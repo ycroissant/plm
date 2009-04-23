@@ -1,0 +1,182 @@
+Changes since version 0-1.2
+
+	* Models with only one explanatory variable resulted in a
+	bug. This has been fixed.
+
+	* Estimation methods are now available with four functions : plm,
+	pvcm, pggls and pgmm instead of one (plm) in the previous version.
+
+	* pvcm is a new function which estimate variable coefficients
+	models. The "nopool" model is now part of it.
+
+	* pggls is a new function which enables the estimation of general
+	FGLS.
+
+	* pgmm is a new function for general method of moments estimator.
+
+	* for all estimation functions, the four first arguments are now
+	formula,data,effect,model
+
+	* robust inference is now provided by the pvcovHC function.
+
+Changes since version 0-2.1
+
+	* pdata.frame is much faster thanks to a modification of the pvar
+	function
+
+	* series with only NA values or with constants values are now
+	removed by pdata.frame
+
+	* observations are ordered by id and time by pdata.frame
+
+	* a pfix function is added to edit a pdata.frame
+
+	* a as.data.frame function is provided to coerce a pdata.frame to a data.frame
+
+	* the dependency to the Matrix package has been removed and pgmm
+	is much faster now
+
+	* phtest has been fixed to return only positive values of the
+	statistic
+
+	* pgmm objects now inherits from panelmodel like other estimators
+	and prints correctly
+
+	* a bug in summary.pgmm has been fixed
+
+Changes since version 0-2.2
+
+	* the coefficients method for objects of class pgmm is now exported.
+
+	* a bug in the plm method of plmtest has been fixed
+
+	* in plmtest, the argument effect "id" is renamed "individual"
+
+	* three testing functions are added : pbsytest (Bera,
+	Sosa-Escudero and Yoon test), pARtest (Breush Godfrey Test) and
+	pDWtest (Durbin-Watson test), pwartest, pBGtest, pwtest pbltest
+
+	* plm, pvcm and pggls now have arguments "subset" and "na.action"
+
+	* phtest, pFtest, plmtest now have a formula method
+
+	* a bug is fixed for the vcov of the within model
+
+	* the pdata.frame function and class is suppressed. The package
+	now use ordinary data.frames.
+
+Changes since version 0-3.1
+
+	* in plm.formula, [int.row.names] is replaced
+	by [as.character(int.row.names)]
+
+	* the degree of freedom for a within time effect model was wrong
+	and has been corrected.
+
+	* the arguments type and weights in pvcovHC.panelmodel are renamed
+	method and type respectively. The default method (type in previous
+	versions) is arellano and not white1
+
+	* honda is now the default option for plmtest
+
+Changes since version 0-3.2
+	
+	* a lot of typos of the man pages have been fixed
+
+	* functions pcdtest, pcdres have been added.
+
+	* for hausman taylor model, the summary now prints the variables
+	and not the effects
+
+	* the estimation of a model with only one explanatory variable
+	using plm with method = "fd" is now working correctly
+
+Changes since version 1-0.0
+
+	* lag and diff methods for pseries are now exported and therefore
+	behave correctly
+
+	* for two-ways within models with instrumental variables, K is
+	replaced by K+1 for the computation of the overall mean matrix of
+	the instruments. Time fixef are now computed. The error message
+	"impossible ..." is removed
+	
+	* a bug in the time random effect model is corrected
+	
+	* a model.matrix method for panelmodel is provided
+	
+	* models without intercept (-1 in the formula) should now be
+	consistently estimated with plm, pggls and pvcm.
+	
+	* plm depends now on the Formula package which provides
+	useful tools for formula with two parts
+
+
+Changes since version 1-0.1
+	
+	* the plm function has been completely rewriten,
+
+	* the names of some arguments have changed (random.methods ->
+	ercomp, inst.method -> ivar), the old names are accepted with a
+	warning,
+
+	* the instuments argument is removed, instrumental variable
+	estimation is performed using extended formula. The instruments
+	argument is still accepted with a warning,
+
+	* the model argument of plm objects are now ordinary data.frame,
+	and not data.frame with elements y and X. Moreover, this
+	data.frame contains untransformed data
+
+	* the data sets which are relevant for panel data estimation that
+	where previously in the Ecdat package are now in the plm package
+
+	* in pvcm a bug when the estimation was made on a subset is fixed
+
+	* ercomp is a stand alone function which returns the estimation of
+	the components of the variance of the errors,
+	
+	* the estimation of two-ways within model is now implemented for
+	unbalanced panels,
+
+	* the fixef method is much improved, the fixed effects may be
+	computed in levels, in deviation from the first level or in
+	deviation from the overall mean
+
+	* in pbsytest, the arguments test are now in lowercases,
+
+	* the pvcovHC function is replaced by suitable vcovHC methods for
+	panelmodel and pgmm models
+	
+Changes since version 1-1.0
+
+	* in fixef, the effect argument default is now NULL:
+	fixef(model_with_time_effect) now works correctly
+
+	* in pFtest, the error message "the arguments should be a within
+	and a pooling model" is removed so that two within models may be
+	provided
+
+	* for backward compatibility reasons, the pvcovHC is reintroduced.
+
+	* for backward compatibility reasons, argument test of pbsytest
+	may be indicated in upper case
+
+	* we switched back to old names for two arguments of plm ercomp ->
+	random.methods ivar -> inst.method -> ivar
+
+	* amemiya method is not implement for unbalanced panels: an error
+	message is now returned.
+ 
+
+Changes since version 1-1.1
+
+	* part of the "details" section of the fixef.plm man page is
+	removed
+
+	* a fitted.value method is now available for plm objects. It
+	returns the fitted values of the untransformed response
+	
+	* in pdiff, a drop=FALSE is added. This omission was responsible
+	of a bug while estimating a model like plm(inv~value-1, data =
+	Grunfeld, model = "fd")

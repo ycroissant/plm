@@ -1,0 +1,355 @@
+phtest <- function(x,...){
+  UseMethod("phtest")
+}
+
+phtest.formula <- function(x, data, ..., model = c("within","random")){
+  if(length(model)!=2) stop("two models should be indicated")
+  for (i in 1:2){
+    model.name <- model[i]
+    if(!(model.name %in% names(model.plm.list))){
+      stop("model must be one of ",oneof(model.plm.list))
+    }
+  }
+  cl <- match.call(expand.dots = TRUE)
+  cl$model <- model[1]
+  names(cl)[2] <- "formula"
+  m <- match(plm.arg,names(cl),0)
+  cl <- cl[c(1,m)]
+  cl[[1]] <- as.name("plm")
+  plm.model.1 <- eval(cl,sys.frame(which=length(sys.calls())))
+  plm.model.2 <- update(plm.model.1, model = model[2])
+  phtest(plm.model.1, plm.model.2)
+}
+
+phtest.panelmodel <- function(x, x2, ...){
+  coef.wi <- coef(x)
+  coef.re <- coef(x2)
+  vcov.wi <- vcov(x)
+  vcov.re <- vcov(x2)
+  names.wi <- names(coef.wi)
+  names.re <- names(coef.re)
+  coef.h <- names.re[names.re%in%names.wi]
+  dbeta <- coef.wi[coef.h]-coef.re[coef.h]
+  df <- length(dbeta)
+  dvcov <- vcov.re[coef.h,coef.h]-vcov.wi[coef.h,coef.h]
+  stat <- abs(t(dbeta)%*%solve(dvcov)%*%dbeta)
+#  pval <- (1-pchisq(stat,df=df))
+  pval <- pchisq(stat,df=df,lower.tail=FALSE)
+  names(stat) <- "chisq"
+  parameter <- df
+  names(parameter) <- "df"
+#  data.name <- paste(deparse(substitute(x)), "and",  deparse(substitute(x2)))
+  data.name <- paste(deparse(x$call$formula))
+  alternative <- "one model is inconsistent"
+#  null.value <- "both models are consistent"
+  res <- list(statistic = stat,
+              p.value = pval,
+              parameter = parameter,
+              method = "Hausman Test",
+              data.name = data.name,
+ #             null.value=null.value,
+              alternative=alternative)
+  class(res) <- "htest"
+  return(res)
+}
+
+
+plmtest <- function(x,...){
+  UseMethod("plmtest")
+}
+
+plmtest.plm <- function(x,
+                        effect = c("individual", "time", "twoways"),
+                        type = c("honda", "bp", "ghm","kw"),
+                        ...){
+
+  effect <- match.arg(effect)
+  type <- match.arg(type)
+  data.name <- paste(deparse(x$call$formula))
+  if (describe(x, "model") != "pooling") x <- update(x, model = "pooling")
+  pdim <- pdim(x)
+  n <- pdim$nT$n
+  T <- pdim$nT$T
+  balanced <- pdim$balanced
+  id <- model.frame(x)[["(id)"]]
+  time <- model.frame(x)[["(time)"]]
+  x <- resid(x)
+  
+  if (effect != "twoways"){
+    if (!type %in% c("honda", "bp"))
+      stop("type must be one of honda or bp for a one way model")
+    if(effect == "individual"){ condvar <- id ; card.cond <- n ; card.other <- T}
+    else{condvar <- time ; card.cond <- T ; card.other <- n}
+    stat <-  sqrt(card.other*card.cond/(2*(card.other-1)))*
+      (crossprod(tapply(x,condvar,mean))*card.other^2/sum(x^2)-1)
+    stat <- switch(type,
+                   honda = c(normal = stat),
+                   bp    = c(chisq  = stat^2))
+    parameter <- switch(type,
+                        honda = NULL,
+                        bp = 1)
+    pval <- switch(type,
+                   honda = pnorm(abs(stat), lower.tail = FALSE)/2,
+                   bp    = pchisq(stat, df = 1, lower.tail = FALSE))
+  }
+  else{
+    stat1 <-  sqrt(n*T/(2*(T-1)))*(crossprod(tapply(x,id,mean))*T^2/sum(x^2)-1)
+    stat2 <-  sqrt(n*T/(2*(n-1)))*(crossprod(tapply(x,time,mean))*n^2/sum(x^2)-1)
+    stat <- switch(type,
+                   ghm   = c(chisq = max(0,stat1)^2+max(0,stat2)^2),
+                   bp    = c(chisq = stat1^2+stat2^2),
+                   honda = c(normal = (stat1+stat2)/sqrt(2)),
+                   kw    = c(normal = sqrt((T-1)/(n+T-2))*stat1+sqrt((n-1)/(n+T-2))*stat2))
+    parameter <- 2
+    pval <- switch(type,
+                   ghm   = pchisq(stat,df=2,lower.tail=FALSE),
+                   honda = pnorm(abs(stat),lower.tail=FALSE)/2,
+                   bp    = pchisq(stat,df=2,lower.tail=FALSE),
+                   kw    = pnorm(abs(stat),lower.tail=FALSE))
+  }
+  
+  method.type <- switch(type,
+                        honda  = "Honda",
+                        bp     = "Breusch-Pagan",
+                        ghm    = "Gourieroux, Holly and Monfort",
+                        kw     = "King and Wu")
+  method.effect <- switch(effect,
+                          id      = "individual effects",
+                          time    = "time effects",
+                          twoways = "two-ways effects")
+  method <- paste("Lagrange Multiplier Test - ",method.effect,
+                  " (",method.type,")\n",sep="")
+
+  if(type == "honda"){
+    res <- list(statistic = stat,
+                p.value   = pval,
+                method    = method,
+                data.name = data.name)
+  }
+  else{
+    names(parameter) <- "df"
+    res <- list(statistic = stat,
+                p.value   = pval,
+                method    = method,
+                parameter = parameter,
+                data.name = data.name)
+  }
+  res$alternative <- "significant effects"
+  class(res) <- "htest"
+  res
+}
+
+
+plmtest.formula <- function(x, data, ...,
+                            effect = c("individual", "time", "twoways"),
+                            type = c("honda", "bp", "ghm", "kw")){
+  
+  cl <- match.call(expand.dots = TRUE)
+  cl$model <- "pooling"
+  names(cl)[2] <- "formula"
+  m <- match(plm.arg,names(cl),0)
+  cl <- cl[c(1,m)]
+  cl[[1]] <- as.name("plm")
+  plm.model <- eval(cl,sys.frame(which=length(sys.calls())))
+  plmtest(plm.model, effect = effect, type = type)
+}
+
+pFtest <- function(x,...){
+  UseMethod("pFtest")
+}
+
+pFtest.formula <- function(x, data, ...){
+  cl <- match.call(expand.dots = TRUE)
+  cl$model <- "within"
+  names(cl)[2] <- "formula"
+  m <- match(plm.arg,names(cl),0)
+  cl <- cl[c(1,m)]
+  cl[[1]] <- as.name("plm")
+  plm.within <- eval(cl,sys.frame(which=length(sys.calls())))
+  plm.pooling <- update(plm.within, model = "pooling")
+  pFtest(plm.within, plm.pooling, ...)
+}
+  
+pFtest.plm <- function(x, z, ...){
+  data.name <-  paste(deparse(x$call$formula))
+  within <- x
+  pooling <- z
+#  if (! (describe(x, "model") == "within" && describe(z, "model") == "pooling"))
+#    stop("the two arguments should be a within and a pooling model")
+  
+  effect <- describe(x, "effect")
+  df1 <- df.residual(pooling)-df.residual(within)
+  df2 <- df.residual(within)
+  ssrp <- sum(residuals(pooling)^2)
+  ssrw <- sum(residuals(within)^2)
+  stat <- (ssrp-ssrw)/ssrw/df1*df2
+  names(stat) <- "F"
+  parameter <- c(df1,df2)
+  names(parameter) <- c("df1","df2")
+  pval <- pf(stat,df1,df2,lower.tail=FALSE)
+  alternative <- "significant effects"
+  res <- list(statistic = stat,
+              p.value = pval,
+              method = paste("F test for ",effect," effects",sep=""),
+              parameter=parameter,
+              data.name=data.name,
+              alternative=alternative)
+  class(res) <- "htest"
+  res
+}
+  
+Ftest <- function(x, test = c("Chisq", "F"), ...){
+  model <- describe(x, "model")
+  data.name <- paste(deparse(formula(x)))
+  test <- match.arg(test)
+  df1 <- ifelse(model == "within",
+                length(coef(x)),
+                length(coef(x)) - has.intercept(x))
+  df2 <- df.residual(x)
+  tss <- tss(x)
+  ssr <- deviance(x)
+  if (test == "Chisq"){
+    stat <- (tss-ssr)/(ssr/df2)
+    names(stat) <- "Chisq"
+    pval <- pchisq(stat,df1,lower.tail=FALSE)
+    parameter <- c(df = df1)
+    method = "Wald test"
+  }
+  else{
+    stat <- (tss-ssr)/ssr*df2/df1
+    names(stat) <- "F"
+    pval <- pf(stat,df1,df2,lower.tail=FALSE)
+    parameter <- c(df1 = df1, df2 = df2)
+    method = "F test"
+  }
+  res <- list(data.name = data.name,
+              statistic = stat,
+              parameter = parameter,
+              p.value = pval,
+              method = method
+              )
+  class(res) <- "htest"
+  res
+}
+
+pwaldtest <- function(x, ...){
+  pdim <- attr(x,"pdim")
+  df <- switch(x$model.name,
+                "within"=pdim$Kw,
+                "between"=pdim$Kb,
+                "pooling"=pdim$K,
+                "random"=pdim$K,
+                "ht"=pdim$K
+                )
+  if (names(coefficients(x))[1]=="(intercept)"){
+    coef <- coefficients(x)[-1]
+    vcv <- vcov(x)[-1,-1]
+  }
+  else{
+    coef <- coefficients(x)
+    vcv <- vcov(x)
+  }
+  parameter <- length(coef)
+  stat <- coef%*%solve(vcv)%*%coef
+  names(stat) <- "chisq"
+  names(parameter) <- "df"
+#  pval <- 1-pchisq(stat,df)
+  pval <- pchisq(stat,df,lower.tail=FALSE)
+  res <- list(statistic = stat,
+              p.value = pval,
+              parameter = parameter,
+              parameter.name = "df",
+              method = "Wald Test",
+              data.name = "data.name")
+  class(res) <- "htest"
+  res
+}
+
+pooltest <- function(x,...){
+  UseMethod("pooltest")
+}
+
+pooltest.formula <- function(x, data, ...){
+  cl <- match.call(expand.dots = TRUE)
+  cl[[1]] <- as.name("plm")
+  names(cl)[[2]] <- "formula"
+  if (is.null(cl$effect)) cl$effect <- "individual"
+  nframe <- length(sys.calls())
+  plm.model <- eval(cl,sys.frame(which = nframe))
+
+  cl[[1]] <- as.name("pvcm")
+  names(cl)[[2]] <- "formula"
+  if (is.null(cl$effect)) cl$effect <- "individual"
+  cl$model <- "within"
+  nframe <- length(sys.calls())
+  pvcm.model <- eval(cl,sys.frame(which = nframe))
+  
+  pooltest(plm.model,pvcm.model)
+}
+
+pooltest.plm <- function(x, z, ...){
+  data.name <- paste(deparse(x$call$formula))
+  rss <- deviance(x)
+  uss <- sum(unlist(residuals(z))^2)
+  dlr <- df.residual(x)
+  dlu <- df.residual(z)
+  df1 <- dlr-dlu
+  df2 <- dlu
+  stat <- (rss-uss)/uss*df2/df1
+  pval <- pf(stat,df1,df2,lower.tail=FALSE)
+  parameter <- c(df1 = df1, df2 = df2)
+  names(stat) <- "F"
+  res <- list(statistic   = stat,
+              parameter   = parameter,
+              p.value     = pval,
+              data.name   = data.name,
+              alternative = "unstability",
+              method      = "F statistic")
+  class(res) <- "htest"
+  res
+}
+
+pwaldtest <- function(x, ...){
+  UseMethod("pwaldtest")
+}
+
+pwaldtest.formula <- function(x, ...){
+  cl <- match.call(expand.dots = TRUE)
+  if (names(cl)[3] == "") names(cl)[3] <- "data"
+  if (is.null(cl$model)) cl$model <- "within"
+  names(cl)[2] <- "formula"
+  m <- match(plm.arg,names(cl),0)
+  cl <- cl[c(1,m)]
+  cl[[1]] <- as.name("plm")
+  plm.model <- eval(cl,sys.frame(which=length(sys.calls())))
+  pwaldtest(plm.model)
+}
+
+
+pwaldtest.panelmodel <- function(x, ...){
+  data.name <- paste(deparse(formula(x)))
+  if (has.intercept(x)){
+    mycoef <- coef(x)[-1]
+    myvcov <- vcov(x)[-1,-1]
+  }
+  else{
+    mycoef <- coef(x)
+    myvcov <- vcov(x)
+  }
+  df <- c(df = length(mycoef))
+  stat <- crossprod(solve(myvcov,mycoef),mycoef)
+  pval <- pchisq(stat,df,lower.tail = FALSE)
+  names(stat) <- "Chisq"
+  result <- list(statistic = stat,
+                 parameter = df,
+                 p.value   = pval,
+                 data.name = NULL)
+  class(result) <- "htest"
+  result
+                 
+}
+
+has.intercept.plm <- function(object, part = "first", ...){
+  has.intercept(formula(object), part = part)
+}
+  
