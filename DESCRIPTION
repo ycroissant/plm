@@ -1,6 +1,6 @@
 Package: plm
 Version: 1.1-2
-Date: 2009-04-23
+Date: 2009-04-28
 Title: Linear models for panel data
 Author: Yves Croissant <yves.croissant@let.ish-lyon.cnrs.fr>, Giovanni Millo <Giovanni_Millo@Generali.com>
 Maintainer: Yves Croissant <yves.croissant@let.ish-lyon.cnrs.fr>

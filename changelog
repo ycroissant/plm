@@ -180,3 +180,9 @@ Changes since version 1-1.1
 	* in pdiff, a drop=FALSE is added. This omission was responsible
 	of a bug while estimating a model like plm(inv~value-1, data =
 	Grunfeld, model = "fd")
+
+	* the lev2var is changed so that it doesn't result in an error
+	when the data.frame contains no factor: this was responsible of a
+	bug in plm.ht
+
+	

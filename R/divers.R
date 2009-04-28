@@ -134,18 +134,23 @@ lev2var <- function(x, ...){
   # names of the vector being the names of the effect
   
   is.fact <- sapply(x, is.factor)
-  not.fact <- names(x)[!is.fact]
-  names(not.fact) <- not.fact
-  x <- x[is.fact]
-  wl <- lapply(x,levels)
-  # nl is the number of levels for each factor
-  nl <- sapply(wl,length)
-  # nf is a vector of length equal to the total number of levels
-  # containing the name of the factor
-  nf <- rep(names(nl),nl)
-  result <- unlist(wl)
-  names(result) <- nf
-  result <- paste(names(result),result,sep="")
-  names(nf) <- result
-  c(nf,not.fact)
+  if (sum(is.fact) > 0){
+    not.fact <- names(x)[!is.fact]
+    names(not.fact) <- not.fact
+    x <- x[is.fact]
+    wl <- lapply(x,levels)
+    # nl is the number of levels for each factor
+    nl <- sapply(wl,length)
+    # nf is a vector of length equal to the total number of levels
+    # containing the name of the factor
+    nf <- rep(names(nl),nl)
+    result <- unlist(wl)
+    names(result) <- nf
+    result <- paste(names(result),result,sep="")
+    names(nf) <- result
+    c(nf,not.fact)
+  }
+  else{
+    names(x)
+  }
 }
