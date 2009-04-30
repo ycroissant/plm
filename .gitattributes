@@ -19,6 +19,7 @@ R/plm.data.R -text
 R/plm.methods.R -text
 R/pserial.R -text
 R/ptest.R -text
+R/pvcm.R -text
 R/pvcovHC.R -text
 /changelog -text
 data/Cigar.rda -text
