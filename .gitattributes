@@ -34,6 +34,9 @@ data/Produc.rda -text
 data/Snmesp.rda -text
 data/SumHes.rda -text
 data/Wages.rda -text
+inst/CITATION -text
+inst/doc/bibliojss.bib -text
+inst/doc/plm.rnw -text
 man/Cigar.Rd -text
 man/Crime.Rd -text
 man/EmplUK.Rd -text

@@ -186,3 +186,7 @@ Changes since version 1-1.1
 	bug in plm.ht
 
 	
+Changes since version 1-1.2
+
+	* the inst directory was missing, it has been added again
+	

@@ -1,0 +1,18 @@
+citHeader("To cite plm in publications use:")
+
+citEntry(entry = "Article",
+  title        = "Panel Data Econometrics in {R}: The {plm} Package",
+  author       = personList(as.person("Yves Croissant"),
+                   as.person("Giovanni Millo")),
+  journal      = "Journal of Statistical Software",
+  year         = "2008",
+  volume       = "27",
+  number       = "2",
+  url          = "http://www.jstatsoft.org/v27/i02/",
+
+  textVersion  =
+  paste("Yves Croissant, Giovanni Millo (2008).",
+        "Panel Data Econometrics in R: The plm Package.",
+        "Journal of Statistical Software 27(2).",
+        "URL http://www.jstatsoft.org/v27/i02/.")
+)
