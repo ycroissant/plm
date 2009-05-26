@@ -190,3 +190,11 @@ Changes since version 1-1.2
 
 	* the inst directory was missing, it has been added again
 	
+Changes since version 1-1.3
+
+	* a relevant error message is added when a within model is
+	estimated with no time-varying variable
+
+	* the formula method for dynformula objects is now exported
+
+	

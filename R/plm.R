@@ -81,6 +81,8 @@ plm <-  function(formula, data, subset, na.action,
 plm.within <- function(formula, data, effect){
   pdim <- pdim(data)
   X <- model.matrix(formula, data, part = "first", model = "within", effect = effect)
+  if (ncol(X) == 0) stop("empty model: no time-varying variable")
+  print(dim(X))
   y <- pmodel.response(data, part = "first", model = "within", effect = effect)
   if (length(formula) == 2){
     W <- model.matrix(formula, data, part = "second", model = "within", effect = effect)
