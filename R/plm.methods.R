@@ -137,8 +137,7 @@ tss <- function(x, ...){
 }
 
 tss.default <- function(x){
-  n <- length(x)
-  sum(x^2)-n*mean(x)^2
+  var(x)*(length(x)-1)
 }
 
 tss.plm <- function(x, model = NULL){
