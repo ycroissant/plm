@@ -69,6 +69,7 @@ plm <-  function(formula, data, subset, na.action,
                      "ht"      = plm.ht     (formula, data),
                      "fd"      = plm.fd     (formula, data)
                      )
+    result$fitted.values <- fitted(result)
     result$call <- cl
     
   }
