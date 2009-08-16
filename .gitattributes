@@ -2,6 +2,7 @@
 /DESCRIPTION -text
 /NAMESPACE -text
 R/attributes.R -text
+R/describe.R -text
 R/divers.R -text
 R/dynformula.R -text
 R/ercomp.R -text
@@ -74,3 +75,4 @@ man/pwfdtest.Rd -text
 man/pwtest.Rd -text
 man/sargan.Rd -text
 man/vcovHC.Rd -text
+tests/testEvaluation.R -text

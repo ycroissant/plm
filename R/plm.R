@@ -14,7 +14,7 @@ plm <-  function(formula, data, subset, na.action,
     warning(deprec.instruments)
   }
 
-  # check and match the arguments
+                           # check and match the arguments
   effect <- match.arg(effect)
   if (!any(is.na(model))) model <- match.arg(model)
   random.method <- match.arg(random.method)
@@ -69,9 +69,15 @@ plm <-  function(formula, data, subset, na.action,
                      "ht"      = plm.ht     (formula, data),
                      "fd"      = plm.fd     (formula, data)
                      )
-    result$fitted.values <- fitted(result)
-    result$call <- cl
-    
+    ## Now add some common stuff to all different models.  Note that
+    ## 'c()' destroys former class
+    clr <- class(result)
+    result <- c(result,
+                list("fitted.values" = fitted(result),
+                     "call" = cl,
+                     "effect" = effect)
+                )
+    class(result) <- clr
   }
   else{
     result <- data
