@@ -57,11 +57,10 @@ plm <-  function(formula, data, subset, na.action,
   mf$include.extra <- TRUE
   data <- eval(mf,sys.frame(which = nframe))
 #  data <- eval(mf, parent.frame())
-  
   class(data) <- c("pdata.frame", "data.frame")
   if (is.na(model)) attr(data, "formula") <- formula
   if (!is.na(model)){
-    result <- switch(model,
+     result <- switch(model,
                      "within"  = plm.within (formula, data, effect),
                      "between" = plm.between(formula, data, effect),
                      "pooling" = plm.pooling(formula, data),
@@ -88,8 +87,8 @@ plm <-  function(formula, data, subset, na.action,
 plm.within <- function(formula, data, effect){
   pdim <- pdim(data)
   X <- model.matrix(formula, data, part = "first", model = "within", effect = effect)
-  if (ncol(X) == 0) stop("empty model: no time-varying variable")
-  print(dim(X))
+  if (ncol(X) == 0)
+      stop("empty model: no time-varying variable")
   y <- pmodel.response(data, part = "first", model = "within", effect = effect)
   if (length(formula) == 2){
     W <- model.matrix(formula, data, part = "second", model = "within", effect = effect)

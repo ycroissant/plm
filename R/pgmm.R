@@ -2,7 +2,6 @@ pgmm <- function(formula, data, effect = c("individual", "twoways", "none"),
                  model = c("onestep", "twosteps"),
                  instruments = NULL, gmm.inst, lag.gmm,
                  transformation = c("d", "ld"), fsm = NULL, ...){
-  
   effect <- match.arg(effect)
   model.name <- match.arg(model)
   transformation <- match.arg(transformation)
@@ -10,15 +9,13 @@ pgmm <- function(formula, data, effect = c("individual", "twoways", "none"),
   cl <- match.call()
   
   mf <- match.call(expand.dots = FALSE)
-  m <- match(c("formula", "data", "subset", "na.action", "index"),names(mf),0)
+  m <- match(c("formula", "data", "subset", "na.action", "index"), names(mf),0)
   mf <- mf[c(1,m)]
   mf$drop.unused.levels <- TRUE
   mf[[1]] <- as.name("plm")
   mf$model <- NA
-
   mf$formula <- formula(formula)
   mf$na.action <- "na.pass"
-
   if(is.null(fsm)){
     fsm <- switch(transformation,
                   "d"="G",
@@ -45,7 +42,8 @@ pgmm <- function(formula, data, effect = c("individual", "twoways", "none"),
     }
   }
   
-  if (!is.list(lag.gmm)) lag.gmm <- rep(list(lag.gmm),J)
+  if (!is.list(lag.gmm))
+      lag.gmm <- rep(list(lag.gmm),J)
 
   # the number of time series lost depends on the lags of the gmm
   # instruments and on the lags of the model
@@ -64,8 +62,10 @@ pgmm <- function(formula, data, effect = c("individual", "twoways", "none"),
   # model, ie returns a model.frame. We provide any formula we need
   # (for the model, the gmm.inst, the instruments so that the relevant
   # data.frame are created.
-  mf$formula <- formula(formula) ; data.formula <- eval(mf,parent.frame())
-  mf$formula <- formula(gmm.inst); data.gmm.inst <- eval(mf,parent.frame())
+  mf$formula <- formula(formula) 
+  data.formula <- eval(mf,parent.frame())
+  mf$formula <- formula(gmm.inst)
+  data.gmm.inst <- eval(mf,parent.frame())
   if (!is.null(instruments)){
     mf$formula <- instruments ;  data.instruments <- eval(mf,parent.frame())
   }
