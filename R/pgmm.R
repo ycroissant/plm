@@ -1,21 +1,32 @@
 pgmm <- function(formula, data, effect = c("individual", "twoways", "none"),
                  model = c("onestep", "twosteps"),
-                 instruments = NULL, gmm.inst, lag.gmm,
+                 instruments = NULL, gmm.inst, lag.gmm, lag.form,
                  transformation = c("d", "ld"), fsm = NULL, ...){
+  
   effect <- match.arg(effect)
   model.name <- match.arg(model)
   transformation <- match.arg(transformation)
-  
   cl <- match.call()
-  
+
+  # if formula is not a dynformula object, check for the relevant
+  # arguments in ... and coerce it
+  if (!inherits(formula, "dynformula")){
+    formula <- match.call(expand.dots = TRUE)
+    m <- match(c("formula", "lag.form", "diff.form", "log.form"),names(cl),0)
+    formula <- formula[c(1, m)]
+    formula[[1]] <- as.name("dynformula")
+    formula <- cl$formula <- eval(formula, parent.frame())
+  }
   mf <- match.call(expand.dots = FALSE)
-  m <- match(c("formula", "data", "subset", "na.action", "index"), names(mf),0)
+  m <- match(c("formula", "data", "subset", "na.action", "index"),names(mf),0)
   mf <- mf[c(1,m)]
   mf$drop.unused.levels <- TRUE
   mf[[1]] <- as.name("plm")
   mf$model <- NA
+
   mf$formula <- formula(formula)
   mf$na.action <- "na.pass"
+
   if(is.null(fsm)){
     fsm <- switch(transformation,
                   "d"="G",
@@ -41,9 +52,7 @@ pgmm <- function(formula, data, effect = c("individual", "twoways", "none"),
       instruments <- formula(dynformula(form.inst, lag.inst, diff.inst, log.inst))
     }
   }
-  
-  if (!is.list(lag.gmm))
-      lag.gmm <- rep(list(lag.gmm),J)
+  if (!is.list(lag.gmm)) lag.gmm <- rep(list(lag.gmm),J)
 
   # the number of time series lost depends on the lags of the gmm
   # instruments and on the lags of the model
@@ -57,15 +66,16 @@ pgmm <- function(formula, data, effect = c("individual", "twoways", "none"),
     lag.gmm.level <- rep(list(c(1,1)),J)
     gmm.inst.level <- dynformula(gmm.inst, diff = T)
   }
-
   # we then use mf (which is a call with plm as function and NA as
   # model, ie returns a model.frame. We provide any formula we need
   # (for the model, the gmm.inst, the instruments so that the relevant
   # data.frame are created.
-  mf$formula <- formula(formula) 
-  data.formula <- eval(mf,parent.frame())
+
+  mf$formula <- formula(formula) ; data.formula <- eval(mf,parent.frame())
   mf$formula <- formula(gmm.inst)
+
   data.gmm.inst <- eval(mf,parent.frame())
+
   if (!is.null(instruments)){
     mf$formula <- instruments ;  data.instruments <- eval(mf,parent.frame())
   }
@@ -75,7 +85,8 @@ pgmm <- function(formula, data, effect = c("individual", "twoways", "none"),
   time.names <- pdim$panel.names$time.names
   id.names <- pdim$panel.names$id.names
   T <- pdim$nT$T
-  ti <- split(data.formula[["(time)"]], data.formula[["(id)"]])
+  index <- attr(data.formula, "index")
+  ti <- split(index[[2]], index[[1]])
 
   # we now call the extract.data to extract the response and the
   # model.matrix of the relevant formula described earlier splited by
@@ -84,7 +95,6 @@ pgmm <- function(formula, data, effect = c("individual", "twoways", "none"),
   # first for the model, extract the yX as a matrix splited by
   # individual, and then remove the relevant number of time series
   yX <- extract.data(data.formula)
-
   K <- ncol(yX[[1]])-1
   Ky <- attr(formula,"lag")[[1]]
   if (length(Ky) > 1) Ky <- Ky[2]-Ky[1]+1
@@ -94,6 +104,7 @@ pgmm <- function(formula, data, effect = c("individual", "twoways", "none"),
   K <- list(K=K,Ky=Ky,Kt=Kt)
 
   yX <- lapply(yX, function(x) if(time.lost==1) x else x[-c(1:(time.lost-1)),])
+
 
   # then do the same with the matrix of "normal" instruments (if any)
   if (is.null(instruments)) In <- NULL else{
@@ -109,7 +120,6 @@ pgmm <- function(formula, data, effect = c("individual", "twoways", "none"),
   W <- extract.data(data.gmm.inst)
   J <- makeJ(time.names, gmm.inst, lag.gmm,time.lost)
   W <- lapply(W, momatrix, J, time.names)
-  
   if (transformation=="ld"){
     # additional stuff if the system GMM is required. Same commands as
     # previously to compute the gmm instrument matrix with variable in
@@ -305,20 +315,26 @@ pgmm.sys <- function(yX,W,Wl,In,time.dummies,fsm,cl){
 }
 
 extract.data <- function(data){
-  attr(attr(data,"terms"),"intercept") <- 0
-  trms <- attr(data,"terms")
-  data <- split(data,data[["(id)"]])
-  data <- lapply(data,function(x){ rownames(x) <- x[["(time)"]];return(x)})
-  if (length(trms) == 3){
+  # the next to lines conflicts with Formula
+  #attr(attr(data,"terms"),"intercept") <- 0
+  #trms <- attr(data,"terms")
+  trms <- attr(data, "formula")
+  index <- attr(data, "index")
+  data <- split(data,index[[1]])
+  time <- split(index[[2]], index[[1]])
+  data <- mapply(function(x, y){ rownames(x) <- y; return(x)}, data, time, SIMPLIFY = FALSE)
+#  data <- lapply(data,function(x){ rownames(x) <- x[["(time)"]];return(x)})
+  if (length(trms)[1] > 0){
     data <- lapply(data,
                    function(x){
-                     x <- cbind(x[,1],model.matrix(trms,x))
+                     x <- cbind(x[[1]], model.matrix(trms, x)[, -1, drop = FALSE]) #[,-1] is a QND patch
                      colnames(x)[1] <- deparse(trms[[2]])
-                     x
+#                     c(nrow(model.matrix(trms, x)), dim(x[[1]]))
+                    x
                    }
                    )
   }
-  else data <- lapply(data,function(x) model.matrix(trms,x))
+  else data <- lapply(data,function(x) model.matrix(trms,x)[, -1, drop = FALSE]) #[,-1] is a QND patch
   data
 }
   

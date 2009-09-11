@@ -306,10 +306,10 @@ specification searches, estimation and inference in a natural way.
 \subsection{Data structure}
 
 Panel data have a special structure: each row of the data corresponds
-to a specific individual and time period. In \pkg{plm} the \code{data} 
-argument is an ordinary \code{data.frame}, but an argument called 
-\code{index} has to be added to indicate the structure of the data. 
-This can be:
+to a specific individual and time period. In \pkg{plm} the \code{data}
+argument may be an ordinary \code{data.frame} but, in this case, an
+argument called \code{index} has to be added to indicate the structure
+of the data.  This can be:
 
 \begin{itemize}
 \item \code{NULL} (the default value), it is then assumed
@@ -323,9 +323,13 @@ This can be:
   balanced panel with observations ordered by individual).
 \end{itemize}
 
-The \code{plm.data} function is then called, which returns a
-\code{data.frame} with the two first columns containing the
-individual and the time indexes.
+The \code{pdata.frame} function is then called internally, which
+returns a \code{pdata.frame} which is a \texttt{data.frame} with an
+attribute called index. This attribute is a \textsc{data.frame} that
+contains the individual and the time indexes.
+
+It is also possible to use directly the \texttt{pdata.frame} function
+and then to use the \texttt{pdata.frame} in the estimation functions.
 
 \subsection{Interface}
 
@@ -456,14 +460,15 @@ one.
 Moreover, instrumental variable estimators of all these models may also
 be obtained using several calls to \code{lm()}. 
 
-For this reason the
-three above estimators have been grouped inside the same function.
+For this reason the three above estimators have been grouped inside
+the same function.
 
 On the output side, a number of diagnostics and a very general
 coefficients' covariance matrix estimator also benefits from this
 framework, as they can be readily calculated applying the standard
 \textsc{ols} formulas to the demeaned data, which are contained inside
-\code{plm} objects. This will be the subject of Subsection~\ref{subsec:inference}.
+\code{plm} objects. This will be the subject of
+Subsection~\ref{subsec:inference}.
 
 
 \subsubsection{The object oriented approach to general GLS computations}
@@ -536,14 +541,15 @@ where $E_i$ is a function of the residuals $\hat{e}_{it}, \; t=1,
 \dots T$ chosen according to the relevant heteroskedasticity and
 correlation structure. Moreover, it turns out that the White
 covariance matrix calculated on the demeaned model's regressors and
-residuals (both part of \code{plm} objects) is a consistent
-estimator of the relevant model's parameters' covariance matrix, thus
-the method is readily applicable to models estimated by random or
-fixed effects, first difference or pooled \textsc{ols} methods. Different pre-weighting schemes taken
-from package \pkg{sandwich} \citep{ZEIL:04} are also
-implemented to improve small-sample performance. Robust estimators
-with any combination of covariance structures and weighting schemes
-can be passed on to the testing functions.
+residuals (both part of \code{plm} objects) is a consistent estimator
+of the relevant model's parameters' covariance matrix, thus the method
+is readily applicable to models estimated by random or fixed effects,
+first difference or pooled \textsc{ols} methods. Different
+pre-weighting schemes taken from package \pkg{sandwich}
+\citep{ZEIL:04} are also implemented to improve small-sample
+performance. Robust estimators with any combination of covariance
+structures and weighting schemes can be passed on to the testing
+functions.
 
 
 \section{Managing data and formulae}
@@ -553,7 +559,7 @@ The package is now illustrated by application to some well-known
 examples. It is loaded using
 
 <<echo=FALSE,results=hide>>=
-options(prompt= "R> ")
+options(prompt= "R> ", useFancyQuotes = FALSE)
 @
 
 <<echo=TRUE,results=hide>>=
@@ -589,25 +595,29 @@ the first two columns, as in all the example datasets but \code{Wages}.
 If this weren't the case, an \code{index} optional argument would 
 have to be passed on to the estimating and testing functions.
 
-As an example, as the \code{Wages} dataset lacks indexes altogether,
-but we know it is a balanced panel already sorted in (\code{id}, 
-\code{time}) order, these can be explicitly reconstructed and put into
-the first two columns by \code{plm.data} specifying the number of
-individuals:
-
 <<setdata1>>=
-Wages <- plm.data(Wages, index = 595)
-
+head(Grunfeld)
+E <- pdata.frame(EmplUK, index = c("firm", "year"), drop.index = TRUE, row.names = TRUE)
+head(E)
+head(attr(E, "index"))
 @
 
-once for all. As an alternative, one could keep specifying \code{index = 595}
-into every command.
+Two further arguments are logical : \texttt{drop.index} drop the
+indexes from the \texttt{data.frame} and \texttt{row.names} computes
+``fancy'' row names by pasting the individual and the time
+indexes. While extracting a serie from a \texttt{pdata.frame}, a
+\texttt{pseries} is created, which is the original serie with the
+index attribute. This object has specific methods, like
+\texttt{summary} and \texttt{as.matrix} are provided. The former
+indicates the total variation of the variable and the share of this
+variation that is due to the individual and the time dimensions. The
+latter gives the matrix representation of the serie, with, by default,
+individual as rows and time as columns.
 
-Datasets that have indexes but are, or are suspected to be, in the
-wrong order can be set in the same way, specifying the names of the
-\code{id} and \code{time} indexes instead of the number of
-individuals.  
-
+<<>>=
+summary(E$emp)
+head(as.matrix(E$emp))
+@ 
 \subsection{Data transformation}
 
 Panel data estimation requires to apply different transformations to
@@ -641,27 +651,47 @@ $d=
 \right)
 $
 
-is of dimension $(T-1,T)$. Note that \proglang{R}'s \code{diff()}
-and \code{lag()} functions don't compute correctly these
-transformations for panel data because they are unable to identify
-when there is a change in individual in the data. They have been
-therefore rewritten in order to handle correctly panel data.
+is of dimension $(T-1,T)$. 
+g
+Note that \proglang{R}'s \code{diff()} and \code{lag()} functions
+don't compute correctly these transformations for panel data because
+they are unable to identify when there is a change in individual in
+the data. Specific methods for \texttt{pserie} objects are therefore
+have been rewritten in order to handle correctly panel data. Further
+functions called \code{Between}, \code{between} and \code{within} are
+also provided to compute the between and the within
+transformation. The \texttt{between} returns unique values, whereas
+\texttt{Between} duplicate the values and returns a vector which
+length is the number of observations.
 
-The \code{Between}, \code{between}, \code{within}, \code{lag}
-and \code{diff} functions can be used directly in formulas to
-estimate models in all the estimation functions previously described.
+<<>>=
+head(diff(E$emp), 10)
+head(lag(E$emp, 2), 10)
+head(within(E$emp))
+head(between(E$emp), 4)
+head(Between(E$emp), 10)
+
+@ 
 
 \end{itemize}
 
-\subsection{Dynamic formula}
+\subsection{Formulas}
 
-Using the \code{lag} and \code{diff} functions to write a formula
-can be very cumbersome for dynamic models. A \code{dynformula}
-function is provided to ease the writing of such formulas. Suppose for
-example than one wants to estimate a model where employment depends on
-its own first two lags and on the second and third lags of wages and
-capital, all the variables except capital being in logs, and capital
-being differenced. The formula is then:
+There are two circumstances where standard \code{formula} are not very
+usefull : formulas for dynamic models and formulas for instrument
+variable estimation. Two deal with the first situation, we provide a
+class called \code{dynformula}, for the second situation, we use the
+\code{Formula} package.
+
+\subsubsection{Formula for dynamic models}
+
+Using the \code{lag} and \code{diff} functions to write a formula can
+be very cumbersome for dynamic models. A \code{dynformula} function is
+provided to ease the writing of such formulas. Suppose for example
+than one wants to estimate a model where employment depends on its own
+first two lags and on the second and third lags of wages and capital,
+and capital being differenced. The formula is then:
+
 <<results=hide>>=
 log(emp)~lag(log(emp),1)+lag(log(emp),2)+lag(log(wage),2)+lag(log(wage),3)+diff(capital,2)+diff(capital,3)
 @ 
@@ -669,13 +699,14 @@ log(emp)~lag(log(emp),1)+lag(log(emp),2)+lag(log(wage),2)+lag(log(wage),3)+diff(
 which can be easily obtained with \code{dynformula}:
 
 <<>>=
-dynformula(emp~wage+capital,log=list(capital=FALSE,TRUE),lag=list(emp=2,c(2,3)),diff=list(FALSE,capital=TRUE))
+dynformula(log(emp)~log(wage)+log(capital), lag=list(emp=2,c(2,3)),diff=c(FALSE,capital=TRUE))
 @ 
 
-The arguments \code{lag}, \code{diff} and \code{log} are lists which can be:
+The arguments \code{lag} and \code{diff} are lists/vectors which can
+be:
 
 \begin{itemize}
-\item unnamed, in this case, the length of the list must equal the
+\item unnamed, in this case, the length of the list/vector must equal the
   number of variables,
 \item named, in this case the missing variables get the default values
   (no lags, no logs, no differences),
@@ -683,11 +714,30 @@ The arguments \code{lag}, \code{diff} and \code{log} are lists which can be:
   defined default value.
 \end{itemize}
 
-The elements of \code{diff} and \code{log} lists should be logical
-values. For \code{lag}, it is either a number or a vector of two
-numbers: 3 means current value and first three lags, \code{c(1,2)}
-means first two lags.
+The \code{diff} vector is logical. The elements of \code{lag} are
+either a number or a vector of two numbers: 3 means current value and
+first three lags, \code{c(1,2)} means first two lags.
 
+\
+\subsubsection{Formula for instrument variable estimation}
+
+Two-part formulas are a very convenient way to describe models
+estimated using instrument variables, the first part indicating the
+covariates and the second part the instruments. The \code{Formula}
+package provides a class which unables to construct multi-part
+formula, each part being separated by a pipe sign. \code{plm} provides
+a \code{pFormula} object which is a \code{Formula} with specific
+methods.
+
+The two formulas below are identical :
+<<>>=
+emp~wage+capital|lag(wage,1)+capital
+emp~wage+capital|.-wage+lag(wage,1)
+@ 
+
+In the second case, the \code{.} means the previous parts which
+describes the covariates and this part is ``updated''. This is
+particulary interesting when there are a few external instruments.
 
 \section{Model estimation}
 \label{modelestimation}
@@ -716,17 +766,20 @@ grun.fe <- plm(inv~value+capital,data=Grunfeld,model="within")
 grun.re <- plm(inv~value+capital,data=Grunfeld,model="random")
 @ 
 
-
 <<>>=
 summary(grun.re)
 @ 
 
-For a \code{random} model, the \code{summary} method gives
-information about the variance of the components of the errors.
-Fixed effects may be extracted easily  using  \code{fixef}:
+For a \code{random} model, the \code{summary} method gives information
+about the variance of the components of the errors.  Fixed effects may
+be extracted easily using \code{fixef}. An argument \code{type}
+indicates howfixed effects should be computed : in level \code{type =
+  'level'} (the default), in deviation from the overall mean
+\code{type = 'dmean'} or in deviation from the first individual
+\code{type = 'dfirst'}.
 
 <<>>=
-fixef(grun.fe)
+fixef(grun.fe, type = 'dmean')
 @ 
 
 The \code{fixef} function returns an object of class \code{fixef}. A
@@ -735,7 +788,7 @@ from the overall intercept), their standard
 errors and the test of equality to the overall intercept.
 
 <<>>=
-summary(fixef(grun.fe))
+summary(fixef(grun.fe, type = 'dmean'))
 @ 
 
 In case of a two-ways effect model, an additional argument
@@ -750,10 +803,12 @@ fixef(grun.twfe,effect="time")
 
 \subsubsection{Random effects estimators}
 
-As observed above, the random effect model is obtained as a linear estimation on
-quasi-demeaned  data. The parameter of this transformation is
-obtained using preliminary estimations. Four estimators of this
-parameter are available, depending on the value of the argument \code{random.method} :
+As observed above, the random effect model is obtained as a linear
+estimation on quasi-demeaned data. The parameter of this
+transformation is obtained using preliminary estimations. 
+
+Four estimators of this parameter are available, depending on the
+value of the argument \code{random.method} :
 
 \begin{itemize}
 \item \code{swar}: from \citet{SWAM:AROR:72}, the default value,
@@ -762,15 +817,22 @@ parameter are available, depending on the value of the argument \code{random.met
 \item \code{nerlove}: from \citet{NERLO:71}.
 \end{itemize}
 
+
 For example, to use the \code{amemiya} estimator:
 
 <<>>=
 grun.amem <- plm(inv~value+capital,data=Grunfeld,model="random",random.method="amemiya")
+@ 
 
+The estimation of the variance of the error components are performed
+using the \code{ercomp} function, which has a \code{method} and an
+\code{effect} argument, and can be used by itself :
+
+<<>>=
+ercomp(inv~value+capital, data=Grunfeld, method = "amemiya", effect = "twoways")
 @ 
 
 \subsubsection{Introducing time or two-ways effects}
-
 
 The default behavior of \code{plm} is to introduce individual
 effects. Using the \code{effect} argument, one may also introduce:
@@ -793,6 +855,27 @@ elements of the error term and the three parameters used in the
 transformation are now printed. The two-ways effect model is for the
 moment only available for balanced panels.
 
+\subsubsection{Unbalanced panels}
+
+Most of the features of \code{plm} are implemented for panel models
+with some limitations :
+
+\begin{itemize}
+\item the random two-ways effect model is not implemented,
+\item the only estimator of the variance of the error components is
+  the one proposed by \citet{SWAM:AROR:72}
+\end{itemize}
+
+The following example is using data used by \citep{HARR:RUBI} to
+estimate an hedonic housing prices function. It is reproduced in
+\citep{BALT:01}, p. 174.
+
+<<>>=
+data("Hedonic", package = "plm")
+Hed <- plm(mv~crim+zn+indus+chas+nox+rm+age+dis+rad+tax+ptratio+blacks+lstat, Hedonic, model = "random", index = "townid")
+summary(Hed)
+@ 
+
 \subsubsection{Instrumental variable estimators}
 
 
@@ -806,19 +889,7 @@ The instrumental variables estimator used is indicated with the
 \item \code{bvk}, from  \citet{BALE:VARA:87}, the default value,
 \item \code{baltagi}, from \citet{BALT:81}.
 \end{itemize}
-
-We illustrate instrumental variables estimation with the employment
-equation. We use the first lag of wage as instrument of wage. The
-four following commands are similar:
-
-<<pbron>>=
-emp.iv <- plm(emp~wage+capital|lag(wage,1)+capital,data=EmplUK,model="random")
-emp.iv <- plm(emp~wage+capital|.-wage+lag(wage,1),data=EmplUK,model="random")
-@ 
-
-In the second case, the \code{.} means the previous parts which
-describes the covariates and this part is ``updated''. This is
-particulary interesting when there are a few external instruments, as
+ as
 illustrated on the following example from \cite{BALT:01}, p.120.
   
 <<>>=
@@ -830,16 +901,18 @@ cr <- plm(log(crmrte) ~ log(prbarr) + log(polpc) + log(prbconv) +
          region + smsa + factor(year) | . - log(prbarr) -log(polpc) + 
          log(taxpc) + log(mix), data = Crime,
          model = "random")
+summary(cr)
 @   
 
 The Hausman-Taylor model \citep[see][]{HAUS:TAYL:81} may be estimated
-with \code{plm} by equating the \code{model} argument to \code{"ht"}. The following example is from \cite{BALT:01} p.130.
+with the \code{pht} function. The following example is from
+\cite{BALT:01} p.130.
 
 <<>>=
-ht <- plm(lwage~wks+south+smsa+married+exp+I(exp^2)+
+ht <- pht(lwage~wks+south+smsa+married+exp+I(exp^2)+
           bluecol+ind+union+sex+black+ed | 
           sex+black+bluecol+south+smsa+ind,
-          data=Wages,model="ht",index=595)
+          data=Wages,index=595)
 summary(ht)
 @ 
 
@@ -1086,8 +1159,8 @@ To test the hypothesis that all the coefficients in the
 :
 
 <<>>=
-znp=pvcm(inv~value+capital,data=Grunfeld,model="within")
-zplm=plm(inv~value+capital,data=Grunfeld)
+znp <- pvcm(inv~value+capital,data=Grunfeld,model="within")
+zplm <- plm(inv~value+capital,data=Grunfeld)
 pooltest(zplm,znp)
 @
 

@@ -17,14 +17,15 @@ fixef.plm <- function(object, effect = NULL,
   }
   formula <- formula(object)
   data <- model.frame(object)
-  Xb <- model.matrix(formula, data, part = "first", model = "between", effect = effect)
-  yb <- pmodel.response(data, part = "first", model = "between", effect = effect)
+  Xb <- model.matrix(formula, data, rhs = 1, model = "between", effect = effect)
+  yb <- pmodel.response(formula, data, model = "between", effect = effect)
   # the between model may contain time independent variables, the
   # within model don't. So select the relevant elements using nw
   # (names of the within variables)
   nw <- names(coef(object))
   fixef <- yb - as.vector(crossprod(t(Xb[,nw,drop=FALSE]),coef(object)))
-  bet <- plm.between(formula, data, effect = effect)
+#  bet <- plm.between(formula, data, effect = effect)
+  bet <- plm.fit(formula, data, model = "between", effect = effect)
   sigma2 <- deviance(bet)/df.residual(bet)
   vcov <- vcov(object)[nw,nw]
   nother <- switch(effect,

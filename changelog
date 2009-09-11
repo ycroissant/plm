@@ -207,6 +207,23 @@ Changes since version 1-1.3
 	* the fitted.values element was missing for plm objects and has
 	been added
 
+Change since version 1-1.4
 
+	* a args argument is added for plm objects, and the internal
+	function relies now on it (and not on the call as previously)
 
+	* more attention is paid when one of the estimated components of
+	the variance is negative (warning or error messages result)
 
+	* pdata.frame objects are re-introduced. They are used to compute
+	model.frames. Extraction from pdata.frames results in 'pserie'
+	objects which have an index attribute.
+
+	* the print method of ercomp is now exported
+
+	* the first argument of pgmm may now be a formula. A lag.form must
+	be provided in this case
+	
+	* hausman-taylor estimation is now performe the pht function. For
+	backaward compatibility reasons, it is still possible to estimate
+	this model with plm

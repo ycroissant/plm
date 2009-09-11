@@ -54,7 +54,7 @@ against cross-sectional correlation.
   
 }
 \examples{
-data("Produc", package="Ecdat")
+data("Produc", package="plm")
 pwtest(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc)
 }
 \keyword{htest}

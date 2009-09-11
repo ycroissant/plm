@@ -16,7 +16,7 @@ phtest.formula <- function(x, data, ..., model = c("within","random")){
   m <- match(plm.arg,names(cl),0)
   cl <- cl[c(1,m)]
   cl[[1]] <- as.name("plm")
-  plm.model.1 <- eval(cl,sys.frame(which=length(sys.calls())))
+  plm.model.1 <- eval(cl,parent.frame())
   plm.model.2 <- update(plm.model.1, model = model[2])
   phtest(plm.model.1, plm.model.2)
 }
@@ -71,8 +71,9 @@ plmtest.plm <- function(x,
   n <- pdim$nT$n
   T <- pdim$nT$T
   balanced <- pdim$balanced
-  id <- model.frame(x)[["(id)"]]
-  time <- model.frame(x)[["(time)"]]
+  index <- attr(model.frame(x), "index")
+  id <- index[[1]]
+  time <- index[[2]]
   x <- resid(x)
   
   if (effect != "twoways"){
@@ -150,7 +151,7 @@ plmtest.formula <- function(x, data, ...,
   m <- match(plm.arg,names(cl),0)
   cl <- cl[c(1,m)]
   cl[[1]] <- as.name("plm")
-  plm.model <- eval(cl,sys.frame(which=length(sys.calls())))
+  plm.model <- eval(cl,parent.frame())
   plmtest(plm.model, effect = effect, type = type)
 }
 
@@ -165,7 +166,7 @@ pFtest.formula <- function(x, data, ...){
   m <- match(plm.arg,names(cl),0)
   cl <- cl[c(1,m)]
   cl[[1]] <- as.name("plm")
-  plm.within <- eval(cl,sys.frame(which=length(sys.calls())))
+  plm.within <- eval(cl,parent.frame())
   plm.pooling <- update(plm.within, model = "pooling")
   pFtest(plm.within, plm.pooling, ...)
 }
@@ -202,6 +203,7 @@ Ftest <- function(x, test = c("Chisq", "F"), ...){
   model <- describe(x, "model")
   data.name <- paste(deparse(formula(x)))
   test <- match.arg(test)
+
   df1 <- ifelse(model == "within",
                 length(coef(x)),
                 length(coef(x)) - has.intercept(x))
@@ -274,15 +276,13 @@ pooltest.formula <- function(x, data, ...){
   cl[[1]] <- as.name("plm")
   names(cl)[[2]] <- "formula"
   if (is.null(cl$effect)) cl$effect <- "individual"
-  nframe <- length(sys.calls())
-  plm.model <- eval(cl,sys.frame(which = nframe))
+  plm.model <- eval(cl,parent.frame())
 
   cl[[1]] <- as.name("pvcm")
   names(cl)[[2]] <- "formula"
   if (is.null(cl$effect)) cl$effect <- "individual"
   cl$model <- "within"
-  nframe <- length(sys.calls())
-  pvcm.model <- eval(cl,sys.frame(which = nframe))
+  pvcm.model <- eval(cl,parent.frame())
   
   pooltest(plm.model,pvcm.model)
 }
@@ -321,7 +321,7 @@ pwaldtest.formula <- function(x, ...){
   m <- match(plm.arg,names(cl),0)
   cl <- cl[c(1,m)]
   cl[[1]] <- as.name("plm")
-  plm.model <- eval(cl,sys.frame(which=length(sys.calls())))
+  plm.model <- eval(cl,parent.frame())
   pwaldtest(plm.model)
 }
 

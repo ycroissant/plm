@@ -29,14 +29,20 @@ bdiag <- function(...){
 } 
 
 
-twosls <- function(y, X, W){
+twosls <- function(y, X, W, intercept = FALSE){
   Xhat <- lm(X ~ W)$fit
   if(!is.matrix(Xhat)){
     Xhat <- matrix(Xhat, ncol = 1)
     colnames(Xhat) <- colnames(X)
   }
-  model <- lm(y~Xhat-1)
-  yhat <- as.vector(crossprod(t(X),coef(model)))
+  if(intercept){
+    model <- lm(y~Xhat)
+    yhat <- as.vector(crossprod(t(cbind(1,X)),coef(model)))
+  }
+  else{
+    model <- lm(y~Xhat-1)
+    yhat <- as.vector(crossprod(t(X),coef(model)))
+  }
   model$residuals <- y - yhat
   model
 }
@@ -98,8 +104,7 @@ rbindl <- function(x){
 
 expand.formula <- function(x){
   if (!any(class(x) == "Formula")) stop("not a Formula object")
-  extra <- attr(x, "extra")
-  if (length(x) != 2) stop("not a two part formula")
+  if (length(x)[2] != 2) stop("not a two part formula")
   xs <- structure(x, class = "formula")
   has.response <- attr(terms(xs),"response") == 1
   if (has.response){
@@ -112,7 +117,6 @@ expand.formula <- function(x){
   }
   firstpart <- rhs[[2]]
   secondpart <- rhs[[3]]
-  
   if (has.response){
     one <- do.call("~",list(y,firstpart))
     two <- do.call("~",list(y,secondpart))
@@ -120,11 +124,13 @@ expand.formula <- function(x){
   else{
     one <- do.call("~",list(firstpart))
     two <- do.call("~",list(secondpart))
-  }    
+  }
   two <- update(one,two)
-  result <- as.Formula(one,two)
+  one <- paste(deparse(one), collapse = "")
+  two <- paste(deparse(two[[3]]), collapse = "")
+  result <- as.formula(paste(one, "|", two, collapse = ""));
+  result <- as.Formula(result)
   class(result) <- c("pFormula", class(result))
-  attr(result,"extra") <- extra
   result
 }
 

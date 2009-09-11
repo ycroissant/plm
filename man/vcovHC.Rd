@@ -8,10 +8,9 @@
   Robust covariance matrix estimators \emph{a la White} for panel models.
 }
 \usage{
-\method{vcovHC}{panelmodel}(x,
-                              method = c("arellano", "white1", "white2"),
-                              type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
-                              ...) 
+\method{vcovHC}{panelmodel}(x, method = c("arellano", "white1", "white2"),
+                            type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
+                            ...) 
 \method{vcovHC}{pgmm}(x,...)
 }
 
@@ -81,9 +80,10 @@ URL \url{http://http://www.jstatsoft.org/v11/i10/}.
 }
 
 \examples{
+library(sandwich)
 library(lmtest)
 library(car)
-data("Produc", package="Ecdat")
+data("Produc", package="plm")
 zz <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc, model="random")
 ## standard coefficient significance test
 coeftest(zz)

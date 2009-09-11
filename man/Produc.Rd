@@ -1,7 +1,7 @@
 \name{Produc}
 \docType{data}
 \alias{Produc}
-\title{Us States Production }
+\title{US States Production }
 \description{
   a panel of 48 observations  from 1970   to 1986
 

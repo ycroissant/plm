@@ -15,7 +15,7 @@ pbgtest.formula<-function(x, ..., order = NULL) {
   m <- match(plm.arg,names(cl),0)
   cl <- cl[c(1,m)]
   cl[[1]] <- as.name("plm")
-  plm.model <- eval(cl,sys.frame(which=length(sys.calls())))
+  plm.model <- eval(cl,parent.frame())
   pbgtest(plm.model, order = order, ...)
 }
 
@@ -29,8 +29,11 @@ pbgtest.panelmodel<-function(x, order = NULL, ...) {
   ## 3: apply bgtest() to auxiliary model and return the result
 
   ## retrieve demeaned data
-  demX <- model.matrix(x)
-  demy <- model.response(model.frame(x))
+  demX <- model.matrix(x, model ="within")
+  demy <- pmodel.response(model.frame(x), model ="within")
+  model <- describe(x, "model")
+  effect <- describe(x, "effect")
+#  demy <- pmodel.response(model.frame(x), model = model, effect = effect)
   
   ## ...and group numerosities
   Ti <- pdim(x)$Tint$Ti
@@ -48,6 +51,7 @@ pbgtest.panelmodel<-function(x, order = NULL, ...) {
   dots <- match.call()[["..."]]
   if (!is.null(dots$type)) type <- dots$type else type <- "Chisq"
   if (!is.null(dots$order.by)) order.by <- dots$order.by else order.by <- NULL
+
   lm.mod <- lm(demy~demX-1)
   bgtest <- bgtest(lm.mod, order = order, type = type, order.by = order.by)
   bgtest$method <- "Breusch-Godfrey/Wooldridge test for serial correlation in panel models"
@@ -72,7 +76,7 @@ pwtest.formula <- function(x, data, ...) {
   m <- match(plm.arg,names(cl),0)
   cl <- cl[c(1,m)]
   cl[[1]] <- as.name("plm")
-  plm.model <- eval(cl,sys.frame(which=length(sys.calls())))
+  plm.model <- eval(cl,parent.frame())
   pwtest(plm.model)
 
   ## "RE" test à la Wooldridge, see 10.4.4
@@ -94,14 +98,14 @@ pwtest.panelmodel <- function(x, ...){
   ## extract indices
 
   ## if effect="individual" std., else swap
-
+  index <- attr(data, "index")
   if (effect == "individual"){
-    index <- data[["(id)"]]
-    tindex <- data[["(time)"]]
+    index <- index[[1]]
+    tindex <- index[[2]]
   }
   else{
-    index <- data[["(time)"]]
-    tindex <- data[["(id)"]]
+    index <- index[[2]]
+    tindex <- index[[1]]
   }
   ## det. number of groups and df
   n <- length(unique(index))
@@ -192,14 +196,13 @@ pwartest.formula <- function(x,  data, ...) {
   m <- match(plm.arg,names(cl),0)
   cl <- cl[c(1,m)]
   cl[[1]] <- as.name("plm")
-  plm.model <- eval(cl,sys.frame(which=length(sys.calls())))
+  plm.model <- eval(cl,parent.frame())
   pwartest(plm.model)
 }
 
 pwartest.panelmodel <- function(x, ...){
   FEres <- resid(x)
   data <- model.frame(x)
-
   if (describe(x, "model") != "within") stop("pwartest only relevant for within models")
   
   ## this is a bug fix for incorrect naming of the "data" attr.
@@ -208,12 +211,15 @@ pwartest.panelmodel <- function(x, ...){
   attr(FEres,"data") <- NULL
   N <- length(FEres)
   FEres.1 <- c(NA,FEres[1:(N-1)])
-  id <- data[["(id)"]]
+  index <- attr(data, "index")
+  id <- index[[1]]
+  time <- index[[2]]
   lagid <- as.numeric(id)-c(NA,as.numeric(id)[1:(N-1)])
   FEres.1[lagid!=0] <- NA
-  data <- data.frame(data[["(id)"]], data[["(time)"]],FEres = FEres, FEres.1 = FEres.1)
-  names(data)[c(1,2)] <- c("(id)","(time)")
-  auxmod <- plm(FEres~FEres.1, data = data, model = "pooling")
+  data <- data.frame(id, time, FEres = FEres, FEres.1 = FEres.1)
+  names(data)[c(1,2)] <- c("id","time")
+  data <- na.omit(data)
+  auxmod <- plm(FEres~FEres.1, data = data, model = "pooling", index = c("id", "time"))
 
   ## calc. theoretical rho under H0: no serial corr. in errors
   t. <- pdim(x)$nT$T
@@ -274,17 +280,17 @@ pbsytest.formula <- function(x, data, ..., test=c("ar","re","j")) {
   m <- match(plm.arg,names(cl),0)
   cl <- cl[c(1,m)]
   cl[[1]] <- as.name("plm")
-  plm.model <- eval(cl,sys.frame(which=length(sys.calls())))
+  plm.model <- eval(cl,parent.frame())
   pbsytest(plm.model, test = test)
-
 }
 
 pbsytest.panelmodel <- function(x, test=c("ar","re","j"), ...){
   poolres <- resid(x)
   data <- model.frame(x)
   ## extract indices
-  index <- data[["(id)"]]
-  tindex <- data[["(time)"]]
+  index <- attr(data, "index")
+  tindex <- index[[2]]
+  index <- index[[1]]
   
   ## till here. 
   ## ordering here if needed.
@@ -380,7 +386,7 @@ pdwtest.formula <- function(x, data, ...) {
   m <- match(plm.arg,names(cl),0)
   cl <- cl[c(1,m)]
   cl[[1]] <- as.name("plm")
-  plm.model <- eval(cl,sys.frame(which=length(sys.calls())))
+  plm.model <- eval(cl,parent.frame())
   pdwtest(plm.model, ...)
 }
 
@@ -571,7 +577,7 @@ pwfdtest.formula <- function(x, data, ..., h0 = c("fd", "fe")){
   m <- match(plm.arg,names(cl),0)
   cl <- cl[c(1,m)]
   cl[[1]] <- as.name("plm")
-  plm.model <- eval(cl,sys.frame(which=length(sys.calls())))
+  plm.model <- eval(cl,parent.frame())
   pwfdtest(plm.model, ..., h0 = h0)
 }
 
@@ -586,8 +592,9 @@ pwfdtest.panelmodel <- function(x, ..., h0=c("fd","fe")) {
   ## indices (full length! must reduce by 1st time period)
    ## this is an ad-hoc solution for the fact that the 'fd' model
    ## carries on the full indices while losing the first time period
-  time <- as.numeric(model.frame(x)[["(time)"]])
-  id <- as.numeric(model.frame(x)[["(id)"]])
+  index <- attr(model.frame(x), "index")
+  time <- as.numeric(index[[2]])
+  id <- as.numeric(index[[1]])
 
    ## fetch dimensions and adapt to those of indices
   pdim <- pdim(x)
@@ -625,7 +632,7 @@ pwfdtest.panelmodel <- function(x, ..., h0=c("fd","fe")) {
   auxdata$FDres.1 <- FDres.1
   ## pooling model FDres vs. lag(FDres),
   ## with intercept (might as well do it w.o.)
-  auxmod <- plm(FDres ~ FDres.1, auxdata, model = "pooling")
+  auxmod <- plm(FDres ~ FDres.1, na.omit(auxdata), model = "pooling")
 
   switch(match.arg(h0), 
              fd = {h0des<-"differenced"

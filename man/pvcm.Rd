@@ -46,21 +46,19 @@ pvcm(formula, data, subset, na.action, effect = c("individual","time"),
 
 \value{
   an object of class \code{c("pvcm","panelmodel")}, which has the following elements :
-  %  \describe{
-    \item{coefficients}{the vector (or the list for fixed effects) of coefficients,}
-    \item{residuals}{the vector of residuals,}
-    \item{fitted.values}{the vector of fitted.values,}
-    \item{vcov}{the covariance matrix of the coefficients,}
-    \item{df.residual}{degrees of freedom of the residuals,}
-    \item{model}{a \code{data.frame} containing the variables used for the
-      estimation,}
-    \item{call}{the call,}
-    \item{Delta}{the estimation of the covariance matrix of the
-      coefficients (random effect models only),}
-    \item{std.error}{the standard errors for all the coefficients for
-      each individual (within models only),}
-    %  }
-    \code{pvcm} objects have \code{print}, \code{summary} and \code{print.summary} methods.
+  \item{coefficients}{the vector (or the list for fixed effects) of coefficients,}
+  \item{residuals}{the vector of residuals,}
+  \item{fitted.values}{the vector of fitted.values,}
+  \item{vcov}{the covariance matrix of the coefficients,}
+  \item{df.residual}{degrees of freedom of the residuals,}
+  \item{model}{a \code{data.frame} containing the variables used for the
+    estimation,}
+  \item{call}{the call,}
+  \item{Delta}{the estimation of the covariance matrix of the
+    coefficients (random effect models only),}
+  \item{std.error}{the standard errors for all the coefficients for
+    each individual (within models only),}
+  \code{pvcm} objects have \code{print}, \code{summary} and \code{print.summary} methods.
 }
 
 \author{Yves Croissant}
@@ -71,7 +69,7 @@ pvcm(formula, data, subset, na.action, effect = c("individual","time"),
 }
 
 \examples{
-data("Produc", package="Ecdat")
+data("Produc", package="plm")
 zw <- pvcm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp,data=Produc, model="within")
 zr <- pvcm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp,data=Produc, model="random")
 }

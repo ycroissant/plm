@@ -1,7 +1,8 @@
 \name{pdim}
 \alias{pdim}
 \alias{pdim.data.frame}
-\alias{pdim.plm}
+\alias{pdim.pdata.frame}
+\alias{pdim.panelmodel}
 \alias{pdim.default}
 \alias{print.pdim}
 
@@ -10,15 +11,13 @@
   observations in the panel and whether it is balanced or not.}
 \usage{
 pdim(x,...)
-\method{pdim}{data.frame}(x, indexes = NULL, ...)
-%\method{pdim}{default}(x,y,...)
-
+\method{pdim}{data.frame}(x, index = NULL, ...)
+\method{pdim}{panelmodel}(x, ...)
+\method{pdim}{pdata.frame}(x, ...)
 }
 \arguments{
-  \item{x}{a \code{"data.frame"} or a \code{"plm"} object,}
-%  or a vector for the default method}
-%  \item{y}{a vector,}
-  \item{indexes}{see \code{plm.data},}
+  \item{x}{a \code{data.frame}, a \code{pdata.frame} or a \code{panelmodel} object,}
+  \item{index}{see \code{pdata.frame},}
   \item{\dots}{further arguments.}
 }
 
@@ -42,24 +41,28 @@ pdim(x,...)
 
 \author{Yves Croissant}
 
-\seealso{\code{\link{plm.data}}}
+\seealso{\code{\link{pdata.frame}}}
 
 \examples{
 
 #There are 595 individuals
 
-data("Wages", package="Ecdat")
+data("Wages", package="plm")
 pdim(Wages, 595)
 
 # Gasoline contains two variables which are individual and time indexes
 # and are the first two variables
-data("Gasoline", package="Ecdat")
+data("Gasoline", package="plm")
 pdim(Gasoline)
 
 # Hedonic is an unbalanced panel, townid is the individual index
-data("Hedonic", package="Ecdat")
+data("Hedonic", package="plm")
 pdim(Hedonic, "townid")
 
-
+# An example of the panelmodel method
+data("Produc", package="plm")
+z <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp,data=Produc,
+         model="random", subset = gsp > 5000)
+pdim(z)
 }
 \keyword{attribute}

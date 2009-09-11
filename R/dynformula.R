@@ -129,6 +129,5 @@ write.lags <- function(name,lags,diff){
 
 
 print.dynformula <- function(x,...){
-  attr(x,"lag") <- attr(x,"var") <- attr(x,"log") <- attr(x,"diff") <- NULL
-  print.formula(x)
+  print(formula(x), ...)
 }

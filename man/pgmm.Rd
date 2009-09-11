@@ -9,7 +9,7 @@
 \usage{
 pgmm(formula, data, effect = c("individual","twoways", "none"),
      model = c("onestep", "twosteps"),
-     instruments = NULL, gmm.inst, lag.gmm,
+     instruments = NULL, gmm.inst, lag.gmm, lag.form,
      transformation = c("d", "ld"),
      fsm = NULL, ...)
 \method{summary}{pgmm}(object,robust, ...)
@@ -19,7 +19,9 @@ pgmm(formula, data, effect = c("individual","twoways", "none"),
 
 \arguments{
   \item{formula}{a symbolic description for the model to be
-    estimated. Should be an object of class \code{"dynformula"}},
+    estimated. Should be an object of class \code{"dynformula"} or of
+    class \code{"formula"}. In the later case, a \code{lag.form}
+    argument should be provided,}
   \item{object,x}{an object of class \code{"pgmm"},}
   \item{data}{a \code{data.frame},}
   \item{effect}{the effects introduced in the model, one of
@@ -31,6 +33,9 @@ pgmm(formula, data, effect = c("individual","twoways", "none"),
   \item{lag.gmm}{a list containing the lags to use for each GMM
     instrument, or a list of two named lists (\code{"d"} for difference
     and \code{"l"} for level) in case of ``system GMM'',}
+  \item{lag.form}{a list containing the lags to use for each variable of
+  the formula. Only relevant if \code{formula} is a standard formula and
+  not a \code{dynformula},}
   \item{transformation}{the kind of transformation to apply to the model
     : either \code{"d"} (the default value) for the ``difference GMM''
     model or \code{"ld"} for the ``system GMM'',}
@@ -47,7 +52,6 @@ pgmm(formula, data, effect = c("individual","twoways", "none"),
 
 \value{
   an object of class \code{c("pgmm","panelmodel")}, which has the following elements :
-  %  \describe{
   \item{coefficients}{the vector (or the list for fixed effects) of coefficients,}
   \item{residuals}{the vector of residuals,}
   \item{fitted.values}{the vector of fitted.values,}
@@ -63,7 +67,6 @@ pgmm(formula, data, effect = c("individual","twoways", "none"),
   \item{A1}{the weighting matrix for the one--step estimator,}
   \item{A2}{the weighting matrix for the two--steps estimator,}
   \item{call}{the call.}
-  %  }
   It has \code{print}, \code{summary} and \code{print.summary} methods.
 }
 \details{
@@ -87,20 +90,13 @@ pgmm(formula, data, effect = c("individual","twoways", "none"),
   for the estimation. \code{"d"} gives the ``difference GMM'' model (see
   Arellano and Bond (1991)), \code{"ld"} the ``system GMM'' model (see
   Blundell and Bond (1998)).
-%   If \code{transformation="ld"}, \code{gmm.inst}, \code{lag.gmm} and
-%   \code{instruments}  can  be  lists of two elements, the first one for the equation in
-%   difference, the second for the equation in differences. Otherwise, the
-%   same instruments are used for both difference and level
-%   equations. Moreover, the \code{lag.gmm} for the level equation is
-%   c(1,1) for all instruments.
   
   \code{pgmm} is an attempt to adapt GMM estimators available within the
   DPD library for GAUSS (see Arellano and Bond 1998) and OX (see
   Doornik, Arellano and Bond 2006) and with the xtabound2 library for
   STATA (see Roodman 2006).
 }  
-  \references{
-
+\references{
     
   Arellano, M. and Bond, S. (1991) Some Tests of Specification
   for Panel Data: Monte Carlo Evidence and an Application to Employment
@@ -121,13 +117,12 @@ pgmm(formula, data, effect = c("individual","twoways", "none"),
   Roodman, D. (2006) How to do xtabound2 : an Introduction to
   ``difference'' and ``system'' GMM in Stata, working paper no 103,
   Center for Global Development.
-
-
   
 }
 \seealso{
-  \code{\link{dynformula}} for dynamic formulas, \code{\link{sargan}} for
-  Sargan tests and \code{\link{mtest}} for Arellano--Bond 's tests of mulicolinearity
+  \code{\link{dynformula}} for dynamic formulas, \code{\link{sargan}}
+  for Sargan tests and \code{\link{mtest}} for Arellano--Bond 's tests
+  of mulicolinearity
 }
 
 \author{Yves Croissant}
@@ -137,7 +132,8 @@ pgmm(formula, data, effect = c("individual","twoways", "none"),
 data("EmplUK", package="plm")
 
 ## Arellano Bond 91 table 4b 
-z1 <- pgmm(dynformula(log(emp)~log(wage)+log(capital)+log(output),list(2,1,0,1)),
+z1 <- pgmm(log(emp)~log(wage)+log(capital)+log(output),
+    lag.form = list(2,1,0,1),
     data=EmplUK, effect="twoways", model="twosteps",
     gmm.inst=~log(emp),lag.gmm=list(c(2,99)))
 

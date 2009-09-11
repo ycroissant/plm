@@ -1,14 +1,25 @@
+myvar <- function(x){
+  if(any(is.na(x))) x <- x[!is.na(x)]
+  n <- length(x)
+  z <- switch(as.character(n),
+              "0"=NA,
+              "1"=0,
+              var(x))
+  z
+}
+
+
 pvar <- function(x, ...){
   UseMethod("pvar")
 }
 
-pvar.default <- function(x,id,time, ...){
+pvar.default <- function(x, id, time, ...){
   name.var <- names(x)
-  time.variation=rep(TRUE,length(x))
-  id.variation=rep(TRUE,length(x))
+  time.variation <- rep(TRUE, length(x))
+  id.variation <- rep(TRUE, length(x))
   K <- length(x)
-  lid <- split(x,id)
-  ltime <- split(x,time)
+  lid <- split(x, id)
+  ltime <- split(x, time)
   if (is.list(x)){
     if (K==1){
       time.variation <- sum(sapply(lid,function(x) sapply(x,myvar)==0))!=length(lid)
@@ -30,36 +41,33 @@ pvar.default <- function(x,id,time, ...){
   dim.var
 }
 
-pvar.matrix <- function(x,id,time, ...){
+pvar.matrix <- function(x, id, time, ...){
   x <- as.data.frame(x)
   pvar.default(x,id,time)
 }
 
-pvar.data.frame <- function(x,indexes=NULL, ...){
-  x <- plm.data(x,indexes)
-  id <- x[[1]]
-  time <- x[[2]]
-  pvar.default(x,id,time)
+pvar.data.frame <- function(x, index = NULL, ...){
+  x <- pdata.frame(x, index, ...)
+  pvar(x)
 }
 
 pvar.pdata.frame <- function(x, ...){
-  K <- ncol(x)
-  id <- x[["(id)"]]
-  time <- x[["(time)"]]
-  x <- x[,c(1:(K-2))]
+  index <- attr(x, "index")
+  id <- index[[1]]
+  time <- index[[2]]
   pvar.default(x, id, time)
 }
 
-print.pvar <- function(x,y=NULL, ...){
+print.pvar <- function(x, ...){
   varnames <- names(x$time.variation)
   if(any(!x$time.variation)){
     var <- varnames[x$time.variation==FALSE]
-    if (!is.null(y)) var <- var[-which(var==y$id)]
+#    if (!is.null(y)) var <- var[-which(var==y$id)]
     if (length(var)!=0) cat(paste("no time variation   : ",paste(var,collapse=" "),"\n"))
   }
   if(any(!x$id.variation)){
     var <- varnames[x$id.variation==FALSE]
-    if (!is.null(y)) var <- var[-which(var==y$time)]
+#    if (!is.null(y)) var <- var[-which(var==y$time)]
     if(length(var)!=0) cat(paste("no individual variation : ",paste(var,collapse=" "),"\n"))
   }
 }
@@ -68,7 +76,7 @@ pdim <- function(x, ...){
   UseMethod("pdim")
 }
 
-pdim.default <- function(x,y, ...){
+pdim.default <- function(x, y, ...){
   if (length(x) != length(y)) stop("The length of the two vectors differs\n")
   x <- x[drop=T]
   y <- y[drop=T]
@@ -93,32 +101,22 @@ pdim.default <- function(x,y, ...){
   z
 }  
 
-pdim.data.frame <- function(x,indexes=NULL, ...){
-  x <- plm.data(x,indexes)
-  id <- x[[1]][drop=T]
-  time <- x[[2]][drop=T]
+pdim.data.frame <- function(x, index = NULL, ...){
+  x <- pdata.frame(x, index)
+  index <- attr(x, "index")
+  id <- index[[1]]
+  time <- index[[2]]
   pdim(id,time)
 }
 
 pdim.pdata.frame <- function(x,...){
-  id <- x[["(id)"]]
-  time <- x[["(time)"]]
-  pdim(id,time)
+  index <- attr(x, "index")
+  pdim(index[[1]],index[[2]])
 }
 
 pdim.panelmodel <- function(x, ...){
   x <- model.frame(x)
   pdim(x)
-}
-
-pdim.pvcm <- function(x, ...){
-  data <- model.frame(x)
-  effect <- describe(x, "effect")
-  condvar <- ifelse(effect == "individual", "(id)", "(time)")
-  id <- sapply(data, function(x) x[[condvar]])
-  data <- unsplit(data, id)
-  class(data) <- c("pdata.frame", "data.frame")
-  pdim(data)
 }
 
 print.pdim <- function(x, ...){

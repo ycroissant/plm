@@ -36,7 +36,7 @@ pooltest(x, ...)
 
 
 \examples{
-data("Gasoline", package="Ecdat")
+data("Gasoline", package="plm")
 form <- lgaspcar~lincomep+lrpmg+lcarpcap
 gasw <-  plm(form, data=Gasoline, model="within")
 gasp <-  plm(form, data=Gasoline, model="pooling")

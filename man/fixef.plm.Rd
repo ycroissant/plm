@@ -8,7 +8,6 @@
 \description{
   This function extracts the fixed effects from a \code{plm} object.
 }
-
 \usage{
 \method{fixef}{plm}(object, effect = NULL,
                       type = c("level", "dfirst", "dmean"), ...)
@@ -34,12 +33,15 @@ width = getOption("width"),...)
 \value{
   An object of class \code{"fixef"}. It is a numeric vector containing the
   fixed effects with two attributes :  \code{se} which contains the standard
-  errors and \code{intercept} which is the overall intercept.
+  errors and \code{intercept} which is the overall intercept. With the
+  \code{type} argument, the fixed effects may be returned in level, in
+  deviation from the overall mean or in deviation from the first value
+  of the index.
 }
 
 \details{
-  The summary method prints the effects in deviation
-  from  the overall intercept, the standard error and the t--values.
+  The summary method prints the effects in deviation from the overall
+  intercept, the standard error and the t--values.
 }
 \seealso{
   \code{\link{plm}}
@@ -57,4 +59,4 @@ gi <- plm(inv ~ value + capital, data = Grunfeld,
           model = "within", effect = "twoways")
 fixef(gi,effect = "time")
 }
-\keyword{attribute}
+\keyword{regression}

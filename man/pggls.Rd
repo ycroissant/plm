@@ -30,19 +30,16 @@ index = NULL, ...)
 
 \value{
   an object of class \code{c("pggls","panelmodel")} containing :
-  
-  %  \describe{
-    \item{coefficients}{the vector of coefficients,}
-    \item{residuals}{the vector of residuals,}
-    \item{fitted.values}{the vector of fitted.values,}
-    \item{vcov}{the covariance matrix of the coefficients,}
-    \item{df.residual}{degrees of freedom of the residuals,}
-    \item{model}{a data.frame containing the variables used for the
+  \item{coefficients}{the vector of coefficients,}
+  \item{residuals}{the vector of residuals,}
+  \item{fitted.values}{the vector of fitted.values,}
+  \item{vcov}{the covariance matrix of the coefficients,}
+  \item{df.residual}{degrees of freedom of the residuals,}
+  \item{model}{a data.frame containing the variables used for the
     estimation,}
   \item{call}{the call,}
-    \item{sigma}{the estimated intragroup (or cross-sectional, if \code{effect="time"}) covariance of errors,}
-    %  }
-  }
+  \item{sigma}{the estimated intragroup (or cross-sectional, if \code{effect="time"}) covariance of errors,}
+}
   
 \details{
   \code{pggls} is a function for the estimation of linear  panel models
@@ -70,8 +67,9 @@ index = NULL, ...)
 }
 \examples{
 
-data("Produc", package="Ecdat")
+data("Produc", package="plm")
 zz <- pggls(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc, model="random")
 summary(zz)
+
 }
 \keyword{regression}

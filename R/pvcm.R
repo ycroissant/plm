@@ -1,4 +1,4 @@
-pvcm <-  function(formula, data,subset ,na.action, effect = c("individual","time"),
+pvcm <-  function(formula, data, subset ,na.action, effect = c("individual","time"),
                   model = c("within","random"), index = NULL, ...){
 
   effect <- match.arg(effect)
@@ -10,20 +10,21 @@ pvcm <-  function(formula, data,subset ,na.action, effect = c("individual","time
   mf[[1]] <- as.name("plm")
   mf$model <- NA
   data <- eval(mf,parent.frame())
-
   result <- switch(model.name,
                    "within" = pvcm.within(formula, data, effect),
                    "random" = pvcm.random(formula, data, effect)
                    )
   class(result) <- c("pvcm","panelmodel")
   result$call <- cl
+  result$args <- list(model = model, effect = effect)
   result
 }
 
 pvcm.within <- function(formula, data, effect){
 
-  id <- data[["(id)"]]
-  time <- data[["(time)"]]
+  index <- attr(data, "index")
+  id <- index[[1]]
+  time <- index[[2]]
   pdim <- pdim(data)
 
   if (effect=="time"){
@@ -36,14 +37,16 @@ pvcm.within <- function(formula, data, effect){
     other <- time
     card.cond <- pdim$nT$n
   }
-  ml <- split(data,cond)
+  ml <- split(data, cond)
   nr <- sapply(ml,function(x) dim(x)[1])>0
   ml <- ml[nr]
+  attr(ml, "index") <- index
   ols <- lapply(ml,
                 function(x){
                   X <- model.matrix(formula,x)
                   if (nrow(X) <= ncol(X)) stop("insufficient number of observations")
-                  y <- model.response(x)
+#                  y <- model.response(x)
+                  y <- x[[1]]
                   r <- lm(y~X-1)
                   r <- mylm(y,X)
                   nc <- colnames(model.frame(r)$X)
@@ -64,16 +67,15 @@ pvcm.within <- function(formula, data, effect){
   tss <- tss(y)
   df.residuals <- pdim$nT$N-card.cond*ncol(coef)
   nopool <- list(coefficients = coef, residuals = residuals, fitted.values = fitted.values,
-                 vcov = vcov, df.residuals = df.residuals, model = ml, std.error = std)
+                 vcov = vcov, df.residuals = df.residuals, model = data, std.error = std)
   nopool
 }
 
 pvcm.random <- function(formula, data, effect){
-
   interc <- has.intercept(formula)
-  
-  id <- data[["(id)"]]
-  time <- data[["(time)"]]
+  index <- attr(data, "index")
+  id <- index[[1]]
+  time <- index[[2]]
   pdim <- pdim(data)
   N <- nrow(data)
   
@@ -90,11 +92,13 @@ pvcm.random <- function(formula, data, effect){
   ml <- split(data,cond)
   nr <- sapply(ml,function(x) dim(x)[1])>0
   ml <- ml[nr]
+  attr(ml, "index") <- index
   ols <- lapply(ml,
                 function(x){
                   X <- model.matrix(formula,x)
                   if (nrow(X) <= ncol(X)) stop("insufficient number of observations")
-                  y <- model.response(x)
+#                  y <- model.response(x)
+                  y <- x[[1]]
                   r <- lm(y~X-1)
                   r <- mylm(y,X)
                   nc <- colnames(model.frame(r)$X)
@@ -111,7 +115,8 @@ pvcm.random <- function(formula, data, effect){
   coefb <- apply(coefm, 2, mean)
 
   X <- lapply(ml, function(x) model.matrix(formula, x)[,colnames(coefm), drop = F])
-  y <- lapply(ml, model.response)
+#  y <- lapply(ml, model.response)
+  y <- lapply(ml, function(x) x[[1]])
   xpxm1 <- lapply(X,
                   function(x){
                     solve(crossprod(x))
@@ -145,7 +150,7 @@ pvcm.random <- function(formula, data, effect){
   fitted.values <- y-residuals
   names(beta) <- rownames(vcovb) <- colnames(vcovb) <- colnames(coefm)
   swamy <- list(coefficients = beta, residuals = residuals, fitted.values = fitted.values,
-                 vcov = vcovb, df.residuals = df.residuals, model = ml, Delta = Delta[[1]])
+                 vcov = vcovb, df.residuals = df.residuals, model = data, Delta = Delta[[1]])
   swamy
 }
 
@@ -167,7 +172,8 @@ summary.pvcm <- function(object,...){
   return(object)
 }
 
-print.summary.pvcm <- function(x,digits=max(3, getOption("digits") - 2), width = getOption("width"),...){
+print.summary.pvcm <- function(x, digits = max(3, getOption("digits") - 2),
+                               width = getOption("width"),...){
   effect <- describe(x, "effect")
   formula <- formula(x)
   model <- describe(x, "model")
@@ -176,7 +182,7 @@ print.summary.pvcm <- function(x,digits=max(3, getOption("digits") - 2), width =
   cat("\nCall:\n")
   print(x$call)
   cat("\n")
-  print(pdim(x))
+  print(pdim(model.frame(x)))
   cat("\nResiduals:\n")
   print(summary(unlist(residuals(x))))
   if (model == "random"){

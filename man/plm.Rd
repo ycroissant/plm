@@ -16,8 +16,6 @@ plm(formula, data, subset, na.action, effect = c("individual","time","twoways"),
 \method{summary}{plm}(object, ...)
 \method{print}{summary.plm}(x, digits = max(3, getOption("digits") - 2),
     width = getOption("width"), ...)
-
-
 }
 
 \arguments{
@@ -26,20 +24,15 @@ plm(formula, data, subset, na.action, effect = c("individual","time","twoways"),
   \item{data}{a \code{data.frame},}
   \item{subset}{see \code{\link{lm}},}
   \item{na.action}{see \code{\link{lm}},}
-
   \item{effect}{the effects introduced in the model, one of
   \code{"individual"}, \code{"time"} or \code{"twoways"},}
-
   \item{model}{one of \code{"pooling"}, \code{"within"},
     \code{"between"}, \code{"random",} \code{"fd"} and \code{"ht"},}
-
   \item{random.method}{method of estimation for the variance components
     in the random effect model, one of \code{"swar"} (the default
     value), \code{"amemiya"}, \code{"walhus"} and \code{"nerlove"},}
-
   \item{inst.method}{the instrumental variable transformation : one of
     \code{"bvk"} and \code{"baltagi"},}
-
   \item{index}{the indexes,}
   \item{digits}{digits,}
   \item{width}{the maximum length of the lines in the print output,}
@@ -135,7 +128,7 @@ plm(formula, data, subset, na.action, effect = c("individual","time","twoways"),
   \emph{Econometrica}, \bold{37}(1), pp.55--72.
 }
 \examples{
-data("Produc", package="Ecdat")
+data("Produc", package="plm")
 zz <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc, index=c("state","year"))
 summary(zz)
 }

@@ -37,28 +37,33 @@ ercomp.formula <- function(object, data,
 }
 
 swar <- function(formula, data, effect){
+#  within <- plm.within(formula, data, effect = effect)
+  within <- plm.fit(formula, data, model = "within", effect = effect)
+  within$args <- list(effect = effect, random.method = "swar")
+  data <- model.frame(within)
   pdim <- pdim(data)
+  index <- attr(data, "index")
   balanced <- pdim$balanced
-  within <- plm.within(formula, data, effect)
   sigma2 <- list()
   n <- pdim$nT$n
   T <- pdim$nT$T
   N <- pdim$nT$N
   if(effect != "twoways"){
-    between <- plm.between(formula, data, effect)
+#    between <- plm.between(formula, data, effect)
+    between <- plm.fit(formula, data, model = "between", effect = effect)
     if (effect == "individual"){
       arg.cond <- n
       arg.other <- T
       arg.cond.i <- pdim$Tint$nt
       arg.other.i <- pdim$Tint$Ti
-      cond <- data[["(id)"]]
+      cond <- index[[1]]
     }
     else{
       arg.cond <- T
       arg.other <- n
       arg.cond.i <- pdim$Tint$Ti
       arg.other.i <- pdim$Tint$nt
-      cond <- data[["(time)"]]
+      cond <- index[[2]]
     }
     Kb <- length(coef(between))
     Kw <- length(coef(within))
@@ -66,14 +71,15 @@ swar <- function(formula, data, effect){
       sigma2$one <- arg.other*deviance(between)/df.residual(between)
       sigma2$idios <- deviance(within)/df.residual(within)
       sigma2$id <- (sigma2$one-sigma2$idios)/arg.other
-      if (sigma2$id < 0) stop("the estimated variance of the individual effect is negative")
+      if (sigma2$id < 0)
+        stop(paste("the estimated variance of the", effect, "effect is negative"))
       theta <- 1-sqrt(sigma2$idios/sigma2$one)
       z <- list(sigma2 = sigma2, theta = theta)
     }
     else{
-      X <- model.matrix(formula, data, part = "first", model = "pooling", effect = effect)
-      X.m <- papply(X,mymean,cond)
-      X.sum <- attr(papply(X,mysum,cond),"cm")
+      X <- model.matrix(formula, data, rhs = 1, model = "pooling", effect = effect)
+      X.m <- Tapply(X, cond, mean)
+      X.sum <- apply(X, 2, tapply, cond, sum)
       X.m.X <- crossprod(X.m)
       X.sum.X <- crossprod(X.sum)
       X.m.X.eig <- eigen(X.m.X)
@@ -91,7 +97,8 @@ swar <- function(formula, data, effect){
       sigma2$idios <- deviance(within)/(N-arg.cond-Kw)
       ssrbet <- sum(between$residuals^2*arg.other.i)
       sigma2$id <- (ssrbet-(arg.cond-Kb)*sigma2$idios)/(N-tr)
-      if (sigma2$id < 0) stop("the estimated variance of the individual effect is negative")
+      if (sigma2$id < 0)
+        stop(paste("the estimated variance of the", effect, "effect is negative"))
       sigma2$one <- (arg.other.i*sigma2$id+sigma2$idios)
       theta <- 1-sqrt(sigma2$idios/(sigma2$idios+arg.other.i*sigma2$id))
       theta <- theta[as.character(cond)]
@@ -99,8 +106,10 @@ swar <- function(formula, data, effect){
     }
   }
   else{
-    between.id <- plm.between(formula, data, "individual")
-    between.time <- plm.between(formula, data, "time")
+#    between.id <- plm.between(formula, data, "individual")
+#    between.time <- plm.between(formula, data, "time")
+    between.id <- plm.fit(formula, data, model = "between", effect = "individual")
+    between.time <- plm.fit(formula, data, model = "between", effect = "time")
     if(balanced){
       theta <- list()
       n <- pdim$nT$n
@@ -111,11 +120,15 @@ swar <- function(formula, data, effect){
       lambda4 <- lambda2+lambda3-sigma2$idios
       sigma2$id <- (lambda2-sigma2$idios)/T
       sigma2$time <- (lambda3-sigma2$idios)/n
+      if (sigma2$id < 0)
+        warning("the estimated variance of the individual effect is negative")
+      if (sigma2$time < 0)
+        warning("the estimated variance of the time effect is negative")
       theta$id <- 1-sqrt(sigma2$idios/lambda2)
       theta$time <- 1-sqrt(sigma2$idios/lambda3)
       theta$total <- theta$id+theta$time+sqrt(sigma2$idios/lambda4)-1
       if (sigma2$time<0) theta$time <- theta$total <- sigma2$time <- 0
-      z <- list(theta=theta,sigma2=sigma2)
+      z <- list(theta = theta, sigma2 = sigma2)
     }
     else{
       stop("twoway random effect model not implemented for unbalanced panels")
@@ -125,21 +138,25 @@ swar <- function(formula, data, effect){
 }
 
 walhus <- function(formula, data, effect){
+#  pooling <- plm.pooling(formula, data)
+  pooling <- plm.fit(formula, data, model = "pooling", effect = effect)
+  data <- model.frame(pooling)
+  index <- attr(data, "index")
   pdim <- pdim(data)
   balanced <- pdim$balanced
-  pooling <- plm.pooling(formula, data)
   respool <- resid(pooling)
   T <- pdim$nT$T
   n <- pdim$nT$n
-  if(!balanced) stop("walhus not implemented for unbalanced panels\n")
+  if(!balanced)
+    stop("walhus not implemented for unbalanced panels\n")
   if(effect != "twoways"){
     if(effect=="individual"){
-      condvar <- data[["(id)"]]
+      condvar <- index[[1]]
       card.cond <- n
       card.other <- T
     }
     else{
-      condvar <- data[["(time)"]]
+      condvar <- index[[2]]
       card.cond <- T
       card.other <- n
     }
@@ -150,12 +167,15 @@ walhus <- function(formula, data, effect){
                    idios = idios,
                    id    = (one-idios)/card.other
                    )
+    if (sigma2$id < 0)
+      stop(paste("the estimated variance of the", effect, "effect is negative"))
     theta <- 1-sqrt(idios/one)
     z <- list(theta = theta, sigma2 = sigma2)
   }
   else{
-    id <- data[["(id)"]]
-    time <- data[["(time)"]]
+    index <- attr(data, "index")
+    id <- index[[1]]
+    time <- index[[2]]
     idios <- sum((respool-tapply(respool,id,mean)[as.character(id)]-
                   tapply(respool,time,mean)[as.character(time)])^2)/((n-1)*(T-1))
     lambda2 <- sum(tapply(respool,id,mean)^2)*T/(n-1)
@@ -171,28 +191,37 @@ walhus <- function(formula, data, effect){
                   time = 1-sqrt(idios/lambda3),
                   total = 1-sqrt(idios/lambda2)-sqrt(idios/lambda3)+sqrt(idios/lambda4)
                   )
-    if (sigma2$time<0) theta$time <- theta$total <- sigma2$time <- 0    
+    if (sigma2$id < 0)
+      warning("the estimated variance of the individual effect is negative")
+    if (sigma2$time < 0)
+      warning("the estimated variance of the time effect is negative")
+    if (sigma2$time<0) theta$time <- theta$total <- sigma2$time <- 0
     z <- list(theta=theta,sigma2=sigma2)
   }
   z
 }
 
 amemiya <- function(formula, data, effect){
+#  within <- plm.within(formula, data, effect = effect)
+  within <- plm.fit(formula, data, model = "within", effect = effect)
+  within$args <- list(effect = effect, random.method = "amemiya")
+  data <- model.frame(within)
   pdim <- pdim(data)
   balanced <- pdim$balanced
-  within <- plm.within(formula, data, effect)
   T <- pdim$nT$T
   n <- pdim$nT$n
   K <- length(coef(within))
-  if(!balanced) stop("amemiya variance decomposition not implemented for unbalanced panels")
+  index <- attr(data, "index")
+  if(!balanced)
+    stop("amemiya variance decomposition not implemented for unbalanced panels")
   if(effect != "twoways"){
-    if (effect=="individual"){
-      condvar <- data[["(id)"]]
+    if (effect == "individual"){
+      condvar <- index[[1]]
       card.cond <- n
       card.other <- T
     }
     else{
-      condvar <- data[["(time)"]]
+      condvar <- index[[2]]
       card.cond <- T
       card.other <- n
     }
@@ -208,10 +237,10 @@ amemiya <- function(formula, data, effect){
     z <- list(theta = theta, sigma2 = sigma2)
   }
   else{
-    X <- model.matrix(formula, data, part = "first", model = "pooling")[,-1,drop = FALSE]
-    y <- pmodel.response(data, part = "first", model = "pooling")
-    id <- data[["(id)"]]
-    time <- data[["(time)"]]
+    X <- model.matrix(formula, data, rhs = 1, model = "pooling")[,-1,drop = FALSE]
+    y <- pmodel.response(formula, data, model = "pooling")
+    id <- index[[1]]
+    time <- index[[2]]
     fe <- fixef(within)
     alpha <- mean(fe)
     uest <- as.vector(y-alpha-X%*%coef(within))
@@ -235,9 +264,12 @@ amemiya <- function(formula, data, effect){
 }
 
 nerlove <- function(formula, data, effect){
+#  within <- plm.within(formula, data, effect)
+  within <- plm.fit(formula, data, model = "within", effect = effect)
+  within$args <- list(effect = effect, random.method = "nerlove")
+  data <- model.frame(within)
   pdim <- pdim(data)
   balanced <- pdim$balanced
-  within <- plm.within(formula, data, effect)
   n <- pdim$nT$n
   N <- pdim$nT$N
   if(effect != "twoways" && balanced){
@@ -251,7 +283,8 @@ nerlove <- function(formula, data, effect){
       arg.other <- pdim$nT$n
     }
     idios <- deviance(within)/N
-    s2id <- sum((fixef(within)-mean(fixef(within)))^2)/(arg.cond-1)
+#    s2id <- sum((fixef(within)-mean(fixef(within)))^2)/(arg.cond-1)
+    s2id <- sum(fixef(within, type = "dmean")^2)/(arg.cond-1)
     sigma2 <- list(idios = idios,
                    id    = s2id,
                    one   = arg.other*s2id+idios
@@ -263,7 +296,7 @@ nerlove <- function(formula, data, effect){
   z
 }
 
-print.ercomp <- function(x, digits= max(3, getOption("digits") - 2)){
+print.ercomp <- function(x, digits= max(3, getOption("digits") - 3), ...){
   effect <- attr(x, "effect")
   balanced <- attr(x, "balanced")
   sigma2 <- x$sigma2

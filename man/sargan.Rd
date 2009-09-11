@@ -14,10 +14,10 @@ sargan(object)
 
 \details{
   The Hansen--Sargan test calculate the quadratic form of the moment
-  restrictions that is  minimized while computing the GMM
-  estimator. It follows asymptotically a Chi--square with a number of
-  degrees of freedom equal to the difference of the number of moment conditions and
-  the number of coefficients.
+  restrictions that is minimized while computing the GMM estimator. It
+  follows asymptotically a Chi--square with a number of degrees of
+  freedom equal to the difference between the number of moment
+  conditions and the number of coefficients.
 }
 
 \value{

@@ -13,11 +13,12 @@ pggls <- function(formula, data, subset, na.action,
   m <- match(c("formula","data","subset","na.action","effect","model","index"),names(plm.model),0)
   plm.model <- plm.model[c(1,m)]
   plm.model[[1]] <- as.name("plm")
-  plm.model$model <- ifelse(model.name=="within","within","pooling")
+  plm.model$model <- ifelse(model.name == "within", "within", "pooling")
   plm.model <- eval(plm.model,parent.frame())
 
-  id <- model.frame(plm.model)[["(id)"]]
-  time <- model.frame(plm.model)[["(time)"]]
+  index <- attr(model.frame(plm.model), "index")
+  id <- index[[1]]
+  time <- index[[2]]
   pdim <- pdim(plm.model)
   balanced <- pdim$balanced
   nt <- pdim$Tint$nt
@@ -44,7 +45,8 @@ pggls <- function(formula, data, subset, na.action,
   ## reorder data
   resid <- resid(plm.model)[myord]
   X <- model.matrix(plm.model)[myord,]
-  y <- model.response(model.frame(plm.model))[myord]
+#  y <- model.response(model.frame(plm.model))[myord]
+  y <- model.frame(plm.model)[[1]][myord]
   cond <- cond[myord]
   other <- other[myord]
   
@@ -130,7 +132,7 @@ summary.pggls <- function(object,...){
   CoefTable <- cbind(b,std.err,z,p)
   colnames(CoefTable) <- c("Estimate","Std. Error","z-value","Pr(>|z|)")
   object$CoefTable <- CoefTable
-  y <- object$model[,1]
+  y <- object$model[[1]]
   object$tss <- tss(y)
   object$ssr <- sum(residuals(object)^2)
   object$rsqr <- 1-object$ssr/object$tss

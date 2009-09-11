@@ -36,7 +36,7 @@ phtest(x, ...)
 \author{Yves Croissant}
   
 \examples{
-data("Gasoline",package="Ecdat")
+data("Gasoline",package="plm")
 form <- lgaspcar~lincomep+lrpmg+lcarpcap
 wi <-  plm(form, data=Gasoline, model="within")
 re <-  plm(form, data=Gasoline, model="random")

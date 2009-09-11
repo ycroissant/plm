@@ -45,4 +45,4 @@ oneof <- function(x){
 }
 
 plm.arg <- c("formula", "data", "subset", "na.action", "effect", "model",
-             "instruments", "random.method", "inst.method", "index", "pvar")
+             "instruments", "random.method", "inst.method", "index")
