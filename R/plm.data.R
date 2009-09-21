@@ -117,7 +117,7 @@ plm.data <- function(x,indexes=NULL){
   }
   posindexes <- match(c(id.name,time.name),names(x))
   x <- data.frame(x[posindexes],x[-posindexes])
-#  attr(x,"class") <- c("plm.dim","data.frame")
+  attr(x,"class") <- c("plm.dim","data.frame")
   x
 }
 
