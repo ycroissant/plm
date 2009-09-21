@@ -12,7 +12,6 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE){
   
   # replace Inf by NA
   for (i in names(x)) x[[i]][!is.finite(x[[i]])] <- NA
-  
   # check and remove complete NA series
   na.check <- sapply(x,function(x) sum(!is.na(x))==0)
   na.serie <- names(x)[na.check]
@@ -27,9 +26,8 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE){
   x <- x[, !na.check]
   
   # check and remove cst series
-  cst.check <- sapply(x,function(x) var(as.numeric(x))==0)
+  cst.check <- sapply(x,function(x) var(as.numeric(x), na.rm = TRUE)==0)
   cst.serie <- names(x)[cst.check]
-
   if (length(cst.serie)>0){
     if (length(cst.serie)==1){
       cat(paste("serie",cst.serie," is constant and has been removed\n"))

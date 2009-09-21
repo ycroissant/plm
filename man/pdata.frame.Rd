@@ -61,8 +61,8 @@ FALSE, ...)
   the \code{pdata.frame} and add it to every series. 
 }
 
-\seealso{
-}
+% \seealso{
+% }
 \examples{
 
 data("Wages", package="plm")

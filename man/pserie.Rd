@@ -48,10 +48,10 @@ within(x, ...)
   (within and between) are available and spectial \code{lag} and
   \code{diff} methods are provided.
 }
-\references{
-}
-\seealso{
-}
+% \references{
+% }
+% \seealso{
+% }
 \examples{
 # Create first a pdata.frame
 data("EmplUK", package = "plm")

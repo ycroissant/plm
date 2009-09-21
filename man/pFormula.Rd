@@ -44,11 +44,11 @@ pFormula(object)
   transformation specified by the \code{model} and \code{effect}
   arguments.
 }
-\references{
-}
-\seealso{
-}
-\examples{
-}
+% \references{
+% }
+% \seealso{
+% }
+% \examples{
+% }
 \author{Yves Croissant}
-\keyword{}
+\keyword{classes}

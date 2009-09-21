@@ -36,9 +36,8 @@ ercomp(object, ...)
   variance of the errors, and \code{theta} which is the parameters used
   for the transformation of the variables.
 }
-\details{
-
-}
+%\details{
+%}
 \references{
 
     Amemiyia, T. (1971) The estimation of the variances in a

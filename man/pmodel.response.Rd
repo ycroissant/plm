@@ -52,11 +52,11 @@ pmodel.response(object, ...)
   \code{pFormula} or a \code{plm} object, and the transformation
   specified by \code{effect} and \code{model} is applied to it. 
 }
-\references{
-}
-\seealso{
-}
-\examples{
-}
+% \references{
+% }
+% \seealso{
+% }
+% \examples{
+% }
 \author{Yves Croissant}
-\keyword{}
+\keyword{manip}
