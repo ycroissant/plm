@@ -16,4 +16,3 @@ has.intercept.Formula <- function(object, rhs = NULL, ...) {
   if(is.null(rhs)) rhs <- 1:length(attr(object, "rhs"))
   sapply(rhs, function(x) has.intercept(formula(object, lhs = 0, rhs = x)))
 }
-
