@@ -46,7 +46,7 @@ model.matrix.pFormula <- function(object, data,
     if (effect == "individual") cond <- id
     if (effect == "time") cond <- time
     result <- switch(model,
-                     "within"  = within(X, cond),
+                     "within"  = Within(X, cond),
                      "Between" = Between(X, cond),
                      "between" = between(X, cond),
                      "pooling" = X,

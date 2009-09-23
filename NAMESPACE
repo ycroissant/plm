@@ -1,7 +1,7 @@
 export(plm, pvcm, pgmm, pggls, pht, plm.data, plmtest, phtest, pFtest, 
        pvar, pdim, pooltest, dynformula, sargan, mtest, ercomp, pvcovHC,
        pbsytest, pdwtest, pbgtest, pbltest, pwartest, pwtest, pwfdtest, pcdtest,
-       pdata.frame, between, Between, within, pFormula, pmodel.response)
+       pdata.frame, between, Between, Within, pFormula, pmodel.response)
 import(stats)
 import(Formula)
 importFrom(kinship, bdsmatrix)
@@ -70,7 +70,7 @@ S3method(lag, pserie)
 S3method(diff, pserie)
 S3method(between, pserie)
 S3method(Between, pserie)
-S3method(within, pserie)
+S3method(Within, pserie)
 S3method(summary, pserie)
 S3method(print, summary.pserie)
 # ercomp

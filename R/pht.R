@@ -59,13 +59,15 @@ pht <-  function(formula, data, subset, na.action, index = NULL, ...){
   else{
     zo <- lm(fixef~1)
   }
-  ssr <- deviance(zo)/N
+  sigma2$one <- deviance(zo)/n
+  
   if(balanced){
-    sigma2$id <- ssr-sigma2$idios/T
-    theta <- 1-sqrt(sigma2$idios/(sigma2$idios+T*sigma2$id))
+    sigma2$id <- (sigma2$one-sigma2$idios)/T
+    theta <- 1-sqrt(sigma2$idios/sigma2$one)
   }
   else{
-    sigma2$id <- ssr-sigma2$idios/T
+    barT <- n/sum(1/Ti)
+    sigma2$id <- (sigma2$one-sigma2$idios)/barT
     theta <- 1-sqrt(sigma2$idios/(sigma2$idios+Ti*sigma2$id))
     theta <- theta[as.character(id)]
   }

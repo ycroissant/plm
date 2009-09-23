@@ -636,7 +636,7 @@ $I_n$ the identity matrix of dimension $n$, we get:
   second one a vector of length $n$,
 \item the within transformation: $Q=I_{nT}-P$ returns a vector
   containing the values in deviation from the individual means. The
-  \code{within} function performs this operation.
+  \code{Within} function performs this operation.
 \item the first difference transformation $D=I_n \otimes d$ where
 
 $d=
@@ -658,7 +658,7 @@ don't compute correctly these transformations for panel data because
 they are unable to identify when there is a change in individual in
 the data. Specific methods for \texttt{pserie} objects are therefore
 have been rewritten in order to handle correctly panel data. Further
-functions called \code{Between}, \code{between} and \code{within} are
+functions called \code{Between}, \code{between} and \code{Within} are
 also provided to compute the between and the within
 transformation. The \texttt{between} returns unique values, whereas
 \texttt{Between} duplicate the values and returns a vector which
@@ -667,7 +667,7 @@ length is the number of observations.
 <<>>=
 head(diff(E$emp), 10)
 head(lag(E$emp, 2), 10)
-head(within(E$emp))
+head(Within(E$emp))
 head(between(E$emp), 4)
 head(Between(E$emp), 10)
 

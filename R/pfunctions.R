@@ -312,22 +312,22 @@ between.matrix <- function(x, effect, ...){
   apply(x, 2, tapply, effect, mean, ...)
 }
 
-within <- function(x,...){
-  UseMethod("within")
+Within <- function(x,...){
+  UseMethod("Within")
 }
 
-within.default <- function(x, effect, ...){
+Within.default <- function(x, effect, ...){
   if (!is.numeric(x)) stop("the within function only applies to numeric vectors")
   x - Between(x, effect, ...)
 }
 
-within.pserie <- function(x, effect = c("individual", "time"), ...){
+Within.pserie <- function(x, effect = c("individual", "time"), ...){
   effect <- match.arg(effect)
-  within.default(x, effect, ...)
+  Within.default(x, effect, ...)
 }
 
-within.matrix <- function(x, effect, ...){
-  result <- within.default(x, effect, ...)
+Within.matrix <- function(x, effect, ...){
+  result <- Within.default(x, effect, ...)
   othervar <- apply(result, 2, function(x) sum(abs(x), na.rm = TRUE)) > 1E-12
   result <- result[, othervar, drop = FALSE]
   attr(result, "constant") <- colnames(x)[!othervar]

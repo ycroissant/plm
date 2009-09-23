@@ -2,10 +2,10 @@
 \alias{pserie}
 \alias{Between}
 \alias{between}
-\alias{within}
+\alias{Within}
 \alias{Between.pserie}
 \alias{between.pserie}
-\alias{within.pserie}
+\alias{Within.pserie}
 \alias{lag.pserie}
 \alias{diff.pserie}
 \alias{summary.pserie}
@@ -19,13 +19,13 @@
 \usage{
 between(x, ...)
 Between(x, ...)
-within(x, ...)
+Within(x, ...)
 \method{lag}{pserie}(x, k = 1, ...)
 \method{diff}{pserie}(x, lag = 1, ...)
 \method{as.matrix}{pserie}(x, idbyrow = TRUE, ...)
 \method{between}{pserie}(x, effect = c("individual", "time"), ...)
 \method{Between}{pserie}(x, effect = c("individual", "time"), ...)
-\method{within}{pserie}(x, effect = c("individual", "time"), ...)
+\method{Within}{pserie}(x, effect = c("individual", "time"), ...)
 \method{summary}{pserie}(object, ...)
 \method{print}{summary.pserie}(x, ...)
 }
@@ -63,7 +63,7 @@ class(z)
 as.matrix(z)
 # compute the between, within transformation
 between(z)
-within(z)
+Within(z)
 # Between replicate the values for each time observations
 Between(z)
 # compute the first and third lag, and the difference laged twice
