@@ -9,7 +9,11 @@ pht <-  function(formula, data, subset, na.action, index = NULL, ...){
   old.formula <- formula
   formula <- pFormula(formula)
   formula <- formula(formula, rhs = 1, lhs = 1)
-  within <- plm(formula, data, effect = "individual", model = "within")
+  mf$model = "within"
+  mf$formula <- formula
+  within <- eval(mf, parent.frame())
+#  print(within)
+#  within <- plm(formula, data, effect = "individual", model = "within")
   fixef <- fixef(within)
   formula <- old.formula
   index <- attr(data, "index")
