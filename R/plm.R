@@ -24,7 +24,7 @@ plm <-  function(formula, data, subset, na.action,
 
   # for backward compatibility, allows the instrument argument
   if (!is.null(dots$instruments)){
-    formula <- as.formula(paste(deparse(formula),"|",deparse(dots$instruments[[2]])))
+    as.Formula(formula, dots$instruments)
     deprec.instruments <- paste("the use of the instruments argument is deprecated,",
                                 "use two-part formulas instead")
     warning(deprec.instruments)
