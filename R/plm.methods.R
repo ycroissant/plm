@@ -4,7 +4,7 @@ summary.plm <- function(object,...){
   std.err <- sqrt(diag(vcov(object)))
   b <- coefficients(object)
   z <- b/std.err
-  p <- 2*pnorm(abs(z),lower.tail=FALSE)
+  p <- 2*pt(abs(z), df = object$df.residual, lower.tail=FALSE)
   object$coefficients <- cbind("Estimate"   = b,
                                "Std. Error" = std.err,
                                "t-value"    = z,

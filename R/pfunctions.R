@@ -219,14 +219,17 @@ lag.pserie <- function(x, k = 1, ...){
   isNAtime <- c(rep(1,k), diff(as.numeric(time), lag = k)) != k
   isNAid <- c(rep(1,k), diff(as.numeric(id), lag = k)) != 0
   isNA <- as.logical(isNAtime + isNAid)
+  if (is.factor(x)) levs <- levels(x)
   result <- c(rep(NA, k), x[1:(length(x)-k)])
   result[isNA] <- NA
+  if (is.factor(x)) result <- factor(result, labels = levs)
   structure(result,
             class = class(x),
             index = index)
 }
 
 diff.pserie <- function(x, lag = 1, ...){
+  if (!is.numeric(x)) stop("diff is only relevant for numeric series")
   lagx <- lag(x, k = lag)
   x-lagx
 }

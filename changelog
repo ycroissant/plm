@@ -227,3 +227,14 @@ Change since version 1-1.4
 	* hausman-taylor estimation is now performe the pht function. For
 	backaward compatibility reasons, it is still possible to estimate
 	this model with plm
+
+Changes since version 1.2-0	
+
+	* the as.matrix and print methods for pserie objects are now exported
+
+	* in summary.plm, the p-value is now computed using a Student
+	distribution and not a normal one
+
+	* the lag.pserie method is modified so that it deals correctly
+	with factors, and not only with numeric vectors. The diff.pserie
+	method returns an error if its argument is not numeric
