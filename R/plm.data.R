@@ -1,13 +1,13 @@
-plm.data <- function(x,indexes=NULL){
+plm.data <- function(x, indexes = NULL){
   if (is.null(indexes)){
     id <- NULL
     time <- NULL
   }
-  if (length(indexes)==1){
+  if (length(indexes) == 1){
     id <- indexes
     time <- NULL
   }
-  if (length(indexes)==2){
+  if (length(indexes) == 2){
     id <- indexes[1]
     time <- indexes[2]
   }
@@ -42,7 +42,7 @@ plm.data <- function(x,indexes=NULL){
   }
   x <- x[,!na.check]
   # check and remove cst series
-  cst.check <- sapply(x,function(x) var(as.numeric(x))==0)
+  cst.check <- sapply(x, function(x) var(as.numeric(x), na.rm = TRUE)==0)
   cst.serie <- names(x)[cst.check]
 
   if (length(cst.serie)>0){
