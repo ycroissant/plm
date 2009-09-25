@@ -55,7 +55,7 @@ FALSE, ...)
   individual and the time indexes. The \code{"[["} and \code{"$"}
   extract a serie from the \code{pdata.frame}. The \code{"index"}
   attribute is then added to the serie and a class attribute
-  \code{"pserie"} is added. The \code{"["} method behaves as for
+  \code{"pseries"} is added. The \code{"["} method behaves as for
   \code{data.frame}, except that the extraction is also applied to the
   \code{index} attribute. The \code{as.data.frame} remove the index from
   the \code{pdata.frame} and add it to every series. 

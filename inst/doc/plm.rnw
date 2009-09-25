@@ -656,7 +656,7 @@ g
 Note that \proglang{R}'s \code{diff()} and \code{lag()} functions
 don't compute correctly these transformations for panel data because
 they are unable to identify when there is a change in individual in
-the data. Specific methods for \texttt{pserie} objects are therefore
+the data. Specific methods for \texttt{pseries} objects are therefore
 have been rewritten in order to handle correctly panel data. Further
 functions called \code{Between}, \code{between} and \code{Within} are
 also provided to compute the between and the within

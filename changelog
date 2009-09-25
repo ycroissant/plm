@@ -241,3 +241,9 @@ Changes since version 1.2-0
 
 	* the instruments-"backward compatility" stuff in plm is
 	simplified thanks to the new features of Formula
+
+	* 'pserie' is renamed 'pseries'
+
+	* a THANKS file is added
+	
+	

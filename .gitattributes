@@ -24,6 +24,7 @@ R/pserial.R -text
 R/ptest.R -text
 R/pvcm.R -text
 R/pvcovHC.R -text
+/THANKS -text
 /changelog -text
 data/Cigar.rda -text
 data/Crime.rda -text

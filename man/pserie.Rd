@@ -1,16 +1,16 @@
-\name{pserie}
-\alias{pserie}
+\name{pseries}
+\alias{pseries}
 \alias{Between}
 \alias{between}
 \alias{Within}
-\alias{Between.pserie}
-\alias{between.pserie}
-\alias{Within.pserie}
-\alias{lag.pserie}
-\alias{diff.pserie}
-\alias{summary.pserie}
-\alias{print.summary.pserie}
-\alias{as.matrix.pserie}
+\alias{Between.pseries}
+\alias{between.pseries}
+\alias{Within.pseries}
+\alias{lag.pseries}
+\alias{diff.pseries}
+\alias{summary.pseries}
+\alias{print.summary.pseries}
+\alias{as.matrix.pseries}
 
 \title{panel series}
 \description{
@@ -20,17 +20,17 @@
 between(x, ...)
 Between(x, ...)
 Within(x, ...)
-\method{lag}{pserie}(x, k = 1, ...)
-\method{diff}{pserie}(x, lag = 1, ...)
-\method{as.matrix}{pserie}(x, idbyrow = TRUE, ...)
-\method{between}{pserie}(x, effect = c("individual", "time"), ...)
-\method{Between}{pserie}(x, effect = c("individual", "time"), ...)
-\method{Within}{pserie}(x, effect = c("individual", "time"), ...)
-\method{summary}{pserie}(object, ...)
-\method{print}{summary.pserie}(x, ...)
+\method{lag}{pseries}(x, k = 1, ...)
+\method{diff}{pseries}(x, lag = 1, ...)
+\method{as.matrix}{pseries}(x, idbyrow = TRUE, ...)
+\method{between}{pseries}(x, effect = c("individual", "time"), ...)
+\method{Between}{pseries}(x, effect = c("individual", "time"), ...)
+\method{Within}{pseries}(x, effect = c("individual", "time"), ...)
+\method{summary}{pseries}(object, ...)
+\method{print}{summary.pseries}(x, ...)
 }
 \arguments{
-  \item{x, object}{a \code{pserie} or a \code{summary.pserie} object,}
+  \item{x, object}{a \code{pseries} or a \code{summary.pseries} object,}
   \item{effect}{the (individual or time) effect,}
   \item{k, lag}{the number of lags for the \code{lag} and \code{diff}
   methods,}
@@ -38,11 +38,11 @@ Within(x, ...)
   \item{\dots}{further arguments.}
 }
 \value{
-  All these functions return an object of class \code{pserie}, except
+  All these functions return an object of class \code{pseries}, except
   \code{between} which is a numeric vector.
 }
 \details{
-  A \code{pserie} is obtained when a serie is extracted from a
+  A \code{pseries} is obtained when a serie is extracted from a
   \code{pdata.frame} object. It consists on the original serie with the
   \code{index} attribute of the \code{pdata.frame}. Specific transformations
   (within and between) are available and spectial \code{lag} and
@@ -56,7 +56,7 @@ Within(x, ...)
 # Create first a pdata.frame
 data("EmplUK", package = "plm")
 Em <- pdata.frame(EmplUK)
-# Then extract a serie, which becomes a pserie
+# Then extract a serie, which becomes a pseries
 z <- Em$output
 class(z)
 # obtain the matrix representation
