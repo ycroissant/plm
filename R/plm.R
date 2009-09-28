@@ -34,7 +34,6 @@ plm <-  function(formula, data, subset, na.action,
   if (inherits(data, "pdata.frame") && !is.null(index))
     warning("the index argument is ignored because data is a pdata.frame")
   if (!inherits(data, "pdata.frame")) data <- pdata.frame(data, index)
-
   # Create a Formula object if necessary
   if (!inherits(formula, "pFormula")) formula <- pFormula(formula)
 

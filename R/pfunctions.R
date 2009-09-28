@@ -135,13 +135,25 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE){
 }
 
 "[.pdata.frame" <- function(x, i, j, drop = TRUE){
-  index <- "[.data.frame"(attr(x, "index"), i,)
-  #remove empty levels if any
-  index <- data.frame(lapply(index, function(x) x[drop = TRUE]))
-  data <- "[.data.frame"(x, i, j, drop = drop)
-  structure(data,
-            index = index,
-            class = c("pdata.frame", "data.frame"))
+  old.pdata.frame <- !inherits(x, "data.frame")
+  if (!old.pdata.frame){
+    # this part for backward compatibility (required by meboot)
+    index <- "[.data.frame"(attr(x, "index"), i,)
+    #remove empty levels if any
+    index <- data.frame(lapply(index, function(x) x[drop = TRUE]))
+  }
+  mydata <- `[.data.frame`(x, i, j, drop = drop)
+  if (is.null(dim(mydata))){
+    structure(mydata,
+              index = index,
+              class = c("pseries", class(mydata))
+              )
+  }
+  else{
+    structure(mydata,
+              index = index,
+              class = c("pdata.frame", "data.frame"))
+  }
 }
 
 print.pdata.frame <- function(x, ...){
