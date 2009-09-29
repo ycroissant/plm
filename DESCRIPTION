@@ -4,7 +4,7 @@ Date: 2009-09-11
 Title: Linear models for panel data
 Author: Yves Croissant <yves.croissant@let.ish-lyon.cnrs.fr>, Giovanni Millo <Giovanni_Millo@Generali.com>
 Maintainer: Yves Croissant <yves.croissant@let.ish-lyon.cnrs.fr>
-Depends: R (>= 1.8.0), stats, kinship, nlme, Formula, MASS, sandwich
+Depends: R (>= 1.8.0), stats, kinship, nlme, Formula (>= 0.2-0), MASS, sandwich
 Suggests: lmtest, car
 Description: A set of estimators and tests for panel data
 License: GPL (>=2)
