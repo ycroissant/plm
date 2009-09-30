@@ -32,7 +32,7 @@ ercomp(object, ...)
 }
 \value{
   an object of class \code{"ercomp"}: a list containing a list called
-  \code{sigma2} which contains the estimation of the components of the
+  \code{sigma2} which contains the estimates of the components of the
   variance of the errors, and \code{theta} which is the parameters used
   for the transformation of the variables.
 }
@@ -40,7 +40,7 @@ ercomp(object, ...)
 %}
 \references{
 
-    Amemiyia, T. (1971) The estimation of the variances in a
+  Amemiya, T. (1971) The estimation of the variances in a
   variance--components model, \emph{International Economic Review},
   \bold{12}, pp.1--13.
 
