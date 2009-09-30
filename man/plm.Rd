@@ -98,7 +98,7 @@ plm(formula, data, subset, na.action, effect = c("individual","time","twoways"),
 \author{Yves Croissant}
 
 \references{
-  Amemiyia, T. (1971) The estimation of the variances in a
+  Amemiya, T. (1971) The estimation of the variances in a
   variance--components model, \emph{International Economic Review}, \bold{12},
   pp.1--13.
 
@@ -107,10 +107,10 @@ plm(formula, data, subset, na.action, effect = c("individual","time","twoways"),
   error components structure, \emph{Econometric Theory}, \bold{3}, pp.223--246.
   
   Baltagi, B.H. (1981) Simultaneous equations with error components,
-  \emph{Journal of econometrics}, \bold{17}, pp.21--49.
+  \emph{Journal of Econometrics}, \bold{17}, pp.21--49.
   
   Baltagi, B.H. (2001) \emph{Econometric Analysis of Panel Data}. John
-  Wiley and sons. ltd.
+  Wiley and Sons, Ltd.
 
   Hausman, J.A. and  Taylor W.E. (1981) Panel data and unobservable
   individual effects, \emph{Econometrica}, \bold{49}, pp.1377--1398.
