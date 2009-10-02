@@ -249,3 +249,8 @@ Changes since version 1.2-0
 	* the `[.pdata.frame` function is modified so that [, j] returns a
 	pseries and not a pdata.frame when j is a single integer, and a
 	backward compatibility feature is added for the "index" attribute
+
+Changes since version 1.2-1
+
+	* a new purtest function to perform unit root tests
+	
