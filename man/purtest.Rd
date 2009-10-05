@@ -9,21 +9,28 @@
   proposed to test the hypothesis of unit root with panel data
 }
 \usage{
-purtest(object, test= c("levinlin", "ips", "madwu"),
-        type = c("none", "intercept", "trend"),
-        lags = c("SIC", "AIC", "Hall"), pmax = 10,
+purtest(object, data = NULL, index = NULL,
+        test= c("levinlin", "ips", "madwu", "hadri"),
+        exo = c("none", "intercept", "trend"),
+        lags = c("SIC", "AIC", "Hall"), pmax = 10, Hcons = TRUE,
         q = NULL, dfcor = FALSE, fixedT = TRUE, ...)
 \method{print}{purtest}(x, ...)
 \method{summary}{purtest}(object, ...)
 \method{print}{summary.purtest}(x, ...)
 }
 \arguments{
-  \item{object, x}{a data.frame containing the time series, a
-    \code{'purtest'} object for the print and summary methods}
+  
+  \item{object, x}{Either a data.frame or a matrix containing the time
+    series, a \code{'pseries'} object, a formula or , the name of a
+    column of a \code{'data.frame'} or a \code{'padata.frame'} on which
+    the test has to be computed ; a\code{'purtest'} object for the print
+    and summary methods,}
+  \item{data}{a \code{'data.frame'} or a \code{'pdata.frame'} object,}
+  \item{index}{the indexes,}
   \item{test}{the test to be computed : one of \code{levinlin} for
     Levin, Lin and Chu (2002), \code{ips} for Im, Pesaran and Shim
-    (2003) and \code{madwu} for Maddala and Wu (1999),}
-  \item{type}{the exogenous variables to introduce in the augmented
+    (2003), \code{madwu} for Maddala and Wu (1999) and \code{hadri},}
+  \item{exo}{the exogenous variables to introduce in the augmented
     Dickey Fuller regressions : this can be nothing (\code{'none'}),
     individual intercepts (\code{'intercept'}) or individual intercepts
     and trend (\code{'trend'}),}
@@ -34,6 +41,8 @@ purtest(object, test= c("levinlin", "ips", "madwu"),
     whether based on the AIC (\code{'AIC'}), SIC (\code{'SIC'}) or using
     Hall's method (\code{'Hall'}),}
   \item{pmax}{maximum number of lags,}
+  \item{Hcons}{a boolean indicating whether the Heteroscedastic
+    consistent test of Hadri should be computed,}
   \item{q}{the bandwidth for the estimation of the long-run variance,}
   \item{dfcor}{should the standard deviation of the regressions be
     computed using a degree of freedom correction ?}
@@ -49,9 +58,22 @@ purtest(object, test= c("levinlin", "ips", "madwu"),
   simulated means and variances needed to compute the statistics.
 }
 \details{
-  All these tests are based on the estimation of augmented Dikey-Fuller
-  regressions for each time-series. A statistic is then computed using
-  the t-statistic associated to the lag value of the variable.
+  
+  All these tests except \code{'hadri'} are based on the estimation of
+  augmented Dikey-Fuller regressions for each time-series. A statistic
+  is then computed using the t-statistic associated to the lag value of
+  the variable. The kind of test to be computed can be specified in
+  several ways :
+
+  a \code{formula}/\code{data} interface (where \code{data} is a
+  \code{data.frame}, an additional \code{index} argument should be
+  specified ; the formula should be of the form : \code{y~0}, \code{y~1}
+  or \code{y~trend} for a test with no exogenous variable, with an
+  intercept or with a time trend
+
+  a \code{data.frame}, a \code{matrix}, a \code{pseries} : in this case
+  the exogenous variables are specified using the \code{exo} argument.
+  
 }
 \references{
   

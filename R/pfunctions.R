@@ -173,10 +173,15 @@ print.pdata.frame <- function(x, ...){
   index <- attr(x, "index")
   attr(x, "index") <- NULL
   class(x) <- "data.frame"
-  structure(x[[y]],
-            class = c("pseries", class(x[[y]])),
-            index = index,
-            names = row.names(x))
+  result <- x[[y]]
+  if (!is.null(result)){
+    result <- structure(result,
+                        class = c("pseries", class(x[[y]])),
+                        index = index,
+                        names = row.names(x)
+                        )
+  }
+  result
 }  
 
 "$.pdata.frame" <- function(x,y){

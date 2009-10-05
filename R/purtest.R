@@ -80,12 +80,13 @@ adj.levinlin <- array(v, dim=c(13,2,3),
                         c("none", "intercept", "trend")))
 
 
-names.type <- c(none = 'None',
+names.exo <- c(none = 'None',
                 intercept = 'Individual Intercepts',
                 trend = 'Individual Intercepts and Trend')
 names.test <- c(levinlin = 'Levin-Lin-Chu Unit-Root Test',
                 ips = 'Im-Pesaran-Sim Unit-Root Test',
-                madwu = 'Maddala-Wu Unit-Root Test')
+                madwu = 'Maddala-Wu Unit-Root Test',
+                hadri = 'Hadri')
 
 my.lm.fit <- function(X, y, dfcor = TRUE, ...){
   object <- lm.fit(X, y)
@@ -131,7 +132,7 @@ selectT <- function(x, Ts){
   return(Ts[c(pos-1,pos)])
 }
     
-lagsel <- function(object, type = c("intercept", "none", "trend"),
+lagsel <- function(object, exo = c("intercept", "none", "trend"),
                    method = c("Hall", "AIC", "SIC"), pmax = 10, dfcor=
                    FALSE, fixedT = TRUE, ...){
   # select the optimal number of lags using Hall method or AIC or SIC
@@ -140,9 +141,9 @@ lagsel <- function(object, type = c("intercept", "none", "trend"),
   y <- object
   Dy <- YCdiff(object)
   Ly <- c(NA, object[1:(length(object)-1)])
-  if (type == "none") m <- NULL
-  if (type == "intercept") m <- rep(1, length(object))
-  if (type == "trend") m <- cbind(1, YCtrend(object))
+  if (exo == "none") m <- NULL
+  if (exo == "intercept") m <- rep(1, length(object))
+  if (exo == "trend") m <- cbind(1, YCtrend(object))
   LDy <- YClags(Dy, pmax)
   decreasei <- TRUE
   i <- 0
@@ -181,48 +182,48 @@ lagsel <- function(object, type = c("intercept", "none", "trend"),
 }        
 
 
-adj.levinlin.value <- function(l, type = c("intercept", "none", "trend")){
+adj.levinlin.value <- function(l, exo = c("intercept", "none", "trend")){
   ## extract the adjustment values for Levin-Lin-Chu test
   theTs <- as.numeric(dimnames(adj.levinlin)[[1]])
   Ts <- selectT(l, theTs)
   if (length(Ts) == 1){
-    return(adj.levinlin[as.character(Ts), , type])
+    return(adj.levinlin[as.character(Ts), , exo])
   }
   else{
-    low <- adj.levinlin[as.character(Ts[1]), , type]
-    high <- adj.levinlin[as.character(Ts[2]), , type]
+    low <- adj.levinlin[as.character(Ts[1]), , exo]
+    high <- adj.levinlin[as.character(Ts[2]), , exo]
     return(low + (l - Ts[1])/(Ts[2] - Ts[1])*(high - low))
   }
 }
 
 adj.ips.value <- function(l = 30, lags = 2,
-                          type = c("intercept", "trend")){
+                          exo = c("intercept", "trend")){
   ## extract the adjustment values for Im-Pesaran-Sim test
   if (!lags %in% 0:8) warning("lags should be an integer between 0 and 8")
   lags <- min(lags, 8)
   theTs <- as.numeric(dimnames(adj.ips)[[2]])
   Ts <- selectT(l, theTs)
   if (length(Ts) == 1){
-    return(adj.ips[as.character(lags),as.character(Ts),,type])
+    return(adj.ips[as.character(lags),as.character(Ts),,exo])
   }
   else{
-    low <- adj.ips[as.character(lags),as.character(Ts[1]),,type]
-    high <- adj.ips[as.character(lags),as.character(Ts[2]),,type]
+    low <- adj.ips[as.character(lags),as.character(Ts[1]),,exo]
+    high <- adj.ips[as.character(lags),as.character(Ts[2]),,exo]
     return(low + (l - Ts[1])/(Ts[2] - Ts[1])*(high - low))
   }
 }
 
 
-tsadf <- function(object, type = c("intercept", "none", "trend"),
+tsadf <- function(object, exo = c("intercept", "none", "trend"),
                   lags = NULL, dfcor = FALSE, comp.aux.reg = FALSE, ...){
   # compute some adf regression for each time serie
   y <- object
   L <- length(y)
   Dy <- YCdiff(object)
   Ly <- c(NA, object[1:(length(object)-1)])
-  if (type == "none") m <- NULL
-  if (type == "intercept") m <- rep(1, length(object))
-  if (type == "trend") m <- cbind(1, YCtrend(object))
+  if (exo == "none") m <- NULL
+  if (exo == "intercept") m <- rep(1, length(object))
+  if (exo == "trend") m <- cbind(1, YCtrend(object))
   narow <- 1:(lags+1)
   LDy <- YClags(Dy, lags)
   X <- cbind(Ly, LDy, m)[-narow, , drop = FALSE]
@@ -242,7 +243,7 @@ tsadf <- function(object, type = c("intercept", "none", "trend"),
     # for Levin-Lin-Chu only, computes the residuals of the auxiliary
     # regressions
     X <- cbind(LDy[ , 0:lags], m)[-narow, , drop = FALSE]
-    if (lags == 0 && type == "none"){
+    if (lags == 0 && exo == "none"){
       resid.diff <- Dy[-narow]/sigma
       resid.level <- Ly[-narow]/sigma
     }
@@ -258,13 +259,13 @@ tsadf <- function(object, type = c("intercept", "none", "trend"),
 }        
   
 
-longrunvar <- function(x, type = c("intercept", "none", "trend"), q = NULL){
+longrunvar <- function(x, exo = c("intercept", "none", "trend"), q = NULL){
   # compute the long run variance of the dependent variable
   T <- length(x)
   if (is.null(q)) q <- round(3.21*T^(1/3))
   dx <- x[2:T]-x[1:(T-1)]
-  if (type == "intercept") dx <- dx - mean(dx)
-  if (type == "trend") dx <- lm.fit(cbind(1,1:length(dx)), dx)$residuals
+  if (exo == "intercept") dx <- dx - mean(dx)
+  if (exo == "trend") dx <- lm.fit(cbind(1,1:length(dx)), dx)$residuals
   dx <- c(NA, dx)
   1/(T-1)*sum(dx[-1]^2)+
     2*sum(
@@ -277,19 +278,122 @@ longrunvar <- function(x, type = c("intercept", "none", "trend"), q = NULL){
           )
 }
 
-purtest <- function(object, test = c("levinlin", "ips", "madwu"),
-                    type = c("none", "intercept", "trend"),
+purtest <- function(object, data = NULL, index = NULL,
+                    test = c("levinlin", "ips", "madwu", "hadri"),
+                    exo = c("none", "intercept", "trend"),
                     lags = c("SIC", "AIC", "Hall"), pmax = 10,
+                    Hcons = TRUE,
                     q = NULL, dfcor = FALSE, fixedT = TRUE, ...){
 
   data.name <- paste(deparse(substitute(object)))
+
+  id <- NULL
+  if (inherits(object, 'formula')){
+    terms <- terms(object)
+    lab <- labels(terms)
+    if (length(lab) == 0){
+      if (attr(terms, "intercept")) exo <- "intercept"
+      else exo <- "none"
+    }
+    else{
+      if (length(lab) > 1 || lab != "trend") stop("uncorrect formula")
+      exo <- "trend"
+    }
+
+    object <- paste(deparse(object[[2]]))
+    if (exists(object) && is.vector(get(object))){
+      # is.vector because, eg, inv exists as a function
+      object <- get(object)
+    }
+    else{
+      if (is.null(data)) stop("unknown response")
+      else{
+        if (object %in% names(data)){
+          object <- data[[object]]
+          if (!inherits(data, "pdata.frame")){
+            if (is.null(index)) stop("the index attribute is required")
+            else data <- pdata.frame(data, index)
+          }
+          id <- attr(data, "index")[[1]]
+        }
+        else{
+          stop("unknown response")
+        }
+      }
+    }
+  }
+  else{
+    exo <- match.arg(exo)
+    if (is.null(dim(object))){
+      if (inherits(object, 'pseries')){
+        id <- attr(object, "index")[[1]]
+      }
+      else stop("the individual dimension is undefined")
+    }
+    if (is.matrix(object)) object <- as.data.frame(object)
+  }
+  if (!inherits(object, "data.frame")){
+    if (is.null(id)) stop("the individual dimension is undefined")
+    object <- as.data.frame(split(object, id))
+  }
+
+ 
   cl <- match.call()
-  type <- match.arg(type)
   test <- match.arg(test)
-  args <- list(test = test, type =type, pmax = pmax, lags = lags,
+  lags <- match.arg(lags)
+  args <- list(test = test, exo =exo, pmax = pmax, lags = lags,
                dfcor = FALSE, fixedT = fixedT)
   L <- nrow(object)
   n <- ncol(object)
+
+  parameter <- NULL
+  alternative <- 'Unit Root'
+  method <- paste(names.test[test], "(ex. var. :",
+                    names.exo[exo],")")
+
+  if (test == "hadri"){
+    if (exo == "intercept"){
+      resid <- lapply(object, function(x) lm(x~1)$residuals)
+      adj <- c(1/6, 1/45)
+    }
+    if (exo == "trend"){
+      resid <- lapply(object,
+                      function(x){
+                        trend <- 1:length(x)
+                        lm(x~trend)$residuals
+                      }
+                      )
+      adj <- c(1/15, 11/6300)
+    }      
+    sigma2 <- mean(unlist(resid)^2)
+    cumres2 <- lapply(resid, function(x) cumsum(x^2))
+    if (!Hcons){
+      S <- sum(unlist(cumres2))/(L^2 * n)
+      LM <- S / sigma2
+    }
+    else{
+      sigma2i <- lapply(resid, function(x) mean(x^2))
+      Sit2 <- mapply("/", cumres2, sigma2i)
+      LM <- sum(unlist(Sit2))/ (L^2 * n)
+    }
+    stat <- c(z = sqrt(n) * (LM - adj[1])  / (adj[2]))
+    pvalue <- 2 * (pnorm(abs(stat), lower.tail = FALSE))
+    htest <- structure(list(statistic = stat,
+                            parameter = NULL,
+                            alternative = "stationarity",
+                            data.name = data.name,
+                            method = method,
+                            p.value = pvalue),
+                       class = "htest")
+  
+    result <- list(statistic = htest,
+                   call = cl,
+                   args = args)
+
+    class(result) <- "purtest"
+    return(result)
+  }  
+  
   # compute the lags for each time series if necessary
   if (is.numeric(lags)){
     if (length(lags) == 1) lags <- rep(lags, n)
@@ -301,30 +405,26 @@ purtest <- function(object, test = c("levinlin", "ips", "madwu"),
   else{
     lags <- match.arg(lags)
     lags <- sapply(object, function(x)
-                   lagsel(x, type = type, method = lags,
+                   lagsel(x, exo = exo, method = lags,
                           pmax = pmax, dfcor = dfcor, fixedT = fixedT))
   }
   # compute the augmented Dickey-Fuller regressions for each time
   # series
   comp.aux.reg <- (test == "levinlin")
   idres <- mapply(function(x, y)
-                  tsadf(x, type = type, lags = y, dfcor = dfcor,
+                  tsadf(x, exo = exo, lags = y, dfcor = dfcor,
                         comp.aux.reg = comp.aux.reg),
                   object, as.list(lags), SIMPLIFY = FALSE)
 
-  parameter <- NULL
-  alternative <- 'Unit Root'
-  method <- paste(names.test[test], "(ex. var. :",
-                    names.type[type],")")
   
   if (test == 'levinlin'){
     # get the adjustment parameters for the mean and the variance
-    adjval <- adj.levinlin.value(L, type = type)
+    adjval <- adj.levinlin.value(L, exo = exo)
     mymu <- adjval[1]
     mysig <- adjval[2]
     # calculate the ration of LT/ST variance
     sigmaST <- sapply(idres, function(x) x[["sigma"]])
-    sigmaLT <- sqrt(sapply(object, longrunvar, type = type, q = q))
+    sigmaLT <- sqrt(sapply(object, longrunvar, exo = exo, q = q))
     si <- sigmaLT/sigmaST
     sbar <- mean(si)
     # stack the residuals of each time series and perform the pooled
@@ -345,7 +445,7 @@ purtest <- function(object, test = c("levinlin", "ips", "madwu"),
   if (test == 'ips'){
     lags <- sapply(idres, function(x) x[["lags"]])
     L <- sapply(idres, function(x) x[["T"]]) - lags - 1
-    adjval <- mapply(function(x, y) adj.ips.value(x, y, type = type),
+    adjval <- mapply(function(x, y) adj.ips.value(x, y, exo = exo),
                      as.list(L), as.list(lags))
     # get the adjustment parameters for the mean and the variance
     trho <- sapply(idres, function(x) x[['trho']])
@@ -406,7 +506,7 @@ summary.purtest <- function(object, ...){
 
 print.summary.purtest <- function(x, ...){
   cat(paste(names.test[x$args$test], "\n"))
-  cat(paste('Exogenous variables :', names.type[x$args$type], '\n'))
+  cat(paste('Exogenous variables :', names.exo[x$args$exo], '\n'))
   thelags <- sapply(x$idres, function(x) x[['lags']])
   if (is.character(x$args$lags)){
     cat(paste('Automatic selection of lags using', x$args$lags,':',
