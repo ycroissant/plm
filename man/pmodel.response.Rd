@@ -4,12 +4,13 @@
 \alias{pmodel.response.pFormula}
 \alias{pmodel.response.plm}
 
-
 \title{A function to extract the model.response}
+
 \description{
-  pmodel.response has several method to extract conveniently the
-  response of several objects
+pmodel.response has several methods to conveniently extract the
+response of several objects.
 }
+
 \usage{
 pmodel.response(object, ...)
 \method{pmodel.response}{data.frame}(object,
@@ -31,6 +32,7 @@ pmodel.response(object, ...)
                               theta = NULL, ...)
 
 }
+
 \arguments{
   \item{object}{an object of class \code{"plm"},}
   \item{data}{a \code{data.frame},}
@@ -38,25 +40,29 @@ pmodel.response(object, ...)
   \code{"individual"}, \code{"time"} or \code{"twoways"},}
   \item{model}{one of \code{"pooling"}, \code{"within"},
     \code{"between"}, \code{"random",} \code{"fd"} and \code{"ht"},}
-  \item{theta}{the parameter for the transformation if \code{model =
-      "random"},}
+  \item{theta}{the parameter for the transformation if \code{model = "random"},}
   \item{lhs}{,}
   \item{\dots}{further arguments.}
 }
 
 \value{
-  A numeric vector.
+A numeric vector.
 }
+
 \details{
-  The model response is extracted (from a \code{data.frame}, a
-  \code{pFormula} or a \code{plm} object, and the transformation
-  specified by \code{effect} and \code{model} is applied to it. 
+The model response is extracted (from a \code{data.frame}, a \code{pFormula} or a \code{plm} object, and the transformation
+specified by \code{effect} and \code{model} is applied to it. 
 }
+
 % \references{
 % }
+
 % \seealso{
 % }
+
 % \examples{
 % }
+
 \author{Yves Croissant}
+
 \keyword{manip}

@@ -21,28 +21,22 @@ pgmm(formula, data, effect = c("individual","twoways", "none"),
 
 \arguments{
  \item{formula}{a symbolic description for the model to be
-    estimated. Should be an object of class \code{"dynformula"} or of
-    class \code{"formula"}. In the later case, a \code{lag.form}
-    argument should be provided,}
+    estimated. Should be an object of class \code{"dynformula"} or of class \code{"formula"}. In the latter case, a \code{lag.form} argument should be provided,}
  \item{object,x}{an object of class \code{"pgmm"},}
  \item{data}{a \code{data.frame},}
  \item{effect}{the effects introduced in the model, one of
     \code{"individual"} or \code{"twoways"},}
  \item{model}{one of \code{"onestep"} or \code{"twosteps"},}
- \item{instruments}{a one side formula containing the normal
+ \item{instruments}{a one-sided formula containing the normal
     instruments,}
- \item{gmm.inst}{a one side formula containing the GMM instruments,}
+ \item{gmm.inst}{a one-sided formula containing the GMM instruments,}
  \item{lag.gmm}{a list containing the lags to use for each GMM
     instrument, or a list of two named lists (\code{"d"} for difference
     and \code{"l"} for level) in case of ``system GMM'',}
  \item{lag.form}{a list containing the lags to use for each variable of
-  the formula. Only relevant if \code{formula} is a standard formula and
-  not a \code{dynformula},}
+  the formula. Only relevant if \code{formula} is a standard formula and not a \code{dynformula},}
  \item{transformation}{the kind of transformation to apply to the model: either \code{"d"} (the default value) for the ``difference GMM'' model or \code{"ld"} for the ``system GMM'',}
- \item{fsm}{the matrix for the one step estimator : one of \code{"I"}
-    (identity matrix) or \code{"G"} (\eqn{=D'D} where \eqn{D} is the first
-    difference operator) if \code{transformation="d"}, one of
-    \code{"GI"} or \code{"full"} if \code{transformation="ld"},}
+ \item{fsm}{the matrix for the one step estimator : one of \code{"I"} (identity matrix) or \code{"G"} (\eqn{=D'D} where \eqn{D} is the first-difference operator) if \code{transformation="d"}, one of \code{"GI"} or \code{"full"} if \code{transformation="ld"},}
  \item{digits}{digits,}
  \item{width}{the maximum length of the lines in the print
     output,}
@@ -51,7 +45,7 @@ pgmm(formula, data, effect = c("individual","twoways", "none"),
 }
 
 \value{
-An object of class \code{c("pgmm","panelmodel")}, which has the following elements :
+An object of class \code{c("pgmm","panelmodel")}, which has the following elements:
  
 \item{coefficients}{the vector (or the list for fixed effects) of coefficients,}
 \item{residuals}{the vector of residuals,}
@@ -96,7 +90,7 @@ Center for Global Development.
 
 \seealso{
 \code{\link{dynformula}} for dynamic formulas, \code{\link{sargan}}
-  for Sargan tests and \code{\link{mtest}} for Arellano--Bond 's tests of multicollinearity
+  for Sargan tests and \code{\link{mtest}} for Arellano--Bond 's tests of multicollinearity.
 }
 
 \author{Yves Croissant}

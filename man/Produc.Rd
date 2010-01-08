@@ -1,19 +1,22 @@
 \name{Produc}
 \docType{data}
 \alias{Produc}
-\title{US States Production }
-\description{
-  a panel of 48 observations  from 1970   to 1986
 
- \emph{number of observations} :  816
+\title{US States Production}
+
+\description{
+A panel of 48 observations from 1970 to 1986
+
+ \emph{total number of observations} :  816
 
  \emph{observation} :  regional
 
-   \emph{country} :  United States
-
+ \emph{country} :  United States
 }
+
 \usage{data(Produc)}
-\format{A dataframe containing :
+
+\format{A data frame containing :
   \describe{
     \item{state}{the state}
     \item{year}{the year}
@@ -27,14 +30,19 @@
     \item{unemp}{state unemployment rate}
   }
 }
+
 \source{
-    Munnel, A. (1990) \dQuote{Why has productivity growth declined? Productivity and public investment}, \emph{New England Economic Review}, 3--22.
+Online complements to Baltagi (2001).
 
-    Baltagi, B. H.  and  N.  Pinnoi (1995) \dQuote{Public capital stock and state productivity growth: further evidence}, \emph{Empirical Economics}, \bold{20}, 351--359.
-
+\url{http://www.wiley.com/legacy/wileychi/baltagi/}.
 }
+
 \references{
-    Baltagi, Badi H. (2003) \emph{Econometric analysis of panel data}, John Wiley and sons, \url{http://www.wiley.com/legacy/wileychi/baltagi/}.
+Baltagi, Badi H. (2003) \emph{Econometric analysis of panel data}, 2nd ed. John Wiley and Sons, 
+
+Baltagi, B. H.  and  N.  Pinnoi (1995) \dQuote{Public capital stock and state productivity growth: further evidence}, \emph{Empirical Economics}, \bold{20}, 351--359.
+
+Munnell, A.H. (1990) \dQuote{Why has productivity growth declined? Productivity and public investment}, \emph{New England Economic Review}, 3--22.
 }
 
 \keyword{datasets}

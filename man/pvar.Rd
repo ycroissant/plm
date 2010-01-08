@@ -28,9 +28,9 @@ pvar(x, ...)
 \value{ 
 An object of class \code{pvar} containing the following elements:
 
- \item{id.var}{ a logical vector with \code{TRUE} values if the
+ \item{id.var}{a logical vector with \code{TRUE} values if the
   variable has individual variation, \code{FALSE} otherwise,}
- \item{time.var}{ a logical vector with \code{TRUE} values if the
+ \item{time.var}{a logical vector with \code{TRUE} values if the
   variable has time variation, \code{FALSE} otherwise,} }
 
 \author{Yves Croissant}
