@@ -1,19 +1,22 @@
 \name{Hedonic}
 \docType{data}
 \alias{Hedonic}
-\title{Hedonic Prices of Cencus Tracts in Boston }
+\title{Hedonic Prices of Census Tracts in the Boston Area}
+
 \description{
-  a cross-section
+  A cross-section
 
  \emph{number of observations} :  506
 
  \emph{observation} :  regional
 
-   \emph{country} :  United States
+ \emph{country} :  United States
 
 }
+
 \usage{data(Hedonic)}
-\format{A dataframe containing :
+
+\format{A dataframe containing:
   \describe{
     \item{mv}{median value of owner--occupied homes}
     \item{crim}{crime rate}
@@ -32,14 +35,19 @@
     \item{townid}{town identifier}
   }
 }
+
 \source{
-    Harrison, D.  and  D.L.  Rubinfeld (1978) \dQuote{Hedonic housing prices and the demand for clean air}, \emph{Journal of Environmental Economics Ans Management}, \bold{5}, 81--102.
-
-    Belsley, D.A.,  E.   Kuh and  R. E.  Welsch (1980) \emph{Regression diagnostics: identifying influencal data ans sources of collinearity}, John Wiley, New--York.
-
+ Online complements to Baltagi (2001).
+ 
+ \url{http://www.wiley.com/legacy/wileychi/baltagi/}.
 }
+
 \references{
-    Baltagi, Badi H. (2003) \emph{Econometric analysis of panel data}, John Wiley and sons, \url{http://www.wiley.com/legacy/wileychi/baltagi/}.
+ Baltagi, Badi H. (2001): \emph{Econometric Analysis of Panel Data}, 2nd ed., John Wiley and Sons.
+
+ Belsley, D.A.,  E. Kuh and  R. E. Welsch (1980): \emph{Regression Diagnostics: Identifying Influencial Data and Sources of Collinearity}, John Wiley, New York.
+
+ Harrison, D. and  D.L. Rubinfeld (1978): \dQuote{Hedonic housing prices and the demand for clean air}, \emph{Journal of Environmental Economics and Management}, \bold{5}, 81--102.
 }
 
 \keyword{datasets}

@@ -5,19 +5,20 @@
 \alias{print.ercomp}
 
 \title{Estimation of the error components}
+
 \description{
-  This function enables the estimation of the components of the errors
-  of a panel model.
+  This function enables the estimation of the variance components of a panel model.
 }
+
 \usage{
 ercomp(object, ...)
 \method{ercomp}{formula}(object, data, effect = c("individual", "time", "twoways"), 
-                         method = c("swar", "walhus", "amemiya", "nerlove"),
+                        method = c("swar", "walhus", "amemiya", "nerlove"),
                          index = NULL, ...)
 \method{ercomp}{plm}(object, ...)
 \method{print}{ercomp}(x, digits= max(3, getOption("digits") - 3), ...)
-
 }
+
 \arguments{
   \item{object}{a \code{formula} or a \code{plm} object,}
   \item{data}{a \code{data.frame},}
@@ -30,27 +31,23 @@ ercomp(object, ...)
   \item{digits}{digits,}
   \item{\dots}{further arguments.}
 }
+
 \value{
-  an object of class \code{"ercomp"}: a list containing a list called
-  \code{sigma2} which contains the estimates of the components of the
-  variance of the errors, and \code{theta} which is the parameters used
-  for the transformation of the variables.
+  An object of class \code{"ercomp"}: a list containing a list called \code{sigma2} which contains the estimates of the variance components, and \code{theta} which is the parameters used for the transformation of the variables.
 }
+
 %\details{
 %}
+
 \references{
 
   Amemiya, T. (1971) The estimation of the variances in a
-  variance--components model, \emph{International Economic Review},
-  \bold{12}, pp.1--13.
+  variance--components model, \emph{International Economic Review}, \bold{12}, pp.1--13.
 
-  Nerlove, M. (1971) Further evidence on the estimation of dynamic
-  economic relations from a time--series of cross--sections,
-  \emph{Econometrica}, \bold{39}, pp.359--382.
+  Nerlove, M. (1971) Further evidence on the estimation of dynamic economic relations from a time--series of cross--sections, \emph{Econometrica}, \bold{39}, pp.359--382.
 
   Swamy, P.A.V.B. and Arora, S.S. (1972) The exact finite sample
-  properties of the estimators of coefficients in the error components
-  regression models, \emph{Econometrica}, \bold{40}, pp.261--275.
+  properties of the estimators of coefficients in the error components regression models, \emph{Econometrica}, \bold{40}, pp.261--275.
 
   Wallace, T.D. and Hussain, A. (1969) The use of error components
   models in combining cross section with time series data,
@@ -58,9 +55,9 @@ ercomp(object, ...)
 
 }
 \seealso{
-  \code{\link{plm}} where the estimation of the components of the
-  variance of the errors are used if a random effect model is estimated
+  \code{\link{plm}} where the estimates of the variance components are used if a random effects model is estimated
 }
+
 \examples{
 data("Produc", package = "plm")
 # an example of the formula method

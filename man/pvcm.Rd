@@ -2,17 +2,19 @@
 \alias{pvcm}
 \alias{summary.pvcm}
 \alias{print.summary.pvcm}
+
 \title{Variable Coefficients Models for Panel Data}
+
 \description{
-  Estimators for random and fixed effects models with variable coefficients.
+ Estimators for random and fixed effects models with variable coefficients.
 }
+
 \usage{
 pvcm(formula, data, subset, na.action, effect = c("individual","time"),
      model = c("within","random"), index = NULL, ...)
 \method{summary}{pvcm}(object, ...)
 \method{print}{summary.pvcm}(x, digits = max(3, getOption("digits") -2),
     width = getOption("width"), ...)
-
 }
 
 \arguments{
@@ -40,12 +42,11 @@ pvcm(formula, data, subset, na.action, effect = c("individual","time"),
   random if \code{model="random"}. In the first case, a different
   model is estimated for each individual (or time period). In the second
   case, the Swamy (1970) model is estimated. It is a
-  generalized least squares model which use the results of the previous model.
-  
+  generalized least squares model which uses the results of the previous model.  
 }
 
 \value{
-  an object of class \code{c("pvcm","panelmodel")}, which has the following elements :
+  An object of class \code{c("pvcm","panelmodel")}, which has the following elements :
   \item{coefficients}{the vector (or the list for fixed effects) of coefficients,}
   \item{residuals}{the vector of residuals,}
   \item{fitted.values}{the vector of fitted.values,}
@@ -64,8 +65,7 @@ pvcm(formula, data, subset, na.action, effect = c("individual","time"),
 \author{Yves Croissant}
 
 \references{
-  Swamy, P.A.V.B. (1970) Efficient Inference in a Random Coefficient
-  Regression Model, \emph{Econometrica}, \bold{38}(2), pp.311--323.
+ Swamy, P.A.V.B. (1970) Efficient Inference in a Random Coefficient Regression Model, \emph{Econometrica}, \bold{38}(2), pp.311--323.
 }
 
 \examples{
@@ -73,4 +73,5 @@ data("Produc", package="plm")
 zw <- pvcm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp,data=Produc, model="within")
 zr <- pvcm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp,data=Produc, model="random")
 }
+
 \keyword{regression}
