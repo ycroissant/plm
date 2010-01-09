@@ -29,7 +29,7 @@ pcdtest(x, ...)
 }
 
 \value{
- An object of class \code{"htest"}.
+An object of class \code{"htest"}.
 }
 
 \details{
@@ -40,7 +40,7 @@ pcdtest(x, ...)
 \references{
  Breusch, T.S. and A.R. Pagan (1980), The Lagrange multiplier test and its applications to model specification in econometrics, \emph{Review of Economic Studies}, 47, pp. 239--253.
 
- Pesaran, H. (2004), General Diagnostic Tests for Cross Section Dependence in Panels, \emph{CESIfo Working Paper} 1229. 
+ Pesaran, H. (2004), General Diagnostic Tests for Cross Section Dependence in Panels, \emph{CESIfo} Working Paper 1229. 
  \url{http://www.cesifo-group.de/DocCIDL/cesifo1_wp1229.pdf}
 }
 
@@ -49,7 +49,7 @@ data(Grunfeld, package = "plm")
 ## test on heterogeneous model (separate time series regressions)
 pcdtest(inv ~ value + capital, data=Grunfeld,
         index = c("firm","year"))
-## test on twoways fixed effects homogeneous model
+## test on two-way fixed effects homogeneous model
 pcdtest(inv ~ value + capital, data=Grunfeld, model="within",
         effect="twoways", , index = c("firm","year"))
 ## test on model object
