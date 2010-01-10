@@ -16,7 +16,7 @@ sargan(object)
 }
 
 \details{
-The Hansen--Sargan test calculates the quadratic form of the moment restrictions that is minimized while computing the GMM estimator. It follows asymptotically a Chi--square with number of degrees of freedom equal to the difference between the number of moment conditions and the number of coefficients.
+The Hansen--Sargan test calculates the quadratic form of the moment restrictions that is minimized while computing the GMM estimator. It follows asymptotically a chi-square distribution with number of degrees of freedom equal to the difference between the number of moment conditions and the number of coefficients.
 }
 
 \value{
@@ -36,9 +36,9 @@ Sargan, J.D. (1958), The Estimation of Economic Relationships using Instrumental
 \examples{
 data("EmplUK", package = "plm")
 ar <- pgmm(dynformula(log(emp) ~ log(wage) + log(capital) + 
- log(output), list(2,1,2,2)), data = EmplUK, effect = "twoways", 
- model = "twosteps", gmm.inst = ~log(emp), 
- lag.gmm = list(c(2,99)))
+            log(output), list(2,1,2,2)), data = EmplUK, effect = "twoways", model = "twosteps", gmm.inst = ~log(emp), 
+             lag.gmm = list(c(2,99)))
 sargan(ar)
 }
+
 \keyword{htest}

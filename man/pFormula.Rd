@@ -4,9 +4,9 @@
 \alias{model.frame.pFormula}
 \alias{model.matrix.pFormula}
 
-\title{pFormula: An extended Formula for panel data}
+\title{pFormula: An extended Formula interface for panel data}
 
-\description{pFormula is a Formula object, with methods useful for panel data
+\description{pFormula is a Formula object, with methods useful for panel data.
 }
 
 \usage{

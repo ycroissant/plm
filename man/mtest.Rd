@@ -35,7 +35,8 @@ Arellano, M. and  Bond, S. (1991), Some Tests of Specification for Panel Data: M
   
 \examples{
 data("EmplUK", package = "plm")
-ar <- pgmm(dynformula(log(emp) ~ log(wage) + log(capital) + log(output), list(2,1,2,2)), data = EmplUK, effect = "twoways", model = "twosteps", gmm.inst = ~ log(emp), lag.gmm = list(c(2,99)))
+ar <- pgmm(dynformula(log(emp) ~ log(wage) + log(capital) +
+            log(output), list(2,1,2,2)), data = EmplUK, effect = "twoways", model = "twosteps", gmm.inst = ~ log(emp), lag.gmm = list(c(2,99)))
 mtest(ar, 1)
 mtest(ar, 2, vcovHC)
 }
