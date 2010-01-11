@@ -35,7 +35,7 @@ Weighting schemes are analogous to those in \code{vcovHC} in package \code{sandw
  
 The main use of \code{vcovHC} is to be an argument to other functions, e.g. for Wald-type testing: as \code{vcov} to \code{coeftest()}, \code{waldtest()} and other methods in the \code{lmtest} package; and as \code{vcov} to \code{linear.hypothesis()} in the \code{car} package (see the examples). Notice that the \code{vcov} argument may be supplied a function (which is the safest) or a matrix (see Zeileis (2004), 4.1-2 and examples below).  
 
-A special procedure \code{pgmm} objects, proposed by Windmeijer (2005), is also provided.
+A special procedure for \code{pgmm} objects, proposed by Windmeijer (2005), is also provided.
 }
 
 \author{Giovanni Millo \& Yves Croissant}
@@ -66,8 +66,10 @@ URL \url{http://http://www.jstatsoft.org/v11/i10/}.
 library(sandwich)
 library(lmtest)
 library(car)
+
 data("Produc", package = "plm")
 zz <- plm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model = "random")
+
 ## standard coefficient significance test
 coeftest(zz)
 ## robust significance test
