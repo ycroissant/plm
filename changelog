@@ -14,7 +14,7 @@ Changes since version 0-1.2
 
 	* pgmm is a new function for general method of moments estimator.
 
-	* for all estimation functions, the four first arguments are now
+	* for all estimation functions, the first four arguments are now
 	formula,data,effect,model
 
 	* robust inference is now provided by the pvcovHC function.
@@ -53,7 +53,7 @@ Changes since version 0-2.2
 	* in plmtest, the argument effect "id" is renamed "individual"
 
 	* three testing functions are added : pbsytest (Bera,
-	Sosa-Escudero and Yoon test), pARtest (Breush Godfrey Test) and
+	Sosa-Escudero and Yoon test), pARtest (Breusch-Godfrey Test) and
 	pDWtest (Durbin-Watson test), pwartest, pBGtest, pwtest pbltest
 
 	* plm, pvcm and pggls now have arguments "subset" and "na.action"
@@ -165,7 +165,7 @@ Changes since version 1-1.0
 	* we switched back to old names for two arguments of plm ercomp ->
 	random.methods ivar -> inst.method -> ivar
 
-	* amemiya method is not implement for unbalanced panels: an error
+	* amemiya method is not implemented for unbalanced panels: an error
 	message is now returned.
  
 
@@ -182,7 +182,7 @@ Changes since version 1-1.1
 	Grunfeld, model = "fd")
 
 	* the lev2var is changed so that it doesn't result in an error
-	when the data.frame contains no factor: this was responsible of a
+	when the data.frame contains no factor: this was responsible for a
 	bug in plm.ht
 
 	
@@ -224,7 +224,7 @@ Change since version 1-1.4
 	* the first argument of pgmm may now be a formula. A lag.form must
 	be provided in this case
 	
-	* hausman-taylor estimation is now performe the pht function. For
+	* hausman-taylor estimation is now performed by the pht function. For
 	backaward compatibility reasons, it is still possible to estimate
 	this model with plm
 
@@ -239,7 +239,7 @@ Changes since version 1.2-0
 	with factors, and not only with numeric vectors. The diff.pserie
 	method returns an error if its argument is not numeric
 
-	* the instruments-"backward compatility" stuff in plm is
+	* the instruments-"backward compatibility" stuff in plm is
 	simplified thanks to the new features of Formula
 
 	* 'pserie' is renamed 'pseries'
@@ -254,5 +254,10 @@ Changes since version 1.2-1
 
 	* a new purtest function to perform unit root tests
 
-	* [[.pdata.frame is modified so that NULL (and not en error
+	* [[.pdata.frame is modified so that NULL (and not an error
 	message) is returned if an unknown column is selected
+
+Changes since version 1.2-2
+
+	* the documentation has been improved
+	

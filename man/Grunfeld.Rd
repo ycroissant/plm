@@ -37,7 +37,7 @@ Online complements to Baltagi (2001).
 }
 
 \seealso{For the complete Grunfeld data (11 firms), see
-  \code{\link{Grunfeld}}, in the \code{AER} package.
+  \code{\link[AER]{Grunfeld}}, in the \code{AER} package.
 }
 
 \keyword{datasets}
