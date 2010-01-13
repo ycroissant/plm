@@ -2,10 +2,10 @@
 \alias{pgmm}
 \alias{summary.pgmm}
 \alias{print.summary.pgmm}
-\title{Generalized Method of Moments (GMM) Estimator for Panel Data}
+\title{Generalized Method of Moments (GMM) Estimation for Panel Data}
 
 \description{
-Generalized method of moments estimator for static or dynamic models with panel data.
+Generalized method of moments estimation for static or dynamic models with panel data.
 }
 
 \usage{
@@ -65,7 +65,7 @@ It has \code{print}, \code{summary} and \code{print.summary} methods.
 }
 
 \details{
-\code{pgmm} estimates a model for panel data with a generalized  method of moments (GMM) estimator. The description of the model to estimate is provided with a \code{\link{dynformula}}. The GMM instruments are provided by filling the \code{pgmm.inst} argument with a one-sided formula. By default, all the variables of the model which are not used as GMM instruments are used as normal instruments with the same lag structure as the one specified in the \code{dynformula}, but the user may also specified one side formula to indicate expicitly the variables to use as normal instruments. The lags used for the GMM instruments are indicated with the \code{lag.gmm} argument. For each instrument, it is either a vector of length 2 (\code{c(99,3)} indicates to use
+\code{pgmm} estimates a model for panel data with a generalized  method of moments (GMM) estimator. The description of the model to estimate is provided with a \code{\link{dynformula}}. The GMM instruments are provided by filling the \code{pgmm.inst} argument with a one-sided formula. By default, all the variables of the model which are not used as GMM instruments are used as normal instruments with the same lag structure as the one specified in the \code{dynformula}, but the user may also specify a one-sided formula to indicate expicitly the variables to use as normal instruments. The lags used for the GMM instruments are indicated with the \code{lag.gmm} argument. For each instrument, it is either a vector of length 2 (\code{c(99,3)} indicates to use
 all the lags available up to t-3), or a scalar (2 indicates to use the lags 0, 1 and 2). If a single vector (or scalar) is written, then this lag structure is replicated for all GMM instruments. Otherwise, \code{lag.gmm} should be a list of length equal to the number of GMM instruments. \code{transformation} indicates how the model should be transformed for the estimation. \code{"d"} gives the ``difference GMM'' model (see Arellano and Bond (1991)), \code{"ld"} the ``system GMM'' model (see Blundell and Bond (1998)).
   
 \code{pgmm} is an attempt to adapt GMM estimators available within the DPD library for GAUSS (see Arellano and Bond 1998) and Ox (see Doornik, Arellano and Bond 2006) and with the xtabond2 library for STATA (see Roodman 2006).
@@ -76,16 +76,18 @@ Arellano, M. and Bond, S. (1991) Some Tests of Specification
 for Panel Data: Monte Carlo Evidence and an Application to Employment Equations, \emph{The Review of Economic Studies}, vol. \bold{58}(2), 1991, pp.227--297.
   
 Arellano, M. and  Bond, S. (1998) Dynamic Panel Data Estimation
-Using DPD89 for GAUSS : a Guide for Users.
+Using DPD98 for GAUSS: A Guide for Users.
 
 Blundell, R. and  Bond, S. (1998) Initial Conditions and
 Moment Restrictions in Dynamic Panel Data Models, \emph{Journal of Econometrics}, vol. \bold{87}, pp.115--143.
 
-Doornik, J., Arellano, M. and Bond, S. (2006) Panel Data Estimation using DPD for Ox.
+Doornik, J., Arellano, M. and Bond, S. (2006) Panel Data Estimation using DPD for Ox. 
+\url{http://www.doornik.com/download/dpd.pdf}
   
 Roodman, D. (2006) How to do xtabond2: An Introduction to
 ``difference'' and ``system'' GMM in Stata, Working Paper no 103,
-Center for Global Development.
+Center for Global Development. 
+\url{http://ideas.repec.org/p/cgd/wpaper/103.html}
 }
 
 \seealso{

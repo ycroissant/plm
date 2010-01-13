@@ -25,7 +25,7 @@ purtest(object, data = NULL, index = NULL,
   \item{object, x}{Either a \code{'data.frame'} or a matrix containing the time series, a \code{'pseries'} object, a formula, or the name of a column of a \code{'data.frame'}, or a \code{'pdata.frame'} on which the test has to be computed; a\code{'purtest'} object for the print and summary methods,}
   \item{data}{a \code{'data.frame'} or a \code{'pdata.frame'} object,}
   \item{index}{the indexes,}
-  \item{test}{the test to be computed: one of \code{levinlin} for Levin, Lin and Chu (2002), \code{ips} for Im, Pesaran and Shin (2003), \code{madwu} for Maddala and Wu (1999) and \code{hadri} for Hadri (2000),}
+  \item{test}{the test to be computed: one of \code{levinlin} for Levin, Lin and Chu (2002), \code{ips} for Im, Pesaran and Shin (2003), \code{madwu} for Maddala and Wu (1999), and \code{hadri} for Hadri (2000),}
   \item{exo}{the exogenous variables to introduce in the augmented Dickey-Fuller regressions: this can be nothing (\code{'none'}), individual intercepts (\code{'intercept'}) or individual intercepts and trends (\code{'trend'}),}
   \item{lags}{the number of lags to be used for the augmented Dickey-Fuller regressions: either an integer (the number of lags for all time series), a vector of integers (one for each time series), or a character string for an automatic computation of the number of lags, based on either the AIC (\code{'AIC'}), the SIC (\code{'SIC'}) or on Hall's method (\code{'Hall'}),}
   \item{pmax}{maximum number of lags,}
