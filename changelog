@@ -261,3 +261,5 @@ Changes since version 1.2-2
 
 	* the documentation has been improved
 	
+	* the pvalue for purtest(..., type = "madwu") was in error (by a factor of 2)
+	

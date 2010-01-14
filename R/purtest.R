@@ -118,7 +118,7 @@ YCdiff <- function(object){
 }
 
 selectT <- function(x, Ts){
-  ## This function select the length of the serie as it is tabulated
+  ## This function selects the length of the series as it is tabulated
   if (x %in% Ts) return(x)
   if (x < Ts[1]){
     warning("the time serie is short")
@@ -198,7 +198,7 @@ adj.levinlin.value <- function(l, exo = c("intercept", "none", "trend")){
 
 adj.ips.value <- function(l = 30, lags = 2,
                           exo = c("intercept", "trend")){
-  ## extract the adjustment values for Im-Pesaran-Sim test
+  ## extract the adjustment values for Im-Pesaran-Shin test
   if (!lags %in% 0:8) warning("lags should be an integer between 0 and 8")
   lags <- min(lags, 8)
   theTs <- as.numeric(dimnames(adj.ips)[[2]])
@@ -461,7 +461,7 @@ purtest <- function(object, data = NULL, index = NULL,
     pvalue <- 2*pnorm(abs(trho), lower.tail = FALSE)
     stat <- c(chisq = - 2*sum(log(pvalue)))
     n <- length(trho)
-    pvalue <- 2*pchisq(stat, df = 2 * length(trho), lower.tail = FALSE)
+    pvalue <- pchisq(stat, df = 2*n, lower.tail = FALSE)
     adjval <- NULL
     parameter <- c(df = 2 * n)
   }
