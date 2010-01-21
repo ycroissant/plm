@@ -340,7 +340,6 @@ purtest <- function(object, data = NULL, index = NULL,
  
   cl <- match.call()
   test <- match.arg(test)
-  lags <- match.arg(lags)
   args <- list(test = test, exo =exo, pmax = pmax, lags = lags,
                dfcor = FALSE, fixedT = fixedT)
   L <- nrow(object)
@@ -396,6 +395,7 @@ purtest <- function(object, data = NULL, index = NULL,
   
   # compute the lags for each time series if necessary
   if (is.numeric(lags)){
+    cat("ca roule\n")
     if (length(lags) == 1) lags <- rep(lags, n)
     else{
       if (length(lags) != n) stop("lags should be of length 1 or n")
@@ -438,6 +438,7 @@ purtest <- function(object, data = NULL, index = NULL,
     rho <- z$coef
     sdrho <- z$se
     trho <- rho/sdrho
+    print(c(rho, trho))
     stat <- c(z = (trho - n * tildeT * sbar / sigmaeps2 * sdrho * mymu)/mysig)
     pvalue <- 2*pnorm(abs(stat), lower.tail = FALSE)
   }

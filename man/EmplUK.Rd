@@ -20,6 +20,7 @@
   \describe{
     \item{firm}{firm index}
     \item{year}{year}
+    \item{sector}{the sector of activity}
     \item{emp}{employment}
     \item{wage}{wages}
     \item{capital}{capital}
