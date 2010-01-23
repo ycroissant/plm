@@ -28,12 +28,13 @@ pbgtest.panelmodel<-function(x, order = NULL, ...) {
   ## 2: est. auxiliary model by OLS on demeaned data
   ## 3: apply bgtest() to auxiliary model and return the result
 
-  ## retrieve demeaned data
-  demX <- model.matrix(x, model ="within")
-  demy <- pmodel.response(model.frame(x), model ="within")
   model <- describe(x, "model")
   effect <- describe(x, "effect")
-#  demy <- pmodel.response(model.frame(x), model = model, effect = effect)
+  theta <- x$ercomp$theta
+                                                    
+  ## retrieve demeaned data
+  demX <- model.matrix(x, model = model, effect = effect, theta=theta)
+  demy <- pmodel.response(model.frame(x), model = model, effect = effect, theta=theta)
   
   ## ...and group numerosities
   Ti <- pdim(x)$Tint$Ti
@@ -52,7 +53,8 @@ pbgtest.panelmodel<-function(x, order = NULL, ...) {
   if (!is.null(dots$type)) type <- dots$type else type <- "Chisq"
   if (!is.null(dots$order.by)) order.by <- dots$order.by else order.by <- NULL
 
-  lm.mod <- lm(demy~demX-1)
+  auxformula <- if(model == "within") demy~demX-1 else demy~demX
+  lm.mod <- lm(auxformula)
   bgtest <- bgtest(lm.mod, order = order, type = type, order.by = order.by)
   bgtest$method <- "Breusch-Godfrey/Wooldridge test for serial correlation in panel models"
   bgtest$alternative <- "serial correlation in idiosyncratic errors"
@@ -402,9 +404,14 @@ pdwtest.panelmodel <- function(x,...) {
   ## 2: est. auxiliary model by OLS on demeaned data
   ## 3: apply bgtest() to auxiliary model and return the result
 
+  model <- describe(x, "model")
+  effect <- describe(x, "effect")
+  theta <- x$ercomp$theta
+                                                    
   ## retrieve demeaned data
-  demX <- model.matrix(x)
-  demy <- model.response(model.frame(x))
+  demX <- model.matrix(x, model = model, effect = effect, theta=theta)
+  demy <- pmodel.response(model.frame(x), model = model, effect = effect, theta=theta)
+ 
 
   ## dw test on the demeaned model:
   
@@ -419,11 +426,12 @@ pdwtest.panelmodel <- function(x,...) {
   if (is.null(dots$exact)) exact <- NULL else exact <- dots$exact
   if (is.null(dots$tol)) tol <- 1e-10 else tol <- dots$tol
 
-  # dwtest use diff, which should be the default and not the panelmodel method
-  attr(demy,"data") <- NULL
-  attr(demy, "class") <- attr(demy, "class")[-1]
+
+  auxformula <- if(model == "within") demy~demX-1 else demy~demX
+  lm.mod <- lm(auxformula)
+
   
-  ARtest <- dwtest(lm(demy~demX-1), order.by = order.by, alternative = alternative,
+  ARtest <- dwtest(lm(auxformula), order.by = order.by, alternative = alternative,
                    iterations = iterations, exact = exact, tol = tol)
 #  ARtest <- dwtest(lm(demy~demX-1))
 
