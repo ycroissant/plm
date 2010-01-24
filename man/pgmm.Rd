@@ -65,10 +65,10 @@ It has \code{print}, \code{summary} and \code{print.summary} methods.
 }
 
 \details{
-\code{pgmm} estimates a model for panel data with a generalized  method of moments (GMM) estimator. The description of the model to estimate is provided with a \code{\link{dynformula}}. The GMM instruments are provided by filling the \code{pgmm.inst} argument with a one-sided formula. By default, all the variables of the model which are not used as GMM instruments are used as normal instruments with the same lag structure as the one specified in the \code{dynformula}, but the user may also specify a one-sided formula to indicate expicitly the variables to use as normal instruments. The lags used for the GMM instruments are indicated with the \code{lag.gmm} argument. For each instrument, it is either a vector of length 2 (\code{c(99,3)} indicates to use
-all the lags available up to t-3), or a scalar (2 indicates to use the lags 0, 1 and 2). If a single vector (or scalar) is written, then this lag structure is replicated for all GMM instruments. Otherwise, \code{lag.gmm} should be a list of length equal to the number of GMM instruments. \code{transformation} indicates how the model should be transformed for the estimation. \code{"d"} gives the ``difference GMM'' model (see Arellano and Bond (1991)), \code{"ld"} the ``system GMM'' model (see Blundell and Bond (1998)).
+\code{pgmm} estimates a model for panel data with a generalized  method of moments (GMM) estimator. The description of the model to estimate is provided with a \code{\link{dynformula}}. The GMM instruments are provided by filling the \code{pgmm.inst} argument with a one-sided formula. By default, all the variables of the model which are not used as GMM instruments are used as normal instruments with the same lag structure as the one specified in the \code{dynformula}, but the user may also specify a one-sided formula to indicate expicitly the variables to use as normal instruments. The lags used for the GMM instruments are indicated with the \code{lag.gmm} argument. For each instrument, it is either a vector of length 2 (e.g., \code{c(99,3)} indicates to use
+all the lags available up to t-3), or a scalar (e.g, 2 indicates to use the lags 0, 1 and 2). If a single vector (or scalar) is written, then this lag structure is replicated for all GMM instruments. Otherwise, \code{lag.gmm} should be a list of length equal to the number of GMM instruments. \code{transformation} indicates how the model should be transformed for the estimation. \code{"d"} gives the ``difference GMM'' model (see Arellano and Bond (1991)), \code{"ld"} the ``system GMM'' model (see Blundell and Bond (1998)).
   
-\code{pgmm} is an attempt to adapt GMM estimators available within the DPD library for GAUSS (see Arellano and Bond 1998) and Ox (see Doornik, Arellano and Bond 2006) and with the xtabond2 library for STATA (see Roodman 2006).
+\code{pgmm} is an attempt to adapt GMM estimators available within the DPD library for GAUSS (see Arellano and Bond 1998) and Ox (see Doornik, Arellano and Bond 2006) and with the xtabond2 library for STATA (see Roodman 2009).
 }  
 
 \references{
@@ -84,15 +84,14 @@ Moment Restrictions in Dynamic Panel Data Models, \emph{Journal of Econometrics}
 Doornik, J., Arellano, M. and Bond, S. (2006) Panel Data Estimation using DPD for Ox. 
 \url{http://www.doornik.com/download/dpd.pdf}
   
-Roodman, D. (2006) How to do xtabond2: An Introduction to
-``difference'' and ``system'' GMM in Stata, Working Paper no 103,
-Center for Global Development. 
+Roodman, D. (2009) How to do xtabond2: An Introduction to
+``difference'' and ``system'' GMM in Stata, \emph{Stata Journal}, vol. \bold{9}(1), pp. 86--136. Working Paper version at
 \url{http://ideas.repec.org/p/cgd/wpaper/103.html}
 }
 
 \seealso{
 \code{\link{dynformula}} for dynamic formulas, \code{\link{sargan}}
-  for Sargan tests and \code{\link{mtest}} for Arellano--Bond 's tests of multicollinearity.
+  for Sargan tests and \code{\link{mtest}} for Arellano--Bond's tests of multicollinearity.
 }
 
 \author{Yves Croissant}
