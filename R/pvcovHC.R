@@ -2,11 +2,17 @@ pvcovHC <- function(x, ...){
   UseMethod("vcovHC")
 }
 
-vcovHC.panelmodel <-function(x,
-                              method = c("arellano", "white1", "white2"),
-                              type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
-                              ...) {
-  ## Robust vcov for panel models (random or within type plm obj.)
+
+vcovHC.plm <-function(x,method=c("arellano","white1","white2"),
+                    type=c("HC0", "HC1", "HC2", "HC3", "HC4"),
+                    cluster=c("group","time"), ...) {
+  ## Robust vcov for panel models (pooling, random, within or
+  ## fd -type plm obj.)
+  ##
+  ## This version: October 20th 2009; allows choosing the clustering dimension
+  ## so as to have serial- or x-sectional-correlation robustness;
+  ## indices redone to cope with unbalanced data.
+  ## 'pcse' SEs à la Beck and Katz (1995) moved to another function.
   ##
   ## This function takes the demeaned data from the
   ## plm object, then vcovHC as in Greene, Ec. An. (2003), pag. 315
@@ -17,60 +23,82 @@ vcovHC.panelmodel <-function(x,
   ## 10.5.4 (and formula (10.59)) for FE/within,
   ## 10.4.2 (referring to formula 7.49) for RE.
   ##
-  ## This version 1: compliant with plm.0.1-3; lmtest.
-  ## 
-  ## Usage: 
-  ## myplm <- plm(<model>,<data>,type=<one of "within","random">)
-  ## # default (White 1):
-  ## coeftest(myplm, vcov=vcovHC)
-  ## # Arellano (1987):
-  ## coeftest(myplm, vcov=function(x) vcovHC(x,type="arellano"))
-  ## # idem, HC3 weighting:
-  ## coeftest(myplm, vcov=function(x) vcovHC(x,type="arellano",weights="HC3"))
-  ## waldtest(myplm,update(myplm,<new formula>),vcov=vcovHC)
+  ## This version: compliant with plm.1.2-0; lmtest.
   ##
-  ## This weighted version implements a system of weights as 
+  ## Usage:
+  ## myplm <- plm(<model>,<data>,...)
+  ## # default (Arellano (1987)):
+  ## coeftest(myplm, vcov=vcovHC)
+  ## # White1:
+  ## coeftest(myplm, vcov=function(x) pvcovHC(x,method="white1"))
+  ## # idem, HC3 weighting:
+  ## coeftest(myplm, vcov=function(x) pvcovHC(x,method="arellano",type="HC3"))
+  ## waldtest(myplm,update(myplm,<new formula>),vcov=pvcovHC)
+  ##
+  ## This weighted version implements a system of weights as
   ## in vcovHC/meatHC. Sure this makes sense for white1, but it
   ## is open to question for white2 and arellano. We'll see.
+  ##
+  ## This version allows for choosing the grouping of covariance
+    ## blocks in Arellano and White2. 'cluster="group"' means that vcov(e) is
+    ## grouped according to individuals and thus the estimator is robust vs.
+    ## heteroskedasticity *and serial correlation* (requires large N).
+    ## Else it is robust vs. hetero *and xsectional correlation* (req. large T).
+    ##
+    ## Notice that this is independent of the type of effects, as everything is
+    ## done on demeaned data.
+  ##
+  ## Results OK vs. Eviews, vcov=White cross-section/period, as long as
+  ## the data are simple, else Eviews screws up... Check unbal.
 
-  method <- match.arg(method)
-  type <- match.arg(type)
-
-  model <- describe(x, "model")
-  if(!model %in% c("random","within","pooling","fd")) {
-    stop("Model has to be either random, within or pooling model")
-  }
-
-  ## extract demeaned data from the plm
-  theta <- x$errcomp$theta
-  demX <- model.matrix(x, model = model)
-  demy <- pmodel.response(x, model = model)
-  ## name intercept: a fix for the "" name of demX_1 ##
-  dimnames(demX)[[2]][1]<-attr(vcov(x),"dimnames")[[1]][1]
-
-  pdim <- pdim(x)
-  n <- pdim$nT$n
-  t <- pdim$nT$T
-  nT <- pdim$nT$N
-
-  ## (re)create groupwise index
-  ## sure this can be done better! ##
-  Ti <- pdim$Tint$Ti
-  tind <- vector("list",n)
-  tfirst <- 0
-  for(i in 1:n) {
-    tind[[i]] <- (tfirst+1):(tfirst+Ti[i])
-    tfirst <- max(tind[[i]])
+    method <- match.arg(method)
+    type <- match.arg(type)
+    model <- describe(x, "model")
+    if (!model %in% c("random", "within", "pooling", "fd")) {
+        stop("Model has to be either random, within or pooling model")
     }
 
-  k <- dim(demX)[[2]]
+  ## extract demeaned data
+    demX <- model.matrix(x, model = model)
+    demy <- pmodel.response(x, model = model)
+    dimnames(demX)[[2]][1] <- attr(vcov(x), "dimnames")[[1]][1]
+
+  ## extract dimensions not dependent on clustering
+    pdim <- pdim(x)
+    nT <- pdim$nT$N
+    Ti <- pdim$Tint$Ti
+    k <- dim(demX)[[2]]
 
   ## extract residuals
-  uhat <- x$residuals
- 
+    uhat <- x$residuals
+
+  ## robustifying against either serial or xs intragroup dependence:
+  ## if 'group' then keep current indexing, if 'time' then swap i<->t
+  ## so that residuals get 'clustered' by time period instead of by
+  ## group (i.e. the vcov estimator is robust vs. xsectional dependence)
+
+  ## extract indices
+    groupind<-as.numeric(attr(x$model, "index")[,1])
+    timeind<-as.numeric(attr(x$model, "index")[,2])
+
+  ## set grouping indexes
+    switch(match.arg(cluster), group = {
+           relevant.ind <- groupind
+         }, time = {
+           relevant.ind <- timeind
+         })
+    n <- length(unique(relevant.ind))
+    tind <- vector("list", n)
+    for (i in 1:n) {
+        tind[[i]]<-which(relevant.ind==i)
+    }
+
+  ## extract residuals
+  uhat<-x$residuals
+
   ## define residuals weighting function omega(res)
   ## (code taken from meatHC and modified)
-  ## 
+  ##
   ## theor. comment:
   ## here we are decomposing the corrected (uhat_i)^2 in White and
   ## MacKinnon in uhat_i*uhat_i, in order to construct the submatrix
@@ -94,43 +122,44 @@ vcovHC.panelmodel <-function(x,
   ## and the diagonal is as in White 1
   ## [Omegai]_ii = cf_i * uhat_i^2
   ##
-  ## in HC1-2 we are correcting by non-negative quantities and taking 
-  ## only squares of errors. 
+  ## in HC1-2 we are correcting by non-negative quantities and taking
+  ## only squares of errors.
 
     ## diaghat function for matrices
     dhat <- function(x) {tx<-t(x)
                          diag(crossprod(tx,solve(crossprod(x),tx)))}
 
     ## this is computationally heavy, do only if needed
-    switch(type,
-           HC0 = {diaghat<-NULL},
-           HC1 = {diaghat<-NULL},
-           HC2 = {diaghat<-try(dhat(demX), silent = TRUE)}, 
-           HC3 = {diaghat<-try(dhat(demX), silent = TRUE)},
-           HC4 = {diaghat<-try(dhat(demX), silent = TRUE)})
-  df <- nT - k
-  switch(type, HC0 = {
-    omega <- function(residuals, diaghat, df) residuals
-  }, HC1 = {
-    omega <- function(residuals, diaghat, df) residuals * 
-      sqrt(length(residuals)/df)
-  }, HC2 = {
-    omega <- function(residuals, diaghat, df) residuals /
-      sqrt(1 - diaghat)
-  }, HC3 = {
-    omega <- function(residuals, diaghat, df) residuals /
-      (1 - diaghat)
-  }, HC4 = {
-    omega <- function(residuals, diaghat, df) residuals/
-      sqrt(1 - diaghat)^pmin(4, length(residuals) * diaghat/as.integer(round(sum(diaghat), 
-                                                                             digits = 0)))
+    switch(match.arg(type), HC0 = {diaghat<-NULL},
+                            HC1 = {diaghat<-NULL},
+                            HC2 = {diaghat<-try(dhat(demX), silent = TRUE)},
+                            HC3 = {diaghat<-try(dhat(demX), silent = TRUE)},
+                            HC4 = {diaghat<-try(dhat(demX), silent = TRUE)})
+    df <- nT - k
+    switch(type, HC0 = {
+            omega <- function(residuals, diaghat, df) residuals
+        }, HC1 = {
+            omega <- function(residuals, diaghat, df) residuals *
+                sqrt(length(residuals)/df)
+        }, HC2 = {
+            omega <- function(residuals, diaghat, df) residuals /
+                sqrt(1 - diaghat)
+        }, HC3 = {
+            omega <- function(residuals, diaghat, df) residuals /
+                (1 - diaghat)
+        }, HC4 = {
+            omega <- function(residuals, diaghat, df) residuals/sqrt(1 -
+                diaghat)^pmin(4, length(residuals) * diaghat/as.integer(round(sum(diaghat),
+                digits = 0)))
         })
 
   ## transform residuals by weights
   uhat<-omega(uhat,diaghat,df)
+
+
   ## define Omegai(e_i) function for Omega_i diag. blocks in E^2
   ## in Greene's formula (top of page 315)
-  switch(method,
+  switch(match.arg(method),
                white1 = {Omegai<-function(x) diag(x^2)},
                white2 = {Omegai<-function(x) {
                          n<-length(x)
@@ -141,17 +170,17 @@ vcovHC.panelmodel <-function(x,
   salame<-array(dim=c(k,k,n))
   for(i in 1:n) {
       groupinds<-tind[[i]]
-      xi<-demX[groupinds, , drop = FALSE]
+      xi<-demX[groupinds,]
       ui<-uhat[groupinds]
       salame[,,i]<-crossprod(xi,Omegai(ui))%*%xi
       }
 
   ## meat
   salame<-apply(salame,1:2,sum)
-  
+
   ## bread
   pane<-solve(crossprod(demX))
-  
+
   ## sandwich
   mycov <- pane %*% salame %*% pane
   return(mycov)
