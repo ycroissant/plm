@@ -1,7 +1,7 @@
 export(plm, pvcm, pgmm, pggls, pht, plm.data, plmtest, phtest, pFtest, 
        pvar, pdim, pooltest, dynformula, sargan, mtest, ercomp, pvcovHC,
        pbsytest, pdwtest, pbgtest, pbltest, pwartest, pwtest, pwfdtest, pcdtest,
-       pdata.frame, between, Between, Within, pFormula, pmodel.response, purtest, vcovBK, vcovSCC)
+       pdata.frame, between, Between, Within, pFormula, pmodel.response, purtest)#, vcovBK, vcovSCC)
 import(stats)
 import(Formula)
 importFrom(kinship, bdsmatrix)
@@ -66,9 +66,9 @@ S3method(formula, dynformula)
 S3method(vcovHC, plm)
 S3method(vcovHC, pgmm)
 # vcovBK
-S3method(vcovBK, plm)
+#S3method(vcovBK, plm)
 # vcovSCC 
-S3method(vcovSCC, plm)
+#S3method(vcovSCC, plm)
 # pseries
 S3method(lag, pseries)
 S3method(diff, pseries)
