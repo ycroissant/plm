@@ -262,4 +262,16 @@ Changes since version 1.2-2
 	* the documentation has been improved
 	
 	* the pvalue for purtest(..., type = "madwu") was in error (by a factor of 2)
+
+	* in formula(dynformula), a bug is fixed so that the endog
+	variable doesn't appear on the rhs if there is no lags
+
+	* in pgmm, the extract.data has been rewriten and is *much* faster
+
+	* two new functions vcovBK and vcovSCC have been added
+
+	* a 'model' argument is added to pgmm.sys and
+	pgmm.diff (previously, the model name was extracted from the call)
+
+	* Kt is fixed to 0 in pgmm when effect="individual"
 	

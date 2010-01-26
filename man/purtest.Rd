@@ -60,9 +60,6 @@ Levin A., Lin C.F. and Chu C.S.J. (2002). ``Unit Root Test in Panel Data: Asympt
 Maddala G.S. and Wu S. (1999). ``A Comparative Study of Unit Root Tests with Panel Data and a New Simple Test'', \emph{Oxford Bulletin of Economics and Statistics}, 61, Supplement 1, pp. 631--652.
 }
 
-\seealso{
-}
-
 \examples{
 data("Grunfeld", package = "plm")
 y <- data.frame(split(Grunfeld$inv, Grunfeld$firm))

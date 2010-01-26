@@ -22,8 +22,7 @@ summary.pgmm <- function(object,robust=FALSE,...){
   std.err <- sqrt(diag(vv))
   b <- coef(object)
   z <- b/std.err
-#  p <- 2*(1-pnorm(abs(z)))
-  p <- 2*pnorm(abs(z),lower.tail=FALSE)
+  p <- 2 * pnorm(abs(z),lower.tail=FALSE)
   CoefTable <- cbind(b,std.err,z,p)
   colnames(CoefTable) <- c("Estimate","Std. Error","z-value","Pr(>|z|)")
   object$CoefTable <- CoefTable[1:rowsel,,drop=FALSE]
@@ -154,7 +153,6 @@ wald <- function(x, param = "coef", vcov = NULL){
   stat <- t(coef)%*%solve(vv)%*%coef
   names(stat) <- "chisq"
   parameter <- length(coef)
-#  pval <- 1-pchisq(stat,df=parameter)
   pval <- pchisq(stat, df = parameter, lower.tail = FALSE)
   wald <- list(statistic = stat,
                p.value = pval,
@@ -227,12 +225,11 @@ mtest <- function(object,order=1,vcov=NULL){
   EX <- suml(mapply(crossprod,El,X,SIMPLIFY=FALSE))
   XZ <- suml(mapply(crossprod,W,X,SIMPLIFY=FALSE))
   ZVE <- suml(mapply(function(x,y,z) t(x)%*%y%*%t(y)%*%z,W,resid,El,SIMPLIFY=FALSE))
-                                        #  denom <- EVE-2*EX%*%object$B2%*%t(XZ)%*%A2%*%ZVE+EX%*%object$vcov%*%t(EX)
+
   denom <- EVE-2*EX%*%vcov(object)%*%t(XZ)%*%A%*%ZVE+EX%*%vv%*%t(EX)
   num <- suml(mapply(crossprod,Eb,Elb,SIMPLIFY=FALSE))
   stat <- num/sqrt(denom)
   names(stat) <- "normal"
-#  pval <- 1-pnorm(abs(stat))
   pval <- pnorm(abs(stat),lower.tail=FALSE)
   mtest <- list(statistic = stat,
                 p.value = pval,

@@ -4,7 +4,7 @@ pgmm <- function(formula, data, effect = c("individual", "twoways", "none"),
                  transformation = c("d", "ld"), fsm = NULL, ...){
   
   effect <- match.arg(effect)
-  model.name <- match.arg(model)
+  model <- match.arg(model)
   transformation <- match.arg(transformation)
   cl <- match.call()
 
@@ -80,6 +80,7 @@ pgmm <- function(formula, data, effect = c("individual", "twoways", "none"),
     mf$formula <- instruments ;  data.instruments <- eval(mf,parent.frame())
   }
 
+
   # we then collect some informations about the data
   pdim <- pdim(data.formula)
   time.names <- pdim$panel.names$time.names
@@ -91,7 +92,6 @@ pgmm <- function(formula, data, effect = c("individual", "twoways", "none"),
   # we now call the extract.data to extract the response and the
   # model.matrix of the relevant formula described earlier splited by
   # individual
-
   # first for the model, extract the yX as a matrix splited by
   # individual, and then remove the relevant number of time series
   yX <- extract.data(data.formula)
@@ -100,8 +100,9 @@ pgmm <- function(formula, data, effect = c("individual", "twoways", "none"),
   if (length(Ky) > 1) Ky <- Ky[2]-Ky[1]+1
   K <- K-Ky
   Kt <- T-time.lost
-  if (transformation == "ld") Kt <- Kt+1
-  K <- list(K=K,Ky=Ky,Kt=Kt)
+  if (transformation == "ld") Kt <- Kt + 1
+  if (effect == "individual") Kt <- 0
+  K <- list(K = K, Ky = Ky, Kt = Kt)
 
   yX <- lapply(yX, function(x) if(time.lost==1) x else x[-c(1:(time.lost-1)),])
 
@@ -155,8 +156,8 @@ pgmm <- function(formula, data, effect = c("individual", "twoways", "none"),
 
   # then, call whether pgmm.sys or pgmm.diff
   result <- switch(transformation,
-                   "ld" = pgmm.sys(yX, W, Wl, In, time.dummies, fsm, cl),
-                   "d"  = pgmm.diff(yX, W, In, time.dummies, fsm, cl)
+                   "ld" = pgmm.sys(yX, W, Wl, In, time.dummies, fsm, model, cl),
+                   "d"  = pgmm.diff(yX, W, In, time.dummies, fsm, model, cl)
                    )
 
   result$time.lost <- time.lost
@@ -165,8 +166,7 @@ pgmm <- function(formula, data, effect = c("individual", "twoways", "none"),
 }
 
 
-pgmm.diff <- function(yX, W, In, time.dummies, fsm, cl){
-  model <- ifelse(is.null(cl$model), "onestep", cl$model)
+pgmm.diff <- function(yX, W, In, time.dummies, fsm, model, cl){
   if(!is.null(time.dummies)){
     yX <- lapply(yX,function(x) cbind(x,time.dummies[rownames(x),]))
     W <- lapply(W,function(x) cbind(x,time.dummies[rownames(x),]))
@@ -176,6 +176,7 @@ pgmm.diff <- function(yX, W, In, time.dummies, fsm, cl){
     In <- lapply(In,diff)
     W <- mapply(cbind,W,In,SIMPLIFY=FALSE)
   }
+  
   Vi <- lapply(W,function(x) crossprod(t(crossprod(x,FSM(dim(x)[1],fsm))),x))
   A1 <- solve(suml(Vi))*length(W)
   WyXi <- mapply(crossprod,W,yX,SIMPLIFY=FALSE)
@@ -232,8 +233,7 @@ pgmm.diff <- function(yX, W, In, time.dummies, fsm, cl){
        model = yX, W = W, K = K, A1 = A1, A2 = A2, call = cl)
 }
 
-pgmm.sys <- function(yX,W,Wl,In,time.dummies,fsm,cl){
-  model <- ifelse(is.null(cl$model), "onestep", cl$model)
+pgmm.sys <- function(yX, W, Wl, In, time.dummies, fsm, model, cl){
   if(!is.null(time.dummies)){
     yX <- lapply(yX,function(x) cbind(x,time.dummies[rownames(x),]))
     Wl <- lapply(Wl,function(x) cbind(x,time.dummies[rownames(x),]))
@@ -320,24 +320,60 @@ extract.data <- function(data){
   #trms <- attr(data,"terms")
   trms <- attr(data, "formula")
   index <- attr(data, "index")
-  data <- split(data,index[[1]])
+  has.response <- length(trms)[1] > 0
+
+#  class(data) <- "data.frame"
+  data <- split(data, index[[1]])
   time <- split(index[[2]], index[[1]])
   data <- mapply(function(x, y){ rownames(x) <- y; return(x)}, data, time, SIMPLIFY = FALSE)
-#  data <- lapply(data,function(x){ rownames(x) <- x[["(time)"]];return(x)})
-  if (length(trms)[1] > 0){
+  
+  if (has.response){
     data <- lapply(data,
                    function(x){
-                     x <- cbind(x[[1]], model.matrix(trms, x)[, -1, drop = FALSE]) #[,-1] is a QND patch
+                     x <- cbind(x[[1]],
+                                model.matrix(trms, x)[, -1, drop = FALSE])
+#                    [,-1] is a QND patch
                      colnames(x)[1] <- deparse(trms[[2]])
-#                     c(nrow(model.matrix(trms, x)), dim(x[[1]]))
-                    x
+#                    c(nrow(model.matrix(trms, x)), dim(x[[1]]))
+                     x
                    }
                    )
   }
-  else data <- lapply(data,function(x) model.matrix(trms,x)[, -1, drop = FALSE]) #[,-1] is a QND patch
+  else
+    data <- lapply(data,
+                   function(x){
+                     model.matrix(trms, x)[, -1, drop = FALSE]
+                     }
+                   ) #[,-1] is a QND patch
   data
 }
+
+extract.data <- function(data){
+  # the previous version is *very* slow because :
+  # 1. split works wrong on pdata.frame
+  # 2. model.matrix is lapplied !
   
+  trms <- attr(data, "formula")
+  index <- attr(data, "index")
+  has.response <- length(trms)[1] > 0
+
+  X <- model.matrix(trms, data)[, -1, drop = FALSE]
+  if (has.response){
+    X <- cbind(data[[1]], X)
+    colnames(X)[1] <- deparse(trms[[2]])
+  }
+  data <- split(as.data.frame(X), index[[1]])
+  time <- split(index[[2]], index[[1]])
+  data <- mapply(
+                 function(x, y){
+                   rownames(x) <- y
+                   return(as.matrix(x))
+                 }
+                 , data, time, SIMPLIFY = FALSE)
+  data
+}
+
+
 
 makeJ <- function(time.names,gmminst,lag.gmm,time.lost){
   T <- length(time.names)

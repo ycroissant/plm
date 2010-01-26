@@ -36,16 +36,20 @@ formula.dynformula <- function(x, ...){
   log.form <- attr(x, "log")
   lag.form <- attr(x, "lag")
   diff.form <- attr(x, "diff")
-  exo <- attr(x, "var")
-  endog <- deparse(x[[2]])
-  has.int <- attr(terms(x), "intercept") == 1
   has.resp <- length(x) == 3
+  exo <- attr(x, "var")
+  if (has.resp){
+    endog <- exo[1]
+    exo <- exo[-1]
+  }
+  has.int <- attr(terms(x), "intercept") == 1
   chexo <- c()
   if (has.resp){
     if (log.form[1]) endog <- paste("log(",endog,")",sep="")
     if (diff.form[1]) endog <- paste("diff(",endog,")",sep="")
-    if (length(lag.form[[1]])==1 && lag.form[[1]]!=0) lag.form[[1]] <- c(1,lag.form[[1]])
-    chexo <- c(chexo,write.lags(endog,lag.form[[1]],diff.form[1]))
+    if (length(lag.form[[1]]) == 1 && lag.form[[1]]!=0) lag.form[[1]] <- c(1,lag.form[[1]])
+    if (!(length(lag.form[[1]]) == 1 && lag.form[[1]]==0))
+      chexo <- c(chexo,write.lags(endog,lag.form[[1]],diff.form[1]))
   }
   for (i in exo){
     lag.formi <- lag.form[[i]]
