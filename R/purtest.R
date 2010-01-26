@@ -83,7 +83,7 @@ names.exo <- c(none = 'None',
                 intercept = 'Individual Intercepts',
                 trend = 'Individual Intercepts and Trend')
 names.test <- c(levinlin = 'Levin-Lin-Chu Unit-Root Test',
-                ips = 'Im-Pesaran-Sim Unit-Root Test',
+                ips = 'Im-Pesaran-Shin Unit-Root Test',
                 madwu = 'Maddala-Wu Unit-Root Test',
                 hadri = 'Hadri')
 
