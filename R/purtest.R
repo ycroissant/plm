@@ -64,7 +64,6 @@ adj.ips <- array(adj.ips, dim=c(10,9,2,2),
                   
 adj.ips <- aperm(adj.ips, c(2,1,3,4))
 
-
 ################
 
 Tn <- c(  25,  30,  35,  40,  45,  50,  60,   70,   80,   90,  100,  250,   500)
@@ -395,7 +394,6 @@ purtest <- function(object, data = NULL, index = NULL,
   
   # compute the lags for each time series if necessary
   if (is.numeric(lags)){
-    cat("ca roule\n")
     if (length(lags) == 1) lags <- rep(lags, n)
     else{
       if (length(lags) != n) stop("lags should be of length 1 or n")
@@ -438,12 +436,12 @@ purtest <- function(object, data = NULL, index = NULL,
     rho <- z$coef
     sdrho <- z$se
     trho <- rho/sdrho
-    print(c(rho, trho))
     stat <- c(z = (trho - n * tildeT * sbar / sigmaeps2 * sdrho * mymu)/mysig)
     pvalue <- 2*pnorm(abs(stat), lower.tail = FALSE)
   }
 
   if (test == 'ips'){
+    if (exo == "none") stop("ips test is not implemented for exo = none")
     lags <- sapply(idres, function(x) x[["lags"]])
     L <- sapply(idres, function(x) x[["T"]]) - lags - 1
     adjval <- mapply(function(x, y) adj.ips.value(x, y, exo = exo),

@@ -25,6 +25,8 @@ R/ptest.R -text
 R/purtest.R -text
 R/pvcm.R -text
 R/pvcovHC.R -text
+R/vcovBK.R -text
+R/vcovSCC.R -text
 /THANKS -text
 /changelog -text
 data/Cigar.rda -text
@@ -84,5 +86,7 @@ man/pwartest.Rd -text
 man/pwfdtest.Rd -text
 man/pwtest.Rd -text
 man/sargan.Rd -text
+man/vcovBK.Rd -text
 man/vcovHC.Rd -text
+man/vcovSCC.Rd -text
 tests/testEvaluation.R -text
