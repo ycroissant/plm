@@ -378,7 +378,7 @@ purtest <- function(object, data = NULL, index = NULL,
     pvalue <- 2 * (pnorm(abs(stat), lower.tail = FALSE))
     htest <- structure(list(statistic = stat,
                             parameter = NULL,
-                            alternative = "at least one unit root",
+                            alternative = "at least one series has a  unit root",
                             data.name = data.name,
                             method = method,
                             p.value = pvalue),
