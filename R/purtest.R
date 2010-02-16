@@ -85,7 +85,7 @@ names.exo <- c(none = 'None',
 names.test <- c(levinlin = 'Levin-Lin-Chu Unit-Root Test',
                 ips = 'Im-Pesaran-Shin Unit-Root Test',
                 madwu = 'Maddala-Wu Unit-Root Test',
-                hadri = 'Hadri')
+                hadri = 'Hadri Test')
 
 my.lm.fit <- function(X, y, dfcor = TRUE, ...){
   object <- lm.fit(X, y)
@@ -378,7 +378,7 @@ purtest <- function(object, data = NULL, index = NULL,
     pvalue <- 2 * (pnorm(abs(stat), lower.tail = FALSE))
     htest <- structure(list(statistic = stat,
                             parameter = NULL,
-                            alternative = "at least one series has a  unit root",
+                            alternative = "at least one series has a unit root",
                             data.name = data.name,
                             method = method,
                             p.value = pvalue),

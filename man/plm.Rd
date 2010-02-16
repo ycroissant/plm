@@ -43,11 +43,11 @@ plm(formula, data, subset, na.action, effect = c("individual","time","twoways"),
 panel models. It supports the following estimation methods:
 pooled OLS (\code{model="pooling"}), fixed effects (\code{"within"}), random effects (\code{"random"}), first--differences (\code{"fd"}) and  between (\code{"between"}). It supports unbalanced panels and two--way effects (although not with all methods).
 
-For random effect models, 4 estimators of the transformation
+For random effects models, 4 estimators of the transformation
 parameter are available : \code{swar} (Swamy and Arora),
 \code{amemiya}, \code{walhus} (Wallace and Hussain) and \code{nerlove}.
 
-Instrumental variables estimation is obtained using two-part formulas, the second part indicating the instrumental variables used. This can be a complete list of instrumental variables or an update of the first part. If, for example, the model is \code{y ~ x1 + x2 + x3}, \code{x1}, \code{x2} are endogenous and \code{z1}, \code{z2} are external instruments, the model can be estimated with:
+Instrumental variables estimation is obtained using two-part formulas, the second part indicating the instrumental variables used. This can be a complete list of instrumental variables or an update of the first part. If, for example, the model is \code{y ~ x1 + x2 + x3}, with \code{x1} and \code{x2} endogenous and \code{z1} and \code{z2} external instruments, the model can be estimated with:
 
 \itemize{
   \item \code{formula=y~x1+x2+x3 | x3+z1+z2},
@@ -62,16 +62,16 @@ The Hausman and Taylor estimator is computed if \code{model="ht"}.
 \value{
 An object of class \code{c("plm","panelmodel")}.
 
-A \code{"plm"} object  has the following elements :
+A \code{"plm"} object has the following elements :
   
 \item{coefficients}{the vector of coefficients,}
 \item{vcov}{the covariance matrix of the coefficients,}
 \item{residuals}{the vector of residuals,}
 \item{df.residual}{degrees of freedom of the residuals,}
-\item{formula}{an object of class \code{'pFormula'} descrbing the model,}
+\item{formula}{an object of class \code{'pFormula'} describing the model,}
 \item{model}{a data.frame of class \code{'pdata.frame'} containing the variables used for the estimation: the response is in first position and the two indexes in the last positions,}
 \item{ercomp}{an object of class \code{'ercomp'} providing the
- estimation of the components of the errors (for random effect models only),}
+ estimation of the components of the errors (for random effects models only),}
 \item{call}{the call,}
    
 It has \code{print}, \code{summary} and \code{print.summary} methods.
