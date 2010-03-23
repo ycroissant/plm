@@ -230,6 +230,7 @@ as.matrix.pseries <- function(x, idbyrow = TRUE, ...){
 ### chunk number 7: lag and diff
 ###################################################
 lag.pseries <- function(x, k = 1, ...){
+  nx <- names(x)
   index <- attr(x, "index")
   id <- index[[1]]
   time <- index[[2]]
@@ -241,6 +242,7 @@ lag.pseries <- function(x, k = 1, ...){
   result[isNA] <- NA
   if (is.factor(x)) result <- factor(result, labels = levs)
   structure(result,
+            names = nx,
             class = class(x),
             index = index)
 }
@@ -364,7 +366,6 @@ sumsq <- function(x, ...){
   sum((na.omit(x)-xb)^2)
 }
 
-
 summary.pseries <- function(object, ...){
   id <- attr(object, "index")[[1]]
   time <- attr(object, "index")[[2]]
@@ -432,4 +433,38 @@ pdiff <- function(x, cond, has.intercept = FALSE){
   }
   attr(result,"na.action") <- NULL
   result
+}
+
+
+lag.pseries <- function(x, k = 1, ...){
+  nx <- names(x)
+  index <- attr(x, "index")
+  id <- index[[1]]
+  time <- index[[2]]
+  
+  alag <- function(x, ak){
+    if (ak != 0){
+      isNAtime <- c(rep(1,ak), diff(as.numeric(time), lag = ak)) != ak
+      isNAid <- c(rep(1,ak), diff(as.numeric(id), lag = ak)) != 0
+      isNA <- as.logical(isNAtime + isNAid)
+      if (is.factor(x)) levs <- levels(x)
+      result <- c(rep(NA, ak), x[1:(length(x)-ak)])
+      result[isNA] <- NA
+      if (is.factor(x)) result <- factor(result, labels = levs)
+      structure(result,
+                names = nx,
+                class = class(x),
+                index = index)
+    }
+    else x
+  }
+  if(length(k) > 1){
+    rval <- sapply(k, function(i) alag(x, i))
+    colnames(rval) <- k
+  }
+  else{
+    rval <- alag(x, k)
+  }
+  return(rval)
+
 }

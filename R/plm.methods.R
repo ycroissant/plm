@@ -159,7 +159,9 @@ formula.plm <- function(x, ...){
 }
 
 # describe function: to extract the characteristics of the plm model
-describe <- function(x, what = c('model', 'effect', 'random.method', 'inst.method')){
+describe <- function(x,
+                     what = c('model', 'effect', 'random.method',
+                       'inst.method', 'transformation')){
   what <- match.arg(what)
   cl <- x$args
 ##   if (is.name(cl$effect)) cl$effect <- eval(cl$effect, parent.frame())
@@ -169,8 +171,12 @@ describe <- function(x, what = c('model', 'effect', 'random.method', 'inst.metho
   switch(what,
          model  = ifelse(!is.null(cl$model), cl$model, "within"),
          effect = ifelse(!is.null(cl$effect), cl$effect, "individual"),
-         random.method = ifelse(!is.null(cl$random.method), cl$random.method, "swar"),
-         inst.method   = ifelse(!is.null(cl$inst.method), cl$inst.method, "bvk")
+         random.method = ifelse(!is.null(cl$random.method),
+           cl$random.method, "swar"),
+         inst.method   = ifelse(!is.null(cl$inst.method),
+           cl$inst.method, "bvk"),
+         transformation = ifelse(!is.null(cl$transformation),
+           cl$transformation, "d")
          )
 }
          

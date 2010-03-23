@@ -1,363 +1,437 @@
-pgmm <- function(formula, data, effect = c("individual", "twoways", "none"),
+pgmm <- function(formula, data, subset, na.action,
+                 effect = c("twoways", "individual"),
                  model = c("onestep", "twosteps"),
-                 instruments = NULL, gmm.inst, lag.gmm, lag.form,
-                 transformation = c("d", "ld"), fsm = NULL, ...){
-  
+                 transformation = c("d", "ld"), fsm = NULL,
+                 index = NULL, ...){
+  cl <- match.call(expand.dots = FALSE)
   effect <- match.arg(effect)
   model <- match.arg(model)
   transformation <- match.arg(transformation)
-  cl <- match.call()
-
-  # if formula is not a dynformula object, check for the relevant
-  # arguments in ... and coerce it
-  if (!inherits(formula, "dynformula")){
-    formula <- match.call(expand.dots = TRUE)
-    m <- match(c("formula", "lag.form", "diff.form", "log.form"),names(cl),0)
-    formula <- formula[c(1, m)]
-    formula[[1]] <- as.name("dynformula")
-    formula <- cl$formula <- eval(formula, parent.frame())
+  
+  # the following section ensures backward compatibility with the old
+  # formula and dynformula interfaces
+  if (inherits(formula, "dynformula") || length(Formula(formula))[2] == 1){
+    if (!inherits(formula, "dynformula")){
+      formula <- match.call(expand.dots = TRUE)
+      m <- match(c("formula", "lag.form", "diff.form", "log.form"),names(formula),0)
+      formula <- formula[c(1, m)]
+      formula[[1]] <- as.name("dynformula")
+      formula <- cl$formula <- eval(formula, parent.frame())
+    }
+    response.name <- paste(deparse(formula[[2]]))
+    main.lags <- attr(formula, "lag")
+    if (length(main.lags[[1]]) == 1 && main.lags[[1]] > 1)
+      main.lags[[1]] <- c(1, main.lags[[1]])
+    main.lags[2:length(main.lags)] <- lapply(main.lags[2:length(main.lags)],
+                        function(x){
+                          if (length(x) == 1 && x != 0) x <- c(0, x)
+                          x
+                        })
+    main.form <- dynterms2formula(main.lags, response.name)
+    dots <- list(...)
+    gmm.inst <- dots$gmm.inst
+    lag.gmm <- dots$lag.gmm
+    instruments <- dots$instruments
+    gmm.form <- dynformula(gmm.inst, lag.form = lag.gmm)
+    gmm.lags <- attr(gmm.form, "lag")
+    gmm.lags <- lapply(gmm.lags, function(x) min(x):max(x))
+    gmm.form <- dynterms2formula(gmm.lags)
+    formula <- as.Formula(main.form, gmm.form)
   }
+  
+  x <- formula
+  if (!inherits(x, "Formula")) x <- Formula(formula)
+  # gmm instruments : named list with the lags, names being the variables
+  gmm.form <- formula(x, rhs = 2, lhs = 0)
+  gmm.lags <- dynterms(gmm.form)
+  # covariates : named list with the lags, names being the variables
+  main.form <- formula(x, rhs = 1, lhs = 1)
+  main.lags <- dynterms(main.form)
+  # Three possibilities for 'normal' instruments :
+  # 1. the third part of the formula describes them
+  # 2. all variables not used as gmm are normal instruments
+  # 3. all variables are gmm instruments and therefore, there are no
+  # normal instruments except maybe time dummies
+  # the third part of the formula (if any) deals with the 'normal' instruments
+  if (length(x)[2] == 3){
+    inst.form <- formula(x, rhs = 3, lhs = 0)
+    # the . - x1 + x2 syntax is allowed, in this case update with the first part
+    inst.form <- update(main.form, inst.form)
+    inst.form <- formula(Formula(inst.form), lhs = 0)
+    inst.lags <- dynterms(inst.form)
+  }
+  else{
+    # the default 'normal' instruments is the subset of covariates
+    # which are not used as gmm instruments
+    iv <- names(main.lags)[! names(main.lags) %in% names(gmm.lags)]
+    inst.lags <- main.lags[iv]
+    # generate the formula for 'normal' instruments
+    if (length(inst.lags) > 0) inst.form <- dynterms2formula(inst.lags)
+    else{
+      # the case where there are no normal instruments : put inst.form
+      # and inst.lags to NULL
+      inst.form <- NULL
+      inst.lags <- NULL
+    }
+  }
+  
+  # How many time series are lost ? May be the maximum number of lags
+  # of any covariates + 1 because of first - differencing or the
+  # largest minimum lag for any gmm or normal instruments
+  gmm.minlag <- max(sapply(gmm.lags, min))
+  if (!is.null(inst.lags)) inst.maxlag <- max(sapply(inst.lags, max))
+  else inst.maxlag <- 0
+  main.maxlag <- max(sapply(main.lags, max))
+  time.lost <- max(main.maxlag + 1, inst.maxlag + 1, gmm.minlag)
+  time.lost.level <- max(main.maxlag, inst.maxlag)
+  
+  # Compute the model frame using the covariates, the 'normal'
+  # instruments if any and the gmm instruments without the lags
+  gmm.form <- as.formula(paste("~", paste(names(gmm.lags), collapse = "+")))
+  if (!is.null(inst.form))  F <- as.Formula(main.form, gmm.form, inst.form)
+  else F <- as.Formula(main.form, gmm.form)
   mf <- match.call(expand.dots = FALSE)
   m <- match(c("formula", "data", "subset", "na.action", "index"),names(mf),0)
   mf <- mf[c(1,m)]
   mf$drop.unused.levels <- TRUE
   mf[[1]] <- as.name("plm")
   mf$model <- NA
-
-  mf$formula <- formula(formula)
+  mf$formula <- F
   mf$na.action <- "na.pass"
+  data <- eval(mf, parent.frame())
+  index <- attr(data, "index")
+  T <- length(levels(index[[2]]))
+  pdim <- pdim(data)
 
-  if(is.null(fsm)){
-    fsm <- switch(transformation,
-                  "d"="G",
-                  "ld"="full"
-                  )
-  }
+  # Compute the first step matrices
+  if (transformation == "d") A1 <- tcrossprod(diff(diag(1, T - time.lost + 1)))
+  if (transformation == "ld") A1 <- FSM(T - time.lost.level, "full")
   
-  # for now, let suppose that gmm.inst and gmm.lag are not lists (why
-  # should they anyway ?)
-  var.gmm <- attr(terms(gmm.inst), "term.labels")
-  var.tot <- attr(formula, "var")
-  J <- length(var.gmm)
-
-  # if instruments is null, use variables as their own instruments
-  if (is.null(instruments)){
-    var.inst <- var.tot[! var.tot %in% var.gmm]
-
-    if (length(var.inst) > 0){
-      lag.inst <- attr(formula,"lag")[var.inst]
-      log.inst <- attr(formula,"log")[var.inst]
-      diff.inst <- attr(formula,"diff")[var.inst]
-      form.inst <- as.formula(paste("~", paste(var.inst,collapse="+"), sep=""))
-      instruments <- formula(dynformula(form.inst, lag.inst, diff.inst, log.inst))
-    }
-  }
-  if (!is.list(lag.gmm)) lag.gmm <- rep(list(lag.gmm),J)
-
-  # the number of time series lost depends on the lags of the gmm
-  # instruments and on the lags of the model
-  max.lag.gmm <- max(sapply(lag.gmm,function(x) x[1]))
-  max.lag.model <- max(sapply(attr(formula,"lag"),max)) + 1
-  time.lost <- max(max.lag.model,max.lag.gmm)
-
-  # if SYSGMM is required, the gmm.instruments are just the variables
-  # in level with one lag
-  if (transformation=="ld"){
-    lag.gmm.level <- rep(list(c(1,1)),J)
-    gmm.inst.level <- dynformula(gmm.inst, diff = T)
-  }
-  # we then use mf (which is a call with plm as function and NA as
-  # model, ie returns a model.frame. We provide any formula we need
-  # (for the model, the gmm.inst, the instruments so that the relevant
-  # data.frame are created.
-
-  mf$formula <- formula(formula) ; data.formula <- eval(mf,parent.frame())
-  mf$formula <- formula(gmm.inst)
-
-  data.gmm.inst <- eval(mf,parent.frame())
-
-  if (!is.null(instruments)){
-    mf$formula <- instruments ;  data.instruments <- eval(mf,parent.frame())
-  }
-
-
-  # we then collect some informations about the data
-  pdim <- pdim(data.formula)
-  time.names <- pdim$panel.names$time.names
-  id.names <- pdim$panel.names$id.names
-  T <- pdim$nT$T
-  index <- attr(data.formula, "index")
-  ti <- split(index[[2]], index[[1]])
-
-  # we now call the extract.data to extract the response and the
-  # model.matrix of the relevant formula described earlier splited by
-  # individual
-  # first for the model, extract the yX as a matrix splited by
-  # individual, and then remove the relevant number of time series
-  yX <- extract.data(data.formula)
-  K <- ncol(yX[[1]])-1
-  Ky <- attr(formula,"lag")[[1]]
-  if (length(Ky) > 1) Ky <- Ky[2]-Ky[1]+1
-  K <- K-Ky
-  Kt <- T-time.lost
-  if (transformation == "ld") Kt <- Kt + 1
-  if (effect == "individual") Kt <- 0
-  K <- list(K = K, Ky = Ky, Kt = Kt)
-
-  yX <- lapply(yX, function(x) if(time.lost==1) x else x[-c(1:(time.lost-1)),])
-
-
-  # then do the same with the matrix of "normal" instruments (if any)
-  if (is.null(instruments)) In <- NULL else{
-    In <- extract.data(data.instruments)
-    In <- lapply(In,function(x) if(time.lost==1) x else x[-c(1:(time.lost-1)),])
-  }
-  
-  # now the big task, the gmm instruments (so called W) matrix. First
-  # extract the matrices of instruments, splited by individual, then
-  # compute the J matrix which compute the relevant lag to use, and
-  # finally, use the momatrix function to compute the W matrix with
-  # the relevant lags
-  W <- extract.data(data.gmm.inst)
-  J <- makeJ(time.names, gmm.inst, lag.gmm,time.lost)
-  W <- lapply(W, momatrix, J, time.names)
-  if (transformation=="ld"){
-    # additional stuff if the system GMM is required. Same commands as
-    # previously to compute the gmm instrument matrix with variable in
-    # differences
-    mf$formula <- formula(gmm.inst.level) ; data.gmm.inst.level <- eval(mf,parent.frame())
-    Wl <- extract.data(data.gmm.inst.level)
-    Jl <- makeJ(time.names[-1], gmm.inst.level, lag.gmm.level,time.lost-1)
-    Wl <- lapply(Wl,
-                 function(x){
-                   x <- x[-1,,drop=FALSE]
-                   x <- momatrix(x, Jl, time.names[-1])
-                   prems <- which(time.names == rownames(x)[1])
-                   x <- rbind(0,x)
-                   rownames(x)[1] <- time.names[prems-1]
-                   x
-                 }
+  # Get the covariates matrix, split it by individual 
+  attr(data, "formula") <- formula(main.form)
+  yX <- extract.data(data)
+  namesX <- colnames(yX[[1]])[-1]
+  # Get a list of missing time series for each individual
+  rn <- lapply(yX, rownames)
+  allrn <- levels(attr(data, "index")[[2]])
+  nats <- lapply(rn,
+               function(x){
+                 z <- allrn %in% x
+                 z <- which(z)
+                 c(z[1] - 1, T - z[length(z)])
+               }
                )
+  # Get the instruments and GMM matrix, split them by individual
+  if (!is.null(inst.form)){
+    attr(data, "formula") <- inst.form
+    inst <- extract.data(data)
   }
+  else inst <- NULL
 
-  # finally, if a twoways effect model is required, time dummies shoud
-  # be added
+  attr(data, "formula") <- gmm.form
+  W <- extract.data(data, as.matrix = FALSE)
+  # Add an nats attribute to the three lists of matrices
+  W <- mapply(function(x, y){ attr(x, "nats") <- y;x}, W, nats, SIMPLIFY=FALSE)
+  if (!is.null(inst))
+    inst <- mapply(function(x, y){ attr(x, "nats") <- y;x}, inst, nats, SIMPLIFY=FALSE)
+  yX <- mapply(function(x, y){ attr(x, "nats") <- y;x}, yX, nats, SIMPLIFY=FALSE)
+
+  # Create the matrix of time dummies.
+  namest <- levels(attr(data, "index")[,2])
   if (effect == "twoways"){
     if (transformation == "ld"){
-      time.dummies <- cbind(1,diag(1,T)[,-(1:(time.lost))])
-      dimnames(time.dummies) <- list(time.names,c("(intercept)",time.names[(time.lost+1):T]))
+      td <- cbind(1, rbind(0, diag(1, T - 1)))
+      # remove as many columns and row as there are lost time series
+      # in level (the difference of position between rows and columns
+      # is due to the fact that the first column of td is the
+      # intercept and should be kept anyway
+      td.gmm.level <- td.model.level <-
+        td[-c(1:time.lost.level), - c(2:(2+time.lost.level-1))]
+      td.model.diff <- diff(td.model.level)
+      namest <- c("(intercept)", namest[-c(0:time.lost.level+1)])
     }
-    else{
-      time.dummies <- diag(1,T)[,-(1:(time.lost))]
-      dimnames(time.dummies) <- list(time.names,time.names[(time.lost+1):T])
+    if (transformation == "d"){
+      td.gmm.diff <- td.model.diff <- diff(diag(1, T - time.lost + 1))[, -1]
+      namest <- namest[-c(0:(time.lost))]
     }
-  }
-  else time.dummies <- NULL
+  }  
 
-  # then, call whether pgmm.sys or pgmm.diff
-  result <- switch(transformation,
-                   "ld" = pgmm.sys(yX, W, Wl, In, time.dummies, fsm, model, cl),
-                   "d"  = pgmm.diff(yX, W, In, time.dummies, fsm, model, cl)
+  # create the matrix of gmm instruments for every individual
+  W <- lapply(W,
+              # loop on all the individuals
+              function(x){
+                nats <- attr(x, "nats")
+                # loop on every gmm instrument
+                u <- mapply(
+                            function(x, g){
+                              rg <- range(g)
+                              # Create the relevant matrix for one gmm instrument
+                              x <- c(rep(0, nats[1]), x, rep(0, nats[2]))
+                              z <- as.list((time.lost+1):T)
+                              x <- lapply(z, function(y) x[max(1, y - rg[2]):(y - rg[1])])
+                              lx <- sapply(x, length)
+                              n <- length(x)
+                              lxc <- cumsum(lx)
+                              before <- c(0, lxc[-n])
+                              after <- lxc[n] - sapply(x, length) - before
+                              result <- mapply(function(x, y, z)
+                                               c(rep(0, y), x, rep(0, z)),
+                                               x, before, after)
+                              matrix(unlist(result), nrow = length(x), byrow = TRUE)
+                            },
+                            x, gmm.lags,
+                            SIMPLIFY = FALSE
+                            )
+                # cbind all the matrices and owerwrite rows with 0 if
+                # there are some missing time series
+                nr <- nrow(u[[1]])
+                u <- unlist(u)
+                u <- matrix(u, nrow = nr)
+                # add the matrix of time dummies if required and if
+                # diff gmm is computed
+                if (effect == "twoways"){
+                  if (transformation == "d") u <- cbind(u, td.gmm.diff)
+                }
+                if (nats[1]) u[1:nats[1], ] <- 0
+                if (nats[2]) u[(T - time.lost - nats[2] + 1):(T - time.lost), ] <- 0
+                # in case of 'sys' gmm, add for each time series the
+                # difference, laged 1 of every gmm instrument
+                if (transformation == "ld"){
+                  ud <- lapply(x,
+                               function(z)
+                               diag(c(rep(0, nats[1]), diff(z[-c(length(z))]), rep(0, nats[2])))
+                               )
+                  # the matrix of instruments in difference has T - 2
+                  # rows if one time series is lost (there are no gmm
+                  # instruments for t = 2 but there is a moment
+                  # condition with the intercept. In this case, a row
+                  # of 0 should be added. Otherwise, the number of
+                  # rows is just T - time.lost.level
+                  nrow.ud <- ifelse(time.lost.level == 1, T - 2, T - time.lost.level)
+                  ud <- matrix(unlist(ud), nrow = nrow.ud)
+                  if (time.lost.level == 1) ud <- rbind(0, ud)
+                  ud <- cbind(ud, td.gmm.level)
+                  # owerwrite rows of  missing time series with 0
+                  if (nats[1]) ud[c(0:nats[1]), ] <- 0
+                  if (nats[2]) ud[(T-time.lost.level- nats[2]+1):(T-time.lost.level), ] <- 0
+                  u <- bdiag(u, ud)
+                }
+                u
+              }
+              )
+
+  yX <- lapply(yX,
+               function(x){
+                 nats <- attr(x, 'nats')
+                 nc <- ncol(x)
+                 # add as many rows of NAs than there are missing
+                 # time series, at the begining and/or at the end
+                 before <- matrix(NA, nats[1] ,nc)
+                 after <- matrix(NA, nats[2], nc)
+                 x <- rbind(before, x, after)
+                 xd <- diff(x)
+                 # remove time.lost - 1 time series (xd is already
+                 # differenced
+                 xd <- xd[-c(1:(time.lost-1)), , drop = FALSE]
+                 # add time dummies if required
+                 if (effect == "twoways") xd <- cbind(xd, td.model.diff)
+                 # put 0 lignes for missing time series 
+                 if (nats[1]) xd[0:nats[1], ] <- 0
+                 if (nats[2]) xd[(T-time.lost- nats[2]+1):(T-time.lost), ] <- 0
+                 if (transformation == "ld"){
+                   # remove the relevent number of time series for
+                   # data in level
+                   x <- x[- c(0:time.lost.level), , drop=FALSE]
+                   # add the matrix of time dummies if required
+                   if (effect == "twoways"){
+                     x <- cbind(x, td.model.level)
+                   }
+                   # owerwrite rows of  missing time series with 0
+                   if (nats[1]) x[c(0:nats[1]), ] <- 0
+                   if (nats[2]) x[(T-time.lost.level- nats[2]+1):(T-time.lost.level), ] <- 0
+                   xd <- rbind(xd, x)
+                 }
+                 xd
+               }
+               )
+
+  if (!is.null(inst)){
+    inst <- lapply(inst,
+                   function(x){
+                     nats <- attr(x, 'nats')
+                     nc <- ncol(x)
+                     # add as many rows of NAs than there are missing
+                     # time series, at the begining and/or at the end
+                     before <- matrix(NA, nats[1] ,nc)
+                     after <- matrix(NA, nats[2], nc)
+                     x <- rbind(before, x, after)
+                     xd <- diff(x)
+                     # remove time.lost - 1 time series (xd is already
+                     # differenced
+                     xd <- xd[-c(1:(time.lost-1)), , drop = FALSE]
+                     # put 0 lignes for missing time series 
+                     if (nats[1]) xd[1:nats[1], ] <- 0
+                     if (nats[2]) xd[(T-time.lost- nats[2]+1):(T-time.lost), ] <- 0
+                     if (transformation == "ld"){
+                       # remove the relevent number of time series for
+                       # data in level
+                       x <- x[- c(0:time.lost.level), , drop=FALSE]
+                       # put 0 lignes for missing time series 
+                       if (nats[1]) x[c(0:nats[1]), ] <- 0
+                       if (nats[2]) x[(T-time.lost.level- nats[2]+1):(T-time.lost.level), ] <- 0
+                       xd <- bdiag(xd, x)
+                     }
+                     xd
+                   }
                    )
-
-  result$time.lost <- time.lost
-  result$K <- K
-  structure(result,class=c("pgmm","panelmodel"),pdim = pdim)
-}
-
-
-pgmm.diff <- function(yX, W, In, time.dummies, fsm, model, cl){
-  if(!is.null(time.dummies)){
-    yX <- lapply(yX,function(x) cbind(x,time.dummies[rownames(x),]))
-    W <- lapply(W,function(x) cbind(x,time.dummies[rownames(x),]))
+    # cbind the matrices of gmm and normal instruments
+    W <- mapply(cbind, W, inst, SIMPLIFY = FALSE)
   }
-  yX <- lapply(yX,diff)
-  if (!is.null(In)){
-    In <- lapply(In,diff)
-    W <- mapply(cbind,W,In,SIMPLIFY=FALSE)
-  }
-  
-  Vi <- lapply(W,function(x) crossprod(t(crossprod(x,FSM(dim(x)[1],fsm))),x))
-  A1 <- solve(suml(Vi))*length(W)
-  WyXi <- mapply(crossprod,W,yX,SIMPLIFY=FALSE)
-  Wyi <- lapply(WyXi,function(x) x[,1])
-  WXi <- lapply(WyXi,function(x) x[,-1])
-  Wy <- suml(Wyi)
-  WX <- suml(WXi)
-  var.names <- colnames(yX[[1]])
-  B1 <- solve(t(WX)%*%A1%*%WX)
-  rownames(B1) <- colnames(B1) <- var.names[-1]
-  coefficients <- B1%*%(t(WX)%*%A1%*%Wy)
-  dim(coefficients) <- NULL
-  names(coefficients) <- var.names[-1]
+  # compute the estimator
+  WX <- mapply(function(x, y) crossprod(x, y), W, yX, SIMPLIFY = FALSE)
+  Wy <- lapply(WX, function(x) x[, 1])
+  WX <- lapply(WX, function(x) x[, -1])
+  A1 <- lapply(W, function(x) crossprod(t(crossprod(x, A1)), x))
+  A1 <- solve(suml(A1))*length(W)
+  WX <- suml(WX)
+  Wy <- suml(Wy)
+  B1 <- solve(crossprod(WX, t(crossprod(WX, A1))))
+  Y1 <- crossprod(t(crossprod(WX, A1)), Wy)
+  coefficients <- as.numeric(crossprod(B1, Y1))
+  names(coefficients) <- c(namesX, namest)
   residuals <- lapply(yX,
                       function(x)
-                      as.vector(x[,1]-crossprod(t(x[,-1]),coefficients)))
+                      as.vector(x[,1] -  crossprod(t(x[,-1]), coefficients)))
   outresid <- lapply(residuals,function(x) outer(x,x))
-  A2 <- mapply(crossprod,W,outresid,SIMPLIFY=FALSE)
-  A2 <- mapply("%*%",A2,W,SIMPLIFY=FALSE)
-#  A2 <- solve(suml(A2))
-  A2 <- ginv(suml(A2))
-  B2 <- solve(t(WX)%*%A2%*%WX)
-  rownames(B2) <- colnames(B2) <- var.names[-1]
+  A2 <- mapply(function(x, y) crossprod(t(crossprod(x, y)), x), W, outresid, SIMPLIFY = FALSE)
+  A2 <- solve(suml(A2))
+  B2 <- solve(crossprod(WX, t(crossprod(WX, A2))))
+
   if (model=="twosteps"){
     coef1s <- coefficients
-    coefficients <- B2%*%(t(WX)%*%A2%*%Wy)
-    dim(coefficients) <- NULL
-    names(coefficients) <- var.names[-1]
+    Y2 <- crossprod(t(crossprod(WX, A2)), Wy)
+    coefficients <- as.numeric(crossprod(B2, Y2))
+    names(coefficients) <- c(namesX, namest)
     vcov <- B2
   }
-  else{
-    vcov <- B1
-  }
-  residuals <- lapply(yX,function(x){
-    nz <- rownames(x)
-    z <- as.vector(x[,1]-crossprod(t(x[,-1]),coefficients))
-    names(z) <- nz
-    z
-  }
-                      )
-  fitted.values <- mapply(function(x,y) x[,1]-y,yX,residuals)
-  n <- apply(sapply(yX,dim),1,sum)[1]
-  K <- length(attr(terms(as.formula(cl$formula)),"term.labels"))
-  Kt <- dim(yX[[1]])[2]-K-1
-  p <- ncol(W[[1]])
-  Ky <- attr(as.formula(cl$formula),"lag")[[1]][2]
-  if(is.na(Ky)) Ky <- 0
-  K <- list(K=K-Ky,Ky=Ky,Kt=Kt)
-  if (model=="twosteps") coefficients <- list(coef1s,coefficients)
-
-  list(coefficients = coefficients, residuals = residuals, vcov = vcov,
-       fitted.values = fitted.values,
-       df.residual = df.residual, 
-       model = yX, W = W, K = K, A1 = A1, A2 = A2, call = cl)
-}
-
-pgmm.sys <- function(yX, W, Wl, In, time.dummies, fsm, model, cl){
-  if(!is.null(time.dummies)){
-    yX <- lapply(yX,function(x) cbind(x,time.dummies[rownames(x),]))
-    Wl <- lapply(Wl,function(x) cbind(x,time.dummies[rownames(x),]))
-  }
-  else{
-    yX <- lapply(yX,function(x){x <- cbind(x,1);colnames(x)[dim(x)[2]] <- "(intercept)";x})
-    Wl <- lapply(Wl,function(x){x <- cbind(x,1);colnames(x)[dim(x)[2]] <- "(intercept)";x})
-  }
-    
-  if (!is.null(In)){
-    Inl <- In
-    In <- lapply(In,diff)
-    W <- mapply(cbind,W,In,SIMPLIFY=FALSE)
-    Wl <- mapply(cbind,Wl,Inl,SIMPLIFY=FALSE)
-  }
-  var.names <- colnames(yX[[1]])
-  yXl <- yX
-  yX <- lapply(yX,diff)
-  pi <- lapply(Wl,nrow)
-  F <- lapply(pi,FSM,fsm)
-  WS <- mapply(bdiag,W,Wl,SIMPLIFY=FALSE)
-  yXS <- mapply(rbind,yX,yXl,SIMPLIFY=FALSE)
-  WyXi <- mapply(crossprod,WS,yXS,SIMPLIFY=FALSE)
-  Wyi <- lapply(WyXi,function(x) x[,1])
-  WXi <- lapply(WyXi,function(x) x[,-1])
-  Wy <- suml(Wyi)
-  WX <- suml(WXi)
-  Vi <- mapply(function(x,y) crossprod(t(crossprod(x,y)),x),WS,F,SIMPLIFY=FALSE)
-  A1 <- solve(suml(Vi))*length(WS)
-  B1 <- solve(t(WX)%*%A1%*%WX)
-  coefficients <- B1%*%(t(WX)%*%A1%*%Wy)
-  dim(coefficients) <- NULL
-  names(coefficients) <- var.names[-1]
-  residuals <- lapply(yXl,
+  else vcov <- B1
+  rownames(vcov) <- colnames(vcov) <- c(namesX, namest)
+  residuals <- lapply(yX,
                       function(x){
-                        nx <- rownames(x)
-                        z <- as.vector(x[,1]-crossprod(t(x[,-1]),coefficients))
-                        names(z) <- nx
+                        nz <- rownames(x)
+                        z <- as.vector(x[, 1] - crossprod(t(x[, -1]), coefficients))
+                        names(z) <- nz
                         z
                       }
                       )
-  resid <- lapply(residuals,function(x) c(diff(x),x))
-  outresid <- lapply(resid,function(x) outer(x,x))
-  Vi <- mapply(function(x,y) crossprod(t(crossprod(x,y)),x),WS,outresid,SIMPLIFY=FALSE)
-  A2 <- solve(suml(Vi))
-  B2 <- solve(t(WX)%*%A2%*%WX)
-  vcov <- B1
-  if (model=="twosteps"){
-    coef1s <- coefficients
-    coefficients <- B2%*%(t(WX)%*%A2%*%Wy)
-    dim(coefficients) <- NULL
-    names(coefficients) <- var.names[-1]
-    vcov <- B2
-    residuals <- lapply(yXl,
-                        function(x){
-                          nx <- rownames(x)
-                          z <- as.vector(x[,1]-crossprod(t(x[,-1]),coefficients))
-                          names(z) <- nx
-                          z
-                        }
-                        )
-  }
-  fitted.values <- mapply(function(x,y) x[,1]-y,yXl,residuals)
-  n <- apply(sapply(yX,dim),1,sum)[1]
-  K <- length(attr(terms(as.formula(cl$formula)),"term.labels"))
-  Kt <- dim(yX[[1]])[2]-K-1
-  p <- ncol(W[[1]])
-  dim(coefficients) <- NULL
-  names(coefficients) <- rownames(vcov) <- colnames(vcov) <- var.names[-1]
-  Ky <- attr(as.formula(cl$formula),"lag")[[1]][2]
-  if(is.na(Ky)) Ky <- 0
-  K <- list(K=K-Ky,Ky=Ky,Kt=Kt)
-  if (model=="twosteps") coefficients <- list(coef1s,coefficients)
-  list(coefficients = coefficients, residuals = residuals, vcov = vcov,
-       fitted.values = fitted.values,
-       df.residual = df.residual, 
-       model = yXl, W = WS, K = K, A1 = A1, A2 = A2, call = cl, Wd = W, Wl = Wl)
-
+  fitted.values <- mapply(function(x,y) x[, 1] - y, yX, residuals)
+  if (model == "twosteps") coefficients <- list(coef1s, coefficients)
+  args <- list(model = model, effect = effect,
+               transformation = transformation, namest = namest)
+  result <- list(coefficients = coefficients, residuals = residuals, vcov = vcov,
+                 fitted.values = fitted.values,
+                 df.residual = df.residual, 
+                 model = yX, W = W, A1 = A1, A2 = A2,
+                 call = cl, args = args)
+  result <- structure(result, class = c("pgmm", "panelmodel"),
+                      pdim = pdim)
+  result
 }
 
-extract.data <- function(data){
-  # the next to lines conflicts with Formula
-  #attr(attr(data,"terms"),"intercept") <- 0
-  #trms <- attr(data,"terms")
-  trms <- attr(data, "formula")
-  index <- attr(data, "index")
-  has.response <- length(trms)[1] > 0
+dynterms <- function(x){
+  trms.lab <- attr(terms(x), "term.labels")
+  result <- getvar(trms.lab)
+  nv <- names(result)
+  dn <- names(table(nv))[table(nv) > 1]
+  un <- names(table(nv))[table(nv) == 1]
+  resu <- result[un]
+  for (i in dn){
+    v <- sort(unique(unlist(result[nv == i])))
+    names(v) <- NULL
+    resu[[i]] <- v
+  }
+  resu
+}
 
-#  class(data) <- "data.frame"
-  data <- split(data, index[[1]])
-  time <- split(index[[2]], index[[1]])
-  data <- mapply(function(x, y){ rownames(x) <- y; return(x)}, data, time, SIMPLIFY = FALSE)
-  
-  if (has.response){
-    data <- lapply(data,
-                   function(x){
-                     x <- cbind(x[[1]],
-                                model.matrix(trms, x)[, -1, drop = FALSE])
-#                    [,-1] is a QND patch
-                     colnames(x)[1] <- deparse(trms[[2]])
-#                    c(nrow(model.matrix(trms, x)), dim(x[[1]]))
-                     x
-                   }
+
+getvar <- function(x){
+  x <- as.list(x)
+  result <- lapply(x, function(y){
+    deb <- as.numeric(gregexpr("lag\\(", y)[[1]])
+    if (deb == -1){
+      lags <- 0
+      avar <- y
+    }
+    else{
+#      inspar <- substr(y, deb + 2, nchar(y) - 1)
+      inspar <- substr(y, deb + 4, nchar(y) - 1)
+      coma <- as.numeric(gregexpr(",", inspar)[[1]][1])
+      if (coma == -1){
+        endvar <- nchar(inspar)
+        lags <- 1
+      }
+      else{
+        endvar <- coma - 1
+        lags <- substr(inspar, coma + 1, nchar(inspar))
+        lags <- eval(parse(text = lags))
+      }
+      avar <- substr(inspar, 1, endvar)
+    }
+    list(avar, lags)
+  }
                    )
-  }
-  else
-    data <- lapply(data,
-                   function(x){
-                     model.matrix(trms, x)[, -1, drop = FALSE]
-                     }
-                   ) #[,-1] is a QND patch
-  data
+  nres <- sapply(result, function(x) x[[1]])
+  result <- lapply(result, function(x) x[[2]])
+  names(result) <- nres
+  result
+  
 }
 
-extract.data <- function(data){
+dynterms2formula <- function(x, response.name = NULL){
+  result <- character(0)
+  for (i in 1:length(x)){
+    theinst <- x[[i]]
+    # if the first element is zero, write the variable without lag and
+    # drop the 0 from the vector
+    if (theinst[1] == 0){
+      at <- names(x)[i]
+      theinst <- theinst[-1]
+    }
+    else{
+      at <- character(0)
+    }
+    # if there are still some lags, write them
+    if (length(theinst) > 0){
+      if (length(theinst) > 1){
+        at <- c(at, paste("lag(",names(x)[i],",c(",
+                          paste(theinst, collapse = ","), "))", sep =""))
+      }
+      else{
+        at <- c(at, paste("lag(",names(x)[i], ",", theinst, ")", sep =""))
+      }
+    }
+    result <- c(result, at)
+  }
+  if (is.null(response.name)) as.formula(paste("~", paste(result, collapse = "+")))
+  else as.formula(paste(response.name, "~", paste(result, collapse = "+")))
+}
+
+extract.data <- function(data, as.matrix = TRUE){
   # the previous version is *very* slow because :
   # 1. split works wrong on pdata.frame
   # 2. model.matrix is lapplied !
-  
-  trms <- attr(data, "formula")
+  form <- attr(data, "formula")
+  trms <- terms(form)
+  has.response <- attr(trms, 'response') == 1
+  has.intercept <- attr(trms, 'intercept') == 1
+  if (has.intercept == 1){
+    # Formula is unable to update formulas with no lhs
+    form <- Formula(update(formula(form), ~. -1))
+#    form <- update(form, ~. -1)
+  }
   index <- attr(data, "index")
-  has.response <- length(trms)[1] > 0
-
-  X <- model.matrix(trms, data)[, -1, drop = FALSE]
+  
+  X <- model.matrix(form, data)
   if (has.response){
     X <- cbind(data[[1]], X)
     colnames(X)[1] <- deparse(trms[[2]])
@@ -367,65 +441,11 @@ extract.data <- function(data){
   data <- mapply(
                  function(x, y){
                    rownames(x) <- y
-                   return(as.matrix(x))
+                   if (as.matrix) x <- as.matrix(x)
+                   x
                  }
                  , data, time, SIMPLIFY = FALSE)
   data
-}
-
-
-
-makeJ <- function(time.names,gmminst,lag.gmm,time.lost){
-  T <- length(time.names)
-  names.gmm <- attr(terms(gmminst),"term.label")
-  J <- array(0,dim=c(T,length(names.gmm),3),
-             dimnames=list(time.names,names.gmm,
-               c("start","end","n")))
-  first.period <- sapply(lag.gmm,max)
-  last.period <- sapply(lag.gmm,min)
-  names(first.period) <- names(last.period) <- names.gmm
-  for (ni in names.gmm){
-    for (t in 1:T){
-      J[t,ni,"start"] <- max(1,t-first.period[ni])
-      J[t,ni,"end"] <- max(1,min(t-last.period[ni],T))
-    }
-  }
-  
-  J[,,"n"] <- J[,,"end",drop=FALSE]-J[,,"start",drop=FALSE]+1
-  if (time.lost!=0){
-    J <- J[-(1:time.lost),,,drop=FALSE]
-  }
-  J
-}
-
-momatrix <- function(x,J,ttot){
-  names.gmm <- dimnames(J)[[2]]
-  z <- matrix(0, nrow = length(ttot),
-              ncol = length(names.gmm),
-              dimnames = list(ttot,names.gmm))
-  z[rownames(x),] <- x
-  t.kept <- dimnames(J)[[1]]
-  t.drop <- length(ttot) - length(t.kept)
-  start <- which(ttot == rownames(x)[1])
-  cnames <- c()
-  for (y in t.kept){
-    my <- c()
-    for (ng in names.gmm){
-      my <- c(my,z[seq(J[y,ng,1], J[y,ng,2]), ng])
-    }
-    cnames <- c(cnames, names(my))
-    if (y==t.kept[1]){
-      maty <- matrix(my, nrow=1)
-    }
-    else{
-      lgn <- c(rep(0, ncol(maty)), my)
-      maty <- cbind(maty, matrix(0, nrow = nrow(maty), ncol = length(my)))
-      maty <- rbind(maty, lgn)
-    }
-  }
-  rownames(maty) <- t.kept
-  maty <- maty[rownames(x)[(t.drop+1):dim(x)[1]],]
-  maty
 }
 
 

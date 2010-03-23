@@ -4,7 +4,9 @@
 
 pFormula <- function(object) {
   stopifnot(inherits(object, "formula"))
-  object <- Formula(object)
+  if (!inherits(object, "Formula")){
+    object <- Formula(object)
+  }
   class(object) <- c("pFormula", class(object))
   object
 }

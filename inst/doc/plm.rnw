@@ -972,7 +972,7 @@ The model is first differenced to get rid of the individual effect:
 \end{equation}
 
 Least squares are inconsistent because $\Delta \epsilon_{it}$ is
-correlated with $ \Delta y_{it-1}$.  $y_{it-2}$ is a valid, but weak
+correlated with $ \Delta y_{it-1}g$.  $y_{it-2}$ is a valid, but weak
 instrument \citep[see][]{ANDE:HSIA:81}. The \textsc{gmm} estimator uses the fact that
 the number of valid instruments is growing with $t$:
 

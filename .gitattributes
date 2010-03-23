@@ -2,7 +2,6 @@
 /DESCRIPTION -text
 /NAMESPACE -text
 R/attributes.R -text
-R/describe.R -text
 R/divers.R -text
 R/dynformula.R -text
 R/ercomp.R -text

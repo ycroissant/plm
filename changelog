@@ -275,3 +275,20 @@ Changes since version 1.2-2
 
 	* Kt is fixed to 0 in pgmm when effect="individual"
 	
+Changes since version 1.2-3
+	
+	* lag.pseries now returns relevant names for the returned factor
+	
+	* pFormula is modified so that it can handle correctly Formula
+	object, and not only formula
+	
+	* pgmm has been completely rewriten with a new 'Formula'
+	interface. Old formula and dynformula interfaces are kept for
+	backward compatibility but won't be maintained in the future
+
+	* subset, na.action are added to the list of arguments of pgmm and
+	oldpgmm
+
+	* lag.pseries is now able to deal with vector arguments for lags,
+	e.g. lag(x, c(1,3))
+	

@@ -119,6 +119,10 @@ pdim.panelmodel <- function(x, ...){
   pdim(x)
 }
 
+pdim.pgmm <- function(x, ...){
+  attr(x, "pdim")
+}
+
 print.pdim <- function(x, ...){
   if (x$balanced){
     cat("Balanced Panel: ")
