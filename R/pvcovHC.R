@@ -169,7 +169,7 @@ vcovHC.plm <-function(x,method=c("arellano","white1","white2"),
   salame<-array(dim=c(k,k,n))
   for(i in 1:n) {
       groupinds<-tind[[i]]
-      xi<-demX[groupinds,]
+      xi<-demX[groupinds,,drop=FALSE]
       ui<-uhat[groupinds]
       salame[,,i]<-crossprod(xi,Omegai(ui))%*%xi
       }
