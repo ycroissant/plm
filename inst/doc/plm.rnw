@@ -168,10 +168,10 @@ unobserved effects model:
 
 The appropriate estimation method for this model depends on the
 properties of the two error components. The idiosyncratic error
-$\epsilon_{it}$ is usually assumed well-behaved and independent from both the
-regressors $x_{it}$ and the individual error component $\mu_i$. The
-individual component may be in turn either independent from the
-regressors or correlated.
+$\epsilon_{it}$ is usually assumed well-behaved and independent from
+both the regressors $x_{it}$ and the individual error component
+$\mu_i$. The individual component may be in turn either independent
+from the regressors or correlated.
 
 If it is correlated, the ordinary least squares (\textsc{ols})
 estimator for $\beta$ would be inconsistent, so it is customary to
@@ -192,9 +192,9 @@ is based on the estimation of the variance of the two error components,
 for which there are a number of different procedures available.
 
 If the individual component is missing altogether, pooled \textsc{ols}
-is the most efficient estimator for $\beta$. This set of assumptions is
-usually labelled {\em pooling} model, although this actually refers to
-the errors' properties and the appropriate estimation method rather
+is the most efficient estimator for $\beta$. This set of assumptions
+is usually labelled {\em pooling} model, although this actually refers
+to the errors' properties and the appropriate estimation method rather
 than the model itself.  If one relaxes the usual hypotheses of
 well-behaved, white noise errors and allows for the idiosyncratic
 error $\epsilon_{it}$ to be arbitrarily heteroskedastic and serially
@@ -205,24 +205,26 @@ individual-specific error components possibly correlated with the
 regressors, in which case it is termed {\em fixed effects}
 \textsc{gls}.
 
-Another way of estimating unobserved effects models through
-removing time-invariant individual components is by first-differencing 
-the data: lagging the model and subtracting, the time-invariant components
+Another way of estimating unobserved effects models through removing
+time-invariant individual components is by first-differencing the
+data: lagging the model and subtracting, the time-invariant components
 (the intercept and the individual error component) are eliminated, and
-the model 
+the model
 
 \begin{equation}
  \Delta y_{it}=  \beta^\top  \Delta x_{it} + \Delta u_{it}
 \end{equation}
 
-(where $\Delta y_{it}=y_{it}-y_{i,t-1}$, $\Delta x_{it}=x_{it}-x_{i,t-1}$ and, from
-(\ref{eq:errcomp}), $\Delta u_{it}=u_{it}-u_{i,t-1}=\Delta \epsilon_{it}$ for $t=2,...,T$) 
-can be consistently estimated by pooled \textsc{ols}. This is called
-the {\em first-difference}, or \textsc{fd} estimator. Its relative efficiency,
-and so reasons for choosing it against other consistent alternatives,
-depends on the properties of the error term. The \textsc{fd} estimator
-is usually preferred if the errors $u_{it}$ are strongly persistent in time,
-because then the $\Delta u_{it}$ will tend to be serially uncorrelated.
+(where $\Delta y_{it}=y_{it}-y_{i,t-1}$, $\Delta
+x_{it}=x_{it}-x_{i,t-1}$ and, from (\ref{eq:errcomp}), $\Delta
+u_{it}=u_{it}-u_{i,t-1}=\Delta \epsilon_{it}$ for $t=2,...,T$) can be
+consistently estimated by pooled \textsc{ols}. This is called the {\em
+  first-difference}, or \textsc{fd} estimator. Its relative
+efficiency, and so reasons for choosing it against other consistent
+alternatives, depends on the properties of the error term. The
+\textsc{fd} estimator is usually preferred if the errors $u_{it}$ are
+strongly persistent in time, because then the $\Delta u_{it}$ will
+tend to be serially uncorrelated.
 
 Lastly, the {\em between} model, which is computed on time (group)
 averages of the data, discards all the information due to intragroup
@@ -230,12 +232,13 @@ variability but is consistent in some settings (e.g., non-stationarity)
 where the others are not, and is often preferred to estimate long-run
 relationships.
 
-Variable coefficients models relax the assumption that $\beta_{it}=\beta$ for all
-$i,t$. Fixed coefficients models allow the coefficients to vary along
-one dimension, like $\beta_{it}=\beta_i$ for all $t$. Random
-coefficients models instead assume that coefficients vary randomly
-around a common average, as $\beta_{it}=\beta+\eta_{i}$ for all $t$,
-where $\eta_{i}$ is a group-- (time--) specific effect with mean zero.
+Variable coefficients models relax the assumption that
+$\beta_{it}=\beta$ for all $i,t$. Fixed coefficients models allow the
+coefficients to vary along one dimension, like $\beta_{it}=\beta_i$
+for all $t$. Random coefficients models instead assume that
+coefficients vary randomly around a common average, as
+$\beta_{it}=\beta+\eta_{i}$ for all $t$, where $\eta_{i}$ is a group--
+(time--) specific effect with mean zero.
 
 
 
@@ -652,14 +655,22 @@ $d=
 $
 
 is of dimension $(T-1,T)$. 
-g
+
 Note that \proglang{R}'s \code{diff()} and \code{lag()} functions
 don't compute correctly these transformations for panel data because
 they are unable to identify when there is a change in individual in
 the data. Specific methods for \texttt{pseries} objects are therefore
-have been rewritten in order to handle correctly panel data. Further
-functions called \code{Between}, \code{between} and \code{Within} are
-also provided to compute the between and the within
+have been rewritten in order to handle correctly panel data. Note that
+compares to the \texttt{lag} method for \texttt{ts} objects, the order
+of lags are indicated by positive integer. Moreover, 0 is a relevant
+value and a vector argument may be provided :
+
+<<>>=
+head(lag(E$emp, 0:2))
+@ 
+
+Further functions called \code{Between}, \code{between} and
+\code{Within} are also provided to compute the between and the within
 transformation. The \texttt{between} returns unique values, whereas
 \texttt{Between} duplicate the values and returns a vector which
 length is the number of observations.
@@ -677,57 +688,15 @@ head(Between(E$emp), 10)
 
 \subsection{Formulas}
 
-There are two circumstances where standard \code{formula} are not very
-usefull : formulas for dynamic models and formulas for instrument
-variable estimation. Two deal with the first situation, we provide a
-class called \code{dynformula}, for the second situation, we use the
+There are circumstances where standard \code{formula} are not very
+usefull to describe a model, notably while using instrumental variable
+like estimators: to deal with these situations, we use the
 \code{Formula} package.
 
-\subsubsection{Formula for dynamic models}
-
-Using the \code{lag} and \code{diff} functions to write a formula can
-be very cumbersome for dynamic models. A \code{dynformula} function is
-provided to ease the writing of such formulas. Suppose for example
-than one wants to estimate a model where employment depends on its own
-first two lags and on the second and third lags of wages and capital,
-and capital being differenced. The formula is then:
-
-<<results=hide>>=
-log(emp)~lag(log(emp),1)+lag(log(emp),2)+lag(log(wage),2)+lag(log(wage),3)+diff(capital,2)+diff(capital,3)
-@ 
-
-which can be easily obtained with \code{dynformula}:
-
-<<>>=
-dynformula(log(emp)~log(wage)+log(capital), lag=list(emp=2,c(2,3)),diff=c(FALSE,capital=TRUE))
-@ 
-
-The arguments \code{lag} and \code{diff} are lists/vectors which can
-be:
-
-\begin{itemize}
-\item unnamed, in this case, the length of the list/vector must equal the
-  number of variables,
-\item named, in this case the missing variables get the default values
-  (no lags, no logs, no differences),
-\item partially named, in this case the unnamed element is the user
-  defined default value.
-\end{itemize}
-
-The \code{diff} vector is logical. The elements of \code{lag} are
-either a number or a vector of two numbers: 3 means current value and
-first three lags, \code{c(1,2)} means first two lags.
-
-\
-\subsubsection{Formula for instrument variable estimation}
-
-Two-part formulas are a very convenient way to describe models
-estimated using instrument variables, the first part indicating the
-covariates and the second part the instruments. The \code{Formula}
-package provides a class which unables to construct multi-part
-formula, each part being separated by a pipe sign. \code{plm} provides
-a \code{pFormula} object which is a \code{Formula} with specific
-methods.
+The \code{Formula} package provides a class which unables to construct
+multi-part formula, each part being separated by a pipe
+sign. \code{plm} provides a \code{pFormula} object which is a
+\code{Formula} with specific methods.
 
 The two formulas below are identical :
 <<>>=
@@ -941,8 +910,8 @@ the errors for individual $i$ obtained from the preliminary estimation
 and:
 
 \begin{equation}
-\hat{\Delta}=\frac{1}{n-1}\sum_{i=1}^n\left(\hat{\beta}_i-\frac{1}{n}\sum_{i=1}^n\hat{\beta}_i\right)
-\left(\hat{\beta}_i-\frac{1}{n}\sum_{i=1}^n\hat{\beta}_i\right)^\top -\frac{1}{n}\sum_{i=1}^n\hat{\sigma}_i^2(X_i^\top X_i)^{-1}
+  \hat{\Delta}=\frac{1}{n-1}\sum_{i=1}^n\left(\hat{\beta}_i-\frac{1}{n}\sum_{i=1}^n\hat{\beta}_i\right)
+  \left(\hat{\beta}_i-\frac{1}{n}\sum_{i=1}^n\hat{\beta}_i\right)^\top -\frac{1}{n}\sum_{i=1}^n\hat{\sigma}_i^2(X_i^\top X_i)^{-1}
 \end{equation}
 
 If this matrix is not positive-definite, the second term is dropped.
@@ -1030,9 +999,55 @@ H^{(1)}=d^\top d=\left(
 Two-steps estimators are obtained using $H^{(2)}_i=\sum_{i=1}^n e^{(1)}_i
 e^{(1)\top }_i $ where $e_i^{(1)}$ are the residuals of the one step estimate.
 
+
+\citet{BLUN:BOND:98} show that with weak hypothesis on the data
+generating process, suplementary moment conditions exist for the
+equation in level :
+
+$$
+y_{it} = \gamma y_{it-1}+\mu_i+\eta_{it}
+$$
+
+More precisely, they show that $\Delta y_{it-2}=y_{it-2}-y_{it-3}$ is
+a valid instrument. The estimator is obtained using the residual
+vector in difference and in level :
+
+$$
+e^+_i=(\Delta e_i, e_i)
+$$
+
+and the matrix of augmented moments :
+
+$$
+Z_i^+=\left(
+\begin{array}{ccccc}
+Z_i & 0   & 0      &  \ldots & 0  \\
+0 & \Delta y_{i2} & 0  & \ldots & 0 \\
+0 & 0 & \Delta y_{i3}   & \ldots & 0 \\
+0 & 0 & 0 & \ldots & \Delta y_{iT-1}
+\end{array}
+\right)
+$$
+
+The moment conditions are then 
+
+
+\begin{eqnarray*}
+\left(\sum_{i=1}^n Z_i^{+\top} \left(\begin{array}{c}\bar{e}_i(\beta)\\ e_i(\beta)\end{array}\right)\right)^\top = \left(\sum_{i=1}^n y_{i1} \bar{e}_{i3},\sum_{i=1}^n  y_{i1}\bar{e}_{i4},\sum_{i=1}^n  y_{i2}\bar{e}_{i4}, \ldots,  \right.\\ \left. \sum_{i=1}^n y_{i1} \bar{e}_{iT}, \sum_{i=1}^n y_{i2} \bar{e}_{iT}, \ldots,\sum_{i=1}^n y_{iT-2} \bar{e}_{iT}, \sum_{i=1}^n \sum_{t=3}^T x_{it} \bar{e}_{it}\right.\\
+\left.\sum_{i=1}^n e_{i3} \Delta y_{i2}, \sum_{i=1}^n e_{i4} \Delta y_{i3},  \ldots , \sum_{i=1}^n e_{iT} \Delta y_{iT-1} \right)^\top
+\end{eqnarray*}
+
+
 The \textsc{gmm} estimator is provided by the \code{pgmm}
 function. It's main argument is a \code{dynformula} which describes
 the variables of the model and the lag structure.
+
+In a \textsc{gmm} estimation, there are ``normal'' instruments and
+``\textsc{gmm}'' instruments. \textsc{gmm} instruments are indicated
+in the second part of the formula. By default, all the variables of
+the model that are not used as \textsc{gmm} instruments are used as
+normal instruments, with the same lag structure ; ``normal''
+instruments may also be indicated in the third part of the formula. 
 
 The effect argument is either \code{NULL}, \code{"individual"}
 (the default), or \code{"twoways"}. In the first case, the model is
@@ -1040,18 +1055,6 @@ estimated in levels. In the second case, the model is estimated in
 first differences to get rid of the individuals effects. In the last
 case, the model is estimated in first differences and time dummies are
 included.
-
-In a \textsc{gmm} estimation, there are ``normal'' instruments and ``\textsc{gmm}''
-instruments. \textsc{gmm} instruments are indicated with the \code{gmm.inst}
-argument (a one side formula) and the lags with the \code{lag.gmm}
-argument. By default, all the variables of the model that are not used
-as \textsc{gmm} instruments are used as normal instruments, with the same lag
-structure.
-
-The complete list of instruments can also be specified with the
-argument \code{instruments} which should be a one side formula (or
-\code{dynformula}).
-
 
 The \code{model} argument specifies whether a one-step or a
 two-steps model is required (\code{"onestep"} or
@@ -1062,8 +1065,23 @@ explained by past values of employment (two lags), current and first
 lag of wages and output and current value of capital.
 
 <<gmm>>=
-emp.gmm <- pgmm(dynformula(log(emp)~log(wage)+log(capital)+log(output),lag=list(2,1,0,1)),EmplUK,effect="twoways",model="twosteps",gmm.inst=~log(emp),lag.gmm=list(c(2,99)))
+emp.gmm <- pgmm(log(emp)~lag(log(emp), 1:2)+lag(log(wage), 0:1)+log(capital)+lag(log(output), 0:1)|lag(log(emp), 2:99),EmplUK,effect="twoways",model="twosteps")
 summary(emp.gmm)
+@ 
+
+The following example is from \citet{BLUN:BOND:98}. The ``sys''
+estimator is obtained using \texttt{transformation = "ld"} for level
+and difference. The \texttt{robust} argument of the \texttt{summary}
+method enables to use the robust covariance matrix proposed by
+\citet{WIND:05}.
+
+<<gmm2>>=
+z2 <- pgmm(log(emp) ~ lag(log(emp), 1)+ lag(log(wage), 0:1) +
+           lag(log(capital), 0:1) | lag(log(emp), 2:99) +
+           lag(log(wage), 2:99) + lag(log(capital), 2:99),        
+           data = EmplUK, effect = "twoways", model = "onestep", 
+           transformation = "ld")
+summary(z2, robust = TRUE)
 @ 
 
 \subsection{General FGLS models}
@@ -1701,6 +1719,124 @@ it is enough that neighbouring pairs correspond to nonzero elements in
   that can be readily converted to and from proximity matrices by means of the
   \code{nb2mat} function. Higher orders of the $CD(p)$ test can be 
   obtained lagging the corresponding \code{nb}s through \code{nblag}.}. 
+
+\subsection{Unit root tests}
+
+\subsubsection{Preliminary results}
+
+We consider the following model :
+
+$$
+y_{it} = \delta y_{it-1} + \sum_{L=1}^{p_i} \theta_i \Delta
+y_{it-L}+\alpha_{mi} d_{mt}+\epsilon_{it}
+$$
+
+The unit root hypothesis is $\rho = 1$. The model can be rewriten in
+difference :
+
+$$
+\Delta y_{it} = \rho y_{it-1} + \sum_{L=1}^{p_i} \theta_i \Delta
+y_{it-L}+\alpha_{mi} d_{mt}+\epsilon_{it}
+$$
+
+So that the unit-root hypothesis is now $\rho = 0$.
+
+Some of the unit-root tests for panel data are based on preliminary
+results obtained by runing the above Augmented Dickey Fuller
+regression. 
+
+First, we hava to determine the optimal number of lags $p_i$ for each
+time-series. Several possibilities are available. They all have in
+common that the maximum number of lags have to be chosen first. Then,
+$p_i$ can be chosen using :
+
+\begin{itemize}
+\item the Swartz information criteria (SIC),
+\item the Akaike information criteria (AIC),
+\item the Hall method, which consist on removing the higher lags while
+  it is not significant.
+\end{itemize}
+
+The ADF regression is run on $T-p_i-1$ observations for
+each individual, so that the total number of observations is $n\times
+\tilde{T}$ where $\tilde{T}=T-p_i-1$
+
+$\bar{p}$ is the average number of lags. Call $e_{i}$ the
+vector of residuals.
+
+Estimate the variance of the $\epsilon_i$ as :
+
+$$
+\hat{\sigma}_{\epsilon_i}^2 = \frac{\sum_{t=p_i+1}^{T} e_{it}^2}{df_i}
+$$
+
+
+
+\subsubsection{Levin-Lin-Chu model}
+
+Then, compute artificial regressions of $\Delta y_{it}$ and $y_{it-1}$
+on $\Delta y_{it-L}$ and $d_{mt}$ and get the two vectors of residuals
+$z_{it}$ and $v_{it}$. 
+
+Standardize these two residuals and run the pooled regression of
+$z_{it}/\hat{\sigma}_i$ on $v_{it}/\hat{\sigma}_i$ to get
+$\hat{\rho}$, its standard deviation $\hat{\sigma}({\hat{\rho}})$ and
+the t-statistic $t_{\hat{\rho}}=\hat{\rho}/\hat{\sigma}({\hat{\rho}})$.
+
+Compute the long run variance of $y_i$ :
+
+$$
+\hat{\sigma}_{yi}^2 = \frac{1}{T-1}\sum_{t=2}^T \Delta y_{it}^2 + 2
+\sum_{L=1}^{\bar{K}}w_{\bar{K}L}\left[\frac{1}{T-1}\sum_{t=2+L}^T
+  \Delta y_{it} \Delta y_{it-L}\right]
+$$
+
+Define $\bar{s}_i$ as the ratio of the long and short term variance
+and $\bar{s}$ the mean for all the individuals of the sample
+
+$$
+s_i = \frac{\hat{\sigma}_{yi}}{\hat{\sigma}_{\epsilon_i}}
+$$
+
+$$
+\bar{s} = \frac{\sum_{i=1}^n s_i}{n}
+$$
+
+
+$$
+t^*_{\rho}=\frac{t_{\rho}- n \bar{T} \bar{s} \hat{\sigma}_{\tilde{\epsilon}}^{-2}
+\hat{\sigma}({\hat{\rho}}) \mu^*_{m\tilde{T}}}{\sigma^*_{m\tilde{T}}}
+$$
+
+follows a normal distribution under the null hypothesis of
+stationarity. $\mu^*_{m\tilde{T}}$ and $\sigma^*_{m\tilde{T}}$ are
+given in table 2 of the original paper and are also available in the
+package.
+
+\subsubsection{Im, Pesaran and Shin test}
+
+This test does not require that $\rho$ is the same for all the
+individuals. The null hypothesis is still that all the series have an
+unit root, but the alternative is that some may have a unit root and
+others have different values of $\rho_i <0$.
+
+The test is based on the average of the student statistic of the
+$\rho$ obtained for each individual :
+
+$$
+\bar{t}=\frac{1}{n}\sum_{i=1}^n t_{\rho i}
+$$
+
+The statistic is then :
+
+$$
+z = \frac{\sqrt{n}\left(\bar{t}- E(\bar{t})\right)}{\sqrt{V(\bar{t})}}
+$$
+
+$\mu^*_{m\tilde{T}}$ and $\sigma^*_{m\tilde{T}}$ are
+given in table 2 of the original paper and are also available in the
+package.
+
 
 \subsection{Robust covariance matrix estimation}
 \label{subsec:robust}

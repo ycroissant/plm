@@ -43,10 +43,11 @@ sargan <- function(object){
   transformation <- describe(object, "transformation")
   if (model == "onestep") Ktot <- length(object$coefficient)
   else Ktot <- length(object$coefficient[[2]])
-  z <- suml(mapply(function(x,y) t(x) %*% y,
-                   object$W,
-                   residuals(object),
-                   SIMPLIFY = FALSE))
+  z <- mapply(function(x,y) t(x) %*% y,
+              object$W,
+              residuals(object),
+              SIMPLIFY = FALSE)
+  z <- Reduce("+", z)
   
   p <- ncol(object$W[[1]])
   if (model == "onestep") A <- object$A1
@@ -90,13 +91,15 @@ mtest <- function(object, order = 1, vcov = NULL){
   W <- object$W
   if (model == "onestep") A <- object$A1
   else  A <- object$A2
-  EVE <- suml(mapply(function(x, y) t(y) %*% x %*% t(x) %*%y, resid, residl, SIMPLIFY = FALSE))
-  EX <- suml(mapply(crossprod, residl, X, SIMPLIFY = FALSE))
-  XZ <- suml(mapply(crossprod, W, X, SIMPLIFY = FALSE))
-  ZVE <- suml(mapply(function(x,y,z) t(x)%*%y%*%t(y)%*%z, W, resid, residl, SIMPLIFY = FALSE))
+  EVE <- Reduce("+",
+                mapply(function(x, y) t(y) %*% x %*% t(x) %*%y, resid, residl, SIMPLIFY = FALSE))
+  EX <- Reduce("+", mapply(crossprod, residl, X, SIMPLIFY = FALSE))
+  XZ <- Reduce("+", mapply(crossprod, W, X, SIMPLIFY = FALSE))
+  ZVE <- Reduce("+",
+                mapply(function(x,y,z) t(x)%*%y%*%t(y)%*%z, W, resid, residl, SIMPLIFY = FALSE))
 
   denom <- EVE - 2 * EX %*% vcov(object) %*% t(XZ) %*% A %*% ZVE + EX %*% vv %*% t(EX)
-  num <- suml(mapply(crossprod, resid, residl, SIMPLIFY = FALSE))
+  num <- Reduce("+", mapply(crossprod, resid, residl, SIMPLIFY = FALSE))
   stat <- num / sqrt(denom)
   names(stat) <- "normal"
   pval <- pnorm(abs(stat), lower.tail = FALSE)

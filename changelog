@@ -292,3 +292,4 @@ Changes since version 1.2-3
 	* lag.pseries is now able to deal with vector arguments for lags,
 	e.g. lag(x, c(1,3))
 	
+	* suml(x) is replaced by Reduce("+", x)

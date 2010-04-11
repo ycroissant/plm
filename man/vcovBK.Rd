@@ -68,7 +68,7 @@ e.g. for Wald-type testing: as \code{vcov} to \code{coeftest()},
 \examples{
 library(lmtest)
 library(car)
-data("Produc", package="Ecdat")
+data("Produc", package="plm")
 zz <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc, model="random")
 ## standard coefficient significance test
 coeftest(zz)

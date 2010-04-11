@@ -57,23 +57,23 @@ sumres <- function(x){
   sr
 }
 
-suml <- function(x){
-  n <- length(x)
-  if (!is.null(dim(x[[1]]))){
-    d <- dim(x[[1]])
-    s <- matrix(0,d[1],d[2])
-    for (i in 1:n){
-      s <- s+x[[i]]
-    }
-  }
-  else{
-    s <- rep(0,length(x[[n]]))
-    for (i in 1:n){
-      s <- s+x[[i]]
-    }
-  }
-  s
-}
+## suml <- function(x){
+##   n <- length(x)
+##   if (!is.null(dim(x[[1]]))){
+##     d <- dim(x[[1]])
+##     s <- matrix(0,d[1],d[2])
+##     for (i in 1:n){
+##       s <- s+x[[i]]
+##     }
+##   }
+##   else{
+##     s <- rep(0,length(x[[n]]))
+##     for (i in 1:n){
+##       s <- s+x[[i]]
+##     }
+##   }
+##   s
+## }
 
 oppl <- function(x,y,func){
   n <- length(x)

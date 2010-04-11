@@ -98,7 +98,7 @@ URL \url{http://http://www.jstatsoft.org/v11/i10/}.
 \examples{
 library(lmtest)
 library(car)
-data("Produc", package="Ecdat")
+data("Produc", package="plm")
 zz <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc, model="random")
 ## standard coefficient significance test
 coeftest(zz)

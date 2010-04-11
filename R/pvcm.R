@@ -123,7 +123,7 @@ pvcm.random <- function(formula, data, effect){
                   }
                   )
   bbp <- lapply(coef, function(x) x - coefb)
-  D1 <- suml(lapply(bbp, function(x) crossprod(t(x))))/(card.cond-1)
+  D1 <- Reduce("+", lapply(bbp, function(x) crossprod(t(x))))/(card.cond-1)
   sigi <- lapply(res,function(x) sum(x^2)/(length(x)-K-interc))
   sigim <- lapply(sigi,function(x) x*matrix(1,K+interc,K+interc))
   s2xpxm1i <- mapply("*",xpxm1,sigim,SIMPLIFY=F)

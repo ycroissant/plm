@@ -292,9 +292,9 @@ pgmm <- function(formula, data, subset, na.action,
   Wy <- lapply(WX, function(x) x[, 1])
   WX <- lapply(WX, function(x) x[, -1])
   A1 <- lapply(W, function(x) crossprod(t(crossprod(x, A1)), x))
-  A1 <- solve(suml(A1))*length(W)
-  WX <- suml(WX)
-  Wy <- suml(Wy)
+  A1 <- solve(Reduce("+", A1))*length(W)
+  WX <- Reduce("+", WX)
+  Wy <- Reduce("+", Wy)
   B1 <- solve(crossprod(WX, t(crossprod(WX, A1))))
   Y1 <- crossprod(t(crossprod(WX, A1)), Wy)
   coefficients <- as.numeric(crossprod(B1, Y1))
@@ -304,7 +304,7 @@ pgmm <- function(formula, data, subset, na.action,
                       as.vector(x[,1] -  crossprod(t(x[,-1]), coefficients)))
   outresid <- lapply(residuals,function(x) outer(x,x))
   A2 <- mapply(function(x, y) crossprod(t(crossprod(x, y)), x), W, outresid, SIMPLIFY = FALSE)
-  A2 <- solve(suml(A2))
+  A2 <- solve(Reduce("+", A2))
   B2 <- solve(crossprod(WX, t(crossprod(WX, A2))))
 
   if (model=="twosteps"){
