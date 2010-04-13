@@ -1,6 +1,6 @@
 library(plm)
 ## testing whether parameters in variables work (bug by Ulrich Morawtz)
-data("Produc", package="Ecdat")
+data("Produc", package="plm")
 estimation_method <- "within"
 estimation_effect <- "individual"
 zz <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp,
