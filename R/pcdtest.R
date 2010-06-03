@@ -38,7 +38,7 @@ pcdtest.formula <- function(x, data, index = NULL,
                             model = NULL, test = c("cd","sclm","lm"),
                             w = NULL, ...) {
 
-  data <- plm.data(data, index = index)
+  data <- pdata.frame(data, index = index)
   
   ## (need a pooling model anyway, to get min(T) and k:
   ## this is inefficient but still rather cheap)          

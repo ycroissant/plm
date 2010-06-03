@@ -457,19 +457,19 @@ pdwtest.panelmodel <- function(x,...) {
 pbltest <- function(x, data, alternative = c("twosided", "onesided"), index=NULL, ...) {
  ## this version (pbltest0) based on a "formula, pdataframe" interface
 
-  data <- plm.data(data,index=index)
-  gindex <- names(data)[1]
-  tindex <- names(data)[2]
 
   ## reduce X to model matrix value (no NAs)
   X<-model.matrix(x,data=data)
   ## reduce data accordingly
   data <- data[which(row.names(data)%in%row.names(X)),]
 
-  ## sort according to indices
-  eval(parse(text=paste("data <- data[order(data$",gindex,",data$",tindex,"),]",sep="")))
+                                                                                        
+  data <- pdata.frame(data,index=index)
 
-  ## make random effects formula
+  ## need name of individual index
+  gindex <- dimnames(attr(data, "index"))[[2]][1]
+                                                                                        
+ ## make random effects formula
   rformula <- NULL
   eval(parse(text=paste("rformula <- ~1|",gindex,sep="")))
 
