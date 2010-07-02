@@ -293,3 +293,9 @@ Changes since version 1.2-3
 	e.g. lag(x, c(1,3))
 	
 	* suml(x) is replaced by Reduce("+", x)
+
+
+Changes since version 1.2-4
+
+	* bug corrected in pgmm : ud <- cbind(ud, td.gmm.level) is
+	relevant only for twoways models

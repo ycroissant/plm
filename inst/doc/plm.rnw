@@ -73,7 +73,7 @@ dimensionality to cope with some of the typical problems associated
 with economic data, first of all that of unobserved heterogeneity.
 
 Timewise observation of data from different observational units has
-long been common in other fields of statistic (where they are often
+long been common in other fields of statistics (where they are often
 termed {\em longitudinal} data). In the panel data field as well as in
 others, the econometric approach is nevertheless peculiar with respect
 to experimental contexts, as it is emphasizing model specification and
@@ -94,19 +94,19 @@ different number of observations between groups), which case needs
 some adaptation to the methods and is not compatible with those in
 \pkg{nlme}.  Hence the need for a package doing panel data ``from the
 econometrician's viewpoint'' and featuring at a minimum the basic
-techniques econometricians themselves are used to: random and fixed
+techniques econometricians are used to: random and fixed
 effects estimation of static linear panel data models, variable
 coefficients models, generalized method of moments estimation of
 dynamic models; and the basic toolbox of specification and
 misspecification diagnostics.
 
 Furthermore, we felt there was the need for automation of some basic
-data management tasks as lagging, summing and, more in general,
+data management tasks such as lagging, summing and, more in general,
 \code{apply}ing (in the \proglang{R} sense) functions to the data, which,
 although conceptually simple, become cumbersome and error-prone on
 two-dimensional data, especially in the case of unbalanced panels.
 
-The paper is organized as follows: Section~\ref{sec:linearpanelmodel}
+This paper is organized as follows: Section~\ref{sec:linearpanelmodel}
 presents a very short overview of the typical model
 taxonomy\footnote{Comprehensive treatments are to be found in many
   econometrics textbooks, e.g.  \citet{BALT:01} or \citet{WOOL:02}:
@@ -137,10 +137,10 @@ where $i=1, \ldots n$ is the individual (group, country \ldots) index,
 $t=1, \ldots T$ is the time index and $u_{it}$ a random disturbance
 term of mean $0$.
 
-Of course the latter is not estimable with $N = n \times T$ data points. A number
-of assumptions are usually made about the parameters, the errors and
-the exogeneity of the regressors, giving rise to a taxonomy of
-feasible models for panel data.  
+Of course $u_{it}$ is not estimable with $N = n \times T$ data
+points. A number of assumptions are usually made about the parameters,
+the errors and the exogeneity of the regressors, giving rise to a
+taxonomy of feasible models for panel data.
 
 The most common one is parameter homogeneity, which means that
 $\alpha_{it}=\alpha$ for all $i,t$ and $\beta_{it}=\beta$ for all
@@ -168,13 +168,13 @@ unobserved effects model:
 
 The appropriate estimation method for this model depends on the
 properties of the two error components. The idiosyncratic error
-$\epsilon_{it}$ is usually assumed well-behaved and independent from
+$\epsilon_{it}$ is usually assumed well-behaved and independent of
 both the regressors $x_{it}$ and the individual error component
 $\mu_i$. The individual component may be in turn either independent
-from the regressors or correlated.
+of the regressors or correlated.
 
 If it is correlated, the ordinary least squares (\textsc{ols})
-estimator for $\beta$ would be inconsistent, so it is customary to
+estimator of $\beta$ would be inconsistent, so it is customary to
 treat the $\mu_i$ as a further set of $n$ parameters to be estimated, as
 if in the general model $\alpha_{it}=\alpha_{i}$ for all $t$. This is
 called the fixed effects (a.k.a. {\em within} or {\em least squares

@@ -210,7 +210,7 @@ pgmm <- function(formula, data, subset, na.action,
                   nrow.ud <- ifelse(time.lost.level == 1, T - 2, T - time.lost.level)
                   ud <- matrix(unlist(ud), nrow = nrow.ud)
                   if (time.lost.level == 1) ud <- rbind(0, ud)
-                  ud <- cbind(ud, td.gmm.level)
+                  if (effect == "twoways") ud <- cbind(ud, td.gmm.level)
                   # owerwrite rows of  missing time series with 0
                   if (nats[1]) ud[c(0:nats[1]), ] <- 0
                   if (nats[2]) ud[(T-time.lost.level- nats[2]+1):(T-time.lost.level), ] <- 0
