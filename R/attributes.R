@@ -21,7 +21,7 @@ pvar.default <- function(x, id, time, ...){
   lid <- split(x, id)
   ltime <- split(x, time)
   if (is.list(x)){
-    if (K==1){
+    if (K == 1){
       time.variation <- sum(sapply(lid,function(x) sapply(x,myvar)==0))!=length(lid)
       id.variation <- sum(sapply(ltime,function(x) sapply(x,myvar)==0))!=length(ltime)
     }

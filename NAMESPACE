@@ -1,7 +1,8 @@
 export(plm, pvcm, pgmm, pggls, pht, plm.data, plmtest, phtest, pFtest, 
        pvar, pdim, pooltest, dynformula, sargan, mtest, ercomp, pvcovHC,
        pbsytest, pdwtest, pbgtest, pbltest, pwartest, pwtest, pwfdtest, pcdtest,
-       pdata.frame, between, Between, Within, pFormula, pmodel.response, purtest, vcovBK, vcovSCC)
+       pdata.frame, between, Between, Within, pFormula, pmodel.response,
+       purtest, vcovBK, vcovSCC, r.squared)
 import(stats)
 import(Formula)
 importFrom(kinship, bdsmatrix)

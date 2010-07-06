@@ -49,7 +49,6 @@ swar <- function(formula, data, effect){
   T <- pdim$nT$T
   N <- pdim$nT$N
   if(effect != "twoways"){
-#    between <- plm.between(formula, data, effect)
     between <- plm.fit(formula, data, model = "between", effect = effect)
     if (effect == "individual"){
       arg.cond <- n

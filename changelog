@@ -299,3 +299,10 @@ Changes since version 1.2-4
 
 	* bug corrected in pgmm : ud <- cbind(ud, td.gmm.level) is
 	relevant only for twoways models
+
+	* in fitted.plm, the extraction of the index is updated
+
+	* the residuals.plm method now has a model argument
+
+	* a new function r.squared
+	

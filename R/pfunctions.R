@@ -87,11 +87,12 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE){
            )
     if (is.factor(x[[id.name]])){
       id <- x[[id.name]] <- x[[id.name]][drop=T]
+      # trier par individu dans le cas ou id est un facteur
+#      x <- x[order(id), ]
     }
     else{
       id <- x[[id.name]] <- as.factor(x[[id.name]])
     }
-    
     if (is.null(time.name)){
       Ti <- table(id)
       n <- length(Ti)

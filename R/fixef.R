@@ -26,6 +26,7 @@ fixef.plm <- function(object, effect = NULL,
   fixef <- yb - as.vector(crossprod(t(Xb[,nw,drop=FALSE]),coef(object)))
 #  bet <- plm.between(formula, data, effect = effect)
   bet <- plm.fit(formula, data, model = "between", effect = effect)
+  bet$args <- list(model = "between", effect = effect)
   sigma2 <- deviance(bet)/df.residual(bet)
   vcov <- vcov(object)[nw,nw]
   nother <- switch(effect,

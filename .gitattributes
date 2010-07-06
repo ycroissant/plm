@@ -84,6 +84,7 @@ man/pvcm.Rd -text
 man/pwartest.Rd -text
 man/pwfdtest.Rd -text
 man/pwtest.Rd -text
+man/r.squared.Rd -text
 man/sargan.Rd -text
 man/vcovBK.Rd -text
 man/vcovHC.Rd -text

@@ -203,7 +203,6 @@ Ftest <- function(x, test = c("Chisq", "F"), ...){
   model <- describe(x, "model")
   data.name <- paste(deparse(formula(x)))
   test <- match.arg(test)
-
   df1 <- ifelse(model == "within",
                 length(coef(x)),
                 length(coef(x)) - has.intercept(x))

@@ -12,11 +12,8 @@ pht <-  function(formula, data, subset, na.action, index = NULL, ...){
   mf$model = "within"
   mf$formula <- formula
   within <- eval(mf, parent.frame())
-#  print(within)
-#  within <- plm(formula, data, effect = "individual", model = "within")
   fixef <- fixef(within)
   formula <- old.formula
-
   index <- attr(data, "index")
   id <- index[[1]]
   time <- index[[2]]
@@ -26,7 +23,6 @@ pht <-  function(formula, data, subset, na.action, index = NULL, ...){
   n <- pdim$nT$n
   N <- pdim$nT$N
   Ti <- pdim$Tint$Ti
-  
   # get the typology of the variables
   formula <- pFormula(old.formula)
   X <- model.matrix(formula, data, rhs = 1, model = "within")

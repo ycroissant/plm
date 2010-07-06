@@ -130,6 +130,7 @@ plm.fit <- function(formula, data, model, effect, random.method, inst.method){
                  formula      = formula,
                  model        = data)
   if (model == "random") result$ercomp <- estec
+  result$args <- list(model = model, effect = effect)
   class(result) <- c("plm", "panelmodel")
   result
 }    
