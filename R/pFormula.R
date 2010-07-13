@@ -150,28 +150,17 @@ model.matrix.plm <- function(object, ...){
   
 
 
-pmodel.response.plm <- function(object, model = c("pooling","within","Between",
-                                          "between","mean","random","fd"),
-                                effect = c("individual","time","twoways"),
-                                theta = NULL, ...){
-  model <- match.arg(model)
-  effect <- match.arg(effect)
-  if (model == "random") theta <- object$ercomp$theta
-  pmodel.response(model.frame(object), model = model, effect = effect, theta = theta)
+pmodel.response.plm <- function(object, ...){
+  dots <- list(...)
+  model <- ifelse(is.null(dots$model), describe(object, "model"), dots$model)
+  effect <- ifelse(is.null(dots$effect), describe(object, "effect"), dots$effect)
+  formula <- formula(object)
+  data <- model.frame(object)
+  if (model != "random"){
+    pmodel.response(formula, data, model = model, effect = effect)
+  }
+  else{
+    theta <- ercomp(object)$theta
+    pmodel.response(formula, data, model = model, effect = effect, theta = theta)
+  }
 }
-  
-## pmodel.response.plm <- function(object, ...){
-##   dots <- list(...)
-##   model <- ifelse(is.null(dots$model), describe(object, "model"), dots$model)
-##   effect <- ifelse(is.null(dots$effect), describe(object, "effect"), dots$effect)
-##   formula <- formula(object)
-##   data <- model.frame(object)
-##   if (model != "random"){
-##     pmodel.response(formula, data, model = model, effect = effect)
-##   }
-##   else{
-##     theta <- ercomp(object)$theta
-##     pmodel.response(formula, data, model = model, effect = effect, theta = theta)
-##   }
-
-## }

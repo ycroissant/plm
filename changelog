@@ -305,4 +305,7 @@ Changes since version 1.2-4
 	* the residuals.plm method now has a model argument
 
 	* a new function r.squared
+
+	* pmodel.response.plm is modified : no explicit effect and model
+	arguments anymore (like in model.matrix.plm)
 	

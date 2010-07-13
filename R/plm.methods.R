@@ -2,15 +2,8 @@ summary.plm <- function(object,...){
   object$fstatistic <- Ftest(object, test = "F")
   model <- describe(object, "model")
   effect <- describe(object, "effect")
-  if (effect != "twoways"){
-    object$r.squared <- c(within  = r.squared(object, model = "within"),
-                          between = r.squared(object, model = "between"),
-                          pooling = r.squared(object, model = "pooling"))
-  }
-  else{
-    object$r.squared <- c(within  = r.squared(object, model = "within"),
-                          pooling = r.squared(object, model = "pooling"))
-  }    
+  object$r.squared <- c(rsq  = r.squared(object),
+                        adjrsq = r.squared(object, dfcor = TRUE))
   # construct the table of coefficients
   std.err <- sqrt(diag(vcov(object)))
   b <- coefficients(object)
@@ -32,7 +25,7 @@ print.summary.plm <- function(x,digits= max(3, getOption("digits") - 2),
   model <- describe(x, "model")
   cat(paste(effect.plm.list[effect]," ",sep=""))
   cat(paste(model.plm.list[model]," Model",sep=""))
-
+  
   if (model=="random"){
     ercomp <- describe(x, "random.method")
     cat(paste(" \n   (",
@@ -69,14 +62,8 @@ print.summary.plm <- function(x,digits= max(3, getOption("digits") - 2),
   cat("\n")
   cat(paste("Total Sum of Squares:    ",signif(tss(x),digits),"\n",sep=""))
   cat(paste("Residual Sum of Squares: ",signif(deviance(x),digits),"\n",sep=""))
-  cat(paste("R-Squared: within  = ", signif(x$r.squared[1], digits),"\n"))
-  if (effect != "twoways"){
-    cat(paste("           between = ", signif(x$r.squared[2], digits),"\n"))
-    cat(paste("           pooling = ", signif(x$r.squared[3], digits),"\n"))
-  }
-  else{
-    cat(paste("           pooling = ", signif(x$r.squared[2], digits),"\n"))
-  }
+  cat(paste("R-Squared      : ", signif(x$r.squared[1], digits),"\n"))
+  cat("      Adj. R-Squared : ", signif(x$r.squared[2], digits),"\n")
   fstat <- x$fstatistic
   if (names(fstat$statistic) == "F"){
     cat(paste("F-statistic: ",signif(fstat$statistic),
@@ -92,10 +79,11 @@ print.summary.plm <- function(x,digits= max(3, getOption("digits") - 2),
   invisible(x)
 }
 
-fitted.plm <- function(object, model = "pooling", ...){
+fitted.plm <- function(object, model = NULL, ...){
   # there are two 'models' used ; the fitted model and the
   # transformation used for the fitted values
   fittedmodel <- describe(object, "model")
+  if (is.null(model)) model <- fittedmodel
   effect <- describe(object, "effect")
   X <- model.matrix(object, model = model)
   y <- pmodel.response(object, model = model)
@@ -171,7 +159,7 @@ tss.plm <- function(x, model = NULL){
 }
 
 r.squared <- function(object, model = NULL,
-                      type = c('cor', 'rss', 'ess')){
+                      type = c('cor', 'rss', 'ess'), dfcor = FALSE){
   if (is.null(model)) model <- describe(object, "model")
   effect <- describe(object, "effect")
   type <- match.arg(type)
@@ -189,6 +177,7 @@ r.squared <- function(object, model = NULL,
     ess <- sum( (haty - mhaty)^2)
     R2 <- ess / tss(object, model = model)
   }
+  if (dfcor) R2 <- R2 * df.residual(object) / length(resid(object) - 1)
   R2
 }
   

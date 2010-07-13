@@ -25,12 +25,7 @@ pmodel.response(object, ...)
                                    effect = c("individual","time","twoways"),
                                    lhs = NULL,
                                    theta = NULL, ...)
-\method{pmodel.response}{plm}(object,
-                              model = c("pooling","within","Between",
-                                        "between","mean","random","fd"),
-                              effect = c("individual","time","twoways"),
-                              theta = NULL, ...)
-
+\method{pmodel.response}{plm}(object, ...)
 }
 
 \arguments{
