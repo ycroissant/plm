@@ -230,9 +230,9 @@ pwartest.panelmodel <- function(x, ...){
   myvcov <- function(x) vcovHC(x, method="arellano", ...)
 
   myH0 <- paste("FEres.1 = ", as.character(rho.H0), sep="")
-  # args(linear.hypothesis) = test = c("F","Chisq") white.adjust = FALSE
-  lhtest <- linear.hypothesis(model=auxmod, myH0, vcov.=myvcov, ...)
-#  lhtest <- linear.hypothesis(model=auxmod, myH0, vcov.=myvcov(x), ...)
+  # args(linearHypothesis) = test = c("F","Chisq") white.adjust = FALSE
+  lhtest <- linearHypothesis(model=auxmod, myH0, vcov.=myvcov, ...)
+#  lhtest <- linearHypothesis(model=auxmod, myH0, vcov.=myvcov(x), ...)
 
   ##(insert usual htest features)  
   FEARstat <- lhtest[2,3]
@@ -656,7 +656,7 @@ pwfdtest.panelmodel <- function(x, ..., h0=c("fd","fe")) {
   myvcov <- function(x) vcovHC(x, method="arellano", ...)
 
   myH0 <- paste("FDres.1 = ", as.character(rho.H0), sep="")
-  lhtest <- linear.hypothesis(model=auxmod, myH0, vcov.=myvcov, ...)
+  lhtest <- linearHypothesis(model=auxmod, myH0, vcov.=myvcov, ...)
   
   ##(insert usual htest features)  
   FDARstat <- lhtest[2,3]

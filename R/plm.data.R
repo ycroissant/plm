@@ -1,3 +1,8 @@
+
+### convert data to plm format
+### Author:
+### Amendments by Ott Toomet
+
 plm.data <- function(x, indexes = NULL){
   if (is.null(indexes)){
     id <- NULL
@@ -41,10 +46,10 @@ plm.data <- function(x, indexes = NULL){
     }
   }
   x <- x[,!na.check]
-  # check and remove cst series
-  cst.check <- sapply(x, function(x) var(as.numeric(x), na.rm = TRUE)==0)
+  ## Which columns are constants ?
+  cst.check <- sapply(x, function(x) all(x[!is.na(x)] == (x[!is.na(x)])[1]))
+                           # any NA-component equal to the first non-NA component
   cst.serie <- names(x)[cst.check]
-
   if (length(cst.serie)>0){
     if (length(cst.serie)==1){
       cat(paste("serie",cst.serie," is constant and has been removed\n"))
@@ -53,7 +58,7 @@ plm.data <- function(x, indexes = NULL){
       cat(paste("series ",paste(na.serie,collapse=",")," are constants and have been removed\n"))
     }
   }
-  x <- x[,!cst.check]
+#  x <- x[,!cst.check]
   if(is.numeric(id.name)){
     if(!is.null(time.name)){warning("The time argument will be ignored\n")}
     N <- nrow(x)

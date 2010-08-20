@@ -41,6 +41,9 @@ model.matrix.pFormula <- function(object, data,
   X <- model.matrix(as.Formula(formula), rhs = rhs, data= data, ...)
   index <- attr(data, "index")
   id <- index[[1]]
+  if(any(is.na(id))) {
+     stop("NA in the individual index variable")
+  }
   time <- index[[2]]
   pdim <- pdim(data)
   if (has.intercept && model == "within") X <- X[ , -1, drop = FALSE]
@@ -87,7 +90,7 @@ model.matrix.pFormula <- function(object, data,
   result
 }
 
-pmodel.response <- function(object, ...){
+pmodel.response <- function(object, ...) {
   UseMethod("pmodel.response")
 }
 
@@ -123,7 +126,7 @@ pmodel.response.pFormula <- function(object, data,
   y <- model.matrix(pFormula(formula), data = data,
                     model = model, effect = effect,
                     lhs = lhs, theta = theta, ...)
-#  dim(y) <- NULL
+                           #  dim(y) <- NULL
   namesy <- rownames(y)
   y <- as.numeric(y)
   names(y) <- namesy

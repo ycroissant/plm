@@ -84,9 +84,10 @@ plm.fit <- function(formula, data, model, effect, random.method, inst.method){
   }
   # extract the model.matrix and the model.response
   X <- model.matrix(formula, data, rhs = 1, model = model, effect = effect, theta = theta)
-  if (ncol(X) == 0) stop("empty model")
+  if (ncol(X) == 0)
+      stop("empty model")
   y <- pmodel.response(formula, data, model = model, effect = effect, theta = theta)
-  # extract the matrix of instruments if necessary
+  ## extract the matrix of instruments if necessary
   if (length(formula)[2] == 2){
     W <- model.matrix(formula, data, rhs = 2, model = model, effect = effect, theta = theta)
     if (model == "random"){
@@ -137,8 +138,10 @@ plm.fit <- function(formula, data, model, effect, random.method, inst.method){
 
 mylm <- function(y, X, W = NULL){
   names.X <- colnames(X)
-  if (is.null(W)) result <- lm(y ~ X - 1)
-  else result <- twosls(y, X, W)
+  if (is.null(W))
+      result <- lm(y ~ X - 1)
+  else
+      result <- twosls(y, X, W)
   if (any(is.na(coef(result)))){
     na.coef <- is.na(coef(result))
     X <- X[, !na.coef, drop = FALSE]

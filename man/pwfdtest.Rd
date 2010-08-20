@@ -20,7 +20,7 @@ pwfdtest(x,...)
   \item{data}{a \code{data.frame},}
   \item{h0}{the null hypothesis: one of "fd","fe"}
   \item{...}{further arguments to be passed on to
-  \code{linear.hypothesis} or to \code{vcovHC}}
+  \code{linearHypothesis} or to \code{vcovHC}}
 }
 
 \details{
@@ -29,7 +29,7 @@ As Wooldridge (2003, 10.6.3) observes, if the idiosyncratic errors in the model 
 Wooldridge (ibid.) suggests basing a test for either hypothesis on a pooled regression of FD residuals on their first lag:
 \eqn{\hat{e}_{i,t}=\alpha + \delta \hat{e}_{i,t-1} + \eta_{i,t}}. Rejecting the restriction \eqn{\delta = -0.5} makes us conclude against the null of no serial correlation in errors of the levels equation (\code{"fe"}). The null hypothesis of no serial correlation in differenced errors (\code{"fd"}) is tested in a similar way, but based on the zero restriction on \eqn{\delta}. Rejecting \code{"fe"} favours the use of the first-differences  estimator and the contrary, although it is possible that both be rejected.
 
-\code{pwartest} estimates the \code{fd} model and retrieves residuals, then estimates an AR(1) \code{pooling} model on them. The test statistic is obtained by applying \code{linear.hypothesis()} to the latter model to test the relevant restriction on \eqn{\delta}, setting the covariance matrix to \code{vcovHC} with the option \code{method=''arellano''} to control for serial correlation.
+\code{pwartest} estimates the \code{fd} model and retrieves residuals, then estimates an AR(1) \code{pooling} model on them. The test statistic is obtained by applying \code{linearHypothesis()} to the latter model to test the relevant restriction on \eqn{\delta}, setting the covariance matrix to \code{vcovHC} with the option \code{method=''arellano''} to control for serial correlation.
 
 Unlike the \code{pbgtest} and \code{pdwtest}, this test does not rely on large-T asymptotics and has therefore good properties in ''short'' panels. Furthermore, it is robust to general heteroskedasticity. The \code{"fe"} version can be used to test for error autocorrelation regardless of whether the maintained specification has fixed or random effects (see Drukker, 2003).
 }

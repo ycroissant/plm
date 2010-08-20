@@ -1,0 +1,48 @@
+
+R version 2.11.1 (2010-05-31)
+Copyright (C) 2010 The R Foundation for Statistical Computing
+ISBN 3-900051-07-0
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> ### Testing problematic and erroneous data
+> library(plm)
+Loading required package: kinship
+Loading required package: survival
+Loading required package: splines
+Loading required package: nlme
+Loading required package: lattice
+[1] "kinship is loaded"
+Loading required package: Formula
+Loading required package: MASS
+Loading required package: sandwich
+Loading required package: zoo
+> 
+> ### NA in the individual index: should give an informative error
+> ind <- 1:100
+> ind[4] <- NA
+> T <- 4
+>                            # balanced panel of length 4
+> alpha <- rnorm(length(ind))
+>                            # fixed effects
+> eps <- rnorm(T*length(ind))
+>                            # idiosyncratic effect
+> x <- runif(length(ind))
+> y <- x + alpha + eps
+> dat <- data.frame(y, x, ind=rep(ind, T), t=rep(1:T, each=length(ind)))
+> data <- plm.data(dat, index=c("ind", "t"))
+> a <- try(m <- plm(y ~ x, data=data, model="random"))
+Error in model.matrix.pFormula(formula, data, rhs = 1, model = model,  : 
+  NA in the individual index variable
+>                            # should give an error: NA in the individual index
+> 

@@ -284,6 +284,7 @@ Tapply.pseries <- function(x, effect = c("individual", "time"), func, ...){
 }
 
 Tapply.matrix <- function(x, effect, func, ...){
+   ## Note: this function is not robust wrt NA in effect
   na.x <- is.na(x)
   uniqval <- apply(x, 2, function(z) tapply(z, effect, "mean"))
   uniqval <- apply(x, 2, function(z) tapply(z, effect, func))
@@ -350,7 +351,7 @@ Within.pseries <- function(x, effect = c("individual", "time"), ...){
 }
 
 Within.matrix <- function(x, effect, ...){
-  result <- Within.default(x, effect, ...)
+   result <- Within.default(x, effect, ...)
   othervar <- apply(result, 2, function(x) sum(abs(x), na.rm = TRUE)) > 1E-12
   result <- result[, othervar, drop = FALSE]
   attr(result, "constant") <- colnames(x)[!othervar]

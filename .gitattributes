@@ -89,4 +89,7 @@ man/sargan.Rd -text
 man/vcovBK.Rd -text
 man/vcovHC.Rd -text
 man/vcovSCC.Rd -text
+tests/testErrors.R -text
+tests/testErrors.Rout.save -text
 tests/testEvaluation.R -text
+tests/testEvaluation.Rout.save -text

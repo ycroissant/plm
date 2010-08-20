@@ -50,7 +50,7 @@ Weighting schemes are analogous to those in \code{vcovHC} in package \code{sandw
 The main use of \code{vcovBK} is to be an argument to other functions,
 e.g. for Wald-type testing: as \code{vcov} to \code{coeftest()},
 \code{waldtest()} and other methods in the \code{lmtest} package; and as
-\code{vcov} to \code{linear.hypothesis()} in the \code{car} package (see the examples). Notice that the \code{vcov} argument may be supplied a function (which is the safest) or a matrix (see Zeileis (2004), 4.1-2 and examples below).
+\code{vcov} to \code{linearHypothesis()} in the \code{car} package (see the examples). Notice that the \code{vcov} argument may be supplied a function (which is the safest) or a matrix (see Zeileis (2004), 4.1-2 and examples below).
 
 }
 
@@ -86,7 +86,7 @@ coeftest(zz, vcov=vcovBK(zz, type="HC1"))
 ## joint restriction test
 waldtest(zz, update(zz, .~.-log(emp)-unemp), vcov=vcovBK)
 ## test of hyp.: 2*log(pc)=log(emp)
-linear.hypothesis(zz, "2*log(pc)=log(emp)", vcov=vcovBK)
+linearHypothesis(zz, "2*log(pc)=log(emp)", vcov=vcovBK)
 }
 \keyword{regression}
 
