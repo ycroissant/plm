@@ -55,12 +55,14 @@ vcovBK.plm <-function(x,type=c("HC0", "HC1", "HC2", "HC3", "HC4"),
     demy <- pmodel.response(x, model = model)
     dimnames(demX)[[2]][1] <- attr(vcov(x), "dimnames")[[1]][1]
 
-  ## extract dimensions not dependent on clustering
     pdim <- pdim(x)
     nT <- pdim$nT$N
     Ti <- pdim$Tint$Ti
     k <- dim(demX)[[2]]
 
+    n0 <- pdim$nT$n 
+    t0 <- pdim$nT$T
+    
   ## extract residuals
     uhat <- x$residuals
 
@@ -73,15 +75,24 @@ vcovBK.plm <-function(x,type=c("HC0", "HC1", "HC2", "HC3", "HC4"),
     groupind<-as.numeric(attr(x$model, "index")[,1])
     timeind<-as.numeric(attr(x$model, "index")[,2])
 
+  ## Achim's fix for 'fd' model (losing first time period)
+     if(model == "fd") {
+       groupind <- groupind[timeind > 1]
+       timeind <- timeind[timeind > 1]
+       nT <- nT-n0
+       Ti <- Ti-1
+       t0 <- t0-1
+     }
+
   ## set grouping indexes
     switch(match.arg(cluster), group = {
-           n <- pdim$nT$n # this is needed only for 'pcse'
-           t <- pdim$nT$T # this is needed only for 'pcse'
+           n <- n0 # this is needed only for 'pcse'
+           t <- t0 # this is needed only for 'pcse'
            relevant.ind <- groupind
            lab <- timeind
          }, time = {
-           n <- pdim$nT$T # this is needed only for 'pcse'
-           t <- pdim$nT$n # this is needed only for 'pcse'
+           n <- t0 # this is needed only for 'pcse'
+           t <- n0 # this is needed only for 'pcse'
            relevant.ind <- timeind
            lab <- groupind
          })

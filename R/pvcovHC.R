@@ -80,6 +80,13 @@ vcovHC.plm <-function(x,method=c("arellano","white1","white2"),
     groupind<-as.numeric(attr(x$model, "index")[,1])
     timeind<-as.numeric(attr(x$model, "index")[,2])
 
+    ## Achim's fix
+     if(model == "fd") {
+       groupind <- groupind[timeind > 1]
+       timeind <- timeind[timeind > 1]
+     }
+
+    
   ## set grouping indexes
     switch(match.arg(cluster), group = {
            relevant.ind <- groupind
