@@ -37,13 +37,21 @@ vcovSCC.plm<-function(x, type=c("HC0", "HC1", "HC2", "HC3", "HC4"), maxlag=NULL,
     n <- pdim$nT$n
     T. <- pdim$nT$T
     nT <- pdim$nT$N
+    time.index <- as.numeric(attr(x$model, "index")[,2])
+
+
+  ## Achim's fix for 'fd' model (losing first time period)
+     if(model == "fd") {
+       nT <- nT-n
+       T. <- T.-1
+       time.index <- time.index[which(time.index!=time.index[1])]
+     }
 
   ## set maxlag
   if(is.null(maxlag)) maxlag<-floor(T.^(1/4))
 
   ## make positions vector for records in each time period
   allpos <- 1:nT
-  time.index <- as.numeric(attr(x$model, "index")[,2])
   gind<-vector("list",T.)
   timevals <- unique(time.index)
   for(i in 1:T.) {
