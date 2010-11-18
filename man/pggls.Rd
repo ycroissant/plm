@@ -10,7 +10,7 @@ General FGLS estimators for panel data (balanced or unbalanced)
 }
 
 \usage{
-pggls(formula, data, subset, na.action, effect = c("individual","time"), model = c("within","random"),
+pggls(formula, data, subset, na.action, effect = c("individual","time"), model = c("within","random","pooling","fd"),
 index = NULL, ...)
 \method{summary}{pggls}(object, ...)
 \method{print}{summary.pggls}(x,digits = max(3, getOption("digits") -
@@ -24,7 +24,8 @@ index = NULL, ...)
  \item{subset}{see \code{lm},}
  \item{na.action}{see \code{lm},}
  \item{effect}{the effects introduced in the model, one of \code{"individual"} or \code{"time"},}
- \item{model}{one of \code{"within"} or \code{"random"},}
+ \item{model}{one of \code{"within"}, \code{"random"}, \code{"pooling"}
+ or \code{"fd"},}
  \item{index}{the indexes, see \code{\link{plm.data}},}
  \item{digits}{digits,}
  \item{width}{the maximum length of the lines in the print output,}
@@ -47,14 +48,32 @@ An object of class \code{c("pggls","panelmodel")} containing:
 \details{
 \code{pggls} is a function for the estimation of linear panel models by general feasible generalized least squares, either with or without fixed effects. General FGLS is based on a two-step estimation process: first a model is estimated by OLS (\code{random}) or fixed effects (\code{within}), then its residuals are used to estimate an error covariance matrix for use in a feasible-GLS analysis. This framework allows the error covariance structure inside every group (if   \code{effect="individual"}, else symmetric) of observations to be
 fully unrestricted and is therefore robust against any type of
-intragroup heteroskedasticity and serial correlation. Conversely, this structure is assumed identical across groups and thus general FGLS estimation is inefficient under groupwise heteroskedasticity. Note also that this method requires estimation of \eqn{T(T+1)/2} variance parameters, thus efficiency requires N  > > T   (if \code{effect="individual"}, else the opposite).}
+intragroup heteroskedasticity and serial correlation. Conversely, this
+structure is assumed identical across groups and thus general FGLS
+estimation is inefficient under groupwise heteroskedasticity. Note also
+that this method requires estimation of \eqn{T(T+1)/2} variance
+parameters, thus efficiency requires N  > > T   (if
+\code{effect="individual"}, else the opposite).
+The \code{model="random"} and \code{model="pooling"} arguments both
+produce an unrestricted FGLS model as in Wooldridge, Ch.10. If
+\code{model="within"} (the default) then a FEGLS (fixed effects GLS, see
+ibid.) is estimated; if \code{model="fd"} a FDGLS (first-difference GLS). 
+}
 
 \author{Giovanni Millo}
 
 \references{
-Kiefer, N. M. (1980) Estimation of Fixed Effects Models for Time Series of Cross-Sections with Arbitrary Intertemporal Covariance, \emph{Journal of Econometrics}, \bold{14}, 195--202. 
+Kiefer, N. M. (1980) Estimation of Fixed Effects Models for Time Series
+of Cross-Sections with Arbitrary Intertemporal Covariance, \emph{Journal
+  of Econometrics}, \bold{14}, 195--202. 
 
-Wooldridge J. M. (2002) \emph{Econometric Analysis of Cross Section and Panel Data}, MIT Press.
+
+Im, K. S. and Ahn, S. C. and Schmidt, P. and Wooldridge, J. M. (1999)
+Efficient Estimation of Panel Data Models with Strictly Exogenous
+Explanatory Variables, \emph{Journal of Econometrics}, \bold{93},
+177-201.
+
+Wooldridge, J. M. (2002) \emph{Econometric Analysis of Cross Section and Panel Data}, MIT Press.
 }
 
 \examples{
