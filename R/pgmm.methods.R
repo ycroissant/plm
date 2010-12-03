@@ -10,6 +10,7 @@ coef.pgmm <- function(object,...){
 }
 summary.pgmm <- function(object, robust = FALSE, time.dummies = FALSE, ...){
   model <- describe(object, "model")
+  effect <- describe(object, "effect")
   transformation <- describe(object, "transformation")
   if (robust){
     vv <- vcovHC(object)
@@ -20,11 +21,11 @@ summary.pgmm <- function(object, robust = FALSE, time.dummies = FALSE, ...){
   if (model == "onestep")   K <- length(object$coefficients)
   else  K <- length(object$coefficients[[2]])
   Kt <- length(object$args$namest)
-  if (!time.dummies) rowsel <- -c((K-Kt+1):K)
+  if (!time.dummies && effect == "twoways") rowsel <- -c((K-Kt+1):K)
   else rowsel <- 1:K
   std.err <- sqrt(diag(vv))
   b <- coef(object)
-  z <- b/std.err
+  z <- b / std.err
   p <- 2 * pnorm(abs(z), lower.tail = FALSE)
   CoefTable <- cbind(b, std.err, z, p)
   colnames(CoefTable) <- c("Estimate", "Std. Error", "z-value", "Pr(>|z|)")
@@ -116,6 +117,8 @@ wald <- function(object, param = "coef", vcov = NULL){
   else if (is.function(vcov)) vv <- myvcov(object)
   else vv <- myvcov
   model <- describe(object, "model")
+  effect <- describe(object, "effect")
+  if (param == "time" && effect == "individual") stop("no time-dummies in this model")
   transformation <- describe(object, "transformation")
   if (model == "onestep") coefficients <- object$coefficients
   else coefficients <- object$coefficients[[2]]
@@ -127,7 +130,7 @@ wald <- function(object, param = "coef", vcov = NULL){
   }
   else{
     start <- 1
-    end <- Ktot-Kt
+    if (effect == "twoways") end <- Ktot-Kt else end <- Ktot
   }
   coef <- coefficients[start:end]
   vv <- vv[start:end, start:end]
