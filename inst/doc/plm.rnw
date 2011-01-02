@@ -8,7 +8,7 @@
 
 
 %\VignetteIndexEntry{Panel Data Econometrics in R: the plm Package}
-%\VignetteDepends{plm,stats,kinship,nlme}
+%\VignetteDepends{plm,stats,bdsmatrix,nlme}
 %\VignetteKeywords{panel data, gmm estimator, covariance matrix estimator, econometric computing, R}
 %\VignettePackage{plm}
 
@@ -491,7 +491,7 @@ information on structure is used in the computations, sometimes with
 dramatic effects on performance \citep[see][]{BATE:04} and packages
 \pkg{Matrix} \citep[see][]{BATE:MAEC:07} and \pkg{SparseM}
 \citep[see][]{KOEN:NG:07}. Some optimized linear algebra routines are
-available in the \proglang{R} package \pkg{kinship}
+available in the \proglang{R} package \pkg{bdsmatrix}
 \citep[see][]{ATKI:THER:07} which exploit the particular
 block-diagonal and symmetric structure of $\hat{V}$ making it
 possible to implement a fast and reliable full-matrix solution to
@@ -569,7 +569,7 @@ options(prompt= "R> ", useFancyQuotes = FALSE)
 library("plm")
 #library(nlme)
 #library(MASS)
-#library(kinship)
+#library(bdsmatrix)
 #source("~/R/plm/chargement.R")
 @ 
 

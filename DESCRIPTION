@@ -2,9 +2,9 @@ Package: plm
 Version: 1.2-7
 Date: 2010-11-20
 Title: Linear Models for Panel Data
-Author: Yves Croissant <yves.croissant@univ-reunion.fr, Giovanni Millo <Giovanni_Millo@Generali.com>
+Author: Yves Croissant <yves.croissant@univ-reunion.fr>, Giovanni Millo <Giovanni_Millo@Generali.com>
 Maintainer: Yves Croissant <yves.croissant@univ-reunion.fr>
-Depends: R (>= 1.8.0), stats, kinship, nlme, Formula (>= 0.2-0), MASS, sandwich
+Depends: R (>= 1.8.0), stats, bdsmatrix, nlme, Formula (>= 0.2-0), MASS, sandwich
 Suggests: lmtest, car
 Description: A set of estimators and tests for panel data.
 License: GPL (>=2)

@@ -78,7 +78,7 @@ Wooldridge, J. M. (2002) \emph{Econometric Analysis of Cross Section and Panel D
 
 \examples{
 data("Produc", package = "plm")
-zz <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model = "random")
+zz <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model = "pooling")
 summary(zz)
 }
 

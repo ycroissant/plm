@@ -5,7 +5,7 @@ export(plm, pvcm, pgmm, pggls, pht, plm.data, plmtest, phtest, pFtest,
        purtest, vcovBK, vcovSCC, r.squared)
 import(stats)
 import(Formula)
-importFrom(kinship, bdsmatrix)
+importFrom(bdsmatrix, bdsmatrix)
 importFrom(sandwich, vcovHC)
 importFrom(nlme, fixef)
 importFrom(MASS, ginv)
