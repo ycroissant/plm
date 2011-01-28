@@ -125,7 +125,7 @@ wald <- function(object, param = "coef", vcov = NULL){
   Ktot <- length(coefficients)
   Kt <- length(object$args$namest)
   if (param == "time"){
-    start <- Ktot - Kt + 2
+    start <- Ktot - Kt + ifelse(transformation == "ld", 2, 1)
     end <- Ktot
   }
   else{

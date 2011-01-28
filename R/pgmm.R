@@ -157,7 +157,10 @@ pgmm <- function(formula, data, subset, na.action,
       td.gmm.diff <- td.model.diff <- diff(diag(1, T - time.lost + 1))[, -1]
       namest <- namest[-c(0:(time.lost))]
     }
-  }  
+  }
+  # A QAD fix for the bug in mtest for ld model without time.dummies
+  if (effect == "individual" && transformation == "ld")
+    namest <- c("(intercept)", namest[-c(0:time.lost.level+1)])
 
   # create the matrix of gmm instruments for every individual
   W <- lapply(W,

@@ -309,9 +309,16 @@ Changes since version 1.2-4
 	* pmodel.response.plm is modified : no explicit effect and model
 	arguments anymore (like in model.matrix.plm)
 	
-
 Changes since version 1.2-5
 
+	
+Changes since version 1.2-6
+
+	* a bug in mtest for pgmm models with effect=individual and
+	transformation=ld *and* for the wald test for time.dummies for
+	model with effect = twoways and transformation=ld is fixed by
+	modifying namest in gmm
+	
 	* there was a bug in pgmm for models with different lags for gmm
 	instruments. The number of time-series lost is now the min (and
 	not the max) of the first lags for gmm instruments
