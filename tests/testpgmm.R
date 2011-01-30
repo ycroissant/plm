@@ -1,3 +1,4 @@
+library("plm")
 data("EmplUK", package = "plm")
 ## Arellano and Bond (1991), table 4b 
 z1 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
