@@ -311,6 +311,15 @@ Changes since version 1.2-4
 	
 Changes since version 1.2-5
 
+	* fixed error in pggls, model="within" (FEGLS). Added model="fd" (FDGLS).  
+
+	* changed dependency from kinship to bdsmatrix (as suggested by Terry Therneau after his reorganization of the packages). 
+
+	* fixed DESCRIPTION and NAMESPACE accordingly. 
+
+	* fixed the example in pggls.Rd
+
+
 	
 Changes since version 1.2-6
 
