@@ -326,3 +326,5 @@ Changes since version 1.2-6
 	* some parts of summmary.pgmm only worked correctly for model with
 	time-dummies. It now deals correctly for model with 'individual'
 	effects
+
+	* the rda files are now compressed

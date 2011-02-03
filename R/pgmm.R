@@ -86,7 +86,9 @@ pgmm <- function(formula, data, subset, na.action,
   main.maxlag <- max(sapply(main.lags, max))
   time.lost <- max(main.maxlag + 1, inst.maxlag + 1, gmm.minlag)
   time.lost.level <- max(main.maxlag, inst.maxlag)
-  
+  # if time.lost.level = 0 (no lags), one observation is lost anyway
+  # because of the differentiation of the lag instruments
+  time.lost.level <- max(1, time.lost.level)
   # Compute the model frame using the covariates, the 'normal'
   # instruments if any and the gmm instruments without the lags
   gmm.form <- as.formula(paste("~", paste(names(gmm.lags), collapse = "+")))
