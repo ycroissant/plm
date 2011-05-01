@@ -90,7 +90,7 @@ plmtest.plm <- function(x,
                         honda = NULL,
                         bp = 1)
     pval <- switch(type,
-                   honda = pnorm(abs(stat), lower.tail = FALSE)/2,
+                   honda = pnorm(abs(stat), lower.tail = FALSE)*2,
                    bp    = pchisq(stat, df = 1, lower.tail = FALSE))
   }
   else{
@@ -104,9 +104,9 @@ plmtest.plm <- function(x,
     parameter <- 2
     pval <- switch(type,
                    ghm   = pchisq(stat,df=2,lower.tail=FALSE),
-                   honda = pnorm(abs(stat),lower.tail=FALSE)/2,
+                   honda = pnorm(abs(stat),lower.tail=FALSE)*2,
                    bp    = pchisq(stat,df=2,lower.tail=FALSE),
-                   kw    = pnorm(abs(stat),lower.tail=FALSE))
+                   kw    = pnorm(abs(stat),lower.tail=FALSE)*2)
   }
   
   method.type <- switch(type,
@@ -254,7 +254,6 @@ pwaldtest <- function(x, ...){
   stat <- coef%*%solve(vcv)%*%coef
   names(stat) <- "chisq"
   names(parameter) <- "df"
-#  pval <- 1-pchisq(stat,df)
   pval <- pchisq(stat,df,lower.tail=FALSE)
   res <- list(statistic = stat,
               p.value = pval,
