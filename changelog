@@ -337,3 +337,5 @@ Changes since version 1.2-6
 	effects
 
 	* the rda files are now compressed
+
+	* p-values for the two-tailed versions of plmtest() were wrong and 		have been fixed. They were divided by 2 instead of multiplied.
