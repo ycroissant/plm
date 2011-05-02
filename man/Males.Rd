@@ -24,7 +24,7 @@
     \item{exper}{years of experience (computed as \code{age-6-school})}
     \item{union}{wage set by collective bargaining ?}
     \item{ethn}{a factor with levels \code{black, hisp, other}}
-    \item{maried}{maried?}
+    \item{married}{married?}
     \item{health}{health problem ?}
     \item{wage}{log of hourly wage}
     \item{industry}{a factor with 12 levels}
