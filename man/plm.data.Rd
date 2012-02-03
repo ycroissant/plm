@@ -8,12 +8,12 @@ This function transforms a data frame in a format suitable for using with the es
 }
 
 \usage{
-x <- plm.data(x, index = NULL)
+plm.data(x, indexes = NULL)
 }
 
 \arguments{
  \item{x}{a \code{data.frame},}
- \item{index}{a vector (of length one or two) indicating the
+ \item{indexes}{a vector (of length one or two) indicating the
   (individual and time) indexes.}
 }
 

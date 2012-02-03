@@ -339,3 +339,12 @@ Changes since version 1.2-6
 	* the rda files are now compressed
 
 	* p-values for the two-tailed versions of plmtest() were wrong and 		have been fixed. They were divided by 2 instead of multiplied.
+
+	
+ Changes since version 1.2-7
+	
+	* a typo is corrected in the man page of plm.data
+
+	* AER is now suggested
+
+	* a index method is added for panelmodel, pdata.frame and pseries

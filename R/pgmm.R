@@ -314,6 +314,8 @@ pgmm <- function(formula, data, subset, na.action,
   outresid <- lapply(residuals,function(x) outer(x,x))
   A2 <- mapply(function(x, y) crossprod(t(crossprod(x, y)), x), W, outresid, SIMPLIFY = FALSE)
   A2 <- solve(Reduce("+", A2))
+#  A2 <- pseudoinverse(Reduce("+", A2))
+#  A2 <- ginv(Reduce("+", A2))
   B2 <- solve(crossprod(WX, t(crossprod(WX, A2))))
 
   if (model=="twosteps"){

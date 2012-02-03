@@ -67,12 +67,12 @@ swar <- function(formula, data, effect){
     Kb <- length(coef(between))
     Kw <- length(coef(within))
     if(balanced){
-      sigma2$one <- arg.other*deviance(between)/df.residual(between)
-      sigma2$idios <- deviance(within)/df.residual(within)
-      sigma2$id <- (sigma2$one-sigma2$idios)/arg.other
+      sigma2$one <- arg.other * deviance(between) / df.residual(between)
+      sigma2$idios <- deviance(within) / df.residual(within)
+      sigma2$id <- (sigma2$one-sigma2$idios) / arg.other
       if (sigma2$id < 0)
         stop(paste("the estimated variance of the", effect, "effect is negative"))
-      theta <- 1-sqrt(sigma2$idios/sigma2$one)
+      theta <- 1 - sqrt(sigma2$idios / sigma2$one)
       z <- list(sigma2 = sigma2, theta = theta)
     }
     else{
@@ -159,12 +159,12 @@ walhus <- function(formula, data, effect){
       card.cond <- T
       card.other <- n
     }
-    one   = card.other*sum(tapply(respool,condvar,mean)^2)/card.cond
-    idios = sum((respool-tapply(respool,condvar,mean)[as.character(condvar)])^2)/
-      (card.cond*(card.other-1))
+    one   = card.other * sum(tapply(respool, condvar, mean) ^ 2) / card.cond
+    idios = sum((respool - tapply(respool, condvar, mean)[as.character(condvar)]) ^ 2) /
+      (card.cond * (card.other - 1))
     sigma2 <- list(one = one,
                    idios = idios,
-                   id    = (one-idios)/card.other
+                   id    = (one - idios) / card.other
                    )
     if (sigma2$id < 0)
       stop(paste("the estimated variance of the", effect, "effect is negative"))
@@ -281,14 +281,15 @@ nerlove <- function(formula, data, effect){
       arg.cond <- pdim$nT$T
       arg.other <- pdim$nT$n
     }
-    idios <- deviance(within)/N
+    idios <- deviance(within) / N
 #    s2id <- sum((fixef(within)-mean(fixef(within)))^2)/(arg.cond-1)
-    s2id <- sum(fixef(within, type = "dmean")^2)/(arg.cond-1)
-    sigma2 <- list(idios = idios,
-                   id    = s2id,
-                   one   = arg.other*s2id+idios
+    s2id <- sum(fixef(within, type = "dmean") ^ 2)/(arg.cond - 1)
+    one <- arg.other * s2id + idios
+    sigma2 <- list(one = one,
+                   idios = idios,
+                   id    = s2id
                    )
-    theta <- 1-sqrt(idios/sigma2$one)
+    theta <- 1 - sqrt(idios / sigma2$one)
     z <- list(theta = theta, sigma2 = sigma2)
   }
   else stop("nerlove variance decomposition only implemented for balanced oneway panels")

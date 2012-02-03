@@ -44,15 +44,15 @@ plm <-  function(formula, data, subset, na.action,
   if (length(formula)[2] == 2) formula <- expand.formula(formula)
   # eval the model.frame
   cl <- match.call()
-  mf <- match.call(expand.dots=FALSE)
-  m <- match(c("formula", "data", "subset", "na.action"),names(mf),0)
-  mf <- mf[c(1,m)]
+  mf <- match.call(expand.dots = FALSE)
+  m <- match(c("formula", "data", "subset", "na.action"), names(mf), 0)
+  mf <- mf[c(1, m)]
   mf$drop.unused.levels <- TRUE
   mf[[1]] <- as.name("model.frame")
   mf$formula <- formula
   mf$data <- data
   # eval in parent.frame() doesn't work
-#  data <- eval(mf, sys.frame(which = nframe)) 
+  #  data <- eval(mf, sys.frame(which = nframe)) 
   data <- eval(mf, parent.frame())
   # return the model.frame or estimate the model
   if (is.na(model)){

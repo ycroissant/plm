@@ -23,6 +23,7 @@ model.frame.pFormula <- function(formula, data, ..., lhs = NULL, rhs = NULL){
   mf <- model.frame(as.Formula(formula), as.data.frame(data), ..., rhs = rhs)
   index <- index[as.numeric(rownames(mf)), ]
   index <- data.frame(lapply(index, function(x) x[drop = TRUE]))
+  class(index) <- c("pindex", "data.frame")
   structure(mf,
             index = index,
             class = c("pdata.frame", class(mf)))
