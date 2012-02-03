@@ -28,14 +28,13 @@ pht <-  function(formula, data, subset, na.action, index = NULL, ...){
   X <- model.matrix(formula, data, rhs = 1, model = "within")
   W <- model.matrix(formula, data, rhs = 2, model = "within")
   exo.all <- colnames(W)
-  tot.all <- colnames(X)
-  tot.cst <- attr(X,"constant")
-  tot.var <- tot.all[!(tot.cst %in% tot.all)]
+  tot.var <- colnames(X)
+  tot.cst <- attr(X, "constant")
   exo.cst <- attr(W,"constant")
   exo.var <- exo.all[!(exo.all %in% exo.cst)]
   end.cst <- tot.cst[!(tot.cst %in% exo.cst)]
   end.var <- tot.var[!(tot.var %in% exo.var)]
-  
+
   if (length(end.cst) > length(exo.var)){
     stop(" The number of endogenous time-invariant variables is greater
            than the number of exogenous time varying variables\n")

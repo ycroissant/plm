@@ -42,6 +42,7 @@ plm <-  function(formula, data, subset, na.action,
 
   # length(formula)[2] because the length is now a vector of length 2
   if (length(formula)[2] == 2) formula <- expand.formula(formula)
+
   # eval the model.frame
   cl <- match.call()
   mf <- match.call(expand.dots = FALSE)
