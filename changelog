@@ -352,3 +352,5 @@ Changes since version 1.2-8
 	* a index method is added for panelmodel, pdata.frame and pseries
 
 	* a bug in the typology of the variables in pht is fixed
+
+	* a bug in vcovBK (matrices degenerating into vectors) is fixed (thx David Hugh-Jones for bug report)

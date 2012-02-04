@@ -185,10 +185,10 @@ vcovBK.plm <-function(x,type=c("HC0", "HC1", "HC2", "HC3", "HC4"),
   for(i in 1:n) {
       groupinds<-tind[[i]]
       grouplabs<-tlab[[i]]
-      xi<-demX[groupinds,]
+      xi<-demX[groupinds, , drop=FALSE]
       ## for every group, take relevant positions
       tpos <- unlabs %in% grouplabs
-      OmegaTi <- OmegaT[tpos,tpos]
+      OmegaTi <- OmegaT[tpos, tpos, drop=FALSE]
       salame[,,i]<-crossprod(xi,OmegaTi)%*%xi
       }
 
