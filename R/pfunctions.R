@@ -281,7 +281,10 @@ Tapply.pseries <- function(x, effect = c("individual", "time"), func, ...){
                  "individual"= index[[1]],
                  "time"= index[[2]]
                  )
-  Tapply.default(x, effect, func, ...)
+  z <- Tapply.default(x, effect, func, ...)
+  attr(z, "index") <- index
+  class(z) <- c("pseries", class(z))
+  z
 }
 
 Tapply.matrix <- function(x, effect, func, ...){
@@ -469,7 +472,6 @@ lag.pseries <- function(x, k = 1, ...){
     rval <- alag(x, k)
   }
   return(rval)
-
 }
   
 

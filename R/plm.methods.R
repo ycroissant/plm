@@ -118,7 +118,7 @@ fitted.plm <- function(object, model = NULL, ...){
   else{
     fv <- as.numeric(crossprod(t(X), beta))
   }
-  fv
+  structure(fv, index =  index(object), class = "pseries")
 }
 
   
@@ -197,7 +197,7 @@ residuals.plm <- function(object, model = NULL, ...){
     }
     res <- y - as.numeric(crossprod(t(X), beta))
   }
-  res
+  structure(res, index =  index(object), class = "pseries")
 }
 
 formula.plm <- function(x, ...){

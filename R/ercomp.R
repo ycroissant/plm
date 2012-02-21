@@ -69,7 +69,7 @@ swar <- function(formula, data, effect){
     if(balanced){
       sigma2$one <- arg.other * deviance(between) / df.residual(between)
       sigma2$idios <- deviance(within) / df.residual(within)
-      sigma2$id <- (sigma2$one-sigma2$idios) / arg.other
+      sigma2$id <- (sigma2$one - sigma2$idios) / arg.other
       if (sigma2$id < 0)
         stop(paste("the estimated variance of the", effect, "effect is negative"))
       theta <- 1 - sqrt(sigma2$idios / sigma2$one)
@@ -94,12 +94,12 @@ swar <- function(formula, data, effect){
         tr <- sum(diag(solve(crossprod(X.m))%*%crossprod(X.sum)))
       }
       sigma2$idios <- deviance(within)/(N-arg.cond-Kw)
-      ssrbet <- sum(between$residuals^2*arg.other.i)
-      sigma2$id <- (ssrbet-(arg.cond-Kb)*sigma2$idios)/(N-tr)
+      ssrbet <- sum(between$residuals^2 * arg.other.i)
+      sigma2$id <- (ssrbet - (arg.cond - Kb) * sigma2$idios)/(N - tr)
       if (sigma2$id < 0)
         stop(paste("the estimated variance of the", effect, "effect is negative"))
-      sigma2$one <- (arg.other.i*sigma2$id+sigma2$idios)
-      theta <- 1-sqrt(sigma2$idios/(sigma2$idios+arg.other.i*sigma2$id))
+      sigma2$one <- (arg.other.i * sigma2$id + sigma2$idios)
+      theta <- 1-sqrt(sigma2$idios / (sigma2$idios + arg.other.i * sigma2$id))
       theta <- theta[as.character(cond)]
       z <- list(sigma2 = sigma2, theta = theta)
     }

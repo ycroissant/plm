@@ -354,3 +354,7 @@ Changes since version 1.2-8
 	* a bug in the typology of the variables in pht is fixed
 
 	* a bug in vcovBK (matrices degenerating into vectors) is fixed (thx David Hugh-Jones for bug report)
+
+	* the Between function now returns a pseries object
+
+	* the resid and fitted method now returns a pseries object
