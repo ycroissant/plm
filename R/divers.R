@@ -49,7 +49,7 @@ twosls <- function(y, X, W, intercept = FALSE){
 
 
 sumres <- function(x){
-  sr <- summary(residuals(x))
+  sr <- summary(unclass(resid(x)))
   srm <- sr["Mean"]
   if (abs(srm)<1e-10){
     sr <- sr[c(1:3,5:6)]

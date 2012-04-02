@@ -298,11 +298,11 @@ purtest <- function(object, data = NULL, index = NULL,
       if (length(lab) > 1 || lab != "trend") stop("uncorrect formula")
       exo <- "trend"
     }
-
     object <- paste(deparse(object[[2]]))
     if (exists(object) && is.vector(get(object))){
       # is.vector because, eg, inv exists as a function
       object <- get(object)
+
     }
     else{
       if (is.null(data)) stop("unknown response")

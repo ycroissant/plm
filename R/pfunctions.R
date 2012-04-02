@@ -164,8 +164,19 @@ print.pdata.frame <- function(x, ...){
   print(x, ...)
 }
 
+"$<-.pdata.frame" <- function(x, name, value){
+  if (class(value)[1] == "pseries"){
+    if (length(class(value)) == 1) value <- unclass(value)
+    else class(value) <- class(value)[-1]
+    attr(value, "index") <- NULL
+  }
+  "$<-.data.frame"(x, name, value)
+}
 
 
+"$.pdata.frame" <- function(x,y){
+  "[["(x, paste(as.name(y)))
+}
 
 
 ###################################################

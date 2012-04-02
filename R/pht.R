@@ -24,6 +24,7 @@ pht <-  function(formula, data, subset, na.action, index = NULL, ...){
   n <- pdim$nT$n
   N <- pdim$nT$N
   Ti <- pdim$Tint$Ti
+  
   # get the typology of the variables
   formula <- pFormula(old.formula)
   X <- model.matrix(formula, data, rhs = 1, model = "within")
@@ -49,22 +50,13 @@ pht <-  function(formula, data, subset, na.action, index = NULL, ...){
   if (length(exo.cst) > 0) XC <- X[ , exo.cst, drop = FALSE] else XC <- NULL
   if (length(edo.cst) > 0) NC <- X[ , edo.cst, drop = FALSE] else NC <- NULL
 
+  if (length(all.cst) !=0 )
+    zo <- twosls(fixef[as.character(id)], cbind(XC,NC), cbind(XC,XV), TRUE)
+  else zo <- lm(fixef~1)
+
   sigma2 <- list()
   sigma2$one <- 0
   sigma2$idios <- deviance(within)/(N-n)
-  if (length(all.cst) !=0 ){
-    X <- cbind(XC, NC)
-    X.m <- Tapply(X, id, mean)
-    X.sum <- apply(X, 2, tapply, id, sum)
-    X.m.X <- crossprod(X.m)
-    X.sum.X <- crossprod(X.sum)
-    X.m.X.eig <- eigen(X.m.X)
-    tr <- sum(diag(solve(crossprod(X.m))%*%crossprod(X.sum)))
-    zo <- twosls(fixef[as.character(id)], cbind(XC,NC), cbind(XC,XV), TRUE)
-  }
-  else{
-    zo <- lm(fixef~1)
-  }
   sigma2$one <- deviance(zo) / n
   
   if(balanced){
@@ -74,9 +66,6 @@ pht <-  function(formula, data, subset, na.action, index = NULL, ...){
   else{
     barT <- n / sum(1 / Ti)
     sigma2$id <- (sigma2$one - sigma2$idios) / barT
-#    sigma2$id <- (deviance(zo) - (n-ncol(X)) * sigma2$idios)/(N - tr)
-    # <6 >5.5
-#    sigma2$id <- 5.7
     theta <- 1 - sqrt(sigma2$idios / (sigma2$idios + Ti * sigma2$id))
     theta <- theta[as.character(id)]
   }

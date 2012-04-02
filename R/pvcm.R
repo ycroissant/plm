@@ -10,6 +10,7 @@ pvcm <-  function(formula, data, subset ,na.action, effect = c("individual","tim
   mf[[1]] <- as.name("plm")
   mf$model <- NA
   data <- eval(mf,parent.frame())
+
   result <- switch(model.name,
                    "within" = pvcm.within(formula, data, effect),
                    "random" = pvcm.random(formula, data, effect)
@@ -43,12 +44,12 @@ pvcm.within <- function(formula, data, effect){
   attr(ml, "index") <- index
   ols <- lapply(ml,
                 function(x){
-                  X <- model.matrix(formula,x)
+                  X <- model.matrix(formula, x)
                   if (nrow(X) <= ncol(X)) stop("insufficient number of observations")
 #                  y <- model.response(x)
                   y <- x[[1]]
                   r <- lm(y~X-1)
-                  r <- mylm(y,X)
+#                  r <- mylm(y,X)
                   nc <- colnames(model.frame(r)$X)
                   names(r$coefficients) <- nc
                   r
@@ -99,7 +100,7 @@ pvcm.random <- function(formula, data, effect){
 #                  y <- model.response(x)
                   y <- x[[1]]
                   r <- lm(y ~ X-1)
-                  r <- mylm(y, X)
+#                  r <- mylm(y, X)
                   nc <- colnames(model.frame(r)$X)
                   names(r$coefficients) <- nc
                   r
@@ -231,6 +232,7 @@ pvcm <-  function(formula, data, subset ,na.action, effect = c("individual","tim
 
 
 pvcm.random <- function(formula, data, effect){
+
   interc <- has.intercept(formula)
   index <- index(data)
   id <- index[[1]]
@@ -247,8 +249,24 @@ pvcm.random <- function(formula, data, effect){
     other <- time
     card.cond <- pdim$nT$n
   }
-  # compute the ols estimation for each individual
-  ols <- lapply(unique(cond), function(i) lm(formula, data[cond == i, , drop = FALSE]))
+
+    ml <- split(data, cond)
+  nr <- sapply(ml, function(x) dim(x)[1]) > 0
+  ml <- ml[nr]
+  attr(ml, "index") <- index
+  ols <- lapply(ml,
+                function(x){
+                  X <- model.matrix(formula, x)
+                  if (nrow(X) <= ncol(X)) stop("insufficient number of observations")
+#                  y <- model.response(x)
+                  y <- x[[1]]
+                  r <- lm(y ~ X-1)
+#                  r <- mylm(y, X)
+                  nc <- colnames(model.frame(r)$X)
+                  names(r$coefficients) <- nc
+                  r
+                }
+                )
   # matrix of coefficients
   coefm <- t(sapply(ols, coef))
   # number of covariates
@@ -282,7 +300,14 @@ pvcm.random <- function(formula, data, effect){
                function(i) sigi[i] * xpxm1[[i]])) / card.cond
   # if D1-D2 semi-definite positive, use it, otherwise use D1
   eig <- prod(eigen(D1 - D2)$values >= 0)
-  if (eig) Delta <- D1 - D2 else Delta <- D1
+  if (eig){
+    Delta <- D1 - D2
+  }
+  else{
+    print(eigen(D1-D2)$values)
+    cat("attention\n")
+    Delta <- D1
+  }
   # compute the Omega matrix for each individual
   Omegan <- lapply(seq_len(card.cond), function(i) sigi[i] * diag(nrow(X[[i]])) + X[[i]] %*% Delta %*% t(X[[i]]))
   # Compte X'Omega X et X'Omega y for each individual
@@ -295,13 +320,12 @@ pvcm.random <- function(formula, data, effect){
     Xnyn[!coefna[i, ],] <- t(Xn) %*% solve(Omegan[[i]]) %*% yn
     list(XnXn = XnXn, Xnyn = Xnyn)
   }
-                )
+                   )
   # Compute the coefficients
   XpXm1 <- solve(Reduce("+", lapply(XyOmXy, function(x) x$XnXn)))
   beta <- XpXm1 %*% Reduce("+", lapply(XyOmXy, function(x) x$Xnyn))
-
+  
   if (TRUE){
-    cat("LE NOUVEAU\n")
     weightsn <- lapply(seq_len(card.cond),
                        function(i){
                          vcovn <- vcov(ols[[i]])
@@ -317,7 +341,7 @@ pvcm.random <- function(formula, data, effect){
     weightsn <- lapply(weightsn, function(x) V %*% x)
     Beta <- Reduce("+", lapply(seq_len(card.cond), function(i) weightsn[[i]] %*% coefm[i, ]))
     XpXm1 <- V
-
+    
   }
   
   y <- model.response(data)

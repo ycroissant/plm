@@ -1,11 +1,7 @@
 coef.pgmm <- function(object,...){
-  model <- ifelse(is.null(object$call$model), "onestep", object$call$model)
-  if(model=="onestep"){
-    coefficients <- object$coefficients
-  }
-  else{
-    coefficients <- object$coefficients[[2]]
-  }
+  model <- describe(object, "model")
+  if(model == "onestep") coefficients <- object$coefficients
+  else coefficients <- object$coefficients[[2]]
   coefficients
 }
 summary.pgmm <- function(object, robust = FALSE, time.dummies = FALSE, ...){

@@ -218,7 +218,7 @@ pwartest.panelmodel <- function(x, ...){
   time <- index[[2]]
   lagid <- as.numeric(id)-c(NA,as.numeric(id)[1:(N-1)])
   FEres.1[lagid!=0] <- NA
-  data <- data.frame(id, time, FEres = FEres, FEres.1 = FEres.1)
+  data <- data.frame(id, time, FEres = unclass(FEres), FEres.1 = unclass(FEres.1))
   names(data)[c(1,2)] <- c("id","time")
   data <- na.omit(data)
   auxmod <- plm(FEres~FEres.1, data = data, model = "pooling", index = c("id", "time"))
