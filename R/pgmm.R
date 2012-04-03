@@ -291,9 +291,11 @@ pgmm <- function(formula, data, subset, na.action,
     }
   }
   # A QAD fix for the bug in mtest for ld model without time.dummies
-  if (effect == "individual" && transformation == "ld")
+  if (effect == "individual" && transformation == "ld"){
+    namesV <- levels(index(data, which = "time"))
     namesV <- c("(intercept)", namesV[-c(0:TL2 + 1)])
-
+  }
+  
   #################################################################
   ##### 9. In case of unbalanced data, replace NA's by 0 and overwrite
   ##### rows for missing time series with 0
@@ -312,6 +314,8 @@ pgmm <- function(formula, data, subset, na.action,
       if (mb) W1[[i]][c(0:mb), ] <- 0
       if (me) W1[[i]][(T1 - me + 1):T1, ] <- 0      
       if (transformation == "ld"){
+        W2[[i]][is.na(W2[[i]])] <- 0
+        yX2[[i]][is.na(yX2[[i]])] <- 0
         if (mb) W2[[i]][c(0:mb), ] <- yX2[[i]][c(0:mb), ] <- 0
         if (me) W2[[i]][(T2 - me + 1):T2, ] <- yX2[[i]][(T2 - me + 1):T2, ] <- 0
       }
@@ -320,6 +324,7 @@ pgmm <- function(formula, data, subset, na.action,
         if (mb) Z1[[i]][c(0:mb), ] <- 0
         if (me) Z1[[i]][(T1 - me + 1):T1, ] <- 0      
         if (transformation == "ld"){
+          Z2[[i]][is.na(Z2[[i]])] <- 0
           if (mb) Z2[[i]][c(0:mb), ] <- 0
           if (me) Z2[[i]][(T2 - me + 1):T2, ] <- 0
         }
@@ -355,10 +360,12 @@ pgmm <- function(formula, data, subset, na.action,
   if (transformation == "ld") A1 <- FSM(T - TL2, "full")
  
   # compute the estimator
-  WX <- mapply(function(x, y) crossprod(x, y), W, yX, SIMPLIFY = FALSE)
-  WX <- Reduce("+", WX)
-  zerolines <- which(apply(WX, 1, function(z) sum(abs(z))) == 0)
-  for (i in 1:N) W[[i]] <- W[[i]][, - zerolines]
+  
+  ## WX <- mapply(function(x, y) crossprod(x, y), W, yX, SIMPLIFY = FALSE)
+  ## WX <- Reduce("+", WX)
+  ## zerolines <- which(apply(WX, 1, function(z) sum(abs(z))) == 0)
+  ## for (i in 1:N) W[[i]] <- W[[i]][, - zerolines]
+
   WX <- mapply(function(x, y) crossprod(x, y), W, yX, SIMPLIFY = FALSE)
   Wy <- lapply(WX, function(x) x[, 1])
   WX <- lapply(WX, function(x) x[, -1])
