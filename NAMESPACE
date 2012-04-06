@@ -1,8 +1,8 @@
-export(plm, pvcm, pgmm, pggls, pht, plm.data, plmtest, phtest, pFtest, 
+export(plm, pvcm, pgmm, pggls, pht, pccep, pmg, plm.data, plmtest, phtest, pFtest, 
        pvar, pdim, pooltest, dynformula, sargan, mtest, ercomp, pvcovHC,
        pbsytest, pdwtest, pbgtest, pbltest, pwartest, pwtest, pwfdtest, pcdtest,
        pdata.frame, between, Between, Within, pFormula, pmodel.response,
-       purtest, vcovBK, vcovSCC, r.squared)
+       purtest, cipstest, vcovBK, vcovSCC, r.squared)
 import(stats)
 import(Formula)
 importFrom(bdsmatrix, bdsmatrix)
@@ -61,6 +61,12 @@ S3method(print, summary.pvcm)
 #pggls
 S3method(summary, pggls)
 S3method(print, summary.pggls)
+#pccep
+S3method(summary, pccep)
+S3method(print, summary.pccep)
+#pmg
+S3method(summary, pmg)
+S3method(print, summary.pmg)
 #pht
 S3method(summary, pht)
 S3method(print, summary.pht)

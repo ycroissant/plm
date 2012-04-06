@@ -360,3 +360,12 @@ Changes since version 1.2-8
 
 	* the pgmm method has been rewriten ; the data frame is then first balanced and NAs are then overwriten by 0s
 
+Changes since version 1.2-9	
+
+	* the pccep function, estimating CCEP models a la Pesaran, has been added together withsummary and print.summary methods. The function generates objects of a class of their own ("pccep"), much like 'pggls', together with 'panelmodel'.
+
+	* the pmg function, estimating MG, DMG and CCEMG models a la Pesaran, has been added together with summary and print.summary methods. The function generates objects of a class of their own ("pmg"), much like 'pggls', together with 'panelmodel'. In the future must consider possible merger with 'pvcm'.
+
+        * the new cipstest function performs a second-generation CIPS test for unit roots on pseries objects
+
+        * the new (hidden) function pmerge is used internally by cipstest to merge lags and differences of a pseries into the original pdata.frame. Will possibly be added to the user space in the future.

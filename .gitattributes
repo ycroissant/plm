@@ -2,6 +2,7 @@
 /DESCRIPTION -text
 /NAMESPACE -text
 R/attributes.R -text
+R/cipstest.R -text
 R/divers.R -text
 R/dynformula.R -text
 R/ercomp.R -text
@@ -10,6 +11,7 @@ R/has.intercept.R -text
 R/options.R -text
 R/pFormula.R -text
 R/panelmodel.R -text
+R/pccep.R -text
 R/pcdtest.R -text
 R/pfunctions.R -text
 R/pggls.R -text
@@ -19,6 +21,8 @@ R/pht.R -text
 R/plm.R -text
 R/plm.data.R -text
 R/plm.methods.R -text
+R/pmerge.R -text
+R/pmg.R -text
 R/pserial.R -text
 R/ptest.R -text
 R/purtest.R -text
@@ -55,6 +59,7 @@ man/Produc.Rd -text
 man/Snmesp.Rd -text
 man/SumHes.Rd -text
 man/Wages.Rd -text
+man/cipstest.Rd -text
 man/dynformula.Rd -text
 man/ercomp.Rd -text
 man/fixef.plm.Rd -text
@@ -64,6 +69,7 @@ man/pFtest.Rd -text
 man/pbgtest.Rd -text
 man/pbltest.Rd -text
 man/pbsytest.Rd -text
+man/pccep.Rd -text
 man/pcdtest.Rd -text
 man/pdata.frame.Rd -text
 man/pdim.Rd -text
@@ -75,6 +81,7 @@ man/phtest.Rd -text
 man/plm.Rd -text
 man/plm.data.Rd -text
 man/plmtest.Rd -text
+man/pmg.Rd -text
 man/pmodel.response.Rd -text
 man/pooltest.Rd -text
 man/pserie.Rd -text
