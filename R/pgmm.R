@@ -159,6 +159,12 @@ pgmm <- function(formula, data, subset, na.action,
     class(index) <- c("pindex", "data.frame")
     attr(data, "index") <- index
   }
+  else{
+    nats <- list()
+    for (n in 1:N) nats[[n]] <- c(0,0)
+  }
+
+#  print(nats);stop()
   
   #################################################################
   ##### 5. Get the response/covariates matrix yX, the gmm instruments
@@ -358,7 +364,7 @@ pgmm <- function(formula, data, subset, na.action,
   # Compute the first step matrices
   if (transformation == "d") A1 <- tcrossprod(diff(diag(1, T - TL1 + 1)))
   if (transformation == "ld") A1 <- FSM(T - TL2, "full")
- 
+
   # compute the estimator
   
   ## WX <- mapply(function(x, y) crossprod(x, y), W, yX, SIMPLIFY = FALSE)
