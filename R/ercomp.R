@@ -308,7 +308,7 @@ print.ercomp <- function(x, digits= max(3, getOption("digits") - 3), ...){
     rownames(sigma2Table) <- c("idiosyncratic","individual","time")
   }
   else{
-    if (balanced) sigma2 <- unlist(sigma2[-1]) else sigma2 <- unlist(sigma2[1:2])
+    sigma2 <- unlist(sigma2[c("idios", "id")])
     sigma2Table <- cbind(var=sigma2,std.dev=sqrt(sigma2),share=sigma2/sum(sigma2))
     rownames(sigma2Table) <- c("idiosyncratic",effect)
   }

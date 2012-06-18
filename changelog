@@ -369,3 +369,7 @@ Changes since version 1.2-9
         * the new cipstest function performs a second-generation CIPS test for unit roots on pseries objects
 
         * the new (hidden) function pmerge is used internally by cipstest to merge lags and differences of a pseries into the original pdata.frame. Will possibly be added to the user space in the future.
+
+Changes since version 1.2-10	
+	* for unbalanced hausman-taylor model, the printing of the error components was wrong, it is now fixed
+	
