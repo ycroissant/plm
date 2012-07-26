@@ -12,6 +12,8 @@ Generalized method of moments estimation for static or dynamic models with panel
 pgmm(formula, data, subset, na.action,
      effect = c("twoways", "individual"),
      model = c("onestep", "twosteps"),
+     collapse = FALSE,
+     lost.ts = NULL,
      transformation = c("d", "ld"),
      fsm = NULL, index = NULL, ...) 
 \method{summary}{pgmm}(object, robust, time.dummies = FALSE, ...)
@@ -33,6 +35,13 @@ pgmm(formula, data, subset, na.action,
     \code{"twoways"} (the default) or \code{"individual"},}
   \item{model}{one of \code{"onestep"} (the default) or
     \code{"twosteps"},}
+  \item{collapse}{if TRUE, the gmm instruments are collapsed,}
+  \item{lost.ts}{the number of lost time series : if \code{NULL}, this
+    is automatically computed. Otherwise, it can be defined by the user
+    as a numeric vector of length 1 or 2. The first element is the
+    number of lost time series in the model in difference, the second
+    one in the model in level. If the second element is missing, it is
+    set to the first one minus one,}
   \item{transformation}{the kind of transformation to apply to the
   model: either \code{"d"} (the default value) for the ``difference GMM''
   model or \code{"ld"} for the ``system GMM'',}

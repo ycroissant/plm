@@ -5,7 +5,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE){
   if (inherits(x, "pdata.frame")) stop("already a pdata.frame")
 
   # coerce character vectors to factors
-  x.char <- names(x)[sapply(x,is.character)]
+  x.char <- names(x)[sapply(x, is.character)]
   for (i in x.char){
     x[[i]] <- factor(x[[i]])
   }
@@ -15,25 +15,25 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE){
   # check and remove complete NA series
   na.check <- sapply(x,function(x) sum(!is.na(x))==0)
   na.serie <- names(x)[na.check]
-  if (length(na.serie)>0){
-    if (length(na.serie)==1){
-      cat(paste("serie",na.serie," is NA and has been removed\n"))
-    }
-    else{
-      cat(paste("series ",paste(na.serie,collapse=",")," are NA and have been removed\n"))
-    }
+  if (length(na.serie) > 0){
+    if (length(na.serie) == 1)
+      cat(paste("series ", na.serie, " is NA and has been removed\n", sep = ""))
+    else
+      cat(paste("series ", paste(na.serie, collapse = ","), " are NA and have been removed\n", sep = ""))
   }
-  x <- x[, !na.check]
+  x <- x[, ! na.check]
   
   # check and remove cst series
-  cst.check <- sapply(x,function(x) var(as.numeric(x), na.rm = TRUE)==0)
+  cst.check <- sapply(x, function(x) var(as.numeric(x), na.rm = TRUE)==0)
+  # following line : bug fixed thank's to Marciej Szelfer 
+  cst.check <- cst.check | is.na(cst.check)
   cst.serie <- names(x)[cst.check]
-  if (length(cst.serie)>0){
-    if (length(cst.serie)==1){
-      cat(paste("serie",cst.serie," is constant and has been removed\n"))
+  if (length(cst.serie) > 0){
+    if (length(cst.serie) == 1){
+      cat(paste("series ", cst.serie, " is constant and has been removed\n", sep = ""))
     }
     else{
-      cat(paste("series ",paste(na.serie,collapse=",")," are constants and have been removed\n"))
+      cat(paste("series ", paste(cst.serie, collapse=", x")," are constants and have been removed\n", sep = ""))
     }
   }
   x <- x[,!cst.check]
@@ -140,7 +140,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE){
   old.pdata.frame <- !inherits(x, "data.frame")
   if (!old.pdata.frame){
     # this part for backward compatibility (required by meboot)
-    index <- "[.data.frame"(attr(x, "index"), i,)
+    index <- "[.data.frame"(attr(x, "index"), i, )
     #remove empty levels if any
     index <- data.frame(lapply(index, function(x) x[drop = TRUE]))
   }

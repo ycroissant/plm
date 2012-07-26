@@ -1,6 +1,8 @@
 pgmm <- function(formula, data, subset, na.action,
                  effect = c("twoways", "individual"),
                  model = c("onestep", "twosteps"),
+                 collapse = FALSE,
+                 lost.ts = NULL,
                  transformation = c("d", "ld"), fsm = NULL,
                  index = NULL, ...){
 
@@ -59,6 +61,26 @@ pgmm <- function(formula, data, subset, na.action,
   gmm.form <- formula(x, rhs = 2, lhs = 0)
   gmm.lags <- dynterms(gmm.form)
 
+  cardW <- length(gmm.lags)
+  if (is.null(names(collapse))){
+    if (length(collapse) == 1){
+      collapse <- as.vector(rep(collapse, cardW), mode = "list")
+    }
+    else{
+      if (length(collapse) != cardW) stop("the collapse vector has a wrong lenght")
+    }
+    names(collapse) <- names(gmm.lags)
+  }
+  else{
+     if (any(! (names(collapse) %in% names(gmm.lags)))) stop("unknown names in the collapse vector")
+     else{
+       bcollapse <- as.vector(rep(FALSE, cardW), mode = "list")
+       names(bcollapse) <- names(gmm.lags)
+       bcollapse[names(collapse)] <- collapse
+       collapse <- bcollapse
+     }
+  }
+   
   # covariates : named list with the lags, names being the variables
   main.form <- formula(x, rhs = 1, lhs = 1)
   main.lags <- dynterms(main.form)
@@ -96,26 +118,35 @@ pgmm <- function(formula, data, subset, na.action,
       inst.lags <- NULL
     }
   }
-
+  
   #################################################################
   ##### 3. How many time series are lost
   #################################################################
-  
-  # How many time series are lost ? May be the maximum number of lags
-  # of any covariates + 1 because of first - differencing or the
-  # largest minimum lag for any gmm or normal instruments
-  gmm.minlag <- max(sapply(gmm.lags, min))
-  # min or max to select the number of lost time series ?
-  gmm.minlag <- min(sapply(gmm.lags, min))
-  if (!is.null(inst.lags)) inst.maxlag <- max(sapply(inst.lags, max))
-  else inst.maxlag <- 0
-  main.maxlag <- max(sapply(main.lags, max))
-  TL1 <- max(main.maxlag + 1, inst.maxlag + 1, gmm.minlag)
-  TL2 <- max(main.maxlag, inst.maxlag)
-  TL2 <- max(main.maxlag, inst.maxlag, gmm.minlag - 1)
-  # if TL2 = 0 (no lags), one observation is lost anyway because of
-  # the differentiation of the lag instruments
-  TL2 <- max(1, TL2)
+
+  if (!is.null(lost.ts)){
+    if (!is.numeric(lost.ts)) stop("lost.ts should be numeric")
+    lost.ts <- as.numeric(lost.ts)
+    if (!(length(lost.ts) %in% c(1, 2))) stop("lost.ts should be of length 1 or 2")
+    TL1 <- lost.ts[1]
+    TL2 <- ifelse(length(lost.ts == 1), TL1 - 1, lost.ts[2])
+  }
+  else{
+    # How many time series are lost ? May be the maximum number of lags
+    # of any covariates + 1 because of first - differencing or the
+    # largest minimum lag for any gmm or normal instruments
+    gmm.minlag <- max(sapply(gmm.lags, min))
+    # min or max to select the number of lost time series ?
+    gmm.minlag <- min(sapply(gmm.lags, min))
+    if (!is.null(inst.lags)) inst.maxlag <- max(sapply(inst.lags, max))
+    else inst.maxlag <- 0
+    main.maxlag <- max(sapply(main.lags, max))
+    TL1 <- max(main.maxlag + 1, inst.maxlag + 1, gmm.minlag)
+    TL2 <- max(main.maxlag, inst.maxlag, gmm.minlag - 1)
+    # if TL2 = 0 (no lags), one observation is lost anyway because of
+    # the differentiation of the lag instruments
+    TL1 <- max(main.maxlag + 1, gmm.minlag)
+    TL2 <- max(main.maxlag, gmm.minlag - 1)
+  }
 
   #################################################################
   ##### 4. Compute the model frame which contains the
@@ -134,6 +165,7 @@ pgmm <- function(formula, data, subset, na.action,
   mf$model <- NA
   mf$formula <- Form
   mf$na.action <- "na.pass"
+  mf$subset <- NULL
   data <- eval(mf, parent.frame())
   index <- index(data)
   N <- length(levels(index[[1]]))
@@ -141,12 +173,8 @@ pgmm <- function(formula, data, subset, na.action,
   pdim <- pdim(data)
   balanced <- pdim$balanced
 
-  # if the data is unbalanced, extract the number of missing time
-  # series at the begining and at the end and "balance" the data
+  # if the data is unbalanced, "balance" the data
   if (!balanced){
-    nats <- tapply(as.numeric(as.factor(index(data, "time"))),
-                   index(data, "id"),
-                   function(x) c(- 1, T) + c(1, - 1) * range(x))
     un.id <- sort(unique(index(data, "id")))
     un.time <- sort(unique(index(data, "time")))
     rownames(data) <- paste(index(data, "id"), index(data, "time"), sep = ".")
@@ -159,12 +187,6 @@ pgmm <- function(formula, data, subset, na.action,
     class(index) <- c("pindex", "data.frame")
     attr(data, "index") <- index
   }
-  else{
-    nats <- list()
-    for (n in 1:N) nats[[n]] <- c(0,0)
-  }
-
-#  print(nats);stop()
   
   #################################################################
   ##### 5. Get the response/covariates matrix yX, the gmm instruments
@@ -187,30 +209,15 @@ pgmm <- function(formula, data, subset, na.action,
   ##### 6. Create the matrix of response/covariates, gmm instruments
   ##### and normal instruments for the diff model
   #################################################################
-
-  makegmm <- function(x, g){
-    rg <- range(g)
-    # Create the relevant matrix for one gmm instrument
-    z <- as.list((TL1 + 1):T)
-    x <- lapply(z, function(y) x[max(1, y - rg[2]):(y - rg[1])])
-    lx <- sapply(x, length)
-    n <- length(x)
-    lxc <- cumsum(lx)
-    before <- c(0, lxc[-n])
-    after <- lxc[n] - sapply(x, length) - before
-    result <- mapply(function(x, y, z)
-                     c(rep(0, y), x, rep(0, z)),
-                     x, before, after, SIMPLIFY = TRUE)
-    t(result)
-  }
   # create the matrix of gmm instruments for every individual
   W1 <- lapply(W,
                function(x){
-                 u <- mapply(makegmm, x, gmm.lags, SIMPLIFY = FALSE)
+                 u <- mapply(makegmm, x, gmm.lags, TL1, collapse, SIMPLIFY = FALSE)
                  u <- matrix(unlist(u), nrow = nrow(u[[1]]))
                  u
                }
                )
+
   # differenciate the matrix of response/covariates (and of normal
   # instruments if any) and remove T1 - 1 time series (xd is already
   # differenced)
@@ -230,7 +237,7 @@ pgmm <- function(formula, data, subset, na.action,
                  }
                  )
   }
-
+  
   #################################################################
   ##### 7. In case of system gmm, create the matrix of
   ##### response/covariates, gmm instruments and normal instruments
@@ -307,33 +314,23 @@ pgmm <- function(formula, data, subset, na.action,
   ##### rows for missing time series with 0
   #################################################################
 
-  if (!balanced){
-    T1 <- T - TL1
-    T2 <- T - TL2
-    for (i in 1:N){
-      nas <- nats[[i]]
-      mb <- nas[1]
-      me <- nas[2]
-      narows <- apply(yX1[[i]], 1, function(z) any(is.na(z)))
-      yX1[[i]][narows, ] <- 0
-      W1[[i]][is.na(W1[[i]])] <- 0
-      if (mb) W1[[i]][c(0:mb), ] <- 0
-      if (me) W1[[i]][(T1 - me + 1):T1, ] <- 0      
-      if (transformation == "ld"){
-        W2[[i]][is.na(W2[[i]])] <- 0
-        yX2[[i]][is.na(yX2[[i]])] <- 0
-        if (mb) W2[[i]][c(0:mb), ] <- yX2[[i]][c(0:mb), ] <- 0
-        if (me) W2[[i]][(T2 - me + 1):T2, ] <- yX2[[i]][(T2 - me + 1):T2, ] <- 0
-      }
+  for (i in 1:N){
+    narows <- apply(yX1[[i]], 1, function(z) any(is.na(z)))
+    yX1[[i]][narows, ] <- 0
+    W1[[i]][is.na(W1[[i]])] <- 0
+    W1[[i]][narows, ] <- 0
+    if (normal.instruments){
+      Z1[[i]][is.na(Z1[[i]])] <- 0
+      Z1[[i]][narows, ] <- 0
+    }
+    if (transformation == "ld"){
+      narows <- apply(yX2[[i]], 1, function(z) any(is.na(z)))
+      yX2[[i]][narows, ] <- 0
+      W2[[i]][is.na(W2[[i]])] <- 0
+      W2[[i]][narows, ] <- 0
       if (normal.instruments){
-        Z1[[i]][is.na(Z1[[i]])] <- 0
-        if (mb) Z1[[i]][c(0:mb), ] <- 0
-        if (me) Z1[[i]][(T1 - me + 1):T1, ] <- 0      
-        if (transformation == "ld"){
-          Z2[[i]][is.na(Z2[[i]])] <- 0
-          if (mb) Z2[[i]][c(0:mb), ] <- 0
-          if (me) Z2[[i]][(T2 - me + 1):T2, ] <- 0
-        }
+        Z2[[i]][is.na(Z2[[i]])] <- 0
+        Z2[[i]][narows, ] <- 0
       }
     }
   }
@@ -376,10 +373,16 @@ pgmm <- function(formula, data, subset, na.action,
   Wy <- lapply(WX, function(x) x[, 1])
   WX <- lapply(WX, function(x) x[, -1])
   A1 <- lapply(W, function(x) crossprod(t(crossprod(x, A1)), x))
-  A1 <- solve(Reduce("+", A1))*length(W)
+  A1 <- Reduce("+", A1)
+  minevA1 <- min(eigen(A1)$values)
+  eps <- 1E-9
+  if (minevA1 < eps){
+    A1 <- ginv(A1) * length(W)
+    warning("the first-step matrix is singular, a general inverse is used")
+  }
+  else A1 <- solve(A1) * length(W)
   WX <- Reduce("+", WX)
   Wy <- Reduce("+", Wy)
-
   B1 <- solve(crossprod(WX, t(crossprod(WX, A1))))
   Y1 <- crossprod(t(crossprod(WX, A1)), Wy)
   coefficients <- as.numeric(crossprod(B1, Y1))
@@ -390,12 +393,18 @@ pgmm <- function(formula, data, subset, na.action,
                       as.vector(x[,1] -  crossprod(t(x[,-1]), coefficients)))
   outresid <- lapply(residuals,function(x) outer(x,x))
   A2 <- mapply(function(x, y) crossprod(t(crossprod(x, y)), x), W, outresid, SIMPLIFY = FALSE)
-  A2 <- solve(Reduce("+", A2))
-#  A2 <- pseudoinverse(Reduce("+", A2))
-#  A2 <- ginv(Reduce("+", A2))
+  A2 <- Reduce("+", A2)
+  minevA2 <- min(eigen(A2)$values)
+  eps <- 1E-9
+  if (minevA2 < eps){
+    A2 <- ginv(A2)
+    warning("the second-step matrix is singular, a general inverse is used")
+  }
+  else A2 <- solve(A2)
+
   B2 <- solve(crossprod(WX, t(crossprod(WX, A2))))
 
-  if (model=="twosteps"){
+  if (model == "twosteps"){
     coef1s <- coefficients
     Y2 <- crossprod(t(crossprod(WX, A2)), Wy)
     coefficients <- as.numeric(crossprod(B2, Y2))
@@ -567,3 +576,29 @@ FSM <- function(t,fsm){
          )
 }
 
+makegmm <- function(x, g, TL1, collapse = FALSE){
+  T <- length(x)
+  rg <- range(g)
+  if (collapse){
+    result <- c()
+    for (t in 0:(T - rg[1] - 1)){
+      result <- c(result, x[1:(T - rg[1] - t)]) 
+    }
+    m <- matrix(0, T - rg[1], T - rg[1])
+    m[lower.tri(m, diag = TRUE)] <- result
+    result <- m
+  }
+  else{
+    z <- as.list((TL1 + 1):T)
+    x <- lapply(z, function(y) x[max(1, y - rg[2]):(y - rg[1])])
+    lx <- sapply(x, length)
+    n <- length(x)
+    lxc <- cumsum(lx)
+    before <- c(0, lxc[-n])
+    after <- lxc[n] - sapply(x, length) - before
+    result <- t(mapply(function(x, y, z)
+                       c(rep(0, y), x, rep(0, z)),
+                       x, before, after, SIMPLIFY = TRUE))
+  }
+  result
+}

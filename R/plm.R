@@ -6,7 +6,6 @@ plm <-  function(formula, data, subset, na.action,
                  index = NULL,
                  ...){
   dots <- list(...)
-
   # check and match the arguments
   effect <- match.arg(effect)
   if (!any(is.na(model))) model <- match.arg(model)

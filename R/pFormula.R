@@ -148,7 +148,6 @@ model.matrix.plm <- function(object, ...){
     theta <- ercomp(object)$theta
     model.matrix(formula, data, model = model, effect = effect, theta = theta)
   }
-
 }
 
   

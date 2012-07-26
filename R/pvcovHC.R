@@ -208,18 +208,26 @@ vcovHC.pgmm <- function(x,...){
     yX <- x$model
     residuals <- x$residuals
   }    
+  minevA2 <- min(abs(Re(eigen(A2)$values)))
+  eps <- 1E-9
+  if (minevA2 < eps){
+    SA2 <- ginv(A2)
+    warning("a general inverse is used")
+  }
+  else SA2 <- solve(A2)
   
   if (model=="twosteps"){
     coef1s <- x$coefficients[[1]]
-    res1s <- lapply(yX,function(x) x[,1]-crossprod(t(x[,-1]),coef1s))
+    res1s <- lapply(yX, function(x) x[,1] - crossprod(t(x[, -1]), coef1s))
     K <- ncol(yX[[1]])
     D <- c()
     WX <- Reduce("+",
                  mapply(function(x, y) crossprod(x, y[,-1]), x$W, yX, SIMPLIFY = FALSE))
     We <- Reduce("+", mapply(function(x, y) crossprod(x, y), x$W, residuals, SIMPLIFY = FALSE))
-    B1 <- solve(t(WX)%*%A1%*%WX)
+    B1 <- solve(t(WX) %*% A1 %*% WX)
     B2 <- vcov(x)
-    vcov1s <- B1%*%(t(WX)%*%A1%*%solve(A2)%*%A1%*%WX)%*%B1
+
+    vcov1s <- B1 %*% (t(WX) %*% A1 %*% SA2 %*% A1 %*% WX) %*% B1
     for (k in 2:K){
       exk <- mapply(
                     function(x,y){
@@ -229,20 +237,20 @@ vcovHC.pgmm <- function(x,...){
                     yX, res1s, SIMPLIFY = FALSE)
       wexkw <- Reduce("+",
                       mapply(
-                             function(x,y)
-                             crossprod(x,crossprod(y,x)),
+                             function(x, y)
+                             crossprod(x, crossprod(y, x)),
                              x$W, exk, SIMPLIFY = FALSE))
       Dk <- -B2 %*% t(WX) %*% A2 %*% wexkw %*% A2 %*% We
       D <- cbind(D,Dk)
     }
-    vcovr <- B2+crossprod(t(D),B2)+t(crossprod(t(D),B2))+D%*%vcov1s%*%t(D)
+    vcovr <- B2 + crossprod(t(D), B2) + t(crossprod(t(D), B2)) + D %*% vcov1s %*% t(D)
   }
   else{
-    res1s <- lapply(yX,function(z) z[,1]-crossprod(t(z[,-1]),x$coefficients))
+    res1s <- lapply(yX, function(z) z[,1] - crossprod(t(z[, -1]), x$coefficients))
     K <- ncol(yX[[1]])
-    WX <- Reduce("+", mapply(function(z,y) crossprod(z[,-1],y),yX,x$W,SIMPLIFY=FALSE))
+    WX <- Reduce("+", mapply(function(z, y) crossprod(z[,-1], y), yX, x$W, SIMPLIFY = FALSE))
     B1 <- vcov(x)
-    vcovr <- B1%*%(WX%*%A1%*%solve(A2)%*%A1%*%t(WX))%*%B1
+    vcovr <- B1 %*% (WX %*% A1 %*% SA2 %*% A1 %*% t(WX)) %*% B1
   }
   vcovr
 }

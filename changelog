@@ -31,7 +31,8 @@ Changes since version 0-2.1
 
 	* a pfix function is added to edit a pdata.frame
 
-	* a as.data.frame function is provided to coerce a pdata.frame to a data.frame
+	* a as.data.frame function is provided to coerce a pdata.frame to
+	a data.frame
 
 	* the dependency to the Matrix package has been removed and pgmm
 	is much faster now
@@ -46,7 +47,8 @@ Changes since version 0-2.1
 
 Changes since version 0-2.2
 
-	* the coefficients method for objects of class pgmm is now exported.
+	* the coefficients method for objects of class pgmm is now
+	exported.
 
 	* a bug in the plm method of plmtest has been fixed
 
@@ -67,8 +69,8 @@ Changes since version 0-2.2
 
 Changes since version 0-3.1
 
-	* in plm.formula, [int.row.names] is replaced
-	by [as.character(int.row.names)]
+	* in plm.formula, [int.row.names] is replaced by
+	[as.character(int.row.names)]
 
 	* the degree of freedom for a within time effect model was wrong
 	and has been corrected.
@@ -108,8 +110,8 @@ Changes since version 1-0.0
 	* models without intercept (-1 in the formula) should now be
 	consistently estimated with plm, pggls and pvcm.
 	
-	* plm depends now on the Formula package which provides
-	useful tools for formula with two parts
+	* plm depends now on the Formula package which provides useful
+	tools for formula with two parts
 
 
 Changes since version 1-0.1
@@ -165,8 +167,8 @@ Changes since version 1-1.0
 	* we switched back to old names for two arguments of plm ercomp ->
 	random.methods ivar -> inst.method -> ivar
 
-	* amemiya method is not implemented for unbalanced panels: an error
-	message is now returned.
+	* amemiya method is not implemented for unbalanced panels: an
+	error message is now returned.
  
 
 Changes since version 1-1.1
@@ -224,13 +226,14 @@ Change since version 1-1.4
 	* the first argument of pgmm may now be a formula. A lag.form must
 	be provided in this case
 	
-	* hausman-taylor estimation is now performed by the pht function. For
-	backaward compatibility reasons, it is still possible to estimate
-	this model with plm
+	* hausman-taylor estimation is now performed by the pht
+	function. For backaward compatibility reasons, it is still
+	possible to estimate this model with plm
 
 Changes since version 1.2-0	
 
-	* the as.matrix and print methods for pserie objects are now exported
+	* the as.matrix and print methods for pserie objects are now
+	exported
 
 	* in summary.plm, the p-value is now computed using a Student
 	distribution and not a normal one
@@ -261,7 +264,8 @@ Changes since version 1.2-2
 
 	* the documentation has been improved
 	
-	* the pvalue for purtest(..., type = "madwu") was in error (by a factor of 2)
+	* the pvalue for purtest(..., type = "madwu") was in error (by a
+	factor of 2)
 
 	* in formula(dynformula), a bug is fixed so that the endog
 	variable doesn't appear on the rhs if there is no lags
@@ -270,8 +274,8 @@ Changes since version 1.2-2
 
 	* two new functions vcovBK and vcovSCC have been added
 
-	* a 'model' argument is added to pgmm.sys and
-	pgmm.diff (previously, the model name was extracted from the call)
+	* a 'model' argument is added to pgmm.sys and pgmm.diff
+	(previously, the model name was extracted from the call)
 
 	* Kt is fixed to 0 in pgmm when effect="individual"
 	
@@ -311,11 +315,13 @@ Changes since version 1.2-4
 	
 Changes since version 1.2-5
 
-	* fixed error in pggls, model="within" (FEGLS). Added model="fd" (FDGLS).  
+	* fixed error in pggls, model="within" (FEGLS). Added model="fd"
+	(FDGLS).
 
-	* changed dependency from kinship to bdsmatrix (as suggested by Terry Therneau after his reorganization of the packages). 
+	* changed dependency from kinship to bdsmatrix (as suggested by
+	Terry Therneau after his reorganization of the packages).
 
-	* fixed DESCRIPTION and NAMESPACE accordingly. 
+	* fixed DESCRIPTION and NAMESPACE accordingly.
 
 	* fixed the example in pggls.Rd
 
@@ -338,9 +344,10 @@ Changes since version 1.2-6
 
 	* the rda files are now compressed
 
-	* p-values for the two-tailed versions of plmtest() were wrong and have been fixed. They were divided by 2 instead of multiplied.
+	* p-values for the two-tailed versions of plmtest() were wrong and
+	have been fixed. They were divided by 2 instead of multiplied.
 
- Changes since version 1.2-7
+	Changes since version 1.2-7
 	
 	* a typo is corrected in the man page of plm.data
 
@@ -352,24 +359,54 @@ Changes since version 1.2-8
 
 	* a bug in the typology of the variables in pht is fixed
 
-	* a bug in vcovBK (matrices degenerating into vectors) is fixed (thx David Hugh-Jones for bug report)
+	* a bug in vcovBK (matrices degenerating into vectors) is fixed
+	(thx David Hugh-Jones for bug report)
 
 	* the Between function now returns a pseries object
 
 	* the resid and fitted method now returns a pseries object
 
-	* the pgmm method has been rewriten ; the data frame is then first balanced and NAs are then overwriten by 0s
+	* the pgmm method has been rewriten ; the data frame is then first
+	balanced and NAs are then overwriten by 0s
 
 Changes since version 1.2-9	
 
-	* the pccep function, estimating CCEP models a la Pesaran, has been added together withsummary and print.summary methods. The function generates objects of a class of their own ("pccep"), much like 'pggls', together with 'panelmodel'.
+	* the pccep function, estimating CCEP models a la Pesaran, has
+	been added together withsummary and print.summary methods. The
+	function generates objects of a class of their own ("pccep"), much
+	like 'pggls', together with 'panelmodel'.
 
-	* the pmg function, estimating MG, DMG and CCEMG models a la Pesaran, has been added together with summary and print.summary methods. The function generates objects of a class of their own ("pmg"), much like 'pggls', together with 'panelmodel'. In the future must consider possible merger with 'pvcm'.
+	* the pmg function, estimating MG, DMG and CCEMG models a la
+	Pesaran, has been added together with summary and print.summary
+	methods. The function generates objects of a class of their own
+	("pmg"), much like 'pggls', together with 'panelmodel'. In the
+	future must consider possible merger with 'pvcm'.
 
-        * the new cipstest function performs a second-generation CIPS test for unit roots on pseries objects
+        * the new cipstest function performs a second-generation CIPS test
+	for unit roots on pseries objects
 
-        * the new (hidden) function pmerge is used internally by cipstest to merge lags and differences of a pseries into the original pdata.frame. Will possibly be added to the user space in the future.
+        * the new (hidden) function pmerge is used internally by cipstest
+	to merge lags and differences of a pseries into the original
+	pdata.frame. Will possibly be added to the user space in the
+	future.
 
-Changes since version 1.2-10	
-	* for unbalanced hausman-taylor model, the printing of the error components was wrong, it is now fixed
+Changes since version 1.2-10
 	
+	* for unbalanced hausman-taylor model, the printing of the error
+	components was wrong, it is now fixed
+	
+	* the printing of the removed variables (cst or NA) is improved
+
+	* the pgmm function has been improved to deal correctly with holes
+	in the cross-sections ; a collapse argument is added to limit the
+	number of gmm instruments
+
+	* the CoefTAble element of summary.pgmm objects is renamed
+	coefficients, so that it can easily be extracted using the coef
+	method
+
+	* the default value for robust is now TRUE in the summary.pgmm
+	method
+
+	* a new argument lost.ts is added in pgmm to select manually the
+	number of lost time series

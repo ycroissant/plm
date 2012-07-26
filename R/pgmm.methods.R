@@ -4,65 +4,39 @@ coef.pgmm <- function(object,...){
   else coefficients <- object$coefficients[[2]]
   coefficients
 }
-summary.pgmm <- function(object, robust = FALSE, time.dummies = FALSE, ...){
+
+summary.pgmm <- function(object, robust = TRUE, time.dummies = FALSE, ...){
   model <- describe(object, "model")
   effect <- describe(object, "effect")
   transformation <- describe(object, "transformation")
   if (robust){
     vv <- vcovHC(object)
+    A <- object$A2
   }
   else{
     vv <- vcov(object)
+    A <- object$A1
   }
   if (model == "onestep")   K <- length(object$coefficients)
   else  K <- length(object$coefficients[[2]])
+  object$sargan <- sargan(object, "twosteps")
+  object$m1 <- mtest(object, 1, vv)
+  object$m2 <- mtest(object, 2, vv)
+  object$wald.coef <- wald(object, "coef", vv)
+  if (describe(object, "effect") == "twoways") object$wald.td <- wald(object,"time",vv)
   Kt <- length(object$args$namest)
-  if (!time.dummies && effect == "twoways") rowsel <- -c((K-Kt+1):K)
+  if (! time.dummies && effect == "twoways") rowsel <- -c((K - Kt + 1):K)
   else rowsel <- 1:K
   std.err <- sqrt(diag(vv))
   b <- coef(object)
   z <- b / std.err
   p <- 2 * pnorm(abs(z), lower.tail = FALSE)
-  CoefTable <- cbind(b, std.err, z, p)
-  colnames(CoefTable) <- c("Estimate", "Std. Error", "z-value", "Pr(>|z|)")
-  object$CoefTable <- CoefTable[rowsel, , drop = FALSE]
-  object$sargan <- sargan(object)
-  object$m1 <- mtest(object, 1, vv)
-  object$m2 <- mtest(object, 2, vv)
-  object$wald.coef <- wald(object, "param", vv)
-  if (describe(object, "effect") == "twoways") object$wald.td <- wald(object,"time",vv)
+  coefficients <- cbind(b, std.err, z, p)
+  colnames(coefficients) <- c("Estimate", "Std. Error", "z-value", "Pr(>|z|)")
+  object$coefficients <- coefficients[rowsel, , drop = FALSE]
   class(object) <- "summary.pgmm"
   object
 }
-
-sargan <- function(object){
-  model <- describe(object, "model")
-  transformation <- describe(object, "transformation")
-  if (model == "onestep") Ktot <- length(object$coefficient)
-  else Ktot <- length(object$coefficient[[2]])
-  z <- mapply(function(x,y) t(x) %*% y,
-              object$W,
-              residuals(object),
-              SIMPLIFY = FALSE)
-  z <- Reduce("+", z)
-  
-  p <- ncol(object$W[[1]])
-  if (model == "onestep") A <- object$A1
-  else A <- object$A2
-  stat <- as.numeric(crossprod(z, t(crossprod(z, A))))
-  parameter <- p-Ktot
-  names(parameter) <- "df"
-  names(stat) <- "chisq"
-  method <- "Sargan test"
-  pval <- pchisq(stat, df = parameter, lower.tail = FALSE)
-  sargan <- list(statistic = stat,
-                 p.value = pval,
-                 parameter = parameter,
-                 method = "Sargan Test")
-  class(sargan) <- "htest"
-  sargan
-}
-
 
 mtest <- function(object, order = 1, vcov = NULL){
   myvcov <- vcov
@@ -102,12 +76,13 @@ mtest <- function(object, order = 1, vcov = NULL){
   pval <- pnorm(abs(stat), lower.tail = FALSE)
   mtest <- list(statistic = stat,
                 p.value = pval,
-                method = paste("Autocorrelation test of degree",order))
+                method = paste("Autocorrelation test of degree", order))
   class(mtest) <- "htest"
   mtest
 }
 
-wald <- function(object, param = "coef", vcov = NULL){
+wald <- function(object, param = c("coef", "time", "all"), vcov = NULL){
+  param <- match.arg(param)
   myvcov <- vcov
   if (is.null(vcov)) vv <- vcov(object)
   else if (is.function(vcov)) vv <- myvcov(object)
@@ -124,13 +99,17 @@ wald <- function(object, param = "coef", vcov = NULL){
     start <- Ktot - Kt + ifelse(transformation == "ld", 2, 1)
     end <- Ktot
   }
-  else{
+  if (param == "coef"){
     start <- 1
     if (effect == "twoways") end <- Ktot-Kt else end <- Ktot
   }
+  if (param == "all"){
+    start <- 1
+    end <- Ktot
+  }
   coef <- coefficients[start:end]
   vv <- vv[start:end, start:end]
-  stat <- t(coef)%*%solve(vv)%*%coef
+  stat <- t(coef) %*% solve(vv) %*% coef
   names(stat) <- "chisq"
   parameter <- length(coef)
   pval <- pchisq(stat, df = parameter, lower.tail = FALSE)
@@ -164,7 +143,7 @@ print.summary.pgmm <- function(x, digits = max(3, getOption("digits") - 2),
   cat("\nResiduals\n")
   print(summary(unlist(residuals(x))))
   cat("\nCoefficients\n")
-  printCoefmat(x$CoefTable,digits=digits)
+  printCoefmat(x$coefficients,digits=digits)
 
   cat("\nSargan Test: ",names(x$sargan$statistic),
       "(",x$sargan$parameter,") = ",x$sargan$statistic,
@@ -188,4 +167,30 @@ print.summary.pgmm <- function(x, digits = max(3, getOption("digits") - 2),
         " (p.value=",format.pval(x$wald.td$p.value,digits=digits),")\n",sep="")
   }
   invisible(x)
+}
+
+sargan <- function(object, weights = c("twosteps", "onestep")){
+  weights <- match.arg(weights)
+  model <- describe(object, "model")
+  transformation <- describe(object, "transformation")
+  if (model == "onestep") Ktot <- length(object$coefficient)
+  else Ktot <- length(object$coefficient[[2]])
+  N <- length(residuals(object))
+  z <- as.numeric(Reduce("+",
+                         lapply(seq_len(N),
+                                function(i) crossprod(object$W[[i]], residuals(object)[[i]]))))
+  p <- ncol(object$W[[1]])
+  if (weights == "onestep") A <- object$A1 else A <- object$A2
+  stat <- as.numeric(crossprod(z, t(crossprod(z, A))))
+  parameter <- p - Ktot
+  names(parameter) <- "df"
+  names(stat) <- "chisq"
+  method <- "Sargan test"
+  pval <- pchisq(stat, df = parameter, lower.tail = FALSE)
+  sargan <- list(statistic = stat,
+                 p.value = pval,
+                 parameter = parameter,
+                 method = "Sargan Test")
+  class(sargan) <- "htest"
+  sargan
 }
