@@ -96,7 +96,8 @@ used as GMM instruments are used as normal instruments with the same lag
 structure as the one specified in the model.
 
 \code{y~lag(y, 1:2)+lag(x1, 0:1)+lag(x2, 0:2) | lag(y, 2:99)} is similar
-to \code{y~lag(y, 1:2)+lag(x1, 0:1)+lag(x2, 0:2) | lag(y, 2:99) |
+to \code{y~lag(y, 1:2) +
+  lag(x1, 0:1) + lag(x2, 0:2) | lag(y, 2:99) |
 lag(x1, 0:1)+lag(x2, 0:2)} and indicates that all lags from 2 of
 \code{y} is used as gmm instruments.
 

@@ -8,11 +8,12 @@ A test of overidentifying restrictions for models estimated by GMM.
 }
 
 \usage{
-sargan(object)
+sargan(object, weights = c("twosteps", "onestep"))
 }
 
 \arguments{
-\item{object}{an object of class \code{"pgmm"}.}
+  \item{object}{an object of class \code{"pgmm"}.}
+  \item{weights}{}
 }
 
 \details{
