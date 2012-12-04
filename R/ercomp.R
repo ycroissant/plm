@@ -12,7 +12,7 @@ ercomp.plm <- function(object, ...){
 
 ercomp.formula <- function(object, data, 
                            effect = c('individual', 'time', 'twoways'),
-                           method = c('swar', 'walhus', 'amemiya', 'nerlove'),
+                           method = c('swar', 'walhus', 'amemiya', 'nerlove', 'kinla'),
                            index = NULL, ...){
   
   # if the data argument is not a pdata.frame, create it using plm
@@ -26,10 +26,11 @@ ercomp.formula <- function(object, data,
   method <- match.arg(method)
   balanced <- pdim(data)$balanced
   result <- switch(method,
-                   "swar"    = swar    (object, data,  effect),
-                   "walhus"  = walhus  (object, data,  effect),
-                   "amemiya" = amemiya (object, data,  effect),
-                   "nerlove" = nerlove (object, data,  effect)
+                   "swar"    = swar    (object, data, effect),
+                   "walhus"  = walhus  (object, data, effect),
+                   "amemiya" = amemiya (object, data, effect),
+                   "nerlove" = nerlove (object, data, effect),
+                   "kinla"   = kinla   (object, data, effect)
                    )
   result <- structure(result, class = "ercomp", balanced = balanced, effect = effect)
   result
@@ -233,6 +234,7 @@ amemiya <- function(formula, data, effect){
                    idios = idios,
                    id = max((one-idios)/card.other,0))
     theta <- max(1-sqrt(idios/one),0)
+    print(theta);print(sigma2)
     z <- list(theta = theta, sigma2 = sigma2)
   }
   else{
@@ -281,7 +283,42 @@ nerlove <- function(formula, data, effect){
       arg.cond <- pdim$nT$T
       arg.other <- pdim$nT$n
     }
-    idios <- deviance(within) / N
+    print(c(N, arg.cond))
+    idios <- deviance(within) / N 
+#    s2id <- sum((fixef(within)-mean(fixef(within)))^2)/(arg.cond-1)
+    s2id <- sum(fixef(within, type = "dmean") ^ 2)/(arg.cond - 1)
+    one <- arg.other * s2id + idios
+    sigma2 <- list(one = one,
+                   idios = idios,
+                   id    = s2id
+                   )
+    theta <- 1 - sqrt(idios / sigma2$one)
+    z <- list(theta = theta, sigma2 = sigma2)
+  }
+  else stop("nerlove variance decomposition only implemented for balanced oneway panels")
+  z
+}
+
+kinla <- function(formula, data, effect){
+#  within <- plm.within(formula, data, effect)
+  within <- plm.fit(formula, data, model = "within", effect = effect)
+  within$args <- list(effect = effect, random.method = "kinla")
+  data <- model.frame(within)
+  pdim <- pdim(data)
+  balanced <- pdim$balanced
+  n <- pdim$nT$n
+  N <- pdim$nT$N
+  if(effect != "twoways" && balanced){
+    N <- pdim$nT$N
+    if (effect == "individual"){
+      arg.cond <- pdim$nT$n
+      arg.other <- pdim$nT$T
+    }
+    else{
+      arg.cond <- pdim$nT$T
+      arg.other <- pdim$nT$n
+    }
+    idios <- deviance(within) / (N - arg.cond)
 #    s2id <- sum((fixef(within)-mean(fixef(within)))^2)/(arg.cond-1)
     s2id <- sum(fixef(within, type = "dmean") ^ 2)/(arg.cond - 1)
     one <- arg.other * s2id + idios

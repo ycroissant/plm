@@ -410,3 +410,7 @@ Changes since version 1.2-10
 
 	* a new argument lost.ts is added in pgmm to select manually the
 	number of lost time series
+
+	* almost null columns of instruments are removed (this happens
+	when within/between transformation is performed on between/within
+	series

@@ -46,6 +46,7 @@ S3method(print, panelmodel)
 S3method(residuals, panelmodel)
 S3method(residuals, plm)
 S3method(fitted, panelmodel)
+S3method(predict, panelmodel)
 S3method(df.residual, panelmodel)
 S3method(vcov, panelmodel)
 #plm
