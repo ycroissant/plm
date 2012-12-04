@@ -3,15 +3,17 @@ plm <-  function(formula, data, subset, na.action,
                  model = c('within','random','ht','between','pooling','fd'),
                  random.method = c('swar','walhus','amemiya','nerlove', 'kinla'),
                  inst.method = c('bvk','baltagi'),
-                 index = NULL, theta = NULL,
-                 ...){
-  rr <- substitute(formula)
-  is.a.list <- substitute(formula)[[1]] == "list"
+                 index = NULL, ...){
+
+  nframe <- length(sys.calls())
+  is.a.list <- class(formula) == "list"
   
   if (is.a.list){
     plmlist <- match.call(expand.dots = FALSE)
     plmlist[[1]] <- as.name("plm.list")
-    plmlist <- eval(plmlist, parent.frame())
+#    plmlist <- eval(plmlist, parent.frame())
+    plmlist <- eval(plmlist, sys.frame(which = nframe))
+
     return(plmlist)
   }
 
@@ -71,20 +73,20 @@ plm <-  function(formula, data, subset, na.action,
   }
   args <- list(model = model, effect = effect,
                random.method = random.method, inst.method = inst.method)
-  result <- plm.fit(formula, data, model, effect, random.method, inst.method, theta)
+  result <- plm.fit(formula, data, model, effect, random.method, inst.method)
   result$call <- cl
   result$args <- args
   result
 }
 
-plm.fit <- function(formula, data, model, effect, random.method, inst.method, theta){
+plm.fit <- function(formula, data, model, effect, random.method, inst.method){
   # if a random effect model is estimated, compute the error components
   if (model == "random"){
     pdim <- pdim(data)
     is.balanced <- pdim$balanced
     estec <- ercomp(formula, data, effect, method = random.method)
     sigma2 <- estec$sigma2
-    if (is.null(theta)) theta <- estec$theta
+    theta <- estec$theta
     index <- attr(data, "index")
     if (effect == "individual") cond <- index[[1]]
     if (effect == "time") cond <- index[[2]]

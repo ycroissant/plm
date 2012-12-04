@@ -414,3 +414,11 @@ Changes since version 1.2-10
 	* almost null columns of instruments are removed (this happens
 	when within/between transformation is performed on between/within
 	series
+
+	* plm now accept three part formulas, the last part being for
+	instruments introduced only in the within form
+
+	* the predict method for panelmodel objects is now exported
+
+	* plm now estimate systems of equations if a list of formulas is
+	provided as the first argument

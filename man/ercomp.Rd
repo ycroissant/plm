@@ -13,7 +13,7 @@
 \usage{
 ercomp(object, ...)
 \method{ercomp}{formula}(object, data, effect = c("individual", "time", "twoways"), 
-                        method = c("swar", "walhus", "amemiya", "nerlove"),
+                        method = c("swar", "walhus", "amemiya", "nerlove", "kinla"),
                          index = NULL, ...)
 \method{ercomp}{plm}(object, ...)
 \method{print}{ercomp}(x, digits= max(3, getOption("digits") - 3), ...)
@@ -44,10 +44,13 @@ ercomp(object, ...)
   Amemiya, T. (1971) The estimation of the variances in a
   variance--components model, \emph{International Economic Review}, \bold{12}, pp.1--13.
 
-  Nerlove, M. (1971) Further evidence on the estimation of dynamic economic relations from a time--series of cross--sections, \emph{Econometrica}, \bold{39}, pp.359--382.
+  Nerlove, M. (1971) Further evidence on the estimation of dynamic
+  economic relations from a time--series of cross--sections,
+  \emph{Econometrica}, \bold{39}, pp.359--382.
 
   Swamy, P.A.V.B. and Arora, S.S. (1972) The exact finite sample
-  properties of the estimators of coefficients in the error components regression models, \emph{Econometrica}, \bold{40}, pp.261--275.
+  properties of the estimators of coefficients in the error components
+  regression models, \emph{Econometrica}, \bold{40}, pp.261--275.
 
   Wallace, T.D. and Hussain, A. (1969) The use of error components
   models in combining cross section with time series data,

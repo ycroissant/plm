@@ -234,7 +234,6 @@ amemiya <- function(formula, data, effect){
                    idios = idios,
                    id = max((one-idios)/card.other,0))
     theta <- max(1-sqrt(idios/one),0)
-    print(theta);print(sigma2)
     z <- list(theta = theta, sigma2 = sigma2)
   }
   else{

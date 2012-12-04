@@ -20,6 +20,7 @@ R/pgmm.methods.R -text
 R/pht.R -text
 R/plm.R -text
 R/plm.data.R -text
+R/plm.list.R -text
 R/plm.methods.R -text
 R/pmerge.R -text
 R/pmg.R -text
@@ -45,8 +46,6 @@ data/Snmesp.rda -text
 data/SumHes.rda -text
 data/Wages.rda -text
 inst/CITATION -text
-inst/doc/bibliojss.bib -text
-inst/doc/plm.rnw -text
 man/Cigar.Rd -text
 man/Crime.Rd -text
 man/EmplUK.Rd -text
@@ -101,3 +100,5 @@ tests/testErrors.Rout.save -text
 tests/testEvaluation.R -text
 tests/testEvaluation.Rout.save -text
 tests/testpgmm.R -text
+vignettes/bibliojss.bib -text
+vignettes/plm.rnw -text
