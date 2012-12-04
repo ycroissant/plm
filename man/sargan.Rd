@@ -12,14 +12,9 @@ sargan(object, weights = c("twosteps", "onestep"))
 }
 
 \arguments{
-<<<<<<< .mine
   \item{object}{an object of class \code{"pgmm"},}
   \item{weights}{the weighting matrix to be used for the computation of
   the test.}
-=======
-  \item{object}{an object of class \code{"pgmm"}.}
-  \item{weights}{}
->>>>>>> .r87
 }
 
 \details{  
