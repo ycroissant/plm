@@ -6,7 +6,8 @@
 
 \title{Check for Cross-Sectional and Time Variation}
 
-\description{This function checks for each variable of a panel if it varies cross-sectionally and over time.}
+\description{This function checks for each variable of a panel if it
+varies cross-sectionally and over time.}
 
 \usage{
 pvar(x, ...)
@@ -36,10 +37,6 @@ An object of class \code{pvar} containing the following elements:
 \author{Yves Croissant}
 
 \examples{
-#There are 595 individuals
-
-data("Wages",package="plm")
-pvar(Wages, 595)
 
 # Gasoline contains two variables which are individual and time indexes
 # and are the first two variables

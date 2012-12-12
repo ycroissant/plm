@@ -6,7 +6,7 @@ plm <-  function(formula, data, subset, na.action,
                  index = NULL, ...){
 
   nframe <- length(sys.calls())
-  is.a.list <- class(formula) == "list"
+  is.a.list <- class(formula)[1] == "list"
   
   if (is.a.list){
     plmlist <- match.call(expand.dots = FALSE)
@@ -96,9 +96,9 @@ plm.fit <- function(formula, data, model, effect, random.method, inst.method){
   }
   # extract the model.matrix and the model.response
   X <- model.matrix(formula, data, rhs = 1, model = model, effect = effect, theta = theta)
-  if (ncol(X) == 0)
+   if (ncol(X) == 0)
       stop("empty model")
-  y <- pmodel.response(formula, data, model = model, effect = effect, theta = theta)
+    y <- pmodel.response(formula, data, model = model, effect = effect, theta = theta)
   ## extract the matrix of instruments if necessary
   if (length(formula)[2] > 1){
     if (length(formula)[2] == 2)

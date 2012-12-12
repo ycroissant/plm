@@ -31,6 +31,30 @@ print.panelmodel <- function(x,digits=max(3, getOption("digits") - 2), width = g
   invisible(x)
 }
 
+# Almost the same as the default method except that update.formula is
+# replaced by update, so that the Formula method is used to update the
+# formula
+update.panelmodel <- function (object, formula., ..., evaluate = TRUE){
+  if (is.null(call <- getCall(object))) 
+    stop("need an object with call component")
+  extras <- match.call(expand.dots = FALSE)$...
+  if (!missing(formula.)){
+    call$formula <- update(formula(object), formula.)
+  }
+  if (length(extras)) {
+    existing <- !is.na(match(names(extras), names(call)))
+    for (a in names(extras)[existing]) call[[a]] <- extras[[a]]
+    if (any(!existing)) {
+      call <- c(as.list(call), extras[!existing])
+      call <- as.call(call)
+    }
+  }
+  if (evaluate) 
+    eval(call, parent.frame())
+  else call
+}
+
+
 print.form <- function(x,length.line){
   x <- deparse(x,width.cutoff=length.line)
   n <- length(x)

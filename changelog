@@ -422,3 +422,10 @@ Changes since version 1.2-10
 
 	* plm now estimate systems of equations if a list of formulas is
 	provided as the first argument
+
+Changes since version 1.3-0
+
+	* an update method for panelmodel objects is provided
+	* the Wages example is removed from the pvar man page because it's time consuming
+	
+	

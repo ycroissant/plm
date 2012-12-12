@@ -40,7 +40,7 @@ model.matrix.pFormula <- function(object, data,
   formula <- object
   has.intercept <- has.intercept(formula, rhs = rhs)
   X <- model.matrix(as.Formula(formula), rhs = rhs, data= data, ...)
-  index <- attr(data, "index")
+    index <- attr(data, "index")
   id <- index[[1]]
   if(any(is.na(id))) {
      stop("NA in the individual index variable")
