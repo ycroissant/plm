@@ -567,10 +567,6 @@ options(prompt= "R> ", useFancyQuotes = FALSE)
 
 <<echo=TRUE,results=hide>>=
 library("plm")
-#library(nlme)
-#library(MASS)
-#library(bdsmatrix)
-#source("~/R/plm/chargement.R")
 @ 
 
 The four datasets used are \code{EmplUK} which was used by
@@ -1128,7 +1124,7 @@ fixed of ``random'' effects\footnote{The ``random effect'' is better
 The ``random effect'' general \textsc{fgls} is estimated by:
  
 <<pggls>>=
-zz <- pggls(log(emp)~log(wage)+log(capital),data=EmplUK,model="random")
+zz <- pggls(log(emp)~log(wage)+log(capital),data=EmplUK,model="pooling")
 summary(zz)
 @ 
 
@@ -1499,11 +1495,11 @@ on themselves, lagged one period: $$\hat{\epsilon}_{i,t}=\alpha + \delta
 correlation.
 
 The building blocks available in \pkg{plm}, together with the function
-\code{linear.hypothesis()} in package \pkg{car}, make it easy to
+\code{linearHypothesis()} in package \pkg{car}, make it easy to
 construct a function carrying out this procedure: first the
 \textsc{fe} model is estimated and the residuals retrieved, then they
 are lagged and a \code{pooling} AR(1) model is estimated. The test
-statistic is obtained by applying \code{linear.hypothesis()} to the
+statistic is obtained by applying \code{linearHypothesis()} to the
 latter model to test the above restriction on $\delta$, supplying a
 heteroskedasticity- and autocorrelation-consistent covariance matrix
 (\code{vcovHC} with the appropriate options, in particular
@@ -1937,11 +1933,11 @@ shown below \citep[see also][p.12]{ZEIL:04}:
 waldtest(re,update(re,.~.-capital),vcov=function(x) vcovHC(x,method="white2",type="HC3"))
 @ 
 
-Moreover, \code{linear.hypothesis} from package \pkg{car} may be used to test for linear restrictions:
+Moreover, \code{linearHypothesis} from package \pkg{car} may be used to test for linear restrictions:
 
 <<>>=
 library("car")
-linear.hypothesis(re, "2*value=capital", vcov.=vcovHC)
+linearHypothesis(re, "2*value=capital", vcov.=vcovHC)
 @
 
 A specific \code{vcovHC} method for \code{pgmm} objects is also
@@ -2208,7 +2204,7 @@ periods than firms, therefore we restrict them to firms 4 to 6.
 <<gglsre>>=
 sGrunfeld <- Grunfeld[Grunfeld$firm%in%4:6,]
 
-ggls<-pggls(inv~value+capital,data=sGrunfeld,model="random")
+ggls<-pggls(inv~value+capital,data=sGrunfeld,model="pooling")
 
 gglsML<-gls(inv~value+capital,data=sGrunfeld,
             correlation=corSymm(form=~1|year))

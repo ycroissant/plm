@@ -1,3 +1,9 @@
+data.name <- function(x){
+  data.name <- paste(deparse(x$call$formula))
+  if (length(data.name) > 1) paste(data.name[1], "...")
+  else data.name
+}
+  
 phtest <- function(x,...){
   UseMethod("phtest")
 }
@@ -38,15 +44,13 @@ phtest.panelmodel <- function(x, x2, ...){
   names(stat) <- "chisq"
   parameter <- df
   names(parameter) <- "df"
-#  data.name <- paste(deparse(substitute(x)), "and",  deparse(substitute(x2)))
-  data.name <- paste(deparse(x$call$formula))
   alternative <- "one model is inconsistent"
 #  null.value <- "both models are consistent"
   res <- list(statistic = stat,
               p.value = pval,
               parameter = parameter,
               method = "Hausman Test",
-              data.name = data.name,
+              data.name = data.name(x),
  #             null.value=null.value,
               alternative=alternative)
   class(res) <- "htest"
@@ -65,7 +69,6 @@ plmtest.plm <- function(x,
 
   effect <- match.arg(effect)
   type <- match.arg(type)
-  data.name <- paste(deparse(x$call$formula))
   if (describe(x, "model") != "pooling") x <- update(x, model = "pooling")
   pdim <- pdim(x)
   n <- pdim$nT$n
@@ -74,7 +77,7 @@ plmtest.plm <- function(x,
   index <- attr(model.frame(x), "index")
   id <- index[[1]]
   time <- index[[2]]
-  x <- resid(x)
+  res <- resid(x)
   
   if (effect != "twoways"){
     if (!type %in% c("honda", "bp"))
@@ -82,7 +85,7 @@ plmtest.plm <- function(x,
     if(effect == "individual"){ condvar <- id ; card.cond <- n ; card.other <- T}
     else{condvar <- time ; card.cond <- T ; card.other <- n}
     stat <-  sqrt(card.other*card.cond/(2*(card.other-1)))*
-      (crossprod(tapply(x,condvar,mean))*card.other^2/sum(x^2)-1)
+      (crossprod(tapply(res,condvar,mean))*card.other^2/sum(res^2)-1)
     stat <- switch(type,
                    honda = c(normal = stat),
                    bp    = c(chisq  = stat^2))
@@ -94,8 +97,8 @@ plmtest.plm <- function(x,
                    bp    = pchisq(stat, df = 1, lower.tail = FALSE))
   }
   else{
-    stat1 <-  sqrt(n*T/(2*(T-1)))*(crossprod(tapply(x,id,mean))*T^2/sum(x^2)-1)
-    stat2 <-  sqrt(n*T/(2*(n-1)))*(crossprod(tapply(x,time,mean))*n^2/sum(x^2)-1)
+    stat1 <-  sqrt(n*T/(2*(T-1)))*(crossprod(tapply(res,id,mean))*T^2/sum(res^2)-1)
+    stat2 <-  sqrt(n*T/(2*(n-1)))*(crossprod(tapply(res,time,mean))*n^2/sum(res^2)-1)
     stat <- switch(type,
                    ghm   = c(chisq = max(0,stat1)^2+max(0,stat2)^2),
                    bp    = c(chisq = stat1^2+stat2^2),
@@ -125,7 +128,7 @@ plmtest.plm <- function(x,
     res <- list(statistic = stat,
                 p.value   = pval,
                 method    = method,
-                data.name = data.name)
+                data.name = data.name(x))
   }
   else{
     names(parameter) <- "df"
@@ -133,7 +136,7 @@ plmtest.plm <- function(x,
                 p.value   = pval,
                 method    = method,
                 parameter = parameter,
-                data.name = data.name)
+                data.name = data.name(x))
   }
   res$alternative <- "significant effects"
   class(res) <- "htest"
@@ -172,7 +175,6 @@ pFtest.formula <- function(x, data, ...){
 }
   
 pFtest.plm <- function(x, z, ...){
-  data.name <-  paste(deparse(x$call$formula))
   within <- x
   pooling <- z
 #  if (! (describe(x, "model") == "within" && describe(z, "model") == "pooling"))
@@ -193,7 +195,7 @@ pFtest.plm <- function(x, z, ...){
               p.value = pval,
               method = paste("F test for ",effect," effects",sep=""),
               parameter=parameter,
-              data.name=data.name,
+              data.name=data.name(x),
               alternative=alternative)
   class(res) <- "htest"
   res
@@ -201,7 +203,6 @@ pFtest.plm <- function(x, z, ...){
   
 Ftest <- function(x, test = c("Chisq", "F"), ...){
   model <- describe(x, "model")
-  data.name <- paste(deparse(formula(x)))
   test <- match.arg(test)
   df1 <- ifelse(model == "within",
                 length(coef(x)),
@@ -223,7 +224,7 @@ Ftest <- function(x, test = c("Chisq", "F"), ...){
     parameter <- c(df1 = df1, df2 = df2)
     method = "F test"
   }
-  res <- list(data.name = data.name,
+  res <- list(data.name = data.name(x),
               statistic = stat,
               parameter = parameter,
               p.value = pval,
@@ -286,7 +287,6 @@ pooltest.formula <- function(x, data, ...){
 }
 
 pooltest.plm <- function(x, z, ...){
-  data.name <- paste(deparse(x$call$formula))
   rss <- deviance(x)
   uss <- sum(unlist(residuals(z))^2)
   dlr <- df.residual(x)
@@ -300,7 +300,7 @@ pooltest.plm <- function(x, z, ...){
   res <- list(statistic   = stat,
               parameter   = parameter,
               p.value     = pval,
-              data.name   = data.name,
+              data.name   = data.name(x),
               alternative = "unstability",
               method      = "F statistic")
   class(res) <- "htest"
@@ -325,7 +325,6 @@ pwaldtest.formula <- function(x, ...){
 
 
 pwaldtest.panelmodel <- function(x, ...){
-  data.name <- paste(deparse(formula(x)))
   if (has.intercept(x)){
     mycoef <- coef(x)[-1]
     myvcov <- vcov(x)[-1,-1]
@@ -341,7 +340,7 @@ pwaldtest.panelmodel <- function(x, ...){
   result <- list(statistic = stat,
                  parameter = df,
                  p.value   = pval,
-                 data.name = NULL)
+                 data.name = data.name(x))
   class(result) <- "htest"
   result
                  

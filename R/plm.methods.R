@@ -18,7 +18,7 @@ summary.plm <- function(object,...){
 }
 
 print.summary.plm <- function(x,digits= max(3, getOption("digits") - 2),
-                              width=getOption("width"),...){
+                              width=getOption("width"), subset = NULL, ...){
   formula <- formula(x)
   has.instruments <- (length(formula)[2] == 2)
   effect <- describe(x, "effect")
@@ -58,7 +58,8 @@ print.summary.plm <- function(x,digits= max(3, getOption("digits") - 2),
   print(sumres(x))
   
   cat("\nCoefficients :\n")
-  printCoefmat(coef(x), digits = digits)
+  if (is.null(subset)) printCoefmat(coef(x), digits = digits)
+  else printCoefmat(coef(x)[subset, ], digits = digits)
   cat("\n")
   cat(paste("Total Sum of Squares:    ",signif(tss(x),digits),"\n",sep=""))
   cat(paste("Residual Sum of Squares: ",signif(deviance(x),digits),"\n",sep=""))

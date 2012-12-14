@@ -429,3 +429,9 @@ Changes since version 1.3-0
 	* the Wages example is removed from the pvar man page because it's time consuming
 	
 	
+Changes sinve version 1.3-1
+
+	* a subset argument is added to print.summary.plm so that a subset
+	of coefficient may be selected
+	* the "name" of the tests is now the formula truncated so that it
+	prints on only one line
