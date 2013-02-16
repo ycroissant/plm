@@ -1,14 +1,19 @@
-summary.plm <- function(object,...){
+summary.plm <- function(object, .vcov = NULL, ...){
   object$fstatistic <- Ftest(object, test = "F")
   model <- describe(object, "model")
   effect <- describe(object, "effect")
   object$r.squared <- c(rsq  = r.squared(object),
                         adjrsq = r.squared(object, dfcor = TRUE))
   # construct the table of coefficients
-  std.err <- sqrt(diag(vcov(object)))
+  if (!is.null(.vcov)){
+    std.err <- sqrt(diag(.vcov))
+  }
+  else{
+    std.err <- sqrt(diag(vcov(object)))
+  }
   b <- coefficients(object)
-  z <- b/std.err
-  p <- 2*pt(abs(z), df = object$df.residual, lower.tail=FALSE)
+  z <- b / std.err
+  p <- 2 * pt(abs(z), df = object$df.residual, lower.tail = FALSE)
   object$coefficients <- cbind("Estimate"   = b,
                                "Std. Error" = std.err,
                                "t-value"    = z,
@@ -59,7 +64,7 @@ print.summary.plm <- function(x,digits= max(3, getOption("digits") - 2),
   
   cat("\nCoefficients :\n")
   if (is.null(subset)) printCoefmat(coef(x), digits = digits)
-  else printCoefmat(coef(x)[subset, ], digits = digits)
+  else printCoefmat(coef(x)[subset, , drop = FALSE], digits = digits)
   cat("\n")
   cat(paste("Total Sum of Squares:    ",signif(tss(x),digits),"\n",sep=""))
   cat(paste("Residual Sum of Squares: ",signif(deviance(x),digits),"\n",sep=""))

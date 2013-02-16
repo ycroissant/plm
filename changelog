@@ -426,12 +426,24 @@ Changes since version 1.2-10
 Changes since version 1.3-0
 
 	* an update method for panelmodel objects is provided
+	
 	* the Wages example is removed from the pvar man page because it's time consuming
 	
 	
 Changes sinve version 1.3-1
 
-	* a subset argument is added to print.summary.plm so that a subset
-	of coefficient may be selected
+	* a subset argument is added to print.summary.plm and summary.pht
+	so that a subset of coefficient may be selected
+
+	* fixed a small problem on the printing of the typologie of the
+	variables for pht models
+	
 	* the "name" of the tests is now the formula truncated so that it
 	prints on only one line
+	
+	* restrict.matrix argument added to deals with linear restrictions
+
+	* a vcov argument is added to summary.plm so that a variance matrix can be supplied
+
+	* the deviance method for panelmodel objects is now exported (12/02)
+	

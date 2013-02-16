@@ -365,10 +365,15 @@ Within.pseries <- function(x, effect = c("individual", "time"), ...){
   Within.default(x, effect, ...)
 }
 
-Within.matrix <- function(x, effect, ...){
-   result <- Within.default(x, effect, ...)
+Within.matrix <- function(x, effect, rm.null = TRUE,...){
+  result <- Within.default(x, effect, ...)
   othervar <- apply(result, 2, function(x) sum(abs(x), na.rm = TRUE)) > 1E-12
-  result <- result[, othervar, drop = FALSE]
+  if (rm.null){
+    result <- result[, othervar, drop = FALSE]
+  }
+  else{
+    result <- result[, drop = FALSE]
+  }
   attr(result, "constant") <- colnames(x)[!othervar]
   result
 }

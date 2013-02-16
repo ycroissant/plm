@@ -3,7 +3,10 @@ plm <-  function(formula, data, subset, na.action,
                  model = c('within','random','ht','between','pooling','fd'),
                  random.method = c('swar','walhus','amemiya','nerlove', 'kinla'),
                  inst.method = c('bvk','baltagi'),
-                 index = NULL, ...){
+                 restrict.matrix = NULL,
+                 restrict.rhs = NULL,
+                 index = NULL,
+                 ...){
 
   nframe <- length(sys.calls())
   is.a.list <- class(formula)[1] == "list"
@@ -42,8 +45,6 @@ plm <-  function(formula, data, subset, na.action,
   }
 
   # Check whether data is a pdata.frame and if not create it
-  if (inherits(data, "pdata.frame") && !is.null(index))
-    warning("the index argument is ignored because data is a pdata.frame")
   if (!inherits(data, "pdata.frame")) data <- pdata.frame(data, index)
   # Create a Formula object if necessary
   if (!inherits(formula, "pFormula")) formula <- pFormula(formula)
@@ -113,8 +114,7 @@ plm.fit <- function(formula, data, model, effect, random.method, inst.method){
       if (length(formula)[2] == 3){
         WOw <- model.matrix(formula, data, rhs = 3, model = "within", effect = effect)
         Ww <- cbind(Ww, WOw)
-      }        
-      if (ncol(Wb) < ncol(X)) stop("Insufficient number of instruments\n")
+      }
       if(inst.method == "baltagi") W <- cbind(Ww, Wb)
       if (! is.balanced) sig2one <- sigma2$one[as.character(cond)] else sig2one <- sigma2$one
       if(inst.method == "bvk"){
@@ -171,6 +171,9 @@ mylm <- function(y, X, W = NULL){
     else result <- twosls(y, X, W)
   }
   result$vcov <- vcov(result)
+  result$X <- X
+  result$y <- y
+  result$W <- W
   names(result$coefficients) <- colnames(result$vcov) <-
     rownames(result$vcov) <- colnames(X)
   result

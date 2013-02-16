@@ -11,14 +11,17 @@ The Hausman-Taylor estimator is an instrumental variable estimator without exter
 \usage{
 pht(formula, data, subset, na.action, index = NULL, ...)
 \method{summary}{pht}(object, ...)
-\method{print}{summary.pht}(x, digits = max(3, getOption("digits") - 2), width = getOption("width"), ...)
+\method{print}{summary.pht}(x, digits = max(3, getOption("digits") - 2),
+     width = getOption("width"), subset = NULL, ...)
 }
 
 \arguments{
  \item{formula}{a symbolic description for the model to be estimated,}
  \item{object,x}{an object of class \code{"plm"},}
  \item{data}{a \code{data.frame},}
- \item{subset}{see \code{\link{lm}},}
+ \item{subset}{see \code{\link{lm}} for \code{"plm"}, a character or
+   numeric vector indicaing asubset of the table of coefficient to be
+   printed for \code{"print.summary.plm"},}
  \item{na.action}{see \code{\link{lm}},}
  \item{index}{the indexes,}
  \item{digits}{digits,}

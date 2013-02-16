@@ -38,7 +38,7 @@ pht <-  function(formula, data, subset, na.action, index = NULL, ...){
   exo.var <- exo.all[!(exo.all %in% exo.cst)]
   edo.cst <- all.cst[!(all.cst %in% exo.cst)]
   edo.var <- edo.all[!(edo.all %in% edo.cst)]
-  
+
   if (length(edo.cst) > length(exo.var)){
     stop(" The number of endogenous time-invariant variables is greater
            than the number of exogenous time varying variables\n")
@@ -83,10 +83,10 @@ pht <-  function(formula, data, subset, na.action, index = NULL, ...){
   result <- twosls(y,X,W)
   K <- length(data)
   ve <- lev2var(data)
-  varlist <- list(xv = ve[exo.var],
-                  nv = ve[edo.var],
-                  xc = ve[exo.cst[exo.cst != "(Intercept)"]],
-                  nc = ve[edo.cst]
+  varlist <- list(xv = unique(ve[exo.var]),
+                  nv = unique(ve[edo.var]),
+                  xc = unique(ve[exo.cst[exo.cst != "(Intercept)"]]),
+                  nc = unique(ve[edo.cst])
                   )
   varlist <- lapply(varlist, function(x){ names(x) <- NULL; x})
 
@@ -122,7 +122,7 @@ summary.pht <- function(object,...){
 }
 
 print.summary.pht <- function(x, digits = max(3, getOption("digits") - 2),
-                              width = getOption("width"),...){
+                              width = getOption("width"), subset = NULL, ...){
   formula <- formula(x)
   has.instruments <- (length(formula)[2] == 2)
   effect <- describe(x, "effect")
@@ -133,15 +133,15 @@ print.summary.pht <- function(x, digits = max(3, getOption("digits") - 2),
   print(x$call)
 
   #    cat("\nTime-Varying Variables: ")
-  names.xv <- paste(x$varlist$xv,collapse=",")
-  names.nv <- paste(x$varlist$nv,collapse=",")
-  names.xc <- paste(x$varlist$xc,collapse=",")
-  names.nc <- paste(x$varlist$nc,collapse=",")
-  cat(paste("\nT.V. exo  : ",names.xv,"\n",sep=""))
-  cat(paste("T.V. endo : ",names.nv,"\n",sep=""))
+  names.xv <- paste(x$varlist$xv,collapse=", ")
+  names.nv <- paste(x$varlist$nv,collapse=", ")
+  names.xc <- paste(x$varlist$xc,collapse=", ")
+  names.nc <- paste(x$varlist$nc,collapse=", ")
+  cat(paste("\nT.V. exo  : ",names.xv,"\n", sep = ""))
+  cat(paste("T.V. endo : ", names.nv,"\n",sep = ""))
   #    cat("Time-Invariant Variables: ")
-  cat(paste("T.I. exo  : ",names.xc,"\n",sep=""))
-  cat(paste("T.I. endo : ",names.nc,"\n",sep=""))
+  cat(paste("T.I. exo  : ", names.xc, "\n", sep= ""))
+  cat(paste("T.I. endo : ", names.nc, "\n", sep= ""))
   cat("\n")
   pdim <- pdim(x)
   print(pdim)
@@ -153,7 +153,8 @@ print.summary.pht <- function(x, digits = max(3, getOption("digits") - 2),
   print(sumres(x))
   
   cat("\nCoefficients :\n")
-  printCoefmat(coef(x), digits = digits)
+  if (is.null(subset)) printCoefmat(coef(x), digits = digits)
+  else printCoefmat(coef(x)[subset, , drop = FALSE], digits = digits)
   cat("\n")
   cat(paste("Total Sum of Squares:    ",signif(tss(x),digits),"\n",sep=""))
   cat(paste("Residual Sum of Squares: ",signif(deviance(x),digits),"\n",sep=""))

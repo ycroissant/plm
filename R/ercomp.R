@@ -77,22 +77,23 @@ swar <- function(formula, data, effect){
       z <- list(sigma2 = sigma2, theta = theta)
     }
     else{
+      cat("bon\n")
       X <- model.matrix(formula, data, rhs = 1, model = "pooling", effect = effect)
       X.m <- Tapply(X, cond, mean)
       X.sum <- apply(X, 2, tapply, cond, sum)
       X.m.X <- crossprod(X.m)
       X.sum.X <- crossprod(X.sum)
       X.m.X.eig <- eigen(X.m.X)
-      if (any(abs(X.m.X.eig$values)<1E-12)){
-        cn <- which(abs(X.m.X.eig$values)<1E-12)
-        C <- X.m.X.eig$vectors[,-cn]
-        OM <- diag(X.m.X.eig$values[-cn])
-        X.m.Xi <- C%*%solve(OM)%*%t(C)
+      if (any(abs(X.m.X.eig$values) < 1E-08)){
+        cn <- which(abs(X.m.X.eig$values) < 1E-08)
+        C <- X.m.X.eig$vectors[, - cn]
+        OM <- diag(X.m.X.eig$values[- cn])
+        X.m.Xi <- C %*% solve(OM) %*% t(C)
         X.sum.X <- crossprod(X.sum)
-        tr <- sum(diag(X.m.Xi%*%X.sum.X))
+        tr <- sum(diag(X.m.Xi %*% X.sum.X))
       }
       else{
-        tr <- sum(diag(solve(crossprod(X.m))%*%crossprod(X.sum)))
+        tr <- sum(diag(solve(crossprod(X.m)) %*% crossprod(X.sum)))
       }
       sigma2$idios <- deviance(within)/(N-arg.cond-Kw)
       ssrbet <- sum(between$residuals^2 * arg.other.i)
@@ -162,7 +163,7 @@ walhus <- function(formula, data, effect){
     }
     one   = card.other * sum(tapply(respool, condvar, mean) ^ 2) / card.cond
     idios = sum((respool - tapply(respool, condvar, mean)[as.character(condvar)]) ^ 2) /
-      (card.cond * (card.other - 1))
+      (card.cond * (card.other - 1));
     sigma2 <- list(one = one,
                    idios = idios,
                    id    = (one - idios) / card.other
@@ -228,6 +229,7 @@ amemiya <- function(formula, data, effect){
     fe <- fixef(within, effect = effect)
     alpha <- mean(fe)
     uest <- resid(within)+fe[as.character(condvar)]-alpha
+    # inutile : one <- T / n * sum(fixef(within, type="dmean") ^ 2) est OK 
     one <- card.other/card.cond*sum(tapply(uest,condvar,mean)^2)
     idios <- deviance(within)/(card.cond*(card.other-1)-K)
     sigma2 <- list(one = one,
@@ -282,7 +284,6 @@ nerlove <- function(formula, data, effect){
       arg.cond <- pdim$nT$T
       arg.other <- pdim$nT$n
     }
-    print(c(N, arg.cond))
     idios <- deviance(within) / N 
 #    s2id <- sum((fixef(within)-mean(fixef(within)))^2)/(arg.cond-1)
     s2id <- sum(fixef(within, type = "dmean") ^ 2)/(arg.cond - 1)

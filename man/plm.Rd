@@ -1,5 +1,6 @@
 \name{plm}
 \alias{plm}
+\alias{has.intercept}
 \alias{print.panelmodel}
 \alias{summary.plm}
 \alias{print.summary.plm}
@@ -14,8 +15,9 @@ Linear models for panel data estimated using the \code{lm} function on transform
 plm(formula, data, subset, na.action, effect = c("individual","time","twoways"),
     model = c("within","random","ht","between","pooling","fd"),
     random.method = c("swar","walhus","amemiya","nerlove", "kinla"),
-    inst.method = c("bvk","baltagi"), index = NULL, ...)
-\method{summary}{plm}(object, ...)
+    inst.method = c("bvk","baltagi"), restrict.matrix = NULL,
+    restrict.rhs = NULL, index = NULL, ...)
+\method{summary}{plm}(object, .vcov = NULL, ...)
 \method{print}{summary.plm}(x, digits = max(3, getOption("digits") - 2),
     width = getOption("width"), subset = NULL, ...)
 }
@@ -37,6 +39,11 @@ plm(formula, data, subset, na.action, effect = c("individual","time","twoways"),
   \code{"amemiya"}, \code{"walhus"}, \code{"nerlove"} and \code{"kinla"},}
   \item{inst.method}{the instrumental variable transformation: one of \code{"bvk"} and \code{"baltagi"},}
   \item{index}{the indexes,}
+  \item{restrict.matrix}{a matrix wich defines linear restrictions on
+    the coefficients,}
+  \item{restrict.rhs}{the right hand side vector of the linear
+  restrictions on the coefficients,}
+  \item{.vcov}{a covariance matrix furnished by the user,}
   \item{digits}{digits,}
   \item{width}{the maximum length of the lines in the printed  output,}
   \item{\dots}{further arguments.}
