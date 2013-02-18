@@ -56,6 +56,7 @@ S3method(summary, plm)
 S3method(print, summary.plm)
 S3method(predict, plm)
 S3method(has.intercept, plm)
+S3method(plot, plm)
 #plm.list
 S3method(summary, plm.list)
 S3method(print, summary.plm.list)

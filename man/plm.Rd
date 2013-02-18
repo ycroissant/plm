@@ -3,6 +3,7 @@
 \alias{has.intercept}
 \alias{print.panelmodel}
 \alias{summary.plm}
+\alias{plot.plm}
 \alias{print.summary.plm}
 
 \title{Panel Data Estimators}
@@ -20,6 +21,7 @@ plm(formula, data, subset, na.action, effect = c("individual","time","twoways"),
 \method{summary}{plm}(object, .vcov = NULL, ...)
 \method{print}{summary.plm}(x, digits = max(3, getOption("digits") - 2),
     width = getOption("width"), subset = NULL, ...)
+\method{plot}{plm}(x, dx = 1, N = NULL, ...)
 }
 
 \arguments{
@@ -46,6 +48,9 @@ plm(formula, data, subset, na.action, effect = c("individual","time","twoways"),
   \item{.vcov}{a covariance matrix furnished by the user,}
   \item{digits}{digits,}
   \item{width}{the maximum length of the lines in the printed  output,}
+  \item{dx}{the half-length of the individual lines for the plot
+    method,}
+  \item{N}{the number of individual to plot,}
   \item{\dots}{further arguments.}
 }
 

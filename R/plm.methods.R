@@ -232,5 +232,41 @@ describe <- function(x,
          )
 }
          
-  
+plot.plm <- function(x, dx = 1, N = NULL, ...){  
+  subs <- ! is.null(N)
+  mco <- update(x, model = "pooling")
+  re <- update(x, model = "random")
+  be <- update(x, model = "between")
+  n <- pdim(x)$nT$n
+  if (! subs) N <- n
+  ids <- unique(index(x, "id"))
+  if (subs) ids <- ids[sample(1:length(ids), N, replace = FALSE)]
+  sel <- index(x, "id") %in% ids
+  T <- pdim(x)$nT$T
+  cols <- rainbow(N)
+  pts <- sample(1:25, N, replace = TRUE)
+  thex <- as.numeric(model.matrix(x, model = "pooling")[sel, 2])
+  they <- as.numeric(pmodel.response(x, model = "pooling")[sel])
+  plot(thex, they, col = rep(cols, each = T), pch = rep(pts, each = T), ann = FALSE, axes = FALSE)
+  axis(side = 1)
+  axis(side = 2, las = 1)
+  idsel <- as.numeric(index(x, "id")[sel])
+  meanx <- tapply(thex, idsel, mean)
+  meany <- tapply(they, idsel, mean)
+  points(meanx, meany, pch = 19, col = cols, cex = 1.5)
+  beta <- coef(x)
+  alphas <- meany - meanx * beta
+  for (i in 1:N){
+    xmin <- meanx[i] - dx
+    xmax <- meanx[i] + dx
+    ymin <- alphas[i] + beta * xmin
+    ymax <- alphas[i] + beta * xmax
+    lines(c(xmin, xmax), c(ymin, ymax), col = cols[i])
+  }
+  abline(coef(re)[1], coef(re)[2], lty = "dotted")
+  abline(coef(mco), lty = "dashed")
+  abline(coef(be), lty = "dotdash")
+}
+
+
   

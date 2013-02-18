@@ -154,9 +154,11 @@ lev2var <- function(x, ...){
     names(result) <- nf
     result <- paste(names(result),result,sep="")
     names(nf) <- result
-    c(nf,not.fact)
+    c(nf, not.fact)
   }
   else{
-    names(x)
+    z <- names(x)
+    names(z) <- z
+    z
   }
 }
