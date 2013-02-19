@@ -390,7 +390,7 @@ pgmm <- function(formula, data, subset, na.action,
   names(coefficients) <- names.coef
   residuals <- lapply(yX,
                       function(x)
-                      as.vector(x[,1] -  crossprod(t(x[,-1]), coefficients)))
+                      as.vector(x[,1] -  crossprod(t(x[,-1, drop=FALSE]), coefficients)))
   outresid <- lapply(residuals,function(x) outer(x,x))
   A2 <- mapply(function(x, y) crossprod(t(crossprod(x, y)), x), W, outresid, SIMPLIFY = FALSE)
   A2 <- Reduce("+", A2)
