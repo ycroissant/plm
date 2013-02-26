@@ -218,11 +218,11 @@ vcovHC.pgmm <- function(x,...){
   
   if (model=="twosteps"){
     coef1s <- x$coefficients[[1]]
-    res1s <- lapply(yX, function(x) x[,1] - crossprod(t(x[, -1]), coef1s))
+    res1s <- lapply(yX, function(x) x[,1] - crossprod(t(x[, -1, drop=FALSE]), coef1s))
     K <- ncol(yX[[1]])
     D <- c()
     WX <- Reduce("+",
-                 mapply(function(x, y) crossprod(x, y[,-1]), x$W, yX, SIMPLIFY = FALSE))
+                 mapply(function(x, y) crossprod(x, y[,-1, drop=FALSE]), x$W, yX, SIMPLIFY = FALSE))
     We <- Reduce("+", mapply(function(x, y) crossprod(x, y), x$W, residuals, SIMPLIFY = FALSE))
     B1 <- solve(t(WX) %*% A1 %*% WX)
     B2 <- vcov(x)
@@ -231,7 +231,7 @@ vcovHC.pgmm <- function(x,...){
     for (k in 2:K){
       exk <- mapply(
                     function(x,y){
-                      z <- crossprod(t(x[,k]),t(y))
+                      z <- crossprod(t(x[,k, drop=FALSE]),t(y))
                       - z - t(z)
                     },
                     yX, res1s, SIMPLIFY = FALSE)
@@ -246,9 +246,9 @@ vcovHC.pgmm <- function(x,...){
     vcovr <- B2 + crossprod(t(D), B2) + t(crossprod(t(D), B2)) + D %*% vcov1s %*% t(D)
   }
   else{
-    res1s <- lapply(yX, function(z) z[,1] - crossprod(t(z[, -1]), x$coefficients))
+    res1s <- lapply(yX, function(z) z[,1] - crossprod(t(z[, -1, drop=FALSE]), x$coefficients))
     K <- ncol(yX[[1]])
-    WX <- Reduce("+", mapply(function(z, y) crossprod(z[,-1], y), yX, x$W, SIMPLIFY = FALSE))
+    WX <- Reduce("+", mapply(function(z, y) crossprod(z[,-1, drop=FALSE], y), yX, x$W, SIMPLIFY = FALSE))
     B1 <- vcov(x)
     vcovr <- B1 %*% (WX %*% A1 %*% SA2 %*% A1 %*% t(WX)) %*% B1
   }

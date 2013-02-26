@@ -35,7 +35,7 @@ print.panelmodel <- function(x,digits=max(3, getOption("digits") - 2), width = g
 # replaced by update, so that the Formula method is used to update the
 # formula
 update.panelmodel <- function (object, formula., ..., evaluate = TRUE){
-  if (is.null(call <- getCall(object))) 
+  if (is.null(call <- object$call)) # was: getCall(object))) 
     stop("need an object with call component")
   extras <- match.call(expand.dots = FALSE)$...
   if (!missing(formula.)){

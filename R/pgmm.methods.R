@@ -58,7 +58,7 @@ mtest <- function(object, order = 1, vcov = NULL){
     residl <- lapply(object$residuals,
                      function(x) c(rep(0, order), x[1:(Kt-order-1)], rep(0, Kt)))
   }
-  X <- lapply(object$model, function(x) x[,-1])
+  X <- lapply(object$model, function(x) x[,-1, drop=FALSE])
   W <- object$W
   if (model == "onestep") A <- object$A1
   else  A <- object$A2
@@ -73,7 +73,7 @@ mtest <- function(object, order = 1, vcov = NULL){
   num <- Reduce("+", mapply(crossprod, resid, residl, SIMPLIFY = FALSE))
   stat <- num / sqrt(denom)
   names(stat) <- "normal"
-  pval <- pnorm(abs(stat), lower.tail = FALSE)
+  pval <- pnorm(abs(stat), lower.tail = FALSE)*2
   mtest <- list(statistic = stat,
                 p.value = pval,
                 method = paste("Autocorrelation test of degree", order))

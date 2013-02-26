@@ -416,7 +416,7 @@ pgmm <- function(formula, data, subset, na.action,
   residuals <- lapply(yX,
                       function(x){
                         nz <- rownames(x)
-                        z <- as.vector(x[, 1] - crossprod(t(x[, -1]), coefficients))
+                        z <- as.vector(x[, 1] - crossprod(t(x[, -1, drop=FALSE]), coefficients))
                         names(z) <- nz
                         z
                       }
