@@ -1,9 +1,17 @@
 ## taken from pmg to estimate CIPS test statistic as "average of t's"
-## this version 4: added type warning, and output single CADF
+## since version 4: added type warning, and output single CADF
 ## regressions as well.
 ## estimation loop for single TS models is now lm(formula, data) with
 ## 'data' properly subsetted; this
 ## allows for decent output of individual mods.
+
+## needed for standalone operation:
+#plm <- plm:::plm
+#pdim <- plm:::pdim
+
+#model.matrix.plm<-plm:::model.matrix.plm
+#pmodel.response<-plm:::pmodel.response.plm
+
 
 cipstest <- function (x, lags = 2, type=c("trend", "drift", "none"),
                   model = c("cmg","mg","dmg"), truncated=FALSE, ...)
@@ -15,6 +23,7 @@ cipstest <- function (x, lags = 2, type=c("trend", "drift", "none"),
   dati <- pmerge(dati, diff(lag(x)))
   ## minimal column names
   clnames <- c("de","le","d1e")
+  dimnames(dati)[[2]][3:5] <- clnames
   ## add lags if lags>1
   if(lags>1) {
       for(i in 2:lags) {
@@ -245,7 +254,7 @@ cipstest <- function (x, lags = 2, type=c("trend", "drift", "none"),
 }
 
 
-## separate function computing critical values
+## separate function computing critical values:
 
 critvals <- function(stat, n, T., type=c("trend","drift","none"),
                      truncated=FALSE) {
@@ -492,5 +501,13 @@ if(stat<min(cv)) {
 
 return(pval)
 }
+
+
+
+
+
+
+
+
 
 

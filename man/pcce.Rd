@@ -1,32 +1,34 @@
-\name{pccep}
-\alias{pccep}
-\alias{summary.pccep}
-\alias{print.summary.pccep}
+\name{pcce}
+\alias{pcce}
+\alias{summary.pcce}
+\alias{print.summary.pcce}
 
-\title{Common Correlated Effects Pooled estimator}
+\title{Common Correlated Effects estimators}
 
 \description{
-Common Corrleated Effects Pooled (CCEP) estimator for panel data with
+Common Correlated Effects Mean Groups (CCEMG) and Pooled (CCEP) estimators for panel data with
 common factors (balanced or unbalanced)
 }
 
 \usage{
-pccep(formula, data, subset, na.action,
- residuals = c("standard", "cce","ccemg"),
- index = NULL, trend = FALSE, ...)
-\method{summary}{pccep}(object, ...)
-\method{print}{summary.pccep}(x,digits = max(3, getOption("digits") -
+pcce(formula, data, subset, na.action,
+     model=c("mg", "p"),
+     residuals = c("defactored", "standard"),
+     index = NULL, trend = FALSE, ...)
+\method{summary}{pcce}(object, ...)
+\method{print}{summary.pcce}(x,digits = max(3, getOption("digits") -
 2), width = getOption("width"),...)
 }
 
 \arguments{
  \item{formula}{a symbolic description of the model to be estimated,}
- \item{object, x}{an object of class \code{pccep},}
+ \item{object, x}{an object of class \code{pcce},}
  \item{data}{a \code{data.frame},}
  \item{subset}{see \code{lm},}
  \item{na.action}{see \code{lm},}
- \item{residuals}{one of \code{c("standard", "cce","ccemg")}, allows for
- returning different inds of residuals for diagnostic purposes,}
+ \item{model}{one of \code{c("mg","p")}, selects Mean Groups vs. Pooled CCE model,}
+ \item{residuals}{one of \code{c("defactored", "standard")}, allows for
+ returning different kinds of residuals,}
  \item{index}{the indexes, see \code{\link{plm.data}},}
  \item{trend}{logical specifying whether an individual-specific trend has to be included,}
  \item{digits}{digits,}
@@ -35,7 +37,7 @@ pccep(formula, data, subset, na.action,
 }
 
 \value{
-An object of class \code{c("pccep","panelmodel")} containing:
+An object of class \code{c("pcce","panelmodel")} containing:
  \item{coefficients}{the vector of coefficients,}
  \item{residuals}{the vector of residuals,}
  \item{fitted.values}{the vector of fitted.values,}
@@ -52,10 +54,10 @@ An object of class \code{c("pccep","panelmodel")} containing:
 }
   
 \details{
-\code{pccep} is a function for the estimation of linear panel models by the
-Common Correlated Effects Pooled estimator, consistent under the
+\code{pcce} is a function for the estimation of linear panel models by the
+Common Correlated Effects Mean Groups or Pooled estimator, consistent under the
 hypothesis of unobserved common factors and idiosyncratic factor
-loadings; the CCEP estimator works by augmenting the model by
+loadings; CCE estimators works by augmenting the model by
 cross-sectional averages of the dependent variable and regressors in
 order to account for the common factors, and adding individual
 intercepts and possibly trends.
@@ -71,7 +73,7 @@ non-stationary multifactor error structures, \emph{Journal of
 
 \examples{
 data("Produc", package = "plm")
-ccepmod <- pccep(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc)
+ccepmod <- pcce(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model="p")
 summary(ccepmod)
 }
 

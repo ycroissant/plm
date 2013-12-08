@@ -1,4 +1,4 @@
-export(plm, pvcm, pgmm, pggls, pht, pccep, pmg, plm.data, plmtest, phtest, pFtest, 
+export(plm, pvcm, pgmm, pggls, pht, pcce, pmg, plm.data, plmtest, phtest, pFtest, 
        pvar, pdim, pooltest, dynformula, sargan, mtest, ercomp, pvcovHC,
        pbsytest, pdwtest, pbgtest, pbltest, pwartest, pwtest, pwfdtest, pcdtest,
        pdata.frame, between, Between, Within, pFormula, pmodel.response,
@@ -70,9 +70,9 @@ S3method(print, summary.pvcm)
 #pggls
 S3method(summary, pggls)
 S3method(print, summary.pggls)
-#pccep
-S3method(summary, pccep)
-S3method(print, summary.pccep)
+#pcce
+S3method(summary, pcce)
+S3method(print, summary.pcce)
 #pmg
 S3method(summary, pmg)
 S3method(print, summary.pmg)
@@ -142,7 +142,8 @@ S3method(pwfdtest, panelmodel)
 # pcdtest
 S3method(pcdtest, formula)
 S3method(pcdtest, panelmodel)
-#purtest
+S3method(pcdtest, pseries)
+# purtest
 S3method(print, purtest)
 S3method(summary, purtest)
 S3method(print, summary.purtest)

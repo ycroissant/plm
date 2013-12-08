@@ -1,6 +1,12 @@
+#pmg<-function(formula,index,tindex=NULL,data=ls(),type=c("mg","cmg","dmg")) {
   ## Mean Group estimator
   ## ref. Coakley, Fuertes and Smith 2004
-  ## this version 7: output matrix of individual coefficients as 'indcoef'
+  ##
+  ## This version 10:
+  ##   added R2=1-var(resid)/var(y) as a measure of fit
+  ## from version 9:
+  ##   fixed residuals
+  ##   output matrix of individual coefficients as 'indcoef' aptly named
 
   ## NB the effect of including a trend is exactly the same as for
   ## including as.numeric(<timeindex>) in the model specification
@@ -18,6 +24,14 @@
   ## TODO: manage models without intercept in cmg, dmg
 
   ## TODO: output single coefs (see how the structure of pvcm is)
+
+## needed for standalone operation:
+#plm <- plm:::plm
+#pdim <- plm:::pdim
+
+#model.matrix.plm<-plm:::model.matrix.plm
+#pmodel.response<-plm:::pmodel.response.plm
+
 
 pmg <- function (formula, data, subset, na.action,
                  model = c("mg","cmg","dmg"), index = NULL,
@@ -85,7 +99,7 @@ pmg <- function (formula, data, subset, na.action,
   ## "pre-allocate" coefficients matrix for the n models
   kt <- if(trend) 1 else 0
   tcoef<-matrix(NA,nrow=k+kt,ncol=n)
-
+  tres <- vector("list", n)
 
   switch(match.arg(model),
     mg={
@@ -95,8 +109,10 @@ pmg <- function (formula, data, subset, na.action,
         tX<-X[ind==unind[i],]
         ty<-y[ind==unind[i]]
         if(trend) tX <- cbind(tX, 1:(dim(tX)[[1]]))
-        tcoef[,i]<-lm.fit(tX,ty)$coef
-        }
+        tfit <- lm.fit(tX,ty)
+        tcoef[,i] <- tfit$coefficients
+        tres[[i]] <- tfit$residuals
+    }
       ## 'trend' always comes last
       if(trend) coef.names <- c(coef.names, "trend")
       ## adjust k
@@ -123,7 +139,9 @@ pmg <- function (formula, data, subset, na.action,
 
         if(trend) taugX <- cbind(taugX, 1:(dim(taugX)[[1]]))
 
-        tcoef0[,i]<-lm.fit(taugX,ty)$coef
+        tfit <- lm.fit(taugX,ty)
+        tcoef0[,i] <- tfit$coefficients
+        tres[[i]] <- tfit$residuals
         }
       tcoef <- tcoef0[1:k,]
       tcoef.bar <- tcoef0[-(1:k),]
@@ -161,8 +179,10 @@ pmg <- function (formula, data, subset, na.action,
         tdemX<-demX[ind==unind[i],]
         tdemy<-demy[ind==unind[i]]
         if(trend) tdemX <- cbind(tdemX, 1:(dim(tdemX)[[1]]))
-        tcoef[,i]<-lm.fit(tdemX,tdemy)$coef
-        }
+        tfit <- lm.fit(tdemX,tdemy)
+        tcoef[,i] <- tfit$coefficients
+        tres[[i]] <- tfit$residuals
+      }
       ## 'trend' always comes last
       if(trend) coef.names <- c(coef.names, "trend")
       ## adjust k
@@ -186,24 +206,29 @@ pmg <- function (formula, data, subset, na.action,
     ######### na.omit=T in apply was the big problem!!
 
     ## code as in pggls, only difference is here there is no 'sigma'
-    residuals <- as.vector(y) - as.vector(crossprod(t(X), coef[1:(dim(X)[[2]])]))
+    residuals <- unlist(tres)
+    ##was: as.vector(y) - as.vector(crossprod(t(X), coef[1:(dim(X)[[2]])]))
     df.residual <- nrow(X) - ncol(X)
     fitted.values <- y - residuals
+
+    ## R2 as 1-var(res)/var(y);
+    ## originally (HPY 3.14) adjusted by *(T.-1)/(T.-2*k0-2)
+    ## but here k has expanded to include ybar, Xbar, (trend)
+    r2 <- 1-var(residuals)/var(y)*(T.-1)/(T.-k-1)
+
     names(coef) <- rownames(vcov) <- colnames(vcov) <- coef.names
-    dimnames(tcoef) <- list(coef.names, 1:dim(tcoef)[[2]])
+    dimnames(tcoef) <- list(coef.names, id.names)
     pmodel <- attr(plm.model, "pmodel")
     pmodel$model.name <- model
     mgmod <- list(coefficients = coef, residuals = residuals,
                   fitted.values = fitted.values, vcov = vcov,
-                  df.residual = df.residual,
+                  df.residual = df.residual, r.squared=r2,
                   model = model.frame(plm.model), sigma=NULL,
                   indcoef = tcoef, call = cl)
     mgmod <- structure(mgmod, pdim = pdim, pmodel = pmodel)
     class(mgmod) <- c("pmg", "panelmodel")
     mgmod
 }
-
-## use summary and print.summary taken from pggls for now
 
 
 summary.pmg <- function(object,...){

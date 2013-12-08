@@ -1,18 +1,17 @@
 
-  ## Common Correlated Effects Pooled estimator
-  ## ref. Kapetanios, Pesaran and Yamagata JoE 2010
-  ## this version 2: polished etc.
+  ## Common Correlated Effects Pooled/MG estimators
+  ## ref. Holly, Pesaran and Yamagata JoE 158 (2010)
+  ## (also Kapetanios, Pesaran and Yamagata JoE 2010)
+  ## CCEP and CCEMG together in the same SW framework
+  ## based on generalized FEs
+
+  ## this version 3: allows for defactored (cce) or raw (standard) residuals
 
   ## NB the effect of including a trend is exactly the same as for
   ## including as.numeric(<timeindex>) in the model specification
-  ## Yet it is cleaner unless some automatic treatment of group invariant
-  ## variates is added for the CCE case (where else any group invariant
-  ## becomes perfectly collinear with the ybar, Xbar and gives NAs in coefs.
-  ## Moreover, if the panel is unbalanced then for some i the trend becomes
+  ## If the panel is unbalanced, though, then for some i the trend becomes
   ## (3,4,5, ...) instead of (1,2,3, ...); the difference is absorbed by
   ## the individual intercept, and *the group intercept* changes.
-
-  ## TODO: see last point above: treatment of invariants
 
 ## needed for standalone operation:
 #plm <- plm:::plm
@@ -22,8 +21,9 @@
 #pmodel.response<-plm:::pmodel.response.plm
 
 
-pccep <- function (formula, data, subset, na.action,
-                   residuals = c("standard", "cce", "ccemg"),
+pcce <- function (formula, data, subset, na.action,
+                   model=c("mg", "p"),
+                   residuals = c("defactored", "standard"),
                    index = NULL, trend = FALSE, ...)
 {
 
@@ -32,8 +32,7 @@ pccep <- function (formula, data, subset, na.action,
     effect <- "individual"
 
     ## record call etc.
-    model <- "ccep"
-    model.name <- "ccep"  #match.arg(model)
+    model.name <- paste("cce", match.arg(model), sep="")
     data.name <- paste(deparse(substitute(data)))
     cl <- match.call()
     plm.model <- match.call(expand.dots = FALSE)
@@ -93,12 +92,13 @@ pccep <- function (formula, data, subset, na.action,
 
   ## "pre-allocate" coefficients matrix for the n models
   tcoef<-matrix(NA,nrow=k,ncol=n)
-  ## pre-allocate residuals matrix for individual regressions
-  cceres <- matrix(NA, nrow=t, ncol=n)
-  ccemgres <- matrix(NA, nrow=t, ncol=n)
 
+  ## pre-allocate residuals lists for individual regressions
+  ## (lists allow for unbalanced panels)
+  cceres <- vector("list", n)
+  stdres <- vector("list", n)
 
-  ## CCEP estimation
+  ## CCE by-group estimation
 
     ## must put the intercept into the group-invariant part!!
     ## so first drop it from X
@@ -145,79 +145,149 @@ pccep <- function (formula, data, subset, na.action,
           XMX[,,i] <- tXMX
           XMy[,,i] <- tXMy
 
-          ## single CCE coefficients (needed for vcov)
-          tcoef[,i] <- solve(tXMX, tXMy)
+          ## single CCE coefficients
+          tb <- ginv(tXMX) %*% tXMy  #solve(tXMX, tXMy)
+          ## USED A GENERALIZED INVERSE HERE BECAUSE OF PBs WITH ECM SPECS
+          ## Notice remark in Pesaran (2006, p.977, between (27) and (28))
+          ## that XMX.i is invariant to the choice of a g-inverse for H'H
+          tcoef[,i] <- tb
+
+          ## cce (defactored) residuals as M_i(y_i - X_i * bCCEMG_i)
+          cceres[[i]] <- tMhat %*% (ty - tX %*% tb)
+          ## std. (raw) residuals as y_i - X_i * bCCEMG_i - a_i
+          ta <- mean(ty-tX)
+          stdres[[i]] <- ty - tX %*% tb - ta
         }
-
-    ## calc beta_CCEP
-    sXMX <- apply(XMX, 1:2, sum)
-    sXMy <- apply(XMy, 1:2, sum)
-    coef <- solve(sXMX, sXMy)
-
-    ## TODO: adjust model formula etc. etc.
-    ## (else breaks waldtest, update, ...)
-    ## <-- maybe not necessary here, check
 
     ## CCEMG coefs are averages across individual regressions
     ## (here: coefs of xs-variants only!)
     coefmg <- apply(tcoef, 1, mean)
 
-    ## calc CCEP covariance:
-    psi.star <- 1/N * sXMX
-
     ## make matrix of cross-products of demeaned individual coefficients
     Rmat <- array(dim=c(k, k, n))
-    demcoef <- tcoef - coefmg # coefmg gets recycled n times by column
-    for(i in 1:n) Rmat[,,i] <- XMX[,,i] %*%
-        outer(demcoef[,i], demcoef[,i]) %*% XMX[,,i]
-    ## summing over the n-dimension of the array we get the
-    ## covariance matrix of coefs
-    R.star <- 1/(n-1) * apply(Rmat, 1:2, sum) * 1/(t^2)
 
-    Sigmap.star <- solve(psi.star, R.star) %*% solve(psi.star)
-    vcov <- Sigmap.star/n
+    ## make b_i - b_CCEMG
+    demcoef <- tcoef - coefmg # coefmg gets recycled n times by column
+
+    ## calc. coef and vcov according to model
+    switch(match.arg(model), mg={
+        ## assign beta CCEMG
+        coef <- coefmg
+        for(i in 1:n) Rmat[,,i] <-  outer(demcoef[,i], demcoef[,i])
+        vcov <- 1/(n*(n-1)) * apply(Rmat, 1:2, sum)
+    }, p={
+        ## calc beta_CCEP
+        sXMX <- apply(XMX, 1:2, sum)
+        sXMy <- apply(XMy, 1:2, sum)
+        coef <- solve(sXMX, sXMy)
+
+        ## calc CCEP covariance:
+        psi.star <- 1/N * sXMX
+
+        for(i in 1:n) Rmat[,,i] <- XMX[,,i] %*%
+            outer(demcoef[,i], demcoef[,i]) %*% XMX[,,i]
+        ## summing over the n-dimension of the array we get the
+        ## covariance matrix of coefs
+        R.star <- 1/(n-1) * apply(Rmat, 1:2, sum) * 1/(t^2)
+
+        Sigmap.star <- solve(psi.star, R.star) %*% solve(psi.star)
+        vcov <- Sigmap.star/n
+
+        ## calc CCEP residuals
+        ccepres <- vector("list", n)
+        for(i in 1:n) {
+            ## must redo all this because needs b_CCEP, which is
+            ## not known at by-groups step
+            tX <- X[ind==unind[i], , drop=FALSE]
+            ty <- y[ind==unind[i]]
+            tHhat <- Hhat[ind==unind[i], , drop=FALSE]
+
+            ## if 'trend' then augment the xs-invariant component
+            if(trend) tHhat <- cbind(tHhat, 1:(dim(tHhat)[[1]]))
+
+            ## NB tHat, tMhat should be i-invariant (but for the
+            ## group size if unbalanced)
+            tMhat <- diag(1, length(ty)) -
+                tHhat %*% solve(crossprod(tHhat), t(tHhat))
+
+            ## cce residuals as M_i(y_i - X_i * bCCEP)
+            cceres[[i]] <- tMhat %*% (ty - tX %*% coef)
+            ## std. (raw) residuals as y_i - X_i * bCCEMG_i - a_i
+            ta <- mean(ty-tX)
+            stdres[[i]] <- ty - tX %*% coef - ta
+        }
+    })
+
+    ## calc. measures of fit according to model type
+    switch(match.arg(model), mg={
+
+        ## R2 as in HPY 2010: sigma2ccemg = average (over n) of variances
+        ## of defactored residuals
+        ## (for unbalanced panels, each variance is correctly normalized
+        ## by group dimension T.i)
+        ##
+        ## If balanced, would simply be
+        ## sum(unlist(cceres)^2)/(n*(T.-2*k-2))
+
+        ## pre-allocate list for individual CCEMG residual variances
+        sigma2cce.i <- vector("list", n)
+        ## average variance of defactored residuals sigma2ccemg as in
+        ## Holly, Pesaran and Yamagata, (3.14)
+        for(i in 1:n) {
+            sigma2cce.i[[i]] <- crossprod(cceres[[i]])*
+                1/(length(cceres[[i]])-2*k-2)
+        }
+        sigma2cce <- 1/n*sum(unlist(sigma2cce.i))
+
+    }, p={
+
+        ## variance of defactored residuals sigma2ccep as in Holly,
+        ## Pesaran and Yamagata, (3.15)
+        sigma2cce <- 1/(n*(T.-k-2)-k)*
+            sum(unlist(lapply(cceres, crossprod)))
+        ## is the same as sum(unlist(cceres)^2)
+
+    })
+
+    ## calc. overall R2, CCEMG or CCEP depending on 'model'
+    sigma2.i <- vector("list", n)
+    for(i in 1:n) {
+          ty <- y[ind==unind[i]]
+          sigma2.i[[i]] <- sum((ty-mean(ty))^2)/(length(ty)-1)
+      }
+    sigma2y <- mean(unlist(sigma2.i))
+    r2cce <- 1 - sigma2cce/sigma2y
 
     ## allow outputting different types of residuals
     switch(match.arg(residuals),
-           standard={
-               residuals <- as.vector(y) -
-                   as.vector(crossprod(t(X), coef))
-               }, cce={residuals <- as.vector(cceres)
-               }, ccemg={
-                   ## calc. CCEMG residuals as
-                   ## u_CCEMG = y_it - beta_CCEMG * X_it
-                   for(i in 1:n) {
-                       tX<-X[ind==unind[i], , drop=FALSE]
-                       ty<-y[ind==unind[i]]
-                       ccemgres[,i] <- ty - tX %*% coefmg
-                   }
-                   residuals <- as.vector(ccemgres)
-                   })
+           standard={residuals <- unlist(stdres)},
+           defactored={residuals <- unlist(cceres)
+          })
 
+
+    ## Final model object:
     ## code as in pggls, only difference is here there is no 'sigma'
     df.residual <- nrow(X) - ncol(X)
     fitted.values <- y - residuals
     names(coef) <- rownames(vcov) <- colnames(vcov) <- coef.names
-    dimnames(tcoef) <- list(coef.names, 1:dim(tcoef)[[2]])
+    dimnames(tcoef) <- list(coef.names, id.names)
     pmodel <- attr(plm.model, "pmodel")
     pmodel$model.name <- model
     mgmod <- list(coefficients = coef, residuals = residuals,
                   fitted.values = fitted.values, vcov = vcov,
                   df.residual = df.residual,
                   model = model.frame(plm.model), sigma=NULL,
-                  indcoef = tcoef,
+                  indcoef = tcoef, r.squared=r2cce,
                   #cceres = as.vector(cceres),
                   #ccemgres = as.vector(ccemgres),
                   call = cl)
     mgmod <- structure(mgmod, pdim = pdim, pmodel = pmodel)
-    class(mgmod) <- c("pccep", "panelmodel")
+    class(mgmod) <- c("pcce", "panelmodel")
     mgmod
 }
 
-## use summary and print.summary taken from pggls for now
 
-
-summary.pccep <- function(object,...){
+summary.pcce <- function(object,...){
   pmodel <- attr(object,"pmodel")
   std.err <- sqrt(diag(object$vcov))
   b <- object$coefficients
@@ -231,11 +301,11 @@ summary.pccep <- function(object,...){
   object$tss <- tss(y)
   object$ssr <- sum(residuals(object)^2)
   object$rsqr <- 1-object$ssr/object$tss
-  class(object) <- c("summary.pccep")
+  class(object) <- c("summary.pcce")
   return(object)
 }
 
-print.summary.pccep <- function(x,digits=max(3, getOption("digits") - 2), width = getOption("width"),...){
+print.summary.pcce <- function(x,digits=max(3, getOption("digits") - 2), width = getOption("width"),...){
   pmodel <- attr(x,"pmodel")
   pdim <- attr(x,"pdim")
   effect <- pmodel$effect
@@ -243,7 +313,7 @@ print.summary.pccep <- function(x,digits=max(3, getOption("digits") - 2), width 
   model.name <- pmodel$model.name
 #  cat(paste(effect.pggls.list[effect]," ",sep=""))
 #  cat(paste(model.pggls.list[model.name],"\n",sep=""))
-  cat("Common Correlated Effects Pooled model")
+  cat("Common Correlated Effects model")
   cat("\nCall:\n")
   print(x$call)
   cat("\n")
@@ -257,5 +327,6 @@ print.summary.pccep <- function(x,digits=max(3, getOption("digits") - 2), width 
   cat(paste("Multiple R-squared: ",signif(x$rsqr,digits),"\n",sep=""))
   invisible(x)
 }
+
 
 

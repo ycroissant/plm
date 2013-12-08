@@ -11,7 +11,7 @@ R/has.intercept.R -text
 R/options.R -text
 R/pFormula.R -text
 R/panelmodel.R -text
-R/pccep.R -text
+R/pcce.R -text
 R/pcdtest.R -text
 R/pfunctions.R -text
 R/pggls.R -text
@@ -68,7 +68,7 @@ man/pFtest.Rd -text
 man/pbgtest.Rd -text
 man/pbltest.Rd -text
 man/pbsytest.Rd -text
-man/pccep.Rd -text
+man/pcce.Rd -text
 man/pcdtest.Rd -text
 man/pdata.frame.Rd -text
 man/pdim.Rd -text

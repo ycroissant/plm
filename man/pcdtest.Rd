@@ -10,8 +10,8 @@
 
 \usage{
 pcdtest(x, ...)
-\method{pcdtest}{panelmodel}(x, test=c("cd","sclm","lm"), w=NULL, ...)
-\method{pcdtest}{formula}(x, data, index=NULL, model=NULL, test=c("cd","sclm","lm"), w=NULL, ...)
+\method{pcdtest}{panelmodel}(x, test=c("cd","sclm","lm","rho","absrho"), w=NULL, ...)
+\method{pcdtest}{formula}(x, data, index=NULL, model=NULL, test=c("cd","sclm","lm","rho","absrho"), w=NULL, ...)
 }
 
 \arguments{
@@ -22,7 +22,8 @@ pcdtest(x, ...)
  if left to \code{NULL}, the original heterogeneous specification of Pesaran is used}
  \item{test}{the type of test statistic to be returned. One of "cd" for Pesaran's CD statistic,
   "lm" for Breusch and Pagan's original LM statistic,
-  "sclm" for the scaled version of Breusch and Pagan's LM statistic}
+  "sclm" for the scaled version of Breusch and Pagan's LM statistic, or
+ "rho", "absrho" for average (absolute) correlation coefficient}
  \item{w}{an \code{n x n} \code{matrix} describing proximity between observations, with \eqn{w_ij = a} where \eqn{a} is any number such that \code{as.logical(a)=TRUE}, if \eqn{i,j} are
  neighbours, \eqn{0} or any number \eqn{b} such that \code{as.logical(b)=FALSE} elsewhere}        
  \item{...}{further arguments to be passed on to \code{plm}, such as e.g. \code{effect} or \code{random.method}}
