@@ -77,7 +77,6 @@ swar <- function(formula, data, effect){
       z <- list(sigma2 = sigma2, theta = theta)
     }
     else{
-      cat("bon\n")
       X <- model.matrix(formula, data, rhs = 1, model = "pooling", effect = effect)
       X.m <- Tapply(X, cond, mean)
       X.sum <- apply(X, 2, tapply, cond, sum)

@@ -144,7 +144,7 @@ plm.fit <- function(formula, data, model, effect, random.method, inst.method){
                          "twoways"    = pdim$nT$n + pdim$nT$T - 1
                          )
     df <- df.residual(result) - card.fixef
-    vcov <- result$vcov * df.residual(result) /df
+    vcov <- result$vcov * df.residual(result) / df
   }
   result <- list(coefficients = coef(result),
                  vcov         = vcov,
