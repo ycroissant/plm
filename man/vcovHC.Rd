@@ -1,4 +1,5 @@
 \name{vcovHC}
+\alias{vcovHC}
 \alias{vcovHC.plm}
 \alias{vcovHC.pgmm}
 \alias{pvcovHC}

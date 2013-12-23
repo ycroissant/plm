@@ -473,8 +473,6 @@ pbltest <- function(x, data, alternative = c("twosided", "onesided"), index=NULL
   rformula <- NULL
   eval(parse(text=paste("rformula <- ~1|",gindex,sep="")))
 
-  require(nlme)
-
   ## est. MLE model
   mymod <- lme(x,data=data,random=rformula,method="ML")
 

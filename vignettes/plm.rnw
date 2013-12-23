@@ -2137,7 +2137,7 @@ else). The composite error is therefore $ u_{ij}=1b_{i1} +
 estimated by \textsc{gls} and then by \textsc{ml}
 
 <<re>>=
-
+require(nlme)
 reGLS<-plm(inv~value+capital,data=Grunfeld,model="random")
 
 reML<-lme(inv~value+capital,data=Grunfeld,random=~1|firm)
