@@ -10,16 +10,15 @@
 }
 
 \usage{
-\method{vcovHC}{plm}(x,
-                              method = c("arellano", "white1", "white2"),
-                              type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
-                              cluster = c("group","time"),
-                              ...)
-\method{vcovHC}{pgmm}(x,...)
+\method{vcovHC}{plm}(x, method = c("arellano", "white1", "white2"),
+                        type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
+                        cluster = c("group","time"), ...)
+\method{vcovHC}{pgmm}(x, ...)
 }
 
 \arguments{
-  \item{x}{an object of class \code{"plm"} which should be the result of a random effects or a within model or a model of class \code{"pgmm"},}
+  \item{x}{an object of class \code{"plm"} which should be the result of a 
+           random effects or a within model or a model of class \code{"pgmm"},}
   \item{method}{one of \code{"arellano","white1","white2"},}
   \item{type}{one of \code{"HC0","HC1","HC2","HC3","HC4"},}
   \item{cluster}{one of \code{"group","time"}}
@@ -48,14 +47,21 @@ Greene (2003), 13.7.1-2 and Wooldridge (2002), 10.7.2);
 allows a fully general structure w.r.t. heteroskedasticity and serial
 (cross-sectional) correlation.
 
-Weighting schemes are analogous to those in \code{vcovHC} in package \code{sandwich} and are justified theoretically (although in the context of the standard linear model) by MacKinnon and White (1985) and Cribari-Neto (2004) (see Zeileis, 2004).
+Weighting schemes are analogous to those in \code{vcovHC} in package
+\code{sandwich} and are justified theoretically (although in the context
+of the standard linear model) by MacKinnon and White (1985) and
+Cribari-Neto (2004) (see Zeileis, 2004).
 
 The main use of \code{vcovHC} is to be an argument to other functions,
 e.g. for Wald-type testing: as \code{vcov} to \code{coeftest()},
 \code{waldtest()} and other methods in the \code{lmtest} package; and as
-\code{vcov} to \code{linearHypothesis()} in the \code{car} package (see the examples). Notice that the \code{vcov} argument allows to supply a function (which is the safest) or a matrix (see Zeileis (2004), 4.1-2 and examples below).
+\code{vcov} to \code{linearHypothesis()} in the \code{car} package (see
+the examples). Notice that the \code{vcov} argument allows to supply a
+function (which is the safest) or a matrix (see Zeileis (2004), 4.1-2
+and examples below).
 
-A special procedure for \code{pgmm} objects, proposed by Windmeijer (2005), is also provided.
+A special procedure for \code{pgmm} objects, proposed by Windmeijer
+(2005), is also provided.
 
 }
 
@@ -69,7 +75,8 @@ Cribari-Neto, F. (2004) Asymptotic inference under heteroskedasticity
 of unknown form. \emph{Computational Statistics \& Data Analysis}
 \bold{45}, 215--233.
 
-Greene, W. H. (1993) \emph{Econometric Analysis}, 2nd ed. Macmillan Publishing Company, New York.
+Greene, W. H. (1993) \emph{Econometric Analysis}, 2nd ed. Macmillan
+Publishing Company, New York.
 
 MacKinnon, J. G. and  White H. (1985) Some heteroskedasticity-consistent
 covariance matrix estimators with improved finite sample properties.
@@ -85,7 +92,8 @@ White H. (1984) A heteroskedasticity-consistent covariance matrix and
 a direct test for heteroskedasticity. \emph{Econometrica} \bold{48},
 817--838.
 
-Wooldridge J. M. (2002) \emph{Econometric Analysis of Cross Section and Panel Data}, MIT Press, Cambridge (MA).
+Wooldridge J. M. (2002) \emph{Econometric Analysis of Cross Section and
+Panel Data}, MIT Press, Cambridge (MA).
 
 Zeileis A. (2004) Econometric Computing with HC and HAC Covariance Matrix
 Estimators. \emph{Journal of Statistical Software}, \bold{11}(10), 1--17.
@@ -97,8 +105,9 @@ URL \url{http://http://www.jstatsoft.org/v11/i10/}.
 \examples{
 library(lmtest)
 library(car)
-data("Produc", package="plm")
-zz <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc, model="random")
+data("Produc", package = "plm")
+zz <- plm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
+          data = Produc, model = "random")
 ## standard coefficient significance test
 coeftest(zz)
 ## robust significance test, cluster by group
@@ -119,10 +128,12 @@ linearHypothesis(zz, "2*log(pc)=log(emp)", vcov=vcovHC)
 
 ## Robust inference for GMM models
 data("EmplUK", package="plm")
-ar <- pgmm(dynformula(log(emp)~log(wage)+log(capital)+log(output), list(2,1,2,2)), data=EmplUK, effect="twoways", model="twosteps",
-    gmm.inst=~log(emp), lag.gmm=list(c(2,99)))
+ar <- pgmm(dynformula(log(emp) ~ log(wage) + log(capital) + log(output),
+           list(2, 1, 2, 2)), data = EmplUK, effect = "twoways",
+           model = "twosteps", gmm.inst = ~ log(emp),
+           lag.gmm = list(c(2, 99)))
 rv <- vcovHC(ar)
-mtest(ar, order=2, vcov=rv)
+mtest(ar, order = 2, vcov = rv)
 
 }
 

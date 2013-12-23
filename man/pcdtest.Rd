@@ -10,8 +10,11 @@
 
 \usage{
 pcdtest(x, ...)
-\method{pcdtest}{panelmodel}(x, test=c("cd","sclm","lm","rho","absrho"), w=NULL, ...)
-\method{pcdtest}{formula}(x, data, index=NULL, model=NULL, test=c("cd","sclm","lm","rho","absrho"), w=NULL, ...)
+\method{pcdtest}{panelmodel}(x, test = c("cd", "sclm", "lm", "rho", "absrho"),
+                             w = NULL, ...)
+\method{pcdtest}{formula}(x, data, index = NULL, model = NULL,
+                          test = c("cd", "sclm", "lm", "rho", "absrho"),
+                          w = NULL, ...)
 }
 
 \arguments{

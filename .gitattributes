@@ -1,6 +1,7 @@
 * text=auto !eol
 /DESCRIPTION -text
 /NAMESPACE -text
+/NEWS -text
 R/attributes.R -text
 R/cipstest.R -text
 R/divers.R -text
@@ -32,7 +33,6 @@ R/pvcovHC.R -text
 R/vcovBK.R -text
 R/vcovSCC.R -text
 /THANKS -text
-/changelog -text
 data/Cigar.rda -text
 data/Crime.rda -text
 data/EmplUK.rda -text

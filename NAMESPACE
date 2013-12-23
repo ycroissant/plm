@@ -3,13 +3,18 @@ export(plm, pvcm, pgmm, pggls, pht, pcce, pmg, plm.data, plmtest, phtest, pFtest
        pbsytest, pdwtest, pbgtest, pbltest, pwartest, pwtest, pwfdtest, pcdtest,
        pdata.frame, between, Between, Within, pFormula, pmodel.response,
        purtest, cipstest, vcovBK, vcovSCC, r.squared, has.intercept)
-import(stats)
-import(Formula)
-importFrom(bdsmatrix, bdsmatrix)
-importFrom(sandwich, vcovHC)
-importFrom(nlme, fixef)
-importFrom(MASS, ginv)
-importFrom(zoo, index)
+import("Formula")
+importFrom("stats", "lag")
+importFrom("bdsmatrix", "bdsmatrix")
+importFrom("sandwich", "vcovHC")
+importFrom("sandwich", "vcovHC.default")
+importFrom("sandwich", "estfun")
+importFrom("sandwich", "bread")
+importFrom("sandwich", "meatHC")
+importFrom("MASS", "ginv")
+importFrom("zoo", "index")
+importFrom("nlme", "fixef")
+
 #pFormula
 S3method(model.frame, pFormula)
 S3method(model.matrix, pFormula)

@@ -142,7 +142,8 @@ in combining cross section with time series data, \emph{Econometrica},
 
 \examples{
 data("Produc", package = "plm")
-zz <- plm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, index = c("state","year"))
+zz <- plm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
+          data = Produc, index = c("state","year"))
 summary(zz)
 }
 

@@ -43,7 +43,8 @@ An object of class \code{pvar} containing the following elements:
 data("Gasoline", package = "plm")
 pvar(Gasoline)
 
-# Hedonic is an unbalanced panel, townid is the individual index; # the drop.index argument is passed to pdata.frame
+# Hedonic is an unbalanced panel, townid is the individual index;
+# the drop.index argument is passed to pdata.frame
 data("Hedonic", package = "plm")
 pvar(Hedonic,"townid", drop.index = TRUE)
 
