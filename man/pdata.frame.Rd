@@ -38,8 +38,9 @@ pdata.frame(x, index = NULL, drop.index = FALSE, row.names = TRUE)
 }
 
 \value{
-  a \code{pdata.frame} object: this is a \code{data.frame} with an \code{index} attribute which is a \code{data.frame} with two
-  variables, the individual and the time indexes. 
+  a \code{pdata.frame} object: this is a \code{data.frame} with an
+  \code{index} attribute which is a \code{data.frame} with two
+  variables, the individual and the time indexes.
 }
 
 \details{
@@ -51,12 +52,18 @@ pdata.frame(x, index = NULL, drop.index = FALSE, row.names = TRUE)
     \item an integer,  the number of individuals in case of
     balanced panel, in this case two new variables ``time'' and ``id'' which
     contain the individual and the time indexes are added,
-    \item a vector of two character strings which contains the names of the individual and of
-    the time indexes.
+    \item a vector of two character strings which contains the names of
+    the individual and of the time indexes.
   }
 
-  The \code{index} attribute is a \code{data.frame} which contains the individual and the time indexes. The \code{"[["} and \code{"$"} extract a series from the \code{pdata.frame}. The \code{"index"} attribute is then added to the series and a class attribute \code{"pseries"} is added. The \code{"["} method behaves as for \code{data.frame}, except that the extraction is also applied to the \code{index} attribute.  \code{as.data.frame} removes the index from the \code{pdata.frame} and adds it to every series. 
-}
+  The \code{index} attribute is a \code{data.frame} which contains the
+individual and the time indexes. The \code{"[["} and \code{"$"} extract
+a series from the \code{pdata.frame}. The \code{"index"} attribute is
+then added to the series and a class attribute \code{"pseries"} is
+added. The \code{"["} method behaves as for \code{data.frame}, except
+that the extraction is also applied to the \code{index} attribute.
+\code{as.data.frame} removes the index from the \code{pdata.frame} and
+adds it to every series.  }
 
 % \seealso{
 % }

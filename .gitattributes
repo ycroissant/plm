@@ -62,6 +62,7 @@ man/cipstest.Rd -text
 man/dynformula.Rd -text
 man/ercomp.Rd -text
 man/fixef.plm.Rd -text
+man/index.plm.Rd -text
 man/mtest.Rd -text
 man/pFormula.Rd -text
 man/pFtest.Rd -text
