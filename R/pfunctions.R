@@ -532,3 +532,96 @@ index.panelmodel <- function(x, which = NULL, ...){
   anindex <- attr(x$model, "index")
   index(x = anindex, which = which)
 }
+
+
+
+pseries2pdata <- function(x) {
+  ## transforms a pseries in a dataframe with the indices as regular columns
+  indices <- attr(x, "index")
+  vx <- as.numeric(x)
+  px <- cbind(indices, vx)
+  dimnames(px)[[2]] <- c("ind","tind",deparse(substitute(x)))
+  return(pdata.frame(px, index=c("ind","tind")))
+}
+
+pmerge <- function(x, y, ...) {
+  ## transf. if pseries
+  if("pseries" %in% class(x)) x <- pseries2pdata(x)
+  if("pseries" %in% class(y)) y <- pseries2pdata(y)
+
+  z <- merge(data.frame(x), data.frame(y), by.x=dimnames(x)[[2]][1:2],
+             by.y=dimnames(y)[[2]][1:2], ...)
+
+  return(z)
+}
+
+
+## plots a panel series by time index
+##
+## can supply any panel function, e.g. a loess smoother
+## > mypanel<-function(x,...) {
+## + panel.xyplot(x,...)
+## + panel.loess(x, col="red", ...)}
+## >
+## > plot(pres(mod), panel=mypanel)
+
+plot.pseries <- function(x, plot=c("lattice", "superposed"),
+                         scale=FALSE, transparency=TRUE,
+                         col="blue", lwd=1, ...) {
+
+    if(scale) {scalefun <- function(x) scale(x)
+               } else {
+                   scalefun <- function(x) return(x)}
+
+    nx <- as.numeric(x)
+    ind <- attr(x, "index")[[1]]
+    tind <- attr(x, "index")[[2]] # possibly as.numeric():
+                                  # activates autom. tick
+                                  # but loses time labels
+
+    xdata <- data.frame(nx=nx, ind=ind, tind=tind)
+
+    switch(match.arg(plot),
+           lattice={
+
+               require(lattice) # make a ggplot2 version
+               xyplot(nx~tind|ind, data=xdata, type="l", col=col, ...)
+
+           }, superposed={
+
+                   ylim <- c(min(tapply(scalefun(nx), ind, min, na.rm=TRUE)),
+                             max(tapply(scalefun(nx), ind, max, na.rm=TRUE)))
+                   unind <- unique(ind)
+                   nx1 <- nx[ind==unind[1]]
+                   tind1 <- as.numeric(tind[ind==unind[1]])
+
+                   ## plot empty plot to provide frame
+                   plot(NA, xlim=c(min(as.numeric(tind)),
+                            max(as.numeric(tind))),
+                        ylim=ylim, xlab="", ylab="", xaxt="n", ...)
+                        #x=tind1, y=scalefun(nx1), ylim=ylim, ...)
+
+                   axis(1, at=as.numeric(unique(tind)),
+                        labels=unique(tind))
+
+                   ## determine lwd and transparency level as a function
+                   ## of n
+                   if(transparency) {
+                       alpha <- 5/length(unind)
+                       col <- heat.colors(1, alpha=alpha)
+                       lwd <- length(unind)/10
+                   }
+
+                   ## plot lines (notice: tind. are factors, so they
+                   ## retain the correct labels which would be lost if
+                   ## using as.numeric
+                   for(i in 1:length(unind)) {
+                       nxi <- nx[ind==unind[i]]
+                       tindi <- tind[ind==unind[i]]
+                       lines(x=tindi, y=scalefun(nxi),
+                             col=col, lwd=lwd, ...)
+                       }
+
+               })
+
+}

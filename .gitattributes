@@ -22,7 +22,6 @@ R/plm.R -text
 R/plm.data.R -text
 R/plm.list.R -text
 R/plm.methods.R -text
-R/pmerge.R -text
 R/pmg.R -text
 R/pserial.R -text
 R/ptest.R -text
