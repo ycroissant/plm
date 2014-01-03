@@ -19,7 +19,6 @@ R/pgmm.R -text
 R/pgmm.methods.R -text
 R/pht.R -text
 R/plm.R -text
-R/plm.data.R -text
 R/plm.list.R -text
 R/plm.methods.R -text
 R/pmg.R -text
