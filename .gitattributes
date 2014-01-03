@@ -8,7 +8,6 @@ R/divers.R -text
 R/dynformula.R -text
 R/ercomp.R -text
 R/fixef.R -text
-R/has.intercept.R -text
 R/options.R -text
 R/pFormula.R -text
 R/panelmodel.R -text
