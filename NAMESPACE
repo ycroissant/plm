@@ -1,4 +1,4 @@
-export(plm, pvcm, pgmm, pggls, pht, pcce, pmg, plm.data, plmtest, phtest, pFtest, 
+export(plm, pvcm, pgmm, pggls, pht, pcce, pmg, plmtest, phtest, pFtest, 
        pvar, pdim, pooltest, dynformula, sargan, mtest, ercomp, pvcovHC,
        pbsytest, pdwtest, pbgtest, pbltest, pwartest, pwtest, pwfdtest, pcdtest,
        pdata.frame, between, Between, Within, pFormula, pmodel.response,

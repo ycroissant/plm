@@ -26,7 +26,7 @@ pvcm(formula, data, subset, na.action, effect = c("individual","time"),
   \item{effect}{the effects introduced in the model: one of
     \code{"individual"}, \code{"time"},}
   \item{model}{one of \code{"within"}, \code{"random"},}
-  \item{index}{the indexes, see \code{\link{plm.data}},}
+  \item{index}{the indexes, see \code{\link{pdata.frame}},}
   \item{digits}{digits,}
   \item{width}{the maximum length of the lines in the print output,}
   \item{...}{further arguments.}

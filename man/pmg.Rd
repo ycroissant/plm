@@ -27,7 +27,7 @@ pmg(formula, data, subset, na.action,
  \item{subset}{see \code{lm},}
  \item{na.action}{see \code{lm},}
  \item{model}{one of \code{c("mg", "cmg","dmg")},}
- \item{index}{the indexes, see \code{\link{plm.data}},}
+ \item{index}{the indexes, see \code{\link{pdata.frame}},}
  \item{trend}{logical specifying whether an individual-specific trend has to be included,}
  \item{digits}{digits,}
  \item{width}{the maximum length of the lines in the print output,}

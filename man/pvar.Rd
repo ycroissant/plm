@@ -18,7 +18,7 @@ pvar(x, ...)
 
 \arguments{
  \item{x}{a \code{data.frame},}
- \item{index}{see \code{\link{plm.data}},}
+ \item{index}{see \code{\link{pdata.frame}},}
  \item{\dots}{further arguments.}
 }
 

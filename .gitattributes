@@ -76,7 +76,6 @@ man/pgmm.Rd -text
 man/pht.Rd -text
 man/phtest.Rd -text
 man/plm.Rd -text
-man/plm.data.Rd -text
 man/plmtest.Rd -text
 man/pmg.Rd -text
 man/pmodel.response.Rd -text
