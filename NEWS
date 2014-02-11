@@ -451,3 +451,10 @@ Changes sinve version 1.3-1
 
 	* a small bug is fixed on the var2lev function to deal the case when there are no factors
 	
+
+Changes since version 1.4-0 
+
+	* substituted vcovHC, vcovSCC with the new framework based on vcovG and wrapper functions
+
+
+	

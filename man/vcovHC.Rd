@@ -12,7 +12,7 @@
 
 \usage{
 \method{vcovHC}{plm}(x, method = c("arellano", "white1", "white2"),
-                        type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
+                        type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
                         cluster = c("group","time"), ...)
 \method{vcovHC}{pgmm}(x, ...)
 }
@@ -21,7 +21,7 @@
   \item{x}{an object of class \code{"plm"} which should be the result of a 
            random effects or a within model or a model of class \code{"pgmm"},}
   \item{method}{one of \code{"arellano","white1","white2"},}
-  \item{type}{one of \code{"HC0","HC1","HC2","HC3","HC4"},}
+  \item{type}{one of \code{"HC0","sss","HC1","HC2","HC3","HC4"},}
   \item{cluster}{one of \code{"group","time"}}
   \item{\dots}{further arguments.}
 }

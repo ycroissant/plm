@@ -26,9 +26,8 @@ R/pserial.R -text
 R/ptest.R -text
 R/purtest.R -text
 R/pvcm.R -text
-R/pvcovHC.R -text
 R/vcovBK.R -text
-R/vcovSCC.R -text
+R/vcovG.R -text
 /THANKS -text
 data/Cigar.rda -text
 data/Crime.rda -text

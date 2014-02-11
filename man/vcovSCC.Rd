@@ -9,15 +9,23 @@
   correlation.
   }
 \usage{
-\method{vcovSCC}{plm}(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
-                              maxlag=NULL, ...)
+\method{vcovSCC}{plm}(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
+                      cluster="time",
+                      maxlag=NULL,
+                      inner=c("cluster","white"),
+                      wj=function(j, maxlag) 1-j/(maxlag+1),
+                      ...)
 }
 
 \arguments{
   \item{x}{an object of class \code{"plm"}}
-  \item{type}{one of \code{"HC0","HC1","HC2","HC3","HC4"},}
+  \item{type}{one of \code{"HC0","sss","HC1","HC2","HC3","HC4"},}
+  \item{cluster}{switch for vcovG; set at \code{"time"} here,}
   \item{maxlag}{either \code{NULL} or a positive integer specifying the
   maximum lag order before truncation}
+  \item{inner}{the function to be applied to the residuals inside the 
+  sandwich: \code{"cluster"} for SCC, \code{"white"} for Newey-West,}
+  \item{wj}{weighting function to be applied to lagged terms,}
   \item{...}{further arguments}.
 }
 
