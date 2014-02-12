@@ -457,4 +457,8 @@ Changes since version 1.4-0
 	* substituted vcovHC, vcovSCC with the new framework based on vcovG and wrapper functions
 
 
+Changes since version 1.5-0 
+
+	* added generic building block and high-level wrappers vcovNW and vcovDC to the namespace
+
 	

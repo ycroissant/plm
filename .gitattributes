@@ -26,7 +26,6 @@ R/pserial.R -text
 R/ptest.R -text
 R/purtest.R -text
 R/pvcm.R -text
-R/vcovBK.R -text
 R/vcovG.R -text
 /THANKS -text
 data/Cigar.rda -text
@@ -89,7 +88,10 @@ man/pwtest.Rd -text
 man/r.squared.Rd -text
 man/sargan.Rd -text
 man/vcovBK.Rd -text
+man/vcovDC.Rd -text
+man/vcovG.Rd -text
 man/vcovHC.Rd -text
+man/vcovNW.Rd -text
 man/vcovSCC.Rd -text
 tests/testErrors.R -text
 tests/testErrors.Rout.save -text
