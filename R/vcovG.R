@@ -28,7 +28,7 @@ vcovG <- function(x, ...) {
 
 
 vcovG.plm <-function(x,type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
-                     cluster=c("group","time"),
+                      cluster=c("group","time"),
                      l=0,
                      inner=c("cluster","white"),
                      ...) {
@@ -79,32 +79,27 @@ vcovG.plm <-function(x,type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
                             HC4 = {diaghat<-try(dhat(demX), silent = TRUE)})
     df <- nT - k
     switch(match.arg(type), HC0 = {
-            omega <- function(residuals, diaghat, df) residuals
+            omega <- function(residuals, diaghat, df, g) residuals
         }, sss = {
-            omega <- function(residuals, diaghat, df) residuals *
-                sqrt(n/(n-1)*((nT-1)/(nT-k)))
+            omega <- function(residuals, diaghat, df, g) residuals *
+                sqrt(g/(g-1)*((nT-1)/(nT-k)))
         }, HC1 = {
-            omega <- function(residuals, diaghat, df) residuals *
+            omega <- function(residuals, diaghat, df, g) residuals *
                 sqrt(length(residuals)/df)
         }, HC2 = {
-            omega <- function(residuals, diaghat, df) residuals /
+            omega <- function(residuals, diaghat, df, g) residuals /
                 sqrt(1 - diaghat)
         }, HC3 = {
-            omega <- function(residuals, diaghat, df) residuals /
+            omega <- function(residuals, diaghat, df, g) residuals /
                 (1 - diaghat)
         }, HC4 = {
-            omega <- function(residuals, diaghat, df) {
+            omega <- function(residuals, diaghat, df, g) {
                 residuals/sqrt(1 - diaghat)^
                  pmin(4, length(residuals) *
                       diaghat/as.integer(round(sum(diaghat),
                 digits = 0)))
             }
         })
-
-  ## transform residuals by weights
-  uhat<-omega(uhat,diaghat,df)
-
-  ## CODE TAKEN FROM pvcovHC() UNTIL HERE except for ind/time labeling ##
 
   ## Definition module for E(u,v)
     if(is.function(inner)) {
@@ -163,6 +158,17 @@ vcovG.plm <-function(x,type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
     }
 
   ## now lab is the 'labels' (a numeric, actually) for the relevant index
+
+  ## transform residuals by weights (here because type='sss' needs to
+  ## know who the grouping index 'g' is
+
+  ## set number of clusters for Stata-like small sample correction
+  ## (if clustering, i.e. inner="cluster", then G is the cardinality of
+  ## the grouping index; if inner="white" it is simply the sample size)
+    ## find some more elegant solution for this!
+    ## (perhaps if white then sss->HC1 but check...)
+  G <- if(match.arg(inner)=="white") nT else n
+  uhat<-omega(uhat, diaghat, df, G)
 
   ## (code partly taken from pggls)
 
@@ -245,6 +251,7 @@ vcovG.plm <-function(x,type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 
     return(mycov)
 }
+
 
 #################################################################
 
@@ -333,7 +340,7 @@ vcovBK.plm <-function(x,type=c("HC0", "HC1", "HC2", "HC3", "HC4"),
                       cluster=c("group","time"),
                       diagonal=FALSE, ...) {
 
-  ## Robust vcov à la Beck and Katz (1995; AKA 'pcse')
+  ## Robust vcov \E0 la Beck and Katz (1995; AKA 'pcse')
   ## for panel models (pooling, random, within or fd type plm obj.)
   ##
   ## This version: October 20th, 2009; allows choosing the clustering dimension

@@ -36,6 +36,7 @@ data/Grunfeld.rda -text
 data/Hedonic.rda -text
 data/LaborSupply.rda -text
 data/Males.rda -text
+data/Parity.rda -text
 data/Produc.rda -text
 data/Snmesp.rda -text
 data/SumHes.rda -text
@@ -49,6 +50,7 @@ man/Grunfeld.Rd -text
 man/Hedonic.Rd -text
 man/LaborSupply.Rd -text
 man/Males.Rd -text
+man/Parity.Rd -text
 man/Produc.Rd -text
 man/Snmesp.Rd -text
 man/SumHes.Rd -text
