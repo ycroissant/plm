@@ -461,4 +461,10 @@ Changes since version 1.5-0
 
 	* added generic building block and high-level wrappers vcovNW and vcovDC to the namespace
 
+	* dataset Parity added to /data
+
 	
+Changes since version 1.5-1
+
+	* fixed "already a pdata.frame" bug in pcdtest.formula 
+

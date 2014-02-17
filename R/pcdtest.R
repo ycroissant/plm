@@ -40,8 +40,8 @@ pcdtest.formula <-
 function (x, data, index = NULL, model = NULL, test = c("cd",
     "sclm", "lm", "rho", "absrho"), w = NULL, ...)
 {
-    data <- pdata.frame(data, index = index)
-    mymod <- plm(x, data, model = "pooling")
+    #data <- pdata.frame(data, index = index)
+    mymod <- plm(x, data, index=index, model = "pooling", ...)
     if (is.null(model) & min(pdim(mymod)$Tint$Ti) < length(mymod$coefficients) +
         1) {
         warning("Insufficient number of observations in time to estimate heterogeneous model: using within residuals",
@@ -78,8 +78,9 @@ function (x, data, index = NULL, model = NULL, test = c("cd",
             names(tres[[i]]) <- tind[ind == unind[i]]
         }
     }
-    return(pcdres(tres = tres, n = n, w = w, form = paste(deparse(substitute(x))),
-        test = match.arg(test)))
+    return(pcdres(tres = tres, n = n, w = w,
+                  form = paste(deparse(substitute(x))),
+                  test = match.arg(test)))
 }
 
 
