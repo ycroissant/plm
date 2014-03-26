@@ -148,7 +148,8 @@ pggls <- function(formula, data, subset, na.action,
     pmodel$model.name <- model
     fullGLS <- list(coefficients = coef, residuals = residuals,
         fitted.values = fitted.values, vcov = vcov, df.residual = df.residual,
-        model = model.frame(plm.model), sigma = subOmega, call = cl)
+        model = model.frame(plm.model), sigma = subOmega, call = cl,
+        formula = plm.model$formula )
     fullGLS <- structure(fullGLS, pdim = pdim, pmodel = pmodel)
     class(fullGLS) <- c("pggls", "panelmodel")
     fullGLS

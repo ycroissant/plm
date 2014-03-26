@@ -84,6 +84,7 @@ S3method("summary", "pht")
 S3method("print", "summary.pht")
 #fixef
 S3method("fixef", "plm")
+S3method("fixef", "pggls")
 S3method("print", "fixef")
 S3method("summary", "fixef")
 S3method("print", "summary.fixef")

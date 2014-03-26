@@ -468,3 +468,6 @@ Changes since version 1.5-1
 
 	* fixed "already a pdata.frame" bug in pcdtest.formula 
 
+        * implemented fixef() method for objects estimated by pggls()
+ 
+

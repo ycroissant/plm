@@ -68,4 +68,6 @@ summary.fixef <- function(object, ...){
 print.summary.fixef <- function(x,digits= max(3, getOption("digits") - 2),width=getOption("width"),...){
   printCoefmat(x,digits=digits)
 }
-  
+
+fixef.pggls <- fixef.plm
+
