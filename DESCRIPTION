@@ -6,7 +6,8 @@ Authors@R: c(person(given = "Yves", family = "Croissant", role = c("aut", "cre")
              person(given = "Giovanni", family = "Millo", role = "aut", email = "Giovanni_Millo@Generali.com"),
 	     person(given = "Ott", family = "Toomet", role = "ctb", email = "otoomet@gmail.com"),
 	     person(given = "Christian", family = "Kleiber", role = "ctb", email = "Christian.Kleiber@unibas.ch"), 
-	     person(given = "Achim", family = "Zeileis", role = "ctb", email = "Achim.Zeileis@R-project.org"))
+	     person(given = "Achim", family = "Zeileis", role = "ctb", email = "Achim.Zeileis@R-project.org"),
+	     person(given = "Arne", family = "Henningsen", role = "ctb", email = "arne.henningsen@googlemail.com"))
 Depends: R (>= 2.10), Formula (>= 0.2-0), stats
 Imports: MASS, bdsmatrix, zoo, nlme, sandwich
 Suggests: lattice, car, AER, lmtest
