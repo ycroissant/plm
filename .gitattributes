@@ -19,6 +19,7 @@ R/pgmm.R -text
 R/pgmm.methods.R -text
 R/pht.R -text
 R/plm.R -text
+R/plm.data.R -text
 R/plm.list.R -text
 R/plm.methods.R -text
 R/pmg.R -text
@@ -76,6 +77,7 @@ man/pgmm.Rd -text
 man/pht.Rd -text
 man/phtest.Rd -text
 man/plm.Rd -text
+man/plm.data.Rd -text
 man/plmtest.Rd -text
 man/pmg.Rd -text
 man/pmodel.response.Rd -text
