@@ -471,3 +471,13 @@ Changes since version 1.5-1
         * implemented fixef() method for objects estimated by pggls()
  
 
+Changes since version 1.5-3
+
+	* reintroduced plm.data eliminated by mistake 
+
+
+Changes since version 1.5-4
+
+	* fixed testErrors.R with plm.data instead of pdata.frame 
+
+
