@@ -196,12 +196,13 @@ vcovG.plm <-function(x,type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 
     ## array of X_i, u_i subsets
     ## for each group 1..n
-    ## (use subscripting from condition 'label in labels' set',
-    ## the rest stays NA if any so mean(na.rm=TRUE will work)
+    ## (if unbalanced, uses correct positions; the rest stays NA and
+    ## will be selected later)
     for(i in (1+l):n) {
         ## check 'occupied' positions (for both i and i-l)
-        tpos<-(1:t)[unique(lab) %in% tlab[[i]]]
-        tposl<-(1:t)[unique(lab) %in% tlab[[i-l]]]
+        ## (all, i.e. 1:t, if balanced)
+        tpos <- tlab[[i]]
+        tposl <- tlab[[i-l]]
 
         X[tpos, , i-l] <- demX[tind[[i]], ]
         Xl[tposl, , i-l] <- demX[tind[[i-l]],]
@@ -218,8 +219,11 @@ vcovG.plm <-function(x,type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 
     ## populate Sl
     for(i in 1:(n-l)) {
-        Eu <- E(u[,,i], ul[,,i])
-        Sl[,,i] <- crossprod(X[,,i], Eu) %*% Xl[,,i]
+        ## select non-NA rows
+        tlb <- tlab[[i+l]] 
+        tlbl <- tlab[[i]]
+        Eu <- E(u[tlb, , i], ul[tlbl, , i])
+        Sl[, , i] <- crossprod(X[tlb, , i], Eu) %*% Xl[tlbl, , i]
     }
 
     ## in order to sum on available observations two things can be done:
@@ -227,7 +231,7 @@ vcovG.plm <-function(x,type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
     ## b) apply mean(..., na.rm=TRUE) idem and multiply by n-l
     ## In case a) averaging is then done dividing each covariance point
     ## by (n-l), regardless of whether there are NAs in the "vertical"
-    ## vector Sl[p,q, ]
+    ## vector Sl[p,q, ] (but notice, here there should be none left!).
     ## In case b) each mean is calculated correctly on the right number
     ## of observations, excluding missing data. 'salame' has to be
     ## multiplied by (n-l)
