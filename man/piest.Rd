@@ -45,10 +45,8 @@ Chamberlain, G. (1982). Multivariate regression for panel data,
   
 \examples{
 data("RiceFarms", package = "pder")
-pirice <- piest(
-re <- plm(form, data = Gasoline, model = "random")
-piest(log(goutput) ~ log(seed) + log(totlabor) + log(size), RiceFarms, index = "id")
-summary(piest)
+pirice <- piest(log(goutput) ~ log(seed) + log(totlabor) + log(size), RiceFarms, index = "id")
+summary(pirice)
 }
 
 \keyword{piest}

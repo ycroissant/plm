@@ -74,10 +74,9 @@ aneweytest <-  function(formula, data, subset, na.action, index = NULL,  ...){
   aneweytest
 }
 
-piest <-  function(formula, data, subset, na.action, model = "piest", index = NULL, robust = TRUE,  ...){
+piest <-  function(formula, data, subset, na.action, index = NULL, robust = TRUE,  ...){
   cl <- match.call(expand.dots = TRUE)
   mf <- match.call()
-  model <- match.arg(model)
   # compute the model.frame using plm with model = NA
   mf[[1]] <- as.name("plm")
   mf$model <- NA

@@ -3,7 +3,7 @@ export(plm, pvcm, pgmm, pggls, pht, pcce, pmg, plmtest, phtest, pFtest,
        pbsytest, pdwtest, pbgtest, pbltest, pwartest, pwtest, pwfdtest, pcdtest,
        plm.data, pdata.frame, between, Between, Within, pFormula, pmodel.response,
        purtest, cipstest, vcovBK, vcovSCC, r.squared, has.intercept,
-       index, fixef, vcovHC, vcovDC, vcovNW, vcovG)
+       index, fixef, vcovHC, vcovDC, vcovNW, vcovG, piest, aneweytest)
 import("Formula")
 importFrom("stats", "lag")
 importFrom("bdsmatrix", "bdsmatrix")
@@ -82,6 +82,9 @@ S3method("print", "summary.pmg")
 #pht
 S3method("summary", "pht")
 S3method("print", "summary.pht")
+#piest
+S3method("summary", "piest")
+S3method("print", "summary.piest")
 #fixef
 S3method("fixef", "plm")
 S3method("fixef", "pggls")
