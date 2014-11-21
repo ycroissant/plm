@@ -18,6 +18,7 @@ R/pggls.R -text
 R/pgmm.R -text
 R/pgmm.methods.R -text
 R/pht.R -text
+R/piest.R -text
 R/plm.R -text
 R/plm.data.R -text
 R/plm.list.R -text
@@ -56,6 +57,7 @@ man/Produc.Rd -text
 man/Snmesp.Rd -text
 man/SumHes.Rd -text
 man/Wages.Rd -text
+man/aneweytest.Rd -text
 man/cipstest.Rd -text
 man/dynformula.Rd -text
 man/ercomp.Rd -text
@@ -76,6 +78,7 @@ man/pggls.Rd -text
 man/pgmm.Rd -text
 man/pht.Rd -text
 man/phtest.Rd -text
+man/piest.Rd -text
 man/plm.Rd -text
 man/plm.data.Rd -text
 man/plmtest.Rd -text
