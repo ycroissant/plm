@@ -72,7 +72,7 @@ pggls <- function(formula, data, subset, na.action,
         groupsdim <- Ti
     }
     myord <- order(cond, other)
-    X <- model.matrix(plm.model)[myord, ]
+    X <- model.matrix(plm.model)[myord, , drop=FALSE]
     y <- pmodel.response(plm.model)[myord]
 
     resid <- resid(lm.fit(X,y))

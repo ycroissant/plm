@@ -147,21 +147,22 @@ vcovG.plm <-function(x,type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
            n <- n0
            t <- t0
            relevant.ind <- groupind
-           lab <- timeind
+           #lab <- timeind
          }, time = {
            n <- t0
            t <- n0
            relevant.ind <- timeind
-           lab <- groupind
+           #lab <- groupind
          })
     tind <- vector("list", n)
-    tlab <- vector("list", n)
+    #tlab <- vector("list", n)
     for (i in 1:length(unique(relevant.ind))) {
         tind[[i]] <- which(relevant.ind==i)
-        tlab[[i]] <- lab[which(relevant.ind==i)]
+        #tlab[[i]] <- lab[which(relevant.ind==i)]
     }
 
-  ## now lab is the 'labels' (a numeric, actually) for the relevant index
+  ## lab were the 'labels' (a numeric, actually) for the relevant index;
+  ## not used any more.
 
   ## transform residuals by weights (here because type='sss' needs to
   ## know who the grouping index 'g' is
@@ -174,89 +175,50 @@ vcovG.plm <-function(x,type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
   G <- if(match.arg(inner)=="white") nT else n
   uhat<-omega(uhat, diaghat, df, G)
 
-  ## (code partly taken from pggls)
-
-    ## compute basic block: X'_t u_t u'_(t-l) X_(t-l) foreach t
+  ## compute basic block: X'_t u_t u'_(t-l) X_(t-l) foreach t,
+  ## then calculate Sl_t and sum over t (here i in place of t)
 
     ## here the benchmark case is time-clustering, but beware
     ## that group-clustering is the default
-
-    ## "pre-allocate" arrays for X_t, X_(t-l), u_t, u_(t-l)
-    ## where third dimension is (t-l)
-    ## NB indices swapped here! X_i is txk, u_i is tx1
-
-    ## (l=0 gives the special contemporaneous case where Xi=Xil, ui=uil
-    ## for computing W, CX, CT)
-
-    X <- array(dim=c(t,k,n-l))
-    Xl <- array(dim=c(t,k,n-l))
-
-    u <- array(dim=c(t,1,n-l)) # was: tres
-    ul <- array(dim=c(t,1,n-l))
-
-    ## array of X_i, u_i subsets
-    ## for each group 1..n
-    ## (if unbalanced, uses correct positions; the rest stays NA and
-    ## will be selected later)
-    for(i in (1+l):n) {
-        ## check 'occupied' positions (for both i and i-l)
-        ## (all, i.e. 1:t, if balanced)
-        tpos <- tlab[[i]]
-        tposl <- tlab[[i-l]]
-
-        X[tpos, , i-l] <- demX[tind[[i]], ]
-        Xl[tposl, , i-l] <- demX[tind[[i-l]],]
-
-        u[tpos, 1 , i-l] <- uhat[tind[[i]]]
-        ul[tposl, 1, i-l] <- uhat[tind[[(i-l)]]]
-      }
 
     ## preallocate k x k x (T-l) array for 'pile' of kxk matrices
     ## holding the X' E(u,ul) X elements
     Sl <- array(dim=c(k, k, n-l))
 
-    ## calculate V_yy:
+    ## (l=0 gives the special contemporaneous case where Xi=Xil, ui=uil
+    ## for computing W, CX, CT)
 
-    ## populate Sl
-    for(i in 1:(n-l)) {
-        ## select non-NA rows
-        tlb <- tlab[[i+l]] 
-        tlbl <- tlab[[i]]
-        Eu <- E(u[tlb, , i], ul[tlbl, , i])
-        Sl[, , i] <- crossprod(X[tlb, , i], Eu) %*% Xl[tlbl, , i]
+    for(i in (1+l):n) {
+        X <- demX[tind[[i]], , drop=FALSE]
+        Xl <- demX[tind[[i-l]], , drop=FALSE]
+        u <- uhat[tind[[i]]]
+        ul <- uhat[tind[[(i-l)]]]
+        ## calculate V_yy
+        Sl[, , i-l] <- crossprod(X, E(u, ul)) %*% Xl
     }
-
+        
     ## in order to sum on available observations two things can be done:
     ## a) apply sum(..., na.rm=TRUE) over the third dim
     ## b) apply mean(..., na.rm=TRUE) idem and multiply by n-l
     ## In case a) averaging is then done dividing each covariance point
     ## by (n-l), regardless of whether there are NAs in the "vertical"
-    ## vector Sl[p,q, ] (but notice, here there should be none left!).
+    ## vector Sl[p,q, ]
     ## In case b) each mean is calculated correctly on the right number
     ## of observations, excluding missing data. 'salame' has to be
     ## multiplied by (n-l)
+    ## But notice, here there should be none left! Each Sl_i is k x k.
+    ## Hence use sum().
 
     ## meat
-    salame <- apply(Sl, 1:2, mean, na.rm=TRUE) * (n-l)
-
-    ## bread by mean(X'X) method
-    #X0 <- array(dim=c(k,k,n))
-    #Xi <- array(dim=c(t,k,n))
-    #for(i in 1:n) {
-    #    ## check 'occupied' positions (for both i and i-l)
-    #    tpos<-(1:t)[unique(lab) %in% tlab[[i]]]
-    #    Xi[tpos, , i] <- demX[tind[[i]], ]
-    #    X0[,,i] <- crossprod(Xi[,,i])
-    #  }
-
-    #pane<-solve(apply(X0, 1:2, mean, na.rm=TRUE))
+    ## salame <- apply(Sl, 1:2, mean, na.rm=TRUE) * (n-l)
+    salame <- apply(Sl, 1:2, sum)
 
     ## bread by standard method
     pane <- solve(crossprod(demX))
 
     ## sandwich
-    mycov <- pane %*% salame %*% pane  #*1/n instead of n if mean(X'X)
-
+    mycov <- pane %*% salame %*% pane
+    
     return(mycov)
 }
 
