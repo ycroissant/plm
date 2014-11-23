@@ -21,7 +21,8 @@ plm(formula, data, subset, na.action, effect = c("individual","time","twoways"),
 \method{summary}{plm}(object, .vcov = NULL, ...)
 \method{print}{summary.plm}(x, digits = max(3, getOption("digits") - 2),
     width = getOption("width"), subset = NULL, ...)
-\method{plot}{plm}(x, dx = 1, N = NULL, ...)
+\method{plot}{plm}(x, dx = 0.2, N = NULL, seed = 1,
+    within = TRUE, pooling = TRUE, between = FALSE, random = FALSE, ...)
 }
 
 \arguments{
@@ -49,8 +50,13 @@ plm(formula, data, subset, na.action, effect = c("individual","time","twoways"),
   \item{digits}{digits,}
   \item{width}{the maximum length of the lines in the printed  output,}
   \item{dx}{the half-length of the individual lines for the plot
-    method,}
+    method (relative to x range),}
   \item{N}{the number of individual to plot,}
+  \item{seed}{the seed which will lead to individual selection,}
+  \item{within}{if \code{TRUE}, the within model is ploted,}
+  \item{pooling}{if \code{TRUE}, the pooling model is ploted,}
+  \item{between}{if \code{TRUE}, the between model is ploted,}
+  \item{random}{if \code{TRUE}, the random effect model is ploted,}
   \item{\dots}{further arguments.}
 }
 

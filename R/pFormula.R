@@ -136,22 +136,20 @@ pmodel.response.pFormula <- function(object, data,
 
 
 model.matrix.plm <- function(object, ...){
-  dots <- list(...)
-  model <- ifelse(is.null(dots$model), describe(object, "model"), dots$model)
-  effect <- ifelse(is.null(dots$effect), describe(object, "effect"), dots$effect)
-  formula <- formula(object)
-  data <- model.frame(object)
-  if (model != "random"){
-    model.matrix(formula, data, model = model, effect = effect)
-  }
-  else{
-    theta <- ercomp(object)$theta
-    model.matrix(formula, data, model = model, effect = effect, theta = theta)
-  }
+    dots <- list(...)
+    model <- ifelse(is.null(dots$model), describe(object, "model"), dots$model)
+    effect <- ifelse(is.null(dots$effect), describe(object, "effect"), dots$effect)
+    rhs <- ifelse(is.null(dots$rhs), 1, dots$rhs)
+    formula <- formula(object)
+    data <- model.frame(object)
+    if (model != "random"){
+        model.matrix(formula, data, model = model, effect = effect, rhs = rhs)
+    }
+    else{
+        theta <- ercomp(object)$theta
+        model.matrix(formula, data, model = model, effect = effect, theta = theta, rhs = rhs)
+    }
 }
-
-  
-
 
 pmodel.response.plm <- function(object, ...){
   dots <- list(...)

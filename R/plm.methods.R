@@ -232,41 +232,56 @@ describe <- function(x,
          )
 }
          
-plot.plm <- function(x, dx = 1, N = NULL, ...){  
-  subs <- ! is.null(N)
-  mco <- update(x, model = "pooling")
-  re <- update(x, model = "random")
-  be <- update(x, model = "between")
-  n <- pdim(x)$nT$n
-  if (! subs) N <- n
-  ids <- unique(index(x, "id"))
-  if (subs) ids <- ids[sample(1:length(ids), N, replace = FALSE)]
-  sel <- index(x, "id") %in% ids
-  T <- pdim(x)$nT$T
-  cols <- rainbow(N)
-  pts <- sample(1:25, N, replace = TRUE)
-  thex <- as.numeric(model.matrix(x, model = "pooling")[sel, 2])
-  they <- as.numeric(pmodel.response(x, model = "pooling")[sel])
-  plot(thex, they, col = rep(cols, each = T), pch = rep(pts, each = T), ann = FALSE, axes = FALSE)
-  axis(side = 1)
-  axis(side = 2, las = 1)
-  idsel <- as.numeric(index(x, "id")[sel])
-  meanx <- tapply(thex, idsel, mean)
-  meany <- tapply(they, idsel, mean)
-  points(meanx, meany, pch = 19, col = cols, cex = 1.5)
-  beta <- coef(x)
-  alphas <- meany - meanx * beta
-  for (i in 1:N){
-    xmin <- meanx[i] - dx
-    xmax <- meanx[i] + dx
-    ymin <- alphas[i] + beta * xmin
-    ymax <- alphas[i] + beta * xmax
-    lines(c(xmin, xmax), c(ymin, ymax), col = cols[i])
-  }
-  abline(coef(re)[1], coef(re)[2], lty = "dotted")
-  abline(coef(mco), lty = "dashed")
-  abline(coef(be), lty = "dotdash")
+plot.plm <- function(x, dx = 0.2, N = NULL, seed = 1,
+                     within = TRUE, pooling = TRUE,
+                     between = FALSE, random = FALSE, ...){
+    set.seed(seed)# 8 est bien pour beertax
+    subs <- ! is.null(N)
+    x <- update(x, model = "within")
+    mco <- update(x, model = "pooling")
+    if (random) re <- update(x, model = "random")
+    if (between) be <- update(x, model = "between")
+    n <- pdim(x)$nT$n
+    if (! subs) N <- n
+    ids <- unique(index(x, "id"))
+    if (subs) ids <- ids[sample(1:length(ids), N, replace = FALSE)]
+    sel <- index(x, "id") %in% ids
+    T <- pdim(x)$nT$T
+    cols <- rainbow(N)
+    pts <- sample(1:25, N, replace = TRUE)
+    thex <- as.numeric(model.matrix(x, model = "pooling")[sel, 2])
+    they <- as.numeric(pmodel.response(x, model = "pooling")[sel])
+#    plot(thex, they, col = rep(cols, each = T), pch = rep(pts, each = T), ann = FALSE, axes = FALSE)
+#    axis(side = 1)
+#    axis(side = 2, las = 1)
+    plot(thex, they, col = rep(cols, each = T), pch = rep(pts, each = T), ann = FALSE, las = 1)
+    idsel <- as.numeric(index(x, "id")[sel])
+    meanx <- tapply(thex, idsel, mean)
+    meany <- tapply(they, idsel, mean)
+    points(meanx, meany, pch = 19, col = cols, cex = 1.5)
+    if (within){
+        beta <- coef(x)
+        alphas <- meany - meanx * beta
+        dx <- dx * (max(thex) - min(thex))
+        for (i in 1:N){
+            xmin <- meanx[i] - dx
+            xmax <- meanx[i] + dx
+            ymin <- alphas[i] + beta * xmin
+            ymax <- alphas[i] + beta * xmax
+            lines(c(xmin, xmax), c(ymin, ymax), col = cols[i])
+        }
+    }
+    if(random) abline(coef(re)[1], coef(re)[2], lty = "dotted")
+    if(pooling) abline(coef(mco), lty = "dashed")
+    if(between) abline(coef(be), lty = "dotdash")
+    # where to put the legends, depends on the sign of the ols slope
+    modploted <- c(random, pooling, between, within)
+    if (sum(modploted)){
+        poslegend <- ifelse(beta > 0, "topleft", "topright")
+        ltylegend <- c("dotted", "dashed", "dotdash", "solid")[modploted]
+        leglegend <- c("random", "pooling", "between", "within")[modploted]
+        legend(poslegend, lty = ltylegend, legend = leglegend)
+    }
 }
-
 
   
