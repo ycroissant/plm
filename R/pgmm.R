@@ -10,6 +10,7 @@ pgmm <- function(formula, data, subset, na.action,
   # instruments, V : time dummies
   
   cl <- match.call(expand.dots = FALSE)
+  cl <- match.call(expand.dots = TRUE)
   effect <- match.arg(effect)
   model <- match.arg(model)
   transformation <- match.arg(transformation)
