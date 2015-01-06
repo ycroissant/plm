@@ -13,8 +13,8 @@
 \usage{
 ercomp(object, ...)
 \method{ercomp}{formula}(object, data, effect = c("individual", "time", "twoways"), 
-                        method = c("swar", "walhus", "amemiya", "nerlove", "kinla"),
-                         index = NULL, ...)
+                         method = c("swar", "walhus", "amemiya","nerlove"),
+                         dfcor = NULL, index = NULL, ...)
 \method{ercomp}{plm}(object, ...)
 \method{print}{ercomp}(x, digits= max(3, getOption("digits") - 3), ...)
 }
@@ -22,18 +22,23 @@ ercomp(object, ...)
 \arguments{
   \item{object}{a \code{formula} or a \code{plm} object,}
   \item{data}{a \code{data.frame},}
-  \item{method}{method of estimation for the variance components,
-    see \code{\link{lm}} for details,}
   \item{effect}{the effects introduced in the model, see
     \code{\link{lm}} for details,}
+  \item{method}{method of estimation for the variance components,
+    see \code{\link{lm}} for details,}
+  \item{dfcor}{a numeric vector of length 2 indicating which degree of
+  freedom should be used,}
   \item{index}{the indexes,}
   \item{x}{a \code{ercomp} object,}
   \item{digits}{digits,}
   \item{\dots}{further arguments.}
 }
 
-\value{
-  An object of class \code{"ercomp"}: a list containing a list called \code{sigma2} which contains the estimates of the variance components, and \code{theta} which is the parameters used for the transformation of the variables.
+\value{  
+  An object of class \code{"ercomp"}: a list containing a list called
+  \code{sigma2} which contains the estimates of the variance components,
+  and \code{theta} which is the parameters used for the transformation
+  of the variables.
 }
 
 %\details{
@@ -64,14 +69,16 @@ ercomp(object, ...)
 \examples{
 data("Produc", package = "plm")
 # an example of the formula method
-ercomp(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc, method="walhus",effect="time")
+ercomp(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc,
+       method = "walhus", effect = "time")
 # same with the plm method
-z <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp,
-         data=Produc, random.method="walhus",
-         effect="time",model="random")
+z <- plm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
+         data = Produc, random.method = "walhus",
+         effect = "time", model = "random")
 ercomp(z)
 # a two-ways model
-ercomp(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc, method="amemiya",effect="twoways")
+ercomp(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc,
+       method = "amemiya",effect = "twoways")
 }
 \author{Yves Croissant}
 \keyword{regression}

@@ -227,18 +227,18 @@ print.summary.piest <- function(x, ...){
   print(x$pitest)
   
 }
-data(Produc, package="plm")
-Produc <- subset(Produc, year >= 1970 & year < 1974)
-T <- 3
-N <- 8
-K <- 2
-data(Wages, package="plm")
-Wages$time <- rep(1:7, 595)
-Wages$id <- rep(1:595, each = 7)
-Wages <- subset(Wages, time %in% c(1:T))
-Wages <- pdata.frame(Wages, index=c("id", "time"))
-#l <- piest(lwage ~  smsa+married, Wages)
+## data(Produc, package="plm")
+## Produc <- subset(Produc, year >= 1970 & year < 1974)
+## T <- 3
+## N <- 8
+## K <- 2
+## data(Wages, package="plm")
+## Wages$time <- rep(1:7, 595)
+## Wages$id <- rep(1:595, each = 7)
+## Wages <- subset(Wages, time %in% c(1:T))
+## Wages <- pdata.frame(Wages, index=c("id", "time"))
+## #l <- piest(lwage ~  smsa+married, Wages)
 
-data(Crime, package="plm")
+## data(Crime, package="plm")
 ## plm(log(crmrte) ~ log(prbarr) + log(prbconv) + log(prbpris) + log(polpc) + log(density) + log(pctmin) + region + log(wtuc) + log(wmfg), Crime, effect = "twoways")
 ## otime <- proc.time();za <- piest(log(crmrte) ~ log(prbarr) + log(prbconv) + log(prbpris) + log(polpc) + log(density) + log(pctmin) + region + log(wtuc) + log(wmfg), Crime);print(proc.time()-otime)

@@ -2,8 +2,8 @@ myvar <- function(x){
   if(any(is.na(x))) x <- x[!is.na(x)]
   n <- length(x)
   z <- switch(as.character(n),
-              "0"=NA,
-              "1"=0,
+              "0" = NA,
+              "1" = 0,
               var(x))
   z
 }
@@ -78,25 +78,25 @@ pdim <- function(x, ...){
 
 pdim.default <- function(x, y, ...){
   if (length(x) != length(y)) stop("The length of the two vectors differs\n")
-  x <- x[drop=T]
-  y <- y[drop=T]
+  x <- x[drop = TRUE]
+  y <- y[drop = TRUE]
   z <- table(x,y)
   Ti <- apply(z,1,sum)
   nt <- apply(z,2,sum)
   n <- nrow(z)
   T <- ncol(z)
   N <- length(x)
-  nT <- list(n=n,T=T,N=N)
+  nT <- list(n = n, T = T, N = N)
   id.names <- rownames(z)
   time.names <- colnames(z)
-  panel.names <- list(id.names=id.names,time.names=time.names)
+  panel.names <- list(id.names = id.names, time.names = time.names)
   if (any(as.vector(z)==0)){
     balanced <- FALSE
   }
   else balanced <- TRUE
-  if (any(as.vector(z)>1)) stop(cat("duplicate couples (time-id)\n"))
-  Tint <- list(Ti=Ti,nt=nt)
-  z <- list(nT=nT,Tint=Tint,balanced=balanced,panel.names=panel.names)
+  if (any(as.vector(z) > 1)) stop(cat("duplicate couples (time-id)\n"))
+  Tint <- list(Ti = Ti, nt = nt)
+  z <- list(nT = nT, Tint = Tint, balanced = balanced, panel.names = panel.names)
   class(z) <- "pdim"
   z
 }  

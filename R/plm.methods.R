@@ -188,13 +188,16 @@ r.squared <- function(object, model = NULL,
 }
   
 
-residuals.plm <- function(object, model = NULL, ...){
+residuals.plm <- function(object, model = NULL, effect = NULL, ...){
   fittedmodel <- describe(object, "model")
+  if (is.null(effect)) effect <- describe(object, "effect")
   if (is.null(model)) res <- object$residuals
   else{
     beta <- coef(object)
-    effect <- describe(object, "effect")
+    
     X <- model.matrix(object, model = model, effect = effect)
+    cstX <- attr(model.matrix(object, model = "within", effect = effect), "constant")
+    X <- X[, ! (colnames(X) %in% cstX)]
     y <- pmodel.response(object, model = model, effect = effect)
     if (model == "within" & fittedmodel != "within") beta <- beta[-1]
     if (model != "within" & fittedmodel == "within"){

@@ -13,10 +13,11 @@ Linear models for panel data estimated using the \code{lm} function on transform
 }
 
 \usage{
-plm(formula, data, subset, na.action, effect = c("individual","time","twoways"),
-    model = c("within","random","ht","between","pooling","fd"),
-    random.method = c("swar","walhus","amemiya","nerlove", "kinla"),
-    inst.method = c("bvk","baltagi"), restrict.matrix = NULL,
+plm(formula, data, subset, na.action, effect = c("individual", "time", "twoways"),
+    model = c("within", "random", "ht", "between", "pooling", "fd"),
+    random.method = c("swar", "walhus", "amemiya", "nerlove", "kinla"),
+    random.dfcor = NULL,
+    inst.method = c("bvk", "baltagi", "am", "bmc"), restrict.matrix = NULL,
     restrict.rhs = NULL, index = NULL, ...)
 \method{summary}{plm}(object, .vcov = NULL, ...)
 \method{print}{summary.plm}(x, digits = max(3, getOption("digits") - 2),
@@ -38,14 +39,17 @@ plm(formula, data, subset, na.action, effect = c("individual","time","twoways"),
   \item{model}{one of \code{"pooling"}, \code{"within"},
     \code{"between"}, \code{"random",} \code{"fd"} and \code{"ht"},}
   \item{random.method}{method of estimation for the variance components
-  in the random effects model, one of \code{"swar"} (the default value),
-  \code{"amemiya"}, \code{"walhus"}, \code{"nerlove"} and \code{"kinla"},}
-  \item{inst.method}{the instrumental variable transformation: one of \code{"bvk"} and \code{"baltagi"},}
+    in the random effects model, one of \code{"swar"} (the default value),
+  \code{"amemiya"}, \code{"walhus"} and \code{"nerlove"},}
+  \item{random.dfcor}{a numeric vector of length 2 indicating which degree of
+    freedom should be used,}
+  \item{inst.method}{the instrumental variable transformation: one of
+    \code{"bvk"}, \code{"baltagi"}, \code{"am"} and \code{"bmc"},}
   \item{index}{the indexes,}
   \item{restrict.matrix}{a matrix wich defines linear restrictions on
     the coefficients,}
   \item{restrict.rhs}{the right hand side vector of the linear
-  restrictions on the coefficients,}
+    restrictions on the coefficients,}
   \item{.vcov}{a covariance matrix furnished by the user,}
   \item{digits}{digits,}
   \item{width}{the maximum length of the lines in the printed  output,}

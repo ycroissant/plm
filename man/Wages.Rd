@@ -40,10 +40,12 @@ Online complements to Baltagi (2001).
 \url{http://www.wiley.com/legacy/wileychi/baltagi/}
 }
 
-\references{
-Baltagi, Badi H. (2003) \emph{Econometric Analysis of Panel Data}, 2nd ed., John Wiley and Sons.
+\references{ Baltagi, Badi H. (2003) \emph{Econometric Analysis of Panel
+Data}, 2nd ed., John Wiley and Sons.
 
-Cornwell, C. and  P. Rupert (1988) \dQuote{Efficient estimation with panel data: an empirical comparison of instrumental variables estimators}, \emph{Journal of Applied Econometrics}, \bold{3}, 149--155.
+Cornwell, C. and P. Rupert (1988) \dQuote{Efficient estimation with
+panel data: an empirical comparison of instrumental variables
+estimators}, \emph{Journal of Applied Econometrics}, \bold{3}, 149--155.
 }
 
 \keyword{datasets}

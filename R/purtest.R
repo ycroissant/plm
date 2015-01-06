@@ -519,3 +519,4 @@ print.summary.purtest <- function(x, ...){
   print(x$sumidres, ...)
 }
 
+#rm(x1, x2, x3, x4, adj.ips, Tn, v, adj.levinlin, names.exo, names.test)
