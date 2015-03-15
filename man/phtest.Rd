@@ -11,7 +11,9 @@ Specification test for panel models.
 \usage{
 phtest(x, ...)
 \method{phtest}{panelmodel}(x, x2, ...)
-\method{phtest}{formula}(x, data, ..., model = c("within","random"))
+\method{phtest}{formula}(x, data, model = c("within","random"),
+                            method = c("chisq", "aux"),
+                            index=NULL, vcov=NULL, ...)
 }
 
 \arguments{
@@ -19,6 +21,9 @@ phtest(x, ...)
  \item{x2}{an object of class \code{"panelmodel"},}
  \item{model}{a vector containing the names of two models,}
  \item{data}{a \code{data.frame},}
+ \item{method}{one of \code{"chisq"} or \code{"aux"},}
+ \item{index}{an optional vector of index variables,}
+ \item{vcov}{an optional covariance function}
  \item{\dots}{further arguments passed to \code{plm}}
 }
 
@@ -28,14 +33,25 @@ An object of class \code{"htest"}.
 
 \details{
 The Hausman test is based on the difference of the vectors of
-coefficients of two different models.
+coefficients of two different models.  The \code{panelmodel} method
+computes the original version of the test based on a quadratic form. The
+\code{formula} method, if \code{method="chisq"} (the default), computes
+the original version of the test based on a quadratic form; if
+\code{method="aux"} then the auxiliary-regression-based version in
+Wooldridge is computed instead. Only the latter can be robustified
+specifying a robust covariance estimator as a function through the
+argument \code{vcov}. 
 }
 
 \references{
-Hausman, J.A. (1978), Specification tests in econometrics, \emph{Econometrica}, \bold{46}, pp.1251--1271.
+Hausman, J.A. (1978), Specification tests in econometrics,
+\emph{Econometrica}, \bold{46}, pp.1251--1271.
+
+Wooldridge, Jeffrey M. (2010), \emph{Econometric analysis of
+  cross-section and panel data}, MIT Press.
 }
 
-\author{Yves Croissant}
+\author{Yves Croissant, Giovanni Millo}
   
 \examples{
 data("Gasoline", package = "plm")
@@ -44,6 +60,7 @@ wi <- plm(form, data = Gasoline, model = "within")
 re <- plm(form, data = Gasoline, model = "random")
 phtest(wi, re)
 phtest(form, data = Gasoline)
+phtest(form, data = Gasoline, method = "aux", vcov = vcovHC)
 }
 
 \keyword{htest}

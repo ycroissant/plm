@@ -8,23 +8,81 @@ phtest <- function(x,...){
   UseMethod("phtest")
 }
 
-phtest.formula <- function(x, data, ..., model = c("within","random")){
-  if(length(model)!=2) stop("two models should be indicated")
-  for (i in 1:2){
-    model.name <- model[i]
-    if(!(model.name %in% names(model.plm.list))){
-      stop("model must be one of ",oneof(model.plm.list))
+phtest.formula <- function(x, data, model = c("within","random"),
+                            method = c("chisq", "aux"),
+                            index=NULL, vcov=NULL, ...){
+    if(length(model)!=2) stop("two models should be indicated")
+    for (i in 1:2){
+        model.name <- model[i]
+        if(!(model.name %in% names(model.plm.list))){
+            stop("model must be one of ",oneof(model.plm.list))
+        }
     }
-  }
-  cl <- match.call(expand.dots = TRUE)
-  cl$model <- model[1]
-  names(cl)[2] <- "formula"
-  m <- match(plm.arg,names(cl),0)
-  cl <- cl[c(1,m)]
-  cl[[1]] <- as.name("plm")
-  plm.model.1 <- eval(cl,parent.frame())
-  plm.model.2 <- update(plm.model.1, model = model[2])
-  phtest(plm.model.1, plm.model.2)
+    switch(match.arg(method),
+           chisq={
+               cl <- match.call(expand.dots = TRUE)
+               cl$model <- model[1]
+               names(cl)[2] <- "formula"
+               m <- match(plm.arg,names(cl),0)
+               cl <- cl[c(1,m)]
+               cl[[1]] <- as.name("plm")
+               plm.model.1 <- eval(cl,parent.frame())
+               plm.model.2 <- update(plm.model.1, model = model[2])
+               return(phtest(plm.model.1, plm.model.2))
+           },
+           aux={
+               ## some interface checks here
+               if(model[1]!="within") {
+                   stop("Please supply 'within' as first model type")
+               }
+               ## set pdata
+               data <- plm.data(data, indexes=index) #, ...)
+               rey <- pmodel.response(plm(formula=x, data=data,
+                                          model=model[2]))
+               reX <- model.matrix(plm(formula=x, data=data,
+                                       model=model[2]))
+               feX <- model.matrix(plm(formula=x, data=data,
+                                       model=model[1]))
+               dimnames(feX)[[2]] <- paste(dimnames(feX)[[2]],
+                                           "tilde", sep=".")
+               ## fetch indices here, check pdata
+               data <- data.frame(cbind(data[, 1:2], rey, reX, feX))[,-4]
+               auxfm <- as.formula(paste("rey~",
+                                         paste(dimnames(reX)[[2]][-1],
+                                               collapse="+"), "+",
+                                         paste(dimnames(feX)[[2]],
+                                               collapse="+"), sep=""))
+               auxmod <- plm(formula=auxfm, data=data, model="pooling")
+               nvars <- dim(feX)[[2]]
+               R <- diag(1, nvars)
+               r <- rep(0, nvars) # here just for clarity of illustration
+               omega0 <- vcov(auxmod)[(nvars+2):(nvars*2+1),
+                                      (nvars+2):(nvars*2+1)]
+               Rbr <- R %*% coef(auxmod)[(nvars+2):(nvars*2+1)] - r
+
+               h2t <- crossprod(Rbr, solve(omega0, Rbr))
+               ph2t <- pchisq(h2t, df=nvars, lower.tail=FALSE)
+
+               df <- nvars
+               names(df) <- "df"
+               names(h2t) <- "Chisq"
+
+               if(!is.null(vcov)) {
+                   vcov=paste(", covariance: ",
+                       paste(deparse(substitute(vcov))),
+                       sep="")
+               }
+
+               haus2 <- list(statistic=h2t,
+                             p.value=ph2t,
+                             parameter=nvars,
+                             method=paste("Regression-based Hausman test",
+                                 vcov, sep=""),
+                             alternative="one model is inconsistent",
+                             data.name=paste(deparse(substitute(fm))))
+               class(haus2) <- "htest"
+               return(haus2)
+           })
 }
 
 phtest.panelmodel <- function(x, x2, ...){
