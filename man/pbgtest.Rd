@@ -47,13 +47,13 @@ Unlike most other tests for serial correlation in panels, this one allows to cho
 }
 
 \examples{
-data("Grunfeld", package = "plm")
-g <- plm(inv ~ value + capital, data = Grunfeld, model = "random")
-pbgtest(g)
-pbgtest(g, order = 4)
+#data("Grunfeld", package = "plm")
+#g <- plm(inv ~ value + capital, data = Grunfeld, model = "random")
+#pbgtest(g)
+#pbgtest(g, order = 4)
 
 ## formula interface
-pbgtest(inv ~ value + capital, data = Grunfeld, model = "random")
+#pbgtest(inv ~ value + capital, data = Grunfeld, model = "random")
 }
 
 \keyword{htest}

@@ -485,4 +485,10 @@ Changes since version 1.5-5
 
 	* fixed bug affecting vcovG on unbalanced datasets (thx Liviu Andronic) from propagation of NAs in final by-group matrix multiplication  
 
+Changes since version 1.5-6
+
+	* pruned 'require' calls to 'lmtest', 'car', 'lattice and substituted them with proper entries in NAMESPACE
+
+	* temporarily commented problematic examples in pbgtest and pdwtest
+
 

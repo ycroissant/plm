@@ -584,7 +584,7 @@ plot.pseries <- function(x, plot=c("lattice", "superposed"),
     switch(match.arg(plot),
            lattice={
 
-               require(lattice) # make a ggplot2 version
+               ##require(lattice) # make a ggplot2 version
                xyplot(nx~tind|ind, data=xdata, type="l", col=col, ...)
 
            }, superposed={

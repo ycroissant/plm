@@ -45,8 +45,8 @@ pbgtest.panelmodel<-function(x, order = NULL, ...) {
   ## bg test on the demeaned model:
   
   ## check package availability and load if necessary
-  lm.ok <- require("lmtest")
-  if(!lm.ok) stop("package lmtest is needed but not available")
+  #lm.ok <- require("lmtest")
+  #if(!lm.ok) stop("package lmtest is needed but not available")
   
   ## bgtest is the bgtest, exception made for the method attribute
   dots <- match.call()[["..."]]
@@ -188,7 +188,7 @@ pwartest <- function(x, ...){
 pwartest.formula <- function(x,  data, ...) {
   ## small-sample serial correlation test for FE models
   ## ref.: Wooldridge (2003) 10.5.4 
-  if(!require(car)) stop("Library 'car' is needed")
+  ##if(!require(car)) stop("Library 'car' is needed")
 
   cl <- match.call(expand.dots = TRUE)
   if (is.null(cl$model)) cl$model <- "within"
@@ -416,8 +416,8 @@ pdwtest.panelmodel <- function(x,...) {
   ## dw test on the demeaned model:
   
   ## check package availability and load if necessary
-  lm.ok <- require("lmtest")
-  if(!lm.ok) stop("package lmtest is needed but not available")
+  ##lm.ok <- require("lmtest")
+  ##if(!lm.ok) stop("package lmtest is needed but not available")
   ## ARtest is the bgtest, exception made for the method attribute
   dots <- match.call(expand.dots=FALSE)[["..."]]
   if (is.null(dots$order.by)) order.by <- NULL else order.by <- dots$order.by
@@ -591,7 +591,7 @@ pwfdtest.panelmodel <- function(x, ..., h0=c("fd","fe")) {
   ## first-difference-based serial correlation test for panel models
   ## ref.: Wooldridge (2003), par. 10.6 
 
-  if(!require(car)) stop("Library 'car' is needed")
+  ##if(!require(car)) stop("Library 'car' is needed")
 
   ## fetch fd residuals
   FDres <- resid(x)

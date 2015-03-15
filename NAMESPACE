@@ -12,6 +12,10 @@ importFrom("MASS", "ginv")
 importFrom("zoo", "index")
 importFrom("nlme", "fixef")
 importFrom("nlme", "lme")
+importFrom("lmtest", "bgtest")
+importFrom("lmtest", "dwtest")
+importFrom("car", "linearHypothesis")
+importFrom("lattice", "xyplot")
 
 #pFormula
 S3method("model.frame", "pFormula")
