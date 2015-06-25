@@ -32,6 +32,9 @@ ercomp.formula <- function(object, data,
                            dfcor = NULL,                           
                            index = NULL, ...){
 
+    effect <- match.arg(effect)
+    method <- match.arg(method)
+
     # Nerlove (0, 1)
     # Walhus (1, 0)
     # Amemyia (1, 0)
@@ -53,8 +56,6 @@ ercomp.formula <- function(object, data,
 
     # if formula is not a pFormula object, coerce it
     if (!inherits(object, "pFormula")) object <- pFormula(object)
-    effect <- match.arg(effect)
-    method <- match.arg(method)
     balanced <- pdim(data)$balanced
     Z <- model.matrix(object, data, model = "pooling")
     K <- ncol(Z) - 1
