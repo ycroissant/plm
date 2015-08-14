@@ -53,7 +53,7 @@ pbgtest.panelmodel<-function(x, order = NULL, ...) {
   if (!is.null(dots$type)) type <- dots$type else type <- "Chisq"
   if (!is.null(dots$order.by)) order.by <- dots$order.by else order.by <- NULL
 
-  auxformula <- if(model == "within") demy~demX-1 else demy~demX
+  auxformula <- demy~demX-1 #if(model == "within") demy~demX-1 else demy~demX
   lm.mod <- lm(auxformula)
   bgtest <- bgtest(lm.mod, order = order, type = type, order.by = order.by)
   bgtest$method <- "Breusch-Godfrey/Wooldridge test for serial correlation in panel models"
@@ -427,11 +427,12 @@ pdwtest.panelmodel <- function(x,...) {
   if (is.null(dots$tol)) tol <- 1e-10 else tol <- dots$tol
 
 
-  auxformula <- if(model == "within") demy~demX-1 else demy~demX
+  auxformula <- demy~demX-1 #if(model == "within") demy~demX-1 else demy~demX
   lm.mod <- lm(auxformula)
 
   
-  ARtest <- dwtest(lm(auxformula), order.by = order.by, alternative = alternative,
+  ARtest <- dwtest(lm(auxformula), order.by = order.by,
+                   alternative = alternative,
                    iterations = iterations, exact = exact, tol = tol)
 #  ARtest <- dwtest(lm(demy~demX-1))
 
