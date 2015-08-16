@@ -1,31 +1,24 @@
 
-R version 2.11.1 (2010-05-31)
-Copyright (C) 2010 The R Foundation for Statistical Computing
-ISBN 3-900051-07-0
+R version 3.2.1 (2015-06-18) -- "World-Famous Astronaut"
+Copyright (C) 2015 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
 
-R is free software and comes with ABSOLUTELY NO WARRANTY.
-You are welcome to redistribute it under certain conditions.
-Type 'license()' or 'licence()' for distribution details.
+R è un software libero ed è rilasciato SENZA ALCUNA GARANZIA.
+Siamo ben lieti se potrai redistribuirlo, ma sotto certe condizioni.
+Scrivi 'license()' o 'licence()' per dettagli su come distribuirlo.
 
-R is a collaborative project with many contributors.
-Type 'contributors()' for more information and
-'citation()' on how to cite R or R packages in publications.
+R è un progetto di collaborazione con molti contributi esterni.
+Scrivi 'contributors()' per maggiori informazioni e 'citation()'
+per sapere come citare R o i pacchetti di R nelle pubblicazioni.
 
-Type 'demo()' for some demos, 'help()' for on-line help, or
-'help.start()' for an HTML browser interface to help.
-Type 'q()' to quit R.
+Scrivi 'demo()' per una dimostrazione, 'help()' per la guida in linea, o
+'help.start()' per l'help navigabile con browser HTML.
+Scrivi 'q()' per uscire da R.
+
+[Caricato workspace precedentemente salvato]
 
 > library(plm)
-Loading required package: kinship
-Loading required package: survival
-Loading required package: splines
-Loading required package: nlme
-Loading required package: lattice
-[1] "kinship is loaded"
-Loading required package: Formula
-Loading required package: MASS
-Loading required package: sandwich
-Loading required package: zoo
+Carico il pacchetto richiesto: Formula
 > ## testing whether parameters in variables work (bug by Ulrich Morawtz)
 > data("Produc", package="plm")
 > estimation_method <- "within"
@@ -56,7 +49,7 @@ log(pc)    0.29200693  0.02511967 11.6246 < 2.2e-16 ***
 log(emp)   0.76815947  0.03009174 25.5273 < 2.2e-16 ***
 unemp     -0.00529774  0.00098873 -5.3582 1.114e-07 ***
 ---
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
 Total Sum of Squares:    18.941
 Residual Sum of Squares: 1.1112
@@ -64,3 +57,6 @@ R-Squared      :  0.94134
       Adj. R-Squared :  0.88135 
 F-statistic: 3064.81 on 4 and 764 DF, p-value: < 2.22e-16
 > 
+> proc.time()
+   user  system elapsed 
+  0.882   0.039   0.915 
