@@ -491,4 +491,12 @@ Changes since version 1.5-6
 
 	* temporarily commented problematic examples in pbgtest and pdwtest
 
+Changes since version 1.5-8
+
+	* fixed bugs in pdwtest
+
+Changes since version 1.5-9
+
+	* fixed bug in vcovG for lagged White terms (make pseudo-diagonal in E(u,v)); affected vcovNW
+
 

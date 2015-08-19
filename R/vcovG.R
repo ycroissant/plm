@@ -106,6 +106,37 @@ vcovG.plm <-function(x,type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
         })
 
   ## Definition module for E(u,v)
+  if(is.function(inner)) {
+        E=inner
+    } else {
+      ## outer for clustering/arellano, diag(diag(inner)) for white
+      switch(match.arg(inner), cluster={
+          E=function(u,v) outer(u,v)
+      }, white={
+          E=function(u,v) { # was simply: diag(diag(outer(u,v)))
+              # but unfortunately we have to manage unbalanced panels
+              # in the case l!=0 (the residual vectors are different)
+              # by producing a "pseudo-diagonal" with all those obs.
+              # common to both vectors
+ 
+              ## calculate outer product
+              efull <- outer(u,v)
+              ## make matrix of zeros with same dims and names
+              eres <- array(0, dim=dim(efull))
+              dimnames(eres) <- dimnames(efull)
+              ## populate "pseudo-diagonal" with values from efull
+              for(i in 1:length(names(u))) {
+                  for(j in 1:length(names(v))) {
+                      if(names(u)[i]==names(v)[j]) {
+                          eres[i,j] <- efull[i,j]
+                      }
+                  }
+              }
+              return(eres)
+          }
+      })
+  }
+   ## Definition module for E(u,v)
     if(is.function(inner)) {
         E=inner
     } else {
@@ -113,9 +144,36 @@ vcovG.plm <-function(x,type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
       switch(match.arg(inner), cluster={
           E=function(u,v) outer(u,v)
       }, white={
-          E=function(u,v) diag(diag(outer(u,v)))
+          E=function(u,v) { # was simply: diag(diag(outer(u,v)))
+              # but unfortunately we have to manage unbalanced panels
+              # in the case l!=0 (the residual vectors are different)
+              # by producing a "pseudo-diagonal" with all those obs.
+              # common to both vectors
+ 
+              if(isTRUE(all.equal(names(u), names(v)))) {
+                  ## ..then keep it simple! (halves time on EmplUK ex.)
+                  euv <- diag(diag(outer(u,v)))
+              } else {
+                  ## calculate outer product
+                  efull <- outer(u,v)
+                  ## make matrix of zeros with same dims and names
+                  eres <- array(0, dim=dim(efull))
+                  dimnames(eres) <- dimnames(efull)
+                  ## populate "pseudo-diagonal" with values from efull
+                  for(i in 1:length(names(u))) {
+                      for(j in 1:length(names(v))) {
+                          if(names(u)[i]==names(v)[j]) {
+                              eres[i,j] <- efull[i,j]
+                          }
+                      }
+                  }
+                  euv <- eres
+              }
+              return(euv)
+          }
       })
   }
+ 
 
     ## try passing: function (a or b) or matrix (unconditional) to vcovG
 
@@ -147,22 +205,23 @@ vcovG.plm <-function(x,type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
            n <- n0
            t <- t0
            relevant.ind <- groupind
-           #lab <- timeind
+           lab <- timeind
          }, time = {
            n <- t0
            t <- n0
            relevant.ind <- timeind
-           #lab <- groupind
+           lab <- groupind
          })
     tind <- vector("list", n)
-    #tlab <- vector("list", n)
+    tlab <- vector("list", n)
     for (i in 1:length(unique(relevant.ind))) {
         tind[[i]] <- which(relevant.ind==i)
-        #tlab[[i]] <- lab[which(relevant.ind==i)]
+        tlab[[i]] <- lab[which(relevant.ind==i)]
     }
 
   ## lab were the 'labels' (a numeric, actually) for the relevant index;
-  ## not used any more.
+  ## in use again from the need to make pseudo-diagonals for
+  ## calc. the lagged White terms on unbalanced panels
 
   ## transform residuals by weights (here because type='sss' needs to
   ## know who the grouping index 'g' is
@@ -192,7 +251,9 @@ vcovG.plm <-function(x,type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
         X <- demX[tind[[i]], , drop=FALSE]
         Xl <- demX[tind[[i-l]], , drop=FALSE]
         u <- uhat[tind[[i]]]
+        names(u) <- tlab[[i]]
         ul <- uhat[tind[[(i-l)]]]
+        names(ul) <- tlab[[(i-l)]]
         ## calculate V_yy
         Sl[, , i-l] <- crossprod(X, E(u, ul)) %*% Xl
     }
