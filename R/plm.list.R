@@ -136,7 +136,7 @@ plm.list <- function(formula, data, subset, na.action,
     BIGB <- BIG(XB, yB, WB, Omega.1)
     y <- BIGW$y + BIGB$y
     X <- BIGB$X
-    # Attention, pb lorsque noms de colonnes duppliqués !!
+    # Attention, pb lorsque noms de colonnes duppliques !!
     #    X[, colnames(BIGW$X)] <- X[, colnames(BIGW$X)] + BIGW$X
     # version provisoire : emplacement des constantes
     intercepts <- c(1, cumsum(sapply(XB, ncol))[-length(XB)]+1)

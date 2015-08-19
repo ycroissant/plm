@@ -51,8 +51,7 @@ Online complements to Baltagi (2001).
 \url{http://www.wiley.com/legacy/wileychi/baltagi/},  .   
 
 See also Journal of Applied Econometrics data archive entry for Baltagi (2006) at 
-
-\url{http://www.econ.queensu.ca/jae/2006-v21.4/baltagi/}.
+\url{http://qed.econ.queensu.ca/jae/2006-v21.4/baltagi/}.
 }
 
 \references{

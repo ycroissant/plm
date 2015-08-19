@@ -82,7 +82,7 @@ pht <-  function(formula, data, subset, na.action, model = c("ht", "am", "bmc"),
     Vx <- model.matrix(formula, data, model = "pooling",
                        rhs = 2)[, exo.var, drop = FALSE]
     if (balanced){
-      # Plus rapide mais pas robuste au non cylindré
+      # Plus rapide mais pas robuste au non cylindre
       Vxstar <- Reduce("cbind",
                        lapply(seq_len(ncol(Vx)),
                               function(x)
@@ -102,7 +102,7 @@ pht <-  function(formula, data, subset, na.action, model = c("ht", "am", "bmc"),
                                  rhs = 2)[, exo.var, drop = FALSE]
     Vx <- within.inst
     if (balanced){
-      # Plus rapide mais pas robuste au non cylindré
+      # Plus rapide mais pas robuste au non cylindre
       Vxstar <- Reduce("cbind",
                        lapply(seq_len(ncol(Vx)),
                               function(x)

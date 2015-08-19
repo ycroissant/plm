@@ -125,9 +125,9 @@ ercomp.formula <- function(object, data,
             qw <- crossprod(Within(hateps))
             qb <- crossprod(Between(hateps))
 
-            # Between(hateps) identique à fixef(model.within, type = "dmean")[as.character(ids)]
-            # qb est identique à sum(fixef(model.within, type = "dmean")[as.character(ids)]^2))
-            # On purge de l'effet individuel l'influence des variables du modèle
+            # Between(hateps) identique a fixef(model.within, type = "dmean")[as.character(ids)]
+            # qb est identique a sum(fixef(model.within, type = "dmean")[as.character(ids)]^2))
+            # On purge de l'effet individuel l'influence des variables du modele
             fixef <- fixef(model.within, type = "dmean")[as.character(ids)]
             cstX <- attr(model.matrix(object, data, model = "within", rhs = 1), "constant")
             if (length(cstX) > 0){

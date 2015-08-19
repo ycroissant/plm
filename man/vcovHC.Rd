@@ -98,7 +98,7 @@ Panel Data}, MIT Press, Cambridge (MA).
 
 Zeileis A. (2004) Econometric Computing with HC and HAC Covariance Matrix
 Estimators. \emph{Journal of Statistical Software}, \bold{11}(10), 1--17.
-URL \url{http://http://www.jstatsoft.org/v11/i10/}.
+URL \url{http://www.jstatsoft.org/v11/i10/}.
 
 
 }

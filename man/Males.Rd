@@ -35,14 +35,13 @@
 
 \source{
 Journal of Applied Econometrics data archive  
- 
-\url{http://www.econ.queensu.ca/jae/1998-v13.2/vella-verbeek/}.
+ \url{http://qed.econ.queensu.ca/jae/1998-v13.2/vella-verbeek/}.
 }
 
 \references{
  Vella, F. and  M. Verbeek (1998) \dQuote{Whose Wages Do Unions Raise? A Dynamic Model of Unionism and Wage Rate Determination for Young Men}, \emph{Journal of Applied Econometrics}, \bold{13}(2), 163--183.
 
- Verbeek, M. (2004) \emph{A Guide to Modern Econometrics}, John Wiley and Sons, \url{http://www.econ.kuleuven.ac.be/GME}, chapter 10.
+ Verbeek, M. (2004) \emph{A Guide to Modern Econometrics}, John Wiley and Sons, \url{http://feb.kuleuven.be/GME/}, chapter 10.
 }
 
 \keyword{datasets}

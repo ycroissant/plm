@@ -126,7 +126,7 @@ Restrictions in Dynamic Panel Data Models, \emph{Journal of
 Econometrics}, vol. \bold{87}, pp.115--143.
 
 Doornik, J., Arellano, M. and Bond, S. (2006) Panel Data Estimation
-using DPD for Ox.  \url{http://www.doornik.com/download/dpd.pdf}
+using DPD for Ox.  \url{http://www.doornik.com/download/oxmetrics7/Ox_Packages/dpd.pdf}
   
 Roodman, D. (2009) How to do xtabond2: An Introduction to ``difference''
 and ``system'' GMM in Stata, \emph{Stata Journal}, vol. \bold{9}(1),

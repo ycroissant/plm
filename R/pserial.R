@@ -81,7 +81,7 @@ pwtest.formula <- function(x, data, ...) {
   plm.model <- eval(cl,parent.frame())
   pwtest(plm.model)
 
-  ## "RE" test à la Wooldridge, see 10.4.4
+  ## "RE" test a la Wooldridge, see 10.4.4
   ## (basically the scaled and standardized estimator for sigma from REmod)
   ## does not rely on normality or homoskedasticity; 
   ## H0: composite errors uncorrelated
