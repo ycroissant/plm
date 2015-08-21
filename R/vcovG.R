@@ -2,7 +2,7 @@
 ## vcovXX functions for robust covariances ##
 #############################################
 
-## according to new framework, based on generic Lego block vcovG
+## According to new framework, based on generic Lego block vcovG
 ## and wrapper functions for vcovHC, vcovNW, vcovSCC, vcovDC.
 ## Only vcovBK stays separate for simplicity reasons.
 
