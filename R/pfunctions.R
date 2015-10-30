@@ -33,7 +33,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE){
       cat(paste("series ", cst.serie, " is constant and has been removed\n", sep = ""))
     }
     else{
-      cat(paste("series ", paste(cst.serie, collapse=", x")," are constants and have been removed\n", sep = ""))
+      cat(paste("series ", paste(cst.serie, collapse = ","), " are constants and have been removed\n", sep = ""))
     }
   }
   x <- x[,!cst.check]
