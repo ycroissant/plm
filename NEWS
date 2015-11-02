@@ -498,5 +498,6 @@ Changes since version 1.5-8
 Changes since version 1.5-9
 
 	* fixed bug in vcovG for lagged White terms (make pseudo-diagonal in E(u,v)); affected vcovNW
+	* documentation updates (mostly text books of Baltagi and Wooldridge to latest edition, references more specific)
 
 
