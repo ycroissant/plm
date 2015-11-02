@@ -4,6 +4,7 @@ export(plm, pvcm, pgmm, pggls, pht, pcce, pmg, plmtest, phtest, pFtest,
        plm.data, pdata.frame, between, Between, Within, pFormula, pmodel.response,
        purtest, cipstest, vcovBK, vcovSCC, r.squared, has.intercept,
        index, fixef, vcovHC, vcovDC, vcovNW, vcovG, piest, aneweytest)
+
 import("Formula")
 importFrom("stats", "lag")
 importFrom("bdsmatrix", "bdsmatrix")
@@ -43,6 +44,8 @@ S3method("pdim", "pdata.frame")
 S3method("pdim", "panelmodel")
 S3method("pdim", "default")
 S3method("print", "pdim")
+# nobs
+S3method("nobs", "plm")
 # pvar
 S3method("pvar", "data.frame")
 S3method("pvar", "pdata.frame")
