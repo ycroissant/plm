@@ -19,11 +19,11 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE){
     if (length(na.serie) == 1)
       cat(paste("series ", na.serie, " is NA and has been removed\n", sep = ""))
     else
-      cat(paste("series ", paste(na.serie, collapse = ","), " are NA and have been removed\n", sep = ""))
+      cat(paste("series ", paste(na.serie, collapse = ", "), " are NA and have been removed\n", sep = ""))
   }
-  x <- x[, ! na.check]
+  x <- x[, !na.check]
   
-  # check and remove cst series
+  # check and remove constant series
   cst.check <- sapply(x, function(x) var(as.numeric(x), na.rm = TRUE)==0)
   # following line : bug fixed thank's to Marciej Szelfer 
   cst.check <- cst.check | is.na(cst.check)
@@ -33,10 +33,10 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE){
       cat(paste("series ", cst.serie, " is constant and has been removed\n", sep = ""))
     }
     else{
-      cat(paste("series ", paste(cst.serie, collapse = ","), " are constants and have been removed\n", sep = ""))
+      cat(paste("series ", paste(cst.serie, collapse = ", "), " are constants and have been removed\n", sep = ""))
     }
   }
-  x <- x[,!cst.check]
+  x <- x[, !cst.check]
   
   # if index is NULL, both id and time are NULL
   if (is.null(index)){

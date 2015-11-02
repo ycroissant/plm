@@ -66,20 +66,20 @@ print.summary.plm <- function(x,digits= max(3, getOption("digits") - 2),
   if (is.null(subset)) printCoefmat(coef(x), digits = digits)
   else printCoefmat(coef(x)[subset, , drop = FALSE], digits = digits)
   cat("\n")
-  cat(paste("Total Sum of Squares:    ",signif(tss(x),digits),"\n",sep=""))
-  cat(paste("Residual Sum of Squares: ",signif(deviance(x),digits),"\n",sep=""))
-  cat(paste("R-Squared      : ", signif(x$r.squared[1], digits),"\n"))
-  cat("      Adj. R-Squared : ", signif(x$r.squared[2], digits),"\n")
+  cat(paste("Total Sum of Squares:    ", signif(tss(x),digits),     "\n", sep=""))
+  cat(paste("Residual Sum of Squares: ", signif(deviance(x),digits),"\n", sep=""))
+  cat(paste("R-Squared:      ", signif(x$r.squared[1], digits),     "\n", sep=""))
+  cat(paste("Adj. R-Squared: ", signif(x$r.squared[2], digits),     "\n", sep=""))
   fstat <- x$fstatistic
   if (names(fstat$statistic) == "F"){
     cat(paste("F-statistic: ",signif(fstat$statistic),
               " on ",fstat$parameter["df1"]," and ",fstat$parameter["df2"],
-              " DF, p-value: ",format.pval(fstat$p.value,digits=digits),"\n",sep=""))
+              " DF, p-value: ",format.pval(fstat$p.value,digits=digits), "\n", sep=""))
   }
   else{
     cat(paste("Chisq: ",signif(fstat$statistic),
               " on ",fstat$parameter,
-              " DF, p-value: ",format.pval(fstat$p.value,digits=digits),"\n",sep=""))
+              " DF, p-value: ",format.pval(fstat$p.value,digits=digits), "\n", sep=""))
     
   }
   invisible(x)
