@@ -38,6 +38,7 @@ An object of class \code{"htest"}.
 
 \references{
 Wooldridge, J.M. (2002) \emph{Econometric Analysis of Cross-Section and Panel Data}, MIT Press, Sec. 10.5.4, pp. 274--276.
+
 Wooldridge, J.M. (2010) \emph{Econometric analysis of cross-section and panel data}, 2nd ed., MIT Press, Sec. 10.5.4, pp. 310--312.
 }
 

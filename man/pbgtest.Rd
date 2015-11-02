@@ -39,9 +39,9 @@ Unlike most other tests for serial correlation in panels, this one allows to cho
 
  Godfrey, L. (1978), \dQuote{Testing against general autoregressive and moving average error models when the regressors include lagged dependent variables}, \emph{Econometrica}, \bold{46}, pp. 1293--1302.
   
- Wooldridge, J.M. (2002) \emph{Econometric Analysis of Cross-Section and Panel Data}, MIT Press, p. 288--291.
+ Wooldridge, J.M. (2002) \emph{Econometric Analysis of Cross-Section and Panel Data}, MIT Press, pp. 288--291.
  
- Wooldridge, J.M. (2010) \emph{Econometric analysis of cross-section and Panel Data}, 2nd ed., MIT Press, p. 328--334.
+ Wooldridge, J.M. (2010) \emph{Econometric analysis of cross-section and Panel Data}, 2nd ed., MIT Press, pp. 328--334.
  
 }
 
