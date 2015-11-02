@@ -27,7 +27,7 @@ pdim(x,...)
  An object of class \code{pdim} containing the following elements:
 
  \item{nT}{a list containing \code{n}, the number of individuals, \code{T}, the number of time observations, \code{N} the total number of observations,}
- \item{TinT}{a list containing two vectors : \code{Ti} gives the
+ \item{Tint}{a list containing two vectors : \code{Ti} gives the
   number of observations for each individuals and \code{nt} gives
   the number of individuals observed for each period,}
  \item{balanced}{a logical value : \code{TRUE} for a balanced panel, \code{FALSE} for an unbalanced panel,}
@@ -42,7 +42,7 @@ pdim(x,...)
 
 \author{Yves Croissant}
 
-\seealso{\code{\link{pdata.frame}}}
+\seealso{\code{\link{nobs.plm}}, \code{\link{pdata.frame}}}
 
 \examples{
 
