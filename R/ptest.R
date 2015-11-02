@@ -8,14 +8,14 @@ phtest <- function(x,...){
   UseMethod("phtest")
 }
 
-phtest.formula <- function(x, data, model = c("within","random"),
+phtest.formula <- function(x, data, model = c("within", "random"),
                             method = c("chisq", "aux"),
                             index=NULL, vcov=NULL, ...){
     if(length(model)!=2) stop("two models should be indicated")
     for (i in 1:2){
         model.name <- model[i]
         if(!(model.name %in% names(model.plm.list))){
-            stop("model must be one of ",oneof(model.plm.list))
+            stop("model must be one of ", oneof(model.plm.list))
         }
     }
     switch(match.arg(method),
@@ -35,8 +35,9 @@ phtest.formula <- function(x, data, model = c("within","random"),
                if(model[1]!="within") {
                    stop("Please supply 'within' as first model type")
                }
+             
                ## set pdata
-               data <- plm.data(data, indexes=index) #, ...)
+               if (!inherits(data, "pdata.frame")) data <- plm.data(data, indexes=index) #, ...)
                rey <- pmodel.response(plm(formula=x, data=data,
                                           model=model[2]))
                reX <- model.matrix(plm(formula=x, data=data,
@@ -75,7 +76,7 @@ phtest.formula <- function(x, data, model = c("within","random"),
 
                haus2 <- list(statistic=h2t,
                              p.value=ph2t,
-                             parameter=nvars,
+                             parameter=df,
                              method=paste("Regression-based Hausman test",
                                  vcov, sep=""),
                              alternative="one model is inconsistent",
