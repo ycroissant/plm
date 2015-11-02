@@ -24,7 +24,7 @@ pwfdtest(x,...)
 }
 
 \details{
-As Wooldridge (2003, 10.6.3) observes, if the idiosyncratic errors in the model in levels are uncorrelated (which we label hypothesis \code{"fe"}), then the errors of the model in first differences (FD) must be serially correlated with \eqn{cor(\hat{e}_{it}, \hat{e}_{is})=-0.5} for each \eqn{t,s}.  If on the contrary the levels model's errors are a random walk, then there must be no serial correlation in the FD errors (hypothesis \code{"fd"}). Both the fixed effects (FE) and the first-differenced (FD) estimators remain consistent under either assumption, but the relative efficiency changes: FE is more efficient under \code{"fe"}, FD under \code{"fd"}.
+As Wooldridge (2003/2010, Sec. 10.6.3) observes, if the idiosyncratic errors in the model in levels are uncorrelated (which we label hypothesis \code{"fe"}), then the errors of the model in first differences (FD) must be serially correlated with \eqn{cor(\hat{e}_{it}, \hat{e}_{is})=-0.5} for each \eqn{t,s}.  If on the contrary the levels model's errors are a random walk, then there must be no serial correlation in the FD errors (hypothesis \code{"fd"}). Both the fixed effects (FE) and the first-differenced (FD) estimators remain consistent under either assumption, but the relative efficiency changes: FE is more efficient under \code{"fe"}, FD under \code{"fd"}.
 
 Wooldridge (ibid.) suggests basing a test for either hypothesis on a pooled regression of FD residuals on their first lag:
 \eqn{\hat{e}_{i,t}=\alpha + \delta \hat{e}_{i,t-1} + \eta_{i,t}}. Rejecting the restriction \eqn{\delta = -0.5} makes us conclude against the null of no serial correlation in errors of the levels equation (\code{"fe"}). The null hypothesis of no serial correlation in differenced errors (\code{"fd"}) is tested in a similar way, but based on the zero restriction on \eqn{\delta}. Rejecting \code{"fe"} favours the use of the first-differences  estimator and the contrary, although it is possible that both be rejected.
@@ -42,10 +42,15 @@ An object of class \code{"htest"}.
 
 \references{
 Drukker, D.M. (2003) Testing for serial correlation in linear
-panel-data models, The Stata Journal, 3(2), pp. 168--177.
+panel-data models, \emph{The Stata Journal}, \bold{3(2)}, pp. 168--177.
 
-Wooldridge, J.M. (2003) Econometric analysis of cross-section and
-panel data, MIT Press, 10.6.3, page 282.
+Wooldridge, J.M. (2003) \emph{Econometric analysis of cross-section and
+panel data}, MIT Press, Sec. 10.6.3, pp. 282--283.
+
+Wooldridge, J.M. (2010) \emph{Econometric analysis of cross-section and
+panel data}, 2nd ed., MIT Press, Sec. 10.6.3, pp. 319--320.
+
+
 }
 
 \seealso{

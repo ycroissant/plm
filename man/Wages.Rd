@@ -35,13 +35,19 @@ A panel of 595 observations from 1976 to 1982, taken from the     Panel Study of
 }
 
 \source{
-Online complements to Baltagi (2001).
+Online complements to Baltagi (2001):
 
-\url{http://www.wiley.com/legacy/wileychi/baltagi/}
+ \url{http://www.wiley.com/legacy/wileychi/baltagi/}
+ 
+Online complements to Baltagi (2013):
+
+  \url{http://bcs.wiley.com/he-bcs/Books?action=resource&bcsId=4338&itemId=1118672321&resourceId=13452}
 }
 
-\references{ Baltagi, Badi H. (2003) \emph{Econometric Analysis of Panel
-Data}, 2nd ed., John Wiley and Sons.
+\references{
+Baltagi, Badi H. (2001) \emph{Econometric Analysis of Panel Data}, 2nd ed., John Wiley and Sons.
+
+Baltagi, Badi H. (2013) \emph{Econometric Analysis of Panel Data}, 5th ed., John Wiley and Sons.
 
 Cornwell, C. and P. Rupert (1988) \dQuote{Efficient estimation with
 panel data: an empirical comparison of instrumental variables

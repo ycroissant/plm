@@ -22,7 +22,7 @@ pwartest(x,...)
 }
 
 \details{
-As Wooldridge (2003, Sec. 10.5.4) observes, under the null of no serial correlation in the errors, the residuals of a FE model must be negatively serially correlated, with \eqn{cor(\hat{u}_{it}, \hat{u}_{is})=-1/(T-1)} for each \eqn{t,s}. He suggests basing a test for this null hypothesis on a pooled regression of FE residuals on their first lag: \eqn{\hat{u}_{i,t} = \alpha + \delta \hat{u}_{i,t-1} + \eta_{i,t}}. Rejecting the restriction \eqn{\delta = -1/(T-1)} makes us conclude against the original null of no serial correlation.
+As Wooldridge (2003/2010, Sec. 10.5.4) observes, under the null of no serial correlation in the errors, the residuals of a FE model must be negatively serially correlated, with \eqn{cor(\hat{u}_{it}, \hat{u}_{is})=-1/(T-1)} for each \eqn{t,s}. He suggests basing a test for this null hypothesis on a pooled regression of FE residuals on their first lag: \eqn{\hat{u}_{i,t} = \alpha + \delta \hat{u}_{i,t-1} + \eta_{i,t}}. Rejecting the restriction \eqn{\delta = -1/(T-1)} makes us conclude against the original null of no serial correlation.
 
 \code{pwartest} estimates the \code{within} model and retrieves
 residuals, then estimates an AR(1) \code{pooling} model on them. The test statistic is obtained by applying \code{linearHypothesis()} to the latter model to test the above restriction on \eqn{\delta}, setting the covariance matrix to \code{vcovHC} with the option \code{method="arellano"} to control for serial correlation.
@@ -37,7 +37,8 @@ An object of class \code{"htest"}.
 \author{Giovanni Millo}
 
 \references{
-Wooldridge, J.M. (2002) \emph{Econometric Analysis of Cross-Section and Panel Data}, MIT Press, Sec. 10.5.4, page 274.
+Wooldridge, J.M. (2002) \emph{Econometric Analysis of Cross-Section and Panel Data}, MIT Press, Sec. 10.5.4, pp. 274--276.
+Wooldridge, J.M. (2010) \emph{Econometric analysis of cross-section and panel data}, 2nd ed., MIT Press, Sec. 10.5.4, pp. 310--312.
 }
 
 \seealso{

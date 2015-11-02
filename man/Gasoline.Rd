@@ -27,13 +27,19 @@
   }
 }
 \source{
-Online complements to Baltagi (2001).
+Online complements to Baltagi (2001):
 
-\url{http://www.wiley.com/legacy/wileychi/baltagi/}.
+ \url{http://www.wiley.com/legacy/wileychi/baltagi/}
+ 
+Online complements to Baltagi (2013):
+
+  \url{http://bcs.wiley.com/he-bcs/Books?action=resource&bcsId=4338&itemId=1118672321&resourceId=13452}
 }
 
 \references{
  Baltagi, Badi H. (2001) \emph{Econometric Analysis of Panel Data}, 2nd ed., John Wiley and Sons.
+ 
+ Baltagi, Badi H. (2013) \emph{Econometric Analysis of Panel Data}, 5th ed., John Wiley and Sons.
 
  Baltagi, B.H.  and  J.M. Griffin (1983) \dQuote{Gasoline demand in the OECD: An application of pooling and testing procedures}, \emph{European Economic Review}, \bold{22}(2), 117--137.
 }

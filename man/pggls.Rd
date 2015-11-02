@@ -65,7 +65,7 @@ method requires estimation of \eqn{T(T+1)/2} variance parameters, thus
 efficiency requires N > > T (if \code{effect="individual"}, else the
 opposite).  The \code{model="random"} and \code{model="pooling"}
 arguments both produce an unrestricted FGLS model as in Wooldridge,
-Ch.10, although the former is deprecated and included only for
+Ch. 10, although the former is deprecated and included only for
 retrocompatibility reasons.
 If \code{model="within"} (the default) then a FEGLS (fixed
 effects GLS, see ibid.) is estimated; if \code{model="fd"} a FDGLS
@@ -76,7 +76,7 @@ effects GLS, see ibid.) is estimated; if \code{model="fd"} a FDGLS
 \references{
 Kiefer, N. M. (1980) Estimation of Fixed Effects Models for Time Series
 of Cross-Sections with Arbitrary Intertemporal Covariance, \emph{Journal
-  of Econometrics}, \bold{14}, 195--202. 
+  of Econometrics}, \bold{14}, pp. 195--202. 
 
 
 Im, K. S. and Ahn, S. C. and Schmidt, P. and Wooldridge, J. M. (1999)
@@ -85,6 +85,8 @@ Explanatory Variables, \emph{Journal of Econometrics}, \bold{93},
 177-201.
 
 Wooldridge, J. M. (2002) \emph{Econometric Analysis of Cross Section and Panel Data}, MIT Press.
+
+Wooldridge, J. M. (2010) \emph{Econometric analysis of cross-section and Panel Data}, 2nd ed., MIT Press.
 }
 
 \examples{

@@ -61,8 +61,8 @@ e.g. for Wald-type testing: as \code{vcov} to \code{coeftest()},
   time-series-cross-section data in comparative politics. \emph{American
     Political Science Review}, \bold{89(3)}, 634--647.
 
-  Greene, W. H. (2003) \emph{Econometric Analysis}, 5th ed. Macmillan
-  Publishing Company, New York, 323.
+  Greene, W. H. (2003) \emph{Econometric Analysis}, 5th ed., Prentice Hall/Pearson,
+  Upper Saddle River, New Jersey, Sec. 13.9.3, 13.9.7.
 }
 
 \examples{

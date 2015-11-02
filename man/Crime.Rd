@@ -46,9 +46,13 @@
 }
 
 \source{
-Online complements to Baltagi (2001).
-    
-\url{http://www.wiley.com/legacy/wileychi/baltagi/},  .   
+Online complements to Baltagi (2001):
+
+ \url{http://www.wiley.com/legacy/wileychi/baltagi/}
+ 
+Online complements to Baltagi (2013):
+
+  \url{http://bcs.wiley.com/he-bcs/Books?action=resource&bcsId=4338&itemId=1118672321&resourceId=13452}
 
 See also Journal of Applied Econometrics data archive entry for Baltagi (2006) at 
 \url{http://qed.econ.queensu.ca/jae/2006-v21.4/baltagi/}.
@@ -59,7 +63,9 @@ See also Journal of Applied Econometrics data archive entry for Baltagi (2006) a
 
  Baltagi, B. H. (2006) \dQuote{Estimating an economic model of crime using panel data from North Carolina}, \emph{Journal of Applied Econometrics}, 21(4), 543--547.
 
- Baltagi, B. H. (2001) \emph{Econometric Analysis of Panel Data}, John Wiley and Sons.
+ Baltagi, Badi H. (2001) \emph{Econometric Analysis of Panel Data}, 2nd ed., John Wiley and Sons.
+ 
+ Baltagi, Badi H. (2013) \emph{Econometric Analysis of Panel Data}, 5th ed., John Wiley and Sons.
 }
 
 \keyword{datasets}

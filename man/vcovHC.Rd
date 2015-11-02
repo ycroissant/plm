@@ -43,7 +43,7 @@ error covariance matrix of every single group of observations,
 \code{"white1"} allows for general heteroskedasticity but no serial
 (cross-sectional) correlation; \code{"white2"} is \code{"white1"}
 restricted to a common variance inside every group (time period) (see
-Greene (2003), 13.7.1-2 and Wooldridge (2002), 10.7.2);
+Greene (2003, Sec. 13.7.1-2; 2012, Sec. 11.6.1-2) and Wooldridge (2002), Sec. 10.7.2);
 \code{"arellano"} (see ibid. and the original ref. Arellano (1987))
 allows a fully general structure w.r.t. heteroskedasticity and serial
 (cross-sectional) correlation.
@@ -70,34 +70,36 @@ A special procedure for \code{pgmm} objects, proposed by Windmeijer
 
 \references{
 Arellano, M. (1987) Computing robust standard errors for within group estimators,
-\emph{Oxford Bulletin of Economics and Statistics}, \bold{49}, 431--434.
+\emph{Oxford Bulletin of Economics and Statistics}, \bold{49}, pp. 431--434.
 
 Cribari-Neto, F. (2004) Asymptotic inference under heteroskedasticity
-of unknown form. \emph{Computational Statistics \& Data Analysis}
-\bold{45}, 215--233.
+of unknown form. \emph{Computational Statistics & Data Analysis}
+\bold{45}, pp. 215--233.
 
-Greene, W. H. (1993) \emph{Econometric Analysis}, 2nd ed. Macmillan
-Publishing Company, New York.
+Greene, W. H. (2003) \emph{Econometric Analysis}, 5th ed., Prentice Hall/Pearson,
+Upper Saddle River, New Jersey.
 
-MacKinnon, J. G. and  White H. (1985) Some heteroskedasticity-consistent
+Greene, W. H. (2012) \emph{Econometric Analysis}, 7th ed., Prentice Hall/Pearson,
+Upper Saddle River, New Jersey.
+
+MacKinnon, J. G. and  White, H. (1985) Some heteroskedasticity-consistent
 covariance matrix estimators with improved finite sample properties.
-\emph{Journal of Econometrics} \bold{29}, 305--325.
+\emph{Journal of Econometrics} \bold{29}, pp. 305--325.
 
 Windmeijer, F. (2005) A finite sample correction for the variance of
 linear efficient two--step GMM estimators, \emph{Journal of
-  Econometrics}, \bold{126}, pp.25--51.
+  Econometrics}, \bold{126}, pp. 25--51.
 
-White H. (1980) \emph{Asymptotic Theory for Econometricians}, Ch. 6, Academic Press, Orlando (FL).
+White, H. (1980) \emph{Asymptotic Theory for Econometricians}, Ch. 6, Academic Press, Orlando (FL).
 
-White H. (1984) A heteroskedasticity-consistent covariance matrix and
-a direct test for heteroskedasticity. \emph{Econometrica} \bold{48},
-817--838.
+White, H. (1984) A heteroskedasticity-consistent covariance matrix and
+a direct test for heteroskedasticity. \emph{Econometrica} \bold{48}, pp. 817--838.
 
-Wooldridge J. M. (2002) \emph{Econometric Analysis of Cross Section and
+Wooldridge, J. M. (2002) \emph{Econometric Analysis of Cross Section and
 Panel Data}, MIT Press, Cambridge (MA).
 
-Zeileis A. (2004) Econometric Computing with HC and HAC Covariance Matrix
-Estimators. \emph{Journal of Statistical Software}, \bold{11}(10), 1--17.
+Zeileis, A. (2004) Econometric Computing with HC and HAC Covariance Matrix
+Estimators. \emph{Journal of Statistical Software}, \bold{11}(10), pp. 1--17.
 URL \url{http://www.jstatsoft.org/v11/i10/}.
 
 
