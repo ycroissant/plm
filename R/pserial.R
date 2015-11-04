@@ -5,7 +5,7 @@ pbgtest <- function (x, ...)
     UseMethod("pbgtest")
 }
 
-pbgtest.formula<-function(x, ..., order = NULL) {
+pbgtest.formula<-function(x, order = NULL, type = c("Chisq", "F"), data, model=c("pooling", "random", "within"), ...) {
   ## formula method for pbgtest;
   ## defaults to a pooling model
   cl <- match.call(expand.dots = TRUE)
@@ -16,25 +16,25 @@ pbgtest.formula<-function(x, ..., order = NULL) {
   cl <- cl[c(1,m)]
   cl[[1]] <- as.name("plm")
   plm.model <- eval(cl,parent.frame())
-  pbgtest(plm.model, order = order, ...)
+  pbgtest(plm.model, order = order, type = type, ...)
 }
 
-pbgtest.panelmodel<-function(x, order = NULL, ...) {
+pbgtest.panelmodel<-function(x, order = NULL, type = c("Chisq", "F"), ...) {
   ## residual serial correlation test based on the residuals of the demeaned
-  ## model (see Wooldridge p.288) and the regular bgtest() in {lmtest}
+  ## model (see Wooldridge (2002), p. 288) and the regular bgtest() in {lmtest}
 
   ## structure:
   ## 1: take demeaned data from 'plm' object
   ## 2: est. auxiliary model by OLS on demeaned data
-  ## 3: apply bgtest() to auxiliary model and return the result
+  ## 3: apply lmtest::bgtest() to auxiliary model and return the result
 
   model <- describe(x, "model")
   effect <- describe(x, "effect")
   theta <- x$ercomp$theta
                                                     
   ## retrieve demeaned data
-  demX <- model.matrix(x, model = model, effect = effect, theta=theta)
-  demy <- pmodel.response(model.frame(x), model = model, effect = effect, theta=theta)
+  demX <- model.matrix(x, model = model, effect = effect, theta = theta)
+  demy <- pmodel.response(model.frame(x), model = model, effect = effect, theta = theta)
   
   ## ...and group numerosities
   Ti <- pdim(x)$Tint$Ti
@@ -49,13 +49,9 @@ pbgtest.panelmodel<-function(x, order = NULL, ...) {
   #if(!lm.ok) stop("package lmtest is needed but not available")
   
   ## bgtest is the bgtest, exception made for the method attribute
-  dots <- match.call()[["..."]]
-  if (!is.null(dots$type)) type <- dots$type else type <- "Chisq"
-  if (!is.null(dots$order.by)) order.by <- dots$order.by else order.by <- NULL
-
   auxformula <- demy~demX-1 #if(model == "within") demy~demX-1 else demy~demX
   lm.mod <- lm(auxformula)
-  bgtest <- bgtest(lm.mod, order = order, type = type, order.by = order.by)
+  bgtest <- bgtest(lm.mod, order = order, type = type, ...)
   bgtest$method <- "Breusch-Godfrey/Wooldridge test for serial correlation in panel models"
   bgtest$alternative <- "serial correlation in idiosyncratic errors"
   bgtest$data.name <- paste(deparse(x$call$formula))
@@ -81,12 +77,12 @@ pwtest.formula <- function(x, data, ...) {
   plm.model <- eval(cl,parent.frame())
   pwtest(plm.model)
 
-  ## "RE" test a la Wooldridge, see 10.4.4
+  ## "RE" test a la Wooldridge (2002), see 10.4.4
   ## (basically the scaled and standardized estimator for sigma from REmod)
   ## does not rely on normality or homoskedasticity; 
   ## H0: composite errors uncorrelated
 
-  ## ref. Wooldridge, p.264
+  ## ref. Wooldridge (2002), p. 264
 
   ######### from here generic testing interface from
   ######### plm to my code
