@@ -38,18 +38,45 @@ phtest.formula <- function(x, data, model = c("within", "random"),
              
                ## set pdata
                if (!inherits(data, "pdata.frame")) data <- plm.data(data, indexes=index) #, ...)
-               rey <- pmodel.response(plm(formula=x, data=data,
-                                          model=model[2]))
-               reX <- model.matrix(plm(formula=x, data=data,
-                                       model=model[2]))
-               feX <- model.matrix(plm(formula=x, data=data,
-                                       model=model[1]))
+               
+               row.names(data) <- NULL # reset rownames of original data set (number rownames in clean sequence) to make rownames
+                                       # comparable for later comparision to obs used in estimation of models (get rid of NA values)
+                                       # [needed becausepmodel.response() and model.matrix() do not retain fancy rownames, but rownames]
+               
+               # calculatate FE and RE model
+               fe_mod <- plm(formula=x, data=data, model=model[1])
+               re_mod <- plm(formula=x, data=data, model=model[2])
+               
+               reY <- pmodel.response(re_mod)
+               reX <- model.matrix(re_mod)[ , -1] # intercept not needed
+               feX <- model.matrix(fe_mod)
                dimnames(feX)[[2]] <- paste(dimnames(feX)[[2]],
                                            "tilde", sep=".")
+               
+               ## estimated models could have fewer obs (due droping of NAs) compared to the original data
+               ## => match original data and observations used in estimated models
+               ## routine adapted from lmtest::bptest
+               commonrownames <- intersect(intersect(intersect(row.names(data), names(reY)), row.names(reX)), row.names(feX))
+               if (!(all(c(row.names(data) %in% commonrownames, commonrownames %in% row.names(data))))) {
+                 data <- data[commonrownames, ]
+                 reY  <- reY[commonrownames]
+                 reX  <- reX[commonrownames, ]
+                 feX  <- feX[commonrownames, ]
+               }
+               
+               # Tests of correct matching of obs (just for safety ...)
+                if (!all.equal(length(reY), nrow(data), nrow(reX), nrow(feX)))
+                  stop("number of cases/observations do not match, most likely due to NAs in \"data\"")
+                if (any(c(is.na(names(reY)), is.na(row.names(data)), is.na(row.names(reX)), is.na(row.names(feX)))))
+                    stop("one (or more) rowname(s) is (are) NA")
+                if (!all.equal(names(reY), row.names(data), row.names(reX), row.names(feX)))
+                  stop("row.names of cases/observations do not match, most likely due to NAs in \"data\"")
+
                ## fetch indices here, check pdata
-               data <- data.frame(cbind(data[, 1:2], rey, reX, feX))[,-4]
-               auxfm <- as.formula(paste("rey~",
-                                         paste(dimnames(reX)[[2]][-1],
+               ## construct data set and formula for auxiliary regression
+               data <- data.frame(cbind(data[, 1:2], reY, reX, feX))
+               auxfm <- as.formula(paste("reY~",
+                                         paste(dimnames(reX)[[2]],
                                                collapse="+"), "+",
                                          paste(dimnames(feX)[[2]],
                                                collapse="+"), sep=""))
@@ -66,21 +93,21 @@ phtest.formula <- function(x, data, model = c("within", "random"),
 
                df <- nvars
                names(df) <- "df"
-               names(h2t) <- "Chisq"
+               names(h2t) <- "chisq"
 
                if(!is.null(vcov)) {
-                   vcov=paste(", covariance: ",
-                       paste(deparse(substitute(vcov))),
-                       sep="")
+                   vcov <- paste(", vcov: ",
+                                  paste(deparse(substitute(vcov))),
+                                  sep="")
                }
 
-               haus2 <- list(statistic=h2t,
-                             p.value=ph2t,
-                             parameter=df,
-                             method=paste("Regression-based Hausman test",
-                                 vcov, sep=""),
-                             alternative="one model is inconsistent",
-                             data.name=paste(deparse(substitute(fm))))
+               haus2 <- list(statistic   = h2t,
+                             p.value     = ph2t,
+                             parameter   = df,
+                             method      = paste("Regression-based Hausman test",
+                                              vcov, sep=""),
+                             alternative = "one model is inconsistent",
+                             data.name   = paste(deparse(substitute(auxfm))))
                class(haus2) <- "htest"
                return(haus2)
            })
@@ -93,7 +120,9 @@ phtest.panelmodel <- function(x, x2, ...){
   vcov.re <- vcov(x2)
   names.wi <- names(coef.wi)
   names.re <- names(coef.re)
-  coef.h <- names.re[names.re%in%names.wi]
+  common_coef_names <- names.re[names.re%in%names.wi]
+  common_coef_names <- common_coef_names[!(common_coef_names %in% "(Intercept)")] # drop intercept if included (when between model inputted)
+  coef.h <- common_coef_names
   dbeta <- coef.wi[coef.h]-coef.re[coef.h]
   df <- length(dbeta)
   dvcov <- vcov.re[coef.h,coef.h]-vcov.wi[coef.h,coef.h]

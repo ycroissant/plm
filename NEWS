@@ -505,5 +505,10 @@ Changes since version 1.5-9
 	* pbgtest: fixed/enabled type="F" (F test of lmtest::bgtest) in wrapper pbgtest() and
 	  fixed/enabled passing of argument order.by= [additional argument in
 	  lmtest::bgtest] [tests/testpbgtest.R added, docs updated and extended]
+	
+	* phtest( , method="aux") [Hausman regression-based test]: fixed bug when data= contains more cases than
+	  there are used in model estimation (due to NA values); avoid calc. of RE model a second time;
+	  phtest now also works with between model correctly (fixed degrees of freedom)
+	  tests/test_phtest_Hausman_regression.R added
 
 
