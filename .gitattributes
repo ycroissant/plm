@@ -105,7 +105,10 @@ tests/testErrors.R -text
 tests/testErrors.Rout.save -text
 tests/testEvaluation.R -text
 tests/testEvaluation.Rout.save -text
+tests/test_Chow.R -text
+tests/test_Estimators.R -text
 tests/test_phtest_Hausman_regression.R -text
+tests/test_pwfdtest_pwartest.R -text
 tests/testpbgtest.R -text
 tests/testpgmm.R -text
 vignettes/bibliojss.bib -text
