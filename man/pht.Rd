@@ -23,8 +23,8 @@ pht(formula, data, subset, na.action, model = c("ht", "am", "bmc"), index = NULL
    numeric vector indicaing asubset of the table of coefficient to be
    printed for \code{"print.summary.plm"},}
  \item{na.action}{see \code{\link{lm}},}
- \item{model}{one of "ht" for Hausman-Taylor, "am" for Amemiya-MaCurdy
- and "bms" for Breush-Mizon-Schmidt,}
+ \item{model}{one of \code{"ht"} for Hausman-Taylor, \code{"am"} for Amemiya-MaCurdy
+ and \code{"bms"} for Breush-Mizon-Schmidt,}
  \item{index}{the indexes,}
  \item{digits}{digits,}
  \item{width}{the maximum length of the lines in the print output,}
@@ -33,29 +33,29 @@ pht(formula, data, subset, na.action, model = c("ht", "am", "bmc"), index = NULL
 
 \details{ \code{pht} estimates panels models using the Hausman-Taylor
 estimator. The model is specified a two-part formula, the second part
-containing the exogenous variables.  }
+containing the exogenous variables.}
 
 \value{
 An object of class \code{c("pht", "plm", "panelmodel")}.
 
 A \code{"pht"} object contains the same element as \code{plm}, with a
 further argument called \code{varlist} which describes the typology of
-the variables.  It has \code{summary} and \code{print.summary} methods.
+the variables. It has \code{summary} and \code{print.summary} methods.
 }
 
 \author{Yves Croissant}
 
 \references{
 
-  Amemiya , T. and MaCurdy T.E. (1986) Instrumental-variable estimation
+  Amemiya, T. and MaCurdy, T.E. (1986) Instrumental-variable estimation
   of an error components model, \emph{Econometrica}, \bold{54},
   pp. 869--881.
 
   Breush, T.S, Mizon, G.E. and Schmidt, P. (1989) Efficient estimation
-  using panel data, \emph{Econometrica}, \bold{57}, pp.219--257.
+  using panel data, \emph{Econometrica}, \bold{57}, pp. 219--257.
   
   Hausman, J.A. and Taylor W.E. (1981) Panel data and unobservable
-individual effects, \emph{Econometrica}, \bold{49}, pp.1377--1398.
+  individual effects, \emph{Econometrica}, \bold{49}, pp. 1377--1398.
 
 
 }

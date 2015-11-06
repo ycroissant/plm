@@ -13,16 +13,16 @@
 \usage{
 \method{vcovHC}{plm}(x, method = c("arellano", "white1", "white2"),
                         type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
-                        cluster = c("group","time"), ...)
+                        cluster = c("group", "time"), ...)
 \method{vcovHC}{pgmm}(x, ...)
 }
 
 \arguments{
   \item{x}{an object of class \code{"plm"} which should be the result of a 
            random effects or a within model or a model of class \code{"pgmm"},}
-  \item{method}{one of \code{"arellano","white1","white2"},}
-  \item{type}{one of \code{"HC0","sss","HC1","HC2","HC3","HC4"},}
-  \item{cluster}{one of \code{"group","time"}}
+  \item{method}{one of \code{"arellano"}, \code{"white1"}, \code{"white2"},}
+  \item{type}{one of \code{"HC0"}, \code{"sss"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"}, \code{"HC4"},}
+  \item{cluster}{one of \code{"group"}, \code{"time"}}
   \item{\dots}{further arguments.}
 }
 
@@ -51,7 +51,7 @@ allows a fully general structure w.r.t. heteroskedasticity and serial
 Weighting schemes are analogous to those in \code{vcovHC} in package
 \code{sandwich} and are justified theoretically (although in the context
 of the standard linear model) by MacKinnon and White (1985) and
-Cribari-Neto (2004) (see Zeileis, 2004).
+Cribari-Neto (2004) (see Zeileis (2004)).
 
 The main use of \code{vcovHC} is to be an argument to other functions,
 e.g. for Wald-type testing: as \code{vcov} to \code{coeftest()},
@@ -66,7 +66,7 @@ A special procedure for \code{pgmm} objects, proposed by Windmeijer
 
 }
 
-\author{Giovanni Millo \& Yves Croissant}
+\author{Giovanni Millo & Yves Croissant}
 
 \references{
 Arellano, M. (1987) Computing robust standard errors for within group estimators,

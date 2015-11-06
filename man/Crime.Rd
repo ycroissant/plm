@@ -4,7 +4,7 @@
 \title{Crime in North Carolina}
 
 \description{
-  a panel of 90 observations (counties) from 1981 to 1987
+  a panel of 90 observational units (counties) from 1981 to 1987
 
  \emph{total number of observations} :  630
 
@@ -39,7 +39,7 @@
     \item{wmfg}{weekly wage in manufacturing}
     \item{wfed}{weekly wage of federal emplyees}
     \item{wsta}{weekly wage of state employees}
-    \item{wloc}{weekly wage of local governments employees      }
+    \item{wloc}{weekly wage of local governments employees}
     \item{mix}{offence mix: face-to-face/other}
     \item{pctymle}{percentage of young males}
   }
@@ -59,9 +59,9 @@ See also Journal of Applied Econometrics data archive entry for Baltagi (2006) a
 }
 
 \references{
- Cornwell, C. and  W.N. Trumbull (1994) \dQuote{Estimating the economic model of crime with panel data}, \emph{Review of Economics and Statistics}, \bold{76}, 360--366.
+ Cornwell, C. and  W.N. Trumbull (1994) \dQuote{Estimating the economic model of crime with panel data}, \emph{Review of Economics and Statistics}, \bold{76}, pp. 360--366.
 
- Baltagi, B. H. (2006) \dQuote{Estimating an economic model of crime using panel data from North Carolina}, \emph{Journal of Applied Econometrics}, 21(4), 543--547.
+ Baltagi, B. H. (2006) \dQuote{Estimating an economic model of crime using panel data from North Carolina}, \emph{Journal of Applied Econometrics}, 21(4), pp. 543--547.
 
  Baltagi, Badi H. (2001) \emph{Econometric Analysis of Panel Data}, 2nd ed., John Wiley and Sons.
  

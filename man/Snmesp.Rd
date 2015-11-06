@@ -38,10 +38,10 @@ Journal of Business Economics and Statistics data archive:
 }
 
 \references{
-Alonso--Borrego, C. and  Arellano, M. (1999). Symmetrically
+Alonso--Borrego, C. and Arellano, M. (1999). Symmetrically
 Normalized Instrumental-Variable Estimation Using Panel Data,
 \emph{Journal of Business and Economic Statistics}, \bold{17(1)},
-36--49.
+pp. 36--49.
 }
 
 \keyword{datasets}

@@ -8,15 +8,15 @@
 }
 \usage{
 \method{vcovBK}{plm}(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
-                              cluster = c("group","time"),
+                              cluster = c("group", "time"),
                               diagonal = FALSE,
                               ...)
 }
 
 \arguments{
   \item{x}{an object of class \code{"plm"}}
-  \item{type}{one of \code{"HC0","HC1","HC2","HC3","HC4"},}
-  \item{cluster}{one of \code{"group","time"}}
+  \item{type}{one of \code{"HC0"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"}, \code{"HC4"},}
+  \item{cluster}{one of \code{"group"}, \code{"time"}}
   \item{diagonal}{a logical value specifying whether to force
   nondiagonal elements to zero}
   \item{\dots}{further arguments.}
@@ -45,7 +45,7 @@ covariances; this is appropriate if both serial and cross-sectional correlation
 are assumed out, and yields a timewise- (groupwise-) heteroskedasticity-consistent
 estimator.
 
-Weighting schemes are analogous to those in \code{vcovHC} in package \code{sandwich} and are justified theoretically (although in the context of the standard linear model) by MacKinnon and White (1985) and Cribari-Neto (2004) (see Zeileis, 2004).
+Weighting schemes are analogous to those in \code{vcovHC} in package \code{sandwich} and are justified theoretically (although in the context of the standard linear model) by MacKinnon and White (1985) and Cribari-Neto (2004) (see Zeileis (2004)).
 
 The main use of \code{vcovBK} is to be an argument to other functions,
 e.g. for Wald-type testing: as \code{vcov} to \code{coeftest()},
@@ -59,7 +59,7 @@ e.g. for Wald-type testing: as \code{vcov} to \code{coeftest()},
 \references{
   Beck, N. and Katz, J. (1995) What to do (and not to do) with
   time-series-cross-section data in comparative politics. \emph{American
-    Political Science Review}, \bold{89(3)}, 634--647.
+    Political Science Review}, \bold{89(3)}, pp. 634--647.
 
   Greene, W. H. (2003) \emph{Econometric Analysis}, 5th ed., Prentice Hall/Pearson,
   Upper Saddle River, New Jersey, Sec. 13.9.3, 13.9.7.

@@ -68,7 +68,7 @@ intercepts and possibly trends.
 \references{
 G. Kapetanios, M. Hashem Pesaran, T. Yamagata (2011), Panels with
 non-stationary multifactor error structures, \emph{Journal of
-  Econometrics}, \bold{160(2)}, 326--348. 
+  Econometrics}, \bold{160(2)}, pp. 326--348. 
 }
 
 \examples{

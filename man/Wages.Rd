@@ -5,7 +5,7 @@
 \title{Panel Data of Individual Wages}
 
 \description{
-A panel of 595 observations from 1976 to 1982, taken from the     Panel Study of Income Dynamics (PSID).    
+A panel of 595 observations from 1976 to 1982, taken from the Panel Study of Income Dynamics (PSID).    
 
  \emph{total number of observations} :  4165
 
@@ -26,7 +26,7 @@ A panel of 595 observations from 1976 to 1982, taken from the     Panel Study of
   \item{south}{resides in the south?}
   \item{smsa}{resides in a standard metropolitan statistical area?}
   \item{married}{married?}
-  \item{sex}{a factor with levels \code{"male", "female"}}
+  \item{sex}{a factor with levels \code{"male"} and \code{"female"}}
   \item{union}{individual's wage set by a union contract?}
   \item{ed}{years of education.}
   \item{black}{is the individual black?}
@@ -51,7 +51,7 @@ Baltagi, Badi H. (2013) \emph{Econometric Analysis of Panel Data}, 5th ed., John
 
 Cornwell, C. and P. Rupert (1988) \dQuote{Efficient estimation with
 panel data: an empirical comparison of instrumental variables
-estimators}, \emph{Journal of Applied Econometrics}, \bold{3}, 149--155.
+estimators}, \emph{Journal of Applied Econometrics}, \bold{3}, pp. 149--155.
 }
 
 \keyword{datasets}

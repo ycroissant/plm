@@ -32,7 +32,7 @@ aneweytest(formula, data, subset, na.action, index = NULL, ...)
 
 \references{
 Angrist, J.D. and Newey, W.K. (1991). Over-identification tests in
-earnings functions with fixed effects, \emph{Journal of Business \&
+earnings functions with fixed effects, \emph{Journal of Business &
   Economic Statistics}, \bold{9(3)}, pp. 317--323.
   
 }

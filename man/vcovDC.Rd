@@ -15,7 +15,7 @@
 
 \arguments{
   \item{x}{an object of class \code{"plm"}}
-  \item{type}{one of \code{"HC0","sss","HC1","HC2","HC3","HC4"},}
+  \item{type}{one of \code{"HC0"}, \code{"sss"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"}, \code{"HC4"},}
   \item{...}{further arguments}.
 }
 
@@ -30,7 +30,7 @@ The function is a convenience wrapper simply summing a group- and a
 time-clustered covariance matrix and subtracting a diagonal one \emph{a la}
 White.
 
-Weighting schemes are analogous to those in \code{vcovHC} in package \code{sandwich} and are justified theoretically (although in the context of the standard linear model) by MacKinnon and White (1985) and Cribari-Neto (2004) (see Zeileis, 2004).
+Weighting schemes are analogous to those in \code{vcovHC} in package \code{sandwich} and are justified theoretically (although in the context of the standard linear model) by MacKinnon and White (1985) and Cribari-Neto (2004) (see Zeileis (2004)).
 
 The main use of \code{vcovDC} is to be an argument to other functions,
 e.g. for Wald-type testing: as \code{vcov} to \code{coeftest()},
@@ -43,10 +43,11 @@ e.g. for Wald-type testing: as \code{vcov} to \code{coeftest()},
 
 \references{
 Cameron, A.C., Gelbach, J.B., & Miller, D.L. (2011) Robust inference with 
- multiway clustering \emph{Journal of Business and Economic Statistics}
- \bold{29(2)}.
+ multiway clustering, \emph{Journal of Business and Economic Statistics}
+ \bold{29(2)}, pp. 238--249.
+ 
 Thompson, S.B. (2011) Simple formulas for standard errors that cluster by
- both firm and time \emph{Journal of Financial Economics} \bold{99(1)} 1--10.
+ both firm and time, \emph{Journal of Financial Economics} \bold{99(1)}, pp. 1--10.
   }
 
 \examples{

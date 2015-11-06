@@ -13,7 +13,7 @@ common factors (CCEMG)
 
 \usage{
 pmg(formula, data, subset, na.action,
- model = c("mg", "cmg","dmg"),
+ model = c("mg", "cmg", "dmg"),
  index = NULL, trend = FALSE, ...)
 \method{summary}{pmg}(object, ...)
 \method{print}{summary.pmg}(x,digits = max(3, getOption("digits") -
@@ -26,7 +26,7 @@ pmg(formula, data, subset, na.action,
  \item{data}{a \code{data.frame},}
  \item{subset}{see \code{lm},}
  \item{na.action}{see \code{lm},}
- \item{model}{one of \code{c("mg", "cmg","dmg")},}
+ \item{model}{one of \code{c("mg", "cmg", "dmg")},}
  \item{index}{the indexes, see \code{\link{pdata.frame}},}
  \item{trend}{logical specifying whether an individual-specific trend has to be included,}
  \item{digits}{digits,}
@@ -35,7 +35,7 @@ pmg(formula, data, subset, na.action,
 }
 
 \value{
-An object of class \code{c("pmg","panelmodel")} containing:
+An object of class \code{c("pmg", "panelmodel")} containing:
  \item{coefficients}{the vector of coefficients,}
  \item{residuals}{the vector of residuals,}
  \item{fitted.values}{the vector of fitted.values,}
@@ -71,7 +71,7 @@ intercepts and possibly trends.
 \author{Giovanni Millo}
 
 \references{
-M. Hashem Pesaran, (2006), Estimation and Inference in Large Heterogeneous Panels with a Multifactor Error Structure, \emph{Econometrica}, \bold{74(4)}, 967--1012. 
+M. Hashem Pesaran (2006), Estimation and Inference in Large Heterogeneous Panels with a Multifactor Error Structure, \emph{Econometrica}, \bold{74(4)}, pp. 967--1012. 
 }
 
 \examples{

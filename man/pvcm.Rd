@@ -33,7 +33,7 @@ pvcm(formula, data, subset, na.action, effect = c("individual","time"),
 }
 
 \details{
-\code{pvcm} estimates variable coefficients models. Time or individual effects are introduced, respectively, if   \code{effect="time"} or \code{effect="individual"} (the default value). 
+\code{pvcm} estimates variable coefficients models. Time or individual effects are introduced, respectively, if \code{effect="time"} or \code{effect="individual"} (the default value). 
   
 Coefficients are assumed to be fixed if \code{model="within"} and
 random if \code{model="random"}. In the first case, a different

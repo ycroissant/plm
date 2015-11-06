@@ -37,8 +37,8 @@ piest(formula, data, subset, na.action, index = NULL, robust = TRUE, ...)
   specification.  }
 
 \references{
-Chamberlain, G. (1982). Multivariate regression for panel data,
-\emph{Journal of Econometrics}, \bold{18}, pp.5--46.
+Chamberlain, G. (1982) Multivariate regression for panel data,
+\emph{Journal of Econometrics}, \bold{18}, pp. 5--46.
 }
 
 \author{Yves Croissant}

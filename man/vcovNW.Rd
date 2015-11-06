@@ -16,7 +16,7 @@
 
 \arguments{
   \item{x}{an object of class \code{"plm"}}
-  \item{type}{one of \code{"HC0","sss","HC1","HC2","HC3","HC4"},}
+  \item{type}{one of \code{"HC0"}, \code{"sss"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"},\code{"HC4"},}
   \item{maxlag}{either \code{NULL} or a positive integer specifying the
   maximum lag order before truncation}
   \item{wj}{weighting function to be applied to lagged terms,}
@@ -33,7 +33,7 @@ parameters for a panel model according to the Newey and West (1987)
 method. The function works as a restriction of the Driscoll and Kraay
 (1998) covariance to no cross-sectional correlation.
 
-Weighting schemes are analogous to those in \code{vcovHC} in package \code{sandwich} and are justified theoretically (although in the context of the standard linear model) by MacKinnon and White (1985) and Cribari-Neto (2004) (see Zeileis, 2004).
+Weighting schemes are analogous to those in \code{vcovHC} in package \code{sandwich} and are justified theoretically (although in the context of the standard linear model) by MacKinnon and White (1985) and Cribari-Neto (2004) (see Zeileis (2004)).
 
 The main use of \code{vcovNW} is to be an argument to other functions,
 e.g. for Wald-type testing: as \code{vcov} to \code{coeftest()},
@@ -45,9 +45,9 @@ e.g. for Wald-type testing: as \code{vcov} to \code{coeftest()},
 \author{Giovanni Millo}
 
 \references{
- Newey, W.K., & West, K.D. (1986) A simple, positive semi-definite, 
+ Newey, W.K. & West, K.D. (1986) A simple, positive semi-definite, 
  heteroskedasticity and autocorrelationconsistent covariance matrix.
- \emph{Econometrica} \bold{55(3)}, 703--08.
+ \emph{Econometrica} \bold{55(3)}, pp. 703--708.
   }
 
 \examples{
