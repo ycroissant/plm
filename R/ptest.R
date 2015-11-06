@@ -107,7 +107,7 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                              method      = paste("Regression-based Hausman test",
                                               vcov, sep=""),
                              alternative = "one model is inconsistent",
-                             data.name   = paste(deparse(substitute(auxfm))))
+                             data.name   = paste(deparse(substitute(x))))
                class(haus2) <- "htest"
                return(haus2)
            })
