@@ -422,13 +422,24 @@ print.summary.pseries <- function(x, ...){
 as.data.frame.pdata.frame <- function(x, row.names = NULL, optional = FALSE, ...){
   index <- attr(x, "index")
   x <- lapply(x,
-              function(z){
-                attr(z, "index") <- index
-                class(z) <- c("pseries", class(z))
-                z
-              }
+                function(z){
+                  attr(z, "index") <- index
+                  class(z) <- c("pseries", class(z))
+                  return(z)
+                }
               )
-  data.frame(x)
+  
+  if (is.null(row.names) || row.names == FALSE) {
+    x <- data.frame(x)
+  } else {
+      if (row.names == TRUE) { # set fancy row names
+        x <- data.frame(x)
+        attr(x, "row.names") <- paste(index[[1]], index[[2]], sep="-") 
+      }
+    ## if row.names is a character vector, row.names could also be passed here to base::data.frame , see ?base::data.frame
+  } 
+  
+  return(x)
 }
 
 

@@ -69,6 +69,7 @@ plm <-  function(formula, data, subset, na.action,
   }
 
   # Check whether data is a pdata.frame and if not create it
+  orig_rownames <- row.names(data)
   if (!inherits(data, "pdata.frame")) data <- pdata.frame(data, index)
   # Create a Formula object if necessary
   if (!inherits(formula, "pFormula")) formula <- pFormula(formula)
@@ -90,6 +91,10 @@ plm <-  function(formula, data, subset, na.action,
   # eval in parent.frame() doesn't work
   #  data <- eval(mf, sys.frame(which = nframe))
   data <- eval(mf, parent.frame())
+  
+  # preserve original row.names for data [also fancy rownames]; so functions like
+  # pmodel.response(), model.frame(), model.matrix(), residuals() return the original row.names
+  row.names(data) <- orig_rownames
   # return the model.frame or estimate the model
   if (is.na(model)){
     attr(data, "formula") <- formula

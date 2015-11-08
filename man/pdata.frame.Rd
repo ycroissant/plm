@@ -31,9 +31,9 @@ pdata.frame(x, index = NULL, drop.index = FALSE, row.names = TRUE)
   \item{index}{this argument indicates the individual and time
     indexes. See details,}
   \item{drop}{see \code{Extract},}
-  \item{drop.index}{should the indexes be removed from the data.frame ?}
-  \item{optional}{see \code{as.data.frame}}
-  \item{row.names}{should ``fancy'' row names be computed ?}
+  \item{drop.index}{logical, indicates whether the indexes are to be excluded from the resulting pdata.frame,}
+  \item{optional}{see \code{as.data.frame},}
+  \item{row.names}{\code{NULL} or logical, indicates whether ``fancy'' row names (a combination of individual index and time index) are to be added to the returned (p)data.frame (\code{NULL} and \code{FALSE} have the same meaning),}
   \item{...}{further arguments}
 }
 
