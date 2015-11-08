@@ -94,7 +94,9 @@ plm <-  function(formula, data, subset, na.action,
   
   # preserve original row.names for data [also fancy rownames]; so functions like
   # pmodel.response(), model.frame(), model.matrix(), residuals() return the original row.names
-  row.names(data) <- orig_rownames
+  # eval(mf, parent.frame()) returns row.names as character vector containing
+  # "row_number" with incomplete observations dropped
+  row.names(data) <- orig_rownames[as.numeric(row.names(data))]
   # return the model.frame or estimate the model
   if (is.na(model)){
     attr(data, "formula") <- formula
