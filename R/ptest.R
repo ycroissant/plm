@@ -234,16 +234,18 @@ plmtest.plm <- function(x,
 
 plmtest.formula <- function(x, data, ...,
                             effect = c("individual", "time", "twoways"),
-                            type = c("honda", "bp", "ghm", "kw")){
+                            type = c("honda", "bp", "ghm", "kw")) {
   
   cl <- match.call(expand.dots = TRUE)
-  cl$model <- "pooling"
+  cl$model <- "pooling" # plmtest is performed on the pooling model...
+  cl$effect <- NULL     # ... and pooling model has no argument effect...
+  cl$type <- NULL       # ... and no argument type => see below: pass on args effect and type to plmtest.plm()
   names(cl)[2] <- "formula"
-  m <- match(plm.arg,names(cl),0)
+  m <- match(plm.arg, names(cl), 0)
   cl <- cl[c(1,m)]
   cl[[1]] <- as.name("plm")
-  plm.model <- eval(cl,parent.frame())
-  plmtest(plm.model, effect = effect, type = type)
+  plm.model <- eval(cl, parent.frame())
+  plmtest(plm.model, effect = effect, type = type) # pass on args. effect and type
 }
 
 pFtest <- function(x,...){
