@@ -120,11 +120,11 @@ selectT <- function(x, Ts){
   ## This function selects the length of the series as it is tabulated
   if (x %in% Ts) return(x)
   if (x < Ts[1]){
-    warning("the time serie is short")
+    warning("the time series is short")
     return(Ts[1])
   }
   if (x > Ts[length(Ts)]){
-    warning("the time serie is long")
+    warning("the time series is long")
     return(Ts[length(Ts)])
   }
   pos <- which((Ts - x)>0)[1]
@@ -295,7 +295,7 @@ purtest <- function(object, data = NULL, index = NULL,
       else exo <- "none"
     }
     else{
-      if (length(lab) > 1 || lab != "trend") stop("uncorrect formula")
+      if (length(lab) > 1 || lab != "trend") stop("incorrect formula")
       exo <- "trend"
     }
     object <- paste(deparse(object[[2]]))
@@ -346,7 +346,7 @@ purtest <- function(object, data = NULL, index = NULL,
 
   parameter <- NULL
   alternative <- 'stationarity'
-  method <- paste(names.test[test], "(ex. var. :",
+  method <- paste0(names.test[test], " (ex. var.: ",
                     names.exo[exo],")")
 
   if (test == "hadri"){
@@ -505,17 +505,17 @@ summary.purtest <- function(object, ...){
 
 print.summary.purtest <- function(x, ...){
   cat(paste(names.test[x$args$test], "\n"))
-  cat(paste('Exogenous variables :', names.exo[x$args$exo], '\n'))
+  cat(paste('Exogenous variables:', names.exo[x$args$exo], '\n'))
   thelags <- sapply(x$idres, function(x) x[['lags']])
   if (is.character(x$args$lags)){
-    cat(paste('Automatic selection of lags using', x$args$lags,':',
-              min(thelags), '-', max(thelags), 'lags (max :', x$args$pmax,')\n'))
+    cat(paste0('Automatic selection of lags using ', x$args$lags, ': ',
+              min(thelags), ' - ', max(thelags), ' lags (max: ', x$args$pmax, ') \n'))
   }
   else{
     cat('User-provided lags\n')
   }
-  cat(paste('statistic :', round(x$statistic$statistic, 3), '\n'))
-  cat(paste('p-value :', round(x$statistic$p.value, 3), '\n'))
+  cat(paste('statistic:', round(x$statistic$statistic, 3), '\n'))
+  cat(paste('p-value:', round(x$statistic$p.value, 3), '\n'))
   print(x$sumidres, ...)
 }
 
