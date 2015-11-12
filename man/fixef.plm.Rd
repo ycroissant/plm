@@ -37,7 +37,7 @@ width = getOption("width"),...)
 }
 
 \details{
-  The summary method prints the effects in deviation from the overall intercept, the standard error and the t--values.
+  The summary method prints the fixed effects in deviation from the overall intercept, the standard errors and the t--values.
 }
 
 \seealso{
@@ -51,10 +51,20 @@ data("Grunfeld", package = "plm")
 gi <- plm(inv ~ value + capital, data = Grunfeld, model = "within")
 fixef(gi)
 summary(fixef(gi))
+
 # extract time effects in a twoways effects model
-gi <- plm(inv ~ value + capital, data = Grunfeld,
+gi_tw <- plm(inv ~ value + capital, data = Grunfeld,
           model = "within", effect = "twoways")
-fixef(gi, effect = "time")
+fixef(gi_tw, effect = "time")
+
+# calc. fitted values of
+# oneway within model using fixef:
+fixefs <- merge(Grunfeld, data.frame(firm = names(fixef(gi)),
+                                   fixef = as.numeric(fixef(gi))),
+                                   all.x = TRUE, by = c("firm"))[ , 6]
+fitted_by_hand <- fixefs + gi$coefficients["value"] * Grunfeld$value +
+                           gi$coefficients["capital"] * Grunfeld$capital
+
 }
 
 \keyword{regression}
