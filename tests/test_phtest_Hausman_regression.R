@@ -78,29 +78,29 @@ vcov(be)*100
 #           =      149.43
 # Prob>chi2 =      0.0000
 
-library(haven)
-nlswork <- read_dta("http://www.stata-press.com/data/r14/nlswork.dta") # large file
-nlswork$race     <- factor(nlswork$race) # convert
-nlswork$race2    <- factor(ifelse(nlswork$race == 2, 1, 0)) # need this variable for example
-nlswork$grade    <- as.numeric(nlswork$grade)
-nlswork$age2     <- (nlswork$age)^2
-nlswork$tenure2  <- (nlswork$tenure)^2
-nlswork$ttl_exp2 <- (nlswork$ttl_exp)^2
-
-pnlswork <- pdata.frame(nlswork, index=c("idcode", "year"), drop.index=F)
-
-form_nls_ex2 <- formula(ln_wage ~ grade + age + age2 + ttl_exp + ttl_exp2 + tenure + tenure2 + race2 + not_smsa + south)
-
-plm_fe_nlswork <- plm(form_nls_ex2, data = pnlswork, model = "within")
-plm_be_nlswork <- plm(form_nls_ex2, data = pnlswork, model = "between")
-plm_re_nlswork <- plm(form_nls_ex2, data = pnlswork, model = "random")
-
-summary(plm_re_nlswork)
-
-### STATA: chi2(8) = 149.43
-phtest(plm_fe_nlswork, plm_re_nlswork)              # chisq = 176.39, df = 8,  p-value < 2.2e-16
-phtest(plm_be_nlswork, plm_re_nlswork)              # chisq = 141.97, df = 10, p-value < 2.2e-16
-phtest(form_nls_ex2, data = pnlswork, method="aux") # chisq = 627.46, df = 8,  p-value < 2.2e-16 [this resulted in an error for SVN revisions 125 - 141]
-phtest(form_nls_ex2, data = nlswork,  method="aux") # same on data.frame
-phtest(form_nls_ex2, data = pnlswork, method="aux", vcov = vcovHC) # chisq = 583.56, df = 8, p-value < 2.2e-16
-# phtest(form_nls_ex2, data = pnlswork, method="aux", vcov = function(x) vcovHC(x, method="white2", type="HC3")) # computational too heavy!
+# library(haven)
+# nlswork <- read_dta("http://www.stata-press.com/data/r14/nlswork.dta") # large file
+# nlswork$race     <- factor(nlswork$race) # convert
+# nlswork$race2    <- factor(ifelse(nlswork$race == 2, 1, 0)) # need this variable for example
+# nlswork$grade    <- as.numeric(nlswork$grade)
+# nlswork$age2     <- (nlswork$age)^2
+# nlswork$tenure2  <- (nlswork$tenure)^2
+# nlswork$ttl_exp2 <- (nlswork$ttl_exp)^2
+# 
+# pnlswork <- pdata.frame(nlswork, index=c("idcode", "year"), drop.index=F)
+# 
+# form_nls_ex2 <- formula(ln_wage ~ grade + age + age2 + ttl_exp + ttl_exp2 + tenure + tenure2 + race2 + not_smsa + south)
+# 
+# plm_fe_nlswork <- plm(form_nls_ex2, data = pnlswork, model = "within")
+# plm_be_nlswork <- plm(form_nls_ex2, data = pnlswork, model = "between")
+# plm_re_nlswork <- plm(form_nls_ex2, data = pnlswork, model = "random")
+# 
+# summary(plm_re_nlswork)
+# 
+# ### STATA: chi2(8) = 149.43
+# phtest(plm_fe_nlswork, plm_re_nlswork)              # chisq = 176.39, df = 8,  p-value < 2.2e-16
+# phtest(plm_be_nlswork, plm_re_nlswork)              # chisq = 141.97, df = 10, p-value < 2.2e-16
+# phtest(form_nls_ex2, data = pnlswork, method="aux") # chisq = 627.46, df = 8,  p-value < 2.2e-16 [this resulted in an error for SVN revisions 125 - 141]
+# phtest(form_nls_ex2, data = nlswork,  method="aux") # same on data.frame
+# phtest(form_nls_ex2, data = pnlswork, method="aux", vcov = vcovHC) # chisq = 583.56, df = 8, p-value < 2.2e-16
+# # phtest(form_nls_ex2, data = pnlswork, method="aux", vcov = function(x) vcovHC(x, method="white2", type="HC3")) # computational too heavy!

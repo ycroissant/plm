@@ -1,18 +1,18 @@
 \name{nobs}
-\alias{nobs}
-\alias{nobs.plm}
+\alias{nobs.panelmodel}
+
 
 \title{Extract Total Number of Observations Used in Estimated Panelmodel}
 
 \description{This function extracts the total number of 'observations' from a fitted panel model.}
 
 \usage{
-nobs(x)
-\method{nobs}{panelmodel}(x)
+\method{nobs}{panelmodel}(object, ...)
 }
 
 \arguments{
- \item{x}{a \code{panelmodel} object for which the number of total observations is to be extracted.}
+ \item{object}{a \code{panelmodel} object for which the number of total observations is to be extracted,}
+ \item{\dots}{further arguments.}
 }
 
 \value{
@@ -23,7 +23,7 @@ nobs(x)
 \code{nobs} is just a wrapper for convenience, it calls \code{pdim(x)$nT$N} and is similiar to \code{lm()}'s \code{nobs}.
 }
 
-\author{Yves Croissant (\code{pdim}) and Kevin Tappe (wrapper \code{nobs})}
+\author{Yves Croissant (for \code{pdim}) and Kevin Tappe (wrapper \code{nobs})}
 
 \seealso{\code{\link{pdim}}}
 

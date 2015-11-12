@@ -16,7 +16,7 @@ pbgtest.formula<-function(x, order = NULL, type = c("Chisq", "F"), data, model=c
   cl <- cl[c(1,m)]
   cl[[1]] <- as.name("plm")
   plm.model <- eval(cl,parent.frame())
-  pbgtest(plm.model, order = order, type = type, ...)
+  pbgtest(plm.model, order = order, type = type, data = data, ...)
 }
 
 pbgtest.panelmodel<-function(x, order = NULL, type = c("Chisq", "F"), ...) {

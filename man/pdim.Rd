@@ -42,7 +42,7 @@ pdim(x,...)
 
 \author{Yves Croissant}
 
-\seealso{\code{\link{nobs.plm}}, \code{\link{pdata.frame}}}
+\seealso{\code{\link{nobs}}, \code{\link{pdata.frame}}}
 
 \examples{
 

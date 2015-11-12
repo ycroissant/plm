@@ -638,6 +638,8 @@ plot.pseries <- function(x, plot=c("lattice", "superposed"),
 }
 
 # nobs() function to extract total number of observations used for estimating the panelmodel
-nobs.plm <- function(x) {
-  if (inherits(x, "plm") | inherits(x, "panelmodel")) return(pdim(x)$nT$N) else stop("Input x needs to be of class 'plm' (or 'panelmodel'), i. e. a panel model estimated by plm()")
+nobs.panelmodel <- function(object, ...) {
+  if (inherits(object, "plm") | inherits(object, "panelmodel")) return(pdim(object)$nT$N)
+    else stop("Input x needs to be of class 'plm' (or 'panelmodel'), i. e. a panel model estimated by plm()")
 }
+

@@ -66,11 +66,14 @@ Online complements to Baltagi (2013):
 }
 
 \examples{
+\dontrun{
 # Compare plm's Grunfeld data to Baltagi's (2001) Grunfeld data:
   data(Grunfeld, package="plm")
-  Grunfeld_baltagi2001 <- read.csv("http://www.wiley.com/legacy/wileychi/baltagi/supp/Grunfeld.fil", sep="", header = F)
+  Grunfeld_baltagi2001 <- read.csv("http://www.wiley.com/legacy/wileychi/
+    baltagi/supp/Grunfeld.fil", sep="", header = FALSE)
   library(compare)
   compare::compare(Grunfeld, Grunfeld_baltagi2001, allowAll = T) # same data set
+  }
 }
 
 \keyword{datasets}

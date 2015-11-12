@@ -11,7 +11,8 @@
 \usage{
 pbgtest(x,...)
 \method{pbgtest}{panelmodel}(x, order = NULL, type = c("Chisq", "F"), ...)
-\method{pbgtest}{formula}(x, order = NULL, type = c("Chisq", "F"), data, model=c("pooling", "random", "within"), ...)
+\method{pbgtest}{formula}(x, order = NULL, type = c("Chisq", "F"),
+           data, model=c("pooling", "random", "within"), ...)
 }
 
 \arguments{
@@ -59,7 +60,7 @@ The argument \code{order} defaults to the minimum number of observations over th
 
 \seealso{
 \code{\link{pdwtest}} for the analogous panel Durbin--Watson test, \code{bgtest} for the Breusch--Godfrey test for serial correlation in the linear model. \code{\link{pbltest}}, \code{\link{pbsytest}}, \code{\link{pwartest}} and \code{\link{pwfdtest}} for other serial correlation tests for panel models.
-For the original test in package \code{lmtest} see \code{\link{lmtest::bgtest}}.
+For the original test in package \code{lmtest} see \code{\link[lmtest]{bgtest}}.
 }
 
 \examples{
@@ -73,7 +74,7 @@ pbgtest(g, order = 4)
 # formula interface
 pbgtest(inv ~ value + capital, data = Grunfeld, model = "random")
 
-# F test statistic for Breusch-Godfrey test (instead of default type="Chisq")
+# F test statistic (instead of default type="Chisq")
 pbgtest(g, type="F")
 pbgtest(inv ~ value + capital, data = Grunfeld, model = "random", type="F")
 

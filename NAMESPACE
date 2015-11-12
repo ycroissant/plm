@@ -2,11 +2,12 @@ export(plm, pvcm, pgmm, pggls, pht, pcce, pmg, plmtest, phtest, pFtest,
        pvar, pdim, pooltest, dynformula, sargan, mtest, ercomp, pvcovHC,
        pbsytest, pdwtest, pbgtest, pbltest, pwartest, pwtest, pwfdtest, pcdtest,
        plm.data, pdata.frame, between, Between, Within, pFormula, pmodel.response,
-       purtest, cipstest, vcovBK, vcovSCC, r.squared, has.intercept,
+       purtest, cipstest, vcovBK, vcovSCC, r.squared, has.intercept, 
        index, fixef, vcovHC, vcovDC, vcovNW, vcovG, piest, aneweytest)
 
 import("Formula")
 importFrom("stats", "lag")
+importFrom("stats", "nobs")
 importFrom("bdsmatrix", "bdsmatrix")
 importFrom("sandwich", "vcovHC")
 importFrom("MASS", "ginv")
@@ -17,6 +18,7 @@ importFrom("lmtest", "bgtest")
 importFrom("lmtest", "dwtest")
 importFrom("car", "linearHypothesis")
 importFrom("lattice", "xyplot")
+
 
 #pFormula
 S3method("model.frame", "pFormula")
@@ -45,7 +47,7 @@ S3method("pdim", "panelmodel")
 S3method("pdim", "default")
 S3method("print", "pdim")
 # nobs
-S3method("nobs", "plm")
+S3method("nobs", "panelmodel")
 # pvar
 S3method("pvar", "data.frame")
 S3method("pvar", "pdata.frame")

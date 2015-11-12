@@ -99,18 +99,18 @@ summary(plm_grunfeld_re_swar   )
 
 #### (2) ####
 ####### replicate STATA's fixed effects estimator, R-squared, F statistic ###
-# http://www.stata.com/manuals14/xtxtreg.pdf [example 2 on p. 14]
-library(plm)
-library(haven)
-nlswork <- read_dta("http://www.stata-press.com/data/r14/nlswork.dta") # large file
-nlswork$race <- factor(nlswork$race) # convert
-nlswork$race2 <- factor(ifelse(nlswork$race == 2, 1, 0)) # need this variable for example
-nlswork$grade <- as.numeric(nlswork$grade)
-pnlswork <- pdata.frame(nlswork, index=c("idcode", "year"), drop.index=F)
-
-form_nls_ex2 <- formula(ln_wage ~ grade + age + I(age^2) + ttl_exp + I(ttl_exp^2) + tenure + I(tenure^2) + race2 + not_smsa + south)
-
-plm_fe_nlswork <- plm(form_nls_ex2, data = pnlswork, model = "within")
+## http://www.stata.com/manuals14/xtxtreg.pdf [example 2 on p. 14]
+# library(plm)
+# library(haven)
+# nlswork <- read_dta("http://www.stata-press.com/data/r14/nlswork.dta") # large file
+# nlswork$race <- factor(nlswork$race) # convert
+# nlswork$race2 <- factor(ifelse(nlswork$race == 2, 1, 0)) # need this variable for example
+# nlswork$grade <- as.numeric(nlswork$grade)
+# pnlswork <- pdata.frame(nlswork, index=c("idcode", "year"), drop.index=F)
+# 
+# form_nls_ex2 <- formula(ln_wage ~ grade + age + I(age^2) + ttl_exp + I(ttl_exp^2) + tenure + I(tenure^2) + race2 + not_smsa + south)
+# 
+# plm_fe_nlswork <- plm(form_nls_ex2, data = pnlswork, model = "within")
 
 # STATA's results:
 #
@@ -140,7 +140,7 @@ plm_fe_nlswork <- plm(form_nls_ex2, data = pnlswork, model = "within")
 # resambles STATA (ex. 2, p. 14)
 # => coefficients, std.errors, R^2 (=R-sq within), F => correct
 # (NB: STATA outputs an "artificial" constant for FE models, see below)
-summary(plm_fe_nlswork)
+#summary(plm_fe_nlswork)
 
 # STATA outputs a constant for the FE model which is computed as the weighted average of the individual constants
 # see http://www.stata.com/support/faqs/statistics/intercept-in-fixed-effects-model/
@@ -148,11 +148,11 @@ summary(plm_fe_nlswork)
 # gretl mimics STATA: see gretl user's guide example p. 160-161 (example 18.1)
 # http://gretl.sourceforge.net/gretl-help/gretl-guide.pdf
 # http://lists.wfu.edu/pipermail/gretl-devel/2013-May/004459.html
-const_fe_STATA_gretl <- weighted.mean(fixef(plm_fe_nlswork) , as.numeric(table(index(plm_fe_nlswork)[[1]])))
+#const_fe_STATA_gretl <- weighted.mean(fixef(plm_fe_nlswork) , as.numeric(table(index(plm_fe_nlswork)[[1]])))
 
 # RE estimator
 # note STATA 14 uses by default a different method compared to plm's Swamy-Arora variance component estimator
 # This is why in comparison with web examples from STATA the random effects coefficients slightly differ
-plm_re_nlswork <- plm(form_nls_ex2, data = pnlswork, model = "random")
+#plm_re_nlswork <- plm(form_nls_ex2, data = pnlswork, model = "random")
 
 

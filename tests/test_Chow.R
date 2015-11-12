@@ -2,6 +2,7 @@
 # Baltagi (2013), Econometric Analysis of Panel Data, 5th edition, Wiley & Sons
 # Sec 4.1.3, example 2, p. 68 => results are replicated
 
+library(plm)
 data("Gasoline", package = "plm")
 form <- lgaspcar ~ lincomep + lrpmg + lcarpcap
 

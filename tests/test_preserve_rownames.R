@@ -75,5 +75,5 @@ row.names(as.data.frame(pGrunfeld, row.names = TRUE))  # fancy row names are add
 # test data.frame - argument row.names has a different meaning here compared to as.data.frame.pdata.frame
 row.names(data.frame(pGrunfeld))
 row.names(data.frame(pGrunfeld, row.names = c(1:nrow(pGrunfeld))))
-row.names(data.frame(pGrunfeld, row.names = TRUE))  # error due to diff. meaning
-row.names(data.frame(pGrunfeld, row.names = FALSE)) # error due to diff. meaning
+# row.names(data.frame(pGrunfeld, row.names = TRUE))  # error due to diff. meaning
+# row.names(data.frame(pGrunfeld, row.names = FALSE)) # error due to diff. meaning
