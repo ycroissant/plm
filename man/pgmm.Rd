@@ -35,7 +35,7 @@ pgmm(formula, data, subset, na.action,
     \code{"twoways"} (the default) or \code{"individual"},}
   \item{model}{one of \code{"onestep"} (the default) or
     \code{"twosteps"},}
-  \item{collapse}{if TRUE, the gmm instruments are collapsed,}
+  \item{collapse}{if \code{TRUE}, the gmm instruments are collapsed,}
   \item{lost.ts}{the number of lost time series : if \code{NULL}, this
     is automatically computed. Otherwise, it can be defined by the user
     as a numeric vector of length 1 or 2. The first element is the
@@ -68,7 +68,7 @@ An object of class \code{c("pgmm","panelmodel")}, which has the following elemen
 \item{fitted.values}{the vector of fitted.values,}
 \item{vcov}{the covariance matrix of the coefficients,}
 \item{df.residual}{degrees of freedom of the residuals,}
-\item{model}{a list containing  the variables used for the
+\item{model}{a list containing the variables used for the
   estimation for each individual,}
 
 \item{W}{a list containing the instruments for each individual (two
@@ -109,7 +109,7 @@ Blundell and Bond (1998)).
 \code{pgmm} is an attempt to adapt GMM estimators available within the
 DPD library for GAUSS (see Arellano and Bond 1998) and Ox (see Doornik,
 Arellano and Bond 2006) and with the xtabond2 library for STATA (see
-Roodman 2009).  }
+Roodman 2009).}
 
 \references{
   
@@ -118,7 +118,7 @@ Data: Monte Carlo Evidence and an Application to Employment Equations,
 \emph{The Review of Economic Studies}, vol. \bold{58}(2), 1991,
 pp.227--297.
   
-Arellano, M. and  Bond, S. (1998) Dynamic Panel Data Estimation
+Arellano, M. and Bond, S. (1998) Dynamic Panel Data Estimation
 Using DPD98 for GAUSS: A Guide for Users.
 
 Blundell, R. and Bond, S. (1998) Initial Conditions and Moment
@@ -126,7 +126,7 @@ Restrictions in Dynamic Panel Data Models, \emph{Journal of
 Econometrics}, vol. \bold{87}, pp.115--143.
 
 Doornik, J., Arellano, M. and Bond, S. (2006) Panel Data Estimation
-using DPD for Ox.  \url{http://www.doornik.com/download/oxmetrics7/Ox_Packages/dpd.pdf}
+using DPD for Ox. \url{http://www.doornik.com/download/oxmetrics7/Ox_Packages/dpd.pdf}
   
 Roodman, D. (2009) How to do xtabond2: An Introduction to ``difference''
 and ``system'' GMM in Stata, \emph{Stata Journal}, vol. \bold{9}(1),

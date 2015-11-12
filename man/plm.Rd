@@ -31,52 +31,52 @@ plm(formula, data, subset, na.action, effect = c("individual", "time", "twoways"
   \item{object,x}{an object of class \code{"plm"},}
   \item{data}{a \code{data.frame},}
   \item{subset}{see \code{\link{lm}} for \code{"plm"}, a character or
-    numeric vector indicaing asubset of the table of coefficient to be
+    numeric vector indicating a subset of the table of coefficients to be
     printed for \code{"print.summary.plm"},}
   \item{na.action}{see \code{\link{lm}},}
   \item{effect}{the effects introduced in the model, one of
-  \code{"individual"}, \code{"time"} or \code{"twoways"},}
+  \code{"individual"}, \code{"time"}, or \code{"twoways"},}
   \item{model}{one of \code{"pooling"}, \code{"within"},
-    \code{"between"}, \code{"random",} \code{"fd"} and \code{"ht"},}
+    \code{"between"}, \code{"random",} \code{"fd"}, or \code{"ht"},}
   \item{random.method}{method of estimation for the variance components
-    in the random effects model, one of \code{"swar"} (the default value),
-  \code{"amemiya"}, \code{"walhus"} and \code{"nerlove"},}
+    in the random effects model, one of \code{"swar"} (default),
+  \code{"amemiya"}, \code{"walhus"}, or \code{"nerlove"},}
   \item{random.dfcor}{a numeric vector of length 2 indicating which degree of
     freedom should be used,}
   \item{inst.method}{the instrumental variable transformation: one of
-    \code{"bvk"}, \code{"baltagi"}, \code{"am"} and \code{"bmc"},}
+    \code{"bvk"}, \code{"baltagi"}, \code{"am"}, or \code{"bmc"},}
   \item{index}{the indexes,}
-  \item{restrict.matrix}{a matrix wich defines linear restrictions on
+  \item{restrict.matrix}{a matrix which defines linear restrictions on
     the coefficients,}
   \item{restrict.rhs}{the right hand side vector of the linear
     restrictions on the coefficients,}
   \item{.vcov}{a covariance matrix furnished by the user,}
-  \item{digits}{digits,}
-  \item{width}{the maximum length of the lines in the printed  output,}
-  \item{dx}{the half-length of the individual lines for the plot
+  \item{digits}{number of digits for printed output,}
+  \item{width}{the maximum length of the lines in the printed output,}
+  \item{dx}{the half--length of the individual lines for the plot
     method (relative to x range),}
   \item{N}{the number of individual to plot,}
   \item{seed}{the seed which will lead to individual selection,}
-  \item{within}{if \code{TRUE}, the within model is ploted,}
-  \item{pooling}{if \code{TRUE}, the pooling model is ploted,}
-  \item{between}{if \code{TRUE}, the between model is ploted,}
-  \item{random}{if \code{TRUE}, the random effect model is ploted,}
+  \item{within}{if \code{TRUE}, the within model is plotted,}
+  \item{pooling}{if \code{TRUE}, the pooling model is plotted,}
+  \item{between}{if \code{TRUE}, the between model is plotted,}
+  \item{random}{if \code{TRUE}, the random effect model is plotted,}
   \item{\dots}{further arguments.}
 }
 
 \details{
   \code{plm} is a general function for the estimation of linear panel
 models. It supports the following estimation methods: pooled OLS
-(\code{model="pooling"}), fixed effects (\code{"within"}), random
-effects (\code{"random"}), first--differences (\code{"fd"}) and between
+(\code{model = "pooling"}), fixed effects (\code{"within"}), random
+effects (\code{"random"}), first--differences (\code{"fd"}), and between
 (\code{"between"}). It supports unbalanced panels and two--way effects
 (although not with all methods).
 
-For random effects models, 4 estimators of the transformation
-parameter are available : \code{swar} (Swamy and Arora),
-\code{amemiya}, \code{walhus} (Wallace and Hussain) and \code{nerlove}.
+For random effects models, four estimators of the transformation
+parameter are available by setting \code{random.method} to one of \code{"swar"} (Swamy and Arora (1972)) (default),
+\code{"amemiya"} (Amemiya (1971)), \code{"walhus"} (Wallace and Hussain (1969)), or \code{"nerlove"} (Nerlove (1971)).
 
-Instrumental variables estimation is obtained using two-part formulas,
+Instrumental variables estimation is obtained using two--part formulas,
 the second part indicating the instrumental variables used. This can be
 a complete list of instrumental variables or an update of the first
 part. If, for example, the model is \code{y ~ x1 + x2 + x3}, with
@@ -89,9 +89,9 @@ instruments, the model can be estimated with:
 }
 
 Balestra and Varadharajan--Krishnakumar's or Baltagi's method is used if
-\code{inst.method="bvk"} or if \code{inst.method="baltagi"}.
+\code{inst.method="bvk"} or if \code{inst.method="baltagi"}, respectively.
   
-The Hausman and Taylor estimator is computed if \code{model="ht"}.
+The Hausman and Taylor estimator is computed if \code{model = "ht"}.
 }
 
 \value{
@@ -106,11 +106,11 @@ A \code{"plm"} object has the following elements :
 \item{formula}{an object of class \code{'pFormula'} describing the
   model,}
 \item{model}{a data.frame of class \code{'pdata.frame'} containing the
-  variables used for the estimation: the response is in first position and
-  the two indexes in the last positions,}
+  variables used for the estimation: the response is in first column and
+  the two indexes in the two last columns,}
 \item{ercomp}{an object of class \code{'ercomp'} providing the
  estimation of the components of the errors (for random effects models only),}
-\item{call}{the call,}
+\item{call}{the call.}
    
 It has \code{print}, \code{summary} and \code{print.summary} methods.
 }
