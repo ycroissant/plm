@@ -198,3 +198,6 @@ print.summary.pggls <- function(x,digits=max(3, getOption("digits") - 2), width 
   invisible(x)
 }
 
+residuals.pggls <- function(object, ...) {
+    return(pres(object))
+}

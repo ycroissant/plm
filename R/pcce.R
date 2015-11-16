@@ -328,5 +328,8 @@ print.summary.pcce <- function(x,digits=max(3, getOption("digits") - 2), width =
   invisible(x)
 }
 
+residuals.pcce <- function(object, ...) {
+    return(pres(object))
+}
 
 

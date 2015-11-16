@@ -272,5 +272,8 @@ print.summary.pmg <- function(x,digits=max(3, getOption("digits") - 2), width = 
   invisible(x)
 }
 
+residuals.pmg <- function(object, ...) {
+    return(pres(object))
+}
 
 

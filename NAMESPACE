@@ -82,12 +82,15 @@ S3method("print", "summary.pvcm")
 #pggls
 S3method("summary", "pggls")
 S3method("print", "summary.pggls")
+S3method("residuals", "pggls")
 #pcce
 S3method("summary", "pcce")
 S3method("print", "summary.pcce")
+S3method("residuals", "pcce")
 #pmg
 S3method("summary", "pmg")
 S3method("print", "summary.pmg")
+S3method("residuals", "pmg")
 #pht
 S3method("summary", "pht")
 S3method("print", "summary.pht")
