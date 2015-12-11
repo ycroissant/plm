@@ -40,7 +40,7 @@ earnings functions with fixed effects, \emph{Journal of Business &
 \author{Yves Croissant}
   
 \examples{
-data("RiceFarms", package = "pder")
+data("RiceFarms", package = "plm")
 aneweytest(log(goutput) ~ log(seed) + log(totlabor) + log(size), RiceFarms, index = "id")
 }
 \keyword{aneweytest}

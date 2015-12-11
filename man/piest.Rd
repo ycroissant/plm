@@ -44,7 +44,7 @@ Chamberlain, G. (1982) Multivariate regression for panel data,
 \author{Yves Croissant}
   
 \examples{
-data("RiceFarms", package = "pder")
+data("RiceFarms", package = "plm")
 pirice <- piest(log(goutput) ~ log(seed) + log(totlabor) + log(size), RiceFarms, index = "id")
 summary(pirice)
 }

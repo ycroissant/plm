@@ -46,12 +46,12 @@ correlation in the linear model. \code{\link{pbltest}},
 }
 
 \examples{
-#data("Grunfeld", package = "plm")
-#g <- plm(inv ~ value + capital, data = Grunfeld, model="random")
-#pdwtest(g)
-#pdwtest(g, alternative="two.sided")
+data("Grunfeld", package = "plm")
+g <- plm(inv ~ value + capital, data = Grunfeld, model="random")
+pdwtest(g)
+pdwtest(g, alternative="two.sided")
 ## formula interface
-#pdwtest(inv ~ value + capital, data=Grunfeld, model="random")
+pdwtest(inv ~ value + capital, data=Grunfeld, model="random")
 }
 
 \keyword{htest}

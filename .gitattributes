@@ -40,6 +40,7 @@ data/LaborSupply.rda -text
 data/Males.rda -text
 data/Parity.rda -text
 data/Produc.rda -text
+data/RiceFarms.rda -text
 data/Snmesp.rda -text
 data/SumHes.rda -text
 data/Wages.rda -text
@@ -54,6 +55,7 @@ man/LaborSupply.Rd -text
 man/Males.Rd -text
 man/Parity.Rd -text
 man/Produc.Rd -text
+man/RiceFarms.Rd -text
 man/Snmesp.Rd -text
 man/SumHes.Rd -text
 man/Wages.Rd -text
