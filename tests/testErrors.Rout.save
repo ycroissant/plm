@@ -1,25 +1,23 @@
 
-R version 3.2.1 (2015-06-18) -- "World-Famous Astronaut"
+R version 3.2.2 (2015-08-14) -- "Fire Safety"
 Copyright (C) 2015 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
-R è un software libero ed è rilasciato SENZA ALCUNA GARANZIA.
-Siamo ben lieti se potrai redistribuirlo, ma sotto certe condizioni.
-Scrivi 'license()' o 'licence()' per dettagli su come distribuirlo.
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
 
-R è un progetto di collaborazione con molti contributi esterni.
-Scrivi 'contributors()' per maggiori informazioni e 'citation()'
-per sapere come citare R o i pacchetti di R nelle pubblicazioni.
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
 
-Scrivi 'demo()' per una dimostrazione, 'help()' per la guida in linea, o
-'help.start()' per l'help navigabile con browser HTML.
-Scrivi 'q()' per uscire da R.
-
-[Caricato workspace precedentemente salvato]
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
 
 > ### Testing problematic and erroneous data
 > library(plm)
-Carico il pacchetto richiesto: Formula
+Loading required package: Formula
 > 
 > ### NA in the individual index: should give an informative error
 > ind <- 1:100
@@ -35,10 +33,10 @@ Carico il pacchetto richiesto: Formula
 > dat <- data.frame(y, x, ind=rep(ind, T), t=rep(1:T, each=length(ind)))
 > data <- plm.data(dat, index=c("ind", "t"))
 > a <- try(m <- plm(y ~ x, data=data, model="random"))
-Error in model.matrix.pFormula(formula, data, rhs = 1, model = model,  : 
+Error in model.matrix.pFormula(object, data, model = "pooling") : 
   NA in the individual index variable
 >                            # should give an error: NA in the individual index
 > 
 > proc.time()
    user  system elapsed 
-  0.707   0.036   0.736 
+  2.452   0.084   2.534 
