@@ -20,11 +20,11 @@ A panel of 48 observations from 1970 to 1986
   \describe{
     \item{state}{the state}
     \item{year}{the year}
-    \item{pcap}{private capital stock}
+    \item{pcap}{public capital stock}
     \item{hwy}{highway and streets}
     \item{water}{water and sewer facilities}
     \item{util}{other public buildings and structures}
-    \item{pc}{public capital}
+    \item{pc}{private capital stock}
     \item{gsp}{gross state products}
     \item{emp}{labor input measured by the employement in non--agricultural payrolls}
     \item{unemp}{state unemployment rate}
