@@ -18,7 +18,16 @@ importFrom("lmtest", "bgtest")
 importFrom("lmtest", "dwtest")
 importFrom("car", "linearHypothesis")
 importFrom("lattice", "xyplot")
-
+#
+importFrom("grDevices", "heat.colors", "rainbow")
+importFrom("graphics", "abline", "axis", "barplot", "legend", "lines",
+           "plot", "points")
+importFrom("stats", "approx", "as.formula", "coef", "coefficients",
+           "cor", "delete.response", "deviance", "df.residual",
+           "fitted", "formula", "lm", "lm.fit", "model.frame",
+           "model.matrix", "model.response", "na.omit", "pchisq", "pf",
+           "pnorm", "printCoefmat", "pt", "resid", "residuals",
+           "terms", "update", "var", "vcov")
 
 #pFormula
 S3method("model.frame", "pFormula")

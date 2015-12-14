@@ -519,3 +519,7 @@ Changes since version 1.5-9
 Changes since version 1.5-11
 
 	* added RiceFarms to datasets to eliminate non-CRAN dependencies, (temporarily) removed 'pder' from suggested, uncommented (fixed) example in pdwtest.Rd
+
+Changes since version 1.5-12
+
+	* added importFrom as per CRAN check for submission.
