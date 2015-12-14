@@ -20,6 +20,7 @@ A panel of 48 observations from 1970 to 1986
   \describe{
     \item{state}{the state}
     \item{year}{the year}
+    \item{region}{the region}
     \item{pcap}{public capital stock}
     \item{hwy}{highway and streets}
     \item{water}{water and sewer facilities}
