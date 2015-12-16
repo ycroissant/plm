@@ -57,13 +57,10 @@ gi_tw <- plm(inv ~ value + capital, data = Grunfeld,
           model = "within", effect = "twoways")
 fixef(gi_tw, effect = "time")
 
-# calc. fitted values of
-# oneway within model using fixef:
-fixefs <- merge(Grunfeld, data.frame(firm = names(fixef(gi)),
-                                   fixef = as.numeric(fixef(gi))),
-                                   all.x = TRUE, by = c("firm"))[ , 6]
-fitted_by_hand <- fixefs + gi$coefficients["value"] * Grunfeld$value +
-                           gi$coefficients["capital"] * Grunfeld$capital
+# calc. fitted values of oneway within model:
+fixefs <- fixef(gi)[index(gi, which = "id")]
+fitted_by_hand <- fixefs + gi$coefficients["value"] * gi$model$value +
+                           gi$coefficients["capital"] * gi$model$capital
 
 }
 

@@ -116,13 +116,13 @@ Changes since version 1-0.0
 
 Changes since version 1-0.1
 	
-	* the plm function has been completely rewriten,
+	* the plm function has been completely rewritten,
 
 	* the names of some arguments have changed (random.methods ->
 	ercomp, inst.method -> ivar), the old names are accepted with a
 	warning,
 
-	* the instuments argument is removed, instrumental variable
+	* the instruments argument is removed, instrumental variable
 	estimation is performed using extended formula. The instruments
 	argument is still accepted with a warning,
 
@@ -145,7 +145,7 @@ Changes since version 1-0.1
 	computed in levels, in deviation from the first level or in
 	deviation from the overall mean
 
-	* in pbsytest, the arguments test are now in lowercases,
+	* in pbsytest, the arguments test are now in lowercase,
 
 	* the pvcovHC function is replaced by suitable vcovHC methods for
 	panelmodel and pgmm models
@@ -227,7 +227,7 @@ Change since version 1-1.4
 	be provided in this case
 	
 	* hausman-taylor estimation is now performed by the pht
-	function. For backaward compatibility reasons, it is still
+	function. For backward compatibility reasons, it is still
 	possible to estimate this model with plm
 
 Changes since version 1.2-0	
@@ -270,7 +270,7 @@ Changes since version 1.2-2
 	* in formula(dynformula), a bug is fixed so that the endog
 	variable doesn't appear on the rhs if there is no lags
 
-	* in pgmm, the extract.data has been rewriten and is *much* faster
+	* in pgmm, the extract.data has been rewritten and is *much* faster
 
 	* two new functions vcovBK and vcovSCC have been added
 
@@ -286,7 +286,7 @@ Changes since version 1.2-3
 	* pFormula is modified so that it can handle correctly Formula
 	object, and not only formula
 	
-	* pgmm has been completely rewriten with a new 'Formula'
+	* pgmm has been completely rewrite with a new 'Formula'
 	interface. Old formula and dynformula interfaces are kept for
 	backward compatibility but won't be maintained in the future
 
@@ -366,8 +366,8 @@ Changes since version 1.2-8
 
 	* the resid and fitted method now returns a pseries object
 
-	* the pgmm method has been rewriten ; the data frame is then first
-	balanced and NAs are then overwriten by 0s
+	* the pgmm method has been rewrite ; the data frame is then first
+	balanced and NAs are then overwritten by 0s
 
 Changes since version 1.2-9	
 
@@ -430,12 +430,12 @@ Changes since version 1.3-0
 	* the Wages example is removed from the pvar man page because it's time consuming
 	
 	
-Changes sinve version 1.3-1
+Changes since version 1.3-1
 
 	* a subset argument is added to print.summary.plm and summary.pht
 	so that a subset of coefficient may be selected
 
-	* fixed a small problem on the printing of the typologie of the
+	* fixed a small problem on the printing of the typology of the
 	variables for pht models
 	
 	* the "name" of the tests is now the formula truncated so that it
@@ -468,7 +468,7 @@ Changes since version 1.5-1
 
 	* fixed "already a pdata.frame" bug in pcdtest.formula 
 
-        * implemented fixef() method for objects estimated by pggls()
+  * implemented fixef() method for objects estimated by pggls()
  
 
 Changes since version 1.5-3
@@ -521,5 +521,5 @@ Changes since version 1.5-11
 	* added RiceFarms to datasets to eliminate non-CRAN dependencies, (temporarily) removed 'pder' from suggested, uncommented (fixed) example in pdwtest.Rd
 
 Changes since version 1.5-12
-
+  * dataset Produc: added variable 'region' as 3rd column and description: 'pcap' is public capital (not private) while 'pc' is private capital (not public)
 	* added importFrom as per CRAN check for submission.
