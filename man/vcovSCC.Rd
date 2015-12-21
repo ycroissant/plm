@@ -12,7 +12,7 @@
 \method{vcovSCC}{plm}(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
                       cluster="time",
                       maxlag=NULL,
-                      inner=c("cluster","white"),
+                      inner=c("cluster","white","diagavg"),
                       wj=function(j, maxlag) 1-j/(maxlag+1),
                       ...)
 }
@@ -24,7 +24,8 @@
   \item{maxlag}{either \code{NULL} or a positive integer specifying the
   maximum lag order before truncation}
   \item{inner}{the function to be applied to the residuals inside the 
-  sandwich: \code{"cluster"} for SCC, \code{"white"} for Newey-West,}
+  sandwich: \code{"cluster"} for SCC, \code{"white"} for Newey-West,
+  (\code{"diagavg"} for compatibility reasons)}
   \item{wj}{weighting function to be applied to lagged terms,}
   \item{...}{further arguments}.
 }

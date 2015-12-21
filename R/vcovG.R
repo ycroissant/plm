@@ -30,7 +30,7 @@ vcovG <- function(x, ...) {
 vcovG.plm <-function(x,type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
                       cluster=c("group","time"),
                      l=0,
-                     inner=c("cluster","white"),
+                     inner=c("cluster","white","diagavg"),
                      ...) {
 
   ## general building block for vcov
@@ -105,37 +105,6 @@ vcovG.plm <-function(x,type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
             }
         })
 
-  ## Definition module for E(u,v)
-  if(is.function(inner)) {
-        E=inner
-    } else {
-      ## outer for clustering/arellano, diag(diag(inner)) for white
-      switch(match.arg(inner), cluster={
-          E=function(u,v) outer(u,v)
-      }, white={
-          E=function(u,v) { # was simply: diag(diag(outer(u,v)))
-              # but unfortunately we have to manage unbalanced panels
-              # in the case l!=0 (the residual vectors are different)
-              # by producing a "pseudo-diagonal" with all those obs.
-              # common to both vectors
- 
-              ## calculate outer product
-              efull <- outer(u,v)
-              ## make matrix of zeros with same dims and names
-              eres <- array(0, dim=dim(efull))
-              dimnames(eres) <- dimnames(efull)
-              ## populate "pseudo-diagonal" with values from efull
-              for(i in 1:length(names(u))) {
-                  for(j in 1:length(names(v))) {
-                      if(names(u)[i]==names(v)[j]) {
-                          eres[i,j] <- efull[i,j]
-                      }
-                  }
-              }
-              return(eres)
-          }
-      })
-  }
    ## Definition module for E(u,v)
     if(is.function(inner)) {
         E=inner
@@ -152,7 +121,8 @@ vcovG.plm <-function(x,type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
  
               if(isTRUE(all.equal(names(u), names(v)))) {
                   ## ..then keep it simple! (halves time on EmplUK ex.)
-                  euv <- diag(diag(outer(u,v)))
+                  n <- length(u)
+                  euv <- diag(u*v, n)
               } else {
                   ## calculate outer product
                   efull <- outer(u,v)
@@ -168,6 +138,34 @@ vcovG.plm <-function(x,type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
                       }
                   }
                   euv <- eres
+              }
+              return(euv)
+          }
+      }, diagavg={
+          E=function(u,v) {
+              ## this is the averaged version for 'white2'
+              if(isTRUE(all.equal(names(u), names(v)))) {
+                  ## ..then keep it simple
+                  n <- length(u)
+                  euv <- diag(x=sum(u*v)/n, n)
+              } else {
+                  ## do just as for 'white' and then average nonzeros:
+                  ## calculate outer product
+                  efull <- outer(u,v)
+                  ## make matrix of zeros with same dims and names
+                  eres <- array(0, dim=dim(efull))
+                  dimnames(eres) <- dimnames(efull)
+                  ## populate "pseudo-diagonal" with values from efull
+                  for(i in 1:length(names(u))) {
+                      for(j in 1:length(names(v))) {
+                          if(names(u)[i]==names(v)[j]) {
+                              eres[i,j] <- efull[i,j]
+                          }
+                      }
+                  }
+                  euv <- eres
+                  ## substitute nonzeros with average thereof
+                  euv[euv!=0] <- mean(euv[euv!=0])
               }
               return(euv)
           }
@@ -231,7 +229,7 @@ vcovG.plm <-function(x,type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
   ## the grouping index; if inner="white" it is simply the sample size)
     ## find some more elegant solution for this!
     ## (perhaps if white then sss->HC1 but check...)
-  G <- if(match.arg(inner)=="white") nT else n
+  G <- if(match.arg(inner)=="cluster") n else nT
   uhat<-omega(uhat, diaghat, df, G)
 
   ## compute basic block: X'_t u_t u'_(t-l) X_(t-l) foreach t,
@@ -297,7 +295,7 @@ vcovHC.plm <- function(x, method=c("arellano","white1","white2"),
     inner <- switch(match.arg(method),
                     arellano = "cluster",
                     white1 = "white",
-                    white2 = "white")  # fix this: add white2 to vcovG
+                    white2 = "diagavg")
 
     return(vcovG(x, type=type, cluster=cluster,
                         l=0, inner=inner, ...))
@@ -331,7 +329,7 @@ vcovDC.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 vcovSCC.plm <- function(x,type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
                         cluster="time",
                         maxlag=NULL,
-                        inner=c("cluster","white"),
+                        inner=c("cluster","white","diagavg"),
                         wj=function(j, maxlag) 1-j/(maxlag+1),
                         ...) {
 

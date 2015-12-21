@@ -11,7 +11,7 @@
 \method{vcovG}{plm}(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
                       cluster=c("group", "time"),
                       l=0,
-                      inner=c("cluster", "white"),
+                      inner=c("cluster", "white","diagavg"),
                       ...)
 }
 
@@ -21,7 +21,7 @@
   \item{cluster}{one of \code{"group"}, \code{"time"},}
   \item{l}{lagging order, defaulting to zero}
   \item{inner}{the function to be applied to the residuals inside the 
-  sandwich: one of \code{"cluster"} or \code{"white"},}
+  sandwich: one of \code{"cluster"} or \code{"white"} or \code{"diagavg"},}
   \item{...}{further arguments}.
 }
 
