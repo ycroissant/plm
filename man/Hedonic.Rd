@@ -21,8 +21,8 @@
     \item{mv}{median value of owner--occupied homes}
     \item{crim}{crime rate}
     \item{zn}{proportion of 25,000 square feet residential lots}
-    \item{indus}{proportion of nonretail business acres}
-    \item{chas}{is the tract bounds the Charles River ?}
+    \item{indus}{proportion of no--retail business acres}
+    \item{chas}{is the tract bounds the Charles River?}
     \item{nox}{annual average nitrogen oxide concentration in parts per hundred million}
     \item{rm}{average number of rooms}
     \item{age}{proportion of owner units built prior to 1940}
@@ -51,7 +51,7 @@ Online complements to Baltagi (2013):
   
  Baltagi, Badi H. (2013) \emph{Econometric Analysis of Panel Data}, 5th ed., John Wiley and Sons.
 
- Belsley, D.A.,  E. Kuh and  R. E. Welsch (1980): \emph{Regression Diagnostics: Identifying Influencial Data and Sources of Collinearity}, John Wiley, New York.
+ Belsley, D.A.,  E. Kuh and  R. E. Welsch (1980): \emph{Regression Diagnostics: Identifying Influential Data and Sources of Collinearity}, John Wiley, New York.
 
  Harrison, D. and  D.L. Rubinfeld (1978): \dQuote{Hedonic housing prices and the demand for clean air}, \emph{Journal of Environmental Economics and Management}, \bold{5}, 81--102.
 }

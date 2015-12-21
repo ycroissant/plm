@@ -1,4 +1,5 @@
 \name{nobs}
+\alias{nobs}
 \alias{nobs.panelmodel}
 
 
@@ -20,7 +21,7 @@
 }
 
 \details{
-\code{nobs} is just a wrapper for convenience, it calls \code{pdim(x)$nT$N} and is similiar to \code{lm()}'s \code{nobs}.
+\code{nobs} is just a wrapper for convenience, it calls \code{pdim(x)$nT$N} (except for pgmm models) and is similiar to \code{lm()}'s \code{nobs}.
 }
 
 \author{Yves Croissant (for \code{pdim}) and Kevin Tappe (wrapper \code{nobs})}

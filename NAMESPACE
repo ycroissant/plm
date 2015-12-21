@@ -53,10 +53,12 @@ S3method("as.data.frame", "pdata.frame")
 S3method("pdim", "data.frame")
 S3method("pdim", "pdata.frame")
 S3method("pdim", "panelmodel")
+S3method("pdim", "pgmm")
 S3method("pdim", "default")
 S3method("print", "pdim")
 # nobs
 S3method("nobs", "panelmodel")
+S3method("nobs", "pgmm")
 # pvar
 S3method("pvar", "data.frame")
 S3method("pvar", "pdata.frame")
