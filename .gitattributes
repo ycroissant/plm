@@ -109,6 +109,7 @@ tests/testEvaluation.R -text
 tests/testEvaluation.Rout.save -text
 tests/test_Chow.R -text
 tests/test_Estimators.R -text
+tests/test_fitted.plm.R -text
 tests/test_phtest_Hausman_regression.R -text
 tests/test_plm_na.action.R -text
 tests/test_preserve_rownames.R -text

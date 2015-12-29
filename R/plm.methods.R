@@ -99,6 +99,18 @@ fitted.plm <- function(object, model = NULL, ...){
     varwith <- colnames(Xw)
     beta <- beta[varwith]
   }
+  
+  # Test if all coefficients could be estimated by plm
+  # [plm silently drops non-estimatable coefficients [v1.5-13]]
+  # With this test, we provide an additional warning message to
+  # users to enhance the error message from failing crossprod later in the code
+  # which relies on non-dropped coefficients; see also testfile tests/test_fitted.plm.R
+  # This test could be computationally/space expensive due to creation of model.matrix.
+  # if (!setequal(names(object$coefficients), colnames(model.matrix(object)))) {
+  #    warning("Coefficients of estimated model do not match variables in its specified model.matrix.
+  #           This is likely due to non-estimatable coefficients (compare object$formula with object$coefficients).")
+  # }
+  
   if (fittedmodel == "within"){
     if (model == "pooling"){
       if (has.intercept(object)) X <- X[,-1]
@@ -109,7 +121,7 @@ fitted.plm <- function(object, model = NULL, ...){
                    individual = fixef(object, effect = "individual")[as.character(id)],
                    time = fixef(object, effect="time")[as.character(time)],
                    twoways = fixef(object, effect = "individual")[as.character(id)] +
-                   fixef(object, effect = "time")[as.character(time)])
+                             fixef(object, effect = "time")[as.character(time)])
       fv <- as.numeric(crossprod(t(X), beta)) + fe
     }
     if (model == "between"){

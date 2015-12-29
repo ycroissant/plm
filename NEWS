@@ -521,9 +521,17 @@ Changes since version 1.5-11
 	* added RiceFarms to datasets to eliminate non-CRAN dependencies, (temporarily) removed 'pder' from suggested, uncommented (fixed) example in pdwtest.Rd
 
 Changes since version 1.5-12
-  * dataset Produc: added variable 'region' as 3rd column and description: 'pcap' is public capital (not private) while 'pc' is private capital (not public)
+
+	* dataset Produc: added variable 'region' as 3rd column and description: 'pcap' is public capital (not private) while 'pc' is private capital (not public)
 	* added importFrom as per CRAN check for submission.
 
 Changes since version 1.5-13
-        * fixed bug in vcovHC(... method="white") from degenerating diag() if any groups have only 1 element
+
+    * fixed bug in vcovHC(... method="white") from degenerating diag() if any groups have only 1 element
 	* reintroduced "white2" method.
+
+Changes since version 1.5-14
+
+	* mylm: added commented (i.e. inactive) warning about dropped coefficients in estimation
+	* fitted.plm: added commented (i.e. inactive) warning in about dropped coefficients in estimated model compared to specified model.matrix
+	* added testfile tests/test_fitted.plm.R (some of those test currently do not run (commented, i.e. inactive))

@@ -191,6 +191,7 @@ mylm <- function(y, X, W = NULL){
       result <- twosls(y, X, W)
   if (any(is.na(coef(result)))){
     na.coef <- is.na(coef(result))
+    # warning("Coefficient(s) '", paste((names.X)[na.coef], collapse = ", "), "' could not be estimated and is (are) dropped.")
     X <- X[, !na.coef, drop = FALSE]
     if (is.null(W)) result <- lm(y ~ X - 1)
     else result <- twosls(y, X, W)
