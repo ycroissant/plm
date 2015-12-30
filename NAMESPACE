@@ -1,9 +1,11 @@
 export(plm, pvcm, pgmm, pggls, pht, pcce, pmg, plmtest, phtest, pFtest, 
        pvar, pdim, pooltest, dynformula, sargan, mtest, ercomp, pvcovHC,
        pbsytest, pdwtest, pbgtest, pbltest, pwartest, pwtest, pwfdtest, pcdtest,
-       plm.data, pdata.frame, between, Between, Within, pFormula, pmodel.response,
+       plm.data, pdata.frame, between, Between, Within, lead, pFormula, pmodel.response,
        purtest, cipstest, vcovBK, vcovSCC, r.squared, has.intercept, 
        index, fixef, vcovHC, vcovDC, vcovNW, vcovG, piest, aneweytest)
+
+
 
 import("Formula")
 importFrom("stats", "lag")
@@ -132,6 +134,7 @@ S3method("vcovDC", "plm")
 S3method("vcovG", "plm")
 # pseries
 S3method("lag", "pseries")
+S3method("lead", "pseries")
 S3method("diff", "pseries")
 S3method("between", "pseries")
 S3method("Between", "pseries")

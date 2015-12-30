@@ -242,6 +242,10 @@ as.matrix.pseries <- function(x, idbyrow = TRUE, ...){
 ###################################################
 ### chunk number 7: lag and diff
 ###################################################
+
+# NB: There is another lag.pseries function with same name in this file which is more general.
+#     Can we delete this one here?
+
 lag.pseries <- function(x, k = 1, ...){
   nx <- names(x)
   index <- attr(x, "index")
@@ -262,8 +266,14 @@ lag.pseries <- function(x, k = 1, ...){
 
 diff.pseries <- function(x, lag = 1, ...){
   if (!is.numeric(x)) stop("diff is only relevant for numeric series")
+  if (round(lag) != lag) stop("Lagging value 'lag' must be whole-numbered (and non-negative)")
+
+  # prevent input of negative values, because it will most likely confuse users
+  # what diff would do in this case
+  if (lag < 0) stop("diff.pseries is only relevant for non-negative lags")
+  
   lagx <- lag(x, k = lag)
-  x-lagx
+  return(x-lagx)
 }
 
 
@@ -468,17 +478,22 @@ pdiff <- function(x, cond, has.intercept = FALSE){
   result
 }
 
-
-lag.pseries <- function(x, k = 1, ...){
+# compute lagged values (handles positive lags and negative lags (=leading values) [and 0 -> do nothing])
+lag.pseries <- function(x, k = 1, ...) {
   nx <- names(x)
   index <- attr(x, "index")
   id <- index[[1]]
   time <- index[[2]]
   
+  # catch the case when an index of pdata.frame shall be lagged
+  if (is.factor(x)) if (all(as.character(x) == as.character(id)) | all(as.character(x)==as.character(time))) stop("Lagged vector cannot be index.")
+  
   alag <- function(x, ak){
-    if (ak != 0){
-      isNAtime <- c(rep(1,ak), diff(as.numeric(time), lag = ak)) != ak
-      isNAid <- c(rep(1,ak), diff(as.numeric(id), lag = ak)) != 0
+    if (round(ak) != ak) stop("Lagging value 'k' must be whole-numbered (positive, negative or zero)")
+    if (ak > 0) {
+      # delete first ak observations for each unit
+      isNAtime <- c(rep(T,ak), diff(as.numeric(time), lag = ak)) != ak
+      isNAid <- c(rep(T,ak), diff(as.numeric(id), lag = ak)) != 0
       isNA <- as.logical(isNAtime + isNAid)
       if (is.factor(x)) levs <- levels(x)
       result <- c(rep(NA, ak), x[1:(length(x)-ak)])
@@ -488,19 +503,45 @@ lag.pseries <- function(x, k = 1, ...){
                 names = nx,
                 class = class(x),
                 index = index)
-    }
-    else x
+    } else if (ak < 0) { # => compute leading values
+      
+      # delete last ak observations for each unit
+      isNAtime <- c(as.numeric(time) - c(tail(as.numeric(time), length(time) + ak), rep(T, -ak))) != ak
+      isNAid   <- c(as.numeric(id) - c(tail(as.numeric(id), length(id) + ak) , rep(T, -ak))) != 0
+      isNA <- as.logical(isNAtime + isNAid)
+      result <- c(x[(1-ak):(length(x))], rep(NA, -ak))
+      result[isNA] <- NA
+      if (is.factor(x)) levs <- levels(x)
+      if (is.factor(x)) result <- factor(result, labels = levs)
+      structure(result,
+                names = nx,
+                class = class(x),
+                index = index)
+      
+    } else return(x) # ak == 0 => nothing to do, return original pseries (no lagging/no leading)
   }
-  if(length(k) > 1){
+  
+  if (length(k) > 1) {
     rval <- sapply(k, function(i) alag(x, i))
     colnames(rval) <- k
   }
-  else{
+  else {
     rval <- alag(x, k)
   }
   return(rval)
 }
-  
+
+
+# lead.pseries(x, k) is a wrapper for lag.pseries(x, -k)
+lead.pseries <- function(x, k = 1, ...) {
+  ret <- lag.pseries(x, k = -k)
+  if (length(k) > 1) colnames(ret) <- k
+  return(ret)
+}
+
+lead <- function(x, k = 1, ...) {
+  UseMethod("lead")
+}
 
 ### Index methods
 
@@ -640,13 +681,13 @@ plot.pseries <- function(x, plot=c("lattice", "superposed"),
 # nobs() function to extract total number of observations used for estimating the panelmodel
 nobs.panelmodel <- function(object, ...) {
   if (inherits(object, "plm") | inherits(object, "panelmodel")) return(pdim(object)$nT$N)
-    else stop("Input 'object' needs to be of class 'plm' (or 'panelmodel'), i. e. a panel model estimated by plm()")
+    else stop("Input 'object' needs to be of class 'plm' or 'panelmodel'")
 }
 
 # No of obs calculated as in print.summary.pgmm [code copied from there]
 nobs.pgmm <- function(object, ...) {
-  if (inherits(object, "pgmm") | inherits(object, "panelmodel")) return(sum(unlist(object$residuals) != 0))
-    else stop("Input 'object' needs to be of class 'pgmm' (or 'panelmodel'), i. e. a GMM estimation with panel data estimated by pgmm()")
+  if (inherits(object, "pgmm")) return(sum(unlist(object$residuals) != 0))
+    else stop("Input 'object' needs to be of class 'pgmm', i. e. a GMM estimation with panel data estimated by pgmm()")
 }
 
 
