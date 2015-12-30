@@ -16,8 +16,8 @@
 #
 # = Baltagi (2005), p. 21 (oneway), p. 43 (twoways) 
 
-# Table 2.1 Grunfeld’s Data. One-way Error Component Results
-#             β1        β2      ρ     σμ    σν
+# Table 2.1 Grunfeld's Data One-way Error Component Results
+#           beta1     beta2   rho  sigma_me sigma_nu
 #--------------------------------------------------
 # OLS       0.116     0.231
 #          (0.006)*  (0.025)*
@@ -57,15 +57,15 @@ summary(plm_grunfeld_re_walhus )
 summary(plm_grunfeld_re_swar   )
 summary(plm_grunfeld_re_amemiya)
 
-# Table 3.1 Grunfeld’s Data. Two-way Error Component Results
+# Table 3.1 Grunfeld's Data. Two-way Error Component Results
 # "For the random effects estimators, both the SWAR and
-#  WALHUS report negative estimates of σ2
-#  λ and this is replaced by zero."
+#  WALHUS report negative estimates of sigma_lambda^2
+#  and this is replaced by zero."
 #
-#             β1        β2      σμ    σλ    σν
+#           beta1     beta2   rho  sigma_me sigma_nu
 #-------------------------------------------------
 # OLS       0.116     0.231
-#          (0.006)∗  (0.025)∗
+#          (0.006)*   (0.025)*
 #
 # Within    0.118     0.358
 #          (0.014)   (0.023)

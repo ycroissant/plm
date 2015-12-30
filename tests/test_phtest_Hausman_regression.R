@@ -60,6 +60,16 @@ phtest(be, re) # replicates Baltagi's m2 = 27.45
 phtest(form, data = Gasoline, method = "aux") # chisq = 26.495054, replicates _almost_ Baltagi's m3 = 26.507
 
 # replicates variance-covariance matrices
+#
+# vcov in Baltagi within:
+# 0.539 0.029 -0.205
+#       0.194  0.009
+#              0.088
+#
+# vcov in Baltagi between:
+# 2.422 -1.694 -1.056
+#        1.766  0.883
+#               0.680
 vcov(wi)*100
 vcov(be)*100
 
@@ -103,4 +113,4 @@ vcov(be)*100
 # phtest(form_nls_ex2, data = pnlswork, method="aux") # chisq = 627.46, df = 8,  p-value < 2.2e-16 [this resulted in an error for SVN revisions 125 - 141]
 # phtest(form_nls_ex2, data = nlswork,  method="aux") # same on data.frame
 # phtest(form_nls_ex2, data = pnlswork, method="aux", vcov = vcovHC) # chisq = 583.56, df = 8, p-value < 2.2e-16
-# # phtest(form_nls_ex2, data = pnlswork, method="aux", vcov = function(x) vcovHC(x, method="white2", type="HC3")) # computational too heavy!
+# # phtest(form_nls_ex2, data = pnlswork, method="aux", vcov = function(x) vcovHC(x, method="white2", type="HC3")) # computationally too heavy!

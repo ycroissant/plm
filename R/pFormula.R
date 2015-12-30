@@ -65,9 +65,9 @@ model.matrix.pFormula <- function(object, data,
     if (pdim$balanced){
       result <- switch(model,
                        "within" = X - Between(X,id) - Between(X,time) +
-                       matrix(apply(X,2,mean),nrow(X),ncol(X),byrow=T),
+                                  matrix(apply(X,2,mean),nrow(X),ncol(X),byrow=T),
                        "random" = X - theta$id * Between(X,id) - theta$time * Between(X,time) +
-                       theta$total * matrix(apply(X,2,mean),nrow(X),ncol(X),byrow=T),
+                                  theta$total * matrix(apply(X,2,mean),nrow(X),ncol(X),byrow=T),
                        "pooling" = X
                        )
     }
@@ -120,7 +120,7 @@ pmodel.response.pFormula <- function(object, data,
                                      effect = c("individual","time","twoways"),
                                      lhs = NULL,
                                      theta = NULL, ...){
-  formula <- object
+  formula <- pFormula(object) # was: formula <- object
   if (is.null(lhs))
     if (length(formula)[1] == 0) stop("no response") else lhs <- 1
   formula <- formula(paste("~ ", deparse(attr(formula, "lhs")[[lhs]]), " - 1", sep = ""))
