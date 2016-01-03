@@ -39,23 +39,23 @@ plm.data <- function(x, indexes = NULL){
   na.serie <- names(x)[na.check]
   if (length(na.serie)>0){
     if (length(na.serie)==1){
-      cat(paste("serie",na.serie," is NA and has been removed\n"))
+      cat(paste("series",na.serie,"is NA and has been removed\n"))
     }
     else{
-      cat(paste("series ",paste(na.serie,collapse=",")," are NA and have been removed\n"))
+      cat(paste("series",paste(na.serie,collapse=", "),"are NA and have been removed\n"))
     }
   }
   x <- x[,!na.check]
-  ## Which columns are constants ?
+  ## Which columns are constants?
   cst.check <- sapply(x, function(x) all(x[!is.na(x)] == (x[!is.na(x)])[1]))
                            # any NA-component equal to the first non-NA component
   cst.serie <- names(x)[cst.check]
   if (length(cst.serie)>0){
     if (length(cst.serie)==1){
-      cat(paste("serie",cst.serie," is constant and has been removed\n"))
+      cat(paste("series",cst.serie,"is constant and has been removed\n"))
     }
     else{
-      cat(paste("series ",paste(na.serie,collapse=",")," are constants and have been removed\n"))
+      cat(paste("series",paste(na.serie,collapse=", "),"are constants and have been removed\n"))
     }
   }
 #  x <- x[,!cst.check]

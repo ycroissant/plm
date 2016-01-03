@@ -549,3 +549,5 @@ Changes since version 1.5-14
 	* lead.pseries: added function as a wrapper for lag.pseries(x, k=-1) for convenience, i.e. lag(x, k = -1) == lead(x, k = 1).
 	* diff.pseries: prevented negative lags as input for to avoid confusion.
 	* doc for pseries functions are made available under their name, e.g. ?lag now displays helpfile for lag.pseries in the help overview (besides e.g. stats::lag).
+	* pdim.default: make error message "duplicate couples (time-id)" printed as proper error message (removed cat() around the message in stop(), was printed as regular string on screen before).
+	* plm.data: slight improvement for printed outputs (spelling and spacing).
