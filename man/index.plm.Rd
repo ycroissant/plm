@@ -26,7 +26,7 @@
 }
 
 \value{
-  a vector or a \code{"data.frame"} containing either one or both
+  a vector or a \code{"data.frame"} containing either one index or both
   indexes.
 }
 
@@ -36,12 +36,12 @@
   \code{"model"} element which is also a \code{"pdata.frame"} and
   therefore also have an \code{"index"} attribute. Finally, each series
   in a \code{"pdata.frame"} is of class \code{"pseries"}, which also
-  have this \code{"index"} attribute. \code{"index"} methods are
+  has this \code{"index"} attribute. \code{"index"} methods are
   available for all these objects. The argument \code{"which"} indicates
-  which index should be extracted. If \code{NULL}, both indexes are
-  extracted, but \code{"which"} can also be a vector of lenght 1 or 2
-  containing either characters (the names of the individual and of the
-  time periods or \code{"id"} and \code{"time"}) or integers (1 for the
+  which index should be extracted. If \code{which = NULL}, both indexes are
+  extracted, but \code{"which"} can also be a vector of length 1 or 2
+  containing either characters (the names of the individual variable and/or of the
+  time variable or \code{"id"} and \code{"time"}) or integers (1 for the
   individual index and 2 for the time index.)
 }
   

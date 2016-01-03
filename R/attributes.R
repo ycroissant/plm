@@ -138,17 +138,18 @@ print.pdim <- function(x, ...){
   }
 }
 
+# NB: Are functions indexes and print.indexes still needed?
 indexes <- function(x){
-  if (class(x)[1]!="pdata.frame"){
+  if (!inherits(x, "pdata.frame")){
     stop("indexes function only for pdata.frame\n")
   }
-  attr(x,"indexes")
+  attr(x,"index")
 }
 
 print.indexes <- function(x, ...){
-  cat(paste("Index : (individual=",x$id,") and  (time=",x$time,")\n",sep=""))
+  cat(paste("Index: (individual=",x$id,") and (time=",x$time,")\n",sep=""))
 }
-  
+
 has.intercept.panelmodel <- function(object, ...){
   object <- attr(model.frame(object),"formula")
   has.intercept(object)

@@ -551,3 +551,4 @@ Changes since version 1.5-14
 	* doc for pseries functions are made available under their name, e.g. ?lag now displays helpfile for lag.pseries in the help overview (besides e.g. stats::lag).
 	* pdim.default: make error message "duplicate couples (time-id)" printed as proper error message (removed cat() around the message in stop(), was printed as regular string on screen before).
 	* plm.data: slight improvement for printed outputs (spelling and spacing).
+	* indexes: fixed return value (was always NULL)
