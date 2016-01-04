@@ -45,7 +45,7 @@ Within(x, ...)
           For the \code{lead} method, a positive (negative) \code{k} gives leading (lagged) values,
           thus, \code{lag(x, k = -1)} yields the same as \code{lead(x, k = 1)}.
           If \code{k} is a vector (\code{k = c(k1,k2, ...)}) a \code{matrix} with multiple lagged \code{pseries} is returned,}
- \item{lag}{the number of lags for the \code{diff} method (only non-negative values for parameter \code{lag} are allowed in \code{diff}),}
+ \item{lag}{the number of lags for the \code{diff} method (only non--negative values for parameter \code{lag} are allowed in \code{diff}),}
  \item{idbyrow}{if \code{TRUE} in the \code{as.matrix} method, the lines of the matrix are the individuals,}
  \item{\dots}{further arguments.}
 }
@@ -72,34 +72,35 @@ A \code{pseries} is obtained when a series is extracted from a
 
 \examples{
 # First, create a pdata.frame
- data("EmplUK", package = "plm")
- Em <- pdata.frame(EmplUK)
+data("EmplUK", package = "plm")
+Em <- pdata.frame(EmplUK)
+
 # Then extract a series, which becomes additionally a pseries
- z <- Em$output
- class(z)
+z <- Em$output
+class(z)
 
 # obtain the matrix representation
- as.matrix(z)
+as.matrix(z)
 
 # compute the between and within transformations
- between(z)
- Within(z)
+between(z)
+Within(z)
 
 # Between replicates the values for each time observations
- Between(z)
+Between(z)
 
 # compute the first and third lag, and the difference lagged twice
- lag(z)
- lag(z, 3)
- diff(z, 2)
+lag(z)
+lag(z, 3)
+diff(z, 2)
 
 # compute negative lags (= leading values)
- lag(z, -1)
- lead(z, 1) # same as line above
- identical(lead(z, 1), lag(z, -1)) # TRUE
+lag(z, -1)
+lead(z, 1) # same as line above
+identical(lead(z, 1), lag(z, -1)) # TRUE
  
 # compute more than one lag at once
- lag(z, c(1,2))
+lag(z, c(1,2))
 }
 
 \author{Yves Croissant}

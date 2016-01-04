@@ -26,7 +26,7 @@ aneweytest(formula, data, subset, na.action, index = NULL, ...)
   An object of class \code{"htest"}.
 }
 
-\details{ Angrist and Newey's test is based on the results of the
+\details{Angrist and Newey's test is based on the results of the
   artifactual regression of the within residuals on the covariates for
   all the period.}
 

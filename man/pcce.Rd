@@ -47,7 +47,7 @@ An object of class \code{c("pcce","panelmodel")} containing:
     estimation,}
  \item{call}{the call,}
  \item{sigma}{always \code{NULL}, \code{sigma} is here only for
-   conmpatibility reasons (to allow using the same \code{summary} and
+   compatibility reasons (to allow using the same \code{summary} and
    \code{print} methods as \code{pggls}),}
  \item{indcoef}{the matrix of individual coefficients from separate time
    series regressions.}

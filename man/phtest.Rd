@@ -32,7 +32,7 @@ An object of class \code{"htest"}.
 }
 
 \details{
-The Hausman test (sometimes also called Durbin-Wu-Hausman test) is
+The Hausman test (sometimes also called Durbin--Wu--Hausman test) is
 based on the difference of the vectors of coefficients of two different
 models. The \code{panelmodel} method computes the original version of
 the test based on a quadratic form. The \code{formula} method, if

@@ -24,7 +24,7 @@ pgmm(formula, data, subset, na.action,
 \arguments{
   
   \item{formula}{a symbolic description for the model to be
-    estimated. The prefered interface is now to indicate a multi-part
+    estimated. The preferred interface is now to indicate a multi--part
     formula, the first two parts describing the covariates and the gmm
     instruments and, if any, the third part the 'normal' instruments,}
   \item{object,x}{an object of class \code{"pgmm"},}
@@ -47,7 +47,7 @@ pgmm(formula, data, subset, na.action,
   model or \code{"ld"} for the ``system GMM'',}
   \item{fsm}{the matrix for the one step estimator : one of \code{"I"}
   (identity matrix) or \code{"G"} (\eqn{=D'D} where \eqn{D} is the
-  first-difference operator) if \code{transformation="d"}, one of
+  first--difference operator) if \code{transformation="d"}, one of
   \code{"GI"} or \code{"full"} if \code{transformation="ld"},}
   \item{index}{the indexes,}
   \item{digits}{digits,}
@@ -87,10 +87,10 @@ It has \code{print}, \code{summary} and \code{print.summary} methods.
   
 \code{pgmm} estimates a model for panel data with a generalized method
 of moments (GMM) estimator. The description of the model to estimate is
-provided with a multi-part formula which is (or which is coerced to) a
-\code{Formula} object. The first right-hand side part describe the
+provided with a multi--part formula which is (or which is coerced to) a
+\code{Formula} object. The first right--hand side part describes the
 covariates. The second one, which is mandatory, describes the gmm
-instruments. The third one, which is optionnal, describes the 'normal'
+instruments. The third one, which is optional, describes the 'normal'
 instruments. By default, all the variables of the model which are not
 used as GMM instruments are used as normal instruments with the same lag
 structure as the one specified in the model.
@@ -112,8 +112,7 @@ Arellano and Bond 2006) and with the xtabond2 library for STATA (see
 Roodman 2009).}
 
 \references{
-  
-  Arellano, M. and Bond, S. (1991) Some Tests of Specification for Panel
+Arellano, M. and Bond, S. (1991) Some Tests of Specification for Panel
 Data: Monte Carlo Evidence and an Application to Employment Equations,
 \emph{The Review of Economic Studies}, vol. \bold{58}(2), 1991,
 pp.227--297.

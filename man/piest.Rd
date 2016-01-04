@@ -5,7 +5,7 @@
 \title{Chamberlain estimator and test for fixed effects}
 
 \description{
-  General estimator usefull for testing the within specification
+  General estimator useful for testing the within specification
 }
 
 \usage{
@@ -33,7 +33,7 @@ piest(formula, data, subset, na.action, index = NULL, robust = TRUE, ...)
 }
 
 \details{ The Chamberlain method consists on using the covariates of all
-  the periods as regressors. It unables to test the within
+  the periods as regressors. It allows to test the within
   specification.  }
 
 \references{

@@ -42,7 +42,7 @@ An object of class \code{c("pFormula", "Formula"}.
 \details{
 The \code{lhs} and \code{rhs} arguments are inherited from
 \code{Formula}. The \code{model.frame} method returns a
-\code{pdata.frame} object. The \code{model.matrix} unables the
+\code{pdata.frame} object. The \code{model.matrix} performs the
 transformation specified by the \code{model} and \code{effect}
 arguments.
 }

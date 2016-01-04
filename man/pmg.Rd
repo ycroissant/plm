@@ -6,7 +6,7 @@
 \title{Mean Groups (MG), Demeaned MG and CCE MG estimators}
 
 \description{
-Mean Groups (MG), Demeaned MG (DMG) and Common Corrleated Effects MG
+Mean Groups (MG), Demeaned MG (DMG) and Common Correlated Effects MG
 (CCEMG) estimators for heterogeneous panel models, possibly with
 common factors (CCEMG)
 }
@@ -24,8 +24,8 @@ pmg(formula, data, subset, na.action,
  \item{formula}{a symbolic description of the model to be estimated,}
  \item{object, x}{an object of class \code{pmg},}
  \item{data}{a \code{data.frame},}
- \item{subset}{see \code{lm},}
- \item{na.action}{see \code{lm},}
+ \item{subset}{see \code{\link{lm}},}
+ \item{na.action}{see \code{\link{lm}},}
  \item{model}{one of \code{c("mg", "cmg", "dmg")},}
  \item{index}{the indexes, see \code{\link{pdata.frame}},}
  \item{trend}{logical specifying whether an individual-specific trend has to be included,}
@@ -45,7 +45,7 @@ An object of class \code{c("pmg", "panelmodel")} containing:
     estimation,}
  \item{call}{the call,}
  \item{sigma}{always \code{NULL}, \code{sigma} is here only for
-   conmpatibility reasons (to allow using the same \code{summary} and
+   compatibility reasons (to allow using the same \code{summary} and
    \code{print} methods as \code{pggls}),}
  \item{indcoef}{the matrix of individual coefficients from separate time
    series regressions.}
@@ -53,7 +53,7 @@ An object of class \code{c("pmg", "panelmodel")} containing:
   
 \details{
 \code{pmg} is a function for the estimation of linear panel models with
-heterogeneous coeffcients by the Mean Groups
+heterogeneous coefficients by the Mean Groups
 estimator. \code{model="mg"} specifies the standard Mean Groups
 estimator, based on the average of individual time series
 regressions. If \code{model="dmg"} the data are demeaned

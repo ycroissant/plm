@@ -552,3 +552,4 @@ Changes since version 1.5-14
 	* pdim.default: make error message "duplicate couples (time-id)" printed as proper error message (removed cat() around the message in stop(), was printed as regular string on screen before).
 	* plm.data: slight improvement for printed outputs (spelling and spacing).
 	* indexes: fixed return value (was always NULL)
+	* doc updates: ?pdim: added section about possible different return values for pdim(pdata.frame) and pdim(panelmodel_object); others: linkage to base functions enables, spelling

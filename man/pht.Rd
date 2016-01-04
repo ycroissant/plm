@@ -5,7 +5,7 @@
 \title{Hausman-Taylor Estimator for Panel Data}
 
 \description{
-The Hausman-Taylor estimator is an instrumental variable estimator without external instruments.
+The Hausman--Taylor estimator is an instrumental variable estimator without external instruments.
 }
 
 \usage{

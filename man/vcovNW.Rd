@@ -46,9 +46,9 @@ e.g. for Wald-type testing: as \code{vcov} to \code{coeftest()},
 
 \references{
  Newey, W.K. & West, K.D. (1986) A simple, positive semi-definite, 
- heteroskedasticity and autocorrelationconsistent covariance matrix.
+ heteroskedasticity and autocorrelation consistent covariance matrix.
  \emph{Econometrica} \bold{55(3)}, pp. 703--708.
-  }
+}
 
 \examples{
 library(lmtest)

@@ -5,7 +5,7 @@
 \title{Tests of cross-section dependence for panel models}
 
 \description{
- Pesaran's CD or Breusch-Pagan's LM (local or global) tests for cross sectional dependence in panel models
+ Pesaran's CD or Breusch--Pagan's LM (local or global) tests for cross sectional dependence in panel models
 }
 
 \usage{

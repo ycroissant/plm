@@ -14,7 +14,7 @@ r.squared(object, model = NULL, type = c("cor", "rss", "ess"), dfcor = FALSE)
   \item{model}{on which transformation of the data the R-squared it to
     be computed. If \code{NULL}, the transformation used to estimate the
     model is also used for the computation of R squared,}
-  \item{type}{inicates  method which is used to compute R squared. One of\cr
+  \item{type}{indicates method which is used to compute R squared. One of\cr
     \code{"rss"} (residual sum of squares),\cr
     \code{"ess"} (explained sum of squares), or\cr
     \code{"cor"} (coefficient of correlation between the fitted values and the

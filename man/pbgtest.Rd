@@ -23,7 +23,7 @@ pbgtest(x,...)
  \item{model}{only relevant for formula interface: compute test statistic for model \code{pooling} (default), \code{random}, or \code{within}.
               When \code{model} is used, the \code{data} argument needs to be passed as well,}
 
- \item{\dots}{further arguments (see \code{?lmtest::bgtest}).}
+ \item{\dots}{further arguments (see \code{\link[lmtest]{bgtest}}).}
 }
 
 \value{

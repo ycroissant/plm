@@ -22,7 +22,7 @@ plmtest(x, ...)
  \item{data}{a \code{data.frame},}
  \item{effect}{a character string indicating which effects are tested: individual effects (\code{"individual"}), time effects (\code{"time"}) or both (\code{"twoways"}),}
  \item{type}{a character string indicating the test to be
-  computed: \code{"bp"} for Breush-Pagan (1980), \code{"ghm"} for Gourieroux, Holly and Monfort (1982), \code{"honda"} for Honda (1985) or \code{"kw"} for King and Wu (1997),}
+  computed: \code{"bp"} for Breush--Pagan (1980), \code{"ghm"} for Gourieroux, Holly and Monfort (1982), \code{"honda"} for Honda (1985) or \code{"kw"} for King and Wu (1997),}
  \item{...}{further arguments passed to \code{plm}.}
 }
 

@@ -25,14 +25,14 @@ pdata.frame(x, index = NULL, drop.index = FALSE, row.names = TRUE)
 \arguments{
   \item{x}{ a \code{data.frame} for the \code{pdata.frame} function and a
     \code{pdata.frame} for the methods,}
-  \item{i}{see \code{Extract},}
-  \item{j}{see \code{Extract},}
+  \item{i}{see \code{\link{Extract}},}
+  \item{j}{see \code{\link{Extract}},}
   \item{y}{one of the columns of the \code{data.frame},}
   \item{index}{this argument indicates the individual and time
     indexes. See details,}
-  \item{drop}{see \code{Extract},}
+  \item{drop}{see \code{\link{Extract}},}
   \item{drop.index}{logical, indicates whether the indexes are to be excluded from the resulting pdata.frame,}
-  \item{optional}{see \code{as.data.frame},}
+  \item{optional}{see \code{\link{as.data.frame}},}
   \item{row.names}{\code{NULL} or logical, indicates whether ``fancy'' row names (a combination of individual index and time index) are to be added to the returned (p)data.frame (\code{NULL} and \code{FALSE} have the same meaning),}
   \item{...}{further arguments}
 }

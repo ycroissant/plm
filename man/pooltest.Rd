@@ -6,7 +6,7 @@
 \title{Test of Poolability}
 
 \description{
-A Chow  test for the poolability of the data.
+A Chow test for the poolability of the data.
 }
 
 \usage{

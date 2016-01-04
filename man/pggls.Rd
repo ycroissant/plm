@@ -22,8 +22,8 @@ pggls(formula, data, subset, na.action, effect = c("individual", "time"),
  \item{formula}{a symbolic description of the model to be estimated,}
  \item{object, x}{an object of class \code{pggls},}
  \item{data}{a \code{data.frame},}
- \item{subset}{see \code{lm},}
- \item{na.action}{see \code{lm},}
+ \item{subset}{see \code{\link{lm}},}
+ \item{na.action}{see \code{\link{lm}},}
  \item{effect}{the effects introduced in the model, one of \code{"individual"} or \code{"time"},}
  \item{model}{one of \code{"within"}, \code{"pooling"}, \code{"random"}
  or \code{"fd"},}
@@ -66,7 +66,7 @@ efficiency requires N > > T (if \code{effect="individual"}, else the
 opposite).  The \code{model="random"} and \code{model="pooling"}
 arguments both produce an unrestricted FGLS model as in Wooldridge,
 Ch. 10, although the former is deprecated and included only for
-retrocompatibility reasons.
+retro--compatibility reasons.
 If \code{model="within"} (the default) then a FEGLS (fixed
 effects GLS, see ibid.) is estimated; if \code{model="fd"} a FDGLS
 (first-difference GLS).  }
