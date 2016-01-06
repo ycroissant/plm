@@ -183,6 +183,11 @@ has.intercept.Formula <- function(object, rhs = NULL, ...) {
   sapply(rhs, function(x) has.intercept(formula(object, lhs = 0, rhs = x)))
 }
 
+has.intercept.panelmodel <- function(object, ...){
+  object <- attr(model.frame(object),"formula")
+  has.intercept(object)
+}
+
 pres <- function(x) {  # pres.panelmodel
   ## extracts model residuals as pseries
 
@@ -209,3 +214,50 @@ pres <- function(x) {  # pres.panelmodel
   return(pres)
 }
 
+
+# nobs() function to extract total number of observations used for estimating the panelmodel
+# like stats::nobs for lm objects
+nobs.panelmodel <- function(object, ...) {
+  if (inherits(object, "plm") | inherits(object, "panelmodel")) return(pdim(object)$nT$N)
+    else stop("Input 'object' needs to be of class 'plm' or 'panelmodel'")
+}
+
+# No of obs calculated as in print.summary.pgmm [code copied from there]
+nobs.pgmm <- function(object, ...) {
+  if (inherits(object, "pgmm")) return(sum(unlist(object$residuals) != 0))
+    else stop("Input 'object' needs to be of class 'pgmm', i. e. a GMM estimation with panel data estimated by pgmm()")
+}
+
+
+
+# punbalancedness: measures for unbalancedness of a pandel data set
+# as defined in Ahrens/Pincus (1981), p. 228 (gamma and nu)
+punbalancedness.default <- function(x, ...) {
+  pdim <- pdim(x, ...)
+  
+  N <- pdim$nT$n # no. of individuals
+  Totalobs <- pdim$nT$N # no. of total observations
+  Ti <- pdim$Tint$Ti
+  Tavg <- sum(Ti/N)
+  
+  r1 <- N / (Tavg * sum(1/Ti))
+  r2 <- 1 / (N * (sum( (Ti/Totalobs)^2)))
+  
+  return(c(gamma = r1, nu = r2))
+}
+
+punbalancedness.pdata.frame <- function(x, ...) {
+  punbalancedness.default(x, ...)
+}
+
+punbalancedness.data.frame <- function(x, ...) {
+  punbalancedness.default(x, ...)
+}
+
+punbalancedness.panelmodel <- function(x, ...) {
+  punbalancedness.default(x, ...)
+}
+
+punbalancedness <- function(x, ...) {
+  UseMethod("punbalancedness")
+}

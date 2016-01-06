@@ -150,7 +150,3 @@ print.indexes <- function(x, ...){
   cat(paste("Index: (individual=",x$id,") and (time=",x$time,")\n",sep=""))
 }
 
-has.intercept.panelmodel <- function(object, ...){
-  object <- attr(model.frame(object),"formula")
-  has.intercept(object)
-}

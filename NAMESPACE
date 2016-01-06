@@ -1,8 +1,8 @@
 export(plm, pvcm, pgmm, pggls, pht, pcce, pmg, plmtest, phtest, pFtest, 
        pvar, pdim, pooltest, dynformula, sargan, mtest, ercomp, pvcovHC,
        pbsytest, pdwtest, pbgtest, pbltest, pwartest, pwtest, pwfdtest, pcdtest,
-       plm.data, pdata.frame, between, Between, Within, lead, pFormula, pmodel.response,
-       purtest, cipstest, vcovBK, vcovSCC, r.squared, has.intercept, 
+       plm.data, pdata.frame, between, Between, Within, lag, lead, pFormula, pmodel.response,
+       punbalancedness, purtest, cipstest, vcovBK, vcovSCC, r.squared, has.intercept, 
        index, fixef, vcovHC, vcovDC, vcovNW, vcovG, piest, aneweytest)
 
 
@@ -39,6 +39,9 @@ S3method("as.Formula", "pFormula")
 S3method("pmodel.response", "data.frame")
 S3method("pmodel.response", "pFormula")
 S3method("pmodel.response", "plm")
+# Formula, formula
+S3method("has.intercept", "Formula")
+S3method("has.intercept", "formula")
 # index
 S3method("index", "pindex")
 S3method("index", "pdata.frame")
@@ -61,6 +64,10 @@ S3method("print", "pdim")
 # nobs
 S3method("nobs", "panelmodel")
 S3method("nobs", "pgmm")
+# punbalancedness
+S3method("punbalancedness", "data.frame")
+S3method("punbalancedness", "pdata.frame")
+S3method("punbalancedness", "panelmodel")
 # pvar
 S3method("pvar", "data.frame")
 S3method("pvar", "pdata.frame")

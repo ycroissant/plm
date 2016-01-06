@@ -89,6 +89,7 @@ man/pmg.Rd -text
 man/pmodel.response.Rd -text
 man/pooltest.Rd -text
 man/pseries.Rd -text
+man/punbalancedness.Rd -text
 man/purtest.Rd -text
 man/pvar.Rd -text
 man/pvcm.Rd -text
@@ -110,10 +111,14 @@ tests/testEvaluation.Rout.save -text
 tests/test_Chow.R -text
 tests/test_Estimators.R -text
 tests/test_fitted.plm.R -text
+tests/test_model.frame.R -text
 tests/test_model.matrix_pmodel.response.R -text
+tests/test_model.matrix_pmodel.response_NA.R -text
+tests/test_pdata.frame_subsetting.R -text
 tests/test_phtest_Hausman_regression.R -text
 tests/test_plm_na.action.R -text
 tests/test_preserve_rownames.R -text
+tests/test_punbalancedness.R -text
 tests/test_pwfdtest_pwartest.R -text
 tests/testpbgtest.R -text
 tests/testpgmm.R -text

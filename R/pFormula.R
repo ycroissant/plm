@@ -39,7 +39,29 @@ model.matrix.pFormula <- function(object, data,
   effect <- match.arg(effect)
   formula <- object
   has.intercept <- has.intercept(formula, rhs = rhs)
-  X <- model.matrix(as.Formula(formula), rhs = rhs, data= data, ...)
+  
+  # NB: data is not sanitized here, i.e. NAs could still be present.
+  # Formula::model.matrix.Formula does not remove rows if there are
+  # NAs in the corresponsing positions in the dependend variable,
+  # unlike stats::model.matrix.default which drops affected rows
+  # See testfiles tests/test_model.matrix_pmodel.response.R and
+  # test_model.matrix_pmodel.response_NA.R
+  # Achim's general advice on such things: build model.frame first
+  # Estimation via plm() is not affected, because plm already builds
+  # the model.frame before model.matrix.pFormula is called. Thus, only
+  # direct calls to model.matrix.pFormula (and maybe pmodel.response)
+  # are affected.
+  # However building the model.frame here to sanitize data
+  # will result in a slight (?) performance regression when calling
+  # plm() because the model.frame is then build a second time.
+  
+  # Decision on whether to apply the balanced or unbalanced transformations
+  # [if pdim(data)$balanced below] needs to be based on sanitized data (with
+  # affected rows removed (also rows removed if NA in corresponsing position
+  # in dependend variable)).
+
+  
+  X <- model.matrix(as.Formula(formula), rhs = rhs, data = data, ...)
     index <- attr(data, "index")
   id <- index[[1]]
   if(any(is.na(id))) {

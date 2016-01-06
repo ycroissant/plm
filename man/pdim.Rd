@@ -39,11 +39,11 @@ pdim(x,...)
   contains the names of each period.}
 }
 
-\note{calling \code{pdim} on an estimated \code{panelmodel} object and on the corresponding \code{pdata.frame}
+\note{Calling \code{pdim} on an estimated \code{panelmodel} object and on the corresponding \code{(p)data.frame}
   used for this estimation does not necessarily yield the same result. When called on an estimated \code{panelmodel},
   the number of observations (individual, time) actually used for model estimation are taken into account.
-  When called on a \code{pdata.frame}, the rows in the \code{pdata.frame} are considered, disregarding any
-  NA values in the variables dependent or independent variable(s) which would be dropped during model estimation.
+  When called on a \code{(p)data.frame}, the rows in the \code{(p)data.frame} are considered, disregarding any
+  NA values in the dependent or independent variable(s) which would be dropped during model estimation.
 }
 
 \details{
@@ -52,7 +52,7 @@ pdim(x,...)
 
 \author{Yves Croissant}
 
-\seealso{\code{\link{nobs}}, \code{\link{pdata.frame}}}
+\seealso{\code{\link{punbalancedness}} for measures of unbalancedness, \code{\link{nobs}}, \code{\link{pdata.frame}}}
 
 \examples{
 

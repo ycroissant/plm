@@ -483,16 +483,18 @@ Changes since version 1.5-4
 
 Changes since version 1.5-5
 
-	* fixed bug affecting vcovG on unbalanced datasets (thx Liviu Andronic) from propagation of NAs in final by-group matrix multiplication  
+	* fixed bug affecting vcovG on unbalanced datasets (thx Liviu Andronic) from propagation
+	  of NAs in final by-group matrix multiplication  
 
 Changes since version 1.5-6
 
-	* pruned 'require' calls to 'lmtest', 'car', 'lattice and substituted them with proper entries in NAMESPACE
+	* pruned 'require' calls to 'lmtest', 'car', 'lattice and substituted them with proper
+	  entries in NAMESPACE
 
 	* temporarily commented problematic examples in pbgtest and pdwtest
 
 Changes since version 1.5-8
-
+  * introduced new phtest (Hausman test) allowing for robust vcov
 	* fixed bugs in pdwtest
 
 Changes since version 1.5-9
@@ -506,50 +508,64 @@ Changes since version 1.5-9
 	  fixed/enabled passing of argument order.by= [additional argument in
 	  lmtest::bgtest] [tests/testpbgtest.R added, docs updated and extended]
 	
-	* phtest( , method="aux") [Hausman regression-based test]: fixed bug when data= contains more cases than
-	  there are used in model estimation (due to NA values); avoid calc. of RE model a second time;
-	  phtest now also works with between model correctly (fixed degrees of freedom)
+	* phtest( , method="aux") [Hausman regression-based test]: fixed bug when data= contains more
+	  cases than there are used in model estimation (due to NA values); avoid calc. of RE model
+	  a second time; phtest now also works with between model correctly (fixed degrees of freedom)
 	  tests/test_phtest_Hausman_regression.R added
 	  
 	* plm(): original row names of inputted data are preserved in plm_object$model,
 	  so functions like pmodel.response(), model.frame(), model.matrix(), residuals()
-	  return the original row.names (and thus fancy rownames if those were to be computed by pdata.frame);
-	  as.data.frame.pdata.frame(): respects row.names argument
+	  return the original row.names (and thus fancy rownames if those were to be computed b
+	  pdata.frame); as.data.frame.pdata.frame(): respects row.names argument
 
 Changes since version 1.5-11
 
-	* added RiceFarms to datasets to eliminate non-CRAN dependencies, (temporarily) removed 'pder' from suggested, uncommented (fixed) example in pdwtest.Rd
+	* added RiceFarms to datasets to eliminate non-CRAN dependencies, (temporarily) removed
+	  'pder' from suggested, uncommented (fixed) example in pdwtest.Rd
 
 Changes since version 1.5-12
 
-	* dataset Produc: added variable 'region' as 3rd column and description: 'pcap' is public capital (not private) while 'pc' is private capital (not public)
+	* dataset Produc: added variable 'region' as 3rd column and description: 'pcap' is public
+	  capital (not private) while 'pc' is private capital (not public)
 	* added importFrom as per CRAN check for submission.
 
 Changes since version 1.5-13
 
-	* fixed bug in vcovHC(... method="white") from degenerating diag() if any groups have only 1 element
+	* fixed bug in vcovHC(... method="white") from degenerating diag() if any groups have
+	  only 1 element
 	* reintroduced "white2" method.
 
 Changes since version 1.5-14
 
 	* mylm: added commented (i.e. inactive) warning about dropped coefficients in estimation.
-	* fitted.plm: added commented (i.e. inactive) warning in about dropped coefficients in estimated model compared to specified model.matrix.
-	* added testfile tests/test_fitted.plm.R (some of those test currently do not run (commented, i.e. inactive)).
+	* fitted.plm: added commented (i.e. inactive) warning in about dropped coefficients in
+	  estimated model compared to specified model.matrix.
+	* added testfile tests/test_fitted.plm.R (some of those test currently do not run
+	  (commented, i.e. inactive)).
 
-	* pmodel.response.pFormula: make sure supplied formula is a pFormula before we continue (coerce to pFormula)
-	   fixes bugs like:
+	* pmodel.response.pFormula: make sure supplied formula is a pFormula before we continue
+	  (coerce to pFormula), fixes bugs like:
 	    pmodel.response.pFormula(regular_formula, data = dat, model = "pooling")
 	     # Error in names(y) <- namesy :
 	     # 'names' attribute [482] must be the same length as the vector [0]
-	   still some bugs left in pmodel.response -> see added testfile: tests/test_model.matrix_pmodel.response.R.
+	   still some bugs left in pmodel.response, see testfile: tests/test_model.matrix_pmodel.response.R.
 
 	* some testfiles: fixed wired encodings.
 
 	* lag.pseries: modified to handle negative lags (=leading values).
-	* lead.pseries: added function as a wrapper for lag.pseries(x, k=-1) for convenience, i.e. lag(x, k = -1) == lead(x, k = 1).
+	* lead.pseries: added function as a wrapper for lag.pseries(x, k=-1) for convenience,
+	  i.e. lag(x, k = -1) == lead(x, k = 1).
 	* diff.pseries: prevented negative lags as input for to avoid confusion.
-	* doc for pseries functions are made available under their name, e.g. ?lag now displays helpfile for lag.pseries in the help overview (besides e.g. stats::lag).
-	* pdim.default: make error message "duplicate couples (time-id)" printed as proper error message (removed cat() around the message in stop(), was printed as regular string on screen before).
+	* doc for pseries functions are made available under their name, e.g. ?lag now displays helpfile for
+	  lag.pseries in the help overview (besides e.g. stats::lag).
+	* pdim.default: make error message "duplicate couples (time-id)" printed as proper error message
+	  (removed cat() around the message in stop(), was printed as regular string on screen before).
 	* plm.data: slight improvement for printed outputs (spelling and spacing).
 	* indexes: fixed return value (was always NULL)
-	* doc updates: ?pdim: added section about possible different return values for pdim(pdata.frame) and pdim(panelmodel_object); others: linkage to base functions enables, spelling
+	* doc updates: ?pdim: added section about possible different return values for pdim(pdata.frame) and
+	  pdim(panelmodel_object); others: linkage to base functions enables, spelling
+
+Changes since version 1.5-15
+
+	* punbalancedness: new function for unbalancedness measures for panel data as
+	  in Ahrens/Pincus (1981); added doc and testfile for punbalancedness
