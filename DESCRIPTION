@@ -16,4 +16,4 @@ Imports: MASS, bdsmatrix, zoo, nlme, sandwich, lattice, car, lmtest
 Suggests: AER
 Description: A set of estimators and tests for panel data.
 License: GPL (>=2)
-URL: http://www.R-project.org
+URL: http://www.R-project.org, https://cran.r-project.org/package=plm, https://r-forge.r-project.org/projects/plm/
