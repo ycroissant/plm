@@ -62,6 +62,9 @@ model.matrix.pFormula <- function(object, data,
 
   
   X <- model.matrix(as.Formula(formula), rhs = rhs, data = data, ...)
+  X.assi <- attr(X, "assign")
+  X.contr <- attr(X, "contrasts")
+  X.contr <- X.contr[ !sapply(X.contr, is.null) ]  ##drop NULL elements
     index <- attr(data, "index")
   id <- index[[1]]
   if(any(is.na(id))) {
@@ -110,6 +113,8 @@ model.matrix.pFormula <- function(object, data,
       }
     }
   }
+  attr(result, "assign") <- X.assi
+  attr(result, "contrasts") <- X.contr
   result
 }
 

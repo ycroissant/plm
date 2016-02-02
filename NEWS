@@ -570,4 +570,5 @@ Changes since version 1.5-15
 	* punbalancedness: new function for unbalancedness measures for panel data as
 	  in Ahrens/Pincus (1981); added doc and testfile for punbalancedness.
 	* DESCRIPTION: added URLs for package on CRAN and package on R-Forge.
+	* model.matrix.pFormula and plm.fit: include 'assign' and 'contrasts' attributes (if any) in model fit
 	

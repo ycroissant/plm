@@ -178,6 +178,8 @@ plm.fit <- function(formula, data, model, effect, random.method, random.dfcor, i
                  formula      = formula,
                  model        = data)
   if (model == "random") result$ercomp <- estec
+  result$assign <- attr(X, "assign")
+  result$contrasts <- attr(X, "contrasts")
   result$args <- list(model = model, effect = effect)
   class(result) <- c("plm", "panelmodel")
   result
