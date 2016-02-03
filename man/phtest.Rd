@@ -40,8 +40,8 @@ the test based on a quadratic form. The \code{formula} method, if
 the original version of the test based on a quadratic form;
 if \code{method="aux"} then the auxiliary-regression-based version in
 Wooldridge (2010, Sec. 10.7.3.) is computed instead. Only the latter can
-be robustified specifying a robust covariance estimator as a function
-through the argument \code{vcov}. 
+be robustified by specifying a robust covariance estimator as a function
+through the argument \code{vcov} (see \bold{Examples}). 
 }
 
 \references{

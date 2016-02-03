@@ -17,7 +17,7 @@ punbalancedness(x,...)
 }
 
 \arguments{
- \item{x}{a \code{panelmodel}, a \code{data.frame}, or a \code{pdata.frame}           object,}
+ \item{x}{a \code{panelmodel}, a \code{data.frame}, or a \code{pdata.frame} object,}
  \item{\dots}{further arguments.}
 }
 
@@ -44,7 +44,7 @@ punbalancedness(x,...)
  not implemented in \code{punbalancedness} as of now.
 
  \code{punbalancedness} uses output of \code{\link{pdim}} to calculate the
- unbalancedness measures, so inputs to \code{punbalancedness} can be whatever
+ unbalancedness measures, so inputs to \code{punbalancedness} can be whatever 
  \code{pdim} works on.
 }
 
@@ -88,9 +88,9 @@ estimators for the unbalanced two-way error component regression model}, \emph{E
 \examples{
 # Grunfeld is a balanced panel, Hedonic is an unbalanced panel
 data(list=c("Grunfeld", "Hedonic"), package="plm")
-punbalancedness(Grunfeld) # 1, indicates balanced panel
+punbalancedness(Grunfeld) # c(1,1) indicates balanced panel
 pdim(Grunfeld)$balanced   # TRUE
-punbalancedness(Hedonic)  # 0.698 and 0.635
+punbalancedness(Hedonic)  # c(0.698, 0.635)
 pdim(Hedonic)$balanced    # FALSE
 
 # punbalancedness on estimated models

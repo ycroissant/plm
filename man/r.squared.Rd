@@ -11,7 +11,7 @@ r.squared(object, model = NULL, type = c("cor", "rss", "ess"), dfcor = FALSE)
 }
 \arguments{
   \item{object}{an object of class \code{"plm"},}
-  \item{model}{on which transformation of the data the R-squared it to
+  \item{model}{on which transformation of the data the R-squared is to
     be computed. If \code{NULL}, the transformation used to estimate the
     model is also used for the computation of R squared,}
   \item{type}{indicates method which is used to compute R squared. One of\cr
