@@ -95,7 +95,7 @@ fitted.plm <- function(object, model = NULL, ...){
   y <- pmodel.response(object, model = model)
   beta <- coef(object)
   # Kevin Tappe 2016-01-09 : perfect correlation of some columns of
-  # the whithin model.matrix
+  # the whithin  model.matrix
   if (ncol(X) != length(beta)){
       result <- lm(y ~ X - 1)
       X <- X[, ! is.na(coef(result))]
