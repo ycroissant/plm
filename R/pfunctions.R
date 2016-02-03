@@ -150,7 +150,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE){
         # to numeric so that the index could be correctly indexed
         ## iindex <- i
         if (! missing(i)){
-            iinndex <- i
+            iindex <- i
             if (is.character(iindex)) iindex <- match(iindex, rownames(x))
             index <- "[.data.frame"(attr(x, "index"), iindex, )
         }
