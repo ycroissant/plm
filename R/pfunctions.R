@@ -137,25 +137,30 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE){
 }
 
 "[.pdata.frame" <- function(x, i, j, drop = TRUE){
-  old.pdata.frame <- !inherits(x, "data.frame")
-  if (!old.pdata.frame){
-    # this part for backward compatibility (required by meboot)
-    index <- "[.data.frame"(attr(x, "index"), i, )
-    #remove empty levels if any
-    index <- data.frame(lapply(index, function(x) x[drop = TRUE]))
-  }
-  mydata <- `[.data.frame`(x, i, j, drop = drop)
-  if (is.null(dim(mydata))){
-    structure(mydata,
-              index = index,
-              class = c("pseries", class(mydata))
-              )
-  }
-  else{
-    structure(mydata,
-              index = index,
-              class = c("pdata.frame", "data.frame"))
-  }
+    old.pdata.frame <- ! inherits(x, "data.frame")
+    if (! old.pdata.frame){
+        # this part for backward compatibility (required by meboot)
+        # Kevin Tappe 2016-01-04 : in case of indexing by a character
+        # vector a pdata.frame, the subseting vector should be coerced
+        # to numeric so that the index could be correctly indexed
+        iindex <- i
+        if (is.character(iindex)) iindex <- match(iindex, rownames(x))
+        index <- "[.data.frame"(attr(x, "index"), iindex, )
+        #remove empty levels if any
+        index <- data.frame(lapply(index, function(x) x[drop = TRUE]))
+    }
+    mydata <- `[.data.frame`(x, i, j, drop = drop)
+    if (is.null(dim(mydata))){
+        structure(mydata,
+                  index = index,
+                  class = c("pseries", class(mydata))
+                  )
+    }
+    else{
+        structure(mydata,
+                  index = index,
+                  class = c("pdata.frame", "data.frame"))
+    }
 }
 
 print.pdata.frame <- function(x, ...){
