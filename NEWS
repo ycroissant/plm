@@ -555,7 +555,7 @@ Changes since version 1.5-14
 	* lag.pseries: modified to handle negative lags (=leading values).
 	* lead.pseries: added function as a wrapper for lag.pseries(x, k=-1) for convenience,
 	  i.e. lag(x, k = -1) == lead(x, k = 1).
-	* diff.pseries: prevented negative lags as input for to avoid confusion.
+	* diff.pseries: prevented negative lags as input to avoid confusion.
 	* doc for pseries functions are made available under their name, e.g. ?lag now displays helpfile for
 	  lag.pseries in the help overview (besides e.g. stats::lag).
 	* pdim.default: make error message "duplicate couples (time-id)" printed as proper error message
@@ -571,4 +571,5 @@ Changes since version 1.5-15
 	  in Ahrens/Pincus (1981); added doc and testfile for punbalancedness.
 	* DESCRIPTION: added URLs for package on CRAN and package on R-Forge.
 	* model.matrix.pFormula and plm.fit: include 'assign' and 'contrasts' attributes (if any) in model fit
-	
+	* Vignette: summary(lme_mod)$coef$fixed -> summary(lme_mod)$coefficients$fixed to avoid
+	  partial matching of 'coef' to 'coefficients' by "$" operator.

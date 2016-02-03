@@ -2144,7 +2144,7 @@ reML<-lme(inv~value+capital,data=Grunfeld,random=~1|firm)
 
 coef(reGLS)
 
-summary(reML)$coef$fixed
+summary(reML)$coefficients$fixed
 
 @
 
@@ -2170,7 +2170,7 @@ vcmML<-lme(inv~value+capital,data=Grunfeld,random=~value+capital|year)
 
 coef(vcm)
 
-summary(vcmML)$coef$fixed
+summary(vcmML)$coefficients$fixed
 
 @
 
@@ -2211,7 +2211,7 @@ gglsML<-gls(inv~value+capital,data=sGrunfeld,
 
 coef(ggls)
 
-summary(gglsML)$coef
+summary(gglsML)$coefficients
 @
 
 The {\em within} case is analogous, with the regressors' set augmented
@@ -2252,7 +2252,7 @@ The regressors' coefficients and the error's serial correlation
 coefficient may be retrieved this way:
 
 <<fetchcoefs>>=
-summary(reAR1ML)$coef$fixed
+summary(reAR1ML)$coefficients$fixed
 coef(reAR1ML$modelStruct$corStruct,unconstrained=FALSE)
 @
 
