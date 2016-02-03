@@ -66,10 +66,10 @@ print.summary.plm <- function(x,digits= max(3, getOption("digits") - 2),
   if (is.null(subset)) printCoefmat(coef(x), digits = digits)
   else printCoefmat(coef(x)[subset, , drop = FALSE], digits = digits)
   cat("\n")
-  cat(paste("Total Sum of Squares:    ", signif(tss(x),digits),     "\n", sep=""))
-  cat(paste("Residual Sum of Squares: ", signif(deviance(x),digits),"\n", sep=""))
-  cat(paste("R-Squared:      ", signif(x$r.squared[1], digits),     "\n", sep=""))
-  cat(paste("Adj. R-Squared: ", signif(x$r.squared[2], digits),     "\n", sep=""))
+  cat(paste("Total Sum of Squares:    ", signif(tss(x), digits),     "\n", sep = ""))
+  cat(paste("Residual Sum of Squares: ", signif(deviance(x), digits),"\n", sep = ""))
+  cat(paste("R-Squared:      ", signif(x$r.squared[1], digits),     "\n", sep = ""))
+  cat(paste("Adj. R-Squared: ", signif(x$r.squared[2], digits),     "\n", sep = ""))
   fstat <- x$fstatistic
   if (names(fstat$statistic) == "F"){
     cat(paste("F-statistic: ",signif(fstat$statistic),
@@ -175,34 +175,35 @@ tss.default <- function(x){
 }
 
 tss.plm <- function(x, model = NULL){
-  if (is.null(model)) model <- describe(x, "model")
-  effect <- describe(x, "effect")
-  if (model == "ht") model = "pooling"
-  if (model == "random") theta <- x$ercomp$theta else theta <- NULL
-  tss(pmodel.response(x, model = model, effect = effect, theta = theta))
+    if (is.null(model)) model <- describe(x, "model")
+    effect <- describe(x, "effect")
+    if (model == "ht") model = "pooling"
+    if (model == "random") theta <- x$ercomp$theta else theta <- NULL
+    tss(pmodel.response(x, model = model, effect = effect, theta = theta))
 }
 
 r.squared <- function(object, model = NULL,
                       type = c('cor', 'rss', 'ess'), dfcor = FALSE){
-  if (is.null(model)) model <- describe(object, "model")
-  effect <- describe(object, "effect")
-  type <- match.arg(type)
-  if (type == 'cor'){
-    y <- pmodel.response(object, model = model, effect = effect)
-    haty <- fitted(object, model = model, effect = effect)
-    R2 <- cor(y, haty)^2
-  }
-  if (type == 'rss'){
-    R2 <- 1 - deviance(object, model = model) / tss(object, model = model)
-  }
-  if (type == 'ess'){
-    haty <- fitted(object, model = model)
-    mhaty <- mean(haty)
-    ess <- sum( (haty - mhaty)^2)
-    R2 <- ess / tss(object, model = model)
-  }
-  if (dfcor) R2 <- R2 * df.residual(object) / length(resid(object) - 1)
-  R2
+    if (is.null(model)) model <- describe(object, "model")
+    effect <- describe(object, "effect")
+    type <- match.arg(type)
+    if (type == 'cor'){
+        y <- pmodel.response(object, model = model, effect = effect)
+        haty <- fitted(object, model = model, effect = effect)
+        R2 <- cor(y, haty)^2
+    }
+    if (type == 'rss'){
+        R2 <- 1 - deviance(object, model = model) / tss(object, model = model)
+    }
+    if (type == 'ess'){
+        haty <- fitted(object, model = model)
+        mhaty <- mean(haty)
+        ess <- sum( (haty - mhaty)^2)
+        R2 <- ess / tss(object, model = model)
+    }
+    # Kevin Tappe 2015-10-19, the computation of the adjusted R2 was wrong
+    if (dfcor) R2 <- 1 - (1 - R2) * (length(resid(object)) - 1) / df.residual(object)
+    R2
 }
   
 
