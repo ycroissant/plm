@@ -7,6 +7,7 @@
 # -> everything is ok in rev. 189
 
 # from ?pdata.frame: "The "[" method behaves as for data.frame, except that the extraction is also applied to the index attribute."
+library(plm)
 data(Grunfeld, package="plm")
 class(Grunfeld)
 pGrunfeld <- pdata.frame(Grunfeld, index = c("firm", "year"), drop.index = F)
