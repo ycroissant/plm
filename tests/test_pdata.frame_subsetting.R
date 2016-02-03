@@ -1,29 +1,52 @@
-# subsetting by rownames of a pdata.frame destroys index (sets all entries to NA)
+# test if subsetting by rownames of a pdata.frame preserves index
+#  (pre rev. 187/189 all entries were set to NA)
 #
-# seems to be in function [.pdata.frame which includes some code for a lagacy pdata.frame format (old.pdata.frame)
 library(plm)
 data("Grunfeld")
 
 pGrunfeld <- pdata.frame(Grunfeld)
 
-# subsetting with [] with rownames - does not work
+# subsetting with [] with rownames - works
 attr(pGrunfeld[c("1-1935"), ], which = "index")
 attr(pGrunfeld[c("1-1935", "1-1936"), ], which = "index")
 
-#if (any(is.na(attr(pGrunfeld[c("1-1935"), ], which = "index")))) warning("FAIL: NA in index")
-#if (any(is.na(attr(pGrunfeld[c("1-1935", "1-1936"), ], which = "index")))) warning("FAIL: NA in index")
+if (any(is.na(attr(pGrunfeld[c("1-1935"), ], which = "index")))) warning("FAIL: NA in index")
+if (any(is.na(attr(pGrunfeld[c("1-1935", "1-1936"), ], which = "index")))) warning("FAIL: NA in index")
 
 
 # subsetting with [] by line number works (indexes preserved)
-attr(pGrunfeld[c(1), ], which = "index")
-attr(pGrunfeld[c(1,2), ], which = "index")
+if (!all(attr(pGrunfeld[c(1), ], which = "index") == c(1, 1935))) warning("wrong index!")
+if (!all(attr(pGrunfeld[c(1,2), ], which = "index") == data.frame(firm = c(1,1), year = c(1935, 1936)))) warning("wrong index!")
 
-#if (any(is.na(attr(pGrunfeld[c(1), ], which = "index")))) warning("FAIL: NA in index")
-#if (any(is.na(attr(pGrunfeld[c(1,2), ], which = "index")))) warning("FAIL: NA in index")
+if (any(is.na(attr(pGrunfeld[c(1), ], which = "index")))) warning("FAIL: NA in index")
+if (any(is.na(attr(pGrunfeld[c(1,2), ], which = "index")))) warning("FAIL: NA in index")
 
 # subsetting with [[]] works (indexes preserved)
 attr(pGrunfeld[["inv"]], which = "index")
 attr(pGrunfeld[[3]], which = "index")
 
-#if (any(is.na(attr(pGrunfeld[["inv"]], which = "index")))) warning("FAIL: NA in index")
-#if (any(is.na(attr(pGrunfeld[[3]], which = "index")))) warning("FAIL: NA in index")
+if (any(is.na(attr(pGrunfeld[["inv"]], which = "index")))) warning("FAIL: NA in index")
+if (any(is.na(attr(pGrunfeld[[3]], which = "index")))) warning("FAIL: NA in index")
+
+
+
+
+
+
+#### subsetted pdata.frame can not be used for estimation in rev. 189
+pGrunfeld_sub <- pGrunfeld[c(23:99), ]
+
+  # classes of index of pdata.frame and subsetted pdata.frame are the same 'pindex' and 'data.frame')
+  class(attr(pGrunfeld, which="index"))
+  class(attr(pGrunfeld$inv, which="index"))
+  if (!all(class(attr(pGrunfeld, which="index")) == class(attr(pGrunfeld$inv, which="index")))) warning("classes differ!")
+  
+  # However, classes index of columns of pdata.frame and subsetted pdata.frame diverge
+  # (subsetted pdata.frame column misses class 'pindex' relative to full pdata.frame)
+  class(attr(pGrunfeld$inv, which="index"))
+  class(attr(pGrunfeld_sub$inv, which="index"))
+#  if (!all(class(attr(pGrunfeld$inv, which="index")) == class(attr(pGrunfeld_sub$inv, which="index")))) warning("classes differ!")
+
+# plm(inv ~ value + capital, data = pGrunfeld[c(23:99), ]) # fails in v 189
+
+plm(inv ~ value + capital, data = pdata.frame(as.data.frame(pGrunfeld[c(23:99), ]))) # coercing to data.frame first => works

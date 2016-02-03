@@ -110,6 +110,8 @@ tests/testEvaluation.R -text
 tests/testEvaluation.Rout.save -text
 tests/test_Chow.R -text
 tests/test_Estimators.R -text
+tests/test_R2_adj_R2.R -text
+tests/test_extract_pdata_frame_class_est_mod.R -text
 tests/test_fitted.plm.R -text
 tests/test_model.frame.R -text
 tests/test_model.matrix_pmodel.response.R -text
