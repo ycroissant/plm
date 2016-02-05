@@ -3,6 +3,9 @@
 \alias{as.Formula.pFormula}
 \alias{model.frame.pFormula}
 \alias{model.matrix.pFormula}
+\alias{model.matrix}
+\alias{model.frame}
+
 
 \title{pFormula: An extended Formula interface for panel data}
 
@@ -24,7 +27,7 @@ pFormula(object)
 
 \arguments{
  \item{object, formula, x}{an object of class \code{"pFormula"},}
- \item{data}{a \code{data.frame}, see Details,}
+ \item{data}{a \code{data.frame}, see \bold{Details},}
  \item{effect}{the effects introduced in the model, one of
   \code{"individual"}, \code{"time"} or \code{"twoways"},}
  \item{model}{one of \code{"pooling"}, \code{"within"},
@@ -45,15 +48,28 @@ The \code{lhs} and \code{rhs} arguments are inherited from
 \code{pdata.frame} object. The \code{model.matrix} method builds a model matrix
 with transformations performed as specified by the \code{model} and \code{effect}
 arguments, in this case the supplied \code{data} argument should be
-a model frame (if not, it is tried to contruct the model frame from the data).
+a model frame (if not, it is tried to construct the model frame from the data).\cr
+Constructing the model frame first ensures proper NA handling.
 }
 
 % \references{
 % }
-% \seealso{
-% }
-% \examples{
-% }
+\seealso{
+  \code{\link{pmodel.response}} for (transformed) response variable corresponding to \code{model.matrix}.
+}
+
+\examples{
+# First, make a pdata.frame
+data(Grunfeld)
+pGrunfeld <- pdata.frame(Grunfeld)
+
+# then make a model.frame from a pFormula and a pdata.frame
+pform <- pFormula(inv ~ value + capital)
+mf <- model.frame(pform, data = pGrunfeld)
+
+# then construct the (transformed) model.matrix (design matrix) from model.frame
+modmat <- model.matrix(pform, data = mf, model = "within")
+}
 
 \author{Yves Croissant}
 
