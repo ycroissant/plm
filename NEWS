@@ -573,3 +573,7 @@ Changes since version 1.5-15
 	* model.matrix.pFormula and plm.fit: include 'assign' and 'contrasts' attributes (if any) in model fit
 	* Vignette: summary(lme_mod)$coef$fixed -> summary(lme_mod)$coefficients$fixed to avoid
 	  partial matching of 'coef' to 'coefficients' by "$" operator.
+	* r.squared: adjusted R squared fixed (at least for models with intercept)
+	* model.matrix.pFormula and pmodel.response: ensured that 'data' gets reduced to the corresponding
+	  model frame if not already a model frame (now mimics stats::model.matrix in this regard);
+	  fixes corner cases with specific NA patterns [see tests/test_model.matrix_pmodel.response_NA.R]

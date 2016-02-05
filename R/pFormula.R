@@ -40,32 +40,20 @@ model.matrix.pFormula <- function(object, data,
   formula <- object
   has.intercept <- has.intercept(formula, rhs = rhs)
   
-  # NB: data is not sanitized here, i.e. NAs could still be present.
-  # Formula::model.matrix.Formula does not remove rows if there are
-  # NAs in the corresponsing positions in the dependend variable,
-  # unlike stats::model.matrix.default which drops affected rows
-  # See testfiles tests/test_model.matrix_pmodel.response.R and
-  # test_model.matrix_pmodel.response_NA.R
-  # Achim's general advice on such things: build model.frame first
-  # Estimation via plm() is not affected, because plm already builds
-  # the model.frame before model.matrix.pFormula is called. Thus, only
-  # direct calls to model.matrix.pFormula (and maybe pmodel.response)
-  # are affected.
-  # However building the model.frame here to sanitize data
-  # will result in a slight (?) performance regression when calling
-  # plm() because the model.frame is then build a second time.
-  
-  # Decision on whether to apply the balanced or unbalanced transformations
-  # [if pdim(data)$balanced below] needs to be based on sanitized data (with
-  # affected rows removed (also rows removed if NA in corresponsing position
-  # in dependend variable)).
+  # check if inputted data is a model.frame, if not convert it to model.frame
+  # (important for NA handling of the original data when model.matrix.pFormula is called directly)
+  # As there is no own class for a model.frame, check if the 'terms' attribute
+  # is present (this mimics what lm does to detect a model.frame)
+  if (is.null(attr(data, "terms"))) {
+    data <- model.frame.pFormula(pFormula(formula), data)
+  }
 
-  
   X <- model.matrix(as.Formula(formula), rhs = rhs, data = data, ...)
   X.assi <- attr(X, "assign")
   X.contr <- attr(X, "contrasts")
   X.contr <- X.contr[ !sapply(X.contr, is.null) ]  ##drop NULL elements
-    index <- attr(data, "index")
+  
+  index <- attr(data, "index")
   id <- index[[1]]
   if(any(is.na(id))) {
      stop("NA in the individual index variable")
@@ -148,9 +136,19 @@ pmodel.response.pFormula <- function(object, data,
                                      lhs = NULL,
                                      theta = NULL, ...){
   formula <- pFormula(object) # was: formula <- object
+  
+  # check if inputted data is already a model.frame, if not convert it to model.frame
+  # (important for NA handling of the original data when pmodel.response is called directly)
+  # As there is no own class for a model.frame, check if the 'terms' attribute
+  # is present (this mimics what lm does to detect a model.frame)
+  if (is.null(attr(data, "terms"))) {
+    data <- model.frame.pFormula(pFormula(formula), data)
+  }
+  
   if (is.null(lhs))
     if (length(formula)[1] == 0) stop("no response") else lhs <- 1
   formula <- formula(paste("~ ", deparse(attr(formula, "lhs")[[lhs]]), " - 1", sep = ""))
+  
   y <- model.matrix(pFormula(formula), data = data,
                     model = model, effect = effect,
                     lhs = lhs, theta = theta, ...)

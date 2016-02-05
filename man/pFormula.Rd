@@ -24,7 +24,7 @@ pFormula(object)
 
 \arguments{
  \item{object, formula, x}{an object of class \code{"pFormula"},}
- \item{data}{a \code{data.frame},}
+ \item{data}{a \code{data.frame}, see Details,}
  \item{effect}{the effects introduced in the model, one of
   \code{"individual"}, \code{"time"} or \code{"twoways"},}
  \item{model}{one of \code{"pooling"}, \code{"within"},
@@ -36,15 +36,16 @@ pFormula(object)
 }
 
 \value{
-An object of class \code{c("pFormula", "Formula"}.
+An object of class \code{c("pFormula", "Formula")}.
 }
 
 \details{
 The \code{lhs} and \code{rhs} arguments are inherited from
 \code{Formula}. The \code{model.frame} method returns a
-\code{pdata.frame} object. The \code{model.matrix} performs the
-transformation specified by the \code{model} and \code{effect}
-arguments.
+\code{pdata.frame} object. The \code{model.matrix} method builds a model matrix
+with transformations performed as specified by the \code{model} and \code{effect}
+arguments, in this case the supplied \code{data} argument should be
+a model frame (if not, it is tried to contruct the model frame from the data).
 }
 
 % \references{

@@ -29,8 +29,9 @@ pmodel.response(object, ...)
 }
 
 \arguments{
-  \item{object}{an object of class \code{"plm"},}
-  \item{data}{a \code{data.frame},}
+  \item{object}{an object of class \code{"plm"}, or a formula of class \code{"pFormula"},}
+  \item{data}{a \code{data.frame}, which is a model frame (if not, it is tried to contruct
+  the model frame from the data)}
   \item{effect}{the effects introduced in the model, one of
   \code{"individual"}, \code{"time"} or \code{"twoways"},}
   \item{model}{one of \code{"pooling"}, \code{"within"},
@@ -45,7 +46,8 @@ A numeric vector.
 }
 
 \details{
-The model response is extracted (from a \code{data.frame}, a \code{pFormula} or a \code{plm} object, and the transformation
+The model response is extracted from a \code{data.frame}, a \code{pFormula} + \code{data} or a
+\code{plm} object, and the transformation
 specified by \code{effect} and \code{model} is applied to it. 
 }
 
