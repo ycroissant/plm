@@ -50,3 +50,17 @@ pGrunfeld_sub <- pGrunfeld[c(23:99), ]
 # plm(inv ~ value + capital, data = pGrunfeld[c(23:99), ]) # fails in v 189
 
 plm(inv ~ value + capital, data = pdata.frame(as.data.frame(pGrunfeld[c(23:99), ]))) # coercing to data.frame first => works
+
+
+##subsetting by [] doesn't mimic data.frame behavior
+##this data.frame subsetting isn't documented clearly:
+# ?Extract.data.frame
+# "When [ and [[ are used with a single vector index (x[i] or x[[i]]),
+# they index the data frame as if it were a list."
+# While X[2:4] works as described above, however X[[2:4]] ends up as an error.
+##nonetheless, we should mimic what data.frame subsetting is doing
+X <- head(Grunfeld, 25)
+pX <- pdata.frame(X)
+X[2:4]  ##data.frame returns columns 2, 3, 4
+pX[2:4]  ##pdata.frame returns rows 2, 3, 4
+
