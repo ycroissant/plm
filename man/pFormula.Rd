@@ -1,61 +1,46 @@
+% model.frame and model.matrix documented separate file
+
 \name{pFormula}
 \alias{pFormula}
 \alias{as.Formula.pFormula}
-\alias{model.frame.pFormula}
-\alias{model.matrix.pFormula}
-\alias{model.matrix}
-\alias{model.frame}
+
 
 
 \title{pFormula: An extended Formula interface for panel data}
 
-\description{pFormula is a Formula object, with methods useful for panel data.
+\description{pFormula is a Formula object used in the plm package.
 }
 
 \usage{
 pFormula(object)
 \S3method{as.Formula}{pFormula}(x, ...)
-\S3method{model.frame}{pFormula}(formula, data, ...,
-                                 lhs = NULL, rhs = NULL)
-\S3method{model.matrix}{pFormula}(object, data,
-                                  model = c("pooling","within","Between",
-  "between","mean","random","fd"), 
-                                  effect = c("individual","time","twoways"),
-                                  rhs = 1,
-                                  theta = NULL, ...)
+
 }
 
 \arguments{
- \item{object, formula, x}{an object of class \code{"pFormula"},}
- \item{data}{a \code{data.frame}, see \bold{Details},}
- \item{effect}{the effects introduced in the model, one of
-  \code{"individual"}, \code{"time"} or \code{"twoways"},}
- \item{model}{one of \code{"pooling"}, \code{"within"},
-    \code{"between"}, \code{"random",} \code{"fd"} and \code{"ht"},}
- \item{theta}{the parameter for the transformation if \code{model = "random"},}
- \item{lhs}{,}
- \item{rhs}{,}
+ \item{object}{an object of class \code{"formula"}, the formula to be coerced to
+ class \code{"pFormula"},}
+ \item{x}{an object of class \code{"pFormula"}, to be coerced to \code{class{"Formula"}},}
  \item{\dots}{further arguments.}
 }
 
 \value{
-An object of class \code{c("pFormula", "Formula")}.
+For \code{pFormula}, the return value is an object of class
+\code{c("pFormula", "Formula", "formula")}.\cr
+For \code{as.Formula}, the return value is an object of class
+\code{c("Formula", "formula")}.\cr
 }
 
-\details{
-The \code{lhs} and \code{rhs} arguments are inherited from
-\code{Formula}. The \code{model.frame} method returns a
-\code{pdata.frame} object. The \code{model.matrix} method builds a model matrix
-with transformations performed as specified by the \code{model} and \code{effect}
-arguments, in this case the supplied \code{data} argument should be
-a model frame (if not, it is tried to construct the model frame from the data).\cr
-Constructing the model frame first ensures proper NA handling.
-}
+% \details{
+% }
 
 % \references{
 % }
 \seealso{
-  \code{\link{pmodel.response}} for (transformed) response variable corresponding to \code{model.matrix}.
+  \code{plm}'s \code{\link[plm]{model.frame}} and \code{\link[plm]{model.matrix}} to create a
+  model frame for panel data and a model.matrix with data transformations applied, respectively.\cr
+  \code{plm}'s \code{\link{pmodel.response}} for (transformed) response variable.\cr
+  \code{\link[Formula]{Formula}} from package \code{Formula}.
 }
 
 \examples{
@@ -63,11 +48,12 @@ Constructing the model frame first ensures proper NA handling.
 data(Grunfeld)
 pGrunfeld <- pdata.frame(Grunfeld)
 
-# then make a model.frame from a pFormula and a pdata.frame
+# then make a model frame from a pFormula and a pdata.frame
 pform <- pFormula(inv ~ value + capital)
 mf <- model.frame(pform, data = pGrunfeld)
 
-# then construct the (transformed) model.matrix (design matrix) from model.frame
+# then construct the (transformed) model matrix (design matrix)
+# from formula and model frame
 modmat <- model.matrix(pform, data = mf, model = "within")
 }
 

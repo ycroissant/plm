@@ -4,7 +4,7 @@
 
 
 ### (1) Comparision of extraction of data.frame and pdata.frame ###
-# -> everything is ok in rev. 189
+# -> everything is ok in rev. 189+
 
 # from ?pdata.frame: "The "[" method behaves as for data.frame, except that the extraction is also applied to the index attribute."
 library(plm)
@@ -22,7 +22,7 @@ nrow(pGrunfeld[pGrunfeld$inv == 317.60, ])  # operation works on pdata.frame as 
 
 
 
-### (2) class 'pseries' of estimated_model$model [cosmetic, present in rev. 189] ###
+### (2) class 'pseries' of estimated_model$model [cosmetic, present in (at least) rev. 189] ###
 mod <- plm(inv ~ value + capital, data=pGrunfeld, model = "pooling")
 class(mod$model)
 class(mod$model$inv) # 'pseries' appears twice

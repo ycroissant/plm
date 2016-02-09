@@ -67,6 +67,7 @@ man/dynformula.Rd -text
 man/ercomp.Rd -text
 man/fixef.plm.Rd -text
 man/index.plm.Rd -text
+man/model.frame_model.matrix.Rd -text
 man/mtest.Rd -text
 man/nobs.Rd -text
 man/pFormula.Rd -text

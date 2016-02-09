@@ -581,3 +581,6 @@ Changes since version 1.5-15
 	* detect_lin_dep: new function as a little helper function to detect linear depedent
 	  columns, esp. in a model matrices; incl. doc with two examples about how linear+
 	  depedent columns can be induced by the within transformation.
+	* doc pFormula.Rd extended (especially examples) and split up in two files to better accomodate
+	  different return values and input values in the documenation
+	  (new file added: man/model.frame_model.matrix.Rd).
