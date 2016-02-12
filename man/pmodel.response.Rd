@@ -30,14 +30,14 @@ pmodel.response(object, ...)
 
 \arguments{
   \item{object}{an object of class \code{"plm"}, or a formula of class \code{"pFormula"},}
-  \item{data}{a \code{data.frame}, which is a model frame (if not, it is tried to construct
+  \item{data}{a \code{pdata.frame}, which is a model frame (if not, it is tried to construct
   the model frame from the data, see \bold{Details}),}
   \item{effect}{the effects introduced in the model, one of
   \code{"individual"}, \code{"time"} or \code{"twoways"},}
   \item{model}{one of \code{"pooling"}, \code{"within"},
     \code{"between"}, \code{"random",} \code{"fd"} and \code{"ht"},}
   \item{theta}{the parameter for the transformation if \code{model = "random"},}
-  \item{lhs}{,}
+  \item{lhs}{inherited from package \code{\link[Formula]{Formula}} (see there),}
   \item{\dots}{further arguments.}
 }
 
@@ -46,18 +46,20 @@ A numeric vector.
 }
 
 \details{
-The model response is extracted from a \code{data.frame} (where the repsonse
-must reside in the first column), a \code{pFormula} + \code{data} or a
+The model response is extracted from a \code{pdata.frame} (where the repsonse
+must reside in the first column; this is the case for a model frame), a \code{pFormula} + \code{data} or a
 \code{plm} object, and the transformation specified by \code{effect} and \code{model} is
 applied to it.\cr
-Constructing the model frame first ensures proper NA handling, see \bold{Examples}.
+Constructing the model frame first ensures proper NA handling and the response being
+placed in the first column, see also \bold{Examples} for usage.
 }
 
 % \references{
 % }
 
 \seealso{
-  \code{plm}'s \code{\link[plm]{model.matrix}} for (transformed) model matrix.
+  \code{plm}'s \code{\link[plm]{model.matrix}} for (transformed) model matrix and the
+  corresponding \code{\link[plm]{model.frame}} method to construct a model frame.
 }
 
 \examples{

@@ -30,14 +30,14 @@
 \arguments{
  \item{object, formula}{an object of class \code{"pFormula"} or an
  estimated model object of class \code{"plm"},}
- \item{data}{a \code{data.frame}, see \bold{Details},}
+ \item{data}{a \code{pdata.frame}, see \bold{Details},}
  \item{effect}{the effects introduced in the model, one of
   \code{"individual"}, \code{"time"} or \code{"twoways"},}
  \item{model}{one of \code{"pooling"}, \code{"within"},
     \code{"between"}, \code{"random",} \code{"fd"} and \code{"ht"},}
  \item{theta}{the parameter for the transformation if \code{model = "random"},}
- \item{lhs}{,}
- \item{rhs}{,}
+ \item{lhs}{inherited from package \code{\link[Formula]{Formula}} (see there),}
+ \item{rhs}{inherited from package \code{\link[Formula]{Formula}} (see there),}
  \item{\dots}{further arguments.}
 }
 
@@ -47,7 +47,8 @@ The \code{model.matrix} methods return a \code{matrix}.
 }
 
 \details{
-The \code{lhs} and \code{rhs} arguments are inherited from \code{Formula}.\cr
+The \code{lhs} and \code{rhs} arguments are inherited from \code{Formula}, see there for
+more details.\cr
 The \code{model.frame} methods return a \code{pdata.frame} object suitable as an input
 to plm's \code{model.matrix}.\cr
 The \code{model.matrix} methods builds a model matrix
@@ -62,7 +63,10 @@ Constructing the model frame first ensures proper NA handling, see \bold{Example
 % }
 \seealso{
   \code{\link{pmodel.response}} for (transformed) response variable.\cr
-  \code{\link{pFormula}}.
+  \code{plm}'s \code{\link[plm]{model.frame}} for creating a model frame.\cr
+  \code{\link{pFormula}}, especially for coercing a \code{formula} to a \code{pFormula}.\cr
+  \code{\link[Formula]{Formula}} from package \code{Formula}, especially for
+  the \code{lhs} and \code{rhs} arguments.
 }
 
 \examples{
