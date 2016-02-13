@@ -1,0 +1,675 @@
+
+R version 3.2.3 (2015-12-10) -- "Wooden Christmas-Tree"
+Copyright (C) 2015 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> # Test of new plmtest implementation (handeling unbalanced panels)
+> #
+> # compare to grunfeld data example in Baltagi (2013), Econometric Analysis of Panel Data, 5th ed., p. 74-75 (Table 4.1/4.2)
+> #                                also Baltagi (2005), Econometric Analysis of Panel Data, 3rd ed., p. 65-66 (just Table 4.1,
+> #                                                                      table 4.2 in Baltagi (2005) is only STATA's xttest0
+> #                                                                      for Breusch-Pagan with chi2(1) = 798.16, Prob > chi2 = 0.0000)
+> #
+> # => statistics and p-values match => implementation of balanced tests is ok.
+> #
+> # The text book only supplies examples for the balanced Grunfeld data
+> # Thus, there are no reference values for an _un_balanced data set.
+> # -> compare calculatation of EViews on an unbalanced data set (grunfeld without last observation)
+> 
+> # unbalanced formulas reduce in the case of a balanced panel to the formula for balanced panels:
+> #
+> #    balanced panel: => test output as in the text book => implementation is ok.
+> #  unbalanced panel: => test statistics for unbalanced panel differ from balanced panel
+> #                    => test matches calculcation of EViews
+> 
+> # Tables reprinted here:
+> #
+> # Table 4.1
+> ############ [statistic (critical values at 5% level)]
+> #     ind       time    twoways
+> #---------------------------------
+> # BP 798.162   6.454    804.615
+> #   (3.841)   (3.841)   (5.991)
+> #
+> # HO 28.252    -2.540    18.181
+> #   (1.645)   (1.645)   (1.645)
+> #
+> # KW 28.252    -2.540   21.832
+> #   (1.645)   (1.645)   (1.645)
+> #
+> # SLM 32.661   -2.433     -    ## note: SLM statistic is not implemented in plm
+> #   (1.645)   (1.645)     -
+> #
+> # GHM   -       -       798.162 
+> #       -       -       (4.231)
+> 
+> 
+> ##### Grunfeld data set - balanced ####
+> # Table 4.2 [Output from EViews], similiar to above table but with p-values
+> ##### EViews add-in BPTest for some older version of EViews needed:
+> ##### http://www.eviews.com/Addins/addins.shtml#addins
+> ##### http://forums.eviews.com/viewtopic.php?f=23&t=2228
+> ##### In (at least) EViews 9, the LM tests are implemented, no need for add-in;
+> #####                         SLM is not outputted anymore but std. Honda and std. KW
+> #####                         and p-values for negative one-sided statistics are not
+> #####                         printed anymore (see unbalanced example below).
+> ########### [statistic (p-values)]
+> #     ind       time    twoways
+> #---------------------------------
+> # BP 798.1615   6.453882    804.6154
+> #   (0.000)     (0.0111)    (0.0000)
+> #
+> # HO 28.25175  -2.540449    18.18064
+> #   (0.000)     (0.9945)    (0.0000)
+> #
+> # KW 28.25175  -2.540449    21.83221
+> #   (0.000)     (0.9945)    (0.0000)
+> #
+> # SLM 32.66605 -2.432565      -   ## note: SLM statistic is not implemented in plm
+> #    (0.000)    (0.9925)      -
+> #
+> # GHM   -       -         798.1615 
+> #       -       -         (0.0000)
+> 
+> 
+> ############ unbalanced ##########################################
+> ##### Grunfeld unbalanced data set [see below]
+> ##### (last observation deleted, i. e. first 199 obs)
+> # Own computation with EViews 9
+> ##### In EViews 9, the LM tests are implemented, no need for add-in anymore;
+> #####              SLM is not outputted but std. Honda and std. KW
+> #####              p-values for the negative one-sided statistics
+> #####              [in this example (std.) Honda, KW]
+> #####              are not printed in EViews 9; from the help file:
+> #####              "However, for testing time-specific effects, there is
+> #####               a marked difference between the results for the
+> #####               two-sided Breusch-Pagan and the one-sided tests,
+> #####               with the former suggesting the presence of effects,
+> #####               and the latter with negative values indicating that
+> #####               there are no time-effects. These data clearly show
+> #####               the benefits of using one-sided tests in an empirical
+> #####               setting."
+> 
+> ########### [statistic (p-values)]
+> #           ind       time    twoways
+> #---------------------------------
+> # BP      796.6615   6.454578  803.1161
+> #         (0.0000)   (0.0111)  (0.0000)
+> #
+> # HO      28.22519  -2.540586  18.16176
+> #         (0.0000)   (--)       (0.0000)
+> #
+> # KW      28.22519  -2.540586  21.81025
+> #         (0.000)    (--)      (0.0000)
+> #
+> # std.HO  32.63583  -2.430639  16.28236  ## note: standardizised HO statistic is not implemented in plm
+> #         (0.000)    (--)      (0.0000)
+> #
+> # std.KW  32.63583  -2.430639  20.94707  ## note: standardizised KW statistic is not implemented in plm
+> #         (0.000)    (--)      (0.0000)
+> #
+> # GHM      -         -        796.6615
+> #                             (<0.001)
+> 
+> 
+> options(digits = 10)
+> Sys.setenv(LANG = "en")
+> require(plm)
+Loading required package: plm
+Loading required package: Formula
+> data(Grunfeld, package = "plm")
+> Grunfeldpdata <- pdata.frame(Grunfeld, index = c("firm", "year"), drop.index = FALSE, row.names = TRUE)
+> 
+> fe_grunfeld    <- plm(inv ~ value + capital, data=Grunfeldpdata, model="within")
+> re_grunfeld    <- plm(inv ~ value + capital, data=Grunfeldpdata, model="random")
+> pool_grunfeld  <- plm(inv ~ value + capital, data=Grunfeldpdata, model="pooling")
+> 
+> 
+> 
+> # Make an unbalanced data set
+> Grunfeldpdata_unbalanced <- Grunfeld[1:(nrow(Grunfeld)-1), ] 
+> Grunfeldpdata_unbalanced <- pdata.frame(Grunfeldpdata_unbalanced, index=c("firm"), drop.index = F)
+> fe_grunfeld_unbalanced   <- plm(inv ~ value + capital, data=Grunfeldpdata_unbalanced, model="within")
+> re_grunfeld_unbalanced   <- plm(inv ~ value + capital, data=Grunfeldpdata_unbalanced, model="random")
+> pool_grunfeld_unbalanced <- plm(inv ~ value + capital, data=Grunfeldpdata_unbalanced, model="pooling")
+> 
+> 
+> # Produc
+> # data(Produc, package = "plm")
+> # form_produc <- formula(gsp ~ log(pc) + log(pcap) + log(emp) + unemp)
+> # produc_pool <- plm(form_produc, data = Produc, model="pooling")
+> 
+> # Hedonic
+> # Stastics heavily differ for this unbalanced data, depending on one applies the
+> # balanced tests (v1.4-0) to this unbalanced data or the unbalanced test
+> #
+> # balanced test of v1.4-0:   849.45815 (individual effects) and 600.20821 (time effects)
+> # unbalanced test:            25.011274 (individual effects) and  1.5571417 (time effects)
+> data(Hedonic, package = "plm")
+> pHedonic <- pdata.frame(Hedonic, index = "townid", drop.index = F)
+> form_hedonic <- formula(mv ~ crim)
+> hedonic_pool <- plm(form_hedonic, data = pHedonic, model="pooling")
+> plmtest(hedonic_pool)
+
+	Lagrange Multiplier Test - (Honda) for unbalanced panels
+
+data:  form_hedonic
+normal = 25.011274, p-value < 2.2204e-16
+alternative hypothesis: significant effects
+
+> plmtest(hedonic_pool, effect = "time")
+
+	Lagrange Multiplier Test - time effects (Honda) for unbalanced panels
+
+data:  form_hedonic
+normal = 1.5571417, p-value = 0.05971842
+alternative hypothesis: significant effects
+
+> 
+> 
+> ### generalized version of plmtest() to handle also unbalanced panels
+> 
+> # individual effect
+> print(honda_ind            <- plmtest(pool_grunfeld, type="honda"))
+
+	Lagrange Multiplier Test - (Honda) for balanced panels
+
+data:  inv ~ value + capital
+normal = 28.251753, p-value < 2.2204e-16
+alternative hypothesis: significant effects
+
+> print(honda_ind_unbalanced <- plmtest(pool_grunfeld_unbalanced, type="honda"))
+
+	Lagrange Multiplier Test - (Honda) for unbalanced panels
+
+data:  inv ~ value + capital
+normal = 28.225193, p-value < 2.2204e-16
+alternative hypothesis: significant effects
+
+> print(bp_ind               <- plmtest(pool_grunfeld, type="bp"))
+
+	Lagrange Multiplier Test - (Breusch-Pagan) for balanced panels
+
+data:  inv ~ value + capital
+chisq = 798.16155, df = 1, p-value < 2.2204e-16
+alternative hypothesis: significant effects
+
+> print(bp_ind_unbalanced    <- plmtest(pool_grunfeld_unbalanced, type="bp"))
+
+	Lagrange Multiplier Test - (Breusch-Pagan) for unbalanced panels
+
+data:  inv ~ value + capital
+chisq = 796.66152, df = 1, p-value < 2.2204e-16
+alternative hypothesis: significant effects
+
+> print(kw_ind               <- plmtest(pool_grunfeld, type="kw"))
+
+	Lagrange Multiplier Test - (King and Wu) for balanced panels
+
+data:  inv ~ value + capital
+normal = 28.251753, p-value < 2.2204e-16
+alternative hypothesis: significant effects
+
+> print(kw_ind_unbalanced    <- plmtest(pool_grunfeld_unbalanced, type="kw"))
+
+	Lagrange Multiplier Test - (King and Wu) for unbalanced panels
+
+data:  inv ~ value + capital
+normal = 28.225193, p-value < 2.2204e-16
+alternative hypothesis: significant effects
+
+> # Note: ghm is only for twoways, hence not in this section
+> 
+> # time effect
+> print(honda_time            <- plmtest(pool_grunfeld, type="honda", effect="time"))
+
+	Lagrange Multiplier Test - time effects (Honda) for balanced panels
+
+data:  inv ~ value + capital
+normal = -2.5404491, p-value = 0.9944645
+alternative hypothesis: significant effects
+
+> print(honda_time_unbalanced <- plmtest(pool_grunfeld_unbalanced, type="honda", effect="time"))
+
+	Lagrange Multiplier Test - time effects (Honda) for unbalanced panels
+
+data:  inv ~ value + capital
+normal = -2.5405861, p-value = 0.9944667
+alternative hypothesis: significant effects
+
+> print(bp_time               <- plmtest(pool_grunfeld, type="bp", effect="time"))
+
+	Lagrange Multiplier Test - time effects (Breusch-Pagan) for balanced
+	panels
+
+data:  inv ~ value + capital
+chisq = 6.4538816, df = 1, p-value = 0.01107102
+alternative hypothesis: significant effects
+
+> print(bp_time_unbalanced    <- plmtest(pool_grunfeld_unbalanced, type="bp", effect="time"))
+
+	Lagrange Multiplier Test - time effects (Breusch-Pagan) for unbalanced
+	panels
+
+data:  inv ~ value + capital
+chisq = 6.4545778, df = 1, p-value = 0.01106668
+alternative hypothesis: significant effects
+
+> print(kw_time               <- plmtest(pool_grunfeld, type="kw", effect="time"))
+
+	Lagrange Multiplier Test - time effects (King and Wu) for balanced
+	panels
+
+data:  inv ~ value + capital
+normal = -2.5404491, p-value = 0.9944645
+alternative hypothesis: significant effects
+
+> print(kw_time_unbalanced    <- plmtest(pool_grunfeld_unbalanced, type="kw", effect="time"))
+
+	Lagrange Multiplier Test - time effects (King and Wu) for unbalanced
+	panels
+
+data:  inv ~ value + capital
+normal = -2.5405861, p-value = 0.9944667
+alternative hypothesis: significant effects
+
+> # Note: ghm is only for twoways, hence not in this section
+> 
+> # twoways effect
+> print(honda_tw            <- plmtest(pool_grunfeld, type="honda", effect="twoways"))
+
+	Lagrange Multiplier Test - two-ways effects (Honda) for balanced
+	panels
+
+data:  inv ~ value + capital
+normal = 18.180637, p-value < 2.2204e-16
+alternative hypothesis: significant effects
+
+> print(honda_tw_unbalanced <- plmtest(pool_grunfeld_unbalanced, type="honda", effect="twoways"))
+
+	Lagrange Multiplier Test - two-ways effects (Honda) for unbalanced
+	panels
+
+data:  inv ~ value + capital
+normal = 18.16176, p-value < 2.2204e-16
+alternative hypothesis: significant effects
+
+> print(bp_tw               <- plmtest(pool_grunfeld, type="bp", effect="twoways"))
+
+	Lagrange Multiplier Test - two-ways effects (Breusch-Pagan) for
+	balanced panels
+
+data:  inv ~ value + capital
+chisq = 804.61543, df = 2, p-value < 2.2204e-16
+alternative hypothesis: significant effects
+
+> print(bp_tw_unbalanced    <- plmtest(pool_grunfeld_unbalanced, type="bp", effect="twoways"))
+
+	Lagrange Multiplier Test - two-ways effects (Breusch-Pagan) for
+	unbalanced panels
+
+data:  inv ~ value + capital
+chisq = 803.1161, df = 2, p-value < 2.2204e-16
+alternative hypothesis: significant effects
+
+> print(kw_tw               <- plmtest(pool_grunfeld, type="kw", effect="twoways"))
+
+	Lagrange Multiplier Test - two-ways effects (King and Wu) for balanced
+	panels
+
+data:  inv ~ value + capital
+normal = 21.832209, p-value < 2.2204e-16
+alternative hypothesis: significant effects
+
+> print(kw_tw_unbalanced    <- plmtest(pool_grunfeld_unbalanced, type="kw", effect="twoways"))
+
+	Lagrange Multiplier Test - two-ways effects (King and Wu) for
+	unbalanced panels
+
+data:  inv ~ value + capital
+normal = 21.810252, p-value < 2.2204e-16
+alternative hypothesis: significant effects
+
+> print(ghm_tw              <- plmtest(pool_grunfeld, type="ghm", effect="twoways"))
+
+	Lagrange Multiplier Test - two-ways effects (Gourieroux, Holly and
+	Monfort) for balanced panels
+
+data:  inv ~ value + capital
+chibarsq = 798.16155, df0 = 0.00, df1 = 1.00, df2 = 2.00, w0 = 0.25, w1
+= 0.50, w2 = 0.25, p-value < 2.2204e-16
+alternative hypothesis: significant effects
+
+> print(ghm_tw_unbalanced   <- plmtest(pool_grunfeld_unbalanced, type="ghm", effect="twoways"))
+
+	Lagrange Multiplier Test - two-ways effects (Gourieroux, Holly and
+	Monfort) for unbalanced panels
+
+data:  inv ~ value + capital
+chibarsq = 796.66152, df0 = 0.00, df1 = 1.00, df2 = 2.00, w0 = 0.25, w1
+= 0.50, w2 = 0.25, p-value < 2.2204e-16
+alternative hypothesis: significant effects
+
+> 
+> 
+> 
+> ### Test of formula interface
+> 
+> # individual effect
+> print(honda_ind_form            <- plmtest(inv ~ value + capital, data=Grunfeldpdata, type="honda"))
+
+	Lagrange Multiplier Test - (Honda) for balanced panels
+
+data:  inv ~ value + capital
+normal = 28.251753, p-value < 2.2204e-16
+alternative hypothesis: significant effects
+
+> print(honda_ind_unbalanced_form <- plmtest(inv ~ value + capital, data=Grunfeldpdata_unbalanced, type="honda"))
+
+	Lagrange Multiplier Test - (Honda) for unbalanced panels
+
+data:  inv ~ value + capital
+normal = 28.225193, p-value < 2.2204e-16
+alternative hypothesis: significant effects
+
+> print(bp_ind_form               <- plmtest(inv ~ value + capital, data=Grunfeldpdata, type="bp"))
+
+	Lagrange Multiplier Test - (Breusch-Pagan) for balanced panels
+
+data:  inv ~ value + capital
+chisq = 798.16155, df = 1, p-value < 2.2204e-16
+alternative hypothesis: significant effects
+
+> print(bp_ind_unbalanced_form    <- plmtest(inv ~ value + capital, data=Grunfeldpdata_unbalanced, type="bp"))
+
+	Lagrange Multiplier Test - (Breusch-Pagan) for unbalanced panels
+
+data:  inv ~ value + capital
+chisq = 796.66152, df = 1, p-value < 2.2204e-16
+alternative hypothesis: significant effects
+
+> print(kw_ind_form               <- plmtest(inv ~ value + capital, data=Grunfeldpdata, type="kw"))
+
+	Lagrange Multiplier Test - (King and Wu) for balanced panels
+
+data:  inv ~ value + capital
+normal = 28.251753, p-value < 2.2204e-16
+alternative hypothesis: significant effects
+
+> print(kw_ind_unbalanced_form    <- plmtest(inv ~ value + capital, data=Grunfeldpdata_unbalanced, type="kw"))
+
+	Lagrange Multiplier Test - (King and Wu) for unbalanced panels
+
+data:  inv ~ value + capital
+normal = 28.225193, p-value < 2.2204e-16
+alternative hypothesis: significant effects
+
+> # Note: ghm is only for twoways, hence not in this section
+> 
+> # time effect
+> print(honda_time_form            <- plmtest(inv ~ value + capital, data=Grunfeldpdata, type="honda", effect="time"))
+
+	Lagrange Multiplier Test - time effects (Honda) for balanced panels
+
+data:  inv ~ value + capital
+normal = -2.5404491, p-value = 0.9944645
+alternative hypothesis: significant effects
+
+> print(honda_time_unbalanced_form <- plmtest(inv ~ value + capital, data=Grunfeldpdata_unbalanced, type="honda", effect="time"))
+
+	Lagrange Multiplier Test - time effects (Honda) for unbalanced panels
+
+data:  inv ~ value + capital
+normal = -2.5405861, p-value = 0.9944667
+alternative hypothesis: significant effects
+
+> print(bp_time_form               <- plmtest(inv ~ value + capital, data=Grunfeldpdata, type="bp", effect="time"))
+
+	Lagrange Multiplier Test - time effects (Breusch-Pagan) for balanced
+	panels
+
+data:  inv ~ value + capital
+chisq = 6.4538816, df = 1, p-value = 0.01107102
+alternative hypothesis: significant effects
+
+> print(bp_time_unbalanced_form    <- plmtest(inv ~ value + capital, data=Grunfeldpdata_unbalanced, type="bp", effect="time"))
+
+	Lagrange Multiplier Test - time effects (Breusch-Pagan) for unbalanced
+	panels
+
+data:  inv ~ value + capital
+chisq = 6.4545778, df = 1, p-value = 0.01106668
+alternative hypothesis: significant effects
+
+> print(kw_time_form               <- plmtest(inv ~ value + capital, data=Grunfeldpdata, type="kw", effect="time"))
+
+	Lagrange Multiplier Test - time effects (King and Wu) for balanced
+	panels
+
+data:  inv ~ value + capital
+normal = -2.5404491, p-value = 0.9944645
+alternative hypothesis: significant effects
+
+> print(kw_time_unbalanced_form    <- plmtest(inv ~ value + capital, data=Grunfeldpdata_unbalanced, type="kw", effect="time"))
+
+	Lagrange Multiplier Test - time effects (King and Wu) for unbalanced
+	panels
+
+data:  inv ~ value + capital
+normal = -2.5405861, p-value = 0.9944667
+alternative hypothesis: significant effects
+
+> # Note: ghm is only for twoways, hence not in this section
+> 
+> # twoways effect
+> print(honda_tw_form            <- plmtest(inv ~ value + capital, data=Grunfeldpdata, type="honda", effect="twoways"))
+
+	Lagrange Multiplier Test - two-ways effects (Honda) for balanced
+	panels
+
+data:  inv ~ value + capital
+normal = 18.180637, p-value < 2.2204e-16
+alternative hypothesis: significant effects
+
+> print(honda_tw_unbalanced_form <- plmtest(inv ~ value + capital, data=Grunfeldpdata_unbalanced, type="honda", effect="twoways"))
+
+	Lagrange Multiplier Test - two-ways effects (Honda) for unbalanced
+	panels
+
+data:  inv ~ value + capital
+normal = 18.16176, p-value < 2.2204e-16
+alternative hypothesis: significant effects
+
+> print(bp_tw_form               <- plmtest(inv ~ value + capital, data=Grunfeldpdata, type="bp", effect="twoways"))
+
+	Lagrange Multiplier Test - two-ways effects (Breusch-Pagan) for
+	balanced panels
+
+data:  inv ~ value + capital
+chisq = 804.61543, df = 2, p-value < 2.2204e-16
+alternative hypothesis: significant effects
+
+> print(bp_tw_unbalanced_form    <- plmtest(inv ~ value + capital, data=Grunfeldpdata_unbalanced, type="bp", effect="twoways"))
+
+	Lagrange Multiplier Test - two-ways effects (Breusch-Pagan) for
+	unbalanced panels
+
+data:  inv ~ value + capital
+chisq = 803.1161, df = 2, p-value < 2.2204e-16
+alternative hypothesis: significant effects
+
+> print(kw_tw_form               <- plmtest(inv ~ value + capital, data=Grunfeldpdata, type="kw", effect="twoways"))
+
+	Lagrange Multiplier Test - two-ways effects (King and Wu) for balanced
+	panels
+
+data:  inv ~ value + capital
+normal = 21.832209, p-value < 2.2204e-16
+alternative hypothesis: significant effects
+
+> print(kw_tw_unbalanced_form    <- plmtest(inv ~ value + capital, data=Grunfeldpdata_unbalanced, type="kw", effect="twoways"))
+
+	Lagrange Multiplier Test - two-ways effects (King and Wu) for
+	unbalanced panels
+
+data:  inv ~ value + capital
+normal = 21.810252, p-value < 2.2204e-16
+alternative hypothesis: significant effects
+
+> print(ghm_tw_form              <- plmtest(inv ~ value + capital, data=Grunfeldpdata, type="ghm", effect="twoways"))
+
+	Lagrange Multiplier Test - two-ways effects (Gourieroux, Holly and
+	Monfort) for balanced panels
+
+data:  inv ~ value + capital
+chibarsq = 798.16155, df0 = 0.00, df1 = 1.00, df2 = 2.00, w0 = 0.25, w1
+= 0.50, w2 = 0.25, p-value < 2.2204e-16
+alternative hypothesis: significant effects
+
+> print(ghm_tw_unbalanced_form   <- plmtest(inv ~ value + capital, data=Grunfeldpdata_unbalanced, type="ghm", effect="twoways"))
+
+	Lagrange Multiplier Test - two-ways effects (Gourieroux, Holly and
+	Monfort) for unbalanced panels
+
+data:  inv ~ value + capital
+chibarsq = 796.66152, df0 = 0.00, df1 = 1.00, df2 = 2.00, w0 = 0.25, w1
+= 0.50, w2 = 0.25, p-value < 2.2204e-16
+alternative hypothesis: significant effects
+
+> 
+> # Should all be TRUE
+> if(!all(
++   identical(honda_ind,            honda_ind_form),
++   identical(honda_ind_unbalanced, honda_ind_unbalanced_form),
++   identical(bp_ind,               bp_ind_form),
++   identical(bp_ind_unbalanced,    bp_ind_unbalanced_form),
++   identical(kw_ind,               kw_ind_form),  
++   identical(kw_ind_unbalanced,    kw_ind_unbalanced_form),
++   
++   identical(honda_time,            honda_time_form),   
++   identical(honda_time_unbalanced, honda_time_unbalanced_form),
++   identical(bp_time,               bp_time_form),
++   identical(bp_time_unbalanced,    bp_time_unbalanced_form),
++   identical(kw_time,               kw_time_form), 
++   identical(kw_time_unbalanced,    kw_time_unbalanced_form),
++   
++   identical(honda_tw,            honda_tw_form),
++   identical(honda_tw_unbalanced, honda_tw_unbalanced_form),
++   identical(bp_tw,               bp_tw_form),
++   identical(bp_tw_unbalanced,    bp_tw_unbalanced_form),
++   identical(kw_tw,               kw_tw_form),   
++   identical(kw_tw_unbalanced,    kw_tw_unbalanced_form),
++   identical(ghm_tw,              ghm_tw_form),   
++   identical(ghm_tw_unbalanced,   ghm_tw_unbalanced_form))) stop("results of plm and formula interface differ!")
+> 
+> 
+> # Tests - unbalanced - statistics should be "sufficiently different" from balanced statistics,
+> # thus results should be TRUE
+> 
+>   # individual
+>   abs(honda_ind_unbalanced$statistic - honda_ind$statistic) > 0.0001
+normal 
+  TRUE 
+>   abs(bp_ind_unbalanced$statistic    - bp_ind$statistic)    > 0.0001
+chisq 
+ TRUE 
+>   abs(kw_ind_unbalanced$statistic    - kw_ind$statistic)    > 0.0001
+normal 
+  TRUE 
+> 
+>   # time
+>   abs(honda_time_unbalanced$statistic - honda_time$statistic) > 0.0001
+normal 
+  TRUE 
+>   abs(bp_time_unbalanced$statistic    - bp_time$statistic)    > 0.0001
+chisq 
+ TRUE 
+>   abs(kw_time_unbalanced$statistic    - kw_time$statistic)    > 0.0001
+normal 
+  TRUE 
+>   
+>   # twoways
+>   abs(honda_tw_unbalanced$statistic - honda_tw$statistic) > 0.0001
+normal 
+  TRUE 
+>   abs(bp_tw_unbalanced$statistic    - bp_tw$statistic)    > 0.0001
+chisq 
+ TRUE 
+>   abs(kw_tw_unbalanced$statistic    - kw_tw$statistic)    > 0.0001
+normal 
+  TRUE 
+>   abs(ghm_tw_unbalanced$statistic   - ghm_tw$statistic)   > 0.0001
+chibarsq 
+    TRUE 
+> 
+> 
+> 
+> 
+> 
+> 
+> ########## resamble critical values at alpha = 0.05 from Table 4.1 (Baltagi (2013), p. 74)
+> alpha <- 0.05
+> 
+> #### honda and kw oneway and twoway -> 1.645
+> qnorm(alpha, lower.tail = F)
+[1] 1.644853627
+> # =>
+> pnorm(qnorm(alpha, lower.tail = F), lower.tail = F)
+[1] 0.05
+> 
+> # honda (kw) p-value implementation as in plm_v1.4-0 (CRAN as of 2015-11-08):
+> # leads to the 10% level (not 5%):
+> # see also above the table for the unbalanced Grunfeld data on how EViews handles negative statistics for Honda and KW
+> pnorm(abs(1.645), lower.tail = FALSE)*2 # CRAN v1.4-0
+[1] 0.09996981108
+> # correct is -> p=0.05
+> pnorm(abs(1.645), lower.tail = FALSE)
+[1] 0.04998490554
+> 
+> 
+> #### bp: df=1 (oneway) -> 3.841
+> ####     df=2 (twoway) -> 5.991
+> qchisq(alpha, df=1, lower.tail = F) # H0_a, H0_b
+[1] 3.841458821
+> qchisq(alpha, df=2, lower.tail = F) # H0_c
+[1] 5.991464547
+> # =>
+> pchisq(qchisq(alpha, df = 1, lower.tail = F), df=1, lower.tail = F)
+[1] 0.05
+> pchisq(qchisq(alpha, df = 2, lower.tail = F), df=2, lower.tail = F)
+[1] 0.05
+> 
+> 
+> 
+> #### ghm    test for p-value of mixed chi-square distribution (more often called chi-bar-square)
+> #           as implemented in fixed version.
+> #           (was simple chisquare in plm_v1.4-0 on CRAN -> wrong)
+> #
+> # Baltagi (2013), p. 88 (note 2), p. 209 (note 10) gives critical values for 0.01, 0.05, 0.10 levels
+> # 4.321 is a typo in the notes of Baltagi's textbook, should be 4.231 [confirmed by private email from Badi Baltagi]
+> crit <- c(7.289, 4.231, 2.952)   # without typo
+> # crit <- c(7.289, 4.312, 2.952) # with typo from text book
+> p.vals <- (1/4)*pchisq(crit, df=0, lower.tail = F) + (1/2) * pchisq(crit, df=1, lower.tail = F) + (1/4) * pchisq(crit, df=2, lower.tail = F)
+> 
+> 
+> # Baltagi (2013), p. 73, 74 contains another example of the mixed chi-square (chi-bar-square) distibution of another statistic
+> # The p-values for that example is also reassembled here
+> crit_2 <- c(2.706) # for alpha=0.05
+> p.val_2 <- (1/2)*pchisq(crit_2, df=0, lower.tail = F) + (1/2) * pchisq(crit_2, df=1, lower.tail = F)
+> 
+> 
+> proc.time()
+   user  system elapsed 
+   2.74    0.17    2.93 

@@ -145,6 +145,19 @@ phtest.panelmodel <- function(x, x2, ...){
   return(res)
 }
 
+############## plmtest() ############################################
+# For a concise overview with original references see
+# Baltagi (2013), Econometric Analysis of Panel Data, 5th edition, pp. 68-76 (balanced), pp. 200-203 (unbalanced).
+#
+# balanced (original) version of Breusch-Pagan test:
+#     T.S. Breusch & A.R. Pagan (1979),
+#       A Simple Test for Heteroscedasticity and Random Coefficient Variation,
+#       Econometrica 47, pp. 1287-1294
+#
+# unbalanced version:
+#     Baltagi/Li (1990),
+#       A lagrange multiplier test for the error components model with incomplete panels,
+#       Econometric Reviews, 9, pp. 103-107,
 
 plmtest <- function(x,...){
   UseMethod("plmtest")
@@ -152,83 +165,115 @@ plmtest <- function(x,...){
 
 plmtest.plm <- function(x,
                         effect = c("individual", "time", "twoways"),
-                        type = c("honda", "bp", "ghm","kw"),
-                        ...){
-
+                        type = c("honda", "bp", "ghm", "kw"),
+                        ...) {
+  
   effect <- match.arg(effect)
   type <- match.arg(type)
   if (describe(x, "model") != "pooling") x <- update(x, model = "pooling")
   pdim <- pdim(x)
   n <- pdim$nT$n
   T <- pdim$nT$T
+  N_obs <- pdim$nT$N
   balanced <- pdim$balanced
   index <- attr(model.frame(x), "index")
   id <- index[[1]]
   time <- index[[2]]
+  T_i <- pdim$Tint$Ti
+  N_t <- pdim$Tint$nt
   res <- resid(x)
   
+  ### calc of parts of test statistic ##
+  # calc. is done w/o using matrix calculation, see e.g. Baltagi/Li (1990), p. 106
+  A1 <- as.numeric(crossprod(tapply(res,id,sum))/sum(res^2) - 1)   # == A1 <- sum(tapply(res,id,sum)^2)/sum(res^2) - 1
+  A2 <- as.numeric(crossprod(tapply(res,time,sum))/sum(res^2) - 1) # == A2 <- sum(tapply(res,time,sum)^2)/sum(res^2) - 1
+  
+  M11 <- sum(T_i^2)
+  M22 <- sum(N_t^2)
+  
+  LM1 <- N_obs * (1/sqrt(2*(M11 - N_obs))) * A1 # == sqrt( (((N_obs)^2) / 2) * ( A1^2 / (M11 - N_obs)) ) [except sign due to positive sqrt]
+  LM2 <- N_obs * (1/sqrt(2*(M22 - N_obs))) * A2 # == sqrt( (((N_obs)^2) / 2) * ( A2^2 / (M22 - N_obs)) ) [except sign due to positive sqrt]
+  ### END calc of parts of test statistic ##
+  
+  
   if (effect != "twoways"){
-    if (!type %in% c("honda", "bp"))
-      stop("type must be one of honda or bp for a one way model")
-    if(effect == "individual"){ condvar <- id ; card.cond <- n ; card.other <- T}
-    else{condvar <- time ; card.cond <- T ; card.other <- n}
-    stat <-  sqrt(card.other*card.cond/(2*(card.other-1)))*
-      (crossprod(tapply(res,condvar,mean))*card.other^2/sum(res^2)-1)
+    # oneway
+    if (!type %in% c("honda", "bp", "kw"))
+      stop("type must be one of \"honda\", \"bp\" or \"kw\" for a one way model") # kw oneway coincides with honda
+    
+    ifelse(effect == "individual", stat <- LM1, stat <- LM2)
     stat <- switch(type,
                    honda = c(normal = stat),
-                   bp    = c(chisq  = stat^2))
+                   bp    = c(chisq  = stat^2),
+                   kw    = c(normal = stat))
+    
     parameter <- switch(type,
-                        honda = NULL,
-                        bp = 1)
+                          honda = NULL,
+                          bp = c(df = 1), # df = 1 in the oneway case (Baltagi (2013), p. 70)
+                          kw = NULL)
+    
     pval <- switch(type,
-                   honda = pnorm(abs(stat), lower.tail = FALSE)*2,
-                   bp    = pchisq(stat, df = 1, lower.tail = FALSE))
+                     honda = pnorm(stat, lower.tail = FALSE), # honda oneway ~ N(0,1), alternative is one-sided (Baltagi (2013), p. 71/202)
+                     bp    = pchisq(stat, df = parameter, lower.tail = FALSE), # is df=1 in the one-way case, alternative is two-sided (Baltagi (2013), p. 70/201)
+                     kw    = pnorm(stat, lower.tail = FALSE)) # kw oneway ~ N(0,1), alternative is one-sided (Baltagi (2013), p. 71/202)
+    # END oneway
   }
-  else{
-    stat1 <-  sqrt(n*T/(2*(T-1)))*(crossprod(tapply(res,id,mean))*T^2/sum(res^2)-1)
-    stat2 <-  sqrt(n*T/(2*(n-1)))*(crossprod(tapply(res,time,mean))*n^2/sum(res^2)-1)
+  else { # twoways
     stat <- switch(type,
-                   ghm   = c(chisq = max(0,stat1)^2+max(0,stat2)^2),
-                   bp    = c(chisq = stat1^2+stat2^2),
-                   honda = c(normal = (stat1+stat2)/sqrt(2)),
-                   kw    = c(normal = sqrt((T-1)/(n+T-2))*stat1+sqrt((n-1)/(n+T-2))*stat2))
-    parameter <- 2
+                    honda = c(normal = (LM1+LM2)/sqrt(2)),
+                    bp    = c(chisq = LM1^2+LM2^2),
+                    kw    = c(normal = (sqrt(M11-N_obs)/sqrt(M11+M22-2*N_obs))*LM1+(sqrt(M22-N_obs)/sqrt(M11+M22-2*N_obs))*LM2),
+                    ghm   = c(chibarsq = max(0,LM1)^2+max(0,LM2)^2))
+    
+    parameter <- switch(type,
+                          honda = NULL,
+                          bp    = c(df = 2), # df = 2 in the twoway case (Baltagi (2013), p. 70/201)
+                          kw    = NULL,
+                          ghm   = c(df0 = 0L, df1=1L, df2=2L, w0=1/4, w1=1/2, w2=1/4)) # chibarsquared (mixed chisq) has several dfs and weights (Baltagi (2013), p. 72/202)
+    
     pval <- switch(type,
-                   ghm   = pchisq(stat,df=2,lower.tail=FALSE),
-                   honda = pnorm(abs(stat),lower.tail=FALSE)*2,
-                   bp    = pchisq(stat,df=2,lower.tail=FALSE),
-                   kw    = pnorm(abs(stat),lower.tail=FALSE)*2)
-  }
+                     honda = pnorm(stat, lower.tail = FALSE), # honda two-ways ~ N(0,1), alternative is one-sided (Baltagi (2013), p. 71/202)
+                     bp    = pchisq(stat, df = parameter, lower.tail = FALSE),  # is df = 2 in the twoway case, alternative is two-sided (Baltagi (2013), p. 70/201)
+                     kw    = pnorm(stat, lower.tail = FALSE), # kw twoways ~ N(0,1), alternative is one-sided (Baltagi (2013), p. 71/202)
+                     ghm   = (1/4)*pchisq(stat, df=0, lower.tail = F) + (1/2) * pchisq(stat, df=1, lower.tail = F) + (1/4) * pchisq(stat, df=2, lower.tail = FALSE)) # mixed chisq (also called chi-bar-square), see Baltagi (2013), pp. 71-72, 74, 88, 202-203, 209
+  } # END twoways
   
   method.type <- switch(type,
-                        honda  = "Honda",
-                        bp     = "Breusch-Pagan",
-                        ghm    = "Gourieroux, Holly and Monfort",
-                        kw     = "King and Wu")
+                          honda  = "Honda",
+                          bp     = "Breusch-Pagan",
+                          ghm    = "Gourieroux, Holly and Monfort",
+                          kw     = "King and Wu")
+  
   method.effect <- switch(effect,
-                          id      = "individual effects",
-                          time    = "time effects",
-                          twoways = "two-ways effects")
-  method <- paste("Lagrange Multiplier Test - ",method.effect,
-                  " (",method.type,")\n",sep="")
-
-  if(type == "honda"){
-    res <- list(statistic = stat,
-                p.value   = pval,
-                method    = method,
-                data.name = data.name(x))
+                            id      = "individual effects",
+                            time    = "time effects",
+                            twoways = "two-ways effects")
+  
+  balanced.type <- ifelse(balanced, "balanced", "unbalanced")
+  
+  method <- paste("Lagrange Multiplier Test - ", method.effect,
+                  " (", method.type, ") for ", balanced.type, " panels", sep="")
+  
+  if (type %in% c("honda", "kw")) {
+    RVAL <- list(statistic = stat,
+                 p.value   = pval,
+                 method    = method,
+                 data.name = data.name(x))
   }
-  else{
-    names(parameter) <- "df"
-    res <- list(statistic = stat,
-                p.value   = pval,
-                method    = method,
-                parameter = parameter,
-                data.name = data.name(x))
+  else { # bp, ghm
+    RVAL <- list(statistic = stat,
+                 p.value   = pval,
+                 method    = method,
+                 parameter = parameter,
+                 data.name = data.name(x))
   }
-  res$alternative <- "significant effects"
-  class(res) <- "htest"
-  res
+  
+  
+  RVAL$alternative <- "significant effects" # TODO: maybe distinguish be b/w one-sided and two-sided alternatives?
+                                            #       (bp: two-sided alt.; all others: one-sided alt.?)
+  
+  class(RVAL) <- "htest"
+  return(RVAL)
 }
 
 
@@ -245,9 +290,11 @@ plmtest.formula <- function(x, data, ...,
   cl <- cl[c(1,m)]
   cl[[1]] <- as.name("plm")
   plm.model <- eval(cl, parent.frame())
-  plmtest(plm.model, effect = effect, type = type) # pass on args. effect and type
+  plmtest(plm.model, effect = effect, type = type) # pass on args effect and type to plmtest.plm()
 }
 
+
+############## pFtest() ############################################
 pFtest <- function(x,...){
   UseMethod("pFtest")
 }
@@ -436,7 +483,5 @@ pwaldtest.panelmodel <- function(x, ...){
                  
 }
 
-has.intercept.plm <- function(object, part = "first", ...){
-  has.intercept(formula(object), part = part)
-}
+
   

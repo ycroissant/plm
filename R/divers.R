@@ -163,7 +163,7 @@ lev2var <- function(x, ...){
   }
 }
 
-
+##### has.intercept methods #####
 has.intercept <- function(object, ...) {
   UseMethod("has.intercept")
 }
@@ -187,6 +187,12 @@ has.intercept.panelmodel <- function(object, ...){
   object <- attr(model.frame(object),"formula")
   has.intercept(object)
 }
+
+has.intercept.plm <- function(object, part = "first", ...){
+  has.intercept(formula(object), part = part)
+}
+
+
 
 pres <- function(x) {  # pres.panelmodel
   ## extracts model residuals as pseries
