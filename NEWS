@@ -589,9 +589,9 @@ Changes since version 1.5-15
 	  
 Changes since version 1.5-16
   
-  * plmtest: * fixed p-values [for type="kw" and "ghm"]
-	           * unbalanced version of all test statistics implemented
-	    		   * doc update with literature references to unbalanced tests
-			       * if requested, the "kw" statistic is now also calculated as one-way ("individual" or "time"), 
-			         albeit they coincide with respective "bp" statistics.
+  * plmtest:  * fixed p-values [for type="kw" and "ghm"]
+              * unbalanced version of all test statistics implemented
+              * doc update with literature references to unbalanced tests
+              * if requested, the "kw" statistic is now also calculated as one-way ("individual" or "time"), 
+                albeit they coincide with respective "bp" statistics.
 	* pwtest: formula interface respects 'effect' argument, 'effect' argument now mentioned in doc

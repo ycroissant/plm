@@ -29,7 +29,7 @@ An object of class \code{"htest"}.
 For the \code{plm} method, the argument of this function is two
 \code{plm} objects, the first being a within model, the second a
 pooling model. The effects tested are either individual, time or
-twoways, depending on the effects introduced in the model.
+twoways, depending on the effects introduced in the within model.
 }
 
 \seealso{
@@ -40,13 +40,16 @@ twoways, depending on the effects introduced in the model.
 
 \examples{
 data("Grunfeld", package="plm")
-gi <- plm(inv ~ value + capital, data = Grunfeld, model = "pooling")
+gp <- plm(inv ~ value + capital, data = Grunfeld, model = "pooling")
+gi <- plm(inv ~ value + capital, data = Grunfeld,
+          effect = "individual", model = "within")
 gt <- plm(inv ~ value + capital, data = Grunfeld,
           effect = "time", model = "within")
 gd <- plm(inv ~ value + capital, data = Grunfeld,
           effect = "twoways", model = "within")
-pFtest(gt, gi)
-pFtest(gd, gi)
+pFtest(gi, gp)
+pFtest(gt, gp)
+pFtest(gd, gp)
 pFtest(inv ~ value + capital, data = Grunfeld, effect = "twoways")
 }
 

@@ -1,0 +1,98 @@
+
+R version 3.2.3 (2015-12-10) -- "Wooden Christmas-Tree"
+Copyright (C) 2015 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> #### Testfile for pFtest()
+> 
+> # SAS 9.4 Output for F Test [fixed one-way estimates, individual effect]
+> #
+> # F Test for No Fixed Effects
+> #
+> # Num DF    Den DF    F statistic   Pr > F
+> #      9       188          49.18  < .0001
+> 
+> library(plm)
+Loading required package: Formula
+> data("Grunfeld", package="plm")
+> gi <- plm(inv ~ value + capital, data = Grunfeld, model = "pooling")
+> 
+> gw <- plm(inv ~ value + capital, data = Grunfeld,
++           effect = "individual", model = "within")
+> 
+> gt <- plm(inv ~ value + capital, data = Grunfeld,
++           effect = "time", model = "within")
+> 
+> gd <- plm(inv ~ value + capital, data = Grunfeld,
++           effect = "twoways", model = "within")
+> 
+> 
+> pFtest(gw, gi) # test for individual effects matches SAS's Output
+
+	F test for individual effects
+
+data:  inv ~ value + capital
+F = 49.177, df1 = 9, df2 = 188, p-value < 2.2e-16
+alternative hypothesis: significant effects
+
+> pFtest(gt, gi)
+
+	F test for time effects
+
+data:  inv ~ value + capital
+F = 0.23451, df1 = 19, df2 = 178, p-value = 0.9997
+alternative hypothesis: significant effects
+
+> pFtest(gd, gi)
+
+	F test for twoways effects
+
+data:  inv ~ value + capital
+F = 17.403, df1 = 28, df2 = 169, p-value < 2.2e-16
+alternative hypothesis: significant effects
+
+> 
+> 
+> print(pFtest(inv ~ value + capital, data = Grunfeld, effect = "individual"))
+
+	F test for individual effects
+
+data:  inv ~ value + capital
+F = 49.177, df1 = 9, df2 = 188, p-value < 2.2e-16
+alternative hypothesis: significant effects
+
+> print(pFtest(inv ~ value + capital, data = Grunfeld, effect = "time"))
+
+	F test for time effects
+
+data:  inv ~ value + capital
+F = 0.23451, df1 = 19, df2 = 178, p-value = 0.9997
+alternative hypothesis: significant effects
+
+> print(pFtest(inv ~ value + capital, data = Grunfeld, effect = "twoways"))
+
+	F test for twoways effects
+
+data:  inv ~ value + capital
+F = 17.403, df1 = 28, df2 = 169, p-value < 2.2e-16
+alternative hypothesis: significant effects
+
+> 
+> # test for wrong order of arguments, this is supposed to give a meaningful error message
+> # pFtest(gi, gd)
+> 
+> proc.time()
+   user  system elapsed 
+   2.13    0.12    2.27 

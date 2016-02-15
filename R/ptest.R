@@ -315,8 +315,8 @@ pFtest.formula <- function(x, data, ...){
 pFtest.plm <- function(x, z, ...){
   within <- x
   pooling <- z
-#  if (! (describe(x, "model") == "within" && describe(z, "model") == "pooling"))
-#    stop("the two arguments should be a within and a pooling model")
+  if (! (describe(x, "model") == "within" && describe(z, "model") == "pooling"))
+   stop("the two arguments should be a 'within' and a 'pooling' model (in this order")
   
   effect <- describe(x, "effect")
   df1 <- df.residual(pooling)-df.residual(within)
@@ -338,7 +338,8 @@ pFtest.plm <- function(x, z, ...){
   class(res) <- "htest"
   res
 }
-  
+
+############## Ftest() ############################################
 Ftest <- function(x, test = c("Chisq", "F"), ...){
   model <- describe(x, "model")
   test <- match.arg(test)
