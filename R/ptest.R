@@ -3,7 +3,8 @@ data.name <- function(x){
   if (length(data.name) > 1) paste(data.name[1], "...")
   else data.name
 }
-  
+
+############## phtest() ############################################
 phtest <- function(x,...){
   UseMethod("phtest")
 }
@@ -371,37 +372,7 @@ Ftest <- function(x, test = c("Chisq", "F"), ...){
   res
 }
 
-pwaldtest <- function(x, ...){
-  pdim <- attr(x,"pdim")
-  df <- switch(x$model.name,
-                "within"=pdim$Kw,
-                "between"=pdim$Kb,
-                "pooling"=pdim$K,
-                "random"=pdim$K,
-                "ht"=pdim$K
-                )
-  if (names(coefficients(x))[1]=="(intercept)"){
-    coef <- coefficients(x)[-1]
-    vcv <- vcov(x)[-1,-1]
-  }
-  else{
-    coef <- coefficients(x)
-    vcv <- vcov(x)
-  }
-  parameter <- length(coef)
-  stat <- coef%*%solve(vcv)%*%coef
-  names(stat) <- "chisq"
-  names(parameter) <- "df"
-  pval <- pchisq(stat,df,lower.tail=FALSE)
-  res <- list(statistic = stat,
-              p.value = pval,
-              parameter = parameter,
-              parameter.name = "df",
-              method = "Wald Test",
-              data.name = "data.name")
-  class(res) <- "htest"
-  res
-}
+############## pooltest() ############################################
 
 pooltest <- function(x,...){
   UseMethod("pooltest")
@@ -440,6 +411,40 @@ pooltest.plm <- function(x, z, ...){
               data.name   = data.name(x),
               alternative = "unstability",
               method      = "F statistic")
+  class(res) <- "htest"
+  res
+}
+
+############## pwaldtest() ############################################
+
+pwaldtest <- function(x, ...){
+  pdim <- attr(x,"pdim")
+  df <- switch(x$model.name,
+                "within"=pdim$Kw,
+                "between"=pdim$Kb,
+                "pooling"=pdim$K,
+                "random"=pdim$K,
+                "ht"=pdim$K
+                )
+  if (names(coefficients(x))[1]=="(intercept)"){
+    coef <- coefficients(x)[-1]
+    vcv <- vcov(x)[-1,-1]
+  }
+  else{
+    coef <- coefficients(x)
+    vcv <- vcov(x)
+  }
+  parameter <- length(coef)
+  stat <- coef%*%solve(vcv)%*%coef
+  names(stat) <- "chisq"
+  names(parameter) <- "df"
+  pval <- pchisq(stat,df,lower.tail=FALSE)
+  res <- list(statistic = stat,
+              p.value = pval,
+              parameter = parameter,
+              parameter.name = "df",
+              method = "Wald Test",
+              data.name = "data.name")
   class(res) <- "htest"
   res
 }

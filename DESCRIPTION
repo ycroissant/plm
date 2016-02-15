@@ -2,15 +2,15 @@ Package: plm
 Version: 1.5-16
 Date: 2016-02-13
 Title: Linear Models for Panel Data
-Authors@R: c(person(given = "Yves", family = "Croissant", role = c("aut", "cre"), email = "yves.croissant@univ-reunion.fr"),
-             person(given = "Giovanni", family = "Millo", role = "aut", email = "Giovanni.Millo@Generali.com"),
-	     person(given = "Ott", family = "Toomet", role = "ctb", email = "otoomet@gmail.com"),
-	     person(given = "Christian", family = "Kleiber", role = "ctb", email = "Christian.Kleiber@unibas.ch"), 
-	     person(given = "Achim", family = "Zeileis", role = "ctb", email = "Achim.Zeileis@R-project.org"),
-	     person(given = "Arne", family = "Henningsen", role = "ctb", email = "arne.henningsen@googlemail.com"),
-	     person(given = "Liviu", family = "Andronic", role = "ctb", email = "landronimirc@gmail.com"),
-	     person(given = "Nina", family = "Schoenfelder", role = "ctb", email = "nina.schoenfelder@fernuni-hagen.de"),
-	     person(given = "Kevin", family = "Tappe", role = "ctb", email = "kevin.tappe@bwi.uni-stuttgart.de"))
+Authors@R: c(person(given = "Yves",      family = "Croissant",    role = c("aut", "cre"), email = "yves.croissant@univ-reunion.fr"),
+             person(given = "Giovanni",  family = "Millo",        role = "aut", email = "Giovanni.Millo@Generali.com"),
+      	     person(given = "Ott",       family = "Toomet",       role = "ctb", email = "otoomet@gmail.com"),
+      	     person(given = "Christian", family = "Kleiber",      role = "ctb", email = "Christian.Kleiber@unibas.ch"), 
+      	     person(given = "Achim",     family = "Zeileis",      role = "ctb", email = "Achim.Zeileis@R-project.org"),
+      	     person(given = "Arne",      family = "Henningsen",   role = "ctb", email = "arne.henningsen@googlemail.com"),
+      	     person(given = "Liviu",     family = "Andronic",     role = "ctb", email = "landronimirc@gmail.com"),
+      	     person(given = "Nina",      family = "Schoenfelder", role = "ctb", email = "nina.schoenfelder@fernuni-hagen.de"),
+      	     person(given = "Kevin",     family = "Tappe",        role = "ctb", email = "kevin.tappe@bwi.uni-stuttgart.de"))
 Depends: R (>= 2.10), Formula (>= 0.2-0), stats
 Imports: MASS, bdsmatrix, zoo, nlme, sandwich, lattice, car, lmtest
 Suggests: AER

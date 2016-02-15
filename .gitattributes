@@ -107,7 +107,6 @@ man/vcovG.Rd -text
 man/vcovHC.Rd -text
 man/vcovNW.Rd -text
 man/vcovSCC.Rd -text
-tests/as.data.frame_as.matrix.R -text
 tests/testErrors.R -text
 tests/testErrors.Rout.save -text
 tests/testEvaluation.R -text
@@ -115,12 +114,14 @@ tests/testEvaluation.Rout.save -text
 tests/test_Chow.R -text
 tests/test_Estimators.R -text
 tests/test_R2_adj_R2.R -text
+tests/test_as.data.frame_as.matrix.R -text
 tests/test_detect_lin_dep.R -text
 tests/test_extract_pdata_frame_class_est_mod.R -text
 tests/test_fitted.plm.R -text
 tests/test_model.frame.R -text
 tests/test_model.matrix_pmodel.response.R -text
 tests/test_model.matrix_pmodel.response_NA.R -text
+tests/test_pbgtest.R -text
 tests/test_pdata.frame_subsetting.R -text
 tests/test_phtest_Hausman_regression.R -text
 tests/test_plm_na.action.R -text
@@ -130,7 +131,6 @@ tests/test_preserve_rownames.R -text
 tests/test_punbalancedness.R -text
 tests/test_pwfdtest_pwartest.R -text
 tests/test_vcovG_lin_dep.R -text
-tests/testpbgtest.R -text
 tests/testpgmm.R -text
 vignettes/bibliojss.bib -text
 vignettes/plm.rnw -text

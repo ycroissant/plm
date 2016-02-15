@@ -25,7 +25,7 @@ plmtest(x, ...)
  \item{type}{a character string indicating the test to be
   performed: \itemize{
   \item \code{"honda"} (default) for Honda (1985),
-  \item \code{"bp"} for Breush/Pagan (1980),
+  \item \code{"bp"} for Breusch/Pagan (1980),
   \item \code{"kw"} for King/Wu (1997), or
   \item \code{"ghm"} for Gourieroux/Holly/Monfort (1982);
   } For unbalanced panel data sets, the respective unbalanced version of the tests are computed,}

@@ -300,3 +300,41 @@ p.vals <- (1/4)*pchisq(crit, df=0, lower.tail = F) + (1/2) * pchisq(crit, df=1, 
 crit_2 <- c(2.706) # for alpha=0.05
 p.val_2 <- (1/2)*pchisq(crit_2, df=0, lower.tail = F) + (1/2) * pchisq(crit_2, df=1, lower.tail = F)
 
+
+
+
+################# Replicate an example from Stata
+## example 1 in this manual:
+## http://www.stata.com/manuals14/xtxtregpostestimation.pdf
+## It is an unbalanced panel
+
+# require(haven) # required to read STATA data file
+# nlswork <- read_dta("http://www.stata-press.com/data/r14/nlswork.dta")
+# nlswork$race <- factor(nlswork$race) # fix data
+# nlswork$race2 <- factor(ifelse(nlswork$race == 2, 1, 0)) # need this variable for example
+# pnlswork <- pdata.frame(nlswork, index=c("idcode", "year"), drop.index=F)
+# 
+# # note STAT 14 uses by default a different method compared to plm's Swamy–Arora variance component estimator
+# # This is why in comparison with web examples from STATA the random effects coefficients slightly differ
+# plm_re_nlswork <- plm(ln_wage ~ grade + age + I(age^2) + ttl_exp + I(ttl_exp^2) + tenure + I(tenure^2) + race2 + not_smsa + south
+#                         , data = pnlswork, model = "random")
+# 
+# # reassembles the FE estimation by STATA in Example 2 of http://www.stata.com/manuals13/xtxtreg.pdf
+# plm_fe_nlswork <- plm(ln_wage ~ grade + age + I(age^2) + ttl_exp + I(ttl_exp^2) + tenure + I(tenure^2) + race2 + not_smsa + south
+#                       , data = pnlswork, model = "within")
+# 
+# plm_pool_nlswork <- plm(ln_wage ~ grade + age + I(age^2) + ttl_exp + I(ttl_exp^2) + tenure + I(tenure^2) + race2 + not_smsa + south
+#                       , data = pnlswork, model = "pooling")
+# 
+# 
+# # Reassembles Exmaple 1 in http://www.stata.com/manuals14/xtxtregpostestimation.pdf
+# # use modified plmtest() as a wrapper
+# options(digits = 10)
+# plmtest(plm_pool_nlswork, type="bp")
+# 
+# # ## Lagrange Multiplier Test - individual effects - Breusch-Pagan Test for unbalanced Panels as in Baltagi/Li (1990)
+# # ## data:  ln_wage ~ grade + age + I(age^2) + ttl_exp + I(ttl_exp^2) + tenure +  ...
+# # ## BP_unbalanced = 14779.984, df = 1, p-value < 2.2204e-16
+# # ## alternative hypothesis: significant effects
+
+
