@@ -65,7 +65,10 @@ pwtest <- function(x, ...){
   UseMethod("pwtest")
 }
 
-pwtest.formula <- function(x, data, ...) {
+pwtest.formula <- function(x, data, effect = c("individual", "time"), ...) {
+  
+  effect <- match.arg(effect, choices = c("individual", "time")) # match effect to pass it on to pwtest.panelmodel
+
   cl <- match.call(expand.dots = TRUE)
   if (names(cl)[3] == "") names(cl)[3] <- "data"
   if (is.null(cl$model)) cl$model <- "pooling"
@@ -75,23 +78,27 @@ pwtest.formula <- function(x, data, ...) {
   cl <- cl[c(1,m)]
   cl[[1]] <- as.name("plm")
   plm.model <- eval(cl,parent.frame())
-  pwtest(plm.model)
-
+  # pwtest(plm.model)
+  pwtest.panelmodel(plm.model, effect = effect) # pass on desired 'effect' argument to pwtest.panelmodel
+  
   ## "RE" test a la Wooldridge (2002), see 10.4.4
   ## (basically the scaled and standardized estimator for sigma from REmod)
   ## does not rely on normality or homoskedasticity; 
   ## H0: composite errors uncorrelated
 
-  ## ref. Wooldridge (2002), p. 264
+  ## ref. Wooldridge (2002), pp. 264-265; Wooldridge (2010), pp. 299-300
 
   ######### from here generic testing interface from
   ######### plm to my code
 }
 
-pwtest.panelmodel <- function(x, ...){
+pwtest.panelmodel <- function(x, effect = c("individual", "time"), ...) {
   ## tind is actually not needed here
   if (describe(x, "model") != "pooling") stop("pwtest only relevant for pooling models")
-  effect <- describe(x, "effect")
+  effect <- match.arg(effect, choices = c("individual", "time")) # was: effect <- describe(x, "effect")
+                                                                 # here we want the effect as in the call of pwtest(),
+                              #                                        not of the already estimated model, because that is
+                              #                                        always a pooling model
   data <- model.frame(x)
   ## extract indices
 
@@ -164,15 +171,14 @@ pwtest.panelmodel <- function(x, ...){
   ##(insert usual htest features)
   dname <- paste(deparse(substitute(formula)))
   RVAL <- list(statistic = Wstat, parameter = NULL,
-               method = paste("Wooldridge's test for unobserved ",
-                 effect,"effects "),
+               method = paste("Wooldridge's test for unobserved",
+                              effect, "effects"),
                alternative = "unobserved effect",
                p.value = pW,
                data.name =   dname)
   class(RVAL) <- "htest"
   return(RVAL)
-  
-  }
+}
 
 
 ### pwartest

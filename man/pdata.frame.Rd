@@ -15,7 +15,7 @@
 
 \usage{
 pdata.frame(x, index = NULL, drop.index = FALSE, row.names = TRUE)
-\method{[}{pdata.frame}(x, i, j, drop = TRUE)
+\method{[}{pdata.frame}(x, i, j, drop)
 \method{[[}{pdata.frame}(x, y)
 \method{$}{pdata.frame}(x, y)
 \method{print}{pdata.frame}(x, ...)

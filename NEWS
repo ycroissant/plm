@@ -580,11 +580,11 @@ Changes since version 1.5-15
 	  fixes corner cases with specific NA patterns when model.matrix.pFormula or pmodel.response are
 	  called directly and 'data' not being a model frame (despite being required so)
 	  [see tests/test_model.matrix_pmodel.response_NA.R].
-	* detect_lin_dep: new function as a little helper function to detect linear depedent
-	  columns, esp. in a model matrices; incl. doc with two examples about how linear+
-	  depedent columns can be induced by the within transformation.
-	* doc pFormula.Rd extended (especially examples) and split up in two files to better accomodate
-	  different return values and input values in the documenation
+	* detect_lin_dep: new function as a little helper function to detect linear dependent
+	  columns, esp. in a model matrices; incl. doc with two examples about how linear
+	  dependent columns can be induced by the within transformation.
+	* doc pFormula.Rd extended (especially examples) and split up in two files to better accommodate
+	  different return values and input values in the documentation
 	  (new file added: man/model.frame_model.matrix.Rd).
 	  
 Changes since version 1.5-16
@@ -593,4 +593,5 @@ Changes since version 1.5-16
 	           * unbalanced version of all test statistics implemented
 	    		   * doc update with literature references to unbalanced tests
 			       * if requested, the "kw" statistic is now also calculated as one-way ("individual" or "time"), 
-			          albeit they coincide with respective "bp" statistics.
+			         albeit they coincide with respective "bp" statistics.
+	* pwtest: formula interface respects 'effect' argument, 'effect' argument now mentioned in doc
