@@ -27,9 +27,9 @@ Type 'q()' to quit R.
 > library(plm)
 Loading required package: Formula
 > data("Grunfeld", package="plm")
-> gi <- plm(inv ~ value + capital, data = Grunfeld, model = "pooling")
+> gp <- plm(inv ~ value + capital, data = Grunfeld, model = "pooling")
 > 
-> gw <- plm(inv ~ value + capital, data = Grunfeld,
+> gi <- plm(inv ~ value + capital, data = Grunfeld,
 +           effect = "individual", model = "within")
 > 
 > gt <- plm(inv ~ value + capital, data = Grunfeld,
@@ -39,7 +39,7 @@ Loading required package: Formula
 +           effect = "twoways", model = "within")
 > 
 > 
-> pFtest(gw, gi) # test for individual effects matches SAS's Output
+> pFtest(gi, gp) # test for individual effects matches SAS's Output
 
 	F test for individual effects
 
@@ -47,7 +47,7 @@ data:  inv ~ value + capital
 F = 49.177, df1 = 9, df2 = 188, p-value < 2.2e-16
 alternative hypothesis: significant effects
 
-> pFtest(gt, gi)
+> pFtest(gt, gp)
 
 	F test for time effects
 
@@ -55,7 +55,7 @@ data:  inv ~ value + capital
 F = 0.23451, df1 = 19, df2 = 178, p-value = 0.9997
 alternative hypothesis: significant effects
 
-> pFtest(gd, gi)
+> pFtest(gd, gp)
 
 	F test for twoways effects
 
