@@ -668,7 +668,7 @@ head(lag(E$emp, 0:2))
 Further functions called \code{Between}, \code{between} and
 \code{Within} are also provided to compute the between and the within
 transformation. The \texttt{between} returns unique values, whereas
-\texttt{Between} duplicate the values and returns a vector which
+\texttt{Between} duplicates the values and returns a vector which
 length is the number of observations.
 
 <<>>=

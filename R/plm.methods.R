@@ -28,7 +28,7 @@ print.summary.plm <- function(x,digits= max(3, getOption("digits") - 2),
   has.instruments <- (length(formula)[2] == 2)
   effect <- describe(x, "effect")
   model <- describe(x, "model")
-  cat(paste(effect.plm.list[effect]," ",sep=""))
+  if (model != "pooling") { cat(paste(effect.plm.list[effect]," ",sep="")) }
   cat(paste(model.plm.list[model]," Model",sep=""))
   
   if (model=="random"){

@@ -3,72 +3,71 @@
 \alias{Between}
 \alias{between}
 \alias{Within}
-\alias{lag}
-\alias{lead}
-\alias{diff}
 \alias{Between.pseries}
 \alias{between.pseries}
 \alias{Within.pseries}
-\alias{lag.pseries}
-\alias{lead.pseries}
-\alias{diff.pseries}
 \alias{summary.pseries}
 \alias{print.summary.pseries}
 \alias{as.matrix.pseries}
 
+% lag, lead, diff is now in separate file lag_lead_diff.Rd
+
 \title{panel series}
 
 \description{
-A class for panel series for which several useful computations are available.
+A class for panel series for which several useful computations and data transformations are available.
 }
 
 \usage{
 between(x, ...)
 Between(x, ...)
 Within(x, ...)
-\method{lag}{pseries}(x, k = 1, ...)
-\method{lead}{pseries}(x, k = 1, ...)
-\method{diff}{pseries}(x, lag = 1, ...)
-\method{as.matrix}{pseries}(x, idbyrow = TRUE, ...)
 \method{between}{pseries}(x, effect = c("individual", "time"), ...)
 \method{Between}{pseries}(x, effect = c("individual", "time"), ...)
 \method{Within}{pseries}(x, effect = c("individual", "time"), ...)
 \method{summary}{pseries}(object, ...)
 \method{print}{summary.pseries}(x, ...)
+\method{as.matrix}{pseries}(x, idbyrow = TRUE, ...)
 }
 
 \arguments{
  \item{x, object}{a \code{pseries} or a \code{summary.pseries} object,}
  \item{effect}{character string indicating the \code{"individual"} or \code{"time"} effect,}
- \item{k}{the number of lags for the \code{lag} and \code{lead} methods (can also be negative).
-          For the \code{lag} method, a positive (negative) \code{k} gives lagged (leading) values.
-          For the \code{lead} method, a positive (negative) \code{k} gives leading (lagged) values,
-          thus, \code{lag(x, k = -1)} yields the same as \code{lead(x, k = 1)}.
-          If \code{k} is a vector (\code{k = c(k1,k2, ...)}) a \code{matrix} with multiple lagged \code{pseries} is returned,}
- \item{lag}{the number of lags for the \code{diff} method (only non--negative values for parameter \code{lag} are allowed in \code{diff}),}
  \item{idbyrow}{if \code{TRUE} in the \code{as.matrix} method, the lines of the matrix are the individuals,}
- \item{\dots}{further arguments.}
+ \item{\dots}{further arguments, e. g. \code{na.rm = TRUE} for transformation functions like 
+ \code{beetween}, see \bold{Details} and \bold{Examples}.}
 }
 
 \value{
 All these functions return an object of class \code{pseries}, except:\cr
-\code{between}, which returns a numeric vector,\cr
-\code{as.matrix}, which returns a matrix, and\cr
-\code{lag} (thus also \code{lead}), which returns a matrix if called with more than one lag (lead), i. e. \code{length(k) > 1}.
+\code{between}, which returns a numeric vector, \code{as.matrix}, which returns a matrix.
 }
 
 \details{
-A \code{pseries} is obtained when a series is extracted from a
-\code{pdata.frame} object. It consists of the original series with the \code{index} attribute of the \code{pdata.frame}. Specific transformations (\code{within} and \code{between}) are available and special \code{lag}, \code{lead} and \code{diff} methods are provided.
+The functions \code{between}, \code{Between}, and \code{Within} perform specific
+data transformations, i. e. the between and within transformation.
+
+\code{between} returns a vector containing the individual means (over time) with the length of the
+vector equal to the number of individuals (if \code{effect = "individual"} (default); if \code{effect = "time"},
+it returns the time means (over individuals)). \code{Between} duplicates the values and returns a vector which 
+length is the number of total observations. \code{Within} returns a vector containing the 
+values in deviation from the individual means (if \code{effect = "individual"}, from time means if \code{effect = "time"}),
+the so called demeand data.
+
+For \code{between}, \code{Between}, and \code{Within} in presence of NA values it can
+be useful to supply \code{na.rm = TRUE} as an additional argument to
+keep as many observations as possible in the resulting transformation, see
+also \bold{Examples}.
 }
 
-\note{The sign of \code{k} in \code{lag.pseries} behaves inversely compared to \code{\link[stats]{lag}} and \code{\link[zoo]{lag.zoo}}.}
 
 % \references{
 % }
 
-% \seealso{
-% }
+\seealso{
+For more functions on class 'pseries' see \code{\link[plm]{lag}}, \code{\link[plm]{lead}}, 
+\code{\link[plm]{diff}} for lagging values, leading values (negative lags) and differencing.
+}
 
 \examples{
 # First, create a pdata.frame
@@ -86,21 +85,25 @@ as.matrix(z)
 between(z)
 Within(z)
 
-# Between replicates the values for each time observations
+# Between replicates the values for each time observation
 Between(z)
 
-# compute the first and third lag, and the difference lagged twice
-lag(z)
-lag(z, 3)
-diff(z, 2)
+# between, Between, and Within transformations on other dimension
+between(z, effect = "time")
+Between(z, effect = "time")
+Within(z, effect = "time")
 
-# compute negative lags (= leading values)
-lag(z, -1)
-lead(z, 1) # same as line above
-identical(lead(z, 1), lag(z, -1)) # TRUE
- 
-# compute more than one lag at once
-lag(z, c(1,2))
+# NA treatment for between, Between, and Within
+z2 <- z
+z2[length(z2)] <- NA # set last value to NA
+between(z2, na.rm = TRUE) # non-NA value for last individual
+Between(z2, na.rm = TRUE) # only the NA observation is lost
+Within(z2, na.rm = TRUE)  # only the NA observation is lost
+
+sum(is.na(Between(z2))) # 9 observations lost due to one NA value
+sum(is.na(Between(z2, na.rm = TRUE))) # only the NA observation is lost
+sum(is.na(Within(z2))) # 9 observations lost due to one NA value
+sum(is.na(Within(z2, na.rm = TRUE))) # only the NA observation is lost
 }
 
 \author{Yves Croissant}

@@ -326,8 +326,8 @@ Tapply.pseries <- function(x, effect = c("individual", "time"), func, ...){
 Tapply.matrix <- function(x, effect, func, ...){
    ## Note: this function is not robust wrt NA in effect
   na.x <- is.na(x)
-  uniqval <- apply(x, 2, function(z) tapply(z, effect, "mean"))
-  uniqval <- apply(x, 2, function(z) tapply(z, effect, func))
+  #uniqval <- apply(x, 2, function(z) tapply(z, effect, "mean")) # Note: uniqval was calculated several times here - why?
+  #uniqval <- apply(x, 2, function(z) tapply(z, effect, func))   # Note: uniqval was calculated several times here - why?
   uniqval <- apply(x, 2, tapply, effect, func)
   result <- uniqval[as.character(effect), , drop = F]
   result[na.x] <- NA
@@ -347,10 +347,22 @@ Between.default <- function(x, effect, ...){
   Tapply(x, effect, mean, ...)
 }
 
+# with na.rm = TRUE
+# Between.default <- function(x, effect, ...){
+#   if (!is.numeric(x)) stop("The Between function only applies to numeric vectors")
+#   Tapply(x, effect, mean, na.rm = TRUE, ...)
+# }
+
 Between.pseries <- function(x, effect = c("individual", "time"), ...){
   effect <- match.arg(effect)
   Tapply(x, effect = effect, mean, ...)
 }
+
+# with na.rm = TRUE
+# Between.pseries <- function(x, effect = c("individual", "time"), ...){
+#   effect <- match.arg(effect)
+#   Tapply(x, effect = effect, mean, na.rm = TRUE, ...)
+# }
 
 between <- function(x,...){
   UseMethod("between")
@@ -360,6 +372,12 @@ between.default <- function(x, effect, ...){
   if (!is.numeric(x)) stop("The between function only applies to numeric vectors")
   tapply(x, effect, mean, ...)
 }
+
+# with na.rm = TRUE
+# between.default <- function(x, effect, ...){
+#   if (!is.numeric(x)) stop("The between function only applies to numeric vectors")
+#   tapply(x, effect, mean, na.rm = TRUE, ...)
+# }
 
 between.pseries <- function(x, effect = c("individual", "time"), ...){
   effect <- match.arg(effect)
@@ -371,6 +389,7 @@ between.pseries <- function(x, effect = c("individual", "time"), ...){
   names(x) <- nms
   x
 }
+
 
 between.matrix <- function(x, effect, ...){
   apply(x, 2, tapply, effect, mean, ...)

@@ -5,7 +5,8 @@
 \title{Panel Data of Individual Wages}
 
 \description{
-A panel of 595 observations from 1976 to 1982, taken from the Panel Study of Income Dynamics (PSID).    
+A panel of 595 individuals from 1976 to 1982, taken from the Panel Study of Income Dynamics (PSID).\cr\cr
+The data are organized as a stacked time series/balanced panel, see \bold{Examples} on how to convert to a \code{pdata.frame}.
 
  \emph{total number of observations} :  4165
 
@@ -52,6 +53,12 @@ Baltagi, Badi H. (2013) \emph{Econometric Analysis of Panel Data}, 5th ed., John
 Cornwell, C. and P. Rupert (1988) \dQuote{Efficient estimation with
 panel data: an empirical comparison of instrumental variables
 estimators}, \emph{Journal of Applied Econometrics}, \bold{3}, pp. 149--155.
+}
+
+\examples{
+# data set 'Wages' is organized as a stacked time series/balanced panel
+data("Wages", package = "plm")
+Wag <- pdata.frame(Wages, index=595)
 }
 
 \keyword{datasets}
