@@ -598,3 +598,7 @@ Changes since version 1.5-16
 	* data set 'Wages': factor 'sex' releveled to c("male", "female") to match use in original paper.
 	* print.summary.plm: supress printing of 'effects' argument in top line in case of 'pooling' model.
 	* doc for between, Between, Within extended; doc for lag, lead, diff in separate file now (lag_lead_diff.Rd)
+	* pdata.frame: * fixed bug: do not assume a specific order of data when only individual index is supplied,
+	               * resulting pdata.frame is ordered by individual, then time index,
+	               * when duplicate coupled (id-time) are created, a warning is issued,
+	               * new argument 'stringAsFactors'.

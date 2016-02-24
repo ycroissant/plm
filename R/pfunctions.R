@@ -1,43 +1,63 @@
 ###################################################
 ### chunk number 1: pdata.frame
 ###################################################
-pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE){
+pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
+                           stringsAsFactors = default.stringsAsFactors()) {
+  
   if (inherits(x, "pdata.frame")) stop("already a pdata.frame")
 
-  # coerce character vectors to factors
-  x.char <- names(x)[sapply(x, is.character)]
-  for (i in x.char){
-    x[[i]] <- factor(x[[i]])
+  if (stringsAsFactors) { # coerce character vectors to factors, if requested
+      x.char <- names(x)[sapply(x, is.character)]
+      for (i in x.char){
+        x[[i]] <- factor(x[[i]])
+      }
   }
   
-  # replace Inf by NA
-  for (i in names(x)) x[[i]][!is.finite(x[[i]])] <- NA
+  # replace Inf by NA (for all but any character columns [relevant if stringAsFactors == FALSE])
+  for (i in names(x)) {
+    if (!inherits(x[[i]], "character")) {
+      x[[i]][!is.finite(x[[i]])] <- NA
+    }
+  }
+  
   # check and remove complete NA series
   na.check <- sapply(x,function(x) sum(!is.na(x))==0)
   na.serie <- names(x)[na.check]
   if (length(na.serie) > 0){
     if (length(na.serie) == 1)
-      cat(paste("series ", na.serie, " is NA and has been removed\n", sep = ""))
+      cat(paste0("This series is NA and has been removed: ", na.serie, "\n"))
     else
-      cat(paste("series ", paste(na.serie, collapse = ", "), " are NA and have been removed\n", sep = ""))
+      cat(paste0("These series are NA and have been removed: ", paste(na.serie, collapse = ", "), "\n"))
   }
   x <- x[, !na.check]
   
   # check and remove constant series
-  cst.check <- sapply(x, function(x) var(as.numeric(x), na.rm = TRUE)==0)
-  # following line : bug fixed thank's to Marciej Szelfer 
+  # cst.check <- sapply(x, function(x) var(as.numeric(x), na.rm = TRUE)==0) # old
+  cst.check <- sapply(x, function(x) {
+    if (is.factor(x) || is.character(x)) {
+      all(duplicated(x[!is.na(x)])[-1L]) # var() and sd() on factors is deprecated as of R 3.2.3
+    } else {
+      var(as.numeric(x), na.rm = TRUE)==0
+      }
+  })
+
+  # following line: bug fixed thank's to Marciej Szelfer 
   cst.check <- cst.check | is.na(cst.check)
   cst.serie <- names(x)[cst.check]
   if (length(cst.serie) > 0){
     if (length(cst.serie) == 1){
-      cat(paste("series ", cst.serie, " is constant and has been removed\n", sep = ""))
+      cat(paste0("This series is constant and has been removed: ", cst.serie, "\n"))
     }
     else{
-      cat(paste("series ", paste(cst.serie, collapse = ", "), " are constants and have been removed\n", sep = ""))
+      cat(paste0("These series are constants and have been removed: ", paste(cst.serie, collapse = ", "), "\n"))
     }
   }
   x <- x[, !cst.check]
   
+  # sanity check for 'index' argument
+  if (length(index)>2){
+    stop("'index' can be of length 2 at the most (one individual and one time index)")
+  }
   # if index is NULL, both id and time are NULL
   if (is.null(index)){
     id <- NULL
@@ -63,12 +83,13 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE){
     id.name <- id
     time.name <- time
   }
-  # index is numeric
+  
+  # if index is numeric, this indicats a balanced panel with no. of individuals equal to id.name
   if(is.numeric(id.name)){
-    if(!is.null(time.name)){warning("The time argument will be ignored\n")}
+    if(!is.null(time.name)){warning("The time index (second element of 'index' argument) will be ignored\n")}
     N <- nrow(x)
     if( (N%%id.name)!=0){
-      stop("unbalanced panel, the id variable should be indicated\n")
+      stop("unbalanced panel, in this case the individual index should be indicated by a the first element of 'index' argument\n")
     }
     else{
       T <- N%/%id.name
@@ -81,20 +102,24 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE){
       x[[time.name]] <- time <- as.factor(time)
     }
   }
-  else{
-    if (!id.name %in% names(x))
-      stop(paste("variable ",id.name," does not exist",sep="")
-           )
+  else{ # id.name is not numeric, i.e. individual index is supplied
+    if (!id.name %in% names(x)) stop(paste("variable ",id.name," does not exist (individual index)", sep=""))
+    
     if (is.factor(x[[id.name]])){
       id <- x[[id.name]] <- x[[id.name]][drop=T]
-      # trier par individu dans le cas ou id est un facteur
-#      x <- x[order(id), ]
     }
     else{
       id <- x[[id.name]] <- as.factor(x[[id.name]])
     }
+    
     if (is.null(time.name)){
-      Ti <- table(id)
+      # if no time index is supplied, add time variable automatically
+      
+      # order data by individual index, necessary for the automatic
+      # addition of time index to be succesfull if no time index was supplied
+      x <- x[order(x[[id.name]]), ]
+    
+      Ti <- table(x[[id.name]]) # was: Ti <- table(id)
       n <- length(Ti)
       time <- c()
       for (i in 1:n){
@@ -104,9 +129,9 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE){
       time <- x[[time.name]] <- time <- as.factor(time)
     }
     else{
-    if (!time.name %in% names(x))
-      stop(paste("variable ",time.name," does not exist",sep="")
-           )
+      # use supplied time index
+      if (!time.name %in% names(x)) stop(paste("variable ",time.name," does not exist (time index)",sep=""))
+      
       if (is.factor(x[[time.name]])){
         time <- x[[time.name]] <- x[[time.name]][drop=T]
       }
@@ -115,7 +140,10 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE){
       }
     }
   }
-  x <- x[order(id,time),]
+  
+  # sort by id, then by time
+  x <- x[order(x[[id.name]], x[[time.name]]), ] # old: x <- x[order(id,time), ] 
+  
   var.names <- names(x)
   for (i in names(x)){
     if(is.factor(x[[i]])){
@@ -128,13 +156,18 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE){
   index <- x[, posindex]
   if (drop.index) x <- x[, - posindex]
   if (row.names){
-    attr(x, "row.names") <- paste(index[[1]],index[[2]],sep="-") 
+    attr(x, "row.names") <- paste(index[[1]], index[[2]], sep="-") 
   }
   class(index) <- c("pindex", "data.frame")
   attr(x, "index") <- index
   class(x) <- c("pdata.frame", "data.frame")
-  x
+  
+  test_doub <- table(index[[1]], index[[2]])
+  if (any(as.vector(test_doub) > 1)) warning("duplicate couples (time-id) in resulting pdata.frame")
+  
+  return(x)
 }
+
 
 "[.pdata.frame" <- function(x, i, j, drop){
     # Kevin Tappe 2015-10-29
@@ -336,7 +369,7 @@ Tapply.matrix <- function(x, effect, func, ...){
 
 
 ###################################################
-### chunk number 10: within and between
+### chunk number 10: Between, between, Within
 ###################################################
 Between <- function(x,...){
   UseMethod("Between")
@@ -347,22 +380,11 @@ Between.default <- function(x, effect, ...){
   Tapply(x, effect, mean, ...)
 }
 
-# with na.rm = TRUE
-# Between.default <- function(x, effect, ...){
-#   if (!is.numeric(x)) stop("The Between function only applies to numeric vectors")
-#   Tapply(x, effect, mean, na.rm = TRUE, ...)
-# }
-
 Between.pseries <- function(x, effect = c("individual", "time"), ...){
   effect <- match.arg(effect)
   Tapply(x, effect = effect, mean, ...)
 }
 
-# with na.rm = TRUE
-# Between.pseries <- function(x, effect = c("individual", "time"), ...){
-#   effect <- match.arg(effect)
-#   Tapply(x, effect = effect, mean, na.rm = TRUE, ...)
-# }
 
 between <- function(x,...){
   UseMethod("between")
@@ -372,12 +394,6 @@ between.default <- function(x, effect, ...){
   if (!is.numeric(x)) stop("The between function only applies to numeric vectors")
   tapply(x, effect, mean, ...)
 }
-
-# with na.rm = TRUE
-# between.default <- function(x, effect, ...){
-#   if (!is.numeric(x)) stop("The between function only applies to numeric vectors")
-#   tapply(x, effect, mean, na.rm = TRUE, ...)
-# }
 
 between.pseries <- function(x, effect = c("individual", "time"), ...){
   effect <- match.arg(effect)
@@ -390,10 +406,10 @@ between.pseries <- function(x, effect = c("individual", "time"), ...){
   x
 }
 
-
 between.matrix <- function(x, effect, ...){
   apply(x, 2, tapply, effect, mean, ...)
 }
+
 
 Within <- function(x,...){
   UseMethod("Within")

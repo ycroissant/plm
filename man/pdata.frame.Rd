@@ -9,19 +9,19 @@
 \title{data.frame for panel data}
 
 \description{
-  An object of this class is a data.frame with an attribute that
-  describes its time and individual dimensions.
+  An object of class 'pdata.frame' is a data.frame with an index attribute that
+  describes its individual and time dimensions.
 }
 
 \usage{
-pdata.frame(x, index = NULL, drop.index = FALSE, row.names = TRUE)
+pdata.frame(x, index = NULL, drop.index = FALSE, row.names = TRUE,
+               stringsAsFactors = default.stringsAsFactors())
 \method{[}{pdata.frame}(x, i, j, drop)
 \method{[[}{pdata.frame}(x, y)
 \method{$}{pdata.frame}(x, y)
 \method{print}{pdata.frame}(x, ...)
 \method{as.data.frame}{pdata.frame}(x, row.names = NULL, optional = FALSE, ...)
 }
-
 \arguments{
   \item{x}{ a \code{data.frame} for the \code{pdata.frame} function and a
     \code{pdata.frame} for the methods,}
@@ -33,14 +33,18 @@ pdata.frame(x, index = NULL, drop.index = FALSE, row.names = TRUE)
   \item{drop}{see \code{\link{Extract}},}
   \item{drop.index}{logical, indicates whether the indexes are to be excluded from the resulting pdata.frame,}
   \item{optional}{see \code{\link{as.data.frame}},}
-  \item{row.names}{\code{NULL} or logical, indicates whether ``fancy'' row names (a combination of individual index and time index) are to be added to the returned (p)data.frame (\code{NULL} and \code{FALSE} have the same meaning),}
+  \item{row.names}{\code{NULL} or logical, indicates whether ``fancy'' row names (a combination of individual
+  index and time index) are to be added to the returned (p)data.frame (\code{NULL} and \code{FALSE} have the same meaning),}
+  \item{stringsAsFactors}{logical, indicating whether character vectors are to be converted to factors,}
   \item{...}{further arguments}
 }
 
 \value{
   a \code{pdata.frame} object: this is a \code{data.frame} with an
   \code{index} attribute which is a \code{data.frame} with two
-  variables, the individual and the time indexes.
+  variables, the individual and the time indexes, both being factors.
+  The resulting pdata.frame is sorted by the individual index, then
+  by the time index. Any constant columns and all-NA columns are dropped.
 }
 
 \details{
