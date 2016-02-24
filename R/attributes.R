@@ -1,13 +1,13 @@
 myvar <- function(x){
   if(any(is.na(x))) x <- x[!is.na(x)]
   n <- length(x)
+  
   z <- switch(as.character(n),
               "0" = NA,
               "1" = 0,
-              var(x))
+              ifelse(!is.factor(x), var(x), !all(duplicated(x)[-1L]))) # (var on factors is deprecated as of R 3.2.3)
   z
 }
-
 
 pvar <- function(x, ...){
   UseMethod("pvar")
@@ -60,15 +60,19 @@ pvar.pdata.frame <- function(x, ...){
 
 print.pvar <- function(x, ...){
   varnames <- names(x$time.variation)
-  if(any(!x$time.variation)){
-    var <- varnames[x$time.variation==FALSE]
+  if(any(is.na(x$time.variation) || any(!x$time.variation) )){
+    var <- varnames[x$time.variation==FALSE & !is.na(x$time.variation)]
 #    if (!is.null(y)) var <- var[-which(var==y$id)]
-    if (length(var)!=0) cat(paste("no time variation   : ",paste(var,collapse=" "),"\n"))
+    if (length(var)!=0) cat(paste(  "no time variation:        ", paste(var,collapse=" "),"\n"))
+    varNA <- varnames[is.na(x$time.variation)]
+    if (length(varNA)!=0) cat(paste("all NA in time dimension: ", paste(varNA,collapse=" "),"\n"))
   }
-  if(any(!x$id.variation)){
-    var <- varnames[x$id.variation==FALSE]
+  if(any(is.na(x$id.variation)) || any(!x$id.variation)){
+    var <- varnames[x$id.variation==FALSE & !is.na(x$id.variation)]
 #    if (!is.null(y)) var <- var[-which(var==y$time)]
-    if(length(var)!=0) cat(paste("no individual variation : ",paste(var,collapse=" "),"\n"))
+    if(length(var)!=0) cat(paste(   "no individual variation:  ", paste(var,collapse=" "),"\n"))
+    varNA <- varnames[is.na(x$id.variation)]
+    if (length(varNA)!=0) cat(paste("all NA in ind. dimension: ", paste(varNA,collapse=" "),"\n"))
   }
 }
 

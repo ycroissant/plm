@@ -124,15 +124,16 @@ tests/test_model.matrix_pmodel.response_NA.R -text
 tests/test_pFtest.R -text
 tests/test_pFtest.Rout.save -text
 tests/test_pbgtest.R -text
+tests/test_pdata.frame_extract_class_est_mod.R -text
 tests/test_pdata.frame_id_index_more.R -text
 tests/test_pdata.frame_subsetting.R -text
-tests/test_pdata_frame_extract_class_est_mod.R -text
 tests/test_phtest_Hausman_regression.R -text
 tests/test_plm_na.action.R -text
 tests/test_plmtest_unbalanced.R -text
 tests/test_plmtest_unbalanced.Rout.save -text
 tests/test_preserve_rownames.R -text
 tests/test_punbalancedness.R -text
+tests/test_pvar.R -text
 tests/test_pwfdtest_pwartest.R -text
 tests/test_pwtest.R -text
 tests/test_vcovG_lin_dep.R -text

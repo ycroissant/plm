@@ -29,10 +29,15 @@ pvar(x, ...)
 \value{ 
 An object of class \code{pvar} containing the following elements:
 
- \item{id.var}{a logical vector with \code{TRUE} values if the
-  variable has individual variation, \code{FALSE} otherwise,}
- \item{time.var}{a logical vector with \code{TRUE} values if the
-  variable has time variation, \code{FALSE} otherwise,} }
+ \item{id.variation}{a logical vector with \code{TRUE} values if the
+  variable has individual variation, \code{FALSE} if not,}
+ \item{time.variation}{a logical vector with \code{TRUE} values if the
+  variable has time variation, \code{FALSE} if not,
+  }  
+  Both aforementioned elements can contain \code{NA} values, if there are
+  all \code{NA} values for (at least) for one the groups in the individual or
+  time dimension.
+}
 
 \author{Yves Croissant}
 

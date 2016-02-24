@@ -71,6 +71,8 @@ Grunfeld_charac$firm <- as.character(Grunfeld_charac$firm)
 Grunfeld_charac.p <- pdata.frame(Grunfeld_charac)
 Grunfeld_charac.p2 <- pdata.frame(Grunfeld_charac, stringsAsFactors = FALSE)
 if(!identical(Grunfeld_charac.p, Grunfeld_charac.p2)) stop("pdata.frames not identical)")
+pdim(Grunfeld_charac.p)
+pdim(Grunfeld_charac.p2)
 
 
 # test: character as individual index
@@ -80,14 +82,17 @@ Grunfeld_charac2$year <- as.character(Grunfeld_charac2$year)
 Grunfeld_charac2.p <- pdata.frame(Grunfeld_charac2)
 Grunfeld_charac2.p2 <- pdata.frame(Grunfeld_charac2, stringsAsFactors = FALSE)
 if(!identical(Grunfeld_charac2.p, Grunfeld_charac2.p2)) stop("pdata.frames not identical)")
+pdim(Grunfeld_charac2.p)
+pdim(Grunfeld_charac2.p2)
 
 # index with two variables
 Grunfeld.p3 <- pdata.frame(Grunfeld, index = c("firm", "year"))
-
+pdim(Grunfeld.p3)
 
 # index is numeric
 data("Wages", package = "plm")
 Wag <- pdata.frame(Wages, 595)
+pdim(Wag)
 
 # test for warning about time index
 ttC2 <-  tryCatch(pdata.frame(Wages, index=c(595, 3)), error=function(e) e, warning=function(w) w)
