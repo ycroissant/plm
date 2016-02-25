@@ -71,6 +71,7 @@ S3method("punbalancedness", "panelmodel")
 # pvar
 S3method("pvar", "data.frame")
 S3method("pvar", "pdata.frame")
+S3method("pvar", "matrix")
 S3method("print", "pvar")
 # panelmodel
 S3method("terms", "panelmodel")

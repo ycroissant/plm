@@ -2,6 +2,7 @@
 \alias{pvar}
 \alias{pvar.data.frame}
 \alias{pvar.pdata.frame}
+\alias{pvar.matrix}
 \alias{print.pvar}
 
 \title{Check for Cross-Sectional and Time Variation}
@@ -13,16 +14,17 @@ varies cross-sectionally and over time.}
 pvar(x, ...)
 \method{pvar}{data.frame}(x, index = NULL, ...)
 \method{pvar}{pdata.frame}(x, ...)
+\method{pvar}{matrix}(x, index = NULL, ...)
 \method{print}{pvar}(x, ...)
 }
 
 \arguments{
- \item{x}{a \code{data.frame},}
+ \item{x}{a \code{(p)data.frame} or a \code{matrix},}
  \item{index}{see \code{\link{pdata.frame}},}
  \item{\dots}{further arguments.}
 }
 
-\details{
+\note{
  \code{pvar} can be time consuming for ``big'' panels.
 }
 
@@ -32,11 +34,22 @@ An object of class \code{pvar} containing the following elements:
  \item{id.variation}{a logical vector with \code{TRUE} values if the
   variable has individual variation, \code{FALSE} if not,}
  \item{time.variation}{a logical vector with \code{TRUE} values if the
-  variable has time variation, \code{FALSE} if not,
-  }  
-  Both aforementioned elements can contain \code{NA} values, if there are
-  all \code{NA} values for (at least) for one the groups in the individual or
-  time dimension.
+  variable has time variation, \code{FALSE} if not,}
+ \item{id.variation_anyNA}{a logical vector with \code{TRUE} values if the
+  variable has at least one individual-time combination with all NA values
+  in the individual dimension for at least one time period, \code{FALSE} if not,}
+ \item{time.variation_anyNA}{a logical vector with \code{TRUE} values if the
+  variable has at least one individual-time combination with all NA values
+  in the time dimension for at least one individual, \code{FALSE} if not.}
+}
+
+\details{
+ For (p)data.frame and matrix interface: All-NA columns are removed prior to calculation
+ of variation due to coercing to pdata.frame first.
+}
+
+\seealso{
+ \code{\link{pdim}} to check the dimensions of a 'pdata.frame' (and other objects), 
 }
 
 \author{Yves Croissant}
@@ -56,6 +69,11 @@ pvar(Hedonic, "townid", drop.index = TRUE)
 # same using pdata.frame
 Hed <- pdata.frame(Hedonic, "townid", drop.index = TRUE)
 pvar(Hed)
+
+# Gasoline with pvar's matrix interface
+Gasoline_mat <- as.matrix(Gasoline)
+pvar(Gasoline_mat)
+pvar(Gasoline_mat, index=c("country", "year"))
 }
 
 \keyword{attribute}

@@ -52,7 +52,11 @@ pdim(x,...)
 
 \author{Yves Croissant}
 
-\seealso{\code{\link{punbalancedness}} for measures of unbalancedness, \code{\link{nobs}}, \code{\link{pdata.frame}}}
+\seealso{
+ \code{\link{punbalancedness}} for measures of unbalancedness,\cr
+ \code{\link{nobs}}, \code{\link{pdata.frame}},\cr
+ \code{\link{pvar}} to check for each variable if it varies cross-sectionally and over time.
+}
 
 \examples{
 

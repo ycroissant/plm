@@ -468,7 +468,7 @@ Changes since version 1.5-1
 
 	* fixed "already a pdata.frame" bug in pcdtest.formula 
 
-  * implemented fixef() method for objects estimated by pggls()
+    * implemented fixef() method for objects estimated by pggls()
  
 
 Changes since version 1.5-3
@@ -590,18 +590,19 @@ Changes since version 1.5-15
 Changes since version 1.5-16
   
 	* plmtest:  * fixed p-values [for type="kw" and "ghm"],
-              * unbalanced version of all test statistics implemented,
-              * doc update with literature references to unbalanced tests,
-              * if requested, the "kw" statistic is now also calculated as one-way ("individual" or "time"), 
-                albeit they coincide with respective "bp" statistics.
+                * unbalanced version of all test statistics implemented,
+                * doc update with literature references to unbalanced tests,
+                * if requested, the "kw" statistic is now also calculated as one-way ("individual" or "time"), 
+                  albeit they coincide with respective "bp" statistics.
 	* pwtest: formula interface respects 'effect' argument, 'effect' argument now mentioned in doc.
 	* data set 'Wages': factor 'sex' re-leveled to c("male", "female") to match use in original paper.
 	* print.summary.plm: suppress printing of 'effects' argument in top line in case of 'pooling' model.
 	* doc for between, Between, Within extended; doc for lag, lead, diff in separate file now (lag_lead_diff.Rd)
 	* pdata.frame: * fixed bug: do not assume a specific order of data when only individual index is supplied,
 	               * resulting pdata.frame is ordered by individual, then time index,
-	               * when duplicate coupled (id-time) are created, a warning is issued,
+	               * when duplicate couples (id-time) are created, a warning is issued,
 	               * new argument 'stringAsFactors'.
 	* pvar: * fixed warning about var on factor variable (var on factors is deprecated as of R 3.2.3),
+	        * fixed corner case with one group being all NA and other non-varying,
 	        * print.pvar: better handling of NA values.
 	

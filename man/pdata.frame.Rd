@@ -72,8 +72,10 @@ that the extraction is also applied to the \code{index} attribute.
 adds it to every series.
 }
 
-% \seealso{
-% }
+\seealso{
+ \code{\link{pdim}} to check the dimensions of a 'pdata.frame' (and other objects), 
+ \code{\link{pvar}} to check for each variable if it varies cross-sectionally and over time.
+}
 
 \examples{
 # Gasoline contains two variables which are individual and time indexes
