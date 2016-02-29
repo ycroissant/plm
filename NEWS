@@ -605,4 +605,5 @@ Changes since version 1.5-16
 	* pvar: * fixed warning about var on factor variable (var on factors is deprecated as of R 3.2.3),
 	        * fixed corner case with one group being all NA and other non-varying,
 	        * print.pvar: better handling of NA values.
+	* lag/lead: fixed bug with dropped factor levels, added testfile tests/test_lag_lead_factor_levels.R.
 	

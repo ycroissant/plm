@@ -292,25 +292,26 @@ as.matrix.pseries <- function(x, idbyrow = TRUE, ...){
 ###################################################
 
 # NB: There is another lag.pseries function with same name in this file which is more general.
-#     Can we delete this one here?
+#     Can we delete this one here? It got overwritten anyway as the other version if further
+#     down in this file.
 
-lag.pseries <- function(x, k = 1, ...){
-  nx <- names(x)
-  index <- attr(x, "index")
-  id <- index[[1]]
-  time <- index[[2]]
-  isNAtime <- c(rep(1,k), diff(as.numeric(time), lag = k)) != k
-  isNAid <- c(rep(1,k), diff(as.numeric(id), lag = k)) != 0
-  isNA <- as.logical(isNAtime + isNAid)
-  if (is.factor(x)) levs <- levels(x)
-  result <- c(rep(NA, k), x[1:(length(x)-k)])
-  result[isNA] <- NA
-  if (is.factor(x)) result <- factor(result, labels = levs)
-  structure(result,
-            names = nx,
-            class = class(x),
-            index = index)
-}
+# lag.pseries <- function(x, k = 1, ...){
+#   nx <- names(x)
+#   index <- attr(x, "index")
+#   id <- index[[1]]
+#   time <- index[[2]]
+#   isNAtime <- c(rep(1,k), diff(as.numeric(time), lag = k)) != k
+#   isNAid <- c(rep(1,k), diff(as.numeric(id), lag = k)) != 0
+#   isNA <- as.logical(isNAtime + isNAid)
+#   if (is.factor(x)) levs <- levels(x)
+#   result <- c(rep(NA, k), x[1:(length(x)-k)])
+#   result[isNA] <- NA
+#   if (is.factor(x)) result <- factor(result, labels = levs)
+#   structure(result,
+#             names = nx,
+#             class = class(x),
+#             index = index)
+# }
 
 diff.pseries <- function(x, lag = 1, ...){
   if (!is.numeric(x)) stop("diff is only relevant for numeric series")
@@ -530,7 +531,6 @@ pdiff <- function(x, cond, has.intercept = FALSE){
 
 # compute lagged values (handles positive lags and negative lags (=leading values) [and 0 -> do nothing])
 lag.pseries <- function(x, k = 1, ...) {
-  nx <- names(x)
   index <- attr(x, "index")
   id <- index[[1]]
   time <- index[[2]]
@@ -545,31 +545,28 @@ lag.pseries <- function(x, k = 1, ...) {
       isNAtime <- c(rep(T,ak), diff(as.numeric(time), lag = ak)) != ak
       isNAid <- c(rep(T,ak), diff(as.numeric(id), lag = ak)) != 0
       isNA <- as.logical(isNAtime + isNAid)
-      if (is.factor(x)) levs <- levels(x)
-      result <- c(rep(NA, ak), x[1:(length(x)-ak)])
-      result[isNA] <- NA
-      if (is.factor(x)) result <- factor(result, labels = levs)
-      structure(result,
-                names = nx,
-                class = class(x),
-                index = index)
+      
+      result <- x                                             # copy x first ...
+      result[1:ak] <- NA                                      # ... then make first ak obs NA ... 
+      result[(ak+1):length(result)] <- x[1:(length(x)-ak)]    # ... shift and ...
+      result[isNA] <- NA                                      # ... make more NAs in between: this way, we keep: all factor levels, names, classes
+      
     } else if (ak < 0) { # => compute leading values
       
-      # delete last ak observations for each unit
+      # delete last |ak| observations for each unit
       isNAtime <- c(as.numeric(time) - c(tail(as.numeric(time), length(time) + ak), rep(T, -ak))) != ak
       isNAid   <- c(as.numeric(id) - c(tail(as.numeric(id), length(id) + ak) , rep(T, -ak))) != 0
       isNA <- as.logical(isNAtime + isNAid)
-      result <- c(x[(1-ak):(length(x))], rep(NA, -ak))
-      result[isNA] <- NA
-      if (is.factor(x)) levs <- levels(x)
-      if (is.factor(x)) result <- factor(result, labels = levs)
-      structure(result,
-                names = nx,
-                class = class(x),
-                index = index)
+
+      result <- x                                            # copy x first ...
+      result[(length(result)+ak+1):length(result)] <- NA     # ... then make last |ak| obs NA ... 
+      result[1:(length(result)+ak)] <- x[(1-ak):(length(x))] # ... shift and ...
+      result[isNA] <- NA                                     # ... make more NAs in between: this way, we keep: all factor levels, names, classes
       
     } else return(x) # ak == 0 => nothing to do, return original pseries (no lagging/no leading)
-  }
+    
+    return(result)
+  } # END function alag
   
   if (length(k) > 1) {
     rval <- sapply(k, function(i) alag(x, i))
