@@ -9,6 +9,7 @@ R/divers.R -text
 R/dynformula.R -text
 R/ercomp.R -text
 R/fixef.R -text
+R/is.pconsecutive.R -text
 R/options.R -text
 R/pFormula.R -text
 R/panelmodel.R -text
@@ -67,6 +68,7 @@ man/dynformula.Rd -text
 man/ercomp.Rd -text
 man/fixef.plm.Rd -text
 man/index.plm.Rd -text
+man/is.pconsecutive.Rd -text
 man/lag_lead_diff.Rd -text
 man/model.frame_model.matrix.Rd -text
 man/mtest.Rd -text
@@ -118,6 +120,7 @@ tests/test_R2_adj_R2.R -text
 tests/test_as.data.frame_as.matrix.R -text
 tests/test_detect_lin_dep.R -text
 tests/test_fitted.plm.R -text
+tests/test_is.pconsecutive.R -text
 tests/test_lag_lead_factor_levels.R -text
 tests/test_model.frame.R -text
 tests/test_model.matrix_pmodel.response.R -text

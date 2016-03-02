@@ -1,4 +1,5 @@
 export(plm, pvcm, pgmm, pggls, pht, pcce, pmg, plmtest, phtest, pFtest, detect_lin_dep,
+       is.pconsecutive,
        pvar, pdim, pooltest, dynformula, sargan, mtest, ercomp, pvcovHC,
        pbsytest, pdwtest, pbgtest, pbltest, pwartest, pwtest, pwfdtest, pcdtest,
        plm.data, pdata.frame, between, Between, Within, lag, lead, pFormula, pmodel.response,
@@ -197,3 +198,8 @@ S3method("print", "summary.purtest")
 # detect_lin_dep
 S3method("detect_lin_dep", "matrix")
 S3method("detect_lin_dep", "data.frame")
+# is.pconsecutive
+S3method("is.pconsecutive", "data.frame")
+S3method("is.pconsecutive", "pdata.frame")
+S3method("is.pconsecutive", "panelmodel")
+S3method("is.pconsecutive", "pseries")
