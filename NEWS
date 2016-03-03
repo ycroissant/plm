@@ -606,5 +606,6 @@ Changes since version 1.5-16
 	        * fixed corner case with one group being all NA and other non-varying,
 	        * print.pvar: better handling of NA values.
 	* lag/lead: fixed bug with dropped factor levels, added testfile tests/test_lag_lead_factor_levels.R.
-	* is.pconsecutive: new function to check if time periods are consecutive per individual.
+	* is.pconsecutive: * new function to check if time periods are consecutive per individual,
+	                   * better NA handling, added argument rm.na.tindex.
 	

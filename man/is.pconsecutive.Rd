@@ -12,14 +12,16 @@ are consecutive (no "gaps" in time)}
 
 \usage{
 is.pconsecutive(x, ...)
-\method{is.pconsecutive}{pdata.frame}(x, ...)
-\method{is.pconsecutive}{panelmodel}(x, ...)
-\method{is.pconsecutive}{pseries}(x, ...)
-\method{is.pconsecutive}{data.frame}(x, index = NULL, ...)
+\method{is.pconsecutive}{pdata.frame}(x, na.rm.tindex = FALSE, ...)
+\method{is.pconsecutive}{panelmodel}(x, na.rm.tindex = FALSE, ...)
+\method{is.pconsecutive}{pseries}(x, na.rm.tindex = FALSE, ...)
+\method{is.pconsecutive}{data.frame}(x, index = NULL, na.rm.tindex = FALSE, ...)
 }
 
 \arguments{
  \item{x}{object of class \code{pdata.frame}, \code{data.frame}, \code{pseries}, or a an estimated \code{panelmodel},}
+ \item{na.rm.tindex}{logical indicating whether any \code{NA} values in the time index are removed
+ before consecutiveness is evaluated (defaults to \code{FALSE}),}
  \item{index}{only relevant for \code{data.frame} interface; if not \code{NULL}, both dimensions ('individual', 'time')
               need to be specified by \code{index} for \code{is.pconsecutive} on data frames,
               for further details see \code{\link{pdata.frame}},}
@@ -28,18 +30,24 @@ is.pconsecutive(x, ...)
 
 \value{ 
 A named \code{logical} vector (names are those of the individuals).
-i-th element of the vector is \code{TRUE} if the i-th individual has consecutive time periods,
-\code{FALSE} if it has non-consecutive time periods.
+The i-th element of the returned vector corresponds to the i-th individual. The values of the i-th element can be:
+\item{\code{TRUE}}{if the i-th individual has consecutive time periods,}
+\item{\code{FALSE}}{if the i-th individual has non-consecutive time periods,}
+\item{\code{NA}}{if there are any NA values in time index of the i-th the individual; 
+see also argument \code{na.rm.tindex} to remove those.}
 }
 
 \details{
  (p)data.frame, pseries and estimated panelmodel objects can be tested if their time periods are consecutive per individual.
  Note: Only the presence of the time period itself in the object is tested, not if there are any other variables.
+ \code{NA} values in individual index are not respected but silently dropped - In this case, it is not clear which individual is 
+ meant by value \code{NA}, thus no statement about consecutiveness of time periods for those "\code{NA}-individuals" is possible.
 }
 
 \seealso{
  \code{\link{pdim}} to check the dimensions of a 'pdata.frame' (and other objects), 
- \code{\link{pvar}} to check for individual and time variation of a 'pdata.frame' (and other objects).\cr
+ \code{\link{pvar}} to check for individual and time variation of a 'pdata.frame' (and other objects),
+ \code{\link[plm]{lag}} for lagged (and leading) values of a 'pseries' object.\cr
  
  \code{\link{pseries}}, \code{\link{data.frame}}, \code{\link{pdata.frame}}, for class 'panelmodel' see \code{\link{plm}} and \code{\link{pgmm}}.
 }

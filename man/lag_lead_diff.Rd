@@ -40,8 +40,9 @@ These functions return an object of class \code{pseries} except if \code{lag} (t
 
 \seealso{
 For further function for 'pseries' objects: \code{\link[plm]{between}}, \code{\link[plm]{Between}}, 
-\code{\link[plm]{Within}}, \code{\link[plm]{summary.pseries}}, \code{\link[plm]{print.summary.pseries}},
- \code{\link[plm]{as.matrix.pseries}}.
+\code{\link[plm]{Within}}, \code{\link[plm]{summary.pseries}}, \code{\link[plm]{print.summary.pseries}}, 
+\code{\link[plm]{as.matrix.pseries}}. To check if the time periods are consecutive per individual, 
+see \code{\link[plm]{is.pconsecutive}}.
 }
 
 \examples{

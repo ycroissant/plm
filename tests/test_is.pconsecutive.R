@@ -29,7 +29,7 @@ is.pconsecutive(Grunfeld_missing_period, index=c("firm", "year"))
 
 # test on pdata.frame
 if(!all(is.pconsecutive(pGrunfeld))) stop("is.pconsecutive on pdata.frame: wrong result")
-if(!all.equal(is.pconsecutive(pGrunfeld_missing_period), c(FALSE, rep(TRUE, 9)),  check.names = FALSE)) stop("is.pconsecutive on pdata.frame: wrong result")
+if(!isTRUE(all.equal(is.pconsecutive(pGrunfeld_missing_period), c(FALSE, rep(TRUE, 9)),  check.names = FALSE))) stop("is.pconsecutive on pdata.frame: wrong result")
 
 
 # test on panelmodel object
@@ -77,8 +77,8 @@ is.pconsecutive(Hed_df, index = c("townid", "time"))
 is.pconsecutive(Hed_df_missing_period, index = c("townid", "time"))
 
 # test on pdata.frame
-if(!all.equal(is.pconsecutive(pHed), expected_Hed, check.names = FALSE)) stop("is.pconsecutive on pdata.frame: wrong result")
-if(!all.equal(is.pconsecutive(pHed_missing_period), expected_Hed_missing_period, check.names = FALSE)) stop("is.pconsecutive on pdata.frame: wrong result")
+if(!isTRUE(all.equal(is.pconsecutive(pHed), expected_Hed, check.names = FALSE))) stop("is.pconsecutive on pdata.frame: wrong result")
+if(!isTRUE(all.equal(is.pconsecutive(pHed_missing_period), expected_Hed_missing_period, check.names = FALSE))) stop("is.pconsecutive on pdata.frame: wrong result")
 
 # test on panelmodel object
 estimation_pHed <- plm(mv ~ crim + indus, data = pHed)
@@ -91,8 +91,8 @@ is.pconsecutive(estimation_pHed_missing_period)
 pmv <- pHed$mv
 pmv_missing_period <- pHed_missing_period$mv
 
-if(!all.equal(is.pconsecutive(pmv), expected_Hed, check.names = FALSE)) stop("is.pconsecutive on pseries: wrong result")
-if(!all.equal(is.pconsecutive(pmv_missing_period), expected_Hed_missing_period, check.names = FALSE)) stop("is.pconsecutive on pseries: wrong result")
+if(!isTRUE(all.equal(is.pconsecutive(pmv), expected_Hed, check.names = FALSE))) stop("is.pconsecutive on pseries: wrong result")
+if(!isTRUE(all.equal(is.pconsecutive(pmv_missing_period), expected_Hed_missing_period, check.names = FALSE))) stop("is.pconsecutive on pseries: wrong result")
 
 ######## with different data set "Gasoline" (has "named" individuals, not just numbers)
 data("Gasoline", package = "plm")
@@ -103,5 +103,71 @@ is.pconsecutive(Gasoline, index = c("country", "year"))
 
 # test on pdata.frame
 is.pconsecutive(pGasoline)
+
+
+
+########## Tests with NA in individual and time index ###########
+
+
+### test with NA in time index ###
+data("Grunfeld", package = "plm") # get fresh Grunfeld (no NAs)
+Grunfeld_NA_time <- Grunfeld
+Grunfeld_NA_time[2, "year"] <- NA # firm 1, year 1936: year set to NA
+
+pGrunfeld_NA_time <- pdata.frame(Grunfeld_NA_time)
+# time index with NA is in pdata.frame
+# it gets sorted to end of firm 1
+head(pGrunfeld_NA_time, 21)
+
+expected_NA_time <- c(NA, rep(TRUE, 9))
+expected_NA_time_na.rm.tindex <- c(FALSE, rep(TRUE, 9))
+
+is.pconsecutive(Grunfeld_NA_time)
+is.pconsecutive(Grunfeld_NA_time, na.rm.tindex = FALSE)
+is.pconsecutive(Grunfeld_NA_time, na.rm.tindex = TRUE)
+
+if(!isTRUE(all.equal(is.pconsecutive(Grunfeld_NA_time), is.pconsecutive(pGrunfeld_NA_time))))
+  stop("is.pconsecutive not equal for data.frame and pdata.frame with 'NA' in time index")
+if(!isTRUE(all.equal(is.pconsecutive(pGrunfeld_NA_time), expected_NA_time, check.names=FALSE)))
+  stop("is.pconsecutive: not expected result with 'NA' in time index")
+if(!isTRUE(all.equal(is.pconsecutive(pGrunfeld_NA_time, na.rm.tindex = TRUE), expected_NA_time_na.rm.tindex, check.names=FALSE)))
+  stop("is.pconsecutive(, na.rm.tindex = TRUE: not expected result with 'NA' in time index - there should be no NA values left")
+
+### test with NA in individual index ###
+# get fresh Grunfeld (no NAs)
+Grunfeld_NA_ind <- Grunfeld
+Grunfeld_NA_ind[3, "firm"] <- NA # firm 1, year 1937: firm set to NA
+pGrunfeld_NA_ind <- pdata.frame(Grunfeld_NA_ind)
+
+# individual index with NA is in pdata.frame
+# it gets sorted to end of individuals
+tail(pGrunfeld_NA_ind, 21)
+
+expected_NA_ind <- c(FALSE, rep(TRUE, 9))
+
+if(!isTRUE(all.equal(is.pconsecutive(Grunfeld_NA_ind), is.pconsecutive(pGrunfeld_NA_ind))))
+  stop("is.pconsecutive not equal for data.frame and pdata.frame with 'NA' in individual index")
+if(!isTRUE(all.equal(is.pconsecutive(pGrunfeld_NA_ind), expected_NA_ind, check.names=FALSE)))
+  stop("is.pconsecutive: not expected result with 'NA' in individual index")
+
+
+
+### test with NA in individual AND time index ###
+# get fresh Grunfeld (no NAs)
+Grunfeld_NA_id_time <- Grunfeld
+Grunfeld_NA_id_time[4, c("firm", "year")] <- NA # firm 1, year 1938: firm and year set to NA
+pGrunfeld_NA_id_time <- pdata.frame(Grunfeld_NA_id_time)
+
+# individual and time index with NA is in pdata.frame
+# it gets sorted to end of individuals
+tail(pGrunfeld_NA_id_time, 21)
+
+expected_NA_ind_time <- c(FALSE, rep(TRUE, 9))
+
+if(!isTRUE(all.equal(is.pconsecutive(Grunfeld_NA_id_time), is.pconsecutive(pGrunfeld_NA_id_time))))
+  stop("is.pconsecutive not equal for data.frame and pdata.frame with 'NA' in individual AND time index")
+if(!isTRUE(all.equal(is.pconsecutive(pGrunfeld_NA_id_time), expected_NA_ind_time, check.names=FALSE)))
+  stop("is.pconsecutive: not expected result with 'NA' in individual AND time index")
+
 
 

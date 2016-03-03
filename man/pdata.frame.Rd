@@ -54,13 +54,14 @@ pdata.frame(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     the individual and of the time indexes,
     \item a character string which is the name of the individual index
     variable. In this case, the time index is created automatically and
-    a new variable called ``time'' is added, assuming consecutive time periods,
+    a new variable called ``time'' is added, assuming consecutive and ascending
+    time periods in the order of the original data,
     \item an integer, the number of individuals. In this case, the data
     need to be a balanced panel and be organized as a stacked time series
-    (sucessive blocks of individuals, each block being a time series for
-    the respective individual,). Two new variables are added:
-    ``time'' and ``id'' which contain the individual and the time indexes,
-    the time periods are assumed to be consecutive.
+    (successive blocks of individuals, each block being a time series for
+    the respective individual) assuming consecutive and ascending
+    time periods in the order of the original data. Two new variables are added:
+    ``time'' and ``id'' which contain the individual and the time indexes.
 }
 
 The \code{"[["} and \code{"$"} extract
@@ -74,7 +75,8 @@ adds it to every series.
 
 \seealso{
  \code{\link{pdim}} to check the dimensions of a 'pdata.frame' (and other objects), 
- \code{\link{pvar}} to check for each variable if it varies cross-sectionally and over time.
+ \code{\link{pvar}} to check for each variable if it varies cross-sectionally and over time. 
+ To check if the time periods are consecutive per individual, see \code{\link[plm]{is.pconsecutive}}.
 }
 
 \examples{
