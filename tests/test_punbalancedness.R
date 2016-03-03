@@ -194,8 +194,18 @@ punbalancedness(df_d4)
 
 # for balanced panels, both measures == 1
 data(Grunfeld, package = "plm")
-punbalancedness(Grunfeld) # test on data.frame
-punbalancedness(pdata.frame(Grunfeld)) # test on pdata.frame
+
+# test on data.frame
+punbalancedness(Grunfeld)
+
+# test on data.frame with index argument
+# (indexes not in first two columns)
+Grunfeld2 <- Grunfeld
+Grunfeld2 <- Grunfeld2[ , c(3:length(Grunfeld2) , c(1,2))]
+punbalancedness(Grunfeld2, index = c("firm", "year"))
+
+# test on pdata.frame
+punbalancedness(pdata.frame(Grunfeld)) 
 
 # Test on estimated model object
 mod <- plm(inv ~ value + capital, data = Grunfeld)
@@ -203,3 +213,7 @@ punbalancedness(mod)
 
 mod2 <- plm(inv ~ value + capital, data = Grunfeld[1:99, ])
 punbalancedness(mod2)
+
+
+
+

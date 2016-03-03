@@ -12,12 +12,13 @@ as defined in Ahrens/Pincus (1981).}
 \usage{
 punbalancedness(x,...)
 \method{punbalancedness}{panelmodel}(x, ...)
-\method{punbalancedness}{data.frame}(x, ...)
+\method{punbalancedness}{data.frame}(x, index = NULL, ...)
 \method{punbalancedness}{pdata.frame}(x, ...)
 }
 
 \arguments{
  \item{x}{a \code{panelmodel}, a \code{data.frame}, or a \code{pdata.frame} object,}
+ \item{index}{only relevant for \code{data.frame} interface, for details see \code{\link{pdata.frame}},}
  \item{\dots}{further arguments.}
 }
 
@@ -88,10 +89,14 @@ estimators for the unbalanced two-way error component regression model}, \emph{E
 \examples{
 # Grunfeld is a balanced panel, Hedonic is an unbalanced panel
 data(list=c("Grunfeld", "Hedonic"), package="plm")
+
+# Grunfeld has individual and time index in first two columns
 punbalancedness(Grunfeld) # c(1,1) indicates balanced panel
 pdim(Grunfeld)$balanced   # TRUE
-punbalancedness(Hedonic)  # c(0.698, 0.635)
-pdim(Hedonic)$balanced    # FALSE
+
+# Hedonic has individual index in column "townid" (in last column)
+punbalancedness(Hedonic, index="townid") # c(0.472, 0.519)
+pdim(Hedonic, index="townid")$balanced   # FALSE
 
 # punbalancedness on estimated models
 plm_mod_pool <- plm(inv ~ value + capital, data = Grunfeld)
@@ -104,7 +109,7 @@ punbalancedness(plm_mod_fe)
 ind_d1  <- c(1,1,1,2,2,2,3,3,3,3,3,4,4,4,4,4,4,4,5,5,5,5,5,5,5)
 time_d1 <- c(1,2,3,1,2,3,1,2,3,4,5,1,2,3,4,5,6,7,1,2,3,4,5,6,7)
 df_d1 <- data.frame(individual = ind_d1, time = time_d1)
-punbalancedness(df_d1)
+punbalancedness(df_d1) # c(0.868, 0.887)
 }
 
 \keyword{attribute}

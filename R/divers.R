@@ -256,7 +256,8 @@ punbalancedness.pdata.frame <- function(x, ...) {
   punbalancedness.default(x, ...)
 }
 
-punbalancedness.data.frame <- function(x, ...) {
+punbalancedness.data.frame <- function(x, index = NULL, ...) {
+  x <- pdata.frame(x, index = index, ...)
   punbalancedness.default(x, ...)
 }
 
