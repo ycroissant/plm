@@ -535,16 +535,24 @@ lag.pseries <- function(x, k = 1, ...) {
   id <- index[[1]]
   time <- index[[2]]
   
-  # catch the case when an index of pdata.frame shall be lagged
-  if (is.factor(x)) if (all(as.character(x) == as.character(id)) | all(as.character(x)==as.character(time))) stop("Lagged vector cannot be index.")
+  # catch the case when an index of pdata.frame shall be lagged (index variables are always factors)
+    # NB: this catches - unintentionally - also the case when a factor variable is the same "on the character level"
+    # as one of the corresponding index variables but not the index variable itself
+    #
+    # -> shall we prevent lagging of index variables at all? -> turned off for now, 2016-03-03
+    # if (is.factor(x)) if (all(as.character(x) == as.character(id)) | all(as.character(x)==as.character(time))) stop("Lagged vector cannot be index.")
   
   alag <- function(x, ak){
     if (round(ak) != ak) stop("Lagging value 'k' must be whole-numbered (positive, negative or zero)")
     if (ak > 0) {
+      
+      # NB: this code assumes consecutive time periods and produces wrong results
+      #     for lag > 1 and non-consecutive time periods
+      
       # delete first ak observations for each unit
-      isNAtime <- c(rep(T,ak), diff(as.numeric(time), lag = ak)) != ak
-      isNAid <- c(rep(T,ak), diff(as.numeric(id), lag = ak)) != 0
-      isNA <- as.logical(isNAtime + isNAid)
+      isNAtime <- c(rep(T, ak), (diff(as.numeric(time), lag = ak) != ak))
+      isNAid   <- c(rep(T, ak), (diff(as.numeric(id),   lag = ak) != 0))
+      isNA <- (isNAtime | isNAid)
       
       result <- x                                             # copy x first ...
       result[1:ak] <- NA                                      # ... then make first ak obs NA ... 
@@ -553,17 +561,24 @@ lag.pseries <- function(x, k = 1, ...) {
       
     } else if (ak < 0) { # => compute leading values
       
+      # NB: this code assumes consecutive time periods and produces wrong results
+      #     for lag > 1 and non-consecutive time periods
+      
       # delete last |ak| observations for each unit
-      isNAtime <- c(as.numeric(time) - c(tail(as.numeric(time), length(time) + ak), rep(T, -ak))) != ak
-      isNAid   <- c(as.numeric(id) - c(tail(as.numeric(id), length(id) + ak) , rep(T, -ak))) != 0
-      isNA <- as.logical(isNAtime + isNAid)
-
+      num_time <- as.numeric(time)
+      num_id   <- as.numeric(id)
+      isNAtime <- c(c((num_time[1:(length(num_time)+ak)] - num_time[(-ak+1):length(num_time)]) != ak), rep(T, -ak))
+      isNAid   <- c(c((num_id[1:(length(num_id)+ak)]     - num_id[(-ak+1):length(num_id)])     != 0),  rep(T, -ak))
+      isNA <- (isNAtime | isNAid)
+      
       result <- x                                            # copy x first ...
       result[(length(result)+ak+1):length(result)] <- NA     # ... then make last |ak| obs NA ... 
       result[1:(length(result)+ak)] <- x[(1-ak):(length(x))] # ... shift and ...
       result[isNA] <- NA                                     # ... make more NAs in between: this way, we keep: all factor levels, names, classes
       
-    } else return(x) # ak == 0 => nothing to do, return original pseries (no lagging/no leading)
+    } else { # ak == 0 => nothing to do, return original pseries (no lagging/no leading)
+      result <- x
+    }
     
     return(result)
   } # END function alag
@@ -590,8 +605,9 @@ lead <- function(x, k = 1, ...) {
   UseMethod("lead")
 }
 
-### Index methods
 
+
+### Index methods
 
 index.pindex <- function(x, which = NULL, ...){
   if (is.null(which)) which <- names(x)
