@@ -248,7 +248,7 @@ pgmm <- function(formula, data, subset, na.action,
   if (transformation == "ld"){
     W2 <- lapply(W,
                  function(x){
-                   u <- lapply(x, function(z) diag(diff(z[-c(length(z))])))
+                   u <- mapply(makeW2,x, collapse, SIMPLIFY = FALSE)
                    # the matrix of instruments in difference has T - 2
                    # rows if one time series is lost (there are no gmm
                    # instruments for t = 2 but there is a moment
@@ -580,26 +580,34 @@ FSM <- function(t,fsm){
 makegmm <- function(x, g, TL1, collapse = FALSE){
   T <- length(x)
   rg <- range(g)
-  if (collapse){
-    result <- c()
-    for (t in 0:(T - rg[1] - 1)){
-      result <- c(result, x[1:(T - rg[1] - t)]) 
+  z <- as.list((TL1 + 1):T)
+  x <- lapply(z, function(y) x[max(1, y - rg[2]):(y - rg[1])])
+  if (collapse) {      
+    x<-lapply(x, rev)
+    m <- matrix(0, T - TL1, min(T - rg[1], rg[2]+1-rg[1]))
+    for(y in 1:length(x)){ m[y,1:length(x[[y]])]<-x[[y]]}
+    result<-m
+   }
+   else {
+     lx <- sapply(x, length)
+     n <- length(x)
+     lxc <- cumsum(lx)
+     before <- c(0, lxc[-n])
+     after <- lxc[n] - sapply(x, length) - before
+     result <- t(mapply(function(x, y, z) 
+                        c(rep(0, y), x, rep(0, z)), 
+                        x, before, after, SIMPLIFY = TRUE))
     }
-    m <- matrix(0, T - rg[1], T - rg[1])
-    m[lower.tri(m, diag = TRUE)] <- result
-    result <- m
-  }
-  else{
-    z <- as.list((TL1 + 1):T)
-    x <- lapply(z, function(y) x[max(1, y - rg[2]):(y - rg[1])])
-    lx <- sapply(x, length)
-    n <- length(x)
-    lxc <- cumsum(lx)
-    before <- c(0, lxc[-n])
-    after <- lxc[n] - sapply(x, length) - before
-    result <- t(mapply(function(x, y, z)
-                       c(rep(0, y), x, rep(0, z)),
-                       x, before, after, SIMPLIFY = TRUE))
-  }
-  result
+    result
+}
+
+
+makeW2<-function (x, collapse = FALSE){
+  if (collapse) {
+    u<-diff(x[-c(length(x))])
+   }
+   else {
+     u<-diag(diff(x[-c(length(x))]))
+   }
+   u
 }
