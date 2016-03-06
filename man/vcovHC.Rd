@@ -48,7 +48,7 @@ Greene (2003, Sec. 13.7.1-2; 2012, Sec. 11.6.1-2) and Wooldridge (2002), Sec. 10
 allows a fully general structure w.r.t. heteroskedasticity and serial
 (cross-sectional) correlation.
 
-Weighting schemes are analogous to those in \code{vcovHC} in package
+Weighting schemes are analogous to those in \code{\link[sandwich]{vcovHC}} in package
 \code{sandwich} and are justified theoretically (although in the context
 of the standard linear model) by MacKinnon and White (1985) and
 Cribari-Neto (2004) (see Zeileis (2004)).
@@ -64,6 +64,10 @@ and examples below).
 A special procedure for \code{pgmm} objects, proposed by Windmeijer
 (2005), is also provided.
 
+}
+
+\seealso{
+  \code{\link[sandwich]{vcovHC}} from the sandwich package for weighting schemes (\code{type} argument).
 }
 
 \author{Giovanni Millo & Yves Croissant}

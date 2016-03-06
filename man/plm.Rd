@@ -88,10 +88,10 @@ instruments, the model can be estimated with:
   \item \code{formula=y~x1+x2+x3 | .-x1-x2+z1+z2}.
 }
 
-Balestra and Varadharajan--Krishnakumar's or Baltagi's method is used if
+Balestra and Varadharajan-Krishnakumar's or Baltagi's method is used if
 \code{inst.method="bvk"} or if \code{inst.method="baltagi"}, respectively.
   
-The Hausman and Taylor estimator is computed if \code{model = "ht"}.
+The Hausman--Taylor estimator is computed if \code{model = "ht"}.
 }
 
 \value{
@@ -105,9 +105,10 @@ A \code{"plm"} object has the following elements :
 \item{df.residual}{degrees of freedom of the residuals,}
 \item{formula}{an object of class \code{'pFormula'} describing the
   model,}
-\item{model}{a data.frame of class \code{'pdata.frame'} containing the
-  variables used for the estimation: the response is in first column and
-  the two indexes in the two last columns,}
+\item{model}{the model frame as a \code{'pdata.frame'} containing the
+  variables used for estimation: the response is in first column followed
+  by the other variables, the individual and time indexes are in the 'index'
+  attribute of \code{model},}
 \item{ercomp}{an object of class \code{'ercomp'} providing the
  estimation of the components of the errors (for random effects models only),}
 \item{call}{the call.}
@@ -123,7 +124,7 @@ Amemiya, T. (1971) The estimation of the variances in a
 variance--components model, \emph{International Economic Review},
 \bold{12}, pp. 1--13.
 
-Balestra, P. and Varadharajan--Krishnakumar, J. (1987) Full information
+Balestra, P. and Varadharajan-Krishnakumar, J. (1987) Full information
 estimations of a system of simultaneous equations with error components
 structure, \emph{Econometric Theory}, \bold{3}, pp. 223--246.
   
@@ -158,6 +159,25 @@ data("Produc", package = "plm")
 zz <- plm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
           data = Produc, index = c("state","year"))
 summary(zz)
+
+# replicates some results from Baltagi (2013), table 3.1
+data("Grunfeld", package = "plm")
+p <- plm(inv ~ value + capital,
+         data = Grunfeld, model="pooling")
+
+wi <- plm(inv ~ value + capital,
+          data = Grunfeld, model="within", effect = "twoways")
+
+swar <- plm(inv ~ value + capital,
+            data = Grunfeld, model="random", effect = "twoways")
+          
+amemiya <- plm(inv ~ value + capital,
+               data = Grunfeld, model = "random", random.method = "amemiya",
+               effect = "twoways")
+                
+walhus <- plm(inv ~ value + capital,
+              data = Grunfeld, model = "random", random.method = "walhus",
+              effect = "twoways")
 }
 
 \keyword{regression}

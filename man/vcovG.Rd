@@ -31,17 +31,24 @@
 
 \details{
   \code{vcovG} is the generic building block for use by higher-level
-  wrappers vcovHC, vcovSCC, vcovDC and vcovNW.
+  wrappers \code{\link[plm]{vcovHC}}, \code{\link[plm]{vcovSCC}}, \code{\link[plm]{vcovDC}}, and
+  \code{\link[plm]{vcovNW}}.
 The main use of \code{vcovG} is to be used internally by the former, but
-  it is made available in the user space for use in non-standard combinations.
+  it is made available in the user space for use in non--standard combinations. For more documentation, see
+  see wrapper functions mentioned.
 }
 
 \author{Giovanni Millo}
 
+\seealso{
+\code{\link[plm]{vcovHC}}, \code{\link[plm]{vcovSCC}}, \code{\link[plm]{vcovDC}}, \code{\link[plm]{vcovNW}},
+and \code{\link[plm]{vcovBK}} albeit the latter does not make use of vcovG.
+}
+
 \references{
  Millo, G. (2014) Robust standard error estimators for panel models: a
  unifying approach \emph{Unpublished manuscript}.
-  }
+}
 
 \examples{
 data("Produc", package="plm")

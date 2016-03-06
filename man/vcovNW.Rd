@@ -33,21 +33,38 @@ parameters for a panel model according to the Newey and West (1987)
 method. The function works as a restriction of the Driscoll and Kraay
 (1998) covariance to no cross-sectional correlation.
 
-Weighting schemes are analogous to those in \code{vcovHC} in package \code{sandwich} and are justified theoretically (although in the context of the standard linear model) by MacKinnon and White (1985) and Cribari-Neto (2004) (see Zeileis (2004)).
+Weighting schemes are analogous to those in \code{\link[sandwich]{vcovHC}} in package \code{sandwich} and are justified theoretically (although in the context of the standard linear model) by MacKinnon and White (1985) and Cribari-Neto (2004) (see Zeileis (2004)).
 
 The main use of \code{vcovNW} is to be an argument to other functions,
 e.g. for Wald-type testing: as \code{vcov} to \code{coeftest()},
 \code{waldtest()} and other methods in the \code{lmtest} package; and as
-\code{vcov} to \code{linearHypothesis()} in the \code{car} package (see the examples). Notice that the \code{vcov} argument may be supplied a function (which is the safest) or a matrix (see Zeileis (2004), 4.1-2 and examples below).
+\code{vcov} to \code{linearHypothesis()} in the \code{car} package (see the examples).  Notice that the \code{vcov} argument allows to supply a function (which is the safest) or a matrix (see Zeileis (2004), 4.1-2 and examples below).
 
+}
+
+\seealso{
+  \code{\link[sandwich]{vcovHC}} from the sandwich package for weighting schemes (\code{type} argument).
 }
 
 \author{Giovanni Millo}
 
 \references{
+ Cribari-Neto, F. (2004) Asymptotic inference under heteroskedasticity
+ of unknown form. \emph{Computational Statistics & Data Analysis}
+ \bold{45}, pp. 215--233.
+ 
+ MacKinnon, J. G. and  White, H. (1985) Some heteroskedasticity-consistent
+ covariance matrix estimators with improved finite sample properties.
+ \emph{Journal of Econometrics} \bold{29}, pp. 305--325.
+
  Newey, W.K. & West, K.D. (1986) A simple, positive semi-definite, 
  heteroskedasticity and autocorrelation consistent covariance matrix.
  \emph{Econometrica} \bold{55(3)}, pp. 703--708.
+ 
+ Zeileis, A. (2004) Econometric Computing with HC and HAC Covariance Matrix
+ Estimators. \emph{Journal of Statistical Software}, \bold{11}(10), pp. 1--17.
+ URL \url{http://www.jstatsoft.org/v11/i10/}.
+ 
 }
 
 \examples{
