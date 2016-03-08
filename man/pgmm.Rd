@@ -28,7 +28,8 @@ pgmm(formula, data, subset, na.action,
     formula, the first two parts describing the covariates and the gmm
     instruments and, if any, the third part the 'normal' instruments,}
   \item{object,x}{an object of class \code{"pgmm"},}
-  \item{data}{a \code{data.frame},}
+  \item{data}{a \code{data.frame} (neither factors nor character vectors
+    will be accepted in \code{data.frame}),}
   \item{subset}{see \code{\link{lm}},}
   \item{na.action}{see \code{\link{lm}},}
   \item{effect}{the effects introduced in the model, one of
