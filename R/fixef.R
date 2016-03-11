@@ -43,9 +43,9 @@ fixef.plm <- function(object, effect = NULL,
                     apply(Xb[, nw, drop = FALSE],1,function(x) t(x) %*% vcov %*% x))
   }
   fixef <- switch(type,
-                  "level" = fixef,
+                  "level"  = fixef,
                   "dfirst" = fixef[2:length(fixef)] - fixef[1],
-                  "dmean" = fixef - mean(fixef)
+                  "dmean"  = fixef - mean(fixef) # TODO: need weighted.mean here for unbalanced data (at least for individual eff)?
                   )
   structure(fixef, se = sefixef, class = "fixef", type = type)
 }

@@ -32,17 +32,21 @@ width = getOption("width"),...)
 }
 
 \value{
-  An object of class \code{"fixef"}. It is a numeric vector containing the fixed effects with two attributes: \code{se} which contains the standard errors and \code{intercept} which is the overall intercept.
+  An object of class \code{"fixef"}. It is a numeric vector containing the fixed effects with attribute: \code{se} which contains the standard errors. 
+  % TODO: this not true anymore/yet:  "and [attribute] \code{intercept} which is the overall intercept.""
+  
   With the \code{type} argument, the fixed effects may be returned in levels (\code{"level"}), as deviations from the first value of the index (\code{"dfirst"}), or as deviations from the overall mean (\code{"dmean"}).
 }
 
 \details{
-  The summary method prints the fixed effects in deviation from the overall intercept, the standard errors and the t--values.
+  The summary method prints the fixed effects (in the way they were requested with the '\code{type}' argument 
+  (\code{"level"}, \code{"dfirst"}, or \code{"dmean"}), their standard errors and associated t--values and p--values.
 }
 
 \seealso{
-  \code{\link{plm}}
+  \code{\link{within_intercept}} for the overall intercept along its standard error, \code{\link{plm}} for plm objects and within models in general.
 }
+
 
 \author{Yves Croissant}
 
@@ -51,6 +55,12 @@ data("Grunfeld", package = "plm")
 gi <- plm(inv ~ value + capital, data = Grunfeld, model = "within")
 fixef(gi)
 summary(fixef(gi))
+
+# relationshop of type="dmean", "level" and overall intercept
+fx_level <- fixef(gi, type = "level")
+fx_dmean <- fixef(gi, type = "dmean")
+overallint <- within_intercept(gi)
+all.equal(overallint + fx_dmean, fx_level, check.attributes = FALSE) # TRUE
 
 # extract time effects in a twoways effects model
 gi_tw <- plm(inv ~ value + capital, data = Grunfeld,

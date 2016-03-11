@@ -31,6 +31,7 @@ R/ptest.R -text
 R/purtest.R -text
 R/pvcm.R -text
 R/vcovG.R -text
+R/within_intercept.R -text
 /THANKS -text
 data/Cigar.rda -text
 data/Crime.rda -text
@@ -110,6 +111,7 @@ man/vcovG.Rd -text
 man/vcovHC.Rd -text
 man/vcovNW.Rd -text
 man/vcovSCC.Rd -text
+man/within_intercept.Rd -text
 tests/testErrors.R -text
 tests/testErrors.Rout.save -text
 tests/testEvaluation.R -text
