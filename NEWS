@@ -611,4 +611,5 @@ Changes since version 1.5-16
 	* punbalancedness: data frame interface gains 'index' argument.
 	* within_intercept: new function to calculate an overall intercept along its standard error for FE models
 	                a la Stata (and Gretl), currently just for models with effect = "individual".
+	* added help topic on package as a whole (?`plm-package`) for sake of completeness
 	
