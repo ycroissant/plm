@@ -1,3 +1,6 @@
+## see function within_intercept to get overall intercept for FE models, 
+## which is related to the fixef method
+
 fixef.plm <- function(object, effect = NULL,
                       type = c("level", "dfirst", "dmean"), ...){
   model.effect <- describe(object, "effect")

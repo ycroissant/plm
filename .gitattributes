@@ -144,6 +144,7 @@ tests/test_pvar.R -text
 tests/test_pwfdtest_pwartest.R -text
 tests/test_pwtest.R -text
 tests/test_vcovG_lin_dep.R -text
+tests/test_within_intercept.R -text
 tests/testpgmm.R -text
 vignettes/bibliojss.bib -text
 vignettes/plm.rnw -text

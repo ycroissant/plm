@@ -1,27 +1,36 @@
-# Note: within_intercept is related to fixef.plm
-
+# Note: return value of within_intercept is related to return values of fixef.plm, see tests/test_within_intercept.R for how
 
 # TODO: vcov as an argument
-# TODO: time, twoways?
-within_intercept.plm <- function(x, ...) { 
+# TODO: vcov - can only be function? not matrix
+#       check for vcov being a function
+within_intercept.plm <- function(object, .vcov = NULL, ...) { 
   
-  if(!inherits(x, "plm")) stop("input 'x' needs to be a \"within\" model estimated by plm()")
-  model  <- describe(x, what = "model")
-  effect <- describe(x, what = "effect")
-  if(model != "within") stop("input 'x' needs to be a \"within\" model estimated by plm(..., model = \"within\", ...)")
-  if(effect != "individual") stop("currently only for within models with 'effect = \"individual\"'")
-  index <- index(x)
+  if(!inherits(object, "plm")) stop("input 'object' needs to be a \"within\" model estimated by plm()")
+  model  <- describe(object, what = "model")
+  effect <- describe(object, what = "effect")
+  if(model != "within") stop("input 'object' needs to be a \"within\" model estimated by plm(..., model = \"within\", ...)")
   
-  # Transformation needed to get the overall intercept is:
-  # demean groupwise and add back grand mean of each variable
+  # .vcov must be a function, because the model estimated to get the
+  # overall intercept next to its standard errors is different from
+  # the FE model for which the intercept is estimated, e.g. dimensions
+  # of vcov differ for FE and for auxiliary model
+  if (!is.null(.vcov)) {
+    if (is.matrix(.vcov)) stop("for within_intercept, '.vcov' may not be of class 'matrix', it must be supplied as a function, e.g. .vcov = function(x) vcovHC(x)")
+    if (!is.function(.vcov)) stop("for within_intercept, argument '.vcov' must be a function, e.g. .vcov = function(x) vcovHC(x)")
+  }
   
-  withinY <- pmodel.response(x)
-  meanY <- mean(pmodel.response(x, model = "pooling")) # on original data
-  transY <- withinY + meanY
+  index <- attr(object$model, which = "index")
   
-  withinM <- model.matrix(x)
-  M <- model.matrix(x, model = "pooling") # on original data
-  M <- M[, colnames(M) %in% colnames(withinM)]
+  # Transformation to get the overall intercept is:
+  # demean groupwise and add back grand mean of each variable, then run OLS
+  mf      <- model.frame(object)
+  withinY <- pmodel.response(object) # returns the response specific to the 'effect' of the est. FE model object
+  meanY   <- mean(mf[ , 1])          # mean of original data's response
+  transY  <- withinY + meanY
+  
+  withinM <- model.matrix(object) # returns the model.matrix specific to the 'effect' of the est. FE model object
+  M <- model.matrix(pFormula(object$formula), data = mf) # model.matrix of original data
+  M <- M[, colnames(M) %in% colnames(withinM)]           # just to be sure: should be same columns
   meansM <- colMeans(M)
   transM <- t(t(withinM) + meansM)
   
@@ -30,34 +39,42 @@ within_intercept.plm <- function(x, ...) {
     # auxreg <- lm(data)
     # summary(auxreg)
 
-  # estimation by plm()  
+  # estimation by plm() - to apply robust vcov functions if supplied
   data <- pdata.frame(data.frame(cbind(index, transY, transM)), drop.index = TRUE)
   form <- as.formula(paste0(names(data)[1], "~", paste(names(data)[-1], collapse = "+")))
   auxreg <- plm(form, data = data, model = "pooling")
   
-  ## degrees of freedom correction due to FE transformation for vcov [copied over from plm.fit]
-  pdim <- pdim(index)
-  card.fixef <- switch(effect,
-                          "individual" = pdim$nT$n,
-                          "time"       = pdim$nT$T,
-                          "twoways"    = pdim$nT$n + pdim$nT$T - 1
-                          )
-  df <- df.residual(auxreg) - card.fixef  + 1 # just for within_intercept: here we need '+1' to correct for the intercept
-  vcov <- vcov(auxreg)
-  vcov <- vcov * df.residual(auxreg) / df
-  auxreg$vcov <- vcov
-
-  s <- summary(auxreg) # TODO: vcov as an argument
+  ## Two cases:
+  ##  (1) in case of "normal" vcov, we need to adjust the vcov by the corrected degrees of freedom
+  ##  (2) in case of robust vcov, which is supplied by a function, no adjustment to the robust vcov is necessary
+  if (!is.function(.vcov)) {
+    # (1) degrees of freedom correction due to FE transformation for "normal" vcov [copied over from plm.fit]
+    pdim <- pdim(index)
+    card.fixef <- switch(effect,
+                            "individual" = pdim$nT$n,
+                            "time"       = pdim$nT$T,
+                            "twoways"    = pdim$nT$n + pdim$nT$T - 1)
+    
+    df <- df.residual(auxreg) - card.fixef  + 1 # just for within_intercept: here we need '+1' to correct for the intercept
+    vcov_new <- vcov(auxreg)
+    vcov_new <- vcov_new * df.residual(auxreg) / df
+  } else {
+    # (2) robust vcov estimated by function supplied in .vcov
+    vcov_new <- .vcov(auxreg)
+  }
   
-  intercept <- s$coefficients["(Intercept)", 1] # estimate
+  auxreg$vcov <- vcov_new # plug new vcov (adjusted "normal" vcov or robust vcov) in auxiliary model
+  
+  coef_se <- lmtest::coeftest(auxreg)
+  intercept <- coef_se[1,1]
+  attr(intercept, which = "se") <- coef_se[1,2]
   names(intercept) <- "(overall_intercept)"
-  attr(intercept, which = "se") <- s$coefficients["(Intercept)", 2] # standard error as attribute
   
   return(intercept)
 } # END within_intercept.plm
 
 
 # generic
-within_intercept <- function(x, ...) {
+within_intercept <- function(object, ...) {
   UseMethod("within_intercept")
 }
