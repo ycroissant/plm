@@ -3,7 +3,7 @@
 # comparision to literature results
 
 
-# Test data as describes in Baltagi/Song/Jung (2002), p. 488:
+# Test data as described in Baltagi/Song/Jung (2002), p. 488:
 # 5(15) means: 15 individuals, each with 5 observations
 # P1 = 5(15), 9(15)
 # P2 = 5(10), 7(10), 9(10)
@@ -15,9 +15,11 @@
 # results:
 # r = (0.918, 0.841, 0.813, 0.754, 0.519, 0.490).
 
-# P1 = 5(15), 9(15)
+
 
 ##### BEGIN build test panel data #####
+
+# P1 = 5(15), 9(15)
 ind_p1 <- c(
   rep(c(1),  5),
   rep(c(2),  5),
@@ -177,20 +179,17 @@ df_p6 <- data.frame(ind_p6, time_p6)
 
 df_d1 <- data.frame(ind_d1, time_d1)
 df_d4 <- data.frame(ind_d4, time_d4)
-
-
 ##### END build test panel data #####
 
 library(plm)
 # replicate gamma in Baltagi et al. (2002), p. 488
-punbalancedness(df_p1)[1]
-punbalancedness(df_p4)["gamma"]
-punbalancedness(df_p6)[1]
-punbalancedness(df_p6)[1]
+punbalancedness(df_p1)[1]        # 0.918
+punbalancedness(df_p4)["gamma"]  # 0.754
+punbalancedness(df_p6)[1]        # 0.490
 
 # replicate Ahrens/Pincus (1981), p. 234
-punbalancedness(df_d1)
-punbalancedness(df_d4)
+punbalancedness(df_d1) #  no. 1: 0.868 and 0.886
+punbalancedness(df_d4) #  no. 4: 0.642 and 0.726
 
 # for balanced panels, both measures == 1
 data(Grunfeld, package = "plm")

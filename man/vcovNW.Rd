@@ -31,14 +31,15 @@
 \code{vcovNW} is a function for estimating a robust covariance matrix of
 parameters for a panel model according to the Newey and West (1987)
 method. The function works as a restriction of the Driscoll and Kraay
-(1998) covariance to no cross-sectional correlation.
+(1998) covariance to no cross--sectional correlation.
 
 Weighting schemes are analogous to those in \code{\link[sandwich]{vcovHC}} in package \code{sandwich} and are justified theoretically (although in the context of the standard linear model) by MacKinnon and White (1985) and Cribari-Neto (2004) (see Zeileis (2004)).
 
 The main use of \code{vcovNW} is to be an argument to other functions,
-e.g. for Wald-type testing: as \code{vcov} to \code{coeftest()},
-\code{waldtest()} and other methods in the \code{lmtest} package; and as
-\code{vcov} to \code{linearHypothesis()} in the \code{car} package (see the examples).  Notice that the \code{vcov} argument allows to supply a function (which is the safest) or a matrix (see Zeileis (2004), 4.1-2 and examples below).
+e.g. for Wald--type testing: argument \code{vcov.} to \code{coeftest()}, argument \code{vcov} to
+\code{waldtest()} and other methods in the \code{lmtest} package; and argument
+\code{vcov.} to \code{linearHypothesis()} in the \code{car} package (see the examples). Notice that the \code{vcov} and \code{vcov.} arguments allow to 
+supply a function (which is the safest) or a matrix (see Zeileis (2004), 4.1-2 and examples below).
 
 }
 
@@ -75,13 +76,13 @@ zz <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc, model="pooling
 ## standard coefficient significance test
 coeftest(zz)
 ## NW robust significance test, default
-coeftest(zz, vcov=vcovNW)
+coeftest(zz, vcov.=vcovNW)
 ## idem with parameters, pass vcov as a function argument
-coeftest(zz, vcov=function(x) vcovNW(x, type="HC1", maxlag=4))
+coeftest(zz, vcov.=function(x) vcovNW(x, type="HC1", maxlag=4))
 ## joint restriction test
 waldtest(zz, update(zz, .~.-log(emp)-unemp), vcov=vcovNW)
 ## test of hyp.: 2*log(pc)=log(emp)
-linearHypothesis(zz, "2*log(pc)=log(emp)", vcov=vcovNW)
+linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovNW)
 }
 \keyword{regression}
 

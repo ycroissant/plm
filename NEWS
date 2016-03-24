@@ -608,6 +608,11 @@ Changes since version 1.5-16
 	* lag/lead: fixed bug with dropped factor levels, added testfile tests/test_lag_lead_factor_levels.R.
 	* is.pconsecutive: * new function to check if time periods are consecutive per individual,
 	                   * better NA handling, added argument rm.na.tindex.
+	* pgmm: fixed bugs affecting the instrument matrix in the following cases:
+	        * gmm instruments are collapsed and restricted in lag length;
+			* first lags are used as gmm instruments;
+			* gmm instruments are collapsed in system GMM;
+			* gmm instruments are restricted in lag length in system GMM.
 	* punbalancedness: data frame interface gains 'index' argument.
 	* within_intercept: new function to calculate an overall intercept along its standard error for FE models
 	                a la Stata (and Gretl), accepts argument '.vcov' for user defined vcov

@@ -68,7 +68,7 @@ man/detect_lin_dep.Rd -text
 man/dynformula.Rd -text
 man/ercomp.Rd -text
 man/fixef.plm.Rd -text
-man/index.plm.Rd -text
+man/index.Rd -text
 man/is.pconsecutive.Rd -text
 man/lag_lead_diff.Rd -text
 man/model.frame_model.matrix.Rd -text

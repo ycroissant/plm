@@ -4,7 +4,8 @@
 
 \title{Beck and Katz Robust Covariance Matrix Estimators}
 \description{
-  Unconditional Robust covariance matrix estimators \emph{a la Beck and Katz} for panel models.
+  Unconditional Robust covariance matrix estimators \emph{a la Beck and Katz} for panel models 
+  (a.k.a. Panel Corrected Standard Errors (PCSE)).
 }
 \usage{
 \method{vcovBK}{plm}(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
@@ -41,16 +42,16 @@ asymptotics and will not be appropriate elsewhere.
 
 The \code{diagonal} logical argument can be used, if set to \code{TRUE},
 to force to zero all nondiagonal elements in the estimated error
-covariances; this is appropriate if both serial and cross-sectional correlation
-are assumed out, and yields a timewise- (groupwise-) heteroskedasticity-consistent
+covariances; this is appropriate if both serial and cross--sectional correlation
+are assumed out, and yields a timewise- (groupwise-) heteroskedasticity--consistent
 estimator.
 
 Weighting schemes are analogous to those in \code{\link[sandwich]{vcovHC}} in package \code{sandwich} and are justified theoretically (although in the context of the standard linear model) by MacKinnon and White (1985) and Cribari-Neto (2004) (see Zeileis (2004)).
 
 The main use of \code{vcovBK} is to be an argument to other functions,
-e.g. for Wald-type testing: as \code{vcov} to \code{coeftest()},
-\code{waldtest()} and other methods in the \code{lmtest} package; and as
-\code{vcov} to \code{linearHypothesis()} in the \code{car} package (see the examples). Notice that the \code{vcov} argument allows to supply a function (which is the safest) or a matrix (see Zeileis (2004), 4.1-2 and examples below).
+e.g. for Wald--type testing: argument \code{vcov.} to \code{coeftest()}, argument \code{vcov} to
+\code{waldtest()} and other methods in the \code{lmtest} package; and argument
+\code{vcov.} to \code{linearHypothesis()} in the \code{car} package (see the examples). Notice that the \code{vcov} and \code{vcov.} arguments allow to supply a function (which is the safest) or a matrix (see Zeileis (2004), 4.1-2 and examples below).
 
 }
 
@@ -90,19 +91,19 @@ zz <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc, model="random"
 coeftest(zz)
 ## robust significance test, cluster by group
 ## (robust vs. serial correlation), default arguments
-coeftest(zz, vcov=vcovBK)
+coeftest(zz, vcov.=vcovBK)
 ## idem with parameters, pass vcov as a function argument
-coeftest(zz, vcov=function(x) vcovBK(x, type="HC1"))
+coeftest(zz, vcov.=function(x) vcovBK(x, type="HC1"))
 ## idem, cluster by time period
 ## (robust vs. cross-sectional correlation)
-coeftest(zz, vcov=function(x) vcovBK(x,
+coeftest(zz, vcov.=function(x) vcovBK(x,
  type="HC1", cluster="time"))
 ## idem with parameters, pass vcov as a matrix argument
-coeftest(zz, vcov=vcovBK(zz, type="HC1"))
+coeftest(zz, vcov.=vcovBK(zz, type="HC1"))
 ## joint restriction test
 waldtest(zz, update(zz, .~.-log(emp)-unemp), vcov=vcovBK)
 ## test of hyp.: 2*log(pc)=log(emp)
-linearHypothesis(zz, "2*log(pc)=log(emp)", vcov=vcovBK)
+linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovBK)
 }
 \keyword{regression}
 

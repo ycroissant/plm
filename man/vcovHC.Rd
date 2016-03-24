@@ -41,12 +41,12 @@ All types assume no intragroup (serial) correlation between errors and
 allow for heteroskedasticity across groups (time periods). As for the
 error covariance matrix of every single group of observations,
 \code{"white1"} allows for general heteroskedasticity but no serial
-(cross-sectional) correlation; \code{"white2"} is \code{"white1"}
+(cross--sectional) correlation; \code{"white2"} is \code{"white1"}
 restricted to a common variance inside every group (time period) (see
 Greene (2003, Sec. 13.7.1-2; 2012, Sec. 11.6.1-2) and Wooldridge (2002), Sec. 10.7.2);
 \code{"arellano"} (see ibid. and the original ref. Arellano (1987))
 allows a fully general structure w.r.t. heteroskedasticity and serial
-(cross-sectional) correlation.
+(cross--sectional) correlation.
 
 Weighting schemes are analogous to those in \code{\link[sandwich]{vcovHC}} in package
 \code{sandwich} and are justified theoretically (although in the context
@@ -54,10 +54,10 @@ of the standard linear model) by MacKinnon and White (1985) and
 Cribari-Neto (2004) (see Zeileis (2004)).
 
 The main use of \code{vcovHC} is to be an argument to other functions,
-e.g. for Wald-type testing: as \code{vcov} to \code{coeftest()},
-\code{waldtest()} and other methods in the \code{lmtest} package; and as
-\code{vcov} to \code{linearHypothesis()} in the \code{car} package (see
-the examples). Notice that the \code{vcov} argument allows to supply a
+e.g. for Wald--type testing: argument \code{vcov.} to \code{coeftest()}, argument \code{vcov} to
+\code{waldtest()} and other methods in the \code{lmtest} package; and argument
+\code{vcov.} to \code{linearHypothesis()} in the \code{car} package (see
+the examples). Notice that the \code{vcov} and \code{vcov.} arguments allow to supply a
 function (which is the safest) or a matrix (see Zeileis (2004), 4.1-2
 and examples below).
 
@@ -105,7 +105,6 @@ Panel Data}, MIT Press, Cambridge (MA).
 Zeileis, A. (2004) Econometric Computing with HC and HAC Covariance Matrix
 Estimators. \emph{Journal of Statistical Software}, \bold{11}(10), pp. 1--17.
 URL \url{http://www.jstatsoft.org/v11/i10/}.
-
 }
 
 \examples{
@@ -118,19 +117,19 @@ zz <- plm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
 coeftest(zz)
 ## robust significance test, cluster by group
 ## (robust vs. serial correlation)
-coeftest(zz, vcov=vcovHC)
+coeftest(zz, vcov.=vcovHC)
 ## idem with parameters, pass vcov as a function argument
-coeftest(zz, vcov=function(x) vcovHC(x, method="arellano", type="HC1"))
+coeftest(zz, vcov.=function(x) vcovHC(x, method="arellano", type="HC1"))
 ## idem, cluster by time period
 ## (robust vs. cross-sectional correlation)
-coeftest(zz, vcov=function(x) vcovHC(x, method="arellano",
+coeftest(zz, vcov.=function(x) vcovHC(x, method="arellano",
  type="HC1", cluster="group"))
 ## idem with parameters, pass vcov as a matrix argument
-coeftest(zz, vcov=vcovHC(zz, method="arellano", type="HC1"))
+coeftest(zz, vcov.=vcovHC(zz, method="arellano", type="HC1"))
 ## joint restriction test
 waldtest(zz, update(zz, .~.-log(emp)-unemp), vcov=vcovHC)
 ## test of hyp.: 2*log(pc)=log(emp)
-linearHypothesis(zz, "2*log(pc)=log(emp)", vcov=vcovHC)
+linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovHC)
 
 ## Robust inference for GMM models
 data("EmplUK", package="plm")

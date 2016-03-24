@@ -1,4 +1,4 @@
-\name{index.plm}
+\name{index}
 \alias{index}
 \alias{index.pdata.frame}
 \alias{index.pindex}

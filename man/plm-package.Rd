@@ -19,10 +19,13 @@ plm provides functions to estimate a wide variety of models and to make (robust)
     \code{pgmm} \tab generalized method of moments (GMM) estimation for panel data,
   }
   \tabular{ll}{
-    \code{pvcm} \tab variable coefficients models for panel data.
+    \code{pvcm} \tab variable coefficients models for panel data,
+  }
+  \tabular{ll}{
+    \code{pmg} \tab mean groups (MG), demeaned MG and common correlated effects (CCEMG) estimators.
   }
 
-  Next to the model estimation function, the package offers several functions for statistical tests related to panel data/models.
+  Next to the model estimation functions, the package offers several functions for statistical tests related to panel data/models.
   
   Multiple functions for (robust) variance--covariance matrices are at hand as well.
 

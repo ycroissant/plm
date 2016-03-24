@@ -30,7 +30,7 @@
 }
 
 \details{
-  \code{vcovG} is the generic building block for use by higher-level
+  \code{vcovG} is the generic building block for use by higher--level
   wrappers \code{\link[plm]{vcovHC}}, \code{\link[plm]{vcovSCC}}, \code{\link[plm]{vcovDC}}, and
   \code{\link[plm]{vcovNW}}.
 The main use of \code{vcovG} is to be used internally by the former, but
@@ -62,7 +62,7 @@ library(lmtest)
 ## (in this example, same as vcovHC)
 myvcov <- function(x) vcovG(x, cluster="group", inner="cluster", l=0)
 ## robust significance test
-coeftest(zz, vcov=myvcov)
+coeftest(zz, vcov.=myvcov)
 }
 \keyword{regression}
 
