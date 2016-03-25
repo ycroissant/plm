@@ -50,7 +50,7 @@ plm(formula, data, subset, na.action, effect = c("individual", "time", "twoways"
     the coefficients,}
   \item{restrict.rhs}{the right hand side vector of the linear
     restrictions on the coefficients,}
-  \item{.vcov}{a covariance matrix furnished by the user,}
+  \item{.vcov}{a variance--covariance matrix furnished by the user or a function to calculate one (see examples),}
   \item{digits}{number of digits for printed output,}
   \item{width}{the maximum length of the lines in the printed output,}
   \item{dx}{the half--length of the individual lines for the plot
@@ -114,6 +114,10 @@ A \code{"plm"} object has the following elements :
 \item{call}{the call.}
    
 It has \code{print}, \code{summary} and \code{print.summary} methods.
+The \code{summary} methods creates an object of class \code{"summary.plm"} that 
+extends the object it is run on with information about (inter alia) F statistic 
+and (adjusted) R-squared of model, standard errors, t--values, and p--values of 
+coefficients, (if supplied) the furnished vcov.
 }
 
 \author{Yves Croissant}
@@ -178,6 +182,13 @@ amemiya <- plm(inv ~ value + capital,
 walhus <- plm(inv ~ value + capital,
               data = Grunfeld, model = "random", random.method = "walhus",
               effect = "twoways")
+
+# summary with a funished vcov
+mat <- vcovHC(wi)
+summary(wi, .vcov = mat) # directly as a matrix
+summary(wi, .vcov = vcovHC) # via function
+summary(wi, .vcov = function(x) vcovHC(x, method="white2")) # via function with add. args
+
 }
 
 \keyword{regression}

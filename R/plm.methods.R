@@ -1,24 +1,37 @@
+
+# summary.plm creates a specific summary.plm object that is derived from the associated plm object
 summary.plm <- function(object, .vcov = NULL, ...){
-  object$fstatistic <- Ftest(object, test = "F")
+  object$fstatistic <- Ftest(object, test = "F") # TODO: robust F test
   model <- describe(object, "model")
   effect <- describe(object, "effect")
   object$r.squared <- c(rsq  = r.squared(object),
                         adjrsq = r.squared(object, dfcor = TRUE))
   # construct the table of coefficients
-  if (!is.null(.vcov)){
-    std.err <- sqrt(diag(.vcov))
+  if (!is.null(.vcov)) {
+    if (is.matrix(.vcov))   rvcov <- .vcov
+    if (is.function(.vcov)) rvcov <- .vcov(object)
+    std.err <- sqrt(diag(rvcov))
   }
-  else{
+  else {
     std.err <- sqrt(diag(vcov(object)))
   }
   b <- coefficients(object)
   z <- b / std.err
   p <- 2 * pt(abs(z), df = object$df.residual, lower.tail = FALSE)
-  object$coefficients <- cbind("Estimate"   = b,
-                               "Std. Error" = std.err,
-                               "t-value"    = z,
-                               "Pr(>|t|)"   = p)
-  class(object) <- c("summary.plm", "plm", "panelmodel")
+  
+  # construct the object of class summary.plm
+    object$coefficients <- cbind("Estimate"   = b,
+                                 "Std. Error" = std.err,
+                                 "t-value"    = z,
+                                 "Pr(>|t|)"   = p)
+  
+    if (!is.null(.vcov)) {
+      # put the robust vcov in summary.plm object (next to "normal" vcov)
+      # if available, put robust vcov function name in summary.plm object
+      object$rvcov <- rvcov 
+      if (is.function(.vcov)) object$rvcov.name <- paste0(deparse(substitute(.vcov))) 
+    }
+    class(object) <- c("summary.plm", "plm", "panelmodel")
   object
 }
 
@@ -41,6 +54,7 @@ print.summary.plm <- function(x,digits= max(3, getOption("digits") - 2),
   else{
     cat("\n")
   }
+  
   if (has.instruments){
     ivar <- describe(x, "inst.method")
     cat(paste("Instrumental variable estimation\n   (",
@@ -48,6 +62,13 @@ print.summary.plm <- function(x,digits= max(3, getOption("digits") - 2),
               "'s transformation)\n",
               sep=""))
   }
+  
+  if (!is.null(x$rvcov)) {
+    cat("Funished variance-covariance matrix used")
+    if (!is.null(x$rvcov.name)) {cat(": ", x$rvcov.name, sep="")}
+    cat("\n")
+  }
+  
   cat("\nCall:\n")
   print(x$call)
   cat("\n")
@@ -66,10 +87,10 @@ print.summary.plm <- function(x,digits= max(3, getOption("digits") - 2),
   if (is.null(subset)) printCoefmat(coef(x), digits = digits)
   else printCoefmat(coef(x)[subset, , drop = FALSE], digits = digits)
   cat("\n")
-  cat(paste("Total Sum of Squares:    ", signif(tss(x), digits),     "\n", sep = ""))
-  cat(paste("Residual Sum of Squares: ", signif(deviance(x), digits),"\n", sep = ""))
-  cat(paste("R-Squared:      ", signif(x$r.squared[1], digits),     "\n", sep = ""))
-  cat(paste("Adj. R-Squared: ", signif(x$r.squared[2], digits),     "\n", sep = ""))
+  cat(paste("Total Sum of Squares:    ", signif(tss(x),      digits), "\n", sep = ""))
+  cat(paste("Residual Sum of Squares: ", signif(deviance(x), digits), "\n", sep = ""))
+  cat(paste("R-Squared:      ", signif(x$r.squared[1], digits),       "\n", sep = ""))
+  cat(paste("Adj. R-Squared: ", signif(x$r.squared[2], digits),       "\n", sep = ""))
   fstat <- x$fstatistic
   if (names(fstat$statistic) == "F"){
     cat(paste("F-statistic: ",signif(fstat$statistic),
