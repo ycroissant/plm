@@ -609,7 +609,7 @@ Changes since version 1.5-16
 	* is.pconsecutive: * new function to check if time periods are consecutive per individual,
 	                   * better NA handling, added argument rm.na.tindex.
 	* pgmm: fixed bugs affecting the instrument matrix in the following cases:
-	      * gmm instruments are collapsed and restricted in lag length;
+			  * gmm instruments are collapsed and restricted in lag length;
 			  * first lags are used as gmm instruments;
 			  * gmm instruments are collapsed in system GMM;
 			  * gmm instruments are restricted in lag length in system GMM.
@@ -617,7 +617,7 @@ Changes since version 1.5-16
 	* within_intercept: new function to calculate an overall intercept along its standard error for FE models
 	                a la Stata (and Gretl), accepts argument '.vcov' for user defined vcov
 	* added help topic on package as a whole (?`plm-package`) for sake of completeness
-	* summary.plm: * argument '.vcov' can also be a function (next to matrix)
+	* summary.plm: * argument '.vcov' can also be a function (before, only only matrix was possible)
 	               * internal: the furnished vcov is saved in the summary.plm object in object$rvcov
-	                           (vcov function name in object$rvcov.name)
+	                           (vcov function name in attr(object$rvcov, which="rvcov.name")
 	

@@ -27,9 +27,8 @@ summary.plm <- function(object, .vcov = NULL, ...){
   
     if (!is.null(.vcov)) {
       # put the robust vcov in summary.plm object (next to "normal" vcov)
-      # if available, put robust vcov function name in summary.plm object
-      object$rvcov <- rvcov 
-      if (is.function(.vcov)) object$rvcov.name <- paste0(deparse(substitute(.vcov))) 
+      object$rvcov <- rvcov
+      attr(object$rvcov, which = "rvcov.name") <- paste0(deparse(substitute(.vcov)))
     }
     class(object) <- c("summary.plm", "plm", "panelmodel")
   object
@@ -64,9 +63,7 @@ print.summary.plm <- function(x,digits= max(3, getOption("digits") - 2),
   }
   
   if (!is.null(x$rvcov)) {
-    cat("Funished variance-covariance matrix used")
-    if (!is.null(x$rvcov.name)) {cat(": ", x$rvcov.name, sep="")}
-    cat("\n")
+    cat("\nFurnished variance-covariance matrix used: ", attr(x$rvcov, which = "rvcov.name"), "\n", sep = "")
   }
   
   cat("\nCall:\n")

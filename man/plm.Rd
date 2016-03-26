@@ -100,7 +100,7 @@ An object of class \code{c("plm","panelmodel")}.
 A \code{"plm"} object has the following elements :
   
 \item{coefficients}{the vector of coefficients,}
-\item{vcov}{the covariance matrix of the coefficients,}
+\item{vcov}{the variance--covariance matrix of the coefficients,}
 \item{residuals}{the vector of residuals,}
 \item{df.residual}{degrees of freedom of the residuals,}
 \item{formula}{an object of class \code{'pFormula'} describing the
@@ -183,11 +183,11 @@ walhus <- plm(inv ~ value + capital,
               data = Grunfeld, model = "random", random.method = "walhus",
               effect = "twoways")
 
-# summary with a funished vcov
-mat <- vcovHC(wi)
-summary(wi, .vcov = mat) # directly as a matrix
-summary(wi, .vcov = vcovHC) # via function
-summary(wi, .vcov = function(x) vcovHC(x, method="white2")) # via function with add. args
+# summary with a funished vcov, passed as matrix, as function, and
+# as function with additional argument
+summary(wi, .vcov = vcovHC(wi))
+summary(wi, .vcov = vcovHC)
+summary(wi, .vcov = function(x) vcovHC(x, method="white2"))
 
 }
 
