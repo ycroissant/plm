@@ -311,12 +311,12 @@ pFtest.formula <- function(x, data, ...){
   plm.pooling <- update(plm.within, model = "pooling")
   pFtest(plm.within, plm.pooling, ...)
 }
-  
+
 pFtest.plm <- function(x, z, ...){
   within <- x
   pooling <- z
   if (! (describe(x, "model") == "within" && describe(z, "model") == "pooling"))
-   stop("the two arguments should be a 'within' and a 'pooling' model (in this order")
+   stop("the two arguments should be a 'within' and a 'pooling' model (in this order)")
   
   effect <- describe(x, "effect")
   df1 <- df.residual(pooling)-df.residual(within)
@@ -340,7 +340,23 @@ pFtest.plm <- function(x, z, ...){
 }
 
 ############## Ftest() ############################################
-Ftest <- function(x, test = c("Chisq", "F"), ...){
+# Ftest is used in summary.plm to compute the F statistic
+#
+# NB: How does this function relate to function plm:::waldtest?
+#     Ftest(x, test = "Chisq") seems to accomplish the same as waldtest?
+#
+# If argument '.vcov' is supplied, the robust tests are carried out
+# robust F test has a finite-sample adjustment
+# 
+# References for robust tests:
+# * Wooldridge (2010), Econometric Analysis of Cross Section and Panel Data
+#     Sec. 4.2.3 (p. 60), eq. (4.13)
+#
+# * finite-sample adjustment for degrees of freedom in F test:
+#   Sec. VII in Cameron/Miller, "A Practitioner's Guide to Cluster-Robust Inference",
+#                 Journal of Human Resources, Spring 2015, Vol. 50, No. 2, pp. 317-373.
+# * Stata doc: http://www.stata.com/manuals14/p_robust.pdf
+Ftest <- function(x, test = c("Chisq", "F"), .vcov = NULL, .df1, .df2, ...){
   model <- describe(x, "model")
   test <- match.arg(test)
   df1 <- ifelse(model == "within",
@@ -349,28 +365,104 @@ Ftest <- function(x, test = c("Chisq", "F"), ...){
   df2 <- df.residual(x)
   tss <- tss(x)
   ssr <- deviance(x)
-  if (test == "Chisq"){
-    stat <- (tss-ssr)/(ssr/df2)
-    names(stat) <- "Chisq"
-    pval <- pchisq(stat,df1,lower.tail=FALSE)
-    parameter <- c(df = df1)
-    method = "Wald test"
+
+  # if robust test: prepare robust vcov and do finite-sample adjustment for df2
+  if (!is.null(.vcov)) {
+    if (is.matrix(.vcov))   rvcov <- rvcov_orig <- .vcov
+    if (is.function(.vcov)) rvcov <- rvcov_orig <- .vcov(x)
+    
+    coefs <- coef(x)
+    int <- "(Intercept)"
+    if (int %in% names(coef(x))) { # drop intercept, if present
+      coefs <- coef(x)[!(names(coef(x)) %in% int)]
+      rvcov <- rvcov_orig[!rownames(rvcov_orig) %in% int, !colnames(rvcov_orig) %in% int]
+    }
+    
+    # determine the variable that the clustering is done on by
+    # attribute "cluster" in the vcov (matrix object)
+    if (!is.null(attr(rvcov, which = "cluster"))) {
+      cluster <- attr(rvcov, which = "cluster")
+      df2 <- switch(cluster,
+                      group = as.integer(pdim(x)$nT$n - 1),
+                      time  = as.integer(pdim(x)$nT$T - 1))
+
+    } else {
+      # no (or no implemented) cluster information found, assume cluster = "group"
+      # or fall-back to non robust statistics (set .vcov <- NULL)?
+      # TODO: what about double clustering? vcovDC?
+      warning("no information 'cluster' found in robust vcov or no implemented clustering, assuming cluster = \"group\"")
+      df2 <- as.integer(pdim(x)$nT$n - 1)
+    }
   }
-  else{
-    stat <- (tss-ssr)/ssr*df2/df1
-    names(stat) <- "F"
-    pval <- pf(stat,df1,df2,lower.tail=FALSE)
-    parameter <- c(df1 = df1, df2 = df2)
-    method = "F test"
+  
+  # overwrite Dfs if especially supplied
+  if (!missing(.df1)) df1 <- .df1
+  if (!missing(.df2)) df2 <- .df2
+  
+  if (test == "Chisq"){
+    # perform "normal" chisq test
+    if (is.null(.vcov)) {
+      stat <- (tss-ssr)/(ssr/df2)
+      names(stat) <- "Chisq"
+      pval <- pchisq(stat, df = df1, lower.tail = FALSE)
+      parameter <- c(df = df1)
+      method <- "Wald test"
+    } else {
+      # perform robust chisq test
+
+        # Old/alternative:
+        # use package car for statistic:
+        # Note: has.intercept() returns TRUE for FE models, so do not use it here...
+        # return_car_lH <- car::linearHypothesis(x,
+        #                                        names(coef(x))[if ("(Intercept)" %in% names(coef(x))) -1 else TRUE],
+        #                                        test="Chisq",
+        #                                        vcov. = rvcov_orig)
+        # stat_car <- return_car_lH[["Chisq"]][2] # extract statistic
+      
+      stat <- crossprod(solve(rvcov, coefs), coefs)
+      names(stat) <- "Chisq"
+      pval <- pchisq(stat, df = df1, lower.tail = FALSE) # TODO: check: need to adjust df1 for clustering? Look at Cameron's examples
+                                                         #     looking at output of felm's waldtest: no adjustment for robust chisq test
+      parameter <- c(df = df1)
+      method <- "robust Wald test"
+    }
+  }
+  if (test == "F"){ 
+    if (is.null(.vcov)) {
+      # perform "normal" F test
+      stat <- (tss-ssr)/ssr*df2/df1
+      names(stat) <- "F"
+      pval <- pf(stat, df1 = df1, df2 = df2, lower.tail = FALSE)
+      parameter <- c(df1 = df1, df2 = df2)
+      method <- "F test"
+    } else {
+      # perform robust F test
+      
+        # Old/alternative:
+        # use package car for statistic:
+        # Note: has.intercept() returns TRUE for FE models, so do not use it here...
+        # Note: car::linearHypothesis does not adjust df2 for clustering
+        # return_car_lH <- car::linearHypothesis(x,
+        #                                        names(coef(x))[if ("(Intercept)" %in% names(coef(x))) -1 else TRUE],
+        #                                        test="F",
+        #                                        vcov. = rvcov_orig)
+        # stat_car <- return_car_lH[["F"]][2] # extract statistic
+
+      stat <- crossprod(solve(rvcov, coefs), coefs) / df1
+      names(stat) <- "F"
+      pval <- pf(stat, df1 = df1, df2 = df2, lower.tail = FALSE)
+      parameter <- c(df1 = df1, df2 = df2) # Dfs
+      method  <- "robust F test"
+    }
   }
   res <- list(data.name = data.name(x),
               statistic = stat,
               parameter = parameter,
-              p.value = pval,
-              method = method
+              p.value   = pval,
+              method    = method
               )
   class(res) <- "htest"
-  res
+  return(res)
 }
 
 ############## pooltest() ############################################
@@ -417,7 +509,10 @@ pooltest.plm <- function(x, z, ...){
 }
 
 ############## pwaldtest() ############################################
-
+# NB: Is pwaldtest still in use? There is also Ftest which seems to
+#     accomplish the same (and more)
+#
+#
 pwaldtest <- function(x, ...){
   pdim <- attr(x,"pdim")
   df <- switch(x$model.name,

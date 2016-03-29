@@ -119,6 +119,7 @@ tests/testEvaluation.R -text
 tests/testEvaluation.Rout.save -text
 tests/test_Chow.R -text
 tests/test_Estimators.R -text
+tests/test_Ftest.R -text
 tests/test_R2_adj_R2.R -text
 tests/test_as.data.frame_as.matrix.R -text
 tests/test_detect_lin_dep.R -text
