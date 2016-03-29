@@ -1,7 +1,7 @@
 
 # summary.plm creates a specific summary.plm object that is derived from the associated plm object
 summary.plm <- function(object, .vcov = NULL, ...){
-  object$fstatistic <- Ftest(object, test = "F") # TODO: robust F test
+  object$fstatistic <- Ftest(object, test = "F") # TODO: "activate" robust F test by: Ftest(object, test = "F", .vcov = .vcov)
   model <- describe(object, "model")
   effect <- describe(object, "effect")
   object$r.squared <- c(rsq  = r.squared(object),
@@ -24,7 +24,6 @@ summary.plm <- function(object, .vcov = NULL, ...){
                                  "Std. Error" = std.err,
                                  "t-value"    = z,
                                  "Pr(>|t|)"   = p)
-  
     if (!is.null(.vcov)) {
       # put the robust vcov in summary.plm object (next to "normal" vcov)
       object$rvcov <- rvcov
@@ -63,7 +62,7 @@ print.summary.plm <- function(x,digits= max(3, getOption("digits") - 2),
   }
   
   if (!is.null(x$rvcov)) {
-    cat("\nFurnished variance-covariance matrix used: ", attr(x$rvcov, which = "rvcov.name"), "\n", sep = "")
+    cat("\nNote: Coefficient variance-covariance matrix supplied: ", attr(x$rvcov, which = "rvcov.name"), "\n", sep = "")
   }
   
   cat("\nCall:\n")

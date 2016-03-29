@@ -82,7 +82,8 @@ vcovG.plm <-function(x,type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
                             HC3 = {diaghat<-try(dhat(demX), silent = TRUE)},
                             HC4 = {diaghat<-try(dhat(demX), silent = TRUE)})
     df <- nT - k
-    switch(match.arg(type), HC0 = {
+    switch(match.arg(type), 
+           HC0 = {
             omega <- function(residuals, diaghat, df, g) residuals
         }, sss = {
             omega <- function(residuals, diaghat, df, g) residuals *
@@ -199,17 +200,17 @@ vcovG.plm <-function(x,type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
      }
 
   ## set grouping indexes
-    switch(match.arg(cluster), group = {
-           n <- n0
-           t <- t0
-           relevant.ind <- groupind
-           lab <- timeind
-         }, time = {
-           n <- t0
-           t <- n0
-           relevant.ind <- timeind
-           lab <- groupind
-         })
+    switch(match.arg(cluster),
+            group = {
+              n <- n0
+              t <- t0
+              relevant.ind <- groupind
+              lab <- timeind}, 
+            time = {
+              n <- t0
+              t <- n0
+              relevant.ind <- timeind
+              lab <- groupind})
     tind <- vector("list", n)
     tlab <- vector("list", n)
     for (i in 1:length(unique(relevant.ind))) {
@@ -278,6 +279,8 @@ vcovG.plm <-function(x,type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
     ## sandwich
     mycov <- pane %*% salame %*% pane
     
+    # save information about cluster variable in matrix (needed for e.g. robust Ftest)
+    attr(mycov, which = "cluster") <- match.arg(cluster)
     return(mycov)
 }
 
@@ -323,7 +326,11 @@ vcovDC.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
                         l=0, inner="cluster", ...)
     Vw <- vcovG(x, type=type, l=0, inner="white", ...)
 
-    return(Vcx + Vct -Vw)
+    res <- Vcx + Vct - Vw
+    
+    # save information about cluster variable in matrix (needed for e.g. robust Ftest)
+    attr(res, which = "cluster") <- "group-time"
+    return(res)
 }
 
 vcovSCC.plm <- function(x,type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
@@ -451,17 +458,18 @@ vcovBK.plm <-function(x,type=c("HC0", "HC1", "HC2", "HC3", "HC4"),
      }
 
   ## set grouping indexes
-    switch(match.arg(cluster), group = {
-           n <- n0 # this is needed only for 'pcse'
-           t <- t0 # this is needed only for 'pcse'
-           relevant.ind <- groupind
-           lab <- timeind
-         }, time = {
-           n <- t0 # this is needed only for 'pcse'
-           t <- n0 # this is needed only for 'pcse'
-           relevant.ind <- timeind
-           lab <- groupind
-         })
+    switch(match.arg(cluster),
+            group = {
+              n <- n0 # this is needed only for 'pcse'
+              t <- t0 # this is needed only for 'pcse'
+              relevant.ind <- groupind
+              lab <- timeind },
+            time = {
+              n <- t0 # this is needed only for 'pcse'
+              t <- n0 # this is needed only for 'pcse'
+              relevant.ind <- timeind
+              lab <- groupind
+            })
     tind <- vector("list", n)
     tlab <- vector("list", n)
     for (i in 1:length(unique(relevant.ind))) {
@@ -566,6 +574,9 @@ vcovBK.plm <-function(x,type=c("HC0", "HC1", "HC2", "HC3", "HC4"),
 
   ## sandwich
   mycov <- pane %*% salame %*% pane
+  
+  # save information about cluster variable in matrix (needed for e.g. robust Ftest)
+  attr(mycov, which = "cluster") <- match.arg(cluster)
   return(mycov)
 }
 

@@ -1,4 +1,6 @@
 #### Testfile for Ftest()
+#
+# see also tests/test_Ftest_vcovG_attr_cluster.R for the attribute 'cluster' of the furnished vcovs
 options(scipen = 999)
 options(digits = 8)
 library(plm)
@@ -10,29 +12,36 @@ gt <- plm(inv ~ value + capital, data = Grunfeld,
           effect = "time", model = "within")
 gd <- plm(inv ~ value + capital, data = Grunfeld,
           effect = "twoways", model = "within")
+gre<- plm(inv ~ value + capital, data = Grunfeld,
+          effect = "individual", model = "random")
+
 # Chisq
 plm:::Ftest(gp, test = "Chisq")
 plm:::Ftest(gi, test = "Chisq")
 plm:::Ftest(gt, test = "Chisq")
 plm:::Ftest(gd, test = "Chisq")
+plm:::Ftest(gre, test = "Chisq")
 
 # F
 plm:::Ftest(gp, test = "F")
 plm:::Ftest(gi, test = "F")
 plm:::Ftest(gt, test = "F")
 plm:::Ftest(gd, test = "F")
+plm:::Ftest(gre, test = "F")
 
 # Chisq - robust - formula
 plm:::Ftest(gp, test = "Chisq", .vcov = vcovHC)
 plm:::Ftest(gi, test = "Chisq", .vcov = vcovHC)
 plm:::Ftest(gt, test = "Chisq", .vcov = vcovHC)
 plm:::Ftest(gd, test = "Chisq", .vcov = vcovHC)
+plm:::Ftest(gre, test = "Chisq", .vcov = vcovHC)
 
 # Chisq - robust - matrix
 plm:::Ftest(gp, test = "Chisq", .vcov = vcovHC(gp))
 plm:::Ftest(gi, test = "Chisq", .vcov = vcovHC(gi))
 plm:::Ftest(gt, test = "Chisq", .vcov = vcovHC(gt))
 plm:::Ftest(gd, test = "Chisq", .vcov = vcovHC(gd))
+plm:::Ftest(gre, test = "Chisq", .vcov = vcovHC(gre))
 
 # F - robust - formula
 plm:::Ftest(gp, test = "F", .vcov = vcovHC) # replicates Gretl: F(2, 9)=57.90485
@@ -40,6 +49,7 @@ plm:::Ftest(gi, test = "F", .vcov = vcovHC) # replicates Gretl: F(2, 9)=31.7744
 plm:::Ftest(gi, test = "F", .vcov = function(x) vcovHC(x, cluster = "time")) # cluster on time, df2 = 19
 plm:::Ftest(gt, test = "F", .vcov = vcovHC)
 plm:::Ftest(gd, test = "F", .vcov = vcovHC) # replicates Gretl: F(2, 9)=74.6338
+plm:::Ftest(gre, test = "F", .vcov = vcovHC)
 
 # F - robust - matrix
 plm:::Ftest(gp, test = "F", .vcov = vcovHC(gp)) # replicates Gretl: F(2, 9)=57.90485
@@ -47,8 +57,7 @@ plm:::Ftest(gi, test = "F", .vcov = vcovHC(gi)) # replicates Gretl: F(2, 9)=31.7
 plm:::Ftest(gi, test = "F", .vcov = function(x) vcovHC(x, cluster = "time")) # cluster on time, df2 = 19
 plm:::Ftest(gt, test = "F", .vcov = vcovHC(gt))
 plm:::Ftest(gd, test = "F", .vcov = vcovHC(gd)) # replicates Gretl: F(2, 9)=74.6338
-
-
+plm:::Ftest(gre, test = "F", .vcov = vcovHC(gre)) 
 
 
 ############### compare to other statistics packages:

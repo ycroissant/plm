@@ -346,8 +346,10 @@ pFtest.plm <- function(x, z, ...){
 #     Ftest(x, test = "Chisq") seems to accomplish the same as waldtest?
 #
 # If argument '.vcov' is supplied, the robust tests are carried out
-# robust F test has a finite-sample adjustment
-# 
+# robust F test has a finite-sample adjustment for df2
+#
+# args .df1, .df2 are only there if user wants to do overwriting of dfs
+#
 # References for robust tests:
 # * Wooldridge (2010), Econometric Analysis of Cross Section and Panel Data
 #     Sec. 4.2.3 (p. 60), eq. (4.13)
@@ -366,7 +368,7 @@ Ftest <- function(x, test = c("Chisq", "F"), .vcov = NULL, .df1, .df2, ...){
   tss <- tss(x)
   ssr <- deviance(x)
 
-  # if robust test: prepare robust vcov and do finite-sample adjustment for df2
+  # if robust test: prepare robust vcov and for robust F test do finite-sample adjustment for df2
   if (!is.null(.vcov)) {
     if (is.matrix(.vcov))   rvcov <- rvcov_orig <- .vcov
     if (is.function(.vcov)) rvcov <- rvcov_orig <- .vcov(x)
@@ -376,22 +378,29 @@ Ftest <- function(x, test = c("Chisq", "F"), .vcov = NULL, .df1, .df2, ...){
     if (int %in% names(coef(x))) { # drop intercept, if present
       coefs <- coef(x)[!(names(coef(x)) %in% int)]
       rvcov <- rvcov_orig[!rownames(rvcov_orig) %in% int, !colnames(rvcov_orig) %in% int]
+      attr(rvcov, which = "cluster") <- attr(rvcov_orig, which = "cluster") # restore 'cluster' attribute
     }
     
-    # determine the variable that the clustering is done on by
-    # attribute "cluster" in the vcov (matrix object)
-    if (!is.null(attr(rvcov, which = "cluster"))) {
-      cluster <- attr(rvcov, which = "cluster")
-      df2 <- switch(cluster,
-                      group = as.integer(pdim(x)$nT$n - 1),
-                      time  = as.integer(pdim(x)$nT$T - 1))
-
-    } else {
-      # no (or no implemented) cluster information found, assume cluster = "group"
-      # or fall-back to non robust statistics (set .vcov <- NULL)?
-      # TODO: what about double clustering? vcovDC?
-      warning("no information 'cluster' found in robust vcov or no implemented clustering, assuming cluster = \"group\"")
-      df2 <- as.integer(pdim(x)$nT$n - 1)
+    # if robust F test: do finite-sample adjustment for df2
+    if (test == "F") {
+      # determine the variable that the clustering is done on by
+      # attribute "cluster" in the vcov (matrix object)
+      if (!is.null(attr(rvcov, which = "cluster"))) {
+        cluster <- attr(rvcov, which = "cluster")
+        df2 <- switch(cluster,
+                        group = as.integer(pdim(x)$nT$n - 1),
+                        time  = as.integer(pdim(x)$nT$T - 1),
+                        # TODO: what about double clustering? vcovDC? vcovDC identifies itself as attr(obj, "cluster")="group-time")
+                        # default:
+                        { # warning("unknown/not implemented clustering, no df2 adjustment for finite-samples")
+                         df2}
+                        )
+        } else {
+          # no information on clustering found, do not adjust df2
+          # (other options would be: assume cluster = "group", or fall-back to non robust statistics (set .vcov <- NULL))
+          warning("no attribute 'cluster' in robust vcov found, no finite-sample df2 adjustment done") # assuming cluster = \"group\"")
+          # df2 <- as.integer(pdim(x)$nT$n - 1) # assume cluster = "group"
+      }
     }
   }
   
@@ -421,8 +430,7 @@ Ftest <- function(x, test = c("Chisq", "F"), .vcov = NULL, .df1, .df2, ...){
       
       stat <- crossprod(solve(rvcov, coefs), coefs)
       names(stat) <- "Chisq"
-      pval <- pchisq(stat, df = df1, lower.tail = FALSE) # TODO: check: need to adjust df1 for clustering? Look at Cameron's examples
-                                                         #     looking at output of felm's waldtest: no adjustment for robust chisq test
+      pval <- pchisq(stat, df = df1, lower.tail = FALSE)
       parameter <- c(df = df1)
       method <- "robust Wald test"
     }
