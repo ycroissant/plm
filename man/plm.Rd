@@ -185,7 +185,7 @@ walhus <- plm(inv ~ value + capital,
               effect = "twoways")
 
 # summary, summary with a funished vcov, passed as matrix, 
-as function, and as function with additional argument
+# as function, and as function with additional argument
 summary(wi)
 summary(wi, .vcov = vcovHC(wi))
 summary(wi, .vcov = vcovHC)

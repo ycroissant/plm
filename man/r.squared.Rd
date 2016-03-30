@@ -21,8 +21,21 @@ r.squared(object, model = NULL, type = c("cor", "rss", "ess"), dfcor = FALSE)
                   response),}
   \item{dfcor}{if \code{TRUE}, the adjusted R squared is computed.}
 }
+
 \value{
   A numerical value (R squared or adjusted R squared).
+}
+
+\seealso{
+\code{\link[plm]{plm}} for estimation of various models; 
+\code{\link[plm]{summary.plm}} which makes use of \code{r.squared}.
+}
+
+\examples{
+data("Grunfeld", package = "plm")
+p <- plm(inv ~ value + capital, data = Grunfeld, model = "pooling")
+r.squared(p)
+r.squared(p, dfcor = TRUE)
 }
 
 \keyword{htest}
