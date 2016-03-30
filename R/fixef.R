@@ -2,7 +2,8 @@
 ## which is related to the fixef method
 
 fixef.plm <- function(object, effect = NULL,
-                      type = c("level", "dfirst", "dmean"), ...){
+                      type = c("level", "dfirst", "dmean"),
+                      .vcov = NULL, ...){
   model.effect <- describe(object, "effect")
   if (is.null(effect)){
     effect <- ifelse(model.effect == "time", "time", "individual")
@@ -23,7 +24,7 @@ fixef.plm <- function(object, effect = NULL,
   Xb <- model.matrix(formula, data, rhs = 1, model = "between", effect = effect)
   yb <- pmodel.response(formula, data, model = "between", effect = effect)
   # the between model may contain time independent variables, the
-  # within model don't. So select the relevant elements using nw
+  # within model doesn't. So select the relevant elements using nw
   # (names of the within variables)
   nw <- names(coef(object))
   fixef <- yb - as.vector(crossprod(t(Xb[, nw, drop = FALSE]), coef(object)))
@@ -32,10 +33,19 @@ fixef.plm <- function(object, effect = NULL,
   ## bet <- plm.fit(formula, data, model = "between", effect = effect)
   ## bet$args <- list(model = "between", effect = effect)
   ## sigma2 <- deviance(bet) / df.residual(bet)
-  vcov <- vcov(object)[nw, nw]
+  
+  
+  # use robust vcov if supplied
+  if (!is.null(.vcov)) {
+    if (is.matrix(.vcov))   vcov <- .vcov[nw, nw]
+    if (is.function(.vcov)) vcov <- .vcov(object)[nw, nw]
+  } else {
+    vcov <- vcov(object)[nw, nw]
+  }
+  
   nother <- switch(effect,
-                   "individual" = pdim(object)$Tint$Ti,
-                   "time" = pdim(object)$Tint$nt)
+                    "individual" = pdim(object)$Tint$Ti,
+                    "time"       = pdim(object)$Tint$nt)
   s2 <- deviance(object) / df.residual(object)
   if (type != "dfirst"){
     sefixef <- sqrt(s2 / nother + apply(Xb[, nw, drop = FALSE],1,function(x) t(x) %*% vcov %*% x))

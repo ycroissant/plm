@@ -12,7 +12,7 @@
 
 \usage{
 \method{fixef}{plm}(object, effect = NULL,
-                      type = c("level", "dfirst", "dmean"), ...)
+                      type = c("level", "dfirst", "dmean"), .vcov = NULL, ...)
 \method{print}{fixef}(x, digits = max(3, getOption("digits") - 2),
 width = getOption("width"),...)
 \method{summary}{fixef}(object, ...)
@@ -25,6 +25,8 @@ width = getOption("width"),...)
     of class \code{"fixef"} for the \code{print} and the \code{summary} method,}
   \item{effect}{one of \code{"individual"} or \code{"time"}, only
     relevant in case of two--ways effects models,}
+  \item{.vcov}{a variance--covariance matrix furnished by the user or a function 
+    to calculate one (see \bold{Examples}),}
   \item{type}{one of \code{"level"}, \code{"dfirst"}, or \code{"dmean"},}
   \item{digits}{digits,}
   \item{width}{the maximum length of the lines in the print output,}
@@ -32,21 +34,20 @@ width = getOption("width"),...)
 }
 
 \value{
-  An object of class \code{"fixef"}. It is a numeric vector containing the fixed effects with attribute: \code{se} which contains the standard errors. 
-  % TODO: this not true anymore/yet:  "and [attribute] \code{intercept} which is the overall intercept.""
-  
+  An object of class \code{"fixef"}. It is a numeric vector containing the fixed effects with attribute \code{se} which contains the standard errors. 
+  If the argument \code{.vcov} was used, the standard errors are the respective robust standard errors.
   With the \code{type} argument, the fixed effects may be returned in levels (\code{"level"}), as deviations from the first value of the index (\code{"dfirst"}), or as deviations from the overall mean (\code{"dmean"}).
 }
 
 \details{
-  The summary method prints the fixed effects (in the way they were requested with the '\code{type}' argument 
-  (\code{"level"}, \code{"dfirst"}, or \code{"dmean"}), their standard errors and associated t--values and p--values.
+  The \code{summary} method prints the fixed effects (in the way they were requested with the argument \code{type} 
+  (\code{"level"}, \code{"dfirst"}, or \code{"dmean"})), their standard errors and associated t--values and p--values
+  (robust if \code{fixef} was used with non-\code{NULL} argument \code{.vcov}).
 }
 
 \seealso{
   \code{\link{within_intercept}} for the overall intercept along its standard error, \code{\link{plm}} for plm objects and within models in general.
 }
-
 
 \author{Yves Croissant}
 
@@ -56,7 +57,7 @@ gi <- plm(inv ~ value + capital, data = Grunfeld, model = "within")
 fixef(gi)
 summary(fixef(gi))
 
-# relationshop of type="dmean", "level" and overall intercept
+# relationship of type = "dmean" and "level" and overall intercept
 fx_level <- fixef(gi, type = "level")
 fx_dmean <- fixef(gi, type = "dmean")
 overallint <- within_intercept(gi)
@@ -67,11 +68,17 @@ gi_tw <- plm(inv ~ value + capital, data = Grunfeld,
           model = "within", effect = "twoways")
 fixef(gi_tw, effect = "time")
 
+# with supplied variance-covariance matrix as matrix, function,
+# and function with additional arguments
+fx_level_robust1 <- fixef(gi, .vcov = vcovHC(gi))
+fx_level_robust2 <- fixef(gi, .vcov = vcovHC)
+fx_level_robust3 <- fixef(gi, .vcov = function(x) vcovHC(x, method = "white2"))
+summary(fx_level_robust1) # gives fixed effects, robust SEs, t- and p-values
+
 # calc. fitted values of oneway within model:
 fixefs <- fixef(gi)[index(gi, which = "id")]
 fitted_by_hand <- fixefs + gi$coefficients["value"] * gi$model$value +
                            gi$coefficients["capital"] * gi$model$capital
-
 }
 
 \keyword{regression}

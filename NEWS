@@ -623,4 +623,5 @@ Changes since version 1.5-16
 	* (internal) plm:::Ftest: * gained '.vcov' argument, which enables robust F test and chi-sq test
 	                            [not yet weaved in summary.plm]
 	* (internal) furnished vcovs gain attribute "cluster" which give info about clustering, e.g. "group" or "time"
+	* fixef: gains new argument '.vcov'
 	

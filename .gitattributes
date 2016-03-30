@@ -125,6 +125,7 @@ tests/test_R2_adj_R2.R -text
 tests/test_as.data.frame_as.matrix.R -text
 tests/test_detect_lin_dep.R -text
 tests/test_fitted.plm.R -text
+tests/test_fixef.R -text
 tests/test_is.pconsecutive.R -text
 tests/test_lag_lead_factor_levels.R -text
 tests/test_model.frame.R -text
