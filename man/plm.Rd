@@ -2,9 +2,7 @@
 \alias{plm}
 \alias{has.intercept}
 \alias{print.panelmodel}
-\alias{summary.plm}
 \alias{plot.plm}
-\alias{print.summary.plm}
 
 \title{Panel Data Estimators}
 
@@ -19,20 +17,17 @@ plm(formula, data, subset, na.action, effect = c("individual", "time", "twoways"
     random.dfcor = NULL,
     inst.method = c("bvk", "baltagi", "am", "bmc"), restrict.matrix = NULL,
     restrict.rhs = NULL, index = NULL, ...)
-\method{summary}{plm}(object, .vcov = NULL, ...)
-\method{print}{summary.plm}(x, digits = max(3, getOption("digits") - 2),
-    width = getOption("width"), subset = NULL, ...)
+\method{print}{panelmodel}(x,digits=max(3, getOption("digits") - 2), 
+  width = getOption("width"),...)
 \method{plot}{plm}(x, dx = 0.2, N = NULL, seed = 1,
     within = TRUE, pooling = TRUE, between = FALSE, random = FALSE, ...)
 }
 
 \arguments{
   \item{formula}{a symbolic description for the model to be estimated,}
-  \item{object,x}{an object of class \code{"plm"},}
+  \item{x}{an object of class \code{"plm"},}
   \item{data}{a \code{data.frame},}
-  \item{subset}{see \code{\link{lm}} for \code{"plm"}, a character or
-    numeric vector indicating a subset of the table of coefficients to be
-    printed for \code{"print.summary.plm"},}
+  \item{subset}{see \code{\link{lm}},}
   \item{na.action}{see \code{\link{lm}},}
   \item{effect}{the effects introduced in the model, one of
   \code{"individual"}, \code{"time"}, or \code{"twoways"},}
@@ -50,7 +45,6 @@ plm(formula, data, subset, na.action, effect = c("individual", "time", "twoways"
     the coefficients,}
   \item{restrict.rhs}{the right hand side vector of the linear
     restrictions on the coefficients,}
-  \item{.vcov}{a variance--covariance matrix furnished by the user or a function to calculate one (see examples),}
   \item{digits}{number of digits for printed output,}
   \item{width}{the maximum length of the lines in the printed output,}
   \item{dx}{the half--length of the individual lines for the plot
@@ -65,7 +59,7 @@ plm(formula, data, subset, na.action, effect = c("individual", "time", "twoways"
 }
 
 \details{
-  \code{plm} is a general function for the estimation of linear panel
+\code{plm} is a general function for the estimation of linear panel
 models. It supports the following estimation methods: pooled OLS
 (\code{model = "pooling"}), fixed effects (\code{"within"}), random
 effects (\code{"random"}), first--differences (\code{"fd"}), and between
@@ -114,10 +108,17 @@ A \code{"plm"} object has the following elements :
 \item{call}{the call.}
    
 It has \code{print}, \code{summary} and \code{print.summary} methods.
-The \code{summary} methods creates an object of class \code{"summary.plm"} that 
+The \code{summary} method creates an object of class \code{"summary.plm"} that 
 extends the object it is run on with information about (inter alia) F statistic 
 and (adjusted) R-squared of model, standard errors, t--values, and p--values of 
-coefficients, (if supplied) the furnished vcov.
+coefficients, (if supplied) the furnished vcov, see \code{\link[plm]{summary.plm}}
+for further details.
+}
+
+\seealso{
+\code{\link[plm]{summary.plm}} for further details about the associated summary method and the
+"summary.plm" object both of which provide some model tests and tests of coefficients. 
+\code{\link[plm]{fixef}} to compute the fixed effects for "within" models (=fixed effects models).
 }
 
 \author{Yves Croissant}
@@ -167,13 +168,13 @@ summary(zz)
 # replicates some results from Baltagi (2013), table 3.1
 data("Grunfeld", package = "plm")
 p <- plm(inv ~ value + capital,
-         data = Grunfeld, model="pooling")
+         data = Grunfeld, model = "pooling")
 
 wi <- plm(inv ~ value + capital,
-          data = Grunfeld, model="within", effect = "twoways")
+          data = Grunfeld, model = "within", effect = "twoways")
 
 swar <- plm(inv ~ value + capital,
-            data = Grunfeld, model="random", effect = "twoways")
+            data = Grunfeld, model = "random", effect = "twoways")
           
 amemiya <- plm(inv ~ value + capital,
                data = Grunfeld, model = "random", random.method = "amemiya",
@@ -183,11 +184,12 @@ walhus <- plm(inv ~ value + capital,
               data = Grunfeld, model = "random", random.method = "walhus",
               effect = "twoways")
 
-# summary with a funished vcov, passed as matrix, as function, and
-# as function with additional argument
+# summary, summary with a funished vcov, passed as matrix, 
+as function, and as function with additional argument
+summary(wi)
 summary(wi, .vcov = vcovHC(wi))
 summary(wi, .vcov = vcovHC)
-summary(wi, .vcov = function(x) vcovHC(x, method="white2"))
+summary(wi, .vcov = function(x) vcovHC(x, method = "white2"))
 
 }
 
