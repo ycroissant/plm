@@ -342,23 +342,26 @@ pFtest.plm <- function(x, z, ...){
 ############## Ftest() ############################################
 # Ftest is used in summary.plm to compute the F statistic
 #
-# NB: How does this function relate to function plm:::waldtest?
-#     Ftest(x, test = "Chisq") seems to accomplish the same as waldtest?
+# NB: How does this function relate to function plm:::pwaldtest?
+#     Ftest(x, test = "Chisq") seems to accomplish the same as pwaldtest?
 #
-# If argument '.vcov' is supplied, the robust tests are carried out
-# robust F test has a finite-sample adjustment for df2
-#
-# args .df1, .df2 are only there if user wants to do overwriting of dfs
+# arg '.vcov' non-NULL => the robust tests are carried out
+# arg df2adj == TRUE does finite-sample/cluster adjustment for F tests's df2
+# args .df1, .df2 are only there if user wants to do overwriting of dfs (user has final say)
 #
 # References for robust tests:
 # * Wooldridge (2010), Econometric Analysis of Cross Section and Panel Data
 #     Sec. 4.2.3 (p. 60), eq. (4.13)
 #
-# * finite-sample adjustment for degrees of freedom in F test:
-#   Sec. VII in Cameron/Miller, "A Practitioner's Guide to Cluster-Robust Inference",
+# finite-sample/cluster adjustment for degrees of freedom (df2) in F test:
+# *  Sec. VII in Cameron/Miller, "A Practitioner's Guide to Cluster-Robust Inference",
 #                 Journal of Human Resources, Spring 2015, Vol. 50, No. 2, pp. 317-373.
+# * Andreß/Golsch/Schmidt (2013), Applied Panel Data Analysis for Economic and Social Surveys, Springer, Heidelberg et al., 
+#    p. 126 (footnote 4): about pooled OLS with robust SE:
+#      "Since we are using cluster-robust standard errors, the degrees of freedom, df2 = n−1, of the overall
+#       F test depend on the number of clusters (n = 545 units), and not on the number of observations (N = 4,360) in the data set."
 # * Stata doc: http://www.stata.com/manuals14/p_robust.pdf
-Ftest <- function(x, test = c("Chisq", "F"), .vcov = NULL, .df1, .df2, ...){
+Ftest <- function(x, test = c("Chisq", "F"), .vcov = NULL, df2adj = (test == "F" && !is.null(.vcov) && missing(.df2)), .df1, .df2, ...){
   model <- describe(x, "model")
   test <- match.arg(test)
   df1 <- ifelse(model == "within",
@@ -367,8 +370,11 @@ Ftest <- function(x, test = c("Chisq", "F"), .vcov = NULL, .df1, .df2, ...){
   df2 <- df.residual(x)
   tss <- tss(x)
   ssr <- deviance(x)
+  
+  # sanity check
+  if (df2adj == TRUE && (is.null(.vcov) || test != "F")) stop("df2adj == TRUE sensible only for robust F test, i.e. test == \"F\" and !is.null(.vcov) and missing(.df2)")
 
-  # if robust test: prepare robust vcov and for robust F test do finite-sample adjustment for df2
+  # if robust test: prepare robust vcov
   if (!is.null(.vcov)) {
     if (is.matrix(.vcov))   rvcov <- rvcov_orig <- .vcov
     if (is.function(.vcov)) rvcov <- rvcov_orig <- .vcov(x)
@@ -381,15 +387,17 @@ Ftest <- function(x, test = c("Chisq", "F"), .vcov = NULL, .df1, .df2, ...){
       attr(rvcov, which = "cluster") <- attr(rvcov_orig, which = "cluster") # restore 'cluster' attribute
     }
     
-    # if robust F test: do finite-sample adjustment for df2
-    if (test == "F") {
+    # if robust F test: by default, do finite-sample adjustment for df2
+    if (df2adj == TRUE & test == "F") {
       # determine the variable that the clustering is done on by
       # attribute "cluster" in the vcov (matrix object)
+      # if only one member in cluster: fall back to original df2
       if (!is.null(attr(rvcov, which = "cluster"))) {
         cluster <- attr(rvcov, which = "cluster")
+        pdim <- pdim(x)
         df2 <- switch(cluster,
-                        group = as.integer(pdim(x)$nT$n - 1),
-                        time  = as.integer(pdim(x)$nT$T - 1),
+                        group = { if(pdim$nT$n == 1L) df2 else (pdim$nT$n - 1L) },
+                        time  = { if(pdim$nT$T == 1L) df2 else (pdim$nT$T - 1L) },
                         # TODO: what about double clustering? vcovDC? vcovDC identifies itself as attr(obj, "cluster")="group-time")
                         # default:
                         { # warning("unknown/not implemented clustering, no df2 adjustment for finite-samples")
@@ -398,13 +406,13 @@ Ftest <- function(x, test = c("Chisq", "F"), .vcov = NULL, .df1, .df2, ...){
         } else {
           # no information on clustering found, do not adjust df2
           # (other options would be: assume cluster = "group", or fall-back to non robust statistics (set .vcov <- NULL))
-          warning("no attribute 'cluster' in robust vcov found, no finite-sample df2 adjustment done") # assuming cluster = \"group\"")
+          warning("no attribute 'cluster' in robust vcov found, no finite-sample adjustment for df2") # assuming cluster = \"group\"")
           # df2 <- as.integer(pdim(x)$nT$n - 1) # assume cluster = "group"
       }
     }
   }
   
-  # overwrite Dfs if especially supplied
+  # final say: overwrite Dfs if especially supplied
   if (!missing(.df1)) df1 <- .df1
   if (!missing(.df2)) df2 <- .df2
   
