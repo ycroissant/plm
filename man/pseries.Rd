@@ -52,7 +52,7 @@ vector equal to the number of individuals (if \code{effect = "individual"} (defa
 it returns the time means (over individuals)). \code{Between} duplicates the values and returns a vector which 
 length is the number of total observations. \code{Within} returns a vector containing the 
 values in deviation from the individual means (if \code{effect = "individual"}, from time means if \code{effect = "time"}),
-the so called demeand data.
+the so called demeaned data.
 
 For \code{between}, \code{Between}, and \code{Within} in presence of NA values it can
 be useful to supply \code{na.rm = TRUE} as an additional argument to

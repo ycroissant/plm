@@ -17,9 +17,9 @@
   \describe{
     \item{id}{the farm identifier}
     \item{size}{the total area cultivated with rice, measured in hectares}
-    \item{status}{land status, on of \code{'owner'} (non sharecroppers, owner operators or leasholders or both), \code{'share'} (sharecroppers), \code{'mixed'} (mixed of the two previous status)}
+    \item{status}{land status, on of \code{'owner'} (non sharecroppers, owner operators or leaseholders or both), \code{'share'} (sharecroppers), \code{'mixed'} (mixed of the two previous status)}
     \item{varieties}{one of \code{'trad'} (traditional varieties), \code{'high'} (high yielding varieties) and \code{'mixed'} (mixed varieties)}
-    \item{bimas}{bIMAS is an intensification program ; one of \code{'no'} (non-bimas famer), \code{'yes'} (bimas farmer) or \code{'mixed'} (part but not all of farmer's land was registered to be in the bimas program)}
+    \item{bimas}{bIMAS is an intensification program; one of \code{'no'} (non-bimas farmer), \code{'yes'} (bimas farmer) or \code{'mixed'} (part but not all of farmer's land was registered to be in the bimas program)}
     \item{seed}{seed in kilogram}
     \item{urea}{urea in kilogram}
     \item{phosphate}{phosphate in kilogram}

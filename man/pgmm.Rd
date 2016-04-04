@@ -109,7 +109,7 @@ Blundell and Bond (1998)).
   
 \code{pgmm} is an attempt to adapt GMM estimators available within the
 DPD library for GAUSS (see Arellano and Bond 1998) and Ox (see Doornik,
-Arellano and Bond 2006) and with the xtabond2 library for STATA (see
+Arellano and Bond 2006) and with the xtabond2 library for Stata (see
 Roodman 2009).}
 
 \references{
@@ -128,8 +128,8 @@ Econometrics}, vol. \bold{87}, pp.115--143.
 Doornik, J., Arellano, M. and Bond, S. (2006) Panel Data Estimation
 using DPD for Ox. \url{http://www.doornik.com/download/oxmetrics7/Ox_Packages/dpd.pdf}
   
-Roodman, D. (2009) How to do xtabond2: An Introduction to ``difference''
-and ``system'' GMM in Stata, \emph{Stata Journal}, vol. \bold{9}(1),
+Roodman, D. (2009) How to do xtabond2: An Introduction to difference
+and system GMM in Stata, \emph{Stata Journal}, vol. \bold{9}(1),
 pp. 86--136. Working Paper version at
 \url{http://ideas.repec.org/p/cgd/wpaper/103.html}
 

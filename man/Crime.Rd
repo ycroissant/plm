@@ -23,8 +23,8 @@
     \item{crmrte}{crimes committed per person}
     \item{prbarr}{'probability' of arrest}
     \item{prbconv}{'probability' of conviction}
-    \item{prbpris}{'probability' of prison sentenc}
-    \item{avgsen}{average sentence, days    }
+    \item{prbpris}{'probability' of prison sentence}
+    \item{avgsen}{average sentence, days}
     \item{polpc}{police per capita}
     \item{density}{people per square mile}
     \item{taxpc}{tax revenue per capita}
@@ -37,7 +37,7 @@
     \item{wfir}{weekly wage in  finance, insurance and real estate}
     \item{wser}{weekly wage in service industry}
     \item{wmfg}{weekly wage in manufacturing}
-    \item{wfed}{weekly wage of federal emplyees}
+    \item{wfed}{weekly wage of federal employees}
     \item{wsta}{weekly wage of state employees}
     \item{wloc}{weekly wage of local governments employees}
     \item{mix}{offence mix: face-to-face/other}

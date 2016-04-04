@@ -44,7 +44,7 @@ Online complements to Baltagi (2013):
   Various versions of the Grunfeld data circulate online. Also, various text books (and also varying among editions)
   and papers use different subsets of the original Grunfeld data, some of which contain errors in a few data points
   compared  to the original data used by Grunfeld (1958) in his PhD thesis. See Kleiber/Zeileis (2010) and its
-  accompanying website for a comparision of various Grunfeld data sets in use.
+  accompanying website for a comparison of various Grunfeld data sets in use.
 }
 
 \references{

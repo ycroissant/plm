@@ -27,7 +27,7 @@ A panel of 48 observations from 1970 to 1986
     \item{util}{other public buildings and structures}
     \item{pc}{private capital stock}
     \item{gsp}{gross state products}
-    \item{emp}{labor input measured by the employement in non--agricultural payrolls}
+    \item{emp}{labor input measured by the employment in non--agricultural payrolls}
     \item{unemp}{state unemployment rate}
   }
 }

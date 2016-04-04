@@ -20,7 +20,7 @@ pht(formula, data, subset, na.action, model = c("ht", "am", "bmc"), index = NULL
  \item{object,x}{an object of class \code{"plm"},}
  \item{data}{a \code{data.frame},}
  \item{subset}{see \code{\link{lm}} for \code{"plm"}, a character or
-   numeric vector indicaing a subset of the table of coefficient to be
+   numeric vector indicating a subset of the table of coefficient to be
    printed for \code{"print.summary.plm"},}
  \item{na.action}{see \code{\link{lm}},}
  \item{model}{one of \code{"ht"} for Hausman--Taylor, \code{"am"} for Amemiya--MaCurdy
