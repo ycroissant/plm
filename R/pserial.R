@@ -81,7 +81,7 @@ pwtest.formula <- function(x, data, effect = c("individual", "time"), ...) {
   # pwtest(plm.model)
   pwtest.panelmodel(plm.model, effect = effect) # pass on desired 'effect' argument to pwtest.panelmodel
   
-  ## "RE" test a la Wooldridge (2002), see 10.4.4
+  ## "RE" test a la Wooldridge (2002/2010), see 10.4.4
   ## (basically the scaled and standardized estimator for sigma from REmod)
   ## does not rely on normality or homoskedasticity; 
   ## H0: composite errors uncorrelated
@@ -122,7 +122,7 @@ pwtest.panelmodel <- function(x, effect = c("individual", "time"), ...) {
   ## det. max. group numerosity
   t <- max(tapply(X[,1],index,length))
 
-  ## ref. Wooldridge, p.264
+  ## ref. Wooldridge (2002), p.264 / Wooldridge (2010), p.299
     
   ## extract resids
   u <- resid(x)
@@ -135,7 +135,7 @@ pwtest.panelmodel <- function(x, effect = c("individual", "time"), ...) {
   ## with averages of xproducts of t(i) residuals
   ## for each group 1..n 
   ## (possibly different sizes if unbal., thus a list
-  ## and thus, unlike Wooldridge (eq.10.37), ve divide 
+  ## and thus, unlike Wooldridge (eq.10.37), we divide 
   ## every block by *his* t(t-1)/2)
 #  unind <- unique(ind)
   unind <- unique(index) # ????
@@ -189,7 +189,7 @@ pwartest <- function(x, ...){
 
 pwartest.formula <- function(x,  data, ...) {
   ## small-sample serial correlation test for FE models
-  ## ref.: Wooldridge (2003) 10.5.4 
+  ## ref.: Wooldridge (2002/2010) 10.5.4 
   ##if(!require(car)) stop("Library 'car' is needed")
 
   cl <- match.call(expand.dots = TRUE)
@@ -257,6 +257,10 @@ pwartest.panelmodel <- function(x, ...){
 }
 
 ### pbsytest
+
+# NB: There is also a version of pbsytest which supports unbalanced panels.
+#     It resides in SVN on r-forge: branches/kt_unbalanced/pbsytest/
+#     and awaits approval
 
 pbsytest <- function (x, ...){
   UseMethod("pbsytest")
@@ -592,7 +596,7 @@ pwfdtest.formula <- function(x, data, ..., h0 = c("fd", "fe")){
 
 pwfdtest.panelmodel <- function(x, ..., h0=c("fd","fe")) {
   ## first-difference-based serial correlation test for panel models
-  ## ref.: Wooldridge (2003), par. 10.6 
+  ## ref.: Wooldridge (2002/2010), par. 10.6.3 
 
   ##if(!require(car)) stop("Library 'car' is needed")
 
