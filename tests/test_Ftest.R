@@ -29,35 +29,51 @@ plm:::Ftest(gt, test = "F")
 plm:::Ftest(gd, test = "F")
 plm:::Ftest(gre, test = "F")
 
+
+# Gretl uses Stata's small sample adjustment
+  g <- pdim(gi)$nT$n # no of individuals
+  n <- pdim(gi)$nT$N # no of total obs
+  k <- length(coefficients(gi))
+  adj_k1 <- (g/(g-1) * (n-1)/(n-k-1)) # k <- k + 1 because Stata and Gretl have the intercept in the FE model
+  adj    <- (g/(g-1) * (n-1)/(n-k))
+  adj_gd <- (g/(g-1) * (n-1)/(n-k-1-19)) # Gretl has time dummies, not demeaning by time (20 periods for Grunfeld data)
+# gd: k anpassen=  adj_ 
+  vcov_mat_adj_gp  <- adj_k1  * plm::vcovHC(gp)
+  vcov_mat_adj_gi  <- adj_k1  * plm::vcovHC(gi)
+  vcov_mat_adj_gd  <- adj_gd  * plm::vcovHC(gd)
+  vcov_mat_adj_gre <- adj_k1  * plm::vcovHC(gre)
+  vcov_mat_adj_gt  <- adj_k1  * plm::vcovHC(gt)
+
 # Chisq - robust - formula
 plm:::Ftest(gp, test = "Chisq", .vcov = vcovHC)
 plm:::Ftest(gi, test = "Chisq", .vcov = vcovHC)
 plm:::Ftest(gt, test = "Chisq", .vcov = vcovHC)
 plm:::Ftest(gd, test = "Chisq", .vcov = vcovHC)
-plm:::Ftest(gre, test = "Chisq", .vcov = vcovHC)
+plm:::Ftest(gre, test = "Chisq", .vcov = vcovHC) 
 
 # Chisq - robust - matrix
 plm:::Ftest(gp, test = "Chisq", .vcov = vcovHC(gp))
 plm:::Ftest(gi, test = "Chisq", .vcov = vcovHC(gi))
 plm:::Ftest(gt, test = "Chisq", .vcov = vcovHC(gt))
 plm:::Ftest(gd, test = "Chisq", .vcov = vcovHC(gd))
-plm:::Ftest(gre, test = "Chisq", .vcov = vcovHC(gre))
+plm:::Ftest(gre, test = "Chisq", .vcov = vcov_mat_adj_gre) # replicates Gretl: Chi-square(2) = 70.1267
 
 # F - robust - formula
-plm:::Ftest(gp, test = "F", .vcov = vcovHC) # replicates Gretl: F(2, 9)=57.90485
-plm:::Ftest(gi, test = "F", .vcov = vcovHC) # replicates Gretl: F(2, 9)=31.7744
+plm:::Ftest(gp, test = "F", .vcov = vcov_mat_adj_gp) # replicates Gretl: F(2, 9) = 51.59060
+plm:::Ftest(gi, test = "F", .vcov = vcov_mat_adj_gi) # replicates Gretl: F(2, 9) = 28.3096
 plm:::Ftest(gi, test = "F", .vcov = function(x) vcovHC(x, cluster = "time")) # cluster on time, df2 = 19
-plm:::Ftest(gt, test = "F", .vcov = vcovHC)
-plm:::Ftest(gd, test = "F", .vcov = vcovHC) # replicates Gretl: F(2, 9)=74.6338
-plm:::Ftest(gre, test = "F", .vcov = vcovHC)
+plm:::Ftest(gt, test = "F", .vcov = vcov_mat_adj_gt)
+plm:::Ftest(gd, test = "F", .vcov = vcov_mat_adj_gd) # replicates Gretl: F(2, 9) = 60.0821
+plm:::Ftest(gre, test = "F", .vcov = vcov_mat_adj_gre)
+
 
 # F - robust - matrix
-plm:::Ftest(gp, test = "F", .vcov = vcovHC(gp)) # replicates Gretl: F(2, 9)=57.90485
-plm:::Ftest(gi, test = "F", .vcov = vcovHC(gi)) # replicates Gretl: F(2, 9)=31.7744
+plm:::Ftest(gp, test = "F", .vcov = vcovHC(gp))
+plm:::Ftest(gi, test = "F", .vcov = vcovHC(gi))
 plm:::Ftest(gi, test = "F", .vcov = function(x) vcovHC(x, cluster = "time")) # cluster on time, df2 = 19
 plm:::Ftest(gt, test = "F", .vcov = vcovHC(gt))
-plm:::Ftest(gd, test = "F", .vcov = vcovHC(gd)) # replicates Gretl: F(2, 9)=74.6338
-plm:::Ftest(gre, test = "F", .vcov = vcovHC(gre)) 
+plm:::Ftest(gd, test = "F", .vcov = vcovHC(gd))
+plm:::Ftest(gre, test = "F", .vcov = vcovHC(gre))
 
 
 ############### compare to other statistics packages:
@@ -102,7 +118,7 @@ plm:::Ftest(gre, test = "F", .vcov = vcovHC(gre))
 
 
 
-### Gretl ####
+### replicate Gretl ####
 # library(foreign);library(plm)
 # wagepan<-read.dta("http://fmwww.bc.edu/ec-p/data/wooldridge/wagepan.dta")
 # pwagepan <- pdata.frame(wagepan, index = c("nr", "year"))
@@ -110,16 +126,22 @@ plm:::Ftest(gre, test = "F", .vcov = vcovHC(gre))
 # 
 # mod_fe_ind <- plm(lwage ~ exper + hours + married + expersq, data = pwagepan, model = "within", effect = "individual")
 # 
-# pdim(mod_fe_ind)
 # plm:::Ftest(mod_fe_ind, test="F")
-# plm:::Ftest(mod_fe_ind, test="F", .vcov = function(x) vcovHC(x)) # replicates Gretl: F(4, 544)=121.497
+# plm:::Ftest(mod_fe_ind, test="F", .vcov = function(x) vcovHC(x)) # 121.4972
+# 
+# # Gretl uses Stata's small sample adjustment
+# g <- pdim(mod_fe_ind)$nT$n # no of individuals
+# n <- pdim(mod_fe_ind)$nT$N # no of total obs
+# k <- length(coefficients(mod_fe_ind))
+# k <- k+1 # + 1 because Stata and Gretl have the intercept in the FE model
+# adj <- (g/(g-1) * (n-1)/(n-k))
+# vcov_mat_adj <- adj * plm::vcovHC(mod_fe_ind)
+# print(plm:::Ftest(mod_fe_ind, test="F", .vcov = vcov_mat_adj), digits = 12) # replicate Gretl: F(4, 544) = 121.163
 
 
-
-# Gretl, wagepan data, fixed effects (oneway, HAC SEs)
-# Gretl (2016a) currently does use the normal degrees of freedom
-# NB: need at least the development version of 2016b  (built date >= 2016-03-26)
+# Reference: Gretl (2016b)
 #
+# Gretl, wagepan data, fixed effects (oneway, HAC SEs)
 # Model 1: Fixed-effects, using 4360 observations
 # Included 545 cross-sectional units
 # Time-series length = 8
@@ -128,11 +150,11 @@ plm:::Ftest(gre, test = "F", .vcov = vcovHC(gre))
 # 
 #              coefficient    std. error    t-ratio    p-value 
 #   -----------------------------------------------------------
-#   const       1.30069       0.0550059     23.65     1.47e-085 ***
-#   exper       0.137331      0.0108281     12.68     1.79e-032 ***
-#   hours      −0.000136467   2.13420e-05   −6.394    3.48e-010 ***
-#   married     0.0481248     0.0212938      2.260    0.0242    **
-#   expersq    −0.00532076    0.000691230   −7.698    6.58e-014 ***
+#   const       1.30069       0.0550817     23.61     2.15e-085 ***
+#   exper       0.137331      0.0108430     12.67     2.12e-032 ***
+#   hours      −0.000136467   2.13715e-05   −6.385    3.67e-010 ***
+#   married     0.0481248     0.0213232      2.257    0.0244    **
+#   expersq    −0.00532076    0.000692182   −7.687    7.09e-014 ***
 # 
 # Mean dependent var   1.649147   S.D. dependent var   0.532609
 # Sum squared resid    459.8591   S.E. of regression   0.347371
@@ -142,8 +164,8 @@ plm:::Ftest(gre, test = "F", .vcov = vcovHC(gre))
 # rho                  0.065436   Durbin-Watson        1.546260
 # 
 # Joint test on named regressors -
-#   Test statistic: F(4, 544) = 121.497
-#   with p-value = P(F(4, 544) > 121.497) = 5.06079e-074
+#   Test statistic: F(4, 544) = 121.163
+#   with p-value = P(F(4, 544) > 121.163) = 7.19472e-074
 # 
 # Robust test for differing group intercepts -
 #   Null hypothesis: The groups have a common intercept
@@ -151,7 +173,7 @@ plm:::Ftest(gre, test = "F", .vcov = vcovHC(gre))
 #   with p-value = P(F(544, 1276.3) > 26.9623) = 0
 
 
-# Gretl, Grunfeld data, fixed effects (oneway, HAC SEs)
+
 # Model 1: Fixed-effects, using 200 observations
 # Included 10 cross-sectional units
 # Time-series length = 20
@@ -160,9 +182,9 @@ plm:::Ftest(gre, test = "F", .vcov = vcovHC(gre))
 # 
 #              coefficient   std. error   t-ratio   p-value 
 #   --------------------------------------------------------
-#   const      −58.7439      26.0545      −2.255    0.0506   *
-#   value        0.110124     0.0143421    7.678    3.07e-05 ***
-#   capital      0.310065     0.0497926    6.227    0.0002   ***
+#   const      −58.7439      27.6029      −2.128    0.0622   *
+#   value        0.110124     0.0151945    7.248    4.83e-05 ***
+#   capital      0.310065     0.0527518    5.878    0.0002   ***
 # 
 # Mean dependent var   145.9582   S.D. dependent var   216.8753
 # Sum squared resid    523478.1   S.E. of regression   52.76797
@@ -172,45 +194,45 @@ plm:::Ftest(gre, test = "F", .vcov = vcovHC(gre))
 # rho                  0.663920   Durbin-Watson        0.684480
 # 
 # Joint test on named regressors -
-#   Test statistic: F(2, 9) = 31.7744
-#   with p-value = P(F(2, 9) > 31.7744) = 8.34168e-005
+#   Test statistic: F(2, 9) = 28.3096
+#   with p-value = P(F(2, 9) > 28.3096) = 0.000131055
 # 
 # Robust test for differing group intercepts -
 #   Null hypothesis: The groups have a common intercept
 #   Test statistic: Welch F(9, 70.6) = 85.9578
 #   with p-value = P(F(9, 70.6) > 85.9578) = 1.90087e-034
 
-# Gretl, Grunfeld data, fixed effects (oneway with time dummies, HAC SEs)
-# Model 2: Fixed-effects, using 200 observations
+
+# Model 6: Fixed-effects, using 200 observations
 # Included 10 cross-sectional units
 # Time-series length = 20
 # Dependent variable: inv
 # Robust (HAC) standard errors
 # 
-#              coefficient   std. error    t-ratio   p-value 
-#   ---------------------------------------------------------
-#   const      −32.8363      17.7496       −1.850    0.0974   *
-#   value        0.117716     0.00971202   12.12     7.07e-07 ***
-#   capital      0.357916     0.0429311     8.337    1.59e-05 ***
-#   dt_2       −19.1974      18.5714       −1.034    0.3282  
-#   dt_3       −40.6900      29.8627       −1.363    0.2061  
-#   dt_4       −39.2264      14.1193       −2.778    0.0215   **
-#   dt_5       −69.4703      24.2241       −2.868    0.0185   **
-#   dt_6       −44.2351      15.5870       −2.838    0.0195   **
-#   dt_7       −18.8045      16.0133       −1.174    0.2704  
-#   dt_8       −21.1398      12.7091       −1.663    0.1306  
-#   dt_9       −42.9776      11.2550       −3.819    0.0041   ***
-#   dt_10      −43.0988       9.86584      −4.368    0.0018   ***
-#   dt_11      −55.6830      13.6396       −4.082    0.0027   ***
-#   dt_12      −31.1693      18.7673       −1.661    0.1311  
-#   dt_13      −39.3922      23.7202       −1.661    0.1311  
-#   dt_14      −43.7165      34.8831       −1.253    0.2417  
-#   dt_15      −73.4951      34.3232       −2.141    0.0609   *
-#   dt_16      −75.8961      33.0168       −2.299    0.0471   **
-#   dt_17      −62.4809      44.3395       −1.409    0.1924  
-#   dt_18      −64.6323      46.2631       −1.397    0.1959  
-#   dt_19      −67.7180      39.2491       −1.725    0.1185  
-#   dt_20      −93.5262      28.4659       −3.286    0.0094   ***
+#              coefficient   std. error   t-ratio   p-value 
+#   --------------------------------------------------------
+#   const      −32.8363      19.7826      −1.660    0.1313  
+#   value        0.117716     0.0108244   10.88     1.77e-06 ***
+#   capital      0.357916     0.0478484    7.480    3.77e-05 ***
+#   dt_2       −19.1974      20.6986      −0.9275   0.3779  
+#   dt_3       −40.6900      33.2832      −1.223    0.2526  
+#   dt_4       −39.2264      15.7365      −2.493    0.0343   **
+#   dt_5       −69.4703      26.9988      −2.573    0.0300   **
+#   dt_6       −44.2351      17.3723      −2.546    0.0314   **
+#   dt_7       −18.8045      17.8475      −1.054    0.3195  
+#   dt_8       −21.1398      14.1648      −1.492    0.1698  
+#   dt_9       −42.9776      12.5441      −3.426    0.0076   ***
+#   dt_10      −43.0988      10.9959      −3.920    0.0035   ***
+#   dt_11      −55.6830      15.2019      −3.663    0.0052   ***
+#   dt_12      −31.1693      20.9169      −1.490    0.1704  
+#   dt_13      −39.3922      26.4371      −1.490    0.1704  
+#   dt_14      −43.7165      38.8786      −1.124    0.2899  
+#   dt_15      −73.4951      38.2545      −1.921    0.0869   *
+#   dt_16      −75.8961      36.7985      −2.062    0.0692   *
+#   dt_17      −62.4809      49.4181      −1.264    0.2379  
+#   dt_18      −64.6323      51.5621      −1.253    0.2416  
+#   dt_19      −67.7180      43.7447      −1.548    0.1560  
+#   dt_20      −93.5262      31.7263      −2.948    0.0163   **
 # 
 # Mean dependent var   145.9582   S.D. dependent var   216.8753
 # Sum squared resid    452147.1   S.E. of regression   51.72452
@@ -220,16 +242,17 @@ plm:::Ftest(gre, test = "F", .vcov = vcovHC(gre))
 # rho                  0.658860   Durbin-Watson        0.686728
 # 
 # Joint test on named regressors -
-#   Test statistic: F(2, 9) = 74.6338
-#   with p-value = P(F(2, 9) > 74.6338) = 2.4936e-006
+#   Test statistic: F(2, 9) = 60.0821
+#   with p-value = P(F(2, 9) > 60.0821) = 6.22231e-006
 # 
 # Robust test for differing group intercepts -
 #   Null hypothesis: The groups have a common intercept
 #   Test statistic: Welch F(9, 76.7) = 53.1255
 #   with p-value = P(F(9, 76.7) > 53.1255) = 2.45306e-029
 
-# Gretl, Grunfeld data, pooled OLS
-# Model 1: Pooled OLS, using 200 observations
+
+
+# Model 5: Pooled OLS, using 200 observations
 # Included 10 cross-sectional units
 # Time-series length = 20
 # Dependent variable: inv
@@ -237,14 +260,53 @@ plm:::Ftest(gre, test = "F", .vcov = vcovHC(gre))
 # 
 #              coefficient   std. error   t-ratio   p-value 
 #   --------------------------------------------------------
-#   const      −42.7144      19.2794      −2.216    0.0540   *
-#   value        0.115562     0.0150027    7.703    2.99e-05 ***
-#   capital      0.230678     0.0802008    2.876    0.0183   **
+#   const      −42.7144      20.4252      −2.091    0.0660   *
+#   value        0.115562     0.0158943    7.271    4.71e-05 ***
+#   capital      0.230678     0.0849671    2.715    0.0238   **
 # 
 # Mean dependent var   145.9582   S.D. dependent var   216.8753
 # Sum squared resid     1755850   S.E. of regression   94.40840
 # R-squared            0.812408   Adjusted R-squared   0.810504
-# F(2, 9)              57.90485   P-value(F)           7.26e-06
+# F(2, 9)              51.59060   P-value(F)           0.000012
 # Log-likelihood      −1191.802   Akaike criterion     2389.605
 # Schwarz criterion    2399.500   Hannan-Quinn         2393.609
 # rho                  0.956242   Durbin-Watson        0.209717
+
+
+# Model 2: Random-effects (GLS), using 200 observations
+# Included 10 cross-sectional units
+# Time-series length = 20
+# Dependent variable: inv
+# Robust (HAC) standard errors
+# 
+#              coefficient   std. error     z       p-value 
+#   --------------------------------------------------------
+#   const      −57.8344      24.8432      −2.328   0.0199    **
+#   value        0.109781     0.0137557    7.981   1.45e-015 ***
+#   capital      0.308113     0.0549728    5.605   2.08e-08  ***
+# 
+# Mean dependent var   145.9582   S.D. dependent var   216.8753
+# Sum squared resid     1841062   S.E. of regression   96.42765
+# Log-likelihood      −1196.541   Akaike criterion     2399.083
+# Schwarz criterion    2408.978   Hannan-Quinn         2403.087
+# 
+# 'Between' variance = 7089.8
+# 'Within' variance = 2784.46
+# theta used for quasi-demeaning = 0.861224
+# corr(y,yhat)^2 = 0.806104
+# 
+# Joint test on named regressors -
+#   Asymptotic test statistic: Chi-square(2) = 70.1267
+#   with p-value = 5.91814e-016
+# 
+# Breusch-Pagan test -
+#   Null hypothesis: Variance of the unit-specific error = 0
+#   Asymptotic test statistic: Chi-square(1) = 798.162
+#   with p-value = 1.35448e-175
+# 
+# Hausman test -
+#   Null hypothesis: GLS estimates are consistent
+#   Asymptotic test statistic: Chi-square(2) = 7.31971
+#   with p-value = 0.0257363
+
+

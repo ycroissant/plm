@@ -51,6 +51,7 @@ inst/CITATION -text
 man/Cigar.Rd -text
 man/Crime.Rd -text
 man/EmplUK.Rd -text
+man/Ftest.Rd -text
 man/Gasoline.Rd -text
 man/Grunfeld.Rd -text
 man/Hedonic.Rd -text

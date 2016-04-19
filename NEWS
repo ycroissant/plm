@@ -620,8 +620,10 @@ Changes since version 1.5-16
 	* summary.plm: * argument '.vcov' can also be a function (before, only only matrix was possible)
 	               * internal: the furnished vcov is saved in the summary.plm object in object$rvcov
 	                           (vcov function name in attr(object$rvcov, which="rvcov.name")
-	* (internal) plm:::Ftest: * gained '.vcov' argument, which enables robust F test and chi-sq test
-	                            [not yet weaved in summary.plm]
-	* (internal) furnished vcovs gain attribute "cluster" which give info about clustering, e.g. "group" or "time"
+	* Ftest: * gained '.vcov' argument, which enables robust F test and chi-sq test
+	           [robust versions not yet weaved in summary.plm]
+	*        * now exported and has documentation (.Rd file)
+	* (internal) vcovXX functions: furnished vcovs gain attribute "cluster" which give info about clustering,
+	                               e.g. "group" or "time"
 	* fixef: gains new argument '.vcov'
 	

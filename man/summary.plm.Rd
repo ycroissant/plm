@@ -47,12 +47,12 @@ The following elements are new or changed relative to the elements of a plm obje
 
 
 \seealso{
-% TODO: Ftest (once Ftest it is exported and has its own doc)
 \code{\link[plm]{plm}} for estimation of various models; 
 \code{\link[plm]{vcovHC}} for an example of a robust estimation of variance--covariance matrix; 
 \code{\link[stats]{print.htest}} for some information about class "htest";
 \code{\link[plm]{fixef}} to compute the fixed effects for "within" (=fixed effects) models and 
 \code{\link[plm]{within_intercept}} for an "overall intercept"" for such models.
+\code{\link[plm]{Ftest}} % maybe Ftest will be renamed later?
 
 }
 

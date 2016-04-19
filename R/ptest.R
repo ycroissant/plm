@@ -342,25 +342,15 @@ pFtest.plm <- function(x, z, ...){
 ############## Ftest() ############################################
 # Ftest is used in summary.plm to compute the F statistic
 #
+# TODO: Ftest with .vcov arg is not yet weaved in in summary.plm
+#
 # NB: How does this function relate to function plm:::pwaldtest?
 #     Ftest(x, test = "Chisq") seems to accomplish the same as pwaldtest?
 #
+# Short intro (but see associated help file)
 # arg '.vcov' non-NULL => the robust tests are carried out
 # arg df2adj == TRUE does finite-sample/cluster adjustment for F tests's df2
 # args .df1, .df2 are only there if user wants to do overwriting of dfs (user has final say)
-#
-# References for robust tests:
-# * Wooldridge (2010), Econometric Analysis of Cross Section and Panel Data
-#     Sec. 4.2.3 (p. 60), eq. (4.13)
-#
-# finite-sample/cluster adjustment for degrees of freedom (df2) in F test:
-# *  Sec. VII in Cameron/Miller, "A Practitioner's Guide to Cluster-Robust Inference",
-#                 Journal of Human Resources, Spring 2015, Vol. 50, No. 2, pp. 317-373.
-# * Andreß/Golsch/Schmidt (2013), Applied Panel Data Analysis for Economic and Social Surveys, Springer, Heidelberg et al., 
-#    p. 126 (footnote 4): about pooled OLS with robust SE:
-#      "Since we are using cluster-robust standard errors, the degrees of freedom, df2 = n−1, of the overall
-#       F test depend on the number of clusters (n = 545 units), and not on the number of observations (N = 4,360) in the data set."
-# * Stata doc: http://www.stata.com/manuals14/p_robust.pdf
 Ftest <- function(x, test = c("Chisq", "F"), .vcov = NULL, df2adj = (test == "F" && !is.null(.vcov) && missing(.df2)), .df1, .df2, ...){
   model <- describe(x, "model")
   test <- match.arg(test)
@@ -427,7 +417,7 @@ Ftest <- function(x, test = c("Chisq", "F"), .vcov = NULL, df2adj = (test == "F"
     } else {
       # perform robust chisq test
 
-        # Old/alternative:
+        # alternative:
         # use package car for statistic:
         # Note: has.intercept() returns TRUE for FE models, so do not use it here...
         # return_car_lH <- car::linearHypothesis(x,
@@ -440,7 +430,7 @@ Ftest <- function(x, test = c("Chisq", "F"), .vcov = NULL, df2adj = (test == "F"
       names(stat) <- "Chisq"
       pval <- pchisq(stat, df = df1, lower.tail = FALSE)
       parameter <- c(df = df1)
-      method <- "robust Wald test"
+      method <- "Wald test (robust)"
     }
   }
   if (test == "F"){ 
@@ -454,7 +444,7 @@ Ftest <- function(x, test = c("Chisq", "F"), .vcov = NULL, df2adj = (test == "F"
     } else {
       # perform robust F test
       
-        # Old/alternative:
+        # alternative:
         # use package car for statistic:
         # Note: has.intercept() returns TRUE for FE models, so do not use it here...
         # Note: car::linearHypothesis does not adjust df2 for clustering
@@ -468,7 +458,7 @@ Ftest <- function(x, test = c("Chisq", "F"), .vcov = NULL, df2adj = (test == "F"
       names(stat) <- "F"
       pval <- pf(stat, df1 = df1, df2 = df2, lower.tail = FALSE)
       parameter <- c(df1 = df1, df2 = df2) # Dfs
-      method  <- "robust F test"
+      method  <- "F test (robust)"
     }
   }
   res <- list(data.name = data.name(x),

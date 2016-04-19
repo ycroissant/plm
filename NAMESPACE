@@ -4,7 +4,7 @@ export(plm, pvcm, pgmm, pggls, pht, pcce, pmg, plmtest, phtest, pFtest, detect_l
        pbsytest, pdwtest, pbgtest, pbltest, pwartest, pwtest, pwfdtest, pcdtest,
        plm.data, pdata.frame, between, Between, Within, lag, lead, pFormula, pmodel.response,
        punbalancedness, purtest, cipstest, vcovBK, vcovSCC, r.squared, has.intercept, 
-       index, fixef, vcovHC, vcovDC, vcovNW, vcovG, piest, aneweytest)
+       index, fixef, vcovHC, vcovDC, vcovNW, vcovG, piest, aneweytest, Ftest)
 
 
 
