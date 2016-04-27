@@ -622,7 +622,8 @@ Changes since version 1.5-16
 	                           (vcov function name in attr(object$rvcov, which="rvcov.name")
 	* Ftest: * gained '.vcov' argument, which enables robust F test and chi-sq test
 	           [robust versions not yet weaved in summary.plm]
-	*        * now exported and has documentation (.Rd file)
+	         * now exported and has documentation (.Rd file)
+	         * returned htest object has vcov's name in 'method' element (if vcov was supplied)
 	* (internal) vcovXX functions: furnished vcovs gain attribute "cluster" which give info about clustering,
 	                               e.g. "group" or "time"
 	* fixef: gains new argument '.vcov'

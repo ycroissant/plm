@@ -49,7 +49,7 @@ plm:::Ftest(gp, test = "Chisq", .vcov = vcovHC)
 plm:::Ftest(gi, test = "Chisq", .vcov = vcovHC)
 plm:::Ftest(gt, test = "Chisq", .vcov = vcovHC)
 plm:::Ftest(gd, test = "Chisq", .vcov = vcovHC)
-plm:::Ftest(gre, test = "Chisq", .vcov = vcovHC) 
+plm:::Ftest(gre, test = "Chisq", .vcov = vcovHC)
 
 # Chisq - robust - matrix
 plm:::Ftest(gp, test = "Chisq", .vcov = vcovHC(gp))
@@ -58,7 +58,7 @@ plm:::Ftest(gt, test = "Chisq", .vcov = vcovHC(gt))
 plm:::Ftest(gd, test = "Chisq", .vcov = vcovHC(gd))
 plm:::Ftest(gre, test = "Chisq", .vcov = vcov_mat_adj_gre) # replicates Gretl: Chi-square(2) = 70.1267
 
-# F - robust - formula
+# F - robust 
 plm:::Ftest(gp, test = "F", .vcov = vcov_mat_adj_gp) # replicates Gretl: F(2, 9) = 51.59060
 plm:::Ftest(gi, test = "F", .vcov = vcov_mat_adj_gi) # replicates Gretl: F(2, 9) = 28.3096
 plm:::Ftest(gi, test = "F", .vcov = function(x) vcovHC(x, cluster = "time")) # cluster on time, df2 = 19

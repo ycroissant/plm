@@ -369,6 +369,8 @@ Ftest <- function(x, test = c("Chisq", "F"), .vcov = NULL, df2adj = (test == "F"
     if (is.matrix(.vcov))   rvcov <- rvcov_orig <- .vcov
     if (is.function(.vcov)) rvcov <- rvcov_orig <- .vcov(x)
     
+    rvcov_name <- paste0(", vcov: ", paste0(deparse(substitute(.vcov)))) # save "name" for later
+    
     coefs <- coef(x)
     int <- "(Intercept)"
     if (int %in% names(coef(x))) { # drop intercept, if present
@@ -430,7 +432,7 @@ Ftest <- function(x, test = c("Chisq", "F"), .vcov = NULL, df2adj = (test == "F"
       names(stat) <- "Chisq"
       pval <- pchisq(stat, df = df1, lower.tail = FALSE)
       parameter <- c(df = df1)
-      method <- "Wald test (robust)"
+      method <- paste0("Wald test (robust)", rvcov_name)
     }
   }
   if (test == "F"){ 
@@ -458,7 +460,7 @@ Ftest <- function(x, test = c("Chisq", "F"), .vcov = NULL, df2adj = (test == "F"
       names(stat) <- "F"
       pval <- pf(stat, df1 = df1, df2 = df2, lower.tail = FALSE)
       parameter <- c(df1 = df1, df2 = df2) # Dfs
-      method  <- "F test (robust)"
+      method  <- paste0("F test (robust)", rvcov_name)
     }
   }
   res <- list(data.name = data.name(x),
