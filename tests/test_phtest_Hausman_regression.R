@@ -23,7 +23,8 @@
 # 0.82630142  -3.7002477
 #             36.4572431
 
-options(digits = 10)library(plm)
+options(digits = 10)
+library(plm)
 data("Grunfeld")
 Grunfeldpdata <- pdata.frame(Grunfeld, index = c("firm", "year"), drop.index = FALSE, row.names = TRUE)
 fe_grun  <- plm(inv ~ value + capital, data=Grunfeldpdata, model="within")
