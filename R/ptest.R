@@ -5,14 +5,15 @@ data.name <- function(x){
 }
 
 ############## phtest() ############################################
+# Hausman test
 phtest <- function(x,...){
   UseMethod("phtest")
 }
 
 phtest.formula <- function(x, data, model = c("within", "random"),
                             method = c("chisq", "aux"),
-                            index=NULL, vcov=NULL, ...){
-    if(length(model)!=2) stop("two models should be indicated")
+                            index = NULL, vcov = NULL, ...){
+    if (length(model)!=2) stop("two models should be indicated")
     for (i in 1:2){
         model.name <- model[i]
         if(!(model.name %in% names(model.plm.list))){
@@ -24,25 +25,27 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                cl <- match.call(expand.dots = TRUE)
                cl$model <- model[1]
                names(cl)[2] <- "formula"
-               m <- match(plm.arg,names(cl),0)
+               m <- match(plm.arg, names(cl), 0)
                cl <- cl[c(1,m)]
                cl[[1]] <- as.name("plm")
-               plm.model.1 <- eval(cl,parent.frame())
+               plm.model.1 <- eval(cl, parent.frame())
                plm.model.2 <- update(plm.model.1, model = model[2])
                return(phtest(plm.model.1, plm.model.2))
            },
            aux={
                ## some interface checks here
-               if(model[1]!="within") {
+               if (model[1] != "within") {
                    stop("Please supply 'within' as first model type")
                }
+             
+               if (!is.null(vcov) && !is.function(vcov)) stop("argument 'vcov' needs to be a function")
              
                ## set pdata
                if (!inherits(data, "pdata.frame")) data <- plm.data(data, indexes=index) #, ...)
                
-               row.names(data) <- NULL # reset rownames of original data set (number rownames in clean sequence) to make rownames
+               row.names(data) <- NULL # reset rownames of original data set (->numbers rownames in clean sequence) to make rownames
                                        # comparable for later comparision to obs used in estimation of models (get rid of NA values)
-                                       # [needed becausepmodel.response() and model.matrix() do not retain fancy rownames, but rownames]
+                                       # [needed because pmodel.response() and model.matrix() do not retain fancy rownames, but rownames]
                
                # calculatate FE and RE model
                fe_mod <- plm(formula=x, data=data, model=model[1])
@@ -90,13 +93,13 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                Rbr <- R %*% coef(auxmod)[(nvars+2):(nvars*2+1)] - r
 
                h2t <- crossprod(Rbr, solve(omega0, Rbr))
-               ph2t <- pchisq(h2t, df=nvars, lower.tail=FALSE)
+               ph2t <- pchisq(h2t, df = nvars, lower.tail = FALSE)
 
                df <- nvars
                names(df) <- "df"
                names(h2t) <- "chisq"
 
-               if(!is.null(vcov)) {
+               if (!is.null(vcov)) {
                    vcov <- paste(", vcov: ",
                                   paste(deparse(substitute(vcov))),
                                   sep="")
@@ -106,7 +109,7 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                              p.value     = ph2t,
                              parameter   = df,
                              method      = paste("Regression-based Hausman test",
-                                              vcov, sep=""),
+                                                  vcov, sep=""),
                              alternative = "one model is inconsistent",
                              data.name   = paste(deparse(substitute(x))))
                class(haus2) <- "htest"
@@ -121,27 +124,27 @@ phtest.panelmodel <- function(x, x2, ...){
   vcov.re <- vcov(x2)
   names.wi <- names(coef.wi)
   names.re <- names(coef.re)
-  common_coef_names <- names.re[names.re%in%names.wi]
-  common_coef_names <- common_coef_names[!(common_coef_names %in% "(Intercept)")] # drop intercept if included (when between model inputted)
+  common_coef_names <- names.re[names.re %in% names.wi]
+  common_coef_names <- common_coef_names[!(common_coef_names %in% "(Intercept)")] # drop intercept if included (relevant when between model inputted)
   coef.h <- common_coef_names
-  dbeta <- coef.wi[coef.h]-coef.re[coef.h]
+  dbeta <- coef.wi[coef.h] - coef.re[coef.h]
   df <- length(dbeta)
-  dvcov <- vcov.re[coef.h,coef.h]-vcov.wi[coef.h,coef.h]
-  stat <- abs(t(dbeta)%*%solve(dvcov)%*%dbeta)
+  dvcov <- vcov.re[coef.h, coef.h] - vcov.wi[coef.h, coef.h]
+  stat <- abs(t(dbeta) %*% solve(dvcov) %*% dbeta)
 #  pval <- (1-pchisq(stat,df=df))
-  pval <- pchisq(stat,df=df,lower.tail=FALSE)
+  pval <- pchisq(stat, df = df, lower.tail = FALSE)
   names(stat) <- "chisq"
   parameter <- df
   names(parameter) <- "df"
   alternative <- "one model is inconsistent"
 #  null.value <- "both models are consistent"
-  res <- list(statistic = stat,
-              p.value = pval,
-              parameter = parameter,
-              method = "Hausman Test",
-              data.name = data.name(x),
- #             null.value=null.value,
-              alternative=alternative)
+  res <- list(statistic   = stat,
+              p.value     = pval,
+              parameter   = parameter,
+              method      = "Hausman Test",
+              data.name   = data.name(x),
+ #             null.value  = null.value,
+              alternative = alternative)
   class(res) <- "htest"
   return(res)
 }
@@ -160,7 +163,7 @@ phtest.panelmodel <- function(x, x2, ...){
 #       A lagrange multiplier test for the error components model with incomplete panels,
 #       Econometric Reviews, 9, pp. 103-107,
 
-plmtest <- function(x,...){
+plmtest <- function(x, ...){
   UseMethod("plmtest")
 }
 
@@ -296,7 +299,7 @@ plmtest.formula <- function(x, data, ...,
 
 
 ############## pFtest() ############################################
-pFtest <- function(x,...){
+pFtest <- function(x, ...){
   UseMethod("pFtest")
 }
 

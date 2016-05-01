@@ -23,20 +23,21 @@
 # 0.82630142  -3.7002477
 #             36.4572431
 
-options(digits = 10)
-library(plm)
+options(digits = 10)library(plm)
 data("Grunfeld")
 Grunfeldpdata <- pdata.frame(Grunfeld, index = c("firm", "year"), drop.index = FALSE, row.names = TRUE)
 fe_grun  <- plm(inv ~ value + capital, data=Grunfeldpdata, model="within")
 be_grun  <- plm(inv ~ value + capital, data=Grunfeldpdata, model="between")
 re_grun  <- plm(inv ~ value + capital, data=Grunfeldpdata, model="random")
 
-# Development version for regression-based Hausman test needed (as of 2015-11-06)
+# regression-based Hausman test
 
 phtest(inv ~ value + capital, Grunfeldpdata)               # replicates Baltagi's m1 = 2.33
 phtest(fe_grun, re_grun)                                   # same as above, replicates Baltagi's m1 = 2.33
 phtest(be_grun, re_grun)                                   # replicates Baltagi's m2 = 2.131 [values m1 and m2 coincide in this case]
 phtest(inv ~ value + capital, Grunfeldpdata, method="aux") # replicates Baltagi's m3 = 2.131
+
+phtest(inv ~ value + capital, Grunfeldpdata, method="aux", vcov = vcovHC) # no comparison value
 
 # replicates variance-covariance matrices
 vcov(fe_grun)*1000

@@ -23,8 +23,8 @@ phtest(x, ...)
  \item{data}{a \code{data.frame},}
  \item{method}{one of \code{"chisq"} or \code{"aux"},}
  \item{index}{an optional vector of index variables,}
- \item{vcov}{an optional covariance function}
- \item{\dots}{further arguments passed to \code{plm}}
+ \item{vcov}{an optional covariance function,}
+ \item{\dots}{further arguments passed to \code{plm}.}
 }
 
 \value{
