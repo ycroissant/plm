@@ -1,14 +1,11 @@
 # Note: return value of within_intercept is related to return values of fixef.plm, see tests/test_within_intercept.R for how
 
-# TODO: vcov as an argument
-# TODO: vcov - can only be function? not matrix
-#       check for vcov being a function
 within_intercept.plm <- function(object, .vcov = NULL, ...) { 
   
-  if(!inherits(object, "plm")) stop("input 'object' needs to be a \"within\" model estimated by plm()")
+  if (!inherits(object, "plm")) stop("input 'object' needs to be a \"within\" model estimated by plm()")
   model  <- describe(object, what = "model")
   effect <- describe(object, what = "effect")
-  if(model != "within") stop("input 'object' needs to be a \"within\" model estimated by plm(..., model = \"within\", ...)")
+  if (model != "within") stop("input 'object' needs to be a \"within\" model estimated by plm(..., model = \"within\", ...)")
   
   # .vcov must be a function, because the model estimated to get the
   # overall intercept next to its standard errors is different from
@@ -39,7 +36,7 @@ within_intercept.plm <- function(object, .vcov = NULL, ...) {
     # auxreg <- lm(data)
     # summary(auxreg)
 
-  # estimation by plm() - to apply robust vcov functions if supplied
+  # estimation by plm() - to apply robust vcov function if supplied
   data <- pdata.frame(data.frame(cbind(index, transY, transM)), drop.index = TRUE)
   form <- as.formula(paste0(names(data)[1], "~", paste(names(data)[-1], collapse = "+")))
   auxreg <- plm(form, data = data, model = "pooling")
@@ -63,7 +60,7 @@ within_intercept.plm <- function(object, .vcov = NULL, ...) {
     vcov_new <- .vcov(auxreg)
   }
   
-  auxreg$vcov <- vcov_new # plug new vcov (adjusted "normal" vcov or robust vcov) in auxiliary model
+  auxreg$vcov <- vcov_new # plug in new vcov (adjusted "normal" vcov or robust vcov) in auxiliary model
   
   coef_se <- lmtest::coeftest(auxreg)
   intercept <- coef_se[1,1]
