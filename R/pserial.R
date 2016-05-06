@@ -594,9 +594,13 @@ pwfdtest.formula <- function(x, data, ..., h0 = c("fd", "fe")){
   pwfdtest(plm.model, ..., h0 = h0)
 }
 
-pwfdtest.panelmodel <- function(x, ..., h0=c("fd","fe")) {
+pwfdtest.panelmodel <- function(x, ..., h0 = c("fd", "fe")) {
   ## first-difference-based serial correlation test for panel models
   ## ref.: Wooldridge (2002/2010), par. 10.6.3 
+  
+  # interface check
+  model <- describe(x, "model")
+  if (model != "fd") stop(paste0("input 'x' needs to be a \"fd\" model (first-differenced model), but is \"", model, "\""))
 
   ##if(!require(car)) stop("Library 'car' is needed")
 
@@ -609,14 +613,14 @@ pwfdtest.panelmodel <- function(x, ..., h0=c("fd","fe")) {
   time <- as.numeric(index[[2]])
   id <- as.numeric(index[[1]])
 
-   ## fetch dimensions and adapt to those of indices
+  ## fetch dimensions and adapt to those of indices
   pdim <- pdim(x)
   n <- pdim$nT$n
 
  
-   ## (re)create groupwise-separated index from 1 to nT 
-   ## - dropping first time period
-   ## - correcting Ti=Ti+1
+  ## (re)create groupwise-separated index from 1 to nT 
+  ## - dropping first time period
+  ## - correcting Ti=Ti+1
   Ti <- pdim$Tint$Ti-1
   
   redind <- vector("list",n)
@@ -648,11 +652,11 @@ pwfdtest.panelmodel <- function(x, ..., h0=c("fd","fe")) {
   auxmod <- plm(FDres ~ FDres.1, na.omit(auxdata), model = "pooling")
 
   switch(match.arg(h0), 
-             fd = {h0des<-"differenced"
+             fd = {h0des <- "differenced"
                    ## theoretical rho under H0: no serial 
                    ## corr. in differenced errors is 0
                    rho.H0 <- 0},
-             fe = {h0des<-"original"
+             fe = {h0des <- "original"
                    ## theoretical rho under H0: no serial 
                    ## corr. in original errors is -0.5
                    rho.H0 <- -0.5})
@@ -663,7 +667,7 @@ pwfdtest.panelmodel <- function(x, ..., h0=c("fd","fe")) {
   myH0 <- paste("FDres.1 = ", as.character(rho.H0), sep="")
   lhtest <- linearHypothesis(model=auxmod, myH0, vcov.=myvcov, ...)
   
-  ##(insert usual htest features)  
+  ## (insert usual htest features)  
   FDARstat <- lhtest[2,3]
   names(FDARstat) <- dimnames(lhtest)[[2]][3] 
   if (names(FDARstat)=="Chisq") names(FDARstat) <- "chisq"
@@ -672,11 +676,12 @@ pwfdtest.panelmodel <- function(x, ..., h0=c("fd","fe")) {
   pFDAR<-lhtest[2,4]
 
   dname <- paste(deparse(substitute(x)))
-  RVAL <- list(statistic = FDARstat, parameter = NULL,
-               method = "Wooldridge's first-difference test for serial correlation in panels",
+  RVAL <- list(statistic   = FDARstat, 
+               parameter   = NULL,
+               method      = "Wooldridge's first-difference test for serial correlation in panels",
                alternative = paste("serial correlation in", h0des, "errors"),
-               p.value = pFDAR,
-               data.name =   dname)
+               p.value     = pFDAR,
+               data.name   = dname)
   class(RVAL) <- "htest"
   return(RVAL)
 
