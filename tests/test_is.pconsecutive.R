@@ -106,6 +106,20 @@ is.pconsecutive(pGasoline)
 
 
 
+######### test for case with a time period missing from whole data set
+data("Grunfeld", package = "plm")
+obs_3rd <- 3 + 20*c(0:9)
+Grunfeld_wo_1937 <- pdata.frame(Grunfeld[-obs_3rd, ])
+
+expected_Grunfeld_wo_1937 <- rep(FALSE, 10)
+
+if(!isTRUE(all.equal(is.pconsecutive(Grunfeld_wo_1937), expected_Grunfeld_wo_1937, check.names = FALSE)))
+  stop("is.pconsecutive on pdata.frame: wrong result for a missing time period in whole data set")
+
+if(!isTRUE(all.equal(is.pconsecutive(Grunfeld_wo_1937$inv), expected_Grunfeld_wo_1937, check.names = FALSE)))
+  stop("is.pconsecutive on pdata.frame: wrong result for a missing time period in whole data set")
+
+
 ########## Tests with NA in individual and time index ###########
 
 

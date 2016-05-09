@@ -1,8 +1,18 @@
 ########### is.pconsecutive ##############
 # little helper function to find out if the time periods of an object are consecutive per id
+
+# default method - not to be called directly (relies on 'sane' ordering of inputs)
+# thus not exported via NAMESPACE
 is.pconsecutive.default <- function(x, id, time, na.rm.tindex = FALSE) {
 
   # argument 'x' not used here but here for consistency
+  
+  # NB: 'time' is assumed to be sorted and be organised as stacked time series
+  #     (successive blocks of individuals, each block being a time series for the respective individual))
+  #
+  #   'time' is in the correct order if is.pconsecutive.default is called by
+  #   is.pconsecutive.(p)data.frame, is.pconsecutive.pseries as a pdata.frame (which is sorted) was constructed 
+  #   in the first place
   
   if(na.rm.tindex) {
     NA_tindex <- is.na(time)
@@ -15,15 +25,23 @@ is.pconsecutive.default <- function(x, id, time, na.rm.tindex = FALSE) {
   res <- sapply(list_id_timevar, function(id_timevar) { if(any(is.na(id_timevar))) {
                                                            NA # return NA if NA found in the time periods for individual
                                                           } else {
-                                                              times <- as.numeric(id_timevar)
+                                                              # NB: as.character needed before as.numeric:
+                                                              # if a time period is missing from the whole data set, this
+                                                              # would not be detected without as.character, see testfile
+                                                              times <- as.numeric(as.character(id_timevar)) 
                                                               begin <- times[1]
                                                               end   <- times[length(times)]
-                                                              # consecutive time periods from begin to end (if times were consecutive)
-                                                              consecutive <- seq(from = begin, to = end, by = 1) 
+                                                 
                                                               # compare to length(original times) to find out if times are consecutive
-                                                              length(consecutive) == length(times)
+                                                              (end - begin + 1) == length(times)
+                                                              
+                                                              # Alternative way of checking:
+                                                                # consecutive time periods from begin to end (if times were consecutive)
+                                                                # consecutive <- seq(from = begin, to = end, by = 1)
+                                                                # length(consecutive) == length(times)
                                                           }
                                                       })
+  
   return(res)
 }
 

@@ -70,6 +70,9 @@ all(is.pconsecutive(Grunfeld_missing_period)) # FALSE
 Grunfeld_missing_period_other <- Grunfeld[-c(1,2), ]
 is.pconsecutive(Grunfeld_missing_period_other) # all TRUE
 
+# delete year 1937 (3rd period) for _all_ individuals
+Grunfeld_wo_1937 <- Grunfeld[Grunfeld$year != 1937, ]
+is.pconsecutive(Grunfeld_wo_1937) # all FALSE
 
 # pdata.frame interface
 pGrunfeld <- pdata.frame(Grunfeld)
