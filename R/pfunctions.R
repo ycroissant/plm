@@ -155,9 +155,11 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
   posindex <- match(c(id.name,time.name),names(x))
   index <- x[, posindex]
   if (drop.index) x <- x[, - posindex]
+  
   if (row.names){
-    attr(x, "row.names") <- paste(index[[1]], index[[2]], sep="-") 
+    attr(x, "row.names") <- fancy.row.names(index)
   }
+  
   class(index) <- c("pindex", "data.frame")
   attr(x, "index") <- index
   class(x) <- c("pdata.frame", "data.frame")
@@ -495,7 +497,7 @@ as.data.frame.pdata.frame <- function(x, row.names = NULL, optional = FALSE, ...
   } else {
       if (row.names == TRUE) { # set fancy row names
         x <- data.frame(x)
-        attr(x, "row.names") <- paste(index[[1]], index[[2]], sep="-") 
+        attr(x, "row.names") <- fancy.row.names(index)
       }
     ## if row.names is a character vector, row.names could also be passed here to base::data.frame , see ?base::data.frame
   } 
@@ -503,7 +505,7 @@ as.data.frame.pdata.frame <- function(x, row.names = NULL, optional = FALSE, ...
   return(x)
 }
 
-
+## pdiff is (only) used in model.matrix.pFormula to calculate the model.matrix for FD models
 pdiff <- function(x, cond, has.intercept = FALSE){
   cond <- as.numeric(cond)
   n <- ifelse(is.matrix(x),nrow(x),length(x))

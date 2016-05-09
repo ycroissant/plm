@@ -169,8 +169,6 @@ if (!isTRUE(all.equal(diff(Grunfeld$inv, 2), Grunfeld$inv - lag(Grunfeld$inv, 2)
 
 
 ############## (4) test with non-consecutive time periods ####
-# rev. 209 (and former revisions): lag introduces to many NAs for lag(, k) with k>1 and non-consecutive time periods
-# -> see tests below (active formal tests once fixed)
 data("Grunfeld", package = "plm")
 
 pGrunfeld_missing_period <- pdata.frame(Grunfeld[-2, ]) # delete one time period of first individual (1-1936 is missing (not NA))
@@ -180,7 +178,7 @@ is.pconsecutive(pGrunfeld_missing_period)
 head(pGrunfeld_missing_period$inv, 25)
 head(test_Grun_miss_p_lag1 <- lag(pGrunfeld_missing_period$inv), 25) # correct: additional NA for the missing time period is introduced at 1-1937
 head(lag(pGrunfeld_missing_period$inv, 2), 25)
-head(test_Grun_miss_p_lag3 <- lag(pGrunfeld_missing_period$inv, 3), 25) # not correct 1-1938 is NA but should be non-NA (former 1-1935: 317.6)
+head(test_Grun_miss_p_lag3 <- lag(pGrunfeld_missing_period$inv, 3), 25) # correct 1-1938 is NA but should be non-NA (former 1-1935: 317.6)
 
 ### formal test for correct value
 if(!is.na(test_Grun_miss_p_lag1["1-1937"])) stop("lag(pGrunfeld_missing_period$inv, 1)' for '1-1937' contains a value but should be 'NA'")

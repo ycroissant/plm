@@ -268,3 +268,9 @@ punbalancedness.panelmodel <- function(x, ...) {
 punbalancedness <- function(x, ...) {
   UseMethod("punbalancedness")
 }
+
+
+# helper function
+fancy.row.names <- function(index, sep = "-") {
+  return(paste(index[[1]], index[[2]], sep = sep))
+}
