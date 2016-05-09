@@ -1,3 +1,5 @@
+=== newest changes at bottom of file ===
+
 Changes since version 0-1.2
 
 	* Models with only one explanatory variable resulted in a
@@ -627,4 +629,8 @@ Changes since version 1.5-16
 	* (internal) vcovXX functions: furnished vcovs gain attribute "cluster" which give info about clustering,
 	                               e.g. "group" or "time"
 	* fixef: gains new argument '.vcov'
+	
+Changes since version 1.5-17
+
+  * lagt.pseries: new method respecting "content"" of time periods [not yet exported due to testing]
 	

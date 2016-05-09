@@ -530,6 +530,11 @@ pdiff <- function(x, cond, has.intercept = FALSE){
 }
 
 # compute lagged values (handles positive lags and negative lags (=leading values) [and 0 -> do nothing])
+#
+# NB: This method seems to be intended for rowwise (positionwise) shifting as lagging
+#     There is also an experimental function called lagt.pseries in a seperate file which
+#     respectes the time periods by looking at their content
+#
 lag.pseries <- function(x, k = 1, ...) {
   index <- attr(x, "index")
   id <- index[[1]]
@@ -550,9 +555,9 @@ lag.pseries <- function(x, k = 1, ...) {
       #     for lag > 1 and non-consecutive time periods
       
       # delete first ak observations for each unit
-      #  NB: as.character(time) before as.numeric() is needed to catch the case of missing time period in whole data set
+      #  NB: as.character(time) before as.numeric() might be needed to catch the case of missing time period in whole data set
       #      see testfile test_lag_lead_factor_levels
-      isNAtime <- c(rep(T, ak), (diff(as.numeric(as.character(time)), lag = ak) != ak))
+      isNAtime <- c(rep(T, ak), (diff(as.numeric(time), lag = ak) != ak))
       isNAid   <- c(rep(T, ak), (diff(as.numeric(id),   lag = ak) != 0))
       isNA <- (isNAtime | isNAid)
       
@@ -567,7 +572,7 @@ lag.pseries <- function(x, k = 1, ...) {
       #     for lag > 1 and non-consecutive time periods
       
       # delete last |ak| observations for each unit
-      num_time <- as.numeric(as.character(time)) # as.character(): needed, see above
+      num_time <- as.numeric(time)
       num_id   <- as.numeric(id)
       isNAtime <- c(c((num_time[1:(length(num_time)+ak)] - num_time[(-ak+1):length(num_time)]) != ak), rep(T, -ak))
       isNAid   <- c(c((num_id[1:(length(num_id)+ak)]     - num_id[(-ak+1):length(num_id)])     != 0),  rep(T, -ak))

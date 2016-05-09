@@ -10,6 +10,7 @@ R/dynformula.R -text
 R/ercomp.R -text
 R/fixef.R -text
 R/is.pconsecutive.R -text
+R/lagt.R -text
 R/options.R -text
 R/pFormula.R -text
 R/panelmodel.R -text
