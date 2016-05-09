@@ -1,6 +1,6 @@
 # tests of lag and lead
 #  (1) test of lagging of index variable
-#  (2) some dropped factor levels
+#  (2) some dropped factor levels / whole period missing
 #  (3) general tests
 #  (4) tests with non-consecutive time periods
 # 
@@ -30,7 +30,7 @@ lag(Grunfeld$firm2)
 
 
 
-############## (2) tests with eliminated factor levels ##########
+############## (2.1) tests with eliminated factor levels ##########
 
 # lag by 1 eliminates some factor levels (e.g. "1" in the last observations)
 # from the sample's unique factor levels, but it should stay in the levels
@@ -43,7 +43,33 @@ lead(Grunfeld$fac)
 length(unique(lead(Grunfeld$fac))) # 191
 
 
+
+############### (2.2) test for case with a time period missing from whole data set
+data("Grunfeld", package = "plm")
+obs_3rd <- 3 + 20*c(0:9)
+Grunfeld_wo_1937 <- pdata.frame(Grunfeld[-obs_3rd, ])
+
+# illustration:
+levels(Grunfeld_wo_1937$year) # no year 1937 anymore and no level for 1937 anymore
+as.numeric(Grunfeld_wo_1937$year)                # as.numeric produces a consecutive series!
+any(diff(as.numeric(Grunfeld_wo_1937$year)) > 1) # -> no gap detected
+
+as.numeric(as.character(Grunfeld_wo_1937$year)) # use as.character before as.numeric!
+any(diff(as.numeric(as.character(Grunfeld_wo_1937$year))) > 1) # -> gap now detected
+
+# formal test:
+if (!is.na(lag( Grunfeld_wo_1937$inv)["1-1938"])) stop("missing time period not detected (year 1937 is missing from whole data set)")
+if (!is.na(lead(Grunfeld_wo_1937$inv)["1-1936"])) stop("missing time period not detected (year 1937 is missing from whole data set)")
+
+
+
+
+
 ############## (3) some general tests ##########
+data("Grunfeld", package = "plm")
+
+Grunfeld$fac <- factor(c(200:2, 1))
+Grunfeld <- pdata.frame(Grunfeld)
 ## some more general testing of lag and lead
 # do nothing
 if (!isTRUE(all.equal(lag(Grunfeld$fac, 0), Grunfeld$fac))) stop("'lag( , 0)' not equal to 'do nothing'")
