@@ -1,4 +1,4 @@
-=== newest changes at bottom of file ===
+=== latest changes at bottom of file ===
 
 Changes since version 0-1.2
 
@@ -632,5 +632,6 @@ Changes since version 1.5-16
 	
 Changes since version 1.5-17
 
-  * lagt.pseries: new method respecting "content"" of time periods [not yet exported due to testing]
+	* lagt.pseries: new method respecting "content" of time periods [not yet exported due to testing]
+	* is.pconsecutive: default method exported so it can be used for arbitrary vectors
 	

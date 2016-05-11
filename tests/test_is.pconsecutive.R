@@ -42,12 +42,25 @@ is.pconsecutive(estimation_pGrunfeld)
 is.pconsecutive(estimation_pGrunfeld_missing_period)
 
 
+# default method (by dispatching)
+# test on "numeric" and "NULL" -> should execute is.pconsecutive.default
+is.pconsecutive(Grunfeld$inv,      id = Grunfeld$firm, time = Grunfeld$year)
+is.pconsecutive(Grunfeld[["inv"]], id = Grunfeld$firm, time = Grunfeld$year)
+is.pconsecutive(NULL, id = Grunfeld$firm, time = Grunfeld$year)
+
+
 # test on pseries
 pinv <- pGrunfeld$inv
 pinv_missing_period <- pGrunfeld_missing_period$inv
 
 is.pconsecutive(pinv)
 is.pconsecutive(pinv_missing_period)
+
+
+## more missing periods
+Grunfeld_missing_periods <- Grunfeld[-c(2,6,7), ]
+pGrunfeld_missing_periods <- pdata.frame(Grunfeld_missing_periods)
+pinv_missing_periods <- pGrunfeld_missing_periods$inv
 
 
 

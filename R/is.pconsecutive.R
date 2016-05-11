@@ -1,13 +1,24 @@
 ########### is.pconsecutive ##############
 # little helper function to find out if the time periods of an object are consecutive per id
+# by consecutive we mean "consecutive on the numbers": t, t+1, t+2, ... where t is an integer
 
-# default method - not to be called directly (relies on 'sane' ordering of inputs)
-# thus not exported via NAMESPACE
-is.pconsecutive.default <- function(x, id, time, na.rm.tindex = FALSE) {
+is.pconsecutive.default <- function(x, id, time, na.rm.tindex = FALSE, ...) {
 
-  # argument 'x' not used here but here for consistency
+  # argument 'x' just used for input check (if not NULL and is a vector)
   
-  # NB: 'time' is assumed to be sorted and be organised as stacked time series
+  # input checks
+  if (length(id) != length(time)) 
+    stop(paste0("arguments 'id' and 'time' must have same length: length(id): ", length(id), ", length(time) ", length(time)))
+  
+  if (!is.null(x) && is.vector(x)) {
+    if (!(length(x) == length(id) && length(x) == length(time) && length(id) == length(time)))
+      stop(paste0("arguments 'x', 'id', 'time' must have same length: length(x): ", 
+                  length(x), ", length(id): ", length(id), ", length(time): ", length(time)))
+    
+  }
+  
+  
+  # NB: 'time' is assumed to be organised as stacked time series (sorted for each individual)
   #     (successive blocks of individuals, each block being a time series for the respective individual))
   #
   #   'time' is in the correct order if is.pconsecutive.default is called by

@@ -203,5 +203,6 @@ S3method("is.pconsecutive", "data.frame")
 S3method("is.pconsecutive", "pdata.frame")
 S3method("is.pconsecutive", "panelmodel")
 S3method("is.pconsecutive", "pseries")
+S3method("is.pconsecutive", "default")
 # within_intercept
 S3method("within_intercept", "plm")
