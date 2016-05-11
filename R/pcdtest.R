@@ -156,8 +156,9 @@ pcdres<-function(tres, n, w, form, test) {
   ## T_ij matrix
   t.ij<-matrix(NA,ncol=n,nrow=n)
 
-  for(i in 1:n) {
-    for(j in 1:n) {
+  ## calc. only for lower tri, rest is nullified later anyway
+  for(i in 2:n) {
+    for(j in 1:(i-1)) {
 
       ## determination of joint range m_i | m_j
       ## m_ij=m_i|m_j, working on names of the residuals' vectors
