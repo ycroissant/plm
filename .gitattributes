@@ -9,6 +9,7 @@ R/divers.R -text
 R/dynformula.R -text
 R/ercomp.R -text
 R/fixef.R -text
+R/index.R -text
 R/is.pconsecutive.R -text
 R/lagt.R -text
 R/options.R -text
