@@ -197,7 +197,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     if (is.null(dim(mydata))){
         structure(mydata,
                   index = index,
-                  class = c("pseries", class(mydata))
+                  class = base::union("pseries", class(mydata)) # use union to avoid doubling pseries if already present
                   )
     }
     else{
@@ -239,7 +239,7 @@ print.pdata.frame <- function(x, ...){
   result <- x[[y]]
   if (!is.null(result)){
     result <- structure(result,
-                        class = c("pseries", class(x[[y]])),
+                        class = base::union("pseries", class(x[[y]])), # use union to avoid doubling pseries if already present
                         index = index,
                         names = row.names(x)
                         )
@@ -487,7 +487,7 @@ as.data.frame.pdata.frame <- function(x, row.names = NULL, optional = FALSE, ...
   x <- lapply(x,
                 function(z){
                   attr(z, "index") <- index
-                  class(z) <- c("pseries", class(z))
+                  class(z) <- base::union("pseries", class(z)) # use union to avoid doubling pseries if already present
                   return(z)
                 }
               )

@@ -17,20 +17,20 @@ nrow(Grunfeld[Grunfeld$inv == 317.60, ])    # 1 row and ...
 class(Grunfeld[Grunfeld$inv == 317.60, ])   # ... it is a data.frame
 
 class(pGrunfeld[pGrunfeld$inv == 317.60, ]) # should be classes 'pdata.frame' and 'data.frame' like it is for a data.frame
+if (!all(class(pGrunfeld[pGrunfeld$inv == 317.60, ]) == c("pdata.frame", "data.frame"))) stop("wrong classes")
 nrow(pGrunfeld[pGrunfeld$inv == 317.60, ])  # operation works on pdata.frame as well
 
 
 
 
-### (2) class 'pseries' of estimated_model$model [cosmetic, present in (at least) rev. 189] ###
+### (2) class 'pseries' of estimated_model$model [fixed in rev. 242] ###
 mod <- plm(inv ~ value + capital, data=pGrunfeld, model = "pooling")
-class(mod$model)
-class(mod$model$inv) # 'pseries' appears twice
+class(mod$model) # 'pseries' appeared twice before rev. 242
+if (!all(class(mod$model$inv) == c("pseries", "numeric"))) stop("wrong classes (or too few/many")
+if (!(length(class(mod$model$inv)) == 2 && class(mod$model$inv) == c("pseries", "numeric"))) warning("class(es) are wrong!")
 
-# if (!(length(class(mod$model$inv)) == 2 && class(mod$model$inv) == c("pseries", "numeric"))) warning("class(es) are wrong!")
 
 df <- as.data.frame(mod$model)
 class(df)
-class(df$inv) # 'pseries' is still here twice
-
-# if (!(length(class(df$inv)) == 2 && class(df$inv) == c("pseries", "numeric"))) warning("class(es) are wrong!")
+class(df$inv) # 'pseries' apperead two before rev. 242
+if (!(length(class(df$inv)) == 2 && class(df$inv) == c("pseries", "numeric"))) warning("class(es) are wrong!")
