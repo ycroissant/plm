@@ -582,6 +582,20 @@ vcovBK.plm <-function(x,type=c("HC0", "HC1", "HC2", "HC3", "HC4"),
 
 #######################################################
 
+#####################################
+## vcovHC methods for pcce objects ##
+#####################################
+
+## pcce is compliant with plm so vcovXX.pcce <- vcovXX.plm
+## for any vcov that makes sense computed on the transformed
+## data from model.matrix.pcce and pmodel.response.pcce
+
+vcovG.pcce <- vcovG.plm
+vcovHC.pcce <- vcovHC.plm
+vcovNW.pcce <- vcovNW.plm
+vcovSCC.pcce <- vcovSCC.plm
+vcovDC.pcce <- vcovDC.plm
+
 ####################################
 ## vcovHC method for pgmm objects ##
 ####################################

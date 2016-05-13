@@ -1,6 +1,7 @@
 \name{vcovNW}
 \alias{vcovNW}
 \alias{vcovNW.plm}
+\alias{vcovNW.pcce}
 
 \title{Newey and West(1987) Robust Covariance Matrix Estimator}
 \description{
@@ -15,7 +16,7 @@
 }
 
 \arguments{
-  \item{x}{an object of class \code{"plm"}}
+  \item{x}{an object of class \code{"plm"} or \code{"pcce"}}
   \item{type}{one of \code{"HC0"}, \code{"sss"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"},\code{"HC4"},}
   \item{maxlag}{either \code{NULL} or a positive integer specifying the
   maximum lag order before truncation}

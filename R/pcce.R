@@ -1,11 +1,11 @@
-
-  ## Common Correlated Effects Pooled/MG estimators
+## Common Correlated Effects Pooled/MG estimators
   ## ref. Holly, Pesaran and Yamagata JoE 158 (2010)
   ## (also Kapetanios, Pesaran and Yamagata JoE 2010)
   ## CCEP and CCEMG together in the same SW framework
   ## based on generalized FEs
 
-  ## this version 3: allows for defactored (cce) or raw (standard) residuals
+  ## this version 6: includes both defactored (cce) and raw (standard) residuals,
+  ## leaving to a special residuals.pcce method the choice of which to retrieve
 
   ## NB the effect of including a trend is exactly the same as for
   ## including as.numeric(<timeindex>) in the model specification
@@ -18,14 +18,18 @@
 #pdim <- plm:::pdim
 
 #model.matrix.plm<-plm:::model.matrix.plm
-#pmodel.response<-plm:::pmodel.response.plm
+#pmodel.response.plm<-plm:::pmodel.response.plm
+
+#tss <- plm:::tss
 
 
 pcce <- function (formula, data, subset, na.action,
                    model=c("mg", "p"),
-                   residuals = c("defactored", "standard"),
+                   #residuals = c("defactored", "standard"),
                    index = NULL, trend = FALSE, ...)
 {
+    ## Create a Formula object if necessary (from plm.R)
+    if (!inherits(formula, "pFormula")) formula <- pFormula(formula)
 
     ## same as pggls but for effect, fixed at "individual" for compatibility
     ## ind for id, tind for time, k for K, coefnam for coef.names
@@ -159,6 +163,52 @@ pcce <- function (formula, data, subset, na.action,
           stdres[[i]] <- ty - tX %*% tb - ta
         }
 
+  ## module for making transformed data My, MX for vcovHC use
+    ## (NB M is symmetric)
+    ## Some redundancy because this might be moved to model.matrix.pcce
+
+    ## initialize
+    tX1 <- X[ind==unind[1], , drop=FALSE]
+    ty1 <- y[ind==unind[1]]
+    tHhat1 <- Hhat[ind==unind[1], , drop=FALSE]
+
+    ## if 'trend' then augment the xs-invariant component
+    if(trend) tHhat1 <- cbind(tHhat1, 1:(dim(tHhat)[[1]]))
+
+    ## NB tHat, tMhat should be i-invariant (but beware of unbalanced)
+    tMhat1 <- diag(1, length(ty1)) -
+        tHhat1 %*% solve(crossprod(tHhat1), t(tHhat1))
+    MX <- crossprod(tMhat1, tX1)
+    My <- crossprod(tMhat1, ty1)
+    for(i in 2:n) {
+        tX <- X[ind==unind[i], , drop=FALSE]
+        ty <- y[ind==unind[i]]
+        tHhat <- Hhat[ind==unind[i], , drop=FALSE]
+
+        ## if 'trend' then augment the xs-invariant component
+        if(trend) tHhat <- cbind(tHhat, 1:(dim(tHhat)[[1]]))
+
+        ## NB tHat, tMhat should be i-invariant
+        tMhat <- diag(1, length(ty)) -
+            tHhat %*% solve(crossprod(tHhat), t(tHhat))
+        tMX <- crossprod(tMhat, tX)
+        tMy <- crossprod(tMhat, ty)
+
+        MX <- rbind(MX, tMX)
+        My <- c(My, tMy)
+    }
+
+    ## checks
+    ## MX<<-MX
+    ## My<<-My
+
+    ## ALT:
+    ## MXa <<- kronecker(diag(n), tMhat1) %*% X
+    ## Mya <<- kronecker(diag(n), tMhat1) %*% y
+    ## very same result, less efficient
+
+  ## end data module
+
     ## CCEMG coefs are averages across individual regressions
     ## (here: coefs of xs-variants only!)
     coefmg <- apply(tcoef, 1, mean)
@@ -193,8 +243,7 @@ pcce <- function (formula, data, subset, na.action,
         Sigmap.star <- solve(psi.star, R.star) %*% solve(psi.star)
         vcov <- Sigmap.star/n
 
-        ## calc CCEP residuals
-        ccepres <- vector("list", n)
+        ## calc CCEP residuals both defactored and raw
         for(i in 1:n) {
             ## must redo all this because needs b_CCEP, which is
             ## not known at by-groups step
@@ -259,14 +308,20 @@ pcce <- function (formula, data, subset, na.action,
     r2cce <- 1 - sigma2cce/sigma2y
 
     ## allow outputting different types of residuals
-    switch(match.arg(residuals),
-           standard={residuals <- unlist(stdres)},
-           defactored={residuals <- unlist(cceres)
-          })
+    stdres <- unlist(stdres)
+    residuals <- unlist(cceres)
 
+    ## add transformed data (for now a simple list)
+    tr.model <- list(y=My, X=MX)
+    ## so that if the model is ccepmod,
+    ## > lm(ccepmod$tr.model[["y"]]~ccepmod$tr.model[["X"]]-1)
+    ## reproduces the model results
 
     ## Final model object:
-    ## code as in pggls, only difference is here there is no 'sigma'
+    ## code as in pggls, differences:
+    ## - here there is no 'sigma'
+    ## - there are two types of residuals
+    ## - transformed data My, MX are included for vcovHC usage
     df.residual <- nrow(X) - ncol(X)
     fitted.values <- y - residuals
     names(coef) <- rownames(vcov) <- colnames(vcov) <- coef.names
@@ -274,13 +329,14 @@ pcce <- function (formula, data, subset, na.action,
     pmodel <- attr(plm.model, "pmodel")
     pmodel$model.name <- model
     mgmod <- list(coefficients = coef, residuals = residuals,
+                  stdres = stdres, tr.model=tr.model,
                   fitted.values = fitted.values, vcov = vcov,
                   df.residual = df.residual,
                   model = model.frame(plm.model), sigma=NULL,
                   indcoef = tcoef, r.squared=r2cce,
                   #cceres = as.vector(cceres),
                   #ccemgres = as.vector(ccemgres),
-                  call = cl)
+                  formula = formula, call = cl)
     mgmod <- structure(mgmod, pdim = pdim, pmodel = pmodel)
     class(mgmod) <- c("pcce", "panelmodel")
     mgmod
@@ -300,7 +356,7 @@ summary.pcce <- function(object,...){
   y <- object$model[[1]]
   object$tss <- tss(y)
   object$ssr <- sum(residuals(object)^2)
-  object$rsqr <- 1-object$ssr/object$tss
+  object$rsqr <- object$r.squared #1-object$ssr/object$tss
   class(object) <- c("summary.pcce")
   return(object)
 }
@@ -324,12 +380,35 @@ print.summary.pcce <- function(x,digits=max(3, getOption("digits") - 2), width =
   printCoefmat(x$CoefTable,digits=digits)
   cat(paste("Total Sum of Squares: ",signif(x$tss,digits),"\n",sep=""))
   cat(paste("Residual Sum of Squares: ",signif(x$ssr,digits),"\n",sep=""))
-  cat(paste("Multiple R-squared: ",signif(x$rsqr,digits),"\n",sep=""))
+  cat(paste("HPY R-squared: ",signif(x$rsqr,digits),"\n",sep=""))
   invisible(x)
 }
 
-residuals.pcce <- function(object, ...) {
-    return(pres(object))
+residuals.pcce <- function(object,
+                           type = c("defactored", "standard"),
+                           ...) {
+    ## special resid() method for pcce: allows to extract either
+    ## defactored residuals (default) or raw residuals
+    defres <- pres(object)
+    switch(match.arg(type),
+           standard={
+               stdres <- object$stdres
+               ## add panel features taking from
+               class(stdres) <- class(defres)
+               attr(stdres, "index") <- attr(defres, "index")
+               residuals <- stdres
+                 },
+           defactored={residuals <- defres}
+           )
+    return(residuals)
 }
 
 
+model.matrix.pcce <- function(object, ...) {
+    object$tr.model$X
+}
+
+
+pmodel.response.pcce <- function(object, ...) {
+    object$tr.model$y
+}

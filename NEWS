@@ -643,3 +643,11 @@ Changes since version 1.5-18
                * extraction methods for pdata.frame and pseries now preserve order
                * class "pindex" for attribute index not lost anymore after subsetting a pdata.frame
 	
+Changes since version 1.5-19
+
+  * pcce now supports model.matrix and pmodel.response methods, extracting the transformed data so that the estimator can be replicated by lm(pmodel.response(model) ~ model.matrix(model)); this is needed both for vcovXX functions and for cluster bootstrapping
+  * summary.pcce outputs the R2 calculated according to Holly, Pesaran and Yamagata instead of RSS/TSS
+	
+Changes since version 1.5-20
+
+  * vcovXX.pcce methods added by copying the vcovXX.plm ones; work just the same, sandwiching the appropriate "meat" in transformed data. General reference is Wooldridge, Ch. 7

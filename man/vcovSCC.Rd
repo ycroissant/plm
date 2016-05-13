@@ -1,6 +1,7 @@
 \name{vcovSCC}
 \alias{vcovSCC}
 \alias{vcovSCC.plm}
+\alias{vcovSCC.pcce}
 
 \title{Driscoll and Kraay (1998) Robust Covariance Matrix Estimator}
 \description{
@@ -18,7 +19,7 @@
 }
 
 \arguments{
-  \item{x}{an object of class \code{"plm"}}
+  \item{x}{an object of class \code{"plm"} or \code{"pcce"}}
   \item{type}{one of \code{"HC0"}, \code{"sss"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"}, \code{"HC4"},}
   \item{cluster}{switch for vcovG; set at \code{"time"} here,}
   \item{maxlag}{either \code{NULL} or a positive integer specifying the

@@ -2,6 +2,7 @@
 \alias{vcovHC}
 \alias{vcovHC.plm}
 \alias{vcovHC.pgmm}
+\alias{vcovHC.pcce}
 \alias{pvcovHC}
 
 \title{Robust Covariance Matrix Estimators}
@@ -19,7 +20,8 @@
 
 \arguments{
   \item{x}{an object of class \code{"plm"} which should be the result of a 
-           random effects or a within model or a model of class \code{"pgmm"},}
+           random effects or a within model or a model of class
+  \code{"pgmm"} or an object of class \code{"pcce"},}
   \item{method}{one of \code{"arellano"}, \code{"white1"}, \code{"white2"},}
   \item{type}{one of \code{"HC0"}, \code{"sss"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"}, \code{"HC4"},}
   \item{cluster}{one of \code{"group"}, \code{"time"}}

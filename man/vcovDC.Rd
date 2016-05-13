@@ -1,6 +1,7 @@
 \name{vcovDC}
 \alias{vcovDC}
 \alias{vcovDC.plm}
+\alias{vcovDC.pcce}
 
 \title{Double-Clustering Robust Covariance Matrix Estimator}
 \description{
@@ -14,7 +15,7 @@
 }
 
 \arguments{
-  \item{x}{an object of class \code{"plm"}}
+  \item{x}{an object of class \code{"plm"} or \code{"pcce"}}
   \item{type}{one of \code{"HC0"}, \code{"sss"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"}, \code{"HC4"},}
   \item{...}{further arguments}.
 }

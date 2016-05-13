@@ -36,10 +36,12 @@ importFrom("stats", "approx", "as.formula", "coef", "coefficients",
 S3method("model.frame", "pFormula")
 S3method("model.matrix", "pFormula")
 S3method("model.matrix", "plm")
+S3method("model.matrix", "pcce")
 S3method("as.Formula", "pFormula")
 S3method("pmodel.response", "data.frame")
 S3method("pmodel.response", "pFormula")
 S3method("pmodel.response", "plm")
+S3method("pmodel.response", "pcce")
 # Formula, formula
 S3method("has.intercept", "Formula")
 S3method("has.intercept", "formula")
@@ -131,16 +133,21 @@ S3method("formula", "dynformula")
 # vcovHC
 S3method("vcovHC", "plm")
 S3method("vcovHC", "pgmm")
+S3method("vcovHC", "pcce")
 # vcovBK
 S3method("vcovBK", "plm")
 # vcovSCC 
 S3method("vcovSCC", "plm")
+S3method("vcovSCC", "pcce")
 # vcovNW 
 S3method("vcovNW", "plm")
+S3method("vcovNW", "pcce")
 # vcovDC 
 S3method("vcovDC", "plm")
+S3method("vcovDC", "pcce")
 # vcovG
 S3method("vcovG", "plm")
+S3method("vcovG", "pcce")
 # pseries
 S3method("lag", "pseries")
 S3method("lead", "pseries")

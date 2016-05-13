@@ -1,6 +1,7 @@
 \name{vcovG}
 \alias{vcovG}
 \alias{vcovG.plm}
+\alias{vcovG.pcce}
 
 \title{Generic Lego building block for Robust Covariance Matrix Estimators}
 \description{
@@ -16,7 +17,7 @@
 }
 
 \arguments{
-  \item{x}{an object of class \code{"plm"}}
+  \item{x}{an object of class \code{"plm"} or \code{"pcce"}}
   \item{type}{one of \code{"HC0"}, \code{"sss"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"}, \code{"HC4"},}
   \item{cluster}{one of \code{"group"}, \code{"time"},}
   \item{l}{lagging order, defaulting to zero}
