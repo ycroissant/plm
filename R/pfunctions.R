@@ -193,7 +193,17 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
         #remove empty levels if any
         index <- data.frame(lapply(index, function(x) x[drop = TRUE]))
     }
+    
+    # delete attribute for old index first:
+    # this preseves the order of the attributes because 
+    # order of non-standard attributes is scrambled by R's data.frame subsetting with `[.`
+    # (need to add new index later anyway)
+    attr(x, "index") <- NULL
     mydata <- `[.data.frame`(x, i, j, drop = drop)
+    
+    # restore "pindex" class for index which got dropped by subsetting with [.data.frame
+    class(index) <- base::union("pindex", class(index))
+    
     if (is.null(dim(mydata))){
         structure(mydata,
                   index = index,
@@ -238,10 +248,11 @@ print.pdata.frame <- function(x, ...){
   class(x) <- "data.frame"
   result <- x[[y]]
   if (!is.null(result)){
+    # use this order for attributes to preserve original order of attributes for a pseries
     result <- structure(result,
+                        names = row.names(x),
                         class = base::union("pseries", class(x[[y]])), # use union to avoid doubling pseries if already present
-                        index = index,
-                        names = row.names(x)
+                        index = index 
                         )
   }
   result
