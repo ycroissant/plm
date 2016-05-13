@@ -21,10 +21,14 @@
 }
 
 \details{
-\code{nobs} is just a wrapper for convenience, it calls \code{pdim(x)$nT$N} (except for pgmm models) and is similar to \code{lm()}'s \code{nobs}.
+  The number of observations is usually the length of the residuals vector. Thus, \code{nobs} gives
+  the number of observations actually used by the estimation procedure. It is not necessarily the number
+  of observations of the model frame (number of rows in the model frame), because sometimes the model frame
+  is further reduced by the estimation procedure. This is e.g. the case for first--difference models 
+  estimated by \code{plm(..., model = "fd")} where the model frame does not yet contain the differences (see
+  also \bold{Examples}).
 }
 
-\author{Yves Croissant (for \code{pdim}) and Kevin Tappe (wrapper \code{nobs})}
 
 \seealso{\code{\link{pdim}}}
 
@@ -39,6 +43,11 @@ nobs(z)       # total observations used in estimation
 pdim(z)$nT$N  # same information
 pdim(z)       # more information about the dimensions (no. of individuals and time periods)
 
+# illustrate difference between nobs and pdim for first-difference model
+data("Grunfeld", package = "plm")
+fdmod <- plm(inv ~ value + capital, data = Grunfeld, model = "fd")
+nobs(fdmod)  # 190
+pdim(fdmod)$nT$N # 200
 }
 
 \keyword{attribute}

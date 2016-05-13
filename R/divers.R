@@ -224,7 +224,7 @@ pres <- function(x) {  # pres.panelmodel
 # nobs() function to extract total number of observations used for estimating the panelmodel
 # like stats::nobs for lm objects
 nobs.panelmodel <- function(object, ...) {
-  if (inherits(object, "plm") | inherits(object, "panelmodel")) return(pdim(object)$nT$N)
+  if (inherits(object, "plm") | inherits(object, "panelmodel")) return(length(residuals(object)))
     else stop("Input 'object' needs to be of class 'plm' or 'panelmodel'")
 }
 
