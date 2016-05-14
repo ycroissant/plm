@@ -65,3 +65,15 @@ if (!isTRUE(all.equal(attrib_names_before_subsetting_pseries, attrib_names_after
   stop("order of attributes has changed after subsetting a pseries")
 
 
+if (!(identical(pGrunfeld[["inv"]], pGrunfeld$"inv")))
+ stop("extraction of vector from pdata.frame yields different results for [[.pdata.frame and $.pdata.frame")
+
+# check names and order of attribute
+# generally, R does not currently garantuee preserving the order of attributes
+# (which is why identical(..., attrib.as.set = TRUE) is default
+attrib_names_after_subsetting_pdataframe  <- names(attributes(pGrunfeld[1:2, ]))
+if (!isTRUE(all.equal(attrib_names_before_subsetting_pdataframe, attrib_names_after_subsetting_pdataframe)))
+  stop("attributes names (or their order) have changed after subsetting")
+  
+
+

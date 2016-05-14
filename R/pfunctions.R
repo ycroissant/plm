@@ -158,6 +158,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
   
   if (row.names){
     attr(x, "row.names") <- fancy.row.names(index)
+    # no fancy row.names for index attribute (!?): maybe because so, it is possible to restore original row.names
   }
   
   class(index) <- c("pindex", "data.frame")
@@ -170,6 +171,27 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
   return(x)
 }
 
+
+
+###################################################
+### chunk number 2: assigning
+###################################################
+
+"$<-.pdata.frame" <- function(x, name, value){
+  if (class(value)[1] == "pseries"){
+    if (length(class(value)) == 1) value <- unclass(value)
+    else class(value) <- class(value)[-1]
+    attr(value, "index") <- NULL
+  }
+  "$<-.data.frame"(x, name, value)
+}
+
+
+###################################################
+### chunk number 3: extracting
+###################################################
+# NB: currently no extracting/subsetting function for class pseries, thus
+#     vector subsetting is used which removes the pseries features
 
 "[.pdata.frame" <- function(x, i, j, drop){
     # Kevin Tappe 2015-10-29
@@ -217,31 +239,6 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     }
 }
 
-print.pdata.frame <- function(x, ...){
-  attr(x, "index") <- NULL
-  class(x) <- "data.frame"
-  print(x, ...)
-}
-
-"$<-.pdata.frame" <- function(x, name, value){
-  if (class(value)[1] == "pseries"){
-    if (length(class(value)) == 1) value <- unclass(value)
-    else class(value) <- class(value)[-1]
-    attr(value, "index") <- NULL
-  }
-  "$<-.data.frame"(x, name, value)
-}
-
-# NB: There is an identical function a few lines below.
-#     Delete this one?
-"$.pdata.frame" <- function(x,y){
-  "[["(x, paste(as.name(y)))
-}
-
-
-###################################################
-### chunk number 3: extracting
-###################################################
 "[[.pdata.frame" <- function(x, y){
   index <- attr(x, "index")
   attr(x, "index") <- NULL
@@ -259,12 +256,22 @@ print.pdata.frame <- function(x, ...){
 }  
 
 "$.pdata.frame" <- function(x,y){
-  "[["(x, paste(as.name(y)))
+  "[[.pdata.frame"(x, paste(as.name(y)))
+}
+
+
+###################################################
+### chunk number 4: printing
+###################################################
+print.pdata.frame <- function(x, ...){
+  attr(x, "index") <- NULL
+  class(x) <- "data.frame"
+  print(x, ...)
 }
 
 print.pseries <- function(x, ...){
   attr(x, "index") <- NULL
-  attr(x, "class") <- attr(x, "class")[-1]
+  attr(x, "class") <- base::setdiff(attr(x, "class"), "pseries") # attr(x, "class")[-1]
   if (length(attr(x, "class")) == 1
       && class(x) %in% c("character", "logical", "numeric"))
     attr(x, "class") <- NULL
