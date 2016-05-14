@@ -660,3 +660,8 @@ Changes since version 1.5-21
       this list as one would expected for (e.g. 'lapplied') operations on the columns of a 
       pdata.frame, e.g. to lag over more than one column, use:
         lapply(as.list(pdataframe[ , your_cols], keep.attributes = TRUE), lag))
+
+Changes since version 1.5-22
+
+  * pdata.frames are now more consistent in themselves after subsetting:
+       (after subsetting unnecesarry information was added to the resulting pdata.frame, fixed now)

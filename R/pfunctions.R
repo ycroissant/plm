@@ -215,40 +215,50 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
         #remove empty levels if any
         index <- data.frame(lapply(index, function(x) x[drop = TRUE]))
     }
+    # restore "pindex" class for index which got dropped by subsetting with "[.data.frame"
+    class(index) <- base::union("pindex", class(index))
     
     # delete attribute for old index first:
     # this preseves the order of the attributes because 
     # order of non-standard attributes is scrambled by R's data.frame subsetting with `[.`
     # (need to add new index later anyway)
     attr(x, "index") <- NULL
-    mydata <- `[.data.frame`(x, i, j, drop = drop)
     
-    # restore "pindex" class for index which got dropped by subsetting with [.data.frame
-    class(index) <- base::union("pindex", class(index))
-    
+    # Set class to "data.frame" first to avoid coering which enlarges the (p)data.frame 
+    # (probably by as.data.frame.pdata.frame).
+    # Coercing is the built in behaviour for extraction from data.frames by "[." (see ?`[.data.frame`) 
+    # and it seems this cannot be avoided; thus we need to make sure, not to have any coercing going on
+    # which add extra data (such as as.matrix.pseries, as.data.frame.pdata.frame) by setting the class 
+    # to "data.frame" first
+    class(x) <- "data.frame"
+    mydata <- "[.data.frame"(x, i, j, drop = drop)
+
     if (is.null(dim(mydata))){
-        structure(mydata,
-                  index = index,
-                  class = base::union("pseries", class(mydata)) # use union to avoid doubling pseries if already present
-                  )
+        # subsetting returned a vector (nothing more is left) -> make it a pseries
+        res <- structure(mydata,
+                         index = index,
+                         class = base::union("pseries", class(mydata))) # use union to avoid doubling pseries if already present
+                         
     }
     else{
-        structure(mydata,
-                  index = index,
-                  class = c("pdata.frame", "data.frame"))
+        # subsetting returned a data.frame -> add missing info to make it a pdata.frame again
+        res <- structure(mydata,
+                         index = index,
+                         class = c("pdata.frame", "data.frame"))
     }
+    return(res)
 }
 
 "[[.pdata.frame" <- function(x, y){
   index <- attr(x, "index")
   attr(x, "index") <- NULL
   class(x) <- "data.frame"
-  result <- x[[y]]
+  result <- "[[.data.frame"(x, y) # x[[y]]
   if (!is.null(result)){
     # use this order for attributes to preserve original order of attributes for a pseries
     result <- structure(result,
                         names = row.names(x),
-                        class = base::union("pseries", class(x[[y]])), # use union to avoid doubling pseries if already present
+                        class = base::union("pseries", class(result)), # class(x[[y]]) # use union to avoid doubling pseries if already present
                         index = index 
                         )
   }

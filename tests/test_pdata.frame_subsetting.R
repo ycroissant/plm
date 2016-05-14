@@ -1,6 +1,7 @@
 # test if subsetting by rownames of a pdata.frame preserves index
 #  (pre rev. 187/189 all entries were set to NA)
-#
+#  (pre rev. 251 subsetting a pdata.frame added extra information due to coercing rules of "[.data.frame")
+
 library(plm)
 data("Grunfeld")
 
@@ -30,30 +31,53 @@ if (any(is.na(attr(pGrunfeld[[3]], which = "index")))) warning("FAIL: NA in inde
 
 
 
+############ subsetting changes the pdata.frame
+##########(since rev. 251 only a tiny bit),
+########## pre rev 251 a lot of unnecessary information was added to the pdata.frame by subsetting 
+
+# this should yield a structurally identical pdata.frame as all rows are extracted:
+Grunfeld2 <- Grunfeld[1:nrow(Grunfeld), ]
+pGrunfeld2 <- pGrunfeld[1:nrow(pGrunfeld), ]
+
+identical(Grunfeld, Grunfeld2)    # TRUE for data.frame
+identical(pGrunfeld, pGrunfeld2)  # FALSE for pdata.frame
+
+######### mode of index gets changed by subsetting!
+all.equal(pGrunfeld, pGrunfeld2)
+all.equal(pGrunfeld, pGrunfeld2, check.attributes = FALSE)
+# compare::compare(pGrunfeld, pGrunfeld2, allowAll = TRUE)
+
+# leave test commented as not yet addressed
+# if (!identical(pGrunfeld, pGrunfeld2)) stop("not identical")
 
 
 
-#### subsetted pdata.frame can not be used for estimation in rev. 189
+### compare object sizes
+object.size(dput(pGrunfeld))  # 37392 bytes
+object.size(dput(pGrunfeld2)) # 26200 bytes since rev. 251
+                              # (was: 83072 bytes in pre rev.251, considerably larger!)
+
+
+
+
+#### estimation on a subsetted pdata.frame failed pre rev. 251
 pGrunfeld_sub <- pGrunfeld[c(23:99), ]
+
+plm(inv ~ value + capital, data = pGrunfeld[c(23:99), ]) # failed pre rev.251
 
   # classes of index of pdata.frame and subsetted pdata.frame are the same 'pindex' and 'data.frame')
   class(attr(pGrunfeld, which="index"))
   class(attr(pGrunfeld$inv, which="index"))
   if (!all(class(attr(pGrunfeld, which="index")) == class(attr(pGrunfeld$inv, which="index")))) warning("classes differ!")
   
-  # However, classes index of columns of pdata.frame and subsetted pdata.frame diverge
-  # (subsetted pdata.frame column misses class 'pindex' relative to full pdata.frame)
+  # classes of index of columns of pdata.frame and subsetted pdata.frame must be the same 'pindex' and 'data.frame')
   class(attr(pGrunfeld$inv, which="index"))
   class(attr(pGrunfeld_sub$inv, which="index"))
-#  if (!all(class(attr(pGrunfeld$inv, which="index")) == class(attr(pGrunfeld_sub$inv, which="index")))) warning("classes differ!")
-
-# plm(inv ~ value + capital, data = pGrunfeld[c(23:99), ]) # fails in v 189
-
-plm(inv ~ value + capital, data = pdata.frame(as.data.frame(pGrunfeld[c(23:99), ]))) # coercing to data.frame first => works
+  if (!all(class(attr(pGrunfeld$inv, which="index")) == class(attr(pGrunfeld_sub$inv, which="index")))) warning("classes differ!")
 
 
-##subsetting by [] doesn't mimic data.frame behavior
-##this data.frame subsetting isn't documented clearly:
+############ subsetting by [] doesn't mimic data.frame behavior in case of missing j
+##this data.frame subsetting isn't documented clearly?:
 # ?Extract.data.frame
 # "When [ and [[ are used with a single vector index (x[i] or x[[i]]),
 # they index the data frame as if it were a list."
