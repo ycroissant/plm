@@ -1,5 +1,5 @@
-export(plm, pvcm, pgmm, pggls, pht, pcce, pmg, plmtest, phtest, pFtest, detect_lin_dep,
-       is.pconsecutive, within_intercept,
+export(plm, pvcm, pgmm, pggls, pht, pcce, pmg, plmtest, phtest, pFtest, 
+       detect_lin_dep, is.pconsecutive, within_intercept,
        pvar, pdim, pooltest, dynformula, sargan, mtest, ercomp, pvcovHC,
        pbsytest, pdwtest, pbgtest, pbltest, pwartest, pwtest, pwfdtest, pcdtest,
        plm.data, pdata.frame, between, Between, Within, lag, lead, pFormula, pmodel.response,
@@ -51,12 +51,13 @@ S3method("index", "pdata.frame")
 S3method("index", "panelmodel")
 S3method("index", "pseries")
 # pdata.frame
-S3method("print", "pdata.frame")
-S3method('[', "pdata.frame")
-S3method('$', "pdata.frame")
-S3method('[[', "pdata.frame")
-S3method('$<-', "pdata.frame")
+S3method("print",         "pdata.frame")
+S3method('[',             "pdata.frame")
+S3method('$',             "pdata.frame")
+S3method('[[',            "pdata.frame")
+S3method('$<-',           "pdata.frame")
 S3method("as.data.frame", "pdata.frame")
+S3method("as.list",       "pdata.frame")
 # pdim
 S3method("pdim", "data.frame")
 S3method("pdim", "pdata.frame")

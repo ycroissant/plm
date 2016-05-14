@@ -305,6 +305,42 @@ as.matrix.pseries <- function(x, idbyrow = TRUE, ...){
   x
 }
 
+###################################################
+### chunk number 6: as.list.pdata.frame
+###################################################
+# The default is to behave identical to as.list.data.frame.
+# This default is necessary, because some code relies on this 
+# behaviour! Do not change this!
+#
+#  as.list.data.frame does:
+#    * unclass
+#    * strips all classes but "list"
+#    * strips row.names
+#
+#  By setting argument keep.attributes = TRUE, the attributes of the pdata.frame
+#  are preserved by as.list.pdata.frame: a list of pseries is returned
+#  and lapply can be used as usual, now working on a list of pseries, e.g.
+#    lapply(as.list(pdata.frame[ , your_cols], keep.attributes), lag)
+#  works as expected.
+as.list.pdata.frame <- function(x, keep.attributes = FALSE, ...) {
+  if (!keep.attributes) {
+    x <- as.list.data.frame(x)
+  } else {
+    # make list of pseries objects
+    x_names <- names(x)
+    x <- lapply(x_names, FUN = function(element, pdataframe) {
+                                    "[[.pdata.frame"(x = pdataframe, y = element)
+                                    }, pdataframe = x)
+    names(x) <- x_names
+     
+    # note: this function is slower than the corresponding
+    # as.list.data.frame function,
+    # because we cannot simply use unclass() on the pdata.frame:
+    # need to add index etc to all columns to get proper pseries
+    # back => thus the extraction function "[[.pdata.frame is used
+    }
+  return(x)
+}
 
 
 ###################################################

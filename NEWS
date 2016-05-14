@@ -651,3 +651,12 @@ Changes since version 1.5-19
 Changes since version 1.5-20
 
   * vcovXX.pcce methods added by copying the vcovXX.plm ones; work just the same, sandwiching the appropriate "meat" in transformed data. General reference is Wooldridge, Ch. 7
+  
+Changes since version 1.5-21
+
+  * new function as.list.pdata.frame:
+      Default behaviour is to act identical to as.list.data.frame (some code relies on this, do not change!).
+      By setting arg 'keep.attributes = TRUE', one gets a list of pseries and can operate on
+      this list as one would expected for (e.g. 'lapplied') operations on the columns of a 
+      pdata.frame, e.g. to lag over more than one column, use:
+        lapply(as.list(pdataframe[ , your_cols], keep.attributes = TRUE), lag))
