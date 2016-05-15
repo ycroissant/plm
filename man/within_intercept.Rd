@@ -21,8 +21,13 @@ within_intercept(object, ...)
 \details{
 The (somewhat artificial) intercept for within models (fixed effects models) was made popular by
 Stata of StataCorp (see Gould (2013)) and later also adopted by Gretl (see Cottrell/Lucchetti (2016), p. 160-161 (example 18.1)).
-It can be considered an overall intercept in the within model framework and is the weighted mean of fixed effects, see examples 
-for the relationship.
+It can be considered an overall intercept in the within model framework and is the weighted mean of fixed
+effects (see \bold{Examples} for the relationship).
+
+\code{within_intercept} estimates a new model which is
+computationally more demanding than just taking the weighted mean. However, with \code{within_intercept} 
+one also gets the associated standard error and it is possible to get an overall intercept for twoway fixed
+effect models.
 
 Users can set argument \code{.vcov} to a function to calculate a specific (robust) variance--covariance matrix and get the 
 respective (robust) standard error for the overall intercept, e.g. the function \code{\link[plm]{vcovHC}}, 
@@ -56,7 +61,7 @@ overallint <- within_intercept(mod_fe)
 attr(overallint, "se") # standard error
 
 # overall intercept is the weighted mean of fixed effects
-weighted.mean(fixef(mod_fe) , as.numeric(table(index(mod_fe)[[1]])))
+weighted.mean(fixef(mod_fe), as.numeric(table(index(mod_fe)[[1]])))
 
 # relationship of type="dmean", "level" and within_intercept
 data("Grunfeld", package = "plm")

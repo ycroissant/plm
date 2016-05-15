@@ -29,12 +29,12 @@ pdim(x,...)
 
  \item{nT}{a list containing \code{n}, the number of individuals, \code{T},
   the number of time observations, \code{N} the total number of observations,}
- \item{Tint}{a list containing two vectors : \code{Ti} gives the
-  number of observations for each individuals and \code{nt} gives
+ \item{Tint}{a list containing two vectors (of type integer): \code{Ti} gives the
+  number of observations for each individual and \code{nt} gives
   the number of individuals observed for each period,}
- \item{balanced}{a logical value : \code{TRUE} for a balanced panel,
+ \item{balanced}{a logical value: \code{TRUE} for a balanced panel,
   \code{FALSE} for an unbalanced panel,}
- \item{panel.names}{a list of character vectors : \code{id.names}
+ \item{panel.names}{a list of character vectors: \code{id.names}
   contains the names of each individual and \code{time.names}
   contains the names of each period.}
 }
@@ -47,7 +47,7 @@ pdim(x,...)
 }
 
 \details{
-\code{pdim} is called by the estimation functions.
+\code{pdim} is called by the estimation functions and can be also used stand-alone.
 }
 
 \author{Yves Croissant}
@@ -59,9 +59,7 @@ pdim(x,...)
 }
 
 \examples{
-
 # There are 595 individuals
-
 data("Wages", package = "plm")
 pdim(Wages, 595)
 

@@ -659,12 +659,12 @@ Changes since version 1.5-21
       By setting arg 'keep.attributes = TRUE', one gets a list of pseries and can operate on
       this list as one would expected for (e.g. 'lapplied') operations on the columns of a 
       pdata.frame, e.g. to lag over more than one column, use:
-        lapply(as.list(pdataframe[ , your_cols], keep.attributes = TRUE), lag))
+        lapply(as.list(pdataframe[ , your_cols], keep.attributes = TRUE), lag)
 
 Changes since version 1.5-22
 
   * pdata.frames are now more consistent after subsetting:
-      => identical(pdataframe, pdataframe[1:nrow(pdataframe), ]) yields TRUE bow
+      => identical(pdataframe, pdataframe[1:nrow(pdataframe), ]) yields TRUE now
        * fixed: after subsetting unnecessary information was added to the resulting pdata.frame
        * fixed: mode of index attribute was changed (unintentionally "simplified")
 

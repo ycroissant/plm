@@ -5,6 +5,7 @@
 \alias{[[.pdata.frame}
 \alias{$.pdata.frame}
 \alias{as.data.frame.pdata.frame}
+\alias{as.list.pdata.frame}
 
 \title{data.frame for panel data}
 
@@ -21,6 +22,7 @@ pdata.frame(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 \method{$}{pdata.frame}(x, y)
 \method{print}{pdata.frame}(x, ...)
 \method{as.data.frame}{pdata.frame}(x, row.names = NULL, optional = FALSE, ...)
+\method{as.list}{pdata.frame}(x, keep.attributes = FALSE, ...)
 }
 \arguments{
   \item{x}{ a \code{data.frame} for the \code{pdata.frame} function and a
@@ -36,6 +38,7 @@ pdata.frame(x, index = NULL, drop.index = FALSE, row.names = TRUE,
   \item{row.names}{\code{NULL} or logical, indicates whether ``fancy'' row names (a combination of individual
   index and time index) are to be added to the returned (p)data.frame (\code{NULL} and \code{FALSE} have the same meaning),}
   \item{stringsAsFactors}{logical, indicating whether character vectors are to be converted to factors,}
+  \item{keep.attributes}{logical, only for as.list, indicating the elements of the returned list should have the pdata.frame's attributes added (default: FALSE),}
   \item{...}{further arguments}
 }
 
@@ -70,7 +73,12 @@ then added to the series and a class attribute \code{"pseries"} is
 added. The \code{"["} method behaves as for \code{data.frame}, except
 that the extraction is also applied to the \code{index} attribute.
 \code{as.data.frame} removes the index from the \code{pdata.frame} and
-adds it to every series.
+adds it to each column.
+
+\code{as.list} behaves by default identical to \code{\link[base]{as.list.data.frame}}
+which means it drops the attributes specific to a pdata.frame; if a list of pseries
+is wanted, the attribute \code{keep.attributes} can to be set to \code{TRUE}. This also
+makes \code{lapply} work as expected on a pdata.frame (see also \bold{Examples}).
 }
 
 \seealso{
@@ -92,6 +100,10 @@ Hed <- pdata.frame(Hedonic, index = "townid", row.names = FALSE)
 # data set 'Wages' is organized as a stacked time series
 data("Wages", package = "plm")
 Wag <- pdata.frame(Wages, 595)
+
+# lapply on a pdata.frame by making it a list of pseries first
+lapply(as.list(Wag[ , c("ed", "lwage")], keep.attributes = TRUE), lag)
+
 }
 
 \author{Yves Croissant}

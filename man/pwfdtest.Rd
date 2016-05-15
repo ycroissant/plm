@@ -11,14 +11,14 @@ First--differencing--based test of serial correlation for (the idiosyncratic com
 
 \usage{
 pwfdtest(x,...)
-\method{pwfdtest}{panelmodel}(x, ..., h0 = c("fd","fe"))
-\method{pwfdtest}{formula}(x, data, ..., h0 = c("fd","fe"))
+\method{pwfdtest}{panelmodel}(x, ..., h0 = c("fd", "fe"))
+\method{pwfdtest}{formula}(x, data, ..., h0 = c("fd", "fe"))
 }
 
 \arguments{
-  \item{x}{an object of class \code{formula} or a \code{"fd"} model,}
+  \item{x}{an object of class \code{formula} or a \code{"fd"}-model (plm object),}
   \item{data}{a \code{data.frame},}
-  \item{h0}{the null hypothesis: one of "fd","fe",}
+  \item{h0}{the null hypothesis: one of \code{"fd"}, \code{"fe"},}
   \item{...}{further arguments to be passed on to
   \code{linearHypothesis} or to \code{vcovHC}.}
 }
@@ -63,10 +63,15 @@ data(EmplUK)
 pwfdtest(log(emp) ~ log(wage) + log(capital), data = EmplUK)
 pwfdtest(log(emp) ~ log(wage) + log(capital), data = EmplUK, h0 = "fe")
 
+# pass argument 'type' to vcovHC used in test
+pwfdtest(log(emp) ~ log(wage) + log(capital), data = EmplUK, type = "HC3", h0 = "fe")
+
+
 # same with panelmodel interface
 mod <- plm(log(emp) ~ log(wage) + log(capital), data = EmplUK, model = "fd")
 pwfdtest(mod)
 pwfdtest(mod, h0 = "fe")
+pwfdtest(mod, type = "HC3", h0 = "fe")
 
 }
 
