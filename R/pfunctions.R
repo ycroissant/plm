@@ -156,11 +156,15 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
   index <- x[, posindex]
   if (drop.index) x <- x[, - posindex]
   
-  test_doub <- table(index[[1]], index[[2]])
-  if (any(as.vector(test_doub) > 1)) warning("duplicate couples (time-id) in resulting pdata.frame")
+  test_doub <- table(index[[1]], index[[2]], useNA = "ifany")
+  if (any(is.na(colnames(test_doub))) || any(is.na(rownames(test_doub))))
+    warning("at least one couple (time-id) has NA in at least one index dimension in resulting pdata.frame")
+  if (any(as.vector(test_doub[!is.na(rownames(test_doub)), !is.na(colnames(test_doub))]) > 1))
+    warning("duplicate couples (time-id) in resulting pdata.frame")
   
   if (row.names){
-    row.names(x) <- fancy.row.names(index) # using row.names(x) is safer than attr(x, "row.names") <- "something"
+    attr(x, "row.names") <- fancy.row.names(index)
+    # NB: attr(x, "row.names") allows for duplicate rownames (as opposed to row.names(x) <- "something)
     # no fancy row.names for index attribute (!?): maybe because so, it is possible to restore original row.names
   }
   
@@ -563,7 +567,8 @@ as.data.frame.pdata.frame <- function(x, row.names = NULL, optional = FALSE, ...
   } else {
       if (row.names == TRUE) { # set fancy row names
         x <- data.frame(x)
-        row.names(x) <- fancy.row.names(index) # using row.names(x) is safer than attr(x, "row.names") <- "something"
+        row.names(x) <- fancy.row.names(index) # using row.names(x) is safer (no duplicate row.names) 
+                                               # than attr(x, "row.names") <- "something"
       }
     ## if row.names is a character vector, row.names could also be passed here to base::data.frame , see ?base::data.frame
   } 
