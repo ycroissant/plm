@@ -663,5 +663,8 @@ Changes since version 1.5-21
 
 Changes since version 1.5-22
 
-  * pdata.frames are now more consistent in themselves after subsetting:
-       (after subsetting unnecesarry information was added to the resulting pdata.frame, fixed now)
+  * pdata.frames are now more consistent after subsetting:
+      => identical(pdataframe, pdataframe[1:nrow(pdataframe), ]) yields TRUE bow
+       * fixed: after subsetting unnecessary information was added to the resulting pdata.frame
+       * fixed: mode of index attribute was changed (unintentionally "simplified")
+

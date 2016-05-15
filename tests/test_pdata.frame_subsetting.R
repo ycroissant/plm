@@ -40,29 +40,48 @@ Grunfeld2 <- Grunfeld[1:nrow(Grunfeld), ]
 pGrunfeld2 <- pGrunfeld[1:nrow(pGrunfeld), ]
 
 identical(Grunfeld, Grunfeld2)    # TRUE for data.frame
-identical(pGrunfeld, pGrunfeld2)  # FALSE for pdata.frame
+identical(pGrunfeld, pGrunfeld2)  # TRUE for pdata.frame (was FALSE pre rev. 252)
+if (!identical(pGrunfeld, pGrunfeld2))
+  stop("pdata.frame not identical after \"subsetting\" with all rows (which should actually not do any subsetting))")
 
-######### mode of index gets changed by subsetting!
+### compare object sizes
+object.size(pGrunfeld)  # 37392 bytes
+object.size(pGrunfeld2) # 37392 bytes since rev. 252 # (was: 83072 bytes in pre rev.251, considerably larger!)
+                                                     # (was: 26200 bytes in rev. 251)
+if (!object.size(pGrunfeld) == object.size(pGrunfeld2))
+  print("pdata.frame not same object size after \"subsetting\" with all rows (which should actually not do any subsetting))")
+
+# this is likely to be unnecessary pedandic, because by default attrib.as.set is TRUE
+identical(Grunfeld, Grunfeld2,   attrib.as.set = FALSE)  # TRUE for data.frame
+identical(pGrunfeld, pGrunfeld2, attrib.as.set = FALSE)  # FALSE for pdata.frame
+
+
+# disply differences (if any) [with rev. 252 there should be no differences left]
 all.equal(pGrunfeld, pGrunfeld2)
 all.equal(pGrunfeld, pGrunfeld2, check.attributes = FALSE)
 # compare::compare(pGrunfeld, pGrunfeld2, allowAll = TRUE)
 
-# leave test commented as not yet addressed
-# if (!identical(pGrunfeld, pGrunfeld2)) stop("not identical")
+
+# Unused levels from the index attribute of a pdata.frame shall be dropped
+# (NB: unused levels are not dropped from the variables of the pdata.frame as this is standard R behaviour)
+pGrunfeld_sub_id <- pGrunfeld[-c(1:20), ] # drop first individual (1st ind. is in first 20 rows)
+if (!isTRUE(all.equal(levels(attr(pGrunfeld_sub_id, "index")[[1]]), levels(factor(2:10)))))
+  stop("unused levels from index (individual) not dropped")
+
+pGrunfeld_sub_year <- pGrunfeld[!pGrunfeld$year %in% "1936", ] # drop year 1936
+if (!isTRUE(all.equal(levels(attr(pGrunfeld_sub_year, "index")[[2]]), levels(factor(c(1935, 1937:1954))))))
+  stop("unused levels from index (time) not dropped")
 
 
 
-### compare object sizes
-object.size(dput(pGrunfeld))  # 37392 bytes
-object.size(dput(pGrunfeld2)) # 26200 bytes since rev. 251
-                              # (was: 83072 bytes in pre rev.251, considerably larger!)
 
 
 
 
-#### estimation on a subsetted pdata.frame failed pre rev. 251
+
+
+#### test estimation by plm on a subsetted pdata.frame (failed pre rev. 251)
 pGrunfeld_sub <- pGrunfeld[c(23:99), ]
-
 plm(inv ~ value + capital, data = pGrunfeld[c(23:99), ]) # failed pre rev.251
 
   # classes of index of pdata.frame and subsetted pdata.frame are the same 'pindex' and 'data.frame')
@@ -76,8 +95,8 @@ plm(inv ~ value + capital, data = pGrunfeld[c(23:99), ]) # failed pre rev.251
   if (!all(class(attr(pGrunfeld$inv, which="index")) == class(attr(pGrunfeld_sub$inv, which="index")))) warning("classes differ!")
 
 
-############ subsetting by [] doesn't mimic data.frame behavior in case of missing j
-##this data.frame subsetting isn't documented clearly?:
+############ subsetting by [] doesn't mimic data.frame behavior in case of missing j (j as in pdf[i, j])
+##t his data.frame subsetting isn't documented clearly(?):
 # ?Extract.data.frame
 # "When [ and [[ are used with a single vector index (x[i] or x[[i]]),
 # they index the data frame as if it were a list."
@@ -86,5 +105,8 @@ plm(inv ~ value + capital, data = pGrunfeld[c(23:99), ]) # failed pre rev.251
 X <- head(Grunfeld, 25)
 pX <- pdata.frame(X)
 X[2:4]  ##data.frame returns columns 2, 3, 4
-pX[2:4]  ##pdata.frame returns rows 2, 3, 4
+pX[2:4]  ##pdata.frame returns rows 2, 3, 4 - should yield columns
+"[.data.frame"(pX, 2:4)
+plm:::"[.pdata.frame"(pX, 2:4)
+
 

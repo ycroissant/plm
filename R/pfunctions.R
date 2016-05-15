@@ -156,17 +156,17 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
   index <- x[, posindex]
   if (drop.index) x <- x[, - posindex]
   
+  test_doub <- table(index[[1]], index[[2]])
+  if (any(as.vector(test_doub) > 1)) warning("duplicate couples (time-id) in resulting pdata.frame")
+  
   if (row.names){
-    attr(x, "row.names") <- fancy.row.names(index)
+    row.names(x) <- fancy.row.names(index) # using row.names(x) is safer than attr(x, "row.names") <- "something"
     # no fancy row.names for index attribute (!?): maybe because so, it is possible to restore original row.names
   }
   
   class(index) <- c("pindex", "data.frame")
   attr(x, "index") <- index
   class(x) <- c("pdata.frame", "data.frame")
-  
-  test_doub <- table(index[[1]], index[[2]])
-  if (any(as.vector(test_doub) > 1)) warning("duplicate couples (time-id) in resulting pdata.frame")
   
   return(x)
 }
@@ -196,8 +196,8 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 "[.pdata.frame" <- function(x, i, j, drop){
     # Kevin Tappe 2015-10-29
     if (missing(drop)){
-        if (! missing(j) && length(j) == 1) drop = TRUE
-        else drop = FALSE
+        if (! missing(j) && length(j) == 1) { drop = TRUE
+          } else { drop = FALSE }
     }
     old.pdata.frame <- ! inherits(x, "data.frame")
     if (! old.pdata.frame){
@@ -212,11 +212,13 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
             index <- "[.data.frame"(attr(x, "index"), iindex, )
         }
         else index <- "[.data.frame"(attr(x, "index"), i, )
-        #remove empty levels if any
-        index <- data.frame(lapply(index, function(x) x[drop = TRUE]))
+        # remove empty levels in index (if any)
+        # NB: really do dropping of unused levels? Standard R behaviour is to leave the levels and not drop unused levels
+        #     Maybe the dropping is needed for lag.pseries to work correctly?
+        index <- droplevels(index)
+        # NB: use droplevels() rather than x[drop = TRUE] as x[drop = TRUE] can also coerce mode!
+        # old (up to rev. 251): index <- data.frame(lapply(index, function(x) x[drop = TRUE]))
     }
-    # restore "pindex" class for index which got dropped by subsetting with "[.data.frame"
-    class(index) <- base::union("pindex", class(index))
     
     # delete attribute for old index first:
     # this preseves the order of the attributes because 
@@ -561,7 +563,7 @@ as.data.frame.pdata.frame <- function(x, row.names = NULL, optional = FALSE, ...
   } else {
       if (row.names == TRUE) { # set fancy row names
         x <- data.frame(x)
-        attr(x, "row.names") <- fancy.row.names(index)
+        row.names(x) <- fancy.row.names(index) # using row.names(x) is safer than attr(x, "row.names") <- "something"
       }
     ## if row.names is a character vector, row.names could also be passed here to base::data.frame , see ?base::data.frame
   } 
