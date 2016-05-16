@@ -197,31 +197,60 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 # NB: currently no extracting/subsetting function for class pseries, thus
 #     vector subsetting is used which removes the pseries features
 
-"[.pdata.frame" <- function(x, i, j, drop){
-    # Kevin Tappe 2015-10-29
-    if (missing(drop)){
-        if (! missing(j) && length(j) == 1) { drop = TRUE
-          } else { drop = FALSE }
-    }
-    old.pdata.frame <- ! inherits(x, "data.frame")
+"[.pdata.frame" <- function(x, i, j, drop = if (missing(i)) TRUE else length(cols) == 1) {
+                             # copy signature of [.data.frame here
+  
+    missing.i    <- missing(i)    # missing is only guaranteed yield correct results,
+    missing.j    <- missing(j)    # if its argument was not modified before
+    missing.drop <- missing(drop) # -> save information about missingness
+    sc <- sys.call()
+    # Nargs_mod to distinguish if called by [] (Nargs_mod == 2L); [,] (Nargs_mod == 3L); [,,] (Nargs_mod == 4L)
+    Nargs_mod <- nargs() - (!missing.drop)
+  
+    # # Kevin Tappe 2015-10-29
+    # if (missing(drop)){
+    #     if (! missing(j) && length(j) == 1) { drop = TRUE
+    #       } else { drop = FALSE }
+    # }
+  
+    old.pdata.frame <- !inherits(x, "data.frame")
     if (! old.pdata.frame){
-        # this part for backward compatibility (required by meboot)
+      # this part for backward compatibility (required by meboot)
+      
+      ### subset index appropriately:
+      # subsetting data.frame by only j (x[ , j]) or missing j (x[i] yields full-row
+      # columns of data.frame, thus do not subset index because it needs full full rows]
+      #
+      # subset index if:
+      #      * [i,j] (supplied i AND supplied j) (in this case: Nargs_mod == 3L (or 4L depending on present/missing drop))
+      #      * [i, ] (supplied i AND missing j)  (in this case: Nargs_mod == 3L (or 4L depending on present/missing drop))
+      #
+      # do not subset index in all other cases (here are the values of Nargs_mod)
+      #      * [ ,j] (missing  i AND j supplied)                   (Nargs_mod == 3L (or 4L depending on present/missing drop))
+      #      * [i]   (supplied i AND missing j)                    (Nargs_mod == 2L) [Nargs_mod distinguishes this case from the one where subsetting is needed!]
+      #      * [i, drop = TRUE/FALSE] (supplied i AND missing j)   (Nargs_mod == 2L)
+      #
+      # => subset index if: supplied i && Nargs_mod => 3L
+      
         # Kevin Tappe 2016-01-04 : in case of indexing by a character
-        # vector a pdata.frame, the subseting vector should be coerced
-        # to numeric so that the index could be correctly indexed
+        # vector a pdata.frame, the subseting vector should be converted 
+        # to numeric by matching to the rownames so that the index could 
+        # be correctly indexed (by this numeric value)
+        # (rownames of the pdata.frame and rownames of the pdata.frame's index are not guaranteed to be the same!)
         ## iindex <- i
-        if (! missing(i)){
+        index <- attr(x, "index")
+        if (!missing.i && Nargs_mod >= 3L) { 
             iindex <- i
             if (is.character(iindex)) iindex <- match(iindex, rownames(x))
-            index <- "[.data.frame"(attr(x, "index"), iindex, )
+            index <- "[.data.frame"(index, iindex, )
+            
+            # remove empty levels in index (if any)
+            # NB: really do dropping of unused levels? Standard R behaviour is to leave the levels and not drop unused levels
+            #     Maybe the dropping is needed for lag.pseries to work correctly?
+            index <- droplevels(index)
+            # NB: use droplevels() rather than x[drop = TRUE] as x[drop = TRUE] can also coerce mode!
+            # old (up to rev. 251): index <- data.frame(lapply(index, function(x) x[drop = TRUE]))
         }
-        else index <- "[.data.frame"(attr(x, "index"), i, )
-        # remove empty levels in index (if any)
-        # NB: really do dropping of unused levels? Standard R behaviour is to leave the levels and not drop unused levels
-        #     Maybe the dropping is needed for lag.pseries to work correctly?
-        index <- droplevels(index)
-        # NB: use droplevels() rather than x[drop = TRUE] as x[drop = TRUE] can also coerce mode!
-        # old (up to rev. 251): index <- data.frame(lapply(index, function(x) x[drop = TRUE]))
     }
     
     # delete attribute for old index first:
@@ -237,7 +266,21 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     # which add extra data (such as as.matrix.pseries, as.data.frame.pdata.frame) by setting the class 
     # to "data.frame" first
     class(x) <- "data.frame"
-    mydata <- "[.data.frame"(x, i, j, drop = drop)
+
+    # call [.data.frame exactly as [.pdata.frame was called but arg is now 'x'
+    # this is necessary because there could be several missing arguments
+    # use sys.call (and not match.call) because arguments other than drop may not be named
+    # need to evaluate i, j, drop, if supplied, before passing them on (do not pass on as originally catched sys.call)
+    sc_mod <- sc
+    sc_mod[[1]] <- quote(`[.data.frame`)
+    sc_mod[[2]] <- quote(x)
+    
+    if (!missing.i) sc_mod[[3]] <- i # if present, i is always in pos 3
+    if (!missing.j) sc_mod[[4]] <- j # if present, j is always in pos 4
+    if (!missing.drop) sc_mod[[length(sc)]] <- drop # if present, drop is always in last position (4 or 5,
+                                                    # depending on the call structure an whether missing j or not)
+    
+    mydata <- eval(sc_mod)
 
     if (is.null(dim(mydata))){
         # subsetting returned a vector (nothing more is left) -> make it a pseries
