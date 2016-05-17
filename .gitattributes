@@ -133,6 +133,7 @@ tests/test_fitted.plm.R -text
 tests/test_fixef.R -text
 tests/test_is.pconsecutive.R -text
 tests/test_lag_lead_factor_levels.R -text
+tests/test_lagt_leadt_factor_levels.R -text
 tests/test_model.frame.R -text
 tests/test_model.matrix_pmodel.response.R -text
 tests/test_model.matrix_pmodel.response_NA.R -text
