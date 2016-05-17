@@ -13,13 +13,14 @@
 # and the old code was not capable to manage this
 #
 # fixed in rev. 207 with better handling of factor levels and simpler code
-
+library(plm)
 
 #### source or assign in NAMESPACE the new lagging function "lagt" and overwrite original function names to demonstrate testfile
 #
 # comment this block to run the old lag and lead function
 
 ### by putting lagt/leadt in global environment:
+
 lag          <- plm:::lagt.pseries
 # lag.pseries  <- lagt.pseries
 lead         <- plm:::leadt.pseries
