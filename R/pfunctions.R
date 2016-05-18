@@ -197,8 +197,8 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 # NB: currently no extracting/subsetting function for class pseries, thus
 #     vector subsetting is used which removes the pseries features
 
-"[.pdata.frame" <- function(x, i, j, drop = if (missing(i)) TRUE else length(cols) == 1) {
-                             # copy signature of [.data.frame here
+"[.pdata.frame" <- function(x, i, j, drop) {
+                            # copy signature of [.data.frame here
   
     missing.i    <- missing(i)    # missing is only guaranteed yield correct results,
     missing.j    <- missing(j)    # if its argument was not modified before
