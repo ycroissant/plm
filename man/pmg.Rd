@@ -79,13 +79,15 @@ data("Produc", package = "plm")
 ## Mean Groups estimator
 mgmod <- pmg(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc)
 summary(mgmod)
+
 ## demeaned Mean Groups
-dmgmod <- pmg(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data =
-Produc, model="dmg")
+dmgmod <- pmg(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
+             data = Produc, model="dmg")
 summary(dmgmod)
+
 ## Common Correlated Effects Mean Groups
-ccemgmod <- pmg(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data
-= Produc, model="cmg")
+ccemgmod <- pmg(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
+                data = Produc, model="cmg")
 summary(ccemgmod)
 }
 
