@@ -219,7 +219,7 @@ pmg <- function (formula, data, subset, na.action,
     names(coef) <- rownames(vcov) <- colnames(vcov) <- coef.names
     dimnames(tcoef) <- list(coef.names, id.names)
     pmodel <- attr(plm.model, "pmodel")
-    pmodel$model.name <- model
+    pmodel$model.name <- model.name
     mgmod <- list(coefficients = coef, residuals = residuals,
                   fitted.values = fitted.values, vcov = vcov,
                   df.residual = df.residual, r.squared=r2,
