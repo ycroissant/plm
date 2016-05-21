@@ -4,7 +4,7 @@
 ## (as opposed to just shifting by row positions [which is probably what ])
 ##
 ## not exported yet;
-## also: maybe better name or overwrite original lag.pseries?
+## also: maybe better name or integrate with original lag.pseries (the latter doing lagging based on rows)?
 lagt.pseries <- function(x, k = 1, ...) {
   index <- attr(x, "index")
   id <- index[[1]]
@@ -31,15 +31,22 @@ alagt <- function(x, ak) {
     
     # Idea: split times in blocks per individuals and do lagging there by computation of correct time shifting
     
+    
+    # need to convert to numeric, do this by coering to character first (otherwise wrong results!)
+    #  see R FAQ 7.10 for coercing factors to numeric: 
+    #      as.numeric(levels(factor_var))[as.integer(factor_var)]   is more efficient than
+    #      as.numeric(as.character(factor_var))
+    time <- as.numeric(levels(time))[as.integer(time)]
+    
     list_id_timevar <- split(time, id, drop = T)
     
     index_lag_ak_all_list <- sapply(X = list_id_timevar, 
-                                    FUN = function(id_timevar) { if(any(is.na(id_timevar))) {
-                                      NA # return NA if NA found in the time periods for individual
-                                    } else {
-                                      id_timevar <- as.numeric(as.character(id_timevar))
-                                      index_lag_ak <- match(id_timevar - ak, id_timevar, incomparables = NA)
-                                    }
+                                    FUN = function(id_timevar) { 
+                                      if(any(is.na(id_timevar))) {
+                                        NA # return NA if NA found in the time periods for individual
+                                      } else {
+                                        index_lag_ak <- match(id_timevar - ak, id_timevar, incomparables = NA)
+                                      }
                                     },
                                     simplify = FALSE)
     
