@@ -9,7 +9,7 @@ trace <- function(x) sum(diag(x))
 ##   cards <- list(id = nrow(z), time = ncol(z), sample = length(x))
 ##   panel.names <- list(id = rownames(z), time = colnames(z))
 ##   if (any(as.vector(z) == 0)) balanced <- FALSE else balanced <- TRUE
-##   if (any(as.vector(z) > 1)) stop("duplicate couples (time-id)\n")
+##   if (any(as.vector(z) > 1)) stop("duplicate couples (id-time)\n")
 ##   margins <- list(id = apply(z, 1, sum), time = apply(z, 2, sum))
 ##   z <- list(cards = cards, margins = margins, balanced = balanced, panel.names = panel.names)
 ##   class(z) <- "pdim"

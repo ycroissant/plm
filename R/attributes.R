@@ -151,7 +151,7 @@ pdim.default <- function(x, y, ...){
     balanced <- FALSE
   }
   else balanced <- TRUE
-  if (any(as.vector(z) > 1)) stop("duplicate couples (time-id)\n")
+  if (any(as.vector(z) > 1)) stop("duplicate couples (id-time)\n")
   Tint <- list(Ti = Ti, nt = nt)
   z <- list(nT = nT, Tint = Tint, balanced = balanced, panel.names = panel.names)
   class(z) <- "pdim"

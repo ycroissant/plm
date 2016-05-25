@@ -384,10 +384,10 @@ Changes since version 1.2-9
 	("pmg"), much like 'pggls', together with 'panelmodel'. In the
 	future must consider possible merger with 'pvcm'.
 
-        * the new cipstest function performs a second-generation CIPS test
+  * the new cipstest function performs a second-generation CIPS test
 	for unit roots on pseries objects
 
-        * the new (hidden) function pmerge is used internally by cipstest
+  * the new (hidden) function pmerge is used internally by cipstest
 	to merge lags and differences of a pseries into the original
 	pdata.frame. Will possibly be added to the user space in the
 	future.
@@ -490,7 +490,7 @@ Changes since version 1.5-5
 
 Changes since version 1.5-6
 
-	* pruned 'require' calls to 'lmtest', 'car', 'lattice and substituted them with proper
+	* pruned 'require' calls to 'lmtest', 'car', 'lattice' and substituted them with proper
 	  entries in NAMESPACE
 
 	* temporarily commented problematic examples in pbgtest and pdwtest
@@ -535,7 +535,7 @@ Changes since version 1.5-12
 
 Changes since version 1.5-13
 
-	* fixed bug in vcovHC(... method="white") from degenerating diag() if any groups have
+	* fixed bug in vcovHC(..., method="white") from degenerating diag() if any groups have
 	  only 1 element.
 	* reintroduced "white2" method.
 
@@ -617,40 +617,43 @@ Changes since version 1.5-16
 			  * gmm instruments are restricted in lag length in system GMM.
 	* punbalancedness: data frame interface gains 'index' argument.
 	* within_intercept: new function to calculate an overall intercept along its standard error for FE models
-	                a la Stata (and Gretl), accepts argument '.vcov' for user defined vcov
+	                    a la Stata (and Gretl), accepts argument '.vcov' for user defined vcov.
 	* added help topic on package as a whole (?`plm-package`) for sake of completeness
-	* summary.plm: * argument '.vcov' can also be a function (before, only only matrix was possible)
+	* summary.plm: * argument '.vcov' can also be a function (before, only only matrix was possible).
 	               * internal: the furnished vcov is saved in the summary.plm object in object$rvcov
-	                           (vcov function name in attr(object$rvcov, which="rvcov.name")
+	                           (vcov function name in attr(object$rvcov, which="rvcov.name").
 	* Ftest: * gained '.vcov' argument, which enables robust F test and chi-sq test
-	           [robust versions not yet weaved in summary.plm]
-	         * now exported and has documentation (.Rd file)
+	           [robust versions not yet weaved in summary.plm].
+	         * now exported and has documentation (.Rd file).
 	         * returned htest object has vcov's name in 'method' element (if vcov was supplied)
 	* (internal) vcovXX functions: furnished vcovs gain attribute "cluster" which give info about clustering,
-	                               e.g. "group" or "time"
-	* fixef: gains new argument '.vcov'
+	                               e.g. "group" or "time".
+	* fixef: gains new argument '.vcov'.
 	
 Changes since version 1.5-17
 
-	* lagt.pseries: new method respecting "content" of time periods [not yet exported due to testing]
-	* is.pconsecutive: default method exported so it can be used for arbitrary vectors
+	* lagt.pseries: new method respecting "content" of time periods [not yet exported due to testing].
+	* is.pconsecutive: default method exported so it can be used for arbitrary vectors.
 	
 Changes since version 1.5-18
 
-  * pcdtest: small efficiency enhancement (calc only lower.tri of rhos)
-  * pos.index (internal, not exported): new func to determine column numbers of index vars in pdata.frame
-  * cosmetics: * some extraction/subsetting functions doubled 'pseries' in the class of returned value (fixed now)
-               * extraction methods for pdata.frame and pseries now preserve order of attributes
-               * class "pindex" for attribute index not lost anymore after subsetting a pdata.frame
+  * pcdtest: small efficiency enhancement (calc only lower.tri of rhos).
+  * pos.index (internal, not exported): new func to determine column numbers of index vars in pdata.frame.
+  * cosmetics: * some extraction/subsetting functions doubled 'pseries' in the class of returned value (fixed now).
+               * extraction methods for pdata.frame and pseries now preserve order of attributes.
+               * class "pindex" for attribute index not lost anymore after subsetting a pdata.frame.
 	
 Changes since version 1.5-19
 
-  * pcce now supports model.matrix and pmodel.response methods, extracting the transformed data so that the estimator can be replicated by lm(pmodel.response(model) ~ model.matrix(model)); this is needed both for vcovXX functions and for cluster bootstrapping
-  * summary.pcce outputs the R2 calculated according to Holly, Pesaran and Yamagata instead of RSS/TSS
+  * pcce now supports model.matrix and pmodel.response methods, extracting the transformed data so that the 
+    estimator can be replicated by lm(pmodel.response(model) ~ model.matrix(model)); this is needed both for
+    vcovXX functions and for cluster bootstrapping.
+  * summary.pcce outputs the R2 calculated according to Holly, Pesaran and Yamagata instead of RSS/TSS.
 	
 Changes since version 1.5-20
 
-  * vcovXX.pcce methods added by copying the vcovXX.plm ones; work just the same, sandwiching the appropriate "meat" in transformed data. General reference is Wooldridge, Ch. 7
+  * vcovXX.pcce methods added by copying the vcovXX.plm ones; work just the same, sandwiching the appropriate 
+    "meat" in transformed data. General reference is Wooldridge, Ch. 7.
   
 Changes since version 1.5-21
 
@@ -658,17 +661,21 @@ Changes since version 1.5-21
       Default behaviour is to act identical to as.list.data.frame (some code relies on this, do not change!).
       By setting arg 'keep.attributes = TRUE', one gets a list of pseries and can operate on
       this list as one would expected for (e.g. 'lapplied') operations on the columns of a 
-      pdata.frame, e.g. to lag over more than one column, use:
-        lapply(as.list(pdataframe[ , your_cols], keep.attributes = TRUE), lag)
+      pdata.frame, e.g. to lag over more than one column and get a list of lagged columns back, use:
+        lapply(as.list(pdataframe[ , your_cols], keep.attributes = TRUE), lag).
 
 Changes since version 1.5-22
 
   * pdata.frames are now more consistent after subsetting:
       => identical(pdataframe, pdataframe[1:nrow(pdataframe), ]) yields TRUE now
-       * fixed: after subsetting unnecessary information was added to the resulting pdata.frame
-       * fixed: mode of index attribute was changed (unintentionally "simplified")
-  * pdata.frame is now a little more informative for NA values in either individual or time index
-    (a warning issued when such a pdata.frame is created)
-  * [.pdata.frame: indexing a pdata.frame is now fully consistent to indexing a data.frame:
-       * fixed: special case of indexing by [i] (missing j) which erroneously returned rows instead of columns
-
+       * fixed: after subsetting unnecessary information was added to the resulting pdata.frame.
+       * fixed: mode of index attribute was changed (unintentionally "simplified").
+  * pdata.frame is now a little more informative about NA values in either individual or time index
+    (a warning issued when such a pdata.frame is created).
+  * [.pdata.frame: indexing a pdata.frame is now fully consistent to indexing a data.frame (as documented):
+       * fixed: special case of indexing by [i] (missing j) which erroneously returned rows instead of columns.
+  * pdata.frame's warnings:
+       * if duplicate couples or NA values in the index variables are found while creating a pdata.frame,
+         the warning now gives users a hint how to find those (table(index(your_pdataframe), useNA = "ifany").
+       * printed is now "id-time" (was: "time-id") to be consistent with order of index variables.
+  

@@ -37,9 +37,10 @@ Error in model.matrix.pFormula(object, data, model = "pooling") :
   NA in the individual index variable
 In addition: Warning message:
 In pdata.frame(data, index) :
-  at least one couple (time-id) has NA in at least one index dimension in resulting pdata.frame
+  at least one couple (id-time) has NA in at least one index dimension in resulting pdata.frame
+ to find out which, use e.g. table(index(your_pdataframe), useNA = "ifany")
 >                            # should give an error: NA in the individual index
 > 
 > proc.time()
    user  system elapsed 
-   1.84    0.06    1.88 
+   1.68    0.12    1.79 
