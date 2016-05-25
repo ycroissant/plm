@@ -1,7 +1,9 @@
 
-
+## function names: lagt/leadt (note the "t")
 ## this lagging function does lagging based on the time periods, i. e. evaluates the time periods
-## (as opposed to just shifting by row positions [which is probably what ])
+## (as opposed to just shifting by row positions with lag.pseries/lead.pseries)
+## 
+## see also test files tests/test_lagt_leadt.R  and tests/test_lag_lead.R
 ##
 ## not exported yet;
 ## also: maybe better name or integrate with original lag.pseries (the latter doing lagging based on rows)?

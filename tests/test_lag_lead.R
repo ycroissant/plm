@@ -1,7 +1,7 @@
 # tests of lag and lead for respecting time periods
-# note: there are also function lagt and leadt (not exported yet which respects the numerical value of the time periods),
+# note: there are also function lagt and leadt (note the "t) (not exported yet which respects the numerical value of the time periods),
 #       i. e. lags period t to t-1, where t is an integer
-#       -> see seperate test file test_lagt_leadt_factor_levels.R so lagt, leadt
+#       -> see seperate test file test_lagt_leadt.R for lagt, leadt
 #
 #
 #  (1) test of lagging of index variable
