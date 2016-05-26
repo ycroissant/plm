@@ -48,7 +48,7 @@ An object of class \code{c("pggls","panelmodel")} containing:
   
 \details{
 
-  \code{pggls} is a function for the estimation of linear panel models
+\code{pggls} is a function for the estimation of linear panel models
 by general feasible generalized least squares, either with or without
 fixed effects. General FGLS is based on a two-step estimation process:
 first a model is estimated by OLS (\code{pooling}), fixed effects
@@ -63,7 +63,7 @@ assumed identical across groups and thus general FGLS estimation is
 inefficient under groupwise heteroskedasticity. Note also that this
 method requires estimation of \eqn{T(T+1)/2} variance parameters, thus
 efficiency requires N > > T (if \code{effect="individual"}, else the
-opposite).  The \code{model="random"} and \code{model="pooling"}
+opposite). The \code{model="random"} and \code{model="pooling"}
 arguments both produce an unrestricted FGLS model as in Wooldridge,
 Ch. 10, although the former is deprecated and included only for
 retro--compatibility reasons.
@@ -91,8 +91,23 @@ Wooldridge, J. M. (2010) \emph{Econometric analysis of cross-section and Panel D
 
 \examples{
 data("Produc", package = "plm")
-zz <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model = "pooling")
-summary(zz)
+zz_wi <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model = "within")
+summary(zz_wi)
+
+zz_pool <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
+                 data = Produc, model = "pooling")
+summary(zz_pool)
+
+zz_re <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
+               data = Produc, model = "random")
+summary(zz_re)
+
+zz_fd <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
+               data = Produc, model = "fd")
+summary(zz_fd)
+
+
+
 }
 
 \keyword{regression}

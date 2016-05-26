@@ -692,3 +692,4 @@ Changes since version 1.5-24
 
   * print.summary.plm: for FD models: now also prints number of observations used during estimation, because
                        these differ from the number of obervations (rows) in the model frame due to diff-ing.
+  * pres: fixed handling of pggls' FD models and, thus, summary on pggls' FD models now works without error.
