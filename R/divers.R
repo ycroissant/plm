@@ -227,8 +227,11 @@ pres <- function(x) {  # pres.panelmodel
 
 # nobs() function to extract total number of observations used for estimating the panelmodel
 # like stats::nobs for lm objects
+# NB: here, use object$residuals rather than residuals(object)
+#     [b/c the latter could do NA padding once NA padding works for plm objects.
+#      NA padded residuals would yield wrong result for nobs!]
 nobs.panelmodel <- function(object, ...) {
-  if (inherits(object, "plm") | inherits(object, "panelmodel")) return(length(residuals(object)))
+  if (inherits(object, "plm") | inherits(object, "panelmodel")) return(length(object$residuals))
     else stop("Input 'object' needs to be of class 'plm' or 'panelmodel'")
 }
 

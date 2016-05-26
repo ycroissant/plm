@@ -1,25 +1,24 @@
 #### pbgtest
 
-pbgtest <- function (x, ...) 
-{
+pbgtest <- function (x, ...) {
     UseMethod("pbgtest")
 }
 
-pbgtest.formula<-function(x, order = NULL, type = c("Chisq", "F"), data, model=c("pooling", "random", "within"), ...) {
+pbgtest.formula <- function(x, order = NULL, type = c("Chisq", "F"), data, model=c("pooling", "random", "within"), ...) {
   ## formula method for pbgtest;
   ## defaults to a pooling model
   cl <- match.call(expand.dots = TRUE)
   if (names(cl)[3] == "") names(cl)[3] <- "data"
   if (is.null(cl$model)) cl$model <- "pooling"
   names(cl)[2] <- "formula"
-  m <- match(plm.arg,names(cl),0)
-  cl <- cl[c(1,m)]
-  cl[[1]] <- as.name("plm")
+  m <- match(plm.arg, names(cl), 0)
+  cl <- cl[c(1L,m)]
+  cl[[1L]] <- quote(plm)
   plm.model <- eval(cl,parent.frame())
   pbgtest(plm.model, order = order, type = type, data = data, ...)
 }
 
-pbgtest.panelmodel<-function(x, order = NULL, type = c("Chisq", "F"), ...) {
+pbgtest.panelmodel <- function(x, order = NULL, type = c("Chisq", "F"), ...) {
   ## residual serial correlation test based on the residuals of the demeaned
   ## model (see Wooldridge (2002), p. 288) and the regular bgtest() in {lmtest}
 
@@ -31,7 +30,7 @@ pbgtest.panelmodel<-function(x, order = NULL, type = c("Chisq", "F"), ...) {
   model <- describe(x, "model")
   effect <- describe(x, "effect")
   theta <- x$ercomp$theta
-                                                    
+
   ## retrieve demeaned data
   demX <- model.matrix(x, model = model, effect = effect, theta = theta)
   demy <- pmodel.response(model.frame(x), model = model, effect = effect, theta = theta)
@@ -74,9 +73,9 @@ pwtest.formula <- function(x, data, effect = c("individual", "time"), ...) {
   if (is.null(cl$model)) cl$model <- "pooling"
   if (cl$model != "pooling") stop("pwtest only relevant for pooling models")
   names(cl)[2] <- "formula"
-  m <- match(plm.arg,names(cl),0)
-  cl <- cl[c(1,m)]
-  cl[[1]] <- as.name("plm")
+  m <- match(plm.arg, names(cl), 0)
+  cl <- cl[c(1L,m)]
+  cl[[1L]] <- quote(plm)
   plm.model <- eval(cl,parent.frame())
   # pwtest(plm.model)
   pwtest.panelmodel(plm.model, effect = effect) # pass on desired 'effect' argument to pwtest.panelmodel
@@ -97,8 +96,8 @@ pwtest.panelmodel <- function(x, effect = c("individual", "time"), ...) {
   if (describe(x, "model") != "pooling") stop("pwtest only relevant for pooling models")
   effect <- match.arg(effect, choices = c("individual", "time")) # was: effect <- describe(x, "effect")
                                                                  # here we want the effect as in the call of pwtest(),
-                              #                                        not of the already estimated model, because that is
-                              #                                        always a pooling model
+                                                                 # not of the already estimated model, because that is
+                                                                 # always a pooling model
   data <- model.frame(x)
   ## extract indices
 
@@ -197,10 +196,10 @@ pwartest.formula <- function(x,  data, ...) {
   if (cl$model != "within") stop("pwartest only relevant for within models")
   if (names(cl)[3] == "") names(cl)[3] <- "data"
   names(cl)[2] <- "formula"
-  m <- match(plm.arg,names(cl),0)
-  cl <- cl[c(1,m)]
-  cl[[1]] <- as.name("plm")
-  plm.model <- eval(cl,parent.frame())
+  m <- match(plm.arg, names(cl), 0)
+  cl <- cl[c(1L,m)]
+  cl[[1L]] <- quote(plm)
+  plm.model <- eval(cl, parent.frame())
   pwartest(plm.model)
 }
 
@@ -285,10 +284,10 @@ pbsytest.formula <- function(x, data, ..., test=c("ar","re","j")) {
   if (cl$model != "pooling") stop("pbsytest only relevant for pooling models")
   names(cl)[2] <- "formula"
   if (names(cl)[3] == "") names(cl)[3] <- "data"
-  m <- match(plm.arg,names(cl),0)
-  cl <- cl[c(1,m)]
-  cl[[1]] <- as.name("plm")
-  plm.model <- eval(cl,parent.frame())
+  m <- match(plm.arg, names(cl), 0)
+  cl <- cl[c(1L,m)]
+  cl[[1L]] <- quote(plm)
+  plm.model <- eval(cl, parent.frame())
   pbsytest(plm.model, test = test)
 }
 
@@ -378,8 +377,7 @@ pbsytest.panelmodel <- function(x, test=c("ar","re","j"), ...){
 
 ### pdwtest
 
-pdwtest <- function (x, ...) 
-{
+pdwtest <- function (x, ...) {
     UseMethod("pdwtest")
 }
 
@@ -391,10 +389,10 @@ pdwtest.formula <- function(x, data, ...) {
   if (is.null(cl$model)) cl$model <- "pooling"
   names(cl)[2] <- "formula"
   if (names(cl)[3] == "") names(cl)[3] <- "data"
-  m <- match(plm.arg,names(cl),0)
-  cl <- cl[c(1,m)]
-  cl[[1]] <- as.name("plm")
-  plm.model <- eval(cl,parent.frame())
+  m <- match(plm.arg, names(cl), 0)
+  cl <- cl[c(1L,m)]
+  cl[[1L]] <- quote(plm)
+  plm.model <- eval(cl, parent.frame())
   pdwtest(plm.model, ...)
 }
 
@@ -461,7 +459,7 @@ pdwtest.panelmodel <- function(x,...) {
 ## on N=3000, T=10 and even 20000x10 (55'') is no problem;
 ## lme() hits the memory limit at ca. 20000x20)
 
-pbltest <- function(x, data, alternative = c("twosided", "onesided"), index=NULL, ...) {
+pbltest.formula <- function(x, data, alternative = c("twosided", "onesided"), index=NULL, ...) {
  ## this version (pbltest0) based on a "formula, pdataframe" interface
 
 
@@ -470,12 +468,11 @@ pbltest <- function(x, data, alternative = c("twosided", "onesided"), index=NULL
   ## reduce data accordingly
   data <- data[which(row.names(data)%in%row.names(X)),]
 
-                                                                                        
   data <- pdata.frame(data,index=index)
 
   ## need name of individual index
   gindex <- dimnames(attr(data, "index"))[[2]][1]
-                                                                                        
+
  ## make random effects formula
   rformula <- NULL
   eval(parse(text=paste("rformula <- ~1|",gindex,sep="")))
@@ -565,7 +562,7 @@ pbltest <- function(x, data, alternative = c("twosided", "onesided"), index=NULL
          )
   dname <- paste(deparse(substitute(x)))
   method <- paste("Baltagi and Li", method1,"LM test")
-  alternative <- "AR(1)/MA(1) errors in RE panel models"
+  alternative <- "AR(1)/MA(1) errors in RE panel model"
 
   res <- list(statistic = LMr.m,
               p.value = pval,
@@ -578,6 +575,20 @@ pbltest <- function(x, data, alternative = c("twosided", "onesided"), index=NULL
   res
 }
 
+pbltest.plm <- function(x, alternative = c("twosided", "onesided"), ...) {
+  # only continue if random effects model
+  if (describe(x, "model") != "random") stop("Test is only for random effects models.")
+  
+  # call pbltest.formula in the right way
+  pbltest.formula(formula(x$formula), data=cbind(index(x), x$model), index=names(index(x)), ...)
+}
+
+pbltest <- function (x, ...) 
+{
+  UseMethod("pbltest")
+}
+
+
 pwfdtest <- function(x, ...){
   UseMethod("pwfdtest")
 }
@@ -587,10 +598,10 @@ pwfdtest.formula <- function(x, data, ..., h0 = c("fd", "fe")){
   if (is.null(cl$model)) cl$model <- "fd"
   names(cl)[2] <- "formula"
   if (names(cl)[3] == "") names(cl)[3] <- "data"
-  m <- match(plm.arg,names(cl),0)
-  cl <- cl[c(1,m)]
-  cl[[1]] <- as.name("plm")
-  plm.model <- eval(cl,parent.frame())
+  m <- match(plm.arg, names(cl), 0)
+  cl <- cl[c(1L,m)]
+  cl[[1L]] <- quote(plm)
+  plm.model <- eval(cl, parent.frame())
   pwfdtest(plm.model, ..., h0 = h0)
 }
 

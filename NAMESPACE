@@ -177,6 +177,9 @@ S3method("phtest", "formula")
 # pFtest
 S3method("pFtest", "plm")
 S3method("pFtest", "formula")
+# pbltest
+S3method("pbltest", "formula")
+S3method("pbltest", "plm")
 # pbsytest
 S3method("pbsytest", "formula")
 S3method("pbsytest", "panelmodel")
