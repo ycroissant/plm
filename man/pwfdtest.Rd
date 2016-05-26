@@ -58,7 +58,7 @@ panel data}, 2nd ed., MIT Press, Sec. 10.6.3, pp. 319--320.
 % \link[car]{linearHypothesis}
 % the link to car's linearHypothesis is likely the cause for the following warning
 % occuring on r-forge, but not in local checks:
-% "package ‘car’ exists but was not installed under R >= 2.10.0 so xrefs cannot be checked"
+% "package 'car' exists but was not installed under R >= 2.10.0 so xrefs cannot be checked"
 }
 
 \examples{
