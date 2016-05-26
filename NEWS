@@ -687,3 +687,8 @@ Changes since version 1.5-23
                        and at the same time also balanced.
   * make.pbalanced: new function to make a (p)data.frame or pseries balanced (but not consecutive)
                     (fills in missing time periods).
+
+Changes since version 1.5-24
+
+  * print.summary.plm: for FD models: now also prints number of observations used during estimation, because
+                       these differ from the number of obervations (rows) in the model frame due to diff-ing.

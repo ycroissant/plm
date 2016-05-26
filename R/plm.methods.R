@@ -33,16 +33,16 @@ summary.plm <- function(object, .vcov = NULL, ...){
   object
 }
 
-print.summary.plm <- function(x,digits= max(3, getOption("digits") - 2),
+print.summary.plm <- function(x, digits = max(3, getOption("digits") - 2),
                               width=getOption("width"), subset = NULL, ...){
   formula <- formula(x)
   has.instruments <- (length(formula)[2] == 2)
   effect <- describe(x, "effect")
-  model <- describe(x, "model")
+  model  <- describe(x, "model")
   if (model != "pooling") { cat(paste(effect.plm.list[effect]," ",sep="")) }
   cat(paste(model.plm.list[model]," Model",sep=""))
   
-  if (model=="random"){
+  if (model == "random"){
     ercomp <- describe(x, "random.method")
     cat(paste(" \n   (",
               random.method.list[ercomp],
@@ -70,6 +70,8 @@ print.summary.plm <- function(x,digits= max(3, getOption("digits") - 2),
   cat("\n")
   pdim <- pdim(x)
   print(pdim)
+  if (model == "fd") {cat(paste0("Observations used in estimation: ", # print this extra info, b/c model.frame of FD models
+                                 nobs(x), "\n"))}                     # has the original (undifferenced) obs/rows of the data
   if (model == "random"){
     cat("\nEffects:\n")
     print(x$ercomp)
@@ -112,7 +114,7 @@ fitted.plm <- function(object, model = NULL, ...){
   y <- pmodel.response(object, model = model)
   beta <- coef(object)
   # Kevin Tappe 2016-01-09 : perfect correlation of some columns of
-  # the whithin  model.matrix
+  # the within model.matrix
   if (ncol(X) != length(beta)){
       result <- lm(y ~ X - 1)
       X <- X[, ! is.na(coef(result))]
@@ -252,7 +254,7 @@ formula.plm <- function(x, ...){
 # describe function: to extract the characteristics of the plm model
 describe <- function(x,
                      what = c('model', 'effect', 'random.method',
-                       'inst.method', 'transformation')){
+                              'inst.method', 'transformation')){
   what <- match.arg(what)
   cl <- x$args
 ##   if (is.name(cl$effect)) cl$effect <- eval(cl$effect, parent.frame())
@@ -270,7 +272,7 @@ describe <- function(x,
            cl$transformation, "d")
          )
 }
-         
+
 plot.plm <- function(x, dx = 0.2, N = NULL, seed = 1,
                      within = TRUE, pooling = TRUE,
                      between = FALSE, random = FALSE, ...){
@@ -323,4 +325,4 @@ plot.plm <- function(x, dx = 0.2, N = NULL, seed = 1,
     }
 }
 
-  
+
