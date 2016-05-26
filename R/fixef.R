@@ -60,21 +60,29 @@ fixef.plm <- function(object, effect = NULL,
                   "dfirst" = fixef[2:length(fixef)] - fixef[1],
                   "dmean"  = fixef - mean(fixef) # TODO: need weighted.mean here for unbalanced data (at least for individual eff)?
                   )
-  structure(fixef, se = sefixef, class = "fixef", type = type)
+  structure(fixef, se = sefixef, class = "fixef", type = type, df.residual = df.residual(object))
 }
 
 
 print.fixef <- function(x, digits = max(3, getOption("digits") - 2),
                         width=getOption("width"), ...){
-  attr(x,"se") <- attr(x,"type") <- attr(x,"class") <- NULL
+  
+  # prevent attributs from being printed
+  attr(x,"se") <- attr(x,"type") <- attr(x,"class") <- attr(x, "df.residual") <- NULL
   print.default(x)
 }
 
+
 summary.fixef <- function(object, ...){
-  se <- attr(object,"se")
-  zvalue <- (object) / se
-  res <- cbind(object, se, zvalue, (1 - pnorm(abs(zvalue))) * 2)
-  colnames(res) <- c("Estimate","Std. Error","t-value","Pr(>|t|)")
+  se <- attr(object, "se")
+  df.res <- attr(object, "df.residual")
+  tvalue <- (object) / se
+  # was: res <- cbind(object, se, zvalue, (1 - pnorm(abs(zvalue))) * 2)
+  res <- cbind(object, se, tvalue, (2 * pt(abs(tvalue), df = df.res, lower.tail = FALSE)))
+  # see for distribution and degrees of freedom
+  #   Greene (2003, 5th ed.), p.  288     (formula 13-7) 
+  # = Greene (2012, 7th ed.), pp. 361-362 (formula 11-19)
+  colnames(res) <- c("Estimate", "Std. Error", "t-value", "Pr(>|t|)")
   class(res) <- "summary.fixef"
   res
 }

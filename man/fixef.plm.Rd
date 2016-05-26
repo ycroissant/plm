@@ -7,7 +7,7 @@
 \title{Extract the Fixed Effects}
 
 \description{
-  This function extracts the fixed effects from a \code{plm} object.
+  Function to extract the fixed effects from a \code{plm} object and associated summary method.
 }
 
 \usage{
@@ -34,19 +34,37 @@ width = getOption("width"),...)
 }
 
 \value{
-  An object of class \code{"fixef"}. It is a numeric vector containing the fixed effects with attribute \code{se} which contains the standard errors. 
-  If the argument \code{.vcov} was used, the standard errors are the respective robust standard errors.
-  With the \code{type} argument, the fixed effects may be returned in levels (\code{"level"}), as deviations from the first value of the index (\code{"dfirst"}), or as deviations from the overall mean (\code{"dmean"}).
+  For function \code{fixef} an object of class \code{"fixef"} is returned:\cr
+  It is a numeric vector containing the fixed effects with attribute \code{se} 
+  which contains the standard errors. There are two further attributes to the 
+  numeric vector:
+  attribute \code{type} contains the chosen type (the value of argument \code{type} 
+  as a character); attribute \code{df.residual} holds the residual degrees of 
+  freedom (integer) from the fixed effects model (plm object) on which \code{fixef} was run.
+  
+  For function \code{summary.fixef} an object of class \code{"summary.fixef"} is returned:\cr
+  It is (internally) a matrix with four columns in this order: the estimated fixed 
+  effects, their standard errors and associated t--values and p--values.
+  The type of the fixed effects and the standard errors in the summary.fixef objects 
+  corresponds to was requested in the \code{fixef} function by arguments \code{type} 
+  and \code{.vcov}.
 }
 
 \details{
-  The \code{summary} method prints the fixed effects (in the way they were requested with the argument \code{type} 
-  (\code{"level"}, \code{"dfirst"}, or \code{"dmean"})), their standard errors and associated t--values and p--values
-  (robust if \code{fixef} was used with non-\code{NULL} argument \code{.vcov}).
+Function \code{fixef} calculates the fixed effects and returns an object of class \code{"fixef"}.
+With the \code{type} argument, the fixed effects may be returned in levels (\code{"level"}), 
+as deviations from the first value of the index (\code{"dfirst"}), or as deviations from the 
+overall mean (\code{"dmean"}). If the argument \code{.vcov} was specified, the standard errors
+(stored as attribute "se" in the return value) are the respective robust standard errors. 
+
+The associated \code{summary} method returns an extended object of class \code{"summary.fixef"} 
+with more information (see sections \bold{Value} and \bold{Examples}).
 }
 
 \seealso{
-  \code{\link{within_intercept}} for the overall intercept along its standard error, \code{\link{plm}} for plm objects and within models in general.
+  \code{\link{within_intercept}} for the overall intercept of fixed effect models along its 
+  standard error, \code{\link{plm}} for plm objects and within models (= fixed effects models) 
+  in general.
 }
 
 \author{Yves Croissant}
@@ -56,6 +74,7 @@ data("Grunfeld", package = "plm")
 gi <- plm(inv ~ value + capital, data = Grunfeld, model = "within")
 fixef(gi)
 summary(fixef(gi))
+summary(fixef(gi))[ , c("Estimate", "Pr(>|t|)")] # only estimates and p-values
 
 # relationship of type = "dmean" and "level" and overall intercept
 fx_level <- fixef(gi, type = "level")
