@@ -678,4 +678,12 @@ Changes since version 1.5-22
        * if duplicate couples or NA values in the index variables are found while creating a pdata.frame,
          the warning now gives users a hint how to find those (table(index(your_pdataframe), useNA = "ifany").
        * printed is now "id-time" (was: "time-id") to be consistent with order of index variables.
-  
+
+Changes since version 1.5-23
+
+  * make.pconsecutive: new function to make a (p)data.frame or pseries consecutive, meaning having consecutive
+                       time periods, t, t+1, t+2, ..., where t is an integer (fills in missing time periods).
+                       Optionally, by argument balanced, (p)data.frames) or pseries can be made consecutive 
+                       and at the same time also balanced.
+  * make.pbalanced: new function to make a (p)data.frame or pseries balanced (but not consecutive)
+                    (fills in missing time periods).

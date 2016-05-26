@@ -1,4 +1,8 @@
 # tests for is.pconsecutive
+#
+# in separate test file: tests for make.pconsecutive and make.pbalanced
+
+
 
 ############## test with consecutive and non-consecutive time periods ####
 
@@ -26,10 +30,20 @@ is.pconsecutive(Grunfeld_missing_period, index=c("firm", "year"))
   if(!is(ttC,"error")) stop("error for non supplied time dimension in index not working")
   # print(ttC$message)
 
+# test with not ordered data.frame (ordered by id, time)
+# [only necessary for data.frame as pdata.frames are always ordered this way]
+Grun_not_ordered <- Grunfeld
+Grun_not_ordered <- Grun_not_ordered[order(Grun_not_ordered$capital), ]
+is.pconsecutive(Grun_not_ordered)
+if (!isTRUE(all.equal(is.pconsecutive(Grun_not_ordered), rep(TRUE, 10), check.attributes = FALSE)))
+  stop("wrong result for not ordered data.frame")
+
 
 # test on pdata.frame
-if(!all(is.pconsecutive(pGrunfeld))) stop("is.pconsecutive on pdata.frame: wrong result")
-if(!isTRUE(all.equal(is.pconsecutive(pGrunfeld_missing_period), c(FALSE, rep(TRUE, 9)),  check.names = FALSE))) stop("is.pconsecutive on pdata.frame: wrong result")
+if (!all(is.pconsecutive(pGrunfeld)))
+  stop("is.pconsecutive on pdata.frame: wrong result")
+if (!isTRUE(all.equal(is.pconsecutive(pGrunfeld_missing_period), c(FALSE, rep(TRUE, 9)),  check.names = FALSE)))
+  stop("is.pconsecutive on pdata.frame: wrong result")
 
 
 # test on panelmodel object
@@ -47,6 +61,11 @@ is.pconsecutive(estimation_pGrunfeld_missing_period)
 is.pconsecutive(Grunfeld$inv,      id = Grunfeld$firm, time = Grunfeld$year)
 is.pconsecutive(Grunfeld[["inv"]], id = Grunfeld$firm, time = Grunfeld$year)
 is.pconsecutive(NULL, id = Grunfeld$firm, time = Grunfeld$year)
+exp_res_arbitrary_vec <- rep(TRUE, 10)
+# formal test
+if (!isTRUE(all.equal(is.pconsecutive(Grunfeld$inv, id = Grunfeld$firm, time = Grunfeld$year),
+                      exp_res_arbitrary_vec, check.attributes = FALSE)))
+  stop("not correct for arbitrary vector")
 
 
 # test on pseries

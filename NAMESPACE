@@ -1,5 +1,5 @@
 export(plm, pvcm, pgmm, pggls, pht, pcce, pmg, plmtest, phtest, pFtest, 
-       detect_lin_dep, is.pconsecutive, within_intercept,
+       detect_lin_dep, is.pconsecutive, make.pconsecutive, make.pbalanced, within_intercept,
        pvar, pdim, pooltest, dynformula, sargan, mtest, ercomp, pvcovHC,
        pbsytest, pdwtest, pbgtest, pbltest, pwartest, pwtest, pwfdtest, pcdtest,
        plm.data, pdata.frame, between, Between, Within, lag, lead, pFormula, pmodel.response,
@@ -212,5 +212,13 @@ S3method("is.pconsecutive", "pdata.frame")
 S3method("is.pconsecutive", "panelmodel")
 S3method("is.pconsecutive", "pseries")
 S3method("is.pconsecutive", "default")
+# make.pconsecutive
+S3method("make.pconsecutive", "data.frame")
+S3method("make.pconsecutive", "pseries")
+S3method("make.pconsecutive", "pdata.frame")
+# make.pbalanced
+S3method("make.pbalanced", "data.frame")
+S3method("make.pbalanced", "pseries")
+S3method("make.pbalanced", "pdata.frame")
 # within_intercept
 S3method("within_intercept", "plm")

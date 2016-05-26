@@ -63,7 +63,6 @@ Constructing the model frame first ensures proper NA handling, see \bold{Example
 % }
 \seealso{
   \code{\link{pmodel.response}} for (transformed) response variable.\cr
-  \code{plm}'s \code{\link[plm]{model.frame}} for creating a model frame.\cr
   \code{\link{pFormula}}, especially for coercing a \code{formula} to a \code{pFormula}.\cr
   \code{\link[Formula]{Formula}} from package \code{Formula}, especially for
   the \code{lhs} and \code{rhs} arguments.

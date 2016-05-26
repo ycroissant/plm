@@ -1,10 +1,19 @@
 ########### is.pconsecutive ##############
-# little helper function to find out if the time periods of an object are consecutive per id
-# by consecutive we mean "consecutive on the numbers": t, t+1, t+2, ... where t is an integer
+# little helper function to find out if the time periods of an object are consecutive per id.
+# By consecutive we mean "consecutive in the numbers", i.e. is.pconsecutive takes the numerical
+# value of the time variable into account: t, t+1, t+2, ... where t is an integer
+#
+# For this, we need as.numeric(as.character(time_var)) where as.character is a crucial part!
+# Equivalent but more efficient is as.numeric(levels(id_timevar))[as.integer(id_timevar)]
+# (see R FAQ 7.10 for coercing factors to numeric]
+# and the coerction of time_var in this manner needs to be meaningful numbers.
+#
+# see also in separate file make.pconsecutive.R:
+#   * make.pconsecutive
+#   * make.pbalanced
 
 is.pconsecutive.default <- function(x, id, time, na.rm.tindex = FALSE, ...) {
-
-  # argument 'x' just used for input check (if not NULL and is a vector)
+  # argument 'x' just used for input check (if it is not NULL and is a vector)
   
   # input checks
   if (length(id) != length(time)) 
@@ -17,42 +26,45 @@ is.pconsecutive.default <- function(x, id, time, na.rm.tindex = FALSE, ...) {
     
   }
   
+#  if (!is.factor(time)) time <- factor(time)
   
   # NB: 'time' is assumed to be organised as stacked time series (sorted for each individual)
   #     (successive blocks of individuals, each block being a time series for the respective individual))
   #
   #   'time' is in the correct order if is.pconsecutive.default is called by
-  #   is.pconsecutive.(p)data.frame, is.pconsecutive.pseries as a pdata.frame (which is sorted) was constructed 
-  #   in the first place
+  #   is.pconsecutive.pdata.frame or is.pconsecutive.pseries as a pdata.frame (which is sorted) was constructed 
+  #   in the first place; for data.frame interface the ordering is done in the respective function
   
-  if(na.rm.tindex) {
+  if (na.rm.tindex) {
     NA_tindex <- is.na(time)
     time <- time[!NA_tindex]
     id <- id[!NA_tindex]
   }
+  
+  # if time var is factor (as is TRUE for pdata.frames, pseries):
+  # need to convert to numeric, do this by coering to character first (otherwise wrong results!)
+  #  see R FAQ 7.10 for coercing factors to numeric: 
+  #      as.numeric(levels(factor_var))[as.integer(factor_var)]   is more efficient than
+  #      as.numeric(as.character(factor_var))
+  if (!is.numeric(time) && is.factor(time)) time <- as.numeric(levels(time))[as.integer(time)]
   
   list_id_timevar <- split(time, id, drop = T)
 
   res <- sapply(list_id_timevar, function(id_timevar) { if(any(is.na(id_timevar))) {
                                                            NA # return NA if NA found in the time periods for individual
                                                           } else {
-                                                              # NB: as.character needed before as.numeric:
-                                                              # if a time period is missing from the whole data set, this
-                                                              # would not be detected without as.character, see testfile
-                                                              times <- as.numeric(as.character(id_timevar)) 
-                                                              begin <- times[1]
-                                                              end   <- times[length(times)]
+                                                              begin <- id_timevar[1]
+                                                              end   <- id_timevar[length(id_timevar)]
                                                  
-                                                              # compare to length(original times) to find out if times are consecutive
-                                                              (end - begin + 1) == length(times)
+                                                              # compare to length(original id_timevar) to find out if times are consecutive
+                                                              (end - begin + 1) == length(id_timevar)
                                                               
                                                               # Alternative way of checking:
-                                                                # consecutive time periods from begin to end (if times were consecutive)
+                                                                # consecutive time periods from begin to end (if id_timevar were consecutive)
                                                                 # consecutive <- seq(from = begin, to = end, by = 1)
-                                                                # length(consecutive) == length(times)
+                                                                # length(consecutive) == length(id_timevar)
                                                           }
                                                       })
-  
   return(res)
 }
 
@@ -61,29 +73,43 @@ is.pconsecutive.data.frame <- function(x, index = NULL, na.rm.tindex = FALSE, ..
     stop("if argument 'index' is not NULL, 'index' needs to specify
          'individual' and 'time' dimension for is.pconsecutive to work on a data.frame")
   
-  x <- pdata.frame(x, index, ...)
-  is.pconsecutive.pdata.frame(x, na.rm.tindex = na.rm.tindex)
+  if (is.null(index)) index_orig_names <- names(x)[1:2] # assume first two columns to be the index vars
+    else index_orig_names <- index
+  
+  id   <- x[ , index_orig_names[1]]
+  time <- x[ , index_orig_names[2]]
+
+  # order as stacked time series (by id and time) first, otherwise default method does not work correctly!
+  ord <- order(id, time)
+  x_ordered    <- x[ord, ]
+  id_ordered   <- id[ord]
+  time_ordered <- time[ord]
+  
+#  if (!identical(x, x_ordered)) 
+#    print("Note: for test of consecutiveness of time periods, the data.frame was ordered by index variables (id, time)")
+  
+  is.pconsecutive.default(x_ordered, id_ordered, time_ordered, na.rm.tindex = na.rm.tindex, ...)
 }
 
 is.pconsecutive.pseries <- function(x, na.rm.tindex = FALSE, ...){
   index <- attr(x, "index")
-  id <- index[[1]]
+  id   <- index[[1]]
   time <- index[[2]]
-  is.pconsecutive.default(x, id, time, na.rm.tindex = na.rm.tindex)
+  is.pconsecutive.default(x, id, time, na.rm.tindex = na.rm.tindex, ...)
 }
 
 is.pconsecutive.pdata.frame <- function(x, na.rm.tindex = FALSE, ...){
   index <- attr(x, "index")
-  id <- index[[1]]
+  id   <- index[[1]]
   time <- index[[2]]
-  is.pconsecutive.default(x, id, time, na.rm.tindex = na.rm.tindex)
+  is.pconsecutive.default(x, id, time, na.rm.tindex = na.rm.tindex, ...)
 }
 
 is.pconsecutive.panelmodel <- function(x, na.rm.tindex = FALSE, ...){
   index <- attr(x$model, "index")
-  id <- index[[1]]
+  id   <- index[[1]]
   time <- index[[2]]
-  is.pconsecutive.default(x, id, time, na.rm.tindex = na.rm.tindex)
+  is.pconsecutive.default(x, id, time, na.rm.tindex = na.rm.tindex, ...)
 }
 
 is.pconsecutive <- function(x, ...){

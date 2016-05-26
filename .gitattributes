@@ -12,6 +12,7 @@ R/fixef.R -text
 R/index.R -text
 R/is.pconsecutive.R -text
 R/lagt.R -text
+R/make.pconsecutive_pbalanced.R -text
 R/options.R -text
 R/pFormula.R -text
 R/panelmodel.R -text
@@ -74,6 +75,8 @@ man/fixef.plm.Rd -text
 man/index.Rd -text
 man/is.pconsecutive.Rd -text
 man/lag_lead_diff.Rd -text
+man/make.pbalanced.Rd -text
+man/make.pconsecutive.Rd -text
 man/model.frame_model.matrix.Rd -text
 man/mtest.Rd -text
 man/nobs.Rd -text
@@ -134,6 +137,7 @@ tests/test_fixef.R -text
 tests/test_is.pconsecutive.R -text
 tests/test_lag_lead.R -text
 tests/test_lagt_leadt.R -text
+tests/test_make.pconsecutive_pbalanced.R -text
 tests/test_model.frame.R -text
 tests/test_model.matrix_pmodel.response.R -text
 tests/test_model.matrix_pmodel.response_NA.R -text
