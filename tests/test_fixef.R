@@ -1,6 +1,13 @@
-### Test of within_intercept in connection with fixef() and comparision to Stata and Gretl
+### Test of fixef
+###
+### (1): general tests
+### (2): consistency with summary.plm
+###
+### see also test file test_within_intercept.R for consistency checks
+###  between functions fixef and within_intercept
 
-# test in connection with fixef:
+
+############# (1): general tests #############
 library(plm)
 data("Grunfeld", package = "plm")
 gi <- plm(inv ~ value + capital, data = Grunfeld, model = "within")
@@ -37,7 +44,19 @@ print(attr(f_level_d_robust_func, "se"))
 print(summary(f_level_d),             digits = 8)
 print(summary(f_level_d_robust_func), digits = 8)
 
-# consistency check:
+# just run tests for type = "demean" and type = "dfirst"
+fixef(gi, type = "dmean")
+fixef(gt, type = "dmean")
+fixef(gd, effect = "individual", type = "dmean")
+fixef(gd, effect = "time",       type = "dmean")
+
+fixef(gi, type = "dfirst")
+fixef(gt, type = "dfirst")
+fixef(gd, effect = "individual", type = "dfirst")
+fixef(gd, effect = "time",       type = "dfirst")
+
+
+############# (2): consistency with summary.plm #############
 # compare summary.plm to summary.fixef( , type = "dfirst")
 mod_pool <- plm(inv ~ value + capital + factor(firm), data = Grunfeld, model = "pooling")
 sum_mod_pool <- summary(mod_pool)
@@ -57,11 +76,15 @@ if (!isTRUE(all.equal(sum_mod_pool[["coefficients"]][-c(1:3) , "Pr(>|t|)"], sum_
   stop("p-values diverge: summary.plm vs. summary.fixef(..., type = \"dfirst\")")
 
 
-## compare to package lfe:
+###### compare to package lfe:
+## Standard errors are bootstrapped in lfe
+##  -> different results compared to plm
+##  -> different results for every new call
+#
 # library(lfe)
 # mod_felm <- felm(inv ~ value + capital | firm, data = Grunfeld)
 # summary(mod_felm)
-## Standard errors are bootstrapped in lfe -> different for every new call
+#
 # fe_lfe <- getfe(mod_felm, se = TRUE, bN = 50)
 # print(fe_lfe)
 # sum_f_level <- summary(f_level)

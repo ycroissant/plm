@@ -700,3 +700,4 @@ Changes since version 1.5-25
   * fixef: * summary.fixef: t distribution is used for p-value calculation (like the heading states).
            * fixef: for the t distribution to be applied for p-value calculation, objects of class "fixef" 
              gained a "df.residual" element.
+           * fixef(..., type = "dmean") now correct for unbalanced data (use weighted.mean instead of mean).

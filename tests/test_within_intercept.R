@@ -1,4 +1,4 @@
-### Test of within_intercept in connection with fixef() and comparision to Stata and Gretl
+### Test of within_intercept, also in connection with fixef() [consistency] and comparision to Stata and Gretl
 
 # test in connection with fixef:
 library(plm)
@@ -11,7 +11,6 @@ int_manual <- weighted.mean(fixef(gi), as.numeric(table(index(gi)[[1]]))) # manu
 individual_intercepts <- int + f_dmean
 
 # check consistency of functions fixef and within_intercept
-# works
 if (!isTRUE(all.equal(individual_intercepts, f_level, check.attributes = FALSE))) stop("within_intercept: something is wrong")
 if (!isTRUE(all.equal(int, int_manual, check.attributes = FALSE))) stop("within_intercept: something is wrong")
 
@@ -24,20 +23,21 @@ f_dmean_u <- fixef(gi_u, type = "dmean")
 int_u <- within_intercept(gi_u)
 individual_intercepts_u <- int_u + f_dmean_u
 
-# fails for unbalanced models, likely due to fixef calc. for dmean: fixef - mean(fixef); need weighted mean?
 # check consistency of functions in themselves
-# if (!isTRUE(all.equal(individual_intercepts_u, f_level_u, check.attributes = FALSE))) stop("within_intercept, unbalanced: something is wrong")
+if (!isTRUE(all.equal(individual_intercepts_u, f_level_u, check.attributes = FALSE))) stop("within_intercept, unbalanced: something is wrong")
 
-## take weighted mean for "dmean" calc. instead:
-int_manual_u2 <- weighted.mean(fixef(gi_u), as.numeric(table(index(gi_u)[[1]])))
-int_u <- within_intercept(gi_u)
-if (!isTRUE(all.equal(int_u, int_manual_u2, check.attributes = FALSE))) stop("within_intercept, unbalanced: something is wrong")
-
-f_dmean_u2 <- f_level_u - int_manual_u2
-individual_intercepts_u2 <- int_u + f_dmean_u2
-# taking weighted.mean: works!
-if (!isTRUE(all.equal(individual_intercepts_u2, f_level_u, check.attributes = FALSE))) stop("within_intercept, unbalanced: something is wrong")
-
+######## not needed anymore as fixef(.., type = "dmean") was fixed in rev. 272 to accommodate unbalanced panels
+# ## take weighted mean for "dmean" calc. instead:
+# 
+# int_manual_u2 <- weighted.mean(fixef(gi_u), as.numeric(table(index(gi_u)[[1]])))
+# int_u <- within_intercept(gi_u)
+# if (!isTRUE(all.equal(int_u, int_manual_u2, check.attributes = FALSE))) stop("within_intercept, unbalanced: something is wrong")
+# 
+# f_dmean_u2 <- f_level_u - int_manual_u2
+# individual_intercepts_u2 <- int_u + f_dmean_u2
+# # taking weighted.mean: works!
+# if (!isTRUE(all.equal(individual_intercepts_u2, f_level_u, check.attributes = FALSE))) stop("within_intercept, unbalanced: something is wrong")
+########
 
 ###### effect = "time" ######
 gt <- plm(inv ~ value + capital, data = Grunfeld, model = "within", effect = "time")
@@ -48,9 +48,24 @@ int_manual_t <- weighted.mean(fixef(gt), as.numeric(table(index(gt)[[2]]))) # ma
 individual_intercepts_t <- int_t + f_dmean_t
 
 # check consistency of functions fixef and within_intercept
-# works
 if (!isTRUE(all.equal(individual_intercepts_t, f_level_t, check.attributes = FALSE))) stop("within_intercept: something is wrong")
 if (!isTRUE(all.equal(int_t, int_manual_t, check.attributes = FALSE))) stop("within_intercept: something is wrong")
+
+# unbalanced
+gt_u <- plm(inv ~ value + capital, data = Grunfeld_unbalanced, model = "within", effect = "time")
+f_level_t_u <- fixef(gt_u, type = "level", effect = "time")
+f_dmean_t_u <- fixef(gt_u, type = "dmean", effect = "time")
+int_t_u <- within_intercept(gt_u)
+int_manual_t_u <- weighted.mean(fixef(gt_u), as.numeric(table(index(gt_u)[[2]]))) # manual calc of overall intercept
+individual_intercepts_t_u <- int_t_u + f_dmean_t_u
+
+# check consistency of functions fixef and within_intercept with unbalanced data
+if (!isTRUE(all.equal(individual_intercepts_t_u, f_level_t_u, check.attributes = FALSE))) stop("within_intercept: something is wrong")
+if (!isTRUE(all.equal(int_t_u, int_manual_t_u, check.attributes = FALSE))) stop("within_intercept: something is wrong")
+
+
+
+
 
 
 ###### effect = "twoways" ######
@@ -100,23 +115,24 @@ individual_intercepts_tw_i_u <- int_tw_u + f_dmean_tw_i_u
 individual_intercepts_tw_t_u <- int_tw_u + f_dmean_tw_t_u
 
 # check consistency of functions fixef and within_intercept
-# fails for unbalanced models, likely due to fixef calc. for dmean: fixef - mean(fixef); need weighted mean?
-#if (!isTRUE(all.equal(individual_intercepts_tw_i_u, f_level_tw_i_u, check.attributes = FALSE))) stop("within_intercept twoways, individual: something is wrong")
-#if (!isTRUE(all.equal(individual_intercepts_tw_t_u, f_level_tw_t_u, check.attributes = FALSE))) stop("within_intercept twoways, time:       something is wrong")
+if (!isTRUE(all.equal(individual_intercepts_tw_i_u, f_level_tw_i_u, check.attributes = FALSE))) stop("within_intercept twoways, individual: something is wrong")
+if (!isTRUE(all.equal(individual_intercepts_tw_t_u, f_level_tw_t_u, check.attributes = FALSE))) stop("within_intercept twoways, time:       something is wrong")
 
-## take weighted mean for "dmean" calc. instead:
-int_manual_tw_u <- weighted.mean(fixef(gtw_u, effect = "individual"), as.numeric(table(index(gtw_u)[[1]]))) # manual calc of overall intercept
-if (!isTRUE(all.equal(int_tw_u, int_manual_tw_u, check.attributes = FALSE))) stop("within_intercept: something is wrong")
 
-f_dmean_tw_i_u2 <- f_level_tw_i_u - int_manual_tw_u
-f_dmean_tw_t_u2 <- f_level_tw_t_u - int_manual_tw_u
-
-individual_intercepts_tw_i_u2 <- int_tw_u + f_dmean_tw_i_u2
-individual_intercepts_tw_t_u2 <- int_tw_u + f_dmean_tw_t_u2
-# taking weighted.mean: works!
-if (!isTRUE(all.equal(individual_intercepts_tw_i_u2, f_level_tw_i_u, check.attributes = FALSE))) stop("within_intercept twoways, individual: something is wrong")
-if (!isTRUE(all.equal(individual_intercepts_tw_t_u2, f_level_tw_t_u, check.attributes = FALSE))) stop("within_intercept twoways, time:       something is wrong")
-
+######## not needed anymore as fixef(.., type = "dmean") was fixed in rev. 272 to accommodate unbalanced panels
+# ## take weighted mean for "dmean" calc. instead:
+# int_manual_tw_u <- weighted.mean(fixef(gtw_u, effect = "individual"), as.numeric(table(index(gtw_u)[[1]]))) # manual calc of overall intercept
+# if (!isTRUE(all.equal(int_tw_u, int_manual_tw_u, check.attributes = FALSE))) stop("within_intercept: something is wrong")
+# 
+# f_dmean_tw_i_u2 <- f_level_tw_i_u - int_manual_tw_u
+# f_dmean_tw_t_u2 <- f_level_tw_t_u - int_manual_tw_u
+# 
+# individual_intercepts_tw_i_u2 <- int_tw_u + f_dmean_tw_i_u2
+# individual_intercepts_tw_t_u2 <- int_tw_u + f_dmean_tw_t_u2
+# # taking weighted.mean: works!
+# if (!isTRUE(all.equal(individual_intercepts_tw_i_u2, f_level_tw_i_u, check.attributes = FALSE))) stop("within_intercept twoways, individual: something is wrong")
+# if (!isTRUE(all.equal(individual_intercepts_tw_t_u2, f_level_tw_t_u, check.attributes = FALSE))) stop("within_intercept twoways, time:       something is wrong")
+########
 
 
 
