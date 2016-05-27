@@ -58,8 +58,7 @@ fixef.plm <- function(object, effect = NULL,
   fixef <- switch(type,
                   "level"  = fixef,
                   "dfirst" = fixef[2:length(fixef)] - fixef[1],
-                  "dmean"  = fixef - stats::weighted.mean(x = fixef, w = nother)
-                  # for dmean: use weighted.mean to accommodate unbalanced data; was: "dmean"=fixef-mean(fixef)
+                  "dmean"  = fixef - mean(fixef)
                   )
   structure(fixef, se = sefixef, class = "fixef", type = type, df.residual = df.residual(object))
 }
