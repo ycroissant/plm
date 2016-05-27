@@ -21,13 +21,21 @@ fixef.plm <- function(object, effect = NULL,
   }
   formula <- formula(object)
   data <- model.frame(object)
+  
+  # For procedure to get the individual/time effects by muliplying the within
+  # estimates with the between-ed data, see Wooldridge (2010), Econometric Analysis 
+  # of Cross Section and Panel Data, 2nd ed., pp. 308-309, formula (10.58)
+  #
+  #   NB: this does not seem to give the correct result in the two-ways unbalanced case,
+  #       all other cases work (twoways/balanced; oneway(ind/time)/balanced/unbalanced)
+  
   Xb <- model.matrix(formula, data, rhs = 1, model = "between", effect = effect)
   yb <- pmodel.response(formula, data, model = "between", effect = effect)
   # the between model may contain time independent variables, the
   # within model doesn't. So select the relevant elements using nw
   # (names of the within variables)
   nw <- names(coef(object))
-  fixef <- yb - as.vector(crossprod(t(Xb[, nw, drop = FALSE]), coef(object)))
+  fixef <- yb - as.vector(tcrossprod(coef(object), Xb[, nw, drop = FALSE]))
 #  bet <- plm.between(formula, data, effect = effect)
   # Lignes suivantes inutiles ??????????
   ## bet <- plm.fit(formula, data, model = "between", effect = effect)
