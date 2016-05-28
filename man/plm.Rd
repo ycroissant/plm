@@ -28,7 +28,7 @@ plm(formula, data, subset, na.action, effect = c("individual", "time", "twoways"
   \item{x}{an object of class \code{"plm"},}
   \item{data}{a \code{data.frame},}
   \item{subset}{see \code{\link{lm}},}
-  \item{na.action}{see \code{\link{lm}},}
+  \item{na.action}{see \code{\link{lm}}; currently, not fully supported,}
   \item{effect}{the effects introduced in the model, one of
   \code{"individual"}, \code{"time"}, or \code{"twoways"},}
   \item{model}{one of \code{"pooling"}, \code{"within"},
@@ -106,7 +106,13 @@ A \code{"plm"} object has the following elements :
 \item{ercomp}{an object of class \code{'ercomp'} providing the
  estimation of the components of the errors (for random effects models only),}
 \item{call}{the call.}
-   
+
+% not listed is element "assign"...
+
+% \item{na.action}{if relevant, information about handling of NAs by the 
+% model.frame function,}
+% NB: na.action is currently not included as it is not supported
+
 It has \code{print}, \code{summary} and \code{print.summary} methods.
 The \code{summary} method creates an object of class \code{"summary.plm"} that 
 extends the object it is run on with information about (inter alia) F statistic 
