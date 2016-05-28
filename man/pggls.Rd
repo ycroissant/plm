@@ -98,10 +98,6 @@ zz_pool <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
                  data = Produc, model = "pooling")
 summary(zz_pool)
 
-zz_re <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
-               data = Produc, model = "random")
-summary(zz_re)
-
 zz_fd <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
                data = Produc, model = "fd")
 summary(zz_fd)

@@ -694,9 +694,14 @@ Changes since version 1.5-24
                        these differ from the number of obervations (rows) in the model frame due to diff-ing.
   * pres: fixed handling of pggls' FD models and, thus, summary on pggls' FD models now works without error.
   * pbltest: now has a plm interface (besides the formula interface).
-  
+
 Changes since version 1.5-25
 
   * fixef: * summary.fixef: t distribution is used for p-value calculation (like the heading states).
            * fixef: for the t distribution to be applied for p-value calculation, objects of class "fixef" 
              gained a "df.residual" element.
+
+Changes since version 1.5-26
+
+  * residuals.plm: residuals extracted by residuals(plm_object) now have class c("pseries", "numeric")
+                   (was just "pseries" before).

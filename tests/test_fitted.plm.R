@@ -58,28 +58,35 @@ mod_be_droppedCoef   <- plm(form2, data = Grunfeld, model="between")
 
 mod_pool_dropped2Coef <- plm(form3, data = Grunfeld, model="pooling")
 
-# These fail due to dropped coefficients [and some due to an additional error with ercomp.plm]
+# Below:
+# Some of these failed due to dropped coefficients, was fixed in rev. 184
+# [and some due to an additional error with ercomp.plm]
 # [and due to the current (v1.5-14) implementation
 #  of fitted.plm they give an error in some instances]
 #
 # A warning message about the reason (dropped coef in estimated model) is
 # implemented in fitted.plm, yet uncommented (v1.5-14).
+#
+# Some still return all NA
 
+plm:::fitted.plm(mod_pool_droppedCoef)
+plm:::fitted.plm(mod_fe_droppedCoef)
+plm:::fitted.plm(mod_re_droppedCoef)
+plm:::fitted.plm(mod_be_droppedCoef)
 
-# plm:::fitted.plm(mod_pool_droppedCoef)
-# plm:::fitted.plm(mod_fe_droppedCoef)
-# plm:::fitted.plm(mod_re_droppedCoef)
-# plm:::fitted.plm(mod_be_droppedCoef)
-# 
-# plm:::fitted.plm(mod_pool_droppedCoef, model = "pooling")
-# plm:::fitted.plm(mod_fe_droppedCoef,   model = "pooling")
-# plm:::fitted.plm(mod_re_droppedCoef,   model = "pooling")
-# plm:::fitted.plm(mod_be_droppedCoef,   model = "pooling")
-# 
+plm:::fitted.plm(mod_pool_droppedCoef, model = "pooling")
+plm:::fitted.plm(mod_fe_droppedCoef,   model = "pooling")
+plm:::fitted.plm(mod_re_droppedCoef,   model = "pooling")
+plm:::fitted.plm(mod_be_droppedCoef,   model = "pooling")
+
 # plm:::fitted.plm(mod_pool_droppedCoef, model = "within") # no error, but all NA values returned
 # plm:::fitted.plm(mod_fe_droppedCoef,   model = "within")
 # plm:::fitted.plm(mod_re_droppedCoef,   model = "within") # no error, but all NA values returned
 # plm:::fitted.plm(mod_be_droppedCoef,   model = "within") # no error, but all NA values returned
+# # formal test
+# if (all(is.na(plm:::fitted.plm(mod_pool_droppedCoef, model = "within"))))
+#   stop("all values are NA")
+
 # 
 # plm:::fitted.plm(mod_pool_droppedCoef, model = "random") # "Error in ercomp.plm(object) : ercomp only relevant for random models"
 # plm:::fitted.plm(mod_fe_droppedCoef,   model = "random") # "Error in ercomp.plm(object) : ercomp only relevant for random models"

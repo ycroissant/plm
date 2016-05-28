@@ -164,7 +164,7 @@ fitted.plm <- function(object, model = NULL, ...){
   structure(fv, index =  index(object), class = "pseries")
 }
 
-  
+
 predict.plm <- function(object, newdata = NULL, ...){
   tt <- terms(object)
   if (is.null(newdata)){
@@ -224,7 +224,7 @@ r.squared <- function(object, model = NULL,
     if (dfcor) R2 <- 1 - (1 - R2) * (length(resid(object)) - 1) / df.residual(object)
     R2
 }
-  
+
 
 residuals.plm <- function(object, model = NULL, effect = NULL, ...){
   fittedmodel <- describe(object, "model")
@@ -244,7 +244,7 @@ residuals.plm <- function(object, model = NULL, effect = NULL, ...){
     }
     res <- y - as.numeric(crossprod(t(X), beta))
   }
-  structure(res, index =  index(object), class = "pseries")
+  structure(res, index =  index(object), class = c("pseries", class(res)))
 }
 
 formula.plm <- function(x, ...){
