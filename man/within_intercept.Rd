@@ -20,7 +20,7 @@ within_intercept(object, ...)
 
 \details{
 The (somewhat artificial) intercept for within models (fixed effects models) was made popular by
-Stata of StataCorp (see Gould (2013)) and later also adopted by Gretl (see Cottrell/Lucchetti (2016), p. 160-161 (example 18.1)).
+Stata of StataCorp (see Gould (2013)) and later also adopted by Gretl (see Cottrell/Lucchetti (2016), p. 160-161 (example 18.1)), see for treatment in the literature, e.g. Greene (2012), Ch. 11.4.4, p. 364.
 It can be considered an overall intercept in the within model framework and is the weighted mean of fixed
 effects (see \bold{Examples} for the relationship).
 
@@ -35,16 +35,18 @@ see examples for usage. Note: The argument \code{.vcov} must be a function, not 
 to calculate the overall intercept for the within model is different from the within model itself.
 }
 
-\value{ 
+\value{
 A named \code{numeric} vector of length one: The overall intercept for the estimated within model along
 attribute "se" which contains the standard error for the intercept.
 }
 
 \references{
+Cottrell, A./Lucchetti, R., Gretl User's Guide, \url{http://gretl.sourceforge.net/gretl-help/gretl-guide.pdf}.
+
 Gould, W. (2013), \dQuote{How can there be an intercept in the fixed-effects model estimated by xtreg, fe?},
 \url{http://www.stata.com/support/faqs/statistics/intercept-in-fixed-effects-model/}.
 
-Cottrell, A./Lucchetti, R., Gretl User's Guide, \url{http://gretl.sourceforge.net/gretl-help/gretl-guide.pdf}.
+Greene, W. H. (2012), Econometric Analysis, 7th ed., Prentice Hall, Ch. 11.4.4.
 }
 
 \seealso{
@@ -54,16 +56,17 @@ Cottrell, A./Lucchetti, R., Gretl User's Guide, \url{http://gretl.sourceforge.ne
 \author{Kevin Tappe}
 
 \examples{
+% TODO: two-way unbalanced case, within_intercept does not seem to produce the right results
 # estimate within model (unbalanced data)
 data("Hedonic", package = "plm")
 mod_fe <- plm(mv ~ age + crim, data = Hedonic, index = "townid")
 overallint <- within_intercept(mod_fe)
 attr(overallint, "se") # standard error
 
-# overall intercept is the weighted mean of fixed effects
+# overall intercept is the weighted mean of fixed effects in the one-way case
 weighted.mean(fixef(mod_fe), as.numeric(table(index(mod_fe)[[1]])))
 
-# relationship of type="dmean", "level" and within_intercept
+# relationship of type="dmean", "level" and within_intercept in the one-way case
 data("Grunfeld", package = "plm")
 gi <- plm(inv ~ value + capital, data = Grunfeld, model = "within")
 fx_level <- fixef(gi, type = "level")

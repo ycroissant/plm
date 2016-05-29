@@ -1,4 +1,6 @@
-# Note: return value of within_intercept is related to return values of fixef.plm, see tests/test_within_intercept.R for how
+# Note: return value of within_intercept is related to return values of fixef.plm, see tests/test_within_intercept.R
+#
+# NB/TODO: check if this is correct for the two-way unbalanced case
 
 within_intercept.plm <- function(object, .vcov = NULL, ...) { 
   

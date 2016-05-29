@@ -59,6 +59,10 @@ overall mean (\code{"dmean"}). If the argument \code{.vcov} was specified, the s
 
 The associated \code{summary} method returns an extended object of class \code{"summary.fixef"} 
 with more information (see sections \bold{Value} and \bold{Examples}).
+
+References with formulae (except for the two-ways unbalanced case) are, e.g., 
+Greene (2012), Ch. 11.4.4, p. 364, formulae (11-25); Wooldridge (2010), Ch. 10.5.3, pp. 308-309, 
+formula (10.58).
 }
 
 \seealso{
@@ -98,6 +102,13 @@ summary(fx_level_robust1) # gives fixed effects, robust SEs, t- and p-values
 fixefs <- fixef(gi)[index(gi, which = "id")]
 fitted_by_hand <- fixefs + gi$coefficients["value"] * gi$model$value +
                            gi$coefficients["capital"] * gi$model$capital
+}
+
+
+\references{
+Greene, W.H. (2012), Econometric Analysis, 7th ed., Prentice Hall, Ch. 11.4.4.
+
+Wooldridge, J.M. (2010) \emph{Econometric Analysis of Cross-Section and Panel Data}, 2nd ed., MIT Press, Ch. 10.5.3.
 }
 
 \keyword{regression}
