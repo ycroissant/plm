@@ -36,35 +36,13 @@ fixef.plm <- function(object, effect = NULL,
   #                 Ch. 11.4.4, p. 364, formulae (11-25)
   #
   # NB: These formulae do not give the correct results in the two-ways unbalanced case,
-  #     all other cases (twoways/balanced; oneway(ind/time)/balanced/unbalanced) work with these formulae.
-  #     The next edition of Greene (8th) will have a short comment about this.
-  #
-  #     For the two-ways _unbalanced_ case we need this special treatment:
-  #     fit the corresponding one-way model with dummies and take those effects
+  #     all other cases (twoways/balanced; oneway(ind/time)/balanced/unbalanced) seem to
+  #     work with these formulae.
   
   Xb <- model.matrix(formula, data, rhs = 1, model = "between", effect = effect)
   yb <- pmodel.response(formula, data, model = "between", effect = effect)
+  fixef <- yb - as.vector(crossprod(t(Xb[, nw, drop = FALSE]), coef(object)))
   
-  if (!(model.effect == "twoways" && !pdim$balanced)) {
-    fixef <- yb - as.vector(tcrossprod(coef(object), Xb[, nw, drop = FALSE]))
-   } else {
-    # treat two-ways unbalanced case
-    # put data in appropriate format for plm (index in now guaranteed to be in first two to columns)
-    data <- cbind(index(object),data)
-
-    # modify formula: add dummies for other effect    
-    dummy_name_other <- ifelse(effect == "individual", names(data)[2], names(data)[1])
-    string_formula <- paste(formula)
-    string_formula[3] <- paste0(string_formula[3], "+ factor(", dummy_name_other, ")")
-    formula_augmented <- as.formula(paste0(string_formula[[2]], string_formula[[1]], string_formula[[3]]))
-    
-    plm_fe_tw_oneway_aug_unbalanced <- plm(formula_augmented, data = data, model = "within", effect = effect)
-    fixef <- fixef(plm_fe_tw_oneway_aug_unbalanced)
-    
-    # NB/TODO: Standard errors in the two-ways unbalanced case need to be adjusted
-  }
-  
-#  bet <- plm.between(formula, data, effect = effect)
   # Lignes suivantes inutiles ??????????
   ## bet <- plm.fit(formula, data, model = "between", effect = effect)
   ## bet$args <- list(model = "between", effect = effect)
@@ -83,9 +61,6 @@ fixef.plm <- function(object, effect = NULL,
                     "individual" = pdim$Tint$Ti,
                     "time"       = pdim$Tint$nt)
   
-  # calculate appropriate standard errors
-  # NB/TODO: Standard errors in the two-ways unbalanced case need to be adjusted
-
   s2 <- deviance(object) / df.residual(object)
   if (type != "dfirst") {
     sefixef <- sqrt(s2 / nother + apply(Xb[, nw, drop = FALSE],1,function(x) t(x) %*% vcov %*% x))

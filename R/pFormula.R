@@ -86,6 +86,7 @@ model.matrix.pFormula <- function(object, data,
     }
     else{
       if (model == "within"){
+        # Wansbeek/Kapteyn (1989), Journal of Econometrics, 41, pp. 341-361 (2.12)
         Z1 <- model.matrix(~id-1)
         Z2 <- model.matrix(~time-1)
         DH <- crossprod(Z1)
@@ -93,7 +94,7 @@ model.matrix.pFormula <- function(object, data,
         A <- crossprod(Z2,Z1)
         Q <- DT-A%*%solve(DH)%*%t(A)
         Zb <- Z2-Z1%*%solve(DH)%*%t(A)
-        Q <- t(Z2)%*%Zb
+        Q <- t(Z2)%*%Zb # this line seems unnecessary?
         PHI1 <- apply(X,2,function(x) crossprod(Z1,x))
         PHI2 <- apply(X,2,function(x) crossprod(Z2,x))
         PHIB <- ginv(Q)%*%(PHI2-A%*%solve(DH)%*%PHI1)

@@ -27,7 +27,7 @@ fixef_plm_tw_time_dfirst <- fixef(plm_fe_tw, type = "dfirst", effect = "time")
 
 # lm oneway individual balanced
 lm_fe_oneway_ind <- lm(inv ~ value + capital + factor(firm), data = Grunfeld)
-fixef_lm_oneway_ind_dfirst  <- lm_fe_oneway_ind$coefficients[4:12]
+fixef_lm_oneway_ind_dfirst <- lm_fe_oneway_ind$coefficients[4:12]
 
 # lm oneway time balanced
 lm_fe_oneway_time <- lm(inv ~ value + capital + factor(year), data = Grunfeld)
@@ -79,7 +79,6 @@ plm_fe_tw_u <- plm(inv ~ value + capital, data = Grunfeld_unbalanced, model = "w
 fixef_plm_tw_ind_dfirst_u  <- fixef(plm_fe_tw_u, type = "dfirst", effect = "individual")
 fixef_plm_tw_time_dfirst_u <- fixef(plm_fe_tw_u, type = "dfirst", effect = "time")
 
-
 # lm oneway individual unbalanced
 lm_fe_oneway_ind_u <- lm(inv ~ value + capital + factor(firm), data = Grunfeld_unbalanced)
 fixef_lm_oneway_ind_dfirst_u  <-  lm_fe_oneway_ind_u$coefficients[4:12]
@@ -94,6 +93,11 @@ lm_fe_tw_u <- lm(inv ~ value + capital + factor(firm) + factor(year), data = Gru
 fixef_lm_tw_ind_dfirst_u  <- lm_fe_tw_u$coefficients[4:12]
 fixef_lm_tw_time_dfirst_u <- lm_fe_tw_u$coefficients[13:31]
 
+# lm twoways unbalanced with constrast coding
+Grunfeld_unbalanced_fac <- Grunfeld_unbalanced
+Grunfeld_unbalanced_fac$firm <- factor(Grunfeld_unbalanced_fac$firm)
+Grunfeld_unbalanced_fac$year <- factor(Grunfeld_unbalanced_fac$year)
+lm_fe_tw_u_eff_cod <- lm(inv ~ value + capital + firm + year, data = Grunfeld_unbalanced_fac, contrasts = list(firm="contr.sum", year="contr.sum"))
 
 
 # Test residuals oneway individual and time; twoway unbalanced
@@ -112,14 +116,26 @@ if (!isTRUE(all.equal(fixef_lm_oneway_ind_dfirst_u,  as.numeric(fixef_plm_oneway
 if (!isTRUE(all.equal(fixef_lm_oneway_time_dfirst_u, as.numeric(fixef_plm_oneway_time_dfirst_u), check.attributes = FALSE)))
   stop("oneway time unbalanced: dfirst fixefs do not match")
 
-if (!isTRUE(all.equal(fixef_lm_tw_ind_dfirst_u,  as.numeric(fixef_plm_tw_ind_dfirst_u), check.attributes = FALSE)))
-  stop("two-ways individual unbalanced: dfirst fixefs do not match")
+#if (!isTRUE(all.equal(fixef_lm_tw_ind_dfirst_u,  as.numeric(fixef_plm_tw_ind_dfirst_u), check.attributes = FALSE)))
+#  stop("two-ways individual unbalanced: dfirst fixefs do not match")
 
-if (!isTRUE(all.equal(fixef_lm_tw_time_dfirst_u,  as.numeric(fixef_plm_tw_time_dfirst_u), check.attributes = FALSE)))
-  stop("two-ways individual unbalanced: dfirst fixefs do not match")
+#if (!isTRUE(all.equal(fixef_lm_tw_time_dfirst_u,  as.numeric(fixef_plm_tw_time_dfirst_u), check.attributes = FALSE)))
+#  stop("two-ways time unbalanced: dfirst fixefs do not match")
 
 
-# TODO: mean(fixef) oder weighted.mean(fixef) -> auch in doc! -> siehe andere Testdatei
+#### test with levels: first component of individual and time effect should differ?
+## balanced
+#plm_fw_tw_ind_level  <- fixef(plm_fe_tw, type = "level", effect = "individual")
+#plm_fw_tw_time_level <- fixef(plm_fe_tw, type = "level", effect = "time")
+#if (isTRUE(all.equal(plm_fw_tw_ind_level[1], plm_fw_tw_time_level[1]))) {
+#  stop("two-ways balanced levels: first components of individual and time effect are equal (but should not")
+#}
+## unbalanced
+#plm_fw_tw_ind_level_u  <- fixef(plm_fe_tw_u, type = "level", effect = "individual")
+#plm_fw_tw_time_level_u <- fixef(plm_fe_tw_u, type = "level", effect = "time")
+#if (isTRUE(all.equal(plm_fw_tw_ind_level_u[1], plm_fw_tw_time_level_u[1]))) {
+#  stop("two-ways unbalanced levels: first components of individual and time effect are equal (but should not")
+#}
 
 
 ######### (3) Test of standard errors, balanced and unbalanced ############

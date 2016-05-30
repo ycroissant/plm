@@ -2,6 +2,14 @@
 #
 # NB/TODO: check if this is correct for the two-way unbalanced case
 
+# Test with contr.sum? - regression constant is the _unweighted_ mean, see http://www.ats.ucla.edu/stat/mult_pkg/faq/general/effect.htm
+# lm twoways unbalanced with contr.sum coding: http://www.ats.ucla.edu/stat/r/library/contrast_coding.htm#DEVIATION
+# Grunfeld_unbalanced_fac <- Grunfeld_unbalanced
+# Grunfeld_unbalanced_fac$firm <- factor(Grunfeld_unbalanced_fac$firm)
+# Grunfeld_unbalanced_fac$year <- factor(Grunfeld_unbalanced_fac$year)
+# lm_fe_tw_u_eff_cod <- lm(inv ~ value + capital + firm + year, data = Grunfeld_unbalanced_fac, contrasts = list(firm="contr.sum", year="contr.sum"))
+
+
 within_intercept.plm <- function(object, .vcov = NULL, ...) { 
   
   if (!inherits(object, "plm")) stop("input 'object' needs to be a \"within\" model estimated by plm()")
