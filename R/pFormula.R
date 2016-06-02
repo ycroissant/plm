@@ -31,7 +31,7 @@ model.frame.pFormula <- function(formula, data, ..., lhs = NULL, rhs = NULL){
 
 model.matrix.pFormula <- function(object, data,
                                   model = c("pooling","within","Between",
-                                    "between","mean","random","fd"),
+                                            "between","mean","random","fd"),
                                   effect = c("individual","time","twoways"),
                                   rhs = 1,
                                   theta = NULL, ...){
@@ -75,7 +75,7 @@ model.matrix.pFormula <- function(object, data,
                      )
   }
   else{
-    if (pdim$balanced){
+    if (pdim$balanced){ # two-ways balanced
       result <- switch(model,
                        "within" = X - Between(X,id) - Between(X,time) +
                                   matrix(apply(X,2,mean),nrow(X),ncol(X),byrow=T),
@@ -84,21 +84,24 @@ model.matrix.pFormula <- function(object, data,
                        "pooling" = X
                        )
     }
-    else{
+    else{ # two-ways unbalanced
       if (model == "within"){
         # Wansbeek/Kapteyn (1989), Journal of Econometrics, 41, pp. 341-361 (2.12)
         Z1 <- model.matrix(~id-1)
         Z2 <- model.matrix(~time-1)
         DH <- crossprod(Z1)
         DT <- crossprod(Z2)
-        A <- crossprod(Z2,Z1)
-        Q <- DT-A%*%solve(DH)%*%t(A)
-        Zb <- Z2-Z1%*%solve(DH)%*%t(A)
-        Q <- t(Z2)%*%Zb # this line seems unnecessary?
+        A  <- crossprod(Z2,Z1)
+        invDH <- solve(DH)                 # little performance optimizations, old code:
+        Q  <- DT-A%*%tcrossprod(invDH, A)    # == DT-A%*%solve(DH)%*%t(A)
+        Zb <- Z2-Z1%*%tcrossprod(invDH, A)   # == Z2-Z1%*%solve(DH)%*%t(A)
+        Q  <- crossprod(Z2, Zb)              # == t(Z2)%*%Zb   # this line seems unnecessary?
         PHI1 <- apply(X,2,function(x) crossprod(Z1,x))
         PHI2 <- apply(X,2,function(x) crossprod(Z2,x))
-        PHIB <- ginv(Q)%*%(PHI2-A%*%solve(DH)%*%PHI1)
-        result <- X-Z1%*%solve(DH)%*%PHI1-Zb%*%PHIB
+        invDH_PHI1 <- invDH%*%PHI1
+        rm(invDH)
+        PHIB   <- ginv(Q)%*%(PHI2-A%*%invDH_PHI1) # == ginv(Q)%*%(PHI2-A%*%solve(DH)%*%PHI1)
+        result <- X-Z1%*%invDH_PHI1-Zb%*%PHIB     # == X-Z1%*%solve(DH)%*%PHI1-Zb%*%PHIB
       }
     }
   }
@@ -114,7 +117,7 @@ pmodel.response <- function(object, ...) {
 
 pmodel.response.data.frame <- function(object,
                                        model = c("pooling","within","Between",
-                                         "between","mean","random","fd"),
+                                                 "between","mean","random","fd"),
                                        effect = c("individual","time","twoways"),
                                        lhs = NULL,
                                        theta = NULL, ...){
@@ -132,7 +135,7 @@ pmodel.response.data.frame <- function(object,
 
 pmodel.response.pFormula <- function(object, data,
                                      model = c("pooling","within","Between",
-                                       "between","mean","random","fd"),
+                                               "between","mean","random","fd"),
                                      effect = c("individual","time","twoways"),
                                      lhs = NULL,
                                      theta = NULL, ...){

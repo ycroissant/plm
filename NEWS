@@ -705,3 +705,7 @@ Changes since version 1.5-26
 
   * residuals.plm: residuals extracted by residuals(plm_object) now have class c("pseries", "numeric")
                    (was just "pseries" before).
+
+Changes since version 1.5-27
+
+  * little speed up of within transformation in the two-ways unbalanced case (in model.matrix.pFormula)
