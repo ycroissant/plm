@@ -709,3 +709,5 @@ Changes since version 1.5-26
 Changes since version 1.5-27
 
   * little speed up of within transformation in the two-ways unbalanced case (in model.matrix.pFormula)
+  * little speed up for some more transformations by using .colMeans instead of apply(X, 2, mean)
+    (in model.matrix.pFormula)

@@ -47,7 +47,8 @@ model.matrix.pFormula <- function(object, data,
   if (is.null(attr(data, "terms"))) {
     data <- model.frame.pFormula(pFormula(formula), data)
   }
-
+  
+  # this goes to Formula::model.matrix.Formula:
   X <- model.matrix(as.Formula(formula), rhs = rhs, data = data, ...)
   X.assi <- attr(X, "assign")
   X.contr <- attr(X, "contrasts")
@@ -69,7 +70,7 @@ model.matrix.pFormula <- function(object, data,
                      "Between" = Between(X, cond),
                      "between" = between(X, cond),
                      "pooling" = X,
-                     "mean"    = matrix(apply(X, 2, mean), nrow(X), ncol(X), byrow = T),
+                     "mean"    = matrix(.colMeans(X,nrow(X),ncol(X)), nrow(X),ncol(X),byrow=T), # .colMeans for speed # matrix(apply(X, 2, mean), nrow(X), ncol(X), byrow = T),
                      "random"  = X - theta * Between(X,cond),
                      "fd"      = pdiff(X, cond, has.intercept = has.intercept)
                      )
@@ -78,9 +79,9 @@ model.matrix.pFormula <- function(object, data,
     if (pdim$balanced){ # two-ways balanced
       result <- switch(model,
                        "within" = X - Between(X,id) - Between(X,time) +
-                                  matrix(apply(X,2,mean),nrow(X),ncol(X),byrow=T),
+                                  matrix(.colMeans(X,nrow(X),ncol(X)), nrow(X),ncol(X),byrow=T), # matrix(apply(X,2,mean),nrow(X),ncol(X),byrow=T)
                        "random" = X - theta$id * Between(X,id) - theta$time * Between(X,time) +
-                                  theta$total * matrix(apply(X,2,mean),nrow(X),ncol(X),byrow=T),
+                                  theta$total * matrix(.colMeans(X,nrow(X),ncol(X)), nrow(X),ncol(X),byrow=T), # matrix(apply(X,2,mean),nrow(X),ncol(X),byrow=T),
                        "pooling" = X
                        )
     }
