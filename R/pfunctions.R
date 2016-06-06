@@ -41,7 +41,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
       }
   })
 
-  # following line: bug fixed thank's to Marciej Szelfer 
+  # following line: bug fixed thanks to Marciej Szelfer 
   cst.check <- cst.check | is.na(cst.check)
   cst.serie <- names(x)[cst.check]
   if (length(cst.serie) > 0){
@@ -89,7 +89,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     if(!is.null(time.name)){warning("The time index (second element of 'index' argument) will be ignored\n")}
     N <- nrow(x)
     if( (N%%id.name)!=0){
-      stop("unbalanced panel, in this case the individual index should be indicated by a the first element of 'index' argument\n")
+      stop("unbalanced panel, in this case the individual index should be indicated by the first element of 'index' argument\n")
     }
     else{
       T <- N%/%id.name
@@ -198,16 +198,16 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 #     vector subsetting is used which removes the pseries features
 
 "[.pdata.frame" <- function(x, i, j, drop) {
-                            # copy signature of [.data.frame here
+                  # signature of [.data.frame here
   
-    missing.i    <- missing(i)    # missing is only guaranteed yield correct results,
-    missing.j    <- missing(j)    # if its argument was not modified before
+    missing.i    <- missing(i)    # missing is only guaranteed to yield correct results,
+    missing.j    <- missing(j)    # if its argument was not modified before accessing it
     missing.drop <- missing(drop) # -> save information about missingness
     sc <- sys.call()
     # Nargs_mod to distinguish if called by [] (Nargs_mod == 2L); [,] (Nargs_mod == 3L); [,,] (Nargs_mod == 4L)
     Nargs_mod <- nargs() - (!missing.drop)
   
-    # # Kevin Tappe 2015-10-29
+    # # Kevin Tappe 2015-10-29 [code from old implementation]
     # if (missing(drop)){
     #     if (! missing(j) && length(j) == 1) { drop = TRUE
     #       } else { drop = FALSE }
@@ -246,7 +246,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
             
             # remove empty levels in index (if any)
             # NB: really do dropping of unused levels? Standard R behaviour is to leave the levels and not drop unused levels
-            #     Maybe the dropping is needed for lag.pseries to work correctly?
+            #     Maybe the dropping is needed for functions like lag.pseries to work correctly?
             index <- droplevels(index)
             # NB: use droplevels() rather than x[drop = TRUE] as x[drop = TRUE] can also coerce mode!
             # old (up to rev. 251): index <- data.frame(lapply(index, function(x) x[drop = TRUE]))
@@ -261,7 +261,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     
     # Set class to "data.frame" first to avoid coering which enlarges the (p)data.frame 
     # (probably by as.data.frame.pdata.frame).
-    # Coercing is the built in behaviour for extraction from data.frames by "[." (see ?`[.data.frame`) 
+    # Coercing is the built-in behaviour for extraction from data.frames by "[." (see ?`[.data.frame`) 
     # and it seems this cannot be avoided; thus we need to make sure, not to have any coercing going on
     # which add extra data (such as as.matrix.pseries, as.data.frame.pdata.frame) by setting the class 
     # to "data.frame" first
@@ -396,7 +396,7 @@ as.list.pdata.frame <- function(x, keep.attributes = FALSE, ...) {
     # as.list.data.frame function,
     # because we cannot simply use unclass() on the pdata.frame:
     # need to add index etc to all columns to get proper pseries
-    # back => thus the extraction function "[[.pdata.frame is used
+    # back => thus the extraction function "[[.pdata.frame" is used
     }
   return(x)
 }
@@ -487,7 +487,7 @@ Tapply.matrix <- function(x, effect, func, ...){
 ###################################################
 ### chunk number 10: Between, between, Within
 ###################################################
-Between <- function(x,...){
+Between <- function(x, ...){
   UseMethod("Between")
 }
 
@@ -501,8 +501,7 @@ Between.pseries <- function(x, effect = c("individual", "time"), ...){
   Tapply(x, effect = effect, mean, ...)
 }
 
-
-between <- function(x,...){
+between <- function(x, ...){
   UseMethod("between")
 }
 
@@ -527,7 +526,7 @@ between.matrix <- function(x, effect, ...){
 }
 
 
-Within <- function(x,...){
+Within <- function(x, ...){
   UseMethod("Within")
 }
 
@@ -570,7 +569,7 @@ summary.pseries <- function(object, ...){
   xm <- mean(object, na.rm = TRUE)
   Bid <-  Between(object, na.rm = TRUE)
   Btime <-  Between(object, effect = "time", na.rm = TRUE)
-  structure( c(total = sumsq(object), between_id= sumsq(Bid), between_time = sumsq(Btime)), 
+  structure( c(total = sumsq(object), between_id = sumsq(Bid), between_time = sumsq(Btime)), 
             class = c("summary.pseries", "numeric")
             )
 }
@@ -613,7 +612,8 @@ as.data.frame.pdata.frame <- function(x, row.names = NULL, optional = FALSE, ...
         row.names(x) <- fancy.row.names(index) # using row.names(x) is safer (no duplicate row.names) 
                                                # than attr(x, "row.names") <- "something"
       }
-    ## if row.names is a character vector, row.names could also be passed here to base::data.frame , see ?base::data.frame
+    ## not implemented: if row.names is a character vector, row.names could also be passed here to base::data.frame,
+    ## see ?base::data.frame
   } 
   
   return(x)
@@ -648,9 +648,8 @@ pdiff <- function(x, cond, has.intercept = FALSE){
 # compute lagged values (handles positive lags and negative lags (=leading values) [and 0 -> do nothing])
 #
 # NB: This method seems to be intended for rowwise (positionwise) shifting as lagging
-#     There is also an experimental function called lagt.pseries in a seperate file which
-#     respectes the time periods by looking at their content
-#
+#     There is also an (somwehat experimental) function called lagt.pseries in a seperate
+#     file which respectes the time periods by looking at their content
 lag.pseries <- function(x, k = 1, ...) {
   index <- attr(x, "index")
   id <- index[[1]]
