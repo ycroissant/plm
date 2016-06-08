@@ -52,12 +52,12 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                re_mod <- plm(formula=x, data=data, model=model[2])
                
                reY <- pmodel.response(re_mod)
-               reX <- model.matrix(re_mod)[ , -1] # intercept not needed
-               feX <- model.matrix(fe_mod)
+               reX <- model.matrix(re_mod)[ , -1, drop = FALSE] # intercept not needed; drop=F needed to prevent matrix
+               feX <- model.matrix(fe_mod)                      # from degenerating to vector if only one regressor
                dimnames(feX)[[2]] <- paste(dimnames(feX)[[2]],
                                            "tilde", sep=".")
                
-               ## estimated models could have fewer obs (due droping of NAs) compared to the original data
+               ## estimated models could have fewer obs (due dropping of NAs) compared to the original data
                ## => match original data and observations used in estimated models
                ## routine adapted from lmtest::bptest
                commonrownames <- intersect(intersect(intersect(row.names(data), names(reY)), row.names(reX)), row.names(feX))
@@ -138,19 +138,19 @@ phtest.panelmodel <- function(x, x2, ...){
   names(parameter) <- "df"
   alternative <- "one model is inconsistent"
 #  null.value <- "both models are consistent"
-  res <- list(statistic   = stat,
-              p.value     = pval,
-              parameter   = parameter,
-              method      = "Hausman Test",
-              data.name   = data.name(x),
+  res <- list(statistic    = stat,
+              p.value      = pval,
+              parameter    = parameter,
+              method       = "Hausman Test",
+              data.name    = data.name(x),
  #             null.value  = null.value,
-              alternative = alternative)
+              alternative  = alternative)
   class(res) <- "htest"
   return(res)
 }
 
 ############## plmtest() ############################################
-# For a concise overview with original references see
+# For a concise overview with original references, see
 # Baltagi (2013), Econometric Analysis of Panel Data, 5th edition, pp. 68-76 (balanced), pp. 200-203 (unbalanced).
 #
 # balanced (original) version of Breusch-Pagan test:
@@ -332,23 +332,22 @@ pFtest.plm <- function(x, z, ...){
   names(parameter) <- c("df1","df2")
   pval <- pf(stat,df1,df2,lower.tail=FALSE)
   alternative <- "significant effects"
-  res <- list(statistic = stat,
-              p.value = pval,
-              method = paste("F test for ",effect," effects",sep=""),
-              parameter=parameter,
-              data.name=data.name(x),
-              alternative=alternative)
+  res <- list(statistic   = stat,
+              p.value     = pval,
+              method      = paste("F test for ",effect," effects",sep=""),
+              parameter   = parameter,
+              data.name   = data.name(x),
+              alternative = alternative)
   class(res) <- "htest"
   res
 }
 
 ############## Ftest() ############################################
 # Ftest is used in summary.plm to compute the F statistic
-#
-# TODO: Ftest with .vcov arg is not yet weaved in in summary.plm
-#
 # NB: How does this function relate to function plm:::pwaldtest?
 #     Ftest(x, test = "Chisq") seems to accomplish the same as pwaldtest?
+#
+# TODO: Ftest with .vcov arg is not yet weaved in in summary.plm
 #
 # Short intro (but see associated help file)
 # arg '.vcov' non-NULL => the robust tests are carried out
@@ -520,9 +519,9 @@ pooltest.plm <- function(x, z, ...){
 }
 
 ############## pwaldtest() ############################################
-# NB: Is pwaldtest still in use? There is also Ftest which seems to
-#     accomplish the same (and more)
-#
+# NB: Is pwaldtest still in use? The Ftest which as enhanced a lot recently seems to
+#     accomplish the same (and more); maybe rename Ftest to pwaldtest and delete the
+#     pwaldtest below?
 #
 pwaldtest <- function(x, ...){
   pdim <- attr(x,"pdim")
@@ -547,10 +546,10 @@ pwaldtest <- function(x, ...){
   names(parameter) <- "df"
   pval <- pchisq(stat,df,lower.tail=FALSE)
   res <- list(statistic = stat,
-              p.value = pval,
+              p.value   = pval,
               parameter = parameter,
               parameter.name = "df",
-              method = "Wald Test",
+              method    = "Wald Test",
               data.name = "data.name")
   class(res) <- "htest"
   res
@@ -596,4 +595,3 @@ pwaldtest.panelmodel <- function(x, ...){
 }
 
 
-  
