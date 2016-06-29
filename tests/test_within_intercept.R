@@ -1,7 +1,7 @@
 ### Test of within_intercept in connection with fixef() and comparision to Stata and Gretl
 #
 # TODO: modify to accomodate unbalanced two-way models?
-#
+#  
 # (1) balanced
 # (2) unbalanced
 
@@ -24,7 +24,7 @@ if (!isTRUE(all.equal(individual_intercepts_gi, f_level_gi, check.attributes = F
 if (!isTRUE(all.equal(int_gi, int_manual_gi, check.attributes = FALSE))) stop("within_intercept: something is wrong")
 
 # oneway time balanced
-gt <- plm(inv ~ value + capital, data = Grunfeld, model = "within", effect = "individual")
+gt <- plm(inv ~ value + capital, data = Grunfeld, model = "within", effect = "time")
 f_level_gt <- fixef(gt, type = "level")
 f_dmean_gt <- fixef(gt, type = "dmean")
 int_gt <- within_intercept(gt)

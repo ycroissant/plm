@@ -218,7 +218,7 @@ pres <- function(x) {  # pres.panelmodel
   }
 
   resdata <- data.frame(ee=x$residuals, ind=groupind, tind=timeind)
-  pee<-pdata.frame(resdata, index=c("ind","tind"))
+  pee < -pdata.frame(resdata, index=c("ind","tind"))
 
   pres <- pee$ee
   return(pres)

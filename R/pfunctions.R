@@ -164,7 +164,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
   
   if (row.names){
     attr(x, "row.names") <- fancy.row.names(index)
-    # NB: attr(x, "row.names") allows for duplicate rownames (as opposed to row.names(x) <- "something)
+    # NB: attr(x, "row.names") allows for duplicate rownames (as opposed to row.names(x) <- something)
     # no fancy row.names for index attribute (!?): maybe because so, it is possible to restore original row.names
   }
   

@@ -27,10 +27,10 @@ vcovG <- function(x, ...) {
 }
 
 
-vcovG.plm <-function(x,type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
-                      cluster=c("group","time"),
-                     l=0,
-                     inner=c("cluster","white","diagavg"),
+vcovG.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
+                      cluster=c("group", "time"),
+                      l=0,
+                      inner=c("cluster", "white", "diagavg"),
                      ...) {
 
   ## general building block for vcov
@@ -49,7 +49,6 @@ vcovG.plm <-function(x,type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
     }
 
   ## extract demeaned data
-
     demX <- model.matrix(x, model = model)
     demy <- pmodel.response(x, model = model)
     dimnames(demX)[[2]][1] <- attr(vcov(x), "dimnames")[[1]][1]
@@ -87,16 +86,16 @@ vcovG.plm <-function(x,type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
             omega <- function(residuals, diaghat, df, g) residuals
         }, sss = {
             omega <- function(residuals, diaghat, df, g) residuals *
-                sqrt(g/(g-1)*((nT-1)/(nT-k)))
+                                sqrt(g/(g-1)*((nT-1)/(nT-k)))
         }, HC1 = {
             omega <- function(residuals, diaghat, df, g) residuals *
-                sqrt(length(residuals)/df)
+                                sqrt(length(residuals)/df)
         }, HC2 = {
             omega <- function(residuals, diaghat, df, g) residuals /
-                sqrt(1 - diaghat)
+                                sqrt(1 - diaghat)
         }, HC3 = {
             omega <- function(residuals, diaghat, df, g) residuals /
-                (1 - diaghat)
+                                (1 - diaghat)
         }, HC4 = {
             omega <- function(residuals, diaghat, df, g) {
                 residuals/sqrt(1 - diaghat)^
@@ -108,13 +107,14 @@ vcovG.plm <-function(x,type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 
    ## Definition module for E(u,v)
     if(is.function(inner)) {
-        E=inner
+        E <- inner
     } else {
       ## outer for clustering/arellano, diag(diag(inner)) for white
-      switch(match.arg(inner), cluster={
-          E=function(u,v) outer(u,v)
+      switch(match.arg(inner), 
+         cluster={
+          E <- function(u,v) outer(u,v)
       }, white={
-          E=function(u,v) { # was simply: diag(diag(outer(u,v)))
+          E <- function(u,v) { # was simply: diag(diag(outer(u,v)))
               # but unfortunately we have to manage unbalanced panels
               # in the case l!=0 (the residual vectors are different)
               # by producing a "pseudo-diagonal" with all those obs.
@@ -143,7 +143,7 @@ vcovG.plm <-function(x,type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
               return(euv)
           }
       }, diagavg={
-          E=function(u,v) {
+          E <- function(u,v) {
               ## this is the averaged version for 'white2'
               if(isTRUE(all.equal(names(u), names(v)))) {
                   ## ..then keep it simple
@@ -182,8 +182,8 @@ vcovG.plm <-function(x,type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
   ## group (i.e. the vcov estimator is robust vs. xsectional dependence)
 
   ## extract indices
-    groupind<-as.numeric(attr(x$model, "index")[,1])
-    timeind<-as.numeric(attr(x$model, "index")[,2])
+    groupind <- as.numeric(attr(x$model, "index")[,1])
+    timeind  <- as.numeric(attr(x$model, "index")[,2])
 
   ## fix for 'fd' model (losing first time period)
      if(model == "fd") {
@@ -231,7 +231,7 @@ vcovG.plm <-function(x,type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
     ## find some more elegant solution for this!
     ## (perhaps if white then sss->HC1 but check...)
   G <- if(match.arg(inner)=="cluster") n else nT
-  uhat<-omega(uhat, diaghat, df, G)
+  uhat <- omega(uhat, diaghat, df, G)
 
   ## compute basic block: X'_t u_t u'_(t-l) X_(t-l) foreach t,
   ## then calculate Sl_t and sum over t (here i in place of t)
@@ -289,9 +289,9 @@ vcovG.plm <-function(x,type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 
 ## user-level wrappers:
 
-vcovHC.plm <- function(x, method=c("arellano","white1","white2"),
+vcovHC.plm <- function(x, method=c("arellano", "white1", "white2"),
                        type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
-                       cluster=c("group","time"), ...) {
+                       cluster=c("group", "time"), ...) {
     ## user-level wrapper for White-Arellano covariances
 
     ## translate arguments
@@ -333,10 +333,10 @@ vcovDC.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
     return(res)
 }
 
-vcovSCC.plm <- function(x,type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
+vcovSCC.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
                         cluster="time",
                         maxlag=NULL,
-                        inner=c("cluster","white","diagavg"),
+                        inner=c("cluster", "white", "diagavg"),
                         wj=function(j, maxlag) 1-j/(maxlag+1),
                         ...) {
 
@@ -372,9 +372,11 @@ vcovBK <- function(x, ...) {
     UseMethod("vcovBK")
 }
 
-vcovBK.plm <-function(x,type=c("HC0", "HC1", "HC2", "HC3", "HC4"),
-                      cluster=c("group","time"),
-                      diagonal=FALSE, ...) {
+
+# TODO: add type "sss" for vcovBK
+vcovBK.plm <- function(x, type=c("HC0", "HC1", "HC2", "HC3", "HC4"),
+                       cluster=c("group", "time"),
+                       diagonal=FALSE, ...) {
 
   ## Robust vcov \E0 la Beck and Katz (1995; AKA 'pcse')
   ## for panel models (pooling, random, within or fd type plm obj.)
@@ -423,7 +425,6 @@ vcovBK.plm <-function(x,type=c("HC0", "HC1", "HC2", "HC3", "HC4"),
     }
 
   ## extract demeaned data
-
     demX <- model.matrix(x, model = model)
     demy <- pmodel.response(x, model = model)
     dimnames(demX)[[2]][1] <- attr(vcov(x), "dimnames")[[1]][1]
@@ -445,8 +446,8 @@ vcovBK.plm <-function(x,type=c("HC0", "HC1", "HC2", "HC3", "HC4"),
   ## group (i.e. the vcov estimator is robust vs. xsectional dependence)
 
   ## extract indices
-    groupind<-as.numeric(attr(x$model, "index")[,1])
-    timeind<-as.numeric(attr(x$model, "index")[,2])
+    groupind <- as.numeric(attr(x$model, "index")[,1])
+    timeind  <- as.numeric(attr(x$model, "index")[,2])
 
   ## Achim's fix for 'fd' model (losing first time period)
      if(model == "fd") {
@@ -493,17 +494,18 @@ vcovBK.plm <-function(x,type=c("HC0", "HC1", "HC2", "HC3", "HC4"),
                             HC3 = {diaghat<-try(dhat(demX), silent = TRUE)},
                             HC4 = {diaghat<-try(dhat(demX), silent = TRUE)})
     df <- nT - k
-    switch(match.arg(type), HC0 = {
+    switch(match.arg(type), 
+           HC0 = {
             omega <- function(residuals, diaghat, df) residuals
         }, HC1 = {
             omega <- function(residuals, diaghat, df) residuals *
-                sqrt(length(residuals)/df)
+                                sqrt(length(residuals)/df)
         }, HC2 = {
             omega <- function(residuals, diaghat, df) residuals /
-                sqrt(1 - diaghat)
+                                sqrt(1 - diaghat)
         }, HC3 = {
             omega <- function(residuals, diaghat, df) residuals /
-                (1 - diaghat)
+                                (1 - diaghat)
         }, HC4 = {
             omega <- function(residuals, diaghat, df) residuals/sqrt(1 -
                 diaghat)^pmin(4, length(residuals) * diaghat/as.integer(round(sum(diaghat),
@@ -567,10 +569,10 @@ vcovBK.plm <-function(x,type=c("HC0", "HC1", "HC2", "HC3", "HC4"),
       }
 
   ## meat
-  salame<-apply(salame,1:2,sum)
+  salame <- apply(salame,1:2,sum)
 
   ## bread
-  pane<-solve(crossprod(demX))
+  pane <- solve(crossprod(demX))
 
   ## sandwich
   mycov <- pane %*% salame %*% pane

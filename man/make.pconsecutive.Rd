@@ -26,7 +26,7 @@ per individual) and, optionally, also balanced}
 
 \value{
 An object of the same class as the input \code{x}, i.e. a pdata.frame, data.frame or a pseries which is made 
-time--consecutive based on the index variables.
+time--consecutive based on the index variables. The returned data is sorted as a stacked time series.
 }
 
 \details{

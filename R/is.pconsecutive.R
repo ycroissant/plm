@@ -1,5 +1,5 @@
 ########### is.pconsecutive ##############
-# little helper function to find out if the time periods of an object are consecutive per id.
+# little helper function to determine if the time periods of an object are consecutive per id.
 # By consecutive we mean "consecutive in the numbers", i.e. is.pconsecutive takes the numerical
 # value of the time variable into account: t, t+1, t+2, ... where t is an integer
 #

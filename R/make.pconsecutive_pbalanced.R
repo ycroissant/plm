@@ -114,7 +114,7 @@ make.pconsecutive.indexes <- function(x, index, balanced = FALSE, ...) {
 
 
 make.pconsecutive.data.frame <- function(x, balanced = FALSE, index = NULL, ...){
-  # if not NULL, index is must be character of lenght 2
+  # if not NULL, index is must be character of length 2
   if (!is.null(index) & length(index) != 2)
     stop("if argument 'index' is not NULL, 'index' needs to specify
          'individual' and 'time' dimension for make.pconsecutive to work on a data.frame")
@@ -232,6 +232,11 @@ make.pconsecutive <- function(x, ...){
 ## make.pbalanced.* methods make the input balanced but not consecutive, i.e.
 ## only those missing time periods are introduced that are present for at least
 ## one individual
+##
+## possible enhancement of function: 
+##  instead of filling in NA values, we also reduce the data to those time periods
+##  that are shared by all individuals
+##  => introduce some argument like type = c("fill", "shared"), where "fill" is the current implementation
 make.pbalanced.pdata.frame <- function(x, ...) {
   index <- attr(x, "index")
   x_consec_bal <- make.pconsecutive(x, balanced = TRUE)
@@ -280,12 +285,15 @@ make.pbalanced.pseries <- function(x, ...) {
 } ## END make.pbalanced.pseries
 
 make.pbalanced.data.frame <- function(x, index = NULL, ...) {
-  # if not NULL, index is must be character of lenght 2
+  # NB: for data.frame interface: the data is also sorted as stack time series
+
+  # if not NULL, index is must be character of length 2
   if (!is.null(index) & length(index) != 2)
     stop("if argument 'index' is not NULL, 'index' needs to specify
          'individual' and 'time' dimension for make.pconsecutive to work on a data.frame")
   
-  if (is.null(index)) index_orig_names <- names(x)[1:2] # assume first two columns to be the index vars
+  # assume first two columns to be the index vars
+  if (is.null(index)) index_orig_names <- names(x)[1:2]
     else index_orig_names <- index
   
   index_df <- x[ , index_orig_names]
