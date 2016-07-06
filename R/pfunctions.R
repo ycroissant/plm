@@ -325,6 +325,14 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 print.pdata.frame <- function(x, ...){
   attr(x, "index") <- NULL
   class(x) <- "data.frame"
+  
+  # This is a workaround: print.data.frame cannot handle
+  # duplicated row names which are currently possible for pdata frames
+  if (any(duplicated(rownames(x)))) {
+   print("Note: pdata.frame contains duplicated row names, thus original row names are not printed")
+   rownames(x) <- NULL 
+  }
+  
   print(x, ...)
 }
 

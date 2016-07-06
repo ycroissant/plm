@@ -470,7 +470,7 @@ Changes since version 1.5-1
 
 	* fixed "already a pdata.frame" bug in pcdtest.formula 
 
-    * implemented fixef() method for objects estimated by pggls()
+  * implemented fixef() method for objects estimated by pggls()
  
 
 Changes since version 1.5-3
@@ -517,7 +517,7 @@ Changes since version 1.5-9
 	  
 	* plm(): original row names of inputted data are preserved in plm_object$model,
 	  so functions like pmodel.response(), model.frame(), model.matrix(), residuals()
-	  return the original row.names (and thus fancy rownames if those were to be computed b
+	  return the original row.names (and thus fancy rownames if those were to be computed by
 	  pdata.frame); as.data.frame.pdata.frame(): respects row.names argument
 	  
 	* plmtest: unbalanced version of tests implemented; some fixes to p-values
@@ -715,3 +715,8 @@ Changes since version 1.5-27
 Changes since version 1.5-28
 
   * phtest (regression based): if only one regressor in formula, the test does not stop anymore
+
+Changes since version 1.5-29
+
+  * print.pdata.frame: workaround to prevent error when printing pdata frames with duplicated row names
+    (original row names are suppressed for printing)
