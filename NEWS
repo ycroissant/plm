@@ -720,3 +720,8 @@ Changes since version 1.5-29
 
   * print.pdata.frame: workaround to prevent error when printing pdata frames with duplicated row names
     (original row names are suppressed for printing)
+    
+Changes since version 1.5-30
+
+  * lagt.pseries (experimental, non exported function): now handles NA values in time index
+  * warning about NA in time index turned into a note being printed (in func pdata.frame)

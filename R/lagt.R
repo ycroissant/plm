@@ -1,12 +1,14 @@
 
-## function names: lagt/leadt (note the "t")
-## this lagging function does lagging based on the time periods, i. e. evaluates the time periods
-## (as opposed to just shifting by row positions with lag.pseries/lead.pseries)
+## functions: lagt/leadt.pseries (note the "t")
+## this lagging function does lagging based on the time periods, i. e. evaluates
+## the time periods (as opposed to just shifting by row positions with 
+## lag.pseries/lead.pseries)
 ## 
-## see also test files tests/test_lagt_leadt.R  and tests/test_lag_lead.R
+## see also test files tests/test_lagt_leadt.R and tests/test_lag_lead.R
 ##
 ## not exported yet;
-## also: maybe better name or integrate with original lag.pseries (the latter doing lagging based on rows)?
+## TODO: maybe better name or integrate with original lag.pseries (the latter doing lagging based on rows)?
+
 lagt.pseries <- function(x, k = 1, ...) {
   index <- attr(x, "index")
   id <- index[[1]]
@@ -24,12 +26,12 @@ lagt.pseries <- function(x, k = 1, ...) {
 
 # helper function (actual work horse) for lagt
 alagt <- function(x, ak) {
-  index <- attr(x, "index")
-  id   <- index[[1]]
-  time <- index[[2]]
-  
+
   if (round(ak) != ak) stop("Lagging value 'k' must be whole-numbered (positive, negative or zero)")
   if (ak != 0) {
+      index <- attr(x, "index")
+      id   <- index[[1]]
+      time <- index[[2]]
     
     # Idea: split times in blocks per individuals and do lagging there by computation of correct time shifting
     
@@ -44,41 +46,34 @@ alagt <- function(x, ak) {
     
     index_lag_ak_all_list <- sapply(X = list_id_timevar, 
                                     FUN = function(id_timevar) { 
-                                      if(any(is.na(id_timevar))) {
-                                        NA # return NA if NA found in the time periods for individual
-                                      } else {
                                         index_lag_ak <- match(id_timevar - ak, id_timevar, incomparables = NA)
-                                      }
                                     },
                                     simplify = FALSE)
     
     # translate blockwise positions to positions in full vector
     index_lag_ak_all <- unlist(index_lag_ak_all_list, use.names = FALSE)
     
-    substitute_in_block <- index_lag_ak_all[!is.na(index_lag_ak_all)]
-    is_NA <- is.na(index_lag_ak_all) # save NA positions
+    NApos <- is.na(index_lag_ak_all) # save NA positions for later
+    substitute_blockwise <- index_lag_ak_all
     
-    block_lengths <- vapply(index_lag_ak_all_list, length, FUN.VALUE = 1L)
-    # not needed but leave here for illustration
+    block_lengths <- vapply(index_lag_ak_all_list, length, FUN.VALUE = 1L) # lengths (with an "s") would be more efficient, but requires R >= 3.2
+
+    # not needed but leave here for illustration:
     #    startpos_block <- cumsum(block_lengths) - block_lengths + 1               
     #    endpos_block <- startpos_block + block_lengths - 1
     
-    index_in_block <- unlist(sapply(block_lengths, function(x) seq(from = 1, to = x)), use.names = FALSE)
-    index_in_block <- index_in_block[!is_NA]
+    indexes_blockwise <- unlist(sapply(block_lengths, function(x) seq(from = 1, to = x), simplify = FALSE), use.names = FALSE)
     
-    pos_in_x <- seq.int(x)[!is.na(index_lag_ak_all)]
+    orig_pos_x <- seq.int(x) # make vector with indexes for original input
+    new_pos <- orig_pos_x - (indexes_blockwise - substitute_blockwise) # calc. new positions
+    new_pos[NApos] <- orig_pos_x[NApos] # fill NAs with arbitrary values to allow proper subsetting in next step
     
-    index_lag_ak_all[!is.na(index_lag_ak_all)] <- pos_in_x - (index_in_block - substitute_in_block)
-    positions <- index_lag_ak_all
-    
-    res <- x[positions]
-    attributes(res) <- attributes(x)
-    
-  } else { # ak == 0 -> return original vector
-    res <- x
+    orig_attr <- attributes(x)
+    x <- x[new_pos] # re-arrange according to lagging
+    x[NApos] <- NA   # set NAs where necessary
+    attributes(x) <- orig_attr # restore original names and 'pseries' class (lost by subsetting x)
   }
-  
-  return(res)
+  return(x)
 } # END alagt
 
 # leadt.pseries(x, k) is a wrapper for lagt.pseries(x, -k)

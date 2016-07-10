@@ -6,11 +6,12 @@
 #  (2) some dropped factor levels / whole period missing
 #  (3) general tests
 #  (4) tests with non-consecutive time periods
-#  (5) lagt and lag should yield same results on data with consecutive time periods 
+#  (5) lagt and lag should yield same results on data with consecutive time periods
+#  (6) NA in time index
 
 library(plm)
 
-#### functions lagt and leadt not exported yet
+#### NB: functions lagt and leadt not exported yet
 #### source or assign in NAMESPACE the new lagging function "lagt" and overwrite original function names to demonstrate testfile
 #
 # comment this block to run the old lag and lead function
@@ -179,7 +180,7 @@ head(lag(pGrunfeld_missing_period$inv, 2), 25)
 head(test_Grun_miss_p_lag3 <- lag(pGrunfeld_missing_period$inv, 3), 25) # correct 1-1938 is NA but should be non-NA (former 1-1935: 317.6)
 
 ### formal test for correct value
-if(!is.na(test_Grun_miss_p_lag1["1-1937"])) stop("lag(pGrunfeld_missing_period$inv, 1)' for '1-1937' contains a value but should be 'NA'")
+if (!is.na(test_Grun_miss_p_lag1["1-1937"])) stop("lag(pGrunfeld_missing_period$inv, 1)' for '1-1937' contains a value but should be 'NA'")
 
 
 if (!is.na(test_Grun_miss_p_lag3["1-1938"])) {
@@ -201,8 +202,8 @@ is.pconsecutive(Hed_missing_period)
 
 head(Hed_missing_period$age, 20)
 head(test_Hed_miss_p_lag1 <- lag(Hed_missing_period$age), 20)    # correct: lag(, 1): additional NAs introduced at (among others) 3-3 and 4-6
-head(test_Hed_miss_p_lag2 <- lag(Hed_missing_period$age, 2), 20) # correct: lag(, 2): 4-6 is NA but should be non-NA (should be former 4-4: 85.89996)
-                                                                 #                    3-3 is NA but should be non-NA (should be former 3-1: 45.79999)
+head(test_Hed_miss_p_lag2 <- lag(Hed_missing_period$age, 2), 20) # correct: lag(, 2): 4-6 should be former 4-4: 85.89996
+                                                                 #                    3-3 should be former 3-1: 45.79999
 
 head(lag(Hed_missing_period$age, c(0,1,2)), 20) # view all at once
 
@@ -233,8 +234,8 @@ is.pconsecutive(Hed_missing_period2)
 
 head(Hed_missing_period2$age, 20)
 head(test_Hed_miss2_p_lag1 <- lag(Hed_missing_period2$age), 20)    # correct: lag(, 1): additional NAs introduced at 3-3 and 4-6
-head(test_Hed_miss2_p_lag2 <- lag(Hed_missing_period2$age, 2), 20) # correct: 3-3 is NA but should be former 3-1 (45.79999)
-head(test_Hed_miss2_p_lag3 <- lag(Hed_missing_period2$age, 3), 20) # correct: 4-7 is NA but should be former 4-4 (85.89996)
+head(test_Hed_miss2_p_lag2 <- lag(Hed_missing_period2$age, 2), 20) # correct: 3-3 should be former 3-1 (45.79999)
+head(test_Hed_miss2_p_lag3 <- lag(Hed_missing_period2$age, 3), 20) # correct: 4-7 should be former 4-4 (85.89996)
 head(lag(Hed_missing_period2$age, c(0,1,2,3)), 20) # view all at once
 
 ### formal tests for correct values
@@ -252,7 +253,6 @@ if (!is.na(test_Hed_miss2_p_lag3["4-7"])) {
  } else stop("'lag(Hed_missing_period2$age, 3)' is NA for '4-7' but should be the value of '4-4' from original data 'Hed_missing_period2$age'")
 
 
-
 ############ (5) lagt and lag should yield same results on data with consecutive time periods ####################
 data("Grunfeld", package = "plm")
 Grunfeld <- pdata.frame(Grunfeld)
@@ -261,19 +261,28 @@ if (!isTRUE(identical(plm:::lag.pseries(Grunfeld$inv, k = c(-3,-2,-1,0,1,2,3)), 
   stop("lag and lagt not same on consecutive data.frame (but must be!)")
 
 
+########### (6) NA in time index ##############
+dfNA <- data.frame(id=c(1,1,2,11,11),
+                 time=c(1,2,9,NA,NA),
+                 a=c(1,2,3,3.1,3.2),
+                 b=c(1,2,3,3.1,3.2))
 
+pdfNA <- pdata.frame(dfNA)
+
+if (!isTRUE(all.equal(as.numeric(plm:::lagt.pseries(pdfNA$a)), c(NA, 1.0, NA, NA, NA), check.attributes = FALSE)))
+  stop("NA in time period not dealt with correctly")
 
 
 ############## messy data set with lots of NAs ############
 #### commented because it needs several extra package and loads data from the internet
-## library(haven)
-##
+# library(haven)
+#
 # nlswork_r8 <- haven::read_dta("http://www.stata-press.com/data/r8/nlswork.dta")
 # nlswork_r8 <- as.data.frame(lapply(nlswork_r8, function(x) {attr(x, "label") <- NULL; x}))
 # pnlswork_r8 <- pdata.frame(nlswork_r8, index=c("idcode", "year"), drop.index=F)
 # 
-# 
-# ### on a consecutive pdata.frame, plm:::lag and plm:::lagt should yield same results (if no NA in id or time)
+# #
+# # ### on a consecutive pdata.frame, plm:::lag and plm:::lagt should yield same results (if no NA in id or time)
 # pnlswork_r8_consec <- make.pconsecutive(pnlswork_r8)
 # pnlswork_r8_consec_bal <- make.pconsecutive(pnlswork_r8, balanced = TRUE)
 # pnlswork_r8_bal <- make.pbalanced(pnlswork_r8, balanced = TRUE)
@@ -283,7 +292,7 @@ if (!isTRUE(identical(plm:::lag.pseries(Grunfeld$inv, k = c(-3,-2,-1,0,1,2,3)), 
 # 
 # if (!all.equal(plm:::lag.pseries(pnlswork_r8_consec_bal$age), plm:::lagt.pseries(pnlswork_r8_consec_bal$age)))
 #   stop("lag and lagt not same on consecutive data.frame (but must be!)")
-# 
+
 # ########### compare results to statar::tlag ########################
 # #### commented because it needs several extra packages
 # ## statar::tlag (and tlead) also works on the numbers of the time variable
@@ -301,7 +310,7 @@ if (!isTRUE(identical(plm:::lag.pseries(Grunfeld$inv, k = c(-3,-2,-1,0,1,2,3)), 
 # nlswork_r8_statar <- dplyr::mutate(dplyr::group_by(nlswork_r8, idcode), agel2 = statar::tlag(age, n = 3, time = year))
 # if (!isTRUE(all.equal(nlswork_r8_statar$agel2, as.numeric(plm:::lagt.pseries(pnlswork_r8$age, 3))))) stop("not same")
 # 
-# ## lead 1
+# # ## lead 1
 # nlswork_r8_statar <- dplyr::mutate(dplyr::group_by(nlswork_r8, idcode), agelead = statar::tlead(age, n = 1, time = year))
 # if (!isTRUE(all.equal(nlswork_r8_statar$agelead, as.numeric(plm:::leadt.pseries(pnlswork_r8$age))))) stop("not same")
 # ## lead 2
