@@ -1,5 +1,5 @@
 
-R version 3.3.0 (2016-05-03) -- "Supposedly Educational"
+R version 3.3.1 (2016-06-21) -- "Bug in Your Hair"
 Copyright (C) 2016 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -33,14 +33,12 @@ Loading required package: Formula
 > dat <- data.frame(y, x, ind=rep(ind, T), t=rep(1:T, each=length(ind)))
 > data <- plm.data(dat, index=c("ind", "t"))
 > a <- try(m <- plm(y ~ x, data=data, model="random"))
+at least one couple (id-time) has NA in at least one index dimension in resulting pdata.frame
+ to find out which, use e.g. table(index(your_pdataframe), useNA = "ifany")
 Error in model.matrix.pFormula(object, data, model = "pooling") : 
   NA in the individual index variable
-In addition: Warning message:
-In pdata.frame(data, index) :
-  at least one couple (id-time) has NA in at least one index dimension in resulting pdata.frame
- to find out which, use e.g. table(index(your_pdataframe), useNA = "ifany")
 >                            # should give an error: NA in the individual index
 > 
 > proc.time()
    user  system elapsed 
-   1.68    0.12    1.79 
+   1.62    0.10    1.74 
