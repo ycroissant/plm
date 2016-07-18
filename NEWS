@@ -708,20 +708,27 @@ Changes since version 1.5-26
 
 Changes since version 1.5-27
 
-  * little speed up of within transformation in the two-ways unbalanced case (in model.matrix.pFormula)
+  * little speed up of within transformation in the two-ways unbalanced case (in model.matrix.pFormula).
   * little speed up for some more transformations by using .colMeans instead of apply(X, 2, mean)
-    (in model.matrix.pFormula)
+    (in model.matrix.pFormula).
     
 Changes since version 1.5-28
 
-  * phtest (regression based): if only one regressor in formula, the test does not stop anymore
+  * phtest (regression based): if only one regressor in formula, the test does not stop anymore.
 
 Changes since version 1.5-29
 
   * print.pdata.frame: workaround to prevent error when printing pdata frames with duplicated row names
-    (original row names are suppressed for printing)
+    (original row names are suppressed for printing).
     
 Changes since version 1.5-30
 
-  * lagt.pseries (experimental, non exported function): now handles NA values in time index
-  * warning about NA in time index turned into a note being printed (in func pdata.frame)
+  * lagt.pseries (experimental, non exported function): now handles NA values in time index.
+  * warning about NA in time index turned into a note being printed (in func pdata.frame).
+  
+Changes since version 1.5-31
+  * fixef: return value is now class c("fixef", "numeric") ("numeric" added).
+  * summary.fixef: return value is now of class c("summary.fixef", "matrix") ("matrix" added);
+                   type and df.residual added as attributes.
+    Both class additions allow easier further processing of the return values. 
+                   

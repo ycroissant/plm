@@ -34,16 +34,15 @@ width = getOption("width"),...)
 }
 
 \value{
-  For function \code{fixef} an object of class \code{"fixef"} is returned:\cr
+  For function \code{fixef} an object of class \code{c("fixef", "numeric")} is returned:\cr
   It is a numeric vector containing the fixed effects with attribute \code{se} 
-  which contains the standard errors. There are two further attributes to the 
-  numeric vector:
+  which contains the standard errors. There are two further attributes:
   attribute \code{type} contains the chosen type (the value of argument \code{type} 
   as a character); attribute \code{df.residual} holds the residual degrees of 
   freedom (integer) from the fixed effects model (plm object) on which \code{fixef} was run.
   
-  For function \code{summary.fixef} an object of class \code{"summary.fixef"} is returned:\cr
-  It is (internally) a matrix with four columns in this order: the estimated fixed 
+  For function \code{summary.fixef} an object of class \code{c("summary.fixef", "matrix"} is returned:\cr
+  It is a matrix with four columns in this order: the estimated fixed 
   effects, their standard errors and associated t--values and p--values.
   The type of the fixed effects and the standard errors in the summary.fixef objects 
   corresponds to was requested in the \code{fixef} function by arguments \code{type} 
@@ -51,13 +50,13 @@ width = getOption("width"),...)
 }
 
 \details{
-Function \code{fixef} calculates the fixed effects and returns an object of class \code{"fixef"}.
+Function \code{fixef} calculates the fixed effects and returns an object of class \code{c("fixef", "numeric")}.
 With the \code{type} argument, the fixed effects may be returned in levels (\code{"level"}), 
 as deviations from the first value of the index (\code{"dfirst"}), or as deviations from the 
 overall mean (\code{"dmean"}). If the argument \code{.vcov} was specified, the standard errors
 (stored as attribute "se" in the return value) are the respective robust standard errors. 
 
-The associated \code{summary} method returns an extended object of class \code{"summary.fixef"} 
+The associated \code{summary} method returns an extended object of class \code{c("summary.fixef", "matrix")} 
 with more information (see sections \bold{Value} and \bold{Examples}).
 
 References with formulae (except for the two-ways unbalanced case) are, e.g., 

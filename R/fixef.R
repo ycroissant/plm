@@ -75,8 +75,7 @@ fixef.plm <- function(object, effect = NULL,
                     "dfirst" = fixef[2:length(fixef)] - fixef[1],
                     "dmean"  = fixef - mean(fixef)
                   )
-  
-  structure(fixef, se = sefixef, class = "fixef", type = type, df.residual = df.residual(object))
+  structure(fixef, se = sefixef, class = c("fixef", "numeric"), type = type, df.residual = df.residual(object))
 }
 
 
@@ -99,7 +98,10 @@ summary.fixef <- function(object, ...){
   #   Greene (2003, 5th ed.), p.  288     (formula 13-7) 
   # = Greene (2012, 7th ed.), pp. 361-362 (formula 11-19)
   colnames(res) <- c("Estimate", "Std. Error", "t-value", "Pr(>|t|)")
-  class(res) <- "summary.fixef"
+  class(res) <- c("summary.fixef", "matrix")
+  attr(res, "type") <- attr(object, "type")
+  attr(res, "df.residual") <- df.res
+  
   res
 }
 
