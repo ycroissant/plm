@@ -1,7 +1,7 @@
 
-R version 3.2.2 (2015-08-14) -- "Fire Safety"
-Copyright (C) 2015 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
+R version 3.3.1 (2016-06-21) -- "Bug in Your Hair"
+Copyright (C) 2016 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -23,7 +23,8 @@ Loading required package: Formula
 > estimation_effect <- "individual"
 > zz <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp,
 +           data=Produc, 
-+           index=c("state","year") , method=estimation_method , 
++           index=c("state","year"),
++           model=estimation_method, 
 +           effect=estimation_effect
 +           )
 > print(summary(zz))
@@ -31,8 +32,8 @@ Oneway (individual) effect Within Model
 
 Call:
 plm(formula = log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
-    data = Produc, effect = estimation_effect, index = c("state", 
-        "year"), method = estimation_method)
+    data = Produc, effect = estimation_effect, model = estimation_method, 
+    index = c("state", "year"))
 
 Balanced Panel: n=48, T=17, N=816
 
@@ -57,4 +58,4 @@ F-statistic: 3064.81 on 4 and 764 DF, p-value: < 2.22e-16
 > 
 > proc.time()
    user  system elapsed 
-  2.567   0.093   2.656 
+   1.80    0.14    1.93 
