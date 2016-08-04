@@ -1,5 +1,5 @@
 
-############## Pesaran's CDtest ###############
+############## Pesaran's CD test and Breusch/Pagan LM Test (also scaled) ###############
 
   ## Pesaran's CD test for cross-sectional dependence in panel data models
   ## (and Breusch and Pagan's LM and scaled LM)
@@ -28,7 +28,7 @@
 ## only adds pseries method and modifies pcdres(), the rest from
 ## "production" version (notice diff to pcdtest8() here)
 
-pcdtest <- function (x, ...)
+pcdtest <- function(x, ...)
 {
     UseMethod("pcdtest")
 }
@@ -36,12 +36,11 @@ pcdtest <- function (x, ...)
 ## this formula method here only for adding "rho" and "absrho"
 ## arguments
 
-pcdtest.formula <-
-function (x, data, index = NULL, model = NULL, test = c("cd",
-    "sclm", "lm", "rho", "absrho"), w = NULL, ...)
-{
+pcdtest.formula <- function(x, data, index = NULL, model = NULL, 
+                            test = c("cd", "sclm", "lm", "rho", "absrho"),
+                            w = NULL, ...) {
     #data <- pdata.frame(data, index = index)
-    mymod <- plm(x, data, index=index, model = "pooling", ...)
+    mymod <- plm(x, data, index = index, model = "pooling", ...)
     if (is.null(model) & min(pdim(mymod)$Tint$Ti) < length(mymod$coefficients) +
         1) {
         warning("Insufficient number of observations in time to estimate heterogeneous model: using within residuals",
@@ -87,10 +86,8 @@ function (x, data, index = NULL, model = NULL, test = c("cd",
 ## this panelmodel method here only for adding "rho" and
 ## "absrho" arguments
 
-pcdtest.panelmodel <- function(x,
-                         test = c("cd", "sclm", "lm","rho","absrho"),
-                         w = NULL, ...)
-{
+pcdtest.panelmodel <- function(x, test = c("cd", "sclm", "lm","rho","absrho"),
+                               w = NULL, ...) {
     myres <- resid(x)
     index <- attr(model.frame(x), "index")
     tind <- as.numeric(index[[2]])
@@ -105,12 +102,13 @@ pcdtest.panelmodel <- function(x,
         tres[[i]] <- myres[ind == unind[i]]
         names(tres[[i]]) <- tind[ind == unind[i]]
     }
-    return(pcdres(tres = tres, n = n, w = w, form = paste(deparse(substitute(formula))),
-        test = match.arg(test)))
+    return(pcdres(tres = tres, n = n, w = w,
+                  form = paste(deparse(substitute(formula))),
+                  test = match.arg(test)))
 }
 
-pcdtest.pseries <- function(x, test=c("cd","sclm","lm","rho","absrho"),
-                             w=NULL, ...) {
+pcdtest.pseries <- function(x, test = c("cd","sclm","lm","rho","absrho"),
+                             w = NULL, ...) {
 
     ## calculates local or global CD test on a pseries 'x' just as it
     ## would on model residuals
@@ -126,24 +124,24 @@ pcdtest.pseries <- function(x, test=c("cd","sclm","lm","rho","absrho"),
     n <- length(unind)
 
     ## "pre-allocate" an empty list of length n
-    tres<-vector("list", n)
+    tres <- vector("list", n)
 
     ## use model residuals, group by group
     ## list of n:
     ## t_i residuals for each x-sect. 1..n
     for(i in 1:n) {
               xnonna <- !is.na(x[ind==unind[i]])
-              tres[[i]]<-x[ind==unind[i]][xnonna]
+              tres[[i]] <- x[ind==unind[i]][xnonna]
               ## name resids after the time index
-              names(tres[[i]])<-tind[ind==unind[i]][xnonna]
+              names(tres[[i]]) <- tind[ind==unind[i]][xnonna]
               }
 
-    return(pcdres(tres=tres, n=n, w=w,
-                  form=paste(deparse(substitute(formula))),
-                  test=match.arg(test)))
+    return(pcdres(tres = tres, n = n, w = w,
+                  form = paste(deparse(substitute(formula))),
+                  test = match.arg(test)))
 }
 
-pcdres<-function(tres, n, w, form, test) {
+pcdres <- function(tres, n, w, form, test) {
 
   ## Take list of model residuals, group by group, and calc. test
   ## (from here on, what's needed for rho_ij is ok)
@@ -199,6 +197,7 @@ pcdres<-function(tres, n, w, form, test) {
   selector.mat[upper.tri(selector.mat,diag=TRUE)]<-FALSE
 
   ## number of elements in selector.mat
+  ## elem.num = 2*(N*(N-1)) in Pesaran (2004), formulae (6), (7), (31), ...
   elem.num<-sum(selector.mat)
 
   ## end features for local test ######################
@@ -208,51 +207,52 @@ pcdres<-function(tres, n, w, form, test) {
 
   switch(test,
    lm = {
-    CDstat<-sum((t.ij*rho^2)[selector.mat])
-    pCD<-pchisq(CDstat,df=elem.num,lower.tail=F)
-    names(CDstat)<-"chisq"
-    parm<-elem.num
-    names(parm)<-"df"
-    testname<-"Breusch-Pagan LM test"
+    CDstat        <- sum((t.ij*rho^2)[selector.mat])
+    pCD           <- pchisq(CDstat, df=elem.num, lower.tail=F)
+    names(CDstat) <- "chisq"
+    parm          <- elem.num
+    names(parm)   <- "df"
+    testname      <- "Breusch-Pagan LM test"
    },
    sclm = {
-    CDstat<-sqrt(1/(2*elem.num))*sum((t.ij*rho^2-1)[selector.mat])
-    pCD<-pnorm(CDstat,lower.tail=F)
-    names(CDstat)<-"z"
-    parm<-NULL
-    testname<-"Scaled LM test"
+    CDstat        <- sqrt(1/(2*elem.num))*sum((t.ij*rho^2-1)[selector.mat])
+    pCD           <- pnorm(CDstat, lower.tail=F)
+    names(CDstat) <- "z"
+    parm          <- NULL
+    testname      <- "Scaled LM test"
    },
    cd = {
-    CDstat<-sqrt(1/elem.num)*sum((sqrt(t.ij)*rho)[selector.mat])
-    pCD<-2*pnorm(abs(CDstat),lower.tail=F)
-    names(CDstat)<-"z"
-    parm<-NULL
-    testname<-"Pesaran CD test"
+    CDstat        <- sqrt(1/elem.num)*sum((sqrt(t.ij)*rho)[selector.mat]) # (Pesaran (2004), formula (31))
+    pCD           <- 2*pnorm(abs(CDstat), lower.tail=F)
+    names(CDstat) <- "z"
+    parm          <- NULL
+    testname      <- "Pesaran CD test"
    },
    rho = {
-    CDstat<-sum(rho[selector.mat])/elem.num
-    pCD<-NULL
-    names(CDstat)<-"rho"
-    parm<-NULL
-    testname<-"Average correlation coefficient"
+    CDstat        <- sum(rho[selector.mat])/elem.num
+    pCD           <- NULL
+    names(CDstat) <- "rho"
+    parm          <- NULL
+    testname      <- "Average correlation coefficient"
    },
    absrho = {
-    CDstat<-sum(abs(rho)[selector.mat])/elem.num
-    pCD<-NULL
-    names(CDstat)<-"|rho|"
-    parm<-NULL
-    testname<-"Average absolute correlation coefficient"
+    CDstat        <- sum(abs(rho)[selector.mat])/elem.num
+    pCD           <- NULL
+    names(CDstat) <- "|rho|"
+    parm          <- NULL
+    testname      <- "Average absolute correlation coefficient"
    })
 
   ##(insert usual htest features)
   dname <- paste(deparse(substitute(formula)))
-  RVAL <- list(statistic = CDstat, parameter = parm,
-               method = paste(testname, "for", dep,
-                "cross-sectional dependence in panels"),
+  RVAL <- list(statistic = CDstat,
+               parameter = parm,
+               method    = paste(testname, "for", dep,
+                            "cross-sectional dependence in panels"),
                alternative = "cross-sectional dependence",
-               p.value = pCD,
-               data.name =   dname)
+               p.value     = pCD,
+               data.name   = dname)
   class(RVAL) <- "htest"
   return(RVAL)
-  }
+}
 
