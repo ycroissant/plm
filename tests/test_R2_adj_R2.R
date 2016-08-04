@@ -31,21 +31,26 @@ r2_wo_int_plm     <- summary(mod_wo_int_plm)$r.squared[1] # R^2
 r2_adj_wo_int_plm <- summary(mod_wo_int_plm)$r.squared[2] # adj. R^2
 
 
-#### fails in rev 261
+#### fails in rev 261, 292
 #if (!isTRUE(all.equal(r2_wo_int_lm,     r2_wo_int_plm,     check.attributes = F))) stop("r squareds differ")
 #if (!isTRUE(all.equal(r2_adj_wo_int_lm, r2_adj_wo_int_plm, check.attributes = F))) stop("adjusted r squareds differ")
 
 
 
-##### test if 'model' argument works correctly - does not in rev. 261 ###
+##### test if 'model' argument works correctly - does not in rev. 261, 292 ###
 
 # take pooling model as input and calculate r-squared for corresponding within model
 wi <- plm(inv ~ value + capital, data = Grunfeld, model = "within")
 re <- plm(inv ~ value + capital, data = Grunfeld, model = "random")
-# if(!isTRUE(all.equal(r.squared(wi), r.squared(a_plm, model = "within")))) stop("r squareds differ")
-# if(!isTRUE(all.equal(r.squared(re), r.squared(a_plm, model = "random")))) stop("r squareds differ")
-# if(!isTRUE(all.equal(r.squared(a_plm), r.squared(re, model = "pooling")))) stop("r squareds differ")
-# if(!isTRUE(all.equal(r.squared(a_plm), r.squared(wi, model = "pooling")))) stop("r squareds differ")
+# if(!isTRUE(all.equal(r.squared(wi), r.squared(mod_plm, model = "within")))) stop("r squareds differ")
+# if(!isTRUE(all.equal(r.squared(re), r.squared(mod_plm, model = "random")))) stop("r squareds differ")
+# if(!isTRUE(all.equal(r.squared(mod_plm), r.squared(re, model = "pooling")))) stop("r squareds differ")
+# if(!isTRUE(all.equal(r.squared(mod_plm), r.squared(wi, model = "pooling")))) stop("r squareds differ")
 
-
-
+# These all yield different values
+r.squared(mod_plm, type = "cor", model = "within")
+r.squared(mod_plm, type = "rss", model = "within")
+r.squared(mod_plm, type = "ess", model = "within")
+# formal test
+#if(!isTRUE(all.equal(r.squared(mod_plm, type = "cor", model = "within"), r.squared(mod_plm, type = "rss", model = "within")))) stop("r squareds differ")
+#if(!isTRUE(all.equal(r.squared(mod_plm, type = "cor", model = "within"), r.squared(mod_plm, type = "ess", model = "within")))) stop("r squareds differ")

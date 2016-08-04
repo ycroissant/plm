@@ -23,7 +23,8 @@ r.squared(object, model = NULL, type = c("cor", "rss", "ess"), dfcor = FALSE)
 }
 
 \value{
-  A numerical value (R squared or adjusted R squared).
+  A numerical value. The R squared or adjusted R squared of the model estimated on 
+  the transformed data, e. g. for the within model the so called "within R squared".
 }
 
 \seealso{
