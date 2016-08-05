@@ -3,7 +3,7 @@
 
   ## Pesaran's CD test for cross-sectional dependence in panel data models
   ## (and Breusch and Pagan's LM and scaled LM)
-  ## ref. Pesaran, General diagnostic tests..., CesIfo WP 1229, 2004
+  ## ref. Pesaran, General diagnostic tests..., CESifo WP 1229, 2004
 
   ## In case K+1>T the group-specific model is not estimable;
   ## as in Greene 11.7.2, formula (11.23) we use the group-specific residuals
@@ -216,7 +216,7 @@ pcdres <- function(tres, n, w, form, test) {
    },
    sclm = {
     CDstat        <- sqrt(1/(2*elem.num))*sum((t.ij*rho^2-1)[selector.mat])
-    pCD           <- pnorm(CDstat, lower.tail=F)
+    pCD           <- 2*pnorm(abs(CDstat), lower.tail=F) # was until rev. 293: pnorm(CDstat, lower.tail=F)
     names(CDstat) <- "z"
     parm          <- NULL
     testname      <- "Scaled LM test"

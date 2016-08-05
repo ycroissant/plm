@@ -520,8 +520,6 @@ Changes since version 1.5-9
 	  return the original row.names (and thus fancy rownames if those were to be computed by
 	  pdata.frame); as.data.frame.pdata.frame(): respects row.names argument
 	  
-	* plmtest: unbalanced version of tests implemented; some fixes to p-values
-
 Changes since version 1.5-11
 
 	* added RiceFarms to datasets to eliminate non-CRAN dependencies, (temporarily) removed
@@ -727,8 +725,12 @@ Changes since version 1.5-30
   * warning about NA in time index turned into a note being printed (in func pdata.frame).
   
 Changes since version 1.5-31
+
   * fixef: return value is now class c("fixef", "numeric") ("numeric" added).
   * summary.fixef: return value is now of class c("summary.fixef", "matrix") ("matrix" added);
                    type and df.residual added as attributes.
     Both class additions allow easier further processing of the return values. 
-                   
+  
+Changes since version 1.5-32
+
+  * pcdtest: fixed p-value for cross-sectional dependence scaled LM test (pcdtest(..., test = "sclm")).
