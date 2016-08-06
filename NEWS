@@ -738,4 +738,6 @@ Changes since version 1.5-32
 Changes since version 1.5-33
 
   * (internal) pdiff gained 'effect' argument and thus is more general.
+  * plm: trying to estimate first-difference (FD) models with effect="time" or "twoways" is now prevented 
+         with meaningful error messages; footnote 3 in vignette slightly adapted to reflect this.
   

@@ -50,6 +50,13 @@ plm <-  function(formula, data, subset, na.action,
   random.method <- match.arg(random.method)
   inst.method <- match.arg(inst.method)
 
+  # input checks for FD model
+  # give informative error message as described in footnote in vignette
+  if (!is.na(model) && model == "fd") {
+    if (effect == "time") stop("effect = \"time\" for first-difference model meaningless because cross-sections do not generally have a natural ordering")
+    if (effect == "twoways") stop("effect = \"twoways\" is not defined for first-difference models")
+  }
+  
   # deprecated, pht is no longer maintained
   if (!is.na(model) && model == "ht"){
     ht <- match.call(expand.dots=FALSE)

@@ -366,8 +366,9 @@ mandatory). Three additional arguments are common to these functions
     in most models the individual and time effects cases are symmetric,
     there are exceptions: estimating the \code{fd} model on time effects
     is meaningless because cross-sections do not generally have a 
-    natural ordering, so here the \code{effect} will always be set to
-    \code{"individual"}.},
+    natural ordering, so trying \code{effect="time"} stops with an error
+    message as does \code{effect="twoways"} which is not defined for 
+    \code{fd} models.},
 \item \code{model}: the kind of model to be estimated, most of the
 time a model with fixed effects or a model with random effects.
 \end{itemize}
