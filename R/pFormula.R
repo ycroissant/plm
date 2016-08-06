@@ -72,7 +72,7 @@ model.matrix.pFormula <- function(object, data,
                      "pooling" = X,
                      "mean"    = matrix(.colMeans(X,nrow(X),ncol(X)), nrow(X),ncol(X),byrow=T), # .colMeans for speed # matrix(apply(X, 2, mean), nrow(X), ncol(X), byrow = T),
                      "random"  = X - theta * Between(X,cond),
-                     "fd"      = pdiff(X, cond, has.intercept = has.intercept)
+                     "fd"      = pdiff(X, cond, effect = effect, has.intercept = has.intercept)
                      )
   }
   else{

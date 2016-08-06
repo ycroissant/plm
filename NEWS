@@ -734,3 +734,8 @@ Changes since version 1.5-31
 Changes since version 1.5-32
 
   * pcdtest: fixed p-value for cross-sectional dependence scaled LM test (pcdtest(..., test = "sclm")).
+
+Changes since version 1.5-33
+
+  * (internal) pdiff gained 'effect' argument and thus is more general.
+  

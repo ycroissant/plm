@@ -628,32 +628,49 @@ as.data.frame.pdata.frame <- function(x, row.names = NULL, optional = FALSE, ...
 }
 
 ## pdiff is (only) used in model.matrix.pFormula to calculate the model.matrix for FD models
-pdiff <- function(x, cond, has.intercept = FALSE){
+## works for effect = "individual" and "time", see model.matrix on how to call pdiff
+## result is in order (id, time) for both effects
+pdiff <- function(x, cond, effect = c("individual", "time"), has.intercept = FALSE){
+  effect <- match.arg(effect)
   cond <- as.numeric(cond)
   n <- ifelse(is.matrix(x),nrow(x),length(x))
-  cond <- c(NA,cond[2:n]-cond[1:(n-1)])
+  
+  # code below is written for effect="individual". If effect="time" is
+  # requested, order x so that the code works and later restore original order of x
+  if (effect == "time") { order_cond <- order(cond)
+                          if (!is.matrix(x)) { x <- x[order_cond]} 
+                            else {x <- x[order_cond, ] }
+                          cond <- cond[order_cond]
+                        }
+
+  cond <- c(NA,cond[2:n]-cond[1:(n-1)]) # this assumes a certain ordering
   cond[cond != 0] <- NA
+  
   if (!is.matrix(x)){
     result <- c(NA,x[2:n]-x[1:(n-1)])
     result[is.na(cond)] <- NA
+    # for effect = "time": restore original order of x:
+    if (effect == "time") result <- result[match(seq_len(n), order_cond)]
     result <- na.omit(result)
   }
   else{
     result <- rbind(NA,x[2:n,,drop=FALSE]-x[1:(n-1),,drop=FALSE])
-    result[is.na(cond),] <- NA
+    result[is.na(cond), ] <- NA
+    # for effect = "time": restore original order of x:
+    if (effect == "time") result <- result[match(seq_len(n), order_cond), ]
     result <- na.omit(result)
     result <- result[,apply(result,2, var) > 1E-12,drop = FALSE]
     if (has.intercept){
       result <- cbind(1,result)
       colnames(result)[1] <- "(intercept)"
     }
-
   }
-  attr(result,"na.action") <- NULL
+  attr(result, "na.action") <- NULL
   result
 }
 
-# compute lagged values (handles positive lags and negative lags (=leading values) [and 0 -> do nothing])
+
+# lag: compute lagged values (handles positive lags and negative lags (=leading values) [and 0 -> do nothing])
 #
 # NB: This method seems to be intended for rowwise (positionwise) shifting as lagging
 #     There is also an (somwehat experimental) function called lagt.pseries in a seperate

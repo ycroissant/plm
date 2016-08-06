@@ -149,6 +149,7 @@ tests/test_pdata.frame_extract_class_est_mod.R -text
 tests/test_pdata.frame_id_index_more.R -text
 tests/test_pdata.frame_print_duplicated_rownames.R -text
 tests/test_pdata.frame_subsetting.R -text
+tests/test_pdiff_fd.R -text
 tests/test_phtest_Hausman_regression.R -text
 tests/test_plm_na.action.R -text
 tests/test_plmtest_unbalanced.R -text
