@@ -741,3 +741,7 @@ Changes since version 1.5-33
   * plm: trying to estimate first-difference (FD) models with effect="time" or "twoways" is now prevented 
          with meaningful error messages; footnote 3 in vignette slightly adapted to reflect this.
   
+Changes since version 1.5-34
+
+  * Ftest: support for vcovs from package clubSandwich to allow df2 adjustment in robust test
+           (new func trans_clubSandwich_vcov added for this purpose).

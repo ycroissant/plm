@@ -378,7 +378,7 @@ Ftest <- function(x, test = c("Chisq", "F"), .vcov = NULL, df2adj = (test == "F"
     if (int %in% names(coef(x))) { # drop intercept, if present
       coefs <- coef(x)[!(names(coef(x)) %in% int)]
       rvcov <- rvcov_orig[!rownames(rvcov_orig) %in% int, !colnames(rvcov_orig) %in% int]
-      attr(rvcov, which = "cluster") <- attr(rvcov_orig, which = "cluster") # restore 'cluster' attribute
+      attr(rvcov, which = "cluster") <- attr(rvcov_orig, which = "cluster") # restore dropped 'cluster' attribute
     }
     
     # if robust F test: by default, do finite-sample adjustment for df2
@@ -387,6 +387,10 @@ Ftest <- function(x, test = c("Chisq", "F"), .vcov = NULL, df2adj = (test == "F"
       # attribute "cluster" in the vcov (matrix object)
       # if only one member in cluster: fall back to original df2
       if (!is.null(attr(rvcov, which = "cluster"))) {
+        
+        # if supplied vcov is from package "clubSandwich": translate attr "cluster" to fit our code
+        if (inherits(rvcov, "vcovCR")) rvcov <- trans_clubSandwich_vcov(rvcov, attr(model.frame(plm_unweighted), "index"))
+        
         cluster <- attr(rvcov, which = "cluster")
         pdim <- pdim(x)
         df2 <- switch(cluster,
@@ -474,6 +478,8 @@ Ftest <- function(x, test = c("Chisq", "F"), .vcov = NULL, df2adj = (test == "F"
   class(res) <- "htest"
   return(res)
 }
+
+
 
 ############## pooltest() ############################################
 
