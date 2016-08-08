@@ -389,7 +389,7 @@ Ftest <- function(x, test = c("Chisq", "F"), .vcov = NULL, df2adj = (test == "F"
       if (!is.null(attr(rvcov, which = "cluster"))) {
         
         # if supplied vcov is from package "clubSandwich": translate attr "cluster" to fit our code
-        if (inherits(rvcov, "vcovCR")) rvcov <- trans_clubSandwich_vcov(rvcov, attr(model.frame(plm_unweighted), "index"))
+        if (inherits(rvcov, "vcovCR")) rvcov <- trans_clubSandwich_vcov(CSvcov = rvcov, index = attr(model.frame(x), "index"))
         
         cluster <- attr(rvcov, which = "cluster")
         pdim <- pdim(x)
