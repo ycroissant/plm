@@ -78,34 +78,42 @@ model.matrix.pFormula <- function(object, data,
   else{
     if (pdim$balanced){ # two-ways balanced
       result <- switch(model,
-                       "within" = X - Between(X,id) - Between(X,time) +
-                                  matrix(.colMeans(X,nrow(X),ncol(X)), nrow(X),ncol(X),byrow=T), # matrix(apply(X,2,mean),nrow(X),ncol(X),byrow=T)
-                       "random" = X - theta$id * Between(X,id) - theta$time * Between(X,time) +
-                                  theta$total * matrix(.colMeans(X,nrow(X),ncol(X)), nrow(X),ncol(X),byrow=T), # matrix(apply(X,2,mean),nrow(X),ncol(X),byrow=T),
-                       "pooling" = X
+                       "within"  = X - Between(X,id) - Between(X,time) +
+                                   matrix(.colMeans(X,nrow(X),ncol(X)), nrow(X),ncol(X),byrow=T), # matrix(apply(X,2,mean),nrow(X),ncol(X),byrow=T)
+                       "random"  = X - theta$id * Between(X,id) - theta$time * Between(X,time) +
+                                   theta$total * matrix(.colMeans(X,nrow(X),ncol(X)), nrow(X),ncol(X),byrow=T), # matrix(apply(X,2,mean),nrow(X),ncol(X),byrow=T),
+                       "pooling" = X,
+                       # place case "mean" here also?
+                       # catch everything else (twoways balanced) and give error message
+                       stop(paste0("in model.matrix.pFormula: no model.matrix for model =\"", model, "\" and effect = \"", effect, "\" meaningful or implemented"))
                        )
     }
     else{ # two-ways unbalanced
-      if (model == "within"){
-        # Wansbeek/Kapteyn (1989), Journal of Econometrics, 41, pp. 341-361 (2.12)
-        Z1 <- model.matrix(~id-1)
-        Z2 <- model.matrix(~time-1)
-        DH <- crossprod(Z1)
-        DT <- crossprod(Z2)
-        A  <- crossprod(Z2,Z1)
-        invDH <- solve(DH)                 # little performance optimizations, old code:
-        Q  <- DT-A%*%tcrossprod(invDH, A)    # == DT-A%*%solve(DH)%*%t(A)
-        Zb <- Z2-Z1%*%tcrossprod(invDH, A)   # == Z2-Z1%*%solve(DH)%*%t(A)
-        Q  <- crossprod(Z2, Zb)              # == t(Z2)%*%Zb   # this line seems unnecessary?
-        PHI1 <- apply(X,2,function(x) crossprod(Z1,x))
-        PHI2 <- apply(X,2,function(x) crossprod(Z2,x))
-        invDH_PHI1 <- invDH%*%PHI1
-        rm(invDH)
-        PHIB   <- ginv(Q)%*%(PHI2-A%*%invDH_PHI1) # == ginv(Q)%*%(PHI2-A%*%solve(DH)%*%PHI1)
-        result <- X-Z1%*%invDH_PHI1-Zb%*%PHIB     # == X-Z1%*%solve(DH)%*%PHI1-Zb%*%PHIB
+      result <- switch(model,
+                       "within"  = { # Wansbeek/Kapteyn (1989), Journal of Econometrics, 41, pp. 341-361 (2.12)
+                                     Z1 <- model.matrix(~id-1)
+                                     Z2 <- model.matrix(~time-1)
+                                     DH <- crossprod(Z1)
+                                     DT <- crossprod(Z2)
+                                     A  <- crossprod(Z2,Z1)
+                                     invDH <- solve(DH)                 # little performance optimizations, old code:
+                                     Q  <- DT-A%*%tcrossprod(invDH, A)    # == DT-A%*%solve(DH)%*%t(A)
+                                     Zb <- Z2-Z1%*%tcrossprod(invDH, A)   # == Z2-Z1%*%solve(DH)%*%t(A)
+                                     Q  <- crossprod(Z2, Zb)              # == t(Z2)%*%Zb   # this line seems unnecessary?
+                                     PHI1 <- apply(X,2,function(x) crossprod(Z1,x))
+                                     PHI2 <- apply(X,2,function(x) crossprod(Z2,x))
+                                     invDH_PHI1 <- invDH%*%PHI1
+                                     rm(invDH)
+                                     PHIB   <- ginv(Q)%*%(PHI2-A%*%invDH_PHI1) # == ginv(Q)%*%(PHI2-A%*%solve(DH)%*%PHI1)
+                                     result <- X-Z1%*%invDH_PHI1-Zb%*%PHIB     # == X-Z1%*%solve(DH)%*%PHI1-Zb%*%PHIB
+                                   },
+                       "pooling" = X,
+                       # "random" seems missing???
+                       # catch everything else for twoways unbalanced and give error message
+                       stop(paste0("in model.matrix.pFormula: no model.matrix for model=\"", model, "\" and effect=\"", effect, "\" meaningful or implemented"))
+                       )
       }
     }
-  }
   attr(result, "assign") <- X.assi
   attr(result, "contrasts") <- X.contr
   result
