@@ -58,6 +58,13 @@ mod_be_droppedCoef   <- plm(form2, data = Grunfeld, model="between")
 
 mod_pool_dropped2Coef <- plm(form3, data = Grunfeld, model="pooling")
 
+mod_pool_droppedCoef$aliased
+mod_fe_droppedCoef$aliased
+mod_re_droppedCoef$aliased
+mod_be_droppedCoef$aliased
+mod_pool_dropped2Coef$aliased
+
+
 # Below:
 # Some of these failed due to dropped coefficients, was fixed in rev. 184
 # [and some due to an additional error with ercomp.plm]
@@ -67,12 +74,22 @@ mod_pool_dropped2Coef <- plm(form3, data = Grunfeld, model="pooling")
 # A warning message about the reason (dropped coef in estimated model) is
 # implemented in fitted.plm, yet uncommented (v1.5-14).
 #
-# Some still return all NA
+# NB: Some still return all NA (commented)
 
-plm:::fitted.plm(mod_pool_droppedCoef)
-plm:::fitted.plm(mod_fe_droppedCoef)
-plm:::fitted.plm(mod_re_droppedCoef)
-plm:::fitted.plm(mod_be_droppedCoef)
+fitval_mod_pool_droppedCoef <- plm:::fitted.plm(mod_pool_droppedCoef)
+fitval_mod_fe_droppedCoef   <- plm:::fitted.plm(mod_fe_droppedCoef)
+fitval_mod_re_droppedCoef   <- plm:::fitted.plm(mod_re_droppedCoef)
+fitval_mod_be_droppedCoef   <- plm:::fitted.plm(mod_be_droppedCoef)
+
+# formal test of same results
+if (!identical(fitval_mod_pool_droppedCoef, plm:::fitted.plm(mod_pool)))
+  stop("not identical")
+if (!identical(fitval_mod_fe_droppedCoef, plm:::fitted.plm(mod_fe)))
+  stop("not identical")
+# if (!identical(fitval_mod_re_droppedCoef, plm:::fitted.plm(mod_re))) #### not identical
+#   stop("not identical")
+if (!identical(fitval_mod_be_droppedCoef, plm:::fitted.plm(mod_be)))
+  stop("not identical")
 
 plm:::fitted.plm(mod_pool_droppedCoef, model = "pooling")
 plm:::fitted.plm(mod_fe_droppedCoef,   model = "pooling")
@@ -92,3 +109,19 @@ plm:::fitted.plm(mod_be_droppedCoef,   model = "pooling")
 # plm:::fitted.plm(mod_fe_droppedCoef,   model = "random") # "Error in ercomp.plm(object) : ercomp only relevant for random models"
 # plm:::fitted.plm(mod_re_droppedCoef,   model = "random")
 # plm:::fitted.plm(mod_be_droppedCoef,   model = "random") # "Error in ercomp.plm(object) : ercomp only relevant for random models"
+
+### test with data that becomes linear dependent due to within transformation
+data(Cigar)
+Cigar.p <- pdata.frame(Cigar)
+Cigar.p[ , "fact1"] <- c(0,1)
+Cigar.p[ , "fact2"] <- c(1,0)
+
+# linear dependent columns are silently dropped in these functions, thus they work
+mod_pool_cigar <- plm(price ~ cpi + fact1 + fact2, data = Cigar.p, model = "pooling")
+mod_fe_cigar   <- plm(price ~ cpi + fact1 + fact2, data = Cigar.p, model = "within")
+mod_pool_cigar$aliased
+mod_fe_cigar$aliased
+plm:::fitted.plm(mod_pool_cigar)
+plm:::fitted.plm(mod_pool_cigar, model = "within") ### NB: This is all NA
+plm:::fitted.plm(mod_fe_cigar)
+plm:::fitted.plm(mod_fe_cigar, model = "within")

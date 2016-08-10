@@ -50,6 +50,8 @@ vcovG.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 
   ## extract demeaned data
     demX <- model.matrix(x, model = model)
+    # drop any linear dependend columns (coresponding to aliased coefficients) from model matrix
+    if (!is.null(x$aliased) && any(x$aliased)) demX <- demX[, !x$aliased, drop = FALSE]
     demy <- pmodel.response(x, model = model)
     dimnames(demX)[[2]][1] <- attr(vcov(x), "dimnames")[[1]][1]
 
@@ -378,7 +380,7 @@ vcovBK.plm <- function(x, type=c("HC0", "HC1", "HC2", "HC3", "HC4"),
                        cluster=c("group", "time"),
                        diagonal=FALSE, ...) {
 
-  ## Robust vcov \E0 la Beck and Katz (1995; AKA 'pcse')
+  ## Robust vcov a la Beck and Katz (1995; AKA 'pcse')
   ## for panel models (pooling, random, within or fd type plm obj.)
   ##
   ## This version: October 20th, 2009; allows choosing the clustering dimension
@@ -426,6 +428,8 @@ vcovBK.plm <- function(x, type=c("HC0", "HC1", "HC2", "HC3", "HC4"),
 
   ## extract demeaned data
     demX <- model.matrix(x, model = model)
+    # drop any linear dependend columns (coresponding to aliased coefficients) from model matrix
+    if (!is.null(x$aliased) && any(x$aliased)) demX <- demX[, !x$aliased, drop = FALSE]
     demy <- pmodel.response(x, model = model)
     dimnames(demX)[[2]][1] <- attr(vcov(x), "dimnames")[[1]][1]
 
@@ -592,17 +596,17 @@ vcovBK.plm <- function(x, type=c("HC0", "HC1", "HC2", "HC3", "HC4"),
 ## for any vcov that makes sense computed on the transformed
 ## data from model.matrix.pcce and pmodel.response.pcce
 
-vcovG.pcce <- vcovG.plm
-vcovHC.pcce <- vcovHC.plm
-vcovNW.pcce <- vcovNW.plm
+vcovG.pcce   <- vcovG.plm
+vcovHC.pcce  <- vcovHC.plm
+vcovNW.pcce  <- vcovNW.plm
 vcovSCC.pcce <- vcovSCC.plm
-vcovDC.pcce <- vcovDC.plm
+vcovDC.pcce  <- vcovDC.plm
 
 ####################################
 ## vcovHC method for pgmm objects ##
 ####################################
 
-vcovHC.pgmm <- function(x,...){
+vcovHC.pgmm <- function(x, ...){
   model <- describe(x, "model")
   transformation <- describe(x, "transformation")
   A1 <- x$A1
