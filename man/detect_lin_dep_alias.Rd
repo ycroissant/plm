@@ -60,8 +60,7 @@ opposite sign of one another; ex. 2) the transformed variables are identical.
 During \code{plm}'s model estimation, linear dependent columns and their corresponding coefficients 
 in the resulting object are silently dropped, while the corresponding model frame and model matrix
 still contain the affected columns.
-% The plm object contains an element \code{aliased} which indicates any such aliased coefficients by a named logical.
-% NB: also some examples still commented 
+The plm object contains an element \code{aliased} which indicates any such aliased coefficients by a named logical.
 
 Both functions, \code{detect_lin_dep} and \code{alias}, help to detect linear dependence and accomplish almost the same:
 \code{detect_lin_dep} is a stand alone implementation while \code{alias}
@@ -115,7 +114,7 @@ detect_lin_dep(modmat_FE)
 mod_FE <- plm(pform, data = Cigar.p, model = "within")
 detect_lin_dep(mod_FE) 
 alias(mod_FE) # => fact1 == -1*fact2
-% plm(pform, data = mf, model = "within")$aliased # "fact2" is aliased
+plm(pform, data = mf, model = "within")$aliased # "fact2" indicated as aliased
 
 # look at the data: after FE transformation fact1 == -1*fact2
 head(modmat_FE)

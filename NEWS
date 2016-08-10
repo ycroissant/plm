@@ -750,4 +750,6 @@ Changes since version 1.5-34
   * alias.plm, alias.pFormula added: complements the generic stats::alias to detect linear 
                                      dependence (much like detect_lin_dep).
   * detect_lin_dep.plm added.
+  * plm objects gained element 'aliased' (a named logical) to indicate any aliased coefficients that are 
+    silently dropped during estimation by plm (cf. summary.lm objects).
   

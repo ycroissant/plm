@@ -105,9 +105,12 @@ A \code{"plm"} object has the following elements :
   attribute of \code{model},}
 \item{ercomp}{an object of class \code{'ercomp'} providing the
  estimation of the components of the errors (for random effects models only),}
+\item{aliased}{named logical vector indicating any aliased coefficients which 
+are silently dropped by \code{plm} due to linearly dependent terms (see also 
+\code{\link[plm]{detect_lin_dep}}),}
 \item{call}{the call.}
 
-% not listed is element "assign"...
+% some elements not listed here...: "assign", "contrast", etc...
 
 % \item{na.action}{if relevant, information about handling of NAs by the 
 % model.frame function,}

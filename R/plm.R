@@ -49,14 +49,14 @@ plm <-  function(formula, data, subset, na.action,
   if (!any(is.na(model))) model <- match.arg(model)
   random.method <- match.arg(random.method)
   inst.method <- match.arg(inst.method)
-
+  
   # input checks for FD model
-  # give informative error message as described in footnote in vignette
+  # give informative error messages as described in footnote in vignette
   if (!is.na(model) && model == "fd") {
     if (effect == "time") stop("effect = \"time\" for first-difference model meaningless because cross-sections do not generally have a natural ordering")
     if (effect == "twoways") stop("effect = \"twoways\" is not defined for first-difference models")
   }
-  
+
   # deprecated, pht is no longer maintained
   if (!is.na(model) && model == "ht"){
     ht <- match.call(expand.dots=FALSE)
@@ -164,10 +164,12 @@ plm.fit <- function(formula, data, model, effect, random.method, random.dfcor, i
   else W <- NULL
   # compute the estimation
   result <- mylm(y, X, W)
-  # in case of a within estimation, correct the degrees of freedom
+  
   df <- df.residual(result)
   vcov <- result$vcov
-
+  aliased <- result$aliased
+  
+  # in case of a within estimation, correct the degrees of freedom
   if (model == "within"){
     pdim <- pdim(data)
     card.fixef <- switch(effect,
@@ -178,6 +180,7 @@ plm.fit <- function(formula, data, model, effect, random.method, random.dfcor, i
     df <- df.residual(result) - card.fixef
     vcov <- result$vcov * df.residual(result) / df
   }
+  
   result <- list(coefficients = coef(result),
                  vcov         = vcov,
                  residuals    = resid(result),
@@ -188,9 +191,10 @@ plm.fit <- function(formula, data, model, effect, random.method, random.dfcor, i
   result$assign <- attr(X, "assign")
   result$contrasts <- attr(X, "contrasts")
   result$args <- list(model = model, effect = effect)
+  result$aliased <- aliased
   class(result) <- c("plm", "panelmodel")
   result
-}    
+}
 
 mylm <- function(y, X, W = NULL){
   names.X <- colnames(X)
@@ -198,8 +202,9 @@ mylm <- function(y, X, W = NULL){
       result <- lm(y ~ X - 1)
   else
       result <- twosls(y, X, W)
-  if (any(is.na(coef(result)))){
-    na.coef <- is.na(coef(result))
+  
+  na.coef <- is.na(coef(result))
+  if (any(na.coef)){
     # warning("Coefficient(s) '", paste((names.X)[na.coef], collapse = ", "), "' could not be estimated and is (are) dropped.")
     X <- X[, !na.coef, drop = FALSE]
     if (is.null(W)) result <- lm(y ~ X - 1)
@@ -209,6 +214,10 @@ mylm <- function(y, X, W = NULL){
   result$X <- X
   result$y <- y
   result$W <- W
+  # aliased is an element of summary.lm-objects:
+  # since plm drops aliased coefs, store this info in plm object
+  result$aliased <- na.coef
+  names(result$aliased) <- names.X
   names(result$coefficients) <- colnames(result$vcov) <-
     rownames(result$vcov) <- colnames(X)
   result

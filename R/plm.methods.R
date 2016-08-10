@@ -115,6 +115,7 @@ fitted.plm <- function(object, model = NULL, ...){
   beta <- coef(object)
   # Kevin Tappe 2016-01-09 : perfect correlation of some columns of
   # the within model.matrix
+  # NB: Could this make use of plmobject$aliased to simplify and save the lm estimation?
   if (ncol(X) != length(beta)){
       result <- lm(y ~ X - 1)
       X <- X[, ! is.na(coef(result))]
