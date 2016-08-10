@@ -45,7 +45,7 @@ see also argument \code{na.rm.tindex} to remove those.}
 \details{
  (p)data.frame, pseries and estimated panelmodel objects can be tested if their time periods are consecutive per individual.
  For evaluation of consecutiveness, the time dimension is interpreted to be numeric, and the data are tested for being a 
- regularly spaced sequence with distance 1 between the time periods for each individual (for each indiviudal the time dimension
+ regularly spaced sequence with distance 1 between the time periods for each individual (for each individual the time dimension
  can be interpreted as sequence t, t+1, t+2, ... where t is an integer). As such, the "numerical content" of the time index
  variable is considered for consecutiveness, not the "physical position" of the various observations for an individuals in
  the (p)data.frame/pseries (it is not about "neighbouring" rows).
@@ -58,7 +58,7 @@ see also argument \code{na.rm.tindex} to remove those.}
  
  For the data.frame interface, the data is ordered in the appropriate way (stacked time series) before the consecutiveness 
  is evaluated. For the pdata.frame and pseries interface, ordering is not performed because both data types are already 
- orderd in the appropriate way when created.
+ ordered in the appropriate way when created.
  
  Note: Only the presence of the time period itself in the object is tested, not if there are any other variables.
  \code{NA} values in individual index are not examined but silently dropped - In this case, it is not clear which 

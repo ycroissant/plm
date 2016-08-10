@@ -1,4 +1,6 @@
-# Tests for function detect_lin_dep()
+# Tests for functions:
+#  * detect_lin_dep
+#  * alias
 
 library(plm)
 data(Cigar)
@@ -16,6 +18,8 @@ detect_lin_dep(model.matrix(pform, data = Cigar.p, model = "pooling"))
 # [after transformation fact1 == -1 * fact2]
 detect_lin_dep(model.matrix(pform, data = Cigar.p, model = "within"))
 
+mod_fe <- plm(pform, data = Cigar.p, model = "within")
+detect_lin_dep(mod_fe)
 
 # test with NA matrix and empty matrix
 detect_lin_dep(matrix(NA))                     # NA matrix
@@ -39,3 +43,42 @@ detect_lin_dep(Cigar)
 Cigar.p$price2 <- 2*Cigar.p$price
 detect_lin_dep(Cigar.p)
 detect_lin_dep(Cigar.p, suppressPrint = TRUE)
+
+
+
+
+######## alias.plm, alias.pFormula ######
+lmmod1 <- lm(pform, data = Cigar.p)
+alias(lmmod1)
+
+plm_fe <- plm(pform, data = Cigar.p, model = "within")
+plm_re <- plm(pform, data = Cigar.p, model = "random")
+plm_re_wal <- plm(pform, data = Cigar.p, model = "random", random.method = "walhus")
+plm_fd <- plm(pform, data = Cigar.p, model = "fd")
+plm_pool <- plm(pform, data = Cigar.p, model = "pooling")
+
+names(plm_fe$model)
+summary(plm_fe)
+alias(plm_fe)
+alias(plm_re)
+alias(plm_re_wal)
+alias(plm_fd)
+alias(plm_pool)
+
+# Test variation of parameters
+# alias.lm(object, complete = TRUE, partial = FALSE, partial.pattern = FALSE, ...)
+alias(plm_fe, complete = FALSE)
+alias(plm_fe, partial = TRUE)
+alias(plm_fe, partial.pattern = TRUE)
+
+alias(pform, Cigar.p, model = "within")
+alias(pform, Cigar.p, model = "random")
+alias(pform, Cigar.p, model = "random", random.method = "walhus")
+# alias(pform, Cigar.p, model = "within", inst.method = "bvk") # should give informative error
+
+alias(pform, Cigar.p, model = "fd")
+alias(pform, Cigar.p, model = "pooling")
+
+alias(pform, Cigar.p, model = "within", complete = FALSE)
+alias(pform, Cigar.p, model = "within", partial = TRUE)
+alias(pform, Cigar.p, model = "within", partial.pattern = TRUE)

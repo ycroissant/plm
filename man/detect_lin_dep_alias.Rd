@@ -44,7 +44,7 @@ detect_lin_dep(object, ...)
 
 \details{
 Linear dependence of columns/variables is (usually) readily avoided when building one's model.
- However, linear dependence sometimes comes in a disguised fashion and is thus harder to detect for
+ However, linear dependence is sometimes not obvious and harder to detect for
 less experienced applied statisticians. The so called "dummy variable trap" is a common and probably
 the best--known fallacy of this kind (see e. g. Wooldridge (2016), sec. 7-2.). When building linear
 models with \code{lm} or \code{plm}'s \code{pooling} model, linear dependence in one's model is
@@ -66,7 +66,7 @@ still contain the affected columns.
 Both functions, \code{detect_lin_dep} and \code{alias}, help to detect linear dependence and accomplish almost the same:
 \code{detect_lin_dep} is a stand alone implementation while \code{alias}
 is a wrapper around \code{\link[stats]{alias.lm}}, extending the \code{alias} generic to classes \code{"plm"} and \code{"pFormula"}.
-\code{alias} hinges on the availability of the package \code{MASS} on the system. Not all arguments of \code{alias.lm} are
+\code{alias} hinges on the availability of the package \pkg{MASS} on the system. Not all arguments of \code{alias.lm} are
 supported.
 Output of \code{alias} is more informative
 as it gives the linear combination of dependent columns (after data transformations, i. e. after (quasi)-demeaning)
