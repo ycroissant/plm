@@ -11,6 +11,7 @@ export(plm, pvcm, pgmm, pggls, pht, pcce, pmg, plmtest, phtest, pFtest,
 import("Formula")
 importFrom("stats", "lag")
 importFrom("stats", "nobs")
+importFrom("stats", "alias")
 importFrom("bdsmatrix", "bdsmatrix")
 importFrom("sandwich", "vcovHC")
 importFrom("MASS", "ginv")
@@ -206,9 +207,12 @@ S3method("pcdtest", "pseries")
 S3method("print", "purtest")
 S3method("summary", "purtest")
 S3method("print", "summary.purtest")
-# detect_lin_dep
+# detect_lin_dep, alias
 S3method("detect_lin_dep", "matrix")
 S3method("detect_lin_dep", "data.frame")
+S3method("detect_lin_dep", "plm")
+S3method("alias", "plm")
+S3method("alias", "pFormula")
 # is.pconsecutive
 S3method("is.pconsecutive", "data.frame")
 S3method("is.pconsecutive", "pdata.frame")

@@ -4,7 +4,7 @@
 /NEWS -text
 R/attributes.R -text
 R/cipstest.R -text
-R/detect_lin_dep.R -text
+R/detect_lin_dep_alias.R -text
 R/divers.R -text
 R/dynformula.R -text
 R/ercomp.R -text
@@ -68,7 +68,7 @@ man/SumHes.Rd -text
 man/Wages.Rd -text
 man/aneweytest.Rd -text
 man/cipstest.Rd -text
-man/detect_lin_dep.Rd -text
+man/detect_lin_dep_alias.Rd -text
 man/dynformula.Rd -text
 man/ercomp.Rd -text
 man/fixef.plm.Rd -text

@@ -2,29 +2,43 @@
 \alias{detect_lin_dep}
 \alias{detect_lin_dep.matrix}
 \alias{detect_lin_dep.data.frame}
+\alias{detect_lin_dep.plm}
+\alias{alias}
+\alias{alias.plm}
+\alias{alias.pFormula}
 
-\title{A function to detect linear dependence}
+\title{Functions to detect linear dependence}
 
 \description{
-Little helper function to aid users to detect linear dependent columns in a data structure,
-especially in a (transformed) model matrix - typically useful in interactive mode during model
-building phase.
+Little helper functions to aid users to detect linear dependent columns in a two-dimensional 
+data structure, especially in a (transformed) model matrix - typically useful in 
+interactive mode during model building phase.
 }
 
 \usage{
 detect_lin_dep(object, ...)
 \method{detect_lin_dep}{matrix}(object, suppressPrint = FALSE, ...)
 \method{detect_lin_dep}{data.frame}(object, suppressPrint = FALSE, ...)
+\method{detect_lin_dep}{plm}(object, suppressPrint = FALSE, ...)
 
-} 
+\method{alias}{plm}(object, ...)
+\method{alias}{pFormula}(object, data, model = c("pooling", "within", "Between", "between",
+                               "mean", "random", "fd"),
+                    effect = c("individual", "time", "twoways"), ...)
+}
 
 
 \arguments{
-  \item{object}{an object which should be checked for linear dependence
-  (of class \code{"matrix"} or \code{"data.frame"}). Usually, one wants to
-  input a model matrix here,} 
-  \item{suppressPrint}{logical indicating whether a message shall be printed;
+  \item{object}{for \code{detect_lin_dep}: an object which should be checked for linear dependence
+  (of class \code{"matrix"}, \code{"data.frame"}, or \code{"plm"}); for \code{alias}:
+  either an estimated model of class \code{"plm"} or a \code{"pFormula"}. Usually, one wants to
+  input a model matrix here or check an already estimated plm model,} 
+  \item{suppressPrint}{for \code{detect_lin_dep} only: logical indicating whether a message shall be printed;
   defaults to printing the message, i. e. to \code{suppressPrint = FALSE},}
+  \item{data}{for \code{alias.pFormula} only: model frame (created by plm's \code{model.frame}
+    method),}
+  \item{model, effect}{for \code{alias.pFormula} only: model and effect to specify the data 
+  transformation, see \code{\link[plm]{plm}},}
   \item{\dots}{further arguments.}
 }
 
@@ -33,7 +47,7 @@ Linear dependence of columns/variables is (usually) readily avoided when buildin
  However, linear dependence sometimes comes in a disguised fashion and is thus harder to detect for
 less experienced applied statisticians. The so called "dummy variable trap" is a common and probably
 the best--known fallacy of this kind (see e. g. Wooldridge (2016), sec. 7-2.). When building linear
-models with \code{lm} or the \code{pooling} model in \code{plm}, linear dependence in one's model is
+models with \code{lm} or \code{plm}'s \code{pooling} model, linear dependence in one's model is
 easily detected, at times post hoc.
 
 However, linear dependence might also occur after some transformations of the data, albeit it
@@ -42,11 +56,30 @@ transformation) used in the \code{"within"} model can result in such linear depe
 is harder to come to mind when building a model. See \bold{Examples} for two examples of linear
 dependent columns after the within transformation: ex. 1) the transformed variables have the
 opposite sign of one another; ex. 2) the transformed variables are identical.
+
+During \code{plm}'s model estimation, linear dependent columns and their corresponding coefficients 
+in the resulting object are silently dropped, while the corresponding model frame and model matrix
+still contain the affected columns.
+% The plm object contains an element \code{aliased} which indicates any such aliased coefficients by a named logical.
+% NB: also some examples still commented 
+
+Both functions, \code{detect_lin_dep} and \code{alias}, help to detect linear dependence and accomplish almost the same:
+\code{detect_lin_dep} is a stand alone implementation while \code{alias}
+is a wrapper around \code{\link[stats]{alias.lm}}, extending the \code{alias} generic to classes \code{"plm"} and \code{"pFormula"}.
+\code{alias} hinges on the availability of the package \code{MASS} on the system. Not all arguments of \code{alias.lm} are
+supported.
+Output of \code{alias} is more informative
+as it gives the linear combination of dependent columns (after data transformations, i. e. after (quasi)-demeaning)
+while \code{detect_lin_dep} only gives columns involved in the linear dependence in a simple format (thus being more 
+suited for automatic post--processing of the information).
 }
 
 \value{
-A named numeric vector containing column numbers of the linear dependent columns in the object,
+For \code{detect_lin_dep}: A named numeric vector containing column numbers of the linear dependent columns in the object after data transformation,
 if any are present. \code{NULL} if no linear dependent columns are detected.
+
+For \code{alias}: return value of \code{\link[stats]{alias.lm}} run on the (quasi-)demeaned model, i. e. the information outputted applies to the
+transformed model matrix, not the original data.
 }
 
 \references{
@@ -55,8 +88,9 @@ Boston, sec. 7-2, pp. 206--211.
 }
 
 \seealso{
+  \code{\link[stats]{alias}}. 
   \code{\link[stats]{model.matrix}} and especially \code{plm}'s \code{\link[plm]{model.matrix}} for
-  (transformed) model matrices.
+  (transformed) model matrices. \code{\link[plm]{model.frame}}.
 }
 
 \examples{
@@ -70,6 +104,7 @@ Cigar.p <- pdata.frame(Cigar)
 # setup a pFormula and a model frame
 pform <- pFormula(price ~ 0 + cpi + fact1 + fact2)
 mf <- model.frame(pform, data = Cigar.p)
+
 # no linear dependence in the pooling model's model matrix
 # (with intercept in the formula, there would be linear depedence)
 detect_lin_dep(model.matrix(pform, data = mf, model = "pooling"))
@@ -77,6 +112,10 @@ detect_lin_dep(model.matrix(pform, data = mf, model = "pooling"))
 # linear dependence present in the FE transformed model matrix
 modmat_FE <- model.matrix(pform, data = mf, model = "within")
 detect_lin_dep(modmat_FE)
+mod_FE <- plm(pform, data = Cigar.p, model = "within")
+detect_lin_dep(mod_FE) 
+alias(mod_FE) # => fact1 == -1*fact2
+% plm(pform, data = mf, model = "within")$aliased # "fact2" is aliased
 
 # look at the data: after FE transformation fact1 == -1*fact2
 head(modmat_FE)
@@ -104,13 +143,19 @@ mf <- model.frame(pform, data=pdata.frame(Grunfeld))
 # no linear dependent columns in original data/pooling model
 modmat_pool <- model.matrix(pform, data = mf, model="pooling")
 detect_lin_dep(modmat_pool)
+mod_pool <- plm(pform, data = Grunfeld, model = "pooling")
+alias(mod_pool)
 
 # CEOtenure and CEOage are linear dependent after FE transformation
 # (demeaning per individual)
 modmat_FE <- model.matrix(pform, data = mf, model="within")
 detect_lin_dep(modmat_FE)
+mod_FE <- plm(pform, data = Grunfeld, model = "within")
+detect_lin_dep(mod_FE)
+alias(mod_FE)
 
-# look at the data: after FE transformation CEOtenure == CEOage
+
+# look at the transformed data: after FE transformation CEOtenure == 1*CEOage
 head(modmat_FE, 50)
 all.equal(modmat_FE[ , "CEOtenure"], modmat_FE[ , "CEOage"])
 }
