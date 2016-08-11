@@ -27,19 +27,19 @@ mod_fe_no_lin_dep$aliased
 vcovHC(mod_fe_lin_dep)
 vcovHC(mod_fe_no_lin_dep)
 if (!identical(vcovHC(mod_fe_lin_dep), vcovHC(mod_fe_no_lin_dep))) {
-  stop("vcvov w/ linear dependent columns and the corresponding one w/o are not identical")
+  stop("vcov w/ linear dependent columns and the corresponding one w/o are not identical")
 }
 
 ## test for vcovBK because that is separate in the vcovG framework
 vcovBK(mod_fe_lin_dep)
 vcovBK(mod_fe_no_lin_dep)
 if (!identical(vcovBK(mod_fe_lin_dep), vcovBK(mod_fe_no_lin_dep))) {
-  stop("vcvov w/ linear dependent columns and the corresponding one w/o are not identical")
+  stop("vcov w/ linear dependent columns and the corresponding one w/o are not identical")
 }
 
 
 
-# just run test for for pgmm models (as vcovHC.pgmm methods use vcovHC.plm)
+# just run test for for pgmm models (as vcovXX.pgmm methods use vcovXX.plm)
 # (no linear dependence involved here)
 data("EmplUK", package="plm")
 ar <- pgmm(dynformula(log(emp) ~ log(wage) + log(capital) + log(output),

@@ -270,7 +270,7 @@ Changes since version 1.2-2
 	factor of 2)
 
 	* in formula(dynformula), a bug is fixed so that the endog
-	variable doesn't appear on the rhs if there is no lags
+	variable doesn't appear on the rhs if there are no lags
 
 	* in pgmm, the extract.data has been rewritten and is *much* faster
 
@@ -340,7 +340,7 @@ Changes since version 1.2-6
 	instruments. The number of time-series lost is now the min (and
 	not the max) of the first lags for gmm instruments
 
-	* some parts of summmary.pgmm only worked correctly for model with
+	* some parts of summary.pgmm only worked correctly for model with
 	time-dummies. It now deals correctly for model with 'individual'
 	effects
 
@@ -349,15 +349,15 @@ Changes since version 1.2-6
 	* p-values for the two-tailed versions of plmtest() were wrong and
 	have been fixed. They were divided by 2 instead of multiplied.
 
-	Changes since version 1.2-7
+Changes since version 1.2-7
 	
 	* a typo is corrected in the man page of plm.data
 
-	* AER is now suggested
+	* package AER is now suggested
 
 Changes since version 1.2-8	
 
-	* a index method is added for panelmodel, pdata.frame and pseries
+	* an index method is added for panelmodel, pdata.frame and pseries
 
 	* a bug in the typology of the variables in pht is fixed
 
@@ -374,7 +374,7 @@ Changes since version 1.2-8
 Changes since version 1.2-9	
 
 	* the pccep function, estimating CCEP models a la Pesaran, has
-	been added together withsummary and print.summary methods. The
+	been added together with summary and print.summary methods. The
 	function generates objects of a class of their own ("pccep"), much
 	like 'pggls', together with 'panelmodel'.
 
@@ -403,7 +403,7 @@ Changes since version 1.2-10
 	in the cross-sections ; a collapse argument is added to limit the
 	number of gmm instruments
 
-	* the CoefTAble element of summary.pgmm objects is renamed
+	* the CoefTable element of summary.pgmm objects is renamed
 	coefficients, so that it can easily be extracted using the coef
 	method
 
@@ -581,7 +581,7 @@ Changes since version 1.5-15
 	  called directly and 'data' not being a model frame (despite being required so)
 	  [see tests/test_model.matrix_pmodel.response_NA.R].
 	* detect_lin_dep: new function as a little helper function to detect linear dependent
-	  columns, esp. in a model matrices; incl. doc with two examples about how linear
+	  columns, esp. in model matrices; incl. doc with two examples about how linear
 	  dependent columns can be induced by the within transformation.
 	* doc pFormula.Rd extended (especially examples) and split up in two files to better accommodate
 	  different return values and input values in the documentation
@@ -657,9 +657,9 @@ Changes since version 1.5-21
 
   * new function as.list.pdata.frame:
       Default behaviour is to act identical to as.list.data.frame (some code relies on this, do not change!).
-      By setting arg 'keep.attributes = TRUE', one gets a list of pseries and can operate on
-      this list as one would expected for (e.g. 'lapplied') operations on the columns of a 
-      pdata.frame, e.g. to lag over more than one column and get a list of lagged columns back, use:
+      By setting arg 'keep.attributes = TRUE', one gets a list of pseries and can operate (e.g. 'lapply') 
+      over this list as one would expect for operations on the columns of a pdata.frame, e.g. to lag over 
+      more than one column and get a list of lagged columns back, use:
         lapply(as.list(pdataframe[ , your_cols], keep.attributes = TRUE), lag).
 
 Changes since version 1.5-22
@@ -689,7 +689,7 @@ Changes since version 1.5-23
 Changes since version 1.5-24
 
   * print.summary.plm: for FD models: now also prints number of observations used during estimation, because
-                       these differ from the number of obervations (rows) in the model frame due to diff-ing.
+                       these differ from the number of observations (rows) in the model frame due to diff-ing.
   * pres: fixed handling of pggls' FD models and, thus, summary on pggls' FD models now works without error.
   * pbltest: now has a plm interface (besides the formula interface).
 
@@ -745,7 +745,7 @@ Changes since version 1.5-34
 
   * Ftest: support for vcovs from package clubSandwich to allow df2 adjustment in robust F test
            (new func trans_clubSandwich_vcov added for this purpose).
-  * (internal) model.matrix.pFormula: case "pooling" added to twoway/unbalanced condition;
+  * (internal) model.matrix.pFormula: case "pooling" added to twoways/unbalanced condition;
                                       for unknown cases, give meaningful error.
   * alias.plm, alias.pFormula added: complements the generic stats::alias to detect linear 
                                      dependence (much like detect_lin_dep).
@@ -754,4 +754,5 @@ Changes since version 1.5-34
     silently dropped during estimation by plm (cf. summary.lm objects).
   * fix: vcovXX.plm (vcovG framework) now handles plm models with aliased coefficients (linear dependent columns
     in model matrix).
+
   
