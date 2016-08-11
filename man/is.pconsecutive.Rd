@@ -24,7 +24,7 @@ are consecutive (no "gaps" in time dimension per individual)}
           for the default method \code{x} can also be an arbitrary vector or \code{NULL}, see \bold{Details},}
  \item{na.rm.tindex}{logical indicating whether any \code{NA} values in the time index are removed
  before consecutiveness is evaluated (defaults to \code{FALSE}),}
- \item{index}{only relevant for \code{data.frame} interface; if \code{NULL}, the first two columns of the data.frame are assumed to be the index variabels; if not \code{NULL}, both dimensions ('individual', 'time')
+ \item{index}{only relevant for \code{data.frame} interface; if \code{NULL}, the first two columns of the data.frame are assumed to be the index variables; if not \code{NULL}, both dimensions ('individual', 'time')
               need to be specified by \code{index} for \code{is.pconsecutive} on data frames,
               for further details see \code{\link{pdata.frame}},}
               

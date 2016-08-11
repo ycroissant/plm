@@ -45,15 +45,14 @@ aneweytest <-  function(formula, data, subset, na.action, index = NULL,  ...){
     Kz <- 0
     namesZ <- NULL
   }
-  namesX <- colnames(X)
   Kx <- ncol(X)
   namesX <- colnames(X)
   # split by time period and remove the mean
   X <- lapply(as.list(years), function(x) X[time == x, , drop = FALSE])
-  X <- lapply(X, function(x) t(t(x) - apply(x, 2, mean)))
+  X <- lapply(X, function(x) t(t(x) - .colMeans(x, nrow(x), ncol(x)))) # was: t(t(x) - apply(x, 2, mean))
   if (!is.null(Z)){
     Z <- Z[time == years[1], , drop = FALSE]
-    Z <- t(t(Z) - apply(Z, 2, mean))
+    Z <- t(t(Z) - .colMeans(Z, nrow(Z), ncol(Z))) # t(t(Z) - apply(Z, 2, mean))
   }
   for (i in 1:(length(years))){
     colnames(X[[i]]) <- paste(colnames(X[[i]]), years[i], sep = ".")
@@ -112,16 +111,15 @@ piest <-  function(formula, data, subset, na.action, index = NULL, robust = TRUE
     Kz <- 0
     namesZ <- NULL
   }
-  namesX <- colnames(X)
   Kx <- ncol(X)
   namesX <- colnames(X)
   # split by time period and remove the mean
   years <- unique(index(data, "time"));
   X <- lapply(as.list(years), function(x) X[time == x, , drop = FALSE])
-  X <- lapply(X, function(x) t(t(x) - apply(x, 2, mean)))
+  X <- lapply(X, function(x) t(t(x) - .colMeans(x, nrow(x), ncol(x)))) # was: t(t(x) - apply(x, 2, mean)))
   if (!is.null(Z)){
     Z <- Z[time == years[1], , drop = FALSE]
-    Z <- t(t(Z) - apply(Z, 2, mean))
+    Z <- t(t(Z) - .colMeans(Z, nrow(Z), ncol(Z))) #was: t(t(Z) - apply(Z, 2, mean))
   }
   for (i in 1:(length(years))){
     colnames(X[[i]]) <- paste(colnames(X[[i]]), years[i], sep = ".")
