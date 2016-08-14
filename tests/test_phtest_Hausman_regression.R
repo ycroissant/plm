@@ -10,8 +10,8 @@
 # Baltagi (2013), Econometric Analysis of Panel Data, 5th edition, Wiley & Sons
 # Sec 4.3.1, p. 81 (example 1):
 #
-#### statistics are: 2.131 for regression based;
-#                    2.33  for original Hausman
+#### statistics are: 2.33  for original Hausman (m1)
+#                    2.131 for m2, m3 (for the Grunfeld data)
 #
 #### vcov within * 10^-3:
 #
@@ -30,15 +30,22 @@ Grunfeldpdata <- pdata.frame(Grunfeld, index = c("firm", "year"), drop.index = F
 fe_grun  <- plm(inv ~ value + capital, data=Grunfeldpdata, model="within")
 be_grun  <- plm(inv ~ value + capital, data=Grunfeldpdata, model="between")
 re_grun  <- plm(inv ~ value + capital, data=Grunfeldpdata, model="random")
+pool_grun <- plm(inv ~ value + capital, data=Grunfeldpdata, model="pooling")
 
-# regression-based Hausman test
+# Hausman test
+# m1, m2, m3 are all mathematically identical; however computer computation differs a little bit
 
 phtest(inv ~ value + capital, Grunfeldpdata)               # replicates Baltagi's m1 = 2.33
 phtest(fe_grun, re_grun)                                   # same as above, replicates Baltagi's m1 = 2.33
-phtest(be_grun, re_grun)                                   # replicates Baltagi's m2 = 2.131 [values m1 and m2 coincide in this case]
-phtest(inv ~ value + capital, Grunfeldpdata, method="aux") # replicates Baltagi's m3 = 2.131
+phtest(re_grun, fe_grun)
 
-phtest(inv ~ value + capital, Grunfeldpdata, method="aux", vcov = vcovHC) # no comparison value
+phtest(be_grun, re_grun)                                   # replicates Baltagi's m2 = 2.131
+phtest(re_grun, be_grun)
+phtest(be_grun, fe_grun)                                   # replicates Baltagi's m3 = 2.131 [values m2 and m3 coincide in this case]
+phtest(fe_grun, be_grun)
+
+phtest(inv ~ value + capital, Grunfeldpdata, method="aux") # replicates m3 from above in regression test
+phtest(inv ~ value + capital, Grunfeldpdata, method="aux", vcov = vcovHC) # no comparison value given
 
 # replicates variance-covariance matrices
 vcov(fe_grun)*1000
@@ -51,14 +58,16 @@ vcov(be_grun)*1000
 ### Baltagi's Gasoline example
 data("Gasoline", package = "plm")
 form <- lgaspcar ~ lincomep + lrpmg + lcarpcap
-wi <- plm(form, data = Gasoline, model = "within")
+fe <- plm(form, data = Gasoline, model = "within")
 be <- plm(form, data = Gasoline, model = "between")
 re <- plm(form, data = Gasoline, model = "random")
 
-phtest(wi, re) # replicates Baltagi's m1 = 302.8
+phtest(fe, re) # replicates Baltagi's m1 = 302.8
 phtest(form, data = Gasoline) # same as above (m1)
 
 phtest(be, re) # replicates Baltagi's m2 = 27.45
+phtest(be, fe) # replicates Baltagi's m3 = 26.507 almost
+
 phtest(form, data = Gasoline, method = "aux") # chisq = 26.495054, replicates _almost_ Baltagi's m3 = 26.507
 
 # replicates variance-covariance matrices
@@ -72,8 +81,49 @@ phtest(form, data = Gasoline, method = "aux") # chisq = 26.495054, replicates _a
 # 2.422 -1.694 -1.056
 #        1.766  0.883
 #               0.680
-vcov(wi)*100
+vcov(fe)*100
 vcov(be)*100
+
+
+##### twoways case ###
+fe2_grun  <- plm(inv ~ value + capital, data=Grunfeldpdata, model="within", effect = "twoways")
+# be_grun  <- plm(inv ~ value + capital, data=Grunfeldpdata, model="between")
+# RE gives warning due to neg. variance estimation
+re2_grun  <- plm(inv ~ value + capital, data=Grunfeldpdata, model="random", effect = "twoways")
+
+
+phtest(fe2_grun, re2_grun) # 13.460, p = 0.00194496 [also given by EViews 9.5; 
+                           # Baltagi (2013), p. 85 has other values due to older/wrong version of EViews?]
+
+
+phtest(inv ~ value + capital, data=Grunfeldpdata, effect = "twoways")
+phtest(inv ~ value + capital, data=Grunfeldpdata, effect = "time")
+
+# test to see of phtest(, method = "aux") respects argument effect
+# (rev. 305a introduced a quick fix and extracted argument effect from dots in function signature)
+# formal test (statistic is about 13 for twoways case and well below in one-way cases)
+testobj <- phtest(inv ~ value + capital, data=Grunfeldpdata, effect = "twoways", method = "aux")
+if (round(testobj$statistic, digits = 0) != 13) stop("argument effect seems to be not respected with method = \"aux\"")
+testobj2 <- phtest(inv ~ value + capital, data=Grunfeldpdata, effect = "twoways") # just to be sure: test for method="chisq" also...
+if (round(testobj2$statistic, digits = 0) != 13) stop("argument effect seems to be not respected with method = \"chisq\"")
+
+
+
+# test for class of statistic [was matrix pre rev. 305]
+testobj1 <- phtest(inv ~ value + capital, data=Grunfeldpdata, effect = "twoways", method = "aux")
+testobj2 <- phtest(fe2_grun, re2_grun)
+testobj3 <- phtest(inv ~ value + capital, data=Grunfeldpdata, effect = "twoways")
+if (class(testobj1$statistic) != "numeric") stop(paste0("class of statistic is not numeric, but ", class(testobj1$statistic)))
+if (class(testobj2$statistic) != "numeric") stop(paste0("class of statistic is not numeric, but ", class(testobj2$statistic)))
+if (class(testobj3$statistic) != "numeric") stop(paste0("class of statistic is not numeric, but ", class(testobj3$statistic)))
+
+
+
+
+# Two-ways case with beetween model should result in informative errors.
+# phtest(fe2_grun, be_grun)
+# phtest(re2_grun, be_grun)
+
 
 
 

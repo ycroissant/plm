@@ -13,6 +13,11 @@ phtest <- function(x,...){
 phtest.formula <- function(x, data, model = c("within", "random"),
                             method = c("chisq", "aux"),
                             index = NULL, vcov = NULL, ...){
+  # NB: No argument 'effect' here, maybe introduce?
+  #     it gets evaluated tough due to the eval() call for method="chisq"
+  #     and since rev. 305 due to extraction from dots (...) in method="aux"
+  #    If, so change doc accordingly (currently, effect arg is mentioned in ...)
+  
     if (length(model)!=2) stop("two models should be indicated")
     for (i in 1:2){
         model.name <- model[i]
@@ -47,9 +52,17 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                                        # comparable for later comparision to obs used in estimation of models (get rid of NA values)
                                        # [needed because pmodel.response() and model.matrix() do not retain fancy rownames, but rownames]
                
+               # rev. 305: quick and dirty fix for missing effect argument in function 
+               # signature for formula interface/test="aux": see if effect is in dots and extract
+                  dots <- list(...)
+                  if (!is.null(dots$effect)) effect <- dots$effect else effect <- NULL
+               
                # calculatate FE and RE model
-               fe_mod <- plm(formula=x, data=data, model=model[1])
-               re_mod <- plm(formula=x, data=data, model=model[2])
+               fe_mod <- plm(formula=x, data=data, model=model[1], effect = effect)
+               re_mod <- plm(formula=x, data=data, model=model[2], effect = effect)
+                ## DEBUG printing:
+                 # print(paste0("mod1: ", describe(fe_mod, "effect")))
+                 # print(paste0("mod2: ", describe(re_mod, "effect")))
                
                reY <- pmodel.response(re_mod)
                reX <- model.matrix(re_mod)[ , -1, drop = FALSE] # intercept not needed; drop=F needed to prevent matrix
@@ -92,7 +105,7 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                                       (nvars+2):(nvars*2+1)]
                Rbr <- R %*% coef(auxmod)[(nvars+2):(nvars*2+1)] - r
 
-               h2t <- crossprod(Rbr, solve(omega0, Rbr))
+               h2t <- as.numeric(crossprod(Rbr, solve(omega0, Rbr)))
                ph2t <- pchisq(h2t, df = nvars, lower.tail = FALSE)
 
                df <- nvars
@@ -130,14 +143,40 @@ phtest.panelmodel <- function(x, x2, ...){
   dbeta <- coef.wi[coef.h] - coef.re[coef.h]
   df <- length(dbeta)
   dvcov <- vcov.re[coef.h, coef.h] - vcov.wi[coef.h, coef.h]
-  stat <- abs(t(dbeta) %*% solve(dvcov) %*% dbeta)
-#  pval <- (1-pchisq(stat,df=df))
+  
+  #### BEGIN cater for equivalent test within vs. between
+    # Baltagi (2013), Sec. 4.3, pp. 77, 81
+    modx  <- describe(x,  what = "model")
+    modx2 <- describe(x2, what = "model")
+    effx  <- describe(x,  what = "effect")
+    effx2 <- describe(x2, what = "effect")
+    
+    # Tests with between model do not extend to two-ways case -> give error
+    # There are, however, some equiv. tests with the individual/time between 
+    # model, but let's not support them (see Kang (1985), Baltagi (2013), Sec. 4.3.7)
+    if (   (modx  == "between" | modx2 == "between")
+        && (effx == "twoways" | effx2 == "twoways")) stop("tests with between model in twoways case not supported")
+    
+    # in case of one-way within vs. between (m3 in Baltagi (2013), pp. 77, 81)
+    # the variances need to be added (not subtracted like in the other cases)
+    if (  (modx  == "within" && modx2 == "between")
+        | (modx2 == "within" && modx  == "between")) {
+      dvcov <- vcov.re[coef.h, coef.h] + vcov.wi[coef.h, coef.h]
+    }
+  #### END cater for equivalent tests with between model
+
+  stat <- as.numeric(abs(t(dbeta) %*% solve(dvcov) %*% dbeta))
   pval <- pchisq(stat, df = df, lower.tail = FALSE)
   names(stat) <- "chisq"
   parameter <- df
   names(parameter) <- "df"
   alternative <- "one model is inconsistent"
 #  null.value <- "both models are consistent"
+  
+  ## DEBUG printing:
+     # print(paste0("mod1: ", describe(x,  "effect")))
+     # print(paste0("mod2: ", describe(x2, "effect")))
+
   res <- list(statistic    = stat,
               p.value      = pval,
               parameter    = parameter,
