@@ -32,9 +32,9 @@ An object of class \code{"htest"}.
 \author{Yves Croissant}
   
 \references{
-Hansen, L.P. (1982), Large Sample Properties of Generalized Methods of Moments Estimators, \emph{Econometrica}, 50, pp. 1029--54.
+Hansen, L.P. (1982), Large Sample Properties of Generalized Methods of Moments Estimators, \emph{Econometrica}, \bold{50}(4), pp. 1029--1054.
   
-Sargan, J.D. (1958), The Estimation of Economic Relationships using Instrumental Variables, \emph{Econometrica}, 26, pp. 393--415.
+Sargan, J.D. (1958), The Estimation of Economic Relationships using Instrumental Variables, \emph{Econometrica}, \bold{26}(3), pp. 393--415.
 }
 
 \seealso{\code{\link{pgmm}}}

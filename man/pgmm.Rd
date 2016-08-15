@@ -66,8 +66,8 @@ An object of class \code{c("pgmm","panelmodel")}, which has the following elemen
  
 \item{coefficients}{the vector (or the list for fixed effects) of coefficients,}
 \item{residuals}{the vector of residuals,}
-\item{fitted.values}{the vector of fitted.values,}
 \item{vcov}{the covariance matrix of the coefficients,}
+\item{fitted.values}{the vector of fitted.values,}
 \item{df.residual}{degrees of freedom of the residuals,}
 \item{model}{a list containing the variables used for the
   estimation for each individual,}
@@ -97,8 +97,7 @@ used as GMM instruments are used as normal instruments with the same lag
 structure as the one specified in the model.
 
 \code{y~lag(y, 1:2)+lag(x1, 0:1)+lag(x2, 0:2) | lag(y, 2:99)} is similar
-to \code{y~lag(y, 1:2) +
-  lag(x1, 0:1) + lag(x2, 0:2) | lag(y, 2:99) |
+to \code{y~lag(y, 1:2)+lag(x1, 0:1)+lag(x2, 0:2) | lag(y, 2:99) |
 lag(x1, 0:1)+lag(x2, 0:2)} and indicates that all lags from 2 of
 \code{y} is used as gmm instruments.
 
@@ -108,30 +107,31 @@ Arellano and Bond (1991)), \code{"ld"} the ``system GMM'' model (see
 Blundell and Bond (1998)).
   
 \code{pgmm} is an attempt to adapt GMM estimators available within the
-DPD library for GAUSS (see Arellano and Bond 1998) and Ox (see Doornik,
-Arellano and Bond 2006) and with the xtabond2 library for Stata (see
-Roodman 2009).}
+DPD library for GAUSS (see Arellano and Bond (1998)) and Ox (see Doornik,
+Arellano and Bond (2006)) and within the xtabond2 library for Stata (see
+Roodman (2009)).}
 
 \references{
 Arellano, M. and Bond, S. (1991) Some Tests of Specification for Panel
 Data: Monte Carlo Evidence and an Application to Employment Equations,
 \emph{The Review of Economic Studies}, vol. \bold{58}(2), 1991,
-pp.227--297.
+pp. 227--297.
   
 Arellano, M. and Bond, S. (1998) Dynamic Panel Data Estimation
 Using DPD98 for GAUSS: A Guide for Users.
 
 Blundell, R. and Bond, S. (1998) Initial Conditions and Moment
 Restrictions in Dynamic Panel Data Models, \emph{Journal of
-Econometrics}, vol. \bold{87}, pp.115--143.
+Econometrics}, vol. \bold{87}, pp. 115--143.
 
 Doornik, J., Arellano, M. and Bond, S. (2006) Panel Data Estimation
 using DPD for Ox. \url{http://www.doornik.com/download/oxmetrics7/Ox_Packages/dpd.pdf}
   
 Roodman, D. (2009) How to do xtabond2: An Introduction to difference
 and system GMM in Stata, \emph{Stata Journal}, vol. \bold{9}(1),
-pp. 86--136. Working Paper version at
-\url{http://ideas.repec.org/p/cgd/wpaper/103.html}
+pp. 86--136. \url{http://www.stata-journal.com/article.html?article=st0159}.
+% full article in Stata Journal is now accessible
+% Working Paper version at \url{http://ideas.repec.org/p/cgd/wpaper/103.html}.
 
 }
 
@@ -139,7 +139,7 @@ pp. 86--136. Working Paper version at
   
   \code{\link{dynformula}} for dynamic formulas, \code{\link{sargan}}
   for Sargan tests and \code{\link{mtest}} for Arellano--Bond's tests of
-  multicollinearity.
+  serial correlation. % was: multicollinearity
   
 }
 
@@ -148,13 +148,13 @@ pp. 86--136. Working Paper version at
 \examples{
 data("EmplUK", package = "plm")
 
-## Arellano and Bond (1991), table 4b 
+## Arellano and Bond (1991), table 4 col. b 
 z1 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
            + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
             data = EmplUK, effect = "twoways", model = "twosteps")
 summary(z1)
 
-## Blundell and Bond (1998) table 4 (cf DPD for OX p.12 col.4)
+## Blundell and Bond (1998) table 4 (cf. DPD for OX p. 12 col. 4)
 z2 <- pgmm(log(emp) ~ lag(log(emp), 1)+ lag(log(wage), 0:1) +
            lag(log(capital), 0:1) | lag(log(emp), 2:99) +
            lag(log(wage), 2:99) + lag(log(capital), 2:99),        
@@ -164,14 +164,14 @@ summary(z2, robust = TRUE)
 
 \dontrun{
 ## Same with the old formula or dynformula interface
-## Arellano and Bond (1991), table 4b 
+## Arellano and Bond (1991), table 4, col. b 
 z1 <- pgmm(log(emp) ~ log(wage) + log(capital) + log(output),
             lag.form = list(2,1,0,1), data = EmplUK, 
             effect = "twoways", model = "twosteps",
             gmm.inst = ~log(emp), lag.gmm = list(c(2,99)))
 summary(z1)
 
-## Blundell and Bond (1998) table 4 (cf DPD for OX p.12 col.4)
+## Blundell and Bond (1998) table 4 (cf DPD for OX p. 12 col. 4)
 z2 <- pgmm(dynformula(log(emp) ~ log(wage) + log(capital), list(1,1,1)), 
             data = EmplUK, effect = "twoways", model = "onestep", 
             gmm.inst = ~log(emp) + log(wage) + log(capital), 
