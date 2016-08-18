@@ -685,7 +685,7 @@ head(Between(E$emp), 10)
 \subsection{Formulas}
 
 There are circumstances where standard \code{formula} are not very
-usefull to describe a model, notably while using instrumental variable
+useful to describe a model, notably while using instrumental variable
 like estimators: to deal with these situations, we use the
 \code{Formula} package.
 
@@ -702,7 +702,7 @@ emp~wage+capital|.-wage+lag(wage,1)
 
 In the second case, the \code{.} means the previous parts which
 describes the covariates and this part is ``updated''. This is
-particulary interesting when there are a few external instruments.
+particularly interesting when there are a few external instruments.
 
 \section{Model estimation}
 \label{modelestimation}
@@ -738,7 +738,7 @@ summary(grun.re)
 For a \code{random} model, the \code{summary} method gives information
 about the variance of the components of the errors.  Fixed effects may
 be extracted easily using \code{fixef}. An argument \code{type}
-indicates howfixed effects should be computed : in level \code{type =
+indicates how fixed effects should be computed : in level \code{type =
   'level'} (the default), in deviation from the overall mean
 \code{type = 'dmean'} or in deviation from the first individual
 \code{type = 'dfirst'}.
@@ -997,7 +997,7 @@ e^{(1)\top }_i $ where $e_i^{(1)}$ are the residuals of the one step estimate.
 
 
 \citet{BLUN:BOND:98} show that with weak hypothesis on the data
-generating process, suplementary moment conditions exist for the
+generating process, supplementary moment conditions exist for the
 equation in level:
 
 $$
@@ -1534,7 +1534,7 @@ test for models with individual effects of any kind can be based on
 estimating the model $$\hat{u}_{i,t}= \delta \hat{u}_{i,t-1} +
 \eta_{i,t}$$ and testing the restriction $\delta = -0.5$,
 corresponding to the null of no serial correlation.  \citet{DRUK:03}
-provides Monte-carlo evidence of the good empirical properties of the
+provides Monte Carlo evidence of the good empirical properties of the
 test.
 
 On the other extreme \citep[see][10.6.1]{WOOL:02}, if the differenced
@@ -1741,7 +1741,7 @@ Some of the unit-root tests for panel data are based on preliminary
 results obtained by running the above Augmented Dickey-Fuller
 regression. 
 
-First, we hava to determine the optimal number of lags $p_i$ for each
+First, we have to determine the optimal number of lags $p_i$ for each
 time-series. Several possibilities are available. They all have in
 common that the maximum number of lags have to be chosen first. Then,
 $p_i$ can be chosen using:

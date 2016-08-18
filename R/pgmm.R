@@ -68,7 +68,7 @@ pgmm <- function(formula, data, subset, na.action,
       collapse <- as.vector(rep(collapse, cardW), mode = "list")
     }
     else{
-      if (length(collapse) != cardW) stop("the collapse vector has a wrong lenght")
+      if (length(collapse) != cardW) stop("the collapse vector has a wrong length")
     }
     names(collapse) <- names(gmm.lags)
   }
@@ -261,7 +261,7 @@ pgmm <- function(formula, data, subset, na.action,
                    u
                  }
                  )
-    # remove the relevent number of time series for data in level
+    # remove the relevant number of time series for data in level
     yX2 <- lapply(yX,
                   function(x){
                     x <- x[- c(0:TL2), , drop = FALSE]
@@ -337,7 +337,7 @@ pgmm <- function(formula, data, subset, na.action,
   }
 
   #################################################################
-  ##### 10. In case of sys gmm, biag or rbind the diff and level
+  ##### 10. In case of sys gmm, bdiag or rbind the diff and level
   ##### matrices
   #################################################################
   

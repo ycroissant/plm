@@ -37,7 +37,7 @@ pgmm(formula, data, subset, na.action,
   \item{model}{one of \code{"onestep"} (the default) or
     \code{"twosteps"},}
   \item{collapse}{if \code{TRUE}, the gmm instruments are collapsed,}
-  \item{lost.ts}{the number of lost time series : if \code{NULL}, this
+  \item{lost.ts}{the number of lost time series: if \code{NULL}, this
     is automatically computed. Otherwise, it can be defined by the user
     as a numeric vector of length 1 or 2. The first element is the
     number of lost time series in the model in difference, the second
@@ -46,7 +46,7 @@ pgmm(formula, data, subset, na.action,
   \item{transformation}{the kind of transformation to apply to the
   model: either \code{"d"} (the default value) for the ``difference GMM''
   model or \code{"ld"} for the ``system GMM'',}
-  \item{fsm}{the matrix for the one step estimator : one of \code{"I"}
+  \item{fsm}{the matrix for the one step estimator: one of \code{"I"}
   (identity matrix) or \code{"G"} (\eqn{=D'D} where \eqn{D} is the
   first--difference operator) if \code{transformation="d"}, one of
   \code{"GI"} or \code{"full"} if \code{transformation="ld"},}
@@ -67,7 +67,7 @@ An object of class \code{c("pgmm","panelmodel")}, which has the following elemen
 \item{coefficients}{the vector (or the list for fixed effects) of coefficients,}
 \item{residuals}{the vector of residuals,}
 \item{vcov}{the covariance matrix of the coefficients,}
-\item{fitted.values}{the vector of fitted.values,}
+\item{fitted.values}{the vector of fitted values,}
 \item{df.residual}{degrees of freedom of the residuals,}
 \item{model}{a list containing the variables used for the
   estimation for each individual,}
