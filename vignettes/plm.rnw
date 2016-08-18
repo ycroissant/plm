@@ -354,8 +354,7 @@ and then to use the \texttt{pdata.frame} in the estimation functions.
 The interface of these functions is consistent with the \code{lm()}
 function. Namely, their first two arguments are \code{formula} and
 \code{data} (which should be a \code{data.frame} and is
-mandatory). Three additional arguments are common to these functions
-:
+mandatory). Three additional arguments are common to these functions:
 
 \begin{itemize}
 \item \code{index}: this argument enables the estimation functions
@@ -605,13 +604,13 @@ head(attr(E, "index"))
 Two further arguments are logical : \texttt{drop.index} drop the
 indexes from the \texttt{data.frame} and \texttt{row.names} computes
 ``fancy'' row names by pasting the individual and the time
-indexes. While extracting a serie from a \texttt{pdata.frame}, a
-\texttt{pseries} is created, which is the original serie with the
+indexes. While extracting a series from a \texttt{pdata.frame}, a
+\texttt{pseries} is created, which is the original series with the
 index attribute. This object has specific methods, like
 \texttt{summary} and \texttt{as.matrix} are provided. The former
 indicates the total variation of the variable and the share of this
 variation that is due to the individual and the time dimensions. The
-latter gives the matrix representation of the serie, with, by default,
+latter gives the matrix representation of the series, with, by default,
 individual as rows and time as columns.
 
 <<>>=
@@ -660,7 +659,7 @@ the data. Specific methods for \texttt{pseries} objects are therefore
 have been rewritten in order to handle correctly panel data. Note that
 compares to the \texttt{lag} method for \texttt{ts} objects, the order
 of lags are indicated by positive integer. Moreover, 0 is a relevant
-value and a vector argument may be provided :
+value and a vector argument may be provided:
 
 <<>>=
 head(lag(E$emp, 0:2))
@@ -690,12 +689,12 @@ usefull to describe a model, notably while using instrumental variable
 like estimators: to deal with these situations, we use the
 \code{Formula} package.
 
-The \code{Formula} package provides a class which unables to construct
+The \code{Formula} package provides a class which enables to construct
 multi-part formula, each part being separated by a pipe
 sign. \code{plm} provides a \code{pFormula} object which is a
 \code{Formula} with specific methods.
 
-The two formulas below are identical :
+The two formulas below are identical:
 <<>>=
 emp~wage+capital|lag(wage,1)+capital
 emp~wage+capital|.-wage+lag(wage,1)
@@ -774,7 +773,7 @@ estimation on quasi-demeaned data. The parameter of this
 transformation is obtained using preliminary estimations. 
 
 Four estimators of this parameter are available, depending on the
-value of the argument \code{random.method} :
+value of the argument \code{random.method}:
 
 \begin{itemize}
 \item \code{swar}: from \citet{SWAM:AROR:72}, the default value,
@@ -792,7 +791,7 @@ grun.amem <- plm(inv~value+capital,data=Grunfeld,model="random",random.method="a
 
 The estimation of the variance of the error components are performed
 using the \code{ercomp} function, which has a \code{method} and an
-\code{effect} argument, and can be used by itself :
+\code{effect} argument, and can be used by itself:
 
 <<>>=
 ercomp(inv~value+capital, data=Grunfeld, method = "amemiya", effect = "twoways")
@@ -824,7 +823,7 @@ moment only available for balanced panels.
 \subsubsection{Unbalanced panels}
 
 Most of the features of \code{plm} are implemented for panel models
-with some limitations :
+with some limitations:
 
 \begin{itemize}
 \item the random two-ways effect model is not implemented,
@@ -834,7 +833,7 @@ with some limitations :
 
 The following example is using data used by \citep{HARR:RUBI} to
 estimate an hedonic housing prices function. It is reproduced in
-\citep{BALT:01}, p. 174.
+\citep{BALT:01}, p.174.
 
 <<>>=
 data("Hedonic", package = "plm")
@@ -938,7 +937,7 @@ The model is first differenced to get rid of the individual effect:
 \end{equation}
 
 Least squares are inconsistent because $\Delta \epsilon_{it}$ is
-correlated with $ \Delta y_{it-1}g$.  $y_{it-2}$ is a valid, but weak
+correlated with $ \Delta y_{it-1}$.  $y_{it-2}$ is a valid, but weak
 instrument \citep[see][]{ANDE:HSIA:81}. The \textsc{gmm} estimator uses the fact that
 the number of valid instruments is growing with $t$:
 
@@ -999,7 +998,7 @@ e^{(1)\top }_i $ where $e_i^{(1)}$ are the residuals of the one step estimate.
 
 \citet{BLUN:BOND:98} show that with weak hypothesis on the data
 generating process, suplementary moment conditions exist for the
-equation in level :
+equation in level:
 
 $$
 y_{it} = \gamma y_{it-1}+\mu_i+\eta_{it}
@@ -1007,13 +1006,13 @@ $$
 
 More precisely, they show that $\Delta y_{it-2}=y_{it-2}-y_{it-3}$ is
 a valid instrument. The estimator is obtained using the residual
-vector in difference and in level :
+vector in difference and in level:
 
 $$
 e^+_i=(\Delta e_i, e_i)
 $$
 
-and the matrix of augmented moments :
+and the matrix of augmented moments:
 
 $$
 Z_i^+=\left(
@@ -1043,7 +1042,7 @@ In a \textsc{gmm} estimation, there are ``normal'' instruments and
 ``\textsc{gmm}'' instruments. \textsc{gmm} instruments are indicated
 in the second part of the formula. By default, all the variables of
 the model that are not used as \textsc{gmm} instruments are used as
-normal instruments, with the same lag structure ; ``normal''
+normal instruments, with the same lag structure; ``normal''
 instruments may also be indicated in the third part of the formula. 
 
 The effect argument is either \code{NULL}, \code{"individual"}
@@ -1721,15 +1720,15 @@ it is enough that neighbouring pairs correspond to nonzero elements in
 
 \subsubsection{Preliminary results}
 
-We consider the following model :
+We consider the following model:
 
 $$
 y_{it} = \delta y_{it-1} + \sum_{L=1}^{p_i} \theta_i \Delta
 y_{it-L}+\alpha_{mi} d_{mt}+\epsilon_{it}
 $$
 
-The unit root hypothesis is $\rho = 1$. The model can be rewriten in
-difference :
+The unit root hypothesis is $\rho = 1$. The model can be rewritten in
+difference:
 
 $$
 \Delta y_{it} = \rho y_{it-1} + \sum_{L=1}^{p_i} \theta_i \Delta
@@ -1739,13 +1738,13 @@ $$
 So that the unit-root hypothesis is now $\rho = 0$.
 
 Some of the unit-root tests for panel data are based on preliminary
-results obtained by runing the above Augmented Dickey Fuller
+results obtained by running the above Augmented Dickey-Fuller
 regression. 
 
 First, we hava to determine the optimal number of lags $p_i$ for each
 time-series. Several possibilities are available. They all have in
 common that the maximum number of lags have to be chosen first. Then,
-$p_i$ can be chosen using :
+$p_i$ can be chosen using:
 
 \begin{itemize}
 \item the Swartz information criteria (SIC),
@@ -1761,7 +1760,7 @@ each individual, so that the total number of observations is $n\times
 $\bar{p}$ is the average number of lags. Call $e_{i}$ the
 vector of residuals.
 
-Estimate the variance of the $\epsilon_i$ as :
+Estimate the variance of the $\epsilon_i$ as:
 
 $$
 \hat{\sigma}_{\epsilon_i}^2 = \frac{\sum_{t=p_i+1}^{T} e_{it}^2}{df_i}
@@ -1818,13 +1817,13 @@ unit root, but the alternative is that some may have a unit root and
 others have different values of $\rho_i <0$.
 
 The test is based on the average of the student statistic of the
-$\rho$ obtained for each individual :
+$\rho$ obtained for each individual:
 
 $$
 \bar{t}=\frac{1}{n}\sum_{i=1}^n t_{\rho i}
 $$
 
-The statistic is then :
+The statistic is then:
 
 $$
 z = \frac{\sqrt{n}\left(\bar{t}- E(\bar{t})\right)}{\sqrt{V(\bar{t})}}
@@ -2069,7 +2068,7 @@ mixed models framework, unless reducing it to \textsc{ols} on a
 specification with one dummy for each group (often termed {\em least
   squares dummy variables}, or \textsc{lsdv} model) which can
 trivially be estimated by \textsc{ols}.  The \textsc{re} model is
-instead a special case of mixed model where only the intercept is
+instead a special case of a mixed model where only the intercept is
 specified as a random effect, while the ``random'' type variable
 coefficients model can be seen as one that has the same regressors in
 the fixed and random sets. The unrestricted generalized least squares

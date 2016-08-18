@@ -39,7 +39,7 @@ Baltagi, B.H. and Li, Q. (1995) Testing AR(1) against MA(1)
 disturbances in an error component model, \emph{Journal of Econometrics} \bold{68}, pp. 133--151.
 
 Baltagi, B.H. and Li, Q. (1997) Monte Carlo results on pure and
-pretest estimators of an error components model with autocorrelated disturbances, \emph{Annales d'economie et de statistique} \bold{48}, pp. 69--82.
+pretest estimators of an error component model with autocorrelated disturbances, \emph{Annales d'economie et de statistique} \bold{48}, pp. 69--82.
 }
 
 \seealso{
