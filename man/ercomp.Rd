@@ -47,19 +47,19 @@ ercomp(object, ...)
 \references{
 
   Amemiya, T. (1971) The estimation of the variances in a
-  variance--components model, \emph{International Economic Review}, \bold{12}, pp.1--13.
+  variance--components model, \emph{International Economic Review}, \bold{12}(1), pp. 1--13.
 
   Nerlove, M. (1971) Further evidence on the estimation of dynamic
   economic relations from a time--series of cross--sections,
-  \emph{Econometrica}, \bold{39}, pp.359--382.
+  \emph{Econometrica}, \bold{39}(2), pp. 359--382.
 
   Swamy, P.A.V.B. and Arora, S.S. (1972) The exact finite sample
   properties of the estimators of coefficients in the error components
-  regression models, \emph{Econometrica}, \bold{40}, pp.261--275.
+  regression models, \emph{Econometrica}, \bold{40}(2), pp. 261--275.
 
   Wallace, T.D. and Hussain, A. (1969) The use of error components
   models in combining cross section with time series data,
-  \emph{Econometrica}, \bold{37}(1), pp.55--72.
+  \emph{Econometrica}, \bold{37}(1), pp. 55--72.
 
 }
 \seealso{

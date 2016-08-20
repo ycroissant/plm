@@ -42,7 +42,7 @@
 
   Driscoll, J. C., and Kraay, A. C. (1998). \dQuote{Consistent
   covariance matrix estimation with spatially dependent panel data},
-  \emph{Review of economics and statistics}, \bold{80}(4), 549--560.
+  \emph{Review of Economics and Statistics}, \bold{80}(4), 549--560.
 }
 
 \keyword{datasets}

@@ -61,19 +61,19 @@ with the respective Honda statistics (\code{"honda"}); twoway statistics of \cod
 
 Baltagi, B. H. (2013) \emph{Econometric Analysis of Panel Data}, 5th edition, Sec. 4.2, pp. 68--76 and Sec. 9.5, pp. 200--203.
 
-Baltagi, B. H./Li, Q. (1990) A lagrange multiplier test for the error components model with incomplete panels, \emph{Econometric Reviews}, \bold{9}, pp. 103--107.
+Baltagi, B. H./Li, Q. (1990) A lagrange multiplier test for the error components model with incomplete panels, \emph{Econometric Reviews}, \bold{9}(1), pp. 103--107.
 
-Baltagi B. H./Chang, Y./Li, Q. (1992) Monte Carlo results on several new and existing tests for the error component model, \emph{Journal of Econometrics, \bold{54}, pp. 95--120.}
+Baltagi B. H./Chang, Y./Li, Q. (1992) Monte Carlo results on several new and existing tests for the error component model, \emph{Journal of Econometrics, \bold{54}(1-3), pp. 95--120.}
 
 Baltagi B. H./Chang, Y./Li, Q. (1998) Testing for random effects using unbalanced panel data, \emph{Advances in Econometrics, \bold{13}, pp. 1--20.}
 
-Breusch, T. S./Pagan, A. R. (1980) The Lagrange multiplier test and its applications to model specification in econometrics, \emph{Review of Economic Studies}, \bold{47}, pp. 239--253.
+Breusch, T. S./Pagan, A. R. (1980) The Lagrange multiplier test and its applications to model specification in econometrics, \emph{Review of Economic Studies}, \bold{47}(1), pp. 239--253.
 
-Gourieroux, C./Holly, A./Monfort, A. (1982) Likelihood ratio test, Wald test, and Kuhn--Tucker test in linear models with inequality constraints on the regression parameters, \emph{Econometrica}, \bold{50}, pp. 63--80.
+Gourieroux, C./Holly, A./Monfort, A. (1982) Likelihood ratio test, Wald test, and Kuhn--Tucker test in linear models with inequality constraints on the regression parameters, \emph{Econometrica}, \bold{50}(1), pp. 63--80.
 
-Honda, Y. (1985) Testing the error components model with non--normal disturbances, \emph{Review of Economic Studies}, \bold{52}, pp. 681--690.
+Honda, Y. (1985) Testing the error components model with non--normal disturbances, \emph{Review of Economic Studies}, \bold{52}(4), pp. 681--690.
 
-King, M. L./Wu, P. X. (1997) Locally optimal one--sided tests for multiparameter hypotheses, \emph{Econometric Reviews}, \bold{33}, pp. 523--529.
+King, M. L./Wu, P. X. (1997) Locally optimal one--sided tests for multiparameter hypotheses, \emph{Econometric Reviews}, \bold{16}(2), pp. 131--156.
 }
 
 \seealso{

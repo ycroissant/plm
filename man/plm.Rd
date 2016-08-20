@@ -136,14 +136,14 @@ for further details.
   
 Amemiya, T. (1971) The estimation of the variances in a
 variance--components model, \emph{International Economic Review},
-\bold{12}, pp. 1--13.
+\bold{12}(1), pp. 1--13.
 
 Balestra, P. and Varadharajan-Krishnakumar, J. (1987) Full information
 estimations of a system of simultaneous equations with error components
-structure, \emph{Econometric Theory}, \bold{3}, pp. 223--246.
+structure, \emph{Econometric Theory}, \bold{3}(2), pp. 223--246.
   
 Baltagi, B.H. (1981) Simultaneous equations with error components,
-\emph{Journal of Econometrics}, \bold{17}, pp. 21--49.
+\emph{Journal of Econometrics}, \bold{17}(2), pp. 189--200.
   
 Baltagi, B.H. (2001) \emph{Econometric Analysis of Panel Data}, 2nd
 ed., John Wiley and Sons.
@@ -152,15 +152,15 @@ Baltagi, B.H. (2013) \emph{Econometric Analysis of Panel Data}, 5th
 ed., John Wiley and Sons.
 
 Hausman, J.A. and Taylor W.E. (1981) Panel data and unobservable
-individual effects, \emph{Econometrica}, \bold{49}, pp. 1377--1398.
+individual effects, \emph{Econometrica}, \bold{49}(6), pp. 1377--1398.
  
 Nerlove, M. (1971) Further evidence on the estimation of dynamic
 economic relations from a time--series of cross--sections,
-\emph{Econometrica}, \bold{39}, pp. 359--382.
+\emph{Econometrica}, \bold{39}(2), pp. 359--382.
 
 Swamy, P.A.V.B. and Arora, S.S. (1972) The exact finite sample
 properties of the estimators of coefficients in the error components
-regression models, \emph{Econometrica}, \bold{40}, pp. 261--275.
+regression models, \emph{Econometrica}, \bold{40}(2), pp. 261--275.
 
 Wallace, T.D. and Hussain, A. (1969) The use of error components models
 in combining cross section with time series data, \emph{Econometrica},

@@ -63,19 +63,19 @@ e.g. for Wald--type testing: argument \code{vcov.} to \code{coeftest()}, argumen
 
 \references{
   Beck, N. and Katz, J. (1995) What to do (and not to do) with
-  time-series-cross-section data in comparative politics. \emph{American
+  time-series cross-section data in comparative politics. \emph{American
     Political Science Review}, \bold{89(3)}, pp. 634--647.
     
   Cribari-Neto, F. (2004) Asymptotic inference under heteroskedasticity
   of unknown form. \emph{Computational Statistics & Data Analysis}
-  \bold{45}, pp. 215--233.
+  \bold{45(2)}, pp. 215--233.
 
   Greene, W. H. (2003) \emph{Econometric Analysis}, 5th ed., Prentice Hall/Pearson,
   Upper Saddle River, New Jersey, Sec. 13.9.3, 13.9.7.
   
   MacKinnon, J. G. and  White, H. (1985) Some heteroskedasticity-consistent
   covariance matrix estimators with improved finite sample properties.
-  \emph{Journal of Econometrics} \bold{29}, pp. 305--325.
+  \emph{Journal of Econometrics} \bold{29(3)}, pp. 305--325.
   
   Zeileis, A. (2004) Econometric Computing with HC and HAC Covariance Matrix
   Estimators. \emph{Journal of Statistical Software}, \bold{11}(10), pp. 1--17.

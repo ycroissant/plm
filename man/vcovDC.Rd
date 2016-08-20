@@ -53,11 +53,11 @@ Cameron, A.C., Gelbach, J.B., & Miller, D.L. (2011) Robust inference with
  
 Cribari-Neto, F. (2004) Asymptotic inference under heteroskedasticity
  of unknown form. \emph{Computational Statistics & Data Analysis}
- \bold{45}, pp. 215--233.
+ \bold{45(2)}, pp. 215--233.
  
 MacKinnon, J. G. and  White, H. (1985) Some heteroskedasticity-consistent
  covariance matrix estimators with improved finite sample properties.
- \emph{Journal of Econometrics} \bold{29}, pp. 305--325.
+ \emph{Journal of Econometrics} \bold{29(3)}, pp. 305--325.
  
 Thompson, S.B. (2011) Simple formulas for standard errors that cluster by
  both firm and time, \emph{Journal of Financial Economics} \bold{99(1)}, pp. 1--10.

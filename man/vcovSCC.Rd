@@ -61,11 +61,11 @@ e.g. for Wald--type testing: argument \code{vcov.} to \code{coeftest()}, argumen
 \references{
  Cribari-Neto, F. (2004) Asymptotic inference under heteroskedasticity
  of unknown form. \emph{Computational Statistics & Data Analysis}
- \bold{45}, pp. 215--233.
+ \bold{45(2)}, pp. 215--233.
 
  Driscoll, J.C. and Kraay, A.C. (1998) Consistent Covariance Matrix
  Estimation with Spatially Dependent Panel Data. \emph{Review of
-   Economics and Statistics} \bold{80}, pp. 549--560.
+   Economics and Statistics} \bold{80(4)}, pp. 549--560.
 
  Hoechle, D. (2007) Robust standard errors for panel regressions with
   cross-sectional dependence. \emph{Stata Journal}, \bold{7(3)},
@@ -73,7 +73,7 @@ e.g. for Wald--type testing: argument \code{vcov.} to \code{coeftest()}, argumen
   
  MacKinnon, J. G. and  White, H. (1985) Some heteroskedasticity-consistent
   covariance matrix estimators with improved finite sample properties.
-  \emph{Journal of Econometrics} \bold{29}, pp. 305--325.
+  \emph{Journal of Econometrics} \bold{29(3)}, pp. 305--325.
   
  Zeileis, A. (2004) Econometric Computing with HC and HAC Covariance Matrix
  Estimators. \emph{Journal of Statistical Software}, \bold{11}(10), pp. 1--17.

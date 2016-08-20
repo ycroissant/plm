@@ -752,7 +752,7 @@ Changes since version 1.5-34
   * detect_lin_dep.plm added.
   * plm objects gained element 'aliased' (a named logical) to indicate any aliased coefficients that are 
     silently dropped during estimation by plm (cf. summary.lm objects).
-  * fix: vcovXX.plm (vcovG framework) now handles plm models with aliased coefficients (linear dependent columns
+  * fix: vcovXX.plm / vcovG framework now handle plm models with aliased coefficients (linear dependent columns
     in model matrix).
   * phtest: better support for between models in phtest;
             for method="aux", argument effect is now extracted from dots.

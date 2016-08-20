@@ -75,12 +75,12 @@ A special procedure for \code{pgmm} objects, proposed by Windmeijer
 \author{Giovanni Millo & Yves Croissant}
 
 \references{
-Arellano, M. (1987) Computing robust standard errors for within group estimators,
-\emph{Oxford Bulletin of Economics and Statistics}, \bold{49}, pp. 431--434.
+Arellano, M. (1987) Computing robust standard errors for within-group estimators,
+\emph{Oxford Bulletin of Economics and Statistics}, \bold{49(4)}, pp. 431--434.
 
 Cribari-Neto, F. (2004) Asymptotic inference under heteroskedasticity
 of unknown form. \emph{Computational Statistics & Data Analysis}
-\bold{45}, pp. 215--233.
+\bold{45(2)}, pp. 215--233.
 
 Greene, W. H. (2003) \emph{Econometric Analysis}, 5th ed., Prentice Hall/Pearson,
 Upper Saddle River, New Jersey.
@@ -90,16 +90,16 @@ Upper Saddle River, New Jersey.
 
 MacKinnon, J. G. and  White, H. (1985) Some heteroskedasticity-consistent
 covariance matrix estimators with improved finite sample properties.
-\emph{Journal of Econometrics} \bold{29}, pp. 305--325.
+\emph{Journal of Econometrics} \bold{29(3)}, pp. 305--325.
 
 Windmeijer, F. (2005) A finite sample correction for the variance of
 linear efficient two--step GMM estimators, \emph{Journal of
-  Econometrics}, \bold{126}, pp. 25--51.
+  Econometrics}, \bold{126(1)}, pp. 25--51.
 
 White, H. (1980) \emph{Asymptotic Theory for Econometricians}, Ch. 6, Academic Press, Orlando (FL).
 
 White, H. (1984) A heteroskedasticity-consistent covariance matrix and
-a direct test for heteroskedasticity. \emph{Econometrica} \bold{48}, pp. 817--838.
+a direct test for heteroskedasticity. \emph{Econometrica} \bold{48(4)}, pp. 817--838.
 
 Wooldridge, J. M. (2002) \emph{Econometric Analysis of Cross Section and
 Panel Data}, MIT Press, Cambridge (MA).

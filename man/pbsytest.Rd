@@ -39,9 +39,9 @@ convenience under this same interface.
 \author{Giovanni Millo}
 
 \references{
- Bera, A.K., Sosa-Escudero, W. and  Yoon, M. (2001), Tests for the error component model in the presence of local misspecification, \emph{Journal of Econometrics}, \bold{101}, pp. 1--23.
+ Bera, A.K., Sosa-Escudero, W. and  Yoon, M. (2001), Tests for the error component model in the presence of local misspecification, \emph{Journal of Econometrics}, \bold{101}(1), pp. 1--23.
 
- Baltagi, B. and Li, Q. (1991), A joint test for serial correlation and random individual effects, \emph{Statistics and Probability Letters}, \bold{11}, pp. 277--280.
+ Baltagi, B. and Li, Q. (1991), A joint test for serial correlation and random individual effects, \emph{Statistics and Probability Letters}, \bold{11}(3), pp. 277--280.
 }
 
 \seealso{

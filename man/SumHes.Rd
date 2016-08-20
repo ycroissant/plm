@@ -37,7 +37,7 @@ Online supplements to Hayashi (2000).
 \references{
 Hayashi, F. (2000) \emph{Econometrics}, Princeton University Press, chapter 5, pp. 358--363.
 
-Summers, R. and A. Heston (1991) \dQuote{The Penn World Table (mark 5): An expanded set of international comparisons, 1950--1988}, \emph{Quarterly Journal of Economics}, \bold{29}, pp. 229--256.
+Summers, R. and A. Heston (1991) \dQuote{The Penn World Table (Mark 5): An expanded set of international comparisons, 1950--1988}, \emph{Quarterly Journal of Economics}, \bold{106}(2), pp. 327-368.
 }
 
 \keyword{datasets}

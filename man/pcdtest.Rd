@@ -48,7 +48,7 @@ An object of class \code{"htest"}.
 }
 
 \references{
- Breusch, T.S. and A.R. Pagan (1980), The Lagrange multiplier test and its applications to model specification in econometrics, \emph{Review of Economic Studies}, 47, pp. 239--253.
+ Breusch, T.S. and A.R. Pagan (1980), The Lagrange multiplier test and its applications to model specification in econometrics, \emph{Review of Economic Studies}, \bold{47}(1), pp. 239--253.
 
  Pesaran, H. (2004), General Diagnostic Tests for Cross Section Dependence in Panels, \emph{CESifo} Working Paper 1229. 
 }

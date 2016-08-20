@@ -43,9 +43,9 @@ Online complements to Baltagi (2013):
  
  Baltagi, Badi H. (2013) \emph{Econometric Analysis of Panel Data}, 5th ed., John Wiley and Sons.
  
- Baltagi, B.H. and  D. Levin (1992) \dQuote{Cigarette taxation: raising revenues and reducing consumption}, \emph{Structural Changes and Economic Dynamics}, \bold{3}, 321--335.
+ Baltagi, B.H. and  D. Levin (1992) \dQuote{Cigarette taxation: raising revenues and reducing consumption}, \emph{Structural Changes and Economic Dynamics}, \bold{3}(2), pp. 321--335.
 
- Baltagi, B.H., J.M. Griffin and  W. Xiong (2000) \dQuote{To pool or not to pool: homogeneous versus heterogeneous estimators applied to cigarette demand}, \emph{Review of Economics and Statistics}, \bold{82}, 117--126.
+ Baltagi, B.H., J.M. Griffin and  W. Xiong (2000) \dQuote{To pool or not to pool: homogeneous versus heterogeneous estimators applied to cigarette demand}, \emph{Review of Economics and Statistics}, \bold{82}(1), pp. 117--126.
 }
 
 \keyword{datasets}

@@ -52,7 +52,7 @@ Baltagi, Badi H. (2013) \emph{Econometric Analysis of Panel Data}, 5th ed., John
 
 Cornwell, C. and P. Rupert (1988) \dQuote{Efficient estimation with
 panel data: an empirical comparison of instrumental variables
-estimators}, \emph{Journal of Applied Econometrics}, \bold{3}, pp. 149--155.
+estimators}, \emph{Journal of Applied Econometrics}, \bold{3}(2), pp. 149--155.
 }
 
 \examples{

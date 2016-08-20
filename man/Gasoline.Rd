@@ -41,7 +41,7 @@ Online complements to Baltagi (2013):
  
  Baltagi, Badi H. (2013) \emph{Econometric Analysis of Panel Data}, 5th ed., John Wiley and Sons.
 
- Baltagi, B.H.  and  J.M. Griffin (1983) \dQuote{Gasoline demand in the OECD: An application of pooling and testing procedures}, \emph{European Economic Review}, \bold{22}(2), 117--137.
+ Baltagi, B.H.  and  J.M. Griffin (1983) \dQuote{Gasoline demand in the OECD: An application of pooling and testing procedures}, \emph{European Economic Review}, \bold{22}(2), pp. 117--137.
 }
 
 \keyword{datasets}

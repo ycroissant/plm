@@ -49,17 +49,17 @@ the variables. It has \code{summary} and \code{print.summary} methods.
 \references{
 
   Amemiya, T. and MaCurdy, T.E. (1986) Instrumental--variable estimation
-  of an error components model, \emph{Econometrica}, \bold{54},
+  of an error components model, \emph{Econometrica}, \bold{54}(4),
   pp. 869--880.
 
   Baltagi, Badi H. (2013) \emph{Econometric Analysis of Panel Data},
   5th ed., John Wiley and Sons.
 
   Breusch, T.S, Mizon, G.E. and Schmidt, P. (1989) Efficient estimation
-  using panel data, \emph{Econometrica}, \bold{57}, pp. 695--700.
+  using panel data, \emph{Econometrica}, \bold{57}(3), pp. 695--700.
   
   Hausman, J.A. and Taylor W.E. (1981) Panel data and unobservable
-  individual effects, \emph{Econometrica}, \bold{49}, pp. 1377--1398.
+  individual effects, \emph{Econometrica}, \bold{49}(6), pp. 1377--1398.
 
 }
 

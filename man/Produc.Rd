@@ -47,9 +47,9 @@ Baltagi, Badi H. (2001) \emph{Econometric Analysis of Panel Data}, 2nd ed., John
   
 Baltagi, Badi H. (2013) \emph{Econometric Analysis of Panel Data}, 5th ed., John Wiley and Sons.
 
-Baltagi, B. H.  and  N.  Pinnoi (1995) \dQuote{Public capital stock and state productivity growth: further evidence}, \emph{Empirical Economics}, \bold{20}, 351--359.
+Baltagi, B. H.  and  N.  Pinnoi (1995) \dQuote{Public capital stock and state productivity growth: further evidence}, \emph{Empirical Economics}, \bold{20}(2), pp. 351--359.
 
-Munnell, A.H. (1990) \dQuote{Why has productivity growth declined? Productivity and public investment}, \emph{New England Economic Review}, 3--22.
+Munnell, A.H. (1990) \dQuote{Why has productivity growth declined? Productivity and public investment}, \emph{New England Economic Review}, pp. 3--22.
 }
 
 \keyword{datasets}

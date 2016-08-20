@@ -76,13 +76,12 @@ effects GLS, see ibid.) is estimated; if \code{model="fd"} a FDGLS
 \references{
 Kiefer, N. M. (1980) Estimation of Fixed Effects Models for Time Series
 of Cross-Sections with Arbitrary Intertemporal Covariance, \emph{Journal
-  of Econometrics}, \bold{14}, pp. 195--202. 
+  of Econometrics}, \bold{14}(2), pp. 195--202. 
 
 
 Im, K. S. and Ahn, S. C. and Schmidt, P. and Wooldridge, J. M. (1999)
 Efficient Estimation of Panel Data Models with Strictly Exogenous
-Explanatory Variables, \emph{Journal of Econometrics}, \bold{93},
-177-201.
+Explanatory Variables, \emph{Journal of Econometrics}, \bold{93}(1), pp. 177--201.
 
 Wooldridge, J. M. (2002) \emph{Econometric Analysis of Cross Section and Panel Data}, MIT Press.
 

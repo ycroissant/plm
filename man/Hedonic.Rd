@@ -53,7 +53,7 @@ Online complements to Baltagi (2013):
 
  Belsley, D.A.,  E. Kuh and  R. E. Welsch (1980): \emph{Regression Diagnostics: Identifying Influential Data and Sources of Collinearity}, John Wiley, New York.
 
- Harrison, D. and  D.L. Rubinfeld (1978): \dQuote{Hedonic housing prices and the demand for clean air}, \emph{Journal of Environmental Economics and Management}, \bold{5}, 81--102.
+ Harrison, D. and  D.L. Rubinfeld (1978): \dQuote{Hedonic housing prices and the demand for clean air}, \emph{Journal of Environmental Economics and Management}, \bold{5}(1), pp. 81--102.
 }
 
 \keyword{datasets}

@@ -55,13 +55,13 @@ The Hadri statistic is the cross-sectional average of the individual KPSS statis
 }
 
 \references{
-Hadri K. (2000). ``Testing for Unit Roots in Heterogeneous Panel Data'', \emph{The Econometrics Journal}, 3, pp. 148--161.
+Hadri K. (2000). ``Testing for Stationarity in Heterogeneous Panel Data'', \emph{The Econometrics Journal}, \bold{3}(2), pp. 148--161.
 
-Im K.S., Pesaran M.H. and Shin Y. (2003). ``Testing for Unit Roots in Heterogeneous Panels'', \emph{Journal of Econometrics}, 115(1), pp. 53--74.
+Im K.S., Pesaran M.H. and Shin Y. (2003). ``Testing for Unit Roots in Heterogeneous Panels'', \emph{Journal of Econometrics}, \bold{115}(1), pp. 53--74.
 
-Levin A., Lin C.F. and Chu C.S.J. (2002). ``Unit Root Test in Panel Data: Asymptotic and Finite Sample Properties'', \emph{Journal of Econometrics}, 108, pp. 1--24.
+Levin A., Lin C.F. and Chu C.S.J. (2002). ``Unit Root Tests in Panel Data: Asymptotic and Finite Sample Properties'', \emph{Journal of Econometrics}, \bold{108}(1), pp. 1--24.
 
-Maddala G.S. and Wu S. (1999). ``A Comparative Study of Unit Root Tests with Panel Data and a New Simple Test'', \emph{Oxford Bulletin of Economics and Statistics}, 61, Supplement 1, pp. 631--652.
+Maddala G.S. and Wu S. (1999). ``A Comparative Study of Unit Root Tests with Panel Data and a New Simple Test'', \emph{Oxford Bulletin of Economics and Statistics}, \bold{61}, Supplement 1, pp. 631--652.
 }
 
 \examples{

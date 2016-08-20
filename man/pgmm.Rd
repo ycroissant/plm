@@ -122,7 +122,7 @@ Using DPD98 for GAUSS: A Guide for Users.
 
 Blundell, R. and Bond, S. (1998) Initial Conditions and Moment
 Restrictions in Dynamic Panel Data Models, \emph{Journal of
-Econometrics}, vol. \bold{87}, pp. 115--143.
+Econometrics}, vol. \bold{87}(1), pp. 115--143.
 
 Doornik, J., Arellano, M. and Bond, S. (2006) Panel Data Estimation
 using DPD for Ox. \url{http://www.doornik.com/download/oxmetrics7/Ox_Packages/dpd.pdf}

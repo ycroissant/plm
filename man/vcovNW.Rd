@@ -53,11 +53,11 @@ supply a function (which is the safest) or a matrix (see Zeileis (2004), 4.1-2 a
 \references{
  Cribari-Neto, F. (2004) Asymptotic inference under heteroskedasticity
  of unknown form. \emph{Computational Statistics & Data Analysis}
- \bold{45}, pp. 215--233.
+ \bold{45(2)}, pp. 215--233.
  
  MacKinnon, J. G. and  White, H. (1985) Some heteroskedasticity-consistent
  covariance matrix estimators with improved finite sample properties.
- \emph{Journal of Econometrics} \bold{29}, pp. 305--325.
+ \emph{Journal of Econometrics} \bold{29(3)}, pp. 305--325.
 
  Newey, W.K. & West, K.D. (1986) A simple, positive semi-definite, 
  heteroskedasticity and autocorrelation consistent covariance matrix.
