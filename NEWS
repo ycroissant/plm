@@ -757,4 +757,8 @@ Changes since version 1.5-34
   * phtest: better support for between models in phtest;
             for method="aux", argument effect is now extracted from dots.
 
+Changes since version 1.5-35
+
+  * pbltest.plm: plm interface now respects the 'alternative' argument.
+
   

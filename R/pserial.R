@@ -580,7 +580,7 @@ pbltest.plm <- function(x, alternative = c("twosided", "onesided"), ...) {
   if (describe(x, "model") != "random") stop("Test is only for random effects models.")
   
   # call pbltest.formula in the right way
-  pbltest.formula(formula(x$formula), data=cbind(index(x), x$model), index=names(index(x)), ...)
+  pbltest.formula(formula(x$formula), data=cbind(index(x), x$model), index=names(index(x)), alternative = alternative, ...)
 }
 
 pbltest <- function (x, ...) 
