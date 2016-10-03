@@ -37,7 +37,7 @@ An object of class \code{"htest"}.
 The Hausman test (sometimes also called Durbin--Wu--Hausman test) is
 based on the difference of the vectors of coefficients of two different
 models. The \code{panelmodel} method computes the original version of
-the test based on a quadratic form. The \code{formula} method, if
+the test based on a quadratic form (Hausman (1978)). The \code{formula} method, if
 \code{method="chisq"} (default), computes
 the original version of the test based on a quadratic form;
 if \code{method="aux"} then the auxiliary-regression-based version in
@@ -58,7 +58,7 @@ Sec. 4.3.7), but those are unsupported by \code{phtest}.)
 Hausman, J.A. (1978), Specification tests in econometrics,
 \emph{Econometrica}, \bold{46}(6), pp. 1251--1271.
 
-Hausman, J.A./Taylor, W.E. (1981), Panel data and unobservable individual effets, 
+Hausman, J.A./Taylor, W.E. (1981), Panel data and unobservable individual effects, 
 \emph{Econometrica}, \bold{49}(6), pp. 1377--1398.
 
 Kang, Suk (1985), A note on the equivalence of specification tests in the 
