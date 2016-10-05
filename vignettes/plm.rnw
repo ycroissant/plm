@@ -831,7 +831,7 @@ with some limitations:
   the one proposed by \citet{SWAM:AROR:72}
 \end{itemize}
 
-The following example is using data used by \citep{HARR:RUBI} to
+The following example is using data used by \citep{HARR:RUBI:78} to
 estimate an hedonic housing prices function. It is reproduced in
 \citep{BALT:01}, p.174.
 
