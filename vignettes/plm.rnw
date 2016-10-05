@@ -1111,7 +1111,7 @@ downwards.
 In a pooled time series context (\code{effect="time"}),
 symmetrically, this estimator is able to account for arbitrary
 cross-sectional correlation, provided that the latter is
-time-invariant  \citep[see][13.9.1--2, p.321--2]{GREE:03}. In this case
+time-invariant  \citep[see][13.9.1--2, pp.321--2]{GREE:03}. In this case
 serial correlation has to be assumed away and the estimator is
 consistent with respect to the time dimension, keeping $n$ fixed.
 
@@ -1128,7 +1128,7 @@ zz <- pggls(log(emp)~log(wage)+log(capital),data=EmplUK,model="pooling")
 summary(zz)
 @ 
 
-The fixed effects \code{pggls} \citep[see][p. 276]{WOOL:02} is based
+The fixed effects \code{pggls} \citep[see][p.276]{WOOL:02} is based
 on the estimation of a within model in the first step; the rest follows as
 above. It is estimated by:
 
@@ -1470,7 +1470,7 @@ Breusch-Godfrey and Durbin-Watson tests from package \code{lmtest}:
 <<generalAR>>=
 ## this can be taken away as soon as attached to plm.rnw
 grun.fe <- plm(inv ~ value + capital, data = Grunfeld, model = "within")
-pbgtest(grun.fe, order=2)
+pbgtest(grun.fe, order = 2)
 @
 
 The tests share the features of their \textsc{ols} counterparts, in
