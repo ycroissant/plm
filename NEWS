@@ -760,5 +760,6 @@ Changes since version 1.5-34
 Changes since version 1.5-35
 
   * pbltest.plm: plm interface now respects the 'alternative' argument.
+  * summary.plm: summary.plm objects gained new component 'df' to mimic summary.lm objects more closely.
 
   

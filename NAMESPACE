@@ -8,7 +8,7 @@ export(plm, pvcm, pgmm, pggls, pht, pcce, pmg, plmtest, phtest, pFtest,
 
 
 
-import("Formula")
+import("Formula") # import whole package
 importFrom("stats", "lag")
 importFrom("stats", "nobs")
 importFrom("stats", "alias")
@@ -33,7 +33,7 @@ importFrom("stats", "approx", "as.formula", "coef", "coefficients",
            "pnorm", "printCoefmat", "pt", "resid", "residuals",
            "terms", "update", "var", "vcov")
 
-#pFormula
+# pFormula
 S3method("model.frame", "pFormula")
 S3method("model.matrix", "pFormula")
 S3method("model.matrix", "plm")
@@ -89,41 +89,41 @@ S3method("df.residual", "panelmodel")
 S3method("vcov", "panelmodel")
 S3method("update", "panelmodel")
 S3method("has.intercept", "panelmodel")
-#plm
+# plm
 S3method("summary", "plm")
 S3method("print", "summary.plm")
 S3method("predict", "plm")
 S3method("has.intercept", "plm")
 S3method("plot", "plm")
-#plm.list
+# plm.list
 S3method("summary", "plm.list")
 S3method("print", "summary.plm.list")
-#pgmm
+# pgmm
 S3method("coef", "pgmm")
 S3method("summary", "pgmm")
 S3method("print", "summary.pgmm")
-#pvcm
+# pvcm
 S3method("summary", "pvcm")
 S3method("print", "summary.pvcm")
-#pggls
+# pggls
 S3method("summary", "pggls")
 S3method("print", "summary.pggls")
 S3method("residuals", "pggls")
-#pcce
+# pcce
 S3method("summary", "pcce")
 S3method("print", "summary.pcce")
 S3method("residuals", "pcce")
-#pmg
+# pmg
 S3method("summary", "pmg")
 S3method("print", "summary.pmg")
 S3method("residuals", "pmg")
-#pht
+# pht
 S3method("summary", "pht")
 S3method("print", "summary.pht")
-#piest
+# piest
 S3method("summary", "piest")
 S3method("print", "summary.piest")
-#fixef
+# fixef
 S3method("fixef", "plm")
 S3method("fixef", "pggls")
 S3method("print", "fixef")
@@ -165,7 +165,6 @@ S3method("as.matrix", "pseries")
 S3method("ercomp", "formula")
 S3method("ercomp", "plm")
 S3method("print", "ercomp")
-#### Tests
 # pooltest
 S3method("pooltest", "plm")
 S3method("pooltest", "formula")

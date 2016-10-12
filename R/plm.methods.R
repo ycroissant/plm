@@ -24,11 +24,18 @@ summary.plm <- function(object, .vcov = NULL, ...){
                                  "Std. Error" = std.err,
                                  "t-value"    = z,
                                  "Pr(>|t|)"   = p)
+    
+    ## add some info to summary.plm object 
+    # robust vcov (next to "normal" vcov)
     if (!is.null(.vcov)) {
-      # put the robust vcov in summary.plm object (next to "normal" vcov)
       object$rvcov <- rvcov
       attr(object$rvcov, which = "rvcov.name") <- paste0(deparse(substitute(.vcov)))
     }
+    
+    # mimics summary.lm's 'df' component
+    # 1st entry: no. coefs (w/o aliased coefs); 2nd: residual df; 3rd no. coefs /w aliased coefs
+    object$df <- c(length(b), object$df.residual, length(object$aliased)) # NB: do not use length(object$coefficients) here
+    
     class(object) <- c("summary.plm", "plm", "panelmodel")
   object
 }

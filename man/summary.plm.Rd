@@ -42,9 +42,11 @@ The following elements are new or changed relative to the elements of a plm obje
 \item{vcov}{the "regular" variance--covariance matrix of the coefficients (class "matrix"),}
 \item{rvcov}{only present if argument \code{.vcov} was set to non-\code{NULL}: the furnished 
             variance--covariance matrix of the coefficients (class "matrix"),}
-\item{r.squared}{a named numeric containing the R-squared ("rsq") and the adjusted R-squared ("adjrsq") of the model.}
+\item{r.squared}{a named numeric containing the R-squared ("rsq") and the adjusted R-squared ("adjrsq") of the model,}
+\item{df}{an integer vector with 3 components, (p, n-p, p*), where p is the number of estimated (non-aliased) 
+          coefficients of the model, n-p are the residual degrees of freedom (n being number of observations), and 
+          p* is the total number of coefficients (incl. any aliased ones).}
 }
-
 
 \seealso{
 \code{\link[plm]{plm}} for estimation of various models; 
