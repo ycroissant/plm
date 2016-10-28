@@ -9,9 +9,9 @@ The summary method for plm objects generates some more information about estimat
 }
 
 \usage{
-\method{summary}{plm}(object, .vcov = NULL, ...)
+\method{summary}{plm}(object, .vcov = NULL, \dots)
 \method{print}{summary.plm}(x, digits = max(3, getOption("digits") - 2),
-    width = getOption("width"), subset = NULL, ...)
+    width = getOption("width"), subset = NULL, \dots)
 }
 
 \arguments{

@@ -16,15 +16,15 @@ interactive mode during model building phase.
 }
 
 \usage{
-detect_lin_dep(object, ...)
-\method{detect_lin_dep}{matrix}(object, suppressPrint = FALSE, ...)
-\method{detect_lin_dep}{data.frame}(object, suppressPrint = FALSE, ...)
-\method{detect_lin_dep}{plm}(object, suppressPrint = FALSE, ...)
+detect_lin_dep(object, \dots)
+\method{detect_lin_dep}{matrix}(object, suppressPrint = FALSE, \dots)
+\method{detect_lin_dep}{data.frame}(object, suppressPrint = FALSE, \dots)
+\method{detect_lin_dep}{plm}(object, suppressPrint = FALSE, \dots)
 
-\method{alias}{plm}(object, ...)
+\method{alias}{plm}(object, \dots)
 \method{alias}{pFormula}(object, data, model = c("pooling", "within", "Between", "between",
                                "mean", "random", "fd"),
-                    effect = c("individual", "time", "twoways"), ...)
+                    effect = c("individual", "time", "twoways"), \dots)
 }
 
 

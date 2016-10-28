@@ -13,7 +13,7 @@
 
 \usage{
 
-\S3method{model.frame}{pFormula}(formula, data, ...,
+\S3method{model.frame}{pFormula}(formula, data, \dots,
                                  lhs = NULL, rhs = NULL)
 
 
@@ -22,9 +22,9 @@
                                             "between","mean","random","fd"), 
                                   effect = c("individual","time","twoways"),
                                   rhs = 1,
-                                  theta = NULL, ...)
+                                  theta = NULL, \dots)
                                   
-\S3method{model.matrix}{plm}(object, ...)
+\S3method{model.matrix}{plm}(object, \dots)
 }
 
 \arguments{

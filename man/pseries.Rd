@@ -19,15 +19,15 @@ A class for panel series for which several useful computations and data transfor
 }
 
 \usage{
-between(x, ...)
-Between(x, ...)
-Within(x, ...)
-\method{between}{pseries}(x, effect = c("individual", "time"), ...)
-\method{Between}{pseries}(x, effect = c("individual", "time"), ...)
-\method{Within}{pseries}(x, effect = c("individual", "time"), ...)
-\method{summary}{pseries}(object, ...)
-\method{print}{summary.pseries}(x, ...)
-\method{as.matrix}{pseries}(x, idbyrow = TRUE, ...)
+between(x, \dots)
+Between(x, \dots)
+Within(x, \dots)
+\method{between}{pseries}(x, effect = c("individual", "time"), \dots)
+\method{Between}{pseries}(x, effect = c("individual", "time"), \dots)
+\method{Within}{pseries}(x, effect = c("individual", "time"), \dots)
+\method{summary}{pseries}(object, \dots)
+\method{print}{summary.pseries}(x, \dots)
+\method{as.matrix}{pseries}(x, idbyrow = TRUE, \dots)
 }
 
 \arguments{

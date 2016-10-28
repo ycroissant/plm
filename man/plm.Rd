@@ -16,11 +16,11 @@ plm(formula, data, subset, na.action, effect = c("individual", "time", "twoways"
     random.method = c("swar", "walhus", "amemiya", "nerlove", "kinla"),
     random.dfcor = NULL,
     inst.method = c("bvk", "baltagi", "am", "bmc"), restrict.matrix = NULL,
-    restrict.rhs = NULL, index = NULL, ...)
+    restrict.rhs = NULL, index = NULL, \dots)
 \method{print}{panelmodel}(x,digits=max(3, getOption("digits") - 2), 
-  width = getOption("width"),...)
+  width = getOption("width"), \dots)
 \method{plot}{plm}(x, dx = 0.2, N = NULL, seed = 1,
-    within = TRUE, pooling = TRUE, between = FALSE, random = FALSE, ...)
+    within = TRUE, pooling = TRUE, between = FALSE, random = FALSE, \dots)
 }
 
 \arguments{

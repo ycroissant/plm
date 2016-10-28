@@ -11,7 +11,7 @@
 \method{vcovBK}{plm}(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
                               cluster = c("group", "time"),
                               diagonal = FALSE,
-                              ...)
+                              \dots)
 }
 
 \arguments{

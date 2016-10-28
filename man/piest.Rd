@@ -9,9 +9,9 @@
 }
 
 \usage{
-piest(formula, data, subset, na.action, index = NULL, robust = TRUE, ...)
-\method{summary}{piest}(object, ...)
-\method{print}{summary.piest}(x, ...)
+piest(formula, data, subset, na.action, index = NULL, robust = TRUE, \dots)
+\method{summary}{piest}(object, \dots)
+\method{print}{summary.piest}(x, \dots)
 
 }
 

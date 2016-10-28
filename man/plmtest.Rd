@@ -10,10 +10,10 @@ Test of individual and/or time effects for panel models.
 }
 
 \usage{
-plmtest(x, ...)
+plmtest(x, \dots)
 \method{plmtest}{plm}(x, effect = c("individual", "time", "twoways"),
-           type = c("honda", "bp", "ghm", "kw"), ...)
-\method{plmtest}{formula}(x, data, ..., effect = c("individual", "time", "twoways"),
+           type = c("honda", "bp", "ghm", "kw"), \dots)
+\method{plmtest}{formula}(x, data, \dots, effect = c("individual", "time", "twoways"),
                       type = c("honda", "bp", "ghm", "kw"))
 }
 
@@ -29,7 +29,7 @@ plmtest(x, ...)
   \item \code{"kw"} for King/Wu (1997), or
   \item \code{"ghm"} for Gourieroux/Holly/Monfort (1982);
   } For unbalanced panel data sets, the respective unbalanced version of the tests are computed,}
- \item{...}{further arguments passed to \code{plmtest}.}
+ \item{\dots}{further arguments passed to \code{plmtest}.}
 }
 
 \details{

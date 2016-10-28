@@ -9,9 +9,9 @@ Test of individual and/or time effects based on the comparison of the \code{with
 }
 
 \usage{
-pFtest(x, ...)
-\method{pFtest}{plm}(x, z, ...)
-\method{pFtest}{formula}(x, data, ...)
+pFtest(x, \dots)
+\method{pFtest}{plm}(x, z, \dots)
+\method{pFtest}{formula}(x, data, \dots)
 }
 
 \arguments{

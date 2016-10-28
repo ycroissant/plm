@@ -11,10 +11,10 @@ Estimators for random and fixed effects models with variable coefficients.
 
 \usage{
 pvcm(formula, data, subset, na.action, effect = c("individual","time"),
-     model = c("within","random"), index = NULL, ...)
-\method{summary}{pvcm}(object, ...)
+     model = c("within","random"), index = NULL, \dots)
+\method{summary}{pvcm}(object, \dots)
 \method{print}{summary.pvcm}(x, digits = max(3, getOption("digits") -2),
-    width = getOption("width"), ...)
+    width = getOption("width"), \dots)
 }
 
 \arguments{
@@ -29,7 +29,7 @@ pvcm(formula, data, subset, na.action, effect = c("individual","time"),
   \item{index}{the indexes, see \code{\link{pdata.frame}},}
   \item{digits}{digits,}
   \item{width}{the maximum length of the lines in the print output,}
-  \item{...}{further arguments.}
+  \item{\dots}{further arguments.}
 }
 
 \details{

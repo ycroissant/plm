@@ -10,9 +10,9 @@
 per individual) and, optionally, also balanced}
 
 \usage{
-\method{make.pconsecutive}{pdata.frame}(x, balanced = FALSE, ...)
-\method{make.pconsecutive}{pseries}(x, balanced = FALSE, ...)
-\method{make.pconsecutive}{data.frame}(x, balanced = FALSE, index = NULL, ...)
+\method{make.pconsecutive}{pdata.frame}(x, balanced = FALSE, \dots)
+\method{make.pconsecutive}{pseries}(x, balanced = FALSE, \dots)
+\method{make.pconsecutive}{data.frame}(x, balanced = FALSE, index = NULL, \dots)
 }
 
 \arguments{
@@ -33,7 +33,7 @@ time--consecutive based on the index variables. The returned data is sorted as a
  (p)data.frame and pseries objects are made consecutive, meaning their time periods are made consecutive per individual.
  For consecutiveness, the time dimension is interpreted to be numeric, and the data are extended to a regularly spaced 
  sequence with distance 1 between the time periods for each individual (for each individual the time dimension
- become a sequence t, t+1, t+2, ... where t is an integer). Non--index variables are filled with \code{NA} for the inserted
+ become a sequence t, t+1, t+2, \ldots where t is an integer). Non--index variables are filled with \code{NA} for the inserted
  elements (rows for (p)data.frames, vector elements for pseries).
  
  With argument \code{balanced = TRUE}, additionally to be made consecutive, the data also can be made a balanced panel/pseries.

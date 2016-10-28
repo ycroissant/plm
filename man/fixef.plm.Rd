@@ -12,12 +12,12 @@
 
 \usage{
 \method{fixef}{plm}(object, effect = NULL,
-                      type = c("level", "dfirst", "dmean"), .vcov = NULL, ...)
+                      type = c("level", "dfirst", "dmean"), .vcov = NULL, \dots)
 \method{print}{fixef}(x, digits = max(3, getOption("digits") - 2),
-width = getOption("width"),...)
-\method{summary}{fixef}(object, ...)
+width = getOption("width"), \dots)
+\method{summary}{fixef}(object, \dots)
 \method{print}{summary.fixef}(x, digits = max(3, getOption("digits") -
-2), width = getOption("width"),...)
+2), width = getOption("width"), \dots)
 }
 
 \arguments{

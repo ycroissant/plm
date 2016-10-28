@@ -10,9 +10,9 @@
 }
 
 \usage{
-pbsytest(x,...)
-\method{pbsytest}{panelmodel}(x, test = c("ar","re","j"), ...)
-\method{pbsytest}{formula}(x, data, ..., test = c("ar","re","j"))
+pbsytest(x, \dots)
+\method{pbsytest}{panelmodel}(x, test = c("ar","re","j"), \dots)
+\method{pbsytest}{formula}(x, data, \dots, test = c("ar","re","j"))
 }
 
 \arguments{

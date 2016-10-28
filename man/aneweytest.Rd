@@ -9,7 +9,7 @@
 }
 
 \usage{
-aneweytest(formula, data, subset, na.action, index = NULL, ...)
+aneweytest(formula, data, subset, na.action, index = NULL, \dots)
 }
 
 \arguments{

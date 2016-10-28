@@ -9,9 +9,9 @@
 \description{This function makes the data balanced, i.e. each individual has the same time periods}
 
 \usage{
-\method{make.pbalanced}{pdata.frame}(x, ...)
-\method{make.pbalanced}{pseries}(x, ...)
-\method{make.pbalanced}{data.frame}(x, index = NULL, ...)
+\method{make.pbalanced}{pdata.frame}(x, \dots)
+\method{make.pbalanced}{pseries}(x, \dots)
+\method{make.pbalanced}{data.frame}(x, index = NULL, \dots)
 }
 
 \arguments{

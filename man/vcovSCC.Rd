@@ -15,7 +15,7 @@
                       maxlag=NULL,
                       inner=c("cluster","white","diagavg"),
                       wj=function(j, maxlag) 1-j/(maxlag+1),
-                      ...)
+                      \dots)
 }
 
 \arguments{
@@ -28,7 +28,7 @@
   sandwich: \code{"cluster"} for SCC, \code{"white"} for Newey-West,
   (\code{"diagavg"} for compatibility reasons)}
   \item{wj}{weighting function to be applied to lagged terms,}
-  \item{...}{further arguments}.
+  \item{\dots}{further arguments}.
 }
 
 \value{

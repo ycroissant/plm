@@ -13,9 +13,9 @@ lag, lead, and diff functions for class pseries.
 }
 
 \usage{
-\method{lag}{pseries}(x, k = 1, ...)
-\method{lead}{pseries}(x, k = 1, ...)
-\method{diff}{pseries}(x, lag = 1, ...)
+\method{lag}{pseries}(x, k = 1, \dots)
+\method{lead}{pseries}(x, k = 1, \dots)
+\method{diff}{pseries}(x, lag = 1, \dots)
 }
 
 \arguments{
@@ -24,7 +24,7 @@ lag, lead, and diff functions for class pseries.
           For the \code{lag} method, a positive (negative) \code{k} gives lagged (leading) values.
           For the \code{lead} method, a positive (negative) \code{k} gives leading (lagged) values,
           thus, \code{lag(x, k = -1)} yields the same as \code{lead(x, k = 1)}.
-          If \code{k} is an integer vector with length > 1 (\code{k = c(k1, k2, ...)}) a \code{matrix} with multiple lagged \code{pseries} is returned,}
+          If \code{k} is an integer vector with length > 1 (\code{k = c(k1, k2, \dots)}) a \code{matrix} with multiple lagged \code{pseries} is returned,}
  \item{lag}{the number of lags for the \code{diff} method (only non--negative values for parameter \code{lag} are allowed in \code{diff}),}
  \item{\dots}{further arguments.}
 }

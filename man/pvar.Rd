@@ -11,11 +11,11 @@
 varies cross-sectionally and over time.}
 
 \usage{
-pvar(x, ...)
-\method{pvar}{data.frame}(x, index = NULL, ...)
-\method{pvar}{pdata.frame}(x, ...)
-\method{pvar}{matrix}(x, index = NULL, ...)
-\method{print}{pvar}(x, ...)
+pvar(x, \dots)
+\method{pvar}{data.frame}(x, index = NULL, \dots)
+\method{pvar}{pdata.frame}(x, \dots)
+\method{pvar}{matrix}(x, index = NULL, \dots)
+\method{print}{pvar}(x, \dots)
 }
 
 \arguments{

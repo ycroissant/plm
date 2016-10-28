@@ -13,7 +13,7 @@
 
 \usage{
 pFormula(object)
-\S3method{as.Formula}{pFormula}(x, ...)
+\S3method{as.Formula}{pFormula}(x, \dots)
 
 }
 

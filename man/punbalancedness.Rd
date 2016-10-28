@@ -10,10 +10,10 @@
 as defined in Ahrens/Pincus (1981).}
 
 \usage{
-punbalancedness(x,...)
-\method{punbalancedness}{panelmodel}(x, ...)
-\method{punbalancedness}{data.frame}(x, index = NULL, ...)
-\method{punbalancedness}{pdata.frame}(x, ...)
+punbalancedness(x, \dots)
+\method{punbalancedness}{panelmodel}(x, \dots)
+\method{punbalancedness}{data.frame}(x, index = NULL, \dots)
+\method{punbalancedness}{pdata.frame}(x, \dots)
 }
 
 \arguments{

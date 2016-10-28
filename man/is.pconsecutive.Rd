@@ -12,11 +12,11 @@
 are consecutive (no "gaps" in time dimension per individual)}
 
 \usage{
-\method{is.pconsecutive}{pdata.frame}(x, na.rm.tindex = FALSE, ...)
-\method{is.pconsecutive}{panelmodel}(x, na.rm.tindex = FALSE, ...)
-\method{is.pconsecutive}{pseries}(x, na.rm.tindex = FALSE, ...)
-\method{is.pconsecutive}{data.frame}(x, index = NULL, na.rm.tindex = FALSE, ...)
-\method{is.pconsecutive}{default}(x, id, time, na.rm.tindex = FALSE, ...)
+\method{is.pconsecutive}{pdata.frame}(x, na.rm.tindex = FALSE, \dots)
+\method{is.pconsecutive}{panelmodel}(x, na.rm.tindex = FALSE, \dots)
+\method{is.pconsecutive}{pseries}(x, na.rm.tindex = FALSE, \dots)
+\method{is.pconsecutive}{data.frame}(x, index = NULL, na.rm.tindex = FALSE, \dots)
+\method{is.pconsecutive}{default}(x, id, time, na.rm.tindex = FALSE, \dots)
 }
 
 \arguments{
@@ -46,7 +46,7 @@ see also argument \code{na.rm.tindex} to remove those.}
  (p)data.frame, pseries and estimated panelmodel objects can be tested if their time periods are consecutive per individual.
  For evaluation of consecutiveness, the time dimension is interpreted to be numeric, and the data are tested for being a 
  regularly spaced sequence with distance 1 between the time periods for each individual (for each individual the time dimension
- can be interpreted as sequence t, t+1, t+2, ... where t is an integer). As such, the "numerical content" of the time index
+ can be interpreted as sequence t, t+1, t+2, \ldots where t is an integer). As such, the "numerical content" of the time index
  variable is considered for consecutiveness, not the "physical position" of the various observations for an individuals in
  the (p)data.frame/pseries (it is not about "neighbouring" rows).
  

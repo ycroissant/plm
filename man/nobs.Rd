@@ -8,7 +8,7 @@
 \description{This function extracts the total number of 'observations' from a fitted panel model.}
 
 \usage{
-\method{nobs}{panelmodel}(object, ...)
+\method{nobs}{panelmodel}(object, \dots)
 }
 
 \arguments{
@@ -25,7 +25,7 @@
   the number of observations actually used by the estimation procedure. It is not necessarily the number
   of observations of the model frame (number of rows in the model frame), because sometimes the model frame
   is further reduced by the estimation procedure. This is e.g. the case for first--difference models 
-  estimated by \code{plm(..., model = "fd")} where the model frame does not yet contain the differences (see
+  estimated by \code{plm(\dots, model = "fd")} where the model frame does not yet contain the differences (see
   also \bold{Examples}).
 }
 

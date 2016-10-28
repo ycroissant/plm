@@ -10,9 +10,9 @@ A Chow test for the poolability of the data.
 }
 
 \usage{
-pooltest(x, ...)
-\method{pooltest}{plm}(x, z, ...)
-\method{pooltest}{formula}(x, data, ...)
+pooltest(x, \dots)
+\method{pooltest}{plm}(x, z, \dots)
+\method{pooltest}{formula}(x, data, \dots)
 }
 
 \arguments{

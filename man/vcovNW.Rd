@@ -12,7 +12,7 @@
 \method{vcovNW}{plm}(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
                       maxlag=NULL,
                       wj=function(j, maxlag) 1-j/(maxlag+1),
-                      ...)
+                      \dots)
 }
 
 \arguments{
@@ -21,7 +21,7 @@
   \item{maxlag}{either \code{NULL} or a positive integer specifying the
   maximum lag order before truncation}
   \item{wj}{weighting function to be applied to lagged terms,}
-  \item{...}{further arguments}.
+  \item{\dots}{further arguments}.
 }
 
 \value{

@@ -10,9 +10,9 @@ Semi-parametric test for the presence of (individual or time) unobserved effects
 }
 
 \usage{
-pwtest(x,...)
-\method{pwtest}{formula}(x, data, effect = c("individual", "time"), ...)
-\method{pwtest}{panelmodel}(x, effect = c("individual", "time"), ...)
+pwtest(x, \dots)
+\method{pwtest}{formula}(x, data, effect = c("individual", "time"), \dots)
+\method{pwtest}{panelmodel}(x, effect = c("individual", "time"), \dots)
 }
 
 \arguments{

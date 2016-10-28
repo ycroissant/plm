@@ -11,13 +11,13 @@
   }
 \usage{
 \method{vcovDC}{plm}(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
-                      ...)
+                      \dots)
 }
 
 \arguments{
   \item{x}{an object of class \code{"plm"} or \code{"pcce"}}
   \item{type}{one of \code{"HC0"}, \code{"sss"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"}, \code{"HC4"},}
-  \item{...}{further arguments}.
+  \item{\dots}{further arguments}.
 }
 
 \value{

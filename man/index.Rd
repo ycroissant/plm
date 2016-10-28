@@ -12,10 +12,10 @@
 }
 
 \usage{
-\method{index}{pindex}(x, which = NULL, ...)
-\method{index}{pdata.frame}(x, which = NULL, ...)
-\method{index}{pseries}(x, which = NULL, ...)
-\method{index}{panelmodel}(x, which = NULL, ...)
+\method{index}{pindex}(x, which = NULL, \dots)
+\method{index}{pdata.frame}(x, which = NULL, \dots)
+\method{index}{pseries}(x, which = NULL, \dots)
+\method{index}{panelmodel}(x, which = NULL, \dots)
 }
 
 \arguments{

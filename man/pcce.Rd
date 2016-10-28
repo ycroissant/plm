@@ -13,10 +13,10 @@ common factors (balanced or unbalanced)
 \usage{
 pcce(formula, data, subset, na.action,
      model=c("mg", "p"),
-     index = NULL, trend = FALSE, ...)
-\method{summary}{pcce}(object, ...)
+     index = NULL, trend = FALSE, \dots)
+\method{summary}{pcce}(object, \dots)
 \method{print}{summary.pcce}(x,digits = max(3, getOption("digits") -
-2), width = getOption("width"),...)
+2), width = getOption("width"), \dots)
 }
 
 \arguments{

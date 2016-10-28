@@ -7,8 +7,8 @@
 \description{This function gives an overall intercept for within models and its accompanying standard error}
 
 \usage{
-within_intercept(object, ...)
-\method{within_intercept}{plm}(object, .vcov = NULL, ...)
+within_intercept(object, \dots)
+\method{within_intercept}{plm}(object, .vcov = NULL, \dots)
 }
 
 \arguments{

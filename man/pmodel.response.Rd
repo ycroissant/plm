@@ -12,20 +12,20 @@ response of several objects.
 }
 
 \usage{
-pmodel.response(object, ...)
+pmodel.response(object, \dots)
 \method{pmodel.response}{data.frame}(object,
                                      model = c("pooling","within","Between",
                                                "between","mean","random","fd"),
                                      effect = c("individual","time","twoways"),
                                      lhs = NULL,
-                                     theta = NULL, ...)
+                                     theta = NULL, \dots)
 \method{pmodel.response}{pFormula}(object, data,
                                    model = c("pooling","within","Between",
                                              "between","mean","random","fd"),
                                    effect = c("individual","time","twoways"),
                                    lhs = NULL,
-                                   theta = NULL, ...)
-\method{pmodel.response}{plm}(object, ...)
+                                   theta = NULL, \dots)
+\method{pmodel.response}{plm}(object, \dots)
 }
 
 \arguments{

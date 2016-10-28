@@ -12,10 +12,10 @@
   observations in the panel and whether it is balanced or not.}
 
 \usage{
-pdim(x,...)
-\method{pdim}{data.frame}(x, index = NULL, ...)
-\method{pdim}{panelmodel}(x, ...)
-\method{pdim}{pdata.frame}(x, ...)
+pdim(x, \dots)
+\method{pdim}{data.frame}(x, index = NULL, \dots)
+\method{pdim}{panelmodel}(x, \dots)
+\method{pdim}{pdata.frame}(x, \dots)
 }
 
 \arguments{

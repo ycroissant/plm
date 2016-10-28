@@ -9,11 +9,11 @@ Specification test for panel models.
 }
 
 \usage{
-phtest(x, ...)
-\method{phtest}{panelmodel}(x, x2, ...)
+phtest(x, \dots)
+\method{phtest}{panelmodel}(x, x2, \dots)
 \method{phtest}{formula}(x, data, model = c("within", "random"),
                 method = c("chisq", "aux"),
-                index = NULL, vcov = NULL, ...)
+                index = NULL, vcov = NULL, \dots)
 }
 
 \arguments{

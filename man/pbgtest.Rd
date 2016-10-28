@@ -9,10 +9,10 @@
 }
 
 \usage{
-pbgtest(x,...)
-\method{pbgtest}{panelmodel}(x, order = NULL, type = c("Chisq", "F"), ...)
+pbgtest(x, \dots)
+\method{pbgtest}{panelmodel}(x, order = NULL, type = c("Chisq", "F"), \dots)
 \method{pbgtest}{formula}(x, order = NULL, type = c("Chisq", "F"),
-           data, model=c("pooling", "random", "within"), ...)
+           data, model=c("pooling", "random", "within"), \dots)
 }
 
 \arguments{

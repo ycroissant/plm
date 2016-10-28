@@ -10,9 +10,9 @@ Test of serial correlation for (the idiosyncratic component of) the errors in pa
 }
 
 \usage{
-pdwtest(x, ...)
-\method{pdwtest}{panelmodel}(x, ...)
-\method{pdwtest}{formula}(x, data, ...)
+pdwtest(x, \dots)
+\method{pdwtest}{panelmodel}(x, \dots)
+\method{pdwtest}{formula}(x, data, \dots)
 }
 
 \arguments{

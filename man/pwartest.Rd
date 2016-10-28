@@ -10,15 +10,15 @@ Test of serial correlation for (the idiosyncratic component of) the errors in fi
 }
 
 \usage{
-pwartest(x,...)
-\method{pwartest}{panelmodel}(x, ...)
-\method{pwartest}{formula}(x, data, ...)
+pwartest(x, \dots)
+\method{pwartest}{panelmodel}(x, \dots)
+\method{pwartest}{formula}(x, data, \dots)
 }
 
 \arguments{
  \item{x}{an object of class \code{formula} or of class \code{panelmodel},}
  \item{data}{a \code{data.frame},}
- \item{...}{further arguments to be passed on to \code{linearHypothesis} or to \code{vcovHC}.}
+ \item{\dots}{further arguments to be passed on to \code{linearHypothesis} or to \code{vcovHC}.}
 }
 
 \details{

@@ -14,9 +14,9 @@ Wald-style chi-square fest and F test, including robust version of the tests.
 
 \usage{
 Ftest(x, test = c("Chisq", "F"), .vcov = NULL, 
-         df2adj = (test == "F" && !is.null(.vcov) && missing(.df2)), .df1, .df2, ...)
-% \method{Ftest}{panelmodel}(x, test = c("Chisq", "F"), .vcov = NULL, df2adj = (test == "F" && !is.null(.vcov) && missing(.df2)), .df1, .df2, ...)
-% \method{Ftest}{formula}(x, ...)  % not implemented (yet? - do we need it?)
+         df2adj = (test == "F" && !is.null(.vcov) && missing(.df2)), .df1, .df2, \dots)
+% \method{Ftest}{panelmodel}(x, test = c("Chisq", "F"), .vcov = NULL, df2adj = (test == "F" && !is.null(.vcov) && missing(.df2)), .df1, .df2, \dots)
+% \method{Ftest}{formula}(x, \dots)  % not implemented (yet? - do we need it?)
 
 }
 

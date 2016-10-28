@@ -11,12 +11,12 @@
 }
 
 \usage{
-ercomp(object, ...)
+ercomp(object, \dots)
 \method{ercomp}{formula}(object, data, effect = c("individual", "time", "twoways"), 
                          method = c("swar", "walhus", "amemiya","nerlove"),
-                         dfcor = NULL, index = NULL, ...)
-\method{ercomp}{plm}(object, ...)
-\method{print}{ercomp}(x, digits= max(3, getOption("digits") - 3), ...)
+                         dfcor = NULL, index = NULL, \dots)
+\method{ercomp}{plm}(object, \dots)
+\method{print}{ercomp}(x, digits= max(3, getOption("digits") - 3), \dots)
 }
 
 \arguments{

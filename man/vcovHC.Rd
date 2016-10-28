@@ -14,8 +14,8 @@
 \usage{
 \method{vcovHC}{plm}(x, method = c("arellano", "white1", "white2"),
                         type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
-                        cluster = c("group", "time"), ...)
-\method{vcovHC}{pgmm}(x, ...)
+                        cluster = c("group", "time"), \dots)
+\method{vcovHC}{pgmm}(x, \dots)
 }
 
 \arguments{

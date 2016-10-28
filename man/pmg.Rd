@@ -14,10 +14,10 @@ common factors (CCEMG)
 \usage{
 pmg(formula, data, subset, na.action,
  model = c("mg", "cmg", "dmg"),
- index = NULL, trend = FALSE, ...)
-\method{summary}{pmg}(object, ...)
+ index = NULL, trend = FALSE, \dots)
+\method{summary}{pmg}(object, \dots)
 \method{print}{summary.pmg}(x,digits = max(3, getOption("digits") -
-2), width = getOption("width"),...)
+2), width = getOption("width"), \dots)
 }
 
 \arguments{

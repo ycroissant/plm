@@ -13,7 +13,7 @@
                       cluster=c("group", "time"),
                       l=0,
                       inner=c("cluster", "white","diagavg"),
-                      ...)
+                      \dots)
 }
 
 \arguments{
@@ -23,7 +23,7 @@
   \item{l}{lagging order, defaulting to zero}
   \item{inner}{the function to be applied to the residuals inside the 
   sandwich: one of \code{"cluster"} or \code{"white"} or \code{"diagavg"},}
-  \item{...}{further arguments}.
+  \item{\dots}{further arguments}.
 }
 
 \value{

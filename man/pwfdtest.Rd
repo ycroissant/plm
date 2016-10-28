@@ -10,16 +10,16 @@ First--differencing--based test of serial correlation for (the idiosyncratic com
 }
 
 \usage{
-pwfdtest(x,...)
-\method{pwfdtest}{panelmodel}(x, ..., h0 = c("fd", "fe"))
-\method{pwfdtest}{formula}(x, data, ..., h0 = c("fd", "fe"))
+pwfdtest(x, \dots)
+\method{pwfdtest}{panelmodel}(x, \dots, h0 = c("fd", "fe"))
+\method{pwfdtest}{formula}(x, data, \dots, h0 = c("fd", "fe"))
 }
 
 \arguments{
   \item{x}{an object of class \code{formula} or a \code{"fd"}-model (plm object),}
   \item{data}{a \code{data.frame},}
   \item{h0}{the null hypothesis: one of \code{"fd"}, \code{"fe"},}
-  \item{...}{further arguments to be passed on to
+  \item{\dots}{further arguments to be passed on to
   \code{linearHypothesis} or to \code{vcovHC}.}
 }
 

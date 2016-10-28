@@ -11,7 +11,7 @@ Cross-sectionally augmented Im, Pesaran and Shin test for unit roots in panel mo
 
 \usage{
 cipstest(x, lags = 2, type = c("trend", "drift", "none"),
-      model = c("cmg", "mg", "dmg"), truncated = FALSE, ...)
+      model = c("cmg", "mg", "dmg"), truncated = FALSE, \dots)
 }
 
 \arguments{
