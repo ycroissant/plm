@@ -23,10 +23,13 @@ pcdtest(x, \dots)
  \item{index}{an optional numerical index, in case \code{data} has to be formatted by \code{plm.data}}
  \item{model}{an optional character string indicating which type of model to estimate;
  if left to \code{NULL}, the original heterogeneous specification of Pesaran is used}
- \item{test}{the type of test statistic to be returned. One of "cd" for Pesaran's CD statistic,
-  "lm" for Breusch and Pagan's original LM statistic,
-  "sclm" for the scaled version of Breusch and Pagan's LM statistic, or
- "rho", "absrho" for average (absolute) correlation coefficient}
+ \item{test}{the type of test statistic to be returned. One of 
+  \itemize{
+   \item \code{"cd"} for Pesaran's CD statistic,
+    \item \code{"lm"} for Breusch and Pagan's original LM statistic,
+    \item \code{"sclm"} for the scaled version of Breusch and Pagan's LM statistic, or
+    \item \code{"rho"} for the average correlation coefficient,
+    \item \code{"absrho"} for the average absolute correlation coefficient,}}
  \item{w}{an \code{n x n} \code{matrix} describing proximity between observations, with \eqn{w_ij = a} where \eqn{a} is any number such that \code{as.logical(a)=TRUE}, if \eqn{i,j} are
  neighbours, \eqn{0} or any number \eqn{b} such that \code{as.logical(b)=FALSE} elsewhere}        
  \item{\dots}{further arguments to be passed on to \code{plm}, such as e.g. \code{effect} or \code{random.method}}
@@ -42,9 +45,8 @@ An object of class \code{"htest"}.
  
  The methods implemented are suitable also for unbalanced panels.
  
- Breusch and Pagan's original LM statistic (\code{test="lm"}) is described in Breusch/Pagan (1980), while
- the scaled version (\code{test="sclm"}) and Pesaran's CD test (\code{test="cd"}) are in Pesaran (2004).
- 
+ Pesaran's CD test (\code{test="cd"}) and the scaled version (\code{test="sclm"}) of the LM test are described in Pesaran (2004), while 
+  Breusch and Pagan's original LM statistic (\code{test="lm"}) is in Breusch/Pagan (1980).
 }
 
 \references{
