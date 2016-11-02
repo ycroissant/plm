@@ -26,7 +26,7 @@ A panel of 48 observations from 1970 to 1986
     \item{water}{water and sewer facilities}
     \item{util}{other public buildings and structures}
     \item{pc}{private capital stock}
-    \item{gsp}{gross state products}
+    \item{gsp}{gross state product}
     \item{emp}{labor input measured by the employment in non--agricultural payrolls}
     \item{unemp}{state unemployment rate}
   }

@@ -6,7 +6,7 @@
 \title{Cross-sectionally Augmented IPS Test for Unit Roots in Panel Models}
 
 \description{
-Cross-sectionally augmented Im, Pesaran and Shin test for unit roots in panel models.
+Cross-sectionally augmented Im, Pesaran and Shin (IPS) test for unit roots in panel models.
 }
 
 \usage{
@@ -17,11 +17,11 @@ cipstest(x, lags = 2, type = c("trend", "drift", "none"),
 \arguments{
   \item{x}{an object of class \code{"pseries"},}
   \item{lags}{lag order for Dickey-Fuller augmentation,}
-  \item{type}{one of \code{c("trend", "drift", "none")},}
-  \item{model}{one of c("cmg","mg","dmg"),}
+  \item{type}{one of \code{"trend"}, \code{"drift"}, \code{"none"},}
+  \item{model}{one of \code{"cmg"}, \code{"mg"}, \code{"dmg"},}
   \item{truncated}{logical specifying whether to calculate the truncated
     version of the test,}
-  \item{\dots}{further arguments passed to \code{critvals}.}
+  \item{\dots}{further arguments passed to \code{critvals}.} % NB: critvals (helper function) not mentioned before
 }
 
 \details{
@@ -52,9 +52,9 @@ An object of class \code{"htest"}.
 
 \examples{
 data("Produc", package = "plm")
-Produc <- pdata.frame(Produc, index=c("state","year"))
-## check whether the log of GDP is trend-stationary
-cipstest(Produc$gsp, type="trend")
+Produc <- pdata.frame(Produc, index=c("state", "year"))
+## check whether the log of gross state product (gsp) is trend-stationary
+cipstest(Produc$gsp, type = "trend")
 }
 
 \keyword{htest}
