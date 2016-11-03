@@ -761,5 +761,7 @@ Changes since version 1.5-35
 
   * pbltest.plm: plm interface now respects the 'alternative' argument.
   * summary.plm: summary.plm objects gained new component 'df' to mimic summary.lm objects more closely.
+  * gettvalue() added as (internal) function to quickly extract one or more t values from an estimated model
+    (so one can avoid a call to summary() with all the other unnecessary computations).
 
   

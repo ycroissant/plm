@@ -311,3 +311,16 @@ trans_clubSandwich_vcov <- function(CSvcov, index) {
   warning("no attribute \"cluster\" found in supplied vcov object")
   return(CSvcov)
 }
+
+## helper function to extract one or more t value(s) (coef/s.e.) for a coefficient from model object
+## useful if one wants to avoid the computation of a whole lot of values with summary()
+gettvalue <- function(x, coefname) {
+  # x: model object (usually class plm or lm)
+  # coefname: character indicating name(s) of coefficient(s) for which the t value(s) is (are) requested
+  # return: vector of length == length(coefname)) with requested t value(s)
+  beta <- coef(x)[coefname]
+  se <- sqrt(diag(vcov(x))[coefname])
+  tvalue <- beta / se
+  return(tvalue)
+}
+
