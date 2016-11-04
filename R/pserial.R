@@ -320,7 +320,7 @@ pbsytest.panelmodel <- function(x, test=c("ar","re","j"), ...){
   ## det. total number of obs. (robust vs. unbalanced panels)
   nT <- length(ind)
 
-            ## calc. A and B:
+  ## calc. A and B:
   S1 <- sum( tapply(poolres,ind,sum)^2 )
   S2 <- sum( poolres^2 )
             
@@ -369,7 +369,7 @@ pbsytest.panelmodel <- function(x, test=c("ar","re","j"), ...){
                method = tname,
                alternative = myH0,
                p.value = pLM,
-               data.name =   dname)
+               data.name = dname)
   class(RVAL) <- "htest"
   return(RVAL)
 

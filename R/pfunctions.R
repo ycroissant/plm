@@ -584,7 +584,7 @@ summary.pseries <- function(object, ...){
 
 plot.summary.pseries <- function(x, ...){
   x <- as.numeric(x)
-  share <- x[-1]/x[1]
+  share <- x[-1]/x[1] # vec with length == 2
   names(share) <- c("id", "time")
   barplot(share, ...)
 }
@@ -592,7 +592,7 @@ plot.summary.pseries <- function(x, ...){
 print.summary.pseries <- function(x, ...){
   digits <- getOption("digits")
   x <- as.numeric(x)
-  share <- x[-1]/x[1]
+  share <- x[-1]/x[1] # vec with length == 2
   names(share) <- c("id", "time")
   cat(paste("total sum of squares :", signif(x[1], digits = digits),"\n"))
   print.default(share, ...)
@@ -617,8 +617,8 @@ as.data.frame.pdata.frame <- function(x, row.names = NULL, optional = FALSE, ...
   } else {
       if (row.names == TRUE) { # set fancy row names
         x <- data.frame(x)
-        row.names(x) <- fancy.row.names(index) # using row.names(x) is safer (no duplicate row.names) 
-                                               # than attr(x, "row.names") <- "something"
+        row.names(x) <- fancy.row.names(index) # using row.names(x)<-"something" is safer (does not allow duplicate row.names) 
+                                               # than attr(x,"row.names")<-"something"
       }
     ## not implemented: if row.names is a character vector, row.names could also be passed here to base::data.frame,
     ## see ?base::data.frame
@@ -758,7 +758,8 @@ lead <- function(x, k = 1, ...) {
 
 
 pseries2pdata <- function(x) {
-  ## transforms a pseries in a dataframe with the indices as regular columns
+  ## transforms a pseries in a pdataframe with the indices as regular columns
+  ## in positions 1 and 2 (individual index, time index)
   indices <- attr(x, "index")
   vx <- as.numeric(x)
   px <- cbind(indices, vx)

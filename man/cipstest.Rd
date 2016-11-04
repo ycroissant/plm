@@ -21,7 +21,10 @@ cipstest(x, lags = 2, type = c("trend", "drift", "none"),
   \item{model}{one of \code{"cmg"}, \code{"mg"}, \code{"dmg"},}
   \item{truncated}{logical specifying whether to calculate the truncated
     version of the test,}
-  \item{\dots}{further arguments passed to \code{critvals}.} % NB: critvals (helper function) not mentioned before
+  \item{\dots}{further arguments passed to \code{critvals}.} 
+% TODO NB: critvals (helper function) not mentioned before
+% TODO NB: doc-code mismatch: currently, critval is not called with '...' in the code,
+%          but mmean(tstats, ...) ist
 }
 
 \details{
@@ -32,6 +35,10 @@ dependence, provided that the default \code{type="cmg"} is
 calculated. Else one can obtain the standard (\code{model="mg"}) or
 cross-sectionally demeaned (\code{model="dmg"}) versions of the IPS
 test.
+
+% TODO: maybe be more verbose here? write about type arg which corresponds to
+%       cases III, II, I in Pesaran (2007) etc.
+
 }
 
 \value{
@@ -53,7 +60,7 @@ An object of class \code{"htest"}.
 \examples{
 data("Produc", package = "plm")
 Produc <- pdata.frame(Produc, index=c("state", "year"))
-## check whether the log of gross state product (gsp) is trend-stationary
+## check whether the gross state product (gsp) is trend-stationary
 cipstest(Produc$gsp, type = "trend")
 }
 
