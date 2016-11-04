@@ -251,7 +251,7 @@ punbalancedness.default <- function(x, ...) {
   N <- pdim$nT$n # no. of individuals
   Totalobs <- pdim$nT$N # no. of total observations
   Ti <- pdim$Tint$Ti
-  Tavg <- sum(Ti/N)
+  Tavg <- sum(Ti)/N
   
   r1 <- N / (Tavg * sum(1/Ti))
   r2 <- 1 / (N * (sum( (Ti/Totalobs)^2)))
@@ -317,7 +317,7 @@ trans_clubSandwich_vcov <- function(CSvcov, index) {
 gettvalue <- function(x, coefname) {
   # x: model object (usually class plm or lm)
   # coefname: character indicating name(s) of coefficient(s) for which the t value(s) is (are) requested
-  # return: vector of length == length(coefname)) with requested t value(s)
+  # return: named numeric vector of length == length(coefname) with requested t value(s)
   beta <- coef(x)[coefname]
   se <- sqrt(diag(vcov(x))[coefname])
   tvalue <- beta / se
