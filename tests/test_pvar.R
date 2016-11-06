@@ -11,7 +11,7 @@ Grunfeld_1NA_nonvari[21:200, "capital"] <- Grunfeld_1NA_nonvari[21:200, "firm"]
 print(pvar(Grunfeld_1NA_nonvari))
 
 Grunfeld_1NA_nonvari_time <- Grunfeld
-Grunfeld_1NA_nonvari_time[Grunfeld_1NA_nonvari_time$year == 1935,  "capital"] <- NA
+Grunfeld_1NA_nonvari_time[Grunfeld_1NA_nonvari_time$year == 1935, "capital"] <- NA
 Grunfeld_1NA_nonvari_time[Grunfeld_1NA_nonvari_time$year != 1935, "capital"] <- Grunfeld_1NA_nonvari_time[Grunfeld_1NA_nonvari_time$year != 1935, "year"]
 print(pvar(Grunfeld_1NA_nonvari_time))
 

@@ -7,12 +7,12 @@ pFormula <- function(object) {
   if (!inherits(object, "Formula")){
     object <- Formula(object)
   }
-  class(object) <- c("pFormula", class(object))
+  class(object) <- union("pFormula", class(object)) # union is safer than c("pFormula", class(object))
   object
 }
 
 as.Formula.pFormula <- function(x, ...){
-  class(x) <- class(x)[-1]
+  class(x) <- setdiff(class(x), "pFormula") # setdiff is safer than: class(x)[-1]
   x
 }
 
@@ -22,7 +22,7 @@ model.frame.pFormula <- function(formula, data, ..., lhs = NULL, rhs = NULL){
   index <- attr(data, "index")
   mf <- model.frame(as.Formula(formula), as.data.frame(data), ..., rhs = rhs)
   index <- index[as.numeric(rownames(mf)), ]
-  index <- data.frame(lapply(index, function(x) x[drop = TRUE]))
+  index <- droplevels(index) # index <- data.frame(lapply(index, function(x) x[drop = TRUE]))
   class(index) <- c("pindex", "data.frame")
   structure(mf,
             index = index,

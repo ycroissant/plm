@@ -106,7 +106,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     if (!id.name %in% names(x)) stop(paste("variable ",id.name," does not exist (individual index)", sep=""))
     
     if (is.factor(x[[id.name]])){
-      id <- x[[id.name]] <- x[[id.name]][drop=T]
+      id <- x[[id.name]] <- x[[id.name]][drop=T] # drops unused levels of factor
     }
     else{
       id <- x[[id.name]] <- as.factor(x[[id.name]])
@@ -133,7 +133,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
       if (!time.name %in% names(x)) stop(paste("variable ",time.name," does not exist (time index)",sep=""))
       
       if (is.factor(x[[time.name]])){
-        time <- x[[time.name]] <- x[[time.name]][drop=T]
+        time <- x[[time.name]] <- x[[time.name]][drop=T] # drops unused levels of factor
       }
       else{
         time <- x[[time.name]] <- as.factor(x[[time.name]])
@@ -196,6 +196,40 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 ###################################################
 # NB: currently no extracting/subsetting function for class pseries, thus
 #     vector subsetting is used which removes the pseries features
+#    There is a working sketch below, but check if it does not interfere with anything else
+
+# "[.pseries" <- function(x, ...) {
+#   
+#   ## use '...' instead of only one specific argument, because subsetting for
+#   ## factors can have argument 'drop', e.g., x[i, drop=T] see ?Extract.factor
+#   
+#   index <- attr(x, "index")
+# 
+#   # to identify the entries which we need to keep in the index:
+#   #  use names of the vector, but set names to integer sequence first (safer)
+#   #  -> use this information (names_subsetted) to subset the index
+#   #  this way, we can use the regular vector subsetting of R x[i] without
+#   #  worrying about the form of i (logical, numeric, character, some expression, ...)
+#   names_orig <- names(x)
+#   names(x) <- seq_along(x)
+#   # remove class 'pseries' and index attrib to use R's vector subsetting x[i]
+#   class(x) <- setdiff(class(x), "pseries")
+#   attr(x, "index") <- NULL
+#   result <- x[...]
+#   names_subsetted <- as.numeric(names(result))
+# 
+#   # make result a 'pseries' again:
+#   # add back to result:
+#   #    * subsetted orignal names
+#   #    * subsetted index as attribute
+#   #    * class 'pseries'
+#   names(result) <- names_orig[names_subsetted]
+#   attr(result, "index") <- index[names_subsetted, ]
+#   class(result) <- union("pseries", class(x))
+#   return(result)
+# }
+
+
 
 "[.pdata.frame" <- function(x, i, j, drop) {
                   # signature of [.data.frame here
