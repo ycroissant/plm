@@ -70,6 +70,8 @@ For random effects models, four estimators of the transformation
 parameter are available by setting \code{random.method} to one of \code{"swar"} (Swamy and Arora (1972)) (default),
 \code{"amemiya"} (Amemiya (1971)), \code{"walhus"} (Wallace and Hussain (1969)), or \code{"nerlove"} (Nerlove (1971)).
 
+For first--difference models, the intercept is maintained (which from a specification viewpoint amounts to allowing for a trend in the levels model). The user can exclude it from the estimated specification the usual way by adding \code{"-1"} to the model formula.
+
 Instrumental variables estimation is obtained using two--part formulas,
 the second part indicating the instrumental variables used. This can be
 a complete list of instrumental variables or an update of the first

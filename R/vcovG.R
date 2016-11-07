@@ -36,11 +36,8 @@ vcovG.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
   ## general building block for vcov
   ## for panel models (pooling, random, within or fd type plm obj.)
   ##
-  ## This version: as July 28th 2011, + 'sss' December 18th, 2013 (!)
+  ## This version (7/11/2016): compliant with IV models
 
-    
-    ## control: no method for IV models, for now
-    if(length(formula(x))[2] == 2) stop("Method not available for IV")
 
     type <- match.arg(type)
     model <- describe(x, "model")
@@ -49,11 +46,21 @@ vcovG.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
     }
 
   ## extract demeaned data
-    demX <- model.matrix(x, model = model)
-    # drop any linear dependend columns (coresponding to aliased coefficients) from model matrix
-    if (!is.null(x$aliased) && any(x$aliased)) demX <- demX[, !x$aliased, drop = FALSE]
     demy <- pmodel.response(x, model = model)
-    dimnames(demX)[[2]][1] <- attr(vcov(x), "dimnames")[[1]][1]
+
+    ## control: IV or not (two- or one-part formula)
+    if(length(formula(x))[2] > 1) {
+        demX <- model.matrix(x, model = model, rhs = 1)
+        demZ <- model.matrix(x, model = model, rhs = 2)
+        ## substitute (transformed) X with projection of X on Z
+        demX <- fitted(lm(demX ~ demZ))
+    } else {
+        demX <- model.matrix(x, model = model)
+        ## drop any linear dependent columns (coresponding to aliased coefficients) from
+        ## model matrix
+        if (!is.null(x$aliased) && any(x$aliased)) demX <- demX[, !x$aliased, drop = FALSE]
+        dimnames(demX)[[2]][1] <- attr(vcov(x), "dimnames")[[1]][1]
+    }
 
     pdim <- pdim(x)
     nT <- pdim$nT$N
@@ -62,6 +69,7 @@ vcovG.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 
     n0 <- pdim$nT$n
     t0 <- pdim$nT$T
+
 
   ## extract residuals
     uhat <- x$residuals
@@ -416,22 +424,28 @@ vcovBK.plm <- function(x, type=c("HC0", "HC1", "HC2", "HC3", "HC4"),
   ##
   ## Results OK vs. Eviews, vcov=PCSE. Unbal. case not exactly the
   ## same (but then, who knows what Eviews does!)
-
-    ## control: no method for IV models, for now
-    if(length(formula(x))[2] == 2) stop("Method not available for IV")
-
+    
     type <- match.arg(type)
     model <- describe(x, "model")
     if (!model %in% c("random", "within", "pooling", "fd")) {
         stop("Model has to be either random, within, pooling or fd model")
     }
-
+    
   ## extract demeaned data
-    demX <- model.matrix(x, model = model)
-    # drop any linear dependend columns (coresponding to aliased coefficients) from model matrix
-    if (!is.null(x$aliased) && any(x$aliased)) demX <- demX[, !x$aliased, drop = FALSE]
+    ## control: IV or not (two- or one-part formula)
+    if(length(formula(x))[2] > 1) {
+        demX <- model.matrix(x, model = model, rhs = 1)
+        demZ <- model.matrix(x, model = model, rhs = 2)
+        ## substitute (transformed) X with projection of X on Z
+        demX <- fitted(lm(demX ~ demZ))
+    } else {
+        demX <- model.matrix(x, model = model)
+        ## drop any linear dependent columns (coresponding to aliased coefficients) from
+        ## model matrix
+        if (!is.null(x$aliased) && any(x$aliased)) demX <- demX[, !x$aliased, drop = FALSE]
+        dimnames(demX)[[2]][1] <- attr(vcov(x), "dimnames")[[1]][1]
+    }
     demy <- pmodel.response(x, model = model)
-    dimnames(demX)[[2]][1] <- attr(vcov(x), "dimnames")[[1]][1]
 
     pdim <- pdim(x)
     nT <- pdim$nT$N
