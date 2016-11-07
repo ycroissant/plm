@@ -13,7 +13,8 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
       }
   }
   
-  # replace Inf by NA (for all but any character columns [relevant if stringAsFactors == FALSE])
+  # replace Inf, -Inf, NaN (everything for which is.finite is FALSE) by NA
+  # (for all but any character columns [relevant if stringAsFactors == FALSE])
   for (i in names(x)) {
     if (!inherits(x[[i]], "character")) {
       x[[i]][!is.finite(x[[i]])] <- NA
@@ -145,16 +146,19 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
   x <- x[order(x[[id.name]], x[[time.name]]), ] # old: x <- x[order(id,time), ] 
   
   var.names <- names(x)
-  for (i in names(x)){
+  
+  ## drop unused levels from all factor variables
+  for (i in var.names){
     if(is.factor(x[[i]])){
-      if (length(unique(x[[i]])) < length(levels(x[[i]]))){
-        x[[i]] <- x[[i]][,drop=TRUE]
-      }
+      # if (length(unique(x[[i]])) < length(levels(x[[i]]))){
+      #   x[[i]] <- x[[i]][,drop=TRUE]
+      # }
+      x[[i]] <- droplevels(x[[i]])
     }
   }
-  posindex <- match(c(id.name,time.name),names(x))
+  posindex <- match(c(id.name, time.name), var.names)
   index <- x[, posindex]
-  if (drop.index) x <- x[, - posindex]
+  if (drop.index) x <- x[ , -posindex]
   
   test_doub <- table(index[[1]], index[[2]], useNA = "ifany")
   if (any(is.na(colnames(test_doub))) || any(is.na(rownames(test_doub))))
@@ -165,7 +169,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
   if (row.names){
     attr(x, "row.names") <- fancy.row.names(index)
     # NB: attr(x, "row.names") allows for duplicate rownames (as opposed to row.names(x) <- something)
-    # no fancy row.names for index attribute (!?): maybe because so, it is possible to restore original row.names
+    # no fancy row.names for index attribute (!?): maybe because so it is possible to restore original row.names?
   }
   
   class(index) <- c("pindex", "data.frame")
@@ -182,9 +186,10 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 ###################################################
 
 "$<-.pdata.frame" <- function(x, name, value){
-  if (class(value)[1] == "pseries"){
+  if (inherits(value, "pseries")){
+    # remove pseries features before adding value as a column to pdata.frame
     if (length(class(value)) == 1) value <- unclass(value)
-    else class(value) <- class(value)[-1]
+    else class(value) <- setdiff(class(value), "pseries")
     attr(value, "index") <- NULL
   }
   "$<-.data.frame"(x, name, value)
@@ -199,10 +204,10 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 #    There is a working sketch below, but check if it does not interfere with anything else
 
 # "[.pseries" <- function(x, ...) {
-#   
+# 
 #   ## use '...' instead of only one specific argument, because subsetting for
 #   ## factors can have argument 'drop', e.g., x[i, drop=T] see ?Extract.factor
-#   
+# 
 #   index <- attr(x, "index")
 # 
 #   # to identify the entries which we need to keep in the index:
@@ -220,10 +225,13 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 # 
 #   # make result a 'pseries' again:
 #   # add back to result:
-#   #    * subsetted orignal names
+#   #    * subsetted orignal names                # TODO: not needed?
 #   #    * subsetted index as attribute
 #   #    * class 'pseries'
-#   names(result) <- names_orig[names_subsetted]
+# #  names(result) <- names_orig[names_subsetted]           # TODO: not needed?
+#   
+#   ### TODO: test for is.null before adding back? see [[.pdata.frame
+#   
 #   attr(result, "index") <- index[names_subsetted, ]
 #   class(result) <- union("pseries", class(x))
 #   return(result)
@@ -338,6 +346,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
   class(x) <- "data.frame"
   result <- "[[.data.frame"(x, y) # x[[y]]
   if (!is.null(result)){
+    # make extracted column a pseries
     # use this order for attributes to preserve original order of attributes for a pseries
     result <- structure(result,
                         names = row.names(x),
@@ -346,9 +355,9 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
                         )
   }
   result
-}  
+}
 
-"$.pdata.frame" <- function(x,y){
+"$.pdata.frame" <- function(x, y){
   "[[.pdata.frame"(x, paste(as.name(y)))
 }
 
