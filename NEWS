@@ -764,4 +764,8 @@ Changes since version 1.5-35
   * gettvalue() added as (internal) function to quickly extract one or more t values from an estimated model
     (so one can avoid a call to summary() with all the other unnecessary computations).
 
+Changes since version 1.6-1
+
+  * vcovG and vcovBK: added compliance with instrumental variables models (through two-parts formulae).
+  * added note on the intercept in 'fd' models, and how to eliminate it, in plm.Rd
   
