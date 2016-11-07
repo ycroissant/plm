@@ -292,6 +292,11 @@ pbsytest.formula <- function(x, data, ..., test=c("ar","re","j")) {
 }
 
 pbsytest.panelmodel <- function(x, test=c("ar","re","j"), ...){
+  ### as this is the version without support for unbalanced data, issue a warning
+  ##  unbalanced capable version resides in SVN on r-forge: branches/kt_unbalanced/pbsytest/
+  ##  and awaits approval
+  if (!pdim(x)$balanced) warning("unbalanced tests not yet implemented for pbsytest(), applying balanced tests to unbalanced model...")
+  
   poolres <- resid(x)
   data <- model.frame(x)
   ## extract indices
