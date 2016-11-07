@@ -147,7 +147,7 @@ if (!identical(b[-multi_periods, ], Grunfeld[-multi_periods, ])) stop("data.fram
 permutate_cols <- c(3, 1, 4, 5, 2)
 Grunfeld_missing_periods_multi_id_other_pos_index <- Grunfeld_missing_periods_multi_id[ , permutate_cols]
 
-d <-make.pconsecutive(Grunfeld_missing_periods_multi_id_other_pos_index, index = c("firm", "year"))
+d <- make.pconsecutive(Grunfeld_missing_periods_multi_id_other_pos_index, index = c("firm", "year"))
 all.equal(d[-multi_periods, ], Grunfeld_missing_periods_multi_id_other_pos_index)
 identical(d[-multi_periods, ], Grunfeld_missing_periods_multi_id_other_pos_index)
 if (!identical(d[-multi_periods, ], Grunfeld_missing_periods_multi_id_other_pos_index)) stop("data.frame interface: non identical results")
@@ -161,10 +161,25 @@ f_without_indexvars_consec <- make.pconsecutive(f_without_indexvars)
 
 # it seems like it is not possible here to check for equality of subsetted pdata.frames because
 # the subsetting functions for pdata.frame alters the pdata.frame
+# (this seems due to the fact that, currently, pdata.frames when created do not have
+#  "pseries" in columns and carry no index attribute. Only after extracting a column, that column
+#  will be of class c(“pseries”, “original_class”) and carry an index attribute.
+# 
+# To see this, use lapply (to avoid extraction):
+# df <- data.frame(id = c(1,1,2), time = c(1,2,1), f = factor(c("a", "a", "b")), n = c(1:3))
+# pdf <- pdata.frame(df)
+# lapply(df, class)
+# lapply(pdf, class)
+# 
+# lapply(df, attributes)
+# lapply(pdf, attributes)
+
+
 
 all.equal(f, f_consec[-multi_periods, ])
+all.equal(f, f_consec[-multi_periods, ], check.attributes = F)
 identical(f, f_consec[-multi_periods, ])
-if (!identical(f, f_consec[-multi_periods, ])) stop("pdata.frame interface: non identical results")
+if (!identical(f, f_consec[-multi_periods, ])) stop("make.pconsecutive pdata.frame interface: non identical results")
 
 all.equal(f_without_indexvars, f_without_indexvars_consec[-multi_periods, ])
 identical(f_without_indexvars, f_without_indexvars_consec[-multi_periods, ])
@@ -207,6 +222,30 @@ if (!nrow(attr(make.pbalanced(pGrunfeld_wo_2nd_period_and_3rd_for_id1), "index")
 if (!length(make.pbalanced(pGrunfeld_wo_2nd_period_and_3rd_for_id1$inv)) == 190) stop("failure make.pbalanced pseries")
 if (!nrow(attr(make.pbalanced(pGrunfeld_wo_2nd_period_and_3rd_for_id1$inv), "index")) == 190) stop("failure make.pbalanced pseries' index")
 
+
+## make.pbalanced with balance.type = "shared":
+# 2 periods deleted -> 180 rows/entries left in (p)data.frame/pseries
+
+  # data.frame
+  if (!nrow(make.pbalanced(Grunfeld_wo_2nd_period_and_3rd_for_id1, balance.type = "shared") == 180)) stop("failure make.pbalanced, balance.type = \"shared\") data.frame")
+  # pdata.frame
+  if (!nrow(make.pbalanced(pGrunfeld_wo_2nd_period_and_3rd_for_id1, balance.type = "shared") == 180)) stop("failure make.pbalanced, balance.type = \"shared\") pdata.frame")
+  if (!nrow(attr(make.pbalanced(pGrunfeld_wo_2nd_period_and_3rd_for_id1, balance.type = "shared"), "index")) == 180) stop("failure make.pbalanced, balance.type = \"shared\") pdata.frame's index")
+  # pseries
+  if (!length(make.pbalanced(pGrunfeld_wo_2nd_period_and_3rd_for_id1$inv, balance.type = "shared")) == 180) stop("failure make.pbalanced(, balance.type = \"shared\") pseries")
+  if (!nrow(attr(make.pbalanced(pGrunfeld_wo_2nd_period_and_3rd_for_id1$inv, balance.type = "shared"), "index")) == 180) stop("failure make.pbalanced pseries' index")
+
+# delete one (but different) period per id -> upper half of years (1945 to 1953) should be left
+delete_1_per_id_half <- c(1, 22, 43, 64, 85, 106, 127, 148, 169, 190)
+#split(Grunfeld[-delete_1_per_id_half, ]$year, Grunfeld[-delete_1_per_id_half, ]$firm) # inspect structure
+
+if (!nrow(make.pbalanced(Grunfeld[-delete_1_per_id_half, ], balance.type = "shared") == 100)) stop("failure make.pbalanced, balance.type = \"shared\") data.frame")
+if (!all(unique(make.pbalanced(Grunfeld[-delete_1_per_id_half, ], balance.type = "shared")$year) == c(1945:1954))) stop("wrong years")
+
+# delete two (but different) periods per id -> none should be left -> data frame with 0 rows
+delete_2_per_id_all <- c(1, 20, 22, 39, 43, 58, 64, 77, 85, 96, 106, 115, 127, 134, 148, 153, 169, 172, 190, 191)
+#split(Grunfeld[-delete_2_per_id_all, ]$year, Grunfeld[-delete_2_per_id_all, ]$firm) # inspect structure
+if (!nrow(make.pbalanced(Grunfeld[-delete_2_per_id_all, ], balance.type = "shared")) == 0) stop("failure make.pbalanced, balance.type = \"shared\") data.frame")
 
 
 
@@ -377,12 +416,4 @@ if (!all(sort(unique(make.pbalanced(Grunfeld_wo_2nd_period_and_3rd_for_id1)$year
 # 
 # pdim(pnlswork_r8_no_NA)
 # any(is.na(pnlswork_r8_no_NA$year))
-
-
-
-
-
-
-
-
 

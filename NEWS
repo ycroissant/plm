@@ -768,4 +768,6 @@ Changes since version 1.6-1
 
   * vcovG and vcovBK: added compliance with instrumental variables models (through two-parts formulae).
   * added note on the intercept in 'fd' models, and how to eliminate it, in plm.Rd
-  
+  * make.pbalanced: gained argument 'balance.type' which allows to select whether
+    to balance by filling in NA values ("fill", like before) and now also by
+    keeping only keeping only time periods shared among all individuals ("shared").
