@@ -150,12 +150,14 @@ tests/test_pdata.frame_extract_class_est_mod.R -text
 tests/test_pdata.frame_id_index_more.R -text
 tests/test_pdata.frame_print_duplicated_rownames.R -text
 tests/test_pdata.frame_subsetting.R -text
+tests/test_pdata.frame_unused_levels.R -text
 tests/test_pdiff_fd.R -text
 tests/test_phtest_Hausman_regression.R -text
 tests/test_plm_na.action.R -text
 tests/test_plmtest_unbalanced.R -text
 tests/test_plmtest_unbalanced.Rout.save -text
 tests/test_preserve_rownames.R -text
+tests/test_pseries_subsetting.R -text
 tests/test_punbalancedness.R -text
 tests/test_pvar.R -text
 tests/test_pwfdtest_pwartest.R -text

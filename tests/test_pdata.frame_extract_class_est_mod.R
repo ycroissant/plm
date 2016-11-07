@@ -76,4 +76,17 @@ if (!isTRUE(all.equal(attrib_names_before_subsetting_pdataframe, attrib_names_af
   stop("attributes names (or their order) have changed after subsetting")
   
 
+### extract pseries from pdata.frame and add back
+  # get fresh data
+  data(Grunfeld, package="plm")
+  pGrunfeld <- pdata.frame(Grunfeld, index = c("firm", "year"), drop.index = F)
+  
+  px <- pGrunfeld$inv
+  if (!all(class(px) == c("pseries", "numeric"))) stop("wrong class(es) after extraction from pdata.frame")
+  if (is.null(attr(px, "index"))) stop("no index attribute present after extraction from pdata.frame")
+  
+  pGrunfeld$px <- px
 
+  if (!lapply(pGrunfeld, class)$px == "numeric") stop("should be only 'numeric'")
+  if (inherits(lapply(pGrunfeld, class)$px, "pseries")) stop("should not inherit 'pseries'")
+  if (!is.null(lapply(pGrunfeld, function(x) attr(x, "index"))$px)) stop("should not have attribute index present")

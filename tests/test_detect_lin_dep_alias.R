@@ -82,3 +82,8 @@ alias(pform, Cigar.p, model = "pooling")
 alias(pform, Cigar.p, model = "within", complete = FALSE)
 alias(pform, Cigar.p, model = "within", partial = TRUE)
 alias(pform, Cigar.p, model = "within", partial.pattern = TRUE)
+
+
+# Tests for names of plm_object$aliased
+if (!isTRUE(all.equal(names(mod_fe$aliased), colnames(model.matrix(mod_fe)))))
+  stop("Names not correct (not like colnames of model.matrix: ", paste0(names(mod_fe$aliased), collapse = ", "))
