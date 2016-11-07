@@ -324,3 +324,14 @@ gettvalue <- function(x, coefname) {
   return(tvalue)
 }
 
+# helper function: "p-function" for mixed chisq (also called chi-bar-squared)
+# used in plmtest(., type = "ghm"), see Baltagi (2013), pp. 71-72, 74, 88, 202-203, 209
+#
+# a reference seems to be
+# Dykstra, R./El Barmi, H., Chi-Bar-Square Distributions, in: Encyclopedia of Statistical Sciences, 
+# DOI: 10.1002/0471667196.ess0265.pub2
+pchibarsq <- function(q, df, weights, lower.tail = TRUE, ... ) {
+  # NB: other parameters in dots (...): not checked if valid! (ncp, log, ...)
+  res <- sum(weights * pchisq(q, df = df, lower.tail = lower.tail, ...))
+  return(res)
+}

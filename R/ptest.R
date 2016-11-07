@@ -272,13 +272,13 @@ plmtest.plm <- function(x,
                           honda = NULL,
                           bp    = c(df = 2), # df = 2 in the twoway case (Baltagi (2013), p. 70/201)
                           kw    = NULL,
-                          ghm   = c(df0 = 0L, df1=1L, df2=2L, w0=1/4, w1=1/2, w2=1/4)) # chibarsquared (mixed chisq) has several dfs and weights (Baltagi (2013), p. 72/202)
+                          ghm   = c(df0 = 0L, df1 = 1L, df2 = 2L, w0 = 1/4, w1 = 1/2, w2 = 1/4)) # chibarsquared (mixed chisq) has several dfs and weights (Baltagi (2013), p. 72/202)
     
     pval <- switch(type,
                      honda = pnorm(stat, lower.tail = FALSE), # honda two-ways ~ N(0,1), alternative is one-sided (Baltagi (2013), p. 71/202)
                      bp    = pchisq(stat, df = parameter, lower.tail = FALSE),  # is df = 2 in the twoway case, alternative is two-sided (Baltagi (2013), p. 70/201)
                      kw    = pnorm(stat, lower.tail = FALSE), # kw twoways ~ N(0,1), alternative is one-sided (Baltagi (2013), p. 71/202)
-                     ghm   = (1/4)*pchisq(stat, df=0, lower.tail = F) + (1/2) * pchisq(stat, df=1, lower.tail = F) + (1/4) * pchisq(stat, df=2, lower.tail = FALSE)) # mixed chisq (also called chi-bar-square), see Baltagi (2013), pp. 71-72, 74, 88, 202-203, 209
+                     ghm   = pchibarsq(stat, df = c(0L, 1L, 2L), weights = c(1/4, 1/2, 1/4), lower.tail = FALSE)) # mixed chisq (also called chi-bar-square), see Baltagi (2013), pp. 71-72, 74, 88, 202-203, 209
   } # END twoways
   
   method.type <- switch(type,
@@ -310,7 +310,6 @@ plmtest.plm <- function(x,
                  parameter = parameter,
                  data.name = data.name(x))
   }
-  
   
   RVAL$alternative <- "significant effects" # TODO: maybe distinguish be b/w one-sided and two-sided alternatives?
                                             #       (bp: two-sided alt.; all others: one-sided alt.?)
