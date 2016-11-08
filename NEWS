@@ -706,10 +706,10 @@ Changes since version 1.5-26
 
 Changes since version 1.5-27
 
-  * little speed up of within transformation in the two-ways unbalanced case (in model.matrix.pFormula).
-  * little speed up for some more transformations by using .colMeans instead of apply(X, 2, mean)
-    (in model.matrix.pFormula).
-    
+  * model.matrix.pFormula: little speed up of within transformation in the two-ways unbalanced case.
+  * model.matrix.pFormula: little speed up for some more transformations by using .colMeans instead 
+                           of apply(X, 2, mean).
+
 Changes since version 1.5-28
 
   * phtest (regression based): if only one regressor in formula, the test does not stop anymore.
@@ -767,7 +767,9 @@ Changes since version 1.5-35
 Changes since version 1.6-1
 
   * vcovG and vcovBK: added compliance with instrumental variables models (through two-parts formulae).
-  * added note on the intercept in 'fd' models, and how to eliminate it, in plm.Rd
+  * plm.Rd: added note on the intercept in 'fd' models, and how to eliminate it.
   * make.pbalanced: gained argument 'balance.type' which allows to select whether
     to balance by filling in NA values ("fill", like before) and now also by
-    keeping only keeping only time periods shared among all individuals ("shared").
+    keeping only time periods shared among all individuals ("shared").
+  * pbsytest: issue warning when applied to an unbalanced model (unbalanced tests still in preparation).
+  
