@@ -30,13 +30,35 @@ if (!identical(vcovHC(mod_fe_lin_dep), vcovHC(mod_fe_no_lin_dep))) {
   stop("vcov w/ linear dependent columns and the corresponding one w/o are not identical")
 }
 
-## test for vcovBK because that is separate in the vcovG framework
+## test for vcovBK because code is separate from the vcovG framework
 vcovBK(mod_fe_lin_dep)
 vcovBK(mod_fe_no_lin_dep)
 if (!identical(vcovBK(mod_fe_lin_dep), vcovBK(mod_fe_no_lin_dep))) {
   stop("vcov w/ linear dependent columns and the corresponding one w/o are not identical")
 }
 
+## test for IV models with linear dependent columns
+  data("Crime", package = "plm")
+  cr <- plm(log(crmrte) ~ log(prbarr) + log(polpc) + log(prbconv) + I(2*log(prbconv))
+            | log(prbarr) + log(polpc) +
+            log(taxpc) + log(mix), data = Crime,
+            model = "pooling")
+  head(model.matrix(cr$formula, cr$model, rhs = 1))
+  head(model.matrix(cr$formula, cr$model, rhs = 2))
+  detect_lin_dep(cr)
+  vcovHC(cr)
+  vcovBK(cr)
+  
+  ## linear dependence in instrument part
+  cr2 <- plm(log(crmrte) ~ log(prbarr) + log(polpc) + log(prbconv)
+            | log(prbarr) + log(polpc) +
+            log(taxpc) + log(mix) + I(2*log(mix)), data = Crime,
+            model = "pooling")
+  detect_lin_dep(cr2) # does not inspect instrument matrix
+  head(model.matrix(cr2$formula, cr2$model, rhs = 2))
+  detect_lin_dep(model.matrix(cr2$formula, cr2$model, rhs = 2))
+  vcovHC(cr2)
+  vcovBK(cr2)
 
 
 # just run test for for pgmm models (as vcovXX.pgmm methods use vcovXX.plm)

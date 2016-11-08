@@ -47,19 +47,17 @@ vcovG.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 
   ## extract demeaned data
     demy <- pmodel.response(x, model = model)
+    demX <- model.matrix(x, model = model, rhs = 1)
+    ## drop any linear dependent columns (corresponding to aliased coefficients)
+    ## from model matrix X
+    if (!is.null(x$aliased) && any(x$aliased)) demX <- demX[, !x$aliased, drop = FALSE]
 
     ## control: IV or not (two- or one-part formula)
     if(length(formula(x))[2] > 1) {
-        demX <- model.matrix(x, model = model, rhs = 1)
         demZ <- model.matrix(x, model = model, rhs = 2)
         ## substitute (transformed) X with projection of X on Z
-        demX <- fitted(lm(demX ~ demZ))
-    } else {
-        demX <- model.matrix(x, model = model)
-        ## drop any linear dependent columns (coresponding to aliased coefficients) from
-        ## model matrix
-        if (!is.null(x$aliased) && any(x$aliased)) demX <- demX[, !x$aliased, drop = FALSE]
-        dimnames(demX)[[2]][1] <- attr(vcov(x), "dimnames")[[1]][1]
+        ## any linear dependence in Z (demZ) is appropriately taken care of by lm.fit()
+        demX <- fitted(lm.fit(demZ, demX)) # demX <- fitted(lm(demX ~ demZ))
     }
 
     pdim <- pdim(x)
@@ -432,20 +430,19 @@ vcovBK.plm <- function(x, type=c("HC0", "HC1", "HC2", "HC3", "HC4"),
     }
     
   ## extract demeaned data
+    demy <- pmodel.response(x, model = model)
+    demX <- model.matrix(x, model = model, rhs = 1)
+    ## drop any linear dependent columns (corresponding to aliased coefficients)
+    ## from model matrix X
+    if (!is.null(x$aliased) && any(x$aliased)) demX <- demX[, !x$aliased, drop = FALSE]
+    
     ## control: IV or not (two- or one-part formula)
     if(length(formula(x))[2] > 1) {
-        demX <- model.matrix(x, model = model, rhs = 1)
         demZ <- model.matrix(x, model = model, rhs = 2)
         ## substitute (transformed) X with projection of X on Z
-        demX <- fitted(lm(demX ~ demZ))
-    } else {
-        demX <- model.matrix(x, model = model)
-        ## drop any linear dependent columns (coresponding to aliased coefficients) from
-        ## model matrix
-        if (!is.null(x$aliased) && any(x$aliased)) demX <- demX[, !x$aliased, drop = FALSE]
-        dimnames(demX)[[2]][1] <- attr(vcov(x), "dimnames")[[1]][1]
+        ## any linear dependence in Z (demZ) is appropriately taken care of by lm.fit()
+        demX <- fitted(lm.fit(demZ, demX)) # demX <- fitted(lm(demX ~ demZ))
     }
-    demy <- pmodel.response(x, model = model)
 
     pdim <- pdim(x)
     nT <- pdim$nT$N
