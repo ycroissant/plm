@@ -13,11 +13,11 @@ importFrom("stats", "lag")
 importFrom("stats", "nobs")
 importFrom("stats", "alias")
 importFrom("bdsmatrix", "bdsmatrix")
-importFrom("sandwich", "vcovHC")
-importFrom("MASS", "ginv")
-importFrom("zoo", "index")
-importFrom("nlme", "fixef")
+importFrom("sandwich", "vcovHC") # import generic and associated methods so the vcovHC methods from pkg sandwich and plm do no mask each other
+importFrom("zoo", "index")       # --- same ---
+importFrom("nlme", "fixef")      # --- same ---
 importFrom("nlme", "lme")
+importFrom("MASS", "ginv")
 importFrom("lmtest", "bgtest")
 importFrom("lmtest", "dwtest")
 importFrom("car", "linearHypothesis")

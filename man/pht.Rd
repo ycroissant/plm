@@ -33,7 +33,7 @@ pht(formula, data, subset, na.action, model = c("ht", "am", "bmc"), index = NULL
 
 \details{ \code{pht} estimates panels models using the Hausman--Taylor
 estimator, Amemiya--MaCurdy estimator, or Breusch--Mizon--Schmidt estimator,
-depending on the argument \code{model}. The model is specified a two--part
+depending on the argument \code{model}. The model is specified as a two--part
 formula, the second part containing the exogenous variables.}
 
 \value{
@@ -55,7 +55,7 @@ the variables. It has \code{summary} and \code{print.summary} methods.
   Baltagi, Badi H. (2013) \emph{Econometric Analysis of Panel Data},
   5th ed., John Wiley and Sons.
 
-  Breusch, T.S, Mizon, G.E. and Schmidt, P. (1989) Efficient estimation
+  Breusch, T.S., Mizon, G.E. and Schmidt, P. (1989) Efficient estimation
   using panel data, \emph{Econometrica}, \bold{57}(3), pp. 695--700.
   
   Hausman, J.A. and Taylor W.E. (1981) Panel data and unobservable

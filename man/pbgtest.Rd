@@ -46,9 +46,9 @@ The argument \code{order} defaults to the minimum number of observations over th
 
 
 \references{
- Breusch, T. (1978), \dQuote{Testing for autocorrelation in dynamic linear models}, \emph{Australian Economic Papers}, \bold{17}(31), pp. 334--355.
+ Breusch, T.S. (1978), \dQuote{Testing for autocorrelation in dynamic linear models}, \emph{Australian Economic Papers}, \bold{17}(31), pp. 334--355.
 
- Godfrey, L. (1978), \dQuote{Testing against general autoregressive and moving average error models when the regressors include lagged dependent variables}, \emph{Econometrica}, \bold{46}(6), pp. 1293--1301.
+ Godfrey, L.G. (1978), \dQuote{Testing against general autoregressive and moving average error models when the regressors include lagged dependent variables}, \emph{Econometrica}, \bold{46}(6), pp. 1293--1301.
   
  Wooldridge, J.M. (2002) \emph{Econometric Analysis of Cross-Section and Panel Data}, MIT Press, pp. 288--291.
  
