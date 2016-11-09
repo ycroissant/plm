@@ -581,7 +581,6 @@ data("EmplUK", package="plm")
 data("Produc", package="plm")
 data("Grunfeld", package="plm")
 data("Wages",package="plm")
-
 @
 
 
@@ -677,7 +676,6 @@ head(lag(E$emp, 2), 10)
 head(Within(E$emp))
 head(between(E$emp), 4)
 head(Between(E$emp), 10)
-
 @ 
 
 \end{itemize}
@@ -2145,7 +2143,6 @@ reML<-lme(inv~value+capital,data=Grunfeld,random=~1|firm)
 coef(reGLS)
 
 summary(reML)$coefficients$fixed
-
 @
 
 
@@ -2171,7 +2168,6 @@ vcmML<-lme(inv~value+capital,data=Grunfeld,random=~value+capital|year)
 coef(vcm)
 
 summary(vcmML)$coefficients$fixed
-
 @
 
 \subsubsection{Variable coefficients, ``within''}
@@ -2186,7 +2182,6 @@ below are equivalent (output suppressed):
 vcmf<-pvcm(inv~value+capital,data=Grunfeld,model="within",effect="time")
 
 vcmfML<-lmList(inv~value+capital|year,data=Grunfeld)
-
 @
 
 \subsubsection{Unrestricted fgls}
