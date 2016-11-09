@@ -78,7 +78,7 @@ plm <-  function(formula, data, subset, na.action,
   # Check whether data is a pdata.frame and if not create it
   orig_rownames <- row.names(data)
   if (!inherits(data, "pdata.frame")) data <- pdata.frame(data, index)
-  # Create a Formula object if necessary
+  # Create a pFormula object if necessary
   if (!inherits(formula, "pFormula")) formula <- pFormula(formula)
 
   # in case of 2part formula, check whether the second part should be

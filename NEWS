@@ -681,7 +681,7 @@ Changes since version 1.5-23
 
   * make.pconsecutive: new function to make a (p)data.frame or pseries consecutive, meaning having consecutive
                        time periods, t, t+1, t+2, ..., where t is an integer (fills in missing time periods).
-                       Optionally, by argument balanced, (p)data.frames) or pseries can be made consecutive 
+                       Optionally, by argument balanced, (p)data.frames or pseries can be made consecutive 
                        and at the same time also balanced.
   * make.pbalanced: new function to make a (p)data.frame or pseries balanced (but not consecutive)
                     (fills in missing time periods).

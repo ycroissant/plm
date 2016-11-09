@@ -489,10 +489,10 @@ on object orientation: particular types of matrices (symmetric,
 sparse, dense etc.) are assigned the relevant class and the additional
 information on structure is used in the computations, sometimes with
 dramatic effects on performance \citep[see][]{BATE:04} and packages
-\pkg{Matrix} \citep[see][]{BATE:MAEC:07} and \pkg{SparseM}
-\citep[see][]{KOEN:NG:07}. Some optimized linear algebra routines are
+\pkg{Matrix} \citep[see][]{BATE:MAEC:2016} and \pkg{SparseM}
+\citep[see][]{KOEN:NG:2016}. Some optimized linear algebra routines are
 available in the \proglang{R} package \pkg{bdsmatrix}
-\citep[see][]{ATKI:THER:07} which exploit the particular
+\citep[see][]{THER:2014} which exploit the particular
 block-diagonal and symmetric structure of $\hat{V}$ making it
 possible to implement a fast and reliable full-matrix solution to
 problems of any practically relevant size.
@@ -513,7 +513,7 @@ demeaning solution.
 
 General frameworks for restrictions and linear hypotheses testing are
 available in the \proglang{R} environment\footnote{See packages \pkg{lmtest}
-\citep{ZEIL:HOTH:02} and \pkg{car} \citep{FOX:06}.}. These
+\citep{HOTH:ZEIL:FARE:CUMM:MILL:MITC:2015} and \pkg{car} \citep{FOX:2016}.}. These
 are based on the Wald test, constructed as $\hat{\beta}^\top \hat{V}^{-1}
 \hat{\beta}$, where $\hat{\beta}$ and $\hat{V}$ are consistent
 estimates of $\beta$ and $V(\beta)$, The Wald test may be used for
@@ -549,7 +549,7 @@ of the relevant model's parameters' covariance matrix, thus the method
 is readily applicable to models estimated by random or fixed effects,
 first difference or pooled \textsc{ols} methods. Different
 pre-weighting schemes taken from package \pkg{sandwich}
-\citep{ZEIL:04} are also implemented to improve small-sample
+\citep[see][]{ZEIL:04, LUML:ZEIL:2015} are also implemented to improve small-sample
 performance. Robust estimators with any combination of covariance
 structures and weighting schemes can be passed on to the testing
 functions.
