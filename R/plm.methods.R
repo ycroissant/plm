@@ -77,8 +77,11 @@ print.summary.plm <- function(x, digits = max(3, getOption("digits") - 2),
   cat("\n")
   pdim <- pdim(x)
   print(pdim)
-  if (model == "fd") {cat(paste0("Observations used in estimation: ", # print this extra info, b/c model.frame of FD models
-                                 nobs(x), "\n"))}                     # has the original (undifferenced) obs/rows of the data
+  if (model %in% c("fd", "between")) {
+    # print this extra info, b/c model.frames of FD and between models
+    # have original (undifferenced/"un-between-ed") obs/rows of the data
+    cat(paste0("Observations used in estimation: ", nobs(x), "\n"))}
+                                                          
   if (model == "random"){
     cat("\nEffects:\n")
     print(x$ercomp)
