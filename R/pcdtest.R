@@ -110,12 +110,15 @@ pcdtest.panelmodel <- function(x, test = c("cd", "sclm", "lm", "rho", "absrho"),
 
 pcdtest.pseries <- function(x, test = c("cd", "sclm", "lm", "rho", "absrho"),
                              w = NULL, ...) {
-
+  
     ## calculates local or global CD test on a pseries 'x' just as it
     ## would on model residuals
 
     ## important difference here: a pseries _can_ have NAs
 
+    # input check
+    if (!inherits(x, "pseries")) stop("input 'x' needs to be of class \"pseries\"")
+  
     ## get indices
     tind <- as.numeric(attr(x, "index")[[2]])
     ind <- as.numeric(attr(x, "index")[[1]])
@@ -131,6 +134,7 @@ pcdtest.pseries <- function(x, test = c("cd", "sclm", "lm", "rho", "absrho"),
     ## list of n:
     ## t_i residuals for each x-sect. 1..n
     for(i in 1:n) {
+              # remove NAs
               xnonna <- !is.na(x[ind==unind[i]])
               tres[[i]] <- x[ind==unind[i]][xnonna]
               ## name resids after the time index

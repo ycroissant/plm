@@ -8,6 +8,8 @@ data("Grunfeld", package = "plm")
 mod_pool <- plm(inv ~ value + capital, data = Grunfeld, model = "pooling")
 testres1 <- pcdtest(mod_pool, test = "cd")
 if (is.nan(testres1$statistic)) stop("statistic is NaN")
+if (is.na(testres1$statistic)) stop("statistic is NA")
+if (is.na(testres1$p.value)) stop("p-value is NA")
 
 ## no intersection for firm 1 and 2:
 # firm 1 years: 1935 to 1944
@@ -17,9 +19,13 @@ mod_pool_no_intersect <- plm(inv ~ value + capital, data = Grunfeld_no_intersect
 
 testres2 <- pcdtest(mod_pool_no_intersect, test = "cd")
 if (is.nan(testres2$statistic)) stop("statistic is NaN")
+if (is.na(testres2$statistic)) stop("statistic is NA")
+if (is.na(testres2$p.value)) stop("p-value is NA")
 
 ## make it also unbalanced for other individuals
 Grunfeld_no_intersect_unbal <- Grunfeld_no_intersect[-c(65:66, 71, 103:110), ]
 mod_pool_no_intersect_unbal <- plm(inv ~ value + capital, data = Grunfeld_no_intersect_unbal, model = "pooling")
 testres3 <- pcdtest(mod_pool_no_intersect_unbal, test = "cd")
 if (is.nan(testres3$statistic)) stop("statistic is NaN")
+if (is.na(testres3$statistic)) stop("statistic is NA")
+if (is.na(testres3$p.value)) stop("p-value is NA")
