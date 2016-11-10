@@ -58,7 +58,7 @@ pcdtest.formula <- function(x, data, index = NULL, model = NULL,
         n <- length(unind)
         tres <- vector("list", n)
         for (i in 1:n) {
-            tX <- X[ind == unind[i], ]
+            tX <- X[ind == unind[i], , drop = FALSE]
             ty <- y[ind == unind[i]]
             tres[[i]] <- lm.fit(tX, ty)$resid
             names(tres[[i]]) <- tind[ind == unind[i]]

@@ -2,6 +2,7 @@
 \alias{pcdtest}
 \alias{pcdtest.formula}
 \alias{pcdtest.panelmodel}
+\alias{pcdtest.pseries}
 \title{Tests of cross-section dependence for panel models}
 
 \description{
@@ -10,15 +11,19 @@
 
 \usage{
 pcdtest(x, \dots)
-\method{pcdtest}{panelmodel}(x, test = c("cd", "sclm", "lm", "rho", "absrho"),
-                             w = NULL, \dots)
 \method{pcdtest}{formula}(x, data, index = NULL, model = NULL,
                           test = c("cd", "sclm", "lm", "rho", "absrho"),
                           w = NULL, \dots)
+\method{pcdtest}{panelmodel}(x, test = c("cd", "sclm", "lm", "rho", "absrho"),
+                             w = NULL, \dots)
+\method{pcdtest}{pseries}(x, test = c("cd", "sclm", "lm", "rho", "absrho"),
+                             w = NULL, \dots)
+                          
 }
 
 \arguments{
- \item{x}{an object of class \code{formula} or \code{panelmodel}, describing the model to be tested}
+ \item{x}{an object of class \code{formula}, \code{panelmodel}, or \code{pseries} 
+          (depending on the respective interface) describing the model to be tested}
  \item{data}{a \code{data.frame}}
  \item{index}{an optional numerical index, in case \code{data} has to be formatted by \code{plm.data}}
  \item{model}{an optional character string indicating which type of model to estimate;
@@ -47,6 +52,11 @@ An object of class \code{"htest"}.
  
  Pesaran's CD test (\code{test="cd"}) and the scaled version (\code{test="sclm"}) of the LM test are described in Pesaran (2004), while 
   Breusch and Pagan's original LM statistic (\code{test="lm"}) is in Breusch/Pagan (1980).
+  
+ The test on a \code{pseries} is the same as a test on a pooled regression model of that variable on a constant, i.e. 
+ \code{pcdtest(some_pseries)} is equivalent to \code{pcdtest(plm(some_var ~ 1, data = some_pdata.frame, model = "pooling")} and also
+ equivalent to \code{pcdtest(some_var ~ 1, data = some_data)}, where \code{some_var} is the variable name in the data which 
+ corresponds to \code{some_pseries}.
 }
 
 \references{
@@ -60,14 +70,20 @@ data(Grunfeld, package = "plm")
 ## test on heterogeneous model (separate time series regressions)
 pcdtest(inv ~ value + capital, data=Grunfeld,
         index = c("firm","year"))
+
 ## test on two-way fixed effects homogeneous model
 pcdtest(inv ~ value + capital, data = Grunfeld, model="within",
         effect="twoways", index = c("firm","year"))
-## test on model object
+
+## test on panelmodel object
 g <- plm(inv ~ value + capital, data = Grunfeld, index = c("firm","year"))
 pcdtest(g)
 ## scaled LM test
 pcdtest(g, test="sclm")
+
+## test on pseries
+pGrunfeld <- pdata.frame(Grunfeld)
+pcdtest(pGrunfeld$value)
 }
 
 \keyword{htest}

@@ -777,4 +777,5 @@ Changes since version 1.6-1
   * pcdtest:
       * returned htest object has correct data.name value now.
       * NaN stemming from non-intersecting pairs of individuals avoided by omission from calculation.
+      * pcdtest(some_var ~ 1, data) does not error anymore.
   
