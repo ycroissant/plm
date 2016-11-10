@@ -438,9 +438,8 @@ pdwtest.panelmodel <- function(x,...) {
 
   auxformula <- demy~demX-1 #if(model == "within") demy~demX-1 else demy~demX
   lm.mod <- lm(auxformula)
-
   
-  ARtest <- dwtest(lm(auxformula), order.by = order.by,
+  ARtest <- dwtest(lm.mod, order.by = order.by,
                    alternative = alternative,
                    iterations = iterations, exact = exact, tol = tol)
 #  ARtest <- dwtest(lm(demy~demX-1))
@@ -654,7 +653,7 @@ pwfdtest.panelmodel <- function(x, ..., h0 = c("fd", "fe")) {
 
   FDres.1 <- c(NA,FDres[1:(N-1)])
 
-  lagid  <-  id-c(NA,id[1:(N-1)])
+  lagid <- id - c(NA,id[1:(N-1)])
 
   FDres.1[lagid!=0] <- NA
 
@@ -689,7 +688,7 @@ pwfdtest.panelmodel <- function(x, ..., h0 = c("fd", "fe")) {
   if (names(FDARstat)=="Chisq") names(FDARstat) <- "chisq"
   ## this is either 'F' or 'Chisq' and is the name of 3rd
   ## column because we are supplying a vcov matrix
-  pFDAR<-lhtest[2,4]
+  pFDAR <- lhtest[2,4]
 
   dname <- paste(deparse(substitute(x)))
   RVAL <- list(statistic   = FDARstat, 
