@@ -774,5 +774,7 @@ Changes since version 1.6-1
   * pbsytest: issue warning when applied to an unbalanced model (unbalanced tests still in preparation).
   * print.summary.plm: for "between" models: print the no. of obs used in estimation
     (like for "fd" models since 1.5-24).
-  * pcdtest: returned htest object has correct data.name value now.
+  * pcdtest:
+      * returned htest object has correct data.name value now.
+      * NaN stemming from non-intersecting pairs of individuals avoided by omission from calculation.
   

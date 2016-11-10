@@ -154,9 +154,9 @@ pcdres <- function(tres, n, w, form, test) {
   ## pcdtest.panelmodel or pcdtest.pseries
 
   ## rho_ij matrix
-  rho<-matrix(NA,ncol=n,nrow=n)
+  rho <- matrix(NA,ncol=n,nrow=n)
   ## T_ij matrix
-  t.ij<-matrix(NA,ncol=n,nrow=n)
+  t.ij <- matrix(NA,ncol=n,nrow=n)
 
   ## calc. only for lower tri, rest is nullified later anyway
   for(i in 2:n) {
@@ -168,21 +168,21 @@ pcdres <- function(tres, n, w, form, test) {
       ##
       ## determination of joint range m_i | m_j
       ## m_ij=m_i|m_j, working on names of the residuals' vectors
-      m.ij<-intersect( names(tres[[i]]), names(tres[[j]]) )
+      m.ij <- intersect(names(tres[[i]]), names(tres[[j]]))
 
       ## for this ij do me_i=mean_t(e_it[m_ij]), idem j
       ## and rho and T_ij as in Pesaran, page 18
       ## (as mean(ei)=0 doesn't necessarily hold any more)
 
-      ei<-tres[[i]][m.ij]
-      ej<-tres[[j]][m.ij]
-      dei<-ei-mean(ei)
-      dej<-ej-mean(ej)
-      rho[i,j]<-( dei%*%dej )/( sqrt(dei%*%dei) * sqrt(dej%*%dej) )
+      ei <- tres[[i]][m.ij]
+      ej <- tres[[j]][m.ij]
+      dei <- ei - mean(ei)
+      dej <- ej - mean(ej)
+      rho[i,j] <- ( dei%*%dej )/( sqrt(dei%*%dei) * sqrt(dej%*%dej) )
 
       ## put this here inside summations, as for unbalanced panels
       ## "common obs. numerosity" T_ij may vary on i,j
-      t.ij[i,j]<-length(m.ij)
+      t.ij[i,j] <- length(m.ij)
 
       }
     }
@@ -191,8 +191,10 @@ pcdres <- function(tres, n, w, form, test) {
   ## higher orders omitted for now, use wlag() explicitly
 
   ## if global test, set all elements in w to 1
-  if(is.null(w)) {w<-matrix(1,ncol=n,nrow=n)
-                  dep<-""} else { dep<-"local" }
+  if(is.null(w)) {
+    w <- matrix(1,ncol=n,nrow=n)
+    dep <- ""
+  } else { dep <- "local" }
 
   ## make (binary) selector matrix based on the contiguity matrix w
   ## and extracting elements corresponding to ones in the lower triangle
@@ -200,14 +202,28 @@ pcdres <- function(tres, n, w, form, test) {
 
   ## transform in logicals (0=FALSE, else=TRUE: no need to worry
   ## about row-std. matrices)
-  selector.mat<-matrix(as.logical(w),ncol=n)
+  selector.mat <- matrix(as.logical(w), ncol=n)
+  
+  ## if no intersection of e_it and e_jt => exclude from calculation and issue warning as information
+  ## non intersecting pairs are indicated by length(m.ij) == 0 and, hence, t.ij[i,j] == 0 
+  non.intersecting <- t.ij == 0
+  if (any(non.intersecting, na.rm = TRUE)) {
+    # t.ij is a lower triangular matrix: do not divide by 2 to get the number of non-intersecting pairs!
+    number.of.non.intersecting.pairs <- sum(non.intersecting, na.rm = TRUE)
+    number.of.total.pairs <- (n*(n-1))/2
+    share.non.intersecting.pairs <- number.of.non.intersecting.pairs / number.of.total.pairs * 100
+    warning(paste("Some pairs of individuals (",
+                  signif(share.non.intersecting.pairs, digits = 2),
+                  " percent) do not have any time period in common and have been omitted from calculation", sep=""))
+    selector.mat[non.intersecting] <- FALSE
+  }
   
   ## set upper tri and diagonal to FALSE
-  selector.mat[upper.tri(selector.mat,diag=TRUE)] <- FALSE
+  selector.mat[upper.tri(selector.mat, diag = TRUE)] <- FALSE
 
   ## number of elements in selector.mat
   ## elem.num = 2*(N*(N-1)) in Pesaran (2004), formulae (6), (7), (31), ...
-  elem.num<-sum(selector.mat)
+  elem.num <- sum(selector.mat)
 
   ## end features for local test ######################
 
