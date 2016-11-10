@@ -24,6 +24,7 @@
 
 ## this version 9:
 ## allows for calc. average rho and average absolute rho
+## fixed: 2016-11-10: 'data.name' in htest object now correct.
 
 ## only adds pseries method and modifies pcdres(), the rest from
 ## "production" version (notice diff to pcdtest8() here)
@@ -78,15 +79,15 @@ pcdtest.formula <- function(x, data, index = NULL, model = NULL,
         }
     }
     return(pcdres(tres = tres, n = n, w = w,
-                  form = paste(deparse(substitute(x))),
+                  form = paste(deparse(x)),
                   test = match.arg(test)))
 }
 
 
 ## this panelmodel method here only for adding "rho" and
 ## "absrho" arguments
-
-pcdtest.panelmodel <- function(x, test = c("cd", "sclm", "lm","rho","absrho"),
+ 
+pcdtest.panelmodel <- function(x, test = c("cd", "sclm", "lm", "rho", "absrho"),
                                w = NULL, ...) {
     myres <- resid(x)
     index <- attr(model.frame(x), "index")
@@ -103,11 +104,11 @@ pcdtest.panelmodel <- function(x, test = c("cd", "sclm", "lm","rho","absrho"),
         names(tres[[i]]) <- tind[ind == unind[i]]
     }
     return(pcdres(tres = tres, n = n, w = w,
-                  form = paste(deparse(substitute(formula))),
+                  form = paste(deparse(x$formula)),
                   test = match.arg(test)))
 }
 
-pcdtest.pseries <- function(x, test = c("cd","sclm","lm","rho","absrho"),
+pcdtest.pseries <- function(x, test = c("cd", "sclm", "lm", "rho", "absrho"),
                              w = NULL, ...) {
 
     ## calculates local or global CD test on a pseries 'x' just as it
@@ -137,11 +138,14 @@ pcdtest.pseries <- function(x, test = c("cd","sclm","lm","rho","absrho"),
               }
 
     return(pcdres(tres = tres, n = n, w = w,
-                  form = paste(deparse(substitute(formula))),
+                  form = paste(deparse(substitute(x))),
                   test = match.arg(test)))
 }
 
 pcdres <- function(tres, n, w, form, test) {
+  
+  # 'form' is a character describing the formula (not a formula object!)
+  # and goes into htest_object$data.name
 
   ## Take list of model residuals, group by group, and calc. test
   ## (from here on, what's needed for rho_ij is ok)
@@ -158,6 +162,10 @@ pcdres <- function(tres, n, w, form, test) {
   for(i in 2:n) {
     for(j in 1:(i-1)) {
 
+      ## Pesaran (2004), p. 18: for unbalanced data sets:
+      ## "compute the pair-wise correlations of eit
+      ##  and ejt using the common set of data points"
+      ##
       ## determination of joint range m_i | m_j
       ## m_ij=m_i|m_j, working on names of the residuals' vectors
       m.ij<-intersect( names(tres[[i]]), names(tres[[j]]) )
@@ -193,8 +201,9 @@ pcdres <- function(tres, n, w, form, test) {
   ## transform in logicals (0=FALSE, else=TRUE: no need to worry
   ## about row-std. matrices)
   selector.mat<-matrix(as.logical(w),ncol=n)
-  ## set upper tri and diagonal to false
-  selector.mat[upper.tri(selector.mat,diag=TRUE)]<-FALSE
+  
+  ## set upper tri and diagonal to FALSE
+  selector.mat[upper.tri(selector.mat,diag=TRUE)] <- FALSE
 
   ## number of elements in selector.mat
   ## elem.num = 2*(N*(N-1)) in Pesaran (2004), formulae (6), (7), (31), ...
@@ -244,14 +253,13 @@ pcdres <- function(tres, n, w, form, test) {
    })
 
   ##(insert usual htest features)
-  dname <- paste(deparse(substitute(formula)))
   RVAL <- list(statistic = CDstat,
                parameter = parm,
                method    = paste(testname, "for", dep,
                             "cross-sectional dependence in panels"),
                alternative = "cross-sectional dependence",
                p.value     = pCD,
-               data.name   = dname)
+               data.name   = form)
   class(RVAL) <- "htest"
   return(RVAL)
 }

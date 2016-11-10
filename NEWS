@@ -769,9 +769,10 @@ Changes since version 1.6-1
   * vcovG and vcovBK: added compliance with instrumental variables models (through two-parts formulae).
   * plm.Rd: added note on the intercept in 'fd' models, and how to eliminate it.
   * make.pbalanced: gained argument 'balance.type' which allows to select whether
-    to balance by filling in NA values ("fill", like before) and now also by
+    to balance by filling in NA values ("fill", like before) or (now new) also by
     keeping only time periods shared among all individuals ("shared").
   * pbsytest: issue warning when applied to an unbalanced model (unbalanced tests still in preparation).
   * print.summary.plm: for "between" models: print the no. of obs used in estimation
-                       (like for "fd" models since 1.5-24).
+    (like for "fd" models since 1.5-24).
+  * pcdtest: returned htest object has correct data.name value now.
   
