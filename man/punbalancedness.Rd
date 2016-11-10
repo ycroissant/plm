@@ -24,8 +24,6 @@ punbalancedness(x, \dots)
 
 
 \details{
- While \code{pdim} returns a logical whether a panel data set is balanced or not and detailed
- information about the number of individuals and time observations (see \code{\link{pdim}}), 
  \code{punbalancedness} returns two measures for the unbalancedness of a
  panel data set (called "gamma" (\eqn{\gamma}) and "nu" (\eqn{\nu})).
  
@@ -46,7 +44,9 @@ punbalancedness(x, \dots)
 
  \code{punbalancedness} uses output of \code{\link{pdim}} to calculate the
  unbalancedness measures, so inputs to \code{punbalancedness} can be whatever 
- \code{pdim} works on.
+ \code{pdim} works on. \code{pdim} returns a logical whether a panel data set 
+ is balanced or not and detailed information about the number of individuals 
+ and time observations (see \code{\link{pdim}}).
 }
 
 \value{
@@ -59,7 +59,7 @@ punbalancedness(x, \dots)
 
 \note{Calling \code{punbalancedness} on an estimated \code{panelmodel} object and
   on the corresponding \code{(p)data.frame} used for this estimation does not
-  necessarily yield the same result (like \code{pdim}). When called on an estimated
+  necessarily yield the same result (true also for \code{pdim}). When called on an estimated
   \code{panelmodel}, the number of observations (individual, time) actually used for
   model estimation are taken into account. When called on a \code{(p)data.frame}, the
   rows in the \code{(p)data.frame} are considered, disregarding any NA values in the
@@ -70,18 +70,18 @@ punbalancedness(x, \dots)
 
 \references{
 Ahrens, H.; Pincus, R. (1981), \dQuote{On two measures of unbalancedness in a one-way model
-and their relation to efficiency}, \emph{Biometrical Journal}, \bold{23}, Issue 3, pp. 227--235.
+and their relation to efficiency}, \emph{Biometrical Journal}, \bold{23}(3), pp. 227--235.
 
 Baltagi, Badi H.; Chang, Young-Jae (1994), \dQuote{Incomplete panels: A comparative study of
 alternative estimators for the unbalanced one-way error component regression model},
-\emph{Journal of Econometrics}, \bold{62}, pp. 67--89.
+\emph{Journal of Econometrics}, \bold{62}(2), pp. 67--89.
 
 Baltagi, Badi H.; Song, Seuck Heun; Jung, Byoung Cheol (2001), \dQuote{The unbalanced nested error
-component regression model}, \emph{Journal of Econometrics}, \bold{101}, pp. 357--381.
+component regression model}, \emph{Journal of Econometrics}, \bold{101}(2), pp. 357--381.
 
 Baltagi, Badi H.; Song, Seuck H.; Jung, Byoung C. (2002), \dQuote{A comparative study of alternative
 estimators for the unbalanced two-way error component regression model}, \emph{Econometrics Journal},
-\bold{5}, pp. 480--493.
+\bold{5}(2), pp. 480--493.
 }
 
 \seealso{\code{\link{nobs}}, \code{\link{pdim}}, \code{\link{pdata.frame}}}
