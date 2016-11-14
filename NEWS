@@ -11,7 +11,8 @@ Changes since version 1.6-1
     (like for "fd" models since 1.5-24).
   * pcdtest:
       * returned htest object has correct data.name value now.
-      * NaN stemming from non-intersecting pairs of individuals avoided by omission from calculation.
+      * NaN stemming from non-intersecting periods or only one shared period of 
+        pairs of individuals avoided by omission from calculation.
       * pcdtest(some_var ~ 1, data) does not error anymore.
   * NEWS file: order of entries changed: latest entries now at top of file.
 

@@ -182,12 +182,11 @@ pcdres <- function(tres, n, w, form, test) {
       ej <- tres[[j]][m.ij]
       dei <- ei - mean(ei)
       dej <- ej - mean(ej)
-      rho[i,j] <- ( dei%*%dej )/( sqrt(dei%*%dei) * sqrt(dej%*%dej) )
+      rho[i,j] <- ( dei%*%dej )/( sqrt(dei%*%dei) * sqrt(dej%*%dej) ) # calc. correlation
 
       ## put this here inside summations, as for unbalanced panels
       ## "common obs. numerosity" T_ij may vary on i,j
       t.ij[i,j] <- length(m.ij)
-
       }
     }
 
@@ -208,20 +207,22 @@ pcdres <- function(tres, n, w, form, test) {
   ## about row-std. matrices)
   selector.mat <- matrix(as.logical(w), ncol=n)
   
-  ## if no intersection of e_it and e_jt => exclude from calculation and issue warning as information
-  ## non intersecting pairs are indicated by length(m.ij) == 0 and, hence, t.ij[i,j] == 0 
-  non.intersecting <- t.ij == 0
-  if (any(non.intersecting, na.rm = TRUE)) {
+  ## if no intersection or only 1 shared period of e_it and e_jt
+  ## => exclude from calculation and issue warning as information
+  ## in general, length(m.ij) gives the number of shared periods by indiviudals i, j
+  ## Thus, non intersecting pairs are indicated by length(m.ij) == 0 (t.ij[i,j] == 0)
+  no.one.intersect <- (t.ij <= 1)
+  if (any(no.one.intersect, na.rm = TRUE)) {
     # t.ij is a lower triangular matrix: do not divide by 2 to get the number of non-intersecting pairs!
-    number.of.non.intersecting.pairs <- sum(non.intersecting, na.rm = TRUE)
+    number.of.non.one.intersecting.pairs <- sum(no.one.intersect, na.rm = TRUE)
     number.of.total.pairs <- (n*(n-1))/2
-    share.non.intersecting.pairs <- number.of.non.intersecting.pairs / number.of.total.pairs * 100
+    share.on.one.intersect.pairs <- number.of.non.one.intersecting.pairs / number.of.total.pairs * 100
     warning(paste("Some pairs of individuals (",
-                  signif(share.non.intersecting.pairs, digits = 2),
-                  " percent) do not have any time period in common and have been omitted from calculation", sep=""))
-    selector.mat[non.intersecting] <- FALSE
+                  signif(share.on.one.intersect.pairs, digits = 2),
+                  " percent) do not have any or just one time period in common and have been omitted from calculation", sep=""))
+    selector.mat[no.one.intersect] <- FALSE
   }
-  
+
   ## set upper tri and diagonal to FALSE
   selector.mat[upper.tri(selector.mat, diag = TRUE)] <- FALSE
 
