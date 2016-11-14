@@ -35,8 +35,8 @@ pcdtest(x, \dots)
     \item \code{"sclm"} for the scaled version of Breusch and Pagan's LM statistic, or
     \item \code{"rho"} for the average correlation coefficient,
     \item \code{"absrho"} for the average absolute correlation coefficient,}}
- \item{w}{an \code{n x n} \code{matrix} describing proximity between observations, with \eqn{w_ij = a} where \eqn{a} is any number such that \code{as.logical(a)=TRUE}, if \eqn{i,j} are
- neighbours, \eqn{0} or any number \eqn{b} such that \code{as.logical(b)=FALSE} elsewhere}        
+ \item{w}{an \code{n x n} \code{matrix} describing proximity between individuals, with \eqn{w_ij = a} where \eqn{a} is any number such that \code{as.logical(a)==TRUE}, if \eqn{i,j} are
+ neighbours, \eqn{0} or any number \eqn{b} such that \code{as.logical(b)==FALSE} elsewhere. Only the lower triangluar part (without diagonal) of \code{w} after coercing with \code{as.logical()} is evaluated for neighbouring information (but \code{w} can be symmetric)}
  \item{\dots}{further arguments to be passed on to \code{plm}, such as e.g. \code{effect} or \code{random.method}}
 }
 

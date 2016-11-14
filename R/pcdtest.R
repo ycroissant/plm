@@ -157,10 +157,18 @@ pcdres <- function(tres, n, w, form, test) {
   ## to be called from either pcdtest.formula or
   ## pcdtest.panelmodel or pcdtest.pseries
 
+  # input check
+  if (!is.null(w)) {
+    dims.w <- dim(w)
+    if(dims.w[1] != n || dims.w[2] != n)
+      stop(paste0("matrix 'w' describing proximity of individuals has wrong dimensions: ",
+           "should be ", n, " x ", n, " (no. of individuals) but is ", dims.w[1], " x ", dims.w[2]))
+  }
+  
   ## rho_ij matrix
-  rho <- matrix(NA,ncol=n,nrow=n)
+  rho <- matrix(NA, ncol = n,nrow = n)
   ## T_ij matrix
-  t.ij <- matrix(NA,ncol=n,nrow=n)
+  t.ij <- matrix(NA, ncol = n, nrow = n)
 
   ## calc. only for lower tri, rest is nullified later anyway
   for(i in 2:n) {
@@ -195,7 +203,7 @@ pcdres <- function(tres, n, w, form, test) {
 
   ## if global test, set all elements in w to 1
   if(is.null(w)) {
-    w <- matrix(1,ncol=n,nrow=n)
+    w <- matrix(1, ncol = n, nrow = n)
     dep <- ""
   } else { dep <- "local" }
 
@@ -205,7 +213,21 @@ pcdres <- function(tres, n, w, form, test) {
 
   ## transform in logicals (0=FALSE, else=TRUE: no need to worry
   ## about row-std. matrices)
-  selector.mat <- matrix(as.logical(w), ncol=n)
+  selector.mat <- matrix(as.logical(w), ncol = n)
+  
+  ## some santiy checks for 'w' (not perfect sanity, but helps)
+  if (sum(selector.mat[lower.tri(selector.mat, diag = FALSE)]) == 0) {
+    stop(paste0("no neighbours individuals defined in proximity matrix 'w'; ",
+                "only lower triangular part of 'w' (w/o diagonal) is evaluated"))
+  } else {
+    if (sum(selector.mat[upper.tri(selector.mat, diag = FALSE)]) != 0) {
+      if (!isSymmetric((unname(selector.mat)))) { # unname needed to ignore rownames and colnames
+        stop(paste0("proximity matrix 'w' is ambiguous: upper and lower triangular part ",
+                    "define different neighbours (it is sufficient to provide information ",
+                    "about neighbours only in the lower triangluar part of 'w'"))
+      }
+    }
+  }
   
   ## if no intersection or only 1 shared period of e_it and e_jt
   ## => exclude from calculation and issue warning as information

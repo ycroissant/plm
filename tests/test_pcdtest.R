@@ -53,3 +53,20 @@ if (is.na(testres4$p.value)) stop("p-value is NA")
 ## "Error in lm.fit(tX, ty) : 'x' must be a matrix"
 pcdtest(value ~ 1, data = Grunfeld)
 
+## tests of local test (with arg w)
+w <- diag(1, nrow = 10)
+w[2,1] <- 1
+testres5 <- pcdtest(mod_pool, test = "cd", w = w)
+if (is.nan(testres5$statistic)) stop("statistic is NaN")
+if (is.na(testres5$statistic)) stop("statistic is NA")
+if (is.na(testres5$p.value)) stop("p-value is NA")
+
+### should result in meaningful errors
+## upper and lower triangular part define different neighbours
+# w1 <- diag(1, nrow = 10)
+# w1[1,3] <- 1
+# w1[2,1] <- 1
+# pcdtest(mod_pool, test = "cd", w = w1)
+## wrong dimension
+# w2 <- diag(1, nrow = 10, ncol = 11)
+# pcdtest(mod_pool, test = "cd", w = w2)
