@@ -217,7 +217,7 @@ pcdres <- function(tres, n, w, form, test) {
   
   ## some santiy checks for 'w' (not perfect sanity, but helps)
   if (sum(selector.mat[lower.tri(selector.mat, diag = FALSE)]) == 0) {
-    stop(paste0("no neighbours individuals defined in proximity matrix 'w'; ",
+    stop(paste0("no neighbouring individuals defined in proximity matrix 'w'; ",
                 "only lower triangular part of 'w' (w/o diagonal) is evaluated"))
   } else {
     if (sum(selector.mat[upper.tri(selector.mat, diag = FALSE)]) != 0) {

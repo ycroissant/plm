@@ -84,6 +84,12 @@ pcdtest(g, test="sclm")
 ## test on pseries
 pGrunfeld <- pdata.frame(Grunfeld)
 pcdtest(pGrunfeld$value)
+
+## local test
+## define neighbours for individual 2: 1, 3, 4, 5 in lower triangular matrix
+w <- matrix(0, ncol= 10, nrow=10)
+w[2,1] <- w[3,2] <- w[4,2] <- w[5,2] <- 1
+pcdtest(g, w = w)
 }
 
 \keyword{htest}
