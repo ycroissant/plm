@@ -19,6 +19,7 @@ Changes since version 1.6-1
   * is.pbalanced.*: methods added to determine balancedness for convenience. Same as pdim()$balanced,
     but avoids calculations performed by pdim() which are not necessary to determine (just) the
     balancedness.
+  * some functions little more efficient by using is.pbalanced() instead of pdim()$balanced.
 
 
 Changes since version 1.5-35

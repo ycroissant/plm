@@ -68,9 +68,9 @@ print.form <- function(x,length.line){
 
 print.theta <- function(x,digits){
   effect <- describe(x, "effect")
-  pdim <- pdim(model.frame(x))
+  balanced <- is.pbalanced(model.frame(x)) # pdim <- pdim(model.frame(x))
   if (effect!="twoways"){
-    if (pdim$balanced){
+    if (balanced){
       cat(paste("theta: ",signif(x$theta,digits)," \n"))
     }
     else{
@@ -79,7 +79,7 @@ print.theta <- function(x,digits){
     }
   }
   else{
-    if(pdim$balanced){
+    if (balanced){
       cat(paste("theta  : ",signif(x$theta$id,digits)," (id) ",signif(x$theta$time,digits)," (time) ",signif(x$theta$total,digits)," (total)\n",sep=""))
     }
   }

@@ -60,7 +60,7 @@ model.matrix.pFormula <- function(object, data,
      stop("NA in the individual index variable")
   }
   time <- index[[2]]
-  pdim <- pdim(data)
+  balanced <- is.pbalanced(data) # pdim <- pdim(data)
   if (has.intercept && model == "within") X <- X[ , -1, drop = FALSE]
   if (effect != "twoways"){
     if (effect == "individual") cond <- id
@@ -76,7 +76,7 @@ model.matrix.pFormula <- function(object, data,
                      )
   }
   else{
-    if (pdim$balanced){ # two-ways balanced
+    if (balanced){ # two-ways balanced
       result <- switch(model,
                        "within"  = X - Between(X,id) - Between(X,time) +
                                    matrix(.colMeans(X,nrow(X),ncol(X)), nrow(X),ncol(X),byrow=T), # matrix(apply(X,2,mean),nrow(X),ncol(X),byrow=T)

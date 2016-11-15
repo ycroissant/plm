@@ -121,8 +121,9 @@ plm <-  function(formula, data, subset, na.action,
 plm.fit <- function(formula, data, model, effect, random.method, random.dfcor, inst.method){
   # if a random effect model is estimated, compute the error components
   if (model == "random"){
-    pdim <- pdim(data)
-    is.balanced <- pdim$balanced
+    # pdim <- pdim(data)
+    # is.balanced <- pdim$balanced
+    is.balanced <- is.pbalanced(data)
     estec <- ercomp(formula, data, effect, method = random.method, dfcor = random.dfcor)
     sigma2 <- estec$sigma2
     theta <- estec$theta

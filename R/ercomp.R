@@ -1,20 +1,5 @@
 trace <- function(x) sum(diag(x))
 
-## pdim.default is now in file R/attributes.R
-## pdim.default <- function(x, y, ...){
-##   if (length(x) != length(y)) stop("The length of the two vectors differs\n")
-##   x <- x[drop = TRUE]
-##   y <- y[drop = TRUE]
-##   z <- table(x, y)
-##   cards <- list(id = nrow(z), time = ncol(z), sample = length(x))
-##   panel.names <- list(id = rownames(z), time = colnames(z))
-##   if (any(as.vector(z) == 0)) balanced <- FALSE else balanced <- TRUE
-##   if (any(as.vector(z) > 1)) stop("duplicate couples (id-time)\n")
-##   margins <- list(id = apply(z, 1, sum), time = apply(z, 2, sum))
-##   z <- list(cards = cards, margins = margins, balanced = balanced, panel.names = panel.names)
-##   class(z) <- "pdim"
-##   z
-## }  
 
 ### ercomp(formula, data, random.method, effect)
 
@@ -58,7 +43,7 @@ ercomp.formula <- function(object, data,
 
     # if formula is not a pFormula object, coerce it
     if (!inherits(object, "pFormula")) object <- pFormula(object)
-    balanced <- pdim(data)$balanced
+    balanced <- is.pbalanced(data) # balanced <- pdim(data)$balanced
     Z <- model.matrix(object, data, model = "pooling")
     K <- ncol(Z) - 1
     if (effect != 'twoways'){

@@ -81,7 +81,7 @@ print.summary.plm <- function(x, digits = max(3, getOption("digits") - 2),
     # print this extra info, b/c model.frames of FD and between models
     # have original (undifferenced/"un-between-ed") obs/rows of the data
     cat(paste0("Observations used in estimation: ", nobs(x), "\n"))}
-                                                          
+
   if (model == "random"){
     cat("\nEffects:\n")
     print(x$ercomp)
@@ -293,12 +293,13 @@ plot.plm <- function(x, dx = 0.2, N = NULL, seed = 1,
     mco <- update(x, model = "pooling")
     if (random) re <- update(x, model = "random")
     if (between) be <- update(x, model = "between")
-    n <- pdim(x)$nT$n
+    pdim <- pdim(x)
+    n <- pdim$nT$n
     if (! subs) N <- n
     ids <- unique(index(x, "id"))
     if (subs) ids <- ids[sample(1:length(ids), N, replace = FALSE)]
     sel <- index(x, "id") %in% ids
-    T <- pdim(x)$nT$T
+    T <- pdim$nT$T
     cols <- rainbow(N)
     pts <- sample(1:25, N, replace = TRUE)
     thex <- as.numeric(model.matrix(x, model = "pooling")[sel, 2])
