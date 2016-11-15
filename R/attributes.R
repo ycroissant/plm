@@ -128,15 +128,15 @@ print.pvar <- function(x, ...){
 }
 
 #### pdim ####
-
+# Note: some parts of this code are copied verbatim to is.pbalanced() 
 pdim <- function(x, ...){
   UseMethod("pdim")
 }
 
 pdim.default <- function(x, y, ...){
   if (length(x) != length(y)) stop("The length of the two vectors differs\n")
-  x <- x[drop = TRUE]
-  y <- y[drop = TRUE]
+  x <- x[drop = TRUE] # drop unused factor levels so that table 
+  y <- y[drop = TRUE] # gives only needed combinations
   z <- table(x,y)
   Ti <- apply(z,1,sum)
   nt <- apply(z,2,sum)
@@ -171,12 +171,18 @@ pdim.pdata.frame <- function(x,...){
   pdim(index[[1]],index[[2]])
 }
 
+pdim.pseries <- function(x,...) {
+  index <- attr(x, "index")
+  pdim(index[[1]], index[[2]])
+}
+
 pdim.panelmodel <- function(x, ...){
   x <- model.frame(x)
   pdim(x)
 }
 
 pdim.pgmm <- function(x, ...){
+## pgmm is also class panelmodel, but take advantage of the pdim attribute in it
   attr(x, "pdim")
 }
 

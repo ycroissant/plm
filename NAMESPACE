@@ -1,5 +1,5 @@
 export(plm, pvcm, pgmm, pggls, pht, pcce, pmg, plmtest, phtest, pFtest, 
-       detect_lin_dep, is.pconsecutive, make.pconsecutive, make.pbalanced, within_intercept,
+       detect_lin_dep, is.pconsecutive, is.pbalanced, make.pconsecutive, make.pbalanced, within_intercept,
        pvar, pdim, pooltest, dynformula, sargan, mtest, ercomp, pvcovHC,
        pbsytest, pdwtest, pbgtest, pbltest, pwartest, pwtest, pwfdtest, pcdtest,
        plm.data, pdata.frame, between, Between, Within, lag, lead, pFormula, pmodel.response,
@@ -63,6 +63,7 @@ S3method("as.list",       "pdata.frame")
 S3method("pdim", "data.frame")
 S3method("pdim", "pdata.frame")
 S3method("pdim", "panelmodel")
+S3method("pdim", "pseries")
 S3method("pdim", "pgmm")
 S3method("pdim", "default")
 S3method("print", "pdim")
@@ -223,6 +224,12 @@ S3method("is.pconsecutive", "default")
 S3method("make.pconsecutive", "data.frame")
 S3method("make.pconsecutive", "pdata.frame")
 S3method("make.pconsecutive", "pseries")
+# is.pbalanced
+S3method("is.pbalanced", "data.frame")
+S3method("is.pbalanced", "pdata.frame")
+S3method("is.pbalanced", "pseries")
+S3method("is.pbalanced", "panelmodel")
+S3method("is.pbalanced", "pgmm")
 # make.pbalanced
 S3method("make.pbalanced", "data.frame")
 S3method("make.pbalanced", "pdata.frame")

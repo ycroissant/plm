@@ -2,7 +2,9 @@
 \alias{pdim}
 \alias{pdim.data.frame}
 \alias{pdim.pdata.frame}
+\alias{pdim.pseries}
 \alias{pdim.panelmodel}
+\alias{pdim.pgmm}
 \alias{pdim.default}
 \alias{print.pdim}
 
@@ -15,11 +17,13 @@
 pdim(x, \dots)
 \method{pdim}{data.frame}(x, index = NULL, \dots)
 \method{pdim}{panelmodel}(x, \dots)
+\method{pdim}{pseries}(x, \dots)
 \method{pdim}{pdata.frame}(x, \dots)
+\method{pdim}{pgmm}(x, \dots)
 }
 
 \arguments{
- \item{x}{a \code{data.frame}, a \code{pdata.frame} or a \code{panelmodel} object,}
+ \item{x}{a \code{data.frame}, a \code{pdata.frame}, a \code{pseries}, a \code{panelmodel}, or a \code{pgmm} object,}
  \item{index}{see \code{\link{pdata.frame}},}
  \item{\dots}{further arguments.}
 }
@@ -53,6 +57,7 @@ pdim(x, \dots)
 \author{Yves Croissant}
 
 \seealso{
+ \code{\link{is.pbalanced}} to just determine balancedness of data (slightly faster than \code{pdim}),\cr
  \code{\link{punbalancedness}} for measures of unbalancedness,\cr
  \code{\link{nobs}}, \code{\link{pdata.frame}},\cr
  \code{\link{pvar}} to check for each variable if it varies cross-sectionally and over time.

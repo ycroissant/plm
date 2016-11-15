@@ -57,6 +57,7 @@ based on the index variables. The returned data is sorted as a stacked time seri
 }
 
 \seealso{
+ \code{\link{is.pbalanced}} to check if data are balanced; 
  \code{\link{is.pconsecutive}} to check if data are consecutive; \code{\link{make.pconsecutive}} to make data consecutive 
  (and, optionally, also balanced).\cr
  \code{\link{punbalancedness}} for two measures of unbalancedness,

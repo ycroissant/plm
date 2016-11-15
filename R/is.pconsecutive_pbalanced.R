@@ -26,8 +26,6 @@ is.pconsecutive.default <- function(x, id, time, na.rm.tindex = FALSE, ...) {
     
   }
   
-#  if (!is.factor(time)) time <- factor(time)
-  
   # NB: 'time' is assumed to be organised as stacked time series (sorted for each individual)
   #     (successive blocks of individuals, each block being a time series for the respective individual))
   #
@@ -88,30 +86,83 @@ is.pconsecutive.data.frame <- function(x, index = NULL, na.rm.tindex = FALSE, ..
 #  if (!identical(x, x_ordered)) 
 #    print("Note: for test of consecutiveness of time periods, the data.frame was ordered by index variables (id, time)")
   
-  is.pconsecutive.default(x_ordered, id_ordered, time_ordered, na.rm.tindex = na.rm.tindex, ...)
+  return(is.pconsecutive.default(x_ordered, id_ordered, time_ordered, na.rm.tindex = na.rm.tindex, ...))
 }
 
 is.pconsecutive.pseries <- function(x, na.rm.tindex = FALSE, ...){
   index <- attr(x, "index")
   id   <- index[[1]]
   time <- index[[2]]
-  is.pconsecutive.default(x, id, time, na.rm.tindex = na.rm.tindex, ...)
+  return(is.pconsecutive.default(x, id, time, na.rm.tindex = na.rm.tindex, ...))
 }
 
 is.pconsecutive.pdata.frame <- function(x, na.rm.tindex = FALSE, ...){
   index <- attr(x, "index")
   id   <- index[[1]]
   time <- index[[2]]
-  is.pconsecutive.default(x, id, time, na.rm.tindex = na.rm.tindex, ...)
+  return(is.pconsecutive.default(x, id, time, na.rm.tindex = na.rm.tindex, ...))
 }
 
 is.pconsecutive.panelmodel <- function(x, na.rm.tindex = FALSE, ...){
   index <- attr(x$model, "index")
   id   <- index[[1]]
   time <- index[[2]]
-  is.pconsecutive.default(x, id, time, na.rm.tindex = na.rm.tindex, ...)
+  return(is.pconsecutive.default(x, id, time, na.rm.tindex = na.rm.tindex, ...))
 }
 
 is.pconsecutive <- function(x, ...){
   UseMethod("is.pconsecutive")
+}
+
+########### is.pbalanced ##############
+### for convenience and to be faster than pdim() for the purpose
+### of the determination of balancedness only, because it avoids
+### pdim()'s calculations which are unnecessary for balancedness.
+###
+### copied (and adapted) methods and code from pdim.*
+### (only relevant parts to determine balancedness)
+is.pbalanced <- function(x, ...) {
+  UseMethod("is.pbalanced")
+}
+
+is.pbalanced.default <- function(x, y, ...) {
+  if (length(x) != length(y)) stop("The length of the two vectors differs\n")
+  x <- x[drop = TRUE] # drop unused factor levels so that table 
+  y <- y[drop = TRUE] # gives only needed combinations
+  z <- table(x, y)
+  if (any(as.vector(z) == 0)) {
+    balanced <- FALSE
+  } else { balanced <- TRUE }
+  
+  if (any(as.vector(z) > 1)) warning("duplicate couples (id-time)\n")
+  
+  return(balanced)
+}
+
+is.pbalanced.data.frame <- function(x, index = NULL, ...) {
+  x <- pdata.frame(x, index)
+  index <- attr(x, "index")
+  id <- index[[1]]
+  time <- index[[2]]
+  return(is.pbalanced(id, time))
+}
+
+is.pbalanced.pdata.frame <- function(x, ...) {
+  index <- attr(x, "index")
+  return(is.pbalanced(index[[1]], index[[2]]))
+}
+
+is.pbalanced.pseries <- function(x, ...) {
+  index <- attr(x, "index")
+  return(is.pbalanced(index[[1]], index[[2]]))
+}
+
+is.pbalanced.panelmodel <- function(x, ...) {
+  x <- model.frame(x)
+  return(is.pbalanced(x))
+}
+
+is.pbalanced.pgmm <- function(x, ...) {
+## pgmm is also class panelmodel, but take advantage of the pdim attribute in it
+  return(attr(x, "pdim")$balanced)
 }

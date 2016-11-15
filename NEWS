@@ -15,6 +15,10 @@ Changes since version 1.6-1
         pairs of individuals avoided by omission from calculation.
       * pcdtest(some_var ~ 1, data) does not error anymore.
   * NEWS file: order of entries changed: latest entries now at top of file.
+  * pdim.pseries: added method.
+  * is.pbalanced.*: methods added to determine balancedness for convenience. Same as pdim()$balanced,
+    but avoids calculations performed by pdim() which are not necessary to determine (just) the
+    balancedness.
 
 
 Changes since version 1.5-35
