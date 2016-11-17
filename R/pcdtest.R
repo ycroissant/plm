@@ -22,12 +22,9 @@
 
 ## production version, generic and based on plm
 
-## this version 9:
-## allows for calc. average rho and average absolute rho
-## fixed: 2016-11-10: 'data.name' in htest object now correct.
-
-## only adds pseries method and modifies pcdres(), the rest from
-## "production" version (notice diff to pcdtest8() here)
+## this version 10:
+## substantial optimization for speed, now fast (few seconds) on N=3000
+## all methods pass on a pseries to pcdres()
 
 pcdtest <- function(x, ...)
 {
@@ -48,9 +45,11 @@ pcdtest.formula <- function(x, data, index = NULL, model = NULL,
             call. = FALSE)
         model <- "within"
     }
-    index <- attr(model.frame(mymod), "index")
-    tind <- as.numeric(index[[2]])
-    ind <- as.numeric(index[[1]])
+    
+    ind0 <- attr(model.frame(mymod), "index")
+    tind <- as.numeric(ind0[[2]])
+    ind <- as.numeric(ind0[[1]])
+    
     if (is.null(model)) {
         ## estimate individual regressions one by one
         X <- model.matrix(mymod)
@@ -77,7 +76,7 @@ pcdtest.formula <- function(x, data, index = NULL, model = NULL,
         tres <- pee$ee
     }
     else {
-        mymod <- plm(x, data, model = model, ...)
+        mymod <- plm(x, data, index = index, model = model, ...)
         tres <- resid(mymod)
         unind <- unique(ind)
         n <- length(unind)
@@ -98,7 +97,7 @@ pcdtest.panelmodel <- function(x, test = c("cd", "sclm", "lm", "rho", "absrho"),
                                w = NULL, ...) {
     tres <- resid(x)
     index <- attr(model.frame(x), "index")
-    tind <- as.numeric(index[[2]])
+    #tind <- as.numeric(index[[2]])
     ind <- as.numeric(index[[1]])
     unind <- unique(ind)
     n <- length(unind)
@@ -306,6 +305,9 @@ preshape <- function(x, na.rm=TRUE, ...) {
                     timevar=inames[2], idvar=inames[1])
     ## drop ind in first column
     mres <- mres[,-1]
+    ## reorder columns (may be scrambled depending on first
+    ## available obs in unbalanced panels)
+    mres <- mres[, order(dimnames(mres)[[2]])]
     ## if requested, drop columns (time periods) with NAs
     if(na.rm) {
         rmc <- which(is.na(apply(mres, 2, sum)))
