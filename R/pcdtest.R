@@ -52,57 +52,59 @@ pcdtest.formula <- function(x, data, index = NULL, model = NULL,
     tind <- as.numeric(index[[2]])
     ind <- as.numeric(index[[1]])
     if (is.null(model)) {
+        ## estimate individual regressions one by one
         X <- model.matrix(mymod)
         y <- model.response(model.frame(mymod))
         unind <- unique(ind)
         n <- length(unind)
-        tres <- vector("list", n)
+        ti.res <- vector("list", n)
+        ind.res <- vector("list", n)
+        tind.res <- vector("list", n)
         for (i in 1:n) {
             tX <- X[ind == unind[i], , drop = FALSE]
             ty <- y[ind == unind[i]]
-            tres[[i]] <- lm.fit(tX, ty)$resid
-            names(tres[[i]]) <- tind[ind == unind[i]]
+            res.i <- lm.fit(tX, ty)$resid
+            ti.res[[i]] <- res.i
+            names(ti.res[[i]]) <- tind[ind == unind[i]]
+            ind.res[[i]] <- rep(i, length(res.i))
+            tind.res[[i]] <- tind[ind == unind[i]]
         }
+        ## make pseries of (all) residuals
+        resdata <- data.frame(ee = unlist(ti.res),
+                              ind = unlist(ind.res),
+                              tind = unlist(tind.res))
+        pee <- pdata.frame(resdata, index = c("ind", "tind"))
+        tres <- pee$ee
     }
     else {
         mymod <- plm(x, data, model = model, ...)
-        myres <- mymod$residuals
+        tres <- resid(mymod)
         unind <- unique(ind)
         n <- length(unind)
         t <- min(pdim(mymod)$Tint$Ti)
         nT <- length(ind)
         k <- length(mymod$coefficients)
-        tres <- vector("list", n)
-        for (i in 1:n) {
-            tres[[i]] <- myres[ind == unind[i]]
-            names(tres[[i]]) <- tind[ind == unind[i]]
         }
-    }
+
     return(pcdres(tres = tres, n = n, w = w,
                   form = paste(deparse(x)),
                   test = match.arg(test)))
 }
 
 
-## this panelmodel method here only for adding "rho" and
-## "absrho" arguments
+## panelmodel method: just fetch resid (as a pseries)
  
 pcdtest.panelmodel <- function(x, test = c("cd", "sclm", "lm", "rho", "absrho"),
                                w = NULL, ...) {
-    myres <- resid(x)
+    tres <- resid(x)
     index <- attr(model.frame(x), "index")
     tind <- as.numeric(index[[2]])
     ind <- as.numeric(index[[1]])
     unind <- unique(ind)
     n <- length(unind)
-    t <- pdim(x)$Tint$Ti
-    nT <- length(ind)
-    k <- length(x$coefficients)
-    tres <- vector("list", n)
-    for (i in 1:n) {
-        tres[[i]] <- myres[ind == unind[i]]
-        names(tres[[i]]) <- tind[ind == unind[i]]
-    }
+    #t <- pdim(x)$Tint$Ti
+    #nT <- length(ind)
+    #k <- length(x$coefficients)
     return(pcdres(tres = tres, n = n, w = w,
                   form = paste(deparse(x$formula)),
                   test = match.arg(test)))
@@ -127,19 +129,21 @@ pcdtest.pseries <- function(x, test = c("cd", "sclm", "lm", "rho", "absrho"),
     unind <- unique(ind)
     n <- length(unind)
 
+    tres <- x
+    
     ## "pre-allocate" an empty list of length n
-    tres <- vector("list", n)
+    #tres <- vector("list", n)
 
     ## use model residuals, group by group
     ## list of n:
     ## t_i residuals for each x-sect. 1..n
-    for(i in 1:n) {
-              # remove NAs
-              xnonna <- !is.na(x[ind==unind[i]])
-              tres[[i]] <- x[ind==unind[i]][xnonna]
-              ## name resids after the time index
-              names(tres[[i]]) <- tind[ind==unind[i]][xnonna]
-              }
+    #for(i in 1:n) {
+    #          # remove NAs
+    #          xnonna <- !is.na(x[ind==unind[i]])
+    #          tres[[i]] <- x[ind==unind[i]][xnonna]
+    #          ## name resids after the time index
+    #          names(tres[[i]]) <- tind[ind==unind[i]][xnonna]
+    #          }
 
     return(pcdres(tres = tres, n = n, w = w,
                   form = paste(deparse(substitute(x))),
@@ -151,12 +155,29 @@ pcdres <- function(tres, n, w, form, test) {
   # 'form' is a character describing the formula (not a formula object!)
   # and goes into htest_object$data.name
 
-  ## Take list of model residuals, group by group, and calc. test
+  ## Take model residuals as pseries, and calc. test
   ## (from here on, what's needed for rho_ij is ok)
+    
   ## this function is the modulus calculating the test,
   ## to be called from either pcdtest.formula or
   ## pcdtest.panelmodel or pcdtest.pseries
 
+  ## now (since v10) tres is the pseries of model residuals
+    
+    ## calc matrix of all possible pairwise corr.
+    ## coeffs. (200x speedup from using cor())
+    wideres <- t(preshape(tres, na.rm=FALSE))
+    rho <- cor(wideres, use="pairwise.complete.obs")
+    
+    ## find length of intersecting pairs
+    ## fast method, times down 200x
+    data.res <- data.frame(time=attr(tres, "index")[[2]],
+                           indiv=attr(tres, "index")[[1]])
+    ## tabulate which obs in time for each ind are !na
+    presence.tab <- table(data.res)
+    ## calculate t.ij
+    t.ij <- crossprod(presence.tab)
+    
   # input check
   if (!is.null(w)) {
     dims.w <- dim(w)
@@ -165,38 +186,6 @@ pcdres <- function(tres, n, w, form, test) {
            "should be ", n, " x ", n, " (no. of individuals) but is ", dims.w[1], " x ", dims.w[2]))
   }
   
-  ## rho_ij matrix
-  rho <- matrix(NA, ncol = n,nrow = n)
-  ## T_ij matrix
-  t.ij <- matrix(NA, ncol = n, nrow = n)
-
-  ## calc. only for lower tri, rest is nullified later anyway
-  for(i in 2:n) {
-    for(j in 1:(i-1)) {
-
-      ## Pesaran (2004), p. 18: for unbalanced data sets:
-      ## "compute the pair-wise correlations of eit
-      ##  and ejt using the common set of data points"
-      ##
-      ## determination of joint range m_i | m_j
-      ## m_ij=m_i|m_j, working on names of the residuals' vectors
-      m.ij <- intersect(names(tres[[i]]), names(tres[[j]]))
-
-      ## for this ij do me_i=mean_t(e_it[m_ij]), idem j
-      ## and rho and T_ij as in Pesaran, page 18
-      ## (as mean(ei)=0 doesn't necessarily hold any more)
-
-      ei <- tres[[i]][m.ij]
-      ej <- tres[[j]][m.ij]
-      dei <- ei - mean(ei)
-      dej <- ej - mean(ej)
-      rho[i,j] <- ( dei%*%dej )/( sqrt(dei%*%dei) * sqrt(dej%*%dej) ) # calc. correlation
-
-      ## put this here inside summations, as for unbalanced panels
-      ## "common obs. numerosity" T_ij may vary on i,j
-      t.ij[i,j] <- length(m.ij)
-      }
-    }
 
   ## begin features for local test ####################
   ## higher orders omitted for now, use wlag() explicitly
@@ -305,5 +294,23 @@ pcdres <- function(tres, n, w, form, test) {
                data.name   = form)
   class(RVAL) <- "htest"
   return(RVAL)
+}
+
+preshape <- function(x, na.rm=TRUE, ...) {
+    ## reshapes pseries,
+    ## e.g. of residuals from a panelmodel,
+    ## in wide form
+    inames <- names(attr(x, "index"))
+    mres <- reshape(cbind(as.vector(x), attr(x, "index")),
+                    direction="wide",
+                    timevar=inames[2], idvar=inames[1])
+    ## drop ind in first column
+    mres <- mres[,-1]
+    ## if requested, drop columns (time periods) with NAs
+    if(na.rm) {
+        rmc <- which(is.na(apply(mres, 2, sum)))
+        if(sum(rmc)>0) mres <- mres[,-rmc]
+    }
+    return(mres)
 }
 

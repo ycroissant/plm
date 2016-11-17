@@ -1,3 +1,7 @@
+Changes since version 1.6-2
+
+  * pcdtest optimized for speed. 'preshape()' added to pcdtest.R to take care of reshaping in wide form
+    prior to applying 'cor()'.
 
 Changes since version 1.6-1
 
