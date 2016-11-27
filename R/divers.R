@@ -282,8 +282,8 @@ fancy.row.names <- function(index, sep = "-") {
   return(paste(index[[1]], index[[2]], sep = sep))
 }
 
-# helper function for Ftest: trans_clubSandwich_vcov
-# translate clubSandwich's vcov object so it is suitable for summary.plm, plm's Ftest
+# helper function for pwaldtest: trans_clubSandwich_vcov
+# translate clubSandwich's vcov object so it is suitable for summary.plm, plm's pwaldtest
 # attribute "cluster" in clubSandwich's vcov objects contains the cluster variable it
 # plm's vcov objects also have attribute "cluster" but it contains a character as
 # information about the cluster dimension (either "group" or "time")

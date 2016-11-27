@@ -1,7 +1,7 @@
 
 # summary.plm creates a specific summary.plm object that is derived from the associated plm object
 summary.plm <- function(object, .vcov = NULL, ...){
-  object$fstatistic <- pwaldtest(object, test = "F") # TODO: "activate" robust F test by: pwaldtest(object, test = "F", .vcov = .vcov)
+  object$fstatistic <- pwaldtest(object, test = "F", .vcov = .vcov)
   model <- describe(object, "model")
   effect <- describe(object, "effect")
   object$r.squared <- c(rsq  = r.squared(object),

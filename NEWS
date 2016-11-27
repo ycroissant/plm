@@ -2,6 +2,7 @@ Changes since version 1.6-3
 
   * Function Ftest renamed to pwaldtest (there was never a CRAN release with Ftest
     exported, thus no deprecation warning).
+  * summary.plm: F statistic uses adjusted df2 parameter in case of robust vcov.
 
 Changes since version 1.6-2
 

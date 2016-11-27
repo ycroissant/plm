@@ -287,7 +287,7 @@ vcovG.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
     ## sandwich
     mycov <- pane %*% salame %*% pane
     
-    # save information about cluster variable in matrix (needed for e.g. robust Ftest)
+    # save information about cluster variable in matrix (needed for e.g. robust F test)
     attr(mycov, which = "cluster") <- match.arg(cluster)
     return(mycov)
 }
@@ -336,7 +336,7 @@ vcovDC.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 
     res <- Vcx + Vct - Vw
     
-    # save information about cluster variable in matrix (needed for e.g. robust Ftest)
+    # save information about cluster variable in matrix (needed for e.g. robust F test)
     attr(res, which = "cluster") <- "group-time"
     return(res)
 }
@@ -592,7 +592,7 @@ vcovBK.plm <- function(x, type=c("HC0", "HC1", "HC2", "HC3", "HC4"),
   ## sandwich
   mycov <- pane %*% salame %*% pane
   
-  # save information about cluster variable in matrix (needed for e.g. robust Ftest)
+  # save information about cluster variable in matrix (needed for e.g. robust F test)
   attr(mycov, which = "cluster") <- match.arg(cluster)
   return(mycov)
 }
