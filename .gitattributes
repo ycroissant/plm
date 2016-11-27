@@ -54,7 +54,6 @@ inst/CITATION -text
 man/Cigar.Rd -text
 man/Crime.Rd -text
 man/EmplUK.Rd -text
-man/Ftest.Rd -text
 man/Gasoline.Rd -text
 man/Grunfeld.Rd -text
 man/Hedonic.Rd -text
@@ -108,6 +107,7 @@ man/punbalancedness.Rd -text
 man/purtest.Rd -text
 man/pvar.Rd -text
 man/pvcm.Rd -text
+man/pwaldtest.Rd -text
 man/pwartest.Rd -text
 man/pwfdtest.Rd -text
 man/pwtest.Rd -text
@@ -127,8 +127,6 @@ tests/testEvaluation.R -text
 tests/testEvaluation.Rout.save -text
 tests/test_Chow.R -text
 tests/test_Estimators.R -text
-tests/test_Ftest.R -text
-tests/test_Ftest_vcovG_attr_cluster.R -text
 tests/test_R2_adj_R2.R -text
 tests/test_as.data.frame_as.matrix.R -text
 tests/test_as.list.pdata.frame.R -text
@@ -162,6 +160,8 @@ tests/test_preserve_rownames.R -text
 tests/test_pseries_subsetting.R -text
 tests/test_punbalancedness.R -text
 tests/test_pvar.R -text
+tests/test_pwaldtest.R -text
+tests/test_pwaldtest_vcovG_attr_cluster.R -text
 tests/test_pwfdtest_pwartest.R -text
 tests/test_pwtest.R -text
 tests/test_summary.plm_vcov.R -text

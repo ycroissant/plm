@@ -1,6 +1,6 @@
-#### Testfile for Ftest()
+#### Testfile for pwaldtest()
 #
-# see also tests/test_Ftest_vcovG_attr_cluster.R for the attribute 'cluster' of the furnished vcovs
+# see also tests/test_pwaldtest_vcovG_attr_cluster.R for the attribute 'cluster' of the furnished vcovs
 options(scipen = 999)
 options(digits = 8)
 library(plm)
@@ -16,18 +16,18 @@ gre<- plm(inv ~ value + capital, data = Grunfeld,
           effect = "individual", model = "random")
 
 # Chisq
-plm:::Ftest(gp, test = "Chisq")
-plm:::Ftest(gi, test = "Chisq")
-plm:::Ftest(gt, test = "Chisq")
-plm:::Ftest(gd, test = "Chisq")
-plm:::Ftest(gre, test = "Chisq")
+plm:::pwaldtest(gp, test = "Chisq")
+plm:::pwaldtest(gi, test = "Chisq")
+plm:::pwaldtest(gt, test = "Chisq")
+plm:::pwaldtest(gd, test = "Chisq")
+plm:::pwaldtest(gre, test = "Chisq")
 
 # F
-plm:::Ftest(gp, test = "F")
-plm:::Ftest(gi, test = "F")
-plm:::Ftest(gt, test = "F")
-plm:::Ftest(gd, test = "F")
-plm:::Ftest(gre, test = "F")
+plm:::pwaldtest(gp, test = "F")
+plm:::pwaldtest(gi, test = "F")
+plm:::pwaldtest(gt, test = "F")
+plm:::pwaldtest(gd, test = "F")
+plm:::pwaldtest(gre, test = "F")
 
 
 # Gretl uses Stata's small sample adjustment
@@ -45,35 +45,35 @@ plm:::Ftest(gre, test = "F")
   vcov_mat_adj_gt  <- adj_k1  * plm::vcovHC(gt)
 
 # Chisq - robust - formula
-plm:::Ftest(gp, test = "Chisq", .vcov = vcovHC)
-plm:::Ftest(gi, test = "Chisq", .vcov = vcovHC)
-plm:::Ftest(gt, test = "Chisq", .vcov = vcovHC)
-plm:::Ftest(gd, test = "Chisq", .vcov = vcovHC)
-plm:::Ftest(gre, test = "Chisq", .vcov = vcovHC)
+plm:::pwaldtest(gp, test = "Chisq", .vcov = vcovHC)
+plm:::pwaldtest(gi, test = "Chisq", .vcov = vcovHC)
+plm:::pwaldtest(gt, test = "Chisq", .vcov = vcovHC)
+plm:::pwaldtest(gd, test = "Chisq", .vcov = vcovHC)
+plm:::pwaldtest(gre, test = "Chisq", .vcov = vcovHC)
 
 # Chisq - robust - matrix
-plm:::Ftest(gp, test = "Chisq", .vcov = vcovHC(gp))
-plm:::Ftest(gi, test = "Chisq", .vcov = vcovHC(gi))
-plm:::Ftest(gt, test = "Chisq", .vcov = vcovHC(gt))
-plm:::Ftest(gd, test = "Chisq", .vcov = vcovHC(gd))
-plm:::Ftest(gre, test = "Chisq", .vcov = vcov_mat_adj_gre) # replicates Gretl: Chi-square(2) = 70.1267
+plm:::pwaldtest(gp, test = "Chisq", .vcov = vcovHC(gp))
+plm:::pwaldtest(gi, test = "Chisq", .vcov = vcovHC(gi))
+plm:::pwaldtest(gt, test = "Chisq", .vcov = vcovHC(gt))
+plm:::pwaldtest(gd, test = "Chisq", .vcov = vcovHC(gd))
+plm:::pwaldtest(gre, test = "Chisq", .vcov = vcov_mat_adj_gre) # replicates Gretl: Chi-square(2) = 70.1267
 
 # F - robust 
-plm:::Ftest(gp, test = "F", .vcov = vcov_mat_adj_gp) # replicates Gretl: F(2, 9) = 51.59060
-plm:::Ftest(gi, test = "F", .vcov = vcov_mat_adj_gi) # replicates Gretl: F(2, 9) = 28.3096
-plm:::Ftest(gi, test = "F", .vcov = function(x) vcovHC(x, cluster = "time")) # cluster on time, df2 = 19
-plm:::Ftest(gt, test = "F", .vcov = vcov_mat_adj_gt)
-plm:::Ftest(gd, test = "F", .vcov = vcov_mat_adj_gd) # replicates Gretl: F(2, 9) = 60.0821
-plm:::Ftest(gre, test = "F", .vcov = vcov_mat_adj_gre)
+plm:::pwaldtest(gp, test = "F", .vcov = vcov_mat_adj_gp) # replicates Gretl: F(2, 9) = 51.59060
+plm:::pwaldtest(gi, test = "F", .vcov = vcov_mat_adj_gi) # replicates Gretl: F(2, 9) = 28.3096
+plm:::pwaldtest(gi, test = "F", .vcov = function(x) vcovHC(x, cluster = "time")) # cluster on time, df2 = 19
+plm:::pwaldtest(gt, test = "F", .vcov = vcov_mat_adj_gt)
+plm:::pwaldtest(gd, test = "F", .vcov = vcov_mat_adj_gd) # replicates Gretl: F(2, 9) = 60.0821
+plm:::pwaldtest(gre, test = "F", .vcov = vcov_mat_adj_gre)
 
 
 # F - robust - matrix
-plm:::Ftest(gp, test = "F", .vcov = vcovHC(gp))
-plm:::Ftest(gi, test = "F", .vcov = vcovHC(gi))
-plm:::Ftest(gi, test = "F", .vcov = function(x) vcovHC(x, cluster = "time")) # cluster on time, df2 = 19
-plm:::Ftest(gt, test = "F", .vcov = vcovHC(gt))
-plm:::Ftest(gd, test = "F", .vcov = vcovHC(gd))
-plm:::Ftest(gre, test = "F", .vcov = vcovHC(gre))
+plm:::pwaldtest(gp, test = "F", .vcov = vcovHC(gp))
+plm:::pwaldtest(gi, test = "F", .vcov = vcovHC(gi))
+plm:::pwaldtest(gi, test = "F", .vcov = function(x) vcovHC(x, cluster = "time")) # cluster on time, df2 = 19
+plm:::pwaldtest(gt, test = "F", .vcov = vcovHC(gt))
+plm:::pwaldtest(gd, test = "F", .vcov = vcovHC(gd))
+plm:::pwaldtest(gre, test = "F", .vcov = vcovHC(gre))
 
 
 ############### compare to other statistics packages:
@@ -85,15 +85,10 @@ plm:::Ftest(gre, test = "F", .vcov = vcovHC(gre))
 # gi_lfe_cluster <- felm(inv ~ value + capital | firm, data = Grunfeld, clustervar="firm")
 # summary(gi_lfe)
 # summary(gi_lfe_cluster)
-# waldtest(gi_lfe, R = names(coef(gi_lfe))) # df2 = 188
-# waldtest(gi_lfe_cluster, R = names(coef(gi_lfe_cluster))) # chi2: 54.03250, F. 27.01625, df1 = 2, df2 = 9
+# lfe::waldtest(gi_lfe, R = names(coef(gi_lfe))) # df1 = 2, df2 = 188
+# lfe::waldtest(gi_lfe_cluster, R = names(coef(gi_lfe_cluster))) # chi2: 54.03250, F. 27.01625, df1 = 2, df2 = 9
 # gi_lfe_cluster$clustervcv #  # this vcov is not identical to vcovHC, so results do not match
-# 
-# mod_felm_ind <- felm(lwage ~ exper + hours + married + expersq | nr, data = pwagepan, clustervar="nr")
-# summary(mod_felm_ind)
-# waldtest(mod_felm_ind, R = names(coef(mod_felm_ind)))
-# round(waldtest(mod_felm_ind, R = names(coef(mod_felm_ind))), digits = 8)
-# mod_felm_ind$clustervcv # this vcov is not identical to vcovHC, so results do not match
+
 
 ### Stata ####
 # See http://www.stata.com/manuals14/xtxtreg.pdf
@@ -113,8 +108,8 @@ plm:::Ftest(gre, test = "F", .vcov = vcovHC(gre))
 # form_nls_ex2 <- formula(ln_wage ~ grade + age + I(age^2) + ttl_exp + I(ttl_exp^2) + tenure + I(tenure^2) + race2 + not_smsa + south)
 # plm_fe_nlswork <- plm(form_nls_ex2, data = pnlswork, model = "within")
 # 
-# plm:::Ftest(plm_fe_nlswork, test = "F")                 # replicates Stata: F(8, 23386) = 610.12 - normal
-# plm:::Ftest(plm_fe_nlswork, test = "F", .vcov = vcovHC) # replicates Stata: F(8, 4696)  = 273.86 - robust
+# plm:::pwaldtest(plm_fe_nlswork, test = "F")                 # replicates Stata: F(8, 23386) = 610.12 - normal
+# plm:::pwaldtest(plm_fe_nlswork, test = "F", .vcov = vcovHC) # replicates Stata: F(8, 4696)  = 273.86 - robust
 
 
 
@@ -126,8 +121,8 @@ plm:::Ftest(gre, test = "F", .vcov = vcovHC(gre))
 # 
 # mod_fe_ind <- plm(lwage ~ exper + hours + married + expersq, data = pwagepan, model = "within", effect = "individual")
 # 
-# plm:::Ftest(mod_fe_ind, test="F")
-# plm:::Ftest(mod_fe_ind, test="F", .vcov = function(x) vcovHC(x)) # 121.4972
+# plm:::pwaldtest(mod_fe_ind, test="F")
+# plm:::pwaldtest(mod_fe_ind, test="F", .vcov = function(x) vcovHC(x)) # 121.4972
 # 
 # # Gretl uses Stata's small sample adjustment
 # g <- pdim(mod_fe_ind)$nT$n # no of individuals
@@ -136,7 +131,7 @@ plm:::Ftest(gre, test = "F", .vcov = vcovHC(gre))
 # k <- k+1 # + 1 because Stata and Gretl have the intercept in the FE model
 # adj <- (g/(g-1) * (n-1)/(n-k))
 # vcov_mat_adj <- adj * plm::vcovHC(mod_fe_ind)
-# print(plm:::Ftest(mod_fe_ind, test="F", .vcov = vcov_mat_adj), digits = 12) # replicate Gretl: F(4, 544) = 121.163
+# print(plm:::pwaldtest(mod_fe_ind, test="F", .vcov = vcov_mat_adj), digits = 12) # replicate Gretl: F(4, 544) = 121.163
 
 
 # Reference: Gretl (2016b)

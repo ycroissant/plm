@@ -1,3 +1,8 @@
+Changes since version 1.6-3
+
+  * Function Ftest renamed to pwaldtest (there was never a CRAN release with Ftest
+    exported, thus no deprecation warning).
+
 Changes since version 1.6-2
 
   * pcdtest optimized for speed. 'preshape()' added to pcdtest.R to take care of reshaping in wide form

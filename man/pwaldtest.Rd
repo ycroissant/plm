@@ -1,27 +1,26 @@
-% NB: maybe we rename Ftest to pwaldtest once we deem the current (e.g. as of March 2016) pwaldtest obsolete?
- 	
-\name{Ftest}
-\alias{Ftest}
-% \alias{Ftest.plm} 
-% \alias{Ftest.panelmodel} 
-% \alias{Ftest.formula} % not implemented (yet? - do we need it?)
+\name{pwaldtest}
+\alias{pwaldtest}
+\alias{pwaldtest.plm} 
+% \alias{pwaldtest.panelmodel} - needed?
+% \alias{pwaldtest.formula} % not implemented (yet? - do we need it?)
 
 \title{Wald-style Chi-square Test and F Test}
 
 \description{
-Wald-style chi-square fest and F test, including robust version of the tests.
+Wald-style chi-square test and F test of slope coefficents being zero jointly, 
+including robust versions of the tests.
 }
 
 \usage{
-Ftest(x, test = c("Chisq", "F"), .vcov = NULL, 
-         df2adj = (test == "F" && !is.null(.vcov) && missing(.df2)), .df1, .df2, \dots)
-% \method{Ftest}{panelmodel}(x, test = c("Chisq", "F"), .vcov = NULL, df2adj = (test == "F" && !is.null(.vcov) && missing(.df2)), .df1, .df2, \dots)
-% \method{Ftest}{formula}(x, \dots)  % not implemented (yet? - do we need it?)
-
+pwaldtest(x, ...)
+\method{pwaldtest}{plm}(x, test = c("Chisq", "F"), .vcov = NULL, 
+          df2adj = (test == "F" && !is.null(.vcov) && missing(.df2)),
+          .df1, .df2, \dots)
+% \method{pwaldtest}{formula}(x, \dots)  % not implemented (yet? - do we need it?)
 }
 
 \arguments{
-\item{x}{an estimated model of class \code{"plm"},} % maybe also class "panelmodel"?
+\item{x}{an estimated model of which the coefficients should be tested (usually of class \code{"plm"}),} % maybe also class "panelmodel"?
 
 \item{test}{a character, indicating the test to be performed, may be either \code{"Chisq"} or
 \code{"F"} for the Wald-style Chi-square test or F test, respectively, }
@@ -49,8 +48,11 @@ of freedom parameter for the F test (usually not used),}
 \details{
 
 
-\code{Ftest} can be used stand--alone with a plm object. It is also used in 
+\code{pwaldtest} can be used stand--alone with a plm object. It is also used in 
 \code{\link{summary.plm}} to produce the F statistic. % TODO: or Chi-square statistic, once "activated" in summary.plm and if Chi-sq is used for RE models.
+
+\code{pwaldtest} performs the test if the slope coefficients of a panel regression are jointly zero.
+It does not perform general purpose Wald-style tests (for those, see \link[lmtest]{waldtest} (from package \pkg{lmtest}) or \link[car]{linearHypothesis} (from \pkg{car})).
 
 If a user specified variance-covariance matrix/function is given in 
 argument \code{.vcov}, the robust version of the tests are carried out. 
@@ -78,18 +80,18 @@ An object of class \code{"htest"}.
 \seealso{
 
 \code{\link[plm]{vcovHC}} for an example of the vcovXX functions, a robust 
-estimation of variance--covariance matrix;
+estimation for the variance--covariance matrix;
 \code{\link[plm]{summary.plm}}
 }
 
-\author{N. N. (initial implementation) and Kevin Tappe (extensions: .vcov and df2 adjustment)}
+\author{N. N. (initial implementation) and Kevin Tappe (extensions: .vcov argument and df2 adjustment)}
 
 \references{
-Wooldridge, J.M. (2010) \emph{Econometric Analysis of Cross-Section and Panel Data}, 2nd ed., MIT Press, Sec. 4.2.3, pp. 60-62.
+Wooldridge, J.M. (2010) \emph{Econometric Analysis of Cross-Section and Panel Data}, 2nd ed., MIT Press, Sec. 4.2.3, pp. 60--62.
 
 Andress, H.-J./Golsch, K./Schmidt, A. (2013), Applied Panel Data Analysis for Economic and Social Surveys, Springer, Heidelberg et al.
 
-Cameron, A. C./Miller, D. L. (2015), "A Practitioner's Guide to Cluster-Robust Inference", \emph{Journal of Human Resources}, 2015, Vol. 50, No. 2, pp. 317-373; see also the supplements under http://cameron.econ.ucdavis.edu/research/papers.html.
+Cameron, A. C./Miller, D. L. (2015), "A Practitioner's Guide to Cluster-Robust Inference", \emph{Journal of Human Resources}, 2015, Vol. 50, No. 2, pp. 317--373; see also the supplements under \url{http://cameron.econ.ucdavis.edu/research/papers.html}.
 }
 
 
@@ -97,19 +99,19 @@ Cameron, A. C./Miller, D. L. (2015), "A Practitioner's Guide to Cluster-Robust I
 data("Grunfeld", package = "plm")
 mod_fe <- plm(inv ~ value + capital, data = Grunfeld, model = "within")
 mod_re <- plm(inv ~ value + capital, data = Grunfeld, model = "random")
-Ftest(mod_fe, test = "F")
-Ftest(mod_re, test = "Chisq")
+pwaldtest(mod_fe, test = "F")
+pwaldtest(mod_re, test = "Chisq")
 
 # with robust vcov
-Ftest(mod_fe, .vcov = vcovHC(mod_fe))
-Ftest(mod_fe, .vcov = function(x) vcovHC(x, type = "HC3"))
+pwaldtest(mod_fe, .vcov = vcovHC(mod_fe))
+pwaldtest(mod_fe, .vcov = function(x) vcovHC(x, type = "HC3"))
 
-Ftest(mod_fe, .vcov = vcovHC(mod_fe), df2adj = FALSE) # w/o df2 adjustment
+pwaldtest(mod_fe, .vcov = vcovHC(mod_fe), df2adj = FALSE) # w/o df2 adjustment
 
 # example without attribute "cluster" in the vcov
 vcov_mat <- vcovHC(mod_fe)
 attr(vcov_mat, "cluster") <- NULL # remove attribute
-Ftest(mod_fe, .vcov = vcov_mat)   # no df2 adjustment performed
+pwaldtest(mod_fe, .vcov = vcov_mat)   # no df2 adjustment performed
 
 }
 

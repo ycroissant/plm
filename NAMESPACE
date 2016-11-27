@@ -4,7 +4,7 @@ export(plm, pvcm, pgmm, pggls, pht, pcce, pmg, plmtest, phtest, pFtest,
        pbsytest, pdwtest, pbgtest, pbltest, pwartest, pwtest, pwfdtest, pcdtest,
        plm.data, pdata.frame, between, Between, Within, lag, lead, pFormula, pmodel.response,
        punbalancedness, purtest, cipstest, vcovBK, vcovSCC, r.squared, has.intercept, 
-       index, fixef, vcovHC, vcovDC, vcovNW, vcovG, piest, aneweytest, Ftest)
+       index, fixef, vcovHC, vcovDC, vcovNW, vcovG, piest, aneweytest, pwaldtest)
 
 
 
@@ -209,6 +209,8 @@ S3method("pcdtest", "pseries")
 S3method("print",   "purtest")
 S3method("summary", "purtest")
 S3method("print", "summary.purtest")
+# pwaldtest
+S3method("pwaldtest", "plm")
 # detect_lin_dep, alias
 S3method("detect_lin_dep", "matrix")
 S3method("detect_lin_dep", "data.frame")

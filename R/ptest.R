@@ -380,18 +380,17 @@ pFtest.plm <- function(x, z, ...){
   res
 }
 
-############## Ftest() ############################################
-# Ftest is used in summary.plm to compute the F statistic
-# NB: How does this function relate to function plm:::pwaldtest?
-#     Ftest(x, test = "Chisq") seems to accomplish the same as pwaldtest?
+############## pwaldtest() ############################################
+# pwaldtest is used in summary.plm, summary.pht to compute the F statistic, but can be used stand-alone
+# test of joint significance of all slopes
 #
-# TODO: Ftest with .vcov arg is not yet weaved in in summary.plm
+# TODO: pwaldtest with .vcov arg is not yet weaved in in summary.plm
 #
 # Short intro (but see associated help file)
 # arg '.vcov' non-NULL => the robust tests are carried out
 # arg df2adj == TRUE does finite-sample/cluster adjustment for F tests's df2
 # args .df1, .df2 are only there if user wants to do overwriting of dfs (user has final say)
-Ftest <- function(x, test = c("Chisq", "F"), .vcov = NULL, df2adj = (test == "F" && !is.null(.vcov) && missing(.df2)), .df1, .df2, ...){
+pwaldtest.plm <- function(x, test = c("Chisq", "F"), .vcov = NULL, df2adj = (test == "F" && !is.null(.vcov) && missing(.df2)), .df1, .df2, ...){
   model <- describe(x, "model")
   test <- match.arg(test)
   df1 <- ifelse(model == "within",
@@ -517,6 +516,13 @@ Ftest <- function(x, test = c("Chisq", "F"), .vcov = NULL, df2adj = (test == "F"
   return(res)
 }
 
+pwaldtest.default <- function(x, ...) {
+  pwaldtest.plm(x, ...)
+}
+
+pwaldtest <- function(x, ...) {
+  UseMethod("pwaldtest")
+}
 
 
 ############## pooltest() ############################################
