@@ -16,7 +16,7 @@
 
 \Plaintitle{Panel Data Econometrics in R: The plm Package}
 
-\author{Yves Croissant\\Universit\'e Lumi\`ere Lyon 2 \And Giovanni
+\author{Yves Croissant\\Universit\'e de La R\'eunion \And Giovanni
   Millo\\University of Trieste and Generali SpA}
 
 \Plainauthor{Yves Croissant, Giovanni Millo}
@@ -24,12 +24,14 @@
 
 \Address{
 Yves Croissant\\
-LET-ISH\\
-Avenue Berthelot\\
-F-69363 Lyon cedex 07\\
-Telephone: +33/4/78727249 \\
-Fax: +33/4/78727248 \\
-E-mail: \email{yves.croissant@let.ish-lyon.cnrs.fr}
+CEMOI\\
+Facult\'e de Droit et d'Economie\\
+Universit\'e de La R\'eunion\\
+15 avenue Ren\'e Cassin\\
+CS 92003\\
+F-97744 Saint-Denis Cedex 9\\
+Telephone: +262262938446\\
+E-mail: \email{yves.croissant@univ-reunion.fr}\\
 \\
 \\
 Giovanni Millo\\

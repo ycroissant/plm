@@ -52,7 +52,7 @@ of freedom parameter for the F test (usually not used),}
 \code{\link{summary.plm}} to produce the F statistic. % TODO: or Chi-square statistic, once "activated" in summary.plm and if Chi-sq is used for RE models.
 
 \code{pwaldtest} performs the test if the slope coefficients of a panel regression are jointly zero.
-It does not perform general purpose Wald-style tests (for those, see \link[lmtest]{waldtest} (from package \pkg{lmtest}) or \link[car]{linearHypothesis} (from \pkg{car})).
+It does not perform general purpose Wald-style tests (for those, see \link[lmtest]{waldtest} (from package \pkg{lmtest}) or \link{linearHypothesis} (from \pkg{car})).
 
 If a user specified variance-covariance matrix/function is given in 
 argument \code{.vcov}, the robust version of the tests are carried out. 

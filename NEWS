@@ -2,6 +2,7 @@ Changes since version 1.6-4
   * package now depends on R >= 3.2.0 due to the dependency of the package car 
     which requires at least this R version.
   * Snesp.Rd, LaborSupply.Rd: broken links fixed.
+  * Vignette: updated contact details.
 
 Changes since version 1.6-3
 
