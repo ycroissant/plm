@@ -3,7 +3,7 @@
 
 fixef.plm <- function(object, effect = NULL,
                       type = c("level", "dfirst", "dmean"),
-                      .vcov = NULL, ...){
+                      vcov = NULL, ...){
   model.effect <- describe(object, "effect")
   if (is.null(effect)){
     effect <- ifelse(model.effect == "time", "time", "individual")
@@ -50,9 +50,9 @@ fixef.plm <- function(object, effect = NULL,
   
   
   # use robust vcov if supplied
-  if (!is.null(.vcov)) {
-    if (is.matrix(.vcov))   vcov <- .vcov[nw, nw]
-    if (is.function(.vcov)) vcov <- .vcov(object)[nw, nw]
+  if (!is.null(vcov)) {
+    if (is.matrix(vcov))   vcov <- vcov[nw, nw]
+    if (is.function(vcov)) vcov <- vcov(object)[nw, nw]
   } else {
     vcov <- vcov(object)[nw, nw]
   }

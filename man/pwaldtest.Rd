@@ -13,8 +13,8 @@ including robust versions of the tests.
 
 \usage{
 pwaldtest(x, ...)
-\method{pwaldtest}{plm}(x, test = c("Chisq", "F"), .vcov = NULL, 
-          df2adj = (test == "F" && !is.null(.vcov) && missing(.df2)),
+\method{pwaldtest}{plm}(x, test = c("Chisq", "F"), vcov = NULL, 
+          df2adj = (test == "F" && !is.null(vcov) && missing(.df2)),
           .df1, .df2, \dots)
 % \method{pwaldtest}{formula}(x, \dots)  % not implemented (yet? - do we need it?)
 }
@@ -25,7 +25,7 @@ pwaldtest(x, ...)
 \item{test}{a character, indicating the test to be performed, may be either \code{"Chisq"} or
 \code{"F"} for the Wald-style Chi-square test or F test, respectively, }
 
-\item{.vcov}{\code{NULL} by default; a \code{matrix} giving a variance--covariance 
+\item{vcov}{\code{NULL} by default; a \code{matrix} giving a variance--covariance 
 matrix or a function which computes such; if supplied (non \code{NULL}), 
 the test is carried out using the variance--covariance matrix indicated resulting 
 in a robust test,}
@@ -33,7 +33,7 @@ in a robust test,}
 \item{df2adj}{logical, only relevant for \code{test = "F"}, indicating whether
 the adjustment for clustered standard errors for the second degrees of freedom 
 parameter should be performed (see \bold{Details}, also for further requirements
-regarding the variance--covariance matrix in \code{.vcov} for the adjustment to be 
+regarding the variance--covariance matrix in \code{vcov} for the adjustment to be 
 performed),}
 
 \item{.df1}{a numeric, used if one wants to overwrite the first degrees
@@ -52,10 +52,10 @@ of freedom parameter for the F test (usually not used),}
 \code{\link{summary.plm}} to produce the F statistic. % TODO: or Chi-square statistic, once "activated" in summary.plm and if Chi-sq is used for RE models.
 
 \code{pwaldtest} performs the test if the slope coefficients of a panel regression are jointly zero.
-It does not perform general purpose Wald-style tests (for those, see \link[lmtest]{waldtest} (from package \pkg{lmtest}) or \link{linearHypothesis} (from \pkg{car})).
+It does not perform general purpose Wald-style tests (for those, see \code{\link[lmtest]{waldtest}} (from package \pkg{lmtest}) or \code{linearHypothesis} (from \pkg{car})).
 
 If a user specified variance-covariance matrix/function is given in 
-argument \code{.vcov}, the robust version of the tests are carried out. 
+argument \code{vcov}, the robust version of the tests are carried out. 
 In that case, if the F test is requested (\code{test = "F"}) and no
 overwriting of the second degrees of freedom parameter is given (by 
 supplying argument (\code{.df2})), the adjustment of the second degrees
@@ -84,7 +84,7 @@ estimation for the variance--covariance matrix;
 \code{\link[plm]{summary.plm}}
 }
 
-\author{N. N. (initial implementation) and Kevin Tappe (extensions: .vcov argument and df2 adjustment)}
+\author{N. N. (initial implementation) and Kevin Tappe (extensions: vcov argument and df2 adjustment)}
 
 \references{
 Wooldridge, J.M. (2010) \emph{Econometric Analysis of Cross-Section and Panel Data}, 2nd ed., MIT Press, Sec. 4.2.3, pp. 60--62.
@@ -103,15 +103,15 @@ pwaldtest(mod_fe, test = "F")
 pwaldtest(mod_re, test = "Chisq")
 
 # with robust vcov
-pwaldtest(mod_fe, .vcov = vcovHC(mod_fe))
-pwaldtest(mod_fe, .vcov = function(x) vcovHC(x, type = "HC3"))
+pwaldtest(mod_fe, vcov = vcovHC(mod_fe))
+pwaldtest(mod_fe, vcov = function(x) vcovHC(x, type = "HC3"))
 
-pwaldtest(mod_fe, .vcov = vcovHC(mod_fe), df2adj = FALSE) # w/o df2 adjustment
+pwaldtest(mod_fe, vcov = vcovHC(mod_fe), df2adj = FALSE) # w/o df2 adjustment
 
 # example without attribute "cluster" in the vcov
 vcov_mat <- vcovHC(mod_fe)
 attr(vcov_mat, "cluster") <- NULL # remove attribute
-pwaldtest(mod_fe, .vcov = vcov_mat)   # no df2 adjustment performed
+pwaldtest(mod_fe, vcov = vcov_mat)   # no df2 adjustment performed
 
 }
 

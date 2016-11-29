@@ -198,9 +198,9 @@ walhus <- plm(inv ~ value + capital,
 # summary, summary with a funished vcov, passed as matrix, 
 # as function, and as function with additional argument
 summary(wi)
-summary(wi, .vcov = vcovHC(wi))
-summary(wi, .vcov = vcovHC)
-summary(wi, .vcov = function(x) vcovHC(x, method = "white2"))
+summary(wi, vcov = vcovHC(wi))
+summary(wi, vcov = vcovHC)
+summary(wi, vcov = function(x) vcovHC(x, method = "white2"))
 
 }
 

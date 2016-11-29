@@ -10,20 +10,20 @@
 # lm_fe_tw_u_eff_cod <- lm(inv ~ value + capital + firm + year, data = Grunfeld_unbalanced_fac, contrasts = list(firm="contr.sum", year="contr.sum"))
 
 
-within_intercept.plm <- function(object, .vcov = NULL, ...) { 
+within_intercept.plm <- function(object, vcov = NULL, ...) {
   
   if (!inherits(object, "plm")) stop("input 'object' needs to be a \"within\" model estimated by plm()")
   model  <- describe(object, what = "model")
   effect <- describe(object, what = "effect")
   if (model != "within") stop("input 'object' needs to be a \"within\" model estimated by plm(..., model = \"within\", ...)")
   
-  # .vcov must be a function, because the model estimated to get the
+  # vcov must be a function, because the model estimated to get the
   # overall intercept next to its standard errors is different from
   # the FE model for which the intercept is estimated, e.g. dimensions
   # of vcov differ for FE and for auxiliary model
-  if (!is.null(.vcov)) {
-    if (is.matrix(.vcov)) stop("for within_intercept, '.vcov' may not be of class 'matrix', it must be supplied as a function, e.g. .vcov = function(x) vcovHC(x)")
-    if (!is.function(.vcov)) stop("for within_intercept, argument '.vcov' must be a function, e.g. .vcov = function(x) vcovHC(x)")
+  if (!is.null(vcov)) {
+    if (is.matrix(vcov)) stop("for within_intercept, 'vcov' may not be of class 'matrix', it must be supplied as a function, e.g. vcov = function(x) vcovHC(x)")
+    if (!is.function(vcov)) stop("for within_intercept, argument 'vcov' must be a function, e.g. vcov = function(x) vcovHC(x)")
   }
   
   index <- attr(object$model, which = "index")
@@ -54,7 +54,7 @@ within_intercept.plm <- function(object, .vcov = NULL, ...) {
   ## Two cases:
   ##  (1) in case of "normal" vcov, we need to adjust the vcov by the corrected degrees of freedom
   ##  (2) in case of robust vcov, which is supplied by a function, no adjustment to the robust vcov is necessary
-  if (!is.function(.vcov)) {
+  if (!is.function(vcov)) {
     # (1) degrees of freedom correction due to FE transformation for "normal" vcov [copied over from plm.fit]
     pdim <- pdim(index)
     card.fixef <- switch(effect,
@@ -66,8 +66,8 @@ within_intercept.plm <- function(object, .vcov = NULL, ...) {
     vcov_new <- vcov(auxreg)
     vcov_new <- vcov_new * df.residual(auxreg) / df
   } else {
-    # (2) robust vcov estimated by function supplied in .vcov
-    vcov_new <- .vcov(auxreg)
+    # (2) robust vcov estimated by function supplied in vcov
+    vcov_new <- vcov(auxreg)
   }
   
   auxreg$vcov <- vcov_new # plug in new vcov (adjusted "normal" vcov or robust vcov) in auxiliary model

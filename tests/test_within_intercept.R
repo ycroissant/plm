@@ -177,7 +177,7 @@ mod_lm <- lm(inv ~ value + capital + factor(firm) + factor(year), data = Grunfel
 # mean(fixef(mod_fe_ind))
 # 
 # # matches Gretl robust SE
-# inter_mod_fe_ind_robust <- plm:::within_intercept.plm(mod_fe_ind, .vcov = function(x) plm::vcovHC(x, method="arellano", type="HC0"))
+# inter_mod_fe_ind_robust <- plm:::within_intercept.plm(mod_fe_ind, vcov = function(x) plm::vcovHC(x, method="arellano", type="HC0"))
 # print(inter_mod_fe_ind_robust)
 
 
@@ -316,7 +316,7 @@ mod_lm <- lm(inv ~ value + capital + factor(firm) + factor(year), data = Grunfel
 # print(int_fe_nls_work)
 # weighted.mean(fixef(plm_fe_nlswork), w = as.numeric(table(index(plm_fe_nlswork)[[1]])))
 # summary(plm_fe_nlswork)
-# summary(plm_fe_nlswork, .vcov = vcovHC(plm_fe_nlswork, type="sss"))
-# int_fe_nls_work_robust <- within_intercept(plm_fe_nlswork, .vcov = function(x) vcovHC(x, type="sss"))  # matches Stata robust SE
+# summary(plm_fe_nlswork, vcov = vcovHC(plm_fe_nlswork, type="sss"))
+# int_fe_nls_work_robust <- within_intercept(plm_fe_nlswork, vcov = function(x) vcovHC(x, type="sss"))  # matches Stata robust SE
 # print(int_fe_nls_work_robust)
 

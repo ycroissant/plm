@@ -1,22 +1,38 @@
 
 # summary.plm creates a specific summary.plm object that is derived from the associated plm object
-summary.plm <- function(object, .vcov = NULL, ...){
+summary.plm <- function(object, vcov = NULL, ..., .vcov = NULL){
 
-# TODO ## deprecation notice on arg ".vcov" introduced  - remove arg ."vcov" some time in the future
+  ## deprecation notice on arg ".vcov" introduced Nov 2016: remove arg ."vcov" some time in the future
   
-  object$fstatistic <- pwaldtest(object, test = "F", .vcov = .vcov)
+  vcov_arg <- vcov
+  
+  ### set correct vcov in case deprecated arg .vcov is not null to support the deprecated .vcov arg for a while
+    depri_.vcov <- paste0("Use of argument \".vcov\" (notice leading dot) is deprecated.", 
+                        " Please change your code to use argument \"vcov\", because \".vcov\" will be removed in the future.")
+    depri_vcov.vcov <- paste0("Arguments \"vcov\" and \".vcov\" specified (not null), continuing with \"vcov\". ", depri_.vcov)
+    if (!is.null(vcov) && !is.null(.vcov)) {
+      warning(depri_vcov.vcov)
+        vcov_arg <- vcov
+    } else {
+      if (!is.null(.vcov)) {
+        warning(depri_.vcov)
+        vcov_arg <- .vcov
+      }
+    }
+  ### END set correct vcov in case deprecated arg .vcov is not null
+  
+  object$fstatistic <- pwaldtest(object, test = "F", vcov = vcov_arg)
   model <- describe(object, "model")
   effect <- describe(object, "effect")
   object$r.squared <- c(rsq  = r.squared(object),
                         adjrsq = r.squared(object, dfcor = TRUE))
   # construct the table of coefficients
-  if (!is.null(.vcov)) {
-    if (is.matrix(.vcov))   rvcov <- .vcov
-    if (is.function(.vcov)) rvcov <- .vcov(object)
+  if (!is.null(vcov_arg)) {
+    if (is.matrix(vcov_arg))   rvcov <- vcov_arg
+    if (is.function(vcov_arg)) rvcov <- vcov_arg(object)
     std.err <- sqrt(diag(rvcov))
-  }
-  else {
-    std.err <- sqrt(diag(vcov(object)))
+  } else {
+    std.err <- sqrt(diag(stats::vcov(object)))
   }
   b <- coefficients(object)
   z <- b / std.err
@@ -30,9 +46,17 @@ summary.plm <- function(object, .vcov = NULL, ...){
     
     ## add some info to summary.plm object 
     # robust vcov (next to "normal" vcov)
-    if (!is.null(.vcov)) {
+    if (!is.null(vcov_arg)) {
       object$rvcov <- rvcov
-      attr(object$rvcov, which = "rvcov.name") <- paste0(deparse(substitute(.vcov)))
+      
+      ## set correct rvcov.name depending on arg used for vcov (as long as we support .vcov)
+      if (is.null(vcov)) {
+        rvcov.name <- paste0(deparse(substitute(.vcov)))
+      } else {
+        rvcov.name <- paste0(deparse(substitute(vcov)))
+      }
+      
+      attr(object$rvcov, which = "rvcov.name") <- rvcov.name 
     }
     
     # mimics summary.lm's 'df' component

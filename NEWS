@@ -1,6 +1,10 @@
 Changes since version 1.6-4
-  * package now depends on R >= 3.2.0 due to the dependency of the package car 
-    which requires at least this R version.
+
+  * Argument for supplying a variance-covariance matrix now consistently named 'vcov'
+    across all functions. The old argument '.vcov' of summary.plm is marked as deprecated.
+    Deprecation warnings are only issued for those functions which where on CRAN with
+    the now deprecated argument '.vcov' (i.e., just for summary.plm, no warnings for
+    functions pwaldtest, fixef, within_intercept).
   * Snesp.Rd, LaborSupply.Rd: broken links fixed.
   * Vignette: updated contact details.
 

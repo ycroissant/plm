@@ -16,8 +16,8 @@ gd <- plm(inv ~ value + capital, data = Grunfeld, model = "within", effect = "tw
 
 
 f_level             <- fixef(gi, type = "level")
-f_level_robust_mat  <- fixef(gi, type = "level", .vcov = vcovHC(gi)) # .vcov is matrix
-f_level_robust_func <- fixef(gi, type = "level", .vcov = vcovHC)     # .vcov is function
+f_level_robust_mat  <- fixef(gi, type = "level", vcov = vcovHC(gi)) # vcov is matrix
+f_level_robust_func <- fixef(gi, type = "level", vcov = vcovHC)     # vcov is function
 
 print(attr(f_level,             "se"))
 print(attr(f_level_robust_func, "se"))
@@ -25,9 +25,8 @@ print(attr(f_level_robust_func, "se"))
 print(summary(f_level),             digits = 8)
 print(summary(f_level_robust_func), digits = 8)
 
-
 f_level_t             <- fixef(gt, type = "level")
-f_level_t_robust_func <- fixef(gt, type = "level", .vcov = vcovHC)     # .vcov is function
+f_level_t_robust_func <- fixef(gt, type = "level", vcov = vcovHC)     # vcov is function
 
 print(attr(f_level_t,             "se"))
 print(attr(f_level_t_robust_func, "se"))
@@ -36,7 +35,7 @@ print(summary(f_level_t),             digits = 8)
 print(summary(f_level_t_robust_func), digits = 8)
 
 f_level_d             <- fixef(gd, type = "level")
-f_level_d_robust_func <- fixef(gd, type = "level", .vcov = vcovHC)     # .vcov is function
+f_level_d_robust_func <- fixef(gd, type = "level", vcov = vcovHC)     # vcov is function
 
 print(attr(f_level_d,             "se"))
 print(attr(f_level_d_robust_func, "se"))

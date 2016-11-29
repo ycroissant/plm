@@ -384,13 +384,11 @@ pFtest.plm <- function(x, z, ...){
 # pwaldtest is used in summary.plm, summary.pht to compute the F statistic, but can be used stand-alone
 # test of joint significance of all slopes
 #
-# TODO: pwaldtest with .vcov arg is not yet weaved in in summary.plm
-#
 # Short intro (but see associated help file)
-# arg '.vcov' non-NULL => the robust tests are carried out
+# arg 'vcov' non-NULL => the robust tests are carried out
 # arg df2adj == TRUE does finite-sample/cluster adjustment for F tests's df2
 # args .df1, .df2 are only there if user wants to do overwriting of dfs (user has final say)
-pwaldtest.plm <- function(x, test = c("Chisq", "F"), .vcov = NULL, df2adj = (test == "F" && !is.null(.vcov) && missing(.df2)), .df1, .df2, ...){
+pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL, df2adj = (test == "F" && !is.null(vcov) && missing(.df2)), .df1, .df2, ...){
   model <- describe(x, "model")
   test <- match.arg(test)
   df1 <- ifelse(model == "within",
@@ -399,16 +397,17 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), .vcov = NULL, df2adj = (tes
   df2 <- df.residual(x)
   tss <- tss(x)
   ssr <- deviance(x)
+  vcov_arg <- vcov
   
   # sanity check
-  if (df2adj == TRUE && (is.null(.vcov) || test != "F")) stop("df2adj == TRUE sensible only for robust F test, i.e. test == \"F\" and !is.null(.vcov) and missing(.df2)")
+  if (df2adj == TRUE && (is.null(vcov_arg) || test != "F")) stop("df2adj == TRUE sensible only for robust F test, i.e. test == \"F\" and !is.null(vcov) and missing(.df2)")
 
   # if robust test: prepare robust vcov
-  if (!is.null(.vcov)) {
-    if (is.matrix(.vcov))   rvcov <- rvcov_orig <- .vcov
-    if (is.function(.vcov)) rvcov <- rvcov_orig <- .vcov(x)
+  if (!is.null(vcov_arg)) {
+    if (is.matrix(vcov_arg))   rvcov <- rvcov_orig <- vcov_arg
+    if (is.function(vcov_arg)) rvcov <- rvcov_orig <- vcov_arg(x)
     
-    rvcov_name <- paste0(", vcov: ", paste0(deparse(substitute(.vcov)))) # save "name" for later
+    rvcov_name <- paste0(", vcov: ", paste0(deparse(substitute(vcov)))) # save "name" for later
     
     coefs <- coef(x)
     int <- "(Intercept)"
@@ -440,7 +439,7 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), .vcov = NULL, df2adj = (tes
                         )
         } else {
           # no information on clustering found, do not adjust df2
-          # (other options would be: assume cluster = "group", or fall-back to non robust statistics (set .vcov <- NULL))
+          # (other options would be: assume cluster = "group", or fall-back to non robust statistics (set vcov_arg <- NULL))
           warning("no attribute 'cluster' in robust vcov found, no finite-sample adjustment for df2") # assuming cluster = \"group\"")
           # df2 <- as.integer(pdim(x)$nT$n - 1) # assume cluster = "group"
       }
@@ -453,7 +452,7 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), .vcov = NULL, df2adj = (tes
   
   if (test == "Chisq"){
     # perform "normal" chisq test
-    if (is.null(.vcov)) {
+    if (is.null(vcov_arg)) {
       stat <- (tss-ssr)/(ssr/df2)
       names(stat) <- "Chisq"
       pval <- pchisq(stat, df = df1, lower.tail = FALSE)
@@ -479,7 +478,7 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), .vcov = NULL, df2adj = (tes
     }
   }
   if (test == "F"){ 
-    if (is.null(.vcov)) {
+    if (is.null(vcov_arg)) {
       # perform "normal" F test
       stat <- (tss-ssr)/ssr*df2/df1
       names(stat) <- "F"

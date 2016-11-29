@@ -8,12 +8,12 @@
 
 \usage{
 within_intercept(object, \dots)
-\method{within_intercept}{plm}(object, .vcov = NULL, \dots)
+\method{within_intercept}{plm}(object, vcov = NULL, \dots)
 }
 
 \arguments{
  \item{object}{object of class \code{plm} which must be a within model (fixed effects model),}
- \item{.vcov}{if not \code{NULL} (default), a function to calculate a user defined variance--covariance matrix (function for robust vcov),}
+ \item{vcov}{if not \code{NULL} (default), a function to calculate a user defined variance--covariance matrix (function for robust vcov),}
  \item{\dots}{further arguments (currently none).}
 }
 
@@ -29,9 +29,9 @@ computationally more demanding than just taking the weighted mean. However, with
 one also gets the associated standard error and it is possible to get an overall intercept for twoway fixed
 effect models.
 
-Users can set argument \code{.vcov} to a function to calculate a specific (robust) variance--covariance matrix and get the 
+Users can set argument \code{vcov} to a function to calculate a specific (robust) variance--covariance matrix and get the 
 respective (robust) standard error for the overall intercept, e.g. the function \code{\link[plm]{vcovHC}}, 
-see examples for usage. Note: The argument \code{.vcov} must be a function, not a matrix, because the model 
+see examples for usage. Note: The argument \code{vcov} must be a function, not a matrix, because the model 
 to calculate the overall intercept for the within model is different from the within model itself.
 }
 
@@ -75,7 +75,7 @@ overallint <- within_intercept(gi)
 all.equal(overallint + fx_dmean, fx_level, check.attributes = FALSE) # TRUE
 
 # overall intercept with robust standard error
-within_intercept(gi, .vcov = function(x) vcovHC(x, method="arellano", type="HC0"))
+within_intercept(gi, vcov = function(x) vcovHC(x, method="arellano", type="HC0"))
 }
 
 \keyword{attribute}

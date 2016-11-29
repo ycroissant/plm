@@ -12,7 +12,7 @@
 
 \usage{
 \method{fixef}{plm}(object, effect = NULL,
-                      type = c("level", "dfirst", "dmean"), .vcov = NULL, \dots)
+                      type = c("level", "dfirst", "dmean"), vcov = NULL, \dots)
 \method{print}{fixef}(x, digits = max(3, getOption("digits") - 2),
 width = getOption("width"), \dots)
 \method{summary}{fixef}(object, \dots)
@@ -25,7 +25,7 @@ width = getOption("width"), \dots)
     of class \code{"fixef"} for the \code{print} and the \code{summary} method,}
   \item{effect}{one of \code{"individual"} or \code{"time"}, only
     relevant in case of two--ways effects models,}
-  \item{.vcov}{a variance--covariance matrix furnished by the user or a function 
+  \item{vcov}{a variance--covariance matrix furnished by the user or a function 
     to calculate one (see \bold{Examples}),}
   \item{type}{one of \code{"level"}, \code{"dfirst"}, or \code{"dmean"},}
   \item{digits}{digits,}
@@ -46,14 +46,14 @@ width = getOption("width"), \dots)
   effects, their standard errors and associated t--values and p--values.
   The type of the fixed effects and the standard errors in the summary.fixef objects 
   corresponds to was requested in the \code{fixef} function by arguments \code{type} 
-  and \code{.vcov}.
+  and \code{vcov}.
 }
 
 \details{
 Function \code{fixef} calculates the fixed effects and returns an object of class \code{c("fixef", "numeric")}.
 With the \code{type} argument, the fixed effects may be returned in levels (\code{"level"}), 
 as deviations from the first value of the index (\code{"dfirst"}), or as deviations from the 
-overall mean (\code{"dmean"}). If the argument \code{.vcov} was specified, the standard errors
+overall mean (\code{"dmean"}). If the argument \code{vcov} was specified, the standard errors
 (stored as attribute "se" in the return value) are the respective robust standard errors. 
 
 The associated \code{summary} method returns an extended object of class \code{c("summary.fixef", "matrix")} 
@@ -92,9 +92,9 @@ fixef(gi_tw, effect = "time")
 
 # with supplied variance-covariance matrix as matrix, function,
 # and function with additional arguments
-fx_level_robust1 <- fixef(gi, .vcov = vcovHC(gi))
-fx_level_robust2 <- fixef(gi, .vcov = vcovHC)
-fx_level_robust3 <- fixef(gi, .vcov = function(x) vcovHC(x, method = "white2"))
+fx_level_robust1 <- fixef(gi, vcov = vcovHC(gi))
+fx_level_robust2 <- fixef(gi, vcov = vcovHC)
+fx_level_robust3 <- fixef(gi, vcov = function(x) vcovHC(x, method = "white2"))
 summary(fx_level_robust1) # gives fixed effects, robust SEs, t- and p-values
 
 # calc. fitted values of oneway within model:

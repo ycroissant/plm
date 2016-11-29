@@ -9,7 +9,7 @@ The summary method for plm objects generates some more information about estimat
 }
 
 \usage{
-\method{summary}{plm}(object, .vcov = NULL, \dots)
+\method{summary}{plm}(object, vcov = NULL, \dots, .vcov = NULL)
 \method{print}{summary.plm}(x, digits = max(3, getOption("digits") - 2),
     width = getOption("width"), subset = NULL, \dots)
 }
@@ -19,7 +19,8 @@ The summary method for plm objects generates some more information about estimat
   \item{x}{an object of class \code{"summary.plm"},}
   \item{subset}{a character or numeric vector indicating a subset of the table of coefficients to be
     printed for \code{"print.summary.plm"},}
-  \item{.vcov}{a variance--covariance matrix furnished by the user or a function to calculate one (see \bold{Examples}),}
+  \item{vcov}{a variance--covariance matrix furnished by the user or a function to calculate one (see \bold{Examples}),}
+  \item{.vcov}{deprecated, use argument \code{vcov},}
   \item{digits}{number of digits for printed output,}
   \item{width}{the maximum length of the lines in the printed output,}
   \item{\dots}{further arguments.}
@@ -36,11 +37,11 @@ An object of class \code{c("summary.plm", "plm", "panelmodel")}. Some of its ele
 carried over from the associated plm object and described there (\code{\link[plm]{plm}}).
 The following elements are new or changed relative to the elements of a plm object:
 
-\item{fstatistic}{F statistic for joint test of significance of coefficients (class "htest"),}
-% TODO for item fstatistic: robust statistic if arg '.vcov' != NULL once "activated" in summary.plm; mention small sample adjustment; Chisq for RE models?
-\item{coefficients}{a matrix with the estimated coefficients, standard errors, t--values, and p--values, if argument '.vcov' was set to non-\code{NULL} the standard errors (and t-- and p--values) in their respective robust variant,}
+\item{fstatistic}{F statistic for joint test of significance of coefficients (class "htest") (robust F statistic in case of supplied argument \code{vcov}, see \code{\link{pwaldtest}} for details),}
+% TODO Chisq for RE models?
+\item{coefficients}{a matrix with the estimated coefficients, standard errors, t--values, and p--values, if argument \code{vcov} was set to non-\code{NULL} the standard errors (and t-- and p--values) in their respective robust variant,}
 \item{vcov}{the "regular" variance--covariance matrix of the coefficients (class "matrix"),}
-\item{rvcov}{only present if argument \code{.vcov} was set to non-\code{NULL}: the furnished 
+\item{rvcov}{only present if argument \code{vcov} was set to non-\code{NULL}: the furnished 
             variance--covariance matrix of the coefficients (class "matrix"),}
 \item{r.squared}{a named numeric containing the R-squared ("rsq") and the adjusted R-squared ("adjrsq") of the model,}
 \item{df}{an integer vector with 3 components, (p, n-p, p*), where p is the number of estimated (non-aliased) 
@@ -74,9 +75,9 @@ summary(zz)
 data("Grunfeld", package = "plm")
 wi <- plm(inv ~ value + capital,
           data = Grunfeld, model="within", effect = "individual")
-summary(wi, .vcov = vcovHC(wi))
-summary(wi, .vcov = vcovHC)
-summary(wi, .vcov = function(x) vcovHC(x, method = "white2"))
+summary(wi, vcov = vcovHC(wi))
+summary(wi, vcov = vcovHC)
+summary(wi, vcov = function(x) vcovHC(x, method = "white2"))
 
 # extract F statistic
 wi_summary <- summary(wi)
