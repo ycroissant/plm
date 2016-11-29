@@ -36,7 +36,7 @@ pcdtest(x, \dots)
     \item \code{"rho"} for the average correlation coefficient,
     \item \code{"absrho"} for the average absolute correlation coefficient,}}
  \item{w}{either \code{NULL} (default) for the global tests or - for the local versions of the statistics - a \code{n x n} \code{matrix} describing proximity between individuals, with \eqn{w_ij = a} where \eqn{a} is any number such that \code{as.logical(a)==TRUE}, if \eqn{i,j} are
- neighbours, \eqn{0} or any number \eqn{b} such that \code{as.logical(b)==FALSE} elsewhere. Only the lower triangluar part (without diagonal) of \code{w} after coercing by \code{as.logical()} is evaluated for neighbouring information (but \code{w} can be symmetric). See also \bold{Details} and \bold{Examples}.}
+ neighbours, \eqn{0} or any number \eqn{b} such that \code{as.logical(b)==FALSE} elsewhere. Only the lower triangular part (without diagonal) of \code{w} after coercing by \code{as.logical()} is evaluated for neighbouring information (but \code{w} can be symmetric). See also \bold{Details} and \bold{Examples}.}
  \item{\dots}{further arguments to be passed on to \code{plm}, such as e.g. \code{effect} or \code{random.method}}
 }
 

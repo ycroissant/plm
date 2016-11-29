@@ -7,7 +7,7 @@
 \title{Wald-style Chi-square Test and F Test}
 
 \description{
-Wald-style chi-square test and F test of slope coefficents being zero jointly, 
+Wald-style chi-square test and F test of slope coefficients being zero jointly, 
 including robust versions of the tests.
 }
 
