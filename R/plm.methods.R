@@ -1,6 +1,9 @@
 
 # summary.plm creates a specific summary.plm object that is derived from the associated plm object
 summary.plm <- function(object, .vcov = NULL, ...){
+
+# TODO ## deprecation notice on arg ".vcov" introduced  - remove arg ."vcov" some time in the future
+  
   object$fstatistic <- pwaldtest(object, test = "F", .vcov = .vcov)
   model <- describe(object, "model")
   effect <- describe(object, "effect")

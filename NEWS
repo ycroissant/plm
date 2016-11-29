@@ -1,3 +1,8 @@
+Changes since version 1.6-4
+  * package now depends on R >= 3.2.0 due to the dependency of the package car 
+    which requires at least this R version.
+  * Snesp.Rd, LaborSupply.Rd: broken links fixed.
+
 Changes since version 1.6-3
 
   * Function Ftest renamed to pwaldtest (there was never a CRAN release with Ftest

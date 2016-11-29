@@ -34,7 +34,7 @@ A panel of 738 observations from 1983 to 1990
 \source{
 Journal of Business Economics and Statistics data archive:
 
-\url{http://www.amstat.org/publications/jbes/}.
+\url{http://amstat.tandfonline.com/loi/ubes20/}.
 }
 
 \references{
