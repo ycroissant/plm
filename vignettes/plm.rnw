@@ -582,7 +582,7 @@ used by \citet{MUNN:90} and the \code{Wages} used by
 data("EmplUK", package="plm")
 data("Produc", package="plm")
 data("Grunfeld", package="plm")
-data("Wages",package="plm")
+data("Wages", package="plm")
 @
 
 
@@ -597,7 +597,7 @@ have to be passed on to the estimating and testing functions.
 
 <<setdata1>>=
 head(Grunfeld)
-E <- pdata.frame(EmplUK, index = c("firm", "year"), drop.index = TRUE, row.names = TRUE)
+E <- pdata.frame(EmplUK, index=c("firm","year"), drop.index=TRUE, row.names=TRUE)
 head(E)
 head(attr(E, "index"))
 @
@@ -727,8 +727,8 @@ data and the model to be estimated. For example, the fixed effects
 model and the random effects model are estimated using:
 
 <<>>=
-grun.fe <- plm(inv~value+capital,data=Grunfeld,model="within")
-grun.re <- plm(inv~value+capital,data=Grunfeld,model="random")
+grun.fe <- plm(inv~value+capital, data = Grunfeld, model = "within")
+grun.re <- plm(inv~value+capital, data = Grunfeld, model = "random")
 @ 
 
 <<>>=
@@ -786,7 +786,8 @@ value of the argument \code{random.method}:
 For example, to use the \code{amemiya} estimator:
 
 <<>>=
-grun.amem <- plm(inv~value+capital,data=Grunfeld,model="random",random.method="amemiya")
+grun.amem <- plm(inv~value+capital, data=Grunfeld,
+                 model="random", random.method="amemiya")
 @ 
 
 The estimation of the variance of the error components are performed
@@ -811,7 +812,8 @@ For example, to estimate a two-ways effect model for the
 \code{Grunfeld} data:
 
 <<>>=
-grun.tways <- plm(inv~value+capital,data=Grunfeld,effect="twoways",model="random",random.method="amemiya")
+grun.tways <- plm(inv~value+capital, data = Grunfeld, effect = "twoways",
+                  model = "random", random.method = "amemiya")
 summary(grun.tways)
 @ 
 
@@ -837,7 +839,8 @@ estimate an hedonic housing prices function. It is reproduced in
 
 <<hedonic>>=
 data("Hedonic", package = "plm")
-Hed <- plm(mv~crim+zn+indus+chas+nox+rm+age+dis+rad+tax+ptratio+blacks+lstat, Hedonic, model = "random", index = "townid")
+Hed <- plm(mv~crim+zn+indus+chas+nox+rm+age+dis+rad+tax+ptratio+blacks+lstat,
+           data = Hedonic, model = "random", index = "townid")
 summary(Hed)
 @ 
 
@@ -915,8 +918,8 @@ If this matrix is not positive-definite, the second term is dropped.
 With the \code{Grunfeld} data, we get:
 
 <<grunfeld.within>>=
-grun.varw <- pvcm(inv~value+capital,data=Grunfeld,model="within")
-grun.varr <- pvcm(inv~value+capital,data=Grunfeld,model="random")
+grun.varw <- pvcm(inv~value+capital, data=Grunfeld, model="within")
+grun.varr <- pvcm(inv~value+capital, data=Grunfeld, model="random")
 summary(grun.varr)
 @ 
 
@@ -1061,7 +1064,9 @@ explained by past values of employment (two lags), current and first
 lag of wages and output and current value of capital.
 
 <<gmm>>=
-emp.gmm <- pgmm(log(emp)~lag(log(emp), 1:2)+lag(log(wage), 0:1)+log(capital)+lag(log(output), 0:1)|lag(log(emp), 2:99),EmplUK,effect="twoways",model="twosteps")
+emp.gmm <- pgmm(log(emp)~lag(log(emp), 1:2)+lag(log(wage), 0:1)+log(capital)+
+                lag(log(output), 0:1)|lag(log(emp), 2:99),
+                data = EmplUK, effect = "twoways", model = "twosteps")
 summary(emp.gmm)
 @ 
 
@@ -1124,7 +1129,7 @@ fixed of ``random'' effects\footnote{The ``random effect'' is better
 The ``random effect'' general \textsc{fgls} is estimated by:
  
 <<pggls>>=
-zz <- pggls(log(emp)~log(wage)+log(capital),data=EmplUK,model="pooling")
+zz <- pggls(log(emp)~log(wage)+log(capital), data=EmplUK, model="pooling")
 summary(zz)
 @ 
 
@@ -1133,7 +1138,7 @@ on the estimation of a within model in the first step; the rest follows as
 above. It is estimated by:
 
 <<>>=
-zz <- pggls(log(emp)~log(wage)+log(capital),data=EmplUK,model="within")
+zz <- pggls(log(emp)~log(wage)+log(capital), data=EmplUK, model="within")
 @ 
 
 The \code{pggls} function is similar to \code{plm} in many
@@ -1173,8 +1178,8 @@ To test the hypothesis that all the coefficients in the
 :
 
 <<>>=
-znp <- pvcm(inv~value+capital,data=Grunfeld,model="within")
-zplm <- plm(inv~value+capital,data=Grunfeld)
+znp <- pvcm(inv~value+capital, data=Grunfeld, model="within")
+zplm <- plm(inv~value+capital, data=Grunfeld, model="within")
 pooltest(zplm,znp)
 @
 
@@ -1182,7 +1187,7 @@ The same test can be computed using a formula as first argument of the
 \code{pooltest} function:
 
 <<results=hide>>=
-pooltest(inv~value+capital,data=Grunfeld,model="within")
+pooltest(inv~value+capital, data=Grunfeld, model="within")
 @ 
 
 \subsection{Tests for individual and time effects}
@@ -1211,14 +1216,14 @@ To test the presence of individual and time effects in the
 we use:
 
 <<>>=
-g <- plm(inv ~ value + capital,data=Grunfeld,model="pooling")
-plmtest(g,effect="twoways",type="ghm")
+g <- plm(inv ~ value + capital, data=Grunfeld, model="pooling")
+plmtest(g, effect="twoways", type="ghm")
 @ 
 
 or 
 
 <<results=hide>>=
-plmtest(inv~value+capital,data=Grunfeld,effect="twoways",type="ghm")
+plmtest(inv~value+capital, data=Grunfeld, effect="twoways", type="ghm")
 @ 
 
 
@@ -1235,7 +1240,7 @@ pFtest(gw,gp)
 @ 
 
 <<results=hide>>=
-pFtest(inv~value+capital,data=Grunfeld,effect="twoways")
+pFtest(inv~value+capital, data=Grunfeld,effect="twoways")
 @ 
 
 \subsection{Hausman test}
@@ -1247,8 +1252,8 @@ formula.  A classical application of the Hausman test for panel data
 is to compare the fixed and the random effects models:
 
 <<>>=
-gw <- plm(inv~value+capital,data=Grunfeld,model="within")
-gr <- plm(inv~value+capital,data=Grunfeld,model="random")
+gw <- plm(inv~value+capital, data=Grunfeld, model="within")
+gr <- plm(inv~value+capital, data=Grunfeld, model="random")
 phtest(gw, gr)
 @
 
@@ -1339,7 +1344,7 @@ homoskedasticity of the idiosyncratic errors has been derived by
 option in \code{pbsytest}:
 
 <<pbsytestJoint>>=
-pbsytest(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp,data=Produc,test="j")
+pbsytest(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc, test="j")
 @
 
 Rejection of the joint test, though, gives no information on the
@@ -1374,7 +1379,7 @@ test\footnote{$LM_3$ in \citet{BALT:LI:95}.}.  If the presence of a
 The serial correlation version is the default:
 
 <<pbsytestAR>>=
-pbsytest(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp,data=Produc)
+pbsytest(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc)
 @
 
 The BSY test for random effects is implemented in the one-sided
@@ -1383,7 +1388,7 @@ version\footnote{Corresponding to $RSO^*_{\mu}$ in the original
 must be non-negative:
 
 <<pbsytestRE>>=
-pbsytest(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp,data=Produc,test="re")
+pbsytest(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc, test="re")
 @
 
 \subsubsection{Conditional LM test for AR(1) or MA(1) errors under random effects}
@@ -1399,7 +1404,8 @@ other one must specify the \code{alternative} option to
 \code{onesided}:
 
 <<pbltest>>=
-pbltest(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp,data=Produc,alternative="onesided")
+pbltest(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, 
+        data=Produc, alternative="onesided")
 @
 
 As usual, the LM test statistic is based on residuals from the maximum
@@ -1465,7 +1471,7 @@ applicable to ``short'' \textsc{fe} panel models.
 straightforward for them. The wrapper functions \code{pbgtest} and
 \code{pdwtest} re-estimate the relevant quasi-demeaned model by
 \textsc{ols} and apply, respectively, standard
-Breusch-Godfrey and Durbin-Watson tests from package \code{lmtest}:
+Breusch-Godfrey and Durbin-Watson tests from package \pkg{lmtest}:
 
 <<generalAR>>=
 ## this can be taken away as soon as attached to plm.rnw
@@ -1910,7 +1916,7 @@ pass the function itself:
 
 <<>>=
 library("lmtest")
-re <- plm(inv~value+capital,data=Grunfeld,model="random")
+re <- plm(inv~value+capital, data=Grunfeld, model="random")
 coeftest(re,vcovHC)
 @
 
@@ -1919,7 +1925,7 @@ else one may do the covariance computation inside the call to
 \code{coeftest}, thus passing on a matrix:
 
 <<results=hide>>=
-coeftest(re,vcovHC(re,method="white2",type="HC3"))
+coeftest(re, vcovHC(re, method="white2", type="HC3"))
 @ 
 
 For some tests, e.g. for multiple model comparisons by
@@ -1930,7 +1936,8 @@ For some tests, e.g. for multiple model comparisons by
 shown below \citep[see also][p.12]{ZEIL:04}:
 
 <<waldtest>>=
-waldtest(re,update(re,.~.-capital),vcov=function(x) vcovHC(x,method="white2",type="HC3"))
+waldtest(re, update(re,.~.-capital),
+         vcov=function(x) vcovHC(x, method="white2", type="HC3"))
 @ 
 
 Moreover, \code{linearHypothesis} from package \pkg{car} may be used to test for linear restrictions:
@@ -2137,10 +2144,10 @@ else). The composite error is therefore $ u_{ij}=1b_{i1} +
 estimated by \textsc{gls} and then by \textsc{ml}
 
 <<re>>=
-require(nlme)
-reGLS<-plm(inv~value+capital,data=Grunfeld,model="random")
+library(nlme)
+reGLS <- plm(inv~value+capital, data=Grunfeld, model="random")
 
-reML<-lme(inv~value+capital,data=Grunfeld,random=~1|firm)
+reML <- lme(inv~value+capital, data=Grunfeld, random=~1|firm)
 
 coef(reGLS)
 
@@ -2163,9 +2170,9 @@ examples fail to converge. The below example is estimated on the
 Grunfeld data and model with time effects.
 
 <<vcmrand>>=
-vcm<-pvcm(inv~value+capital,data=Grunfeld,model="random",effect="time")
+vcm <- pvcm(inv~value+capital, data=Grunfeld, model="random", effect="time")
 
-vcmML<-lme(inv~value+capital,data=Grunfeld,random=~value+capital|year)
+vcmML <- lme(inv~value+capital, data=Grunfeld, random=~value+capital|year)
 
 coef(vcm)
 
@@ -2181,9 +2188,9 @@ below are equivalent (output suppressed):
 
 
 <<vcmfixed>>=
-vcmf<-pvcm(inv~value+capital,data=Grunfeld,model="within",effect="time")
+vcmf <- pvcm(inv~value+capital, data=Grunfeld, model="within", effect="time")
 
-vcmfML<-lmList(inv~value+capital|year,data=Grunfeld)
+vcmfML <- lmList(inv~value+capital|year, data=Grunfeld)
 @
 
 \subsubsection{Unrestricted fgls}
@@ -2201,10 +2208,10 @@ periods than firms, therefore we restrict them to firms 4 to 6.
 <<gglsre>>=
 sGrunfeld <- Grunfeld[Grunfeld$firm%in%4:6,]
 
-ggls<-pggls(inv~value+capital,data=sGrunfeld,model="pooling")
+ggls <- pggls(inv~value+capital, data=sGrunfeld, model="pooling")
 
-gglsML<-gls(inv~value+capital,data=sGrunfeld,
-            correlation=corSymm(form=~1|year))
+gglsML <- gls(inv~value+capital, data=sGrunfeld,
+              correlation=corSymm(form=~1|year))
 
 coef(ggls)
 
@@ -2231,8 +2238,8 @@ fitted by \code{gls()}, specifying the correlation structure in the
 
 <<lmAR1>>=
 Grunfeld$year <- as.numeric(as.character(Grunfeld$year))
-lmAR1ML<-gls(inv~value+capital,data=Grunfeld,
-             correlation=corAR1(0,form=~year|firm))
+lmAR1ML <- gls(inv~value+capital,data=Grunfeld,
+               correlation=corAR1(0,form=~year|firm))
 @
 
 and analogously the random effects panel with, e.g., AR(1) errors
@@ -2241,8 +2248,8 @@ econometrics, may be fit by \code{lme} specifying an additional
 random intercept:
 
 <<reAR1>>=
-reAR1ML<-lme(inv~value+capital,data=Grunfeld,random=~1|firm,
-             correlation=corAR1(0,form=~year|firm))
+reAR1ML <- lme(inv~value+capital, data=Grunfeld,random=~1|firm,
+               correlation=corAR1(0,form=~year|firm))
 @
 
 The regressors' coefficients and the error's serial correlation
@@ -2250,7 +2257,7 @@ coefficient may be retrieved this way:
 
 <<fetchcoefs>>=
 summary(reAR1ML)$coefficients$fixed
-coef(reAR1ML$modelStruct$corStruct,unconstrained=FALSE)
+coef(reAR1ML$modelStruct$corStruct, unconstrained=FALSE)
 @
 
 Significance statistics for the regressors' coefficients are to be
@@ -2276,8 +2283,8 @@ by \code{gls()}.
 
 
 <<LRar>>=
-lmML<-gls(inv~value+capital,data=Grunfeld)
-anova(lmML,lmAR1ML)
+lmML <- gls(inv~value+capital, data=Grunfeld)
+anova(lmML, lmAR1ML)
 @
 
 
@@ -2285,7 +2292,7 @@ The AR(1) test on the random effects model is to be done in much the
 same way, using the random effects model objects estimated above:
 
 <<LRarsubRE>>=
-anova(reML,reAR1ML)
+anova(reML, reAR1ML)
 @
 
 A likelihood ratio test for random effects compares the specifications
@@ -2293,7 +2300,7 @@ with and without random effects and spherical idiosyncratic errors:
 
 
 <<LRre>>=
-anova(lmML,reML)
+anova(lmML, reML)
 @
 
 
@@ -2303,7 +2310,7 @@ errors may be carried out, again, by comparing the two autoregressive
 specifications:
 
 <<LRresubAR>>=
-anova(lmAR1ML,reAR1ML)
+anova(lmAR1ML, reAR1ML)
 @
 
 whence we see that the Grunfeld model specification doesn't seem to need any random
