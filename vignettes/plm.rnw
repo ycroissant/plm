@@ -835,7 +835,7 @@ The following example is using data used by \citep{HARR:RUBI:78} to
 estimate an hedonic housing prices function. It is reproduced in
 \citep{BALT:01}, p.174.
 
-<<>>=
+<<hedonic>>=
 data("Hedonic", package = "plm")
 Hed <- plm(mv~crim+zn+indus+chas+nox+rm+age+dis+rad+tax+ptratio+blacks+lstat, Hedonic, model = "random", index = "townid")
 summary(Hed)
@@ -1929,7 +1929,7 @@ For some tests, e.g. for multiple model comparisons by
   \pkg{lmtest}.}. In this case, optional parameters are provided as
 shown below \citep[see also][p.12]{ZEIL:04}:
 
-<<>>=
+<<waldtest>>=
 waldtest(re,update(re,.~.-capital),vcov=function(x) vcovHC(x,method="white2",type="HC3"))
 @ 
 

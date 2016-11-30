@@ -18,7 +18,8 @@
 
 
 \S3method{model.matrix}{pFormula}(object, data,
-                                  model = c("pooling","within","Between",
+                                  model =
+                                  c("pooling","within","Between", "Sum",
                                             "between","mean","random","fd"), 
                                   effect = c("individual","time","twoways"),
                                   rhs = 1,
@@ -33,7 +34,7 @@
  \item{data}{a \code{pdata.frame}, see \bold{Details},}
  \item{effect}{the effects introduced in the model, one of
   \code{"individual"}, \code{"time"} or \code{"twoways"},}
- \item{model}{one of \code{"pooling"}, \code{"within"},
+ \item{model}{one of \code{"pooling"}, \code{"within"}, \code{"Sum"}, \code{"Between"},
     \code{"between"}, \code{"random",} \code{"fd"} and \code{"ht"},}
  \item{theta}{the parameter for the transformation if \code{model = "random"},}
  \item{lhs}{inherited from package \code{\link[Formula]{Formula}} (see there),}

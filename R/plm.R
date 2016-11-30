@@ -23,7 +23,8 @@ starX <- function(formula, data, model, rhs = 1, effect){
 plm <-  function(formula, data, subset, na.action,
                  effect=c('individual','time','twoways'),
                  model = c('within','random','ht','between','pooling','fd'),
-                 random.method = c('swar','walhus','amemiya','nerlove', 'kinla'),
+                 random.method = NULL,
+                 random.models = NULL,
                  random.dfcor = NULL,
                  inst.method = c('bvk','baltagi', 'am', 'bmc'),
                  restrict.matrix = NULL,
@@ -47,7 +48,7 @@ plm <-  function(formula, data, subset, na.action,
   # check and match the arguments
   effect <- match.arg(effect)
   if (!any(is.na(model))) model <- match.arg(model)
-  random.method <- match.arg(random.method)
+#  random.method <- match.arg(random.method)
   inst.method <- match.arg(inst.method)
   
   # input checks for FD model
@@ -110,91 +111,118 @@ plm <-  function(formula, data, subset, na.action,
     return(data)
   }
   args <- list(model = model, effect = effect,
-               random.method = random.method, random.dfcor = random.dfcor,
+               random.method = random.method,
+               random.models = random.models, random.dfcor = random.dfcor,
                inst.method = inst.method)
-  result <- plm.fit(formula, data, model, effect, random.method, random.dfcor, inst.method)
+  result <- plm.fit(formula, data, model, effect, random.method, random.models, random.dfcor, inst.method)
   result$call <- cl
   result$args <- args
   result
 }
 
-plm.fit <- function(formula, data, model, effect, random.method, random.dfcor, inst.method){
-  # if a random effect model is estimated, compute the error components
-  if (model == "random"){
-    # pdim <- pdim(data)
-    # is.balanced <- pdim$balanced
-    is.balanced <- is.pbalanced(data)
-    estec <- ercomp(formula, data, effect, method = random.method, dfcor = random.dfcor)
-    sigma2 <- estec$sigma2
-    theta <- estec$theta
-    index <- attr(data, "index")
-    if (effect == "individual") cond <- index[[1]]
-    if (effect == "time") cond <- index[[2]]
-    if (! is.balanced) sig2one <- sigma2$one[as.character(cond)] else sig2one <- sigma2$one
-    if (length(formula)[2] == 2 && effect == "twoways")
-      stop("Instrumental variable random effect estimation not implemented for two-ways panels")
-  }
-  # extract the model.matrix and the model.response
-  X <- model.matrix(formula, data, rhs = 1, model = model, effect = effect, theta = theta)
-  if (ncol(X) == 0) stop("empty model")
-  y <- pmodel.response(formula, data, model = model, effect = effect, theta = theta)
-  ## extract the matrix of instruments if necessary
-  if (length(formula)[2] > 1){
-      if (length(formula)[2] == 2) W <- model.matrix(formula, data, rhs = 2, model = model, effect = effect, theta = theta)
-      else W <- model.matrix(formula, data, rhs = c(2, 3), model = model, effect = effect, theta = theta)
-      if (model == "random" && inst.method != "bvk"){
-          X <- X / sqrt(sigma2$idios)
-          y <- y / sqrt(sigma2$idios)
-          W1 <- model.matrix(formula, data, rhs = 2, model = "within", effect = effect, theta = theta)
-          B1 <- model.matrix(formula, data, rhs = 2, model = "Between", effect = effect, theta = theta)
-          StarW1 <- starX(formula, data, rhs = 2, model = "within", effect = effect)
-          if (length(formula)[2] == 3){
-              W2 <- model.matrix(formula, data, rhs = 3, model = "within", effect = effect, theta = theta)
-              StarW2 <- starX(formula, data, rhs = 3, model = "within", effect = effect)
-          }
-          else W2 <- StarW2 <- NULL
-          if (inst.method == "baltagi") W <- cbind(W1, W2, B1)
-          if (inst.method == "am") W <- cbind(W1, W2, B1, StarW1)
-          if (inst.method == "bmc") W <- cbind(W1, W2, B1, StarW1, StarW2)
-          # quick and dirty trick to remove columns of 0
-          zerovars <- apply(W, 2, function(x) max(abs(x), na.rm = TRUE)) < 1E-5
-          W <- W[, !zerovars]
-      }
-      if (ncol(W) < ncol(X)) stop("insufficient number of instruments")
-  }
-  else W <- NULL
-  # compute the estimation
-  result <- mylm(y, X, W)
-  
-  df <- df.residual(result)
-  vcov <- result$vcov
-  aliased <- result$aliased
-  
-  # in case of a within estimation, correct the degrees of freedom
-  if (model == "within"){
-    pdim <- pdim(data)
-    card.fixef <- switch(effect,
-                         "individual" = pdim$nT$n,
-                         "time"       = pdim$nT$T,
-                         "twoways"    = pdim$nT$n + pdim$nT$T - 1
-                         )
-    df <- df.residual(result) - card.fixef
-    vcov <- result$vcov * df.residual(result) / df
-  }
-  
-  result <- list(coefficients = coef(result),
-                 vcov         = vcov,
-                 residuals    = resid(result),
-                 df.residual  = df,
-                 formula      = formula,
-                 model        = data)
-  if (model == "random") result$ercomp <- estec
-  result$assign <- attr(X, "assign")
-  result$contrasts <- attr(X, "contrasts")
-  result$args <- list(model = model, effect = effect)
-  result$aliased <- aliased
-  class(result) <- c("plm", "panelmodel")
-  result
+plm.fit <- function(formula, data, model, effect, random.method, random.models, random.dfcor, inst.method){
+    # if a random effect model is estimated, compute the error components
+    if (model == "random"){
+        is.balanced <- is.pbalanced(data)
+        estec <- ercomp(formula, data, effect, method = random.method, models = random.models, dfcor = random.dfcor)
+        sigma2 <- estec$sigma2
+        theta <- estec$theta
+        index <- attr(data, "index")
+        ## if (effect == "individual") cond <- index[[1]]
+        ## if (effect == "time") cond <- index[[2]]
+        ## if (! is.balanced) sig2one <- sigma2$one[as.character(cond)] else sig2one <- sigma2$one
+        if (length(formula)[2] == 2 && effect == "twoways")
+            stop("Instrumental variable random effect estimation not implemented for two-ways panels")
+    }
+    # For all models except the unbalanced twoways random model, the
+    # estimator is obtained as a linear regression on transformed data
+    if (! (model == "random" & effect == "twoways" && ! is.balanced)){
+    # extract the model.matrix and the model.response
+        X <- model.matrix(formula, data, rhs = 1, model = model, effect = effect, theta = theta)
+        if (ncol(X) == 0) stop("empty model")
+        y <- pmodel.response(formula, data, model = model, effect = effect, theta = theta)
+        ## extract the matrix of instruments if necessary
+        if (length(formula)[2] > 1){
+            if (length(formula)[2] == 2) W <- model.matrix(formula, data, rhs = 2, model = model, effect = effect, theta = theta)
+            else W <- model.matrix(formula, data, rhs = c(2, 3), model = model, effect = effect, theta = theta)
+            if (model == "random" && inst.method != "bvk"){
+                X <- X / sqrt(sigma2$idios)
+                y <- y / sqrt(sigma2$idios)
+                W1 <- model.matrix(formula, data, rhs = 2, model = "within", effect = effect, theta = theta)
+                B1 <- model.matrix(formula, data, rhs = 2, model = "Between", effect = effect, theta = theta)
+                StarW1 <- starX(formula, data, rhs = 2, model = "within", effect = effect)
+                if (length(formula)[2] == 3){
+                    W2 <- model.matrix(formula, data, rhs = 3, model = "within", effect = effect, theta = theta)
+                    StarW2 <- starX(formula, data, rhs = 3, model = "within", effect = effect)
+                }
+                else W2 <- StarW2 <- NULL
+                if (inst.method == "baltagi") W <- cbind(W1, W2, B1)
+                if (inst.method == "am") W <- cbind(W1, W2, B1, StarW1)
+                if (inst.method == "bmc") W <- cbind(W1, W2, B1, StarW1, StarW2)
+                # quick and dirty trick to remove columns of 0
+                zerovars <- apply(W, 2, function(x) max(abs(x), na.rm = TRUE)) < 1E-5
+                W <- W[, !zerovars]
+            }
+            if (ncol(W) < ncol(X)) stop("insufficient number of instruments")
+        }
+        else W <- NULL
+        # compute the estimation
+        result <- mylm(y, X, W)
+        df <- df.residual(result)
+        vcov <- result$vcov
+        aliased <- result$aliased
+        
+        # in case of a within estimation, correct the degrees of freedom
+        if (model == "within"){
+            pdim <- pdim(data)
+            card.fixef <- switch(effect,
+                                 "individual" = pdim$nT$n,
+                                 "time"       = pdim$nT$T,
+                                 "twoways"    = pdim$nT$n + pdim$nT$T - 1
+                                 )
+            df <- df.residual(result) - card.fixef
+            vcov <- result$vcov * df.residual(result) / df
+        }
+        
+        result <- list(coefficients = coef(result),
+                       vcov         = vcov,
+                       residuals    = resid(result),
+                       df.residual  = df,
+                       formula      = formula,
+                       model        = data)
+        if (model == "random") result$ercomp <- estec
+    }
+    else{
+        pdim <- pdim(data)
+        TS <- pdim$nT$T
+        theta <- estec$theta$id
+        phi2mu <- estec$sigma2["time"] / estec$sigma2["idios"]        
+        Dmu <- model.matrix( ~ factor(index(data)[[2]]) - 1)
+        Dmu <- Dmu - theta * Between(Dmu, index(data)[[1]])
+        X <- model.matrix(   formula, data, rhs = 1, model = "random", effect = "individual", theta = theta)
+        y <- pmodel.response(formula, data,          model = "random", effect = "individual", theta = theta)
+        P <- solve(diag(TS) + phi2mu * crossprod(Dmu))
+        XPX <- crossprod(X)    - phi2mu * crossprod(X, Dmu) %*% P %*% crossprod(Dmu, X)
+        XPy <- crossprod(X, y) - phi2mu * crossprod(X, Dmu) %*% P %*% crossprod(Dmu, y)
+        gamma <- solve(XPX, XPy)[, , drop = TRUE]
+        e <- pmodel.response(formula, data, model = "pooling") -
+            as.numeric(model.matrix(formula, data, rhs = 1, model = "pooling") %*% gamma)
+        result <- list(coefficients = gamma,
+                       vcov = solve(XPX),
+                       formula = formula,
+                       model = data,
+                       ercomp = estec,
+                       df.residual = nrow(X) - ncol(X),
+                       residuals = e)
+        aliased <- NA
+    }
+    result$assign <- attr(X, "assign")
+    result$contrasts <- attr(X, "contrasts")
+    result$args <- list(model = model, effect = effect)
+    result$aliased <- aliased
+    class(result) <- c("plm", "panelmodel")
+    result
+
 }
 
 mylm <- function(y, X, W = NULL){

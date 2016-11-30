@@ -538,6 +538,21 @@ Tapply.matrix <- function(x, effect, func, ...){
 ###################################################
 ### chunk number 10: Between, between, Within
 ###################################################
+Sum <- function(x, ...){
+  UseMethod("Sum")
+}
+
+Sum.default <- function(x, effect, ...){
+  if (!is.numeric(x)) stop("The Sum function only applies to numeric vectors")
+  Tapply(x, effect, sum, ...)
+}
+
+Sum.pseries <- function(x, effect = c("individual", "time", "group"), ...){
+  effect <- match.arg(effect)
+  Tapply(x, effect = sum, mean, ...)
+}
+
+
 Between <- function(x, ...){
   UseMethod("Between")
 }

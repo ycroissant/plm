@@ -54,16 +54,21 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                
                # rev. 305: quick and dirty fix for missing effect argument in function 
                # signature for formula interface/test="aux": see if effect is in dots and extract
-                  dots <- list(...)
+               dots <- list(...)
+               print(dots)
                   if (!is.null(dots$effect)) effect <- dots$effect else effect <- NULL
                
                # calculatate FE and RE model
+               print(effect)
+               print(model)
                fe_mod <- plm(formula=x, data=data, model=model[1], effect = effect)
                re_mod <- plm(formula=x, data=data, model=model[2], effect = effect)
                 ## DEBUG printing:
                  # print(paste0("mod1: ", describe(fe_mod, "effect")))
                  # print(paste0("mod2: ", describe(re_mod, "effect")))
-               
+                              print(fe_mod)
+               print(re_mod)
+
                reY <- pmodel.response(re_mod)
                reX <- model.matrix(re_mod)[ , -1, drop = FALSE] # intercept not needed; drop=F needed to prevent matrix
                feX <- model.matrix(fe_mod)                      # from degenerating to vector if only one regressor

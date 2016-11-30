@@ -37,7 +37,21 @@ ercomp.formula <- function(object, data,
 
     # method and models arguments aren't set, use swar
     if (is.null(method) & is.null(models)) method <- "swar"
-
+    if (! is.null(method) && method == "nerlove"){
+        if (effect != "individual" | ! balanced)
+            stop("Nerlove method only implemented for balanced one-way models")
+        N <- pdim(data)$nT$n
+        TS <- pdim(data)$nT$T
+        wm <- plm(object, data, effect = "individual")
+        s2nu <- deviance(wm) / (N * TS)
+        s2eta <- sum(fixef(wm, type = "dmean") ^ 2) / N
+        sigma2 <- c(idios = s2nu, id = s2eta)
+        theta <- (1 - (1 + TS * sigma2["id"] / sigma2["idios"]) ^ (-0.5))
+        result <- list(sigma2 = sigma2, theta = theta)
+        result <- structure(result, class = "ercomp", balanced = balanced, effect = effect)
+        return(result)
+    }
+    
     # dfcor is set, coerce it to a length 2 vector if necessary
     if (! is.null(dfcor)){
         if (length(dfcor) > 2) stop("dfcor length should be at least 2")
@@ -81,7 +95,6 @@ ercomp.formula <- function(object, data,
          # default value of dfcor 3,3
         if (is.null(dfcor)) dfcor <- c(3, 3)
     }
-    
     Z <- model.matrix(object, data)
     O <- nrow(Z)
     K <- ncol(Z) - 1                                                                                       # INTERCEPT
@@ -107,6 +120,7 @@ ercomp.formula <- function(object, data,
     quad <- vector(length = 3, mode = "numeric")
     # first quadratic form, within transformation
     hateps_w <- resid(estm[[1]], model = "pooling")
+
     if (effect != "twoways"){
         quad[1] <- crossprod(Within(hateps_w, effect = effect))
     }
@@ -137,7 +151,7 @@ ercomp.formula <- function(object, data,
     M <- matrix(NA, nrow = 3, ncol = 3,
                 dimnames = list(c("w", "id", "ts"),
                     c("nu", "eta", "mu")))
-    
+
     # Compute the M matrix :
     ## (    q_w)    ( w_nu      w_eta     w_mu    )   ( s^2_nu )
     ## |       |  = |                             |   |        |
@@ -165,6 +179,7 @@ ercomp.formula <- function(object, data,
         }
         if (effect == "twoways")
             M["ts", "eta"] <- M["id", "mu"] <- 0
+
     }
     else{
         # General case, compute the unbiased version of the estimators
@@ -312,20 +327,20 @@ ercomp.formula <- function(object, data,
     structure(result, class = "ercomp", balanced = balanced, effect = effect)
 }
 
-print.ercomp <- function(x, digits= max(3, getOption("digits") - 3), ...){
+print.ercomp <- function(x, digits = max(3, getOption("digits") - 3), ...){
     effect <- attr(x, "effect")
     balanced <- attr(x, "balanced")
     sigma2 <- x$sigma2
     theta <- x$theta
     
-    if (effect=="twoways"){
+    if (effect == "twoways"){
         sigma2 <- unlist(sigma2)
-        sigma2Table <- cbind(var=sigma2,std.dev=sqrt(sigma2),share=sigma2/sum(sigma2))
+        sigma2Table <- cbind(var = sigma2, std.dev = sqrt(sigma2), share = sigma2 / sum(sigma2))
         rownames(sigma2Table) <- c("idiosyncratic","individual","time")
     }
     else{
         sigma2 <- unlist(sigma2[c("idios", "id")])
-        sigma2Table <- cbind(var=sigma2,std.dev=sqrt(sigma2),share=sigma2/sum(sigma2))
+        sigma2Table <- cbind(var = sigma2, std.dev = sqrt(sigma2), share = sigma2 / sum(sigma2))
         rownames(sigma2Table) <- c("idiosyncratic",effect)
     }
     printCoefmat(sigma2Table,digits)
