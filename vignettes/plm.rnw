@@ -111,7 +111,7 @@ two-dimensional data, especially in the case of unbalanced panels.
 This paper is organized as follows: Section~\ref{sec:linearpanelmodel}
 presents a very short overview of the typical model
 taxonomy\footnote{Comprehensive treatments are to be found in many
-  econometrics textbooks, e.g.  \citet{BALT:01} or \citet{WOOL:02}:
+  econometrics textbooks, e.g. \citet{BALT:01} or \citet{WOOL:02}:
   the reader is referred to these, especially to the first 9 chapters
   of \citet{BALT:01}.}.  Section~\ref{sec:software} discusses the
 software approach used in the package. The next three sections present
@@ -1625,7 +1625,7 @@ $$SCLM=\sqrt{\frac{1}{n(n-1)}} ( \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} \sqrt{T_{ij}}
 
 and distributed as a standard Normal.
 
-Pesaran's \citep{PESA:04} $CD$ test 
+Pesaran's \citep{PESA:04, PESA:2015} $CD$ test 
 
 $$CD=\sqrt{\frac{2}{n(n-1)}} ( \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} \sqrt{T_{ij}} \hat{\rho}_{ij} )$$
 
