@@ -1893,7 +1893,7 @@ serial correlation, is complicated by the fact that the demeaning
 induces serial correlation in the errors. The original White estimator
 (\code{white1}) turns out to be inconsistent for fixed $T$ as $n$
 grows, so in this case it is advisable to use the \code{arellano}
-version \citep[see][]{STOC:WATS:06}.
+version \citep[see][]{STOC:WATS:08}.
 
 The errors may be weighted according to the schemes proposed by
 \citet{MACK:WHIT:85} and \citet{CRIB:04} to improve small-sample

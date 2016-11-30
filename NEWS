@@ -1,12 +1,13 @@
 Changes since version 1.6-4
 
-  * Argument for supplying a variance-covariance matrix now consistently named 'vcov'
+  * Argument for supplying a variance-covariance matrix is now consistently named 'vcov'
     across all functions. The old argument '.vcov' of summary.plm is marked as deprecated.
     Deprecation warnings are only issued for those functions which where on CRAN with
     the now deprecated argument '.vcov' (i.e., just for summary.plm, no warnings for
     functions pwaldtest, fixef, within_intercept).
   * Snesp.Rd, LaborSupply.Rd: broken links fixed.
   * Vignette: updated contact details.
+  
 
 Changes since version 1.6-3
 
@@ -14,10 +15,12 @@ Changes since version 1.6-3
     exported, thus no deprecation warning).
   * summary.plm: F statistic uses adjusted df2 parameter in case of robust vcov.
 
+
 Changes since version 1.6-2
 
   * pcdtest optimized for speed. 'preshape()' added to pcdtest.R to take care of reshaping in wide form
     prior to applying 'cor()'.
+
 
 Changes since version 1.6-1
 
@@ -226,7 +229,7 @@ Changes since version 1.5-16
 	* punbalancedness: data frame interface gains 'index' argument.
 	* within_intercept: new function to calculate an overall intercept along its standard error for FE models
 	                    a la Stata (and Gretl), accepts argument '.vcov' for user defined vcov.
-	* added help topic on package as a whole (?`plm-package`) for sake of completeness
+	* added help topic on package as a whole (?`plm-package`) for sake of completeness.
 	* summary.plm: * argument '.vcov' can also be a function (before, only only matrix was possible).
 	               * internal: the furnished vcov is saved in the summary.plm object in object$rvcov
 	                           (vcov function name in attr(object$rvcov, which="rvcov.name").
@@ -292,7 +295,7 @@ Changes since version 1.5-13
 
 	* fixed bug in vcovHC(..., method="white") from degenerating diag() if any groups have
 	  only 1 element.
-	* reintroduced "white2" method.
+	* vcovG framework: reintroduced "white2" method.
 
 
 Changes since version 1.5-12
