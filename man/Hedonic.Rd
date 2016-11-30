@@ -28,7 +28,7 @@
     \item{age}{proportion of owner units built prior to 1940}
     \item{dis}{weighted distances to five employment centers in the Boston area}
     \item{rad}{index of accessibility to radial highways}
-    \item{tax}{full value property tax rate (\$/\$10,000)}
+    \item{tax}{full value property tax rate ($/$10,000)}
     \item{ptratio}{pupil/teacher ratio}
     \item{blacks}{proportion of blacks in the population}
     \item{lstat}{proportion of population that is lower status}

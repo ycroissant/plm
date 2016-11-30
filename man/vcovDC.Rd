@@ -31,17 +31,17 @@ The function is a convenience wrapper simply summing a group- and a
 time-clustered covariance matrix and subtracting a diagonal one \emph{a la}
 White.
 
-Weighting schemes are analogous to those in \code{\link[sandwich]{vcovHC}} in package \code{sandwich} and are justified theoretically (although in the context of the standard linear model) by MacKinnon and White (1985) and Cribari-Neto (2004) (see Zeileis (2004)).
+Weighting schemes are analogous to those in \code{\link[sandwich]{vcovHC}} in package \pkg{sandwich} and are justified theoretically (although in the context of the standard linear model) by MacKinnon and White (1985) and Cribari-Neto (2004) (see Zeileis (2004)).
 
 The main use of \code{vcovDC} is to be an argument to other functions,
 e.g. for Wald-type testing: argument \code{vcov.} to \code{coeftest()}, argument \code{vcov} to
 \code{waldtest()} and other methods in the \code{lmtest} package; and argument
-\code{vcov.} to \code{linearHypothesis()} in the \code{car} package (see the examples). Notice that the \code{vcov} and \code{vcov.} arguments allow to supply a function (which is the safest) or a matrix (see Zeileis (2004), 4.1-2 and examples below).
+\code{vcov.} to \code{linearHypothesis()} in the \pkg{car} package (see the examples). Notice that the \code{vcov} and \code{vcov.} arguments allow to supply a function (which is the safest) or a matrix (see Zeileis (2004), 4.1-2 and examples below).
 
 }
 
 \seealso{
-  \code{\link[sandwich]{vcovHC}} from the sandwich package for weighting schemes (\code{type} argument).
+  \code{\link[sandwich]{vcovHC}} from the \pkg{sandwich} package for weighting schemes (\code{type} argument).
 }
 
 \author{Giovanni Millo}

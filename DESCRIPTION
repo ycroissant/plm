@@ -9,7 +9,7 @@ Authors@R: c(person(given = "Yves",      family = "Croissant",    role = c("aut"
       	     person(given = "Achim",     family = "Zeileis",      role = "ctb", email = "Achim.Zeileis@R-project.org"),
       	     person(given = "Arne",      family = "Henningsen",   role = "ctb", email = "arne.henningsen@googlemail.com"),
       	     person(given = "Liviu",     family = "Andronic",     role = "ctb", email = "landronimirc@gmail.com"),
-      	     person(given = "Nina",      family = "Schönfelder",  role = "ctb", email = "nina.schoenfelder@fernuni-hagen.de"),
+      	     person(given = "Nina",      family = "Schoenfelder",  role = "ctb", email = "nina.schoenfelder@fernuni-hagen.de"),
       	     person(given = "Kevin",     family = "Tappe",        role = "ctb", email = "kevin.tappe@bwi.uni-stuttgart.de"))
 Depends: R (>= 2.12.0), Formula (>= 0.2-0), stats
 Imports: MASS, bdsmatrix, zoo, nlme, sandwich, lattice, car, lmtest

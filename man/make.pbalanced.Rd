@@ -25,7 +25,7 @@
 
 \value{
 An object of the same class as the input \code{x}, i.e. a pdata.frame, data.frame or a pseries which is made balanced 
-based on the index variables. The returned data is sorted as a stacked time series.
+based on the index variables. The returned data are sorted as a stacked time series.
 }
 
 \details{
