@@ -1,7 +1,7 @@
 Changes since version 1.6-5
   
   * pFtest: disable input model check due to reverse dependency of package AER
-    (and to allow arbitrary models comparisons).
+    (and to allow arbitrary model comparisons).
 
 
 Changes since version 1.6-4
