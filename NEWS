@@ -1,3 +1,9 @@
+Changes since version 1.6-5
+  
+  * pFtest: disable input mdoel check due to reverse dependency of package AER
+    (and to allow arbitrary models comparisons).
+
+
 Changes since version 1.6-4
 
   * Argument for supplying a variance-covariance matrix is now consistently named 'vcov'
