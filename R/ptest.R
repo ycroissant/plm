@@ -361,8 +361,10 @@ pFtest.formula <- function(x, data, ...){
 pFtest.plm <- function(x, z, ...){
   within <- x
   pooling <- z
-  if (! (describe(x, "model") == "within" && describe(z, "model") == "pooling"))
-   stop("the two arguments should be a 'within' and a 'pooling' model (in this order)")
+  ## leave this interface check commented because pkg AER (reverse dependency) has examples that
+  ## use pFtest(within_twoway, within_time)
+  # if (! (describe(x, "model") == "within" && describe(z, "model") == "pooling"))
+  #  stop("the two arguments should be a 'within' and a 'pooling' model (in this order)")
   
   effect <- describe(x, "effect")
   df1 <- df.residual(pooling)-df.residual(within)
@@ -393,7 +395,8 @@ pFtest.plm <- function(x, z, ...){
 # arg 'vcov' non-NULL => the robust tests are carried out
 # arg df2adj == TRUE does finite-sample/cluster adjustment for F tests's df2
 # args .df1, .df2 are only there if user wants to do overwriting of dfs (user has final say)
-pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL, df2adj = (test == "F" && !is.null(vcov) && missing(.df2)), .df1, .df2, ...){
+pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
+                          df2adj = (test == "F" && !is.null(vcov) && missing(.df2)), .df1, .df2, ...) {
   model <- describe(x, "model")
   test <- match.arg(test)
   df1 <- ifelse(model == "within",
@@ -405,7 +408,9 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL, df2adj = (test
   vcov_arg <- vcov
   
   # sanity check
-  if (df2adj == TRUE && (is.null(vcov_arg) || test != "F")) stop("df2adj == TRUE sensible only for robust F test, i.e. test == \"F\" and !is.null(vcov) and missing(.df2)")
+  if (df2adj == TRUE && (is.null(vcov_arg) || test != "F")) {
+    stop("df2adj == TRUE sensible only for robust F test, i.e. test == \"F\" and !is.null(vcov) and missing(.df2)")
+  }
 
   # if robust test: prepare robust vcov
   if (!is.null(vcov_arg)) {
