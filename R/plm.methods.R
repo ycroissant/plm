@@ -265,32 +265,24 @@ r.squared <- function(object, model = NULL,
 
 
 residuals.plm <- function(object, model = NULL, effect = NULL, ...){
-    fittedmodel <- describe(object, "model")
-    if (is.null(effect)) effect <- describe(object, "effect")
-    if (is.null(model)) res <- object$residuals
-    else{
-        beta <- coef(object)
-        X <- model.matrix(object, model = model, effect = effect)
-        cstX <- attr(model.matrix(object, model = "within", effect = effect), "constant")
-        cstX <- union(cstX, names(which(object$alias)))
-        X <- X[, ! (colnames(X) %in% cstX), drop = FALSE]
-        y <- pmodel.response(object, model = model, effect = effect)
-        if (model == "within" & fittedmodel != "within"){
-            if (names(beta)[1] == "(Intercept)") beta <- beta[-1]
-        }
-        if (model != "within" & fittedmodel == "within"){
-            if (colnames(X)[1] == "(Intercept)"){
-                alpha <- mean(y) - crossprod(apply(X[, -1, drop = FALSE], 2, mean), beta)
-                beta <- c("(Intercept)" = alpha, beta)
-            }
-        }
-        # !YC! QDF : on a Between estimation with time dummies, coefs
-       # on years dummies disapears
-        comonpars <- intersect(colnames(X), names(beta))
-        res <- y - as.numeric(crossprod(t(X[, comonpars, drop = FALSE]), beta[comonpars]))
-#        res <- y - as.numeric(crossprod(t(X), beta))
+  fittedmodel <- describe(object, "model")
+  if (is.null(effect)) effect <- describe(object, "effect")
+  if (is.null(model)) res <- object$residuals
+  else{
+    beta <- coef(object)
+    
+    X <- model.matrix(object, model = model, effect = effect)
+    cstX <- attr(model.matrix(object, model = "within", effect = effect), "constant")
+    X <- X[, ! (colnames(X) %in% cstX)]
+    y <- pmodel.response(object, model = model, effect = effect)
+    if (model == "within" & fittedmodel != "within") beta <- beta[-1]
+    if (model != "within" & fittedmodel == "within"){
+      alpha <- mean(y) - crossprod(apply(X[, -1], 2, mean), beta)
+      beta <- c(alpha, beta)
     }
-    structure(res, index =  index(object), class = c("pseries", class(res)))
+    res <- y - as.numeric(crossprod(t(X), beta))
+  }
+  structure(res, index =  index(object), class = c("pseries", class(res)))
 }
 
 formula.plm <- function(x, ...){
