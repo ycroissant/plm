@@ -84,7 +84,7 @@ estimation for the variance--covariance matrix;
 \code{\link[plm]{summary.plm}}
 }
 
-\author{N. N. (initial implementation) and Kevin Tappe (extensions: vcov argument and df2 adjustment)}
+\author{Yves Croissant (initial implementation) and Kevin Tappe (extensions: vcov argument and df2 adjustment)}
 
 \references{
 Wooldridge, J.M. (2010) \emph{Econometric Analysis of Cross-Section and Panel Data}, 2nd ed., MIT Press, Sec. 4.2.3, pp. 60--62.
