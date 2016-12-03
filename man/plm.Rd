@@ -13,7 +13,8 @@ Linear models for panel data estimated using the \code{lm} function on transform
 \usage{
 plm(formula, data, subset, na.action, effect = c("individual", "time", "twoways"),
     model = c("within", "random", "ht", "between", "pooling", "fd"),
-    random.method = c("swar", "walhus", "amemiya", "nerlove", "kinla"),
+    random.method = NULL,
+    random.models = NULL,
     random.dfcor = NULL,
     inst.method = c("bvk", "baltagi", "am", "bmc"), restrict.matrix = NULL,
     restrict.rhs = NULL, index = NULL, \dots)
@@ -35,7 +36,9 @@ plm(formula, data, subset, na.action, effect = c("individual", "time", "twoways"
     \code{"between"}, \code{"random",} \code{"fd"}, or \code{"ht"},}
   \item{random.method}{method of estimation for the variance components
     in the random effects model, one of \code{"swar"} (default),
-  \code{"amemiya"}, \code{"walhus"}, or \code{"nerlove"},}
+    \code{"amemiya"}, \code{"walhus"}, or \code{"nerlove"},}
+  \item{random.models}{an alternative to the previous argument, the
+  models used to compute the variance components estimations are indicated,}
   \item{random.dfcor}{a numeric vector of length 2 indicating which degree of
     freedom should be used,}
   \item{inst.method}{the instrumental variable transformation: one of

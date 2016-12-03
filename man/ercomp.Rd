@@ -13,7 +13,7 @@
 \usage{
 ercomp(object, \dots)
 \method{ercomp}{formula}(object, data, effect = c("individual", "time", "twoways"), 
-                         method = c("swar", "walhus", "amemiya","nerlove"),
+                         method = NULL, models = NULL,
                          dfcor = NULL, index = NULL, \dots)
 \method{ercomp}{plm}(object, \dots)
 \method{print}{ercomp}(x, digits= max(3, getOption("digits") - 3), \dots)
@@ -26,6 +26,8 @@ ercomp(object, \dots)
     \code{\link{lm}} for details,}
   \item{method}{method of estimation for the variance components,
     see \code{\link{lm}} for details,}
+  \item{models}{the models used to estimate the variance components (an
+  alternative to the previous argument),}
   \item{dfcor}{a numeric vector of length 2 indicating which degree of
   freedom should be used,}
   \item{index}{the indexes,}
