@@ -38,8 +38,8 @@ function may be either a pooling model of class \code{plm} or an object of class
 the model. For inputted within (fixed effects) or random effects models, the corresponding pooling model is
 calculated internally first as the tests are based on the residuals of the pooling model.
 
-The \code{bp} test for unbalanced panels was derived in Baltagi/Li (1990), the \code{kw} test for
-unbalanced panels in Baltagi/Chang/Li (1998). The \code{ghm} test and the \code{kw} test were
+The \code{"bp"} test for unbalanced panels was derived in Baltagi/Li (1990), the \code{"kw"} test for
+unbalanced panels in Baltagi/Chang/Li (1998). The \code{"ghm"} test and the \code{"kw"} test were
 extended to two-way effects in Baltagi/Chang/Li (1992).\cr
 For a concise overview of all these statistics see Baltagi (2013), Sec. 4.2, pp.
 68--76 (for balanced panels) and Sec. 9.5, pp. 200--203 (for unbalanced panels).

@@ -715,11 +715,11 @@ Several models can be estimated with \code{plm} by filling the
 \code{model} argument:
 
 \begin{itemize}
-\item the fixed effects model (\code{within}),
-\item the pooling model (\code{pooling}),
-\item the first-difference model (\code{fd}),
-\item the between model (\code{between}),
-\item the error components model (\code{random}).
+\item the fixed effects model (\code{"within"}),
+\item the pooling model (\code{"pooling"}),
+\item the first-difference model (\code{"fd"}),
+\item the between model (\code{"between"}),
+\item the error components model (\code{"random"}).
 \end{itemize}
 
 The basic use of \code{plm} is to indicate the model formula, the
@@ -776,10 +776,10 @@ Four estimators of this parameter are available, depending on the
 value of the argument \code{random.method}:
 
 \begin{itemize}
-\item \code{swar}: from \citet{SWAM:AROR:72}, the default value,
-\item \code{walhus}: from \citet{WALL:HUSS:69},
-\item \code{amemiya}: from \citet{AMEM:71},
-\item \code{nerlove}: from \citet{NERLO:71}.
+\item \code{"swar"}: from \citet{SWAM:AROR:72}, the default value,
+\item \code{"walhus"}: from \citet{WALL:HUSS:69},
+\item \code{"amemiya"}: from \citet{AMEM:71},
+\item \code{"nerlove"}: from \citet{NERLO:71}.
 \end{itemize}
 
 
@@ -874,7 +874,7 @@ summary(cr)
 
 The Hausman-Taylor model \citep[see][]{HAUS:TAYL:81} may be estimated
 with the \code{pht} function. The following example is from
-\cite{BALT:01} p.130.
+\cite{BALT:01}, p.130.
 
 <<>>=
 ht <- pht(lwage~wks+south+smsa+married+exp+I(exp^2)+
@@ -1202,14 +1202,24 @@ Two additional arguments can be added to indicate the kind of test to
 be computed. The argument \code{type} is one of:
 
 \begin{itemize}
-\item \code{bp}: \citet{BREU:PAGA:80},
-\item \code{honda}: \citet{HOND:85}, the default value,
-\item \code{kw}: \citet{KING:WU:97},
-\item \code{ghm}: \citet{GOUR:HOLL:MONF:82}.
+\item \code{"honda"}: \citet{HOND:85}, the default value,
+\item \code{"bp"}: \citet{BREU:PAGA:80},
+\item \code{"kw"}: \citet{KING:WU:97}\footnote{NB: Oneway King-Wu (\code{"kw"}) 
+statistics (\code{"individual"} and \code{"time"}) coincide with the respective 
+Honda statistics (\code{"honda"}); however, the twoway statistics of \code{"kw"} 
+and \code{"honda"} differ.},
+\item \code{"ghm"}: \citet{GOUR:HOLL:MONF:82}.
 \end{itemize}
 
 The effects tested are indicated with the \code{effect} argument (one
-of \code{individual}, \code{time} or \code{twoways}).
+of \code{"individual"}, \code{"time"} or \code{"twoways"}). The test statistics 
+implemented are also suitable for unbalanced panels.\footnote{
+The \code{"bp"} test for unbalanced panels was derived in \citet{BALT:LI:90}, 
+the \code{"kw"} test for unbalanced panels in \citet{BALT:CHA:LI:98}. The 
+\code{"ghm"} test and the \code{"kw"} test were extended to two--way effects in 
+\citet{BALT:CHA:LI:92}. For a concise overview of all these statistics see 
+\citet[Sec. 4.2, pp. 68--76 (for balanced panels) and Sec. 9.5, pp. 200--203 
+(for unbalanced panels)]{BALT:2013}.}
 
 To test the presence of individual and time effects in the
 \code{Grunfeld} example, using the \citet{GOUR:HOLL:MONF:82} test,
