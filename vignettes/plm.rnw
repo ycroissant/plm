@@ -111,9 +111,9 @@ two-dimensional data, especially in the case of unbalanced panels.
 This paper is organized as follows: Section~\ref{sec:linearpanelmodel}
 presents a very short overview of the typical model
 taxonomy\footnote{Comprehensive treatments are to be found in many
-  econometrics textbooks, e.g. \citet{BALT:01} or \citet{WOOL:02}:
+  econometrics textbooks, e.g. \citet{BALT:01, BALT:2013} or \citet{WOOL:02, WOOL:2010}:
   the reader is referred to these, especially to the first 9 chapters
-  of \citet{BALT:01}.}.  Section~\ref{sec:software} discusses the
+  of \citet{BALT:01, BALT:2013}.}.  Section~\ref{sec:software} discusses the
 software approach used in the package. The next three sections present
 the functionalities of the package in more detail: data management
 (Section~\ref{sec:dataformula}), estimation
@@ -835,7 +835,7 @@ with some limitations:
 
 The following example is using data used by \citep{HARR:RUBI:78} to
 estimate an hedonic housing prices function. It is reproduced in
-\citep{BALT:01}, p.174.
+\citep{BALT:01}, p.174/\citet{BALT:2013}, p.197.
 
 <<hedonic>>=
 data("Hedonic", package = "plm")
@@ -858,7 +858,7 @@ The instrumental variables estimator used is indicated with the
 \item \code{baltagi}, from \citet{BALT:81}.
 \end{itemize}
  as
-illustrated on the following example from \cite{BALT:01}, p.120.
+illustrated on the following example from \cite{BALT:01}, p.120/\citet{BALT:2013}, p.137.
   
 <<>>=
 data("Crime", package = "plm")
@@ -874,7 +874,7 @@ summary(cr)
 
 The Hausman-Taylor model \citep[see][]{HAUS:TAYL:81} may be estimated
 with the \code{pht} function. The following example is from
-\cite{BALT:01}, p.130.
+\cite{BALT:01}, p.130/\citet{BALT:2013}, p.146.
 
 <<>>=
 ht <- pht(lwage~wks+south+smsa+married+exp+I(exp^2)+
@@ -1275,7 +1275,7 @@ A model with individual effects has composite errors that are serially
 correlated by definition. The presence of the time-invariant error
 component\footnote{Here we treat fixed and random effects alike, as
   components of the error term, according with the modern approach in
-  econometrics \citep[see][]{WOOL:02}.} gives rise to serial
+  econometrics \citep[see][]{WOOL:02, WOOL:2010}.} gives rise to serial
 correlation which does not die out over time, thus standard tests
 applied on pooled data always end up rejecting the null of spherical
 residuals\footnote{Neglecting time effects may also lead to serial
@@ -2253,7 +2253,7 @@ lmAR1ML <- gls(inv~value+capital,data=Grunfeld,
 @
 
 and analogously the random effects panel with, e.g., AR(1) errors
-\citep[see][chap~5]{BALT:01}, which is a very common specification in
+\citep[see][chap~5]{BALT:01, BALT:2013}, which is a very common specification in
 econometrics, may be fit by \code{lme} specifying an additional
 random intercept:
 
