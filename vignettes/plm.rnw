@@ -381,6 +381,7 @@ has the same name of the function. They all inherit from class
 \code{coefficients}, \code{residuals}, \code{fitted.values},
 \code{vcov}, \code{df.residual} and \code{call} and functions
 that extract these elements are provided.
+% TODO: currently, plm objects do not contain fitted.values
 
 \subsubsection{Testing interface}
 
@@ -602,17 +603,17 @@ head(E)
 head(attr(E, "index"))
 @
 
-Two further arguments are logical : \texttt{drop.index} drop the
-indexes from the \texttt{data.frame} and \texttt{row.names} computes
+Two further arguments are logical: \texttt{drop.index = TRUE} drops the
+indexes from the \texttt{data.frame} and \texttt{row.names = TRUE} computes
 ``fancy'' row names by pasting the individual and the time
 indexes. While extracting a series from a \texttt{pdata.frame}, a
 \texttt{pseries} is created, which is the original series with the
 index attribute. This object has specific methods, like
-\texttt{summary} and \texttt{as.matrix} are provided. The former
-indicates the total variation of the variable and the share of this
-variation that is due to the individual and the time dimensions. The
+\texttt{summary} and \texttt{as.matrix}. The former
+indicates the total variation of the variable and the shares of this
+variation due to the individual and the time dimensions. The
 latter gives the matrix representation of the series, with, by default,
-individual as rows and time as columns.
+individuals as rows and times as columns.
 
 <<>>=
 summary(E$emp)
@@ -631,7 +632,7 @@ $I_n$ the identity matrix of dimension $n$, we get:
 \begin{itemize}
 \item the between transformation: $P=\frac{1}{T}I_n\otimes jj'$
   returns a vector containing the individual means. The
-  \code{Between} and \code{between} functions performs this
+  \code{Between} and \code{between} functions perform this
   operation, the first one returning a vector of length $nT$, the
   second one a vector of length $n$,
 \item the within transformation: $Q=I_{nT}-P$ returns a vector
@@ -656,10 +657,10 @@ is of dimension $(T-1,T)$.
 Note that \proglang{R}'s \code{diff()} and \code{lag()} functions
 don't compute correctly these transformations for panel data because
 they are unable to identify when there is a change in individual in
-the data. Specific methods for \texttt{pseries} objects are therefore
-have been rewritten in order to handle correctly panel data. Note that
-compares to the \texttt{lag} method for \texttt{ts} objects, the order
-of lags are indicated by positive integer. Moreover, 0 is a relevant
+the data. Therefore, specific methods for \texttt{pseries} objects have 
+been written in order to handle correctly panel data. Note that
+compared to the \texttt{lag()} method for \texttt{ts} objects, the order
+of lags are indicated by a positive integer. Moreover, 0 is a relevant
 value and a vector argument may be provided:
 
 <<>>=
@@ -684,7 +685,7 @@ head(Between(E$emp), 10)
 
 \subsection{Formulas}
 
-There are circumstances where standard \code{formula} are not very
+In some circumstances, standard \code{formula}s are not very
 useful to describe a model, notably while using instrumental variable
 like estimators: to deal with these situations, we use the
 \code{Formula} package.
@@ -738,13 +739,13 @@ summary(grun.re)
 For a \code{random} model, the \code{summary} method gives information
 about the variance of the components of the errors.  Fixed effects may
 be extracted easily using \code{fixef}. An argument \code{type}
-indicates how fixed effects should be computed : in level \code{type =
-  'level'} (the default), in deviation from the overall mean
-\code{type = 'dmean'} or in deviation from the first individual
-\code{type = 'dfirst'}.
+indicates how fixed effects should be computed: in levels \code{type =
+  "level"} (the default), in deviations from the overall mean
+\code{type = "dmean"} or in deviations from the first individual
+\code{type = "dfirst"}.
 
 <<>>=
-fixef(grun.fe, type = 'dmean')
+fixef(grun.fe, type = "dmean")
 @ 
 
 The \code{fixef} function returns an object of class \code{fixef}. A
@@ -753,7 +754,7 @@ from the overall intercept), their standard
 errors and the test of equality to the overall intercept.
 
 <<>>=
-summary(fixef(grun.fe, type = 'dmean'))
+summary(fixef(grun.fe, type = "dmean"))
 @ 
 
 In case of a two-ways effect model, an additional argument
@@ -854,8 +855,9 @@ after a | sign.
 The instrumental variables estimator used is indicated with the
 \code{inst.method} argument:
 \begin{itemize}
-\item \code{bvk}, from  \citet{BALE:VARA:87}, the default value,
-\item \code{baltagi}, from \citet{BALT:81}.
+\item \code{"bvk"}, from  \citet{BALE:VARA:87}, the default value,
+\item \code{"baltagi"}, from \citet{BALT:81}.
+% TODO:  "am", "bmc"/"bms" missing here?
 \end{itemize}
  as
 illustrated on the following example from \cite{BALT:01}, p.120/\citet{BALT:2013}, p.137.
@@ -1495,7 +1497,7 @@ correlation, which might turn useful, e.g., on quarterly
 data. Analogously, from the point of view of software, as the
 functions are simple wrappers towards \code{bgtest} and \code{dwtest},
 all arguments from the latter two apply and may be passed on through
-the `\dots' operator.
+the `\dots' argument.
 
 
 \subsubsection{Wooldridge's test for serial correlation in ``short'' FE panels}
@@ -1765,7 +1767,7 @@ $p_i$ can be chosen using:
 \begin{itemize}
 \item the Swartz information criteria (SIC),
 \item the Akaike information criteria (AIC),
-\item the Hall method, which consist on removing the higher lags while
+\item the Hall method, which consist in removing the higher lags while
   it is not significant.
 \end{itemize}
 
