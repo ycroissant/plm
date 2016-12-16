@@ -1,6 +1,8 @@
 Changes since version 1.6-6
+
   * ercomp: first iteration of more general framework.
-  
+TODO: comment about improvement of twoway FE transformation (Yves)
+
 
 Changes since version 1.6-5
   
@@ -212,11 +214,11 @@ Changes since version 1.5-17
 
 Changes since version 1.5-16
   
-	* plmtest:  * fixed p-values [for type="kw" and "ghm"],
-              * unbalanced version of all test statistics implemented,
-              * doc update with literature references to unbalanced tests,
-              * if requested, the "kw" statistic is now also calculated as one-way ("individual" or "time"), 
-                albeit they coincide with respective "bp" statistics.
+	* plmtest: * fixed p-values [for type="kw" and "ghm"],
+               * unbalanced version of all test statistics implemented,
+               * doc update with literature references to unbalanced tests,
+               * if requested, the "kw" statistic is now also calculated as one-way ("individual" or "time"), 
+                 albeit they coincide with respective "bp" statistics.
 	* pwtest: formula interface respects 'effect' argument, 'effect' argument now mentioned in doc.
 	* data set 'Wages': factor 'sex' re-leveled to c("male", "female") to match use in original paper.
 	* print.summary.plm: suppress printing of 'effects' argument in top line in case of 'pooling' model.
@@ -310,8 +312,9 @@ Changes since version 1.5-13
 
 Changes since version 1.5-12
 
-	* dataset Produc: added variable 'region' as 3rd column and description: 'pcap' is public
-	  capital (not private) while 'pc' is private capital (not public)
+	* dataset Produc: added variable 'region' as 3rd column and fixed variable 
+	  descriptions: 'pcap' is public capital (not private) while 'pc' is private 
+	  capital (not public).
 	* added importFrom as per CRAN check for submission.
 
 
@@ -344,7 +347,8 @@ Changes since version 1.5-9
 
 
 Changes since version 1.5-8
-  * introduced new phtest (Hausman test) allowing for robust vcov
+
+	* introduced new phtest (Hausman test) allowing for robust vcov.
 	* fixed bugs in pdwtest.
 
 
@@ -394,7 +398,7 @@ Changes since version 1.4-0
 Changes since version 1.3-1
 
 	* a subset argument is added to print.summary.plm and summary.pht
-	so that a subset of coefficient may be selected.
+	so that a subset of coefficients may be selected.
 
 	* fixed a small problem on the printing of the typology of the
 	variables for pht models.
@@ -402,7 +406,7 @@ Changes since version 1.3-1
 	* the "name" of the tests is now the formula truncated so that it
 	prints on only one line.
 	
-	* restrict.matrix argument added to deals with linear restrictions.
+	* restrict.matrix argument added to deal with linear restrictions.
 
 	* a vcov argument is added to summary.plm so that a variance matrix can be supplied.
 
@@ -487,7 +491,7 @@ Changes since version 1.2-8
 
 	* the Between function now returns a pseries object.
 
-	* the resid and fitted method now returns a pseries object.
+	* the resid and fitted method now return a pseries object.
 
 	* the pgmm method has been rewritten; the data frame is then first
 	balanced and NAs are then overwritten by 0s.
@@ -502,17 +506,17 @@ Changes since version 1.2-7
 
 Changes since version 1.2-6
 
-	* a bug in mtest for pgmm models with effect=individual and
-	transformation=ld *and* for the wald test for time.dummies for
-	model with effect = twoways and transformation=ld is fixed by
+	* a bug in mtest for pgmm models with effect="individual" and
+	transformation="ld" *and* for the wald test for time.dummies for
+	model with effect="twoways" and transformation="ld" is fixed by
 	modifying namest in gmm.
 	
 	* there was a bug in pgmm for models with different lags for gmm
-	instruments. The number of time-series lost is now the min (and
+	instruments. The number of time series lost is now the min (and
 	not the max) of the first lags for gmm instruments.
 
-	* some parts of summary.pgmm only worked correctly for model with
-	time-dummies. It now deals correctly for model with 'individual'
+	* some parts of summary.pgmm only worked correctly for models with
+	time-dummies. It now deals correctly for models with 'individual'
 	effects.
 
 	* the rda files are now compressed.
@@ -554,9 +558,9 @@ Changes since version 1.2-3
 	* lag.pseries now returns relevant names for the returned factor.
 	
 	* pFormula is modified so that it can handle correctly Formula
-	object, and not only formula.
+	objects, and not only formula.
 	
-	* pgmm has been completely rewrite with a new 'Formula'
+	* pgmm has been completely rewritten with a new 'Formula'
 	interface. Old formula and dynformula interfaces are kept for
 	backward compatibility but won't be maintained in the future.
 
@@ -795,7 +799,7 @@ Changes since version 0-2.2
 	* the coefficients method for objects of class pgmm is now
 	exported.
 
-	* a bug in the plm method of plmtest has been fixed
+	* a bug in the plm method of plmtest has been fixed.
 
 	* in plmtest, the argument effect "id" is renamed "individual".
 
