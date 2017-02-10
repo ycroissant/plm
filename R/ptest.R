@@ -426,7 +426,6 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
       rvcov <- rvcov_orig[!rownames(rvcov_orig) %in% int, !colnames(rvcov_orig) %in% int]
       attr(rvcov, which = "cluster") <- attr(rvcov_orig, which = "cluster") # restore dropped 'cluster' attribute
     }
-    
     # if robust F test: by default, do finite-sample adjustment for df2
     if (df2adj == TRUE & test == "F") {
       # determine the variable that the clustering is done on by

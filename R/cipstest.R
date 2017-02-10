@@ -55,8 +55,7 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
 
   ## estimate preliminary pooling plm, to take care of all diffs
   ## and lags in a 'panel' way (would be lost in single TS regr.s)
-  pmod <- plm(adffm, data=dati, model="pooling")
-
+    pmod <- plm(adffm, data=dati, model="pooling")
   ## this as in pmg()
     index <- attr(model.frame(pmod), "index")
     ## group index
@@ -84,7 +83,7 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
     ## model data
     X <- model.matrix(pmod)
     y <- as.numeric(model.response(model.frame(pmod))) # remove pseries attribs
-
+    
   ## det. *minimum* group numerosity
   t <- min(tapply(X[,1],ind,length)) # TODO: == min(Ti) simpler???
 

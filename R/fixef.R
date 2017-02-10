@@ -4,6 +4,7 @@
 fixef.plm <- function(object, effect = NULL,
                       type = c("level", "dfirst", "dmean"),
                       vcov = NULL, ...){
+  ancien <- FALSE
   model.effect <- describe(object, "effect")
   if (is.null(effect)){
     effect <- ifelse(model.effect == "time", "time", "individual")
@@ -38,9 +39,15 @@ fixef.plm <- function(object, effect = NULL,
   # NB: These formulae do not give the correct results in the two-ways unbalanced case,
   #     all other cases (twoways/balanced; oneway(ind/time)/balanced/unbalanced) seem to
   #     work with these formulae.
-  
-  Xb <- model.matrix(formula, data, rhs = 1, model = "between", effect = effect)
-  yb <- pmodel.response(formula, data, model = "between", effect = effect)
+  if (ancien){
+      Xb <- model.matrix(formula, data, rhs = 1, model = "between", effect = effect)
+      yb <- pmodel.response(formula, data, model = "between", effect = effect)
+  }
+  else{
+      Xb <- model.matrix(data, rhs = 1, model = "between", effect = effect)
+      yb <- pmodel.response(data, model = "between", effect = effect)
+
+      }
   fixef <- yb - as.vector(crossprod(t(Xb[, nw, drop = FALSE]), coef(object)))
   
   # Lignes suivantes inutiles ??????????

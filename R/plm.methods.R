@@ -228,7 +228,7 @@ tss <- function(x, ...){
 }
 
 tss.default <- function(x){
-  var(x)*(length(x)-1)
+  var(x) * (length(x) - 1)
 }
 
 tss.plm <- function(x, model = NULL){

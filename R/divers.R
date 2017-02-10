@@ -103,7 +103,8 @@ rbindl <- function(x){
 }
 
 expand.formula <- function(x){
-  if (!any(class(x) == "Formula")) stop("not a Formula object")
+    oclass <- class(x)
+  if (! any(class(x) == "Formula")) stop("not a Formula object")
   if (length(x)[2] != 2) stop("not a two part formula")
   xs <- structure(x, class = "formula")
   has.response <- attr(terms(xs),"response") == 1
@@ -130,8 +131,8 @@ expand.formula <- function(x){
   two <- paste(deparse(two[[3]]), collapse = "")
   result <- as.formula(paste(one, "|", two, collapse = ""));
   result <- as.Formula(result)
-  class(result) <- c("pFormula", class(result))
-  result
+  #YC  class(result) <- c("pFormula", class(result))
+  structure(result, class = oclass)
 }
 
 
