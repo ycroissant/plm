@@ -12,7 +12,8 @@
 
 \usage{
 ercomp(object, \dots)
-\method{ercomp}{formula}(object, data, effect = c("individual", "time", "twoways"), 
+\method{ercomp}{formula}(object, data,
+                         effect = c("individual", "time","twoways", "group"), 
                          method = NULL, models = NULL,
                          dfcor = NULL, index = NULL, \dots)
 \method{ercomp}{plm}(object, \dots)
@@ -23,9 +24,9 @@ ercomp(object, \dots)
   \item{object}{a \code{formula} or a \code{plm} object,}
   \item{data}{a \code{data.frame},}
   \item{effect}{the effects introduced in the model, see
-    \code{\link{lm}} for details,}
+    \code{\link{plm}} for details,}
   \item{method}{method of estimation for the variance components,
-    see \code{\link{lm}} for details,}
+    see \code{\link{plm}} for details,}
   \item{models}{the models used to estimate the variance components (an
   alternative to the previous argument),}
   \item{dfcor}{a numeric vector of length 2 indicating which degree of

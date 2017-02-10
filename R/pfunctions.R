@@ -1,182 +1,201 @@
-###################################################
-### chunk number 1: pdata.frame
-###################################################
+
 pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
-                           stringsAsFactors = default.stringsAsFactors()) {
+                        stringsAsFactors = default.stringsAsFactors()) {
+    
+    if (inherits(x, "pdata.frame")) stop("already a pdata.frame")
+    
+    if (stringsAsFactors) { # coerce character vectors to factors, if requested
+        x.char <- names(x)[sapply(x, is.character)]
+        for (i in x.char){
+            x[[i]] <- factor(x[[i]])
+        }
+    }
   
-  if (inherits(x, "pdata.frame")) stop("already a pdata.frame")
+     # replace Inf, -Inf, NaN (everything for which is.finite is FALSE) by NA
+     # (for all but any character columns [relevant if stringAsFactors == FALSE])
+    for (i in names(x)) {
+        if (!inherits(x[[i]], "character")) {
+            x[[i]][!is.finite(x[[i]])] <- NA
+        }
+    }
+  
+    # check and remove complete NA series
+    na.check <- sapply(x,function(x) sum(!is.na(x))==0)
+    na.serie <- names(x)[na.check]
+    if (length(na.serie) > 0){
+        if (length(na.serie) == 1)
+            cat(paste0("This series is NA and has been removed: ", na.serie, "\n"))
+        else
+            cat(paste0("These series are NA and have been removed: ", paste(na.serie, collapse = ", "), "\n"))
+    }
+    x <- x[, !na.check]
+  
+    # check and remove constant series
+    # cst.check <- sapply(x, function(x) var(as.numeric(x), na.rm = TRUE)==0) # old
+    cst.check <- sapply(x, function(x) {
+                            if (is.factor(x) || is.character(x)) {
+                                all(duplicated(x[!is.na(x)])[-1L]) # var() and sd() on factors is deprecated as of R 3.2.3
+                            } else {
+                                var(as.numeric(x), na.rm = TRUE)==0
+                            }
+                        })
+    
+    # following line: bug fixed thanks to Marciej Szelfer 
+    cst.check <- cst.check | is.na(cst.check)
+    cst.serie <- names(x)[cst.check]
+    if (length(cst.serie) > 0){
+        if (length(cst.serie) == 1){
+            cat(paste0("This series is constant and has been removed: ", cst.serie, "\n"))
+        }
+        else{
+            cat(paste0("These series are constants and have been removed: ", paste(cst.serie, collapse = ", "), "\n"))
+        }
+    }
+    x <- x[, !cst.check]
+  
+    # sanity check for 'index' argument. First check the presence of a
+    # grouping variable, this should be the third element of the index
+    # vector or any "group" named element ot this vector
 
-  if (stringsAsFactors) { # coerce character vectors to factors, if requested
-      x.char <- names(x)[sapply(x, is.character)]
-      for (i in x.char){
-        x[[i]] <- factor(x[[i]])
-      }
-  }
-  
-  # replace Inf, -Inf, NaN (everything for which is.finite is FALSE) by NA
-  # (for all but any character columns [relevant if stringAsFactors == FALSE])
-  for (i in names(x)) {
-    if (!inherits(x[[i]], "character")) {
-      x[[i]][!is.finite(x[[i]])] <- NA
+    group.name <- NULL
+    if (! is.null(names(index)) | length(index == 3)){
+        if (! is.null(names(index))){
+            grouppos <- match("group", names(index))
+            if (! is.na(grouppos)){
+                group.name <- index[grouppos]
+                index <- index[- grouppos]
+            }
+        }
+        if (length(index) == 3){
+            group.name <- index[3]
+            index <- index[- 3]
+        }
     }
-  }
-  
-  # check and remove complete NA series
-  na.check <- sapply(x,function(x) sum(!is.na(x))==0)
-  na.serie <- names(x)[na.check]
-  if (length(na.serie) > 0){
-    if (length(na.serie) == 1)
-      cat(paste0("This series is NA and has been removed: ", na.serie, "\n"))
-    else
-      cat(paste0("These series are NA and have been removed: ", paste(na.serie, collapse = ", "), "\n"))
-  }
-  x <- x[, !na.check]
-  
-  # check and remove constant series
-  # cst.check <- sapply(x, function(x) var(as.numeric(x), na.rm = TRUE)==0) # old
-  cst.check <- sapply(x, function(x) {
-    if (is.factor(x) || is.character(x)) {
-      all(duplicated(x[!is.na(x)])[-1L]) # var() and sd() on factors is deprecated as of R 3.2.3
-    } else {
-      var(as.numeric(x), na.rm = TRUE)==0
-      }
-  })
+    if (length(index) == 0) index <- NULL
 
-  # following line: bug fixed thanks to Marciej Szelfer 
-  cst.check <- cst.check | is.na(cst.check)
-  cst.serie <- names(x)[cst.check]
-  if (length(cst.serie) > 0){
-    if (length(cst.serie) == 1){
-      cat(paste0("This series is constant and has been removed: ", cst.serie, "\n"))
+    if (length(index)>2){
+        stop("'index' can be of length 2 at the most (one individual and one time index)")
     }
-    else{
-      cat(paste0("These series are constants and have been removed: ", paste(cst.serie, collapse = ", "), "\n"))
-    }
-  }
-  x <- x[, !cst.check]
-  
-  # sanity check for 'index' argument
-  if (length(index)>2){
-    stop("'index' can be of length 2 at the most (one individual and one time index)")
-  }
   # if index is NULL, both id and time are NULL
-  if (is.null(index)){
-    id <- NULL
-    time <- NULL
-  }
+    if (is.null(index)){
+        id <- NULL
+        time <- NULL
+    }
   # if the length of index is 1, id = index and time is NULL
-  if (length(index)==1){
-    id <- index
-    time <- NULL
-  }
+    if (length(index)==1){
+        id <- index
+        time <- NULL
+    }
   # if the length of index is 2, the first element is id, the second is time
-  if (length(index)==2){
-    id <- index[1]
-    time <- index[2]
-  }
+    if (length(index)==2){
+        id <- index[1]
+        time <- index[2]
+    }
   # if both id and time are NULL, the names of the index are the first
   # two names of x
-  if (is.null(id) & is.null(time)){
-    id.name <- names(x)[1]
-    time.name <- names(x)[2]
-  }
-  else{
-    id.name <- id
-    time.name <- time
-  }
-  
+    if (is.null(id) & is.null(time)){
+        id.name <- names(x)[1]
+        time.name <- names(x)[2]
+    }
+    else{
+        id.name <- id
+        time.name <- time
+    }
+    
   # if index is numeric, this indicats a balanced panel with no. of individuals equal to id.name
-  if(is.numeric(id.name)){
-    if(!is.null(time.name)){warning("The time index (second element of 'index' argument) will be ignored\n")}
-    N <- nrow(x)
-    if( (N%%id.name)!=0){
-      stop("unbalanced panel, in this case the individual index should be indicated by the first element of 'index' argument\n")
+    if(is.numeric(id.name)){
+        if(!is.null(time.name)){warning("The time index (second element of 'index' argument) will be ignored\n")}
+        N <- nrow(x)
+        if( (N %% id.name)!=0){
+            stop("unbalanced panel, in this case the individual index should be indicated by the first element of 'index' argument\n")
+        }
+        else{
+            T <- N %/% id.name
+            n <- N %/% T
+            time <- rep(1:T, n)
+            id <- rep(seq(1:n), rep(T, n))
+            id.name <- "id"
+            time.name <- "time"
+            x[[id.name]] <- id <- as.factor(id)
+            x[[time.name]] <- time <- as.factor(time)
+        }
     }
-    else{
-      T <- N%/%id.name
-      n <- N%/%T
-      time <- rep(1:T,n)
-      id <- rep(seq(1:n),rep(T,n))
-      id.name <- "id"
-      time.name <- "time"
-      x[[id.name]] <- id <- as.factor(id)
-      x[[time.name]] <- time <- as.factor(time)
-    }
-  }
-  else{ # id.name is not numeric, i.e. individual index is supplied
-    if (!id.name %in% names(x)) stop(paste("variable ",id.name," does not exist (individual index)", sep=""))
-    
-    if (is.factor(x[[id.name]])){
-      id <- x[[id.name]] <- x[[id.name]][drop=T] # drops unused levels of factor
-    }
-    else{
-      id <- x[[id.name]] <- as.factor(x[[id.name]])
-    }
-    
-    if (is.null(time.name)){
-      # if no time index is supplied, add time variable automatically
+    else{ # id.name is not numeric, i.e. individual index is supplied
+        if (!id.name %in% names(x)) stop(paste("variable ",id.name," does not exist (individual index)", sep=""))
+        
+        if (is.factor(x[[id.name]])){
+            id <- x[[id.name]] <- x[[id.name]][drop=T] # drops unused levels of factor
+        }
+        else{
+            id <- x[[id.name]] <- as.factor(x[[id.name]])
+        }
+        
+        if (is.null(time.name)){
+        # if no time index is supplied, add time variable automatically
       
-      # order data by individual index, necessary for the automatic
-      # addition of time index to be succesfull if no time index was supplied
-      x <- x[order(x[[id.name]]), ]
+        # order data by individual index, necessary for the automatic
+        # addition of time index to be succesfull if no time index was supplied
+            x <- x[order(x[[id.name]]), ]
+            
+            Ti <- table(x[[id.name]]) # was: Ti <- table(id)
+            n <- length(Ti)
+            time <- c()
+            for (i in 1:n){
+                time <- c(time,1:Ti[i])
+            }
+            time.name <- "time"
+            time <- x[[time.name]] <- time <- as.factor(time)
+        }
+        else{
+        # use supplied time index
+            if (!time.name %in% names(x)) stop(paste("variable ",time.name," does not exist (time index)",sep=""))
+            
+            if (is.factor(x[[time.name]])){
+                time <- x[[time.name]] <- x[[time.name]][drop=T] # drops unused levels of factor
+            }
+            else{
+                time <- x[[time.name]] <- as.factor(x[[time.name]])
+            }
+        }
+    }
+  
+    # sort by id, then by time
+    x <- x[order(x[[id.name]], x[[time.name]]), ] # old: x <- x[order(id,time), ] 
     
-      Ti <- table(x[[id.name]]) # was: Ti <- table(id)
-      n <- length(Ti)
-      time <- c()
-      for (i in 1:n){
-        time <- c(time,1:Ti[i])
-      }
-      time.name <- "time"
-      time <- x[[time.name]] <- time <- as.factor(time)
+    var.names <- names(x)
+  
+    ## drop unused levels from all factor variables
+    for (i in var.names){
+        if(is.factor(x[[i]])){
+        # if (length(unique(x[[i]])) < length(levels(x[[i]]))){
+        #   x[[i]] <- x[[i]][,drop=TRUE]
+        # }
+            x[[i]] <- droplevels(x[[i]])
+        }
     }
-    else{
-      # use supplied time index
-      if (!time.name %in% names(x)) stop(paste("variable ",time.name," does not exist (time index)",sep=""))
-      
-      if (is.factor(x[[time.name]])){
-        time <- x[[time.name]] <- x[[time.name]][drop=T] # drops unused levels of factor
-      }
-      else{
-        time <- x[[time.name]] <- as.factor(x[[time.name]])
-      }
+    posindex <- match(c(id.name, time.name, group.name), names(x))
+    index <- x[, posindex]
+    if (drop.index) x <- x[ , -posindex]
+    
+    test_doub <- table(index[[1]], index[[2]], useNA = "ifany")
+    if (any(is.na(colnames(test_doub))) || any(is.na(rownames(test_doub))))
+        cat(paste0("at least one couple (id-time) has NA in at least one index dimension in resulting pdata.frame\n to find out which, use e.g. table(index(your_pdataframe), useNA = \"ifany\")\n"))
+    if (any(as.vector(test_doub[!is.na(rownames(test_doub)), !is.na(colnames(test_doub))]) > 1))
+        warning("duplicate couples (id-time) in resulting pdata.frame\n to find out which, use e.g. table(index(your_pdataframe), useNA = \"ifany\")")
+    
+    if (row.names){
+        attr(x, "row.names") <- fancy.row.names(index)
+        # NB: attr(x, "row.names") allows for duplicate rownames (as
+        # opposed to row.names(x) <- something) no fancy row.names for
+        # index attribute (!?): maybe because so it is possible to
+        # restore original row.names?
     }
-  }
-  
-  # sort by id, then by time
-  x <- x[order(x[[id.name]], x[[time.name]]), ] # old: x <- x[order(id,time), ] 
-  
-  var.names <- names(x)
-  
-  ## drop unused levels from all factor variables
-  for (i in var.names){
-    if(is.factor(x[[i]])){
-      # if (length(unique(x[[i]])) < length(levels(x[[i]]))){
-      #   x[[i]] <- x[[i]][,drop=TRUE]
-      # }
-      x[[i]] <- droplevels(x[[i]])
-    }
-  }
-  posindex <- match(c(id.name, time.name), var.names)
-  index <- x[, posindex]
-  if (drop.index) x <- x[ , -posindex]
-  
-  test_doub <- table(index[[1]], index[[2]], useNA = "ifany")
-  if (any(is.na(colnames(test_doub))) || any(is.na(rownames(test_doub))))
-    cat(paste0("at least one couple (id-time) has NA in at least one index dimension in resulting pdata.frame\n to find out which, use e.g. table(index(your_pdataframe), useNA = \"ifany\")\n"))
-  if (any(as.vector(test_doub[!is.na(rownames(test_doub)), !is.na(colnames(test_doub))]) > 1))
-    warning("duplicate couples (id-time) in resulting pdata.frame\n to find out which, use e.g. table(index(your_pdataframe), useNA = \"ifany\")")
-  
-  if (row.names){
-    attr(x, "row.names") <- fancy.row.names(index)
-    # NB: attr(x, "row.names") allows for duplicate rownames (as opposed to row.names(x) <- something)
-    # no fancy row.names for index attribute (!?): maybe because so it is possible to restore original row.names?
-  }
-  
-  class(index) <- c("pindex", "data.frame")
-  attr(x, "index") <- index
-  class(x) <- c("pdata.frame", "data.frame")
-  
-  return(x)
+    
+    class(index) <- c("pindex", "data.frame")
+    attr(x, "index") <- index
+    class(x) <- c("pdata.frame", "data.frame")
+    
+    return(x)
 }
 
 
@@ -525,7 +544,7 @@ Tapply.pseries <- function(x, effect = c("individual", "time"), func, ...){
 
 Tapply.matrix <- function(x, effect, func, ...){
    ## Note: this function is not robust wrt NA in effect
-  na.x <- is.na(x)
+    na.x <- is.na(x)
   #uniqval <- apply(x, 2, function(z) tapply(z, effect, "mean")) # Note: uniqval was calculated several times here - why?
   #uniqval <- apply(x, 2, function(z) tapply(z, effect, func))   # Note: uniqval was calculated several times here - why?
   uniqval <- apply(x, 2, tapply, effect, func)

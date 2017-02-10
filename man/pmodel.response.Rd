@@ -16,13 +16,13 @@ pmodel.response(object, \dots)
 \method{pmodel.response}{data.frame}(object,
                                      model = c("pooling","within","Between",
                                                "between","mean","random","fd"),
-                                     effect = c("individual","time","twoways"),
+                                     effect = c("individual","time","twoways", "group"),
                                      lhs = NULL,
                                      theta = NULL, \dots)
 \method{pmodel.response}{pFormula}(object, data,
                                    model = c("pooling","within","Between",
                                              "between","mean","random","fd"),
-                                   effect = c("individual","time","twoways"),
+                                   effect = c("individual","time","twoways", "group"),
                                    lhs = NULL,
                                    theta = NULL, \dots)
 \method{pmodel.response}{plm}(object, \dots)

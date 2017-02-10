@@ -2,6 +2,7 @@ Changes since version 1.6-6
 
   * ercomp: first iteration of more general framework.
 TODO: comment about improvement of twoway FE transformation (Yves)
+  * a weight argument is added to plm
 
 
 Changes since version 1.6-5

@@ -13,6 +13,7 @@ importFrom("stats", "lag")
 importFrom("stats", "nobs")
 importFrom("stats", "alias")
 importFrom("stats", "reshape")
+importFrom("stats", "model.weights")
 importFrom("bdsmatrix", "bdsmatrix")
 importFrom("sandwich", "vcovHC") # import generic and associated methods so the vcovHC methods from pkg sandwich and plm do no mask each other
 importFrom("zoo", "index")       # --- same ---

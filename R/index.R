@@ -2,29 +2,25 @@
 ### Index methods
 
 index.pindex <- function(x, which = NULL, ...){
-  if (is.null(which)) which <- names(x)
-  if (! (length(which) %in% c(1, 2))) stop("which should be of length 1 or 2")
-  if (is.numeric(which)){
-    if (! all(which %in% c(1, 2))) stop("if integers, which should contain 1 and/or 2")
-    which <- names(x)[which]
-  }
-  if (length(which) == 2){
-    if (which[1] == "id") which[1] = names(x)[1]
-    if (which[2] == "time") which[2] = names(x)[2]
-    for (i in 1:2){
-      if (! (which[i] %in% names(x))) stop(paste("variable", which[i], "does not exist"))
+    if (is.null(which)) which <- names(x)
+    if (length(which) >  3) stop("the length of which should be at most 3")
+    if (is.numeric(which)){
+        if (! all(which %in% 1:3))
+            stop("if integers, which should contain only 1, 2 and/or 3")
+        if (ncol(x) == 2 & 3 %in% which) stop("no grouping variable, only 2 indexes")
+        which <- names(x)[which]
     }
+    nindex <- names(x)
+    gindex <- c("id", "time")
+    if (ncol(x) == 3) gindex <- c(gindex, "group")
+    if (any(! which %in% c(nindex, gindex))) stop("unknown variable")
+    if ("id" %in% which) which[which == "id"] <- names(x)[1]
+    if ("time" %in% which) which[which == "time"] <- names(x)[2]
+    if ("group" %in% which) which[which == "group"] <- names(x)[3]
     result <- x[, which]
-  }
-  else{
-    if (which == "id") which = names(x)[1]
-    if (which == "time") which = names(x)[2]
-    if (! (which %in% names(x))) stop(paste("variable", which, "does not exist"))
-    result <- x[, which]
-  }
-  result
+    result
 }
-      
+
 index.pdata.frame <- function(x, which = NULL, ...){
   anindex <- attr(x, "index")
   index(x = anindex, which = which)

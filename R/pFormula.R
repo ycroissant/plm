@@ -32,7 +32,7 @@ model.frame.pFormula <- function(formula, data, ..., lhs = NULL, rhs = NULL){
 model.matrix.pFormula <- function(object, data,
                                   model = c("pooling","within","Between", "Sum",
                                       "between","mean","random","fd"),
-                                  effect = c("individual","time","twoways"),
+                                  effect = c("individual", "time", "twoways", "group"),
                                   rhs = 1,
                                   theta = NULL, ...){
     model <- match.arg(model)
@@ -60,11 +60,13 @@ model.matrix.pFormula <- function(object, data,
         stop("NA in the individual index variable")
     }
     time <- index[[2]]
+    if (length(index) == 3) group <- index[[3]]
     balanced <- is.pbalanced(data) # pdim <- pdim(data)
     if (has.intercept && model == "within") X <- X[ , -1, drop = FALSE]
     if (effect != "twoways"){
         if (effect == "individual") cond <- id
         if (effect == "time") cond <- time
+        if (effect == "group") cond <- group
         #!YC! rm.null FALSE or TRUE ?
         result <- switch(model,
                          "within"  = Within(X, cond, rm.null = FALSE),
@@ -118,7 +120,7 @@ pmodel.response <- function(object, ...) {
 pmodel.response.data.frame <- function(object,
                                        model = c("pooling","within","Between",
                                                  "between","mean","random","fd"),
-                                       effect = c("individual","time","twoways"),
+                                       effect = c("individual","time","twoways", "group"),
                                        lhs = NULL,
                                        theta = NULL, ...){
   data <- object
@@ -136,7 +138,7 @@ pmodel.response.data.frame <- function(object,
 pmodel.response.pFormula <- function(object, data,
                                      model = c("pooling","within","Between",
                                                "between","mean","random","fd"),
-                                     effect = c("individual","time","twoways"),
+                                     effect = c("individual","time","twoways", "group"),
                                      lhs = NULL,
                                      theta = NULL, ...){
   formula <- pFormula(object) # was: formula <- object

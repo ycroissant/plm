@@ -11,7 +11,7 @@ Linear models for panel data estimated using the \code{lm} function on transform
 }
 
 \usage{
-plm(formula, data, subset, na.action, effect = c("individual", "time", "twoways"),
+plm(formula, data, subset, weights, na.action, effect = c("individual", "time", "twoways"),
     model = c("within", "random", "ht", "between", "pooling", "fd"),
     random.method = NULL,
     random.models = NULL,
@@ -29,6 +29,7 @@ plm(formula, data, subset, na.action, effect = c("individual", "time", "twoways"
   \item{x}{an object of class \code{"plm"},}
   \item{data}{a \code{data.frame},}
   \item{subset}{see \code{\link{lm}},}
+  \item{weights}{see \code{\link{lm}},}
   \item{na.action}{see \code{\link{lm}}; currently, not fully supported,}
   \item{effect}{the effects introduced in the model, one of
   \code{"individual"}, \code{"time"}, or \code{"twoways"},}

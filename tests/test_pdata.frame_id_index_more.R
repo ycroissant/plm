@@ -96,14 +96,14 @@ Wag <- pdata.frame(Wages, 595)
 pdim(Wag)
 
 # test for warning about time index
-ttC2 <-  tryCatch(pdata.frame(Wages, index=c(595, 3)), error=function(e) e, warning=function(w) w)
+ttC2 <-  tryCatch(pdata.frame(Wages, index=c(595, 3)), error=function(e) e, warning = function(w) w)
 if(!is(ttC2,"warning") | ttC2$message != "The time index (second element of 'index' argument) will be ignored\n") stop("warning about unused time index not sent")
 
 # test for error about length(index)>2
 # Should result in error with informative message
-ttC3 <-  tryCatch(pdata.frame(Wages, index=c(595, 3, 5)), error=function(e) e, warning=function(w) w)
-if(!is(ttC3,"error") | ttC3$message != "'index' can be of length 2 at the most (one individual and one time index)") stop("error about length(index)>2 not sent")
-
+#ttC3 <-  tryCatch(pdata.frame(Wages, index=c(595, 3, 5)), error=function(e) e, warning = function(w) w)
+#if(!is(ttC3,"error") | ttC3$message != "'index' can be of length 2 at the most (one individual and one time index)") stop("error about length(index)>2 not sent")
+#YC deprecated, the index can be now of length 3
 
 #### larger data set ###
 ## commented because needs other package
