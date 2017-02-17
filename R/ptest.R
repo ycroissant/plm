@@ -251,9 +251,9 @@ plmtest.plm <- function(x,
     
     ifelse(effect == "individual", stat <- LM1, stat <- LM2)
     stat <- switch(type,
-                   honda = c(normal = stat),
-                   bp    = c(chisq  = stat^2),
-                   kw    = c(normal = stat))
+                     honda = c(normal = stat),
+                     bp    = c(chisq  = stat^2),
+                     kw    = c(normal = stat))
     
     parameter <- switch(type,
                           honda = NULL,
@@ -262,7 +262,7 @@ plmtest.plm <- function(x,
     
     pval <- switch(type,
                      honda = pnorm(stat, lower.tail = FALSE), # honda oneway ~ N(0,1), alternative is one-sided (Baltagi (2013), p. 71/202)
-                     bp    = pchisq(stat, df = parameter, lower.tail = FALSE), # is df=1 in the one-way case, alternative is two-sided (Baltagi (2013), p. 70/201)
+                     bp    = pchisq(stat, df = parameter, lower.tail = FALSE), # df = 1 in the one-way case, alternative is two-sided (Baltagi (2013), p. 70/201)
                      kw    = pnorm(stat, lower.tail = FALSE)) # kw oneway ~ N(0,1), alternative is one-sided (Baltagi (2013), p. 71/202)
     # END oneway
   }
@@ -316,7 +316,7 @@ plmtest.plm <- function(x,
                  data.name = data.name(x))
   }
   
-  RVAL$alternative <- "significant effects" # TODO: maybe distinguish be b/w one-sided and two-sided alternatives?
+  RVAL$alternative <- "significant effects" # TODO: maybe distinguish b/w one-sided and two-sided alternatives?
                                             #       (bp: two-sided alt.; all others: one-sided alt.?)
   
   class(RVAL) <- "htest"
