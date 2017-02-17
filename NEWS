@@ -2,13 +2,17 @@ Changes since version 1.6-6
 
   * ercomp: first iteration of more general framework.
 TODO: comment about improvement of twoway FE transformation (Yves)
-  * a weight argument is added to plm
+  * plm: a weight argument is added to plm.
+  * pbsytest:
+      * test = "j": [joint test by Baltagi/Li(1991)]:
+        fixed degrees of freedom (now df = 2 instead of df = 1).
 
 
 Changes since version 1.6-5
   
   * pFtest: disable input model check due to reverse dependency of package AER
-    (and to allow arbitrary model comparisons).
+    (and to allow arbitrary model comparisons); check was errornously enabled in
+    plm version 1.6-4.
 
 
 Changes since version 1.6-4
