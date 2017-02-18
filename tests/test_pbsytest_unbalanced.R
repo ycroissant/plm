@@ -1,0 +1,141 @@
+# test pbsytest() - unbalanced and balanced version
+
+################### Bera, Sosa-Escudero and Yoon (2001) and joint test of Baltagi/Li (1991) ###############
+# see Baltagi (2005), Econometric Analysis of Panel Data, 3rd edition, pp. 96-97
+#  or Baltagi (2013), Econometric Analysis of Panel Data, 5th edition, p. 108.
+#
+##  only balanced tests described in Bera, Sosa-Escudero and Yoon (2001) and Baltagi (2005, 2013)!
+#
+# Baltagi (2013), p. 108:
+# Grunfeld data,  (table 4.2)
+# LM_mu = 798.162 (with Stata's xttest0 command) [-> plmtest(pool_grunfeld, type = "bp")]
+# LM_rho = 143.523, LM*_mu = 664.948, LM*_rho = 10.310, joint test (LM1) = 808.471 (all using TSP)
+#
+# comments about significance in book:
+# joint test (LM1): rejects null hypo (no first-order serial correlation and no random effects)
+# LM_rho, LM*_rho:  reject null hypo (no first-order serial correlation)
+# LM_mu, LM*_mu:    reject null hypo (no random effects)
+
+
+library(plm)
+data("Grunfeld", package = "plm")
+Grunfeldpdata <- pdata.frame(Grunfeld, index = c("firm", "year"), drop.index = FALSE, row.names = TRUE)
+form_gunfeld <- formula(inv ~ value + capital)
+pool_grunfeld <- plm(form_gunfeld, data = Grunfeldpdata, model="pooling")
+
+pbsytest(pool_grunfeld, test = "ar")                    # chisq = 10.31    => LM*_rho  in Baltagi's book (RS*_lambda from Sosa-Escudero/Bera (2008), p. 73)
+pbsytest(pool_grunfeld, test = "re", re.normal = FALSE) # chisq = 664.948  => LM*_mu in Baltagi's book (RS*_mu from Sosa-Escudero/Bera (2008), p. 73)
+pbsytest(pool_grunfeld, test = "re")                    # [sqrt(chisq) = z = 25.787] =>  RSO*_mu from Sosa-Escudero/Bera (2008), p. 75
+pbsytest(pool_grunfeld, test = "j")                     # chisq = 808.47   => LM1 in Baltagi's book (RS_lambda_mu in Sosa-Escudero/Bera (2008), p. 74)
+
+# formula interface
+pbsytest(form_gunfeld, data = Grunfeld, test = "ar")
+pbsytest(form_gunfeld, data = Grunfeld, test = "re")
+pbsytest(form_gunfeld, data = Grunfeld, test = "re", re.normal = FALSE) 
+pbsytest(form_gunfeld, data = Grunfeld, test = "j")
+
+plmtest(pool_grunfeld, type = "bp") # LM_mu in Baltagi's book
+
+############### balanced version ###################
+### Results from Bera et al. (2001), p. 13:
+
+## Bera/Sosa-Escudero/Yoon (2001), Tests for the error component model in the presence of local misspecifcation,
+##                                 Journal of Econometrics 101 (2001), pp. 1-23.
+
+# To replicate, a special version of the Grunfeld data set is needed: only 5 selected firms (total of 100 obs)
+# from http://pages.stern.nyu.edu/~wgreene/Text/tables/TableF13-1.txt
+# or   http://statmath.wu.ac.at/~zeileis/grunfeld/TableF13-1.txt
+#
+# NB: this data set contains 3 erros compared to the original Grunfeld data, see e.g. the 
+#     analysis of various different Grundfeld data sets circulating at http://statmath.wu-wien.ac.at/~zeileis/grunfeld/
+
+## commented due to file download
+
+# Grunfeld_greene_5firms <- read.csv("http://pages.stern.nyu.edu/~wgreene/Text/tables/TableF13-1.txt", sep="")
+# # Grunfeld_greene_5firms <- read.csv("http://statmath.wu.ac.at/~zeileis/grunfeld/TableF13-1.txt", sep="") # alternative source
+# 
+# # Matching to Grunfeld data set in plm
+# # Grunfeld[c(1:20, 41:60), 3:5] == Grunfeld_greene_5firms[c(1:20, 41:60), 3:5]
+# # Grunfeld[61:80, 3:5]          == Grunfeld_greene_5firms[21:40, 3:5]
+# # Grunfeld[141:160, 3:5]        == Grunfeld_greene_5firms[61:80, 3:5]
+# # Grunfeld[21:40, 3:5]          == Grunfeld_greene_5firms[81:100, 3:5] # almost all equal, 3 values differ (3 errors in the Greene 5 firm version)
+# 
+# pGrunfeld_greene_5firms <- pdata.frame(Grunfeld_greene_5firms, index = c("Firm", "Year"), drop.index = FALSE, row.names = TRUE)
+# form_gunfeld_half <- formula(I ~ F + C)
+# pool_grunfeld_half <- plm(form_gunfeld_half, data=pGrunfeld_greene_5firms, model = "pooling")
+# re_grunfeld_half   <- plm(form_gunfeld_half, data=pGrunfeld_greene_5firms, model = "random")
+# 
+# pbsytest(pool_grunfeld_half, test = "ar")                    # chisq = 3.7125         => RS*_rho in Bera et al. (2001), p. 13
+# pbsytest(pool_grunfeld_half, test = "re")                    # normal = 19.601; p = 0 => RSO*_mu
+# pbsytest(pool_grunfeld_half, test = "re", re.normal = FALSE) # chisq = 384.183 => RS*_mu  [sqrt(chisq) = z = 19.601]
+# pbsytest(pool_grunfeld_half, test = "j")                     # chisq = 457.53         => RS_mu_rho
+# 
+# # plmtest's statistic is also mentioned in paper
+# plmtest(pool_grunfeld_half, type = "bp")              # chisq = 453.82   => RS_mu   in Bera et al. (2001), p. 13
+# plmtest(pool_grunfeld_half, type = "honda")           # normal = 21.3031 => RSO_mu
+# 
+# 
+# ## RS_rho in Bera et al (2001), p. 9 (formula 19) is not implemented
+# ## it's origin is in Baltagi/Li (1991), but there is is just a side result
+# ## in terms of n, t, b of pbsystest it is: (n*t^2*(B^2)) / (t-1)
+# 
+# # formula interface
+# pbsytest(form_gunfeld_half, data = pGrunfeld_greene_5firms, test = "ar")
+# pbsytest(form_gunfeld_half, data = pGrunfeld_greene_5firms, test = "re")
+# pbsytest(form_gunfeld_half, data = pGrunfeld_greene_5firms, test = "re", re.normal = FALSE)
+# pbsytest(form_gunfeld_half, data = pGrunfeld_greene_5firms, test = "j")
+# 
+# plmtest(form_gunfeld_half, data = pGrunfeld_greene_5firms, type = "bp")
+
+
+############ Replicate tests from original paper Sosa-Escudero/Bera (2008) ####################
+############ unbalanced panel                                              ####################
+##
+## data set for test from Sosa-Escudero/Bera (2008), pp. 75-77
+## available as STATA .dta file at http://www.stata-journal.com/software/sj8-1/sg164_1/ginipanel5.dta
+##
+## Sosa-Escudero/Bera (2008), Tests for unbalanced error-components models under local misspecification,
+##                            The Stata Journal (2008), Vol. 8, Number 1, pp. 68-78.
+
+## Commented due to extra package needed
+
+# library(haven)
+# ginipanel5 <- read_dta("http://www.stata-journal.com/software/sj8-1/sg164_1/ginipanel5.dta")
+# pginipanel5 <- pdata.frame(ginipanel5, index = c("naglo", "ano"), drop.index = FALSE, row.names = TRUE)
+# 
+# # STATA command for RE model: xtreg gini ie ie2 indus adpubedsal desempleo tactiv invipib apertura pyas4 e64 supc tamfam, re
+# # use pooling model in R:
+# formula_gini <- formula(gini ~ ie + ie2 + indus + adpubedsal + desempleo + tactiv + invipib + apertura + pyas4 + e64 + supc + tamfam)
+# pool_gini <- plm(formula_gini, data = pginipanel5, model = "pooling")
+# 
+# pdim(pool_gini) # Unbalanced Panel: n=17, T=6-8, N=128
+# 
+# # STATA's Output of xttest1, unadjusted (Sosa-Escudero/Bera (2008), p. 77):
+# #
+# # Random Effects, Two Sided:
+# #   LM(Var(u)=0) = 13.50 Pr>chi2(1) = 0.0002
+# #  ALM(Var(u)=0) = 6.03  Pr>chi2(1) = 0.0141              # test="re", re.normal = FALSE
+# #
+# # Random Effects, One Sided:
+# #   LM(Var(u)=0) = 3.67 Pr>N(0,1) = 0.0001
+# #  ALM(Var(u)=0) = 2.46 Pr>N(0,1) = 0.0070                # test="re", re.normal = TRUE
+# #
+# # Serial Correlation:
+# #   LM(lambda=0) = 9.32 Pr>chi2(1) = 0.0023
+# #  ALM(lambda=0) = 1.86 Pr>chi2(1) = 0.1732               # test="ar"
+# #
+# # Joint Test:
+# #   LM(Var(u)=0,lambda=0) = 15.35 Pr>chi2(2) = 0.0005     # test="j"
+# 
+# 
+# pbsytest(pool_gini, test = "re", re.normal = FALSE)    # chisq = 6.0288793,  df = 1, p-value = 0.01407367
+# pbsytest(pool_gini, test = "re")                       # normal = 2.4553776,  n/a    p-value = 0.007036833
+# pbsytest(pool_gini, test = "ar")                       # chisq = 1.8550073,  df = 1, p-value = 0.1732021
+# pbsytest(pool_gini, test = "j")                        # chisq = 15.352307,  df = 2, p-value = 0.0004637552
+# 
+# # formula interface
+# pbsytest(formula_gini, data = pginipanel5, test = "re", re.normal = FALSE)  # chisq = 6.0288793,  df = 1, p-value = 0.01407367
+# pbsytest(formula_gini, data = pginipanel5, test = "re")                     # normal = 2.4553776,   n/a   p-value = 0.007036833
+# pbsytest(formula_gini, data = pginipanel5, test = "ar")                     # chisq = 1.8550073,  df = 1, p-value = 0.1732021
+# pbsytest(formula_gini, data = pginipanel5, test = "j")                      # chisq = 15.352307,  df = 2, p-value = 0.0004637552
+# 

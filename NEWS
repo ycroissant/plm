@@ -6,6 +6,7 @@ TODO: comment about improvement of twoway FE transformation (Yves)
   * pbsytest:
       * test = "j": [joint test by Baltagi/Li(1991)]:
         fixed degrees of freedom (now df = 2 instead of df = 1).
+      * unbalanced version of all statistics implemented.
 
 
 Changes since version 1.6-5

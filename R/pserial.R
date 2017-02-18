@@ -257,22 +257,38 @@ pwartest.panelmodel <- function(x, ...){
 
 ### pbsytest
 
-# NB: There is also a version of pbsytest which supports unbalanced panels.
-#     It resides in SVN on r-forge: branches/kt_unbalanced/pbsytest/
-#     and awaits approval
+## Bera., Sosa-Escudero and Yoon type LM test for random effects
+## under serial correlation (H0: no random effects) or the inverse;
+## test="ar" you get the serial corr. test robust vs. RE
+## test="re" you get the RE test robust vs. serial corr.
+## test="j"  you get the joint test for serial corr. and random effects
 
-pbsytest <- function (x, ...){
+# Reference for the _balanced_ tests="ar"|"re":
+#                   Bera/Sosa-Escudero/Yoon (2001), Tests for the error component model in the presence of local misspecifcation,
+#                                                   Journal of Econometrics 101 (2001), pp. 1-23.
+#
+#           for original (balanced) test="j": Baltagi/Li (1991), A joint test for serial correlation and random individual effects,
+#                                                     Statistics & Probability Letters 11 (1991), pp. 277-280.
+#
+# Reference for _un_balanced versions of all three tests (boil down to the balanced versions for balanced panels):
+#                    Sosa-Escudero/Bera (2008), Tests for unbalanced error-components models under local misspecification,
+#                                               The Stata Journal (2008), Vol. 8, Number 1, pp. 68-78.
+#
+# Concise treatment of only _balanced_ tests in
+#                      Baltagi (2005), Econometric Analysis of Panel Data, 3rd edition, pp. 96-97
+#                   or Baltagi (2013), Econometric Analysis of Panel Data, 5th edition, pp. 108.
+#
+#
+## Implementation follows the formulae for unbalanced panels, which reduce for balanced data to the formulae for balanced panels.
+##
+## Notation in code largly follows Sosa-Escudero/Bera (2008) (m in Sosa-Escudero/Bera (2008) is total number of observations -> N_obs)
+## NB: Baltagi's book matrix A is slightly different defined: A in Balagi is -A in Sosa-Escudera/Bera (2008)
+
+pbsytest <- function (x, ...) {
   UseMethod("pbsytest")
 }
 
-pbsytest.formula <- function(x, data, ..., test=c("ar","re","j")) {
-
-  ## Bera., Sosa-Escudero and Yoon type LM test for random effects
-  ## under serial correlation (H0: no random effects) or the inverse;
-  ## ref. Baltagi 2005, pages 96-97;
-  ## original ref. Bera, Sosa-Escudero and Yoon, JE 101 (2001)
-  ## test="AR" you get the serial corr. test robust vs. RE
-  ## test="RE" you get the RE test robust vs. serial corr.
+pbsytest.formula <- function(x, data, ..., test = c("ar", "re", "j"), re.normal = TRUE) {
 
   ######### from here generic testing interface from
   ######### plm to my code
@@ -284,25 +300,23 @@ pbsytest.formula <- function(x, data, ..., test=c("ar","re","j")) {
   if (cl$model != "pooling") stop("pbsytest only relevant for pooling models")
   names(cl)[2] <- "formula"
   if (names(cl)[3] == "") names(cl)[3] <- "data"
-  m <- match(plm.arg, names(cl), 0)
-  cl <- cl[c(1L,m)]
-  cl[[1L]] <- quote(plm)
+  m <- match(plm.arg ,names(cl), 0)
+  cl <- cl[c(1, m)]
+  cl[[1]] <- as.name("plm")
   plm.model <- eval(cl, parent.frame())
-  pbsytest(plm.model, test = test)
+  pbsytest(plm.model, test = test, re.normal = re.normal, ...)
 }
 
-pbsytest.panelmodel <- function(x, test=c("ar","re","j"), ...){
-  ### as this is the version without support for unbalanced data, issue a warning
-  ##  unbalanced capable version resides in SVN on r-forge: branches/kt_unbalanced/pbsytest/
-  ##  and awaits approval
-  if (!is.pbalanced(x)) warning("unbalanced tests not yet implemented for pbsytest(), applying balanced tests to unbalanced model...")
+pbsytest.panelmodel <- function(x, test = c("ar", "re", "j"), re.normal = TRUE, ...) {
+  test <- match.arg(test)
+  if (describe(x, "model") != "pooling") stop("pbsytest only relevant for pooling models")
   
   poolres <- resid(x)
   data <- model.frame(x)
   ## extract indices
   index <- attr(data, "index")
   tindex <- index[[2]]
-  index <- index[[1]]
+  iindex <- index[[1]]
   
   ## till here. 
   ## ordering here if needed.
@@ -313,72 +327,95 @@ pbsytest.panelmodel <- function(x, test=c("ar","re","j"), ...){
   ## and numerosity check
   
   ## order by group, then time
-  oo <- order(index,tindex)
-  ind <- index[oo]
+  oo <- order(iindex,tindex)
+  ind <- iindex[oo]
   tind <- tindex[oo]
   poolres <- poolres[oo]
-  ## det. number of groups and df
-  n <- length(unique(index))
-  k <- ncol(model.matrix(x))
-  ## det. max. group numerosity
-  t <- max(pdim(x)$Tint$Ti)
-  ## det. total number of obs. (robust vs. unbalanced panels)
-  nT <- length(ind)
-
-  ## calc. A and B:
-  S1 <- sum( tapply(poolres,ind,sum)^2 )
-  S2 <- sum( poolres^2 )
-            
-  A <- S1/S2-1
-
+  pdim <- pdim(x)
+  n <- max(pdim$Tint$n) ## det. number of groups
+  T_i <- pdim$Tint$Ti
+  N_t <- pdim$Tint$nt
+  t <- max(T_i) ## det. max. group numerosity
+  N_obs <- pdim$nT$N ## det. total number of obs. (m in Sosa-Escudera/Bera (2008), p. 69)
+  
+  ## calc. matrices A and B:
+  # Sosa-Escudera/Bera (2008), p. 74
+  # Baltagi (2013), p. 108 defines A=(S1/S2)-1 and, thus, has slightly different formulae [opposite sign in Baltagi]
+  S1 <- sum(tapply(poolres,ind,sum)^2)
+  S2 <- sum(poolres^2)
+  A <- 1 - S1/S2
+  
   unind <- unique(ind)
-  uu <- rep(NA,length(unind))
-  uu1 <- rep(NA,length(unind))
+  uu <- rep(NA, length(unind))
+  uu1 <- rep(NA, length(unind))
   for(i in 1:length(unind)) {
-    u.t <- poolres[ind==unind[i]]
+    u.t <- poolres[ind == unind[i]]
     u.t.1 <- u.t[-length(u.t)]
     u.t <- u.t[-1]
     uu[i] <- crossprod(u.t)
-    uu1[i] <- crossprod(u.t,u.t.1)
+    uu1[i] <- crossprod(u.t, u.t.1)
   }
-  
   B <- sum(uu1)/sum(uu)
   
-  switch(match.arg(test),
-         ar ={LM <- (n * t^2 * (B - (A/t))^2) / ((t-1)*(1-(2/t)))
-             df <- c(df=1)
-             names(LM) <- "chisq"
-             pLM <- pchisq(LM,df=1,lower.tail=FALSE)
+  a <- sum(T_i^2) # Sosa-Escudera/Bera (2008), p. 69
+  
+  switch(test,
+           ar = {
+             # RS*_lambda from Sosa-Escudero/Bera (2008), p. 73 (unbalanced formula)
+             stat <- (B + (((N_obs - n)/(a - N_obs)) * A))^2 * (((a - N_obs)*N_obs^2) / ((N_obs - n)*(a - 3*N_obs + 2*n)))
+             df <- c(df = 1)
+             names(stat) <- "chisq"
+             pstat <- pchisq(stat, df = df, lower.tail = FALSE)
              tname <- "Bera, Sosa-Escudero and Yoon locally robust test"
-             myH0 <- "AR(1) errors sub random effects"
+             myH0_alt <- "AR(1) errors sub random effects"
            },
-         re={LM <- (A - 2*B) * sqrt( (n * t) / (2*(t-1)*(1-(2/t))) )
-             names(LM) <- "z"
-             df <- NULL
-             pLM <- pnorm(LM,lower.tail=FALSE)
-             tname <- "Bera, Sosa-Escudero and Yoon locally robust test"
-             myH0 <- "random effects sub AR(1) errors"
-           },              
-         j={LM <- (n * t^2) / (2*(t-1)*(t-2)) * (A^2 - 4*A*B + 2*t*B^2) 
-            df <- c(df=2)
-            names(LM) <- "chisq"
-            pLM <- pchisq(LM,df=df,lower.tail=FALSE) # Baltagi/Li (1991), p. 279 and Baltagi/Li (1995), p. 136: statistic is distributed as chisquare with df=2 
-            tname <- "Baltagi and Li AR-RE joint test"
-            myH0 <- "AR(1) errors or random effects"
-          }
-         )
-
+           
+           re = {
+             if (re.normal) {
+               # RSO*_mu from Sosa-Escudero/Bera (2008), p. 75 (unbalanced formula), normally distributed
+               stat <- -sqrt( (N_obs^2) / (2*(a - 3*N_obs + 2*n))) * (A + 2*B)
+               names(stat) <- "z"
+               df <- NULL
+               pstat <- pnorm(stat, lower.tail = FALSE)
+               tname <- "Bera, Sosa-Escudero and Yoon locally robust test (one-sided)"
+               myH0_alt <- "random effects sub AR(1) errors"
+             } else {
+                # RS*_mu from Sosa-Escudero/Bera (2008), p. 73 (unbalanced formula), chisq(1)
+                stat <- ((N_obs^2) * (A + 2*B)^2) / (2*(a - 3*N_obs + 2*n)) 
+                names(stat) <- "chisq"
+                df <- c(df = 1)
+                pstat <- pchisq(stat, df = df, lower.tail = FALSE)
+                tname <- "Bera, Sosa-Escudero and Yoon locally robust test (two-sided)"
+                myH0_alt <- "random effects sub AR(1) errors"
+             }
+           },
+           
+           j = {
+             # RS_lambda_mu in Sosa-Escudero/Bera (2008), p. 74 (unbalanced formula)
+             stat <- N_obs^2 * ( ((A^2 + 4*A*B + 4*B^2) / (2*(a - 3*N_obs + 2*n))) + (B^2/(N_obs - n)))
+             # Degrees of freedom in the joint test (test="j") of Baltagi/Li (1991) are 2 (chisquare(2) distributed),
+             # see Baltagi/Li (1991), p. 279 and again in Baltagi/Li (1995), p. 136
+             df <- c(df = 2)
+             names(stat) <- "chisq"
+             pstat <- pchisq(stat, df = df, lower.tail = FALSE)
+             tname <- "Baltagi and Li AR-RE joint test"
+             myH0_alt <- "AR(1) errors or random effects"
+           }
+  ) # END switch
+  
   dname <- paste(deparse(substitute(formula)))
-  RVAL <- list(statistic = LM,
-               parameter = df,
-               method = tname,
-               alternative = myH0,
-               p.value = pLM,
-               data.name = dname)
+  balanced.type <- ifelse(pdim$balanced, "balanced", "unbalanced")
+  tname <- paste(tname, "-", balanced.type, "panel", collapse = " ")
+
+  RVAL <- list(statistic   = stat,
+               parameter   = df,
+               method      = tname,
+               alternative = myH0_alt,
+               p.value     = pstat,
+               data.name   = dname)
   class(RVAL) <- "htest"
   return(RVAL)
-
-  }
+}
 
 ### pdwtest
 

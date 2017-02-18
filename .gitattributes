@@ -145,6 +145,8 @@ tests/test_model.matrix_pmodel.response_NA.R -text
 tests/test_pFtest.R -text
 tests/test_pFtest.Rout.save -text
 tests/test_pbgtest.R -text
+tests/test_pbsytest_unbalanced.R -text
+tests/test_pbsytest_unbalanced.Rout.save -text
 tests/test_pcdtest.R -text
 tests/test_pdata.frame_extract_class_est_mod.R -text
 tests/test_pdata.frame_id_index_more.R -text
