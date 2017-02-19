@@ -32,16 +32,16 @@
     \item{smsa}{factor. Does the individual reside in a SMSA (standard metropolitan statistical area)?}
     \item{pctmin}{percentage minority in 1980}
     \item{wcon}{weekly wage in construction}
-    \item{wtuc}{weekly wage in trns, util, commun}
-    \item{wtrd}{weekly wage in whole sales and retail trade}
-    \item{wfir}{weekly wage in  finance, insurance and real estate}
+    \item{wtuc}{weekly wage in transportation, utilities, communications}
+    \item{wtrd}{weekly wage in wholesale and retail trade}
+    \item{wfir}{weekly wage in finance, insurance and real estate}
     \item{wser}{weekly wage in service industry}
     \item{wmfg}{weekly wage in manufacturing}
-    \item{wfed}{weekly wage of federal employees}
-    \item{wsta}{weekly wage of state employees}
-    \item{wloc}{weekly wage of local governments employees}
+    \item{wfed}{weekly wage in federal government}
+    \item{wsta}{weekly wage in state government}
+    \item{wloc}{weekly wage in local government}
     \item{mix}{offence mix: face-to-face/other}
-    \item{pctymle}{percentage of young males}
+    \item{pctymle}{percentage of young males (between ages 15 to 24)}
   }
 }
 

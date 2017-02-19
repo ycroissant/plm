@@ -61,16 +61,19 @@ overwriting of the second degrees of freedom parameter is given (by
 supplying argument (\code{.df2})), the adjustment of the second degrees
 of freedom parameter is performed by default. The second degrees of 
 freedom parameter is adjusted to be the number of unique elements of the 
-clustered variable - 1, e. g. the number of individuals - 1.
+cluster variable - 1, e. g. the number of individuals - 1. For the degrees of 
+freedom adjustment of the F test in general, see e. g. Cameron/Miller (2015), 
+section VII;  Andress/Golsch/Schmidt (2013), pp. 126, footnote 4.
 
-The adjustment requires the vcov to carry an attribute called "cluster" 
-with a known clustering described as a character (for now this could be 
-either the character \code{"group"} or \code{"time"}). The vcovXX functions 
-of the package plm provide such an attribute for their returned 
-variance--covariance matrices. No adjustment is done for unknown descriptions
-in the character of the attribute "cluster" or when the attribute "cluster" 
-is not present. For the adjustment, see e. g. Cameron/Miller (2015), section VII; 
-Andress/Golsch/Schmidt (2013), pp. 126, footnote 4.
+The degrees of freedom adjustment requires the vcov object supplied or created by a supplied function
+to carry an attribute called "cluster" with a known clustering described as a 
+character (for now this could be either \code{"group"} or \code{"time"}).
+The vcovXX functions of the package \pkg{plm} provide such an attribute for their returned 
+variance--covariance matrices. No adjustment is done for unknown descriptions given
+in the attribute "cluster" or when the attribute "cluster" is not present.
+Robust vcov objects/functions from package \pkg{clubSandwich} work as inputs to 
+\code{pwaldtest}'s F test because a they are translated internally to match the 
+needs described above.
 }
 
 \value{
@@ -84,7 +87,7 @@ estimation for the variance--covariance matrix;
 \code{\link[plm]{summary.plm}}
 }
 
-\author{Yves Croissant (initial implementation) and Kevin Tappe (extensions: vcov argument and df2 adjustment)}
+\author{Yves Croissant (initial implementation) and Kevin Tappe (extensions: vcov argument and F test's df2 adjustment)}
 
 \references{
 Wooldridge, J.M. (2010) \emph{Econometric Analysis of Cross-Section and Panel Data}, 2nd ed., MIT Press, Sec. 4.2.3, pp. 60--62.

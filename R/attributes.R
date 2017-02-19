@@ -135,7 +135,7 @@ pdim <- function(x, ...){
 
 pdim.default <- function(x, y, ...){
   if (length(x) != length(y)) stop("The length of the two vectors differs\n")
-  x <- x[drop = TRUE] # drop unused factor levels so that table 
+  x <- x[drop = TRUE] # drop unused factor levels so that table() 
   y <- y[drop = TRUE] # gives only needed combinations
   z <- table(x,y)
   Ti <- apply(z,1,sum)

@@ -244,7 +244,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 # 
 #   # make result a 'pseries' again:
 #   # add back to result:
-#   #    * subsetted orignal names                # TODO: not needed?
+#   #    * subsetted original names                # TODO: not needed?
 #   #    * subsetted index as attribute
 #   #    * class 'pseries'
 # #  names(result) <- names_orig[names_subsetted]           # TODO: not needed?
