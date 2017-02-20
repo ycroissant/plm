@@ -43,7 +43,7 @@ ercomp.formula <- function(object, data,
             stop("Nerlove method only implemented for balanced one-way models")
         N <- pdim(data)$nT$n
         TS <- pdim(data)$nT$T
-        wm <- plm(object, data, effect = "individual")
+        wm <- plm.fit(object, data, effect = "individual", model = "within")
         s2nu <- deviance(wm) / (N * TS)
         s2eta <- sum(fixef(wm, type = "dmean") ^ 2) / N
         sigma2 <- c(idios = s2nu, id = s2eta)

@@ -218,8 +218,8 @@ plm.fit <- function(formula, data, model, effect, random.method,
             }
             if (model == "random" && inst.method != "bvk"){
                 # the bvk estimator seems to have desapeared
-                X <- X / sqrt(sigma2$idios)
-                y <- y / sqrt(sigma2$idios)
+                X <- X / sqrt(sigma2["idios"])
+                y <- y / sqrt(sigma2["idios"])
                 if (ancien){
                     W1 <- model.matrix(formula, data, rhs = 2, model = "within", 
                                        effect = effect, theta = theta)
@@ -244,10 +244,11 @@ plm.fit <- function(formula, data, model, effect, random.method,
                         W2 <- model.matrix(data, rhs = 3, model = "within", 
                                            effect = effect, theta = theta)
                     }
-                  if (inst.method == "bmc")
-                      StarW2 <- starX(formula, data, rhs = 3, model = "within", 
-                                      effect = effect)
+                    if (inst.method == "bmc")
+                        StarW2 <- starX(formula, data, rhs = 3, model = "within", 
+                                        effect = effect)
                 }
+                else W2 <- StarW2 <- NULL
                 if (inst.method == "baltagi") W <- sqrt(w) * cbind(W1, W2, B1)
                 if (inst.method == "am") W <- sqrt(w) * cbind(W1, W2, B1, StarW1)
                 if (inst.method == "bmc") W <- sqrt(w) * cbind(W1, W2, B1, StarW1, StarW2)
