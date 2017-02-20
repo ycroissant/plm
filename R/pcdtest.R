@@ -10,7 +10,7 @@
   ## of a consistent estimator. This may be pooled OLS, RE, FE. Here the
   ## default is set to FE.
 
-  ## Note that the test can be performed on the results of plm's with
+  ## Note that the test can be performed on the results of plm objects with
   ## any kind of effects: having "time" effects means checking for
   ## xs-dependence *after* introducing time dummies.
 
@@ -38,9 +38,9 @@ pcdtest.formula <- function(x, data, index = NULL, model = NULL,
                             test = c("cd", "sclm", "lm", "rho", "absrho"),
                             w = NULL, ...) {
     #data <- pdata.frame(data, index = index)
-    mymod <- plm(x, data, index = index, model = "pooling", ...)
-    if (is.null(model) & min(pdim(mymod)$Tint$Ti) < length(mymod$coefficients) +
-        1) {
+    mymod <- plm(x, data = data, index = index, model = "pooling", ...)
+    if(is.null(model) & min(pdim(mymod)$Tint$Ti) < length(mymod$coefficients)+1) 
+      {
         warning("Insufficient number of observations in time to estimate heterogeneous model: using within residuals",
             call. = FALSE)
         model <- "within"
@@ -91,7 +91,7 @@ pcdtest.formula <- function(x, data, index = NULL, model = NULL,
 }
 
 
-## panelmodel method: just fetch resid (as a pseries)
+## panelmodel method: just fetch resid (as a pseries) and hand over to pcdres
  
 pcdtest.panelmodel <- function(x, test = c("cd", "sclm", "lm", "rho", "absrho"),
                                w = NULL, ...) {

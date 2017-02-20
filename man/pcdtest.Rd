@@ -25,8 +25,12 @@ pcdtest(x, \dots)
  \item{x}{an object of class \code{formula}, \code{panelmodel}, or \code{pseries} 
           (depending on the respective interface) describing the model to be tested}
  \item{data}{a \code{data.frame}}
- \item{index}{an optional numerical index, in case \code{data} has to be formatted by \code{plm.data}}
- \item{model}{an optional character string indicating which type of model to estimate;
+ \item{index}{an optional numerical index, if \code{NULL}, the first two columns of 
+              the data.frame provided in argument \code{data} are assumed to be the 
+              index variables; if not \code{NULL}, both dimensions ('individual', 'time') 
+              need to be specified by \code{index} as character of length 2, for 
+              further details see \code{\link{pdata.frame}},}
+\item{model}{an optional character string indicating which type of model to estimate;
  if left to \code{NULL}, the original heterogeneous specification of Pesaran is used}
  \item{test}{the type of test statistic to be returned. One of 
   \itemize{
