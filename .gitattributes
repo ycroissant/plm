@@ -126,7 +126,9 @@ tests/testErrors.Rout.save -text
 tests/testEvaluation.R -text
 tests/testEvaluation.Rout.save -text
 tests/test_Chow.R -text
+tests/test_Chow.Rout.save -text
 tests/test_Estimators.R -text
+tests/test_Estimators.Rout.save -text
 tests/test_R2_adj_R2.R -text
 tests/test_as.data.frame_as.matrix.R -text
 tests/test_as.list.pdata.frame.R -text
@@ -163,7 +165,9 @@ tests/test_pseries_subsetting.R -text
 tests/test_punbalancedness.R -text
 tests/test_pvar.R -text
 tests/test_pwaldtest.R -text
+tests/test_pwaldtest.Rout.save -text
 tests/test_pwaldtest_vcovG_attr_cluster.R -text
+tests/test_pwaldtest_vcovG_attr_cluster.Rout.save -text
 tests/test_pwfdtest_pwartest.R -text
 tests/test_pwtest.R -text
 tests/test_summary.plm_vcov.R -text

@@ -37,10 +37,10 @@ plm::pwaldtest(gre, test = "F")
   adj_k1 <- (g/(g-1) * (n-1)/(n-k-1)) # k <- k + 1 because Stata and Gretl have the intercept in the FE model
   adj    <- (g/(g-1) * (n-1)/(n-k))
   adj_gd <- (g/(g-1) * (n-1)/(n-k-1-19)) # Gretl has time dummies, not demeaning by time (20 periods for Grunfeld data)
-# gd: k anpassen=  adj_ 
+# vcov with adjustment factors 
   vcov_mat_adj_gp  <- adj_k1  * plm::vcovHC(gp)
   vcov_mat_adj_gi  <- adj_k1  * plm::vcovHC(gi)
-  vcov_mat_adj_gd  <- adj_gd  * plm::vcovHC(gd)
+  vcov_mat_adj_gd  <- adj_gd  * plm::vcovHC(gd) # NB: adj_gd to be used here
   vcov_mat_adj_gre <- adj_k1  * plm::vcovHC(gre)
   vcov_mat_adj_gt  <- adj_k1  * plm::vcovHC(gt)
 

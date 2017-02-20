@@ -1,0 +1,67 @@
+
+R version 3.3.2 (2016-10-31) -- "Sincere Pumpkin Patch"
+Copyright (C) 2016 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> ############## Poolability: Chow test
+> # Baltagi (2013), Econometric Analysis of Panel Data, 5th edition, Wiley & Sons
+> # Sec 4.1.3, example 2, p. 68 => results are replicated
+> 
+> library(plm)
+Loading required package: Formula
+> data("Gasoline", package = "plm")
+> form <- lgaspcar ~ lincomep + lrpmg + lcarpcap
+> 
+> # poolability across countries
+> pooltest(form, data = Gasoline, effect = "individual", model = "pooling") # matches: F=129.38 [F(68,270)]
+
+	F statistic
+
+data:  form
+F = 129.32, df1 = 68, df2 = 270, p-value < 2.2e-16
+alternative hypothesis: unstability
+
+> 
+> # poolability across countries [slope coefficients only, allowing for different intercepts]
+> pooltest(form, data = Gasoline, effect = "individual", model = "within")  # matches: F= 27.33 [F(51,270)]
+
+	F statistic
+
+data:  form
+F = 27.335, df1 = 51, df2 = 270, p-value < 2.2e-16
+alternative hypothesis: unstability
+
+> 
+> # poolability across time
+> pooltest(form, data = Gasoline, effect = "time", model = "pooling") # matches: F= 0.276 [F(72,266)]
+
+	F statistic
+
+data:  form
+F = 0.27625, df1 = 72, df2 = 266, p-value = 1
+alternative hypothesis: unstability
+
+> pooltest(form, data = Gasoline, effect = "time", model = "within")  # no value stated in Baltagi (2013) for within
+
+	F statistic
+
+data:  form
+F = 0.29465, df1 = 54, df2 = 266, p-value = 1
+alternative hypothesis: unstability
+
+> 
+> proc.time()
+   user  system elapsed 
+   2.13    0.14    2.26 

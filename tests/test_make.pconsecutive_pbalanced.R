@@ -110,7 +110,7 @@ Grunfeld_missing_periods_one_id <- Grunfeld[-c(2,6,7), ]
 pGrunfeld_missing_periods_one_id <- pdata.frame(Grunfeld_missing_periods_one_id)
 pinv_missing_periods <- pGrunfeld_missing_periods_one_id$inv
 
-multi_periods <- c(2,6,7,22,23,56) # my not be at the first or last pos for an id, otherwise this line cannot be restored
+multi_periods <- c(2,6,7,22,23,56) # may not be at the first or last pos for an id, otherwise this line cannot be restored
 Grunfeld_missing_periods_multi_id <- Grunfeld[-multi_periods, ]
 pGrunfeld_missing_periods_multi_id <- pdata.frame(Grunfeld_missing_periods_multi_id)
 pinv_missing_periods_multi_id <- pGrunfeld_missing_periods_multi_id$inv

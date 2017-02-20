@@ -46,14 +46,14 @@ plm_re_NA_dep_var_more <- plm(form, data=pGrunfeld_NA_dep_var_more, model="rando
 # plm_re_NA_tw   <- plm(form, data=Grunfeld, model="random", effect = "twoways") # est. variance of time effect < 0
 
 
-nrow(plm_fe$model) # 200 (correct)
-nrow(plm_fe_NA_dep_var$model) # 199 (correct)
-nrow(plm_fe_NA_dep_var_more$model) # 180 (correct)
-nrow(plm_fe_NA_dep_var_tw$model) # 199 (correct)
+if (nrow(plm_fe$model) != 200) stop("should be 200 rows") # 200 (correct)
+if (nrow(plm_fe_NA_dep_var$model) != 199) stop("should be 199 rows") # 199 (correct)
+if (nrow(plm_fe_NA_dep_var_more$model) != 180) stop("should be 180 rows") # 180 (correct)
+if (nrow(plm_fe_NA_dep_var_tw$model) != 199) stop("should be 199 rows") # 199 (correct)
 
-nrow(plm_re$model) # 200 (correct)
-nrow(plm_re_NA_dep_var$model) # 199 (correct)
-nrow(plm_re_NA_dep_var_more$model) # 180 (correct)
+if (nrow(plm_re$model) != 200) stop("should be 200 rows") # 200 (correct)
+if (nrow(plm_re_NA_dep_var$model) != 199) stop("should be 199 rows") # 199 (correct)
+if (nrow(plm_re_NA_dep_var_more$model) != 180) stop("should be 180 rows") # 180 (correct)
 #nrow(plm_fe_NA_dep_var_tw$model) # not implemented
 
 
@@ -76,11 +76,11 @@ if(!all.equal(plm_fe_NA_dep_var$model, plm_fe_NA_dep_var2$model, check.attribute
 plm_fe_NA_dep_var_more2 <- plm(form, data=plm_fe_NA_dep_var_more$model, model="within")
 
 # coefficients are the same
-if(!all(plm_fe_NA_dep_var_more$coefficients == plm_fe_NA_dep_var_more2$coefficients)) stop("coefficients diverge")
+if (!all(plm_fe_NA_dep_var_more$coefficients == plm_fe_NA_dep_var_more2$coefficients)) stop("coefficients diverge")
 
 # model.frame in plm_object is same
-if(!all(plm_fe_NA_dep_var_more$model == plm_fe_NA_dep_var_more2$model)) stop("model.frames diverge")
-if(!all.equal(plm_fe_NA_dep_var_more$model, plm_fe_NA_dep_var_more2$model, check.attributes = FALSE)) stop("model.frames diverge")
+if (!all(plm_fe_NA_dep_var_more$model == plm_fe_NA_dep_var_more2$model)) stop("model.frames diverge")
+if (!all.equal(plm_fe_NA_dep_var_more$model, plm_fe_NA_dep_var_more2$model, check.attributes = FALSE)) stop("model.frames diverge")
 #compare::compare(as.data.frame(plm_fe_NA_dep_var_more$model), as.data.frame(plm_fe_NA_dep_var_more2$model), ignoreAttrs = TRUE) # TRUE
 
 
@@ -89,11 +89,11 @@ if(!all.equal(plm_fe_NA_dep_var_more$model, plm_fe_NA_dep_var_more2$model, check
 plm_fe_NA_dep_var_tw2 <- plm(form, data=plm_fe_NA_dep_var_tw$model, model="within", effect = "twoways")
 
 # coefficients are the same
-if(!all(plm_fe_NA_dep_var_tw$coefficients == plm_fe_NA_dep_var_tw2$coefficients)) stop("coefficients diverge")
+if (!all(plm_fe_NA_dep_var_tw$coefficients == plm_fe_NA_dep_var_tw2$coefficients)) stop("coefficients diverge")
 
 # model.frame in plm_object is same
-if(!all(plm_fe_NA_dep_var_tw$model == plm_fe_NA_dep_var_tw$model)) stop("model.frames diverge")
-if(!all.equal(plm_fe_NA_dep_var_tw$model, plm_fe_NA_dep_var_tw2$model, check.attributes = FALSE)) stop("model.frames diverge")
+if (!all(plm_fe_NA_dep_var_tw$model == plm_fe_NA_dep_var_tw$model)) stop("model.frames diverge")
+if (!all.equal(plm_fe_NA_dep_var_tw$model, plm_fe_NA_dep_var_tw2$model, check.attributes = FALSE)) stop("model.frames diverge")
 #compare::compare(as.data.frame(plm_fe_NA_dep_var_tw$model), as.data.frame(plm_fe_NA_dep_var_tw2$model), ignoreAttrs = TRUE) # TRUE
 
 
@@ -105,11 +105,11 @@ if(!all.equal(plm_fe_NA_dep_var_tw$model, plm_fe_NA_dep_var_tw2$model, check.att
 plm_re_NA_dep_var2 <- plm(form, data=plm_re_NA_dep_var$model, model="random")
 
 # coefficients are the same
-if(!all(plm_re_NA_dep_var$coefficients == plm_re_NA_dep_var2$coefficients)) stop("coefficients diverge")
+if (!all(plm_re_NA_dep_var$coefficients == plm_re_NA_dep_var2$coefficients)) stop("coefficients diverge")
 
 # model.frames in plm_objects are the same
-if(!all(plm_re_NA_dep_var$model == plm_re_NA_dep_var2$model)) stop("model.frames diverge")
-if(!all.equal(plm_re_NA_dep_var$model, plm_re_NA_dep_var2$model, check.attributes = FALSE)) stop("model.frames diverge")
+if (!all(plm_re_NA_dep_var$model == plm_re_NA_dep_var2$model)) stop("model.frames diverge")
+if (!all.equal(plm_re_NA_dep_var$model, plm_re_NA_dep_var2$model, check.attributes = FALSE)) stop("model.frames diverge")
 #compare::compare(as.data.frame(plm_re_NA_dep_var$model), as.data.frame(plm_re_NA_dep_var2$model), ignoreAttrs = TRUE) # TRUE
 
 
@@ -119,11 +119,11 @@ if(!all.equal(plm_re_NA_dep_var$model, plm_re_NA_dep_var2$model, check.attribute
 plm_re_NA_dep_var_more2 <- plm(form, data=plm_re_NA_dep_var_more$model, model="random")
 
 # coefficients are the same
-if(!all(plm_re_NA_dep_var_more$coefficients == plm_re_NA_dep_var_more2$coefficients)) stop("coefficients diverge")
+if (!all(plm_re_NA_dep_var_more$coefficients == plm_re_NA_dep_var_more2$coefficients)) stop("coefficients diverge")
 
 # model.frame in plm_object is same
-if(!all(plm_re_NA_dep_var_more$model == plm_re_NA_dep_var_more2$model)) stop("model.frames diverge")
-if(!all.equal(plm_re_NA_dep_var_more$model, plm_re_NA_dep_var_more2$model, check.attributes = FALSE)) stop("model.frames diverge")
+if (!all(plm_re_NA_dep_var_more$model == plm_re_NA_dep_var_more2$model)) stop("model.frames diverge")
+if (!all.equal(plm_re_NA_dep_var_more$model, plm_re_NA_dep_var_more2$model, check.attributes = FALSE)) stop("model.frames diverge")
 #compare::compare(as.data.frame(plm_re_NA_dep_var_more$model), as.data.frame(plm_re_NA_dep_var_more2$model), ignoreAttrs = TRUE) # TRUE
 
 
