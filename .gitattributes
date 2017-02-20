@@ -4,9 +4,9 @@
 /NEWS -text
 R/attributes.R -text
 R/cipstest.R -text
+R/deprecated.R -text
 R/detect_lin_dep_alias.R -text
 R/divers.R -text
-R/dynformula.R -text
 R/ercomp.R -text
 R/fixef.R -text
 R/index.R -text
@@ -21,13 +21,8 @@ R/pcdtest.R -text
 R/pfunctions.R -text
 R/pggls.R -text
 R/pgmm.R -text
-R/pgmm.methods.R -text
-R/pht.R -text
 R/piest.R -text
 R/plm.R -text
-R/plm.data.R -text
-R/plm.list.R -text
-R/plm.methods.R -text
 R/pmg.R -text
 R/pserial.R -text
 R/ptest.R -text

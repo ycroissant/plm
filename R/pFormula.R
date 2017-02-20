@@ -172,7 +172,7 @@ model.matrix.plm <- function(object, ...){
     rhs <- ifelse(is.null(dots$rhs), 1, dots$rhs)
     formula <- formula(object)
     data <- model.frame(object)
-    ancien <- FALSE
+    ancien <- TRUE
     if (ancien){
         if (model != "random"){
             model.matrix(formula, data, model = model, effect = effect, rhs = rhs)
@@ -199,7 +199,7 @@ pmodel.response.plm <- function(object, ...){
   effect <- ifelse(is.null(dots$effect), describe(object, "effect"), dots$effect)
   formula <- formula(object)
   data <- model.frame(object)
-  ancien <- FALSE
+  ancien <- TRUE
   if (model != "random"){
       if (ancien){
           pmodel.response(formula, data, model = model, effect = effect)

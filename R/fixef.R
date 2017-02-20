@@ -4,7 +4,7 @@
 fixef.plm <- function(object, effect = NULL,
                       type = c("level", "dfirst", "dmean"),
                       vcov = NULL, ...){
-  ancien <- FALSE
+  ancien <- TRUE
   model.effect <- describe(object, "effect")
   if (is.null(effect)){
     effect <- ifelse(model.effect == "time", "time", "individual")

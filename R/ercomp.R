@@ -21,13 +21,14 @@ ercomp.formula <- function(object, data,
                            index = NULL, ...){
     effect <- match.arg(effect)
 
-    # if the data argument is not a pdata.frame, create it using plm
-    if (!inherits(data, "pdata.frame"))
-        data <- plm(object, data, model = NA, index = index)
-
     # if formula is not a pFormula object, coerce it
     if (!inherits(object, "pFormula")) object <- pFormula(object)
 
+    # if the data argument is not a pdata.frame, create it using plm
+    if (! inherits(data, "pdata.frame"))
+        data <- plm(object, data, model = NA, index = index)
+    if(is.null(attr(data, "terms"))) data <- model.frame(object, data)
+    
     # check whether the panel is balanced
     balanced <- pdim(data)$balanced
     
@@ -218,7 +219,6 @@ ercomp.formula <- function(object, data,
         return(solve(M, quad))
     }
 
-    
     Z <- model.matrix(object, data)
     O <- nrow(Z)
     K <- ncol(Z) - 1                                                                                       # INTERCEPT
@@ -263,6 +263,7 @@ ercomp.formula <- function(object, data,
         }
         quad[1] <- crossprod(hateps_w)
     }
+
     # second quadratic form, between transformation
     if (effect != "time"){
         hateps_id <- resid(estm[[2]], model = "pooling")

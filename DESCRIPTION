@@ -13,7 +13,7 @@ Authors@R: c(person(given = "Yves",      family = "Croissant",    role = c("aut"
       	     person(given = "Nina",      family = "Schoenfelder", role = "ctb", email = "nina.schoenfelder@fernuni-hagen.de"))
 Depends: R (>= 2.12.0), Formula (>= 0.2-0), stats
 Imports: MASS, bdsmatrix, zoo, nlme, sandwich, lattice, car, lmtest
-Suggests: AER
+Suggests: AER, foreign, pcse, pder, pglm, spdep, splm, stargazer, texreg, Ecdat
 Description: A set of estimators and tests for panel data.
 License: GPL (>=2)
 URL: https://cran.r-project.org/package=plm, https://r-forge.r-project.org/projects/plm/
