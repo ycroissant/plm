@@ -45,9 +45,9 @@ phtest.formula <- function(x, data, model = c("within", "random"),
              
                if (!is.null(vcov) && !is.function(vcov)) stop("argument 'vcov' needs to be a function")
              
-               ## set pdata
-               if (!inherits(data, "pdata.frame")) data <- plm.data(data, indexes=index) #, ...)
-               
+               ## set pdata.frame
+               if (!inherits(data, "pdata.frame")) data <- pdata.frame(data, index = index) #, ...)
+
                row.names(data) <- NULL # reset rownames of original data set (->numbers rownames in clean sequence) to make rownames
                                        # comparable for later comparision to obs used in estimation of models (get rid of NA values)
                                        # [needed because pmodel.response() and model.matrix() do not retain fancy rownames, but rownames]
