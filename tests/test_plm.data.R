@@ -4,6 +4,7 @@
 # Usefull especially if future changes to pdata.frame() affect the "plm.dim"
 # object onces created by plm.data()
 
+library(plm)
 
 # use a data set that has index variables not in first two columns, because
 # plm.dim objects always have them in the fist two colums (id, time)
