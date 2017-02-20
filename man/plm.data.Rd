@@ -1,10 +1,10 @@
 \name{plm.data}
 \alias{plm.data}
 
-\title{Data Frame Special Format for Panel Data}
+\title{Data Frame Special Format for Panel Data (Deprecated)}
 
 \description{
-This function transforms a data frame in a format suitable for using with the estimation functions of \code{plm}.
+This is a deprecated function once used to transform a data frame in a format suitable for using with the estimation functions of \code{plm}.
 }
 
 \usage{
@@ -22,6 +22,10 @@ A \code{data.frame}.
 }
 
 \details{
+
+  This function is \bold{deprecated} now (since February 2017), use \code{pdata.frame} instead. 
+  It will be kept for a while due to backward compatibility, especially for package \pkg{systemfit}.
+
  \code{indexes} can be:
 
  \itemize{

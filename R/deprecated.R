@@ -1,9 +1,52 @@
+## some deprecated functions
+
+# plm.data() is now deprecated (since February 2017).
+# It is keep due to backward compatibility, especially for package 'systemfit'.
+# While plm.data() was a 'full function' once, it now is now using pdata.frame()
+# and re-works the properties of the "plm.dim" objects original created by the
+# 'full' plm.data() function.
+# The 'full' plm.data() function is kept non-exported as plm.data_depr_orig
+# due to reference and testing (see tests/test_plm.data.R)
+
+plm.data <- function(x, indexes = NULL) {
+
+  .Deprecated(new = "pdata.frame", msg = "'plm.data' is deprecated, use 'pdata.frame'",
+              old = "plm.data")
+
+  # the class "plm.dim" (which plm.data creates) deviates from class "pdata.frame":
+  #    * always contains the indexes (in first two columns (id, time))
+  #    * does not have fancy rownames
+  #    * always coerces strings to factors
+  #    * does not have index attribute
+  #
+  #  -> call pdata.frame accordingly and adjust afterwards
+  
+  x <- pdata.frame(x, index = indexes,
+                      drop.index = FALSE,
+                      row.names = FALSE,
+                      stringsAsFactors = TRUE)
+
+  # class "plm.dim" always has indexes in first two columns (id, time)
+  # while "pdata.frame" leaves the index variables at it's place (if not dropped at all with drop.index = T)
+  pos_indexes <- pos.index(x)
+  pos_other_columns <- setdiff(seq_len(ncol(x)), pos_indexes)
+  x <- x[ , c(pos_indexes, pos_other_columns)]
+  
+  # the class "plm.dim" does not have the index attribute -> remove
+  attr(x, "index") <- NULL
+  
+  # set class
+  class(x) <- c("plm.dim", "data.frame")
+  return(x)
+}
+
 
 ### convert data to plm format
 ### Author:
 ### Amendments by Ott Toomet
 
-plm.data <- function(x, indexes = NULL){
+plm.data_depr_orig <- function(x, indexes = NULL){
+  ## this is the full plm.data() function kept as reference for testing purposed (non-exported)
   if (is.null(indexes)){
     id <- NULL
     time <- NULL
@@ -33,7 +76,7 @@ plm.data <- function(x, indexes = NULL){
 
   # replace Inf by NA
   for (i in names(x)) x[[i]][!is.finite(x[[i]])] <- NA
-  
+
   # check and remove complete NA series
   na.check <- sapply(x,function(x) sum(!is.na(x))==0)
   na.serie <- names(x)[na.check]
@@ -86,7 +129,7 @@ plm.data <- function(x, indexes = NULL){
     else{
       id <- x[[id.name]] <- as.factor(x[[id.name]])
     }
-    
+
     if (is.null(time.name)){
       Ti <- table(id)
       n <- length(Ti)
@@ -135,6 +178,7 @@ data2plm.data <- function(data,indexes=NULL){
 }
 
 pht <-  function(formula, data, subset, na.action, model = c("ht", "am", "bmc"), index = NULL, ...){
+
   cl <- match.call(expand.dots = TRUE)
   mf <- match.call()
   model <- match.arg(model)
