@@ -23,7 +23,7 @@ pooltest(x, \dots)
  \item{\dots}{further arguments passed to plm.}
 }
 
-\details{ \code{pooltest} is an \emph{F} test of stability (or Chow test) for the coefficients of a panel model. The estimated \code{plm} object should be a \code{"pooling"} model or a \code{"within"} model (the default); intercepts are assumed to be identical in the first case and different in the second case.
+\details{ \code{pooltest} is a \emph{F} test of stability (or Chow test) for the coefficients of a panel model. The estimated \code{plm} object should be a \code{"pooling"} model or a \code{"within"} model (the default); intercepts are assumed to be identical in the first case and different in the second case.
 }
 
 \value{
@@ -35,9 +35,9 @@ An object of class \code{"htest"}.
 \examples{
 data("Gasoline", package = "plm")
 form <- lgaspcar ~ lincomep + lrpmg + lcarpcap
-gasw <-  plm(form, data = Gasoline, model = "within")
-gasp <-  plm(form, data = Gasoline, model = "pooling")
-gasnp <-  pvcm(form, data = Gasoline, model = "within")
+gasw <- plm(form, data = Gasoline, model = "within")
+gasp <- plm(form, data = Gasoline, model = "pooling")
+gasnp <- pvcm(form, data = Gasoline, model = "within")
 pooltest(gasw, gasnp)
 pooltest(gasp, gasnp)
 
