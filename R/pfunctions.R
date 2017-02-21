@@ -223,6 +223,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 ###################################################
 ### chunk number 3: extracting
 ###################################################
+
 # NB: currently no extracting/subsetting function for class pseries, thus
 #     vector subsetting is used which removes the pseries features
 #    There is a working sketch below, but check if it does not interfere with anything else
@@ -478,30 +479,8 @@ as.list.pdata.frame <- function(x, keep.attributes = FALSE, ...) {
 
 
 ###################################################
-### chunk number 7: lag and diff
+### chunk number 7: diff
 ###################################################
-
-# NB: There is another lag.pseries function with same name in this file which is more general.
-#     Can we delete this one here? It got overwritten anyway as the other version if further
-#     down in this file.
-
-# lag.pseries <- function(x, k = 1, ...){
-#   nx <- names(x)
-#   index <- attr(x, "index")
-#   id <- index[[1]]
-#   time <- index[[2]]
-#   isNAtime <- c(rep(1,k), diff(as.numeric(time), lag = k)) != k
-#   isNAid <- c(rep(1,k), diff(as.numeric(id), lag = k)) != 0
-#   isNA <- as.logical(isNAtime + isNAid)
-#   if (is.factor(x)) levs <- levels(x)
-#   result <- c(rep(NA, k), x[1:(length(x)-k)])
-#   result[isNA] <- NA
-#   if (is.factor(x)) result <- factor(result, labels = levs)
-#   structure(result,
-#             names = nx,
-#             class = class(x),
-#             index = index)
-# }
 
 diff.pseries <- function(x, lag = 1, ...){
   if (!is.numeric(x)) stop("diff is only relevant for numeric series")
