@@ -11,7 +11,8 @@ Linear models for panel data estimated using the \code{lm} function on transform
 }
 
 \usage{
-plm(formula, data, subset, weights, na.action, effect = c("individual", "time", "twoways"),
+plm(formula, data, subset, weights, na.action,
+    effect = c("individual", "time", "twoways", "nested"),
     model = c("within", "random", "ht", "between", "pooling", "fd"),
     random.method = NULL,
     random.models = NULL,
@@ -32,7 +33,7 @@ plm(formula, data, subset, weights, na.action, effect = c("individual", "time", 
   \item{weights}{see \code{\link{lm}},}
   \item{na.action}{see \code{\link{lm}}; currently, not fully supported,}
   \item{effect}{the effects introduced in the model, one of
-  \code{"individual"}, \code{"time"}, or \code{"twoways"},}
+  \code{"individual"}, \code{"time"}, \code{"twoways"} or \code{"nested"},}
   \item{model}{one of \code{"pooling"}, \code{"within"},
     \code{"between"}, \code{"random",} \code{"fd"}, or \code{"ht"},}
   \item{random.method}{method of estimation for the variance components
@@ -71,10 +72,15 @@ effects (\code{"random"}), first--differences (\code{"fd"}), and between
 (although not with all methods).
 
 For random effects models, four estimators of the transformation
-parameter are available by setting \code{random.method} to one of \code{"swar"} (Swamy and Arora (1972)) (default),
-\code{"amemiya"} (Amemiya (1971)), \code{"walhus"} (Wallace and Hussain (1969)), or \code{"nerlove"} (Nerlove (1971)).
+parameter are available by setting \code{random.method} to one of
+\code{"swar"} (Swamy and Arora (1972)) (default), \code{"amemiya"}
+(Amemiya (1971)), \code{"walhus"} (Wallace and Hussain (1969)), or
+\code{"nerlove"} (Nerlove (1971)).
 
-For first--difference models, the intercept is maintained (which from a specification viewpoint amounts to allowing for a trend in the levels model). The user can exclude it from the estimated specification the usual way by adding \code{"-1"} to the model formula.
+For first--difference models, the intercept is maintained (which from a
+specification viewpoint amounts to allowing for a trend in the levels
+model). The user can exclude it from the estimated specification the
+usual way by adding \code{"-1"} to the model formula.
 
 Instrumental variables estimation is obtained using two--part formulas,
 the second part indicating the instrumental variables used. This can be
@@ -131,9 +137,10 @@ for further details.
 }
 
 \seealso{
-\code{\link[plm]{summary.plm}} for further details about the associated summary method and the
-"summary.plm" object both of which provide some model tests and tests of coefficients. 
-\code{\link[plm]{fixef}} to compute the fixed effects for "within" models (=fixed effects models).
+\code{\link[plm]{summary.plm}} for further details about the associated
+summary method and the "summary.plm" object both of which provide some
+model tests and tests of coefficients.  \code{\link[plm]{fixef}} to
+compute the fixed effects for "within" models (=fixed effects models).
 }
 
 \author{Yves Croissant}

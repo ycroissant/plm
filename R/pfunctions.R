@@ -73,7 +73,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     }
     if (length(index) == 0) index <- NULL
 
-    if (length(index)>2){
+    if (length(index) > 2){
         stop("'index' can be of length 2 at the most (one individual and one time index)")
     }
   # if index is NULL, both id and time are NULL
@@ -159,9 +159,9 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
         }
     }
   
-    # sort by id, then by time
-    x <- x[order(x[[id.name]], x[[time.name]]), ] # old: x <- x[order(id,time), ] 
-    
+    # sort by group (eventually), by id, then by time
+    if (! is.null(group.name)) x <- x[order(x[[group.name]], x[[id.name]], x[[time.name]]), ] # old: x <- x[order(id,time), ] 
+    else x <- x[order(x[[id.name]], x[[time.name]]), ]
     var.names <- names(x)
   
     ## drop unused levels from all factor variables

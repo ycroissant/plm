@@ -16,13 +16,13 @@ pmodel.response(object, \dots)
 \method{pmodel.response}{data.frame}(object,
                                      model = c("pooling","within","Between",
                                                "between","mean","random","fd"),
-                                     effect = c("individual","time","twoways", "group"),
+                                     effect = c("individual","time","twoways", "nested"),
                                      lhs = NULL,
                                      theta = NULL, \dots)
 \method{pmodel.response}{pFormula}(object, data,
                                    model = c("pooling","within","Between",
                                              "between","mean","random","fd"),
-                                   effect = c("individual","time","twoways", "group"),
+                                   effect = c("individual","time","twoways", "nested"),
                                    lhs = NULL,
                                    theta = NULL, \dots)
 \method{pmodel.response}{plm}(object, \dots)
@@ -33,7 +33,7 @@ pmodel.response(object, \dots)
   \item{data}{a \code{pdata.frame}, which is a model frame (if not, it is tried to construct
   the model frame from the data, see \bold{Details}),}
   \item{effect}{the effects introduced in the model, one of
-  \code{"individual"}, \code{"time"} or \code{"twoways"},}
+  \code{"individual"}, \code{"time"}, \code{"twoways"} or \code{"nested"},}
   \item{model}{one of \code{"pooling"}, \code{"within"},
     \code{"between"}, \code{"random",} \code{"fd"} and \code{"ht"},}
   \item{theta}{the parameter for the transformation if \code{model = "random"},}

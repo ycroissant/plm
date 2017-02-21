@@ -21,7 +21,7 @@
                                   model =
                                   c("pooling","within","Between", "Sum",
                                             "between","mean","random","fd"), 
-                                  effect = c("individual","time","twoways", "group"),
+                                  effect = c("individual","time","twoways", "nested"),
                                   rhs = 1,
                                   theta = NULL, \dots)
                                   
@@ -33,7 +33,7 @@
  estimated model object of class \code{"plm"},}
  \item{data}{a \code{pdata.frame}, see \bold{Details},}
  \item{effect}{the effects introduced in the model, one of
-  \code{"individual"}, \code{"time"}, \code{"twoways"} or \code{"group"},}
+  \code{"individual"}, \code{"time"}, \code{"twoways"} or \code{"nested"},}
  \item{model}{one of \code{"pooling"}, \code{"within"}, \code{"Sum"}, \code{"Between"},
     \code{"between"}, \code{"random",} \code{"fd"} and \code{"ht"},}
  \item{theta}{the parameter for the transformation if \code{model = "random"},}

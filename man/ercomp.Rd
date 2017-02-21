@@ -13,7 +13,7 @@
 \usage{
 ercomp(object, \dots)
 \method{ercomp}{formula}(object, data,
-                         effect = c("individual", "time","twoways", "group"), 
+                         effect = c("individual", "time","twoways", "nested"), 
                          method = NULL, models = NULL,
                          dfcor = NULL, index = NULL, \dots)
 \method{ercomp}{plm}(object, \dots)

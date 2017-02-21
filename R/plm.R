@@ -23,7 +23,7 @@ starX <- function(formula, data, model, rhs = 1, effect){
 }   
 
 plm <-  function(formula, data, subset, weights, na.action,
-                 effect=c('individual','time','twoways'),
+                 effect = c('individual','time','twoways', 'nested'),
                  model = c('within','random','ht','between','pooling','fd'),
                  random.method = NULL,
                  random.models = NULL,
@@ -49,6 +49,7 @@ plm <-  function(formula, data, subset, weights, na.action,
     # note that model can be NA, in this case the model.frame is
     # returned
     if (! any(is.na(model))) model <- match.arg(model)
+    if (! any(is.na(model)) & effect == "nested") model <- "random"
     inst.method <- match.arg(inst.method)
   
     # input checks for FD model give informative error messages as
@@ -110,7 +111,6 @@ plm <-  function(formula, data, subset, weights, na.action,
         index <- attr(data, "index")
         data <- eval(mf, parent.frame())
         index <- index[as.numeric(rownames(data)), ]
-#        print(names(attributes(data)));stop()
         ## if (! is.null(attr(data, "na.action")))
         ##     index <- index[- attr(data, "na.action"), ]
         index <- droplevels(index)

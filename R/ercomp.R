@@ -14,7 +14,7 @@ ercomp.plm <- function(object, ...){
 }
 
 ercomp.formula <- function(object, data, 
-                           effect = c('individual', 'time', 'twoways', 'group'),
+                           effect = c('individual', 'time', 'twoways', 'nested'),
                            method = NULL,
                            models = NULL,
                            dfcor = NULL,                           
@@ -97,7 +97,7 @@ ercomp.formula <- function(object, data,
          # default value of dfcor 3,3
         if (is.null(dfcor)) dfcor <- c(3, 3)
     }
-    if (effect == "group"){
+    if (effect == "nested"){
         tss <- attr(data, "index")[[2]]
         ids <- attr(data, "index")[[1]]
         gps <- attr(data, "index")[[3]]
@@ -124,7 +124,8 @@ ercomp.formula <- function(object, data,
             hateps <- as.numeric(resid(estm, model = "pooling"))
             quad <- c(crossprod(resid(estm, model = "within", effect = "individual")),
                       crossprod(Between(hateps, ids) - Between(hateps, gps)),
-                      crossprod(resid(estm, model = "Between", effect = "group")))
+                      crossprod(Between(hateps, gps)))
+#                      crossprod(resid(estm, model = "Between", effect = "nested")))
             Z <- model.matrix(estm, model = "pooling")
             ZSeta <- model.matrix(estm, model = "Sum", effect = "individual")
             ZSlambda <- apply(Z, 2, tapply, gps, sum)[as.character(gps), , drop = FALSE]
@@ -215,8 +216,19 @@ ercomp.formula <- function(object, data,
             M["gp", "eta"] <- sum(TG) - trace( solve(crossprod(ZBlambda)) %*% crossprod(ZBlambda, ZSeta))
             M["gp", "lambda"] <- O - trace( solve(crossprod(ZBlambda)) %*% crossprod(ZSlambda, Z))
         }
-        print(M)
-        return(solve(M, quad))
+        ids <- index(data)[[1]]
+        tss <- index(data)[[2]]
+        gps <- index(data)[[3]]
+        Gs <- as.numeric(table(gps)[as.character(gps)])
+        Tn <- as.numeric(table(ids)[as.character(ids)])
+        sigma2 <- as.numeric(solve(M, quad))
+        names(sigma2) <- c("idios", "id", "gp")
+        theta <- list(id = 1 - sqrt(sigma2["idios"] /  (Tn * sigma2["id"] + sigma2["idios"])),
+                      gp = sqrt(sigma2["idios"] /  (Tn * sigma2["id"] + sigma2["idios"])) -
+                          sqrt(sigma2["idios"] / (Gs * sigma2["gp"] + Tn * sigma2["id"] + sigma2["idios"]))
+                      )
+        result <- list(sigma2 = sigma2, theta = theta)
+        return(structure(result, class = "ercomp", balanced = balanced, effect = effect))
     }
 
     Z <- model.matrix(object, data)
@@ -463,15 +475,26 @@ print.ercomp <- function(x, digits = max(3, getOption("digits") - 3), ...){
         sigma2Table <- cbind(var = sigma2, std.dev = sqrt(sigma2), share = sigma2 / sum(sigma2))
         rownames(sigma2Table) <- c("idiosyncratic","individual","time")
     }
-    else{
+    if (effect == "individual"){
         sigma2 <- unlist(sigma2[c("idios", "id")])
         sigma2Table <- cbind(var = sigma2, std.dev = sqrt(sigma2), share = sigma2 / sum(sigma2))
-        rownames(sigma2Table) <- c("idiosyncratic",effect)
+        rownames(sigma2Table) <- c("idiosyncratic", effect)
     }
-    printCoefmat(sigma2Table,digits)
+    if (effect == "time"){
+        sigma2 <- unlist(sigma2[c("idios", "time")])
+        sigma2Table <- cbind(var = sigma2, std.dev = sqrt(sigma2), share = sigma2 / sum(sigma2))
+        rownames(sigma2Table) <- c("idiosyncratic", effect)
+    }
+    if (effect == "nested"){
+        sigma2 <- unlist(sigma2)
+        sigma2Table <- cbind(var = sigma2, std.dev = sqrt(sigma2), share = sigma2 / sum(sigma2))
+        rownames(sigma2Table) <- c("idiosyncratic", "individual", "group")
+    }
+
+    printCoefmat(sigma2Table, digits)
     
-    if (!is.null(x$theta)){
-        if (effect!="twoways"){
+    if (! is.null(x$theta)){
+        if (effect %in% c("individual", "time")){
             if (balanced){
                 cat(paste("theta: ",signif(x$theta,digits)," \n"))
             }
@@ -480,11 +503,16 @@ print.ercomp <- function(x, digits = max(3, getOption("digits") - 3), ...){
                 print(summary(x$theta))
             }
         }
-        else{
+        if (effect == "twoways"){
             if(balanced){
                 cat(paste("theta  : ", signif(x$theta$id,digits), " (id) ", signif(x$theta$time,digits), " (time) ",
                           signif(x$theta$total,digits), " (total)\n", sep = ""))
             }
+        }
+        if (effect == "nested"){
+            cat("theta  :\n")
+            print(rbind(id = summary(x$theta$id),
+                        group = summary(x$theta$gp)))
         }
     }
 }

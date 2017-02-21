@@ -32,7 +32,7 @@ model.frame.pFormula <- function(formula, data, ..., lhs = NULL, rhs = NULL){
 model.matrix.pFormula <- function(object, data,
                                   model = c("pooling","within","Between", "Sum",
                                       "between","mean","random","fd"),
-                                  effect = c("individual", "time", "twoways", "group"),
+                                  effect = c("individual", "time", "twoways", "nested"),
                                   rhs = 1,
                                   theta = NULL, ...){
     model <- match.arg(model)
@@ -62,10 +62,9 @@ model.matrix.pFormula <- function(object, data,
     if (length(index) == 3) group <- index[[3]]
     balanced <- is.pbalanced(data) # pdim <- pdim(data)
     if (has.intercept && model == "within") X <- X[ , -1, drop = FALSE]
-    if (effect != "twoways"){
+    if (effect %in% c("individual", "time")){
         if (effect == "individual") cond <- id
         if (effect == "time") cond <- time
-        if (effect == "group") cond <- group
         #!YC! rm.null FALSE or TRUE ?
         result <- switch(model,
                          "within"  = Within(X, cond, rm.null = FALSE),
@@ -78,7 +77,7 @@ model.matrix.pFormula <- function(object, data,
                          "fd"      = pdiff(X, cond, effect = effect, has.intercept = has.intercept)
                          )
     }
-    else{
+    if (effect == "twoways"){
         if (balanced){ # two-ways balanced
             result <- switch(model,
                              "within"  = X - Between(X,id) - Between(X,time) +
@@ -106,6 +105,8 @@ model.matrix.pFormula <- function(object, data,
                              )
         }
     }
+    if (effect == "nested") result <- X - theta$id * Between(X, id) - theta$gp * Between(X, group)
+
     attr(result, "assign") <- X.assi
     attr(result, "contrasts") <- X.contr
     result
@@ -119,7 +120,7 @@ pmodel.response <- function(object, ...) {
 pmodel.response.data.frame <- function(object,
                                        model = c("pooling","within","Between",
                                                  "between","mean","random","fd"),
-                                       effect = c("individual","time","twoways", "group"),
+                                       effect = c("individual","time","twoways", "nested"),
                                        lhs = NULL,
                                        theta = NULL, ...){
   data <- object
@@ -137,7 +138,7 @@ pmodel.response.data.frame <- function(object,
 pmodel.response.pFormula <- function(object, data,
                                      model = c("pooling","within","Between",
                                                "between","mean","random","fd"),
-                                     effect = c("individual","time","twoways", "group"),
+                                     effect = c("individual","time","twoways", "nested"),
                                      lhs = NULL,
                                      theta = NULL, ...){
   formula <- pFormula(object) # was: formula <- object
@@ -223,7 +224,7 @@ pmodel.response.plm <- function(object, ...){
 model.matrix.pdata.frame <- function(object,
                                   model = c("pooling","within","Between", "Sum",
                                       "between","mean","random","fd"),
-                                  effect = c("individual", "time", "twoways", "group"),
+                                  effect = c("individual", "time", "twoways", "nested"),
                                   rhs = 1,
                                   theta = NULL, ...){
     model <- match.arg(model)
@@ -247,10 +248,9 @@ model.matrix.pdata.frame <- function(object,
     if (length(index) == 3) group <- index[[3]]
     balanced <- is.pbalanced(data) # pdim <- pdim(data)
     if (has.intercept && model == "within") X <- X[ , -1, drop = FALSE]
-    if (effect != "twoways"){
+    if (effect %in% c("individual",  "time")){
         if (effect == "individual") cond <- id
         if (effect == "time") cond <- time
-        if (effect == "group") cond <- group
         #!YC! rm.null FALSE or TRUE ?
         result <- switch(model,
                          "within"  = Within(X, cond, rm.null = FALSE),
@@ -263,7 +263,7 @@ model.matrix.pdata.frame <- function(object,
                          "fd"      = pdiff(X, cond, effect = effect, has.intercept = has.intercept)
                          )
     }
-    else{
+    if (effect == "twoways"){
         if (balanced){ # two-ways balanced
             result <- switch(model,
                              "within"  = X - Between(X,id) - Between(X,time) +
@@ -291,6 +291,7 @@ model.matrix.pdata.frame <- function(object,
                              )
         }
     }
+    if (effect == "nested") X - theta$id * Between(X, id) - theta$gp * Between(X, group)
     attr(result, "assign") <- X.assi
     attr(result, "contrasts") <- X.contr
     result
@@ -299,7 +300,7 @@ model.matrix.pdata.frame <- function(object,
 pmodel.response.pdataframe <- function(object,
                                        model = c("pooling","within","Between",
                                                  "between","mean","random","fd"),
-                                       effect = c("individual","time","twoways", "group"),
+                                       effect = c("individual","time","twoways", "nested"),
                                        lhs = NULL,
                                        theta = NULL, ...){
     formula <- attr(object, "formula")
