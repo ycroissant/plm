@@ -1,8 +1,15 @@
+###################################################
+### chunk number 1: pdata.frame
+###################################################
 
 pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
                         stringsAsFactors = default.stringsAsFactors()) {
     
     if (inherits(x, "pdata.frame")) stop("already a pdata.frame")
+  
+    if (length(index) > 3){
+        stop("'index' can be of length 3 at the most (one index variable for individual, time, group)")
+    }
     
     if (stringsAsFactors) { # coerce character vectors to factors, if requested
         x.char <- names(x)[sapply(x, is.character)]
@@ -11,8 +18,8 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
         }
     }
   
-     # replace Inf, -Inf, NaN (everything for which is.finite is FALSE) by NA
-     # (for all but any character columns [relevant if stringAsFactors == FALSE])
+    # replace Inf, -Inf, NaN (everything for which is.finite is FALSE) by NA
+    # (for all but any character columns [relevant if stringAsFactors == FALSE])
     for (i in names(x)) {
         if (!inherits(x[[i]], "character")) {
             x[[i]][!is.finite(x[[i]])] <- NA
@@ -31,10 +38,11 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     x <- x[, !na.check]
   
     # check and remove constant series
-    # cst.check <- sapply(x, function(x) var(as.numeric(x), na.rm = TRUE)==0) # old
+    # old: cst.check <- sapply(x, function(x) var(as.numeric(x), na.rm = TRUE)==0) # old
+    # -> var() and sd() on factors is deprecated as of R 3.2.3 -> use duplicated()
     cst.check <- sapply(x, function(x) {
                             if (is.factor(x) || is.character(x)) {
-                                all(duplicated(x[!is.na(x)])[-1L]) # var() and sd() on factors is deprecated as of R 3.2.3
+                                all(duplicated(x[!is.na(x)])[-1L])
                             } else {
                                 var(as.numeric(x), na.rm = TRUE)==0
                             }
@@ -73,9 +81,6 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     }
     if (length(index) == 0) index <- NULL
 
-    if (length(index) > 2){
-        stop("'index' can be of length 2 at the most (one individual and one time index)")
-    }
   # if index is NULL, both id and time are NULL
     if (is.null(index)){
         id <- NULL
@@ -159,14 +164,14 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
         }
     }
   
-    # sort by group (eventually), by id, then by time
+    # sort by group (if given), then by id, then by time
     if (! is.null(group.name)) x <- x[order(x[[group.name]], x[[id.name]], x[[time.name]]), ] # old: x <- x[order(id,time), ] 
     else x <- x[order(x[[id.name]], x[[time.name]]), ]
     var.names <- names(x)
   
     ## drop unused levels from all factor variables
     for (i in var.names){
-        if(is.factor(x[[i]])){
+        if (is.factor(x[[i]])){
         # if (length(unique(x[[i]])) < length(levels(x[[i]]))){
         #   x[[i]] <- x[[i]][,drop=TRUE]
         # }
@@ -183,7 +188,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     if (any(as.vector(test_doub[!is.na(rownames(test_doub)), !is.na(colnames(test_doub))]) > 1))
         warning("duplicate couples (id-time) in resulting pdata.frame\n to find out which, use e.g. table(index(your_pdataframe), useNA = \"ifany\")")
     
-    if (row.names){
+    if (row.names) {
         attr(x, "row.names") <- fancy.row.names(index)
         # NB: attr(x, "row.names") allows for duplicate rownames (as
         # opposed to row.names(x) <- something) no fancy row.names for

@@ -38,6 +38,10 @@ index.panelmodel <- function(x, which = NULL, ...){
 
 # pos.index:
 # not exported, helper function
+#
+# NB: check if this functions (and it's uses in the code) works with the new
+#     additional group index; admend comments below for group index
+#
 # determines column numbers of the index variables in a pdata.frame
 # returns named numeric of length 2 with column numbers of the index variables (1: individual index, 2: time index) and 
 # names are the names of the index variables
@@ -54,6 +58,7 @@ pos.index <- function(x, ...) {
 
 
 # NB: Are functions indexes and print.indexes still needed?
+# NB: print.indexes does not treat the new group index var
 indexes <- function(x){
   if (!inherits(x, "pdata.frame")){
     stop("indexes function only for pdata.frame\n")

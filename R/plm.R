@@ -633,7 +633,7 @@ print.plm.list <- function(x, digits = max(3, getOption("digits") - 2), width = 
 # summary.plm creates a specific summary.plm object that is derived from the associated plm object
 summary.plm <- function(object, vcov = NULL, ..., .vcov = NULL){
 
-  ## deprecation notice on arg ".vcov" introduced Nov 2016: remove arg ."vcov" some time in the future
+  ## deprecation notice on arg ".vcov" introduced Nov 2016: remove arg ".vcov" some time in the future
   
   vcov_arg <- vcov
   
@@ -650,7 +650,8 @@ summary.plm <- function(object, vcov = NULL, ..., .vcov = NULL){
         vcov_arg <- .vcov
       }
     }
-  ### END set correct vcov in case deprecated arg .vcov is not null
+    ## NB: there is another instance of a switch for arg ".vcov" below concerning rvcov.name
+  ### END set correct vcov in case deprecated arg ".vcov" is not null
   
   object$fstatistic <- pwaldtest(object, test = "F", vcov = vcov_arg)
   model <- describe(object, "model")
@@ -680,7 +681,7 @@ summary.plm <- function(object, vcov = NULL, ..., .vcov = NULL){
     if (!is.null(vcov_arg)) {
       object$rvcov <- rvcov
       
-      ## set correct rvcov.name depending on arg used for vcov (as long as we support .vcov)
+      ## set correct rvcov.name depending on arg used for vcov (as long as we support the deprecated arg ".vcov")
       if (is.null(vcov)) {
         rvcov.name <- paste0(deparse(substitute(.vcov)))
       } else {
