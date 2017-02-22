@@ -11,7 +11,8 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
         stop("'index' can be of length 3 at the most (one index variable for individual, time, group)")
     }
     
-    if (stringsAsFactors) { # coerce character vectors to factors, if requested
+    # coerce character vectors to factors, if requested
+    if (stringsAsFactors) {
         x.char <- names(x)[sapply(x, is.character)]
         for (i in x.char){
             x[[i]] <- factor(x[[i]])
@@ -63,7 +64,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
   
     # sanity check for 'index' argument. First check the presence of a
     # grouping variable, this should be the third element of the index
-    # vector or any "group" named element ot this vector
+    # vector or any "group" named element of this vector
 
     group.name <- NULL
     if (! is.null(names(index)) | length(index == 3)){
@@ -163,7 +164,17 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
             }
         }
     }
-  
+    
+    # if present, make group variable a factor (just like for id and time variables)
+    if (!is.null(group.name)) {
+        if (is.factor(x[[group.name]])){
+            group <- x[[group.name]] <- x[[group.name]][drop=T] # drops unused levels of factor
+        }
+        else{
+            group <- x[[group.name]] <- as.factor(x[[group.name]])
+        }
+    }
+
     # sort by group (if given), then by id, then by time
     if (! is.null(group.name)) x <- x[order(x[[group.name]], x[[id.name]], x[[time.name]]), ] # old: x <- x[order(id,time), ] 
     else x <- x[order(x[[id.name]], x[[time.name]]), ]
