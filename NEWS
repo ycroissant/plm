@@ -6,12 +6,12 @@ TODO: comment about improvement of twoway FE transformation (Yves)
   * pbsytest:
       * test = "j": [joint test by Baltagi/Li(1991)]:
         fixed degrees of freedom (now df = 2 instead of df = 1).
-      * unbalanced version of all statistics implemented.
+      * unbalanced version of all statistics implemented (Sosa-Escudero/Bera (2008)).
   * plm.data:
-      * deprecated now (gives warning).
+      * deprecated now (gives warning), use pdata.frame instead.
       * function internally uses pdata.frame now and then adjusts
         to get a "plm.dim" object as before. This way, plm.data
-        benefits from bug fixes made in pdata.frame.
+        benefits from bug fixes made previously in pdata.frame.
 
 
 Changes since version 1.6-5

@@ -1,3 +1,7 @@
+
+
+% TODO: adapt to 3rd index variable group
+
 \name{index}
 \alias{index}
 \alias{index.pdata.frame}
@@ -26,8 +30,8 @@
 }
 
 \value{
-  a vector or a \code{"data.frame"} containing either one index or both
-  indexes.
+  a vector or an object of class \code{"pindex", "data.frame"} containing either 
+  one index or both indexes.
 }
 
 \details{
