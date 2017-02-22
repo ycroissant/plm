@@ -7,6 +7,9 @@ TODO: comment about improvement of twoway FE transformation (Yves)
       * test = "j": [joint test by Baltagi/Li(1991)]:
         fixed degrees of freedom (now df = 2 instead of df = 1).
       * unbalanced version of all statistics implemented (Sosa-Escudero/Bera (2008)).
+      * new argument 're.normal' (only relevant if test = "re"): allows to compute
+        the two-sided RE test when set to FALSE (default is TRUE which gives the
+        one-sided RE test as before).
   * plm.data:
       * deprecated now (gives warning), use pdata.frame instead.
       * function internally uses pdata.frame now and then adjusts
