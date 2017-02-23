@@ -4,6 +4,10 @@
 # 2) Does fitted.plm run / issue a warning if a coefficients gets (silently) dropped in estimated model
 #
 # NB: Correctness of calculation in fitted.plm is not checked currently in this file
+#
+# NB: there is also a non-exported function fitted_exp.plm and an associated test file
+#     which calculated the fitted values by subtracting the "overall" residuals
+#     (of the respective "overall"/"outer" model).
 
 library(plm)
 data(Grunfeld)

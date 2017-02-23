@@ -169,8 +169,8 @@ plm.fit <- function(formula, data, model, effect, random.method,
     # For all models except the unbalanced twoways random model, the
     # estimator is obtained as a linear regression on transformed data
     if (! (model == "random" & effect == "twoways" && ! is.balanced)){
-        # extract the model.matrix and the model.response actualy, this can be
-        # actualy done by providing model.matrix and pmodel.response's methods
+        # extract the model.matrix and the model.response actually, this can be
+        # done by providing model.matrix and pmodel.response's methods
         # to pdata.frames
         if (ancien){
             X <- model.matrix(formula, data, rhs = 1, model = model, 
@@ -773,6 +773,27 @@ print.summary.plm <- function(x, digits = max(3, getOption("digits") - 2),
   invisible(x)
 }
 
+fitted_exp.plm <- function(x, ...) { #### experimental, non-exported function
+# fitted_exp.plm: gives the fitted values of all types of plm models by substracting the overall 
+#                 residuals from the untransformed response variable; does not have
+#                 a model argument so it is simpler than 'fitted.plm' below and is simpler.
+# see also test file tests/test_residuals_overall_fitted_exp.R
+  model <- describe(x, "model")
+  res <- residuals_overall_exp.plm(x)
+  
+  # For models "between" and "fd" the number of residuals is not equal to the 
+  # number of original observations. Thus, model.frame cannot be used but rather
+  # pmodel.response because it has the right length. However, pmodel.response
+  # shall not be used for the other models because we want the untransformed data.
+  if (model %in% c("between", "fd")) {
+    y <- pmodel.response(x)
+  } else {
+    y <- model.frame(x)[,1]
+  }
+  return(y - res) # TODO: shall the result be class pseries? currently, pmodel.response does not set 'pseries' class
+}
+
+
 fitted.plm <- function(object, model = NULL, ...){
   # there are two 'models' used ; the fitted model and the
   # transformation used for the fitted values
@@ -923,6 +944,50 @@ residuals.plm <- function(object, model = NULL, effect = NULL, ...){
 #        res <- y - as.numeric(crossprod(t(X), beta))
     }
     structure(res, index = index(object), class = c("pseries", class(res)))
+}
+
+residuals_overall_exp.plm <- function(x, ...) { #### experimental, non-exported function
+# residuals_overall.plm: gives the residuals of the "overall"/outer model for all types of plm models
+# in the future, this could be integrated with residuals.plm by some argument, e.g. overall = FALSE (default).
+# see also test file tests/test_residuals_overall_fitted_exp.R
+  
+  # no na.action eval yet
+  
+  model <- describe(x, "model")
+  
+  # for all effects of within models: residuals of demeaned (inner) model
+  # are also the residuals of the "overall" model
+  if (model == "random") {
+    # get untransformed data to calculate overall residuals
+    X <- model.matrix(x, model = "pooling") 
+    y <- pmodel.response(x, model = "pooling")
+    # take care of any aliased coefficients:
+    # they are not in x$coefficients but assoc. variables are still present in model.matrix
+    if (any(x$aliased, na.rm = TRUE)) { # na.rm = TRUE because currently, RE tw unbalanced models set aliased simply to NA
+      X <- X[ , !x$aliased, drop = FALSE]
+    }
+    
+    est <- as.numeric(tcrossprod(coef(x), X))
+    res <- y - est
+    names(res) <- rownames(X)
+
+    ## make residuals a pseries    
+        ## old:
+        # index <- index(x)
+        #   if (ncol(index) == 3) {
+        #     resdata <- data.frame(ind=index[[1]], tind=index[[2]], gind=index[[3]], res = res)
+        #     presdata <- pdata.frame(resdata, index=c("ind", "tind", "gind"))
+        #   } else {
+        #     resdata <- data.frame(ind=index[[1]], tind=index[[2]], res = res)
+        #     presdata <- pdata.frame(resdata, index=c("ind", "tind"))
+        #   }
+        #   res <- presdata$res
+    res <- structure(res, index = index(x), class = c("pseries", class(res)))
+      
+  } else { # all plm models except random
+    res <- residuals(x)
+  }
+  return(res)
 }
 
 formula.plm <- function(x, ...){
