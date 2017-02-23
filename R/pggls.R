@@ -135,21 +135,27 @@ pggls <- function(formula, data, subset, na.action,
     A <- crossprod(X, solve(omega, X))
     B <- crossprod(X, solve(omega, y))
     vcov <- solve(A)
-    coef <- as.vector(solve(A, B))
+    coef <- as.numeric(solve(A, B))
     if (drop1 && model == "within") {
         X <- X0
         y <- y0
     }
-    residuals <- y - as.vector(crossprod(t(X), coef))
+    residuals <- y - as.numeric(tcrossprod(coef, X))
     df.residual <- nrow(X) - ncol(X)
     fitted.values <- y - residuals
     names(coef) <- rownames(vcov) <- colnames(vcov) <- coef.names
     pmodel <- attr(plm.model, "pmodel")
     pmodel$model.name <- model
-    fullGLS <- list(coefficients = coef, residuals = residuals,
-        fitted.values = fitted.values, vcov = vcov, df.residual = df.residual,
-        model = model.frame(plm.model), sigma = subOmega, call = cl,
-        formula = plm.model$formula )
+    fullGLS <- list(coefficients  = coef,
+                    residuals     = residuals,
+                    fitted.values = fitted.values,
+                    vcov          = vcov,
+                    df.residual   = df.residual,
+                    model         = model.frame(plm.model),
+                    sigma         = subOmega,
+                    call          = cl,
+                    formula       = plm.model$formula)
+    
     fullGLS <- structure(fullGLS, pdim = pdim, pmodel = pmodel)
     class(fullGLS) <- c("pggls", "panelmodel")
     fullGLS
