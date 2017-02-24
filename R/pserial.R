@@ -58,7 +58,7 @@ pbgtest.panelmodel <- function(x, order = NULL, type = c("Chisq", "F"), ...) {
   return(bgtest)
 }
 
-### pwtest
+#### pwtest
 
 pwtest <- function(x, ...){
   UseMethod("pwtest")
@@ -180,9 +180,9 @@ pwtest.panelmodel <- function(x, effect = c("individual", "time"), ...) {
 }
 
 
-### pwartest
+#### pwartest
 
-pwartest <- function(x, ...){
+pwartest <- function(x, ...) {
   UseMethod("pwartest")
 }
 
@@ -235,7 +235,18 @@ pwartest.panelmodel <- function(x, ...) {
   lhtest <- linearHypothesis(model=auxmod, myH0, vcov.=myvcov, ...)
 #  lhtest <- linearHypothesis(model=auxmod, myH0, vcov.=myvcov(x), ...)
 
-  ##(insert usual htest features)  
+  ## Note: can avoid extra call to car::linearHypothesis
+  ##       -> avoids arg ... to be passed to vcovHC AND linearHypothesis
+  ##  * currently in pwfdtest, it is taken to be a chisq but in this special
+  ##    case F stat and chisq are the same. Drukker (2003) uses F stat
+  ##  * degrees of freedom should go in htest object
+  #
+  # fstat <- ((coef(auxmod)["FEres.1"] - rho.H0 )/sqrt(myvcov(auxmod)["FEres.1", "FEres.1"]))^2 # F stat with rho.H0
+  # pfstat <- pf(fstat, df1 = 1, df2 = df.residual(auxmod), lower.tail = F)
+  # cat("fstat ", fstat); cat("\n")
+  # cat("pfstat", pfstat)
+  
+  ##(insert usual htest features)
   FEARstat <- lhtest[2,3]
   names(FEARstat) <- dimnames(lhtest)[[2]][3]
   if (names(FEARstat)=="Chisq") names(FEARstat) <- "chisq"
@@ -255,7 +266,7 @@ pwartest.panelmodel <- function(x, ...) {
 
 }
 
-### pbsytest
+#### pbsytest
 
 ## Bera., Sosa-Escudero and Yoon type LM test for random effects
 ## under serial correlation (H0: no random effects) or the inverse;
@@ -417,7 +428,7 @@ pbsytest.panelmodel <- function(x, test = c("ar", "re", "j"), re.normal = TRUE, 
   return(RVAL)
 }
 
-### pdwtest
+#### pdwtest
 
 pdwtest <- function (x, ...) {
     UseMethod("pdwtest")
@@ -438,7 +449,7 @@ pdwtest.formula <- function(x, data, ...) {
   pdwtest(plm.model, ...)
 }
 
-pdwtest.panelmodel <- function(x,...) {
+pdwtest.panelmodel <- function(x, ...) {
   ## residual serial correlation test based on the residuals of the demeaned
   ## model and the regular dwtest() in {lmtest}
   ## reference Baltagi (page 98) for FE application, Wooldridge page 288 for
@@ -453,7 +464,7 @@ pdwtest.panelmodel <- function(x,...) {
   model <- describe(x, "model")
   effect <- describe(x, "effect")
   theta <- x$ercomp$theta
-                                                    
+
   ## retrieve demeaned data
   demX <- model.matrix(x, model = model, effect = effect, theta=theta)
   demy <- pmodel.response(model.frame(x), model = model, effect = effect, theta=theta)
@@ -487,6 +498,7 @@ pdwtest.panelmodel <- function(x,...) {
   return(ARtest)
 }
 
+#### pbltest
 
 ######### Baltagi and Li's LM_rho|mu ########
 ## ex Baltagi and Li (1995) Testing AR(1) against MA(1)...,
@@ -500,7 +512,7 @@ pdwtest.panelmodel <- function(x,...) {
 ## on N=3000, T=10 and even 20000x10 (55'') is no problem;
 ## lme() hits the memory limit at ca. 20000x20)
 
-pbltest.formula <- function(x, data, alternative = c("twosided", "onesided"), index=NULL, ...) {
+pbltest.formula <- function(x, data, alternative = c("twosided", "onesided"), index = NULL, ...) {
  ## this version (pbltest0) based on a "formula, pdataframe" interface
 
 
@@ -586,8 +598,7 @@ pbltest.formula <- function(x, data, alternative = c("twosided", "onesided"), in
          onesided = {
            LMr.m <- Drho * sqrt(J11)
            pval <- pnorm(LMr.m,lower.tail=FALSE)
-                                        #    names(LMr.m) <- "Z"
-           names(LMr.m) <- "z"
+           names(LMr.m) <- "z" #    names(LMr.m) <- "Z"
            method1 <- "one-sided"
            method2 <- "H0: rho = 0, HA: rho > 0"
            parameter <- NULL
@@ -629,12 +640,13 @@ pbltest <- function (x, ...)
   UseMethod("pbltest")
 }
 
+#### pwfdtest
 
-pwfdtest <- function(x, ...){
+pwfdtest <- function(x, ...) {
   UseMethod("pwfdtest")
 }
 
-pwfdtest.formula <- function(x, data, ..., h0 = c("fd", "fe")){
+pwfdtest.formula <- function(x, data, ..., h0 = c("fd", "fe")) {
   cl <- match.call(expand.dots = TRUE)
   if (is.null(cl$model)) cl$model <- "fd"
   names(cl)[2] <- "formula"
@@ -685,15 +697,11 @@ pwfdtest.panelmodel <- function(x, ..., h0 = c("fd", "fe")) {
   redind <- unlist(redind)
   time <- time[redind]
   id <- id[redind]
-    
+
   N <- length(FDres)
-
   FDres.1 <- c(NA,FDres[1:(N-1)])
-
   lagid <- id - c(NA,id[1:(N-1)])
-
   FDres.1[lagid!=0] <- NA
-
 
   ## make (panel) dataframe for auxiliary regression
   auxdata <- as.data.frame(cbind(id,time))
@@ -719,6 +727,17 @@ pwfdtest.panelmodel <- function(x, ..., h0 = c("fd", "fe")) {
   myH0 <- paste("FDres.1 = ", as.character(rho.H0), sep="")
   lhtest <- linearHypothesis(model=auxmod, myH0, vcov.=myvcov, ...)
   
+  ## Note: can avoid extra call to car::linearHypothesis
+  ##       -> avoids arg ... to be passed to vcovHC AND linearHypothesis
+  ##  * currently in pwfdtest, it is taken to be a chisq but in this special
+  ##    case F stat and chisq are the same. Drukker (2003) uses F stat
+  ##  * degrees of freedom should go in htest object
+  # 
+  #   fstat <- ((coef(auxmod)["FDres.1"] - rho.H0 )/sqrt(myvcov(auxmod)["FDres.1", "FDres.1"]))^2 # F stat with rho.H0
+  #   pfstat <- pf(fstat, df1 = 1, df2 = df.residual(auxmod), lower.tail = F)
+  #   cat("fstat ", fstat); cat("\n")
+  #   cat("pfstat", pfstat)
+  
   ## (insert usual htest features)  
   FDARstat <- lhtest[2,3]
   names(FDARstat) <- dimnames(lhtest)[[2]][3] 
@@ -736,5 +755,4 @@ pwfdtest.panelmodel <- function(x, ..., h0 = c("fd", "fe")) {
                data.name   = dname)
   class(RVAL) <- "htest"
   return(RVAL)
-
 }
