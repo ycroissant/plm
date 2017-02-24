@@ -19,6 +19,7 @@ TODO: comment about improvement of twoway FE transformation (Yves)
     for testing purposes: residuals_overall_exp.plm always gives the residuals of the
     overall/outer plm model, fitted_exp.plm gives the fitted values (by subtracting
     the overall residuals from the untransformed response variable).
+  * pwartest.formula (only formula interface): fixed: ellipsis (dots) were not passed on.
 
 
 Changes since version 1.6-5

@@ -186,7 +186,7 @@ pwartest <- function(x, ...){
   UseMethod("pwartest")
 }
 
-pwartest.formula <- function(x,  data, ...) {
+pwartest.formula <- function(x, data, ...) {
   ## small-sample serial correlation test for FE models
   ## ref.: Wooldridge (2002/2010) 10.5.4 
   ##if(!require(car)) stop("Library 'car' is needed")
@@ -200,10 +200,10 @@ pwartest.formula <- function(x,  data, ...) {
   cl <- cl[c(1L,m)]
   cl[[1L]] <- quote(plm)
   plm.model <- eval(cl, parent.frame())
-  pwartest(plm.model)
+  pwartest(plm.model, ...)
 }
 
-pwartest.panelmodel <- function(x, ...){
+pwartest.panelmodel <- function(x, ...) {
   FEres <- resid(x)
   data <- model.frame(x)
   if (describe(x, "model") != "within") stop("pwartest only relevant for within models")
@@ -249,7 +249,7 @@ pwartest.panelmodel <- function(x, ...){
                method = "Wooldridge's test for serial correlation in FE panels",
                alternative = "serial correlation",
                p.value = pFEAR,
-               data.name =   dname)
+               data.name = dname)
   class(RVAL) <- "htest"
   return(RVAL)
 
@@ -671,8 +671,8 @@ pwfdtest.panelmodel <- function(x, ..., h0 = c("fd", "fe")) {
 
  
   ## (re)create groupwise-separated index from 1 to nT 
-  ## - dropping first time period
-  ## - correcting Ti=Ti+1
+  ## - drop first time period
+  ## - correct Ti=Ti-1
   Ti <- pdim$Tint$Ti-1
   
   redind <- vector("list",n)
@@ -701,7 +701,7 @@ pwfdtest.panelmodel <- function(x, ..., h0 = c("fd", "fe")) {
   auxdata$FDres.1 <- FDres.1
   ## pooling model FDres vs. lag(FDres),
   ## with intercept (might as well do it w.o.)
-  auxmod <- plm(FDres ~ FDres.1, na.omit(auxdata), model = "pooling")
+  auxmod <- plm(FDres ~ FDres.1, data = na.omit(auxdata), model = "pooling")
 
   switch(match.arg(h0), 
              fd = {h0des <- "differenced"
