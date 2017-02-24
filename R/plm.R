@@ -80,7 +80,7 @@ plm <-  function(formula, data, subset, weights, na.action,
         warning(deprec.instruments)
     }
     ancien <- TRUE
-    # check whether data and formula are pdta.frame and Formula and if not
+    # check whether data and formula are pdata.frame and Formula and if not
     # coerce them and if not create it
 #YC    orig_rownames <- row.names(data)
     if (! inherits(data, "pdata.frame")) data <- pdata.frame(data, index)
@@ -450,7 +450,7 @@ plm.list <- function(formula, data, subset, na.action,
   Instruments <- sapply(models, function(x) length(formula(x))[2]) > 1
 
   # Get the residuals and compute the consistent estimation of the
-  # covariance matrix of the residuals : Note that if there is
+  # covariance matrix of the residuals : Note that if there are
   # restrictions, the "restricted" residuals are used ; for random
   # effect models, two covariance matrices must be computed
   if (model == "random"){
@@ -693,7 +693,7 @@ summary.plm <- function(object, vcov = NULL, ..., .vcov = NULL){
     
     # mimics summary.lm's 'df' component
     # 1st entry: no. coefs (w/o aliased coefs); 2nd: residual df; 3rd no. coefs /w aliased coefs
-    object$df <- c(length(b), object$df.residual, length(object$aliased)) # NB: do not use length(object$coefficients) here
+    object$df <- c(length(b), object$df.residual, length(object$aliased)) # NB: do not use length(object$coefficients) for 3rd entry!
     
     class(object) <- c("summary.plm", "plm", "panelmodel")
   object
@@ -790,7 +790,8 @@ fitted_exp.plm <- function(x, ...) { #### experimental, non-exported function
   } else {
     y <- model.frame(x)[,1]
   }
-  return(y - res) # TODO: shall the result be class pseries? currently, pmodel.response does not set 'pseries' class
+  return(y - res) # TODO: shall the result be class pseries? currently, 
+                  #       pmodel.response (used for between and fd model) does not set 'pseries' class
 }
 
 
@@ -817,14 +818,14 @@ fitted.plm <- function(object, model = NULL, ...){
   }
   
   # Test if all coefficients could be estimated by plm
-  # [plm silently drops non-estimatable coefficients [v1.5-13]]
+  # [plm silently drops non-estimable coefficients [v1.5-13]]
   # With this test, we provide an additional warning message to
   # users to enhance the error message from failing crossprod later in the code
   # which relies on non-dropped coefficients; see also testfile tests/test_fitted.plm.R
   # This test could be computationally/space expensive due to creation of model.matrix.
   # if (!setequal(names(object$coefficients), colnames(model.matrix(object)))) {
   #    warning("Coefficients of estimated model do not match variables in its specified model.matrix.
-  #           This is likely due to non-estimatable coefficients (compare object$formula with object$coefficients).")
+  #           This is likely due to non-estimable coefficients (compare object$formula with object$coefficients).")
   # }
   
   if (fittedmodel == "within"){
@@ -955,7 +956,9 @@ residuals_overall_exp.plm <- function(x, ...) { #### experimental, non-exported 
   
   model <- describe(x, "model")
   
-  # for all effects of within models: residuals of demeaned (inner) model
+  if (model == "ht") stop("model \"ht\" not (yet?) supported")
+  
+  # for all effects of within models: residuals of (quasi-)demeaned (inner) model
   # are also the residuals of the "overall" model
   if (model == "random") {
     # get untransformed data to calculate overall residuals
@@ -984,7 +987,7 @@ residuals_overall_exp.plm <- function(x, ...) { #### experimental, non-exported 
         #   res <- presdata$res
     res <- structure(res, index = index(x), class = c("pseries", class(res)))
       
-  } else { # all plm models except random
+  } else { # all plm models except random (also also except ht)
     res <- residuals(x)
   }
   return(res)

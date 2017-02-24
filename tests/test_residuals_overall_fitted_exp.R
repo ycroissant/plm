@@ -2,8 +2,15 @@
 # tests for experimental, non-exported methods:
 #   * residuals_overall_exp.plm
 #   * fitted_exp.plm
+#
+# TODO: plm model "ht": is that deprecated? currently, it is not supported by residuals_overall_exp.plm and fitted_exp.plm
+
 library(plm)
 data("Grunfeld", package = "plm")
+
+# due to functions being non-exported:
+fitted_exp.plm            <- plm:::fitted_exp.plm
+residuals_overall_exp.plm <- plm:::residuals_overall_exp.plm
 
 # random - balanced
 re_id_bal   <- plm(inv ~ value + capital, model = "random", effect = "individual", data = Grunfeld)
@@ -36,6 +43,13 @@ pool_unbal <- plm(inv ~ value + capital, model = "pooling", data = Grunfeld[1:19
 # fd
 fd_bal   <- plm(inv ~ value + capital, model = "fd", data = Grunfeld)
 fd_unbal <- plm(inv ~ value + capital, model = "fd", data = Grunfeld[1:199, ])
+
+# ht
+data("Wages", package = "plm")
+ht <- plm(lwage ~ wks + south + smsa + married + exp + I(exp^2) +
+          bluecol + ind + union + sex + black + ed | 
+          sex + black + bluecol + south + smsa + ind,
+          data = Wages, model = "ht", index = 595)
 
 ### Tests ###
 
@@ -71,3 +85,5 @@ if (!isTRUE(all.equal(pool_unbal$model[,1], fitted_exp.plm(pool_unbal) + residua
 if (!isTRUE(all.equal(pmodel.response(fd_bal),   as.numeric(fitted_exp.plm(fd_bal)   + residuals_overall_exp.plm(fd_bal)),   check.attributes = F))) stop("model fd not equal")
 if (!isTRUE(all.equal(pmodel.response(fd_unbal), as.numeric(fitted_exp.plm(fd_unbal) + residuals_overall_exp.plm(fd_unbal)), check.attributes = F))) stop("model fd not equal")
 
+# ht
+# if (!isTRUE(all.equal(ht$model[,1],   as.numeric(fitted_exp.plm(ht)   + residuals_overall_exp.plm(ht)),   check.attributes = F))) stop("model ht not equal")
