@@ -189,7 +189,6 @@ pwartest <- function(x, ...) {
 pwartest.formula <- function(x, data, ...) {
   ## small-sample serial correlation test for FE models
   ## ref.: Wooldridge (2002/2010) 10.5.4 
-  ##if(!require(car)) stop("Library 'car' is needed")
 
   cl <- match.call(expand.dots = TRUE)
   if (is.null(cl$model)) cl$model <- "within"
@@ -211,7 +210,7 @@ pwartest.panelmodel <- function(x, ...) {
   ## this is a bug fix for incorrect naming of the "data" attr.
   ## for the pseries in pdata.frame()
   
-  attr(FEres,"data") <- NULL
+  attr(FEres, "data") <- NULL
   N <- length(FEres)
   FEres.1 <- c(NA,FEres[1:(N-1)])
   index <- attr(data, "index")
@@ -220,50 +219,36 @@ pwartest.panelmodel <- function(x, ...) {
   lagid <- as.numeric(id)-c(NA,as.numeric(id)[1:(N-1)])
   FEres.1[lagid!=0] <- NA
   data <- data.frame(id, time, FEres = unclass(FEres), FEres.1 = unclass(FEres.1))
-  names(data)[c(1,2)] <- c("id","time")
+  names(data)[c(1,2)] <- c("id", "time")
   data <- na.omit(data)
-  auxmod <- plm(FEres~FEres.1, data = data, model = "pooling", index = c("id", "time"))
+  
+  # calc. auxiliary model
+  auxmod <- plm(FEres ~ FEres.1, data = data, model = "pooling", index = c("id", "time"))
 
   ## calc. theoretical rho under H0: no serial corr. in errors
   t. <- pdim(x)$nT$T
   rho.H0 <- -1/(t.-1)
-  ## test H0: rho=rho.H0 with HAC t-test (HC0-3 parm may be passed)
-  myvcov <- function(x) vcovHC(x, method="arellano", ...)
-
   myH0 <- paste("FEres.1 = ", as.character(rho.H0), sep="")
-  # args(linearHypothesis) = test = c("F","Chisq") white.adjust = FALSE
-  lhtest <- linearHypothesis(model=auxmod, myH0, vcov.=myvcov, ...)
-#  lhtest <- linearHypothesis(model=auxmod, myH0, vcov.=myvcov(x), ...)
-
-  ## Note: can avoid extra call to car::linearHypothesis
-  ##       -> avoids arg ... to be passed to vcovHC AND linearHypothesis
-  ##  * currently in pwfdtest, it is taken to be a chisq but in this special
-  ##    case F stat and chisq are the same. Drukker (2003) uses F stat
-  ##  * degrees of freedom should go in htest object
-  #
-  # fstat <- ((coef(auxmod)["FEres.1"] - rho.H0 )/sqrt(myvcov(auxmod)["FEres.1", "FEres.1"]))^2 # F stat with rho.H0
-  # pfstat <- pf(fstat, df1 = 1, df2 = df.residual(auxmod), lower.tail = F)
-  # cat("fstat ", fstat); cat("\n")
-  # cat("pfstat", pfstat)
+  
+  ## test H0: rho=rho.H0 with HAC
+  myvcov <- function(x) vcovHC(x, method = "arellano", ...) # more params may be passed via ellipsis
+  
+  # calc F stat with restriction rho.H0 and robust vcov
+  FEARstat <- ((coef(auxmod)["FEres.1"] - rho.H0)/sqrt(myvcov(auxmod)["FEres.1", "FEres.1"]))^2
+  names(FEARstat) <- "F"
+  df1 <- c("df1" = 1); df2 <- c("df2" = df.residual(auxmod))
+  pFEARstat <- pf(FEARstat, df1 = df1, df2 = df2, lower.tail = F)
   
   ##(insert usual htest features)
-  FEARstat <- lhtest[2,3]
-  names(FEARstat) <- dimnames(lhtest)[[2]][3]
-  if (names(FEARstat)=="Chisq") names(FEARstat) <- "chisq"
-  ## this is either 'F' or 'Chisq' and is the name of 3rd
-  ## column because we are supplying a vcov matrix
-  pFEAR <- lhtest[2,4]
-
   dname <- paste(deparse(substitute(x)))
   RVAL <- list(statistic = FEARstat,
-               parameter = NULL,
+               parameter = c(df1, df2),
+               p.value   = pFEARstat,
                method = "Wooldridge's test for serial correlation in FE panels",
                alternative = "serial correlation",
-               p.value = pFEAR,
                data.name = dname)
   class(RVAL) <- "htest"
   return(RVAL)
-
 }
 
 #### pbsytest
@@ -503,7 +488,7 @@ pdwtest.panelmodel <- function(x, ...) {
 ######### Baltagi and Li's LM_rho|mu ########
 ## ex Baltagi and Li (1995) Testing AR(1) against MA(1)...,
 ## JE 68, 133-151, test statistic (one-sided) is LM_4;
-## see also idem (1997), Monte carlo results...,
+## see also idem (1997), Monte Carlo results...,
 ## Annales d'Econometrie et Statistique 48, formula (8)
 
 ## from version 2: disposes of Kronecker products,
@@ -666,8 +651,6 @@ pwfdtest.panelmodel <- function(x, ..., h0 = c("fd", "fe")) {
   model <- describe(x, "model")
   if (model != "fd") stop(paste0("input 'x' needs to be a \"fd\" model (first-differenced model), but is \"", model, "\""))
 
-  ##if(!require(car)) stop("Library 'car' is needed")
-
   ## fetch fd residuals
   FDres <- resid(x)
   ## indices (full length! must reduce by 1st time period)
@@ -681,7 +664,6 @@ pwfdtest.panelmodel <- function(x, ..., h0 = c("fd", "fe")) {
   pdim <- pdim(x)
   n <- pdim$nT$n
 
- 
   ## (re)create groupwise-separated index from 1 to nT 
   ## - drop first time period
   ## - correct Ti=Ti-1
@@ -693,7 +675,7 @@ pwfdtest.panelmodel <- function(x, ..., h0 = c("fd", "fe")) {
     redind[[i]] <- (tfirst+2):(tfirst+Ti[i]+1)
     tfirst <- max(redind[[i]])
   }
-   ## reduce indices by 1st time period
+  ## reduce indices by 1st time period
   redind <- unlist(redind)
   time <- time[redind]
   id <- id[redind]
@@ -704,11 +686,10 @@ pwfdtest.panelmodel <- function(x, ..., h0 = c("fd", "fe")) {
   FDres.1[lagid!=0] <- NA
 
   ## make (panel) dataframe for auxiliary regression
-  auxdata <- as.data.frame(cbind(id,time))
+  auxdata <- as.data.frame(cbind(id, time))
   auxdata$FDres <- FDres
   auxdata$FDres.1 <- FDres.1
-  ## pooling model FDres vs. lag(FDres),
-  ## with intercept (might as well do it w.o.)
+  ## pooling model FDres vs. lag(FDres), with intercept (might as well do it w.o.)
   auxmod <- plm(FDres ~ FDres.1, data = na.omit(auxdata), model = "pooling")
 
   switch(match.arg(h0), 
@@ -721,37 +702,24 @@ pwfdtest.panelmodel <- function(x, ..., h0 = c("fd", "fe")) {
                    ## corr. in original errors is -0.5
                    rho.H0 <- -0.5})
 
-  ## test H0: rho=rho.H0 with HAC t-test (HC0-3 parm may be passed)
-  myvcov <- function(x) vcovHC(x, method="arellano", ...)
-
   myH0 <- paste("FDres.1 = ", as.character(rho.H0), sep="")
-  lhtest <- linearHypothesis(model=auxmod, myH0, vcov.=myvcov, ...)
   
-  ## Note: can avoid extra call to car::linearHypothesis
-  ##       -> avoids arg ... to be passed to vcovHC AND linearHypothesis
-  ##  * currently in pwfdtest, it is taken to be a chisq but in this special
-  ##    case F stat and chisq are the same. Drukker (2003) uses F stat
-  ##  * degrees of freedom should go in htest object
-  # 
-  #   fstat <- ((coef(auxmod)["FDres.1"] - rho.H0 )/sqrt(myvcov(auxmod)["FDres.1", "FDres.1"]))^2 # F stat with rho.H0
-  #   pfstat <- pf(fstat, df1 = 1, df2 = df.residual(auxmod), lower.tail = F)
-  #   cat("fstat ", fstat); cat("\n")
-  #   cat("pfstat", pfstat)
+  ## test H0: rho=rho.H0 with HAC
+  myvcov <- function(x) vcovHC(x, method = "arellano", ...) # more params may be passed via ellipsis
+
+  # calc F stat with restriction rho.H0 and robust vcov
+  FDARstat <- ((coef(auxmod)["FDres.1"] - rho.H0)/sqrt(myvcov(auxmod)["FDres.1", "FDres.1"]))^2
+  names(FDARstat) <- "F"
+  df1 <- c(df1 = 1); df2 <- c(df2 = df.residual(auxmod))
+  pFDARstat <- pf(FDARstat, df1 = df1, df2 = df2, lower.tail = F)
   
   ## (insert usual htest features)  
-  FDARstat <- lhtest[2,3]
-  names(FDARstat) <- dimnames(lhtest)[[2]][3] 
-  if (names(FDARstat)=="Chisq") names(FDARstat) <- "chisq"
-  ## this is either 'F' or 'Chisq' and is the name of 3rd
-  ## column because we are supplying a vcov matrix
-  pFDAR <- lhtest[2,4]
-
   dname <- paste(deparse(substitute(x)))
   RVAL <- list(statistic   = FDARstat, 
-               parameter   = NULL,
+               parameter   = c(df1, df2),
+               p.value     = pFDARstat,
                method      = "Wooldridge's first-difference test for serial correlation in panels",
                alternative = paste("serial correlation in", h0des, "errors"),
-               p.value     = pFDAR,
                data.name   = dname)
   class(RVAL) <- "htest"
   return(RVAL)
