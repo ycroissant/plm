@@ -220,7 +220,6 @@ pres <- function(x) {  # pres.panelmodel
 
   resdata <- data.frame(ee=x$residuals, ind=groupind, tind=timeind)
   pee <- pdata.frame(resdata, index=c("ind","tind"))
-
   pres <- pee$ee
   return(pres)
 }
@@ -280,7 +279,9 @@ punbalancedness <- function(x, ...) {
 
 # helper function
 fancy.row.names <- function(index, sep = "-") {
-  return(paste(index[[1]], index[[2]], sep = sep))
+  if (length(index) == 2) {result <- paste(index[[1]], index[[2]], sep = sep)}
+  if (length(index) == 3) {result <- paste(index[[1]], index[[2]], index[[3]], sep = sep)}
+  return(result)
 }
 
 # helper function for pwaldtest: trans_clubSandwich_vcov
@@ -328,7 +329,7 @@ gettvalue <- function(x, coefname) {
 # helper function: "p-function" for mixed chisq (also called chi-bar-squared)
 # used in plmtest(., type = "ghm"), see Baltagi (2013), pp. 71-72, 74, 88, 202-203, 209
 #
-# a reference seems to be
+# a reference for the distribution seems to be
 # Dykstra, R./El Barmi, H., Chi-Bar-Square Distributions, in: Encyclopedia of Statistical Sciences, 
 # DOI: 10.1002/0471667196.ess0265.pub2
 pchibarsq <- function(q, df, weights, lower.tail = TRUE, ... ) {
