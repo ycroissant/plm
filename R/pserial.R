@@ -78,7 +78,7 @@ pwtest.formula <- function(x, data, effect = c("individual", "time"), ...) {
   cl[[1L]] <- quote(plm)
   plm.model <- eval(cl,parent.frame())
   # pwtest(plm.model)
-  pwtest.panelmodel(plm.model, effect = effect) # pass on desired 'effect' argument to pwtest.panelmodel
+  pwtest.panelmodel(plm.model, effect = effect, ...) # pass on desired 'effect' argument to pwtest.panelmodel
   
   ## "RE" test a la Wooldridge (2002/2010), see 10.4.4
   ## (basically the scaled and standardized estimator for sigma from REmod)
@@ -169,12 +169,13 @@ pwtest.panelmodel <- function(x, effect = c("individual", "time"), ...) {
   
   ##(insert usual htest features)
   dname <- paste(deparse(substitute(formula)))
-  RVAL <- list(statistic = Wstat, parameter = NULL,
+  RVAL <- list(statistic = Wstat,
+               parameter = NULL,
                method = paste("Wooldridge's test for unobserved",
                               effect, "effects"),
                alternative = "unobserved effect",
                p.value = pW,
-               data.name =   dname)
+               data.name = dname)
   class(RVAL) <- "htest"
   return(RVAL)
 }
@@ -444,15 +445,15 @@ pdwtest.panelmodel <- function(x, ...) {
   ## structure:
   ## 1: take demeaned data from 'plm' object
   ## 2: est. auxiliary model by OLS on demeaned data
-  ## 3: apply bgtest() to auxiliary model and return the result
+  ## 3: apply dwtest() to auxiliary model and return the result
 
   model <- describe(x, "model")
   effect <- describe(x, "effect")
   theta <- x$ercomp$theta
 
   ## retrieve demeaned data
-  demX <- model.matrix(x, model = model, effect = effect, theta=theta)
-  demy <- pmodel.response(model.frame(x), model = model, effect = effect, theta=theta)
+  demX <- model.matrix(x, model = model, effect = effect, theta = theta)
+  demy <- pmodel.response(model.frame(x), model = model, effect = effect, theta = theta)
  
 
   ## dw test on the demeaned model:
@@ -474,7 +475,7 @@ pdwtest.panelmodel <- function(x, ...) {
   
   ARtest <- dwtest(lm.mod, order.by = order.by,
                    alternative = alternative,
-                   iterations = iterations, exact = exact, tol = tol)
+                   iterations = iterations, exact = exact, tol = tol, ...)
 #  ARtest <- dwtest(lm(demy~demX-1))
 
   ARtest$method <- "Durbin-Watson test for serial correlation in panel models"
@@ -598,7 +599,7 @@ pbltest.formula <- function(x, data, alternative = c("twosided", "onesided"), in
          }
          )
   dname <- paste(deparse(substitute(x)))
-  method <- paste("Baltagi and Li", method1,"LM test")
+  method <- paste("Baltagi and Li", method1, "LM test")
   alternative <- "AR(1)/MA(1) errors in RE panel model"
 
   res <- list(statistic = LMr.m,
