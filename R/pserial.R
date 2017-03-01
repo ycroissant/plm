@@ -20,7 +20,7 @@ pbgtest.formula <- function(x, order = NULL, type = c("Chisq", "F"), data, model
 
 pbgtest.panelmodel <- function(x, order = NULL, type = c("Chisq", "F"), ...) {
   ## residual serial correlation test based on the residuals of the demeaned
-  ## model (see Wooldridge (2002), p. 288) and the regular bgtest() in {lmtest}
+  ## model (see Wooldridge (2002), p. 288) and the regular lmtest::bgtest()
 
   ## structure:
   ## 1: take demeaned data from 'plm' object
@@ -204,9 +204,11 @@ pwartest.formula <- function(x, data, ...) {
 }
 
 pwartest.panelmodel <- function(x, ...) {
+  
+  if (describe(x, "model") != "within") stop("pwartest only relevant for within models")
+
   FEres <- resid(x)
   data <- model.frame(x)
-  if (describe(x, "model") != "within") stop("pwartest only relevant for within models")
   
   ## this is a bug fix for incorrect naming of the "data" attr.
   ## for the pseries in pdata.frame()
@@ -422,7 +424,7 @@ pdwtest <- function (x, ...) {
 
 pdwtest.formula <- function(x, data, ...) {
   ## formula method for pdwtest;
-  ## defaults to a RE model
+  ## defaults to a RE model               #### RE model? rather pooling model?
 
   cl <- match.call(expand.dots = TRUE)
   if (is.null(cl$model)) cl$model <- "pooling"
@@ -438,14 +440,13 @@ pdwtest.formula <- function(x, data, ...) {
 pdwtest.panelmodel <- function(x, ...) {
   ## residual serial correlation test based on the residuals of the demeaned
   ## model and the regular dwtest() in {lmtest}
-  ## reference Baltagi (page 98) for FE application, Wooldridge page 288 for
+  ## reference Baltagi (2005),p. 98 for FE application, Wooldridge, p. 288 for
   ## the general idea.
-
 
   ## structure:
   ## 1: take demeaned data from 'plm' object
   ## 2: est. auxiliary model by OLS on demeaned data
-  ## 3: apply dwtest() to auxiliary model and return the result
+  ## 3: apply lmtest::dwtest() to auxiliary model and return the result
 
   model <- describe(x, "model")
   effect <- describe(x, "effect")
@@ -470,14 +471,14 @@ pdwtest.panelmodel <- function(x, ...) {
   if (is.null(dots$tol)) tol <- 1e-10 else tol <- dots$tol
 
 
-  auxformula <- demy~demX-1 #if(model == "within") demy~demX-1 else demy~demX
+  auxformula <- demy~demX-1 # was: if(model == "within") demy~demX-1 else demy~demX
   lm.mod <- lm(auxformula)
   
   ARtest <- dwtest(lm.mod, order.by = order.by,
                    alternative = alternative,
                    iterations = iterations, exact = exact, tol = tol)
-#  ARtest <- dwtest(lm(demy~demX-1))
 
+  # overwrite elements of the values produced by lmtest::dwtest
   ARtest$method <- "Durbin-Watson test for serial correlation in panel models"
   ARtest$alternative <- "serial correlation in idiosyncratic errors"
   ARtest$data.name <- paste(deparse(x$call$formula))
@@ -503,7 +504,7 @@ pbltest.formula <- function(x, data, alternative = c("twosided", "onesided"), in
 
 
   ## reduce X to model matrix value (no NAs)
-  X<-model.matrix(x,data=data)
+  X <- model.matrix(x,data=data)
   ## reduce data accordingly
   data <- data[which(row.names(data)%in%row.names(X)),]
 

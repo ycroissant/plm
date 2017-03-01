@@ -20,7 +20,8 @@ pdwtest(x, \dots)
  \item{x}{an object of class \code{"panelmodel"} or of class
    \code{"formula"},}
  \item{data}{a \code{data.frame},}
- \item{\dots}{further arguments to be passed on to \code{dwtest}.}
+ \item{\dots}{further arguments to be passed on to \code{dwtest}, e.g. 
+ \code{alternative}, see \code{\link[lmtest]{dwtest}} for further details.}
 }
 
 \details{

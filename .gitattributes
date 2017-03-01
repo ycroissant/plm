@@ -151,6 +151,7 @@ tests/test_pdata.frame_print_duplicated_rownames.R -text
 tests/test_pdata.frame_subsetting.R -text
 tests/test_pdata.frame_unused_levels.R -text
 tests/test_pdiff_fd.R -text
+tests/test_pdwtest.R -text
 tests/test_phtest_Hausman_regression.R -text
 tests/test_plm.data.R -text
 tests/test_plm_na.action.R -text
