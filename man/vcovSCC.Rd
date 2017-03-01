@@ -46,7 +46,7 @@ Weighting schemes are analogous to those in \code{\link[sandwich]{vcovHC}} in pa
 
 The main use of \code{vcovSCC} is to be an argument to other functions,
 e.g. for Wald--type testing: argument \code{vcov.} to \code{coeftest()}, argument \code{vcov} to
-\code{waldtest()} and other methods in the \code{lmtest} package; and argument
+\code{waldtest()} and other methods in the \pkg{lmtest} package; and argument
 \code{vcov.} to \code{linearHypothesis()} in the \pkg{car} package (see the examples). Notice that the \code{vcov} and \code{vcov.} arguments allow to supply a function (which is the safest) or a matrix (see Zeileis (2004), 4.1-2 and examples below).
 
 }

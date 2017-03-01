@@ -34,7 +34,7 @@ pbgtest(x, \dots)
 
 \details{
 This Lagrange multiplier test uses the auxiliary model on
-(quasi-)demeaned data taken from a model of class \code{plm} which may be a \code{pooling} (default for formula interface), \code{random} or \code{within} model. It performs a Breusch--Godfrey test (using \code{bgtest} from package \code{lmtest}) on the residuals of the (quasi-)demeaned model, which should be serially uncorrelated under the null of no serial correlation in idiosyncratic
+(quasi-)demeaned data taken from a model of class \code{plm} which may be a \code{pooling} (default for formula interface), \code{random} or \code{within} model. It performs a Breusch--Godfrey test (using \code{bgtest} from package \pkg{lmtest}) on the residuals of the (quasi-)demeaned model, which should be serially uncorrelated under the null of no serial correlation in idiosyncratic
 errors, as illustrated in Wooldridge (2002/2010). The function takes the demeaned data, estimates the model and calls \code{bgtest}.  
 
 Unlike most other tests for serial correlation in panels, this one allows to choose the order of correlation to test for.
@@ -55,12 +55,13 @@ The argument \code{order} defaults to the minimum number of observations over th
  Wooldridge, J.M. (2010) \emph{Econometric analysis of cross-section and Panel Data}, 2nd ed., MIT Press, pp. 328--334.
  
  Wooldridge, J.M. (2013) \emph{Introductory Econometrics: A Modern Approach}, 5th ed., South-Western (Cengage Learning), Sec. 12.2, pp. 421--422.
- 
 }
 
 \seealso{
-\code{\link{pdwtest}} for the analogous panel Durbin--Watson test, \code{bgtest} for the Breusch--Godfrey test for serial correlation in the linear model. \code{\link{pbltest}}, \code{\link{pbsytest}}, \code{\link{pwartest}} and \code{\link{pwfdtest}} for other serial correlation tests for panel models.
-For the original test in package \code{lmtest} see \code{\link[lmtest]{bgtest}}.
+For the original test in package \pkg{lmtest} see \code{\link[lmtest]{bgtest}}. 
+See \code{\link{pdwtest}} for the analogous panel Durbin--Watson test. 
+See \code{\link{pbltest}}, \code{\link{pbsytest}}, \code{\link{pwartest}} and 
+\code{\link{pwfdtest}} for other serial correlation tests for panel models.
 }
 
 \examples{
@@ -76,7 +77,7 @@ pbgtest(inv ~ value + capital, data = Grunfeld, model = "random")
 
 # F test statistic (instead of default type="Chisq")
 pbgtest(g, type="F")
-pbgtest(inv ~ value + capital, data = Grunfeld, model = "random", type="F")
+pbgtest(inv ~ value + capital, data = Grunfeld, model = "random", type = "F")
 
 # same output as lmtest::bgtest [see Note]
 pbgtest(g, order = 1)
