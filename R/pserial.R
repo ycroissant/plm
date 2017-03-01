@@ -475,7 +475,7 @@ pdwtest.panelmodel <- function(x, ...) {
   
   ARtest <- dwtest(lm.mod, order.by = order.by,
                    alternative = alternative,
-                   iterations = iterations, exact = exact, tol = tol, ...)
+                   iterations = iterations, exact = exact, tol = tol)
 #  ARtest <- dwtest(lm(demy~demX-1))
 
   ARtest$method <- "Durbin-Watson test for serial correlation in panel models"
