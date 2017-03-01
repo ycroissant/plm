@@ -1512,13 +1512,19 @@ on themselves, lagged one period: $$\hat{\epsilon}_{i,t}=\alpha + \delta
 -1/(T-1)$ makes us conclude against the original null of no serial
 correlation.
 
-The building blocks available in \pkg{plm}, together with the function
-\code{linearHypothesis()} in package \pkg{car}, make it easy to
+The building blocks available in \pkg{plm}
+% car::linearHypothesis() not used anymore for this (cf. rev. 404):
+% ", together with the function
+% \code{linearHypothesis()} in package \pkg{car}," 
+make it easy to
 construct a function carrying out this procedure: first the
 \textsc{fe} model is estimated and the residuals retrieved, then they
 are lagged and a \code{pooling} AR(1) model is estimated. The test
-statistic is obtained by applying \code{linearHypothesis()} to the
-latter model to test the above restriction on $\delta$, supplying a
+statistic is obtained by applying
+% car::linearHypothesis() not used anymore for this  (cf. rev. 404):
+% \code{linearHypothesis()} to the
+% latter model to test 
+the above restriction on $\delta$ and supplying a
 heteroskedasticity- and autocorrelation-consistent covariance matrix
 (\code{vcovHC} with the appropriate options, in particular
 \code{method="arellano"})\footnote{see Subsection~\ref{subsec:robust}.}.
@@ -1569,7 +1575,8 @@ default behaviour \code{h0="fd"} is to test for serial correlation in
 pwfdtest(log(emp) ~ log(wage) + log(capital), data=EmplUK)
 @
 
-while specifying \code{h0="fe"} the null hypothesis becomes no serial correlation in {\em original} errors, which is similar to the \code{pwartest}. 
+while specifying \code{h0="fe"} the null hypothesis becomes no serial 
+correlation in {\em original} errors, which is similar to the \code{pwartest}. 
 
 <<pwfdtest2>>=
 pwfdtest(log(emp) ~ log(wage) + log(capital), data=EmplUK, h0="fe")
@@ -1952,7 +1959,8 @@ waldtest(re, update(re,.~.-capital),
          vcov=function(x) vcovHC(x, method="white2", type="HC3"))
 @ 
 
-Moreover, \code{linearHypothesis} from package \pkg{car} may be used to test for linear restrictions:
+Moreover, \code{linearHypothesis} from package \pkg{car} may be used to test 
+for linear restrictions:
 
 <<>>=
 library("car")
