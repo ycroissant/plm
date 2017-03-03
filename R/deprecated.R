@@ -188,12 +188,12 @@ pht <-  function(formula, data, subset, na.action, model = c("ht", "am", "bmc"),
   data <- eval(mf, parent.frame())
   # estimate the within model without instrument and extract the fixed
   # effects
-  formula <- pFormula(formula)
+    formula <- pFormula(formula)
   if (length(formula)[2] == 1) stop("a list of exogenous variables should be provided")
   else formula <- expand.formula(formula)
   mf$model = "within"
-  mf$formula <- formula(formula, rhs = 1)
-  within <- eval(mf, parent.frame())
+    mf$formula <- formula(formula, rhs = 1)
+    within <- eval(mf, parent.frame())
   fixef <- fixef(within)
   id <- index(data, "id")
   time <- index(data, "time")

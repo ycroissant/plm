@@ -1,5 +1,7 @@
 trace <- function(x) sum(diag(x))
 
+is.constant <- function(x) (max(x) - min(x)) < sqrt(.Machine$double.eps)
+        
 
 ### ercomp(formula, data, random.method, effect)
 
@@ -38,21 +40,6 @@ ercomp.formula <- function(object, data,
 
     # method and models arguments aren't set, use swar
     if (is.null(method) & is.null(models)) method <- "swar"
-
-    if (! is.null(method) && method == "nerlove"){
-        if (effect != "individual" | ! balanced)
-            stop("Nerlove method only implemented for balanced one-way models")
-        N <- pdim(data)$nT$n
-        TS <- pdim(data)$nT$T
-        wm <- plm.fit(object, data, effect = "individual", model = "within")
-        s2nu <- deviance(wm) / (N * TS)
-        s2eta <- sum(fixef(wm, type = "dmean") ^ 2) / N
-        sigma2 <- c(idios = s2nu, id = s2eta)
-        theta <- (1 - (1 + TS * sigma2["id"] / sigma2["idios"]) ^ (-0.5))
-        result <- list(sigma2 = sigma2, theta = theta)
-        result <- structure(result, class = "ercomp", balanced = balanced, effect = effect)
-        return(result)
-    }
     
     # dfcor is set, coerce it to a length 2 vector if necessary
     if (! is.null(dfcor)){
@@ -62,6 +49,72 @@ ercomp.formula <- function(object, data,
             stop("dfcor should equal 3 for unbalanced panels")
     }
 
+    # we use later a general expression for the three kind of effects,
+    # select the relevant lines
+
+    therows <- switch(effect,
+                      individual = 1:2,
+                      time = c(1, 3),
+                      twoways = 1:3)
+
+    if (! is.null(method) && method == "nerlove"){
+        if (! balanced) stop("Nerlove method only implemented for balanced models")
+        est <- plm.fit(object, data, model = "within", effect = effect)
+        N <- pdim(data)$nT$n
+        TS <- pdim(data)$nT$T
+        O <- pdim(data)$nT$N
+        NTS <- N * (effect != "time") + TS * (effect != "individual") - 1 * (effect == "twoways")
+        s2nu <- deviance(est) / (O - NTS)
+        s2eta <- s2mu <- NULL
+        if (effect != "time")
+            s2eta <- sum(fixef(est, type = "dmean", effect = "individual") ^ 2) / (N - 1)
+        if (effect != "individual")
+            s2mu <- sum(fixef(est, type = "dmean", effect = "time") ^ 2) / (TS - 1)
+        sigma2 <- c(idios = s2nu, id = s2eta, time = s2mu)
+        theta <- list()
+        if (effect != "time") theta$id <- (1 - (1 + TS * sigma2["id"] / sigma2["idios"]) ^ (-0.5))
+        if (effect != "individual") theta$time <- (1 - (1 + N * sigma2["time"] / sigma2["idios"]) ^ (-0.5))
+        if (effect == "twoways")
+            theta$total <- theta$id + theta$time - 1 +
+                (1 + N * sigma2["time"] / sigma2["idios"] +
+                 TS * sigma2["id"] / sigma2["idios"]) ^ (-0.5)
+        if (effect != "twoways") theta <- theta[[1]]
+        result <- list(sigma2 = sigma2, theta = theta)
+        result <- structure(result, class = "ercomp", balanced = balanced, effect = effect)
+        return(result)
+    }
+
+    if (! is.null(method) && method == "ht"){
+        N <- pdim(data)$nT$n
+        TS <- pdim(data)$nT$T
+        O <- pdim(data)$nT$N
+        wm <- plm.fit(object, data, effect = "individual", model = "within")
+        s2nu <- deviance(wm) / (O - N)
+        s2eta <- sum(fixef(wm, type = "dmean") ^ 2) / N
+        X <- model.matrix(object, data, rhs = 1)
+        constants <- apply(X, 2, function(x) all(tapply(x, index(data)[[1]], is.constant)))
+        if (length(object)[2] > 1){
+            W1 <- model.matrix(object, data, rhs = 2)
+            ra <- twosls(fixef(wm, type = "dmean")[as.character(index(data)[[1]])], X[, constants], W1)
+        }
+        else{
+
+            FES <- fixef(wm, type = "dmean")[as.character(index(data)[[1]])]
+            XCST <- X[, constants]
+            ra <- lm(FES ~ XCST - 1)
+        }
+        s2nu <- deviance(wm) / (O - N)
+        s21 <- sum(fixef(wm, type = "dmean") ^ 2) / N
+        s21 <- deviance(ra) / N
+        s2eta <- (s21 - s2nu) / TS
+        sigma2 <- c(idios = s2nu, id = s2eta)
+        theta <- (1 - (1 + TS * sigma2["id"] / sigma2["idios"]) ^ (-0.5))
+        result <- list(sigma2 = sigma2, theta = theta)
+        result <- structure(result, class = "ercomp", balanced = balanced, effect = effect)
+        return(result)
+    }
+
+    
     # method argument is used, check its validity and set the relevant
     # models and dfcor
     if (! is.null(method)){
@@ -97,6 +150,8 @@ ercomp.formula <- function(object, data,
          # default value of dfcor 3,3
         if (is.null(dfcor)) dfcor <- c(3, 3)
     }
+
+    # The nested error component model
     if (effect == "nested"){
         tss <- attr(data, "index")[[2]]
         ids <- attr(data, "index")[[1]]
@@ -231,6 +286,7 @@ ercomp.formula <- function(object, data,
         return(structure(result, class = "ercomp", balanced = balanced, effect = effect))
     }
 
+    # the "classic" error component model    
     Z <- model.matrix(object, data)
     O <- nrow(Z)
     K <- ncol(Z) - 1                                                                                       # INTERCEPT
@@ -300,18 +356,23 @@ ercomp.formula <- function(object, data,
     # In case of balanced panels, simple denominators are
     # available if dfcor < 3
 
-    if (balanced & dfcor[1] != 3){
+#    if (balanced & dfcor[1] != 3){
+    if (dfcor[1] != 3){
+        # The number of time series in the balanced panel is replaced
+        # by the harmonic mean of the number of time series in case of
+        # unbalanced panels
+        barT <- ifelse(balanced, TS, length(Tn) / sum(Tn ^ (- 1)))
         M["w", "nu"] <- O
         if (dfcor[1] == 1) M["w", "nu"] <- M["w", "nu"] - NTS
         if (dfcor[1] == 2) M["w", "nu"] <- M["w", "nu"] - NTS - K
         if (effect != "time"){
             M["w", "eta"] <- 0
-            M["id", "nu"] <-ifelse(dfcor[2] == 2, N - K - 1, N)
-            M["id", "eta"] <- TS * M["id", "nu"]
+            M["id", "nu"] <- ifelse(dfcor[2] == 2, N - K - 1, N)
+            M["id", "eta"] <- barT * M["id", "nu"]
         }
         if (effect != "individual"){
             M["w", "mu"] <- 0
-            M["ts", "nu"] <-ifelse(dfcor[2] == 2, TS - K - 1, TS)
+            M["ts", "nu"] <- ifelse(dfcor[2] == 2, TS - K - 1, TS)
             M["ts", "mu"] <- N * M["ts", "nu"]
         }
         if (effect == "twoways")
@@ -435,10 +496,6 @@ ercomp.formula <- function(object, data,
             }
         }
     }
-    therows <- switch(effect,
-                      individual = 1:2,
-                      time = c(1, 3),
-                      twoways = 1:3)
     sigma2 <- as.numeric(solve(M[therows, therows], quad[therows]))
     names(sigma2) <- c("idios", "id", "time")[therows]
     sigma2[sigma2 < 0] <- 0

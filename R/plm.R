@@ -32,7 +32,7 @@ plm <-  function(formula, data, subset, weights, na.action,
                  restrict.matrix = NULL,
                  restrict.rhs = NULL,
                  index = NULL,
-                 ...){    
+                 ...){
     # if the first argument is a list (of formulas), then call plmlist and exit
     if (is.list(formula)){
         plmlist <- match.call(expand.dots = FALSE)
@@ -79,23 +79,17 @@ plm <-  function(formula, data, subset, weights, na.action,
                                     "use two-part formulas instead")
         warning(deprec.instruments)
     }
-    ancien <- TRUE
     # check whether data and formula are pdata.frame and Formula and if not
     # coerce them and if not create it
 #YC    orig_rownames <- row.names(data)
     if (! inherits(data, "pdata.frame")) data <- pdata.frame(data, index)
-    if (ancien){
-        if (! inherits(formula, "pFormula")) formula <- pFormula(formula)
-    }
-    else{
-        if (inherits(formula, "pFormula")) class(formula) <- class(formula)[ - match("pFormula", class(formula))]
-        if (! inherits(formula, "Formula")) formula <- Formula(formula)
-    }
+    if (! inherits(formula, "pFormula")) formula <- pFormula(formula)
     # in case of 2part formula, check whether the second part should
     # be updated, e.g. y ~ x1 + x2 + x3 | . - x2 + z becomes y ~ x1 +
     # x2 + x3 | x1 + x3 + z length(formula)[2] because the length is
     # now a vector of length 2
     if (length(formula)[2] == 2) formula <- expand.formula(formula)
+
     # eval the model.frame
     cl <- match.call()
     mf <- match.call(expand.dots = FALSE)
@@ -105,24 +99,9 @@ plm <-  function(formula, data, subset, weights, na.action,
     mf[[1]] <- as.name("model.frame")
     # use the pFormula and pdata.frame which were created if necessary (and not
     # the original formula / data)
-    if (! ancien){
-        mf$formula <- formula # actually a formula now
-        mf$data <- as.data.frame(data) # data is a data.frame
-        index <- attr(data, "index")
-        data <- eval(mf, parent.frame())
-        index <- index[as.numeric(rownames(data)), ]
-        ## if (! is.null(attr(data, "na.action")))
-        ##     index <- index[- attr(data, "na.action"), ]
-        index <- droplevels(index)
-        class(index) <- c("pindex", "data.frame")
-        data <- structure(data, index = index,
-                          class = c("pdata.frame", "data.frame"))
-    }
-    else{
-        mf$formula <- formula
-        mf$data <- data # data is a pdata.frame
-        data <- eval(mf, parent.frame())
-    }
+    mf$formula <- formula
+    mf$data <- data # data is a pdata.frame
+    data <- eval(mf, parent.frame())
     
     # preserve original row.names for data [also fancy rownames]; so functions
     # like pmodel.response(), model.frame(), model.matrix(), residuals() return
@@ -135,7 +114,6 @@ plm <-  function(formula, data, subset, weights, na.action,
         attr(data, "formula") <- formula
         return(data)
     }
-    if (! ancien) attr(data, "formula") <- formula
     
     # note that the model.frame has as attributes the pFormula and the index
     # data.frame
@@ -153,7 +131,7 @@ plm <-  function(formula, data, subset, weights, na.action,
 
 plm.fit <- function(formula, data, model, effect, random.method, 
                     random.models, random.dfcor, inst.method){
-    ancien <- TRUE
+
     # if a random effect model is estimated, compute the error components
     if (model == "random"){
         is.balanced <- is.pbalanced(data)
@@ -172,18 +150,10 @@ plm.fit <- function(formula, data, model, effect, random.method,
         # extract the model.matrix and the model.response actually, this can be
         # done by providing model.matrix and pmodel.response's methods
         # to pdata.frames
-        if (ancien){
-            X <- model.matrix(formula, data, rhs = 1, model = model, 
-                              effect = effect, theta = theta)
-            y <- pmodel.response(formula, data, model = model, 
-                                 effect = effect, theta = theta)
-        }
-        else{        
-            X <- model.matrix(data, rhs = 1, model = model, 
-                              effect = effect, theta = theta)
-            y <- pmodel.response(data, model = model, 
-                                 effect = effect, theta = theta)
-        }
+        X <- model.matrix(formula, data, rhs = 1, model = model, 
+                          effect = effect, theta = theta)
+        y <- pmodel.response(formula, data, model = model, 
+                             effect = effect, theta = theta)
         if (ncol(X) == 0) stop("empty model")
         # call w the weights (use 1 if no weights are specified)
         w <- as.vector(model.weights(data))
@@ -195,55 +165,38 @@ plm.fit <- function(formula, data, model, effect, random.method,
         # have a multi-parts formula)
         if (length(formula)[2] > 1){
             if (length(formula)[2] == 2){
-                if (ancien){
-                    W <- model.matrix(formula, data, rhs = 2, 
-                                      model = model, effect = effect, 
-                                      theta = theta)
-                }
-                else{
-                    W <- model.matrix(data, rhs = 2, 
-                                      model = model, effect = effect, 
-                                      theta = theta)
-                }
+                W <- model.matrix(formula, data, rhs = 2, 
+                                  model = model, effect = effect, 
+                                  theta = theta)
             }
             else{
-                if (ancien){
-                    W <- model.matrix(formula, data, rhs = c(2, 3), model = model, 
+                W <- model.matrix(formula, data, rhs = c(2, 3), model = model, 
                                       effect = effect, theta = theta)
+            }
+            if (model == "within"){
+                if (! is.null(W)){
+                    cst.W <- match(attr(W, "constant"), colnames(W))                    
+                    if (length(cst.W) > 0) W <- W[, - cst.W]
                 }
-                else{
-                    W <- model.matrix(data, rhs = c(2, 3), model = model, 
-                                      effect = effect, theta = theta)
+                if (! is.null(X)){
+                    cst.X <- match(attr(X, "constant"), colnames(X))
+                    if (length(cst.X) > 0) X <- X[, - cst.X]
                 }
             }
             if (model == "random" && inst.method != "bvk"){
                 # the bvk estimator seems to have desapeared
                 X <- X / sqrt(sigma2["idios"])
                 y <- y / sqrt(sigma2["idios"])
-                if (ancien){
-                    W1 <- model.matrix(formula, data, rhs = 2, model = "within", 
-                                       effect = effect, theta = theta)
-                    B1 <- model.matrix(formula, data, rhs = 2, model = "Between", 
-                                       effect = effect, theta = theta)
-                }
-                else{
-                    W1 <- model.matrix(data, rhs = 2, model = "within", 
-                                       effect = effect, theta = theta)
-                    B1 <- model.matrix(data, rhs = 2, model = "Between", 
-                                       effect = effect, theta = theta)
-                }                    
+                W1 <- model.matrix(formula, data, rhs = 2, model = "within", 
+                                   effect = effect, theta = theta)
+                B1 <- model.matrix(formula, data, rhs = 2, model = "Between", 
+                                   effect = effect, theta = theta)
                 if (inst.method %in% c("am", "bmc")) 
-                  StarW1 <- starX(formula, data, rhs = 2, model = "within", 
-                                  effect = effect)
+                    StarW1 <- starX(formula, data, rhs = 2, model = "within", 
+                                    effect = effect)
                 if (length(formula)[2] == 3){
-                    if (ancien){
-                        W2 <- model.matrix(formula, data, rhs = 3, model = "within", 
+                    W2 <- model.matrix(formula, data, rhs = 3, model = "within", 
                                            effect = effect, theta = theta)
-                    }
-                    else{
-                        W2 <- model.matrix(data, rhs = 3, model = "within", 
-                                           effect = effect, theta = theta)
-                    }
                     if (inst.method == "bmc")
                         StarW2 <- starX(formula, data, rhs = 3, model = "within", 
                                         effect = effect)
@@ -351,7 +304,7 @@ mylm <- function(y, X, W = NULL){
 plm.list <- function(formula, data, subset, na.action,
                      effect=c('individual','time','twoways'),
                      model = c('within','random','ht','between','pooling','fd'),
-                     random.method = c('swar','walhus','amemiya','nerlove', 'kinla'),
+                     random.method = c('swar','walhus','amemiya','nerlove', 'kinla', 'ht'),
                      inst.method = c('bvk','baltagi'),
                      restrict.matrix = NULL,
                      restrict.rhs = NULL,
@@ -1071,5 +1024,6 @@ plot.plm <- function(x, dx = 0.2, N = NULL, seed = 1,
         legend(poslegend, lty = ltylegend, legend = leglegend)
     }
 }
+
 
 
