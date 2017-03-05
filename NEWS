@@ -19,8 +19,8 @@ Changes since version 1.6-6
     overall/outer plm model, fitted_exp.plm gives the fitted values (by subtracting
     the overall residuals from the untransformed response variable).
   * pwartest.formula (only formula interface): fixed: ellipsis (dots) were not passed on.
-  * pwartest, pwfdtest: statistics are labelled as F statistics,
-                        calculations now done without car::linearHypothesis().
+  * pwartest, pwfdtest: * statistics are labelled as F statistics.
+                        * calculations now done without car::linearHypothesis().
 
 
 Changes since version 1.6-5
@@ -125,7 +125,7 @@ Changes since version 1.5-31
 Changes since version 1.5-30
 
   * lagt.pseries (experimental, non exported function): now handles NA values in time index.
-  * warning about NA in time index turned into a note being printed (in func pdata.frame).
+  * pdata.frame: warning about NA in time index turned into a note being printed.
 
 
 Changes since version 1.5-29
@@ -432,7 +432,7 @@ Changes since version 1.3-1
 
 	* the deviance method for panelmodel objects is now exported (12/02).
 
-	* the hausman-taylor now support the Amemiya MaCurdy and the Breush-Mizon-Schmidt version.
+	* the Hausman-Taylor now support the Amemiya MaCurdy and the Breush-Mizon-Schmidt version.
 
 	* a small bug is fixed on the var2lev function to deal the case when there are no factors.
 	
@@ -446,7 +446,7 @@ Changes since version 1.3-0
 
 Changes since version 1.2-10
 	
-	* for unbalanced hausman-taylor model, the printing of the error
+	* for unbalanced Hausman-Taylor model, the printing of the error
 	components was wrong, it is now fixed.
 	
 	* the printing of the removed variables (cst or NA) is improved.
@@ -494,7 +494,7 @@ Changes since version 1.2-9
   * the new cipstest function performs a second-generation CIPS test
 	for unit roots on pseries objects.
 
-  * the new (hidden) function pmerge is used internally by cipstest
+  * the new (non-exported) function pmerge is used internally by cipstest
 	to merge lags and differences of a pseries into the original
 	pdata.frame. Will possibly be added to the user space in the
 	future.
@@ -662,7 +662,7 @@ Change since version 1-1.4
 	* the first argument of pgmm may now be a formula. A lag.form must
 	be provided in this case.
 	
-	* hausman-taylor estimation is now performed by the pht
+	* Hausman-Taylor estimation is now performed by the pht
 	function. For backward compatibility reasons, it is still
 	possible to estimate this model with plm.
 
@@ -677,7 +677,7 @@ Changes since version 1-1.3
 	* a misleading notation was corrected for plm.ht model.
 
 	* the definition of sigma2$id for unbalanced ht model is
-	corrected, an harmonic mean of Ti being used.
+	corrected, a harmonic mean of Ti being used.
 
 	* the definition of tss.default is simplified.
 
@@ -699,7 +699,7 @@ Changes since version 1-1.1
 	returns the fitted values of the untransformed response.
 	
 	* in pdiff, a drop=FALSE is added. This omission was responsible
-	of a bug while estimating a model like plm(inv~value-1, data =
+	for a bug while estimating a model like plm(inv~value-1, data =
 	Grunfeld, model = "fd").
 
 	* the lev2var is changed so that it doesn't result in an error
@@ -792,7 +792,7 @@ Changes since version 0-3.2
 
 	* functions pcdtest, pcdres have been added.
 
-	* for hausman taylor model, the summary now prints the variables
+	* for Hausman-Taylor model, the summary now prints the variables
 	and not the effects.
 
 	* the estimation of a model with only one explanatory variable

@@ -1,7 +1,7 @@
 ## some deprecated functions
 
 # plm.data() is now deprecated (since February 2017).
-# It is keep due to backward compatibility, especially for package 'systemfit'.
+# It is kept due to backward compatibility, especially for package 'systemfit'.
 # While plm.data() was a 'full function' once, it now is now using pdata.frame()
 # and re-works the properties of the "plm.dim" objects original created by the
 # 'full' plm.data() function.
@@ -46,7 +46,7 @@ plm.data <- function(x, indexes = NULL) {
 ### Amendments by Ott Toomet
 
 plm.data_depr_orig <- function(x, indexes = NULL){
-  ## this is the full plm.data() function kept as reference for testing purposed (non-exported)
+  ## this is the original old full plm.data() function kept as reference for testing purposes (non-exported)
   if (is.null(indexes)){
     id <- NULL
     time <- NULL
