@@ -12,8 +12,10 @@ and Joint Test by Baltagi and Li}
 
 \usage{
 pbsytest(x, \dots)
-\method{pbsytest}{panelmodel}(x, test = c("ar", "re", "j"), re.normal = TRUE, \dots)
-\method{pbsytest}{formula}(x, data, \dots, test = c("ar", "re", "j"), re.normal = TRUE)
+\method{pbsytest}{panelmodel}(x, test = c("ar", "re", "j"), 
+            re.normal = if (test == "re") TRUE else NULL, \dots)
+\method{pbsytest}{formula}(x, data, \dots, test = c("ar", "re", "j"),
+            re.normal = if (test == "re") TRUE else NULL)
 }
 
 \arguments{
@@ -23,8 +25,10 @@ pbsytest(x, \dots)
  \item{test}{a character string indicating which test to perform:
   first--order serial correlation (\code{"ar"}), random effects
   (\code{"re"}) or joint test for either of them (\code{"j"}),}
- \item{re.normal}{logical, only relevant for \code{test = "re"}, ignored for other values of \code{test},
- indicates whether the one-sided \code{"re"} test (default) should be computed (see also Details),}
+ \item{re.normal}{logical, only relevant for \code{test = "re"}: 
+ \code{TRUE} (default) computes the one-sided \code{"re"} test, 
+ \code{FALSE} the two-sided test (see also Details);
+ not relevant for other values of \code{test} and, thus, should be \code{NULL},}
  \item{\dots}{further arguments.}
 }
 

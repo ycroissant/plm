@@ -31,7 +31,7 @@ pbsytest(pool_grunfeld, test = "j")                     # chisq = 808.47   => LM
 # formula interface
 pbsytest(form_gunfeld, data = Grunfeld, test = "ar")
 pbsytest(form_gunfeld, data = Grunfeld, test = "re")
-pbsytest(form_gunfeld, data = Grunfeld, test = "re", re.normal = FALSE) 
+pbsytest(form_gunfeld, data = Grunfeld, test = "re", re.normal = FALSE)
 pbsytest(form_gunfeld, data = Grunfeld, test = "j")
 
 plmtest(pool_grunfeld, type = "bp") # LM_mu in Baltagi's book

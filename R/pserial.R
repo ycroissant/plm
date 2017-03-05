@@ -287,7 +287,7 @@ pbsytest <- function (x, ...) {
   UseMethod("pbsytest")
 }
 
-pbsytest.formula <- function(x, data, ..., test = c("ar", "re", "j"), re.normal = TRUE) {
+pbsytest.formula <- function(x, data, ..., test = c("ar", "re", "j"), re.normal = if (test == "re") TRUE else NULL) {
 
   ######### from here generic testing interface from
   ######### plm to my code
@@ -306,10 +306,14 @@ pbsytest.formula <- function(x, data, ..., test = c("ar", "re", "j"), re.normal 
   pbsytest(plm.model, test = test, re.normal = re.normal, ...)
 }
 
-pbsytest.panelmodel <- function(x, test = c("ar", "re", "j"), re.normal = TRUE, ...) {
+pbsytest.panelmodel <- function(x, test = c("ar", "re", "j"), re.normal = if (test == "re") TRUE else NULL, ...) {
   test <- match.arg(test)
   if (describe(x, "model") != "pooling") stop("pbsytest only relevant for pooling models")
-  
+
+  # interface check for argument re.normal
+  if (test != "re" && !is.null(re.normal)) {
+    stop("argument 're.normal' only relevant for test = \"re\", set re.normal = NULL for other tests")}
+
   poolres <- resid(x)
   data <- model.frame(x)
   ## extract indices
@@ -317,7 +321,8 @@ pbsytest.panelmodel <- function(x, test = c("ar", "re", "j"), re.normal = TRUE, 
   tindex <- index[[2]]
   iindex <- index[[1]]
   
-  ## till here. 
+  
+  ## till here.
   ## ordering here if needed.
   
   ## this needs ordering of obs. on time, regardless 
