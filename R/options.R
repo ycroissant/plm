@@ -57,5 +57,5 @@ oneof <- function(x){
   x
 }
 
-plm.arg <- c("formula", "data", "subset", "na.action", "effect", "model",
+plm.arg <- c("formula", "data", "subset", "weights", "na.action", "effect", "model",
              "instruments", "random.method", "inst.method", "index")
