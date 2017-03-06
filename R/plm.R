@@ -22,17 +22,17 @@ starX <- function(formula, data, model, rhs = 1, effect){
     result
 }   
 
-plm <-  function(formula, data, subset, weights, na.action,
-                 effect = c('individual','time','twoways', 'nested'),
-                 model = c('within','random','ht','between','pooling','fd'),
-                 random.method = NULL,
-                 random.models = NULL,
-                 random.dfcor = NULL,
-                 inst.method = c('bvk', 'baltagi', 'am', 'bmc'),
-                 restrict.matrix = NULL,
-                 restrict.rhs = NULL,
-                 index = NULL,
-                 ...){
+plm <- function(formula, data, subset, weights, na.action,
+                effect = c('individual','time','twoways', 'nested'),
+                model = c('within','random','ht','between','pooling','fd'),
+                random.method = NULL,
+                random.models = NULL,
+                random.dfcor = NULL,
+                inst.method = c('bvk', 'baltagi', 'am', 'bmc'),
+                restrict.matrix = NULL,
+                restrict.rhs = NULL,
+                index = NULL,
+                ...){
     # if the first argument is a list (of formulas), then call plmlist and exit
     if (is.list(formula)){
         plmlist <- match.call(expand.dots = FALSE)
@@ -72,6 +72,7 @@ plm <-  function(formula, data, subset, weights, na.action,
         ht <- eval(ht, parent.frame())
         return(ht)
     }
+    
     # the use of the instrument argument is deprecated, use Formulas instead
     if (!is.null(dots$instruments)){
         as.Formula(formula, dots$instruments)
@@ -79,11 +80,13 @@ plm <-  function(formula, data, subset, weights, na.action,
                                     "use two-part formulas instead")
         warning(deprec.instruments)
     }
-    # check whether data and formula are pdata.frame and Formula and if not
+    
+    # check whether data and formula are pdata.frame and pFormula and if not
     # coerce them and if not create it
 #YC    orig_rownames <- row.names(data)
     if (! inherits(data, "pdata.frame")) data <- pdata.frame(data, index)
     if (! inherits(formula, "pFormula")) formula <- pFormula(formula)
+    
     # in case of 2part formula, check whether the second part should
     # be updated, e.g. y ~ x1 + x2 + x3 | . - x2 + z becomes y ~ x1 +
     # x2 + x3 | x1 + x3 + z length(formula)[2] because the length is
@@ -109,6 +112,7 @@ plm <-  function(formula, data, subset, weights, na.action,
     # character vector containing"row_number" with incomplete observations
     # dropped
 #YC    row.names(data) <- orig_rownames[as.numeric(row.names(data))]
+
     # return the model.frame or estimate the model
     if (is.na(model)){
         attr(data, "formula") <- formula
@@ -144,6 +148,7 @@ plm.fit <- function(formula, data, model, effect, random.method,
             stop(paste("Instrumental variable random effect estimation", 
                        "not implemented for two-ways panels"))
     }
+
     # For all models except the unbalanced twoways random model, the
     # estimator is obtained as a linear regression on transformed data
     if (! (model == "random" & effect == "twoways" && ! is.balanced)){
@@ -184,7 +189,7 @@ plm.fit <- function(formula, data, model, effect, random.method,
                 }
             }
             if (model == "random" && inst.method != "bvk"){
-                # the bvk estimator seems to have desapeared
+                # the bvk estimator seems to have disappeared
                 X <- X / sqrt(sigma2["idios"])
                 y <- y / sqrt(sigma2["idios"])
                 W1 <- model.matrix(formula, data, rhs = 2, model = "within", 
@@ -203,7 +208,7 @@ plm.fit <- function(formula, data, model, effect, random.method,
                 }
                 else W2 <- StarW2 <- NULL
                 if (inst.method == "baltagi") W <- sqrt(w) * cbind(W1, W2, B1)
-                if (inst.method == "am") W <- sqrt(w) * cbind(W1, W2, B1, StarW1)
+                if (inst.method == "am")  W <- sqrt(w) * cbind(W1, W2, B1, StarW1)
                 if (inst.method == "bmc") W <- sqrt(w) * cbind(W1, W2, B1, StarW1, StarW2)
                 # quick and dirty trick to remove columns of 0
                 zerovars <- apply(W, 2, function(x) max(abs(x), na.rm = TRUE)) < 1E-5
@@ -212,6 +217,7 @@ plm.fit <- function(formula, data, model, effect, random.method,
             if (ncol(W) < ncol(X)) stop("insufficient number of instruments")
         }
         else W <- NULL
+        
         # compute the estimation
         result <- mylm(y, X, W)
         df <- df.residual(result)
@@ -229,6 +235,7 @@ plm.fit <- function(formula, data, model, effect, random.method,
             df <- df.residual(result) - card.fixef
             vcov <- result$vcov * df.residual(result) / df
         }
+        
         result <- list(coefficients = coef(result),
                        vcov         = vcov,
                        residuals    = resid(result),
@@ -237,7 +244,7 @@ plm.fit <- function(formula, data, model, effect, random.method,
                        model        = data)
         if (model == "random") result$ercomp <- estec
     }
-    else{
+    else{ # random twoways unbalanced:
         pdim <- pdim(data)
         TS <- pdim$nT$T
         theta <- estec$theta$id
@@ -253,15 +260,17 @@ plm.fit <- function(formula, data, model, effect, random.method,
         XPy <- crossprod(X, y) - phi2mu * crossprod(X, Dmu) %*% P %*% crossprod(Dmu, y)
         gamma <- solve(XPX, XPy)[, , drop = TRUE]
         e <- pmodel.response(formula, data, model = "pooling") -
-            as.numeric(model.matrix(formula, data, rhs = 1, model = "pooling") %*% gamma)
+             as.numeric(model.matrix(formula, data, rhs = 1, model = "pooling") %*% gamma)
+        
         result <- list(coefficients = gamma,
-                       vcov = solve(XPX),
-                       formula = formula,
-                       model = data,
-                       ercomp = estec,
-                       df.residual = nrow(X) - ncol(X),
-                       residuals = e)
-        aliased <- NA
+                       vcov         = solve(XPX),
+                       formula      = formula,
+                       model        = data,
+                       ercomp       = estec,
+                       df.residual  = nrow(X) - ncol(X),
+                       residuals    = e)
+        
+        aliased <- NA  # TODO: find a way to determine aliased coefs for tw RE unbalanced: compare 'gamma' to names of model matrix? 
     }
     result$assign <- attr(X, "assign")
     result$contrasts <- attr(X, "contrasts")
@@ -269,7 +278,6 @@ plm.fit <- function(formula, data, model, effect, random.method,
     result$aliased <- aliased
     class(result) <- c("plm", "panelmodel")
     result
-
 }
 
 mylm <- function(y, X, W = NULL){
@@ -302,7 +310,7 @@ mylm <- function(y, X, W = NULL){
 
 
 plm.list <- function(formula, data, subset, na.action,
-                     effect=c('individual','time','twoways'),
+                     effect = c('individual','time','twoways'),
                      model = c('within','random','ht','between','pooling','fd'),
                      random.method = c('swar','walhus','amemiya','nerlove', 'kinla', 'ht'),
                      inst.method = c('bvk','baltagi'),
