@@ -52,7 +52,7 @@ of freedom parameter for the F test (usually not used),}
 \code{\link{summary.plm}} to produce the F statistic. % TODO: or Chi-square statistic, once "activated" in summary.plm and if Chi-sq is used for RE models.
 
 \code{pwaldtest} performs the test if the slope coefficients of a panel regression are jointly zero.
-It does not perform general purpose Wald-style tests (for those, see \code{\link[lmtest]{waldtest}} (from package \pkg{lmtest}) or \code{linearHypothesis} (from \pkg{car})).
+It does not perform general purpose Wald-style tests (for those, see \code{\link[lmtest]{waldtest}} (from package \CRANpkg{lmtest}) or \code{linearHypothesis} (from \CRANpkg{car})).
 
 If a user specified variance-covariance matrix/function is given in 
 argument \code{vcov}, the robust version of the tests are carried out. 
@@ -71,7 +71,7 @@ character (for now this could be either \code{"group"} or \code{"time"}).
 The vcovXX functions of the package \pkg{plm} provide such an attribute for their returned 
 variance--covariance matrices. No adjustment is done for unknown descriptions given
 in the attribute "cluster" or when the attribute "cluster" is not present.
-Robust vcov objects/functions from package \pkg{clubSandwich} work as inputs to 
+Robust vcov objects/functions from package \CRANpkg{clubSandwich} work as inputs to 
 \code{pwaldtest}'s F test because a they are translated internally to match the 
 needs described above.
 }

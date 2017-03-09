@@ -24,7 +24,7 @@ A \code{data.frame}.
 \details{
 
   This function is \bold{deprecated} now (since February 2017), use \code{pdata.frame} instead. 
-  It will be kept for a while due to backward compatibility, especially for package \pkg{systemfit}.
+  It will be kept for a while due to backward compatibility, especially for package \CRANpkg{systemfit}.
 
  \code{indexes} can be:
 

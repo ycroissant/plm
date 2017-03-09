@@ -28,7 +28,7 @@ pdwtest(x, \dots)
 This Durbin--Watson test uses the auxiliary model on (quasi-)demeaned data taken 
 from a model of class \code{plm} which may be a \code{pooling} (the default), 
 \code{random} or \code{within} model. It performs a Durbin--Watson test 
-(using \code{dwtest} from package \pkg{lmtest}) on the residuals of the 
+(using \code{dwtest} from package \CRANpkg{lmtest}) on the residuals of the 
 (quasi-)demeaned model, which should be serially uncorrelated under the null of 
 no serial correlation in idiosyncratic errors. The function takes the demeaned 
 data, estimates the model and calls \code{dwtest}.
@@ -47,7 +47,7 @@ An object of class \code{"htest"}.
 }
 
 \seealso{
-\code{\link[lmtest]{dwtest}} for the Durbin--Watson test in \pkg{lmtest},
+\code{\link[lmtest]{dwtest}} for the Durbin--Watson test in \CRANpkg{lmtest},
 \code{\link{pbgtest}} for the analogous Breusch--Godfrey 
 test for panel models, \code{\link[lmtest]{bgtest}} for the Breusch--Godfrey test for 
 serial correlation in the linear model. \code{\link{pbltest}}, 

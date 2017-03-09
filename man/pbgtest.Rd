@@ -34,7 +34,7 @@ pbgtest(x, \dots)
 
 \details{
 This Lagrange multiplier test uses the auxiliary model on
-(quasi-)demeaned data taken from a model of class \code{plm} which may be a \code{pooling} (default for formula interface), \code{random} or \code{within} model. It performs a Breusch--Godfrey test (using \code{bgtest} from package \pkg{lmtest}) on the residuals of the (quasi-)demeaned model, which should be serially uncorrelated under the null of no serial correlation in idiosyncratic
+(quasi-)demeaned data taken from a model of class \code{plm} which may be a \code{pooling} (default for formula interface), \code{random} or \code{within} model. It performs a Breusch--Godfrey test (using \code{bgtest} from package \CRANpkg{lmtest}) on the residuals of the (quasi-)demeaned model, which should be serially uncorrelated under the null of no serial correlation in idiosyncratic
 errors, as illustrated in Wooldridge (2002/2010). The function takes the demeaned data, estimates the model and calls \code{bgtest}.  
 
 Unlike most other tests for serial correlation in panels, this one allows to choose the order of correlation to test for.
@@ -58,7 +58,7 @@ The argument \code{order} defaults to the minimum number of observations over th
 }
 
 \seealso{
-For the original test in package \pkg{lmtest} see \code{\link[lmtest]{bgtest}}. 
+For the original test in package \CRANpkg{lmtest} see \code{\link[lmtest]{bgtest}}. 
 See \code{\link{pdwtest}} for the analogous panel Durbin--Watson test. 
 See \code{\link{pbltest}}, \code{\link{pbsytest}}, \code{\link{pwartest}} and 
 \code{\link{pwfdtest}} for other serial correlation tests for panel models.

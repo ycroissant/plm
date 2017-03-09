@@ -65,7 +65,7 @@ The plm object contains an element \code{aliased} which indicates any such alias
 Both functions, \code{detect_lin_dep} and \code{alias}, help to detect linear dependence and accomplish almost the same:
 \code{detect_lin_dep} is a stand alone implementation while \code{alias}
 is a wrapper around \code{\link[stats]{alias.lm}}, extending the \code{alias} generic to classes \code{"plm"} and \code{"pFormula"}.
-\code{alias} hinges on the availability of the package \pkg{MASS} on the system. Not all arguments of \code{alias.lm} are
+\code{alias} hinges on the availability of the package \CRANpkg{MASS} on the system. Not all arguments of \code{alias.lm} are
 supported.
 Output of \code{alias} is more informative
 as it gives the linear combination of dependent columns (after data transformations, i. e. after (quasi)-demeaning)

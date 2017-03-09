@@ -46,17 +46,17 @@ covariances; this is appropriate if both serial and cross--sectional correlation
 are assumed out, and yields a timewise- (groupwise-) heteroskedasticity--consistent
 estimator.
 
-Weighting schemes are analogous to those in \code{\link[sandwich]{vcovHC}} in package \pkg{sandwich} and are justified theoretically (although in the context of the standard linear model) by MacKinnon and White (1985) and Cribari-Neto (2004) (see Zeileis (2004)).
+Weighting schemes are analogous to those in \code{\link[sandwich]{vcovHC}} in package \CRANpkg{sandwich} and are justified theoretically (although in the context of the standard linear model) by MacKinnon and White (1985) and Cribari-Neto (2004) (see Zeileis (2004)).
 
 The main use of \code{vcovBK} is to be an argument to other functions,
 e.g. for Wald--type testing: argument \code{vcov.} to \code{coeftest()}, argument \code{vcov} to
-\code{waldtest()} and other methods in the \pkg{lmtest} package; and argument
-\code{vcov.} to \code{linearHypothesis()} in the \pkg{car} package (see the examples). Notice that the \code{vcov} and \code{vcov.} arguments allow to supply a function (which is the safest) or a matrix (see Zeileis (2004), 4.1-2 and examples below).
+\code{waldtest()} and other methods in the \CRANpkg{lmtest} package; and argument
+\code{vcov.} to \code{linearHypothesis()} in the \CRANpkg{car} package (see the examples). Notice that the \code{vcov} and \code{vcov.} arguments allow to supply a function (which is the safest) or a matrix (see Zeileis (2004), 4.1-2 and examples below).
 
 }
 
 \seealso{
-  \code{\link[sandwich]{vcovHC}} from the \pkg{sandwich} package for weighting schemes (\code{type} argument).
+  \code{\link[sandwich]{vcovHC}} from the \CRANpkg{sandwich} package for weighting schemes (\code{type} argument).
 }
 
 \author{Giovanni Millo}
