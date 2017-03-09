@@ -18,22 +18,60 @@ plm.data <- function(x, indexes = NULL) {
   #    * does not have fancy rownames
   #    * always coerces strings to factors
   #    * does not have index attribute
+  #    * leaves in constant columns (albeit the 'full' implementation printed a msg about dropping those ...)
   #
   #  -> call pdata.frame accordingly and adjust afterwards
+  
+  # identify and save constant columns to re-attach them later
+    # check and remove constant series
+    # old: cst.check <- sapply(x, function(x) var(as.numeric(x), na.rm = TRUE)==0) # old
+    # -> var() and sd() on factors is deprecated as of R 3.2.3 -> use duplicated()
+  cst.check <- sapply(x, function(x) {
+    if (is.factor(x) || is.character(x)) {
+      all(duplicated(x[!is.na(x)])[-1L])
+    } else {
+      var(as.numeric(x), na.rm = TRUE)==0
+    }
+  })
+  
+  orig_col_order <- colnames(x)
+  cst.check <- cst.check | is.na(cst.check)
+  cst.serie <- names(x)[cst.check]
+  cst.clmns <- x[ , cst.check, drop = FALSE]
   
   x <- pdata.frame(x, index = indexes,
                       drop.index = FALSE,
                       row.names = FALSE,
                       stringsAsFactors = TRUE)
 
-  # class "plm.dim" always has indexes in first two columns (id, time)
-  # while "pdata.frame" leaves the index variables at it's place (if not dropped at all with drop.index = T)
+  # determine position and names of index vars in pdata.frame
   pos_indexes <- pos.index(x)
-  pos_other_columns <- setdiff(seq_len(ncol(x)), pos_indexes)
-  x <- x[ , c(pos_indexes, pos_other_columns)]
+  names_indexes <- names(pos_indexes) # cannot take from arg 'indexes' as it could be only the index for id
   
   # the class "plm.dim" does not have the index attribute -> remove
   attr(x, "index") <- NULL
+  # remove class 'pdata.frame' to prevent any dispatching of special methods on object x
+  class(x) <- setdiff(class(x), "pdata.frame")
+  
+  if (any(cst.check)) {
+    # re-attach constant columns
+    # for constant columns, ordering of rows is not important -> just cbind()
+    # (other columns were ordered by id, time var by pdata.frame())
+    
+    # coerce character vectors to factors in constant columns
+    cst.clmns.char <- names(cst.clmns)[sapply(cst.clmns,is.character)]
+    for (i in cst.clmns.char) {
+      cst.clmns[[i]] <- factor(cst.clmns[[i]])
+    }
+    x <- cbind(x, cst.clmns)
+  }
+  
+  # class "plm.dim" always has indexes in first two columns (id, time)
+  # while "pdata.frame" leaves the index variables at it's place (if not dropped at all with drop.index = T)
+
+  # pos_other_columns <- setdiff(seq_len(ncol(x)), pos_indexes)
+  # x <- x[ , c(pos_indexes, pos_other_columns)]
+  x <- x[ , c(names_indexes, setdiff(orig_col_order, names_indexes))]
   
   # set class
   class(x) <- c("plm.dim", "data.frame")
@@ -70,7 +108,7 @@ plm.data_depr_orig <- function(x, indexes = NULL){
   data.name <- paste(deparse(substitute(x)))
   # coerce character vectors to factors
   x.char <- names(x)[sapply(x,is.character)]
-    for (i in x.char){
+  for (i in x.char){
     x[[i]] <- factor(x[[i]])
   }
 

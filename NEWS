@@ -13,7 +13,7 @@ Changes since version 1.6-6
       * deprecated now (gives warning), use pdata.frame instead.
       * function internally uses pdata.frame now and then adjusts
         to get a "plm.dim" object as before. This way, plm.data
-        benefits from bug fixes made previously in pdata.frame.
+        benefits from bug fixes made previously to pdata.frame.
   * (internal, not exported): residuals_overall_exp.plm and fitted_exp.plm are added
     for testing purposes: residuals_overall_exp.plm always gives the residuals of the
     overall/outer plm model, fitted_exp.plm gives the fitted values (by subtracting

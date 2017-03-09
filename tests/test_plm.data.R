@@ -20,3 +20,20 @@ if (!identical(pHed_new_plm.data, pHed_old_plm.data))
 
 if (!isTRUE(all.equal(pHed_new_plm.data, pHed_old_plm.data)))
   stop("plm.data stub function using pdata.frame() does not recreate ('all.equal()') the original plm.dim object once produced by the original plm.data() ")
+
+# introduce constant columns
+Hedonic_const <- Hedonic
+Hedonic_const$constantNr <- 1
+Hedonic_const$constantStr <- "constant"
+Hedonic_const <- Hedonic_const[ , c("constantNr", setdiff(names(Hedonic), c("constantNr", "constantStr")), "constantStr")]
+pHed_const_new_plm.data <- plm.data(Hedonic_const, indexes = "townid")
+pHed_const_old_plm.data <- plm:::plm.data_depr_orig(Hedonic_const, indexes = "townid")
+if (!isTRUE(all.equal(pHed_const_new_plm.data, pHed_const_old_plm.data)))
+  stop("plm.data stub function using pdata.frame() does not recreate ('all.equal()') the original plm.dim object once produced by the original plm.data() ")
+
+class(pHed_const_new_plm.data)
+class(pHed_const_old_plm.data)
+names(pHed_const_new_plm.data)
+names(pHed_const_old_plm.data)
+lapply(pHed_const_new_plm.data, class)
+lapply(pHed_const_old_plm.data, class)
