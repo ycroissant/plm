@@ -216,7 +216,7 @@ plm.fit <- function(formula, data, model, effect, random.method,
             }
             if (ncol(W) < ncol(X)) stop("insufficient number of instruments")
         }
-        else W <- NULL
+        else W <- NULL # no instruments
         
         # compute the estimation
         result <- mylm(y, X, W)
@@ -289,6 +289,7 @@ mylm <- function(y, X, W = NULL){
   
   na.coef <- is.na(coef(result))
   if (any(na.coef)){
+    ## for debug purpose:
     # warning("Coefficient(s) '", paste((names.X)[na.coef], collapse = ", "), 
     #"' could not be estimated and is (are) dropped.")
     X <- X[, !na.coef, drop = FALSE]
@@ -312,7 +313,7 @@ mylm <- function(y, X, W = NULL){
 plm.list <- function(formula, data, subset, na.action,
                      effect = c('individual','time','twoways'),
                      model = c('within','random','ht','between','pooling','fd'),
-                     random.method = c('swar','walhus','amemiya','nerlove', 'kinla', 'ht'),
+                     random.method = c('swar','walhus','amemiya','nerlove','ht'),
                      inst.method = c('bvk','baltagi'),
                      restrict.matrix = NULL,
                      restrict.rhs = NULL,
@@ -405,7 +406,7 @@ plm.list <- function(formula, data, subset, na.action,
       structure(list(coefficents = Ucoef, vcov = Uvcov, residuals = .resid), class = "basiclm")
     }
   }
-  models <- plm.models(sysplm, amodel = model, random.method = "kinla")
+  models <- plm.models(sysplm, amodel = model, random.method = "kinla") #NB: "kinla" does not seem to be supported anymore...
   L <- length(models)
   sys <- systemlm(models, restrict.matrix = restrict.matrix, restrict.rhs = restrict.rhs)
   Instruments <- sapply(models, function(x) length(formula(x))[2]) > 1
