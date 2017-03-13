@@ -135,7 +135,6 @@ plm <- function(formula, data, subset, weights, na.action,
 
 plm.fit <- function(formula, data, model, effect, random.method, 
                     random.models, random.dfcor, inst.method){
-
     # if a random effect model is estimated, compute the error components
     if (model == "random"){
         is.balanced <- is.pbalanced(data)
@@ -210,7 +209,6 @@ plm.fit <- function(formula, data, model, effect, random.method,
                 if (inst.method == "baltagi") W <- sqrt(w) * cbind(W1, W2, B1)
                 if (inst.method == "am")  W <- sqrt(w) * cbind(W1, W2, B1, StarW1)
                 if (inst.method == "bmc") W <- sqrt(w) * cbind(W1, W2, B1, StarW1, StarW2)
-                # quick and dirty trick to remove columns of 0
                 zerovars <- apply(W, 2, function(x) max(abs(x), na.rm = TRUE)) < 1E-5
                 W <- W[, !zerovars]
             }
@@ -292,7 +290,7 @@ mylm <- function(y, X, W = NULL){
     ## for debug purpose:
     # warning("Coefficient(s) '", paste((names.X)[na.coef], collapse = ", "), 
     #"' could not be estimated and is (are) dropped.")
-    X <- X[, !na.coef, drop = FALSE]
+      X <- X[, ! na.coef, drop = FALSE]
     if (is.null(W)) result <- lm(y ~ X - 1)
     else result <- twosls(y, X, W)
   }
@@ -883,7 +881,9 @@ r.squared <- function(object, model = NULL,
 residuals.plm <- function(object, model = NULL, effect = NULL, ...){
     fittedmodel <- describe(object, "model")
     if (is.null(effect)) effect <- describe(object, "effect")
-    if (is.null(model)) res <- object$residuals
+    if (is.null(model)){
+        res <- object$residuals
+    }
     else{
         beta <- coef(object)
         X <- model.matrix(object, model = model, effect = effect)
@@ -908,6 +908,78 @@ residuals.plm <- function(object, model = NULL, effect = NULL, ...){
     }
     structure(res, index = index(object), class = c("pseries", class(res)))
 }
+
+
+residuals.plm <- function(object, model = NULL, effect = NULL, ...){
+    fittedmodel <- describe(object, "model")
+    if (is.null(effect)) effect <- describe(object, "effect")
+    if (is.null(model)){
+        res <- object$residuals
+    }
+    else{
+        beta <- coef(object)
+        X <- model.matrix(object, model = model, effect = effect)
+        y <- pmodel.response(object, model = model, effect = effect)
+        aliases <- object$alias
+        # beta has an intercept, X not
+        if (has.intercept(object)[1] & model == "within"){
+            beta <- beta[-1]
+            aliases <- aliases[-1]
+        }
+        if (! has.intercept(object)[1] & model != "within"){
+            XM <- apply(X[, -1, drop = FALSE], 2, mean)
+            comonpars <- intersect(names(XM), names(beta))
+            alpha <- mean(y) - sum(XM[comonpars] * beta[comonpars])
+            beta <- c("(Intercept)" = alpha, beta)
+            aliases <- c("(Intercept)" = FALSE, aliases)
+        }
+#        cstXW <- attr(model.matrix(object, model = "within", effect = effect), "constant")
+#        X <- X[, ! (colnames(X) %in% cstX), drop = FALSE]
+        # !YC! QDF : on a Between estimation with time dummies, coefs
+       # on years dummies disapears
+        comonpars <- intersect(colnames(X), names(beta))
+        res <- y - as.numeric(crossprod(t(X[, comonpars, drop = FALSE]), beta[comonpars]))
+#        res <- y - as.numeric(crossprod(t(X), beta))
+    }
+    structure(res, index = index(object), class = c("pseries", class(res)))
+}
+
+
+## residuals.plm <- function(object, model = NULL, effect = NULL, ...){
+##     fittedmodel <- describe(object, "model")
+##     if (is.null(effect)) effect <- describe(object, "effect")
+##     if (is.null(model)){
+##         res <- object$residuals
+##     }
+##     else{
+##         beta <- coef(object)
+##         X <- model.matrix(object, model = model, effect = effect)
+##         ## cstX <- attr(model.matrix(object, model = "within", effect = effect), "constant")
+##         ## cstX <- union(cstX, names(which(object$alias)))
+##         ## X <- X[, ! (colnames(X) %in% cstX), drop = FALSE]
+##         y <- pmodel.response(object, model = model, effect = effect)
+##         if (model == "within" & fittedmodel != "within"){
+##             if (names(beta)[1] == "(Intercept)") beta <- beta[-1]
+##         }
+##         if (model != "within" & fittedmodel == "within"){
+##             if (colnames(X)[1] == "(Intercept)"){
+## #                alpha <- mean(y) - crossprod(apply(X[, -1, drop = FALSE], 2, mean), beta)
+##                 XM <- apply(X, 2, mean)[-1]
+##                 comonpars <- intersect(names(X), names(beta))
+##                 alpha <- mean(y) - crossprod(XM[comonpars], beta[comonpars])
+##                 beta <- c("(Intercept)" = alpha, beta)
+##             }
+##         }
+##         # !YC! QDF : on a Between estimation with time dummies, coefs
+##        # on years dummies disapears
+##         comonpars <- intersect(colnames(X), names(beta))
+##         res <- y - as.numeric(crossprod(t(X[, comonpars, drop = FALSE]), beta[comonpars]))
+## #        res <- y - as.numeric(crossprod(t(X), beta))
+##     }
+##     structure(res, index = index(object), class = c("pseries", class(res)))
+## }
+
+
 
 residuals_overall_exp.plm <- function(x, ...) { #### experimental, non-exported function
 # residuals_overall.plm: gives the residuals of the "overall"/outer model for all types of plm models

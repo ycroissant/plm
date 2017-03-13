@@ -98,7 +98,6 @@ ercomp.formula <- function(object, data,
             ra <- twosls(fixef(wm, type = "dmean")[as.character(index(data)[[1]])], X[, constants], W1)
         }
         else{
-
             FES <- fixef(wm, type = "dmean")[as.character(index(data)[[1]])]
             XCST <- X[, constants]
             ra <- lm(FES ~ XCST - 1)
@@ -287,6 +286,7 @@ ercomp.formula <- function(object, data,
     }
 
     # the "classic" error component model    
+
     Z <- model.matrix(object, data)
     O <- nrow(Z)
     K <- ncol(Z) - 1                                                                                       # INTERCEPT
@@ -309,6 +309,7 @@ ercomp.formula <- function(object, data,
         if (effect != "time") estm[[2]] <- plm.fit(object, data, model = secmod, effect = "individual")
         if (effect != "individual") estm[[3]] <- plm.fit(object, data, model = secmod, effect = "time")
     }
+    KS <- sapply(estm, function(x) length(coef(x))) - sapply(estm, function(x){ "(Intercept)" %in% names(coef(x))})
     quad <- vector(length = 3, mode = "numeric")
     # first quadratic form, within transformation
     hateps_w <- resid(estm[[1]], model = "pooling")
@@ -336,6 +337,7 @@ ercomp.formula <- function(object, data,
     if (effect != "time"){
         hateps_id <- resid(estm[[2]], model = "pooling")
         quad[2] <- crossprod(Between(hateps_id, effect = "individual"))
+        RESB <- Between(hateps_id, effect = "individual")
     }
     if (effect != "individual"){
         hateps_ts <- resid(estm[[3]], model = "pooling")
@@ -355,8 +357,7 @@ ercomp.formula <- function(object, data,
     
     # In case of balanced panels, simple denominators are
     # available if dfcor < 3
-
-#    if (balanced & dfcor[1] != 3){
+    # if (balanced & dfcor[1] != 3){
     if (dfcor[1] != 3){
         # The number of time series in the balanced panel is replaced
         # by the harmonic mean of the number of time series in case of
@@ -364,20 +365,19 @@ ercomp.formula <- function(object, data,
         barT <- ifelse(balanced, TS, length(Tn) / sum(Tn ^ (- 1)))
         M["w", "nu"] <- O
         if (dfcor[1] == 1) M["w", "nu"] <- M["w", "nu"] - NTS
-        if (dfcor[1] == 2) M["w", "nu"] <- M["w", "nu"] - NTS - K
+        if (dfcor[1] == 2) M["w", "nu"] <- M["w", "nu"] - NTS - KS[1]
         if (effect != "time"){
             M["w", "eta"] <- 0
-            M["id", "nu"] <- ifelse(dfcor[2] == 2, N - K - 1, N)
+            M["id", "nu"] <- ifelse(dfcor[2] == 2, N - KS[2] - 1, N)
             M["id", "eta"] <- barT * M["id", "nu"]
         }
         if (effect != "individual"){
             M["w", "mu"] <- 0
-            M["ts", "nu"] <- ifelse(dfcor[2] == 2, TS - K - 1, TS)
+            M["ts", "nu"] <- ifelse(dfcor[2] == 2, TS - KS[3] - 1, TS)
             M["ts", "mu"] <- N * M["ts", "nu"]
         }
         if (effect == "twoways")
             M["ts", "eta"] <- M["id", "mu"] <- 0
-
     }
     else{
         # General case, compute the unbiased version of the estimators
