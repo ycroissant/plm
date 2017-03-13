@@ -492,7 +492,7 @@ plm.list <- function(formula, data, subset, na.action,
 
 
 summary.plm.list <- function(object, ...){
-  class(object) <- class(object)[-1]
+  class(object) <- setdiff(class(object), "plm.list")
   formulas <- eval(object$call$formula)
   eqnames <- names(formulas)
   L <- length(object$coefnames)

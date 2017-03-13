@@ -98,8 +98,8 @@ Changes since version 1.5-34
     silently dropped during estimation by plm (cf. summary.lm objects).
   * fix: vcovXX.plm / vcovG framework now handle plm models with aliased coefficients (linear dependent columns
     in model matrix).
-  * phtest: better support for between models in phtest;
-            for method="aux", argument effect is now extracted from dots.
+  * phtest: * better support for between models;
+            * for method="aux", argument effect is now extracted from dots.
 
 
 Changes since version 1.5-33
@@ -647,7 +647,7 @@ Changes since version 1.2-0
 
 Change since version 1-1.4
 
-	* a args argument is added for plm objects, and the internal
+	* an args argument is added to plm objects, and the internal
 	function relies now on it (and not on the call as previously).
 
 	* more attention is paid when one of the estimated components of
