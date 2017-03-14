@@ -135,6 +135,10 @@ plm <- function(formula, data, subset, weights, na.action,
 
 plm.fit <- function(formula, data, model, effect, random.method, 
                     random.models, random.dfcor, inst.method){
+  
+    # check for 0 cases like in lm.fit (e.g. due to NA dropping) 
+    if (nrow(data) == 0L) stop("0 (non-NA) cases")
+  
     # if a random effect model is estimated, compute the error components
     if (model == "random"){
         is.balanced <- is.pbalanced(data)
@@ -179,7 +183,7 @@ plm.fit <- function(formula, data, model, effect, random.method,
             }
             if (model == "within"){
                 if (! is.null(W)){
-                    cst.W <- match(attr(W, "constant"), colnames(W))                    
+                    cst.W <- match(attr(W, "constant"), colnames(W))
                     if (length(cst.W) > 0) W <- W[, - cst.W]
                 }
                 if (! is.null(X)){

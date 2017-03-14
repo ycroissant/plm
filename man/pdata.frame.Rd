@@ -16,7 +16,9 @@
 
 \usage{
 pdata.frame(x, index = NULL, drop.index = FALSE, row.names = TRUE,
-               stringsAsFactors = default.stringsAsFactors())
+               stringsAsFactors = default.stringsAsFactors(),
+               replace.non.finite = FALSE,
+               drop.NA.series = FALSE, drop.const.series = FALSE)
 \method{[}{pdata.frame}(x, i, j, drop)
 \method{[[}{pdata.frame}(x, y)
 \method{$}{pdata.frame}(x, y)
@@ -38,6 +40,11 @@ pdata.frame(x, index = NULL, drop.index = FALSE, row.names = TRUE,
   \item{row.names}{\code{NULL} or logical, indicates whether ``fancy'' row names (a combination of individual
   index and time index) are to be added to the returned (p)data.frame (\code{NULL} and \code{FALSE} have the same meaning),}
   \item{stringsAsFactors}{logical, indicating whether character vectors are to be converted to factors,}
+  \item{replace.non.finite}{logical, indicating whether values for which \code{is.finite()} yields \code{TRUE} are to be
+  replaced by \code{NA} values, except for character variables (defaults to \code{FALSE}),}
+  \item{drop.NA.series}{logical, indicating whether all-NA columns are to be removed from the pdata.frame (defaults to \code{FALSE}),}
+  \item{drop.const.series}{logical, indicating whether constant columns are to be removed from the pdata.frame (defaults to \code{FALSE}),}
+
   \item{keep.attributes}{logical, only for as.list, indicating the elements of the returned list should have the pdata.frame's attributes added (default: FALSE),}
   \item{\dots}{further arguments}
 }
@@ -47,7 +54,7 @@ pdata.frame(x, index = NULL, drop.index = FALSE, row.names = TRUE,
   \code{index} attribute which is a \code{data.frame} with two
   variables, the individual and the time indexes, both being factors.
   The resulting pdata.frame is sorted by the individual index, then
-  by the time index. Any constant columns and all-NA columns are dropped.
+  by the time index.
 }
 
 \details{

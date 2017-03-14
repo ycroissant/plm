@@ -145,6 +145,7 @@ tests/test_pbgtest.R -text
 tests/test_pbsytest_unbalanced.R -text
 tests/test_pbsytest_unbalanced.Rout.save -text
 tests/test_pcdtest.R -text
+tests/test_pdata.frame_const_allNA_nonfinite.R -text
 tests/test_pdata.frame_extract_class_est_mod.R -text
 tests/test_pdata.frame_id_index_more.R -text
 tests/test_pdata.frame_print_duplicated_rownames.R -text

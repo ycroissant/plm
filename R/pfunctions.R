@@ -3,8 +3,10 @@
 ###################################################
 
 pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
-                        stringsAsFactors = default.stringsAsFactors()) {
-    
+                        stringsAsFactors = default.stringsAsFactors(),
+                        replace.non.finite = FALSE,
+                        drop.NA.series = FALSE, drop.const.series = FALSE) {
+
     if (inherits(x, "pdata.frame")) stop("already a pdata.frame")
   
     if (length(index) > 3){
@@ -21,51 +23,58 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
   
     # replace Inf, -Inf, NaN (everything for which is.finite is FALSE) by NA
     # (for all but any character columns [relevant if stringAsFactors == FALSE])
-    for (i in names(x)) {
+    if (replace.non.finite) {
+      for (i in names(x)) {
         if (!inherits(x[[i]], "character")) {
-            x[[i]][!is.finite(x[[i]])] <- NA
+          x[[i]][!is.finite(x[[i]])] <- NA
         }
+      }
     }
   
     # check and remove complete NA series
-    na.check <- sapply(x,function(x) sum(!is.na(x))==0)
-    na.serie <- names(x)[na.check]
-    if (length(na.serie) > 0){
+    if (drop.NA.series) {
+      na.check <- sapply(x,function(x) sum(!is.na(x))==0)
+      na.serie <- names(x)[na.check]
+      if (length(na.serie) > 0){
         if (length(na.serie) == 1)
-            cat(paste0("This series is NA and has been removed: ", na.serie, "\n"))
+          cat(paste0("This series is NA and has been removed: ", na.serie, "\n"))
         else
-            cat(paste0("These series are NA and have been removed: ", paste(na.serie, collapse = ", "), "\n"))
+          cat(paste0("These series are NA and have been removed: ", paste(na.serie, collapse = ", "), "\n"))
+      }
+      x <- x[, !na.check]
     }
-    x <- x[, !na.check]
+
   
     # check and remove constant series
-    # old: cst.check <- sapply(x, function(x) var(as.numeric(x), na.rm = TRUE)==0) # old
-    # -> var() and sd() on factors is deprecated as of R 3.2.3 -> use duplicated()
-    cst.check <- sapply(x, function(x) {
-                            if (is.factor(x) || is.character(x)) {
+    if (drop.const.series) {
+      # old: cst.check <- sapply(x, function(x) var(as.numeric(x), na.rm = TRUE)==0) # old
+      # -> var() and sd() on factors is deprecated as of R 3.2.3 -> use duplicated()
+      cst.check <- sapply(x, function(x) {
+                              if (is.factor(x) || is.character(x)) {
                                 all(duplicated(x[!is.na(x)])[-1L])
-                            } else {
+                              } else {
+                                x[!is.finite(x)] <- NA # set infinite elements to NA only for check
                                 var(as.numeric(x), na.rm = TRUE)==0
-                            }
-                        })
-    
-    # following line: bug fixed thanks to Marciej Szelfer 
-    cst.check <- cst.check | is.na(cst.check)
-    cst.serie <- names(x)[cst.check]
-    if (length(cst.serie) > 0){
+                              }
+                            })
+      
+      # following line: bug fixed thanks to Marciej Szelfer 
+      cst.check <- cst.check | is.na(cst.check)
+      cst.serie <- names(x)[cst.check]
+      if (length(cst.serie) > 0){
         if (length(cst.serie) == 1){
-            cat(paste0("This series is constant and has been removed: ", cst.serie, "\n"))
+          cat(paste0("This series is constant and has been removed: ", cst.serie, "\n"))
         }
         else{
-            cat(paste0("These series are constants and have been removed: ", paste(cst.serie, collapse = ", "), "\n"))
+          cat(paste0("These series are constants and have been removed: ", paste(cst.serie, collapse = ", "), "\n"))
         }
+      }
+      x <- x[, !cst.check]
     }
-    x <- x[, !cst.check]
   
     # sanity check for 'index' argument. First check the presence of a
     # grouping variable, this should be the third element of the index
     # vector or any "group" named element of this vector
-
     group.name <- NULL
     if (! is.null(names(index)) | length(index == 3)){
         if (! is.null(names(index))){
@@ -539,9 +548,7 @@ Tapply.pseries <- function(x, effect = c("individual", "time"), func, ...){
 
 Tapply.matrix <- function(x, effect, func, ...){
    ## Note: this function is not robust wrt NA in effect
-    na.x <- is.na(x)
-  #uniqval <- apply(x, 2, function(z) tapply(z, effect, "mean")) # Note: uniqval was calculated several times here - why?
-  #uniqval <- apply(x, 2, function(z) tapply(z, effect, func))   # Note: uniqval was calculated several times here - why?
+  na.x <- is.na(x)
   uniqval <- apply(x, 2, tapply, effect, func)
   result <- uniqval[as.character(effect), , drop = F]
   result[na.x] <- NA
