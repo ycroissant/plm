@@ -136,7 +136,7 @@ plm.data_depr_orig <- function(x, indexes = NULL){
       cat(paste("series",cst.serie,"is constant and has been removed\n"))
     }
     else{
-      cat(paste("series",paste(na.serie,collapse=", "),"are constants and have been removed\n"))
+      cat(paste("series",paste(cst.serie,collapse=", "),"are constants and have been removed\n"))
     }
   }
 #  x <- x[,!cst.check]
