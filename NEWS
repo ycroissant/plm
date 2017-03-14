@@ -16,7 +16,7 @@ Changes since version 1.6-6
         benefits from bug fixes made previously to pdata.frame.
   * pdata.frame:
       * By default, the resulting pdata.frame is now closer to the original data:
-        Columns with constant values and all-NA values not removed anymore and
+        Columns with constant values and all-NA values are not removed anymore and
         non-finite values are not substituted with NAs anymore.
       * Arguments drop.NA.series, drop.const.series, replace.non.finite introduced
         to remove/replace columns/values as described before (all default to FALSE).

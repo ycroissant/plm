@@ -13,7 +13,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
         stop("'index' can be of length 3 at the most (one index variable for individual, time, group)")
     }
     
-    # coerce character vectors to factors, if requested
+    # if requested: coerce character vectors to factors
     if (stringsAsFactors) {
         x.char <- names(x)[sapply(x, is.character)]
         for (i in x.char){
@@ -21,7 +21,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
         }
     }
   
-    # replace Inf, -Inf, NaN (everything for which is.finite is FALSE) by NA
+    # if requested: replace Inf, -Inf, NaN (everything for which is.finite is FALSE) by NA
     # (for all but any character columns [relevant if stringAsFactors == FALSE])
     if (replace.non.finite) {
       for (i in names(x)) {
@@ -31,7 +31,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
       }
     }
   
-    # check and remove complete NA series
+    # if requested: check and remove complete NA series
     if (drop.NA.series) {
       na.check <- sapply(x,function(x) sum(!is.na(x))==0)
       na.serie <- names(x)[na.check]
@@ -45,7 +45,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     }
 
   
-    # check and remove constant series
+    # if requested: check and remove constant series
     if (drop.const.series) {
       # old: cst.check <- sapply(x, function(x) var(as.numeric(x), na.rm = TRUE)==0) # old
       # -> var() and sd() on factors is deprecated as of R 3.2.3 -> use duplicated()
@@ -159,7 +159,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
                 time <- c(time,1:Ti[i])
             }
             time.name <- "time"
-            time <- x[[time.name]] <- time <- as.factor(time)
+            time <- x[[time.name]] <- as.factor(time)
         }
         else{
         # use supplied time index
@@ -187,9 +187,9 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     # sort by group (if given), then by id, then by time
     if (! is.null(group.name)) x <- x[order(x[[group.name]], x[[id.name]], x[[time.name]]), ] # old: x <- x[order(id,time), ] 
     else x <- x[order(x[[id.name]], x[[time.name]]), ]
-    var.names <- names(x)
-  
+
     ## drop unused levels from all factor variables
+    var.names <- names(x)
     for (i in var.names){
         if (is.factor(x[[i]])){
         # if (length(unique(x[[i]])) < length(levels(x[[i]]))){
@@ -198,6 +198,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
             x[[i]] <- droplevels(x[[i]])
         }
     }
+
     posindex <- match(c(id.name, time.name, group.name), names(x))
     index <- x[, posindex]
     if (drop.index) x <- x[ , -posindex]
