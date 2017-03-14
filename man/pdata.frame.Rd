@@ -90,7 +90,7 @@ makes \code{lapply} work as expected on a pdata.frame (see also \bold{Examples})
 \examples{
 # Gasoline contains two variables which are individual and time indexes
 data("Gasoline", package = "plm")
-Gas <- pdata.frame(Gasoline, index = c("country", "year"), drop = TRUE)
+Gas <- pdata.frame(Gasoline, index = c("country", "year"), drop.index = TRUE)
 
 # Hedonic is an unbalanced panel, townid is the individual index
 data("Hedonic", package = "plm")
