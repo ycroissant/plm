@@ -897,6 +897,7 @@ residuals.plm <- function(object, model = NULL, effect = NULL, ...){
         if (model != "within" & fittedmodel == "within"){
             if (colnames(X)[1] == "(Intercept)"){
                 alpha <- mean(y) - crossprod(apply(X[, -1, drop = FALSE], 2, mean), beta)
+                print(alpha)
                 beta <- c("(Intercept)" = alpha, beta)
             }
         }
@@ -908,7 +909,6 @@ residuals.plm <- function(object, model = NULL, effect = NULL, ...){
     }
     structure(res, index = index(object), class = c("pseries", class(res)))
 }
-
 
 residuals.plm <- function(object, model = NULL, effect = NULL, ...){
     fittedmodel <- describe(object, "model")
@@ -926,7 +926,8 @@ residuals.plm <- function(object, model = NULL, effect = NULL, ...){
             beta <- beta[-1]
             aliases <- aliases[-1]
         }
-        if (! has.intercept(object)[1] & model != "within"){
+        if (model != "within" & fittedmodel == "within"){
+#        if (! has.intercept(object)[1] & model != "within"){
             XM <- apply(X[, -1, drop = FALSE], 2, mean)
             comonpars <- intersect(names(XM), names(beta))
             alpha <- mean(y) - sum(XM[comonpars] * beta[comonpars])
@@ -943,7 +944,6 @@ residuals.plm <- function(object, model = NULL, effect = NULL, ...){
     }
     structure(res, index = index(object), class = c("pseries", class(res)))
 }
-
 
 ## residuals.plm <- function(object, model = NULL, effect = NULL, ...){
 ##     fittedmodel <- describe(object, "model")
