@@ -45,7 +45,7 @@ For \code{as.Formula}, the return value is an object of class
 
 \examples{
 # First, make a pdata.frame
-data(Grunfeld)
+data("Grunfeld", package = "plm")
 pGrunfeld <- pdata.frame(Grunfeld)
 
 # then make a model frame from a pFormula and a pdata.frame

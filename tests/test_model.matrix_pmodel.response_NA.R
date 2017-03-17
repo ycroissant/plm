@@ -8,7 +8,7 @@
 
 
 library(plm)
-data(Grunfeld, package="plm")
+data("Grunfeld", package="plm")
 form <- formula(inv ~ value + capital)
 plm_pool       <- plm(form, data=Grunfeld, model="pooling")
 plm_fe         <- plm(form, data=Grunfeld, model="within")

@@ -109,7 +109,7 @@ if(!is(ttC2,"warning") | ttC2$message != "The time index (second element of 'ind
 ## commented because needs other package
 # require(plm)
 # library(ggplot2)
-# data(diamonds, package = "ggplot2")
+# data("diamonds", package = "ggplot2")
 # 
 # class(diamonds$cut) # ordered factor
 # 

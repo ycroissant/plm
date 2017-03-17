@@ -192,7 +192,7 @@ punbalancedness(df_d1) #  no. 1: 0.868 and 0.886
 punbalancedness(df_d4) #  no. 4: 0.642 and 0.726
 
 # for balanced panels, both measures == 1
-data(Grunfeld, package = "plm")
+data("Grunfeld", package = "plm")
 
 # test on data.frame
 punbalancedness(Grunfeld)

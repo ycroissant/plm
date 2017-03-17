@@ -33,7 +33,7 @@ library(plm)
 
 
 
-data(Grunfeld, package = "plm")
+data("Grunfeld", package = "plm")
 Grunfeldpdata <- pdata.frame(Grunfeld, index = c("firm", "year"), drop.index = FALSE, row.names = TRUE)
 form_grun <- formula(inv ~ value + capital)
 fd_grun  <- plm(form_grun, data=Grunfeldpdata, model="fd")

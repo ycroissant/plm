@@ -81,7 +81,7 @@ panel data}, 2nd ed., MIT Press, Sec. 10.6.3, pp. 319--320.
 }
 
 \examples{
-data(EmplUK)
+data("EmplUK" , package = "plm")
 pwfdtest(log(emp) ~ log(wage) + log(capital), data = EmplUK)
 pwfdtest(log(emp) ~ log(wage) + log(capital), data = EmplUK, h0 = "fe")
 

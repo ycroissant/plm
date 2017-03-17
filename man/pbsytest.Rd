@@ -114,7 +114,7 @@ pbsytest(x, \dots)
 \examples{
 ## Bera et al. (2001), p. 13, table 1 use a subset of the original Grunfeld
 ## data which contains three errors -> construct this subset:
-data(Grunfeld, package = "plm")
+data("Grunfeld", package = "plm")
 Grunsubset <- rbind(Grunfeld[1:80, ], Grunfeld[141:160, ])
 Grunsubset[Grunsubset$firm == 2 & Grunsubset$year \%in\% c(1940, 1952), ][["inv"]] <- c(261.6, 645.2)
 Grunsubset[Grunsubset$firm == 2 & Grunsubset$year == 1946, ][["capital"]] <- 232.6

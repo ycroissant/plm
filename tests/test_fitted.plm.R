@@ -10,7 +10,7 @@
 #     (of the respective "overall"/"outer" model).
 
 library(plm)
-data(Grunfeld)
+data("Grunfeld", package = "plm")
 form <- inv ~ value + capital
 
 mod_pool <- plm(form, data = Grunfeld, model = "pooling")
@@ -115,7 +115,7 @@ plm:::fitted.plm(mod_be_droppedCoef,   model = "pooling")
 # plm:::fitted.plm(mod_be_droppedCoef,   model = "random") # "Error in ercomp.plm(object) : ercomp only relevant for random models"
 
 ### test with data that becomes linear dependent due to within transformation
-data(Cigar)
+data("Cigar", package = "plm")
 Cigar.p <- pdata.frame(Cigar)
 Cigar.p[ , "fact1"] <- c(0,1)
 Cigar.p[ , "fact2"] <- c(1,0)

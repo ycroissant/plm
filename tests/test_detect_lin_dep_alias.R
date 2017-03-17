@@ -3,7 +3,7 @@
 #  * alias
 
 library(plm)
-data(Cigar)
+data("Cigar", package = "plm")
 Cigar[ , "fact1"] <- c(0,1)
 Cigar[ , "fact2"] <- c(1,0)
 Cigar.p <- pdata.frame(Cigar)

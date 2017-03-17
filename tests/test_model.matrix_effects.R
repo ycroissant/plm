@@ -2,7 +2,7 @@
 #                      request all combinations from all model objects
 
 library(plm)
-data(Grunfeld)
+data("Grunfeld", package = "plm")
 
 fe2_bal   <- plm(inv ~ value + capital, model = "within", effect = "twoways", data = Grunfeld)
 fe2_unbal <- plm(inv ~ value + capital, model = "within", effect = "twoways", data = Grunfeld[1:199, ])

@@ -73,7 +73,7 @@ An object of class \code{"htest"}.
 }
 
 \examples{
-data(Grunfeld, package = "plm")
+data("Grunfeld", package = "plm")
 ## test on heterogeneous model (separate time series regressions)
 pcdtest(inv ~ value + capital, data = Grunfeld,
         index = c("firm", "year"))

@@ -38,6 +38,7 @@ ercomp(object, \dots)
 }
 
 \value{  
+% TODO: the internal structure of ercomp changed slightly: sigma2 is now a named vector
   An object of class \code{"ercomp"}: a list containing a list called
   \code{sigma2} which contains the estimates of the variance components,
   and \code{theta} which is the parameters used for the transformation

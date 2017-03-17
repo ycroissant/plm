@@ -2,7 +2,7 @@
 # => reproduction works
 
 library(plm)
-data(Grunfeld, package="plm") # requires package plm
+data("Grunfeld", package="plm") # requires package plm
 
 
 # generate dataset with NA in dependent and independent variable

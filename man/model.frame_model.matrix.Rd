@@ -71,7 +71,7 @@ Constructing the model frame first ensures proper NA handling, see \bold{Example
 
 \examples{
 # First, make a pdata.frame
-data(Grunfeld)
+data("Grunfeld", package = "plm")
 pGrunfeld <- pdata.frame(Grunfeld)
 
 # then make a model frame from a pFormula and a pdata.frame

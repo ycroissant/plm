@@ -110,7 +110,7 @@
 options(digits = 10)
 Sys.setenv(LANG = "en")
 require(plm)
-data(Grunfeld, package = "plm")
+data("Grunfeld", package = "plm")
 Grunfeldpdata <- pdata.frame(Grunfeld, index = c("firm", "year"), drop.index = FALSE, row.names = TRUE)
 
 fe_grunfeld    <- plm(inv ~ value + capital, data=Grunfeldpdata, model="within")
@@ -128,7 +128,7 @@ pool_grunfeld_unbalanced <- plm(inv ~ value + capital, data=Grunfeldpdata_unbala
 
 
 # Produc
-# data(Produc, package = "plm")
+# data("Produc", package = "plm")
 # form_produc <- formula(gsp ~ log(pc) + log(pcap) + log(emp) + unemp)
 # produc_pool <- plm(form_produc, data = Produc, model="pooling")
 
@@ -138,7 +138,7 @@ pool_grunfeld_unbalanced <- plm(inv ~ value + capital, data=Grunfeldpdata_unbala
 #
 # balanced test of v1.4-0:   849.45815 (individual effects) and 600.20821 (time effects)
 # unbalanced test:            25.011274 (individual effects) and  1.5571417 (time effects)
-data(Hedonic, package = "plm")
+data("Hedonic", package = "plm")
 pHedonic <- pdata.frame(Hedonic, index = "townid", drop.index = F)
 form_hedonic <- formula(mv ~ crim)
 hedonic_pool <- plm(form_hedonic, data = pHedonic, model="pooling")

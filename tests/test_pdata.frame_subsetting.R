@@ -3,7 +3,7 @@
 #  (pre rev. 251 subsetting a pdata.frame added extra information due to coercing rules of "[.data.frame")
 
 library(plm)
-data("Grunfeld")
+data("Grunfeld", package = "plm")
 
 pGrunfeld <- pdata.frame(Grunfeld)
 

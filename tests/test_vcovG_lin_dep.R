@@ -3,7 +3,7 @@
 # see the example below
 
 library(plm)
-data(Cigar)
+data("Cigar", package = "plm")
 Cigar.p <- pdata.frame(Cigar)
 Cigar.p[ , "fact1"] <- c(0,1)
 Cigar.p[ , "fact2"] <- c(1,0)
