@@ -103,7 +103,7 @@ rbindl <- function(x){
 }
 
 expand.formula <- function(x){
-    oclass <- class(x)
+  oclass <- class(x)
   if (! any(class(x) == "Formula")) stop("not a Formula object")
   if (length(x)[2] != 2) stop("not a two part formula")
   xs <- structure(x, class = "formula")
@@ -280,14 +280,15 @@ punbalancedness <- function(x, ...) {
 # helper function
 fancy.row.names <- function(index, sep = "-") {
   if (length(index) == 2) {result <- paste(index[[1]], index[[2]], sep = sep)}
-  if (length(index) == 3) {result <- paste(index[[1]], index[[2]], index[[3]], sep = sep)}
+  # this in the order also used for sorting (group, id. time):
+  if (length(index) == 3) {result <- paste(index[[3]], index[[1]], index[[2]], sep = sep)}
   return(result)
 }
 
 # helper function for pwaldtest: trans_clubSandwich_vcov
-# translate clubSandwich's vcov object so it is suitable for summary.plm, plm's pwaldtest
-# attribute "cluster" in clubSandwich's vcov objects contains the cluster variable it
-# plm's vcov objects also have attribute "cluster" but it contains a character as
+# translate clubSandwich's vcov object so it is suitable for summary.plm, plm's pwaldtest.
+# Attribute "cluster" in clubSandwich's vcov objects contains the cluster variable itself.
+# plm's vcov object also has attribute "cluster" but it contains a character as
 # information about the cluster dimension (either "group" or "time")
 #
 # inputs:
