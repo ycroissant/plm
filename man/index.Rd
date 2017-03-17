@@ -30,18 +30,19 @@
 }
 
 \value{
-  a vector or an object of class \code{"pindex", "data.frame"} containing either 
+  A vector or an object of class \code{c("pindex", "data.frame")} containing either 
   one index or both indexes.
 }
 
 \details{
-  panel data are stored in a \code{"pdata.frame"} which has an
-  \code{"index"} attribute. Fitted models in \code{"plm"} has a
+  Panel data are stored in a \code{"pdata.frame"} which has an
+  \code{"index"} attribute. Fitted models in \code{"plm"} have a
   \code{"model"} element which is also a \code{"pdata.frame"} and
-  therefore also have an \code{"index"} attribute. Finally, each series
-  in a \code{"pdata.frame"} is of class \code{"pseries"}, which also
-  has this \code{"index"} attribute. \code{"index"} methods are
-  available for all these objects. The argument \code{"which"} indicates
+  therefore also has an \code{"index"} attribute. Finally, each series,
+  once extracted from a \code{"pdata.frame"}, becomes of class 
+  \code{"pseries"}, which also has this \code{"index"} attribute. 
+  \code{"index"} methods are available for all these objects.
+  The argument \code{"which"} indicates
   which index should be extracted. If \code{which = NULL}, both indexes are
   extracted, but \code{"which"} can also be a vector of length 1 or 2
   containing either characters (the names of the individual variable and/or of the
@@ -50,7 +51,7 @@
 }
   
 \seealso{
-  \code{\link{plm}}
+  \code{\link{pdata.frame}}, \code{\link{plm}}
 }
 
 \author{Yves Croissant}

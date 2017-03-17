@@ -71,24 +71,28 @@ pdata.frame(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     (successive blocks of individuals, each block being a time series for
     the respective individual) assuming consecutive and ascending
     time periods in the order of the original data. Two new variables are added:
-    ``time'' and ``id'' which contain the individual and the time indexes.
-}
-
-The \code{"[["} and \code{"$"} extract
-a series from the \code{pdata.frame}. The \code{"index"} attribute is
-then added to the series and a class attribute \code{"pseries"} is
-added. The \code{"["} method behaves as for \code{data.frame}, except
-that the extraction is also applied to the \code{index} attribute.
-\code{as.data.frame} removes the index from the \code{pdata.frame} and
-adds it to each column.
-
-\code{as.list} behaves by default identical to \code{\link[base]{as.list.data.frame}}
-which means it drops the attributes specific to a pdata.frame; if a list of pseries
-is wanted, the attribute \code{keep.attributes} can to be set to \code{TRUE}. This also
-makes \code{lapply} work as expected on a pdata.frame (see also \bold{Examples}).
+    ``id'' and ``time'' which contain the individual and the time indexes.
+    }
+  
+  The \code{"[["} and \code{"$"} extract
+  a series from the \code{pdata.frame}. The \code{"index"} attribute is
+  then added to the series and a class attribute \code{"pseries"} is
+  added. The \code{"["} method behaves as for \code{data.frame}, except
+  that the extraction is also applied to the \code{index} attribute.
+  A safe way to extract the index attribute is to use the function
+  \code{\link{index}} for 'pdata.frames' (and other objects).
+  
+  \code{as.data.frame} removes the index from the \code{pdata.frame} and
+  adds it to each column.
+  
+  \code{as.list} behaves by default identical to \code{\link[base]{as.list.data.frame}}
+  which means it drops the attributes specific to a pdata.frame; if a list of pseries
+  is wanted, the attribute \code{keep.attributes} can to be set to \code{TRUE}. This also
+  makes \code{lapply} work as expected on a pdata.frame (see also \bold{Examples}).
 }
 
 \seealso{
+ \code{\link{index}} to extract the index variables from a 'pdata.frame' (and other objects),
  \code{\link{pdim}} to check the dimensions of a 'pdata.frame' (and other objects), 
  \code{\link{pvar}} to check for each variable if it varies cross-sectionally and over time. 
  To check if the time periods are consecutive per individual, see \code{\link[plm]{is.pconsecutive}}.
