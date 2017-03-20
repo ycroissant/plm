@@ -122,7 +122,8 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
         if(!is.null(time.name)){warning("The time index (second element of 'index' argument) will be ignored\n")}
         N <- nrow(x)
         if( (N %% id.name)!=0){
-            stop("unbalanced panel, in this case the individual index should be indicated by the first element of 'index' argument\n")
+          stop(paste0("unbalanced panel, in this case the individual index may not be indicated by an integer\n",
+                      "but by specifying a column of the data.frame in the first element of the 'index' argument\n"))
         }
         else{
             T <- N %/% id.name
