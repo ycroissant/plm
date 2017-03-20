@@ -5,7 +5,8 @@
 pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
                         stringsAsFactors = default.stringsAsFactors(),
                         replace.non.finite = FALSE,
-                        drop.NA.series = FALSE, drop.const.series = FALSE) {
+                        drop.NA.series = FALSE, drop.const.series = FALSE,
+                        drop.unused.levels = FALSE) {
 
     if (inherits(x, "pdata.frame")) stop("already a pdata.frame")
   
@@ -189,20 +190,24 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     if (! is.null(group.name)) x <- x[order(x[[group.name]], x[[id.name]], x[[time.name]]), ] # old: x <- x[order(id,time), ] 
     else x <- x[order(x[[id.name]], x[[time.name]]), ]
 
-    ## drop unused levels from all factor variables
-    var.names <- names(x)
-    for (i in var.names){
+    # if requested: drop unused levels from factor variables
+    # (spare those serving for the index as their unused levels are dropped already
+    # (at least in the attribute "index" they need to be dropped b/c much code relies on it))
+    if (drop.unused.levels) {
+      var.names <- setdiff(names(x), c(id.name, time.name, group.name))
+      for (i in var.names){
         if (is.factor(x[[i]])){
-        # if (length(unique(x[[i]])) < length(levels(x[[i]]))){
-        #   x[[i]] <- x[[i]][,drop=TRUE]
-        # }
-            x[[i]] <- droplevels(x[[i]])
+          x[[i]] <- droplevels(x[[i]])
         }
+      }
     }
 
     posindex <- match(c(id.name, time.name, group.name), names(x))
     index <- x[, posindex]
-    if (drop.index) x <- x[ , -posindex]
+    if (drop.index) {
+      x <- x[ , -posindex]
+      if (ncol(x) == 0L) cat("after dropping of index variables, the pdata.frame contains 0 columns")
+    }
     
     test_doub <- table(index[[1]], index[[2]], useNA = "ifany")
     if (any(is.na(colnames(test_doub))) || any(is.na(rownames(test_doub))))

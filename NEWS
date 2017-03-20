@@ -1,7 +1,7 @@
 Changes since version 1.6-6
 
-  * ercomp: first iteration of more general framework.
-  * plm: a weight argument is added to plm.
+  * ercomp: re-write to be a more general framework.
+  * plm: new argument weights added.
   * pbsytest:
       * test = "j": [joint test by Baltagi/Li(1991)]:
         fixed degrees of freedom (now df = 2 instead of df = 1).
@@ -16,10 +16,13 @@ Changes since version 1.6-6
         benefits from bug fixes made previously to pdata.frame.
   * pdata.frame:
       * By default, the resulting pdata.frame is now closer to the original data:
-        Columns with constant values and all-NA values are not removed anymore and
-        non-finite values are not substituted with NAs anymore.
-      * Arguments drop.NA.series, drop.const.series, replace.non.finite introduced
-        to remove/replace columns/values as described before (all default to FALSE).
+         * columns with constant values and all-NA values are not removed anymore,
+         * non-finite values are not substituted with NAs anymore,
+         * unused factor levels are not dropped anymore (except for those
+           variables serving to construct the index).
+      * Arguments drop.NA.series, drop.const.series, replace.non.finite,
+        drop.unused.levels introduced to remove/replace columns/values as described
+        before (all default to FALSE).
   * (internal, not exported): residuals_overall_exp.plm and fitted_exp.plm are added
     for testing purposes: residuals_overall_exp.plm always gives the residuals of the
     overall/outer plm model, fitted_exp.plm gives the fitted values (by subtracting

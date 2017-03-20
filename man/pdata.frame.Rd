@@ -18,7 +18,8 @@
 pdata.frame(x, index = NULL, drop.index = FALSE, row.names = TRUE,
                stringsAsFactors = default.stringsAsFactors(),
                replace.non.finite = FALSE,
-               drop.NA.series = FALSE, drop.const.series = FALSE)
+               drop.NA.series = FALSE, drop.const.series = FALSE,
+               drop.unused.levels = FALSE)
 \method{[}{pdata.frame}(x, i, j, drop)
 \method{[[}{pdata.frame}(x, y)
 \method{$}{pdata.frame}(x, y)
@@ -44,6 +45,8 @@ pdata.frame(x, index = NULL, drop.index = FALSE, row.names = TRUE,
   replaced by \code{NA} values, except for character variables (defaults to \code{FALSE}),}
   \item{drop.NA.series}{logical, indicating whether all-NA columns are to be removed from the pdata.frame (defaults to \code{FALSE}),}
   \item{drop.const.series}{logical, indicating whether constant columns are to be removed from the pdata.frame (defaults to \code{FALSE}),}
+  \item{drop.unused.levels}{logical, indicating whether unused levels of factors are to be dropped (defaults to \code{FALSE})
+    (unused levels are always dropped from variables serving to construct the index variables),}
 
   \item{keep.attributes}{logical, only for as.list, indicating the elements of the returned list should have the pdata.frame's attributes added (default: FALSE),}
   \item{\dots}{further arguments}
