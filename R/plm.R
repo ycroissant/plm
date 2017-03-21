@@ -52,7 +52,7 @@ plm <- function(formula, data, subset, weights, na.action,
     if (! any(is.na(model)) & effect == "nested") model <- "random"
     inst.method <- match.arg(inst.method)
   
-    # input checks for FD model give informative error messages as
+    # input checks for FD model: give informative error messages as
     # described in footnote in vignette
     if (! is.na(model) && model == "fd") {
         if (effect == "time") stop(paste("effect = \"time\" for first-difference model", 
@@ -75,7 +75,7 @@ plm <- function(formula, data, subset, weights, na.action,
     
     # the use of the instrument argument is deprecated, use Formulas instead
     if (!is.null(dots$instruments)){
-        as.Formula(formula, dots$instruments)
+        formula <- as.Formula(formula, dots$instruments)
         deprec.instruments <- paste("the use of the instruments argument is deprecated,",
                                     "use two-part formulas instead")
         warning(deprec.instruments)
@@ -87,10 +87,10 @@ plm <- function(formula, data, subset, weights, na.action,
     if (! inherits(data, "pdata.frame")) data <- pdata.frame(data, index)
     if (! inherits(formula, "pFormula")) formula <- pFormula(formula)
     
-    # in case of 2part formula, check whether the second part should
-    # be updated, e.g. y ~ x1 + x2 + x3 | . - x2 + z becomes y ~ x1 +
-    # x2 + x3 | x1 + x3 + z length(formula)[2] because the length is
-    # now a vector of length 2
+    # in case of 2-part formula, check whether the second part should
+    # be updated, e.g. y ~ x1 + x2 + x3 | . - x2 + z becomes 
+    # y ~ x1 + x2 + x3 | x1 + x3 + z
+    # use length(formula)[2] because the length is now a vector of length 2
     if (length(formula)[2] == 2) formula <- expand.formula(formula)
 
     # eval the model.frame
