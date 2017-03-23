@@ -433,10 +433,10 @@ print.pdata.frame <- function(x, ...){
 
 print.pseries <- function(x, ...){
   attr(x, "index") <- NULL
-  attr(x, "class") <- base::setdiff(attr(x, "class"), "pseries") # attr(x, "class")[-1]
-  if (length(attr(x, "class")) == 1
-      && class(x) %in% c("character", "logical", "numeric"))
+  attr(x, "class") <- base::setdiff(attr(x, "class"), "pseries") # old: attr(x, "class")[-1]
+  if (length(attr(x, "class")) == 1 && class(x) %in% c("character", "logical", "numeric", "integer")) {
     attr(x, "class") <- NULL
+  }
   print(x, ...)
 }
 
