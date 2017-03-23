@@ -33,6 +33,7 @@ Changes since version 1.6-6
   * pwartest, pwfdtest: * statistics are labelled as F statistics.
                         * calculations now done without car::linearHypothesis().
   * print.pseries: prettier printing for integers.
+  * diff.pseries: logicals can now be diff'ed (result is integer, mimics base::diff).
 
 
 Changes since version 1.6-5

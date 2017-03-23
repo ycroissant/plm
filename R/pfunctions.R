@@ -510,15 +510,19 @@ as.list.pdata.frame <- function(x, keep.attributes = FALSE, ...) {
 ###################################################
 
 diff.pseries <- function(x, lag = 1, ...){
-  if (!is.numeric(x)) stop("diff is only relevant for numeric series")
+  islogi <- is.logical(x)
+  if (! (is.numeric(x) || islogi)) stop("diff is only relevant for numeric or logical series")
   if (round(lag) != lag) stop("Lagging value 'lag' must be whole-numbered (and non-negative)")
-
+  
   # prevent input of negative values, because it will most likely confuse users
   # what diff would do in this case
   if (lag < 0) stop("diff.pseries is only relevant for non-negative lags")
   
   lagx <- lag(x, k = lag)
-  return(x-lagx)
+  res <- x-lagx
+  # if x is logical, diff'ed x is integer (mimics base::diff behaviour):
+  if (islogi) class(res) <- c("pseries", "integer")
+  return(res)
 }
 
 
