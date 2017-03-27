@@ -85,7 +85,7 @@ Explanatory Variables, \emph{Journal of Econometrics}, \bold{93}(1), pp. 177--20
 
 Wooldridge, J. M. (2002) \emph{Econometric Analysis of Cross Section and Panel Data}, MIT Press.
 
-Wooldridge, J. M. (2010) \emph{Econometric analysis of cross-section and Panel Data}, 2nd ed., MIT Press.
+Wooldridge, J. M. (2010) \emph{Econometric Analysis of Cross Section and Panel Data}, 2nd ed., MIT Press.
 }
 
 \examples{

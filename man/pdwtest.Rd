@@ -43,7 +43,7 @@ An object of class \code{"htest"}.
 \references{
  Baltagi, B.H. (2005) \emph{Econometric Analysis of Panel Data}, 3rd. ed., Wiley, p. 98.
 
- Wooldridge, J.M. (2002) \emph{Econometric Analysis of Cross-Section and Panel Data}, MIT Press, p. 288.
+ Wooldridge, J.M. (2002) \emph{Econometric Analysis of Cross Section and Panel Data}, MIT Press, p. 288.
 }
 
 \seealso{

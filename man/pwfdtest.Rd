@@ -67,11 +67,11 @@ An object of class \code{"htest"}.
 Drukker, D.M. (2003) Testing for serial correlation in linear
 panel--data models, \emph{The Stata Journal}, \bold{3(2)}, pp. 168--177.
 
-Wooldridge, J.M. (2003) \emph{Econometric analysis of cross--section and
-panel data}, MIT Press, Sec. 10.6.3, pp. 282--283.
+Wooldridge, J.M. (2003) \emph{Econometric Analysis of Cross Section and
+Panel Data}, MIT Press, Sec. 10.6.3, pp. 282--283.
 
-Wooldridge, J.M. (2010) \emph{Econometric analysis of cross--section and
-panel data}, 2nd ed., MIT Press, Sec. 10.6.3, pp. 319--320.
+Wooldridge, J.M. (2010) \emph{Econometric Analysis of Cross Section and
+Panel Data}, 2nd ed., MIT Press, Sec. 10.6.3, pp. 319--320.
 
 
 }

@@ -107,7 +107,7 @@ fitted_by_hand <- fixefs + gi$coefficients["value"] * gi$model$value +
 \references{
 Greene, W.H. (2012), Econometric Analysis, 7th ed., Prentice Hall, Ch. 11.4.4.
 
-Wooldridge, J.M. (2010) \emph{Econometric Analysis of Cross-Section and Panel Data}, 2nd ed., MIT Press, Ch. 10.5.3.
+Wooldridge, J.M. (2010) \emph{Econometric Analysis of Cross Section and Panel Data}, 2nd ed., MIT Press, Ch. 10.5.3.
 }
 
 \keyword{regression}

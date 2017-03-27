@@ -50,9 +50,9 @@ The argument \code{order} defaults to the minimum number of observations over th
 
  Godfrey, L.G. (1978), \dQuote{Testing against general autoregressive and moving average error models when the regressors include lagged dependent variables}, \emph{Econometrica}, \bold{46}(6), pp. 1293--1301.
   
- Wooldridge, J.M. (2002) \emph{Econometric Analysis of Cross-Section and Panel Data}, MIT Press, pp. 288--291.
+ Wooldridge, J.M. (2002) \emph{Econometric Analysis of Cross Section and Panel Data}, MIT Press, pp. 288--291.
  
- Wooldridge, J.M. (2010) \emph{Econometric analysis of cross-section and Panel Data}, 2nd ed., MIT Press, pp. 328--334.
+ Wooldridge, J.M. (2010) \emph{Econometric Analysis of Cross Section and Panel Data}, 2nd ed., MIT Press, pp. 328--334.
  
  Wooldridge, J.M. (2013) \emph{Introductory Econometrics: A Modern Approach}, 5th ed., South-Western (Cengage Learning), Sec. 12.2, pp. 421--422.
 }

@@ -65,8 +65,8 @@ Kang, Suk (1985), A note on the equivalence of specification tests in the
 two-factor multivariate variance components model, \emph{Journal of Econometrics}, 
 \bold{28}(2), pp. 193--203.
 
-Wooldridge, Jeffrey M. (2010), \emph{Econometric analysis of
-  cross-section and panel data}, 2nd ed., MIT Press, Sec. 10.7.3., pp. 328--334.
+Wooldridge, Jeffrey M. (2010), \emph{Econometric Analysis of
+  Cross Section and Panel Data}, 2nd ed., MIT Press, Sec. 10.7.3., pp. 328--334.
   
 Baltagi, Badi H. (2013), \emph{Econometric Analysis of Panel Data}, 5th ed., 
 John Wiley and Sons., Sec. 4.3.
