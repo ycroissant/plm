@@ -15,64 +15,64 @@ pvar <- function(x, ...){
 
 pvar.default <- function(x, id, time, ...){
   name.var <- names(x)
-  time.variation <- rep(TRUE, length(x))
-  id.variation <- rep(TRUE, length(x))
-  time.variation_anyNA <- rep(FALSE, length(x))
-  id.variation_anyNA <- rep(FALSE, length(x))
-  K <- length(x)
+  len <- length(x)
+  time.variation <- rep(TRUE, len)
+  id.variation   <- rep(TRUE, len)
+  time.variation_anyNA <- rep(FALSE, len)
+  id.variation_anyNA   <- rep(FALSE, len)
   lid <- split(x, id)
   ltime <- split(x, time)
   if (is.list(x)){
-    if (K == 1){
+    if (len == 1){
       # time variation
-      temp_time.var          <- sapply(lid,function(x) sapply(x,myvar))
-      temp_time.var_sumNoVar <- sum(temp_time.var==0, na.rm=T) # number of non-varying id-time comb. (without all NA groups)
-      temp_time.var_sumNA    <- sum(is.na(temp_time.var))      # number of all-NA groups
+      temp_time.var          <- sapply(lid, function(x) sapply(x, myvar))
+      temp_time.var_sumNoVar <- sum(temp_time.var == 0, na.rm = TRUE) # number of non-varying id-time comb. (without all NA groups)
+      temp_time.var_sumNA    <- sum(is.na(temp_time.var))             # number of all-NA groups
       temp_time.varResult    <- temp_time.var_sumNoVar + temp_time.var_sumNA
-      time.variation         <- temp_time.varResult!=length(lid) # no variation if (no. non-varying + no. all-NA) == number of groups 
-      time.variation_anyNA   <- temp_time.var_sumNA > 0          # indicates if at least one id-time comb is all NA
+      time.variation         <- temp_time.varResult != length(lid) # no variation if (no. non-varying + no. all-NA) == number of groups 
+      time.variation_anyNA   <- temp_time.var_sumNA > 0            # indicates if at least one id-time comb is all NA
       
       # id variation
-      temp_id.var          <- sapply(ltime,function(x) sapply(x,myvar))
-      temp_id.var_sumNoVar <- sum(temp_id.var==0, na.rm=T)
+      temp_id.var          <- sapply(ltime, function(x) sapply(x, myvar))
+      temp_id.var_sumNoVar <- sum(temp_id.var == 0, na.rm = TRUE)
       temp_id.var_sumNA    <- sum(is.na(temp_id.var))
       temp_id.varResult    <- temp_id.var_sumNoVar + temp_id.var_sumNA
-      id.variation         <- temp_id.varResult!=length(ltime)
+      id.variation         <- temp_id.varResult != length(ltime)
       id.variation_anyNA   <- temp_id.var_sumNA > 0
     }
     else{
      # time variation
-      temp_time.var          <- sapply(lid,function(x) sapply(x,myvar))
-      temp_time.var_sumNoVar <- apply(temp_time.var==0 , 1, sum, na.rm=T)
+      temp_time.var          <- sapply(lid, function(x) sapply(x, myvar))
+      temp_time.var_sumNoVar <- apply(temp_time.var == 0, 1, sum, na.rm = TRUE)
       temp_time.var_sumNA    <- apply(is.na(temp_time.var), 1, sum)
       temp_time.varResult    <- temp_time.var_sumNoVar + temp_time.var_sumNA
-      time.variation         <- temp_time.varResult!=length(lid)
+      time.variation         <- temp_time.varResult != length(lid)
       time.variation_anyNA   <- temp_time.var_sumNA > 0
 
      # id variation
-      temp_id.var          <- sapply(ltime,function(x) sapply(x,myvar))
-      temp_id.var_sumNoVar <- apply(temp_id.var==0 , 1, sum, na.rm=T)
+      temp_id.var          <- sapply(ltime, function(x) sapply(x, myvar))
+      temp_id.var_sumNoVar <- apply(temp_id.var == 0, 1, sum, na.rm = TRUE)
       temp_id.var_sumNA    <- apply(is.na(temp_id.var), 1, sum)
       temp_id.varResult    <- temp_id.var_sumNoVar + temp_id.var_sumNA
-      id.variation         <- temp_id.varResult!=length(ltime)
+      id.variation         <- temp_id.varResult != length(ltime)
       id.variation_anyNA   <- temp_id.var_sumNA > 0
     }
   }
   else{ # not a list (not a data.frame, pdata.frame) - try our best for that unknown data structure
       # time variation
-      temp_time.var          <- sapply(lid,function(x) sapply(x,myvar))
-      temp_time.var_sumNoVar <- sum(temp_time.var==0, na.rm=T)
+      temp_time.var          <- sapply(lid, function(x) sapply(x, myvar))
+      temp_time.var_sumNoVar <- sum(temp_time.var == 0, na.rm = TRUE)
       temp_time.var_sumNA    <- sum(is.na(temp_time.var))
       temp_time.varResult    <- temp_time.var_sumNoVar + temp_time.var_sumNA
-      time.variation         <- temp_time.varResult!=length(lid)
+      time.variation         <- temp_time.varResult != length(lid)
       time.variation_anyNA   <- temp_time.var_sumNA > 0
       
       # id variation
-      temp_id.var          <- sapply(ltime,function(x) sapply(x,myvar))
-      temp_id.var_sumNoVar <- sum(temp_id.var==0, na.rm=T)
+      temp_id.var          <- sapply(ltime, function(x) sapply(x, myvar))
+      temp_id.var_sumNoVar <- sum(temp_id.var == 0, na.rm = TRUE)
       temp_id.var_sumNA    <- sum(is.na(temp_id.var))
       temp_id.varResult    <- temp_id.var_sumNoVar + temp_id.var_sumNA
-      id.variation         <- temp_id.varResult!=length(ltime)
+      id.variation         <- temp_id.varResult != length(ltime)
       id.variation_anyNA   <- temp_id.var_sumNA > 0
   }
 
