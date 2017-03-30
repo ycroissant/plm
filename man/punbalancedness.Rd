@@ -6,8 +6,8 @@
 
 \title{Measures for Unbalancedness of Panel Data}
 
-\description{This function reports two unbalancedness measures for panel data
-as defined in Ahrens/Pincus (1981).}
+\description{This function reports unbalancedness measures for panel data
+as defined in Ahrens/Pincus (1981) and Baltagi/Song/Jung (2001).}
 
 \usage{
 punbalancedness(x, \dots)
@@ -24,37 +24,52 @@ punbalancedness(x, \dots)
 
 
 \details{
- \code{punbalancedness} returns two measures for the unbalancedness of a
- panel data set (called "gamma" (\eqn{\gamma}) and "nu" (\eqn{\nu})).
+ \code{punbalancedness} returns measures for the unbalancedness of a
+ panel data set.
+
+\itemize{
+ \item{For two-dimensional data:\cr
+ The two measures of Ahrens/Pincus (1981) are calculated,
+ called "gamma" (\eqn{\gamma}) and "nu" (\eqn{\nu}).
  
  If the panel data are balanced, both measures equal 1. The more "unbalanced" the
  panel data, the lower the measures (but > 0). The upper and lower bounds
  as given in Ahrens/Pincus (1981) are:\cr
  \eqn{0 < \gamma, \nu \le 1}, and for \eqn{\nu} more precisely \eqn{\frac{1}{n} < \nu \le 1}{%
  1/n < \nu \le 1}, with \eqn{n} being the number of individuals (as in \code{pdim(x)$nT$n}).
-
- An application of the first measure ("gamma") is found in e. g.
+ }
+ \item{
+ For nested panel data (meaning including a grouping variable):\cr
+ The extension of the above measures by Baltagi/Song/Jung (2001), p. 368, are calculated:\cr
+ \itemize{
+   \item{c1: measure of subgroup (individual) unbalancedness,}
+   \item{c2: measure of time unbalancedness,}
+   \item{c3: measure of group unbalancedness due to each group size.}
+ }
+ Values are 1 if the data are balanced and become smaller as the data become more unbalanced.
+ }
+ } % itemize
+ 
+ An application of the measure "gamma" is found in e. g.
  Baltagi/Song/Jung (2002), pp. 488-491, and Baltagi/Chang (1994), pp. 78--87,
  where it is used to measure the unbalancedness of various unbalanced data
- sets used for Monte Carlo simulation studies.
+ sets used for Monte Carlo simulation studies. Measures c1, c2, c3 are used
+ for similiar purposes in Baltagi/Song/Jung (2001).
 
- There exists also an extension of unbalancedness measures to nested panel
- structures as developed in Baltagi/Song/Jung (2001), p. 368, but these are
- not implemented in \code{punbalancedness} as of now.
 
- \code{punbalancedness} uses output of \code{\link{pdim}} to calculate the
- unbalancedness measures, so inputs to \code{punbalancedness} can be whatever 
- \code{pdim} works on. \code{pdim} returns a logical whether a panel data set 
- is balanced or not and detailed information about the number of individuals 
- and time observations (see \code{\link{pdim}}).
+ In the two-dimensional case, \code{punbalancedness} uses output of \code{\link{pdim}} 
+ to calculate the two unbalancedness measures, so inputs to \code{punbalancedness} can 
+ be whatever \code{pdim} works on. \code{pdim} returns detailed information about the 
+ number of individuals and time observations (see \code{\link{pdim}}).
 }
 
+
 \value{
- A numeric vector containing two entries (in this order):
- \item{gamma}{unbalancedness measure "gamma" (\eqn{\gamma}) (as called by the Greek letter in
-              Ahrens/Pincus (1981), p. 228),}
- \item{nu}{unbalancedness measure "nu" (\eqn{\nu}) (as called by the Greek letter in
-           Ahrens/Pincus (1981), p. 228).}
+ A named numeric vector containing either two or three entries, depending on the 
+ panel structure inputted:
+ 
+ \item{*}{For the two-dimensional panel structure, the entries are called \code{gamma} and \code{nu},}
+ \item{*}{For a nested panel structure, the entries are called \code{c1}, \code{c2}, \code{c3}.}
 }
 
 \note{Calling \code{punbalancedness} on an estimated \code{panelmodel} object and
@@ -110,6 +125,12 @@ ind_d1  <- c(1,1,1,2,2,2,3,3,3,3,3,4,4,4,4,4,4,4,5,5,5,5,5,5,5)
 time_d1 <- c(1,2,3,1,2,3,1,2,3,4,5,1,2,3,4,5,6,7,1,2,3,4,5,6,7)
 df_d1 <- data.frame(individual = ind_d1, time = time_d1)
 punbalancedness(df_d1) # c(0.868, 0.887)
+
+# example for a nested panel structure with a third index variable
+# specifying a group (states are grouped by region) and without grouping
+data("Produc", package = "plm")
+punbalancedness(Produc, index = c("state", "year", "region"))
+punbalancedness(Produc, index = c("state", "year")) 
 }
 
 \keyword{attribute}

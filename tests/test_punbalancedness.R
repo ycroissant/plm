@@ -1,7 +1,10 @@
-# Test of punbalanced (measures for unbalancedness as defined in Ahrens/Pincus (1981))
+# Test of punbalanced  (1) measures for unbalancedness as defined in Ahrens/Pincus (1981)
+#                  and (2) of extension to nested panel structures (Baltagi/Song/Jung (2001), p. 368-369))
 
 # comparision to literature results
 
+
+################## (1) ######### two-dimensional panel ########################################
 
 # Test data as described in Baltagi/Song/Jung (2002), p. 488:
 # 5(15) means: 15 individuals, each with 5 observations
@@ -213,6 +216,60 @@ punbalancedness(mod)
 mod2 <- plm(inv ~ value + capital, data = Grunfeld[1:99, ])
 punbalancedness(mod2)
 
+################## (2) ######### test of nested panel data (additionally with a group) ####################
+# Baltagi/Song/Jung (2001), p. 368-369:
+# P1:
+# M = 10
+# Ni pattern: (8,8,8,10,10,10,10,12,12,12)
+# Ti pattern: (6,6,6, 5, 5, 5, 5, 5, 4, 4)
+# 500 = 3*(8*6) + 4*(10*5) + 1*(12*5)+2*(12*4)
+
+nest_grp_p1 <- c(rep(1,  8*6),
+                 rep(2,  8*6),
+                 rep(3,  8*6),
+                 rep(4,  10*5),
+                 rep(5,  10*5),
+                 rep(6,  10*5),
+                 rep(7,  10*5),
+                 rep(8,  12*5),
+                 rep(9,  12*4),
+                 rep(10, 12*4))
+length(nest_grp_p1)
+
+nest_id_p1 <- c(rep(c(1:8),        6),
+                rep(c(9:(9+7)),    6),
+                rep(c(18:(18+7)),  6),
+                rep(c(27:(27+9)),  5),
+                rep(c(38:(38+9)),  5),
+                rep(c(49:(49+9)),  5),
+                rep(c(60:(60+9)),  5),
+                rep(c(71:(71+11)), 5),
+                rep(c(84:(84+11)), 4),
+                rep(c(97:(97+11)), 4))
+nest_id_p1 <- sort(nest_id_p1)
+length(nest_id_p1)
 
 
+nest_time_p1 <- c(rep(rep(c(1:6), 8),  3),
+                  rep(rep(c(1:5), 10), 4),
+                  rep(rep(c(1:5), 12), 1),
+                  rep(rep(c(1:4), 12), 2))
+length(nest_time_p1)
+df_nested_p1  <- data.frame(nest_id_p1, nest_time_p1, nest_grp_p1)
+pdf_nested_p1 <- pdata.frame(df_nested_p1, index = c("nest_id_p1", "nest_time_p1", "nest_grp_p1"))
 
+
+# on pdata.frame
+punbalancedness(pdf_nested_p1)
+
+# on data.frame
+punbalancedness(df_nested_p1, index = c("nest_id_p1", "nest_time_p1", "nest_grp_p1"))
+
+data("Produc", package = "plm")
+punbalancedness(Produc, index = c("state", "year", "region"))
+
+# on plm object
+pProduc <- pdata.frame(Produc, index = c("state", "year", "region"))
+form  <- log(gsp) ~ log(pc) + log(emp) + log(hwy) + log(water) + log(util) + unemp
+nested_mod <- plm(form, data = pProduc, model = "random", effect = "nested")
+punbalancedness(nested_mod)

@@ -245,18 +245,43 @@ nobs.pgmm <- function(object, ...) {
 
 # punbalancedness: measures for unbalancedness of a pandel data set
 # as defined in Ahrens/Pincus (1981), p. 228 (gamma and nu)
+# and for nested panel structures as in Baltagi/Song/Jung (2001), p. 368-369
 punbalancedness.default <- function(x, ...) {
-  pdim <- pdim(x, ...)
+
+  ii <- index(x)
   
-  N <- pdim$nT$n # no. of individuals
-  Totalobs <- pdim$nT$N # no. of total observations
-  Ti <- pdim$Tint$Ti
-  Tavg <- sum(Ti)/N
-  
-  r1 <- N / (Tavg * sum(1/Ti))
-  r2 <- 1 / (N * (sum( (Ti/Totalobs)^2)))
-  
-  return(c(gamma = r1, nu = r2))
+  if (length(ii) == 2) {
+   ## original Ahrens/Pincus (1981)
+    pdim <- pdim(x, ...)
+    N <- pdim$nT$n # no. of individuals
+    Totalobs <- pdim$nT$N # no. of total observations
+    Ti <- pdim$Tint$Ti
+    Tavg <- sum(Ti)/N
+    
+    r1 <- N / (Tavg * sum(1/Ti))
+    r2 <- 1 / (N * (sum( (Ti/Totalobs)^2)))
+    result <- c(gamma = r1, nu = r2)
+  } else {
+    if (length(ii) == 3) {
+     ## extension to nested model with additional group variable
+     ## Baltagi/Song/Jung (2001), p. 368-369
+      ids <- ii[[1]]
+      tss <- ii[[2]]
+      gps <- ii[[3]]
+      Tis <- unique(data.frame(tss, gps)) # no of max time periods per group
+      Tis <- table(Tis$gps)
+      Nis <- unique(data.frame(ids, gps)) # no of individuals per group
+      Nis <- table(Nis$gps)
+      M <- length(unique(gps)) # no of unique groups
+      Nbar <- sum(Nis)/M
+      Tbar <- sum(Tis)/M
+      c1 <- M / (Nbar * sum(1/Nis))
+      c2 <- M / (Tbar * sum(1/Tis))
+      c3 <- M / (sum(Nis * Tis)/M * sum(1/(Nis*Tis)))
+      result <- (c(c1 = c1, c2 = c2, c3 = c3))
+    } else stop(paste0("unsupported number of dimensions: ", length(ii)))
+  }
+  return(result)
 }
 
 punbalancedness.pdata.frame <- function(x, ...) {
