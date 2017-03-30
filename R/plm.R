@@ -23,8 +23,8 @@ starX <- function(formula, data, model, rhs = 1, effect){
 }   
 
 plm <- function(formula, data, subset, weights, na.action,
-                effect = c('individual','time','twoways', 'nested'),
-                model = c('within','random','ht','between','pooling','fd'),
+                effect = c('individual', 'time', 'twoways', 'nested'),
+                model = c('within', 'random', 'ht', 'between', 'pooling', 'fd'),
                 random.method = NULL,
                 random.models = NULL,
                 random.dfcor = NULL,
@@ -33,6 +33,7 @@ plm <- function(formula, data, subset, weights, na.action,
                 restrict.rhs = NULL,
                 index = NULL,
                 ...){
+  
     # if the first argument is a list (of formulas), then call plmlist and exit
     if (is.list(formula)){
         plmlist <- match.call(expand.dots = FALSE)
@@ -41,6 +42,11 @@ plm <- function(formula, data, subset, weights, na.action,
         nframe <- length(sys.calls())
         plmlist <- eval(plmlist, sys.frame(which = nframe))
         return(plmlist)
+    }
+  
+    if ((!is.null(restrict.matrix) || !is.null(restrict.rhs)) && !is.list(formula)) {
+      stop(paste0("arguments 'restrict.matrix' and 'restrict.rhs' not yet implemented ",
+                  "for single equations"))
     }
     
     dots <- list(...)
@@ -73,7 +79,7 @@ plm <- function(formula, data, subset, weights, na.action,
         return(ht)
     }
     
-    # the use of the instrument argument is deprecated, use Formulas instead
+    # the use of the instrument argument is deprecated, use 2-part Formulas instead
     if (!is.null(dots$instruments)){
         formula <- as.Formula(formula, dots$instruments)
         deprec.instruments <- paste("the use of the instruments argument is deprecated,",
