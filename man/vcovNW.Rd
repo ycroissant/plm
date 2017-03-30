@@ -3,7 +3,7 @@
 \alias{vcovNW.plm}
 \alias{vcovNW.pcce}
 
-\title{Newey and West(1987) Robust Covariance Matrix Estimator}
+\title{Newey and West (1987) Robust Covariance Matrix Estimator}
 \description{
   Nonparametric robust covariance matrix estimators \emph{a la Newey
     and West} for panel models with serial correlation.
@@ -32,7 +32,7 @@
 \code{vcovNW} is a function for estimating a robust covariance matrix of
 parameters for a panel model according to the Newey and West (1987)
 method. The function works as a restriction of the Driscoll and Kraay
-(1998) covariance to no cross--sectional correlation.
+(1998) covariance (see \code{\link{vcovSCC}}) to no cross--sectional correlation.
 
 Weighting schemes are analogous to those in \code{\link[sandwich]{vcovHC}} in package \CRANpkg{sandwich} and are justified theoretically (although in the context of the standard linear model) by MacKinnon and White (1985) and Cribari-Neto (2004) (see Zeileis (2004)).
 
@@ -55,11 +55,15 @@ supply a function (which is the safest) or a matrix (see Zeileis (2004), 4.1-2 a
  of unknown form. \emph{Computational Statistics & Data Analysis}
  \bold{45(2)}, pp. 215--233.
  
+ Driscoll, J.C. and Kraay, A.C. (1998) Consistent Covariance Matrix
+ Estimation with Spatially Dependent Panel Data. \emph{Review of
+   Economics and Statistics} \bold{80(4)}, pp. 549--560.
+ 
  MacKinnon, J. G. and  White, H. (1985) Some heteroskedasticity-consistent
  covariance matrix estimators with improved finite sample properties.
  \emph{Journal of Econometrics} \bold{29(3)}, pp. 305--325.
 
- Newey, W.K. & West, K.D. (1986) A simple, positive semi-definite, 
+ Newey, W.K. & West, K.D. (1987) A simple, positive semi-definite, 
  heteroskedasticity and autocorrelation consistent covariance matrix.
  \emph{Econometrica} \bold{55(3)}, pp. 703--708.
  

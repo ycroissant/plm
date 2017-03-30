@@ -268,13 +268,14 @@ punbalancedness.default <- function(x, ...) {
       ids <- ii[[1]]
       tss <- ii[[2]]
       gps <- ii[[3]]
-      Tis <- unique(data.frame(tss, gps)) # no of max time periods per group
-      Tis <- table(Tis$gps)
-      Nis <- unique(data.frame(ids, gps)) # no of individuals per group
-      Nis <- table(Nis$gps)
-      M <- length(unique(gps)) # no of unique groups
+      Tis <- unique(data.frame(tss, gps))
+      Tis <- table(Tis$gps)               # no of max time periods per group
+      Nis <- unique(data.frame(ids, gps))
+      Nis <- table(Nis$gps)               # no of individuals per group
+      M <- length(unique(gps))            # no of unique groups
       Nbar <- sum(Nis)/M
       Tbar <- sum(Tis)/M
+      
       c1 <- M / (Nbar * sum(1/Nis))
       c2 <- M / (Tbar * sum(1/Tis))
       c3 <- M / (sum(Nis * Tis)/M * sum(1/(Nis*Tis)))
