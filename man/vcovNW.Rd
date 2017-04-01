@@ -17,7 +17,8 @@
 
 \arguments{
   \item{x}{an object of class \code{"plm"} or \code{"pcce"}}
-  \item{type}{one of \code{"HC0"}, \code{"sss"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"},\code{"HC4"},}
+  \item{type}{the weighting scheme used, one of \code{"HC0"}, \code{"sss"}, \code{"HC1"}, \code{"HC2"}, 
+              \code{"HC3"}, \code{"HC4"}, see Details,}
   \item{maxlag}{either \code{NULL} or a positive integer specifying the
   maximum lag order before truncation}
   \item{wj}{weighting function to be applied to lagged terms,}
@@ -34,7 +35,7 @@ parameters for a panel model according to the Newey and West (1987)
 method. The function works as a restriction of the Driscoll and Kraay
 (1998) covariance (see \code{\link{vcovSCC}}) to no cross--sectional correlation.
 
-Weighting schemes are analogous to those in \code{\link[sandwich]{vcovHC}} in package \CRANpkg{sandwich} and are justified theoretically (although in the context of the standard linear model) by MacKinnon and White (1985) and Cribari-Neto (2004) (see Zeileis (2004)).
+Weighting schemes specified by \code{type} are analogous to those in \code{\link[sandwich]{vcovHC}} in package \CRANpkg{sandwich} and are justified theoretically (although in the context of the standard linear model) by MacKinnon and White (1985) and Cribari-Neto (2004) (see Zeileis (2004)).
 
 The main use of \code{vcovNW} is to be an argument to other functions,
 e.g. for Wald--type testing: argument \code{vcov.} to \code{coeftest()}, argument \code{vcov} to

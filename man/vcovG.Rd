@@ -18,7 +18,7 @@
 
 \arguments{
   \item{x}{an object of class \code{"plm"} or \code{"pcce"}}
-  \item{type}{one of \code{"HC0"}, \code{"sss"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"}, \code{"HC4"},}
+  \item{type}{the weighting scheme used, one of \code{"HC0"}, \code{"sss"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"}, \code{"HC4"},}
   \item{cluster}{one of \code{"group"}, \code{"time"},}
   \item{l}{lagging order, defaulting to zero}
   \item{inner}{the function to be applied to the residuals inside the 
