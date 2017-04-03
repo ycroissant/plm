@@ -168,7 +168,7 @@ Hausman, J.A. and Taylor W.E. (1981) Panel data and unobservable
 individual effects, \emph{Econometrica}, \bold{49}(6), pp. 1377--1398.
  
 Nerlove, M. (1971) Further evidence on the estimation of dynamic
-economic relations from a time--series of cross--sections,
+economic relations from a time series of cross sections,
 \emph{Econometrica}, \bold{39}(2), pp. 359--382.
 
 Swamy, P.A.V.B. and Arora, S.S. (1972) The exact finite sample

@@ -54,7 +54,7 @@ ercomp(object, \dots)
   variance--components model, \emph{International Economic Review}, \bold{12}(1), pp. 1--13.
 
   Nerlove, M. (1971) Further evidence on the estimation of dynamic
-  economic relations from a time--series of cross--sections,
+  economic relations from a time series of cross sections,
   \emph{Econometrica}, \bold{39}(2), pp. 359--382.
 
   Swamy, P.A.V.B. and Arora, S.S. (1972) The exact finite sample
