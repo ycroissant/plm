@@ -43,7 +43,7 @@ ercomp.formula <- function(object, data,
     
     # dfcor is set, coerce it to a length 2 vector if necessary
     if (! is.null(dfcor)){
-        if (length(dfcor) > 2) stop("dfcor length should be at least 2")
+        if (length(dfcor) > 2) stop("dfcor length should be at most 2")
         if (length(dfcor) == 1) dfcor <- rep(dfcor, 2)
         if (! balanced & any(dfcor != 3))
             stop("dfcor should equal 3 for unbalanced panels")
@@ -72,8 +72,8 @@ ercomp.formula <- function(object, data,
             s2mu <- sum(fixef(est, type = "dmean", effect = "time") ^ 2) / (TS - 1)
         sigma2 <- c(idios = s2nu, id = s2eta, time = s2mu)
         theta <- list()
-        if (effect != "time") theta$id <- (1 - (1 + TS * sigma2["id"] / sigma2["idios"]) ^ (-0.5))
-        if (effect != "individual") theta$time <- (1 - (1 + N * sigma2["time"] / sigma2["idios"]) ^ (-0.5))
+        if (effect != "time")       theta$id   <- (1 - (1 + TS * sigma2["id"]   / sigma2["idios"]) ^ (-0.5))
+        if (effect != "individual") theta$time <- (1 - (1 + N  * sigma2["time"] / sigma2["idios"]) ^ (-0.5))
         if (effect == "twoways")
             theta$total <- theta$id + theta$time - 1 +
                 (1 + N * sigma2["time"] / sigma2["idios"] +
@@ -137,10 +137,10 @@ ercomp.formula <- function(object, data,
         # the between estimator is only relevant for the second
         # quadratic form
         if (models[1] %in% c("Between", "between"))
-            stop("the between estimator is only relevant for the  between quadratic form")
-        # if the argument is of length 2, duplicate the second valuer
+            stop("the between estimator is only relevant for the between quadratic form")
+        # if the argument is of length 2, duplicate the second value
         if (length(models) == 2) models <- c(models[1], rep(models[2], 2))
-        # if the argument is of length 2, duplicate the second valuer
+        # if the argument is of length 1, triple its value
         if (length(models) == 1) models <- c(rep(models, 3))
         # set one of the last two values to NA in the case of one way
         # model
@@ -241,14 +241,14 @@ ercomp.formula <- function(object, data,
         if (method == "swar"){
             X <- Z[, -1, drop = FALSE]
 
-            yBetaBlambda <- Between(y, ids)  - Between(y, gps)
+            yBetaBlambda <- Between(y, ids) - Between(y, gps)
             ZBetaBlambda <- Between(Z, ids) - Between(Z, gps)
             XBetaBlambda <- Between(X, ids) - Between(X, gps)
             ZBlambda <- Between(Z, gps)
             yBlambda <- Between(y, gps)
-            ZSeta <- apply(Z, 2, tapply, ids, sum)[as.character(ids), , drop = FALSE]
+            ZSeta    <- apply(Z, 2, tapply, ids, sum)[as.character(ids), , drop = FALSE]
             ZSlambda <- apply(Z, 2, tapply, gps, sum)[as.character(gps), , drop = FALSE]
-            XSeta <- apply(X, 2, tapply, ids, sum)[as.character(ids), , drop = FALSE]
+            XSeta    <- apply(X, 2, tapply, ids, sum)[as.character(ids), , drop = FALSE]
             
             estm1 <- plm.fit(object, data, effect = "individual", model = "within")
             estm2 <- lm.fit(ZBetaBlambda, yBetaBlambda)
@@ -324,7 +324,7 @@ ercomp.formula <- function(object, data,
         else{
             time <- index(data)[[2]]
             id <- index(data)[[1]]
-            Dmu <- model.matrix(~ time - 1)                                                                    
+            Dmu <- model.matrix(~ time - 1)
             W1 <- Within(hateps_w, "individual")
             WDmu <- Within(Dmu, id)
             W2 <- fitted(lm.fit(WDmu, hateps_w))
@@ -530,7 +530,7 @@ print.ercomp <- function(x, digits = max(3, getOption("digits") - 3), ...){
     if (effect == "twoways"){
         sigma2 <- unlist(sigma2)
         sigma2Table <- cbind(var = sigma2, std.dev = sqrt(sigma2), share = sigma2 / sum(sigma2))
-        rownames(sigma2Table) <- c("idiosyncratic","individual","time")
+        rownames(sigma2Table) <- c("idiosyncratic", "individual", "time")
     }
     if (effect == "individual"){
         sigma2 <- unlist(sigma2[c("idios", "id")])
