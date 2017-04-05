@@ -1,9 +1,9 @@
 Changes since version 1.6-6
 
   * ercomp: re-written to be a more general framework.
-  * plm: new argument weights added.
-  * plm: fix backward compatibility for the (deprecated!) argument 'instruments'
-         to estimate IV models (but rather use 2-part formulae for IV models).
+  * plm: * new argument weights added.
+         * fix backward compatibility for the (deprecated!) argument 'instruments'
+           to estimate IV models (but rather use 2-part formulae for IV models).
   * pbsytest:
       * test = "j": [joint test by Baltagi/Li(1991)]:
         fixed degrees of freedom (now df = 2 instead of df = 1).
@@ -34,6 +34,7 @@ Changes since version 1.6-6
                         * calculations now done without car::linearHypothesis().
   * print.pseries: prettier printing for integers.
   * diff.pseries: logicals can now be diff'ed (result is integer, mimics base::diff).
+  * summary.pseries: better handling of characters, logicals, factors (use base methods).
   * punbalancedness: extended to calculate unbalancedness measures of nested panel 
                      structures as in Baltagi/Song/Jung (2001).
 

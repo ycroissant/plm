@@ -661,15 +661,23 @@ sumsq <- function(x, ...){
   sum((na.omit(x)-xb)^2)
 }
 
-summary.pseries <- function(object, ...){
-  id <- attr(object, "index")[[1]]
-  time <- attr(object, "index")[[2]]
-  xm <- mean(object, na.rm = TRUE)
-  Bid <-  Between(object, na.rm = TRUE)
-  Btime <-  Between(object, effect = "time", na.rm = TRUE)
-  structure( c(total = sumsq(object), between_id = sumsq(Bid), between_time = sumsq(Btime)), 
-            class = c("summary.pseries", "numeric")
-            )
+summary.pseries <- function(object, ...) {
+  if (!inherits(object, c("factor", "logical", "character"))) {
+    id <- attr(object, "index")[[1]]
+    time <- attr(object, "index")[[2]]
+    xm <- mean(object, na.rm = TRUE)
+    Bid <-  Between(object, na.rm = TRUE)
+    Btime <-  Between(object, effect = "time", na.rm = TRUE)
+    res <- structure(c(total = sumsq(object),
+                       between_id = sumsq(Bid),
+                       between_time = sumsq(Btime)), 
+                     class = c("summary.pseries", "numeric"))
+  } else {
+    class(object) <- setdiff(class(object), c("pseries"))
+    res <- summary(object, ...)
+    class(res) <- c("summary.pseries", class(object), class(res))
+  }
+  return(res)
 }
 
 plot.summary.pseries <- function(x, ...){
@@ -681,11 +689,17 @@ plot.summary.pseries <- function(x, ...){
 
 print.summary.pseries <- function(x, ...){
   digits <- getOption("digits")
-  x <- as.numeric(x)
-  share <- x[-1]/x[1] # vec with length == 2
-  names(share) <- c("id", "time")
-  cat(paste("total sum of squares :", signif(x[1], digits = digits),"\n"))
-  print.default(share, ...)
+  special_treatment_vars <- c("factor", "logical", "character")
+  if (!inherits(x, special_treatment_vars)) {
+    x <- as.numeric(x)
+    share <- x[-1]/x[1] # vec with length == 2
+    names(share) <- c("id", "time")
+    cat(paste("total sum of squares :", signif(x[1], digits = digits),"\n"))
+    print.default(share, ...)
+  } else {
+    class(x) <- setdiff(class(x), c("summary.pseries", special_treatment_vars))
+    print(x, ...)
+  }
 }
 
 
