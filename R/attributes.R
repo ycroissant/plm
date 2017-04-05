@@ -5,7 +5,7 @@ myvar <- function(x){
   z <- switch(as.character(n),
               "0" = NA,
               "1" = 0,
-              ifelse(!is.factor(x), var(x), !all(duplicated(x)[-1L]))) # (var on factors is deprecated as of R 3.2.3)
+              ifelse(!(is.factor(x) || is.character(x)), var(x), !all(duplicated(x)[-1L]))) # (var on factors is deprecated as of R 3.2.3)
   z
 }
 
