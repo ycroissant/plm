@@ -37,6 +37,8 @@ Changes since version 1.6-6
   * summary.pseries: better handling of characters, logicals, factors (use base methods).
   * punbalancedness: extended to calculate unbalancedness measures of nested panel 
                      structures as in Baltagi/Song/Jung (2001).
+  * phtest(..., method = "aux"): fixed bug when index variables were not in the first
+                                 two columns of data (statistic was NaN in that case).
 
 
 Changes since version 1.6-5

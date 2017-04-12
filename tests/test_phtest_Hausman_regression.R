@@ -4,6 +4,7 @@
 ## (1) comparision to Baltagi (2013), sec. 4.3.1, example 1 (pp. 81-82)
 ## (2) comparision to Baltagi (2013), sec. 4.3.2, example 2 (pp. 82-83)
 ## (3) comparision to STATA
+## (4) test for fixed bug about placement of index var
 
 
 ################################## (1) ##################################
@@ -166,3 +167,28 @@ if (class(testobj3$statistic) != "numeric") stop(paste0("class of statistic is n
 # phtest(form_nls_ex2, data = nlswork,  method="aux") # same on data.frame
 # phtest(form_nls_ex2, data = pnlswork, method="aux", vcov = vcovHC) # chisq = 583.56, df = 8, p-value < 2.2e-16
 # # phtest(form_nls_ex2, data = pnlswork, method="aux", vcov = function(x) vcovHC(x, method="white2", type="HC3")) # computationally too heavy!
+
+
+
+############ (4) ################
+### pre rev. 448: for method = "aux", the statistic resulted in NaN if the index vars were not 
+### in the first two columns of the data -> test this
+
+# move index vars to last columns
+gas_index <- c("country", "year")
+gas <- Gasoline[ , c(setdiff(names(Gasoline), gas_index), gas_index) ]
+index_mod1 <- phtest(form, data = gas, method = "aux", index = gas_index)
+pgas <- pdata.frame(gas, index = gas_index)
+index_mod2 <- phtest(form, data = pgas, method = "aux")
+
+data("Hedonic", package = "plm")
+pHed <- pdata.frame(Hedonic, index = "townid")
+index_mod3 <- phtest(mv ~ crim + rm, data = pHed, method = "aux")
+
+## place index vars in last columns
+pHed2 <- pHed[ , c(15:16, 1:14)]
+index_mod4 <- phtest(mv ~ crim + rm, data = pHed2, method = "aux")
+
+if (any(is.nan(c(index_mod1$statistic, index_mod2$statistic, index_mod3$statistic, index_mod4$statistic))))
+  stop("one of the statistics is NaN")
+

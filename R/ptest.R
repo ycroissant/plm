@@ -12,11 +12,11 @@ phtest <- function(x,...){
 
 phtest.formula <- function(x, data, model = c("within", "random"),
                             method = c("chisq", "aux"),
-                            index = NULL, vcov = NULL, ...){
+                            index = NULL, vcov = NULL, ...) {
   # NB: No argument 'effect' here, maybe introduce?
-  #     it gets evaluated tough due to the eval() call for method="chisq"
+  #     it gets evaluated due to the eval() call for method="chisq"
   #     and since rev. 305 due to extraction from dots (...) in method="aux"
-  #    If, so change doc accordingly (currently, effect arg is mentioned in ...)
+  #    If introduced as argument, change doc accordingly (currently, effect arg is mentioned in ...)
   
     if (length(model)!=2) stop("two models should be indicated")
     for (i in 1:2){
@@ -59,8 +59,8 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                   if (!is.null(dots$effect)) effect <- dots$effect else effect <- NULL
                
                # calculatate FE and RE model
-               fe_mod <- plm(formula=x, data=data, model=model[1], effect = effect)
-               re_mod <- plm(formula=x, data=data, model=model[2], effect = effect)
+               fe_mod <- plm(formula = x, data = data, model = model[1], effect = effect)
+               re_mod <- plm(formula = x, data = data, model = model[2], effect = effect)
                 ## DEBUG printing:
                  # print(effect)
                  # print(model)
@@ -72,8 +72,7 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                reY <- pmodel.response(re_mod)
                reX <- model.matrix(re_mod)[ , -1, drop = FALSE] # intercept not needed; drop=F needed to prevent matrix
                feX <- model.matrix(fe_mod)                      # from degenerating to vector if only one regressor
-               dimnames(feX)[[2]] <- paste(dimnames(feX)[[2]],
-                                           "tilde", sep=".")
+               dimnames(feX)[[2]] <- paste(dimnames(feX)[[2]], "tilde", sep=".")
                
                ## estimated models could have fewer obs (due dropping of NAs) compared to the original data
                ## => match original data and observations used in estimated models
@@ -96,13 +95,13 @@ phtest.formula <- function(x, data, model = c("within", "random"),
 
                ## fetch indices here, check pdata
                ## construct data set and formula for auxiliary regression
-               data <- data.frame(cbind(data[, 1:2], reY, reX, feX))
+               data <- pdata.frame(cbind(index(data), reY, reX, feX))
                auxfm <- as.formula(paste("reY~",
                                          paste(dimnames(reX)[[2]],
                                                collapse="+"), "+",
                                          paste(dimnames(feX)[[2]],
                                                collapse="+"), sep=""))
-               auxmod <- plm(formula=auxfm, data=data, model="pooling")
+               auxmod <- plm(formula = auxfm, data = data, model = "pooling")
                nvars <- dim(feX)[[2]]
                R <- diag(1, nvars)
                r <- rep(0, nvars) # here just for clarity of illustration
