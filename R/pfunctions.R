@@ -384,7 +384,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
                          
     }
     else{
-        # subsetting returned a data.frame -> add missing info to make it a pdata.frame again
+        # subsetting returned a data.frame -> add missing attributes to make it a pdata.frame again
         res <- structure(mydata,
                          index = index,
                          class = c("pdata.frame", "data.frame"))
@@ -396,7 +396,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
   index <- attr(x, "index")
   attr(x, "index") <- NULL
   class(x) <- "data.frame"
-  result <- "[[.data.frame"(x, y) # x[[y]]
+  result <- "[[.data.frame"(x, y) # was: x[[y]]
   if (!is.null(result)){
     # make extracted column a pseries
     # use this order for attributes to preserve original order of attributes for a pseries
@@ -414,9 +414,9 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 }
 
 
-###################################################
-### chunk number 4: printing
-###################################################
+######################################################
+### chunk number 4: printing for pdata.frame, pseries
+######################################################
 print.pdata.frame <- function(x, ...){
   attr(x, "index") <- NULL
   class(x) <- "data.frame"
@@ -442,7 +442,7 @@ print.pseries <- function(x, ...){
 
 
 ###################################################
-### chunk number 5: as.matrix
+### chunk number 5: as.matrix.pseries
 ###################################################
 as.matrix.pseries <- function(x, idbyrow = TRUE, ...){
   index <- attr(x, "index")
@@ -468,7 +468,7 @@ as.matrix.pseries <- function(x, idbyrow = TRUE, ...){
 }
 
 ###################################################
-### chunk number 6: as.list.pdata.frame
+### as.list.pdata.frame
 ###################################################
 # The default is to behave identical to as.list.data.frame.
 # This default is necessary, because some code relies on this 
@@ -506,6 +506,36 @@ as.list.pdata.frame <- function(x, keep.attributes = FALSE, ...) {
 
 
 ###################################################
+### as.data.frame.pdata.frame
+###################################################
+as.data.frame.pdata.frame <- function(x, row.names = NULL, optional = FALSE, ...){
+  index <- attr(x, "index")
+  x <- lapply(x,
+              function(z){
+                attr(z, "index") <- index
+                class(z) <- base::union("pseries", class(z)) # use union to avoid doubling pseries if already present
+                return(z)
+              }
+  )
+  
+  if (is.null(row.names) || row.names == FALSE) {
+    x <- data.frame(x)
+  } else {
+    if (row.names == TRUE) { # set fancy row names
+      x <- data.frame(x)
+      row.names(x) <- fancy.row.names(index) # using row.names(x)<-"something" is safer (does not allow duplicate row.names) 
+      # than attr(x,"row.names")<-"something"
+    }
+    ## not implemented: if row.names is a character vector, row.names could also be passed here to base::data.frame,
+    ## see ?base::data.frame
+  } 
+  
+  return(x)
+}
+
+
+
+###################################################
 ### chunk number 7: diff
 ###################################################
 
@@ -524,6 +554,50 @@ diff.pseries <- function(x, lag = 1, ...){
   if (islogi) class(res) <- c("pseries", "integer")
   return(res)
 }
+
+
+## pdiff is (only) used in model.matrix.pFormula to calculate the model.matrix for FD models,
+## works for effect = "individual" and "time", see model.matrix on how to call pdiff.
+## Result is in order (id, time) for both effects
+pdiff <- function(x, cond, effect = c("individual", "time"), has.intercept = FALSE){
+  effect <- match.arg(effect)
+  cond <- as.numeric(cond)
+  n <- ifelse(is.matrix(x),nrow(x),length(x))
+  
+  # code below is written for effect="individual". If effect="time" is
+  # requested, order x so that the code works and later restore original order of x
+  if (effect == "time") { order_cond <- order(cond)
+  if (!is.matrix(x)) { x <- x[order_cond]} 
+  else {x <- x[order_cond, ] }
+  cond <- cond[order_cond]
+  }
+  
+  cond <- c(NA,cond[2:n]-cond[1:(n-1)]) # this assumes a certain ordering
+  cond[cond != 0] <- NA
+  
+  if (!is.matrix(x)){
+    result <- c(NA,x[2:n]-x[1:(n-1)])
+    result[is.na(cond)] <- NA
+    # for effect = "time": restore original order of x:
+    if (effect == "time") result <- result[match(seq_len(n), order_cond)]
+    result <- na.omit(result)
+  }
+  else{
+    result <- rbind(NA,x[2:n,,drop=FALSE]-x[1:(n-1),,drop=FALSE])
+    result[is.na(cond), ] <- NA
+    # for effect = "time": restore original order of x:
+    if (effect == "time") result <- result[match(seq_len(n), order_cond), ]
+    result <- na.omit(result)
+    result <- result[,apply(result,2, var) > 1E-12,drop = FALSE]
+    if (has.intercept){
+      result <- cbind(1,result)
+      colnames(result)[1] <- "(intercept)"
+    }
+  }
+  attr(result, "na.action") <- NULL
+  result
+}
+
 
 
 ###################################################
@@ -700,77 +774,6 @@ print.summary.pseries <- function(x, ...){
     class(x) <- setdiff(class(x), c("summary.pseries", special_treatment_vars))
     print(x, ...)
   }
-}
-
-
-###################################################
-### chunk number 14: as.data.frame
-###################################################
-as.data.frame.pdata.frame <- function(x, row.names = NULL, optional = FALSE, ...){
-  index <- attr(x, "index")
-  x <- lapply(x,
-                function(z){
-                  attr(z, "index") <- index
-                  class(z) <- base::union("pseries", class(z)) # use union to avoid doubling pseries if already present
-                  return(z)
-                }
-              )
-  
-  if (is.null(row.names) || row.names == FALSE) {
-    x <- data.frame(x)
-  } else {
-      if (row.names == TRUE) { # set fancy row names
-        x <- data.frame(x)
-        row.names(x) <- fancy.row.names(index) # using row.names(x)<-"something" is safer (does not allow duplicate row.names) 
-                                               # than attr(x,"row.names")<-"something"
-      }
-    ## not implemented: if row.names is a character vector, row.names could also be passed here to base::data.frame,
-    ## see ?base::data.frame
-  } 
-  
-  return(x)
-}
-
-## pdiff is (only) used in model.matrix.pFormula to calculate the model.matrix for FD models
-## works for effect = "individual" and "time", see model.matrix on how to call pdiff
-## result is in order (id, time) for both effects
-pdiff <- function(x, cond, effect = c("individual", "time"), has.intercept = FALSE){
-  effect <- match.arg(effect)
-  cond <- as.numeric(cond)
-  n <- ifelse(is.matrix(x),nrow(x),length(x))
-  
-  # code below is written for effect="individual". If effect="time" is
-  # requested, order x so that the code works and later restore original order of x
-  if (effect == "time") { order_cond <- order(cond)
-                          if (!is.matrix(x)) { x <- x[order_cond]} 
-                            else {x <- x[order_cond, ] }
-                          cond <- cond[order_cond]
-                        }
-
-  cond <- c(NA,cond[2:n]-cond[1:(n-1)]) # this assumes a certain ordering
-  cond[cond != 0] <- NA
-  
-  if (!is.matrix(x)){
-    result <- c(NA,x[2:n]-x[1:(n-1)])
-    result[is.na(cond)] <- NA
-    # for effect = "time": restore original order of x:
-    if (effect == "time") result <- result[match(seq_len(n), order_cond)]
-    result <- na.omit(result)
-  }
-  else{
-    result <- rbind(NA,x[2:n,,drop=FALSE]-x[1:(n-1),,drop=FALSE])
-    result[is.na(cond), ] <- NA
-    # for effect = "time": restore original order of x:
-    if (effect == "time") result <- result[match(seq_len(n), order_cond), ]
-    result <- na.omit(result)
-    result <- result[,apply(result,2, var) > 1E-12,drop = FALSE]
-    if (has.intercept){
-      result <- cbind(1,result)
-      colnames(result)[1] <- "(intercept)"
-    }
-  }
-  attr(result, "na.action") <- NULL
-  result
 }
 
 
