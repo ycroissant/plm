@@ -191,7 +191,7 @@ pgmm <- function(formula, data, subset, na.action,
   
   #################################################################
   ##### 5. Get the response/covariates matrix yX, the gmm instruments
-  ##### matrix W and the normal instruments matrix inst, splited by
+  ##### matrix W and the normal instruments matrix inst, split by
   ##### individuals
   #################################################################
 
@@ -653,6 +653,7 @@ summary.pgmm <- function(object, robust = TRUE, time.dummies = FALSE, ...){
 }
 
 mtest <- function(object, order = 1, vcov = NULL){
+  if (!inherits(object, "pgmm")) stop("argument 'object' needs to be class 'pgmm'")
   myvcov <- vcov
   if (is.null(vcov)) vv <- vcov(object)
   else if (is.function(vcov)) vv <- myvcov(object)
@@ -690,7 +691,8 @@ mtest <- function(object, order = 1, vcov = NULL){
   pval <- pnorm(abs(stat), lower.tail = FALSE)*2
   mtest <- list(statistic = stat,
                 p.value = pval,
-                method = paste("Autocorrelation test of degree", order))
+                method = paste("Autocorrelation test of degree", order),
+                data.name = data.name(object))
   class(mtest) <- "htest"
   mtest
 }

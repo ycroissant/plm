@@ -37,6 +37,7 @@ Changes since version 1.6-6
   * summary.pseries: better handling of characters, logicals, factors (use base methods).
   * punbalancedness: extended to calculate unbalancedness measures of nested panel 
                      structures as in Baltagi/Song/Jung (2001).
+  * mtest: return value gained data.name element.
 
 
 Changes since version 1.6-5
