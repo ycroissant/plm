@@ -732,7 +732,7 @@ wald <- function(object, param = c("coef", "time", "all"), vcov = NULL){
   wald <- list(statistic = stat,
                p.value = pval,
                parameter = parameter,
-               method = "Wald test")
+               method = "Wald test") # data.name seems missing?
   class(wald) <- "htest"
   wald
 }
@@ -786,6 +786,7 @@ print.summary.pgmm <- function(x, digits = max(3, getOption("digits") - 2),
 }
 
 sargan <- function(object, weights = c("twosteps", "onestep")){
+  if (!inherits(object, "pgmm")) stop("argument 'object' needs to be class 'pgmm'")
   weights <- match.arg(weights)
   model <- describe(object, "model")
   transformation <- describe(object, "transformation")
@@ -806,7 +807,8 @@ sargan <- function(object, weights = c("twosteps", "onestep")){
   sargan <- list(statistic = stat,
                  p.value = pval,
                  parameter = parameter,
-                 method = "Sargan Test")
+                 method = "Sargan Test",
+                 data.name = data.name(object))
   class(sargan) <- "htest"
   sargan
 }
