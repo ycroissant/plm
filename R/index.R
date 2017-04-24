@@ -39,14 +39,13 @@ index.panelmodel <- function(x, which = NULL, ...){
 # pos.index:
 # not exported, helper function
 #
-# NB: check if this functions (and it's uses in the code) works with the new
-#     additional group index; admend comments below for group index
-#
 # determines column numbers of the index variables in a pdata.frame
-# returns named numeric of length 2 with column numbers of the index variables (1: individual index, 2: time index) and 
+# returns named numeric of length 2 or 3 with column numbers of the index variables
+# (1: individual index, 2: time index, if available 3: group index), 
 # names are the names of the index variables
 #
-# returns c(NA, NA) if the index variables are not a column in the pdata.frame (e.g. for pdata.frames created with drop.index = TRUE).
+# returns c(NA, NA) / c(NA, NA, NA) if the index variables are not a column in the pdata.frame
+# (e.g. for pdata.frames created with drop.index = TRUE).
 # Cannot detect index variables if their columns names were changed after creation of the pdata.frame
 pos.index <- function(x, ...) {
   index <- attr(x, "index")
