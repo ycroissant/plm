@@ -50,9 +50,6 @@ x4 <- c(
 
 
 adj.ips <- c(x1, x2, x3, x4)
-adj.ips <- array(adj.ips, dim=c(4, 10,9))
-
-
 
 adj.ips <- array(adj.ips, dim=c(10,9,2,2),
            dimnames = list(
@@ -441,7 +438,7 @@ purtest <- function(object, data = NULL, index = NULL,
   }
 
   if (test == 'ips'){
-    if (exo == "none") stop("ips test is not implemented for exo = none")
+    if (exo == "none") stop("ips test is not implemented for exo = \"none\"")
     lags <- sapply(idres, function(x) x[["lags"]])
     L <- sapply(idres, function(x) x[["T"]]) - lags - 1
     adjval <- mapply(function(x, y) adj.ips.value(x, y, exo = exo),
@@ -519,4 +516,3 @@ print.summary.purtest <- function(x, ...){
   print(x$sumidres, ...)
 }
 
-#rm(x1, x2, x3, x4, adj.ips, Tn, v, adj.levinlin, names.exo, names.test)
