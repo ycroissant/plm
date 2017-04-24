@@ -25,7 +25,7 @@ pgmm(formula, data, subset, na.action,
   
   \item{formula}{a symbolic description for the model to be
     estimated. The preferred interface is now to indicate a multi--part
-    formula, the first two parts describing the covariates and the gmm
+    formula, the first two parts describing the covariates and the GMM
     instruments and, if any, the third part the 'normal' instruments,}
   \item{object,x}{an object of class \code{"pgmm"},}
   \item{data}{a \code{data.frame} (neither factors nor character vectors
@@ -36,7 +36,7 @@ pgmm(formula, data, subset, na.action,
     \code{"twoways"} (the default) or \code{"individual"},}
   \item{model}{one of \code{"onestep"} (the default) or
     \code{"twosteps"},}
-  \item{collapse}{if \code{TRUE}, the gmm instruments are collapsed,}
+  \item{collapse}{if \code{TRUE}, the GMM instruments are collapsed,}
   \item{lost.ts}{the number of lost time series: if \code{NULL}, this
     is automatically computed. Otherwise, it can be defined by the user
     as a numeric vector of length 1 or 2. The first element is the
@@ -90,7 +90,7 @@ It has \code{print}, \code{summary} and \code{print.summary} methods.
 of moments (GMM) estimator. The description of the model to estimate is
 provided with a multi--part formula which is (or which is coerced to) a
 \code{Formula} object. The first right--hand side part describes the
-covariates. The second one, which is mandatory, describes the gmm
+covariates. The second one, which is mandatory, describes the GMM
 instruments. The third one, which is optional, describes the 'normal'
 instruments. By default, all the variables of the model which are not
 used as GMM instruments are used as normal instruments with the same lag
@@ -99,7 +99,7 @@ structure as the one specified in the model.
 \code{y~lag(y, 1:2)+lag(x1, 0:1)+lag(x2, 0:2) | lag(y, 2:99)} is similar
 to \code{y~lag(y, 1:2)+lag(x1, 0:1)+lag(x2, 0:2) | lag(y, 2:99) |
 lag(x1, 0:1)+lag(x2, 0:2)} and indicates that all lags from 2 of
-\code{y} is used as gmm instruments.
+\code{y} are used as GMM instruments.
 
  \code{transformation} indicates how the model should be transformed for
 the estimation. \code{"d"} gives the ``difference GMM'' model (see
@@ -127,7 +127,7 @@ Econometrics}, vol. \bold{87}(1), pp. 115--143.
 Doornik, J., Arellano, M. and Bond, S. (2006) Panel Data Estimation
 using DPD for Ox. \url{http://www.doornik.com/download/oxmetrics7/Ox_Packages/dpd.pdf}
   
-Roodman, D. (2009) How to do xtabond2: An Introduction to difference
+Roodman, D. (2009) How to do xtabond2: An introduction to difference
 and system GMM in Stata, \emph{Stata Journal}, vol. \bold{9}(1),
 pp. 86--136. \url{http://www.stata-journal.com/article.html?article=st0159}.
 % full article in Stata Journal is now accessible
@@ -137,10 +137,9 @@ pp. 86--136. \url{http://www.stata-journal.com/article.html?article=st0159}.
 
 \seealso{
   
-  \code{\link{dynformula}} for dynamic formulas, \code{\link{sargan}}
-  for Sargan tests and \code{\link{mtest}} for Arellano--Bond's tests of
-  serial correlation. % was: multicollinearity
-  
+  \code{\link{sargan}} for Sargan tests and \code{\link{mtest}} for 
+  Arellano--Bond's tests of serial correlation. % was: multicollinearity
+  \code{\link{dynformula}} for dynamic formulas (deprecated).
 }
 
 \author{Yves Croissant}
@@ -152,7 +151,7 @@ data("EmplUK", package = "plm")
 z1 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
            + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
             data = EmplUK, effect = "twoways", model = "twosteps")
-summary(z1)
+summary(z1, robust = FALSE)
 
 ## Blundell and Bond (1998) table 4 (cf. DPD for OX p. 12 col. 4)
 z2 <- pgmm(log(emp) ~ lag(log(emp), 1)+ lag(log(wage), 0:1) +
@@ -169,7 +168,7 @@ z1 <- pgmm(log(emp) ~ log(wage) + log(capital) + log(output),
             lag.form = list(2,1,0,1), data = EmplUK, 
             effect = "twoways", model = "twosteps",
             gmm.inst = ~log(emp), lag.gmm = list(c(2,99)))
-summary(z1)
+summary(z1, robust = FALSE)
 
 ## Blundell and Bond (1998) table 4 (cf DPD for OX p. 12 col. 4)
 z2 <- pgmm(dynformula(log(emp) ~ log(wage) + log(capital), list(1,1,1)), 
