@@ -26,7 +26,7 @@ purtest(object, data = NULL, index = NULL,
   \item{data}{a \code{'data.frame'} or a \code{'pdata.frame'} object,}
   \item{index}{the indexes,}
   \item{test}{the test to be computed: one of \code{"levinlin"} for Levin, Lin and Chu (2002), \code{"ips"} for Im, Pesaran and Shin (2003), \code{"madwu"} for Maddala and Wu (1999), or \code{"hadri"} for Hadri (2000),}
-  \item{exo}{the exogenous variables to introduce in the augmented Dickey--Fuller regressions, one of: no exogenous variables (\code{"none"}), individual intercepts (\code{"intercept"}), or individual intercepts and trends (\code{"trend"}),}
+  \item{exo}{the exogenous variables to introduce in the augmented Dickey--Fuller regressions, one of: no exogenous variables (\code{"none"}), individual intercepts (\code{"intercept"}), or individual intercepts and trends (\code{"trend"}), but see Detail,}
   \item{lags}{the number of lags to be used for the augmented Dickey-Fuller regressions: either an integer (the number of lags for all time series), a vector of integers (one for each time series), or a character string for an automatic computation of the number of lags, based on either the AIC (\code{"AIC"}), the SIC (\code{"SIC"}), or on Hall's method (\code{"Hall"}),}
   \item{pmax}{maximum number of lags,}
   \item{Hcons}{logical, indicating whether the heteroscedasticity-consistent test of Hadri should be computed,}
@@ -47,7 +47,7 @@ The kind of test to be computed can be specified in several ways:
 
 A \code{formula}/\code{data} interface (if \code{data} is a
 \code{data.frame}, an additional \code{index} argument should be
-specified); the formula should be of the form: \code{y~0}, \code{y~1}, or \code{y~trend} for a test with no exogenous variables, with an intercept, or with individual intercepts and time trend, respectively.
+specified); the formula should be of the form: \code{y~0}, \code{y~1}, or \code{y~trend} for a test with no exogenous variables, with an intercept, or with individual intercepts and time trend, respectively. The \code{exo} argument is ignored in this case.
 
 A \code{data.frame}, a \code{matrix}, a \code{pseries}: in this case, the exogenous variables are specified using the \code{exo} argument.
 
