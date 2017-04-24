@@ -728,11 +728,13 @@ wald <- function(object, param = c("coef", "time", "all"), vcov = NULL){
   stat <- t(coef) %*% solve(vv) %*% coef
   names(stat) <- "chisq"
   parameter <- length(coef)
+  names(parameter) <- "df"
   pval <- pchisq(stat, df = parameter, lower.tail = FALSE)
   wald <- list(statistic = stat,
                p.value = pval,
                parameter = parameter,
-               method = "Wald test") # data.name seems missing?
+               method = "Wald test",
+               data.name = data.name(object))
   class(wald) <- "htest"
   wald
 }
