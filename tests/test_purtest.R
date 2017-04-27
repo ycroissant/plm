@@ -1,5 +1,5 @@
 # Various run tests for purtest()
-
+library(plm)
 data("Grunfeld", package = "plm")
 pG <- pdata.frame(Grunfeld)
 
@@ -10,13 +10,17 @@ purtest(inv ~ 1, data = Grunfeld, index = "firm", pmax = 4, test = "madwu")
 
 summary(a1 <- purtest(pG$inv, lags = "SIC", exo = "intercept", test = "ips", pmax = 8))
 print(a1$args$lags)
+if (length(a1$args$lags) != 1) stop("length(return_value$args$lags must be 1")
+if (a1$args$lags != "SIC") stop("length(return_value$args$lags must be \"SIC\"")
 
 summary(a2 <- purtest(pG$inv, lags = 2, exo = "intercept", test = "ips"))
 print(a2$args$lags)
+if (length(a2$args$lags) != 1) stop("length(return_value$args$lags must be 1")
 
 summary(a3 <- purtest(pG$inv, lags = c(2,3,1,5,8,1,4,6,7,1), exo = "intercept", test = "ips"))
 length(a3$args$lags)
 print(a3$args$lags)
+if (length(a3$args$lags) != 10) stop("length(return_value$args$lags must be 10")
 
 ### pseries
 purtest(pdata.frame(Grunfeld)[ , "inv"],  pmax = 4, test = "ips", exo = "intercept") # works

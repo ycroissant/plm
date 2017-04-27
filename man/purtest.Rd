@@ -52,6 +52,8 @@ specified); the formula should be of the form: \code{y~0}, \code{y~1}, or \code{
 A \code{data.frame}, a \code{matrix}, a \code{pseries}: in this case, the exogenous variables are specified using the \code{exo} argument.
 
 The Hadri statistic is the cross-sectional average of the individual KPSS statistics (Kwiatkowski/Phillips/Schmidt/Shin (1992)), standardized by their asymptotic mean and standard deviation.
+
+With the associated \code{summary} and \code{print} methods, additional information can be extracted/displayed (see also Value).
 }
 
 \references{
