@@ -338,7 +338,7 @@ purtest <- function(object, data = NULL, index = NULL,
 
   cl <- match.call()
   test <- match.arg(test)
-  lags <- match.arg(lags)
+  if (is.character(lags)) lags <- match.arg(lags) # if character, select one possible value
   args <- list(test = test, exo = exo, pmax = pmax, lags = lags,
                dfcor = FALSE, fixedT = fixedT)
   L <- nrow(object)
