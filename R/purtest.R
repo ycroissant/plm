@@ -64,6 +64,7 @@ adj.ips <- aperm(adj.ips, c(2,1,3,4))
 ################
 
 Tn <- c(  25,  30,  35,  40,  45,  50,  60,   70,   80,   90,  100,  250,   500)
+
 v <- c(c( .004, .003, .002, .002, .001, .001, .001,0.000,0.000,0.000,0.000,0.000,0.000),
        c(1.049,1.035,1.027,1.021,1.017,1.014,1.011,1.008,1.007,1.006,1.005,1.001,1.000),
        c(-.554,-.546,-.541,-.537,-.533,-.531,-.527,-.524,-.521,-.520,-.518,-.509,-.500),
@@ -71,14 +72,15 @@ v <- c(c( .004, .003, .002, .002, .001, .001, .001,0.000,0.000,0.000,0.000,0.000
        c(-.703,-.674,-.653,-.637,-.624,-.614,-.598,-.587,-.578,-.571,-.566,-.533,-.500),
        c(1.003,0.949,0.906,0.871,0.842,0.818,0.780,0.751,0.728,0.710,0.695,0.603,0.500)
        )
+
 adj.levinlin <- array(v, dim=c(13,2,3),
                       dimnames = list(Tn, c("mu","sigma"),
                         c("none", "intercept", "trend")))
 
-
 names.exo <- c(none = 'None',
-                intercept = 'Individual Intercepts',
-                trend = 'Individual Intercepts and Trend')
+               intercept = 'Individual Intercepts',
+               trend = 'Individual Intercepts and Trend')
+
 names.test <- c(levinlin = 'Levin-Lin-Chu Unit-Root Test',
                 ips = 'Im-Pesaran-Shin Unit-Root Test',
                 madwu = 'Maddala-Wu Unit-Root Test',
@@ -93,8 +95,8 @@ my.lm.fit <- function(X, y, dfcor = TRUE, ...){
   resvar <- ifelse(dfcor, rss/rdf, rss/n)
   sigma <- sqrt(resvar)
   R <- chol2inv(Qr$qr[p1, p1, drop = FALSE])
-  thecoef <- object$coefficients[Qr$pivot[p1]]#[lags+1]
-  these <- sigma*sqrt(diag(R))#[lags+1])
+  thecoef <- object$coefficients[Qr$pivot[p1]] #[lags+1]
+  these <- sigma*sqrt(diag(R)) #[lags+1])
   list(coef = thecoef, se = these, sigma = sigma,
        rss = rss, n = n, K = p, rdf = rdf)
 }
@@ -108,7 +110,9 @@ YClags <- function(object,  k = 3){
   else
     NULL
 }
+
 YCtrend <- function(object) 1:length(object)
+
 YCdiff <- function(object){
   c(NA, object[2:length(object)] - object[1:(length(object)-1)])
 }
@@ -299,7 +303,6 @@ purtest <- function(object, data = NULL, index = NULL,
     if (exists(object) && is.vector(get(object))){
       # is.vector because, eg, inv exists as a function
       object <- get(object)
-
     }
     else{
       if (is.null(data)) stop("unknown response")
@@ -333,14 +336,13 @@ purtest <- function(object, data = NULL, index = NULL,
     object <- as.data.frame(split(object, id))
   }
 
- 
   cl <- match.call()
   test <- match.arg(test)
-  args <- list(test = test, exo =exo, pmax = pmax, lags = lags,
+  lags <- match.arg(lags)
+  args <- list(test = test, exo = exo, pmax = pmax, lags = lags,
                dfcor = FALSE, fixedT = fixedT)
   L <- nrow(object)
   n <- ncol(object)
-
   parameter <- NULL
   alternative <- 'stationarity'
   method <- paste0(names.test[test], " (ex. var.: ",
@@ -403,6 +405,7 @@ purtest <- function(object, data = NULL, index = NULL,
                    lagsel(x, exo = exo, method = lags,
                           pmax = pmax, dfcor = dfcor, fixedT = fixedT))
   }
+  
   # compute the augmented Dickey-Fuller regressions for each time
   # series
   comp.aux.reg <- (test == "levinlin")
@@ -410,9 +413,8 @@ purtest <- function(object, data = NULL, index = NULL,
                   tsadf(x, exo = exo, lags = y, dfcor = dfcor,
                         comp.aux.reg = comp.aux.reg),
                   object, as.list(lags), SIMPLIFY = FALSE)
-
   
-  if (test == 'levinlin'){
+  if (test == "levinlin"){
     # get the adjustment parameters for the mean and the variance
     adjval <- adj.levinlin.value(L, exo = exo)
     mymu <- adjval[1]
@@ -437,14 +439,14 @@ purtest <- function(object, data = NULL, index = NULL,
     pvalue <- 2*pnorm(abs(stat), lower.tail = FALSE)
   }
 
-  if (test == 'ips'){
+  if (test == "ips"){
     if (exo == "none") stop("ips test is not implemented for exo = \"none\"")
     lags <- sapply(idres, function(x) x[["lags"]])
     L <- sapply(idres, function(x) x[["T"]]) - lags - 1
     adjval <- mapply(function(x, y) adj.ips.value(x, y, exo = exo),
                      as.list(L), as.list(lags))
     # get the adjustment parameters for the mean and the variance
-    trho <- sapply(idres, function(x) x[['trho']])
+    trho <- sapply(idres, function(x) x[["trho"]])
     tbar <- mean(trho)
     Etbar <- mean(adjval[1,])
     Vtbar <- mean(adjval[2,])
@@ -453,7 +455,7 @@ purtest <- function(object, data = NULL, index = NULL,
   }
 
   if (test == "madwu"){
-    trho <- sapply(idres, function(x) x[['trho']])
+    trho <- sapply(idres, function(x) x[["trho"]])
     pvalue <- 2*pnorm(abs(trho), lower.tail = FALSE)
     stat <- c(chisq = - 2*sum(log(pvalue)))
     n <- length(trho)
@@ -461,6 +463,7 @@ purtest <- function(object, data = NULL, index = NULL,
     adjval <- NULL
     parameter <- c(df = 2 * n)
   }
+  
   htest <- structure(list(statistic = stat,
                           parameter = parameter,
                           alternative = alternative,
@@ -484,14 +487,14 @@ print.purtest <- function(x, ...){
 }
 
 summary.purtest <- function(object, ...){
-  lags <- sapply(object$idres, function(x) x[['lags']])
-  L <- sapply(object$idres, function(x) x[['T']])
+  lags <- sapply(object$idres, function(x) x[["lags"]])
+  L <- sapply(object$idres, function(x) x[["T"]])
   nam <- names(object$idres)
-  rho <- sapply(object$idres, function(x) x[['rho']])
-  sdrho <- sapply(object$idres, function(x) x[['sdrho']])
+  rho <- sapply(object$idres, function(x) x[["rho"]])
+  sdrho <- sapply(object$idres, function(x) x[["sdrho"]])
   trho <- rho / sdrho
   sumidres <- cbind(lags = lags, obs = L - lags - 1, rho = rho, trho = trho)
-  if (object$args$test == 'ips'){
+  if (object$args$test == "ips"){
     sumidres <- cbind(sumidres, t(object$adjval))
   }
   rownames(sumidres) <- nam
@@ -503,10 +506,10 @@ summary.purtest <- function(object, ...){
 print.summary.purtest <- function(x, ...){
   cat(paste(names.test[x$args$test], "\n"))
   cat(paste('Exogenous variables:', names.exo[x$args$exo], '\n'))
-  thelags <- sapply(x$idres, function(x) x[['lags']])
+  thelags <- sapply(x$idres, function(x) x[["lags"]])
   if (is.character(x$args$lags)){
     cat(paste0('Automatic selection of lags using ', x$args$lags, ': ',
-              min(thelags), ' - ', max(thelags), ' lags (max: ', x$args$pmax, ') \n'))
+              min(thelags), ' - ', max(thelags), ' lags (max: ', x$args$pmax, ')\n'))
   }
   else{
     cat('User-provided lags\n')

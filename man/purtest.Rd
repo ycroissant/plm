@@ -51,13 +51,16 @@ specified); the formula should be of the form: \code{y~0}, \code{y~1}, or \code{
 
 A \code{data.frame}, a \code{matrix}, a \code{pseries}: in this case, the exogenous variables are specified using the \code{exo} argument.
 
-The Hadri statistic is the cross-sectional average of the individual KPSS statistics, standardized by their asymptotic mean and standard deviation.
+The Hadri statistic is the cross-sectional average of the individual KPSS statistics (Kwiatkowski/Phillips/Schmidt/Shin (1992)), standardized by their asymptotic mean and standard deviation.
 }
 
 \references{
 Hadri K. (2000). ``Testing for Stationarity in Heterogeneous Panel Data'', \emph{The Econometrics Journal}, \bold{3}(2), pp. 148--161.
 
 Im K.S., Pesaran M.H. and Shin Y. (2003). ``Testing for Unit Roots in Heterogeneous Panels'', \emph{Journal of Econometrics}, \bold{115}(1), pp. 53--74.
+
+Kwiatkowski D., Phillips P. C. B., Schmidt P. and Shin Y. (1992). ``Testing the null of stationarity against the alternative of a unit root:
+How sure are we that economic time series have a unit root?'', \emph{Journal of Econometrics}, \bold{54}(1--3), pp. 159--178.
 
 Levin A., Lin C.F. and Chu C.S.J. (2002). ``Unit Root Tests in Panel Data: Asymptotic and Finite Sample Properties'', \emph{Journal of Econometrics}, \bold{108}(1), pp. 1--24.
 

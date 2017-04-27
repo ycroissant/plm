@@ -38,6 +38,9 @@ Changes since version 1.6-6
   * punbalancedness: extended to calculate unbalancedness measures of nested panel 
                      structures as in Baltagi/Song/Jung (2001).
   * mtest, sargan: return values gained data.name element.
+  * purtest: cosmetic: when argument 'lags' is not specified by user, the returned
+             object does not contain all three possible values in args$lags anymore,
+             thus gives prettier printing.
 
 
 Changes since version 1.6-5
