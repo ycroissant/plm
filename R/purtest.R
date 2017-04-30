@@ -55,8 +55,8 @@ adj.ips <- array(adj.ips, dim=c(10,9,2,2),
            dimnames = list(
              c(10,15,20,25,30,40,50,60,70,100),
              0:8,
-             c('mean', 'var'),
-             c('intercept', 'trend'))
+             c("mean", "var"),
+             c("intercept", "trend"))
            )
                   
 adj.ips <- aperm(adj.ips, c(2,1,3,4))
@@ -77,14 +77,14 @@ adj.levinlin <- array(v, dim=c(13,2,3),
                       dimnames = list(Tn, c("mu","sigma"),
                         c("none", "intercept", "trend")))
 
-names.exo <- c(none = 'None',
-               intercept = 'Individual Intercepts',
-               trend = 'Individual Intercepts and Trend')
+names.exo <- c(none = "None",
+               intercept = "Individual Intercepts",
+               trend = "Individual Intercepts and Trend")
 
-names.test <- c(levinlin = 'Levin-Lin-Chu Unit-Root Test',
-                ips = 'Im-Pesaran-Shin Unit-Root Test',
-                madwu = 'Maddala-Wu Unit-Root Test',
-                hadri = 'Hadri Test')
+names.test <- c(levinlin = "Levin-Lin-Chu Unit-Root Test",
+                ips = "Im-Pesaran-Shin Unit-Root Test",
+                madwu = "Maddala-Wu Unit-Root Test",
+                hadri = "Hadri Test")
 
 my.lm.fit <- function(X, y, dfcor = TRUE, ...){
   object <- lm.fit(X, y)
@@ -133,8 +133,8 @@ selectT <- function(x, Ts){
 }
     
 lagsel <- function(object, exo = c("intercept", "none", "trend"),
-                   method = c("Hall", "AIC", "SIC"), pmax = 10, dfcor=
-                   FALSE, fixedT = TRUE, ...){
+                   method = c("Hall", "AIC", "SIC"), pmax = 10, 
+                   dfcor = FALSE, fixedT = TRUE, ...){
   # select the optimal number of lags using Hall method or AIC or SIC
   # method
   method <- match.arg(method)
@@ -216,7 +216,7 @@ adj.ips.value <- function(l = 30, lags = 2,
 
 tsadf <- function(object, exo = c("intercept", "none", "trend"),
                   lags = NULL, dfcor = FALSE, comp.aux.reg = FALSE, ...){
-  # compute some adf regression for each time serie
+  # compute some ADF regression for each time serie
   y <- object
   L <- length(y)
   Dy <- YCdiff(object)
@@ -239,6 +239,7 @@ tsadf <- function(object, exo = c("intercept", "none", "trend"),
                  sigma = sigma,
                  T = L,
                  lags = lags)
+  
   if (comp.aux.reg){
     # for Levin-Lin-Chu only, computes the residuals of the auxiliary
     # regressions
@@ -288,7 +289,7 @@ purtest <- function(object, data = NULL, index = NULL,
   data.name <- paste(deparse(substitute(object)))
 
   id <- NULL
-  if (inherits(object, 'formula')){
+  if (inherits(object, "formula")){
     terms <- terms(object)
     lab <- labels(terms)
     if (length(lab) == 0){
@@ -324,7 +325,7 @@ purtest <- function(object, data = NULL, index = NULL,
   else{
     exo <- match.arg(exo)
     if (is.null(dim(object))){
-      if (inherits(object, 'pseries')){
+      if (inherits(object, "pseries")){
         id <- attr(object, "index")[[1]]
       }
       else stop("the individual dimension is undefined")
@@ -344,7 +345,7 @@ purtest <- function(object, data = NULL, index = NULL,
   L <- nrow(object)
   n <- ncol(object)
   parameter <- NULL
-  alternative <- 'stationarity'
+  alternative <- "stationarity"
   method <- paste0(names.test[test], " (ex. var.: ",
                     names.exo[exo],")")
 
@@ -419,7 +420,7 @@ purtest <- function(object, data = NULL, index = NULL,
     adjval <- adj.levinlin.value(L, exo = exo)
     mymu <- adjval[1]
     mysig <- adjval[2]
-    # calculate the ration of LT/ST variance
+    # calculate the ratio of LT/ST variance
     sigmaST <- sapply(idres, function(x) x[["sigma"]])
     sigmaLT <- sqrt(sapply(object, longrunvar, exo = exo, q = q))
     si <- sigmaLT/sigmaST
@@ -429,7 +430,7 @@ purtest <- function(object, data = NULL, index = NULL,
     res.level <- unlist(lapply(idres, function(x) x$resid[["resid.level"]]))
     res.diff <- unlist(lapply(idres, function(x) x$resid[["resid.diff"]]))
     z <- my.lm.fit(as.matrix(res.level), res.diff, dfcor = dfcor)
-    # compute the levin-lin-chu statistic
+    # compute the Levin-Lin-Chu statistic
     tildeT <- L-mean(lags)-1
     sigmaeps2 <- z$rss/(n*tildeT)
     rho <- z$coef
@@ -505,17 +506,17 @@ summary.purtest <- function(object, ...){
 
 print.summary.purtest <- function(x, ...){
   cat(paste(names.test[x$args$test], "\n"))
-  cat(paste('Exogenous variables:', names.exo[x$args$exo], '\n'))
+  cat(paste("Exogenous variables:", names.exo[x$args$exo], "\n"))
   thelags <- sapply(x$idres, function(x) x[["lags"]])
   if (is.character(x$args$lags)){
-    cat(paste0('Automatic selection of lags using ', x$args$lags, ': ',
-              min(thelags), ' - ', max(thelags), ' lags (max: ', x$args$pmax, ')\n'))
+    cat(paste0("Automatic selection of lags using ", x$args$lags, ": ",
+              min(thelags), " - ", max(thelags), " lags (max: ", x$args$pmax, ")\n"))
   }
   else{
-    cat('User-provided lags\n')
+    cat("User-provided lags\n")
   }
-  cat(paste('statistic:', round(x$statistic$statistic, 3), '\n'))
-  cat(paste('p-value:', round(x$statistic$p.value, 3), '\n'))
+  cat(paste("statistic:", round(x$statistic$statistic, 3), "\n"))
+  cat(paste("p-value:", round(x$statistic$p.value, 3), "\n"))
   print(x$sumidres, ...)
 }
 
