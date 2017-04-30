@@ -4,6 +4,8 @@ Changes since version 1.6-6
   * plm: * new argument weights added.
          * fix backward compatibility for the (deprecated!) argument 'instruments'
            to estimate IV models (but rather use 2-part formulae for IV models).
+         * gives an informative error message if all terms are dropped in an 
+           estimation due to aliasing.
   * pbsytest:
       * test = "j": [joint test by Baltagi/Li(1991)]:
         fixed degrees of freedom (now df = 2 instead of df = 1).

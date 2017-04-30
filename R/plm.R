@@ -300,7 +300,8 @@ mylm <- function(y, X, W = NULL){
     ## for debug purpose:
     # warning("Coefficient(s) '", paste((names.X)[na.coef], collapse = ", "), 
     #"' could not be estimated and is (are) dropped.")
-      X <- X[, ! na.coef, drop = FALSE]
+    X <- X[, ! na.coef, drop = FALSE]
+    if (dim(X)[2] == 0L) stop("estimation not possible: all coefficients ommitted from estimation due to aliasing")
     if (is.null(W)) result <- lm(y ~ X - 1)
     else result <- twosls(y, X, W)
   }

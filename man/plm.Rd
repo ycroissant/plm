@@ -164,7 +164,7 @@ component regression model}, \emph{Journal of Econometrics}, \bold{101}(2), pp. 
 Baltagi, B.H. (2013) \emph{Econometric Analysis of Panel Data}, 5th
 ed., John Wiley and Sons.
 
-Hausman, J.A. and Taylor W.E. (1981) Panel data and unobservable
+Hausman, J.A. and Taylor, W.E. (1981) Panel data and unobservable
 individual effects, \emph{Econometrica}, \bold{49}(6), pp. 1377--1398.
  
 Nerlove, M. (1971) Further evidence on the estimation of dynamic
