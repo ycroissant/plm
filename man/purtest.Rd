@@ -27,7 +27,7 @@ purtest(object, data = NULL, index = NULL,
   \item{index}{the indexes,}
   \item{test}{the test to be computed: one of \code{"levinlin"} for Levin, Lin and Chu (2002), \code{"ips"} for Im, Pesaran and Shin (2003), \code{"madwu"} for Maddala and Wu (1999), or \code{"hadri"} for Hadri (2000),}
   \item{exo}{the exogenous variables to introduce in the augmented Dickey--Fuller (ADF) regressions, one of: no exogenous variables (\code{"none"}), individual intercepts (\code{"intercept"}), or individual intercepts and trends (\code{"trend"}), but see Details,}
-  \item{lags}{the number of lags to be used for the augmented Dickey-Fuller regressions: either an integer (the number of lags for all time series), a vector of integers (one for each time series), or a character string for an automatic computation of the number of lags, based on either the AIC (\code{"AIC"}), the SIC (\code{"SIC"}), or on Hall's method (\code{"Hall"}),}
+  \item{lags}{the number of lags to be used for the augmented Dickey-Fuller regressions: either an integer (the number of lags for all time series), a vector of integers (one for each time series), or a character string for an automatic computation of the number of lags, based on either the AIC (\code{"AIC"}), the SIC (\code{"SIC"}), or on the method by Hall (1994) (\code{"Hall"}),}
   \item{pmax}{maximum number of lags,}
   \item{Hcons}{logical, indicating whether the heteroscedasticity-consistent test of Hadri should be computed,}
   \item{q}{the bandwidth for the estimation of the long-run variance,}
@@ -62,12 +62,14 @@ With the associated \code{summary} and \code{print} methods, additional informat
 \references{
 Hadri K. (2000). ``Testing for Stationarity in Heterogeneous Panel Data'', \emph{The Econometrics Journal}, \bold{3}(2), pp. 148--161.
 
+Hall A. (1994). ``Testing for a Unit Root in Time Series with Pretest Data-Based Model Selection'', \emph{Journal of Business & Economic Statistics}, \bold{12}(1), pp. 461--470.
+
 Im K.S., Pesaran M.H. and Shin Y. (2003). ``Testing for Unit Roots in Heterogeneous Panels'', \emph{Journal of Econometrics}, \bold{115}(1), pp. 53--74.
 
 Kwiatkowski D., Phillips P. C. B., Schmidt P. and Shin Y. (1992). ``Testing the null of stationarity against the alternative of a unit root:
 How sure are we that economic time series have a unit root?'', \emph{Journal of Econometrics}, \bold{54}(1--3), pp. 159--178.
 
-Levin A., Lin C.F. and Chu C.S.J. (2002). ``Unit Root Tests in Panel Data: Asymptotic and Finite Sample Properties'', \emph{Journal of Econometrics}, \bold{108}(1), pp. 1--24.
+Levin A., Lin C.-F. and Chu C.-S.J. (2002). ``Unit Root Tests in Panel Data: Asymptotic and Finite-Sample Properties'', \emph{Journal of Econometrics}, \bold{108}(1), pp. 1--24.
 
 Maddala G.S. and Wu S. (1999). ``A Comparative Study of Unit Root Tests with Panel Data and a New Simple Test'', \emph{Oxford Bulletin of Economics and Statistics}, \bold{61}, Supplement 1, pp. 631--652.
 }

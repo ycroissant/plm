@@ -1,5 +1,5 @@
 
-
+# x1: means without time trend from table 3 in IPS (2003)
 x1 <- c(
 -1.504,-1.514,-1.522,-1.520,-1.526,-1.523,-1.527,-1.519,-1.524,-1.532,
 -1.488,-1.503,-1.516,-1.514,-1.519,-1.520,-1.524,-1.519,-1.522,-1.530,
@@ -11,7 +11,7 @@ x1 <- c(
     NA,    NA,    NA,-1.273,-1.319,-1.371,-1.411,-1.423,-1.441,-1.474,
     NA,    NA,    NA,-1.212,-1.266,-1.329,-1.377,-1.393,-1.415,-1.456
 )
-
+# x2: variances without time trend from table 3 in IPS (2003)
 x2 <- c(
 1.069,0.923,0.851,0.809,0.789,0.770,0.760,0.749,0.736,0.735,
 1.255,1.011,0.915,0.861,0.831,0.803,0.781,0.770,0.753,0.745,
@@ -24,6 +24,7 @@ x2 <- c(
    NA,   NA,   NA,1.217,1.105,0.996,0.929,0.896,0.871,0.818
 )
 
+# x3: means with time trend from table 3 in IPS (2003)
 x3 <- c(
 -2.166,-2.167,-2.168,-2.167,-2.172,-2.173,-2.176,-2.174,-2.174,-2.177,
 -2.173,-2.169,-2.172,-2.172,-2.173,-2.177,-2.180,-2.178,-2.176,-2.179,
@@ -36,6 +37,7 @@ x3 <- c(
     NA,    NA,    NA,-1.761,-1.835,-1.925,-1.987,-2.024,-2.046,-2.088
 )
 
+# x4: variances with time trend from table 3 in IPS (2003)
 x4 <- c(
 1.132,0.869,0.763,0.713,0.690,0.655,0.633,0.621,0.610,0.597,
 1.453,0.975,0.845,0.769,0.734,0.687,0.654,0.641,0.627,0.605,
@@ -48,7 +50,6 @@ x4 <- c(
    NA,   NA,   NA,1.208,1.063,0.902,0.808,0.766,0.728,0.670
 )
 
-
 adj.ips <- c(x1, x2, x3, x4)
 
 adj.ips <- array(adj.ips, dim=c(10,9,2,2),
@@ -58,11 +59,12 @@ adj.ips <- array(adj.ips, dim=c(10,9,2,2),
              c("mean", "var"),
              c("intercept", "trend"))
            )
-                  
+
 adj.ips <- aperm(adj.ips, c(2,1,3,4))
 
 ################
 
+# table 2 in LLC (2002): mean and standard deviation adjustments
 Tn <- c(  25,  30,  35,  40,  45,  50,  60,   70,   80,   90,  100,  250,   500)
 
 v <- c(c( .004, .003, .002, .002, .001, .001, .001,0.000,0.000,0.000,0.000,0.000,0.000),
@@ -131,7 +133,7 @@ selectT <- function(x, Ts){
   pos <- which((Ts - x)>0)[1]
   return(Ts[c(pos-1,pos)])
 }
-    
+
 lagsel <- function(object, exo = c("intercept", "none", "trend"),
                    method = c("Hall", "AIC", "SIC"), pmax = 10, 
                    dfcor = FALSE, fixedT = TRUE, ...){
@@ -216,7 +218,7 @@ adj.ips.value <- function(l = 30, lags = 2,
 
 tsadf <- function(object, exo = c("intercept", "none", "trend"),
                   lags = NULL, dfcor = FALSE, comp.aux.reg = FALSE, ...){
-  # compute some ADF regression for each time serie
+  # compute some ADF regressions for each time series
   y <- object
   L <- length(y)
   Dy <- YCdiff(object)
@@ -241,7 +243,7 @@ tsadf <- function(object, exo = c("intercept", "none", "trend"),
                  lags = lags)
   
   if (comp.aux.reg){
-    # for Levin-Lin-Chu only, computes the residuals of the auxiliary
+    # for Levin-Lin-Chu only, compute the residuals of the auxiliary
     # regressions
     X <- cbind(LDy[ , 0:lags], m)[-narow, , drop = FALSE]
     if (lags == 0 && exo == "none"){
@@ -344,28 +346,28 @@ purtest <- function(object, data = NULL, index = NULL,
                dfcor = FALSE, fixedT = fixedT)
   L <- nrow(object)
   n <- ncol(object)
-  parameter <- NULL
   alternative <- "stationarity"
   method <- paste0(names.test[test], " (ex. var.: ",
                     names.exo[exo],")")
 
   if (test == "hadri"){
+#### NB: case exo == "none" is not catched/does not work for Hadri
     if (exo == "intercept"){
       resid <- lapply(object, function(x) lm(x~1)$residuals)
-      adj <- c(1/6, 1/45)
+      adj <- c(1/6, 1/45) # eq. (17) in Hadri (2000)
     }
     if (exo == "trend"){
       resid <- lapply(object,
                       function(x){
                         trend <- 1:length(x)
                         lm(x~trend)$residuals
-                      }
-                      )
-      adj <- c(1/15, 11/6300)
-    }      
-    sigma2 <- mean(unlist(resid)^2)
+                        })
+      adj <- c(1/15, 11/6300) # eq. (25) in Hadri (2000)
+    }
+    
     cumres2 <- lapply(resid, function(x) cumsum(x)^2)
     if (!Hcons){
+      sigma2 <- mean(unlist(resid)^2)
       S <- sum(unlist(cumres2))/(L^2)
       LM <- S / sigma2
     }
@@ -374,7 +376,7 @@ purtest <- function(object, data = NULL, index = NULL,
       Sit2 <- mapply("/", cumres2, sigma2i)
       LM <- sum(unlist(Sit2))/ (L^2 * n)
     }
-    stat <- c(z = sqrt(n) * (LM - adj[1])  / sqrt(adj[2]))
+    stat <- c(z = sqrt(n) * (LM - adj[1])  / sqrt(adj[2])) # eq. (14), (22) in Hadri (2000)
     pvalue <- 2 * (pnorm(abs(stat), lower.tail = FALSE))
     htest <- structure(list(statistic = stat,
                             parameter = NULL,
@@ -394,7 +396,7 @@ purtest <- function(object, data = NULL, index = NULL,
   
   # compute the lags for each time series if necessary
   if (is.numeric(lags)){
-    if (length(lags) == 1) lags <- rep(lags, n)
+    if (length(lags) == 1L) lags <- rep(lags, n)
     else{
       if (length(lags) != n) stop("lags should be of length 1 or n")
       else lags <- as.list(lags)
@@ -438,6 +440,7 @@ purtest <- function(object, data = NULL, index = NULL,
     trho <- rho/sdrho
     stat <- c(z = (trho - n * tildeT * sbar / sigmaeps2 * sdrho * mymu)/mysig)
     pvalue <- 2*pnorm(abs(stat), lower.tail = FALSE)
+    parameter <- NULL
   }
 
   if (test == "ips"){
@@ -453,6 +456,7 @@ purtest <- function(object, data = NULL, index = NULL,
     Vtbar <- mean(adjval[2,])
     stat <- c(z = sqrt(n)*(tbar-Etbar)/sqrt(Vtbar))
     pvalue <- 2*pnorm(abs(stat), lower.tail = FALSE)
+    parameter <- NULL
   }
 
   if (test == "madwu"){
@@ -460,9 +464,9 @@ purtest <- function(object, data = NULL, index = NULL,
     pvalue <- 2*pnorm(abs(trho), lower.tail = FALSE)
     stat <- c(chisq = - 2*sum(log(pvalue)))
     n <- length(trho)
-    pvalue <- pchisq(stat, df = 2*n, lower.tail = FALSE)
-    adjval <- NULL
     parameter <- c(df = 2 * n)
+    pvalue <- pchisq(stat, df = parameter, lower.tail = FALSE)
+    adjval <- NULL
   }
   
   htest <- structure(list(statistic = stat,
