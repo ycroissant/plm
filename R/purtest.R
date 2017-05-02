@@ -351,7 +351,7 @@ purtest <- function(object, data = NULL, index = NULL,
                     names.exo[exo],")")
 
   if (test == "hadri"){
-#### NB: case exo == "none" is not catched/does not work for Hadri
+#### NB: case exo == "none" is not caught/does not work for Hadri
     if (exo == "intercept"){
       resid <- lapply(object, function(x) lm(x~1)$residuals)
       adj <- c(1/6, 1/45) # eq. (17) in Hadri (2000)
@@ -438,7 +438,8 @@ purtest <- function(object, data = NULL, index = NULL,
     rho <- z$coef
     sdrho <- z$se
     trho <- rho/sdrho
-    stat <- c(z = (trho - n * tildeT * sbar / sigmaeps2 * sdrho * mymu)/mysig)
+    stat <- (trho - n * tildeT * sbar / sigmaeps2 * sdrho * mymu)/mysig
+    names(stat) <- "z" # avoids a concatenated name like z.x1
     pvalue <- 2*pnorm(abs(stat), lower.tail = FALSE)
     parameter <- NULL
   }
