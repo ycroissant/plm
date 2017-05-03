@@ -1,6 +1,6 @@
 ### Test of within_intercept in connection with fixef() and comparision to Stata and Gretl
 #
-# TODO: modify to accomodate unbalanced two-way models?
+# results for within_intercept matches EViews, also in the two-way unbalanced case
 #  
 # (1) balanced
 # (2) unbalanced
@@ -142,7 +142,6 @@ int_manual_tw_i_u2 <- crossprod(f_level_tw_i_u, weights_gtw_i_u) / sum(weights_g
 int_manual_tw_t_u2 <- crossprod(f_level_tw_t_u, weights_gtw_t_u) / sum(weights_gtw_t_u)
 
 
-# TODO: within_intercept needs to be modified to handle the two-way unbalanced case?
 individual_intercepts_tw_i_u <- int_tw_u + f_dmean_tw_i_u
 individual_intercepts_tw_t_u <- int_tw_u + f_dmean_tw_t_u
 

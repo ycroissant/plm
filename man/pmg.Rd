@@ -60,7 +60,7 @@ regressions. If \code{model="dmg"} the data are demeaned
 cross-sectionally, which is believed to reduce the influence of common
 factors (and is akin to what is done in homogeneous panels when
 \code{model="within"} and \code{effect="time"}. Lastly, if
-\code{model="cmg"} then the CCEMG estimator is employed: this latter is
+\code{model="cmg"} the CCEMG estimator is employed: this latter is
 consistent under the hypothesis of unobserved common factors and
 idiosyncratic factor loadings; it works by augmenting the model by
 cross-sectional averages of the dependent variable and regressors in
@@ -71,7 +71,7 @@ intercepts and possibly trends.
 \author{Giovanni Millo}
 
 \references{
-M. Hashem Pesaran (2006), Estimation and Inference in Large Heterogeneous Panels with a Multifactor Error Structure, \emph{Econometrica}, \bold{74(4)}, pp. 967--1012. 
+M. Hashem Pesaran (2006), Estimation and Inference in Large Heterogeneous Panels with a Multifactor Error Structure, \emph{Econometrica}, \bold{74}(4), pp. 967--1012. 
 }
 
 \examples{
@@ -82,12 +82,12 @@ summary(mgmod)
 
 ## demeaned Mean Groups
 dmgmod <- pmg(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
-             data = Produc, model="dmg")
+             data = Produc, model = "dmg")
 summary(dmgmod)
 
 ## Common Correlated Effects Mean Groups
 ccemgmod <- pmg(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
-                data = Produc, model="cmg")
+                data = Produc, model = "cmg")
 summary(ccemgmod)
 }
 

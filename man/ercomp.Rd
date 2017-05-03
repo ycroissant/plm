@@ -82,7 +82,7 @@ z <- plm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
 ercomp(z)
 # a two-ways model
 ercomp(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc,
-       method = "amemiya",effect = "twoways")
+       method = "amemiya", effect = "twoways")
 }
 \author{Yves Croissant}
 \keyword{regression}

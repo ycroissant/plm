@@ -46,7 +46,7 @@ pdim(z)       # more information about the dimensions (no. of individuals and ti
 # illustrate difference between nobs and pdim for first-difference model
 data("Grunfeld", package = "plm")
 fdmod <- plm(inv ~ value + capital, data = Grunfeld, model = "fd")
-nobs(fdmod)  # 190
+nobs(fdmod)      # 190
 pdim(fdmod)$nT$N # 200
 }
 

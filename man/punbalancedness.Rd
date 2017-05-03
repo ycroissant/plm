@@ -65,7 +65,7 @@ punbalancedness(x, \dots)
 
 
 \value{
- A named numeric vector containing either two or three entries, depending on the 
+ A named numeric containing either two or three entries, depending on the 
  panel structure inputted:
  
  \item{*}{For the two-dimensional panel structure, the entries are called \code{gamma} and \code{nu},}
