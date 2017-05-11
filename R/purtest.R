@@ -243,7 +243,7 @@ tsadf <- function(object, exo = c("intercept", "none", "trend"),
                  lags = lags)
   
   if (comp.aux.reg){
-    # for Levin-Lin-Chu only, compute the residuals of the auxiliary
+    # for Levin-Lin-Chu test only, compute the residuals of the auxiliary
     # regressions
     X <- cbind(LDy[ , 0:lags], m)[-narow, , drop = FALSE]
     if (lags == 0 && exo == "none"){
@@ -514,7 +514,8 @@ print.summary.purtest <- function(x, ...){
   cat(paste("Exogenous variables:", names.exo[x$args$exo], "\n"))
   thelags <- sapply(x$idres, function(x) x[["lags"]])
   if (is.character(x$args$lags)){
-    cat(paste0("Automatic selection of lags using ", x$args$lags, ": ",
+    lagselectionmethod <- if (x$args$lags == "Hall") "Hall's method" else x$args$lags
+    cat(paste0("Automatic selection of lags using ", lagselectionmethod, ": ",
               min(thelags), " - ", max(thelags), " lags (max: ", x$args$pmax, ")\n"))
   }
   else{

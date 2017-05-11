@@ -2,6 +2,8 @@ Changes since version 1.6-6
 
   * ercomp: re-written to be a more general framework.
   * plm: * new argument weights added.
+         * nested random effects models implemented (Baltagi/Song/Jung (2001)),
+           use effect = "nested".
          * fix backward compatibility for the (deprecated!) argument 'instruments'
            to estimate IV models (but rather use 2-part formulae for IV models).
          * gives an informative error message if all terms are dropped in an 
@@ -27,22 +29,22 @@ Changes since version 1.6-6
       * Arguments drop.NA.series, drop.const.series, replace.non.finite,
         drop.unused.levels introduced to remove/replace columns/values as described
         before (all default to FALSE).
+  * punbalancedness: extended to calculate unbalancedness measures of nested panel 
+                     structures as in Baltagi/Song/Jung (2001).
+  * pwartest, pwfdtest: * statistics are labelled as F statistics.
+                        * calculations now done without car::linearHypothesis().
+  * mtest, sargan: return values gained data.name element.
   * (internal, not exported): residuals_overall_exp.plm and fitted_exp.plm are added
     for testing purposes: residuals_overall_exp.plm always gives the residuals of the
     overall/outer plm model, fitted_exp.plm gives the fitted values (by subtracting
     the overall residuals from the untransformed response variable).
   * pwartest.formula (only formula interface): fixed: ellipsis (dots) were not passed on.
-  * pwartest, pwfdtest: * statistics are labelled as F statistics.
-                        * calculations now done without car::linearHypothesis().
   * print.pseries: prettier printing for integers.
   * diff.pseries: logicals can now be diff'ed (result is integer, mimics base::diff).
   * summary.pseries: better handling of characters, logicals, factors (use base methods).
-  * punbalancedness: extended to calculate unbalancedness measures of nested panel 
-                     structures as in Baltagi/Song/Jung (2001).
-  * mtest, sargan: return values gained data.name element.
   * purtest: cosmetic: when argument 'lags' is not specified by user, the returned
              object does not contain all three possible values in args$lags anymore,
-             thus gives prettier printing.
+             thus prints prettier.
 
 
 Changes since version 1.6-5
