@@ -285,7 +285,7 @@ pgmm <- function(formula, data, subset, na.action,
     }
     else{
       td <- cbind(1, rbind(0, diag(1, T - 1)))
-      # remove as many columns and row as there are lost time series
+      # remove as many columns and rows as there are lost time series
       # in level (the difference of position between rows and columns
       # is due to the fact that the first column of td is the
       # intercept and should be kept anyway
@@ -765,24 +765,24 @@ print.summary.pgmm <- function(x, digits = max(3, getOption("digits") - 2),
 
   cat("\nSargan Test: ",names(x$sargan$statistic),
       "(",x$sargan$parameter,") = ",x$sargan$statistic,
-      " (p.value=",format.pval(x$sargan$p.value,digits=digits),")\n",sep="")
+      " (p-value=",format.pval(x$sargan$p.value,digits=digits),")\n",sep="")
 
   cat("Autocorrelation test (1): ",names(x$m1$statistic),
       " = ",x$m1$statistic,
-      " (p.value=",format.pval(x$m1$p.value,digits=digits),")\n",sep="")
+      " (p-value=",format.pval(x$m1$p.value,digits=digits),")\n",sep="")
   
   cat("Autocorrelation test (2): ",names(x$m2$statistic),
       " = ",x$m2$statistic,
-      " (p.value=",format.pval(x$m2$p.value,digits=digits),")\n",sep="")
+      " (p-value=",format.pval(x$m2$p.value,digits=digits),")\n",sep="")
   cat("Wald test for coefficients: ",names(x$wald.coef$statistic),
       "(",x$wald.coef$parameter,") = ",x$wald.coef$statistic,
-      " (p.value=",format.pval(x$wald.coef$p.value,digits=digits),")\n",sep="")
+      " (p-value=",format.pval(x$wald.coef$p.value,digits=digits),")\n",sep="")
   
   
   if (describe(x, "effect") == "twoways"){
     cat("Wald test for time dummies: ",names(x$wald.td$statistic),
         "(",x$wald.td$parameter,") = ",x$wald.td$statistic,
-        " (p.value=",format.pval(x$wald.td$p.value,digits=digits),")\n",sep="")
+        " (p-value=",format.pval(x$wald.td$p.value,digits=digits),")\n",sep="")
   }
   invisible(x)
 }
