@@ -16,14 +16,14 @@ pooltest(x, \dots)
 }
 
 \arguments{
- \item{x}{an object of class \code{"plm"},}
+ \item{x}{an object of class \code{"plm"} for the plm method; an object of class \code{"formula"} for the formula interface,}
  \item{z}{an object of class \code{"pvcm"} obtained with
     \code{model="within"},}
  \item{data}{a \code{data.frame},}
  \item{\dots}{further arguments passed to plm.}
 }
 
-\details{ \code{pooltest} is a \emph{F} test of stability (or Chow test) for the coefficients of a panel model. The estimated \code{plm} object should be a \code{"pooling"} model or a \code{"within"} model (the default); intercepts are assumed to be identical in the first case and different in the second case.
+\details{ \code{pooltest} is a \emph{F} test of stability (or Chow test) for the coefficients of a panel model. For argument \code{x}, the estimated \code{plm} object should be a \code{"pooling"} model or a \code{"within"} model (the default); intercepts are assumed to be identical in the first case and different in the second case.
 }
 
 \value{
