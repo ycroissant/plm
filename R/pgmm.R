@@ -316,7 +316,7 @@ pgmm <- function(formula, data, subset, na.action,
   #################################################################
 
   for (i in 1:N){
-    narows <- apply(yX1[[i]], 1, function(z) any(is.na(z)))
+    narows <- apply(yX1[[i]], 1, function(z) anyNA(z))
     yX1[[i]][narows, ] <- 0
     W1[[i]][is.na(W1[[i]])] <- 0
     W1[[i]][narows, ] <- 0
@@ -325,7 +325,7 @@ pgmm <- function(formula, data, subset, na.action,
       Z1[[i]][narows, ] <- 0
     }
     if (transformation == "ld"){
-      narows <- apply(yX2[[i]], 1, function(z) any(is.na(z)))
+      narows <- apply(yX2[[i]], 1, function(z) anyNA(z))
       yX2[[i]][narows, ] <- 0
       W2[[i]][is.na(W2[[i]])] <- 0
       W2[[i]][narows, ] <- 0

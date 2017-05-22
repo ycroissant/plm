@@ -15,7 +15,7 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                             index = NULL, vcov = NULL, ...) {
   # NB: No argument 'effect' here, maybe introduce?
   #     it gets evaluated due to the eval() call for method="chisq"
-  #     and since rev. 305 due to extraction from dots (...) in method="aux"
+  #     and since rev. 305 due to extraction from dots (...) in method="aux" as a quick fix
   #    If introduced as argument, change doc accordingly (currently, effect arg is mentioned in ...)
   
     if (length(model)!=2) stop("two models should be indicated")
@@ -387,8 +387,8 @@ pFtest.plm <- function(x, z, ...){
 }
 
 ############## pwaldtest() ############################################
-# pwaldtest is used in summary.plm, summary.pht to compute the F statistic, but can be used stand-alone
-# test of joint significance of all slopes
+# pwaldtest is used in summary.plm, summary.pht to compute the F statistic, but can be used 
+# as a stand-alone test of joint significance of all slopes
 #
 # Short intro (but see associated help file)
 # arg 'vcov' non-NULL => the robust tests are carried out

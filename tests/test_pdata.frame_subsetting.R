@@ -11,23 +11,23 @@ pGrunfeld <- pdata.frame(Grunfeld)
 attr(pGrunfeld[c("1-1935"), ], which = "index")
 attr(pGrunfeld[c("1-1935", "1-1936"), ], which = "index")
 
-if (any(is.na(attr(pGrunfeld[c("1-1935"), ], which = "index")))) stop("FAIL: NA in index")
-if (any(is.na(attr(pGrunfeld[c("1-1935", "1-1936"), ], which = "index")))) stop("FAIL: NA in index")
+if (anyNA(attr(pGrunfeld[c("1-1935"), ], which = "index"))) stop("FAIL: NA in index")
+if (anyNA(attr(pGrunfeld[c("1-1935", "1-1936"), ], which = "index"))) stop("FAIL: NA in index")
 
 
 # subsetting with [] by line number works (indexes preserved)
 if (!all(attr(pGrunfeld[c(1), ], which = "index") == c(1, 1935))) stop("wrong index!")
 if (!all(attr(pGrunfeld[c(1,2), ], which = "index") == data.frame(firm = c(1,1), year = c(1935, 1936)))) stop("wrong index!")
 
-if (any(is.na(attr(pGrunfeld[c(1), ], which = "index")))) stop("FAIL: NA in index")
-if (any(is.na(attr(pGrunfeld[c(1,2), ], which = "index")))) stop("FAIL: NA in index")
+if (anyNA(attr(pGrunfeld[c(1), ], which = "index"))) stop("FAIL: NA in index")
+if (anyNA(attr(pGrunfeld[c(1,2), ], which = "index"))) stop("FAIL: NA in index")
 
 # subsetting with [[]] works (indexes preserved)
 attr(pGrunfeld[["inv"]], which = "index")
 attr(pGrunfeld[[3]], which = "index")
 
-if (any(is.na(attr(pGrunfeld[["inv"]], which = "index")))) stop("FAIL: NA in index")
-if (any(is.na(attr(pGrunfeld[[3]], which = "index")))) stop("FAIL: NA in index")
+if (anyNA(attr(pGrunfeld[["inv"]], which = "index"))) stop("FAIL: NA in index")
+if (anyNA(attr(pGrunfeld[[3]], which = "index"))) stop("FAIL: NA in index")
 
 
 

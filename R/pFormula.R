@@ -55,7 +55,7 @@ model.matrix.pFormula <- function(object, data,
     X.contr <- X.contr[ !sapply(X.contr, is.null) ]  ##drop NULL elements
     index <- attr(data, "index")
     id <- index[[1]]
-    if(any(is.na(id))) {
+    if (anyNA(id)) {
         stop("NA in the individual index variable")
     }
     time <- index[[2]]
@@ -241,7 +241,7 @@ model.matrix.pdata.frame <- function(object,
     X.contr <- X.contr[! sapply(X.contr, is.null) ]  ##drop NULL elements
     index <- attr(data, "index")
     id <- index[[1]]
-    if(any(is.na(id))) {
+    if (anyNA(id)) {
         stop("NA in the individual index variable")
     }
     time <- index[[2]]

@@ -415,5 +415,5 @@ if (!all(sort(unique(make.pbalanced(Grunfeld_wo_2nd_period_and_3rd_for_id1)$year
 # max(dims$Tint$Ti)
 # 
 # pdim(pnlswork_r8_no_NA)
-# any(is.na(pnlswork_r8_no_NA$year))
+# anyNA(pnlswork_r8_no_NA$year)
 

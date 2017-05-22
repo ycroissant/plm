@@ -1,5 +1,6 @@
 myvar <- function(x){
-  if(any(is.na(x))) x <- x[!is.na(x)]
+  x.na <- is.na(x)
+  if(anyNA(x.na)) x <- x[!x.na]
   n <- length(x)
   
   z <- switch(as.character(n),

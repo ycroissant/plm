@@ -160,7 +160,7 @@ make.pconsecutive.pdata.frame <- function(x, balanced = FALSE, ...){
   # determine position of index vars is c(NA, NA) if index vars are not columns in x
   pos_indexvars <- pos.index(x)
   index_orig_names <- names(pos_indexvars)
-  if (any(is.na(pos_indexvars))) {
+  if (anyNA(pos_indexvars)) {
     index_orig <- attr(x, "index")
     x <- cbind(index_orig, x)
   }
@@ -191,7 +191,7 @@ make.pconsecutive.pdata.frame <- function(x, balanced = FALSE, ...){
 
 make.pconsecutive.pseries <- function(x, balanced = FALSE, ...) {
   is_p <- is.pconsecutive(x)
-  if (any(is.na(is_p)) || !all(is_p)) {
+  if (anyNA(is_p) || !all(is_p)) {
     
     list_ret_make_index <- make.pconsecutive.indexes(x, balanced = balanced, ...)
     df_index_filled    <- list_ret_make_index[["consec_index"]]
@@ -261,7 +261,7 @@ make.pbalanced.pdata.frame <- function(x, balance.type = c("fill", "shared"), ..
       # drop from time column (if time index column present in pdata.frame)
       pos_indexvars <- pos.index(result) # position of index vars is c(NA, NA) if index vars are not present as columns
       index_orig_names <- names(pos_indexvars)
-      if (!any(is.na(pos_indexvars))) {
+      if (!anyNA(pos_indexvars)) {
         result[ , pos_indexvars[2]] <- droplevels(result[ , pos_indexvars[2]])
       }
   } else {

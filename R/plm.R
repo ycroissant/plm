@@ -54,8 +54,8 @@ plm <- function(formula, data, subset, weights, na.action,
     effect <- match.arg(effect)
     # note that model can be NA, in this case the model.frame is
     # returned
-    if (! any(is.na(model))) model <- match.arg(model)
-    if (! any(is.na(model)) & effect == "nested") model <- "random"
+    if (! anyNA(model)) model <- match.arg(model)
+    if (! anyNA(model) & effect == "nested") model <- "random"
     inst.method <- match.arg(inst.method)
   
     # input checks for FD model: give informative error messages as
