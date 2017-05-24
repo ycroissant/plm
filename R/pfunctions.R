@@ -542,16 +542,22 @@ as.data.frame.pdata.frame <- function(x, row.names = NULL, optional = FALSE, ...
 diff.pseries <- function(x, lag = 1, ...){
   islogi <- is.logical(x)
   if (! (is.numeric(x) || islogi)) stop("diff is only relevant for numeric or logical series")
-  if (round(lag) != lag) stop("Lagging value 'lag' must be whole-numbered (and non-negative)")
   
+  non.int <- vapply(lag, function(l) round(l) != l, FUN.VALUE = TRUE)
+  if (any(non.int)) stop("Lagging value(s) in 'lag' must be whole-numbered (and non-negative)")
+    
   # prevent input of negative values, because it will most likely confuse users
   # what diff would do in this case
-  if (lag < 0) stop("diff.pseries is only relevant for non-negative lags")
+  neg <- vapply(lag, function(l) l < 0, FUN.VALUE = TRUE)
+  if (any(neg)) stop("diff.pseries is only relevant for non-negative values in 'lag'")
+  
   
   lagx <- lag(x, k = lag)
   res <- x-lagx
-  # if x is logical, diff'ed x is integer (mimics base::diff behaviour):
-  if (islogi) class(res) <- c("pseries", "integer")
+  
+  # if x is logical and lagged x is a vector (as opposed to a matrix),
+  # diff'ed x is an integer vector (mimics base::diff behaviour):
+  if (islogi && length(lag) == 1) class(res) <- c("pseries", "integer")
   return(res)
 }
 
