@@ -33,6 +33,9 @@ Changes since version 1.6-6
                      structures as in Baltagi/Song/Jung (2001).
   * pwartest, pwfdtest: * statistics are labelled as F statistics.
                         * calculations now done without car::linearHypothesis().
+  * difft.pseries (non-exported) implemented, diff-ing taking the value of the
+    of the time dimension into account, analogous to already implemented (non-exported)
+    functions lagt/lead.pseries.
   * mtest, sargan: return values gained data.name element.
   * (internal, not exported): residuals_overall_exp.plm and fitted_exp.plm are added
     for testing purposes: residuals_overall_exp.plm always gives the residuals of the
