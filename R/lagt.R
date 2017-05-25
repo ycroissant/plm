@@ -46,17 +46,17 @@ leadt <- function(x, k = 1, ...) {
 
 ## difft: diff-ing taking the time variable into account
 difft.pseries <- function(x, lag = 1, ...){
-## copied from diff.peries except lines which use lagt() ("t") instead of lag()
+## copied/adapted from diff.peries except lines which use lagt() ("t") instead of lag()
   islogi <- is.logical(x)
-  if (! (is.numeric(x) || islogi)) stop("diff is only relevant for numeric or logical series")
+  if (! (is.numeric(x) || islogi)) stop("difft is only relevant for numeric or logical series")
   
   non.int <- vapply(lag, function(l) round(l) != l, FUN.VALUE = TRUE)
   if (any(non.int)) stop("Lagging value(s) in 'lag' must be whole-numbered (and non-negative)")
   
   # prevent input of negative values, because it will most likely confuse users
-  # what diff would do in this case
+  # what difft would do in this case
   neg <- vapply(lag, function(l) l < 0, FUN.VALUE = TRUE)
-  if (any(neg)) stop("diff.pseries is only relevant for non-negative values in 'lag'")
+  if (any(neg)) stop("difft.pseries is only relevant for non-negative values in 'lag'")
   
   
   lagtx <- lagt(x, k = lag) # use "time-based" lagging for difft
