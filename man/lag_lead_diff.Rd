@@ -31,7 +31,10 @@ lag, lead, and diff functions for class pseries.
 }
 
 \value{
-These functions return an object of class \code{pseries} except if \code{lag} (thus also \code{lead}, \code{diff}) is called with more than one lag (lead), i. e. argument \code{length(k) > 1} or argument \code{length(lag) > 1}, a matrix is returned.
+
+ \item{*}{An object of class \code{pseries}, if the argument specifying the lag has length 1 
+ (argument \code{k} in functions \code{lag} and \code{lead}, argument \code{lag} in function \code{diff}).}
+ \item{*}{A matrix containing the various series in its columns, if the argument specifying the lag has length > 1.}
 }
 
 \note{The sign of \code{k} in \code{lag.pseries} results in inverse behavior compared to \code{\link[stats]{lag}} and \code{\link[zoo]{lag.zoo}}.}
@@ -66,6 +69,7 @@ lead(z, 1) # same as line above
 identical(lead(z, 1), lag(z, -1)) # TRUE
  
 # compute more than one lag and diff at once
+# (each returns matrix)
 lag(z, c(1,2))
 diff(z, c(1,2))
 }
