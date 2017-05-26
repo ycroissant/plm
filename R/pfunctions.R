@@ -45,7 +45,6 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
       x <- x[, !na.check]
     }
 
-  
     # if requested: check and remove constant series
     if (drop.const.series) {
       # old: cst.check <- sapply(x, function(x) var(as.numeric(x), na.rm = TRUE)==0) # old
@@ -312,8 +311,8 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
       # this part for backward compatibility (required by meboot)
       
       ### subset index appropriately:
-      # subsetting data.frame by only j (x[ , j]) or missing j (x[i] yields full-row
-      # columns of data.frame, thus do not subset index because it needs full full rows]
+      # subsetting data.frame by only j (x[ , j]) or missing j (x[i]) yields full-row
+      # column(s) of data.frame, thus do not subset index because it needs full rows
       #
       # subset index if:
       #      * [i,j] (supplied i AND supplied j) (in this case: Nargs_mod == 3L (or 4L depending on present/missing drop))
@@ -340,7 +339,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
             
             # remove empty levels in index (if any)
             # NB: really do dropping of unused levels? Standard R behaviour is to leave the levels and not drop unused levels
-            #     Maybe the dropping is needed for functions like lag.pseries to work correctly?
+            #     Maybe the dropping is needed for functions like lag.pseries/lagt.pseries to work correctly?
             index <- droplevels(index)
             # NB: use droplevels() rather than x[drop = TRUE] as x[drop = TRUE] can also coerce mode!
             # old (up to rev. 251): index <- data.frame(lapply(index, function(x) x[drop = TRUE]))
@@ -433,7 +432,7 @@ print.pdata.frame <- function(x, ...){
 
 print.pseries <- function(x, ...){
   attr(x, "index") <- NULL
-  attr(x, "class") <- base::setdiff(attr(x, "class"), "pseries") # old: attr(x, "class")[-1]
+  attr(x, "class") <- base::setdiff(attr(x, "class"), "pseries")
   if (length(attr(x, "class")) == 1 && class(x) %in% c("character", "logical", "numeric", "integer")) {
     attr(x, "class") <- NULL
   }
