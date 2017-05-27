@@ -183,6 +183,7 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
   stat <- c("chisq" = n * resb %*% solve(Omega) %*% resb)
   df <- c("df" = Kx * (T ^ 2 - T - 1))                  ## TODO: df is overwritten in next line...?!
   df <- length(pi) - length(.coef)
+  names(df) <- "df"
   pitest <- list(statistic = stat,
                  parameter = df,
                  method = "Chamberlain's pi test",
