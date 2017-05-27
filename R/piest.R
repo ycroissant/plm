@@ -52,7 +52,7 @@ aneweytest <-  function(formula, data, subset, na.action, index = NULL,  ...){
   X <- lapply(X, function(x) t(t(x) - .colMeans(x, nrow(x), ncol(x)))) # was: t(t(x) - apply(x, 2, mean))
   if (!is.null(Z)){
     Z <- Z[time == years[1], , drop = FALSE]
-    Z <- t(t(Z) - .colMeans(Z, nrow(Z), ncol(Z))) # t(t(Z) - apply(Z, 2, mean))
+    Z <- t(t(Z) - .colMeans(Z, nrow(Z), ncol(Z))) # was: t(t(Z) - apply(Z, 2, mean))
   }
   for (i in 1:(length(years))){
     colnames(X[[i]]) <- paste(colnames(X[[i]]), years[i], sep = ".")
@@ -73,7 +73,7 @@ aneweytest <-  function(formula, data, subset, na.action, index = NULL,  ...){
   aneweytest
 }
 
-piest <-  function(formula, data, subset, na.action, index = NULL, robust = TRUE,  ...){
+piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,  ...){
   cl <- match.call(expand.dots = TRUE)
   mf <- match.call()
   # compute the model.frame using plm with model = NA
@@ -167,7 +167,7 @@ piest <-  function(formula, data, subset, na.action, index = NULL, robust = TRUE
   piconst <- matrix(R %*% .coef, ncol = T)
   OOmega <- Omega
   .resid <- as.matrix(as.data.frame(Y)) - XX %*% piconst
-  if(TRUE){
+  if(TRUE){                                             ## TODO: this is always TRUE...?!
     if (robust){
       Omega <- lapply(seq_len(n),
                       function(i)
@@ -181,7 +181,7 @@ piest <-  function(formula, data, subset, na.action, index = NULL, robust = TRUE
   }
   A <- solve(t(R) %*% solve(Omega) %*% R)
   stat <- c("chisq" = n * resb %*% solve(Omega) %*% resb)
-  df <- c("df" = Kx * (T ^ 2 - T - 1))
+  df <- c("df" = Kx * (T ^ 2 - T - 1))                  ## TODO: df is overwritten in next line...?!
   df <- length(pi) - length(.coef)
   pitest <- list(statistic = stat,
                  parameter = df,
@@ -189,8 +189,7 @@ piest <-  function(formula, data, subset, na.action, index = NULL, robust = TRUE
                  p.value = pchisq(stat, df = df, lower.tail = FALSE),
                  data.name = paste(deparse(formula))
                  )
-                 
-  
+
   structure(list(coefficients = .coef,
                  pi = pi,
                  daub = resb,
@@ -214,8 +213,8 @@ summary.piest <- function(object,...){
   p <- 2 * pnorm(abs(z), lower.tail = FALSE)
   object$coefficients <- cbind("Estimate"   = b,
                                "Std. Error" = std.err,
-                               "t-value"    = z,
-                               "Pr(>|t|)"   = p)
+                               "t-value"    = z,    # TODO: but standard normal distribution used?!
+                               "Pr(>|t|)"   = p)    # TODO
   class(object) <- c("summary.piest", "piest", "panelmodel")
   object
 }
@@ -223,8 +222,8 @@ summary.piest <- function(object,...){
 print.summary.piest <- function(x, ...){
   print(x$coefficients)
   print(x$pitest)
-  
 }
+
 ## data(Produc, package="plm")
 ## Produc <- subset(Produc, year >= 1970 & year < 1974)
 ## T <- 3
