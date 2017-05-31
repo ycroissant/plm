@@ -33,7 +33,7 @@ Changes since version 1.6-6
                      structures as in Baltagi/Song/Jung (2001).
   * pwartest, pwfdtest: * statistics are labelled as F statistics.
                         * calculations now done without car::linearHypothesis().
-  * difft.pseries (note the "t") implemented (non-exported), does diff-ing while
+  * difft.pseries (note the "t") implemented (non-exported), diff-ing whith
     taking the value of the time dimension into account, analogous to already
     implemented (non-exported) functions lagt.pseries/leadt.pseries.
   * diff.pseries: * logicals can now be diff'ed (result is integer, mimics base::diff).
@@ -43,7 +43,7 @@ Changes since version 1.6-6
     for testing purposes: residuals_overall_exp.plm always gives the residuals of the
     overall/outer plm model, fitted_exp.plm gives the fitted values (by subtracting
     the overall residuals from the untransformed response variable).
-  * pwartest.formula (only formula interface): fixed: ellipsis (dots) were not passed on.
+  * pwartest.formula (only formula interface): fixed: ellipsis (dots) was not passed on.
   * print.pseries: prettier printing for integers.
   * summary.pseries: better handling of characters, logicals, factors (use base methods).
   * purtest: cosmetic: when argument 'lags' is not specified by user, the returned

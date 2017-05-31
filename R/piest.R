@@ -201,7 +201,8 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
                  pitest = structure(pitest, class = "htest"),
                  Omega = Omega,
                  moments = resb,
-                 call = cl), class = c("piest", "panelmodel"))
+                 call = cl),
+                class = c("piest", "panelmodel"))
 }
 
 

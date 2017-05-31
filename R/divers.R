@@ -137,7 +137,7 @@ expand.formula <- function(x){
 
 
 lev2var <- function(x, ...){
-  # take a data.frame and returns a vector of variable names, the
+  # takes a data.frame and returns a vector of variable names, the
   # names of the vector being the names of the effect
   
   is.fact <- sapply(x, is.factor)
@@ -245,7 +245,7 @@ nobs.pgmm <- function(object, ...) {
 
 # punbalancedness: measures for unbalancedness of a pandel data set
 # as defined in Ahrens/Pincus (1981), p. 228 (gamma and nu)
-# and for nested panel structures as in Baltagi/Song/Jung (2001), p. 368-369
+# and for nested panel structures as in Baltagi/Song/Jung (2001), pp. 368-369
 punbalancedness.default <- function(x, ...) {
 
   ii <- index(x)
@@ -264,7 +264,7 @@ punbalancedness.default <- function(x, ...) {
   } else {
     if (length(ii) == 3) {
      ## extension to nested model with additional group variable
-     ## Baltagi/Song/Jung (2001), p. 368-369
+     ## Baltagi/Song/Jung (2001), pp. 368-369
       ids <- ii[[1]]
       tss <- ii[[2]]
       gps <- ii[[3]]
@@ -306,19 +306,19 @@ punbalancedness <- function(x, ...) {
 # helper function
 fancy.row.names <- function(index, sep = "-") {
   if (length(index) == 2) {result <- paste(index[[1]], index[[2]], sep = sep)}
-  # this in the order also used for sorting (group, id. time):
+  # this in the order also used for sorting (group, id, time):
   if (length(index) == 3) {result <- paste(index[[3]], index[[1]], index[[2]], sep = sep)}
   return(result)
 }
 
 # helper function for pwaldtest: trans_clubSandwich_vcov
-# translate clubSandwich's vcov object so it is suitable for summary.plm, plm's pwaldtest.
+# translate vcov object from package clubSandwich so it is suitable for summary.plm, plm's pwaldtest.
 # Attribute "cluster" in clubSandwich's vcov objects contains the cluster variable itself.
 # plm's vcov object also has attribute "cluster" but it contains a character as
 # information about the cluster dimension (either "group" or "time")
 #
 # inputs:
-#   * CSvcov: a vcov as returned by clubSandwich's vcovCR function [class("vcovCR", "clubSandwich")]
+#   * CSvcov: a vcov as returned by clubSandwich's vcovCR function [class c("vcovCR", "clubSandwich")]
 #   * index: the index belonging to a plm object/model
 # return value:
 #   * modified CSvcov (substituted attribute "cluster" with suitable character or NULL)
