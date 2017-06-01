@@ -71,7 +71,7 @@ print.theta <- function(x,digits){
   balanced <- is.pbalanced(model.frame(x)) # pdim <- pdim(model.frame(x))
   if (effect!="twoways"){
     if (balanced){
-      cat(paste("theta: ",signif(x$theta,digits)," \n"))
+      cat(paste("theta: ",signif(x$theta,digits),"\n"), sep = "")
     }
     else{
       cat("theta: \n")

@@ -556,7 +556,7 @@ print.ercomp <- function(x, digits = max(3, getOption("digits") - 3), ...){
     if (! is.null(x$theta)){
         if (effect %in% c("individual", "time")){
             if (balanced){
-                cat(paste("theta: ",signif(x$theta,digits)," \n"))
+                cat(paste("theta: ",signif(x$theta,digits),"\n", sep = ""))
             }
             else{
                 cat("theta: \n")
