@@ -756,11 +756,11 @@ print.summary.pgmm <- function(x, digits = max(3, getOption("digits") - 2),
   cat("\n")
   print(pdim)
   ntot <- sum(unlist(x$residuals) != 0)
-  cat("\nNumber of Observations Used: ",ntot,"\n")
+  cat("\nNumber of Observations Used: ",ntot,"\n", sep="")
   
-  cat("\nResiduals\n")
+  cat("\nResiduals:\n")
   print(summary(unlist(residuals(x))))
-  cat("\nCoefficients\n")
+  cat("\nCoefficients:\n")
   printCoefmat(x$coefficients,digits=digits)
 
   cat("\nSargan Test: ",names(x$sargan$statistic),

@@ -33,9 +33,9 @@
 #pmodel.response<-plm:::pmodel.response.plm
 
 
-pmg <- function (formula, data, subset, na.action,
-                 model = c("mg","cmg","dmg"), index = NULL,
-                 trend = FALSE, ...)
+pmg <- function(formula, data, subset, na.action,
+                model = c("mg","cmg","dmg"), index = NULL,
+                trend = FALSE, ...)
 {
 
     ## same as pggls but for effect, fixed at "individual" for compatibility
@@ -82,7 +82,7 @@ pmg <- function (formula, data, subset, na.action,
 
 
   ## det. *minimum* group numerosity
-  t<-min(tapply(X[,1],ind,length))
+  t <- min(tapply(X[,1],ind,length))
 
   ## check min. t numerosity
   ## NB it is also possible to allow estimation if there *is* one group
@@ -98,16 +98,16 @@ pmg <- function (formula, data, subset, na.action,
 
   ## "pre-allocate" coefficients matrix for the n models
   kt <- if(trend) 1 else 0
-  tcoef<-matrix(NA,nrow=k+kt,ncol=n)
+  tcoef <- matrix(NA,nrow=k+kt,ncol=n)
   tres <- vector("list", n)
 
   switch(match.arg(model),
     mg={
       ## for each x-sect. i=1..n
-      unind<-unique(ind)
+      unind <- unique(ind)
       for(i in 1:n) {
-        tX<-X[ind==unind[i],]
-        ty<-y[ind==unind[i]]
+        tX <- X[ind==unind[i],]
+        ty <- y[ind==unind[i]]
         if(trend) tX <- cbind(tX, 1:(dim(tX)[[1]]))
         tfit <- lm.fit(tX,ty)
         tcoef[,i] <- tfit$coefficients
@@ -121,21 +121,21 @@ pmg <- function (formula, data, subset, na.action,
     cmg={
 
       ## between-periods transformation (take means over groups for each t)
-      be<-function(x,index,na.rm=T) tapply(x,index,mean,na.rm=na.rm)
-      Xm<-apply(X,2,FUN=be,index=tind)[tind,]
-      ym<-apply(as.matrix(as.numeric(y)),2,FUN=be,index=tind)[tind]
+      be <- function(x,index,na.rm=T) tapply(x,index,mean,na.rm=na.rm)
+      Xm <- apply(X,2,FUN=be,index=tind)[tind,]
+      ym <- apply(as.matrix(as.numeric(y)),2,FUN=be,index=tind)[tind]
 
-      augX<-cbind(X,ym,Xm[,-1])
+      augX <- cbind(X,ym,Xm[,-1])
 
       ## allow for extended coef vector
-      tcoef0<-matrix(NA,nrow=2*k+kt,ncol=n)
+      tcoef0 <- matrix(NA,nrow=2*k+kt,ncol=n)
 
       ## for each x-sect. i=1..n estimate (over t) an augmented model
       ## y_it = alfa_i + beta_i*X_it + c1_i*my_t + c2_i*mX_t + err_it
-      unind<-unique(ind)
+      unind <- unique(ind)
       for(i in 1:n) {
-        taugX<-augX[ind==unind[i],]
-        ty<-y[ind==unind[i]]
+        taugX <- augX[ind==unind[i],]
+        ty <- y[ind==unind[i]]
 
         if(trend) taugX <- cbind(taugX, 1:(dim(taugX)[[1]]))
 
@@ -163,21 +163,21 @@ pmg <- function (formula, data, subset, na.action,
     dmg={
 
       ## between-periods transformation (take means over group for each t)
-      be<-function(x,index,na.rm=T) tapply(x,index,mean,na.rm=na.rm)
-      Xm<-apply(X,2,FUN=be,index=tind)[tind,]
-      ym<-apply(as.matrix(as.numeric(y)),2,FUN=be,index=tind)[tind]
+      be <- function(x,index,na.rm=T) tapply(x,index,mean,na.rm=na.rm)
+      Xm <- apply(X,2,FUN=be,index=tind)[tind,]
+      ym <- apply(as.matrix(as.numeric(y)),2,FUN=be,index=tind)[tind]
       ## ...but of course we do not demean the intercept!
-      Xm[,1]<-0
+      Xm[,1] <- 0
 
       demX <- X-Xm
       demy <- y-ym
 
       ## for each x-sect. i=1..n estimate (over t) a demeaned model
       ## (y_it-my_t) = alfa_i + beta_i*(X_it-mX_t) + err_it
-      unind<-unique(ind)
+      unind <- unique(ind)
       for(i in 1:n) {
-        tdemX<-demX[ind==unind[i],]
-        tdemy<-demy[ind==unind[i]]
+        tdemX <- demX[ind==unind[i],]
+        tdemy <- demy[ind==unind[i]]
         if(trend) tdemX <- cbind(tdemX, 1:(dim(tdemX)[[1]]))
         tfit <- lm.fit(tdemX,tdemy)
         tcoef[,i] <- tfit$coefficients
@@ -191,7 +191,7 @@ pmg <- function (formula, data, subset, na.action,
 
 
     ## coefs are averages across individual regressions
-    coef<-apply(tcoef,1,mean)
+    coef <- apply(tcoef,1,mean)
 
     ## make matrix of cross-products of demeaned individual coefficients
 
@@ -236,7 +236,6 @@ summary.pmg <- function(object,...){
   std.err <- sqrt(diag(object$vcov))
   b <- object$coefficients
   z <- b/std.err
-#  p <- 2*(1-pnorm(abs(z)))
   p <- 2*pnorm(abs(z),lower.tail=FALSE)
   CoefTable <- cbind(b,std.err,z,p)
   colnames(CoefTable) <- c("Estimate","Std. Error","z-value","Pr(>|z|)")
@@ -262,9 +261,9 @@ print.summary.pmg <- function(x,digits=max(3, getOption("digits") - 2), width = 
   print(x$call)
   cat("\n")
   print(pdim)
-  cat("\nResiduals\n")
+  cat("\nResiduals:\n")
   print(summary(unlist(residuals(x))))
-  cat("\nCoefficients\n")
+  cat("\nCoefficients:\n")
   printCoefmat(x$CoefTable,digits=digits)
   cat(paste("Total Sum of Squares: ",signif(x$tss,digits),"\n",sep=""))
   cat(paste("Residual Sum of Squares: ",signif(x$ssr,digits),"\n",sep=""))

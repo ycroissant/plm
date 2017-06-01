@@ -348,7 +348,6 @@ summary.pcce <- function(object,...){
   std.err <- sqrt(diag(object$vcov))
   b <- object$coefficients
   z <- b/std.err
-#  p <- 2*(1-pnorm(abs(z)))
   p <- 2*pnorm(abs(z),lower.tail=FALSE)
   CoefTable <- cbind(b,std.err,z,p)
   colnames(CoefTable) <- c("Estimate","Std. Error","z-value","Pr(>|z|)")
@@ -374,9 +373,9 @@ print.summary.pcce <- function(x,digits=max(3, getOption("digits") - 2), width =
   print(x$call)
   cat("\n")
   print(pdim)
-  cat("\nResiduals\n")
+  cat("\nResiduals:\n")
   print(summary(unlist(residuals(x))))
-  cat("\nCoefficients\n")
+  cat("\nCoefficients:\n")
   printCoefmat(x$CoefTable,digits=digits)
   cat(paste("Total Sum of Squares: ",signif(x$tss,digits),"\n",sep=""))
   cat(paste("Residual Sum of Squares: ",signif(x$ssr,digits),"\n",sep=""))

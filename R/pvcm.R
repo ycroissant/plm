@@ -1,4 +1,4 @@
-pvcm <-  function(formula, data, subset ,na.action, effect = c("individual","time"),
+pvcm <- function(formula, data, subset ,na.action, effect = c("individual","time"),
                   model = c("within","random"), index = NULL, ...){
 
   effect <- match.arg(effect)
@@ -166,7 +166,7 @@ summary.pvcm <- function(object,...){
     std.err <- sqrt(diag(vcov(object)))
     b <- object$coefficients
     z <- b/std.err
-    p <- 2*(1-pnorm(abs(z)))
+    p <- 2*pnorm(abs(z), lower.tail = FALSE)
     coef <- cbind(b,std.err,z,p)
     colnames(coef) <- c("Estimate","Std. Error","z-value","Pr(>|z|)")
     object$coefficients <- coef
@@ -208,8 +208,8 @@ print.summary.pvcm <- function(x, digits = max(3, getOption("digits") - 2),
   invisible(x)
 }
 
-pvcm <-  function(formula, data, subset ,na.action, effect = c("individual","time"),
-                  model = c("within","random"), index = NULL, ...){
+pvcm <- function(formula, data, subset ,na.action, effect = c("individual","time"),
+                 model = c("within","random"), index = NULL, ...){
   
   effect <- match.arg(effect)
   model.name <- match.arg(model)
@@ -250,7 +250,7 @@ pvcm.random <- function(formula, data, effect){
     card.cond <- pdim$nT$n
   }
 
-    ml <- split(data, cond)
+  ml <- split(data, cond)
   nr <- sapply(ml, function(x) dim(x)[1]) > 0
   ml <- ml[nr]
   attr(ml, "index") <- index
@@ -286,8 +286,7 @@ pvcm.random <- function(formula, data, effect){
                 dimnames=list(colnames(coefm), colnames(coefm)))
     z[!coefna[i, ], !coefna[i, ]] <- solve(crossprod(X[[i]][!coefna[i, ], !coefna[i,]]))
     z
-  }
-                  )
+  })
   # compute the mean of the parameters
   coefb <- apply(coefm, 2, function(x) mean(x, na.rm = TRUE))
   # insert the mean values in place of NA coefficients
@@ -304,8 +303,8 @@ pvcm.random <- function(formula, data, effect){
     Delta <- D1 - D2
   }
   else{
-    print(eigen(D1-D2)$values)
-    cat("attention\n")
+    print(eigen(D1-D2)$values)      ## TODO
+    cat("attention\n")              ## TODO: likely unwanted debug output?
     Delta <- D1
   }
   # compute the Omega matrix for each individual
@@ -319,13 +318,12 @@ pvcm.random <- function(formula, data, effect){
     XnXn[!coefna[i,], !coefna[i,]] <- t(Xn) %*% solve(Omegan[[i]]) %*% Xn
     Xnyn[!coefna[i, ],] <- t(Xn) %*% solve(Omegan[[i]]) %*% yn
     list(XnXn = XnXn, Xnyn = Xnyn)
-  }
-                   )
+  })
   # Compute the coefficients
   XpXm1 <- solve(Reduce("+", lapply(XyOmXy, function(x) x$XnXn)))
   beta <- XpXm1 %*% Reduce("+", lapply(XyOmXy, function(x) x$Xnyn))
   
-  if (TRUE){
+  if (TRUE){                                                    ### TODO: this statement is always TRUE...?!
     weightsn <- lapply(seq_len(card.cond),
                        function(i){
                          vcovn <- vcov(ols[[i]])
@@ -341,7 +339,6 @@ pvcm.random <- function(formula, data, effect){
     weightsn <- lapply(weightsn, function(x) V %*% x)
     Beta <- Reduce("+", lapply(seq_len(card.cond), function(i) weightsn[[i]] %*% coefm[i, ]))
     XpXm1 <- V
-    
   }
   
   y <- model.response(data)
