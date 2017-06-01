@@ -33,7 +33,7 @@ Changes since version 1.6-6
                      structures as in Baltagi/Song/Jung (2001).
   * pwartest, pwfdtest: * statistics are labelled as F statistics.
                         * calculations now done without car::linearHypothesis().
-  * difft.pseries (note the "t") implemented (non-exported), diff-ing whith
+  * difft.pseries (note the "t") implemented (non-exported), diff-ing with
     taking the value of the time dimension into account, analogous to already
     implemented (non-exported) functions lagt.pseries/leadt.pseries.
   * diff.pseries: * logicals can now be diff'ed (result is integer, mimics base::diff).
@@ -49,6 +49,8 @@ Changes since version 1.6-6
   * purtest: cosmetic: when argument 'lags' is not specified by user, the returned
              object does not contain all three possible values in args$lags anymore,
              thus prints prettier.
+  * summary.piest: heading now has "z-value" and "Pr(>|z|)" as the numbers are based
+                   on the standard normal distribution.
 
 
 Changes since version 1.6-5

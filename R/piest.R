@@ -182,8 +182,7 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
   A <- solve(t(R) %*% solve(Omega) %*% R)
   stat <- c("chisq" = n * resb %*% solve(Omega) %*% resb)
   df <- c("df" = Kx * (T ^ 2 - T - 1))                  ## TODO: df is overwritten in next line...?!
-  df <- length(pi) - length(.coef)
-  names(df) <- "df"
+  df <- c("df" = length(pi) - length(.coef))
   pitest <- list(statistic = stat,
                  parameter = df,
                  method = "Chamberlain's pi test",
@@ -215,8 +214,8 @@ summary.piest <- function(object,...){
   p <- 2 * pnorm(abs(z), lower.tail = FALSE)
   object$coefficients <- cbind("Estimate"   = b,
                                "Std. Error" = std.err,
-                               "t-value"    = z,    # TODO: but standard normal distribution used?!
-                               "Pr(>|t|)"   = p)    # TODO
+                               "z-value"    = z,
+                               "Pr(>|z|)"   = p)
   class(object) <- c("summary.piest", "piest", "panelmodel")
   object
 }
