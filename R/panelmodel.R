@@ -74,13 +74,13 @@ print.theta <- function(x,digits){
       cat(paste("theta: ",signif(x$theta,digits)," \n"))
     }
     else{
-      cat("theta  : \n")
+      cat("theta: \n")
       print(summary(x$theta))
     }
   }
   else{
     if (balanced){
-      cat(paste("theta  : ",signif(x$theta$id,digits)," (id) ",signif(x$theta$time,digits)," (time) ",signif(x$theta$total,digits)," (total)\n",sep=""))
+      cat(paste("theta: ",signif(x$theta$id,digits)," (id) ",signif(x$theta$time,digits)," (time) ",signif(x$theta$total,digits)," (total)\n",sep=""))
     }
   }
 }
