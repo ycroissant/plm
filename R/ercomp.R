@@ -210,7 +210,8 @@ ercomp.formula <- function(object, data,
             hateps <- as.numeric(resid(estm, model = "pooling"))
             hatepsBeta <- Between(hateps, ids)
             hatepsBlambda <- Between(hateps, gps)
-            quad <- c(crossprod(resid(estm, model = "within", effect = "individual")),
+#            quad <- c(crossprod(resid(estm, model = "within", effect = "individual")), ## Problem, don't return the within residuals, why ?
+            quad <- c(crossprod(resid(estm)), 
                       crossprod(Between(hateps, ids) - Between(hateps, gps)),
                       crossprod(Between(hateps, gps)))
             WX <- model.matrix(estm, model = "within", effect = "individual", null.rm = TRUE)
@@ -276,6 +277,8 @@ ercomp.formula <- function(object, data,
         Gs <- as.numeric(table(gps)[as.character(gps)])
         Tn <- as.numeric(table(ids)[as.character(ids)])
         sigma2 <- as.numeric(solve(M, quad))
+        print(M)
+        print(quad)
         names(sigma2) <- c("idios", "id", "gp")
         theta <- list(id = 1 - sqrt(sigma2["idios"] /  (Tn * sigma2["id"] + sigma2["idios"])),
                       gp = sqrt(sigma2["idios"] /  (Tn * sigma2["id"] + sigma2["idios"])) -

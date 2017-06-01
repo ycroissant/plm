@@ -933,7 +933,9 @@ residuals.plm <- function(object, model = NULL, effect = NULL, ...){
         y <- pmodel.response(object, model = model, effect = effect)
         aliases <- object$alias
         # beta has an intercept, X not
-        if (has.intercept(object)[1] & model == "within"){
+#        if (has.intercept(object)[1] & model == "within"){
+        # doesn't work the intercept is detected in the formula
+        if (names(coef(object))[1] == "(Intercept)" & model == "within"){
             beta <- beta[-1]
             aliases <- aliases[-1]
         }
