@@ -190,15 +190,15 @@ pdim.pgmm <- function(x, ...){
 print.pdim <- function(x, ...){
   if (x$balanced){
     cat("Balanced Panel: ")
-    cat(paste("n=",x$nT$n,", ",sep=""))
-    cat(paste("T=",x$nT$T,", ",sep=""))
-    cat(paste("N=",x$nT$N,"\n",sep=""))
+    cat(paste("n = ",x$nT$n,", ",sep=""))
+    cat(paste("T = ",x$nT$T,", ",sep=""))
+    cat(paste("N = ",x$nT$N,"\n",sep=""))
   }
   else{
     cat("Unbalanced Panel: ")
-    cat(paste("n=",x$nT$n,", ",sep=""))
-    cat(paste("T=",min(x$Tint$Ti),"-",max(x$Tint$Ti),", ",sep=""))
-    cat(paste("N=",x$nT$N,"\n",sep=""))
+    cat(paste("n = ",x$nT$n,", ",sep=""))
+    cat(paste("T = ",min(x$Tint$Ti),"-",max(x$Tint$Ti),", ",sep=""))
+    cat(paste("N = ",x$nT$N,"\n",sep=""))
   }
 }
 

@@ -51,6 +51,7 @@ Changes since version 1.6-6
              thus prints prettier.
   * summary.piest: heading now has "z-value" and "Pr(>|z|)" as the numbers are based
                    on the standard normal distribution.
+  * cosmetic: some print functions now have better aligned whitespacing.
 
 
 Changes since version 1.6-5
