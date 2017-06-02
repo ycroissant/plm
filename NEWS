@@ -52,8 +52,9 @@ Changes since version 1.6-6
   * summary.piest: heading now has "z-value" and "Pr(>|z|)" as the numbers are based
                    on the standard normal distribution.
   * cosmetic: some print functions now have better aligned whitespacing.
-  * ranef.plm added (non-exported): initial work on a function to extract the random
-                                    effects from a random effects model object.
+  * ranef.plm added (non-exported): initial work on a function to calculate random
+                                    effects from RE model object, like fixef for FE
+                                    models (balanced individual/time models work).
 
 
 Changes since version 1.6-5
