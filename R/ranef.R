@@ -2,29 +2,24 @@
 ## (like fixef() for FE models)
 
 # TODO:
-#       * unbalanced one-way case
-#       * add unbalanced one-way case to test file, outdate .Rout.save
-#       * documentation
-#       * export
 #       * balanced two-way case
 #       * unbalanced two-way case
 
-ranef.plm <- function(object) {
-  ## function is ok for one-way balanced cases (individual, time)
-  
+
+## generic for ranef supplied by importing nlme::ranef via NAMESPACE
+
+ranef.plm <- function(object, ...) {
   model <- describe(object, "model")
   effect <- describe(object, "effect")
-  
   balanced <- is.pbalanced(object)
-  if (!balanced) stop("only implemented for balanced")
   
   if (model != "random") stop("only applicable to random effect models")
-  if (effect == "twoways") stop("only for one way models")
+  if (effect == "twoways") stop("only for one-way models (individual or time)")
   
   erc <- ercomp(object)
   theta <- unlist(erc["theta"])
   
-  # res <- x$residuals # gives residuals of quasi-demeaned model
+  # res <- x$residuals        # gives residuals of quasi-demeaned model
   res <- residuals_overall_exp.plm(object) # but need RE residuals of overall model
   
   if (!inherits(res, "pseries")) {
@@ -33,11 +28,24 @@ ranef.plm <- function(object) {
     attr(res, "index") <- index(object$model)
     class(res) <- c("pseries", class(res))
   }
+   
+  #mean_res <- between(res, effect = effect)  # gives length = # individuals
+  mean_res <- between(res, effect = effect) # need per id
   
-  # mean_res <- Between(res, effect = effect) # gives length = # obs
-  mean_res <- between(res, effect = effect)  # gives length = # individuals
+  if (!balanced) {
+    # in the (one-way) unbalanced case, ercomp$theta is full length (# obs)
+    #  -> reduce to per id
+    select <- switch(effect,
+                     "individual" = !duplicated(index(object$model)[1]),
+                     "time"       = !duplicated(index(object$model)[2]))
+    theta <- theta[select]
+  }
   
-  raneffects <- (1 - (1 - theta)^2) * mean_res # balanced one-way (is symmetric for individual/time)
-  
+  # calculate random effects:
+  # This formula works (at least) for:
+  #  balanced one-way (is symmetric for individual/time)
+  #  unbalanced one-way (symmetric) is also catched by this line as theta is reduced before
+  raneffects <- (1 - (1 - theta)^2) * mean_res
+  names(raneffects) <- names(mean_res)
   return(raneffects)
 }

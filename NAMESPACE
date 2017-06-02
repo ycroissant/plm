@@ -4,7 +4,7 @@ export(plm, pvcm, pgmm, pggls, pht, pcce, pmg, plmtest, phtest, pFtest,
        pbsytest, pdwtest, pbgtest, pbltest, pwartest, pwtest, pwfdtest, pcdtest,
        plm.data, pdata.frame, between, Between, Within, lag, lead, pFormula, pmodel.response,
        punbalancedness, purtest, cipstest, vcovBK, vcovSCC, r.squared, has.intercept, 
-       index, fixef, vcovHC, vcovDC, vcovNW, vcovG, piest, aneweytest, pwaldtest)
+       index, fixef, ranef, vcovHC, vcovDC, vcovNW, vcovG, piest, aneweytest, pwaldtest)
 
 
 
@@ -18,6 +18,7 @@ importFrom("bdsmatrix", "bdsmatrix")
 importFrom("sandwich", "vcovHC") # import generic and associated methods so the vcovHC methods from pkg sandwich and plm do no mask each other
 importFrom("zoo", "index")       # --- same ---
 importFrom("nlme", "fixef")      # --- same ---
+importFrom("nlme", "ranef")      # --- same ---
 importFrom("nlme", "lme")
 importFrom("MASS", "ginv")
 importFrom("lmtest", "bgtest")
@@ -132,6 +133,8 @@ S3method("fixef", "pggls")
 S3method("print", "fixef")
 S3method("summary", "fixef")
 S3method("print", "summary.fixef")
+# ranef
+S3method("ranef", "plm")
 # dynformula
 S3method("print", "dynformula")
 S3method("formula", "dynformula")

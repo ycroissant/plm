@@ -90,7 +90,7 @@ R-Squared:      0.082104
 Adj. R-Squared: 0.08077
 F-statistic: 61.5846 on 2 and 1377 DF, p-value: < 2.22e-16
 > 
-> plm:::ranef.plm(obj_bal_ind)
+> ranef(obj_bal_ind)
           1           3           4           5           7           8 
 -15.7944651  -9.8171737  -7.1695035 -17.7369442  -3.0124669  28.4615124 
           9          10          11          13          14          15 
@@ -107,7 +107,7 @@ F-statistic: 61.5846 on 2 and 1377 DF, p-value: < 2.22e-16
 -18.7567863  -5.3213460 -15.8621529 -53.8380549  18.4511623   7.6226181 
          48          49          50          51 
 -25.4722740  -7.6575310 -14.4304092  13.0113830 
-> plm:::ranef.plm(obj_bal_time)
+> ranef(obj_bal_time)
         63         64         65         66         67         68         69 
 -40.107118 -39.620447 -39.268900 -37.758341 -37.054658 -35.204205 -34.238769 
         70         71         72         73         74         75         76 
@@ -119,6 +119,127 @@ F-statistic: 61.5846 on 2 and 1377 DF, p-value: < 2.22e-16
         91         92 
  79.682251  99.399670 
 > 
+> ### unbalanced one-way tests
+> 
+> data("Grunfeld", package = "plm")
+> Grunfeld199 <- Grunfeld[1:199, ]
+> 
+> mod_unbal_id <- plm(inv ~ value + capital, data = Grunfeld199, model = "random", effect = "individual")
+> mod_unbal_time <- plm(inv ~ value + capital, data = Grunfeld199, model = "random", effect = "time")
+> ranef(mod_unbal_id)
+           1            2            3            4            5            6 
+  -9.5217161  157.8971498 -172.8867226   29.9217807  -54.6663526   34.3565278 
+           7            8            9           10 
+  -7.8857572    0.6826192  -28.1276964   50.2301675 
+> ranef(mod_unbal_time)
+1935 1936 1937 1938 1939 1940 1941 1942 1943 1944 1945 1946 1947 1948 1949 1950 
+   0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0 
+1951 1952 1953 1954 
+   0    0    0    0 
+> 
+> Cigar_unbal <- Cigar[1:(nrow(Cigar)-1), ]
+> 
+> ## same formula this time
+> obj_unbal_ind  <- plm(sales ~ pop, data = Cigar_unbal, model = "random", effect = "individual") # gives positive estimate for theta
+> obj_unbal_time <- plm(sales ~ pop, data = Cigar_unbal, model = "random", effect = "time") # gives positive estimate for theta
+> summary(obj_unbal_ind)
+Oneway (individual) effect Random Effect Model 
+   (Swamy-Arora's transformation)
+
+Call:
+plm(formula = sales ~ pop, data = Cigar_unbal, effect = "individual", 
+    model = "random")
+
+Unbalanced Panel: n = 46, T = 29-30, N = 1379
+
+Effects:
+                 var std.dev share
+idiosyncratic 297.25   17.24 0.306
+individual    672.90   25.94 0.694
+theta: 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.8775  0.8795  0.8795  0.8795  0.8795  0.8795 
+
+Residuals:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+-79.900  -8.850   0.526   0.000   8.730 135.000 
+
+Coefficients:
+               Estimate  Std. Error t-value  Pr(>|t|)    
+(Intercept)  1.3741e+02  4.3961e+00 31.2575 < 2.2e-16 ***
+pop         -2.9625e-03  4.6022e-04 -6.4372 1.677e-10 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    425110
+Residual Sum of Squares: 412670
+R-Squared:      0.029272
+Adj. R-Squared: 0.028567
+F-statistic: 41.5232 on 1 and 1377 DF, p-value: 1.6066e-10
+> summary(obj_unbal_time)
+Oneway (time) effect Random Effect Model 
+   (Swamy-Arora's transformation)
+
+Call:
+plm(formula = sales ~ pop, data = Cigar_unbal, effect = "time", 
+    model = "random")
+
+Unbalanced Panel: n = 46, T = 29-30, N = 1379
+
+Effects:
+                  var std.dev share
+idiosyncratic 863.173  29.380 0.941
+time           54.571   7.387 0.059
+theta: 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.4900  0.4942  0.4942  0.4940  0.4942  0.4942 
+
+Residuals:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+-65.000 -15.700  -3.570   0.003   8.660 170.000 
+
+Coefficients:
+               Estimate  Std. Error t-value  Pr(>|t|)    
+(Intercept)  1.2685e+02  1.7413e+00 72.8525 < 2.2e-16 ***
+pop         -6.4035e-04  1.6514e-04 -3.8776 0.0001105 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    1213200
+Residual Sum of Squares: 1200600
+R-Squared:      0.010345
+Adj. R-Squared: 0.0096263
+F-statistic: 14.3869 on 1 and 1377 DF, p-value: 0.00015528
+> 
+> ranef(obj_unbal_ind)
+          1           3           4           5           7           8 
+-18.5005959 -16.5175085 -15.4126063  45.3509108 -10.0691964  14.7452846 
+          9          10          11          13          14          15 
+ 28.4341945  15.3197942  -2.2732403 -29.5894852  21.8660407  20.2045003 
+         16          17          18          19          20          21 
+-16.9983070 -17.4906773  52.1136395  -1.4565459  -0.6084628  -0.6844186 
+         22          23          24          25          26          27 
+ -0.6770297  18.7888081 -16.9969763 -21.7032125   9.3029721 -23.4788114 
+         28          29          30          31          32          33 
+-24.8169817  37.6221358 100.2268588   4.8232643 -41.0601497  34.7118192 
+         35          36          37          39          40          41 
+-30.6792706  20.3586680  -8.2494643  12.4698131   0.6149471  -8.8851025 
+         42          43          44          45          46          47 
+-31.6181612  -5.3972089  14.3306694 -64.5816094   4.6592013  12.2186127 
+         48          49          50          51 
+-29.6550563 -16.9150978 -15.0225962   1.1756383 
+> ranef(obj_unbal_time)
+         63          64          65          66          67          68 
+  2.1840689  -0.4458102   0.9722171   1.5157005   1.6245628   0.2068228 
+         69          70          71          72          73          74 
+ -0.6921238  -2.7639457  -0.4890980   2.6820932   3.9277757   6.1161651 
+         75          76          77          78          79          80 
+  7.3140219   9.4759779   9.1957832   9.0995970   7.5592267   7.9568186 
+         81          82          83          84          85          86 
+  8.1080736   6.7816983   3.1858157  -1.0607719  -2.1120297  -3.7924067 
+         87          88          89          90          91          92 
+ -6.0557382  -8.6560816 -11.8598359 -15.1564003 -17.0858090 -17.7363679 
+> 
 > proc.time()
    user  system elapsed 
-   2.43    0.12    2.55 
+   2.79    0.12    2.93 
