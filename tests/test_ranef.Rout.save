@@ -1,0 +1,124 @@
+
+R version 3.3.3 (2017-03-06) -- "Another Canoe"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> ## test of ranef()
+> library(plm)
+Loading required package: Formula
+> data("Cigar", package = "plm")
+> 
+> # note: the formulae used in estimation are different
+> obj_bal_ind  <- plm(sales ~ pop + price, data = Cigar, model = "random", effect = "individual") # gives positive estimate for theta
+> obj_bal_time <- plm(price ~ pop + sales, data = Cigar, model = "random", effect = "time") # gives positive estimate for theta
+> summary(obj_bal_ind)
+Oneway (individual) effect Random Effect Model 
+   (Swamy-Arora's transformation)
+
+Call:
+plm(formula = sales ~ pop + price, data = Cigar, effect = "individual", 
+    model = "random")
+
+Balanced Panel: n = 46, T = 30, N = 1380
+
+Effects:
+                 var std.dev share
+idiosyncratic 229.84   15.16 0.268
+individual    627.02   25.04 0.732
+theta: 0.8901
+
+Residuals:
+   Min. 1st Qu.  Median 3rd Qu.    Max. 
+ -61.20   -8.38    0.62    7.47  127.00 
+
+Coefficients:
+               Estimate  Std. Error  t-value Pr(>|t|)    
+(Intercept)  1.3641e+02  4.1699e+00  32.7123   <2e-16 ***
+pop          5.0781e-04  4.5196e-04   1.1236   0.2614    
+price       -2.1484e-01  1.0679e-02 -20.1175   <2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    423530
+Residual Sum of Squares: 317410
+R-Squared:      0.25057
+Adj. R-Squared: 0.24948
+F-statistic: 230.198 on 2 and 1377 DF, p-value: < 2.22e-16
+> summary(obj_bal_time)
+Oneway (time) effect Random Effect Model 
+   (Swamy-Arora's transformation)
+
+Call:
+plm(formula = price ~ pop + sales, data = Cigar, effect = "time", 
+    model = "random")
+
+Balanced Panel: n = 46, T = 30, N = 1380
+
+Effects:
+                 var std.dev share
+idiosyncratic 41.379   6.433 0.554
+time          33.264   5.767 0.446
+theta: 0.8377
+
+Residuals:
+   Min. 1st Qu.  Median 3rd Qu.    Max. 
+ -14.70   -6.21   -2.56    3.80   49.10 
+
+Coefficients:
+               Estimate  Std. Error t-value  Pr(>|t|)    
+(Intercept)  7.7764e+01  1.8791e+00 41.3830 < 2.2e-16 ***
+pop          2.3395e-04  5.1615e-05  4.5327  6.33e-06 ***
+sales       -8.1687e-02  8.4936e-03 -9.6175 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    126340
+Residual Sum of Squares: 115970
+R-Squared:      0.082104
+Adj. R-Squared: 0.08077
+F-statistic: 61.5846 on 2 and 1377 DF, p-value: < 2.22e-16
+> 
+> plm:::ranef.plm(obj_bal_ind)
+          1           3           4           5           7           8 
+-15.7944651  -9.8171737  -7.1695035 -17.7369442  -3.0124669  28.4615124 
+          9          10          11          13          14          15 
+ 41.6154573   1.3213865  -5.4988147 -17.6196269  -0.8826409  16.0194286 
+         16          17          18          19          20          21 
+-10.8182773 -10.2479062  52.8847398   0.4504968  11.7969137  -0.4085639 
+         22          23          24          25          26          27 
+ -3.3157988   3.6640065 -13.7469988 -14.7841676   7.1763488 -11.0484827 
+         28          29          30          31          32          33 
+-14.6198738  51.8254887 112.0924500  -3.2131140 -29.9070401  -9.7981923 
+         35          36          37          39          40          41 
+-17.4436069  -1.3609524  -2.5061748 -12.2793676  13.5058893  -5.5305745 
+         42          43          44          45          46          47 
+-18.7567863  -5.3213460 -15.8621529 -53.8380549  18.4511623   7.6226181 
+         48          49          50          51 
+-25.4722740  -7.6575310 -14.4304092  13.0113830 
+> plm:::ranef.plm(obj_bal_time)
+        63         64         65         66         67         68         69 
+-40.107118 -39.620447 -39.268900 -37.758341 -37.054658 -35.204205 -34.238769 
+        70         71         72         73         74         75         76 
+-31.483517 -29.317820 -27.560848 -26.991763 -25.621068 -22.667782 -19.162696 
+        77         78         79         80         81         82         83 
+-17.984822 -12.783243 -10.636099  -7.581342  -4.469280   2.048338  12.706015 
+        84         85         86         87         88         89         90 
+ 23.142923  28.263242  34.377851  40.619107  48.921108  58.887947  71.464266 
+        91         92 
+ 79.682251  99.399670 
+> 
+> proc.time()
+   user  system elapsed 
+   2.43    0.12    2.55 

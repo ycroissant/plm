@@ -1,35 +1,36 @@
 ## calculate random effects from estimated model object
-## (like fixef())
+## (like fixef() for FE models)
 
 # TODO:
 #       * unbalanced one-way case
-#       * balanced two-way case
+#       * add unbalanced one-way case to test file, outdate .Rout.save
 #       * documentation
 #       * export
-#       + unbalanced two-way case
+#       * balanced two-way case
+#       * unbalanced two-way case
 
-ranef.plm <- function(x) {
+ranef.plm <- function(object) {
   ## function is ok for one-way balanced cases (individual, time)
   
-  model <- describe(x, "model")
-  effect <- describe(x, "effect")
+  model <- describe(object, "model")
+  effect <- describe(object, "effect")
   
-  balanced <- is.pbalanced(x)
+  balanced <- is.pbalanced(object)
   if (!balanced) stop("only implemented for balanced")
   
   if (model != "random") stop("only applicable to random effect models")
   if (effect == "twoways") stop("only for one way models")
   
-  erc <- ercomp(x)
+  erc <- ercomp(object)
   theta <- unlist(erc["theta"])
   
   # res <- x$residuals # gives residuals of quasi-demeaned model
-  res <- residuals_overall_exp.plm(x) # but need RE residuals of overall model
+  res <- residuals_overall_exp.plm(object) # but need RE residuals of overall model
   
   if (!inherits(res, "pseries")) {
     # in development version 1.6-6, residuals() do not seem to return pseries anymore..?
     # residuals_overall_exp.plm() still returns pseries, but just make sure we have a pseries
-    attr(res, "index") <- index(x$model)
+    attr(res, "index") <- index(object$model)
     class(res) <- c("pseries", class(res))
   }
   

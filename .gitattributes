@@ -170,6 +170,8 @@ tests/test_pwaldtest_vcovG_attr_cluster.R -text
 tests/test_pwaldtest_vcovG_attr_cluster.Rout.save -text
 tests/test_pwfdtest_pwartest.R -text
 tests/test_pwtest.R -text
+tests/test_ranef.R -text
+tests/test_ranef.Rout.save -text
 tests/test_residuals_overall_fitted_exp.R -text
 tests/test_summary.plm_vcov.R -text
 tests/test_summary.pseries_character_logical_factor.R -text
