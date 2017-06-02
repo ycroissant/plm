@@ -15,11 +15,12 @@ ranef.plm <- function(object, ...) {
   
   if (model != "random") stop("only applicable to random effect models")
   if (effect == "twoways") stop("only for one-way models (individual or time)")
+  if (effect == "nested")  stop("nested random effect models are not supported")
   
   erc <- ercomp(object)
   theta <- unlist(erc["theta"])
   
-  # res <- x$residuals        # gives residuals of quasi-demeaned model
+  # res <- x$residuals                     # gives residuals of quasi-demeaned model
   res <- residuals_overall_exp.plm(object) # but need RE residuals of overall model
   
   if (!inherits(res, "pseries")) {
@@ -29,8 +30,8 @@ ranef.plm <- function(object, ...) {
     class(res) <- c("pseries", class(res))
   }
    
-  #mean_res <- between(res, effect = effect)  # gives length = # individuals
-  mean_res <- between(res, effect = effect) # need per id
+  # mean_res <- Between(res, effect = effect)  # has length = # observations
+  mean_res <- between(res, effect = effect)    # need length = # individuals
   
   if (!balanced) {
     # in the (one-way) unbalanced case, ercomp$theta is full length (# obs)
@@ -44,7 +45,7 @@ ranef.plm <- function(object, ...) {
   # calculate random effects:
   # This formula works (at least) for:
   #  balanced one-way (is symmetric for individual/time)
-  #  unbalanced one-way (symmetric) is also catched by this line as theta is reduced before
+  #  unbalanced one-way (symmetric) is also caught by this line as theta is reduced before
   raneffects <- (1 - (1 - theta)^2) * mean_res
   names(raneffects) <- names(mean_res)
   return(raneffects)
