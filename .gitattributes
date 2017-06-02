@@ -28,6 +28,7 @@ R/pserial.R -text
 R/ptest.R -text
 R/purtest.R -text
 R/pvcm.R -text
+R/ranef.R -text
 R/vcovG.R -text
 R/within_intercept.R -text
 /THANKS -text
