@@ -16,7 +16,7 @@ ercomp.plm <- function(object, ...){
 }
 
 ercomp.formula <- function(object, data, 
-                           effect = c('individual', 'time', 'twoways', 'nested'),
+                           effect = c("individual", "time", "twoways", "nested"),
                            method = NULL,
                            models = NULL,
                            dfcor = NULL,                           
@@ -277,8 +277,8 @@ ercomp.formula <- function(object, data,
         Gs <- as.numeric(table(gps)[as.character(gps)])
         Tn <- as.numeric(table(ids)[as.character(ids)])
         sigma2 <- as.numeric(solve(M, quad))
-        print(M)
-        print(quad)
+#        print(M)
+#        print(quad)
         names(sigma2) <- c("idios", "id", "gp")
         theta <- list(id = 1 - sqrt(sigma2["idios"] /  (Tn * sigma2["id"] + sigma2["idios"])),
                       gp = sqrt(sigma2["idios"] /  (Tn * sigma2["id"] + sigma2["idios"])) -
