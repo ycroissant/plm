@@ -67,7 +67,7 @@ formula (10.58).
 \seealso{
   \code{\link{within_intercept}} for the overall intercept of fixed effect models along its 
   standard error, \code{\link{plm}} for plm objects and within models (= fixed effects models) 
-  in general.
+  in general. See \code{\link{ranef}} to extract the random effects from a random effects model.
 }
 
 \author{Yves Croissant}

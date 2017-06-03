@@ -240,6 +240,11 @@ F-statistic: 14.3869 on 1 and 1377 DF, p-value: 0.00015528
          87          88          89          90          91          92 
  -6.0557382  -8.6560816 -11.8598359 -15.1564003 -17.0858090 -17.7363679 
 > 
+> ## two-way balanced
+> # obj_bal_tw  <- plm(sales ~ pop + price, data = Cigar, model = "random", effect = "twoways") # gives positive estimate for theta
+> # summary(obj_bal_tw)
+> # ranef(obj_bal_tw)
+> 
 > proc.time()
    user  system elapsed 
-   2.79    0.12    2.93 
+   2.85    0.14    2.98 

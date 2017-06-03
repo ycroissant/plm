@@ -1,5 +1,7 @@
 ## see function within_intercept to get overall intercept for FE models, 
 ## which is related to the fixef method
+##
+## see also: ranef.plm (in file ranef.R) which extracts the random effects from RE models
 
 fixef.plm <- function(object, effect = NULL,
                       type = c("level", "dfirst", "dmean"),

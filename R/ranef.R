@@ -4,6 +4,8 @@
 # TODO:
 #       * balanced two-way case
 #       * unbalanced two-way case
+#       * -> introduce argument 'effect' (see fixef how to best handle default value etc.)
+#            (allowing to extract the effect not in the model seems overengineering for a first step)
 
 
 ## generic for ranef supplied by importing nlme::ranef via NAMESPACE
@@ -15,7 +17,11 @@ ranef.plm <- function(object, ...) {
   
   if (model != "random") stop("only applicable to random effect models")
   if (effect == "twoways") stop("only for one-way models (individual or time)")
+  
+  # TODO: Are random effects for nested models and IV models calculated the same way?
+  #       Be defensive here and error for such models.
   if (effect == "nested")  stop("nested random effect models are not supported")
+  if (length(object$formula)[2] == 2) stop("IV models not supported")
   
   erc <- ercomp(object)
   theta <- unlist(erc["theta"])
