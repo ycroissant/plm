@@ -41,12 +41,12 @@ width = getOption("width"), \dots)
   as a character); attribute \code{df.residual} holds the residual degrees of 
   freedom (integer) from the fixed effects model (plm object) on which \code{fixef} was run.
   
-  For function \code{summary.fixef} an object of class \code{c("summary.fixef", "matrix"} is returned:\cr
+  For function \code{summary.fixef} an object of class \code{c("summary.fixef", "matrix")} is returned:\cr
   It is a matrix with four columns in this order: the estimated fixed 
   effects, their standard errors and associated t--values and p--values.
   The type of the fixed effects and the standard errors in the summary.fixef objects 
-  corresponds to was requested in the \code{fixef} function by arguments \code{type} 
-  and \code{vcov}.
+  correspond to was requested in the \code{fixef} function by arguments \code{type} 
+  and \code{vcov}, respectively.
 }
 
 \details{

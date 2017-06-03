@@ -13,7 +13,7 @@
 
 \arguments{
   \item{object}{an object of class \code{"plm"}, needs to be a fitted random effects model,}
-  \item{effect}{\code{NULL}, \code{"individual"}, or \code{"time"}, the effect to be 
+  \item{effect}{\code{NULL}, \code{"individual"}, or \code{"time"}, the effects to be 
   extracted, see \bold{Details},}
   \item{\dots}{further arguments (currently not used).}
 }
