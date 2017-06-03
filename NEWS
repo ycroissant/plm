@@ -53,8 +53,9 @@ Changes since version 1.6-6
                    on the standard normal distribution.
   * cosmetic: some print functions now have better aligned whitespacing.
   * ranef.plm added: function to calculate random effects from RE model object,
-                     like fixef for FE models
-                     (balanced/unbalanced one-way individual/time models implemented).
+                     like fixef for FE models (implemented:
+                       one-way: balanced/unbalanced, individual/time models
+                       two-way: balanced models).
 
 
 Changes since version 1.6-5

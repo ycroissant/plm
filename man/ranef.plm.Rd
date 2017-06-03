@@ -8,11 +8,12 @@
 }
 
 \usage{
-\method{ranef}{plm}(object, \dots)
+\method{ranef}{plm}(object, effect = NULL, \dots)
 }
 
 \arguments{
   \item{object}{an object of class \code{"plm"}, needs to be a fitted random effects model,}
+  \item{effect}{\code{NULL} or character, the effect to be extracted, see \bold{Details},}
   \item{\dots}{further arguments (currently not used).}
 }
 
@@ -22,7 +23,9 @@
 
 \details{
 Function \code{ranef} calculates the random effects of a fitted random effects model.
-The calculated effects (individual or time) are those of the fitted model object.
+For one-way models, the effects of the estimated model are extracted (either individual or time effects).
+For two-way models, extracting the individual effects are the default (argument \code{effect = NULL}),
+time effects can be extracted by setting \code{effect = NULL}.
 Not all random effect model types are supported (yet?).
 }
 
@@ -43,6 +46,13 @@ ranef(m1) # individual random effects
   m2 <- lmer(inv ~ value + capital + (1 | firm), data = Grunfeld) 
   cbind("plm" = ranef(m1), "lmer" = unname(ranef(m2)$firm))
 }
+
+# two-ways RE model, calculate individual and random effects
+data("Cigar", package = "plm")
+tw  <- plm(sales ~ pop + price, data = Cigar, model = "random", effect = "twoways")
+ranef(tw)                   # individual random effects
+ranef(tw, effect = "time")  # time random effects
+
 }
 
 
