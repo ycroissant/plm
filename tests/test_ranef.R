@@ -38,3 +38,12 @@ summary(obj_bal_tw)
 ranef(obj_bal_tw)
 ranef(obj_bal_tw, effect = "individual") # same as line before
 ranef(obj_bal_tw, effect = "time")
+
+## two-way unbalanced
+obj_unbal_tw  <- plm(sales ~ pop + price, data = Cigar_unbal, model = "random", effect = "twoways") # gives positive estimate for theta
+summary(obj_unbal_tw)
+ranef(obj_unbal_tw)
+ranef(obj_unbal_tw, effect = "individual") # same as line before
+ranef(obj_unbal_tw, effect = "time")
+
+

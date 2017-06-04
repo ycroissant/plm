@@ -3,7 +3,7 @@
 
 # TODO:
 #      Check if the same procedure can be applied to
-#       * unbalanced two-way case
+#       * unbalanced two-way case (for now: implemented the same way, but not entirely sure)
 #       * random IV models
 #       * nested random effect models
 
@@ -18,7 +18,6 @@ ranef.plm <- function(object, effect = NULL, ...) {
   if (model != "random") stop("only applicable to random effect models")
   # TODO: Are random effects for nested models and IV models calculated the same way?
   #       Be defensive here and error for such models.
-  if (obj.effect == "twoways" && !balanced) stop("two-ways unbalanced models not supported (yet?)")
   if (obj.effect == "nested")  stop("nested random effect models are not supported (yet?)")
   if (length(object$formula)[2] == 2) stop("IV models not supported (yet?)")
   
@@ -35,7 +34,7 @@ ranef.plm <- function(object, effect = NULL, ...) {
   erc <- ercomp(object)
   theta <- unlist(erc["theta"])
   
-  # res <- x$residuals                     # gives residuals of quasi-demeaned model
+  # res <- object$residuals                # gives residuals of quasi-demeaned model
   res <- residuals_overall_exp.plm(object) # but need RE residuals of overall model
   
   if (!inherits(res, "pseries")) {
@@ -53,10 +52,13 @@ ranef.plm <- function(object, effect = NULL, ...) {
                     "individual" = theta[1],
                     "time"       = theta[2])
   }
+  if (obj.effect == "twoways" && !balanced) {
+    theta <- erc[["theta"]][[ifelse(effect == "individual", "id", "time")]]
+  }
   
   if (!balanced && effect %in% c("individual", "time")) {
     # in the (one-way) unbalanced case, ercomp$theta is full length (# obs)
-    #  -> reduce to per id
+    #  -> reduce to per id/time
     select <- switch(effect,
                      "individual" = !duplicated(index(object$model)[1]),
                      "time"       = !duplicated(index(object$model)[2]))
