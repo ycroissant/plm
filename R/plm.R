@@ -1040,6 +1040,23 @@ residuals_overall_exp.plm <- function(x, ...) { #### experimental, non-exported 
   return(res)
 }
 
+residuals_overall_e_exp <- function(object) { ### experimental non-exported function
+  ## residuals of "overall" RE model minus random effects (=e_it)
+  ## e.g.: two-way model: residual_overall_it = random_component_individual_i + random_component_time_t + e_it
+  model <- describe(object, "model")
+  if (model != "random") stop("only for random effect models")
+  res_ov <- plm:::residuals_overall_exp.plm(object)
+  obj.eff <- describe(object, "effect")
+  if (obj.eff == "twoways") {
+    res_ov_e <- res_ov - ranef(object, "individual")[index(object, "id")] - ranef(object, "time")[index(object, "time")]
+  } else {
+    res_ov_e <- res_ov - ranef(object)[index(object, ifelse(obj.eff == "individual", "id", "time"))]
+  }
+  names(res_ov_e) <- names(res_ov)
+  return(res_ov_e)
+}
+
+
 formula.plm <- function(x, ...){
   x$formula
 }
