@@ -773,7 +773,7 @@ print.summary.pseries <- function(x, ...){
     x <- as.numeric(x)
     share <- x[-1]/x[1] # vec with length == 2
     names(share) <- c("id", "time")
-    cat(paste("total sum of squares :", signif(x[1], digits = digits),"\n"))
+    cat(paste("total sum of squares:", signif(x[1], digits = digits),"\n"))
     print.default(share, ...)
   } else {
     class(x) <- setdiff(class(x), c("summary.pseries", special_treatment_vars))
