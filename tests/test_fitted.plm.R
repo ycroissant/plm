@@ -6,7 +6,7 @@
 # NB: Correctness of calculation in fitted.plm is not checked currently in this file
 #
 # NB: there is also a non-exported function fitted_exp.plm and an associated test file
-#     which calculated the fitted values by subtracting the "overall" residuals
+#     which calculates the fitted values by subtracting the "overall" residuals
 #     (of the respective "overall"/"outer" model).
 
 library(plm)
@@ -49,7 +49,7 @@ plm:::fitted.plm(mod_be,   model = "between")
 
 
 ######## 2) Testcase with dropped coefficient in estimated model ######
-# add linear dependend columns to dataset. Those columns get dropped in estimation
+# add linear dependent columns to dataset. Those columns get dropped in estimation
 Grunfeld$lin_dep_col <- Grunfeld$capital
 Grunfeld$lin_dep_col2 <- 2 * Grunfeld$lin_dep_col
 form2 <- update.formula(form, . ~ . + lin_dep_col)

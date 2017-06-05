@@ -752,7 +752,7 @@ fitted_exp.plm <- function(x, ...) { #### experimental, non-exported function
   model <- describe(x, "model")
   res <- residuals_overall_exp.plm(x)
   
-  # For models "between" and "fd" the number of residuals is not equal to the 
+  # For "between" and "fd" models, the number of fitted values is not equal to the 
   # number of original observations. Thus, model.frame cannot be used but rather
   # pmodel.response because it has the right length. However, pmodel.response
   # shall not be used for the other models because we want the untransformed data.
@@ -995,8 +995,8 @@ residuals.plm <- function(object, model = NULL, effect = NULL, ...){
 
 
 residuals_overall_exp.plm <- function(x, ...) { #### experimental, non-exported function
-# residuals_overall.plm: gives the residuals of the "overall"/outer model for all types of plm models
-# in the future, this could be integrated with residuals.plm by some argument, e.g. overall = FALSE (default).
+# residuals_overall.plm: gives the residuals of the "overall"/outer model for all types of plm models.
+# In the future, this could be integrated with residuals.plm by some argument, e.g. overall = FALSE (default).
 # see also test file tests/test_residuals_overall_fitted_exp.R
   
   # no na.action eval yet
@@ -1021,17 +1021,7 @@ residuals_overall_exp.plm <- function(x, ...) { #### experimental, non-exported 
     res <- y - est
     names(res) <- rownames(X)
 
-    ## make residuals a pseries    
-        ## old:
-        # index <- index(x)
-        #   if (ncol(index) == 3) {
-        #     resdata <- data.frame(ind=index[[1]], tind=index[[2]], gind=index[[3]], res = res)
-        #     presdata <- pdata.frame(resdata, index=c("ind", "tind", "gind"))
-        #   } else {
-        #     resdata <- data.frame(ind=index[[1]], tind=index[[2]], res = res)
-        #     presdata <- pdata.frame(resdata, index=c("ind", "tind"))
-        #   }
-        #   res <- presdata$res
+    # make residuals a pseries
     res <- structure(res, index = index(x), class = c("pseries", class(res)))
       
   } else { # all plm models except random (also also except ht)

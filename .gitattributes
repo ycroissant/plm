@@ -178,6 +178,7 @@ tests/test_summary.plm_vcov.R -text
 tests/test_summary.pseries_character_logical_factor.R -text
 tests/test_vcovG_lin_dep.R -text
 tests/test_within_intercept.R -text
+tests/test_within_intercept.Rout.save -text
 tests/testpgmm.R -text
 vignettes/bibliojss.bib -text
 vignettes/plm.rnw -text

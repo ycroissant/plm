@@ -2,8 +2,13 @@ library(plm)
 data("Grunfeld", package = "plm")
 Grunfeld_unbalanced <- Grunfeld[1:199, ]
 
+## fixef() is related to within_intercept()
+##  see also: 
+##      * test file tests/test_within_intercept.R
+##      * test file tests/test_fixef.R
+
 ### TODO:
-## * test vcov, once the standard erros have been modifidied to 
+## * test vcov, once the standard erros have been modified to 
 ## accommodate the unbalanced case (see (3))
 
 ## (1) tests of effects in balanced case
@@ -98,7 +103,7 @@ Grunfeld_unbalanced_fac <- Grunfeld_unbalanced
 Grunfeld_unbalanced_fac$firm <- factor(Grunfeld_unbalanced_fac$firm)
 Grunfeld_unbalanced_fac$year <- factor(Grunfeld_unbalanced_fac$year)
 lm_fe_tw_u_eff_cod <- lm(inv ~ value + capital + firm + year, data = Grunfeld_unbalanced_fac, contrasts = list(firm="contr.sum", year="contr.sum"))
-
+lm_fe_tw_u_eff_cod_wo_int <- lm(inv ~ 0 + value + capital + firm + year, data = Grunfeld_unbalanced_fac, contrasts = list(firm="contr.sum", year="contr.sum"))
 
 # Test residuals oneway individual and time; twoway unbalanced
 if (!isTRUE(all.equal(residuals(lm_fe_oneway_ind_u), as.numeric(residuals(plm_fe_oneway_ind_u)), check.attributes = FALSE)))

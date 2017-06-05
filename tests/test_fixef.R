@@ -3,9 +3,10 @@
 ### (1): general tests
 ### (2): consistency with summary.plm
 ###
-### see also test file test_within_intercept.R for consistency checks
-###  between functions fixef and within_intercept
-
+### see also:
+###    * test file test_within_intercept.R for consistency checks
+###      between functions fixef and within_intercept
+###    * test file test_fixef_comp_lm_plm.R for a comparision of the fixed effects to LSDV models via lm()
 
 ############# (1): general tests #############
 library(plm)

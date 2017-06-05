@@ -161,6 +161,16 @@ mod_lm <- lm(inv ~ value + capital + factor(firm) + factor(year), data = Grunfel
 
 
 
+
+### print all within intercepts (to have them compared to the reference output test_within_intercept.Rout.save)
+print(within_intercept(gi))
+print(within_intercept(gi_u))
+print(within_intercept(gt))
+print(within_intercept(gt_u))
+print(within_intercept(gtw))
+print(within_intercept(gtw_u))
+
+
 ######### Test with reference case: balanced panel
 ## commented because it needs extra library 'foreign'
 # library(foreign);library(plm)

@@ -1,10 +1,10 @@
-# functions to aid in detecting linear dependend columns in the (transformed) 
+# functions to aid in detecting linear dependent columns in the (transformed) 
 # model matrix or estimated plm models:
 #  * detect_lin_dep
-#  * alias (the latter as a wrapper around alias.lm)
+#  * alias (the latter is a wrapper around alias.lm)
 #
 # doc file provides an extensive example how linear dependence can arise after
-# the data transformation, e. g. for within transformation
+# the data transformation, e. g., for within transformation
 
 ### detect_lin_dep.matrix, .data.frame, .plm
 detect_lin_dep.matrix <- function(object, suppressPrint = FALSE, ...) {
