@@ -23,12 +23,12 @@ starX <- function(formula, data, model, rhs = 1, effect){
 }   
 
 plm <- function(formula, data, subset, weights, na.action,
-                effect = c('individual', 'time', 'twoways', 'nested'),
-                model = c('within', 'random', 'ht', 'between', 'pooling', 'fd'),
+                effect = c("individual", "time", "twoways", "nested"),
+                model = c("within", "random", "ht", "between", "pooling", "fd"),
                 random.method = NULL,
                 random.models = NULL,
                 random.dfcor = NULL,
-                inst.method = c('bvk', 'baltagi', 'am', 'bmc'),
+                inst.method = c("bvk", "baltagi", "am", "bmc"),
                 restrict.matrix = NULL,
                 restrict.rhs = NULL,
                 index = NULL,
@@ -320,10 +320,10 @@ mylm <- function(y, X, W = NULL){
 
 
 plm.list <- function(formula, data, subset, na.action,
-                     effect = c('individual','time','twoways'),
-                     model = c('within','random','ht','between','pooling','fd'),
-                     random.method = c('swar','walhus','amemiya','nerlove','ht'),
-                     inst.method = c('bvk','baltagi'),
+                     effect = c("individual", "time", "twoways"),
+                     model = c("within", "random", "ht", "between", "pooling", "fd"),
+                     random.method = c("swar", "walhus", "amemiya", "nerlove", "ht"),
+                     inst.method = c("bvk", "baltagi"),
                      restrict.matrix = NULL,
                      restrict.rhs = NULL,
                      index = NULL,
@@ -865,19 +865,19 @@ tss.plm <- function(x, model = NULL){
 }
 
 r.squared <- function(object, model = NULL,
-                      type = c('cor', 'rss', 'ess'), dfcor = FALSE){
+                      type = c("cor", "rss", "ess"), dfcor = FALSE){
     if (is.null(model)) model <- describe(object, "model")
     effect <- describe(object, "effect")
     type <- match.arg(type)
-    if (type == 'cor'){
+    if (type == "cor"){
         y <- pmodel.response(object, model = model, effect = effect)
         haty <- fitted(object, model = model, effect = effect)
         R2 <- cor(y, haty)^2
     }
-    if (type == 'rss'){
+    if (type == "rss"){
         R2 <- 1 - deviance(object, model = model) / tss(object, model = model)
     }
-    if (type == 'ess'){
+    if (type == "ess"){
         haty <- fitted(object, model = model)
         mhaty <- mean(haty)
         ess <- sum( (haty - mhaty)^2)
@@ -1045,8 +1045,8 @@ residuals_overall_e_exp <- function(object) { ### experimental non-exported func
   ## e.g.: two-way model: residual_overall_it = random_component_individual_i + random_component_time_t + e_it
   model <- describe(object, "model")
   if (model != "random") stop("only for random effect models")
-  res_ov <- plm:::residuals_overall_exp.plm(object)
   obj.eff <- describe(object, "effect")
+  res_ov <- residuals_overall_exp.plm(object)
   if (obj.eff == "twoways") {
     res_ov_e <- res_ov - ranef(object, "individual")[index(object, "id")] - ranef(object, "time")[index(object, "time")]
   } else {
@@ -1063,8 +1063,8 @@ formula.plm <- function(x, ...){
 
 # describe function: extract characteristics of plm model
 describe <- function(x,
-                     what = c('model', 'effect', 'random.method',
-                              'inst.method', 'transformation')){
+                     what = c("model", "effect", "random.method",
+                              "inst.method", "transformation")){
   what <- match.arg(what)
   cl <- x$args
 ##   if (is.name(cl$effect)) cl$effect <- eval(cl$effect, parent.frame())

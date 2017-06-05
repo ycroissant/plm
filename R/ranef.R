@@ -32,7 +32,7 @@ ranef.plm <- function(object, effect = NULL, ...) {
   if (is.null(effect)) effect <- obj.effect
   
   erc <- ercomp(object)
-  theta <- unlist(erc["theta"])
+  theta <- unlist(erc["theta"]) # extract theta, but depending on model/effect, it is adjusted later
   
   # res <- object$residuals                # gives residuals of quasi-demeaned model
   res <- residuals_overall_exp.plm(object) # but need RE residuals of overall model
@@ -40,6 +40,7 @@ ranef.plm <- function(object, effect = NULL, ...) {
   if (!inherits(res, "pseries")) {
     # in development version 1.6-6, residuals() do not seem to return pseries anymore..?
     # residuals_overall_exp.plm() still returns pseries, but just make sure we have a pseries
+    # for the following between() to work.
     attr(res, "index") <- index(object$model)
     class(res) <- c("pseries", class(res))
   }
@@ -56,8 +57,8 @@ ranef.plm <- function(object, effect = NULL, ...) {
     theta <- erc[["theta"]][[ifelse(effect == "individual", "id", "time")]]
   }
   
-  if (!balanced && effect %in% c("individual", "time")) {
-    # in the (one-way) unbalanced case, ercomp$theta is full length (# obs)
+  if (!balanced) {
+    # in the unbalanced cases, ercomp[["theta"]] is full length (# obs)
     #  -> reduce to per id/time
     select <- switch(effect,
                      "individual" = !duplicated(index(object$model)[1]),
