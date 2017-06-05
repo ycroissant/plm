@@ -132,6 +132,8 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
             id <- rep(seq(1:n), rep(T, n))
             id.name <- "id"
             time.name <- "time"
+            if (id.name %in% names(x)) warning(paste0("column '", id.name, "' overwritten by id index"))
+            if (time.name %in% names(x)) warning(paste0("column '", time.name, "' overwritten by time index"))
             x[[id.name]] <- id <- as.factor(id)
             x[[time.name]] <- time <- as.factor(time)
         }
@@ -160,11 +162,12 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
                 time <- c(time,1:Ti[i])
             }
             time.name <- "time"
+            if (time.name %in% names(x)) warning(paste0("column '", time.name, "' overwritten by time index"))
             time <- x[[time.name]] <- as.factor(time)
         }
         else{
         # use supplied time index
-            if (!time.name %in% names(x)) stop(paste("variable ",time.name," does not exist (time index)",sep=""))
+            if (!time.name %in% names(x)) stop(paste0("variable ", time.name, " does not exist (time index)"))
             
             if (is.factor(x[[time.name]])){
                 time <- x[[time.name]] <- x[[time.name]][drop=T] # drops unused levels of factor
