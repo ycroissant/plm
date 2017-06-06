@@ -559,7 +559,7 @@ print.ercomp <- function(x, digits = max(3, getOption("digits") - 3), ...){
                 cat(paste("theta: ",signif(x$theta,digits),"\n", sep = ""))
             }
             else{
-                cat("theta: \n")
+                cat("theta:\n")
                 print(summary(x$theta))
             }
         }
@@ -567,6 +567,11 @@ print.ercomp <- function(x, digits = max(3, getOption("digits") - 3), ...){
             if(balanced){
                 cat(paste("theta: ", signif(x$theta$id,digits), " (id) ", signif(x$theta$time,digits), " (time) ",
                           signif(x$theta$total,digits), " (total)\n", sep = ""))
+            } else {
+              cat("theta:\n")
+              print(rbind(id = summary(x$theta$id),
+                          time = summary(x$theta$time),
+                          total =  summary(x$theta$total)))
             }
         }
         if (effect == "nested"){
