@@ -33,7 +33,6 @@ plm <- function(formula, data, subset, weights, na.action,
                 restrict.rhs = NULL,
                 index = NULL,
                 ...){
-  
     # if the first argument is a list (of formulas), then call plmlist and exit
     if (is.list(formula)){
         plmlist <- match.call(expand.dots = FALSE)
@@ -349,6 +348,8 @@ plm.list <- function(formula, data, subset, na.action,
       sysplm$formula <- aformula
       sysplm[[1]] <- as.name("plm")
       sysplm$model <- amodel
+      # a new pb, plm on every equation fails because of the restrict.matrix argument
+      sysplm$restrict.matrix <- NULL
       models[[l-1]] <- eval(sysplm, parent.frame())
     }
     models
