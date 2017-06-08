@@ -138,8 +138,8 @@ int_manual_tw_i_u <- mean(f_level_tw_i_u)
 int_manual_tw_t_u <- mean(f_level_tw_t_u)
 all.equal(int_manual_tw_i_u, int_manual_tw_t_u) # not equal
 # ... but weighted means are
-int_manual_tw_i_u2 <- crossprod(f_level_tw_i_u, weights_gtw_i_u) / sum(weights_gtw_i_u)
-int_manual_tw_t_u2 <- crossprod(f_level_tw_t_u, weights_gtw_t_u) / sum(weights_gtw_t_u)
+int_manual_tw_i_u2 <- as.vector(crossprod(f_level_tw_i_u, weights_gtw_i_u) / sum(weights_gtw_i_u))
+int_manual_tw_t_u2 <- as.vector(crossprod(f_level_tw_t_u, weights_gtw_t_u) / sum(weights_gtw_t_u))
 
 
 individual_intercepts_tw_i_u <- int_tw_u + f_dmean_tw_i_u
