@@ -122,8 +122,8 @@ individual_intercepts_gt_u <- int_gt_u + f_dmean_gt_u
 
 ## twoways unbalanced
 gtw_u <- plm(inv ~ value + capital, data = Grunfeld_unbalanced, model = "within", effect = "twoways")
-f_level_tw_i_u <- fixef(gtw_u, type = "level", effect = "individual") # these effects are correct since rev. 278
-f_level_tw_t_u <- fixef(gtw_u, type = "level", effect = "time")       # 
+f_level_tw_i_u <- fixef(gtw_u, type = "level", effect = "individual")
+f_level_tw_t_u <- fixef(gtw_u, type = "level", effect = "time")
 f_dmean_tw_i_u <- fixef(gtw_u, type = "dmean", effect = "individual")
 f_dmean_tw_t_u <- fixef(gtw_u, type = "dmean", effect = "time")
 

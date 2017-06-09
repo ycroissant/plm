@@ -1,5 +1,5 @@
 
-R version 3.4.0 Patched (2017-05-31 r72753) -- "You Stupid Darkness"
+R version 3.3.3 (2017-03-06) -- "Another Canoe"
 Copyright (C) 2017 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -141,8 +141,8 @@ Loading required package: Formula
 > 
 > ## twoways unbalanced
 > gtw_u <- plm(inv ~ value + capital, data = Grunfeld_unbalanced, model = "within", effect = "twoways")
-> f_level_tw_i_u <- fixef(gtw_u, type = "level", effect = "individual") # these effects are correct since rev. 278
-> f_level_tw_t_u <- fixef(gtw_u, type = "level", effect = "time")       # 
+> f_level_tw_i_u <- fixef(gtw_u, type = "level", effect = "individual")
+> f_level_tw_t_u <- fixef(gtw_u, type = "level", effect = "time")
 > f_dmean_tw_i_u <- fixef(gtw_u, type = "dmean", effect = "individual")
 > f_dmean_tw_t_u <- fixef(gtw_u, type = "dmean", effect = "time")
 > 
@@ -376,4 +376,4 @@ attr(,"se")
 > 
 > proc.time()
    user  system elapsed 
-   3.51    0.18    3.68 
+   2.66    0.18    2.83 

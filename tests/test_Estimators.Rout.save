@@ -1,6 +1,6 @@
 
-R version 3.3.2 (2016-10-31) -- "Sincere Pumpkin Patch"
-Copyright (C) 2016 The R Foundation for Statistical Computing
+R version 3.3.3 (2017-03-06) -- "Another Canoe"
+Copyright (C) 2017 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -74,13 +74,13 @@ Pooling Model
 Call:
 plm(formula = inv ~ value + capital, data = Grunfeld, model = "pooling")
 
-Balanced Panel: n=10, T=20, N=200
+Balanced Panel: n = 10, T = 20, N = 200
 
-Residuals :
+Residuals:
    Min. 1st Qu.  Median 3rd Qu.    Max. 
  -292.0   -30.0     5.3    34.8   369.0 
 
-Coefficients :
+Coefficients:
                Estimate  Std. Error t-value  Pr(>|t|)    
 (Intercept) -42.7143694   9.5116760 -4.4907 1.207e-05 ***
 value         0.1155622   0.0058357 19.8026 < 2.2e-16 ***
@@ -99,14 +99,14 @@ Oneway (individual) effect Between Model
 Call:
 plm(formula = inv ~ value + capital, data = Grunfeld, model = "between")
 
-Balanced Panel: n=10, T=20, N=200
+Balanced Panel: n = 10, T = 20, N = 200
 Observations used in estimation: 10
 
-Residuals :
+Residuals:
    Min. 1st Qu.  Median 3rd Qu.    Max. 
 -163.00   -3.68    2.97   20.70  144.00 
 
-Coefficients :
+Coefficients:
              Estimate Std. Error t-value Pr(>|t|)   
 (Intercept) -8.527114  47.515308 -0.1795  0.86266   
 value        0.134646   0.028745  4.6841  0.00225 **
@@ -125,13 +125,13 @@ Oneway (individual) effect Within Model
 Call:
 plm(formula = inv ~ value + capital, data = Grunfeld, model = "within")
 
-Balanced Panel: n=10, T=20, N=200
+Balanced Panel: n = 10, T = 20, N = 200
 
-Residuals :
+Residuals:
     Min.  1st Qu.   Median  3rd Qu.     Max. 
 -184.000  -17.600    0.563   19.200  251.000 
 
-Coefficients :
+Coefficients:
         Estimate Std. Error t-value  Pr(>|t|)    
 value   0.110124   0.011857  9.2879 < 2.2e-16 ***
 capital 0.310065   0.017355 17.8666 < 2.2e-16 ***
@@ -151,19 +151,19 @@ Call:
 plm(formula = inv ~ value + capital, data = Grunfeld, model = "random", 
     random.method = "walhus")
 
-Balanced Panel: n=10, T=20, N=200
+Balanced Panel: n = 10, T = 20, N = 200
 
 Effects:
                   var std.dev share
 idiosyncratic 3089.07   55.58 0.352
 individual    5690.18   75.43 0.648
-theta:  0.8374  
+theta: 0.8374
 
-Residuals :
+Residuals:
    Min. 1st Qu.  Median 3rd Qu.    Max. 
 -181.00  -22.00    5.79   18.80  254.00 
 
-Coefficients :
+Coefficients:
               Estimate Std. Error t-value Pr(>|t|)    
 (Intercept) -57.553864  25.335537 -2.2717  0.02419 *  
 value         0.109710   0.010181 10.7756  < 2e-16 ***
@@ -184,19 +184,19 @@ Call:
 plm(formula = inv ~ value + capital, data = Grunfeld, model = "random", 
     random.method = "swar")
 
-Balanced Panel: n=10, T=20, N=200
+Balanced Panel: n = 10, T = 20, N = 200
 
 Effects:
                   var std.dev share
 idiosyncratic 2784.46   52.77 0.282
 individual    7089.80   84.20 0.718
-theta:  0.8612  
+theta: 0.8612
 
-Residuals :
+Residuals:
    Min. 1st Qu.  Median 3rd Qu.    Max. 
 -178.00  -19.70    4.69   19.50  253.00 
 
-Coefficients :
+Coefficients:
               Estimate Std. Error t-value Pr(>|t|)    
 (Intercept) -57.834415  28.898935 -2.0013  0.04674 *  
 value         0.109781   0.010493 10.4627  < 2e-16 ***
@@ -217,19 +217,19 @@ Call:
 plm(formula = inv ~ value + capital, data = Grunfeld, model = "random", 
     random.method = "amemiya")
 
-Balanced Panel: n=10, T=20, N=200
+Balanced Panel: n = 10, T = 20, N = 200
 
 Effects:
                   var std.dev share
 idiosyncratic 2755.15   52.49 0.298
 individual    6477.30   80.48 0.702
-theta:  0.8557  
+theta: 0.8557
 
-Residuals :
+Residuals:
    Min. 1st Qu.  Median 3rd Qu.    Max. 
 -178.00  -20.20    4.92   19.50  253.00 
 
-Coefficients :
+Coefficients:
               Estimate Std. Error t-value Pr(>|t|)    
 (Intercept) -57.771054  27.961477 -2.0661  0.04013 *  
 value         0.109764   0.010421 10.5328  < 2e-16 ***
@@ -283,13 +283,13 @@ Call:
 plm(formula = inv ~ value + capital, data = Grunfeld, effect = "twoways", 
     model = "pooling")
 
-Balanced Panel: n=10, T=20, N=200
+Balanced Panel: n = 10, T = 20, N = 200
 
-Residuals :
+Residuals:
    Min. 1st Qu.  Median 3rd Qu.    Max. 
  -292.0   -30.0     5.3    34.8   369.0 
 
-Coefficients :
+Coefficients:
                Estimate  Std. Error t-value  Pr(>|t|)    
 (Intercept) -42.7143694   9.5116760 -4.4907 1.207e-05 ***
 value         0.1155622   0.0058357 19.8026 < 2.2e-16 ***
@@ -309,13 +309,13 @@ Call:
 plm(formula = inv ~ value + capital, data = Grunfeld, effect = "twoways", 
     model = "within")
 
-Balanced Panel: n=10, T=20, N=200
+Balanced Panel: n = 10, T = 20, N = 200
 
-Residuals :
+Residuals:
    Min. 1st Qu.  Median 3rd Qu.    Max. 
 -163.00  -19.50   -1.27   19.10  212.00 
 
-Coefficients :
+Coefficients:
         Estimate Std. Error t-value  Pr(>|t|)    
 value   0.117716   0.013751  8.5604 6.653e-15 ***
 capital 0.357916   0.022719 15.7540 < 2.2e-16 ***
@@ -335,20 +335,20 @@ Call:
 plm(formula = inv ~ value + capital, data = Grunfeld, effect = "twoways", 
     model = "random", random.method = "walhus")
 
-Balanced Panel: n=10, T=20, N=200
+Balanced Panel: n = 10, T = 20, N = 200
 
 Effects:
                   var std.dev share
 idiosyncratic 3188.06   56.46 0.359
 individual    5685.23   75.40 0.641
 time             0.00    0.00 0.000
-theta  : 0.8349 (id) 0 (time) 2.776e-17 (total)
+theta: 0.8349 (id) 0 (time) 2.776e-17 (total)
 
-Residuals :
+Residuals:
    Min. 1st Qu.  Median 3rd Qu.    Max. 
 -182.00  -22.40    5.91   18.70  254.00 
 
-Coefficients :
+Coefficients:
               Estimate Std. Error t-value Pr(>|t|)    
 (Intercept) -57.522213  25.012301 -2.2998  0.02251 *  
 value         0.109703   0.010147 10.8113  < 2e-16 ***
@@ -369,20 +369,20 @@ Call:
 plm(formula = inv ~ value + capital, data = Grunfeld, effect = "twoways", 
     model = "random", random.method = "amemiya")
 
-Balanced Panel: n=10, T=20, N=200
+Balanced Panel: n = 10, T = 20, N = 200
 
 Effects:
                   var std.dev share
 idiosyncratic 2644.13   51.42 0.256
 individual    7452.02   86.33 0.721
 time           243.78   15.61 0.024
-theta  : 0.868 (id) 0.2787 (time) 0.2776 (total)
+theta: 0.868 (id) 0.2787 (time) 0.2776 (total)
 
-Residuals :
+Residuals:
    Min. 1st Qu.  Median 3rd Qu.    Max. 
 -177.00  -18.00    3.27   17.20  234.00 
 
-Coefficients :
+Coefficients:
               Estimate Std. Error t-value Pr(>|t|)    
 (Intercept) -63.767791  29.851537 -2.1362   0.0339 *  
 value         0.111386   0.010909 10.2102   <2e-16 ***
@@ -403,20 +403,20 @@ Call:
 plm(formula = inv ~ value + capital, data = Grunfeld, effect = "twoways", 
     model = "random", random.method = "swar")
 
-Balanced Panel: n=10, T=20, N=200
+Balanced Panel: n = 10, T = 20, N = 200
 
 Effects:
                   var std.dev share
 idiosyncratic 2675.43   51.72 0.274
 individual    7095.25   84.23 0.726
 time             0.00    0.00 0.000
-theta  : 0.864 (id) 0 (time) 5.551e-17 (total)
+theta: 0.864 (id) 0 (time) 5.551e-17 (total)
 
-Residuals :
+Residuals:
    Min. 1st Qu.  Median 3rd Qu.    Max. 
  -177.0   -19.8     4.6    19.5   253.0 
 
-Coefficients :
+Coefficients:
               Estimate Std. Error t-value Pr(>|t|)    
 (Intercept) -57.865377  29.393359 -1.9687   0.0504 .  
 value         0.109790   0.010528 10.4285   <2e-16 ***
@@ -493,4 +493,4 @@ F-statistic: 328.647 on 2 and 197 DF, p-value: < 2.22e-16
 > 
 > proc.time()
    user  system elapsed 
-   2.46    0.18    2.63 
+   2.91    0.10    3.01 

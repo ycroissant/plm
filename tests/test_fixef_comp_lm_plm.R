@@ -21,15 +21,31 @@ Grunfeld_unbalanced <- Grunfeld[1:199, ]
 plm_fe_oneway_ind <- plm(inv ~ value + capital, data = Grunfeld, model = "within", effect = "individual")
 fixef_plm_oneway_ind_dfirst  <- fixef(plm_fe_oneway_ind, type = "dfirst", effect = "individual")
 
+if (!isTRUE(all.equal(as.numeric(plm:::fitted_exp.plm(plm_fe_oneway_ind)),
+                      (within_intercept(plm_fe_oneway_ind) + 
+                       fixef(plm_fe_oneway_ind, type = "dmean", effect = "individual")[as.character(index(plm_fe_oneway_ind)[[1]])] + 
+                       as.vector(tcrossprod(coef(plm_fe_oneway_ind), as.matrix(plm_fe_oneway_ind$model[ , 2:3])))), check.attributes = FALSE))) stop("1way unbal/id: effects not correct")
+
 # plm oneway time balanced
 plm_fe_oneway_time <- plm(inv ~ value + capital, data = Grunfeld, model = "within", effect = "time")
 fixef_plm_oneway_time_dfirst <- fixef(plm_fe_oneway_time, type = "dfirst", effect = "time")
+
+if (!isTRUE(all.equal(as.numeric(plm:::fitted_exp.plm(plm_fe_oneway_time)),
+                      (within_intercept(plm_fe_oneway_time) + 
+                       fixef(plm_fe_oneway_time, type = "dmean", effect = "time")[as.character(index(plm_fe_oneway_time)[[2]])] +
+                       as.vector(tcrossprod(coef(plm_fe_oneway_time), as.matrix(plm_fe_oneway_time$model[ , 2:3])))), check.attributes = FALSE))) stop("1way unbal/time: effects not correct")
 
 # plm twoways balanced
 plm_fe_tw <- plm(inv ~ value + capital, data = Grunfeld, model = "within", effect = "twoways")
 fixef_plm_tw_ind_dfirst  <- fixef(plm_fe_tw, type = "dfirst", effect = "individual")
 fixef_plm_tw_time_dfirst <- fixef(plm_fe_tw, type = "dfirst", effect = "time")
 
+if (!isTRUE(all.equal(as.numeric(plm:::fitted_exp.plm(plm_fe_tw)),
+                      (within_intercept(plm_fe_tw) + 
+                       fixef(plm_fe_tw, type = "dmean", effect = "individual")[as.character(index(plm_fe_tw)[[1]])] + 
+                       fixef(plm_fe_tw, type = "dmean", effect = "time")[as.character(index(plm_fe_tw)[[2]])] +
+                       as.vector(tcrossprod(coef(plm_fe_tw), as.matrix(plm_fe_tw$model[ , 2:3])))), check.attributes = FALSE))) stop("2way bal: effects not correct")
+  
 # lm oneway individual balanced
 lm_fe_oneway_ind <- lm(inv ~ value + capital + factor(firm), data = Grunfeld)
 fixef_lm_oneway_ind_dfirst <- lm_fe_oneway_ind$coefficients[4:12]
@@ -75,14 +91,35 @@ if (!isTRUE(all.equal(fixef_lm_tw_time_dfirst, as.numeric(fixef_plm_tw_time_dfir
 plm_fe_oneway_ind_u <- plm(inv ~ value + capital, data = Grunfeld_unbalanced, model = "within", effect = "individual")
 fixef_plm_oneway_ind_dfirst_u <- fixef(plm_fe_oneway_ind_u, type = "dfirst", effect = "individual")
 
+## would be ok if type = "demean" would return the weighted mean of level effects
+# if (!isTRUE(all.equal(as.numeric(plm:::fitted_exp.plm(plm_fe_oneway_ind_u)),
+#                       (within_intercept(plm_fe_oneway_ind_u) + 
+#                        fixef(plm_fe_oneway_ind_u, type = "dmean", effect = "individual")[as.character(index(plm_fe_oneway_ind_u)[[1]])] + 
+#                        as.vector(tcrossprod(coef(plm_fe_oneway_ind_u), as.matrix(plm_fe_oneway_ind_u$model[ , 2:3])))), check.attributes = FALSE))) stop("1way unbal/id: effects not correct")
+
 # plm one-way time unbalanced
 plm_fe_oneway_time_u <- plm(inv ~ value + capital, data = Grunfeld_unbalanced, model = "within", effect = "time")
 fixef_plm_oneway_time_dfirst_u <- fixef(plm_fe_oneway_time_u, type = "dfirst", effect = "time")
+
+## would be ok if type = "demean" would return the weighted mean of level effects
+# if (!isTRUE(all.equal(as.numeric(plm:::fitted_exp.plm(plm_fe_oneway_time_u)),
+#                       (within_intercept(plm_fe_oneway_time_u) + 
+#                        fixef(plm_fe_oneway_time_u, type = "dmean", effect = "time")[as.character(index(plm_fe_oneway_time_u)[[2]])] + 
+#                        as.vector(tcrossprod(coef(plm_fe_oneway_time_u), as.matrix(plm_fe_oneway_time_u$model[ , 2:3])))), check.attributes = FALSE))) stop("1way unbal/time: effects not correct")
+
 
 # plm twoways unbalanced
 plm_fe_tw_u <- plm(inv ~ value + capital, data = Grunfeld_unbalanced, model = "within", effect = "twoways")
 fixef_plm_tw_ind_dfirst_u  <- fixef(plm_fe_tw_u, type = "dfirst", effect = "individual")
 fixef_plm_tw_time_dfirst_u <- fixef(plm_fe_tw_u, type = "dfirst", effect = "time")
+
+## the level effects in case of 2-way unbalanced are not correct, hence the dmean specification is not correct
+# if (!isTRUE(all.equal(as.numeric(plm:::fitted_exp.plm(plm_fe_tw_u)),
+#                       (within_intercept(plm_fe_tw_u) + 
+#                        fixef(plm_fe_tw_u, type = "dmean", effect = "individual")[as.character(index(plm_fe_tw_u)[[1]])] + 
+#                        fixef(plm_fe_tw_u, type = "dmean", effect = "time")[as.character(index(plm_fe_tw_u)[[2]])] +
+#                        as.vector(tcrossprod(coef(plm_fe_tw_u), as.matrix(plm_fe_tw_u$model[ , 2:3])))), check.attributes = FALSE))) stop("tw unbal: effects not correct")
+
 
 # lm oneway individual unbalanced
 lm_fe_oneway_ind_u <- lm(inv ~ value + capital + factor(firm), data = Grunfeld_unbalanced)
@@ -104,6 +141,24 @@ Grunfeld_unbalanced_fac$firm <- factor(Grunfeld_unbalanced_fac$firm)
 Grunfeld_unbalanced_fac$year <- factor(Grunfeld_unbalanced_fac$year)
 lm_fe_tw_u_eff_cod <- lm(inv ~ value + capital + firm + year, data = Grunfeld_unbalanced_fac, contrasts = list(firm="contr.sum", year="contr.sum"))
 lm_fe_tw_u_eff_cod_wo_int <- lm(inv ~ 0 + value + capital + firm + year, data = Grunfeld_unbalanced_fac, contrasts = list(firm="contr.sum", year="contr.sum"))
+
+# replicates SAS - 2-way unbalanced
+lm_fe_tw_u_eff_cod_SAS_w_Int <- lm(inv ~  value + capital + firm + year, data = Grunfeld_unbalanced_fac, contrasts = list(firm="contr.SAS", year="contr.SAS"))
+lm_fe_tw_u_eff_cod_SAS <- lm(inv ~ 0 + value + capital + firm + year, data = Grunfeld_unbalanced_fac, contrasts = list(firm="contr.SAS", year="contr.SAS"))
+lm_fe_tw_u_eff_cod_SAS$coefficients[3:12]                                                    ## correct level specification for individuals?
+lm_fe_tw_u_eff_cod_SAS$coefficients[3:12] - mean(lm_fe_tw_u_eff_cod_SAS$coefficients[3:12])  ## correct dmean specification for individuals (matches EViews)
+
+
+lm_fe_tw_u_eff_cod_SAS_time <- lm(inv ~ 0 + value + capital + year + firm, data = Grunfeld_unbalanced_fac, contrasts = list(year="contr.SAS", firm="contr.SAS"))
+lm_fe_tw_u_eff_cod_SAS_time$coefficients[3:22] - mean(lm_fe_tw_u_eff_cod_SAS_time$coefficients[3:22])  ## time effect: does _NOT_ match EViews?!
+
+## oneway unbalanced: SAS matches fixef()
+lm_fe_tw_u_eff_cod_SAS_1way_unbal_ind <- lm(inv ~ 0 + value + capital + firm, data = Grunfeld_unbalanced_fac, contrasts = list(firm="contr.SAS"))
+fixef(plm_fe_oneway_ind_u)
+lm_fe_tw_u_eff_cod_SAS_1way_unbal_time <- lm(inv ~ 0 + value + capital + year, data = Grunfeld_unbalanced_fac, contrasts = list(year="contr.SAS"))
+fixef(plm_fe_oneway_time_u)
+
+
 
 # Test residuals oneway individual and time; twoway unbalanced
 if (!isTRUE(all.equal(residuals(lm_fe_oneway_ind_u), as.numeric(residuals(plm_fe_oneway_ind_u)), check.attributes = FALSE)))

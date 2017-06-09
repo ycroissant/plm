@@ -156,7 +156,7 @@ Effects:
                  var std.dev share
 idiosyncratic 297.25   17.24 0.306
 individual    672.90   25.94 0.694
-theta: 
+theta:
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
  0.8775  0.8795  0.8795  0.8795  0.8795  0.8795 
 
@@ -190,7 +190,7 @@ Effects:
                   var std.dev share
 idiosyncratic 863.173  29.380 0.941
 time           54.571   7.387 0.059
-theta: 
+theta:
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
  0.4900  0.4942  0.4942  0.4940  0.4942  0.4942 
 
@@ -339,6 +339,11 @@ Effects:
 idiosyncratic 174.688  13.217 0.215
 individual    629.540  25.091 0.774
 time            8.616   2.935 0.011
+theta:
+        Min. 1st Qu. Median   Mean 3rd Qu.   Max.
+id    0.9026  0.9043 0.9043 0.9042  0.9043 0.9043
+time  0.4427  0.4469 0.4469 0.4468  0.4469 0.4469
+total 0.4417  0.4459 0.4459 0.4458  0.4459 0.4459
 
 Residuals:
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
@@ -407,4 +412,4 @@ F-statistic: 73.4956 on 2 and 1376 DF, p-value: < 2.22e-16
 > 
 > proc.time()
    user  system elapsed 
-   3.26    0.20    3.46 
+   3.40    0.14    3.52 
