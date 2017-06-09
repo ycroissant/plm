@@ -118,14 +118,14 @@ man/vcovHC.Rd -text
 man/vcovNW.Rd -text
 man/vcovSCC.Rd -text
 man/within_intercept.Rd -text
-tests/testErrors.R -text
-tests/testErrors.Rout.save -text
-tests/testEvaluation.R -text
-tests/testEvaluation.Rout.save -text
 tests/test_Chow.R -text
 tests/test_Chow.Rout.save -text
+tests/test_Errors.R -text
+tests/test_Errors.Rout.save -text
 tests/test_Estimators.R -text
 tests/test_Estimators.Rout.save -text
+tests/test_Evaluation.R -text
+tests/test_Evaluation.Rout.save -text
 tests/test_R2_adj_R2.R -text
 tests/test_as.data.frame_as.matrix.R -text
 tests/test_as.list.pdata.frame.R -text
@@ -155,6 +155,7 @@ tests/test_pdata.frame_subsetting.R -text
 tests/test_pdata.frame_unused_levels.R -text
 tests/test_pdiff_fd.R -text
 tests/test_pdwtest.R -text
+tests/test_pgmm.R -text
 tests/test_phtest_Hausman_regression.R -text
 tests/test_plm.data.R -text
 tests/test_plm_na.action.R -text
@@ -179,6 +180,5 @@ tests/test_summary.pseries_character_logical_factor.R -text
 tests/test_vcovG_lin_dep.R -text
 tests/test_within_intercept.R -text
 tests/test_within_intercept.Rout.save -text
-tests/testpgmm.R -text
 vignettes/bibliojss.bib -text
 vignettes/plm.rnw -text
