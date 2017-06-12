@@ -1,5 +1,5 @@
-## Comparision of lm()'s adjusted R-squared and plm()'s R-squared
-## for pooling-Models
+## Comparison of lm()'s adjusted R-squared and plm()'s R-squared
+## for pooling models
 
 
 require(plm)

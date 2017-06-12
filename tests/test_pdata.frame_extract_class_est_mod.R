@@ -1,9 +1,9 @@
-### (1) Comparision of extraction of data.frame and pdata.frame and
+### (1) Comparison of extraction of data.frame and pdata.frame and
 ### (2) class 'pseries' of estimated_model$model
 
 
 
-### (1) Comparision of extraction of data.frame and pdata.frame ###
+### (1) Comparison of extraction of data.frame and pdata.frame ###
 # -> everything is ok in rev. 189+
 
 # from ?pdata.frame: "The "[" method behaves as for data.frame, except that the extraction is also applied to the index attribute."

@@ -1,7 +1,7 @@
 # Test of punbalanced  (1) measures for unbalancedness as defined in Ahrens/Pincus (1981)
 #                  and (2) of extension to nested panel structures (Baltagi/Song/Jung (2001), p. 368-369))
 
-# comparision to literature results
+# comparison to literature results
 
 
 ################## (1) ######### two-dimensional panel ########################################

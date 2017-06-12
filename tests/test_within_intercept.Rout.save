@@ -15,7 +15,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> ### Test of within_intercept in connection with fixef() and comparision to Stata and Gretl
+> ### Test of within_intercept in connection with fixef() and comparison to Stata and Gretl
 > #
 > # results for within_intercept matches EViews, also in the two-way unbalanced case
 > #  

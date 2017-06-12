@@ -1,7 +1,7 @@
 #### Replicate results of various sources
 ####
 #### (1): Baltagi (2013)
-#### (2): STATA's FE estimator
+#### (2): Stata's FE estimator
 
 
 
@@ -98,7 +98,7 @@ summary(plm_grunfeld_re_swar   )
 
 
 #### (2) ####
-####### replicate STATA's fixed effects estimator, R-squared, F statistic ###
+####### replicate Stata's fixed effects estimator, R-squared, F statistic ###
 ## http://www.stata.com/manuals14/xtxtreg.pdf [example 2 on p. 14]
 # library(plm)
 # library(haven)
@@ -112,7 +112,7 @@ summary(plm_grunfeld_re_swar   )
 # 
 # plm_fe_nlswork <- plm(form_nls_ex2, data = pnlswork, model = "within")
 
-# STATA's results:
+# Stata's results:
 #
 # R-sq:                                          
 #   within  = 0.1727                               
@@ -137,22 +137,22 @@ summary(plm_grunfeld_re_swar   )
 # south                      -.0606309      .0109319
 # _cons                      1.03732        .0485546
 
-# resambles STATA (ex. 2, p. 14)
+# resambles Stata (ex. 2, p. 14)
 # => coefficients, std.errors, R^2 (=R-sq within), F => correct
-# (NB: STATA outputs an "artificial" constant for FE models, see below)
+# (NB: Stata outputs an "artificial" constant for FE models, see below)
 #summary(plm_fe_nlswork)
 
-# STATA outputs a constant for the FE model which is computed as the weighted average of the individual constants
+# Stata outputs a constant for the FE model which is computed as the weighted average of the individual constants
 # see http://www.stata.com/support/faqs/statistics/intercept-in-fixed-effects-model/
-# However, STATA also outputs std.err, t-test and p-value for the artificial constant
-# gretl mimics STATA: see gretl user's guide example p. 160-161 (example 18.1)
+# However, Stata also outputs std.err, t-test and p-value for the artificial constant
+# gretl mimics Stata: see gretl user's guide example p. 160-161 (example 18.1)
 # http://gretl.sourceforge.net/gretl-help/gretl-guide.pdf
 # http://lists.wfu.edu/pipermail/gretl-devel/2013-May/004459.html
-#const_fe_STATA_gretl <- weighted.mean(fixef(plm_fe_nlswork) , as.numeric(table(index(plm_fe_nlswork)[[1]])))
+#const_fe_Stata_gretl <- weighted.mean(fixef(plm_fe_nlswork) , as.numeric(table(index(plm_fe_nlswork)[[1]])))
 
 # RE estimator
-# note STATA 14 uses by default a different method compared to plm's Swamy-Arora variance component estimator
-# This is why in comparison with web examples from STATA the random effects coefficients slightly differ
+# note Stata 14 uses by default a different method compared to plm's Swamy-Arora variance component estimator
+# This is why in comparison with web examples from Stata the random effects coefficients slightly differ
 #plm_re_nlswork <- plm(form_nls_ex2, data = pnlswork, model = "random")
 
 

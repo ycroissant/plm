@@ -92,7 +92,7 @@ plmtest(pool_grunfeld, type = "bp") # LM_mu in Baltagi's book
 ############ unbalanced panel                                              ####################
 ##
 ## data set for test from Sosa-Escudero/Bera (2008), pp. 75-77
-## available as STATA .dta file at http://www.stata-journal.com/software/sj8-1/sg164_1/ginipanel5.dta
+## available as Stata .dta file at http://www.stata-journal.com/software/sj8-1/sg164_1/ginipanel5.dta
 ##
 ## Sosa-Escudero/Bera (2008), Tests for unbalanced error-components models under local misspecification,
 ##                            The Stata Journal (2008), Vol. 8, Number 1, pp. 68-78.
@@ -103,14 +103,14 @@ plmtest(pool_grunfeld, type = "bp") # LM_mu in Baltagi's book
 # ginipanel5 <- read_dta("http://www.stata-journal.com/software/sj8-1/sg164_1/ginipanel5.dta")
 # pginipanel5 <- pdata.frame(ginipanel5, index = c("naglo", "ano"), drop.index = FALSE, row.names = TRUE)
 # 
-# # STATA command for RE model: xtreg gini ie ie2 indus adpubedsal desempleo tactiv invipib apertura pyas4 e64 supc tamfam, re
+# # Stata command for RE model: xtreg gini ie ie2 indus adpubedsal desempleo tactiv invipib apertura pyas4 e64 supc tamfam, re
 # # use pooling model in R:
 # formula_gini <- formula(gini ~ ie + ie2 + indus + adpubedsal + desempleo + tactiv + invipib + apertura + pyas4 + e64 + supc + tamfam)
 # pool_gini <- plm(formula_gini, data = pginipanel5, model = "pooling")
 # 
 # pdim(pool_gini) # Unbalanced Panel: n=17, T=6-8, N=128
 # 
-# # STATA's Output of xttest1, unadjusted (Sosa-Escudero/Bera (2008), p. 77):
+# # Stata's Output of xttest1, unadjusted (Sosa-Escudero/Bera (2008), p. 77):
 # #
 # # Random Effects, Two Sided:
 # #   LM(Var(u)=0) = 13.50 Pr>chi2(1) = 0.0002

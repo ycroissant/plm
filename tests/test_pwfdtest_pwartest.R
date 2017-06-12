@@ -23,7 +23,7 @@ library(plm)
 # fd_nls <- plm(form_nls, data = pnlswork_r8, model = "fd")
 # 
 # # results of regression differ, likely because the model matrices used differ (cf. number of obs)
-# # in STATA example : Number of obs: 10528 used in regression
+# # in Stata example : Number of obs: 10528 used in regression
 # summary(fd_nls)
 # 
 # # both result in error in plm v1.4-0 (CRAN) and dev version as of 2015-11-05

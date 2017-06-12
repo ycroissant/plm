@@ -1,9 +1,9 @@
 #### Hausman test (original version and regression-based version)
 ##
 ##
-## (1) comparision to Baltagi (2013), sec. 4.3.1, example 1 (pp. 81-82)
-## (2) comparision to Baltagi (2013), sec. 4.3.2, example 2 (pp. 82-83)
-## (3) comparision to STATA
+## (1) comparison to Baltagi (2013), sec. 4.3.1, example 1 (pp. 81-82)
+## (2) comparison to Baltagi (2013), sec. 4.3.2, example 2 (pp. 82-83)
+## (3) comparison to Stata
 
 
 ################################## (1) ##################################
@@ -128,14 +128,14 @@ if (class(testobj3$statistic) != "numeric") stop(paste0("class of statistic is n
 
 
 ################################## (3) ##################################
-### comparision to STATA:
-# Hausman test with STATA example 2, pp. 5-6 in http://www.stata.com/manuals14/xtxtregpostestimation.pdf
+### comparison to Stata:
+# Hausman test with Stata example 2, pp. 5-6 in http://www.stata.com/manuals14/xtxtregpostestimation.pdf
 #
-# Results of phtest differ, most likely because RE model differs slightly from STATA's RE model as the
-# default RE model in STATA uses a slightly different implementation of Swamy-Arora method
+# Results of phtest differ, most likely because RE model differs slightly from Stata's RE model as the
+# default RE model in Stata uses a slightly different implementation of Swamy-Arora method
 # [see http://www.stata.com/manuals14/xtxtreg.pdf]
 #
-# STATA:
+# Stata:
 # chi2(8)   = (b-B)'[(V_b-V_B)^(-1)](b-B)
 #           =      149.43
 # Prob>chi2 =      0.0000
@@ -159,7 +159,7 @@ if (class(testobj3$statistic) != "numeric") stop(paste0("class of statistic is n
 # 
 # summary(plm_re_nlswork)
 # 
-# ### STATA: chi2(8) = 149.43
+# ### Stata: chi2(8) = 149.43
 # phtest(plm_fe_nlswork, plm_re_nlswork)              # chisq = 176.39, df = 8,  p-value < 2.2e-16
 # phtest(plm_be_nlswork, plm_re_nlswork)              # chisq = 141.97, df = 10, p-value < 2.2e-16
 # phtest(form_nls_ex2, data = pnlswork, method="aux") # chisq = 627.46, df = 8,  p-value < 2.2e-16 [this resulted in an error for SVN revisions 125 - 141]

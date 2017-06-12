@@ -1,4 +1,4 @@
-### Test of within_intercept in connection with fixef() and comparision to Stata and Gretl
+### Test of within_intercept in connection with fixef() and comparison to Stata and Gretl
 #
 # results for within_intercept matches EViews, also in the two-way unbalanced case
 #  

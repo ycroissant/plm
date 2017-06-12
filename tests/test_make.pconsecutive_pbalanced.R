@@ -329,10 +329,10 @@ if (!all(sort(unique(make.pbalanced(Grunfeld_wo_2nd_period_and_3rd_for_id1)$year
 # rows_there_before <- df_nlswork_r8_consec$here_before & !is.na(df_nlswork_r8_consec$here_before)
 # all.equal(df_nlswork_r8_consec[rows_there_before, ], nlswork_r8)
 # 
-# nlswork_r8_comparision  <- nlswork_r8
-# attr(nlswork_r8_comparision, "row.names") <- attr(df_nlswork_r8_consec[rows_there_before, ], "row.names")
+# nlswork_r8_comparison <- nlswork_r8
+# attr(nlswork_r8_comparison, "row.names") <- attr(df_nlswork_r8_consec[rows_there_before, ], "row.names")
 # 
-# if (!identical(df_nlswork_r8_consec[rows_there_before, ],nlswork_r8_comparision)) stop("data.frame: not identical")
+# if (!identical(df_nlswork_r8_consec[rows_there_before, ],nlswork_r8_comparison)) stop("data.frame: not identical")
 # 
 # if (!identical(typeof(attr(nlswork_r8, "row.names")), typeof(attr(df_nlswork_r8_consec, "row.names"))))
 #   stop("wrong typeof of attribute 'row.names'")
@@ -344,17 +344,17 @@ if (!all(sort(unique(make.pbalanced(Grunfeld_wo_2nd_period_and_3rd_for_id1)$year
 # if (!nrow(pdf_pnlswork_r8_consec) == 52365) stop("failure")
 # 
 # # same row.names adoption necessary as for data.frame
-# pnlswork_r8_comparision  <- pnlswork_r8
+# pnlswork_r8_comparison  <- pnlswork_r8
 # pdf_pnlswork_r8_consec_rows_there_before <- pdf_pnlswork_r8_consec[rows_there_before, ]
-# attr(attr(pnlswork_r8_comparision, "index"), "row.names") <- attr(attr(pdf_pnlswork_r8_consec_rows_there_before, "index"), "row.names")
+# attr(attr(pnlswork_r8_comparison, "index"), "row.names") <- attr(attr(pdf_pnlswork_r8_consec_rows_there_before, "index"), "row.names")
 # # as the index vars are in the pdata.frame: added levels are not to be dropped; thus: adapt here to enable comparison
 # pdf_pnlswork_r8_consec_rows_there_before$idcode <- droplevels(pdf_pnlswork_r8_consec_rows_there_before$idcode)
 # pdf_pnlswork_r8_consec_rows_there_before$year <- droplevels(pdf_pnlswork_r8_consec_rows_there_before$year)
 # 
 # length(levels(pdf_pnlswork_r8_consec_rows_there_before$year))
 # 
-# all.equal(pdf_pnlswork_r8_consec_rows_there_before, pnlswork_r8_comparision)
-# if (!identical(pdf_pnlswork_r8_consec_rows_there_before, pnlswork_r8_comparision)) stop("pdata.frame: not identical")
+# all.equal(pdf_pnlswork_r8_consec_rows_there_before, pnlswork_r8_comparison)
+# if (!identical(pdf_pnlswork_r8_consec_rows_there_before, pnlswork_r8_comparison)) stop("pdata.frame: not identical")
 # 
 # 
 # 
