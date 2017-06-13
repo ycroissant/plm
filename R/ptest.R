@@ -49,7 +49,7 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                if (!inherits(data, "pdata.frame")) data <- pdata.frame(data, index = index) #, ...)
 
                row.names(data) <- NULL # reset rownames of original data set (->numbers rownames in clean sequence) to make rownames
-                                       # comparable for later comparision to obs used in estimation of models (get rid of NA values)
+                                       # comparable for later comparison to obs used in estimation of models (get rid of NA values)
                                        # [needed because pmodel.response() and model.matrix() do not retain fancy rownames, but rownames]
                
                # rev. 305: quick and dirty fix for missing effect argument in function 

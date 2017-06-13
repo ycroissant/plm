@@ -1,0 +1,148 @@
+
+R version 3.3.3 (2017-03-06) -- "Another Canoe"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(plm)
+Loading required package: Formula
+> data("Produc", package = "plm")
+> pProduc <- pdata.frame(Produc, index = c("state", "year", "region"))
+> form  <- log(gsp) ~ log(pc) + log(emp) + log(hwy) + log(water) + log(util) + unemp
+> summary(plm(form, data = pProduc, model = "random", effect = "nested"))
+NA Random Effect Model 
+   (Swamy-Arora's transformation)
+
+Call:
+plm(formula = form, data = pProduc, effect = "nested", model = "random")
+
+Balanced Panel: n = 48, T = 17, N = 816
+
+Effects:
+                   var  std.dev share
+idiosyncratic 0.001352 0.036765 0.191
+individual    0.004278 0.065410 0.604
+group         0.001455 0.038148 0.205
+theta:
+         Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
+id    0.86490 0.86490 0.86490 0.86490 0.86490 0.86490
+group 0.03961 0.04669 0.05714 0.05578 0.06458 0.06458
+
+Residuals:
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-0.106000 -0.024800 -0.001820 -0.000054  0.019800  0.183000 
+
+Coefficients:
+               Estimate  Std. Error t-value  Pr(>|t|)    
+(Intercept)  2.08921088  0.14570204 14.3389 < 2.2e-16 ***
+log(pc)      0.27412419  0.02054440 13.3430 < 2.2e-16 ***
+log(emp)     0.73983766  0.02575046 28.7311 < 2.2e-16 ***
+log(hwy)     0.07273624  0.02202509  3.3024  0.001001 ** 
+log(water)   0.07645327  0.01385767  5.5170 4.642e-08 ***
+log(util)   -0.09437398  0.01677289 -5.6266 2.533e-08 ***
+unemp       -0.00616304  0.00090331 -6.8227 1.751e-11 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    43.035
+Residual Sum of Squares: 1.1245
+R-Squared:      0.97387
+Adj. R-Squared: 0.97368
+F-statistic: 5025.33 on 6 and 809 DF, p-value: < 2.22e-16
+> summary(plm(form, data = pProduc, model = "random", effect = "nested", random.method = "walhus"))
+NA Random Effect Model 
+   (Wallace-Hussain's transformation)
+
+Call:
+plm(formula = form, data = pProduc, effect = "nested", model = "random", 
+    random.method = "walhus")
+
+Balanced Panel: n = 48, T = 17, N = 816
+
+Effects:
+                   var  std.dev share
+idiosyncratic 0.001415 0.037617 0.163
+individual    0.004507 0.067131 0.520
+group         0.002744 0.052387 0.317
+theta:
+        Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
+id    0.8653 0.86530 0.86530 0.86530 0.86530 0.86530
+group 0.0541 0.06154 0.07179 0.07024 0.07867 0.07867
+
+Residuals:
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-0.105000 -0.024700 -0.001880 -0.000056  0.019900  0.182000 
+
+Coefficients:
+               Estimate  Std. Error t-value  Pr(>|t|)    
+(Intercept)  2.08165186  0.15034855 13.8455 < 2.2e-16 ***
+log(pc)      0.27256322  0.02093384 13.0202 < 2.2e-16 ***
+log(emp)     0.74164483  0.02607167 28.4464 < 2.2e-16 ***
+log(hwy)     0.07493204  0.02234932  3.3528 0.0008373 ***
+log(water)   0.07639159  0.01386702  5.5089 4.855e-08 ***
+log(util)   -0.09523031  0.01677247 -5.6778 1.902e-08 ***
+unemp       -0.00614840  0.00090786 -6.7724 2.436e-11 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    40.423
+Residual Sum of Squares: 1.1195
+R-Squared:      0.97231
+Adj. R-Squared: 0.9721
+F-statistic: 4733.87 on 6 and 809 DF, p-value: < 2.22e-16
+> summary(plm(form, data = pProduc, model = "random", effect = "nested", random.method = "amemiya"))
+NA Random Effect Model 
+   (Amemiya's transformation)
+
+Call:
+plm(formula = form, data = pProduc, effect = "nested", model = "random", 
+    random.method = "amemiya")
+
+Balanced Panel: n = 48, T = 17, N = 816
+
+Effects:
+                   var  std.dev share
+idiosyncratic 0.001352 0.036765 0.130
+individual    0.006899 0.083058 0.662
+group         0.002170 0.046589 0.208
+theta:
+         Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
+id    0.89330 0.89330 0.89330 0.89330 0.89330 0.89330
+group 0.02997 0.03549 0.04369 0.04265 0.04959 0.04959
+
+Residuals:
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-0.105000 -0.024300 -0.002260 -0.000038  0.019400  0.179000 
+
+Coefficients:
+               Estimate  Std. Error t-value  Pr(>|t|)    
+(Intercept)  2.13133109  0.16013819 13.3093 < 2.2e-16 ***
+log(pc)      0.26447567  0.02176030 12.1540 < 2.2e-16 ***
+log(emp)     0.75811017  0.02660794 28.4919 < 2.2e-16 ***
+log(hwy)     0.07211418  0.02362627  3.0523  0.002345 ** 
+log(water)   0.07616495  0.01401879  5.4331 7.334e-08 ***
+log(util)   -0.10150953  0.01705158 -5.9531 3.919e-09 ***
+unemp       -0.00583842  0.00091107 -6.4083 2.496e-10 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    34.089
+Residual Sum of Squares: 1.0911
+R-Squared:      0.96799
+Adj. R-Squared: 0.96776
+F-statistic: 4077.78 on 6 and 809 DF, p-value: < 2.22e-16
+> 
+> proc.time()
+   user  system elapsed 
+   2.54    0.15    2.68 

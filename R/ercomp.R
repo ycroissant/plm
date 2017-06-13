@@ -49,7 +49,7 @@ ercomp.formula <- function(object, data,
             stop("dfcor should equal 3 for unbalanced panels")
     }
 
-    # we use later a general expression for the three kind of effects,
+    # we use later a general expression for the three kinds of effects,
     # select the relevant lines
 
     therows <- switch(effect,
@@ -82,7 +82,7 @@ ercomp.formula <- function(object, data,
         result <- list(sigma2 = sigma2, theta = theta)
         result <- structure(result, class = "ercomp", balanced = balanced, effect = effect)
         return(result)
-    }
+    } ## END nerlove
 
     if (! is.null(method) && method == "ht"){
         N <- pdim(data)$nT$n
@@ -111,7 +111,7 @@ ercomp.formula <- function(object, data,
         result <- list(sigma2 = sigma2, theta = theta)
         result <- structure(result, class = "ercomp", balanced = balanced, effect = effect)
         return(result)
-    }
+    } ## END ht
 
     
     # method argument is used, check its validity and set the relevant
@@ -125,13 +125,13 @@ ercomp.formula <- function(object, data,
         if (is.null(dfcor)){
             if (balanced){
                 dfcor <- switch(method,
-                                'swar'    = c(2, 2),
-                                'walhus'  = c(1, 1),
-                                'amemiya' = c(1, 1)
+                                "swar"    = c(2, 2),
+                                "walhus"  = c(1, 1),
+                                "amemiya" = c(1, 1)
                                 )
             }
             else dfcor <- c(3, 3)
-        }        
+        }
     }
     else{
         # the between estimator is only relevant for the second
@@ -173,6 +173,7 @@ ercomp.formula <- function(object, data,
         M <- matrix(NA, nrow = 3, ncol = 3,
                     dimnames = list(c("w", "id", "gp"),
                         c("nu", "eta", "lambda")))
+        
         if (method == "walhus"){
             estm <- plm.fit(object, data, model = "pooling", effect = "individual")
             hateps <- as.numeric(resid(estm, model = "pooling"))
@@ -202,15 +203,16 @@ ercomp.formula <- function(object, data,
             M["gp", "nu"] <- G - trace(crossprod(CPZM, CPZBlambda))
             M["gp", "eta"] <- sum(TG) - 2 * trace(crossprod(CPZM, CPZBlambdaSeta)) +
                 trace( CPZM %*% CPZBlambda %*% CPZM %*% CPZSeta)
-            M["gp", "lambda"] <- O - 2 * trace(crossprod(CPZM, CPZSlambda)) +                         
+            M["gp", "lambda"] <- O - 2 * trace(crossprod(CPZM, CPZSlambda)) + 
                 trace( CPZM %*% CPZBlambda %*% CPZM %*% CPZSlambda)
         }
+        
         if (method == "amemiya"){
             estm <- plm.fit(object, data, effect = "individual", model = "within")
             hateps <- as.numeric(resid(estm, model = "pooling"))
             hatepsBeta <- Between(hateps, ids)
             hatepsBlambda <- Between(hateps, gps)
-#            quad <- c(crossprod(resid(estm, model = "within", effect = "individual")), ## Problem, don't return the within residuals, why ?
+#            quad <- c(crossprod(resid(estm, model = "within", effect = "individual")), ## Problem, doesn't return the within residuals, why ?
             quad <- c(crossprod(resid(estm)), 
                       crossprod(Between(hateps, ids) - Between(hateps, gps)),
                       crossprod(Between(hateps, gps)))
@@ -271,9 +273,7 @@ ercomp.formula <- function(object, data,
             M["gp", "eta"] <- sum(TG) - trace( solve(crossprod(ZBlambda)) %*% crossprod(ZBlambda, ZSeta))
             M["gp", "lambda"] <- O - trace( solve(crossprod(ZBlambda)) %*% crossprod(ZSlambda, Z))
         }
-        ids <- index(data)[[1]]
-        tss <- index(data)[[2]]
-        gps <- index(data)[[3]]
+        
         Gs <- as.numeric(table(gps)[as.character(gps)])
         Tn <- as.numeric(table(ids)[as.character(ids)])
         sigma2 <- as.numeric(solve(M, quad))
@@ -286,7 +286,7 @@ ercomp.formula <- function(object, data,
                       )
         result <- list(sigma2 = sigma2, theta = theta)
         return(structure(result, class = "ercomp", balanced = balanced, effect = effect))
-    }
+    } ### END nested models
 
     # the "classic" error component model    
 
@@ -300,7 +300,7 @@ ercomp.formula <- function(object, data,
     Nt <- pdim(data)$Tint$nt
     # Estimate the relevant models
     estm <- vector(length = 3, mode = "list")
-    estm[[1]] <-  plm.fit(object, data, model = models[1], effect = effect)
+    estm[[1]] <- plm.fit(object, data, model = models[1], effect = effect)
     # Check what is the second model
     secmod <- na.omit(models[2:3])[1]
     if (secmod %in% c("within", "pooling")){
@@ -426,7 +426,7 @@ ercomp.formula <- function(object, data,
             if (effect == "twoways"){
                 CPZBmuSeta <- crossprod(ZBmu, ZSeta)
                 CPZBetaSmu <- crossprod(ZBeta, ZSmu)
-                M["id", "mu"] <- N - 2 * trace(crossprod(CPZM, CPZBetaSmu)) +                         
+                M["id", "mu"] <- N - 2 * trace(crossprod(CPZM, CPZBetaSmu)) + 
                     trace( CPZM %*% CPZBeta %*% CPZM %*% CPZSmu)
                 M["ts", "eta"] <- TS - 2 * trace(crossprod(CPZM, CPZBmuSeta)) +
                     trace( CPZM %*% CPZBmu %*% CPZM %*% CPZSeta)
@@ -451,7 +451,7 @@ ercomp.formula <- function(object, data,
                     XBeta <- t(t(XBeta) - apply(XBeta, 2, mean))
                     CPXBeta <- crossprod(XBeta)
                     M["id", "nu"] <- N - 1 + trace( crossprod(CPXM, CPXBeta) )
-                    M["id", "eta"] <-  O - sum(Tn ^ 2) / O
+                    M["id", "eta"] <- O - sum(Tn ^ 2) / O
                 }
                 if (effect != "individual"){
                     XBmu <- model.matrix(estm[[3]], model = "Between",
@@ -515,10 +515,11 @@ ercomp.formula <- function(object, data,
     }
     if (effect != "time") theta$id <- (1 - (1 + Tns * sigma2["id"] / sigma2["idios"]) ^ (-0.5))
     if (effect != "individual") theta$time <- (1 - (1 + Nts * sigma2["time"] / sigma2["idios"]) ^ (-0.5))
-    if (effect == "twoways")
+    if (effect == "twoways") {
         theta$total <- theta$id + theta$time - 1 +
             (1 + Nts * sigma2["time"] / sigma2["idios"] +
                  Tns * sigma2["id"] / sigma2["idios"]) ^ (-0.5)
+    }
     if (effect != "twoways") theta <- theta[[1]]
     result <- list(sigma2 = sigma2, theta = theta)
     structure(result, class = "ercomp", balanced = balanced, effect = effect)
@@ -571,7 +572,7 @@ print.ercomp <- function(x, digits = max(3, getOption("digits") - 3), ...){
               cat("theta:\n")
               print(rbind(id = summary(x$theta$id),
                           time = summary(x$theta$time),
-                          total =  summary(x$theta$total)))
+                          total = summary(x$theta$total)))
             }
         }
         if (effect == "nested"){
