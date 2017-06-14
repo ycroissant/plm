@@ -860,7 +860,7 @@ The instrumental variables estimator used is indicated with the
 % TODO:  "am", "bmc"/"bms" missing here?
 \end{itemize}
  as
-illustrated on the following example from \cite{BALT:01}, p.120/\citet{BALT:2013}, p.137.
+illustrated on the following example from \cite{BALT:01}, p.120/\citet{BALT:2013}, p.133/136 ("EC2SLS").
   
 <<>>=
 data("Crime", package = "plm")
@@ -868,9 +868,9 @@ cr <- plm(log(crmrte) ~ log(prbarr) + log(polpc) + log(prbconv) +
          log(prbpris) + log(avgsen) + log(density) + log(wcon) + 
          log(wtuc) + log(wtrd) + log(wfir) + log(wser) + log(wmfg) + 
          log(wfed) + log(wsta) + log(wloc) + log(pctymle) + log(pctmin) + 
-         region + smsa + factor(year) | . - log(prbarr) -log(polpc) + 
+         west + central + urban + factor(year) | . - log(prbarr) -log(polpc) + 
          log(taxpc) + log(mix), data = Crime,
-         model = "random")
+         model = "random", inst.method = "baltagi")
 summary(cr)
 @   
 
