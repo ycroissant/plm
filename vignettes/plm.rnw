@@ -111,9 +111,9 @@ two-dimensional data, especially in the case of unbalanced panels.
 This paper is organized as follows: Section~\ref{sec:linearpanelmodel}
 presents a very short overview of the typical model
 taxonomy\footnote{Comprehensive treatments are to be found in many
-  econometrics textbooks, e.g. \citet{BALT:01, BALT:2013} or \citet{WOOL:02, WOOL:2010}:
+  econometrics textbooks, e.g. \citet{BALT:2005, BALT:2013} or \citet{WOOL:02, WOOL:2010}:
   the reader is referred to these, especially to the first 9 chapters
-  of \citet{BALT:01, BALT:2013}.}.  Section~\ref{sec:software} discusses the
+  of \citet{BALT:2005, BALT:2013}.}.  Section~\ref{sec:software} discusses the
 software approach used in the package. The next three sections present
 the functionalities of the package in more detail: data management
 (Section~\ref{sec:dataformula}), estimation
@@ -836,7 +836,7 @@ with some limitations:
 
 The following example is using data used by \citep{HARR:RUBI:78} to
 estimate an hedonic housing prices function. It is reproduced in
-\citep{BALT:01}, p.174/\citet{BALT:2013}, p.197.
+\citep{BALT:2005}, p.174/\citet{BALT:2013}, p.197.
 
 <<hedonic>>=
 data("Hedonic", package = "plm")
@@ -860,7 +860,7 @@ The instrumental variables estimator used is indicated with the
 % TODO:  "am", "bmc"/"bms" missing here?
 \end{itemize}
  as
-illustrated on the following example from \cite{BALT:01}, p.120/\citet{BALT:2013}, p.133/136 ("EC2SLS").
+illustrated on the following example from \cite{BALT:2005}, p.120/\citet{BALT:2013}, p.137 ("G2SLS").
   
 <<>>=
 data("Crime", package = "plm")
@@ -870,13 +870,13 @@ cr <- plm(log(crmrte) ~ log(prbarr) + log(polpc) + log(prbconv) +
          log(wfed) + log(wsta) + log(wloc) + log(pctymle) + log(pctmin) + 
          west + central + urban + factor(year) | . - log(prbarr) -log(polpc) + 
          log(taxpc) + log(mix), data = Crime,
-         model = "random", inst.method = "baltagi")
+         model = "random")
 summary(cr)
 @   
 
 The Hausman-Taylor model \citep[see][]{HAUS:TAYL:81} may be estimated
 with the \code{pht} function. The following example is from
-\cite{BALT:01}, p.130/\citet{BALT:2013}, p.146.
+\cite{BALT:2005}, p.130/\citet{BALT:2013}, p.146.
 
 <<>>=
 ht <- pht(lwage~wks+south+smsa+married+exp+I(exp^2)+
@@ -2263,7 +2263,7 @@ lmAR1ML <- gls(inv~value+capital,data=Grunfeld,
 @
 
 and analogously the random effects panel with, e.g., AR(1) errors
-\citep[see][chap~5]{BALT:01, BALT:2013}, which is a very common specification in
+\citep[see][chap~5]{BALT:2005, BALT:2013}, which is a very common specification in
 econometrics, may be fit by \code{lme} specifying an additional
 random intercept:
 
