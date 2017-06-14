@@ -55,6 +55,9 @@ Changes since version 1.6-6
   * summary.piest: heading now has "z-value" and "Pr(>|z|)" as the numbers are based
                    on the standard normal distribution.
   * cosmetic: some print functions now have better aligned whitespacing.
+  * data set "Crime": fixed data errors: variable 'region' was not supposed to be a 
+                      three-level factor, but three variables 'west', 'central', and
+                      'urban' (former variable 'smsa' is 'urban').
 
 
 Changes since version 1.6-5
