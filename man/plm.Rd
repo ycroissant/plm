@@ -96,7 +96,10 @@ instruments, the model can be estimated with:
 
 Balestra and Varadharajan-Krishnakumar's or Baltagi's method is used if
 \code{inst.method="bvk"} or if \code{inst.method="baltagi"}, respectively.
-  
+(References for the methods are Balestra and Varadharajan-Krishnakumar (1987)
+and Baltagi (1981)).
+% TODO: add other IV methods here (bmc/bms, am)? If so, include references, too.
+
 The Hausman--Taylor estimator is computed if \code{model = "ht"}.
 }
 
@@ -197,17 +200,17 @@ wi <- plm(inv ~ value + capital,
 
 swar <- plm(inv ~ value + capital,
             data = Grunfeld, model = "random", effect = "twoways")
-          
+
 amemiya <- plm(inv ~ value + capital,
                data = Grunfeld, model = "random", random.method = "amemiya",
                effect = "twoways")
-                
+
 walhus <- plm(inv ~ value + capital,
               data = Grunfeld, model = "random", random.method = "walhus",
               effect = "twoways")
 
-# summary, summary with a funished vcov, passed as matrix, 
-# as function, and as function with additional argument
+# summary and summary with a funished vcov (passed as matrix, 
+# as function, and as function with additional argument)
 summary(wi)
 summary(wi, vcov = vcovHC(wi))
 summary(wi, vcov = vcovHC)
@@ -219,7 +222,7 @@ summary(wi, vcov = function(x) vcovHC(x, method = "white2"))
 # == Baltagi (2013), pp. 204-205
 data("Produc", package = "plm")
 pProduc <- pdata.frame(Produc, index = c("state", "year", "region"))
-form  <- log(gsp) ~ log(pc) + log(emp) + log(hwy) + log(water) + log(util) + unemp
+form <- log(gsp) ~ log(pc) + log(emp) + log(hwy) + log(water) + log(util) + unemp
 summary(plm(form, data = pProduc, model = "random", effect = "nested"))
 summary(plm(form, data = pProduc, model = "random", effect = "nested",
             random.method = "walhus"))
