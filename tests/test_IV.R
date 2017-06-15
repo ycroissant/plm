@@ -7,7 +7,7 @@ library(plm)
 data("Crime", package = "plm")
 
 # replicates Table 7.1, column "Between"
-form <- log(crmrte) ~ log(prbarr) + log(prbconv) + log(prbpris) + log(avgsen) + log(polpc) + log(density) + log(wcon) + log(wtuc) + log(wtrd) + log(wfir) + log(wser) + log(wmfg) + log(wfed) + log(wsta) + log(wloc) + log(pctymle) + log(pctmin) + west + central + urban
+form <- log(crmrte) ~ log(prbarr) + log(prbconv) + log(prbpris) + log(avgsen) + log(polpc) + log(density) + log(wcon) + log(wtuc) + log(wtrd) + log(wfir) + log(wser) + log(wmfg) + log(wfed) + log(wsta) + log(wloc) + log(pctymle) + log(pctmin) + region + smsa
 be <- plm(form, data = Crime, model = "between")
 summary(be)
 
@@ -16,18 +16,17 @@ fe <- plm(form, data = Crime, model = "within", effect = "twoways")
 summary(fe)
 
 # replicates Table 7.1, column "FE2SLS"
-form_iv <- log(crmrte) ~ log(prbarr) + log(prbconv) + log(prbpris) + log(avgsen) + log(polpc) + log(density) + log(wcon) + log(wtuc) + log(wtrd) + log(wfir) + log(wser) + log(wmfg) + log(wfed) + log(wsta) + log(wloc) + log(pctymle) + log(pctmin) + west + central + urban | . -log(prbarr) - log(polpc) + log(taxpc) + log(mix)
+form_iv <- log(crmrte) ~ log(prbarr) + log(prbconv) + log(prbpris) + log(avgsen) + log(polpc) + log(density) + log(wcon) + log(wtuc) + log(wtrd) + log(wfir) + log(wser) + log(wmfg) + log(wfed) + log(wsta) + log(wloc) + log(pctymle) + log(pctmin) + region + smsa | . -log(prbarr) - log(polpc) + log(taxpc) + log(mix)
 fe_iv <- plm(form_iv, data = Crime, model = "within", effect = "twoways")
 summary(fe_iv)
 
 # replicates Table 7.1, column "BE2SLS"
-form_iv <- log(crmrte) ~ log(prbarr) + log(prbconv) + log(prbpris) + log(avgsen) + log(polpc) + log(density) + log(wcon) + log(wtuc) + log(wtrd) + log(wfir) + log(wser) + log(wmfg) + log(wfed) + log(wsta) + log(wloc) + log(pctymle) + log(pctmin) + west + central + urban | . -log(prbarr) - log(polpc) + log(taxpc) + log(mix)
 be_iv <- plm(form_iv, data = Crime, model = "between")
 summary(be_iv)
 
 # replicates Table 7.1, column "EC2SLS"
 ## need to include time dummies!
-form_re_iv <- log(crmrte) ~ log(prbarr) + log(prbconv) + log(prbpris) + log(avgsen) + log(polpc) + log(density) + log(wcon) + log(wtuc) + log(wtrd) + log(wfir) + log(wser) + log(wmfg) + log(wfed) + log(wsta) + log(wloc) + log(pctymle) + log(pctmin) + west + central + urban + factor(year) | . -log(prbarr) - log(polpc) + log(taxpc) + log(mix)
+form_re_iv <- log(crmrte) ~ log(prbarr) + log(prbconv) + log(prbpris) + log(avgsen) + log(polpc) + log(density) + log(wcon) + log(wtuc) + log(wtrd) + log(wfir) + log(wser) + log(wmfg) + log(wfed) + log(wsta) + log(wloc) + log(pctymle) + log(pctmin) + region + smsa + factor(year) | . -log(prbarr) - log(polpc) + log(taxpc) + log(mix)
 re_iv <- plm(form_re_iv, data = Crime, model = "random", inst.method = "baltagi")
 summary(re_iv)
 

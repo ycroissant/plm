@@ -868,7 +868,7 @@ cr <- plm(log(crmrte) ~ log(prbarr) + log(polpc) + log(prbconv) +
          log(prbpris) + log(avgsen) + log(density) + log(wcon) + 
          log(wtuc) + log(wtrd) + log(wfir) + log(wser) + log(wmfg) + 
          log(wfed) + log(wsta) + log(wloc) + log(pctymle) + log(pctmin) + 
-         west + central + urban + factor(year) | . - log(prbarr) -log(polpc) + 
+         region + smsa + factor(year) | . - log(prbarr) - log(polpc) + 
          log(taxpc) + log(mix), data = Crime,
          model = "random")
 summary(cr)

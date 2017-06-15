@@ -28,6 +28,8 @@
     \item{polpc}{police per capita}
     \item{density}{people per square mile}
     \item{taxpc}{tax revenue per capita}
+    \item{region}{factor. One of 'other', 'west' or 'central'.}
+    \item{smsa}{factor. (Also called "urban".) Does the individual reside in a SMSA (standard metropolitan statistical area)?}
     \item{pctmin}{percentage minority in 1980}
     \item{wcon}{weekly wage in construction}
     \item{wtuc}{weekly wage in transportation, utilities, communications}
@@ -40,9 +42,6 @@
     \item{wloc}{weekly wage in local government}
     \item{mix}{offence mix: face-to-face/other}
     \item{pctymle}{percentage of young males (between ages 15 to 24)}
-    \item{west}{factor. indicating a western county}
-    \item{central}{factor. indicating a central county}
-    \item{urban}{factor. Does the individual reside in a SMSA (standard metropolitan statistical area)?}
   }
 }
 
