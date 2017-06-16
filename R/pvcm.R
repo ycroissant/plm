@@ -1,5 +1,5 @@
 pvcm <- function(formula, data, subset ,na.action, effect = c("individual","time"),
-                  model = c("within","random"), index = NULL, ...){
+                 model = c("within","random"), index = NULL, ...){
 
   effect <- match.arg(effect)
   model.name <- match.arg(model)
@@ -9,13 +9,12 @@ pvcm <- function(formula, data, subset ,na.action, effect = c("individual","time
   mf <- match.call()
   mf[[1]] <- as.name("plm")
   mf$model <- NA
-  data <- eval(mf,parent.frame())
-
+  data <- eval(mf, parent.frame())
   result <- switch(model.name,
                    "within" = pvcm.within(formula, data, effect),
                    "random" = pvcm.random(formula, data, effect)
-                   )
-  class(result) <- c("pvcm","panelmodel")
+  )
+  class(result) <- c("pvcm", "panelmodel")
   result$call <- cl
   result$args <- list(model = model, effect = effect)
   result
@@ -160,77 +159,7 @@ pvcm.random <- function(formula, data, effect){
   swamy
 }
 
-summary.pvcm <- function(object,...){
-  model <- describe(object, "model")
-  if (model == "random"){
-    std.err <- sqrt(diag(vcov(object)))
-    b <- object$coefficients
-    z <- b/std.err
-    p <- 2*pnorm(abs(z), lower.tail = FALSE)
-    coef <- cbind(b,std.err,z,p)
-    colnames(coef) <- c("Estimate","Std. Error","z-value","Pr(>|z|)")
-    object$coefficients <- coef
-  }
-  object$ssr <- deviance(object)
-  object$tss <- tss(unlist(model.frame(object)))
-  object$rsqr <- 1-object$ssr/object$tss
-  class(object) <- c("summary.pvcm", "pvcm")
-  return(object)
-}
-
-print.summary.pvcm <- function(x, digits = max(3, getOption("digits") - 2),
-                               width = getOption("width"),...){
-  effect <- describe(x, "effect")
-  formula <- formula(x)
-  model <- describe(x, "model")
-  cat(paste(effect.pvcm.list[effect]," ",sep=""))
-  cat(paste(model.pvcm.list[model],"\n",sep=""))
-  cat("\nCall:\n")
-  print(x$call)
-  cat("\n")
-  print(pdim(model.frame(x)))
-  cat("\nResiduals:\n")
-  print(summary(unlist(residuals(x))))
-  if (model == "random"){
-  cat("\nEstimated mean of the coefficients:\n")
-    printCoefmat(x$coefficients, digits = digits)
-    cat("\nEstimated variance of the coefficients:\n")
-    print(x$Delta, digits = digits)
-  }
-  if (model == "within"){
-    cat("\nCoefficients:\n")
-    print(summary(x$coefficients))
-  }
-  cat("\n")
-  cat(paste("Total Sum of Squares: ",signif(x$tss,digits),"\n",sep=""))
-  cat(paste("Residual Sum of Squares: ",signif(x$ssr,digits),"\n",sep=""))
-  cat(paste("Multiple R-Squared: ",signif(x$rsqr,digits),"\n",sep=""))
-  invisible(x)
-}
-
-pvcm <- function(formula, data, subset ,na.action, effect = c("individual","time"),
-                 model = c("within","random"), index = NULL, ...){
-  
-  effect <- match.arg(effect)
-  model.name <- match.arg(model)
-  data.name <- paste(deparse(substitute(data)))
-
-  cl <- match.call(expand.dots = TRUE)
-  mf <- match.call()
-  mf[[1]] <- as.name("plm")
-  mf$model <- NA
-  data <- eval(mf, parent.frame())
-  result <- switch(model.name,
-                   "within" = pvcm.within(formula, data, effect),
-                   "random" = pvcm.random(formula, data, effect)
-                   )
-  class(result) <- c("pvcm", "panelmodel")
-  result$call <- cl
-  result$args <- list(model = model, effect = effect)
-  result
-}
-
-
+### TODO: pvcm.random is defined two times in this file
 pvcm.random <- function(formula, data, effect){
 
   interc <- has.intercept(formula)
@@ -349,4 +278,53 @@ pvcm.random <- function(formula, data, effect){
 
   list(coefficients = beta, residuals = res, fitted.values = fit,
                  vcov = XpXm1, df.residuals = df.residuals, model = data, Delta = Delta)
+}
+
+
+summary.pvcm <- function(object,...){
+  model <- describe(object, "model")
+  if (model == "random"){
+    std.err <- sqrt(diag(vcov(object)))
+    b <- object$coefficients
+    z <- b/std.err
+    p <- 2*pnorm(abs(z), lower.tail = FALSE)
+    coef <- cbind(b,std.err,z,p)
+    colnames(coef) <- c("Estimate","Std. Error","z-value","Pr(>|z|)")
+    object$coefficients <- coef
+  }
+  object$ssr <- deviance(object)
+  object$tss <- tss(unlist(model.frame(object)))
+  object$rsqr <- 1-object$ssr/object$tss
+  class(object) <- c("summary.pvcm", "pvcm")
+  return(object)
+}
+
+print.summary.pvcm <- function(x, digits = max(3, getOption("digits") - 2),
+                               width = getOption("width"),...){
+  effect <- describe(x, "effect")
+  formula <- formula(x)
+  model <- describe(x, "model")
+  cat(paste(effect.pvcm.list[effect]," ",sep=""))
+  cat(paste(model.pvcm.list[model],"\n",sep=""))
+  cat("\nCall:\n")
+  print(x$call)
+  cat("\n")
+  print(pdim(model.frame(x)))
+  cat("\nResiduals:\n")
+  print(summary(unlist(residuals(x))))
+  if (model == "random"){
+    cat("\nEstimated mean of the coefficients:\n")
+    printCoefmat(x$coefficients, digits = digits)
+    cat("\nEstimated variance of the coefficients:\n")
+    print(x$Delta, digits = digits)
+  }
+  if (model == "within"){
+    cat("\nCoefficients:\n")
+    print(summary(x$coefficients))
+  }
+  cat("\n")
+  cat(paste("Total Sum of Squares: ",signif(x$tss,digits),"\n",sep=""))
+  cat(paste("Residual Sum of Squares: ",signif(x$ssr,digits),"\n",sep=""))
+  cat(paste("Multiple R-Squared: ",signif(x$rsqr,digits),"\n",sep=""))
+  invisible(x)
 }
