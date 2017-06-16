@@ -1,7 +1,3 @@
-
-
-% TODO: adapt to 3rd index variable group
-
 \name{index}
 \alias{index}
 \alias{index.pdata.frame}
@@ -12,7 +8,9 @@
 
 \description{
   This function extracts the information about the structure of the
-  individual and time dimensions of panel data.
+  individual and time dimensions of panel data. Grouping information
+  can also be extracted if the panel data were created with a grouping
+  variable.
 }
 
 \usage{
@@ -31,7 +29,8 @@
 
 \value{
   A vector or an object of class \code{c("pindex", "data.frame")} containing either 
-  one index or both indexes.
+  one index, individual and time index, or (any combination of) individual, time 
+  and group indexes.
 }
 
 \details{
@@ -43,11 +42,13 @@
   \code{"pseries"}, which also has this \code{"index"} attribute. 
   \code{"index"} methods are available for all these objects.
   The argument \code{"which"} indicates
-  which index should be extracted. If \code{which = NULL}, both indexes are
-  extracted, but \code{"which"} can also be a vector of length 1 or 2
-  containing either characters (the names of the individual variable and/or of the
-  time variable or \code{"id"} and \code{"time"}) or integers (1 for the
-  individual index and 2 for the time index.)
+  which index should be extracted. If \code{which = NULL}, all indexes are
+  extracted. \code{"which"} can also be a vector of length 1, 2, or 3 (3 only if the 
+  pdata frame was constructed with an additional group index) containing either 
+  characters (the names of the individual variable and/or of the
+  time variable and/or the group variable or \code{"id"} and \code{"time"}) and \code{"group"} 
+  or integers (1 for the individual index, 2 for the time index, and 3 for the group
+  index (the latter only if the pdata frame was constructed with such).)
 }
   
 \seealso{
@@ -64,6 +65,14 @@ index(Gr, "firm")
 index(Gr, "time")
 index(Gr$inv, c(2, 1))
 index(m, "id")
+
+# with additional group index
+data("Produc", package = "plm")
+pProduc <- pdata.frame(Produc, index = c("state", "year", "region"))
+index(pProduc, 3)
+index(pProduc, "region")
+index(pProduc, "group")
+
 }
 
 \keyword{attribute}
