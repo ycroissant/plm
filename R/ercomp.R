@@ -60,9 +60,10 @@ ercomp.formula <- function(object, data,
     if (! is.null(method) && method == "nerlove"){
         if (! balanced) stop("Nerlove method only implemented for balanced models")
         est <- plm.fit(object, data, model = "within", effect = effect)
-        N <- pdim(data)$nT$n
-        TS <- pdim(data)$nT$T
-        O <- pdim(data)$nT$N
+        pdim <- pdim(data)
+        N <- pdim$nT$n
+        TS <- pdim$nT$T
+        O <- pdim$nT$N
         NTS <- N * (effect != "time") + TS * (effect != "individual") - 1 * (effect == "twoways")
         s2nu <- deviance(est) / (O - NTS)
         s2eta <- s2mu <- NULL
@@ -77,7 +78,7 @@ ercomp.formula <- function(object, data,
         if (effect == "twoways")
             theta$total <- theta$id + theta$time - 1 +
                 (1 + N * sigma2["time"] / sigma2["idios"] +
-                 TS * sigma2["id"] / sigma2["idios"]) ^ (-0.5)
+                    TS * sigma2["id"]   / sigma2["idios"]) ^ (-0.5)
         if (effect != "twoways") theta <- theta[[1]]
         result <- list(sigma2 = sigma2, theta = theta)
         result <- structure(result, class = "ercomp", balanced = balanced, effect = effect)
@@ -85,9 +86,10 @@ ercomp.formula <- function(object, data,
     } ## END nerlove
 
     if (! is.null(method) && method == "ht"){
-        N <- pdim(data)$nT$n
-        TS <- pdim(data)$nT$T
-        O <- pdim(data)$nT$N
+        pdim <- pdim(data)
+        N <- pdim$nT$n
+        TS <- pdim$nT$T
+        O <- pdim$nT$N
         wm <- plm.fit(object, data, effect = "individual", model = "within")
         s2nu <- deviance(wm) / (O - N)
         s2eta <- sum(fixef(wm, type = "dmean") ^ 2) / N
@@ -160,14 +162,15 @@ ercomp.formula <- function(object, data,
         y <- pmodel.response(object, data, model = "pooling")
         O <- nrow(Z)
         K <- ncol(Z) - 1                                                                                       # INTERCEPT
-        N <- pdim(data)$nT$n
-        TS <- pdim(data)$nT$T
+        pdim <- pdim(data)
+        N <- pdim$nT$n
+        TS <- pdim$nT$T
         TG <- unique(data.frame(tss, gps))
         TG <- table(TG$gps)
         NG <- unique(data.frame(ids, gps))
         NG <- table(NG$gps)
-        Tn <- pdim(data)$Tint$Ti
-        Nt <- pdim(data)$Tint$nt
+        Tn <- pdim$Tint$Ti
+        Nt <- pdim$Tint$nt
         quad <- vector(length = 3, mode = "numeric")
         
         M <- matrix(NA, nrow = 3, ncol = 3,
@@ -293,11 +296,12 @@ ercomp.formula <- function(object, data,
     Z <- model.matrix(object, data)
     O <- nrow(Z)
     K <- ncol(Z) - 1                                                                                       # INTERCEPT
-    N <- pdim(data)$nT$n
-    TS <- pdim(data)$nT$T
+    pdim <- pdim(data)
+    N <- pdim$nT$n
+    TS <- pdim$nT$T
     NTS <- N * (effect != "time") + TS * (effect != "individual") - 1 * (effect == "twoways")
-    Tn <- pdim(data)$Tint$Ti
-    Nt <- pdim(data)$Tint$nt
+    Tn <- pdim$Tint$Ti
+    Nt <- pdim$Tint$nt
     # Estimate the relevant models
     estm <- vector(length = 3, mode = "list")
     estm[[1]] <- plm.fit(object, data, model = models[1], effect = effect)
