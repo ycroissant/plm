@@ -6,7 +6,7 @@ myvar <- function(x){
   z <- switch(as.character(n),
               "0" = NA,
               "1" = 0,
-              ifelse(!(is.factor(x) || is.character(x)), var(x), !all(duplicated(x)[-1L]))) # (var on factors is deprecated as of R 3.2.3)
+              ifelse(!(is.factor(x) || is.character(x)), var(x), !all(duplicated(x)[-1L]))) # [var() on factors is deprecated as of R 3.2.3]
   z
 }
 
@@ -139,8 +139,8 @@ pdim.default <- function(x, y, ...){
   x <- x[drop = TRUE] # drop unused factor levels so that table() 
   y <- y[drop = TRUE] # gives only needed combinations
   z <- table(x,y)
-  Ti <- apply(z,1,sum)
-  nt <- apply(z,2,sum)
+  Ti <- rowSums(z) # faster than: apply(z, 1, sum)
+  nt <- colSums(z) #              apply(z, 2, sum)
   n <- nrow(z)
   T <- ncol(z)
   N <- length(x)
