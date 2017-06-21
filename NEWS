@@ -1,14 +1,18 @@
 Changes since version 1.6-6
 
   * ercomp: re-written to be a more general framework.
-  * Two-way fixed effects models for unbalanced panels faster.
-  * plm: * new argument weights added.
-         * nested random effects models implemented (Baltagi/Song/Jung (2001)),
-           use effect = "nested".
-         * fix backward compatibility for the (deprecated!) argument 'instruments'
-           to estimate IV models (but rather use 2-part formulae for IV models).
-         * gives an informative error message if all terms are dropped in an 
-           estimation due to aliasing.
+  * plm:
+      * random effect models: some random methods extended to unbalanced 
+        two-way case (Nerlove's method only supports balanced one-way, two-way),
+        thanks to the more general ercomp framework.
+      * nested random effects models implemented (Baltagi/Song/Jung (2001)),
+        use effect = "nested".
+      * two-way fixed effects models for unbalanced panels faster.
+      * new argument 'weights' added.
+      * fix backward compatibility for the (deprecated!) argument 'instruments'
+        to estimate IV models (but rather use 2-part formulae for IV models).
+      * plm gives an informative error message if all terms are dropped in an 
+        estimation due to aliasing.
   * pbsytest:
       * test = "j": [joint test by Baltagi/Li(1991)]:
         fixed degrees of freedom (now df = 2 instead of df = 1).
@@ -32,7 +36,7 @@ Changes since version 1.6-6
         before (all default to FALSE).
   * punbalancedness: extended to calculate unbalancedness measures of nested panel 
                      structures as in Baltagi/Song/Jung (2001).
-  * ranef.plm: new function to calculate random effects from RE model object,
+  * ranef.plm: new function to calculate random effects from RE model objects,
                like fixef for FE models.
   * pwartest, pwfdtest: * statistics are labelled as F statistics.
                         * calculations now done without car::linearHypothesis().
@@ -46,7 +50,7 @@ Changes since version 1.6-6
     for testing purposes: residuals_overall_exp.plm always gives the residuals of the
     overall/outer plm model, fitted_exp.plm gives the fitted values (by subtracting
     the overall residuals from the untransformed response variable).
-  * pwartest.formula (only formula interface): fixed: ellipsis (dots) was not passed on.
+  * pwartest.formula (only formula interface): fixed: ellipsis ("dots") was not passed on.
   * print.pseries: prettier printing for integers.
   * summary.pseries: better handling of characters, logicals, factors (use base methods).
   * purtest: cosmetic: when argument 'lags' is not specified by user, the returned
@@ -58,7 +62,7 @@ Changes since version 1.6-6
 
 
 Changes since version 1.6-5
-  
+
   * pFtest: disable input model check due to reverse dependency of package AER
     (and to allow arbitrary model comparisons); check was erroneously enabled in
     plm version 1.6-4.
@@ -218,7 +222,7 @@ Changes since version 1.5-22
        * fixed: after subsetting unnecessary information was added to the resulting pdata.frame.
        * fixed: mode of index attribute was changed (unintentionally "simplified").
   * pdata.frame is now a little more informative about NA values in either individual or time index
-    (a warning issued when such a pdata.frame is created).
+    (a warning is issued when such a pdata.frame is created).
   * [.pdata.frame: indexing a pdata.frame is now fully consistent to indexing a data.frame (as documented):
        * fixed: special case of indexing by [i] (missing j) which erroneously returned rows instead of columns.
   * pdata.frame's warnings:
@@ -254,7 +258,7 @@ Changes since version 1.5-19
 Changes since version 1.5-18
 
   * pcdtest: small efficiency enhancement (calc only lower.tri of rhos).
-  * pos.index (internal, not exported): new func to determine column numbers of index vars in pdata.frame.
+  * pos.index (internal, not exported): new func to determine column numbers of index vars in a pdata.frame.
   * cosmetics: * some extraction/subsetting functions doubled 'pseries' in the class of returned value (fixed now).
                * extraction methods for pdata.frame and pseries now preserve order of attributes.
                * class "pindex" for attribute index not lost anymore after subsetting a pdata.frame.
