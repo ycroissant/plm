@@ -58,8 +58,9 @@ Changes since version 1.6-6
              thus prints prettier.
   * summary.piest: heading now has "z-value" and "Pr(>|z|)" as the numbers are based
                    on the standard normal distribution.
-  * cosmetic: some print functions now have better aligned whitespacing.
-
+  * cosmetic: some print functions now have better aligned whitespacing.  
+  * pldv : new function to compute fixed and random effects models for
+    truncated or censored dependent variable
 
 Changes since version 1.6-5
 

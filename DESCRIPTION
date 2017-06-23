@@ -12,7 +12,7 @@ Authors@R: c(person(given = "Yves",      family = "Croissant",    role = c("aut"
       	     person(given = "Liviu",     family = "Andronic",     role = "ctb", email = "landronimirc@gmail.com"),
       	     person(given = "Nina",      family = "Schoenfelder", role = "ctb", email = "nina.schoenfelder@fernuni-hagen.de"))
 Depends: R (>= 2.12.0), Formula (>= 0.2-0), stats
-Imports: MASS, bdsmatrix, zoo, nlme, sandwich, lattice, car, lmtest
+Imports: MASS, bdsmatrix, zoo, nlme, sandwich, lattice, car, lmtest, statmod
 Suggests: AER, foreign, pcse, clusterSEs, clubSandwich, pder, pglm, spdep, splm, stargazer, texreg, Ecdat
 Description: A set of estimators and tests for panel data.
 License: GPL (>=2)

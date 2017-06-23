@@ -9,7 +9,7 @@
 #     which calculates the fitted values by subtracting the "overall" residuals
 #     (of the respective "overall"/"outer" model).
 
-library(plm)
+#library(plm)
 data("Grunfeld", package = "plm")
 form <- inv ~ value + capital
 

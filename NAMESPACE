@@ -4,7 +4,7 @@ export(plm, pvcm, pgmm, pggls, pht, pcce, pmg, plmtest, phtest, pFtest,
        pbsytest, pdwtest, pbgtest, pbltest, pwartest, pwtest, pwfdtest, pcdtest,
        plm.data, pdata.frame, between, Between, Within, lag, lead, pFormula, pmodel.response,
        punbalancedness, purtest, cipstest, vcovBK, vcovSCC, r.squared, has.intercept, 
-       index, fixef, ranef, vcovHC, vcovDC, vcovNW, vcovG, piest, aneweytest, pwaldtest)
+       index, fixef, ranef, vcovHC, vcovDC, vcovNW, vcovG, piest, aneweytest, pwaldtest, pldv)
 
 
 
@@ -12,6 +12,11 @@ import("Formula") # import whole package
 importFrom("stats", "lag")
 importFrom("stats", "nobs")
 importFrom("stats", "alias")
+importFrom("stats", "pnorm")
+importFrom("stats", "dnorm")
+importFrom("stats", "sd")
+
+
 importFrom("stats", "reshape")
 importFrom("stats", "model.weights")
 importFrom("bdsmatrix", "bdsmatrix")
@@ -25,6 +30,7 @@ importFrom("lmtest", "bgtest")
 importFrom("lmtest", "dwtest")
 importFrom("car", "linearHypothesis")
 importFrom("lattice", "xyplot")
+importFrom("statmod", "gauss.quad")
 #
 importFrom("grDevices", "heat.colors", "rainbow")
 importFrom("graphics", "abline", "axis", "barplot", "legend", "lines",

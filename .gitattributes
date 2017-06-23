@@ -22,6 +22,7 @@ R/pfunctions.R -text
 R/pggls.R -text
 R/pgmm.R -text
 R/piest.R -text
+R/pldv.R -text
 R/plm.R -text
 R/pmg.R -text
 R/pserial.R -text
@@ -91,6 +92,7 @@ man/pgmm.Rd -text
 man/pht.Rd -text
 man/phtest.Rd -text
 man/piest.Rd -text
+man/pldv.Rd -text
 man/plm-package.Rd -text
 man/plm.Rd -text
 man/plm.data.Rd -text
