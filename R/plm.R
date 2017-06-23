@@ -825,8 +825,8 @@ fitted.plm <- function(object, model = NULL, ...){
   else{
       # QDF just in case check the conformabilty of beta and X cols,
       # usefull for FD censored/truncated models
-      comonpars <- union(colnames(X), names(beta))
-      fv <- as.numeric(crossprod(t(X[, comonpars]), beta[comonpars]))
+      comonpars <- union(colnames(X), na.omit(names(beta)))
+      fv <- as.numeric(crossprod(t(X[, comonpars, drop = FALSE]), beta[comonpars]))
   }
   structure(fv, index =  index(object), class = "pseries")
 }
