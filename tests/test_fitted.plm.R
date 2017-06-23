@@ -2,6 +2,7 @@
 # 
 # 1) Does fitted.plm run with various inputs?
 # 2) Does fitted.plm run / issue a warning if a coefficients gets (silently) dropped in estimated model
+# 3) Sundry
 #
 # NB: Correctness of calculation in fitted.plm is not checked currently in this file
 #
@@ -129,3 +130,10 @@ plm:::fitted.plm(mod_pool_cigar)
 plm:::fitted.plm(mod_pool_cigar, model = "within") ### NB: This is all NA
 plm:::fitted.plm(mod_fe_cigar)
 plm:::fitted.plm(mod_fe_cigar, model = "within")
+
+
+######## 3) Sundry 
+# this gave an error pre rev. 522 (drop = FALSE was missing):
+wi <- plm(inv ~ value, data = Grunfeld, model = "within")
+fitted(wi, model = "between")
+

@@ -748,7 +748,7 @@ print.summary.plm <- function(x, digits = max(3, getOption("digits") - 2),
 fitted_exp.plm <- function(x, ...) { #### experimental, non-exported function
 # fitted_exp.plm: gives the fitted values of all types of plm models by substracting the overall 
 #                 residuals from the untransformed response variable; does not have
-#                 a model argument so it is simpler than 'fitted.plm' below and is simpler.
+#                 a model argument so it is not as versatile as 'fitted.plm' below.
 # see also test file tests/test_residuals_overall_fitted_exp.R
   model <- describe(x, "model")
   res <- residuals_overall_exp.plm(x)
@@ -760,7 +760,7 @@ fitted_exp.plm <- function(x, ...) { #### experimental, non-exported function
   if (model %in% c("between", "fd")) {
     y <- pmodel.response(x)
   } else {
-    y <- model.frame(x)[,1]
+    y <- model.frame(x)[ , 1]
   }
   return(y - res) # TODO: shall the result be class pseries? currently, 
                   #       pmodel.response (used for between and fd model) does not set 'pseries' class
@@ -781,7 +781,7 @@ fitted.plm <- function(object, model = NULL, ...){
   # NB: Could this make use of plmobject$aliased to simplify and save the lm estimation?
   if (ncol(X) != length(beta)){
       result <- lm(y ~ X - 1)
-      X <- X[, ! is.na(coef(result))]
+      X <- X[, ! is.na(coef(result)), drop = FALSE]
   }
   if (model == "within" & fittedmodel != "within"){
     Xw <- model.matrix(object, model = "within", effect = effect)
@@ -802,7 +802,7 @@ fitted.plm <- function(object, model = NULL, ...){
   
   if (fittedmodel == "within"){
     if (model == "pooling"){
-      if (has.intercept(object)) X <- X[,-1]
+      if (has.intercept(object)) X <- X[ , -1, drop = FALSE]
       index <- attr(model.frame(object), "index")
       if (effect != "time") id <- index[[1]]
       if (effect != "individual") time <- index[[2]]
@@ -814,7 +814,7 @@ fitted.plm <- function(object, model = NULL, ...){
       fv <- as.numeric(crossprod(t(X), beta)) + fe
     }
     if (model == "between"){
-      alpha <- mean(y) - crossprod(apply(X[, -1], 2, mean), beta)
+      alpha <- mean(y) - as.numeric(crossprod(colMeans(X[ , -1, drop = FALSE]), beta))
       beta <- c(alpha, beta)
       fv <- as.numeric(crossprod(t(X), beta))
     }
@@ -824,11 +824,11 @@ fitted.plm <- function(object, model = NULL, ...){
   }
   else{
       # QDF just in case check the conformabilty of beta and X cols,
-      # usefull for FD censored/truncated models
+      # useful for FD censored/truncated models
       comonpars <- union(colnames(X), na.omit(names(beta)))
       fv <- as.numeric(crossprod(t(X[, comonpars, drop = FALSE]), beta[comonpars]))
   }
-  structure(fv, index =  index(object), class = "pseries")
+  structure(fv, index = index(object), class = "pseries")
 }
 
 
