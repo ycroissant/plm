@@ -774,6 +774,8 @@ fitted.plm <- function(object, model = NULL, ...){
   if (is.null(model)) model <- fittedmodel
   effect <- describe(object, "effect")
   X <- model.matrix(object, model = model)
+  # QDF ; remove the intercept in case of fd models
+  if (model == "fd") X <- X[, - 1]
   y <- pmodel.response(object, model = model)
   beta <- coef(object)
   # Kevin Tappe 2016-01-09 : perfect correlation of some columns of
