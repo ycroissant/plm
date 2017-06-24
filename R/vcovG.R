@@ -50,7 +50,7 @@ vcovG.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
     demX <- model.matrix(x, model = model, rhs = 1)
     ## drop any linear dependent columns (corresponding to aliased coefficients)
     ## from model matrix X
-    if (!is.null(x$aliased) && any(x$aliased)) demX <- demX[, !x$aliased, drop = FALSE]
+    if (!is.null(x$aliased) && any(x$aliased, na.rm = TRUE)) demX <- demX[, !x$aliased, drop = FALSE] # na.rm = TRUE because currently, RE tw unbalanced models set aliased simply to NA
 
     ## control: IV or not (two- or one-part formula)
     if(length(formula(x))[2] > 1) {
@@ -434,7 +434,7 @@ vcovBK.plm <- function(x, type=c("HC0", "HC1", "HC2", "HC3", "HC4"),
     demX <- model.matrix(x, model = model, rhs = 1)
     ## drop any linear dependent columns (corresponding to aliased coefficients)
     ## from model matrix X
-    if (!is.null(x$aliased) && any(x$aliased)) demX <- demX[, !x$aliased, drop = FALSE]
+    if (!is.null(x$aliased) && any(x$aliased, na.rm = TRUE)) demX <- demX[, !x$aliased, drop = FALSE] # na.rm = TRUE because currently, RE tw unbalanced models set aliased simply to NA
     
     ## control: IV or not (two- or one-part formula)
     if(length(formula(x))[2] > 1) {

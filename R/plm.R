@@ -276,8 +276,9 @@ plm.fit <- function(formula, data, model, effect, random.method,
                        ercomp       = estec,
                        df.residual  = nrow(X) - ncol(X),
                        residuals    = e)
-        
-        aliased <- NA  # TODO: find a way to determine aliased coefs for tw RE unbalanced: compare 'gamma' to names of model matrix? 
+        # TODO: find a way to determine aliased coefs for tw RE unbalanced: compare 'gamma' to names of model matrix? 
+        # make 'aliased' the right length, so that summary.plm(model)$df[3] contains correct value (length(aliased))
+        aliased <- rep(NA, length(gamma))
     }
     result$assign <- attr(X, "assign")
     result$contrasts <- attr(X, "contrasts")
