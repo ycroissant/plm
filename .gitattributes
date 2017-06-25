@@ -141,6 +141,7 @@ tests/test_is.pconsecutive.R -text
 tests/test_lag_lead.R -text
 tests/test_lagt_leadt.R -text
 tests/test_make.pconsecutive_pbalanced.R -text
+tests/test_misc.R -text
 tests/test_model.frame.R -text
 tests/test_model.matrix_effects.R -text
 tests/test_model.matrix_pmodel.response.R -text

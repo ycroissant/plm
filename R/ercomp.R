@@ -161,7 +161,7 @@ ercomp.formula <- function(object, data,
         Z <- model.matrix(object, data, model = "pooling")
         y <- pmodel.response(object, data, model = "pooling")
         O <- nrow(Z)
-        K <- ncol(Z) - 1                                                                                       # INTERCEPT
+        K <- ncol(Z) - 1                                              # INTERCEPT
         pdim <- pdim(data)
         N <- pdim$nT$n
         TS <- pdim$nT$T
@@ -223,7 +223,7 @@ ercomp.formula <- function(object, data,
             X <- model.matrix(estm, model = "pooling")[, -1, drop = FALSE]
             XBetaBlambda <- Between(X, ids) - Between(X, gps)
             XBlambda <- Between(X, gps)
-            XBlambda <- t(t(XBlambda) - apply(XBlambda, 2, mean))
+            XBlambda <- t(t(XBlambda) - colMeans(XBlambda))
             CPXBlambda <- crossprod(XBlambda)
             CPXM <- solve(crossprod(WX))
             CPXBetaBlambda <- crossprod(XBetaBlambda)
@@ -284,8 +284,8 @@ ercomp.formula <- function(object, data,
 #        print(quad)
         names(sigma2) <- c("idios", "id", "gp")
         theta <- list(id = 1 - sqrt(sigma2["idios"] /  (Tn * sigma2["id"] + sigma2["idios"])),
-                      gp = sqrt(sigma2["idios"] /  (Tn * sigma2["id"] + sigma2["idios"])) -
-                          sqrt(sigma2["idios"] / (Gs * sigma2["gp"] + Tn * sigma2["id"] + sigma2["idios"]))
+                      gp = sqrt(sigma2["idios"] / (Tn * sigma2["id"] + sigma2["idios"])) -
+                           sqrt(sigma2["idios"] / (Gs * sigma2["gp"] + Tn * sigma2["id"] + sigma2["idios"]))
                       )
         result <- list(sigma2 = sigma2, theta = theta)
         return(structure(result, class = "ercomp", balanced = balanced, effect = effect))
@@ -443,7 +443,7 @@ ercomp.formula <- function(object, data,
             MK <- length(attr(WX, "constant"))
             KW <- ncol(WX)
             if (models[1] == "within"){
-                M["w", "nu"] <- O - NTS - K + MK                                                       # INTERCEPT
+                M["w", "nu"] <- O - NTS - K + MK                                        # INTERCEPT
                 if (effect != "time") M["w", "eta"] <- 0
                 if (effect != "individual") M["w", "mu"] <- 0
             }
@@ -451,16 +451,16 @@ ercomp.formula <- function(object, data,
                 CPXM <- solve(crossprod(WX))
                 if (effect != "time"){
                     XBeta <- model.matrix(estm[[2]], model = "Between",
-                                          effect = "individual")[, - 1]                                # INTERCEPT
-                    XBeta <- t(t(XBeta) - apply(XBeta, 2, mean))
+                                          effect = "individual")[, -1, drop = FALSE]    # INTERCEPT
+                    XBeta <- t(t(XBeta) - colMeans(XBeta))
                     CPXBeta <- crossprod(XBeta)
                     M["id", "nu"] <- N - 1 + trace( crossprod(CPXM, CPXBeta) )
                     M["id", "eta"] <- O - sum(Tn ^ 2) / O
                 }
                 if (effect != "individual"){
                     XBmu <- model.matrix(estm[[3]], model = "Between",
-                                         effect = "time")[, - 1]                                 # INTERCEPT
-                    XBmu <- t(t(XBmu) - apply(XBmu, 2, mean))
+                                         effect = "time")[, -1, drop = FALSE]           # INTERCEPT
+                    XBmu <- t(t(XBmu) - colMeans(XBmu))
                     CPXBmu <- crossprod(XBmu)
                     M["ts", "nu"] <- TS - 1 + trace( crossprod(CPXM, CPXBmu) )
                     M["ts", "mu"] <- O - sum(Nt ^ 2) / O
@@ -517,12 +517,12 @@ ercomp.formula <- function(object, data,
         Tns <- TS
         Nts <- N
     }
-    if (effect != "time") theta$id <- (1 - (1 + Tns * sigma2["id"] / sigma2["idios"]) ^ (-0.5))
+    if (effect != "time")       theta$id   <- (1 - (1 + Tns * sigma2["id"]   / sigma2["idios"]) ^ (-0.5))
     if (effect != "individual") theta$time <- (1 - (1 + Nts * sigma2["time"] / sigma2["idios"]) ^ (-0.5))
     if (effect == "twoways") {
         theta$total <- theta$id + theta$time - 1 +
             (1 + Nts * sigma2["time"] / sigma2["idios"] +
-                 Tns * sigma2["id"] / sigma2["idios"]) ^ (-0.5)
+                 Tns * sigma2["id"]   / sigma2["idios"]) ^ (-0.5)
     }
     if (effect != "twoways") theta <- theta[[1]]
     result <- list(sigma2 = sigma2, theta = theta)
