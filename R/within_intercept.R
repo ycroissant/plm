@@ -1,3 +1,9 @@
+# Note: The name of the function (within_intercept) with an underscore does not
+#       follow the regular naming scheme where one would expect a dot (within.intercept).
+#       Due to the S3 class system, calling the function within.intercept would result in
+#       a name clash as we have a function called 'within' and in this casem the S3 
+#       system interprets '.intercept' as a class called 'intercept'.
+
 # Note: return value of within_intercept is related to return values of fixef.plm,
 #       see tests/test_within_intercept.R
 
