@@ -1,4 +1,4 @@
-Changes since version 1.6-6
+Changes in version 1.6-6
 
   * ercomp: re-written to be a more general framework.
   * plm:
@@ -13,6 +13,8 @@ Changes since version 1.6-6
         to estimate IV models (but rather use 2-part formulae for IV models).
       * plm gives an informative error message if all terms are dropped in an 
         estimation due to aliasing.
+  * pldv: new function to compute fixed and random effects models for
+          truncated or censored dependent variable.
   * pbsytest:
       * test = "j": [joint test by Baltagi/Li(1991)]:
         fixed degrees of freedom (now df = 2 instead of df = 1).
@@ -59,17 +61,16 @@ Changes since version 1.6-6
   * summary.piest: heading now has "z-value" and "Pr(>|z|)" as the numbers are based
                    on the standard normal distribution.
   * cosmetic: some print functions now have better aligned whitespacing.  
-  * pldv : new function to compute fixed and random effects models for
-    truncated or censored dependent variable
 
-Changes since version 1.6-5
+
+Changes in version 1.6-5
 
   * pFtest: disable input model check due to reverse dependency of package AER
     (and to allow arbitrary model comparisons); check was erroneously enabled in
     plm version 1.6-4.
 
 
-Changes since version 1.6-4
+Changes in version 1.6-4
 
   * Argument for supplying a variance-covariance matrix is now consistently named 'vcov'
     across all functions. The old argument '.vcov' of summary.plm is marked as deprecated.
@@ -78,22 +79,22 @@ Changes since version 1.6-4
     functions pwaldtest, fixef, within_intercept).
   * Snesp.Rd, LaborSupply.Rd: broken links fixed.
   * Vignette: updated contact details.
-  
 
-Changes since version 1.6-3
+
+Changes in version 1.6-3
 
   * Function Ftest renamed to pwaldtest (there was never a CRAN release with Ftest
     exported, thus no deprecation warning).
   * summary.plm: F statistic uses adjusted df2 parameter in case of robust vcov.
 
 
-Changes since version 1.6-2
+Changes in version 1.6-2
 
   * pcdtest optimized for speed. 'preshape()' added to pcdtest.R to take care of reshaping in wide form
     prior to applying 'cor()'.
 
 
-Changes since version 1.6-1
+Changes in version 1.6-1
 
   * vcovG and vcovBK: added compliance with instrumental variables models (through two-parts formulae).
   * plm.Rd: added note on the intercept in 'fd' models, and how to eliminate it.
@@ -116,7 +117,7 @@ Changes since version 1.6-1
   * some functions little more efficient by using is.pbalanced() instead of pdim()$balanced.
 
 
-Changes since version 1.5-35
+Changes in version 1.5-35
 
   * pbltest.plm: plm interface now respects the 'alternative' argument.
   * summary.plm: summary.plm objects gained new component 'df' to mimic summary.lm objects more closely.
@@ -124,7 +125,7 @@ Changes since version 1.5-35
     (so one can avoid a call to summary() with all the other unnecessary computations).
 
 
-Changes since version 1.5-34
+Changes in version 1.5-34
 
   * Ftest: support for vcovs from package clubSandwich to allow df2 adjustment in robust F test
            (new func trans_clubSandwich_vcov added for this purpose).
@@ -141,19 +142,19 @@ Changes since version 1.5-34
             * for method="aux", argument effect is now extracted from dots.
 
 
-Changes since version 1.5-33
+Changes in version 1.5-33
 
   * (internal) pdiff gained 'effect' argument and thus is more general.
   * plm: trying to estimate first-difference (FD) models with effect="time" or "twoways" is now prevented 
          with meaningful error messages; footnote 3 in vignette slightly adapted to reflect this.
 
 
-Changes since version 1.5-32
+Changes in version 1.5-32
 
   * pcdtest: fixed p-value for cross-sectional dependence scaled LM test (pcdtest(..., test = "sclm")).
 
 
-Changes since version 1.5-31
+Changes in version 1.5-31
 
   * fixef: return value is now class c("fixef", "numeric") ("numeric" added).
   * summary.fixef: return value is now of class c("summary.fixef", "matrix") ("matrix" added);
@@ -161,44 +162,44 @@ Changes since version 1.5-31
     Both class additions allow easier further processing of the return values. 
 
 
-Changes since version 1.5-30
+Changes in version 1.5-30
 
   * lagt.pseries (experimental, non exported function): now handles NA values in time index.
   * pdata.frame: warning about NA in time index turned into a note being printed.
 
 
-Changes since version 1.5-29
+Changes in version 1.5-29
 
   * print.pdata.frame: workaround to prevent error when printing pdata frames with duplicated row names
     (original row names are suppressed for printing in this case).
 
 
-Changes since version 1.5-28
+Changes in version 1.5-28
 
   * phtest (regression based): if only one regressor in formula, the test does not stop anymore.
 
 
-Changes since version 1.5-27
+Changes in version 1.5-27
 
   * model.matrix.pFormula: little speed up of within transformation in the two-ways unbalanced case.
   * model.matrix.pFormula: little speed up for some more transformations by using .colMeans instead 
                            of apply(X, 2, mean).
 
 
-Changes since version 1.5-26
+Changes in version 1.5-26
 
   * residuals.plm: residuals extracted by residuals(plm_object) now have class c("pseries", "numeric")
                    (was just "pseries" before).
 
 
-Changes since version 1.5-25
+Changes in version 1.5-25
 
   * fixef: * summary.fixef: t distribution is used for p-value calculation (like the heading states).
            * fixef: for the t distribution to be applied for p-value calculation, objects of class "fixef" 
              gained a "df.residual" element.
 
 
-Changes since version 1.5-24
+Changes in version 1.5-24
 
   * print.summary.plm: for FD models: now also prints number of observations used during estimation, because
                        these differ from the number of observations (rows) in the model frame due to diff-ing.
@@ -206,7 +207,7 @@ Changes since version 1.5-24
   * pbltest: now has a plm interface (besides the formula interface).
 
 
-Changes since version 1.5-23
+Changes in version 1.5-23
 
   * make.pconsecutive: new function to make a (p)data.frame or pseries consecutive, meaning having consecutive
                        time periods, t, t+1, t+2, ..., where t is an integer (fills in missing time periods).
@@ -216,7 +217,7 @@ Changes since version 1.5-23
                     (fills in missing time periods).
 
 
-Changes since version 1.5-22
+Changes in version 1.5-22
 
   * pdata.frames are now more consistent after subsetting:
       => identical(pdataframe, pdataframe[1:nrow(pdataframe), ]) yields TRUE now
@@ -232,7 +233,7 @@ Changes since version 1.5-22
        * printed is now "id-time" (was: "time-id") to be consistent with order of index variables.
 
 
-Changes since version 1.5-21
+Changes in version 1.5-21
 
   * new function as.list.pdata.frame:
       Default behaviour is to act identical to as.list.data.frame (some code relies on this, do not change!).
@@ -242,13 +243,13 @@ Changes since version 1.5-21
         lapply(as.list(pdataframe[ , your_cols], keep.attributes = TRUE), lag).
 
 
-Changes since version 1.5-20
+Changes in version 1.5-20
 
   * vcovXX.pcce methods added by copying the vcovXX.plm ones; work just the same, sandwiching the appropriate 
     "meat" in transformed data. General reference is Wooldridge, Ch. 7.
 
 
-Changes since version 1.5-19
+Changes in version 1.5-19
 
   * pcce now supports model.matrix and pmodel.response methods, extracting the transformed data so that the 
     estimator can be replicated by lm(pmodel.response(model) ~ model.matrix(model)); this is needed both for
@@ -256,7 +257,7 @@ Changes since version 1.5-19
   * summary.pcce outputs the R2 calculated according to Holly, Pesaran and Yamagata instead of RSS/TSS.
 
 
-Changes since version 1.5-18
+Changes in version 1.5-18
 
   * pcdtest: small efficiency enhancement (calc only lower.tri of rhos).
   * pos.index (internal, not exported): new func to determine column numbers of index vars in a pdata.frame.
@@ -265,55 +266,55 @@ Changes since version 1.5-18
                * class "pindex" for attribute index not lost anymore after subsetting a pdata.frame.
 
 
-Changes since version 1.5-17
+Changes in version 1.5-17
 
 	* lagt.pseries: new method respecting "content" of time periods [not yet exported due to testing].
 	* is.pconsecutive: default method exported so it can be used for arbitrary vectors.
 
 
-Changes since version 1.5-16
-  
-	* plmtest: * fixed p-values [for type="kw" and "ghm"],
-               * unbalanced version of all test statistics implemented,
-               * doc update with literature references to unbalanced tests,
-               * if requested, the "kw" statistic is now also calculated as one-way ("individual" or "time"), 
-                 albeit it coincides with the respective "bp" statistic.
-	* pwtest: formula interface respects 'effect' argument, 'effect' argument now mentioned in doc.
-	* data set 'Wages': factor 'sex' re-leveled to c("male", "female") to match use in original paper.
-	* print.summary.plm: suppress printing of 'effects' argument in top line in case of 'pooling' model.
-	* doc for between, Between, Within extended; doc for lag, lead, diff in separate file now (lag_lead_diff.Rd)
-	* pdata.frame: * fixed bug: do not assume a specific order of data when only individual index is supplied,
-	               * resulting pdata.frame is ordered by individual, then time index,
-	               * when duplicate couples (id-time) are created, a warning is issued,
-	               * new argument 'stringAsFactors'.
-	* pvar: * fixed warning about var on factor variable (var on factors is deprecated as of R 3.2.3),
-	        * fixed corner case with one group being all NA and other non-varying,
-	        * print.pvar: better handling of NA values.
-	* lag/lead: fixed bug with dropped factor levels, added testfile tests/test_lag_lead_factor_levels.R.
-	* is.pconsecutive: * new function to check if time periods are consecutive per individual,
-	                   * better NA handling, added argument rm.na.tindex.
-	* pgmm: fixed bugs affecting the instrument matrix in the following cases:
-			  * gmm instruments are collapsed and restricted in lag length;
-			  * first lags are used as gmm instruments;
-			  * gmm instruments are collapsed in system GMM;
-			  * gmm instruments are restricted in lag length in system GMM.
-	* punbalancedness: data frame interface gains 'index' argument.
-	* within_intercept: new function to calculate an overall intercept along its standard error for FE models
-	                    a la Stata (and Gretl), accepts argument '.vcov' for user defined vcov.
-	* added help topic on package as a whole (?`plm-package`) for sake of completeness.
-	* summary.plm: * argument '.vcov' can also be a function (before, only matrix was possible).
-	               * internal: the furnished vcov is saved in the summary.plm object in object$rvcov
-	                           (vcov function name in attr(object$rvcov, which="rvcov.name").
-	* Ftest: * gained '.vcov' argument, which enables robust F test and chi-sq test
-	           [robust versions not yet weaved in summary.plm].
-	         * now exported and has documentation (.Rd file).
-	         * returned htest object has vcov's name in 'method' element (if vcov was supplied)
-	* (internal) vcovXX functions: furnished vcovs gain attribute "cluster" which give info about clustering,
-	                               e.g. "group" or "time".
-	* fixef: gains new argument '.vcov'.
+Changes in version 1.5-16
+
+  * plmtest: * fixed p-values [for type="kw" and "ghm"],
+             * unbalanced version of all test statistics implemented,
+             * doc update with literature references to unbalanced tests,
+             * if requested, the "kw" statistic is now also calculated as one-way ("individual" or "time"), 
+               albeit it coincides with the respective "bp" statistic.
+  * pwtest: formula interface respects 'effect' argument, 'effect' argument now mentioned in doc.
+  * data set 'Wages': factor 'sex' re-leveled to c("male", "female") to match use in original paper.
+  * print.summary.plm: suppress printing of 'effects' argument in top line in case of 'pooling' model.
+  * doc for between, Between, Within extended; doc for lag, lead, diff in separate file now (lag_lead_diff.Rd)
+  * pdata.frame: * fixed bug: do not assume a specific order of data when only individual index is supplied,
+                 * resulting pdata.frame is ordered by individual, then time index,
+                 * when duplicate couples (id-time) are created, a warning is issued,
+                 * new argument 'stringAsFactors'.
+  * pvar: * fixed warning about var on factor variable (var on factors is deprecated as of R 3.2.3),
+          * fixed corner case with one group being all NA and other non-varying,
+          * print.pvar: better handling of NA values.
+  * lag/lead: fixed bug with dropped factor levels, added testfile tests/test_lag_lead_factor_levels.R.
+  * is.pconsecutive: * new function to check if time periods are consecutive per individual,
+                     * better NA handling, added argument rm.na.tindex.
+  * pgmm: fixed bugs affecting the instrument matrix in the following cases:
+        * gmm instruments are collapsed and restricted in lag length;
+        * first lags are used as gmm instruments;
+        * gmm instruments are collapsed in system GMM;
+        * gmm instruments are restricted in lag length in system GMM.
+  * punbalancedness: data frame interface gains 'index' argument.
+  * within_intercept: new function to calculate an overall intercept along its standard error for FE models
+                      a la Stata (and Gretl), accepts argument '.vcov' for user defined vcov.
+  * added help topic on package as a whole (?`plm-package`) for sake of completeness.
+  * summary.plm: * argument '.vcov' can also be a function (before, only matrix was possible).
+                 * internal: the furnished vcov is saved in the summary.plm object in object$rvcov
+                             (vcov function name in attr(object$rvcov, which="rvcov.name").
+  * Ftest: * gained '.vcov' argument, which enables robust F test and chi-sq test
+             [robust versions not yet weaved in summary.plm].
+           * now exported and has documentation (.Rd file).
+           * returned htest object has vcov's name in 'method' element (if vcov was supplied)
+  * (internal) vcovXX functions: furnished vcovs gain attribute "cluster" which give info about clustering,
+                                 e.g. "group" or "time".
+  * fixef: gains new argument '.vcov'.
 
 
-Changes since version 1.5-15
+Changes in version 1.5-15
 
 	* punbalancedness: new function for unbalancedness measures for panel data as
 	  in Ahrens/Pincus (1981); added doc and testfile for punbalancedness.
@@ -335,7 +336,7 @@ Changes since version 1.5-15
 	  (new file added: man/model.frame_model.matrix.Rd).
 
 
-Changes since version 1.5-14
+Changes in version 1.5-14
 
 	* mylm: added commented (i.e. inactive) warning about dropped coefficients in estimation.
 	* fitted.plm: added commented (i.e. inactive) warning in about dropped coefficients in
@@ -362,14 +363,14 @@ Changes since version 1.5-14
 	  pdim(panelmodel_object); others: linkage to base functions enabled, spelling.
 
 
-Changes since version 1.5-13
+Changes in version 1.5-13
 
 	* fixed bug in vcovHC(..., method="white") from degenerating diag() if any groups have
 	  only 1 element.
 	* vcovG framework: reintroduced "white2" method.
 
 
-Changes since version 1.5-12
+Changes in version 1.5-12
 
 	* dataset Produc: added variable 'region' as 3rd column and fixed variable 
 	  descriptions: 'pcap' is public capital (not private) while 'pc' is private 
@@ -377,13 +378,13 @@ Changes since version 1.5-12
 	* added importFrom as per CRAN check for submission.
 
 
-Changes since version 1.5-11
+Changes in version 1.5-11
 
 	* added RiceFarms to datasets to eliminate non-CRAN dependencies, (temporarily) removed
 	  'pder' from suggested, uncommented (fixed) example in pdwtest.Rd.
 
 
-Changes since version 1.5-9
+Changes in version 1.5-9
 
 	* fixed bug in vcovG for lagged White terms (make pseudo-diagonal in E(u,v)); affected vcovNW.
 	
@@ -405,7 +406,7 @@ Changes since version 1.5-9
 	  pdata.frame); as.data.frame.pdata.frame(): respects row.names argument.
 
 
-Changes since version 1.5-8
+Changes in version 1.5-8
 
 	* introduced new phtest (Hausman test) allowing for robust vcov.
 	* fixed bugs in pdwtest.
@@ -442,7 +443,7 @@ Changes since version 1.5-1
   * implemented fixef() method for objects estimated by pggls().
 
 
-Changes since version 1.5-0 
+Changes since version 1.5-0
 
 	* added generic building block and high-level wrappers vcovNW and vcovDC to the namespace.
 
@@ -471,7 +472,7 @@ Changes since version 1.3-1
 
 	* the deviance method for panelmodel objects is now exported (12/02).
 
-	* the Hausman-Taylor now support the Amemiya MaCurdy and the Breush-Mizon-Schmidt version.
+	* the Hausman-Taylor now supports the Amemiya MaCurdy and the Breush-Mizon-Schmidt version.
 
 	* a small bug is fixed on the var2lev function to deal the case when there are no factors.
 	
@@ -530,10 +531,10 @@ Changes since version 1.2-9
 	("pmg"), much like 'pggls', together with 'panelmodel'. In the
 	future must consider possible merger with 'pvcm'.
 
-  * the new cipstest function performs a second-generation CIPS test
+	* the new cipstest function performs a second-generation CIPS test
 	for unit roots on pseries objects.
 
-  * the new (non-exported) function pmerge is used internally by cipstest
+	* the new (non-exported) function pmerge is used internally by cipstest
 	to merge lags and differences of a pseries into the original
 	pdata.frame. Will possibly be added to the user space in the
 	future.
