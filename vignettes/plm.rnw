@@ -8,7 +8,7 @@
 
 
 %\VignetteIndexEntry{Panel Data Econometrics in R: the plm Package}
-%\VignetteDepends{plm,stats,bdsmatrix,nlme}
+%\VignetteDepends{plm,stats,bdsmatrix,nlme,car}
 %\VignetteKeywords{panel data, gmm estimator, covariance matrix estimator, econometric computing, R}
 %\VignettePackage{plm}
 
@@ -102,7 +102,7 @@ coefficients models, generalized method of moments estimation of
 dynamic models; and the basic toolbox of specification and
 misspecification diagnostics.
 
-Furthermore, we felt there was the need for automation of some basic
+Furthermore, we felt there was a need for automation of some basic
 data management tasks such as lagging, summing and, more in general,
 \code{apply}ing (in the \proglang{R} sense) functions to the data, which,
 although conceptually simple, become cumbersome and error-prone on
@@ -284,7 +284,7 @@ the most appropriate estimator) are usually tested by means of:
 % Dynamic models in a fixed or random effects setting, and in general
 % lack of strict exogeneity of the regressors, pose further problems to
 % estimation which are usually dealt with in the generalized method of
-% moments (\textsc{gmm}) framework.  
+% moments (\textsc{gmm}) framework.
 
 
 Dynamic models and in general lack of strict exogeneity of the
@@ -2062,7 +2062,7 @@ fundamental issue is whether the unobserved effects are correlated
 with the regressors or not. In this last case, they can safely be left
 in the error term, and the serial correlation they induce is cared for
 by means of appropriate \textsc{gls} transformations. On the contrary, in the case of
-correlation,  ``fixed effects'' methods such as least
+correlation, ``fixed effects'' methods such as least
 squares dummy variables or time-demeaning are needed, which
 explicitly, although inconsistently\footnote{For fixed effects
   estimation, as the sample grows (on the dimension on which the fixed
