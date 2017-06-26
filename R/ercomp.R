@@ -19,7 +19,7 @@ ercomp.formula <- function(object, data,
                            effect = c("individual", "time", "twoways", "nested"),
                            method = NULL,
                            models = NULL,
-                           dfcor = NULL,                           
+                           dfcor = NULL,
                            index = NULL, ...){
     effect <- match.arg(effect)
 
@@ -75,10 +75,11 @@ ercomp.formula <- function(object, data,
         theta <- list()
         if (effect != "time")       theta$id   <- (1 - (1 + TS * sigma2["id"]   / sigma2["idios"]) ^ (-0.5))
         if (effect != "individual") theta$time <- (1 - (1 + N  * sigma2["time"] / sigma2["idios"]) ^ (-0.5))
-        if (effect == "twoways")
+        if (effect == "twoways") {
             theta$total <- theta$id + theta$time - 1 +
                 (1 + N * sigma2["time"] / sigma2["idios"] +
                     TS * sigma2["id"]   / sigma2["idios"]) ^ (-0.5)
+        }
         if (effect != "twoways") theta <- theta[[1]]
         result <- list(sigma2 = sigma2, theta = theta)
         result <- structure(result, class = "ercomp", balanced = balanced, effect = effect)
@@ -97,11 +98,11 @@ ercomp.formula <- function(object, data,
         constants <- apply(X, 2, function(x) all(tapply(x, index(data)[[1]], is.constant)))
         if (length(object)[2] > 1){
             W1 <- model.matrix(object, data, rhs = 2)
-            ra <- twosls(fixef(wm, type = "dmean")[as.character(index(data)[[1]])], X[, constants], W1)
+            ra <- twosls(fixef(wm, type = "dmean")[as.character(index(data)[[1]])], X[, constants, drop = FALSE], W1)
         }
         else{
             FES <- fixef(wm, type = "dmean")[as.character(index(data)[[1]])]
-            XCST <- X[, constants]
+            XCST <- X[, constants, drop = FALSE]
             ra <- lm(FES ~ XCST - 1)
         }
         s2nu <- deviance(wm) / (O - N)
@@ -383,8 +384,9 @@ ercomp.formula <- function(object, data,
             M["ts", "nu"] <- ifelse(dfcor[2] == 2, TS - KS[3] - 1, TS)
             M["ts", "mu"] <- N * M["ts", "nu"]
         }
-        if (effect == "twoways")
+        if (effect == "twoways") {
             M["ts", "eta"] <- M["id", "mu"] <- 0
+        }
     }
     else{
         # General case, compute the unbiased version of the estimators
