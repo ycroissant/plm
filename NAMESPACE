@@ -28,10 +28,9 @@ importFrom("nlme", "lme")
 importFrom("MASS", "ginv")
 importFrom("lmtest", "bgtest")
 importFrom("lmtest", "dwtest")
-importFrom("car", "linearHypothesis")
+# importFrom("car", "linearHypothesis") # pkg 'car' in 'Suggests', so do not import
 importFrom("lattice", "xyplot")
 importFrom("statmod", "gauss.quad")
-#
 importFrom("grDevices", "heat.colors", "rainbow")
 importFrom("graphics", "abline", "axis", "barplot", "legend", "lines",
            "plot", "points")
