@@ -141,7 +141,7 @@ plm <- function(formula, data, subset, weights, na.action,
 plm.fit <- function(formula, data, model, effect, random.method, 
                     random.models, random.dfcor, inst.method){
   
-    # check for 0 cases like in lm.fit (e.g. due to NA dropping) 
+    # check for 0 cases like in stats::lm.fit (e.g. due to NA dropping) 
     if (nrow(data) == 0L) stop("0 (non-NA) cases")
   
     # if a random effect model is estimated, compute the error components
@@ -301,7 +301,7 @@ mylm <- function(y, X, W = NULL){
     # warning("Coefficient(s) '", paste((names.X)[na.coef], collapse = ", "), 
     #"' could not be estimated and is (are) dropped.")
     X <- X[, ! na.coef, drop = FALSE]
-    if (dim(X)[2] == 0L) stop("estimation not possible: all coefficients ommitted from estimation due to aliasing")
+    if (dim(X)[2] == 0L) stop("estimation not possible: all coefficients omitted from estimation due to aliasing")
     if (is.null(W)) result <- lm(y ~ X - 1)
     else result <- twosls(y, X, W)
   }
