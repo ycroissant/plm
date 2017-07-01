@@ -78,10 +78,6 @@ pbgtest(inv ~ value + capital, data = Grunfeld, model = "random")
 # F test statistic (instead of default type="Chisq")
 pbgtest(g, type="F")
 pbgtest(inv ~ value + capital, data = Grunfeld, model = "random", type = "F")
-
-# same output as lmtest::bgtest [see Note]
-pbgtest(g, order = 1)
-lmtest::bgtest(g, order = 1)
 }
 
 \keyword{htest}
