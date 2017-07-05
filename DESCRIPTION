@@ -11,7 +11,7 @@ Authors@R: c(person(given = "Yves",      family = "Croissant",    role = c("aut"
       	     person(given = "Arne",      family = "Henningsen",   role = "ctb", email = "arne.henningsen@googlemail.com"),
       	     person(given = "Liviu",     family = "Andronic",     role = "ctb", email = "landronimirc@gmail.com"),
       	     person(given = "Nina",      family = "Schoenfelder", role = "ctb", email = "nina.schoenfelder@fernuni-hagen.de"))
-Depends: R (>= 2.12.0), Formula (>= 0.2-0), stats
+Depends: R (>= 2.12.0), Formula (>= 0.2-0), stats, maxLik
 Imports: MASS, bdsmatrix, zoo, nlme, sandwich, lattice, lmtest, statmod
 Suggests: AER, foreign, car, pcse, clusterSEs, clubSandwich, pder, pglm, spdep, splm, stargazer, texreg, Ecdat
 Description: A set of estimators and tests for panel data.

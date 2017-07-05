@@ -40,6 +40,7 @@ pldv <- function(formula, data, subset, weights, na.action,
         # create the matrix of first differenced covariates
         X <- model.matrix(formula, mf, model = "fd")[, -1]
         start <- rep(.1, ncol(X))
+        names(start) <- colnames(X)
         if (sample == "trunc"){
             if (objfun == "lad") fm <- function(x) abs(x)
             if (objfun == "lsq") fm <- function(x) x ^ 2
@@ -132,6 +133,7 @@ pldv <- function(formula, data, subset, weights, na.action,
             if (ls <= 1){
                 startcl <- cl
                 startcl$model <- "pooling"
+                startcl$method <- "bfgs"
                 pglmest <- eval(startcl, parent.frame())
                 thestart <- coef(pglmest)
                 if (ls == 1){

@@ -913,7 +913,6 @@ residuals.plm <- function(object, model = NULL, effect = NULL, ...){
         if (model != "within" & fittedmodel == "within"){
             if (colnames(X)[1] == "(Intercept)"){
                 alpha <- mean(y) - crossprod(apply(X[, -1, drop = FALSE], 2, mean), beta)
-                print(alpha)
                 beta <- c("(Intercept)" = alpha, beta)
             }
         }

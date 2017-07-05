@@ -16,7 +16,7 @@ importFrom("stats", "pnorm")
 importFrom("stats", "dnorm")
 importFrom("stats", "sd")
 
-
+importFrom("maxLik", "maxLik")
 importFrom("stats", "reshape")
 importFrom("stats", "model.weights")
 importFrom("bdsmatrix", "bdsmatrix")
