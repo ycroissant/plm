@@ -54,12 +54,14 @@ Changes in version 1.6-6
     the overall residuals from the untransformed response variable).
   * pwartest.formula (only formula interface): fixed: ellipsis ("dots") was not passed on.
   * print.pseries: prettier printing for integers.
+  * print.summary.plm: prints information about dropped coefficients due to singularities
+                       (mimics print.summary.lm).
   * summary.pseries: better handling of characters, logicals, factors (use base methods).
   * purtest: cosmetic: when argument 'lags' is not specified by user, the returned
              object does not contain all three possible values in args$lags anymore,
              thus prints prettier.
-  * summary.piest: heading now has "z-value" and "Pr(>|z|)" as the numbers are based
-                   on the standard normal distribution.
+  * summary.piest: table heading now has "z-value" and "Pr(>|z|)" as the numbers are
+                   based on standard normal distribution.
   * cosmetic: some print functions now have better aligned whitespacing.
   * Dependencies: 'car' moved from 'Imports' to 'Suggests'.
 

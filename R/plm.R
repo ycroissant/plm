@@ -723,7 +723,12 @@ print.summary.plm <- function(x, digits = max(3, getOption("digits") - 2),
   on.exit(options(digits = save.digits))
   print(sumres(x))
   
-  cat("\nCoefficients:\n")
+  if (any(x$aliased, na.rm = TRUE)) {
+    # na.rm = TRUE because currently, RE tw unbalanced models set aliased simply to NA
+    naliased <- sum(x$aliased, na.rm = TRUE)
+    cat("\nCoefficients: (", naliased, " dropped because of singularities)\n", sep = "")
+  } else cat("\nCoefficients:\n")
+  
   if (is.null(subset)) printCoefmat(coef(x), digits = digits)
   else printCoefmat(coef(x)[subset, , drop = FALSE], digits = digits)
   cat("\n")
@@ -904,7 +909,7 @@ residuals.plm <- function(object, model = NULL, effect = NULL, ...){
         beta <- coef(object)
         X <- model.matrix(object, model = model, effect = effect)
         cstX <- attr(model.matrix(object, model = "within", effect = effect), "constant")
-        cstX <- union(cstX, names(which(object$alias)))
+        cstX <- union(cstX, names(which(object$aliased)))
         X <- X[, ! (colnames(X) %in% cstX), drop = FALSE]
         y <- pmodel.response(object, model = model, effect = effect)
         if (model == "within" & fittedmodel != "within"){
@@ -935,7 +940,7 @@ residuals.plm <- function(object, model = NULL, effect = NULL, ...){
         beta <- coef(object)
         X <- model.matrix(object, model = model, effect = effect)
         y <- pmodel.response(object, model = model, effect = effect)
-        aliases <- object$alias
+        aliases <- object$aliased
         # beta has an intercept, X not
 #        if (has.intercept(object)[1] & model == "within"){
         # doesn't work the intercept is detected in the formula
@@ -972,7 +977,7 @@ residuals.plm <- function(object, model = NULL, effect = NULL, ...){
 ##         beta <- coef(object)
 ##         X <- model.matrix(object, model = model, effect = effect)
 ##         ## cstX <- attr(model.matrix(object, model = "within", effect = effect), "constant")
-##         ## cstX <- union(cstX, names(which(object$alias)))
+##         ## cstX <- union(cstX, names(which(object$aliased)))
 ##         ## X <- X[, ! (colnames(X) %in% cstX), drop = FALSE]
 ##         y <- pmodel.response(object, model = model, effect = effect)
 ##         if (model == "within" & fittedmodel != "within"){
