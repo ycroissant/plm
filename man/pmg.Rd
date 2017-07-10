@@ -59,7 +59,7 @@ estimator, based on the average of individual time series
 regressions. If \code{model="dmg"} the data are demeaned
 cross-sectionally, which is believed to reduce the influence of common
 factors (and is akin to what is done in homogeneous panels when
-\code{model="within"} and \code{effect="time"}. Lastly, if
+\code{model="within"} and \code{effect="time"}). Lastly, if
 \code{model="cmg"} the CCEMG estimator is employed: this latter is
 consistent under the hypothesis of unobserved common factors and
 idiosyncratic factor loadings; it works by augmenting the model by
