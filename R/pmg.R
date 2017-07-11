@@ -82,14 +82,14 @@ pmg <- function(formula, data, subset, na.action,
 
 
   ## det. *minimum* group numerosity
-  t <- min(tapply(X[,1],ind,length))
+  t <- min(tapply(X[,1], ind, length))
 
   ## check min. t numerosity
   ## NB it is also possible to allow estimation if there *is* one group
   ## with t large enough and average on coefficients removing NAs
   ## Here we choose the explicit way: let estimation fail if we lose df
   ## but a warning would do...
-  if(t<(k+1)) stop("Insufficient number of time periods")
+  if(t < (k+1)) stop("Insufficient number of time periods")
 
   ## one regression for each group i in 1..n
   ## and retrieve coefficients putting them into a matrix
@@ -98,7 +98,7 @@ pmg <- function(formula, data, subset, na.action,
 
   ## "pre-allocate" coefficients matrix for the n models
   kt <- if(trend) 1 else 0
-  tcoef <- matrix(NA,nrow=k+kt,ncol=n)
+  tcoef <- matrix(NA, nrow = k+kt, ncol = n)
   tres <- vector("list", n)
 
   switch(match.arg(model),
@@ -106,13 +106,13 @@ pmg <- function(formula, data, subset, na.action,
       ## for each x-sect. i=1..n
       unind <- unique(ind)
       for(i in 1:n) {
-        tX <- X[ind==unind[i],]
-        ty <- y[ind==unind[i]]
+        tX <- X[ind == unind[i],]
+        ty <- y[ind == unind[i]]
         if(trend) tX <- cbind(tX, 1:(dim(tX)[[1]]))
-        tfit <- lm.fit(tX,ty)
-        tcoef[,i] <- tfit$coefficients
+        tfit <- lm.fit(tX, ty)
+        tcoef[ ,i] <- tfit$coefficients
         tres[[i]] <- tfit$residuals
-    }
+      }
       ## 'trend' always comes last
       if(trend) coef.names <- c(coef.names, "trend")
       ## adjust k
@@ -125,24 +125,24 @@ pmg <- function(formula, data, subset, na.action,
       Xm <- apply(X,2,FUN=be,index=tind)[tind,]
       ym <- apply(as.matrix(as.numeric(y)),2,FUN=be,index=tind)[tind]
 
-      augX <- cbind(X,ym,Xm[,-1])
+      augX <- cbind(X, ym, Xm[ ,-1])
 
       ## allow for extended coef vector
-      tcoef0 <- matrix(NA,nrow=2*k+kt,ncol=n)
+      tcoef0 <- matrix(NA, nrow = 2*k+kt, ncol = n)
 
       ## for each x-sect. i=1..n estimate (over t) an augmented model
       ## y_it = alfa_i + beta_i*X_it + c1_i*my_t + c2_i*mX_t + err_it
       unind <- unique(ind)
       for(i in 1:n) {
-        taugX <- augX[ind==unind[i],]
-        ty <- y[ind==unind[i]]
+        taugX <- augX[ind == unind[i], ]
+        ty <- y[ind == unind[i]]
 
         if(trend) taugX <- cbind(taugX, 1:(dim(taugX)[[1]]))
 
-        tfit <- lm.fit(taugX,ty)
-        tcoef0[,i] <- tfit$coefficients
+        tfit <- lm.fit(taugX, ty)
+        tcoef0[ ,i] <- tfit$coefficients
         tres[[i]] <- tfit$residuals
-        }
+      }
       tcoef <- tcoef0[1:k,]
       tcoef.bar <- tcoef0[-(1:k),]
 
@@ -167,19 +167,19 @@ pmg <- function(formula, data, subset, na.action,
       Xm <- apply(X,2,FUN=be,index=tind)[tind,]
       ym <- apply(as.matrix(as.numeric(y)),2,FUN=be,index=tind)[tind]
       ## ...but of course we do not demean the intercept!
-      Xm[,1] <- 0
+      Xm[ ,1] <- 0
 
-      demX <- X-Xm
-      demy <- y-ym
+      demX <- X - Xm
+      demy <- y - ym
 
       ## for each x-sect. i=1..n estimate (over t) a demeaned model
       ## (y_it-my_t) = alfa_i + beta_i*(X_it-mX_t) + err_it
       unind <- unique(ind)
       for(i in 1:n) {
-        tdemX <- demX[ind==unind[i],]
-        tdemy <- demy[ind==unind[i]]
+        tdemX <- demX[ind == unind[i], ]
+        tdemy <- demy[ind == unind[i]]
         if(trend) tdemX <- cbind(tdemX, 1:(dim(tdemX)[[1]]))
-        tfit <- lm.fit(tdemX,tdemy)
+        tfit <- lm.fit(tdemX, tdemy)
         tcoef[,i] <- tfit$coefficients
         tres[[i]] <- tfit$residuals
       }
@@ -191,12 +191,12 @@ pmg <- function(formula, data, subset, na.action,
 
 
     ## coefs are averages across individual regressions
-    coef <- apply(tcoef,1,mean)
+    coef <- rowMeans(tcoef) # == apply(tcoef, 1, mean)
 
     ## make matrix of cross-products of demeaned individual coefficients
 
     coefmat <- array(dim=c(k, k, n))
-    demcoef <- tcoef-coef # gets recycled n times by column
+    demcoef <- tcoef - coef # gets recycled n times by column
 
     for(i in 1:n) coefmat[,,i] <- outer(demcoef[,i], demcoef[,i])
     ## summing over the n-dimension of the array we get the
@@ -222,8 +222,8 @@ pmg <- function(formula, data, subset, na.action,
     pmodel$model.name <- model.name
     mgmod <- list(coefficients = coef, residuals = residuals,
                   fitted.values = fitted.values, vcov = vcov,
-                  df.residual = df.residual, r.squared=r2,
-                  model = model.frame(plm.model), sigma=NULL,
+                  df.residual = df.residual, r.squared = r2,
+                  model = model.frame(plm.model), sigma = NULL,
                   indcoef = tcoef, call = cl)
     mgmod <- structure(mgmod, pdim = pdim, pmodel = pmodel)
     class(mgmod) <- c("pmg", "panelmodel")
@@ -236,8 +236,8 @@ summary.pmg <- function(object,...){
   std.err <- sqrt(diag(object$vcov))
   b <- object$coefficients
   z <- b/std.err
-  p <- 2*pnorm(abs(z),lower.tail=FALSE)
-  CoefTable <- cbind(b,std.err,z,p)
+  p <- 2*pnorm(abs(z), lower.tail = FALSE)
+  CoefTable <- cbind(b, std.err, z, p)
   colnames(CoefTable) <- c("Estimate","Std. Error","z-value","Pr(>|z|)")
   object$CoefTable <- CoefTable
   y <- object$model[[1]]
@@ -248,7 +248,7 @@ summary.pmg <- function(object,...){
   return(object)
 }
 
-print.summary.pmg <- function(x,digits=max(3, getOption("digits") - 2), width = getOption("width"),...){
+print.summary.pmg <- function(x, digits = max(3, getOption("digits") - 2), width = getOption("width"),...){
   pmodel <- attr(x,"pmodel")
   pdim <- attr(x,"pdim")
   effect <- pmodel$effect
@@ -265,9 +265,9 @@ print.summary.pmg <- function(x,digits=max(3, getOption("digits") - 2), width = 
   print(summary(unlist(residuals(x))))
   cat("\nCoefficients:\n")
   printCoefmat(x$CoefTable,digits=digits)
-  cat(paste("Total Sum of Squares: ",signif(x$tss,digits),"\n",sep=""))
-  cat(paste("Residual Sum of Squares: ",signif(x$ssr,digits),"\n",sep=""))
-  cat(paste("Multiple R-squared: ",signif(x$rsqr,digits),"\n",sep=""))
+  cat(paste("Total Sum of Squares: ", signif(x$tss,digits),"\n",sep=""))
+  cat(paste("Residual Sum of Squares: ", signif(x$ssr,digits),"\n",sep=""))
+  cat(paste("Multiple R-squared: ", signif(x$rsqr,digits),"\n",sep=""))
   invisible(x)
 }
 
