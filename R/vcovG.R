@@ -193,19 +193,19 @@ vcovG.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
     groupind <- as.numeric(attr(x$model, "index")[,1])
     timeind  <- as.numeric(attr(x$model, "index")[,2])
 
-  ## fix for 'fd' model (losing first time period)
-     if(model == "fd") {
-       groupi <- as.numeric(groupind)
-       ## make vector =1 on first obs in each group, 0 elsewhere
-       selector <-groupi-c(0,groupi[-length(groupi)])
-       selector[1] <- 1 # the first must always be 1
-       ## eliminate first obs in time for each group
-       groupind <- groupind[!selector]
-       timeind <- timeind[!selector]
-       nT <- nT-n0
-       Ti <- Ti-1
-       t0 <- t0-1
-     }
+  ## adjust for 'fd' model (losing first time period)
+    if(model == "fd") {
+      groupi <- as.numeric(groupind)
+      ## make vector =1 on first obs in each group, 0 elsewhere
+      selector <- groupi - c(0, groupi[-length(groupi)])
+      selector[1] <- 1 # the first must always be 1
+      ## eliminate first obs in time for each group
+      groupind <- groupind[!selector]
+      timeind <- timeind[!selector]
+      nT <- nT-n0
+      Ti <- Ti-1
+      t0 <- t0-1
+    }
 
   ## set grouping indexes
     switch(match.arg(cluster),
@@ -223,19 +223,11 @@ vcovG.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
     tind <- vector("list", n)
     tlab <- vector("list", n)
     
-    for (i in 1:length(unique(relevant.ind))) {       # FIXME for FD models: seems like we want to iterate over relevant.id, but it does not start from 1 for FD models..
-        tind[[i]] <- which(relevant.ind == i)         # ... rather use this: for (i in unique(relevant.ind)) {...}
-        tlab[[i]] <- lab[which(relevant.ind == i)]    # -> produces tind, tlab with first entry NULL -> correct thereafter
+    for (i in 1:length(unique(relevant.ind))) {
+        tind[[i]] <- which(relevant.ind == i)
+        tlab[[i]] <- lab[which(relevant.ind == i)]
     }
   
-   ### FIXME: uncomment this: tind, tlab is too long for FD models (1st entry is NULL)  
-   # for FD models: need to delete first element in tind, tlab (is NULL)
-   # if (model == "fd") { tind[1] <- NULL; tlab[1] <- NULL }
-    
-   ### FIXME: in vcovBK: a different code block to adjust for FD models is used and, thus, does not produce an error.
-   ###        -> Check if it is ok to have different FD adjustments
-    
-    
   ## lab were the 'labels' (a numeric, actually) for the relevant index;
   ## in use again from the need to make pseudo-diagonals for
   ## calc. the lagged White terms on unbalanced panels
@@ -264,15 +256,15 @@ vcovG.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
     ## (l=0 gives the special contemporaneous case where Xi=Xil, ui=uil
     ## for computing W, CX, CT)
   
-     for(i in (1+l):n) {
-        X <- demX[tind[[i]], , drop = FALSE]
-        Xl <- demX[tind[[i-l]], , drop = FALSE]
-        u <- uhat[tind[[i]]]
-        names(u) <- tlab[[i]]
-        ul <- uhat[tind[[(i-l)]]]
-        names(ul) <- tlab[[(i-l)]]
-        ## calculate V_yy
-        Sl[, , i-l] <- crossprod(X, E(u, ul)) %*% Xl
+    for(i in (1+l):n) {
+      X <- demX[tind[[i]], , drop = FALSE]
+      Xl <- demX[tind[[i-l]], , drop = FALSE]
+      u <- uhat[tind[[i]]]
+      names(u) <- tlab[[i]]
+      ul <- uhat[tind[[(i-l)]]]
+      names(ul) <- tlab[[(i-l)]]
+      ## calculate V_yy
+      Sl[, , i-l] <- crossprod(X, E(u, ul)) %*% Xl
     }
     
     ## in order to sum on available observations two things can be done:
