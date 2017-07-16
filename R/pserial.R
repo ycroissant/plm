@@ -39,15 +39,15 @@ pbgtest.panelmodel <- function(x, order = NULL, type = c("Chisq", "F"), ...) {
   Ti <- pdim(x)$Tint$Ti
   ## set lag order to minimum group numerosity if not specified by user
   ## (check whether this is sensible)
-  
   if(is.null(order)) order <- min(Ti)
-  ## bg test on the demeaned model:
+
+  ## lmtest::bgtest on the demeaned model:
   
-  ## check package availability and load if necessary
-  #lm.ok <- require("lmtest")
-  #if(!lm.ok) stop("package lmtest is needed but not available")
+    ## check package availability and load if necessary # not needed as it importFrom in NAMESPACE is now used
+    #lm.ok <- require("lmtest")
+    #if(!lm.ok) stop("package lmtest is needed but not available")
   
-  ## bgtest is the bgtest, exception made for the method attribute
+  ## pbgtest is the return value of lmtest::bgtest, exception made for the method attribute
   auxformula <- demy~demX-1 #if(model == "within") demy~demX-1 else demy~demX
   lm.mod <- lm(auxformula)
   bgtest <- bgtest(lm.mod, order = order, type = type, ...)
@@ -165,9 +165,9 @@ pwtest.panelmodel <- function(x, effect = c("individual", "time"), ...) {
 
   Wstat <- W/seW
   names(Wstat) <- "z"
-  pW <- 2*pnorm(abs(Wstat),lower.tail=FALSE) # unlike LM, test is two-tailed!
+  pW <- 2*pnorm(abs(Wstat), lower.tail=FALSE) # unlike LM, test is two-tailed!
   
-  ##(insert usual htest features)
+  ## insert usual htest features
   dname <- paste(deparse(substitute(formula)))
   RVAL <- list(statistic = Wstat,
                parameter = NULL,
@@ -239,10 +239,11 @@ pwartest.panelmodel <- function(x, ...) {
   # calc F stat with restriction rho.H0 and robust vcov
   FEARstat <- ((coef(auxmod)["FEres.1"] - rho.H0)/sqrt(myvcov(auxmod)["FEres.1", "FEres.1"]))^2
   names(FEARstat) <- "F"
-  df1 <- c("df1" = 1); df2 <- c("df2" = df.residual(auxmod))
+  df1 <- c("df1" = 1)
+  df2 <- c("df2" = df.residual(auxmod))
   pFEARstat <- pf(FEARstat, df1 = df1, df2 = df2, lower.tail = F)
   
-  ##(insert usual htest features)
+  ## insert usual htest features
   dname <- paste(deparse(substitute(x)))
   RVAL <- list(statistic = FEARstat,
                parameter = c(df1, df2),
@@ -429,7 +430,7 @@ pdwtest <- function (x, ...) {
 
 pdwtest.formula <- function(x, data, ...) {
   ## formula method for pdwtest;
-  ## defaults to a RE model               #### RE model? rather pooling model?
+  ## defaults to pooling model
 
   cl <- match.call(expand.dots = TRUE)
   if (is.null(cl$model)) cl$model <- "pooling"
@@ -462,19 +463,19 @@ pdwtest.panelmodel <- function(x, ...) {
   demy <- pmodel.response(model.frame(x), model = model, effect = effect, theta = theta)
  
 
-  ## dw test on the demeaned model:
+  ## lmtest::dwtest on the demeaned model:
   
-  ## check package availability and load if necessary
-  ##lm.ok <- require("lmtest")
-  ##if(!lm.ok) stop("package lmtest is needed but not available")
-  ## ARtest is the bgtest, exception made for the method attribute
+    ## check package availability and load if necessary # not needed anymore as importFrom in NAMESPACE
+    ##lm.ok <- require("lmtest")
+    ##if(!lm.ok) stop("package lmtest is needed but not available")
+  
+  ## ARtest is the return value of lmtest::dwtest, exception made for the method attribute
   dots <- match.call(expand.dots=FALSE)[["..."]]
   if (is.null(dots$order.by)) order.by <- NULL else order.by <- dots$order.by
   if (is.null(dots$alternative)) alternative <- "greater" else alternative <- dots$alternative
   if (is.null(dots$iterations)) iterations <- 15 else iterations <- dots$iterations
   if (is.null(dots$exact)) exact <- NULL else exact <- dots$exact
   if (is.null(dots$tol)) tol <- 1e-10 else tol <- dots$tol
-
 
   auxformula <- demy~demX-1 # was: if(model == "within") demy~demX-1 else demy~demX
   lm.mod <- lm(auxformula)
@@ -717,10 +718,11 @@ pwfdtest.panelmodel <- function(x, ..., h0 = c("fd", "fe")) {
   # calc F stat with restriction rho.H0 and robust vcov
   FDARstat <- ((coef(auxmod)["FDres.1"] - rho.H0)/sqrt(myvcov(auxmod)["FDres.1", "FDres.1"]))^2
   names(FDARstat) <- "F"
-  df1 <- c(df1 = 1); df2 <- c(df2 = df.residual(auxmod))
+  df1 <- c(df1 = 1)
+  df2 <- c(df2 = df.residual(auxmod))
   pFDARstat <- pf(FDARstat, df1 = df1, df2 = df2, lower.tail = F)
   
-  ## (insert usual htest features)  
+  ## insert usual htest features
   dname <- paste(deparse(substitute(x)))
   RVAL <- list(statistic   = FDARstat, 
                parameter   = c(df1, df2),

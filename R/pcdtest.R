@@ -62,7 +62,7 @@ pcdtest.formula <- function(x, data, index = NULL, model = NULL,
         for (i in 1:n) {
             tX <- X[ind == unind[i], , drop = FALSE]
             ty <- y[ind == unind[i]]
-            res.i <- lm.fit(tX, ty)$resid
+            res.i <- lm.fit(tX, ty)$residuals
             ti.res[[i]] <- res.i
             names(ti.res[[i]]) <- tind[ind == unind[i]]
             ind.res[[i]] <- rep(i, length(res.i))

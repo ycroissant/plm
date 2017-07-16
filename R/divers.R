@@ -30,18 +30,18 @@ bdiag <- function(...){
 
 
 twosls <- function(y, X, W, intercept = FALSE){
-  Xhat <- lm(X ~ W)$fit
+  Xhat <- lm(X ~ W)$fitted.values
   if(!is.matrix(Xhat)){
     Xhat <- matrix(Xhat, ncol = 1)
     colnames(Xhat) <- colnames(X)
   }
   if(intercept){
-    model <- lm(y~Xhat)
-    yhat <- as.vector(crossprod(t(cbind(1,X)),coef(model)))
+    model <- lm(y ~ Xhat)
+    yhat <- as.vector(crossprod(t(cbind(1, X)), coef(model)))
   }
   else{
-    model <- lm(y~Xhat-1)
-    yhat <- as.vector(crossprod(t(X),coef(model)))
+    model <- lm(y ~ Xhat - 1)
+    yhat <- as.vector(crossprod(t(X), coef(model)))
   }
   model$residuals <- y - yhat
   model
@@ -119,14 +119,14 @@ expand.formula <- function(x){
   firstpart <- rhs[[2]]
   secondpart <- rhs[[3]]
   if (has.response){
-    one <- do.call("~",list(y,firstpart))
-    two <- do.call("~",list(y,secondpart))
+    one <- do.call("~", list(y,firstpart))
+    two <- do.call("~", list(y,secondpart))
   }
   else{
-    one <- do.call("~",list(firstpart))
-    two <- do.call("~",list(secondpart))
+    one <- do.call("~", list(firstpart))
+    two <- do.call("~", list(secondpart))
   }
-  two <- update(one,two)
+  two <- update(one, two)
   one <- paste(deparse(one), collapse = "")
   two <- paste(deparse(two[[3]]), collapse = "")
   result <- as.formula(paste(one, "|", two, collapse = ""));
@@ -178,7 +178,7 @@ has.intercept.formula <- function(object, ...) {
 }
 
 has.intercept.Formula <- function(object, rhs = NULL, ...) {
-  ## NOTE: return a logical vector of the necessary length
+  ## NOTE: returns a logical vector of the necessary length
   ## (which might be > 1)
   if(is.null(rhs)) rhs <- 1:length(attr(object, "rhs"))
   sapply(rhs, function(x) has.intercept(formula(object, lhs = 0, rhs = x)))
@@ -199,8 +199,8 @@ pres <- function(x) {  # pres.panelmodel
   ## extracts model residuals as pseries
 
   ## extract indices
-  groupind <-attr(x$model, "index")[,1]   #attr(model.frame(x), "index")[[1]]
-  timeind  <-attr(x$model, "index")[,2]   #attr(model.frame(x), "index")[[2]]
+  groupind <-attr(x$model, "index")[,1]
+  timeind  <-attr(x$model, "index")[,2]
   
   # fix to allow operation with pggls, pmg (NB: pmg? meant: plm?)
   # [NB: one day, make this cleaner; with the describe framework?]
@@ -211,15 +211,15 @@ pres <- function(x) {  # pres.panelmodel
   if(exists("maybe_fd") && maybe_fd == "fd") {
     groupi <- as.numeric(groupind)
     ## make vector =1 on first obs in each group, 0 elsewhere
-    selector <-groupi-c(0,groupi[-length(groupi)])
+    selector <- groupi - c(0, groupi[-length(groupi)])
     selector[1] <- 1 # the first must always be 1
     ## eliminate first obs in time for each group
     groupind <- groupind[!selector]
     timeind <- timeind[!selector]
   }
 
-  resdata <- data.frame(ee=x$residuals, ind=groupind, tind=timeind)
-  pee <- pdata.frame(resdata, index=c("ind","tind"))
+  resdata <- data.frame(ee = x$residuals, ind = groupind, tind = timeind)
+  pee <- pdata.frame(resdata, index = c("ind", "tind"))
   pres <- pee$ee
   return(pres)
 }
@@ -238,7 +238,7 @@ nobs.panelmodel <- function(object, ...) {
 # No of obs calculated as in print.summary.pgmm [code copied from there]
 nobs.pgmm <- function(object, ...) {
   if (inherits(object, "pgmm")) return(sum(unlist(object$residuals) != 0))
-    else stop("Input 'object' needs to be of class 'pgmm', i. e. a GMM estimation with panel data estimated by pgmm()")
+    else stop("Input 'object' needs to be of class 'pgmm', i. e., a GMM estimation with panel data estimated by pgmm()")
 }
 
 
@@ -303,7 +303,7 @@ punbalancedness <- function(x, ...) {
 }
 
 
-# helper function
+# helper function, used in pdata.frame()
 fancy.row.names <- function(index, sep = "-") {
   if (length(index) == 2) {result <- paste(index[[1]], index[[2]], sep = sep)}
   # this in the order also used for sorting (group, id, time):
@@ -311,7 +311,7 @@ fancy.row.names <- function(index, sep = "-") {
   return(result)
 }
 
-# helper function for pwaldtest: trans_clubSandwich_vcov
+# trans_clubSandwich_vcov: helper function for pwaldtest()
 # translate vcov object from package clubSandwich so it is suitable for summary.plm, plm's pwaldtest.
 # Attribute "cluster" in clubSandwich's vcov objects contains the cluster variable itself.
 # plm's vcov object also has attribute "cluster" but it contains a character as
@@ -341,7 +341,7 @@ trans_clubSandwich_vcov <- function(CSvcov, index) {
   return(CSvcov)
 }
 
-## helper function to extract one or more t value(s) (coef/s.e.) for a coefficient from model object
+## gettvalue: helper function to extract one or more t value(s) (coef/s.e.) for a coefficient from model object
 ## useful if one wants to avoid the computation of a whole lot of values with summary()
 gettvalue <- function(x, coefname) {
   # x: model object (usually class plm or lm)
@@ -353,7 +353,7 @@ gettvalue <- function(x, coefname) {
   return(tvalue)
 }
 
-# helper function: "p-function" for mixed chisq (also called chi-bar-squared)
+# pchibarsq: helper function: "p-function" for mixed chisq (also called chi-bar-squared)
 # used in plmtest(., type = "ghm"), see Baltagi (2013), pp. 71-72, 74, 88, 202-203, 209
 #
 # a reference for the distribution seems to be
