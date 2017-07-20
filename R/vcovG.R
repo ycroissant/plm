@@ -50,24 +50,23 @@ vcovG.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
     demX <- model.matrix(x, model = model, rhs = 1)
     ## drop any linear dependent columns (corresponding to aliased coefficients)
     ## from model matrix X
-    if (!is.null(x$aliased) && any(x$aliased, na.rm = TRUE)) demX <- demX[, !x$aliased, drop = FALSE] # na.rm = TRUE because currently, RE tw unbalanced models set aliased simply to NA
+    ## na.rm = TRUE because currently, RE tw unbalanced models set aliased simply to NA
+    if (!is.null(x$aliased) && any(x$aliased, na.rm = TRUE)) demX <- demX[, !x$aliased, drop = FALSE]
 
     ## control: IV or not (two- or one-part formula)
     if(length(formula(x))[2] > 1) {
         demZ <- model.matrix(x, model = model, rhs = 2)
         ## substitute (transformed) X with projection of X on Z
         ## any linear dependence in Z (demZ) is appropriately taken care of by lm.fit()
-        demX <- fitted(lm.fit(demZ, demX)) # demX <- fitted(lm(demX ~ demZ))
+        demX <- fitted(lm.fit(demZ, demX))
     }
 
     pdim <- pdim(x)
     nT <- pdim$nT$N
     Ti <- pdim$Tint$Ti
     k <- dim(demX)[[2]]
-
     n0 <- pdim$nT$n
     t0 <- pdim$nT$T
-
 
   ## extract residuals
     uhat <- x$residuals
@@ -252,10 +251,9 @@ vcovG.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
     ## preallocate k x k x (T-l) array for 'pile' of kxk matrices
     ## holding the X' E(u,ul) X elements
     Sl <- array(dim = c(k, k, n-l))
-
+    
     ## (l=0 gives the special contemporaneous case where Xi=Xil, ui=uil
     ## for computing W, CX, CT)
-  
     for(i in (1+l):n) {
       X <- demX[tind[[i]], , drop = FALSE]
       Xl <- demX[tind[[i-l]], , drop = FALSE]
@@ -362,9 +360,7 @@ vcovSCC.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
     S0 <- vcovG(x, type=type, cluster=cluster, l=0, inner=inner)
 
     if(maxlag > 0) {
-
         for(i in 1:maxlag) {
-
             Vctl <- vcovG(x, type=type, cluster=cluster,
                              l=i, inner=inner)
             S0 <- S0 + wj(i, maxlag) * (Vctl + t(Vctl))
@@ -405,7 +401,7 @@ vcovBK.plm <- function(x, type=c("HC0", "HC1", "HC2", "HC3", "HC4"),
   ## cross-sectional dependence, as in the original Beck and Katz paper (where
   ## it is applied to "pooling" models).
   ##
-  ## This version: compliant with plm.1.2-0; lmtest.
+  ## This version: compliant with plm 1.2-0; lmtest.
   ## Code is identical to pvcovHC until mark.
   ##
   ## Usage:
@@ -422,8 +418,8 @@ vcovBK.plm <- function(x, type=c("HC0", "HC1", "HC2", "HC3", "HC4"),
   ## in vcovHC/meatHC. Sure this makes sense for white1, but it
   ## is open to question for white2 and arellano. We'll see.
   ##
-  ## Results OK vs. Eviews, vcov=PCSE. Unbal. case not exactly the
-  ## same (but then, who knows what Eviews does!)
+  ## Results OK vs. EViews, vcov=PCSE. Unbal. case not exactly the
+  ## same (but then, who knows what EViews does!)
     
     type <- match.arg(type)
     model <- describe(x, "model")
@@ -436,21 +432,21 @@ vcovBK.plm <- function(x, type=c("HC0", "HC1", "HC2", "HC3", "HC4"),
     demX <- model.matrix(x, model = model, rhs = 1)
     ## drop any linear dependent columns (corresponding to aliased coefficients)
     ## from model matrix X
-    if (!is.null(x$aliased) && any(x$aliased, na.rm = TRUE)) demX <- demX[, !x$aliased, drop = FALSE] # na.rm = TRUE because currently, RE tw unbalanced models set aliased simply to NA
+    ##  na.rm = TRUE because currently, RE tw unbalanced models set aliased simply to NA
+    if (!is.null(x$aliased) && any(x$aliased, na.rm = TRUE)) demX <- demX[, !x$aliased, drop = FALSE]
     
     ## control: IV or not (two- or one-part formula)
     if(length(formula(x))[2] > 1) {
         demZ <- model.matrix(x, model = model, rhs = 2)
         ## substitute (transformed) X with projection of X on Z
         ## any linear dependence in Z (demZ) is appropriately taken care of by lm.fit()
-        demX <- fitted(lm.fit(demZ, demX)) # demX <- fitted(lm(demX ~ demZ))
+        demX <- fitted(lm.fit(demZ, demX))
     }
 
     pdim <- pdim(x)
     nT <- pdim$nT$N
     Ti <- pdim$Tint$Ti
     k <- dim(demX)[[2]]
-
     n0 <- pdim$nT$n 
     t0 <- pdim$nT$T
     
@@ -467,13 +463,13 @@ vcovBK.plm <- function(x, type=c("HC0", "HC1", "HC2", "HC3", "HC4"),
     timeind  <- as.numeric(attr(x$model, "index")[,2])
 
   ## Achim's fix for 'fd' model (losing first time period)
-     if(model == "fd") {
-       groupind <- groupind[timeind > 1]
-       timeind <- timeind[timeind > 1]
-       nT <- nT-n0
-       Ti <- Ti-1
-       t0 <- t0-1
-     }
+    if(model == "fd") {
+      groupind <- groupind[timeind > 1]
+      timeind <- timeind[timeind > 1]
+      nT <- nT-n0
+      Ti <- Ti-1
+      t0 <- t0-1
+    }
 
   ## set grouping indexes
     switch(match.arg(cluster),
@@ -554,7 +550,8 @@ vcovBK.plm <- function(x, type=c("HC0", "HC1", "HC2", "HC3", "HC4"),
     ## array of n "empirical omega-blocks"
     ## with outer product of t(i) residuals
     ## for each group 1..n
-    ## (use subscripting from condition 'label in labels' set', the rest stays NA if any)
+    ## (use subscripting from condition 'label in labels' set',
+    ## the rest stays NA if any)
     for(i in 1:n) {
       ut <- uhat[tind[[i]]]
       tpos <- (1:t)[unique(lab) %in% tlab[[i]]]
@@ -569,9 +566,9 @@ vcovBK.plm <- function(x, type=c("HC0", "HC1", "HC2", "HC3", "HC4"),
     ## average over all omega blocks, removing NAs (apply preserving
     ## *two* dimensions, i.e. over the third) to get the unconditional
     ## covariance matrix of errors for a group (viz. time period):
-    OmegaT <- apply(tres,1:2, mean, na.rm = TRUE)
+    OmegaT <- apply(tres, 1:2, mean, na.rm = TRUE)
 
-  ## end of PCSE covariance calculation. Now
+  ## end of PCSE covariance calculation.
 
   ## fetch (all, unique) values of the relevant labels
   unlabs <- unique(lab)
