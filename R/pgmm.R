@@ -280,7 +280,7 @@ pgmm <- function(formula, data, subset, na.action,
   if (effect == "twoways"){
     namesV <- levels(index(data, which = "time"))
     if (transformation == "d"){
-      V1 <-td.model.diff <- diff(diag(1, T - TL1 + 1))[, -1]
+      V1 <- td.model.diff <- diff(diag(1, T - TL1 + 1))[, -1]
       namesV <- namesV[- c(0:(TL1))]
     }
     else{
@@ -568,12 +568,12 @@ Id <- function(t){
   diag(rep(1,t))
 }
 
-FSM <- function(t,fsm){
+FSM <- function(t, fsm){
   switch(fsm,
-         "I"=Id(t),
-         "G"=G(t),
-         "GI"=bdiag(G(t-1),diag(1,t)),
-         "full"=rbind(cbind(G(t-1),FD(t)),cbind(t(FD(t)),Id(t)))
+         "I" = Id(t),
+         "G" = G(t),
+         "GI" = bdiag(G(t-1), diag(1,t)),
+         "full" = rbind(cbind(G(t-1), FD(t)), cbind(t(FD(t)), Id(t)))
          )
 }
 
@@ -583,7 +583,7 @@ makegmm <- function(x, g, TL1, collapse = FALSE){
   z <- as.list((TL1 + 1):T)
   x <- lapply(z, function(y) x[max(1, y - rg[2]):(y - rg[1])])
   if (collapse) {      
-    x<-lapply(x, rev)
+    x <- lapply(x, rev)
     m <- matrix(0, T - TL1, min(T - rg[1], rg[2]+1-rg[1]))
     for(y in 1:length(x)){ m[y,1:length(x[[y]])]<-x[[y]]}
     result<-m
@@ -604,10 +604,10 @@ makegmm <- function(x, g, TL1, collapse = FALSE){
 
 makeW2<-function (x, collapse = FALSE){
   if (collapse) {
-    u<-diff(x[-c(length(x))])
+    u <- diff(x[-c(length(x))])
    }
    else {
-     u<-diag(diff(x[-c(length(x))]))
+     u < -diag(diff(x[-c(length(x))]))
    }
    u
 }
@@ -705,7 +705,7 @@ wald <- function(object, param = c("coef", "time", "all"), vcov = NULL){
   else vv <- myvcov
   model <- describe(object, "model")
   effect <- describe(object, "effect")
-  if (param == "time" && effect == "individual") stop("no time-dummies in this model")
+  if (param == "time" && effect == "individual") stop("no time dummies in this model")
   transformation <- describe(object, "transformation")
   if (model == "onestep") coefficients <- object$coefficients
   else coefficients <- object$coefficients[[2]]
@@ -763,7 +763,7 @@ print.summary.pgmm <- function(x, digits = max(3, getOption("digits") - 2),
   cat("\nCoefficients:\n")
   printCoefmat(x$coefficients,digits=digits)
 
-  cat("\nSargan Test: ",names(x$sargan$statistic),
+  cat("\nSargan test: ",names(x$sargan$statistic),
       "(",x$sargan$parameter,") = ",x$sargan$statistic,
       " (p-value=",format.pval(x$sargan$p.value,digits=digits),")\n",sep="")
 
@@ -809,7 +809,7 @@ sargan <- function(object, weights = c("twosteps", "onestep")){
   sargan <- list(statistic = stat,
                  p.value = pval,
                  parameter = parameter,
-                 method = "Sargan Test",
+                 method = method,
                  data.name = data.name(object))
   class(sargan) <- "htest"
   sargan
