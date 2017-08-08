@@ -607,7 +607,7 @@ makeW2<-function (x, collapse = FALSE){
     u <- diff(x[-c(length(x))])
    }
    else {
-     u < -diag(diff(x[-c(length(x))]))
+     u <- diag(diff(x[-c(length(x))]))
    }
    u
 }
