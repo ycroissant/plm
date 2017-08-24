@@ -223,29 +223,29 @@ if (!length(make.pbalanced(pGrunfeld_wo_2nd_period_and_3rd_for_id1$inv)) == 190)
 if (!nrow(attr(make.pbalanced(pGrunfeld_wo_2nd_period_and_3rd_for_id1$inv), "index")) == 190) stop("failure make.pbalanced pseries' index")
 
 
-## make.pbalanced with balance.type = "shared":
+## make.pbalanced with balance.type = "shared.times":
 # 2 periods deleted -> 180 rows/entries left in (p)data.frame/pseries
 
   # data.frame
-  if (!nrow(make.pbalanced(Grunfeld_wo_2nd_period_and_3rd_for_id1, balance.type = "shared") == 180)) stop("failure make.pbalanced, balance.type = \"shared\") data.frame")
+  if (!nrow(make.pbalanced(Grunfeld_wo_2nd_period_and_3rd_for_id1, balance.type = "shared.times") == 180)) stop("failure make.pbalanced, balance.type = \"shared.times\") data.frame")
   # pdata.frame
-  if (!nrow(make.pbalanced(pGrunfeld_wo_2nd_period_and_3rd_for_id1, balance.type = "shared") == 180)) stop("failure make.pbalanced, balance.type = \"shared\") pdata.frame")
-  if (!nrow(attr(make.pbalanced(pGrunfeld_wo_2nd_period_and_3rd_for_id1, balance.type = "shared"), "index")) == 180) stop("failure make.pbalanced, balance.type = \"shared\") pdata.frame's index")
+  if (!nrow(make.pbalanced(pGrunfeld_wo_2nd_period_and_3rd_for_id1, balance.type = "shared.times") == 180)) stop("failure make.pbalanced, balance.type = \"shared.times\") pdata.frame")
+  if (!nrow(attr(make.pbalanced(pGrunfeld_wo_2nd_period_and_3rd_for_id1, balance.type = "shared.times"), "index")) == 180) stop("failure make.pbalanced, balance.type = \"shared.times\") pdata.frame's index")
   # pseries
-  if (!length(make.pbalanced(pGrunfeld_wo_2nd_period_and_3rd_for_id1$inv, balance.type = "shared")) == 180) stop("failure make.pbalanced(, balance.type = \"shared\") pseries")
-  if (!nrow(attr(make.pbalanced(pGrunfeld_wo_2nd_period_and_3rd_for_id1$inv, balance.type = "shared"), "index")) == 180) stop("failure make.pbalanced pseries' index")
+  if (!length(make.pbalanced(pGrunfeld_wo_2nd_period_and_3rd_for_id1$inv, balance.type = "shared.times")) == 180) stop("failure make.pbalanced(, balance.type = \"shared.times\") pseries")
+  if (!nrow(attr(make.pbalanced(pGrunfeld_wo_2nd_period_and_3rd_for_id1$inv, balance.type = "shared.times"), "index")) == 180) stop("failure make.pbalanced pseries' index")
 
 # delete one (but different) period per id -> upper half of years (1945 to 1953) should be left
 delete_1_per_id_half <- c(1, 22, 43, 64, 85, 106, 127, 148, 169, 190)
 #split(Grunfeld[-delete_1_per_id_half, ]$year, Grunfeld[-delete_1_per_id_half, ]$firm) # inspect structure
 
-if (!nrow(make.pbalanced(Grunfeld[-delete_1_per_id_half, ], balance.type = "shared") == 100)) stop("failure make.pbalanced, balance.type = \"shared\") data.frame")
-if (!all(unique(make.pbalanced(Grunfeld[-delete_1_per_id_half, ], balance.type = "shared")$year) == c(1945:1954))) stop("wrong years")
+if (!nrow(make.pbalanced(Grunfeld[-delete_1_per_id_half, ], balance.type = "shared.times") == 100)) stop("failure make.pbalanced, balance.type = \"shared.times\") data.frame")
+if (!all(unique(make.pbalanced(Grunfeld[-delete_1_per_id_half, ], balance.type = "shared.times")$year) == c(1945:1954))) stop("wrong years")
 
 # delete two (but different) periods per id -> none should be left -> data frame with 0 rows
 delete_2_per_id_all <- c(1, 20, 22, 39, 43, 58, 64, 77, 85, 96, 106, 115, 127, 134, 148, 153, 169, 172, 190, 191)
 #split(Grunfeld[-delete_2_per_id_all, ]$year, Grunfeld[-delete_2_per_id_all, ]$firm) # inspect structure
-if (!nrow(make.pbalanced(Grunfeld[-delete_2_per_id_all, ], balance.type = "shared")) == 0) stop("failure make.pbalanced, balance.type = \"shared\") data.frame")
+if (!nrow(make.pbalanced(Grunfeld[-delete_2_per_id_all, ], balance.type = "shared.times")) == 0) stop("failure make.pbalanced, balance.type = \"shared.times\") data.frame")
 
 
 

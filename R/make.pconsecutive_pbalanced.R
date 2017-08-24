@@ -235,83 +235,115 @@ make.pconsecutive <- function(x, ...){
 ##                        introduced that are present for at least one individual
 ##                        (union of time periods)
 ##
-## balance.type = "shared": remove all observations with time periods which are
-##                          not shared among all individuals
-##                          (intersect of time periods)
-make.pbalanced.pdata.frame <- function(x, balance.type = c("fill", "shared"), ...) {
-  
+## balance.type = "shared.times": remove all observations with time periods
+##                                not shared among all individuals
+##                                (keep intersect of time periods)
+##
+##                "keep.times": drop individuals which don't have all time periods
+make.pbalanced.pdata.frame <- function(x, balance.type = c("fill", "shared.times", "keep.times"), ...) {
+
+  if (length(balance.type) == 1 && balance.type == "shared") {
+    # accept "shared" for backward compatibility
+    balance.type <- "shared.times"
+    warning("Use of balanced.type = 'shared' discouraged, set to 'shared.time'")
+  }
   balance.type <- match.arg(balance.type)
   index <- attr(x, "index")
   
-  if (balance.type == "fill") {
-    x_consec_bal <- make.pconsecutive(x, balanced = TRUE)
-    
-    # delete time periods that were not present for any individual, but introduced by
-    # making data consecutive
-    # result: no time periods are added that are not present for at least one individual
-    times_present_orig <- attr(x_consec_bal, "index")[[2]] %in% unique(index[[2]])
-    result <- x_consec_bal[times_present_orig, ]
-    
-    # drop not present factor levels (some new levels were introduced by making data consecutive first):
-      # drop from index
-      index_result <- attr(result, "index")
-      index_result[[2]] <- droplevels(index_result[[2]])
-      attr(result, "index") <- index_result
-      
-      # drop from time column (if time index column present in pdata.frame)
-      pos_indexvars <- pos.index(result) # position of index vars is c(NA, NA) if index vars are not present as columns
-      index_orig_names <- names(pos_indexvars)
-      if (!anyNA(pos_indexvars)) {
-        result[ , pos_indexvars[2]] <- droplevels(result[ , pos_indexvars[2]])
-      }
-  } else {
-    ## balance.type == shared
-    keep <- intersect_index_by_time(index)
-    result <- x[keep, ]
-  }
-  
+  switch(balance.type,
+         "fill" = {
+            x_consec_bal <- make.pconsecutive(x, balanced = TRUE)
+            
+            # delete time periods that were not present for any individual, but introduced by
+            # making data consecutive
+            # result: no time periods are added that are not present for at least one individual
+            times_present_orig <- attr(x_consec_bal, "index")[[2]] %in% unique(index[[2]])
+            result <- x_consec_bal[times_present_orig, ]
+            
+            # drop not present factor levels (some new levels were introduced by making data consecutive first):
+              # drop from index
+              index_result <- attr(result, "index")
+              index_result[[2]] <- droplevels(index_result[[2]])
+              attr(result, "index") <- index_result
+              
+              # drop from time column (if time index column present in pdata.frame)
+              pos_indexvars <- pos.index(result) # position of index vars is c(NA, NA) if index vars are not present as columns
+              index_orig_names <- names(pos_indexvars)
+              if (!anyNA(pos_indexvars)) {
+                result[ , pos_indexvars[2]] <- droplevels(result[ , pos_indexvars[2]])
+              }
+        },
+        "shared.times" = {
+            keep <- intersect_index(index, "time")
+            result <- x[keep, ]
+        },
+        "keep.times" = {
+            keep <- intersect_index(index, "individual")
+            result <- x[keep, ]
+        })
   return(result)
 } ## END make.pbalanced.pdata.frame
 
 
-make.pbalanced.pseries <- function(x, balance.type = c("fill", "shared"), ...) {
-  index <- attr(x, "index")
-  balance.type <- match.arg(balance.type)
+make.pbalanced.pseries <- function(x, balance.type = c("fill", "shared.times", "keep.times"), ...) {
 
-  if (balance.type == "fill") {
-    x_consec_bal <- make.pconsecutive(x, balanced = TRUE)
-    
-    # delete time periods that were not present for any individual, but introduced by
-    # making data consecutive
-    # result: no time periods are added that are not present for at least one individual
-      x_consec_bal_index <- attr(x_consec_bal, "index")
-      times_present_orig <- x_consec_bal_index[[2]] %in% unique(index[[2]])
-      result <- x_consec_bal[times_present_orig] # this drops the pseries features (index, class "pseries")
-                                                 # because there is no function "[.pseries]" (as of 2016-05-14)
-      
-      # drop introduced extra periods also from index
-      x_consec_bal_index <- x_consec_bal_index[times_present_orig, ]
-    # re-attach index and restore original class(es)
-    attr(result, "index") <- x_consec_bal_index
-    attr(result, "class") <- attr(x, "class")
-    
-  } else {
-    ## balance.type == shared
-    keep <- intersect_index_by_time(index)
-    result <- x[keep]
-    # restore 'pseries' features
-    # (no subsetting method for pseries in the package (yet),
-    #  usual vector subsetting removes the pseries features)
-    attr(result, "index") <- index[keep, ]
-    class(result) <- union("pseries", class(result))
+  if (length(balance.type) == 1 && balance.type == "shared") {
+    # accept "shared" for backward compatibility
+    balance.type <- "shared.times"
+    warning("Use of balanced.type = 'shared' discouraged, set to 'shared.time'")
   }
-  
+  balance.type <- match.arg(balance.type)
+  index <- attr(x, "index")
+
+  switch(balance.type,
+         "fill" = {
+            x_consec_bal <- make.pconsecutive(x, balanced = TRUE)
+            
+            # delete time periods that were not present for any individual, but introduced by
+            # making data consecutive
+            # result: no time periods are added that are not present for at least one individual
+              x_consec_bal_index <- attr(x_consec_bal, "index")
+              times_present_orig <- x_consec_bal_index[[2]] %in% unique(index[[2]])
+              result <- x_consec_bal[times_present_orig] # this drops the pseries features (index, class "pseries")
+                                                         # because there is no function "[.pseries]" (as of 2016-05-14)
+              
+              # drop introduced extra periods also from index
+              x_consec_bal_index <- x_consec_bal_index[times_present_orig, ]
+            # re-attach index and restore original class(es)
+            attr(result, "index") <- x_consec_bal_index
+            attr(result, "class") <- attr(x, "class")
+            },
+         
+         "shared.times" = {
+           keep <- intersect_index(index, "time")
+           result <- x[keep]
+           # restore 'pseries' features
+           # (no subsetting method for pseries in the package (yet),
+           #  usual vector subsetting removes the pseries features)
+           attr(result, "index") <- index[keep, ]
+           class(result) <- union("pseries", class(result))
+           },
+         
+         "keep.times" = {
+           keep <- intersect_index(index, "individual")
+           result <- x[keep]
+           # restore 'pseries' features
+           # (no subsetting method for pseries in the package (yet),
+           #  usual vector subsetting removes the pseries features)
+           attr(result, "index") <- index[keep, ]
+           class(result) <- union("pseries", class(result))
+         })
   return(result)
 } ## END make.pbalanced.pseries
 
-make.pbalanced.data.frame <- function(x, balance.type = c("fill", "shared"), index = NULL, ...) {
+make.pbalanced.data.frame <- function(x, balance.type = c("fill", "shared.times", "keep.times"), index = NULL, ...) {
   # NB: for data.frame interface: the data is also sorted as stack time series
 
+  if (length(balance.type) == 1 && balance.type == "shared") {
+    # accept "shared" for backward compatibility
+    balance.type <- "shared.times"
+    warning("Use of balanced.type = 'shared' discouraged, set to 'shared.times'")
+  }
   balance.type <- match.arg(balance.type)
 
   ## identify index of data.frame  
@@ -326,36 +358,52 @@ make.pbalanced.data.frame <- function(x, balance.type = c("fill", "shared"), ind
       
       index_df <- x[ , index_orig_names]
   
-  if (balance.type == "fill") {
-    x_consec_bal <- make.pconsecutive(x, index = index_orig_names, balanced = TRUE)
-    
-    # delete time periods that were not present for any individual, but introduced by
-    # making data consecutive
-    # result: no time periods are added that are not present for at least one individual
-    times_present_orig <- x_consec_bal[ , index_orig_names[2]] %in% unique(index_df[[2]])
-    result <- x_consec_bal[times_present_orig , ]
-  } else {
-    ## balance.type == shared
-    keep <- intersect_index_by_time(index_df)
-    result <- x[keep, ]
-  }
-  
+  switch(balance.type,
+         "fill" = {
+            x_consec_bal <- make.pconsecutive(x, index = index_orig_names, balanced = TRUE)
+            
+            # delete time periods that were not present for any individual, but introduced by
+            # making data consecutive
+            # result: no time periods are added that are not present for at least one individual
+            times_present_orig <- x_consec_bal[ , index_orig_names[2]] %in% unique(index_df[[2]])
+            result <- x_consec_bal[times_present_orig , ]},
+         
+        "shared.times" = {
+           keep <- intersect_index(index_df, "time")
+           result <- x[keep, ]},
+        
+        "keep.times" = {
+           keep <- intersect_index(index_df, "individual")
+           result <- x[keep, ]
+         })
   return(result)
 } ## END make.pbalanced.data.frame
 
-make.pbalanced <- function(x, balance.type = c("fill", "shared"), ...) {
+make.pbalanced <- function(x, balance.type = c("fill", "shared.times", "keep.times"), ...) {
   UseMethod("make.pbalanced")
 }
 
 # helper function: returns logical vector which rows/entries to keep
-#                  when balance.type = "shared" (intersect of all time periods)
-intersect_index_by_time <- function(index) {
+#                  when balance.type = "shared.times" or "keep.times" (intersect of all time periods or individuals)
+intersect_index <- function(index, by) {
   # intersect() is defined on vectors (not factors)
-  #  -> convert time index to character before
-  id <- index[[1]]
-  time <- as.character(index[[2]])
+  #  -> convert respective index to character before
+  
+  switch(by,
+         "time" = {
+           id <- index[[1]]
+           time <- as.character(index[[2]])
+         },
+         "individual" = {
+           id <- index[[2]]
+           time <- as.character(index[[1]])
+         })
+  
   times_by_ids <- split(time, id)
   common_times <- Reduce(intersect, times_by_ids) 
   keep_entries <- time %in% common_times
   return(keep_entries)
 }
+
+
+

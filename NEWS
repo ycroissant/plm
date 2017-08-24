@@ -62,6 +62,9 @@ Changes in version 1.6-6
              thus prints prettier.
   * summary.piest: table heading now has "z-value" and "Pr(>|z|)" as the numbers are
                    based on standard normal distribution.
+  * make.pbalanced: argument balanced.type:
+      * 'keep.times' added als additional option,
+      * 'shared' renamed to 'shared.times' (with a back-compatible solution).
   * cosmetic: some print functions now have better aligned whitespacing.
   * Dependencies: 'car' moved from 'Imports' to 'Suggests'.
 
