@@ -239,8 +239,9 @@ make.pconsecutive <- function(x, ...){
 ##                                not shared among all individuals
 ##                                (keep intersect of time periods)
 ##
-##                "keep.times": drop individuals which don't have all time periods
-make.pbalanced.pdata.frame <- function(x, balance.type = c("fill", "shared.times", "keep.times"), ...) {
+##                "shared.individuals": drop individuals which don't have all time periods
+##                                      (symmetric to "shared.times")
+make.pbalanced.pdata.frame <- function(x, balance.type = c("fill", "shared.times", "shared.individuals"), ...) {
 
   if (length(balance.type) == 1 && balance.type == "shared") {
     # accept "shared" for backward compatibility
@@ -277,7 +278,7 @@ make.pbalanced.pdata.frame <- function(x, balance.type = c("fill", "shared.times
             keep <- intersect_index(index, "time")
             result <- x[keep, ]
         },
-        "keep.times" = {
+        "shared.individuals" = {
             keep <- intersect_index(index, "individual")
             result <- x[keep, ]
         })
@@ -285,7 +286,7 @@ make.pbalanced.pdata.frame <- function(x, balance.type = c("fill", "shared.times
 } ## END make.pbalanced.pdata.frame
 
 
-make.pbalanced.pseries <- function(x, balance.type = c("fill", "shared.times", "keep.times"), ...) {
+make.pbalanced.pseries <- function(x, balance.type = c("fill", "shared.times", "shared.individuals"), ...) {
 
   if (length(balance.type) == 1 && balance.type == "shared") {
     # accept "shared" for backward compatibility
@@ -324,7 +325,7 @@ make.pbalanced.pseries <- function(x, balance.type = c("fill", "shared.times", "
            class(result) <- union("pseries", class(result))
            },
          
-         "keep.times" = {
+         "shared.individuals" = {
            keep <- intersect_index(index, "individual")
            result <- x[keep]
            # restore 'pseries' features
@@ -336,7 +337,7 @@ make.pbalanced.pseries <- function(x, balance.type = c("fill", "shared.times", "
   return(result)
 } ## END make.pbalanced.pseries
 
-make.pbalanced.data.frame <- function(x, balance.type = c("fill", "shared.times", "keep.times"), index = NULL, ...) {
+make.pbalanced.data.frame <- function(x, balance.type = c("fill", "shared.times", "shared.individuals"), index = NULL, ...) {
   # NB: for data.frame interface: the data is also sorted as stack time series
 
   if (length(balance.type) == 1 && balance.type == "shared") {
@@ -372,19 +373,20 @@ make.pbalanced.data.frame <- function(x, balance.type = c("fill", "shared.times"
            keep <- intersect_index(index_df, "time")
            result <- x[keep, ]},
         
-        "keep.times" = {
+        "shared.individuals" = {
            keep <- intersect_index(index_df, "individual")
            result <- x[keep, ]
          })
   return(result)
 } ## END make.pbalanced.data.frame
 
-make.pbalanced <- function(x, balance.type = c("fill", "shared.times", "keep.times"), ...) {
+make.pbalanced <- function(x, balance.type = c("fill", "shared.times", "shared.individuals"), ...) {
   UseMethod("make.pbalanced")
 }
 
 # helper function: returns logical vector which rows/entries to keep
-#                  when balance.type = "shared.times" or "keep.times" (intersect of all time periods or individuals)
+#                  when balance.type = "shared.times" or "shared.individuals"
+#                  (intersect of all time periods or individuals)
 intersect_index <- function(index, by) {
   # intersect() is defined on vectors (not factors)
   #  -> convert respective index to character before

@@ -10,17 +10,17 @@
 
 \usage{
 \method{make.pbalanced}{pdata.frame}(x, 
-               balance.type = c("fill", "shared.times", "keep.times"), \dots)
+               balance.type = c("fill", "shared.times", "shared.individuals"), \dots)
 \method{make.pbalanced}{pseries}(x,
-               balance.type = c("fill", "shared.times", "keep.times"), \dots)
+               balance.type = c("fill", "shared.times", "shared.individuals"), \dots)
 \method{make.pbalanced}{data.frame}(x,
-               balance.type = c("fill", "shared.times", "keep.times"),
+               balance.type = c("fill", "shared.times", "shared.individuals"),
                index = NULL, \dots)
 }
 
 \arguments{
  \item{x}{an object of class \code{pdata.frame}, \code{data.frame}, or \code{pseries};}
- \item{balance.type}{character, one of \code{"fill"}, \code{"shared.times"}, or \code{"keep.times"}, see \bold{Details}, }
+ \item{balance.type}{character, one of \code{"fill"}, \code{"shared.times"}, or \code{"shared.individuals"}, see \bold{Details}, }
  \item{index}{only relevant for \code{data.frame} interface; if \code{NULL}, the first two columns of the data.frame are 
               assumed to be the index variables; if not \code{NULL}, both dimensions ('individual', 'time') need to be 
               specified by \code{index} as character of length 2 for data frames, for further details see \code{\link{pdata.frame}},}
@@ -44,12 +44,13 @@ based on the index variables. The returned data are sorted as a stacked time ser
  
   \item \code{balance.type = "shared.times"}:
          The intersect of available time periods over all individuals is taken (w/o \code{NA} values). 
-         Thus, time periods not available for all individuals are discarded (only time periods shared among
-         all individuals are left in the result).
+         Thus, time periods not available for all individuals are discarded, i. e., only time periods 
+         shared by all individuals are left in the result).
  
- \item \code{balance.type = "keep.times"}:
+ \item \code{balance.type = "shared.individuals"}:
          All available time periods are kept and those individuals are dropped for which not all time
-         periods are available.
+         periods are available, i. e., only individuals shared by all time periods are left in the 
+         result (symmetric to \code{"shared.times"}).
  }
  
  The data are not necessarily made consecutive (regularly time series with distance 1), because balancedness does not imply
