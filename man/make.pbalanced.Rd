@@ -6,7 +6,8 @@
 
 \title{Make data balanced}
 
-\description{This function makes the data balanced, i.e. each individual has the same time periods}
+\description{This function makes the data balanced, i.e. each individual has the same time periods,
+by filling in or dropping observations}
 
 \usage{
 \method{make.pbalanced}{pdata.frame}(x, 
@@ -53,11 +54,11 @@ based on the index variables. The returned data are sorted as a stacked time ser
          result (symmetric to \code{"shared.times"}).
  }
  
- The data are not necessarily made consecutive (regularly time series with distance 1), because balancedness does not imply
+ The data are not necessarily made consecutive (regular time series with distance 1), because balancedness does not imply
  consecutiveness. For making the data consecutive, use \code{\link{make.pconsecutive}} (and, optionally, set argument 
  \code{balanced = TRUE} to make consecutive and balanced, see also \bold{Examples} for a comparison of the two functions.
  
- Note: rows of (p)data.frames (elements for pseries) with \code{NA} values in individual or time index are not examined but
+ Note: Rows of (p)data.frames (elements for pseries) with \code{NA} values in individual or time index are not examined but
  silently dropped before the data are made balanced. In this case, it cannot be inferred which individual or time period is 
  meant by the missing value(s) (see also \bold{Examples}). Especially, this means: \code{NA} values in the first/last position 
  of the original time periods for an individual are dropped, which are usually meant to depict the beginning and ending of 
@@ -73,7 +74,7 @@ based on the index variables. The returned data are sorted as a stacked time ser
  \code{\link{punbalancedness}} for two measures of unbalancedness,
  \code{\link{pdim}} to check the dimensions of a 'pdata.frame' (and other objects), 
  \code{\link{pvar}} to check for individual and time variation of a 'pdata.frame' (and other objects),
- \code{\link[plm]{lag}} for lagged (and leading) values of a 'pseries' object.\cr
+ \code{\link[plm]{lag}} for lagging (and leading) values of a 'pseries' object.\cr
  \code{\link{pseries}}, \code{\link{data.frame}}, \code{\link{pdata.frame}}.
 }
 

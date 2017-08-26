@@ -114,3 +114,19 @@ g_fe_lm <- lm(inv ~ factor(firm) + value + capital, data = Grunfeld)
   
   
   
+  g_re <- plm(inv ~ value, model = "random", data = Grunfeld)
+  g_re <- plm(inv ~ value + capital, model = "random", data = Grunfeld)
+  X <- model.matrix(g_re)
+  y <- pmodel.response(g_re)
+  df <- as.data.frame(cbind(y, X[,-1]))
+  lm.mod <- lm(y ~ X - 1)
+  lm.mod2 <- lm(df)
+  all.equal(lm.mod$residuals,  g_re$residuals)
+  all.equal(lm.mod2$residuals, g_re$residuals)
+
+  lmtest::bgtest(lm.mod)
+  lmtest::bgtest(lm.mod2)
+  pbgtest(g_re, order = 1)
+  
+  
+  

@@ -341,8 +341,8 @@ summary.pht <- function(object,...){
   p <- 2*pnorm(abs(z),lower.tail=FALSE)
   object$coefficients <- cbind("Estimate"   = b,
                                "Std. Error" = std.err,
-                               "t-value"    = z,
-                               "Pr(>|t|)"   = p)
+                               "t-value"    = z,  ## TODO "t-value" but standard normal distribution used - which one is correct?
+                               "Pr(>|t|)"   = p)  ## TODO "t" ?
   class(object) <- c("summary.pht", "pht", "plm", "panelmodel")
   object
 }
