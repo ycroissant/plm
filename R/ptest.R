@@ -232,14 +232,14 @@ plmtest.plm <- function(x,
   
   ### calc of parts of test statistic ##
   # calc. is done w/o using matrix calculation, see e.g. Baltagi/Li (1990), p. 106
-  A1 <- as.numeric(crossprod(tapply(res,id,sum))/sum(res^2) - 1)   # == A1 <- sum(tapply(res,id,sum)^2)/sum(res^2) - 1
-  A2 <- as.numeric(crossprod(tapply(res,time,sum))/sum(res^2) - 1) # == A2 <- sum(tapply(res,time,sum)^2)/sum(res^2) - 1
+  A1 <- as.numeric(crossprod(tapply(res, id, sum)) / sum(res ^ 2) - 1)   # == A1 <- sum(tapply(res,id,sum)^2)/sum(res^2) - 1
+  A2 <- as.numeric(crossprod(tapply(res, time, sum)) / sum(res ^ 2) - 1) # == A2 <- sum(tapply(res,time,sum)^2)/sum(res^2) - 1
   
-  M11 <- sum(T_i^2)
-  M22 <- sum(N_t^2)
+  M11 <- sum(T_i ^ 2)
+  M22 <- sum(N_t ^ 2)
   
-  LM1 <- N_obs * (1/sqrt(2*(M11 - N_obs))) * A1 # == sqrt( (((N_obs)^2) / 2) * ( A1^2 / (M11 - N_obs)) ) [except sign due to positive sqrt]
-  LM2 <- N_obs * (1/sqrt(2*(M22 - N_obs))) * A2 # == sqrt( (((N_obs)^2) / 2) * ( A2^2 / (M22 - N_obs)) ) [except sign due to positive sqrt]
+  LM1 <- N_obs * (1 / sqrt(2 * (M11 - N_obs))) * A1 # == sqrt( (((N_obs)^2) / 2) * ( A1^2 / (M11 - N_obs)) ) [except sign due to positive sqrt]
+  LM2 <- N_obs * (1 / sqrt(2 * (M22 - N_obs))) * A2 # == sqrt( (((N_obs)^2) / 2) * ( A2^2 / (M22 - N_obs)) ) [except sign due to positive sqrt]
   ### END calc of parts of test statistic ##
   
   
@@ -248,10 +248,10 @@ plmtest.plm <- function(x,
     if (!type %in% c("honda", "bp", "kw"))
       stop("type must be one of \"honda\", \"bp\" or \"kw\" for a one way model") # kw oneway coincides with honda
     
-    ifelse(effect == "individual", stat <- LM1, stat <- LM2)
+    stat <- ifelse(effect == "individual", LM1, LM2)
     stat <- switch(type,
                      honda = c(normal = stat),
-                     bp    = c(chisq  = stat^2),
+                     bp    = c(chisq  = stat ^ 2),
                      kw    = c(normal = stat))
     
     parameter <- switch(type,
@@ -267,10 +267,11 @@ plmtest.plm <- function(x,
   }
   else { # twoways
     stat <- switch(type,
-                    honda = c(normal = (LM1+LM2)/sqrt(2)),
-                    bp    = c(chisq = LM1^2+LM2^2),
-                    kw    = c(normal = (sqrt(M11-N_obs)/sqrt(M11+M22-2*N_obs))*LM1+(sqrt(M22-N_obs)/sqrt(M11+M22-2*N_obs))*LM2),
-                    ghm   = c(chibarsq = max(0,LM1)^2+max(0,LM2)^2))
+                   honda = c(normal = (LM1 + LM2) / sqrt(2)),
+                   bp    = c(chisq = LM1 ^ 2 + LM2 ^ 2),
+                   kw    = c(normal = (sqrt(M11 - N_obs) / sqrt(M11 + M22 - 2 * N_obs)) * LM1 +
+                                 (sqrt(M22 - N_obs) / sqrt(M11 + M22 - 2 * N_obs)) * LM2),
+                   ghm   = c(chibarsq = max(0, LM1) ^ 2 + max(0, LM2) ^ 2))
     
     parameter <- switch(type,
                           honda = NULL,

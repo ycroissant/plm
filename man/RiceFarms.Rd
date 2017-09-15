@@ -1,7 +1,7 @@
 \name{RiceFarms}
 \docType{data}
 \alias{RiceFarms}
-\title{Production of Rice in India }
+\title{Production of Rice in Indonesia }
 \description{
   a panel of 171 observations
 

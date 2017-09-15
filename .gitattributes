@@ -64,6 +64,7 @@ man/SumHes.Rd -text
 man/Wages.Rd -text
 man/aneweytest.Rd -text
 man/cipstest.Rd -text
+man/cortab.Rd -text
 man/detect_lin_dep_alias.Rd -text
 man/dynformula.Rd -text
 man/ercomp.Rd -text

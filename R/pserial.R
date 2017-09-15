@@ -510,11 +510,11 @@ pbltest.formula <- function(x, data, alternative = c("twosided", "onesided"), in
 
 
   ## reduce X to model matrix value (no NAs)
-  X <- model.matrix(x,data=data)
+    X <- model.matrix(x,data=data)
   ## reduce data accordingly
-  data <- data[which(row.names(data)%in%row.names(X)),]
-
-  data <- pdata.frame(data,index=index)
+    data <- data[which(row.names(data)%in%row.names(X)),]
+    if (! "pdata.frame" %in% class(data))
+        data <- pdata.frame(data,index=index)
 
   ## need name of individual index
   gindex <- dimnames(attr(data, "index"))[[2]][1]

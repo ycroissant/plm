@@ -316,3 +316,89 @@ preshape <- function(x, na.rm=TRUE, ...) {
     return(mres)
 }
 
+
+cortab <- function(x, grouping, groupnames = NULL,
+                   value = "statistic", ...) {
+    ## makes table of within and between correlation
+    ## needs a pseries and a groupings vector of **same length**
+
+    ## would use a better naming, and also passing a char or factor as
+    ## grouping index
+
+    ## x must be a pseries
+    if(!("pseries" %in% class(x))) stop("First argument must be a pseries")
+    if(length(x) != length(grouping)) stop("Incompatible lengths")
+
+    fullind <- as.numeric(attr(x, "index")[,1])
+    ids <- unique(fullind)
+    n <- length(ids)
+    regs <- 1:length(unique(grouping))
+
+    if(!(is.numeric(grouping))) grouping<-as.numeric(as.factor(grouping))
+    
+    idnames <- as.character(ids)  #
+    if(is.null(groupnames)) {
+        groupnames <- as.character(unique(grouping))
+    }
+
+    ## make matrices of between-regions correlations
+    ## (includes within correlation on diagonal)
+    ## for each pair of regions (nb: no duplicates, e.g. 3.1 but not 1.3)
+
+    ## make w<1.n>:
+    for(h in 1:length(regs)) {
+      for(k in 1:h) {
+        statew <- matrix(0, ncol=n, nrow=n)
+        ## make statew for cor. between h and k
+        for(i in 1:n) {
+          ## get first region (all values equal, so take first one)
+          ireg <- grouping[fullind==ids[i]][1]
+          if(ireg==h) {
+            for(j in 1:n) {
+                jreg <- grouping[fullind==ids[j]][1]
+                if(jreg==k) statew[i,j] <- 1
+            }
+          }
+        }
+        if(h!=k) statew<-statew+t(statew)
+        ## just for debugging reasons:
+        dimnames(statew) <- list(idnames, idnames)
+        ## eliminate self.correlation of states if i=j
+        diag(statew) <- 0
+        ## not needed: pcdtest seems to do this by construction
+        eval(parse(text=paste("w", h, ".", k, " <- statew", sep="")))
+      }
+     }
+
+     ## notice: without the line
+     ## '' if(i!=j) statew<-statew+t(statew) ''
+     ## all wn.n matrices would have values only on one half (upper
+     ## or lower triangle)
+
+     ## make generic table of regions' within and between correlation
+     ## argument: a pseries
+    #YC regnames is undefined, so is myw
+    tab.g <- function(x, regs, regnames, test="rho", value) {
+        myw <- 0
+         tabg <- matrix(NA, ncol=length(regs), nrow=length(regs))
+         for(i in 1:length(regs)) {
+             for(j in 1:i) {
+                 ## take appropriate w matrix
+                 eval(parse(text=paste("myw<-w", i, ".", j, sep="")))
+                 tabg[i,j] <- pcdtest(x, test="rho", w=myw)[[value]]
+             }
+         }
+         dimnames(tabg) <- list(groupnames, groupnames)
+         return(tabg)
+    }
+    regnames <- ""
+    mytab <- tab.g(x, regs=regs, regnames=regnames, test="rho", value=value)
+    return(mytab)
+}
+
+
+## make toy example
+#dati <- data.frame(ind=rep(1:7, 4), time=rep(1:4, each=7), x=rnorm(28),
+#                   group=rep(c(1,1,2,2,2,3,3), 4))
+#pdati <- pdata.frame(dati)
+

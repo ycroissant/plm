@@ -5,7 +5,8 @@ random.method.list <- c(swar    = "Swamy-Arora",
 
 effect.plm.list <- c(individual = "Oneway (individual) effect",
                      time       = "Oneway (time) effect",
-                     twoways    = "Twoways effects")
+                     twoways    = "Twoways effects",
+                     nested     = "Nested effects")
 
 effect.pvcm.list <- c(individual  = "Oneway (individual) effect",
                       time        = "Oneway (time) effect")

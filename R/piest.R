@@ -27,6 +27,7 @@ aneweytest <-  function(formula, data, subset, na.action, index = NULL,  ...){
   ht[[1]] <- as.name("plm")
   ht$model <- "within"
   ht$effect <- "twoways"
+  ht$effect <- "individual"
   ht <- eval(ht, parent.frame())
   .resid <- split(resid(ht), time)
   
@@ -201,9 +202,10 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
                  Omega = Omega,
                  moments = resb,
                  call = cl),
-                class = c("piest", "panelmodel"))
+            class = c("piest", "panelmodel"))
 }
 
+print.piest <- function(x, ...) print(x$pitest)   
 
 summary.piest <- function(object,...){
 #  object$fstatistic <- Ftest(object, test = "F")

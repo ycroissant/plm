@@ -1,10 +1,12 @@
 export(plm, pvcm, pgmm, pggls, pht, pcce, pmg, plmtest, phtest, pFtest, 
-       detect_lin_dep, is.pconsecutive, is.pbalanced, make.pconsecutive, make.pbalanced, within_intercept,
+       detect_lin_dep, is.pconsecutive, is.pbalanced, make.pconsecutive,
+       make.pbalanced, within_intercept,
        pvar, pdim, pooltest, dynformula, sargan, mtest, ercomp, pvcovHC,
        pbsytest, pdwtest, pbgtest, pbltest, pwartest, pwtest, pwfdtest, pcdtest,
        plm.data, pdata.frame, between, Between, Within, lag, lead, pFormula, pmodel.response,
        punbalancedness, purtest, cipstest, vcovBK, vcovSCC, r.squared, has.intercept, 
-       index, fixef, ranef, vcovHC, vcovDC, vcovNW, vcovG, piest, aneweytest, pwaldtest, pldv)
+       index, fixef, ranef, vcovHC, vcovDC, vcovNW, vcovG, piest, aneweytest, pwaldtest,
+       pldv, cortab)
 
 
 
@@ -130,6 +132,7 @@ S3method("residuals", "pmg")
 S3method("summary", "pht")
 S3method("print", "summary.pht")
 # piest
+S3method("print", "piest")
 S3method("summary", "piest")
 S3method("print", "summary.piest")
 # fixef
