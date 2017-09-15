@@ -1,5 +1,5 @@
-  * pbltest now accept pdata.frame objects
-  * cortab included as a function in plm
+  * pbltest now accepts pdata.frames with index not in first two columns
+  * cortab: new function to compute cross-sectional correlation matrix
 
 
 

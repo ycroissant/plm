@@ -26,8 +26,8 @@ aneweytest <-  function(formula, data, subset, na.action, index = NULL,  ...){
   ht <- ht[c(1,m)]
   ht[[1]] <- as.name("plm")
   ht$model <- "within"
-  ht$effect <- "twoways"
-  ht$effect <- "individual"
+  ht$effect <- "twoways"       ## TODO: ht$effect is overwritten in next line...?!
+  ht$effect <- "individual"    ## TODO
   ht <- eval(ht, parent.frame())
   .resid <- split(resid(ht), time)
   

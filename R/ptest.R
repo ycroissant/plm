@@ -373,13 +373,13 @@ pFtest.plm <- function(x, z, ...){
   ssrw <- sum(residuals(within)^2)
   stat <- (ssrp-ssrw)/ssrw/df1*df2
   names(stat) <- "F"
-  parameter <- c(df1,df2)
-  names(parameter) <- c("df1","df2")
-  pval <- pf(stat,df1,df2,lower.tail=FALSE)
+  parameter <- c(df1, df2)
+  names(parameter) <- c("df1", "df2")
+  pval <- pf(stat, df1, df2, lower.tail = FALSE)
   alternative <- "significant effects"
   res <- list(statistic   = stat,
               p.value     = pval,
-              method      = paste("F test for ",effect," effects",sep=""),
+              method      = paste("F test for ", effect, " effects",sep=""),
               parameter   = parameter,
               data.name   = data.name(x),
               alternative = alternative)
@@ -563,7 +563,7 @@ pooltest.plm <- function(x, z, ...){
   df1 <- dlr-dlu
   df2 <- dlu
   stat <- (rss-uss)/uss*df2/df1
-  pval <- pf(stat,df1,df2,lower.tail=FALSE)
+  pval <- pf(stat, df1, df2, lower.tail = FALSE)
   parameter <- c(df1 = df1, df2 = df2)
   names(stat) <- "F"
   res <- list(statistic   = stat,

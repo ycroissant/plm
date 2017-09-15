@@ -326,7 +326,7 @@ cortab <- function(x, grouping, groupnames = NULL,
     ## grouping index
 
     ## x must be a pseries
-    if(!("pseries" %in% class(x))) stop("First argument must be a pseries")
+    if(!inherits(x, "pseries")) stop("First argument must be a pseries")
     if(length(x) != length(grouping)) stop("Incompatible lengths")
 
     fullind <- as.numeric(attr(x, "index")[,1])
@@ -334,9 +334,9 @@ cortab <- function(x, grouping, groupnames = NULL,
     n <- length(ids)
     regs <- 1:length(unique(grouping))
 
-    if(!(is.numeric(grouping))) grouping<-as.numeric(as.factor(grouping))
+    if(!(is.numeric(grouping))) grouping <- as.numeric(as.factor(grouping))
     
-    idnames <- as.character(ids)  #
+    idnames <- as.character(ids)
     if(is.null(groupnames)) {
         groupnames <- as.character(unique(grouping))
     }
@@ -360,7 +360,7 @@ cortab <- function(x, grouping, groupnames = NULL,
             }
           }
         }
-        if(h!=k) statew<-statew+t(statew)
+        if(h!=k) statew <- statew + t(statew)
         ## just for debugging reasons:
         dimnames(statew) <- list(idnames, idnames)
         ## eliminate self.correlation of states if i=j
@@ -371,7 +371,7 @@ cortab <- function(x, grouping, groupnames = NULL,
      }
 
      ## notice: without the line
-     ## '' if(i!=j) statew<-statew+t(statew) ''
+     ## '' if(i!=j) statew <- statew + t(statew) ''
      ## all wn.n matrices would have values only on one half (upper
      ## or lower triangle)
 

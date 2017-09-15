@@ -17,9 +17,9 @@
 ## cross-section dependence, Journal of Applied Econometrics, 22(2), pp. 265-312
 
 cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
-                  model = c("cmg", "mg", "dmg"), truncated = FALSE, ...) {
+                      model = c("cmg", "mg", "dmg"), truncated = FALSE, ...) {
 
-  ## type=c("trend","drift","none") corresponds to Case III, II, I 
+  ## type = c("trend", "drift", "none") corresponds to Case III, II, I 
   ## in Pesaran (2007), respectively.
 
   ## input checks
@@ -31,10 +31,10 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
   dati <- pmerge(diff(x), lag(x))
   dati <- pmerge(dati, diff(lag(x)))
   ## minimal column names
-  clnames <- c("de","le","d1e")
+  clnames <- c("de", "le", "d1e")
   dimnames(dati)[[2]][3:5] <- clnames
-  ## add lags if lags>1
-  if(lags>1) {
+  ## add lags if lags > 1
+  if(lags > 1) {
       for(i in 2:lags) {
           dati <- pmerge(dati, diff(lag(x, i)))
           clnames <- c(clnames, paste("d", i, "e", sep=""))
@@ -49,13 +49,13 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
                           none={"-1"})
 
   ## make formula
-  adffm <-as.formula(paste("de~le+",
-                           paste(clnames[3:(lags+2)], collapse="+"),
-                           deterministic, sep=""))
+  adffm <- as.formula(paste("de~le+",
+                            paste(clnames[3:(lags+2)], collapse="+"),
+                            deterministic, sep=""))
 
   ## estimate preliminary pooling plm, to take care of all diffs
   ## and lags in a 'panel' way (would be lost in single TS regr.s)
-    pmod <- plm(adffm, data=dati, model="pooling")
+    pmod <- plm(adffm, data = dati, model = "pooling")
   ## this as in pmg()
     index <- attr(model.frame(pmod), "index")
     ## group index
@@ -78,7 +78,7 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
     k <- length(coef.names)
 
     ## CIPS test needs an ADF regression with k lags
-    ## so fm <- has to be like diff(e)~lag(e)+diff(lag(e)) etc..
+    ## so fm <- has to be like diff(e) ~ lag(e)+diff(lag(e)) etc.
 
     ## model data
     X <- model.matrix(pmod)
@@ -112,7 +112,7 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
           ## make datafr. subtracting intercept and add trend
           adfdati <- data.frame(cbind(y, X[,-1]))
           dimnames(adfdati)[[2]] <- c(clnames, "trend")
-          adffm <- update(adffm, .~.-as.numeric(tind)+trend)},
+          adffm <- update(adffm, . ~ . -as.numeric(tind) + trend)},
         drift={
           ## make df subtracting intercept
           adfdati <- data.frame(cbind(y, X[,-1]))
@@ -124,18 +124,18 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
         )
       
       ## for each x-sect. i=1..n
-      unind<-unique(ind)
+      unind <- unique(ind)
       for(i in 1:n) {
-        tdati <- adfdati[ind==unind[i],]
+        tdati <- adfdati[ind == unind[i], ]
         tmods[[i]] <- lm(adffm, tdati)
         }
       },
     
     dmg={
       ## between-periods transformation (take means over group for each t)
-      be<-function(x,index,na.rm=TRUE) tapply(x,index,mean,na.rm=na.rm)
-      Xm<-apply(X,2,FUN=be,index=tind)[tind,]
-      ym<-apply(as.matrix(as.numeric(y)),2,FUN=be,index=tind)[tind]
+      be <- function(x,index,na.rm=TRUE) tapply(x,index,mean,na.rm=na.rm)
+      Xm <- apply(X,2,FUN=be,index=tind)[tind,]
+      ym <- apply(as.matrix(as.numeric(y)),2,FUN=be,index=tind)[tind]
       ## we do not care about demeaning the intercept or not as it is
       ## eliminated anyway
 
@@ -149,7 +149,7 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
           ## make datafr. subtracting intercept and add trend
           adfdati <- data.frame(cbind(demy, demX[,-1]))
           dimnames(adfdati)[[2]] <- c(clnames, "trend")
-          adffm <- update(adffm, .~.-as.numeric(tind)+trend)},
+          adffm <- update(adffm, . ~ . -as.numeric(tind) + trend)},
         drift={
           ## make df subtracting intercept
           adfdati <- data.frame(cbind(demy, demX[,-1]))
@@ -161,9 +161,9 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
 
       ## for each x-sect. i=1..n estimate (over t) a demeaned model
       ## (y_it-my_t) = alfa_i + beta_i*(X_it-mX_t) + err_it
-      unind<-unique(ind)
+      unind <- unique(ind)
       for(i in 1:n) {
-        tdati <- adfdati[ind==unind[i],]
+        tdati <- adfdati[ind == unind[i], ]
         tmods[[i]] <- lm(adffm, tdati)
         }
     },
@@ -174,16 +174,16 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
                                drift={""},
                                none={"-1"})
       ## adjust formula
-      adffm <-as.formula(paste("de~le+",
-                         paste(clnames[3:(lags+2)], collapse="+"),
-                         "+", paste(paste(clnames, "bar", sep="."),
-                               collapse="+"),
-                         deterministic2, sep=""))
+      adffm <- as.formula(paste("de~le+",
+                           paste(clnames[3:(lags+2)], collapse = "+"),
+                           "+", paste(paste(clnames, "bar", sep = "."),
+                           collapse = "+"),
+                          deterministic2, sep = ""))
 
       ## between-periods transformation (take means over groups for each t)
-      be<-function(x,index,na.rm=TRUE) tapply(x,index,mean,na.rm=na.rm)
-      Xm<-apply(X,2,FUN=be,index=tind)[tind,]
-      ym<-apply(as.matrix(as.numeric(y)),2,FUN=be,index=tind)[tind]
+      be <- function(x,index,na.rm=TRUE) tapply(x,index,mean,na.rm=na.rm)
+      Xm <- apply(X,2,FUN=be,index=tind)[tind,]
+      ym <- apply(as.matrix(as.numeric(y)),2,FUN=be,index=tind)[tind]
 
       ## final data as dataframe, to be subsetted for single TS models
       ## (purge intercepts etc., if 'trend' fix this variable's name)
@@ -196,16 +196,16 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
           adfdati <- adfdati[,-(dim(adfdati)[[2]])]
           dimnames(adfdati)[[2]] <- c(clnames, "trend",
                                       paste(clnames, "bar", sep="."))
-          adffm <- update(adffm, .~.-as.numeric(tind)+trend)},
+          adffm <- update(adffm, . ~ . -as.numeric(tind) + trend)},
         
         drift={
-          augX<-cbind(X[,-1], ym, Xm[,-1])
+          augX <- cbind(X[,-1], ym, Xm[,-1])
           adfdati <- data.frame(cbind(y, augX))
           dimnames(adfdati)[[2]] <- c(clnames,
                                       paste(clnames, "bar", sep="."))},
         none={
           ## no intercepts here
-          augX<-cbind(X,ym,Xm)
+          augX <- cbind(X,ym,Xm)
           adfdati <- data.frame(cbind(y, augX))
           dimnames(adfdati)[[2]] <- c(clnames,
                                       paste(clnames, "bar", sep="."))
@@ -215,8 +215,8 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
       ## y_it = alfa_i + beta_i*X_it + c1_i*my_t + c2_i*mX_t + err_it
       unind<-unique(ind)
       for(i in 1:n) {
-        tdati <- adfdati[ind==unind[i],]
-        tmods[[i]]<-lm(adffm, tdati)
+        tdati <- adfdati[ind == unind[i], ]
+        tmods[[i]] <- lm(adffm, tdati)
         }
   })
 
@@ -240,9 +240,9 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
                           none  = {c(-6.42, 1.70)}) ## TODO?
       ## formulae (34) in Pesaran (2007):
       ## truncate at lower bound 
-      tstats <- ifelse(tstats>trbounds[1], tstats, trbounds[1])
+      tstats <- ifelse(tstats > trbounds[1], tstats, trbounds[1])
       ## truncate at upper bound
-      tstats <- ifelse(tstats<trbounds[2], tstats, trbounds[2])
+      tstats <- ifelse(tstats < trbounds[2], tstats, trbounds[2])
   }
 
   ## here allow for '...' to pass 'na.rm=TRUE' in case (but see what happens
@@ -252,10 +252,10 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
 
   ## if pval out of critical values' then set at boundary and issue
   ## a warning
-  if(pval=="> 0.10") {
+  if(pval == "> 0.10") {
       pval <- 0.10
       warning("p-value greater than printed p-value")
-  } else if(pval=="< 0.01") {
+  } else if(pval == "< 0.01") {
       pval <- 0.01
       warning("p-value smaller than printed p-value")
   }
@@ -281,7 +281,7 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
 critvals <- function(stat, n, T., type=c("trend", "drift", "none"),
                      truncated = FALSE) {
     ## auxiliary function for cipstest()
-    ## extracts --or calculates by interpolation-- p.values for the
+    ## extracts --or calculates by interpolation-- p-values for the
     ## (averaged) CIPS statistic depending on whether n and T,
     ## given the critical values of average of individual cross-sectionally
     ## augmented Dickey-Fuller distribution
@@ -508,10 +508,10 @@ cvprox <- approx(cv, c(0.01,0.05,0.1), n=200)
 cvseq <- cvprox$x
 pvseq <- cvprox$y
 
-if(stat<min(cv)) {
+if(stat < min(cv)) {
     pval <- "< 0.01"
 } else {
-    if(stat>max(cv)) {
+    if(stat > max(cv)) {
         pval <- "> 0.10"
         } else {
             if(stat %in% cv) {
