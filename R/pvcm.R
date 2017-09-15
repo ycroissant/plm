@@ -232,8 +232,8 @@ pvcm.random <- function(formula, data, effect){
     Delta <- D1 - D2
   }
   else{
-#    print(eigen(D1-D2)$values)      ## TODO
-#    cat("attention\n")              ## TODO: likely unwanted debug output?
+#    print(eigen(D1-D2)$values)
+#    cat("attention\n")
     Delta <- D1
   }
   # compute the Omega matrix for each individual

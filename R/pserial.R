@@ -510,21 +510,21 @@ pbltest.formula <- function(x, data, alternative = c("twosided", "onesided"), in
 
 
   ## reduce X to model matrix value (no NAs)
-    X <- model.matrix(x,data=data)
+    X <- model.matrix(x, data = data)
   ## reduce data accordingly
     data <- data[which(row.names(data)%in%row.names(X)),]
-    if (! "pdata.frame" %in% class(data))
-        data <- pdata.frame(data,index=index)
+    if (! inherits(data, "pdata.frame"))
+        data <- pdata.frame(data, index = index)
 
   ## need name of individual index
   gindex <- dimnames(attr(data, "index"))[[2]][1]
 
  ## make random effects formula
   rformula <- NULL
-  eval(parse(text=paste("rformula <- ~1|",gindex,sep="")))
+  eval(parse(text = paste("rformula <- ~1|", gindex, sep = "")))
 
   ## est. MLE model
-  mymod <- lme(x,data=data,random=rformula,method="ML")
+  mymod <- lme(x, data = data, random = rformula, method = "ML")
 
   nt. <- mymod$dims$N
   n. <- as.numeric(mymod$dims$ngrps[1])
@@ -539,7 +539,7 @@ pbltest.formula <- function(x, data, alternative = c("twosided", "onesided"), in
     }
 
   ## retrieve composite (=lowest level) residuals
-  uhat <- residuals(mymod,level=0)
+  uhat <- residuals(mymod, level=0)
 
   ## sigma2.e and sigma2.1 as in BL
   ## break up residuals by group to get rid of Kronecker prod.
@@ -548,8 +548,8 @@ pbltest.formula <- function(x, data, alternative = c("twosided", "onesided"), in
   for(i in 1:n.) {
     uhat.i[[i]] <- uhat[t.*(i-1)+1:t.]
     }
-  s2e <- rep(NA,n.)
-  s21 <- rep(NA,n.)
+  s2e <- rep(NA, n.)
+  s21 <- rep(NA, n.)
   for(i in 1:n.) {
     u.i <- uhat.i[[i]]
     s2e[i] <- as.numeric(crossprod(u.i,Et) %*% u.i)
@@ -579,10 +579,10 @@ pbltest.formula <- function(x, data, alternative = c("twosided", "onesided"), in
   j.33 <- (n./2) * (1/sigma2.1^2 + (t.-1)/sigma2.e^2)
 
   ## build up information matrix
-  Jmat <- matrix(nrow=3,ncol=3)
-  Jmat[1,] <- c(j.rr,j.12,j.13)
-  Jmat[2,] <- c(j.12,j.22,j.23)
-  Jmat[3,] <- c(j.13,j.23,j.33)
+  Jmat <- matrix(nrow = 3, ncol = 3)
+  Jmat[1,] <- c(j.rr, j.12, j.13)
+  Jmat[2,] <- c(j.12, j.22, j.23)
+  Jmat[3,] <- c(j.13, j.23, j.33)
 
   J11 <- n.^2 * t.^2 * (t.-1) / (det(Jmat) * 4*sigma2.1^2 * sigma2.e^2)
   ## this is the same as J11 <- solve(Jmat)[1,1], see BL page 73
@@ -590,17 +590,17 @@ pbltest.formula <- function(x, data, alternative = c("twosided", "onesided"), in
   switch(match.arg(alternative),
          onesided = {
            LMr.m <- Drho * sqrt(J11)
-           pval <- pnorm(LMr.m,lower.tail=FALSE)
-           names(LMr.m) <- "z" #    names(LMr.m) <- "Z"
+           pval <- pnorm(LMr.m, lower.tail = FALSE)
+           names(LMr.m) <- "z"
            method1 <- "one-sided"
            method2 <- "H0: rho = 0, HA: rho > 0"
            parameter <- NULL
          },
          twosided = {
            LMr.m <- Drho^2 * J11
-           pval <- pchisq(LMr.m,1,lower.tail=FALSE)
+           pval <- pchisq(LMr.m, 1, lower.tail = FALSE)
            names(LMr.m) <- "chisq"
-           parameter <- c(df=1)
+           parameter <- c(df = 1)
            method1 <- "two-sided"
            method2 <- "H0: rho = 0, HA: rho != 0"
          }
