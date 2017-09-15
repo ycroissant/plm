@@ -792,8 +792,8 @@ sargan <- function(object, weights = c("twosteps", "onestep")){
   weights <- match.arg(weights)
   model <- describe(object, "model")
   transformation <- describe(object, "transformation")
-  if (model == "onestep") Ktot <- length(object$coefficient)
-  else Ktot <- length(object$coefficient[[2]])
+  if (model == "onestep") Ktot <- length(object$coefficients)
+  else Ktot <- length(object$coefficients[[2]])
   N <- length(residuals(object))
   z <- as.numeric(Reduce("+",
                          lapply(seq_len(N),
