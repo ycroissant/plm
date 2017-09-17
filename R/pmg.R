@@ -1,4 +1,4 @@
-#pmg<-function(formula,index,tindex=NULL,data=ls(),type=c("mg","cmg","dmg")) {
+#pmg <- function(formula,index,tindex=NULL,data=ls(),type=c("mg","cmg","dmg")) {
   ## Mean Group estimator
   ## ref. Coakley, Fuertes and Smith 2004
   ##
@@ -29,8 +29,8 @@
 #plm <- plm:::plm
 #pdim <- plm:::pdim
 
-#model.matrix.plm<-plm:::model.matrix.plm
-#pmodel.response<-plm:::pmodel.response.plm
+#model.matrix.plm <- plm:::model.matrix.plm
+#pmodel.response <- plm:::pmodel.response.plm
 
 
 pmg <- function(formula, data, subset, na.action,
@@ -110,7 +110,7 @@ pmg <- function(formula, data, subset, na.action,
         ty <- y[ind == unind[i]]
         if(trend) tX <- cbind(tX, 1:(dim(tX)[[1]]))
         tfit <- lm.fit(tX, ty)
-        tcoef[ ,i] <- tfit$coefficients
+        tcoef[ , i] <- tfit$coefficients
         tres[[i]] <- tfit$residuals
       }
       ## 'trend' always comes last
@@ -238,7 +238,7 @@ summary.pmg <- function(object,...){
   z <- b/std.err
   p <- 2*pnorm(abs(z), lower.tail = FALSE)
   CoefTable <- cbind(b, std.err, z, p)
-  colnames(CoefTable) <- c("Estimate","Std. Error","z-value","Pr(>|z|)")
+  colnames(CoefTable) <- c("Estimate", "Std. Error", "z-value", "Pr(>|z|)")
   object$CoefTable <- CoefTable
   y <- object$model[[1]]
   object$tss <- tss(y)
@@ -249,8 +249,8 @@ summary.pmg <- function(object,...){
 }
 
 print.summary.pmg <- function(x, digits = max(3, getOption("digits") - 2), width = getOption("width"),...){
-  pmodel <- attr(x,"pmodel")
-  pdim <- attr(x,"pdim")
+  pmodel <- attr(x, "pmodel")
+  pdim <- attr(x, "pdim")
   effect <- pmodel$effect
   formula <- pmodel$formula
   model.name <- pmodel$model.name
@@ -274,5 +274,3 @@ print.summary.pmg <- function(x, digits = max(3, getOption("digits") - 2), width
 residuals.pmg <- function(object, ...) {
     return(pres(object))
 }
-
-

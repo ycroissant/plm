@@ -19,7 +19,7 @@ dynformula(formula, lag.form = NULL, diff.form = NULL, log.form = NULL)
   \item{log.form}{a vector (or a list) of logical values indicating whether variables should be in logarithms.}  }
 
 \value{
-  An object of class \code{c("dynformula","formula")}, which is a
+  An object of class \code{c("dynformula", "formula")}, which is a
   formula with four additional attributes: \code{var}, the names of the variables in the formula, \code{lag}, \code{diff}, and \code{log}, which store the information about lags, differences and logs, respectively.
 
   A \code{formula} method coerces the \code{dynformula} object to a standard \code{formula}.

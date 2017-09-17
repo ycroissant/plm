@@ -33,7 +33,7 @@ twoways, depending on the effects introduced in the within model.
 }
 
 \seealso{
-\code{\link{plmtest}} for Lagrange multipliers tests of individuals and/or time effects.
+\code{\link{plmtest}} for Lagrange multiplier tests of individuals and/or time effects.
 }
 
 \author{Yves Croissant}

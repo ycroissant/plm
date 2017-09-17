@@ -1,7 +1,6 @@
 trace <- function(x) sum(diag(x))
 
 is.constant <- function(x) (max(x) - min(x)) < sqrt(.Machine$double.eps)
-        
 
 ### ercomp(formula, data, random.method, effect)
 
@@ -563,7 +562,7 @@ print.ercomp <- function(x, digits = max(3, getOption("digits") - 3), ...){
     if (! is.null(x$theta)){
         if (effect %in% c("individual", "time")){
             if (balanced){
-                cat(paste("theta: ",signif(x$theta,digits),"\n", sep = ""))
+                cat(paste("theta: ", signif(x$theta,digits), "\n", sep = ""))
             }
             else{
                 cat("theta:\n")
@@ -572,8 +571,9 @@ print.ercomp <- function(x, digits = max(3, getOption("digits") - 3), ...){
         }
         if (effect == "twoways"){
             if(balanced){
-                cat(paste("theta: ", signif(x$theta$id,digits), " (id) ", signif(x$theta$time,digits), " (time) ",
-                          signif(x$theta$total,digits), " (total)\n", sep = ""))
+                cat(paste("theta: ", signif(x$theta$id,digits), " (id) ",
+                                     signif(x$theta$time,digits), " (time) ",
+                                     signif(x$theta$total,digits), " (total)\n", sep = ""))
             } else {
               cat("theta:\n")
               print(rbind(id = summary(x$theta$id),

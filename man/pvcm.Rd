@@ -34,20 +34,20 @@ pvcm(formula, data, subset, na.action, effect = c("individual","time"),
 
 \details{
 \code{pvcm} estimates variable coefficients models. Time or individual effects are introduced, 
-respectively, if \code{effect="time"} or \code{effect="individual"} (the default value). 
+respectively, if \code{effect = "time"} or \code{effect = "individual"} (the default value). 
   
-Coefficients are assumed to be fixed if \code{model="within"} and
-random if \code{model="random"}. In the first case, a different
+Coefficients are assumed to be fixed if \code{model = "within"} and
+random if \code{model = "random"}. In the first case, a different
 model is estimated for each individual (or time period). In the second case, the Swamy (1970) model 
-is estimated. It is a generalized least squares model which uses the results of the previous model.  
+is estimated. It is a generalized least squares model which uses the results of the previous model.
 }
 
 \value{
-An object of class \code{c("pvcm","panelmodel")}, which has the following elements:
+An object of class \code{c("pvcm", "panelmodel")}, which has the following elements:
 
   \item{coefficients}{the vector (or the list for fixed effects) of coefficients,}
   \item{residuals}{the vector of residuals,}
-  \item{fitted.values}{the vector of fitted.values,}
+  \item{fitted.values}{the vector of fitted values,}
   \item{vcov}{the covariance matrix of the coefficients,}
   \item{df.residual}{degrees of freedom of the residuals,}
   \item{model}{a \code{data.frame} containing the variables used for the estimation,}

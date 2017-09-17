@@ -32,7 +32,7 @@ ercomp(object, \dots)
   \item{dfcor}{a numeric vector of length 2 indicating which degree of
   freedom should be used,}
   \item{index}{the indexes,}
-  \item{x}{a \code{ercomp} object,}
+  \item{x}{an \code{ercomp} object,}
   \item{digits}{digits,}
   \item{\dots}{further arguments.}
 }
