@@ -37,13 +37,13 @@ pggls(formula, data, subset, na.action, effect = c("individual", "time"),
 An object of class \code{c("pggls","panelmodel")} containing:
  \item{coefficients}{the vector of coefficients,}
  \item{residuals}{the vector of residuals,}
- \item{fitted.values}{the vector of fitted.values,}
+ \item{fitted.values}{the vector of fitted values,}
  \item{vcov}{the covariance matrix of the coefficients,}
  \item{df.residual}{degrees of freedom of the residuals,}
  \item{model}{a data.frame containing the variables used for the
     estimation,}
  \item{call}{the call,}
- \item{sigma}{the estimated intragroup (or cross-sectional, if \code{effect="time"}) covariance of errors,}
+ \item{sigma}{the estimated intragroup (or cross-sectional, if \code{effect = "time"}) covariance of errors,}
 }
   
 \details{
@@ -51,32 +51,33 @@ An object of class \code{c("pggls","panelmodel")} containing:
 \code{pggls} is a function for the estimation of linear panel models
 by general feasible generalized least squares, either with or without
 fixed effects. General FGLS is based on a two-step estimation process:
-first a model is estimated by OLS (\code{pooling}), fixed effects
-(\code{within}) or first differences (\code{fd}), then its residuals are
-used to estimate an error covariance matrix for use in a feasible-GLS
-analysis.
+first a model is estimated by OLS (\code{model = "pooling"}), fixed effects
+(\code{model = "within"}) or first differences (\code{model = "fd"}), then
+its residuals are used to estimate an error covariance matrix for use in
+a feasible-GLS analysis.
 This framework allows the error covariance structure inside every group (if
-\code{effect="individual"}, else symmetric) of observations to be fully
+\code{effect = "individual"}, else symmetric) of observations to be fully
 unrestricted and is therefore robust against any type of intragroup
 heteroskedasticity and serial correlation. Conversely, this structure is
 assumed identical across groups and thus general FGLS estimation is
 inefficient under groupwise heteroskedasticity. Note also that this
 method requires estimation of \eqn{T(T+1)/2} variance parameters, thus
-efficiency requires N > > T (if \code{effect="individual"}, else the
-opposite). The \code{model="random"} and \code{model="pooling"}
-arguments both produce an unrestricted FGLS model as in Wooldridge,
+efficiency requires N >> T (if \code{effect = "individual"}, else the
+opposite).Setting \code{model = "random"} or \code{model = "pooling"},
+ both produce an unrestricted FGLS model as in Wooldridge,
 Ch. 10, although the former is deprecated and included only for
 retro--compatibility reasons.
-If \code{model="within"} (the default) then a FEGLS (fixed
-effects GLS, see ibid.) is estimated; if \code{model="fd"} a FDGLS
-(first-difference GLS).  }
+If \code{model = "within"} (the default) then a FEGLS (fixed
+effects GLS, see ibid.) is estimated; if \code{model = "fd"} a FDGLS
+(first-difference GLS).
+}
 
 \author{Giovanni Millo}
 
 \references{
 Kiefer, N. M. (1980) Estimation of Fixed Effects Models for Time Series
 of Cross-Sections with Arbitrary Intertemporal Covariance, \emph{Journal
-  of Econometrics}, \bold{14}(2), pp. 195--202. 
+ of Econometrics}, \bold{14}(2), pp. 195--202. 
 
 
 Im, K. S. and Ahn, S. C. and Schmidt, P. and Wooldridge, J. M. (1999)
@@ -90,7 +91,8 @@ Wooldridge, J. M. (2010) \emph{Econometric Analysis of Cross Section and Panel D
 
 \examples{
 data("Produc", package = "plm")
-zz_wi <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model = "within")
+zz_wi <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
+               data = Produc, model = "within")
 summary(zz_wi)
 
 zz_pool <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
@@ -100,8 +102,6 @@ summary(zz_pool)
 zz_fd <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
                data = Produc, model = "fd")
 summary(zz_fd)
-
-
 
 }
 

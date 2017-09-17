@@ -38,7 +38,7 @@ pmg(formula, data, subset, na.action,
 An object of class \code{c("pmg", "panelmodel")} containing:
  \item{coefficients}{the vector of coefficients,}
  \item{residuals}{the vector of residuals,}
- \item{fitted.values}{the vector of fitted.values,}
+ \item{fitted.values}{the vector of fitted values,}
  \item{vcov}{the covariance matrix of the coefficients,}
  \item{df.residual}{degrees of freedom of the residuals,}
  \item{model}{a data.frame containing the variables used for the
@@ -54,13 +54,13 @@ An object of class \code{c("pmg", "panelmodel")} containing:
 \details{
 \code{pmg} is a function for the estimation of linear panel models with
 heterogeneous coefficients by the Mean Groups
-estimator. \code{model="mg"} specifies the standard Mean Groups
+estimator. \code{model = "mg"} specifies the standard Mean Groups
 estimator, based on the average of individual time series
-regressions. If \code{model="dmg"} the data are demeaned
+regressions. If \code{model = "dmg"} the data are demeaned
 cross-sectionally, which is believed to reduce the influence of common
 factors (and is akin to what is done in homogeneous panels when
-\code{model="within"} and \code{effect="time"}). Lastly, if
-\code{model="cmg"} the CCEMG estimator is employed: this latter is
+\code{model = "within"} and \code{effect = "time"}). Lastly, if
+\code{model = "cmg"} the CCEMG estimator is employed: this latter is
 consistent under the hypothesis of unobserved common factors and
 idiosyncratic factor loadings; it works by augmenting the model by
 cross-sectional averages of the dependent variable and regressors in
