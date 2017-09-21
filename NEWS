@@ -1,3 +1,7 @@
+  * purtest: the Maddala-Wu test used to be computed using the normal
+    p-values, fixed now, using approximated p-values for the tau
+    distribution described by McKinnon (1994)
+  
   * pbltest: now accepts pdata.frames with index not in first two columns.
   * cortab: new function to compute cross-sectional correlation matrix.
 

@@ -1,3 +1,24 @@
+small <- matrix(c(0.6344, 1.2378, 3.2496,
+                  2.1659, 1.4412, 3.8269,
+                  3.2512, 1.6047, 4.9588),
+                nrow = 3, byrow = TRUE)
+small <- t(t(small) / c(1, 1, 100))
+large <- matrix(c(0.4797, 9.3557, -0.6999,  3.3066,
+                  1.7339, 9.3202, -1.2745, -1.0368,
+                  2.5261, 6.6154, -3.7956, -6.0285),
+                nrow = 3, byrow = TRUE)
+large <- t(t(large) / c(1, 10, 10, 100))
+limit <- c(-1.04, -1.61, -2.89)
+rownames(small) <- rownames(large) <- names(limit) <- c("none", "intercept", "trend")
+
+padf <- function(x, exo = c("none", "intercept", "trend")){
+    exo <- match.arg(exo)
+    psmall <- apply(small[exo, ] * rbind(1, x, x ^ 2), 2, sum)
+    plarge <- apply(large[exo, ] * rbind(1, x, x ^ 2, x ^ 3), 2, sum)
+    as.numeric(pnorm(psmall * (x <= limit[exo]) + plarge * (x > limit[exo])))
+}
+
+
 
 # x1: means without time trend from table 3 in IPS (2003)
 x1 <- c(
@@ -463,7 +484,9 @@ purtest <- function(object, data = NULL, index = NULL,
   if (test == "madwu"){
     trho <- sapply(idres, function(x) x[["trho"]])
     pvalue <- 2*pnorm(abs(trho), lower.tail = FALSE)
-    stat <- c(chisq = - 2*sum(log(pvalue)))
+    pvalue <- pnorm(trho)
+    pvalue <- padf(trho, exo = exo)
+    stat <- c(chisq = - 2 * sum(log(pvalue)))
     n <- length(trho)
     parameter <- c(df = 2 * n)
     pvalue <- pchisq(stat, df = parameter, lower.tail = FALSE)
@@ -525,4 +548,5 @@ print.summary.purtest <- function(x, ...){
   cat(paste("p-value:", round(x$statistic$p.value, 3), "\n"))
   print(x$sumidres, ...)
 }
+
 
