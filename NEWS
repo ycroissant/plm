@@ -1,6 +1,6 @@
   * purtest: the Maddala-Wu test used to be computed using the normal
     p-values, fixed now, using approximated p-values for the tau
-    distribution described by McKinnon (1994)
+    distribution described by MacKinnon (1994).
   
   * pbltest: now accepts pdata.frames with index not in first two columns.
   * cortab: new function to compute cross-sectional correlation matrix.
@@ -75,7 +75,7 @@ Changes in version 1.6-6
       * 'shared' renamed to 'shared.times' (with a back-compatible solution),
       * 'shared.individuals' added as additional option (symmetric case).
   * cosmetic: some print functions now have better aligned whitespacing.
-  * Dependencies: 'car' moved from 'Imports' to 'Suggests'.
+  * Dependencies: package 'car' moved from 'Imports' to 'Suggests'.
 
 
 Changes in version 1.6-5
