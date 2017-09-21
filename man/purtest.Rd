@@ -44,7 +44,7 @@ An object of class \code{'purtest'}: a list with the elements \code{'statistic'}
 All these tests except \code{"hadri"} are based on the estimation of augmented Dickey-Fuller (ADF) regressions for each time series.
 A statistic is then computed using the t-statistics associated with the lagged variable. The Hadri statistic is the cross-sectional 
 average of the individual KPSS statistics (Kwiatkowski/Phillips/Schmidt/Shin (1992)), standardized by their asymptotic mean and 
-standard deviation.
+standard deviation. The p-value for \code{"madwu"} is the approximated p-values for the tau distribution described by McKinnon (1994).
 
 The kind of test to be computed can be specified in several ways, depending on how the data is handed over to the function:
 \itemize{
@@ -70,6 +70,8 @@ Kwiatkowski D., Phillips P. C. B., Schmidt P. and Shin Y. (1992). ``Testing the 
 How sure are we that economic time series have a unit root?'', \emph{Journal of Econometrics}, \bold{54}(1--3), pp. 159--178.
 
 Levin A., Lin C.-F. and Chu C.-S.J. (2002). ``Unit Root Tests in Panel Data: Asymptotic and Finite-Sample Properties'', \emph{Journal of Econometrics}, \bold{108}(1), pp. 1--24.
+
+MacKinnon, J.G. (1994). ``Approximate Asymptotic Distribution Functions for Unit-Root and Cointegration Tests'', \emph{Journal of Business & Economic Statistics}, \bold{12}(2), pp. 167--176.
 
 Maddala G.S. and Wu S. (1999). ``A Comparative Study of Unit Root Tests with Panel Data and a New Simple Test'', \emph{Oxford Bulletin of Economics and Statistics}, \bold{61}, Supplement 1, pp. 631--652.
 }
