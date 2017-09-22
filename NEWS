@@ -1,5 +1,5 @@
-  * purtest: the Maddala-Wu test used to be computed using the normal
-    p-values, fixed now, using approximated p-values for the tau
+  * purtest: Maddala-Wu test's p-value used to be computed using the normal
+    distribution, fixed now, by using approximated p-values for the tau
     distribution described by MacKinnon (1994).
   
   * pbltest: now accepts pdata.frames with index not in first two columns.
@@ -12,7 +12,7 @@ Changes in version 1.6-6
   * ercomp: re-written to be a more general framework.
   * plm:
       * random effect models: some random methods extended to unbalanced 
-        two-way case (Nerlove's method only supports balanced one-way, two-way),
+        two-way case (Nerlove's method only supports balanced one-way, two-ways),
         thanks to the more general ercomp framework.
       * nested random effects models implemented (Baltagi/Song/Jung (2001)),
         use effect = "nested".
@@ -115,7 +115,7 @@ Changes in version 1.6-1
   * plm.Rd: added note on the intercept in 'fd' models, and how to eliminate it.
   * make.pbalanced: gained argument 'balance.type' which allows to select whether
     to balance by filling in NA values ("fill", like before) or (now new) also by
-    keeping only time periods shared among all individuals ("shared").
+    keeping only time periods shared among all individuals ("shared" [in v1.6-6 renamed to "shared.times" ]).
   * pbsytest: issue warning when applied to an unbalanced model (unbalanced tests still in preparation).
   * print.summary.plm: for "between" models: print the no. of obs used in estimation
     (like for "fd" models since 1.5-24).
