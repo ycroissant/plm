@@ -83,7 +83,7 @@ y <- data.frame(split(Grunfeld$inv, Grunfeld$firm))
 purtest(y, pmax = 4, exo = "intercept", test = "madwu")
 
 ## same via formula interface
-purtest(inv ~ 1, data = Grunfeld, index = "firm", pmax = 4, test = "madwu")
+purtest(inv ~ 1, data = Grunfeld, index = c("firm", "year"), pmax = 4, test = "madwu")
 }
 
 \author{Yves Croissant}

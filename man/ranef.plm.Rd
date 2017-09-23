@@ -53,7 +53,7 @@ ranef(m1) # individual random effects
 
 # two-ways RE model, calculate individual and time random effects
 data("Cigar", package = "plm")
-tw  <- plm(sales ~ pop + price, data = Cigar, model = "random", effect = "twoways")
+tw <- plm(sales ~ pop + price, data = Cigar, model = "random", effect = "twoways")
 ranef(tw)                   # individual random effects
 ranef(tw, effect = "time")  # time random effects
 

@@ -146,9 +146,9 @@ Changes in version 1.5-34
            (new func trans_clubSandwich_vcov added for this purpose).
   * (internal) model.matrix.pFormula: case "pooling" added to twoways/unbalanced condition;
                                       for unknown cases, give meaningful error.
-  * alias.plm, alias.pFormula added: complements the generic stats::alias to detect linear 
-                                     dependence (much like detect_lin_dep).
-  * detect_lin_dep.plm added (complementing previously added detect_lin_dep methods from version 1.5-15).
+  * alias.plm, alias.pFormula: added functions to complement the generic stats::alias to detect
+                               linear dependence (much like detect_lin_dep).
+  * detect_lin_dep.plm: added (complementing previously added detect_lin_dep methods from version 1.5-15).
   * plm objects gained element 'aliased' (a named logical) to indicate any aliased coefficients that are 
     silently dropped during estimation by plm (cf. summary.lm objects).
   * fix: vcovXX.plm / vcovG framework now handle plm models with aliased coefficients (linear dependent columns
@@ -487,7 +487,7 @@ Changes since version 1.3-1
 
 	* the deviance method for panelmodel objects is now exported (12/02).
 
-	* the Hausman-Taylor now supports the Amemiya MaCurdy and the Breush-Mizon-Schmidt version.
+	* the Hausman-Taylor now supports the Amemiya-MaCurdy and the Breush-Mizon-Schmidt version.
 
 	* a small bug is fixed on the var2lev function to deal the case when there are no factors.
 	
@@ -524,7 +524,7 @@ Changes since version 1.2-10
 	when within/between transformation is performed on between/within
 	series.
 
-	* plm now accept three part formulas, the last part being for
+	* plm now accepts three part formulas, the last part being for
 	instruments introduced only in the within form.
 
 	* the predict method for panelmodel objects is now exported.
@@ -656,7 +656,7 @@ Changes since version 1.2-2
 	factor of 2).
 
 	* in formula(dynformula), a bug is fixed so that the endog
-	variable doesn't appear on the rhs if there are no lags.
+	variable doesn't appear on the RHS if there are no lags.
 
 	* in pgmm, the extract.data has been rewritten and is *much* faster.
 
@@ -927,7 +927,7 @@ Changes since version 0-1.2
 	* Estimation methods are now available with four functions : plm,
 	pvcm, pggls and pgmm instead of one (plm) in the previous version.
 
-	* pvcm is a new function which estimate variable coefficients
+	* pvcm is a new function which estimates variable coefficients
 	models. The "nopool" model is now part of it.
 
 	* pggls is a new function which enables the estimation of general

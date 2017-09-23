@@ -50,7 +50,7 @@ An object of class \code{"htest"}.
 \references{
   Pesaran, M.H. (2007) A simple panel unit root test in the presence of
   cross-section dependence, \emph{Journal of Applied Econometrics},
-  \bold{22(2)}, pp. 265--312.
+  \bold{22}(2), pp. 265--312.
 }
 
 \seealso{

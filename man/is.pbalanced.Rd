@@ -9,7 +9,7 @@
 
 \title{Check if data are balanced}
 
-\description{This function checks if the data are balanced, i.e. each individual has the same time periods}
+\description{This function checks if the data are balanced, i.e. if each individual has the same time periods}
 
 \usage{
 \method{is.pbalanced}{pdata.frame}(x, \dots)

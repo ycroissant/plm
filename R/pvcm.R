@@ -27,58 +27,7 @@ pvcm.within <- function(formula, data, effect){
   time <- index[[2]]
   pdim <- pdim(data)
 
-  if (effect=="time"){
-    cond <- time
-    other <- id
-    card.cond <- pdim$nT$T
-  }
-  else{
-    cond <- id
-    other <- time
-    card.cond <- pdim$nT$n
-  }
-  ml <- split(data, cond)
-  nr <- sapply(ml,function(x) dim(x)[1])>0
-  ml <- ml[nr]
-  attr(ml, "index") <- index
-  ols <- lapply(ml,
-                function(x){
-                  X <- model.matrix(formula, x)
-                  if (nrow(X) <= ncol(X)) stop("insufficient number of observations")
-#                  y <- model.response(x)
-                  y <- x[[1]]
-                  r <- lm(y~X-1)
-#                  r <- mylm(y,X)
-                  nc <- colnames(model.frame(r)$X)
-                  names(r$coefficients) <- nc
-                  r
-                }
-                )
-
-
-  coef <- as.data.frame(t(sapply(ols,coefficients)))
-  residuals <- unlist(lapply(ols,residuals))
-  vcov <- lapply(ols,vcov)
-  std <- as.data.frame(t(sapply(vcov,function(x) sqrt(diag(x)))))
-  names(coef) <- names(std) <- colnames(coef)
-  ssr <- sum(residuals^2)
-  y <- unlist(lapply(ml,function(x) x[,1]))
-  fitted.values <- y-residuals
-  tss <- tss(y)
-  df.residuals <- pdim$nT$N-card.cond*ncol(coef)
-  nopool <- list(coefficients = coef, residuals = residuals, fitted.values = fitted.values,
-                 vcov = vcov, df.residuals = df.residuals, model = data, std.error = std)
-  nopool
-}
-
-pvcm.random <- function(formula, data, effect){
-  interc <- has.intercept(formula)
-  index <- attr(data, "index")
-  id <- index[[1]]
-  time <- index[[2]]
-  pdim <- pdim(data)
-  N <- nrow(data)
-  if (effect=="time"){
+  if (effect == "time"){
     cond <- time
     other <- id
     card.cond <- pdim$nT$T
@@ -98,7 +47,56 @@ pvcm.random <- function(formula, data, effect){
                   if (nrow(X) <= ncol(X)) stop("insufficient number of observations")
 #                  y <- model.response(x)
                   y <- x[[1]]
-                  r <- lm(y ~ X-1)
+                  r <- lm(y ~ X - 1)
+#                  r <- mylm(y,X)
+                  nc <- colnames(model.frame(r)$X)
+                  names(r$coefficients) <- nc
+                  r
+                })
+  
+  coef <- as.data.frame(t(sapply(ols, coefficients)))
+  residuals <- unlist(lapply(ols, residuals))
+  vcov <- lapply(ols, vcov)
+  std <- as.data.frame(t(sapply(vcov, function(x) sqrt(diag(x)))))
+  names(coef) <- names(std) <- colnames(coef)
+  ssr <- sum(residuals^2)
+  y <- unlist(lapply(ml, function(x) x[,1]))
+  fitted.values <- y - residuals
+  tss <- tss(y)
+  df.residuals <- pdim$nT$N - card.cond * ncol(coef)
+  nopool <- list(coefficients = coef, residuals = residuals, fitted.values = fitted.values,
+                 vcov = vcov, df.residuals = df.residuals, model = data, std.error = std)
+  nopool
+}
+
+pvcm.random <- function(formula, data, effect){
+  interc <- has.intercept(formula)
+  index <- attr(data, "index")
+  id <- index[[1]]
+  time <- index[[2]]
+  pdim <- pdim(data)
+  N <- nrow(data)
+  if (effect == "time"){
+    cond <- time
+    other <- id
+    card.cond <- pdim$nT$T
+  }
+  else{
+    cond <- id
+    other <- time
+    card.cond <- pdim$nT$n
+  }
+  ml <- split(data, cond)
+  nr <- sapply(ml, function(x) dim(x)[1]) > 0
+  ml <- ml[nr]
+  attr(ml, "index") <- index
+  ols <- lapply(ml,
+                function(x){
+                  X <- model.matrix(formula, x)
+                  if (nrow(X) <= ncol(X)) stop("insufficient number of observations")
+#                  y <- model.response(x)
+                  y <- x[[1]]
+                  r <- lm(y ~ X - 1)
 #                  r <- mylm(y, X)
                   nc <- colnames(model.frame(r)$X)
                   names(r$coefficients) <- nc
@@ -155,7 +153,7 @@ pvcm.random <- function(formula, data, effect){
   fitted.values <- y-residuals
   names(beta) <- rownames(vcovb) <- colnames(vcovb) <- colnames(coefm)
   swamy <- list(coefficients = beta, residuals = residuals, fitted.values = fitted.values,
-                 vcov = vcovb, df.residuals = df.residuals, model = data, Delta = Delta[[1]])
+                vcov = vcovb, df.residuals = df.residuals, model = data, Delta = Delta[[1]])
   swamy
 }
 
@@ -189,13 +187,13 @@ pvcm.random <- function(formula, data, effect){
                   if (nrow(X) <= ncol(X)) stop("insufficient number of observations")
 #                  y <- model.response(x)
                   y <- x[[1]]
-                  r <- lm(y ~ X-1)
+                  r <- lm(y ~ X - 1)
 #                  r <- mylm(y, X)
                   nc <- colnames(model.frame(r)$X)
                   names(r$coefficients) <- nc
                   r
-                }
-                )
+                })
+  
   # matrix of coefficients
   coefm <- t(sapply(ols, coef))
   # number of covariates
@@ -277,7 +275,7 @@ pvcm.random <- function(formula, data, effect){
   df.residuals <- N - ncol(coefm)
 
   list(coefficients = beta, residuals = res, fitted.values = fit,
-                 vcov = XpXm1, df.residuals = df.residuals, model = data, Delta = Delta)
+       vcov = XpXm1, df.residuals = df.residuals, model = data, Delta = Delta)
 }
 
 
@@ -288,8 +286,8 @@ summary.pvcm <- function(object,...){
     b <- object$coefficients
     z <- b/std.err
     p <- 2*pnorm(abs(z), lower.tail = FALSE)
-    coef <- cbind(b,std.err,z,p)
-    colnames(coef) <- c("Estimate","Std. Error","z-value","Pr(>|z|)")
+    coef <- cbind(b, std.err, z, p)
+    colnames(coef) <- c("Estimate", "Std. Error", "z-value", "Pr(>|z|)")
     object$coefficients <- coef
   }
   object$ssr <- deviance(object)
@@ -323,8 +321,8 @@ print.summary.pvcm <- function(x, digits = max(3, getOption("digits") - 2),
     print(summary(x$coefficients))
   }
   cat("\n")
-  cat(paste("Total Sum of Squares: ",signif(x$tss,digits),"\n",sep=""))
-  cat(paste("Residual Sum of Squares: ",signif(x$ssr,digits),"\n",sep=""))
-  cat(paste("Multiple R-Squared: ",signif(x$rsqr,digits),"\n",sep=""))
+  cat(paste("Total Sum of Squares: ", signif(x$tss, digits), "\n", sep=""))
+  cat(paste("Residual Sum of Squares: ", signif(x$ssr, digits), "\n", sep=""))
+  cat(paste("Multiple R-Squared: ", signif(x$rsqr, digits), "\n", sep=""))
   invisible(x)
 }

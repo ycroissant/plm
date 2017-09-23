@@ -12,12 +12,12 @@
 
 \usage{
 \method{fixef}{plm}(object, effect = NULL,
-                      type = c("level", "dfirst", "dmean"), vcov = NULL, \dots)
+      type = c("level", "dfirst", "dmean"), vcov = NULL, \dots)
 \method{print}{fixef}(x, digits = max(3, getOption("digits") - 2),
 width = getOption("width"), \dots)
 \method{summary}{fixef}(object, \dots)
-\method{print}{summary.fixef}(x, digits = max(3, getOption("digits") -
-2), width = getOption("width"), \dots)
+\method{print}{summary.fixef}(x, digits = max(3, getOption("digits") -2),
+      width = getOption("width"), \dots)
 }
 
 \arguments{
@@ -51,7 +51,7 @@ width = getOption("width"), \dots)
 
 \details{
 Function \code{fixef} calculates the fixed effects and returns an object of class \code{c("fixef", "numeric")}.
-With the \code{type} argument, the fixed effects may be returned in levels (\code{"level"}), 
+By setting the \code{type} argument, the fixed effects may be returned in levels (\code{"level"}), 
 as deviations from the first value of the index (\code{"dfirst"}), or as deviations from the 
 overall mean (\code{"dmean"}). If the argument \code{vcov} was specified, the standard errors
 (stored as attribute "se" in the return value) are the respective robust standard errors. 
@@ -105,7 +105,7 @@ fitted_by_hand <- fixefs + gi$coefficients["value"] * gi$model$value +
 
 
 \references{
-Greene, W.H. (2012), Econometric Analysis, 7th ed., Prentice Hall, Ch. 11.4.4.
+Greene, W.H. (2012), \emph{Econometric Analysis}, 7th ed., Prentice Hall, Ch. 11.4.4.
 
 Wooldridge, J.M. (2010) \emph{Econometric Analysis of Cross Section and Panel Data}, 2nd ed., MIT Press, Ch. 10.5.3.
 }
