@@ -311,7 +311,7 @@ preshape <- function(x, na.rm = TRUE, ...) {
     mres <- mres[ , order(dimnames(mres)[[2]])]
     ## if requested, drop columns (time periods) with NAs
     if(na.rm) {
-        na.cols <- is.na(colSums(mres, na.rm = FALSE)) # use colSum to detect NAs
+        na.cols <- vapply(mres, FUN = anyNA, FUN.VALUE = TRUE)
         if(sum(na.cols) > 0) mres <- mres[, !na.cols]
     }
     return(mres)
