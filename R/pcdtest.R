@@ -165,13 +165,13 @@ pcdres <- function(tres, n, w, form, test) {
     
     ## calc matrix of all possible pairwise corr.
     ## coeffs. (200x speedup from using cor())
-    wideres <- t(preshape(tres, na.rm=FALSE))
-    rho <- cor(wideres, use="pairwise.complete.obs")
+    wideres <- t(preshape(tres, na.rm = FALSE))
+    rho <- cor(wideres, use = "pairwise.complete.obs")
     
     ## find length of intersecting pairs
     ## fast method, times down 200x
-    data.res <- data.frame(time=attr(tres, "index")[[2]],
-                           indiv=attr(tres, "index")[[1]])
+    data.res <- data.frame(time = attr(tres, "index")[[2]],
+                           indiv = attr(tres, "index")[[1]])
     ## tabulate which obs in time for each ind are !na
     presence.tab <- table(data.res)
     ## calculate t.ij
@@ -248,7 +248,7 @@ pcdres <- function(tres, n, w, form, test) {
   switch(test,
    lm = {
     CDstat        <- sum((t.ij*rho^2)[selector.mat])
-    pCD           <- pchisq(CDstat, df=elem.num, lower.tail=F)
+    pCD           <- pchisq(CDstat, df = elem.num, lower.tail = FALSE)
     names(CDstat) <- "chisq"
     parm          <- elem.num
     names(parm)   <- "df"
@@ -256,14 +256,14 @@ pcdres <- function(tres, n, w, form, test) {
    },
    sclm = {
     CDstat        <- sqrt(1/(2*elem.num))*sum((t.ij*rho^2-1)[selector.mat])
-    pCD           <- 2*pnorm(abs(CDstat), lower.tail=F) # was until rev. 293: pnorm(CDstat, lower.tail=F)
+    pCD           <- 2*pnorm(abs(CDstat), lower.tail = FALSE) # was until rev. 293: pnorm(CDstat, lower.tail=F)
     names(CDstat) <- "z"
     parm          <- NULL
     testname      <- "Scaled LM test"
    },
    cd = {
     CDstat        <- sqrt(1/elem.num)*sum((sqrt(t.ij)*rho)[selector.mat]) # (Pesaran (2004), formula (31))
-    pCD           <- 2*pnorm(abs(CDstat), lower.tail=F)
+    pCD           <- 2*pnorm(abs(CDstat), lower.tail = FALSE)
     names(CDstat) <- "z"
     parm          <- NULL
     testname      <- "Pesaran CD test"
@@ -295,23 +295,24 @@ pcdres <- function(tres, n, w, form, test) {
   return(RVAL)
 }
 
-preshape <- function(x, na.rm=TRUE, ...) {
+preshape <- function(x, na.rm = TRUE, ...) {
     ## reshapes pseries,
     ## e.g. of residuals from a panelmodel,
     ## in wide form
     inames <- names(attr(x, "index"))
     mres <- reshape(cbind(as.vector(x), attr(x, "index")),
-                    direction="wide",
-                    timevar=inames[2], idvar=inames[1])
+                    direction = "wide",
+                    timevar = inames[2],
+                    idvar = inames[1])
     ## drop ind in first column
-    mres <- mres[,-1]
+    mres <- mres[ , -1]
     ## reorder columns (may be scrambled depending on first
     ## available obs in unbalanced panels)
-    mres <- mres[, order(dimnames(mres)[[2]])]
+    mres <- mres[ , order(dimnames(mres)[[2]])]
     ## if requested, drop columns (time periods) with NAs
     if(na.rm) {
-        rmc <- which(is.na(apply(mres, 2, sum)))
-        if(sum(rmc)>0) mres <- mres[,-rmc]
+        na.cols <- is.na(colSums(mres, na.rm = FALSE)) # use colSum to detect NAs
+        if(sum(na.cols) > 0) mres <- mres[, !na.cols]
     }
     return(mres)
 }
