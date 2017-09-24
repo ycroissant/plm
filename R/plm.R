@@ -37,7 +37,7 @@ plm <- function(formula, data, subset, weights, na.action,
     if (is.list(formula)){
         plmlist <- match.call(expand.dots = FALSE)
         plmlist[[1]] <- as.name("plm.list")
-        # eval in nframe and not the usual parent.frame(), relevant ?
+        # eval in nframe and not the usual parent.frame(), relevant?
         nframe <- length(sys.calls())
         plmlist <- eval(plmlist, sys.frame(which = nframe))
         return(plmlist)
@@ -67,7 +67,7 @@ plm <- function(formula, data, subset, weights, na.action,
                                             "for first-difference models"))
     }
 
-    # deprecated section :
+    # deprecated section:
     # pht is no longer maintained
     if (! is.na(model) && model == "ht"){
         ht <- match.call(expand.dots=FALSE)
@@ -189,11 +189,11 @@ plm.fit <- function(formula, data, model, effect, random.method,
             if (model == "within"){
                 if (! is.null(W)){
                     cst.W <- match(attr(W, "constant"), colnames(W))
-                    if (length(cst.W) > 0) W <- W[, - cst.W]
+                    if (length(cst.W) > 0) W <- W[, - cst.W, drop = FALSE]
                 }
                 if (! is.null(X)){
                     cst.X <- match(attr(X, "constant"), colnames(X))
-                    if (length(cst.X) > 0) X <- X[, - cst.X]
+                    if (length(cst.X) > 0) X <- X[, - cst.X, drop = FALSE]
                 }
             }
             if (model == "random" && inst.method != "bvk"){
@@ -204,6 +204,7 @@ plm.fit <- function(formula, data, model, effect, random.method,
                                    effect = effect, theta = theta)
                 B1 <- model.matrix(formula, data, rhs = 2, model = "Between", 
                                    effect = effect, theta = theta)
+                
                 if (inst.method %in% c("am", "bmc")) 
                     StarW1 <- starX(formula, data, rhs = 2, model = "within", 
                                     effect = effect)
@@ -219,7 +220,7 @@ plm.fit <- function(formula, data, model, effect, random.method,
                 if (inst.method == "am")  W <- sqrt(w) * cbind(W1, W2, B1, StarW1)
                 if (inst.method == "bmc") W <- sqrt(w) * cbind(W1, W2, B1, StarW1, StarW2)
                 zerovars <- apply(W, 2, function(x) max(abs(x), na.rm = TRUE)) < 1E-5
-                W <- W[, !zerovars]
+                W <- W[, !zerovars, drop = FALSE]
             }
             if (ncol(W) < ncol(X)) stop("insufficient number of instruments")
         }
@@ -255,7 +256,7 @@ plm.fit <- function(formula, data, model, effect, random.method,
         pdim <- pdim(data)
         TS <- pdim$nT$T
         theta <- estec$theta$id
-        phi2mu <- estec$sigma2["time"] / estec$sigma2["idios"]        
+        phi2mu <- estec$sigma2["time"] / estec$sigma2["idios"]
         Dmu <- model.matrix( ~ factor(index(data)[[2]]) - 1)
         Dmu <- Dmu - theta * Between(Dmu, index(data)[[1]])
         X <- model.matrix(   formula, data, rhs = 1, model = "random", 
@@ -417,7 +418,7 @@ plm.list <- function(formula, data, subset, na.action,
       structure(list(coefficents = Ucoef, vcov = Uvcov, residuals = .resid), class = "basiclm")
     }
   }
-  models <- plm.models(sysplm, amodel = model, random.method = "kinla") #NB: "kinla" does not seem to be supported anymore...
+  models <- plm.models(sysplm, amodel = model, random.method = "kinla") #TODO NB: "kinla" does not seem to be supported anymore...
   L <- length(models)
   sys <- systemlm(models, restrict.matrix = restrict.matrix, restrict.rhs = restrict.rhs)
   Instruments <- sapply(models, function(x) length(formula(x))[2]) > 1
