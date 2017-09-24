@@ -17,8 +17,10 @@ plm(formula, data, subset, weights, na.action,
     random.method = NULL,
     random.models = NULL,
     random.dfcor = NULL,
-    inst.method = c("bvk", "baltagi", "am", "bmc"), restrict.matrix = NULL,
-    restrict.rhs = NULL, index = NULL, \dots)
+    inst.method = c("bvk", "baltagi", "am", "bmc"),
+    restrict.matrix = NULL,
+    restrict.rhs = NULL,
+    index = NULL, \dots)
 \method{print}{panelmodel}(x, digits = max(3, getOption("digits") - 2), 
       width = getOption("width"), \dots)
 \method{plot}{plm}(x, dx = 0.2, N = NULL, seed = 1,
@@ -33,7 +35,7 @@ plm(formula, data, subset, weights, na.action,
   \item{weights}{see \code{\link{lm}},}
   \item{na.action}{see \code{\link{lm}}; currently, not fully supported,}
   \item{effect}{the effects introduced in the model, one of
-  \code{"individual"}, \code{"time"}, \code{"twoways"} or \code{"nested"},}
+  \code{"individual"}, \code{"time"}, \code{"twoways"}, or \code{"nested"},}
   \item{model}{one of \code{"pooling"}, \code{"within"},
     \code{"between"}, \code{"random",} \code{"fd"}, or \code{"ht"},}
   \item{random.method}{method of estimation for the variance components
@@ -90,8 +92,8 @@ part. If, for example, the model is \code{y ~ x1 + x2 + x3}, with
 instruments, the model can be estimated with:
 
 \itemize{
-  \item \code{formula=y~x1+x2+x3 | x3+z1+z2},
-  \item \code{formula=y~x1+x2+x3 | .-x1-x2+z1+z2}.
+  \item \code{formula = y~x1+x2+x3 | x3+z1+z2},
+  \item \code{formula = y~x1+x2+x3 | . -x1-x2+z1+z2}.
 }
 
 Balestra and Varadharajan-Krishnakumar's or Baltagi's method is used if

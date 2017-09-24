@@ -24,7 +24,7 @@ cipstest(x, lags = 2, type = c("trend", "drift", "none"),
   \item{\dots}{further arguments passed to \code{critvals}.} 
 % TODO NB: critvals (helper function) not mentioned before
 % TODO NB: doc-code mismatch: currently, critval is not called with '...' in the code,
-%          but mmean(tstats, ...) ist
+%          but mean(tstats, ...) is
 }
 
 \details{

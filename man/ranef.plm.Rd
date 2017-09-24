@@ -44,7 +44,7 @@ data("Grunfeld", package = "plm")
 m1 <- plm(inv ~ value + capital, data = Grunfeld, model = "random")
 ranef(m1) # individual random effects
 
-# compare to random effects by ML estimation by lmer from package lme4
+# compare to random effects by ML estimation via lmer from package lme4
 \dontrun{
   library(lme4)
   m2 <- lmer(inv ~ value + capital + (1 | firm), data = Grunfeld) 
