@@ -332,17 +332,17 @@ pht <-  function(formula, data, subset, na.action, model = c("ht", "am", "bmc"),
   result
 }
 
-summary.pht <- function(object,...){
+summary.pht <- function(object, ...){
   object$fstatistic <- pwaldtest(object, test = "F")
   # construct the table of coefficients
   std.err <- sqrt(diag(vcov(object)))
   b <- coefficients(object)
   z <- b/std.err
-  p <- 2*pnorm(abs(z),lower.tail=FALSE)
+  p <- 2*pnorm(abs(z), lower.tail = FALSE)
   object$coefficients <- cbind("Estimate"   = b,
                                "Std. Error" = std.err,
-                               "t-value"    = z,  ## TODO "t-value" but standard normal distribution used - which one is correct?
-                               "Pr(>|t|)"   = p)  ## TODO "t" ?
+                               "z-value"    = z,
+                               "Pr(>|z|)"   = p)
   class(object) <- c("summary.pht", "pht", "plm", "panelmodel")
   object
 }

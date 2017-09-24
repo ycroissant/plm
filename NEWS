@@ -69,8 +69,8 @@ Changes in version 1.6-6
   * purtest: cosmetic: when argument 'lags' is not specified by user, the returned
              object does not contain all three possible values in args$lags anymore,
              thus prints prettier.
-  * summary.piest: table heading now has "z-value" and "Pr(>|z|)" as the numbers are
-                   based on standard normal distribution.
+  * summary.piest, summary.pht: table headings now have "z-value" and "Pr(>|z|)" 
+                                as the numbers are based on standard normal distribution.
   * make.pbalanced: argument balanced.type:
       * 'shared' renamed to 'shared.times' (with a back-compatible solution),
       * 'shared.individuals' added as additional option (symmetric case).
