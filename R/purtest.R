@@ -369,7 +369,7 @@ purtest <- function(object, data = NULL, index = NULL,
   test <- match.arg(test)
   if (is.character(lags)) lags <- match.arg(lags) # if character, select one possible value
   args <- list(test = test, exo = exo, pmax = pmax, lags = lags,
-               dfcor = FALSE, fixedT = fixedT)
+               dfcor = dfcor, fixedT = fixedT)
   L <- nrow(object)
   n <- ncol(object)
   alternative <- "stationarity"
