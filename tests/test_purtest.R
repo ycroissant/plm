@@ -33,3 +33,13 @@ purtest(pdata.frame(Grunfeld)[ , "inv"],  pmax = 4, test = "ips", exo = "trend")
 # purtest(pdata.frame(Grunfeld)[ , "inv", drop = F],  pmax = 4, test = "ips", exo = "none")     # works as intended: gives informative error msg
 
 
+#### Hadri (2000) test
+## matches results vom EViews 9.5:
+## z stat     =  4.18428, p = 0.0000 (intercept)
+## z stat het = 10.1553,  p = 0.0000 (intercept)
+## z stat     =  4.53395, p = 0.0000 (trend)
+## z stat het = 9.57816,  p = 0.0000 (trend)
+purtest(pG$value, exo = "intercept", test = "hadri", Hcons = FALSE)
+purtest(pG$value, exo = "intercept", test = "hadri")
+purtest(pG$value, exo = "trend", test = "hadri", Hcons = FALSE)
+purtest(pG$value, exo = "trend", test = "hadri")

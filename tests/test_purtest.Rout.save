@@ -1,0 +1,185 @@
+
+R version 3.4.1 (2017-06-30) -- "Single Candle"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> # Various run tests for purtest()
+> library(plm)
+Loading required package: Formula
+Loading required package: maxLik
+Loading required package: miscTools
+
+Please cite the 'maxLik' package as:
+Henningsen, Arne and Toomet, Ott (2011). maxLik: A package for maximum likelihood estimation in R. Computational Statistics 26(3), 443-458. DOI 10.1007/s00180-010-0217-1.
+
+If you have questions, suggestions, or comments regarding the 'maxLik' package, please use a forum or 'tracker' at maxLik's R-Forge site:
+https://r-forge.r-project.org/projects/maxlik/
+> data("Grunfeld", package = "plm")
+> pG <- pdata.frame(Grunfeld)
+> 
+> y <- data.frame(split(Grunfeld$inv, Grunfeld$firm))
+> 
+> purtest(pG$inv, pmax = 4, exo = "intercept", test = "ips")
+
+	Im-Pesaran-Shin Unit-Root Test (ex. var.: Individual Intercepts)
+
+data:  pG$inv
+z = 2.5801, p-value = 0.009876
+alternative hypothesis: stationarity
+
+> purtest(inv ~ 1, data = Grunfeld, index = "firm", pmax = 4, test = "madwu")
+
+	Maddala-Wu Unit-Root Test (ex. var.: Individual Intercepts)
+
+data:  inv ~ 1
+chisq = 14.719, df = 20, p-value = 0.7922
+alternative hypothesis: stationarity
+
+> 
+> summary(a1 <- purtest(pG$inv, lags = "SIC", exo = "intercept", test = "ips", pmax = 8))
+Im-Pesaran-Shin Unit-Root Test 
+Exogenous variables: Individual Intercepts 
+Automatic selection of lags using SIC: 0 - 8 lags (max: 8)
+statistic: NA 
+p-value: NA 
+    lags obs         rho        trho    mean    var
+X1     8  11  0.57372489   7.2972878      NA     NA
+X2     7  12 -1.33500743  -2.1403062      NA     NA
+X3     8  11 -0.24069010  -1.8357409      NA     NA
+X4     0  19 -0.05374775  -0.4175477 -1.5204 0.8654
+X5     7  12  1.43387118   3.6341172      NA     NA
+X6     8  11  1.47800229  45.8810140      NA     NA
+X7     0  19 -0.13861644  -0.8207942 -1.5204 0.8654
+X8     8  11 -1.54461692 -12.2711923      NA     NA
+X9     8  11 -1.72024968 -10.6042569      NA     NA
+X10    7  12 -4.64427462 -34.2629736      NA     NA
+> print(a1$args$lags)
+[1] "SIC"
+> if (length(a1$args$lags) != 1) stop("length(return_value$args$lags must be 1")
+> if (a1$args$lags != "SIC") stop("length(return_value$args$lags must be \"SIC\"")
+> 
+> summary(a2 <- purtest(pG$inv, lags = 2, exo = "intercept", test = "ips"))
+Im-Pesaran-Shin Unit-Root Test 
+Exogenous variables: Individual Intercepts 
+User-provided lags
+statistic: 4.51 
+p-value: 0 
+    lags obs         rho        trho    mean    var
+X1     2  17  0.37455746  1.69705718 -1.4034 1.0344
+X2     2  17 -0.33653803 -1.31826344 -1.4034 1.0344
+X3     2  17 -0.12937014 -0.65968273 -1.4034 1.0344
+X4     2  17  0.19494339  1.06936162 -1.4034 1.0344
+X5     2  17  0.02327321  0.08084075 -1.4034 1.0344
+X6     2  17  0.28398534  2.60790962 -1.4034 1.0344
+X7     2  17  0.13957097  0.65174468 -1.4034 1.0344
+X8     2  17 -0.28331574 -1.30317041 -1.4034 1.0344
+X9     2  17 -0.37152816 -1.88381502 -1.4034 1.0344
+X10    2  17 -0.07346420 -0.46967793 -1.4034 1.0344
+> print(a2$args$lags)
+[1] 2
+> if (length(a2$args$lags) != 1) stop("length(return_value$args$lags must be 1")
+> 
+> summary(a3 <- purtest(pG$inv, lags = c(2,3,1,5,8,1,4,6,7,1), exo = "intercept", test = "ips"))
+Im-Pesaran-Shin Unit-Root Test 
+Exogenous variables: Individual Intercepts 
+User-provided lags
+statistic: NA 
+p-value: NA 
+    lags obs         rho        trho    mean    var
+X1     2  17  0.37455746  1.69705718 -1.4034 1.0344
+X2     3  16 -0.21033975 -0.81675296 -1.3754 1.1522
+X3     1  18 -0.27302816 -1.65614389 -1.5108 0.9534
+X4     5  14  0.85015585  1.04616383      NA     NA
+X5     8  11  1.06680894  1.96954663      NA     NA
+X6     1  18  0.21710976  2.51472363 -1.5108 0.9534
+X7     4  15  0.01600785  0.05406133 -1.2600 1.2790
+X8     6  13 -0.12662404 -0.38012322      NA     NA
+X9     7  12 -0.89993048 -4.03185909      NA     NA
+X10    1  18 -0.23247810 -1.68616532 -1.5108 0.9534
+> length(a3$args$lags)
+[1] 10
+> print(a3$args$lags)
+ [1] 2 3 1 5 8 1 4 6 7 1
+> if (length(a3$args$lags) != 10) stop("length(return_value$args$lags must be 10")
+> 
+> ### pseries
+> purtest(pdata.frame(Grunfeld)[ , "inv"],  pmax = 4, test = "ips", exo = "intercept") # works
+
+	Im-Pesaran-Shin Unit-Root Test (ex. var.: Individual Intercepts)
+
+data:  pdata.frame(Grunfeld)[, "inv"]
+z = 2.5801, p-value = 0.009876
+alternative hypothesis: stationarity
+
+> purtest(pdata.frame(Grunfeld)[ , "inv"],  pmax = 4, test = "ips", exo = "trend")     # works
+
+	Im-Pesaran-Shin Unit-Root Test (ex. var.: Individual Intercepts and
+	Trend)
+
+data:  pdata.frame(Grunfeld)[, "inv"]
+z = -3.0337, p-value = 0.002416
+alternative hypothesis: stationarity
+
+> # purtest(pdata.frame(Grunfeld)[ , "inv"],  pmax = 4, test = "ips", exo = "none")      # works as intended: gives informative error msg
+> 
+> ### pdata.frame
+> # purtest(pdata.frame(Grunfeld)[ , "inv", drop = F],  pmax = 4, test = "ips", exo = "intercept") # runs but but gives different results! and a warning!
+> # purtest(pdata.frame(Grunfeld)[ , "inv", drop = F],  pmax = 4, test = "ips", exo = "trend")     # runs but but gives different results! and a warning!
+> # purtest(pdata.frame(Grunfeld)[ , "inv", drop = F],  pmax = 4, test = "ips", exo = "none")     # works as intended: gives informative error msg
+> 
+> 
+> #### Hadri (2000) test
+> ## matches results vom EViews 9.5:
+> ## z stat     =  4.18428, p = 0.0000 (intercept)
+> ## z stat het = 10.1553,  p = 0.0000 (intercept)
+> ## z stat     =  4.53395, p = 0.0000 (trend)
+> ## z stat het = 9.57816,  p = 0.0000 (trend)
+> purtest(pG$value, exo = "intercept", test = "hadri", Hcons = FALSE)
+
+	Hadri Test (ex. var.: Individual Intercepts)
+
+data:  pG$value
+z = 4.1843, p-value = 1.43e-05
+alternative hypothesis: at least one series has a unit root
+
+> purtest(pG$value, exo = "intercept", test = "hadri")
+
+	Hadri Test (ex. var.: Individual Intercepts) (Heterosked. Consistent)
+
+data:  pG$value
+z = 10.155, p-value < 2.2e-16
+alternative hypothesis: at least one series has a unit root
+
+> purtest(pG$value, exo = "trend", test = "hadri", Hcons = FALSE)
+
+	Hadri Test (ex. var.: Individual Intercepts and Trend)
+
+data:  pG$value
+z = 4.5339, p-value = 2.895e-06
+alternative hypothesis: at least one series has a unit root
+
+> purtest(pG$value, exo = "trend", test = "hadri")
+
+	Hadri Test (ex. var.: Individual Intercepts and Trend) (Heterosked.
+	Consistent)
+
+data:  pG$value
+z = 9.5782, p-value < 2.2e-16
+alternative hypothesis: at least one series has a unit root
+
+> 
+> proc.time()
+   user  system elapsed 
+   1.34    0.07    1.40 

@@ -397,16 +397,18 @@ purtest <- function(object, data = NULL, index = NULL,
     cumres2 <- lapply(resid, function(x) cumsum(x)^2)
     if (!Hcons){
       sigma2 <- mean(unlist(resid)^2)
-      S <- sum(unlist(cumres2))/(L^2)
+      S <- (1/n) * sum(unlist(cumres2))/(L^2)
       LM <- S / sigma2
     }
     else{
       sigma2i <- lapply(resid, function(x) mean(x^2))
       Sit2 <- mapply("/", cumres2, sigma2i)
       LM <- sum(unlist(Sit2))/ (L^2 * n)
+      method <- paste0(method, " (Heterosked. Consistent)")
     }
     stat <- c(z = sqrt(n) * (LM - adj[1])  / sqrt(adj[2])) # eq. (14), (22) in Hadri (2000)
-    pvalue <- 2 * (pnorm(abs(stat), lower.tail = FALSE))
+    pvalue <- pnorm(stat, lower.tail = FALSE) # is one-sided! was until rev. 572: 2*(pnorm(abs(stat), lower.tail = FALSE))
+    
     htest <- structure(list(statistic = stat,
                             parameter = NULL,
                             alternative = "at least one series has a unit root",
@@ -474,7 +476,7 @@ purtest <- function(object, data = NULL, index = NULL,
   }
 
   if (test == "ips"){
-    if (exo == "none") stop("ips test is not implemented for exo = \"none\"")
+    if (exo == "none") stop("exo = \"none\" is not a valid option for the Im-Pesaran-Shin test")
     lags <- sapply(idres, function(x) x[["lags"]])
     L <- sapply(idres, function(x) x[["T"]]) - lags - 1
     adjval <- mapply(function(x, y) adj.ips.value(x, y, exo = exo),

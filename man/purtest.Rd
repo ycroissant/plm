@@ -29,7 +29,7 @@ purtest(object, data = NULL, index = NULL,
   \item{exo}{the exogenous variables to introduce in the augmented Dickey--Fuller (ADF) regressions, one of: no exogenous variables (\code{"none"}), individual intercepts (\code{"intercept"}), or individual intercepts and trends (\code{"trend"}), but see Details,}
   \item{lags}{the number of lags to be used for the augmented Dickey-Fuller regressions: either an integer (the number of lags for all time series), a vector of integers (one for each time series), or a character string for an automatic computation of the number of lags, based on either the AIC (\code{"AIC"}), the SIC (\code{"SIC"}), or on the method by Hall (1994) (\code{"Hall"}),}
   \item{pmax}{maximum number of lags,}
-  \item{Hcons}{logical, indicating whether the heteroscedasticity-consistent test of Hadri should be computed,}
+  \item{Hcons}{logical, indicating whether the heteroskedasticity-consistent test of Hadri (2000) should be computed,}
   \item{q}{the bandwidth for the estimation of the long-run variance,}
   \item{dfcor}{logical, indicating whether the standard deviation of the regressions is to be computed using a degrees-of-freedom correction,}
   \item{fixedT}{logical, indicating whether the different ADF regressions are to be computed using the same number of observations,}

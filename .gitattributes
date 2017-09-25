@@ -173,6 +173,7 @@ tests/test_preserve_rownames.R -text
 tests/test_pseries_subsetting.R -text
 tests/test_punbalancedness.R -text
 tests/test_purtest.R -text
+tests/test_purtest.Rout.save -text
 tests/test_pvar.R -text
 tests/test_pwaldtest.R -text
 tests/test_pwaldtest.Rout.save -text
