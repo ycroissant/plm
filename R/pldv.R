@@ -1,5 +1,5 @@
 pldv <- function(formula, data, subset, weights, na.action,
-                 model = c("within", "random", "pooling"), index = NULL,
+                 model = c("fd", "random", "pooling"), index = NULL,
                  R = 20, start = NULL, lower = 0, upper = + Inf,
                  objfun = c("lsq", "lad"), sample = c("cens", "trunc"), ...){
     # use the plm interface to compute the model.frame
@@ -23,7 +23,7 @@ pldv <- function(formula, data, subset, weights, na.action,
     maxl[[1]] <- as.name("maxLik")
     
     # The within model -> Bo Honore (1992)
-    if (model == "within"){
+    if (model == "fd"){
         objfun <- match.arg(objfun)
         # create a data.frame containing y_t and y_{t-1}
         y <- as.character(formula[[2]])

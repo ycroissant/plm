@@ -10,7 +10,7 @@
 
 \usage{
 pldv(formula, data, subset, weights, na.action,
-                 model = c("within", "random", "pooling"), index = NULL,
+                 model = c("fd", "random", "pooling"), index = NULL,
                  R = 20, start = NULL, lower = 0, upper = + Inf,
                  objfun = c("lsq", "lad"), sample = c("cens", "trunc"), \dots)
 }
