@@ -282,7 +282,7 @@ pwartest.panelmodel <- function(x, ...) {
 ## Implementation follows the formulae for unbalanced panels, which reduce for balanced data to the formulae for balanced panels.
 ##
 ## Notation in code largly follows Sosa-Escudero/Bera (2008) (m in Sosa-Escudero/Bera (2008) is total number of observations -> N_obs)
-## NB: Baltagi's book matrix A is slightly different defined: A in Balagi is -A in Sosa-Escudera/Bera (2008)
+## NB: Baltagi's book matrix A is slightly different defined: A in Baltagi is -A in Sosa-Escudera/Bera (2008)
 
 pbsytest <- function (x, ...) {
   UseMethod("pbsytest")

@@ -100,10 +100,10 @@ instruments, the model can be estimated with:
 If an instrument variable estimation is requested, argument \code{inst.method}
 selects the instrument variable transformation method:
 \itemize{
-  \item \code{"bvk"} (default) Balestra and Varadharajan-Krishnakumar (1987),
-  \item \code{"baltagi"} Baltagi (1981),
-  \item \code{"am"} Amemiya and MaCurdy (1986),
-  \item \code{"bms"} Breusch, Mizon, and Schmidt (1989).
+  \item \code{"bvk"} (default) for Balestra and Varadharajan-Krishnakumar (1987),
+  \item \code{"baltagi"} for Baltagi (1981),
+  \item \code{"am"} for Amemiya and MaCurdy (1986),
+  \item \code{"bms"} for Breusch, Mizon, and Schmidt (1989).
 }
 
 The Hausman--Taylor estimator is computed if \code{model = "ht"}.
@@ -118,13 +118,13 @@ A \code{"plm"} object has the following elements :
 \item{vcov}{the variance--covariance matrix of the coefficients,}
 \item{residuals}{the vector of residuals (these are the residuals of the (quasi-)demeaned model),}
 \item{df.residual}{degrees of freedom of the residuals,}
-\item{formula}{an object of class \code{'pFormula'} describing the
+\item{formula}{an object of class \code{"pFormula"} describing the
   model,}
-\item{model}{the model frame as a \code{'pdata.frame'} containing the
+\item{model}{the model frame as a \code{"pdata.frame"} containing the
   variables used for estimation: the response is in first column followed
   by the other variables, the individual and time indexes are in the 'index'
   attribute of \code{model},}
-\item{ercomp}{an object of class \code{'ercomp'} providing the
+\item{ercomp}{an object of class \code{"ercomp"} providing the
  estimation of the components of the errors (for random effects models only),}
 \item{aliased}{named logical vector indicating any aliased coefficients which 
 are silently dropped by \code{plm} due to linearly dependent terms (see also 
