@@ -373,19 +373,26 @@ purtest <- function(object, data = NULL, index = NULL,
                     names.exo[exo],")")
 
   if (test == "hadri"){
-#### NB: case exo == "none" is not caught/does not work for Hadri
+    
+    if (exo == "none") stop("exo = \"none\" is not a valid option for Hadri's test")
+    
     if (exo == "intercept"){
       resid <- lapply(object, function(x) lm(x~1)$residuals)
-      adj <- c(1/6, 1/45) # eq. (17) in Hadri (2000)
+      adj <- c(1/6, 1/45) # xi, zeta^2 in eq. (17) in Hadri (2000)
     }
+    
     if (exo == "trend"){
       resid <- lapply(object,
                       function(x){
                         trend <- 1:length(x)
                         lm(x~trend)$residuals
                         })
-      adj <- c(1/15, 11/6300) # eq. (25) in Hadri (2000)
+      adj <- c(1/15, 11/6300) # xi, zeta^2 in eq. (25) in Hadri (2000)
     }
+    
+    ## NB: could also use an estimate for sigma2 and sigma2i with corrected 
+    ##     degrees of freedom in case of "intercept" and "trend",
+    ##     see Hadri (2000), p. 157
     
     cumres2 <- lapply(resid, function(x) cumsum(x)^2)
     if (!Hcons){
@@ -413,8 +420,8 @@ purtest <- function(object, data = NULL, index = NULL,
                    args = args)
 
     class(result) <- "purtest"
-    return(result)
-  }  
+    return(result) # early exit for hadri
+  }
   
   # compute the lags for each time series if necessary
   if (is.numeric(lags)){
@@ -549,5 +556,4 @@ print.summary.purtest <- function(x, ...){
   cat(paste("p-value:", round(x$statistic$p.value, 3), "\n"))
   print(x$sumidres, ...)
 }
-
 
