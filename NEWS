@@ -2,8 +2,9 @@
       * test = "madwu": Maddala-Wu test statistic used to be computed using p-values from 
                         the normal distribution, fixed now, by using approximated p-values
                         for the tau distribution described by MacKinnon (1994).
-      * test = "hadri": fixed p-value (now based on one-sided test).
-                        fixed test statistic in non-heteroskedasticity case(Hcons = FALSE).
+      * test = "hadri": * fixed p-value (now based on one-sided test).
+                        * fixed statistic in non-heteroskedasticity case (Hcons = FALSE).
+                        * for non-het. consistent case, one can now use dfcor = TRUE.
       
   * pbltest: now accepts pdata.frames with index not in first two columns.
   * cortab: new function to compute cross-sectional correlation matrix.
@@ -15,7 +16,7 @@ Changes in version 1.6-6
   * ercomp: re-written to be a more general framework.
   * plm:
       * random effect models: some random methods extended to unbalanced 
-        two-way case (Nerlove's method only supports balanced one-way, two-ways),
+        two-ways case (Nerlove's method only supports balanced one-way, two-ways),
         thanks to the more general ercomp framework.
       * nested random effects model implemented (Baltagi/Song/Jung (2001)),
         use effect = "nested".

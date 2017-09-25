@@ -113,9 +113,13 @@ names.test <- c(levinlin = "Levin-Lin-Chu Unit-Root Test",
 my.lm.fit <- function(X, y, dfcor = TRUE, ...){
   object <- lm.fit(X, y)
   ## 'as' summary method for lm.fit
-  p <- object$rank ; Qr <- object$qr ; n <- NROW(Qr$qr)
-  rdf <- n - p ; p1 <- 1L:p ; r <- object$residuals
-  rss <- sum(r^2) ;
+  p <- object$rank
+  Qr <- object$qr
+  n <- NROW(Qr$qr)
+  rdf <- n - p
+  p1 <- 1L:p
+  r <- object$residuals
+  rss <- sum(r^2)
   resvar <- ifelse(dfcor, rss/rdf, rss/n)
   sigma <- sqrt(resvar)
   R <- chol2inv(Qr$qr[p1, p1, drop = FALSE])
@@ -306,8 +310,8 @@ longrunvar <- function(x, exo = c("intercept", "none", "trend"), q = NULL){
 purtest <- function(object, data = NULL, index = NULL,
                     test = c("levinlin", "ips", "madwu", "hadri"),
                     exo = c("none", "intercept", "trend"),
-                    lags = c("SIC", "AIC", "Hall"), pmax = 10,
-                    Hcons = TRUE,
+                    lags = c("SIC", "AIC", "Hall"),
+                    pmax = 10, Hcons = TRUE,
                     q = NULL, dfcor = FALSE, fixedT = TRUE, ...){
 
   data.name <- paste(deparse(substitute(object)))
@@ -390,18 +394,22 @@ purtest <- function(object, data = NULL, index = NULL,
       adj <- c(1/15, 11/6300) # xi, zeta^2 in eq. (25) in Hadri (2000)
     }
     
-    ## NB: could also use an estimate for sigma2 and sigma2i with corrected 
-    ##     degrees of freedom in case of "intercept" and "trend",
-    ##     see Hadri (2000), p. 157
-    
     cumres2 <- lapply(resid, function(x) cumsum(x)^2)
     if (!Hcons){
-      sigma2 <- mean(unlist(resid)^2)
+      sigma2 <- if (!dfcor) { 
+                  mean(unlist(resid)^2)
+                } else {
+                  # df correction as suggested in Hadri (2000), p. 157
+                  dfcorval <- ifelse(exo == "intercept", n * (L-1), n * (L-2))
+                  sum(unlist(resid)^2) / dfcorval
+                }
       S <- (1/n) * sum(unlist(cumres2))/(L^2)
       LM <- S / sigma2
     }
     else{
       sigma2i <- lapply(resid, function(x) mean(x^2))
+      ## TODO: ? dfcor also applicable for het. const case with individual sigma2 estimates?
+      ##       If not, leave a comment here.
       Sit2 <- mapply("/", cumres2, sigma2i)
       LM <- sum(unlist(Sit2))/ (L^2 * n)
       method <- paste0(method, " (Heterosked. Consistent)")
