@@ -1,5 +1,5 @@
-  * purtest: Maddala-Wu test's p-value used to be computed using the normal
-    distribution, fixed now, by using approximated p-values for the tau
+  * purtest: Maddala-Wu test statistic used to be computed using p-values from 
+    the normal distribution, fixed now, by using approximated p-values for the tau
     distribution described by MacKinnon (1994).
   
   * pbltest: now accepts pdata.frames with index not in first two columns.
@@ -565,7 +565,7 @@ Changes since version 1.2-8
 	* a bug in the typology of the variables in pht is fixed.
 
 	* a bug in vcovBK (matrices degenerating into vectors) is fixed
-	(thx David Hugh-Jones for bug report).
+	(thx to David Hugh-Jones for bug report).
 
 	* the Between function now returns a pseries object.
 
@@ -597,7 +597,7 @@ Changes since version 1.2-6
 	time-dummies. It now deals correctly for models with 'individual'
 	effects.
 
-	* the rda files are now compressed.
+	* the *.rda files are now compressed.
 
 	* p-values for the two-tailed versions of plmtest() were wrong and
 	have been fixed. They were divided by 2 instead of multiplied.
@@ -627,7 +627,7 @@ Changes since version 1.2-4
 
 	* a new function r.squared.
 
-	* pmodel.response.plm is modified : no explicit effect and model
+	* pmodel.response.plm is modified: no explicit effect and model
 	arguments anymore (like in model.matrix.plm).
 
 
@@ -673,7 +673,7 @@ Changes since version 1.2-2
 
 Changes since version 1.2-1
 
-	* a new purtest function to perform unit root tests.
+	* a new purtest function to perform panel unit root tests.
 
 	* [[.pdata.frame is modified so that NULL (and not an error
 	message) is returned if an unknown column is selected.
@@ -745,7 +745,7 @@ Changes since version 1-1.3
 	
 Changes since version 1-1.2
 
-	* the inst directory was missing, it has been added again.
+	* the /inst directory was missing, it has been added again.
 	
 
 Changes since version 1-1.1

@@ -57,6 +57,7 @@ sumres <- function(x){
   sr
 }
 
+# suml(x) is replaced by Reduce("+", x)
 ## suml <- function(x){
 ##   n <- length(x)
 ##   if (!is.null(dim(x[[1]]))){

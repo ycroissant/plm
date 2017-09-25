@@ -483,11 +483,11 @@ purtest <- function(object, data = NULL, index = NULL,
   }
 
   if (test == "madwu"){
+    # Maddala/Wu (1999), pp. 636-637; Baltagi (2013), pp. 283-285
     trho <- sapply(idres, function(x) x[["trho"]])
-    pvalue <- 2*pnorm(abs(trho), lower.tail = FALSE)  ## TODO: pvalue is calculated 3x...
-    pvalue <- pnorm(trho)
-    pvalue <- padf(trho, exo = exo)
-    stat <- c(chisq = - 2 * sum(log(pvalue)))
+ #   pvalues.trho <- 2*pnorm(abs(trho), lower.tail = FALSE)  # ... until rev. 551
+    pvalues.trho <- padf(trho, exo = exo)
+    stat <- c(chisq = - 2 * sum(log(pvalues.trho)))
     n <- length(trho)
     parameter <- c(df = 2 * n)
     pvalue <- pchisq(stat, df = parameter, lower.tail = FALSE)
