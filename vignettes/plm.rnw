@@ -857,10 +857,12 @@ The instrumental variables estimator used is indicated with the
 \begin{itemize}
 \item \code{"bvk"}, from  \citet{BALE:VARA:87}, the default value,
 \item \code{"baltagi"}, from \citet{BALT:81}.
-% TODO:  "am", "bmc"/"bms" missing here?
+\item \code{"am"}, from \citet{AMEM:MACUR:86}
+\item \code{"bms"}, from \citet{BREU:MIZO:SCHMI:89}
 \end{itemize}
- as
-illustrated on the following example from \cite{BALT:2005}, p.120/\citet{BALT:2013}, p.137 ("G2SLS").
+
+as illustrated in the following example from 
+\cite{BALT:2005}, p.120/\citet{BALT:2013}, p.137 ("G2SLS").
   
 <<>>=
 data("Crime", package = "plm")
@@ -872,7 +874,7 @@ cr <- plm(log(crmrte) ~ log(prbarr) + log(polpc) + log(prbconv) +
          log(taxpc) + log(mix), data = Crime,
          model = "random")
 summary(cr)
-@   
+@
 
 The Hausman-Taylor model \citep[see][]{HAUS:TAYL:81} may be estimated
 with the \code{pht} function. The following example is from
