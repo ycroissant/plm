@@ -22,6 +22,9 @@ Changes in version 1.6-6
         to estimate IV models (but rather use 2-part formulae for IV models).
       * plm gives an informative error message if all terms are dropped in an 
         estimation due to aliasing.
+      * argument inst.method: value "bmc" renamed to "bms" for the Breusch-Mizon-Schmidt
+        method ("bmc" was a typo, back-compatible solution implemented).
+  * pht: argument model: value "bmc" renamed to "bms" (cf. plm).
   * pldv: new function to compute fixed and random effects models for
           truncated or censored dependent variable.
   * pbsytest:

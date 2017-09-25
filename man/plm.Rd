@@ -17,7 +17,7 @@ plm(formula, data, subset, weights, na.action,
     random.method = NULL,
     random.models = NULL,
     random.dfcor = NULL,
-    inst.method = c("bvk", "baltagi", "am", "bmc"),
+    inst.method = c("bvk", "baltagi", "am", "bms"),
     restrict.matrix = NULL,
     restrict.rhs = NULL,
     index = NULL, \dots)
@@ -46,7 +46,8 @@ plm(formula, data, subset, weights, na.action,
   \item{random.dfcor}{a numeric vector of length 2 indicating which degree of
     freedom should be used,}
   \item{inst.method}{the instrumental variable transformation: one of
-    \code{"bvk"}, \code{"baltagi"}, \code{"am"}, or \code{"bmc"},}
+    \code{"bvk"}, \code{"baltagi"}, \code{"am"}, or \code{"bms"} (see also 
+    Details),}
   \item{index}{the indexes,}
   \item{restrict.matrix}{a matrix which defines linear restrictions on
     the coefficients,}
@@ -96,17 +97,20 @@ instruments, the model can be estimated with:
   \item \code{formula = y~x1+x2+x3 | . -x1-x2+z1+z2}.
 }
 
-Balestra and Varadharajan-Krishnakumar's or Baltagi's method is used if
-\code{inst.method="bvk"} or if \code{inst.method="baltagi"}, respectively.
-(References for the methods are Balestra and Varadharajan-Krishnakumar (1987)
-and Baltagi (1981)).
-% TODO: add other IV methods here (bmc/bms, am)? If so, include references, too.
+If an instrument variable estimation is requested, argument \code{inst.method}
+selects the instrument variable transformation method:
+\itemize{
+  \item \code{"bvk"} (default) Balestra and Varadharajan-Krishnakumar (1987),
+  \item \code{"baltagi"} Baltagi (1981),
+  \item \code{"am"} Amemiya and MaCurdy (1986),
+  \item \code{"bms"} Breusch, Mizon, and Schmidt (1989).
+}
 
 The Hausman--Taylor estimator is computed if \code{model = "ht"}.
 }
 
 \value{
-An object of class \code{c("plm","panelmodel")}.
+An object of class \code{c("plm", "panelmodel")}.
 
 A \code{"plm"} object has the following elements :
   
@@ -156,6 +160,9 @@ Amemiya, T. (1971) The estimation of the variances in a
 variance--components model, \emph{International Economic Review},
 \bold{12}(1), pp. 1--13.
 
+Amemiya, T. and MaCurdy, T.E. (1986) Instrumental--variable estimation
+of an error components model, \emph{Econometrica}, \bold{54}(4), pp. 869--880.
+
 Balestra, P. and Varadharajan-Krishnakumar, J. (1987) Full information
 estimations of a system of simultaneous equations with error components
 structure, \emph{Econometric Theory}, \bold{3}(2), pp. 223--246.
@@ -168,6 +175,9 @@ component regression model}, \emph{Journal of Econometrics}, \bold{101}(2), pp. 
 
 Baltagi, B.H. (2013) \emph{Econometric Analysis of Panel Data}, 5th
 ed., John Wiley and Sons.
+
+Breusch, T.S., Mizon, G.E. and Schmidt, P. (1989) Efficient estimation
+using panel data, \emph{Econometrica}, \bold{57}(3), pp. 695--700.
 
 Hausman, J.A. and Taylor, W.E. (1981) Panel data and unobservable
 individual effects, \emph{Econometrica}, \bold{49}(6), pp. 1377--1398.

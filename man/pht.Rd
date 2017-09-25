@@ -9,7 +9,7 @@ The Hausman--Taylor estimator is an instrumental variable estimator without exte
 }
 
 \usage{
-pht(formula, data, subset, na.action, model = c("ht", "am", "bmc"), index = NULL, \dots)
+pht(formula, data, subset, na.action, model = c("ht", "am", "bms"), index = NULL, \dots)
 \method{summary}{pht}(object, \dots)
 \method{print}{summary.pht}(x, digits = max(3, getOption("digits") - 2),
      width = getOption("width"), subset = NULL, \dots)

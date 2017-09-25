@@ -179,17 +179,23 @@ plm.data_depr_orig <- function(x, indexes = NULL){
 }
 
 
-data2plm.data <- function(data,indexes=NULL){
-  data <- plm.data(data,indexes)
+data2plm.data <- function(data, indexes = NULL){
+  data <- plm.data(data, indexes)
   id.name <- names(data)[1]
   time.name <- names(data)[2]
-  list(data=data,id.name=id.name,time.name=time.name)
+  list(data = data, id.name = id.name, time.name = time.name)
 }
 
-pht <-  function(formula, data, subset, na.action, model = c("ht", "am", "bmc"), index = NULL, ...){
+pht <-  function(formula, data, subset, na.action, model = c("ht", "am", "bms"), index = NULL, ...){
 
   cl <- match.call(expand.dots = TRUE)
   mf <- match.call()
+  
+  if (length(model) == 1 && model == "bmc") {
+    # accept "bmc" (a long-standing typo) for Breusch-Mizon-Schmidt due to backward compatibility
+    model <- "bms"
+    warning("Use of model = \"bmc\" discouraged, set to \"bms\" for Breusch-Mizon-Schmidt instrumental variable transformation")
+  }
   model <- match.arg(model)
   # compute the model.frame using plm with model = NA
   mf[[1]] <- as.name("plm")
@@ -286,7 +292,7 @@ pht <-  function(formula, data, subset, na.action, model = c("ht", "am", "bmc"),
     }
     W <- cbind(within.inst, XC, Vxstar)
   }
-  if (model == "bmc"){
+  if (model == "bms"){
     between.inst <- model.matrix(formula, data, model = "Between",
                                  rhs = 2)[, exo.var, drop = FALSE]
     Vx <- within.inst

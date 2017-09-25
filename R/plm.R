@@ -28,7 +28,7 @@ plm <- function(formula, data, subset, weights, na.action,
                 random.method = NULL,
                 random.models = NULL,
                 random.dfcor = NULL,
-                inst.method = c("bvk", "baltagi", "am", "bmc"),
+                inst.method = c("bvk", "baltagi", "am", "bms"),
                 restrict.matrix = NULL,
                 restrict.rhs = NULL,
                 index = NULL,
@@ -55,6 +55,12 @@ plm <- function(formula, data, subset, weights, na.action,
     # returned
     if (! anyNA(model)) model <- match.arg(model)
     if (! anyNA(model) & effect == "nested") model <- "random"
+    
+    if (length(inst.method) == 1 && inst.method == "bmc") {
+      # accept "bmc" (a long-standing typo) for Breusch-Mizon-Schmidt due to backward compatibility
+      inst.method <- "bms"
+      warning("Use of inst.method = \"bmc\" discouraged, set to \"bms\" for Breusch-Mizon-Schmidt instrumental variable transformation")
+    }
     inst.method <- match.arg(inst.method)
   
     # input checks for FD model: give informative error messages as
@@ -70,9 +76,9 @@ plm <- function(formula, data, subset, weights, na.action,
     # deprecated section:
     # pht is no longer maintained
     if (! is.na(model) && model == "ht"){
-        ht <- match.call(expand.dots=FALSE)
+        ht <- match.call(expand.dots = FALSE)
         m <- match(c("formula", "data", "subset", "na.action", "index"), names(ht), 0)
-        ht <- ht[c(1,m)]
+        ht <- ht[c(1, m)]
         ht[[1]] <- as.name("pht")
         ht <- eval(ht, parent.frame())
         return(ht)
@@ -114,7 +120,7 @@ plm <- function(formula, data, subset, weights, na.action,
     # preserve original row.names for data [also fancy rownames]; so functions
     # like pmodel.response(), model.frame(), model.matrix(), residuals() return
     # the original row.names eval(mf, parent.frame()) returns row.names as
-    # character vector containing"row_number" with incomplete observations
+    # character vector containing the "row_number" with incomplete observations
     # dropped
 #YC    row.names(data) <- orig_rownames[as.numeric(row.names(data))]
 
@@ -205,20 +211,20 @@ plm.fit <- function(formula, data, model, effect, random.method,
                 B1 <- model.matrix(formula, data, rhs = 2, model = "Between", 
                                    effect = effect, theta = theta)
                 
-                if (inst.method %in% c("am", "bmc")) 
+                if (inst.method %in% c("am", "bms")) 
                     StarW1 <- starX(formula, data, rhs = 2, model = "within", 
                                     effect = effect)
                 if (length(formula)[2] == 3){
                     W2 <- model.matrix(formula, data, rhs = 3, model = "within", 
                                            effect = effect, theta = theta)
-                    if (inst.method == "bmc")
+                    if (inst.method == "bms")
                         StarW2 <- starX(formula, data, rhs = 3, model = "within", 
                                         effect = effect)
                 }
                 else W2 <- StarW2 <- NULL
                 if (inst.method == "baltagi") W <- sqrt(w) * cbind(W1, W2, B1)
                 if (inst.method == "am")  W <- sqrt(w) * cbind(W1, W2, B1, StarW1)
-                if (inst.method == "bmc") W <- sqrt(w) * cbind(W1, W2, B1, StarW1, StarW2)
+                if (inst.method == "bms") W <- sqrt(w) * cbind(W1, W2, B1, StarW1, StarW2)
                 zerovars <- apply(W, 2, function(x) max(abs(x), na.rm = TRUE)) < 1E-5
                 W <- W[, !zerovars, drop = FALSE]
             }
@@ -278,6 +284,7 @@ plm.fit <- function(formula, data, model, effect, random.method,
                        df.residual  = nrow(X) - ncol(X),
                        residuals    = e)
         # TODO: find a way to determine aliased coefs for tw RE unbalanced: compare 'gamma' to names of model matrix? 
+        
         # make 'aliased' the right length, so that summary.plm(model)$df[3] contains correct value (length(aliased))
         aliased <- rep(NA, length(gamma))
     }
@@ -517,7 +524,7 @@ summary.plm.list <- function(object, ...){
     std.err <- sqrt(diag(object$vcov))
     b <- coefficients(object)
     z <- b / std.err
-    p <- 2 * pt(abs(z), df = object$df.residual, lower.tail=FALSE)
+    p <- 2 * pt(abs(z), df = object$df.residual, lower.tail = FALSE)
     coefTable <- cbind("Estimate"   = b,
                        "Std. Error" = std.err,
                        "t-value"    = z,
@@ -591,7 +598,7 @@ print.summary.plm.list <- function(x, digits = max(3, getOption("digits") - 2),
   }
   invisible(x)
 }
-          
+
 print.plm.list <- function(x, digits = max(3, getOption("digits") - 2), width = getOption("width"),...){
   cat("\nModel Formulas:\n")
   for (l in 1:length(formula(x))){
@@ -870,7 +877,7 @@ tss.default <- function(x){
 tss.plm <- function(x, model = NULL){
     if (is.null(model)) model <- describe(x, "model")
     effect <- describe(x, "effect")
-    if (model == "ht") model = "pooling"
+    if (model == "ht") model <- "pooling"
     if (model == "random") theta <- x$ercomp$theta else theta <- NULL
     tss(pmodel.response(x, model = model, effect = effect, theta = theta))
 }
@@ -1126,7 +1133,7 @@ plot.plm <- function(x, dx = 0.2, N = NULL, seed = 1,
     if(random) abline(coef(re)[1], coef(re)[2], lty = "dotted")
     if(pooling) abline(coef(mco), lty = "dashed")
     if(between) abline(coef(be), lty = "dotdash")
-    # where to put the legends, depends on the sign of the ols slope
+    # where to put the legends, depends on the sign of the OLS slope
     modploted <- c(random, pooling, between, within)
     if (sum(modploted)){
         poslegend <- ifelse(beta > 0, "topleft", "topright")

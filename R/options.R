@@ -36,7 +36,6 @@ model.pgmm.list <- c(onestep  = "One step model",
 inst.method.list <- c(bvk     = "Balestra-Varadharajan-Krishnakumar",
                       baltagi = "Baltagi",
                       am      = "Amemiya-MaCurdy",
-                      bmc     = "Breusch-Mizon-Schmidt", # bmc was likly a typo in an old version, keep it here for some time...
                       bms     = "Breusch-Mizon-Schmidt")
 
 robust.list <- c(white1   = "White 1",
