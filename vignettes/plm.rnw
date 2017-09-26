@@ -1488,8 +1488,6 @@ straightforward for them. The wrapper functions \code{pbgtest} and
 Breusch-Godfrey and Durbin-Watson tests from package \pkg{lmtest}:
 
 <<generalAR>>=
-## this can be taken away as soon as attached to plm.rnw
-grun.fe <- plm(inv ~ value + capital, data = Grunfeld, model = "within")
 pbgtest(grun.fe, order = 2)
 @
 
@@ -1765,7 +1763,7 @@ $$
 So that the unit-root hypothesis is now $\rho = 0$.
 
 Some of the unit-root tests for panel data are based on preliminary
-results obtained by running the above Augmented Dickey-Fuller
+results obtained by running the above Augmented Dickey-Fuller (ADF)
 regression. 
 
 First, we have to determine the optimal number of lags $p_i$ for each
