@@ -41,6 +41,10 @@ An object of class \code{"purtest"}: a list with the elements \code{"statistic"}
 }
 
 \details{
+% TODO: in general, write more to the various tests
+% TODO: mention which statistic of IPS (2003) we output: Ztbar or Wtbar? (it is not t-bar, the mean of t statistics)
+
+
 All these tests except \code{"hadri"} are based on the estimation of augmented Dickey-Fuller (ADF) regressions for each time series.
 A statistic is then computed using the t-statistics associated with the lagged variable. The Hadri statistic is the cross-sectional 
 average of the individual KPSS statistics (Kwiatkowski/Phillips/Schmidt/Shin (1992)), standardized by their asymptotic mean and 
@@ -49,6 +53,7 @@ standard deviation.
 The test statistic for \code{"madwu"} is a Fisher-type test ("inverse chi-squared test") that combines p-values from 
 individual tests; the individual p-values are approximated as described in MacKinnon (1994). The same test is described in Choi (2001)
 (the statistic being called "P" there).
+
 
 The kind of test to be computed can be specified in several ways, depending on how the data is handed over to the function:
 \itemize{

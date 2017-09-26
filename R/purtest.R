@@ -377,6 +377,7 @@ purtest <- function(object, data = NULL, index = NULL,
                     names.exo[exo],")")
 
   if (test == "hadri"){
+    ## Hadri's test is applicable to balanced data only
     
     if (exo == "none") stop("exo = \"none\" is not a valid option for Hadri's test")
     
@@ -489,18 +490,20 @@ purtest <- function(object, data = NULL, index = NULL,
     L <- sapply(idres, function(x) x[["T"]]) - lags - 1
     adjval <- mapply(function(x, y) adj.ips.value(x, y, exo = exo),
                      as.list(L), as.list(lags))
-    # get the adjustment parameters for the mean and the variance
+    # get the adjustment parameters for the mean and the variance of the individual t statistics
     trho <- sapply(idres, function(x) x[["trho"]])
     tbar <- mean(trho)
     Etbar <- mean(adjval[1,])
     Vtbar <- mean(adjval[2,])
-    stat <- c(z = sqrt(n)*(tbar-Etbar)/sqrt(Vtbar))
-    pvalue <- 2*pnorm(abs(stat), lower.tail = FALSE)
+    stat <- c(z = sqrt(n) * (tbar-Etbar) / sqrt(Vtbar)) # (3.13) or (4.10) in IPS (2003)? [Ztbar or Wtbar]
+    pvalue <- pnorm(stat, lower.tail = TRUE) # need lower.tail = TRUE (like ADF one-sided to the left), was until rev. 577: 2*pnorm(abs(stat), lower.tail = FALSE)
     parameter <- NULL
   }
 
   if (test == "madwu"){
     # Maddala/Wu (1999), pp. 636-637; Baltagi (2013), pp. 283-285
+    ## does not require a balanced panel
+    
     trho <- sapply(idres, function(x) x[["trho"]])
  #   pvalues.trho <- 2*pnorm(abs(trho), lower.tail = FALSE)  # ... until rev. 551
     pvalues.trho <- padf(trho, exo = exo)

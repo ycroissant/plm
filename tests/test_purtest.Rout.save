@@ -36,7 +36,7 @@ https://r-forge.r-project.org/projects/maxlik/
 	Im-Pesaran-Shin Unit-Root Test (ex. var.: Individual Intercepts)
 
 data:  pG$inv
-z = 2.5801, p-value = 0.009876
+z = 2.5801, p-value = 0.9951
 alternative hypothesis: stationarity
 
 > purtest(inv ~ 1, data = Grunfeld, index = "firm", pmax = 4, test = "madwu")
@@ -75,7 +75,7 @@ Im-Pesaran-Shin Unit-Root Test
 Exogenous variables: Individual Intercepts 
 User-provided lags
 statistic: 4.51 
-p-value: 0 
+p-value: 1 
     lags obs         rho        trho    mean    var
 X1     2  17  0.37455746  1.69705718 -1.4034 1.0344
 X2     2  17 -0.33653803 -1.31826344 -1.4034 1.0344
@@ -120,7 +120,7 @@ X10    1  18 -0.23247810 -1.68616532 -1.5108 0.9534
 	Im-Pesaran-Shin Unit-Root Test (ex. var.: Individual Intercepts)
 
 data:  pdata.frame(Grunfeld)[, "inv"]
-z = 2.5801, p-value = 0.009876
+z = 2.5801, p-value = 0.9951
 alternative hypothesis: stationarity
 
 > purtest(pdata.frame(Grunfeld)[ , "inv"],  pmax = 4, test = "ips", exo = "trend")     # works
@@ -129,7 +129,7 @@ alternative hypothesis: stationarity
 	Trend)
 
 data:  pdata.frame(Grunfeld)[, "inv"]
-z = -3.0337, p-value = 0.002416
+z = -3.0337, p-value = 0.001208
 alternative hypothesis: stationarity
 
 > # purtest(pdata.frame(Grunfeld)[ , "inv"],  pmax = 4, test = "ips", exo = "none")      # works as intended: gives informative error msg
@@ -180,6 +180,34 @@ z = 9.5782, p-value < 2.2e-16
 alternative hypothesis: at least one series has a unit root
 
 > 
+> 
+> ### IPS (2003) test
+> ## use dfcor = TRUE to match gretl 2017c and EViews 9.5 exactly
+> b <- purtest(pG$value, test = "ips", exo = "intercept", lags = 0, dfcor = TRUE)
+> unlist(lapply(b$idres, function(x) x[["rho"]]))
+     X1.Ly      X2.Ly      X3.Ly      X4.Ly      X5.Ly      X6.Ly      X7.Ly 
+-0.7221173 -0.8376784 -0.5503275 -0.9812049 -0.0246934  0.1313902 -0.2767321 
+     X8.Ly      X9.Ly     X10.Ly 
+-0.2343526 -0.3064189 -0.6898608 
+> unlist(lapply(b$idres, function(x) x[["trho"]]))
+     X1.Ly      X2.Ly      X3.Ly      X4.Ly      X5.Ly      X6.Ly      X7.Ly 
+-3.0980241 -3.9708351 -2.4918122 -4.4232340 -0.2247631  2.0376353 -1.5074566 
+     X8.Ly      X9.Ly     X10.Ly 
+-1.4013933 -1.4852375 -2.8137835 
+> 
+> ## lags = 2 to match gretl and EViews exactly (lags > 0 gives the Wtbar stat in gretl and EViews)
+> b_lag2 <- purtest(pG$value, test = "ips", exo = "intercept", lags = 2, dfcor = TRUE)
+> unlist(lapply(b_lag2$idres, function(x) x[["rho"]]))
+      X1.Ly       X2.Ly       X3.Ly       X4.Ly       X5.Ly       X6.Ly 
+-0.77717841 -0.66130878 -0.53160334 -1.07349948 -0.01866852  0.25337574 
+      X7.Ly       X8.Ly       X9.Ly      X10.Ly 
+-0.38352999  0.35686831 -0.86010702 -0.83869431 
+> unlist(lapply(b_lag2$idres, function(x) x[["trho"]]))
+      X1.Ly       X2.Ly       X3.Ly       X4.Ly       X5.Ly       X6.Ly 
+-1.43117190 -1.83739675 -1.58422268 -2.15851492 -0.08602929  2.80099666 
+      X7.Ly       X8.Ly       X9.Ly      X10.Ly 
+-1.75556519  1.02362053 -2.07408161 -2.11875217 
+> 
 > proc.time()
    user  system elapsed 
-   1.34    0.07    1.40 
+   1.32    0.15    1.48 

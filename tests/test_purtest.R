@@ -43,3 +43,15 @@ purtest(pG$value, exo = "intercept", test = "hadri", Hcons = FALSE)
 purtest(pG$value, exo = "intercept", test = "hadri")
 purtest(pG$value, exo = "trend", test = "hadri", Hcons = FALSE)
 purtest(pG$value, exo = "trend", test = "hadri")
+
+
+### IPS (2003) test
+## use dfcor = TRUE to match gretl 2017c and EViews 9.5 exactly
+b <- purtest(pG$value, test = "ips", exo = "intercept", lags = 0, dfcor = TRUE)
+unlist(lapply(b$idres, function(x) x[["rho"]]))
+unlist(lapply(b$idres, function(x) x[["trho"]]))
+
+## lags = 2 to match gretl and EViews exactly (lags > 0 gives the Wtbar stat in gretl and EViews)
+b_lag2 <- purtest(pG$value, test = "ips", exo = "intercept", lags = 2, dfcor = TRUE)
+unlist(lapply(b_lag2$idres, function(x) x[["rho"]]))
+unlist(lapply(b_lag2$idres, function(x) x[["trho"]]))
