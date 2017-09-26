@@ -12,7 +12,7 @@
 
 \usage{
 purtest(object, data = NULL, index = NULL,
-        test = c("levinlin", "ips", "madwu", "hadri"),
+        test = c("levinlin", "ips", "madwu", "Pm" , "invnormal", "logit", "hadri"),
         exo = c("none", "intercept", "trend"),
         lags = c("SIC", "AIC", "Hall"), pmax = 10, Hcons = TRUE,
         q = NULL, dfcor = FALSE, fixedT = TRUE, \dots)
@@ -25,7 +25,7 @@ purtest(object, data = NULL, index = NULL,
   \item{object, x}{Either a \code{"data.frame"} or a matrix containing the time series, a \code{"pseries"} object, a formula, or the name of a column of a \code{"data.frame"}, or a \code{"pdata.frame"} on which the test has to be computed; a \code{"purtest"} object for the print and summary methods,}
   \item{data}{a \code{"data.frame"} or a \code{"pdata.frame"} object,}
   \item{index}{the indexes,}
-  \item{test}{the test to be computed: one of \code{"levinlin"} for Levin, Lin and Chu (2002), \code{"ips"} for Im, Pesaran and Shin (2003), \code{"madwu"} for Maddala and Wu (1999), or \code{"hadri"} for Hadri (2000), see Details,}
+  \item{test}{the test to be computed: one of \code{"levinlin"} for Levin, Lin and Chu (2002), \code{"ips"} for Im, Pesaran and Shin (2003), \code{"madwu"} for Maddala and Wu (1999), \code{"Pm"} , \code{"invnormal"}, \code{"logit"} for various tests in Choi (2001), or \code{"hadri"} for Hadri (2000), see Details,}
   \item{exo}{the exogenous variables to introduce in the augmented Dickey--Fuller (ADF) regressions, one of: no exogenous variables (\code{"none"}), individual intercepts (\code{"intercept"}), or individual intercepts and trends (\code{"trend"}), but see Details,}
   \item{lags}{the number of lags to be used for the augmented Dickey-Fuller regressions: either an integer (the number of lags for all time series), a vector of integers (one for each time series), or a character string for an automatic computation of the number of lags, based on either the AIC (\code{"AIC"}), the SIC (\code{"SIC"}), or on the method by Hall (1994) (\code{"Hall"}),}
   \item{pmax}{maximum number of lags,}
@@ -46,13 +46,14 @@ An object of class \code{"purtest"}: a list with the elements \code{"statistic"}
 
 
 All these tests except \code{"hadri"} are based on the estimation of augmented Dickey-Fuller (ADF) regressions for each time series.
-A statistic is then computed using the t-statistics associated with the lagged variable. The Hadri statistic is the cross-sectional 
-average of the individual KPSS statistics (Kwiatkowski/Phillips/Schmidt/Shin (1992)), standardized by their asymptotic mean and 
-standard deviation.
+A statistic is then computed using the t-statistics associated with the lagged variable. The Hadri residual-based LM statistic is 
+the cross-sectional average of the individual KPSS statistics (Kwiatkowski/Phillips/Schmidt/Shin (1992)), standardized by their 
+asymptotic mean and standard deviation.
 
 The test statistic for \code{"madwu"} is a Fisher-type test ("inverse chi-squared test") that combines p-values from 
 individual tests; the individual p-values are approximated as described in MacKinnon (1994). The same test is described in Choi (2001)
-(the statistic being called "P" there).
+and called P test. Choi (2001) also proposed a modified P test (\code{"Pm"}) for large N and further the inverse normal test 
+(\code{"invnormal"}) and the logit test (\code{"logit"}). The tests by Choi rely on the same individual p-value approximations as \code{"madwu"}.
 
 
 The kind of test to be computed can be specified in several ways, depending on how the data is handed over to the function:

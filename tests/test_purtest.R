@@ -55,3 +55,9 @@ unlist(lapply(b$idres, function(x) x[["trho"]]))
 b_lag2 <- purtest(pG$value, test = "ips", exo = "intercept", lags = 2, dfcor = TRUE)
 unlist(lapply(b_lag2$idres, function(x) x[["rho"]]))
 unlist(lapply(b_lag2$idres, function(x) x[["trho"]]))
+
+#### various tests from Choi (2001)
+purtest(pG$value, test = "Pm", exo = "intercept", lags = 2, dfcor = TRUE)
+purtest(pG$value, test = "invnormal", exo = "intercept", lags = 2, dfcor = TRUE)
+purtest(pG$value, test = "logit", exo = "intercept", lags = 2, dfcor = TRUE)
+

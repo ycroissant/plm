@@ -208,6 +208,33 @@ alternative hypothesis: at least one series has a unit root
       X7.Ly       X8.Ly       X9.Ly      X10.Ly 
 -1.75556519  1.02362053 -2.07408161 -2.11875217 
 > 
+> #### various tests from Choi (2001)
+> purtest(pG$value, test = "Pm", exo = "intercept", lags = 2, dfcor = TRUE)
+
+	Choi's modified P Unit-Root Test (ex. var.: Individual Intercepts)
+
+data:  pG$value
+Pm = -0.76782, p-value = 0.7787
+alternative hypothesis: stationarity
+
+> purtest(pG$value, test = "invnormal", exo = "intercept", lags = 2, dfcor = TRUE)
+
+	Choi's Inverse Normal Unit-Root Test (ex. var.: Individual Intercepts)
+
+data:  pG$value
+z = 1.4928, p-value = 0.9322
+alternative hypothesis: stationarity
+
+> purtest(pG$value, test = "logit", exo = "intercept", lags = 2, dfcor = TRUE)
+
+	Choi's Logit Unit-Root Test (ex. var.: Individual Intercepts)
+
+data:  pG$value
+L* = 1.943, df = 54, p-value = 0.9714
+alternative hypothesis: stationarity
+
+> 
+> 
 > proc.time()
    user  system elapsed 
-   1.32    0.15    1.48 
+   1.37    0.12    1.48 

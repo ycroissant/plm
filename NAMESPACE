@@ -16,6 +16,7 @@ importFrom("stats", "nobs")
 importFrom("stats", "alias")
 importFrom("stats", "pnorm")
 importFrom("stats", "dnorm")
+importFrom("stats", "qnorm")
 importFrom("stats", "sd")
 
 importFrom("maxLik", "maxLik")

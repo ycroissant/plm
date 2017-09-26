@@ -6,6 +6,8 @@
                         * fixed statistic in non-heteroskedasticity case (Hcons = FALSE).
                         * for non-het. consistent case, one can now use dfcor = TRUE.
       * test = "ips": p-value fixed (now one-sided to the left).
+      * new tests implemented: Choi (2001) modified P ("Pm"), inverse normal ("invnormal"),
+                               logit ("logit").
       
   * pbltest: now accepts pdata.frames with index not in first two columns.
   * cortab: new function to compute cross-sectional correlation matrix.

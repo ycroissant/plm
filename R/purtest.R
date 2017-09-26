@@ -108,6 +108,9 @@ names.exo <- c(none = "None",
 names.test <- c(levinlin = "Levin-Lin-Chu Unit-Root Test",
                 ips = "Im-Pesaran-Shin Unit-Root Test",
                 madwu = "Maddala-Wu Unit-Root Test",
+                Pm = "Choi's modified P Unit-Root Test",
+                invnormal = "Choi's Inverse Normal Unit-Root Test",
+                logit = "Choi's Logit Unit-Root Test",
                 hadri = "Hadri Test")
 
 my.lm.fit <- function(X, y, dfcor = TRUE, ...){
@@ -308,7 +311,7 @@ longrunvar <- function(x, exo = c("intercept", "none", "trend"), q = NULL){
 }
 
 purtest <- function(object, data = NULL, index = NULL,
-                    test = c("levinlin", "ips", "madwu", "hadri"),
+                    test = c("levinlin", "ips", "madwu", "Pm" , "invnormal", "logit", "hadri"),
                     exo = c("none", "intercept", "trend"),
                     lags = c("SIC", "AIC", "Hall"),
                     pmax = 10, Hcons = TRUE,
@@ -501,7 +504,7 @@ purtest <- function(object, data = NULL, index = NULL,
   }
 
   if (test == "madwu"){
-    # Maddala/Wu (1999), pp. 636-637; Baltagi (2013), pp. 283-285
+    # Maddala/Wu (1999), pp. 636-637; Choi (2001), p. 253; Baltagi (2013), pp. 283-285
     ## does not require a balanced panel
     
     trho <- sapply(idres, function(x) x[["trho"]])
@@ -513,6 +516,44 @@ purtest <- function(object, data = NULL, index = NULL,
     pvalue <- pchisq(stat, df = parameter, lower.tail = FALSE)
     adjval <- NULL
   }
+  
+  if (test == "Pm"){
+    ## Choi Pm (modified P) [proposed for large N]
+    trho <- sapply(idres, function(x) x[["trho"]])
+    pvalues.trho <- padf(trho, exo = exo)
+    n <- length(trho)
+    # formula (18) in Choi (2001), p. 255:
+    stat <- c( "Pm" = 1/(2*sqrt(n)) * sum(-2*log(pvalues.trho) -2) ) # == 1/sqrt(n) * sum(log(pvalues.trho) +1)
+    pvalue <- pnorm(stat, lower.tail = FALSE) # one-sided
+    parameter <- NULL
+    adjval <- NULL
+  }
+  
+  if (test == "invnormal"){
+    # inverse normal test as in Choi (2001)
+    trho <- sapply(idres, function(x) x[["trho"]])
+    pvalues.trho <- padf(trho, exo = exo)
+    n <- length(trho)
+    stat <- c("z" = sum(qnorm(pvalues.trho))/sqrt(n)) # formula (9), Choi (2001), p. 253
+    pvalue <- pnorm(stat, lower.tail = TRUE) # formula (12), Choi, p. 254
+    parameter <- NULL
+    adjval <- NULL
+  }
+  
+  if (test == "logit"){
+    # logit test as in Choi (2001)
+    trho <- sapply(idres, function(x) x[["trho"]])
+    pvalues.trho <- padf(trho, exo = exo)
+    n <- length(trho)
+    l_stat <-  c("L*" = sum(log(pvalues.trho / (1 - pvalues.trho)))) # formula (10), Choi (2001), p. 253
+    k <- (3 * (5*n + 4)) / (pi^2 * n * (5*n + 2))
+    stat <- sqrt(k) * l_stat  # formula (13), Choi (2001), p. 254
+    parameter <- c("df" = 5*n+4)
+    pvalue <- pt(stat, df = parameter, lower.tail = TRUE)
+    adjval <- NULL
+  }
+  
+  
   
   htest <- structure(list(statistic = stat,
                           parameter = parameter,
