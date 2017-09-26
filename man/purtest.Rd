@@ -50,10 +50,16 @@ A statistic is then computed using the t-statistics associated with the lagged v
 the cross-sectional average of the individual KPSS statistics (Kwiatkowski/Phillips/Schmidt/Shin (1992)), standardized by their 
 asymptotic mean and standard deviation.
 
-The test statistic for \code{"madwu"} is a Fisher-type test ("inverse chi-squared test") that combines p-values from 
-individual tests; the individual p-values are approximated as described in MacKinnon (1994). The same test is described in Choi (2001)
-and called P test. Choi (2001) also proposed a modified P test (\code{"Pm"}) for large N and further the inverse normal test 
-(\code{"invnormal"}) and the logit test (\code{"logit"}). The tests by Choi rely on the same individual p-value approximations as \code{"madwu"}.
+Fisher-type tests that combine p-values from tests per individual are available:
+\itemize{
+\item \code{"madwu"} is the inverse chi-squared test (Maddala and Wu (1999)), also called P test by Choi (2001)),
+\item \code{"Pm"} is the modified P test proposed by Choi (2001) for large N,
+\item \code{"invnormal"} is the inverse normal test by Choi (2001), and
+\item \code{"logit"} is the logit test by Choi (2001).
+}
+The individual p-values for the Fisher-type tests are approximated as described in MacKinnon (1994).
+
+
 
 
 The kind of test to be computed can be specified in several ways, depending on how the data is handed over to the function:

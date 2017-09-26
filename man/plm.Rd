@@ -106,7 +106,7 @@ selects the instrument variable transformation method:
   \item \code{"bms"} for Breusch, Mizon, and Schmidt (1989).
 }
 
-The Hausman--Taylor estimator is computed if \code{model = "ht"}.
+The Hausman--Taylor estimator (Hausman and Taylor (1981)) is computed if \code{model = "ht"}.
 }
 
 \value{
