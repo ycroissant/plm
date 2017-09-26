@@ -1,16 +1,3 @@
-  * purtest:
-      * test = "madwu": Maddala-Wu test statistic used to be computed using p-values from 
-                        the normal distribution, fixed now, by using approximated p-values
-                        for the tau distribution described by MacKinnon (1994).
-      * test = "hadri": * fixed p-value (now based on one-sided test).
-                        * fixed statistic in non-heteroskedasticity case (Hcons = FALSE).
-                        * for non-het. consistent case, one can now use dfcor = TRUE.
-      * test = "ips" and "levinlin": p-values fixed (now one-sided to the left).
-      * new tests implemented: Choi (2001) modified P ("Pm"), inverse normal ("invnormal"),
-                               logit ("logit").
-      
-  * pbltest: now accepts pdata.frames with index not in first two columns.
-  * cortab: new function to compute cross-sectional correlation matrix.
 
 
 
@@ -32,6 +19,17 @@ Changes in version 1.6-6
       * argument inst.method: value "bmc" renamed to "bms" for the Breusch-Mizon-Schmidt
         method ("bmc" was a typo, back-compatible solution implemented).
   * pht: argument model: value "bmc" renamed to "bms" (cf. plm).
+  * purtest:
+      * for test = 
+       * "madwu": Maddala-Wu test statistic used to be computed using p-values from 
+                  the normal distribution, fixed now, by using approximated p-values
+                  for the tau distribution described by MacKinnon (1994).
+       * "hadri": * fixed p-value (now based on one-sided test).
+                  * fixed statistic in non-heteroskedasticity case (Hcons = FALSE).
+                  * for non-het. consistent case, one can now use dfcor = TRUE.
+       * "ips", "levinlin": p-values fixed (now one-sided to the left).
+      * new tests: Choi (2001) modified P ("Pm"), inverse normal ("invnormal"),
+                   logit ("logit").
   * pldv: new function to compute fixed and random effects models for
           truncated or censored dependent variable.
   * pbsytest:
@@ -59,6 +57,7 @@ Changes in version 1.6-6
                      structures as in Baltagi/Song/Jung (2001).
   * ranef: new function to calculate random effects from RE model objects, like
            fixef for FE models.
+  * cortab: new function to compute cross-sectional correlation matrix.
   * pwartest, pwfdtest: * statistics are labelled as F statistics.
                         * calculations now done without car::linearHypothesis().
   * difft.pseries (note the "t") implemented (non-exported), diff-ing with
@@ -67,6 +66,7 @@ Changes in version 1.6-6
   * diff.pseries: * logicals can now be diff'ed (result is integer, mimics base::diff).
                   * does not warn anymore if argument 'lag' has length > 1.
   * mtest, sargan: return values gained data.name element.
+  * pbltest: now accepts pdata.frames with index not in first two columns.
   * (internal, not exported): residuals_overall_exp.plm and fitted_exp.plm are added
     for testing purposes: residuals_overall_exp.plm always gives the residuals of the
     overall/outer plm model, fitted_exp.plm gives the fitted values (by subtracting
