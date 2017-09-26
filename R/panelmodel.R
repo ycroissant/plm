@@ -54,36 +54,3 @@ update.panelmodel <- function (object, formula., ..., evaluate = TRUE){
   else call
 }
 
-
-print.form <- function(x, length.line){
-  x <- deparse(x,width.cutoff=length.line)
-  n <- length(x)
-  cat(paste(x[1],"\n",sep=""))
-  if (n>1){
-    for (i in 2:n){
-      cat(paste(x[i],"\n",sep=""))
-    }
-  }
-}
-
-print.theta <- function(x, digits){
-  effect <- describe(x, "effect")
-  balanced <- is.pbalanced(model.frame(x)) # pdim <- pdim(model.frame(x))
-  if (effect != "twoways"){
-    if (balanced){
-      cat(paste("theta: ", signif(x$theta,digits),"\n"), sep = "")
-    }
-    else{
-      cat("theta:\n")
-      print(summary(x$theta))
-    }
-  }
-  else{
-    if (balanced){
-      cat(paste("theta: ", signif(x$theta$id,digits), " (id) ", 
-                           signif(x$theta$time,digits), " (time) ",
-                           signif(x$theta$total,digits), " (total)\n", sep=""))
-    }
-  }
-}
-

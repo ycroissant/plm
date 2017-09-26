@@ -365,3 +365,15 @@ pchibarsq <- function(q, df, weights, lower.tail = TRUE, ... ) {
   res <- sum(weights * pchisq(q, df = df, lower.tail = lower.tail, ...))
   return(res)
 }
+
+## TODO: is print.form actually used? - delete?
+print.form <- function(x, length.line){
+  x <- deparse(x,width.cutoff=length.line)
+  n <- length(x)
+  cat(paste(x[1],"\n",sep=""))
+  if (n>1){
+    for (i in 2:n){
+      cat(paste(x[i],"\n",sep=""))
+    }
+  }
+}
