@@ -483,7 +483,7 @@ purtest <- function(object, data = NULL, index = NULL,
     trho <- rho/sdrho
     stat <- (trho - n * tildeT * sbar / sigmaeps2 * sdrho * mymu)/mysig
     names(stat) <- "z" # avoids a concatenated name like z.x1
-    pvalue <- 2*pnorm(abs(stat), lower.tail = FALSE)
+    pvalue <- pnorm(stat, lower.tail = TRUE) # need lower.tail = TRUE (like ADF one-sided to the left)
     parameter <- NULL
   }
 

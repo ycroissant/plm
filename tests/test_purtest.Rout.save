@@ -145,7 +145,7 @@ alternative hypothesis: stationarity
 > ## z stat     =  4.18428, p = 0.0000 (intercept)
 > ## z stat het = 10.1553,  p = 0.0000 (intercept)
 > ## z stat     =  4.53395, p = 0.0000 (trend)
-> ## z stat het = 9.57816,  p = 0.0000 (trend)
+> ## z stat het =  9.57816, p = 0.0000 (trend)
 > purtest(pG$value, exo = "intercept", test = "hadri", Hcons = FALSE)
 
 	Hadri Test (ex. var.: Individual Intercepts)
@@ -234,7 +234,18 @@ L* = 1.943, df = 54, p-value = 0.9714
 alternative hypothesis: stationarity
 
 > 
+> ### Levin-Lin-Chu test
+> purtest(pG$value, test = "levinlin", exo = "intercept", lags = 0, dfcor = TRUE)
+
+	Levin-Lin-Chu Unit-Root Test (ex. var.: Individual Intercepts)
+
+data:  pG$value
+z = 0.31527, p-value = 0.6237
+alternative hypothesis: stationarity
+
+Warning message:
+In selectT(l, theTs) : the time series is short
 > 
 > proc.time()
    user  system elapsed 
-   1.37    0.12    1.48 
+   1.37    0.14    1.51 

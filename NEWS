@@ -5,7 +5,7 @@
       * test = "hadri": * fixed p-value (now based on one-sided test).
                         * fixed statistic in non-heteroskedasticity case (Hcons = FALSE).
                         * for non-het. consistent case, one can now use dfcor = TRUE.
-      * test = "ips": p-value fixed (now one-sided to the left).
+      * test = "ips" and "levinlin": p-values fixed (now one-sided to the left).
       * new tests implemented: Choi (2001) modified P ("Pm"), inverse normal ("invnormal"),
                                logit ("logit").
       
