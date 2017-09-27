@@ -404,16 +404,24 @@ purtest <- function(object, data = NULL, index = NULL,
                   mean(unlist(resid)^2)
                 } else {
                   # df correction as suggested in Hadri (2000), p. 157
-                  dfcorval <- ifelse(exo == "intercept", n * (L-1), n * (L-2))
+                  # -> apply to full length residuals over all inviduals -> n*(L-1) or n*(L-2)
+                  dfcorval <- switch(exo, "intercept" = n*(L-1),
+                                          "trend"     = n*(L-2))
                   sum(unlist(resid)^2) / dfcorval
                 }
-      S <- (1/n) * sum(unlist(cumres2))/(L^2)
+      S <- sum(unlist(cumres2))/(L^2 * n)
       LM <- S / sigma2
     }
     else{
-      sigma2i <- lapply(resid, function(x) mean(x^2))
-      ## TODO: ? dfcor also applicable for het. const case with individual sigma2 estimates?
-      ##       If not, leave a comment here.
+      sigma2i <- if (!dfcor) {
+                  lapply(resid, function(x) mean(x^2))
+                 } else {
+                   # df correction as suggested in Hadri (2000), p. 157
+                   # -> apply to individual residuals length, so just L -> L-1 or L-2
+                   dfcorval <- switch(exo, "intercept" = (L-1),
+                                           "trend"     = (L-2))
+                   lapply(resid, function(x) sum(x^2)/dfcorval)
+                 }
       Sit2 <- mapply("/", cumres2, sigma2i)
       LM <- sum(unlist(Sit2))/ (L^2 * n)
       method <- paste0(method, " (Heterosked. Consistent)")

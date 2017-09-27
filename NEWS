@@ -1,6 +1,5 @@
 
 
-
 Changes in version 1.6-6
 
   * ercomp: re-written to be a more general framework.
@@ -26,7 +25,7 @@ Changes in version 1.6-6
                   for the tau distribution described by MacKinnon (1994).
        * "hadri": * fixed p-value (now based on one-sided test).
                   * fixed statistic in non-heteroskedasticity case (Hcons = FALSE).
-                  * for non-het. consistent case, one can now use dfcor = TRUE.
+                  * degrees of freedom correction implemented (set dfcor = TRUE).
        * "ips", "levinlin": p-values fixed (now one-sided to the left).
       * new tests: Choi (2001) modified P ("Pm"), inverse normal ("invnormal"),
                    logit ("logit").
