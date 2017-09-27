@@ -89,7 +89,7 @@ alagt <- function(x, ak) {
     #      as.numeric(as.character(factor_var))
     time <- as.numeric(levels(time))[as.integer(time)]
     
-    list_id_timevar <- split(time, id, drop = T)
+    list_id_timevar <- split(time, id, drop = TRUE)
     
     index_lag_ak_all_list <- sapply(X = list_id_timevar, 
                                     FUN = function(id_timevar) { 

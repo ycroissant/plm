@@ -142,7 +142,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
         if (!id.name %in% names(x)) stop(paste("variable ",id.name," does not exist (individual index)", sep=""))
         
         if (is.factor(x[[id.name]])){
-            id <- x[[id.name]] <- x[[id.name]][drop=T] # drops unused levels of factor
+            id <- x[[id.name]] <- x[[id.name]][drop=TRUE] # drops unused levels of factor
         }
         else{
             id <- x[[id.name]] <- as.factor(x[[id.name]])
@@ -170,7 +170,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
             if (!time.name %in% names(x)) stop(paste0("variable ", time.name, " does not exist (time index)"))
             
             if (is.factor(x[[time.name]])){
-                time <- x[[time.name]] <- x[[time.name]][drop=T] # drops unused levels of factor
+                time <- x[[time.name]] <- x[[time.name]][drop=TRUE] # drops unused levels of factor
             }
             else{
                 time <- x[[time.name]] <- as.factor(x[[time.name]])
@@ -181,7 +181,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     # if present, make group variable a factor (just like for id and time variables)
     if (!is.null(group.name)) {
         if (is.factor(x[[group.name]])){
-            group <- x[[group.name]] <- x[[group.name]][drop=T] # drops unused levels of factor
+            group <- x[[group.name]] <- x[[group.name]][drop=TRUE] # drops unused levels of factor
         }
         else{
             group <- x[[group.name]] <- as.factor(x[[group.name]])
@@ -260,7 +260,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 # "[.pseries" <- function(x, ...) {
 # 
 #   ## use '...' instead of only one specific argument, because subsetting for
-#   ## factors can have argument 'drop', e.g., x[i, drop=T] see ?Extract.factor
+#   ## factors can have argument 'drop', e.g., x[i, drop=TRUE] see ?Extract.factor
 # 
 #   index <- attr(x, "index")
 # 

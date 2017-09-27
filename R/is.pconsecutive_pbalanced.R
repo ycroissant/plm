@@ -46,7 +46,7 @@ is.pconsecutive.default <- function(x, id, time, na.rm.tindex = FALSE, ...) {
   #      as.numeric(as.character(factor_var))
   if (!is.numeric(time) && is.factor(time)) time <- as.numeric(levels(time))[as.integer(time)]
   
-  list_id_timevar <- split(time, id, drop = T)
+  list_id_timevar <- split(time, id, drop = TRUE)
 
   res <- sapply(list_id_timevar, function(id_timevar) { if(anyNA(id_timevar)) {
                                                            NA # return NA if NA found in the time periods for individual

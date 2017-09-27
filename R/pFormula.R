@@ -72,7 +72,7 @@ model.matrix.pFormula <- function(object, data,
                          "Between" = Between(X, cond),
                          "between" = between(X, cond),
                          "pooling" = X,
-                         "mean"    = matrix(.colMeans(X,nrow(X),ncol(X)), nrow(X),ncol(X),byrow=T), # .colMeans for speed # matrix(apply(X, 2, mean), nrow(X), ncol(X), byrow = T),
+                         "mean"    = matrix(.colMeans(X,nrow(X),ncol(X)), nrow(X),ncol(X),byrow=TRUE), # .colMeans for speed # matrix(apply(X, 2, mean), nrow(X), ncol(X), byrow = T),
                          "random"  = X - theta * Between(X,cond),
                          "fd"      = pdiff(X, cond, effect = effect, has.intercept = has.intercept)
                          )
@@ -81,9 +81,9 @@ model.matrix.pFormula <- function(object, data,
         if (balanced){ # two-ways balanced
             result <- switch(model,
                              "within"  = X - Between(X,id) - Between(X,time) +
-                                 matrix(.colMeans(X,nrow(X),ncol(X)), nrow(X),ncol(X),byrow=T), # matrix(apply(X,2,mean),nrow(X),ncol(X),byrow=T)
+                                 matrix(.colMeans(X,nrow(X),ncol(X)), nrow(X),ncol(X),byrow=TRUE), # matrix(apply(X,2,mean),nrow(X),ncol(X),byrow=T)
                              "random"  = X - theta$id * Between(X,id) - theta$time * Between(X,time) +
-                                 theta$total * matrix(.colMeans(X,nrow(X),ncol(X)), nrow(X),ncol(X),byrow=T), # matrix(apply(X,2,mean),nrow(X),ncol(X),byrow=T),
+                                 theta$total * matrix(.colMeans(X,nrow(X),ncol(X)), nrow(X),ncol(X),byrow=TRUE), # matrix(apply(X,2,mean),nrow(X),ncol(X),byrow=T),
                              "pooling" = X,
                              # place case "mean" here also?
                              # catch everything else (twoways balanced) and give error message
@@ -267,9 +267,9 @@ model.matrix.pdata.frame <- function(object,
         if (balanced){ # two-ways balanced
             result <- switch(model,
                              "within"  = X - Between(X,id) - Between(X,time) +
-                                 matrix(.colMeans(X,nrow(X),ncol(X)), nrow(X),ncol(X),byrow=T), # matrix(apply(X,2,mean),nrow(X),ncol(X),byrow=T)
+                                 matrix(.colMeans(X,nrow(X),ncol(X)), nrow(X),ncol(X),byrow=TRUE), # matrix(apply(X,2,mean),nrow(X),ncol(X),byrow=T)
                              "random"  = X - theta$id * Between(X,id) - theta$time * Between(X,time) +
-                                 theta$total * matrix(.colMeans(X,nrow(X),ncol(X)), nrow(X),ncol(X),byrow=T), # matrix(apply(X,2,mean),nrow(X),ncol(X),byrow=T),
+                                 theta$total * matrix(.colMeans(X,nrow(X),ncol(X)), nrow(X),ncol(X),byrow=TRUE), # matrix(apply(X,2,mean),nrow(X),ncol(X),byrow=T),
                              "pooling" = X,
                              # place case "mean" here also?
                              # catch everything else (twoways balanced) and give error message

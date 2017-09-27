@@ -720,7 +720,7 @@ pwfdtest.panelmodel <- function(x, ..., h0 = c("fd", "fe")) {
   names(FDARstat) <- "F"
   df1 <- c(df1 = 1)
   df2 <- c(df2 = df.residual(auxmod))
-  pFDARstat <- pf(FDARstat, df1 = df1, df2 = df2, lower.tail = F)
+  pFDARstat <- pf(FDARstat, df1 = df1, df2 = df2, lower.tail = FALSE)
   
   ## insert usual htest features
   dname <- paste(deparse(substitute(x)))
