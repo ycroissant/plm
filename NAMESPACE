@@ -33,7 +33,7 @@ importFrom("lmtest", "bgtest")
 importFrom("lmtest", "dwtest")
 # importFrom("car", "linearHypothesis") # pkg 'car' in 'Suggests', so do not import
 importFrom("lattice", "xyplot")
-importFrom("statmod", "gauss.quad")
+# importFrom("statmod", "gauss.quad") # pkg 'statmod' in 'Suggests', so do not import
 importFrom("grDevices", "heat.colors", "rainbow")
 importFrom("graphics", "abline", "axis", "barplot", "legend", "lines",
            "plot", "points")

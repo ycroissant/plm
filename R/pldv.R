@@ -112,8 +112,19 @@ pldv <- function(formula, data, subset, weights, na.action,
         if (ncol(X) == 0) stop("empty model")
         y <- pmodel.response(formula, mf, model = "pooling", effect = "individual")
         id <- attr(mf, "index")[[1]]
+        
+          # The following is the only instance of statmod::gauss.quad, so check for 
+          # the package's availability. (We placed 'statmod' in 'Suggests' rather
+          # than 'Imports' so that it is not an absolutely required depedency.)
+          ## Procedure for pkg check for pkg in 'Suggests' as recommended in 
+          ## Wickham, R packages (http://r-pkgs.had.co.nz/description.html).
+          if (!requireNamespace("statmod", quietly = TRUE)) {
+            stop(paste("Function 'gauss.quad' from package 'statmod' needed for this function to work.",
+                       "Please install it, e.g., with 'install.packages(\"statmod\")"),
+                 call. = FALSE)
+          }
         # compute the nodes and the weights for the gaussian quadrature
-        rn <- gauss.quad(R, kind = 'hermite')
+        rn <- statmod::gauss.quad(R, kind = 'hermite')
         # compute the starting values
         ls <- length(start)
         if (model == "pooling"){
