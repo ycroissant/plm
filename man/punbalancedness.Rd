@@ -54,7 +54,7 @@ punbalancedness(x, \dots)
  Baltagi/Song/Jung (2002), pp. 488-491, and Baltagi/Chang (1994), pp. 78--87,
  where it is used to measure the unbalancedness of various unbalanced data
  sets used for Monte Carlo simulation studies. Measures c1, c2, c3 are used
- for similiar purposes in Baltagi/Song/Jung (2001).
+ for similar purposes in Baltagi/Song/Jung (2001).
 
 
  In the two-dimensional case, \code{punbalancedness} uses output of \code{\link{pdim}} 

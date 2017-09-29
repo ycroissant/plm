@@ -94,7 +94,7 @@ Wooldridge, J.M. (2010) \emph{Econometric Analysis of Cross Section and Panel Da
 
 Andress, H.-J./Golsch, K./Schmidt, A. (2013), Applied Panel Data Analysis for Economic and Social Surveys, Springer, Heidelberg et al.
 
-Cameron, A. C./Miller, D. L. (2015), "A Practitioner's Guide to Cluster-Robust Inference", \emph{Journal of Human Resources}, 2015, Vol. 50, No. 2, pp. 317--373; see also the supplements under \url{http://cameron.econ.ucdavis.edu/research/papers.html}.
+Cameron, A. C./Miller, D. L. (2015), "A Practitioner's Guide to Cluster-Robust Inference", \emph{Journal of Human Resources}, 2015, \bold{50}(2), pp. 317--373; see also the supplements under \url{http://cameron.econ.ucdavis.edu/research/papers.html}.
 }
 
 

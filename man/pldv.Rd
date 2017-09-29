@@ -33,7 +33,7 @@ pldv(formula, data, subset, weights, na.action,
       of \code{"lsq"} for least squares and \code{"lad"} for least absolute
       deviations,}
 
-  \item{sample}{"cens" for a censored (tobit-like) sample, "trunc" for a
+  \item{sample}{\code{"cens"} for a censored (tobit-like) sample, \code{"trunc"} for a
         truncated sample,}
   \item{\dots}{further arguments.}
 }
@@ -54,7 +54,7 @@ An object of class \code{c("plm","panelmodel")}.
 \references{
 Honor\'e, Bo (1992). Trimmed LAD and least squares estimation of
 truncated and censored regression models with fixed effects,
-\emph{Econometrica},\bold{60}(3), pp. 533--565.
+\emph{Econometrica}, \bold{60}(3), pp. 533--565.
 
 }
 
