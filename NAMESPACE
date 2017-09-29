@@ -6,7 +6,10 @@ export(plm, pvcm, pgmm, pggls, pht, pcce, pmg, plmtest, phtest, pFtest,
        plm.data, pdata.frame, between, Between, Within, lag, lead, pFormula, pmodel.response,
        punbalancedness, purtest, cipstest, vcovBK, vcovSCC, r.squared, has.intercept, 
        index, fixef, ranef, vcovHC, vcovDC, vcovNW, vcovG, piest, aneweytest, pwaldtest,
-       pldv, cortab)
+       pldv, cortab,
+       maxLik # re-export maxLik::maxLik so we can place pkg 'maxLik' in 'Imports' rather than 'Depends' as it is only needed for pldv()
+              # 'Suggests' is not sufficient for maxLik as it is used in an eval()-statement in pldv().
+       )
 
 
 
@@ -34,6 +37,7 @@ importFrom("lmtest", "dwtest")
 # importFrom("car", "linearHypothesis") # pkg 'car' in 'Suggests', so do not import
 importFrom("lattice", "xyplot")
 # importFrom("statmod", "gauss.quad") # pkg 'statmod' in 'Suggests', so do not import
+importFrom("maxLik", "maxLik")
 importFrom("grDevices", "heat.colors", "rainbow")
 importFrom("graphics", "abline", "axis", "barplot", "legend", "lines",
            "plot", "points")

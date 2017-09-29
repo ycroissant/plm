@@ -2,6 +2,13 @@ pldv <- function(formula, data, subset, weights, na.action,
                  model = c("fd", "random", "pooling"), index = NULL,
                  R = 20, start = NULL, lower = 0, upper = + Inf,
                  objfun = c("lsq", "lad"), sample = c("cens", "trunc"), ...){
+  
+## Due to the eval() construct with maxLik::maxLik we import maxLik::maxLik
+## and re-export it as plm::maxLik with a minimal documentation pointing to
+## the original documentation. This way, we can keep the flexibility of eval()
+## [evalutate in parent frame] and can lessen the dependency burden by palacing
+## pkg maxLik in 'Imports' rather than 'Depends' in DESCRIPTION.
+  
     # use the plm interface to compute the model.frame
     sample <- match.arg(sample)
     model <- match.arg(model)

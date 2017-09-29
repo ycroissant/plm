@@ -112,6 +112,7 @@ man/pwfdtest.Rd -text
 man/pwtest.Rd -text
 man/r.squared.Rd -text
 man/ranef.plm.Rd -text
+man/reexports.Rd -text
 man/sargan.Rd -text
 man/summary.plm.Rd -text
 man/vcovBK.Rd -text
