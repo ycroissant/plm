@@ -94,7 +94,7 @@ plm <- function(formula, data, subset, weights, na.action,
     
     # check whether data and formula are pdata.frame and pFormula and if not
     # coerce them and if not create it
-#YC    orig_rownames <- row.names(data)
+    orig_rownames <- row.names(data)
     if (! inherits(data, "pdata.frame")) data <- pdata.frame(data, index)
     if (! inherits(formula, "pFormula")) formula <- pFormula(formula)
     
@@ -122,7 +122,7 @@ plm <- function(formula, data, subset, weights, na.action,
     # the original row.names eval(mf, parent.frame()) returns row.names as
     # character vector containing the "row_number" with incomplete observations
     # dropped
-#YC    row.names(data) <- orig_rownames[as.numeric(row.names(data))]
+    row.names(data) <- orig_rownames[as.numeric(row.names(data))]
 
     # return the model.frame or estimate the model
     if (is.na(model)){
