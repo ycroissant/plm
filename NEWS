@@ -2,7 +2,12 @@
 
 Changes in version 1.6-6
 
-  * ercomp: re-written to be a more general framework.
+  * ercomp:
+      * re-written to be a more general framework.
+      * (internal) returned ercomp object: component 'sigma2' is now a numeric;
+        component 'theta' is now either a numeric (balanced models) or a list with 
+        numerics (unbalanced models), the numerics being of length 1 (one-way models)
+        or of length equal to the number of observations (two-ways models).
   * plm:
       * random effect models: some random methods extended to unbalanced 
         two-ways case (Nerlove's method only supports balanced one-way, two-ways),
@@ -85,7 +90,7 @@ Changes in version 1.6-6
       * 'shared.individuals' added as additional option (symmetric case).
   * cosmetic: some print functions now have better aligned whitespacing.
   * Dependencies:
-      * R version >= 3.1 is required now.
+      * R version >= 3.1.0 required now.
       * 'Depends': maxLik added.
       * moved from 'Imports' to 'Suggests': car.
       * 'Suggests' added: pcse, clusterSEs, clubSandwich, pglm, spdep, splm,

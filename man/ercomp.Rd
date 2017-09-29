@@ -38,11 +38,15 @@ ercomp(object, \dots)
 }
 
 \value{  
-% TODO: the internal structure of ercomp changed slightly: sigma2 is now a named vector
-  An object of class \code{"ercomp"}: a list containing a list called
-  \code{sigma2} which contains the estimates of the variance components,
-  and \code{theta} which is the parameters used for the transformation
-  of the variables.
+  An object of class \code{"ercomp"}: a list containing
+\itemize{
+  \item \code{sigma2} a named numeric with estimates of the variance components,
+  \item \code{theta} contains the parameter(s) used for the transformation
+  of the variables: For a one-way model, a numeric corresponding to the selected
+  effect (individual or time); for a two-ways model a list of length 3 with the 
+  parameters. In case of a balanced model, the numeric has length 1 while for an
+  unbalanced model, the numerics' length equal the number of observations.
+}
 }
 
 %\details{
