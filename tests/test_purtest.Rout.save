@@ -18,14 +18,6 @@ Type 'q()' to quit R.
 > # Various run tests for purtest()
 > library(plm)
 Loading required package: Formula
-Loading required package: maxLik
-Loading required package: miscTools
-
-Please cite the 'maxLik' package as:
-Henningsen, Arne and Toomet, Ott (2011). maxLik: A package for maximum likelihood estimation in R. Computational Statistics 26(3), 443-458. DOI 10.1007/s00180-010-0217-1.
-
-If you have questions, suggestions, or comments regarding the 'maxLik' package, please use a forum or 'tracker' at maxLik's R-Forge site:
-https://r-forge.r-project.org/projects/maxlik/
 > data("Grunfeld", package = "plm")
 > pG <- pdata.frame(Grunfeld)
 > 

@@ -1,22 +1,26 @@
-# values from MacKinnon (1994), table 3, 4
-small <- matrix(c(0.6344, 1.2378, 3.2496,
-                  2.1659, 1.4412, 3.8269,
-                  3.2512, 1.6047, 4.9588),
-                nrow = 3, byrow = TRUE)
-small <- t(t(small) / c(1, 1, 100))
-large <- matrix(c(0.4797, 9.3557, -0.6999,  3.3066,
-                  1.7339, 9.3202, -1.2745, -1.0368,
-                  2.5261, 6.1654, -3.7956, -6.0285),
-                nrow = 3, byrow = TRUE)
-large <- t(t(large) / c(1, 10, 10, 100))
-limit <- c(-1.04, -1.61, -2.89)
-rownames(small) <- rownames(large) <- names(limit) <- c("none", "intercept", "trend")
+
 
 padf <- function(x, exo = c("none", "intercept", "trend")){
-    exo <- match.arg(exo)
-    psmall <- apply(small[exo, ] * rbind(1, x, x ^ 2), 2, sum)
-    plarge <- apply(large[exo, ] * rbind(1, x, x ^ 2, x ^ 3), 2, sum)
-    as.numeric(pnorm(psmall * (x <= limit[exo]) + plarge * (x > limit[exo])))
+ # p-value approx. by MacKinnon (1994), used in some panel unit root tests
+  
+  # values from MacKinnon (1994), table 3, 4
+      small <- matrix(c(0.6344, 1.2378, 3.2496,
+                        2.1659, 1.4412, 3.8269,
+                        3.2512, 1.6047, 4.9588),
+                      nrow = 3, byrow = TRUE)
+      small <- t(t(small) / c(1, 1, 100))
+      large <- matrix(c(0.4797, 9.3557, -0.6999,  3.3066,
+                        1.7339, 9.3202, -1.2745, -1.0368,
+                        2.5261, 6.1654, -3.7956, -6.0285),
+                      nrow = 3, byrow = TRUE)
+      large <- t(t(large) / c(1, 10, 10, 100))
+      limit <- c(-1.04, -1.61, -2.89)
+      rownames(small) <- rownames(large) <- names(limit) <- c("none", "intercept", "trend")
+  
+  exo <- match.arg(exo)
+  psmall <- apply(small[exo, ] * rbind(1, x, x ^ 2), 2, sum)
+  plarge <- apply(large[exo, ] * rbind(1, x, x ^ 2, x ^ 3), 2, sum)
+  as.numeric(pnorm(psmall * (x <= limit[exo]) + plarge * (x > limit[exo])))
 }
 
 
@@ -317,6 +321,10 @@ purtest <- function(object, data = NULL, index = NULL,
                     pmax = 10, Hcons = TRUE,
                     q = NULL, dfcor = FALSE, fixedT = TRUE, ...){
 
+## TODO: While some statistics seems to be appropriate for the unbalanced cases,
+##       data pre-processing done before does not allow for unbalanced cases
+##       (most notably as.data.frame(split(object, id)) but other instances likely too).
+  
   data.name <- paste(deparse(substitute(object)))
 
   id <- NULL
