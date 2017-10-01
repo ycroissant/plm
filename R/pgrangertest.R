@@ -10,6 +10,9 @@
 ##                                           IRENE Working paper 17-03, September 11, 2017
 ##   * supplements (xtgcause for Stata) https://ideas.repec.org/c/boc/bocode/s458308.html
 ##
+##   * EViews blog with introduction to the test and a Monte-Carlo study:
+##     http://blog.eviews.com/2017/08/dumitrescu-hurlin-panel-granger.html
+##
 ## TODO (?)
 ##  * Dumitrescu/Hurlin (2012) also give a statistic for the unbalanced case (formula (33))
 ##  *                          and also for individual lag orders. Take care of T = T - k there!
@@ -39,7 +42,7 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar"), order = 1L, 
   N <- pdim$nT$n
   T. <- pdim$nT$T
   
-  if(!pdim$balanced) stop("data must be balanced, test for unbalanced not (yet?) implemented")
+  if(!pdim$balanced) stop("data must be balanced, test for unbalanced data not (yet?) implemented")
   
   # For statistic Ztilde, the second order moments of the individual statistics must exist.
   # ((10) in Dumitrescu/Hurlin (2012) where T = T - K)
@@ -52,17 +55,18 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar"), order = 1L, 
   
   grangertests_i <- lapply(listdata, function(i)  {
     dat <- as.data.frame(i)
-    lmtest::grangertest(formula, data = as.data.frame(i), order = order)
+    # Dumitrescu/Hurlin (2012), p. 1453 use the Chisq definition of the Granger test
+    lmtest::grangertest(formula, data = as.data.frame(i), order = order, test = "Chisq")
   })
   
-  # extract statistics of individual Granger tests
-  Wi <- lapply(grangertests_i, function(g) g["F"][[1]][2])
+  # extract Wald/Chisq-statistics of individual Granger tests
+  Wi <- lapply(grangertests_i, function(g) g["Chisq"][[1]][2])
   
-  Wbar <- mean(unlist(Wi)) * order # statistic of lmtest::grangertest must be multiplied by order - why?
+  Wbar <- mean(unlist(Wi))
   
   Zbar <- c("Zbar" = sqrt(N/(2*order)) * (Wbar - order))
   # Ztilde recommended for fixed T, formula ()
-  Ztilde <- c("Ztilde" = sqrt( N/(2*order) * (T. - 3*order - 5) / (T. - 2*order -3) ) 
+  Ztilde <- c("Ztilde" =   sqrt( N/(2*order) * (T. - 3*order - 5) / (T. - 2*order -3) ) 
                          * ( (T. - 3*order - 3) / (T. - 3*order -1) * Wbar - order))
   
   pZbar   <- 2*pnorm(abs(Zbar),   lower.tail = F)

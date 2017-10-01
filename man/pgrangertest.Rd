@@ -4,7 +4,7 @@
 \title{Panel Granger Causality Test (Dumitrescu/Hurlin (2012))}
 
 \description{
-Test of Granger causality in panel data.
+Test for Granger causality in panel data.
 }
 
 \usage{
@@ -12,8 +12,8 @@ pgrangertest(formula, data, test = c("Ztilde", "Zbar"), order = 1L, index = NULL
 }
 
 \arguments{
- \item{formula}{a \code{"formula"} to destribe the causation,}
- \item{data}{a \code{pdata.frame},} % TODO
+ \item{formula}{a \code{"formula"} to describe the direction of the causation,}
+ \item{data}{a \code{pdata.frame} or a \code{data.frame},}
  \item{test}{a character to request the statistic to be returned, either 
              \code{"Ztilde"} (default), or \code{"Zbar"},}
  \item{order}{an integer giving the number of lags to include in the test's
@@ -28,17 +28,18 @@ pgrangertest(formula, data, test = c("Ztilde", "Zbar"), order = 1L, index = NULL
 }
 
 \details{
-The panel Granger causality test is a combination of the original Granger test 
-(Granger (1969)) performed per individual. The formula \code{formula} describes 
-the direction of the (panel) Granger causation where \code{y ~ x} means 
-"x (panel) Granger causes y".
+The panel Granger causality test is a combination of original Granger tests 
+(Granger (1969)) performed per individual.
 
-By setting argument \code{test} to either \code{"Ztilde"} (default) or \code{"Zbar"}, two
-different statistics can be requested. \code{Ztilde} is a standardised statistic recommended
-by Dumitrescu/Hurlin (2012) for fixed T samples.
+The formula \code{formula} describes the direction of the (panel) Granger 
+causation where \code{y ~ x} means "x (panel) Granger causes y".
 
-The implementation uses \code{\link[lmtest]{grangertest}} from package \CRANpkg{lmtest} for the 
-individual Granger tests.
+By setting argument \code{test} to either \code{"Ztilde"} (default) or \code{"Zbar"}, 
+two different statistics can be requested. \code{Ztilde} is the standardised 
+statistic recommended by Dumitrescu/Hurlin (2012) for fixed T samples.
+
+The implementation uses \code{\link[lmtest]{grangertest}} from package 
+\CRANpkg{lmtest} to perform the individual Granger tests.
 }
 
 \value{
