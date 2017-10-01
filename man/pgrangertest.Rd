@@ -8,7 +8,8 @@ Test for Granger causality in panel data.
 }
 
 \usage{
-pgrangertest(formula, data, test = c("Ztilde", "Zbar"), order = 1L, index = NULL)
+pgrangertest(formula, data, test = c("Ztilde", "Zbar", "Wbar"),
+             order = 1L, index = NULL)
 }
 
 \arguments{
@@ -28,22 +29,27 @@ pgrangertest(formula, data, test = c("Ztilde", "Zbar"), order = 1L, index = NULL
 }
 
 \details{
-The panel Granger causality test is a combination of original Granger tests 
+The panel Granger causality test is a combination of Granger tests 
 (Granger (1969)) performed per individual.
 
 The formula \code{formula} describes the direction of the (panel) Granger 
 causation where \code{y ~ x} means "x (panel) Granger causes y".
 
 By setting argument \code{test} to either \code{"Ztilde"} (default) or \code{"Zbar"}, 
-two different statistics can be requested. \code{Ztilde} is the standardised 
-statistic recommended by Dumitrescu/Hurlin (2012) for fixed T samples.
+two different statistics can be requested. \code{"Ztilde"} gives the standardised 
+statistic recommended by Dumitrescu/Hurlin (2012) for fixed T samples. If set to
+\code{"Wbar"}, the intermediate Wbar statistic (average of individual Granger 
+chi-square statistics) is given which is used to derive the other two and for which 
+no p-value is available.
 
 The implementation uses \code{\link[lmtest]{grangertest}} from package 
 \CRANpkg{lmtest} to perform the individual Granger tests.
 }
 
 \value{
-An object of class \code{"htest"}.
+An object of class \code{c("pgrangertest", "htest"}. Besides the usual 
+elements of a \code{htest} object, it contains a \code{indgranger} element which
+carries the Granger test statistics and p-values per individual as a data frame.
 }
 
 \author{Kevin Tappe}

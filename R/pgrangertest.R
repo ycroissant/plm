@@ -14,13 +14,15 @@
 ##     http://blog.eviews.com/2017/08/dumitrescu-hurlin-panel-granger.html
 ##
 ## TODO (?)
+##  * put individual chisq statistics and associacted p-values in return value and 
+##    extend to a c("pgrangertest", "htest") object?
 ##  * Dumitrescu/Hurlin (2012) also give a statistic for the unbalanced case (formula (33))
 ##  *                          and also for individual lag orders. Take care of T = T - k there!
 ##  * Lopez/Weber (2017) also demonstrate lag selection procedure by AIC, BIC, ...
 ##
 
 
-pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar"), order = 1L, index = NULL) {
+pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar", "Wbar"), order = 1L, index = NULL) {
   # Implementation of formulas follows Lopez/Weber (2017), the formulas are slightly different
   # compared to Dumistrescu/Hurlin (2012), because "Note however that T in DH's formulas 
   # must be understood as the number of observations remaining in the estimations, that 
@@ -30,9 +32,13 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar"), order = 1L, 
   
   # y ~ x: x (panel) Granger causes y
   
-  
   test <- match.arg(test)
-  
+
+  # some input checks
+  if (length(all.vars(formula)) > 2) {
+    stop("'formula' may not contain more than 2 variables, one LHS and one RHS variable, e.g. 'y ~ x'")
+  }
+    
   if (!(is.numeric(order) && round(order) == order && order > 0)) 
     stop("Lagging value 'order' must be a positive integer")
   
@@ -51,7 +57,8 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar"), order = 1L, 
                   "must be larger than 5 + 3*order (", T., " > ", "5 + 3*", order, " = ", 5 + 3*order,")"))
   }
   
-  listdata <- split(data, index(data)[[1]]) # split data per individual
+  indi <- index(data)[[1]]
+  listdata <- split(data, indi) # split data per individual
   
   grangertests_i <- lapply(listdata, function(i)  {
     dat <- as.data.frame(i)
@@ -59,29 +66,38 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar"), order = 1L, 
     lmtest::grangertest(formula, data = as.data.frame(i), order = order, test = "Chisq")
   })
   
-  # extract Wald/Chisq-statistics of individual Granger tests
-  Wi <- lapply(grangertests_i, function(g) g["Chisq"][[1]][2])
+  # extract Wald/Chisq-statistics and p-values of individual Granger tests
+  Wi  <- lapply(grangertests_i, function(g) g["Chisq"][[1]][2])
+  pWi <- lapply(grangertests_i, function(g) g[["Pr(>Chisq)"]][[2]])
   
-  Wbar <- mean(unlist(Wi))
   
-  Zbar <- c("Zbar" = sqrt(N/(2*order)) * (Wbar - order))
+  Wbar <- c("Wbar" = mean(unlist(Wi)))
+  
+  Zbar <- c(sqrt(N/(2*order)) * (Wbar - order))
+  names(Zbar) <- "Zbar"
   # Ztilde recommended for fixed T, formula ()
-  Ztilde <- c("Ztilde" =   sqrt( N/(2*order) * (T. - 3*order - 5) / (T. - 2*order -3) ) 
-                         * ( (T. - 3*order - 3) / (T. - 3*order -1) * Wbar - order))
+  Ztilde <- c( sqrt( N/(2*order) * (T. - 3*order - 5) / (T. - 2*order -3) ) 
+              * ( (T. - 3*order - 3) / (T. - 3*order -1) * Wbar - order))
+  names(Ztilde) <- "Ztilde"
   
   pZbar   <- 2*pnorm(abs(Zbar),   lower.tail = F)
   pZtilde <- 2*pnorm(abs(Ztilde), lower.tail = F)
   
-  stat <- switch(test, "Zbar" = Zbar, "Ztilde" = Ztilde)
-  pval <- switch(test, "Zbar" = pZbar, "Ztilde" = pZtilde)
+  stat <- switch(test, "Zbar" = Zbar,  "Ztilde" = Ztilde,  "Wbar" = Wbar)
+  pval <- switch(test, "Zbar" = pZbar, "Ztilde" = pZtilde, "Wbar" = NULL)
+  
+  # save individual Granger tests in return value
+  indgranger <- data.frame(indi[!duplicated(indi)], unlist(Wi), unlist(pWi))
+  colnames(indgranger) <- c(names(index(data))[1], "Chisq", "p-value")
   
   RVAL <- list(statistic = stat,
                parameter = NULL,
                p.value   = pval,
                method = "Panel Granger Causality Test (Dumitrescu/Hurlin (2012))",
                alternative = "Granger causality for at least one individual",
-               data.name = deparse(formula))
-  class(RVAL) <- "htest"
+               data.name = deparse(formula),
+               indgranger = indgranger)
+  class(RVAL) <- c("pgrangertest", "htest")
   
   return(RVAL)
 }
