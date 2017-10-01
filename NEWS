@@ -36,6 +36,7 @@ Changes in version 1.6-6
                    logit ("logit").
   * pldv: new function to compute fixed and random effects models for
           truncated or censored dependent variable.
+  * pgrangertest: added Granger causality test for panels (Dumitrescu/Hurlin (2012)).
   * pbsytest:
       * test = "j": [joint test by Baltagi/Li(1991)]:
         fixed degrees of freedom (now df = 2 instead of df = 1).

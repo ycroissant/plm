@@ -1,5 +1,5 @@
 
-R version 3.3.3 (2017-03-06) -- "Another Canoe"
+R version 3.4.2 (2017-09-28) -- "Short Summer"
 Copyright (C) 2017 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -40,8 +40,8 @@ individual    627.02   25.04 0.732
 theta: 0.8901
 
 Residuals:
-   Min. 1st Qu.  Median 3rd Qu.    Max. 
- -61.20   -8.38    0.62    7.47  127.00 
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-61.20952  -8.37807   0.61966   7.47058 126.76616 
 
 Coefficients:
                Estimate  Std. Error  t-value Pr(>|t|)    
@@ -73,8 +73,8 @@ time          33.264   5.767 0.446
 theta: 0.8377
 
 Residuals:
-   Min. 1st Qu.  Median 3rd Qu.    Max. 
- -14.70   -6.21   -2.56    3.80   49.10 
+    Min.  1st Qu.   Median  3rd Qu.     Max. 
+-14.6856  -6.2149  -2.5633   3.8027  49.1200 
 
 Coefficients:
                Estimate  Std. Error t-value  Pr(>|t|)    
@@ -162,7 +162,7 @@ theta:
 
 Residuals:
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
--79.900  -8.850   0.526   0.000   8.730 135.000 
+-79.865  -8.851   0.526   0.000   8.733 135.499 
 
 Coefficients:
                Estimate  Std. Error t-value  Pr(>|t|)    
@@ -196,7 +196,7 @@ theta:
 
 Residuals:
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
--65.000 -15.700  -3.570   0.003   8.660 170.000 
+-65.024 -15.652  -3.569   0.003   8.662 170.409 
 
 Coefficients:
                Estimate  Std. Error t-value  Pr(>|t|)    
@@ -260,8 +260,8 @@ time           10.413   3.227 0.013
 theta: 0.9042 (id) 0.483 (time) 0.4819 (total)
 
 Residuals:
-   Min. 1st Qu.  Median 3rd Qu.    Max. 
--58.600  -6.720   0.156   5.670 128.000 
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-58.61044  -6.72191   0.15599   5.67123 128.33115 
 
 Coefficients:
                Estimate  Std. Error  t-value Pr(>|t|)    
@@ -340,14 +340,14 @@ idiosyncratic 174.688  13.217 0.215
 individual    629.540  25.091 0.774
 time            8.616   2.935 0.011
 theta:
-        Min. 1st Qu. Median   Mean 3rd Qu.   Max.
-id    0.9026  0.9043 0.9043 0.9042  0.9043 0.9043
-time  0.4427  0.4469 0.4469 0.4468  0.4469 0.4469
-total 0.4417  0.4459 0.4459 0.4458  0.4459 0.4459
+           Min.   1st Qu.    Median      Mean   3rd Qu.      Max.
+id    0.9026463 0.9042675 0.9042675 0.9042334 0.9042675 0.9042675
+time  0.4426693 0.4468900 0.4468900 0.4467522 0.4468900 0.4468900
+total 0.4417103 0.4459100 0.4459100 0.4457719 0.4459100 0.4459100
 
 Residuals:
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
--70.900 -15.300  -3.650  -0.008   8.710 165.000 
+-70.856 -15.317  -3.646  -0.008   8.711 164.621 
 
 Coefficients:
                Estimate  Std. Error   t-value Pr(>|t|)    
@@ -412,4 +412,4 @@ F-statistic: 73.4956 on 2 and 1376 DF, p-value: < 2.22e-16
 > 
 > proc.time()
    user  system elapsed 
-   3.40    0.14    3.52 
+   3.15    0.04    3.18 

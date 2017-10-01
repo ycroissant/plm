@@ -1,0 +1,67 @@
+
+R version 3.4.2 (2017-09-28) -- "Short Summer"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(plm)
+Loading required package: Formula
+> data("Grunfeld", package = "plm")
+> 
+> pgrangertest(inv ~ value, data = Grunfeld)
+
+	Panel Granger Causality Test (Dumitrescu/Hurlin (2012))
+
+data:  inv ~ value
+Ztilde = 3.2896, p-value = 0.001003
+alternative hypothesis: Granger causality for at least one individual
+
+> pgrangertest(inv ~ value, data = Grunfeld, order = 2L)
+
+	Panel Granger Causality Test (Dumitrescu/Hurlin (2012))
+
+data:  inv ~ value
+Ztilde = 1.6832, p-value = 0.09234
+alternative hypothesis: Granger causality for at least one individual
+
+> pgrangertest(inv ~ value, data = Grunfeld, order = 2L, test = "Zbar")
+
+	Panel Granger Causality Test (Dumitrescu/Hurlin (2012))
+
+data:  inv ~ value
+Zbar = 2.9657, p-value = 0.00302
+alternative hypothesis: Granger causality for at least one individual
+
+> 
+> 
+> ## Demo data from Dumitrescu/Hurlin (2012) supplement:
+> ## http://www.runmycode.org/companion/view/42
+> ## The data are in the following format: 20 x 20
+> ## First 20 columns are the x series for the 10 individual
+> ## next 20 columns are the y series for the 10 individuals
+> ## -> need to convert to 'long' format first
+> 
+> # demodat <- readxl::read_excel("data/Granger_Data_demo_long.xls")
+> # demodat <- data.frame(demodat)
+> # pdemodat <- pdata.frame(demodat)
+> 
+> # pgrangertest(y ~ x, data = pdemodat, order = 1L)
+> # pgrangertest(y ~ x, data = pdemodat, order = 1L, test = "Zbar")
+> # 
+> # pgrangertest(y ~ x, data = pdemodat, order = 2L)
+> # pgrangertest(y ~ x, data = pdemodat, order = 2L, test = "Zbar")
+> 
+> proc.time()
+   user  system elapsed 
+   1.96    0.07    2.04 

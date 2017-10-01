@@ -21,6 +21,7 @@ R/pcdtest.R -text
 R/pfunctions.R -text
 R/pggls.R -text
 R/pgmm.R -text
+R/pgrangertest.R -text
 R/piest.R -text
 R/pldv.R -text
 R/plm.R -text
@@ -90,6 +91,7 @@ man/pdim.Rd -text
 man/pdwtest.Rd -text
 man/pggls.Rd -text
 man/pgmm.Rd -text
+man/pgrangertest.Rd -text
 man/pht.Rd -text
 man/phtest.Rd -text
 man/piest.Rd -text
@@ -165,6 +167,8 @@ tests/test_pdata.frame_unused_levels.R -text
 tests/test_pdiff_fd.R -text
 tests/test_pdwtest.R -text
 tests/test_pgmm.R -text
+tests/test_pgrangertest.R -text
+tests/test_pgrangertest.Rout.save -text
 tests/test_phtest_Hausman_regression.R -text
 tests/test_plm.data.R -text
 tests/test_plm_na.action.R -text

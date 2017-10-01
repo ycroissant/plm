@@ -36,15 +36,17 @@ if(!isTRUE(all.equal(names(residuals(gr_fancy_rownames)), row.names(pGrunfeld)))
   gr_1NA <- plm(inv ~ value + capital, data=Grunfeld_1NA, model="pooling")
   nobs(gr_1NA)       # 199
   nrow(Grunfeld_1NA) # 200
-  all.equal(row.names(gr_1NA$model),        row.names(Grunfeld_1NA[-line_no, ]))  # TRUE
-  all.equal(row.names(model.frame(gr_1NA)), row.names(Grunfeld_1NA[-line_no, ]))  # TRUE
-  all.equal(names(pmodel.response(gr_1NA)), row.names(Grunfeld_1NA[-line_no, ]))  # TRUE
+  if(!isTRUE(all.equal(row.names(gr_1NA$model),        row.names(Grunfeld_1NA[-line_no, ])))) stop("original rownames not preserved in plm_obj$model")
+  if(!isTRUE(all.equal(row.names(model.frame(gr_1NA)), row.names(Grunfeld_1NA[-line_no, ])))) stop("original rownames not preserved in model.frame(plm_obj)")
+  if(!isTRUE(all.equal(names(pmodel.response(gr_1NA)), row.names(Grunfeld_1NA[-line_no, ])))) stop("original rownames not preserved in names(pmodel.response(plm_obj))")
+  if(!isTRUE(all.equal(names(residuals(gr_1NA)),       row.names(Grunfeld_1NA[-line_no, ])))) stop("original rownames not preserved in names(residuals(plm_obj))")
+  
 
   # Should be TRUE
   # [199 + 1 == 200]
   # [199     == 199]
-  length(residuals(gr_1NA)) + 1 == length(row.names(Grunfeld_1NA))
-  length(residuals(gr_1NA))     == length(row.names(Grunfeld_1NA[-line_no, ]))
+  if(!isTRUE(length(residuals(gr_1NA)) + 1 == length(row.names(Grunfeld_1NA)))) stop("length not correct")
+  if(!isTRUE(length(residuals(gr_1NA))     == length(row.names(Grunfeld_1NA[-line_no, ])))) stop("length not correct")
   
   # pdata.frame
   pGrunfeld_1NA <- pGrunfeld
@@ -54,15 +56,16 @@ if(!isTRUE(all.equal(names(residuals(gr_fancy_rownames)), row.names(pGrunfeld)))
   gr_fancy_rownames_1NA <- plm(inv ~ value + capital, data=pGrunfeld_1NA, model="pooling")
   nobs(gr_fancy_rownames_1NA)       # 199
   nrow(pGrunfeld_1NA) # 200
-  all.equal(row.names(gr_fancy_rownames_1NA$model),        row.names(pGrunfeld_1NA[-line_no, ]))  # TRUE
-  all.equal(row.names(model.frame(gr_fancy_rownames_1NA)), row.names(pGrunfeld_1NA[-line_no, ]))  # TRUE
-  all.equal(names(pmodel.response(gr_fancy_rownames_1NA)), row.names(pGrunfeld_1NA[-line_no, ]))  # TRUE
-
+  if(!isTRUE(all.equal(row.names(gr_fancy_rownames_1NA$model),        row.names(pGrunfeld_1NA[-line_no, ])))) stop("original rownames not preserved in plm_obj$model")
+  if(!isTRUE(all.equal(row.names(model.frame(gr_fancy_rownames_1NA)), row.names(pGrunfeld_1NA[-line_no, ])))) stop("original rownames not preserved in model.frame(plm_obj)")
+  if(!isTRUE(all.equal(names(pmodel.response(gr_fancy_rownames_1NA)), row.names(pGrunfeld_1NA[-line_no, ])))) stop("original rownames not preserved in names(pmodel.response(plm_obj))")
+  if(!isTRUE(all.equal(names(residuals(gr_fancy_rownames_1NA)),       row.names(pGrunfeld_1NA[-line_no, ])))) stop("original rownames not preserved in names(residuals(plm_obj))")
+  
   # Should be TRUE
   # [199 + 1 == 200]
   # [199     == 199]
-  length(residuals(gr_fancy_rownames_1NA)) + 1 == length(row.names(pGrunfeld_1NA))
-  length(residuals(gr_fancy_rownames_1NA))     == length(row.names(pGrunfeld_1NA[-line_no, ]))
+  if(!isTRUE(length(residuals(gr_fancy_rownames_1NA)) + 1 == length(row.names(pGrunfeld_1NA)))) stop("length not correct")
+  if(!isTRUE(length(residuals(gr_fancy_rownames_1NA))     == length(row.names(pGrunfeld_1NA[-line_no, ])))) stop("length not correct")
 
 
 
