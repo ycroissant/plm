@@ -13,9 +13,7 @@
 ##   * EViews blog with introduction to the test and a Monte-Carlo study:
 ##     http://blog.eviews.com/2017/08/dumitrescu-hurlin-panel-granger.html
 ##
-## TODO (?)
-##  * put individual chisq statistics and associacted p-values in return value and 
-##    extend to a c("pgrangertest", "htest") object?
+## TODO (if someone is willing...)
 ##  * Dumitrescu/Hurlin (2012) also give a statistic for the unbalanced case (formula (33))
 ##  *                          and also for individual lag orders. Take care of T = T - k there!
 ##  * Lopez/Weber (2017) also demonstrate lag selection procedure by AIC, BIC, ...
@@ -69,7 +67,6 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar", "Wbar"), orde
   # extract Wald/Chisq-statistics and p-values of individual Granger tests
   Wi  <- lapply(grangertests_i, function(g) g["Chisq"][[1]][2])
   pWi <- lapply(grangertests_i, function(g) g[["Pr(>Chisq)"]][[2]])
-  
   
   Wbar <- c("Wbar" = mean(unlist(Wi)))
   

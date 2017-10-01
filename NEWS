@@ -95,7 +95,7 @@ Changes in version 1.6-6
       * 'Imports': maxLik added, function maxLik::maxLik is re-exported by plm.
       * moved from 'Imports' to 'Suggests': car.
       * 'Suggests': added pcse, clusterSEs, clubSandwich, pglm, spdep, splm,
-                          statmod, stargazer, texreg, Ecdat, foreign.
+                    statmod, Ecdat, pder, stargazer, texreg, foreign.
 
 
 Changes in version 1.6-5
@@ -303,8 +303,8 @@ Changes in version 1.5-18
 
 Changes in version 1.5-17
 
-	* lagt.pseries: new method respecting "content" of time periods [not yet exported due to testing].
-	* is.pconsecutive: default method exported so it can be used for arbitrary vectors.
+  * lagt.pseries: new method respecting "content" of time periods [not yet exported due to testing].
+  * is.pconsecutive: default method exported so it can be used for arbitrary vectors.
 
 
 Changes in version 1.5-16
