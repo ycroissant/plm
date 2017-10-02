@@ -13,7 +13,7 @@ Changes in version 1.6-6
         two-ways case (Nerlove's method only supports balanced one-way, two-ways),
         thanks to the more general ercomp framework.
       * nested random effects model implemented (Baltagi/Song/Jung (2001)),
-        use effect = "nested".
+        use effect = "nested", see example in ?plm.
       * two-way fixed effects model for unbalanced panels is faster.
       * new argument 'weights' added.
       * fix backward compatibility for the (deprecated!) argument 'instruments'
@@ -58,6 +58,9 @@ Changes in version 1.6-6
       * Arguments drop.NA.series, drop.const.series, replace.non.finite,
         drop.unused.levels introduced to remove/replace columns/values as described
         before (all default to FALSE).
+      * Warning issued if an index variable is to be constructed that subsequently 
+        overwrites an already present column of the same name ('id' and/or 'time').
+        the pdata.frame
   * punbalancedness: extended to calculate unbalancedness measures of nested panel 
                      structures as in Baltagi/Song/Jung (2001).
   * ranef: new function to calculate random effects from RE model objects, like

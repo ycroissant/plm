@@ -135,5 +135,5 @@ plm:::fitted.plm(mod_fe_cigar, model = "within")
 ######## 3) Sundry 
 # this gave an error pre rev. 522 (drop = FALSE was missing):
 wi <- plm(inv ~ value, data = Grunfeld, model = "within")
-fitted(wi, model = "between")
+plm:::fitted.plm(wi, model = "between")
 
