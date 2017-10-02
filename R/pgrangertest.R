@@ -46,8 +46,25 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar", "Wbar"), orde
   pdim <- pdim(data)
   N <- pdim$nT$n
   T. <- pdim$nT$T
+  indi <- index(data)[[1]]
+  indi_con <- is.pconsecutive(data)
   
   if(!pdim$balanced) stop("data must be balanced, test for unbalanced data not (yet?) implemented")
+  
+  # give warning if data is not consecutive per individual
+  if(!all(indi_con)) {
+    indnames <- pdim[["panel.names"]][["id.names"]]
+    wrn1 <- "pgrangertest: result may be unreliable due to individuals with non-consecutive time periods: "
+    wrn2 <- if (sum(!indi_con) <= 5)  { 
+              paste0(indnames[!indi_con], collapse = ", ") 
+            }
+            else { # cut off enumercation of individuals in warning message if more than 5
+              breakpoint <- which(cumsum(!indi_con) == 5)[1]
+              paste0(paste0(indnames[1:breakpoint][!indi_con[1:breakpoint]], collapse = ", "), ", ...")
+            }
+    wrn <- paste0(wrn1, wrn2)
+    warning(wrn)
+  }
   
   # For statistic Ztilde, the second order moments of the individual statistics must exist.
   # ((10) in Dumitrescu/Hurlin (2012) where T = T - K)
@@ -56,7 +73,7 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar", "Wbar"), orde
                   "must be larger than 5 + 3*order (", T., " > ", "5 + 3*", order, " = ", 5 + 3*order,")"))
   }
   
-  indi <- index(data)[[1]]
+  
   listdata <- split(data, indi) # split data per individual
   
   grangertests_i <- lapply(listdata, function(i)  {
