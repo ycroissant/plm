@@ -1142,7 +1142,7 @@ plot.plm <- function(x, dx = 0.2, N = NULL, seed = 1,
     }
 }
 
-
+if(VERSION){
  
 fitted.plm <- function(object, model = NULL, effect = NULL, ...){
     fittedmodel <- describe(object, "model")
@@ -1163,10 +1163,27 @@ fitted.plm <- function(object, model = NULL, effect = NULL, ...){
             if (model == "within") bX <- Within(bX, theindex)
             if (model == "between") bX <- between(bX, theindex)
             if (model == "fd") bX <- pdiff(bX, theindex)
+            if (model == "random"){
+                if (fittedmodel != "random") stop("the fitted model is not a random effects model")
+                theta <- ercomp(object)$theta
+                if (effect != "nested") bX <- bX - theta * Between(bX, theindex)
+                else bX <- bX - theta$id * Between(bX, index(object)[[1]]) - theta$gp * Between(bX, index(object)[[3]])
+            }
+        }
+        else{
+            if (model == "within"){
+                bX <- bX - Between(bX, index(object)[[1]]) - Between(bX, index(object)[[1]]) + mean(bX)
+            }
+            if (model == "random"){
+                if (fittedmodel != "random") stop("the fitted model is not a random effects model")
+                theta <- ercomp(object)$theta
+                bX <- bX - theta$id * Between(bX, index(object)[[1]]) - theta$time * Between(bX, index(object)[[2]]) + mean(bX)
+            }
         }
     }
     structure(bX, index = index(object), class = c(class(bX), "pseries"))
 }
+    
 
 
 residuals.plm <- function(object, model = NULL, effect = NULL,  ...){
@@ -1184,4 +1201,5 @@ residuals.plm <- function(object, model = NULL, effect = NULL,  ...){
     }
     res <- structure(res, class = c("pseries", class(res)), index = index(object))
     res
+}
 }
