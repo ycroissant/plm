@@ -64,7 +64,7 @@ ercomp.formula <- function(object, data,
         TS <- pdim$nT$T
         O <- pdim$nT$N
         NTS <- N * (effect != "time") + TS * (effect != "individual") - 1 * (effect == "twoways")
-        s2nu <- deviance(est) / O#(O - NTS)
+        s2nu <- deviance(est) / O # NB: Nerlove takes within residual sums of squares divided by #obs without df correction (Baltagi (2013), p. 23/45)
         s2eta <- s2mu <- NULL
         if (effect != "time")
             s2eta <- sum(fixef(est, type = "dmean", effect = "individual") ^ 2) / (N - 1)
