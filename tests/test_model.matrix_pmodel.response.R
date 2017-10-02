@@ -67,6 +67,9 @@ resp_pdf_mf_pool <- plm:::pmodel.response.data.frame(pGrunfeld_mf, model = "pool
 resp_pdf_mf_fe   <- plm:::pmodel.response.data.frame(pGrunfeld_mf, model = "within")   # works
 #resp_pdf_mf_re   <- plm:::pmodel.response.data.frame(pGrunfeld_mf, model = "random") # error, likely due to missing arguments
 
+## these errored pre rev. 601 due to missing 'match.arg()' to set default value:
+pmodel.response(pFormula(form), data = pGrunfeld)
+pmodel.response(pGrunfeld_mf)
 
 
 

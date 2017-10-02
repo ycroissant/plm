@@ -14,17 +14,17 @@ response of several objects.
 \usage{
 pmodel.response(object, \dots)
 \method{pmodel.response}{data.frame}(object,
-                                     model = c("pooling","within","Between",
-                                               "between","mean","random","fd"),
-                                     effect = c("individual","time","twoways", "nested"),
-                                     lhs = NULL,
-                                     theta = NULL, \dots)
+                model = c("pooling", "within", "Between",
+                          "between", "mean", "random", "fd"),
+                effect = c("individual", "time", "twoways", "nested"),
+                lhs = NULL,
+                theta = NULL, \dots)
 \method{pmodel.response}{pFormula}(object, data,
-                                   model = c("pooling","within","Between",
-                                             "between","mean","random","fd"),
-                                   effect = c("individual","time","twoways", "nested"),
-                                   lhs = NULL,
-                                   theta = NULL, \dots)
+                model = c("pooling", "within", "Between",
+                          "between", "mean", "random", "fd"),
+                effect = c("individual", "time", "twoways", "nested"),
+                lhs = NULL,
+                theta = NULL, \dots)
 \method{pmodel.response}{plm}(object, \dots)
 }
 
@@ -35,7 +35,7 @@ pmodel.response(object, \dots)
   \item{effect}{the effects introduced in the model, one of
   \code{"individual"}, \code{"time"}, \code{"twoways"} or \code{"nested"},}
   \item{model}{one of \code{"pooling"}, \code{"within"},
-    \code{"between"}, \code{"random",} \code{"fd"} and \code{"ht"},}
+    \code{"between"}, \code{"random",} \code{"fd"}, or \code{"ht"},}
   \item{theta}{the parameter for the transformation if \code{model = "random"},}
   \item{lhs}{inherited from package \code{\link[Formula]{Formula}} (see there),}
   \item{\dots}{further arguments.}

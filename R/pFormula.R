@@ -130,6 +130,7 @@ pmodel.response.data.frame <- function(object,
                                        lhs = NULL,
                                        theta = NULL, ...){
   data <- object
+  model <- match.arg(model)
   formula <- formula(paste("~ ", names(data)[[1]], " - 1", sep = ""))
   y <- model.matrix(pFormula(formula), data = data,
                     model = model, effect = effect,
@@ -147,6 +148,7 @@ pmodel.response.pFormula <- function(object, data,
                                      lhs = NULL,
                                      theta = NULL, ...){
   formula <- pFormula(object) # was: formula <- object
+  model <- match.arg(model)
   
   # check if inputted data is already a model.frame, if not convert it to model.frame
   # (important for NA handling of the original data when pmodel.response is called directly)
