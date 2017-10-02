@@ -33,8 +33,9 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar", "Wbar"), orde
   test <- match.arg(test)
 
   # some input checks
-  if (length(all.vars(formula)) > 2) {
-    stop("'formula' may not contain more than 2 variables, one LHS and one RHS variable, e.g. 'y ~ x'")
+  if (!inherits(formula, "formula") || length(all.vars(formula)) > 2) {
+    stop(paste0("Argument 'formula' must be of class \"formula\" and may not contain ",
+                "more than 2 variables, one LHS and one RHS variable, e.g. 'y ~ x'"))
   }
     
   if (!(is.numeric(order) && round(order) == order && order > 0)) 
@@ -72,8 +73,9 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar", "Wbar"), orde
   
   Zbar <- c(sqrt(N/(2*order)) * (Wbar - order))
   names(Zbar) <- "Zbar"
-  # Ztilde recommended for fixed T, formula ()
-  Ztilde <- c( sqrt( N/(2*order) * (T. - 3*order - 5) / (T. - 2*order -3) ) 
+  
+  # Ztilde recommended for fixed T
+  Ztilde <- c(  sqrt( N/(2*order) * (T. - 3*order - 5) / (T. - 2*order -3) ) 
               * ( (T. - 3*order - 3) / (T. - 3*order -1) * Wbar - order))
   names(Ztilde) <- "Ztilde"
   

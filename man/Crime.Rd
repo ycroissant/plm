@@ -29,7 +29,8 @@
     \item{density}{people per square mile}
     \item{taxpc}{tax revenue per capita}
     \item{region}{factor. One of 'other', 'west' or 'central'.}
-    \item{smsa}{factor. (Also called "urban".) Does the individual reside in a SMSA (standard metropolitan statistical area)?}
+    \item{smsa}{factor. (Also called "urban".) Does the individual reside in a
+                SMSA (standard metropolitan statistical area)?}
     \item{pctmin}{percentage minority in 1980}
     \item{wcon}{weekly wage in construction}
     \item{wtuc}{weekly wage in transportation, utilities, communications}
@@ -63,13 +64,19 @@ See also Journal of Applied Econometrics data archive entry for Baltagi (2006) a
 }
 
 \references{
- Cornwell, C. and  W.N. Trumbull (1994) \dQuote{Estimating the economic model of crime with panel data}, \emph{Review of Economics and Statistics}, \bold{76}(2), pp. 360--366.
+ Cornwell, C. and  W.N. Trumbull (1994) \dQuote{Estimating the economic model of 
+ crime with panel data}, \emph{Review of Economics and Statistics}, \bold{76}(2), 
+ pp. 360--366.
 
- Baltagi, B. H. (2006) \dQuote{Estimating an economic model of crime using panel data from North Carolina}, \emph{Journal of Applied Econometrics}, \bold{21}(4), pp. 543--547.
+ Baltagi, B. H. (2006) \dQuote{Estimating an economic model of crime using panel 
+ data from North Carolina}, \emph{Journal of Applied Econometrics}, \bold{21}(4), 
+ pp. 543--547.
 
- Baltagi, Badi H. (2001) \emph{Econometric Analysis of Panel Data}, 2nd ed., John Wiley and Sons.
+ Baltagi, Badi H. (2001) \emph{Econometric Analysis of Panel Data}, 2nd ed., 
+ John Wiley and Sons.
  
- Baltagi, Badi H. (2013) \emph{Econometric Analysis of Panel Data}, 5th ed., John Wiley and Sons.
+ Baltagi, Badi H. (2013) \emph{Econometric Analysis of Panel Data}, 5th ed., 
+ John Wiley and Sons.
 }
 
 \keyword{datasets}

@@ -25,7 +25,7 @@ pgrangertest(formula, data, test = c("Ztilde", "Zbar", "Wbar"),
              both dimensions ('individual', 'time') need to be specified by 
              \code{index} as character of length 2 for data frames, for further 
              details see \code{\link{pdata.frame}}.}
-% \item{\dots}{further arguments to be passed on to ???. 
+% \item{\dots}{further arguments to be passed on to some function}. % not needed 
 }
 
 \details{
@@ -47,8 +47,8 @@ The implementation uses \code{\link[lmtest]{grangertest}} from package
 }
 
 \value{
-An object of class \code{c("pgrangertest", "htest"}. Besides the usual 
-elements of a \code{htest} object, it contains a \code{indgranger} element which
+An object of class \code{c("pgrangertest", "htest")}. Besides the usual 
+elements of a \code{htest} object, it contains element \code{indgranger} which
 carries the Granger test statistics and p-values per individual as a data frame.
 }
 
@@ -58,14 +58,14 @@ carries the Granger test statistics and p-values per individual as a data frame.
 
  Dumitrescu, E.-I./Hurlin, C. (2012), Testing for Granger non--causality in 
  heterogeneous panels, \emph{Economic Modelling}, \bold{29}(4), pp. 1450--460.
-% * supplements (test data, MATLAB code): http://www.runmycode.org/companion/view/42
+% supplements (test data, MATLAB code): http://www.runmycode.org/companion/view/42
 
  Granger, C. W. J., Investigating Causal Relations by Econometric Models and 
  Cross--spectral Methods, \emph{Econometrica}, \bold{37}(3), pp. 424--438.
 
  Lopez, L./Weber, S. (2017), Testing for Granger causality in panel data,
  \emph{IRENE Working paper 17-03}, September 11, 2017.
-% * supplements (xtgcause for Stata) https://ideas.repec.org/c/boc/bocode/s458308.html
+% supplements (xtgcause for Stata) https://ideas.repec.org/c/boc/bocode/s458308.html
 }
 
 \seealso{

@@ -56,13 +56,11 @@ punbalancedness(x, \dots)
  sets used for Monte Carlo simulation studies. Measures c1, c2, c3 are used
  for similar purposes in Baltagi/Song/Jung (2001).
 
-
  In the two-dimensional case, \code{punbalancedness} uses output of \code{\link{pdim}} 
  to calculate the two unbalancedness measures, so inputs to \code{punbalancedness} can 
  be whatever \code{pdim} works on. \code{pdim} returns detailed information about the 
  number of individuals and time observations (see \code{\link{pdim}}).
 }
-
 
 \value{
  A named numeric containing either two or three entries, depending on the 
@@ -84,18 +82,18 @@ punbalancedness(x, \dots)
 \author{Kevin Tappe}
 
 \references{
-Ahrens, H.; Pincus, R. (1981), \dQuote{On two measures of unbalancedness in a one-way model
+Ahrens, H.; Pincus, R. (1981), \dQuote{On two measures of unbalancedness in a one-way model 
 and their relation to efficiency}, \emph{Biometrical Journal}, \bold{23}(3), pp. 227--235.
 
-Baltagi, Badi H.; Chang, Young-Jae (1994), \dQuote{Incomplete panels: A comparative study of
-alternative estimators for the unbalanced one-way error component regression model},
+Baltagi, Badi H.; Chang, Young-Jae (1994), \dQuote{Incomplete panels: A comparative study of 
+alternative estimators for the unbalanced one-way error component regression model}, 
 \emph{Journal of Econometrics}, \bold{62}(2), pp. 67--89.
 
-Baltagi, Badi H.; Song, Seuck Heun; Jung, Byoung Cheol (2001), \dQuote{The unbalanced nested error
+Baltagi, Badi H.; Song, Seuck Heun; Jung, Byoung Cheol (2001), \dQuote{The unbalanced nested error 
 component regression model}, \emph{Journal of Econometrics}, \bold{101}(2), pp. 357--381.
 
-Baltagi, Badi H.; Song, Seuck H.; Jung, Byoung C. (2002), \dQuote{A comparative study of alternative
-estimators for the unbalanced two-way error component regression model}, \emph{Econometrics Journal},
+Baltagi, Badi H.; Song, Seuck H.; Jung, Byoung C. (2002), \dQuote{A comparative study of alternative 
+estimators for the unbalanced two-way error component regression model}, \emph{Econometrics Journal}, 
 \bold{5}(2), pp. 480--493.
 }
 
