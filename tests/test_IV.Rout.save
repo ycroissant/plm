@@ -1,5 +1,5 @@
 
-R version 3.3.3 (2017-03-06) -- "Another Canoe"
+R version 3.4.2 (2017-09-28) -- "Short Summer"
 Copyright (C) 2017 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -37,8 +37,8 @@ Balanced Panel: n = 90, T = 7, N = 630
 Observations used in estimation: 90
 
 Residuals:
-   Min. 1st Qu.  Median 3rd Qu.    Max. 
--0.5100 -0.0985 -0.0216  0.1310  0.5990 
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-0.510397 -0.098495 -0.021638  0.131446  0.598675 
 
 Coefficients:
                Estimate Std. Error t-value  Pr(>|t|)    
@@ -83,10 +83,10 @@ plm(formula = form, data = Crime, effect = "twoways", model = "within")
 Balanced Panel: n = 90, T = 7, N = 630
 
 Residuals:
-    Min.  1st Qu.   Median  3rd Qu.     Max. 
--0.55800 -0.06500 -0.00183  0.06980  0.52500 
+      Min.    1st Qu.     Median    3rd Qu.       Max. 
+-0.5581590 -0.0650155 -0.0018256  0.0698165  0.5247036 
 
-Coefficients:
+Coefficients: (4 dropped because of singularities)
                Estimate Std. Error  t-value  Pr(>|t|)    
 log(prbarr)  -0.3548257  0.0322048 -11.0178 < 2.2e-16 ***
 log(prbconv) -0.2815673  0.0211376 -13.3207 < 2.2e-16 ***
@@ -127,10 +127,10 @@ plm(formula = form_iv, data = Crime, effect = "twoways", model = "within")
 Balanced Panel: n = 90, T = 7, N = 630
 
 Residuals:
-   Min. 1st Qu.  Median 3rd Qu.    Max. 
--0.7210 -0.0682 -0.0041  0.0759  0.5660 
+      Min.    1st Qu.     Median    3rd Qu.       Max. 
+-0.7207996 -0.0682050 -0.0041004  0.0759313  0.5661408 
 
-Coefficients:
+Coefficients: (4 dropped because of singularities)
                Estimate Std. Error t-value Pr(>|t|)
 log(prbarr)  -0.5753943  0.8019932 -0.7175   0.4734
 log(prbconv) -0.4230764  0.5018196 -0.8431   0.3996
@@ -169,8 +169,8 @@ Balanced Panel: n = 90, T = 7, N = 630
 Observations used in estimation: 90
 
 Residuals:
-    Min.  1st Qu.   Median  3rd Qu.     Max. 
--0.55000 -0.10400  0.00298  0.09860  0.60200 
+      Min.    1st Qu.     Median    3rd Qu.       Max. 
+-0.5499406 -0.1041014  0.0029817  0.0986084  0.6020580 
 
 Coefficients:
                Estimate Std. Error t-value  Pr(>|t|)    
@@ -226,8 +226,8 @@ individual    0.04604 0.21456 0.674
 theta: 0.7458
 
 Residuals:
-   Min. 1st Qu.  Median 3rd Qu.    Max. 
--5.0000 -0.4660  0.0272  0.5130  3.9200 
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-4.997164 -0.465637  0.027153  0.512779  3.917220 
 
 Coefficients:
                  Estimate Std. Error t-value  Pr(>|t|)    
@@ -287,8 +287,8 @@ individual    0.04604 0.21456 0.674
 theta: 0.7458
 
 Residuals:
-    Min.  1st Qu.   Median  3rd Qu.     Max. 
--0.74900 -0.07100  0.00407  0.07840  0.47600 
+      Min.    1st Qu.     Median    3rd Qu.       Max. 
+-0.7485123 -0.0710015  0.0040742  0.0784401  0.4756493 
 
 Coefficients:
                  Estimate Std. Error t-value  Pr(>|t|)    
@@ -330,4 +330,4 @@ F-statistic: 33.1494 on 26 and 603 DF, p-value: < 2.22e-16
 > 
 > proc.time()
    user  system elapsed 
-   3.69    0.15    3.85 
+   3.75    0.15    3.90 

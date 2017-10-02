@@ -1,5 +1,5 @@
 
-R version 3.3.3 (2017-03-06) -- "Another Canoe"
+R version 3.4.2 (2017-09-28) -- "Short Summer"
 Copyright (C) 2017 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -21,7 +21,7 @@ Loading required package: Formula
 > pProduc <- pdata.frame(Produc, index = c("state", "year", "region"))
 > form  <- log(gsp) ~ log(pc) + log(emp) + log(hwy) + log(water) + log(util) + unemp
 > summary(plm(form, data = pProduc, model = "random", effect = "nested"))
-NA Random Effect Model 
+Nested effects Random Effect Model 
    (Swamy-Arora's transformation)
 
 Call:
@@ -35,13 +35,13 @@ idiosyncratic 0.001352 0.036765 0.191
 individual    0.004278 0.065410 0.604
 group         0.001455 0.038148 0.205
 theta:
-         Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
-id    0.86490 0.86490 0.86490 0.86490 0.86490 0.86490
-group 0.03961 0.04669 0.05714 0.05578 0.06458 0.06458
+            Min.   1st Qu.     Median       Mean    3rd Qu.       Max.
+id    0.86492676 0.8649268 0.86492676 0.86492676 0.86492676 0.86492676
+group 0.03960556 0.0466931 0.05713605 0.05577645 0.06458029 0.06458029
 
 Residuals:
      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
--0.106000 -0.024800 -0.001820 -0.000054  0.019800  0.183000 
+-0.106171 -0.024805 -0.001816 -0.000054  0.019795  0.182810 
 
 Coefficients:
                Estimate  Std. Error t-value  Pr(>|t|)    
@@ -61,7 +61,7 @@ R-Squared:      0.97387
 Adj. R-Squared: 0.97368
 F-statistic: 5025.33 on 6 and 809 DF, p-value: < 2.22e-16
 > summary(plm(form, data = pProduc, model = "random", effect = "nested", random.method = "walhus"))
-NA Random Effect Model 
+Nested effects Random Effect Model 
    (Wallace-Hussain's transformation)
 
 Call:
@@ -76,13 +76,13 @@ idiosyncratic 0.001415 0.037617 0.163
 individual    0.004507 0.067131 0.520
 group         0.002744 0.052387 0.317
 theta:
-        Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
-id    0.8653 0.86530 0.86530 0.86530 0.86530 0.86530
-group 0.0541 0.06154 0.07179 0.07024 0.07867 0.07867
+            Min.    1st Qu.     Median       Mean    3rd Qu.       Max.
+id    0.86533240 0.86533240 0.86533240 0.86533240 0.86533240 0.86533240
+group 0.05409908 0.06154491 0.07179372 0.07023704 0.07867007 0.07867007
 
 Residuals:
      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
--0.105000 -0.024700 -0.001880 -0.000056  0.019900  0.182000 
+-0.105014 -0.024736 -0.001879 -0.000056  0.019944  0.182082 
 
 Coefficients:
                Estimate  Std. Error t-value  Pr(>|t|)    
@@ -102,7 +102,7 @@ R-Squared:      0.97231
 Adj. R-Squared: 0.9721
 F-statistic: 4733.87 on 6 and 809 DF, p-value: < 2.22e-16
 > summary(plm(form, data = pProduc, model = "random", effect = "nested", random.method = "amemiya"))
-NA Random Effect Model 
+Nested effects Random Effect Model 
    (Amemiya's transformation)
 
 Call:
@@ -117,13 +117,13 @@ idiosyncratic 0.001352 0.036765 0.130
 individual    0.006899 0.083058 0.662
 group         0.002170 0.046589 0.208
 theta:
-         Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
-id    0.89330 0.89330 0.89330 0.89330 0.89330 0.89330
-group 0.02997 0.03549 0.04369 0.04265 0.04959 0.04959
+            Min.    1st Qu.     Median       Mean    3rd Qu.       Max.
+id    0.89325689 0.89325689 0.89325689 0.89325689 0.89325689 0.89325689
+group 0.02996995 0.03548869 0.04369353 0.04264991 0.04959127 0.04959127
 
 Residuals:
      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
--0.105000 -0.024300 -0.002260 -0.000038  0.019400  0.179000 
+-0.104625 -0.024323 -0.002264 -0.000038  0.019351  0.178975 
 
 Coefficients:
                Estimate  Std. Error t-value  Pr(>|t|)    
@@ -145,4 +145,4 @@ F-statistic: 4077.78 on 6 and 809 DF, p-value: < 2.22e-16
 > 
 > proc.time()
    user  system elapsed 
-   2.54    0.15    2.68 
+   2.74    0.15    2.90 

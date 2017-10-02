@@ -1,4 +1,4 @@
-#### Replicate results of various sources
+#### Replicate results of various sources and additional run tests, compared to the corresponding .Rout.save
 ####
 #### (1): Baltagi (2013)
 #### (2): Stata's FE estimator
@@ -9,8 +9,6 @@
 #### (1) ####
 #### compare OLS, FE and RE estimators to Baltagi's results
 # Baltagi (2013), Econometric Analysis of Panel Data, 5th edition, Wiley & Sons
-#
-#
 #    oneway:  sec. 2.6, example 1 p. 27, table 2.1
 #    twoways: sec. 3.6, example 1 p. 51, table 3.1
 #
@@ -41,14 +39,16 @@
 #          (0.010)   (0.017)
 library(plm)
 data("Grunfeld", package = "plm")
-# oneway
+Grunfeld_unbal <- Grunfeld[1:199, ]
+
+#### oneway individual balanced
 plm_grunfeld_pooled     <- plm(inv ~ value + capital, data=Grunfeld, model="pooling")
 plm_grunfeld_be         <- plm(inv ~ value + capital, data=Grunfeld, model="between")
 plm_grunfeld_fe         <- plm(inv ~ value + capital, data=Grunfeld, model="within")
 plm_grunfeld_re_walhus  <- plm(inv ~ value + capital, data=Grunfeld, model="random", random.method="walhus")
 plm_grunfeld_re_amemiya <- plm(inv ~ value + capital, data=Grunfeld, model="random", random.method="amemiya")
 plm_grunfeld_re_swar    <- plm(inv ~ value + capital, data=Grunfeld, model="random", random.method="swar")
-
+plm_grunfeld_re_nerlove <- plm(inv ~ value + capital, data=Grunfeld, model="random", random.method="nerlove")
 
 summary(plm_grunfeld_pooled    )
 summary(plm_grunfeld_be        )
@@ -56,6 +56,57 @@ summary(plm_grunfeld_fe        )
 summary(plm_grunfeld_re_walhus )
 summary(plm_grunfeld_re_swar   )
 summary(plm_grunfeld_re_amemiya)
+summary(plm_grunfeld_re_nerlove)
+
+#### oneway time balanced
+plm_grunfeld_be_time         <- plm(inv ~ value + capital, data=Grunfeld, model="between", effect = "time")
+plm_grunfeld_fe_time         <- plm(inv ~ value + capital, data=Grunfeld, model="within",  effect = "time")
+plm_grunfeld_re_walhus_time  <- plm(inv ~ value + capital, data=Grunfeld, model="random", random.method="walhus",  effect = "time")
+plm_grunfeld_re_amemiya_time <- plm(inv ~ value + capital, data=Grunfeld, model="random", random.method="amemiya", effect = "time")
+plm_grunfeld_re_swar_time    <- plm(inv ~ value + capital, data=Grunfeld, model="random", random.method="swar",    effect = "time")
+plm_grunfeld_re_nerlove_time <- plm(inv ~ value + capital, data=Grunfeld, model="random", random.method="nerlove", effect = "time")
+
+summary(plm_grunfeld_be_time        )
+summary(plm_grunfeld_fe_time        )
+summary(plm_grunfeld_re_walhus_time )
+summary(plm_grunfeld_re_swar_time   )
+summary(plm_grunfeld_re_amemiya_time)
+summary(plm_grunfeld_re_nerlove_time)
+
+#### oneway individual unbalanced
+plm_grunfeld_be_unbal         <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="between")
+plm_grunfeld_fe_unbal         <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="within")
+plm_grunfeld_re_walhus_unbal  <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="walhus")
+plm_grunfeld_re_amemiya_unbal <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="amemiya")
+plm_grunfeld_re_swar_unbal    <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="swar")
+## not implemented
+# plm_grunfeld_re_nerlove_unbal <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="nerlove")
+
+summary(plm_grunfeld_be_unbal        )
+summary(plm_grunfeld_fe_unbal        )
+summary(plm_grunfeld_re_walhus_unbal )
+summary(plm_grunfeld_re_swar_unbal   )
+summary(plm_grunfeld_re_amemiya_unbal)
+# summary(plm_grunfeld_re_nerlove_unbal) # not implemented
+
+#### oneway time unbalanced
+plm_grunfeld_be_time_unbal         <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="between", effect = "time")
+plm_grunfeld_fe_time_unbal         <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="within",  effect = "time")
+plm_grunfeld_re_walhus_time_unbal  <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="walhus",  effect = "time")
+plm_grunfeld_re_amemiya_time_unbal <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="amemiya", effect = "time")
+plm_grunfeld_re_swar_time_unbal    <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="swar",    effect = "time")
+## not implemented:
+# plm_grunfeld_re_nerlove_time_unbal <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="nerlove", effect = "time")
+
+summary(plm_grunfeld_be_time_unbal        )
+summary(plm_grunfeld_fe_time_unbal        )
+summary(plm_grunfeld_re_walhus_time_unbal )
+summary(plm_grunfeld_re_swar_time_unbal   )
+summary(plm_grunfeld_re_amemiya_time_unbal)
+# summary(plm_grunfeld_re_nerlove_time_unbal) # not implemented
+
+
+
 
 # Table 3.1 Grunfeld's Data. Two-way Error Component Results
 # "For the random effects estimators, both the SWAR and
@@ -83,18 +134,58 @@ summary(plm_grunfeld_re_amemiya)
 #          (0.010)   (0.020)
 
 
-# twoways
-plm_grunfeld_pooled_tw  <- plm(inv ~ value + capital, data=Grunfeld, model="pooling", effect = "twoways")
-plm_grunfeld_fe_tw      <- plm(inv ~ value + capital, data=Grunfeld, model="within",  effect = "twoways")
-plm_grunfeld_re_walhus  <- plm(inv ~ value + capital, data=Grunfeld, model="random", random.method="walhus",  effect = "twoways")
-plm_grunfeld_re_amemiya <- plm(inv ~ value + capital, data=Grunfeld, model="random", random.method="amemiya", effect = "twoways")
-plm_grunfeld_re_swar    <- plm(inv ~ value + capital, data=Grunfeld, model="random", random.method="swar",    effect = "twoways")
+#### twoways balanced
+plm_grunfeld_pooled_tw     <- plm(inv ~ value + capital, data=Grunfeld, model="pooling", effect = "twoways")
+plm_grunfeld_fe_tw         <- plm(inv ~ value + capital, data=Grunfeld, model="within",  effect = "twoways")
+plm_grunfeld_re_walhus_tw  <- plm(inv ~ value + capital, data=Grunfeld, model="random", random.method="walhus",  effect = "twoways")
+plm_grunfeld_re_amemiya_tw <- plm(inv ~ value + capital, data=Grunfeld, model="random", random.method="amemiya", effect = "twoways")
+plm_grunfeld_re_swar_tw    <- plm(inv ~ value + capital, data=Grunfeld, model="random", random.method="swar",    effect = "twoways")
+plm_grunfeld_re_nerlove_tw <- plm(inv ~ value + capital, data=Grunfeld, model="random", random.method="nerlove", effect = "twoways")
 
-summary(plm_grunfeld_pooled_tw )
-summary(plm_grunfeld_fe_tw     )
-summary(plm_grunfeld_re_walhus )
-summary(plm_grunfeld_re_amemiya)
-summary(plm_grunfeld_re_swar   )
+summary(plm_grunfeld_pooled_tw    )
+summary(plm_grunfeld_fe_tw        )
+summary(plm_grunfeld_re_walhus_tw )
+summary(plm_grunfeld_re_amemiya_tw)
+summary(plm_grunfeld_re_swar_tw   )
+summary(plm_grunfeld_re_nerlove_tw)
+
+##### twoways unbalanced
+plm_grunfeld_pooled_tw_unbal     <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="pooling", effect = "twoways")
+plm_grunfeld_fe_tw_unbal         <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="within",  effect = "twoways")
+plm_grunfeld_re_walhus_tw_unbal  <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="walhus",  effect = "twoways")
+plm_grunfeld_re_amemiya_tw_unbal <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="amemiya", effect = "twoways")
+plm_grunfeld_re_swar_tw_unbal    <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="swar",    effect = "twoways")
+## not implemented:
+# plm_grunfeld_re_nerlove_tw_unbal <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="nerlove", effect = "twoways")
+
+summary(plm_grunfeld_pooled_tw_unbal    )
+summary(plm_grunfeld_fe_tw_unbal        )
+summary(plm_grunfeld_re_walhus_tw_unbal )
+summary(plm_grunfeld_re_amemiya_tw_unbal)
+summary(plm_grunfeld_re_swar_tw_unbal   )
+# summary(plm_grunfeld_re_nerlove_tw_unbal) # not implemented
+
+
+
+### "amemiya" and "swar" have the same idiosyncratic variance (both based on the within variance)
+# if (!isTRUE(all.equal(ercomp(plm_grunfeld_re_amemiya)[["sigma2"]][["idios"]], ercomp(plm_grunfeld_re_swar)[["sigma2"]][["idios"]])))
+#   stop("idiosyncratic variance for 'amemiya' and 'swar' differ!")
+# 
+# if (!isTRUE(all.equal(ercomp(plm_grunfeld_re_amemiya_time)[["sigma2"]][["idios"]], ercomp(plm_grunfeld_re_swar_time)[["sigma2"]][["idios"]])))
+#   stop("idiosyncratic variance for 'amemiya' and 'swar' differ!")
+# 
+# if (!isTRUE(all.equal(ercomp(plm_grunfeld_re_amemiya_unbal)[["sigma2"]][["idios"]], ercomp(plm_grunfeld_re_swar_unbal)[["sigma2"]][["idios"]])))
+#   stop("idiosyncratic variance for 'amemiya' and 'swar' differ!")
+# 
+# if (!isTRUE(all.equal(ercomp(plm_grunfeld_re_amemiya_time_unbal)[["sigma2"]][["idios"]], ercomp(plm_grunfeld_re_swar_time_unbal)[["sigma2"]][["idios"]])))
+#   stop("idiosyncratic variance for 'amemiya' and 'swar' differ!")
+# 
+# if (!isTRUE(all.equal(ercomp(plm_grunfeld_re_amemiya_tw)[["sigma2"]][["idios"]], ercomp(plm_grunfeld_re_swar_tw)[["sigma2"]][["idios"]])))
+#   stop("idiosyncratic variance for 'amemiya' and 'swar' differ!")
+# 
+# if (!isTRUE(all.equal(ercomp(plm_grunfeld_re_amemiya_tw_unbal)[["sigma2"]][["idios"]], ercomp(plm_grunfeld_re_swar_tw_unbal)[["sigma2"]][["idios"]])))
+#   stop("idiosyncratic variance for 'amemiya' and 'swar' differ!")
+
 
 
 #### (2) ####
@@ -106,7 +197,7 @@ summary(plm_grunfeld_re_swar   )
 # nlswork$race <- factor(nlswork$race) # convert
 # nlswork$race2 <- factor(ifelse(nlswork$race == 2, 1, 0)) # need this variable for example
 # nlswork$grade <- as.numeric(nlswork$grade)
-# pnlswork <- pdata.frame(nlswork, index=c("idcode", "year"), drop.index=F)
+# pnlswork <- pdata.frame(nlswork, index=c("idcode", "year"), drop.index=FALSE)
 # 
 # form_nls_ex2 <- formula(ln_wage ~ grade + age + I(age^2) + ttl_exp + I(ttl_exp^2) + tenure + I(tenure^2) + race2 + not_smsa + south)
 # 
@@ -148,6 +239,7 @@ summary(plm_grunfeld_re_swar   )
 # gretl mimics Stata: see gretl user's guide example p. 160-161 (example 18.1)
 # http://gretl.sourceforge.net/gretl-help/gretl-guide.pdf
 # http://lists.wfu.edu/pipermail/gretl-devel/2013-May/004459.html
+#within.intercept(plm_fe_nlswork)
 #const_fe_Stata_gretl <- weighted.mean(fixef(plm_fe_nlswork) , as.numeric(table(index(plm_fe_nlswork)[[1]])))
 
 # RE estimator

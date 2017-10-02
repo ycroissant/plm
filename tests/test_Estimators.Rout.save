@@ -1,5 +1,5 @@
 
-R version 3.3.3 (2017-03-06) -- "Another Canoe"
+R version 3.4.2 (2017-09-28) -- "Short Summer"
 Copyright (C) 2017 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -15,7 +15,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> #### Replicate results of various sources
+> #### Replicate results of various sources and additional run tests, compared to the corresponding .Rout.save
 > ####
 > #### (1): Baltagi (2013)
 > #### (2): Stata's FE estimator
@@ -26,8 +26,6 @@ Type 'q()' to quit R.
 > #### (1) ####
 > #### compare OLS, FE and RE estimators to Baltagi's results
 > # Baltagi (2013), Econometric Analysis of Panel Data, 5th edition, Wiley & Sons
-> #
-> #
 > #    oneway:  sec. 2.6, example 1 p. 27, table 2.1
 > #    twoways: sec. 3.6, example 1 p. 51, table 3.1
 > #
@@ -59,14 +57,16 @@ Type 'q()' to quit R.
 > library(plm)
 Loading required package: Formula
 > data("Grunfeld", package = "plm")
-> # oneway
+> Grunfeld_unbal <- Grunfeld[1:199, ]
+> 
+> #### oneway individual balanced
 > plm_grunfeld_pooled     <- plm(inv ~ value + capital, data=Grunfeld, model="pooling")
 > plm_grunfeld_be         <- plm(inv ~ value + capital, data=Grunfeld, model="between")
 > plm_grunfeld_fe         <- plm(inv ~ value + capital, data=Grunfeld, model="within")
 > plm_grunfeld_re_walhus  <- plm(inv ~ value + capital, data=Grunfeld, model="random", random.method="walhus")
 > plm_grunfeld_re_amemiya <- plm(inv ~ value + capital, data=Grunfeld, model="random", random.method="amemiya")
 > plm_grunfeld_re_swar    <- plm(inv ~ value + capital, data=Grunfeld, model="random", random.method="swar")
-> 
+> plm_grunfeld_re_nerlove <- plm(inv ~ value + capital, data=Grunfeld, model="random", random.method="nerlove")
 > 
 > summary(plm_grunfeld_pooled    )
 Pooling Model
@@ -77,8 +77,8 @@ plm(formula = inv ~ value + capital, data = Grunfeld, model = "pooling")
 Balanced Panel: n = 10, T = 20, N = 200
 
 Residuals:
-   Min. 1st Qu.  Median 3rd Qu.    Max. 
- -292.0   -30.0     5.3    34.8   369.0 
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-291.6757  -30.0137    5.3033   34.8293  369.4464 
 
 Coefficients:
                Estimate  Std. Error t-value  Pr(>|t|)    
@@ -103,8 +103,8 @@ Balanced Panel: n = 10, T = 20, N = 200
 Observations used in estimation: 10
 
 Residuals:
-   Min. 1st Qu.  Median 3rd Qu.    Max. 
--163.00   -3.68    2.97   20.70  144.00 
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-163.3924   -3.6808    2.9683   20.7388  144.0590 
 
 Coefficients:
              Estimate Std. Error t-value Pr(>|t|)   
@@ -128,8 +128,8 @@ plm(formula = inv ~ value + capital, data = Grunfeld, model = "within")
 Balanced Panel: n = 10, T = 20, N = 200
 
 Residuals:
-    Min.  1st Qu.   Median  3rd Qu.     Max. 
--184.000  -17.600    0.563   19.200  251.000 
+      Min.    1st Qu.     Median    3rd Qu.       Max. 
+-184.00857  -17.64316    0.56337   19.19222  250.70974 
 
 Coefficients:
         Estimate Std. Error t-value  Pr(>|t|)    
@@ -160,8 +160,8 @@ individual    5690.18   75.43 0.648
 theta: 0.8374
 
 Residuals:
-   Min. 1st Qu.  Median 3rd Qu.    Max. 
--181.00  -22.00    5.79   18.80  254.00 
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-181.3556  -22.0352    5.7851   18.8320  253.9807 
 
 Coefficients:
               Estimate Std. Error t-value Pr(>|t|)    
@@ -193,8 +193,8 @@ individual    7089.80   84.20 0.718
 theta: 0.8612
 
 Residuals:
-   Min. 1st Qu.  Median 3rd Qu.    Max. 
--178.00  -19.70    4.69   19.50  253.00 
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-177.6063  -19.7350    4.6851   19.5105  252.8743 
 
 Coefficients:
               Estimate Std. Error t-value Pr(>|t|)    
@@ -226,8 +226,8 @@ individual    6477.30   80.48 0.702
 theta: 0.8557
 
 Residuals:
-   Min. 1st Qu.  Median 3rd Qu.    Max. 
--178.00  -20.20    4.92   19.50  253.00 
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-178.4834  -20.1692    4.9156   19.5200  253.1136 
 
 Coefficients:
               Estimate Std. Error t-value Pr(>|t|)    
@@ -242,6 +242,569 @@ Residual Sum of Squares: 550970
 R-Squared:      0.76971
 Adj. R-Squared: 0.76738
 F-statistic: 329.229 on 2 and 197 DF, p-value: < 2.22e-16
+> summary(plm_grunfeld_re_nerlove)
+Oneway (individual) effect Random Effect Model 
+   (Nerlove's transformation)
+
+Call:
+plm(formula = inv ~ value + capital, data = Grunfeld, model = "random", 
+    random.method = "nerlove")
+
+Balanced Panel: n = 10, T = 20, N = 200
+
+Effects:
+                  var std.dev share
+idiosyncratic 2617.39   51.16 0.263
+individual    7350.06   85.73 0.737
+theta: 0.8677
+
+Residuals:
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-176.5695  -19.8094    4.5578   19.4083  252.6067 
+
+Coefficients:
+              Estimate Std. Error t-value Pr(>|t|)    
+(Intercept) -57.907362  30.106995 -1.9234  0.05587 .  
+value         0.109802   0.010576 10.3824  < 2e-16 ***
+capital       0.308294   0.017158 17.9676  < 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    2368800
+Residual Sum of Squares: 546580
+R-Squared:      0.76926
+Adj. R-Squared: 0.76692
+F-statistic: 328.392 on 2 and 197 DF, p-value: < 2.22e-16
+> 
+> #### oneway time balanced
+> plm_grunfeld_be_time         <- plm(inv ~ value + capital, data=Grunfeld, model="between", effect = "time")
+> plm_grunfeld_fe_time         <- plm(inv ~ value + capital, data=Grunfeld, model="within",  effect = "time")
+> plm_grunfeld_re_walhus_time  <- plm(inv ~ value + capital, data=Grunfeld, model="random", random.method="walhus",  effect = "time")
+> plm_grunfeld_re_amemiya_time <- plm(inv ~ value + capital, data=Grunfeld, model="random", random.method="amemiya", effect = "time")
+> plm_grunfeld_re_swar_time    <- plm(inv ~ value + capital, data=Grunfeld, model="random", random.method="swar",    effect = "time")
+> plm_grunfeld_re_nerlove_time <- plm(inv ~ value + capital, data=Grunfeld, model="random", random.method="nerlove", effect = "time")
+> 
+> summary(plm_grunfeld_be_time        )
+Oneway (time) effect Between Model
+
+Call:
+plm(formula = inv ~ value + capital, data = Grunfeld, effect = "time", 
+    model = "between")
+
+Balanced Panel: n = 10, T = 20, N = 200
+Observations used in estimation: 20
+
+Residuals:
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-33.94030  -7.93792  -0.56437   9.84984  19.53850 
+
+Coefficients:
+              Estimate Std. Error t-value  Pr(>|t|)    
+(Intercept) -33.224601  19.412274 -1.7115 0.1051660    
+value         0.099252   0.020102  4.9374 0.0001249 ***
+capital       0.260214   0.024576 10.5879 6.659e-09 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    62870
+Residual Sum of Squares: 3839.6
+R-Squared:      0.93893
+Adj. R-Squared: 0.93174
+F-statistic: 130.682 on 2 and 17 DF, p-value: 4.7819e-11
+> summary(plm_grunfeld_fe_time        )
+Oneway (time) effect Within Model
+
+Call:
+plm(formula = inv ~ value + capital, data = Grunfeld, effect = "time", 
+    model = "within")
+
+Balanced Panel: n = 10, T = 20, N = 200
+
+Residuals:
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-292.1576  -26.3717    8.3651   31.4250  380.1370 
+
+Coefficients:
+         Estimate Std. Error t-value  Pr(>|t|)    
+value   0.1167978  0.0063313 18.4477 < 2.2e-16 ***
+capital 0.2197066  0.0322961  6.8029 1.504e-10 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    8731200
+Residual Sum of Squares: 1713000
+R-Squared:      0.80381
+Adj. R-Squared: 0.78067
+F-statistic: 364.645 on 2 and 178 DF, p-value: < 2.22e-16
+> summary(plm_grunfeld_re_walhus_time )
+Oneway (time) effect Random Effect Model 
+   (Wallace-Hussain's transformation)
+
+Call:
+plm(formula = inv ~ value + capital, data = Grunfeld, effect = "time", 
+    model = "random", random.method = "walhus")
+
+Balanced Panel: n = 10, T = 20, N = 200
+
+Effects:
+                  var std.dev share
+idiosyncratic 9522.69   97.58     1
+time             0.00    0.00     0
+theta: 0
+
+Residuals:
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-291.6757  -30.0137    5.3033   34.8293  369.4464 
+
+Coefficients:
+               Estimate  Std. Error t-value  Pr(>|t|)    
+(Intercept) -42.7143694   9.5116760 -4.4907 1.207e-05 ***
+value         0.1155622   0.0058357 19.8026 < 2.2e-16 ***
+capital       0.2306785   0.0254758  9.0548 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    9359900
+Residual Sum of Squares: 1755900
+R-Squared:      0.81241
+Adj. R-Squared: 0.8105
+F-statistic: 426.576 on 2 and 197 DF, p-value: < 2.22e-16
+> summary(plm_grunfeld_re_swar_time   )
+Oneway (time) effect Random Effect Model 
+   (Swamy-Arora's transformation)
+
+Call:
+plm(formula = inv ~ value + capital, data = Grunfeld, effect = "time", 
+    model = "random", random.method = "swar")
+
+Balanced Panel: n = 10, T = 20, N = 200
+
+Effects:
+                 var std.dev share
+idiosyncratic 9623.4    98.1     1
+time             0.0     0.0     0
+theta: 0
+
+Residuals:
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-291.6757  -30.0137    5.3033   34.8293  369.4464 
+
+Coefficients:
+               Estimate  Std. Error t-value  Pr(>|t|)    
+(Intercept) -42.7143694   9.5116760 -4.4907 1.207e-05 ***
+value         0.1155622   0.0058357 19.8026 < 2.2e-16 ***
+capital       0.2306785   0.0254758  9.0548 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    9359900
+Residual Sum of Squares: 1755900
+R-Squared:      0.81241
+Adj. R-Squared: 0.8105
+F-statistic: 426.576 on 2 and 197 DF, p-value: < 2.22e-16
+> summary(plm_grunfeld_re_amemiya_time)
+Oneway (time) effect Random Effect Model 
+   (Amemiya's transformation)
+
+Call:
+plm(formula = inv ~ value + capital, data = Grunfeld, effect = "time", 
+    model = "random", random.method = "amemiya")
+
+Balanced Panel: n = 10, T = 20, N = 200
+
+Effects:
+                  var std.dev share
+idiosyncratic 9516.51   97.55     1
+time             0.00    0.00     0
+theta: 0
+
+Residuals:
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-291.6757  -30.0137    5.3033   34.8293  369.4464 
+
+Coefficients:
+               Estimate  Std. Error t-value  Pr(>|t|)    
+(Intercept) -42.7143694   9.5116760 -4.4907 1.207e-05 ***
+value         0.1155622   0.0058357 19.8026 < 2.2e-16 ***
+capital       0.2306785   0.0254758  9.0548 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    9359900
+Residual Sum of Squares: 1755900
+R-Squared:      0.81241
+Adj. R-Squared: 0.8105
+F-statistic: 426.576 on 2 and 197 DF, p-value: < 2.22e-16
+> summary(plm_grunfeld_re_nerlove_time)
+Oneway (time) effect Random Effect Model 
+   (Nerlove's transformation)
+
+Call:
+plm(formula = inv ~ value + capital, data = Grunfeld, effect = "time", 
+    model = "random", random.method = "nerlove")
+
+Balanced Panel: n = 10, T = 20, N = 200
+
+Effects:
+                  var std.dev share
+idiosyncratic 8564.86   92.55 0.973
+time           234.38   15.31 0.027
+theta: 0.1139
+
+Residuals:
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-291.2135  -28.3774    5.6538   34.4465  371.6054 
+
+Coefficients:
+               Estimate  Std. Error t-value  Pr(>|t|)    
+(Intercept) -42.4667890  10.1886847 -4.1680 4.598e-05 ***
+value         0.1157687   0.0058638 19.7429 < 2.2e-16 ***
+capital       0.2289722   0.0263535  8.6885 1.413e-15 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    9224900
+Residual Sum of Squares: 1746800
+R-Squared:      0.81064
+Adj. R-Squared: 0.80872
+F-statistic: 421.667 on 2 and 197 DF, p-value: < 2.22e-16
+> 
+> #### oneway individual unbalanced
+> plm_grunfeld_be_unbal         <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="between")
+> plm_grunfeld_fe_unbal         <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="within")
+> plm_grunfeld_re_walhus_unbal  <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="walhus")
+> plm_grunfeld_re_amemiya_unbal <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="amemiya")
+> plm_grunfeld_re_swar_unbal    <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="swar")
+> ## not implemented
+> # plm_grunfeld_re_nerlove_unbal <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="nerlove")
+> 
+> summary(plm_grunfeld_be_unbal        )
+Oneway (individual) effect Between Model
+
+Call:
+plm(formula = inv ~ value + capital, data = Grunfeld_unbal, model = "between")
+
+Unbalanced Panel: n = 10, T = 19-20, N = 199
+Observations used in estimation: 10
+
+Residuals:
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-163.3896   -3.6615    2.9251   20.7200  144.0777 
+
+Coefficients:
+             Estimate Std. Error t-value Pr(>|t|)   
+(Intercept) -8.583114  47.497067 -0.1807  0.86172   
+value        0.134642   0.028744  4.6843  0.00225 **
+capital      0.032182   0.190854  0.1686  0.87086   
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    355810
+Residual Sum of Squares: 50602
+R-Squared:      0.85778
+Adj. R-Squared: 0.81715
+F-statistic: 21.1102 on 2 and 7 DF, p-value: 0.0010848
+> summary(plm_grunfeld_fe_unbal        )
+Oneway (individual) effect Within Model
+
+Call:
+plm(formula = inv ~ value + capital, data = Grunfeld_unbal, model = "within")
+
+Unbalanced Panel: n = 10, T = 19-20, N = 199
+
+Residuals:
+      Min.    1st Qu.     Median    3rd Qu.       Max. 
+-184.00854  -17.86458    0.53588   19.33777  250.71052 
+
+Coefficients:
+        Estimate Std. Error t-value  Pr(>|t|)    
+value   0.110125   0.011888  9.2632 < 2.2e-16 ***
+capital 0.310064   0.017401 17.8188 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    2244300
+Residual Sum of Squares: 523480
+R-Squared:      0.76676
+Adj. R-Squared: 0.75304
+F-statistic: 307.37 on 2 and 187 DF, p-value: < 2.22e-16
+> summary(plm_grunfeld_re_walhus_unbal )
+Oneway (individual) effect Random Effect Model 
+   (Wallace-Hussain's transformation)
+
+Call:
+plm(formula = inv ~ value + capital, data = Grunfeld_unbal, model = "random", 
+    random.method = "walhus")
+
+Unbalanced Panel: n = 10, T = 19-20, N = 199
+
+Effects:
+                  var std.dev share
+idiosyncratic 2900.88   53.86 0.275
+individual    7663.69   87.54 0.725
+theta:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.8602  0.8637  0.8637  0.8634  0.8637  0.8637 
+
+Residuals:
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+-177.211  -19.802    4.641   -0.017   19.687  252.771 
+
+Coefficients:
+              Estimate Std. Error t-value Pr(>|t|)    
+(Intercept) -57.874183  29.422867  -1.967   0.0506 .  
+value         0.109792   0.010552  10.405   <2e-16 ***
+capital       0.308181   0.017216  17.901   <2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    2376100
+Residual Sum of Squares: 548000
+R-Squared:      0.76937
+Adj. R-Squared: 0.76702
+F-statistic: 326.931 on 2 and 196 DF, p-value: < 2.22e-16
+> summary(plm_grunfeld_re_swar_unbal   )
+Oneway (individual) effect Random Effect Model 
+   (Swamy-Arora's transformation)
+
+Call:
+plm(formula = inv ~ value + capital, data = Grunfeld_unbal, model = "random", 
+    random.method = "swar")
+
+Unbalanced Panel: n = 10, T = 19-20, N = 199
+
+Effects:
+                  var std.dev share
+idiosyncratic 2799.34   52.91 0.282
+individual    7124.82   84.41 0.718
+theta:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.8577  0.8612  0.8612  0.8609  0.8612  0.8612 
+
+Residuals:
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+-177.611  -19.815    4.769   -0.018   19.686  252.876 
+
+Coefficients:
+              Estimate Std. Error t-value Pr(>|t|)    
+(Intercept) -57.846046  28.969526 -1.9968  0.04723 *  
+value         0.109784   0.010519 10.4364  < 2e-16 ***
+capital       0.308110   0.017224 17.8880  < 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    2381000
+Residual Sum of Squares: 548910
+R-Squared:      0.76947
+Adj. R-Squared: 0.76711
+F-statistic: 327.102 on 2 and 196 DF, p-value: < 2.22e-16
+> summary(plm_grunfeld_re_amemiya_unbal)
+Oneway (individual) effect Random Effect Model 
+   (Amemiya's transformation)
+
+Call:
+plm(formula = inv ~ value + capital, data = Grunfeld_unbal, model = "random", 
+    random.method = "amemiya")
+
+Unbalanced Panel: n = 10, T = 19-20, N = 199
+
+Effects:
+                  var std.dev share
+idiosyncratic 2799.34   52.91 0.286
+individual    6994.34   83.63 0.714
+theta:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.8564  0.8599  0.8599  0.8596  0.8599  0.8599 
+
+Residuals:
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+-177.811  -19.945    4.834   -0.018   19.678  252.929 
+
+Coefficients:
+              Estimate Std. Error t-value Pr(>|t|)    
+(Intercept) -57.831814  28.748169 -2.0117  0.04562 *  
+value         0.109780   0.010503 10.4523  < 2e-16 ***
+capital       0.308074   0.017229 17.8813  < 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    2383500
+Residual Sum of Squares: 549370
+R-Squared:      0.76951
+Adj. R-Squared: 0.76716
+F-statistic: 327.188 on 2 and 196 DF, p-value: < 2.22e-16
+> # summary(plm_grunfeld_re_nerlove_unbal) # not implemented
+> 
+> #### oneway time unbalanced
+> plm_grunfeld_be_time_unbal         <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="between", effect = "time")
+> plm_grunfeld_fe_time_unbal         <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="within",  effect = "time")
+> plm_grunfeld_re_walhus_time_unbal  <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="walhus",  effect = "time")
+> plm_grunfeld_re_amemiya_time_unbal <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="amemiya", effect = "time")
+> plm_grunfeld_re_swar_time_unbal    <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="swar",    effect = "time")
+> ## not implemented:
+> # plm_grunfeld_re_nerlove_time_unbal <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="nerlove", effect = "time")
+> 
+> summary(plm_grunfeld_be_time_unbal        )
+Oneway (time) effect Between Model
+
+Call:
+plm(formula = inv ~ value + capital, data = Grunfeld_unbal, effect = "time", 
+    model = "between")
+
+Unbalanced Panel: n = 10, T = 19-20, N = 199
+Observations used in estimation: 20
+
+Residuals:
+    Min.  1st Qu.   Median  3rd Qu.     Max. 
+-34.0155  -8.0472  -0.2581   9.7594  18.9273 
+
+Coefficients:
+              Estimate Std. Error t-value  Pr(>|t|)    
+(Intercept) -30.984895  18.541321 -1.6711 0.1130019    
+value         0.097527   0.019623  4.9700 0.0001167 ***
+capital       0.258281   0.024649 10.4782 7.774e-09 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    71348
+Residual Sum of Squares: 3870
+R-Squared:      0.94576
+Adj. R-Squared: 0.93938
+F-statistic: 148.209 on 2 and 17 DF, p-value: 1.7449e-11
+> summary(plm_grunfeld_fe_time_unbal        )
+Oneway (time) effect Within Model
+
+Call:
+plm(formula = inv ~ value + capital, data = Grunfeld_unbal, effect = "time", 
+    model = "within")
+
+Unbalanced Panel: n = 10, T = 19-20, N = 199
+
+Residuals:
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-288.9732  -27.3836    8.3436   31.6945  380.9448 
+
+Coefficients:
+         Estimate Std. Error t-value  Pr(>|t|)    
+value   0.1167471  0.0063489 18.3887 < 2.2e-16 ***
+capital 0.2215911  0.0328505  6.7454 2.088e-10 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    8651000
+Residual Sum of Squares: 1711900
+R-Squared:      0.80212
+Adj. R-Squared: 0.77864
+F-statistic: 358.743 on 2 and 177 DF, p-value: < 2.22e-16
+> summary(plm_grunfeld_re_walhus_time_unbal )
+Oneway (time) effect Random Effect Model 
+   (Wallace-Hussain's transformation)
+
+Call:
+plm(formula = inv ~ value + capital, data = Grunfeld_unbal, effect = "time", 
+    model = "random", random.method = "walhus")
+
+Unbalanced Panel: n = 10, T = 19-20, N = 199
+
+Effects:
+                  var std.dev share
+idiosyncratic 9666.19   98.32     1
+time             0.00    0.00     0
+theta:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      0       0       0       0       0       0 
+
+Residuals:
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-291.8494  -29.8087    5.3955   34.7586  368.5334 
+
+Coefficients:
+               Estimate  Std. Error t-value  Pr(>|t|)    
+(Intercept) -43.0915664   9.5781503 -4.4989 1.169e-05 ***
+value         0.1156300   0.0058506 19.7637 < 2.2e-16 ***
+capital       0.2310875   0.0255505  9.0443 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    9340000
+Residual Sum of Squares: 1754400
+R-Squared:      0.81216
+Adj. R-Squared: 0.81025
+F-statistic: 423.727 on 2 and 196 DF, p-value: < 2.22e-16
+> summary(plm_grunfeld_re_swar_time_unbal   )
+Oneway (time) effect Random Effect Model 
+   (Swamy-Arora's transformation)
+
+Call:
+plm(formula = inv ~ value + capital, data = Grunfeld_unbal, effect = "time", 
+    model = "random", random.method = "swar")
+
+Unbalanced Panel: n = 10, T = 19-20, N = 199
+
+Effects:
+                  var std.dev share
+idiosyncratic 9671.53   98.34     1
+time             0.00    0.00     0
+theta:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      0       0       0       0       0       0 
+
+Residuals:
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-291.8494  -29.8087    5.3955   34.7586  368.5334 
+
+Coefficients:
+               Estimate  Std. Error t-value  Pr(>|t|)    
+(Intercept) -43.0915664   9.5781503 -4.4989 1.169e-05 ***
+value         0.1156300   0.0058506 19.7637 < 2.2e-16 ***
+capital       0.2310875   0.0255505  9.0443 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    9340000
+Residual Sum of Squares: 1754400
+R-Squared:      0.81216
+Adj. R-Squared: 0.81025
+F-statistic: 423.727 on 2 and 196 DF, p-value: < 2.22e-16
+> summary(plm_grunfeld_re_amemiya_time_unbal)
+Oneway (time) effect Random Effect Model 
+   (Amemiya's transformation)
+
+Call:
+plm(formula = inv ~ value + capital, data = Grunfeld_unbal, effect = "time", 
+    model = "random", random.method = "amemiya")
+
+Unbalanced Panel: n = 10, T = 19-20, N = 199
+
+Effects:
+                  var std.dev share
+idiosyncratic 9671.53   98.34     1
+time             0.00    0.00     0
+theta:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      0       0       0       0       0       0 
+
+Residuals:
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-291.8494  -29.8087    5.3955   34.7586  368.5334 
+
+Coefficients:
+               Estimate  Std. Error t-value  Pr(>|t|)    
+(Intercept) -43.0915664   9.5781503 -4.4989 1.169e-05 ***
+value         0.1156300   0.0058506 19.7637 < 2.2e-16 ***
+capital       0.2310875   0.0255505  9.0443 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    9340000
+Residual Sum of Squares: 1754400
+R-Squared:      0.81216
+Adj. R-Squared: 0.81025
+F-statistic: 423.727 on 2 and 196 DF, p-value: < 2.22e-16
+> # summary(plm_grunfeld_re_nerlove_time_unbal) # not implemented
+> 
+> 
+> 
 > 
 > # Table 3.1 Grunfeld's Data. Two-way Error Component Results
 > # "For the random effects estimators, both the SWAR and
@@ -269,14 +832,15 @@ F-statistic: 329.229 on 2 and 197 DF, p-value: < 2.22e-16
 > #          (0.010)   (0.020)
 > 
 > 
-> # twoways
-> plm_grunfeld_pooled_tw  <- plm(inv ~ value + capital, data=Grunfeld, model="pooling", effect = "twoways")
-> plm_grunfeld_fe_tw      <- plm(inv ~ value + capital, data=Grunfeld, model="within",  effect = "twoways")
-> plm_grunfeld_re_walhus  <- plm(inv ~ value + capital, data=Grunfeld, model="random", random.method="walhus",  effect = "twoways")
-> plm_grunfeld_re_amemiya <- plm(inv ~ value + capital, data=Grunfeld, model="random", random.method="amemiya", effect = "twoways")
-> plm_grunfeld_re_swar    <- plm(inv ~ value + capital, data=Grunfeld, model="random", random.method="swar",    effect = "twoways")
+> #### twoways balanced
+> plm_grunfeld_pooled_tw     <- plm(inv ~ value + capital, data=Grunfeld, model="pooling", effect = "twoways")
+> plm_grunfeld_fe_tw         <- plm(inv ~ value + capital, data=Grunfeld, model="within",  effect = "twoways")
+> plm_grunfeld_re_walhus_tw  <- plm(inv ~ value + capital, data=Grunfeld, model="random", random.method="walhus",  effect = "twoways")
+> plm_grunfeld_re_amemiya_tw <- plm(inv ~ value + capital, data=Grunfeld, model="random", random.method="amemiya", effect = "twoways")
+> plm_grunfeld_re_swar_tw    <- plm(inv ~ value + capital, data=Grunfeld, model="random", random.method="swar",    effect = "twoways")
+> plm_grunfeld_re_nerlove_tw <- plm(inv ~ value + capital, data=Grunfeld, model="random", random.method="nerlove", effect = "twoways")
 > 
-> summary(plm_grunfeld_pooled_tw )
+> summary(plm_grunfeld_pooled_tw    )
 Pooling Model
 
 Call:
@@ -286,8 +850,8 @@ plm(formula = inv ~ value + capital, data = Grunfeld, effect = "twoways",
 Balanced Panel: n = 10, T = 20, N = 200
 
 Residuals:
-   Min. 1st Qu.  Median 3rd Qu.    Max. 
- -292.0   -30.0     5.3    34.8   369.0 
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-291.6757  -30.0137    5.3033   34.8293  369.4464 
 
 Coefficients:
                Estimate  Std. Error t-value  Pr(>|t|)    
@@ -302,7 +866,7 @@ Residual Sum of Squares: 1755900
 R-Squared:      0.81241
 Adj. R-Squared: 0.8105
 F-statistic: 426.576 on 2 and 197 DF, p-value: < 2.22e-16
-> summary(plm_grunfeld_fe_tw     )
+> summary(plm_grunfeld_fe_tw        )
 Twoways effects Within Model
 
 Call:
@@ -312,8 +876,8 @@ plm(formula = inv ~ value + capital, data = Grunfeld, effect = "twoways",
 Balanced Panel: n = 10, T = 20, N = 200
 
 Residuals:
-   Min. 1st Qu.  Median 3rd Qu.    Max. 
--163.00  -19.50   -1.27   19.10  212.00 
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-162.6094  -19.4710   -1.2669   19.1277  211.8420 
 
 Coefficients:
         Estimate Std. Error t-value  Pr(>|t|)    
@@ -327,7 +891,7 @@ Residual Sum of Squares: 452150
 R-Squared:      0.72015
 Adj. R-Squared: 0.67047
 F-statistic: 217.442 on 2 and 169 DF, p-value: < 2.22e-16
-> summary(plm_grunfeld_re_walhus )
+> summary(plm_grunfeld_re_walhus_tw )
 Twoways effects Random Effect Model 
    (Wallace-Hussain's transformation)
 
@@ -345,8 +909,8 @@ time             0.00    0.00 0.000
 theta: 0.8349 (id) 0 (time) 2.776e-17 (total)
 
 Residuals:
-   Min. 1st Qu.  Median 3rd Qu.    Max. 
--182.00  -22.40    5.91   18.70  254.00 
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-181.7595  -22.3727    5.9119   18.7001  254.1129 
 
 Coefficients:
               Estimate Std. Error t-value Pr(>|t|)    
@@ -361,7 +925,7 @@ Residual Sum of Squares: 559450
 R-Squared:      0.77057
 Adj. R-Squared: 0.76824
 F-statistic: 330.818 on 2 and 197 DF, p-value: < 2.22e-16
-> summary(plm_grunfeld_re_amemiya)
+> summary(plm_grunfeld_re_amemiya_tw)
 Twoways effects Random Effect Model 
    (Amemiya's transformation)
 
@@ -379,8 +943,8 @@ time           243.78   15.61 0.024
 theta: 0.868 (id) 0.2787 (time) 0.2776 (total)
 
 Residuals:
-   Min. 1st Qu.  Median 3rd Qu.    Max. 
--177.00  -18.00    3.27   17.20  234.00 
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-176.9062  -18.0431    3.2697   17.1719  234.1735 
 
 Coefficients:
               Estimate Std. Error t-value Pr(>|t|)    
@@ -395,7 +959,7 @@ Residual Sum of Squares: 518200
 R-Squared:      0.74927
 Adj. R-Squared: 0.74673
 F-statistic: 294.358 on 2 and 197 DF, p-value: < 2.22e-16
-> summary(plm_grunfeld_re_swar   )
+> summary(plm_grunfeld_re_swar_tw   )
 Twoways effects Random Effect Model 
    (Swamy-Arora's transformation)
 
@@ -413,8 +977,8 @@ time             0.00    0.00 0.000
 theta: 0.864 (id) 0 (time) 5.551e-17 (total)
 
 Residuals:
-   Min. 1st Qu.  Median 3rd Qu.    Max. 
- -177.0   -19.8     4.6    19.5   253.0 
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-177.1700  -19.7576    4.6048   19.4676  252.7596 
 
 Coefficients:
               Estimate Std. Error t-value Pr(>|t|)    
@@ -429,6 +993,242 @@ Residual Sum of Squares: 547910
 R-Squared:      0.7694
 Adj. R-Squared: 0.76706
 F-statistic: 328.647 on 2 and 197 DF, p-value: < 2.22e-16
+> summary(plm_grunfeld_re_nerlove_tw)
+Twoways effects Random Effect Model 
+   (Nerlove's transformation)
+
+Call:
+plm(formula = inv ~ value + capital, data = Grunfeld, effect = "twoways", 
+    model = "random", random.method = "nerlove")
+
+Balanced Panel: n = 10, T = 20, N = 200
+
+Effects:
+                  var std.dev share
+idiosyncratic 2260.74   47.55 0.201
+individual    8426.92   91.80 0.751
+time           534.94   23.13 0.048
+theta: 0.885 (id) 0.455 (time) 0.4532 (total)
+
+Residuals:
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-173.1203  -16.4742    2.0885   18.8439  221.8104 
+
+Coefficients:
+              Estimate Std. Error t-value Pr(>|t|)    
+(Intercept) -68.304674  33.457520 -2.0415  0.04253 *  
+value         0.112729   0.011330  9.9499  < 2e-16 ***
+capital       0.334494   0.019686 16.9917  < 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    1896600
+Residual Sum of Squares: 496930
+R-Squared:      0.73799
+Adj. R-Squared: 0.73533
+F-statistic: 277.437 on 2 and 197 DF, p-value: < 2.22e-16
+> 
+> ##### twoways unbalanced
+> plm_grunfeld_pooled_tw_unbal     <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="pooling", effect = "twoways")
+> plm_grunfeld_fe_tw_unbal         <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="within",  effect = "twoways")
+> plm_grunfeld_re_walhus_tw_unbal  <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="walhus",  effect = "twoways")
+> plm_grunfeld_re_amemiya_tw_unbal <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="amemiya", effect = "twoways")
+> plm_grunfeld_re_swar_tw_unbal    <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="swar",    effect = "twoways")
+> ## not implemented:
+> # plm_grunfeld_re_nerlove_tw_unbal <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="nerlove", effect = "twoways")
+> 
+> summary(plm_grunfeld_pooled_tw_unbal    )
+Pooling Model
+
+Call:
+plm(formula = inv ~ value + capital, data = Grunfeld_unbal, effect = "twoways", 
+    model = "pooling")
+
+Unbalanced Panel: n = 10, T = 19-20, N = 199
+
+Residuals:
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-291.8494  -29.8087    5.3955   34.7586  368.5334 
+
+Coefficients:
+               Estimate  Std. Error t-value  Pr(>|t|)    
+(Intercept) -43.0915664   9.5781503 -4.4989 1.169e-05 ***
+value         0.1156300   0.0058506 19.7637 < 2.2e-16 ***
+capital       0.2310875   0.0255505  9.0443 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    9340000
+Residual Sum of Squares: 1754400
+R-Squared:      0.81216
+Adj. R-Squared: 0.81025
+F-statistic: 423.727 on 2 and 196 DF, p-value: < 2.22e-16
+> summary(plm_grunfeld_fe_tw_unbal        )
+Twoways effects Within Model
+
+Call:
+plm(formula = inv ~ value + capital, data = Grunfeld_unbal, effect = "twoways", 
+    model = "within")
+
+Unbalanced Panel: n = 10, T = 19-20, N = 199
+
+Residuals:
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-163.3268  -19.0378   -1.7054   20.7438  212.5877 
+
+Coefficients:
+        Estimate Std. Error t-value  Pr(>|t|)    
+value   0.118504   0.013775  8.6029 5.299e-15 ***
+capital 0.361140   0.022951 15.7352 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    1597100
+Residual Sum of Squares: 449510
+R-Squared:      0.71855
+Adj. R-Squared: 0.66829
+F-statistic: 214.457 on 2 and 168 DF, p-value: < 2.22e-16
+> summary(plm_grunfeld_re_walhus_tw_unbal )
+Twoways effects Random Effect Model 
+   (Wallace-Hussain's transformation)
+
+Call:
+plm(formula = inv ~ value + capital, data = Grunfeld_unbal, effect = "twoways", 
+    model = "random", random.method = "walhus")
+
+Unbalanced Panel: n = 10, T = 19-20, N = 199
+
+Effects:
+                  var std.dev share
+idiosyncratic 3078.75   55.49 0.287
+individual    7655.76   87.50 0.713
+time             0.00    0.00 0.000
+theta:
+           Min.  1st Qu.   Median         Mean  3rd Qu.         Max.
+id    0.8560314 0.859604 0.859604 8.592629e-01 0.859604 8.596040e-01
+time  0.0000000 0.000000 0.000000 0.000000e+00 0.000000 0.000000e+00
+total 0.0000000 0.000000 0.000000 5.300060e-18 0.000000 5.551115e-17
+
+Residuals:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+-329.39  -41.02   10.57   -0.25   46.73  329.43 
+
+Coefficients:
+               Estimate  Std. Error t-value  Pr(>|t|)    
+(Intercept) -5.7828e+01  5.4187e-01 -106.72 < 2.2e-16 ***
+value        1.0978e-01  1.9828e-04  553.65 < 2.2e-16 ***
+capital      3.0806e-01  3.2541e-04  946.70 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    9340000
+Residual Sum of Squares: 1838200
+R-Squared:      0.80588
+Adj. R-Squared: 0.8039
+F-statistic: 399.938 on 2 and 196 DF, p-value: < 2.22e-16
+> summary(plm_grunfeld_re_amemiya_tw_unbal)
+Twoways effects Random Effect Model 
+   (Amemiya's transformation)
+
+Call:
+plm(formula = inv ~ value + capital, data = Grunfeld_unbal, effect = "twoways", 
+    model = "random", random.method = "amemiya")
+
+Unbalanced Panel: n = 10, T = 19-20, N = 199
+
+Effects:
+                  var std.dev share
+idiosyncratic 2675.67   51.73 0.241
+individual    8088.44   89.94 0.729
+time           326.08   18.06 0.029
+theta:
+           Min.   1st Qu.    Median      Mean   3rd Qu.      Max.
+id    0.8691846 0.8724423 0.8724423 0.8721313 0.8724423 0.8724423
+time  0.3094100 0.3286443 0.3286443 0.3277744 0.3286443 0.3286443
+total 0.3082868 0.3273981 0.3273981 0.3265245 0.3273981 0.3273981
+
+Residuals:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+-344.32  -44.34   14.98   -0.19   51.14  324.13 
+
+Coefficients:
+               Estimate  Std. Error t-value  Pr(>|t|)    
+(Intercept) -6.5371e+01  6.0239e-01 -108.52 < 2.2e-16 ***
+value        1.1185e-01  2.1633e-04  517.04 < 2.2e-16 ***
+capital      3.2691e-01  3.7420e-04  873.62 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    9340000
+Residual Sum of Squares: 1896700
+R-Squared:      0.80418
+Adj. R-Squared: 0.80218
+F-statistic: 384.597 on 2 and 196 DF, p-value: < 2.22e-16
+> summary(plm_grunfeld_re_swar_tw_unbal   )
+Twoways effects Random Effect Model 
+   (Swamy-Arora's transformation)
+
+Call:
+plm(formula = inv ~ value + capital, data = Grunfeld_unbal, effect = "twoways", 
+    model = "random", random.method = "swar")
+
+Unbalanced Panel: n = 10, T = 19-20, N = 199
+
+Effects:
+                  var std.dev share
+idiosyncratic 2675.67   51.73 0.273
+individual    7131.05   84.45 0.727
+time             0.00    0.00 0.000
+theta:
+               Min.      1st Qu.       Median         Mean      3rd Qu.
+id     8.608394e-01 8.642973e-01 8.642973e-01 8.639671e-01 8.642973e-01
+time   0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00
+total -5.551115e-17 2.775558e-17 2.775558e-17 1.980549e-17 2.775558e-17
+              Max.
+id    8.642973e-01
+time  0.000000e+00
+total 2.775558e-17
+
+Residuals:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+-329.50  -41.03   10.61   -0.25   46.75  329.39 
+
+Coefficients:
+               Estimate  Std. Error t-value  Pr(>|t|)    
+(Intercept) -5.7881e+01  5.5860e-01 -103.62 < 2.2e-16 ***
+value        1.0979e-01  1.9973e-04  549.70 < 2.2e-16 ***
+capital      3.0820e-01  3.2561e-04  946.53 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    9340000
+Residual Sum of Squares: 1838600
+R-Squared:      0.80587
+Adj. R-Squared: 0.80389
+F-statistic: 399.846 on 2 and 196 DF, p-value: < 2.22e-16
+> # summary(plm_grunfeld_re_nerlove_tw_unbal) # not implemented
+> 
+> 
+> 
+> ### "amemiya" and "swar" have the same idiosyncratic variance (both based on the within variance)
+> # if (!isTRUE(all.equal(ercomp(plm_grunfeld_re_amemiya)[["sigma2"]][["idios"]], ercomp(plm_grunfeld_re_swar)[["sigma2"]][["idios"]])))
+> #   stop("idiosyncratic variance for 'amemiya' and 'swar' differ!")
+> # 
+> # if (!isTRUE(all.equal(ercomp(plm_grunfeld_re_amemiya_time)[["sigma2"]][["idios"]], ercomp(plm_grunfeld_re_swar_time)[["sigma2"]][["idios"]])))
+> #   stop("idiosyncratic variance for 'amemiya' and 'swar' differ!")
+> # 
+> # if (!isTRUE(all.equal(ercomp(plm_grunfeld_re_amemiya_unbal)[["sigma2"]][["idios"]], ercomp(plm_grunfeld_re_swar_unbal)[["sigma2"]][["idios"]])))
+> #   stop("idiosyncratic variance for 'amemiya' and 'swar' differ!")
+> # 
+> # if (!isTRUE(all.equal(ercomp(plm_grunfeld_re_amemiya_time_unbal)[["sigma2"]][["idios"]], ercomp(plm_grunfeld_re_swar_time_unbal)[["sigma2"]][["idios"]])))
+> #   stop("idiosyncratic variance for 'amemiya' and 'swar' differ!")
+> # 
+> # if (!isTRUE(all.equal(ercomp(plm_grunfeld_re_amemiya_tw)[["sigma2"]][["idios"]], ercomp(plm_grunfeld_re_swar_tw)[["sigma2"]][["idios"]])))
+> #   stop("idiosyncratic variance for 'amemiya' and 'swar' differ!")
+> # 
+> # if (!isTRUE(all.equal(ercomp(plm_grunfeld_re_amemiya_tw_unbal)[["sigma2"]][["idios"]], ercomp(plm_grunfeld_re_swar_tw_unbal)[["sigma2"]][["idios"]])))
+> #   stop("idiosyncratic variance for 'amemiya' and 'swar' differ!")
+> 
 > 
 > 
 > #### (2) ####
@@ -440,7 +1240,7 @@ F-statistic: 328.647 on 2 and 197 DF, p-value: < 2.22e-16
 > # nlswork$race <- factor(nlswork$race) # convert
 > # nlswork$race2 <- factor(ifelse(nlswork$race == 2, 1, 0)) # need this variable for example
 > # nlswork$grade <- as.numeric(nlswork$grade)
-> # pnlswork <- pdata.frame(nlswork, index=c("idcode", "year"), drop.index=F)
+> # pnlswork <- pdata.frame(nlswork, index=c("idcode", "year"), drop.index=FALSE)
 > # 
 > # form_nls_ex2 <- formula(ln_wage ~ grade + age + I(age^2) + ttl_exp + I(ttl_exp^2) + tenure + I(tenure^2) + race2 + not_smsa + south)
 > # 
@@ -482,6 +1282,7 @@ F-statistic: 328.647 on 2 and 197 DF, p-value: < 2.22e-16
 > # gretl mimics Stata: see gretl user's guide example p. 160-161 (example 18.1)
 > # http://gretl.sourceforge.net/gretl-help/gretl-guide.pdf
 > # http://lists.wfu.edu/pipermail/gretl-devel/2013-May/004459.html
+> #within.intercept(plm_fe_nlswork)
 > #const_fe_Stata_gretl <- weighted.mean(fixef(plm_fe_nlswork) , as.numeric(table(index(plm_fe_nlswork)[[1]])))
 > 
 > # RE estimator
@@ -493,4 +1294,4 @@ F-statistic: 328.647 on 2 and 197 DF, p-value: < 2.22e-16
 > 
 > proc.time()
    user  system elapsed 
-   2.91    0.10    3.01 
+   4.38    0.15    4.58 
