@@ -49,7 +49,6 @@ pcdtest.formula <- function(x, data, index = NULL, model = NULL,
     ind0 <- attr(model.frame(mymod), "index")
     tind <- as.numeric(ind0[[2]])
     ind <- as.numeric(ind0[[1]])
-    
     if (is.null(model)) {
         ## estimate individual regressions one by one
         X <- model.matrix(mymod)
@@ -150,7 +149,6 @@ pcdtest.pseries <- function(x, test = c("cd", "sclm", "lm", "rho", "absrho"),
 }
 
 pcdres <- function(tres, n, w, form, test) {
-  
   # 'form' is a character describing the formula (not a formula object!)
   # and goes into htest_object$data.name
 

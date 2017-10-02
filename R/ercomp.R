@@ -64,7 +64,7 @@ ercomp.formula <- function(object, data,
         TS <- pdim$nT$T
         O <- pdim$nT$N
         NTS <- N * (effect != "time") + TS * (effect != "individual") - 1 * (effect == "twoways")
-        s2nu <- deviance(est) / (O - NTS)
+        s2nu <- deviance(est) / O#(O - NTS)
         s2eta <- s2mu <- NULL
         if (effect != "time")
             s2eta <- sum(fixef(est, type = "dmean", effect = "individual") ^ 2) / (N - 1)
@@ -281,6 +281,7 @@ ercomp.formula <- function(object, data,
         sigma2 <- as.numeric(solve(M, quad))
 #        print(M)
 #        print(quad)
+
         names(sigma2) <- c("idios", "id", "gp")
         theta <- list(id = 1 - sqrt(sigma2["idios"] /  (Tn * sigma2["id"] + sigma2["idios"])),
                       gp = sqrt(sigma2["idios"] / (Tn * sigma2["id"] + sigma2["idios"])) -
@@ -319,7 +320,6 @@ ercomp.formula <- function(object, data,
     quad <- vector(length = 3, mode = "numeric")
     # first quadratic form, within transformation
     hateps_w <- resid(estm[[1]], model = "pooling")
-
     if (effect != "twoways"){
         quad[1] <- crossprod(Within(hateps_w, effect = effect))
     }

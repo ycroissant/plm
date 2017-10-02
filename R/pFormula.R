@@ -1,18 +1,17 @@
 ## pFormula:
 ## methods : formula, model.frame, model.matrix, pmodel.response
 
-
 pFormula <- function(object) {
   stopifnot(inherits(object, "formula"))
   if (!inherits(object, "Formula")){
     object <- Formula(object)
   }
-  class(object) <- union("pFormula", class(object)) # union is safer than c("pFormula", class(object))
+  class(object) <- union("pFormula", class(object))
   object
 }
 
 as.Formula.pFormula <- function(x, ...){
-  class(x) <- setdiff(class(x), "pFormula") # setdiff is safer than: class(x)[-1]
+  class(x) <- setdiff(class(x), "pFormula")
   x
 }
 
@@ -22,7 +21,7 @@ model.frame.pFormula <- function(formula, data, ..., lhs = NULL, rhs = NULL){
   index <- attr(data, "index")
   mf <- model.frame(as.Formula(formula), as.data.frame(data), ..., rhs = rhs)
   index <- index[as.numeric(rownames(mf)), ]
-  index <- droplevels(index) # index <- data.frame(lapply(index, function(x) x[drop = TRUE]))
+  index <- droplevels(index)
   class(index) <- c("pindex", "data.frame")
   structure(mf,
             index = index,
@@ -30,37 +29,36 @@ model.frame.pFormula <- function(formula, data, ..., lhs = NULL, rhs = NULL){
 }
 
 model.matrix.pFormula <- function(object, data,
-                                  model = c("pooling","within","Between", "Sum",
-                                      "between","mean","random","fd"),
+                                  model = c("pooling", "within", "Between", "Sum",
+                                      "between", "mean", "random", "fd"),
                                   effect = c("individual", "time", "twoways", "nested"),
                                   rhs = 1,
                                   theta = NULL, ...){
     model <- match.arg(model)
     effect <- match.arg(effect)
     formula <- object
-
+    
     has.intercept <- has.intercept(formula, rhs = rhs)
-  # check if inputted data is a model.frame, if not convert it to model.frame
-  # (important for NA handling of the original data when model.matrix.pFormula is called directly)
-  # As there is no own class for a model.frame, check if the 'terms' attribute
-  # is present (this mimics what lm does to detect a model.frame)
-    if (is.null(attr(data, "terms"))) {
-        data <- model.frame.pFormula(pFormula(formula), data)
-    }
+    
+    # check if inputted data is a model.frame, if not convert it to
+    # model.frame (important for NA handling of the original data when
+    # model.matrix.pFormula is called directly) As there is no own
+    # class for a model.frame, check if the 'terms' attribute is
+    # present (this mimics what lm does to detect a model.frame)
+    
+    if (is.null(attr(data, "terms"))) data <- model.frame.pFormula(pFormula(formula), data)
   
-  # this goes to Formula::model.matrix.Formula:
+    # this goes to Formula::model.matrix.Formula:
     X <- model.matrix(as.Formula(formula), rhs = rhs, data = data, ...)
     X.assi <- attr(X, "assign")
     X.contr <- attr(X, "contrasts")
-    X.contr <- X.contr[ !sapply(X.contr, is.null) ]  ##drop NULL elements
+    X.contr <- X.contr[ !sapply(X.contr, is.null) ]
     index <- attr(data, "index")
     id <- index[[1]]
-    if (anyNA(id)) {
-        stop("NA in the individual index variable")
-    }
+    if (anyNA(id)) stop("NA in the individual index variable")
     time <- index[[2]]
     if (length(index) == 3) group <- index[[3]]
-    balanced <- is.pbalanced(data) # pdim <- pdim(data)
+    balanced <- is.pbalanced(data)
     if (has.intercept && model == "within") X <- X[ , -1, drop = FALSE]
     if (effect %in% c("individual", "time")){
         if (effect == "individual") cond <- id
@@ -72,8 +70,8 @@ model.matrix.pFormula <- function(object, data,
                          "Between" = Between(X, cond),
                          "between" = between(X, cond),
                          "pooling" = X,
-                         "mean"    = matrix(.colMeans(X,nrow(X),ncol(X)), nrow(X),ncol(X),byrow=TRUE), # .colMeans for speed # matrix(apply(X, 2, mean), nrow(X), ncol(X), byrow = T),
-                         "random"  = X - theta * Between(X,cond),
+                         "mean"    = matrix(.colMeans(X, nrow(X), ncol(X)), nrow(X), ncol(X), byrow = TRUE),
+                         "random"  = X - theta * Between(X, cond),
                          "fd"      = pdiff(X, cond, effect = effect, has.intercept = has.intercept)
                          )
     }
@@ -81,19 +79,20 @@ model.matrix.pFormula <- function(object, data,
         if (balanced){ # two-ways balanced
             result <- switch(model,
                              "within"  = X - Between(X,id) - Between(X,time) +
-                                 matrix(.colMeans(X,nrow(X),ncol(X)), nrow(X),ncol(X),byrow=TRUE), # matrix(apply(X,2,mean),nrow(X),ncol(X),byrow=T)
-                             "random"  = X - theta$id * Between(X,id) - theta$time * Between(X,time) +
-                                 theta$total * matrix(.colMeans(X,nrow(X),ncol(X)), nrow(X),ncol(X),byrow=TRUE), # matrix(apply(X,2,mean),nrow(X),ncol(X),byrow=T),
+                                 matrix(.colMeans(X, nrow(X), ncol(X)), nrow(X), ncol(X), byrow = TRUE),
+                             "random"  = X - theta$id * Between(X,id) - theta$time * Between(X, time) +
+                                 theta$total * matrix(.colMeans(X, nrow(X), ncol(X)), nrow(X), ncol(X), byrow=TRUE),
                              "pooling" = X,
-                             # place case "mean" here also?
-                             # catch everything else (twoways balanced) and give error message
+                             # place case "mean" here also?  catch
+                             # everything else (twoways balanced) and
+                             # give error message
                              stop(paste0("in model.matrix.pFormula: no model.matrix for model =\"", model, "\" and effect = \"", effect, "\" meaningful or implemented"))
                              )
         }
         else{ # two-ways unbalanced
             result <- switch(model,
                              "within"  = { # Wansbeek/Kapteyn (1989), Journal of Econometrics, 41, pp. 341-361 (2.12)
-                                 Dmu <- model.matrix(~ time - 1)       ## O x T 
+                                 Dmu <- model.matrix(~ time - 1)
                                  W1 <- Within(X, id, rm.null = FALSE)
                                  WDmu <- Within(Dmu, id)
                                  W2 <- fitted(lm.fit(WDmu, X))
@@ -105,7 +104,14 @@ model.matrix.pFormula <- function(object, data,
                              )
         }
     }
-    if (effect == "nested") result <- X - theta$id * Between(X, id) - theta$gp * Between(X, group)
+    if (effect == "nested"){
+        if (model == "pooling"){
+            result <- X
+        }
+        else{
+            result <- X - theta$id * Between(X, id) - theta$gp * Between(X, group)
+        }
+    }
 
     attr(result, "assign") <- X.assi
     attr(result, "contrasts") <- X.contr
@@ -118,9 +124,9 @@ pmodel.response <- function(object, ...) {
 
 
 pmodel.response.data.frame <- function(object,
-                                       model = c("pooling","within","Between",
-                                                 "between","mean","random","fd"),
-                                       effect = c("individual","time","twoways", "nested"),
+                                       model = c("pooling", "within", "Between",
+                                                 "between", "mean", "random", "fd"),
+                                       effect = c("individual", "time", "twoways", "nested"),
                                        lhs = NULL,
                                        theta = NULL, ...){
   data <- object
@@ -128,7 +134,6 @@ pmodel.response.data.frame <- function(object,
   y <- model.matrix(pFormula(formula), data = data,
                     model = model, effect = effect,
                     lhs = lhs, theta = theta, ...)
-#  dim(y) <- NULL
   namesy <- rownames(y)
   y <- as.numeric(y)
   names(y) <- namesy
@@ -136,9 +141,9 @@ pmodel.response.data.frame <- function(object,
 }
 
 pmodel.response.pFormula <- function(object, data,
-                                     model = c("pooling","within","Between",
-                                               "between","mean","random","fd"),
-                                     effect = c("individual","time","twoways", "nested"),
+                                     model = c("pooling", "within", "Between",
+                                               "between", "mean", "random", "fd"),
+                                     effect = c("individual", "time", "twoways", "nested"),
                                      lhs = NULL,
                                      theta = NULL, ...){
   formula <- pFormula(object) # was: formula <- object
@@ -221,103 +226,3 @@ pmodel.response.plm <- function(object, ...){
 }
 
 
-model.matrix.pdata.frame <- function(object,
-                                  model = c("pooling","within","Between", "Sum",
-                                      "between","mean","random","fd"),
-                                  effect = c("individual", "time", "twoways", "nested"),
-                                  rhs = 1,
-                                  theta = NULL, ...){
-    model <- match.arg(model)
-    effect <- match.arg(effect)
-    formula <- attr(object, "formula")
-    data <- object
-    has.intercept <- has.intercept(formula, rhs = rhs)
-    if (is.null(attr(data, "terms"))) {
-        stop("This is not a model.frame, but just an ordinary pdata.frame")
-    }
-    X <- model.matrix(formula, rhs = rhs, data = data, ...)
-    X.assi <- attr(X, "assign")
-    X.contr <- attr(X, "contrasts")
-    X.contr <- X.contr[! sapply(X.contr, is.null) ]  ##drop NULL elements
-    index <- attr(data, "index")
-    id <- index[[1]]
-    if (anyNA(id)) {
-        stop("NA in the individual index variable")
-    }
-    time <- index[[2]]
-    if (length(index) == 3) group <- index[[3]]
-    balanced <- is.pbalanced(data) # pdim <- pdim(data)
-    if (has.intercept && model == "within") X <- X[ , -1, drop = FALSE]
-    if (effect %in% c("individual",  "time")){
-        if (effect == "individual") cond <- id
-        if (effect == "time") cond <- time
-        #!YC! rm.null FALSE or TRUE ?
-        result <- switch(model,
-                         "within"  = Within(X, cond, rm.null = FALSE),
-                         "Sum"     = Sum(X, cond),
-                         "Between" = Between(X, cond),
-                         "between" = between(X, cond),
-                         "pooling" = X,
-                         "mean"    = matrix(.colMeans(X,nrow(X),ncol(X)), nrow(X),ncol(X),byrow=T), # .colMeans for speed # matrix(apply(X, 2, mean), nrow(X), ncol(X), byrow = T),
-                         "random"  = X - theta * Between(X,cond),
-                         "fd"      = pdiff(X, cond, effect = effect, has.intercept = has.intercept)
-                         )
-    }
-    if (effect == "twoways"){
-        if (balanced){ # two-ways balanced
-            result <- switch(model,
-                             "within"  = X - Between(X,id) - Between(X,time) +
-                                 matrix(.colMeans(X,nrow(X),ncol(X)), nrow(X),ncol(X),byrow=TRUE), # matrix(apply(X,2,mean),nrow(X),ncol(X),byrow=T)
-                             "random"  = X - theta$id * Between(X,id) - theta$time * Between(X,time) +
-                                 theta$total * matrix(.colMeans(X,nrow(X),ncol(X)), nrow(X),ncol(X),byrow=TRUE), # matrix(apply(X,2,mean),nrow(X),ncol(X),byrow=T),
-                             "pooling" = X,
-                             # place case "mean" here also?
-                             # catch everything else (twoways balanced) and give error message
-                             stop(paste0("in model.matrix.pFormula: no model.matrix for model =\"", model, "\" and effect = \"", effect, "\" meaningful or implemented"))
-                             )
-        }
-        else{ # two-ways unbalanced
-            result <- switch(model,
-                             "within"  = { # Wansbeek/Kapteyn (1989), Journal of Econometrics, 41, pp. 341-361 (2.12)
-                                 Dmu <- model.matrix(~ time - 1)       ## O x T 
-                                 W1 <- Within(X, id, rm.null = FALSE)
-                                 WDmu <- Within(Dmu, id)
-                                 W2 <- fitted(lm.fit(WDmu, X))
-                                 result <- W1 - W2
-                             },
-                             "pooling" = X,
-                             "random" = X, # !YC! this value is irrelevant, just in order to compute the summary
-                             stop(paste0("in model.matrix.pFormula: no model.matrix for model=\"", model, "\" and effect=\"", effect, "\" meaningful or implemented"))
-                             )
-        }
-    }
-    if (effect == "nested") X - theta$id * Between(X, id) - theta$gp * Between(X, group)
-    attr(result, "assign") <- X.assi
-    attr(result, "contrasts") <- X.contr
-    result
-}
-
-pmodel.response.pdataframe <- function(object,
-                                       model = c("pooling","within","Between",
-                                                 "between","mean","random","fd"),
-                                       effect = c("individual","time","twoways", "nested"),
-                                       lhs = NULL,
-                                       theta = NULL, ...){
-    formula <- attr(object, "formula")
-    if (is.null(attr(object, "terms"))) {
-        stop("This is not a model.frame, but just an ordinary pdata.frame")
-    }
-    if (is.null(lhs)){
-        if (length(formula)[1] == 0) stop("no response") else lhs <- 1
-    }
-    formula <- formula(paste("~ ", deparse(attr(formula, "lhs")[[lhs]]), " - 1", sep = ""))
-    attr(object, "formula") <- formula
-    
-    y <- model.matrix(object = object,
-                      model = model, effect = effect,
-                      lhs = lhs, theta = theta, ...)
-    namesy <- rownames(y)
-    y <- as.numeric(y)
-    names(y) <- namesy
-    y
-}

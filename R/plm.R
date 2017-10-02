@@ -146,7 +146,6 @@ plm <- function(formula, data, subset, weights, na.action,
 
 plm.fit <- function(formula, data, model, effect, random.method, 
                     random.models, random.dfcor, inst.method){
-  
     # check for 0 cases like in stats::lm.fit (e.g. due to NA dropping) 
     if (nrow(data) == 0L) stop("0 (non-NA) cases")
   
@@ -249,7 +248,6 @@ plm.fit <- function(formula, data, model, effect, random.method,
             df <- df.residual(result) - card.fixef
             vcov <- result$vcov * df.residual(result) / df
         }
-        
         result <- list(coefficients = coef(result),
                        vcov         = vcov,
                        residuals    = resid(result),
@@ -274,7 +272,7 @@ plm.fit <- function(formula, data, model, effect, random.method,
         XPy <- crossprod(X, y) - phi2mu * crossprod(X, Dmu) %*% P %*% crossprod(Dmu, y)
         gamma <- solve(XPX, XPy)[, , drop = TRUE]
         e <- pmodel.response(formula, data, model = "pooling") -
-             as.numeric(model.matrix(formula, data, rhs = 1, model = "pooling") %*% gamma)
+            as.numeric(model.matrix(formula, data, rhs = 1, model = "pooling") %*% gamma)
         
         result <- list(coefficients = gamma,
                        vcov         = solve(XPX),
@@ -298,20 +296,17 @@ plm.fit <- function(formula, data, model, effect, random.method,
 
 mylm <- function(y, X, W = NULL){
   names.X <- colnames(X)
-  if (is.null(W))
-      result <- lm(y ~ X - 1)
-  else
-      result <- twosls(y, X, W)
-  
+  if (is.null(W)) result <- lm(y ~ X - 1)
+  else result <- twosls(y, X, W)
   na.coef <- is.na(coef(result))
   if (any(na.coef)){
     ## for debug purpose:
     # warning("Coefficient(s) '", paste((names.X)[na.coef], collapse = ", "), 
     #"' could not be estimated and is (are) dropped.")
-    X <- X[, ! na.coef, drop = FALSE]
-    if (dim(X)[2] == 0L) stop("estimation not possible: all coefficients omitted from estimation due to aliasing")
-    if (is.null(W)) result <- lm(y ~ X - 1)
-    else result <- twosls(y, X, W)
+      X <- X[, ! na.coef, drop = FALSE]
+      if (dim(X)[2] == 0L) stop("estimation not possible: all coefficients omitted from estimation due to aliasing")
+      if (is.null(W)) result <- lm(y ~ X - 1)
+      else result <- twosls(y, X, W)
   }
   result$vcov <- vcov(result)
   result$X <- X
@@ -322,7 +317,7 @@ mylm <- function(y, X, W = NULL){
   result$aliased <- na.coef
   names(result$aliased) <- names.X
   names(result$coefficients) <- colnames(result$vcov) <- 
-    rownames(result$vcov) <- colnames(X)
+      rownames(result$vcov) <- colnames(X)
   result
 }
 
@@ -611,73 +606,76 @@ print.plm.list <- function(x, digits = max(3, getOption("digits") - 2), width = 
 }
 
 
-# summary.plm creates a specific summary.plm object that is derived from the associated plm object
-summary.plm <- function(object, vcov = NULL, ..., .vcov = NULL){
+# summary.plm creates a specific summary.plm object that is derived
+# from the associated plm object
 
-  ## deprecation notice on arg ".vcov" introduced Nov 2016: remove arg ".vcov" some time in the future
+summary.plm <- function(object, vcov = NULL, ..., .vcov = NULL){
+    
+# deprecation notice on arg ".vcov" introduced Nov 2016: remove arg ".vcov" some time in the future
   
   vcov_arg <- vcov
-  
-  ### set correct vcov in case deprecated arg .vcov is not null to support the deprecated .vcov arg for a while
+    
+### set correct vcov in case deprecated arg .vcov is not null to support the deprecated .vcov arg for a while
+
     depri_.vcov <- paste0("Use of argument \".vcov\" (notice leading dot) is deprecated.", 
-                        " Please change your code to use argument \"vcov\", because \".vcov\" will be removed in the future.")
+                          " Please change your code to use argument \"vcov\", because \".vcov\" will be removed in the future.")
     depri_vcov.vcov <- paste0("Arguments \"vcov\" and \".vcov\" specified (not null), continuing with \"vcov\". ", depri_.vcov)
     if (!is.null(vcov) && !is.null(.vcov)) {
-      warning(depri_vcov.vcov)
+        warning(depri_vcov.vcov)
         vcov_arg <- vcov
     } else {
-      if (!is.null(.vcov)) {
-        warning(depri_.vcov)
-        vcov_arg <- .vcov
-      }
+        if (!is.null(.vcov)) {
+            warning(depri_.vcov)
+            vcov_arg <- .vcov
+        }
     }
     ## NB: there is another instance of a switch for arg ".vcov" below concerning rvcov.name
-  ### END set correct vcov in case deprecated arg ".vcov" is not null
-  
-  object$fstatistic <- pwaldtest(object, test = "F", vcov = vcov_arg)
-  model <- describe(object, "model")
-  effect <- describe(object, "effect")
-  object$r.squared <- c(rsq  = r.squared(object),
-                        adjrsq = r.squared(object, dfcor = TRUE))
-  # construct the table of coefficients
-  if (!is.null(vcov_arg)) {
-    if (is.matrix(vcov_arg))   rvcov <- vcov_arg
-    if (is.function(vcov_arg)) rvcov <- vcov_arg(object)
-    std.err <- sqrt(diag(rvcov))
-  } else {
-    std.err <- sqrt(diag(stats::vcov(object)))
-  }
-  b <- coefficients(object)
-  z <- b / std.err
-  p <- 2 * pt(abs(z), df = object$df.residual, lower.tail = FALSE)
-  
-  # construct the object of class summary.plm
+### END set correct vcov in case deprecated arg ".vcov" is not null
+    
+    object$fstatistic <- pwaldtest(object, test = "F", vcov = vcov_arg)
+    model <- describe(object, "model")
+    effect <- describe(object, "effect")
+    object$r.squared <- c(rsq  = r.squared(object),
+                          adjrsq = r.squared(object, dfcor = TRUE))
+                                        # construct the table of coefficients
+    if (!is.null(vcov_arg)) {
+        if (is.matrix(vcov_arg))   rvcov <- vcov_arg
+        if (is.function(vcov_arg)) rvcov <- vcov_arg(object)
+        std.err <- sqrt(diag(rvcov))
+    } else {
+        std.err <- sqrt(diag(stats::vcov(object)))
+    }
+    b <- coefficients(object)
+    z <- b / std.err
+    p <- 2 * pt(abs(z), df = object$df.residual, lower.tail = FALSE)
+    
+                                        # construct the object of class summary.plm
     object$coefficients <- cbind("Estimate"   = b,
                                  "Std. Error" = std.err,
                                  "t-value"    = z,
                                  "Pr(>|t|)"   = p)
     
     ## add some info to summary.plm object 
-    # robust vcov (next to "normal" vcov)
+                                        # robust vcov (next to "normal" vcov)
     if (!is.null(vcov_arg)) {
-      object$rvcov <- rvcov
-      
-      ## set correct rvcov.name depending on arg used for vcov (as long as we support the deprecated arg ".vcov")
-      if (is.null(vcov)) {
-        rvcov.name <- paste0(deparse(substitute(.vcov)))
-      } else {
-        rvcov.name <- paste0(deparse(substitute(vcov)))
-      }
-      
-      attr(object$rvcov, which = "rvcov.name") <- rvcov.name 
+        object$rvcov <- rvcov
+        
+        ## set correct rvcov.name depending on arg used for vcov (as long as we support the deprecated arg ".vcov")
+        if (is.null(vcov)) {
+            rvcov.name <- paste0(deparse(substitute(.vcov)))
+        } else {
+            rvcov.name <- paste0(deparse(substitute(vcov)))
+        }
+        
+        attr(object$rvcov, which = "rvcov.name") <- rvcov.name 
     }
     
-    # mimics summary.lm's 'df' component
-    # 1st entry: no. coefs (w/o aliased coefs); 2nd: residual df; 3rd no. coefs /w aliased coefs
+                                        # mimics summary.lm's 'df' component
+                                        # 1st entry: no. coefs (w/o aliased coefs); 2nd: residual df; 3rd no. coefs /w aliased coefs
     object$df <- c(length(b), object$df.residual, length(object$aliased)) # NB: do not use length(object$coefficients) for 3rd entry!
     
     class(object) <- c("summary.plm", "plm", "panelmodel")
-  object
+    object
 }
 
 print.summary.plm <- function(x, digits = max(3, getOption("digits") - 2),
@@ -776,8 +774,9 @@ fitted_exp.plm <- function(x, ...) { #### experimental, non-exported function
   } else {
     y <- model.frame(x)[ , 1]
   }
-  return(y - res) # TODO: shall the result be class pseries? currently, 
-                  #       pmodel.response (used for between and fd model) does not set 'pseries' class
+  return(y - res) # TODO: shall the result be class pseries?
+                  # currently, pmodel.response (used for between and
+                  # fd model) does not set 'pseries' class
 }
 
 
@@ -791,8 +790,8 @@ fitted.plm <- function(object, model = NULL, ...){
   y <- pmodel.response(object, model = model)
   beta <- coef(object)
   # Kevin Tappe 2016-01-09 : perfect correlation of some columns of
-  # the within model.matrix
-  # NB: Could this make use of plmobject$aliased to simplify and save the lm estimation?
+  # the within model.matrix NB: Could this make use of
+  # plmobject$aliased to simplify and save the lm estimation?
   if (ncol(X) != length(beta)){
       result <- lm(y ~ X - 1)
       X <- X[, ! is.na(coef(result)), drop = FALSE]
@@ -803,16 +802,18 @@ fitted.plm <- function(object, model = NULL, ...){
     beta <- beta[varwith]
   }
   
-  # Test if all coefficients could be estimated by plm
-  # [plm silently drops non-estimable coefficients [v1.5-13]]
-  # With this test, we provide an additional warning message to
-  # users to enhance the error message from failing crossprod later in the code
-  # which relies on non-dropped coefficients; see also testfile tests/test_fitted.plm.R
-  # This test could be computationally/space expensive due to creation of model.matrix.
-  # if (!setequal(names(object$coefficients), colnames(model.matrix(object)))) {
-  #    warning("Coefficients of estimated model do not match variables in its specified model.matrix.
-  #           This is likely due to non-estimable coefficients (compare object$formula with object$coefficients).")
-  # }
+  # Test if all coefficients could be estimated by plm [plm silently
+  # drops non-estimable coefficients [v1.5-13]] With this test, we
+  # provide an additional warning message to users to enhance the
+  # error message from failing crossprod later in the code which
+  # relies on non-dropped coefficients; see also testfile
+  # tests/test_fitted.plm.R This test could be computationally/space
+  # expensive due to creation of model.matrix.  if
+  # (!setequal(names(object$coefficients),
+  # colnames(model.matrix(object)))) { warning("Coefficients of
+  # estimated model do not match variables in its specified
+  # model.matrix.  This is likely due to non-estimable coefficients
+  # (compare object$formula with object$coefficients).")  }
   
   if (fittedmodel == "within"){
     if (model == "pooling"){
@@ -824,7 +825,7 @@ fitted.plm <- function(object, model = NULL, ...){
                    individual = fixef(object, effect = "individual")[as.character(id)],
                    time = fixef(object, effect="time")[as.character(time)],
                    twoways = fixef(object, effect = "individual")[as.character(id)] +
-                             fixef(object, effect = "time")[as.character(time)])
+                       fixef(object, effect = "time")[as.character(time)])
       fv <- as.numeric(crossprod(t(X), beta)) + fe
     }
     if (model == "between"){
@@ -841,6 +842,7 @@ fitted.plm <- function(object, model = NULL, ...){
       # useful for FD censored/truncated models
       comonpars <- union(colnames(X), na.omit(names(beta)))
       fv <- as.numeric(crossprod(t(X[, comonpars, drop = FALSE]), beta[comonpars]))
+
   }
   structure(fv, index = index(object), class = "pseries")
 }
@@ -910,9 +912,7 @@ r.squared <- function(object, model = NULL,
 residuals.plm <- function(object, model = NULL, effect = NULL, ...){
     fittedmodel <- describe(object, "model")
     if (is.null(effect)) effect <- describe(object, "effect")
-    if (is.null(model)){
-        res <- object$residuals
-    }
+    if (is.null(model)) res <- object$residuals
     else{
         beta <- coef(object)
         X <- model.matrix(object, model = model, effect = effect)
@@ -930,10 +930,10 @@ residuals.plm <- function(object, model = NULL, effect = NULL, ...){
             }
         }
         # !YC! QDF : on a Between estimation with time dummies, coefs
-       # on years dummies disapears
+        # !on years dummies disapears
         comonpars <- intersect(colnames(X), names(beta))
         res <- y - as.numeric(crossprod(t(X[, comonpars, drop = FALSE]), beta[comonpars]))
-#        res <- y - as.numeric(crossprod(t(X), beta))
+        # res <- y - as.numeric(crossprod(t(X), beta))
     }
     structure(res, index = index(object), class = c("pseries", class(res)))
 }
@@ -941,38 +941,37 @@ residuals.plm <- function(object, model = NULL, effect = NULL, ...){
 residuals.plm <- function(object, model = NULL, effect = NULL, ...){
     fittedmodel <- describe(object, "model")
     if (is.null(effect)) effect <- describe(object, "effect")
-    if (is.null(model)){
-        res <- object$residuals
-    }
+    if (is.null(model)) res <- object$residuals
     else{
         beta <- coef(object)
         X <- model.matrix(object, model = model, effect = effect)
         y <- pmodel.response(object, model = model, effect = effect)
         aliases <- object$aliased
-        # beta has an intercept, X not
-#        if (has.intercept(object)[1] & model == "within"){
-        # doesn't work the intercept is detected in the formula
+        # beta has an intercept, X not if (has.intercept(object)[1] &
+        # model == "within"){ doesn't work the intercept is detected
+        # in the formula
         if (names(coef(object))[1] == "(Intercept)" & model == "within"){
             beta <- beta[-1]
             aliases <- aliases[-1]
         }
         if (model != "within" & fittedmodel == "within"){
-#        if (! has.intercept(object)[1] & model != "within"){
+        # if (! has.intercept(object)[1] & model != "within"){
             XM <- apply(X[, -1, drop = FALSE], 2, mean)
             comonpars <- intersect(names(XM), names(beta))
             alpha <- mean(y) - sum(XM[comonpars] * beta[comonpars])
             beta <- c("(Intercept)" = alpha, beta)
             aliases <- c("(Intercept)" = FALSE, aliases)
         }
-#        cstXW <- attr(model.matrix(object, model = "within", effect = effect), "constant")
-#        X <- X[, ! (colnames(X) %in% cstX), drop = FALSE]
-        # !YC! QDF : on a Between estimation with time dummies, coefs
-       # on years dummies disapears
+#        cstXW <- attr(model.matrix(object, model = "within", effect =
+#        effect), "constant") X <- X[, ! (colnames(X) %in% cstX), drop
+#        = FALSE] !YC! QDF : on a Between estimation with time
+#        dummies, coefs on years dummies disapears
         comonpars <- intersect(colnames(X), names(beta))
         res <- y - as.numeric(crossprod(t(X[, comonpars, drop = FALSE]), beta[comonpars]))
 #        res <- y - as.numeric(crossprod(t(X), beta))
     }
-    structure(res, index = index(object), class = c("pseries", class(res)))
+    res <- structure(res, index = index(object), class = c("pseries", class(res)))
+    res
 }
 
 ## residuals.plm <- function(object, model = NULL, effect = NULL, ...){
@@ -1144,4 +1143,45 @@ plot.plm <- function(x, dx = 0.2, N = NULL, seed = 1,
 }
 
 
+ 
+fitted.plm <- function(object, model = NULL, effect = NULL, ...){
+    fittedmodel <- describe(object, "model")
+    if (is.null(model)) model <- fittedmodel
+    if (is.null(effect)) effect <- describe(object, "effect")
+    X <- model.matrix(object, model = "pooling")
+    y <- pmodel.response(object, model = "pooling")
+    beta <- coef(object)
+    comonpars <- intersect(names(beta), colnames(X))
+    bX <- as.numeric(crossprod(t(X[, comonpars, drop = FALSE]), beta[comonpars]))
+    if (fittedmodel == "within"){
+        intercept <- mean(y - bX)
+        bX <- bX + intercept
+    }
+    if (model != "pooling"){
+        if (effect != "twoways"){
+            if (effect == "individual") theindex <- index(object)[[1]] else theindex <- index(object)[[2]]
+            if (model == "within") bX <- Within(bX, theindex)
+            if (model == "between") bX <- between(bX, theindex)
+            if (model == "fd") bX <- pdiff(bX, theindex)
+        }
+    }
+    structure(bX, index = index(object), class = c(class(bX), "pseries"))
+}
 
+
+residuals.plm <- function(object, model = NULL, effect = NULL,  ...){
+    if (is.null(model) & is.null(effect)){
+        res <- object$residuals
+    }
+    else{
+        cl <- match.call(expand.dots = FALSE)
+        cl[[1]] <- as.name("fitted.plm")
+        bX <- eval(cl, parent.frame())
+        if (is.null(model)) model <- describe(object, "model")
+        if (is.null(effect)) effect <- describe(object, "effect")
+        y <- pmodel.response(object, model = model, effect = effect)
+        res <- y - bX
+    }
+    res <- structure(res, class = c("pseries", class(res)), index = index(object))
+    res
+}

@@ -6,28 +6,28 @@
 fixef.plm <- function(object, effect = NULL,
                       type = c("level", "dfirst", "dmean"),
                       vcov = NULL, ...){
-  model.effect <- describe(object, "effect")
-  if (is.null(effect)){
-    effect <- ifelse(model.effect == "time", "time", "individual")
-  }
-  else{
-    if (!effect %in% c("individual", "time")) stop("wrong effect argument")
-    if (model.effect != "twoways" && model.effect != effect) stop("wrong effect argument")
-  }
+    model.effect <- describe(object, "effect")
+    if (is.null(effect)){
+        effect <- ifelse(model.effect == "time", "time", "individual")
+    }
+    else{
+        if (! effect %in% c("individual", "time")) stop("wrong effect argument")
+        if (model.effect != "twoways" && model.effect != effect) stop("wrong effect argument")
+    }
     
-  type <- match.arg(type)
-  if (!is.null(object$call)){
-    if (describe(object, "model") != "within")
+    type <- match.arg(type)
+    if (!is.null(object$call)){
+        if (describe(object, "model") != "within")
       stop("fixef is relevant only for within models")
-  }
-  formula <- formula(object)
-  data <- model.frame(object)
-  pdim <- pdim(object)
+    }
+    formula <- formula(object)
+    data <- model.frame(object)
+    pdim <- pdim(object)
   
   # the between model may contain time independent variables, the
   # within model doesn't. So select the relevant elements using nw
   # (names of the within variables)
-  nw <- names(coef(object))
+    nw <- names(coef(object))
   
   
   # For procedure to get the individual/time effects by muliplying the within
@@ -40,9 +40,10 @@ fixef.plm <- function(object, effect = NULL,
   # NB: These formulae do not give the correct results in the two-ways unbalanced case,
   #     all other cases (twoways/balanced; oneway(ind/time)/balanced/unbalanced) seem to
   #     work with these formulae.
-  Xb <- model.matrix(formula, data, rhs = 1, model = "between", effect = effect)
-  yb <- pmodel.response(formula, data, model = "between", effect = effect)
-  fixef <- yb - as.vector(crossprod(t(Xb[, nw, drop = FALSE]), coef(object)))
+
+    Xb <- model.matrix(formula, data, rhs = 1, model = "between", effect = effect)
+    yb <- pmodel.response(formula, data, model = "between", effect = effect)
+    fixef <- yb - as.vector(crossprod(t(Xb[, nw, drop = FALSE]), coef(object)))
   
   # Lignes suivantes inutiles ??????????
   ## bet <- plm.fit(formula, data, model = "between", effect = effect)
@@ -51,32 +52,32 @@ fixef.plm <- function(object, effect = NULL,
   
   
   # use robust vcov if supplied
-  if (!is.null(vcov)) {
-    if (is.matrix(vcov))   vcov <- vcov[nw, nw]
-    if (is.function(vcov)) vcov <- vcov(object)[nw, nw]
-  } else {
-    vcov <- vcov(object)[nw, nw]
-  }
+    if (! is.null(vcov)) {
+        if (is.matrix(vcov))   vcov <- vcov[nw, nw]
+        if (is.function(vcov)) vcov <- vcov(object)[nw, nw]
+    } else {
+        vcov <- vcov(object)[nw, nw]
+    }
+    
+    nother <- switch(effect,
+                     "individual" = pdim$Tint$Ti,
+                     "time"       = pdim$Tint$nt)
   
-  nother <- switch(effect,
-                    "individual" = pdim$Tint$Ti,
-                    "time"       = pdim$Tint$nt)
-  
-  s2 <- deviance(object) / df.residual(object)
-  if (type != "dfirst") {
-    sefixef <- sqrt(s2 / nother + apply(Xb[, nw, drop = FALSE],1,function(x) t(x) %*% vcov %*% x))
-  } else {
-    Xb <- t(t(Xb[-1, ]) - Xb[1, ])
-    sefixef <- sqrt(s2 * (1 / nother[-1] + 1 / nother[1])+
-                    apply(Xb[, nw, drop = FALSE],1,function(x) t(x) %*% vcov %*% x))
-  }
-  
-  fixef <- switch(type,
+    s2 <- deviance(object) / df.residual(object)
+    if (type != "dfirst") {
+        sefixef <- sqrt(s2 / nother + apply(Xb[, nw, drop = FALSE],1,function(x) t(x) %*% vcov %*% x))
+    } else {
+        Xb <- t(t(Xb[-1, ]) - Xb[1, ])
+        sefixef <- sqrt(s2 * (1 / nother[-1] + 1 / nother[1])+
+                        apply(Xb[, nw, drop = FALSE],1,function(x) t(x) %*% vcov %*% x))
+    }
+    
+    fixef <- switch(type,
                     "level"  = fixef,
                     "dfirst" = fixef[2:length(fixef)] - fixef[1],
                     "dmean"  = fixef - mean(fixef)
-                  )
-  structure(fixef, se = sefixef, class = c("fixef", "numeric"), type = type, df.residual = df.residual(object))
+                    )
+    structure(fixef, se = sefixef, class = c("fixef", "numeric"), type = type, df.residual = df.residual(object))
 }
 
 
