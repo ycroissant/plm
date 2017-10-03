@@ -626,12 +626,13 @@ Tapply.default <- function(x, effect, func, ...){
   result
 }
 
-Tapply.pseries <- function(x, effect = c("individual", "time"), func, ...){
+Tapply.pseries <- function(x, effect = c("individual", "time", "group"), func, ...){
   effect <- match.arg(effect)
   index <- attr(x, "index")
   effect <- switch(effect,
                  "individual"= index[[1]],
-                 "time"= index[[2]]
+                 "time"= index[[2]],
+                 "group" = index[[3]]
                  )
   z <- Tapply.default(x, effect, func, ...)
   attr(z, "index") <- index
@@ -676,7 +677,7 @@ Between.default <- function(x, effect, ...){
   Tapply(x, effect, mean, ...)
 }
 
-Between.pseries <- function(x, effect = c("individual", "time"), ...){
+Between.pseries <- function(x, effect = c("individual", "time", "group"), ...){
   effect <- match.arg(effect)
   Tapply(x, effect = effect, mean, ...)
 }
@@ -690,10 +691,15 @@ between.default <- function(x, effect, ...){
   tapply(x, effect, mean, ...)
 }
 
-between.pseries <- function(x, effect = c("individual", "time"), ...){
+between.pseries <- function(x, effect = c("individual", "time", "group"), ...){
   effect <- match.arg(effect)
   index <- attr(x, "index")
-  if (effect == "individual") effect <- index[[1]] else effect <- index[[2]]
+  effect <- switch(effect,
+                   individual = index[[1]],
+                   time = index[[2]],
+                   group = index[[3]]
+                   )
+#  if (effect == "individual") effect <- index[[1]] else effect <- index[[2]]
   x <- between.default(x, effect = effect, ...)
   nms <- attr(x, "dimnames")[[1]]
   attr(x, "dimnames") <- attr(x, "dim") <- NULL
@@ -715,7 +721,7 @@ Within.default <- function(x, effect, ...){
   x - Between(x, effect, ...)
 }
 
-Within.pseries <- function(x, effect = c("individual", "time"), ...){
+Within.pseries <- function(x, effect = c("individual", "time", "group"), ...){
   effect <- match.arg(effect)
   Within.default(x, effect, ...)
 }

@@ -1142,8 +1142,6 @@ plot.plm <- function(x, dx = 0.2, N = NULL, seed = 1,
     }
 }
 
-if(VERSION){
- 
 fitted.plm <- function(object, model = NULL, effect = NULL, ...){
     fittedmodel <- describe(object, "model")
     if (is.null(model)) model <- fittedmodel
@@ -1153,6 +1151,7 @@ fitted.plm <- function(object, model = NULL, effect = NULL, ...){
     beta <- coef(object)
     comonpars <- intersect(names(beta), colnames(X))
     bX <- as.numeric(crossprod(t(X[, comonpars, drop = FALSE]), beta[comonpars]))
+    bX <- structure(bX, index = index(object), class = union("pseries", class(bX)))
     if (fittedmodel == "within"){
         intercept <- mean(y - bX)
         bX <- bX + intercept
@@ -1160,28 +1159,38 @@ fitted.plm <- function(object, model = NULL, effect = NULL, ...){
     if (model != "pooling"){
         if (effect != "twoways"){
             if (effect == "individual") theindex <- index(object)[[1]] else theindex <- index(object)[[2]]
-            if (model == "within") bX <- Within(bX, theindex)
-            if (model == "between") bX <- between(bX, theindex)
+            if (model == "within") bX <- Within(bX, effect)
+            if (model == "between") bX <- between(bX, effect)
             if (model == "fd") bX <- pdiff(bX, theindex)
             if (model == "random"){
                 if (fittedmodel != "random") stop("the fitted model is not a random effects model")
                 theta <- ercomp(object)$theta
-                if (effect != "nested") bX <- bX - theta * Between(bX, theindex)
-                else bX <- bX - theta$id * Between(bX, index(object)[[1]]) - theta$gp * Between(bX, index(object)[[3]])
+                if (effect != "nested") bX <- bX - theta * Between(bX, effect)
+                else bX <- bX - theta$id * Between(bX, "individual") - theta$gp * Between(bX, "group")
             }
         }
         else{
             if (model == "within"){
-                bX <- bX - Between(bX, index(object)[[1]]) - Between(bX, index(object)[[1]]) + mean(bX)
+                if (is.pbalanced(object)){
+                    bX <- bX - Between(bX, "individual") - Between(bX, "time") + mean(bX)
+                }
+                else{
+                    X <- model.matrix(object)
+                    comonpars <- intersect(names(beta), colnames(X))
+                    bX <- as.numeric(crossprod(t(X[, comonpars, drop = FALSE]), beta[comonpars]))
+                }
             }
             if (model == "random"){
                 if (fittedmodel != "random") stop("the fitted model is not a random effects model")
-                theta <- ercomp(object)$theta
-                bX <- bX - theta$id * Between(bX, index(object)[[1]]) - theta$time * Between(bX, index(object)[[2]]) + mean(bX)
+                if (is.pbalanced(object)){
+                    theta <- ercomp(object)$theta
+                    bX <- bX - theta$id * Between(bX, "individual") - theta$time * Between(bX, "time") +
+                        theta$total * mean(bX)
+                }
             }
         }
     }
-    structure(bX, index = index(object), class = c(class(bX), "pseries"))
+    structure(bX, index = index(object), class = union("pseries", class(bX)))
 }
     
 
@@ -1202,4 +1211,4 @@ residuals.plm <- function(object, model = NULL, effect = NULL,  ...){
     res <- structure(res, class = c("pseries", class(res)), index = index(object))
     res
 }
-}
+
