@@ -49,7 +49,8 @@ The implementation uses \code{\link[lmtest]{grangertest}} from package
 \value{
 An object of class \code{c("pgrangertest", "htest")}. Besides the usual 
 elements of a \code{htest} object, it contains element \code{indgranger} which
-carries the Granger test statistics and p-values per individual as a data frame.
+carries the Granger test statistics along their p-values and degrees of freedom 
+per individual as a data frame.
 }
 
 \author{Kevin Tappe}

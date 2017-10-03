@@ -58,7 +58,7 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar", "Wbar"), orde
     wrn2 <- if (sum(!indi_con) <= 5)  { 
               paste0(indnames[!indi_con], collapse = ", ") 
             }
-            else { # cut off enumercation of individuals in warning message if more than 5
+            else { # cut off enumeration of individuals in warning message if more than 5
               breakpoint <- which(cumsum(!indi_con) == 5)[1]
               paste0(paste0(indnames[1:breakpoint][!indi_con[1:breakpoint]], collapse = ", "), ", ...")
             }
@@ -83,8 +83,9 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar", "Wbar"), orde
   })
   
   # extract Wald/Chisq-statistics and p-values of individual Granger tests
-  Wi  <- lapply(grangertests_i, function(g) g["Chisq"][[1]][2])
-  pWi <- lapply(grangertests_i, function(g) g[["Pr(>Chisq)"]][[2]])
+  Wi   <- lapply(grangertests_i, function(g) g[["Chisq"]][2])
+  pWi  <- lapply(grangertests_i, function(g) g[["Pr(>Chisq)"]][[2]])
+  dfWi <- lapply(grangertests_i, function(g) abs(g[["Df"]][2]))
   
   Wbar <- c("Wbar" = mean(unlist(Wi)))
   
@@ -103,8 +104,8 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar", "Wbar"), orde
   pval <- switch(test, "Zbar" = pZbar, "Ztilde" = pZtilde, "Wbar" = NULL)
   
   # save individual Granger tests in return value
-  indgranger <- data.frame(indi[!duplicated(indi)], unlist(Wi), unlist(pWi))
-  colnames(indgranger) <- c(names(index(data))[1], "Chisq", "p-value")
+  indgranger <- data.frame(indi[!duplicated(indi)], unlist(Wi), unlist(pWi), unlist(dfWi))
+  colnames(indgranger) <- c(names(index(data))[1], "Chisq", "p-value", "df")
   
   RVAL <- list(statistic = stat,
                parameter = NULL,
