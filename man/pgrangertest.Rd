@@ -17,8 +17,10 @@ pgrangertest(formula, data, test = c("Ztilde", "Zbar", "Wbar"),
  \item{data}{a \code{pdata.frame} or a \code{data.frame},}
  \item{test}{a character to request the statistic to be returned, either 
              \code{"Ztilde"} (default), or \code{"Zbar"},}
- \item{order}{an integer giving the number of lags to include in the test's
-              auxiliary regressions,}
+ \item{order}{integer(s) giving the number of lags to include in the test's
+              auxiliary regressions, the length of order must be either 1 (same
+              lag order for all individuals) or equal to the number of individuals
+              (to specify a lag order per individual),}
  \item{index}{only relevant if \code{data} is \code{data.frame} and not a 
              \code{pdata.frame}; if \code{NULL}, the first two columns of the 
              data.frame are assumed to be the index variables; if not \code{NULL}, 
@@ -39,7 +41,9 @@ By setting argument \code{test} to either \code{"Ztilde"} (default) or \code{"Zb
 two different statistics can be requested. \code{"Ztilde"} gives the standardised 
 statistic recommended by Dumitrescu/Hurlin (2012) for fixed T samples. If set to
 \code{"Wbar"}, the intermediate Wbar statistic (average of individual Granger 
-chi-square statistics) is given which is used to derive the other two and for which 
+chi-square statistics) is given which is used to derive the other two. 
+
+The Zbar statistic is not suitable for unbalanced panels. For the Wbar statistic, 
 no p-value is available.
 
 The implementation uses \code{\link[lmtest]{grangertest}} from package 
@@ -49,8 +53,8 @@ The implementation uses \code{\link[lmtest]{grangertest}} from package
 \value{
 An object of class \code{c("pgrangertest", "htest")}. Besides the usual 
 elements of a \code{htest} object, it contains element \code{indgranger} which
-carries the Granger test statistics along their p-values and degrees of freedom 
-per individual as a data frame.
+carries the Granger test statistics along their p-values, degrees of freedom and
+the specified lag order per individual as a data frame.
 }
 
 \author{Kevin Tappe}
@@ -81,6 +85,9 @@ data("Grunfeld", package = "plm")
 pgrangertest(inv ~ value, data = Grunfeld)
 pgrangertest(inv ~ value, data = Grunfeld, order = 2L)
 pgrangertest(inv ~ value, data = Grunfeld, order = 2L, test = "Zbar")
+
+# varying lag order (last individual lag order 3, others lag order 2)
+pgrangertest(inv ~ value, data = Grunfeld, order = c(rep(2L, 9), 3L))
 
 }
 
