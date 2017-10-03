@@ -34,8 +34,10 @@ Changes in version 1.6-6
        * "ips", "levinlin": p-values fixed (now one-sided to the left).
       * new tests: Choi (2001) modified P ("Pm"), inverse normal ("invnormal"),
                    logit ("logit").
-  * pldv: new function to compute fixed and random effects models for
-          truncated or censored dependent variable.
+      * cosmetic: when argument 'lags' is not specified by user, the returned
+        object does not contain all three possible values in args$lags anymore.
+  * pldv: new function to compute fixed and random effects models for truncated 
+          or censored dependent variable.
   * pgrangertest: added Granger causality test for panels (Dumitrescu/Hurlin (2012)).
   * pbsytest:
       * test = "j": [joint test by Baltagi/Li(1991)]:
@@ -50,17 +52,16 @@ Changes in version 1.6-6
         to get a "plm.dim" object as before. This way, plm.data
         benefits from bug fixes made previously to pdata.frame.
   * pdata.frame:
-      * By default, the resulting pdata.frame is now closer to the original data:
+      * by default, the resulting pdata.frame is now closer to the original data:
          * columns with constant values and all-NA values are not removed anymore,
          * non-finite values are not substituted with NAs anymore,
          * unused factor levels are not dropped anymore (except for those
            variables serving to construct the index).
-      * Arguments drop.NA.series, drop.const.series, replace.non.finite,
-        drop.unused.levels introduced to remove/replace columns/values as described
+      * arguments 'drop.NA.series', 'drop.const.series', 'replace.non.finite',
+        'drop.unused.levels' introduced to remove/replace columns/values as described
         before (all default to FALSE).
-      * Warning issued if an index variable is to be constructed that subsequently 
+      * warning issued if an index variable is to be constructed that subsequently 
         overwrites an already present column of the same name ('id' and/or 'time').
-        the pdata.frame
   * punbalancedness: extended to calculate unbalancedness measures of nested panel 
                      structures as in Baltagi/Song/Jung (2001).
   * ranef: new function to calculate random effects from RE model objects, like
@@ -80,18 +81,15 @@ Changes in version 1.6-6
     overall/outer plm model, fitted_exp.plm gives the fitted values (by subtracting
     the overall residuals from the untransformed response variable).
   * pwartest.formula (only formula interface): fixed: ellipsis ("dots") was not passed on.
-  * print.pseries: prettier printing for integers.
-  * print.summary.plm: prints information about dropped coefficients due to singularities
-                       (mimics print.summary.lm).
   * summary.pseries: better handling of characters, logicals, factors (use base methods).
-  * purtest: cosmetic: when argument 'lags' is not specified by user, the returned
-             object does not contain all three possible values in args$lags anymore,
-             thus prints prettier.
   * summary.piest, summary.pht: table headings now have "z-value" and "Pr(>|z|)" 
                                 as the numbers are based on standard normal distribution.
   * make.pbalanced: argument balanced.type:
       * 'shared' renamed to 'shared.times' (with a back-compatible solution),
       * 'shared.individuals' added as additional option (symmetric case).
+  * print.pseries: prettier printing for integers.
+  * print.summary.plm: prints information about dropped coefficients due to singularities
+                       (mimics print.summary.lm).
   * cosmetic: some print functions now have better aligned whitespacing.
   * Dependencies:
       * R version >= 3.1.0 required now.
