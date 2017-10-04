@@ -13,7 +13,8 @@ pgrangertest(formula, data, test = c("Ztilde", "Zbar", "Wbar"),
 }
 
 \arguments{
- \item{formula}{a \code{"formula"} to describe the direction of the causation,}
+ \item{formula}{a \code{formula} object to describe the direction of the 
+               hypothesized Granger causation,}
  \item{data}{a \code{pdata.frame} or a \code{data.frame},}
  \item{test}{a character to request the statistic to be returned, either 
              \code{"Ztilde"} (default), or \code{"Zbar"},}
@@ -23,16 +24,15 @@ pgrangertest(formula, data, test = c("Ztilde", "Zbar", "Wbar"),
               (to specify a lag order per individual),}
  \item{index}{only relevant if \code{data} is \code{data.frame} and not a 
              \code{pdata.frame}; if \code{NULL}, the first two columns of the 
-             data.frame are assumed to be the index variables; if not \code{NULL}, 
-             both dimensions ('individual', 'time') need to be specified by 
-             \code{index} as character of length 2 for data frames, for further 
+             data.frame are assumed to be the index variables, for further 
              details see \code{\link{pdata.frame}}.}
 % \item{\dots}{further arguments to be passed on to some function}. % not needed 
 }
 
 \details{
 The panel Granger causality test is a combination of Granger tests 
-(Granger (1969)) performed per individual.
+(Granger (1969)) performed per individual. The test is developed by 
+Dumitrescu/Hurlin (2012), a shorter exposition is given in Lopez/Weber (2017).
 
 The formula \code{formula} describes the direction of the (panel) Granger 
 causation where \code{y ~ x} means "x (panel) Granger causes y".
@@ -65,7 +65,7 @@ the specified lag order per individual as a data frame.
  heterogeneous panels, \emph{Economic Modelling}, \bold{29}(4), pp. 1450--460.
 % supplements (test data, MATLAB code): http://www.runmycode.org/companion/view/42
 
- Granger, C. W. J., Investigating Causal Relations by Econometric Models and 
+ Granger, C. W. J. (1969), Investigating Causal Relations by Econometric Models and 
  Cross--spectral Methods, \emph{Econometrica}, \bold{37}(3), pp. 424--438.
 
  Lopez, L./Weber, S. (2017), Testing for Granger causality in panel data,
