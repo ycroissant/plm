@@ -47,7 +47,7 @@ Changes in version 1.6-6
         the two-sided RE test when set to FALSE (default is TRUE which gives the
         one-sided RE test as before).
   * plm.data:
-      * deprecated now (gives warning), use pdata.frame instead.
+      * use discouraged now (gives warning), use pdata.frame instead.
       * function internally uses pdata.frame now and then adjusts
         to get a "plm.dim" object as before. This way, plm.data
         benefits from bug fixes made previously to pdata.frame.
@@ -62,29 +62,25 @@ Changes in version 1.6-6
         before (all default to FALSE).
       * warning issued if an index variable is to be constructed that subsequently 
         overwrites an already present column of the same name ('id' and/or 'time').
-  * punbalancedness: extended to calculate unbalancedness measures of nested panel 
-                     structures as in Baltagi/Song/Jung (2001).
   * ranef: new function to calculate random effects from RE model objects, like
            fixef for FE models.
   * cortab: new function to compute cross-sectional correlation matrix.
   * pwartest, pwfdtest: * statistics are labelled as F statistics.
                         * calculations now done without car::linearHypothesis().
+  * diff.pseries: * logicals can now be diff'ed (result is integer, mimics base::diff).
+                  * does not warn anymore if argument 'lag' has length > 1.
   * difft.pseries (note the "t") implemented (non-exported), diff-ing with
     taking the value of the time dimension into account, analogous to already
     implemented (non-exported) functions lagt.pseries/leadt.pseries.
-  * diff.pseries: * logicals can now be diff'ed (result is integer, mimics base::diff).
-                  * does not warn anymore if argument 'lag' has length > 1.
+  * punbalancedness: extended to calculate unbalancedness measures of nested panel 
+                     structures as in Baltagi/Song/Jung (2001).
   * mtest, sargan: return values gained data.name element.
   * pbltest: now accepts pdata.frames with index not in first two columns.
-  * (internal, not exported): residuals_overall_exp.plm and fitted_exp.plm are added
-    for testing purposes: residuals_overall_exp.plm always gives the residuals of the
-    overall/outer plm model, fitted_exp.plm gives the fitted values (by subtracting
-    the overall residuals from the untransformed response variable).
   * pwartest.formula (only formula interface): fixed: ellipsis ("dots") was not passed on.
   * summary.pseries: better handling of characters, logicals, factors (use base methods).
   * summary.piest, summary.pht: table headings now have "z-value" and "Pr(>|z|)" 
                                 as the numbers are based on standard normal distribution.
-  * make.pbalanced: argument balanced.type:
+  * make.pbalanced: argument 'balanced.type':
       * 'shared' renamed to 'shared.times' (with a back-compatible solution),
       * 'shared.individuals' added as additional option (symmetric case).
   * print.pseries: prettier printing for integers.
