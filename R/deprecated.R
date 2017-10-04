@@ -222,6 +222,9 @@ pht <-  function(formula, data, subset, na.action, model = c("ht", "am", "bms"),
   Ti <- pdim$Tint$Ti
   # get the typology of the variables
   X <- model.matrix(formula, data, rhs = 1, model = "within")
+  # YC 2017/10/03, the intercept is no longer removed while computing
+  # the within X matrix, remove it below
+    if (colnames(X)[1] == "(Intercept)") X <- X[, -1]
   W <- model.matrix(formula, data, rhs = 2, model = "within")
   exo.all <- colnames(W)
   all.all <- colnames(X)
@@ -250,7 +253,6 @@ pht <-  function(formula, data, subset, na.action, model = c("ht", "am", "bms"),
   sigma2$one <- 0
   sigma2$idios <- deviance(within)/ (N - n)
   sigma2$one <- deviance(zo) / n
-  
   if(balanced){
     sigma2$id <- (sigma2$one - sigma2$idios)/ T
     theta <- 1 - sqrt(sigma2$idios / sigma2$one)
@@ -314,7 +316,7 @@ pht <-  function(formula, data, subset, na.action, model = c("ht", "am", "bms"),
     }
     W <- cbind(within.inst, XC, between.inst, Vxstar)
   }
-    
+
   result <- twosls(y, X, W)
   K <- length(data)
   ve <- lev2var(data)

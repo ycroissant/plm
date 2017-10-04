@@ -312,7 +312,7 @@ lnl.tobit <- function(param, y, X, id, lower = 0, upper = +Inf, model = "pooling
             DD1 <- - crossprod(daub)
             DD2 <- lapply(1:R, function(i) rn$weights[i] * hlnPnr[[i]])
             DD2 <- Reduce("+", DD2) / sqrt(pi)
-            DD3 <- lapply(1:R, function(i) rn$weights[i] * crossprod(glnPnr[[i]] * pwnt[[i]], glnPnr[[i]])) # TODO: this line seems unnecessary, DD3 gets overwritten by next line...
+#            DD3 <- lapply(1:R, function(i) rn$weights[i] * crossprod(glnPnr[[i]] * pwnt[[i]], glnPnr[[i]])) # TODO: this line seems unnecessary, DD3 gets overwritten by next line...
             DD3 <- lapply(1:R, function(i) rn$weights[i] * crossprod(sqrt(pwn[[i]]) * apply(glnPnr[[i]], 2, tapply, id, sum)))
             DD3 <- Reduce("+", DD3) / sqrt(pi)
             H <- (DD1+ DD2 + DD3) 

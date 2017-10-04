@@ -504,7 +504,6 @@ plm.list <- function(formula, data, subset, na.action,
   return(m)
 }
 
-
 summary.plm.list <- function(object, ...){
   class(object) <- setdiff(class(object), "plm.list")
   formulas <- eval(object$call$formula)
@@ -604,7 +603,6 @@ print.plm.list <- function(x, digits = max(3, getOption("digits") - 2), width = 
   cat("\n")
   invisible(x)
 }
-
 
 # summary.plm creates a specific summary.plm object that is derived
 # from the associated plm object
@@ -1023,8 +1021,6 @@ fitted.plm <- function(object, model = NULL, effect = NULL, ...){
     }
     structure(bX, index = index(object), class = union("pseries", class(bX)))
 }
-
-
 residuals.plm <- function(object, model = NULL, effect = NULL,  ...){
     if (is.null(model) & is.null(effect)){
         res <- object$residuals

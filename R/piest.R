@@ -1,6 +1,6 @@
 aneweytest <-  function(formula, data, subset, na.action, index = NULL,  ...){
-  cl <- match.call(expand.dots = TRUE)
-  mf <- match.call()
+    cl <- match.call(expand.dots = TRUE)
+    mf <- match.call()
   # compute the model.frame using plm with model = NA
   mf[[1]] <- as.name("plm")
   mf$model <- NA
@@ -26,7 +26,7 @@ aneweytest <-  function(formula, data, subset, na.action, index = NULL,  ...){
   ht <- ht[c(1,m)]
   ht[[1]] <- as.name("plm")
   ht$model <- "within"
-  ht$effect <- "twoways"       ## TODO: ht$effect is overwritten in next line...?!
+#  ht$effect <- "twoways"       ## TODO: ht$effect is overwritten in next line...?!
   ht$effect <- "individual"    ## TODO
   ht <- eval(ht, parent.frame())
   .resid <- split(resid(ht), time)
