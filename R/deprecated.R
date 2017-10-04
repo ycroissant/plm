@@ -1,7 +1,9 @@
 ## some deprecated functions
 
-# plm.data() is now deprecated (since February 2017).
-# It is kept due to backward compatibility, especially for package 'systemfit'.
+# plm.data() is now deprecated (since February 2017). Need to keep it in package
+# for backward compatibility of users's code out there and packages, especially 
+# for package 'systemfit'.
+#
 # While plm.data() was a 'full function' once, it now is now using pdata.frame()
 # and re-works the properties of the "plm.dim" objects original created by the
 # 'full' plm.data() function.
@@ -10,7 +12,7 @@
 
 plm.data <- function(x, indexes = NULL) {
 
-  .Deprecated(new = "pdata.frame", msg = "'plm.data' is deprecated, use 'pdata.frame'",
+  .Deprecated(new = "pdata.frame", msg = "use of 'plm.data' is discouraged, better use 'pdata.frame' instead",
               old = "plm.data")
 
   # the class "plm.dim" (which plm.data creates) deviates from class "pdata.frame":
