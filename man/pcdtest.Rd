@@ -12,13 +12,12 @@
 \usage{
 pcdtest(x, \dots)
 \method{pcdtest}{formula}(x, data, index = NULL, model = NULL,
-                          test = c("cd", "sclm", "lm", "rho", "absrho"),
-                          w = NULL, \dots)
+        test = c("cd", "sclm", "lm", "rho", "absrho"),
+        w = NULL, \dots)
 \method{pcdtest}{panelmodel}(x, test = c("cd", "sclm", "lm", "rho", "absrho"),
-                             w = NULL, \dots)
+        w = NULL, \dots)
 \method{pcdtest}{pseries}(x, test = c("cd", "sclm", "lm", "rho", "absrho"),
-                             w = NULL, \dots)
-                          
+        w = NULL, \dots)
 }
 
 \arguments{
