@@ -36,6 +36,8 @@ Changes in version 1.6-6
                    logit ("logit").
       * cosmetic: when argument 'lags' is not specified by user, the returned
         object does not contain all three possible values in args$lags anymore.
+  * cipstest: for the truncated version of the test, the constants used in the
+              calcuation were mixed up for type = "none" and "trend". 
   * pldv: new function to compute fixed and random effects models for truncated 
           or censored dependent variable.
   * pgrangertest: added Granger causality test for panels (Dumitrescu/Hurlin (2012)).

@@ -228,16 +228,16 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
   
   if(truncated) {
       ## set bounds, Pesaran (2007), p. 277
-        ## NB: there is a  typo in the paper:
+        ## NB: there is a  typo in the paper (see p. 279/281 to confirm):
         ##   Case I: "with an intercept or trend" -> "with_out_ an intercept or trend"
         ## "with_out_ an intercept or trend (Case I): K1 = 6.12, K2 = 4.16"
         ## "with an intercept and no trend (Case II): K1 = 6.19, K2 = 2.61"
         ## "with a linear trend (Case III):           K1 = 6.42, K2 = 1.70"
         ## (use negative values for K1's to ease assignment if bound is reached)
       trbounds <- switch(match.arg(type),
-                          trend = {c(-6.12, 4.16)}, ## TODO?
+                          none  = {c(-6.12, 4.16)},
                           drift = {c(-6.19, 2.61)},
-                          none  = {c(-6.42, 1.70)}) ## TODO?
+                          trend = {c(-6.42, 1.70)})
       ## formulae (34) in Pesaran (2007):
       ## truncate at lower bound 
       tstats <- ifelse(tstats > trbounds[1], tstats, trbounds[1])
