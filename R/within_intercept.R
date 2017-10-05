@@ -28,8 +28,8 @@ within_intercept.plm <- function(object, vcov = NULL, ...) {
   # Transformation to get the overall intercept is:
   # demean groupwise and add back grand mean of each variable, then run OLS
   mf      <- model.frame(object)
-  withinY <- pmodel.response(object) # returns the response specific to the 'effect' of the est. FE model object
-  meanY   <- mean(mf[ , 1])          # mean of original data's response
+  withinY <- pmodel.response(object, rm.cst = TRUE) # returns the response specific to the 'effect' of the est. FE model object
+    meanY   <- mean(mf[ , 1])          # mean of original data's response
   transY  <- withinY + meanY
   
   withinM <- model.matrix(object) # returns the model.matrix specific to the 'effect' of the est. FE model object

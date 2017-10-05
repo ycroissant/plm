@@ -5,57 +5,56 @@ pbgtest <- function (x, ...) {
 }
 
 pbgtest.formula <- function(x, order = NULL, type = c("Chisq", "F"), data, model=c("pooling", "random", "within"), ...) {
-  ## formula method for pbgtest;
-  ## defaults to a pooling model
-  cl <- match.call(expand.dots = TRUE)
-  if (names(cl)[3] == "") names(cl)[3] <- "data"
-  if (is.null(cl$model)) cl$model <- "pooling"
-  names(cl)[2] <- "formula"
-  m <- match(plm.arg, names(cl), 0)
-  cl <- cl[c(1L,m)]
-  cl[[1L]] <- quote(plm)
-  plm.model <- eval(cl,parent.frame())
-  pbgtest(plm.model, order = order, type = type, data = data, ...)
+    ## formula method for pbgtest;
+    ## defaults to a pooling model
+    cl <- match.call(expand.dots = TRUE)
+    if (names(cl)[3] == "") names(cl)[3] <- "data"
+    if (is.null(cl$model)) cl$model <- "pooling"
+    names(cl)[2] <- "formula"
+    m <- match(plm.arg, names(cl), 0)
+    cl <- cl[c(1L,m)]
+    cl[[1L]] <- quote(plm)
+    plm.model <- eval(cl,parent.frame())
+    pbgtest(plm.model, order = order, type = type, data = data, ...)
 }
 
 pbgtest.panelmodel <- function(x, order = NULL, type = c("Chisq", "F"), ...) {
-  ## residual serial correlation test based on the residuals of the demeaned
-  ## model (see Wooldridge (2002), p. 288) and the regular lmtest::bgtest()
+    ## residual serial correlation test based on the residuals of the demeaned
+    ## model (see Wooldridge (2002), p. 288) and the regular lmtest::bgtest()
 
-  ## structure:
-  ## 1: take demeaned data from 'plm' object
-  ## 2: est. auxiliary model by OLS on demeaned data
-  ## 3: apply lmtest::bgtest() to auxiliary model and return the result
+    ## structure:
+    ## 1: take demeaned data from 'plm' object
+    ## 2: est. auxiliary model by OLS on demeaned data
+    ## 3: apply lmtest::bgtest() to auxiliary model and return the result
 
-  model <- describe(x, "model")
-  effect <- describe(x, "effect")
-  theta <- x$ercomp$theta
+    model <- describe(x, "model")
+    effect <- describe(x, "effect")
+    theta <- x$ercomp$theta
 
-  ## retrieve demeaned data
-  demX <- model.matrix(x, model = model, effect = effect, theta = theta)
-  demy <- pmodel.response(model.frame(x), model = model, effect = effect, theta = theta)
-  
-  ## ...and group numerosities
-  Ti <- pdim(x)$Tint$Ti
-  ## set lag order to minimum group numerosity if not specified by user
-  ## (check whether this is sensible)
-  if(is.null(order)) order <- min(Ti)
+    ## retrieve demeaned data
+    demX <- model.matrix(x, model = model, effect = effect, theta = theta, rm.cst = TRUE)
+    demy <- pmodel.response(model.frame(x), model = model, effect = effect, theta = theta)
+    ## ...and group numerosities
+    Ti <- pdim(x)$Tint$Ti
+    ## set lag order to minimum group numerosity if not specified by user
+    ## (check whether this is sensible)
+    if(is.null(order)) order <- min(Ti)
 
-  ## lmtest::bgtest on the demeaned model:
+    ## lmtest::bgtest on the demeaned model:
   
     ## check package availability and load if necessary # not needed as it importFrom in NAMESPACE is now used
     #lm.ok <- require("lmtest")
     #if(!lm.ok) stop("package lmtest is needed but not available")
   
-  ## pbgtest is the return value of lmtest::bgtest, exception made for the method attribute
-  auxformula <- demy~demX-1 #if(model == "within") demy~demX-1 else demy~demX
-  lm.mod <- lm(auxformula)
-  bgtest <- bgtest(lm.mod, order = order, type = type, ...)
-  bgtest$method <- "Breusch-Godfrey/Wooldridge test for serial correlation in panel models"
-  bgtest$alternative <- "serial correlation in idiosyncratic errors"
-  bgtest$data.name <- paste(deparse(x$call$formula))
-  names(bgtest$statistic) <- if(length(bgtest$parameter)==1) "chisq" else "F"
-  return(bgtest)
+    ## pbgtest is the return value of lmtest::bgtest, exception made for the method attribute
+    auxformula <- demy ~ demX - 1 #if(model == "within") demy~demX-1 else demy~demX
+    lm.mod <- lm(auxformula)
+    bgtest <- bgtest(lm.mod, order = order, type = type, ...)
+    bgtest$method <- "Breusch-Godfrey/Wooldridge test for serial correlation in panel models"
+    bgtest$alternative <- "serial correlation in idiosyncratic errors"
+    bgtest$data.name <- paste(deparse(x$call$formula))
+    names(bgtest$statistic) <- if(length(bgtest$parameter) == 1) "chisq" else "F"
+    return(bgtest)
 }
 
 #### pwtest
@@ -459,8 +458,8 @@ pdwtest.panelmodel <- function(x, ...) {
   theta <- x$ercomp$theta
 
   ## retrieve demeaned data
-  demX <- model.matrix(x, model = model, effect = effect, theta = theta)
-  demy <- pmodel.response(model.frame(x), model = model, effect = effect, theta = theta)
+  demX <- model.matrix(x, model = model, effect = effect, theta = theta, rm.cst = TRUE)
+  demy <- pmodel.response(model.frame(x), model = model, effect = effect, theta = theta, rm.cst = TRUE)
  
 
   ## lmtest::dwtest on the demeaned model:

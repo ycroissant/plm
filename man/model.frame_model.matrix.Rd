@@ -19,7 +19,9 @@
              model = c("pooling", "within", "Between", "Sum",
                        "between", "mean", "random", "fd"), 
              effect = c("individual", "time", "twoways", "nested"),
-             rhs = 1, theta = NULL, \dots)
+             rhs = 1,
+             theta = NULL,
+             rm.cst = FALSE, \dots)
                                   
 \S3method{model.matrix}{plm}(object, \dots)
 }
@@ -33,6 +35,7 @@
  \item{model}{one of \code{"pooling"}, \code{"within"}, \code{"Sum"}, \code{"Between"},
     \code{"between"}, \code{"random",} \code{"fd"} and \code{"ht"},}
  \item{theta}{the parameter for the transformation if \code{model = "random"},}
+ \item{rm.cst}{remove the constant columns,}
  \item{lhs}{inherited from package \code{\link[Formula]{Formula}} (see there),}
  \item{rhs}{inherited from package \code{\link[Formula]{Formula}} (see there),}
  \item{\dots}{further arguments.}

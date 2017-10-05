@@ -58,7 +58,7 @@ fixef.plm <- function(object, effect = NULL,
     } else {
         vcov <- vcov(object)[nw, nw]
     }
-    
+
     nother <- switch(effect,
                      "individual" = pdim$Tint$Ti,
                      "time"       = pdim$Tint$nt)

@@ -33,7 +33,8 @@ model.matrix.pFormula <- function(object, data,
                                       "between", "mean", "random", "fd"),
                                   effect = c("individual", "time", "twoways", "nested"),
                                   rhs = 1,
-                                  theta = NULL, ...){
+                                  theta = NULL,
+                                  rm.cst = FALSE, ...){
     model <- match.arg(model)
     effect <- match.arg(effect)
     formula <- object
@@ -59,13 +60,13 @@ model.matrix.pFormula <- function(object, data,
     time <- index[[2]]
     if (length(index) == 3) group <- index[[3]]
     balanced <- is.pbalanced(data)
-    if (has.intercept && model == "within") X <- X[ , -1, drop = FALSE]
+#    if (has.intercept && model == "within") X <- X[ , -1, drop = FALSE]
     if (effect %in% c("individual", "time")){
         if (effect == "individual") cond <- id
         if (effect == "time") cond <- time
         #!YC! rm.null FALSE or TRUE ?
         result <- switch(model,
-                         "within"  = Within(X, cond, rm.null = FALSE),
+                         "within"  = Within(X, cond, rm.null = rm.cst),
                          "Sum"     = Sum(X, cond),
                          "Between" = Between(X, cond),
                          "between" = between(X, cond),
@@ -78,25 +79,31 @@ model.matrix.pFormula <- function(object, data,
     if (effect == "twoways"){
         if (balanced){ # two-ways balanced
             result <- switch(model,
-                             "within"  = X - Between(X,id) - Between(X,time) +
+                             "within"  = X - Between(X, id) - Between(X, time) +
                                  matrix(.colMeans(X, nrow(X), ncol(X)), nrow(X), ncol(X), byrow = TRUE),
                              "random"  = X - theta$id * Between(X,id) - theta$time * Between(X, time) +
-                                 theta$total * matrix(.colMeans(X, nrow(X), ncol(X)), nrow(X), ncol(X), byrow=TRUE),
+                                 theta$total * matrix(.colMeans(X, nrow(X), ncol(X)), nrow(X), ncol(X), byrow = TRUE),
                              "pooling" = X,
                              # place case "mean" here also?  catch
                              # everything else (twoways balanced) and
                              # give error message
                              stop(paste0("in model.matrix.pFormula: no model.matrix for model =\"", model, "\" and effect = \"", effect, "\" meaningful or implemented"))
                              )
+            # very QDF ! remove the column of one for two-ways balanced within (no call to the Within function)
+            if (model == "within" & rm.cst == TRUE & ncol(result) > 1) result <- result[, -1]
         }
         else{ # two-ways unbalanced
             result <- switch(model,
                              "within"  = { # Wansbeek/Kapteyn (1989), Journal of Econometrics, 41, pp. 341-361 (2.12)
+                                 if ("(Intercept)" %in% colnames(X))
+                                     X <- X[, - match("(Intercept)", colnames(X)), drop = FALSE]
                                  Dmu <- model.matrix(~ time - 1)
                                  W1 <- Within(X, id, rm.null = FALSE)
                                  WDmu <- Within(Dmu, id)
                                  W2 <- fitted(lm.fit(WDmu, X))
                                  result <- W1 - W2
+                                 if (! rm.cst) result <- cbind("(Intercept)"= 1, result)
+                                 result
                              },
                              "pooling" = X,
                              "random" = X, # !YC! this value is irrelevant, just in order to compute the summary
@@ -178,26 +185,15 @@ model.matrix.plm <- function(object, ...){
     model <- ifelse(is.null(dots$model), describe(object, "model"), dots$model)
     effect <- ifelse(is.null(dots$effect), describe(object, "effect"), dots$effect)
     rhs <- ifelse(is.null(dots$rhs), 1, dots$rhs)
+    rm.cst <- ifelse(is.null(dots$rm.cst), FALSE, dots$rm.cst)
     formula <- formula(object)
     data <- model.frame(object)
-    ancien <- TRUE
-    if (ancien){
-        if (model != "random"){
-            model.matrix(formula, data, model = model, effect = effect, rhs = rhs)
-        }
-        else{
-            theta <- ercomp(object)$theta
-            model.matrix(formula, data, model = model, effect = effect, theta = theta, rhs = rhs)
-        }
+    if (model != "random"){
+        model.matrix(formula, data, model = model, effect = effect, rhs = rhs, rm.cst = rm.cst)
     }
     else{
-        if (model != "random"){
-            model.matrix(data, model = model, effect = effect, rhs = rhs)
-        }
-        else{
-            theta <- ercomp(object)$theta
-            model.matrix(data, model = model, effect = effect, theta = theta, rhs = rhs)
-        }
+        theta <- ercomp(object)$theta
+        model.matrix(formula, data, model = model, effect = effect, theta = theta, rhs = rhs, rm.cst = rm.cst)
     }
 }
 
@@ -205,25 +201,16 @@ pmodel.response.plm <- function(object, ...){
   dots <- list(...)
   model <- ifelse(is.null(dots$model), describe(object, "model"), dots$model)
   effect <- ifelse(is.null(dots$effect), describe(object, "effect"), dots$effect)
+  rm.cst <- ifelse(is.null(dots$rm.cst), FALSE, dots$rm.cst)
+
   formula <- formula(object)
   data <- model.frame(object)
-  ancien <- TRUE
   if (model != "random"){
-      if (ancien){
-          pmodel.response(formula, data, model = model, effect = effect)
-      }
-      else{
-          pmodel.response(data, model = model, effect = effect)
-      }
+      pmodel.response(formula, data, model = model, effect = effect, rm.cst = rm.cst)
   }
   else{
       theta <- ercomp(object)$theta
-      if (ancien){
-          pmodel.response(formula, data, model = model, effect = effect, theta = theta)
-      }
-      else{
-          pmodel.response(data, model = model, effect = effect, theta = theta)
-      }
+      pmodel.response(formula, data, model = model, effect = effect, theta = theta)
   }
 }
 

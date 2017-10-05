@@ -57,10 +57,12 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                   dots <- list(...)
                   # print(dots) # DEBUG printing
                   if (!is.null(dots$effect)) effect <- dots$effect else effect <- NULL
-               
                # calculatate FE and RE model
-               fe_mod <- plm(formula = x, data = data, model = model[1], effect = effect)
+
+                  fe_mod <- plm(formula = x, data = data, model = model[1], effect = effect)
+
                re_mod <- plm(formula = x, data = data, model = model[2], effect = effect)
+
                 ## DEBUG printing:
                  # print(effect)
                  # print(model)
@@ -68,10 +70,9 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                  # print(paste0("mod2: ", describe(re_mod, "effect")))
                  # print(fe_mod)
                  # print(re_mod)
-
                reY <- pmodel.response(re_mod)
                reX <- model.matrix(re_mod)[ , -1, drop = FALSE] # intercept not needed; drop=F needed to prevent matrix
-               feX <- model.matrix(fe_mod)                      # from degenerating to vector if only one regressor
+               feX <- model.matrix(fe_mod, rm.cst = TRUE)                      # from degenerating to vector if only one regressor
                dimnames(feX)[[2]] <- paste(dimnames(feX)[[2]], "tilde", sep=".")
                
                ## estimated models could have fewer obs (due dropping of NAs) compared to the original data

@@ -730,12 +730,13 @@ Within.matrix <- function(x, effect, rm.null = TRUE,...){
   result <- Within.default(x, effect, ...)
   othervar <- apply(result, 2, function(x) sum(abs(x), na.rm = TRUE)) > 1E-12
   if (rm.null){
-    result <- result[, othervar, drop = FALSE]
+      result <- result[, othervar, drop = FALSE]
+      attr(result, "constant") <- character(0)
   }
   else{
-    result <- result[, drop = FALSE]
+      result <- result[, drop = FALSE]
+      attr(result, "constant") <- colnames(x)[!othervar]
   }
-  attr(result, "constant") <- colnames(x)[!othervar]
   result
 }
 

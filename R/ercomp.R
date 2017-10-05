@@ -218,7 +218,8 @@ ercomp.formula <- function(object, data,
             quad <- c(crossprod(resid(estm)), 
                       crossprod(Between(hateps, ids) - Between(hateps, gps)),
                       crossprod(Between(hateps, gps)))
-            WX <- model.matrix(estm, model = "within", effect = "individual", null.rm = TRUE)
+#            WX <- model.matrix(estm, model = "within", effect = "individual", null.rm = TRUE)
+            WX <- model.matrix(estm, model = "within", effect = "individual", rm.cst = TRUE)
             X <- model.matrix(estm, model = "pooling")[, -1, drop = FALSE]
             XBetaBlambda <- Between(X, ids) - Between(X, gps)
             XBlambda <- Between(X, gps)
@@ -402,8 +403,9 @@ ercomp.formula <- function(object, data,
             }
         }
         if (models[1] == "pooling"){
-            ZW <- model.matrix(estm[[1]], model = "within", effect = effect)
-            CPZW <- crossprod(cbind(0, ZW))                                                              # INTERCEPT
+            ZW <- model.matrix(estm[[1]], model = "within", effect = effect, rm.cst = FALSE)
+#            CPZW <- crossprod(cbind(0, ZW))                                                              # INTERCEPT
+            CPZW <- crossprod(ZW)
             M["w", "nu"] <- O - NTS - trace(crossprod(CPZM, CPZW))
             if (effect != "time"){
                 M["w", "eta"] <- trace( CPZM %*% CPZW %*% CPZM %*% CPZSeta)
@@ -437,10 +439,12 @@ ercomp.formula <- function(object, data,
             }
         }
         if ("within" %in% models){
+            ## WX <- model.matrix(estm[[match("within", models)]], model = "within",
+            ##                    effect = effect, null.rm = TRUE)
             WX <- model.matrix(estm[[match("within", models)]], model = "within",
-                               effect = effect, null.rm = TRUE)
+                               effect = effect, rm.cst = TRUE)
             K <- ncol(WX)
-            MK <- length(attr(WX, "constant"))
+            MK <- length(attr(WX, "constant")) - 1
             KW <- ncol(WX)
             if (models[1] == "within"){
                 M["w", "nu"] <- O - NTS - K + MK                                        # INTERCEPT
