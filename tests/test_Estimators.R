@@ -3,9 +3,6 @@
 #### (1): Baltagi (2013)
 #### (2): Stata's FE estimator
 
-
-
-
 #### (1) ####
 #### compare OLS, FE and RE estimators to Baltagi's results
 # Baltagi (2013), Econometric Analysis of Panel Data, 5th edition, Wiley & Sons
