@@ -96,7 +96,7 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
     N <- pdim$nT$N
     Ti <- pdim$Tint$Ti
     # extract the response, split by period and remove the mean
-    y <- pmodel.response(data, model = "pooling")
+    y <- pmodel.response(data, model = "pooling", effect = "individual")
     Y <- split(y, time)
     Y <- lapply(Y, function(x) x - mean(x))
     # extract the covariates, and isolate time-invariant covariates

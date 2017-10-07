@@ -158,7 +158,7 @@ ercomp.formula <- function(object, data,
         gps <- attr(data, "index")[[3]]
         G <- length(unique(gps))
         Z <- model.matrix(object, data, model = "pooling")
-        y <- pmodel.response(object, data, model = "pooling")
+        y <- pmodel.response(object, data = data, model = "pooling", effect = "individual")
         O <- nrow(Z)
         K <- ncol(Z) - 1                                              # INTERCEPT
         pdim <- pdim(data)
@@ -246,23 +246,28 @@ ercomp.formula <- function(object, data,
         
         if (method == "swar"){
             X <- Z[, -1, drop = FALSE]
-
-            yBetaBlambda <- Between(y, ids) - Between(y, gps)
+#            yBetaBlambda <- Between(y, ids) - Between(y, gps)
+#            yBetaBlambda <- Between(y, "individual") - Between(y, "group")
+            yBetaBlambda <- pmodel.response(object, data = data, model = "Between", effect = "individual") -
+                pmodel.response(object, data = data, model = "Between", effect = "group")
             ZBetaBlambda <- Between(Z, ids) - Between(Z, gps)
             XBetaBlambda <- Between(X, ids) - Between(X, gps)
             ZBlambda <- Between(Z, gps)
-            yBlambda <- Between(y, gps)
+#            yBlambda <- Between(y, gps)
+#            yBlambda <- Between(y, "group")
+            yBlambda <- pmodel.response(object, data = data, model = "Between", effect = "group")
             ZSeta    <- apply(Z, 2, tapply, ids, sum)[as.character(ids), , drop = FALSE]
             ZSlambda <- apply(Z, 2, tapply, gps, sum)[as.character(gps), , drop = FALSE]
             XSeta    <- apply(X, 2, tapply, ids, sum)[as.character(ids), , drop = FALSE]
-            
             estm1 <- plm.fit(object, data, effect = "individual", model = "within")
             estm2 <- lm.fit(ZBetaBlambda, yBetaBlambda)
 #            estm3 <- plm.fit(object, data, effect = "group", model = "between")
             estm3 <- lm.fit(ZBlambda, yBlambda)
+
             quad <- c(crossprod(resid(estm1)),
                       crossprod(resid(estm2)),
                       crossprod(resid(estm3)))
+
         
             M["w", "nu"] <- O - N - K
             M["w", "eta"] <- 0
@@ -508,7 +513,6 @@ ercomp.formula <- function(object, data,
             }
         }
     }
-#        print(M)
     sigma2 <- as.numeric(solve(M[therows, therows], quad[therows]))
     names(sigma2) <- c("idios", "id", "time")[therows]
     sigma2[sigma2 < 0] <- 0

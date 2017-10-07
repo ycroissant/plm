@@ -45,17 +45,17 @@ pGrunfeld_NA_row <- pdata.frame(Grunfeld_NA_row)
 pdim(pGrunfeld_NA_row) # balanced - ok, because (p)data.frame
 pdim(plm_fe_NA_row      <- plm(form, data=pGrunfeld_NA_row, model="within")) # unbalanced - ok
 pdim(plm_fe_NA_row_time <- plm(form, data=pGrunfeld_NA_row, model="within", effect = "time")) # unbalanced - ok
-pdim(plm_fe_NA_row_tw   <- plm(form, data=pGrunfeld_NA_row, model="within", effect = "twoway")) # unbalanced - ok
+pdim(plm_fe_NA_row_tw   <- plm(form, data=pGrunfeld_NA_row, model="within", effect = "twoways")) # unbalanced - ok
 
 pdim(pGrunfeld_NA_dep_var) # balanced - ok, because (p)data.frame
 pdim(plm_fe_NA_dep_var      <- plm(form, data=pGrunfeld_NA_dep_var, model="within")) # unbalanced - ok
 pdim(plm_fe_NA_dep_var_time <- plm(form, data=pGrunfeld_NA_dep_var, model="within", effect = "time")) # unbalanced - ok
-pdim(plm_fe_NA_dep_var_tw   <- plm(form, data=pGrunfeld_NA_dep_var, model="within", effect = "twoway")) # unbalanced - ok
+pdim(plm_fe_NA_dep_var_tw   <- plm(form, data=pGrunfeld_NA_dep_var, model="within", effect = "twoways")) # unbalanced - ok
 
 pdim(pGrunfeld_NA_indep_var) # balanced, because (p)data.frame
 pdim(plm_fe_NA_indep_var      <- plm(form, data=pGrunfeld_NA_indep_var, model="within")) # unbalanced - ok
 pdim(plm_fe_NA_indep_var_time <- plm(form, data=pGrunfeld_NA_indep_var, model="within", effect = "time")) # unbalanced - ok
-pdim(plm_fe_NA_indep_var_tw   <- plm(form, data=pGrunfeld_NA_indep_var, model="within", effect = "twoway")) # unbalanced - ok
+pdim(plm_fe_NA_indep_var_tw   <- plm(form, data=pGrunfeld_NA_indep_var, model="within", effect = "twoways")) # unbalanced - ok
 
 
 
@@ -91,7 +91,7 @@ if (!isTRUE(all.equal(plm:::model.matrix.pFormula(pFormula(form), data=pGrunfeld
 modmat_pFormula_pdataframe_pool    <- plm:::model.matrix.pFormula(form, data=pGrunfeld, model="pooling") # works
 modmat_pFormula_pdataframe_fe      <- plm:::model.matrix.pFormula(form, data=pGrunfeld, model="within")  # works
 modmat_pFormula_pdataframe_fe_time <- plm:::model.matrix.pFormula(form, data=pGrunfeld, model="within", effect = "time")   # works
-modmat_pFormula_pdataframe_fe_tw   <- plm:::model.matrix.pFormula(form, data=pGrunfeld, model="within", effect = "twoway") # works
+modmat_pFormula_pdataframe_fe_tw   <- plm:::model.matrix.pFormula(form, data=pGrunfeld, model="within", effect = "twoways") # works
 
 
 # RE fails due to theta = NULL in model.matrix.pFormula (also model.matrix.pFormula needs facilities for random.method (ercomp(, method)))
@@ -171,9 +171,9 @@ if (!isTRUE(all.equal(modmat_plm_fe,         modmat_pFormula_pdataframe_fe,   ch
 
 
 # pooling and within models work on pdata.frame with fix in v1.5-14/rev. 175
-resp_pFormula_pool  <- plm:::pmodel.response.pFormula(form, data = pGrunfeld, model = "pooling")
-resp_pFormula_fe    <- plm:::pmodel.response.pFormula(form, data = pGrunfeld, model = "within")
-resp_pFormula_fe_tw <- plm:::pmodel.response.pFormula(form, data = pGrunfeld, model = "within", effect = "twoways")
+resp_pFormula_pool  <- plm:::pmodel.response.formula(form, data = pGrunfeld, model = "pooling")
+resp_pFormula_fe    <- plm:::pmodel.response.formula(form, data = pGrunfeld, model = "within")
+resp_pFormula_fe_tw <- plm:::pmodel.response.formula(form, data = pGrunfeld, model = "within", effect = "twoways")
 # resp_pFormula_re    <- plm:::pmodel.response.pFormula(form, data = pGrunfeld, model = "random") # error
 # still fails, likely due to theta = NULL in RE model
 # resp_pFormula_re <- plm:::pmodel.response.pFormula(form, data = pGrunfeld, model = "random")
@@ -184,7 +184,7 @@ resp_pFormula_fe_tw <- plm:::pmodel.response.pFormula(form, data = pGrunfeld, mo
 
 
 
-resp_pFormula_NA_depvar_fe   <- plm:::pmodel.response.pFormula(form, data = pGrunfeld_NA_dep_var, model = "within")
+resp_pFormula_NA_depvar_fe   <- plm:::pmodel.response.formula(form, data = pGrunfeld_NA_dep_var, model = "within")
 # resp_pFormula_NA_depvar_re   <- plm:::pmodel.response.pFormula(form, data = pGrunfeld_NA_dep_var, model = "random") # error
 #
 #Error in model.matrix.pFormula(pFormula(formula), data = data, model = model,  : 
@@ -193,19 +193,19 @@ resp_pFormula_NA_depvar_fe   <- plm:::pmodel.response.pFormula(form, data = pGru
 # pmodel.repsonse.plm
 resp_plm_NA_depvar_pool  <- plm:::pmodel.response.plm(plm(form, data = pGrunfeld_NA_dep_var, model = "pooling"))
 resp_plm_NA_depvar_fe    <- plm:::pmodel.response.plm(plm(form, data = pGrunfeld_NA_dep_var, model = "within"))
-resp_plm_NA_depvar_fe_tw <- plm:::pmodel.response.plm(plm(form, data = pGrunfeld_NA_dep_var, model = "within", effect = "twoway"))
+resp_plm_NA_depvar_fe_tw <- plm:::pmodel.response.plm(plm(form, data = pGrunfeld_NA_dep_var, model = "within", effect = "twoways"))
 resp_plm_NA_depvar_re    <- plm:::pmodel.response.plm(plm(form, data = pGrunfeld_NA_dep_var, model = "random"))
 
 resp_plm_NA_indepvar_pool  <- plm:::pmodel.response.plm(plm(form, data = pGrunfeld_NA_indep_var, model = "pooling"))
 resp_plm_NA_indepvar_fe    <- plm:::pmodel.response.plm(plm(form, data = pGrunfeld_NA_indep_var, model = "within"))
-resp_plm_NA_indepvar_fe_tw <- plm:::pmodel.response.plm(plm(form, data = pGrunfeld_NA_indep_var, model = "within", effect = "twoway")) # correct transformation
+resp_plm_NA_indepvar_fe_tw <- plm:::pmodel.response.plm(plm(form, data = pGrunfeld_NA_indep_var, model = "within", effect = "twoways")) # correct transformation
 resp_plm_NA_indepvar_re    <- plm:::pmodel.response.plm(plm(form, data = pGrunfeld_NA_indep_var, model = "random"))
 
 
 # pmodel.repsonse.pFormula with NA in dependent variable
-resp_pFormula_NA_depvar_pool  <- plm:::pmodel.response.pFormula(form, data = pGrunfeld_NA_dep_var, model = "pooling")
-resp_pFormula_NA_depvar_fe    <- plm:::pmodel.response.pFormula(form, data = pGrunfeld_NA_dep_var, model = "within")
-resp_pFormula_NA_depvar_fe_tw <- plm:::pmodel.response.pFormula(form, data = pGrunfeld_NA_dep_var, model = "within", effect = "twoway")
+resp_pFormula_NA_depvar_pool  <- plm:::pmodel.response.formula(form, data = pGrunfeld_NA_dep_var, model = "pooling")
+resp_pFormula_NA_depvar_fe    <- plm:::pmodel.response.formula(form, data = pGrunfeld_NA_dep_var, model = "within")
+resp_pFormula_NA_depvar_fe_tw <- plm:::pmodel.response.formula(form, data = pGrunfeld_NA_dep_var, model = "within", effect = "twoways")
 # NOT OK: error
 #resp_pFormula_NA_depvar_re    <- plm:::pmodel.response.pFormula(form, data = pGrunfeld_NA_dep_var, model = "random")
 
@@ -213,9 +213,9 @@ resp_pFormula_NA_depvar_fe_tw <- plm:::pmodel.response.pFormula(form, data = pGr
 # NA in independent variable is detected and vector of dependent variable (response) adjusted according (drop the observation)
 # -> resulting response has 199 entries, albeit there are 200 obs for the response but NA in independent variable
 # -> thus, the results of pmodel.repsonse and model.matrix match
-resp_pFormula_NA_indepvar_pool  <- plm:::pmodel.response.pFormula(form, data = pGrunfeld_NA_indep_var, model = "pooling")
-resp_pFormula_NA_indepvar_fe    <- plm:::pmodel.response.pFormula(form, data = pGrunfeld_NA_indep_var, model = "within")
-resp_pFormula_NA_indepvar_fe_tw <- plm:::pmodel.response.pFormula(form, data = pGrunfeld_NA_indep_var, model = "within", effect = "twoway")
+resp_pFormula_NA_indepvar_pool  <- plm:::pmodel.response.formula(form, data = pGrunfeld_NA_indep_var, model = "pooling")
+resp_pFormula_NA_indepvar_fe    <- plm:::pmodel.response.formula(form, data = pGrunfeld_NA_indep_var, model = "within")
+resp_pFormula_NA_indepvar_fe_tw <- plm:::pmodel.response.formula(form, data = pGrunfeld_NA_indep_var, model = "within", effect = "twoways")
 # resp_pFormula_NA_indepvar_re    <- plm:::pmodel.response.pFormula(form, data = pGrunfeld_NA_indep_var, model = "random") # error
 
 

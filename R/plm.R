@@ -148,7 +148,7 @@ plm.fit <- function(formula, data, model, effect, random.method,
                     random.models, random.dfcor, inst.method){
     # check for 0 cases like in stats::lm.fit (e.g. due to NA dropping) 
     if (nrow(data) == 0L) stop("0 (non-NA) cases")
-  
+
     # if a random effect model is estimated, compute the error components
     if (model == "random"){
         is.balanced <- is.pbalanced(data)
@@ -161,6 +161,7 @@ plm.fit <- function(formula, data, model, effect, random.method,
             stop(paste("Instrumental variable random effect estimation", 
                        "not implemented for two-ways panels"))
     }
+    else theta <- NULL
 
     # For all models except the unbalanced twoways random model, the
     # estimator is obtained as a linear regression on transformed data
@@ -170,7 +171,7 @@ plm.fit <- function(formula, data, model, effect, random.method,
         # to pdata.frames
         X <- model.matrix(formula, data, rhs = 1, model = model, 
                           effect = effect, theta = theta, rm.cst = TRUE)
-        y <- pmodel.response(formula, data, model = model, 
+        y <- pmodel.response(formula, data = data, model = model, 
                              effect = effect, theta = theta, rm.cst = TRUE)
         if (ncol(X) == 0) stop("empty model")
         # call w the weights (use 1 if no weights are specified)
@@ -264,16 +265,16 @@ plm.fit <- function(formula, data, model, effect, random.method,
         Dmu <- model.matrix( ~ factor(index(data)[[2]]) - 1)
         Dmu <- Dmu - theta * Between(Dmu, index(data)[[1]])
         X <- model.matrix(   formula, data, rhs = 1, model = "random", 
-                             effect = "individual", theta = theta)
-        y <- pmodel.response(formula, data, model = "random", 
+                          effect = "individual", theta = theta)
+        y <- pmodel.response(formula, data = data, model = "random", 
                              effect = "individual", theta = theta)
         P <- solve(diag(TS) + phi2mu * crossprod(Dmu))
         XPX <- crossprod(X)    - phi2mu * crossprod(X, Dmu) %*% P %*% crossprod(Dmu, X)
         XPy <- crossprod(X, y) - phi2mu * crossprod(X, Dmu) %*% P %*% crossprod(Dmu, y)
         gamma <- solve(XPX, XPy)[, , drop = TRUE]
-        e <- pmodel.response(formula, data, model = "pooling") -
+
+        e <- pmodel.response(formula, data = data, model = "pooling", effect = effect) -
             as.numeric(model.matrix(formula, data, rhs = 1, model = "pooling") %*% gamma)
-        
         result <- list(coefficients = gamma,
                        vcov         = solve(XPX),
                        formula      = formula,
@@ -976,7 +977,7 @@ fitted.plm <- function(object, model = NULL, effect = NULL, ...){
     if (is.null(model)) model <- fittedmodel
     if (is.null(effect)) effect <- describe(object, "effect")
     X <- model.matrix(object, model = "pooling")
-    y <- pmodel.response(object, model = "pooling")
+    y <- pmodel.response(object, model = "pooling", effect = effect)
     beta <- coef(object)
     comonpars <- intersect(names(beta), colnames(X))
     bX <- as.numeric(crossprod(t(X[, comonpars, drop = FALSE]), beta[comonpars]))
@@ -1039,59 +1040,20 @@ residuals.plm <- function(object, model = NULL, effect = NULL,  ...){
     res
 }
 
-
-
-
-## daub <- function(x, model = NULL, effect = NULL, theta = NULL, ...){
-##     if (model == "pooling") return(x)
-##     if (effect == "twoways" & model %in% c("between", "fd"))
-##         stop("twoways effect only relevant for within, random and pooling models")
-##     if (effect == "individual") theindex <- index(x)[[1]] else theindex <- index(x)[[2]]
-##     if (model == "within") x <- Within(x, effect)
-##     if (model == "between") x <- between(x, effect)
-##     if (model == "fd") x <- pdiff(x, theindex)
-##     if (model == "random"){
-##         if (is.null(theta))("a theta argument should be provided")
-##         if (effect != "nested") x <- x - theta * Between(x, effect)
-##         else x <- x - theta$id * Between(x, "individual") - theta$gp * Between(x, "group")
-##     }
-##     else{
-##         if (model == "within"){
-##             if (is.pbalanced(object)){
-##                 x <- x - Between(x, "individual") - Between(x, "time") + mean(x)
-##             }
-##             else{
-##                 X <- model.matrix(object)
-##                 comonpars <- intersect(names(beta), colnames(X))
-##                 x <- as.numeric(crossprod(t(X[, comonpars, drop = FALSE]), beta[comonpars]))
-##             }
-##         }
-##         if (model == "random"){
-##             if (fittedmodel != "random") stop("the fitted model is not a random effects model")
-##             if (is.pbalanced(object)){
-##                 theta <- ercomp(object)$theta
-##                 x <- x - theta$id * Between(x, "individual") - theta$time * Between(x, "time") +
-##                     theta$total * mean(x)
-##             }
-##         }
-##     }
-##     structure(x, index = index(x), class = union("pseries", class(x)))
-## }
-
-## fitted.plm <- function(object, model = NULL, effect = NULL, ...){
-##     fittedmodel <- describe(object, "model")
-##     if (is.null(model)) model <- fittedmodel
-##     if (is.null(effect)) effect <- describe(object, "effect")
-##     if (fittedmodel == "random") theta <- ercomp(object)$theta else theta <- NULL
-##     X <- model.matrix(object, model = "pooling")
-##     y <- pmodel.response(object, model = "pooling")
-##     beta <- coef(object)
-##     comonpars <- intersect(names(beta), colnames(X))
-##     bX <- as.numeric(crossprod(t(X[, comonpars, drop = FALSE]), beta[comonpars]))
-##     bX <- structure(bX, index = index(object), class = union("pseries", class(bX)))
-##     if (fittedmodel == "within"){
-##         intercept <- mean(y - bX)
-##         bX <- bX + intercept
-##     }
-##     daub(bX, model = model, effect = effect, theta = theta)
-## }
+fitted.plm <- function(object, model = NULL, effect = NULL, ...){
+    fittedmodel <- describe(object, "model")
+    if (is.null(model)) model <- fittedmodel
+    if (is.null(effect)) effect <- describe(object, "effect")
+    if (fittedmodel == "random") theta <- ercomp(object)$theta else theta <- NULL
+    X <- model.matrix(object, model = "pooling")
+    y <- pmodel.response(object, model = "pooling", effect = effect)
+    beta <- coef(object)
+    comonpars <- intersect(names(beta), colnames(X))
+    bX <- as.numeric(crossprod(t(X[, comonpars, drop = FALSE]), beta[comonpars]))
+    bX <- structure(bX, index = index(object), class = union("pseries", class(bX)))
+    if (fittedmodel == "within"){
+        intercept <- mean(y - bX)
+        bX <- bX + intercept
+    }
+    ptransform(bX, model = model, effect = effect, theta = theta)
+}

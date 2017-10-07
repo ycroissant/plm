@@ -74,7 +74,6 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                reX <- model.matrix(re_mod)[ , -1, drop = FALSE] # intercept not needed; drop=F needed to prevent matrix
                feX <- model.matrix(fe_mod, rm.cst = TRUE)                      # from degenerating to vector if only one regressor
                dimnames(feX)[[2]] <- paste(dimnames(feX)[[2]], "tilde", sep=".")
-               
                ## estimated models could have fewer obs (due dropping of NAs) compared to the original data
                ## => match original data and observations used in estimated models
                ## routine adapted from lmtest::bptest
@@ -87,7 +86,7 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                }
                
                # Tests of correct matching of obs (just for safety ...)
-                if (!all.equal(length(reY), nrow(data), nrow(reX), nrow(feX)))
+               if (!all.equal(length(reY), nrow(data), nrow(reX), nrow(feX)))
                   stop("number of cases/observations do not match, most likely due to NAs in \"data\"")
                 if (any(c(is.na(names(reY)), is.na(row.names(data)), is.na(row.names(reX)), is.na(row.names(feX)))))
                     stop("one (or more) rowname(s) is (are) NA")

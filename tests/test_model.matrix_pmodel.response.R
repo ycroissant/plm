@@ -23,6 +23,8 @@ pGrunfeld <- pdata.frame(Grunfeld, index = c("firm", "year"))
 
 modmat_pFormula_pdf_pool <- plm:::model.matrix.pFormula(form, data=pGrunfeld, model="pooling") # works
 modmat_pFormula_pdf_fe   <- plm:::model.matrix.pFormula(form, data=pGrunfeld, model="within")  # works
+
+
 #modmat_pFormula_re2   <- plm:::model.matrix.pFormula(form, data=pGrunfeld, model="random")  # still fails in v1.5-15
 
 # Error:
@@ -48,8 +50,8 @@ if(!isTRUE(all.equal(modmat_plm_fe,   modmat_pFormula_pdf_fe,   check.attributes
 
 # pooling and within models work on a pdata.frame [the plain pdata.frame is coerced to a model.frame
 # internally in pmodel.response.pFormula]
-resp_pFormula_pool <- plm:::pmodel.response.pFormula(form, data = pGrunfeld, model = "pooling") 
-resp_pFormula_fe   <- plm:::pmodel.response.pFormula(form, data = pGrunfeld, model = "within")
+resp_pFormula_pool <- plm:::pmodel.response.formula(form, data = pGrunfeld, model = "pooling") 
+resp_pFormula_fe   <- plm:::pmodel.response.formula(form, data = pGrunfeld, model = "within")
 
 # still fails
 # resp_pFormula_re <- plm:::pmodel.response.pFormula(form, data = pGrunfeld, model = "random")
@@ -77,7 +79,6 @@ pmodel.response(pGrunfeld_mf)
 resp_plm_pool <- pmodel.response(plm_pool)
 resp_plm_fe   <- pmodel.response(plm_fe)
 resp_plm_re   <- pmodel.response(plm_re)
-
 
 
 # compare interface pFormula with plm

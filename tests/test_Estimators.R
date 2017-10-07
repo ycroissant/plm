@@ -157,7 +157,7 @@ plm_grunfeld_re_swar_tw_unbal    <- plm(inv ~ value + capital, data=Grunfeld_unb
 
 summary(plm_grunfeld_pooled_tw_unbal    )
 summary(plm_grunfeld_fe_tw_unbal        )
-summary(plm_grunfeld_re_walhus_tw_unbal )
+summary(plm_grunfeld_re_walhus_tw_unbal ) #CHECK
 summary(plm_grunfeld_re_amemiya_tw_unbal)
 summary(plm_grunfeld_re_swar_tw_unbal   )
 # summary(plm_grunfeld_re_nerlove_tw_unbal) # not implemented

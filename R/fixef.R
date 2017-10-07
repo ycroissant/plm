@@ -42,7 +42,7 @@ fixef.plm <- function(object, effect = NULL,
   #     work with these formulae.
 
     Xb <- model.matrix(formula, data, rhs = 1, model = "between", effect = effect)
-    yb <- pmodel.response(formula, data, model = "between", effect = effect)
+    yb <- pmodel.response(formula, data = data, model = "between", effect = effect)
     fixef <- yb - as.vector(crossprod(t(Xb[, nw, drop = FALSE]), coef(object)))
   
   # Lignes suivantes inutiles ??????????
@@ -85,7 +85,7 @@ print.fixef <- function(x, digits = max(3, getOption("digits") - 2),
                         width = getOption("width"), ...){
   
   # prevent attributs from being printed
-  attr(x, "se") <- attr(x, "type") <- attr(x, "class") <- attr(x, "df.residual") <- NULL
+  attr(x, "se") <- attr(x, "type") <- attr(x, "class") <- attr(x, "df.residual") <- attr(x, "index") <- NULL
   print.default(x)
 }
 

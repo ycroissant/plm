@@ -268,8 +268,8 @@ pht <-  function(formula, data, subset, na.action, model = c("ht", "am", "bms"),
                      class = "ercomp",
                      balanced = balanced,
                      effect = "individual")
-  y <- pmodel.response(data, model = "random", theta = theta)
-  X <- model.matrix(formula, data, model = "random", theta = theta)
+  y <- pmodel.response(data, model = "random", effect = "individual", theta = theta)
+  X <- model.matrix(formula, data, model = "random", effect = "individual", theta = theta)
   within.inst <- model.matrix(formula, data, model = "within")
 
   if (model == "ht"){
