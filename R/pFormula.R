@@ -34,7 +34,7 @@ model.matrix.pFormula <- function(object, data,
                                   effect = c("individual", "time", "twoways", "nested"),
                                   rhs = 1,
                                   theta = NULL,
-                                  rm.cst = FALSE, ...){
+                                  cstcovar.rm = FALSE, ...){
     model <- match.arg(model)
     effect <- match.arg(effect)
     formula <- object
@@ -66,7 +66,7 @@ model.matrix.pFormula <- function(object, data,
         if (effect == "time") cond <- time
         #!YC! rm.null FALSE or TRUE ?
         result <- switch(model,
-                         "within"  = Within(X, cond, rm.null = rm.cst),
+                         "within"  = Within(X, cond, rm.null = cstcovar.rm),
                          "Sum"     = Sum(X, cond),
                          "Between" = Between(X, cond),
                          "between" = between(X, cond),
@@ -90,7 +90,7 @@ model.matrix.pFormula <- function(object, data,
                              stop(paste0("in model.matrix.pFormula: no model.matrix for model =\"", model, "\" and effect = \"", effect, "\" meaningful or implemented"))
                              )
             # very QDF ! remove the column of one for two-ways balanced within (no call to the Within function)
-            if (model == "within" & rm.cst == TRUE & ncol(result) > 1) result <- result[, -1]
+            if (model == "within" & cstcovar.rm == TRUE & ncol(result) > 1) result <- result[, -1]
         }
         else{ # two-ways unbalanced
             result <- switch(model,
@@ -102,7 +102,7 @@ model.matrix.pFormula <- function(object, data,
                                  WDmu <- Within(Dmu, id)
                                  W2 <- fitted(lm.fit(WDmu, X))
                                  result <- W1 - W2
-                                 if (! rm.cst) result <- cbind("(Intercept)"= 1, result)
+                                 if (! cstcovar.rm) result <- cbind("(Intercept)"= 0, result)
                                  result
                              },
                              "pooling" = X,
@@ -125,92 +125,22 @@ model.matrix.pFormula <- function(object, data,
     result
 }
 
-
-## pmodel.response.data.frame <- function(object,
-##                                        model = c("pooling", "within", "Between",
-##                                                  "between", "mean", "random", "fd"),
-##                                        effect = c("individual", "time", "twoways", "nested"),
-##                                        lhs = NULL,
-##                                        theta = NULL, ...){
-##     data <- object
-##     model <- match.arg(model)
-##     formula <- formula(paste("~ ", names(data)[[1]], " - 1", sep = ""))
-##     y <- model.matrix(pFormula(formula), data = data,
-##                       model = model, effect = effect,
-##                       lhs = lhs, theta = theta, ...)
-##     namesy <- rownames(y)
-##     y <- as.numeric(y)
-##     names(y) <- namesy
-##     y
-## }
-
-## pmodel.response.pFormula <- function(object, data,
-##                                      model = c("pooling", "within", "Between",
-##                                                "between", "mean", "random", "fd"),
-##                                      effect = c("individual", "time", "twoways", "nested"),
-##                                      lhs = NULL,
-##                                      theta = NULL, ...){
-##     formula <- pFormula(object) # was: formula <- object
-##     model <- match.arg(model)
-  
-##     # check if inputted data is already a model.frame, if not convert it to model.frame
-##     # (important for NA handling of the original data when pmodel.response is called directly)
-##     # As there is no own class for a model.frame, check if the 'terms' attribute
-##     # is present (this mimics what lm does to detect a model.frame)
-##     if (is.null(attr(data, "terms"))) {
-##         data <- model.frame.pFormula(pFormula(formula), data)
-##     }
-  
-##     if (is.null(lhs))
-##         if (length(formula)[1] == 0) stop("no response") else lhs <- 1
-##     formula <- formula(paste("~ ", deparse(attr(formula, "lhs")[[lhs]]), " - 1", sep = ""))
-    
-##     y <- model.matrix(pFormula(formula), data = data,
-##                       model = model, effect = effect,
-##                       lhs = lhs, theta = theta, ...)
-##                                         #  dim(y) <- NULL
-##     namesy <- rownames(y)
-##     y <- as.numeric(y)
-##     names(y) <- namesy
-##     y
-## }
-
 model.matrix.plm <- function(object, ...){
     dots <- list(...)
     model <- ifelse(is.null(dots$model), describe(object, "model"), dots$model)
     effect <- ifelse(is.null(dots$effect), describe(object, "effect"), dots$effect)
     rhs <- ifelse(is.null(dots$rhs), 1, dots$rhs)
-    rm.cst <- ifelse(is.null(dots$rm.cst), FALSE, dots$rm.cst)
+    cstcovar.rm <- ifelse(is.null(dots$cstcovar.rm), FALSE, dots$cstcovar.rm)
     formula <- formula(object)
     data <- model.frame(object)
     if (model != "random"){
-        model.matrix(formula, data, model = model, effect = effect, rhs = rhs, rm.cst = rm.cst)
+        model.matrix(formula, data, model = model, effect = effect, rhs = rhs, cstcovar.rm = cstcovar.rm)
     }
     else{
         theta <- ercomp(object)$theta
-        model.matrix(formula, data, model = model, effect = effect, theta = theta, rhs = rhs, rm.cst = rm.cst)
+        model.matrix(formula, data, model = model, effect = effect, theta = theta, rhs = rhs, cstcovar.rm = cstcovar.rm)
     }
 }
-
-## pmodel.response.plm <- function(object, ...){
-##     dots <- list(...)
-##     model <- ifelse(is.null(dots$model), describe(object, "model"), dots$model)
-##     effect <- ifelse(is.null(dots$effect), describe(object, "effect"), dots$effect)
-##     rm.cst <- ifelse(is.null(dots$rm.cst), FALSE, dots$rm.cst)
-    
-##     formula <- formula(object)
-##     data <- model.frame(object)
-##     if (model != "random"){
-##         pmodel.response(formula, data, model = model, effect = effect, rm.cst = rm.cst)
-##     }
-##     else{
-##         theta <- ercomp(object)$theta
-##         pmodel.response(formula, data, model = model, effect = effect, theta = theta)
-##     }
-## }
-
-
-#Comment extraire y comme une pseries ?
 
 ptransform <- function(x, model = NULL, effect = NULL, theta = NULL, ...){
     if (model == "pooling") return(x)
@@ -266,11 +196,7 @@ pmodel.response.plm <- function(object, ...){
         if (describe(object, "model") == "random") theta <- ercomp(object)$theta else theta <- NULL
     }
     else theta <- dots$theta
-    y <- ptransform(y, model = model, effect = effect, theta = theta)
-    namesy <- names(y)
-    y <- as.numeric(y)
-    names(y) <- namesy
-    y
+    ptransform(y, model = model, effect = effect, theta = theta)
 }
 
 pmodel.response.data.frame <- function(object, ...){
@@ -280,13 +206,7 @@ pmodel.response.data.frame <- function(object, ...){
     if (is.null(dots$effect)) effect <- "individual" else effect <- dots$effect#stop("the effect argument is mandatory")
     if (is.null(dots$theta)) theta <- NULL else theta <- dots$theta
     y <- model.response(object)
-#    model <- dots$model
-#    effect <- dots$effect
-    y <- ptransform(y, model = model, effect = effect, theta = theta)
-    namesy <- names(y)
-    y <- as.numeric(y)
-    names(y) <- namesy
-    y
+    ptransform(y, model = model, effect = effect, theta = theta)
 }
 
 pmodel.response.formula <- function(object, ...){
@@ -301,10 +221,24 @@ pmodel.response.formula <- function(object, ...){
     if (is.null(effect)) effect <- "individual"#stop("the effect argument is mandatory")
     if (model == "random" & is.null(theta)) stop("the theta argument is mandatory")
     y <- model.response(data)
-    y <- ptransform(y, model = model, effect = effect, theta = theta)
-    namesy <- names(y)
-    y <- as.numeric(y)
-    names(y) <- namesy
-    y
+    ptransform(y, model = model, effect = effect, theta = theta)
 }
 
+ptransform <- function(x, model = NULL, effect = NULL, theta = NULL, ...){
+    if (model == "pooling") return(x)
+    if (effect == "twoways" & model %in% c("between", "fd"))
+        stop("twoways effect only relevant for within, random and pooling models")
+    if (effect == "individual") theindex <- index(x)[[1]] else theindex <- index(x)[[2]]
+    if (model == "within") x <- Within(x, effect)
+    if (model == "between") x <- between(x, effect)
+    if (model == "Between") x <- Between(x, effect)
+    if (model == "fd") x <- pdiff(x, theindex)
+    if (model == "random"){
+        if (is.null(theta)) stop("a theta argument should be provided")
+        if (effect %in% c("time", "individual")) x <- x - theta * Between(x, effect)
+        if (effect == "nested") x <- x - theta$id * Between(x, "individual") - theta$gp * Between(x, "group")
+        if (effect == "twoways" & is.pbalanced(x))
+            x <- x - theta$id * Between(x, "individual") - theta$time * Between(x, "time") + theta$total * mean(x)
+    }
+    structure(x, index = index(x), class = union("pseries", class(x)))
+}

@@ -72,7 +72,7 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                  # print(re_mod)
                reY <- pmodel.response(re_mod)
                reX <- model.matrix(re_mod)[ , -1, drop = FALSE] # intercept not needed; drop=F needed to prevent matrix
-               feX <- model.matrix(fe_mod, rm.cst = TRUE)                      # from degenerating to vector if only one regressor
+               feX <- model.matrix(fe_mod, cstcovar.rm = TRUE)                      # from degenerating to vector if only one regressor
                dimnames(feX)[[2]] <- paste(dimnames(feX)[[2]], "tilde", sep=".")
                ## estimated models could have fewer obs (due dropping of NAs) compared to the original data
                ## => match original data and observations used in estimated models

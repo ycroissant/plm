@@ -32,7 +32,7 @@ pbgtest.panelmodel <- function(x, order = NULL, type = c("Chisq", "F"), ...) {
     theta <- x$ercomp$theta
 
     ## retrieve demeaned data
-    demX <- model.matrix(x, model = model, effect = effect, theta = theta, rm.cst = TRUE)
+    demX <- model.matrix(x, model = model, effect = effect, theta = theta, cstcovar.rm = TRUE)
     demy <- pmodel.response(model.frame(x), model = model, effect = effect, theta = theta)
     ## ...and group numerosities
     Ti <- pdim(x)$Tint$Ti
@@ -443,51 +443,51 @@ pdwtest.formula <- function(x, data, ...) {
 }
 
 pdwtest.panelmodel <- function(x, ...) {
-  ## residual serial correlation test based on the residuals of the demeaned
-  ## model and the regular dwtest() in {lmtest}
-  ## reference Baltagi (2005),p. 98 for FE application, Wooldridge, p. 288 for
-  ## the general idea.
+    ## residual serial correlation test based on the residuals of the demeaned
+    ## model and the regular dwtest() in {lmtest}
+    ## reference Baltagi (2005),p. 98 for FE application, Wooldridge, p. 288 for
+    ## the general idea.
 
-  ## structure:
-  ## 1: take demeaned data from 'plm' object
-  ## 2: est. auxiliary model by OLS on demeaned data
-  ## 3: apply lmtest::dwtest() to auxiliary model and return the result
+    ## structure:
+    ## 1: take demeaned data from 'plm' object
+    ## 2: est. auxiliary model by OLS on demeaned data
+    ## 3: apply lmtest::dwtest() to auxiliary model and return the result
 
-  model <- describe(x, "model")
-  effect <- describe(x, "effect")
-  theta <- x$ercomp$theta
+    model <- describe(x, "model")
+    effect <- describe(x, "effect")
+    theta <- x$ercomp$theta
 
-  ## retrieve demeaned data
-  demX <- model.matrix(x, model = model, effect = effect, theta = theta, rm.cst = TRUE)
-  demy <- pmodel.response(model.frame(x), model = model, effect = effect, theta = theta, rm.cst = TRUE)
- 
+    ## retrieve demeaned data
+    demX <- model.matrix(x, model = model, effect = effect, theta = theta, cstcovar.rm = TRUE)
+    demy <- pmodel.response(model.frame(x), model = model, effect = effect, theta = theta)
 
-  ## lmtest::dwtest on the demeaned model:
+    ## lmtest::dwtest on the demeaned model:
   
     ## check package availability and load if necessary # not needed anymore as importFrom in NAMESPACE
     ##lm.ok <- require("lmtest")
     ##if(!lm.ok) stop("package lmtest is needed but not available")
   
-  ## ARtest is the return value of lmtest::dwtest, exception made for the method attribute
-  dots <- match.call(expand.dots=FALSE)[["..."]]
-  if (is.null(dots$order.by)) order.by <- NULL else order.by <- dots$order.by
-  if (is.null(dots$alternative)) alternative <- "greater" else alternative <- dots$alternative
-  if (is.null(dots$iterations)) iterations <- 15 else iterations <- dots$iterations
-  if (is.null(dots$exact)) exact <- NULL else exact <- dots$exact
-  if (is.null(dots$tol)) tol <- 1e-10 else tol <- dots$tol
+    ## ARtest is the return value of lmtest::dwtest, exception made for the method attribute
+    dots <- match.call(expand.dots=FALSE)[["..."]]
+    if (is.null(dots$order.by)) order.by <- NULL else order.by <- dots$order.by
+    if (is.null(dots$alternative)) alternative <- "greater" else alternative <- dots$alternative
+    if (is.null(dots$iterations)) iterations <- 15 else iterations <- dots$iterations
+    if (is.null(dots$exact)) exact <- NULL else exact <- dots$exact
+    if (is.null(dots$tol)) tol <- 1e-10 else tol <- dots$tol
+    
+    auxformula <- demy ~ demX-1 # was: if(model == "within") demy~demX-1 else demy~demX
+    lm.mod <- lm(auxformula)
+    lm.mod$model[[1]] <- as.numeric(lm.mod$model[[1]])
+    
+    ARtest <- dwtest(lm.mod, order.by = order.by,
+                     alternative = alternative,
+                     iterations = iterations, exact = exact, tol = tol)
 
-  auxformula <- demy~demX-1 # was: if(model == "within") demy~demX-1 else demy~demX
-  lm.mod <- lm(auxformula)
-  
-  ARtest <- dwtest(lm.mod, order.by = order.by,
-                   alternative = alternative,
-                   iterations = iterations, exact = exact, tol = tol)
-
-  # overwrite elements of the values produced by lmtest::dwtest
-  ARtest$method <- "Durbin-Watson test for serial correlation in panel models"
-  ARtest$alternative <- "serial correlation in idiosyncratic errors"
-  ARtest$data.name <- paste(deparse(x$call$formula))
-  return(ARtest)
+    # overwrite elements of the values produced by lmtest::dwtest
+    ARtest$method <- "Durbin-Watson test for serial correlation in panel models"
+    ARtest$alternative <- "serial correlation in idiosyncratic errors"
+    ARtest$data.name <- paste(deparse(x$call$formula))
+    return(ARtest)
 }
 
 #### pbltest

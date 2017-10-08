@@ -16,6 +16,25 @@
 ## Pesaran, M.H. (2007) A simple panel unit root test in the presence of
 ## cross-section dependence, Journal of Applied Econometrics, 22(2), pp. 265-312
 
+pseries2pdata <- function(x) {
+  ## transforms a pseries in a pdataframe with the indices as regular columns
+  ## in positions 1 and 2 (individual index, time index)
+  indices <- attr(x, "index")
+  vx <- as.numeric(x)
+  px <- cbind(indices, vx)
+  dimnames(px)[[2]] <- c("ind", "tind", deparse(substitute(x)))
+  return(pdata.frame(px, index=c("ind", "tind")))
+}
+
+pmerge <- function(x, y, ...) {
+  ## transf. if pseries
+  if("pseries" %in% class(x)) x <- pseries2pdata(x)
+  if("pseries" %in% class(y)) y <- pseries2pdata(y)
+  z <- merge(data.frame(x), data.frame(y), by.x=dimnames(x)[[2]][1:2],
+             by.y=dimnames(y)[[2]][1:2], ...)
+  return(z)
+}
+
 cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
                       model = c("cmg", "mg", "dmg"), truncated = FALSE, ...) {
 

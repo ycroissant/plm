@@ -170,9 +170,9 @@ plm.fit <- function(formula, data, model, effect, random.method,
         # done by providing model.matrix and pmodel.response's methods
         # to pdata.frames
         X <- model.matrix(formula, data, rhs = 1, model = model, 
-                          effect = effect, theta = theta, rm.cst = TRUE)
+                          effect = effect, theta = theta, cstcovar.rm = TRUE)
         y <- pmodel.response(formula, data = data, model = model, 
-                             effect = effect, theta = theta, rm.cst = TRUE)
+                             effect = effect, theta = theta)
         if (ncol(X) == 0) stop("empty model")
         # call w the weights (use 1 if no weights are specified)
         w <- as.vector(model.weights(data))
@@ -821,7 +821,7 @@ r.squared <- function(object, model = NULL,
     effect <- describe(object, "effect")
     type <- match.arg(type)
     if (type == "cor"){
-        y <- pmodel.response(object, model = model, effect = effect, rm.cst = TRUE)
+        y <- pmodel.response(object, model = model, effect = effect)
         haty <- fitted(object, model = model, effect = effect)
         R2 <- cor(y, haty)^2
     }

@@ -83,7 +83,7 @@ ercomp.formula <- function(object, data,
         result <- list(sigma2 = sigma2, theta = theta)
         result <- structure(result, class = "ercomp", balanced = balanced, effect = effect)
         return(result)
-    } ## END nerlove
+    }
 
     if (! is.null(method) && method == "ht"){
         pdim <- pdim(data)
@@ -112,8 +112,7 @@ ercomp.formula <- function(object, data,
         result <- list(sigma2 = sigma2, theta = theta)
         result <- structure(result, class = "ercomp", balanced = balanced, effect = effect)
         return(result)
-    } ## END ht
-
+    }
     
     # method argument is used, check its validity and set the relevant
     # models and dfcor
@@ -178,10 +177,16 @@ ercomp.formula <- function(object, data,
         
         if (method == "walhus"){
             estm <- plm.fit(object, data, model = "pooling", effect = "individual")
-            hateps <- as.numeric(resid(estm, model = "pooling"))
-            quad <- c(crossprod(resid(estm, model = "within", effect = "individual")),
-                      crossprod(Between(hateps, ids) - Between(hateps, gps)),
-                      crossprod(Between(hateps, gps)))
+            ## hateps <- as.numeric(resid(estm, model = "pooling"))
+            ## quad <- c(crossprod(resid(estm, model = "within", effect = "individual")),
+            ##           crossprod(Between(hateps, ids) - Between(hateps, gps)),
+            ##           crossprod(Between(hateps, gps)))
+            hateps <- resid(estm, model = "pooling")
+            quad <- c(crossprod(Within(hateps, effect = "individual")),
+                      crossprod(Between(hateps, effect = "individual") - Between(hateps, effect = "group")),
+                      crossprod(Between(hateps, "group")))
+
+            
 #                      crossprod(resid(estm, model = "Between", effect = "nested")))
             Z <- model.matrix(estm, model = "pooling")
             ZSeta <- model.matrix(estm, model = "Sum", effect = "individual")
@@ -211,16 +216,21 @@ ercomp.formula <- function(object, data,
         
         if (method == "amemiya"){
             estm <- plm.fit(object, data, effect = "individual", model = "within")
-            hateps <- as.numeric(resid(estm, model = "pooling"))
-            hatepsBeta <- Between(hateps, ids)
-            hatepsBlambda <- Between(hateps, gps)
+#            hateps <- as.numeric(resid(estm, model = "pooling"))
+#            hatepsBeta <- Between(hateps, ids)
+#            hatepsBlambda <- Between(hateps, gps)
 #            quad <- c(crossprod(resid(estm, model = "within", effect = "individual")), ## Problem, doesn't return the within residuals, why ?
-            quad <- c(crossprod(resid(estm)), 
-                      crossprod(Between(hateps, ids) - Between(hateps, gps)),
-                      crossprod(Between(hateps, gps)))
+            hateps <- resid(estm, model = "pooling")
+            ## quad <- c(crossprod(resid(estm)), 
+            ##           crossprod(Between(hateps, ids) - Between(hateps, gps)),
+            ##           crossprod(Between(hateps, gps)))
 #            WX <- model.matrix(estm, model = "within", effect = "individual", null.rm = TRUE)
-            WX <- model.matrix(estm, model = "within", effect = "individual", rm.cst = TRUE)
-            X <- model.matrix(estm, model = "pooling")[, -1, drop = FALSE]
+
+            quad <- c(crossprod(Within(hateps, effect = "individual")),
+                      crossprod(Between(hateps, effect = "individual") - Between(hateps, effect = "group")),
+                      crossprod(Between(hateps, "group")))
+            WX <- model.matrix(estm, model = "within", effect = "individual", cstcovar.rm = TRUE)
+            X <- model.matrix(estm, model = "pooling", intercept.rm = TRUE)[, -1, drop = FALSE]
             XBetaBlambda <- Between(X, ids) - Between(X, gps)
             XBlambda <- Between(X, gps)
             XBlambda <- t(t(XBlambda) - colMeans(XBlambda))
@@ -267,7 +277,6 @@ ercomp.formula <- function(object, data,
             quad <- c(crossprod(resid(estm1)),
                       crossprod(resid(estm2)),
                       crossprod(resid(estm3)))
-
         
             M["w", "nu"] <- O - N - K
             M["w", "eta"] <- 0
@@ -285,9 +294,6 @@ ercomp.formula <- function(object, data,
         Gs <- as.numeric(table(gps)[as.character(gps)])
         Tn <- as.numeric(table(ids)[as.character(ids)])
         sigma2 <- as.numeric(solve(M, quad))
-#        print(M)
-#        print(quad)
-
         names(sigma2) <- c("idios", "id", "gp")
         theta <- list(id = 1 - sqrt(sigma2["idios"] /  (Tn * sigma2["id"] + sigma2["idios"])),
                       gp = sqrt(sigma2["idios"] / (Tn * sigma2["id"] + sigma2["idios"])) -
@@ -326,30 +332,32 @@ ercomp.formula <- function(object, data,
     quad <- vector(length = 3, mode = "numeric")
     # first quadratic form, within transformation
     hateps_w <- resid(estm[[1]], model = "pooling")
-    if (effect != "twoways"){
-        quad[1] <- crossprod(Within(hateps_w, effect = effect))
-    }
-    else{
-        if (balanced){
-            hateps_w <- hateps_w - Within(hateps_w, "individual") - Within(hateps_w, "time")
-        }
-        else{
-            time <- index(data)[[2]]
-            id <- index(data)[[1]]
-            Dmu <- model.matrix(~ time - 1)
-            W1 <- Within(hateps_w, "individual")
-            WDmu <- Within(Dmu, id)
-            W2 <- fitted(lm.fit(WDmu, hateps_w))
-            hateps_w <- W1 - W2
-        }
-        quad[1] <- crossprod(hateps_w)
-    }
+#    if (effect != "twoways"){
+#        quad[1] <- crossprod(Within(hateps_w, effect = effect))
+#    }
+#    else{
+        
+        ## if (balanced){
+        ##     hateps_w <- hateps_w - Within(hateps_w, "individual") - Within(hateps_w, "time")
+        ## }
+        ## else{
+        ##     time <- index(data)[[2]]
+        ##     id <- index(data)[[1]]
+        ##     Dmu <- model.matrix(~ time - 1)
+        ##     W1 <- Within(hateps_w, "individual")
+        ##     WDmu <- Within(Dmu, id)
+        ##     W2 <- fitted(lm.fit(WDmu, hateps_w))
+        ##     hateps_w <- W1 - W2
+        ## }
+        ## quad[1] <- crossprod(hateps_w)
+#   }
+    quad[1] <- crossprod(Within(hateps_w, effect = effect))
 
     # second quadratic form, between transformation
     if (effect != "time"){
         hateps_id <- resid(estm[[2]], model = "pooling")
         quad[2] <- crossprod(Between(hateps_id, effect = "individual"))
-        RESB <- Between(hateps_id, effect = "individual")
+#        RESB <- Between(hateps_id, effect = "individual")
     }
     if (effect != "individual"){
         hateps_ts <- resid(estm[[3]], model = "pooling")
@@ -357,8 +365,8 @@ ercomp.formula <- function(object, data,
     }
     M <- matrix(NA, nrow = 3, ncol = 3,
                 dimnames = list(c("w", "id", "ts"),
-                    c("nu", "eta", "mu")))
-
+                                c("nu", "eta", "mu")))
+    
     # Compute the M matrix :
     ## (    q_w)    ( w_nu      w_eta     w_mu    )   ( s^2_nu )
     ## |       |  = |                             |   |        |
@@ -408,8 +416,7 @@ ercomp.formula <- function(object, data,
             }
         }
         if (models[1] == "pooling"){
-            ZW <- model.matrix(estm[[1]], model = "within", effect = effect, rm.cst = FALSE)
-#            CPZW <- crossprod(cbind(0, ZW))                                                              # INTERCEPT
+            ZW <- model.matrix(estm[[1]], model = "within", effect = effect, cstcovar.rm. = FALSE)
             CPZW <- crossprod(ZW)
             M["w", "nu"] <- O - NTS - trace(crossprod(CPZM, CPZW))
             if (effect != "time"){
@@ -447,7 +454,7 @@ ercomp.formula <- function(object, data,
             ## WX <- model.matrix(estm[[match("within", models)]], model = "within",
             ##                    effect = effect, null.rm = TRUE)
             WX <- model.matrix(estm[[match("within", models)]], model = "within",
-                               effect = effect, rm.cst = TRUE)
+                               effect = effect, cstcovar.rm = TRUE)
             K <- ncol(WX)
 #            MK <- length(attr(WX, "constant")) - 1
             KW <- ncol(WX)

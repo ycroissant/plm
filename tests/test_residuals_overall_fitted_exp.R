@@ -74,16 +74,16 @@ if (!isTRUE(all.equal(fe_time_unbal$model[,1], fitted_exp.plm(fe_time_unbal) + r
 if (!isTRUE(all.equal(fe2_unbal$model[,1],     fitted_exp.plm(fe2_unbal)     + residuals_overall_exp.plm(fe2_unbal),     check.attributes = F))) stop("model within not equal")
 
 # between
-if (!isTRUE(all.equal(pmodel.response(be_bal),   as.numeric(fitted_exp.plm(be_bal)   + residuals_overall_exp.plm(be_bal)),   check.attributes = F))) stop("model be not equal")
-if (!isTRUE(all.equal(pmodel.response(be_unbal), as.numeric(fitted_exp.plm(be_unbal) + residuals_overall_exp.plm(be_unbal)), check.attributes = F))) stop("model be not equal")
+if (!isTRUE(all.equal(as.numeric(pmodel.response(be_bal)),   as.numeric(fitted_exp.plm(be_bal)   + residuals_overall_exp.plm(be_bal)),   check.attributes = F))) stop("model be not equal")
+if (!isTRUE(all.equal(as.numeric(pmodel.response(be_unbal)), as.numeric(fitted_exp.plm(be_unbal) + residuals_overall_exp.plm(be_unbal)), check.attributes = F))) stop("model be not equal")
 
 # pooling
 if (!isTRUE(all.equal(pool_bal$model[,1],   fitted_exp.plm(pool_bal)   + residuals_overall_exp.plm(pool_bal),   check.attributes = F))) stop("model pool not equal")
 if (!isTRUE(all.equal(pool_unbal$model[,1], fitted_exp.plm(pool_unbal) + residuals_overall_exp.plm(pool_unbal), check.attributes = F))) stop("model pool not equal")
 
 # fd
-if (!isTRUE(all.equal(pmodel.response(fd_bal),   as.numeric(fitted_exp.plm(fd_bal)   + residuals_overall_exp.plm(fd_bal)),   check.attributes = F))) stop("model fd not equal")
-if (!isTRUE(all.equal(pmodel.response(fd_unbal), as.numeric(fitted_exp.plm(fd_unbal) + residuals_overall_exp.plm(fd_unbal)), check.attributes = F))) stop("model fd not equal")
+if (!isTRUE(all.equal(as.numeric(pmodel.response(fd_bal)),   as.numeric(fitted_exp.plm(fd_bal)   + residuals_overall_exp.plm(fd_bal)),   check.attributes = F))) stop("model fd not equal")
+if (!isTRUE(all.equal(as.numeric(pmodel.response(fd_unbal)), as.numeric(fitted_exp.plm(fd_unbal) + residuals_overall_exp.plm(fd_unbal)), check.attributes = F))) stop("model fd not equal")
 
 # ht
 # if (!isTRUE(all.equal(ht$model[,1],   as.numeric(fitted_exp.plm(ht)   + residuals_overall_exp.plm(ht)),   check.attributes = F))) stop("model ht not equal")
