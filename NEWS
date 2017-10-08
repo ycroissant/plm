@@ -342,7 +342,8 @@ Changes in version 1.5-16
   * Ftest: * gained '.vcov' argument, which enables robust F test and chi-sq test
              [robust versions not yet weaved in summary.plm].
            * now exported and has documentation (.Rd file).
-           * returned htest object has vcov's name in 'method' element (if vcov was supplied)
+           * returned htest object has vcov's name in 'method' element (if vcov was supplied).
+           * Ftest later renamed to pwaldtest (in version 1.6-3).
   * (internal) vcovXX functions: furnished vcovs gain attribute "cluster" which give info about clustering,
                                  e.g. "group" or "time".
   * fixef: gains new argument '.vcov'.
