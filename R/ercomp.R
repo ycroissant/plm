@@ -64,7 +64,8 @@ ercomp.formula <- function(object, data,
         TS <- pdim$nT$T
         O <- pdim$nT$N
         NTS <- N * (effect != "time") + TS * (effect != "individual") - 1 * (effect == "twoways")
-        s2nu <- deviance(est) / O # NB: Nerlove takes within residual sums of squares divided by #obs without df correction (Baltagi (2013), p. 23/45)
+        s2nu <- deviance(est) / O
+        # NB: Nerlove takes within residual sums of squares divided by #obs without df correction (Baltagi (2013), p. 23/45)
         s2eta <- s2mu <- NULL
         if (effect != "time")
             s2eta <- sum(fixef(est, type = "dmean", effect = "individual") ^ 2) / (N - 1)
@@ -160,7 +161,7 @@ ercomp.formula <- function(object, data,
         X <- model.matrix(object, data, model = "pooling", cstcovar.rm = "intercept")
         y <- pmodel.response(object, data = data, model = "pooling", effect = "individual")
         O <- nrow(Z)
-        K <- ncol(Z) - 1                                              # INTERCEPT
+        K <- ncol(Z) - (ncol(Z) - ncol(X))
         pdim <- pdim(data)
         N <- pdim$nT$n
         TS <- pdim$nT$T
@@ -178,38 +179,20 @@ ercomp.formula <- function(object, data,
         
         if (method == "walhus"){
             estm <- plm.fit(object, data, model = "pooling", effect = "individual")
-            ## hateps <- as.numeric(resid(estm, model = "pooling"))
-            ## quad <- c(crossprod(resid(estm, model = "within", effect = "individual")),
-            ##           crossprod(Between(hateps, ids) - Between(hateps, gps)),
-            ##           crossprod(Between(hateps, gps)))
             hateps <- resid(estm, model = "pooling")
             quad <- c(crossprod(Within(hateps, effect = "individual")),
                       crossprod(Between(hateps, effect = "individual") - Between(hateps, effect = "group")),
                       crossprod(Between(hateps, "group")))
-
-            
-#                      crossprod(resid(estm, model = "Between", effect = "nested")))
-#            Z <- model.matrix(estm, model = "pooling")
             ZSeta <- model.matrix(estm, model = "Sum", effect = "individual")
-#            ZSlambda <- apply(Z, 2, tapply, gps, sum)[as.character(gps), , drop = FALSE]
             ZSlambda <- Sum(Z, effect = "group")
             CPZM <- solve(crossprod(Z))
             CPZSeta <-    crossprod(ZSeta,    Z)
             CPZSlambda <- crossprod(ZSlambda, Z)
-
-            ## CPZW <- crossprod(Z - Between(Z, ids))
-            ## CPZBetaBlambda <-     crossprod(Between(Z, ids) - Between(Z, gps))
-            ## CPZBetaBlambdaSeta <- crossprod(Between(Z, ids) - Between(Z, gps) , ZSeta)
-            ## CPZBlambdaSeta <- crossprod(Between(Z, gps), ZSeta)
-            ## CPZBlambda <- crossprod(Between(Z, gps))
-
             CPZW <- crossprod(Z - Between(Z, "individual"))
             CPZBetaBlambda <-     crossprod(Between(Z, "individual") - Between(Z, "group"))
             CPZBetaBlambdaSeta <- crossprod(Between(Z, "individual") - Between(Z, "group") , ZSeta)
             CPZBlambdaSeta <- crossprod(Between(Z, "group"), ZSeta)
             CPZBlambda <- crossprod(Between(Z, "group"))
-
-            
             M["w", "nu"] <- O - N - trace(crossprod(CPZM, CPZW))
             M["w", "eta"] <-    trace( CPZM %*% CPZW %*% CPZM %*% CPZSeta)
             M["w", "lambda"] <- trace( CPZM %*% CPZW %*% CPZM %*% CPZSlambda)
@@ -217,7 +200,6 @@ ercomp.formula <- function(object, data,
             M["id", "eta"] <- O - sum(TG) - 2 * trace(crossprod(CPZM, CPZBetaBlambdaSeta)) +
                 trace( CPZM %*% CPZBetaBlambda %*% CPZM %*% CPZSeta)
             M["id", "lambda"] <- trace(crossprod(CPZM, CPZBetaBlambda) %*% crossprod( CPZM, CPZSlambda))
-            
             M["gp", "nu"] <- G - trace(crossprod(CPZM, CPZBlambda))
             M["gp", "eta"] <- sum(TG) - 2 * trace(crossprod(CPZM, CPZBlambdaSeta)) +
                 trace( CPZM %*% CPZBlambda %*% CPZM %*% CPZSeta)
@@ -227,30 +209,13 @@ ercomp.formula <- function(object, data,
         
         if (method == "amemiya"){
             estm <- plm.fit(object, data, effect = "individual", model = "within")
-#            hateps <- as.numeric(resid(estm, model = "pooling"))
-#            hatepsBeta <- Between(hateps, ids)
-#            hatepsBlambda <- Between(hateps, gps)
-#            quad <- c(crossprod(resid(estm, model = "within", effect = "individual")), ## Problem, doesn't return the within residuals, why ?
             hateps <- resid(estm, model = "pooling")
-            ## quad <- c(crossprod(resid(estm)), 
-            ##           crossprod(Between(hateps, ids) - Between(hateps, gps)),
-            ##           crossprod(Between(hateps, gps)))
-#            WX <- model.matrix(estm, model = "within", effect = "individual", null.rm = TRUE)
-
             quad <- c(crossprod(Within(hateps, effect = "individual")),
                       crossprod(Between(hateps, effect = "individual") - Between(hateps, effect = "group")),
                       crossprod(Between(hateps, "group")))
-
-#            WX <- model.matrix(estm, model = "within", effect = "individual", cstcovar.rm = TRUE)
-#            X <- model.matrix(estm, model = "pooling", intercept.rm = TRUE)[, -1, drop = FALSE]
             WX <- model.matrix(estm, model = "within", effect = "individual", cstcovar.rm = "all")
-#            X <- model.matrix(estm, model = "pooling", cstcovar.rm = "intercept")
-
-#            XBetaBlambda <- Between(X, ids) - Between(X, gps)
-#            XBlambda <- Between(X, gps)
             XBetaBlambda <- Between(X, "individual") - Between(X, "group")
             XBlambda <- Between(X, "group")
-            
             XBlambda <- t(t(XBlambda) - colMeans(XBlambda))
             CPXBlambda <- crossprod(XBlambda)
             CPXM <- solve(crossprod(WX))
@@ -258,62 +223,39 @@ ercomp.formula <- function(object, data,
             K <- ncol(WX)
             MK <- length(setdiff("(Intercept)", attr(WX, "constant"))) # Pas sur, a verifier
             KW <- ncol(WX)
-            M["w", "nu"] <- O - N - K + MK                                                       # INTERCEPT
+            M["w", "nu"] <- O - N - K + MK              
             M["w", "eta"] <- 0
             M["w", "lambda"] <- 0
-
             M["id", "nu"] <- N - G + trace( crossprod(CPXM, CPXBetaBlambda))
             M["id", "eta"] <- O - sum(TG)
             M["id", "lambda"] <- 0
-        
             M["gp", "nu"] <- G - 1 + trace( crossprod(CPXM, CPXBlambda ) )
             M["gp", "eta"] <- sum(TG) - sum(NG  * TG ^ 2) / O
             M["gp", "lambda"] <- O - sum(NG ^ 2 * TG ^ 2) / O
         }
         
         if (method == "swar"){
-#            X <- Z[, -1, drop = FALSE]
-#            X <- model.matrix(object, model = "pooling", cstcovar.rm = "intercept")
-#            yBetaBlambda <- Between(y, ids) - Between(y, gps)
-#            yBetaBlambda <- Between(y, "individual") - Between(y, "group")
             yBetaBlambda <- pmodel.response(object, data = data, model = "Between", effect = "individual") -
                 pmodel.response(object, data = data, model = "Between", effect = "group")
-#            ZBetaBlambda <- Between(Z, ids) - Between(Z, gps)
-#            XBetaBlambda <- Between(X, ids) - Between(X, gps)
-#            ZBlambda <- Between(Z, gps)
-
             ZBetaBlambda <- Between(Z, "individual") - Between(Z, "group")
             XBetaBlambda <- Between(X, "individual") - Between(X, "group")
             ZBlambda <- Between(Z, "group")
-            
-#            yBlambda <- Between(y, gps)
-#            yBlambda <- Between(y, "group")
             yBlambda <- pmodel.response(object, data = data, model = "Between", effect = "group")
-#            ZSeta    <- apply(Z, 2, tapply, ids, sum)[as.character(ids), , drop = FALSE]
-#            ZSlambda <- apply(Z, 2, tapply, gps, sum)[as.character(gps), , drop = FALSE]
-#            XSeta    <- apply(X, 2, tapply, ids, sum)[as.character(ids), , drop = FALSE]
             ZSeta <- Sum(Z, effect = "individual")
             ZSlambda <- Sum(Z, effect = "group")
             XSeta <- Sum(X, effect = "individual")
-
-            
             estm1 <- plm.fit(object, data, effect = "individual", model = "within")
             estm2 <- lm.fit(ZBetaBlambda, yBetaBlambda)
-#            estm3 <- plm.fit(object, data, effect = "group", model = "between")
             estm3 <- lm.fit(ZBlambda, yBlambda)
-
             quad <- c(crossprod(resid(estm1)),
                       crossprod(resid(estm2)),
                       crossprod(resid(estm3)))
-        
             M["w", "nu"] <- O - N - K
             M["w", "eta"] <- 0
             M["w", "lambda"] <- 0
-            
             M["id", "nu"] <- N - G - K
             M["id", "eta"] <- O - sum(TG) - trace(solve(crossprod(XBetaBlambda)) %*% crossprod(XSeta, XBetaBlambda))
             M["id", "lambda"] <- 0
-            
             M["gp", "nu"] <- G - K - 1
             M["gp", "eta"] <- sum(TG) - trace( solve(crossprod(ZBlambda)) %*% crossprod(ZBlambda, ZSeta))
             M["gp", "lambda"] <- O - trace( solve(crossprod(ZBlambda)) %*% crossprod(ZSlambda, Z))
@@ -358,32 +300,11 @@ ercomp.formula <- function(object, data,
     quad <- vector(length = 3, mode = "numeric")
                                         # first quadratic form, within transformation
     hateps_w <- resid(estm[[1]], model = "pooling")
-#    if (effect != "twoways"){
-#        quad[1] <- crossprod(Within(hateps_w, effect = effect))
-#    }
-#    else{
-        
-        ## if (balanced){
-        ##     hateps_w <- hateps_w - Within(hateps_w, "individual") - Within(hateps_w, "time")
-        ## }
-        ## else{
-        ##     time <- index(data)[[2]]
-        ##     id <- index(data)[[1]]
-        ##     Dmu <- model.matrix(~ time - 1)
-        ##     W1 <- Within(hateps_w, "individual")
-        ##     WDmu <- Within(Dmu, id)
-        ##     W2 <- fitted(lm.fit(WDmu, hateps_w))
-        ##     hateps_w <- W1 - W2
-        ## }
-        ## quad[1] <- crossprod(hateps_w)
-#   }
     quad[1] <- crossprod(Within(hateps_w, effect = effect))
-
     # second quadratic form, between transformation
     if (effect != "time"){
         hateps_id <- resid(estm[[2]], model = "pooling")
         quad[2] <- crossprod(Between(hateps_id, effect = "individual"))
-#        RESB <- Between(hateps_id, effect = "individual")
     }
     if (effect != "individual"){
         hateps_ts <- resid(estm[[3]], model = "pooling")
@@ -392,18 +313,15 @@ ercomp.formula <- function(object, data,
     M <- matrix(NA, nrow = 3, ncol = 3,
                 dimnames = list(c("w", "id", "ts"),
                                 c("nu", "eta", "mu")))
-    
     # Compute the M matrix :
     ## (    q_w)    ( w_nu      w_eta     w_mu    )   ( s^2_nu )
     ## |       |  = |                             |   |        |
     ## (  q_bid)    ( bid_nu    bid_eta   bid_mu  )   ( s^2_eta)
     ## |       |  = |                             |   |        |
     ## (q_btime)    ( btime_nu  btime_eta btime_mu)   ( s^2_mu )
-
-    
     # In case of balanced panels, simple denominators are
     # available if dfcor < 3
-    # if (balanced & dfcor[1] != 3){
+
     if (dfcor[1] != 3){
         # The number of time series in the balanced panel is replaced
         # by the harmonic mean of the number of time series in case of
@@ -477,11 +395,6 @@ ercomp.formula <- function(object, data,
             }
         }
         if ("within" %in% models){
-            ## WX <- model.matrix(estm[[match("within", models)]], model = "within",
-            ##                    effect = effect, null.rm = TRUE)
-            ## WX <- model.matrix(estm[[match("within", models)]], model = "within",
-            ##                    effect = effect, cstcovar.rm = TRUE)
-            
             WX <- model.matrix(estm[[match("within", models)]], model = "within",
                                effect = effect, cstcovar.rm = "all")
             K <- ncol(WX)
@@ -537,12 +450,9 @@ ercomp.formula <- function(object, data,
             }
             if (effect == "twoways"){
                 if (! balanced){
-                    #ZSmuBeta <- Sum(ZBeta, effect = index(data)[[2]])
                     ZSmuBeta <- Sum(ZBeta, effect = "time")
                     ZBetaSmuBeta <- crossprod(ZBeta, ZSmuBeta)
-#                    ZSetaBmu <- Sum(ZBmu, effect = index(data)[[1]])
                     ZSetaBmu <- Sum(ZBmu, effect = "individual")
-                    
                     ZBmuSetaBmu <- crossprod(ZBmu, ZSetaBmu)
                     M["id", "mu"] <- N - trace(CPZMeta %*% ZBetaSmuBeta)
                     M["ts", "eta"] <- TS - trace(CPZMmu %*% ZBmuSetaBmu)

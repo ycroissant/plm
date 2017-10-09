@@ -57,6 +57,13 @@ sumres <- function(x){
   sr
 }
 
+sumsq <- function(x, ...){
+    xb <- mean(x, na.rm = TRUE)
+    sum((na.omit(x)-xb)^2)
+}
+
+
+
 # suml(x) is replaced by Reduce("+", x)
 ## suml <- function(x){
 ##   n <- length(x)

@@ -18,6 +18,7 @@ R/pFormula.R -text
 R/panelmodel.R -text
 R/pcce.R -text
 R/pcdtest.R -text
+R/pdata.frame.R -text
 R/pfunctions.R -text
 R/pggls.R -text
 R/pgmm.R -text

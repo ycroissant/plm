@@ -90,11 +90,12 @@ ptransform <- function(x, model = NULL, effect = NULL, theta = NULL, ...){
     if (model == "pooling") return(x)
     if (effect == "twoways" & model %in% c("between", "fd"))
         stop("twoways effect only relevant for within, random and pooling models")
-    if (effect == "individual") theindex <- index(x)[[1]] else theindex <- index(x)[[2]]
+#    if (effect == "individual") theindex <- index(x)[[1]] else theindex <- index(x)[[2]]
     if (model == "within") x <- Within(x, effect)
     if (model == "between") x <- between(x, effect)
     if (model == "Between") x <- Between(x, effect)
-    if (model == "fd") x <- pdiff(x, theindex)
+#    if (model == "fd") x <- pdiff(x, theindex)
+    if (model == "fd") x <- pdiff(x, "individual")
     if (model == "random"){
         if (is.null(theta)) stop("a theta argument should be provided")
         if (effect %in% c("time", "individual")) x <- x - theta * Between(x, effect)
@@ -141,13 +142,14 @@ model.matrix.pFormula <- function(object, data,
     attr(X, "index") <- index
     if (effect == "twoways" & model %in% c("between", "fd"))
         stop("twoways effect only relevant for within, random and pooling models")
-    if (effect == "individual") cond <- index[[1]] else cond <- index[[2]]
+#    if (effect == "individual") cond <- index[[1]] else cond <- index[[2]]
     if (model == "within") X <- Within(X, effect)
     if (model == "Sum") X <- Sum(X, effect)
     if (model == "Between") X <- Between(X, effect)
     if (model == "between") X <- between(X, effect)
     if (model == "mean") X <- Mean(X)
-    if (model == "fd") X <- pdiff(X, cond, effect = effect, has.intercept = has.intercept)
+#    if (model == "fd") X <- pdiff(X, cond, effect = effect, has.intercept = has.intercept)
+    if (model == "fd") X <- pdiff(X, effect = "individual")
     if (model == "random"){
         if (is.null(theta)) stop("a theta argument should be provided")
         if (effect %in% c("time", "individual")) X <- X - theta * Between(X, effect)
