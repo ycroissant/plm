@@ -21,7 +21,8 @@
              effect = c("individual", "time", "twoways", "nested"),
              rhs = 1,
              theta = NULL,
-             cstcovar.rm = FALSE, \dots)
+             cstcovar.rm = c("none", "intercept", "covariates", "all"),
+             \dots)
                                   
 \S3method{model.matrix}{plm}(object, \dots)
 }

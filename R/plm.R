@@ -72,7 +72,6 @@ plm <- function(formula, data, subset, weights, na.action,
         if (effect == "twoways") stop(paste("effect = \"twoways\" is not defined",  
                                             "for first-difference models"))
     }
-
     # deprecated section:
     # pht is no longer maintained
     if (! is.na(model) && model == "ht"){
@@ -116,7 +115,6 @@ plm <- function(formula, data, subset, weights, na.action,
     mf$formula <- formula
     mf$data <- data # data is a pdata.frame
     data <- eval(mf, parent.frame())
-    
     # preserve original row.names for data [also fancy rownames]; so functions
     # like pmodel.response(), model.frame(), model.matrix(), residuals() return
     # the original row.names eval(mf, parent.frame()) returns row.names as
@@ -168,9 +166,9 @@ plm.fit <- function(formula, data, model, effect, random.method,
     if (! (model == "random" & effect == "twoways" && ! is.balanced)){
         # extract the model.matrix and the model.response actually, this can be
         # done by providing model.matrix and pmodel.response's methods
-        # to pdata.frames
+                                        # to pdata.frames
         X <- model.matrix(formula, data, rhs = 1, model = model, 
-                          effect = effect, theta = theta, cstcovar.rm = TRUE)
+                          effect = effect, theta = theta, cstcovar.rm = "all")
         y <- pmodel.response(formula, data = data, model = model, 
                              effect = effect, theta = theta)
         if (ncol(X) == 0) stop("empty model")
@@ -197,10 +195,13 @@ plm.fit <- function(formula, data, model, effect, random.method,
                     cst.W <- match(attr(W, "constant"), colnames(W))
                     if (length(cst.W) > 0) W <- W[, - cst.W, drop = FALSE]
                 }
-                if (! is.null(X)){
-                    cst.X <- match(attr(X, "constant"), colnames(X))
-                    if (length(cst.X) > 0) X <- X[, - cst.X, drop = FALSE]
-                }
+                ## if (! is.null(X)){
+                ##     print(head(X))
+                ##     print(attr(X, "constant"))
+                ##     stop()
+                ##     cst.X <- match(attr(X, "constant"), colnames(X))
+                ##     if (length(cst.X) > 0) X <- X[, - cst.X, drop = FALSE]
+                ## }
             }
             if (model == "random" && inst.method != "bvk"){
                 # the bvk estimator seems to have disappeared
@@ -233,6 +234,10 @@ plm.fit <- function(formula, data, model, effect, random.method,
         else W <- NULL # no instruments
         
         # compute the estimation
+        ## print(c(model, effect))
+        ## print(head(X))
+        ## print(head(y))
+        ## print(coef(lm.fit(X, y)))
         result <- mylm(y, X, W)
         df <- df.residual(result)
         vcov <- result$vcov
@@ -262,8 +267,12 @@ plm.fit <- function(formula, data, model, effect, random.method,
         TS <- pdim$nT$T
         theta <- estec$theta$id
         phi2mu <- estec$sigma2["time"] / estec$sigma2["idios"]
+#        Dmu <- model.matrix( ~ factor(index(data)[[2]]) - 1)
+#        Dmu <- Dmu - theta * Between(Dmu, index(data)[[1]])
+
         Dmu <- model.matrix( ~ factor(index(data)[[2]]) - 1)
-        Dmu <- Dmu - theta * Between(Dmu, index(data)[[1]])
+        attr(Dmu, "index") <- index
+        Dmu <- Dmu - theta * Between(Dmu, "individual")
         X <- model.matrix(   formula, data, rhs = 1, model = "random", 
                           effect = "individual", theta = theta)
         y <- pmodel.response(formula, data = data, model = "random", 

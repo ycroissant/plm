@@ -1,6 +1,8 @@
 # Tests for functions:
 #  * detect_lin_dep
 #  * alias
+# YC 2017/10/09 :  RE model par defaut pb because the between model is empty
+
 
 library(plm)
 data("Cigar", package = "plm")
@@ -52,7 +54,7 @@ lmmod1 <- lm(pform, data = Cigar.p)
 alias(lmmod1)
 
 plm_fe <- plm(pform, data = Cigar.p, model = "within")
-plm_re <- plm(pform, data = Cigar.p, model = "random")
+#YC plm_re <- plm(pform, data = Cigar.p, model = "random")                                  # The between model is very special, as there is no interept and cpi is constant
 plm_re_wal <- plm(pform, data = Cigar.p, model = "random", random.method = "walhus")
 plm_fd <- plm(pform, data = Cigar.p, model = "fd")
 plm_pool <- plm(pform, data = Cigar.p, model = "pooling")
@@ -60,7 +62,7 @@ plm_pool <- plm(pform, data = Cigar.p, model = "pooling")
 names(plm_fe$model)
 summary(plm_fe)
 alias(plm_fe)
-alias(plm_re)
+#YC alias(plm_re)
 alias(plm_re_wal)
 alias(plm_fd)
 alias(plm_pool)
@@ -72,7 +74,7 @@ alias(plm_fe, partial = TRUE)
 alias(plm_fe, partial.pattern = TRUE)
 
 alias(pform, Cigar.p, model = "within")
-alias(pform, Cigar.p, model = "random")
+#YC alias(pform, Cigar.p, model = "random")
 alias(pform, Cigar.p, model = "random", random.method = "walhus")
 # alias(pform, Cigar.p, model = "within", inst.method = "bvk") # should give informative error
 

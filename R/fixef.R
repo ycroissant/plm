@@ -6,6 +6,7 @@
 fixef.plm <- function(object, effect = NULL,
                       type = c("level", "dfirst", "dmean"),
                       vcov = NULL, ...){
+
     model.effect <- describe(object, "effect")
     if (is.null(effect)){
         effect <- ifelse(model.effect == "time", "time", "individual")
@@ -14,7 +15,6 @@ fixef.plm <- function(object, effect = NULL,
         if (! effect %in% c("individual", "time")) stop("wrong effect argument")
         if (model.effect != "twoways" && model.effect != effect) stop("wrong effect argument")
     }
-    
     type <- match.arg(type)
     if (!is.null(object$call)){
         if (describe(object, "model") != "within")
@@ -23,12 +23,10 @@ fixef.plm <- function(object, effect = NULL,
     formula <- formula(object)
     data <- model.frame(object)
     pdim <- pdim(object)
-  
   # the between model may contain time independent variables, the
   # within model doesn't. So select the relevant elements using nw
   # (names of the within variables)
     nw <- names(coef(object))
-  
   
   # For procedure to get the individual/time effects by muliplying the within
   # estimates with the between-ed data, see e.g.
@@ -40,7 +38,6 @@ fixef.plm <- function(object, effect = NULL,
   # NB: These formulae do not give the correct results in the two-ways unbalanced case,
   #     all other cases (twoways/balanced; oneway(ind/time)/balanced/unbalanced) seem to
   #     work with these formulae.
-
     Xb <- model.matrix(formula, data, rhs = 1, model = "between", effect = effect)
     yb <- pmodel.response(formula, data = data, model = "between", effect = effect)
     fixef <- yb - as.vector(crossprod(t(Xb[, nw, drop = FALSE]), coef(object)))

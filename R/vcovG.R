@@ -47,7 +47,7 @@ vcovG.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 
   ## extract demeaned data
     demy <- pmodel.response(x, model = model)
-    demX <- model.matrix(x, model = model, rhs = 1, cstcovar.rm = TRUE)
+    demX <- model.matrix(x, model = model, rhs = 1, cstcovar.rm = "all")
     ## drop any linear dependent columns (corresponding to aliased coefficients)
     ## from model matrix X
     ## na.rm = TRUE because currently, RE tw unbalanced models set aliased simply to NA
@@ -55,7 +55,7 @@ vcovG.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 
     ## control: IV or not (two- or one-part formula)
     if(length(formula(x))[2] > 1) {
-        demZ <- model.matrix(x, model = model, rhs = 2, cstcovar.rm = TRUE)
+        demZ <- model.matrix(x, model = model, rhs = 2, cstcovar.rm = "all")
         ## substitute (transformed) X with projection of X on Z
         ## any linear dependence in Z (demZ) is appropriately taken care of by lm.fit()
         demX <- fitted(lm.fit(demZ, demX))
@@ -429,7 +429,7 @@ vcovBK.plm <- function(x, type=c("HC0", "HC1", "HC2", "HC3", "HC4"),
     
   ## extract demeaned data
     demy <- pmodel.response(x, model = model)
-    demX <- model.matrix(x, model = model, rhs = 1, cstcovar.rm = TRUE)
+    demX <- model.matrix(x, model = model, rhs = 1, cstcovar.rm = "all")
     ## drop any linear dependent columns (corresponding to aliased coefficients)
     ## from model matrix X
     ##  na.rm = TRUE because currently, RE tw unbalanced models set aliased simply to NA
@@ -437,7 +437,7 @@ vcovBK.plm <- function(x, type=c("HC0", "HC1", "HC2", "HC3", "HC4"),
     
     ## control: IV or not (two- or one-part formula)
     if(length(formula(x))[2] > 1) {
-        demZ <- model.matrix(x, model = model, rhs = 2, cstcovar.rm = TRUE)
+        demZ <- model.matrix(x, model = model, rhs = 2, cstcovar.rm = "all")
         ## substitute (transformed) X with projection of X on Z
         ## any linear dependence in Z (demZ) is appropriately taken care of by lm.fit()
         demX <- fitted(lm.fit(demZ, demX))

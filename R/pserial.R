@@ -32,7 +32,7 @@ pbgtest.panelmodel <- function(x, order = NULL, type = c("Chisq", "F"), ...) {
     theta <- x$ercomp$theta
 
     ## retrieve demeaned data
-    demX <- model.matrix(x, model = model, effect = effect, theta = theta, cstcovar.rm = TRUE)
+    demX <- model.matrix(x, model = model, effect = effect, theta = theta, cstcovar.rm = "all")
     demy <- pmodel.response(model.frame(x), model = model, effect = effect, theta = theta)
     ## ...and group numerosities
     Ti <- pdim(x)$Tint$Ti
@@ -458,7 +458,7 @@ pdwtest.panelmodel <- function(x, ...) {
     theta <- x$ercomp$theta
 
     ## retrieve demeaned data
-    demX <- model.matrix(x, model = model, effect = effect, theta = theta, cstcovar.rm = TRUE)
+    demX <- model.matrix(x, model = model, effect = effect, theta = theta, cstcovar.rm = "all")
     demy <- pmodel.response(model.frame(x), model = model, effect = effect, theta = theta)
 
     ## lmtest::dwtest on the demeaned model:

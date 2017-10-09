@@ -203,7 +203,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     posindex <- match(c(id.name, time.name, group.name), names(x))
     index <- x[, posindex]
     if (drop.index) {
-        x <- x[ , -posindex]
+        x <- x[ , - posindex]
         if (ncol(x) == 0L) cat("after dropping of index variables, the pdata.frame contains 0 columns")
     }
     
@@ -610,6 +610,8 @@ Tapply.matrix <- function(x, effect, func, ...){
     ## Note: this function is not robust wrt NA in effect
     na.x <- is.na(x)
     uniqval <- apply(x, 2, tapply, effect, func)
+#    print(uniqval)
+#    print(effect)
     result <- uniqval[as.character(effect), , drop = F]
     result[na.x] <- NA
     result
@@ -626,7 +628,7 @@ Sum.default <- function(x, effect, ...){
 
 Sum.pseries <- function(x, effect = c("individual", "time", "group"), ...){
     effect <- match.arg(effect)
-    Tapply(x, effect = sum, mean, ...)
+    Tapply(x, effect, sum, ...)
 }
 
 Between <- function(x, ...){
@@ -915,8 +917,9 @@ Within.pseries <- function(x, effect = c("individual", "time", "group", "twoways
         else{
             time <- index(x)[[2]]
             Dmu <- model.matrix(~ time - 1)
+            attr(Dmu, "index") <- index(x)
             W1 <- Within(x, "individual")
-            WDmu <- Within(Dmu, index(x)[[1]])
+            WDmu <- Within(Dmu, "individual")
             W2 <- fitted(lm.fit(WDmu, x))
             W1 - W2
         }
@@ -936,3 +939,99 @@ Within.matrix <- function(x, effect, rm.null = TRUE,...){
     }
     result
 }
+
+####
+
+Within.pseries <- function(x, effect = c("individual", "time", "group", "twoways"), ...){
+    effect <- match.arg(effect)
+    if (effect != "twoways") x - Between(x, effect, ...)
+    else{
+        if (is.pbalanced(x)) x - Between(x, "individual", ...) - Between(x, "time") + mean(x)
+        else{
+            time <- index(x)[[2]]
+            Dmu <- model.matrix(~ time - 1)
+            attr(Dmu, "index") <- index(x)
+            W1 <- Within(x, "individual")
+            WDmu <- Within(Dmu, "individual")
+            W2 <- fitted(lm.fit(WDmu, x))
+            W1 - W2
+        }
+    }
+}
+
+between.matrix <- function(x, effect,...){
+    if (! effect %in% c("individual", "time", "group"))
+        stop("irrelevant effect for a between transformation")
+    if (is.null(attr(x, "index"))) Between.default(x, effect)
+    else{
+        if (length(effect) > 1)
+            stop("for matrices with index attributes, the effect argument must be a character")
+        xindex <- attr(x, "index")
+        effect <- index(xindex, effect)
+        apply(x, 2, tapply, effect, mean, ...)
+    }        
+}
+
+
+Between.matrix <- function(x, effect,...){
+    if (! effect %in% c("individual", "time", "group"))
+        stop("irrelevant effect for a between transformation")
+    if (is.null(attr(x, "index"))) Between.default(x, effect)
+    else{
+        if (length(effect) > 1)
+            stop("for matrices with index attributes, the effect argument must be a character")
+        xindex <- attr(x, "index")
+        effect <- index(xindex, effect)
+        Tapply(x, effect, mean)
+    }        
+}
+
+Sum.matrix <- function(x, effect,...){
+    if (! effect %in% c("individual", "time", "group"))
+        stop("irrelevant effect for a Sum transformation")
+    if (is.null(attr(x, "index"))) Sum.default(x, effect)
+    else{
+        if (length(effect) > 1)
+            stop("for matrices with index attributes, the effect argument must be a character")
+        xindex <- attr(x, "index")
+        effect <- index(xindex, effect)
+        Tapply(x, effect, sum)
+    }        
+}
+
+
+Within.matrix <- function(x, effect, rm.null = TRUE,...){
+    if (is.null(attr(x, "index"))){
+        result <- Within.default(x, effect, ...)
+        othervar <- apply(result, 2, function(x) sum(abs(x), na.rm = TRUE)) > 1E-12
+        if (rm.null){
+            result <- result[, othervar, drop = FALSE]
+            attr(result, "constant") <- character(0)
+        }
+        else{
+            result <- result[, drop = FALSE]
+            attr(result, "constant") <- colnames(x)[!othervar]
+        }
+        result
+    }
+    else{
+        if (effect %in% c("individual", "time", "group")) result <- x - Between(x, effect)
+        if (effect == "twoways"){
+            xindex <- attr(x, "index")
+            if (is.pbalanced(xindex)) result <- x - Between(x, "individual") - Between(x, "time") +
+                                          matrix(rep(apply(x, 2, mean), nrow(x)), nrow = nrow(x), byrow = TRUE)
+            else{
+                time <- index(xindex, "time")
+                id <- index(xindex, "individual")
+                Dmu <- model.matrix(~ time - 1)
+                attr(Dmu, "index") <- xindex
+                W1 <- Within(x, "individual", rm.null = FALSE)
+                WDmu <- Within(Dmu, "individual")
+                W2 <- fitted(lm.fit(WDmu, x))
+                result <- W1 - W2
+            }
+        }
+    }
+    result
+}
+

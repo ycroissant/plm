@@ -3,6 +3,10 @@
 
 index.pindex <- function(x, which = NULL, ...){
     if (is.null(which)) which <- names(x)
+    else{
+        posindividual <- match("individual", which)
+        if (! is.na(posindividual)) which[posindividual] <- "id"
+    }
     if (length(which) >  3) stop("the length of which should be at most 3")
     if (is.numeric(which)){
         if (! all(which %in% 1:3))

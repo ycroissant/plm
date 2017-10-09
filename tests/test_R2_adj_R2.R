@@ -50,8 +50,8 @@ re <- plm(inv ~ value + capital, data = Grunfeld, model = "random")
 # These all yield different values
 r.squared(mod_plm, type = "cor", model = "within")
 # ! YC 
-#r.squared(mod_plm, type = "rss", model = "within")
-#r.squared(mod_plm, type = "ess", model = "within")
+r.squared(mod_plm, type = "rss", model = "within")
+r.squared(mod_plm, type = "ess", model = "within")
 
 # formal test
 #if(!isTRUE(all.equal(r.squared(mod_plm, type = "cor", model = "within"), r.squared(mod_plm, type = "rss", model = "within")))) stop("r squareds differ")
