@@ -71,9 +71,9 @@ pmodel.response.data.frame <- function(object, ...){
     ptransform(y, model = model, effect = effect, theta = theta)
 }
 
-pmodel.response.formula <- function(object, ...){
+pmodel.response.formula <- function(object, data, ...){
     dots <- list(...)
-    data <- dots$data
+#    data <- dots$data
     if (is.null(data)) stop("the data argument is mandatory")
     if (is.null(attr(data, "terms"))) data <- model.frame(pFormula(object), data)
     model <- dots$model

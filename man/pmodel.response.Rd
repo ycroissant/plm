@@ -14,12 +14,14 @@ response of several objects.
 \usage{
 pmodel.response(object, \dots)
 \method{pmodel.response}{data.frame}(object, \dots)
-\method{pmodel.response}{formula}(object, \dots)
+\method{pmodel.response}{formula}(object, data, \dots)
 \method{pmodel.response}{plm}(object, \dots)
 }
 
 \arguments{
-  \item{object}{an object of class \code{"plm"}, or a formula of class \code{"pFormula"},}
+  \item{object}{an object of class \code{"plm"}, or a formula of class
+    \code{"pFormula"},}
+  \item{data}{a \code{data.frame}}
   \item{\dots}{further arguments.}
 }
 
