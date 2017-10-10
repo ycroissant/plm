@@ -14,17 +14,16 @@ export(plm, pvcm, pgmm, pggls, pht, pcce, pmg, plmtest, phtest, pFtest,
 
 
 import("Formula") # import whole package
-importFrom("stats", "lag")
-importFrom("stats", "nobs")
-importFrom("stats", "alias")
-importFrom("stats", "pnorm")
-importFrom("stats", "dnorm")
-importFrom("stats", "qnorm")
-importFrom("stats", "sd")
+importFrom("stats", "lag", "nobs", "alias",
+           "pnorm", "dnorm", "qnorm", "pt", "pchisq", "pf", "sd", "var",
+		   "model.weights", "reshape", 
+           "approx", "as.formula", "coef", "coefficients", "printCoefmat",
+           "cor", "delete.response", "deviance", "df.residual",
+           "formula", "lm", "lm.fit", "model.frame",
+           "model.matrix", "model.response", "na.omit", "terms", "update",
+           "fitted", "resid", "residuals", "vcov")
 
 importFrom("maxLik", "maxLik")
-importFrom("stats", "reshape")
-importFrom("stats", "model.weights")
 importFrom("bdsmatrix", "bdsmatrix")
 importFrom("sandwich", "vcovHC") # import generic and associated methods so the vcovHC methods from pkg sandwich and plm do no mask each other
 importFrom("zoo", "index")       # --- same ---
@@ -36,18 +35,11 @@ importFrom("lmtest", "bgtest")
 importFrom("lmtest", "dwtest")
 importFrom("lmtest", "grangertest")
 # importFrom("car", "linearHypothesis") # pkg 'car' in 'Suggests', so do not import
+# importFrom("statmod", "gauss.quad")   # pkg 'statmod' in 'Suggests', so do not import
 importFrom("lattice", "xyplot")
-# importFrom("statmod", "gauss.quad") # pkg 'statmod' in 'Suggests', so do not import
-importFrom("maxLik", "maxLik")
 importFrom("grDevices", "heat.colors", "rainbow")
 importFrom("graphics", "abline", "axis", "barplot", "legend", "lines",
            "plot", "points")
-importFrom("stats", "approx", "as.formula", "coef", "coefficients",
-           "cor", "delete.response", "deviance", "df.residual",
-           "fitted", "formula", "lm", "lm.fit", "model.frame",
-           "model.matrix", "model.response", "na.omit", "pchisq", "pf",
-           "pnorm", "printCoefmat", "pt", "resid", "residuals",
-           "terms", "update", "var", "vcov")
 
 # pFormula
 S3method("model.frame", "pFormula")
@@ -100,7 +92,6 @@ S3method("print", "pvar")
 S3method("terms",         "panelmodel")
 S3method("print",         "panelmodel")
 S3method("residuals",     "panelmodel")
-S3method("residuals",     "plm")
 S3method("fitted",        "panelmodel")
 S3method("deviance",      "panelmodel")
 S3method("df.residual",   "panelmodel")
@@ -108,40 +99,40 @@ S3method("vcov",          "panelmodel")
 S3method("update",        "panelmodel")
 S3method("has.intercept", "panelmodel")
 # plm
-S3method("summary", "plm")
-S3method("print", "summary.plm")
-S3method("predict", "plm")
+S3method("predict",       "plm")
 S3method("has.intercept", "plm")
-S3method("plot", "plm")
-S3method("fitted", "plm")
-S3method("residuals", "plm")
+S3method("plot",          "plm")
+S3method("fitted",        "plm")
+S3method("residuals",     "plm")
+S3method("summary",       "plm")
+S3method("print", "summary.plm")
 # plm.list
 S3method("summary", "plm.list")
 S3method("print", "summary.plm.list")
 # pgmm
-S3method("coef", "pgmm")
+S3method("coef",    "pgmm")
 S3method("summary", "pgmm")
 S3method("print", "summary.pgmm")
 # pvcm
 S3method("summary", "pvcm")
 S3method("print", "summary.pvcm")
 # pggls
-S3method("summary", "pggls")
-S3method("print", "summary.pggls")
 S3method("residuals", "pggls")
+S3method("summary",   "pggls")
+S3method("print", "summary.pggls")
 # pcce
-S3method("summary", "pcce")
-S3method("print", "summary.pcce")
 S3method("residuals", "pcce")
+S3method("summary",   "pcce")
+S3method("print", "summary.pcce")
 # pmg
-S3method("summary", "pmg")
-S3method("print", "summary.pmg")
 S3method("residuals", "pmg")
+S3method("summary",   "pmg")
+S3method("print", "summary.pmg")
 # pht
 S3method("summary", "pht")
 S3method("print", "summary.pht")
 # piest
-S3method("print", "piest")
+S3method("print",   "piest")
 S3method("summary", "piest")
 S3method("print", "summary.piest")
 # fixef
@@ -153,7 +144,7 @@ S3method("print", "summary.fixef")
 # ranef
 S3method("ranef", "plm")
 # dynformula
-S3method("print", "dynformula")
+S3method("print",   "dynformula")
 S3method("formula", "dynformula")
 # vcovHC
 S3method("vcovHC", "plm")
@@ -184,7 +175,7 @@ S3method("print",     "pseries")
 S3method("summary",   "pseries")
 S3method("as.matrix", "pseries")
 S3method("print", "summary.pseries")
-# S3method("[", "pseries") # not implemented (yet)
+# S3method("[", "pseries") # not implemented (yet?)
 # ercomp
 S3method("ercomp", "formula")
 S3method("ercomp", "plm")
