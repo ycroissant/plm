@@ -22,9 +22,9 @@ detect_lin_dep(object, \dots)
 \method{detect_lin_dep}{plm}(object, suppressPrint = FALSE, \dots)
 
 \method{alias}{plm}(object, \dots)
-\method{alias}{pFormula}(object, data, model = c("pooling", "within", "Between", "between",
-                               "mean", "random", "fd"),
-                    effect = c("individual", "time", "twoways"), \dots)
+\method{alias}{pFormula}(object, data, 
+      model = c("pooling", "within", "Between", "between", "mean", "random", "fd"),
+      effect = c("individual", "time", "twoways"), \dots)
 }
 
 
@@ -87,9 +87,9 @@ Boston, sec. 7-2, pp. 206--211.
 }
 
 \seealso{
-  \code{\link[stats]{alias}}. 
+  \code{\link[stats]{alias}}, 
   \code{\link[stats]{model.matrix}} and especially \code{plm}'s \code{\link[plm]{model.matrix}} for
-  (transformed) model matrices. \code{\link[plm]{model.frame}}.
+  (transformed) model matrices, \code{\link[plm]{model.frame}}.
 }
 
 \examples{
@@ -152,7 +152,6 @@ detect_lin_dep(modmat_FE)
 mod_FE <- plm(pform, data = Grunfeld, model = "within")
 detect_lin_dep(mod_FE)
 alias(mod_FE)
-
 
 # look at the transformed data: after FE transformation CEOtenure == 1*CEOage
 head(modmat_FE, 50)
