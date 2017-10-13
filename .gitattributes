@@ -164,6 +164,7 @@ tests/test_pdata.frame_extract_class_est_mod.R -text
 tests/test_pdata.frame_id_index_more.R -text
 tests/test_pdata.frame_print_duplicated_rownames.R -text
 tests/test_pdata.frame_subsetting.R -text
+tests/test_pdata.frame_subsetting.Rout.save -text
 tests/test_pdata.frame_unused_levels.R -text
 tests/test_pdiff_fd.R -text
 tests/test_pdwtest.R -text

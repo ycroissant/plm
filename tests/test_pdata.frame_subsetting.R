@@ -174,3 +174,34 @@ if (!all(c(dim(pX[1])[1], 2L)               == dim(attr(pX[1],               "in
 if (!all(c(dim(pX[1, drop = TRUE])[1],  2L) == dim(attr(pX[1, drop = TRUE],  "index")))) stop("index has wrong dimension after subsetting")
 if (!all(c(dim(pX[1, drop = FALSE])[1], 2L) == dim(attr(pX[1, drop = FALSE], "index")))) stop("index has wrong dimension after subsetting")
 
+
+####### test return values numeric(0) etc and especially NULL
+
+## compare pdata.frame() to data.frame() in case of subsetting with non-existent return values
+# firm 31 is non-existent
+# valueNonExistent is non-existent
+
+pGrunfeld[pGrunfeld$firm == "31"]
+
+Grunfeld[Grunfeld$firm == "31"]
+
+
+pGrunfeld[pGrunfeld$firm == "31", "value"]
+
+Grunfeld[Grunfeld$firm == "31", "value"]
+
+#### since R 3.4.0 the  following two cases gave a warning which is pacified in plm rev. 626
+# Warning in structure(mydata, index = index, class = base::union("pseries",  :
+#                                                                   Calling 'structure(NULL, *)' is deprecated, as NULL cannot have attributes.
+#                                                                 Consider 'structure(list(), *)' instead.
+
+pGrunfeld[pGrunfeld$firm == "31", "valueNonExistent"]
+
+Grunfeld[Grunfeld$firm == "31", "valueNonExistent"]
+
+
+
+pGrunfeld[pGrunfeld$firm == "19", "valueX"]
+
+Grunfeld[Grunfeld$firm == "19", "valueX"]
+

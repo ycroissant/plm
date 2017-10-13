@@ -1,0 +1,696 @@
+
+R version 3.4.2 (2017-09-28) -- "Short Summer"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> # test if subsetting by rownames of a pdata.frame preserves index
+> #  (pre rev. 187/189 all entries were set to NA)
+> #  (pre rev. 251 subsetting a pdata.frame added extra information due to coercing rules of "[.data.frame")
+> 
+> library(plm)
+Loading required package: Formula
+> data("Grunfeld", package = "plm")
+> 
+> pGrunfeld <- pdata.frame(Grunfeld)
+> 
+> # subsetting with [] with rownames - works
+> attr(pGrunfeld[c("1-1935"), ], which = "index")
+  firm year
+1    1 1935
+> attr(pGrunfeld[c("1-1935", "1-1936"), ], which = "index")
+  firm year
+1    1 1935
+2    1 1936
+> 
+> if (anyNA(attr(pGrunfeld[c("1-1935"), ], which = "index"))) stop("FAIL: NA in index")
+> if (anyNA(attr(pGrunfeld[c("1-1935", "1-1936"), ], which = "index"))) stop("FAIL: NA in index")
+> 
+> 
+> # subsetting with [] by line number works (indexes preserved)
+> if (!all(attr(pGrunfeld[c(1), ], which = "index") == c(1, 1935))) stop("wrong index!")
+> if (!all(attr(pGrunfeld[c(1,2), ], which = "index") == data.frame(firm = c(1,1), year = c(1935, 1936)))) stop("wrong index!")
+> 
+> if (anyNA(attr(pGrunfeld[c(1), ], which = "index"))) stop("FAIL: NA in index")
+> if (anyNA(attr(pGrunfeld[c(1,2), ], which = "index"))) stop("FAIL: NA in index")
+> 
+> # subsetting with [[]] works (indexes preserved)
+> attr(pGrunfeld[["inv"]], which = "index")
+    firm year
+1      1 1935
+2      1 1936
+3      1 1937
+4      1 1938
+5      1 1939
+6      1 1940
+7      1 1941
+8      1 1942
+9      1 1943
+10     1 1944
+11     1 1945
+12     1 1946
+13     1 1947
+14     1 1948
+15     1 1949
+16     1 1950
+17     1 1951
+18     1 1952
+19     1 1953
+20     1 1954
+21     2 1935
+22     2 1936
+23     2 1937
+24     2 1938
+25     2 1939
+26     2 1940
+27     2 1941
+28     2 1942
+29     2 1943
+30     2 1944
+31     2 1945
+32     2 1946
+33     2 1947
+34     2 1948
+35     2 1949
+36     2 1950
+37     2 1951
+38     2 1952
+39     2 1953
+40     2 1954
+41     3 1935
+42     3 1936
+43     3 1937
+44     3 1938
+45     3 1939
+46     3 1940
+47     3 1941
+48     3 1942
+49     3 1943
+50     3 1944
+51     3 1945
+52     3 1946
+53     3 1947
+54     3 1948
+55     3 1949
+56     3 1950
+57     3 1951
+58     3 1952
+59     3 1953
+60     3 1954
+61     4 1935
+62     4 1936
+63     4 1937
+64     4 1938
+65     4 1939
+66     4 1940
+67     4 1941
+68     4 1942
+69     4 1943
+70     4 1944
+71     4 1945
+72     4 1946
+73     4 1947
+74     4 1948
+75     4 1949
+76     4 1950
+77     4 1951
+78     4 1952
+79     4 1953
+80     4 1954
+81     5 1935
+82     5 1936
+83     5 1937
+84     5 1938
+85     5 1939
+86     5 1940
+87     5 1941
+88     5 1942
+89     5 1943
+90     5 1944
+91     5 1945
+92     5 1946
+93     5 1947
+94     5 1948
+95     5 1949
+96     5 1950
+97     5 1951
+98     5 1952
+99     5 1953
+100    5 1954
+101    6 1935
+102    6 1936
+103    6 1937
+104    6 1938
+105    6 1939
+106    6 1940
+107    6 1941
+108    6 1942
+109    6 1943
+110    6 1944
+111    6 1945
+112    6 1946
+113    6 1947
+114    6 1948
+115    6 1949
+116    6 1950
+117    6 1951
+118    6 1952
+119    6 1953
+120    6 1954
+121    7 1935
+122    7 1936
+123    7 1937
+124    7 1938
+125    7 1939
+126    7 1940
+127    7 1941
+128    7 1942
+129    7 1943
+130    7 1944
+131    7 1945
+132    7 1946
+133    7 1947
+134    7 1948
+135    7 1949
+136    7 1950
+137    7 1951
+138    7 1952
+139    7 1953
+140    7 1954
+141    8 1935
+142    8 1936
+143    8 1937
+144    8 1938
+145    8 1939
+146    8 1940
+147    8 1941
+148    8 1942
+149    8 1943
+150    8 1944
+151    8 1945
+152    8 1946
+153    8 1947
+154    8 1948
+155    8 1949
+156    8 1950
+157    8 1951
+158    8 1952
+159    8 1953
+160    8 1954
+161    9 1935
+162    9 1936
+163    9 1937
+164    9 1938
+165    9 1939
+166    9 1940
+167    9 1941
+168    9 1942
+169    9 1943
+170    9 1944
+171    9 1945
+172    9 1946
+173    9 1947
+174    9 1948
+175    9 1949
+176    9 1950
+177    9 1951
+178    9 1952
+179    9 1953
+180    9 1954
+181   10 1935
+182   10 1936
+183   10 1937
+184   10 1938
+185   10 1939
+186   10 1940
+187   10 1941
+188   10 1942
+189   10 1943
+190   10 1944
+191   10 1945
+192   10 1946
+193   10 1947
+194   10 1948
+195   10 1949
+196   10 1950
+197   10 1951
+198   10 1952
+199   10 1953
+200   10 1954
+> attr(pGrunfeld[[3]], which = "index")
+    firm year
+1      1 1935
+2      1 1936
+3      1 1937
+4      1 1938
+5      1 1939
+6      1 1940
+7      1 1941
+8      1 1942
+9      1 1943
+10     1 1944
+11     1 1945
+12     1 1946
+13     1 1947
+14     1 1948
+15     1 1949
+16     1 1950
+17     1 1951
+18     1 1952
+19     1 1953
+20     1 1954
+21     2 1935
+22     2 1936
+23     2 1937
+24     2 1938
+25     2 1939
+26     2 1940
+27     2 1941
+28     2 1942
+29     2 1943
+30     2 1944
+31     2 1945
+32     2 1946
+33     2 1947
+34     2 1948
+35     2 1949
+36     2 1950
+37     2 1951
+38     2 1952
+39     2 1953
+40     2 1954
+41     3 1935
+42     3 1936
+43     3 1937
+44     3 1938
+45     3 1939
+46     3 1940
+47     3 1941
+48     3 1942
+49     3 1943
+50     3 1944
+51     3 1945
+52     3 1946
+53     3 1947
+54     3 1948
+55     3 1949
+56     3 1950
+57     3 1951
+58     3 1952
+59     3 1953
+60     3 1954
+61     4 1935
+62     4 1936
+63     4 1937
+64     4 1938
+65     4 1939
+66     4 1940
+67     4 1941
+68     4 1942
+69     4 1943
+70     4 1944
+71     4 1945
+72     4 1946
+73     4 1947
+74     4 1948
+75     4 1949
+76     4 1950
+77     4 1951
+78     4 1952
+79     4 1953
+80     4 1954
+81     5 1935
+82     5 1936
+83     5 1937
+84     5 1938
+85     5 1939
+86     5 1940
+87     5 1941
+88     5 1942
+89     5 1943
+90     5 1944
+91     5 1945
+92     5 1946
+93     5 1947
+94     5 1948
+95     5 1949
+96     5 1950
+97     5 1951
+98     5 1952
+99     5 1953
+100    5 1954
+101    6 1935
+102    6 1936
+103    6 1937
+104    6 1938
+105    6 1939
+106    6 1940
+107    6 1941
+108    6 1942
+109    6 1943
+110    6 1944
+111    6 1945
+112    6 1946
+113    6 1947
+114    6 1948
+115    6 1949
+116    6 1950
+117    6 1951
+118    6 1952
+119    6 1953
+120    6 1954
+121    7 1935
+122    7 1936
+123    7 1937
+124    7 1938
+125    7 1939
+126    7 1940
+127    7 1941
+128    7 1942
+129    7 1943
+130    7 1944
+131    7 1945
+132    7 1946
+133    7 1947
+134    7 1948
+135    7 1949
+136    7 1950
+137    7 1951
+138    7 1952
+139    7 1953
+140    7 1954
+141    8 1935
+142    8 1936
+143    8 1937
+144    8 1938
+145    8 1939
+146    8 1940
+147    8 1941
+148    8 1942
+149    8 1943
+150    8 1944
+151    8 1945
+152    8 1946
+153    8 1947
+154    8 1948
+155    8 1949
+156    8 1950
+157    8 1951
+158    8 1952
+159    8 1953
+160    8 1954
+161    9 1935
+162    9 1936
+163    9 1937
+164    9 1938
+165    9 1939
+166    9 1940
+167    9 1941
+168    9 1942
+169    9 1943
+170    9 1944
+171    9 1945
+172    9 1946
+173    9 1947
+174    9 1948
+175    9 1949
+176    9 1950
+177    9 1951
+178    9 1952
+179    9 1953
+180    9 1954
+181   10 1935
+182   10 1936
+183   10 1937
+184   10 1938
+185   10 1939
+186   10 1940
+187   10 1941
+188   10 1942
+189   10 1943
+190   10 1944
+191   10 1945
+192   10 1946
+193   10 1947
+194   10 1948
+195   10 1949
+196   10 1950
+197   10 1951
+198   10 1952
+199   10 1953
+200   10 1954
+> 
+> if (anyNA(attr(pGrunfeld[["inv"]], which = "index"))) stop("FAIL: NA in index")
+> if (anyNA(attr(pGrunfeld[[3]], which = "index"))) stop("FAIL: NA in index")
+> 
+> 
+> 
+> ############ subsetting used to change the pdata.frame
+> ########## since rev.252 this is fully fixed (rev. 251 already fixed large parts of this),
+> ########## pre rev 251 a lot of unnecessary information was added to the pdata.frame by subsetting 
+> 
+> # this should yield a structurally identical pdata.frame as all rows are extracted:
+> Grunfeld2 <- Grunfeld[1:nrow(Grunfeld), ]
+> pGrunfeld2 <- pGrunfeld[1:nrow(pGrunfeld), ]
+> 
+> identical(Grunfeld, Grunfeld2)    # TRUE for data.frame
+[1] TRUE
+> identical(pGrunfeld, pGrunfeld2)  # TRUE for pdata.frame (was FALSE pre rev. 252)
+[1] TRUE
+> if (!identical(pGrunfeld, pGrunfeld2))
++   stop("pdata.frame not identical after \"subsetting\" with all rows (which should actually not do any subsetting))")
+> 
+> ### compare object sizes
+> object.size(pGrunfeld)  # 37392 bytes
+37392 bytes
+> object.size(pGrunfeld2) # 37392 bytes since rev. 252 # (was: 83072 bytes in pre rev.251, considerably larger!)
+37392 bytes
+>                                                      # (was: 26200 bytes in rev. 251)
+> if (!object.size(pGrunfeld) == object.size(pGrunfeld2))
++   print("pdata.frame not same object size after \"subsetting\" with all rows (which should actually not do any subsetting))")
+> 
+> # this is likely to be unnecessarily pedandic, because by default attrib.as.set is TRUE
+> # and from ?attributes "Attributes are not stored internally as a list and should be 
+> # thought of as a set and not a vector."
+> identical(Grunfeld, Grunfeld2,   attrib.as.set = FALSE)  # TRUE for data.frame
+[1] TRUE
+> identical(pGrunfeld, pGrunfeld2, attrib.as.set = FALSE)  # FALSE for pdata.frame
+[1] FALSE
+> 
+> # disply differences (if any) [with rev. 252 there should be no differences left]
+> all.equal(pGrunfeld, pGrunfeld2)
+[1] TRUE
+> all.equal(pGrunfeld, pGrunfeld2, check.attributes = FALSE)
+[1] TRUE
+> # compare::compare(pGrunfeld, pGrunfeld2, allowAll = TRUE)
+> 
+> 
+> # Unused levels from the index attribute of a pdata.frame shall be dropped
+> # (NB: unused levels are not dropped from the variables of the pdata.frame as this is standard R behaviour)
+> pGrunfeld_sub_id <- pGrunfeld[-c(1:20), ] # drop first individual (1st ind. is in first 20 rows)
+> if (!isTRUE(all.equal(levels(attr(pGrunfeld_sub_id, "index")[[1]]), levels(factor(2:10)))))
++   stop("unused levels from index (individual) not dropped")
+> 
+> pGrunfeld_sub_year <- pGrunfeld[!pGrunfeld$year %in% "1936", ] # drop year 1936
+> if (!isTRUE(all.equal(levels(attr(pGrunfeld_sub_year, "index")[[2]]), levels(factor(c(1935, 1937:1954))))))
++   stop("unused levels from index (time) not dropped")
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> #### test estimation by plm on a subsetted pdata.frame (failed pre rev. 251)
+> pGrunfeld_sub <- pGrunfeld[c(23:99), ]
+> plm(inv ~ value + capital, data = pGrunfeld[c(23:99), ]) # failed pre rev.251
+
+Model Formula: inv ~ value + capital
+
+Coefficients:
+   value  capital 
+0.066117 0.173627 
+
+> 
+>   # classes of index of pdata.frame and subsetted pdata.frame are the same 'pindex' and 'data.frame')
+>   class(attr(pGrunfeld, which="index"))
+[1] "pindex"     "data.frame"
+>   class(attr(pGrunfeld$inv, which="index"))
+[1] "pindex"     "data.frame"
+>   if (!all(class(attr(pGrunfeld, which="index")) == class(attr(pGrunfeld$inv, which="index")))) stop("classes differ!")
+>   
+>   # classes of index of columns of pdata.frame and subsetted pdata.frame must be the same 'pindex' and 'data.frame')
+>   class(attr(pGrunfeld$inv, which="index"))
+[1] "pindex"     "data.frame"
+>   class(attr(pGrunfeld_sub$inv, which="index"))
+[1] "pindex"     "data.frame"
+>   if (!all(class(attr(pGrunfeld$inv, which="index")) == class(attr(pGrunfeld_sub$inv, which="index")))) stop("classes differ!")
+> 
+> 
+> ############ further testing subsetting of pdata.frame and its index
+> # up to rev.254 subetting by [i] (with missing j) did not mimic data.frame behavior in case of missing j (j as in [i, j])
+> # fixed in rev.255
+> data("Grunfeld", package = "plm")
+> X <- Grunfeld
+> pX <- pdata.frame(X)
+> 
+> ###### test dimensions of subsetted pdata.frame
+> if (!isTRUE(all.equal(dim(X[]), dim(pX[])))) stop("dimensions of data.frame and pdata.frame not equal after subsetting")
+> if (!isTRUE(all.equal(dim(X[ , ]), dim(pX[ ,])))) stop("dimensions of data.frame and pdata.frame not equal after subsetting")
+> if (!isTRUE(all.equal(dim(X[ , , ]), dim(pX[ , , ])))) stop("dimensions of data.frame and pdata.frame not equal after subsetting")
+> if (!isTRUE(all.equal(dim(X[ , , drop = TRUE]),  dim(pX[ , , drop = TRUE])))) stop("dimensions of data.frame and pdata.frame not equal after subsetting")
+> if (!isTRUE(all.equal(dim(X[ , , drop = FALSE]), dim(pX[ , , drop = FALSE])))) stop("dimensions of data.frame and pdata.frame not equal after subsetting")
+> 
+> 
+> if (!isTRUE(all.equal(dim(X[1:10, 2:4]),               dim(pX[1:10, 2:4])))) stop("dimensions of data.frame and pdata.frame not equal after subsetting")
+> if (!isTRUE(all.equal(dim(X[1:10, 2:4, drop = TRUE]),  dim(pX[1:10, 2:4, drop = TRUE])))) stop("dimensions of data.frame and pdata.frame not equal after subsetting")
+> if (!isTRUE(all.equal(dim(X[1:10, 2:4, drop = FALSE]), dim(pX[1:10, 2:4, drop = FALSE])))) stop("dimensions of data.frame and pdata.frame not equal after subsetting")
+> 
+> if (!isTRUE(all.equal(dim(X[1:10, , ]),              dim(pX[1:10, , ])))) stop("dimensions of data.frame and pdata.frame not equal after subsetting")
+> if (!isTRUE(all.equal(dim(X[1:10, , drop = TRUE]),   dim(pX[1:10, , drop = TRUE])))) stop("dimensions of data.frame and pdata.frame not equal after subsetting")
+> if (!isTRUE(all.equal(dim(X[1:10, , drop = FALSE]),  dim(pX[1:10, , drop = FALSE])))) stop("dimensions of data.frame and pdata.frame not equal after subsetting")
+> 
+> 
+> if (!isTRUE(all.equal(dim(X[1:10, ]),    dim(pX[1:10, ])))) stop("dimensions of data.frame and pdata.frame not equal after subsetting")
+> if (!isTRUE(all.equal(dim(X[1, ]),        dim(pX[1, ])))) stop("dimensions of data.frame and pdata.frame not equal after subsetting")
+> 
+> if (!isTRUE(all.equal(dim(X[1]),                 dim(pX[1])))) stop("dimensions of data.frame and pdata.frame not equal after subsetting")
+> if (!isTRUE(all.equal(dim(X[1, drop = TRUE]),    dim(pX[1, drop = TRUE])))) stop("dimensions of data.frame and pdata.frame not equal after subsetting")
+Warning messages:
+1: In `[.data.frame`(X, 1, drop = TRUE) : 'drop' argument will be ignored
+2: In `[.data.frame`(x, 1, drop = TRUE) : 'drop' argument will be ignored
+> if (!isTRUE(all.equal(dim(X[1, drop = FALSE]),   dim(pX[1, drop = FALSE])))) stop("dimensions of data.frame and pdata.frame not equal after subsetting")
+Warning messages:
+1: In `[.data.frame`(X, 1, drop = FALSE) : 'drop' argument will be ignored
+2: In `[.data.frame`(x, 1, drop = FALSE) : 'drop' argument will be ignored
+> 
+> if (!isTRUE(all.equal(dim(X[1:2]),               dim(pX[1:2])))) stop("dimensions of data.frame and pdata.frame not equal after subsetting")
+> if (!isTRUE(all.equal(dim(X[1:2, drop = TRUE]),  dim(pX[1:2, drop = TRUE])))) stop("dimensions of data.frame and pdata.frame not equal after subsetting")
+Warning messages:
+1: In `[.data.frame`(X, 1:2, drop = TRUE) :
+  'drop' argument will be ignored
+2: In `[.data.frame`(x, 1:2, drop = TRUE) :
+  'drop' argument will be ignored
+> if (!isTRUE(all.equal(dim(X[1:2, drop = FALSE]), dim(pX[1:2, drop = FALSE])))) stop("dimensions of data.frame and pdata.frame not equal after subsetting")
+Warning messages:
+1: In `[.data.frame`(X, 1:2, drop = FALSE) :
+  'drop' argument will be ignored
+2: In `[.data.frame`(x, 1:2, drop = FALSE) :
+  'drop' argument will be ignored
+> 
+> if (!isTRUE(all.equal(dim(X[ , 2:4]), dim(pX[ , 2:4])))) stop("dimensions of data.frame and pdata.frame not equal after subsetting")
+> if (!isTRUE(all.equal(dim(X[ , 2:4, drop = TRUE]),  dim(pX[ , 2:4, drop = TRUE])))) stop("dimensions of data.frame and pdata.frame not equal after subsetting")
+> if (!isTRUE(all.equal(dim(X[ , 2:4 ,drop = FALSE]), dim(pX[ , 2:4, drop = FALSE])))) stop("dimensions of data.frame and pdata.frame not equal after subsetting")
+> 
+> if (!isTRUE(all.equal(dim(X[ , 3]),               dim(pX[ , 3])))) stop("dimensions of data.frame and pdata.frame not equal after subsetting")
+> if (!isTRUE(all.equal(dim(X[ , 3, drop = TRUE]),  dim(pX[ , 3, drop = TRUE])))) stop("dimensions of data.frame and pdata.frame not equal after subsetting")
+> if (!isTRUE(all.equal(dim(X[ , 3, drop = FALSE]), dim(pX[ , 3, drop = FALSE])))) stop("dimensions of data.frame and pdata.frame not equal after subsetting")
+> 
+> if (!isTRUE(all.equal(dim(X[1, , ]),             dim(pX[1, , ])))) stop("dimensions of data.frame and pdata.frame not equal after subsetting")
+> if (!isTRUE(all.equal(dim(X[1, , drop = TRUE]),  dim(pX[1, , drop = TRUE])))) stop("dimensions of data.frame and pdata.frame not equal after subsetting")
+> if (!isTRUE(all.equal(dim(X[1, , drop = FALSE]), dim(pX[1, , drop = FALSE])))) stop("dimensions of data.frame and pdata.frame not equal after subsetting")
+> 
+> 
+> ###### test dimensions of index of subsetted pdata.frame
+> if (!all(c(dim(pX[1:10 , 2:4])[1], 2L) == dim(attr(pX[1:10 , 2:4], "index")))) stop("index has wrong dimension after subsetting")
+> if (!all(c(dim(pX[1:10 ,    ])[1], 2L) == dim(attr(pX[1:10 ,    ], "index")))) stop("index has wrong dimension after subsetting")
+> if (!all(c(dim(pX[     , 2:4])[1], 2L) == dim(attr(pX[     , 2:4], "index")))) stop("index has wrong dimension after subsetting")
+> 
+> # NB: this is class c("pseries", "numeric), need length here
+> if (!all(c(length(pX[ , 3]), 2L) == dim(attr(pX[ , 3], "index")))) stop("index has wrong dimension after subsetting")
+> 
+> # NB: this is class c("pseries", "numeric), need length here
+> if (!all(c(length(pX[ , 3, drop = TRUE]), 2L) == dim(attr(pX[ , 3, drop = TRUE], "index")))) stop("index has wrong dimension after subsetting")
+> 
+> # need dim again here, because drop = FALSE
+> if (!all(c(dim(pX[ , 3, drop = FALSE])[1], 2L) == dim(attr(pX[ , 3, drop = FALSE], "index")))) stop("index has wrong dimension after subsetting")
+> 
+> # NB: this is a list! has no index anymore
+> length(pX[1, , drop = TRUE])
+[1] 5
+> # NB: this a a pdata.frame (drop = FALSE)
+> if (!all(c(dim(pX[1, , drop = FALSE])[1], 2L) == dim(attr(pX[1, , drop = FALSE], "index")))) stop("index has wrong dimension after subsetting")
+> 
+> 
+> # case of [i]-indexing with missing j: index must be have full rows
+> # dim of pdata.frame: 25, 3
+> if (!all(c(dim(pX[2:4])[1], 2L)               == dim(attr(pX[2:4],               "index")))) stop("index has wrong dimension after subsetting")
+> if (!all(c(dim(pX[2:4, drop = TRUE])[1],  2L) == dim(attr(pX[2:4, drop = TRUE],  "index")))) stop("index has wrong dimension after subsetting")
+Warning messages:
+1: In `[.data.frame`(x, 2:4, drop = TRUE) :
+  'drop' argument will be ignored
+2: In `[.data.frame`(x, 2:4, drop = TRUE) :
+  'drop' argument will be ignored
+> if (!all(c(dim(pX[2:4, drop = FALSE])[1], 2L) == dim(attr(pX[2:4, drop = FALSE], "index")))) stop("index has wrong dimension after subsetting")
+Warning messages:
+1: In `[.data.frame`(x, 2:4, drop = FALSE) :
+  'drop' argument will be ignored
+2: In `[.data.frame`(x, 2:4, drop = FALSE) :
+  'drop' argument will be ignored
+> 
+> if (!all(c(dim(pX[1])[1], 2L)               == dim(attr(pX[1],               "index")))) stop("index has wrong dimension after subsetting")
+> if (!all(c(dim(pX[1, drop = TRUE])[1],  2L) == dim(attr(pX[1, drop = TRUE],  "index")))) stop("index has wrong dimension after subsetting")
+Warning messages:
+1: In `[.data.frame`(x, 1, drop = TRUE) : 'drop' argument will be ignored
+2: In `[.data.frame`(x, 1, drop = TRUE) : 'drop' argument will be ignored
+> if (!all(c(dim(pX[1, drop = FALSE])[1], 2L) == dim(attr(pX[1, drop = FALSE], "index")))) stop("index has wrong dimension after subsetting")
+Warning messages:
+1: In `[.data.frame`(x, 1, drop = FALSE) : 'drop' argument will be ignored
+2: In `[.data.frame`(x, 1, drop = FALSE) : 'drop' argument will be ignored
+> 
+> 
+> ####### test return values numeric(0) etc and especially NULL
+> 
+> ## compare pdata.frame() to data.frame() in case of subsetting with non-existent return values
+> # firm 31 is non-existent
+> # valueNonExistent is non-existent
+> 
+> pGrunfeld[pGrunfeld$firm == "31"]
+data frame with 0 columns and 200 rows
+> 
+> Grunfeld[Grunfeld$firm == "31"]
+data frame with 0 columns and 200 rows
+> 
+> 
+> pGrunfeld[pGrunfeld$firm == "31", "value"]
+numeric(0)
+> 
+> Grunfeld[Grunfeld$firm == "31", "value"]
+numeric(0)
+> 
+> #### since R 3.4.0 the  following two cases gave a warning which is pacified in plm rev. 626
+> # Warning in structure(mydata, index = index, class = base::union("pseries",  :
+> #                                                                   Calling 'structure(NULL, *)' is deprecated, as NULL cannot have attributes.
+> #                                                                 Consider 'structure(list(), *)' instead.
+> 
+> pGrunfeld[pGrunfeld$firm == "31", "valueNonExistent"]
+NULL
+> 
+> Grunfeld[Grunfeld$firm == "31", "valueNonExistent"]
+NULL
+> 
+> 
+> 
+> pGrunfeld[pGrunfeld$firm == "19", "valueX"]
+NULL
+> 
+> Grunfeld[Grunfeld$firm == "19", "valueX"]
+NULL
+> 
+> 
+> proc.time()
+   user  system elapsed 
+   1.20    0.18    1.37 

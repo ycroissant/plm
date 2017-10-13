@@ -365,18 +365,23 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     mydata <- eval(sc_mod)
 
     if (is.null(dim(mydata))){
-        # subsetting returned a vector (nothing more is left) -> make it a pseries
+      # subsetting returned a vector or a factor or NULL (nothing more is left)
+      if (is.null(mydata)) {
+        # since R 3.4.0 NULL cannot have attributes, so special case it
+        res <- NULL
+      } else {
+        # vector or factor -> make it a pseries
         res <- structure(mydata,
                          index = index,
                          class = base::union("pseries", class(mydata))) # use union to avoid doubling pseries if already present
-                         
+      }
+    } else {
+          # subsetting returned a data.frame -> add missing attributes to make it a pdata.frame again
+          res <- structure(mydata,
+                           index = index,
+                           class = c("pdata.frame", "data.frame"))
     }
-    else{
-        # subsetting returned a data.frame -> add missing attributes to make it a pdata.frame again
-        res <- structure(mydata,
-                         index = index,
-                         class = c("pdata.frame", "data.frame"))
-    }
+  
     return(res)
 }
 
