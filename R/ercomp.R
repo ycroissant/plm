@@ -360,7 +360,7 @@ ercomp.formula <- function(object, data,
             }
         }
         if (models[1] == "pooling"){
-            ZW <- model.matrix(estm[[1]], model = "within", effect = effect)
+            ZW <- model.matrix(estm[[1]], model = "within", effect = effect, cstcovar.rm = "none")
             CPZW <- crossprod(ZW)
             M["w", "nu"] <- O - NTS - trace(crossprod(CPZM, CPZW))
             if (effect != "time"){

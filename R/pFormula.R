@@ -33,7 +33,8 @@ model.matrix.plm <- function(object, ...){
     model <- ifelse(is.null(dots$model), describe(object, "model"), dots$model)
     effect <- ifelse(is.null(dots$effect), describe(object, "effect"), dots$effect)
     rhs <- ifelse(is.null(dots$rhs), 1, dots$rhs)
-    cstcovar.rm <- ifelse(is.null(dots$cstcovar.rm), "none", dots$cstcovar.rm)
+#    cstcovar.rm <- ifelse(is.null(dots$cstcovar.rm), ifelse(model == "within", "intercept", "none"), dots$cstcovar.rm)
+    cstcovar.rm <- dots$cstcovar
     formula <- formula(object)
     data <- model.frame(object)
     if (model != "random"){
@@ -117,14 +118,14 @@ model.matrix.pFormula <- function(object, data,
                                   effect = c("individual", "time", "twoways", "nested"),
                                   rhs = 1,
                                   theta = NULL,
-                                  cstcovar.rm = c("none", "intercept", "covariates", "all"),
+                                  cstcovar.rm = NULL,#c("none", "intercept", "covariates", "all"),
                                   ...){
     
     model <- match.arg(model)
     effect <- match.arg(effect)
     formula <- object  
     has.intercept <- has.intercept(formula, rhs = rhs)
-    cstcovar.rm <- match.arg(cstcovar.rm)
+#    cstcovar.rm <- match.arg(cstcovar.rm)
     balanced <- is.pbalanced(data)
     # check if inputted data is a model.frame, if not convert it to
     # model.frame (important for NA handling of the original data when
@@ -157,11 +158,18 @@ model.matrix.pFormula <- function(object, data,
         if (effect == "twoways" & balanced)
             X <- X - theta$id * Between(X, "individual") - theta$time * Between(X, "time") + theta$total * Mean(X)
     }
+    nouveau <- TRUE
+    if (nouveau){
+        if (is.null(cstcovar.rm)){
+            if (model %in% c("within", "fd")) cstcovar.rm <- "intercept" else cstcovar.rm <- "none"
+        }
+    } else if(is.null(cstcovar.rm)) cstcovar.rm <- "none"
+
     if (cstcovar.rm == "intercept"){
         posintercept <- match("(Intercept)", colnames(X))
         if (! is.na(posintercept)){
             X <- X[, - posintercept]
-            attr(X, "constant") <- "(Intercept)"
+#            attr(X, "constant") <- "(Intercept)"
         }
     }
     if (cstcovar.rm %in% c("covariates", "all")){
