@@ -8,7 +8,8 @@ Changes in version 1.6-6
         component 'theta' is now either a numeric (balanced models) or a list with 
         numerics (unbalanced models), the numerics being of length 1 (one-way models)
         or of length equal to the number of observations (two-ways models).
-  * pmodel.response: new returns object of class c("pseries", "numeric") [was "numeric"].
+  * model.matrix.*: gained new argument 'cstcovar.rm' to remove specific columns.
+  * pmodel.response: now returns object of class c("pseries", "numeric") [was "numeric"].
   * plm:
       * random effect models: some random methods extended to unbalanced 
         two-ways case (Nerlove's method only supports balanced one-way, two-ways),

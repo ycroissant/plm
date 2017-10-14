@@ -412,7 +412,7 @@ purtest <- function(object, data = NULL, index = NULL,
                   mean(unlist(resid)^2)
                 } else {
                   # df correction as suggested in Hadri (2000), p. 157
-                  # -> apply to full length residuals over all inviduals -> n*(L-1) or n*(L-2)
+                  # -> apply to full length residuals over all individuals -> n*(L-1) or n*(L-2)
                   dfcorval <- switch(exo, "intercept" = n*(L-1),
                                           "trend"     = n*(L-2))
                   sum(unlist(resid)^2) / dfcorval
