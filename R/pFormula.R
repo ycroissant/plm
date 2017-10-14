@@ -168,7 +168,7 @@ model.matrix.pFormula <- function(object, data,
     if (cstcovar.rm == "intercept"){
         posintercept <- match("(Intercept)", colnames(X))
         if (! is.na(posintercept)){
-            X <- X[, - posintercept]
+            X <- X[, - posintercept, drop = FALSE]
 #            attr(X, "constant") <- "(Intercept)"
         }
     }
