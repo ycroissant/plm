@@ -30,6 +30,12 @@ pgrangertest(formula, data, test = c("Ztilde", "Zbar", "Wbar"),
 }
 
 \details{
+
+
+% TODO: write about assumptions of panel Granger test:
+%       * cross-sectional independence
+%       * convergence
+
 The panel Granger causality test is a combination of Granger tests 
 (Granger (1969)) performed per individual. The test is developed by 
 Dumitrescu/Hurlin (2012), a shorter exposition is given in Lopez/Weber (2017).
