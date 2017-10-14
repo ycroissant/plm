@@ -34,7 +34,7 @@ model.matrix.plm <- function(object, ...){
     effect <- ifelse(is.null(dots$effect), describe(object, "effect"), dots$effect)
     rhs <- ifelse(is.null(dots$rhs), 1, dots$rhs)
 #    cstcovar.rm <- ifelse(is.null(dots$cstcovar.rm), ifelse(model == "within", "intercept", "none"), dots$cstcovar.rm)
-    cstcovar.rm <- dots$cstcovar
+    cstcovar.rm <- dots$cstcovar.rm
     formula <- formula(object)
     data <- model.frame(object)
     if (model != "random"){
