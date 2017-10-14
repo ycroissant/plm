@@ -397,11 +397,11 @@ ercomp.formula <- function(object, data,
         if ("within" %in% models){
             WX <- model.matrix(estm[[match("within", models)]], model = "within",
                                effect = effect, cstcovar.rm = "all")
-            K <- ncol(WX)
+#            K <- ncol(WX)
 #            MK <- length(attr(WX, "constant")) - 1
             KW <- ncol(WX)
             if (models[1] == "within"){
-                M["w", "nu"] <- O - NTS - K# + MK                                        # INTERCEPT
+                M["w", "nu"] <- O - NTS - KW# + MK                                        # INTERCEPT
                 if (effect != "time") M["w", "eta"] <- 0
                 if (effect != "individual") M["w", "mu"] <- 0
             }
