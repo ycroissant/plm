@@ -234,7 +234,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
   if (inherits(value, "pseries")){
     # remove pseries features before adding value as a column to pdata.frame
     if (length(class(value)) == 1) value <- unclass(value)
-    else class(value) <- setdiff(class(value), "pseries")
+    else attr(value, "class") <- setdiff(class(value), "pseries") # don't use class(value) <- here as it forces the storage mode to change
     attr(value, "index") <- NULL
   }
   "$<-.data.frame"(x, name, value)
@@ -373,7 +373,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
         # vector or factor -> make it a pseries
         res <- structure(mydata,
                          index = index,
-                         class = base::union("pseries", class(mydata))) # use union to avoid doubling pseries if already present
+                         class = base::union("pseries", class(mydata)))
       }
     } else {
           # subsetting returned a data.frame -> add missing attributes to make it a pdata.frame again
@@ -389,13 +389,13 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
   index <- attr(x, "index")
   attr(x, "index") <- NULL
   class(x) <- "data.frame"
-  result <- "[[.data.frame"(x, y) # was: x[[y]]
+  result <- "[[.data.frame"(x, y)
   if (!is.null(result)){
     # make extracted column a pseries
     # use this order for attributes to preserve original order of attributes for a pseries
     result <- structure(result,
                         names = row.names(x),
-                        class = base::union("pseries", class(result)), # class(x[[y]]) # use union to avoid doubling pseries if already present
+                        class = base::union("pseries", class(result)),
                         index = index 
                         )
   }
@@ -459,7 +459,7 @@ as.data.frame.pdata.frame <- function(x, row.names = NULL, optional = FALSE, ...
     x <- lapply(x,
                 function(z){
                     attr(z, "index") <- index
-                    class(z) <- base::union("pseries", class(z)) # use union to avoid doubling pseries if already present
+                    class(z) <- base::union("pseries", class(z))
                     return(z)
                 }
                 )
