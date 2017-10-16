@@ -45,7 +45,7 @@ pldv <- function(formula, data, subset, weights, na.action,
         yt <- Y$y
         ytm1 <- Y$ly
         # create the matrix of first differenced covariates
-        X <- model.matrix(formula, mf, model = "fd")[, -1]
+        X <- model.matrix(formula, mf, model = "fd")#[, -1]
         start <- rep(.1, ncol(X))
         names(start) <- colnames(X)
         if (sample == "trunc"){
