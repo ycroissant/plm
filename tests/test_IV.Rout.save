@@ -86,7 +86,7 @@ Residuals:
       Min.    1st Qu.     Median    3rd Qu.       Max. 
 -0.5581590 -0.0650155 -0.0018256  0.0698165  0.5247036 
 
-Coefficients: (4 dropped because of singularities)
+Coefficients:
                Estimate Std. Error  t-value  Pr(>|t|)    
 log(prbarr)  -0.3548257  0.0322048 -11.0178 < 2.2e-16 ***
 log(prbconv) -0.2815673  0.0211376 -13.3207 < 2.2e-16 ***
@@ -130,7 +130,7 @@ Residuals:
       Min.    1st Qu.     Median    3rd Qu.       Max. 
 -0.7207996 -0.0682050 -0.0041004  0.0759313  0.5661408 
 
-Coefficients: (4 dropped because of singularities)
+Coefficients:
                Estimate Std. Error t-value Pr(>|t|)
 log(prbarr)  -0.5753943  0.8019932 -0.7175   0.4734
 log(prbconv) -0.4230764  0.5018196 -0.8431   0.3996
@@ -330,4 +330,4 @@ F-statistic: 33.1494 on 26 and 603 DF, p-value: < 2.22e-16
 > 
 > proc.time()
    user  system elapsed 
-   3.75    0.15    3.90 
+   3.24    0.10    3.35 
