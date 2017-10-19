@@ -138,6 +138,8 @@ tests/test_IV.Rout.save -text
 tests/test_R2_adj_R2.R -text
 tests/test_as.data.frame_as.matrix.R -text
 tests/test_as.list.pdata.frame.R -text
+tests/test_clubSandwich_interoperability.R -text
+tests/test_clubSandwich_interoperability.Rout.save -text
 tests/test_detect_lin_dep_alias.R -text
 tests/test_fitted.plm.R -text
 tests/test_fixef.R -text

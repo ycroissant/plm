@@ -437,7 +437,8 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
       if (!is.null(attr(rvcov, which = "cluster"))) {
         
         # if supplied vcov is from package "clubSandwich": translate attr "cluster" to fit our code
-        if (inherits(rvcov, "vcovCR")) rvcov <- trans_clubSandwich_vcov(CSvcov = rvcov, index = attr(model.frame(x), "index"))
+        # (use rvcov_orig here for the test as the above dropping of the intercept drops the special classes of rvcov)
+        if (inherits(rvcov_orig, "vcovCR")) rvcov <- trans_clubSandwich_vcov(CSvcov = rvcov, index = attr(model.frame(x), "index"))
         
         cluster <- attr(rvcov, which = "cluster")
         pdim <- pdim(x)
