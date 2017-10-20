@@ -73,7 +73,8 @@ vcovG.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 
   ## define residuals weighting function omega(res)
   ## (code taken from meatHC and modified)
-  ##
+  ## (the weighting is defined "in sqrt" relative to the literature)
+  ## 
   ## (see the theoretical comments in pvcovHC)
 
     ## diaghat function for matrices
@@ -393,7 +394,7 @@ vcovBK.plm <- function(x, type=c("HC0", "HC1", "HC2", "HC3", "HC4"),
   ## This function takes the demeaned data from the
   ## plm object, then estimates an *unconditional* error covariance by
   ## averaging the empirical covariance blocks by group (time period);
-  ## this average block (say, OmegaM in Eviews notation) is then put into
+  ## this average block (say, OmegaM in EViews notation) is then put into
   ## White's formula instead of each Omega_i.
   ##
   ## The clustering defaults to "group" for consistency with pvcovHC;
@@ -495,6 +496,7 @@ vcovBK.plm <- function(x, type=c("HC0", "HC1", "HC2", "HC3", "HC4"),
 
   ## define residuals weighting function omega(res)
   ## (code taken from meatHC and modified)
+  ## (the weighting is defined "in sqrt" relative to the literature)
   ##
   ## (see the theoretical comments in pvcovHC)
 
@@ -534,7 +536,7 @@ vcovBK.plm <- function(x, type=c("HC0", "HC1", "HC2", "HC3", "HC4"),
 
   ## the PCSE covariance estimator is based on the unconditional estimate
   ## of the intragroup (intraperiod) covariance of errors, OmegaT or OmegaM
-  ## in the Eviews help.
+  ## in the EViews help.
   ## we calculate this based on code from pggls().
   ## the Omegai function is then:
   ## - constant if the panel is balanced
