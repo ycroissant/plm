@@ -21,7 +21,7 @@ pldv(formula, data, subset, weights, na.action,
   \item{subset}{see \code{lm},}
   \item{weights}{see \code{lm},}
   \item{na.action}{see \code{lm},}
-  \item{model}{one of \code{"pooling"}, \code{"within"}, \code{"random"},}
+  \item{model}{one of \code{"fd"}, \code{"random"} or \code{"pooling"},}
   \item{index}{the indexes, see \code{\link{pdata.frame}},}
   \item{R}{the number of points for the gaussian quadrature,}
   \item{start}{a vector of starting values,}
@@ -41,7 +41,7 @@ pldv(formula, data, subset, weights, na.action,
 \details{
 \code{pldv} computes two kinds of models : maximum likelihood estimator
 with an assumed normal distribution for the individual effects and a
-LSQ/LAD estimator for the fixed effects model.
+LSQ/LAD estimator for the first-difference model.
 }
 
 \value{
