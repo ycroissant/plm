@@ -341,7 +341,7 @@ Changes in version 1.5-16
         * gmm instruments are restricted in lag length in system GMM.
   * punbalancedness: data frame interface gains 'index' argument.
   * within_intercept: new function to calculate an overall intercept along its standard error for FE models
-                      a la Stata (and Gretl), accepts argument '.vcov' for user defined vcov.
+                      a la Stata and gretl, accepts argument '.vcov' for user defined vcov.
   * added help topic on package as a whole (?`plm-package`) for sake of completeness.
   * summary.plm: * argument '.vcov' can also be a function (before, only matrix was possible).
                  * internal: the furnished vcov is saved in the summary.plm object in object$rvcov
@@ -430,7 +430,7 @@ Changes in version 1.5-9
 
 	* fixed bug in vcovG for lagged White terms (make pseudo-diagonal in E(u,v)); affected vcovNW.
 	
-	* documentation updates (mostly text books of Baltagi and Wooldridge to latest edition,
+	* documentation updates (mostly text books of Baltagi and Wooldridge to latest editions,
 	  references are also more specific now).
 	  
 	* pbgtest: fixed/enabled type="F" (F test of lmtest::bgtest) in wrapper pbgtest() and

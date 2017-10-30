@@ -994,7 +994,7 @@ residuals.plm <- function(object, model = NULL, effect = NULL,  ...){
         y <- pmodel.response(object, model = model, effect = effect)
         res <- y - bX
     }
-    res <- structure(res, class = c("pseries", class(res)), index = index(object))
+    res <- structure(res, class = union("pseries", class(res)), index = index(object))
     res
 }
 
