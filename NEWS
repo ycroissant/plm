@@ -68,7 +68,8 @@ Changes in version 1.6-6
         overwrites an already present column of the same name ('id' and/or 'time').
       * pacified warning in subsetting with with non-existent rows and columns due
         to deprecation of 'structure(NULL, *)' in R >= 3.4.0.
-      * $<-.pdata.frame: preserves storage mode 'double' if so for class 'integer'.
+      * $<-.pdata.frame: preserves storage mode and sets correct class if propagation
+                         to higher class occured for a pseries prior to assignment.
   * ranef: new function to calculate random effects from RE model objects, like
            fixef for FE models.
   * cortab: new function to compute cross-sectional correlation matrix.

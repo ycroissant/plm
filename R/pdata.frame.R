@@ -234,11 +234,20 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
   if (inherits(value, "pseries")){
     # remove pseries features before adding value as a column to pdata.frame
     if (length(class(value)) == 1) value <- unclass(value)
-    else attr(value, "class") <- setdiff(class(value), "pseries") # don't use class(value) <- here as it forces the storage mode to change
+    else {
+      value <- check_propagation_correct_class(value) # check if propagation to a higher type happened prior to assignment, e.g. integer => numeric
+      attr(value, "class") <- setdiff(class(value), "pseries") # don't use class(value) <- here as it can force the storage mode to change
+    }
     attr(value, "index") <- NULL
   }
   "$<-.data.frame"(x, name, value)
 }
+
+# NB: We don't have methods for [<-.pdata.frame and [[<-.pdata.frame, so it
+#     dispatches to the respective data.frame methods.
+#     This results in really assigning a pseries to the pdata.frame in case 
+#     of [<- and [[<- as can be seen by lapply(some_pdata.frame, class) after 
+#     assigning with the respective .data.frame methods
 
 
 # NB: currently no extracting/subsetting function for class pseries, thus

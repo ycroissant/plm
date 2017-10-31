@@ -53,18 +53,30 @@ class(fac)
 typeof(fac)
 mode(fac)
 
+logi <- c(TRUE, FALSE, TRUE)
+class(logi) # logical
+typeof(logi) # logical
+class(logi) <- union("myclass", class(logi))
+class(logi) # myclass logical
+loginum <- logi - 1.5
+class(loginum) # myclass logical
+typeof(loginum) # double
+
 
 ############# (2) #############
 
 data(Grunfeld)
 Grunfeld[ , "integer"] <- rep(c(1L, 2L, 3L, 4L), 25)
+Grunfeld[ , "logi"]    <- rep(c(TRUE, FALSE, TRUE, FALSE), 25)
 pG <- pdata.frame(Grunfeld)
 
 class(pG[ , "integer"])
 class(pG[ , "integer"] / 3) 
 
-pG[ , "int2double"] <- pG$integer / 30
-pG$int2double2      <- pG$integer / 30 # at least this case by assigning with $<- is treated differently
+# assign: we don't have methods for [<-.pdata.frame and [[<-.pdata.frame, so it dispatches to the respective data.frame methods
+# This results in really assigning a pseries to the pdata.frame in case of [<- and [[<- as can be seen by lapply(pG, class)
+pG[ , "int2double"] <- pG$integer / 30 
+pG$int2double2      <- pG$integer / 30 # this case by assigning with $<- is treated differently
 pG[["int2double3"]] <- pG$integer / 30
 
 class(pG[ , "int2double"])
@@ -78,4 +90,54 @@ typeof(pG[ , "int2double3"])
 if(isTRUE(all.equal(as.numeric(pG[ , "int2double"]),  rep(0, 200), check.attributes = FALSE))) stop("when assigning by [<-: double casted to integer (wrong result)")
 if(isTRUE(all.equal(as.numeric(pG$int2double2),       rep(0, 200), check.attributes = FALSE))) stop("when assigning by $<-: double casted to integer (wrong result)")
 if(isTRUE(all.equal(as.numeric(pG[ , "int2double3"]), rep(0, 200), check.attributes = FALSE))) stop("when assigning by [[<-: double casted to integer (wrong result)")
+
+# check classes
+#if(!isTRUE(all.equal(class(pG[ , "int2double"]), c("pseries", "numeric"), check.attributes = FALSE))) stop("when assigning by [<-: double casted to logical (wrong class)")
+if(!isTRUE(all.equal(class(pG$int2double2),       c("pseries", "numeric"), check.attributes = FALSE))) stop("when assigning by $<-: double casted to logical (wrong class)")
+#if(!isTRUE(all.equal(class(pG[ , "int2doubl3"]), c("pseries", "numeric"), check.attributes = FALSE))) stop("when assigning by [[<-: double casted to logical (wrong class)")
+
+
+## same with logicals:
+
+pG[ , "logi2double1"] <- pG$logi / 10
+pG$logi2double2       <- pG$logi / 10
+pG[["logi2double3"]]  <- pG$logi / 10
+
+class(pG[ , "logi2double1"])
+class(pG[ , "logi2double2"])
+class(pG[ , "logi2double3"])
+
+typeof(pG[ , "logi2double1"])
+typeof(pG[ , "logi2double2"])
+typeof(pG[ , "logi2double3"])
+
+# check values
+if(!isTRUE(all.equal(as.numeric(pG[ , "logi2double1"]), rep(c(0.1, 0.0), 100), check.attributes = FALSE))) stop("when assigning by [<-: double casted to logical (wrong result)")
+if(!isTRUE(all.equal(as.numeric(pG$logi2double2),       rep(c(0.1, 0.0), 100), check.attributes = FALSE))) stop("when assigning by $<-: double casted to logical (wrong result)")
+if(!isTRUE(all.equal(as.numeric(pG[ , "logi2double3"]), rep(c(0.1, 0.0), 100), check.attributes = FALSE))) stop("when assigning by [[<-: double casted to logical (wrong result)")
+
+# check classes
+#if(!isTRUE(all.equal(class(pG[ , "logi2double1"]), c("pseries", "numeric"), check.attributes = FALSE))) stop("when assigning by [<-: double casted to logical (wrong class)")
+if(!isTRUE(all.equal(class(pG$logi2double2),       c("pseries", "numeric"), check.attributes = FALSE))) stop("when assigning by $<-: double casted to logical (wrong class)")
+#if(!isTRUE(all.equal(class(pG[ , "logi2double3"]), c("pseries", "numeric"), check.attributes = FALSE))) stop("when assigning by [[<-: double casted to logical (wrong class)")
+
+
+pseries_logi2double <- pG[ , "logi2double1"]
+
+class(pseries_logi2double)
+all.equal(pseries_logi2double, plm:::check_propagation_correct_class(pseries_logi2double), check.attributes = FALSE)
+pseries_logi2double <- plm:::check_propagation_correct_class(pseries_logi2double)
+class(pseries_logi2double)
+
+class(pG$logi2complex <- pG$logi + 3i)
+class(pG$logi2complex)
+typeof(pG$logi2complex)
+pseries_logi2complex <- pG$logi2complex
+
+class(pseries_logi2complex)
+all.equal(pseries_logi2complex, plm:::check_propagation_correct_class(pseries_logi2complex), check.attributes = FALSE)
+pseries_logi2complex <- plm:::check_propagation_correct_class(pseries_logi2complex)
+class(pseries_logi2complex)
+
+
 
