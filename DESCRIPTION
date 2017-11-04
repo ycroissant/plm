@@ -1,7 +1,7 @@
 Package: plm
 Version: 1.6-6
 Date: 2017-10-31
-Title: Linear Models for Panel Data
+Title: Linear Models for Panel Data Econometrics
 Authors@R: c(person(given = "Yves",      family = "Croissant",    role = c("aut", "cre"), email = "yves.croissant@univ-reunion.fr"),
              person(given = "Giovanni",  family = "Millo",        role = "aut", email = "Giovanni.Millo@Generali.com"),
              person(given = "Kevin",     family = "Tappe",        role = "aut", email = "kevin.tappe@bwi.uni-stuttgart.de"),
