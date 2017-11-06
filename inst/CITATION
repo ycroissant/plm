@@ -1,18 +1,32 @@
-citHeader("To cite plm in publications use:")
-
-citEntry(entry = "Article",
+bibentry(bibtype = "Article",
   title        = "Panel Data Econometrics in {R}: The {plm} Package",
-  author       = personList(as.person("Yves Croissant"),
-                   as.person("Giovanni Millo")),
+  author       = c(person(given = "Yves",
+                          family = "Croissant",
+                          email = "yves.croissant@univ-reunion.fr"),
+                   person(given = "Giovanni",
+                          family = "Millo",
+                          email = "Giovanni.Millo@Generali.com")),
   journal      = "Journal of Statistical Software",
   year         = "2008",
   volume       = "27",
   number       = "2",
-  url          = "http://www.jstatsoft.org/v27/i02/",
+  pages        = "1--43",
+  doi          = "10.18637/jss.v027.i02",
 
-  textVersion  =
-  paste("Yves Croissant, Giovanni Millo (2008).",
-        "Panel Data Econometrics in R: The plm Package.",
-        "Journal of Statistical Software 27(2).",
-        "URL http://www.jstatsoft.org/v27/i02/.")
+  header       = "To cite plm in publications use:"
+)
+
+bibentry(bibtype = "Article",
+  title        = "Robust Standard Error Estimators for Panel Models: A Unifying Approach",
+  author       = person(given = "Giovanni",
+                        family = "Millo",
+                        email = "Giovanni.Millo@Generali.com"),
+  journal      = "Journal of Statistical Software",
+  year         = "2017",
+  volume       = "82",
+  number       = "3",
+  pages        = "1--27",
+  doi          = "10.18637/jss.v082.i03",
+
+  header       = "For the covariance matrix estimators in plm, please cite:"
 )
