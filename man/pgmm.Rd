@@ -16,7 +16,7 @@ pgmm(formula, data, subset, na.action,
      lost.ts = NULL,
      transformation = c("d", "ld"),
      fsm = NULL, index = NULL, \dots) 
-\method{summary}{pgmm}(object, robust, time.dummies = FALSE, \dots)
+\method{summary}{pgmm}(object, robust = TRUE, time.dummies = FALSE, \dots)
 \method{print}{summary.pgmm}(x, digits = max(3, getOption("digits") - 2),
     width = getOption("width"), \dots)
 }
