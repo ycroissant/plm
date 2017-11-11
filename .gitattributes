@@ -125,6 +125,7 @@ man/vcovHC.Rd -text
 man/vcovNW.Rd -text
 man/vcovSCC.Rd -text
 man/within_intercept.Rd -text
+tests/Examples/plm-Ex.Rout.save -text
 tests/test_Chow.R -text
 tests/test_Chow.Rout.save -text
 tests/test_Errors.R -text
