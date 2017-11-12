@@ -26,8 +26,7 @@ aneweytest <-  function(formula, data, subset, na.action, index = NULL,  ...){
     ht <- ht[c(1,m)]
     ht[[1]] <- as.name("plm")
     ht$model <- "within"
-    #  ht$effect <- "twoways"       ## TODO: ht$effect is overwritten in next line...?!
-    ht$effect <- "individual"    ## TODO
+    ht$effect <- "individual"
     ht <- eval(ht, parent.frame())
     .resid <- split(resid(ht), time)
   
@@ -52,10 +51,10 @@ aneweytest <-  function(formula, data, subset, na.action, index = NULL,  ...){
     namesX <- colnames(X)
     # split by time period and remove the mean
     X <- lapply(as.list(years), function(x) X[time == x, , drop = FALSE])
-    X <- lapply(X, function(x) t(t(x) - .colMeans(x, nrow(x), ncol(x)))) # was: t(t(x) - apply(x, 2, mean))
+    X <- lapply(X, function(x) t(t(x) - .colMeans(x, nrow(x), ncol(x))))
     if (!is.null(Z)){
         Z <- Z[time == years[1], , drop = FALSE]
-        Z <- t(t(Z) - .colMeans(Z, nrow(Z), ncol(Z))) # was: t(t(Z) - apply(Z, 2, mean))
+        Z <- t(t(Z) - .colMeans(Z, nrow(Z), ncol(Z)))
     }
     for (i in 1:(length(years))){
         colnames(X[[i]]) <- paste(colnames(X[[i]]), years[i], sep = ".")
@@ -121,10 +120,10 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
     # split by time period and remove the mean
     years <- unique(index(data, "time"));
     X <- lapply(as.list(years), function(x) X[time == x, , drop = FALSE])
-    X <- lapply(X, function(x) t(t(x) - .colMeans(x, nrow(x), ncol(x)))) # was: t(t(x) - apply(x, 2, mean)))
+    X <- lapply(X, function(x) t(t(x) - .colMeans(x, nrow(x), ncol(x))))
     if (!is.null(Z)){
         Z <- Z[time == years[1], , drop = FALSE]
-        Z <- t(t(Z) - .colMeans(Z, nrow(Z), ncol(Z))) #was: t(t(Z) - apply(Z, 2, mean))
+        Z <- t(t(Z) - .colMeans(Z, nrow(Z), ncol(Z)))
     }
     for (i in 1:(length(years))){
         colnames(X[[i]]) <- paste(colnames(X[[i]]), years[i], sep = ".")
@@ -241,7 +240,7 @@ print.summary.piest <- function(x, ...){
 ## Wages$id <- rep(1:595, each = 7)
 ## Wages <- subset(Wages, time %in% c(1:T))
 ## Wages <- pdata.frame(Wages, index=c("id", "time"))
-## #l <- piest(lwage ~  smsa+married, Wages)
+## #l <- piest(lwage ~ smsa+married, Wages)
 
 ## data(Crime, package="plm")
 ## plm(log(crmrte) ~ log(prbarr) + log(prbconv) + log(prbpris) + log(polpc) + log(density) + log(pctmin) + region + log(wtuc) + log(wmfg), Crime, effect = "twoways")
