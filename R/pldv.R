@@ -4,10 +4,11 @@ pldv <- function(formula, data, subset, weights, na.action,
                  objfun = c("lsq", "lad"), sample = c("cens", "trunc"), ...){
   
 ## Due to the eval() construct with maxLik::maxLik we import maxLik::maxLik
-## and re-export it as plm::maxLik with a minimal documentation pointing to
-## the original documentation. This way, we can keep the flexibility of eval()
-## [evalutate in parent frame] and can lessen the dependency burden by palacing
-## pkg maxLik in 'Imports' rather than 'Depends' in DESCRIPTION.
+## and re-export it via NAMESPACE as plm::maxLik with a minimal documentation 
+## pointing to the original documentation.
+## This way, we can keep the flexibility of eval() ## [evalutate in parent frame] 
+## and can lessen the dependency burden by palacing pkg maxLik in 'Imports'
+## rather than 'Depends' in DESCRIPTION.
   
     # use the plm interface to compute the model.frame
     sample <- match.arg(sample)
@@ -45,7 +46,7 @@ pldv <- function(formula, data, subset, weights, na.action,
         yt <- Y$y
         ytm1 <- Y$ly
         # create the matrix of first differenced covariates
-        X <- model.matrix(formula, mf, model = "fd")#[, -1]
+        X <- model.matrix(formula, mf, model = "fd")
         start <- rep(.1, ncol(X))
         names(start) <- colnames(X)
         if (sample == "trunc"){
@@ -102,13 +103,13 @@ pldv <- function(formula, data, subset, weights, na.action,
         if (is.null(result$vcov)) result$vcov <- solve(- result$hessian)
         resid <- yt - as.numeric(X %*% coef(result))
         result <- list(coefficients = coef(result),
-                       vcov = result$vcov,
-                       formula = formula,
-                       model = mf,
-                       df.residual = nrow(X) - ncol(X),
-                       residuals = resid,
-                       args = list(model = "fd", effect = "individual"),
-                       call = cl)
+                       vcov         = result$vcov,
+                       formula      = formula,
+                       model        = mf,
+                       df.residual  = nrow(X) - ncol(X),
+                       residuals    = resid,
+                       args         = list(model = "fd", effect = "individual"),
+                       call         = cl)
         class(result) <- c("plm", "panelmodel")
         result
     }
@@ -312,7 +313,6 @@ lnl.tobit <- function(param, y, X, id, lower = 0, upper = +Inf, model = "pooling
             DD1 <- - crossprod(daub)
             DD2 <- lapply(1:R, function(i) rn$weights[i] * hlnPnr[[i]])
             DD2 <- Reduce("+", DD2) / sqrt(pi)
-#            DD3 <- lapply(1:R, function(i) rn$weights[i] * crossprod(glnPnr[[i]] * pwnt[[i]], glnPnr[[i]])) # TODO: this line seems unnecessary, DD3 gets overwritten by next line...
             DD3 <- lapply(1:R, function(i) rn$weights[i] * crossprod(sqrt(pwn[[i]]) * apply(glnPnr[[i]], 2, tapply, id, sum)))
             DD3 <- Reduce("+", DD3) / sqrt(pi)
             H <- (DD1+ DD2 + DD3) 
