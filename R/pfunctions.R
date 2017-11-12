@@ -192,7 +192,7 @@ Within.matrix <- function(x, effect, rm.null = TRUE,...){
 
 # lag: compute lagged values (handles positive lags and negative lags (=leading values) [and 0 -> do nothing])
 #
-# NB: This method seems to be intended for rowwise (positionwise) shifting as lagging
+# NB: This method seems to be intended for rowwise (positionwise) shifting as lagging       # TODO: adapt wording once lagt ("t") etc is exported
 #     There is also an (somwehat experimental) function called lagt.pseries in a seperate
 #     file which respectes the time periods by looking at their content
 lag.pseries <- function(x, k = 1, ...) {
@@ -211,10 +211,11 @@ lag.pseries <- function(x, k = 1, ...) {
         if (round(ak) != ak) stop("Lagging value 'k' must be whole-numbered (positive, negative or zero)")
         if (ak > 0) {
       
-        # NB: this code assumes consecutive time periods and produces wrong results
-        #     for lag > 1 and non-consecutive time periods
+        # NB: this code assumes consecutive time periods and produces   # TODO: better wording: does row-wise shifting, thus its results might be unexpected if lag > 1 and non-consecutive time periods
+        #     wrong/unexpected results for lag > 1 and non-consecutive time periods
+
         # delete first ak observations for each unit
-        #  NB: as.character(time) before as.numeric() might be needed to catch the case of missing time period in whole data set
+        #  NB: as.character(time) before as.numeric() might be needed to catch the case of missing time period in whole data set    ## TODO: check if this comment is valid at all. might be a left over from KT's analysis of the code
         #      see testfile test_lag_lead_factor_levels
             isNAtime <- c(rep(T, ak), (diff(as.numeric(time), lag = ak) != ak))
             isNAid   <- c(rep(T, ak), (diff(as.numeric(id),   lag = ak) != 0))
@@ -226,9 +227,6 @@ lag.pseries <- function(x, k = 1, ...) {
             result[isNA] <- NA                                      # ... make more NAs in between: this way, we keep: all factor levels, names, classes
       
         } else if (ak < 0) { # => compute leading values
-      
-        # NB: this code assumes consecutive time periods and produces wrong results
-        #     for lag > 1 and non-consecutive time periods
       
         # delete last |ak| observations for each unit
             num_time <- as.numeric(time)
@@ -300,7 +298,7 @@ diff.pseries <- function(x, lag = 1, ...){
 pdiff <- function(x, cond, effect = c("individual", "time"), has.intercept = FALSE){
     effect <- match.arg(effect)
     cond <- as.numeric(cond)
-    n <- ifelse(is.matrix(x),nrow(x),length(x))
+    n <- ifelse(is.matrix(x), nrow(x), length(x))
   
     # code below is written for effect="individual". If effect="time" is
     # requested, order x so that the code works and later restore original order of x
@@ -310,25 +308,25 @@ pdiff <- function(x, cond, effect = c("individual", "time"), has.intercept = FAL
         cond <- cond[order_cond]
     }
   
-    cond <- c(NA,cond[2:n]-cond[1:(n-1)]) # this assumes a certain ordering
+    cond <- c(NA, cond[2:n] - cond[1:(n-1)]) # this assumes a certain ordering
     cond[cond != 0] <- NA
     
     if (!is.matrix(x)){
-        result <- c(NA,x[2:n]-x[1:(n-1)])
+        result <- c(NA, x[2:n] - x[1:(n-1)])
         result[is.na(cond)] <- NA
         # for effect = "time": restore original order of x:
         if (effect == "time") result <- result[match(seq_len(n), order_cond)]
         result <- na.omit(result)
     }
     else{
-        result <- rbind(NA,x[2:n,,drop=FALSE]-x[1:(n-1),,drop=FALSE])
+        result <- rbind(NA, x[2:n, , drop=FALSE] - x[1:(n-1), , drop = FALSE])
         result[is.na(cond), ] <- NA
         # for effect = "time": restore original order of x:
         if (effect == "time") result <- result[match(seq_len(n), order_cond), ]
         result <- na.omit(result)
-        result <- result[,apply(result,2, var) > 1E-12,drop = FALSE]
+        result <- result[ , apply(result, 2, var) > 1E-12, drop = FALSE]
         if (has.intercept){
-            result <- cbind(1,result)
+            result <- cbind(1, result)
             colnames(result)[1] <- "(intercept)"
         }
     }
@@ -336,6 +334,8 @@ pdiff <- function(x, cond, effect = c("individual", "time"), has.intercept = FAL
     result
 }
 
+
+## TODO: why do we have a second pdiff() now (introduced in rev. 622)?
 pdiff <- function(x, effect = c("individual", "time"), has.intercept = FALSE){
     effect <- match.arg(effect)
     cond <- as.numeric(attr(x, "index")[[1]])
@@ -351,9 +351,9 @@ pdiff <- function(x, effect = c("individual", "time"), has.intercept = FALSE){
         result <- rbind(NA, x[2:n, , drop = FALSE] - x[1:(n-1), , drop = FALSE])
         result[is.na(cond), ] <- NA
         result <- na.omit(result)
-#        result <- result[, apply(result,2, var) > 1E-12, drop = FALSE]
+#        result <- result[ , apply(result, 2, var) > 1E-12, drop = FALSE]
         if (has.intercept){
-            result <- cbind(1,result)
+            result <- cbind(1, result)
             colnames(result)[1] <- "(Intercept)"
         }
     }

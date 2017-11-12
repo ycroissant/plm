@@ -690,8 +690,8 @@ mtest <- function(object, order = 1, vcov = NULL){
   names(stat) <- "normal"
   pval <- pnorm(abs(stat), lower.tail = FALSE)*2
   mtest <- list(statistic = stat,
-                p.value = pval,
-                method = paste("Autocorrelation test of degree", order),
+                p.value   = pval,
+                method    = paste("Autocorrelation test of degree", order),
                 data.name = data.name(object))
   class(mtest) <- "htest"
   mtest
@@ -731,9 +731,9 @@ wald <- function(object, param = c("coef", "time", "all"), vcov = NULL){
   names(parameter) <- "df"
   pval <- pchisq(stat, df = parameter, lower.tail = FALSE)
   wald <- list(statistic = stat,
-               p.value = pval,
+               p.value   = pval,
                parameter = parameter,
-               method = "Wald test",
+               method    = "Wald test",
                data.name = data.name(object))
   class(wald) <- "htest"
   wald
@@ -807,9 +807,9 @@ sargan <- function(object, weights = c("twosteps", "onestep")){
   method <- "Sargan test"
   pval <- pchisq(stat, df = parameter, lower.tail = FALSE)
   sargan <- list(statistic = stat,
-                 p.value = pval,
+                 p.value   = pval,
                  parameter = parameter,
-                 method = method,
+                 method    = method,
                  data.name = data.name(object))
   class(sargan) <- "htest"
   sargan
