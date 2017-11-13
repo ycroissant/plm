@@ -335,7 +335,7 @@ mylm <- function(y, X, W = NULL){
 plm.list <- function(formula, data, subset, na.action,
                      effect = c("individual", "time", "twoways"),
                      model = c("within", "random", "ht", "between", "pooling", "fd"),
-                     random.method = c("swar", "walhus", "amemiya", "nerlove", "ht"),
+                     random.method = NULL,#c("swar", "walhus", "amemiya", "nerlove", "ht"),
                      inst.method = c("bvk", "baltagi"),
                      restrict.matrix = NULL,
                      restrict.rhs = NULL,
