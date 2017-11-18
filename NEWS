@@ -1,6 +1,6 @@
 Changes in version 1.6-7
 
-## New entries go in here
+  * as.data.frame.pdata.frame gained argument 'keep.attributes'.
 
 
 Changes in version 1.6-6

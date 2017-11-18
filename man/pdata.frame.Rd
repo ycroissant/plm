@@ -24,7 +24,7 @@ pdata.frame(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 \method{[[}{pdata.frame}(x, y)
 \method{$}{pdata.frame}(x, y)
 \method{print}{pdata.frame}(x, \dots)
-\method{as.data.frame}{pdata.frame}(x, row.names = NULL, optional = FALSE, \dots)
+\method{as.data.frame}{pdata.frame}(x, row.names = NULL, optional = FALSE, keep.attributes = TRUE, \dots)
 \method{as.list}{pdata.frame}(x, keep.attributes = FALSE, \dots)
 }
 \arguments{
@@ -47,8 +47,7 @@ pdata.frame(x, index = NULL, drop.index = FALSE, row.names = TRUE,
   \item{drop.const.series}{logical, indicating whether constant columns are to be removed from the pdata.frame (defaults to \code{FALSE}),}
   \item{drop.unused.levels}{logical, indicating whether unused levels of factors are to be dropped (defaults to \code{FALSE})
     (unused levels are always dropped from variables serving to construct the index variables),}
-
-  \item{keep.attributes}{logical, only for as.list, indicating the elements of the returned list should have the pdata.frame's attributes added (default: FALSE),}
+  \item{keep.attributes}{logical, only for as.list and as.data.frame methods, indicating weather the elements of the returned list/columns of the data.frame should have the pdata.frame's attributes added (default: FALSE for as.list, TRUE for as.data.frame),}
   \item{\dots}{further arguments}
 }
 

@@ -463,15 +463,23 @@ as.list.pdata.frame <- function(x, keep.attributes = FALSE, ...) {
     return(x)
 }
 
-as.data.frame.pdata.frame <- function(x, row.names = NULL, optional = FALSE, ...){
+as.data.frame.pdata.frame <- function(x, row.names = NULL, optional = FALSE, keep.attributes = TRUE, ...){
     index <- attr(x, "index")
-    x <- lapply(x,
-                function(z){
+
+     if (!keep.attributes) {
+       attr(x, "index") <- NULL
+       class(x) <- "data.frame"
+       rownames(x) <- NULL
+     } else {
+      # make each column a pseries
+      x <- lapply(x,
+                  function(z){
                     attr(z, "index") <- index
                     class(z) <- base::union("pseries", class(z))
                     return(z)
-                }
-                )
+                  }
+      )
+    }
     
     if (is.null(row.names) || row.names == FALSE) {
         x <- data.frame(x)
