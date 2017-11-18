@@ -47,7 +47,7 @@ pdata.frame(x, index = NULL, drop.index = FALSE, row.names = TRUE,
   \item{drop.const.series}{logical, indicating whether constant columns are to be removed from the pdata.frame (defaults to \code{FALSE}),}
   \item{drop.unused.levels}{logical, indicating whether unused levels of factors are to be dropped (defaults to \code{FALSE})
     (unused levels are always dropped from variables serving to construct the index variables),}
-  \item{keep.attributes}{logical, only for as.list and as.data.frame methods, indicating weather the elements of the returned list/columns of the data.frame should have the pdata.frame's attributes added (default: FALSE for as.list, TRUE for as.data.frame),}
+  \item{keep.attributes}{logical, only for as.list and as.data.frame methods, indicating whether the elements of the returned list/columns of the data.frame should have the pdata.frame's attributes added (default: FALSE for as.list, TRUE for as.data.frame),}
   \item{\dots}{further arguments}
 }
 
