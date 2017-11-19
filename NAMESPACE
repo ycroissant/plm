@@ -169,6 +169,10 @@ S3method("vcovDC", "pcce")
 # vcovG
 S3method("vcovG", "plm")
 S3method("vcovG", "pcce")
+# groupGenric for pseries, see files groupGenerics_pseries(_test).R and ?groupGeneric
+S3method("Ops",       "pseries")
+S3method("Math",      "pseries")
+S3method("Complex",   "pseries")
 # pseries
 S3method("lag",       "pseries")
 S3method("lead",      "pseries")

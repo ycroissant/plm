@@ -283,11 +283,16 @@ diff.pseries <- function(x, lag = 1, ...){
     if (any(neg)) stop("diff.pseries is only relevant for non-negative values in 'lag'")
 
     lagx <- lag(x, k = lag)
-    res <- x-lagx
-  
-    # if x is logical and lagged x is a vector (as opposed to a matrix),
-    # diff'ed x is an integer vector (mimics base::diff behaviour):
-    if (islogi && length(lag) == 1) class(res) <- c("pseries", "integer")
+    
+    if (is.matrix(lagx)) {
+      # if 'lagx' is matrix (case length(lag) > 1):
+      # perform subtraction without pseries feature of 'x', because otherwise 
+      # the result would be c("pseries", "matrix") which is not supported
+      res <- as.numeric(x) - lagx
+    } else {
+      res <- x - lagx
+    }
+    
     return(res)
 }
 

@@ -389,15 +389,16 @@ print.form <- function(x, length.line){
 # Function checks if the class and storage mode (type) of an object match 
 # and corrects its class attribute if not
 #
-# A mismatch can occur if a pseries of lower class and type logical or interger
+# A mismatch can occur if a pseries of lower class and type logical or integer
 # are propagated to higher type by an arithmetic operation as R's arithmetic
 # operations do not change the first value of class attribute for
-# c("pseries", "logical/integer").
+# c("pseries", "logical/integer"). However, using groupGenerics as wrapper around
+# pseries objects, this does not happen anymore.
 # E.g.
 #  x <- c(1L, 2L, 3L)
 #  x + 1.5
 # results in class propagation from class "integer" to "numeric" 
-# but not if x is of class c("pseries", "interger")
+# but not if x is of class c("myclass", "integer")
 check_propagation_correct_class <- function(x) {
   # x: a pseries object (usually)
   if (any((pos <- inherits(x, c("logical" ,"integer", "numeric"), which = TRUE)) > 0)) {

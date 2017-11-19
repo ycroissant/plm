@@ -234,10 +234,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
   if (inherits(value, "pseries")){
     # remove pseries features before adding value as a column to pdata.frame
     if (length(class(value)) == 1) value <- unclass(value)
-    else {
-      value <- check_propagation_correct_class(value) # check if propagation to a higher type happened prior to assignment, e.g. integer => numeric
-      attr(value, "class") <- setdiff(class(value), "pseries") # don't use class(value) <- here as it can force the storage mode to change
-    }
+    else attr(value, "class") <- setdiff(class(value), "pseries") # don't use class(value) <- here as it forces the storage mode to change
     attr(value, "index") <- NULL
   }
   "$<-.data.frame"(x, name, value)
