@@ -9,6 +9,7 @@ R/detect_lin_dep_alias.R -text
 R/divers.R -text
 R/ercomp.R -text
 R/fixef.R -text
+R/groupGenerics_pseries.R -text
 R/index.R -text
 R/is.pconsecutive_pbalanced.R -text
 R/lagt.R -text
@@ -145,6 +146,7 @@ tests/test_detect_lin_dep_alias.R -text
 tests/test_fitted.plm.R -text
 tests/test_fixef.R -text
 tests/test_fixef_comp_lm_plm.R -text
+tests/test_groupGenerics_pseries.R -text
 tests/test_is.pconsecutive.R -text
 tests/test_lag_lead.R -text
 tests/test_lagt_leadt.R -text
