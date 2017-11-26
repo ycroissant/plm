@@ -68,7 +68,7 @@ the specified lag order per individual as a data frame.
 \references{
 
  Dumitrescu, E.-I./Hurlin, C. (2012), Testing for Granger non--causality in 
- heterogeneous panels, \emph{Economic Modelling}, \bold{29}(4), pp. 1450--460.
+ heterogeneous panels, \emph{Economic Modelling}, \bold{29}(4), pp. 1450--1460.
 % supplements (test data, MATLAB code): http://www.runmycode.org/companion/view/42
 
  Granger, C. W. J. (1969), Investigating Causal Relations by Econometric Models and 
