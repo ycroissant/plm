@@ -47,8 +47,8 @@ and \code{\link[plm]{vcovBK}} albeit the latter does not make use of vcovG.
 }
 
 \references{
- Millo, G. (2014) Robust standard error estimators for panel models: a
- unifying approach \emph{Unpublished manuscript}.
+ Millo, G. (2017) Robust Standard Error Estimators for Panel Models: A Unifying Approach,
+ \emph{Journal of Statistical Software} \bold{82}(3), pp. 1--27.
 }
 
 \examples{
