@@ -61,10 +61,7 @@ difft.pseries <- function(x, lag = 1, ...){
   
   lagtx <- lagt(x, k = lag) # use "time-based" lagging for difft
   res <- x-lagtx
-  
-  # if x is logical and lagged x is a vector (as opposed to a matrix),
-  # diff'ed x is an integer vector (mimics base::diff behaviour):
-  if (islogi && length(lag) == 1) class(res) <- c("pseries", "integer")
+
   return(res)
 }
 
