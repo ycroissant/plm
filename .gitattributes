@@ -12,7 +12,6 @@ R/fixef.R -text
 R/groupGenerics_pseries.R -text
 R/index.R -text
 R/is.pconsecutive_pbalanced.R -text
-R/lagt.R -text
 R/make.pconsecutive_pbalanced.R -text
 R/options.R -text
 R/pFormula.R -text
@@ -149,7 +148,9 @@ tests/test_fixef_comp_lm_plm.R -text
 tests/test_groupGenerics_pseries.R -text
 tests/test_is.pconsecutive.R -text
 tests/test_lag_lead.R -text
+tests/test_lag_lead.Rout.save -text
 tests/test_lagt_leadt.R -text
+tests/test_lagt_leadt.Rout.save -text
 tests/test_make.pconsecutive_pbalanced.R -text
 tests/test_misc.R -text
 tests/test_model.frame.R -text

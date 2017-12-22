@@ -1,5 +1,14 @@
+
 Changes in version 1.6-7
 
+  * lag, lead, diff for pseries objects: functions now perform the shifting of
+    observations while taking care of the time dimension per default. Previously, 
+    shifting was based on rows (neglecting the time dimension). The argument 
+    'shift' is introduced to control shifting behaviour; possible values are 
+    "time" (default) and "row" (row-wise shifting, behaviour up until plm 1.6-6).
+
+    Note that, however, the diff-ing performed in first-difference model estimation
+    by plm(..., model = "fd") is based on row-wise differences of the model matrix.
   * groupGenerics now used for 'pseries' objects, implemented as a wrapper 
     for methods in groups 'Math', 'Ops' and 'Complex' (see ?groupGeneric).
     Thus, propagation to a higher or lower data type works correctly when 

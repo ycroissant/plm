@@ -1,6 +1,10 @@
-# tests of lagt and lead fort (note the "t") respecting time periods (not just shifting of rows)
-# -> there is also a test file (test_lag_lead_factor_levels.R) for plm::lag which does not
+# tests of lagt and leadt (note the "t") respecting time periods (not just shifting of rows)
+# -> there is also a test file (test_lag_lead_factor_levels.R) for plm::lagr which does not
 #    treat the time variable as a numeric value (merely shifts rows)
+#
+# The lagging with respect to the time dimension is the default for lag since plm version 1.6-7, i.e.
+#  lag(..., shift = "time") is a wrapper for plm::lagt
+#
 #
 #  (1) test of lagging of index variable
 #  (2) some dropped factor levels / whole period missing
@@ -8,27 +12,6 @@
 #  (4) tests with non-consecutive time periods
 #  (5) lagt and lag should yield same results on data with consecutive time periods
 #  (6) NA in time index
-
-library(plm)
-
-#### NB: functions lagt and leadt not exported yet
-#### source or assign in NAMESPACE the new lagging function "lagt" and overwrite original function names to demonstrate testfile
-#
-# comment this block to run the old lag and lead function
-
-### by putting lagt/leadt in global environment:
-
-lag          <- plm:::lagt.pseries
-# lag.pseries  <- lagt.pseries
-lead         <- plm:::leadt.pseries
-# lead.pseries <- leadt.pseries
-
-### by assigning in NAMESPACE:
-#library(plm)
-#assignInNamespace("lag.pseries",  plm:::lagt.pseries,  envir = as.environment("package:plm"))
-#assignInNamespace("lead.pseries", plm:::leadt.pseries, envir = as.environment("package:plm"))
-######################
-
 
 
 library(plm)
@@ -38,8 +21,6 @@ Grunfeld$fac <- factor(c(200:2, 1))
 Grunfeld <- pdata.frame(Grunfeld)
 
 
-
-
 ############## (1) test of lagging of index variable ##########
 ## test of lagging of index variable
 lag(Grunfeld$firm)
@@ -47,7 +28,6 @@ lag(Grunfeld$firm)
 # variable identical to an index "on character level"
 Grunfeld$firm2 <- Grunfeld$firm
 lag(Grunfeld$firm2)
-
 
 
 ############## (2.1) tests with eliminated factor levels ##########
@@ -64,7 +44,6 @@ lead(Grunfeld$fac)
 if (!(length(unique(Grunfeld$fac)) == 200)) stop("wrong factor levels") # 200
 if (!(length(unique(lead(Grunfeld$fac))) == 191)) stop("wrong factor levels") # 191
 if (!(length(levels(lead(Grunfeld$fac))) == 200)) stop("wrong factor levels")  # 200
-
 
 
 ############### (2.2) test for case with a time period missing from whole data set
@@ -166,7 +145,6 @@ if (!isTRUE(all.equal(diff(Grunfeld$inv, 2), Grunfeld$inv - lag(Grunfeld$inv, 2)
 
 
 
-
 ############## (4) test with non-consecutive time periods ####
 data("Grunfeld", package = "plm")
 
@@ -177,7 +155,7 @@ is.pconsecutive(pGrunfeld_missing_period)
 head(pGrunfeld_missing_period$inv, 25)
 head(test_Grun_miss_p_lag1 <- lag(pGrunfeld_missing_period$inv), 25) # correct: additional NA for the missing time period is introduced at 1-1937
 head(lag(pGrunfeld_missing_period$inv, 2), 25)
-head(test_Grun_miss_p_lag3 <- lag(pGrunfeld_missing_period$inv, 3), 25) # correct 1-1938 is NA but should be non-NA (former 1-1935: 317.6)
+head(test_Grun_miss_p_lag3 <- lag(pGrunfeld_missing_period$inv, 3), 25) # correct: 1-1938 should be non-NA (former 1-1935: 317.6)
 
 ### formal test for correct value
 if (!is.na(test_Grun_miss_p_lag1["1-1937"])) stop("lag(pGrunfeld_missing_period$inv, 1)' for '1-1937' contains a value but should be 'NA'")
@@ -253,11 +231,11 @@ if (!is.na(test_Hed_miss2_p_lag3["4-7"])) {
  } else stop("'lag(Hed_missing_period2$age, 3)' is NA for '4-7' but should be the value of '4-4' from original data 'Hed_missing_period2$age'")
 
 
-############ (5) lagt and lag should yield same results on data with consecutive time periods ####################
+############ (5) lagt and lagr should yield same results on data with consecutive time periods ####################
 data("Grunfeld", package = "plm")
 Grunfeld <- pdata.frame(Grunfeld)
 
-if (!isTRUE(identical(plm:::lag.pseries(Grunfeld$inv, k = c(-3,-2,-1,0,1,2,3)), plm:::lagt.pseries(Grunfeld$inv, k = c(-3,-2,-1,0,1,2,3)))))
+if (!isTRUE(identical(plm:::lagt.pseries(Grunfeld$inv, k = c(-3,-2,-1,0,1,2,3)), plm:::lagr.pseries(Grunfeld$inv, k = c(-3,-2,-1,0,1,2,3)))))
   stop("lag and lagt not same on consecutive data.frame (but must be!)")
 
 
@@ -274,50 +252,51 @@ if (!isTRUE(all.equal(as.numeric(plm:::lagt.pseries(pdfNA$a)), c(NA, 1.0, NA, NA
 
 
 ############## messy data set with lots of NAs ############
-#### commented because it needs several extra package and loads data from the internet
+#### commented because it needs several extra packages and loads data from the internet
 # library(haven)
-#
+# 
 # nlswork_r8 <- haven::read_dta("http://www.stata-press.com/data/r8/nlswork.dta")
 # nlswork_r8 <- as.data.frame(lapply(nlswork_r8, function(x) {attr(x, "label") <- NULL; x}))
 # pnlswork_r8 <- pdata.frame(nlswork_r8, index=c("idcode", "year"), drop.index=F)
-# 
-# #
-# # ### on a consecutive pdata.frame, plm:::lag and plm:::lagt should yield same results (if no NA in id or time)
+#
+#
+# ### on a consecutive pdata.frame, plm:::lagr and plm:::lagt should yield same results (if no NA in id or time)
 # pnlswork_r8_consec <- make.pconsecutive(pnlswork_r8)
 # pnlswork_r8_consec_bal <- make.pconsecutive(pnlswork_r8, balanced = TRUE)
 # pnlswork_r8_bal <- make.pbalanced(pnlswork_r8, balanced = TRUE)
+#
+# if (!all.equal(plm:::lagr.pseries(pnlswork_r8_consec$age), plm:::lagt.pseries(pnlswork_r8_consec$age)))
+#  stop("lagr and lagt not same on consecutive data.frame (but must be!)")
+#
+# if (!all.equal(plm:::lagr.pseries(pnlswork_r8_consec_bal$age), plm:::lagt.pseries(pnlswork_r8_consec_bal$age)))
+#  stop("lagr and lagt not same on consecutive data.frame (but must be!)")
 # 
-# if (!all.equal(plm:::lag.pseries(pnlswork_r8_consec$age), plm:::lagt.pseries(pnlswork_r8_consec$age)))
-#   stop("lag and lagt not same on consecutive data.frame (but must be!)")
-# 
-# if (!all.equal(plm:::lag.pseries(pnlswork_r8_consec_bal$age), plm:::lagt.pseries(pnlswork_r8_consec_bal$age)))
-#   stop("lag and lagt not same on consecutive data.frame (but must be!)")
-
-# ########### compare results to statar::tlag ########################
+## ########### compare results to statar::tlag ########################
 # #### commented because it needs several extra packages
 # ## statar::tlag (and tlead) also works on the numbers of the time variable
 # ##
-# ### devtools::install_github("matthieugomez/statar")
+# ### install.packages("statar")
+# #### devtools::install_github("matthieugomez/statar")
 # ## library(dplyr)
 # ##
-# # ## lag 1
-# nlswork_r8_statar <- dplyr::mutate(dplyr::group_by(nlswork_r8, idcode), agel = statar::tlag(age, n = 1, time = year))
-# if (!isTRUE(all.equal(nlswork_r8_statar$agel, as.numeric(plm:::lagt.pseries(pnlswork_r8$age))))) stop("not same")
+# ## lag 1
+#  nlswork_r8_statar <- dplyr::mutate(dplyr::group_by(nlswork_r8, idcode), agel = statar::tlag(age, n = 1, time = year))
+#  if (!isTRUE(all.equal(nlswork_r8_statar$agel, as.numeric(plm:::lagt.pseries(pnlswork_r8$age))))) stop("not same")
 # ## lag 2
-# nlswork_r8_statar <- dplyr::mutate(dplyr::group_by(nlswork_r8, idcode), agel2 = statar::tlag(age, n = 2, time = year))
-# if (!isTRUE(all.equal(nlswork_r8_statar$agel2, as.numeric(plm:::lagt.pseries(pnlswork_r8$age, 2))))) stop("not same")
+#  nlswork_r8_statar <- dplyr::mutate(dplyr::group_by(nlswork_r8, idcode), agel2 = statar::tlag(age, n = 2, time = year))
+#  if (!isTRUE(all.equal(nlswork_r8_statar$agel2, as.numeric(plm:::lagt.pseries(pnlswork_r8$age, 2))))) stop("not same")
 # ## lag 3
-# nlswork_r8_statar <- dplyr::mutate(dplyr::group_by(nlswork_r8, idcode), agel2 = statar::tlag(age, n = 3, time = year))
-# if (!isTRUE(all.equal(nlswork_r8_statar$agel2, as.numeric(plm:::lagt.pseries(pnlswork_r8$age, 3))))) stop("not same")
-# 
-# # ## lead 1
-# nlswork_r8_statar <- dplyr::mutate(dplyr::group_by(nlswork_r8, idcode), agelead = statar::tlead(age, n = 1, time = year))
-# if (!isTRUE(all.equal(nlswork_r8_statar$agelead, as.numeric(plm:::leadt.pseries(pnlswork_r8$age))))) stop("not same")
+#  nlswork_r8_statar <- dplyr::mutate(dplyr::group_by(nlswork_r8, idcode), agel2 = statar::tlag(age, n = 3, time = year))
+#  if (!isTRUE(all.equal(nlswork_r8_statar$agel2, as.numeric(plm:::lagt.pseries(pnlswork_r8$age, 3))))) stop("not same")
+#
+# ## lead 1
+#  nlswork_r8_statar <- dplyr::mutate(dplyr::group_by(nlswork_r8, idcode), agelead = statar::tlead(age, n = 1, time = year))
+#  if (!isTRUE(all.equal(nlswork_r8_statar$agelead, as.numeric(plm:::leadt.pseries(pnlswork_r8$age))))) stop("not same")
 # ## lead 2
-# nlswork_r8_statar <- dplyr::mutate(dplyr::group_by(nlswork_r8, idcode), agelead2 = statar::tlead(age, n = 2, time = year))
-# if (!isTRUE(all.equal(nlswork_r8_statar$agelead2, as.numeric(plm:::leadt.pseries(pnlswork_r8$age, 2))))) stop("not same")
+#  nlswork_r8_statar <- dplyr::mutate(dplyr::group_by(nlswork_r8, idcode), agelead2 = statar::tlead(age, n = 2, time = year))
+#  if (!isTRUE(all.equal(nlswork_r8_statar$agelead2, as.numeric(plm:::leadt.pseries(pnlswork_r8$age, 2))))) stop("not same")
 # ## lead 3
-# nlswork_r8_statar <- dplyr::mutate(dplyr::group_by(nlswork_r8, idcode), agelead3 = statar::tlead(age, n = 3, time = year))
-# if (!isTRUE(all.equal(nlswork_r8_statar$agelead3, as.numeric(plm:::leadt.pseries(pnlswork_r8$age, 3))))) stop("not same")
+#  nlswork_r8_statar <- dplyr::mutate(dplyr::group_by(nlswork_r8, idcode), agelead3 = statar::tlead(age, n = 3, time = year))
+#  if (!isTRUE(all.equal(nlswork_r8_statar$agelead3, as.numeric(plm:::leadt.pseries(pnlswork_r8$age, 3))))) stop("not same")
 
 
