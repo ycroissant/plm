@@ -58,9 +58,9 @@ The implementation uses \code{\link[lmtest]{grangertest}} from package
 
 \value{
 An object of class \code{c("pgrangertest", "htest")}. Besides the usual 
-elements of a \code{htest} object, it contains element \code{indgranger} which
-carries the Granger test statistics along their p-values, degrees of freedom and
-the specified lag order per individual as a data frame.
+elements of a \code{htest} object, it contains the data frame \code{indgranger} 
+which carries the Granger test statistics per individual along the associated 
+p-values, degrees of freedom and the specified lag order.
 }
 
 \author{Kevin Tappe}
@@ -80,7 +80,8 @@ the specified lag order per individual as a data frame.
 }
 
 \seealso{
-\code{\link[lmtest]{grangertest}} for the Granger causality test in \CRANpkg{lmtest},
+\code{\link[lmtest]{grangertest}} for the original (non-panel) Granger causality
+test in \CRANpkg{lmtest}.
 }
 
 \examples{
