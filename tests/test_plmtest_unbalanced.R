@@ -17,27 +17,14 @@
 #  unbalanced panel: => test statistics for unbalanced panel differ from balanced panel
 #                    => test matches calculcation of EViews
 
-# Tables reprinted here:
+# Tables from Baltagi
 #
 # Table 4.1
 ############ [statistic (critical values at 5% level)]
+## note: SLM statistic is not implemented in plm
 #     ind       time    twoways
 #---------------------------------
-# BP 798.162   6.454    804.615
-#   (3.841)   (3.841)   (5.991)
-#
-# HO 28.252    -2.540    18.181
-#   (1.645)   (1.645)   (1.645)
-#
-# KW 28.252    -2.540   21.832
-#   (1.645)   (1.645)   (1.645)
-#
-# SLM 32.661   -2.433     -    ## note: SLM statistic is not implemented in plm
-#   (1.645)   (1.645)     -
-#
-# GHM   -       -       798.162 
-#       -       -       (4.231)
-
+# [...]
 
 ##### Grunfeld data set - balanced ####
 # Table 4.2 [Output from EViews], similiar to above table but with p-values
@@ -51,21 +38,8 @@
 ########### [statistic (p-values)]
 #     ind       time    twoways
 #---------------------------------
-# BP 798.1615   6.453882    804.6154
-#   (0.000)     (0.0111)    (0.0000)
-#
-# HO 28.25175  -2.540449    18.18064
-#   (0.000)     (0.9945)    (0.0000)
-#
-# KW 28.25175  -2.540449    21.83221
-#   (0.000)     (0.9945)    (0.0000)
-#
-# SLM 32.66605 -2.432565      -   ## note: SLM statistic is not implemented in plm
-#    (0.000)    (0.9925)      -
-#
-# GHM   -       -         798.1615 
-#       -       -         (0.0000)
-
+## note: SLM statistic is not implemented in plm
+# [...]
 
 ############ unbalanced ##########################################
 ##### Grunfeld unbalanced data set [see below]
@@ -76,35 +50,14 @@
 #####              p-values for the negative one-sided statistics
 #####              [in this example (std.) Honda, KW]
 #####              are not printed in EViews 9; from the help file:
-#####              "However, for testing time-specific effects, there is
-#####               a marked difference between the results for the
-#####               two-sided Breusch-Pagan and the one-sided tests,
-#####               with the former suggesting the presence of effects,
-#####               and the latter with negative values indicating that
-#####               there are no time-effects. These data clearly show
-#####               the benefits of using one-sided tests in an empirical
-#####               setting."
 
 ########### [statistic (p-values)]
 #           ind       time    twoways
 #---------------------------------
-# BP      796.6615   6.454578  803.1161
-#         (0.0000)   (0.0111)  (0.0000)
+# [...]
 #
-# HO      28.22519  -2.540586  18.16176
-#         (0.0000)   (--)       (0.0000)
-#
-# KW      28.22519  -2.540586  21.81025
-#         (0.000)    (--)      (0.0000)
-#
-# std.HO  32.63583  -2.430639  16.28236  ## note: standardizised HO statistic is not implemented in plm
-#         (0.000)    (--)      (0.0000)
-#
-# std.KW  32.63583  -2.430639  20.94707  ## note: standardizised KW statistic is not implemented in plm
-#         (0.000)    (--)      (0.0000)
-#
-# GHM      -         -        796.6615
-#                             (<0.001)
+## note: standardizised HO statistic is not implemented in plm
+## note: standardizised KW statistic is not implemented in plm
 
 
 options(digits = 10)
@@ -305,7 +258,7 @@ p.val_2 <- (1/2)*pchisq(crit_2, df=0, lower.tail = F) + (1/2) * pchisq(crit_2, d
 
 ################# Replicate an example from Stata
 ## example 1 in this manual:
-## http://www.stata.com/manuals14/xtxtregpostestimation.pdf
+## http://www.stata.com/manuals/xtxtregpostestimation.pdf
 ## It is an unbalanced panel
 
 # require(haven) # required to read Stata data file

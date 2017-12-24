@@ -15,26 +15,8 @@
 # Table 2.1 Grunfeld's Data One-way Error Component Results
 #           beta1     beta2   rho  sigma_me sigma_nu
 #--------------------------------------------------
-# OLS       0.116     0.231
-#          (0.006)*  (0.025)*
-#
-# Between   0.135     0.032
-#          (0.029)   (0.191)
-#
-# Within    0.110     0.310
-#          (0.012)   (0.017)
-#
-# WALHUS    0.110     0.308   0.73  87.36   53.75
-#          (0.011)   (0.017)
-#
-# AMEMIYA   0.110     0.308   0.71  83.52   52.77
-#          (0.010)   (0.017)
-#
-# SWAR      0.110     0.308   0.72  84.20   52.77
-#          (0.010)   (0.017)
-#
-# IMLE      0.110     0.308   0.70  80.30   52.49
-#          (0.010)   (0.017)
+# [...]
+
 library(plm)
 data("Grunfeld", package = "plm")
 Grunfeld_unbal <- Grunfeld[1:199, ]
@@ -107,30 +89,12 @@ summary(plm_grunfeld_re_amemiya_time_unbal)
 
 
 # Table 3.1 Grunfeld's Data. Two-way Error Component Results
-# "For the random effects estimators, both the SWAR and
-#  WALHUS report negative estimates of sigma_lambda^2
-#  and this is replaced by zero."
+#  RE estimators: SWAR and WALHUS yield negative estimates of
+#  sigma_lambda^2 and these are set to zero in the table.
 #
 #           beta1     beta2   rho  sigma_me sigma_nu
 #-------------------------------------------------
-# OLS       0.116     0.231
-#          (0.006)*   (0.025)*
-#
-# Within    0.118     0.358
-#          (0.014)   (0.023)
-#
-# WALHUS    0.110     0.308   87.31   -0     55.33
-#          (0.010)   (0.017)
-#
-# AMEMIYA   0.111     0.324   89.26 15.78   51.72
-#          (0.011)   (0.019)
-#
-# SWAR      0.110     0.308   84.23   -0     51.72
-#          (0.011)   (0.017)
-#
-# IMLE      0.110     0.309   80.41 3.87    52.35
-#          (0.010)   (0.020)
-
+# [...]
 
 #### twoways balanced
 plm_grunfeld_pooled_tw     <- plm(inv ~ value + capital, data=Grunfeld, model="pooling", effect = "twoways")
@@ -188,7 +152,7 @@ summary(plm_grunfeld_re_swar_tw_unbal   )
 
 #### (2) ####
 ####### replicate Stata's fixed effects estimator, R-squared, F statistic ###
-## http://www.stata.com/manuals14/xtxtreg.pdf [example 2 on p. 14]
+## http://www.stata.com/manuals/xtxtreg.pdf [example 2 on p. 14]
 # library(plm)
 # library(haven)
 # nlswork <- read_dta("http://www.stata-press.com/data/r14/nlswork.dta") # large file
@@ -249,8 +213,9 @@ summary(plm_grunfeld_re_swar_tw_unbal   )
 ## Test of unbalanced random effects estimator on Hedonic data of Harrison/Rubinfeld (1978)
 
 ## NB: Baltagi's text book, table 9.1 uses the Stata results, the original paper Baltagi/Chang (1994) what EViews and plm yields
-##     However, the standard error of plm do not match exactly EViews and the paper. plm and gretl match. We don't know what
-##     EViews or Baltagi/Chang (1994) did (the paper mentions, it "approximate" standard errors)
+##     However, the standard error of plm do not match exactly EViews and the paper. We don't know what exactly
+##     EViews or Baltagi/Chang (1994) did (the paper mentions "approximate" standard errors).
+##     A detailed explanation what EViews does is here: http://forums.eviews.com/viewtopic.php?f=4&t=18629#p59506
 
 # scaling of variables in dataset Hedonic is a little bit different to Baltagi/Chang (1994) and Baltagi's text book, table 9.1
 # see below for scaling as in Baltagi/Chang (1994)

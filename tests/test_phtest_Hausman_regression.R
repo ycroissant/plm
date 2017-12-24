@@ -129,11 +129,11 @@ if (class(testobj3$statistic) != "numeric") stop(paste0("class of statistic is n
 
 ################################## (3) ##################################
 ### comparison to Stata:
-# Hausman test with Stata example 2, pp. 5-6 in http://www.stata.com/manuals14/xtxtregpostestimation.pdf
+# Hausman test with Stata example 2, pp. 5-6 in http://www.stata.com/manuals/xtxtregpostestimation.pdf
 #
 # Results of phtest differ, most likely because RE model differs slightly from Stata's RE model as the
 # default RE model in Stata uses a slightly different implementation of Swamy-Arora method
-# [see http://www.stata.com/manuals14/xtxtreg.pdf]
+# [see http://www.stata.com/manuals/xtxtreg.pdf]
 #
 # Stata:
 # chi2(8)   = (b-B)'[(V_b-V_B)^(-1)](b-B)
