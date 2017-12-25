@@ -241,9 +241,12 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 }
 
 # NB: We don't have methods for [<-.pdata.frame and [[<-.pdata.frame, so it
-#     dispatches to the respective data.frame methods.
-#     This results in really assigning a pseries to the pdata.frame in case 
-#     of [<- and [[<- as can be seen by lapply(some_pdata.frame, class) after 
+#     dispatches to the respective data.frame methods which assign whatever is
+#     handed over to the methods. Especially, if a pseries is handed over, this
+#     results in really assigning a pseries to the pdata.frame in case of usage of
+#     [<- and [[<-. This is inconsistent because the columns of a pdata.frame do not
+#     have the 'pseries' features.
+#     This can be seen by lapply(some_pdata.frame, class) after 
 #     assigning with the respective .data.frame methods
 
 
@@ -294,12 +297,6 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     sc <- sys.call()
     # Nargs_mod to distinguish if called by [] (Nargs_mod == 2L); [,] (Nargs_mod == 3L); [,,] (Nargs_mod == 4L)
     Nargs_mod <- nargs() - (!missing.drop)
-  
-    # # Kevin Tappe 2015-10-29 [code from old implementation]
-    # if (missing(drop)){
-    #     if (! missing(j) && length(j) == 1) { drop = TRUE
-    #       } else { drop = FALSE }
-    # }
   
     old.pdata.frame <- !inherits(x, "data.frame")
     if (! old.pdata.frame){

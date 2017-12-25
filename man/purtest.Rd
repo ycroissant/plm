@@ -41,7 +41,7 @@ An object of class \code{"purtest"}: a list with the elements \code{"statistic"}
 }
 
 \details{
-% TODO: in general, write more to the various tests
+% TODO: in general, write more about the various tests
 % TODO: mention which test is suitable for unbalanced panels (once the data pre-processing in purtest() is fixed to handle unbalanced data)
 % TODO: mention which statistic of IPS (2003) we output: Ztbar or Wtbar? (it is not t-bar, the mean of t statistics)
 
@@ -107,6 +107,6 @@ purtest(y, pmax = 4, exo = "intercept", test = "madwu")
 purtest(inv ~ 1, data = Grunfeld, index = c("firm", "year"), pmax = 4, test = "madwu")
 }
 
-\author{Yves Croissant}
+\author{Yves Croissant and for "Pm", "invnormal", and "logit" Kevin Tappe}
 
 \keyword{htest}
