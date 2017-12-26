@@ -354,7 +354,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     # (probably by as.data.frame.pdata.frame).
     # Coercing is the built-in behaviour for extraction from data.frames by "[." (see ?`[.data.frame`) 
     # and it seems this cannot be avoided; thus we need to make sure, not to have any coercing going on
-    # which add extra data (such as as.matrix.pseries, as.data.frame.pdata.frame) by setting the class 
+    # which adds extra data (such as as.matrix.pseries, as.data.frame.pdata.frame) by setting the class 
     # to "data.frame" first
     class(x) <- "data.frame"
 
@@ -476,6 +476,7 @@ as.data.frame.pdata.frame <- function(x, row.names = NULL, optional = FALSE, kee
       # make each column a pseries
       x <- lapply(x,
                   function(z){
+               #     names(z) <- row.names(x) # it does not seem possible to keep the names in the 'pseries' because the call to data.frame later deletes the names 
                     attr(z, "index") <- index
                     class(z) <- base::union("pseries", class(z))
                     return(z)
@@ -489,9 +490,8 @@ as.data.frame.pdata.frame <- function(x, row.names = NULL, optional = FALSE, kee
         if (row.names == TRUE) { # set fancy row names
             x <- data.frame(x)
             row.names(x) <- fancy.row.names(index)
-            # using row.names(x)<-"something" is safer (does not allow
-            # duplicate row.names) than
-            # attr(x,"row.names")<-"something"
+            # using row.names(x) <- "something" is safer (does not allow
+            # duplicate row.names) than # attr(x,"row.names") <- "something"
     }
     ## not implemented: if row.names is a character vector, row.names
     ## could also be passed here to base::data.frame, see
