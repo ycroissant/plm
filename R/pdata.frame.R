@@ -43,7 +43,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
       x <- x[, !na.check]
     }
 
-    # if requested: check and remove constant series
+    # if requested: check for constant series and remove
     if (drop.const.series) {
       # old: cst.check <- sapply(x, function(x) var(as.numeric(x), na.rm = TRUE)==0) # old
       # -> var() and sd() on factors is deprecated as of R 3.2.3 -> use duplicated()
@@ -52,11 +52,11 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
                                 all(duplicated(x[!is.na(x)])[-1L])
                               } else {
                                 x[!is.finite(x)] <- NA # set infinite elements to NA only for check
-                                var(as.numeric(x), na.rm = TRUE)==0
+                                var(as.numeric(x), na.rm = TRUE) == 0
                               }
                             })
       
-      # following line: bug fixed thanks to Marciej Szelfer 
+      # following line: bug fixed thanks to Marciej Szelfer
       cst.check <- cst.check | is.na(cst.check)
       cst.serie <- names(x)[cst.check]
       if (length(cst.serie) > 0){
@@ -95,12 +95,12 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
         time <- NULL
     }
     # if the length of index is 1, id = index and time is NULL
-    if (length(index)==1){
+    if (length(index) == 1){
         id <- index
         time <- NULL
     }
     # if the length of index is 2, the first element is id, the second is time
-    if (length(index)==2){
+    if (length(index) == 2){
         id <- index[1]
         time <- index[2]
     }
@@ -119,15 +119,15 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     if(is.numeric(id.name)){
         if(!is.null(time.name)){warning("The time index (second element of 'index' argument) will be ignored\n")}
         N <- nrow(x)
-        if( (N %% id.name)!=0){
+        if( (N %% id.name) != 0){
             stop(paste0("unbalanced panel, in this case the individual index may not be indicated by an integer\n",
                         "but by specifying a column of the data.frame in the first element of the 'index' argument\n"))
         }
         else{
             T <- N %/% id.name
             n <- N %/% T
-            time <- rep(1:T, n)
-            id <- rep(seq(1:n), rep(T, n))
+            time <- rep((1:T), n)
+            id <- rep((1:n), rep(T, n))
             id.name <- "id"
             time.name <- "time"
             if (id.name %in% names(x)) warning(paste0("column '", id.name, "' overwritten by id index"))
@@ -157,7 +157,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
             n <- length(Ti)
             time <- c()
             for (i in 1:n){
-                time <- c(time,1:Ti[i])
+                time <- c(time, 1:Ti[i])
             }
             time.name <- "time"
             if (time.name %in% names(x)) warning(paste0("column '", time.name, "' overwritten by time index"))
@@ -218,9 +218,9 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     if (row.names) {
         attr(x, "row.names") <- fancy.row.names(index)
         # NB: attr(x, "row.names") allows for duplicate rownames (as
-        # opposed to row.names(x) <- something) no fancy row.names for
-        # index attribute (!?): maybe because so it is possible to
-        # restore original row.names?
+        # opposed to row.names(x) <- something)
+        # NB: no fancy row.names for index attribute (!?):
+        # maybe because so it is possible to restore original row.names?
     }
     
     class(index) <- c("pindex", "data.frame")
@@ -315,7 +315,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
         #      * [i]   (supplied i AND missing j)                    (Nargs_mod == 2L) [Nargs_mod distinguishes this case from the one where subsetting is needed!]
         #      * [i, drop = TRUE/FALSE] (supplied i AND missing j)   (Nargs_mod == 2L)
         #
-        # => subset index (and row names) if: supplied i && Nargs_mod => 3L
+        # => subset index (and row names) if: supplied i && Nargs_mod >= 3L
       
         index <- attr(x, "index")
         x.rownames <- row.names(x)
@@ -344,7 +344,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
         }
     }
     
-    # delete attribute for old index first:
+    # delete attribute with old index first:
     # this preseves the order of the attributes because 
     # order of non-standard attributes is scrambled by R's data.frame subsetting with `[.`
     # (need to add new index later anyway)
@@ -369,7 +369,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     if (!missing.i) sc_mod[[3]] <- i # if present, i is always in pos 3
     if (!missing.j) sc_mod[[4]] <- j # if present, j is always in pos 4
     if (!missing.drop) sc_mod[[length(sc)]] <- drop # if present, drop is always in last position (4 or 5,
-                                                    # depending on the call structure an whether missing j or not)
+                                                    # depending on the call structure and whether missing j or not)
     
     mydata <- eval(sc_mod)
 
@@ -428,6 +428,7 @@ print.pdata.frame <- function(x, ...){
   print(x, ...)
 }
 
+# as.list.pdata.frame:
 # The default is to behave identical to as.list.data.frame.
 # This default is necessary, because some code relies on this 
 # behaviour! Do not change this!
@@ -515,7 +516,7 @@ as.matrix.pseries <- function(x, idbyrow = TRUE, ...){
     id <- index[[1]]
     time <- index[[2]]
     time.names <- levels(as.factor(time))
-    x <- split(data.frame(x,time), id)
+    x <- split(data.frame(x, time), id)
     x <- lapply(x, function(x){
         rownames(x) <- x[,2]
         x[,-2,drop=F]
