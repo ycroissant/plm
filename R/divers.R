@@ -211,7 +211,7 @@ pres <- function(x) {  # pres.panelmodel
   timeind  <-attr(x$model, "index")[,2]
   
   # fix to allow operation with pggls, pmg (NB: pmg? meant: plm?)
-  # [NB: one day, make this cleaner; with the describe framework?]
+  # [TODO: one day, make this cleaner; with the describe framework?]
   if (!is.null(x$args$model))                 maybe_fd <- x$args$model
   if (!is.null(attr(x, "pmodel")$model.name)) maybe_fd <- attr(x, "pmodel")$model.name # this line is currently needed to detect pggls models
   

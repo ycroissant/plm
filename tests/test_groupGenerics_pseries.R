@@ -37,9 +37,9 @@ stopifnot(all(c("pseries", class(Conj(Grunfeld$complex))) == class(Conj(pGrunfel
 stopifnot(all(c("pseries", class(Re(Grunfeld$complex))) == class(Re(pGrunfeld$complex))))
 
 ############# (2) check of model estimation with dependent variable as integer #########
-## during testing phase of the implementation of groupGenerics, it became apparent that
-## non-correct implementation yields different results when an integer is in the dependent
-## variable -> so, have this as a test case
+## During testing phase of the implementation of groupGenerics, it became apparent that
+## non-correct implementation yields different results when an integer serves as dependent
+## variable -> use an integer as test case
 data("Produc", package = "plm")
 
 ## gsp is an integer
@@ -58,8 +58,8 @@ if (!isTRUE(all.equal(zz$coefficients, zz2$coefficients))) stop("estimation resu
 
 ############# (3) assinging to a pdata.frame #############
 ## test for assigning by $<- to a pdata.frame
-## pre rev. 634: decimals which where integers before were converted to integers with typof being integer
-##               yielded wrong results.
+## pre rev. 634: decimals which had been integers previously were converted to integers with typeof == integer
+##               and gave wrong results.
 
 Grunfeld[ , "integer"] <- rep(c(1L, 2L, 3L, 4L), 25)
 Grunfeld[ , "logi"]    <- rep(c(TRUE, FALSE, TRUE, FALSE), 25)
@@ -137,7 +137,7 @@ y2 <- y / 10
 class(y2) # c("myclass", "interger") - not propagated to c("myclass", "numeric")
 mode(y2)
 typeof(y2)
-y2 # 0.1 0.2 0.3 - but decimal numbers!
+y2 # 0.1 0.2 0.3 - class is c("myclass", "integer") but result is decimals!
 
 y3 <- y2
 typeof(y3) # double

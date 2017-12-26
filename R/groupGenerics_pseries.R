@@ -1,6 +1,6 @@
 ## groupGenerics for operations on pseries
 ## see ?groupGeneric
-## see test_groupGenerics_pseries.R for examples
+## see tests/test_groupGenerics_pseries.R for examples
 ##
 ## implemented wrappers for groups Ops, Math, Complex
 ##
@@ -14,7 +14,8 @@
 ## e.g. class c("pseries", "integer") -> c("pseries", "numeric") when a function
 ## takes an integer as input and outputs a numeric. Without the group generics,
 ## the class of the results would stay as c("pseries", "integer") while the values
-## themselves are numerics.
+## themselves are numerics. The associated test file demonstrates the behaviour,
+## see tests/test_groupGenerics_pseries.R
 
 
 ## helper functions: remove_pseries_features and add_pseries_features
@@ -37,7 +38,7 @@ Ops.pseries <- function(e1, e2) {
   miss_e2 <- missing(e2)
   index_e1 <- attr(e1, "index")
   
-  ## either one or both could be pseries
+  # either one or both could be pseries
   if (inherits(e1, "pseries")) e1 <- remove_pseries_features(e1)
   if (!miss_e2 && inherits(e2, "pseries")) e2 <- remove_pseries_features(e2)
 
@@ -66,9 +67,9 @@ Complex.pseries <- function(z) {
 #  print("Complex.pseries executed!") # debug output
 
   index <- attr(z, "index")
-  if (inherits(z, "pseries")) x <- remove_pseries_features(z)
+  if (inherits(z, "pseries")) z <- remove_pseries_features(z)
 
-  z <- get(.Generic)(x)
+  z <- get(.Generic)(z)
   z <- add_pseries_features(z, index)
   return(z)
 }

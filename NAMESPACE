@@ -46,6 +46,9 @@ importFrom("graphics",
            "abline", "axis", "barplot", "legend", "lines",
            "plot", "points")
 
+
+################## register S3 methods ##################
+
 # pFormula
 S3method("model.frame",  "pFormula")
 S3method("model.matrix", "pFormula")
@@ -169,7 +172,7 @@ S3method("vcovDC", "pcce")
 # vcovG
 S3method("vcovG", "plm")
 S3method("vcovG", "pcce")
-# groupGenric for pseries, see files groupGenerics_pseries(_test).R and ?groupGeneric
+# groupGenric for pseries, see ?groupGeneric and files R/groupGenerics_pseries.R and tests/test_groupGenerics_pseries.R
 S3method("Ops",       "pseries")
 S3method("Math",      "pseries")
 S3method("Complex",   "pseries")
