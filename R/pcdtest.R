@@ -216,8 +216,8 @@ pcdres <- function(tres, n, w, form, test) {
   }
   
   ## if no intersection or only 1 shared period of e_it and e_jt
-  ## => exclude from calculation and issue warning as information
-  ## in general, length(m.ij) gives the number of shared periods by indiviudals i, j
+  ## => exclude from calculation and issue a warning.
+  ## In general, length(m.ij) gives the number of shared periods by indiviudals i, j
   ## Thus, non intersecting pairs are indicated by length(m.ij) == 0 (t.ij[i,j] == 0)
   no.one.intersect <- (t.ij <= 1)
   if (any(no.one.intersect, na.rm = TRUE)) {

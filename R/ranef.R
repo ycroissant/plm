@@ -27,7 +27,7 @@ ranef.plm <- function(object, effect = NULL, ...) {
     stop(paste0("for one-way models, argument \"effect\" must be NULL or match the effect introduced in model estimation"))
 
   # default effect is the model's effect
-  # for two-ways RE mdoels: set default to effect = "individual"
+  # for two-ways RE models: set default to effect = "individual"
   if (obj.effect == "twoways" && is.null(effect)) effect <- "individual"
   if (is.null(effect)) effect <- obj.effect
   
@@ -38,15 +38,13 @@ ranef.plm <- function(object, effect = NULL, ...) {
   res <- residuals_overall_exp.plm(object) # but need RE residuals of overall model
   
   if (!inherits(res, "pseries")) {
-    # in development version 1.6-6, residuals() do not seem to return pseries anymore..?
-    # residuals_overall_exp.plm() still returns pseries, but just make sure we have a pseries
-    # for the following between() to work.
+    # just make sure we have a pseries for the following between() to work
     attr(res, "index") <- index(object$model)
     class(res) <- c("pseries", class(res))
   }
    
-  # mean_res <- Between(res, effect = effect)  # has length = # observations
-  mean_res <- between(res, effect = effect)    # need length = # individuals
+  # mean_res <- Between(res, effect = effect)  # has length == # observations
+  mean_res <- between(res, effect = effect)    # but need length == # individuals
   
   if (obj.effect == "twoways" && balanced) {
     theta <- switch(effect,
