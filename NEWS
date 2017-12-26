@@ -15,6 +15,9 @@ Changes in version 1.6-7
     performed on pseries, e.g. a c("pseries", "interger") gets propagated
     to c("pseries", "numeric") if an operation returns a decimal.
   * as.data.frame.pdata.frame gained argument 'keep.attributes'.
+  * [.pdata.frame: in case a single column, i.e., a pseries is returned, this 
+    pseries now has names (now consistent to extraction by $.pdata.frame and
+    [[.pdata.frame).
 
 
 Changes in version 1.6-6

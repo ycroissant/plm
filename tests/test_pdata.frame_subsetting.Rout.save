@@ -1,5 +1,5 @@
 
-R version 3.4.2 (2017-09-28) -- "Short Summer"
+R version 3.4.3 (2017-11-30) -- "Kite-Eating Tree"
 Copyright (C) 2017 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -15,9 +15,10 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> # test if subsetting by rownames of a pdata.frame preserves index
+> # various test of subsetting ("indexing") a pdata.frame, e.g. that subsetting by rownames preserves the index
 > #  (pre rev. 187/189 all entries were set to NA)
 > #  (pre rev. 251 subsetting a pdata.frame added extra information due to coercing rules of "[.data.frame")
+> #  (pre rev. 668 subsetting a pdata.frame with [.pdata.frame such that a single column (pseries) is returned was lacking names)
 > 
 > library(plm)
 Loading required package: Formula
@@ -455,6 +456,17 @@ Loading required package: Formula
 > if (anyNA(attr(pGrunfeld[[3]], which = "index"))) stop("FAIL: NA in index")
 > 
 > 
+> # check that extracting a single column (which becomes a pseries) yield the same
+> # result for the three extraction methods $.pdata.freme, [[.pdata.frame, and [.pdata.frame
+> extr1 <- pGrunfeld$inv
+> extr2 <- pGrunfeld[["inv"]]
+> extr3 <- pGrunfeld[ , "inv"]
+> if (!isTRUE(all.equal(extr1, extr2))) stop("extraction of single column (pseries) does not yield same results for $.pdata.frame and [[.pdata.frame")
+> if (!isTRUE(all.equal(extr1, extr3))) stop("extraction of single column (pseries) does not yield same results for $.pdata.frame and [.pdata.frame")
+> 
+> # check that row names are kept and subsetted by [.pdata.frame when a single column (pseries) is returned
+> if (!isTRUE(all.equal(names(pGrunfeld[1:5 , "inv"]), row.names(pGrunfeld)[1:5]))) stop("row names not correctly subsetted by [.pdata.frame")
+> 
 > 
 > ############ subsetting used to change the pdata.frame
 > ########## since rev.252 this is fully fixed (rev. 251 already fixed large parts of this),
@@ -652,7 +664,7 @@ Warning messages:
 2: In `[.data.frame`(x, 1, drop = FALSE) : 'drop' argument will be ignored
 > 
 > 
-> ####### test return values numeric(0) etc and especially NULL
+> ####### test return values (named) numeric(0) etc and especially NULL
 > 
 > ## compare pdata.frame() to data.frame() in case of subsetting with non-existent return values
 > # firm 31 is non-existent
@@ -666,12 +678,12 @@ data frame with 0 columns and 200 rows
 > 
 > 
 > pGrunfeld[pGrunfeld$firm == "31", "value"]
-numeric(0)
+named numeric(0)
 > 
 > Grunfeld[Grunfeld$firm == "31", "value"]
 numeric(0)
 > 
-> #### since R 3.4.0 the  following two cases gave a warning which is pacified in plm rev. 626
+> #### since R 3.4.0 the following two cases gave a warning which was pacified in rev. 626
 > # Warning in structure(mydata, index = index, class = base::union("pseries",  :
 > #                                                                   Calling 'structure(NULL, *)' is deprecated, as NULL cannot have attributes.
 > #                                                                 Consider 'structure(list(), *)' instead.
@@ -683,14 +695,14 @@ NULL
 NULL
 > 
 > 
-> 
-> pGrunfeld[pGrunfeld$firm == "19", "valueX"]
+> # with existent firm 19
+> pGrunfeld[pGrunfeld$firm == "19", "valueNonExistent"]
 NULL
 > 
-> Grunfeld[Grunfeld$firm == "19", "valueX"]
+> Grunfeld[Grunfeld$firm == "19", "valueNonExistent"]
 NULL
 > 
 > 
 > proc.time()
    user  system elapsed 
-   1.20    0.18    1.37 
+   1.40    0.18    1.56 
