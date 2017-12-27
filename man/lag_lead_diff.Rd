@@ -34,7 +34,6 @@ lag, lead, and diff functions for class pseries.
 }
 
 \details{
-% TODO: describe argument shift
 This set of functions perform lagging, leading (lagging in the opposite direction), and differencing operations
 on \code{pseries} objects, i. e., they take the panel structure of the data into account by performing the
 operations per individual.
