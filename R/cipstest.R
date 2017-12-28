@@ -20,16 +20,17 @@ pseries2pdata <- function(x) {
   ## transforms a pseries in a pdataframe with the indices as regular columns
   ## in positions 1 and 2 (individual index, time index)
   indices <- attr(x, "index")
-  vx <- as.numeric(x)
+  vx <- remove_pseries_features(x)
   px <- cbind(indices, vx)
+  if (ncol(indices) > 2) stop("pseries2pdata not adapted to more than 2 indices yet")
   dimnames(px)[[2]] <- c("ind", "tind", deparse(substitute(x)))
-  return(pdata.frame(px, index=c("ind", "tind")))
+  return(pdata.frame(px, index = c("ind", "tind")))
 }
 
 pmerge <- function(x, y, ...) {
   ## transf. if pseries
-  if("pseries" %in% class(x)) x <- pseries2pdata(x)
-  if("pseries" %in% class(y)) y <- pseries2pdata(y)
+  if(inherits(x, "pseries")) x <- pseries2pdata(x)
+  if(inherits(y, "pseries")) y <- pseries2pdata(y)
   z <- merge(data.frame(x), data.frame(y), by.x=dimnames(x)[[2]][1:2],
              by.y=dimnames(y)[[2]][1:2], ...)
   return(z)
@@ -101,7 +102,7 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
 
     ## model data
     X <- model.matrix(pmod)
-    y <- as.numeric(model.response(model.frame(pmod))) # remove pseries attribs
+    y <- as.numeric(model.response(model.frame(pmod))) # remove pseries attribs  # TODO: can use remove_pseries_attributes
     
   ## det. *minimum* group numerosity
   t <- min(tapply(X[,1],ind,length)) # TODO: == min(Ti) simpler???
@@ -232,7 +233,7 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
 
       ## for each x-sect. i=1..n estimate (over t) an augmented model
       ## y_it = alfa_i + beta_i*X_it + c1_i*my_t + c2_i*mX_t + err_it
-      unind<-unique(ind)
+      unind <- unique(ind)
       for(i in 1:n) {
         tdati <- adfdati[ind == unind[i], ]
         tmods[[i]] <- lm(adffm, tdati)
