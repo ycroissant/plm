@@ -40,6 +40,21 @@ index.panelmodel <- function(x, which = NULL, ...){
   index(x = anindex, which = which)
 }
 
+is.index <- function(index) {
+# not exported, helper function
+  # checks if the index is an index in the sense of package plm
+  res <- if (all(class(index) == c("pindex", "data.frame"))) TRUE else FALSE
+  return(res)
+}
+
+has.index <- function(object) {
+# not exported, helper function
+  # checks if an object has an index in sense of package plm
+  # (esp. to distinguish from zoo::index() which always returns an index)
+  index <- attr(object, "index")
+  return(is.index(index))
+}
+
 # pos.index:
 # not exported, helper function
 #
