@@ -32,6 +32,8 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
   dati <- pmerge(diff(x), lag(x))
   dati <- pmerge(dati, diff(lag(x)))
   ## minimal column names
+  indexnames <- c("ind", "tind")
+  dimnames(dati)[[2]][1:2] <- indexnames
   clnames <- c("de", "le", "d1e")
   dimnames(dati)[[2]][3:5] <- clnames
   ## add lags if lags > 1

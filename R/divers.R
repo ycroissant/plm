@@ -415,18 +415,16 @@ check_propagation_correct_class <- function(x) {
 pseries2pdataframe <- function(x, pdata.frame = TRUE) {
   ## non-exported
   ## Transforms a pseries in a (p)data.frame with the indices as regular columns
-  ## in positions 1 and 2 (individual index, time index).
+  ## in positions 1, 2 and (if present) 3 (individual index, time index, group index).
   ## if pdataframe = TRUE -> return a pdata.frame, if FALSE -> return a data.frame
   if (!inherits(x, "pseries")) stop("input needs to be of class 'pseries'")
   indices <- attr(x, "index")
   class(indices) <- setdiff(class(indices), "pindex")
   vx <- remove_pseries_features(x)
   dfx <- cbind(indices, vx)
-  if (ncol(indices) == 2) dimnames(dfx)[[2]] <- c("ind", "tind", deparse(substitute(x)))
-  if (ncol(indices) == 3) dimnames(dfx)[[2]] <- c("ind", "tind", "gind", deparse(substitute(x)))
+  dimnames(dfx)[[2]] <- c(names(indices), deparse(substitute(x)))
   if (pdata.frame == TRUE) {
-      if (ncol(indices) == 2) res <- pdata.frame(dfx, index = c("ind", "tind"))
-      if (ncol(indices) == 3) res <- pdata.frame(dfx, index = c("ind", "tind", "gind"))
+    res <- pdata.frame(dfx, index = names(indices))
    } else { res <- dfx }
   return(res)
 }
