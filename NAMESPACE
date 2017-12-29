@@ -10,7 +10,7 @@ export(# estimation:
        # others:
        plm.data, pdata.frame, pmodel.response,
        between, Between, Within, lag, lead, pFormula,
-       punbalancedness, r.squared, has.intercept, detect_lin_dep,
+       punbalancedness, r.squared, has.intercept, detect_lin_dep, is.pseries,
        is.pconsecutive, is.pbalanced, make.pconsecutive, make.pbalanced,
        within_intercept, pvar, pdim, dynformula, index, fixef, ranef, cortab,
        

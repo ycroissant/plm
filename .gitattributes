@@ -74,6 +74,7 @@ man/fixef.plm.Rd -text
 man/index.Rd -text
 man/is.pbalanced.Rd -text
 man/is.pconsecutive.Rd -text
+man/is.pseries.Rd -text
 man/lag_lead_diff.Rd -text
 man/make.pbalanced.Rd -text
 man/make.pconsecutive.Rd -text

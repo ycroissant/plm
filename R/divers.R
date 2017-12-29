@@ -450,3 +450,14 @@ pmerge <- function(x, y, ...) {
   return(z)
 }
 
+is.pseries <- function(object) {
+ # checks if an object has the necessary features to qualify as a 'pseries'
+  res <- TRUE
+  if (!inherits(object, "pseries")) res <- FALSE
+  # class 'pseries' is always on top of basic class: min 2 classes needed, if 2 classes "pseries" needs to be first entry
+  if (!length(class(object)) >= 2L) res <- FALSE
+  if (length(class(object)) == 2L & class(object)[1] != "pseries") res <- FALSE
+  if (!has.index(object)) res <- FALSE
+  if (!any(c(is.numeric(object), is.factor(object), is.logical(object), is.character(object)))) check <- FALSE
+  return(res)
+}

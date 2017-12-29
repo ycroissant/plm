@@ -10,7 +10,8 @@
 \alias{print.summary.pseries}
 \alias{as.matrix.pseries}
 
-% lag, lead, diff is now in separate file lag_lead_diff.Rd
+% lag, lead, diff documented in separate file man/lag_lead_diff.Rd
+% is.pseries documented in file man/is.pseries.Rd
 
 \title{panel series}
 
@@ -65,6 +66,7 @@ also \bold{Examples}.
 % }
 
 \seealso{
+\code{\link[plm]{is.pseries}} to check if an object is a pseries.
 For more functions on class 'pseries' see \code{\link[plm]{lag}}, \code{\link[plm]{lead}}, 
 \code{\link[plm]{diff}} for lagging values, leading values (negative lags) and differencing.
 }

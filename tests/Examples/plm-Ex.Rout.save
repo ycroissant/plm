@@ -363,7 +363,7 @@ CEOage 0     0       1
 log(y) ~ lag(log(y), 1) + log(x1) + lag(log(x1), 1) + lag(log(x1), 
     2) + log(x2) + lag(log(x2), 1) + lag(log(x2), 2) + diff(log(x3)) + 
     diff(log(x3), 1) + diff(log(x3), 2)
-<environment: 0x0000000007d18e48>
+<environment: 0x000000000678e5c0>
 > 
 > 
 > 
@@ -975,6 +975,36 @@ FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
 > is.pconsecutive(NULL, id = Grunfeld$firm, time = Grunfeld$year)
    1    2    3    4    5    6    7    8    9   10 
 TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("is.pseries")
+> ### * is.pseries
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: is.pseries
+> ### Title: Check if an object is a pseries
+> ### Aliases: is.pseries
+> ### Keywords: attribute
+> 
+> ### ** Examples
+> 
+> # Create a pdata.frame and extract a series, which becomes a pseries
+> data("EmplUK", package = "plm")
+> Em <- pdata.frame(EmplUK)
+> z <- Em$output
+> 
+> class(z) # pseries as indicated by class
+[1] "pseries" "numeric"
+> is.pseries(z) # and confirmed by check
+[1] TRUE
+> 
+> # destroy index of pseries and re-check
+> attr(z, "index") <- NA
+> is.pseries(z) # now FALSE
+[1] FALSE
 > 
 > 
 > 
@@ -13262,7 +13292,7 @@ attr(,"se")
 > ###
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  18.87 0.55 19.61 NA NA 
+Time elapsed:  22.15 0.85 23.18 NA NA 
 > grDevices::dev.off()
 null device 
           1 
