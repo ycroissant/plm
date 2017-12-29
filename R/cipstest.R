@@ -16,21 +16,11 @@
 ## Pesaran, M.H. (2007) A simple panel unit root test in the presence of
 ## cross-section dependence, Journal of Applied Econometrics, 22(2), pp. 265-312
 
-pseries2pdata <- function(x) {
-  ## transforms a pseries in a pdataframe with the indices as regular columns
-  ## in positions 1 and 2 (individual index, time index)
-  indices <- attr(x, "index")
-  vx <- remove_pseries_features(x)
-  px <- cbind(indices, vx)
-  if (ncol(indices) > 2) stop("pseries2pdata not adapted to more than 2 indices yet")
-  dimnames(px)[[2]] <- c("ind", "tind", deparse(substitute(x)))
-  return(pdata.frame(px, index = c("ind", "tind")))
-}
 
 pmerge <- function(x, y, ...) {
   ## transf. if pseries
-  if(inherits(x, "pseries")) x <- pseries2pdata(x)
-  if(inherits(y, "pseries")) y <- pseries2pdata(y)
+  if(inherits(x, "pseries")) x <- pseries2pdataframe(x)
+  if(inherits(y, "pseries")) y <- pseries2pdataframe(y)
   z <- merge(data.frame(x), data.frame(y), by.x=dimnames(x)[[2]][1:2],
              by.y=dimnames(y)[[2]][1:2], ...)
   return(z)
@@ -102,17 +92,17 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
 
     ## model data
     X <- model.matrix(pmod)
-    y <- as.numeric(model.response(model.frame(pmod))) # remove pseries attribs  # TODO: can use remove_pseries_attributes
+    y <- as.numeric(model.response(model.frame(pmod))) # remove pseries attribs
     
   ## det. *minimum* group numerosity
-  t <- min(tapply(X[,1],ind,length)) # TODO: == min(Ti) simpler???
+  t <- min(tapply(X[,1], ind, length)) # TODO: == min(Ti) simpler???
 
   ## check min. t numerosity
   ## NB it is also possible to allow estimation if there *is* one group
   ## with t large enough and average on coefficients removing NAs
   ## Here we choose the explicit way: let estimation fail if we lose df
   ## but a warning would do...
-  if(t<(k+1)) stop("Insufficient number of time periods")
+  if(t < (k+1)) stop("Insufficient number of time periods")
 
   ## one regression for each group i in 1..n
   ## and retrieve coefficients putting them into a matrix
