@@ -431,3 +431,22 @@ pseries2pdataframe <- function(x, pdata.frame = TRUE) {
   return(res)
 }
 
+pmerge <- function(x, y, ...) {
+  ## non-exported
+  ## Returns a data.frame, not a pdata.frame.
+  ## pmerge is used to merge pseries or pdata.frames into a data.frame or
+  ## to merge a pseries to a data.frame
+  
+  ## transf. if pseries or pdata.frame
+  if(inherits(x, "pseries")) x <- pseries2pdataframe(x, pdata.frame = FALSE)
+  if(inherits(y, "pseries")) y <- pseries2pdataframe(y, pdata.frame = FALSE)
+  if(inherits(x, "pdata.frame")) x <- as.data.frame(x, keep.attributes = FALSE)
+  if(inherits(y, "pdata.frame")) y <- as.data.frame(y, keep.attributes = FALSE)
+  
+  # input to merge() needs to be data.frames; not yet suitable for 3rd index (group variable)
+  z <- merge(x, y,
+             by.x = dimnames(x)[[2]][1:2],
+             by.y = dimnames(y)[[2]][1:2], ...)
+  return(z)
+}
+

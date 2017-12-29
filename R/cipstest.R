@@ -17,15 +17,6 @@
 ## cross-section dependence, Journal of Applied Econometrics, 22(2), pp. 265-312
 
 
-pmerge <- function(x, y, ...) {
-  ## transf. if pseries
-  if(inherits(x, "pseries")) x <- pseries2pdataframe(x)
-  if(inherits(y, "pseries")) y <- pseries2pdataframe(y)
-  z <- merge(data.frame(x), data.frame(y), by.x=dimnames(x)[[2]][1:2],
-             by.y=dimnames(y)[[2]][1:2], ...)
-  return(z)
-}
-
 cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
                       model = c("cmg", "mg", "dmg"), truncated = FALSE, ...) {
 
