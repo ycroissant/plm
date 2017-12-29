@@ -217,3 +217,62 @@ pGrunfeld[pGrunfeld$firm == "19", "valueNonExistent"]
 
 Grunfeld[Grunfeld$firm == "19", "valueNonExistent"]
 
+
+
+############### test pseries subsetting ("[.pseries") ################
+#### a sketch for "[.pseries" is in pdata.frame.R, but it does not work with FD models yet
+# (plm(log(emp) ~ log(wage) + log(capital), data = EmplUK, model = "fd"))
+#
+# data("Grunfeld", package = "plm")
+# Grunfeld$fac <- factor(c("a", "b", "c", "d"))
+# pGrunfeld <- pdata.frame(Grunfeld)
+# 
+# pseries <- pGrunfeld$inv
+# pfac <- pGrunfeld$fac
+# fac <- Grunfeld$fac
+# 
+# pseries[1]
+# pseries[c(1,2)]
+# pseries[-c(1,2)]
+# # this also checks for the both indexes having the same levels after subsetting
+# # (unused levels in index are dropped):
+# if(!isTRUE(all.equal(index(pseries[c(1)]),    index(pGrunfeld[c(1), ])))) stop("indexes not the same")
+# if(!isTRUE(all.equal(index(pseries[c(1,2)]),  index(pGrunfeld[c(1,2), ])))) stop("indexes not the same")
+# if(!isTRUE(all.equal(index(pseries[-c(1,2)]), index(pGrunfeld[-c(1,2), ])))) stop("indexes not the same")
+# 
+# 
+# # subsetting with character
+# pseries["10-1946"]
+# pseries[c("10-1935", "10-1946")]
+# 
+# # character subsetting works for plain numeric:
+# series <- Grunfeld$inv
+# names(series) <- names(pseries)
+# names(fac) <- names(pfac)
+# series["10-1946"] 
+# 
+# if(!isTRUE(all.equal(index(pseries["10-1946"]),               index(pGrunfeld["10-1946", ])))) stop("indexes not the same")
+# if(!isTRUE(all.equal(index(pseries[c("10-1935", "10-1946")]), index(pGrunfeld[c("10-1935", "10-1946"), ])))) stop("indexes not the same")
+# 
+# 
+# ### For c("pseries", "factor") perform additional tests of 'drop' argument
+# pfac[1, drop = TRUE]   # only level "a" should be left
+# pfac[1:3][drop = TRUE] # only level "a", "b", "c" should be left
+# 
+# fac[1, drop = TRUE]
+# fac[1:3][drop = TRUE]
+# 
+# pfac["nonExist"] # should be NA and levels "a" to "d"
+# fac["nonExist"]
+# 
+# pfac["nonExist"][drop = TRUE] # should be NA and no level left
+# fac["nonExist"][drop = TRUE]
+# 
+# # check subsetting with NA:
+# if(!isTRUE(all.equal(as.numeric(pseries[NA]), series[NA], check.attributes = FALSE))) stop("subsetting with NA not the same for pseries")
+
+
+## These are ok (give (about) same error msg for plain numeric as for pseries numeric)
+# pseries[1, ] # Error in x[...] : incorrect number of dimensions
+# series[1, ]  # Error during wrapup: incorrect number of dimensions
+

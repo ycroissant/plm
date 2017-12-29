@@ -186,8 +186,8 @@ S3method("Within",    "pseries")
 S3method("print",     "pseries")
 S3method("summary",   "pseries")
 S3method("as.matrix", "pseries")
+#S3method("[",         "pseries") # not implemented yet - sketch in pdata.frame.R
 S3method("print", "summary.pseries")
-# S3method("[", "pseries") # not implemented (yet?)
 # ercomp
 S3method("ercomp", "formula")
 S3method("ercomp", "plm")

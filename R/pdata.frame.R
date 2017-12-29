@@ -51,7 +51,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
                               if (is.factor(x) || is.character(x)) {
                                 all(duplicated(x[!is.na(x)])[-1L])
                               } else {
-                                x[!is.finite(x)] <- NA # set infinite elements to NA only for check
+                                x[!is.finite(x)] <- NA # infinite elements set to NA only for this check
                                 var(as.numeric(x), na.rm = TRUE) == 0
                               }
                             })
@@ -250,40 +250,37 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 #     assigning with the respective .data.frame methods
 
 
-# NB: currently no extracting/subsetting function for class pseries, thus
+# NB: Currently no extracting/subsetting function for class pseries, thus
 #     vector subsetting is used which removes the pseries features
-#    There is a working sketch below, but check if it does not interfere with anything else
+#
+#     Test cases in tests/test_pdata.frame_subsetting.R 
+# 
+#     There is a working sketch below, but check if it does not interfere with anything else.
+#     * does not work with FD models yet: plm(log(emp) ~ log(wage) + log(capital), data = EmplUK, model = "fd")
+#
 # "[.pseries" <- function(x, ...) {
 # 
-#   ## use '...' instead of only one specific argument, because subsetting for
-#   ## factors can have argument 'drop', e.g., x[i, drop=TRUE] see ?Extract.factor
-# 
+#  ## use '...' instead of only one specific argument, because subsetting for
+#  ## factors can have argument 'drop', e.g., x[i, drop=TRUE] see ?Extract.factor
+# #stop()
 #   index <- attr(x, "index")
-# 
-#   # to identify the entries which we need to keep in the index:
-#   #  use names of the vector, but set names to integer sequence first (safer)
-#   #  -> use this information (names_subsetted) to subset the index
-#   #  this way, we can use the regular vector subsetting of R x[i] without
-#   #  worrying about the form of i (logical, numeric, character, some expression, ...)
+#   if (is.null(index)) warning("pseries object with is.null(index(pseries)) == TRUE encountered, trying to continue anyway...")
 #   names_orig <- names(x)
-#   names(x) <- seq_along(x)
-#   # remove class 'pseries' and index attrib to use R's vector subsetting x[i]
-#   class(x) <- setdiff(class(x), "pseries")
-#   attr(x, "index") <- NULL
+#   x <- remove_pseries_features(x)
 #   result <- x[...]
-#   names_subsetted <- as.numeric(names(result))
 # 
-#   # make result a 'pseries' again:
-#   # add back to result:
-#   #    * subsetted original names                # TODO: not needed?
-#   #    * subsetted index as attribute
-#   #    * class 'pseries'
-# #  names(result) <- names_orig[names_subsetted]           # TODO: not needed?
-#   
+#   # subset index / identify rows to keep in the index:
+#   keep_rownr <- seq_along(names_orig)  # full length row numbers original pseries
+#   names(keep_rownr) <- names_orig
+#   keep_rownr <- keep_rownr[names(result)] # row numbers to keep after subsetting
+#   index <- index[keep_rownr, ]
+# 
+#   # drop unused levels (like in subsetting of pdata.frames)
+#   index <- droplevels(index)
+# 
 #   ### TODO: test for is.null before adding back? see [[.pdata.frame
-#   
-#   attr(result, "index") <- index[names_subsetted, ]
-#   class(result) <- union("pseries", class(x))
+# 
+#   result <- add_pseries_features(result, index)
 #   return(result)
 # }
 
