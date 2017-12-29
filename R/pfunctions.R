@@ -467,6 +467,8 @@ pdiff <- function(x, cond, effect = c("individual", "time"), has.intercept = FAL
 
 ## TODO: why do we have a second pdiff() now (introduced in rev. 622)?
 pdiff <- function(x, effect = c("individual", "time"), has.intercept = FALSE){
+  # NB: x is assumed to have an index attribute, e.g., a pseries
+  #     can check with has.index(x)
     effect <- match.arg(effect)
     cond <- as.numeric(attr(x, "index")[[1]])
     n <- ifelse(is.matrix(x), nrow(x), length(x))

@@ -73,6 +73,10 @@ pmodel.response.data.frame <- function(object, ...){
 }
 
 pmodel.response.formula <- function(object, data, ...){
+  ## TODO: returns an illegal index for FD and between models, likely due to ptransform, see:
+  ## (can also check with is.pseries(pmodel.reponse(...))
+  ##        * index(pmodel.response(form, data = pGrunfeld, model = "fd"))
+  ##        * index(pmodel.response(form, data = pGrunfeld, model = "between"))
     dots <- list(...)
 #    data <- dots$data
     if (is.null(data)) stop("the data argument is mandatory")

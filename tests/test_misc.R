@@ -19,3 +19,15 @@ df_after_pmerge <- plm:::pmerge(pGrunfeld$inv, pGrunfeld$value)
 if (inherits(df_after_pmerge$ind, "pseries") & is.null(attr(df_after_pmerge$ind, "index"))) stop("illegal pseries (no index) produced by pmerge")
 if ("pseries" %in% unlist(lapply(df_after_pmerge, class))) stop("pmerge returned a column with pseries")
 if (!"data.frame" == class(df_after_pmerge)) stop("pmerge did not return a pure data.frame according to class()")
+
+
+# test case for illegal pseries from pmodel.response for some models: index is not correct
+form <- formula(inv ~ value + capital)
+if (!plm:::has.index(pmodel.response(form, data = pGrunfeld, model = "pooling"))) stop("pmodel.response's return value does not have an index")
+if (!plm:::has.index(pmodel.response(form, data = pGrunfeld, model = "within"))) stop("pmodel.response's return value does not have an index")
+if (!plm:::has.index(pmodel.response(form, data = pGrunfeld, model = "Between"))) stop("pmodel.response's return value does not have an index")
+
+### TODO: no or illegal index for FD and between models
+# if (!plm:::has.index(pmodel.response(form, data = pGrunfeld, model = "fd"))) stop("pmodel.response's return value does not have an index")
+# if (!plm:::has.index(pmodel.response(form, data = pGrunfeld, model = "between"))) stop("pmodel.response's return value does not have an index")
+

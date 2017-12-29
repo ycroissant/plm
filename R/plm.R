@@ -96,7 +96,7 @@ plm <- function(formula, data, subset, weights, na.action,
     orig_rownames <- row.names(data)
     if (! inherits(data, "pdata.frame")) data <- pdata.frame(data, index)
     if (! inherits(formula, "pFormula")) formula <- pFormula(formula)
-    
+
     # in case of 2-part formula, check whether the second part should
     # be updated, e.g. y ~ x1 + x2 + x3 | . - x2 + z becomes 
     # y ~ x1 + x2 + x3 | x1 + x3 + z
@@ -166,7 +166,7 @@ plm.fit <- function(formula, data, model, effect, random.method,
     if (! (model == "random" & effect == "twoways" && ! is.balanced)){
         # extract the model.matrix and the model.response actually, this can be
         # done by providing model.matrix and pmodel.response's methods
-                                        # to pdata.frames
+        # to pdata.frames
         X <- model.matrix(formula, data, rhs = 1, model = model, 
                           effect = effect, theta = theta, cstcovar.rm = "all")
         y <- pmodel.response(formula, data = data, model = model, 
