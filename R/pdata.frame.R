@@ -45,7 +45,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 
     # if requested: check for constant series and remove
     if (drop.const.series) {
-      # old: cst.check <- sapply(x, function(x) var(as.numeric(x), na.rm = TRUE)==0) # old
+      # old: cst.check <- sapply(x, function(x) var(as.numeric(x), na.rm = TRUE)==0)
       # -> var() and sd() on factors is deprecated as of R 3.2.3 -> use duplicated()
       cst.check <- sapply(x, function(x) {
                               if (is.factor(x) || is.character(x)) {
@@ -205,7 +205,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     posindex <- match(c(id.name, time.name, group.name), names(x))
     index <- x[, posindex]
     if (drop.index) {
-        x <- x[ , - posindex]
+        x <- x[ , -posindex, drop = FALSE]
         if (ncol(x) == 0L) cat("after dropping of index variables, the pdata.frame contains 0 columns")
     }
     
@@ -257,6 +257,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 # 
 #     There is a working sketch below, but check if it does not interfere with anything else.
 #     * does not work with FD models yet: plm(log(emp) ~ log(wage) + log(capital), data = EmplUK, model = "fd")
+#       -> this is due to pmodel.reponse() not returning legal pseries (index attribute missing) for FD and between models
 #
 # "[.pseries" <- function(x, ...) {
 # 

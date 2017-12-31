@@ -20,6 +20,8 @@ Changes in version 1.6-7
   * is.pseries: added function to check if an object qualifies as a pseries.
   * (internal) is.index, has.index: new non-exported functions to check if an
     object is or has a proper index (in the sense of the plm package).
+  * pdata.frame: fixed bug so that pdata.frames with only one column can be 
+    created if drop.index = TRUE is set.
 
 
 Changes in version 1.6-6
