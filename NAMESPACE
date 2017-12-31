@@ -94,6 +94,7 @@ S3method("punbalancedness", "panelmodel")
 # pvar
 S3method("pvar",  "data.frame")
 S3method("pvar",  "pdata.frame")
+S3method("pvar",  "pseries")
 S3method("pvar",  "matrix")
 S3method("print", "pvar")
 # panelmodel
@@ -186,7 +187,7 @@ S3method("Within",    "pseries")
 S3method("print",     "pseries")
 S3method("summary",   "pseries")
 S3method("as.matrix", "pseries")
-#S3method("[",         "pseries") # not implemented yet - sketch in pdata.frame.R
+#S3method("[",         "pseries") # not implemented yet - sketch in R/pdata.frame.R
 S3method("print", "summary.pseries")
 # ercomp
 S3method("ercomp", "formula")

@@ -75,6 +75,10 @@ pvar(Grunfeld_mat_allNA)
 
 
 
+## pseries
+pGrunfeld <- pdata.frame(Grunfeld)
+pvar(pGrunfeld$capital)          # should indicate variation in both dimensions (nothing is printed)
+pvar(pGrunfeld[1:20, ]$capital)  # should indicate no indivivual variation (b/c only 1 individual is evaluated)
 
 
 # library(foreign);library(plm)

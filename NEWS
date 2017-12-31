@@ -22,6 +22,7 @@ Changes in version 1.6-7
     object is or has a proper index (in the sense of the plm package).
   * pdata.frame: fixed bug so that pdata.frames with only one column can be 
     created if drop.index = TRUE is set.
+  * pvar: added method for pseries.
 
 
 Changes in version 1.6-6

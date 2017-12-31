@@ -104,6 +104,13 @@ pvar.pdata.frame <- function(x, ...){
   pvar.default(x, id, time)
 }
 
+pvar.pseries <- function(x, ...){
+  # use drop.index = TRUE so that the index columns' 
+  # variations are not evaluated:
+  pdfx <- pseries2pdataframe(x, drop.index = TRUE)
+  pvar.pdata.frame(pdfx)
+}
+
 print.pvar <- function(x, ...){
   varnames <- names(x$time.variation)
   if(any(!x$time.variation)){
