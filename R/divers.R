@@ -258,7 +258,7 @@ punbalancedness.default <- function(x, ...) {
 
   ii <- index(x)
   
-  if (length(ii) == 2) {
+  if (ncol(ii) == 2) {
    ## original Ahrens/Pincus (1981)
     pdim <- pdim(x, ...)
     N <- pdim$nT$n # no. of individuals
@@ -270,7 +270,7 @@ punbalancedness.default <- function(x, ...) {
     r2 <- 1 / (N * (sum( (Ti/Totalobs)^2)))
     result <- c(gamma = r1, nu = r2)
   } else {
-    if (length(ii) == 3) {
+    if (ncol(ii) == 3) {
      ## extension to nested model with additional group variable
      ## Baltagi/Song/Jung (2001), pp. 368-369
       ids <- ii[[1]]
@@ -288,7 +288,7 @@ punbalancedness.default <- function(x, ...) {
       c2 <- M / (Tbar * sum(1/Tis))
       c3 <- M / (sum(Nis * Tis)/M * sum(1/(Nis*Tis)))
       result <- (c(c1 = c1, c2 = c2, c3 = c3))
-    } else stop(paste0("unsupported number of dimensions: ", length(ii)))
+    } else stop(paste0("unsupported number of dimensions: ", ncol(ii)))
   }
   return(result)
 }
@@ -412,11 +412,12 @@ check_propagation_correct_class <- function(x) {
   return(x)
 }
 
-pseries2pdataframe <- function(x, pdata.frame = TRUE) {
+pseries2pdataframe <- function(x, pdata.frame = TRUE, ...) {
   ## non-exported
   ## Transforms a pseries in a (p)data.frame with the indices as regular columns
   ## in positions 1, 2 and (if present) 3 (individual index, time index, group index).
   ## if pdataframe = TRUE -> return a pdata.frame, if FALSE -> return a data.frame
+  ## ellipsis (dots) passed on to pdata.frame()
   if (!inherits(x, "pseries")) stop("input needs to be of class 'pseries'")
   indices <- attr(x, "index")
   class(indices) <- setdiff(class(indices), "pindex")
@@ -424,7 +425,7 @@ pseries2pdataframe <- function(x, pdata.frame = TRUE) {
   dfx <- cbind(indices, vx)
   dimnames(dfx)[[2]] <- c(names(indices), deparse(substitute(x)))
   if (pdata.frame == TRUE) {
-    res <- pdata.frame(dfx, index = names(indices))
+    res <- pdata.frame(dfx, index = names(indices), ...)
    } else { res <- dfx }
   return(res)
 }
