@@ -11,7 +11,7 @@ Changes in version 1.6-7
   * groupGenerics now used for 'pseries' objects, implemented as a wrapper 
     for methods in groups 'Math', 'Ops' and 'Complex' (see ?groupGeneric).
     Thus, propagation to a higher or lower data type works correctly when 
-    performed on pseries, e.g. a c("pseries", "interger") is propagated
+    performed on pseries, e.g. c("pseries", "integer") is propagated
     to c("pseries", "numeric") if an operation returns a decimal.
   * as.data.frame.pdata.frame gained argument 'keep.attributes'.
   * [.pdata.frame: in case a single column, i.e., a pseries is returned, this 
