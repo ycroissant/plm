@@ -48,7 +48,9 @@ see also argument \code{na.rm.tindex} to remove those.}
  regularly spaced sequence with distance 1 between the time periods for each individual (for each individual the time dimension
  can be interpreted as sequence t, t+1, t+2, \ldots where t is an integer). As such, the "numerical content" of the time index
  variable is considered for consecutiveness, not the "physical position" of the various observations for an individuals in
- the (p)data.frame/pseries (it is not about "neighbouring" rows).
+ the (p)data.frame/pseries (it is not about "neighbouring" rows). If the object to be evaluated is a pseries or a pdata.frame,
+ the time index is coerced from factor via as.character to numeric, i.e. the series
+ \code{as.numeric(as.character(index(<pseries/pdata.frame>)[[2]]))]} is evaluated for gaps.
  
  The default method also works for argument \code{x} being an arbitrary vector (see \bold{Examples}), provided one can 
  supply arguments \code{id} and \code{time}, which need to ordered as stacked time series. As only \code{id} and \code{time} 
