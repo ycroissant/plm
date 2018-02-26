@@ -1,8 +1,8 @@
 
 Changes in version 1.6-7
 
-  * lag, lead, diff for pseries objects: functions now take care of the time 
-    dimension when shifting observations per default. Previously, shifting was
+  * lag, lead, diff for pseries objects: functions by default now take care of
+    the time  dimension when shifting observations. Previously, shifting was
     performed row-wise (neglecting the time dimension). The argument 'shift' is 
     introduced to control shifting behaviour, possible values are "time" (default)
     and "row" (behaviour up until plm 1.6-6).
@@ -94,7 +94,9 @@ Changes in version 1.6-6
       * pacified warning in subsetting with with non-existent rows and columns due
         to deprecation of 'structure(NULL, *)' in R >= 3.4.0.
       * $<-.pdata.frame: preserves storage mode and sets correct class if propagation
-                         to higher class occurred for a pseries prior to assignment.
+                         to higher class occurred for a pseries prior to assignment
+                         (in plm 1.6-7 this was replaced by the more general approach
+                         using groupGenerics).
   * ranef: new function to calculate random effects from RE model objects, like
            fixef for FE models.
   * cortab: new function to compute cross-sectional correlation matrix.
