@@ -234,14 +234,14 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
   if (inherits(value, "pseries")){
     # remove pseries features before adding value as a column to pdata.frame
     if (length(class(value)) == 1) value <- unclass(value)
-    else attr(value, "class") <- setdiff(class(value), "pseries") # don't use class(value) <- here as it forces the storage mode to change
+    else attr(value, "class") <- setdiff(class(value), "pseries")
     attr(value, "index") <- NULL
   }
   "$<-.data.frame"(x, name, value)
 }
 
-# NB: We don't have methods for [<-.pdata.frame and [[<-.pdata.frame, so it
-#     dispatches to the respective data.frame methods which assign whatever is
+# NB: We don't have methods for [<-.pdata.frame and [[<-.pdata.frame, so these functions
+#     dispatche to the respective data.frame methods which assign whatever is
 #     handed over to the methods. Especially, if a pseries is handed over, this
 #     results in really assigning a pseries to the pdata.frame in case of usage of
 #     [<- and [[<-. This is inconsistent because the columns of a pdata.frame do not
@@ -517,11 +517,11 @@ as.matrix.pseries <- function(x, idbyrow = TRUE, ...){
     time.names <- levels(as.factor(time))
     x <- split(data.frame(x, time), id)
     x <- lapply(x, function(x){
-        rownames(x) <- x[,2]
-        x[,-2,drop=F]
+        rownames(x) <- x[ , 2]
+        x[ , -2, drop = FALSE]
     })
     x <- lapply(x, function(x){
-        x <- x[time.names,,drop=F]
+        x <- x[time.names, , drop = FALSE]
         rownames(x) <- time.names
         x
     }
