@@ -1,0 +1,250 @@
+
+R version 3.4.3 (2017-11-30) -- "Kite-Eating Tree"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library("plm")
+Loading required package: Formula
+> data("EmplUK", package = "plm")
+> ## Arellano and Bond (1991), table 4 col. b
+> z1 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
++            + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
++             data = EmplUK, effect = "twoways", model = "twosteps")
+> summary(z1)
+Twoways effects Two steps model
+
+Call:
+pgmm(formula = log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 
+    0:1) + log(capital) + lag(log(output), 0:1) | lag(log(emp), 
+    2:99), data = EmplUK, effect = "twoways", model = "twosteps")
+
+Unbalanced Panel: n = 140, T = 7-9, N = 1031
+
+Number of Observations Used: 611
+
+Residuals:
+      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+-0.6190677 -0.0255683  0.0000000 -0.0001339  0.0332013  0.6410272 
+
+Coefficients:
+                        Estimate Std. Error z-value  Pr(>|z|)    
+lag(log(emp), 1:2)1     0.474151   0.185398  2.5575 0.0105437 *  
+lag(log(emp), 1:2)2    -0.052967   0.051749 -1.0235 0.3060506    
+lag(log(wage), 0:1)0   -0.513205   0.145565 -3.5256 0.0004225 ***
+lag(log(wage), 0:1)1    0.224640   0.141950  1.5825 0.1135279    
+log(capital)            0.292723   0.062627  4.6741 2.953e-06 ***
+lag(log(output), 0:1)0  0.609775   0.156263  3.9022 9.530e-05 ***
+lag(log(output), 0:1)1 -0.446373   0.217302 -2.0542 0.0399605 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Sargan test: chisq(25) = 30.11247 (p-value = 0.22011)
+Autocorrelation test (1): normal = -1.53845 (p-value = 0.12394)
+Autocorrelation test (2): normal = -0.2796829 (p-value = 0.77972)
+Wald test for coefficients: chisq(7) = 142.0353 (p-value = < 2.22e-16)
+Wald test for time dummies: chisq(6) = 16.97046 (p-value = 0.0093924)
+> 
+> z1col <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
++            + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
++            data = EmplUK, effect = "twoways", model = "twosteps", collapse = TRUE)
+> summary(z1col)
+Twoways effects Two steps model
+
+Call:
+pgmm(formula = log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 
+    0:1) + log(capital) + lag(log(output), 0:1) | lag(log(emp), 
+    2:99), data = EmplUK, effect = "twoways", model = "twosteps", 
+    collapse = TRUE)
+
+Unbalanced Panel: n = 140, T = 7-9, N = 1031
+
+Number of Observations Used: 611
+
+Residuals:
+      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+-0.8455637 -0.0326605  0.0000000 -0.0003799  0.0312841  0.7010278 
+
+Coefficients:
+                        Estimate Std. Error z-value Pr(>|z|)   
+lag(log(emp), 1:2)1     0.853895   0.562348  1.5184 0.128902   
+lag(log(emp), 1:2)2    -0.169886   0.123293 -1.3779 0.168232   
+lag(log(wage), 0:1)0   -0.533119   0.245948 -2.1676 0.030189 * 
+lag(log(wage), 0:1)1    0.352516   0.432846  0.8144 0.415408   
+log(capital)            0.271707   0.089921  3.0216 0.002514 **
+lag(log(output), 0:1)0  0.612855   0.242289  2.5294 0.011424 * 
+lag(log(output), 0:1)1 -0.682550   0.612311 -1.1147 0.264974   
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Sargan test: chisq(5) = 11.62681 (p-value = 0.040275)
+Autocorrelation test (1): normal = -1.290551 (p-value = 0.19686)
+Autocorrelation test (2): normal = 0.4482577 (p-value = 0.65397)
+Wald test for coefficients: chisq(7) = 134.788 (p-value = < 2.22e-16)
+Wald test for time dummies: chisq(6) = 11.91947 (p-value = 0.06379)
+> 
+> 
+> z1ind <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
++            + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
++             data = EmplUK, effect = "individual", model = "twosteps")
+> summary(z1ind)
+Oneway (individual) effect Two steps model
+
+Call:
+pgmm(formula = log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 
+    0:1) + log(capital) + lag(log(output), 0:1) | lag(log(emp), 
+    2:99), data = EmplUK, effect = "individual", model = "twosteps")
+
+Unbalanced Panel: n = 140, T = 7-9, N = 1031
+
+Number of Observations Used: 611
+
+Residuals:
+      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+-0.5891371 -0.0258848  0.0000000 -0.0001108  0.0354295  0.6092587 
+
+Coefficients:
+                        Estimate Std. Error z-value  Pr(>|z|)    
+lag(log(emp), 1:2)1     0.448806   0.182638  2.4573 0.0139968 *  
+lag(log(emp), 1:2)2    -0.042209   0.056360 -0.7489 0.4539021    
+lag(log(wage), 0:1)0   -0.542931   0.150326 -3.6117 0.0003042 ***
+lag(log(wage), 0:1)1    0.191413   0.154501  1.2389 0.2153787    
+log(capital)            0.320322   0.057396  5.5809 2.393e-08 ***
+lag(log(output), 0:1)0  0.636832   0.113729  5.5996 2.149e-08 ***
+lag(log(output), 0:1)1 -0.246296   0.204975 -1.2016 0.2295240    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Sargan test: chisq(25) = 31.87899 (p-value = 0.16154)
+Autocorrelation test (1): normal = -1.501206 (p-value = 0.1333)
+Autocorrelation test (2): normal = -0.41767 (p-value = 0.67619)
+Wald test for coefficients: chisq(7) = 725.4739 (p-value = < 2.22e-16)
+> 
+> z1indcol <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
++             + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
++             data = EmplUK, effect = "individual", model = "twosteps")
+> summary(z1indcol)
+Oneway (individual) effect Two steps model
+
+Call:
+pgmm(formula = log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 
+    0:1) + log(capital) + lag(log(output), 0:1) | lag(log(emp), 
+    2:99), data = EmplUK, effect = "individual", model = "twosteps")
+
+Unbalanced Panel: n = 140, T = 7-9, N = 1031
+
+Number of Observations Used: 611
+
+Residuals:
+      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+-0.5891371 -0.0258848  0.0000000 -0.0001108  0.0354295  0.6092587 
+
+Coefficients:
+                        Estimate Std. Error z-value  Pr(>|z|)    
+lag(log(emp), 1:2)1     0.448806   0.182638  2.4573 0.0139968 *  
+lag(log(emp), 1:2)2    -0.042209   0.056360 -0.7489 0.4539021    
+lag(log(wage), 0:1)0   -0.542931   0.150326 -3.6117 0.0003042 ***
+lag(log(wage), 0:1)1    0.191413   0.154501  1.2389 0.2153787    
+log(capital)            0.320322   0.057396  5.5809 2.393e-08 ***
+lag(log(output), 0:1)0  0.636832   0.113729  5.5996 2.149e-08 ***
+lag(log(output), 0:1)1 -0.246296   0.204975 -1.2016 0.2295240    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Sargan test: chisq(25) = 31.87899 (p-value = 0.16154)
+Autocorrelation test (1): normal = -1.501206 (p-value = 0.1333)
+Autocorrelation test (2): normal = -0.41767 (p-value = 0.67619)
+Wald test for coefficients: chisq(7) = 725.4739 (p-value = < 2.22e-16)
+> 
+> 
+> ## Blundell and Bond (1998) table 4 (cf DPD for OX p.12 col.4)
+> ## not quite...
+> z2 <- pgmm(log(emp) ~ lag(log(emp), 1)+ lag(log(wage), 0:1) +
++            lag(log(capital), 0:1) | lag(log(emp), 2:99) +
++            lag(log(wage), 3:99) + lag(log(capital), 2:99),
++            data = EmplUK, effect = "twoways", model = "onestep", 
++            transformation = "ld")
+> summary(z2, robust = TRUE)
+Twoways effects One step model
+
+Call:
+pgmm(formula = log(emp) ~ lag(log(emp), 1) + lag(log(wage), 0:1) + 
+    lag(log(capital), 0:1) | lag(log(emp), 2:99) + lag(log(wage), 
+    3:99) + lag(log(capital), 2:99), data = EmplUK, effect = "twoways", 
+    model = "onestep", transformation = "ld")
+
+Unbalanced Panel: n = 140, T = 7-9, N = 1031
+
+Number of Observations Used: 1642
+
+Residuals:
+      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+-0.7501512 -0.0389075  0.0000000  0.0001834  0.0459166  0.6149616 
+
+Coefficients:
+                         Estimate Std. Error z-value  Pr(>|z|)    
+lag(log(emp), 1)         0.945068   0.029312 32.2415 < 2.2e-16 ***
+lag(log(wage), 0:1)0    -0.655654   0.105377 -6.2220 4.909e-10 ***
+lag(log(wage), 0:1)1     0.499634   0.128513  3.8878 0.0001012 ***
+lag(log(capital), 0:1)0  0.474032   0.054796  8.6509 < 2.2e-16 ***
+lag(log(capital), 0:1)1 -0.414113   0.061467 -6.7371 1.616e-11 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Sargan test: chisq(94) = 115.8547 (p-value = 0.062687)
+Autocorrelation test (1): normal = -4.955307 (p-value = 7.2216e-07)
+Autocorrelation test (2): normal = -0.2551838 (p-value = 0.79858)
+Wald test for coefficients: chisq(5) = 7517.379 (p-value = < 2.22e-16)
+Wald test for time dummies: chisq(7) = 15.88489 (p-value = 0.026189)
+> 
+> z2b <- pgmm(log(emp) ~ lag(log(emp), 1)+ lag(log(wage), 0:1) +
++            lag(log(capital), 0:1) | lag(log(emp), 2:99) +
++            lag(log(wage), 3:99) + lag(log(capital), 2:99),
++            data = EmplUK, effect = "individual", model = "onestep", 
++            transformation = "ld")
+> summary(z2b, robust = TRUE)
+Oneway (individual) effect One step model
+
+Call:
+pgmm(formula = log(emp) ~ lag(log(emp), 1) + lag(log(wage), 0:1) + 
+    lag(log(capital), 0:1) | lag(log(emp), 2:99) + lag(log(wage), 
+    3:99) + lag(log(capital), 2:99), data = EmplUK, effect = "individual", 
+    model = "onestep", transformation = "ld")
+
+Unbalanced Panel: n = 140, T = 7-9, N = 1031
+
+Number of Observations Used: 1642
+
+Residuals:
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-0.772126 -0.035115  0.000000  0.004193  0.055023  0.591462 
+
+Coefficients:
+                         Estimate Std. Error z-value  Pr(>|z|)    
+lag(log(emp), 1)         0.903871   0.045345 19.9333 < 2.2e-16 ***
+lag(log(wage), 0:1)0    -0.513039   0.088364 -5.8059 6.400e-09 ***
+lag(log(wage), 0:1)1     0.546466   0.089703  6.0919 1.116e-09 ***
+lag(log(capital), 0:1)0  0.554952   0.048778 11.3771 < 2.2e-16 ***
+lag(log(capital), 0:1)1 -0.484148   0.050905 -9.5108 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Sargan test: chisq(94) = 104.872 (p-value = 0.20826)
+Autocorrelation test (1): normal = -5.646905 (p-value = 1.6336e-08)
+Autocorrelation test (2): normal = -0.5507488 (p-value = 0.58181)
+Wald test for coefficients: chisq(5) = 20061.48 (p-value = < 2.22e-16)
+> 
+> proc.time()
+   user  system elapsed 
+   4.74    0.21    4.96 
