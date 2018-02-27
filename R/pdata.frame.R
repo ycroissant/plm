@@ -256,8 +256,8 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 #     Test cases in tests/test_pdata.frame_subsetting.R 
 # 
 #     There is a working sketch below, but check if it does not interfere with anything else.
-#     * does not work with FD models yet: plm(log(emp) ~ log(wage) + log(capital), data = EmplUK, model = "fd")
-#       -> this is due to pmodel.reponse() not returning legal pseries (index attribute missing) for FD and between models
+#     * check if it works with FD and between models (these models compress the data and, thus,
+#       pmodel.reponse for these does not return a pseries but a pure numeric)
 #
 # "[.pseries" <- function(x, ...) {
 # 

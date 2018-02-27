@@ -983,6 +983,7 @@ plot.plm <- function(x, dx = 0.2, N = NULL, seed = 1,
 
 residuals.plm <- function(object, model = NULL, effect = NULL,  ...){
     if (is.null(model) & is.null(effect)){
+        model <- describe(object, "model")
         res <- object$residuals
     }
     else{
@@ -994,8 +995,13 @@ residuals.plm <- function(object, model = NULL, effect = NULL,  ...){
         y <- pmodel.response(object, model = model, effect = effect)
         res <- y - bX
     }
-    res <- structure(res, class = union("pseries", class(res)), index = index(object))
-    res
+    res <- if (model %in% c("between", "fd")) {
+      # these models "compress" the data, thus an index does not make sense here -> no pseries
+      res
+    } else {
+      structure(res, index = index(object), class = union("pseries", class(res)))
+    }
+    return(res)
 }
 
 fitted.plm <- function(object, model = NULL, effect = NULL, ...){

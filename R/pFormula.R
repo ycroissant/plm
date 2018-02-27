@@ -65,18 +65,14 @@ pmodel.response.plm <- function(object, ...){
 pmodel.response.data.frame <- function(object, ...){
     dots <- list(...)
     if (is.null(attr(object, "terms"))) stop("not a model.frame")
-    if (is.null(dots$model)) model <- "pooling" else model <- dots$model#stop("the model argument is mandatory")
-    if (is.null(dots$effect)) effect <- "individual" else effect <- dots$effect#stop("the effect argument is mandatory")
+    if (is.null(dots$model)) model <- "pooling" else model <- dots$model #stop("the model argument is mandatory")
+    if (is.null(dots$effect)) effect <- "individual" else effect <- dots$effect #stop("the effect argument is mandatory")
     if (is.null(dots$theta)) theta <- NULL else theta <- dots$theta
     y <- model.response(object)
     ptransform(y, model = model, effect = effect, theta = theta)
 }
 
 pmodel.response.formula <- function(object, data, ...){
-  ## TODO: returns an illegal index for FD and between models, likely due to ptransform, see:
-  ## (can also check with is.pseries(pmodel.reponse(...))
-  ##        * index(pmodel.response(form, data = pGrunfeld, model = "fd"))
-  ##        * index(pmodel.response(form, data = pGrunfeld, model = "between"))
     dots <- list(...)
 #    data <- dots$data
     if (is.null(data)) stop("the data argument is mandatory")
@@ -84,8 +80,8 @@ pmodel.response.formula <- function(object, data, ...){
     model <- dots$model
     effect <- dots$effect
     theta <- dots$theta
-    if (is.null(model)) model <- "pooling"#stop("the model argument is mandatory")
-    if (is.null(effect)) effect <- "individual"#stop("the effect argument is mandatory")
+    if (is.null(model)) model <- "pooling" #stop("the model argument is mandatory")
+    if (is.null(effect)) effect <- "individual" #stop("the effect argument is mandatory")
     if (model == "random" & is.null(theta)) stop("the theta argument is mandatory")
     y <- model.response(data)
     ptransform(y, model = model, effect = effect, theta = theta)
@@ -108,7 +104,14 @@ ptransform <- function(x, model = NULL, effect = NULL, theta = NULL, ...){
         if (effect == "twoways" & is.pbalanced(x))
             x <- x - theta$id * Between(x, "individual") - theta$time * Between(x, "time") + theta$total * mean(x)
     }
-    structure(x, index = index(x), class = union("pseries", class(x)))
+    
+    res <- if (model %in% c("between", "fd")) {
+      # these models "compress" the data, thus an index does not make sense here -> no pseries
+      x
+    } else {
+      structure(x, index = index(x), class = union("pseries", class(x)))
+    }
+    return(res)
 }
 
 ####
@@ -180,7 +183,7 @@ model.matrix.pFormula <- function(object, data,
         sds <- apply(X, 2, sd)
         cstcol <- names(sds)[sds < 1E-07]
         posintercept <- match("(Intercept)", cstcol)
-        if (! is.na(posintercept)) zeroint <- ifelse(max(abs(X[, "(Intercept)"])) < 1E-07, TRUE, FALSE)        
+        if (! is.na(posintercept)) zeroint <- ifelse(max(abs(X[, "(Intercept)"])) < 1E-07, TRUE, FALSE)
         if (length(cstcol) > 0){
             if (cstcovar.rm == "covariates" | (! is.na(posintercept) && ! zeroint)){
                 posintercept <- match("(Intercept)", cstcol)

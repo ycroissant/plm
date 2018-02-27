@@ -26,7 +26,10 @@ pmodel.response(object, \dots)
 }
 
 \value{
-A numeric vector.
+A pseries except if model responses' of a \code{"between"} or {"fd"} model as
+these models "compress" the data (the number of observations used in estimation is smaller
+than the original data due to the specific transformation). A numeric is returned for the 
+"between" and "fd" model.
 }
 
 \details{
