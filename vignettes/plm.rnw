@@ -1326,7 +1326,7 @@ deviation: $$W=\frac{ \sum_{i=1}^n \sum_{t=1}^{T-1} \sum_{s=t+1}^T
     \sum_{s=t+1}^T \hat{u}_{it} \hat{u}_{is} } )^2 ]^{1/2} }$$
 
 
-This test is ($n$-) asymptotically distributed as a standard Normal
+This test is ($n$-) asymptotically distributed as a standard normal
 regardless of the distribution of the errors. It does also not rely on
 homoskedasticity.
 
@@ -1425,7 +1425,7 @@ pbltest(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp,
 As usual, the LM test statistic is based on residuals from the maximum
 likelihood estimate of the restricted model (random effects with
 serially uncorrelated errors). In this case, though, the restricted
-model cannot be estimated by \textsc{ols} any more, therefore the testing
+model cannot be estimated by \textsc{ols} anymore, therefore the testing
 function depends on \code{lme()} in the \pkg{nlme} package for
 estimation of a random effects model by maximum likelihood. For this
 reason, the test is applicable only to balanced panels.
@@ -1433,7 +1433,7 @@ reason, the test is applicable only to balanced panels.
 No test has been implemented to date for the symmetric hypothesis of
 no random effects in a model with errors following an AR(1) process,
 but an asymptotically equivalent likelihood ratio test is available in
-the \pkg{nlme} package (see Section~\ref{sec:nlme})..
+the \pkg{nlme} package (see Section~\ref{sec:nlme}).
 
 \subsubsection{General serial correlation tests}
 
@@ -1576,7 +1576,7 @@ pwfdtest(log(emp) ~ log(wage) + log(capital), data=EmplUK)
 @
 
 while specifying \code{h0="fe"} the null hypothesis becomes no serial 
-correlation in {\em original} errors, which is similar to the \code{pwartest}. 
+correlation in {\em original} errors, which is similar to the \code{pwartest}.
 
 <<pwfdtest2>>=
 pwfdtest(log(emp) ~ log(wage) + log(capital), data=EmplUK, h0="fe")
@@ -1648,14 +1648,14 @@ series contexts), is defined as
 
 $$SCLM=\sqrt{\frac{1}{n(n-1)}} ( \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} \sqrt{T_{ij}} \hat{\rho}_{ij}^2 )$$
 
-and distributed as a standard Normal.
+and distributed as a standard normal.
 
 Pesaran's \citep{PESA:04, PESA:2015} $CD$ test 
 
 $$CD=\sqrt{\frac{2}{n(n-1)}} ( \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} \sqrt{T_{ij}} \hat{\rho}_{ij} )$$
 
 based on $\rho_{ij}$ without squaring (also distributed as a standard
-Normal) is appropriate both in $n$-- and in $T$--asymptotic
+normal) is appropriate both in $n$-- and in $T$--asymptotic
 settings. It has remarkable properties in samples of any practically
 relevant size and is robust to a variety of settings. The only big
 drawback is that the test loses power against the alternative of
@@ -1676,7 +1676,7 @@ If a different model specification (\code{within}, \code{random}, ...)
 is assumed consistent, one can resort to its residuals for
 testing\footnote{This is also the only solution when the time
   dimension's length is insufficient for estimating the heterogeneous
-  model.}  by specifying the relevant \code{model} type.  The main
+  model.}  by specifying the relevant \code{model} type. The main
 argument of this function may be either a model of class
 \code{panelmodel} or a \code{formula} and a \code{data.frame}; in the
 second case, unless \code{model} is set to \code{NULL}, all usual
@@ -2075,13 +2075,13 @@ Thus, from the point of view of model specification, having {\em fixed
   effects} in an econometric model has the meaning of allowing the
 intercept to vary with group, or time, or both, while the other
 parameters are generally still assumed to be homogeneous. Having {\em
-  random effects} means having a group-- (or time--, or both) specific
+ random effects} means having a group-- (or time--, or both) specific
 component in the error term.
 
 In the mixed models literature, on the contrary, {\em fixed effect}
 indicates a parameter that is assumed constant, while {\em random
-  effects} are parameters that vary randomly around zero according to
-a joint multivariate Normal distribution.
+ effects} are parameters that vary randomly around zero according to
+a joint multivariate normal distribution.
 
 
 % So, the \textsc{fe} model in econometrics has no counterpart in the mixed
@@ -2093,8 +2093,8 @@ a joint multivariate Normal distribution.
 So, the \textsc{fe} model in econometrics has no counterpart in the
 mixed models framework, unless reducing it to \textsc{ols} on a
 specification with one dummy for each group (often termed {\em least
-  squares dummy variables}, or \textsc{lsdv} model) which can
-trivially be estimated by \textsc{ols}.  The \textsc{re} model is
+ squares dummy variables}, or \textsc{lsdv} model) which can
+trivially be estimated by \textsc{ols}. The \textsc{re} model is
 instead a special case of a mixed model where only the intercept is
 specified as a random effect, while the ``random'' type variable
 coefficients model can be seen as one that has the same regressors in
@@ -2161,7 +2161,7 @@ only one random effects regressor: the intercept. Formally, $z_{1ij}=1
 \forall j, \forall q \neq 1$ $ \lambda_{ij}=1$ for $i=j$, $0$
 else). The composite error is therefore $ u_{ij}=1b_{i1} +
 \epsilon_{ij}$. Below we report coefficients of Grunfeld's model
-estimated by \textsc{gls} and then by \textsc{ml}
+estimated by \textsc{gls} and then by \textsc{ml}:
 
 <<re>>=
 library(nlme)
