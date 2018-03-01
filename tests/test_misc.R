@@ -38,8 +38,8 @@ if (!is.pseries(residuals(plm(form, data = pGrunfeld, model = "random")))) stop(
 # for FD and between models, it should be a numeric as a pseries does not make sense due to the data compression
 if (inherits(residuals(plm(form, data = pGrunfeld, model = "fd")), "pseries")) stop("residuals.plm's return value shall not be a pseries for fd models")
 if (inherits(residuals(plm(form, data = pGrunfeld, model = "between")), "pseries")) stop("residuals.plm's return value shall not be a pseries for between models")
-if (has.index(residuals(plm(form, data = pGrunfeld, model = "fd")))) stop("residuals.plm's return value shall not have an index for fd models")
-if (has.index(residuals(plm(form, data = pGrunfeld, model = "between")))) stop("residuals.plm's return value shall not have an index for between models")
+if (plm:::has.index(residuals(plm(form, data = pGrunfeld, model = "fd")))) stop("residuals.plm's return value shall not have an index for fd models")
+if (plm:::has.index(residuals(plm(form, data = pGrunfeld, model = "between")))) stop("residuals.plm's return value shall not have an index for between models")
 
 # fitted.plm: test case for illegal pseries
 if (!is.pseries(fitted(plm(form, data = pGrunfeld, model = "pooling")))) stop("fitted.plm's return value is not a valid pseries")
@@ -48,6 +48,6 @@ if (!is.pseries(fitted(plm(form, data = pGrunfeld, model = "random")))) stop("fi
 # for FD and between models, it should be a numeric as a pseries does not make sense due to the data compression
 if (inherits(fitted(plm(form, data = pGrunfeld, model = "fd")), "pseries")) stop("fitted.plm's return value shall not be a pseries for fd models")
 if (inherits(fitted(plm(form, data = pGrunfeld, model = "between")), "pseries")) stop("fitted.plm's return value shall not be a pseries for between models")
-if (has.index(fitted(plm(form, data = pGrunfeld, model = "fd")))) stop("fitted.plm's return value shall not have an index for fd models")
-if (has.index(fitted(plm(form, data = pGrunfeld, model = "between")))) stop("fitted.plm's return value shall not have an index for between models")
+if (plm:::has.index(fitted(plm(form, data = pGrunfeld, model = "fd")))) stop("fitted.plm's return value shall not have an index for fd models")
+if (plm:::has.index(fitted(plm(form, data = pGrunfeld, model = "between")))) stop("fitted.plm's return value shall not have an index for between models")
 

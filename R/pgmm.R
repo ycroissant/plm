@@ -9,7 +9,7 @@ pgmm <- function(formula, data, subset, na.action,
   # yX : response / covariates, W : gmm instruments, Z : normal
   # instruments, V : time dummies
   
-  cl <- match.call(expand.dots = FALSE)
+#  cl <- match.call(expand.dots = FALSE)
   cl <- match.call(expand.dots = TRUE)
   effect <- match.arg(effect)
   model <- match.arg(model)
@@ -481,7 +481,6 @@ getvar <- function(x){
   result <- lapply(result, function(x) x[[2]])
   names(result) <- nres
   result
-  
 }
 
 dynterms2formula <- function(x, response.name = NULL){
@@ -625,11 +624,9 @@ summary.pgmm <- function(object, robust = TRUE, time.dummies = FALSE, ...){
   transformation <- describe(object, "transformation")
   if (robust){
     vv <- vcovHC(object)
-    A <- object$A2
   }
   else{
     vv <- vcov(object)
-    A <- object$A1
   }
   if (model == "onestep")   K <- length(object$coefficients)
   else  K <- length(object$coefficients[[2]])
@@ -698,6 +695,7 @@ mtest <- function(object, order = 1, vcov = NULL){
 }
 
 wald <- function(object, param = c("coef", "time", "all"), vcov = NULL){
+  if (!inherits(object, "pgmm")) stop("argument 'object' needs to be class 'pgmm'")
   param <- match.arg(param)
   myvcov <- vcov
   if (is.null(vcov)) vv <- vcov(object)
