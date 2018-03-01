@@ -192,12 +192,12 @@ has.intercept.Formula <- function(object, rhs = NULL, ...) {
   sapply(rhs, function(x) has.intercept(formula(object, lhs = 0, rhs = x)))
 }
 
-has.intercept.panelmodel <- function(object, ...){
+has.intercept.panelmodel <- function(object, ...) {
   object <- attr(model.frame(object),"formula")
   has.intercept(object)
 }
 
-has.intercept.plm <- function(object, part = "first", ...){
+has.intercept.plm <- function(object, part = "first", ...) {
   has.intercept(formula(object), part = part)
 }
 
@@ -205,12 +205,14 @@ has.intercept.plm <- function(object, part = "first", ...){
 
 pres <- function(x) {  # pres.panelmodel
   ## extracts model residuals as pseries
-
+  ## not necessary for plm models as residuals.plm returns a pseries,
+  ## but used in residuals.pggls, residuals.pcce, residuals.pmg
+  
   ## extract indices
   groupind <-attr(x$model, "index")[,1]
   timeind  <-attr(x$model, "index")[,2]
   
-  # fix to allow operation with pggls, pmg (NB: pmg? meant: plm?)
+  # fix to allow operation with pggls, pmg
   # [TODO: one day, make this cleaner; with the describe framework?]
   if (!is.null(x$args$model))                 maybe_fd <- x$args$model
   if (!is.null(attr(x, "pmodel")$model.name)) maybe_fd <- attr(x, "pmodel")$model.name # this line is currently needed to detect pggls models
