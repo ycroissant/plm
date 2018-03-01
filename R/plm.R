@@ -349,7 +349,7 @@ plm.list <- function(formula, data, subset, na.action,
   }
 
   names.eq <- names(formula)
-  # run plm for each equations of the list, store the results in a
+  # run plm for each equation of the list, store the results in a
   # list
   plm.models <- function(sysplm, amodel, ...){
     formulas <- sysplm$formula
@@ -645,7 +645,7 @@ summary.plm <- function(object, vcov = NULL, ..., .vcov = NULL){
     effect <- describe(object, "effect")
     object$r.squared <- c(rsq  = r.squared(object),
                           adjrsq = r.squared(object, dfcor = TRUE))
-                                        # construct the table of coefficients
+    # construct the table of coefficients
     if (!is.null(vcov_arg)) {
         if (is.matrix(vcov_arg))   rvcov <- vcov_arg
         if (is.function(vcov_arg)) rvcov <- vcov_arg(object)
@@ -657,14 +657,14 @@ summary.plm <- function(object, vcov = NULL, ..., .vcov = NULL){
     z <- b / std.err
     p <- 2 * pt(abs(z), df = object$df.residual, lower.tail = FALSE)
     
-                                        # construct the object of class summary.plm
+    # construct the object of class summary.plm
     object$coefficients <- cbind("Estimate"   = b,
                                  "Std. Error" = std.err,
                                  "t-value"    = z,
                                  "Pr(>|t|)"   = p)
     
     ## add some info to summary.plm object 
-                                        # robust vcov (next to "normal" vcov)
+    # robust vcov (next to "normal" vcov)
     if (!is.null(vcov_arg)) {
         object$rvcov <- rvcov
         
@@ -678,8 +678,8 @@ summary.plm <- function(object, vcov = NULL, ..., .vcov = NULL){
         attr(object$rvcov, which = "rvcov.name") <- rvcov.name 
     }
     
-                                        # mimics summary.lm's 'df' component
-                                        # 1st entry: no. coefs (w/o aliased coefs); 2nd: residual df; 3rd no. coefs /w aliased coefs
+    # mimics summary.lm's 'df' component
+    # 1st entry: no. coefs (w/o aliased coefs); 2nd: residual df; 3rd no. coefs /w aliased coefs
     object$df <- c(length(b), object$df.residual, length(object$aliased)) # NB: do not use length(object$coefficients) for 3rd entry!
     
     class(object) <- c("summary.plm", "plm", "panelmodel")
@@ -806,7 +806,7 @@ predict.plm <- function(object, newdata = NULL, ...){
 deviance.panelmodel <- function(object, model = NULL, ...){
   if (is.null(model)) sum(resid(object)^2)
   else sum(residuals(object, model = model)^2)
-} 
+}
 
 tss <- function(x, ...){
   UseMethod("tss")
@@ -876,7 +876,7 @@ residuals_overall_exp.plm <- function(x, ...) { #### experimental, non-exported 
     res <- y - est
     names(res) <- rownames(X)
 
-    # make residuals a pseries
+    # make residuals a pseries # TODO: also for FD and between models?
     res <- structure(res, index = index(x), class = c("pseries", class(res)))
       
   } else { # all plm models except random (also also except ht)

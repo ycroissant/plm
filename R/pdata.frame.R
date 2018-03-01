@@ -241,7 +241,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 }
 
 # NB: We don't have methods for [<-.pdata.frame and [[<-.pdata.frame, so these functions
-#     dispatche to the respective data.frame methods which assign whatever is
+#     dispatch to the respective data.frame methods which assign whatever is
 #     handed over to the methods. Especially, if a pseries is handed over, this
 #     results in really assigning a pseries to the pdata.frame in case of usage of
 #     [<- and [[<-. This is inconsistent because the columns of a pdata.frame do not
@@ -514,7 +514,7 @@ as.matrix.pseries <- function(x, idbyrow = TRUE, ...){
     index <- attr(x, "index")
     id <- index[[1]]
     time <- index[[2]]
-    time.names <- levels(as.factor(time))
+    time.names <- levels(time)
     x <- split(data.frame(x, time), id)
     x <- lapply(x, function(x){
         rownames(x) <- x[ , 2]
