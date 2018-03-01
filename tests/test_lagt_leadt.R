@@ -2,7 +2,7 @@
 # -> there is also a test file (test_lag_lead_factor_levels.R) for plm::lagr which does not
 #    treat the time variable as a numeric value (merely shifts rows)
 #
-# The lagging with respect to the time dimension is the default for lag since plm version 1.6-7, i.e.
+# The lagging with respect to the time dimension is the default for lag since plm version 1.7-0, i.e.
 #  lag(..., shift = "time") is a wrapper for plm::lagt
 #
 #

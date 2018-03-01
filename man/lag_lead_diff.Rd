@@ -73,7 +73,7 @@ return values will occur for non-consecutive time periods per individual ("holes
 
 \note{
   Up to and including version 1.6-6 of package \pkg{plm}, the lag, lead and diff functions for pseries
-  performed the shifting based on rows and there was no argument \code{shift}. Beginning with version 1.6-7, 
+  performed the shifting based on rows and there was no argument \code{shift}. Beginning with version 1.7-0, 
   the default shifting in these functions respects the time dimension (argument \code{shift} introduced with
   default value \code{"time"}.)
 }

@@ -1,8 +1,8 @@
 
-Changes in version 1.6-7
+Changes in version 1.7-0
 
   * lag, lead, diff for pseries objects: functions by default now take care of
-    the time  dimension when shifting observations. Previously, shifting was
+    the time dimension when shifting observations. Previously, shifting was
     performed row-wise (neglecting the time dimension). The argument 'shift' is 
     introduced to control shifting behaviour, possible values are "time" (default)
     and "row" (behaviour up until plm 1.6-6).
@@ -275,7 +275,7 @@ Changes in version 1.5-24
 
   * print.summary.plm: for FD models: now also prints number of observations used during estimation, because
                        these differ from the number of observations (rows) in the model frame due to diff-ing.
-  * pres: fixed handling of pggls' FD models and, thus, summary on pggls' FD models now works without error.
+  * pres: fixed handling of pggls' FD models and, thus, summary on pggls' FD models does not error anymore.
   * pbltest: now has a plm interface (besides the formula interface).
 
 
@@ -468,7 +468,7 @@ Changes in version 1.5-9
     fixed/enabled passing of argument order.by= [additional argument in
     lmtest::bgtest] [tests/testpbgtest.R added, docs updated and extended].
 
-  * phtest( , method="aux") [Hausman regression-based test]: fixed bug when data contains more
+  * phtest( , method="aux") [Hausman regression-based test]: fixed bug when data contain more
     cases than there are used in model estimation (due to NA values); avoid calc. of RE model
     a second time; phtest now also works with between model correctly (fixed degrees of freedom)
     tests/test_phtest_Hausman_regression.R added.
@@ -570,7 +570,7 @@ Changes since version 1.2-10
     in the cross-sections ; a collapse argument is added to limit the
     number of gmm instruments.
 
-  * the CoefTable element of summary.pgmm objects is renamed
+  * the CoefTable element of summary.pgmm objects is renamed to
     coefficients, so that it can easily be extracted using the coef method.
 
   * the default value for robust is now TRUE in the summary.pgmm method.
