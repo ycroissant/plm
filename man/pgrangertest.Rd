@@ -1,10 +1,10 @@
 \name{pgrangertest}
 \alias{pgrangertest}
 
-\title{Panel Granger Causality Test (Dumitrescu/Hurlin (2012))}
+\title{Panel Granger (Non-)Causality Test (Dumitrescu/Hurlin (2012))}
 
 \description{
-Test for Granger causality in panel data.
+Test for Granger (non-)causality in panel data.
 }
 
 \usage{
@@ -36,7 +36,7 @@ pgrangertest(formula, data, test = c("Ztilde", "Zbar", "Wbar"),
 %       * cross-sectional independence
 %       * convergence
 
-The panel Granger causality test is a combination of Granger tests 
+The panel Granger (non-)causality test is a combination of Granger tests 
 (Granger (1969)) performed per individual. The test is developed by 
 Dumitrescu/Hurlin (2012), a shorter exposition is given in Lopez/Weber (2017).
 

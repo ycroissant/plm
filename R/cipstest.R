@@ -9,8 +9,8 @@
 #plm <- plm:::plm
 #pdim <- plm:::pdim
 
-#model.matrix.plm<-plm:::model.matrix.plm
-#pmodel.response<-plm:::pmodel.response.plm
+#model.matrix.plm <- plm:::model.matrix.plm
+#pmodel.response <- plm:::pmodel.response.plm
 
 ## Reference is
 ## Pesaran, M.H. (2007) A simple panel unit root test in the presence of
@@ -506,7 +506,7 @@ for(i in 1:3) {
     }
 }
 
-## approximate p.values' sequence
+## approximate p-values' sequence
 cvprox <- approx(cv, c(0.01,0.05,0.1), n=200)
 cvseq <- cvprox$x
 pvseq <- cvprox$y
@@ -521,8 +521,8 @@ if(stat < min(cv)) {
                 ## if exactly one of the tabulated values
                 pval <- c(0.01, 0.05, 0.10)[which(cv==stat)]
             } else {
-                ## find interval where true p.value lies and
-                ## set p.value as the mean of bounds
+                ## find interval where true p-value lies and
+                ## set p-value as the mean of bounds
                 kk <- findInterval(stat, cvseq)
                 pval <- mean(pvseq[kk:(kk+1)])
             }

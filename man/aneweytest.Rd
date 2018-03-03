@@ -28,7 +28,7 @@ aneweytest(formula, data, subset, na.action, index = NULL, \dots)
 
 \details{Angrist and Newey's test is based on the results of the
   artifactual regression of the within residuals on the covariates for
-  all the period.}
+  all the periods.}
 
 \references{
 Angrist, J.D. and Newey, W.K. (1991). Over-identification tests in

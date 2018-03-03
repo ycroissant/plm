@@ -214,7 +214,7 @@ lagsel <- function(object, exo = c("intercept", "none", "trend"),
     lags <- pmax + 1 - which.min(l)
   }
   lags
-}        
+}
 
 
 adj.levinlin.value <- function(l, exo = c("intercept", "none", "trend")){
@@ -468,8 +468,7 @@ purtest <- function(object, data = NULL, index = NULL,
                           pmax = pmax, dfcor = dfcor, fixedT = fixedT))
   }
   
-  # compute the augmented Dickey-Fuller regressions for each time
-  # series
+  # compute the augmented Dickey-Fuller regressions for each time series
   comp.aux.reg <- (test == "levinlin")
   idres <- mapply(function(x, y)
                   tsadf(x, exo = exo, lags = y, dfcor = dfcor,
@@ -568,8 +567,6 @@ purtest <- function(object, data = NULL, index = NULL,
     pvalue <- pt(stat, df = parameter, lower.tail = TRUE)
     adjval <- NULL
   }
-  
-  
   
   htest <- structure(list(statistic = stat,
                           parameter = parameter,

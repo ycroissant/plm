@@ -333,11 +333,11 @@ pcce <- function (formula, data, subset, na.action,
     pmodel <- attr(plm.model, "pmodel")
     pmodel$model.name <- model
     mgmod <- list(coefficients = coef, residuals = residuals,
-                  stdres = stdres, tr.model=tr.model,
+                  stdres = stdres, tr.model = tr.model,
                   fitted.values = fitted.values, vcov = vcov,
                   df.residual = df.residual,
-                  model = model.frame(plm.model), sigma=NULL,
-                  indcoef = tcoef, r.squared=r2cce,
+                  model = model.frame(plm.model), sigma = NULL,
+                  indcoef = tcoef, r.squared = r2cce,
                   #cceres = as.vector(cceres),
                   #ccemgres = as.vector(ccemgres),
                   formula = formula, call = cl)

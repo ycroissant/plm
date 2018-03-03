@@ -28,7 +28,7 @@ plmtest(x, \dots)
   \item \code{"bp"} for Breusch/Pagan (1980),
   \item \code{"kw"} for King/Wu (1997), or
   \item \code{"ghm"} for Gourieroux/Holly/Monfort (1982);
-  } For unbalanced panel data sets, the respective unbalanced version of the tests are computed,}
+  } for unbalanced panel data sets, the respective unbalanced version of the tests are computed,}
  \item{\dots}{further arguments passed to \code{plmtest}.}
 }
 
