@@ -1,7 +1,7 @@
 ## some deprecated functions
 
 # plm.data() is now deprecated (since February 2017). Need to keep it in package
-# for backward compatibility of users's code out there and packages, especially 
+# for backward compatibility of users' code out there and packages, especially 
 # for package 'systemfit'.
 #
 # While plm.data() was a 'full function' once, it now is now using pdata.frame()
@@ -486,7 +486,7 @@ formula.dynformula <- function(x, ...){
 create.list <- function(alist, K, has.int, has.resp, endog, exo, default){
   # if alist is NULL, create a list of 0
   if (is.null(alist)) alist <- rep(list(default), K+has.resp)
-  # if alist is note a list, coerce it
+  # if alist is not a list, coerce it
   if (!is.list(alist)) alist <- list(alist)
 
   if (!is.null(names(alist))){
@@ -497,7 +497,7 @@ create.list <- function(alist, K, has.int, has.resp, endog, exo, default){
     if (any (nam == "")){
     # case where one element is unnamed, and therefore is the default
       unnamed <- which(nam == "")
-      if (length(unnamed) > 1) stop("Only one unnamed element is adminited\n")
+      if (length(unnamed) > 1) stop("Only one unnamed element is admitted")
       default <- alist[[unnamed]]
     }
     else{
@@ -512,7 +512,7 @@ create.list <- function(alist, K, has.int, has.resp, endog, exo, default){
   # case where there are no names, in this case the relevant length is
   # whether 1 or K+1
     if (length(alist) == 1) alist <- rep(alist, c(K+has.resp))
-    else if (!length(alist) %in% c(K+has.resp)) stop("irrelevant length for alist\n")
+    else if (!length(alist) %in% c(K+has.resp)) stop("irrelevant length for alist")
   }
   names(alist) <- c(endog,exo)
   alist

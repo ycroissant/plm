@@ -266,7 +266,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 # #stop()
 #   index <- attr(x, "index")
 #   if (is.null(index)) warning("pseries object with is.null(index(pseries)) == TRUE encountered, trying to continue anyway...")
-#   if (is.index(index)) stop(paste0("pseries object has illegal index with class(index) == ", paste0(class(index), collapse = ", ")))
+#   if (!is.index(index)) stop(paste0("pseries object has illegal index with class(index) == ", paste0(class(index), collapse = ", ")))
 #   names_orig <- names(x)
 #   x <- remove_pseries_features(x)
 #   result <- x[...]
