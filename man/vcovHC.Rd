@@ -13,8 +13,8 @@
 
 \usage{
 \method{vcovHC}{plm}(x, method = c("arellano", "white1", "white2"),
-                        type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
-                        cluster = c("group", "time"), \dots)
+          type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
+          cluster = c("group", "time"), \dots)
 \method{vcovHC}{pgmm}(x, \dots)
 }
 
@@ -25,7 +25,7 @@
   \item{method}{one of \code{"arellano"}, \code{"white1"}, \code{"white2"},}
   \item{type}{the weighting scheme used, one of \code{"HC0"}, \code{"sss"}, \code{"HC1"}, \code{"HC2"}, 
               \code{"HC3"}, \code{"HC4"}, see Details,}
-  \item{cluster}{one of \code{"group"}, \code{"time"}}
+  \item{cluster}{one of \code{"group"}, \code{"time"},}
   \item{\dots}{further arguments.}
 }
 
@@ -55,6 +55,8 @@ Weighting schemes specified by \code{type} are analogous to those in \code{\link
 \CRANpkg{sandwich} and are justified theoretically (although in the context
 of the standard linear model) by MacKinnon and White (1985) and
 Cribari-Neto (2004) (see Zeileis (2004)).
+\code{type = "sss"} employs the small sample correction as used by Stata.
+% TODO: give formula for "sss"; elaborate why different result for FE models (intercept)
 
 The main use of \code{vcovHC} is to be an argument to other functions,
 e.g. for Wald--type testing: argument \code{vcov.} to \code{coeftest()}, argument \code{vcov} to

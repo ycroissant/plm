@@ -9,18 +9,15 @@
 }
 \usage{
 \method{vcovBK}{plm}(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
-                              cluster = c("group", "time"),
-                              diagonal = FALSE,
-                              \dots)
+          cluster = c("group", "time"), diagonal = FALSE, \dots)
 }
 
 \arguments{
-  \item{x}{an object of class \code{"plm"}}
-  \item{type}{the weighting scheme used, one of \code{"HC0"}, \code{"HC1"}, \code{"HC2"}, 
-              \code{"HC3"}, \code{"HC4"}, see Details,}
-  \item{cluster}{one of \code{"group"}, \code{"time"}}
-  \item{diagonal}{a logical value specifying whether to force
-  nondiagonal elements to zero}
+  \item{x}{an object of class \code{"plm"},}
+  \item{type}{the weighting scheme used, one of \code{"HC0"}, 
+              \code{"HC1"}, \code{"HC2"}, \code{"HC3"}, \code{"HC4"}, see Details,}
+  \item{cluster}{one of \code{"group"}, \code{"time"},}
+  \item{diagonal}{a logical value specifying whether to force nondiagonal elements to zero,}
   \item{\dots}{further arguments.}
 }
 
@@ -48,6 +45,9 @@ are assumed out, and yields a timewise- (groupwise-) heteroskedasticity--consist
 estimator.
 
 Weighting schemes specified by \code{type} are analogous to those in \code{\link[sandwich]{vcovHC}} in package \CRANpkg{sandwich} and are justified theoretically (although in the context of the standard linear model) by MacKinnon and White (1985) and Cribari-Neto (2004) (see Zeileis (2004)).
+
+% TODO: once "sss" has been added: \code{type = "sss"} employs the small sample correction as used by Stata.
+% give formula for "sss"; elaborate why different result for FE models (intercept)
 
 The main use of \code{vcovBK} is to be an argument to other functions,
 e.g. for Wald--type testing: argument \code{vcov.} to \code{coeftest()}, argument \code{vcov} to
