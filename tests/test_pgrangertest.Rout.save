@@ -1,5 +1,5 @@
 
-R version 3.4.2 (2017-09-28) -- "Short Summer"
+R version 3.4.3 (2017-11-30) -- "Kite-Eating Tree"
 Copyright (C) 2017 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -21,7 +21,7 @@ Loading required package: Formula
 > 
 > pgrangertest(inv ~ value, data = Grunfeld)
 
-	Panel Granger Causality Test (Dumitrescu/Hurlin (2012))
+	Panel Granger (Non-)Causality Test (Dumitrescu/Hurlin (2012))
 
 data:  inv ~ value
 Ztilde = 3.2896, p-value = 0.001003
@@ -29,7 +29,7 @@ alternative hypothesis: Granger causality for at least one individual
 
 > pgrangertest(inv ~ value, data = Grunfeld, order = 2L)
 
-	Panel Granger Causality Test (Dumitrescu/Hurlin (2012))
+	Panel Granger (Non-)Causality Test (Dumitrescu/Hurlin (2012))
 
 data:  inv ~ value
 Ztilde = 1.6832, p-value = 0.09234
@@ -37,7 +37,7 @@ alternative hypothesis: Granger causality for at least one individual
 
 > pgrangertest(inv ~ value, data = Grunfeld, order = 2L, test = "Zbar")
 
-	Panel Granger Causality Test (Dumitrescu/Hurlin (2012))
+	Panel Granger (Non-)Causality Test (Dumitrescu/Hurlin (2012))
 
 data:  inv ~ value
 Zbar = 2.9657, p-value = 0.00302
@@ -108,4 +108,4 @@ alternative hypothesis: Granger causality for at least one individual
 > 
 > proc.time()
    user  system elapsed 
-   2.54    0.15    2.68 
+   2.77    0.17    2.94 

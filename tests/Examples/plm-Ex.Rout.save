@@ -363,7 +363,7 @@ CEOage 0     0       1
 log(y) ~ lag(log(y), 1) + log(x1) + lag(log(x1), 1) + lag(log(x1), 
     2) + log(x2) + lag(log(x2), 1) + lag(log(x2), 2) + diff(log(x3)) + 
     diff(log(x3), 1) + diff(log(x3), 2)
-<environment: 0x000000000678e5c0>
+<environment: 0x0000000009dd8d08>
 > 
 > 
 > 
@@ -8719,7 +8719,7 @@ Wald test for time dummies: chisq(7) = 14.71138 (p-value = 0.039882)
 > flush(stderr()); flush(stdout())
 > 
 > ### Name: pgrangertest
-> ### Title: Panel Granger Causality Test (Dumitrescu/Hurlin (2012))
+> ### Title: Panel Granger (Non-)Causality Test (Dumitrescu/Hurlin (2012))
 > ### Aliases: pgrangertest
 > ### Keywords: htest
 > 
@@ -8731,7 +8731,7 @@ Wald test for time dummies: chisq(7) = 14.71138 (p-value = 0.039882)
 > data("Grunfeld", package = "plm")
 > pgrangertest(inv ~ value, data = Grunfeld)
 
-	Panel Granger Causality Test (Dumitrescu/Hurlin (2012))
+	Panel Granger (Non-)Causality Test (Dumitrescu/Hurlin (2012))
 
 data:  inv ~ value
 Ztilde = 3.2896, p-value = 0.001003
@@ -8739,7 +8739,7 @@ alternative hypothesis: Granger causality for at least one individual
 
 > pgrangertest(inv ~ value, data = Grunfeld, order = 2L)
 
-	Panel Granger Causality Test (Dumitrescu/Hurlin (2012))
+	Panel Granger (Non-)Causality Test (Dumitrescu/Hurlin (2012))
 
 data:  inv ~ value
 Ztilde = 1.6832, p-value = 0.09234
@@ -8747,7 +8747,7 @@ alternative hypothesis: Granger causality for at least one individual
 
 > pgrangertest(inv ~ value, data = Grunfeld, order = 2L, test = "Zbar")
 
-	Panel Granger Causality Test (Dumitrescu/Hurlin (2012))
+	Panel Granger (Non-)Causality Test (Dumitrescu/Hurlin (2012))
 
 data:  inv ~ value
 Zbar = 2.9657, p-value = 0.00302
@@ -8757,7 +8757,7 @@ alternative hypothesis: Granger causality for at least one individual
 > # varying lag order (last individual lag order 3, others lag order 2)
 > pgrangertest(inv ~ value, data = Grunfeld, order = c(rep(2L, 9), 3L))
 
-	Panel Granger Causality Test (Dumitrescu/Hurlin (2012))
+	Panel Granger (Non-)Causality Test (Dumitrescu/Hurlin (2012))
 
 data:  inv ~ value
 Ztilde = 1.8181, p-value = 0.06905
@@ -13292,7 +13292,7 @@ attr(,"se")
 > ###
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  22.15 0.85 23.18 NA NA 
+Time elapsed:  18.4 0.72 19.17 NA NA 
 > grDevices::dev.off()
 null device 
           1 

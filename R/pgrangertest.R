@@ -1,14 +1,16 @@
 
-### Panel Granger Causality Test
+### Panel Granger (Non-)Causality Test
 ##
 ## Reference:
 ##   * Dumitrescu, Elena-Ivona/Hurlin, Christophe (2012), Testing for Granger non-causality in heterogeneous panels,
 ##                                                        Economic Modelling, 29(4), pp. 1450-460.
 ##   * supplements (test data, MATLAB code): http://www.runmycode.org/companion/view/42
 ##
-##   * Lopez, Luciano/Weber, Sylvain (2017), Testing for Granger causality in panel data, 
-##                                           IRENE Working paper 17-03, September 11, 2017
-##   * supplements (xtgcause for Stata) https://ideas.repec.org/c/boc/bocode/s458308.html
+##   * Lopez, Luciano/Weber, Sylvain (2017), Testing for Granger causality in panel data,
+##                                          The Stata Journal, Vol 17, Issue 4, pp. 972-984.
+##      * Working paper: Testing for Granger causality in panel data, 
+##                        IRENE Working paper 17-03, September 11, 2017
+##      * supplements (xtgcause for Stata) https://ideas.repec.org/c/boc/bocode/s458308.html
 ##
 ##   * EViews blog with introduction to the test and a Monte-Carlo study:
 ##     http://blog.eviews.com/2017/08/dumitrescu-hurlin-panel-granger.html
@@ -19,7 +21,7 @@
 
 
 pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar", "Wbar"), order = 1L, index = NULL) {
-  # Implementation of formulas follows Lopez/Weber (2017), the formulas are slightly different
+  # Implementation of formulae follows Lopez/Weber (2017), the formulas are slightly different
   # compared to Dumistrescu/Hurlin (2012), because "Note however that T in DH's formulas 
   # must be understood as the number of observations remaining in the estimations, that 
   # is the number of periods minus the number of lags included. In order to be consistent
@@ -142,7 +144,7 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar", "Wbar"), orde
   RVAL <- list(statistic = stat,
                parameter = NULL,
                p.value   = pval,
-               method = "Panel Granger Causality Test (Dumitrescu/Hurlin (2012))",
+               method = "Panel Granger (Non-)Causality Test (Dumitrescu/Hurlin (2012))",
                alternative = "Granger causality for at least one individual",
                data.name = deparse(formula),
                indgranger = indgranger)
