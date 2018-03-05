@@ -424,13 +424,21 @@ pgmm <- function(formula, data, subset, na.action,
                       )
   fitted.values <- mapply(function(x,y) x[, 1] - y, yX, residuals)
   if (model == "twosteps") coefficients <- list(coef1s, coefficients)
-  args <- list(model = model, effect = effect,
-               transformation = transformation, namest = namesV)
-  result <- list(coefficients = coefficients, residuals = residuals, vcov = vcov,
+  args <- list(model          = model,
+               effect         = effect,
+               transformation = transformation,
+               namest         = namesV)
+  result <- list(coefficients  = coefficients,
+                 residuals     = residuals,
+                 vcov          = vcov,
                  fitted.values = fitted.values,
-                 df.residual = df.residual, 
-                 model = yX, W = W, A1 = A1, A2 = A2,
-                 call = cl, args = args)
+                 df.residual   = df.residual,     # TODO: df.residual is not defined here, hence the function 'df.residual' is attached
+                 model         = yX,
+                 W             = W,
+                 A1            = A1,
+                 A2            = A2,
+                 call          = cl,
+                 args          = args)
   result <- structure(result, class = c("pgmm", "panelmodel"),
                       pdim = pdim)
   result
