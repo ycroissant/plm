@@ -75,8 +75,10 @@ p-values, degrees of freedom and the specified lag order.
  Cross--spectral Methods, \emph{Econometrica}, \bold{37}(3), pp. 424--438.
 
  Lopez, L./Weber, S. (2017), Testing for Granger causality in panel data,
- \emph{IRENE Working paper 17-03}, September 11, 2017.
-% supplements (xtgcause for Stata) https://ideas.repec.org/c/boc/bocode/s458308.html
+ \emph{The Stata Journal}, \bold{17}(4), pp. 972--984.
+% supplements (xtgcause for Stata): https://ideas.repec.org/c/boc/bocode/s458308.html
+% Working Paper: Lopez, L./Weber, S. (2017), Testing for Granger causality in panel data,
+% \emph{IRENE Working paper 17-03}, September 11, 2017.
 }
 
 \seealso{
