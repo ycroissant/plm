@@ -123,7 +123,7 @@ pwtest.panelmodel <- function(x, effect = c("individual", "time"), ...) {
   ## ref. Wooldridge (2002), p.264 / Wooldridge (2010), p.299
     
   ## extract resids
-  u <- resid(x)
+  u <- x$residuals
 
   ## est. random effect variance
   ## "pre-allocate" an empty list of length n
@@ -140,13 +140,13 @@ pwtest.panelmodel <- function(x, effect = c("individual", "time"), ...) {
  
   for(i in 1:n) {
     ut <- u[index == unind[i]]
-    tres[[i]] <- ut%o%ut
+    tres[[i]] <- ut %o% ut
   }
 
   ## sum over all upper triangles of emp. omega blocks:
   ## define aux. function
   uptrisum <- function(x) {
-    uts <- sum(x[upper.tri(x,diag=FALSE)])
+    uts <- sum(x[upper.tri(x, diag = FALSE)])
     return(uts)}
   
   ## det. # of upper triangle members (n*t(t-1)/2 if balanced)
@@ -154,17 +154,17 @@ pwtest.panelmodel <- function(x, effect = c("individual", "time"), ...) {
   uptrinum <- sum(ti*(ti-1)/2)  # don't need this!!
 
   ## ...apply to list and sum over resulting vector (df corrected)
-  W <- sum(sapply(tres,uptrisum)) # /sqrt(n) simplifies out
+  W <- sum(sapply(tres, uptrisum)) # /sqrt(n) simplifies out
   
   ## calculate se(Wstat) as in 10.40
-  seW <- sqrt( sum( sapply(tres,uptrisum)^2 ) )
+  seW <- sqrt( sum( sapply(tres, uptrisum)^2 ) )
   
   ## NB should we apply a df correction here, maybe that of the standard
   ## RE estimator? (see page 261) 
 
   Wstat <- W/seW
   names(Wstat) <- "z"
-  pW <- 2*pnorm(abs(Wstat), lower.tail=FALSE) # unlike LM, test is two-tailed!
+  pW <- 2*pnorm(abs(Wstat), lower.tail = FALSE) # unlike LM, test is two-tailed!
   
   ## insert usual htest features
   dname <- paste(deparse(substitute(formula)))
@@ -206,7 +206,7 @@ pwartest.panelmodel <- function(x, ...) {
   
   if (describe(x, "model") != "within") stop("pwartest only relevant for within models")
 
-  FEres <- resid(x)
+  FEres <- x$residuals
   data <- model.frame(x)
   
   ## this is a bug fix for incorrect naming of the "data" attr.
@@ -218,7 +218,7 @@ pwartest.panelmodel <- function(x, ...) {
   index <- attr(data, "index")
   id <- index[[1]]
   time <- index[[2]]
-  lagid <- as.numeric(id)-c(NA,as.numeric(id)[1:(N-1)])
+  lagid <- as.numeric(id) - c(NA,as.numeric(id)[1:(N-1)])
   FEres.1[lagid!=0] <- NA
   data <- data.frame(id, time, FEres = unclass(FEres), FEres.1 = unclass(FEres.1))
   names(data)[c(1,2)] <- c("id", "time")
@@ -240,7 +240,7 @@ pwartest.panelmodel <- function(x, ...) {
   names(FEARstat) <- "F"
   df1 <- c("df1" = 1)
   df2 <- c("df2" = df.residual(auxmod))
-  pFEARstat <- pf(FEARstat, df1 = df1, df2 = df2, lower.tail = F)
+  pFEARstat <- pf(FEARstat, df1 = df1, df2 = df2, lower.tail = FALSE)
   
   ## insert usual htest features
   dname <- paste(deparse(substitute(x)))
@@ -314,7 +314,7 @@ pbsytest.panelmodel <- function(x, test = c("ar", "re", "j"), re.normal = if (te
   if (test != "re" && !is.null(re.normal)) {
     stop("argument 're.normal' only relevant for test = \"re\", set re.normal = NULL for other tests")}
 
-  poolres <- resid(x)
+  poolres <- x$residuals
   data <- model.frame(x)
   ## extract indices
   index <- attr(data, "index")
@@ -463,10 +463,6 @@ pdwtest.panelmodel <- function(x, ...) {
 
     ## lmtest::dwtest on the demeaned model:
   
-    ## check package availability and load if necessary # not needed anymore as importFrom in NAMESPACE
-    ##lm.ok <- require("lmtest")
-    ##if(!lm.ok) stop("package lmtest is needed but not available")
-  
     ## ARtest is the return value of lmtest::dwtest, exception made for the method attribute
     dots <- match.call(expand.dots=FALSE)[["..."]]
     if (is.null(dots$order.by)) order.by <- NULL else order.by <- dots$order.by
@@ -475,9 +471,10 @@ pdwtest.panelmodel <- function(x, ...) {
     if (is.null(dots$exact)) exact <- NULL else exact <- dots$exact
     if (is.null(dots$tol)) tol <- 1e-10 else tol <- dots$tol
     
+    demy <- remove_pseries_features(demy) # needed as lmtest::dwtest cannot cope with pseries
+    
     auxformula <- demy ~ demX-1 # was: if(model == "within") demy~demX-1 else demy~demX
     lm.mod <- lm(auxformula)
-    lm.mod$model[[1]] <- as.numeric(lm.mod$model[[1]])
     
     ARtest <- dwtest(lm.mod, order.by = order.by,
                      alternative = alternative,
@@ -528,10 +525,10 @@ pbltest.formula <- function(x, data, alternative = c("twosided", "onesided"), in
   nt. <- mymod$dims$N
   n. <- as.numeric(mymod$dims$ngrps[1])
   t. <- nt./n.
-  Jt <- matrix(1,ncol=t.,nrow=t.)/t.
+  Jt <- matrix(1, ncol=t., nrow=t.)/t.
   Et <- diag(1,t.)-Jt
   ## make 'bidiagonal' matrix (see BL, p.136)
-  G <- matrix(0,ncol=t.,nrow=t.)
+  G <- matrix(0, ncol=t., nrow=t.)
   for(i in 2:t.) {
     G[i-1,i] <- 1
     G[i,i-1] <- 1
@@ -543,7 +540,7 @@ pbltest.formula <- function(x, data, alternative = c("twosided", "onesided"), in
   ## sigma2.e and sigma2.1 as in BL
   ## break up residuals by group to get rid of Kronecker prod.
   ## data have to be balanced and sorted by group/time, so this works
-  uhat.i <- vector("list",n.)
+  uhat.i <- vector("list", n.)
   for(i in 1:n.) {
     uhat.i[[i]] <- uhat[t.*(i-1)+1:t.]
     }
@@ -551,18 +548,18 @@ pbltest.formula <- function(x, data, alternative = c("twosided", "onesided"), in
   s21 <- rep(NA, n.)
   for(i in 1:n.) {
     u.i <- uhat.i[[i]]
-    s2e[i] <- as.numeric(crossprod(u.i,Et) %*% u.i)
-    s21[i] <- as.numeric(crossprod(u.i,Jt) %*% u.i)
+    s2e[i] <- as.numeric(crossprod(u.i, Et) %*% u.i)
+    s21[i] <- as.numeric(crossprod(u.i, Jt) %*% u.i)
     }
   sigma2.e <- sum(s2e) / (n.*(t.-1))
   sigma2.1 <- sum(s21) / n.
 
   ## calc. score under the null:
   star1 <- (Jt/sigma2.1 + Et/sigma2.e) %*% G %*% (Jt/sigma2.1 + Et/sigma2.e)
-  star2 <- rep(NA,n.)
+  star2 <- rep(NA, n.)
   ## again, do this group by group to avoid Kronecker prod.
   for(i in 1:n.) {
-    star2[i] <- as.numeric(crossprod(uhat.i[[i]],star1) %*% uhat.i[[i]])
+    star2[i] <- as.numeric(crossprod(uhat.i[[i]], star1) %*% uhat.i[[i]])
     }
   star2 <- sum(star2)
   Drho <- (n.*(t.-1)/t.) * (sigma2.1-sigma2.e)/sigma2.1 + sigma2.e/2 * star2
@@ -597,7 +594,7 @@ pbltest.formula <- function(x, data, alternative = c("twosided", "onesided"), in
          },
          twosided = {
            LMr.m <- Drho^2 * J11
-           pval <- pchisq(LMr.m, 1, lower.tail = FALSE)
+           pval <- pchisq(LMr.m, df = 1, lower.tail = FALSE)
            names(LMr.m) <- "chisq"
            parameter <- c(df = 1)
            method1 <- "two-sided"
@@ -659,7 +656,7 @@ pwfdtest.panelmodel <- function(x, ..., h0 = c("fd", "fe")) {
   if (model != "fd") stop(paste0("input 'x' needs to be a \"fd\" model (first-differenced model), but is \"", model, "\""))
 
   ## fetch fd residuals
-  FDres <- resid(x)
+  FDres <- x$residuals
   ## indices (full length! must reduce by 1st time period)
    ## this is an ad-hoc solution for the fact that the 'fd' model
    ## carries on the full indices while losing the first time period
@@ -676,7 +673,7 @@ pwfdtest.panelmodel <- function(x, ..., h0 = c("fd", "fe")) {
   ## - correct Ti=Ti-1
   Ti <- pdim$Tint$Ti-1
   
-  redind <- vector("list",n)
+  redind <- vector("list", n)
   tfirst <- 0
   for(i in 1:n) {
     redind[[i]] <- (tfirst+2):(tfirst+Ti[i]+1)
@@ -688,9 +685,9 @@ pwfdtest.panelmodel <- function(x, ..., h0 = c("fd", "fe")) {
   id <- id[redind]
 
   N <- length(FDres)
-  FDres.1 <- c(NA,FDres[1:(N-1)])
-  lagid <- id - c(NA,id[1:(N-1)])
-  FDres.1[lagid!=0] <- NA
+  FDres.1 <- c(NA, FDres[1:(N-1)])
+  lagid <- id - c(NA, id[1:(N-1)])
+  FDres.1[lagid != 0] <- NA
 
   ## make (panel) dataframe for auxiliary regression
   auxdata <- as.data.frame(cbind(id, time))
