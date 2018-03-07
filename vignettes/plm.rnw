@@ -7,7 +7,7 @@
 
 
 
-%\VignetteIndexEntry{Panel Data Econometrics in R: the plm Package}
+%\VignetteIndexEntry{Panel Data Econometrics in R: The plm Package}
 %\VignetteDepends{plm,stats,bdsmatrix,nlme,car}
 %\VignetteKeywords{panel data, gmm estimator, covariance matrix estimator, econometric computing, R}
 %\VignettePackage{plm}

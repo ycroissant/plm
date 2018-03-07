@@ -12,7 +12,7 @@
 ##                        IRENE Working paper 17-03, September 11, 2017
 ##      * supplements (xtgcause for Stata) https://ideas.repec.org/c/boc/bocode/s458308.html
 ##
-##   * EViews blog with introduction to the test and a Monte-Carlo study:
+##   * EViews blog with introduction to the test and a Monte Carlo study:
 ##     http://blog.eviews.com/2017/08/dumitrescu-hurlin-panel-granger.html
 ##
 ## TODO (if someone is willing...)
@@ -54,7 +54,7 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar", "Wbar"), orde
   if (test == "Zbar" && !balanced) stop("'test = \"Zbar\"' is not suited for unbalanced panels")
   if (test == "Zbar" && length(unique(order)) != 1) stop("'test = \"Zbar\"' is not suited for varying lag order")
   
-  # For statistic Ztilde, the second order moments of the individual statistics must exist.
+  # For statistic Ztilde, the second order moments of the individual statistics must exist
   # (formula (10) in Dumitrescu/Hurlin (2012) where T = T - K)
   if (length(order) == 1) {
     if (test == "Ztilde" && !(T. > 5 + 3*order)) {
@@ -114,15 +114,15 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar", "Wbar"), orde
   if(test == "Ztilde") {
     # Ztilde recommended for fixed T
     if (balanced && length(order) == 1L) {
-      stat <- c(  sqrt( N/(2*order) * (T. - 3*order - 5) / (T. - 2*order -3) ) 
-                  * ( (T. - 3*order - 3) / (T. - 3*order -1) * Wbar - order))
+      stat <- c(  sqrt( N/(2*order) * (T. - 3*order - 5) / (T. - 2*order - 3) ) 
+                  * ( (T. - 3*order - 3) / (T. - 3*order - 1) * Wbar - order))
     } else {
       # unbalanced and/or varying lag order
       # unbal stat seems to reduce to the balanced case for balanced data but rather treat it seperately here
       # formula (33) in Dumitrescu/Hurlin (2012), p. 1459
       if (length(order) == 1) order <- rep(order, N) # replicate lag order for all invididuals
       stat <- c(   sqrt(N) * ( Wbar - 1/N * sum( order * (Ti - 3*order - 1) / (Ti - 3*order - 3) )) 
-                 * 1/sqrt( 1/N * sum( 2* order * ((Ti - 3*order -1)^2 * (Ti - 2*order - 3)) / 
+                 * 1/sqrt( 1/N * sum( 2* order * ((Ti - 3*order - 1)^2 * (Ti - 2*order - 3)) / 
                                                  ((Ti - 3*order - 3)^2 * (Ti - 3*order - 5)) ) ) )
     }
     names(stat) <- "Ztilde"
@@ -135,7 +135,7 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar", "Wbar"), orde
     pval <- NULL
   }
   
-  # save individual Granger test results and lag order in return value
+  # make data frame with individual Granger test results and lag order
   indgranger <- data.frame(indi[!duplicated(indi)], unlist(Wi),
                            unlist(pWi), unlist(dfWi), 
                            (if(length(order) == 1) rep(order, N) else order))
