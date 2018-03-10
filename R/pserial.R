@@ -76,7 +76,6 @@ pwtest.formula <- function(x, data, effect = c("individual", "time"), ...) {
   cl <- cl[c(1L,m)]
   cl[[1L]] <- quote(plm)
   plm.model <- eval(cl,parent.frame())
-  # pwtest(plm.model)
   pwtest.panelmodel(plm.model, effect = effect, ...) # pass on desired 'effect' argument to pwtest.panelmodel
   
   ## "RE" test a la Wooldridge (2002/2010), see 10.4.4
@@ -91,7 +90,6 @@ pwtest.formula <- function(x, data, effect = c("individual", "time"), ...) {
 }
 
 pwtest.panelmodel <- function(x, effect = c("individual", "time"), ...) {
-  ## tind is actually not needed here
   if (describe(x, "model") != "pooling") stop("pwtest only relevant for pooling models")
   effect <- match.arg(effect, choices = c("individual", "time")) # was: effect <- describe(x, "effect")
                                                                  # here we want the effect as in the call of pwtest(),
@@ -135,7 +133,6 @@ pwtest.panelmodel <- function(x, effect = c("individual", "time"), ...) {
   ## (possibly different sizes if unbal., thus a list
   ## and thus, unlike Wooldridge (eq.10.37), we divide 
   ## every block by *his* t(t-1)/2)
-#  unind <- unique(ind)
   unind <- unique(index) # ????
  
   for(i in 1:n) {
@@ -256,7 +253,7 @@ pwartest.panelmodel <- function(x, ...) {
 
 #### pbsytest
 
-## Bera., Sosa-Escudero and Yoon type LM test for random effects
+## Bera, Sosa-Escudero and Yoon type LM test for random effects
 ## under serial correlation (H0: no random effects) or the inverse;
 ## test="ar" you get the serial corr. test robust vs. RE
 ## test="re" you get the RE test robust vs. serial corr.
@@ -508,7 +505,7 @@ pbltest.formula <- function(x, data, alternative = c("twosided", "onesided"), in
   ## reduce X to model matrix value (no NAs)
     X <- model.matrix(x, data = data)
   ## reduce data accordingly
-    data <- data[which(row.names(data)%in%row.names(X)),]
+    data <- data[which(row.names(data) %in% row.names(X)), ]
     if (! inherits(data, "pdata.frame"))
         data <- pdata.frame(data, index = index)
 
@@ -525,10 +522,10 @@ pbltest.formula <- function(x, data, alternative = c("twosided", "onesided"), in
   nt. <- mymod$dims$N
   n. <- as.numeric(mymod$dims$ngrps[1])
   t. <- nt./n.
-  Jt <- matrix(1, ncol=t., nrow=t.)/t.
-  Et <- diag(1,t.)-Jt
+  Jt <- matrix(1, ncol = t., nrow = t.)/t.
+  Et <- diag(1, t.) - Jt
   ## make 'bidiagonal' matrix (see BL, p.136)
-  G <- matrix(0, ncol=t., nrow=t.)
+  G <- matrix(0, ncol = t., nrow = t.)
   for(i in 2:t.) {
     G[i-1,i] <- 1
     G[i,i-1] <- 1
