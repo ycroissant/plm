@@ -22,7 +22,9 @@
 
 ## production version, generic and based on plm
 
-## this version 10:
+## version 11: added test = "bcsclm"
+##
+## version 10:
 ## substantial optimization for speed, now fast (few seconds) on N=3000
 ## all methods pass on a pseries to pcdres()
 
@@ -35,10 +37,13 @@ pcdtest <- function(x, ...)
 ## arguments
 
 pcdtest.formula <- function(x, data, index = NULL, model = NULL, 
-                            test = c("cd", "sclm", "lm", "rho", "absrho"),
+                            test = c("cd", "sclm", "bcsclm", "lm", "rho", "absrho"),
                             w = NULL, ...) {
     #data <- pdata.frame(data, index = index)
-    mymod <- plm(x, data = data, index = index, model = "pooling", ...)
+    test <- match.arg(test)
+    if (is.null(model) && test == "bcsclm") stop("for test = 'bcsclm', set argument model = 'within'")
+    mymod <- if (test != "bcsclm") plm(x, data = data, index = index, model = "pooling", ...)
+              else plm(x, data = data, index = index, model = "within", ...)
     if(is.null(model) & min(pdim(mymod)$Tint$Ti) < length(mymod$coefficients)+1) 
       {
         warning("Insufficient number of observations in time to estimate heterogeneous model: using within residuals",
@@ -86,14 +91,22 @@ pcdtest.formula <- function(x, data, index = NULL, model = NULL,
 
     return(pcdres(tres = tres, n = n, w = w,
                   form = paste(deparse(x)),
-                  test = match.arg(test)))
+                  test = test))
 }
 
 
 ## panelmodel method: just fetch resid (as a pseries) and hand over to pcdres
  
-pcdtest.panelmodel <- function(x, test = c("cd", "sclm", "lm", "rho", "absrho"),
+pcdtest.panelmodel <- function(x, test = c("cd", "sclm", "bcsclm", "lm", "rho", "absrho"),
                                w = NULL, ...) {
+    
+    test <- match.arg(test)
+    model <- describe(x, "model")
+    effect <- describe(x, "effect")
+    eff <- (effect == "individual" | effect == "twoways")
+    if (test == "bcsclm")
+      if (model != "within" || !eff) stop("for test = 'bcsclm', model x must be a within individual or twoways model")
+  
     tres <- resid(x)
     index <- attr(model.frame(x), "index")
     #tind <- as.numeric(index[[2]])
@@ -105,10 +118,10 @@ pcdtest.panelmodel <- function(x, test = c("cd", "sclm", "lm", "rho", "absrho"),
     #k <- length(x$coefficients)
     return(pcdres(tres = tres, n = n, w = w,
                   form = paste(deparse(x$formula)),
-                  test = match.arg(test)))
+                  test = test))
 }
 
-pcdtest.pseries <- function(x, test = c("cd", "sclm", "lm", "rho", "absrho"),
+pcdtest.pseries <- function(x, test = c("cd", "sclm", "bcsclm", "lm", "rho", "absrho"),
                              w = NULL, ...) {
   
     ## calculates local or global CD test on a pseries 'x' just as it
@@ -258,6 +271,13 @@ pcdres <- function(tres, n, w, form, test) {
     names(CDstat) <- "z"
     parm          <- NULL
     testname      <- "Scaled LM test"
+   },
+   bcsclm = {
+      CDstat        <- sqrt(1/(2*elem.num))*sum((t.ij*rho^2-1)[selector.mat]) - (n/(2*(max(t.ij)-1))) # Baltagi/Feng/Kao (2012), formula (11) (unbalanced case as sclm + in bias correction as EViews: max(T_ij) instead of T)
+      pCD           <- 2*pnorm(abs(CDstat), lower.tail = FALSE)
+      names(CDstat) <- "z"
+      parm          <- NULL
+      testname      <- "Bias-corrected Scaled LM test"
    },
    cd = {
     CDstat        <- sqrt(1/elem.num)*sum((sqrt(t.ij)*rho)[selector.mat]) # (Pesaran (2004), formula (31))

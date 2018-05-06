@@ -26,6 +26,8 @@ Changes in version 1.7-0
   * pmodel.response, fitted.plm, residuals.plm: for "between" and "fd" models, 
     a pure numeric is returned, not an 'illegal' pseries anymore (these models 
     compress data where having an index/pseries is useless and misleading).
+  * pcdtest: bias-corrected scaled LM test implemented (test = "bcsclm") as in
+    Baltagi/Feng/Kao (2012).
 
 
 Changes in version 1.6-6

@@ -12,11 +12,11 @@
 \usage{
 pcdtest(x, \dots)
 \method{pcdtest}{formula}(x, data, index = NULL, model = NULL,
-        test = c("cd", "sclm", "lm", "rho", "absrho"),
+        test = c("cd", "sclm", "bcsclm", "lm", "rho", "absrho"),
         w = NULL, \dots)
-\method{pcdtest}{panelmodel}(x, test = c("cd", "sclm", "lm", "rho", "absrho"),
+\method{pcdtest}{panelmodel}(x, test = c("cd", "sclm", "bcsclm", "lm", "rho", "absrho"),
         w = NULL, \dots)
-\method{pcdtest}{pseries}(x, test = c("cd", "sclm", "lm", "rho", "absrho"),
+\method{pcdtest}{pseries}(x, test = c("cd", "sclm", "bcsclm", "lm", "rho", "absrho"),
         w = NULL, \dots)
 }
 
@@ -34,6 +34,7 @@ pcdtest(x, \dots)
    \item \code{"cd"} for Pesaran's CD statistic,
     \item \code{"lm"} for Breusch and Pagan's original LM statistic,
     \item \code{"sclm"} for the scaled version of Breusch and Pagan's LM statistic,
+    \item \code{"bcsclm"} for the bias-corrected scaled version of Breusch and Pagan's LM statistic,
     \item \code{"rho"} for the average correlation coefficient,
     \item \code{"absrho"} for the average absolute correlation coefficient,}}
  \item{w}{either \code{NULL} (default) for the global tests or -- for the local versions of the statistics -- a \code{n x n} \code{matrix} describing proximity between individuals, with \eqn{w_ij = a} where \eqn{a} is any number such that \code{as.logical(a)==TRUE}, if \eqn{i,j} are
@@ -53,7 +54,7 @@ An object of class \code{"htest"}.
  
  The methods implemented are suitable also for unbalanced panels.
  
- Pesaran's CD test (\code{test="cd"}), Breusch and Pagan's LM test (\code{test="lm"}), and its scaled version (\code{test="sclm"}) are all described in Pesaran (2004) (and complemented by Pesaran (2015)). Breusch/Pagan (1980) is the original source for the LM test.
+ Pesaran's CD test (\code{test="cd"}), Breusch and Pagan's LM test (\code{test="lm"}), and its scaled version (\code{test="sclm"}) are all described in Pesaran (2004) (and complemented by Pesaran (2015)). The bias-corrected scaled test (\code{test="bcsclm"}) is due to Baltagi/Feng/Kao (2012) and only valid for within models including the individual effect (it's unbalanced version uses max(Tij for T) in the bias-correction term). Breusch/Pagan (1980) is the original source for the LM test.
   
  The test on a \code{pseries} is the same as a test on a pooled regression model of that variable on a constant, i.e. 
  \code{pcdtest(some_pseries)} is equivalent to \code{pcdtest(plm(some_var ~ 1, data = some_pdata.frame, model = "pooling")} and also
@@ -62,6 +63,8 @@ An object of class \code{"htest"}.
 }
 
 \references{
+Baltagi, B.H.; Feng, Q.; Kao, C. (2012), A Lagrange Multiplier test for cross--sectional dependence in a fixed effects panel data model, \emph{Journal of Econometrics}, \bold{170}(1), pp. 164--177.
+
  Breusch, T.S. and A.R. Pagan (1980), The Lagrange multiplier test and its applications to model specification in econometrics, \emph{Review of Economic Studies}, \bold{47}(1), pp. 239--253.
 
  Pesaran, M.H. (2004), General Diagnostic Tests for Cross Section Dependence in Panels, \emph{CESifo} Working Paper 1229.
