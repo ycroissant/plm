@@ -1,6 +1,6 @@
 
-R version 3.4.3 (2017-11-30) -- "Kite-Eating Tree"
-Copyright (C) 2017 The R Foundation for Statistical Computing
+R version 3.4.4 (2018-03-15) -- "Someone to Lean On"
+Copyright (C) 2018 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -363,7 +363,7 @@ CEOage 0     0       1
 log(y) ~ lag(log(y), 1) + log(x1) + lag(log(x1), 1) + lag(log(x1), 
     2) + log(x2) + lag(log(x2), 1) + lag(log(x2), 2) + diff(log(x3)) + 
     diff(log(x3), 1) + diff(log(x3), 2)
-<environment: 0x0000000009dd8d08>
+<environment: 0x00000000093dfc70>
 > 
 > 
 > 
@@ -6713,6 +6713,62 @@ alternative hypothesis: AR(1)/MA(1) errors in RE panel model
 > 
 > 
 > cleanEx()
+> nameEx("pbnftest")
+> ### * pbnftest
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: pbnftest
+> ### Title: Modified BNF-Durbin-Watson Test and Baltagi-Wu's LBI Test for
+> ###   Panel Models
+> ### Aliases: pbnftest pbnftest.panelmodel pbnftest.formula
+> ### Keywords: htest
+> 
+> ### ** Examples
+> 
+> data("Grunfeld", package = "plm")
+> 
+> # formula interface, replicate Baltagi/Wu (1999), table 1, test case A:
+> data_A <- Grunfeld[!Grunfeld[["year"]] %in% c("1943", "1944"), ]
+> pbnftest(inv ~ value + capital, data = data_A, model = "within")
+
+	modified Bhargava/Franzini/Narendranathan Panel Durbin-Watson Test
+
+data:  inv ~ value + capital
+DW = 0.70579
+alternative hypothesis: serial correlation in idiosyncratic errors
+
+> pbnftest(inv ~ value + capital, data = data_A, test = "lbi", model = "within")
+
+	Baltagi/Wu LBI Test for Serial Correlation in Panel Models
+
+data:  inv ~ value + capital
+LBI = 1.0219
+alternative hypothesis: serial correlation in idiosyncratic errors
+
+> 
+> # replicate Baltagi (2013), p. 101, table 5.1:
+> re <- plm(inv ~ value + capital, data = Grunfeld, model = "random")
+> pbnftest(re)
+
+	Bhargava/Franzini/Narendranathan Panel Durbin-Watson Test
+
+data:  inv ~ value + capital
+DW = 0.68448
+alternative hypothesis: serial correlation in idiosyncratic errors
+
+> pbnftest(re, test = "lbi")
+
+	Baltagi/Wu LBI Test for Serial Correlation in Panel Models
+
+data:  inv ~ value + capital
+LBI = 0.95636
+alternative hypothesis: serial correlation in idiosyncratic errors
+
+> 
+> 
+> 
+> cleanEx()
 > nameEx("pbsytest")
 > ### * pbsytest
 > 
@@ -12629,6 +12685,7 @@ The following objects are masked from 'package:base':
     as.Date, as.Date.numeric
 
 > library(car)
+Loading required package: carData
 > data("Produc", package="plm")
 > zz <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc, model="random")
 > ## standard coefficient significance test
@@ -12735,7 +12792,8 @@ Note: Coefficient covariance matrix supplied.
 > 
 > cleanEx()
 
-detaching 'package:car', 'package:lmtest', 'package:zoo'
+detaching 'package:car', 'package:carData', 'package:lmtest',
+  'package:zoo'
 
 > nameEx("vcovDC")
 > ### * vcovDC
@@ -12759,6 +12817,7 @@ The following objects are masked from 'package:base':
     as.Date, as.Date.numeric
 
 > library(car)
+Loading required package: carData
 > data("Produc", package="plm")
 > zz <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc, model="pooling")
 > ## standard coefficient significance test
@@ -12834,7 +12893,8 @@ Note: Coefficient covariance matrix supplied.
 > 
 > cleanEx()
 
-detaching 'package:car', 'package:lmtest', 'package:zoo'
+detaching 'package:car', 'package:carData', 'package:lmtest',
+  'package:zoo'
 
 > nameEx("vcovG")
 > ### * vcovG
@@ -12924,6 +12984,7 @@ The following objects are masked from 'package:base':
     as.Date, as.Date.numeric
 
 > library(car)
+Loading required package: carData
 > data("Produc", package = "plm")
 > zz <- plm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
 +           data = Produc, model = "random")
@@ -13047,7 +13108,8 @@ normal = -0.1165, p-value = 0.9073
 > 
 > cleanEx()
 
-detaching 'package:car', 'package:lmtest', 'package:zoo'
+detaching 'package:car', 'package:carData', 'package:lmtest',
+  'package:zoo'
 
 > nameEx("vcovNW")
 > ### * vcovNW
@@ -13071,6 +13133,7 @@ The following objects are masked from 'package:base':
     as.Date, as.Date.numeric
 
 > library(car)
+Loading required package: carData
 > data("Produc", package="plm")
 > zz <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc, model="pooling")
 > ## standard coefficient significance test
@@ -13146,7 +13209,8 @@ Note: Coefficient covariance matrix supplied.
 > 
 > cleanEx()
 
-detaching 'package:car', 'package:lmtest', 'package:zoo'
+detaching 'package:car', 'package:carData', 'package:lmtest',
+  'package:zoo'
 
 > nameEx("vcovSCC")
 > ### * vcovSCC
@@ -13170,6 +13234,7 @@ The following objects are masked from 'package:base':
     as.Date, as.Date.numeric
 
 > library(car)
+Loading required package: carData
 > data("Produc", package="plm")
 > zz <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc, model="pooling")
 > ## standard coefficient significance test
@@ -13245,7 +13310,8 @@ Note: Coefficient covariance matrix supplied.
 > 
 > cleanEx()
 
-detaching 'package:car', 'package:lmtest', 'package:zoo'
+detaching 'package:car', 'package:carData', 'package:lmtest',
+  'package:zoo'
 
 > nameEx("within_intercept")
 > ### * within_intercept
@@ -13292,7 +13358,7 @@ attr(,"se")
 > ###
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  18.4 0.72 19.17 NA NA 
+Time elapsed:  18.83 0.9 19.73 NA NA 
 > grDevices::dev.off()
 null device 
           1 

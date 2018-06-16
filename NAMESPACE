@@ -2,8 +2,8 @@ export(# estimation:
        plm, pldv, pvcm, pcce, pgmm, pggls, pht, pmg, ercomp,
        # tests:
        piest,
-       pbltest, pbgtest, pbsytest, pcdtest, pdwtest, plmtest, phtest, pFtest,
-       pwaldtest, pwartest, pwtest, pwfdtest, pgrangertest, purtest,
+       pbltest, pbnftest, pbgtest, pbsytest, pcdtest, pdwtest, plmtest, phtest, 
+       pFtest, pwaldtest, pwartest, pwtest, pwfdtest, pgrangertest, purtest,
        sargan, mtest, pooltest, aneweytest, cipstest,
        # vcov:
        vcovHC, vcovDC, vcovNW, vcovG, vcovBK, vcovSCC, pvcovHC,
@@ -208,6 +208,9 @@ S3method("pFtest", "formula")
 # pbltest
 S3method("pbltest", "formula")
 S3method("pbltest", "plm")
+# pbnftest
+S3method("pbnftest", "formula")
+S3method("pbnftest", "panelmodel")
 # pbsytest
 S3method("pbsytest", "formula")
 S3method("pbsytest", "panelmodel")

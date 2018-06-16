@@ -8,6 +8,11 @@ Changes in version 1.7-0
     and "row" (behaviour up until plm 1.6-6).
     Note that, however, the diff-ing performed in first-difference model estimation
     by plm(..., model = "fd") is based on row-wise differences of the model matrix.
+  * pbnftest: new function for Durbin-Watson test generalised to panels:
+    (modified) BNF statistic and Baltagi/Wu's LBI.
+    (Bhargava/Franzini/Narendranathan (1982), Baltagi/Wu (1999)). 
+  * pcdtest: bias-corrected scaled LM test implemented (test = "bcsclm") as in
+    Baltagi/Feng/Kao (2012).
   * groupGenerics now used for 'pseries' objects, implemented as a wrapper 
     for methods in groups 'Math', 'Ops' and 'Complex' (see ?groupGeneric).
     Thus, propagation to a higher or lower data type works correctly when 
@@ -26,8 +31,6 @@ Changes in version 1.7-0
   * pmodel.response, fitted.plm, residuals.plm: for "between" and "fd" models, 
     a pure numeric is returned, not an 'illegal' pseries anymore (these models 
     compress data where having an index/pseries is useless and misleading).
-  * pcdtest: bias-corrected scaled LM test implemented (test = "bcsclm") as in
-    Baltagi/Feng/Kao (2012).
 
 
 Changes in version 1.6-6

@@ -40,7 +40,7 @@ if (!isTRUE(all.equal(res_dwtest_pool_alt2$statistic, res_pdwtest_pool_alt2$stat
 pdwtest(inv ~ value + capital, data = Grunfeld)
 pdwtest(inv ~ value + capital, data = Grunfeld, model = "random", effect = "twoways")
 pdwtest(inv ~ value + capital, data = Grunfeld, model = "random", effect = "twoways", alternative = "two.sided")
-# exact = T (but not exact = TRUE) fail up to at least rev. 408
+# exact = T (but not exact = TRUE) fails up to at least rev. 408
 pdwtest(inv ~ value + capital, data = Grunfeld, model = "pooling", effect = "individual", alternative = "two.sided", exact = TRUE)
 # pdwtest(inv ~ value + capital, data = Grunfeld, model = "pooling", effect = "individual", alternative = "two.sided", exact = T)
 # pdwtest(plm_pool, alternative = "two.sided", exact = T)

@@ -85,6 +85,7 @@ man/pFormula.Rd -text
 man/pFtest.Rd -text
 man/pbgtest.Rd -text
 man/pbltest.Rd -text
+man/pbnftest.Rd -text
 man/pbsytest.Rd -text
 man/pcce.Rd -text
 man/pcdtest.Rd -text
@@ -163,6 +164,8 @@ tests/test_nested.Rout.save -text
 tests/test_pFtest.R -text
 tests/test_pFtest.Rout.save -text
 tests/test_pbgtest.R -text
+tests/test_pbnftest.R -text
+tests/test_pbnftest.Rout.save -text
 tests/test_pbsytest_unbalanced.R -text
 tests/test_pbsytest_unbalanced.Rout.save -text
 tests/test_pcdtest.R -text

@@ -42,7 +42,7 @@ pbgtest.panelmodel <- function(x, order = NULL, type = c("Chisq", "F"), ...) {
 
     ## lmtest::bgtest on the demeaned model:
   
-    ## check package availability and load if necessary # not needed as it importFrom in NAMESPACE is now used
+    ## check package availability and load if necessary ## not needed anymore as importFrom in NAMESPACE is now used
     #lm.ok <- require("lmtest")
     #if(!lm.ok) stop("package lmtest is needed but not available")
   
@@ -255,9 +255,9 @@ pwartest.panelmodel <- function(x, ...) {
 
 ## Bera, Sosa-Escudero and Yoon type LM test for random effects
 ## under serial correlation (H0: no random effects) or the inverse;
-## test="ar" you get the serial corr. test robust vs. RE
-## test="re" you get the RE test robust vs. serial corr.
-## test="j"  you get the joint test for serial corr. and random effects
+## test="ar": serial corr. test robust vs. RE
+## test="re": RE test robust vs. serial corr.
+## test="j":  joint test for serial corr. and random effects
 
 # Reference for the _balanced_ tests="ar"|"re":
 #                   Bera/Sosa-Escudero/Yoon (2001), Tests for the error component model in the presence of local misspecifcation,
@@ -419,7 +419,6 @@ pbsytest.panelmodel <- function(x, test = c("ar", "re", "j"), re.normal = if (te
 }
 
 #### pdwtest
-
 pdwtest <- function (x, ...) {
     UseMethod("pdwtest")
 }
@@ -440,11 +439,13 @@ pdwtest.formula <- function(x, data, ...) {
 }
 
 pdwtest.panelmodel <- function(x, ...) {
+    ## does not respect panel structure: 
     ## residual serial correlation test based on the residuals of the demeaned
-    ## model and the regular dwtest() in {lmtest}
-    ## reference Baltagi (2005),p. 98 for FE application, Wooldridge, p. 288 for
-    ## the general idea.
-
+    ## model and passed on to lmtest::dwtest() for the original DW test
+    ## approach justified in Wooldridge (2002/2010), Econometric Analysis of Cross Section and Panel Data, p. 288/328.
+    ##
+    ## For the Bhargava et al. (1982) generalized DW test see pbnftest()
+  
     ## structure:
     ## 1: take demeaned data from 'plm' object
     ## 2: est. auxiliary model by OLS on demeaned data
@@ -459,7 +460,7 @@ pdwtest.panelmodel <- function(x, ...) {
     demy <- pmodel.response(model.frame(x), model = model, effect = effect, theta = theta)
 
     ## lmtest::dwtest on the demeaned model:
-  
+
     ## ARtest is the return value of lmtest::dwtest, exception made for the method attribute
     dots <- match.call(expand.dots=FALSE)[["..."]]
     if (is.null(dots$order.by)) order.by <- NULL else order.by <- dots$order.by
@@ -467,12 +468,12 @@ pdwtest.panelmodel <- function(x, ...) {
     if (is.null(dots$iterations)) iterations <- 15 else iterations <- dots$iterations
     if (is.null(dots$exact)) exact <- NULL else exact <- dots$exact
     if (is.null(dots$tol)) tol <- 1e-10 else tol <- dots$tol
-    
+
     demy <- remove_pseries_features(demy) # needed as lmtest::dwtest cannot cope with pseries
-    
-    auxformula <- demy ~ demX-1 # was: if(model == "within") demy~demX-1 else demy~demX
+
+    auxformula <- demy ~ demX-1
     lm.mod <- lm(auxformula)
-    
+
     ARtest <- dwtest(lm.mod, order.by = order.by,
                      alternative = alternative,
                      iterations = iterations, exact = exact, tol = tol)
@@ -482,6 +483,101 @@ pdwtest.panelmodel <- function(x, ...) {
     ARtest$alternative <- "serial correlation in idiosyncratic errors"
     ARtest$data.name <- paste(deparse(x$call$formula))
     return(ARtest)
+}
+
+#### pbnftest
+
+## references:
+## * balanced and consecutive:
+##    Bhargava/Franzini/Narendranathan (1982), Serial Correlation and the Fixed Effects Model, Review of Economic Studies (1982), XLIX(4), pp. 533-549.
+##    (also in Baltagi (2005/2013), p. 98-99/109-110 for FE application)
+## * unbalanced and/or non-consecutive: modified BNF statistic and LBI statistic
+##    Baltagi/Wu (1999), Unequally spaced panel data regressions with AR(1) disturbances. Econometric Theory, 15(6), pp. 814-823.
+##    (an example is also in Baltagi (2005/2013), p. 90/101)  
+
+pbnftest <- function (x, ...) {
+  UseMethod("pbnftest")
+}
+
+pbnftest.formula <- function(x, data, test = c("bnf", "lbi"), model = c("pooling", "within", "random"), ...) {
+  ## formula method for pdwtest;
+  ## defaults to pooling model
+  
+  test  <- match.arg(test)
+  model <- match.arg(model)
+  
+  cl <- match.call(expand.dots = TRUE)
+  if (is.null(model)) model <- "pooling"
+  names(cl)[2] <- "formula"
+  if (names(cl)[3] == "") names(cl)[3] <- "data"
+  m <- match(plm.arg, names(cl), 0)
+  cl <- cl[c(1L,m)]
+  cl[[1L]] <- quote(plm)
+  plm.model <- eval(cl, parent.frame())
+  pbnftest(plm.model, test = test)
+}
+
+pbnftest.panelmodel <- function(x, test = c("bnf", "lbi"), ...) {
+  
+  test <- match.arg(test)
+  
+  # no test for random effects available: take FE as also consistent (Verbeek (2004, 2nd edition), p. 358)
+  model <- describe(x, "model")
+  if (model == "random") x <- update(x, model = "within")
+  
+  consec <- all(is.pconsecutive(x))
+  balanced <- is.pbalanced(x)
+  
+  # residuals are now class pseries, so diff.pseries is used and the differences are computed within observational units
+  # (not across as it would be the case if base::diff() is used and as it is done for lm-objects)
+  # NAs are introduced by the differencing as one observation is lost per observational unit
+  if (!inherits(residuals(x), "pseries")) stop("pdwtest internal error: residuals are not of class \"pseries\"") # check to be safe: need pseries
+  
+  ind <- index(x)[[1]]
+  obs1 <- !duplicated(ind)                  # first ob of each individual
+  obsn <- !duplicated(ind, fromLast = TRUE) # last ob of each individual
+  
+  #### d1, d2, d3, d4 as in Baltagi/Wu (1999), p. 819 formula (16)
+  res_crossprod <- as.numeric(crossprod(residuals(x))) # denominator
+  
+  ## d1 consists of two parts:
+  ##  d1.1: BNF statistic (sum of squared differenced residuals of consecutive time periods per individual)
+  ##  d1.2: sum of squared "later" residuals (not differenced) surrounded by gaps in time periods
+  ##  typo in Baltagi/Wu (1999) for d1: index j starts at j = 2, not j = 1
+  res_diff <- diff(residuals(x), shift = "time")
+  d1.1 <- sum(res_diff^2, na.rm = T) / res_crossprod # == BNF (1982), formula (4)
+  d1.2_contrib <- as.logical(is.na(res_diff) - obs1)
+  d1.2 <- sum(residuals(x)[d1.2_contrib]^2) / res_crossprod
+  d1 <- d1.1 + d1.2 # == modified BNF statistic = d1 in Baltagi/Wu (1999) formula (16) [reduces to original BNF in case of balanced and consecutive data (d1.2 is zero)]
+  
+  if (test == "bnf") {
+    stat <- d1
+    names(stat) <- "DW"
+    method <- "Bhargava/Franzini/Narendranathan Panel Durbin-Watson Test"
+    if (!consec || !balanced) method <- paste0("modified ", method)
+  }
+  
+  if (test == "lbi")  {
+    ## d2 contains the "earlier" obs sourrounded by gaps in time periods
+    d2_contrib <- as.logical(is.na(lead(residuals(x), shift = "time")) - obsn)
+    d2 <- sum(residuals(x)[d2_contrib]^2) / res_crossprod
+    
+    ## d3, d4: sum squared residual of first/last time period for all inviduals / crossprod(residuals)
+    d3 <- sum(residuals(x)[obs1]^2) / res_crossprod
+    d4 <- sum(residuals(x)[obsn]^2) / res_crossprod
+    
+    stat <- d1 + d2 + d3 + d4
+    names(stat) <- "LBI"
+    method <- "Baltagi/Wu LBI Test for Serial Correlation in Panel Models"
+  }
+  
+  result <- list(statistic = stat,
+                 # p.value   = NA, # none
+                 method    = method,
+                 alternative = "serial correlation in idiosyncratic errors",
+                 data.name = paste(deparse(x$call$formula)))
+  class(result) <- "htest"
+  return(result) 
 }
 
 #### pbltest
@@ -617,7 +713,7 @@ pbltest.plm <- function(x, alternative = c("twosided", "onesided"), ...) {
   # only continue if random effects model
   if (describe(x, "model") != "random") stop("Test is only for random effects models.")
   
-  # call pbltest.formula in the right way
+  # call pbltest.formula the right way
   pbltest.formula(formula(x$formula), data=cbind(index(x), x$model), index=names(index(x)), alternative = alternative, ...)
 }
 
