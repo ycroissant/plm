@@ -294,7 +294,7 @@ plm.fit <- function(formula, data, model, effect, random.method,
                        residuals    = e)
         
         # make 'aliased' the right length, so that summary.plm(model)$df[3] contains correct value (length(aliased))
-        aliased <- !is.na(gamma)
+        aliased <- is.na(gamma)
     }
     result$assign <- attr(X, "assign")
     result$contrasts <- attr(X, "contrasts")
