@@ -282,6 +282,7 @@ plm.fit <- function(formula, data, model, effect, random.method,
         XPy <- crossprod(X, y) - phi2mu * crossprod(X, Dmu) %*% P %*% crossprod(Dmu, y)
         gamma <- solve(XPX, XPy)[, , drop = TRUE]
 
+        # NB: residuals 'e' are not the residuals of a quasi-demeaned model but of the 'outer' model
         e <- pmodel.response(formula, data = data, model = "pooling", effect = effect) -
             as.numeric(model.matrix(formula, data, rhs = 1, model = "pooling") %*% gamma)
         result <- list(coefficients = gamma,
@@ -291,10 +292,9 @@ plm.fit <- function(formula, data, model, effect, random.method,
                        ercomp       = estec,
                        df.residual  = nrow(X) - ncol(X),
                        residuals    = e)
-        # TODO: find a way to determine aliased coefs for tw RE unbalanced: compare 'gamma' to names of model matrix? 
         
         # make 'aliased' the right length, so that summary.plm(model)$df[3] contains correct value (length(aliased))
-        aliased <- rep(NA, length(gamma))
+        aliased <- !is.na(gamma)
     }
     result$assign <- attr(X, "assign")
     result$contrasts <- attr(X, "contrasts")

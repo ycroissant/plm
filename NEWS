@@ -8,8 +8,8 @@ Changes in version 1.7-0
     and "row" (behaviour up until plm 1.6-6).
     Note that, however, the diff-ing performed in first-difference model estimation
     by plm(..., model = "fd") is based on row-wise differences of the model matrix.
-  * pbnftest: new function for Durbin-Watson test generalised to panels:
-    (modified) BNF statistic and Baltagi/Wu's LBI.
+  * pbnftest: new function for (modified) BNF statistic (Durbin-Watson test 
+    generalised to panels) and Baltagi/Wu's LBI statistic.
     (Bhargava/Franzini/Narendranathan (1982), Baltagi/Wu (1999)). 
   * pcdtest: bias-corrected scaled LM test implemented (test = "bcsclm") as in
     Baltagi/Feng/Kao (2012).

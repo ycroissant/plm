@@ -21,14 +21,14 @@ Tests for AR(1) disturbances in panel models.
  \item{data}{a \code{data.frame} (only relevant for formula interface),}
  \item{model}{a character indicating on which type of model the test shall be performed
  (\code{"pooling"}, \code{"within"}, \code{"random"}, only relevant for formula interface),}
- \item{\dots}{no relevant for formula interface: further arguments to specify the model to test (arguments passed on to plm()), e.g. \code{effect}.}
+ \item{\dots}{only relevant for formula interface: further arguments to specify the model to test (arguments passed on to plm()), e.g. \code{effect}.}
 }
 
 \details{
 The default, \code{test = "bnf"}, gives the (modified) BNF statistic, the generalised
 Durbin-Watson statistic for panels. For balanced and consecutive panels, 
 the reference is Bhargava/Franzini/Narendranathan (1982). The modified BNF is given
-for unbalanced and/or non-consecutive panels (d1 in Baltagi/Wu (1999)).
+for unbalanced and/or non-consecutive panels (d1 in formula 16 of Baltagi/Wu (1999)).
 
 \code{test = "lbi"} yields Baltagi--Wu's LBI statistic (Baltagi/Wu (1999)), 
 the locally best invariant test which is based on the modified BNF statistic.
@@ -55,10 +55,10 @@ An object of class \code{"htest"}.
 \references{
  Baltagi, B.H. (2013) \emph{Econometric Analysis of Panel Data}, 5th ed., John Wiley and Sons, pp. 100--101, 109--110.
 
- Baltagi, B. H., and P. X. Wu (1999), Unequally spaced panel data regressions with AR(1) disturbances. \emph{Econometric Theory}, \bold{15}(6), pp. 814--823.
+ Baltagi, B. H. and Wu, P. X. (1999), Unequally spaced panel data regressions with AR(1) disturbances. \emph{Econometric Theory}, \bold{15}(6), pp. 814--823.
  
  Bhargava, A., Franzini, L., and Narendranathan, W. (1982), Serial Correlation and the Fixed Effects Model, \emph{Review of Economic Studies}, \bold{XLIX}(4), pp. 533--549.
- 
+
 }
 
 \seealso{
