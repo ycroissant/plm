@@ -1,5 +1,5 @@
 
-R version 3.4.4 (2018-03-15) -- "Someone to Lean On"
+R version 3.5.0 (2018-04-23) -- "Joy in Playing"
 Copyright (C) 2018 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -25,6 +25,7 @@ Type 'q()' to quit R.
 Loading required package: Formula
 > 
 > base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+> base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
 > cleanEx()
 > nameEx("Grunfeld")
 > ### * Grunfeld
@@ -363,7 +364,7 @@ CEOage 0     0       1
 log(y) ~ lag(log(y), 1) + log(x1) + lag(log(x1), 1) + lag(log(x1), 
     2) + log(x2) + lag(log(x2), 1) + lag(log(x2), 2) + diff(log(x3)) + 
     diff(log(x3), 1) + diff(log(x3), 2)
-<environment: 0x00000000093dfc70>
+<environment: 0x00000000099a8388>
 > 
 > 
 > 
@@ -13356,9 +13357,10 @@ attr(,"se")
 > 
 > ### * <FOOTER>
 > ###
+> cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  18.83 0.9 19.73 NA NA 
+Time elapsed:  12.36 1.11 13.5 NA NA 
 > grDevices::dev.off()
 null device 
           1 

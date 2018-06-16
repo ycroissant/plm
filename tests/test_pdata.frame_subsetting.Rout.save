@@ -1,6 +1,6 @@
 
-R version 3.4.3 (2017-11-30) -- "Kite-Eating Tree"
-Copyright (C) 2017 The R Foundation for Statistical Computing
+R version 3.5.0 (2018-04-23) -- "Joy in Playing"
+Copyright (C) 2018 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -485,9 +485,9 @@ Loading required package: Formula
 > 
 > ### compare object sizes
 > object.size(pGrunfeld)  # 37392 bytes
-37392 bytes
+41376 bytes
 > object.size(pGrunfeld2) # 37392 bytes since rev. 252 # (was: 83072 bytes in pre rev.251, considerably larger!)
-37392 bytes
+41376 bytes
 >                                                      # (was: 26200 bytes in rev. 251)
 > if (!object.size(pGrunfeld) == object.size(pGrunfeld2))
 +   print("pdata.frame not same object size after \"subsetting\" with all rows (which should actually not do any subsetting))")
@@ -764,4 +764,4 @@ NULL
 > 
 > proc.time()
    user  system elapsed 
-   1.46    0.20    1.63 
+   0.78    0.21    0.96 

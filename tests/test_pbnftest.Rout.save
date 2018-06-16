@@ -1,5 +1,5 @@
 
-R version 3.4.4 (2018-03-15) -- "Someone to Lean On"
+R version 3.5.0 (2018-04-23) -- "Joy in Playing"
 Copyright (C) 2018 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -68,6 +68,7 @@ Loading required package: Formula
 
 data:  inv ~ value + capital
 DW = 0.70579
+alternative hypothesis: serial correlation in idiosyncratic errors
 
 > pbnftest(inv ~ value + capital, data = Grunfeld[!Grunfeld$year %in% c(1943, 1944), ], test = "lbi", model = "within")
 
@@ -75,6 +76,7 @@ DW = 0.70579
 
 data:  inv ~ value + capital
 LBI = 1.0219
+alternative hypothesis: serial correlation in idiosyncratic errors
 
 > 
 > # x <- plm(inv ~ value + capital, data = Grunfeld[!Grunfeld$year %in% c(1943, 1944), ], model = "within")
@@ -88,4 +90,4 @@ LBI = 1.0219
 > 
 > proc.time()
    user  system elapsed 
-   1.90    0.29    2.23 
+   1.13    0.10    1.21 
