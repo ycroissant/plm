@@ -1474,9 +1474,9 @@ model objects only for T ``sufficiently large''\footnote{Baltagi and
   the individual effects, whether fixed or random''. Generalizing the
   Durbin-Watson test to \textsc{fe} models by applying it to fixed
   effects residuals is documented in \citet{BHAR:FRAN:NARE:82}, a
-  modified version for unbalanced and/or non-consecutive panels in 
-  \citet{BALT:WU:99}, the statistic and Baltagi-Wu's LBI statistic 
-  are implemented in \code{pbnftest}}.
+  (modified) version for unbalanced and/or non-consecutive panels is
+  implemented in \code{pbnftest} as is Baltagi-Wu's LBI statistic 
+  (for both see \citet{BALT:WU:99}).}
 On the converse, in short panels the test gets severely
 biased towards rejection (or, as the induced correlation is negative, towards
 acceptance in the case of the one-sided DW test with
