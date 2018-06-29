@@ -298,7 +298,7 @@ ercomp.formula <- function(object, data,
     }
     KS <- sapply(estm, function(x) length(coef(x))) - sapply(estm, function(x){ "(Intercept)" %in% names(coef(x))})
     quad <- vector(length = 3, mode = "numeric")
-                                        # first quadratic form, within transformation
+    # first quadratic form, within transformation
     hateps_w <- resid(estm[[1]], model = "pooling")
     quad[1] <- crossprod(Within(hateps_w, effect = effect))
     # second quadratic form, between transformation
