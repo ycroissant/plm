@@ -148,6 +148,7 @@ tests/test_fitted.plm.R -text
 tests/test_fixef.R -text
 tests/test_fixef_comp_lm_plm.R -text
 tests/test_groupGenerics_pseries.R -text
+tests/test_groupGenerics_pseries.Rout.save -text
 tests/test_is.pconsecutive.R -text
 tests/test_lag_lead.R -text
 tests/test_lag_lead.Rout.save -text

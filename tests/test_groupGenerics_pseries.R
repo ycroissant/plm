@@ -7,20 +7,29 @@ data("Grunfeld", package = "plm")
 Grunfeld[ , "integer"] <- rep(c(1L, 2L, 3L, 4L), 25)
 Grunfeld[ , "logi"]    <- rep(c(TRUE, FALSE, TRUE, FALSE), 25)
 Grunfeld[ , "complex"] <- rep(c(1+0i, 2+1i), 100)
-pGrunfeld <- pdata.frame(Grunfeld)
+Grunfeld[ , "char"] <- rep(c("a1", "b2"), 100)
+Grunfeld[ , "fac"] <- factor(rep(c("a", "b"), 100))
+pGrunfeld <- pdata.frame(Grunfeld, stringsAsFactors = FALSE)
 
 ############### (1) general checks if group generics and propagation works ###########
 
 # check Ops: integer -> numeric
 stopifnot(all.equal(c("pseries", class(Grunfeld$integer / 33)), class(pGrunfeld$integer / 33)))
 
-# check Ops. logi -> numeric
+# check Ops: logical -> numeric
 stopifnot(all.equal(c("pseries", class(Grunfeld$logi + 1.1)), class(pGrunfeld$logi + 1.1)))
 stopifnot(all.equal(c("pseries", class(-Grunfeld$logi)), class(-pGrunfeld$logi)))
 
 stopifnot(all(class(diff(pGrunfeld$logi)) == c("pseries", "integer")))
 
-# check Math, also with optional second argument (check calculation and class)
+## check Ops: non-vector result, result is matrix (may not be class c("pseries", "matrix"))
+mdat <- matrix(c(1:200), nrow = 200, ncol = 1, byrow = TRUE)
+stopifnot(all(class(pGrunfeld$integer * mdat) == "matrix"))
+stopifnot(all(class(pGrunfeld$logi * mdat) == "matrix"))
+stopifnot(all(class(mdat * pGrunfeld$integer) == "matrix"))
+stopifnot(all(class(mdat * pGrunfeld$logi) == "matrix"))
+
+# check Math: also with optional second argument (check calculation and class)
 stopifnot(all.equal(log(Grunfeld$integer), as.numeric(log(pGrunfeld$integer))))
 stopifnot(all.equal(c("pseries", class(log(Grunfeld$integer))), class(log(pGrunfeld$integer))))
 
@@ -116,7 +125,49 @@ if(!isTRUE(all.equal(class(pGrunfeld$logi2double2),       c("pseries", "numeric"
 if(!isTRUE(all.equal(class(pGrunfeld[ , "logi2double3"]), c("pseries", "numeric")))) stop("when assigning by [[<-: double casted to logical (wrong class)")
 
 
-############## (4) demonstration of R's behaviour for a wrapping class "myclass" without group generics
+############## (4) test for various kinds of argument combinations in Ops.pseries
+
+# e1: pseries, e2: not a pseries and vice versa
+# -> result must be a pseries in both cases
+e1e2_a <- `*`(pGrunfeld$integer, 4L)
+e1e2_b <- `*`(4L, pGrunfeld$integer)
+class(e1e2_a)
+class(e1e2_b)
+stopifnot(is.pseries(e1e2_a))
+stopifnot(is.pseries(e1e2_b))
+stopifnot(isTRUE(all.equal(e1e2_a, e1e2_b)))
+
+# e1, e2: pseries with varying length
+# -> result must have index of longer pseries (as the shorter pseries is recycled)
+pGrunfeld_short <- pGrunfeld[4:5, ]
+e1e2_c <- `*`(pGrunfeld$integer,       pGrunfeld_short$integer)
+e1e2_d <- `*`(pGrunfeld_short$integer, pGrunfeld$integer)
+length(e1e2_c)
+length(e1e2_d)
+index(e1e2_c)
+index(e1e2_d)
+nrow(index(e1e2_c))
+nrow(index(e1e2_d))
+stopifnot(is.pseries(e1e2_c))
+stopifnot(is.pseries(e1e2_d))
+stopifnot(isTRUE(all.equal(index(e1e2_c), index(pGrunfeld$integer))))
+stopifnot(isTRUE(all.equal(index(e1e2_d), index(pGrunfeld$integer))))
+
+# e1, e2: pseries with index of same length but different content
+# -> result is assigned index of first operand
+Gr <- Grunfeld
+Gr$firm <- sort(rep(LETTERS[1:10], 20)) # make individual index different
+pGr <- pdata.frame(Gr, stringsAsFactors = FALSE)
+e1e2_e <- `*`(pGr$integer,       pGrunfeld$integer)
+e1e2_f <- `*`(pGrunfeld$integer, pGr$integer)
+index(e1e2_e)
+index(e1e2_f)
+stopifnot(is.pseries(e1e2_e))
+stopifnot(is.pseries(e1e2_f))
+
+
+
+############## (5) demonstration of R's behaviour for a wrapping class "myclass" without group generics
 x <- c(1L, 2L, 3L)
 class(x) # integer
 mode(x)
@@ -168,4 +219,3 @@ class(logi) # myclass logical
 loginum <- logi - 1.5
 class(loginum) # myclass logical
 typeof(loginum) # double
-

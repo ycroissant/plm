@@ -20,6 +20,10 @@
 
 ## helper functions: remove_pseries_features and add_pseries_features
 remove_pseries_features <- function(x) {
+  
+  # debug:
+#  if (!is.pseries(x)) stop("removing pseries features now but object was not a proper pseries before")
+  
   attr(x, "index") <- NULL
  # attr(x, "class") <- setdiff(class(x), "pseries") # cannot use this, don't know why
   class(x) <- setdiff(class(x), "pseries")
@@ -27,6 +31,9 @@ remove_pseries_features <- function(x) {
 }
 
 add_pseries_features <- function(x, index) {
+  # debug:
+#  if (is.null(index)) warning("'index' is null")
+  
   attr(x, "index") <- index
   class(x) <- union("pseries", class(x))
   return(x)
@@ -36,11 +43,18 @@ Ops.pseries <- function(e1, e2) {
 #  print("Ops.pseries executed!") # debug output
 
   miss_e2 <- missing(e2)
-  index_e1 <- attr(e1, "index")
-  
+  e1_pseries <- e2_pseries <- FALSE
   # either one or both could be pseries
-  if (inherits(e1, "pseries")) e1 <- remove_pseries_features(e1)
-  if (!miss_e2 && inherits(e2, "pseries")) e2 <- remove_pseries_features(e2)
+  if (inherits(e1, "pseries")) {
+    e1_pseries <- TRUE
+    index_e1 <- attr(e1, "index")
+    e1 <- remove_pseries_features(e1)
+  }
+  if (!miss_e2 && inherits(e2, "pseries")) {
+    e2_pseries <- TRUE
+    index_e2 <- attr(e2, "index")
+    e2 <- remove_pseries_features(e2)
+  }
 
   res <- if (!miss_e2) {
             get(.Generic)(e1, e2)
@@ -48,12 +62,34 @@ Ops.pseries <- function(e1, e2) {
             get(.Generic)(e1)
           }
   
-  res <- add_pseries_features(res, index_e1)
+  # result could be e.g. matrix. So check if adding back pseries features
+  # makes sense (e.g., do not create something of class c("pseries", "matrix"))
+  # (check for is.factor is probably superfluous here as the result probably
+  #  cannot be a factor)
+  add_back_pseries <- if (is.vector(res) || is.factor(res)) TRUE else FALSE
+  if (add_back_pseries) {
+    if (miss_e2 && e1_pseries) relevant_index <- index_e1
+    if ( e1_pseries && !e2_pseries) relevant_index <- index_e1
+    if (!e1_pseries &&  e2_pseries) relevant_index <- index_e2
+    if ( e1_pseries &&  e2_pseries) {
+      # decide on index for result:
+      # if objects vary in length: shorter object is recycled by R
+      #  -> must take index of non-recycled object (= longer pseries)
+      relevant_index <- if (nrow(index_e1) >= nrow(index_e2)) index_e1 else index_e2
+      if ((nrow(index_e1) == nrow(index_e2)) && !isTRUE(all.equal(index_e1, index_e2)))
+        warning("indexes of pseries have same length but not same content: result was assigned first operand's index")
+    }
+    res <- add_pseries_features(res, relevant_index)
+  }
+  
   return(res)
 }
   
 Math.pseries <- function(x, ...) {
 #  print("Math.pseries executed!") # debug output
+
+  # debug:
+#  if (!is.pseries(x)) stop("removing pseries features now but object was not a proper pseries before")
   
   index <- attr(x, "index")
   if (inherits(x, "pseries")) x <- remove_pseries_features(x)
