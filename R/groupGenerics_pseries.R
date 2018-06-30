@@ -22,7 +22,7 @@
 remove_pseries_features <- function(x) {
   
   # debug:
-#  if (!is.pseries(x)) stop("removing pseries features now but object was not a proper pseries before")
+#  if (!is.pseries(x)) warning("removing pseries features now but object was not a proper pseries before")
   
   attr(x, "index") <- NULL
  # attr(x, "class") <- setdiff(class(x), "pseries") # cannot use this, don't know why
@@ -88,9 +88,6 @@ Ops.pseries <- function(e1, e2) {
 Math.pseries <- function(x, ...) {
 #  print("Math.pseries executed!") # debug output
 
-  # debug:
-#  if (!is.pseries(x)) stop("removing pseries features now but object was not a proper pseries before")
-  
   index <- attr(x, "index")
   if (inherits(x, "pseries")) x <- remove_pseries_features(x)
   
