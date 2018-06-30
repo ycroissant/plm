@@ -10,8 +10,8 @@ Estimators for random and fixed effects models with variable coefficients.
 }
 
 \usage{
-pvcm(formula, data, subset, na.action, effect = c("individual","time"),
-     model = c("within","random"), index = NULL, \dots)
+pvcm(formula, data, subset, na.action, effect = c("individual", "time"),
+     model = c("within", "random"), index = NULL, \dots)
 \method{summary}{pvcm}(object, \dots)
 \method{print}{summary.pvcm}(x, digits = max(3, getOption("digits") -2),
     width = getOption("width"), \dots)
@@ -45,7 +45,7 @@ is estimated. It is a generalized least squares model which uses the results of 
 \value{
 An object of class \code{c("pvcm", "panelmodel")}, which has the following elements:
 
-  \item{coefficients}{the vector (or the list for fixed effects) of coefficients,}
+  \item{coefficients}{the vector (or the data frame for fixed effects) of coefficients,}
   \item{residuals}{the vector of residuals,}
   \item{fitted.values}{the vector of fitted values,}
   \item{vcov}{the covariance matrix of the coefficients,}
@@ -62,7 +62,7 @@ An object of class \code{c("pvcm", "panelmodel")}, which has the following eleme
 \author{Yves Croissant}
 
 \references{
-Swamy, P.A.V.B. (1970). Efficient Inference in a Random Coefficient Regression Model, \emph{Econometrica}, \bold{38}(2), pp.  311--323.
+Swamy, P.A.V.B. (1970). Efficient Inference in a Random Coefficient Regression Model, \emph{Econometrica}, \bold{38}(2), pp. 311--323.
 }
 
 \examples{

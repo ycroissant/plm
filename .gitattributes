@@ -194,6 +194,8 @@ tests/test_punbalancedness.R -text
 tests/test_purtest.R -text
 tests/test_purtest.Rout.save -text
 tests/test_pvar.R -text
+tests/test_pvcm.R -text
+tests/test_pvcm.Rout.save -text
 tests/test_pwaldtest.R -text
 tests/test_pwaldtest.Rout.save -text
 tests/test_pwaldtest_vcovG_attr_cluster.R -text

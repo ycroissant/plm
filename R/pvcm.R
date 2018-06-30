@@ -1,5 +1,5 @@
-pvcm <- function(formula, data, subset ,na.action, effect = c("individual","time"),
-                 model = c("within","random"), index = NULL, ...){
+pvcm <- function(formula, data, subset ,na.action, effect = c("individual", "time"),
+                 model = c("within", "random"), index = NULL, ...){
 
   effect <- match.arg(effect)
   model.name <- match.arg(model)
@@ -56,6 +56,7 @@ pvcm.within <- function(formula, data, effect){
   
   coef <- as.data.frame(t(sapply(ols, coefficients)))
   residuals <- unlist(lapply(ols, residuals))
+  residuals <- add_pseries_features(residuals, index)
   vcov <- lapply(ols, vcov)
   std <- as.data.frame(t(sapply(vcov, function(x) sqrt(diag(x)))))
   names(coef) <- names(std) <- colnames(coef)
@@ -161,6 +162,9 @@ pvcm.random <- function(formula, data, effect){
   # Compute the coefficients
   XpXm1 <- solve(Reduce("+", lapply(XyOmXy, function(x) x$XnXn)))
   beta <- XpXm1 %*% Reduce("+", lapply(XyOmXy, function(x) x$Xnyn))
+  beta.names <- rownames(beta)
+  beta <- as.numeric(beta)
+  names(beta) <- beta.names
   
   if (TRUE){                                                    ### TODO: this statement is always TRUE...?!
     weightsn <- lapply(seq_len(card.cond),
@@ -176,13 +180,17 @@ pvcm.random <- function(formula, data, effect){
                        )
     V <- solve(Reduce("+", weightsn))
     weightsn <- lapply(weightsn, function(x) V %*% x)
+    ## TODO: should "Beta" be called "beta"?
     Beta <- Reduce("+", lapply(seq_len(card.cond), function(i) weightsn[[i]] %*% coefm[i, ]))
+    Beta.names <- rownames(Beta)
+    Beta <- as.numeric(Beta)
+    names(Beta) <- Beta.names
     XpXm1 <- V
   }
   
   y <- model.response(data)
   X <- model.matrix(formula, data)
-  fit <- X %*% beta
+  fit <- as.numeric(tcrossprod(beta, X))
   res <- y - fit
   df.residuals <- N - ncol(coefm)
 

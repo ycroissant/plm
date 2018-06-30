@@ -31,6 +31,8 @@ Changes in version 1.7-0
   * pmodel.response, fitted.plm, residuals.plm: for "between" and "fd" models, 
     a pure numeric is returned, not an 'illegal' pseries anymore (these models 
     compress data where having an index/pseries is useless and misleading).
+  * pvcm: residuals are now of class c("pseries", "numeric")
+    (before: "numeric" for within, "matrix" with one column for random model).
 
 
 Changes in version 1.6-6
