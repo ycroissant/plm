@@ -459,6 +459,10 @@ is.pseries <- function(object) {
   if (!length(class(object)) >= 2L) res <- FALSE
   if (length(class(object)) == 2L & class(object)[1] != "pseries") res <- FALSE
   if (!has.index(object)) res <- FALSE
-  if (!any(c(is.numeric(object), is.factor(object), is.logical(object), is.character(object)))) res <- FALSE
+  if (!any(c(is.numeric(object), is.factor(object), is.logical(object), 
+             is.character(object), is.complex(object)))) {
+    res <- FALSE
+  }
+  
   return(res)
 }
