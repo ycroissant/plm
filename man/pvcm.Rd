@@ -48,7 +48,7 @@ An object of class \code{c("pvcm", "panelmodel")}, which has the following eleme
   \item{coefficients}{the vector (or the data frame for fixed effects) of coefficients,}
   \item{residuals}{the vector of residuals,}
   \item{fitted.values}{the vector of fitted values,}
-  \item{vcov}{the covariance matrix of the coefficients,}
+  \item{vcov}{the covariance matrix of the coefficients (a list for fixed effects),}
   \item{df.residual}{degrees of freedom of the residuals,}
   \item{model}{a \code{data.frame} containing the variables used for the estimation,}
   \item{call}{the call,}
