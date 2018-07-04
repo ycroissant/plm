@@ -33,7 +33,6 @@ Changes in version 1.7-0
     compress data where having an index/pseries is useless and misleading).
   * pvcm: residuals are now of class c("pseries", "numeric")
     (before: "numeric" for within, "matrix" with one column for random model).
-  * is.pseries: now returns TRUE for proper class c("pseries", "complex").
 
 
 Changes in version 1.6-6
