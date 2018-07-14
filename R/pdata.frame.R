@@ -504,7 +504,7 @@ as.data.frame.pdata.frame <- function(x, row.names = NULL, optional = FALSE, kee
 print.pseries <- function(x, ...){
   attr(x, "index") <- NULL
   attr(x, "class") <- base::setdiff(attr(x, "class"), "pseries")
-  if (length(attr(x, "class")) == 1 && class(x) %in% c("character", "logical", "numeric", "integer")) {
+  if (length(attr(x, "class")) == 1 && class(x) %in% c("character", "logical", "numeric", "integer", "complex")) {
     attr(x, "class") <- NULL
   }
   print(x, ...)
@@ -546,7 +546,8 @@ plot.pseries <- function(x, plot = c("lattice", "superposed"),
                          scale = FALSE, transparency = TRUE,
                          col = "blue", lwd = 1, ...) {
 
-    if(scale) {scalefun <- function(x) scale(x)
+    if(scale) {
+      scalefun <- function(x) scale(x)
     } else {
         scalefun <- function(x) return(x)}
 
