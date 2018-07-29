@@ -9,7 +9,7 @@ The summary method for plm objects generates some more information about estimat
 }
 
 \usage{
-\method{summary}{plm}(object, vcov = NULL, \dots, .vcov = NULL)
+\method{summary}{plm}(object, vcov = NULL, \dots)
 \method{print}{summary.plm}(x, digits = max(3, getOption("digits") - 2),
     width = getOption("width"), subset = NULL, \dots)
 }
@@ -20,7 +20,6 @@ The summary method for plm objects generates some more information about estimat
   \item{subset}{a character or numeric vector indicating a subset of the table of coefficients to be
     printed for \code{"print.summary.plm"},}
   \item{vcov}{a variance--covariance matrix furnished by the user or a function to calculate one (see \bold{Examples}),}
-  \item{.vcov}{deprecated, use argument \code{vcov},}
   \item{digits}{number of digits for printed output,}
   \item{width}{the maximum length of the lines in the printed output,}
   \item{\dots}{further arguments.}

@@ -293,7 +293,8 @@ plm.fit <- function(formula, data, model, effect, random.method,
                        df.residual  = nrow(X) - ncol(X),
                        residuals    = e)
         
-        # make 'aliased' the right length, so that summary.plm(model)$df[3] contains correct value (length(aliased))
+        # derive 'aliased' information (this is based on the assumption that
+        # estimation fails anyway if singularities are present).
         aliased <- is.na(gamma)
     }
     result$assign <- attr(X, "assign")
@@ -617,28 +618,9 @@ print.plm.list <- function(x, digits = max(3, getOption("digits") - 2), width = 
 # summary.plm creates a specific summary.plm object that is derived
 # from the associated plm object
 
-summary.plm <- function(object, vcov = NULL, ..., .vcov = NULL){
+summary.plm <- function(object, vcov = NULL, ...){
     
-# deprecation notice on arg ".vcov" introduced Nov 2016: remove arg ".vcov" some time in the future
-  
-  vcov_arg <- vcov
-    
-### set correct vcov in case deprecated arg .vcov is not null to support the deprecated .vcov arg for a while
-
-    depri_.vcov <- paste0("Use of argument \".vcov\" (notice leading dot) is deprecated.", 
-                          " Please change your code to use argument \"vcov\", because \".vcov\" will be removed in the future.")
-    depri_vcov.vcov <- paste0("Arguments \"vcov\" and \".vcov\" specified (not null), continuing with \"vcov\". ", depri_.vcov)
-    if (!is.null(vcov) && !is.null(.vcov)) {
-        warning(depri_vcov.vcov)
-        vcov_arg <- vcov
-    } else {
-        if (!is.null(.vcov)) {
-            warning(depri_.vcov)
-            vcov_arg <- .vcov
-        }
-    }
-    ## NB: there is another instance of a switch for arg ".vcov" below concerning rvcov.name
-### END set correct vcov in case deprecated arg ".vcov" is not null
+    vcov_arg <- vcov
     
     object$fstatistic <- pwaldtest(object, test = "F", vcov = vcov_arg)
     model <- describe(object, "model")
@@ -667,20 +649,14 @@ summary.plm <- function(object, vcov = NULL, ..., .vcov = NULL){
     # robust vcov (next to "normal" vcov)
     if (!is.null(vcov_arg)) {
         object$rvcov <- rvcov
-        
-        ## set correct rvcov.name depending on arg used for vcov (as long as we support the deprecated arg ".vcov")
-        if (is.null(vcov)) {
-            rvcov.name <- paste0(deparse(substitute(.vcov)))
-        } else {
-            rvcov.name <- paste0(deparse(substitute(vcov)))
-        }
-        
+        rvcov.name <- paste0(deparse(substitute(vcov)))
         attr(object$rvcov, which = "rvcov.name") <- rvcov.name 
     }
     
     # mimics summary.lm's 'df' component
     # 1st entry: no. coefs (w/o aliased coefs); 2nd: residual df; 3rd no. coefs /w aliased coefs
-    object$df <- c(length(b), object$df.residual, length(object$aliased)) # NB: do not use length(object$coefficients) for 3rd entry!
+    # NB: do not use length(object$coefficients) for 3rd entry!
+    object$df <- c(length(b), object$df.residual, length(object$aliased))
     
     class(object) <- c("summary.plm", "plm", "panelmodel")
     object

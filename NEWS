@@ -34,6 +34,9 @@ Changes in version 1.7-0
   * pvcm: residuals are now of class c("pseries", "numeric")
     (before: "numeric" for within, "matrix" with one column for random model).
   * print.pseries: prettier printing for c("pseries", "complex").
+  * summary.plm: removed support for  ill-named argument '.vcov', instead use
+    'vcov'. '.vcov' has been deprecated in plm 1.6-4 on CRAN since 2016-11-30.
+
 
 Changes in version 1.6-6
 
