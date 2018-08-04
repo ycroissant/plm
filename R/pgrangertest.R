@@ -57,14 +57,14 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar", "Wbar"), orde
   # For statistic Ztilde, the second order moments of the individual statistics must exist
   # (formula (10) in Dumitrescu/Hurlin (2012) where T = T - K)
   if (length(order) == 1) {
-    if (test == "Ztilde" && !(T. > 5 + 3*order)) {
-      stop(paste0("Condition for test = \"Ztilde\" not met: length of time series ",
-                  "must be larger than 5 + 3*order (", T., " > ", "5 + 3*", order, " = ", 5 + 3*order,")"))
+    if (test == "Ztilde" && !all((Ti > (5 + 3*order)))) {
+      stop(paste0("Condition for test = \"Ztilde\" not met for all individuals: length of time series ",
+                  "must be larger than 5+3*order (>5+3*", order, "=", 5 + 3*order,")"))
       }
     } else {
       if (test == "Ztilde" && !all((Ti > (5 + 3*order)))) {
         stop(paste0("Condition for test = \"Ztilde\" not met for all individuals: length of time series ",
-                    "must be larger than 5 + 3*order [where order is the order specified for the individual]"))
+                    "must be larger than 5+3*order [where order is the order specified for the individuals]"))
         }
     }
   
@@ -72,7 +72,7 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar", "Wbar"), orde
   if (!all(indi_con)) {
      indnames <- pdim[["panel.names"]][["id.names"]]
      wrn1 <- "pgrangertest: result may be unreliable due to individuals with non-consecutive time periods: "
-     wrn2 <- if (sum(!indi_con) <= 5)  { 
+     wrn2 <- if (sum(!indi_con) <= 5) {
                paste0(indnames[!indi_con], collapse = ", ") 
              }
              else { # cut off enumeration of individuals in warning message if more than 5

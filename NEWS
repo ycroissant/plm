@@ -18,6 +18,8 @@ Changes in version 1.7-0
     Thus, propagation to a higher or lower data type works correctly when 
     performed on pseries, e.g. c("pseries", "integer") is propagated
     to c("pseries", "numeric") if an operation returns a decimal.
+  * summary.plm: removed support for ill-named argument '.vcov', instead use
+    'vcov'. '.vcov' has been deprecated in plm 1.6-4 on CRAN since 2016-11-30.
   * as.data.frame.pdata.frame gained argument 'keep.attributes'.
   * [.pdata.frame: in case a single column, i.e., a pseries is returned, this 
     pseries now has names (now consistent to extraction by $.pdata.frame and
@@ -34,8 +36,7 @@ Changes in version 1.7-0
   * pvcm: residuals are now of class c("pseries", "numeric")
     (before: "numeric" for within, "matrix" with one column for random model).
   * print.pseries: prettier printing for c("pseries", "complex").
-  * summary.plm: removed support for ill-named argument '.vcov', instead use
-    'vcov'. '.vcov' has been deprecated in plm 1.6-4 on CRAN since 2016-11-30.
+  * pgrangertest: better detection of infeasibility of test due to lacking data.
 
 
 Changes in version 1.6-6
