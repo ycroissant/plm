@@ -7,7 +7,7 @@
 and Joint Test by Baltagi and Li}
 
 \description{
- Test for residual serial correlation (or individual random effects) locally robust vs. individual random effects (serial correlation) for panel models and joint test by Baltagi and Li.
+ Test for residual serial correlation (or individual random effects) locally robust vs. individual random effects (serial correlation) for panel models and joint test of serial correlation and the random effect specification by Baltagi and Li.
 }
 
 \usage{
@@ -45,8 +45,9 @@ pbsytest(x, \dots)
  Setting \code{re.normal = FALSE} gives the two-sided test (asymptotically chi-squared(2) distributed). Argument
  \code{re.normal} is irrelevant for all other values of \code{test}.
 
- The joint test (\code{test = "j"}) is due to Baltagi and Li (1991) (also mentioned in
- Baltagi and Li (1995), pp. 135--136) and is added for convenience under this same function.
+ The joint test of serial correlation and the random effect specification (\code{test = "j"}) 
+ is due to Baltagi and Li (1991) (also mentioned in Baltagi and Li (1995), pp. 135--136) and 
+ is added for convenience under this same function.
 
  The unbalanced version of all tests are derived in Sosa-Escudero and Bera (2008). The functions implemented 
  are suitable for balanced as well as unbalanced panel data sets.
