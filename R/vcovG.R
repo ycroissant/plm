@@ -27,17 +27,20 @@ vcovG <- function(x, ...) {
 }
 
 
-vcovG.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
-                      cluster=c("group", "time"),
-                      l=0,
-                      inner=c("cluster", "white", "diagavg"),
+vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
+                      cluster = c("group", "time"),
+                      l = 0,
+                      inner = c("cluster", "white", "diagavg"),
                      ...) {
 
   ## general building block for vcov
   ## for panel models (pooling, random, within or fd type plm obj.)
   ##
-  ## This version (7/11/2016): compliant with IV models
-
+  ## * (7/11/2016): compliant with IV models
+  
+    # stopping control for weighted regressions
+    if (!is.null(x$weights)) stop("vcovXX functions not implemented for weighted panel regressions")
+  
 
     type <- match.arg(type)
     model <- describe(x, "model")
@@ -381,9 +384,9 @@ vcovBK <- function(x, ...) {
 
 
 # TODO: add type "sss" for vcovBK
-vcovBK.plm <- function(x, type=c("HC0", "HC1", "HC2", "HC3", "HC4"),
-                       cluster=c("group", "time"),
-                       diagonal=FALSE, ...) {
+vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
+                       cluster = c("group", "time"),
+                       diagonal = FALSE, ...) {
 
   ## Robust vcov a la Beck and Katz (1995; AKA 'pcse')
   ## for panel models (pooling, random, within or fd type plm obj.)
@@ -421,7 +424,10 @@ vcovBK.plm <- function(x, type=c("HC0", "HC1", "HC2", "HC3", "HC4"),
   ##
   ## Results OK vs. EViews, vcov=PCSE. Unbal. case not exactly the
   ## same (but then, who knows what EViews does!)
-    
+  
+    # stopping control for weighted regressions
+    if (!is.null(x$weights)) stop("vcovXX functions not implemented for weighted panel regressions")
+  
     type <- match.arg(type)
     model <- describe(x, "model")
     if (!model %in% c("random", "within", "pooling", "fd")) {

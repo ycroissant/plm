@@ -36,8 +36,8 @@ Changes in version 1.7-0
   * pvcm: residuals are now of class c("pseries", "numeric")
     (before: "numeric" for within, "matrix" with one column for random model).
   * print.pseries: prettier printing for c("pseries", "complex").
-  * pgrangertest: better detection of infeasibility of test due to lacking data.
-
+  * pgrangertest: better detection of test's infeasibility when a series too short.
+  * plm objects now have element 'weights' if weighted estimation was performed.
 
 Changes in version 1.6-6
 

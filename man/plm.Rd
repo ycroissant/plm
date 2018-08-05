@@ -117,6 +117,7 @@ A \code{"plm"} object has the following elements :
 \item{coefficients}{the vector of coefficients,}
 \item{vcov}{the variance--covariance matrix of the coefficients,}
 \item{residuals}{the vector of residuals (these are the residuals of the (quasi-)demeaned model),}
+\item{weights}{(only for weighted estimations) weights as specified,}
 \item{df.residual}{degrees of freedom of the residuals,}
 \item{formula}{an object of class \code{"pFormula"} describing the
   model,}

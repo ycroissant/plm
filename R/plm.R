@@ -172,12 +172,16 @@ plm.fit <- function(formula, data, model, effect, random.method,
         y <- pmodel.response(formula, data = data, model = model, 
                              effect = effect, theta = theta)
         if (ncol(X) == 0) stop("empty model")
+        
         # call w the weights (use 1 if no weights are specified)
         w <- as.vector(model.weights(data))
+        if (!is.null(w) && !is.numeric(w)) 
+          stop("'weights' must be a numeric vector")
         if (is.null(w)) w <- 1
         # weight accordingly the response and the covariates
         X <- X * sqrt(w)
         y <- y * sqrt(w)
+        
         # extract the matrix of instruments if necessary (means here that we
         # have a multi-parts formula)
         if (length(formula)[2] > 1){
@@ -260,6 +264,7 @@ plm.fit <- function(formula, data, model, effect, random.method,
                        df.residual  = df,
                        formula      = formula,
                        model        = data)
+        if (!is.null(as.vector(model.weights(data)))) result$weights <- w
         if (model == "random") result$ercomp <- estec
     }
     else{ # random twoways unbalanced:
@@ -749,7 +754,7 @@ fitted_exp.plm <- function(x, ...) { #### experimental, non-exported function
   model <- describe(x, "model")
   res <- residuals_overall_exp.plm(x)
   
-  # For "between" and "fd" models, the number of fitted values is not equal to the 
+  # For "between" and "fd" models, the number of fitted values is not equal to the
   # number of original observations. Thus, model.frame cannot be used but rather
   # pmodel.response because it has the right length. However, pmodel.response
   # shall not be used for the other models because we want the untransformed data.
