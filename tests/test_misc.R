@@ -55,3 +55,9 @@ if (inherits(fitted(plm(form, data = pGrunfeld, model = "between")), "pseries"))
 if (plm:::has.index(fitted(plm(form, data = pGrunfeld, model = "fd")))) stop("fitted.plm's return value shall not have an index for fd models")
 if (plm:::has.index(fitted(plm(form, data = pGrunfeld, model = "between")))) stop("fitted.plm's return value shall not have an index for between models")
 
+## WLS
+p <- plm(inv ~ value, Grunfeld, model = "pooling")
+pwls <- plm(inv ~ value + capital, data = Grunfeld, weights = Grunfeld$capital, model = "pooling")
+
+if (!is.null(p$weights)) stop("element 'weights' in plm object albeit it should not be there")
+if (is.null(pwls$weights)) stop("element 'weights' missing in plm object")

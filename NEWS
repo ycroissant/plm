@@ -1,9 +1,9 @@
 
 Changes in version 1.7-0
 
-  * lag, lead, diff for pseries objects: functions by default now take care of
-    the time dimension when shifting observations within each individual.
-    Previously, shifting was performed row-wise (neglecting the time dimension).
+  * lag, lead, diff for pseries objects: functions now take care of the time
+    dimension when shifting observations within each individual. Previously, 
+    shifting was performed row-wise (neglecting the time dimension).
     The argument 'shift' is introduced to control shifting behaviour, possible 
     values are "time" (default) and "row" (behaviour up until and incl. plm 1.6-6).
     Note that, however, the diff-ing performed in first-difference model estimation
@@ -34,9 +34,9 @@ Changes in version 1.7-0
     a pure numeric is returned, not an 'illegal' pseries anymore (these models 
     compress data where having an index/pseries is useless and misleading).
   * pvcm: residuals are now of class c("pseries", "numeric")
-    (before: "numeric" for within, "matrix" with one column for random model).
+    (was: "numeric" for within, "matrix" with one column for random model).
   * print.pseries: prettier printing for c("pseries", "complex").
-  * pgrangertest: better detection of test's infeasibility when a series too short.
+  * pgrangertest: better detection of infeasibility if a series is too short.
   * plm objects now have element 'weights' if weighted estimation was performed.
 
 Changes in version 1.6-6

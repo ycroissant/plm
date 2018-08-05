@@ -261,10 +261,11 @@ plm.fit <- function(formula, data, model, effect, random.method,
         result <- list(coefficients = coef(result),
                        vcov         = vcov,
                        residuals    = resid(result),
+                       weights      = w,
                        df.residual  = df,
                        formula      = formula,
                        model        = data)
-        if (!is.null(as.vector(model.weights(data)))) result$weights <- w
+        if (is.null(as.vector(model.weights(data)))) result$weights <- NULL
         if (model == "random") result$ercomp <- estec
     }
     else{ # random twoways unbalanced:
