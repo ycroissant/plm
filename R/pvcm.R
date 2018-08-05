@@ -64,9 +64,14 @@ pvcm.within <- function(formula, data, effect){
   y <- unlist(lapply(ml, function(x) x[,1]))
   fitted.values <- y - residuals
   tss <- tss(y)
-  df.residuals <- pdim$nT$N - card.cond * ncol(coef)
-  nopool <- list(coefficients = coef, residuals = residuals, fitted.values = fitted.values,
-                 vcov = vcov, df.residuals = df.residuals, model = data, std.error = std)
+  df.resid <- pdim$nT$N - card.cond * ncol(coef)
+  nopool <- list(coefficients  = coef,
+                 residuals     = residuals,
+                 fitted.values = fitted.values,
+                 vcov          = vcov,
+                 df.residual   = df.resid,
+                 model         = data,
+                 std.error     = std)
   nopool
 }
 
@@ -192,10 +197,15 @@ pvcm.random <- function(formula, data, effect){
   X <- model.matrix(formula, data)
   fit <- as.numeric(tcrossprod(beta, X))
   res <- y - fit
-  df.residuals <- N - ncol(coefm)
+  df.resid <- N - ncol(coefm)
 
-  list(coefficients = beta, residuals = res, fitted.values = fit,
-       vcov = XpXm1, df.residuals = df.residuals, model = data, Delta = Delta)
+  list(coefficients  = beta,
+       residuals     = res,
+       fitted.values = fit,
+       vcov          = XpXm1,
+       df.residual   = df.resid,
+       model         = data,
+       Delta         = Delta)
 }
 
 

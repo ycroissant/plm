@@ -33,8 +33,9 @@ Changes in version 1.7-0
   * pmodel.response, fitted.plm, residuals.plm: for "between" and "fd" models, 
     a pure numeric is returned, not an 'illegal' pseries anymore (these models 
     compress data where having an index/pseries is useless and misleading).
-  * pvcm: residuals are now of class c("pseries", "numeric")
-    (was: "numeric" for within, "matrix" with one column for random model).
+  * pvcm: residuals are now of class c("pseries", "numeric"), were: "numeric" for
+    within, "matrix" with one column for random model); pvcm object's element
+    'df.residuals' renamed to 'df.residual' as is standard (cf. lm, plm, ...).
   * print.pseries: prettier printing for c("pseries", "complex").
   * pgrangertest: better detection of infeasibility if a series is too short.
   * plm objects now have element 'weights' if weighted estimation was performed.
