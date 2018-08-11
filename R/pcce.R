@@ -354,17 +354,17 @@ summary.pcce <- function(object,...){
   z <- b/std.err
   p <- 2*pnorm(abs(z), lower.tail = FALSE)
   CoefTable <- cbind(b, std.err, z, p)
-  colnames(CoefTable) <- c("Estimate","Std. Error","z-value","Pr(>|z|)")
+  colnames(CoefTable) <- c("Estimate", "Std. Error", "z-value", "Pr(>|z|)")
   object$CoefTable <- CoefTable
   y <- object$model[[1]]
   object$tss <- tss(y)
-  object$ssr <- sum(residuals(object)^2)
+  object$ssr <- as.numeric(crossprod(residuals(object)))
   object$rsqr <- object$r.squared #1-object$ssr/object$tss
   class(object) <- c("summary.pcce")
   return(object)
 }
 
-print.summary.pcce <- function(x,digits=max(3, getOption("digits") - 2), width = getOption("width"),...){
+print.summary.pcce <- function(x, digits = max(3, getOption("digits") - 2), width = getOption("width"), ...){
   pmodel <- attr(x,"pmodel")
   pdim <- attr(x,"pdim")
   effect <- pmodel$effect

@@ -764,9 +764,7 @@ fitted_exp.plm <- function(x, ...) { #### experimental, non-exported function
   } else {
     y <- model.frame(x)[ , 1]
   }
-  return(y - res) # TODO: shall the result be class pseries?
-                  # currently, pmodel.response (used for between and
-                  # fd model) does not set 'pseries' class
+  return(y - res)
 }
 
 
@@ -822,7 +820,7 @@ r.squared <- function(object, model = NULL,
     if (type == "ess"){
         haty <- fitted(object, model = model)
         mhaty <- mean(haty)
-        ess <- sum( (haty - mhaty)^2)
+        ess <- as.numeric(crossprod((haty - mhaty)))
         R2 <- ess / tss(object, model = model)
     }
     # Kevin Tappe 2015-10-19, the computation of the adjusted R2 was wrong
@@ -846,7 +844,7 @@ residuals_overall_exp.plm <- function(x, ...) { #### experimental, non-exported 
   # are also the residuals of the "overall" model
   if (model == "random") {
     # get untransformed data to calculate overall residuals
-    X <- model.matrix(x, model = "pooling") 
+    X <- model.matrix(x, model = "pooling")
     y <- pmodel.response(x, model = "pooling")
     # take care of any aliased coefficients:
     # they are not in x$coefficients but assoc. variables are still present in model.matrix
@@ -858,7 +856,7 @@ residuals_overall_exp.plm <- function(x, ...) { #### experimental, non-exported 
     res <- y - est
     names(res) <- rownames(X)
 
-    # make residuals a pseries # TODO: also for FD and between models?
+    # make residuals a pseries
     res <- structure(res, index = index(x), class = c("pseries", class(res)))
       
   } else { # all plm models except random (also also except ht)

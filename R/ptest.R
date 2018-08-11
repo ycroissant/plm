@@ -372,8 +372,8 @@ pFtest.plm <- function(x, z, ...){
   effect <- describe(x, "effect")
   df1 <- df.residual(pooling)-df.residual(within)
   df2 <- df.residual(within)
-  ssrp <- sum(residuals(pooling)^2)
-  ssrw <- sum(residuals(within)^2)
+  ssrp <- as.numeric(crossprod(residuals(pooling)))
+  ssrw <- as.numeric(crossprod(residuals(within)))
   stat <- (ssrp-ssrw)/ssrw/df1*df2
   names(stat) <- "F"
   parameter <- c(df1, df2)
