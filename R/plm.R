@@ -786,8 +786,8 @@ predict.plm <- function(object, newdata = NULL, ...){
 }
 
 deviance.panelmodel <- function(object, model = NULL, ...){
-  if (is.null(model)) sum(resid(object)^2)
-  else sum(residuals(object, model = model)^2)
+  if (is.null(model)) as.numeric(crossprod(resid(object)))
+  else as.numeric(crossprod(residuals(object, model = model)))
 }
 
 tss <- function(x, ...){

@@ -40,6 +40,7 @@ Changes in version 1.7-0
   * pgrangertest: better detection of infeasibility if a series is too short.
   * plm objects now have element 'weights' if weighted estimation was performed.
 
+
 Changes in version 1.6-6
 
   * ercomp:
