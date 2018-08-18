@@ -37,6 +37,7 @@ Changes in version 1.7-0
     (were: "numeric" for within, "matrix" with one column for random model);
     element 'df.residuals' renamed to 'df.residual' (cf. lm, plm, ...).
   * print.pseries: prettier printing for c("pseries", "complex").
+  * print.summary.plm: more informative for perfect fits (all residuals are 0).
   * pgrangertest: better detection of infeasibility if a series is too short.
   * plm object: gained element 'weights' if weighted estimation was performed.
   * pgmm object: removed element 'df.residual' for now as it contained the

@@ -66,10 +66,10 @@ plm <- function(formula, data, subset, weights, na.action,
     # input checks for FD model: give informative error messages as
     # described in footnote in vignette
     if (! is.na(model) && model == "fd") {
-        if (effect == "time") stop(paste("effect = \"time\" for first-difference model", 
-                                         "meaningless because cross-sections do not", 
+        if (effect == "time") stop(paste("effect = \"time\" for first-difference model",
+                                         "meaningless because cross-sections do not",
                                          "generally have a natural ordering"))
-        if (effect == "twoways") stop(paste("effect = \"twoways\" is not defined",  
+        if (effect == "twoways") stop(paste("effect = \"twoways\" is not defined",
                                             "for first-difference models"))
     }
     # deprecated section:
@@ -135,7 +135,7 @@ plm <- function(formula, data, subset, weights, na.action,
                  random.models = random.models,
                  random.dfcor = random.dfcor,
                  inst.method = inst.method)
-    result <- plm.fit(formula, data, model, effect, random.method, 
+    result <- plm.fit(formula, data, model, effect, random.method,
                       random.models, random.dfcor, inst.method)
     result$call <- cl
     result$args <- args
@@ -150,13 +150,13 @@ plm.fit <- function(formula, data, model, effect, random.method,
     # if a random effect model is estimated, compute the error components
     if (model == "random"){
         is.balanced <- is.pbalanced(data)
-        estec <- ercomp(formula, data, effect, method = random.method, 
+        estec <- ercomp(formula, data, effect, method = random.method,
                         models = random.models, dfcor = random.dfcor)
         sigma2 <- estec$sigma2
         theta <- estec$theta
         index <- attr(data, "index")
         if (length(formula)[2] == 2 && effect == "twoways")
-            stop(paste("Instrumental variable random effect estimation", 
+            stop(paste("Instrumental variable random effect estimation",
                        "not implemented for two-ways panels"))
     }
     else theta <- NULL
@@ -186,12 +186,12 @@ plm.fit <- function(formula, data, model, effect, random.method,
         # have a multi-parts formula)
         if (length(formula)[2] > 1){
             if (length(formula)[2] == 2){
-                W <- model.matrix(formula, data, rhs = 2, 
-                                  model = model, effect = effect, 
+                W <- model.matrix(formula, data, rhs = 2,
+                                  model = model, effect = effect,
                                   theta = theta)
             }
             else{
-                W <- model.matrix(formula, data, rhs = c(2, 3), model = model, 
+                W <- model.matrix(formula, data, rhs = c(2, 3), model = model,
                                       effect = effect, theta = theta)
             }
             if (model == "within"){
@@ -211,19 +211,19 @@ plm.fit <- function(formula, data, model, effect, random.method,
                 # the bvk estimator seems to have disappeared
                 X <- X / sqrt(sigma2["idios"])
                 y <- y / sqrt(sigma2["idios"])
-                W1 <- model.matrix(formula, data, rhs = 2, model = "within", 
+                W1 <- model.matrix(formula, data, rhs = 2, model = "within",
                                    effect = effect, theta = theta)
-                B1 <- model.matrix(formula, data, rhs = 2, model = "Between", 
+                B1 <- model.matrix(formula, data, rhs = 2, model = "Between",
                                    effect = effect, theta = theta)
                 
                 if (inst.method %in% c("am", "bms")) 
-                    StarW1 <- starX(formula, data, rhs = 2, model = "within", 
+                    StarW1 <- starX(formula, data, rhs = 2, model = "within",
                                     effect = effect)
                 if (length(formula)[2] == 3){
-                    W2 <- model.matrix(formula, data, rhs = 3, model = "within", 
+                    W2 <- model.matrix(formula, data, rhs = 3, model = "within",
                                            effect = effect, theta = theta)
                     if (inst.method == "bms")
-                        StarW2 <- starX(formula, data, rhs = 3, model = "within", 
+                        StarW2 <- starX(formula, data, rhs = 3, model = "within",
                                         effect = effect)
                 }
                 else W2 <- StarW2 <- NULL
@@ -715,9 +715,17 @@ print.summary.plm <- function(x, digits = max(3, getOption("digits") - 2),
     print(x$ercomp)
   }
   cat("\nResiduals:\n")
-  save.digits <- unlist(options(digits = digits))
-  on.exit(options(digits = save.digits))
-  print(sumres(x))
+  df <- x$df
+  rdf <- df[2L]
+  if (rdf > 5L) {
+    save.digits <- unlist(options(digits = digits))
+    on.exit(options(digits = save.digits))
+    print(sumres(x))
+  } else if (rdf > 0L) print(residuals(x), digits = digits)
+  if (rdf == 0L) { # estimation is a perfect fit
+   cat("ALL", x$df[1L], "residuals are 0: no residual degrees of freedom!")
+   cat("\n")
+  }
   
   if (any(x$aliased, na.rm = TRUE)) {
     # na.rm = TRUE because currently, RE tw unbalanced models set aliased simply to NA
@@ -748,7 +756,7 @@ print.summary.plm <- function(x, digits = max(3, getOption("digits") - 2),
 }
 
 fitted_exp.plm <- function(x, ...) { #### experimental, non-exported function
-# fitted_exp.plm: gives the fitted values of all types of plm models by substracting the overall 
+# fitted_exp.plm: gives the fitted values of all types of plm models by substracting the overall
 #                 residuals from the untransformed response variable; does not have
 #                 a model argument so it is not as versatile as 'fitted.plm' below.
 # see also test file tests/test_residuals_overall_fitted_exp.R
