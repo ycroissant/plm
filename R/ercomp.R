@@ -295,6 +295,9 @@ ercomp.formula <- function(object, data,
     if (secmod %in% c("between", "Between")){
         if (effect != "time") estm[[2]] <- plm.fit(object, data, model = secmod, effect = "individual")
         if (effect != "individual") estm[[3]] <- plm.fit(object, data, model = secmod, effect = "time")
+        # check if Between model was estimated correctly
+        swar_Between_check(estm[[2]], method)
+        swar_Between_check(estm[[3]], method)
     }
     KS <- sapply(estm, function(x) length(coef(x))) - sapply(estm, function(x){ "(Intercept)" %in% names(coef(x))})
     quad <- vector(length = 3, mode = "numeric")

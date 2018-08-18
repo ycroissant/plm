@@ -482,3 +482,20 @@ amemiya_check <- function(matA, matB, method) {
     stop(paste0("'amemiya' model not estimable due to variable(s) lacking within variation: ", offending_vars))
   } else NULL
 }
+
+swar_Between_check <- function(x, method) {
+  ## non-exported
+  ## little helper function to feasibility of Between model in Swamy-Arora estimation
+  ## in ercomp(): if model contains too few groups (individual, time) the Between
+  ## model is not estimable (but does not error)
+  if (method == "swar" && describe(x, "model") == "Between") {
+    pdim <- pdim(x)
+    grp <- switch(describe(x, "effect"),
+                  "individual" = pdim$nT$n,
+                  "time"       = pdim$nT$T)
+    # cannot use df.residual(x) here because that gives the number for the "uncompressed" Between model
+    if (length(x$aliased) >= grp) stop(paste0("'swar' model not estimable as there are ", length(x$aliased),
+                                              " coefficient(s) (incl. intercept) to be estimated for the between model but only ",
+                                              grp, " ", describe(x, "effect"), "(s)"))
+  } else NULL
+}
