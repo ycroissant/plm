@@ -223,7 +223,7 @@ ercomp.formula <- function(object, data,
             K <- ncol(WX)
             MK <- length(setdiff("(Intercept)", attr(WX, "constant"))) # Pas sur, a verifier
             KW <- ncol(WX)
-            M["w", "nu"] <- O - N - K + MK              
+            M["w", "nu"] <- O - N - K + MK
             M["w", "eta"] <- 0
             M["w", "lambda"] <- 0
             M["id", "nu"] <- N - G + trace( crossprod(CPXM, CPXBetaBlambda))
@@ -304,11 +304,11 @@ ercomp.formula <- function(object, data,
     # second quadratic form, between transformation
     if (effect != "time"){
         hateps_id <- resid(estm[[2]], model = "pooling")
-        quad[2] <- crossprod(Between(hateps_id, effect = "individual"))
+        quad[2] <- as.numeric(crossprod(Between(hateps_id, effect = "individual")))
     }
     if (effect != "individual"){
         hateps_ts <- resid(estm[[3]], model = "pooling")
-        quad[3] <- crossprod(Between(hateps_ts, effect = "time"))
+        quad[3] <- as.numeric(crossprod(Between(hateps_ts, effect = "time")))
     }
     M <- matrix(NA, nrow = 3, ncol = 3,
                 dimnames = list(c("w", "id", "ts"),
@@ -412,6 +412,7 @@ ercomp.formula <- function(object, data,
                                           effect = "individual")[, -1, drop = FALSE]    # INTERCEPT
                     XBeta <- t(t(XBeta) - colMeans(XBeta))
                     CPXBeta <- crossprod(XBeta)
+                    amemiya_check(CPXM, CPXBeta, method) # catch non-estimable 'amemiya'
                     M["id", "nu"] <- N - 1 + trace( crossprod(CPXM, CPXBeta) )
                     M["id", "eta"] <- O - sum(Tn ^ 2) / O
                 }
@@ -420,6 +421,7 @@ ercomp.formula <- function(object, data,
                                          effect = "time")[, -1, drop = FALSE]           # INTERCEPT
                     XBmu <- t(t(XBmu) - colMeans(XBmu))
                     CPXBmu <- crossprod(XBmu)
+                    amemiya_check(CPXM, CPXBmu, method) # catch non-estimable 'amemiya'
                     M["ts", "nu"] <- TS - 1 + trace( crossprod(CPXM, CPXBmu) )
                     M["ts", "mu"] <- O - sum(Nt ^ 2) / O
                 }
@@ -428,7 +430,7 @@ ercomp.formula <- function(object, data,
                     M["ts", "eta"] <- TS - sum(Tn ^ 2) / O
                 }
             }
-        }
+        } # END if ("within" %in% models)
         if (length(intersect(c("between", "Between"), models))){
             if (effect != "time"){
                 Zeta <- model.matrix(estm[[2]], model = "pooling", effect = "individual")
@@ -460,7 +462,7 @@ ercomp.formula <- function(object, data,
                 else M["id", "mu"] <- M["ts", "eta"] <- 0
             }
         }
-    }
+    } ## END of General case, compute the unbiased version of the estimators
     sigma2 <- as.numeric(solve(M[therows, therows], quad[therows]))
     names(sigma2) <- c("idios", "id", "time")[therows]
     sigma2[sigma2 < 0] <- 0

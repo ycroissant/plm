@@ -466,3 +466,19 @@ is.pseries <- function(object) {
   
   return(res)
 }
+
+amemiya_check <- function(matA, matB, method) {
+  ## non-exported
+  ## little helper function to check matrix multiplication compatibility
+  ## in ercomp() for the amemiya estimator: if model contains variables without
+  ## within variation (individual or time), the model is not estimable
+  if (NROW(matA) < NCOL(matB) && method == "amemiya" ) {
+    offending_vars <- setdiff(colnames(matB), rownames(matA))
+    offending_vars <- if (length(offending_vars) > 3) {
+      paste0(paste(offending_vars[1:3], collapse = ", "), ", ...") 
+      } else { 
+        paste(offending_vars, collapse = ", ")
+      }
+    stop(paste0("'amemiya' model not estimable due to variable(s) lacking within variation: ", offending_vars))
+  } else NULL
+}
