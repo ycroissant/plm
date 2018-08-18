@@ -73,6 +73,13 @@ zr <- pvcm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, mod
 ## replicate Greene (2012), p. 419, table 11.14
 summary(pvcm(log(gsp) ~ log(pc) + log(hwy) + log(water) + log(util) + log(emp) + unemp, 
              data = Produc, model = "random"))
+             
+\dontrun{
+# replicate Swamy (1970), p. 166, table 5.2
+data(Grunfeld, package = "AER") # 11 firm Grunfeld data needed from package AER
+gw <- pvcm(invest ~ value + capital, data = Grunfeld, index = c("firm", "year"))
+}
+             
 }
 
 \keyword{regression}
