@@ -357,7 +357,8 @@ pgmm <- function(formula, data, subset, na.action,
   ##### 11. Compute the estimator
   #################################################################
 
-  W <- W1 ; yX <- yX1
+  W <- W1
+  yX <- yX1
   
   # Compute the first step matrices
   if (transformation == "d") A1 <- tcrossprod(diff(diag(1, T - TL1 + 1)))
@@ -432,14 +433,15 @@ pgmm <- function(formula, data, subset, na.action,
                  residuals     = residuals,
                  vcov          = vcov,
                  fitted.values = fitted.values,
-                 df.residual   = df.residual,     # TODO: df.residual is not defined here, hence the function 'df.residual' is attached
+          #       df.residual   = df.residual,     # TODO: df.residual is not defined here, hence the function 'df.residual' is attached by this
                  model         = yX,
                  W             = W,
                  A1            = A1,
                  A2            = A2,
                  call          = cl,
                  args          = args)
-  result <- structure(result, class = c("pgmm", "panelmodel"),
+  result <- structure(result,
+                      class = c("pgmm", "panelmodel"),
                       pdim = pdim)
   result
 }
