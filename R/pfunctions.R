@@ -155,7 +155,7 @@ Within.pseries <- function(x, effect = c("individual", "time", "group", "twoways
 Within.matrix <- function(x, effect, rm.null = TRUE,...){
     if (is.null(attr(x, "index"))){
         result <- Within.default(x, effect, ...)
-        othervar <- .colSums(abs(mat), m = nrow(mat), n = ncol(mat), na.rm = TRUE) > 1E-12
+        othervar <- .colSums(abs(x), m = nrow(x), n = ncol(x), na.rm = TRUE) > 1E-12
         if (rm.null){
             result <- result[ , othervar, drop = FALSE]
             attr(result, "constant") <- character(0)
