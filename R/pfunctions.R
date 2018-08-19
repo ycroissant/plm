@@ -18,8 +18,8 @@ Tapply.pseries <- function(x, effect = c("individual", "time", "group"), func, .
     index <- attr(x, "index")
     effect <- switch(effect,
                      "individual"= index[[1]],
-                     "time"= index[[2]],
-                     "group" = index[[3]]
+                     "time"      = index[[2]],
+                     "group"     = index[[3]]
                      )
     z <- Tapply.default(x, effect, func, ...)
     attr(z, "index") <- index
@@ -102,9 +102,9 @@ between.pseries <- function(x, effect = c("individual", "time", "group"), ...){
     effect <- match.arg(effect)
     index <- attr(x, "index")
     effect <- switch(effect,
-                     individual = index[[1]],
-                     time = index[[2]],
-                     group = index[[3]]
+                     "individual" = index[[1]],
+                     "time"       = index[[2]],
+                     "group"      = index[[3]]
                      )
     x <- between.default(x, effect = effect, ...)
     nms <- attr(x, "dimnames")[[1]]
@@ -155,13 +155,13 @@ Within.pseries <- function(x, effect = c("individual", "time", "group", "twoways
 Within.matrix <- function(x, effect, rm.null = TRUE,...){
     if (is.null(attr(x, "index"))){
         result <- Within.default(x, effect, ...)
-        othervar <- apply(result, 2, function(x) sum(abs(x), na.rm = TRUE)) > 1E-12
+        othervar <- .colSums(abs(mat), m = nrow(mat), n = ncol(mat), na.rm = TRUE) > 1E-12
         if (rm.null){
-            result <- result[, othervar, drop = FALSE]
+            result <- result[ , othervar, drop = FALSE]
             attr(result, "constant") <- character(0)
         }
         else{
-            result <- result[, drop = FALSE]
+            result <- result[ , drop = FALSE]
             attr(result, "constant") <- colnames(x)[!othervar]
         }
         result
@@ -170,9 +170,11 @@ Within.matrix <- function(x, effect, rm.null = TRUE,...){
         if (effect %in% c("individual", "time", "group")) result <- x - Between(x, effect)
         if (effect == "twoways"){
             xindex <- attr(x, "index")
-            if (is.pbalanced(xindex)) result <- x - Between(x, "individual") - Between(x, "time") +
-                                          matrix(rep(apply(x, 2, mean), nrow(x)), nrow = nrow(x), byrow = TRUE)
-            else{
+            if (is.pbalanced(xindex)) {
+              result <- x - Between(x, "individual") - Between(x, "time") +
+                            matrix(.colMeans(x, m = nrow(x), n = ncol(x)), nrow = nrow(x), ncol = ncol(x), byrow = TRUE)
+            }
+            else{ # unbalanced twoways
                 time <- index(xindex, "time")
                 id <- index(xindex, "individual")
                 Dmu <- model.matrix(~ time - 1)

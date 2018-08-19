@@ -360,7 +360,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     # call [.data.frame exactly as [.pdata.frame was called but arg is now 'x'
     # this is necessary because there could be several missing arguments
     # use sys.call (and not match.call) because arguments other than drop may not be named
-    # need to evaluate i, j, drop, if supplied, before passing them on (do not pass on as originally catched sys.call)
+    # need to evaluate i, j, drop, if supplied, before passing on (do not pass on as the sys.call caught originally)
     sc_mod <- sc
     sc_mod[[1]] <- quote(`[.data.frame`)
     sc_mod[[2]] <- quote(x)

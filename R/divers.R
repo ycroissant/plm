@@ -468,7 +468,7 @@ is.pseries <- function(object) {
 }
 
 amemiya_check <- function(matA, matB, method) {
-  ## non-exported
+  ## non-exported, used in ercomp()
   ## little helper function to check matrix multiplication compatibility
   ## in ercomp() for the amemiya estimator: if model contains variables without
   ## within variation (individual or time), the model is not estimable
@@ -484,8 +484,8 @@ amemiya_check <- function(matA, matB, method) {
 }
 
 swar_Between_check <- function(x, method) {
-  ## non-exported
-  ## little helper function to feasibility of Between model in Swamy-Arora estimation
+  ## non-exported, used in ercomp()
+  ## little helper function to check feasibility of Between model in Swamy-Arora estimation
   ## in ercomp(): if model contains too few groups (individual, time) the Between
   ## model is not estimable (but does not error)
   if (method == "swar" && describe(x, "model") == "Between") {
