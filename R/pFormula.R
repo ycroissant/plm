@@ -179,7 +179,11 @@ model.matrix.pFormula <- function(object, data,
 #            attr(X, "constant") <- "(Intercept)"
         }
     }
+    
+    
     if (cstcovar.rm %in% c("covariates", "all")){
+      # check for finite values (otherwise the following math functions return nonsense)
+      if(any(is.finite(X))) stop("model matrix or response contains non-finite values (NA/NaN/Inf/-Inf)")
         sds <- apply(X, 2, sd)
         cstcol <- names(sds)[sds < 1E-07]
         posintercept <- match("(Intercept)", cstcol)
