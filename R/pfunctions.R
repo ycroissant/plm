@@ -251,7 +251,7 @@ leadt.pseries <- function(x, k = 1, ...) {
 difft.pseries <- function(x, lag = 1, ...){
   ## copied/adapted from diffr.pseries except lines which use lagt() ("t") instead of lagr() ("r")
   islogi <- is.logical(x)
-  if (! (is.numeric(x) || islogi)) stop("difft is only relevant for numeric or logical series")
+  if (! (is.numeric(x) || islogi)) stop("diff is only relevant for numeric or logical series")
   
   non.int <- vapply(lag, function(l) round(l) != l, FUN.VALUE = TRUE)
   if (any(non.int)) stop("Lagging value(s) in 'lag' must be whole-numbered (and non-negative)")
@@ -259,7 +259,7 @@ difft.pseries <- function(x, lag = 1, ...){
   # prevent input of negative values, because it will most likely confuse users
   # what difft would do in this case
   neg <- vapply(lag, function(l) l < 0, FUN.VALUE = TRUE)
-  if (any(neg)) stop("difft.pseries is only relevant for non-negative values in 'lag'")
+  if (any(neg)) stop("diff is only relevant for non-negative values in 'lag'")
   
   lagtx <- lagt.pseries(x, k = lag) # use "time-based" lagging for difft
   
@@ -406,7 +406,7 @@ diffr.pseries <- function(x, lag = 1, ...){
     # prevent input of negative values, because it will most likely confuse users
     # what diff would do in this case
     neg <- vapply(lag, function(l) l < 0, FUN.VALUE = TRUE)
-    if (any(neg)) stop("diff.pseries is only relevant for non-negative values in 'lag'")
+    if (any(neg)) stop("diff is only relevant for non-negative values in 'lag'")
 
     lagrx <- lagr.pseries(x, k = lag)
     

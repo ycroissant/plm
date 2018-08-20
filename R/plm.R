@@ -728,7 +728,7 @@ print.summary.plm <- function(x, digits = max(3, getOption("digits") - 2),
   }
   
   if (any(x$aliased, na.rm = TRUE)) {
-    # na.rm = TRUE because currently, RE tw unbalanced models set aliased simply to NA
+    # na.rm = TRUE because currently, RE tw unbalanced models might have NAs?
     naliased <- sum(x$aliased, na.rm = TRUE)
     cat("\nCoefficients: (", naliased, " dropped because of singularities)\n", sep = "")
   } else cat("\nCoefficients:\n")
