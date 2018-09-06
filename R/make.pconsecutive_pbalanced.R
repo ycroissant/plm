@@ -246,7 +246,7 @@ make.pbalanced.pdata.frame <- function(x, balance.type = c("fill", "shared.times
   if (length(balance.type) == 1 && balance.type == "shared") {
     # accept "shared" for backward compatibility
     balance.type <- "shared.times"
-    warning("Use of balanced.type = 'shared' discouraged, set to 'shared.time'")
+    warning("Use of balanced.type = 'shared' discouraged, set to 'shared.times'")
   }
   balance.type <- match.arg(balance.type)
   index <- attr(x, "index")
@@ -291,7 +291,7 @@ make.pbalanced.pseries <- function(x, balance.type = c("fill", "shared.times", "
   if (length(balance.type) == 1 && balance.type == "shared") {
     # accept "shared" for backward compatibility
     balance.type <- "shared.times"
-    warning("Use of balanced.type = 'shared' discouraged, set to 'shared.time'")
+    warning("Use of balanced.type = 'shared' discouraged, set to 'shared.times'")
   }
   balance.type <- match.arg(balance.type)
   index <- attr(x, "index")
