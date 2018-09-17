@@ -1,6 +1,11 @@
 
 Changes in version 1.7-0
 
+  * a bug is fixed in Between.matrix, so that the transformation can
+    be correctly performed for a matrix without index attribute
+
+  * Between and Within methods for matrices are now exported
+
   * lag, lead, diff for pseries objects: functions now take care of the time
     dimension when shifting observations within each individual. Previously, 
     shifting was performed row-wise (neglecting the time dimension).

@@ -187,6 +187,9 @@ S3method("Within",    "pseries")
 S3method("print",     "pseries")
 S3method("summary",   "pseries")
 S3method("as.matrix", "pseries")
+S3method("between",   "matrix")
+S3method("Between",   "matrix")
+S3method("Within",    "matrix")
 #S3method("[",         "pseries") # not implemented yet - sketch in R/pdata.frame.R
 S3method("print", "summary.pseries")
 # ercomp

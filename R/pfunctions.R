@@ -77,9 +77,11 @@ Between.pseries <- function(x, effect = c("individual", "time", "group"), ...){
 }
 
 Between.matrix <- function(x, effect,...){
+    #YC20180916 In the previous version the matrix wasn't returned
+    #when there is no index attribute
+    if (is.null(attr(x, "index"))) return(Between.default(x, effect))
     if (! effect %in% c("individual", "time", "group"))
         stop("irrelevant effect for a between transformation")
-    if (is.null(attr(x, "index"))) Between.default(x, effect)
     else{
         if (length(effect) > 1)
             stop("for matrices with index attributes, the effect argument must be a character")
@@ -485,7 +487,7 @@ pdiff <- function(x, effect = c("individual", "time"), has.intercept = FALSE){
         result <- rbind(NA, x[2:n, , drop = FALSE] - x[1:(n-1), , drop = FALSE])
         result[is.na(cond), ] <- NA
         result <- na.omit(result)
-#        result <- result[ , apply(result, 2, var) > 1E-12, drop = FALSE]
+        result <- result[ , apply(result, 2, var) > 1E-12, drop = FALSE]
         if (has.intercept){
             result <- cbind(1, result)
             colnames(result)[1] <- "(Intercept)"
