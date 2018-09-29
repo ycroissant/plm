@@ -1,11 +1,6 @@
 
 Changes in version 1.7-0
 
-  * a bug is fixed in Between.matrix, so that the transformation can
-    be correctly performed for a matrix without index attribute
-
-  * Between and Within methods for matrices are now exported
-
   * lag, lead, diff for pseries objects: functions now take care of the time
     dimension when shifting observations within each individual. Previously, 
     shifting was performed row-wise (neglecting the time dimension).
@@ -23,6 +18,9 @@ Changes in version 1.7-0
     Thus, propagation to a higher or lower data type works correctly when 
     performed on pseries, e.g. c("pseries", "integer") is propagated
     to c("pseries", "numeric") if an operation returns a decimal.
+  * Between.matrix: bug fixed, so that the transformation can
+    be correctly performed for a matrix without index attribute.
+  * Between and Within methods for matrices are now exported.
   * summary.plm: removed support for ill-named argument '.vcov', instead use
     'vcov'. '.vcov' has been deprecated in plm 1.6-4 on CRAN since 2016-11-30.
   * as.data.frame.pdata.frame gained argument 'keep.attributes'.
@@ -92,7 +90,7 @@ Changes in version 1.6-6
       * cosmetic: when argument 'lags' is not specified by user, the returned
         object does not contain all three possible values in args$lags anymore.
   * cipstest: for the truncated version of the test, the constants used in the
-              calcuation were mixed up for type = "none" and "trend". 
+              calculation were mixed up for type = "none" and "trend". 
   * pldv: new function to compute fixed and random effects models for truncated 
           or censored dependent variable.
   * pgrangertest: added Granger causality test for panels (Dumitrescu/Hurlin (2012)).
