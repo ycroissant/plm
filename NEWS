@@ -49,6 +49,8 @@ Changes in version 1.7-0
     models when between model lacks observations ('swar') and individual or
     time dimension lacks within variation ('amemiya').
   * plm/model.matrix.pFormula: informative error message for non-finite values.
+  * summary.purtest: give informative error message when run on purtest object
+    containing result for Hadri's test.
 
 
 Changes in version 1.6-6

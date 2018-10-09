@@ -568,19 +568,19 @@ purtest <- function(object, data = NULL, index = NULL,
     adjval <- NULL
   }
   
-  htest <- structure(list(statistic = stat,
-                          parameter = parameter,
+  htest <- structure(list(statistic   = stat,
+                          parameter   = parameter,
                           alternative = alternative,
-                          data.name = data.name,
-                          method = method,
-                          p.value = pvalue),
+                          data.name   = data.name,
+                          method      = method,
+                          p.value     = pvalue),
                      class = "htest")
   
   result <- list(statistic = htest,
-                 call = cl,
-                 args = args,
-                 idres = idres,
-                 adjval = adjval)
+                 call      = cl,
+                 args      = args,
+                 idres     = idres,
+                 adjval    = adjval)
   class(result) <- "purtest"
   result
 }
@@ -591,6 +591,10 @@ print.purtest <- function(x, ...){
 }
 
 summary.purtest <- function(object, ...){
+  if (object$args$test == "hadri"){
+    stop("summary() not applicable for Hadri's test, i.e. for the result of purtest(<.>, test = \"hadri\")")
+  }
+  
   lags <- sapply(object$idres, function(x) x[["lags"]])
   L <- sapply(object$idres, function(x) x[["T"]])
   nam <- names(object$idres)
