@@ -204,7 +204,10 @@ if (!pdim(make.pconsecutive(punbalanced_Grunfeld2, index = c("firm", "year"), ba
 
 # for pseries
 if (length(make.pconsecutive(punbalanced_Grunfeld2$inv, balanced = TRUE)) != 200) stop("not balanced")
-
+# pseries is consecutive but not balanced and balancedness requested
+psun <- pdata.frame(Grunfeld[1:199 , ])$inv
+if (!length(make.pconsecutive(psun, balanced = TRUE)) == 200) stop("faile make.pconsecutive pseries")
+if (!nrow(attr(make.pconsecutive(psun, balanced = TRUE), "index")) == 200) stop("failure make.pconsecutive pseries' index")
 
 
 ######## test make.pbalanced #########
@@ -222,6 +225,10 @@ if (!nrow(attr(make.pbalanced(pGrunfeld_wo_2nd_period_and_3rd_for_id1), "index")
 if (!length(make.pbalanced(pGrunfeld_wo_2nd_period_and_3rd_for_id1$inv)) == 190) stop("failure make.pbalanced pseries")
 if (!nrow(attr(make.pbalanced(pGrunfeld_wo_2nd_period_and_3rd_for_id1$inv), "index")) == 190) stop("failure make.pbalanced pseries' index")
 
+# pseries is consecutive but not balanced and balancedness requested
+psun <- pdata.frame(Grunfeld[1:199 , ])$inv 
+if (!length(make.pbalanced(psun, balance.type = "fill")) == 200) stop("faile make.pbalanced pseries")
+if (!nrow(attr(make.pbalanced(psun, balance.type = "fill"), "index")) == 200) stop("failure make.pbalanced pseries' index")
 
 ## make.pbalanced with balance.type = "shared.times":
 # 2 periods deleted -> 180 rows/entries left in (p)data.frame/pseries
