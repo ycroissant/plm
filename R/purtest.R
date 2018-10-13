@@ -419,6 +419,13 @@ purtest <- function(object, data = NULL, index = NULL,
                 }
       S <- sum(unlist(cumres2))/(L^2 * n)
       LM <- S / sigma2
+      
+      ## This would give the individual LM statistics for this case:
+        ## TODO: generalise for all cases and plug in in returned object,
+        ## so summary() on a Hadri returns these
+      # indsigma2 <- unlist(lapply(resid, function(x) mean(x^2)))
+      # indS <- unlist(lapply(cumres2, function(x) sum(x)))
+      # indLM <- indS / (L^2 * n) / indsigma2
     }
     else{
       sigma2i <- if (!dfcor) {
@@ -437,12 +444,12 @@ purtest <- function(object, data = NULL, index = NULL,
     stat <- c(z = sqrt(n) * (LM - adj[1])  / sqrt(adj[2])) # eq. (14), (22) in Hadri (2000)
     pvalue <- pnorm(stat, lower.tail = FALSE) # is one-sided! was until rev. 572: 2*(pnorm(abs(stat), lower.tail = FALSE))
     
-    htest <- structure(list(statistic = stat,
-                            parameter = NULL,
+    htest <- structure(list(statistic   = stat,
+                            parameter   = NULL,
                             alternative = "at least one series has a unit root",
-                            data.name = data.name,
-                            method = method,
-                            p.value = pvalue),
+                            data.name   = data.name,
+                            method      = method,
+                            p.value     = pvalue),
                        class = "htest")
   
     result <- list(statistic = htest,
