@@ -53,8 +53,6 @@ Changes in version 1.7-0
   * plm/model.matrix.pFormula: informative error message for non-finite values.
   * summary.purtest: give informative error message when run on purtest object
     containing result for Hadri's test.
-  * make.pconsecutive for pseries: for inputted consecutive pseries, the argument
-    balanced was not respected.
 
 
 Changes in version 1.6-6
