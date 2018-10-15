@@ -34,7 +34,7 @@
 
 
 pmg <- function(formula, data, subset, na.action,
-                model = c("mg","cmg","dmg"), index = NULL,
+                model = c("mg", "cmg", "dmg"), index = NULL,
                 trend = FALSE, ...)
 {
 
@@ -43,7 +43,8 @@ pmg <- function(formula, data, subset, na.action,
     effect <- "individual"
 
     ## record call etc.
-    model.name <- match.arg(model)
+    model <- match.arg(model)
+    model.name <- paste0("", model)    # TODO give internal name for model
     data.name <- paste(deparse(substitute(data)))
     cl <- match.call()
     plm.model <- match.call(expand.dots = FALSE)
@@ -82,7 +83,7 @@ pmg <- function(formula, data, subset, na.action,
 
 
   ## det. *minimum* group numerosity
-  t <- min(tapply(X[,1], ind, length))
+  t <- min(tapply(X[ , 1], ind, length))
 
   ## check min. t numerosity
   ## NB it is also possible to allow estimation if there *is* one group
@@ -97,12 +98,12 @@ pmg <- function(formula, data, subset, na.action,
   ## as min(t)>k+1)
 
   ## "pre-allocate" coefficients matrix for the n models
-  kt <- if(trend) 1 else 0
+  kt <- if (trend) 1 else 0
   tcoef <- matrix(NA, nrow = k+kt, ncol = n)
   tres <- vector("list", n)
 
-  switch(match.arg(model),
-    mg={
+  switch(model,
+    mg = {
       ## for each x-sect. i=1..n
       unind <- unique(ind)
       for(i in 1:n) {
@@ -118,7 +119,7 @@ pmg <- function(formula, data, subset, na.action,
       ## adjust k
       k <- length(coef.names)
       },
-    cmg={
+    cmg = {
 
       ## between-periods transformation (take means over groups for each t)
       be <- function(x,index,na.rm=TRUE) tapply(x,index,mean,na.rm=na.rm)
@@ -143,13 +144,13 @@ pmg <- function(formula, data, subset, na.action,
         tcoef0[ ,i] <- tfit$coefficients
         tres[[i]] <- tfit$residuals
       }
-      tcoef <- tcoef0[1:k,]
-      tcoef.bar <- tcoef0[-(1:k),]
+      tcoef <- tcoef0[1:k, ]
+      tcoef.bar <- tcoef0[-(1:k), ]
 
       coef.names.bar <- c("y.bar", paste(coef.names[-1], ".bar", sep=""))
 
       ## 'trend' always comes last
-      if(trend) coef.names.bar <- c(coef.names.bar, "trend")
+      if (trend) coef.names.bar <- c(coef.names.bar, "trend")
 
       ## output complete coefs
       tcoef <- tcoef0
@@ -158,16 +159,15 @@ pmg <- function(formula, data, subset, na.action,
       k <- length(coef.names)
 
       ## TODO: adjust model formula etc. etc. (else breaks waldtest, update, ...)
-
-  },
-    dmg={
+      },
+    dmg = {
 
       ## between-periods transformation (take means over group for each t)
-      be <- function(x,index,na.rm=TRUE) tapply(x,index,mean,na.rm=na.rm)
-      Xm <- apply(X,2,FUN=be,index=tind)[tind,]
-      ym <- apply(as.matrix(as.numeric(y)),2,FUN=be,index=tind)[tind]
+      be <- function(x, index, na.rm = TRUE) tapply(x, index, mean, na.rm = na.rm)
+      Xm <- apply(X, 2, FUN = be, index = tind)[tind, ]
+      ym <- apply(as.matrix(as.numeric(y)), 2, FUN = be, index = tind)[tind]
       ## ...but of course we do not demean the intercept!
-      Xm[ ,1] <- 0
+      Xm[ , 1] <- 0
 
       demX <- X - Xm
       demy <- y - ym
@@ -175,16 +175,16 @@ pmg <- function(formula, data, subset, na.action,
       ## for each x-sect. i=1..n estimate (over t) a demeaned model
       ## (y_it-my_t) = alfa_i + beta_i*(X_it-mX_t) + err_it
       unind <- unique(ind)
-      for(i in 1:n) {
+      for (i in 1:n) {
         tdemX <- demX[ind == unind[i], ]
         tdemy <- demy[ind == unind[i]]
         if(trend) tdemX <- cbind(tdemX, 1:(dim(tdemX)[[1]]))
         tfit <- lm.fit(tdemX, tdemy)
-        tcoef[,i] <- tfit$coefficients
+        tcoef[ ,i] <- tfit$coefficients
         tres[[i]] <- tfit$residuals
       }
       ## 'trend' always comes last
-      if(trend) coef.names <- c(coef.names, "trend")
+      if (trend) coef.names <- c(coef.names, "trend")
       ## adjust k
       k <- length(coef.names)
   })
@@ -195,10 +195,10 @@ pmg <- function(formula, data, subset, na.action,
 
     ## make matrix of cross-products of demeaned individual coefficients
 
-    coefmat <- array(dim=c(k, k, n))
+    coefmat <- array(dim = c(k, k, n))
     demcoef <- tcoef - coef # gets recycled n times by column
 
-    for(i in 1:n) coefmat[,,i] <- outer(demcoef[,i], demcoef[,i])
+    for (i in 1:n) coefmat[ , , i] <- outer(demcoef[ , i], demcoef[ , i])
     ## summing over the n-dimension of the array we get the
     ## covariance matrix of coefs
     vcov <- apply(coefmat, 1:2, sum)/(n*(n-1))
@@ -224,7 +224,8 @@ pmg <- function(formula, data, subset, na.action,
                   fitted.values = fitted.values, vcov = vcov,
                   df.residual = df.residual, r.squared = r2,
                   model = model.frame(plm.model), sigma = NULL,
-                  indcoef = tcoef, call = cl)
+                  indcoef = tcoef, formula = formula,
+                  call = cl)
     mgmod <- structure(mgmod, pdim = pdim, pmodel = pmodel)
     class(mgmod) <- c("pmg", "panelmodel")
     mgmod
@@ -232,7 +233,7 @@ pmg <- function(formula, data, subset, na.action,
 
 
 summary.pmg <- function(object,...){
-  pmodel <- attr(object,"pmodel")
+  pmodel <- attr(object, "pmodel")
   std.err <- sqrt(diag(object$vcov))
   b <- object$coefficients
   z <- b/std.err
@@ -251,11 +252,9 @@ summary.pmg <- function(object,...){
 print.summary.pmg <- function(x, digits = max(3, getOption("digits") - 2), width = getOption("width"),...){
   pmodel <- attr(x, "pmodel")
   pdim <- attr(x, "pdim")
-  effect <- pmodel$effect
-  formula <- pmodel$formula
+#  formula <- pmodel$formula
   model.name <- pmodel$model.name
-#  cat(paste(effect.pggls.list[effect]," ",sep=""))
-#  cat(paste(model.pggls.list[model.name],"\n",sep=""))
+#  cat(paste(model.pmg.list[model.name], "\n", sep=""))
   cat("Mean Groups model")
   cat("\nCall:\n")
   print(x$call)
@@ -264,10 +263,10 @@ print.summary.pmg <- function(x, digits = max(3, getOption("digits") - 2), width
   cat("\nResiduals:\n")
   print(summary(unlist(residuals(x))))
   cat("\nCoefficients:\n")
-  printCoefmat(x$CoefTable,digits=digits)
-  cat(paste("Total Sum of Squares: ", signif(x$tss,digits),"\n",sep=""))
-  cat(paste("Residual Sum of Squares: ", signif(x$ssr,digits),"\n",sep=""))
-  cat(paste("Multiple R-squared: ", signif(x$rsqr,digits),"\n",sep=""))
+  printCoefmat(x$CoefTable, digits = digits)
+  cat(paste("Total Sum of Squares: ",    signif(x$tss, digits), "\n",sep=""))
+  cat(paste("Residual Sum of Squares: ", signif(x$ssr, digits), "\n",sep=""))
+  cat(paste("Multiple R-squared: ",      signif(x$rsqr, digits),"\n",sep=""))
   invisible(x)
 }
 

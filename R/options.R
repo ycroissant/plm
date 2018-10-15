@@ -38,6 +38,9 @@ model.pgmm.list <- c(onestep  = "One step model",
 model.pcce.list <- c(ccemg = "Mean Groups model",
                      ccep  = "Pooled model")
 
+model.pmg.list <- c(md  = "",  # TODO
+                    dmg = "",
+                    cmg = "")
 
 inst.method.list <- c(bvk     = "Balestra-Varadharajan-Krishnakumar",
                       baltagi = "Baltagi",
