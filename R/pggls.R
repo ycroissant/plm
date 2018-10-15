@@ -7,18 +7,18 @@ pggls <- function(formula, data, subset, na.action,
     effect <- match.arg(effect)
     model.name <- match.arg(model)
     if(model.name == "random") {
-        warning("'random' argument to pggls() has been renamed as 'pooling'",
-                call.=FALSE)
+        warning("for argument 'model' to pggls(), the value 'random' has been renamed as 'pooling'",
+                call. = FALSE)
         model.name <- "pooling"
     }
     data.name <- paste(deparse(substitute(data)))
     cl <- match.call()
     plm.model <- match.call(expand.dots=FALSE)
-    m <- match(c("formula","data","subset","na.action","effect","model","index"),names(plm.model),0)
+    m <- match(c("formula", "data", "subset", "na.action", "effect", "model", "index"), names(plm.model),0)
     plm.model <- plm.model[c(1,m)]
     plm.model[[1]] <- as.name("plm")
     plm.model$model <- model.name
-    plm.model <- eval(plm.model,parent.frame())
+    plm.model <- eval(plm.model, parent.frame())
     
     index <- attr(model.frame(plm.model), "index")
     pdim <- pdim(plm.model)
@@ -39,9 +39,9 @@ pggls <- function(formula, data, subset, na.action,
         time.names <- pdim$panel.names$time.names[-1]
         tind <- as.numeric(index[,2])
         sel <- (tind-c(-1,tind[-length(tind)]))==1
-        index <- index[sel,]
+        index <- index[sel, ]
         id <- index[[1]]
-        time <- factor(index[[2]], levels=attr(index[,2], "levels")[-1])
+        time <- factor(index[[2]], levels = attr(index[ ,2], "levels")[-1])
     } else {
         nt <- pdim$Tint$nt
         Ti <- pdim$Tint$Ti
@@ -72,7 +72,7 @@ pggls <- function(formula, data, subset, na.action,
         groupsdim <- Ti
     }
     myord <- order(cond, other)
-    X <- model.matrix(plm.model)[myord, , drop=FALSE]
+    X <- model.matrix(plm.model)[myord, , drop = FALSE]
     commonpars <- intersect(names(coef(plm.model)), colnames(X))
     X <- X[, commonpars, drop = FALSE]
     y <- pmodel.response(plm.model)[myord]
@@ -82,15 +82,18 @@ pggls <- function(formula, data, subset, na.action,
     other <- other[myord]
     drop1 <- FALSE
     if (drop1 && model.name %in% c("within","fd")) {
-    ## drop first time period (see Wooldridge 10.5, eq. 10.61)
-    ## this is needed according to Wooldridge, p.277 but is
-    ## not totally robust to unbalancedness, dummies etc.
+    ## drop one  time period (e.g. first as we do here)
+    ## (see Wooldridge (2002) 10.5, eq. 10.61)/Woolridge (2010),10.5.5, eq.10.61)
+    ## this is needed according to Wooldridge (2002), p.277 / Wooldridge (2010), p. 312
+    ## but is not totally robust to unbalancedness, dummies etc.
     ## 
-    ## the function turns out to work irrespective of dropping
-    ## one time period or not!! absolutely the same results...
-    ## this is thx to solve.bdsmatrix() using a generalized
+    ## The function turns out to work irrespective of dropping
+    ## one time period or not! Absolutely the same results!
+    ## This is thx to solve.bdsmatrix() using a generalized
     ## inverse, which in this case where rank=T-1 is equivalent
     ## to discarding one year (N columns)
+    ## -> as noted by Wooldridge
+    ##
     ## The 'if' parameterization is just for debugging.
     
         numeric.t <- as.numeric(other)

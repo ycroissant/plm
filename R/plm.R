@@ -856,7 +856,7 @@ residuals_overall_exp.plm <- function(x, ...) { #### experimental, non-exported 
     y <- pmodel.response(x, model = "pooling")
     # take care of any aliased coefficients:
     # they are not in x$coefficients but assoc. variables are still present in model.matrix
-    if (any(x$aliased, na.rm = TRUE)) { # na.rm = TRUE because currently, RE tw unbalanced models set aliased simply to NA
+    if (any(x$aliased, na.rm = TRUE)) { # na.rm = TRUE because currently, RE tw unbalanced models set aliased differently
       X <- X[ , !x$aliased, drop = FALSE]
     }
     
@@ -984,7 +984,8 @@ residuals.plm <- function(object, model = NULL, effect = NULL,  ...){
         res <- y - bX
     }
     res <- if (model %in% c("between", "fd")) {
-      # these models "compress" the data, thus an index does not make sense here -> no pseries
+      # these models "compress" the data, thus an index does not make sense here
+      # -> do not return pseries but plain numeric
       res
     } else {
       structure(res, index = index(object), class = union("pseries", class(res)))

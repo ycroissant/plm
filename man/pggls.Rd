@@ -63,9 +63,9 @@ assumed identical across groups and thus general FGLS estimation is
 inefficient under groupwise heteroskedasticity. Note also that this
 method requires estimation of \eqn{T(T+1)/2} variance parameters, thus
 efficiency requires N >> T (if \code{effect = "individual"}, else the
-opposite).Setting \code{model = "random"} or \code{model = "pooling"},
+opposite). Setting \code{model = "random"} or \code{model = "pooling"},
  both produce an unrestricted FGLS model as in Wooldridge,
-Ch. 10, although the former is deprecated and included only for
+Ch. 10.5, although the former is deprecated and included only for
 retro--compatibility reasons.
 If \code{model = "within"} (the default) then a FEGLS (fixed
 effects GLS, see ibid.) is estimated; if \code{model = "fd"} a FDGLS
@@ -78,7 +78,6 @@ effects GLS, see ibid.) is estimated; if \code{model = "fd"} a FDGLS
 Kiefer, N. M. (1980) Estimation of Fixed Effects Models for Time Series
 of Cross-Sections with Arbitrary Intertemporal Covariance, \emph{Journal
  of Econometrics}, \bold{14}(2), pp. 195--202. 
-
 
 Im, K. S. and Ahn, S. C. and Schmidt, P. and Wooldridge, J. M. (1999)
 Efficient Estimation of Panel Data Models with Strictly Exogenous
