@@ -51,7 +51,25 @@ An object of class \code{c("pcce", "panelmodel")} containing:
  \item{indcoef}{the matrix of individual coefficients from separate time
    series regressions.}
 }
-  
+ 
+ %% about pooled vs. random - email from Giovanni:
+ %% TODO: one day, incorporate this information in the visible man page
+ % The "random" vs. "pooling" issue is rooted in the approach of Wooldridge,
+ % where the FGLS is consistent under "standard" RE, and therefore it is
+ % presented among RE methods. But then, if you see it in the
+ % demeaning/transforming framework, then FGLS is G(eneral)GLS applied to
+ % untransformed ("pooled") data, FEGLS is GGLS on within transformed data and 
+ % FDGLS is GGLS on first differenced. So "pooled" GGLS would be more
+ % appropriate; but this is in turn less telling -- nobody calls it like this.
+
+ % call the random/pooling version "General FGLS". The reason is that the 
+ % standard RE estimator is also an FGLS, only relying on stricter assumptions,
+ % and is so much better known: so "FGLS" alone would create confusion. On the
+ % contrary, FEGLS and FDGLS -- and their extended forms you propose -- are
+ % unambiguous, their "standard" counterparts being OLS methods.
+
+ 
+ 
 \details{
 \code{pcce} is a function for the estimation of linear panel models by the
 Common Correlated Effects Mean Groups or Pooled estimator, consistent under the
@@ -75,8 +93,8 @@ data("Produc", package = "plm")
 ccepmod <- pcce(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model="p")
 summary(ccepmod)
 
-ccepmod <- pcce(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model="mg")
-summary(ccepmod)
+ccemgmod <- pcce(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model="mg")
+summary(ccemgmod)
 }
 
 \keyword{regression}

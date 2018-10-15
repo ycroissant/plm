@@ -364,7 +364,7 @@ CEOage 0     0       1
 log(y) ~ lag(log(y), 1) + log(x1) + lag(log(x1), 1) + lag(log(x1), 
     2) + log(x2) + lag(log(x2), 1) + lag(log(x2), 2) + diff(log(x3)) + 
     diff(log(x3), 1) + diff(log(x3), 2)
-<environment: 0x000000000b18fa30>
+<environment: 0x000000000a9afbb0>
 > 
 > 
 > 
@@ -6880,8 +6880,8 @@ Total Sum of Squares: 849.81
 Residual Sum of Squares: 0.11927
 HPY R-squared: 0.99077
 > 
-> ccepmod <- pcce(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model="mg")
-> summary(ccepmod)
+> ccemgmod <- pcce(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model="mg")
+> summary(ccemgmod)
 Common Correlated Effects Mean Groups model
 
 Call:
@@ -8630,7 +8630,7 @@ Multiple R-squared: 0.99863
 > zz_pool <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
 +                  data = Produc, model = "pooling")
 > summary(zz_pool)
-Oneway (individual) effect Random FGLS model
+Oneway (individual) effect General FGLS model
 
 Call:
 pggls(formula = log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
@@ -13395,7 +13395,7 @@ attr(,"se")
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  12.56 1.15 13.73 NA NA 
+Time elapsed:  14.14 1.31 15.66 NA NA 
 > grDevices::dev.off()
 null device 
           1 

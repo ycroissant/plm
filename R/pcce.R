@@ -86,8 +86,8 @@ pcce <- function (formula, data, subset, na.action,
 
   ## one regression for each group i in 1..n
   ## and retrieve coefficients putting them into a matrix
-  ## (might be unbalanced => t1!=t2 but we don't care as long
-  ## as min(t)>k+1)
+  ## (might be unbalanced => t1 != t2 but we don't care as long
+  ## as min(t) > k+1)
 
   ## subtract intercept from parms number and names
     if(attr(terms(plm.model), "intercept")) {
@@ -124,8 +124,8 @@ pcce <- function (formula, data, subset, na.action,
           }
 
       ## prepare XMX, XMy arrays
-      XMX <- array(dim=c(k, k, n))
-      XMy <- array(dim=c(k, 1, n))
+      XMX <- array(dim = c(k, k, n))
+      XMy <- array(dim = c(k, 1, n))
 
       ## hence calc. beta_i anyway because of vcov
 
@@ -133,9 +133,9 @@ pcce <- function (formula, data, subset, na.action,
       ## as in KPY, eq. 15
       unind <- unique(ind)
       for(i in 1:n) {
-          tX <- X[ind==unind[i], , drop=FALSE]
-          ty <- y[ind==unind[i]]
-          tHhat <- Hhat[ind==unind[i], , drop=FALSE]
+          tX <- X[ind == unind[i], , drop=FALSE]
+          ty <- y[ind == unind[i]]
+          tHhat <- Hhat[ind == unind[i], , drop=FALSE]
 
           ## if 'trend' then augment the xs-invariant component
           if(trend) tHhat <- cbind(tHhat, 1:(dim(tHhat)[[1]]))
@@ -147,20 +147,20 @@ pcce <- function (formula, data, subset, na.action,
           tXMy <- crossprod(tX, tMhat %*% ty)
 
           ## XMX_i, XMy_i
-          XMX[ , ,i] <- tXMX
-          XMy[ , ,i] <- tXMy
+          XMX[ , , i] <- tXMX
+          XMy[ , , i] <- tXMy
 
           ## single CCE coefficients
           tb <- ginv(tXMX) %*% tXMy  #solve(tXMX, tXMy)
           ## USED A GENERALIZED INVERSE HERE BECAUSE OF PBs WITH ECM SPECS
           ## Notice remark in Pesaran (2006, p.977, between (27) and (28))
           ## that XMX.i is invariant to the choice of a g-inverse for H'H
-          tcoef[ ,i] <- tb
+          tcoef[ , i] <- tb
 
           ## cce (defactored) residuals as M_i(y_i - X_i * bCCEMG_i)
           cceres[[i]] <- tMhat %*% (ty - tX %*% tb)
           ## std. (raw) residuals as y_i - X_i * bCCEMG_i - a_i
-          ta <- mean(ty-tX)
+          ta <- mean(ty - tX)
           stdres[[i]] <- ty - tX %*% tb - ta
         }
 
@@ -329,6 +329,7 @@ pcce <- function (formula, data, subset, na.action,
     ## - transformed data My, MX are included for vcovHC usage
     df.residual <- nrow(X) - ncol(X)
     fitted.values <- y - residuals
+    coef <- as.numeric(coef)
     names(coef) <- rownames(vcov) <- colnames(vcov) <- coef.names
     dimnames(tcoef) <- list(coef.names, id.names)
     pmodel <- attr(plm.model, "pmodel")
