@@ -157,7 +157,7 @@ model.matrix.pFormula <- function(object, data,
     if (model == "between") X <- between(X, effect)
     if (model == "mean") X <- Mean(X)
 #    if (model == "fd") X <- pdiff(X, cond, effect = effect, has.intercept = has.intercept)
-    if (model == "fd") X <- pdiff(X, effect = "individual")
+    if (model == "fd") X <- pdiff(X, effect = "individual", has.intercept = has.intercept)
     if (model == "random"){
         if (is.null(theta)) stop("a theta argument should be provided")
         if (effect %in% c("time", "individual")) X <- X - theta * Between(X, effect)
@@ -168,7 +168,7 @@ model.matrix.pFormula <- function(object, data,
     nouveau <- TRUE
     if (nouveau){
         if (is.null(cstcovar.rm)){
-            if (model %in% c("within", "fd")) cstcovar.rm <- "intercept" else cstcovar.rm <- "none"
+            if (model %in% c("within")) cstcovar.rm <- "intercept" else cstcovar.rm <- "none"
         }
     } else if(is.null(cstcovar.rm)) cstcovar.rm <- "none"
 

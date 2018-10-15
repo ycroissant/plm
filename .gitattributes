@@ -179,6 +179,7 @@ tests/test_pdata.frame_subsetting.Rout.save -text
 tests/test_pdata.frame_unused_levels.R -text
 tests/test_pdiff_fd.R -text
 tests/test_pdwtest.R -text
+tests/test_pggls.R -text
 tests/test_pgmm.R -text
 tests/test_pgmm.Rout.save -text
 tests/test_pgrangertest.R -text

@@ -32,6 +32,8 @@ Changes in version 1.7-0
     object is or has a proper index (in the sense of the plm package).
   * pdata.frame: fixed bug so that pdata.frames with only one column can be 
     created if drop.index = TRUE is set.
+  * Fixed first-difference models (plm(..., model = "fd"), pggls(...,model = "fd"))
+    to have an intercept by default again (disappeared in plm 1.6-6)
   * make.pconsecutive for pseries: for inputted consecutive pseries, the argument
     'balanced' was not respected.
   * pvar: added method for pseries.
