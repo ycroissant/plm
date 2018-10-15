@@ -1,0 +1,172 @@
+
+R version 3.5.1 (2018-07-02) -- "Feather Spray"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> ## Test of various models involving first-differences
+> 
+> library(plm)
+Loading required package: Formula
+> data("Produc", package = "plm")
+> 
+> 
+> # plm with intercept
+> fd_plm <- plm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model = "fd")
+> # plm without intercept
+> fd_plm2 <- plm(log(gsp) ~ 0 + log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model = "fd")
+> 
+> # pggls with intercept
+> fd_pggls <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model = "fd")
+>   
+> # pggls without intercept
+> fd_pggls2 <- pggls(log(gsp) ~ 0 + log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model = "fd")
+> 
+> 
+> summary(fd_plm)
+Oneway (individual) effect First-Difference Model
+
+Call:
+plm(formula = log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
+    data = Produc, model = "fd")
+
+Balanced Panel: n = 48, T = 17, N = 816
+Observations used in estimation: 768
+
+Residuals:
+      Min.    1st Qu.     Median    3rd Qu.       Max. 
+-0.0852334 -0.0108348  0.0016016  0.0126813  0.1024759 
+
+Coefficients:
+               Estimate  Std. Error t-value  Pr(>|t|)    
+(Intercept)  0.01068526  0.00137639  7.7633 2.663e-14 ***
+log(pcap)   -0.00660507  0.04593751 -0.1438    0.8857    
+log(pc)     -0.03243575  0.02305050 -1.4072    0.1598    
+log(emp)     0.83147269  0.03696857 22.4913 < 2.2e-16 ***
+unemp       -0.00598593  0.00076141 -7.8616 1.293e-14 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    1.0802
+Residual Sum of Squares: 0.33308
+R-Squared:      0.69166
+Adj. R-Squared: 0.69004
+F-statistic: 427.885 on 4 and 763 DF, p-value: < 2.22e-16
+> summary(fd_plm2)
+Oneway (individual) effect First-Difference Model
+
+Call:
+plm(formula = log(gsp) ~ 0 + log(pcap) + log(pc) + log(emp) + 
+    unemp, data = Produc, model = "fd")
+
+Balanced Panel: n = 48, T = 17, N = 816
+Observations used in estimation: 768
+
+Residuals:
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+-0.07921 -0.00908  0.00447  0.00321  0.01654  0.10380 
+
+Coefficients:
+             Estimate  Std. Error t-value  Pr(>|t|)    
+log(pcap)  0.12347223  0.04440085  2.7809  0.005555 ** 
+log(pc)    0.01838177  0.02294278  0.8012  0.423264    
+log(emp)   0.95943399  0.03435017 27.9310 < 2.2e-16 ***
+unemp     -0.00428020  0.00075677 -5.6559 2.192e-08 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    1.0802
+Residual Sum of Squares: 0.35939
+R-Squared:      0.67909
+Adj. R-Squared: 0.67783
+F-statistic: 383.099 on 4 and 764 DF, p-value: < 2.22e-16
+> summary(fd_pggls)
+Oneway (individual) effect First-Difference FGLS model
+
+Call:
+pggls(formula = log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
+    data = Produc, model = "fd")
+
+Balanced Panel: n = 48, T = 17, N = 816
+
+Residuals:
+      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+-0.0847594 -0.0103758  0.0024378  0.0007254  0.0133336  0.1018213 
+
+Coefficients:
+               Estimate  Std. Error  z-value Pr(>|z|)    
+(Intercept)  0.00942926  0.00106337   8.8673  < 2e-16 ***
+log(pcap)   -0.04400764  0.02911083  -1.5117  0.13060    
+log(pc)     -0.03100727  0.01248722  -2.4831  0.01302 *  
+log(emp)     0.87411813  0.02077388  42.0777  < 2e-16 ***
+unemp       -0.00483240  0.00040668 -11.8825  < 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Total Sum of Squares: 849.81
+Residual Sum of Squares: 0.33459
+Multiple R-squared: 0.99961
+> summary(fd_pggls2)
+Oneway (individual) effect First-Difference FGLS model
+
+Call:
+pggls(formula = log(gsp) ~ 0 + log(pcap) + log(pc) + log(emp) + 
+    unemp, data = Produc, model = "fd")
+
+Balanced Panel: n = 48, T = 17, N = 816
+
+Residuals:
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-0.078700 -0.007233  0.005760  0.004556  0.018221  0.104727 
+
+Coefficients:
+             Estimate  Std. Error z-value  Pr(>|z|)    
+log(pcap)  0.07172150  0.02768373  2.5907  0.009577 ** 
+log(pc)    0.00339678  0.01229449  0.2763  0.782329    
+log(emp)   0.96091335  0.01795985 53.5034 < 2.2e-16 ***
+unemp     -0.00367101  0.00039837 -9.2150 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Total Sum of Squares: 849.81
+Residual Sum of Squares: 0.36212
+Multiple R-squared: 0.99957
+> vcovHC(fd_plm)
+              (Intercept)     log(pcap)       log(pc)      log(emp)
+(Intercept)  1.535028e-06 -3.409304e-06 -9.074916e-06 -1.586871e-05
+log(pcap)   -3.409304e-06  1.904713e-03 -6.277947e-04 -5.320156e-04
+log(pc)     -9.074916e-06 -6.277947e-04  6.851179e-04  7.508316e-06
+log(emp)    -1.586871e-05 -5.320156e-04  7.508316e-06  1.004051e-03
+unemp       -1.441006e-07 -1.917667e-05  2.322284e-06  1.809700e-05
+                    unemp
+(Intercept) -1.441006e-07
+log(pcap)   -1.917667e-05
+log(pc)      2.322284e-06
+log(emp)     1.809700e-05
+unemp        6.273753e-07
+attr(,"cluster")
+[1] "group"
+> vcovHC(fd_plm2)
+              log(pcap)       log(pc)      log(emp)         unemp
+log(pcap)  2.104941e-03 -7.261636e-04 -5.907699e-04 -2.007078e-05
+log(pc)   -7.261636e-04  6.968358e-04 -5.151465e-05  1.072643e-06
+log(emp)  -5.907699e-04 -5.151465e-05  9.602959e-04  1.788651e-05
+unemp     -2.007078e-05  1.072643e-06  1.788651e-05  6.544230e-07
+attr(,"cluster")
+[1] "group"
+> ## vcovHC does not run pggls models
+> # vcovHC(fd_pggls)
+> # vcovHC(fd_pggls2)
+> 
+> proc.time()
+   user  system elapsed 
+   0.88    0.12    0.98 

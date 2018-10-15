@@ -27,11 +27,17 @@ model.plm.list <- c(pooling = "Pooling",
 model.pvcm.list <- c(within = "No-pooling model",
                      random = "Random coefficients model")
 
-model.pggls.list <- c(within = "Within model",
-                      random = "Random effects model")
+model.pggls.list <- c(within  = "Within FGLS model",
+                      random  = "General FGLS model",
+                      pooling = "General FGLS model",
+                      fd      = "First-Difference FGLS model")
 
 model.pgmm.list <- c(onestep  = "One step model",
                      twosteps = "Two steps model")
+
+model.pcce.list <- c(ccemg = "Mean Groups model",
+                     ccep  = "Pooled model")
+
 
 inst.method.list <- c(bvk     = "Balestra-Varadharajan-Krishnakumar",
                       baltagi = "Baltagi",

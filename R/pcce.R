@@ -36,7 +36,8 @@ pcce <- function (formula, data, subset, na.action,
     effect <- "individual"
 
     ## record call etc.
-    model.name <- paste("cce", match.arg(model), sep="")
+    model <- match.arg(model)
+    model.name <- paste("cce", model, sep="")
     data.name <- paste(deparse(substitute(data)))
     cl <- match.call()
     plm.model <- match.call(expand.dots = FALSE)
@@ -74,14 +75,14 @@ pcce <- function (formula, data, subset, na.action,
     y <- model.response(model.frame(plm.model))
 
   ## det. *minimum* group numerosity
-  t <- min(tapply(X[,1],ind,length))
+  t <- min(tapply(X[ , 1], ind, length))
 
   ## check min. t numerosity
   ## NB it is also possible to allow estimation if there *is* one group
   ## with t large enough and average on coefficients removing NAs
   ## Here we choose the explicit way: let estimation fail if we lose df
   ## but a warning would do...
-  if(t<(k+1)) stop("Insufficient number of time periods")
+  if(t < (k+1)) stop("Insufficient number of time periods")
 
   ## one regression for each group i in 1..n
   ## and retrieve coefficients putting them into a matrix
@@ -146,15 +147,15 @@ pcce <- function (formula, data, subset, na.action,
           tXMy <- crossprod(tX, tMhat %*% ty)
 
           ## XMX_i, XMy_i
-          XMX[,,i] <- tXMX
-          XMy[,,i] <- tXMy
+          XMX[ , ,i] <- tXMX
+          XMy[ , ,i] <- tXMy
 
           ## single CCE coefficients
           tb <- ginv(tXMX) %*% tXMy  #solve(tXMX, tXMy)
           ## USED A GENERALIZED INVERSE HERE BECAUSE OF PBs WITH ECM SPECS
           ## Notice remark in Pesaran (2006, p.977, between (27) and (28))
           ## that XMX.i is invariant to the choice of a g-inverse for H'H
-          tcoef[,i] <- tb
+          tcoef[ ,i] <- tb
 
           ## cce (defactored) residuals as M_i(y_i - X_i * bCCEMG_i)
           cceres[[i]] <- tMhat %*% (ty - tX %*% tb)
@@ -214,21 +215,21 @@ pcce <- function (formula, data, subset, na.action,
     coefmg <- rowMeans(tcoef) # was: apply(tcoef, 1, mean)
 
     ## make matrix of cross-products of demeaned individual coefficients
-    Rmat <- array(dim=c(k, k, n))
+    Rmat <- array(dim = c(k, k, n))
 
     ## make b_i - b_CCEMG
     demcoef <- tcoef - coefmg # coefmg gets recycled n times by column
 
     ## calc. coef and vcov according to model
-    switch(match.arg(model),
-           mg={
+    switch(model,
+           mg = {
             ## assign beta CCEMG
             coef <- coefmg
             for(i in 1:n) Rmat[,,i] <-  outer(demcoef[,i], demcoef[,i])
             vcov <- 1/(n*(n-1)) * apply(Rmat, 1:2, sum)
             },
            
-           p={
+           p = {
             ## calc beta_CCEP
             sXMX <- apply(XMX, 1:2, sum)
             sXMy <- apply(XMy, 1:2, sum)
@@ -250,9 +251,9 @@ pcce <- function (formula, data, subset, na.action,
             for(i in 1:n) {
                 ## must redo all this because needs b_CCEP, which is
                 ## not known at by-groups step
-                tX <- X[ind==unind[i], , drop=FALSE]
-                ty <- y[ind==unind[i]]
-                tHhat <- Hhat[ind==unind[i], , drop=FALSE]
+                tX <- X[ind == unind[i], , drop=FALSE]
+                ty <- y[ind == unind[i]]
+                tHhat <- Hhat[ind == unind[i], , drop=FALSE]
     
                 ## if 'trend' then augment the xs-invariant component
                 if(trend) tHhat <- cbind(tHhat, 1:(dim(tHhat)[[1]]))
@@ -271,8 +272,8 @@ pcce <- function (formula, data, subset, na.action,
     })
 
     ## calc. measures of fit according to model type
-    switch(match.arg(model),
-           mg={
+    switch(model,
+           mg = {
 
             ## R2 as in HPY 2010: sigma2ccemg = average (over n) of variances
             ## of defactored residuals
@@ -293,7 +294,7 @@ pcce <- function (formula, data, subset, na.action,
             sigma2cce <- 1/n*sum(unlist(sigma2cce.i))
             },
            
-           p={
+           p = {
 
             ## variance of defactored residuals sigma2ccep as in Holly,
             ## Pesaran and Yamagata, (3.15)
@@ -305,7 +306,7 @@ pcce <- function (formula, data, subset, na.action,
     ## calc. overall R2, CCEMG or CCEP depending on 'model'
     sigma2.i <- vector("list", n)
     for(i in 1:n) {
-          ty <- y[ind==unind[i]]
+          ty <- y[ind == unind[i]]
           sigma2.i[[i]] <- sum((ty-mean(ty))^2)/(length(ty)-1)
       }
     sigma2y <- mean(unlist(sigma2.i))
@@ -316,7 +317,7 @@ pcce <- function (formula, data, subset, na.action,
     residuals <- unlist(cceres)
 
     ## add transformed data (for now a simple list)
-    tr.model <- list(y=My, X=MX)
+    tr.model <- list(y = My, X = MX)
     ## so that if the model is ccepmod,
     ## > lm(ccepmod$tr.model[["y"]]~ccepmod$tr.model[["X"]]-1)
     ## reproduces the model results
@@ -331,7 +332,7 @@ pcce <- function (formula, data, subset, na.action,
     names(coef) <- rownames(vcov) <- colnames(vcov) <- coef.names
     dimnames(tcoef) <- list(coef.names, id.names)
     pmodel <- attr(plm.model, "pmodel")
-    pmodel$model.name <- model
+    pmodel$model.name <- model.name
     mgmod <- list(coefficients = coef, residuals = residuals,
                   stdres = stdres, tr.model = tr.model,
                   fitted.values = fitted.values, vcov = vcov,
@@ -365,14 +366,12 @@ summary.pcce <- function(object,...){
 }
 
 print.summary.pcce <- function(x, digits = max(3, getOption("digits") - 2), width = getOption("width"), ...){
-  pmodel <- attr(x,"pmodel")
-  pdim <- attr(x,"pdim")
-  effect <- pmodel$effect
+  pmodel <- attr(x, "pmodel")
+  pdim <- attr(x, "pdim")
   formula <- pmodel$formula
   model.name <- pmodel$model.name
-#  cat(paste(effect.pggls.list[effect]," ",sep=""))
-#  cat(paste(model.pggls.list[model.name],"\n",sep=""))
-  cat("Common Correlated Effects model")
+  cat("Common Correlated Effects ")
+  cat(paste(model.pcce.list[model.name],"\n",sep=""))
   cat("\nCall:\n")
   print(x$call)
   cat("\n")

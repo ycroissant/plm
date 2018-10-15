@@ -149,6 +149,7 @@ pggls <- function(formula, data, subset, na.action,
     names(coef) <- rownames(vcov) <- colnames(vcov) <- coef.names
     pmodel <- attr(plm.model, "pmodel")
     pmodel$model.name <- model
+    pmodel$effect.name <- effect
     fullGLS <- list(coefficients  = coef,
                     residuals     = residuals,
                     fitted.values = fitted.values,
@@ -184,10 +185,10 @@ summary.pggls <- function(object,...){
 print.summary.pggls <- function(x,digits=max(3, getOption("digits") - 2), width = getOption("width"),...){
   pmodel <- attr(x,"pmodel")
   pdim <- attr(x,"pdim")
-  effect <- pmodel$effect
   formula <- pmodel$formula
   model.name <- pmodel$model.name
-  cat(paste(effect.pggls.list[effect]," ",sep=""))
+  effect.name <- pmodel$effect.name
+  cat(paste(effect.pggls.list[effect.name]," ",sep=""))
   cat(paste(model.pggls.list[model.name],"\n",sep=""))
   cat("\nCall:\n")
   print(x$call)

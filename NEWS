@@ -55,6 +55,8 @@ Changes in version 1.7-0
   * plm/model.matrix.pFormula: informative error message for non-finite values.
   * summary.purtest: give informative error message when run on purtest object
     containing result for Hadri's test.
+  * pggls models: display proper names in summary's topline.
+  * pcce models: display proper names in summary's topline.
 
   * Addenum: In plm version 1.6-6, aneweytest() was changed to use the residuals
     of the one-way individual within model (was: two-ways within model).

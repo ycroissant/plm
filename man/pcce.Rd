@@ -74,6 +74,9 @@ non-stationary multifactor error structures, \emph{Journal of
 data("Produc", package = "plm")
 ccepmod <- pcce(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model="p")
 summary(ccepmod)
+
+ccepmod <- pcce(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model="mg")
+summary(ccepmod)
 }
 
 \keyword{regression}

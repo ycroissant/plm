@@ -136,6 +136,8 @@ tests/test_Estimators.R -text
 tests/test_Estimators.Rout.save -text
 tests/test_Evaluation.R -text
 tests/test_Evaluation.Rout.save -text
+tests/test_FD_models.R -text
+tests/test_FD_models.Rout.save -text
 tests/test_IV.R -text
 tests/test_IV.Rout.save -text
 tests/test_R2_adj_R2.R -text
