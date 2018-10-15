@@ -133,9 +133,9 @@ pcce <- function (formula, data, subset, na.action,
       ## as in KPY, eq. 15
       unind <- unique(ind)
       for(i in 1:n) {
-          tX <- X[ind == unind[i], , drop=FALSE]
+          tX <- X[ind == unind[i], , drop = FALSE]
           ty <- y[ind == unind[i]]
-          tHhat <- Hhat[ind == unind[i], , drop=FALSE]
+          tHhat <- Hhat[ind == unind[i], , drop = FALSE]
 
           ## if 'trend' then augment the xs-invariant component
           if(trend) tHhat <- cbind(tHhat, 1:(dim(tHhat)[[1]]))
@@ -169,9 +169,9 @@ pcce <- function (formula, data, subset, na.action,
     ## Some redundancy because this might be moved to model.matrix.pcce
 
     ## initialize
-    tX1 <- X[ind==unind[1], , drop=FALSE]
-    ty1 <- y[ind==unind[1]]
-    tHhat1 <- Hhat[ind==unind[1], , drop=FALSE]
+    tX1 <- X[ind == unind[1], , drop = FALSE]
+    ty1 <- y[ind == unind[1]]
+    tHhat1 <- Hhat[ind == unind[1], , drop = FALSE]
 
     ## if 'trend' then augment the xs-invariant component
     if(trend) tHhat1 <- cbind(tHhat1, 1:(dim(tHhat)[[1]]))
@@ -182,9 +182,9 @@ pcce <- function (formula, data, subset, na.action,
     MX <- crossprod(tMhat1, tX1)
     My <- crossprod(tMhat1, ty1)
     for(i in 2:n) {
-        tX <- X[ind==unind[i], , drop=FALSE]
-        ty <- y[ind==unind[i]]
-        tHhat <- Hhat[ind==unind[i], , drop=FALSE]
+        tX <- X[ind == unind[i], , drop = FALSE]
+        ty <- y[ind == unind[i]]
+        tHhat <- Hhat[ind == unind[i], , drop = FALSE]
 
         ## if 'trend' then augment the xs-invariant component
         if(trend) tHhat <- cbind(tHhat, 1:(dim(tHhat)[[1]]))
@@ -251,9 +251,9 @@ pcce <- function (formula, data, subset, na.action,
             for(i in 1:n) {
                 ## must redo all this because needs b_CCEP, which is
                 ## not known at by-groups step
-                tX <- X[ind == unind[i], , drop=FALSE]
+                tX <- X[ind == unind[i], , drop = FALSE]
                 ty <- y[ind == unind[i]]
-                tHhat <- Hhat[ind == unind[i], , drop=FALSE]
+                tHhat <- Hhat[ind == unind[i], , drop = FALSE]
     
                 ## if 'trend' then augment the xs-invariant component
                 if(trend) tHhat <- cbind(tHhat, 1:(dim(tHhat)[[1]]))
@@ -334,7 +334,7 @@ pcce <- function (formula, data, subset, na.action,
     dimnames(tcoef) <- list(coef.names, id.names)
     pmodel <- attr(plm.model, "pmodel")
     pmodel$model.name <- model.name
-    mgmod <- list(coefficients = coef, residuals = residuals,
+    pccemod <- list(coefficients = coef, residuals = residuals,
                   stdres = stdres, tr.model = tr.model,
                   fitted.values = fitted.values, vcov = vcov,
                   df.residual = df.residual,
@@ -343,9 +343,9 @@ pcce <- function (formula, data, subset, na.action,
                   #cceres = as.vector(cceres),
                   #ccemgres = as.vector(ccemgres),
                   formula = formula, call = cl)
-    mgmod <- structure(mgmod, pdim = pdim, pmodel = pmodel)
-    class(mgmod) <- c("pcce", "panelmodel")
-    mgmod
+    pccemod <- structure(pccemod, pdim = pdim, pmodel = pmodel)
+    class(pccemod) <- c("pcce", "panelmodel")
+    pccemod
 }
 
 
@@ -394,14 +394,12 @@ residuals.pcce <- function(object,
     ## defactored residuals (default) or raw residuals
     defres <- pres(object)
     switch(match.arg(type),
-           standard={
-               stdres <- object$stdres
-               ## add panel features taking from
-               class(stdres) <- class(defres)
-               attr(stdres, "index") <- attr(defres, "index")
-               residuals <- stdres
+           standard = {
+               ## add panel features and names from defres
+               residuals <- add_pseries_features(object$stdres, index(defres))
+               names(residuals) <- names(defres)
                  },
-           defactored={residuals <- defres}
+           defactored = { residuals <- defres}
            )
     return(residuals)
 }
