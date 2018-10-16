@@ -825,13 +825,11 @@ moment only available for balanced panels.
 
 \subsubsection{Unbalanced panels}
 
-Most of the features of \code{plm} are implemented for panel models
-with some limitations:
+Most of the features of \code{plm} are implemented for unbalanced panel models
+with one notable exception:
 
 \begin{itemize}
-\item the random two-ways effect model is not implemented,
-\item the only estimator of the variance of the error components is
-  the one proposed by \citet{SWAM:AROR:72}
+\item there is no random two-ways effect model for \code{random.method = "nerlove"}.
 \end{itemize}
 
 The following example is using data used by \citep{HARR:RUBI:78} to
