@@ -243,3 +243,18 @@ pHedonic2 <- pdata.frame(Hedonic, index = "townid")
 form2 <- formula(mv2 ~ crim2 + zn2 + indus2 + chas2 + nox2 + rm2 + age2 + dis2 + rad2 + tax2 + ptratio2 + blacks + lstat2)
 summary(plm(form2, data = pHedonic2, model = "random"))
 
+
+# pcce(., model = "mg") amd pmg(., model = "cmg") estimate  the same model but
+# in a different way - coefficients need to match
+data("Produc", package = "plm")
+form <- log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp
+pccemgmod <- pcce(form, data = Produc, model="mg")
+pmgccemgmod <- pmg(form, data = Produc, model="cmg")
+common <- intersect(names(pccemgmod[["coefficients"]]), names(pmgccemgmod[["coefficients"]]))
+coef_pccemgmod   <- round(pccemgmod[["coefficients"]][common],   digits = 7)
+coef_pmgccemgmod <- round(pmgccemgmod[["coefficients"]][common], digits = 7)
+stopifnot(all.equal(coef_pccemgmod, coef_pmgccemgmod))
+print(summary(pccemgmod))
+print(summary(pmgccemgmod))
+
+

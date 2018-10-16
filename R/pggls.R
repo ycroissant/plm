@@ -6,7 +6,7 @@ pggls <- function(formula, data, subset, na.action,
   # check and match the arguments
     effect <- match.arg(effect)
     model.name <- match.arg(model)
-    if(model.name == "random") {
+    if (model.name == "random") {
         warning("for argument 'model' to pggls(), the value 'random' has been renamed as 'pooling'",
                 call. = FALSE)
         model.name <- "pooling"
@@ -14,7 +14,7 @@ pggls <- function(formula, data, subset, na.action,
     data.name <- paste(deparse(substitute(data)))
     cl <- match.call()
     plm.model <- match.call(expand.dots=FALSE)
-    m <- match(c("formula", "data", "subset", "na.action", "effect", "model", "index"), names(plm.model),0)
+    m <- match(c("formula", "data", "subset", "na.action", "effect", "model", "index"), names(plm.model), 0)
     plm.model <- plm.model[c(1,m)]
     plm.model[[1]] <- as.name("plm")
     plm.model$model <- model.name
@@ -29,7 +29,7 @@ pggls <- function(formula, data, subset, na.action,
     coef.names <- names(coef(plm.model))
     K <- length(coef.names)
     
-    if(model.name=="fd") {
+    if (model.name == "fd") {
     ## eliminate first year in indices
         nt <- pdim$Tint$nt[-1]
         Ti <- pdim$Tint$Ti - 1
@@ -81,8 +81,8 @@ pggls <- function(formula, data, subset, na.action,
     cond <- cond[myord]
     other <- other[myord]
     drop1 <- FALSE
-    if (drop1 && model.name %in% c("within","fd")) {
-    ## drop one  time period (e.g. first as we do here)
+    if (drop1 && model.name %in% c("within", "fd")) {
+    ## drop one time period (e.g. first as we do here)
     ## (see Wooldridge (2002) 10.5, eq. 10.61)/Woolridge (2010),10.5.5, eq.10.61)
     ## this is needed according to Wooldridge (2002), p.277 / Wooldridge (2010), p. 312
     ## but is not totally robust to unbalancedness, dummies etc.
@@ -115,7 +115,7 @@ pggls <- function(formula, data, subset, na.action,
     if (balanced) {
         for (i in 1:ncond) {
             ut <- resid[cond == lcnd[i]]
-            tres[, , i] <- ut %o% ut
+            tres[ , , i] <- ut %o% ut
         }
         subOmega <- apply(tres, 1:2, mean)
         omega <- bdsmatrix(rep(nother, ncond), rep(subOmega, ncond))
@@ -166,13 +166,13 @@ pggls <- function(formula, data, subset, na.action,
 }
 
 summary.pggls <- function(object,...){
-  pmodel <- attr(object,"pmodel")
+  pmodel <- attr(object, "pmodel")
   std.err <- sqrt(diag(object$vcov))
   b <- object$coefficients
   z <- b/std.err
-  p <- 2*pnorm(abs(z),lower.tail=FALSE)
+  p <- 2*pnorm(abs(z), lower.tail = FALSE)
   CoefTable <- cbind(b,std.err,z,p)
-  colnames(CoefTable) <- c("Estimate","Std. Error","z-value","Pr(>|z|)")
+  colnames(CoefTable) <- c("Estimate", "Std. Error", "z-value", "Pr(>|z|)")
   object$CoefTable <- CoefTable
   y <- object$model[[1]]
   object$tss <- tss(y)
@@ -182,14 +182,14 @@ summary.pggls <- function(object,...){
   return(object)
 }
 
-print.summary.pggls <- function(x,digits=max(3, getOption("digits") - 2), width = getOption("width"),...){
-  pmodel <- attr(x,"pmodel")
-  pdim <- attr(x,"pdim")
+print.summary.pggls <- function(x, digits = max(3, getOption("digits") - 2), width = getOption("width"), ...){
+  pmodel <- attr(x, "pmodel")
+  pdim <- attr(x, "pdim")
   formula <- pmodel$formula
   model.name <- pmodel$model.name
   effect.name <- pmodel$effect.name
-  cat(paste(effect.pggls.list[effect.name]," ",sep=""))
-  cat(paste(model.pggls.list[model.name],"\n",sep=""))
+  cat(paste(effect.pggls.list[effect.name], " ", sep = ""))
+  cat(paste(model.pggls.list[model.name], "\n", sep = ""))
   cat("\nCall:\n")
   print(x$call)
   cat("\n")
@@ -198,9 +198,9 @@ print.summary.pggls <- function(x,digits=max(3, getOption("digits") - 2), width 
   print(summary(unlist(residuals(x))))
   cat("\nCoefficients:\n")
   printCoefmat(x$CoefTable,digits=digits)
-  cat(paste("Total Sum of Squares: ",signif(x$tss,digits),"\n",sep=""))
-  cat(paste("Residual Sum of Squares: ",signif(x$ssr,digits),"\n",sep=""))
-  cat(paste("Multiple R-squared: ",signif(x$rsqr,digits),"\n",sep=""))
+  cat(paste("Total Sum of Squares: ",    signif(x$tss,digits),  "\n", sep=""))
+  cat(paste("Residual Sum of Squares: ", signif(x$ssr,digits),  "\n", sep=""))
+  cat(paste("Multiple R-squared: ",      signif(x$rsqr,digits), "\n", sep=""))
   invisible(x)
 }
 

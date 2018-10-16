@@ -232,7 +232,7 @@ pmg <- function(formula, data, subset, na.action,
 }
 
 
-summary.pmg <- function(object,...){
+summary.pmg <- function(object, ...){
   pmodel <- attr(object, "pmodel")
   std.err <- sqrt(diag(object$vcov))
   b <- object$coefficients
@@ -249,13 +249,12 @@ summary.pmg <- function(object,...){
   return(object)
 }
 
-print.summary.pmg <- function(x, digits = max(3, getOption("digits") - 2), width = getOption("width"),...){
+print.summary.pmg <- function(x, digits = max(3, getOption("digits") - 2), width = getOption("width"), ...){
   pmodel <- attr(x, "pmodel")
   pdim <- attr(x, "pdim")
 #  formula <- pmodel$formula
   model.name <- pmodel$model.name
-#  cat(paste(model.pmg.list[model.name], "\n", sep=""))
-  cat("Mean Groups model")
+  cat(paste(model.pmg.list[model.name], "\n", sep=""))
   cat("\nCall:\n")
   print(x$call)
   cat("\n")
@@ -264,9 +263,9 @@ print.summary.pmg <- function(x, digits = max(3, getOption("digits") - 2), width
   print(summary(unlist(residuals(x))))
   cat("\nCoefficients:\n")
   printCoefmat(x$CoefTable, digits = digits)
-  cat(paste("Total Sum of Squares: ",    signif(x$tss, digits), "\n",sep=""))
-  cat(paste("Residual Sum of Squares: ", signif(x$ssr, digits), "\n",sep=""))
-  cat(paste("Multiple R-squared: ",      signif(x$rsqr, digits),"\n",sep=""))
+  cat(paste("Total Sum of Squares: ",    signif(x$tss, digits), "\n", sep=""))
+  cat(paste("Residual Sum of Squares: ", signif(x$ssr, digits), "\n", sep=""))
+  cat(paste("Multiple R-squared: ",      signif(x$rsqr, digits),"\n", sep=""))
   invisible(x)
 }
 

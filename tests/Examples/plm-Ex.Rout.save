@@ -364,7 +364,7 @@ CEOage 0     0       1
 log(y) ~ lag(log(y), 1) + log(x1) + lag(log(x1), 1) + lag(log(x1), 
     2) + log(x2) + lag(log(x2), 1) + lag(log(x2), 2) + diff(log(x3)) + 
     diff(log(x3), 1) + diff(log(x3), 2)
-<environment: 0x0000000006b2f648>
+<environment: 0x000000000b18f9b0>
 > 
 > 
 > 
@@ -9519,6 +9519,7 @@ alternative hypothesis: significant effects
 > mgmod <- pmg(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc)
 > summary(mgmod)
 Mean Groups model
+
 Call:
 pmg(formula = log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
     data = Produc)
@@ -9546,7 +9547,8 @@ Multiple R-squared: 0.99961
 > dmgmod <- pmg(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
 +              data = Produc, model = "dmg")
 > summary(dmgmod)
-Mean Groups model
+Demeaned Mean Groups model
+
 Call:
 pmg(formula = log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
     data = Produc, model = "dmg")
@@ -9574,7 +9576,8 @@ Multiple R-squared: 0.99972
 > ccemgmod <- pmg(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
 +                 data = Produc, model = "cmg")
 > summary(ccemgmod)
-Mean Groups model
+Common Correlated Effects Mean Groups model
+
 Call:
 pmg(formula = log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
     data = Produc, model = "cmg")
@@ -13395,7 +13398,7 @@ attr(,"se")
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  12.9 1.13 14.04 NA NA 
+Time elapsed:  12.58 1.14 13.76 NA NA 
 > grDevices::dev.off()
 null device 
           1 

@@ -349,8 +349,8 @@ pcce <- function (formula, data, subset, na.action,
 }
 
 
-summary.pcce <- function(object,...){
-  pmodel <- attr(object,"pmodel")
+summary.pcce <- function(object, ...){
+  pmodel <- attr(object, "pmodel")
   std.err <- sqrt(diag(object$vcov))
   b <- object$coefficients
   z <- b/std.err
@@ -369,10 +369,10 @@ summary.pcce <- function(object,...){
 print.summary.pcce <- function(x, digits = max(3, getOption("digits") - 2), width = getOption("width"), ...){
   pmodel <- attr(x, "pmodel")
   pdim <- attr(x, "pdim")
-  formula <- pmodel$formula
+#  formula <- pmodel$formula
   model.name <- pmodel$model.name
   cat("Common Correlated Effects ")
-  cat(paste(model.pcce.list[model.name],"\n",sep=""))
+  cat(paste(model.pcce.list[model.name], "\n", sep = ""))
   cat("\nCall:\n")
   print(x$call)
   cat("\n")
@@ -380,10 +380,10 @@ print.summary.pcce <- function(x, digits = max(3, getOption("digits") - 2), widt
   cat("\nResiduals:\n")
   print(summary(unlist(residuals(x))))
   cat("\nCoefficients:\n")
-  printCoefmat(x$CoefTable,digits=digits)
-  cat(paste("Total Sum of Squares: ",signif(x$tss,digits),"\n",sep=""))
-  cat(paste("Residual Sum of Squares: ",signif(x$ssr,digits),"\n",sep=""))
-  cat(paste("HPY R-squared: ",signif(x$rsqr,digits),"\n",sep=""))
+  printCoefmat(x$CoefTable, digits = digits)
+  cat(paste("Total Sum of Squares: ",    signif(x$tss,digits), "\n", sep=""))
+  cat(paste("Residual Sum of Squares: ", signif(x$ssr,digits), "\n", sep=""))
+  cat(paste("HPY R-squared: ",           signif(x$rsqr,digits),"\n", sep=""))
   invisible(x)
 }
 
@@ -395,20 +395,18 @@ residuals.pcce <- function(object,
     defres <- pres(object)
     switch(match.arg(type),
            standard = {
-               ## add panel features and names from defres
+               ## add panel features and names from 'defres'
                residuals <- add_pseries_features(object$stdres, index(defres))
                names(residuals) <- names(defres)
-                 },
-           defactored = { residuals <- defres}
+              },
+           defactored = { residuals <- defres }
            )
     return(residuals)
 }
 
-
 model.matrix.pcce <- function(object, ...) {
     object$tr.model$X
 }
-
 
 pmodel.response.pcce <- function(object, ...) {
     object$tr.model$y

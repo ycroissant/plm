@@ -1,6 +1,6 @@
 
-R version 3.4.3 (2017-11-30) -- "Kite-Eating Tree"
-Copyright (C) 2017 The R Foundation for Statistical Computing
+R version 3.5.1 (2018-07-02) -- "Feather Spray"
+Copyright (C) 2018 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -1375,6 +1375,71 @@ Adj. R-Squared: 0.99067
 F-statistic: 4117.13 on 13 and 492 DF, p-value: < 2.22e-16
 > 
 > 
+> # pcce(., model = "mg") amd pmg(., model = "cmg") estimate  the same model but
+> # in a different way - coefficients need to match
+> data("Produc", package = "plm")
+> form <- log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp
+> pccemgmod <- pcce(form, data = Produc, model="mg")
+> pmgccemgmod <- pmg(form, data = Produc, model="cmg")
+> common <- intersect(names(pccemgmod[["coefficients"]]), names(pmgccemgmod[["coefficients"]]))
+> coef_pccemgmod   <- round(pccemgmod[["coefficients"]][common],   digits = 7)
+> coef_pmgccemgmod <- round(pmgccemgmod[["coefficients"]][common], digits = 7)
+> stopifnot(all.equal(coef_pccemgmod, coef_pmgccemgmod))
+> print(summary(pccemgmod))
+Common Correlated Effects Mean Groups model
+
+Call:
+pcce(formula = form, data = Produc, model = "mg")
+
+Balanced Panel: n = 48, T = 17, N = 816
+
+Residuals:
+      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+-0.0806338 -0.0037117  0.0003147  0.0000000  0.0040207  0.0438957 
+
+Coefficients:
+            Estimate Std. Error z-value  Pr(>|z|)    
+log(pcap)  0.0899850  0.1176039  0.7652   0.44418    
+log(pc)    0.0335784  0.0423362  0.7931   0.42770    
+log(emp)   0.6258659  0.1071719  5.8398 5.225e-09 ***
+unemp     -0.0031178  0.0014389 -2.1668   0.03025 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Total Sum of Squares: 849.81
+Residual Sum of Squares: 0.056978
+HPY R-squared: 0.99312
+> print(summary(pmgccemgmod))
+Common Correlated Effects Mean Groups model
+
+Call:
+pmg(formula = form, data = Produc, model = "cmg")
+
+Balanced Panel: n = 48, T = 17, N = 816
+
+Residuals:
+      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+-0.0806338 -0.0037117  0.0003147  0.0000000  0.0040207  0.0438957 
+
+Coefficients:
+                Estimate Std. Error z-value  Pr(>|z|)    
+(Intercept)   -0.6741754  1.0445518 -0.6454  0.518655    
+log(pcap)      0.0899850  0.1176040  0.7652  0.444180    
+log(pc)        0.0335784  0.0423362  0.7931  0.427698    
+log(emp)       0.6258659  0.1071719  5.8398 5.225e-09 ***
+unemp         -0.0031178  0.0014389 -2.1668  0.030249 *  
+y.bar          1.0038005  0.1078874  9.3041 < 2.2e-16 ***
+log(pcap).bar -0.0491919  0.2396185 -0.2053  0.837344    
+log(pc).bar   -0.0033198  0.1576547 -0.0211  0.983200    
+log(emp).bar  -0.6978359  0.2432887 -2.8683  0.004126 ** 
+unemp.bar      0.0025544  0.0031848  0.8021  0.422505    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Total Sum of Squares: 849.81
+Residual Sum of Squares: 0.056978
+Multiple R-squared: 0.99993
+> 
+> 
+> 
 > proc.time()
    user  system elapsed 
-   4.41    0.12    4.52 
+   3.49    0.15    3.66 
