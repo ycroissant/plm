@@ -105,11 +105,11 @@ adj.levinlin <- array(v, dim=c(13,2,3),
                       dimnames = list(Tn, c("mu","sigma"),
                         c("none", "intercept", "trend")))
 
-names.exo <- c(none = "None",
-               intercept = "Individual Intercepts",
-               trend = "Individual Intercepts and Trend")
+purtest.names.exo <- c(none = "None",
+                       intercept = "Individual Intercepts",
+                       trend = "Individual Intercepts and Trend")
 
-names.test <- c(levinlin = "Levin-Lin-Chu Unit-Root Test",
+purtest.names.test <- c(levinlin = "Levin-Lin-Chu Unit-Root Test",
                 ips = "Im-Pesaran-Shin Unit-Root Test",
                 madwu = "Maddala-Wu Unit-Root Test",
                 Pm = "Choi's modified P Unit-Root Test",
@@ -384,12 +384,12 @@ purtest <- function(object, data = NULL, index = NULL,
   L <- nrow(object)
   n <- ncol(object)
   alternative <- "stationarity"
-  method <- paste0(names.test[test], " (ex. var.: ",
-                    names.exo[exo],")")
+  method <- paste0(purtest.names.test[test], " (ex. var.: ",
+                   purtest.names.exo[exo],")")
 
   if (test == "hadri"){
     ## Hadri's test is applicable to balanced data only
-    
+    ## TODO: catch unbalanced case
     if (exo == "none") stop("exo = \"none\" is not a valid option for Hadri's test")
     
     if (exo == "intercept"){
@@ -619,8 +619,8 @@ summary.purtest <- function(object, ...){
 }
 
 print.summary.purtest <- function(x, ...){
-  cat(paste(names.test[x$args$test], "\n"))
-  cat(paste("Exogenous variables:", names.exo[x$args$exo], "\n"))
+  cat(paste(purtest.names.test[x$args$test], "\n"))
+  cat(paste("Exogenous variables:", purtest.names.exo[x$args$exo], "\n"))
   thelags <- sapply(x$idres, function(x) x[["lags"]])
   if (is.character(x$args$lags)){
     lagselectionmethod <- if (x$args$lags == "Hall") "Hall's method" else x$args$lags
