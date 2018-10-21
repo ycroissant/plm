@@ -33,3 +33,14 @@ summary(re_iv)
 # replicates Baltagi (2013), p. 137 ("G2SLS") (not in Table 7.1)
 re2_iv <- plm(form_re_iv, data = Crime, model = "random")
 summary(re2_iv)
+
+
+# further variants of the IV estimator
+re_iv2 <- plm(form_re_iv, data = Crime, model = "random", inst.method = "bvk")
+summary(re_iv2)
+
+re_iv3 <- plm(form_re_iv, data = Crime, model = "random", inst.method = "am")
+summary(re_iv3)
+
+re_iv4 <- plm(form_re_iv, data = Crime, model = "random", inst.method = "bms")
+summary(re_iv4)

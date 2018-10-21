@@ -1,6 +1,6 @@
 
-R version 3.4.2 (2017-09-28) -- "Short Summer"
-Copyright (C) 2017 The R Foundation for Statistical Computing
+R version 3.5.1 (2018-07-02) -- "Feather Spray"
+Copyright (C) 2018 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -328,6 +328,188 @@ R-Squared:      0.59228
 Adj. R-Squared: 0.5747
 F-statistic: 33.1494 on 26 and 603 DF, p-value: < 2.22e-16
 > 
+> 
+> # further variants of the IV estimator
+> re_iv2 <- plm(form_re_iv, data = Crime, model = "random", inst.method = "bvk")
+> summary(re_iv2)
+Oneway (individual) effect Random Effect Model 
+   (Swamy-Arora's transformation)
+Instrumental variable estimation
+   (Balestra-Varadharajan-Krishnakumar's transformation)
+
+Call:
+plm(formula = form_re_iv, data = Crime, model = "random", inst.method = "bvk")
+
+Balanced Panel: n = 90, T = 7, N = 630
+
+Effects:
+                  var std.dev share
+idiosyncratic 0.02227 0.14923 0.326
+individual    0.04604 0.21456 0.674
+theta: 0.7458
+
+Residuals:
+      Min.    1st Qu.     Median    3rd Qu.       Max. 
+-0.7485123 -0.0710015  0.0040742  0.0784401  0.4756493 
+
+Coefficients:
+                 Estimate Std. Error t-value  Pr(>|t|)    
+(Intercept)    -0.4538241  1.7029840 -0.2665  0.789955    
+log(prbarr)    -0.4141200  0.2210540 -1.8734  0.061498 .  
+log(prbconv)   -0.3432383  0.1324679 -2.5911  0.009798 ** 
+log(prbpris)   -0.1900437  0.0733420 -2.5912  0.009796 ** 
+log(avgsen)    -0.0064374  0.0289406 -0.2224  0.824052    
+log(polpc)      0.5049285  0.2277811  2.2167  0.027014 *  
+log(density)    0.4343519  0.0711528  6.1045 1.847e-09 ***
+log(wcon)      -0.0042963  0.0414225 -0.1037  0.917426    
+log(wtuc)       0.0444572  0.0215449  2.0635  0.039495 *  
+log(wtrd)      -0.0085626  0.0419822 -0.2040  0.838456    
+log(wfir)      -0.0040302  0.0294565 -0.1368  0.891220    
+log(wser)       0.0105604  0.0215822  0.4893  0.624798    
+log(wmfg)      -0.2017917  0.0839423 -2.4039  0.016520 *  
+log(wfed)      -0.2134634  0.2151074 -0.9924  0.321421    
+log(wsta)      -0.0601083  0.1203146 -0.4996  0.617544    
+log(wloc)       0.1835137  0.1396721  1.3139  0.189383    
+log(pctymle)   -0.1458448  0.2268137 -0.6430  0.520458    
+log(pctmin)     0.1948760  0.0459409  4.2419 2.565e-05 ***
+regionwest     -0.2281780  0.1010317 -2.2585  0.024272 *  
+regioncentral  -0.1987675  0.0607510 -3.2718  0.001129 ** 
+smsayes        -0.2595423  0.1499780 -1.7305  0.084046 .  
+factor(year)82  0.0132140  0.0299923  0.4406  0.659676    
+factor(year)83 -0.0847676  0.0320008 -2.6489  0.008286 ** 
+factor(year)84 -0.1062004  0.0387893 -2.7379  0.006366 ** 
+factor(year)85 -0.0977398  0.0511685 -1.9102  0.056587 .  
+factor(year)86 -0.0719390  0.0605821 -1.1875  0.235512    
+factor(year)87 -0.0396520  0.0758537 -0.5227  0.601345    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    30.168
+Residual Sum of Squares: 12.418
+R-Squared:      0.59228
+Adj. R-Squared: 0.5747
+F-statistic: 33.1494 on 26 and 603 DF, p-value: < 2.22e-16
+> 
+> re_iv3 <- plm(form_re_iv, data = Crime, model = "random", inst.method = "am")
+> summary(re_iv3)
+Oneway (individual) effect Random Effect Model 
+   (Swamy-Arora's transformation)
+Instrumental variable estimation
+   (Amemiya-MaCurdy's transformation)
+
+Call:
+plm(formula = form_re_iv, data = Crime, model = "random", inst.method = "am")
+
+Balanced Panel: n = 90, T = 7, N = 630
+
+Effects:
+                  var std.dev share
+idiosyncratic 0.02227 0.14923 0.326
+individual    0.04604 0.21456 0.674
+theta: 0.7458
+
+Residuals:
+    Min.  1st Qu.   Median  3rd Qu.     Max. 
+-5.03162 -0.44966  0.02556  0.52267  3.91770 
+
+Coefficients:
+                  Estimate  Std. Error  t-value  Pr(>|t|)    
+(Intercept)    -1.33632334  1.23078627  -1.0857  0.278024    
+log(prbarr)    -0.50748163  0.06389968  -7.9418 9.787e-15 ***
+log(prbconv)   -0.34533794  0.03277845 -10.5355 < 2.2e-16 ***
+log(prbpris)   -0.20890870  0.03625978  -5.7614 1.331e-08 ***
+log(avgsen)    -0.01239506  0.02713430  -0.4568  0.647976    
+log(polpc)      0.40886566  0.05070027   8.0644 3.980e-15 ***
+log(density)    0.39793218  0.05243491   7.5891 1.229e-13 ***
+log(wcon)      -0.00809298  0.03988932  -0.2029  0.839293    
+log(wtuc)       0.04333273  0.01983193   2.1850  0.029273 *  
+log(wtrd)      -0.00598336  0.04187735  -0.1429  0.886434    
+log(wfir)      -0.00455018  0.02925771  -0.1555  0.876463    
+log(wser)      -0.00021705  0.02011330  -0.0108  0.991393    
+log(wmfg)      -0.19832417  0.08110069  -2.4454  0.014754 *  
+log(wfed)      -0.14186228  0.15298059  -0.9273  0.354130    
+log(wsta)      -0.07010717  0.10510357  -0.6670  0.505009    
+log(wloc)       0.15985810  0.11853902   1.3486  0.177982    
+log(pctymle)   -0.12661034  0.12660867  -1.0000  0.317705    
+log(pctmin)     0.18750912  0.04148212   4.5202 7.437e-06 ***
+regionwest     -0.22780254  0.10080178  -2.2599  0.024183 *  
+regioncentral  -0.18398464  0.06045808  -3.0432  0.002443 ** 
+smsayes        -0.20813651  0.11197168  -1.8588  0.063538 .  
+factor(year)82  0.01352005  0.02557798   0.5286  0.597290    
+factor(year)83 -0.07835083  0.03092912  -2.5332  0.011554 *  
+factor(year)84 -0.09402494  0.03727559  -2.5224  0.011911 *  
+factor(year)85 -0.08691358  0.04985021  -1.7435  0.081757 .  
+factor(year)86 -0.06603092  0.06029136  -1.0952  0.273868    
+factor(year)87 -0.02893228  0.07079517  -0.4087  0.682923    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    30.168
+Residual Sum of Squares: 558.04
+R-Squared:      0.58975
+Adj. R-Squared: 0.57206
+F-statistic: -21.9385 on 26 and 603 DF, p-value: 1
+> 
+> re_iv4 <- plm(form_re_iv, data = Crime, model = "random", inst.method = "bms")
+> summary(re_iv4)
+Oneway (individual) effect Random Effect Model 
+   (Swamy-Arora's transformation)
+Instrumental variable estimation
+   (Breusch-Mizon-Schmidt's transformation)
+
+Call:
+plm(formula = form_re_iv, data = Crime, model = "random", inst.method = "bms")
+
+Balanced Panel: n = 90, T = 7, N = 630
+
+Effects:
+                  var std.dev share
+idiosyncratic 0.02227 0.14923 0.326
+individual    0.04604 0.21456 0.674
+theta: 0.7458
+
+Residuals:
+    Min.  1st Qu.   Median  3rd Qu.     Max. 
+-5.03162 -0.44966  0.02556  0.52267  3.91770 
+
+Coefficients:
+                  Estimate  Std. Error  t-value  Pr(>|t|)    
+(Intercept)    -1.33632334  1.23078627  -1.0857  0.278024    
+log(prbarr)    -0.50748163  0.06389968  -7.9418 9.787e-15 ***
+log(prbconv)   -0.34533794  0.03277845 -10.5355 < 2.2e-16 ***
+log(prbpris)   -0.20890870  0.03625978  -5.7614 1.331e-08 ***
+log(avgsen)    -0.01239506  0.02713430  -0.4568  0.647976    
+log(polpc)      0.40886566  0.05070027   8.0644 3.980e-15 ***
+log(density)    0.39793218  0.05243491   7.5891 1.229e-13 ***
+log(wcon)      -0.00809298  0.03988932  -0.2029  0.839293    
+log(wtuc)       0.04333273  0.01983193   2.1850  0.029273 *  
+log(wtrd)      -0.00598336  0.04187735  -0.1429  0.886434    
+log(wfir)      -0.00455018  0.02925771  -0.1555  0.876463    
+log(wser)      -0.00021705  0.02011330  -0.0108  0.991393    
+log(wmfg)      -0.19832417  0.08110069  -2.4454  0.014754 *  
+log(wfed)      -0.14186228  0.15298059  -0.9273  0.354130    
+log(wsta)      -0.07010717  0.10510357  -0.6670  0.505009    
+log(wloc)       0.15985810  0.11853902   1.3486  0.177982    
+log(pctymle)   -0.12661034  0.12660867  -1.0000  0.317705    
+log(pctmin)     0.18750912  0.04148212   4.5202 7.437e-06 ***
+regionwest     -0.22780254  0.10080178  -2.2599  0.024183 *  
+regioncentral  -0.18398464  0.06045808  -3.0432  0.002443 ** 
+smsayes        -0.20813651  0.11197168  -1.8588  0.063538 .  
+factor(year)82  0.01352005  0.02557798   0.5286  0.597290    
+factor(year)83 -0.07835083  0.03092912  -2.5332  0.011554 *  
+factor(year)84 -0.09402494  0.03727559  -2.5224  0.011911 *  
+factor(year)85 -0.08691358  0.04985021  -1.7435  0.081757 .  
+factor(year)86 -0.06603092  0.06029136  -1.0952  0.273868    
+factor(year)87 -0.02893228  0.07079517  -0.4087  0.682923    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    30.168
+Residual Sum of Squares: 558.04
+R-Squared:      0.58975
+Adj. R-Squared: 0.57206
+F-statistic: -21.9385 on 26 and 603 DF, p-value: 1
+> 
 > proc.time()
    user  system elapsed 
-   3.24    0.10    3.35 
+   2.77    0.20    2.96 
