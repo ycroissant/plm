@@ -7,10 +7,10 @@ index.pindex <- function(x, which = NULL, ...){
         posindividual <- match("individual", which)
         if (! is.na(posindividual)) which[posindividual] <- "id"
     }
-    if (length(which) >  3) stop("the length of which should be at most 3")
+    if (length(which) >  3) stop("the length of argument 'which' should be at most 3")
     if (is.numeric(which)){
         if (! all(which %in% 1:3))
-            stop("if integers, which should contain only 1, 2 and/or 3")
+            stop("if integer, argument 'which' should contain only 1, 2 and/or 3")
         if (ncol(x) == 2 & 3 %in% which) stop("no grouping variable, only 2 indexes")
         which <- names(x)[which]
     }
@@ -21,7 +21,7 @@ index.pindex <- function(x, which = NULL, ...){
     if ("id" %in% which) which[which == "id"] <- names(x)[1]
     if ("time" %in% which) which[which == "time"] <- names(x)[2]
     if ("group" %in% which) which[which == "group"] <- names(x)[3]
-    result <- x[, which]
+    result <- x[ , which]
     result
 }
 
