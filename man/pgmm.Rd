@@ -136,8 +136,8 @@ pp. 86--136. \url{http://www.stata-journal.com/article.html?article=st0159}.
 
 \seealso{
   
-  \code{\link{sargan}} for Sargan tests and \code{\link{mtest}} for 
-  Arellano--Bond's tests of serial correlation. % was: multicollinearity
+  \code{\link{sargan}} for the Hansen--Sargan test and \code{\link{mtest}} for 
+  Arellano--Bond's test of serial correlation.
   \code{\link{dynformula}} for dynamic formulas (deprecated).
 }
 

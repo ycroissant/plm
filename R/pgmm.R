@@ -623,7 +623,7 @@ makeW2<-function (x, collapse = FALSE){
 
 coef.pgmm <- function(object,...){
   model <- describe(object, "model")
-  if(model == "onestep") coefficients <- object$coefficients
+  if (model == "onestep") coefficients <- object$coefficients
   else coefficients <- object$coefficients[[2]]
   coefficients
 }
@@ -638,13 +638,13 @@ summary.pgmm <- function(object, robust = TRUE, time.dummies = FALSE, ...){
   else{
     vv <- vcov(object)
   }
-  if (model == "onestep")   K <- length(object$coefficients)
+  if (model == "onestep") K <- length(object$coefficients)
   else  K <- length(object$coefficients[[2]])
   object$sargan <- sargan(object, "twosteps")
   object$m1 <- mtest(object, 1, vv)
   object$m2 <- mtest(object, 2, vv)
   object$wald.coef <- wald(object, "coef", vv)
-  if (describe(object, "effect") == "twoways") object$wald.td <- wald(object,"time",vv)
+  if (effect == "twoways") object$wald.td <- wald(object, "time", vv)
   Kt <- length(object$args$namest)
   if (! time.dummies && effect == "twoways") rowsel <- -c((K - Kt + 1):K)
   else rowsel <- 1:K
@@ -659,7 +659,7 @@ summary.pgmm <- function(object, robust = TRUE, time.dummies = FALSE, ...){
   object
 }
 
-mtest <- function(object, order = 1, vcov = NULL){
+mtest <- function(object, order = 1, vcov = NULL) {
   if (!inherits(object, "pgmm")) stop("argument 'object' needs to be class 'pgmm'")
   myvcov <- vcov
   if (is.null(vcov)) vv <- vcov(object)
@@ -668,34 +668,39 @@ mtest <- function(object, order = 1, vcov = NULL){
   model <- describe(object, "model")
   transformation <- describe(object, "transformation")
   Kt <- length(object$args$namest)
-  if (transformation == "d"){
-    resid <- object$residuals
-    residl <- lapply(resid,
-                     function(x) c(rep(0,order), x[1:(length(x)-order)])
-                     )
-  }
-  else{
-    resid <- lapply(object$residuals,
-                    function(x) c(x[-c(Kt:(2*Kt + 1))], rep(0, Kt)))
-    residl <- lapply(object$residuals,
-                     function(x) c(rep(0, order), x[1:(Kt-order-1)], rep(0, Kt)))
-  }
-  X <- lapply(object$model, function(x) x[,-1, drop=FALSE])
+  
+  switch(transformation,
+         "d" = {
+           resid <- object$residuals
+           residl <- lapply(resid,
+                            function(x)
+                              c(rep(0, order), x[1:(length(x) - order)]))
+               },
+         "ld" = {
+           resid <- lapply(object$residuals,
+                           function(x)
+                             c(x[-c(Kt:(2 * Kt + 1))], rep(0, Kt)))
+           residl <- lapply(object$residuals,
+                            function(x)
+                              c(rep(0, order), x[1:(Kt - order - 1)], rep(0, Kt)))
+         })
+  
+  X <- lapply(object$model, function(x) x[ , -1, drop = FALSE])
   W <- object$W
   if (model == "onestep") A <- object$A1
   else  A <- object$A2
   EVE <- Reduce("+",
-                mapply(function(x, y) t(y) %*% x %*% t(x) %*%y, resid, residl, SIMPLIFY = FALSE))
+                mapply(function(x, y) t(y) %*% x %*% t(x) %*% y, resid, residl, SIMPLIFY = FALSE))
   EX <- Reduce("+", mapply(crossprod, residl, X, SIMPLIFY = FALSE))
   XZ <- Reduce("+", mapply(crossprod, W, X, SIMPLIFY = FALSE))
   ZVE <- Reduce("+",
-                mapply(function(x,y,z) t(x)%*%y%*%t(y)%*%z, W, resid, residl, SIMPLIFY = FALSE))
+                mapply(function(x, y, z) t(x) %*% y %*% t(y) %*% z, W, resid, residl, SIMPLIFY = FALSE))
 
   denom <- EVE - 2 * EX %*% vcov(object) %*% t(XZ) %*% A %*% ZVE + EX %*% vv %*% t(EX)
   num <- Reduce("+", mapply(crossprod, resid, residl, SIMPLIFY = FALSE))
   stat <- num / sqrt(denom)
   names(stat) <- "normal"
-  pval <- pnorm(abs(stat), lower.tail = FALSE)*2
+  pval <- 2 * pnorm(abs(stat), lower.tail = FALSE)
   mtest <- list(statistic = stat,
                 p.value   = pval,
                 method    = paste("Autocorrelation test of degree", order),
@@ -704,7 +709,7 @@ mtest <- function(object, order = 1, vcov = NULL){
   mtest
 }
 
-wald <- function(object, param = c("coef", "time", "all"), vcov = NULL){
+wald <- function(object, param = c("coef", "time", "all"), vcov = NULL) {
   if (!inherits(object, "pgmm")) stop("argument 'object' needs to be class 'pgmm'")
   param <- match.arg(param)
   myvcov <- vcov
@@ -719,21 +724,23 @@ wald <- function(object, param = c("coef", "time", "all"), vcov = NULL){
   else coefficients <- object$coefficients[[2]]
   Ktot <- length(coefficients)
   Kt <- length(object$args$namest)
-  if (param == "time"){
-    start <- Ktot - Kt + ifelse(transformation == "ld", 2, 1)
-    end <- Ktot
-  }
-  if (param == "coef"){
-    start <- 1
-    if (effect == "twoways") end <- Ktot-Kt else end <- Ktot
-  }
-  if (param == "all"){
-    start <- 1
-    end <- Ktot
-  }
+  
+  switch(param,
+         "time" = {
+           start <- Ktot - Kt + ifelse(transformation == "ld", 2, 1)
+           end <- Ktot
+         },
+         "coef" = {
+           start <- 1
+           end <- if (effect == "twoways") Ktot - Kt else Ktot
+         },
+         "all" = {
+           start <- 1
+           end <- Ktot
+         })
   coef <- coefficients[start:end]
   vv <- vv[start:end, start:end]
-  stat <- t(coef) %*% solve(vv) %*% coef
+  stat <- as.numeric(crossprod(coef, crossprod(solve(vv), coef)))
   names(stat) <- "chisq"
   parameter <- length(coef)
   names(parameter) <- "df"
@@ -749,12 +756,12 @@ wald <- function(object, param = c("coef", "time", "all"), vcov = NULL){
 
 print.summary.pgmm <- function(x, digits = max(3, getOption("digits") - 2),
                                width = getOption("width"),
-                               ...){
+                               ...) {
   model <- describe(x, "model")
   transformation <- describe(x, "transformation")
   effect <- describe(x, "effect")
 
-  pdim <- attr(x,"pdim")
+  pdim <- attr(x, "pdim")
   formula <- x$call$formula
 
   cat(paste(effect.pgmm.list[effect]," ",sep=""))
@@ -795,7 +802,7 @@ print.summary.pgmm <- function(x, digits = max(3, getOption("digits") - 2),
   invisible(x)
 }
 
-sargan <- function(object, weights = c("twosteps", "onestep")){
+sargan <- function(object, weights = c("twosteps", "onestep")) {
   if (!inherits(object, "pgmm")) stop("argument 'object' needs to be class 'pgmm'")
   weights <- match.arg(weights)
   model <- describe(object, "model")
@@ -808,7 +815,7 @@ sargan <- function(object, weights = c("twosteps", "onestep")){
                                 function(i) crossprod(object$W[[i]], residuals(object)[[i]]))))
   p <- ncol(object$W[[1]])
   if (weights == "onestep") A <- object$A1 else A <- object$A2
-  stat <- as.numeric(crossprod(z, t(crossprod(z, A))))
+  stat <- as.numeric(tcrossprod(z, crossprod(z, A)))
   parameter <- p - Ktot
   names(parameter) <- "df"
   names(stat) <- "chisq"
