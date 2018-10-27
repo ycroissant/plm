@@ -413,7 +413,10 @@ print.summary.pht <- function(x, digits = max(3, getOption("digits") - 2),
   invisible(x)
 }
 
-dynformula <- function(formula, lag.form = NULL, diff.form = NULL, log.form = NULL){
+dynformula <- function(formula, lag.form = NULL, diff.form = NULL, log.form = NULL) {
+  
+  .Deprecated(msg = "use of 'dynformula' is deprecated, use a multi-part formula instead",
+              old = "dynformula")
 
   # for backward compatibility, accept a list argument and coerce it
   # to a vector
@@ -424,9 +427,9 @@ dynformula <- function(formula, lag.form = NULL, diff.form = NULL, log.form = NU
   # exo / endog are the names of the variable
   # has.int has.resp  TRUE if the formula has an intercept and a response
   # K is the number of exogenous variables
-  exo <- attr(terms(formula),"term.labels")
-  has.int <- attr(terms(formula),"intercept") == 1
-  if(length(formula)==3){
+  exo <- attr(terms(formula), "term.labels")
+  has.int <- attr(terms(formula), "intercept") == 1
+  if(length(formula) == 3){
     endog <- deparse(formula[[2]])
     has.resp <- TRUE
   }
@@ -442,7 +445,7 @@ dynformula <- function(formula, lag.form = NULL, diff.form = NULL, log.form = NU
   diff.form <- unlist(create.list(diff.form, K, has.int, has.resp, endog, exo, FALSE))
   log.form <- unlist(create.list(log.form, K, has.int, has.resp, endog, exo, FALSE))
 
-  structure(formula, class = c("dynformula","formula"), lag = lag.form,
+  structure(formula, class = c("dynformula", "formula"), lag = lag.form,
             diff = diff.form, log = log.form, var = c(endog,exo))
 }
 

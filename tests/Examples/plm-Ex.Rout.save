@@ -360,11 +360,12 @@ CEOage 0     0       1
 > # all variables in log, x1, x2 and x3 laged twice, y laged once and x3 differenced
 > z <- dynformula(y ~ x1 + x2 + x3, lag.form = list(2, y = 1),
 +                 diff.form = c(x3 = TRUE), log.form = TRUE)
+Warning: use of 'dynformula' is deprecated, use a multi-part formula instead
 > formula(z)
 log(y) ~ lag(log(y), 1) + log(x1) + lag(log(x1), 1) + lag(log(x1), 
     2) + log(x2) + lag(log(x2), 1) + lag(log(x2), 2) + diff(log(x3)) + 
     diff(log(x3), 1) + diff(log(x3), 2)
-<environment: 0x000000000b18f9b0>
+<environment: 0x000000000b1b5e38>
 > 
 > 
 > 
@@ -13129,16 +13130,15 @@ Note: Coefficient covariance matrix supplied.
 > 
 > ## Robust inference for GMM models
 > data("EmplUK", package="plm")
-> ar <- pgmm(dynformula(log(emp) ~ log(wage) + log(capital) + log(output),
-+            list(2, 1, 2, 2)), data = EmplUK, effect = "twoways",
-+            model = "twosteps", gmm.inst = ~ log(emp),
-+            lag.gmm = list(c(2, 99)))
+> ar <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
++            + log(capital) + lag(log(capital), 2) + log(output) + lag(log(output),2) | lag(log(emp), 2:99),
++             data = EmplUK, effect = "twoways", model = "twosteps")
 > rv <- vcovHC(ar)
 > mtest(ar, order = 2, vcov = rv)
 
 	Autocorrelation test of degree 2
 
-data:  dynformula(log(emp) ~ log(wage) + log(capital) + log(output),  ...
+data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + log(capital) +  ...
 normal = -0.1165, p-value = 0.9073
 
 > 
@@ -13398,7 +13398,7 @@ attr(,"se")
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  12.58 1.14 13.76 NA NA 
+Time elapsed:  13.41 1.13 14.65 NA NA 
 > grDevices::dev.off()
 null device 
           1 

@@ -59,6 +59,7 @@ Changes in version 1.7-0
   * pcce models: display proper names in printed summary's topline; pooled model object's
     element 'coefficients' is a numeric (was 1x1 matrix).
   * pmg models: display distinguishing names in printed summary's topline.
+  * dynformula: the long depricated function now gives a deprecation warning.
 
   * Addendum: In plm version 1.6-6, aneweytest() was changed to use the residuals
     of the one-way individual within model (was: two-ways within model).

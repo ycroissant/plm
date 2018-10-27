@@ -1040,8 +1040,8 @@ The moment conditions are then
 
 
 The \textsc{gmm} estimator is provided by the \code{pgmm}
-function. It's main argument is a \code{dynformula} which describes
-the variables of the model and the lag structure.
+function. By using a multi-part formula, the variables of the model and 
+the lag structure are described.
 
 In a \textsc{gmm} estimation, there are ``normal'' instruments and
 ``\textsc{gmm}'' instruments. \textsc{gmm} instruments are indicated

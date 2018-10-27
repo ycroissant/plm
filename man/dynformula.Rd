@@ -5,7 +5,7 @@
 \title{Dynamic Formula}
 
 \description{
- A function to easily create a formula with lags and differences
+ A function to easily create a formula with lags and differences (Deprecated)
 }
 
 \usage{
@@ -26,6 +26,9 @@ dynformula(formula, lag.form = NULL, diff.form = NULL, log.form = NULL)
 }
 
 \details{
+  The function was once used to easily create a formula with lots lags and differences. With the introduction of multi-part formulas, this
+  function is deprecated.
+
   \code{lag.form} is a list, \code{diff.form} and \code{log.form} are vectors (or lists) that should be of length equal to the total number of variables. Each element of these lists/vectors is:
   
   \itemize{
