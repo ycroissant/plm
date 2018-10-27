@@ -365,7 +365,7 @@ Warning: use of 'dynformula' is deprecated, use a multi-part formula instead
 log(y) ~ lag(log(y), 1) + log(x1) + lag(log(x1), 1) + lag(log(x1), 
     2) + log(x2) + lag(log(x2), 1) + lag(log(x2), 2) + diff(log(x3)) + 
     diff(log(x3), 1) + diff(log(x3), 2)
-<environment: 0x000000000b1b5e38>
+<environment: 0x000000000b1b6b28>
 > 
 > 
 > 
@@ -13131,7 +13131,8 @@ Note: Coefficient covariance matrix supplied.
 > ## Robust inference for GMM models
 > data("EmplUK", package="plm")
 > ar <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
-+            + log(capital) + lag(log(capital), 2) + log(output) + lag(log(output),2) | lag(log(emp), 2:99),
++            + log(capital) + lag(log(capital), 2) + log(output)
++            + lag(log(output),2) | lag(log(emp), 2:99),
 +             data = EmplUK, effect = "twoways", model = "twosteps")
 > rv <- vcovHC(ar)
 > mtest(ar, order = 2, vcov = rv)
@@ -13398,7 +13399,7 @@ attr(,"se")
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  13.41 1.13 14.65 NA NA 
+Time elapsed:  14.4 1.28 15.85 NA NA 
 > grDevices::dev.off()
 null device 
           1 

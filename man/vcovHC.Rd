@@ -139,7 +139,8 @@ linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovHC)
 ## Robust inference for GMM models
 data("EmplUK", package="plm")
 ar <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
-           + log(capital) + lag(log(capital), 2) + log(output) + lag(log(output),2) | lag(log(emp), 2:99),
+           + log(capital) + lag(log(capital), 2) + log(output)
+           + lag(log(output),2) | lag(log(emp), 2:99),
             data = EmplUK, effect = "twoways", model = "twosteps")
 rv <- vcovHC(ar)
 mtest(ar, order = 2, vcov = rv)
