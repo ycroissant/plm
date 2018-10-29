@@ -135,8 +135,9 @@ pgmm <- function(formula, data, subset, na.action,
     # How many time series are lost ? May be the maximum number of lags
     # of any covariates + 1 because of first - differencing or the
     # largest minimum lag for any gmm or normal instruments
+
+    # min or max to select the number of lost time series ?   ## TODO: assignment of gmm.minlag
     gmm.minlag <- max(sapply(gmm.lags, min))
-    # min or max to select the number of lost time series ?
     gmm.minlag <- min(sapply(gmm.lags, min))
     if (!is.null(inst.lags)) inst.maxlag <- max(sapply(inst.lags, max))
     else inst.maxlag <- 0
@@ -248,7 +249,7 @@ pgmm <- function(formula, data, subset, na.action,
   if (transformation == "ld"){
     W2 <- lapply(W,
                  function(x){
-                   u <- mapply(makeW2,x, collapse, SIMPLIFY = FALSE)
+                   u <- mapply(makeW2, x, collapse, SIMPLIFY = FALSE)
                    # the matrix of instruments in difference has T - 2
                    # rows if one time series is lost (there are no gmm
                    # instruments for t = 2 but there is a moment
@@ -372,8 +373,8 @@ pgmm <- function(formula, data, subset, na.action,
   ## for (i in 1:N) W[[i]] <- W[[i]][, - zerolines]
 
   WX <- mapply(function(x, y) crossprod(x, y), W, yX, SIMPLIFY = FALSE)
-  Wy <- lapply(WX, function(x) x[, 1])
-  WX <- lapply(WX, function(x) x[, -1])
+  Wy <- lapply(WX, function(x) x[ , 1])
+  WX <- lapply(WX, function(x) x[ , -1])
   A1 <- lapply(W, function(x) crossprod(t(crossprod(x, A1)), x))
   A1 <- Reduce("+", A1)
   minevA1 <- min(eigen(A1)$values)
@@ -392,7 +393,7 @@ pgmm <- function(formula, data, subset, na.action,
   names(coefficients) <- names.coef
   residuals <- lapply(yX,
                       function(x)
-                      as.vector(x[,1] -  crossprod(t(x[,-1, drop=FALSE]), coefficients)))
+                      as.vector(x[ , 1] - crossprod(t(x[ , -1, drop = FALSE]), coefficients)))
   outresid <- lapply(residuals,function(x) outer(x,x))
   A2 <- mapply(function(x, y) crossprod(t(crossprod(x, y)), x), W, outresid, SIMPLIFY = FALSE)
   A2 <- Reduce("+", A2)
@@ -418,12 +419,12 @@ pgmm <- function(formula, data, subset, na.action,
   residuals <- lapply(yX,
                       function(x){
                         nz <- rownames(x)
-                        z <- as.vector(x[, 1] - crossprod(t(x[, -1, drop=FALSE]), coefficients))
+                        z <- as.vector(x[ , 1] - crossprod(t(x[ , -1, drop = FALSE]), coefficients))
                         names(z) <- nz
                         z
                       }
                       )
-  fitted.values <- mapply(function(x,y) x[, 1] - y, yX, residuals)
+  fitted.values <- mapply(function(x,y) x[ , 1] - y, yX, residuals)
   if (model == "twosteps") coefficients <- list(coef1s, coefficients)
   args <- list(model          = model,
                effect         = effect,
@@ -532,7 +533,7 @@ extract.data <- function(data, as.matrix = TRUE){
   has.intercept <- attr(trms, 'intercept') == 1
   if (has.intercept == 1){
     # Formula is unable to update formulas with no lhs
-    form <- Formula(update(formula(form), ~. -1))
+    form <- Formula(update(formula(form), ~ . -1))
 #    form <- update(form, ~. -1)
   }
   index <- attr(data, "index")
@@ -566,7 +567,7 @@ G <- function(t){
 }
 
 FD <- function(t){
-  FD <- Id(t)[-1,]
+  FD <- Id(t)[-1, ]
   for (i in 1:(t-1)){
     FD[i,i] <- -1
   }
@@ -574,14 +575,14 @@ FD <- function(t){
 }
 
 Id <- function(t){
-  diag(rep(1,t))
+  diag(rep(1, t))
 }
 
 FSM <- function(t, fsm){
   switch(fsm,
          "I" = Id(t),
          "G" = G(t),
-         "GI" = bdiag(G(t-1), diag(1,t)),
+         "GI" = bdiag(G(t-1), diag(1, t)),
          "full" = rbind(cbind(G(t-1), FD(t)), cbind(t(FD(t)), Id(t)))
          )
 }
@@ -595,7 +596,7 @@ makegmm <- function(x, g, TL1, collapse = FALSE){
     x <- lapply(x, rev)
     m <- matrix(0, T - TL1, min(T - rg[1], rg[2]+1-rg[1]))
     for(y in 1:length(x)){ m[y,1:length(x[[y]])]<-x[[y]]}
-    result<-m
+    result <- m
    }
    else {
      lx <- sapply(x, length)
