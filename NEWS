@@ -3,14 +3,15 @@ Changes in version 1.7-0
 
   * lag, lead, diff for pseries objects: functions now take care of the time
     dimension when shifting observations within each individual. Previously, 
-    shifting was performed row-wise (neglecting the time dimension).
-    The argument 'shift' is introduced to control shifting behaviour, possible 
-    values are "time" (default) and "row" (behaviour up until and incl. plm 1.6-6).
-    Note that, however, the diff-ing performed in first-difference model estimation
-    by plm(..., model = "fd") is based on row-wise differences of the model matrix.
+    shifting was performed row-wise within each individual (neglecting the time
+    dimension). The argument 'shift' is introduced to control shifting behaviour,
+    possible values are "time" (default) and "row" (behaviour up until and incl.
+    plm 1.6-6). Note that, however, the diff-ing performed in first-difference 
+    model estimationby plm(..., model = "fd") is based on row-wise differences of
+    the model matrix per individual.
   * pbnftest: new function for (modified) BNF statistic (Durbin-Watson test 
     generalised to panels) and Baltagi/Wu's LBI statistic.
-    (Bhargava/Franzini/Narendranathan (1982), Baltagi/Wu (1999)). 
+    (Bhargava/Franzini/Narendranathan (1982), Baltagi/Wu (1999)).
   * pcdtest: bias-corrected scaled LM test implemented (test = "bcsclm") as in
     Baltagi/Feng/Kao (2012).
   * groupGenerics now used for 'pseries' objects, implemented as a wrapper 

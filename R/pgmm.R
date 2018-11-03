@@ -595,7 +595,7 @@ makegmm <- function(x, g, TL1, collapse = FALSE){
   if (collapse) {      
     x <- lapply(x, rev)
     m <- matrix(0, T - TL1, min(T - rg[1], rg[2]+1-rg[1]))
-    for(y in 1:length(x)){ m[y,1:length(x[[y]])]<-x[[y]]}
+    for (y in 1:length(x)){ m[y, 1:length(x[[y]])] <- x[[y]]}
     result <- m
    }
    else {
@@ -629,7 +629,7 @@ coef.pgmm <- function(object,...){
   coefficients
 }
 
-summary.pgmm <- function(object, robust = TRUE, time.dummies = FALSE, ...){
+summary.pgmm <- function(object, robust = TRUE, time.dummies = FALSE, ...) {
   model <- describe(object, "model")
   effect <- describe(object, "effect")
   transformation <- describe(object, "transformation")
