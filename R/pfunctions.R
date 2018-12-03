@@ -21,6 +21,7 @@ Tapply.pseries <- function(x, effect = c("individual", "time", "group"), func, .
                      "time"      = index[[2]],
                      "group"     = index[[3]]
                      )
+    x <- as.numeric(x)
     z <- Tapply.default(x, effect, func, ...)
     attr(z, "index") <- index
     class(z) <- c("pseries", class(z))
