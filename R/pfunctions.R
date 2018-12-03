@@ -154,18 +154,15 @@ Within.pseries <- function(x, effect = c("individual", "time", "group", "twoways
     }
 }
 
-Within.matrix <- function(x, effect, rm.null = TRUE,...){
+Within.matrix <- function(x, effect, rm.null = TRUE, ...){
     if (is.null(attr(x, "index"))){
         result <- Within.default(x, effect, ...)
-        othervar <- .colSums(abs(x), m = nrow(x), n = ncol(x), na.rm = TRUE) > 1E-12
+        othervar <- colSums(abs(x)) > sqrt(.Machine$double.eps)
         if (rm.null){
             result <- result[ , othervar, drop = FALSE]
             attr(result, "constant") <- character(0)
         }
-        else{
-            result <- result[ , drop = FALSE]
-            attr(result, "constant") <- colnames(x)[!othervar]
-        }
+        else attr(result, "constant") <- colnames(x)[! othervar]
         result
     }
     else{
@@ -173,8 +170,8 @@ Within.matrix <- function(x, effect, rm.null = TRUE,...){
         if (effect == "twoways"){
             xindex <- attr(x, "index")
             if (is.pbalanced(xindex)) {
-              result <- x - Between(x, "individual") - Between(x, "time") +
-                            matrix(.colMeans(x, m = nrow(x), n = ncol(x)), nrow = nrow(x), ncol = ncol(x), byrow = TRUE)
+                result <- x - Between(x, "individual") - Between(x, "time") +
+                    matrix(colMeans(x), nrow = nrow(x), ncol = ncol(x), byrow = TRUE)
             }
             else{ # unbalanced twoways
                 time <- index(xindex, "time")
@@ -190,6 +187,7 @@ Within.matrix <- function(x, effect, rm.null = TRUE,...){
     }
     result
 }
+
 
 ############### LAG and DIFF
 #
