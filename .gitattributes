@@ -17,7 +17,6 @@ R/experimental.R -text
 R/groupGenerics_pseries.R -text
 R/is.pconsecutive_pbalanced.R -text
 R/make.pconsecutive_pbalanced.R -text
-R/pFormula.R -text
 R/test_cd.R -text
 R/test_cips.R -text
 R/test_general.R -text
