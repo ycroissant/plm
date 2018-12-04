@@ -531,3 +531,39 @@ if(stat < min(cv)) {
 
 return(pval)
 }
+
+
+## gettvalue: helper function to extract one or more t value(s)
+## (coef/s.e.) for a coefficient from model object useful if one wants
+## to avoid the computation of a whole lot of values with summary()
+gettvalue <- function(x, coefname) {
+  # x: model object (usually class plm or lm) coefname: character
+  # indicating name(s) of coefficient(s) for which the t value(s) is
+  # (are) requested return: named numeric vector of length ==
+  # length(coefname) with requested t value(s)
+    beta <- coef(x)[coefname]
+    se <- sqrt(diag(vcov(x))[coefname])
+    tvalue <- beta / se
+    return(tvalue)
+}
+
+
+
+pmerge <- function(x, y, ...) {
+  ## non-exported
+  ## Returns a data.frame, not a pdata.frame.
+  ## pmerge is used to merge pseries or pdata.frames into a data.frame or
+  ## to merge a pseries to a data.frame
+  
+  ## transf. if pseries or pdata.frame
+  if(inherits(x, "pseries")) x <- pseries2pdataframe(x, pdata.frame = FALSE)
+  if(inherits(y, "pseries")) y <- pseries2pdataframe(y, pdata.frame = FALSE)
+  if(inherits(x, "pdata.frame")) x <- as.data.frame(x, keep.attributes = FALSE)
+  if(inherits(y, "pdata.frame")) y <- as.data.frame(y, keep.attributes = FALSE)
+  
+  # input to merge() needs to be data.frames; not yet suitable for 3rd index (group variable)
+  z <- merge(x, y,
+             by.x = dimnames(x)[[2]][1:2],
+             by.y = dimnames(y)[[2]][1:2], ...)
+  return(z)
+}

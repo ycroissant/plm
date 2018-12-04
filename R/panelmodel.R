@@ -10,6 +10,7 @@
 # - print
 # - update
 # - deviance
+# - nobs
 
 ## plm methods :
 # - summary
@@ -53,6 +54,16 @@ print.panelmodel <- function(x,digits=max(3, getOption("digits") - 2),
   print(coef(x),digits=digits)
   cat("\n")
   invisible(x)
+}
+
+# nobs() function to extract total number of observations used for estimating the panelmodel
+# like stats::nobs for lm objects
+# NB: here, use object$residuals rather than residuals(object)
+#     [b/c the latter could do NA padding once NA padding works for plm objects.
+#      NA padded residuals would yield wrong result for nobs!]
+nobs.panelmodel <- function(object, ...) {
+  if (inherits(object, "plm") | inherits(object, "panelmodel")) return(length(object$residuals))
+    else stop("Input 'object' needs to be of class 'plm' or 'panelmodel'")
 }
 
 # Almost the same as the default method except that update.formula is
@@ -184,7 +195,13 @@ print.summary.plm <- function(x, digits = max(3, getOption("digits") - 2),
   if (rdf > 5L) {
     save.digits <- unlist(options(digits = digits))
     on.exit(options(digits = save.digits))
-    print(sumres(x))
+    sr <- summary(unclass(resid(x)))
+    srm <- sr["Mean"]
+    if (abs(srm)<1e-10){
+        sr <- sr[c(1:3,5:6)]
+    }
+    print(sr)
+#    print(sumres(x))
   } else if (rdf > 0L) print(residuals(x), digits = digits)
   if (rdf == 0L) { # estimation is a perfect fit
    cat("ALL", x$df[1L], "residuals are 0: no residual degrees of freedom!")

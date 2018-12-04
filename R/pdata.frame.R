@@ -22,6 +22,7 @@
 ## - summary
 ## - plot.summary
 ## - print.summary
+## - is.pseries
 
 ## pdim :
 ## - pdim.default
@@ -37,6 +38,14 @@
 ## - index.pdata.frame
 ## - index.pseries
 ## - index.panelmodel
+
+fancy.row.names <- function(index, sep = "-") {
+  if (length(index) == 2) {result <- paste(index[[1]], index[[2]], sep = sep)}
+  # this in the order also used for sorting (group, id, time):
+  if (length(index) == 3) {result <- paste(index[[3]], index[[1]], index[[2]], sep = sep)}
+  return(result)
+}
+
 
 pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
                         stringsAsFactors = default.stringsAsFactors(),
@@ -651,10 +660,15 @@ summary.pseries <- function(object, ...) {
         xm <- mean(object, na.rm = TRUE)
         Bid <-  Between(object, na.rm = TRUE)
         Btime <-  Between(object, effect = "time", na.rm = TRUE)
-        res <- structure(c(total = sumsq(object),
-                           between_id = sumsq(Bid),
-                           between_time = sumsq(Btime)), 
-                         class = c("summary.pseries", "numeric"))
+        ## res <- structure(c(total = sumsq(object),
+        ##                    between_id = sumsq(Bid),
+        ##                    between_time = sumsq(Btime)), 
+        ##                  class = c("summary.pseries", "numeric"))
+        res <- structure(c(total = sum( (na.omit(object) - mean(object, na.rm = TRUE)) ^ 2),
+                           between_id = sum( (na.omit(Bid) - mean(Bid, na.rm = TRUE)) ^ 2),
+                           between_time = sum( (na.omit(Btime) - mean(Btime, na.rm = TRUE)) ^ 2)), 
+                           class = c("summary.pseries", "numeric"))
+        
     } else {
         class(object) <- setdiff(class(object), c("pseries"))
         res <- summary(object, ...)
@@ -685,6 +699,23 @@ print.summary.pseries <- function(x, ...){
     }
 }
 
+is.pseries <- function(object) {
+ # checks if an object has the necessary features to qualify as a 'pseries'
+  res <- TRUE
+  if (!inherits(object, "pseries")) res <- FALSE
+  # class 'pseries' is always on top of basic class: min 2 classes needed, if 2 classes "pseries" needs to be first entry
+  if (!length(class(object)) >= 2L) res <- FALSE
+  if (length(class(object)) == 2L & class(object)[1] != "pseries") res <- FALSE
+  if (!has.index(object)) res <- FALSE
+  if (!any(c(is.numeric(object), is.factor(object), is.logical(object), 
+             is.character(object), is.complex(object)))) {
+    res <- FALSE
+  }
+  
+  return(res)
+}
+
+    
 ## pdim 
 # Note: some parts of this code are copied verbatim to is.pbalanced()
 pdim <- function(x, ...){

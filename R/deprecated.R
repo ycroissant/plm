@@ -705,3 +705,127 @@ indexes <- function(x){
 print.indexes <- function(x, ...){
   cat(paste("Index: (individual=",x$id,") and (time=",x$time,")\n",sep=""))
 }
+
+
+sumres <- function(x){
+  sr <- summary(unclass(resid(x)))
+  srm <- sr["Mean"]
+  if (abs(srm)<1e-10){
+    sr <- sr[c(1:3,5:6)]
+  }
+  sr
+}
+
+sumsq <- function(x, ...){
+    xb <- mean(x, na.rm = TRUE)
+    sum((na.omit(x)-xb)^2)
+}
+
+
+
+# suml(x) is replaced by Reduce("+", x)
+## suml <- function(x){
+##   n <- length(x)
+##   if (!is.null(dim(x[[1]]))){
+##     d <- dim(x[[1]])
+##     s <- matrix(0,d[1],d[2])
+##     for (i in 1:n){
+##       s <- s+x[[i]]
+##     }
+##   }
+##   else{
+##     s <- rep(0,length(x[[n]]))
+##     for (i in 1:n){
+##       s <- s+x[[i]]
+##     }
+##   }
+##   s
+## }
+
+oppl <- function(x,y,func){
+  n <- length(x)
+  z <- list()
+  if (!is.list(y)){
+    for (i in 1:n){
+      t <- paste("\"",func,"\"","(x[[i]],y)",sep="")
+      z[[i]] <- eval(parse(text=t))
+    }
+  }
+  else{
+    for (i in 1:n){
+      t <- paste("\"",func,"\"","(x[[i]],y[[i]])",sep="")
+      z[[i]] <- eval(parse(text=t))
+    }
+  }
+  z
+}
+
+rbindl <- function(x){
+  n <- length(x)
+  d <- dim(x[[1]])
+  s <- c()
+  for (i in 1:n){
+    s <- rbind(s,x[[i]])
+  }
+}
+
+lev2var <- function(x, ...){
+  # takes a data.frame and returns a vector of variable names, the
+  # names of the vector being the names of the effect
+  
+  is.fact <- sapply(x, is.factor)
+  if (sum(is.fact) > 0){
+    not.fact <- names(x)[!is.fact]
+    names(not.fact) <- not.fact
+    x <- x[is.fact]
+    wl <- lapply(x,levels)
+    # nl is the number of levels for each factor
+    nl <- sapply(wl,length)
+    # nf is a vector of length equal to the total number of levels
+    # containing the name of the factor
+    nf <- rep(names(nl),nl)
+    result <- unlist(wl)
+    names(result) <- nf
+    result <- paste(names(result),result,sep="")
+    names(nf) <- result
+    c(nf, not.fact)
+  }
+  else{
+    z <- names(x)
+    names(z) <- z
+    z
+  }
+}
+
+
+## TODO: is print.form actually used? - delete?
+print.form <- function(x, length.line){
+  x <- deparse(x,width.cutoff=length.line)
+  n <- length(x)
+  cat(paste(x[1],"\n",sep=""))
+  if (n>1){
+    for (i in 2:n){
+      cat(paste(x[i],"\n",sep=""))
+    }
+  }
+}
+
+
+pseries2pdataframe <- function(x, pdata.frame = TRUE, ...) {
+  ## non-exported
+  ## Transforms a pseries in a (p)data.frame with the indices as regular columns
+  ## in positions 1, 2 and (if present) 3 (individual index, time index, group index).
+  ## if pdataframe = TRUE -> return a pdata.frame, if FALSE -> return a data.frame
+  ## ellipsis (dots) passed on to pdata.frame()
+  if (!inherits(x, "pseries")) stop("input needs to be of class 'pseries'")
+  indices <- attr(x, "index")
+  class(indices) <- setdiff(class(indices), "pindex")
+  vx <- remove_pseries_features(x)
+  dfx <- cbind(indices, vx)
+  dimnames(dfx)[[2]] <- c(names(indices), deparse(substitute(x)))
+  if (pdata.frame == TRUE) {
+    res <- pdata.frame(dfx, index = names(indices), ...)
+   } else { res <- dfx }
+  return(res)
+}
+
