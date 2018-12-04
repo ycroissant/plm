@@ -24,6 +24,7 @@ R/pgrangertest.R -text
 R/piest.R -text
 R/pldv.R -text
 R/plm.R -text
+R/plm.list.R -text
 R/pmg.R -text
 R/pserial.R -text
 R/ptest.R -text
