@@ -2,15 +2,13 @@
 /DESCRIPTION -text
 /NAMESPACE -text
 /NEWS -text
-R/attributes.R -text
 R/cipstest.R -text
 R/deprecated.R -text
 R/detect_lin_dep_alias.R -text
 R/divers.R -text
 R/ercomp.R -text
-R/fixef.R -text
+R/experimental.R -text
 R/groupGenerics_pseries.R -text
-R/index.R -text
 R/is.pconsecutive_pbalanced.R -text
 R/make.pconsecutive_pbalanced.R -text
 R/options.R -text
@@ -31,9 +29,8 @@ R/pserial.R -text
 R/ptest.R -text
 R/purtest.R -text
 R/pvcm.R -text
-R/ranef.R -text
+R/ranfixef.R -text
 R/vcovG.R -text
-R/within_intercept.R -text
 /THANKS -text
 data/Cigar.rda -text
 data/Crime.rda -text

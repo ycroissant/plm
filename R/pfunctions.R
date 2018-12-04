@@ -457,7 +457,7 @@ pdiff <- function(x, cond, effect = c("individual", "time"), has.intercept = FAL
         # for effect = "time": restore original order of x:
         if (effect == "time") result <- result[match(seq_len(n), order_cond), ]
         result <- na.omit(result)
-        result <- result[ , apply(result, 2, var) > 1E-12, drop = FALSE]
+        result <- result[ , apply(result, 2, var) > sqrt(.Machine$double.eps, drop = FALSE]
         if (has.intercept){
             result <- cbind(1, result)
             colnames(result)[1] <- "(intercept)"
