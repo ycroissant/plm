@@ -1,3 +1,18 @@
+## This file contains the relevant transformations used for panel data,
+## namely of course Within and between/Between, but also Sum (usefull for
+## unbalanced panels).
+
+## They are all generics and have default, pseries and matrix
+## methods. The effect argument is an index vector for the default method
+## and a character ("individual", "time", "group", "twoways") for the
+## pseries method. It can be any of the two for the matrix method (the
+## second one only if the matrix argument has an index attribute
+
+## diff, lag and lead methods for pseries are also provided (lead is a
+## generic exported by plm, lag and diff being generic exported by
+## stats). All of them have a shift argument which can be either "time"
+## or "row".
+
 Tapply <- function(x, ...){
     UseMethod("Tapply")
 }
@@ -189,7 +204,6 @@ Within.matrix <- function(x, effect, rm.null = TRUE, ...){
     result
 }
 
-
 ############### LAG and DIFF
 #
 # lag/lead/diff for pseries are a wrappers for lagt, leadt, difft (if shift = "time") and 
@@ -197,9 +211,12 @@ Within.matrix <- function(x, effect, rm.null = TRUE, ...){
 #
 # The "t" and "r" methods are not exported (by intention).
 #
-# The "t" methods perform shifting while taking the time period into account (they "look" at the value in the time dimension).
-# The "r" methods perform shifting row-wise (without taking the value in the time dimension into account).
-#
+
+# The "t" methods perform shifting while taking the time period into
+# account (they "look" at the value in the time dimension).
+
+# The "r" methods perform shifting row-wise (without taking the value
+# in the time dimension into account).
 
 # Generic needed only for lead (lag and diff generics are already included in base R)
 lead <- function(x, k = 1, ...) {
@@ -334,12 +351,17 @@ lagr.pseries <- function(x, k = 1, ...) {
     id <- index[[1]]
     time <- index[[2]]
   
-    # catch the case when an index of pdata.frame shall be lagged (index variables are always factors)
-    # NB: this catches - unintentionally - also the case when a factor variable is the same "on the character level"
-    # as one of the corresponding index variables but not the index variable itself
+    # catch the case when an index of pdata.frame shall be lagged
+    # (index variables are always factors) NB: this catches -
+    # unintentionally - also the case when a factor variable is the
+    # same "on the character level" as one of the corresponding index
+    # variables but not the index variable itself
     #
-    # -> shall we prevent lagging of index variables at all? -> turned off for now, 2016-03-03
-    # if (is.factor(x)) if (all(as.character(x) == as.character(id)) | all(as.character(x)==as.character(time))) stop("Lagged vector cannot be index.")
+    # -> shall we prevent lagging of index variables at all? -> turned
+    # off for now, 2016-03-03 if (is.factor(x)) if
+    # (all(as.character(x) == as.character(id)) |
+    # all(as.character(x)==as.character(time))) stop("Lagged vector
+    # cannot be index.")
   
     alagr <- function(x, ak){
         if (round(ak) != ak) stop("Lagging value 'k' must be whole-numbered (positive, negative or zero)")
@@ -422,53 +444,10 @@ diffr.pseries <- function(x, lag = 1, ...){
     return(res)
 }
 
-
-
-## pdiff is (only) used in model.matrix.pFormula to calculate the model.matrix for FD models,
-## works for effect = "individual" and "time", see model.matrix on how to call pdiff.
-## Result is in order (id, time) for both effects
-## Performs row-wise shifting
-pdiff <- function(x, cond, effect = c("individual", "time"), has.intercept = FALSE){
-    effect <- match.arg(effect)
-    cond <- as.numeric(cond)
-    n <- ifelse(is.matrix(x), nrow(x), length(x))
-  
-    # code below is written for effect="individual". If effect="time" is
-    # requested, order x so that the code works and later restore original order of x
-    if (effect == "time") { order_cond <- order(cond)
-        if (!is.matrix(x)) { x <- x[order_cond]} 
-        else {x <- x[order_cond, ] }
-        cond <- cond[order_cond]
-    }
-  
-    cond <- c(NA, cond[2:n] - cond[1:(n-1)]) # this assumes a certain ordering
-    cond[cond != 0] <- NA
-    
-    if (!is.matrix(x)){
-        result <- c(NA, x[2:n] - x[1:(n-1)])
-        result[is.na(cond)] <- NA
-        # for effect = "time": restore original order of x:
-        if (effect == "time") result <- result[match(seq_len(n), order_cond)]
-        result <- na.omit(result)
-    }
-    else{
-        result <- rbind(NA, x[2:n, , drop=FALSE] - x[1:(n-1), , drop = FALSE])
-        result[is.na(cond), ] <- NA
-        # for effect = "time": restore original order of x:
-        if (effect == "time") result <- result[match(seq_len(n), order_cond), ]
-        result <- na.omit(result)
-        result <- result[ , apply(result, 2, var) > sqrt(.Machine$double.eps), drop = FALSE]
-        if (has.intercept){
-            result <- cbind(1, result)
-            colnames(result)[1] <- "(intercept)"
-        }
-    }
-    attr(result, "na.action") <- NULL
-    result
-}
-
-
-## TODO: why do we have a second pdiff() now (introduced in rev. 622)?
+## pdiff is (only) used in model.matrix.pFormula to calculate the
+## model.matrix for FD models, works for effect = "individual" only,
+## see model.matrix on how to call pdiff.  Result is in order (id,
+## time) for both effects Performs row-wise shifting
 pdiff <- function(x, effect = c("individual", "time"), has.intercept = FALSE){
   # NB: x is assumed to have an index attribute, e.g., a pseries
   #     can check with has.index(x)
