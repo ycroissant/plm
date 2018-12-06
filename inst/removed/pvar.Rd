@@ -1,0 +1,79 @@
+\name{pvar}
+\alias{pvar}
+\alias{pvar.data.frame}
+\alias{pvar.pdata.frame}
+\alias{pvar.matrix}
+\alias{print.pvar}
+
+\title{Check for Cross-Sectional and Time Variation}
+
+\description{This function checks for each variable of a panel if it
+varies cross-sectionally and over time.}
+
+\usage{
+pvar(x, \dots)
+\method{pvar}{data.frame}(x, index = NULL, \dots)
+\method{pvar}{pdata.frame}(x, \dots)
+\method{pvar}{matrix}(x, index = NULL, \dots)
+\method{print}{pvar}(x, \dots)
+}
+
+\arguments{
+ \item{x}{a \code{(p)data.frame} or a \code{matrix},}
+ \item{index}{see \code{\link{pdata.frame}},}
+ \item{\dots}{further arguments.}
+}
+
+\note{
+ \code{pvar} can be time consuming for ``big'' panels.
+}
+
+\value{ 
+An object of class \code{pvar} containing the following elements:
+
+ \item{id.variation}{a logical vector with \code{TRUE} values if the
+  variable has individual variation, \code{FALSE} if not,}
+ \item{time.variation}{a logical vector with \code{TRUE} values if the
+  variable has time variation, \code{FALSE} if not,}
+ \item{id.variation_anyNA}{a logical vector with \code{TRUE} values if the
+  variable has at least one individual-time combination with all NA values
+  in the individual dimension for at least one time period, \code{FALSE} if not,}
+ \item{time.variation_anyNA}{a logical vector with \code{TRUE} values if the
+  variable has at least one individual-time combination with all NA values
+  in the time dimension for at least one individual, \code{FALSE} if not.}
+}
+
+\details{
+ For (p)data.frame and matrix interface: All-NA columns are removed prior to calculation
+ of variation due to coercing to pdata.frame first.
+}
+
+\seealso{
+ \code{\link{pdim}} to check the dimensions of a 'pdata.frame' (and other objects), 
+}
+
+\author{Yves Croissant}
+
+\examples{
+
+# Gasoline contains two variables which are individual and time indexes
+# and are the first two variables
+data("Gasoline", package = "plm")
+pvar(Gasoline)
+
+# Hedonic is an unbalanced panel, townid is the individual index;
+# the drop.index argument is passed to pdata.frame
+data("Hedonic", package = "plm")
+pvar(Hedonic, "townid", drop.index = TRUE)
+
+# same using pdata.frame
+Hed <- pdata.frame(Hedonic, "townid", drop.index = TRUE)
+pvar(Hed)
+
+# Gasoline with pvar's matrix interface
+Gasoline_mat <- as.matrix(Gasoline)
+pvar(Gasoline_mat)
+pvar(Gasoline_mat, index=c("country", "year"))
+}
+
+\keyword{attribute}

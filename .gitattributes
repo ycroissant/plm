@@ -47,6 +47,14 @@ data/Snmesp.rda -text
 data/SumHes.rda -text
 data/Wages.rda -text
 inst/CITATION -text
+inst/removed/dynformula.Rd -text
+inst/removed/pFormula.Rd -text
+inst/removed/pht.Rd -text
+inst/removed/plm.data.Rd -text
+inst/removed/pvar.Rd -text
+inst/removed/test_model.matrix_pmodel.response_NA.R -text
+inst/removed/test_pvar.R -text
+inst/removed/unused.R -text
 man/Cigar.Rd -text
 man/Crime.Rd -text
 man/EmplUK.Rd -text
