@@ -727,8 +727,10 @@ The basic use of \code{plm} is to indicate the model formula, the
 data and the model to be estimated. For example, the fixed effects
 model and the random effects model are estimated using:
 
-<<>>=
+<<fe>>=
 grun.fe <- plm(inv~value+capital, data = Grunfeld, model = "within")
+@ 
+<<re>>=
 grun.re <- plm(inv~value+capital, data = Grunfeld, model = "random")
 @ 
 

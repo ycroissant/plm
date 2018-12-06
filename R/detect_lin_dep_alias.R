@@ -98,27 +98,44 @@ alias.plm <- function(object, ...) {
   return(stats::alias(lm.fit.obj, ... = dots))
 }
 
-alias.pFormula <- function(object, data,
-                           model = c("pooling", "within", "Between", "between",
-                                     "mean", "random", "fd"),
-                           effect = c("individual", "time", "twoways"),
-                           ...) {
-  dots <- list(...)
-  if (!is.null(dots$inst.method)) stop("alias.plm/alias.pFormula: IV not supported")
-  model <- match.arg(model)
-  effect <- match.arg(effect)
-  formula <- object
+## alias.pFormula <- function(object, data,
+##                            model = c("pooling", "within", "Between", "between",
+##                                      "mean", "random", "fd"),
+##                            effect = c("individual", "time", "twoways"),
+##                            ...) {
+##   dots <- list(...)
+##   if (!is.null(dots$inst.method)) stop("alias.plm/alias.pFormula: IV not supported")
+##   model <- match.arg(model)
+##   effect <- match.arg(effect)
+##   formula <- object
 
-  # check if object is already pFormula, try to convert if not    
-  if (!inherits(formula, "pFormula")) formula <- pFormula(formula)
+##   # check if object is already pFormula, try to convert if not    
+##   if (!inherits(formula, "pFormula")) formula <- pFormula(formula)
   
-  # check if data is already a model frame, convert to if not
-  if (is.null(attr(data, "terms"))) {
-    data <- model.frame.pFormula(pFormula(formula), data)
-  }
+##   # check if data is already a model frame, convert to if not
+##   if (is.null(attr(data, "terms"))) {
+##     data <- model.frame.pFormula(pFormula(formula), data)
+##   }
 
-  plmobj <- plm(formula, data = data, model = model, effect = effect, ...)
-#  print(summary(plmobj))
-  return(alias(plmobj, ...))
+##   plmobj <- plm(formula, data = data, model = model, effect = effect, ...)
+## #  print(summary(plmobj))
+##   return(alias(plmobj, ...))
+## }
+
+
+alias.pdata.frame <- function(object,
+                              model = c("pooling", "within", "Between", "between",
+                                        "mean", "random", "fd"),
+                              effect = c("individual", "time", "twoways"),
+                              ...) {
+    dots <- list(...)
+    if (!is.null(dots$inst.method)) stop("alias.plm/alias.pFormula: IV not supported")
+    model <- match.arg(model)
+    effect <- match.arg(effect)
+      # check if data is already a model frame, if not exit
+    if (is.null(attr(object, "terms")))
+        stop("the argument must be a model.frame")
+    formula <- attr(object, "formula")
+    plmobj <- plm(formula, data = object, model = model, effect = effect, ...)
+    return(alias(plmobj, ...))
 }
-

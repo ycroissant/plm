@@ -40,8 +40,8 @@ fixef.plm <- function(object, effect = NULL,
     # NB: These formulae do not give the correct results in the two-ways unbalanced case,
     #     all other cases (twoways/balanced; oneway(ind/time)/balanced/unbalanced) seem to
     #     work with these formulae.
-    Xb <- model.matrix(formula, data, rhs = 1, model = "between", effect = effect)
-    yb <- pmodel.response(formula, data = data, model = "between", effect = effect)
+    Xb <- model.matrix(data, rhs = 1, model = "between", effect = effect)
+    yb <- pmodel.response(data, model = "between", effect = effect)
     fixef <- yb - as.vector(crossprod(t(Xb[, nw, drop = FALSE]), coef(object)))
   
     # use robust vcov if supplied
@@ -213,8 +213,9 @@ within_intercept.plm <- function(object, vcov = NULL, ...) {
   transY  <- withinY + meanY
   
   withinM <- model.matrix(object) # returns the model.matrix specific to the 'effect' of the est. FE model object
-  M <- model.matrix(pFormula(object$formula), data = mf) # model.matrix of original data
-  M <- M[, colnames(M) %in% colnames(withinM)]           # just to be sure: should be same columns
+#MM  M <- model.matrix(pFormula(object$formula), data = mf) # model.matrix of original data
+    M <- model.matrix(mf)
+    M <- M[, colnames(M) %in% colnames(withinM)]           # just to be sure: should be same columns
   meansM <- colMeans(M)
   transM <- t(t(withinM) + meansM)
   

@@ -1,6 +1,6 @@
 starX <- function(formula, data, model, rhs = 1, effect){
     apdim <- pdim(data)
-    amatrix <- model.matrix(formula, data, model, effect, rhs)
+    amatrix <- model.matrix(data, model, effect, rhs)
     T <- length(unique(index(data, 2)))
     N <- length(unique(index(data, 1)))
     if (apdim$balanced){
@@ -117,7 +117,7 @@ plm <- function(formula, data, subset, weights, na.action,
     }
     
     # the use of the instrument argument is deprecated, use 2-part Formulas instead
-    if (!is.null(dots$instruments)){
+    if (! is.null(dots$instruments)){
         formula <- as.Formula(formula, dots$instruments)
         deprec.instruments <- paste("the use of the instruments argument is deprecated,",
                                     "use two-part formulas instead")
@@ -128,26 +128,29 @@ plm <- function(formula, data, subset, weights, na.action,
     # coerce them
     orig_rownames <- row.names(data)
     if (! inherits(data, "pdata.frame")) data <- pdata.frame(data, index)
-    if (! inherits(formula, "pFormula")) formula <- pFormula(formula)
-
+#PM    if (! inherits(formula, "pFormula")) formula <- pFormula(formula)
+    if (! inherits(formula, "Formula")) formula <- as.Formula(formula)
     # in case of 2-part formula, check whether the second part should
     # be updated, e.g. y ~ x1 + x2 + x3 | . - x2 + z becomes 
     # y ~ x1 + x2 + x3 | x1 + x3 + z
     # use length(formula)[2] because the length is now a vector of length 2
     if (length(formula)[2] == 2) formula <- expand.formula(formula)
-
     # eval the model.frame
     cl <- match.call()
     mf <- match.call(expand.dots = FALSE)
-    m <- match(c("formula", "data", "subset", "weights", "na.action"), names(mf), 0)
+#    m <- match(c("formula", "data", "subset", "weights", "na.action"), names(mf), 0)
+    m <- match(c("data", "formula", "subset", "weights", "na.action"), names(mf), 0)
     mf <- mf[c(1, m)]
+    names(mf)[2:3] <- c("formula", "data")
     mf$drop.unused.levels <- TRUE
+#    mf[[1]] <- as.name("model.frame")
     mf[[1]] <- as.name("model.frame")
     # use the pFormula and pdata.frame which were created if necessary (and not
     # the original formula / data)
-    mf$formula <- formula
-    mf$data <- data
+    mf$formula <- data
+    mf$data <- formula
     data <- eval(mf, parent.frame())
+
     # preserve original row.names for data [also fancy rownames]; so functions
     # like pmodel.response(), model.frame(), model.matrix(), residuals() return
     # the original row.names eval(mf, parent.frame()) returns row.names as
@@ -168,24 +171,28 @@ plm <- function(formula, data, subset, weights, na.action,
                  random.models = random.models,
                  random.dfcor = random.dfcor,
                  inst.method = inst.method)
-    result <- plm.fit(formula, data, model, effect, random.method,
+    result <- plm.fit(data, model, effect, random.method,
                       random.models, random.dfcor, inst.method)
     result$call <- cl
     result$args <- args
     result
 }
 
-plm.fit <- function(formula, data, model, effect, random.method, 
+#plm.fit <- function(formula, data, model, effect, random.method, 
+#                    random.models, random.dfcor, inst.method){
+plm.fit <- function(data, model, effect, random.method, 
                     random.models, random.dfcor, inst.method){
-    
+    formula <- attr(data, "formula")
     # check for 0 cases like in stats::lm.fit (e.g. due to NA dropping) 
     if (nrow(data) == 0L) stop("0 (non-NA) cases")
 
     # if a random effect model is estimated, compute the error components
     if (model == "random"){
         is.balanced <- is.pbalanced(data)
-        estec <- ercomp(formula, data, effect, method = random.method,
-                        models = random.models, dfcor = random.dfcor)
+        ## estec <- ercomp(formula, data, effect, method = random.method,
+        ##                 models = random.models, dfcor = random.dfcor)
+        estec <- ercomp(data, effect, method = random.method,
+                        models = random.models, dfcor = random.dfcor)        
         sigma2 <- estec$sigma2
         theta <- estec$theta
         if (length(formula)[2] == 2 && effect == "twoways")
@@ -200,9 +207,9 @@ plm.fit <- function(formula, data, model, effect, random.method,
         # extract the model.matrix and the model.response actually, this can be
         # done by providing model.matrix and pmodel.response's methods
         # to pdata.frames
-        X <- model.matrix(formula, data, rhs = 1, model = model, 
+        X <- model.matrix(data, rhs = 1, model = model, 
                           effect = effect, theta = theta, cstcovar.rm = "all")
-        y <- pmodel.response(formula, data = data, model = model, 
+        y <- pmodel.response(data, model = model, 
                              effect = effect, theta = theta)
         if (ncol(X) == 0) stop("empty model")
         
@@ -218,28 +225,28 @@ plm.fit <- function(formula, data, model, effect, random.method,
         # have a multi-parts formula)
         if (length(formula)[2] > 1){
             if (length(formula)[2] == 2){
-                W <- model.matrix(formula, data, rhs = 2,
+                W <- model.matrix(data, rhs = 2,
                                   model = model, effect = effect,
                                   theta = theta, cstcovar.rm = "all")
             }
             else{
-                W <- model.matrix(formula, data, rhs = c(2, 3), model = model,
+                W <- model.matrix(data, rhs = c(2, 3), model = model,
                                       effect = effect, theta = theta, cstcovar.rm = "all")
             }
             if (model == "random" && inst.method != "bvk"){
                 # the bvk estimator seems to have disappeared
                 X <- X / sqrt(sigma2["idios"])
                 y <- y / sqrt(sigma2["idios"])
-                W1 <- model.matrix(formula, data, rhs = 2, model = "within",
+                W1 <- model.matrix(data, rhs = 2, model = "within",
                                    effect = effect, theta = theta, cstcovar.rm = "all")
-                B1 <- model.matrix(formula, data, rhs = 2, model = "Between",
+                B1 <- model.matrix(data, rhs = 2, model = "Between",
                                    effect = effect, theta = theta, cstcovar.rm = "all")
                 
                 if (inst.method %in% c("am", "bms")) 
                     StarW1 <- starX(formula, data, rhs = 2, model = "within",
                                     effect = effect)
                 if (length(formula)[2] == 3){
-                    W2 <- model.matrix(formula, data, rhs = 3, model = "within",
+                    W2 <- model.matrix(data, rhs = 3, model = "within",
                                            effect = effect, theta = theta, cstcovar.rm = "all")
                     if (inst.method == "bms")
                         StarW2 <- starX(formula, data, rhs = 3, model = "within",
@@ -289,9 +296,9 @@ plm.fit <- function(formula, data, model, effect, random.method,
         Dmu <- model.matrix( ~ factor(index(data)[[2]]) - 1)
         attr(Dmu, "index") <- index(data)
         Dmu <- Dmu - theta * Between(Dmu, "individual")
-        X <- model.matrix(formula, data, rhs = 1, model = "random", 
+        X <- model.matrix(data, rhs = 1, model = "random", 
                           effect = "individual", theta = theta)
-        y <- pmodel.response(formula, data = data, model = "random", 
+        y <- pmodel.response(data, model = "random", 
                              effect = "individual", theta = theta)
         P <- solve(diag(TS) + phi2mu * crossprod(Dmu))
         XPX <- crossprod(X)    - phi2mu * crossprod(X, Dmu) %*% P %*% crossprod(Dmu, X)
@@ -300,8 +307,8 @@ plm.fit <- function(formula, data, model, effect, random.method,
 
         # residuals 'e' are not the residuals of a quasi-demeaned
         # model but of the 'outer' model
-        e <- pmodel.response(formula, data = data, model = "pooling", effect = effect) -
-            as.numeric(model.matrix(formula, data, rhs = 1, model = "pooling") %*% gamma)
+        e <- pmodel.response(data, model = "pooling", effect = effect) -
+            as.numeric(model.matrix(data, rhs = 1, model = "pooling") %*% gamma)
         result <- list(coefficients = gamma,
                        vcov         = solve(XPX),
                        formula      = formula,

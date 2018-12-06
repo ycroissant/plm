@@ -78,7 +78,6 @@ man/make.pconsecutive.Rd -text
 man/model.frame_model.matrix.Rd -text
 man/mtest.Rd -text
 man/nobs.Rd -text
-man/pFormula.Rd -text
 man/pFtest.Rd -text
 man/pbgtest.Rd -text
 man/pbltest.Rd -text

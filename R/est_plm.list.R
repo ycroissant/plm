@@ -127,10 +127,10 @@ plm.list <- function(formula, data, subset, na.action,
       WW <- lapply(models,
                    function(x){
                      if (length(formula(x))[2] == 3) rhss = c(2, 3) else rhss = 2
-                     model.matrix(formula(x), model.frame(x), rhs = rhss, model = "within")
+                     model.matrix(model.frame(x), rhs = rhss, model = "within")
                    }
                    )
-      WB <- lapply(models, function(x) model.matrix(formula(x), model.frame(x), rhs = 2, model = "Between"))
+      WB <- lapply(models, function(x) model.matrix(model.frame(x), rhs = 2, model = "Between"))
     }
     else WW <- WB <- NULL
     coefnames <- lapply(XB, colnames)
@@ -155,7 +155,7 @@ plm.list <- function(formula, data, subset, na.action,
       W <- lapply(models,
                   function(x){
                     if (length(formula(x))[2] == 3) rhss = c(2, 3) else rhss = 2
-                    model.matrix(formula(x), model.frame(x), rhs = rhss)
+                    model.matrix(model.frame(x), rhs = rhss)
                   }
                   )
     else W <- NULL

@@ -9,7 +9,7 @@ export(# estimation:
        vcovHC, vcovDC, vcovNW, vcovG, vcovBK, vcovSCC, pvcovHC,
        # others:
        plm.data, pdata.frame, pmodel.response,
-       between, Between, Within, lag, lead, pFormula,
+       between, Between, Within, lag, lead, #pFormula,
        punbalancedness, r.squared, has.intercept, detect_lin_dep, is.pseries,
        is.pconsecutive, is.pbalanced, make.pconsecutive, make.pbalanced,
        within_intercept, pvar, pdim, dynformula, index, fixef, ranef, cortab,
@@ -50,11 +50,14 @@ importFrom("graphics",
 ################## register S3 methods ##################
 
 # pFormula
-S3method("model.frame",  "pFormula")
-S3method("model.matrix", "pFormula")
+#S3method("model.frame",  "pFormula")
+#S3method("model.matrix", "pFormula")
+S3method("model.frame",  "pdata.frame")
+S3method("model.matrix", "pdata.frame")
+
 S3method("model.matrix", "plm")
 S3method("model.matrix", "pcce")
-S3method("as.Formula", "pFormula")
+#S3method("as.Formula", "pFormula")
 S3method("pmodel.response", "data.frame")
 #S3method("pmodel.response", "pFormula")
 S3method("pmodel.response", "plm")
@@ -195,6 +198,7 @@ S3method("print", "summary.pseries")
 # ercomp
 S3method("ercomp", "formula")
 S3method("ercomp", "plm")
+S3method("ercomp", "pdata.frame")
 S3method("print", "ercomp")
 # pooltest
 S3method("pooltest", "plm")
@@ -247,7 +251,8 @@ S3method("detect_lin_dep", "matrix")
 S3method("detect_lin_dep", "data.frame")
 S3method("detect_lin_dep", "plm")
 S3method("alias", "plm")
-S3method("alias", "pFormula")
+S3method("alias", "pdata.frame")
+#S3method("alias", "pFormula")
 # is.pconsecutive
 S3method("is.pconsecutive", "data.frame")
 S3method("is.pconsecutive", "pdata.frame")

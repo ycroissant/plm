@@ -205,8 +205,9 @@ pht <-  function(formula, data, subset, na.action, model = c("ht", "am", "bms"),
   data <- eval(mf, parent.frame())
   # estimate the within model without instrument and extract the fixed
   # effects
-    formula <- pFormula(formula)
-  if (length(formula)[2] == 1) stop("a list of exogenous variables should be provided")
+#MM    formula <- pFormula(formula)
+formula <- Formula(formula)
+    if (length(formula)[2] == 1) stop("a list of exogenous variables should be provided")
   else formula <- expand.formula(formula)
   mf$model = "within"
     mf$formula <- formula(formula, rhs = 1)
@@ -221,13 +222,15 @@ pht <-  function(formula, data, subset, na.action, model = c("ht", "am", "bms"),
   N <- pdim$nT$N
   Ti <- pdim$Tint$Ti
   # get the typology of the variables
-    X <- model.matrix(formula, data, rhs = 1, model = "within")
+#MM    X <- model.matrix(formula, data, rhs = 1, model = "within")
+    X <- model.matrix(data, rhs = 1, model = "within")
   # YC 2017/10/03, the intercept is no longer removed while computing
   # the within X matrix, remove it below
     nouveau <- TRUE
     if (! nouveau)  if (colnames(X)[1] == "(Intercept)") X <- X[, -1]
-    W <- model.matrix(formula, data, rhs = 2, model = "within")
-if (nouveau)    W <- model.matrix(formula, data, rhs = 2, model = "within", cstcovar.rm = "none")
+#MM    W <- model.matrix(formula, data, rhs = 2, model = "within")
+    W <- model.matrix(data, rhs = 2, model = "within")
+    if (nouveau)    W <- model.matrix(formula, data, rhs = 2, model = "within", cstcovar.rm = "none")
 #    stop()
   exo.all <- colnames(W)
   all.all <- colnames(X)
@@ -243,7 +246,8 @@ if (nouveau)    W <- model.matrix(formula, data, rhs = 2, model = "within", cstc
            than the number of exogenous time varying variables\n")
     }
   
-    X <- model.matrix(formula, data, model = "pooling", rhs = 1, lhs = 1)
+#MM    X <- model.matrix(formula, data, model = "pooling", rhs = 1, lhs = 1)
+    X <- model.matrix(data, model = "pooling", rhs = 1, lhs = 1)
   if (length(exo.var) > 0) XV <- X[ , exo.var, drop = FALSE] else XV <- NULL
   if (length(edo.var) > 0) NV <- X[ , edo.var, drop = FALSE] else NV <- NULL
   if (length(exo.cst) > 0) XC <- X[ , exo.cst, drop = FALSE] else XC <- NULL
@@ -272,16 +276,21 @@ if (nouveau)    W <- model.matrix(formula, data, rhs = 2, model = "within", cstc
                      balanced = balanced,
                      effect = "individual")
   y <- pmodel.response(data, model = "random", effect = "individual", theta = theta)
-  X <- model.matrix(formula, data, model = "random", effect = "individual", theta = theta)
-  within.inst <- model.matrix(formula, data, model = "within")
-
+#MM  X <- model.matrix(formula, data, model = "random", effect = "individual", theta = theta)
+  X <- model.matrix(data, model = "random", effect = "individual", theta = theta)
+#MM  within.inst <- model.matrix(formula, data, model = "within")
+    within.inst <- model.matrix(data, model = "within")
   if (model == "ht"){
-    between.inst <- model.matrix(formula, data, model = "Between",
+    ##MM between.inst <- model.matrix(formula, data, model = "Between",
+    ##                              rhs = 2)[, exo.var, drop = FALSE]
+    between.inst <- model.matrix(data, model = "Between",
                                  rhs = 2)[, exo.var, drop = FALSE]
     W <- cbind(within.inst, XC, between.inst)
   }
   if (model == "am"){
-    Vx <- model.matrix(formula, data, model = "pooling",
+    ##MM Vx <- model.matrix(formula, data, model = "pooling",
+    ##                    rhs = 2)[, exo.var, drop = FALSE]
+    Vx <- model.matrix(data, model = "pooling",
                        rhs = 2)[, exo.var, drop = FALSE]
     if (balanced){
       # Plus rapide mais pas robuste au non cylindre
@@ -300,7 +309,9 @@ if (nouveau)    W <- model.matrix(formula, data, rhs = 2, model = "within", cstc
     W <- cbind(within.inst, XC, Vxstar)
   }
   if (model == "bms"){
-    between.inst <- model.matrix(formula, data, model = "Between",
+#MM    between.inst <- model.matrix(formula, data, model = "Between",
+#                                 rhs = 2)[, exo.var, drop = FALSE]
+    between.inst <- model.matrix(data, model = "Between",
                                  rhs = 2)[, exo.var, drop = FALSE]
     Vx <- within.inst
     if (balanced){

@@ -14,6 +14,16 @@ ercomp.plm <- function(object, ...){
   object$ercomp
 }
 
+ercomp.pdata.frame <- function(object, effect = c("individual", "time", "twoways", "nested"),
+                               method = NULL,
+                               models = NULL,
+                               dfcor = NULL,
+                               index = NULL, ...){
+    data <- object
+    object <- attr(data, "formula")
+    ercomp(object, data, effect = effect, method = method, models = models, dfcor = dfcor, index = index, ...)
+}
+
 ercomp.formula <- function(object, data, 
                            effect = c("individual", "time", "twoways", "nested"),
                            method = NULL,
@@ -22,14 +32,11 @@ ercomp.formula <- function(object, data,
                            index = NULL, ...){
     effect <- match.arg(effect)
 
-    # if formula is not a pFormula object, coerce it
-    if (!inherits(object, "pFormula")) object <- pFormula(object)
-
+    if (! inherits(object, "Formula")) object <- as.Formula(object)
     # if the data argument is not a pdata.frame, create it using plm
     if (! inherits(data, "pdata.frame"))
         data <- plm(object, data, model = NA, index = index)
-    if(is.null(attr(data, "terms"))) data <- model.frame(object, data)
-    
+    if(is.null(attr(data, "terms"))) data <- model.frame(data, object)
     # check whether the panel is balanced
     balanced <- pdim(data)$balanced
     
@@ -58,7 +65,7 @@ ercomp.formula <- function(object, data,
 
     if (! is.null(method) && method == "nerlove"){
         if (! balanced) stop("Nerlove method only implemented for balanced models")
-        est <- plm.fit(object, data, model = "within", effect = effect)
+        est <- plm.fit(data, model = "within", effect = effect)
         pdim <- pdim(data)
         N <- pdim$nT$n
         TS <- pdim$nT$T
@@ -91,12 +98,12 @@ ercomp.formula <- function(object, data,
         N <- pdim$nT$n
         TS <- pdim$nT$T
         O <- pdim$nT$N
-        wm <- plm.fit(object, data, effect = "individual", model = "within")
+        wm <- plm.fit(data, effect = "individual", model = "within")
         s2eta <- sum(fixef(wm, type = "dmean") ^ 2) / N # TODO: s2esta is calculated 2x
-        X <- model.matrix(object, data, rhs = 1)
+        X <- model.matrix(data, rhs = 1)
         constants <- apply(X, 2, function(x) all(tapply(x, index(data)[[1]], is.constant)))
         if (length(object)[2] > 1){
-            W1 <- model.matrix(object, data, rhs = 2)
+            W1 <- model.matrix(data, rhs = 2)
             ra <- twosls(fixef(wm, type = "dmean")[as.character(index(data)[[1]])], X[, constants, drop = FALSE], W1)
         }
         else{
@@ -157,9 +164,9 @@ ercomp.formula <- function(object, data,
         ids <- attr(data, "index")[[1]]
         gps <- attr(data, "index")[[3]]
         G <- length(unique(gps))
-        Z <- model.matrix(object, data, model = "pooling")
-        X <- model.matrix(object, data, model = "pooling", cstcovar.rm = "intercept")
-        y <- pmodel.response(object, data = data, model = "pooling", effect = "individual")
+        Z <- model.matrix(data, model = "pooling")
+        X <- model.matrix(data, model = "pooling", cstcovar.rm = "intercept")
+        y <- pmodel.response(data, model = "pooling", effect = "individual")
         O <- nrow(Z)
         K <- ncol(Z) - (ncol(Z) - ncol(X))
         pdim <- pdim(data)
@@ -178,7 +185,7 @@ ercomp.formula <- function(object, data,
                         c("nu", "eta", "lambda")))
         
         if (method == "walhus"){
-            estm <- plm.fit(object, data, model = "pooling", effect = "individual")
+            estm <- plm.fit(data, model = "pooling", effect = "individual")
             hateps <- resid(estm, model = "pooling")
             quad <- c(crossprod(Within(hateps, effect = "individual")),
                       crossprod(Between(hateps, effect = "individual") - Between(hateps, effect = "group")),
@@ -208,7 +215,7 @@ ercomp.formula <- function(object, data,
         }
         
         if (method == "amemiya"){
-            estm <- plm.fit(object, data, effect = "individual", model = "within")
+            estm <- plm.fit(data, effect = "individual", model = "within")
             hateps <- resid(estm, model = "pooling")
             quad <- c(crossprod(Within(hateps, effect = "individual")),
                       crossprod(Between(hateps, effect = "individual") - Between(hateps, effect = "group")),
@@ -235,16 +242,16 @@ ercomp.formula <- function(object, data,
         }
         
         if (method == "swar"){
-            yBetaBlambda <- pmodel.response(object, data = data, model = "Between", effect = "individual") -
-                pmodel.response(object, data = data, model = "Between", effect = "group")
+            yBetaBlambda <- pmodel.response(data, model = "Between", effect = "individual") -
+                pmodel.response(data, model = "Between", effect = "group")
             ZBetaBlambda <- Between(Z, "individual") - Between(Z, "group")
             XBetaBlambda <- Between(X, "individual") - Between(X, "group")
             ZBlambda <- Between(Z, "group")
-            yBlambda <- pmodel.response(object, data = data, model = "Between", effect = "group")
+            yBlambda <- pmodel.response(data, model = "Between", effect = "group")
             ZSeta <- Sum(Z, effect = "individual")
             ZSlambda <- Sum(Z, effect = "group")
             XSeta <- Sum(X, effect = "individual")
-            estm1 <- plm.fit(object, data, effect = "individual", model = "within")
+            estm1 <- plm.fit(data, effect = "individual", model = "within")
             estm2 <- lm.fit(ZBetaBlambda, yBetaBlambda)
             estm3 <- lm.fit(ZBlambda, yBlambda)
             quad <- c(crossprod(resid(estm1)),
@@ -273,7 +280,7 @@ ercomp.formula <- function(object, data,
     } ### END nested models
 
     # the "classic" error component model    
-    Z <- model.matrix(object, data)
+    Z <- model.matrix(data)
     O <- nrow(Z)
     K <- ncol(Z) - 1                                                                                       # INTERCEPT
     pdim <- pdim(data)
@@ -284,17 +291,17 @@ ercomp.formula <- function(object, data,
     Nt <- pdim$Tint$nt
     # Estimate the relevant models
     estm <- vector(length = 3, mode = "list")
-    estm[[1]] <- plm.fit(object, data, model = models[1], effect = effect)
+    estm[[1]] <- plm.fit(data, model = models[1], effect = effect)
     # Check what is the second model
     secmod <- na.omit(models[2:3])[1]
     if (secmod %in% c("within", "pooling")){
-        amodel <- plm.fit(object, data, model = secmod, effect = effect)
+        amodel <- plm.fit(data, model = secmod, effect = effect)
         if (effect != "time") estm[[2]] <- amodel
         if (effect != "individual") estm[[3]] <- amodel
     }
     if (secmod %in% c("between", "Between")){
-        if (effect != "time") estm[[2]] <- plm.fit(object, data, model = secmod, effect = "individual")
-        if (effect != "individual") estm[[3]] <- plm.fit(object, data, model = secmod, effect = "time")
+        if (effect != "time") estm[[2]] <- plm.fit(data, model = secmod, effect = "individual")
+        if (effect != "individual") estm[[3]] <- plm.fit(data, model = secmod, effect = "time")
         # check if Between model was estimated correctly
         swar_Between_check(estm[[2]], method)
         swar_Between_check(estm[[3]], method)

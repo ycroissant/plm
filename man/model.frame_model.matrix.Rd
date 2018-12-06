@@ -1,21 +1,21 @@
-\name{model.frame.pFormula}
-\alias{model.frame.pFormula}
-\alias{model.matrix.pFormula}
+\name{model.frame.pdata.frame}
+\alias{model.frame.pdata.frame}
+\alias{model.matrix.pdata.frame}
 \alias{model.matrix.plm}
+\alias{model.frame.plm}
 \alias{model.matrix}
 \alias{model.frame}
 
-
-\title{model.frame and model.matrix for panel data}
+\title{model.frame and model.matrix for panel data}	
 
 \description{Methods to create model frame and model matrix for panel data.
 }
 
 \usage{
 
-\S3method{model.frame}{pFormula}(formula, data, \dots, lhs = NULL, rhs = NULL)
+\S3method{model.frame}{pdata.frame}(formula, data = NULL, \dots, lhs = NULL, rhs = NULL, dot = "separate")
 
-\S3method{model.matrix}{pFormula}(object, data,
+\S3method{model.matrix}{pdata.frame}(object,
              model = c("pooling", "within", "Between", "Sum",
                        "between", "mean", "random", "fd"), 
              effect = c("individual", "time", "twoways", "nested"),
@@ -28,9 +28,9 @@
 }
 
 \arguments{
- \item{object, formula}{an object of class \code{"pFormula"} or an
+ \item{object, formula}{an object of class \code{"pdata.frame"} or an
  estimated model object of class \code{"plm"},}
- \item{data}{a \code{pdata.frame}, see \bold{Details},}
+ \item{data}{a \code{formula}, see \bold{Details},}
  \item{effect}{the effects introduced in the model, one of
   \code{"individual"}, \code{"time"}, \code{"twoways"} or \code{"nested"},}
  \item{model}{one of \code{"pooling"}, \code{"within"}, \code{"Sum"}, \code{"Between"},
@@ -39,6 +39,7 @@
  \item{cstcovar.rm}{remove the constant columns, one of \code{"none", "intercept", "covariates", "all")},}
  \item{lhs}{inherited from package \code{\link[Formula]{Formula}} (see there),}
  \item{rhs}{inherited from package \code{\link[Formula]{Formula}} (see there),}
+ \item{dot}{inherited from package \code{\link[Formula]{Formula}} (see there),}
  \item{\dots}{further arguments.}
 }
 
@@ -64,7 +65,6 @@ Constructing the model frame first ensures proper NA handling, see \bold{Example
 % }
 \seealso{
   \code{\link{pmodel.response}} for (transformed) response variable.\cr
-  \code{\link{pFormula}}, especially for coercing a \code{formula} to a \code{pFormula}.\cr
   \code{\link[Formula]{Formula}} from package \code{Formula}, especially for
   the \code{lhs} and \code{rhs} arguments.
 }
@@ -75,16 +75,19 @@ data("Grunfeld", package = "plm")
 pGrunfeld <- pdata.frame(Grunfeld)
 
 # then make a model frame from a pFormula and a pdata.frame
-pform <- pFormula(inv ~ value + capital)
-mf <- model.frame(pform, data = pGrunfeld)
+#pform <- pFormula(inv ~ value + capital)
+#mf <- model.frame(pform, data = pGrunfeld)
+form <- inv ~ value
+mf <- model.frame(pGrunfeld, form)
 
 # then construct the (transformed) model matrix (design matrix)
 # from formula and model frame
-modmat <- model.matrix(pform, data = mf, model = "within")
-
+#modmat <- model.matrix(pform, data = mf, model = "within")
+modmat <- model.matrix(mf, model = "within")
 
 ## retrieve model frame and model matrix from an estimated plm object
-fe_model <- plm(pform, data = pGrunfeld, model = "within")
+#fe_model <- plm(pform, data = pGrunfeld, model = "within")
+fe_model <- plm(form, data = pGrunfeld, model = "within")
 model.frame(fe_model)
 model.matrix(fe_model)
 
