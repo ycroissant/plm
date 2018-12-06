@@ -46,7 +46,6 @@ pldv <- function(formula, data, subset, weights, na.action,
         yt <- Y$y
         ytm1 <- Y$ly
         # create the matrix of first differenced covariates
-#        X <- model.matrix(formula, mf, model = "fd")
         X <- model.matrix(mf, model = "fd")
         start <- rep(.1, ncol(X))
         names(start) <- colnames(X)
@@ -117,11 +116,9 @@ pldv <- function(formula, data, subset, weights, na.action,
     else{
         # old pglm stuff for the pooling and the random model, with
         # update to allow upper and lower bonds
-#MM        X <- model.matrix(formula, mf, rhs = 1, model = "pooling", effect = "individual")
         X <- model.matrix(mf, rhs = 1, model = "pooling", effect = "individual")
         
         if (ncol(X) == 0) stop("empty model")
-#MM        y <- pmodel.response(formula, mf, model = "pooling", effect = "individual")
         y <- pmodel.response(mf, model = "pooling", effect = "individual")
         id <- attr(mf, "index")[[1]]
         

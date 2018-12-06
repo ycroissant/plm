@@ -125,9 +125,9 @@ ranef.plm <- function(object, effect = NULL, ...) {
   if (length(object$formula)[2] == 2) stop("IV models not supported (yet?)")
   
   if (!is.null(effect) && !(effect %in% c("individual", "time"))) 
-    stop("argument 'effect' must be NULL, \"individual\", or \"time\"")
+      stop("argument 'effect' must be NULL, \"individual\", or \"time\"")
   if (obj.effect != "twoways" && !is.null(effect) && effect != obj.effect) 
-    stop(paste0("for one-way models, argument \"effect\" must be NULL or match the effect introduced in model estimation"))
+      stop(paste0("for one-way models, argument \"effect\" must be NULL or match the effect introduced in model estimation"))
 
   # default effect is the model's effect
   # for two-ways RE models: set default to effect = "individual"
@@ -213,7 +213,6 @@ within_intercept.plm <- function(object, vcov = NULL, ...) {
   transY  <- withinY + meanY
   
   withinM <- model.matrix(object) # returns the model.matrix specific to the 'effect' of the est. FE model object
-#MM  M <- model.matrix(pFormula(object$formula), data = mf) # model.matrix of original data
     M <- model.matrix(mf)
     M <- M[, colnames(M) %in% colnames(withinM)]           # just to be sure: should be same columns
   meansM <- colMeans(M)

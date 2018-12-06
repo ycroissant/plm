@@ -129,7 +129,6 @@ plm <- function(formula, data, subset, weights, na.action,
     # coerce them
     orig_rownames <- row.names(data)
     if (! inherits(data, "pdata.frame")) data <- pdata.frame(data, index)
-#PM    if (! inherits(formula, "pFormula")) formula <- pFormula(formula)
     if (! inherits(formula, "Formula")) formula <- as.Formula(formula)
     # in case of 2-part formula, check whether the second part should
     # be updated, e.g. y ~ x1 + x2 + x3 | . - x2 + z becomes 
@@ -139,12 +138,10 @@ plm <- function(formula, data, subset, weights, na.action,
     # eval the model.frame
     cl <- match.call()
     mf <- match.call(expand.dots = FALSE)
-#    m <- match(c("formula", "data", "subset", "weights", "na.action"), names(mf), 0)
     m <- match(c("data", "formula", "subset", "weights", "na.action"), names(mf), 0)
     mf <- mf[c(1, m)]
     names(mf)[2:3] <- c("formula", "data")
     mf$drop.unused.levels <- TRUE
-#    mf[[1]] <- as.name("model.frame")
     mf[[1]] <- as.name("model.frame")
     # use the pFormula and pdata.frame which were created if necessary (and not
     # the original formula / data)
@@ -179,8 +176,6 @@ plm <- function(formula, data, subset, weights, na.action,
     result
 }
 
-#plm.fit <- function(formula, data, model, effect, random.method, 
-#                    random.models, random.dfcor, inst.method){
 plm.fit <- function(data, model, effect, random.method, 
                     random.models, random.dfcor, inst.method){
     formula <- attr(data, "formula")
@@ -190,8 +185,6 @@ plm.fit <- function(data, model, effect, random.method,
     # if a random effect model is estimated, compute the error components
     if (model == "random"){
         is.balanced <- is.pbalanced(data)
-        ## estec <- ercomp(formula, data, effect, method = random.method,
-        ##                 models = random.models, dfcor = random.dfcor)
         estec <- ercomp(data, effect, method = random.method,
                         models = random.models, dfcor = random.dfcor)        
         sigma2 <- estec$sigma2

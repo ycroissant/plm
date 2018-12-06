@@ -186,7 +186,6 @@ pvcm.random <- function(formula, data, effect){
     XpXm1 <- V
     
     y <- pmodel.response(data)
-#MM    X <- model.matrix(formula, data)
     X <- model.matrix(data)
     fit <- as.numeric(tcrossprod(beta, X))
     res <- y - fit

@@ -84,393 +84,377 @@ lev2var <- function(x, ...){
 
 pht <-  function(formula, data, subset, na.action, model = c("ht", "am", "bms"), index = NULL, ...){
 
-  cl <- match.call(expand.dots = TRUE)
-  mf <- match.call()
+    cl <- match.call(expand.dots = TRUE)
+    mf <- match.call()
   
-  if (length(model) == 1 && model == "bmc") {
-    # accept "bmc" (a long-standing typo) for Breusch-Mizon-Schmidt due to backward compatibility
-    model <- "bms"
-    warning("Use of model = \"bmc\" discouraged, set to \"bms\" for Breusch-Mizon-Schmidt instrumental variable transformation")
-  }
-  model <- match.arg(model)
-  # compute the model.frame using plm with model = NA
-  mf[[1]] <- as.name("plm")
-  mf$model <- NA
-  data <- eval(mf, parent.frame())
-  # estimate the within model without instrument and extract the fixed
-  # effects
-#MM    formula <- pFormula(formula)
-formula <- Formula(formula)
+    if (length(model) == 1 && model == "bmc") {
+        # accept "bmc" (a long-standing typo) for Breusch-Mizon-Schmidt due to backward compatibility
+        model <- "bms"
+        warning("Use of model = \"bmc\" discouraged, set to \"bms\" for Breusch-Mizon-Schmidt instrumental variable transformation")
+    }
+    model <- match.arg(model)
+    # compute the model.frame using plm with model = NA
+    mf[[1]] <- as.name("plm")
+    mf$model <- NA
+    data <- eval(mf, parent.frame())
+    # estimate the within model without instrument and extract the fixed
+    # effects
+    formula <- Formula(formula)
     if (length(formula)[2] == 1) stop("a list of exogenous variables should be provided")
-#  else formula <- expand.formula(formula)
-  mf$model = "within"
+    mf$model = "within"
     mf$formula <- formula(formula, rhs = 1)
     within <- eval(mf, parent.frame())
-  fixef <- fixef(within)
-  id <- index(data, "id")
-  time <- index(data, "time")
-  pdim <- pdim(data)
-  balanced <- pdim$balanced
-  T <- pdim$nT$T
-  n <- pdim$nT$n
-  N <- pdim$nT$N
-  Ti <- pdim$Tint$Ti
-  # get the typology of the variables
-#MM    X <- model.matrix(formula, data, rhs = 1, model = "within")
+    fixef <- fixef(within)
+    id <- index(data, "id")
+    time <- index(data, "time")
+    pdim <- pdim(data)
+    balanced <- pdim$balanced
+    T <- pdim$nT$T
+    n <- pdim$nT$n
+    N <- pdim$nT$N
+    Ti <- pdim$Tint$Ti
+    # get the typology of the variables
     X <- model.matrix(data, rhs = 1, model = "within")
-  # YC 2017/10/03, the intercept is no longer removed while computing
-  # the within X matrix, remove it below
+    # YC 2017/10/03, the intercept is no longer removed while computing
+    # the within X matrix, remove it below
     nouveau <- TRUE
     if (! nouveau)  if (colnames(X)[1] == "(Intercept)") X <- X[, -1]
-#MM    W <- model.matrix(formula, data, rhs = 2, model = "within")
     W <- model.matrix(data, rhs = 2, model = "within")
     if (nouveau)    W <- model.matrix(formula, data, rhs = 2, model = "within", cstcovar.rm = "none")
-#    stop()
-  exo.all <- colnames(W)
-  all.all <- colnames(X)
-  edo.all <- all.all[!(all.all %in% exo.all)]
-  all.cst <- attr(X, "constant")
-  exo.cst <- attr(W, "constant")
-  exo.var <- exo.all[!(exo.all %in% exo.cst)]
-  edo.cst <- all.cst[!(all.cst %in% exo.cst)]
+    exo.all <- colnames(W)
+    all.all <- colnames(X)
+    edo.all <- all.all[!(all.all %in% exo.all)]
+    all.cst <- attr(X, "constant")
+    exo.cst <- attr(W, "constant")
+    exo.var <- exo.all[!(exo.all %in% exo.cst)]
+    edo.cst <- all.cst[!(all.cst %in% exo.cst)]
     edo.var <- edo.all[!(edo.all %in% edo.cst)]
-
-  if (length(edo.cst) > length(exo.var)){
-    stop(" The number of endogenous time-invariant variables is greater
+    
+    if (length(edo.cst) > length(exo.var)){
+        stop(" The number of endogenous time-invariant variables is greater
            than the number of exogenous time varying variables\n")
     }
   
-#MM    X <- model.matrix(formula, data, model = "pooling", rhs = 1, lhs = 1)
     X <- model.matrix(data, model = "pooling", rhs = 1, lhs = 1)
-  if (length(exo.var) > 0) XV <- X[ , exo.var, drop = FALSE] else XV <- NULL
-  if (length(edo.var) > 0) NV <- X[ , edo.var, drop = FALSE] else NV <- NULL
-  if (length(exo.cst) > 0) XC <- X[ , exo.cst, drop = FALSE] else XC <- NULL
-  if (length(edo.cst) > 0) NC <- X[ , edo.cst, drop = FALSE] else NC <- NULL
-  if (length(all.cst) !=0 )
-    zo <- twosls(fixef[as.character(id)], cbind(XC, NC), cbind(XC, XV), TRUE)
-  else zo <- lm(fixef ~ 1)
-
-  sigma2 <- list()
-  sigma2$one <- 0
-  sigma2$idios <- deviance(within)/ (N - n)
-  sigma2$one <- deviance(zo) / n
-  if(balanced){
-    sigma2$id <- (sigma2$one - sigma2$idios)/ T
-    theta <- 1 - sqrt(sigma2$idios / sigma2$one)
-  }
-  else{
-    # for unbalanced data, the harmonic mean of the Ti's is used ; why ??
-    barT <- n / sum(1 / Ti)
-    sigma2$id <- (sigma2$one - sigma2$idios) / barT
-    theta <- 1 - sqrt(sigma2$idios / (sigma2$idios + Ti * sigma2$id))
-    theta <- theta[as.character(id)]
-  }
-  estec <- structure(list(sigma2 = sigma2, theta = theta),
-                     class = "ercomp",
-                     balanced = balanced,
-                     effect = "individual")
-  y <- pmodel.response(data, model = "random", effect = "individual", theta = theta)
-#MM  X <- model.matrix(formula, data, model = "random", effect = "individual", theta = theta)
-  X <- model.matrix(data, model = "random", effect = "individual", theta = theta)
-#MM  within.inst <- model.matrix(formula, data, model = "within")
+    if (length(exo.var) > 0) XV <- X[ , exo.var, drop = FALSE] else XV <- NULL
+    if (length(edo.var) > 0) NV <- X[ , edo.var, drop = FALSE] else NV <- NULL
+    if (length(exo.cst) > 0) XC <- X[ , exo.cst, drop = FALSE] else XC <- NULL
+    if (length(edo.cst) > 0) NC <- X[ , edo.cst, drop = FALSE] else NC <- NULL
+    if (length(all.cst) !=0 )
+        zo <- twosls(fixef[as.character(id)], cbind(XC, NC), cbind(XC, XV), TRUE)
+    else zo <- lm(fixef ~ 1)
+    
+    sigma2 <- list()
+    sigma2$one <- 0
+    sigma2$idios <- deviance(within)/ (N - n)
+    sigma2$one <- deviance(zo) / n
+    if(balanced){
+        sigma2$id <- (sigma2$one - sigma2$idios)/ T
+        theta <- 1 - sqrt(sigma2$idios / sigma2$one)
+    }
+    else{
+        # for unbalanced data, the harmonic mean of the Ti's is used ; why ??
+        barT <- n / sum(1 / Ti)
+        sigma2$id <- (sigma2$one - sigma2$idios) / barT
+        theta <- 1 - sqrt(sigma2$idios / (sigma2$idios + Ti * sigma2$id))
+        theta <- theta[as.character(id)]
+    }
+    estec <- structure(list(sigma2 = sigma2, theta = theta),
+                       class = "ercomp",
+                       balanced = balanced,
+                       effect = "individual")
+    y <- pmodel.response(data, model = "random", effect = "individual", theta = theta)
+    X <- model.matrix(data, model = "random", effect = "individual", theta = theta)
     within.inst <- model.matrix(data, model = "within")
-  if (model == "ht"){
-    ##MM between.inst <- model.matrix(formula, data, model = "Between",
-    ##                              rhs = 2)[, exo.var, drop = FALSE]
-    between.inst <- model.matrix(data, model = "Between",
-                                 rhs = 2)[, exo.var, drop = FALSE]
-    W <- cbind(within.inst, XC, between.inst)
-  }
-  if (model == "am"){
-    ##MM Vx <- model.matrix(formula, data, model = "pooling",
-    ##                    rhs = 2)[, exo.var, drop = FALSE]
-    Vx <- model.matrix(data, model = "pooling",
-                       rhs = 2)[, exo.var, drop = FALSE]
-    if (balanced){
-      # Plus rapide mais pas robuste au non cylindre
-      Vxstar <- Reduce("cbind",
-                       lapply(seq_len(ncol(Vx)),
-                              function(x)
-                              matrix(Vx[, x], ncol = T, byrow = TRUE)[rep(1:n, each = T), ]))
+    if (model == "ht"){
+        between.inst <- model.matrix(data, model = "Between",
+                                     rhs = 2)[, exo.var, drop = FALSE]
+        W <- cbind(within.inst, XC, between.inst)
     }
-    else{
+    if (model == "am"){
+        Vx <- model.matrix(data, model = "pooling",
+                           rhs = 2)[, exo.var, drop = FALSE]
+        if (balanced){
+            # Plus rapide mais pas robuste au non cylindre
+            Vxstar <- Reduce("cbind",
+                             lapply(seq_len(ncol(Vx)),
+                                    function(x)
+                                        matrix(Vx[, x], ncol = T, byrow = TRUE)[rep(1:n, each = T), ]))
+        }
+        else{
       Xs <- lapply(seq_len(ncol(Vx)), function(x)
-                   structure(Vx[, x], index = index(data), class = c("pseries", class(Vx[, x]))))
+          structure(Vx[, x], index = index(data), class = c("pseries", class(Vx[, x]))))
       Vx2 <- Reduce("cbind", lapply(Xs, as.matrix))
       Vxstar <- Vx2[rep(1:n, times = Ti), ]
       Vxstar[is.na(Vxstar)] <- 0
+        }
+        W <- cbind(within.inst, XC, Vxstar)
     }
-    W <- cbind(within.inst, XC, Vxstar)
-  }
-  if (model == "bms"){
-#MM    between.inst <- model.matrix(formula, data, model = "Between",
-#                                 rhs = 2)[, exo.var, drop = FALSE]
-    between.inst <- model.matrix(data, model = "Between",
-                                 rhs = 2)[, exo.var, drop = FALSE]
-    Vx <- within.inst
-    if (balanced){
-      # Plus rapide mais pas robuste au non cylindre
-      Vxstar <- Reduce("cbind",
-                       lapply(seq_len(ncol(Vx)),
-                              function(x)
-                              matrix(Vx[, x], ncol = T, byrow = TRUE)[rep(1:n, each = T), ]))
+    if (model == "bms"){
+        between.inst <- model.matrix(data, model = "Between",
+                                     rhs = 2)[, exo.var, drop = FALSE]
+        Vx <- within.inst
+        if (balanced){
+            # Plus rapide mais pas robuste au non cylindre
+            Vxstar <- Reduce("cbind",
+                             lapply(seq_len(ncol(Vx)),
+                                    function(x)
+                                        matrix(Vx[, x], ncol = T, byrow = TRUE)[rep(1:n, each = T), ]))
+        }
+        else{
+            Xs <- lapply(seq_len(ncol(Vx)), function(x)
+                structure(Vx[, x], index = index(data), class = c("pseries", class(Vx[, x]))))
+            Vx2 <- Reduce("cbind", lapply(Xs, as.matrix))
+            Vxstar <- Vx2[rep(1:n, times = Ti), ]
+            Vxstar[is.na(Vxstar)] <- 0
+        }
+        W <- cbind(within.inst, XC, between.inst, Vxstar)
     }
-    else{
-      Xs <- lapply(seq_len(ncol(Vx)), function(x)
-                   structure(Vx[, x], index = index(data), class = c("pseries", class(Vx[, x]))))
-      Vx2 <- Reduce("cbind", lapply(Xs, as.matrix))
-      Vxstar <- Vx2[rep(1:n, times = Ti), ]
-      Vxstar[is.na(Vxstar)] <- 0
-    }
-    W <- cbind(within.inst, XC, between.inst, Vxstar)
-  }
-
-  result <- twosls(y, X, W)
-  K <- length(data)
-  ve <- lev2var(data)
-  varlist <- list(xv = unique(ve[exo.var]),
-                  nv = unique(ve[edo.var]),
-                  xc = unique(ve[exo.cst[exo.cst != "(Intercept)"]]),
-                  nc = unique(ve[edo.cst])
-                  )
-  varlist <- lapply(varlist, function(x){ names(x) <- NULL; x})
-  result <- list(coefficients = coef(result),
-                 vcov         = vcov(result),
-                 residuals    = resid(result),
-                 df.residual  = df.residual(result),
-                 formula      = formula, 
-                 model        = data,
-                 varlist      = varlist,
-                 ercomp       = estec,
-                 call         = cl,
-                 args         = list(model = "ht"))
-  names(result$coefficients) <- colnames(result$vcov) <-
-    rownames(result$vcov) <- colnames(X)
-  class(result) <- c("pht", "plm", "panelmodel")
-  result
+    
+    result <- twosls(y, X, W)
+    K <- length(data)
+    ve <- lev2var(data)
+    varlist <- list(xv = unique(ve[exo.var]),
+                    nv = unique(ve[edo.var]),
+                    xc = unique(ve[exo.cst[exo.cst != "(Intercept)"]]),
+                    nc = unique(ve[edo.cst])
+                    )
+    varlist <- lapply(varlist, function(x){ names(x) <- NULL; x})
+    result <- list(coefficients = coef(result),
+                   vcov         = vcov(result),
+                   residuals    = resid(result),
+                   df.residual  = df.residual(result),
+                   formula      = formula, 
+                   model        = data,
+                   varlist      = varlist,
+                   ercomp       = estec,
+                   call         = cl,
+                   args         = list(model = "ht"))
+    names(result$coefficients) <- colnames(result$vcov) <-
+        rownames(result$vcov) <- colnames(X)
+    class(result) <- c("pht", "plm", "panelmodel")
+    result
 }
 
 summary.pht <- function(object, ...){
-  object$fstatistic <- pwaldtest(object, test = "F")
-  # construct the table of coefficients
-  std.err <- sqrt(diag(vcov(object)))
-  b <- coefficients(object)
-  z <- b/std.err
-  p <- 2*pnorm(abs(z), lower.tail = FALSE)
-  object$coefficients <- cbind("Estimate"   = b,
-                               "Std. Error" = std.err,
-                               "z-value"    = z,
-                               "Pr(>|z|)"   = p)
-  class(object) <- c("summary.pht", "pht", "plm", "panelmodel")
-  object
+    object$fstatistic <- pwaldtest(object, test = "F")
+    # construct the table of coefficients
+    std.err <- sqrt(diag(vcov(object)))
+    b <- coefficients(object)
+    z <- b/std.err
+    p <- 2*pnorm(abs(z), lower.tail = FALSE)
+    object$coefficients <- cbind("Estimate"   = b,
+                                 "Std. Error" = std.err,
+                                 "z-value"    = z,
+                                 "Pr(>|z|)"   = p)
+    class(object) <- c("summary.pht", "pht", "plm", "panelmodel")
+    object
 }
 
 print.summary.pht <- function(x, digits = max(3, getOption("digits") - 2),
                               width = getOption("width"), subset = NULL, ...){
-  formula <- formula(x)
-  has.instruments <- (length(formula)[2] == 2)
-  effect <- describe(x, "effect")
-  model <- describe(x, "model")
-  cat(paste(effect.plm.list[effect]," ",sep=""))
-  cat(paste(model.plm.list[model]," Model",sep=""))
-  cat("\nCall:\n")
-  print(x$call)
+    formula <- formula(x)
+    has.instruments <- (length(formula)[2] == 2)
+    effect <- describe(x, "effect")
+    model <- describe(x, "model")
+    cat(paste(effect.plm.list[effect]," ",sep=""))
+    cat(paste(model.plm.list[model]," Model",sep=""))
+    cat("\nCall:\n")
+    print(x$call)
 
-  #    cat("\nTime-Varying Variables: ")
-  names.xv <- paste(x$varlist$xv,collapse=", ")
-  names.nv <- paste(x$varlist$nv,collapse=", ")
-  names.xc <- paste(x$varlist$xc,collapse=", ")
-  names.nc <- paste(x$varlist$nc,collapse=", ")
-  cat(paste("\nT.V. exo  : ",names.xv,"\n", sep = ""))
-  cat(paste("T.V. endo : ", names.nv,"\n",sep = ""))
-  #    cat("Time-Invariant Variables: ")
-  cat(paste("T.I. exo  : ", names.xc, "\n", sep= ""))
-  cat(paste("T.I. endo : ", names.nc, "\n", sep= ""))
-  cat("\n")
-  pdim <- pdim(x)
-  print(pdim)
-  cat("\nEffects:\n")
-  print(x$ercomp)
-  cat("\nResiduals:\n")
-  save.digits <- unlist(options(digits = digits))
-  on.exit(options(digits = save.digits))
-  print(sumres(x))
+      #    cat("\nTime-Varying Variables: ")
+    names.xv <- paste(x$varlist$xv,collapse=", ")
+    names.nv <- paste(x$varlist$nv,collapse=", ")
+    names.xc <- paste(x$varlist$xc,collapse=", ")
+    names.nc <- paste(x$varlist$nc,collapse=", ")
+    cat(paste("\nT.V. exo  : ",names.xv,"\n", sep = ""))
+    cat(paste("T.V. endo : ", names.nv,"\n",sep = ""))
+    #    cat("Time-Invariant Variables: ")
+    cat(paste("T.I. exo  : ", names.xc, "\n", sep= ""))
+    cat(paste("T.I. endo : ", names.nc, "\n", sep= ""))
+    cat("\n")
+    pdim <- pdim(x)
+    print(pdim)
+    cat("\nEffects:\n")
+    print(x$ercomp)
+    cat("\nResiduals:\n")
+    save.digits <- unlist(options(digits = digits))
+    on.exit(options(digits = save.digits))
+    print(sumres(x))
   
-  cat("\nCoefficients:\n")
-  if (is.null(subset)) printCoefmat(coef(x), digits = digits)
-  else printCoefmat(coef(x)[subset, , drop = FALSE], digits = digits)
-  cat("\n")
-  cat(paste("Total Sum of Squares:    ",signif(tss(x),digits),"\n",sep=""))
-  cat(paste("Residual Sum of Squares: ",signif(deviance(x),digits),"\n",sep=""))
-#  cat(paste("Multiple R-Squared:      ",signif(x$rsq,digits),"\n",sep=""))
-  fstat <- x$fstatistic
-  if (names(fstat$statistic) == "F"){
-    cat(paste("F-statistic: ",signif(fstat$statistic),
-              " on ",fstat$parameter["df1"]," and ",fstat$parameter["df2"],
-              " DF, p-value: ",format.pval(fstat$p.value,digits=digits),"\n",sep=""))
-  }
-  else{
-    cat(paste("Chisq: ",signif(fstat$statistic),
-              " on ",fstat$parameter,
-              " DF, p-value: ",format.pval(fstat$p.value,digits=digits),"\n",sep=""))
-    
-  }
-  invisible(x)
+    cat("\nCoefficients:\n")
+    if (is.null(subset)) printCoefmat(coef(x), digits = digits)
+    else printCoefmat(coef(x)[subset, , drop = FALSE], digits = digits)
+    cat("\n")
+    cat(paste("Total Sum of Squares:    ",signif(tss(x),digits),"\n",sep=""))
+    cat(paste("Residual Sum of Squares: ",signif(deviance(x),digits),"\n",sep=""))
+ #  cat(paste("Multiple R-Squared:      ",signif(x$rsq,digits),"\n",sep=""))
+    fstat <- x$fstatistic
+    if (names(fstat$statistic) == "F"){
+        cat(paste("F-statistic: ",signif(fstat$statistic),
+                  " on ",fstat$parameter["df1"]," and ",fstat$parameter["df2"],
+                  " DF, p-value: ",format.pval(fstat$p.value,digits=digits),"\n",sep=""))
+    }
+    else{
+        cat(paste("Chisq: ",signif(fstat$statistic),
+                  " on ",fstat$parameter,
+                  " DF, p-value: ",format.pval(fstat$p.value,digits=digits),"\n",sep=""))
+        
+    }
+    invisible(x)
 }
 
 ## dynformula
 
 sumres <- function(x){
-  sr <- summary(unclass(resid(x)))
-  srm <- sr["Mean"]
-  if (abs(srm)<1e-10){
-    sr <- sr[c(1:3,5:6)]
-  }
-  sr
+    sr <- summary(unclass(resid(x)))
+    srm <- sr["Mean"]
+    if (abs(srm)<1e-10){
+        sr <- sr[c(1:3,5:6)]
+    }
+    sr
 }
 
 
 create.list <- function(alist, K, has.int, has.resp, endog, exo, default){
-  # if alist is NULL, create a list of 0
-  if (is.null(alist)) alist <- rep(list(default), K+has.resp)
-  # if alist is not a list, coerce it
-  if (!is.list(alist)) alist <- list(alist)
+    # if alist is NULL, create a list of 0
+    if (is.null(alist)) alist <- rep(list(default), K+has.resp)
+    # if alist is not a list, coerce it
+    if (!is.list(alist)) alist <- list(alist)
 
-  if (!is.null(names(alist))){
-  # case where (at least) some elements are named
-    nam <- names(alist) # vector of names of elements
-    oalist <- alist  # copy of the alist provided
-    notnullname <- nam[nam != ""]
-    if (any (nam == "")){
-    # case where one element is unnamed, and therefore is the default
-      unnamed <- which(nam == "")
-      if (length(unnamed) > 1) stop("Only one unnamed element is admitted")
-      default <- alist[[unnamed]]
+    if (!is.null(names(alist))){
+    # case where (at least) some elements are named
+        nam <- names(alist) # vector of names of elements
+        oalist <- alist  # copy of the alist provided
+        notnullname <- nam[nam != ""]
+        if (any (nam == "")){
+      # case where one element is unnamed, and therefore is the default
+            unnamed <- which(nam == "")
+            if (length(unnamed) > 1) stop("Only one unnamed element is admitted")
+            default <- alist[[unnamed]]
+        }
+        else{
+        # case where there are no unnamed elements, the default is 0
+            default <- default
+        }
+        alist <- rep(list(default), K+has.resp)
+        names(alist) <- c(endog, exo)
+        alist[notnullname] <- oalist[notnullname]
     }
     else{
-    # case where there are no unnamed elements, the default is 0
-      default <- default
+    # case where there are no names, in this case the relevant length is
+    # whether 1 or K+1
+        if (length(alist) == 1) alist <- rep(alist, c(K+has.resp))
+        else if (!length(alist) %in% c(K+has.resp)) stop("irrelevant length for alist")
     }
-    alist <- rep(list(default), K+has.resp)
-    names(alist) <- c(endog, exo)
-    alist[notnullname] <- oalist[notnullname]
-  }
-  else{
-  # case where there are no names, in this case the relevant length is
-  # whether 1 or K+1
-    if (length(alist) == 1) alist <- rep(alist, c(K+has.resp))
-    else if (!length(alist) %in% c(K+has.resp)) stop("irrelevant length for alist")
-  }
-  names(alist) <- c(endog,exo)
-  alist
+    names(alist) <- c(endog,exo)
+    alist
 }
 
 write.lags <- function(name,lags,diff){
-  lags <- switch(length(lags),
-                 "1"=c(0,lags),
-                 "2"=sort(lags),
-                 stop("lags should be of length 1 or 2\n")
-                 )
-  lag.string <- ifelse(diff,"diff","lag")
-  chlag <- c()
-  if (lags[2]!=0){
-    lags <- lags[1]:lags[2]
-    for (i in lags){
-      if (i==0){
-        if (diff) chlag <- c(chlag,paste("diff(",name,")")) else chlag <- c(chlag,name)
-      }
-      else{
-        ichar <- paste(i)
-        chlag <- c(chlag,paste(lag.string,"(",name,",",i,")",sep=""))
-      }
+    lags <- switch(length(lags),
+                   "1"=c(0,lags),
+                   "2"=sort(lags),
+                   stop("lags should be of length 1 or 2\n")
+                   )
+    lag.string <- ifelse(diff,"diff","lag")
+    chlag <- c()
+    if (lags[2]!=0){
+        lags <- lags[1]:lags[2]
+        for (i in lags){
+            if (i==0){
+                if (diff) chlag <- c(chlag,paste("diff(",name,")")) else chlag <- c(chlag,name)
+            }
+            else{
+                ichar <- paste(i)
+                chlag <- c(chlag,paste(lag.string,"(",name,",",i,")",sep=""))
+            }
+        }
+        ret <- paste(chlag,collapse="+")
     }
-    ret <- paste(chlag,collapse="+")
-  }
-  else{
-    if (diff) chlag <- paste("diff(",name,")") else chlag <- name
-    ret <- chlag
-  }
-  ret
+    else{
+        if (diff) chlag <- paste("diff(",name,")") else chlag <- name
+        ret <- chlag
+    }
+    ret
 }   
 
 
 
 dynformula <- function(formula, lag.form = NULL, diff.form = NULL, log.form = NULL) {
-  
-  .Deprecated(msg = "use of 'dynformula' is deprecated, use a multi-part formula instead",
-              old = "dynformula")
+    
+    .Deprecated(msg = "use of 'dynformula' is deprecated, use a multi-part formula instead",
+                old = "dynformula")
 
-  # for backward compatibility, accept a list argument and coerce it
-  # to a vector
-  if (!is.null(diff.form) && !is.list(diff.form)) diff.form <- as.list(diff.form)
-  if (!is.null(log.form) && !is.list(log.form)) log.form <- as.list(log.form)
+    # for backward compatibility, accept a list argument and coerce it
+    # to a vector
+    if (!is.null(diff.form) && !is.list(diff.form)) diff.form <- as.list(diff.form)
+    if (!is.null(log.form) && !is.list(log.form)) log.form <- as.list(log.form)
 
-  
-  # exo / endog are the names of the variable
-  # has.int has.resp  TRUE if the formula has an intercept and a response
-  # K is the number of exogenous variables
-  exo <- attr(terms(formula), "term.labels")
-  has.int <- attr(terms(formula), "intercept") == 1
-  if(length(formula) == 3){
-    endog <- deparse(formula[[2]])
-    has.resp <- TRUE
-  }
-  else{
-    endog <- NULL
-    has.resp <- FALSE
-  }
-  K <- length(exo)
+    # exo / endog are the names of the variable
+    # has.int has.resp  TRUE if the formula has an intercept and a response
+    # K is the number of exogenous variables
+    exo <- attr(terms(formula), "term.labels")
+    has.int <- attr(terms(formula), "intercept") == 1
+    if(length(formula) == 3){
+        endog <- deparse(formula[[2]])
+        has.resp <- TRUE
+    }
+    else{
+        endog <- NULL
+        has.resp <- FALSE
+    }
+    K <- length(exo)
 
-  # use the create.list function to create the lists with the relevant
-  # default values
-  lag.form <- create.list(lag.form, K, has.int, has.resp, endog, exo, 0)
-  diff.form <- unlist(create.list(diff.form, K, has.int, has.resp, endog, exo, FALSE))
-  log.form <- unlist(create.list(log.form, K, has.int, has.resp, endog, exo, FALSE))
-
-  structure(formula, class = c("dynformula", "formula"), lag = lag.form,
-            diff = diff.form, log = log.form, var = c(endog,exo))
+    # use the create.list function to create the lists with the relevant
+    # default values
+    lag.form <- create.list(lag.form, K, has.int, has.resp, endog, exo, 0)
+    diff.form <- unlist(create.list(diff.form, K, has.int, has.resp, endog, exo, FALSE))
+    log.form <- unlist(create.list(log.form, K, has.int, has.resp, endog, exo, FALSE))
+    
+    structure(formula, class = c("dynformula", "formula"), lag = lag.form,
+              diff = diff.form, log = log.form, var = c(endog,exo))
 }
 
 
 formula.dynformula <- function(x, ...){
-  log.form <- attr(x, "log")
-  lag.form <- attr(x, "lag")
-  diff.form <- attr(x, "diff")
-  has.resp <- length(x) == 3
-  exo <- attr(x, "var")
-  if (has.resp){
-    endog <- exo[1]
-    exo <- exo[-1]
-  }
-  has.int <- attr(terms(x), "intercept") == 1
-  chexo <- c()
-  if (has.resp){
-    if (log.form[1]) endog <- paste("log(",endog,")",sep="")
-    if (diff.form[1]) endog <- paste("diff(",endog,")",sep="")
-    if (length(lag.form[[1]]) == 1 && lag.form[[1]]!=0) lag.form[[1]] <- c(1,lag.form[[1]])
-    if (!(length(lag.form[[1]]) == 1 && lag.form[[1]]==0))
-      chexo <- c(chexo,write.lags(endog,lag.form[[1]],diff.form[1]))
-  }
-  for (i in exo){
-    lag.formi <- lag.form[[i]]
-    diff.formi <- diff.form[i]
-    if (log.form[[i]]) i <- paste("log(",i,")",sep="")
-    chexo <- c(chexo,write.lags(i,lag.formi,diff.formi))
-  }
-  chexo <- paste(chexo,collapse="+")
-  if (has.resp){
-    formod <- as.formula(paste(endog,"~",chexo,sep=""))
-  }
-  else{
-    formod <- as.formula(paste("~",chexo,sep=""))
-  }
-  if (!has.int) formod <- update(formod,.~.-1)
-  formod
+    log.form <- attr(x, "log")
+    lag.form <- attr(x, "lag")
+    diff.form <- attr(x, "diff")
+    has.resp <- length(x) == 3
+    exo <- attr(x, "var")
+    if (has.resp){
+        endog <- exo[1]
+        exo <- exo[-1]
+    }
+    has.int <- attr(terms(x), "intercept") == 1
+    chexo <- c()
+    if (has.resp){
+        if (log.form[1]) endog <- paste("log(",endog,")",sep="")
+        if (diff.form[1]) endog <- paste("diff(",endog,")",sep="")
+        if (length(lag.form[[1]]) == 1 && lag.form[[1]]!=0) lag.form[[1]] <- c(1,lag.form[[1]])
+        if (!(length(lag.form[[1]]) == 1 && lag.form[[1]]==0))
+            chexo <- c(chexo,write.lags(endog,lag.form[[1]],diff.form[1]))
+    }
+    for (i in exo){
+        lag.formi <- lag.form[[i]]
+        diff.formi <- diff.form[i]
+        if (log.form[[i]]) i <- paste("log(",i,")",sep="")
+        chexo <- c(chexo,write.lags(i,lag.formi,diff.formi))
+    }
+    chexo <- paste(chexo,collapse="+")
+    if (has.resp){
+        formod <- as.formula(paste(endog,"~",chexo,sep=""))
+    }
+    else{
+        formod <- as.formula(paste("~",chexo,sep=""))
+    }
+    if (!has.int) formod <- update(formod,.~.-1)
+    formod
 }
 
-
 print.dynformula <- function(x,...){
-  print(formula(x), ...)
+    print(formula(x), ...)
 }
 
 

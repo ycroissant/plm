@@ -73,25 +73,14 @@ update.panelmodel <- function (object, formula., ..., evaluate = TRUE){
     if (is.null(call <- object$call)) # was: getCall(object))) 
         stop("need an object with call component")
     extras <- match.call(expand.dots = FALSE)$...
-    if (!missing(formula.)){
-        cat("avant\n")
-        nform <- formula.
-        oform <- formula(object)
-        cat("avant update.Formula\n")
-        print(oform)
-        print(class(oform))
-        print(nform)
-        print(class(nform))
+    # update.Formula fails if latter rhs are . ; simplify the formula
+    # by removing the latter parts
 
-        call$formula <- update(oform, formula.)
-        cat("apres update.Formula\n")
-        
-        print(call)
-        print(oform)
-        print(class(oform))
-        print(nform)
-        print(class(nform))
-        cat("apres\n")
+    if (! missing(formula.)){
+        newform <- Formula(formula.)
+        if (length(newform)[2] == 2 && attr(newform, "rhs")[2] == as.name("."))
+            newform <- formula(newform, rhs = 1)
+        call$formula <- update(formula(object), newform)
     }
     if (length(extras)) {
         existing <- !is.na(match(names(extras), names(call)))

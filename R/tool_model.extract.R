@@ -3,33 +3,6 @@
 # hesoteric, but consistent with the argument list of
 # model.frame.Formula which is latter called.
 
-if(FALSE){
-pFormula <- function(object) {
-    stopifnot(inherits(object, "formula"))
-    if (!inherits(object, "Formula")){
-        object <- Formula(object)
-    }
-    class(object) <- union("pFormula", class(object))
-    object
-}
-
-as.Formula.pFormula <- function(x, ...){
-    class(x) <- setdiff(class(x), "pFormula")
-    x
-}
-model.frame.pFormula <- function(formula, data, ..., lhs = NULL, rhs = NULL){
-    if (is.null(rhs)) rhs <- 1:(length(formula)[2])
-    if (is.null(lhs)) lhs <- ifelse(length(formula)[1] > 0, 1, 0)
-    index <- attr(data, "index")
-    mf <- model.frame(as.Formula(formula), as.data.frame(data), ..., rhs = rhs)
-    index <- index[as.numeric(rownames(mf)), ]
-    index <- droplevels(index)
-    class(index) <- c("pindex", "data.frame")
-    structure(mf,
-              index = index,
-              class = c("pdata.frame", class(mf)))
-}
-}
 model.frame.pdata.frame <- function(formula, data = NULL, ...,
                                     lhs = NULL, rhs = NULL, dot = "separate"){
     pdata <- formula
@@ -46,6 +19,12 @@ model.frame.pdata.frame <- function(formula, data = NULL, ...,
               index = index,
               formula = formula,
               class = c("pdata.frame", class(mf)))
+}
+
+formula.pdata.frame <- function(x, ...){
+    if (is.null(attr(x, "terms")))
+        stop("formula expect a model.frame and not an ordinary pdata.frame")
+    attr(x, "formula")
 }
     
 
@@ -145,83 +124,6 @@ ptransform <- function(x, model = NULL, effect = NULL, theta = NULL, ...){
 Mean <- function(x) matrix(.colMeans(x, nrow(x), ncol(x)),
                            nrow(x), ncol(x), byrow = TRUE)
 
-if (FALSE){
-# deprecated
-model.matrix.pFormula <- function(object, data,
-                                  model = c("pooling", "within", "Between", "Sum",
-                                            "between", "mean", "random", "fd"),
-                                  effect = c("individual", "time", "twoways", "nested"),
-                                  rhs = 1,
-                                  theta = NULL,
-                                  cstcovar.rm = NULL,
-                                  ...){
-    model <- match.arg(model)
-    effect <- match.arg(effect)
-    formula <- object  
-    has.intercept <- has.intercept(formula, rhs = rhs)
-    # relevant defaults for cstcovar.rm
-    if (is.null(cstcovar.rm)) cstcovar.rm <- ifelse(model == "within", "intercept", "none")
-    balanced <- is.pbalanced(data)
-    # check if inputted data is a model.frame, if not convert it to
-    # model.frame (important for NA handling of the original data when
-    # model.matrix.pFormula is called directly) As there is no own
-    # class for a model.frame, check if the 'terms' attribute is
-    # present (this mimics what lm does to detect a model.frame)    
-    if (is.null(attr(data, "terms")))
-        data <- model.frame.pFormula(pFormula(formula), data)  
-    # this goes to Formula::model.matrix.Formula:
-    X <- model.matrix(as.Formula(formula), rhs = rhs, data = data, dot = "previous", ...)
-    # check for infinite or NA values and exit if there are some
-    if(any(! is.finite(X))) stop(paste("model matrix or response contains non-finite",
-                                       "values (NA/NaN/Inf/-Inf)"))
-    X.assi <- attr(X, "assign")
-    X.contr <- attr(X, "contrasts")
-    X.contr <- X.contr[ ! sapply(X.contr, is.null) ]
-    index <- index(data)
-    if (anyNA(index[[1]])) stop("NA in the individual index variable")
-    attr(X, "index") <- index
-    if (effect == "twoways" & model %in% c("between", "fd"))
-        stop("twoways effect only relevant for within, random and pooling models")
-    if (model == "within") X <- Within(X, effect)
-    if (model == "Sum") X <- Sum(X, effect)
-    if (model == "Between") X <- Between(X, effect)
-    if (model == "between") X <- between(X, effect)
-    if (model == "mean") X <- Mean(X)
-    if (model == "fd") X <- pdiff(X, effect = "individual",
-                                  has.intercept = has.intercept)
-    if (model == "random"){
-        if (is.null(theta)) stop("a theta argument should be provided")
-        if (effect %in% c("time", "individual")) X <- X - theta * Between(X, effect)
-        if (effect == "nested") X <- X - theta$id * Between(X, "individual") -
-                                    theta$gp * Between(X, "group")
-        if (effect == "twoways" & balanced)
-            X <- X - theta$id * Between(X, "individual") -
-                theta$time * Between(X, "time") + theta$total * Mean(X)
-    }
-
-    if (cstcovar.rm == "intercept"){
-        posintercept <- match("(Intercept)", colnames(X))
-        if (! is.na(posintercept)) X <- X[, - posintercept, drop = FALSE]
-    }
-    if (cstcovar.rm %in% c("covariates", "all")){
-        cols <- apply(X, 2, is.constant)
-        cstcol <- names(cols)[cols]
-        posintercept <- match("(Intercept)", cstcol)
-        cstintercept <- ifelse(is.na(posintercept), FALSE, TRUE)
-        zeroint <- ifelse(cstintercept &&
-                          max(X[, posintercept]) < sqrt(.Machine$double.eps),
-                          TRUE, FALSE)
-        if (length(cstcol) > 0){
-            if (cstcovar.rm == "covariates" | ! zeroint) cstcol <- cstcol[- posintercept]
-            if (length(cstcol) > 0){
-                X <- X[, - match(cstcol, colnames(X)), drop = FALSE]
-                attr(X, "constant") <- cstcol
-            }
-        }
-    }
-    structure(X, assign = X.assi, contrasts = X.contr, index = index)
-}
-}
 model.matrix.pdata.frame <- function(object, 
                                      model = c("pooling", "within", "Between", "Sum",
                                                "between", "mean", "random", "fd"),
