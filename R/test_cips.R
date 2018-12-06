@@ -1,9 +1,8 @@
 ## taken from pmg to estimate CIPS test statistic as "average of t's"
 ## since version 4: added type warning, and output single CADF
-## regressions as well, use func gettvalue for speed.
-## estimation loop for single TS models is now lm(formula, data) with
-## 'data' properly subsetted; this
-## allows for decent output of individual mods.
+## regressions as well, use func gettvalue for speed.  estimation loop
+## for single TS models is now lm(formula, data) with 'data' properly
+## subsetted; this allows for decent output of individual mods.
 
 ## needed for standalone operation:
 #plm <- plm:::plm
@@ -547,7 +546,23 @@ gettvalue <- function(x, coefname) {
     return(tvalue)
 }
 
-
+pseries2pdataframe <- function(x, pdata.frame = TRUE, ...) {
+  ## non-exported
+  ## Transforms a pseries in a (p)data.frame with the indices as regular columns
+  ## in positions 1, 2 and (if present) 3 (individual index, time index, group index).
+  ## if pdataframe = TRUE -> return a pdata.frame, if FALSE -> return a data.frame
+  ## ellipsis (dots) passed on to pdata.frame()
+  if (!inherits(x, "pseries")) stop("input needs to be of class 'pseries'")
+  indices <- attr(x, "index")
+  class(indices) <- setdiff(class(indices), "pindex")
+  vx <- remove_pseries_features(x)
+  dfx <- cbind(indices, vx)
+  dimnames(dfx)[[2]] <- c(names(indices), deparse(substitute(x)))
+  if (pdata.frame == TRUE) {
+    res <- pdata.frame(dfx, index = names(indices), ...)
+   } else { res <- dfx }
+  return(res)
+}
 
 pmerge <- function(x, y, ...) {
   ## non-exported

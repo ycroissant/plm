@@ -95,8 +95,8 @@ pdata.frame(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 
 \seealso{
  \code{\link{index}} to extract the index variables from a 'pdata.frame' (and other objects),
- \code{\link{pdim}} to check the dimensions of a 'pdata.frame' (and other objects), 
- \code{\link{pvar}} to check for each variable if it varies cross-sectionally and over time. 
+ \code{\link{pdim}} to check the dimensions of a 'pdata.frame' (and other objects).
+% \code{\link{pvar}} to check for each variable if it varies cross-sectionally and over time. 
  To check if the time periods are consecutive per individual, see \code{\link[plm]{is.pconsecutive}}.
 }
 

@@ -70,23 +70,40 @@ nobs.panelmodel <- function(object, ...) {
 # replaced by update, so that the Formula method is used to update the
 # formula
 update.panelmodel <- function (object, formula., ..., evaluate = TRUE){
-  if (is.null(call <- object$call)) # was: getCall(object))) 
-    stop("need an object with call component")
-  extras <- match.call(expand.dots = FALSE)$...
-  if (!missing(formula.)){
-    call$formula <- update(formula(object), formula.)
-  }
-  if (length(extras)) {
-    existing <- !is.na(match(names(extras), names(call)))
-    for (a in names(extras)[existing]) call[[a]] <- extras[[a]]
-    if (any(!existing)) {
-      call <- c(as.list(call), extras[!existing])
-      call <- as.call(call)
+    if (is.null(call <- object$call)) # was: getCall(object))) 
+        stop("need an object with call component")
+    extras <- match.call(expand.dots = FALSE)$...
+    if (!missing(formula.)){
+        cat("avant\n")
+        nform <- formula.
+        oform <- formula(object)
+        cat("avant update.Formula\n")
+        print(oform)
+        print(class(oform))
+        print(nform)
+        print(class(nform))
+
+        call$formula <- update(oform, formula.)
+        cat("apres update.Formula\n")
+        
+        print(call)
+        print(oform)
+        print(class(oform))
+        print(nform)
+        print(class(nform))
+        cat("apres\n")
     }
-  }
-  if (evaluate) 
-    eval(call, parent.frame())
-  else call
+    if (length(extras)) {
+        existing <- !is.na(match(names(extras), names(call)))
+        for (a in names(extras)[existing]) call[[a]] <- extras[[a]]
+        if (any(!existing)) {
+            call <- c(as.list(call), extras[!existing])
+            call <- as.call(call)
+        }
+    }
+    if (evaluate) 
+        eval(call, parent.frame())
+    else call
 }
 
 deviance.panelmodel <- function(object, model = NULL, ...){

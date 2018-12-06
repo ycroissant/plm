@@ -12,7 +12,7 @@ export(# estimation:
        between, Between, Within, lag, lead, #pFormula,
        punbalancedness, r.squared, has.intercept, detect_lin_dep, is.pseries,
        is.pconsecutive, is.pbalanced, make.pconsecutive, make.pbalanced,
-       within_intercept, pvar, pdim, dynformula, index, fixef, ranef, cortab,
+       within_intercept,  pdim, dynformula, index, fixef, ranef, cortab, #pvar
        
        # re-exports:
        maxLik # re-export maxLik::maxLik so we can place pkg 'maxLik' in 'Imports' rather than 'Depends' as it is only needed for pldv()
@@ -95,11 +95,11 @@ S3method("punbalancedness", "data.frame")
 S3method("punbalancedness", "pdata.frame")
 S3method("punbalancedness", "panelmodel")
 # pvar
-S3method("pvar",  "data.frame")
-S3method("pvar",  "pdata.frame")
-S3method("pvar",  "pseries")
-S3method("pvar",  "matrix")
-S3method("print", "pvar")
+## S3method("pvar",  "data.frame")
+## S3method("pvar",  "pdata.frame")
+## S3method("pvar",  "pseries")
+## S3method("pvar",  "matrix")
+## S3method("print", "pvar")
 # panelmodel
 S3method("terms",         "panelmodel")
 S3method("print",         "panelmodel")

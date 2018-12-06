@@ -45,7 +45,7 @@ A logical indicating whether the data associated with object \code{x} are balanc
  \code{\link{is.pconsecutive}} to check if data are consecutive; \code{\link{make.pconsecutive}} to make data consecutive 
  (and, optionally, also balanced).\cr
  \code{\link{pdim}} to check the dimensions of a 'pdata.frame' (and other objects), 
- \code{\link{pvar}} to check for individual and time variation of a 'pdata.frame' (and other objects),
+% \code{\link{pvar}} to check for individual and time variation of a 'pdata.frame' (and other objects),
  \code{\link{pseries}}, \code{\link{data.frame}}, \code{\link{pdata.frame}}.
 }
 

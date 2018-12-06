@@ -61,6 +61,7 @@ plm <- function(formula, data, subset, weights, na.action,
                 restrict.rhs = NULL,
                 index = NULL,
                 ...){
+
     if (is.list(formula)){
         # if the first argument is a list (of formulas), then call plmlist and exit
         plmlist <- match.call(expand.dots = FALSE)
@@ -134,7 +135,7 @@ plm <- function(formula, data, subset, weights, na.action,
     # be updated, e.g. y ~ x1 + x2 + x3 | . - x2 + z becomes 
     # y ~ x1 + x2 + x3 | x1 + x3 + z
     # use length(formula)[2] because the length is now a vector of length 2
-    if (length(formula)[2] == 2) formula <- expand.formula(formula)
+#    if (length(formula)[2] == 2) formula <- expand.formula(formula)
     # eval the model.frame
     cl <- match.call()
     mf <- match.call(expand.dots = FALSE)
@@ -163,7 +164,7 @@ plm <- function(formula, data, subset, weights, na.action,
         attr(data, "formula") <- formula
         return(data)
     }
-    
+
     # note that the model.frame has as attributes the pFormula and the index
     # data.frame
     args <- list(model = model, effect = effect,
@@ -282,7 +283,7 @@ plm.fit <- function(data, model, effect, random.method,
                        residuals    = resid(result),
                        weights      = w,
                        df.residual  = df,
-                       formula      = formula,
+                       formula      = formula,  #fForm
                        model        = data)
         if (is.null(model.weights(data))) result$weights <- NULL
         if (model == "random") result$ercomp <- estec
@@ -311,7 +312,7 @@ plm.fit <- function(data, model, effect, random.method,
             as.numeric(model.matrix(data, rhs = 1, model = "pooling") %*% gamma)
         result <- list(coefficients = gamma,
                        vcov         = solve(XPX),
-                       formula      = formula,
+                       formula      = formula, #fForm
                        model        = data,
                        ercomp       = estec,
                        df.residual  = nrow(X) - ncol(X),

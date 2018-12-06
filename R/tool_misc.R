@@ -54,38 +54,38 @@ twosls <- function(y, X, W, intercept = FALSE){
   model
 }
 
-expand.formula <- function(x){
-  oclass <- class(x)
-  if (! any(class(x) == "Formula")) stop("not a Formula object")
-  if (length(x)[2] != 2) stop("not a two part formula")
-  xs <- structure(x, class = "formula")
-  has.response <- attr(terms(xs),"response") == 1
-  if (has.response){
-    y <- x[[2]]
-    rhs <- x[[3]]
-  }
-  else{
-    y <- NULL
-    rhs <- x[[2]]
-  }
-  firstpart <- rhs[[2]]
-  secondpart <- rhs[[3]]
-  if (has.response){
-    one <- do.call("~", list(y,firstpart))
-    two <- do.call("~", list(y,secondpart))
-  }
-  else{
-    one <- do.call("~", list(firstpart))
-    two <- do.call("~", list(secondpart))
-  }
-  two <- update(one, two)
-  one <- paste(deparse(one), collapse = "")
-  two <- paste(deparse(two[[3]]), collapse = "")
-  result <- as.formula(paste(one, "|", two, collapse = ""));
-  result <- as.Formula(result)
-  #YC  class(result) <- c("pFormula", class(result))
-  structure(result, class = oclass)
-}
+## expand.formula <- function(x){
+##   oclass <- class(x)
+##   if (! any(class(x) == "Formula")) stop("not a Formula object")
+##   if (length(x)[2] != 2) stop("not a two part formula")
+##   xs <- structure(x, class = "formula")
+##   has.response <- attr(terms(xs),"response") == 1
+##   if (has.response){
+##     y <- x[[2]]
+##     rhs <- x[[3]]
+##   }
+##   else{
+##     y <- NULL
+##     rhs <- x[[2]]
+##   }
+##   firstpart <- rhs[[2]]
+##   secondpart <- rhs[[3]]
+##   if (has.response){
+##     one <- do.call("~", list(y,firstpart))
+##     two <- do.call("~", list(y,secondpart))
+##   }
+##   else{
+##     one <- do.call("~", list(firstpart))
+##     two <- do.call("~", list(secondpart))
+##   }
+##   two <- update(one, two)
+##   one <- paste(deparse(one), collapse = "")
+##   two <- paste(deparse(two[[3]]), collapse = "")
+##   result <- as.formula(paste(one, "|", two, collapse = ""));
+##   result <- as.Formula(result)
+##   #YC  class(result) <- c("pFormula", class(result))
+##   structure(result, class = oclass)
+## }
 
 
 
@@ -105,12 +105,18 @@ has.intercept.formula <- function(object, ...) {
 has.intercept.Formula <- function(object, rhs = NULL, ...) {
   ## NOTE: returns a logical vector of the necessary length
   ## (which might be > 1)
-  if(is.null(rhs)) rhs <- 1:length(attr(object, "rhs"))
-  sapply(rhs, function(x) has.intercept(formula(object, lhs = 0, rhs = x)))
+    if(is.null(rhs)) rhs <- 1:length(attr(object, "rhs"))
+    sapply(rhs, function(x){
+        aform <- formula(object, lhs = 0, rhs = x)
+        # expand the dot if any in all the parts except the first
+        if (x > 1) aform <- update(formula(object, lhs = 0, rhs = 1), aform)
+        has.intercept(aform)
+    }
+    )
 }
 
 has.intercept.panelmodel <- function(object, ...) {
-  object <- attr(model.frame(object),"formula")
+  object <- attr(model.frame(object), "formula")
   has.intercept(object)
 }
 
