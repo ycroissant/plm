@@ -123,7 +123,6 @@ man/vcovHC.Rd -text
 man/vcovNW.Rd -text
 man/vcovSCC.Rd -text
 man/within_intercept.Rd -text
-tests/Examples/plm-Ex.Rout.save -text
 tests/test_Chow.R -text
 tests/test_Chow.Rout.save -text
 tests/test_Errors.R -text
@@ -157,7 +156,6 @@ tests/test_misc.R -text
 tests/test_model.frame.R -text
 tests/test_model.matrix_effects.R -text
 tests/test_model.matrix_pmodel.response.R -text
-tests/test_model.matrix_pmodel.response_NA.R -text
 tests/test_nested.R -text
 tests/test_nested.Rout.save -text
 tests/test_pFtest.R -text
