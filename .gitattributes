@@ -27,6 +27,7 @@ R/tool_argvalues.R -text
 R/tool_ercomp.R -text
 R/tool_methods.R -text
 R/tool_misc.R -text
+R/tool_model.extract.R -text
 R/tool_pdata.frame.R -text
 R/tool_ranfixef.R -text
 R/tool_transformations.R -text
