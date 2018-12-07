@@ -303,8 +303,8 @@ ercomp.formula <- function(object, data,
         if (effect != "time") estm[[2]] <- plm.fit(data, model = secmod, effect = "individual")
         if (effect != "individual") estm[[3]] <- plm.fit(data, model = secmod, effect = "time")
         # check if Between model was estimated correctly
-        swar_Between_check(estm[[2]], method)
-        swar_Between_check(estm[[3]], method)
+#        swar_Between_check(estm[[2]], method)
+#        swar_Between_check(estm[[3]], method)
     }
     KS <- sapply(estm, function(x) length(coef(x))) - sapply(estm, function(x){ "(Intercept)" %in% names(coef(x))})
     quad <- vector(length = 3, mode = "numeric")
@@ -576,6 +576,8 @@ amemiya_check <- function(matA, matB, method) {
 
 
 swar_Between_check <- function(x, method) {
+    print(method)
+    print(describe(x, "model"))
   ## non-exported, used in ercomp()
   ## little helper function to check feasibility of Between model in Swamy-Arora estimation
   ## in ercomp(): if model contains too few groups (individual, time) the Between
