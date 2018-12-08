@@ -111,7 +111,6 @@ The Hausman--Taylor estimator (Hausman and Taylor (1981)) is computed if \code{m
 
 \value{
 An object of class \code{c("plm", "panelmodel")}.
-
 A \code{"plm"} object has the following elements :
   
 \item{coefficients}{the vector of coefficients,}
