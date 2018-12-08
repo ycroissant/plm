@@ -45,7 +45,7 @@ Next, the `formula`, which is the first and mandatory argument of
 
 `model.frame` is then called, but with the `data` argument in the
 first position (a `pdata.frame` object) and the `formula` in the
-second position. This unusual order of the arguments unables to use a
+second position. This unusual order of the arguments enables to use a
 specific `model.frame.pdata.frame` method defined in `plm`.
 
 As for the `model.frame.formula` method, a `data.frame` is returned,
@@ -56,7 +56,7 @@ to do so is to feed the function with to arguments, a `formula` or a
 `terms` object and a `data.frame` created with `model.frame`. `lm` use
 something like `model.matrix(terms(mf), mf)` where `mf` is a
 `data.frame` created with a `model.frame`. Therefore, `model.matrix`
-needs actualy one argument and not two and we therefore wrote a
+needs actually one argument and not two and we therefore wrote a
 `model.matrix.pdata.frame` which does the job ; the method first check
 that the argument has a `term` attribute, extract the `terms`
 (actually the `formula`) and then compute the `model.matrix`.
@@ -75,7 +75,7 @@ SeatBelt$occfat <- with(SeatBelt, log(farsocc / (vmtrural + vmturban)))
 pSB <- pdata.frame(SeatBelt)
 ```
 
-We start with an ols (`pooling`) specification. 
+We start with an OLS (`pooling`) specification. 
 
 
 ```{r }
@@ -97,7 +97,7 @@ endogenous and instrumented by three variables indicating the law
 context : `ds`, `dp` and `dsp`. 
 
 The model is described using a two-parts formula, the first part of
-the rhs describing the covariates and the second part the
+the RHS describing the covariates and the second part the
 instruments. The following two formulations can be used :
 
 
@@ -108,13 +108,13 @@ formiv2 <- occfat ~ log(usage) + log(percapin) | . - log(usage) + ds + dp + dsp
 The second formulation has two advantages :
 
 - in the common case when a lot of covariates are instruments, these
-  covariates don't need to be indicated in the second rhs part of the
+  covariates don't need to be indicated in the second RHS part of the
   formula,
-- the endogenous variables clearly appear as they are preeceed by a
-  `-` sign in the second rhs part of the formula.
+- the endogenous variables clearly appear as they are proceeded by a
+  `-` sign in the second RHS part of the formula.
 
 The formula is coerced to a `Formula`, using the `Formula`
-package. `model.matrix.pdata.frame` then internaly calls the
+package. `model.matrix.pdata.frame` then internally calls the
 `model.matrix.Formula` in order to extract the covariates and
 instruments model matrices :
 
@@ -125,7 +125,7 @@ X1 <- model.matrix(mfSB1, rhs = 1)
 W1 <- model.matrix(mfSB1, rhs = 2)
 head(X1, 3) ; head(W1, 3)
 ```
-For the second (and prefered formulation), the `dot` argument should
+For the second (and preferred formulation), the `dot` argument should
 be set and is passed to the `Formula` methods. `.` has actually two
 meanings : 
 
@@ -141,11 +141,11 @@ head(model.frame(Formula(formiv2), SeatBelt), 3)
 head(model.frame(Formula(formiv2), SeatBelt, dot = "previous"), 3)
 ```
 In the first case, all the covariates are returned by `model.frame` as
-the `.` is understanden by default as "everything".
+the `.` is understood by default as "everything".
 
-In `plm`, the `dot` argument is internaly set to
-`previous` so that the end-user doesn't have to wory about these
-subtilties. 
+In `plm`, the `dot` argument is internally set to
+`previous` so that the end-user doesn't have to worry about these
+subtleties. 
 
 ```{r }
 mfSB2 <- model.frame(pSB, formiv2)
@@ -153,7 +153,7 @@ X2 <- model.matrix(mfSB2, rhs = 1)
 W2 <- model.matrix(mfSB2, rhs = 2)
 head(X2, 3) ; head(W2, 3)
 ```
-The iv estimator can then be obtained as a 2sls estimator : first
+The iv estimator can then be obtained as a 2SLS estimator : first
 regress the covariates on the instruments and get the fitted values :
 
 

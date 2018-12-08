@@ -82,7 +82,7 @@ setMethod("extract", signature = className("plm", "plm"),
 
 ```
 `plm` is a very versatile function which enable the estimation of a
-wide range of error component models. Those models can be writen as
+wide range of error component models. Those models can be written as
 follow :
 
 $$
@@ -115,7 +115,7 @@ main more argument can be set :
 - `effect` indicates the effects that should be taken into account ;
   this is one of `indiviudal`, `time` and `twoways`.
 - `model` indicates the model to be estimated : `pooling` is just the
-  ols estimation (equivalent to a call to `lm`), `between` performs
+  OLS estimation (equivalent to a call to `lm`), `between` performs
   the estimation on the individual or time means, `within` on the
   deviations from the individual or/and time mean, `fd` on the first
   differences and `random` perform a feasible generalized least
@@ -123,8 +123,8 @@ main more argument can be set :
   by the presence of individual and/or time effects.
 
 The estimation of all but the last model is straightforward, as it
-requires only the estimation by *ols* of obvious transformations of
-the data. The *gls* model requires more explanations. In most of the
+requires only the estimation by *OLS* of obvious transformations of
+the data. The *GLS* model requires more explanations. In most of the
 cases, the estimation is obtained by quasi-differencing the data from
 the individual and/or the time means. The coefficients used to perform
 this quasi-difference depends on estimators of the variance of the
@@ -148,7 +148,7 @@ where $B$ and $W$ are respectively the matrices that performs the
 individual (or time) means and the deviations from these
 means. Consistent estimators can be obtained by replacing the unknown
 errors by the residuals of a consistent preliminary estimation and by
-droping the expecting value operator. Some degree of freedom
+dropping the expecting value operator. Some degree of freedom
 correction can also be introduced. `plm` provides a general interface
 called `ercomp` to estimate the variances :
 
@@ -168,7 +168,7 @@ called `ercomp` to estimate the variances :
       @WALL:HUSS:69,
     * `swar` - `models = c("within", "Between")` @SWAM:AROR:72,
     * `amemiya` - `models = c("within")` @AMEM:71,
-    * `ht` is an slightly modifed version of `amemiya` ; when there
+    * `ht` is an slightly modified version of `amemiya` ; when there
       are time-invariant covariates, the @AMEM:71 estimator of the
       individual component of the variance is under-estimated as the
       time-invariant covariates diseapear in the within regression. In
@@ -177,7 +177,7 @@ called `ercomp` to estimate the variances :
       the residuals in order to estimate the components of the
       variance,
     * `nerlove` which is a specific method which doesn't fit to the
-      methodolgy described aboved (@NERLO:71).
+      methodology described above (@NERLO:71).
 
 Note that when only one model is provided, this means that the same
 residuals are used to compute the two quadratic forms.
@@ -185,7 +185,7 @@ residuals are used to compute the two quadratic forms.
     
 To illustrate the use of `plm`, we use examples reproduced in @BALT:13.
 
-Table 2.1 on page 21 presents Eviews results of the estimation on the
+Table 2.1 on page 21 presents EViews results of the estimation on the
 `Grunfeld` data set :
 
 ```{r grunfeld}
@@ -235,7 +235,7 @@ summary(PrSwar)
 # The twoways effect model
 
 The two-ways effect model is obtained by setting the `effect` argument
-to `TRUE`. @BALT:13 p. 44-46, presents Eviews output for the Grunfeld
+to `TRUE`. @BALT:13 p. 44-46, presents EViews output for the Grunfeld
 data set.
 
 ```{r grunfeld2ways}
@@ -249,7 +249,7 @@ screenreg(list("Wallace-Hussein" = Grw, "Swamy-Arora" = Grs, "Amemiya" = Gra), d
 The estimated variance of the time component of the variance is
 negative for `whalus` and `swar`, it is set to 0.
 
-@BALT:09 p. 60-62, presents Eviews output for the `Produc` data.
+@BALT:09 p. 60-62, presents EViews output for the `Produc` data.
 
 ```{r produc2ways}
 data(Produc, package = "plm")
@@ -270,17 +270,17 @@ Two difficulties arise with unbalanced panels :
   residuals that are used to estimate the components of the
   variance. The strategy is then to compute the expected value and
   equates it to the actual quadratic forms. Detailed formula are
-  omited here, they depend on the preliminary estimator.
+  omitted here, they depend on the preliminary estimator.
 - for the one-way effect model, the estimator is still obtained by
-  applying *ols* on demeaned data (the individual **and** the time
+  applying *OLS* on demeaned data (the individual **and** the time
   means are now deduced) for the within model and on quasi-demeaned
   data for the random effects model ; this is not the case for the
   two-ways effects model.
 
 @BALT:13 and @BALT:09 present results of the estimation of the
 @SWAM:AROR:72 model with the `Hedonic` data set. @BALT:13 p.174,
-presents the Stata output as @BALT:09 p.211 presents the Eviews
-output. The Eviews Wallace Hussain estimator is reported in @BALT:09,
+presents the Stata output as @BALT:09 p.211 presents the EViews
+output. The EViews Wallace Hussain estimator is reported in @BALT:09,
 p. 210.
 
 ```{r hedonic}
@@ -297,7 +297,7 @@ screenreg(list(Eviews = HedEviews, Stata = HedStata, "Walace-Hussein" = HedEview
 ```
 
 The difference is due to the fact that Stata use a between regression
-on $N$ observations as Eviews a between regression on $\sum_n T_n$
+on $N$ observations as EViews a between regression on $\sum_n T_n$
 observations, which are not the same on unbalanced panels. Note the
 use of between with or without the B is capitalized in the
 random.models argument.
