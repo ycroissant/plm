@@ -23,7 +23,7 @@ Changes in version 1.7-0
     be correctly performed for a matrix without index attribute.
   * Between and Within methods for matrices are now exported.
   * pht, plm(., model = "ht"/"am"/"bms"): both uses discouraged, better use instead
-    plm(., model ="random", random.method ="ht"/"am"/"bms", inst.method = "baltagi")
+    plm(., model ="random", random.method ="ht", inst.method = "baltagi"/"am"/"bms")
     to estimate Hausman-Taylor models.
   * summary.plm: removed support for ill-named argument '.vcov', instead use
     'vcov'. '.vcov' has been deprecated in plm 1.6-4 on CRAN since 2016-11-30.
