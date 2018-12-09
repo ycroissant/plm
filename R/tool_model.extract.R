@@ -133,7 +133,7 @@ model.matrix.pdata.frame <- function(object,
                                      cstcovar.rm = NULL,
                                      ...){
     if (is.null(attr(object, "terms")))
-        stop("model.matrix expect a model.frame and not an ordinary pdata.frame")
+        stop("model.matrix expects a model.frame and not an ordinary pdata.frame")
     model <- match.arg(model)
     effect <- match.arg(effect)
     formula <- attr(object, "formula")
@@ -185,7 +185,7 @@ model.matrix.pdata.frame <- function(object,
                           max(X[, posintercept]) < sqrt(.Machine$double.eps),
                           TRUE, FALSE)
         if (length(cstcol) > 0){
-            if (cstcovar.rm == "covariates" | ! zeroint) cstcol <- cstcol[- posintercept]
+            if (cstcovar.rm == "covariates" | !zeroint) cstcol <- cstcol[- posintercept]
             if (length(cstcol) > 0){
                 X <- X[, - match(cstcol, colnames(X)), drop = FALSE]
                 attr(X, "constant") <- cstcol

@@ -84,7 +84,8 @@ lev2var <- function(x, ...){
 
 pht <- function(formula, data, subset, na.action, model = c("ht", "am", "bms"), index = NULL, ...){
 
-  .Deprecated(old = "pht", msg = "uses of 'pht()' and 'plm(., model = \"ht\"/\"am\"/\"bms\")' are discouraged, better use 'plm(., model =\"random\", random.method = \"ht\"/\"am\"/\"bms\", inst.method = \"baltagi\")' instead to estimate Hausman-Taylor models")
+  .Deprecated(old = "pht",
+              msg = "uses of 'pht()' and 'plm(., model = \"ht\"/\"am\"/\"bms\")' are discouraged, better use 'plm(., model =\"random\", random.method = \"ht\", inst.method = \"baltagi\"/\"am\"/\"bms\")'")
   
 
     cl <- match.call(expand.dots = TRUE)

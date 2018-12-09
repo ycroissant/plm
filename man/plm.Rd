@@ -40,7 +40,7 @@ plm(formula, data, subset, weights, na.action,
     \code{"between"}, \code{"random",} \code{"fd"}, or \code{"ht"},}
   \item{random.method}{method of estimation for the variance components
     in the random effects model, one of \code{"swar"} (default),
-    \code{"amemiya"}, \code{"walhus"}, or \code{"nerlove"},}
+    \code{"amemiya"}, \code{"walhus"}, \code{"nerlove"}, or \code{"ht"},}
   \item{random.models}{an alternative to the previous argument, the
   models used to compute the variance components estimations are indicated,}
   \item{random.dfcor}{a numeric vector of length 2 indicating which degree of
@@ -106,7 +106,7 @@ selects the instrument variable transformation method:
   \item \code{"bms"} for Breusch, Mizon, and Schmidt (1989).
 }
 
-The Hausman--Taylor estimator (Hausman and Taylor (1981)) is computed if \code{model = "ht"}.
+The Hausman--Taylor estimator (Hausman and Taylor (1981)) is computed if \code{model = "ht"}. % TODO: this is the deprecated way?!
 }
 
 \value{

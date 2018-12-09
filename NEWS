@@ -22,7 +22,6 @@ Changes in version 1.7-0
   * Between.matrix: bug fixed, so that the transformation can
     be correctly performed for a matrix without index attribute.
   * Between and Within methods for matrices are now exported.
-  * pht: fixed estimation (plm 1.6-6 introduced a regression).
   * pht, plm(., model = "ht"/"am"/"bms"): both uses discouraged, better use instead
     plm(., model ="random", random.method ="ht"/"am"/"bms", inst.method = "baltagi")
     to estimate Hausman-Taylor models.
@@ -39,6 +38,7 @@ Changes in version 1.7-0
     created if drop.index = TRUE is set.
   * Fixed first-difference models (plm(., model = "fd"), pggls(., model = "fd"))
     to have an intercept by default again (disappeared in plm 1.6-6).
+  * pht: fixed estimation (plm 1.6-6 introduced a regression).
   * make.pconsecutive for pseries: for consecutive pseries, argument 'balanced'
     was not respected.
   * pvar: added method for pseries.

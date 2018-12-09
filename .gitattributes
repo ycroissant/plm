@@ -187,6 +187,8 @@ tests/test_pgmm.R -text
 tests/test_pgmm.Rout.save -text
 tests/test_pgrangertest.R -text
 tests/test_pgrangertest.Rout.save -text
+tests/test_pht.R -text
+tests/test_pht.Rout.save -text
 tests/test_phtest_Hausman_regression.R -text
 tests/test_phtest_Hausman_regression.Rout.save -text
 tests/test_plm.data.R -text
