@@ -242,7 +242,6 @@ F-statistic: 2852.33 on 12 and 4152 DF, p-value: < 2.22e-16
 +              wks + married + union + exp + I(exp ^ 2),
 +           model = "random", random.method = "ht", inst.method = "baltagi",
 +            data = Wages, index = 595)
-[1] "ercomp with HT executed"
 > summary(ht5)
 Oneway (individual) effect Random Effect Model 
    (NA's transformation)
@@ -296,7 +295,6 @@ F-statistic: -325.803 on 12 and 4152 DF, p-value: 1
 +              wks + married + union + exp + I(exp ^ 2),
 +            model = "random", random.method = "ht", inst.method = "am",
 +            data = Wages, index = 595)
-[1] "ercomp with HT executed"
 > summary(ht6)
 Oneway (individual) effect Random Effect Model 
    (NA's transformation)
@@ -350,7 +348,6 @@ F-statistic: -325.787 on 12 and 4152 DF, p-value: 1
 +              wks + married + union + exp + I(exp ^ 2),
 +            model = "random", random.method = "ht", inst.method = "bms",
 +            data = Wages, index = 595)
-[1] "ercomp with HT executed"
 > summary(ht7)
 Oneway (individual) effect Random Effect Model 
    (NA's transformation)
