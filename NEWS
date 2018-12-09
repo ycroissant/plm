@@ -22,6 +22,10 @@ Changes in version 1.7-0
   * Between.matrix: bug fixed, so that the transformation can
     be correctly performed for a matrix without index attribute.
   * Between and Within methods for matrices are now exported.
+  * pht: fixed estimation (plm 1.6-6 introduced a regression).
+  * pht, plm(., model = "ht"/"am"/"bms"): both uses discouraged, better use instead
+    plm(., model ="random", random.method ="ht"/"am"/"bms", inst.method = "baltagi")
+    to estimate Hausman-Taylor models.
   * summary.plm: removed support for ill-named argument '.vcov', instead use
     'vcov'. '.vcov' has been deprecated in plm 1.6-4 on CRAN since 2016-11-30.
   * as.data.frame.pdata.frame gained argument 'keep.attributes'.
@@ -35,8 +39,8 @@ Changes in version 1.7-0
     created if drop.index = TRUE is set.
   * Fixed first-difference models (plm(., model = "fd"), pggls(., model = "fd"))
     to have an intercept by default again (disappeared in plm 1.6-6).
-  * make.pconsecutive for pseries: for inputted consecutive pseries, the argument
-    'balanced' was not respected.
+  * make.pconsecutive for pseries: for consecutive pseries, argument 'balanced'
+    was not respected.
   * pvar: added method for pseries.
   * pmodel.response, fitted.plm, residuals.plm: for "between" and "fd" models, 
     a pure numeric is returned, not an 'illegal' pseries anymore (these models 

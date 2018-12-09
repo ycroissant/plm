@@ -82,7 +82,10 @@ lev2var <- function(x, ...){
 }
 
 
-pht <-  function(formula, data, subset, na.action, model = c("ht", "am", "bms"), index = NULL, ...){
+pht <- function(formula, data, subset, na.action, model = c("ht", "am", "bms"), index = NULL, ...){
+
+  .Deprecated(old = "pht", msg = "uses of 'pht()' and 'plm(., model = \"ht\"/\"am\"/\"bms\")' are discouraged, better use 'plm(., model =\"random\", random.method = \"ht\"/\"am\"/\"bms\", inst.method = \"baltagi\")' instead to estimate Hausman-Taylor models")
+  
 
     cl <- match.call(expand.dots = TRUE)
     mf <- match.call()
@@ -114,18 +117,15 @@ pht <-  function(formula, data, subset, na.action, model = c("ht", "am", "bms"),
     N <- pdim$nT$N
     Ti <- pdim$Tint$Ti
     # get the typology of the variables
-    X <- model.matrix(data, rhs = 1, model = "within")
-    # YC 2017/10/03, the intercept is no longer removed while computing
-    # the within X matrix, remove it below
-    nouveau <- TRUE
-    if (! nouveau)  if (colnames(X)[1] == "(Intercept)") X <- X[, -1]
-    W <- model.matrix(data, rhs = 2, model = "within")
-    if (nouveau)    W <- model.matrix(formula, data, rhs = 2, model = "within", cstcovar.rm = "none")
+    X <- model.matrix(data, rhs = 1, model = "within", cstcovar.rm = "all")
+    W <- model.matrix(data, rhs = 2, model = "within", cstcovar.rm = "all")
     exo.all <- colnames(W)
     all.all <- colnames(X)
     edo.all <- all.all[!(all.all %in% exo.all)]
     all.cst <- attr(X, "constant")
     exo.cst <- attr(W, "constant")
+    if("(Intercept)" %in% all.cst) all.cst <- setdiff(all.cst, "(Intercept)")
+    if("(Intercept)" %in% exo.cst) exo.cst <- setdiff(exo.cst, "(Intercept)")
     exo.var <- exo.all[!(exo.all %in% exo.cst)]
     edo.cst <- all.cst[!(all.cst %in% exo.cst)]
     edo.var <- edo.all[!(edo.all %in% edo.cst)]
@@ -140,12 +140,11 @@ pht <-  function(formula, data, subset, na.action, model = c("ht", "am", "bms"),
     if (length(edo.var) > 0) NV <- X[ , edo.var, drop = FALSE] else NV <- NULL
     if (length(exo.cst) > 0) XC <- X[ , exo.cst, drop = FALSE] else XC <- NULL
     if (length(edo.cst) > 0) NC <- X[ , edo.cst, drop = FALSE] else NC <- NULL
-    if (length(all.cst) !=0 )
+    if (length(all.cst) != 0 )
         zo <- twosls(fixef[as.character(id)], cbind(XC, NC), cbind(XC, XV), TRUE)
     else zo <- lm(fixef ~ 1)
     
     sigma2 <- list()
-    sigma2$one <- 0
     sigma2$idios <- deviance(within)/ (N - n)
     sigma2$one <- deviance(zo) / n
     if(balanced){
