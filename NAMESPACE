@@ -7,7 +7,7 @@ export(# estimation:
        # vcov:
        vcovHC, vcovDC, vcovNW, vcovG, vcovBK, vcovSCC, pvcovHC,
        # others:
-       pdata.frame, pmodel.response,
+       pdata.frame, pmodel.response, pvar,
        between, Between, Within, lag, lead,
        punbalancedness, r.squared, has.intercept, detect_lin_dep, is.pseries,
        is.pconsecutive, is.pbalanced, make.pconsecutive, make.pbalanced,
@@ -131,6 +131,12 @@ S3method("print", "summary.pcce")
 S3method("residuals", "pmg")
 S3method("summary",   "pmg")
 S3method("print", "summary.pmg")
+# pvar
+S3method("pvar",  "data.frame")
+S3method("pvar",  "pdata.frame")
+S3method("pvar",  "pseries")
+S3method("pvar",  "matrix")
+S3method("print", "pvar")
 # pht
 S3method("summary", "pht")
 S3method("print", "summary.pht")

@@ -215,3 +215,139 @@ punbalancedness <- function(x, ...) {
   UseMethod("punbalancedness")
 }
 
+myvar <- function(x){
+  x.na <- is.na(x)
+  if(anyNA(x.na)) x <- x[!x.na]
+  n <- length(x)
+  
+  z <- switch(as.character(n),
+              "0" = NA,
+              "1" = 0,
+              ifelse(!(is.factor(x) || is.character(x)), var(x), !all(duplicated(x)[-1L]))) # [var() on factors is deprecated as of R 3.2.3]
+  z
+}
+
+pvar <- function(x, ...){
+  UseMethod("pvar")
+}
+
+pvar.default <- function(x, id, time, ...){
+  name.var <- names(x)
+  len <- length(x)
+  time.variation <- rep(TRUE, len)
+  id.variation   <- rep(TRUE, len)
+  time.variation_anyNA <- rep(FALSE, len)
+  id.variation_anyNA   <- rep(FALSE, len)
+  lid <- split(x, id)
+  ltime <- split(x, time)
+  if (is.list(x)){
+    if (len == 1){
+      # time variation
+      temp_time.var          <- sapply(lid, function(x) sapply(x, myvar))
+      temp_time.var_sumNoVar <- sum(temp_time.var == 0, na.rm = TRUE) # number of non-varying id-time comb. (without all NA groups)
+      temp_time.var_sumNA    <- sum(is.na(temp_time.var))             # number of all-NA groups
+      temp_time.varResult    <- temp_time.var_sumNoVar + temp_time.var_sumNA
+      time.variation         <- temp_time.varResult != length(lid) # no variation if (no. non-varying + no. all-NA) == number of groups 
+      time.variation_anyNA   <- temp_time.var_sumNA > 0            # indicates if at least one id-time comb is all NA
+      
+      # id variation
+      temp_id.var          <- sapply(ltime, function(x) sapply(x, myvar))
+      temp_id.var_sumNoVar <- sum(temp_id.var == 0, na.rm = TRUE)
+      temp_id.var_sumNA    <- sum(is.na(temp_id.var))
+      temp_id.varResult    <- temp_id.var_sumNoVar + temp_id.var_sumNA
+      id.variation         <- temp_id.varResult != length(ltime)
+      id.variation_anyNA   <- temp_id.var_sumNA > 0
+    }
+    else{
+      # time variation
+      temp_time.var          <- sapply(lid, function(x) sapply(x, myvar))
+      temp_time.var_sumNoVar <- apply(temp_time.var == 0, 1, sum, na.rm = TRUE)
+      temp_time.var_sumNA    <- apply(is.na(temp_time.var), 1, sum)
+      temp_time.varResult    <- temp_time.var_sumNoVar + temp_time.var_sumNA
+      time.variation         <- temp_time.varResult != length(lid)
+      time.variation_anyNA   <- temp_time.var_sumNA > 0
+      
+      # id variation
+      temp_id.var          <- sapply(ltime, function(x) sapply(x, myvar))
+      temp_id.var_sumNoVar <- apply(temp_id.var == 0, 1, sum, na.rm = TRUE)
+      temp_id.var_sumNA    <- apply(is.na(temp_id.var), 1, sum)
+      temp_id.varResult    <- temp_id.var_sumNoVar + temp_id.var_sumNA
+      id.variation         <- temp_id.varResult != length(ltime)
+      id.variation_anyNA   <- temp_id.var_sumNA > 0
+    }
+  }
+  else{ # not a list (not a data.frame, pdata.frame) - try our best for that unknown data structure
+    # time variation
+    temp_time.var          <- sapply(lid, function(x) sapply(x, myvar))
+    temp_time.var_sumNoVar <- sum(temp_time.var == 0, na.rm = TRUE)
+    temp_time.var_sumNA    <- sum(is.na(temp_time.var))
+    temp_time.varResult    <- temp_time.var_sumNoVar + temp_time.var_sumNA
+    time.variation         <- temp_time.varResult != length(lid)
+    time.variation_anyNA   <- temp_time.var_sumNA > 0
+    
+    # id variation
+    temp_id.var          <- sapply(ltime, function(x) sapply(x, myvar))
+    temp_id.var_sumNoVar <- sum(temp_id.var == 0, na.rm = TRUE)
+    temp_id.var_sumNA    <- sum(is.na(temp_id.var))
+    temp_id.varResult    <- temp_id.var_sumNoVar + temp_id.var_sumNA
+    id.variation         <- temp_id.varResult != length(ltime)
+    id.variation_anyNA   <- temp_id.var_sumNA > 0
+  }
+  
+  # make 'pvar' object
+  names(id.variation) <- names(time.variation) <- names(id.variation_anyNA) <- names(time.variation_anyNA) <- name.var
+  dim.var <- list(id.variation         = id.variation,
+                  time.variation       = time.variation,
+                  id.variation_anyNA   = id.variation_anyNA,
+                  time.variation_anyNA = time.variation_anyNA)
+  class(dim.var) <- "pvar"
+  return(dim.var)
+}
+
+pvar.matrix <- function(x, index = NULL, ...){
+  x <- pdata.frame(as.data.frame(x), index, ...)
+  pvar(x)
+}
+
+pvar.data.frame <- function(x, index = NULL, ...){
+  x <- pdata.frame(x, index, ...)
+  pvar(x)
+}
+
+pvar.pdata.frame <- function(x, ...){
+  index <- attr(x, "index")
+  id <- index[[1]]
+  time <- index[[2]]
+  pvar.default(x, id, time)
+}
+
+pvar.pseries <- function(x, ...){
+  # use drop.index = TRUE so that the index columns' 
+  # variations are not evaluated:
+  pdfx <- pseries2pdataframe(x, drop.index = TRUE)
+  pvar.pdata.frame(pdfx)
+}
+
+print.pvar <- function(x, ...){
+  varnames <- names(x$time.variation)
+  if(any(!x$time.variation)){
+    var <- varnames[x$time.variation==FALSE]
+    #    if (!is.null(y)) var <- var[-which(var==y$id)]
+    if (length(var)!=0) cat(paste("no time variation:      ", paste(var,collapse=" "),"\n"))
+  }
+  if(any(!x$id.variation)){
+    var <- varnames[x$id.variation==FALSE]
+    #    if (!is.null(y)) var <- var[-which(var==y$time)]
+    if(length(var)!=0) cat(paste("no individual variation:", paste(var,collapse=" "),"\n"))
+  }
+  
+  # any individual-time combinations all NA?
+  if(any(x$time.variation_anyNA)){
+    var_anyNA <- varnames[x$time.variation_anyNA]
+    if (length(var_anyNA)!=0) cat(paste("all NA in time dimension for at least one individual: ", paste(var_anyNA,collapse=" "),"\n"))
+  }
+  if(any(x$id.variation_anyNA)){
+    var_anyNA <- varnames[x$id.variation_anyNA]
+    if (length(var_anyNA)!=0) cat(paste("all NA in ind. dimension for at least one time period:", paste(var_anyNA,collapse=" "),"\n"))
+  }
+}

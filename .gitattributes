@@ -52,9 +52,7 @@ inst/removed/dynformula.Rd -text
 inst/removed/pFormula.Rd -text
 inst/removed/pht.Rd -text
 inst/removed/plm.data.Rd -text
-inst/removed/pvar.Rd -text
 inst/removed/test_model.matrix_pmodel.response_NA.R -text
-inst/removed/test_pvar.R -text
 inst/removed/unused.R -text
 man/Cigar.Rd -text
 man/Crime.Rd -text
@@ -112,6 +110,7 @@ man/pooltest.Rd -text
 man/pseries.Rd -text
 man/punbalancedness.Rd -text
 man/purtest.Rd -text
+man/pvar.Rd -text
 man/pvcm.Rd -text
 man/pwaldtest.Rd -text
 man/pwartest.Rd -text
@@ -200,6 +199,7 @@ tests/test_pseries_subsetting.R -text
 tests/test_punbalancedness.R -text
 tests/test_purtest.R -text
 tests/test_purtest.Rout.save -text
+tests/test_pvar.R -text
 tests/test_pvcm.R -text
 tests/test_pvcm.Rout.save -text
 tests/test_pwaldtest.R -text
