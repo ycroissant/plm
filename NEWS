@@ -1,6 +1,16 @@
 
 Changes in version 1.7-0
 
+  * transformations (Within, Between, ...) was very slow for the
+    pseries method, due to a call to the default method on pseries,
+    this is nox fixed
+
+  * pFormula is removed ; model.frame now has a pdata.frame method
+    (instead of a pFormula method) and model.matrix has a pdata.frame
+    method (a pdata.frame with a terms attribute). formula as an
+    argument in model.matrix was unnecessary as the formula can be
+    retrieved from the pdata.frame
+
   * lag, lead, diff for pseries objects: functions now take care of the time
     dimension when shifting observations within each individual. Previously, 
     shifting was performed row-wise within each individual (neglecting the time
