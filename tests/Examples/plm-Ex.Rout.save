@@ -130,10 +130,11 @@ alternative hypothesis: Stationarity
 > 
 > flush(stderr()); flush(stdout())
 > 
-> ### Name: detect_lin_dep
+> ### Name: detect.lindep
 > ### Title: Functions to detect linear dependence
-> ### Aliases: detect_lin_dep detect_lin_dep.matrix detect_lin_dep.data.frame
-> ###   detect_lin_dep.plm alias alias.plm alias.pdata.frame
+> ### Aliases: detect.lindep detect_lin_dep detect.lindep.matrix
+> ###   detect.lindep.data.frame detect.lindep.plm alias alias.plm
+> ###   alias.pdata.frame
 > ### Keywords: manip array
 > 
 > ### ** Examples
@@ -152,18 +153,18 @@ alternative hypothesis: Stationarity
 > mf <- model.frame(Cigar.p, form)
 > # no linear dependence in the pooling model's model matrix
 > # (with intercept in the formula, there would be linear depedence)
-> #MM detect_lin_dep(model.matrix(pform, data = mf, model = "pooling"))
-> detect_lin_dep(model.matrix(mf, model = "pooling"))
+> #MM detect.lindep(model.matrix(pform, data = mf, model = "pooling"))
+> detect.lindep(model.matrix(mf, model = "pooling"))
 [1] "No linear dependent column(s) detected."
 > # linear dependence present in the FE transformed model matrix
 > #MM modmat_FE <- model.matrix(pform, data = mf, model = "within")
 > modmat_FE <- model.matrix(mf, model = "within")
-> detect_lin_dep(modmat_FE)
+> detect.lindep(modmat_FE)
 [1] "Suspiscious column number(s): 2, 3"
 [1] "Suspiscious column name(s):   fact1, fact2"
 > #MM mod_FE <- plm(pform, data = Cigar.p, model = "within")
 > mod_FE <- plm(form, data = Cigar.p, model = "within")
-> detect_lin_dep(mod_FE) 
+> detect.lindep(mod_FE) 
 [1] "Suspiscious column number(s): 2, 3"
 [1] "Suspiscious column name(s):   fact1, fact2"
 > alias(mod_FE) # => fact1 == -1*fact2
@@ -265,7 +266,7 @@ FALSE FALSE  TRUE
 > # no linear dependent columns in original data/pooling model
 > #MM modmat_pool <- model.matrix(pform, data = mf, model="pooling")
 > modmat_pool <- model.matrix(mf, model="pooling")
-> detect_lin_dep(modmat_pool)
+> detect.lindep(modmat_pool)
 [1] "No linear dependent column(s) detected."
 > #MM mod_pool <- plm(pform, data = Grunfeld, model = "pooling")
 > mod_pool <- plm(form, data = Grunfeld, model = "pooling")
@@ -278,12 +279,12 @@ Model :
 > # (demeaning per individual)
 > #MM modmat_FE <- model.matrix(pform, data = mf, model="within")
 > modmat_FE <- model.matrix(mf, model="within")
-> detect_lin_dep(modmat_FE)
+> detect.lindep(modmat_FE)
 [1] "Suspiscious column number(s): 3, 4"
 [1] "Suspiscious column name(s):   CEOtenure, CEOage"
 > #MM mod_FE <- plm(pform, data = Grunfeld, model = "within")
 > mod_FE <- plm(form, data = Grunfeld, model = "within")
-> detect_lin_dep(mod_FE)
+> detect.lindep(mod_FE)
 [1] "Suspiscious column number(s): 3, 4"
 [1] "Suspiscious column name(s):   CEOtenure, CEOage"
 > alias(mod_FE)
@@ -6505,6 +6506,34 @@ Unbalanced Panel: n = 48, T = 9-17, N = 808
 [1] 190
 > pdim(fdmod)$nT$N # 200
 [1] 200
+> 
+> 
+> 
+> cleanEx()
+> nameEx("pFormula")
+> ### * pFormula
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: pFormula
+> ### Title: pFormula: An extended Formula interface for panel data
+> ### Aliases: pFormula as.Formula.pFormula
+> ### Keywords: classes
+> 
+> ### ** Examples
+> 
+> # First, make a pdata.frame
+> data("Grunfeld", package = "plm")
+> pGrunfeld <- pdata.frame(Grunfeld)
+> 
+> # then make a model frame from a pFormula and a pdata.frame
+> pform <- pFormula(inv ~ value + capital)
+Warning: pFormula() is deprecated, use Formula()
+> mf <- model.frame(pform, data = pGrunfeld)
+> 
+> # then construct the (transformed) model matrix (design matrix)
+> # from formula and model frame
+> modmat <- model.matrix(pform, data = mf, model = "within")
 > 
 > 
 > 
@@ -13246,7 +13275,7 @@ attr(,"se")
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  43.54 3.77 47.55 NA NA 
+Time elapsed:  12.54 1.06 13.64 NA NA 
 > grDevices::dev.off()
 null device 
           1 

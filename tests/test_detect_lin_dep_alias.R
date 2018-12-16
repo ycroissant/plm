@@ -1,5 +1,5 @@
 # Tests for functions:
-#  * detect_lin_dep
+#  * detect.lindep
 #  * alias
 # YC 2017/10/09 :  RE model par defaut pb because the between model is empty
 
@@ -16,45 +16,47 @@ mf <- model.frame(Cigar.p, form)
 
 # for the pooling model.matrix, there is no linear dependence
 # (because the intercept is left out in this case in the formula)
-#MM detect_lin_dep(model.matrix(pform, data = Cigar.p, model = "pooling"))
+#MM detect.lindep(model.matrix(pform, data = Cigar.p, model = "pooling"))
 
+detect.lindep(model.matrix(mf, model = "pooling"))
+
+## check if backward compatibility works
 detect_lin_dep(model.matrix(mf, model = "pooling"))
-
 
 # linear dependence occury after FE transformation
 # [after transformation fact1 == -1 * fact2]
-#MM detect_lin_dep(model.matrix(pform, data = Cigar.p, model = "within"))
+#MM detect.lindep(model.matrix(pform, data = Cigar.p, model = "within"))
 
-detect_lin_dep(model.matrix(mf, model = "within"))
+detect.lindep(model.matrix(mf, model = "within"))
 #MM mod_fe <- plm(pform, data = Cigar.p, model = "within")
 mod_fe <- plm(form, data = Cigar.p, model = "within")
-detect_lin_dep(mod_fe)
+detect.lindep(mod_fe)
 
 # test with NA matrix and empty matrix
-detect_lin_dep(matrix(NA))                     # NA matrix
-detect_lin_dep(matrix(NA, nrow = 0, ncol = 0)) # empty matrix
+detect.lindep(matrix(NA))                     # NA matrix
+detect.lindep(matrix(NA, nrow = 0, ncol = 0)) # empty matrix
 
 # linear dependent column(s) are silently dropped in plm estimation, thus this works
 #mod_fe <- plm(pform, data = Cigar.p, model = "within")
 mod_fe <- plm(form, data = Cigar.p, model = "within")
-detect_lin_dep(model.matrix(mod_fe))
+detect.lindep(model.matrix(mod_fe))
 
 # tests with suppressed printing
-detect_lin_dep(matrix(NA), suppressPrint = TRUE)                     # NA matrix
-detect_lin_dep(matrix(NA, nrow = 0, ncol = 0), suppressPrint = TRUE) # empty matrix
-#MM detect_lin_dep(model.matrix(pform, data = Cigar.p, model = "pooling"), suppressPrint = TRUE)
-#MM detect_lin_dep(model.matrix(pform, data = Cigar.p, model = "within"), suppressPrint = TRUE)
-detect_lin_dep(model.matrix(mf, model = "pooling"), suppressPrint = TRUE)
-detect_lin_dep(model.matrix(mf, model = "within"), suppressPrint = TRUE)
-detect_lin_dep(model.matrix(mod_fe), suppressPrint = TRUE)
+detect.lindep(matrix(NA), suppressPrint = TRUE)                     # NA matrix
+detect.lindep(matrix(NA, nrow = 0, ncol = 0), suppressPrint = TRUE) # empty matrix
+#MM detect.lindep(model.matrix(pform, data = Cigar.p, model = "pooling"), suppressPrint = TRUE)
+#MM detect.lindep(model.matrix(pform, data = Cigar.p, model = "within"), suppressPrint = TRUE)
+detect.lindep(model.matrix(mf, model = "pooling"), suppressPrint = TRUE)
+detect.lindep(model.matrix(mf, model = "within"), suppressPrint = TRUE)
+detect.lindep(model.matrix(mod_fe), suppressPrint = TRUE)
 
 # test for (p)data.frame interface
 df <- as.data.frame(model.matrix(mod_fe))
-detect_lin_dep(df)
-detect_lin_dep(Cigar)
+detect.lindep(df)
+detect.lindep(Cigar)
 Cigar.p$price2 <- 2*Cigar.p$price
-detect_lin_dep(Cigar.p)
-detect_lin_dep(Cigar.p, suppressPrint = TRUE)
+detect.lindep(Cigar.p)
+detect.lindep(Cigar.p, suppressPrint = TRUE)
 
 
 

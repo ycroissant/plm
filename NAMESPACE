@@ -9,11 +9,11 @@ export(# estimation:
        # others:
        pdata.frame, pmodel.response, pvar,
        between, Between, Within, lag, lead,
-       punbalancedness, r.squared, has.intercept, detect_lin_dep, is.pseries,
+       punbalancedness, r.squared, has.intercept, detect.lindep, is.pseries,
        is.pconsecutive, is.pbalanced, make.pconsecutive, make.pbalanced,
        within_intercept,  pdim, index, fixef, ranef, cortab,
        #deprecated:
-       dynformula, plm.data, pht,
+       dynformula, detect_lin_dep, plm.data, pht,
        # re-exports:
        maxLik # re-export maxLik::maxLik so we can place pkg 'maxLik'
               # in 'Imports' rather than 'Depends' as it is only
@@ -245,10 +245,10 @@ S3method("summary", "purtest")
 S3method("print", "summary.purtest")
 # pwaldtest
 S3method("pwaldtest", "plm")
-# detect_lin_dep, alias
-S3method("detect_lin_dep", "matrix")
-S3method("detect_lin_dep", "data.frame")
-S3method("detect_lin_dep", "plm")
+# detect.lindep, alias
+S3method("detect.lindep", "matrix")
+S3method("detect.lindep", "data.frame")
+S3method("detect.lindep", "plm")
 S3method("alias", "plm")
 S3method("alias", "pdata.frame")
 # is.pconsecutive
