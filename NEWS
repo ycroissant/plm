@@ -69,7 +69,8 @@ Changes in version 1.7-0
   * pcce models: display proper names in printed summary's topline; pooled model object's
     element 'coefficients' is a numeric (was 1x1 matrix).
   * pmg models: display distinguishing names in printed summary's topline.
-  * dynformula: the long depricated function now gives a deprecation warning.
+  * dynformula: the long deprecated function now gives a deprecation warning.
+  * pvcovHC: function deprecated, use vcovHC for same functionality.
   * detect.lindep: renamed function detect_lin_dep for consistency in function
     nameing (back-compatible solution implemented).
 
@@ -876,7 +877,7 @@ Changes since version 1-1.0
     and a pooling model" is removed so that two within models may be
     provided.
 
-  * for backward compatibility reasons, the pvcovHC is reintroduced.
+  * for backward compatibility reasons, function pvcovHC is reintroduced.
 
   * for backward compatibility reasons, argument test of pbsytest
     may be indicated in upper case.

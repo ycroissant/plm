@@ -6,9 +6,6 @@
 ## and wrapper functions for vcovHC, vcovNW, vcovSCC, vcovDC.
 ## Only vcovBK stays separate for simplicity reasons.
 
-pvcovHC <- function(x, ...){
-  UseMethod("vcovHC")
-}
 
 vcovSCC <- function(x, ...){
   UseMethod("vcovSCC")

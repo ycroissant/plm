@@ -1,5 +1,13 @@
 ## some deprecated functions
 
+
+pvcovHC <- function(x, ...){
+  .Deprecated(new = "pvcovHC", msg = "'pvcovHC' is deprecated, use 'vcovHC' instead for same functionality",
+              old = "vcovHC")
+  UseMethod("vcovHC")
+}
+
+
 # plm.data() is now deprecated (since February 2017). Need to keep it in package
 # for backward compatibility of users' code out there and packages, especially 
 # for package 'systemfit'.
