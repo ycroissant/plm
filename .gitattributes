@@ -50,7 +50,6 @@ data/Wages.rda -text
 inst/CITATION -text
 inst/removed/dynformula.Rd -text
 inst/removed/pFormula.Rd -text
-inst/removed/pht.Rd -text
 inst/removed/plm.data.Rd -text
 inst/removed/test_model.matrix_pmodel.response_NA.R -text
 inst/removed/unused.R -text
@@ -97,6 +96,7 @@ man/pdwtest.Rd -text
 man/pggls.Rd -text
 man/pgmm.Rd -text
 man/pgrangertest.Rd -text
+man/pht.Rd -text
 man/phtest.Rd -text
 man/piest.Rd -text
 man/pldv.Rd -text

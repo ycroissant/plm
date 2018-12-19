@@ -6510,34 +6510,6 @@ Unbalanced Panel: n = 48, T = 9-17, N = 808
 > 
 > 
 > cleanEx()
-> nameEx("pFormula")
-> ### * pFormula
-> 
-> flush(stderr()); flush(stdout())
-> 
-> ### Name: pFormula
-> ### Title: pFormula: An extended Formula interface for panel data
-> ### Aliases: pFormula as.Formula.pFormula
-> ### Keywords: classes
-> 
-> ### ** Examples
-> 
-> # First, make a pdata.frame
-> data("Grunfeld", package = "plm")
-> pGrunfeld <- pdata.frame(Grunfeld)
-> 
-> # then make a model frame from a pFormula and a pdata.frame
-> pform <- pFormula(inv ~ value + capital)
-Warning: pFormula() is deprecated, use Formula()
-> mf <- model.frame(pform, data = pGrunfeld)
-> 
-> # then construct the (transformed) model matrix (design matrix)
-> # from formula and model frame
-> modmat <- model.matrix(pform, data = mf, model = "within")
-> 
-> 
-> 
-> cleanEx()
 > nameEx("pFtest")
 > ### * pFtest
 > 
@@ -8843,6 +8815,144 @@ alternative hypothesis: Granger causality for at least one individual
 > 
 > 
 > cleanEx()
+> nameEx("pht")
+> ### * pht
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: pht
+> ### Title: Hausman-Taylor Estimator for Panel Data
+> ### Aliases: pht summary.pht print.summary.pht
+> ### Keywords: regression
+> 
+> ### ** Examples
+> 
+> ## replicates Baltagi (2005, 2013), table 7.4
+> ## preferred way with plm()
+> data("Wages", package = "plm")
+> ht <- plm(lwage ~ wks + south + smsa + married + exp + I(exp ^ 2) + 
++               bluecol + ind + union + sex + black + ed |
++               bluecol + south + smsa + ind + sex + black |
++               wks + married + union + exp + I(exp ^ 2), 
++           data = Wages, index = 595,
++           random.method = "ht", model = "random", inst.method = "baltagi")
+> summary(ht)
+Oneway (individual) effect Random Effect Model 
+   (NA's transformation)
+
+Call:
+plm(formula = lwage ~ wks + south + smsa + married + exp + I(exp^2) + 
+    bluecol + ind + union + sex + black + ed | bluecol + south + 
+    smsa + ind + sex + black | wks + married + union + exp + 
+    I(exp^2), data = Wages, model = "random", random.method = "ht", 
+    inst.method = "baltagi", index = 595)
+
+Balanced Panel: n = 595, T = 7, N = 4165
+
+Effects:
+                  var std.dev share
+idiosyncratic 0.02304 0.15180 0.025
+individual    0.88699 0.94180 0.975
+theta: 0.9392
+
+Residuals:
+      Min.    1st Qu.     Median    3rd Qu.       Max. 
+-12.643736  -0.466002   0.043285   0.524739  13.340263 
+
+Coefficients:
+               Estimate  Std. Error t-value  Pr(>|t|)    
+(Intercept)  2.9127e+00  2.8365e-01 10.2687 < 2.2e-16 ***
+wks          8.3740e-04  5.9973e-04  1.3963   0.16270    
+southyes     7.4398e-03  3.1955e-02  0.2328   0.81591    
+smsayes     -4.1833e-02  1.8958e-02 -2.2066   0.02740 *  
+marriedyes  -2.9851e-02  1.8980e-02 -1.5728   0.11585    
+exp          1.1313e-01  2.4710e-03 45.7851 < 2.2e-16 ***
+I(exp^2)    -4.1886e-04  5.4598e-05 -7.6718 2.100e-14 ***
+bluecolyes  -2.0705e-02  1.3781e-02 -1.5024   0.13307    
+ind          1.3604e-02  1.5237e-02  0.8928   0.37202    
+unionyes     3.2771e-02  1.4908e-02  2.1982   0.02799 *  
+sexfemale   -1.3092e-01  1.2666e-01 -1.0337   0.30135    
+blackyes    -2.8575e-01  1.5570e-01 -1.8352   0.06654 .  
+ed           1.3794e-01  2.1248e-02  6.4919 9.471e-11 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    243.04
+Residual Sum of Squares: 4163.6
+R-Squared:      0.60945
+Adj. R-Squared: 0.60833
+F-statistic: -325.803 on 12 and 4152 DF, p-value: 1
+> 
+> am <- plm(lwage ~ wks + south + smsa + married + exp + I(exp ^ 2) + 
++               bluecol + ind + union + sex + black + ed |
++               bluecol + south + smsa + ind + sex + black |
++               wks + married + union + exp + I(exp ^ 2), 
++           data = Wages, index = 595,
++           random.method = "ht", model = "random", inst.method = "am")
+> summary(am)
+Oneway (individual) effect Random Effect Model 
+   (NA's transformation)
+
+Call:
+plm(formula = lwage ~ wks + south + smsa + married + exp + I(exp^2) + 
+    bluecol + ind + union + sex + black + ed | bluecol + south + 
+    smsa + ind + sex + black | wks + married + union + exp + 
+    I(exp^2), data = Wages, model = "random", random.method = "ht", 
+    inst.method = "am", index = 595)
+
+Balanced Panel: n = 595, T = 7, N = 4165
+
+Effects:
+                  var std.dev share
+idiosyncratic 0.02304 0.15180 0.025
+individual    0.88699 0.94180 0.975
+theta: 0.9392
+
+Residuals:
+      Min.    1st Qu.     Median    3rd Qu.       Max. 
+-12.643192  -0.464811   0.043216   0.523598  13.338789 
+
+Coefficients:
+               Estimate  Std. Error t-value  Pr(>|t|)    
+(Intercept)  2.9273e+00  2.7513e-01 10.6399 < 2.2e-16 ***
+wks          8.3806e-04  5.9945e-04  1.3980   0.16218    
+southyes     7.2818e-03  3.1936e-02  0.2280   0.81965    
+smsayes     -4.1951e-02  1.8947e-02 -2.2141   0.02688 *  
+marriedyes  -3.0089e-02  1.8967e-02 -1.5864   0.11273    
+exp          1.1297e-01  2.4688e-03 45.7584 < 2.2e-16 ***
+I(exp^2)    -4.2140e-04  5.4554e-05 -7.7244 1.400e-14 ***
+bluecolyes  -2.0850e-02  1.3765e-02 -1.5147   0.12993    
+ind          1.3629e-02  1.5229e-02  0.8949   0.37088    
+unionyes     3.2475e-02  1.4894e-02  2.1804   0.02928 *  
+sexfemale   -1.3201e-01  1.2660e-01 -1.0427   0.29715    
+blackyes    -2.8590e-01  1.5549e-01 -1.8388   0.06602 .  
+ed           1.3720e-01  2.0570e-02  6.6703 2.889e-11 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    243.04
+Residual Sum of Squares: 4160.3
+R-Squared:      0.60948
+Adj. R-Squared: 0.60835
+F-statistic: -325.787 on 12 and 4152 DF, p-value: 1
+> 
+> ## deprecated way with pht() for HT
+> #ht <- pht(lwage ~ wks + south + smsa + married + exp + I(exp^2) +
+> #          bluecol + ind + union + sex + black + ed | 
+> #          sex + black + bluecol + south + smsa + ind,
+> #          data = Wages, model = "ht", index = 595)
+> #summary(ht)
+> # deprecated way with pht() for AM
+> #am <- pht(lwage ~ wks + south + smsa + married + exp + I(exp^2) +
+> #          bluecol + ind + union + sex + black + ed | 
+> #          sex + black + bluecol + south + smsa + ind,
+> #          data = Wages, model = "am", index = 595)
+> #summary(am)
+> 
+> 
+> 
+> 
+> cleanEx()
 > nameEx("phtest")
 > ### * phtest
 > 
@@ -9282,6 +9392,115 @@ Residual Sum of Squares: 1.1195
 R-Squared:      0.97231
 Adj. R-Squared: 0.9721
 F-statistic: 4733.87 on 6 and 809 DF, p-value: < 2.22e-16
+> 
+> ## Hausman-Taylor estimator and Amemiya-MaCurdy estimator
+> ## replicate Baltagi (2005, 2013), table 7.4
+> data("Wages", package = "plm")
+> ht <- plm(lwage ~ wks + south + smsa + married + exp + I(exp ^ 2) + 
++               bluecol + ind + union + sex + black + ed |
++               bluecol + south + smsa + ind + sex + black |
++               wks + married + union + exp + I(exp ^ 2), 
++           data = Wages, index = 595,
++           random.method = "ht", model = "random", inst.method = "baltagi")
+> summary(ht)
+Oneway (individual) effect Random Effect Model 
+   (NA's transformation)
+
+Call:
+plm(formula = lwage ~ wks + south + smsa + married + exp + I(exp^2) + 
+    bluecol + ind + union + sex + black + ed | bluecol + south + 
+    smsa + ind + sex + black | wks + married + union + exp + 
+    I(exp^2), data = Wages, model = "random", random.method = "ht", 
+    inst.method = "baltagi", index = 595)
+
+Balanced Panel: n = 595, T = 7, N = 4165
+
+Effects:
+                  var std.dev share
+idiosyncratic 0.02304 0.15180 0.025
+individual    0.88699 0.94180 0.975
+theta: 0.9392
+
+Residuals:
+      Min.    1st Qu.     Median    3rd Qu.       Max. 
+-12.643736  -0.466002   0.043285   0.524739  13.340263 
+
+Coefficients:
+               Estimate  Std. Error t-value  Pr(>|t|)    
+(Intercept)  2.9127e+00  2.8365e-01 10.2687 < 2.2e-16 ***
+wks          8.3740e-04  5.9973e-04  1.3963   0.16270    
+southyes     7.4398e-03  3.1955e-02  0.2328   0.81591    
+smsayes     -4.1833e-02  1.8958e-02 -2.2066   0.02740 *  
+marriedyes  -2.9851e-02  1.8980e-02 -1.5728   0.11585    
+exp          1.1313e-01  2.4710e-03 45.7851 < 2.2e-16 ***
+I(exp^2)    -4.1886e-04  5.4598e-05 -7.6718 2.100e-14 ***
+bluecolyes  -2.0705e-02  1.3781e-02 -1.5024   0.13307    
+ind          1.3604e-02  1.5237e-02  0.8928   0.37202    
+unionyes     3.2771e-02  1.4908e-02  2.1982   0.02799 *  
+sexfemale   -1.3092e-01  1.2666e-01 -1.0337   0.30135    
+blackyes    -2.8575e-01  1.5570e-01 -1.8352   0.06654 .  
+ed           1.3794e-01  2.1248e-02  6.4919 9.471e-11 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    243.04
+Residual Sum of Squares: 4163.6
+R-Squared:      0.60945
+Adj. R-Squared: 0.60833
+F-statistic: -325.803 on 12 and 4152 DF, p-value: 1
+> 
+> am <- plm(lwage ~ wks + south + smsa + married + exp + I(exp ^ 2) + 
++               bluecol + ind + union + sex + black + ed |
++               bluecol + south + smsa + ind + sex + black |
++               wks + married + union + exp + I(exp ^ 2), 
++           data = Wages, index = 595,
++           random.method = "ht", model = "random", inst.method = "am")
+> summary(am)
+Oneway (individual) effect Random Effect Model 
+   (NA's transformation)
+
+Call:
+plm(formula = lwage ~ wks + south + smsa + married + exp + I(exp^2) + 
+    bluecol + ind + union + sex + black + ed | bluecol + south + 
+    smsa + ind + sex + black | wks + married + union + exp + 
+    I(exp^2), data = Wages, model = "random", random.method = "ht", 
+    inst.method = "am", index = 595)
+
+Balanced Panel: n = 595, T = 7, N = 4165
+
+Effects:
+                  var std.dev share
+idiosyncratic 0.02304 0.15180 0.025
+individual    0.88699 0.94180 0.975
+theta: 0.9392
+
+Residuals:
+      Min.    1st Qu.     Median    3rd Qu.       Max. 
+-12.643192  -0.464811   0.043216   0.523598  13.338789 
+
+Coefficients:
+               Estimate  Std. Error t-value  Pr(>|t|)    
+(Intercept)  2.9273e+00  2.7513e-01 10.6399 < 2.2e-16 ***
+wks          8.3806e-04  5.9945e-04  1.3980   0.16218    
+southyes     7.2818e-03  3.1936e-02  0.2280   0.81965    
+smsayes     -4.1951e-02  1.8947e-02 -2.2141   0.02688 *  
+marriedyes  -3.0089e-02  1.8967e-02 -1.5864   0.11273    
+exp          1.1297e-01  2.4688e-03 45.7584 < 2.2e-16 ***
+I(exp^2)    -4.2140e-04  5.4554e-05 -7.7244 1.400e-14 ***
+bluecolyes  -2.0850e-02  1.3765e-02 -1.5147   0.12993    
+ind          1.3629e-02  1.5229e-02  0.8949   0.37088    
+unionyes     3.2475e-02  1.4894e-02  2.1804   0.02928 *  
+sexfemale   -1.3201e-01  1.2660e-01 -1.0427   0.29715    
+blackyes    -2.8590e-01  1.5549e-01 -1.8388   0.06602 .  
+ed           1.3720e-01  2.0570e-02  6.6703 2.889e-11 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    243.04
+Residual Sum of Squares: 4160.3
+R-Squared:      0.60948
+Adj. R-Squared: 0.60835
+F-statistic: -325.787 on 12 and 4152 DF, p-value: 1
 > 
 > 
 > 
@@ -12920,7 +13139,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 > ## robust significance test, cluster by group
 > ## (robust vs. serial correlation)
-> coeftest(zz, vcov.=vcovHC)
+> coeftest(zz, vcov. = vcovHC)
 
 t test of coefficients:
 
@@ -12934,7 +13153,7 @@ unemp       -0.0061725  0.0023326 -2.6461  0.008299 **
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 > ## idem with parameters, pass vcov as a function argument
-> coeftest(zz, vcov.=function(x) vcovHC(x, method="arellano", type="HC1"))
+> coeftest(zz, vcov. = function(x) vcovHC(x, method = "arellano", type = "HC1"))
 
 t test of coefficients:
 
@@ -12949,8 +13168,8 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 > ## idem, cluster by time period
 > ## (robust vs. cross-sectional correlation)
-> coeftest(zz, vcov.=function(x) vcovHC(x, method="arellano",
-+  type="HC1", cluster="group"))
+> coeftest(zz, vcov. = function(x) vcovHC(x, method = "arellano",
++  type = "HC1", cluster = "group"))
 
 t test of coefficients:
 
@@ -12964,7 +13183,7 @@ unemp       -0.0061725  0.0023398 -2.6380  0.008499 **
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 > ## idem with parameters, pass vcov as a matrix argument
-> coeftest(zz, vcov.=vcovHC(zz, method="arellano", type="HC1"))
+> coeftest(zz, vcov.=vcovHC(zz, method = "arellano", type="HC1"))
 
 t test of coefficients:
 
@@ -12978,7 +13197,7 @@ unemp       -0.0061725  0.0023398 -2.6380  0.008499 **
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 > ## joint restriction test
-> waldtest(zz, update(zz, .~.-log(emp)-unemp), vcov=vcovHC)
+> waldtest(zz, update(zz, .~.-log(emp)-unemp), vcov = vcovHC)
 Wald test
 
 Model 1: log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp
@@ -12989,7 +13208,7 @@ Model 2: log(gsp) ~ log(pcap) + log(pc)
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 > ## test of hyp.: 2*log(pc)=log(emp)
-> linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovHC)
+> linearHypothesis(zz, "2*log(pc)=log(emp)", vcov. = vcovHC)
 Linear hypothesis test
 
 Hypothesis:
@@ -13275,7 +13494,7 @@ attr(,"se")
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  12.54 1.06 13.64 NA NA 
+Time elapsed:  15.9 1.1 16.99 NA NA 
 > grDevices::dev.off()
 null device 
           1 

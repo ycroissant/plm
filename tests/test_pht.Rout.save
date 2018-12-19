@@ -17,6 +17,7 @@ Type 'q()' to quit R.
 
 > 
 > # replicates Baltagi (2005, 2013), table 7.4
+> # pht vs plm(., random.model="ht", inst.method="ht/am/bms") vs. plm(, model = "ht")
 > library("plm")
 Loading required package: Formula
 > data("Wages", package = "plm")
@@ -403,4 +404,4 @@ F-statistic: -325.725 on 12 and 4152 DF, p-value: 1
 > 
 > proc.time()
    user  system elapsed 
-   5.64    0.18    5.80 
+   5.72    0.26    5.95 

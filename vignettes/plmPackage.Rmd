@@ -849,10 +849,11 @@ summary(cr)
 ```
 
 The Hausman-Taylor model [see @HAUS:TAYL:81] may be estimated
-with the `pht` function. The following example is from
-[@BALT:2005], p.130/ @BALT:2013, p.146.
+with the `plm` function by setting parameters accordingly like in
+the example beloq. The following replicates [@BALT:2005], p.130/ @BALT:2013, p.146.
 
 ```{r }
+## (note: function pht is a deprecated way to estimate this type of model
 ## ht <- pht(lwage~wks+south+smsa+married+exp+I(exp^2)+
 ##           bluecol+ind+union+sex+black+ed | 
 ##           sex+black+bluecol+south+smsa+ind,
@@ -864,7 +865,7 @@ ht <- plm(lwage ~ wks + south + smsa + married + exp + I(exp ^ 2) +
           data = Wages, index = 595,
           random.method = "ht", model = "random", inst.method = "baltagi")
 summary(ht)
-``` 
+```
 
 
 ## Variable coefficients model

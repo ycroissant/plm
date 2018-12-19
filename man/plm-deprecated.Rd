@@ -3,26 +3,25 @@
 \alias{dynformula}
 \alias{print.dynformula}
 \alias{formula.dynformula}
-\alias{pht}
-\alias{summary.pht}
-\alias{print.summary.pht}
 \alias{plm.data}
 
 
 \title{Deprecated functions of plm}
 
 \description{
-  \code{dynformula}, \code{pht} and \code{plm.data} are deprecated
-  functions which could be removed from \code{plm} in a near future.
+  \code{dynformula}, \code{pht},  \code{plm.data}, and \code{pvcovHC} are deprecated
+  functions which could be removed from \pkg{plm} in a near future.
 
   \code{dynformula} was used to construct a dynamic formula which was
-  the first argument of \code{pgmm}. \code{pgmm} use now multi-part
+  the first argument of \code{pgmm}. \code{pgmm} uses now multi-part
   formulas.
 
   \code{pht} estimates the Hausman-Taylor model, which can now be
   estimated using the more general \code{plm} function.
 
   \code{plm.data} is replaced by \code{pdata.frame}.
+  
+  \code{pvcovHV} is replaced by \code{vcovHC}.
 
 }
 

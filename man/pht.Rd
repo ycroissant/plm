@@ -5,8 +5,8 @@
 \title{Hausman--Taylor Estimator for Panel Data}
 
 \description{
-The Hausman--Taylor estimator is an instrumental variable estimator without external instruments.
-}
+The Hausman--Taylor estimator is an instrumental variable estimator without external instruments
+(function deprecated).}
 
 \usage{
 pht(formula, data, subset, na.action, model = c("ht", "am", "bms"), index = NULL, \dots)
@@ -39,9 +39,17 @@ formula, the second part containing the exogenous variables.}
 \value{
 An object of class \code{c("pht", "plm", "panelmodel")}.
 
-A \code{"pht"} object contains the same elements as \code{plm}, with a
+A \code{"pht"} object contains the same elements as \code{plm} object, with a
 further argument called \code{varlist} which describes the typology of
 the variables. It has \code{summary} and \code{print.summary} methods.
+}
+
+\note{
+The function \code{pht} is deprecated. Please use function \code{plm} to estimate
+Taylor--Hausman models like this with a three-part formula as shown in the example:\cr
+\code{plm(<formula>, random.method = "ht", model = "random", inst.method = "baltagi")}.
+The Amemiya--MaCurdy estimator abd the Breusch--Mizon--Schmidt estimator is computed
+likewise with \code{plm}.
 }
 
 \author{Yves Croissant}
@@ -64,13 +72,38 @@ the variables. It has \code{summary} and \code{print.summary} methods.
 }
 
 \examples{
-# replicates Baltagi (2005, 2013), table 7.4
+## replicates Baltagi (2005, 2013), table 7.4
+## preferred way with plm()
 data("Wages", package = "plm")
-ht <- pht(lwage ~ wks + south + smsa + married + exp + I(exp^2) +
-          bluecol + ind + union + sex + black + ed | 
-          sex + black + bluecol + south + smsa + ind,
-          data = Wages, model = "ht", index = 595)
+ht <- plm(lwage ~ wks + south + smsa + married + exp + I(exp ^ 2) + 
+              bluecol + ind + union + sex + black + ed |
+              bluecol + south + smsa + ind + sex + black |
+              wks + married + union + exp + I(exp ^ 2), 
+          data = Wages, index = 595,
+          random.method = "ht", model = "random", inst.method = "baltagi")
 summary(ht)
+
+am <- plm(lwage ~ wks + south + smsa + married + exp + I(exp ^ 2) + 
+              bluecol + ind + union + sex + black + ed |
+              bluecol + south + smsa + ind + sex + black |
+              wks + married + union + exp + I(exp ^ 2), 
+          data = Wages, index = 595,
+          random.method = "ht", model = "random", inst.method = "am")
+summary(am)
+
+## deprecated way with pht() for HT
+#ht <- pht(lwage ~ wks + south + smsa + married + exp + I(exp^2) +
+#          bluecol + ind + union + sex + black + ed | 
+#          sex + black + bluecol + south + smsa + ind,
+#          data = Wages, model = "ht", index = 595)
+#summary(ht)
+# deprecated way with pht() for AM
+#am <- pht(lwage ~ wks + south + smsa + married + exp + I(exp^2) +
+#          bluecol + ind + union + sex + black + ed | 
+#          sex + black + bluecol + south + smsa + ind,
+#          data = Wages, model = "am", index = 595)
+#summary(am)
+
 }
 
 \keyword{regression}

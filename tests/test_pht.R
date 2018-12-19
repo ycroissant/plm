@@ -1,5 +1,6 @@
 
 # replicates Baltagi (2005, 2013), table 7.4
+# pht vs plm(., random.model="ht", inst.method="ht/am/bms") vs. plm(, model = "ht")
 library("plm")
 data("Wages", package = "plm")
 ht <- pht(lwage ~ wks + south + smsa + married + exp + I(exp^2) +
