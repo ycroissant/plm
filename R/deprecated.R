@@ -465,4 +465,19 @@ print.dynformula <- function(x,...){
     print(formula(x), ...)
 }
 
+pFormula <- function(object) {
+  .Deprecated(msg = "class 'pFormula' is deprecated, simply use class 'Formula'",
+              old = "pFormula", new = "Formula")
+  stopifnot(inherits(object, "formula"))
+  if (!inherits(object, "Formula")){
+    object <- Formula(object)
+  }
+  class(object) <- union("pFormula", class(object))
+  object
+}
+
+as.Formula.pFormula <- function(x, ...){
+  class(x) <- setdiff(class(x), "pFormula")
+  x
+}
 
