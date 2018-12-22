@@ -1,11 +1,6 @@
 
 Changes in version 1.7-0
 
-  * class pFormula is deprecated and will be removed soon; model.frame now has a
-    pdata.frame method (instead of a pFormula method) and model.matrix has a 
-    pdata.frame method (a pdata.frame with a terms attribute). formula as an
-    argument in model.matrix was unnecessary as the formula can be retrieved from
-    the pdata.frame.
   * lag, lead, diff for pseries objects: functions now take care of the time
     dimension when shifting observations within each individual. Previously, 
     shifting was performed row-wise within each individual (neglecting the time
@@ -27,9 +22,6 @@ Changes in version 1.7-0
   * Between.matrix: bug fixed, so that the transformation can
     be correctly performed for a matrix without index attribute.
   * Between and Within methods for matrices are now exported.
-  * pht, plm(., model = "ht"/"am"/"bms"): both uses discouraged, better use instead
-    plm(., model ="random", random.method ="ht", inst.method = "baltagi"/"am"/"bms")
-    to estimate Hausman-Taylor models.
   * summary.plm: removed support for ill-named argument '.vcov', instead use
     'vcov'. '.vcov' has been deprecated in plm 1.6-4 on CRAN since 2016-11-30.
   * as.data.frame.pdata.frame gained argument 'keep.attributes'.
@@ -43,9 +35,8 @@ Changes in version 1.7-0
     created if drop.index = TRUE is set.
   * Fixed first-difference models (plm(., model = "fd"), pggls(., model = "fd"))
     to have an intercept by default again (disappeared in plm 1.6-6).
-  * pht: fixed estimation (plm 1.6-6 introduced a regression).
-  * make.pconsecutive for pseries: for consecutive pseries, argument 'balanced'
-    was not respected.
+  * make.pconsecutive for pseries: for inputted consecutive pseries, the argument
+    'balanced' was not respected.
   * pvar: added method for pseries.
   * pmodel.response, fitted.plm, residuals.plm: for "between" and "fd" models, 
     a pure numeric is returned, not an 'illegal' pseries anymore (these models 
@@ -69,13 +60,8 @@ Changes in version 1.7-0
   * pcce models: display proper names in printed summary's topline; pooled model object's
     element 'coefficients' is a numeric (was 1x1 matrix).
   * pmg models: display distinguishing names in printed summary's topline.
-  * dynformula: the long deprecated function now gives a deprecation warning.
-  * pvcovHC: function deprecated, use vcovHC for same functionality.
-  * detect.lindep: renamed function detect_lin_dep for consistency in function
-    naming (back-compatible solution implemented).
-  * Vingettes: translated original package's vignette to Rmd format and renamed
-    to plmPackage.Rmd; added two additional vignettes.
-  * Dependencies: added to 'Suggests': knitr, rmarkdown, bookdown
+  * dynformula: the long depricated function now gives a deprecation warning.
+
   * Addendum: In plm version 1.6-6, aneweytest() was changed to use the residuals
     of the one-way individual within model (was: two-ways within model).
 
@@ -879,7 +865,7 @@ Changes since version 1-1.0
     and a pooling model" is removed so that two within models may be
     provided.
 
-  * for backward compatibility reasons, function pvcovHC is reintroduced.
+  * for backward compatibility reasons, the pvcovHC is reintroduced.
 
   * for backward compatibility reasons, argument test of pbsytest
     may be indicated in upper case.

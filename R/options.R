@@ -1,7 +1,3 @@
-## This file contain named vectors of the acceptable values for different
-## arguments used in plm functions.
-
-
 random.method.list <- c(swar    = "Swamy-Arora",
                         walhus  = "Wallace-Hussain",
                         amemiya = "Amemiya",

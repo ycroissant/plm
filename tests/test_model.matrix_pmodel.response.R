@@ -20,13 +20,9 @@ plm_re   <- plm(form, data=Grunfeld, model="random")
 
 # pooling and within models work pdata.frame [albeit one should input a model.frame of class pdata.frame]
 pGrunfeld <- pdata.frame(Grunfeld, index = c("firm", "year"))
-mf <- model.frame(pGrunfeld, form)
 
-#MM modmat_pFormula_pdf_pool <- plm:::model.matrix.pFormula(form, data=pGrunfeld, model="pooling") # works
-#MM modmat_pFormula_pdf_fe   <- plm:::model.matrix.pFormula(form, data=pGrunfeld, model="within")  # works
-
-modmat_pFormula_pdf_pool <- plm:::model.matrix.pdata.frame(mf, model="pooling") # works
-modmat_pFormula_pdf_fe   <- plm:::model.matrix.pdata.frame(mf, model="within")  # works
+modmat_pFormula_pdf_pool <- plm:::model.matrix.pFormula(form, data=pGrunfeld, model="pooling") # works
+modmat_pFormula_pdf_fe   <- plm:::model.matrix.pFormula(form, data=pGrunfeld, model="within")  # works
 
 
 #modmat_pFormula_re2   <- plm:::model.matrix.pFormula(form, data=pGrunfeld, model="random")  # still fails in v1.5-15
@@ -54,9 +50,6 @@ if(!isTRUE(all.equal(modmat_plm_fe,   modmat_pFormula_pdf_fe,   check.attributes
 
 # pooling and within models work on a pdata.frame [the plain pdata.frame is coerced to a model.frame
 # internally in pmodel.response.pFormula]
-#MM resp_pFormula_pool <- plm:::pmodel.response.formula(form, data = pGrunfeld, model = "pooling") 
-#MM resp_pFormula_fe   <- plm:::pmodel.response.formula(form, data = pGrunfeld, model = "within")
-
 resp_pFormula_pool <- plm:::pmodel.response.formula(form, data = pGrunfeld, model = "pooling") 
 resp_pFormula_fe   <- plm:::pmodel.response.formula(form, data = pGrunfeld, model = "within")
 
@@ -70,16 +63,14 @@ resp_pFormula_fe   <- plm:::pmodel.response.formula(form, data = pGrunfeld, mode
 ### pmodel.response.data.frame on data.frame/pdata.frame
 ## the 'data' data.frame for pmodel.response.data.frame must be a model.frame created by plm's model.frame
 ## it needs to be a model.frame because then it is ensured we find the response variable in the fist column
-#pGrunfeld_mf <- model.frame(pFormula(form), data = pGrunfeld)
-pGrunfeld_mf <- model.frame(pGrunfeld, form)
+pGrunfeld_mf <- model.frame(pFormula(form), data = pGrunfeld)
 
 resp_pdf_mf_pool <- plm:::pmodel.response.data.frame(pGrunfeld_mf, model = "pooling") # works
 resp_pdf_mf_fe   <- plm:::pmodel.response.data.frame(pGrunfeld_mf, model = "within")   # works
 #resp_pdf_mf_re   <- plm:::pmodel.response.data.frame(pGrunfeld_mf, model = "random") # error, likely due to missing arguments
 
 ## these errored pre rev. 601 due to missing 'match.arg()' to set default value:
-#pmodel.response(pFormula(form), data = pGrunfeld)
-pmodel.response(form, data = pGrunfeld)
+pmodel.response(pFormula(form), data = pGrunfeld)
 pmodel.response(pGrunfeld_mf)
 
 

@@ -1,24 +1,22 @@
 export(# estimation:
-       plm, pldv, pvcm, pcce, pgmm, pggls, pmg, ercomp, piest,
+       plm, pldv, pvcm, pcce, pgmm, pggls, pht, pmg, ercomp,
        # tests:
+       piest,
        pbltest, pbnftest, pbgtest, pbsytest, pcdtest, pdwtest, plmtest, phtest, 
        pFtest, pwaldtest, pwartest, pwtest, pwfdtest, pgrangertest, purtest,
        sargan, mtest, pooltest, aneweytest, cipstest,
        # vcov:
        vcovHC, vcovDC, vcovNW, vcovG, vcovBK, vcovSCC, pvcovHC,
        # others:
-       pdata.frame, pmodel.response, pvar,
-       between, Between, Within, lag, lead,
-       punbalancedness, r.squared, has.intercept, detect.lindep, is.pseries,
+       plm.data, pdata.frame, pmodel.response,
+       between, Between, Within, lag, lead, pFormula,
+       punbalancedness, r.squared, has.intercept, detect_lin_dep, is.pseries,
        is.pconsecutive, is.pbalanced, make.pconsecutive, make.pbalanced,
-       within_intercept,  pdim, index, fixef, ranef, cortab,
-       #deprecated:
-       dynformula, detect_lin_dep, plm.data, pht,
+       within_intercept, pvar, pdim, dynformula, index, fixef, ranef, cortab,
+       
        # re-exports:
-       maxLik # re-export maxLik::maxLik so we can place pkg 'maxLik'
-              # in 'Imports' rather than 'Depends' as it is only
-              # needed for pldv() 'Suggests' is not sufficient for
-              # maxLik as it is used in an eval()-statement in pldv().
+       maxLik # re-export maxLik::maxLik so we can place pkg 'maxLik' in 'Imports' rather than 'Depends' as it is only needed for pldv()
+              # 'Suggests' is not sufficient for maxLik as it is used in an eval()-statement in pldv().
        )
 
 import("Formula") # import whole package
@@ -33,27 +31,32 @@ importFrom("stats",
            "fitted", "resid", "residuals", "vcov")
 importFrom("maxLik", "maxLik")
 importFrom("bdsmatrix", "bdsmatrix")
-importFrom("sandwich", "vcovHC")    # import generic and associated
-                                    # methods so the vcovHC methods
-                                    # from pkg sandwich and plm do no
-                                    # mask each other
+importFrom("sandwich", "vcovHC")    # import generic and associated methods so the vcovHC methods from pkg sandwich and plm do no mask each other
 importFrom("zoo", "index")          # --- same ---
 importFrom("nlme",                  # --- same for fixef and ranef ---
            "fixef", "ranef", "lme")
 importFrom("MASS", "ginv")
 importFrom("lmtest",
            "bgtest", "dwtest", "grangertest")
+# importFrom("car", "linearHypothesis") # pkg 'car' in 'Suggests', so do not import
+# importFrom("statmod", "gauss.quad")   # pkg 'statmod' in 'Suggests', so do not import
 importFrom("lattice", "xyplot")
 importFrom("grDevices", "heat.colors", "rainbow")
 importFrom("graphics",
            "abline", "axis", "barplot", "legend", "lines",
            "plot", "points")
 
+
 ################## register S3 methods ##################
 
+# pFormula
+S3method("model.frame",  "pFormula")
+S3method("model.matrix", "pFormula")
 S3method("model.matrix", "plm")
 S3method("model.matrix", "pcce")
+S3method("as.Formula", "pFormula")
 S3method("pmodel.response", "data.frame")
+#S3method("pmodel.response", "pFormula")
 S3method("pmodel.response", "plm")
 S3method("pmodel.response", "formula")
 S3method("pmodel.response", "pcce")
@@ -73,9 +76,6 @@ S3method("[[",            "pdata.frame")
 S3method("$<-",           "pdata.frame")
 S3method("as.data.frame", "pdata.frame")
 S3method("as.list",       "pdata.frame")
-S3method("formula",       "pdata.frame")
-S3method("model.frame",   "pdata.frame")
-S3method("model.matrix",  "pdata.frame")
 # pdim
 S3method("pdim", "data.frame")
 S3method("pdim", "pdata.frame")
@@ -91,6 +91,12 @@ S3method("nobs", "pgmm")
 S3method("punbalancedness", "data.frame")
 S3method("punbalancedness", "pdata.frame")
 S3method("punbalancedness", "panelmodel")
+# pvar
+S3method("pvar",  "data.frame")
+S3method("pvar",  "pdata.frame")
+S3method("pvar",  "pseries")
+S3method("pvar",  "matrix")
+S3method("print", "pvar")
 # panelmodel
 S3method("terms",         "panelmodel")
 S3method("print",         "panelmodel")
@@ -131,12 +137,6 @@ S3method("print", "summary.pcce")
 S3method("residuals", "pmg")
 S3method("summary",   "pmg")
 S3method("print", "summary.pmg")
-# pvar
-S3method("pvar",  "data.frame")
-S3method("pvar",  "pdata.frame")
-S3method("pvar",  "pseries")
-S3method("pvar",  "matrix")
-S3method("print", "pvar")
 # pht
 S3method("summary", "pht")
 S3method("print", "summary.pht")
@@ -173,8 +173,7 @@ S3method("vcovDC", "pcce")
 # vcovG
 S3method("vcovG", "plm")
 S3method("vcovG", "pcce")
-# groupGenric for pseries, see ?groupGeneric and files
-# R/groupGenerics_pseries.R and tests/test_groupGenerics_pseries.R
+# groupGenric for pseries, see ?groupGeneric and files R/groupGenerics_pseries.R and tests/test_groupGenerics_pseries.R
 S3method("Ops",       "pseries")
 S3method("Math",      "pseries")
 S3method("Complex",   "pseries")
@@ -191,13 +190,11 @@ S3method("as.matrix", "pseries")
 S3method("between",   "matrix")
 S3method("Between",   "matrix")
 S3method("Within",    "matrix")
-#S3method("[", "pseries") # not implemented yet - sketch in
-#R/pdata.frame.R
+#S3method("[",         "pseries") # not implemented yet - sketch in R/pdata.frame.R
 S3method("print", "summary.pseries")
 # ercomp
 S3method("ercomp", "formula")
 S3method("ercomp", "plm")
-S3method("ercomp", "pdata.frame")
 S3method("print", "ercomp")
 # pooltest
 S3method("pooltest", "plm")
@@ -245,12 +242,12 @@ S3method("summary", "purtest")
 S3method("print", "summary.purtest")
 # pwaldtest
 S3method("pwaldtest", "plm")
-# detect.lindep, alias
-S3method("detect.lindep", "matrix")
-S3method("detect.lindep", "data.frame")
-S3method("detect.lindep", "plm")
+# detect_lin_dep, alias
+S3method("detect_lin_dep", "matrix")
+S3method("detect_lin_dep", "data.frame")
+S3method("detect_lin_dep", "plm")
 S3method("alias", "plm")
-S3method("alias", "pdata.frame")
+S3method("alias", "pFormula")
 # is.pconsecutive
 S3method("is.pconsecutive", "data.frame")
 S3method("is.pconsecutive", "pdata.frame")

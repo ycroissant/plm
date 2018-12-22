@@ -77,7 +77,7 @@ if (nrow(model.matrix(pFormula(form), data=pGrunfeld_NA_dep_var, model="within")
 
 # ok - 199
 if (nrow(plm:::model.matrix.pFormula(form, data=pGrunfeld_NA_dep_var, model="within", effect = "twoways")) != 199) stop("NA not detected")
-#MM if (nrow(plm:::model.matrix.pFormula(pFormula(form), data=pGrunfeld_NA_dep_var, model="within", effect = "twoways")) != 199) stop("NA not detected")
+if (nrow(plm:::model.matrix.pFormula(pFormula(form), data=pGrunfeld_NA_dep_var, model="within", effect = "twoways")) != 199) stop("NA not detected")
 
 
 if (!isTRUE(all.equal(plm:::model.matrix.pFormula(pFormula(form), data=pGrunfeld_NA_dep_var, model="within", effect = "twoways"),

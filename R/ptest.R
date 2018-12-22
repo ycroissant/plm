@@ -209,20 +209,6 @@ phtest.panelmodel <- function(x, x2, ...){
 #       A lagrange multiplier test for the error components model with incomplete panels,
 #       Econometric Reviews, 9, pp. 103-107,
 
-
-# pchibarsq: helper function: "p-function" for mixed chisq (also called chi-bar-squared)
-# used in plmtest(., type = "ghm"), see Baltagi (2013), pp. 71-72, 74, 88, 202-203, 209
-#
-# a reference for the distribution seems to be
-# Dykstra, R./El Barmi, H., Chi-Bar-Square Distributions, in: Encyclopedia of Statistical Sciences, 
-# DOI: 10.1002/0471667196.ess0265.pub2
-pchibarsq <- function(q, df, weights, lower.tail = TRUE, ... ) {
-  # NB: other parameters in dots (...): not checked if valid! (ncp, log, ...)
-  res <- sum(weights * pchisq(q, df = df, lower.tail = lower.tail, ...))
-  return(res)
-}
-
-
 plmtest <- function(x, ...){
   UseMethod("plmtest")
 }
@@ -412,40 +398,6 @@ pFtest.plm <- function(x, z, ...){
 # arg 'vcov' non-NULL => the robust tests are carried out
 # arg df2adj == TRUE does finite-sample/cluster adjustment for F tests's df2
 # args .df1, .df2 are only there if user wants to do overwriting of dfs (user has final say)
-
-
-# trans_clubSandwich_vcov: helper function for pwaldtest()
-# translate vcov object from package clubSandwich so it is suitable for summary.plm, plm's pwaldtest.
-# Attribute "cluster" in clubSandwich's vcov objects contains the cluster variable itself.
-# plm's vcov object also has attribute "cluster" but it contains a character as
-# information about the cluster dimension (either "group" or "time")
-#
-# inputs:
-#   * CSvcov: a vcov as returned by clubSandwich's vcovCR function [class c("vcovCR", "clubSandwich")]
-#   * index: the index belonging to a plm object/model
-# return value:
-#   * modified CSvcov (substituted attribute "cluster" with suitable character or NULL)
-
-trans_clubSandwich_vcov <- function(CSvcov, index) {
-  clustervar <- attr(CSvcov, "cluster")
-  if (!is.null(clustervar)) {
-      if (isTRUE(all.equal(index[[1]], clustervar))) {
-        attr(CSvcov, "cluster") <- "group"
-        return(CSvcov)
-      }
-      if (isTRUE(all.equal(index[[2]], clustervar))) {
-        attr(CSvcov, "cluster") <- "time"
-        return(CSvcov)
-      } else {
-        attr(CSvcov, "cluster") <- NULL
-        return(CSvcov)
-      }
-  }
-  warning("no attribute \"cluster\" found in supplied vcov object")
-  return(CSvcov)
-}
-
-
 pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
                           df2adj = (test == "F" && !is.null(vcov) && missing(.df2)), .df1, .df2, ...) {
   model <- describe(x, "model")

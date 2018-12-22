@@ -136,7 +136,8 @@ pgmm <- function(formula, data, subset, na.action,
     # of any covariates + 1 because of first - differencing or the
     # largest minimum lag for any gmm or normal instruments
 
-    # min or max to select the number of lost time series ?
+    # min or max to select the number of lost time series ?   ## TODO: assignment of gmm.minlag
+    gmm.minlag <- max(sapply(gmm.lags, min))
     gmm.minlag <- min(sapply(gmm.lags, min))
     if (!is.null(inst.lags)) inst.maxlag <- max(sapply(inst.lags, max))
     else inst.maxlag <- 0
@@ -753,14 +754,6 @@ wald <- function(object, param = c("coef", "time", "all"), vcov = NULL) {
   class(wald) <- "htest"
   wald
 }
-
-# No of obs calculated as in print.summary.pgmm [code copied from there]
-nobs.pgmm <- function(object, ...) {
-  if (inherits(object, "pgmm")) return(sum(unlist(object$residuals) != 0))
-    else stop("Input 'object' needs to be of class 'pgmm', i. e., a GMM estimation with panel data estimated by pgmm()")
-}
-
-
 
 print.summary.pgmm <- function(x, digits = max(3, getOption("digits") - 2),
                                width = getOption("width"),

@@ -40,7 +40,7 @@ plm(formula, data, subset, weights, na.action,
     \code{"between"}, \code{"random",} \code{"fd"}, or \code{"ht"},}
   \item{random.method}{method of estimation for the variance components
     in the random effects model, one of \code{"swar"} (default),
-    \code{"amemiya"}, \code{"walhus"}, \code{"nerlove"}, or \code{"ht"},}
+    \code{"amemiya"}, \code{"walhus"}, or \code{"nerlove"},}
   \item{random.models}{an alternative to the previous argument, the
   models used to compute the variance components estimations are indicated,}
   \item{random.dfcor}{a numeric vector of length 2 indicating which degree of
@@ -106,13 +106,12 @@ selects the instrument variable transformation method:
   \item \code{"bms"} for Breusch, Mizon, and Schmidt (1989).
 }
 
-The Hausman--Taylor estimator (Hausman and Taylor (1981)) is computed with arguments
-\code{random.method = "ht", model = "random", inst.method = "baltagi"} (the other
-way with only \code{model = "ht"} is deprecated). 
+The Hausman--Taylor estimator (Hausman and Taylor (1981)) is computed if \code{model = "ht"}.
 }
 
 \value{
 An object of class \code{c("plm", "panelmodel")}.
+
 A \code{"plm"} object has the following elements :
   
 \item{coefficients}{the vector of coefficients,}
@@ -240,25 +239,6 @@ form <- log(gsp) ~ log(pc) + log(emp) + log(hwy) + log(water) + log(util) + unem
 summary(plm(form, data = pProduc, model = "random", effect = "nested"))
 summary(plm(form, data = pProduc, model = "random", effect = "nested",
             random.method = "walhus"))
-
-## Hausman-Taylor estimator and Amemiya-MaCurdy estimator
-## replicate Baltagi (2005, 2013), table 7.4
-data("Wages", package = "plm")
-ht <- plm(lwage ~ wks + south + smsa + married + exp + I(exp ^ 2) + 
-              bluecol + ind + union + sex + black + ed |
-              bluecol + south + smsa + ind + sex + black |
-              wks + married + union + exp + I(exp ^ 2), 
-          data = Wages, index = 595,
-          random.method = "ht", model = "random", inst.method = "baltagi")
-summary(ht)
-
-am <- plm(lwage ~ wks + south + smsa + married + exp + I(exp ^ 2) + 
-              bluecol + ind + union + sex + black + ed |
-              bluecol + south + smsa + ind + sex + black |
-              wks + married + union + exp + I(exp ^ 2), 
-          data = Wages, index = 595,
-          random.method = "ht", model = "random", inst.method = "am")
-summary(am)
 
 }
 

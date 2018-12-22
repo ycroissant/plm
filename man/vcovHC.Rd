@@ -8,7 +8,7 @@
 \title{Robust Covariance Matrix Estimators}
 
 \description{
-  Robust covariance matrix estimators \emph{a la White} for panel models).
+  Robust covariance matrix estimators \emph{a la White} for panel models.
 }
 
 \usage{
@@ -23,15 +23,14 @@
            random effects or a within model or a model of class
   \code{"pgmm"} or an object of class \code{"pcce"},}
   \item{method}{one of \code{"arellano"}, \code{"white1"}, \code{"white2"},}
-  \item{type}{the weighting scheme used, one of \code{"HC0"}, \code{"sss"},
-              \code{"HC1"}, \code{"HC2"}, \code{"HC3"}, \code{"HC4"}, see Details,}
+  \item{type}{the weighting scheme used, one of \code{"HC0"}, \code{"sss"}, \code{"HC1"}, \code{"HC2"}, 
+              \code{"HC3"}, \code{"HC4"}, see Details,}
   \item{cluster}{one of \code{"group"}, \code{"time"},}
   \item{\dots}{further arguments.}
 }
 
 \value{
-  An object of class \code{"matrix"} containing the estimate of the asymptotic
-  covariance matrix of coefficients.
+  An object of class \code{"matrix"} containing the estimate of the asymptotic covariance matrix of coefficients.
 }
 
 \details{
@@ -52,8 +51,7 @@ Greene (2003, Sec. 13.7.1-2; 2012, Sec. 11.6.1-2) and Wooldridge (2002), Sec. 10
 allows a fully general structure w.r.t. heteroskedasticity and serial
 (cross--sectional) correlation.
 
-Weighting schemes specified by \code{type} are analogous to those in
-\code{\link[sandwich]{vcovHC}} in package
+Weighting schemes specified by \code{type} are analogous to those in \code{\link[sandwich]{vcovHC}} in package
 \CRANpkg{sandwich} and are justified theoretically (although in the context
 of the standard linear model) by MacKinnon and White (1985) and
 Cribari-Neto (2004) (see Zeileis (2004)).
@@ -74,12 +72,8 @@ A special procedure for \code{pgmm} objects, proposed by Windmeijer
 }
 
 \seealso{
-  \code{\link[sandwich]{vcovHC}} from the \CRANpkg{sandwich} package for
-  weighting schemes (\code{type} argument).
+  \code{\link[sandwich]{vcovHC}} from the \CRANpkg{sandwich} package for weighting schemes (\code{type} argument).
 }
-
-\note{The function \code{pvcovHC} is deprecated. Use \code{vcovHC} for the same
-functionality.}
 
 \author{Giovanni Millo & Yves Croissant}
 
@@ -103,7 +97,7 @@ covariance matrix estimators with improved finite sample properties.
 
 Windmeijer, F. (2005) A finite sample correction for the variance of
 linear efficient two--step GMM estimators, \emph{Journal of
-Econometrics}, \bold{126(1)}, pp. 25--51.
+  Econometrics}, \bold{126(1)}, pp. 25--51.
 
 White, H. (1980) \emph{Asymptotic Theory for Econometricians}, Ch. 6, Academic Press, Orlando (FL).
 
@@ -128,19 +122,19 @@ zz <- plm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
 coeftest(zz)
 ## robust significance test, cluster by group
 ## (robust vs. serial correlation)
-coeftest(zz, vcov. = vcovHC)
+coeftest(zz, vcov.=vcovHC)
 ## idem with parameters, pass vcov as a function argument
-coeftest(zz, vcov. = function(x) vcovHC(x, method = "arellano", type = "HC1"))
+coeftest(zz, vcov.=function(x) vcovHC(x, method="arellano", type="HC1"))
 ## idem, cluster by time period
 ## (robust vs. cross-sectional correlation)
-coeftest(zz, vcov. = function(x) vcovHC(x, method = "arellano",
- type = "HC1", cluster = "group"))
+coeftest(zz, vcov.=function(x) vcovHC(x, method="arellano",
+ type="HC1", cluster="group"))
 ## idem with parameters, pass vcov as a matrix argument
-coeftest(zz, vcov.=vcovHC(zz, method = "arellano", type="HC1"))
+coeftest(zz, vcov.=vcovHC(zz, method="arellano", type="HC1"))
 ## joint restriction test
-waldtest(zz, update(zz, .~.-log(emp)-unemp), vcov = vcovHC)
+waldtest(zz, update(zz, .~.-log(emp)-unemp), vcov=vcovHC)
 ## test of hyp.: 2*log(pc)=log(emp)
-linearHypothesis(zz, "2*log(pc)=log(emp)", vcov. = vcovHC)
+linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovHC)
 
 ## Robust inference for GMM models
 data("EmplUK", package="plm")
