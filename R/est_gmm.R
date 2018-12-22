@@ -136,8 +136,7 @@ pgmm <- function(formula, data, subset, na.action,
     # of any covariates + 1 because of first - differencing or the
     # largest minimum lag for any gmm or normal instruments
 
-    # min or max to select the number of lost time series ?   ## TODO: assignment of gmm.minlag
-    gmm.minlag <- max(sapply(gmm.lags, min))
+    # min or max to select the number of lost time series ?
     gmm.minlag <- min(sapply(gmm.lags, min))
     if (!is.null(inst.lags)) inst.maxlag <- max(sapply(inst.lags, max))
     else inst.maxlag <- 0

@@ -42,7 +42,7 @@ ercomp.formula <- function(object, data,
     
     # method and models arguments can't be both set
     if (! is.null(method) & ! is.null(models))
-        stop("you can't use both method and models arguments")
+        stop("you can't use both, the 'method' and the 'models' arguments")
 
     # method and models arguments aren't set, use swar
     if (is.null(method) & is.null(models)) method <- "swar"
@@ -99,7 +99,6 @@ ercomp.formula <- function(object, data,
         TS <- pdim$nT$T
         O <- pdim$nT$N
         wm <- plm.fit(data, effect = "individual", model = "within")
-        s2eta <- sum(fixef(wm, type = "dmean") ^ 2) / N # TODO: s2esta is calculated 2x
         X <- model.matrix(data, rhs = 1)
         constants <- apply(X, 2, function(x) all(tapply(x, index(data)[[1]], is.constant)))
         if (length(object)[2] > 1){
@@ -112,7 +111,6 @@ ercomp.formula <- function(object, data,
             ra <- lm(FES ~ XCST - 1)
         }
         s2nu <- deviance(wm) / (O - N)
-        s21 <- sum(fixef(wm, type = "dmean") ^ 2) / N  # TODO: s21 is calculated 2x
         s21 <- deviance(ra) / N
         s2eta <- (s21 - s2nu) / TS
         sigma2 <- c(idios = s2nu, id = s2eta)
