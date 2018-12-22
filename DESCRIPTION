@@ -13,7 +13,7 @@ Authors@R: c(person(given = "Yves",      family = "Croissant",    role = c("aut"
       	     person(given = "Nina",      family = "Schoenfelder", role = "ctb", email = "nina.schoenfelder@fernuni-hagen.de"))
 Depends: R (>= 3.1.0), Formula (>= 0.2-0), stats
 Imports: MASS, bdsmatrix, zoo, nlme, sandwich, lattice, lmtest, maxLik
-Suggests: AER, car, pcse, clusterSEs, clubSandwich, pglm, spdep, splm, statmod, Ecdat, pder, stargazer, texreg, foreign, knitr, rmarkdown
+Suggests: AER, car, pcse, clusterSEs, clubSandwich, pglm, spdep, splm, statmod, Ecdat, pder, stargazer, texreg, foreign, knitr, rmarkdown, bookdown
 Description: A set of estimators and tests for panel data econometrics.
 License: GPL (>=2)
 VignetteBuilder: knitr

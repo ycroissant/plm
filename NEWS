@@ -73,7 +73,9 @@ Changes in version 1.7-0
   * pvcovHC: function deprecated, use vcovHC for same functionality.
   * detect.lindep: renamed function detect_lin_dep for consistency in function
     naming (back-compatible solution implemented).
-
+  * Vingettes: translated original package's vignette to Rmd format and renamed
+    to plmPackage.Rmd; added two additional vignettes.
+  * Dependencies: added to 'Suggests': knitr, rmarkdown, bookdown
   * Addendum: In plm version 1.6-6, aneweytest() was changed to use the residuals
     of the one-way individual within model (was: two-ways within model).
 
