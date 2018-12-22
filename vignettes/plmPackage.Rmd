@@ -59,7 +59,7 @@ environment and can be used, e.g., for estimation of random effects
 panel models, its use is not intuitive for a practicing
 econometrician, and maximum likelihood estimation is only one of the
 possible approaches to panel data econometrics. Moreover, economic
-panel datasets often happen to be *unbalanced* (i.e., they have a
+panel data sets often happen to be *unbalanced* (i.e., they have a
 different number of observations between groups), which case needs
 some adaptation to the methods and is not compatible with those in
 `nlme`.  Hence the need for a package doing panel data "from the
@@ -381,7 +381,7 @@ matrix of errors $\hat{V}$, model parameters can be estimated as
 \end{equation}
 
 Nevertheless, in practice plain computation of $\hat{\beta}$ has long
-been an intractable problem even for moderate-sized datasets because
+been an intractable problem even for moderate-sized data sets because
 of the need to invert the $N\times N$ $\hat{V}$ matrix. With the
 advances in computer power, this is no more so, and it is possible to
 program the "naive" estimator \@ref(eq:naive) in `R` with standard
@@ -533,7 +533,7 @@ options(prompt= "R> ", useFancyQuotes = FALSE)
 library("plm")
 ``` 
 
-The four datasets used are `EmplUK` which was used by
+The four data sets used are `EmplUK` which was used by
 @AREL:BOND:91, the `Grunfeld` data [@KLEI:ZEIL:08]
 which is used in several econometric books, the `Produc` data
 used by @MUNN:90 and the `Wages` used by
@@ -553,7 +553,7 @@ data("Wages", package="plm")
 As observed above, the current version of `plm` is capable of
 working with a regular `data.frame` without any further
 transformation, provided that the individual and time indexes are in
-the first two columns, as in all the example datasets but `Wages`.
+the first two columns, as in all the example data sets but `Wages`.
 If this weren't the case, an `index` optional argument would 
 have to be passed on to the estimating and testing functions.
 
@@ -827,13 +827,13 @@ The instrumental variables estimator used is indicated with the
 
 
 - `"bvk"`, from  @BALE:VARA:87, the default value,
-- `"baltagi"`, from @BALT:81.
-- `"am"`, from @AMEM:MACUR:86
-- `"bms"`, from @BREU:MIZO:SCHMI:89
+- `"baltagi"`, from @BALT:81,
+- `"am"`, from @AMEM:MACUR:86,
+- `"bms"`, from @BREU:MIZO:SCHMI:89.
 
 
 
-as illustrated in the following example from 
+An illustration is in the following example from 
 [@BALT:2005], p.120 / @BALT:2013, p.137 ("G2SLS").
   
 ```{r }
@@ -850,7 +850,7 @@ summary(cr)
 
 The Hausman-Taylor model [see @HAUS:TAYL:81] may be estimated
 with the `plm` function by setting parameters accordingly like in
-the example beloq. The following replicates [@BALT:2005], p.130/ @BALT:2013, p.146.
+the example below. The following replicates [@BALT:2005], p.130/ @BALT:2013, p.146.
 
 ```{r }
 ## (note: function pht is a deprecated way to estimate this type of model
@@ -872,8 +872,7 @@ summary(ht)
 
 The `pvcm` function enables the estimation of variable
 coefficients models. Time or individual effects are introduced if
-`effect` is fixed to `"time"` or `"individual"`
-(the default value).
+`effect` is fixed to `"time"` or `"individual"` (the default value).
 
 Coefficients are assumed to be fixed if `model="within"` or 
 random if `model="random"`. In the first case, a different
@@ -2287,7 +2286,7 @@ testing is accomplished by passing these on to testing functions,
 together with a `panelmodel` object.
 
 The main functionalities of the package have been illustrated here by
-applying them on some well-known datasets from the econometric
+applying them on some well-known data sets from the econometric
 literature. The similarities and differences with the maximum
 likelihood approach to longitudinal data have also been briefly
 discussed.
