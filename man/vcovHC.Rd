@@ -71,6 +71,10 @@ A special procedure for \code{pgmm} objects, proposed by Windmeijer
 
 }
 
+\note{The function \code{pvcovHC} is deprecated. Use \code{vcovHC} for the same
+functionality.}
+
+
 \seealso{
   \code{\link[sandwich]{vcovHC}} from the \CRANpkg{sandwich} package for weighting schemes (\code{type} argument).
 }

@@ -92,7 +92,6 @@ ercomp.formula <- function(object, data,
         TS <- pdim$nT$T
         O <- pdim$nT$N
         wm <- plm.fit(object, data, effect = "individual", model = "within")
-        s2eta <- sum(fixef(wm, type = "dmean") ^ 2) / N # TODO: s2esta is calculated 2x
         X <- model.matrix(object, data, rhs = 1)
         constants <- apply(X, 2, function(x) all(tapply(x, index(data)[[1]], is.constant)))
         if (length(object)[2] > 1){
@@ -105,7 +104,6 @@ ercomp.formula <- function(object, data,
             ra <- lm(FES ~ XCST - 1)
         }
         s2nu <- deviance(wm) / (O - N)
-        s21 <- sum(fixef(wm, type = "dmean") ^ 2) / N  # TODO: s21 is calculated 2x
         s21 <- deviance(ra) / N
         s2eta <- (s21 - s2nu) / TS
         sigma2 <- c(idios = s2nu, id = s2eta)

@@ -91,7 +91,7 @@ environment and can be used, e.g., for estimation of random effects
 panel models, its use is not intuitive for a practicing
 econometrician, and maximum likelihood estimation is only one of the
 possible approaches to panel data econometrics. Moreover, economic
-panel datasets often happen to be {\em unbalanced} (i.e., they have a
+panel data sets often happen to be {\em unbalanced} (i.e., they have a
 different number of observations between groups), which case needs
 some adaptation to the methods and is not compatible with those in
 \pkg{nlme}.  Hence the need for a package doing panel data ``from the
@@ -418,7 +418,7 @@ matrix of errors $\hat{V}$, model parameters can be estimated as
 \end{equation}
 
 Nevertheless, in practice plain computation of $\hat{\beta}$ has long
-been an intractable problem even for moderate-sized datasets because
+been an intractable problem even for moderate-sized data sets because
 of the need to invert the $N\times N$ $\hat{V}$ matrix. With the
 advances in computer power, this is no more so, and it is possible to
 program the ``naive'' estimator (\ref{eq:naive}) in \proglang{R} with
@@ -572,7 +572,7 @@ options(prompt= "R> ", useFancyQuotes = FALSE)
 library("plm")
 @ 
 
-The four datasets used are \code{EmplUK} which was used by
+The four data sets used are \code{EmplUK} which was used by
 \citet{AREL:BOND:91}, the \code{Grunfeld} data \citep{KLEI:ZEIL:08}
 which is used in several econometric books, the \code{Produc} data
 used by \citet{MUNN:90} and the \code{Wages} used by
@@ -592,7 +592,7 @@ data("Wages", package="plm")
 As observed above, the current version of \pkg{plm} is capable of
 working with a regular \code{data.frame} without any further
 transformation, provided that the individual and time indexes are in
-the first two columns, as in all the example datasets but \code{Wages}.
+the first two columns, as in all the example data sets but \code{Wages}.
 If this weren't the case, an \code{index} optional argument would 
 have to be passed on to the estimating and testing functions.
 
@@ -854,9 +854,9 @@ The instrumental variables estimator used is indicated with the
 \code{inst.method} argument:
 \begin{itemize}
 \item \code{"bvk"}, from  \citet{BALE:VARA:87}, the default value,
-\item \code{"baltagi"}, from \citet{BALT:81}.
-\item \code{"am"}, from \citet{AMEM:MACUR:86}
-\item \code{"bms"}, from \citet{BREU:MIZO:SCHMI:89}
+\item \code{"baltagi"}, from \citet{BALT:81},
+\item \code{"am"}, from \citet{AMEM:MACUR:86},
+\item \code{"bms"}, from \citet{BREU:MIZO:SCHMI:89},
 \end{itemize}
 
 as illustrated in the following example from 
@@ -2369,7 +2369,7 @@ testing is accomplished by passing these on to testing functions,
 together with a \code{panelmodel} object.
 
 The main functionalities of the package have been illustrated here by
-applying them on some well-known datasets from the econometric
+applying them on some well-known data sets from the econometric
 literature. The similarities and differences with the maximum
 likelihood approach to longitudinal data have also been briefly
 discussed.

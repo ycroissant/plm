@@ -7,6 +7,8 @@
 ## Only vcovBK stays separate for simplicity reasons.
 
 pvcovHC <- function(x, ...){
+	.Deprecated(new = "pvcovHC", msg = "'pvcovHC' is deprecated, use 'vcovHC' instead for same functionality",
+							old = "vcovHC")
   UseMethod("vcovHC")
 }
 

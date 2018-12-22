@@ -129,7 +129,7 @@ A \code{"plm"} object has the following elements :
  estimation of the components of the errors (for random effects models only),}
 \item{aliased}{named logical vector indicating any aliased coefficients which 
 are silently dropped by \code{plm} due to linearly dependent terms (see also 
-\code{\link[plm]{detect_lin_dep}}),}
+\code{\link[plm]{detect.lindep}}),}
 \item{call}{the call.}
 
 % some elements not listed here...: "assign", "contrast", etc...

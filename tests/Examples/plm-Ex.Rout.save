@@ -1,5 +1,5 @@
 
-R version 3.5.1 (2018-07-02) -- "Feather Spray"
+R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
 Copyright (C) 2018 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -130,10 +130,11 @@ alternative hypothesis: Stationarity
 > 
 > flush(stderr()); flush(stdout())
 > 
-> ### Name: detect_lin_dep
+> ### Name: detect.lindep
 > ### Title: Functions to detect linear dependence
-> ### Aliases: detect_lin_dep detect_lin_dep.matrix detect_lin_dep.data.frame
-> ###   detect_lin_dep.plm alias alias.plm alias.pFormula
+> ### Aliases: detect.lindep detect_lin_dep detect.lindep.matrix
+> ###   detect.lindep.data.frame detect.lindep.plm alias alias.plm
+> ###   alias.pFormula
 > ### Keywords: manip array
 > 
 > ### ** Examples
@@ -148,19 +149,17 @@ alternative hypothesis: Stationarity
 > # setup a pFormula and a model frame
 > pform <- pFormula(price ~ 0 + cpi + fact1 + fact2)
 > mf <- model.frame(pform, data = Cigar.p)
-> 
 > # no linear dependence in the pooling model's model matrix
 > # (with intercept in the formula, there would be linear depedence)
-> detect_lin_dep(model.matrix(pform, data = mf, model = "pooling"))
+> detect.lindep(model.matrix(pform, data = mf, model = "pooling"))
 [1] "No linear dependent column(s) detected."
-> 
 > # linear dependence present in the FE transformed model matrix
 > modmat_FE <- model.matrix(pform, data = mf, model = "within")
-> detect_lin_dep(modmat_FE)
+> detect.lindep(modmat_FE)
 [1] "Suspiscious column number(s): 2, 3"
 [1] "Suspiscious column name(s):   fact1, fact2"
 > mod_FE <- plm(pform, data = Cigar.p, model = "within")
-> detect_lin_dep(mod_FE) 
+> detect.lindep(mod_FE) 
 [1] "Suspiscious column number(s): 2, 3"
 [1] "Suspiscious column name(s):   fact1, fact2"
 > alias(mod_FE) # => fact1 == -1*fact2
@@ -194,7 +193,7 @@ FALSE FALSE  TRUE
 > # data about CEO tenure and age in year 1935 (first observation
 > # in the data set) to be at 1 to 10 years and 38 to 55 years, respectively.
 > # => CEO tenure and CEO age increase by same value (+1 year per year).
-> data(Grunfeld, package = "plm")
+> data("Grunfeld", package = "plm")
 > set.seed(42)
 > # add fictional data
 > Grunfeld$CEOtenure <- c(replicate(10, seq(from=s<-sample(1:10,  1), to=s+19, by=1)))
@@ -256,10 +255,9 @@ FALSE FALSE  TRUE
 > 
 > pform <- pFormula(inv ~ value + capital + CEOtenure + CEOage)
 > mf <- model.frame(pform, data=pdata.frame(Grunfeld))
-> 
 > # no linear dependent columns in original data/pooling model
 > modmat_pool <- model.matrix(pform, data = mf, model="pooling")
-> detect_lin_dep(modmat_pool)
+> detect.lindep(modmat_pool)
 [1] "No linear dependent column(s) detected."
 > mod_pool <- plm(pform, data = Grunfeld, model = "pooling")
 > alias(mod_pool)
@@ -270,11 +268,11 @@ Model :
 > # CEOtenure and CEOage are linear dependent after FE transformation
 > # (demeaning per individual)
 > modmat_FE <- model.matrix(pform, data = mf, model="within")
-> detect_lin_dep(modmat_FE)
+> detect.lindep(modmat_FE)
 [1] "Suspiscious column number(s): 3, 4"
 [1] "Suspiscious column name(s):   CEOtenure, CEOage"
 > mod_FE <- plm(pform, data = Grunfeld, model = "within")
-> detect_lin_dep(mod_FE)
+> detect.lindep(mod_FE)
 [1] "Suspiscious column number(s): 3, 4"
 [1] "Suspiscious column name(s):   CEOtenure, CEOage"
 > alias(mod_FE)
@@ -365,7 +363,7 @@ Warning: use of 'dynformula' is deprecated, use a multi-part formula instead
 log(y) ~ lag(log(y), 1) + log(x1) + lag(log(x1), 1) + lag(log(x1), 
     2) + log(x2) + lag(log(x2), 1) + lag(log(x2), 2) + diff(log(x3)) + 
     diff(log(x3), 1) + diff(log(x3), 2)
-<environment: 0x000000000b1b6b28>
+<environment: 0x0000000007b0b4e8>
 > 
 > 
 > 
@@ -8872,6 +8870,7 @@ alternative hypothesis: Granger causality for at least one individual
 +           bluecol + ind + union + sex + black + ed | 
 +           sex + black + bluecol + south + smsa + ind,
 +           data = Wages, model = "ht", index = 595)
+Warning: uses of 'pht()' and 'plm(., model = "ht"/"am"/"bms")' are discouraged, better use 'plm(., model ="random", random.method = "ht", inst.method = "baltagi"/"am"/"bms")'
 > summary(ht)
 Oneway (individual) effect Hausman-Taylor Model
 Call:
@@ -8880,44 +8879,44 @@ pht(formula = lwage ~ wks + south + smsa + married + exp + I(exp^2) +
     bluecol + south + smsa + ind, data = Wages, model = "ht", 
     index = 595)
 
-T.V. exo  : NA, sex, black, bluecol, south, smsa, ind
-T.V. endo : wks, married, exp, I(exp^2), union, ed
-T.I. exo  : 
-T.I. endo : 
+T.V. exo  : bluecol, south, smsa, ind
+T.V. endo : wks, married, exp, I(exp^2), union
+T.I. exo  : sex, black
+T.I. endo : ed
 
 Balanced Panel: n = 595, T = 7, N = 4165
 
 Effects:
                   var std.dev share
-idiosyncratic 0.02304 0.15180 0.134
-individual    0.14913 0.38618 0.866
-theta: 0.853
+idiosyncratic 0.02304 0.15180 0.025
+individual    0.88699 0.94180 0.975
+theta: 0.9392
 
 Residuals:
-     Min.   1st Qu.    Median   3rd Qu.      Max. 
--2.070475 -0.116106  0.013176  0.125657  2.139104 
+      Min.    1st Qu.     Median    3rd Qu.       Max. 
+-1.9193535 -0.0707404  0.0065708  0.0796568  2.0250882 
 
 Coefficients:
                Estimate  Std. Error z-value  Pr(>|z|)    
-(Intercept)  2.9317e+00  1.7849e-01 16.4256 < 2.2e-16 ***
-wks          8.3787e-04  7.7790e-04  1.0771 0.2814400    
-southyes     2.9987e-02  3.2519e-02  0.9221 0.3564628    
-smsayes     -3.7427e-02  2.2243e-02 -1.6826 0.0924499 .  
-marriedyes  -3.0798e-02  2.4596e-02 -1.2522 0.2105119    
-exp          1.1284e-01  3.2032e-03 35.2261 < 2.2e-16 ***
-I(exp^2)    -4.2043e-04  7.0808e-05 -5.9376 2.892e-09 ***
-bluecolyes  -1.7773e-02  1.7855e-02 -0.9954 0.3195249    
-ind         -8.9816e-03  1.8608e-02 -0.4827 0.6293372    
-unionyes     3.3535e-02  1.9281e-02  1.7393 0.0819856 .  
-sexfemale   -1.3980e-01  7.1167e-02 -1.9643 0.0494919 *  
-blackyes    -2.9270e-01  8.4004e-02 -3.4844 0.0004932 ***
-ed           1.3698e-01  1.2456e-02 10.9973 < 2.2e-16 ***
+(Intercept)  2.9127e+00  2.8365e-01 10.2687 < 2.2e-16 ***
+wks          8.3740e-04  5.9973e-04  1.3963   0.16263    
+southyes     7.4398e-03  3.1955e-02  0.2328   0.81590    
+smsayes     -4.1833e-02  1.8958e-02 -2.2066   0.02734 *  
+marriedyes  -2.9851e-02  1.8980e-02 -1.5728   0.11578    
+exp          1.1313e-01  2.4710e-03 45.7851 < 2.2e-16 ***
+I(exp^2)    -4.1886e-04  5.4598e-05 -7.6718 1.696e-14 ***
+bluecolyes  -2.0705e-02  1.3781e-02 -1.5024   0.13299    
+ind          1.3604e-02  1.5237e-02  0.8928   0.37196    
+unionyes     3.2771e-02  1.4908e-02  2.1982   0.02794 *  
+sexfemale   -1.3092e-01  1.2666e-01 -1.0337   0.30129    
+blackyes    -2.8575e-01  1.5570e-01 -1.8352   0.06647 .  
+ed           1.3794e-01  2.1248e-02  6.4919 8.474e-11 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Total Sum of Squares:    886.9
-Residual Sum of Squares: 161.45
-F-statistic: 1554.72 on 12 and 4152 DF, p-value: < 2.22e-16
+Residual Sum of Squares: 95.947
+F-statistic: 2852.33 on 12 and 4152 DF, p-value: < 2.22e-16
 > 
 > 
 > 
@@ -13399,7 +13398,7 @@ attr(,"se")
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  14.4 1.28 15.85 NA NA 
+Time elapsed:  12.82 1.03 13.85 NA NA 
 > grDevices::dev.off()
 null device 
           1 

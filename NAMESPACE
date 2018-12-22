@@ -10,7 +10,7 @@ export(# estimation:
        # others:
        plm.data, pdata.frame, pmodel.response,
        between, Between, Within, lag, lead, pFormula,
-       punbalancedness, r.squared, has.intercept, detect_lin_dep, is.pseries,
+       punbalancedness, r.squared, has.intercept, detect.lindep, detect_lin_dep, is.pseries,
        is.pconsecutive, is.pbalanced, make.pconsecutive, make.pbalanced,
        within_intercept, pvar, pdim, dynformula, index, fixef, ranef, cortab,
        
@@ -242,10 +242,10 @@ S3method("summary", "purtest")
 S3method("print", "summary.purtest")
 # pwaldtest
 S3method("pwaldtest", "plm")
-# detect_lin_dep, alias
-S3method("detect_lin_dep", "matrix")
-S3method("detect_lin_dep", "data.frame")
-S3method("detect_lin_dep", "plm")
+# detect.lindep, alias
+S3method("detect.lindep", "matrix")
+S3method("detect.lindep", "data.frame")
+S3method("detect.lindep", "plm")
 S3method("alias", "plm")
 S3method("alias", "pFormula")
 # is.pconsecutive
