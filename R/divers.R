@@ -488,7 +488,7 @@ swar_Between_check <- function(x, method) {
   ## little helper function to check feasibility of Between model in Swamy-Arora estimation
   ## in ercomp(): if model contains too few groups (individual, time) the Between
   ## model is not estimable (but does not error)
-  if (describe(x, "model") == "Between") {
+  if (describe(x, "model") %in% c("between", "Between")) {
     pdim <- pdim(x)
     grp <- switch(describe(x, "effect"),
                   "individual" = pdim$nT$n,
