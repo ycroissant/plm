@@ -28,7 +28,7 @@ Changes in version 1.7-0
   * pht: fixed estimation (plm 1.6-6 introduced a regression).
   * summary.pht: waldtest now uses Chisq distribution (was F distribution).
   * pht, plm(., model = "ht"/"am"/"bms"): both uses deprecated, better use instead
-    plm(., model ="random", random.method ="ht", inst.method = "baltagi"/"am"/"bms")
+    plm(., model="random", random.method ="ht", inst.method="baltagi"/"am"/"bms")
     to estimate Hausman-Taylor models.
   * Between and Within methods for matrices are now exported.
   * summary.plm: removed support for ill-named argument '.vcov', instead use
@@ -66,8 +66,8 @@ Changes in version 1.7-0
   * summary.purtest: give informative error message when run on purtest object
     containing result for Hadri's test.
   * pggls models: display proper names in printed summary's topline.
-  * pcce models: display proper names in printed summary's topline; pooled model object's
-    element 'coefficients' is a numeric (was 1x1 matrix).
+  * pcce models: display proper names in printed summary's topline; pooled model
+    object's element 'coefficients' is a numeric (was 1x1 matrix).
   * pmg models: display distinguishing names in printed summary's topline.
   * dynformula: the long depricated function now gives a deprecation warning.
   * detect.lindep: renamed function detect_lin_dep for consistency in function

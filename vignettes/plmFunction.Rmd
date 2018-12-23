@@ -348,7 +348,7 @@ crbalt <- plm(log(crmrte) ~ log(prbarr) + log(polpc) + log(prbconv) +
           model = "random", inst.method = "baltagi")
 crbvk <- update(crbalt, inst.method = "bvk")
 crwth <- update(crbalt, model = "within")
-screenreg(list(within = crwth, EC2SLS = crbalt, G2SLS = crbalt), 
+screenreg(list(within = crwth, EC2SLS = crbalt, G2SLS = crbvk), 
           single.row = TRUE, digits = 5, omit.coef = "(region)|(year)")
 ```
 
