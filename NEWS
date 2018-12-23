@@ -7,7 +7,7 @@ Changes in version 1.7-0
     dimension). The argument 'shift' is introduced to control shifting behaviour,
     possible values are "time" (default) and "row" (behaviour up until and incl.
     plm 1.6-6). Note that, however, the diff-ing performed in first-difference 
-    model estimationby plm(..., model = "fd") is based on row-wise differences of
+    model estimation by plm(..., model = "fd") is based on row-wise differences of
     the model matrix per individual.
   * pbnftest: new function for (modified) BNF statistic (Durbin-Watson test 
     generalised to panels) and Baltagi/Wu's LBI statistic.
@@ -23,28 +23,15 @@ Changes in version 1.7-0
     be correctly performed for a matrix without index attribute.
   * summary.plm: for all instrumental variable models, coefficient tests are based
     on standard normal distribution and Wald test on Chi-square distribution.
-  * pwaldtest: now handles IV models correctly (Wooldridge (1990)); in all cases,
-    htest object's 'statistic' element is a numeric (was 1x1 matrix for some cases).
-  * pht: fixed estimation (plm 1.6-6 introduced a regression).
-  * summary.pht: waldtest now uses Chisq distribution (was F distribution).
+  * pwaldtest: now handles IV models correctly (Wooldridge (1990)).
+  * pht: fixed estimation (plm 1.6-6 introduced a slight regression).
+  * summary.pht: waldtest now uses Chi-square distribution (was F distribution).
   * pht, plm(., model = "ht"/"am"/"bms"): both uses deprecated, better use instead
     plm(., model="random", random.method ="ht", inst.method="baltagi"/"am"/"bms")
     to estimate Hausman-Taylor models.
-  * Between and Within methods for matrices are now exported.
-  * summary.plm: removed support for ill-named argument '.vcov', instead use
-    'vcov'. '.vcov' has been deprecated in plm 1.6-4 on CRAN since 2016-11-30.
-  * as.data.frame.pdata.frame gained argument 'keep.attributes'.
-  * [.pdata.frame: in case a single column, i.e., a pseries is returned, this 
-    pseries now has names (now consistent to extraction by $.pdata.frame and
-    [[.pdata.frame).
-  * is.pseries: added function to check if an object qualifies as a pseries.
-  * (internal) is.index, has.index: new non-exported functions to check if an
-    object is or has a proper index (in the sense of the plm package).
-  * pdata.frame: fixed bug so that pdata.frames with only one column can be 
-    created if drop.index = TRUE is set.
   * Fixed first-difference models (plm(., model = "fd"), pggls(., model = "fd"))
     to have an intercept by default again (disappeared in plm 1.6-6).
-  * make.pconsecutive for pseries: for inputted consecutive pseries, the argument
+  * make.pconsecutive for pseries: for consecutive pseries, the argument
     'balanced' was not respected.
   * pvar: added method for pseries.
   * pmodel.response, fitted.plm, residuals.plm: for "between" and "fd" models, 
@@ -56,6 +43,18 @@ Changes in version 1.7-0
   * print.pseries: prettier printing for c("pseries", "complex").
   * print.summary.plm: more informative for perfect fits (all residuals are 0).
   * pgrangertest: better detection of infeasibility if a series is too short.
+  * summary.plm: removed support for ill-named argument '.vcov', instead use
+    'vcov'. '.vcov' has been deprecated in plm 1.6-4 on CRAN since 2016-11-30.
+  * as.data.frame.pdata.frame gained argument 'keep.attributes'.
+  * [.pdata.frame: in case a single column, i.e., a pseries is returned, this 
+    pseries now has names (now consistent to extraction by $.pdata.frame and
+    [[.pdata.frame).
+  * Between and Within methods for matrices are now exported.
+  * is.pseries: added function to check if an object qualifies as a pseries.
+  * (internal) is.index, has.index: new non-exported functions to check if an
+    object is or has a proper index (in the sense of the plm package).
+  * pdata.frame: fixed bug so that pdata.frames with only one column can be 
+    created if drop.index = TRUE is set.
   * plm object: gained element 'weights' if weighted estimation was performed.
   * pgmm object: removed element 'df.residual' for now as it contained the
     function of the same name rather than a number.
@@ -68,13 +67,15 @@ Changes in version 1.7-0
   * pggls models: display proper names in printed summary's topline.
   * pcce models: display proper names in printed summary's topline; pooled model
     object's element 'coefficients' is a numeric (was 1x1 matrix).
+  * pwaldtest: in all cases, htest object's 'statistic' element is a numeric
+    (was 1x1 matrix for some cases).
   * pmg models: display distinguishing names in printed summary's topline.
   * dynformula: the long depricated function now gives a deprecation warning.
   * detect.lindep: renamed function detect_lin_dep for consistency in function
     naming (back-compatible solution implemented).
   * pvcovHC: function deprecated, use vcovHC for same functionality.
 
-  * Vingettes: translated original package's vignette to Rmd format and renamed
+  * Vingettes: translated package's original vignette to Rmd format and renamed
     to plmPackage.Rmd; added vignette plmFunction.Rmd for further explanation
     about the estimation of error components models with the plm function.
   
@@ -531,7 +532,7 @@ Changes in version 1.5-9
     a second time; phtest now also works with between model correctly (fixed degrees of freedom)
     tests/test_phtest_Hausman_regression.R added.
  
-  * plm(): original row names of inputted data are preserved in plm_object$model,
+  * plm(): original row names of input data are preserved in plm_object$model,
     so functions like pmodel.response(), model.frame(), model.matrix(), residuals()
     return the original row.names (and thus fancy rownames if those were to be computed by
     pdata.frame)

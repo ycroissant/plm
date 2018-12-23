@@ -124,7 +124,7 @@ more main arguments can be set :
 
 The estimation of all but the last model is straightforward, as it
 requires only the estimation by *OLS* of obvious transformations of
-the data. The *GLS* model requires more explanations. In most of the
+the data. The *GLS* model requires more explanation. In most of the
 cases, the estimation is obtained by quasi-differencing the data from
 the individual and/or the time means. The coefficients used to perform
 this quasi-difference depends on estimators of the variance of the

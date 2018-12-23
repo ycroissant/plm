@@ -182,8 +182,8 @@ the model
 (where $\Delta y_{it}=y_{it}-y_{i,t-1}$, $\Delta
 x_{it}=x_{it}-x_{i,t-1}$ and, from \@ref(eq:errcomp), $\Delta
 u_{it}=u_{it}-u_{i,t-1}=\Delta \epsilon_{it}$ for $t=2,...,T$) can be
-consistently estimated by pooled OLS. This is called the {\em
-  first-difference}, or FD estimator. Its relative
+consistently estimated by pooled OLS. This is called the *first-difference*,
+or FD estimator. Its relative
 efficiency, and so reasons for choosing it against other consistent
 alternatives, depends on the properties of the error term. The
 FD estimator is usually preferred if the errors $u_{it}$ are
@@ -207,8 +207,8 @@ $\beta_{it}=\beta+\eta_{i}$ for all $t$, where $\eta_{i}$ is a group--
 
 
  The hypotheses on parameters and error terms (and hence the choice of
- the most appropriate estimator) are usually tested by means of: {\em
-   pooling} tests to check poolability, i.e. the hypothesis that the
+ the most appropriate estimator) are usually tested by means of: *pooling*
+ tests to check poolability, i.e. the hypothesis that the
  same coefficients apply across all individuals; and random effects
  tests, comparing the null of spherical residuals with the alternative
  of group (time) specific effects in the error term. If the homogeneity
@@ -306,7 +306,7 @@ and then to use the `pdata.frame` in the estimation functions.
 
 ### Estimation interface
 
-`plm` provides four functions for estimation:
+`plm` provides various functions for estimation, among them:
 
 
 
@@ -332,7 +332,7 @@ mandatory). Three additional arguments are common to these functions:
   to identify the structure of the data, *i.e.* the individual
   and the time period for each observation,
 - `effect`: the kind of effects to include in the model,
-  *i.e.* individual effects, time effects or both^[Although in most models the individual and time effects cases are symmetric, there are exceptions: estimating the `fd` model on time effects is meaningless because cross-sections do not generally have a natural ordering, so trying `effect="time"` stops with an error message as does `effect="twoways"` which is not defined for `fd` models],
+  *i.e.* individual effects, time effects or both^[Although in most models the individual and time effects cases are symmetric, there are exceptions: estimating the `fd` model on time effects is meaningless because cross-sections do not generally have a natural ordering, so trying `effect = "time"` stops with an error message as does `effect = "twoways"` which is not defined for `fd` models],
 - `model`: the kind of model to be estimated, most of the
 time a model with fixed effects or a model with random effects.
 
@@ -403,8 +403,8 @@ within) models, can all be described inside the OLS estimation
 framework. In fact, while pooled OLS simply pools data, the standard
 way of estimating fixed effects models with, say, group (time) effects
 entails transforming the data by subtracting the average over time
-(group) to every variable, which is usually termed {\em
-  time-demeaning}. In the random effects case, the various feasible
+(group) to every variable, which is usually termed *time-demeaning*.
+In the random effects case, the various feasible
 GLS estimators which have been put forth to tackle the issue of serial
 correlation induced by the group-invariant random effect have been
 proven to be equivalent (as far as estimation of $\beta$s is
@@ -727,8 +727,8 @@ In case of a two-ways effect model, an additional argument
 `effect` is required to extract fixed effects:
 
 ```{r }
-grun.twfe <- plm(inv~value+capital,data=Grunfeld,model="within",effect="twoways")
-fixef(grun.twfe,effect="time")
+grun.twfe <- plm(inv~value+capital, data=Grunfeld, model="within", effect="twoways")
+fixef(grun.twfe, effect="time")
 ``` 
 
 ## More advanced use of plm
@@ -774,8 +774,8 @@ effects. Using the `effect` argument, one may also introduce:
 
 
 
-- time effects (`effect="time"`),
-- individual and time effects (`effect="twoways"`).
+- time effects (`effect = "time"`),
+- individual and time effects (`effect = "twoways"`).
 
 
 
@@ -1083,7 +1083,7 @@ with $$\hat{\Omega}=\sum_{i=1}^n \frac{\hat{u}_{it}
 
 
 This framework allows the error covariance structure inside every
-group (if `effect="individual"`) of observations to be fully
+group (if `effect = "individual"`) of observations to be fully
 unrestricted and is therefore robust against any type of intragroup
 heteroskedasticity and serial correlation. This structure, by
 converse, is assumed identical across groups and thus general
@@ -1097,7 +1097,7 @@ income surveys, while problematic for "long" panels, where $\hat{V}$
 tends to become singular and standard errors therefore become biased
 downwards.
 
-In a pooled time series context (`effect="time"`),
+In a pooled time series context (`effect = "time"`),
 symmetrically, this estimator is able to account for arbitrary
 cross-sectional correlation, provided that the latter is
 time-invariant  [see @GREE:03 13.9.1--2, pp.321--2]. In this case
@@ -1219,13 +1219,13 @@ are either two `plm` objects (the results of a `pooling`
 and a `within` model) or a formula.
 
 ```{r }
-gw <- plm(inv ~ value + capital,data=Grunfeld,effect="twoways",model="within")
-gp <- plm(inv ~ value + capital,data=Grunfeld,model="pooling")
+gw <- plm(inv ~ value + capital, data=Grunfeld, effect="twoways", model="within")
+gp <- plm(inv ~ value + capital, data=Grunfeld, model="pooling")
 pFtest(gw,gp)
 ``` 
 
 ```{r results='hide'}
-pFtest(inv~value+capital, data=Grunfeld,effect="twoways")
+pFtest(inv~value+capital, data=Grunfeld, effect="twoways")
 ``` 
 
 ## Hausman test
@@ -1636,8 +1636,8 @@ second case, unless `model` is set to `NULL`, all usual
 parameters relative to the estimation of a `plm` model may be
 passed on.  The test is compatible with any consistent
 `panelmodel` for the data at hand, with any specification of
-`effect`. E.g., specifying `effect="time"` or
-`effect="twoways"` allows to test for residual cross-sectional
+`effect`. E.g., specifying `effect = "time"` or
+`effect = "twoways"` allows to test for residual cross-sectional
 dependence after the introduction of time fixed effects to account for
 common shocks.
 
@@ -1655,8 +1655,8 @@ warning.
 ### CD(p) test for local cross-sectional dependence
  
 A *local* variant of the $CD$ test, called $CD(p)$ test
-[@PESA:04], takes into account an appropriate subset of {\em
-  neighbouring} cross-sectional units to check the null of no
+[@PESA:04], takes into account an appropriate subset of *neighbouring*
+cross-sectional units to check the null of no
 XSD against the alternative of *local* XSD,
 i.e. dependence between neighbours only. To do so, the pairs of
 neighbouring units are selected by means of a binary proximity matrix
