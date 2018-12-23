@@ -105,7 +105,7 @@ The first two arguments of `plm` are, like for most of the estimation
 functions of `R` a `formula` which describes the model to be estimated
 and a `data.frame`. `subset`, `weights` and `na.action` are also
 available and have the same behavior than in the `lm` function. Three
-main more argument can be set :
+more main arguments can be set :
 
 - `index` helps `plm` to understand the structure of the data : if
   `NULL`, the first two columns of the data are assumed to contain the
@@ -210,7 +210,7 @@ screenreg(list(ols = ols, between = between, within = within,
         digits = 5, omit.coef = "(Intercept)")
 ```
 
-The estimated variance can be extract using the `ercomp` function. For
+The estimated variance can be extracted using the `ercomp` function. For
 example, for the `amemiya` model :
 
 ```{r ercompamemiya}
@@ -235,7 +235,7 @@ summary(PrSwar)
 # The twoways effect model
 
 The two-ways effect model is obtained by setting the `effect` argument
-to `TRUE`. @BALT:13 p. 44-46, presents EViews' output for the Grunfeld
+to `twoways`. @BALT:13 p. 44-46, presents EViews' output for the Grunfeld
 data set.
 
 ```{r grunfeld2ways}
@@ -246,8 +246,8 @@ Gra <- update(Grw, random.method = "amemiya")
 screenreg(list("Wallace-Hussain" = Grw, "Swamy-Arora" = Grs, "Amemiya" = Gra), digits = 5)
 ```
 
-The estimated variance of the time component of the variance is
-negative for `whalus` and `swar`, it is set to 0.
+The estimated variance of the time component is
+negative for `walhus` as well as `swar` and `plm` sets it to 0.
 
 @BALT:09 p. 60-62, presents EViews' output for the `Produc` data.
 
@@ -269,7 +269,7 @@ Two difficulties arise with unbalanced panels :
 - there are no obvious denominators for the quadratic forms of the
   residuals that are used to estimate the components of the
   variance. The strategy is then to compute the expected value and
-  equates it to the actual quadratic forms. Detailed formula are
+  equate it to the actual quadratic forms. Detailed formula are
   omitted here, they depend on the preliminary estimator.
 - for the one-way effect model, the estimator is still obtained by
   applying *OLS* on demeaned data (the individual **and** the time
@@ -292,7 +292,7 @@ HedStata <- plm(form, Hedonic, model = "random", index = "townid",
 HedEviews <- plm(form, Hedonic, model = "random", index = "townid", 
                  random.models = c("within", "Between"))
 HedEviewsWH <- update(HedEviews, random.models = "pooling")
-screenreg(list(Eviews = HedEviews, Stata = HedStata, "Wallace-Hussain" = HedEviewsWH), 
+screenreg(list(EViews = HedEviews, Stata = HedStata, "Wallace-Hussain" = HedEviewsWH), 
           digits = 5, single.row = TRUE)
 ```
 
@@ -300,13 +300,14 @@ The difference is due to the fact that Stata uses a between regression
 on $N$ observations while EViews uses a between regression on $\sum_n T_n$
 observations, which are not the same on unbalanced panels. Note the
 use of between with or without the B capitalized in the
-random.models argument.
+`random.models` argument. A more detailed analysis of Stata's estimation procedure
+is given by @COTT:2017.
 
 
 # Instrumental variable estimators
 
 All of the models presented above may be estimated using instrumental
-variables. The instruments are specified using two or three-part
+variables. The instruments are specified using two- or three-part
 formulas, each part being separated by a `|` sign :
 
 - the first part contains the covariates,
@@ -335,7 +336,7 @@ The instrumental variables estimator used is indicated with the
   variable of the second and of the third parts are included as
   instruments.
 
- as illustrated on the following example from @BALT:01, p.120 @BALT:13, p.137.
+ as illustrated on the following example from @BALT:01, p.120/ @BALT:13, p.137.
   
 ```{r}
 data("Crime", package = "plm")
@@ -352,7 +353,7 @@ screenreg(list(within = crwth, EC2SLS = crbalt, G2SLS = crbvk),
           single.row = TRUE, digits = 5, omit.coef = "(region)|(year)")
 ```
 
-The Hausman-Taylor model @HAUS:TAYL:81 may be estimated
+The Hausman-Taylor model (@HAUS:TAYL:81) may be estimated
 with the `plm` function. The following example is from
 @BALT:01, p.130 and @BALT:13, p.146.
 
