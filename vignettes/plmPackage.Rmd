@@ -1717,14 +1717,14 @@ regression.
 First, we have to determine the optimal number of lags $p_i$ for each
 time-series. Several possibilities are available. They all have in
 common that the maximum number of lags have to be chosen first. Then,
-$p_i$ can be chosen using:
+$p_i$ can be chosen by using:
 
 
 
-- the Schwarz information criteria (SIC),
-- the Akaike information criteria (AIC),
-- the Hall method, which consist in removing the higher lags while
-  it is not significant.
+- the Schwarz information criterion (SIC),
+- the Akaike information criterion (AIC),
+- the Hall's method, which consist in removing the higher lags while
+  they are not significant.
 
 
 
@@ -1997,9 +1997,11 @@ in the error term, and the serial correlation they induce is cared for
 by means of appropriate GLS transformations. On the contrary, in the case of
 correlation, "fixed effects" methods such as least
 squares dummy variables or time-demeaning are needed, which
-explicitly, although inconsistently^[For fixed effects estimation, as the sample grows (on the dimension on which the fixed effects are specified) so does the number of parameters to be estimated. Estimation of individual fixed effects is $T$-- (but not $n$--) consistent, and the opposite],
-estimate a group-- (or time--)
-invariant additional parameter for each group (or time period).
+explicitly, although inconsistently^[For fixed effects estimation, as the sample
+grows (on the dimension on which the fixed effects are specified) so does the
+number of parameters to be estimated. Estimation of individual fixed effects
+is $T$-- (but not $n$--) consistent, and the opposite], estimate a 
+group-- (or time--) invariant additional parameter for each group (or time period).
 
 Thus, from the point of view of model specification, having
 *fixed effects* in an econometric model has the meaning of allowing the
@@ -2169,8 +2171,7 @@ interesting to applied econometricians.
 ### AR(1) pooling or random effects panel
 Linear models with groupwise structures of
 time-dependence^[Take heed that here, in contrast to the usual meaning of serial correlation in time series, we always speak of serial correlation *between the errors of each group*]
-may be
-fitted by `gls()`, specifying the correlation structure in the
+may be fitted by `gls()`, specifying the correlation structure in the
 `correlation` option^[note that the time index is coerced to numeric before the estimation]:
 
 
@@ -2251,8 +2252,8 @@ specifications:
 anova(lmAR1ML, reAR1ML)
 ```
 
-whence we see that the Grunfeld model specification doesn't seem to need any random
-effects once we control for serial correlation in the data.
+whence we see that the Grunfeld model specification doesn't seem to need any 
+random effects once we control for serial correlation in the data.
 
 
 # Conclusions
