@@ -22,6 +22,7 @@ Changes in version 1.7-0
   * Between.matrix: bug fixed, so that the transformation can
     be correctly performed for a matrix without index attribute.
   * pht: fixed estimation (plm 1.6-6 introduced a regression).
+  * summary.pht: waldtest now uses Chisq distribution (was F distribution).
   * pht, plm(., model = "ht"/"am"/"bms"): both uses deprecated, better use instead
     plm(., model ="random", random.method ="ht", inst.method = "baltagi"/"am"/"bms")
     to estimate Hausman-Taylor models.
@@ -69,6 +70,12 @@ Changes in version 1.7-0
     naming (back-compatible solution implemented).
   * pvcovHC: function deprecated, use vcovHC for same functionality.
 
+  * Vingettes: translated original package's vignette to Rmd format and renamed
+    to plmPackage.Rmd; added vignette plmFunction.Rmd for further explanation
+    about the estimation of error components models with the plm function.
+  
+  * Dependencies: added to 'Suggests': knitr, rmarkdown, bookdown
+  
   * Addendum: In plm version 1.6-6, aneweytest() was changed to use the residuals
     of the one-way individual within model (was: two-ways within model).
 

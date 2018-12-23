@@ -345,7 +345,7 @@ pht <-  function(formula, data, subset, na.action, model = c("ht", "am", "bms"),
 }
 
 summary.pht <- function(object, ...){
-  object$fstatistic <- pwaldtest(object, test = "F")
+  object$fstatistic <- pwaldtest(object, test = "Chisq")
   # construct the table of coefficients
   std.err <- sqrt(diag(vcov(object)))
   b <- coefficients(object)
