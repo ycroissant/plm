@@ -1721,7 +1721,7 @@ $p_i$ can be chosen using:
 
 
 
-- the Swartz information criteria (SIC),
+- the Schwarz information criteria (SIC),
 - the Akaike information criteria (AIC),
 - the Hall method, which consist in removing the higher lags while
   it is not significant.
