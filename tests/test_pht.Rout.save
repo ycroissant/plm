@@ -72,7 +72,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Total Sum of Squares:    886.9
 Residual Sum of Squares: 95.947
-Chisq: 34227.9 on 12 DF, p-value: < 2.22e-16
+Chisq: 6891.87 on 12 DF, p-value: < 2.22e-16
 > 
 > 
 > ht2 <- pht(lwage ~ wks + south + smsa + married + exp + I(exp^2) +
@@ -126,7 +126,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Total Sum of Squares:    886.9
 Residual Sum of Squares: 95.871
-Chisq: 34258.4 on 12 DF, p-value: < 2.22e-16
+Chisq: 6879.2 on 12 DF, p-value: < 2.22e-16
 > 
 > ht3 <- pht(lwage ~ wks + south + smsa + married + exp + I(exp^2) +
 +             bluecol + ind + union + sex + black + ed | 
@@ -179,7 +179,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Total Sum of Squares:    886.9
 Residual Sum of Squares: 95.578
-Chisq: 34376 on 12 DF, p-value: < 2.22e-16
+Chisq: 6467.37 on 12 DF, p-value: < 2.22e-16
 > 
 > ht4 <- plm(lwage ~ wks + south + smsa + married + exp + I(exp^2) +
 +             bluecol + ind + union + sex + black + ed | 
@@ -231,7 +231,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Total Sum of Squares:    886.9
 Residual Sum of Squares: 95.947
-Chisq: 34227.9 on 12 DF, p-value: < 2.22e-16
+Chisq: 6891.87 on 12 DF, p-value: < 2.22e-16
 > 
 > # estimating with pht and plm(., model = "ht") should give the same results
 > stopifnot(isTRUE(all.equal(coef(ht4), coef(ht))))
@@ -288,7 +288,7 @@ Total Sum of Squares:    243.04
 Residual Sum of Squares: 4163.6
 R-Squared:      0.60945
 Adj. R-Squared: 0.60833
-Chisq: -3909.64 on 12 DF, p-value: 1
+Chisq: 6891.87 on 12 DF, p-value: < 2.22e-16
 > 
 > ht6 <- plm(lwage ~ wks + south + smsa + married + exp + I(exp ^ 2) + 
 +              bluecol + ind + union + sex + black + ed |
@@ -341,7 +341,7 @@ Total Sum of Squares:    243.04
 Residual Sum of Squares: 4160.3
 R-Squared:      0.60948
 Adj. R-Squared: 0.60835
-Chisq: -3909.44 on 12 DF, p-value: 1
+Chisq: 6879.2 on 12 DF, p-value: < 2.22e-16
 > 
 > ht7 <- plm(lwage ~ wks + south + smsa + married + exp + I(exp ^ 2) + 
 +              bluecol + ind + union + sex + black + ed |
@@ -394,7 +394,7 @@ Total Sum of Squares:    243.04
 Residual Sum of Squares: 4147.6
 R-Squared:      0.60686
 Adj. R-Squared: 0.60572
-Chisq: -3908.7 on 12 DF, p-value: 1
+Chisq: 6467.37 on 12 DF, p-value: < 2.22e-16
 > 
 > stopifnot(isTRUE(all.equal(coef(ht5), coef(ht))))
 > stopifnot(isTRUE(all.equal(coef(ht6), coef(ht2))))
@@ -404,4 +404,4 @@ Chisq: -3908.7 on 12 DF, p-value: 1
 > 
 > proc.time()
    user  system elapsed 
-   5.42    0.21    5.64 
+   5.03    0.20    5.22 

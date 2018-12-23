@@ -21,6 +21,10 @@ Changes in version 1.7-0
     to c("pseries", "numeric") if an operation returns a decimal.
   * Between.matrix: bug fixed, so that the transformation can
     be correctly performed for a matrix without index attribute.
+  * summary.plm: for all instrumental variable models, coefficient tests are based
+    on standard normal distribution and Wald test on Chi-square distribution.
+  * pwaldtest: now handles IV models correctly (Wooldridge (1990)); in all cases,
+    htest object's 'statistic' element is a numeric (was 1x1 matrix for some cases).
   * pht: fixed estimation (plm 1.6-6 introduced a regression).
   * summary.pht: waldtest now uses Chisq distribution (was F distribution).
   * pht, plm(., model = "ht"/"am"/"bms"): both uses deprecated, better use instead

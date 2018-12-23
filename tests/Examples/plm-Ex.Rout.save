@@ -363,7 +363,7 @@ Warning: use of 'dynformula' is deprecated, use a multi-part formula instead
 log(y) ~ lag(log(y), 1) + log(x1) + lag(log(x1), 1) + lag(log(x1), 
     2) + log(x2) + lag(log(x2), 1) + lag(log(x2), 2) + diff(log(x3)) + 
     diff(log(x3), 1) + diff(log(x3), 2)
-<environment: 0x0000000007b0b8f0>
+<environment: 0x00000000079cb500>
 > 
 > 
 > 
@@ -8918,7 +8918,7 @@ Total Sum of Squares:    243.04
 Residual Sum of Squares: 4163.6
 R-Squared:      0.60945
 Adj. R-Squared: 0.60833
-Chisq: -3909.64 on 12 DF, p-value: 1
+Chisq: 6891.87 on 12 DF, p-value: < 2.22e-16
 > 
 > am <- plm(lwage ~ wks + south + smsa + married + exp + I(exp ^ 2) + 
 +               bluecol + ind + union + sex + black + ed |
@@ -8971,7 +8971,7 @@ Total Sum of Squares:    243.04
 Residual Sum of Squares: 4160.3
 R-Squared:      0.60948
 Adj. R-Squared: 0.60835
-Chisq: -3909.44 on 12 DF, p-value: 1
+Chisq: 6879.2 on 12 DF, p-value: < 2.22e-16
 > 
 > ## deprecated way with pht() for HT
 > #ht <- pht(lwage ~ wks + south + smsa + married + exp + I(exp^2) +
@@ -13467,7 +13467,7 @@ attr(,"se")
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  13.32 0.89 14.23 NA NA 
+Time elapsed:  13.04 1.09 14.15 NA NA 
 > grDevices::dev.off()
 null device 
           1 

@@ -398,6 +398,9 @@ pFtest.plm <- function(x, z, ...){
 # arg 'vcov' non-NULL => the robust tests are carried out
 # arg df2adj == TRUE does finite-sample/cluster adjustment for F tests's df2
 # args .df1, .df2 are only there if user wants to do overwriting of dfs (user has final say)
+#
+# Chi-sq test for IV models as in Wooldridge (1990), A note on the Lagrange multiplier and F-statistics for two stage least
+#                                                    squares regressions’, Economics Letters 34: 151–155.
 pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
                           df2adj = (test == "F" && !is.null(vcov) && missing(.df2)), .df1, .df2, ...) {
   model <- describe(x, "model")
@@ -409,6 +412,8 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
   tss <- tss(x)
   ssr <- deviance(x)
   vcov_arg <- vcov
+  int <- "(Intercept)"
+  coefs_wo_int <- coef(x)[!(names(coef(x)) %in% int)]
   
   # sanity check
   if (df2adj == TRUE && (is.null(vcov_arg) || test != "F")) {
@@ -422,10 +427,7 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
     
     rvcov_name <- paste0(", vcov: ", paste0(deparse(substitute(vcov)))) # save "name" for later
     
-    coefs <- coef(x)
-    int <- "(Intercept)"
     if (int %in% names(coef(x))) { # drop intercept, if present
-      coefs <- coef(x)[!(names(coef(x)) %in% int)]
       rvcov <- rvcov_orig[!rownames(rvcov_orig) %in% int, !colnames(rvcov_orig) %in% int]
       attr(rvcov, which = "cluster") <- attr(rvcov_orig, which = "cluster") # restore dropped 'cluster' attribute
     }
@@ -466,7 +468,14 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
   if (test == "Chisq"){
     # perform "normal" chisq test
     if (is.null(vcov_arg)) {
-      stat <- (tss-ssr)/(ssr/df2)
+      stat <- if(length(formula(x))[2] > 1) {
+                  # IV case: cannot take usual TSS-SSR-way to calc. stat
+                  as.numeric(crossprod(solve(vcov(x)[names(coefs_wo_int), names(coefs_wo_int)], coefs_wo_int), coefs_wo_int))
+                } else {
+                  # non IV
+                  (tss-ssr)/(ssr/df2)
+                }
+      
       names(stat) <- "Chisq"
       pval <- pchisq(stat, df = df1, lower.tail = FALSE)
       parameter <- c(df = df1)
@@ -483,14 +492,15 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
         #                                        vcov. = rvcov_orig)
         # stat_car <- return_car_lH[["Chisq"]][2] # extract statistic
       
-      stat <- crossprod(solve(rvcov, coefs), coefs)
+      stat <- as.numeric(crossprod(solve(rvcov, coefs_wo_int), coefs_wo_int))
       names(stat) <- "Chisq"
       pval <- pchisq(stat, df = df1, lower.tail = FALSE)
       parameter <- c(df = df1)
       method <- paste0("Wald test (robust)", rvcov_name)
     }
   }
-  if (test == "F"){ 
+  if (test == "F"){
+    if(length(formula(x))[2] > 1) stop("test = \"F\" not sensible for IV models")
     if (is.null(vcov_arg)) {
       # perform "normal" F test
       stat <- (tss-ssr)/ssr*df2/df1
@@ -511,7 +521,7 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
         #                                        vcov. = rvcov_orig)
         # stat_car <- return_car_lH[["F"]][2] # extract statistic
 
-      stat <- crossprod(solve(rvcov, coefs), coefs) / df1
+      stat <- as.numeric(crossprod(solve(rvcov, coefs_wo_int), coefs_wo_int) / df1)
       names(stat) <- "F"
       pval <- pf(stat, df1 = df1, df2 = df2, lower.tail = FALSE)
       parameter <- c(df1 = df1, df2 = df2) # Dfs

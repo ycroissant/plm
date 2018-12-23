@@ -616,16 +616,16 @@ print.plm.list <- function(x, digits = max(3, getOption("digits") - 2), width = 
 summary.plm <- function(object, vcov = NULL, ...){
     
     vcov_arg <- vcov
-    
-    
     model <- describe(object, "model")
     effect <- describe(object, "effect")
     random.method <- describe(object, "random.method")
     object$r.squared <- c(rsq  = r.squared(object),
                           adjrsq = r.squared(object, dfcor = TRUE))
+    
     ## determine if t distribution and F test to be used or standard normal and Chisq test
     norm_t <- if(model == "ht") "norm" else "t" # Hausman-Taylor via plm(., model="ht")
     norm_t <- if(!is.null(random.method) && random.method == "ht") "norm" else "t"
+    norm_t <- if(length(formula(object))[2] > 1) "norm" else "t" # all IV models
     
     object$fstatistic <- pwaldtest(object,
                                    test = ifelse(norm_t == "t", "F", "Chisq"),
