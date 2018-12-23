@@ -400,7 +400,7 @@ pFtest.plm <- function(x, z, ...){
 # args .df1, .df2 are only there if user wants to do overwriting of dfs (user has final say)
 #
 # Chi-sq test for IV models as in Wooldridge (1990), A note on the Lagrange multiplier and F-statistics for two stage least
-#                                                    squares regressions’, Economics Letters 34: 151–155.
+#                                                    squares regressions, Economics Letters 34: 151-155.
 pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
                           df2adj = (test == "F" && !is.null(vcov) && missing(.df2)), .df1, .df2, ...) {
   model <- describe(x, "model")
