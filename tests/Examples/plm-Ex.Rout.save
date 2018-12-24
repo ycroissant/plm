@@ -363,7 +363,7 @@ Warning: use of 'dynformula' is deprecated, use a multi-part formula instead
 log(y) ~ lag(log(y), 1) + log(x1) + lag(log(x1), 1) + lag(log(x1), 
     2) + log(x2) + lag(log(x2), 1) + lag(log(x2), 2) + diff(log(x3)) + 
     diff(log(x3), 1) + diff(log(x3), 2)
-<environment: 0x00000000079cb500>
+<environment: 0x00000000079cc898>
 > 
 > 
 > 
@@ -8875,7 +8875,9 @@ alternative hypothesis: Granger causality for at least one individual
 +           random.method = "ht", model = "random", inst.method = "baltagi")
 > summary(ht)
 Oneway (individual) effect Random Effect Model 
-   (NA's transformation)
+   (Hausman-Taylor's transformation)
+Instrumental variable estimation
+   (Baltagi's transformation)
 
 Call:
 plm(formula = lwage ~ wks + south + smsa + married + exp + I(exp^2) + 
@@ -8928,7 +8930,9 @@ Chisq: 6891.87 on 12 DF, p-value: < 2.22e-16
 +           random.method = "ht", model = "random", inst.method = "am")
 > summary(am)
 Oneway (individual) effect Random Effect Model 
-   (NA's transformation)
+   (Hausman-Taylor's transformation)
+Instrumental variable estimation
+   (Amemiya-MaCurdy's transformation)
 
 Call:
 plm(formula = lwage ~ wks + south + smsa + married + exp + I(exp^2) + 
@@ -13467,7 +13471,7 @@ attr(,"se")
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  13.04 1.09 14.15 NA NA 
+Time elapsed:  13.02 0.92 13.96 NA NA 
 > grDevices::dev.off()
 null device 
           1 

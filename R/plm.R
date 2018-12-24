@@ -90,10 +90,11 @@ plm <- function(formula, data, subset, weights, na.action,
     
     # the use of the instrument argument is deprecated, use 2-part Formulas instead
     if (!is.null(dots$instruments)){
+      # TODO: once plm 1.7-0 is released to CRAN, delete this section entirely
         formula <- as.Formula(formula, dots$instruments)
-        deprec.instruments <- paste("the use of the instruments argument is deprecated,",
-                                    "use two-part formulas instead")
-        warning(deprec.instruments)
+        deprec.instruments <- paste("the use of the 'instruments' argument is not possible anymore,",
+                                    "use two-part Formulas instead")
+        stop(deprec.instruments)
     }
     
     # check whether data and formula are pdata.frame and pFormula and if not
@@ -676,7 +677,7 @@ summary.plm <- function(object, vcov = NULL, ...){
 print.summary.plm <- function(x, digits = max(3, getOption("digits") - 2),
                               width=getOption("width"), subset = NULL, ...){
   formula <- formula(x)
-  has.instruments <- (length(formula)[2] == 2)
+  has.instruments <- (length(formula)[2] > 2)
   effect <- describe(x, "effect")
   model  <- describe(x, "model")
   if (model != "pooling") { cat(paste(effect.plm.list[effect]," ",sep="")) }
@@ -902,7 +903,7 @@ formula.plm <- function(x, ...){
 # describe function: extract characteristics of plm model
 describe <- function(x,
                      what = c("model", "effect", "random.method",
-                              "inst.method", "transformation")){
+                              "inst.method", "transformation", "ht.method")){
   what <- match.arg(what)
   cl <- x$args
 ##   if (is.name(cl$effect)) cl$effect <- eval(cl$effect, parent.frame())
@@ -917,7 +918,8 @@ describe <- function(x,
          "inst.method"    = ifelse(!is.null(cl$inst.method),
                                  cl$inst.method, "bvk"),
          "transformation" = ifelse(!is.null(cl$transformation),
-                                 cl$transformation, "d")
+                                 cl$transformation, "d"),
+         "ht.method"      = ifelse(!is.null(cl$ht.method), cl$ht.method, "ht")
          )
 }
 

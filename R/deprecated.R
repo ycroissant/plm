@@ -337,7 +337,7 @@ pht <-  function(formula, data, subset, na.action, model = c("ht", "am", "bms"),
                  varlist      = varlist,
                  ercomp       = estec,
                  call         = cl,
-                 args         = list(model = "ht"))
+                 args         = list(model = "ht", ht.method = model))
   names(result$coefficients) <- colnames(result$vcov) <-
     rownames(result$vcov) <- colnames(X)
   class(result) <- c("pht", "plm", "panelmodel")
@@ -365,8 +365,11 @@ print.summary.pht <- function(x, digits = max(3, getOption("digits") - 2),
   has.instruments <- (length(formula)[2] == 2)
   effect <- describe(x, "effect")
   model <- describe(x, "model")
+  ht.method <- describe(x, "ht.method")
   cat(paste(effect.plm.list[effect]," ",sep=""))
-  cat(paste(model.plm.list[model]," Model",sep=""))
+  cat(paste(model.plm.list[model]," Model",sep=""),"\n")
+  cat(paste("(", ht.method.list[ht.method],")",sep=""),"\n")
+  
   cat("\nCall:\n")
   print(x$call)
 

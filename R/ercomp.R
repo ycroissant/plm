@@ -35,7 +35,7 @@ ercomp.formula <- function(object, data,
     
     # method and models arguments can't be both set
     if (! is.null(method) & ! is.null(models))
-        stop("you can't use both method and models arguments")
+        stop("you can't use both, the 'method' and the 'models' arguments")
 
     # method and models arguments aren't set, use swar
     if (is.null(method) & is.null(models)) method <- "swar"

@@ -28,7 +28,9 @@ Loading required package: Formula
 Warning message:
 uses of 'pht()' and 'plm(., model = "ht"/"am"/"bms")' are discouraged, better use 'plm(., model ="random", random.method = "ht", inst.method = "baltagi"/"am"/"bms")' 
 > summary(ht)
-Oneway (individual) effect Hausman-Taylor Model
+Oneway (individual) effect Hausman-Taylor Model 
+(Hausman-Taylor estimator) 
+
 Call:
 pht(formula = lwage ~ wks + south + smsa + married + exp + I(exp^2) + 
     bluecol + ind + union + sex + black + ed | sex + black + 
@@ -82,7 +84,9 @@ Chisq: 6891.87 on 12 DF, p-value: < 2.22e-16
 Warning message:
 uses of 'pht()' and 'plm(., model = "ht"/"am"/"bms")' are discouraged, better use 'plm(., model ="random", random.method = "ht", inst.method = "baltagi"/"am"/"bms")' 
 > summary(ht2)
-Oneway (individual) effect Hausman-Taylor Model
+Oneway (individual) effect Hausman-Taylor Model 
+(Amemiya-MaCurdy estimator) 
+
 Call:
 pht(formula = lwage ~ wks + south + smsa + married + exp + I(exp^2) + 
     bluecol + ind + union + sex + black + ed | sex + black + 
@@ -135,7 +139,9 @@ Chisq: 6879.2 on 12 DF, p-value: < 2.22e-16
 Warning message:
 uses of 'pht()' and 'plm(., model = "ht"/"am"/"bms")' are discouraged, better use 'plm(., model ="random", random.method = "ht", inst.method = "baltagi"/"am"/"bms")' 
 > summary(ht3)
-Oneway (individual) effect Hausman-Taylor Model
+Oneway (individual) effect Hausman-Taylor Model 
+(Breusch-Mizon-Schmidt estimator) 
+
 Call:
 pht(formula = lwage ~ wks + south + smsa + married + exp + I(exp^2) + 
     bluecol + ind + union + sex + black + ed | sex + black + 
@@ -188,7 +194,9 @@ Chisq: 6467.37 on 12 DF, p-value: < 2.22e-16
 Warning message:
 uses of 'pht()' and 'plm(., model = "ht"/"am"/"bms")' are discouraged, better use 'plm(., model ="random", random.method = "ht", inst.method = "baltagi"/"am"/"bms")' 
 > summary(ht4)
-Oneway (individual) effect Hausman-Taylor Model
+Oneway (individual) effect Hausman-Taylor Model 
+(Hausman-Taylor estimator) 
+
 Call:
 pht(formula = lwage ~ wks + south + smsa + married + exp + I(exp^2) + 
     bluecol + ind + union + sex + black + ed | sex + black + 
@@ -245,7 +253,9 @@ Chisq: 6891.87 on 12 DF, p-value: < 2.22e-16
 +            data = Wages, index = 595)
 > summary(ht5)
 Oneway (individual) effect Random Effect Model 
-   (NA's transformation)
+   (Hausman-Taylor's transformation)
+Instrumental variable estimation
+   (Baltagi's transformation)
 
 Call:
 plm(formula = lwage ~ wks + south + smsa + married + exp + I(exp^2) + 
@@ -298,7 +308,9 @@ Chisq: 6891.87 on 12 DF, p-value: < 2.22e-16
 +            data = Wages, index = 595)
 > summary(ht6)
 Oneway (individual) effect Random Effect Model 
-   (NA's transformation)
+   (Hausman-Taylor's transformation)
+Instrumental variable estimation
+   (Amemiya-MaCurdy's transformation)
 
 Call:
 plm(formula = lwage ~ wks + south + smsa + married + exp + I(exp^2) + 
@@ -351,7 +363,9 @@ Chisq: 6879.2 on 12 DF, p-value: < 2.22e-16
 +            data = Wages, index = 595)
 > summary(ht7)
 Oneway (individual) effect Random Effect Model 
-   (NA's transformation)
+   (Hausman-Taylor's transformation)
+Instrumental variable estimation
+   (Breusch-Mizon-Schmidt's transformation)
 
 Call:
 plm(formula = lwage ~ wks + south + smsa + married + exp + I(exp^2) + 
@@ -404,4 +418,4 @@ Chisq: 6467.37 on 12 DF, p-value: < 2.22e-16
 > 
 > proc.time()
    user  system elapsed 
-   5.03    0.20    5.22 
+   5.19    0.23    5.41 

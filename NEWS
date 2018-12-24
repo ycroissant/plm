@@ -33,29 +33,41 @@ Changes in version 1.7-0
     to have an intercept by default again (disappeared in plm 1.6-6).
   * make.pconsecutive for pseries: for consecutive pseries, the argument
     'balanced' was not respected.
-  * pvar: added method for pseries.
   * pmodel.response, fitted.plm, residuals.plm: for "between" and "fd" models, 
     a pure numeric is returned, not an 'illegal' pseries anymore (these models 
     compress data where having an index/pseries is useless and misleading).
+  * Between and Within methods for matrices are now exported.
+  * plm object: gained element 'weights' if weighted estimation was performed.
+  * Vingettes: translated package's original vignette to Rmd format and renamed
+    to plmPackage.Rmd; added vignette plmFunction.Rmd for further explanation
+    about the estimation of error components models with the plm function.
+  
+  Deprecated/renamed:
+  * detect.lindep: renamed function detect_lin_dep for consistency in function
+    naming (back-compatible solution implemented).
+  * summary.plm: removed support for ill-named argument '.vcov', instead use
+    'vcov'. '.vcov' has been deprecated in plm 1.6-4 on CRAN since 2016-11-30.
+  * pvcovHC: function deprecated, use vcovHC for same functionality.
+  * plm: using the 'instruments' argument errors now (gave deprecation warning).
+  * dynformula: the long deprecated function now gives a deprecation warning.
+
+  Minor items:
+  * pvar: added method for pseries.
+  * pgrangertest: better detection of infeasibility if a series is too short.
+  * pdata.frame: fixed bug so that pdata.frames with only one column can be 
+    created if drop.index = TRUE is set.
+  * as.data.frame.pdata.frame gained argument 'keep.attributes'.
+  * [.pdata.frame: in case a single column, i.e., a pseries is returned, this 
+    pseries now has names (now consistent to extraction by $.pdata.frame and
+    [[.pdata.frame).
+  * is.pseries: added function to check if an object qualifies as a pseries.
+  * (internal) is.index, has.index: new non-exported functions to check if an
+    object is or has a proper index (in the sense of the plm package).
   * pvcm object: element 'residuals' is now of class c("pseries", "numeric") 
     (were: "numeric" for within, "matrix" with one column for random model);
     element 'df.residuals' renamed to 'df.residual' (cf. lm, plm, ...).
   * print.pseries: prettier printing for c("pseries", "complex").
   * print.summary.plm: more informative for perfect fits (all residuals are 0).
-  * pgrangertest: better detection of infeasibility if a series is too short.
-  * summary.plm: removed support for ill-named argument '.vcov', instead use
-    'vcov'. '.vcov' has been deprecated in plm 1.6-4 on CRAN since 2016-11-30.
-  * as.data.frame.pdata.frame gained argument 'keep.attributes'.
-  * [.pdata.frame: in case a single column, i.e., a pseries is returned, this 
-    pseries now has names (now consistent to extraction by $.pdata.frame and
-    [[.pdata.frame).
-  * Between and Within methods for matrices are now exported.
-  * is.pseries: added function to check if an object qualifies as a pseries.
-  * (internal) is.index, has.index: new non-exported functions to check if an
-    object is or has a proper index (in the sense of the plm package).
-  * pdata.frame: fixed bug so that pdata.frames with only one column can be 
-    created if drop.index = TRUE is set.
-  * plm object: gained element 'weights' if weighted estimation was performed.
   * pgmm object: removed element 'df.residual' for now as it contained the
     function of the same name rather than a number.
   * plm/ercomp: informative error messages for non-estimable 'swar' and 'amemiya'
@@ -64,20 +76,12 @@ Changes in version 1.7-0
   * plm/model.matrix.pFormula: informative error message for non-finite values.
   * summary.purtest: give informative error message when run on purtest object
     containing result for Hadri's test.
-  * pggls models: display proper names in printed summary's topline.
+  * pht, pggls models: display proper names in printed summary's topline.
   * pcce models: display proper names in printed summary's topline; pooled model
     object's element 'coefficients' is a numeric (was 1x1 matrix).
   * pwaldtest: in all cases, htest object's 'statistic' element is a numeric
     (was 1x1 matrix for some cases).
   * pmg models: display distinguishing names in printed summary's topline.
-  * dynformula: the long depricated function now gives a deprecation warning.
-  * detect.lindep: renamed function detect_lin_dep for consistency in function
-    naming (back-compatible solution implemented).
-  * pvcovHC: function deprecated, use vcovHC for same functionality.
-
-  * Vingettes: translated package's original vignette to Rmd format and renamed
-    to plmPackage.Rmd; added vignette plmFunction.Rmd for further explanation
-    about the estimation of error components models with the plm function.
   
   * Dependencies: added to 'Suggests': knitr, rmarkdown, bookdown
   
