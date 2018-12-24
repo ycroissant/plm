@@ -300,8 +300,11 @@ The difference is due to the fact that Stata uses a between regression
 on $N$ observations while EViews uses a between regression on $\sum_n T_n$
 observations, which are not the same on unbalanced panels. Note the
 use of between with or without the B capitalized in the
-`random.models` argument. A more detailed analysis of Stata's estimation procedure
-is given by @COTT:2017.
+`random.models` argument. `plm`'s default is to use the between regression
+with $\sum_n T_n$ observations when setting `model = "random", random.method = "swar"`).
+The default employed is what the original paper for the unbalanced
+one-way Swamy-Arora estimator defined (in @BALT:CHA:94, p.73). A more detailed
+analysis of Stata's Swamy-Arora estimation procedure is given by @COTT:2017.
 
 
 # Instrumental variable estimators
