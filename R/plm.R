@@ -675,9 +675,9 @@ summary.plm <- function(object, vcov = NULL, ...){
 }
 
 print.summary.plm <- function(x, digits = max(3, getOption("digits") - 2),
-                              width=getOption("width"), subset = NULL, ...){
+                              width = getOption("width"), subset = NULL, ...){
   formula <- formula(x)
-  has.instruments <- (length(formula)[2] > 2)
+  has.instruments <- (length(formula)[2] >= 2)
   effect <- describe(x, "effect")
   model  <- describe(x, "model")
   if (model != "pooling") { cat(paste(effect.plm.list[effect]," ",sep="")) }

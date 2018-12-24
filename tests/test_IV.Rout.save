@@ -118,6 +118,8 @@ F-statistic: 21.6923 on 16 and 518 DF, p-value: < 2.22e-16
 > fe_iv <- plm(form_iv, data = Crime, model = "within", effect = "twoways", inst.method = "baltagi")
 > summary(fe_iv)
 Twoways effects Within Model
+Instrumental variable estimation
+   (Baltagi's transformation)
 
 Call:
 plm(formula = form_iv, data = Crime, effect = "twoways", model = "within", 
@@ -158,6 +160,8 @@ Chisq: 56.2016 on 16 DF, p-value: 2.2539e-06
 > be_iv <- plm(form_iv, data = Crime, model = "between")
 > summary(be_iv)
 Oneway (individual) effect Between Model
+Instrumental variable estimation
+   (Balestra-Varadharajan-Krishnakumar's transformation)
 
 Call:
 plm(formula = form_iv, data = Crime, model = "between")
@@ -208,6 +212,8 @@ Chisq: 413.647 on 20 DF, p-value: < 2.22e-16
 > summary(re_iv)
 Oneway (individual) effect Random Effect Model 
    (Swamy-Arora's transformation)
+Instrumental variable estimation
+   (Baltagi's transformation)
 
 Call:
 plm(formula = form_re_iv, data = Crime, model = "random", inst.method = "baltagi")
@@ -267,6 +273,8 @@ Chisq: 575.685 on 26 DF, p-value: < 2.22e-16
 > summary(re2_iv)
 Oneway (individual) effect Random Effect Model 
    (Swamy-Arora's transformation)
+Instrumental variable estimation
+   (Balestra-Varadharajan-Krishnakumar's transformation)
 
 Call:
 plm(formula = form_re_iv, data = Crime, model = "random", inst.method = "bvk")
@@ -329,6 +337,8 @@ Chisq: 542.435 on 26 DF, p-value: < 2.22e-16
 > summary(re_iv3)
 Oneway (individual) effect Random Effect Model 
    (Swamy-Arora's transformation)
+Instrumental variable estimation
+   (Amemiya-MaCurdy's transformation)
 
 Call:
 plm(formula = form_re_iv, data = Crime, model = "random", inst.method = "am")
@@ -387,6 +397,8 @@ Chisq: 628.718 on 26 DF, p-value: < 2.22e-16
 > summary(re_iv4)
 Oneway (individual) effect Random Effect Model 
    (Swamy-Arora's transformation)
+Instrumental variable estimation
+   (Breusch-Mizon-Schmidt's transformation)
 
 Call:
 plm(formula = form_re_iv, data = Crime, model = "random", inst.method = "bms")
@@ -443,4 +455,4 @@ Chisq: 628.718 on 26 DF, p-value: < 2.22e-16
 > 
 > proc.time()
    user  system elapsed 
-   2.35    0.21    2.54 
+   2.40    0.17    2.54 

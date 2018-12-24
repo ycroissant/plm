@@ -26,9 +26,6 @@ Changes in version 1.7-0
   * pwaldtest: now handles IV models correctly (Wooldridge (1990)).
   * pht: fixed estimation (plm 1.6-6 introduced a slight regression).
   * summary.pht: waldtest now uses Chi-square distribution (was F distribution).
-  * pht, plm(., model = "ht"/"am"/"bms"): both uses deprecated, better use instead
-    plm(., model="random", random.method ="ht", inst.method="baltagi"/"am"/"bms")
-    to estimate Hausman-Taylor models.
   * Fixed first-difference models (plm(., model = "fd"), pggls(., model = "fd"))
     to have an intercept by default again (disappeared in plm 1.6-6).
   * make.pconsecutive for pseries: for consecutive pseries, the argument
@@ -43,14 +40,17 @@ Changes in version 1.7-0
     about the estimation of error components models with the plm function.
   
   Deprecated/renamed:
-  * detect.lindep: renamed function detect_lin_dep for consistency in function
-    naming (back-compatible solution implemented).
+  * pht, plm(., model = "ht"/"am"/"bms"): both uses deprecated, better use instead
+    plm(., model="random", random.method ="ht", inst.method="baltagi"/"am"/"bms")
+    to estimate Hausman-Taylor-type models.
   * summary.plm: removed support for ill-named argument '.vcov', instead use
     'vcov'. '.vcov' has been deprecated in plm 1.6-4 on CRAN since 2016-11-30.
   * pvcovHC: function deprecated, use vcovHC for same functionality.
   * plm: using the 'instruments' argument errors now (gave deprecation warning).
   * dynformula: the long deprecated function now gives a deprecation warning.
-
+  * detect.lindep: renamed function detect_lin_dep for consistency in function
+    naming (back-compatible solution implemented).
+  
   Minor items:
   * pvar: added method for pseries.
   * pgrangertest: better detection of infeasibility if a series is too short.
@@ -83,7 +83,7 @@ Changes in version 1.7-0
     (was 1x1 matrix for some cases).
   * pmg models: display distinguishing names in printed summary's topline.
   
-  * Dependencies: added to 'Suggests': knitr, rmarkdown, bookdown
+  * Dependencies: added to 'Suggests': knitr, rmarkdown, bookdown.
   
   * Addendum: In plm version 1.6-6, aneweytest() was changed to use the residuals
     of the one-way individual within model (was: two-ways within model).
