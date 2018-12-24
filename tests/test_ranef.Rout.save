@@ -1,6 +1,6 @@
 
-R version 3.4.2 (2017-09-28) -- "Short Summer"
-Copyright (C) 2017 The R Foundation for Statistical Computing
+R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
+Copyright (C) 2018 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -44,9 +44,9 @@ Residuals:
 -61.20952  -8.37807   0.61966   7.47058 126.76616 
 
 Coefficients:
-               Estimate  Std. Error  t-value Pr(>|t|)    
+               Estimate  Std. Error  z-value Pr(>|z|)    
 (Intercept)  1.3641e+02  4.1699e+00  32.7123   <2e-16 ***
-pop          5.0781e-04  4.5196e-04   1.1236   0.2614    
+pop          5.0781e-04  4.5196e-04   1.1236   0.2612    
 price       -2.1484e-01  1.0679e-02 -20.1175   <2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
@@ -55,7 +55,7 @@ Total Sum of Squares:    423530
 Residual Sum of Squares: 317410
 R-Squared:      0.25057
 Adj. R-Squared: 0.24948
-F-statistic: 230.198 on 2 and 1377 DF, p-value: < 2.22e-16
+Chisq: 460.397 on 2 DF, p-value: < 2.22e-16
 > summary(obj_bal_time)
 Oneway (time) effect Random Effect Model 
    (Swamy-Arora's transformation)
@@ -77,9 +77,9 @@ Residuals:
 -14.6856  -6.2149  -2.5633   3.8027  49.1200 
 
 Coefficients:
-               Estimate  Std. Error t-value  Pr(>|t|)    
+               Estimate  Std. Error z-value  Pr(>|z|)    
 (Intercept)  7.7764e+01  1.8791e+00 41.3830 < 2.2e-16 ***
-pop          2.3395e-04  5.1615e-05  4.5327  6.33e-06 ***
+pop          2.3395e-04  5.1615e-05  4.5327 5.825e-06 ***
 sales       -8.1687e-02  8.4936e-03 -9.6175 < 2.2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
@@ -88,7 +88,7 @@ Total Sum of Squares:    126340
 Residual Sum of Squares: 115970
 R-Squared:      0.082104
 Adj. R-Squared: 0.08077
-F-statistic: 61.5846 on 2 and 1377 DF, p-value: < 2.22e-16
+Chisq: 123.169 on 2 DF, p-value: < 2.22e-16
 > 
 > ranef(obj_bal_ind)
           1           3           4           5           7           8 
@@ -165,9 +165,9 @@ Residuals:
 -79.865  -8.851   0.526   0.000   8.733 135.499 
 
 Coefficients:
-               Estimate  Std. Error t-value  Pr(>|t|)    
+               Estimate  Std. Error z-value  Pr(>|z|)    
 (Intercept)  1.3741e+02  4.3961e+00 31.2575 < 2.2e-16 ***
-pop         -2.9625e-03  4.6022e-04 -6.4372 1.677e-10 ***
+pop         -2.9625e-03  4.6022e-04 -6.4372 1.217e-10 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -175,7 +175,7 @@ Total Sum of Squares:    425110
 Residual Sum of Squares: 412670
 R-Squared:      0.029272
 Adj. R-Squared: 0.028567
-F-statistic: 41.5232 on 1 and 1377 DF, p-value: 1.6066e-10
+Chisq: 41.5232 on 1 DF, p-value: 1.1648e-10
 > summary(obj_unbal_time)
 Oneway (time) effect Random Effect Model 
    (Swamy-Arora's transformation)
@@ -199,9 +199,9 @@ Residuals:
 -65.024 -15.652  -3.569   0.003   8.662 170.409 
 
 Coefficients:
-               Estimate  Std. Error t-value  Pr(>|t|)    
+               Estimate  Std. Error z-value  Pr(>|z|)    
 (Intercept)  1.2685e+02  1.7413e+00 72.8525 < 2.2e-16 ***
-pop         -6.4035e-04  1.6514e-04 -3.8776 0.0001105 ***
+pop         -6.4035e-04  1.6514e-04 -3.8776 0.0001055 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -209,7 +209,7 @@ Total Sum of Squares:    1213200
 Residual Sum of Squares: 1200600
 R-Squared:      0.010345
 Adj. R-Squared: 0.0096263
-F-statistic: 14.3869 on 1 and 1377 DF, p-value: 0.00015528
+Chisq: 14.3869 on 1 DF, p-value: 0.00014884
 > 
 > ranef(obj_unbal_ind)
           1           3           4           5           7           8 
@@ -264,7 +264,7 @@ Residuals:
 -58.61044  -6.72191   0.15599   5.67123 128.33115 
 
 Coefficients:
-               Estimate  Std. Error  t-value Pr(>|t|)    
+               Estimate  Std. Error  z-value Pr(>|z|)    
 (Intercept)  1.4052e+02  4.5154e+00  31.1196   <2e-16 ***
 pop         -1.9055e-05  4.4084e-04  -0.0432   0.9655    
 price       -2.3989e-01  1.7855e-02 -13.4355   <2e-16 ***
@@ -275,7 +275,7 @@ Total Sum of Squares:    311890
 Residual Sum of Squares: 273640
 R-Squared:      0.12261
 Adj. R-Squared: 0.12134
-F-statistic: 96.2167 on 2 and 1377 DF, p-value: < 2.22e-16
+Chisq: 192.433 on 2 DF, p-value: < 2.22e-16
 > ranef(obj_bal_tw)
           1           3           4           5           7           8 
 -16.2313983 -10.9407671  -8.4070839  -8.0035988  -3.5394647  26.4991483 
@@ -350,7 +350,7 @@ Residuals:
 -70.856 -15.317  -3.646  -0.008   8.711 164.621 
 
 Coefficients:
-               Estimate  Std. Error   t-value Pr(>|t|)    
+               Estimate  Std. Error   z-value Pr(>|z|)    
 (Intercept)  1.4006e+02  3.1863e-01  439.5515   <2e-16 ***
 pop          9.7349e-06  3.1270e-05    0.3113   0.7556    
 price       -2.3502e-01  1.1919e-03 -197.1821   <2e-16 ***
@@ -361,7 +361,7 @@ Total Sum of Squares:    1324300
 Residual Sum of Squares: 1196500
 R-Squared:      0.096564
 Adj. R-Squared: 0.095251
-F-statistic: 73.4956 on 2 and 1376 DF, p-value: < 2.22e-16
+Chisq: 146.991 on 2 DF, p-value: < 2.22e-16
 > ranef(obj_unbal_tw)
           1           3           4           5           7           8 
 -16.2146713 -10.8796414  -8.3461136  -8.5509485  -3.5478700  26.6062307 
@@ -412,4 +412,4 @@ F-statistic: 73.4956 on 2 and 1376 DF, p-value: < 2.22e-16
 > 
 > proc.time()
    user  system elapsed 
-   3.15    0.04    3.18 
+   1.57    0.24    1.80 

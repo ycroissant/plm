@@ -620,16 +620,17 @@ summary.plm <- function(object, vcov = NULL, ...){
     model <- describe(object, "model")
     effect <- describe(object, "effect")
     random.method <- describe(object, "random.method")
-    object$r.squared <- c(rsq  = r.squared(object),
+    object$r.squared <- c(rsq    = r.squared(object),
                           adjrsq = r.squared(object, dfcor = TRUE))
     
-    ## determine if t distribution and F test to be used or standard normal and Chisq test
-    norm_t <- if(model == "ht") "norm" else "t" # Hausman-Taylor via plm(., model="ht")
-    norm_t <- if(!is.null(random.method) && random.method == "ht") "norm" else "t"
-    norm_t <- if(length(formula(object))[2] >= 2) "norm" else "t" # all IV models
-    
+    ## determine if standard normal and Chisq test or t distribution and F test to be used
+    use.norm.chisq <- FALSE
+    if(model == "random") use.norm.chisq <- TRUE               # all random models
+    if(length(formula(object))[2] >= 2) use.norm.chisq <- TRUE # all IV models
+    if(model == "ht") use.norm.chisq <- TRUE                   # HT via plm(., model="ht")
+
     object$fstatistic <- pwaldtest(object,
-                                   test = ifelse(norm_t == "t", "F", "Chisq"),
+                                   test = ifelse(use.norm.chisq, "Chisq", "F"),
                                    vcov = vcov_arg)
     
     # construct the table of coefficients
@@ -642,17 +643,17 @@ summary.plm <- function(object, vcov = NULL, ...){
     }
     b <- coefficients(object)
     z <- b / std.err
-    p <- if(norm_t == "t") {
-              2 * pt(abs(z), df = object$df.residual, lower.tail = FALSE)
-            } else {
+    p <- if(use.norm.chisq) {
               2 * pnorm(abs(z), lower.tail = FALSE)
+            } else {
+              2 * pt(abs(z), df = object$df.residual, lower.tail = FALSE)
             }
     
     # construct the object of class summary.plm
     object$coefficients <- cbind(b, std.err, z, p)
-    colnames(object$coefficients) <- if(norm_t == "t") {
-               c("Estimate", "Std. Error", "t-value", "Pr(>|t|)")
-      } else { c("Estimate", "Std. Error", "z-value", "Pr(>|z|)") }
+    colnames(object$coefficients) <- if(use.norm.chisq) {
+               c("Estimate", "Std. Error", "z-value", "Pr(>|z|)")
+      } else { c("Estimate", "Std. Error", "t-value", "Pr(>|t|)") }
     
     ## add some info to summary.plm object 
     # robust vcov (next to "normal" vcov)
