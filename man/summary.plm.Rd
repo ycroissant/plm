@@ -36,8 +36,8 @@ An object of class \code{c("summary.plm", "plm", "panelmodel")}. Some of its ele
 carried over from the associated plm object and described there (\code{\link[plm]{plm}}).
 The following elements are new or changed relative to the elements of a plm object:
 
-\item{fstatistic}{F statistic for joint test of significance of coefficients (class "htest") (robust F statistic in case of supplied argument \code{vcov}, see \code{\link{pwaldtest}} for details),}
-% TODO Chisq for RE models?
+\item{fstatistic}{'htest' object: joint test of significance of coefficients (F or Chi-square test) (robust statistic in case of supplied
+argument \code{vcov}, see \code{\link{pwaldtest}} for details),}
 \item{coefficients}{a matrix with the estimated coefficients, standard errors, t--values, and p--values, if argument \code{vcov} was set to non-\code{NULL} the standard errors (and t-- and p--values) in their respective robust variant,}
 \item{vcov}{the "regular" variance--covariance matrix of the coefficients (class "matrix"),}
 \item{rvcov}{only present if argument \code{vcov} was set to non-\code{NULL}: the furnished 

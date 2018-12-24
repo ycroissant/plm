@@ -626,7 +626,7 @@ summary.plm <- function(object, vcov = NULL, ...){
     ## determine if t distribution and F test to be used or standard normal and Chisq test
     norm_t <- if(model == "ht") "norm" else "t" # Hausman-Taylor via plm(., model="ht")
     norm_t <- if(!is.null(random.method) && random.method == "ht") "norm" else "t"
-    norm_t <- if(length(formula(object))[2] > 1) "norm" else "t" # all IV models
+    norm_t <- if(length(formula(object))[2] >= 2) "norm" else "t" # all IV models
     
     object$fstatistic <- pwaldtest(object,
                                    test = ifelse(norm_t == "t", "F", "Chisq"),
@@ -642,20 +642,17 @@ summary.plm <- function(object, vcov = NULL, ...){
     }
     b <- coefficients(object)
     z <- b / std.err
-    p <- 2 * pt(abs(z), df = object$df.residual, lower.tail = FALSE)
+    p <- if(norm_t == "t") {
+              2 * pt(abs(z), df = object$df.residual, lower.tail = FALSE)
+            } else {
+              2 * pnorm(abs(z), lower.tail = FALSE)
+            }
     
     # construct the object of class summary.plm
-    object$coefficients <- if(norm_t == "t") {
-      cbind("Estimate"   = b,
-            "Std. Error" = std.err,
-            "t-value"    = z,
-            "Pr(>|t|)"   = p)
-    } else {
-      cbind("Estimate"   = b,
-            "Std. Error" = std.err,
-            "z-value"    = z,
-            "Pr(>|z|)"   = p)
-    }
+    object$coefficients <- cbind(b, std.err, z, p)
+    colnames(object$coefficients) <- if(norm_t == "t") {
+               c("Estimate", "Std. Error", "t-value", "Pr(>|t|)")
+      } else { c("Estimate", "Std. Error", "z-value", "Pr(>|z|)") }
     
     ## add some info to summary.plm object 
     # robust vcov (next to "normal" vcov)
