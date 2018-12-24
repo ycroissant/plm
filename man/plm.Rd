@@ -106,7 +106,9 @@ selects the instrument variable transformation method:
   \item \code{"bms"} for Breusch, Mizon, and Schmidt (1989).
 }
 
-The Hausman--Taylor estimator (Hausman and Taylor (1981)) is computed if \code{model = "ht"}.
+The Hausman--Taylor estimator (Hausman and Taylor (1981)) is computed with arguments
+\code{random.method = "ht", model = "random", inst.method = "baltagi"} (the other
+way with only \code{model = "ht"} is deprecated).
 }
 
 \value{
@@ -240,6 +242,24 @@ summary(plm(form, data = pProduc, model = "random", effect = "nested"))
 summary(plm(form, data = pProduc, model = "random", effect = "nested",
             random.method = "walhus"))
 
+## Hausman-Taylor estimator and Amemiya-MaCurdy estimator
+## replicate Baltagi (2005, 2013), table 7.4
+data("Wages", package = "plm")
+ht <- plm(lwage ~ wks + south + smsa + married + exp + I(exp ^ 2) + 
+              bluecol + ind + union + sex + black + ed |
+              bluecol + south + smsa + ind + sex + black |
+              wks + married + union + exp + I(exp ^ 2), 
+          data = Wages, index = 595,
+          random.method = "ht", model = "random", inst.method = "baltagi")
+summary(ht)
+
+am <- plm(lwage ~ wks + south + smsa + married + exp + I(exp ^ 2) + 
+              bluecol + ind + union + sex + black + ed |
+              bluecol + south + smsa + ind + sex + black |
+              wks + married + union + exp + I(exp ^ 2), 
+          data = Wages, index = 595,
+          random.method = "ht", model = "random", inst.method = "am")
+summary(am)
 }
 
 \keyword{regression}
