@@ -82,6 +82,7 @@ Changes in version 1.7-0
     object's element 'coefficients' is a numeric (was 1x1 matrix).
   * pwaldtest: in all cases, htest object's 'statistic' element is a numeric
     (was 1x1 matrix for some cases).
+  * Data set 'Crime' extended with pre-computed log values as in original data.
   
   * Dependencies: added to 'Suggests': knitr, rmarkdown, bookdown.
   

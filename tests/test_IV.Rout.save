@@ -19,6 +19,13 @@ Type 'q()' to quit R.
 > ## Replicate Baltagi (2013), Econometric Analysis of Panel Data, 5th edition, ch. 7.2 (p. 133)
 > ## (same as Baltagi (2006), Estimating an econometric model of crime using panel data from North Carolina,
 > ##                          Journal of Applied Econometrics 21(4), pp. 543-547.
+> ##
+> ## NB: Crime data set: results can diverge slightly form the values printed in Baltagi
+> ##     if logarithm computation is performed on the original variable. For the paper,
+> ##     a data set with pre-computed logarithms (variables l*) was used and those 
+> ##     logarithmic values diverge from what R's log() function gives.
+> ##     -> see the two FE2SLS example which is computed in both ways
+> 
 > 
 > library(plm)
 Loading required package: Formula
@@ -115,8 +122,10 @@ F-statistic: 21.6923 on 16 and 518 DF, p-value: < 2.22e-16
 > 
 > # replicates Table 7.1, column "FE2SLS"
 > form_iv <- log(crmrte) ~ log(prbarr) + log(prbconv) + log(prbpris) + log(avgsen) + log(polpc) + log(density) + log(wcon) + log(wtuc) + log(wtrd) + log(wfir) + log(wser) + log(wmfg) + log(wfed) + log(wsta) + log(wloc) + log(pctymle) + log(pctmin) + region + smsa | . -log(prbarr) - log(polpc) + log(taxpc) + log(mix)
+> form_iv2 <- lcrmrte ~ lprbarr + lprbconv + lprbpris + lavgsen + lpolpc + ldensity + lwcon + lwtuc + lwtrd + lwfir + lwser + lwmfg + lwfed + lwsta + lwloc + lpctymle + lpctmin + region + smsa | . -lprbarr - lpolpc + ltaxpc + lmix
 > fe_iv <- plm(form_iv, data = Crime, model = "within", effect = "twoways", inst.method = "baltagi")
-> summary(fe_iv)
+> fe_iv2 <- plm(form_iv2, data = Crime, model = "within", effect = "twoways", inst.method = "baltagi")
+> summary(fe_iv)  # logs computed by R
 Twoways effects Within Model
 Instrumental variable estimation
    (Baltagi's transformation)
@@ -155,6 +164,52 @@ Residual Sum of Squares: 11.535
 R-Squared:      0.39131
 Adj. R-Squared: 0.26087
 Chisq: 56.2016 on 16 DF, p-value: 2.2539e-06
+> summary(fe_iv2) # logs as in data set by Baltagi -> results match exactly
+Twoways effects Within Model
+Instrumental variable estimation
+   (Baltagi's transformation)
+
+Call:
+plm(formula = form_iv2, data = Crime, effect = "twoways", model = "within", 
+    inst.method = "baltagi")
+
+Balanced Panel: n = 90, T = 7, N = 630
+
+Residuals:
+      Min.    1st Qu.     Median    3rd Qu.       Max. 
+-0.7209110 -0.0682207 -0.0041115  0.0759381  0.5661659 
+
+Coefficients:
+           Estimate Std. Error z-value Pr(>|z|)
+lprbarr  -0.5755058  0.8021842 -0.7174   0.4731
+lprbconv -0.4231446  0.5019375 -0.8430   0.3992
+lprbpris -0.2502550  0.2794602 -0.8955   0.3705
+lavgsen   0.0090987  0.0489879  0.1857   0.8527
+lpolpc    0.6575270  0.8468673  0.7764   0.4375
+ldensity  0.1394120  1.0212391  0.1365   0.8914
+lwcon    -0.0287308  0.0535145 -0.5369   0.5914
+lwtuc     0.0391292  0.0308568  1.2681   0.2048
+lwtrd    -0.0177536  0.0453142 -0.3918   0.6952
+lwfir    -0.0093443  0.0365519 -0.2556   0.7982
+lwser     0.0185854  0.0388155  0.4788   0.6321
+lwmfg    -0.2431684  0.4195485 -0.5796   0.5622
+lwfed    -0.4513372  0.5271232 -0.8562   0.3919
+lwsta    -0.0187458  0.2808182 -0.0668   0.9468
+lwloc     0.2632585  0.3123945  0.8427   0.3994
+lpctymle  0.3511166  1.0110334  0.3473   0.7284
+
+Total Sum of Squares:    16.123
+Residual Sum of Squares: 11.537
+R-Squared:      0.3913
+Adj. R-Squared: 0.26087
+Chisq: 56.1934 on 16 DF, p-value: 2.2609e-06
+> 
+> # ## felm example
+> # library(lfe)
+> # form_felm <- log(crmrte) ~  log(prbconv) + log(prbpris) + log(avgsen) + log(density) + log(wcon) + log(wtuc) + log(wtrd) + log(wfir) + log(wser) + log(wmfg) + log(wfed) + log(wsta) + log(wloc) + log(pctymle)  |
+> #   county + year |
+> #   (log(prbarr) + log(polpc) ~ log(prbpris) + log(avgsen) + log(density) + log(wcon) + log(wtuc) + log(wtrd) + log(wfir) + log(wser) + log(wmfg) + log(wfed) + log(wsta) + log(wloc) + log(pctymle) + log(taxpc) + log(mix))
+> # summary(felm(form_felm, data = Crime))
 > 
 > # replicates Table 7.1, column "BE2SLS"
 > be_iv <- plm(form_iv, data = Crime, model = "between")
@@ -207,8 +262,10 @@ Chisq: 413.647 on 20 DF, p-value: < 2.22e-16
 > 
 > # replicates Table 7.1, column "EC2SLS"
 > ## need to include time dummies!
-> form_re_iv <- log(crmrte) ~ log(prbarr) + log(prbconv) + log(prbpris) + log(avgsen) + log(polpc) + log(density) + log(wcon) + log(wtuc) + log(wtrd) + log(wfir) + log(wser) + log(wmfg) + log(wfed) + log(wsta) + log(wloc) + log(pctymle) + log(pctmin) + region + smsa + factor(year) | . -log(prbarr) - log(polpc) + log(taxpc) + log(mix)
-> re_iv <- plm(form_re_iv, data = Crime, model = "random", inst.method = "baltagi")
+> form_re_iv  <- log(crmrte) ~ log(prbarr) + log(prbconv) + log(prbpris) + log(avgsen) + log(polpc) + log(density) + log(wcon) + log(wtuc) + log(wtrd) + log(wfir) + log(wser) + log(wmfg) + log(wfed) + log(wsta) + log(wloc) + log(pctymle) + log(pctmin) + region + smsa + factor(year) | . -log(prbarr) - log(polpc) + log(taxpc) + log(mix)
+> form_re_iv2 <- lcrmrte ~ lprbarr + lprbconv + lprbpris + lavgsen + lpolpc + ldensity + lwcon + lwtuc + lwtrd + lwfir + lwser + lwmfg + lwfed + lwsta + lwloc + lpctymle + lpctmin + region + smsa + factor(year) | . -lprbarr - lpolpc + ltaxpc + lmix
+> re_iv  <- plm(form_re_iv,  data = Crime, model = "random", inst.method = "baltagi")
+> re_iv2 <- plm(form_re_iv2, data = Crime, model = "random", inst.method = "baltagi")
 > summary(re_iv)
 Oneway (individual) effect Random Effect Model 
    (Swamy-Arora's transformation)
@@ -267,10 +324,69 @@ Residual Sum of Squares: 544.47
 R-Squared:      0.59845
 Adj. R-Squared: 0.58114
 Chisq: 575.685 on 26 DF, p-value: < 2.22e-16
+> summary(re_iv2)
+Oneway (individual) effect Random Effect Model 
+   (Swamy-Arora's transformation)
+Instrumental variable estimation
+   (Baltagi's transformation)
+
+Call:
+plm(formula = form_re_iv2, data = Crime, model = "random", inst.method = "baltagi")
+
+Balanced Panel: n = 90, T = 7, N = 630
+
+Effects:
+                  var std.dev share
+idiosyncratic 0.02227 0.14924 0.326
+individual    0.04604 0.21456 0.674
+theta: 0.7457
+
+Residuals:
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-4.996927 -0.465655  0.027205  0.512780  3.917085 
+
+Coefficients:
+                 Estimate Std. Error z-value  Pr(>|z|)    
+(Intercept)    -0.9538032  1.2839664 -0.7429  0.457568    
+lprbarr        -0.4129261  0.0974020 -4.2394 2.241e-05 ***
+lprbconv       -0.3228872  0.0535517 -6.0295 1.645e-09 ***
+lprbpris       -0.1863195  0.0419382 -4.4427 8.883e-06 ***
+lavgsen        -0.0101765  0.0270231 -0.3766  0.706481    
+lpolpc          0.4347492  0.0896950  4.8470 1.254e-06 ***
+ldensity        0.4290282  0.0548483  7.8221 5.196e-15 ***
+lwcon          -0.0074751  0.0395775 -0.1889  0.850194    
+lwtuc           0.0454450  0.0197926  2.2961  0.021673 *  
+lwtrd          -0.0081412  0.0413828 -0.1967  0.844040    
+lwfir          -0.0036395  0.0289238 -0.1258  0.899865    
+lwser           0.0056098  0.0201259  0.2787  0.780447    
+lwmfg          -0.2041398  0.0804393 -2.5378  0.011155 *  
+lwfed          -0.1635108  0.1594496 -1.0255  0.305142    
+lwsta          -0.0540503  0.1056769 -0.5115  0.609024    
+lwloc           0.1630523  0.1196380  1.3629  0.172920    
+lpctymle       -0.1081057  0.1396949 -0.7739  0.439007    
+lpctmin         0.1890370  0.0414988  4.5552 5.233e-06 ***
+regionwest     -0.2268433  0.0995913 -2.2777  0.022742 *  
+regioncentral  -0.1940428  0.0598241 -3.2436  0.001180 ** 
+smsayes        -0.2251539  0.1156302 -1.9472  0.051512 .  
+factor(year)82  0.0107452  0.0257969  0.4165  0.677023    
+factor(year)83 -0.0837944  0.0307088 -2.7287  0.006359 ** 
+factor(year)84 -0.1034997  0.0370885 -2.7906  0.005261 ** 
+factor(year)85 -0.0957017  0.0494502 -1.9353  0.052952 .  
+factor(year)86 -0.0688982  0.0595956 -1.1561  0.247642    
+factor(year)87 -0.0314071  0.0705197 -0.4454  0.656055    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    30.169
+Residual Sum of Squares: 544.4
+R-Squared:      0.59847
+Adj. R-Squared: 0.58115
+Chisq: 575.735 on 26 DF, p-value: < 2.22e-16
 > 
-> # replicates (almost) Baltagi (2013), p. 137 ("G2SLS") (not in Table 7.1)
-> re2_iv <- plm(form_re_iv, data = Crime, model = "random", inst.method = "bvk")
-> summary(re2_iv)
+> # replicates Baltagi (2013), p. 137 ("G2SLS") (not in Table 7.1)
+> re_iv_bvk  <- plm(form_re_iv,  data = Crime, model = "random", inst.method = "bvk")
+> re_iv_bvk2 <- plm(form_re_iv2, data = Crime, model = "random", inst.method = "bvk")
+> summary(re_iv_bvk)
 Oneway (individual) effect Random Effect Model 
    (Swamy-Arora's transformation)
 Instrumental variable estimation
@@ -328,13 +444,71 @@ Residual Sum of Squares: 12.418
 R-Squared:      0.59228
 Adj. R-Squared: 0.5747
 Chisq: 542.435 on 26 DF, p-value: < 2.22e-16
-> cor(plm:::fitted_exp.plm(re2_iv), re2_iv$model[,1])^2 # overall R^2 as per Stata
-[1] 0.7724888
+> summary(re_iv_bvk2)
+Oneway (individual) effect Random Effect Model 
+   (Swamy-Arora's transformation)
+Instrumental variable estimation
+   (Balestra-Varadharajan-Krishnakumar's transformation)
+
+Call:
+plm(formula = form_re_iv2, data = Crime, model = "random", inst.method = "bvk")
+
+Balanced Panel: n = 90, T = 7, N = 630
+
+Effects:
+                  var std.dev share
+idiosyncratic 0.02227 0.14924 0.326
+individual    0.04604 0.21456 0.674
+theta: 0.7457
+
+Residuals:
+      Min.    1st Qu.     Median    3rd Qu.       Max. 
+-0.7485357 -0.0709883  0.0040648  0.0784455  0.4756273 
+
+Coefficients:
+                 Estimate Std. Error z-value  Pr(>|z|)    
+(Intercept)    -0.4538501  1.7029831 -0.2665  0.789852    
+lprbarr        -0.4141383  0.2210496 -1.8735  0.060998 .  
+lprbconv       -0.3432506  0.1324648 -2.5913  0.009563 ** 
+lprbpris       -0.1900467  0.0733392 -2.5913  0.009560 ** 
+lavgsen        -0.0064389  0.0289407 -0.2225  0.823935    
+lpolpc          0.5049461  0.2277778  2.2168  0.026634 *  
+ldensity        0.4343449  0.0711496  6.1047 1.030e-09 ***
+lwcon          -0.0042958  0.0414226 -0.1037  0.917403    
+lwtuc           0.0444589  0.0215448  2.0636  0.039060 *  
+lwtrd          -0.0085579  0.0419829 -0.2038  0.838476    
+lwfir          -0.0040305  0.0294569 -0.1368  0.891166    
+lwser           0.0105602  0.0215823  0.4893  0.624630    
+lwmfg          -0.2018020  0.0839373 -2.4042  0.016208 *  
+lwfed          -0.2134579  0.2151046 -0.9923  0.321029    
+lwsta          -0.0601232  0.1203149 -0.4997  0.617275    
+lwloc           0.1835363  0.1396775  1.3140  0.188846    
+lpctymle       -0.1458703  0.2268086 -0.6431  0.520131    
+lpctmin         0.1948763  0.0459385  4.2421 2.214e-05 ***
+regionwest     -0.2281821  0.1010260 -2.2586  0.023905 *  
+regioncentral  -0.1987703  0.0607475 -3.2721  0.001068 ** 
+smsayes        -0.2595451  0.1499718 -1.7306  0.083518 .  
+factor(year)82  0.0132147  0.0299924  0.4406  0.659500    
+factor(year)83 -0.0847693  0.0320010 -2.6490  0.008074 ** 
+factor(year)84 -0.1062027  0.0387893 -2.7379  0.006183 ** 
+factor(year)85 -0.0977457  0.0511681 -1.9103  0.056097 .  
+factor(year)86 -0.0719451  0.0605819 -1.1876  0.235004    
+factor(year)87 -0.0396595  0.0758531 -0.5228  0.601081    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    30.169
+Residual Sum of Squares: 12.419
+R-Squared:      0.5923
+Adj. R-Squared: 0.57472
+Chisq: 542.478 on 26 DF, p-value: < 2.22e-16
+> cor(plm:::fitted_exp.plm(re_iv_bvk2), re_iv_bvk2$model[,1])^2 # overall R^2 as per Stata
+[1] 0.7724889
 > 
 > 
 > 
-> re_iv3 <- plm(form_re_iv, data = Crime, model = "random", inst.method = "am")
-> summary(re_iv3)
+> re_iv_am <- plm(form_re_iv, data = Crime, model = "random", inst.method = "am")
+> summary(re_iv_am)
 Oneway (individual) effect Random Effect Model 
    (Swamy-Arora's transformation)
 Instrumental variable estimation
@@ -393,8 +567,8 @@ R-Squared:      0.58975
 Adj. R-Squared: 0.57206
 Chisq: 628.718 on 26 DF, p-value: < 2.22e-16
 > 
-> re_iv4 <- plm(form_re_iv, data = Crime, model = "random", inst.method = "bms")
-> summary(re_iv4)
+> re_iv_bms <- plm(form_re_iv, data = Crime, model = "random", inst.method = "bms")
+> summary(re_iv_bms)
 Oneway (individual) effect Random Effect Model 
    (Swamy-Arora's transformation)
 Instrumental variable estimation
@@ -455,4 +629,4 @@ Chisq: 628.718 on 26 DF, p-value: < 2.22e-16
 > 
 > proc.time()
    user  system elapsed 
-   2.38    0.23    2.60 
+   3.41    0.26    3.66 

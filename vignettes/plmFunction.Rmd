@@ -343,13 +343,11 @@ The instrumental variables estimator used is indicated with the
   
 ```{r}
 data("Crime", package = "plm")
-crbalt <- plm(log(crmrte) ~ log(prbarr) + log(polpc) + log(prbconv) +
-           log(prbpris) + log(avgsen) + log(density) + log(wcon) + 
-           log(wtuc) + log(wtrd) + log(wfir) + log(wser) + log(wmfg) + 
-          log(wfed) + log(wsta) + log(wloc) + log(pctymle) + log(pctmin) + 
-          region + smsa + factor(year) | . - log(prbarr) - log(polpc) + 
-          log(taxpc) + log(mix), data = Crime,
-          model = "random", inst.method = "baltagi")
+crbalt <- plm(lcrmrte ~ lprbarr + lpolpc + lprbconv + lprbpris + lavgsen +
+              ldensity + lwcon + lwtuc + lwtrd + lwfir + lwser + lwmfg + lwfed +
+              lwsta + lwloc + lpctymle + lpctmin + region + smsa + factor(year)
+              | . - lprbarr - lpolpc + ltaxpc + lmix,
+              data = Crime, model = "random", inst.method = "baltagi")
 crbvk <- update(crbalt, inst.method = "bvk")
 crwth <- update(crbalt, model = "within")
 screenreg(list(within = crwth, EC2SLS = crbalt, G2SLS = crbvk), 

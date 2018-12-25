@@ -43,7 +43,36 @@
     \item{wloc}{weekly wage in local government}
     \item{mix}{offence mix: face-to-face/other}
     \item{pctymle}{percentage of young males (between ages 15 to 24)}
+    
+    \item{lcrmrte}{log of crimes committed per person}
+    \item{lprbarr}{log of 'probability' of arrest}
+    \item{lprbconv}{log of 'probability' of conviction}
+    \item{lprbpris}{log of 'probability' of prison sentence}
+    \item{lavgsen}{log of average sentence, days}
+    \item{lpolpc}{log of police per capita}
+    \item{ldensity}{log of people per square mile}
+    \item{ltaxpc}{log of tax revenue per capita}
+    \item{lpctmin}{log of percentage minority in 1980}
+    \item{lwcon}{log of weekly wage in construction}
+    \item{lwtuc}{log of weekly wage in transportation, utilities, communications}
+    \item{lwtrd}{log of weekly wage in wholesale and retail trade}
+    \item{lwfir}{log of weekly wage in finance, insurance and real estate}
+    \item{lwser}{log of weekly wage in service industry}
+    \item{lwmfg}{log of weekly wage in manufacturing}
+    \item{lwfed}{log of weekly wage in federal government}
+    \item{lwsta}{log of weekly wage in state government}
+    \item{lwloc}{log of weekly wage in local government}
+    \item{lmix}{log of offence mix: face-to-face/other}
+    \item{lpctymle}{log of percentage of young males (between ages 15 to 24)}
   }
+}
+
+\details{
+ The variables l* (lcrmrte, lprbarr, ...) contain the pre-computed logarithms
+ of the base variables as found in the original data set. Note that these values
+ slightly differ from what R's log() function yields for the base variables.
+ In order to reproduce examples from the literature, the pre-computed logs
+ need to be used, otherwise the results differ slightly.
 }
 
 \source{

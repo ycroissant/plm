@@ -652,8 +652,7 @@ like estimators: to deal with these situations, we use the
 
 The `Formula` package provides a class which enables to construct
 multi-part formula, each part being separated by a pipe
-sign. `plm` provides a `pFormula` object which is a
-`Formula` with specific methods.
+sign (`|`).
 
 The two formulas below are identical:
 ```{r }
@@ -819,7 +818,7 @@ summary(Hed)
 
 All of the models presented above may be estimated using instrumental
 variables. The instruments are specified at the end of the formula
-after a | sign.
+after a `|` sign (pipe).
 
 The instrumental variables estimator used is indicated with the
 `inst.method` argument:
@@ -837,13 +836,11 @@ An illustration is in the following example from
   
 ```{r }
 data("Crime", package = "plm")
-cr <- plm(log(crmrte) ~ log(prbarr) + log(polpc) + log(prbconv) +
-         log(prbpris) + log(avgsen) + log(density) + log(wcon) + 
-         log(wtuc) + log(wtrd) + log(wfir) + log(wser) + log(wmfg) + 
-         log(wfed) + log(wsta) + log(wloc) + log(pctymle) + log(pctmin) + 
-         region + smsa + factor(year) | . - log(prbarr) - log(polpc) + 
-         log(taxpc) + log(mix), data = Crime,
-         model = "random")
+cr <- plm(lcrmrte ~ lprbarr + lpolpc + lprbconv + lprbpris + lavgsen +
+          ldensity + lwcon + lwtuc + lwtrd + lwfir + lwser + lwmfg + lwfed +
+          lwsta + lwloc + lpctymle + lpctmin + region + smsa + factor(year)
+          | . - lprbarr - lpolpc + ltaxpc + lmix,
+          data = Crime, model = "random")
 summary(cr)
 ```
 
