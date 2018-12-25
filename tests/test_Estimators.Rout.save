@@ -1439,7 +1439,42 @@ Residual Sum of Squares: 0.056978
 Multiple R-squared: 0.99993
 > 
 > 
+> ## further run tests without intercept
+> plm(inv ~ 0 + value + capital + year, data = Grunfeld, model = "between")
+
+Model Formula: inv ~ 0 + value + capital + year
+
+Coefficients:
+    value   capital 
+0.1351278 0.0091422 
+
+> plm(inv ~ 0 + value + capital + year, data = Grunfeld, model = "random")
+
+Model Formula: inv ~ 0 + value + capital + year
+
+Coefficients:
+     value    capital   year1935   year1936   year1937   year1938   year1939 
+   0.11379    0.35435  -29.83815  -47.53304  -67.85332  -68.24177  -97.51343 
+  year1940   year1941   year1942   year1943   year1944   year1945   year1946 
+ -72.05556  -46.74154  -49.79337  -71.14771  -71.14670  -83.26433  -58.44853 
+  year1947   year1948   year1949   year1950   year1951   year1952   year1953 
+ -67.49265  -71.78949 -101.36137 -103.45708  -89.05656  -90.81574  -92.74262 
+  year1954 
+-118.42152 
+
+> plm(inv ~ 0 + value + capital + year, data = Grunfeld, model = "within")
+
+Model Formula: inv ~ 0 + value + capital + year
+
+Coefficients:
+   value  capital year1935 year1936 year1937 year1938 year1939 year1940 
+ 0.11772  0.35792 93.52622 74.32882 52.83621 54.29982 24.05593 49.29114 
+year1941 year1942 year1943 year1944 year1945 year1946 year1947 year1948 
+74.72176 72.38643 50.54860 50.42745 37.84318 62.35694 54.13398 49.80971 
+year1949 year1950 year1951 year1952 year1953 
+20.03112 17.63011 31.04531 28.89388 25.80826 
+
 > 
 > proc.time()
    user  system elapsed 
-   3.10    0.21    3.32 
+   3.49    0.21    3.69 

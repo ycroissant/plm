@@ -187,7 +187,7 @@ model.matrix.pFormula <- function(object, data,
                           max(X[, posintercept]) < sqrt(.Machine$double.eps),
                           TRUE, FALSE)
         if (length(cstcol) > 0){
-            if (cstcovar.rm == "covariates" | ! zeroint) cstcol <- cstcol[- posintercept]
+            if ((cstcovar.rm == "covariates" || !zeroint) && cstintercept) cstcol <- cstcol[- posintercept]
             if (length(cstcol) > 0){
                 X <- X[, - match(cstcol, colnames(X)), drop = FALSE]
                 attr(X, "constant") <- cstcol
