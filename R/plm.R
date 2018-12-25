@@ -206,7 +206,7 @@ plm.fit <- function(formula, data, model, effect, random.method,
             ##     }
             ## }
             if (model == "random" && inst.method != "bvk"){
-                # the bvk estimator is already given by W above is part
+                # the bvk estimator is already given by W in the part above
                 X <- X / sqrt(sigma2["idios"])
                 y <- y / sqrt(sigma2["idios"])
                 W1 <- model.matrix(formula, data, rhs = 2, model = "within",

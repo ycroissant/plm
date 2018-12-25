@@ -235,14 +235,14 @@ pht <-  function(formula, data, subset, na.action, model = c("ht", "am", "bms"),
   if("(Intercept)" %in% exo.cst) exo.cst <- setdiff(exo.cst, "(Intercept)")
   exo.var <- exo.all[!(exo.all %in% exo.cst)]
   edo.cst <- all.cst[!(all.cst %in% exo.cst)]
-    edo.var <- edo.all[!(edo.all %in% edo.cst)]
+  edo.var <- edo.all[!(edo.all %in% edo.cst)]
 
   if (length(edo.cst) > length(exo.var)){
     stop(" The number of endogenous time-invariant variables is greater
            than the number of exogenous time varying variables\n")
     }
   
-    X <- model.matrix(formula, data, model = "pooling", rhs = 1, lhs = 1)
+  X <- model.matrix(formula, data, model = "pooling", rhs = 1, lhs = 1)
   if (length(exo.var) > 0) XV <- X[ , exo.var, drop = FALSE] else XV <- NULL
   if (length(edo.var) > 0) NV <- X[ , edo.var, drop = FALSE] else NV <- NULL
   if (length(exo.cst) > 0) XC <- X[ , exo.cst, drop = FALSE] else XC <- NULL

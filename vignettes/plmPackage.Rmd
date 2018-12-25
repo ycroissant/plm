@@ -142,8 +142,9 @@ If it is correlated, the ordinary least squares (OLS)
 estimator of $\beta$ would be inconsistent, so it is customary to
 treat the $\mu_i$ as a further set of $n$ parameters to be estimated, as
 if in the general model $\alpha_{it}=\alpha_{i}$ for all $t$. This is
-called the fixed effects (a.k.a. *within* or *least squares dummy variables*) model, usually estimated by OLS on
-transformed data, and gives consistent estimates for $\beta$.
+called the fixed effects (a.k.a. *within* or *least squares dummy variables*)
+model, usually estimated by OLS on transformed data, and gives consistent
+estimates for $\beta$.
 
 If the individual-specific component $\mu_i$ is uncorrelated with the
 regressors, a situation which is usually termed *random effects*,
@@ -163,11 +164,10 @@ than the model itself.  If one relaxes the usual hypotheses of
 well-behaved, white noise errors and allows for the idiosyncratic
 error $\epsilon_{it}$ to be arbitrarily heteroskedastic and serially
 correlated over time, a more general kind of feasible GLS is
-needed, called the *unrestricted* or *general*
-GLS. This specification can also be augmented with
+needed, called the *unrestricted* or *general* GLS.
+This specification can also be augmented with
 individual-specific error components possibly correlated with the
-regressors, in which case it is termed *fixed effects*
-GLS.
+regressors, in which case it is termed *fixed effects* GLS.
 
 Another way of estimating unobserved effects models through removing
 time-invariant individual components is by first-differencing the
@@ -182,11 +182,10 @@ the model
 (where $\Delta y_{it}=y_{it}-y_{i,t-1}$, $\Delta
 x_{it}=x_{it}-x_{i,t-1}$ and, from \@ref(eq:errcomp), $\Delta
 u_{it}=u_{it}-u_{i,t-1}=\Delta \epsilon_{it}$ for $t=2,...,T$) can be
-consistently estimated by pooled OLS. This is called the *first-difference*,
-or FD estimator. Its relative
-efficiency, and so reasons for choosing it against other consistent
-alternatives, depends on the properties of the error term. The
-FD estimator is usually preferred if the errors $u_{it}$ are
+consistently estimated by pooled OLS. This is called the *first-difference*
+or FD estimator. Its relative efficiency, and so reasons for choosing it
+against other consistent alternatives, depends on the properties of the error
+term. The FD estimator is usually preferred if the errors $u_{it}$ are
 strongly persistent in time, because then the $\Delta u_{it}$ will
 tend to be serially uncorrelated.
 
@@ -458,7 +457,7 @@ dramatic effects on performance [see @BATE:04] and packages
 `Matrix` [see @BATE:MAEC:2016] and `SparseM`
 [see @KOEN:NG:2016]. Some optimized linear algebra routines are
 available in the `R` package `bdsmatrix`
-[see @THER:2014] which exploit the particular
+[see @THER:2017] which exploit the particular
 block-diagonal and symmetric structure of $\hat{V}$ making it
 possible to implement a fast and reliable full-matrix solution to
 problems of any practically relevant size.
@@ -908,8 +907,7 @@ summary(grun.varr)
 ## Generalized method of moments estimator
 
 The generalized method of moments is mainly used in panel data
-econometrics to estimate dynamic models
-[@AREL:BOND:91 ; @HOLT:NEWE:ROSE:88].
+econometrics to estimate dynamic models [@AREL:BOND:91; @HOLT:NEWE:ROSE:88].
 
 \begin{equation}
 y_{it}=\rho y_{it-1}+\beta^\top x_{it}+\mu_i+\epsilon_{it}
@@ -950,7 +948,7 @@ y_1 & 0   & 0   & 0    & 0   & 0   & ... & 0    & 0   &  0   &        0      & x
 
 The moment conditions are: $\sum_{i=1}^n W_i^\top e_i(\beta)$ where
 $e_i(\beta)$ is the vector of residuals for individual $i$. The GMM
-estimator minimize:
+estimator minimizes:
 
 \begin{equation}
 \left(\sum_{i=1}^n e_i(\beta)^\top W_i\right) A \left(\sum_{i=1}^n W_i^\top e_i(\beta)\right)
@@ -1026,14 +1024,14 @@ The GMM estimator is provided by the `pgmm`
 function. By using a multi-part formula, the variables of the model and 
 the lag structure are described.
 
-In a GMM estimation, there are "normal" instruments and
-"GMM" instruments. GMM instruments are indicated
+In a GMM estimation, there are "normal instruments" and
+"GMM instruments". GMM instruments are indicated
 in the second part of the formula. By default, all the variables of
 the model that are not used as GMM instruments are used as
 normal instruments, with the same lag structure; "normal"
 instruments may also be indicated in the third part of the formula. 
 
-The effect argument is either `NULL`, `"individual"`
+The `effect` argument is either `NULL`, `"individual"`
 (the default), or `"twoways"`. In the first case, the model is
 estimated in levels. In the second case, the model is estimated in
 first differences to get rid of the individuals effects. In the last
@@ -1114,7 +1112,7 @@ zz <- pggls(log(emp)~log(wage)+log(capital), data=EmplUK, model="pooling")
 summary(zz)
 ``` 
 
-The fixed effects `pggls` [see @WOOL:02 p.276] is based
+The fixed effects `pggls` [see @WOOL:02, p.276] is based
 on the estimation of a within model in the first step; the rest follows as
 above. It is estimated by:
 
@@ -1193,7 +1191,7 @@ be computed. The argument `type` is one of:
 
 
 The effects tested are indicated with the `effect` argument (one
-of `"individual"`, `"time"` or `"twoways"`). The test statistics 
+of `"individual"`, `"time"`, or `"twoways"`). The test statistics 
 implemented are also suitable for unbalanced panels.^[The `"bp"` test for unbalanced panels was derived in @BALT:LI:90, the `"kw"` test for unbalanced panels in @BALT:CHA:LI:98. The `"ghm"` test and the `"kw"` test were extended to two--way effects in @BALT:CHA:LI:92. For a concise overview of all these statistics see @BALT:2013 Sec. 4.2, pp. 68--76 (for balanced panels) and Sec. 9.5, pp. 200--203 (for unbalanced panels)]
 
 To test the presence of individual and time effects in the
@@ -1656,10 +1654,9 @@ warning.
  
 A *local* variant of the $CD$ test, called $CD(p)$ test
 [@PESA:04], takes into account an appropriate subset of *neighbouring*
-cross-sectional units to check the null of no
-XSD against the alternative of *local* XSD,
-i.e. dependence between neighbours only. To do so, the pairs of
-neighbouring units are selected by means of a binary proximity matrix
+cross-sectional units to check the null of no XSD against the alternative
+of *local* XSD, i.e. dependence between neighboursonly. To do so, the pairs
+of neighbouring units are selected by means of a binary proximity matrix
 like those used in spatial models. In the original paper, a regular
 ordering of observations is assumed, so that the $m$-th
 cross-sectional observation is a neighbour to the $(m-1)$-th and to
