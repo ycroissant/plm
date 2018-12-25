@@ -70,16 +70,16 @@ Changes in version 1.7-0
   * print.pseries: prettier printing for c("pseries", "complex").
   * print.summary.plm: more informative for perfect fits (all residuals are 0).
   * pgmm object: removed element 'df.residual' for now as it contained the
-    function of the same name rather than a number.
+    function of the same name rather than a number; fixed handling of argument
+    'lost.ts''s second element.
   * plm/ercomp: informative error messages for non-estimable 'swar' and 'amemiya'
     models when between model lacks observations ('swar') and individual or
     time dimension lacks within variation ('amemiya').
   * plm/model.matrix.pFormula: informative error message for non-finite values.
   * summary.purtest: give informative error message when run on purtest object
     containing result for Hadri's test.
-  * pht, pmg, pggls models: display proper names in printed summary's topline.
-  * pcce models: display proper names in printed summary's topline; pooled model
-    object's element 'coefficients' is a numeric (was 1x1 matrix).
+  * pcce, pht, pmg, pggls models: proper names in printed summary's topline.
+  * pcce models: pooled model's element 'coefficients' is numeric (was 1x1 matrix).
   * pwaldtest: in all cases, htest object's 'statistic' element is a numeric
     (was 1x1 matrix for some cases).
   * Data set 'Crime' extended with pre-computed log values as in original data.
