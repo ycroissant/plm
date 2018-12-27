@@ -10,8 +10,8 @@ output:
 bibliography: bibliojss.bib
 abstract: |
   This introduction to the `plm` package is a slightly
-  modified version of [@Croissant:Millo:2008], published in the
-  Journal of Statistical Software. 
+  modified version of @Croissant:Millo:2008, published in the
+  *Journal of Statistical Software*. 
   
   Panel data econometrics is obviously one of the main fields
   in the profession, but most of the models used are difficult to
@@ -54,7 +54,7 @@ Thus, while a very comprehensive software framework for (among many
 other features) maximum likelihood estimation of linear regression
 models for longitudinal data, packages `nlme`
 [@PINH:BATE:DEBR:SARK:07] and `lme4`
-[@BATE:07], is available in the `R` [@R:2008]
+[@BATE:07], is available in the `R` (@R:2008)
 environment and can be used, e.g., for estimation of random effects
 panel models, its use is not intuitive for a practicing
 econometrician, and maximum likelihood estimation is only one of the
@@ -205,21 +205,22 @@ $\beta_{it}=\beta+\eta_{i}$ for all $t$, where $\eta_{i}$ is a group--
 
 
 
- The hypotheses on parameters and error terms (and hence the choice of
- the most appropriate estimator) are usually tested by means of: *pooling*
- tests to check poolability, i.e. the hypothesis that the
- same coefficients apply across all individuals; and random effects
- tests, comparing the null of spherical residuals with the alternative
- of group (time) specific effects in the error term. If the homogeneity
- assumption over the $\beta$s is established, the next step is to
- establish the presence of unobserved effects. The choice between fixed
- and random effects specifications is based on Hausman-type tests,
- comparing the two estimators under the null of no significant
- difference: if this is not rejected, the more efficient random effects
- estimator is chosen.  Even after this step, departures of the error
- structure from sphericity can further affect inference, so that either
- screening tests or robust diagnostics are needed.
-
+<!--
+The hypotheses on parameters and error terms (and hence the choice of
+the most appropriate estimator) are usually tested by means of: *pooling*
+tests to check poolability, i.e. the hypothesis that the
+same coefficients apply across all individuals; and random effects
+tests, comparing the null of spherical residuals with the alternative
+of group (time) specific effects in the error term. If the homogeneity
+assumption over the $\beta$s is established, the next step is to
+establish the presence of unobserved effects. The choice between fixed
+and random effects specifications is based on Hausman-type tests,
+comparing the two estimators under the null of no significant
+difference: if this is not rejected, the more efficient random effects
+estimator is chosen.  Even after this step, departures of the error
+structure from sphericity can further affect inference, so that either
+screening tests or robust diagnostics are needed.
+-->
 
 
 The hypotheses on parameters and error terms (and hence the choice of
@@ -243,12 +244,12 @@ the most appropriate estimator) are usually tested by means of:
 
 
 
-
- Dynamic models in a fixed or random effects setting, and in general
- lack of strict exogeneity of the regressors, pose further problems to
- estimation which are usually dealt with in the generalized method of
- moments (GMM) framework.
-
+<!--
+Dynamic models in a fixed or random effects setting, and in general
+lack of strict exogeneity of the regressors, pose further problems to
+estimation which are usually dealt with in the generalized method of
+moments (GMM) framework.
+-->
 
 Dynamic models and in general lack of strict exogeneity of the
 regressors, pose further problems to estimation which are usually
@@ -279,8 +280,6 @@ argument may be an ordinary `data.frame` but, in this case, an
 argument called `index` has to be added to indicate the structure
 of the data.  This can be:
 
-
-
 - `NULL` (the default value), it is then assumed
   that the first two columns contain the individual and the time
   index and that observations are ordered by individual and by time period,
@@ -290,7 +289,6 @@ of the data.  This can be:
   individual and the time index,
 - an integer which is the number of individuals (only in case of a
   balanced panel with observations ordered by individual).
-
 
 
 The `pdata.frame` function is then called internally, which returns a
@@ -307,8 +305,6 @@ and then to use the `pdata.frame` in the estimation functions.
 
 `plm` provides various functions for estimation, among them:
 
-
-
 - `plm`: estimation of the
   basic panel models, *i.e.* within, between and random effect
   models. Models are estimated using the `lm` function to
@@ -318,14 +314,10 @@ and then to use the `pdata.frame` in the estimation functions.
 - `pggls`: estimation of general feasible generalized least squares
   models.
 
-
-
 The interface of these functions is consistent with the `lm()`
 function. Namely, their first two arguments are `formula` and
 `data` (which should be a `data.frame` and is
 mandatory). Three additional arguments are common to these functions:
-
-
 
 - `index`: this argument enables the estimation functions
   to identify the structure of the data, *i.e.* the individual
@@ -335,15 +327,15 @@ mandatory). Three additional arguments are common to these functions:
 - `model`: the kind of model to be estimated, most of the
 time a model with fixed effects or a model with random effects.
 
-
-
-
 The results of these four functions are stored in an object which class
 has the same name of the function. They all inherit from class
 `panelmodel`. A `panelmodel` object contains:
 `coefficients`, `residuals`, `fitted.values`,
 `vcov`, `df.residual` and `call` and functions
 that extract these elements are provided.
+
+<!-- TODO: currently, plm objects do not contain fitted.values -->
+
 
 ### Testing interface
 
@@ -359,13 +351,14 @@ model objects, whose estimation is computationally inexpensive.
 Therefore most examples in the following are based on `formula`
 methods, which are perhaps the cleanest for illustrative purposes.
 
- In some cases where tests are to be done on model objects that be, in
- computational terms, more demanding to estimate (and that are also
- likely to be already present in the workspace at that stage), an
- exception is made to the rule and tests require a `panelmodel`
- object argument. This is the case of Hausman tests and of
- Wooldridge-type serial correlation tests.
-
+<!--
+In some cases where tests are to be done on model objects that be, in
+computational terms, more demanding to estimate (and that are also
+likely to be already present in the workspace at that stage), an
+exception is made to the rule and tests require a `panelmodel`
+object argument. This is the case of Hausman tests and of
+Wooldridge-type serial correlation tests.
+-->
 
 ## Computational approach to estimation
 
@@ -535,9 +528,7 @@ library("plm")
 The four data sets used are `EmplUK` which was used by
 @AREL:BOND:91, the `Grunfeld` data [@KLEI:ZEIL:08]
 which is used in several econometric books, the `Produc` data
-used by @MUNN:90 and the `Wages` used by
-@CORN:RUPE:88.
-
+used by @MUNN:90 and the `Wages` used by @CORN:RUPE:88.
 
 ```{r }
 data("EmplUK", package="plm")
@@ -587,9 +578,6 @@ of individuals and $T$ is the number of time periods), the transformed
 series $\tilde{x}$ is obtained as $\tilde{x}=Mx$ where $M$ is a
 transformation matrix. Denoting $j$ a vector of one of length $T$ and
 $I_n$ the identity matrix of dimension $n$, we get:
-
-
-
 
 - the between transformation: $P=\frac{1}{T}I_n\otimes jj'$
   returns a vector containing the individual means. The
@@ -641,8 +629,6 @@ head(Between(E$emp), 10)
 ``` 
 
 
-
-
 ## Formulas
 
 In some circumstances, standard `formula`s are not very
@@ -673,15 +659,11 @@ particularly interesting when there are a few external instruments.
 Several models can be estimated with `plm` by filling the
 `model` argument:
 
-
-
 - the fixed effects model (`"within"`),
 - the pooling model (`"pooling"`),
 - the first-difference model (`"fd"`),
 - the between model (`"between"`),
 - the error components model (`"random"`).
-
-
 
 The basic use of `plm` is to indicate the model formula, the
 data and the model to be estimated. For example, the fixed effects
@@ -738,15 +720,10 @@ transformation is obtained using preliminary estimations.
 Four estimators of this parameter are available, depending on the
 value of the argument `random.method`:
 
-
-
 - `"swar"`: from @SWAM:AROR:72, the default value,
 - `"walhus"`: from @WALL:HUSS:69,
 - `"amemiya"`: from @AMEM:71,
 - `"nerlove"`: from @NERLO:71.
-
-
-
 
 For example, to use the `amemiya` estimator:
 
@@ -768,12 +745,8 @@ ercomp(inv~value+capital, data=Grunfeld, method = "amemiya", effect = "twoways")
 The default behavior of `plm` is to introduce individual
 effects. Using the `effect` argument, one may also introduce:
 
-
-
 - time effects (`effect = "time"`),
 - individual and time effects (`effect = "twoways"`).
-
-
 
 For example, to estimate a two-ways effect model for the
 `Grunfeld` data:
@@ -808,8 +781,8 @@ summary(Hed)
 ```
 Measures for the unbalancedness of a panel data set or the data used in
 estimated models are provided by function `punbalancedness`. It gives
-the measures $\gamma$ and $\nu$ from @AH:PI:1981 where values 1 represent
-balanced data and the more unbalanced the data the lower the values.
+the measures $\gamma$ and $\nu$ from @AH:PI:1981 where for both 1 represents
+balanced data and the more unbalanced the data the lower the value.
 
 ```{r hedonic-punbal}
 punbalancedness(Hed)
@@ -825,13 +798,10 @@ after a `|` sign (pipe).
 The instrumental variables estimator used is indicated with the
 `inst.method` argument:
 
-
 - `"bvk"`, from  @BALE:VARA:87, the default value,
 - `"baltagi"`, from @BALT:81,
 - `"am"`, from @AMEM:MACUR:86,
 - `"bms"`, from @BREU:MIZO:SCHMI:89.
-
-
 
 An illustration is in the following example from 
 @BALT:2005, p.120 / @BALT:2013, p.137 ("G2SLS").
@@ -923,13 +893,9 @@ correlated with $\Delta y_{it-1}$.  $y_{it-2}$ is a valid, but weak
 instrument (see @ANDE:HSIA:81). The GMM estimator uses the fact that
 the number of valid instruments is growing with $t$:
 
-
-
 - $t=3$: $y_1$,
 - $t=4$: $y_1,y_2$,
-- $t=5$: $y_1,y_2,y_3$
-
-
+- $t=5$: $y_1,y_2,y_3$.
 
 For individual $i$, the matrix of instruments is then:
 
@@ -1180,14 +1146,10 @@ or a formula.
 Two additional arguments can be added to indicate the kind of test to
 be computed. The argument `type` is one of:
 
-
-
 - `"honda"`: @HOND:85, the default value,
 - `"bp"`: @BREU:PAGA:80,
 - `"kw"`: @KING:WU:97^[NB: Oneway King-Wu (`"kw"`) statistics (`"individual"` and `"time"`) coincide with the respective  Honda statistics (`"honda"`); however, the twoway statistics of `"kw"`  and `"honda"` differ.],
 - `"ghm"`: @GOUR:HOLL:MONF:82.
-
-
 
 The effects tested are indicated with the `effect` argument (one
 of `"individual"`, `"time"`, or `"twoways"`). The test statistics 
@@ -1429,7 +1391,7 @@ residuals are negatively serially correlated, with $cor(\hat{u}_{it},
 \hat{u}_{is})=-1/(T-1)$ for each $t,s$
 (see @WOOL:02 10.5.4). This correlation clearly dies out as T
 increases, so this kind of AR test is applicable to `within`
-model objects only for T "sufficiently large"^[Baltagi and Li derive a basically analogous T-asymptotic test for first-order serial correlation in a FE panel model as a Breusch-Godfrey LM test on within residuals (see @BALT:LI:95 par. 2.3 and formula 12). They also observe that the test on within residuals can be used for testing on the RE model, as "the within transformation [time-demeaning, in our terminology] wipes out the individual effects, whether fixed or random". Generalizing the Durbin-Watson test to FE models by applying it to fixed effects residuals is documented in @BHAR:FRAN:NARE:82, a (modified) version for unbalanced and/or non-consecutive panels is implemented in `pbnftest` as is Baltagi-Wu's LBI statistic (for both see @BALT:WU:99).]
+model objects only for T "sufficiently large"^[Baltagi and Li derive a basically analogous T-asymptotic test for first-order serial correlation in a FE panel model as a Breusch-Godfrey LM test on within residuals (see @BALT:LI:95 par. 2.3 and formula 12). They also observe that the test on within residuals can be used for testing on the RE model, as "the within transformation [time-demeaning, in our terminology] wipes out the individual effects, whether fixed or random". Generalizing the Durbin-Watson test to FE models by applying it to fixed effects residuals is documented in @BHAR:FRAN:NARE:82, a (modified) version for unbalanced and/or non-consecutive panels is implemented in `pbnftest` as is Baltagi-Wu's LBI statistic (for both see @BALT:WU:99).].
 On the converse, in short panels the test gets severely
 biased towards rejection (or, as the induced correlation is negative, towards
 acceptance in the case of the one-sided DW test with
@@ -1537,8 +1499,6 @@ Subsection \@ref(robust-covariance-matrix-estimation) in inference.
 
 
 ## Tests for cross-sectional dependence
-
-
 
 Next to the more familiar issue of serial correlation, over the last
 years a growing body of literature has been dealing with
@@ -1706,14 +1666,10 @@ time-series. Several possibilities are available. They all have in
 common that the maximum number of lags have to be chosen first. Then,
 $p_i$ can be chosen by using:
 
-
-
 - the Schwarz information criterion (SIC),
 - the Akaike information criterion (AIC),
 - the Hall's method, which consist in removing the higher lags while
   they are not significant.
-
-
 
 The ADF regression is run on $T-p_i-1$ observations for
 each individual, so that the total number of observations is $n\times
@@ -1903,8 +1859,6 @@ provided which implements the robust covariance matrix proposed by
 @WIND:05 for generalized method of moments estimators.
 
 
-
-
 # plm versus nlme and lme4
 \label{sec:nlme}
 
@@ -2002,12 +1956,13 @@ indicates a parameter that is assumed constant, while
 *random  effects* are parameters that vary randomly around zero
 according to a joint multivariate normal distribution.
 
-
+<!---
  So, the FE model in econometrics has no counterpart in the mixed
  models framework, unless reducing it to OLS on a specification with
  one dummy for each group (viz. time period, or both) (often termed
  *least squares dummy variables*, or LSDV model) which can
  trivially be estimated by OLS. 
+-->
 
 So, the FE model in econometrics has no counterpart in the
 mixed models framework, unless reducing it to OLS on a
@@ -2122,8 +2077,8 @@ vcmf <- pvcm(inv~value+capital, data=Grunfeld, model="within", effect="time")
 vcmfML <- lmList(inv~value+capital|year, data=Grunfeld)
 ```
 
-### Unrestricted FGLS
-The general, or unrestricted, feasible GLS, `pggls` in the
+### General FGLS
+The general, or unrestricted, feasible GLS (FGLS), `pggls` in the
 `plm` nomenclature, is equivalent to a model with no random
 effects regressors ($b_{iq}=0 \phantom{p} \forall i,q$) and an error
 covariance structure which is unrestricted within groups apart from
@@ -2279,14 +2234,15 @@ literature. The similarities and differences with the maximum
 likelihood approach to longitudinal data have also been briefly
 discussed.
 
- We plan to expand the methods in this paper to systems of equations
- and to the estimation and testing of models with autoregressive
- errors. Additions to the misspecification testing toolbox and
- covariance estimators robust vs. cross-sectional correlation are also
- in the offing. Lastly, conditional visualization features in the
- `R` environment seem to offer a promising toolbox for visual
- diagnostics, which is another subject for future work.
-
+<!--
+We plan to expand the methods in this paper to systems of equations
+and to the estimation and testing of models with autoregressive
+errors. Additions to the misspecification testing toolbox and
+covariance estimators robust vs. cross-sectional correlation are also
+in the offing. Lastly, conditional visualization features in the
+`R` environment seem to offer a promising toolbox for visual
+diagnostics, which is another subject for future work.
+-->
 
 We plan to expand the methods in this paper to systems of equations
 and to the estimation of models with autoregressive errors. Addition
@@ -2306,9 +2262,4 @@ Benedetti.
 # Bibliography {-}
 
  <!-- Local IspellDict: english --> <!-- Local IspellPersDict: ~/emacs/.ispell-english -->
-
-
-
-
-
 
