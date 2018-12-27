@@ -149,26 +149,27 @@ individual (or time) means and the deviations from these
 means. Consistent estimators can be obtained by replacing the unknown
 errors by the residuals of a consistent preliminary estimation and by
 dropping the expecting value operator. Some degree of freedom
-correction can also be introduced. `plm` provides a general interface
-called `ercomp` to estimate the variances :
+correction can also be introduced. `plm` calls the general function
+`ercomp` to estimate the variances. Important arguments to `ercomp`
+are:
 
 - `models` indicates which models are estimated in order to calculate
-  the two quadratic forms ; for example `c("within", "Between")`
+  the two quadratic forms ; for example `c("within", "Between")`.
 - `dfcor` indicates what kind of degrees of freedom correction is
-  used : if 0, the quadratic forms are divided by the number of
-  observations, respectively $N\times T$ and $N$ ; if 1, the
+  used : if `0`, the quadratic forms are divided by the number of
+  observations, respectively $N\times T$ and $N$ ; if `1`, the
   numerators of the previous expressions are used ($N\times (T-1)$ and
-  $N$) ; if 2, the number of estimated parameters in the preliminary
-  estimate $K$ is deduced. Finally, if 3, the unbiased version is
+  $N$) ; if `2`, the number of estimated parameters in the preliminary
+  estimate $K$ is deduced. Finally, if `3`, the unbiased version is
   computed, which is based on much more complex computations, which
   relies on the calculus of the trace of different cross-products
   which depends on the preliminary models used.
 - `method` is an alternative to the `models` argument ; it is one of :
-    * `walhus` (which is equivalent) to `models = c("pooling")`
+    * `"walhus"` - which is equivalent to `models = c("pooling")`,
       @WALL:HUSS:69,
-    * `swar` - `models = c("within", "Between")` @SWAM:AROR:72,
-    * `amemiya` - `models = c("within")` @AMEM:71,
-    * `ht` is an slightly modified version of `amemiya` ; when there
+    * `"swar"` - `models = c("within", "Between")`, @SWAM:AROR:72,
+    * `"amemiya"` - `models = c("within")`, @AMEM:71,
+    * `"ht"` is an slightly modified version of `amemiya` ; when there
       are time-invariant covariates, the @AMEM:71 estimator of the
       individual component of the variance is under-estimated as the
       time-invariant covariates disappear in the within regression. In
@@ -176,15 +177,13 @@ called `ercomp` to estimate the variances :
       the individual effects on the time-invariant covariates and use
       the residuals in order to estimate the components of the
       variance,
-    * `nerlove` which is a specific method which doesn't fit to the
+    * `"nerlove"`, which is a specific method which doesn't fit to the
       methodology described above (@NERLO:71).
 
-Note that when only one model is provided, this means that the same
+Note that when only one model is provided in `models`, this means that the same
 residuals are used to compute the two quadratic forms.
 
-    
-To illustrate the use of `plm`, we use examples reproduced in @BALT:13.
-
+To illustrate the use of `plm`, we use examples reproduced in @BALT:2013.
 Table 2.1 on page 21 presents EViews' results of the estimation on the
 `Grunfeld` data set :
 
@@ -199,7 +198,7 @@ amemiya <- update(walhus, random.method = "amemiya")
 swar <- update(amemiya, random.method = "swar")
 ```
 
-Note that the `random.dfcor` argument is set to 3, which means that
+Note that the `random.dfcor` argument is set to `3`, which means that
 the unbiased version of the estimation of the error components is
 used. We use the `texreg` package to present the results :
 
@@ -217,10 +216,10 @@ example, for the `amemiya` model :
 ercomp(amemiya)
 ```
 
-@BALT:13, p.27, presents the Stata estimation of the Swamy-Arora
-estimator ; the Swamy-Arora estimator is the same if `random.dfcor` =
-3 or 2 (the quadratic forms are divided by $\sum_n T_n - K - N$ and by
-$N - K - 1$), so I don't know what is the behaviour of Stata for the
+@BALT:2013, p. 27, presents the Stata estimation of the Swamy-Arora
+estimator ; the Swamy-Arora estimator is the same if `random.dfcor` is
+set to `3` or `2` (the quadratic forms are divided by $\sum_n T_n - K - N$
+and by $N - K - 1$), so I don't know what is the behaviour of Stata for the
 other estimators for which the unbiased estimators differs from the
 simple one.
 
@@ -235,7 +234,7 @@ summary(PrSwar)
 # The twoways effect model
 
 The two-ways effect model is obtained by setting the `effect` argument
-to `twoways`. @BALT:13 p. 44-46, presents EViews' output for the Grunfeld
+to `"twoways"`. @BALT:2013 p. 44-46, presents EViews' output for the Grunfeld
 data set.
 
 ```{r grunfeld2ways}
@@ -246,8 +245,8 @@ Gra <- update(Grw, random.method = "amemiya")
 screenreg(list("Wallace-Hussain" = Grw, "Swamy-Arora" = Grs, "Amemiya" = Gra), digits = 5)
 ```
 
-The estimated variance of the time component is
-negative for `walhus` as well as `swar` and `plm` sets it to 0.
+The estimated variance of the time component is negative for the 
+Wallace-Hussain as well as the Swamy-Arora models and `plm` sets it to 0.
 
 @BALT:09 p. 60-62, presents EViews' output for the `Produc` data.
 
@@ -277,9 +276,9 @@ Two difficulties arise with unbalanced panels :
   data for the random effects model ; this is not the case for the
   two-ways effects model.
 
-@BALT:13 and @BALT:09 present results of the estimation of the
-@SWAM:AROR:72 model with the `Hedonic` data set. @BALT:13 p.174,
-presents the Stata output as @BALT:09 p.211 presents EViews'
+@BALT:2013 and @BALT:09 present results of the estimation of the
+@SWAM:AROR:72 model with the `Hedonic` data set. @BALT:2013, p. 174,
+presents the Stata output as @BALT:09, p. 211 presents EViews'
 output. EViews' Wallace-Hussain estimator is reported in @BALT:09,
 p. 210.
 
@@ -301,9 +300,10 @@ on $N$ observations while EViews uses a between regression on $\sum_n T_n$
 observations, which are not the same on unbalanced panels. Note the
 use of between with or without the B capitalized in the
 `random.models` argument. `plm`'s default is to use the between regression
-with $\sum_n T_n$ observations when setting `model = "random", random.method = "swar"`).
+with $\sum_n T_n$ observations when setting
+`model = "random", random.method = "swar"`.
 The default employed is what the original paper for the unbalanced
-one-way Swamy-Arora estimator defined (in @BALT:CHA:94, p.73). A more detailed
+one-way Swamy-Arora estimator defined (in @BALT:CHA:94, p. 73). A more detailed
 analysis of Stata's Swamy-Arora estimation procedure is given by @COTT:2017.
 
 
@@ -332,14 +332,15 @@ The instrumental variables estimator used is indicated with the
   introduced twice using the between and the within transformation as
   those of the third are only introduced with the within
   transformation,
-- `am` for @AMEM:MACUR:86, the within transformation of the variables
+- `am`, from @AMEM:MACUR:86, the within transformation of the variables
   of the second parts for each period are also included as
   instruments,
-- `bmc` for @BREU:MIZO:SCHMI:89, the within transformation of the
+- `bmc`, from @BREU:MIZO:SCHMI:89, the within transformation of the
   variable of the second and of the third parts are included as
   instruments.
 
- as illustrated on the following example from @BALT:01, p.120/ @BALT:13, p.137.
+The instrumental variable estimators are illustrated in the following example
+from @BALT:2005, p. 120/ @BALT:2013, p. 137.
   
 ```{r}
 data("Crime", package = "plm")
@@ -350,13 +351,14 @@ crbalt <- plm(lcrmrte ~ lprbarr + lpolpc + lprbconv + lprbpris + lavgsen +
               data = Crime, model = "random", inst.method = "baltagi")
 crbvk <- update(crbalt, inst.method = "bvk")
 crwth <- update(crbalt, model = "within")
-screenreg(list(within = crwth, EC2SLS = crbalt, G2SLS = crbvk), 
-          single.row = TRUE, digits = 5, omit.coef = "(region)|(year)")
+screenreg(list(FE2SLS = crwth, EC2SLS = crbalt, G2SLS = crbvk), 
+          single.row = TRUE, digits = 5, omit.coef = "(region)|(year)",
+          reorder.coef = c(1:16, 19, 18, 17))
 ```
 
 The Hausman-Taylor model (@HAUS:TAYL:81) may be estimated
 with the `plm` function. The following example is from
-@BALT:01, p.130 and @BALT:13, p.146.
+@BALT:2005, p. 130 and @BALT:2013, p. 146.
 
 ```{r}
 data("Wages", package = "plm")

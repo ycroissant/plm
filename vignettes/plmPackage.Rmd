@@ -651,13 +651,12 @@ like estimators: to deal with these situations, we use the
 `Formula` package.
 
 The `Formula` package provides a class which enables to construct
-multi-part formula, each part being separated by a pipe
-sign (`|`).
+multi-part formula, each part being separated by a pipe sign (`|`).
 
 The two formulas below are identical:
 ```{r }
-emp~wage+capital|lag(wage,1)+capital
-emp~wage+capital|.-wage+lag(wage,1)
+emp ~ wage + capital | lag(wage,1) + capital
+emp ~ wage + capital | . -wage + lag(wage,1)
 ``` 
 
 In the second case, the `.` means the previous parts which
@@ -703,8 +702,7 @@ For a `random` model, the `summary` method gives information
 about the variance of the components of the errors.  Fixed effects may
 be extracted easily using `fixef`. An argument `type`
 indicates how fixed effects should be computed: in levels 
-`type = "level"` 
-(the default), in deviations from the overall mean
+`type = "level"` (the default), in deviations from the overall mean
 `type = "dmean"` or in deviations from the first individual
 `type = "dfirst"`.
 
@@ -786,10 +784,9 @@ grun.tways <- plm(inv~value+capital, data = Grunfeld, effect = "twoways",
 summary(grun.tways)
 ``` 
 
-In the "effects" section of the result, the variance of the three
-elements of the error term and the three parameters used in the
-transformation are now printed. The two-ways effect model is for the
-moment only available for balanced panels.
+In the "effects" section of the printed summary of the result, the variance 
+of the three elements of the error term and the three parameters used in the
+transformation are printed.
 
 ### Unbalanced panels
 
