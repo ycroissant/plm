@@ -122,9 +122,11 @@ is a standard linear model pooling all the data across $i$ and $t$.
 
 To model individual heterogeneity, one often assumes that the error
 term has two separate components, one of which is specific to the
-individual and doesn't change over time^[For the sake of exposition we are considering only the individual effects case here. There may also be time effects, which is a symmetric case, or both of them, so that the error has three components: $u_{it}=\mu_{i}+\lambda_{t}+\epsilon_{it}$.].
-This is called the
-unobserved effects model:
+individual and doesn't change over time^[For the sake of exposition we are 
+considering only the individual effects case here. There may also be time
+effects, which is a symmetric case, or both of them, so that the error has
+three components: $u_{it}=\mu_{i}+\lambda_{t}+\epsilon_{it}$.].
+This is called the unobserved effects model:
 
 \begin{equation}
   (\#eq:errcomp)
@@ -323,7 +325,12 @@ mandatory). Three additional arguments are common to these functions:
   to identify the structure of the data, *i.e.* the individual
   and the time period for each observation,
 - `effect`: the kind of effects to include in the model,
-  *i.e.* individual effects, time effects or both^[Although in most models the individual and time effects cases are symmetric, there are exceptions: estimating the `fd` model on time effects is meaningless because cross-sections do not generally have a natural ordering, so trying `effect = "time"` stops with an error message as does `effect = "twoways"` which is not defined for `fd` models.],
+  *i.e.* individual effects, time effects or both^[Although in most models the 
+  individual and time effects cases are symmetric, there are exceptions: 
+  estimating the *first-difference* model on time effects is meaningless
+  because cross-sections do not generally have a natural ordering, so trying 
+  `effect = "time"` stops with an error message as does `effect = "twoways"` 
+  which is not defined for first-difference models.],
 - `model`: the kind of model to be estimated, most of the
 time a model with fixed effects or a model with random effects.
 
@@ -469,14 +476,16 @@ resulting in speed comparable to that of the demeaning solution.
 
 
 General frameworks for restrictions and linear hypotheses testing are
-available in the `R` environment^[See packages `lmtest` (@HOTH:ZEIL:FARE:CUMM:MILL:MITC:2015) and `car` (@FOX:2016).].
+available in the `R` environment^[See packages `lmtest`
+(@HOTH:ZEIL:FARE:CUMM:MILL:MITC:2015) and `car` (@FOX:2016).].
 These
 are based on the Wald test, constructed as $\hat{\beta}^\top \hat{V}^{-1}
 \hat{\beta}$, where $\hat{\beta}$ and $\hat{V}$ are consistent
 estimates of $\beta$ and $V(\beta)$, The Wald test may be used for
 zero-restriction (i.e., significance) testing and, more generally, for
 linear hypotheses in the form $(R \hat{\beta} - r)^\top  [R \hat{V} R^\top ]^{-1} (R
-\hat{\beta} - r)$^[Moreover, `coeftest()` provides a compact way of looking at coefficient estimates and significance diagnostics.].
+\hat{\beta} - r)$^[Moreover, `coeftest()` provides a compact way of looking at 
+coefficient estimates and significance diagnostics.].
 To be applicable, the test functions require
 extractor methods for coefficients' and covariance matrix estimates to
 be defined for the model object to be tested. Model objects in
@@ -1068,7 +1077,9 @@ serial correlation has to be assumed away and the estimator is
 consistent with respect to the time dimension, keeping $n$ fixed.
 
 The function `pggls` estimates general FGLS models, with either
-fixed of "random" effects^[The "random effect" is better termed "general FGLS" model, as in fact it does not have a proper random effects structure, but we keep this terminology for general language consistency.].
+fixed of "random" effects^[The "random effect" is better termed "general FGLS" 
+model, as in fact it does not have a proper random effects structure, but we 
+keep this terminology for general language consistency.].
 
 The "random effect" general FGLS is estimated by:
  
@@ -1148,12 +1159,19 @@ be computed. The argument `type` is one of:
 
 - `"honda"`: @HOND:85, the default value,
 - `"bp"`: @BREU:PAGA:80,
-- `"kw"`: @KING:WU:97^[NB: Oneway King-Wu (`"kw"`) statistics (`"individual"` and `"time"`) coincide with the respective  Honda statistics (`"honda"`); however, the twoway statistics of `"kw"`  and `"honda"` differ.],
+- `"kw"`: @KING:WU:97^[NB: Oneway King-Wu (`"kw"`) statistics 
+(`"individual"` and `"time"`) coincide with the respective  Honda statistics
+(`"honda"`); however, the twoway statistics of `"kw"`  and `"honda"` differ.],
 - `"ghm"`: @GOUR:HOLL:MONF:82.
 
 The effects tested are indicated with the `effect` argument (one
 of `"individual"`, `"time"`, or `"twoways"`). The test statistics 
-implemented are also suitable for unbalanced panels.^[The `"bp"` test for unbalanced panels was derived in @BALT:LI:90, the `"kw"` test for unbalanced panels in @BALT:CHA:LI:98. The `"ghm"` test and the `"kw"` test were extended to two--way effects in @BALT:CHA:LI:92. For a concise overview of all these statistics see @BALT:2013 Sec. 4.2, pp. 68--76 (for balanced panels) and Sec. 9.5, pp. 200--203 (for unbalanced panels).]
+implemented are also suitable for unbalanced panels.^[The `"bp"` test for 
+unbalanced panels was derived in @BALT:LI:90, the `"kw"` test for unbalanced 
+panels in @BALT:CHA:LI:98. The `"ghm"` test and the `"kw"` test were extended 
+to two--way effects in @BALT:CHA:LI:92. For a concise overview of all these 
+statistics see @BALT:2013 Sec. 4.2, pp. 68--76 (for balanced panels) and 
+Sec. 9.5, pp. 200--203 (for unbalanced panels).]
 
 To test the presence of individual and time effects in the
 `Grunfeld` example, using the @GOUR:HOLL:MONF:82 test,
@@ -1206,11 +1224,14 @@ phtest(gw, gr)
 
 A model with individual effects has composite errors that are serially
 correlated by definition. The presence of the time-invariant error
-component^[Here we treat fixed and random effects alike, as components of the error term, according with the modern approach in econometrics (see @WOOL:02, @WOOL:2010).]
+component^[Here we treat fixed and random effects alike, as components of the 
+error term, according with the modern approach in econometrics (see @WOOL:02, 
+@WOOL:2010).]
 gives rise to serial
 correlation which does not die out over time, thus standard tests
 applied on pooled data always end up rejecting the null of spherical
-residuals^[Neglecting time effects may also lead to serial correlation in residuals (as observed in @WOOL:02 10.4.1).].
+residuals^[Neglecting time effects may also lead to serial correlation in 
+residuals (as observed in @WOOL:02 10.4.1).].
 There may also be serial correlation of the
 "usual" kind in the idiosyncratic error terms, e.g. as an AR(1)
 process. By "testing for serial correlation" we mean testing for
@@ -1391,7 +1412,17 @@ residuals are negatively serially correlated, with $cor(\hat{u}_{it},
 \hat{u}_{is})=-1/(T-1)$ for each $t,s$
 (see @WOOL:02 10.5.4). This correlation clearly dies out as T
 increases, so this kind of AR test is applicable to `within`
-model objects only for T "sufficiently large"^[Baltagi and Li derive a basically analogous T-asymptotic test for first-order serial correlation in a FE panel model as a Breusch-Godfrey LM test on within residuals (see @BALT:LI:95 par. 2.3 and formula 12). They also observe that the test on within residuals can be used for testing on the RE model, as "the within transformation [time-demeaning, in our terminology] wipes out the individual effects, whether fixed or random". Generalizing the Durbin-Watson test to FE models by applying it to fixed effects residuals is documented in @BHAR:FRAN:NARE:82, a (modified) version for unbalanced and/or non-consecutive panels is implemented in `pbnftest` as is Baltagi-Wu's LBI statistic (for both see @BALT:WU:99).].
+model objects only for T "sufficiently large"^[Baltagi and Li derive a basically
+analogous T-asymptotic test for first-order serial correlation in a FE panel
+model as a Breusch-Godfrey LM test on within residuals
+(see @BALT:LI:95 par. 2.3 and formula 12). They also observe that the test on 
+within residuals can be used for testing on the RE model, as "the within 
+transformation [time-demeaning, in our terminology] wipes out the individual 
+effects, whether fixed or random". Generalizing the Durbin-Watson test to FE 
+models by applying it to fixed effects residuals is documented in 
+@BHAR:FRAN:NARE:82, a (modified) version for unbalanced and/or non-consecutive 
+panels is implemented in `pbnftest` as is Baltagi-Wu's LBI statistic (for both 
+see @BALT:WU:99).].
 On the converse, in short panels the test gets severely
 biased towards rejection (or, as the induced correlation is negative, towards
 acceptance in the case of the one-sided DW test with
@@ -1457,7 +1488,9 @@ estimator between fixed effects (`within`) and first difference
 
 The starting point is the observation that if the idiosyncratic errors
 of the original model $u_{it}$ are uncorrelated, the errors of the
-(first) differenced model^[Here, $e_{it}$ for notational simplicity (and as in Wooldridge): equivalent to $\Delta \epsilon_{it}$ in the general notation of the paper.]
+(first) differenced model^[Here, $e_{it}$ for notational simplicity (and as in
+Wooldridge): equivalent to $\Delta \epsilon_{it}$ in the general notation of 
+the paper.]
 $e_{it} \equiv
 u_{it}-u_{i,t-1}$ will be correlated, with $cor(e_{it},
 e_{i,t-1})=-0.5$, while any time-invariant effect, "fixed" or
@@ -1512,7 +1545,10 @@ The subject is huge, and here we touch only some general aspects of
 misspecification testing and valid inference. If XSD is
 present, the consequence is, at a minimum, inefficiency of the usual
 estimators and invalid inference when using the standard covariance
-matrix^[This is the case, e.g., if in an unobserved effects model when XSD is due to an unobservable factor structure, with factors that are uncorrelated with the regressors. In this case the within or random estimators are still consistent, although inefficient (see @DEHO:SARA:06).].
+matrix^[This is the case, e.g., if in an unobserved effects model when XSD is
+due to an unobservable factor structure, with factors that are uncorrelated
+with the regressors. In this case the within or random estimators are still
+consistent, although inefficient (see @DEHO:SARA:06).].
 The plan is to have in `plm` both misspecification tests to detect
 XSD and robust covariance matrices to perform valid inference
 in its presence, like in the serial dependence case. For now, though,
@@ -1548,11 +1584,11 @@ is "large". A scaled version, applicable also if $T \rightarrow
 \infty$ and *then* $n \rightarrow \infty$ (as in some pooled time
 series contexts), is defined as
 
-$$SCLM=\sqrt{\frac{1}{n(n-1)}} ( \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} T_{ij} \hat{\rho}_{ij}^2-1 )$$
+$$SCLM=\sqrt{\frac{1}{n(n-1)}} ( \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} T_{ij} \hat{\rho}_{ij}^2 -1 )$$
 
 and distributed as a standard normal (see @PESA:04).
 
-A bias-corrected scaled version $BCSCLM$ for the *fixed effect model with individual
+A bias-corrected scaled version, $BCSCLM$, for the *fixed effect model with individual
 effects* only is also available which is simply the $SCLM$ with a term correcting
 for the bias (@BALT:FENG:KAO:2012)^[The unbalanced version of this statistic uses
 max(Tij) for T in the bias-correction term]. This statistic is also asympotically
@@ -1575,7 +1611,7 @@ cross-sectional dependence if the latter is due to a factor structure
 with factor loadings averaging zero, that is, some units react
 positively to common shocks, others negatively.
 
-The default version of the test is `"cd"`.
+The default version of the test is `"cd"` yielding Pesaran's $CD$ test.
 These tests are originally meant to use the residuals of separate
 estimation of one time-series regression for each cross-sectional
 unit, so this is the default behaviour of `pcdtest`. 
@@ -1586,7 +1622,8 @@ pcdtest(inv~value+capital, data=Grunfeld)
 
 If a different model specification (`within`, `random`, ...)
 is assumed consistent, one can resort to its residuals for
-testing^[This is also the only solution when the time dimension's length is insufficient for estimating the heterogeneous model.]
+testing^[This is also the only solution when the time dimension's length is
+insufficient for estimating the heterogeneous model.]
 by specifying the relevant `model` type. The main
 argument of this function may be either a model of class
 `panelmodel` or a `formula` and a `data.frame`; in the
@@ -1632,8 +1669,8 @@ where $[w(p)]_{ij}$ is the $(i,j)$-th element of the $p$-th order
 proximity matrix, so that if $h,k$ are not neighbours, $[w(p)]_{hk}=0$
 and $\hat{\rho}_{hk}$ gets "killed"; this is easily seen to reduce
 to formula (14) in Pesaran [@PESA:04] for the special case
-considered in that paper.  The same can be applied to the $LM$ and
-$SCLM$ tests.
+considered in that paper.  The same can be applied to the $LM$,
+$SCLM$, and $BCSCLM$ tests.
 
 Therefore, the *local* version of either test can be computed
 supplying an $n \times n$ matrix (of any kind coercible to
@@ -1644,7 +1681,12 @@ computing the test; else, `w` will default to `NULL` and all
 observations will be used.  The matrix needs not really be binary, so
 commonly used "row-standardized" matrices can be employed as well:
 it is enough that neighbouring pairs correspond to nonzero elements in
-`w` ^[The very comprehensive package `spdep` for spatial dependence analysis (see @BIVA:08) contains features for creating, lagging and manipulating *neighbour list* objects of class `nb`, that can be readily converted to and from proximity matrices by means of the `nb2mat` function. Higher orders of the $CD(p)$ test can be obtained lagging the corresponding `nb`s through `nblag`.]. 
+`w` ^[The very comprehensive package `spdep` for spatial dependence analysis
+(see @BIVA:08) contains features for creating, lagging and manipulating
+*neighbour list* objects of class `nb`, that can be readily converted to and 
+from proximity matrices by means of the `nb2mat` function. Higher orders of
+the $CD(p)$ test can be obtained by lagging the corresponding `nb`s
+through `nblag`.]. 
 
 ## Unit root tests
 

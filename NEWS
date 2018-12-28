@@ -7,8 +7,8 @@ Changes in version 1.7-0
     dimension). The argument 'shift' is introduced to control shifting behaviour,
     possible values are "time" (default) and "row" (behaviour up until and incl.
     plm 1.6-6). Note that, however, the diff-ing performed in first-difference 
-    model estimation by plm(..., model = "fd") is based on row-wise differences of
-    the model matrix per individual.
+    model estimation by plm(..., model = "fd") is based on row-wise differences
+    of the model matrix per individual.
   * pbnftest: new function for (modified) BNF statistic (Durbin-Watson test 
     generalised to panels) and Baltagi/Wu's LBI statistic.
     (Bhargava/Franzini/Narendranathan (1982), Baltagi/Wu (1999)).
@@ -22,8 +22,8 @@ Changes in version 1.7-0
   * summary.pht: waldtest now uses Chi-square distribution (was F distribution).
   * Fixed first-difference models (plm(., model = "fd"), pggls(., model = "fd"))
     to have an intercept by default again (disappeared in plm 1.6-6).
-  * Between.matrix: bug fixed, so that the transformation can
-    be correctly performed for a matrix without index attribute.
+  * Between.matrix: bug fixed, so that the transformation can be correctly 
+    performed for a matrix without index attribute.
   * make.pconsecutive for pseries: for consecutive pseries, the argument
     'balanced' was not respected.
   * pmodel.response, fitted.plm, residuals.plm: for "between" and "fd" models, 
@@ -39,7 +39,8 @@ Changes in version 1.7-0
   * Vingettes: translated package's original vignette to Rmd format and renamed
     to plmPackage.Rmd; added vignette plmFunction.Rmd for further explanation
     about the estimation of error components models with the plm function;
-    in plmPackage.Rmd fixed typo in formula for scaled LM test.
+    in plmPackage.Rmd fixed typo in formula for cross-sectional dependence
+    scaled LM test.
   
   Deprecated/renamed:
   * pht, plm(., model = "ht"/"am"/"bms"): both uses deprecated, better use instead

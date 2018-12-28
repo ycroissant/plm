@@ -109,16 +109,17 @@ more main arguments can be set :
 
 - `index` helps `plm` to understand the structure of the data : if
   `NULL`, the first two columns of the data are assumed to contain the
-  individual or the time index. Otherwise, use something like
+  individual or the time index. Otherwise, supply the column names of 
+  the individual and time index as a character, e.g., use something like
   `c("firm", "year")` or just `"firm"` if there is no explicit time
   index.
 - `effect` indicates the effects that should be taken into account ;
-  this is one of `indiviudal`, `time` and `twoways`.
-- `model` indicates the model to be estimated : `pooling` is just the
-  OLS estimation (equivalent to a call to `lm`), `between` performs
-  the estimation on the individual or time means, `within` on the
-  deviations from the individual or/and time mean, `fd` on the first
-  differences and `random` perform a feasible generalized least
+  this is one of `"indiviudal"`, `"time"` and `"twoways"`.
+- `model` indicates the model to be estimated : `"pooling"` is just the
+  OLS estimation (equivalent to a call to `lm`), `"between"` performs
+  the estimation on the individual or time means, `"within"` on the
+  deviations from the individual or/and time mean, `"fd"` on the first
+  differences and `"random"` perform a feasible generalized least
   squares estimation which takes into account the correlation induced
   by the presence of individual and/or time effects.
 
@@ -265,12 +266,12 @@ screenreg(list("Wallace-Hussain" = Prw, "Swamy-Arora" = Prs, "Amemiya" = Pra), d
 
 Two difficulties arise with unbalanced panels :
 
-- there are no obvious denominators for the quadratic forms of the
+- There are no obvious denominators for the quadratic forms of the
   residuals that are used to estimate the components of the
   variance. The strategy is then to compute the expected value and
   equate it to the actual quadratic forms. Detailed formula are
   omitted here, they depend on the preliminary estimator.
-- for the one-way effect model, the estimator is still obtained by
+- For the one-way effect model, the estimator is still obtained by
   applying *OLS* on demeaned data (the individual **and** the time
   means are now deduced) for the within model and on quasi-demeaned
   data for the random effects model ; this is not the case for the
@@ -310,7 +311,7 @@ analysis of Stata's Swamy-Arora estimation procedure is given by @COTT:2017.
 # Instrumental variable estimators
 
 All of the models presented above may be estimated using instrumental
-variables. The instruments are specified using two- or three-part
+variables (IV). The instruments are specified using two- or three-part
 formulas, each part being separated by a `|` sign :
 
 - the first part contains the covariates,
@@ -325,19 +326,23 @@ formulas, each part being separated by a `|` sign :
 The instrumental variables estimator used is indicated with the
 `inst.method` argument:
 
-- `bvk`, from @BALE:VARA:87, the default value : in this case, all the
+- `"bvk"`, from @BALE:VARA:87, the default value : in this case, all the
   instruments are introduced in quasi-differences, using the same
   transformation as for the response and the covariates,
-- `baltagi`, from @BALT:81, the instruments of the second part are
+- `"baltagi"`, from @BALT:81, the instruments of the second part are
   introduced twice using the between and the within transformation as
   those of the third are only introduced with the within
   transformation,
-- `am`, from @AMEM:MACUR:86, the within transformation of the variables
+- `"am"`, from @AMEM:MACUR:86, the within transformation of the variables
   of the second parts for each period are also included as
   instruments,
-- `bmc`, from @BREU:MIZO:SCHMI:89, the within transformation of the
+- `"bmc"`, from @BREU:MIZO:SCHMI:89, the within transformation of the
   variable of the second and of the third parts are included as
   instruments.
+
+The various possible values of the  `inst.method` argument are not relevant
+for fixed effect IV models as there is only one method for this type of IV
+models but many for random effect IV models.
 
 The instrumental variable estimators are illustrated in the following example
 from @BALT:2005, p. 120/ @BALT:2013, p. 137.
@@ -357,8 +362,8 @@ screenreg(list(FE2SLS = crwth, EC2SLS = crbalt, G2SLS = crbvk),
 ```
 
 The Hausman-Taylor model (@HAUS:TAYL:81) may be estimated
-with the `plm` function. The following example is from
-@BALT:2005, p. 130 and @BALT:2013, p. 146.
+with the `plm` function by setting argument `random.method = "ht"`.
+The following example is from @BALT:2005, p. 130 and @BALT:2013, p. 146.
 
 ```{r}
 data("Wages", package = "plm")
@@ -369,13 +374,9 @@ ht <- plm(lwage ~ wks + south + smsa + married + exp + I(exp^2) +
           data = Wages, index = 595, 
           inst.method = "baltagi", model = "random", 
           random.method = "ht")
-am <- plm(lwage ~ wks + south + smsa + married + exp + I(exp^2) + 
-            bluecol + ind + union + sex + black + ed | 
-            bluecol + south + smsa + ind + sex + black | 
-            wks + married + exp + I(exp^2) + union, 
-          data = Wages, index = 595, 
-          inst.method = "am", model = "random", 
-          random.method = "ht")
+
+am <- update(ht, inst.method = "am")
+  
 screenreg(list("Hausman-Taylor" = ht, "Amemiya-MaCurdy" = am), 
           digits = 5, single.row = TRUE)
 ```
