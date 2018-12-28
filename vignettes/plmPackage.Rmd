@@ -1548,9 +1548,19 @@ is "large". A scaled version, applicable also if $T \rightarrow
 \infty$ and *then* $n \rightarrow \infty$ (as in some pooled time
 series contexts), is defined as
 
-$$SCLM=\sqrt{\frac{1}{n(n-1)}} ( \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} \sqrt{T_{ij}} \hat{\rho}_{ij}^2 )$$
+$$SCLM=\sqrt{\frac{1}{n(n-1)}} ( \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} T_{ij} \hat{\rho}_{ij}^2-1 )$$
 
-and distributed as a standard normal.
+and distributed as a standard normal (see @PESA:04).
+
+A bias-corrected scaled version $BCSCLM$ for the *fixed effect model with individual
+effects* only is also available which is simply the $SCLM$ with a term correcting
+for the bias (@BALT:FENG:KAO:2012)^[The unbalanced version of this statistic uses
+max(Tij) for T in the bias-correction term]. This statistic is also asympotically
+distributed as standard normal.
+$$BCSCLM=\sqrt{\frac{1}{n(n-1)}} ( \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} T_{ij} \hat{\rho}_{ij}^2 -1)-\frac{n}{2(T-1)}$$
+
+
+
 
 Pesaran's (@PESA:04, @PESA:2015) $CD$ test 
 

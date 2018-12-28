@@ -38,7 +38,8 @@ Changes in version 1.7-0
     to c("pseries", "numeric") if an operation returns a decimal.
   * Vingettes: translated package's original vignette to Rmd format and renamed
     to plmPackage.Rmd; added vignette plmFunction.Rmd for further explanation
-    about the estimation of error components models with the plm function.
+    about the estimation of error components models with the plm function;
+    in plmPackage.Rmd fixed typo in formula for scaled LM test.
   
   Deprecated/renamed:
   * pht, plm(., model = "ht"/"am"/"bms"): both uses deprecated, better use instead

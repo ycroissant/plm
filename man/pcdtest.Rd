@@ -54,7 +54,7 @@ An object of class \code{"htest"}.
  
  The methods implemented are suitable also for unbalanced panels.
  
- Pesaran's CD test (\code{test="cd"}), Breusch and Pagan's LM test (\code{test="lm"}), and its scaled version (\code{test="sclm"}) are all described in Pesaran (2004) (and complemented by Pesaran (2015)). The bias-corrected scaled test (\code{test="bcsclm"}) is due to Baltagi/Feng/Kao (2012) and only valid for within models including the individual effect (it's unbalanced version uses max(Tij for T) in the bias-correction term). Breusch/Pagan (1980) is the original source for the LM test.
+ Pesaran's CD test (\code{test="cd"}), Breusch and Pagan's LM test (\code{test="lm"}), and its scaled version (\code{test="sclm"}) are all described in Pesaran (2004) (and complemented by Pesaran (2015)). The bias-corrected scaled test (\code{test="bcsclm"}) is due to Baltagi/Feng/Kao (2012) and only valid for within models including the individual effect (it's unbalanced version uses max(Tij) for T) in the bias-correction term). Breusch/Pagan (1980) is the original source for the LM test.
   
  The test on a \code{pseries} is the same as a test on a pooled regression model of that variable on a constant, i.e. 
  \code{pcdtest(some_pseries)} is equivalent to \code{pcdtest(plm(some_var ~ 1, data = some_pdata.frame, model = "pooling")} and also
