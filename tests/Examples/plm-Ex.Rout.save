@@ -363,7 +363,7 @@ Warning: use of 'dynformula' is deprecated, use a multi-part formula instead
 log(y) ~ lag(log(y), 1) + log(x1) + lag(log(x1), 1) + lag(log(x1), 
     2) + log(x2) + lag(log(x2), 1) + lag(log(x2), 2) + diff(log(x3)) + 
     diff(log(x3), 1) + diff(log(x3), 2)
-<environment: 0x000000000775c910>
+<environment: 0x00000000079cc860>
 > 
 > 
 > 
@@ -13583,7 +13583,7 @@ attr(,"se")
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  14.24 1.18 15.43 NA NA 
+Time elapsed:  18.13 1.03 19.28 NA NA 
 > grDevices::dev.off()
 null device 
           1 

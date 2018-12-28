@@ -128,7 +128,6 @@ F-statistic: 21.6923 on 16 and 518 DF, p-value: < 2.22e-16
 > summary(fe_iv)  # logs computed by R
 Twoways effects Within Model
 Instrumental variable estimation
-   (Baltagi's transformation)
 
 Call:
 plm(formula = form_iv, data = Crime, effect = "twoways", model = "within", 
@@ -167,7 +166,6 @@ Chisq: 56.2016 on 16 DF, p-value: 2.2539e-06
 > summary(fe_iv2) # logs as in data set by Baltagi -> results match exactly
 Twoways effects Within Model
 Instrumental variable estimation
-   (Baltagi's transformation)
 
 Call:
 plm(formula = form_iv2, data = Crime, effect = "twoways", model = "within", 
@@ -629,4 +627,4 @@ Chisq: 628.718 on 26 DF, p-value: < 2.22e-16
 > 
 > proc.time()
    user  system elapsed 
-   3.41    0.26    3.66 
+   3.80    0.34    4.16 

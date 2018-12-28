@@ -693,11 +693,13 @@ print.summary.plm <- function(x, digits = max(3, getOption("digits") - 2),
   }
   
   if (has.instruments){
-    ivar <- describe(x, "inst.method")
-    cat(paste("Instrumental variable estimation\n   (",
-              inst.method.list[ivar],
-              "'s transformation)\n",
-              sep=""))
+    cat("Instrumental variable estimation\n")
+    if(model != "within") {
+      # don't print transformation method for FE models as there is only one
+      # such method for FE models but plenty for other model types
+      ivar <- describe(x, "inst.method")
+      cat(paste0("   (", inst.method.list[ivar], "'s transformation)\n"))
+    }
   }
   
   if (!is.null(x$rvcov)) {
