@@ -16,8 +16,8 @@ summary(zw)
 
 print(zr$residuals)
 class(zr$residuals)
-print(zw$coefficients)
-class(zw$coefficients)
+print(zr$coefficients)
+class(zr$coefficients)
 summary(zr)
 
 

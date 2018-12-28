@@ -50,11 +50,10 @@ An object of class \code{c("pvcm", "panelmodel")}, which has the following eleme
   \item{fitted.values}{the vector of fitted values,}
   \item{vcov}{the covariance matrix of the coefficients (a list for fixed effects),}
   \item{df.residual}{degrees of freedom of the residuals,}
-  \item{model}{a \code{data.frame} containing the variables used for the estimation,}
+  \item{model}{a data frame containing the variables used for the estimation,}
   \item{call}{the call,}
-  \item{Delta}{the estimation of the covariance matrix of the
-   coefficients (random effect models only),}
-  \item{std.error}{the standard errors for all the coefficients for each individual (within models only).}
+  \item{Delta}{the estimation of the covariance matrix of the coefficients (random effect models only),}
+  \item{std.error}{a data frame containing standard errors for all coefficients for each individual (within models only).}
   
 \code{pvcm} objects have \code{print}, \code{summary} and \code{print.summary} methods.
 }

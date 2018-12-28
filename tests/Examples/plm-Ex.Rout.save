@@ -363,7 +363,7 @@ Warning: use of 'dynformula' is deprecated, use a multi-part formula instead
 log(y) ~ lag(log(y), 1) + log(x1) + lag(log(x1), 1) + lag(log(x1), 
     2) + log(x2) + lag(log(x2), 1) + lag(log(x2), 2) + diff(log(x3)) + 
     diff(log(x3), 1) + diff(log(x3), 2)
-<environment: 0x00000000079c4f20>
+<environment: 0x0000000007b0a308>
 > 
 > 
 > 
@@ -12327,9 +12327,8 @@ pvcm(formula = log(gsp) ~ log(pc) + log(hwy) + log(water) + log(util) +
 Balanced Panel: n = 48, T = 17, N = 816
 
 Residuals:
-total sum of squares: 29.74077 
-         id        time 
-0.960118923 0.007220712 
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+-0.23533 -0.06035  0.08087  0.09229  0.20421  0.97490 
 
 Estimated mean of the coefficients:
               Estimate Std. Error z-value Pr(>|z|)    
@@ -13584,7 +13583,7 @@ attr(,"se")
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  15.81 1.19 17.1 NA NA 
+Time elapsed:  15.72 1.19 16.98 NA NA 
 > grDevices::dev.off()
 null device 
           1 

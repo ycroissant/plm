@@ -240,7 +240,7 @@ print.summary.pvcm <- function(x, digits = max(3, getOption("digits") - 2),
   cat("\n")
   print(pdim(model.frame(x)))
   cat("\nResiduals:\n")
-  print(summary(unlist(residuals(x))))
+  print(sumres(x))
   if (model == "random"){
     cat("\nEstimated mean of the coefficients:\n")
     printCoefmat(x$coefficients, digits = digits)

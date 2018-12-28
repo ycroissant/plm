@@ -68,8 +68,9 @@ Changes in version 1.7-0
   * (internal) is.index, has.index: new non-exported functions to check if an
     object is or has a proper index (in the sense of the plm package).
   * pvcm object: element 'residuals' is now of class c("pseries", "numeric") 
-    (were: "numeric" for within, "matrix" with one column for random model);
-    element 'df.residuals' renamed to 'df.residual' (cf. lm, plm, ...).
+    (was: "numeric" for within model); element 'coefficients' is numeric for
+    random model (was "matrix" with one column); element 'df.residuals' renamed
+    to 'df.residual' (as is standard, cf. lm, plm, ...).
   * print.pseries: prettier printing for c("pseries", "complex").
   * print.summary.plm: more informative for perfect fits (all residuals are 0).
   * pgmm object: removed element 'df.residual' for now as it contained the
