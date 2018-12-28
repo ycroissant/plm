@@ -242,6 +242,7 @@ S3method("summary", "purtest")
 S3method("print", "summary.purtest")
 # pwaldtest
 S3method("pwaldtest", "plm")
+S3method("pwaldtest", "pvcm")
 # detect.lindep, alias
 S3method("detect.lindep", "matrix")
 S3method("detect.lindep", "data.frame")

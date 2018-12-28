@@ -30,6 +30,7 @@ Changes in version 1.7-0
     a pure numeric is returned, not an 'illegal' pseries anymore (these models 
     compress data where having an index/pseries is useless and misleading).
   * Between and Within methods for matrices are now exported.
+  * pwaldtest.pcvm: new method for random pvcm models; used in summary.pvcm.
   * plm object: gained element 'weights' if weighted estimation was performed.
   * groupGenerics now used for 'pseries' objects, implemented as a wrapper 
     for methods in groups 'Math', 'Ops' and 'Complex' (see ?groupGeneric).

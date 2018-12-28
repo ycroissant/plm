@@ -19,3 +19,11 @@ class(zr$residuals)
 print(zw$coefficients)
 class(zw$coefficients)
 summary(zr)
+
+
+## Stata example:
+## http://www.stata.com/manuals/xtxtrc.pdf
+## replicate Stata's example:
+# dat <- haven::read_dta("http://www.stata-press.com/data/r15/invest2.dta")
+# pvcm(invest ~ market + stock, data = dat, index = c("company", "time"), model = "random")
+

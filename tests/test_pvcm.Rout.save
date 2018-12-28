@@ -1,5 +1,5 @@
 
-R version 3.5.0 (2018-04-23) -- "Joy in Playing"
+R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
 Copyright (C) 2018 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -941,7 +941,16 @@ unemp         0.0049513 -0.002347 -0.0018884  0.0051148  0.00012953
 Total Sum of Squares: 19352
 Residual Sum of Squares: 12.785
 Multiple R-Squared: 0.99934
+Chisq: 946.626 on 4 DF, p-value: < 2.22e-16
+> 
+> 
+> ## Stata example:
+> ## http://www.stata.com/manuals/xtxtrc.pdf
+> ## replicate Stata's example:
+> # dat <- haven::read_dta("http://www.stata-press.com/data/r15/invest2.dta")
+> # pvcm(invest ~ market + stock, data = dat, index = c("company", "time"), model = "random")
+> 
 > 
 > proc.time()
    user  system elapsed 
-   1.23    0.21    1.42 
+   1.57    0.26    1.81 

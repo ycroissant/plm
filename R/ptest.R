@@ -538,6 +538,28 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
   return(res)
 }
 
+pwaldtest.pvcm <- function(x, ...) {
+  model <- describe(x, "model")
+  if(!model == "random") stop("pwaldtest.pvcm only applicable to 'random' pvcm objects")
+  
+  coefs_wo_int <- x$coefficients[setdiff(names(x$coefficients), "(Intercept)")]
+  stat <- as.numeric(crossprod(solve(vcov(x)[names(coefs_wo_int), names(coefs_wo_int)], coefs_wo_int), coefs_wo_int))
+  names(stat) <- "Chisq"
+  df1 <- length(coefs_wo_int)
+  pval <- pchisq(stat, df = df1, lower.tail = FALSE)
+  parameter <- c(df = df1)
+  method <- "Wald test"
+  
+  res <- list(data.name = data.name(x),
+              statistic = stat,
+              parameter = parameter,
+              p.value   = pval,
+              method    = method
+  )
+  class(res) <- "htest"
+  return(res)
+}
+
 pwaldtest.default <- function(x, ...) {
   pwaldtest.plm(x, ...)
 }

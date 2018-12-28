@@ -363,7 +363,7 @@ Warning: use of 'dynformula' is deprecated, use a multi-part formula instead
 log(y) ~ lag(log(y), 1) + log(x1) + lag(log(x1), 1) + lag(log(x1), 
     2) + log(x2) + lag(log(x2), 1) + lag(log(x2), 2) + diff(log(x3)) + 
     diff(log(x3), 1) + diff(log(x3), 2)
-<environment: 0x00000000079cc860>
+<environment: 0x00000000079c4fe0>
 > 
 > 
 > 
@@ -12364,6 +12364,7 @@ unemp        0.00016044
 Total Sum of Squares: 21431
 Residual Sum of Squares: 36.691
 Multiple R-Squared: 0.99829
+Chisq: 434.623 on 6 DF, p-value: < 2.22e-16
 >              
 > ## Not run: 
 > ##D # replicate Swamy (1970), p. 166, table 5.2
@@ -13583,7 +13584,7 @@ attr(,"se")
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  18.13 1.03 19.28 NA NA 
+Time elapsed:  15.28 1.15 16.52 NA NA 
 > grDevices::dev.off()
 null device 
           1 

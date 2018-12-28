@@ -212,6 +212,7 @@ pvcm.random <- function(formula, data, effect){
 summary.pvcm <- function(object,...){
   model <- describe(object, "model")
   if (model == "random"){
+    object$waldstatistic <- pwaldtest(object)
     std.err <- sqrt(diag(vcov(object)))
     b <- object$coefficients
     z <- b/std.err
@@ -254,5 +255,12 @@ print.summary.pvcm <- function(x, digits = max(3, getOption("digits") - 2),
   cat(paste("Total Sum of Squares: ", signif(x$tss, digits), "\n", sep=""))
   cat(paste("Residual Sum of Squares: ", signif(x$ssr, digits), "\n", sep=""))
   cat(paste("Multiple R-Squared: ", signif(x$rsqr, digits), "\n", sep=""))
+  if (model == "random"){
+    waldstat <- x$waldstatistic
+    cat(paste("Chisq: ",signif(waldstat$statistic),
+              " on ",waldstat$parameter,
+              " DF, p-value: ",format.pval(waldstat$p.value,digits=digits), "\n", sep=""))
+  }
   invisible(x)
 }
+
