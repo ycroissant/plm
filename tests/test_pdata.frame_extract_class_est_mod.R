@@ -27,13 +27,13 @@ nrow(pGrunfeld[pGrunfeld$inv == 317.60, ])  # operation works on pdata.frame as 
 mod <- plm(inv ~ value + capital, data=pGrunfeld, model = "pooling")
 class(mod$model) # 'pseries' appeared twice before rev. 242
 if (!all(class(mod$model$inv) == c("pseries", "numeric"))) stop("wrong classes (or too few/many")
-if (!(length(class(mod$model$inv)) == 2 && class(mod$model$inv) == c("pseries", "numeric"))) warning("class(es) are wrong!")
+if (!(length(class(mod$model$inv)) == 2 && all(class(mod$model$inv) == c("pseries", "numeric")))) warning("class(es) are wrong!")
 
 
 df <- as.data.frame(mod$model)
 class(df)
 class(df$inv) # 'pseries' apperead two before rev. 242
-if (!(length(class(df$inv)) == 2 && class(df$inv) == c("pseries", "numeric"))) warning("class(es) are wrong!")
+if (!(length(class(df$inv)) == 2 && all(class(df$inv) == c("pseries", "numeric")))) warning("class(es) are wrong!")
 
 
 

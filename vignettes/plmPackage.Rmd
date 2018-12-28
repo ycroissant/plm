@@ -78,7 +78,9 @@ two-dimensional data, especially in the case of unbalanced panels.
 
 This paper is organized as follows: Section \@ref(the-linear-panel-model)
 presents a very short overview of the typical model
-taxonomy^[Comprehensive treatments are to be found in many econometrics textbooks, e.g. @BALT:2005, @BALT:2013 or @WOOL:02, @WOOL:2010: the reader is referred to these, especially to the first 9 chapters of @BALT:2005, @BALT:2013.].
+taxonomy^[Comprehensive treatments are to be found in many econometrics textbooks,
+e.g. @BALT:2005, @BALT:2013 or @WOOL:02, @WOOL:2010: the reader is referred to
+these, especially to the first 9 chapters of @BALT:2005, @BALT:2013.].
 Section \@ref(software-approach) discusses the
 software approach used in the package. The next three sections present
 the functionalities of the package in more detail: data management
@@ -1226,12 +1228,10 @@ A model with individual effects has composite errors that are serially
 correlated by definition. The presence of the time-invariant error
 component^[Here we treat fixed and random effects alike, as components of the 
 error term, according with the modern approach in econometrics (see @WOOL:02, 
-@WOOL:2010).]
-gives rise to serial
-correlation which does not die out over time, thus standard tests
-applied on pooled data always end up rejecting the null of spherical
-residuals^[Neglecting time effects may also lead to serial correlation in 
-residuals (as observed in @WOOL:02 10.4.1).].
+@WOOL:2010).] gives rise to serial correlation which does not die out over 
+time, thus standard tests applied on pooled data always end up rejecting the
+null of spherical residuals^[Neglecting time effects may also lead to serial
+correlation in residuals (as observed in @WOOL:02 10.4.1).].
 There may also be serial correlation of the
 "usual" kind in the idiosyncratic error terms, e.g. as an AR(1)
 process. By "testing for serial correlation" we mean testing for
@@ -1387,7 +1387,7 @@ the `nlme` package (see Section \@ref(plm-versus-nlme-and-lme4)).
 
 A general testing procedure for serial correlation in fixed effects
 (FE), random effects (RE) and pooled-OLS
-panel models alike can be based on considerations in \citep[10.7.2]{WOOL:02}.
+panel models alike can be based on considerations in @WOOL:02, 10.7.2.
 
 Recall that `plm` model objects are the result of OLS
 estimation performed on "demeaned" data, where, in the case of
@@ -1481,7 +1481,7 @@ The test is applicable to any FE panel model, and in particular to
 ### Wooldridge's first-difference-based test
 
 In the context of the first difference model, 
-\citet[10.6.3]{WOOL:02} proposes a serial correlation test that can
+@WOOL:02, 10.6.3 proposes a serial correlation test that can
 also be seen as a specification test to choose the most efficient
 estimator between fixed effects (`within`) and first difference
 (`fd`).
@@ -1836,9 +1836,9 @@ heteroskedasticity but no serial correlation, *i.e.*
 while `"white2"` is `"white1"` restricted to a common
 variance inside every group, estimated as
 $\sigma_i^2=\sum_{t=1}^T{\hat{u}_{it}^2}/T$, so that $\Omega_i=I_T \otimes
-\sigma_i^2$ (see \citet[13.7.1--2]{GREE:03} and
-\citet[10.7.2]{WOOL:02}; `"arellano"`  (see ibid. and the original ref. @AREL:87) allows a fully general structure
-w.r.t. heteroskedasticity and serial correlation:
+\sigma_i^2$ (see @GREE:03, 13.7.1--2 and
+@WOOL:02, 10.7.2; `"arellano"` (see ibid. and the original ref. @AREL:87) allows
+a fully general structure w.r.t. heteroskedasticity and serial correlation:
 
 \begin{equation}
  (\#eq:omegaArellano)
@@ -1985,7 +1985,7 @@ until convergence of two-step optimization of the relevant likelihood.
 
 The *fixed/random effects* terminology in econometrics is often
 recognized to be misleading, as both are treated as random variates in
-modern econometrics (see e.g. @WOOL:02 10.2.1). It has been
+modern econometrics (see, e.g., @WOOL:02 10.2.1). It has been
 recognized since Mundlak's classic paper (@MUND:78) that the
 fundamental issue is whether the unobserved effects are correlated
 with the regressors or not. In this last case, they can safely be left
