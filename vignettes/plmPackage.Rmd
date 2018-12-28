@@ -1445,7 +1445,7 @@ the `pbgtest` allows testing for higher-order serial correlation,
 which might turn useful, e.g., on quarterly data. Analogously, from
 the point of view of software, as the functions are simple wrappers
 towards `bgtest` and `dwtest`, all arguments from the latter two apply
-and may be passed on through the `...` argument.
+and may be passed on through the ellipsis (the `...` argument).
 
 
 ### Wooldridge's test for serial correlation in "short" FE panels
@@ -1872,7 +1872,10 @@ The main use of `vcovHC` is together with testing functions from the
 `lmtest` and `car` packages. These typically allow passing the
 `vcov` parameter either as a matrix or as a function 
 (see @ZEIL:04). If one is happy with the defaults, it is easiest to
-pass the function itself:
+pass the function itself^[For `coeftest` set `df = Inf` to have the coefficients'
+tests be performed with standard normal distribution instead of t distribution
+as we deal with a random effects model here. For these types of models, the 
+precise distribution of the coefficients estimates is unknown]:
 
 ```{r }
 library("lmtest")
