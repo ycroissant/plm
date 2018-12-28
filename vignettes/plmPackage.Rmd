@@ -316,8 +316,14 @@ and then to use the `pdata.frame` in the estimation functions.
 - `pvcm`: estimation of models with variable coefficients,
 - `pgmm`: estimation of generalized method of moments models,
 - `pggls`: estimation of general feasible generalized least squares
-  models.
-
+  models,
+- `pmg`: estimators for mean groups (MG), demeaned MG (DMG) and common 
+   correlated effects MG (CCEMG) for heterogeneous panel models,
+- `pcce`: estimators for common correlated effects mean groups (CCEMG) and
+   pooled (CCEP) for panel data with common factors,
+- `pldv`: panel estimators for limited dependent variables.
+   
+   
 The interface of these functions is consistent with the `lm()`
 function. Namely, their first two arguments are `formula` and
 `data` (which should be a `data.frame` and is
