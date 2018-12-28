@@ -363,7 +363,7 @@ Warning: use of 'dynformula' is deprecated, use a multi-part formula instead
 log(y) ~ lag(log(y), 1) + log(x1) + lag(log(x1), 1) + lag(log(x1), 
     2) + log(x2) + lag(log(x2), 1) + lag(log(x2), 2) + diff(log(x3)) + 
     diff(log(x3), 1) + diff(log(x3), 2)
-<environment: 0x00000000079c4fe0>
+<environment: 0x00000000079c4f20>
 > 
 > 
 > 
@@ -12383,7 +12383,7 @@ Chisq: 434.623 on 6 DF, p-value: < 2.22e-16
 > 
 > ### Name: pwaldtest
 > ### Title: Wald-style Chi-square Test and F Test
-> ### Aliases: pwaldtest pwaldtest.plm
+> ### Aliases: pwaldtest pwaldtest.plm pwaldtest.pvcm
 > ### Keywords: htest
 > 
 > ### ** Examples
@@ -13584,7 +13584,7 @@ attr(,"se")
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  15.28 1.15 16.52 NA NA 
+Time elapsed:  15.81 1.19 17.1 NA NA 
 > grDevices::dev.off()
 null device 
           1 

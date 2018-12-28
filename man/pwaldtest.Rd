@@ -1,13 +1,14 @@
 \name{pwaldtest}
 \alias{pwaldtest}
-\alias{pwaldtest.plm} 
+\alias{pwaldtest.plm}
+\alias{pwaldtest.pvcm}
 % \alias{pwaldtest.panelmodel} - needed?
 % \alias{pwaldtest.formula} % not implemented (yet? - do we need it?)
 
 \title{Wald-style Chi-square Test and F Test}
 
 \description{
-Wald-style chi-square test and F test of slope coefficients being zero jointly, 
+Wald-style Chi-square test and F test of slope coefficients being zero jointly, 
 including robust versions of the tests.
 }
 
@@ -16,11 +17,13 @@ pwaldtest(x, ...)
 \method{pwaldtest}{plm}(x, test = c("Chisq", "F"), vcov = NULL, 
           df2adj = (test == "F" && !is.null(vcov) && missing(.df2)),
           .df1, .df2, \dots)
+\method{pwaldtest}{pvcm}(x, \dots)
 % \method{pwaldtest}{formula}(x, \dots)  % not implemented (yet? - do we need it?)
 }
 
 \arguments{
-\item{x}{an estimated model of which the coefficients should be tested (usually of class \code{"plm"}),} % maybe also class "panelmodel"?
+\item{x}{an estimated model of which the coefficients should be tested (usually 
+of class \code{"plm"}/\code{"pvcm"}),} % maybe also class "panelmodel"?
 
 \item{test}{a character, indicating the test to be performed, may be either \code{"Chisq"} or
 \code{"F"} for the Wald-style Chi-square test or F test, respectively, }
@@ -48,11 +51,15 @@ of freedom parameter for the F test (usually not used),}
 \details{
 
 
-\code{pwaldtest} can be used stand--alone with a plm object. It is also used in 
-\code{\link{summary.plm}} to produce the F statistic. % TODO: or Chi-square statistic, once "activated" in summary.plm and if Chi-sq is used for RE models.
+\code{pwaldtest} can be used stand--alone with a plm object or a pvcm object (for
+the latter only the 'random' type is valid and no further arguments are processed).
+It is also used in \code{\link{summary.plm}} to produce the F statistic and
+the Chi-square statistic for the joint test of coefficients.
 
-\code{pwaldtest} performs the test if the slope coefficients of a panel regression are jointly zero.
-It does not perform general purpose Wald-style tests (for those, see \code{\link[lmtest]{waldtest}} (from package \CRANpkg{lmtest}) or \code{linearHypothesis} (from \CRANpkg{car})).
+\code{pwaldtest} performs the test if the slope coefficients of a panel
+regression are jointly zero. It does not perform general purpose Wald-style
+tests (for those, see \code{\link[lmtest]{waldtest}} (from package 
+\CRANpkg{lmtest}) or \code{linearHypothesis} (from \CRANpkg{car})).
 
 If a user specified variance-covariance matrix/function is given in 
 argument \code{vcov}, the robust version of the tests are carried out. 
