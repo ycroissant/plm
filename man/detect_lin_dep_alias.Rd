@@ -39,7 +39,7 @@ detect.lindep(object, \dots)
   \item{data}{for \code{alias.pFormula} only: model frame (created by plm's \code{model.frame}
     method),}
   \item{model, effect}{for \code{alias} only: model and effect to specify the data 
-  transformation, see \code{\link[plm]{plm}},}
+  transformation, see \code{\link{plm}},}
   \item{\dots}{further arguments.}
 }
 
@@ -72,7 +72,7 @@ which indicates any such aliased coefficients by a named logical.
 Both functions, \code{detect.lindep} and \code{alias}, help to detect
 linear dependence and accomplish almost the same: \code{detect.lindep}
 is a stand alone implementation while \code{alias} is a wrapper around
-\code{\link[stats]{alias.lm}}, extending the \code{alias} generic to
+\code{\link[stats:alias]{alias.lm}}, extending the \code{alias} generic to
 classes \code{"plm"} and \code{"pdata.frame"}.  \code{alias} hinges on the
 availability of the package \CRANpkg{MASS} on the system. Not all
 arguments of \code{alias.lm} are supported.  Output of \code{alias} is
@@ -87,7 +87,7 @@ column numbers of the linear dependent columns in the object after data
 transformation, if any are present. \code{NULL} if no linear dependent
 columns are detected.
 
-For \code{alias}: return value of \code{\link[stats]{alias.lm}} run on
+For \code{alias}: return value of \code{\link[stats:alias]{alias.lm}} run on
 the (quasi-)demeaned model, i. e. the information outputted applies to
 the transformed model matrix, not the original data.  }
 
@@ -97,9 +97,9 @@ Boston, sec. 7-2, pp. 206--211.
 }
 
 \seealso{
-  \code{\link[stats]{alias}}, 
-  \code{\link[stats]{model.matrix}} and especially \code{plm}'s \code{\link[plm]{model.matrix}} for
-  (transformed) model matrices, \code{\link[plm]{model.frame}}.
+  \code{\link[stats:alias]{alias}}, 
+  \code{\link[stats]{model.matrix}} and especially \code{plm}'s \code{\link{model.matrix}} for
+  (transformed) model matrices, plm's \code{\link{model.frame}}.
 }
 
 \note{

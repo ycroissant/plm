@@ -89,9 +89,9 @@ An object of class \code{"htest"}.
 
 \seealso{
 
-\code{\link[plm]{vcovHC}} for an example of the vcovXX functions, a robust 
+\code{\link{vcovHC}} for an example of the vcovXX functions, a robust 
 estimation for the variance--covariance matrix;
-\code{\link[plm]{summary.plm}}
+\code{\link{summary.plm}}
 }
 
 \author{Yves Croissant (initial implementation) and Kevin Tappe (extensions: vcov argument and F test's df2 adjustment)}

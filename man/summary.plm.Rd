@@ -33,7 +33,7 @@ extends the plm object it is run on with various information about the estimated
 
 \value{
 An object of class \code{c("summary.plm", "plm", "panelmodel")}. Some of its elements are
-carried over from the associated plm object and described there (\code{\link[plm]{plm}}).
+carried over from the associated plm object and described there (\code{\link{plm}}).
 The following elements are new or changed relative to the elements of a plm object:
 
 \item{fstatistic}{'htest' object: joint test of significance of coefficients (F or Chi-square test) (robust statistic in case of supplied
@@ -49,13 +49,13 @@ argument \code{vcov}, see \code{\link{pwaldtest}} for details),}
 }
 
 \seealso{
-\code{\link[plm]{plm}} for estimation of various models; 
-\code{\link[plm]{vcovHC}} for an example of a robust estimation of variance--covariance matrix; 
-\code{\link[plm]{r.squared}} for the function to calculate R-squared; 
-\code{\link[stats]{print.htest}} for some information about class "htest";
-\code{\link[plm]{fixef}} to compute the fixed effects for "within" (=fixed effects) models and
-\code{\link[plm]{within_intercept}} for an "overall intercept" for such models;
-\code{\link[plm]{pwaldtest}}
+\code{\link{plm}} for estimation of various models; 
+\code{\link{vcovHC}} for an example of a robust estimation of variance--covariance matrix; 
+\code{\link{r.squared}} for the function to calculate R-squared; 
+\code{\link[stats:print.power.htest]{print.htest}} for some information about class "htest";
+\code{\link{fixef}} to compute the fixed effects for "within" (=fixed effects) models and
+\code{\link{within_intercept}} for an "overall intercept" for such models;
+\code{\link{pwaldtest}}
 
 }
 

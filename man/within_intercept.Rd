@@ -31,7 +31,7 @@ one also gets the associated standard error and it is possible to get an overall
 effect models.
 
 Users can set argument \code{vcov} to a function to calculate a specific (robust) variance--covariance matrix and get the 
-respective (robust) standard error for the overall intercept, e.g. the function \code{\link[plm]{vcovHC}}, 
+respective (robust) standard error for the overall intercept, e.g. the function \code{\link{vcovHC}}, 
 see examples for usage. Note: The argument \code{vcov} must be a function, not a matrix, because the model 
 to calculate the overall intercept for the within model is different from the within model itself.
 }

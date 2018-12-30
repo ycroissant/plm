@@ -45,8 +45,8 @@ placed in the first column, see also \bold{Examples} for usage.
 % }
 
 \seealso{
-  \code{plm}'s \code{\link[plm]{model.matrix}} for (transformed) model matrix and the
-  corresponding \code{\link[plm]{model.frame}} method to construct a model frame.
+  \code{plm}'s \code{\link{model.matrix}} for (transformed) model matrix and the
+  corresponding \code{\link{model.frame}} method to construct a model frame.
 }
 
 \examples{

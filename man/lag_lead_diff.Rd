@@ -82,11 +82,11 @@ return values will occur for non-consecutive time periods per individual ("holes
 % }
 
 \seealso{
-To check if the time periods are consecutive per individual, see \code{\link[plm]{is.pconsecutive}}.
+To check if the time periods are consecutive per individual, see \code{\link{is.pconsecutive}}.
 
-For further function for 'pseries' objects: \code{\link[plm]{between}}, \code{\link[plm]{Between}}, 
-\code{\link[plm]{Within}}, \code{\link[plm]{summary.pseries}}, \code{\link[plm]{print.summary.pseries}}, 
-\code{\link[plm]{as.matrix.pseries}}.
+For further function for 'pseries' objects: \code{\link{between}}, \code{\link{Between}}, 
+\code{\link{Within}}, \code{\link{summary.pseries}}, \code{\link{print.summary.pseries}}, 
+\code{\link{as.matrix.pseries}}.
 }
 
 \examples{
