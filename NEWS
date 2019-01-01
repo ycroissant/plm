@@ -27,6 +27,7 @@ Changes in version 1.7-0
     performed for a matrix without index attribute.
   * make.pconsecutive for pseries: for consecutive pseries, the argument
     'balanced' was not respected.
+  * pwfdtest: fixed error when one individual has one observation only.
   * pmodel.response, fitted.plm, residuals.plm: for "between" and "fd" models, 
     a pure numeric is returned, not an 'illegal' pseries anymore (these models 
     compress data where having an index/pseries is useless and misleading).

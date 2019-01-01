@@ -229,8 +229,8 @@ pwartest.panelmodel <- function(x, ...) {
   rho.H0 <- -1/(t.-1)
   myH0 <- paste("FEres.1 = ", as.character(rho.H0), sep="")
   
-  ## test H0: rho=rho.H0 with HAC
-  myvcov <- function(x) vcovHC(x, method = "arellano", ...) # more params may be passed via ellipsis
+  ## test H0: rho=rho.H0 with HAC, more params may be passed via ellipsis
+  myvcov <- function(x) vcovHC(x, method = "arellano", ...)
   
   # calc F stat with restriction rho.H0 and robust vcov
   FEARstat <- ((coef(auxmod)["FEres.1"] - rho.H0)/sqrt(myvcov(auxmod)["FEres.1", "FEres.1"]))^2
@@ -760,34 +760,34 @@ pwfdtest.panelmodel <- function(x, ..., h0 = c("fd", "fe")) {
   ## fetch dimensions and adapt to those of indices
   pdim <- pdim(x)
   n <- pdim$nT$n
+  Ti_minus_one <- pdim$Tint$Ti-1
 
-  ## (re)create groupwise-separated index from 1 to nT 
-  ## - drop first time period
-  ## - correct Ti=Ti-1
-  Ti <- pdim$Tint$Ti-1
+  ## generate new individual index: drop one observation per individual
+  ## NB: This is based on the assumption that the estimated FD model performes
+  ##     its diff-ing row-wise (it currently does so). If the diff-ing for FD
+  ##     is changed to diff-ing based on time dimension, this part about index
+  ##     creation needs to be re-worked because more than 1 observation per
+  ##     individual can be dropped
+    red_id <- integer()
+    for(i in 1:n) {
+      red_id <- c(red_id, rep(i, Ti_minus_one[i]))
+    }
+    # additional check
+    # (but should error earlier already as the FD model should be nonestimable)
+    if(length(red_id) == 0)
+      stop("only individuals with one observation in original data: test not feasible")
   
-  redind <- vector("list", n)
-  tfirst <- 0
-  for(i in 1:n) {
-    redind[[i]] <- (tfirst+2):(tfirst+Ti[i]+1)
-    tfirst <- max(redind[[i]])
-  }
-  ## reduce indices by 1st time period
-  redind <- unlist(redind)
-  time <- time[redind]
-  id <- id[redind]
-
-  N <- length(FDres)
-  FDres.1 <- c(NA, FDres[1:(N-1)])
-  lagid <- id - c(NA, id[1:(N-1)])
-  FDres.1[lagid != 0] <- NA
-
-  ## make (panel) dataframe for auxiliary regression
-  auxdata <- as.data.frame(cbind(id, time))
-  auxdata$FDres <- FDres
-  auxdata$FDres.1 <- FDres.1
+  # make pdata.frame for auxiliary regression: time dimension is not relvant
+  # as the first observation of each individual was dropped -> let time dimension
+  # be created (is not related to the original times anymore)
+  auxdata <- pdata.frame(as.data.frame(cbind(red_id, FDres)), index = "red_id")
+  
+  # lag residuals by row (as the FD model diffes by row)
+  # NB: need to consoder change to shift = "time" if behaviour of FD model is changed
+  auxdata[["FDres.1"]] <- lag(auxdata[["FDres"]], shift = "row")
+  
   ## pooling model FDres vs. lag(FDres), with intercept (might as well do it w.o.)
-  auxmod <- plm(FDres ~ FDres.1, data = na.omit(auxdata), model = "pooling")
+  auxmod <- plm(FDres ~ FDres.1, data = auxdata, model = "pooling")
 
   switch(match.arg(h0), 
              fd = {h0des <- "differenced"
@@ -801,8 +801,8 @@ pwfdtest.panelmodel <- function(x, ..., h0 = c("fd", "fe")) {
 
   myH0 <- paste("FDres.1 = ", as.character(rho.H0), sep="")
   
-  ## test H0: rho=rho.H0 with HAC
-  myvcov <- function(x) vcovHC(x, method = "arellano", ...) # more params may be passed via ellipsis
+  ## test H0: rho=rho.H0 with HAC, more params may be passed via ellipsis
+  myvcov <- function(x) vcovHC(x, method = "arellano", ...) 
 
   # calc F stat with restriction rho.H0 and robust vcov
   FDARstat <- ((coef(auxmod)["FDres.1"] - rho.H0)/sqrt(myvcov(auxmod)["FDres.1", "FDres.1"]))^2
