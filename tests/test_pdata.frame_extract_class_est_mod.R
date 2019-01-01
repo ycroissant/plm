@@ -32,7 +32,7 @@ if (!(length(class(mod$model$inv)) == 2 && all(class(mod$model$inv) == c("pserie
 
 df <- as.data.frame(mod$model)
 class(df)
-class(df$inv) # 'pseries' apperead two before rev. 242
+class(df$inv) # 'pseries' apperead twice before rev. 242
 if (!(length(class(df$inv)) == 2 && all(class(df$inv) == c("pseries", "numeric")))) warning("class(es) are wrong!")
 
 

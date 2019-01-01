@@ -190,6 +190,7 @@ plm.fit <- function(formula, data, model, effect, random.method,
         # extract the matrix of instruments if necessary (means here that we
         # have a multi-parts formula)
         if (length(formula)[2] > 1){
+            if(!is.null(model.weights(data)) || any(w != 1)) stop("argument 'weights' not yet implemented for instrumental variable models")
             if (length(formula)[2] == 2){
                 W <- model.matrix(formula, data, rhs = 2,
                                   model = model, effect = effect,
