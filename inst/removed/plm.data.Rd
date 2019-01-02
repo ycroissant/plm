@@ -4,8 +4,10 @@
 \title{Data Frame Special Format for Panel Data (Deprecated)}
 
 \description{
-This function was once used to transform a data frame in a format suitable for using with the estimation functions of \code{plm}.
-New code should rather use the more versatile function \code{\link{pdata.frame}}.
+  This function was once used to transform a data frame in a format
+suitable for using with the estimation functions of \code{plm}.  New
+code should rather use the more versatile function
+\code{\link{pdata.frame}}.
 }
 
 \usage{

@@ -258,7 +258,3 @@ print(summary(pccemgmod))
 print(summary(pmgccemgmod))
 
 
-## further run tests without intercept
-plm(inv ~ 0 + value + capital + year, data = Grunfeld, model = "between")
-plm(inv ~ 0 + value + capital + year, data = Grunfeld, model = "random")
-plm(inv ~ 0 + value + capital + year, data = Grunfeld, model = "within")

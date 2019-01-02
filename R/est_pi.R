@@ -7,7 +7,7 @@ aneweytest <-  function(formula, data, subset, na.action, index = NULL,  ...){
     data <- eval(mf, parent.frame())
     # estimate the within model without instrument and extract the fixed
     # effects
-    formula <- pFormula(formula)
+    formula <- as.Formula(formula)
     mf$formula <- formula(formula, rhs = 1)
     id <- index(data, "id")
     time <- index(data, "time")
@@ -31,8 +31,9 @@ aneweytest <-  function(formula, data, subset, na.action, index = NULL,  ...){
     .resid <- split(resid(ht), time)
   
     # extract the covariates, and isolate time-invariant covariates
-    X <- model.matrix(formula, data, model = "pooling", rhs = 1, lhs = 1)[, - 1, drop = FALSE]
-    cst <- attr(model.matrix(formula, data, model = "within", rhs = 1, lhs = 1), "constant")
+    X <- model.matrix(data, model = "pooling", rhs = 1, lhs = 1)[, - 1, drop = FALSE]
+    cst <- attr(model.matrix(data, model = "within", rhs = 1, lhs = 1), "constant")
+
     # get constant columns and remove the intercept
     if (length(cst) > 0) cst <- cst[- match("(Intercept)", cst)]
     if (length(cst) > 0){
@@ -84,7 +85,7 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
     data <- eval(mf, parent.frame())
     # estimate the within model without instrument and extract the fixed
     # effects
-    formula <- pFormula(formula)
+    formula <- as.Formula(formula)
     mf$formula <- formula(formula, rhs = 1)
     id <- index(data, "id")
     time <- index(data, "time")
@@ -99,8 +100,8 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
     Y <- split(y, time)
     Y <- lapply(Y, function(x) x - mean(x))
     # extract the covariates, and isolate time-invariant covariates
-    X <- model.matrix(formula, data, model = "pooling", rhs = 1, lhs = 1)[, -1, drop = FALSE]
-    cst <- attr(model.matrix(formula, data, model = "within", rhs = 1, lhs = 1), "constant")
+    X <- model.matrix(data, model = "pooling", rhs = 1, lhs = 1)[, -1, drop = FALSE]
+    cst <- attr(model.matrix(data, model = "within", rhs = 1, lhs = 1), "constant")
     # get constant columns and remove the intercept
     if (length(cst) > 0) cst <- cst[- match("(Intercept)", cst)]
     if (length(cst) > 0){

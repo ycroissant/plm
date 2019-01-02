@@ -1,4 +1,51 @@
-# pdata.frame
+## pdata.frame and pseries are adaptations of respectively data.frame
+## and vector for panel data. An index attribute is added to both,
+## which is a data.frame containing the indexes. There is no pseries
+## function, it is the class of series extracted from a
+## pdata.frame. index and pdim functions are used to extract
+## respectively the data.frame containing the index and the dimensions
+## of the panel
+
+## pdata.frame : 
+## - $<-
+## - [
+## - $    
+## - [[
+## - print
+## - as.list
+## - as.data.frame
+
+## pseries :
+## - print
+## - as.matrix
+## - plot
+## - summary
+## - plot.summary
+## - print.summary
+## - is.pseries
+
+## pdim :
+## - pdim.default
+## - pdim.data.frame
+## - pdim.pdata.frame
+## - pdim.pseries
+## - pdim.panelmodel
+## - pdim.pgmm
+## - print.pdim
+ 
+## index :
+## - index.pindex    
+## - index.pdata.frame
+## - index.pseries
+## - index.panelmodel
+
+fancy.row.names <- function(index, sep = "-") {
+  if (length(index) == 2) {result <- paste(index[[1]], index[[2]], sep = sep)}
+  # this in the order also used for sorting (group, id, time):
+  if (length(index) == 3) {result <- paste(index[[3]], index[[1]], index[[2]], sep = sep)}
+  return(result)
+}
+
 
 pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
                         stringsAsFactors = default.stringsAsFactors(),
@@ -51,7 +98,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
                               if (is.factor(x) || is.character(x)) {
                                 all(duplicated(x[!is.na(x)])[-1L])
                               } else {
-                                x[!is.finite(x)] <- NA # infinite elements set to NA only for this check
+                                x[! is.finite(x)] <- NA # infinite elements set to NA only for this check
                                 var(as.numeric(x), na.rm = TRUE) == 0
                               }
                             })
@@ -64,7 +111,8 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
           cat(paste0("This series is constant and has been removed: ", cst.serie, "\n"))
         }
         else{
-          cat(paste0("These series are constants and have been removed: ", paste(cst.serie, collapse = ", "), "\n"))
+            cat(paste0("These series are constants and have been removed: ",
+                       paste(cst.serie, collapse = ", "), "\n"))
         }
       }
       x <- x[, !cst.check]
@@ -99,7 +147,8 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
         id <- index
         time <- NULL
     }
-    # if the length of index is 2, the first element is id, the second is time
+    # if the length of index is 2, the first element is id, the second
+    # is time
     if (length(index) == 2){
         id <- index[1]
         time <- index[2]
@@ -115,9 +164,11 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
         time.name <- time
     }
     
-    # if index is numeric, this indicats a balanced panel with no. of individuals equal to id.name
+    # if index is numeric, this indicats a balanced panel with no. of
+    # individuals equal to id.name
     if(is.numeric(id.name)){
-        if(!is.null(time.name)){warning("The time index (second element of 'index' argument) will be ignored\n")}
+        if(!is.null(time.name))
+            warning("The time index (second element of 'index' argument) will be ignored\n")
         N <- nrow(x)
         if( (N %% id.name) != 0){
             stop(paste0("unbalanced panel, in this case the individual index may not be indicated by an integer\n",
@@ -149,7 +200,6 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
         
         if (is.null(time.name)){
             # if no time index is supplied, add time variable automatically
-      
             # order data by individual index, necessary for the automatic
             # addition of time index to be succesfull if no time index was supplied
             x <- x[order(x[[id.name]]), ]
@@ -160,15 +210,17 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
                 time <- c(time, 1:Ti[i])
             }
             time.name <- "time"
-            if (time.name %in% names(x)) warning(paste0("column '", time.name, "' overwritten by time index"))
+            if (time.name %in% names(x))
+                warning(paste0("column '", time.name, "' overwritten by time index"))
             time <- x[[time.name]] <- as.factor(time)
         }
         else{
             # use supplied time index
-            if (!time.name %in% names(x)) stop(paste0("variable ", time.name, " does not exist (time index)"))
+            if (!time.name %in% names(x))
+                stop(paste0("variable ", time.name, " does not exist (time index)"))
             
             if (is.factor(x[[time.name]])){
-                time <- x[[time.name]] <- x[[time.name]][drop=TRUE] # drops unused levels of factor
+                time <- x[[time.name]] <- x[[time.name]][drop=TRUE]
             }
             else{
                 time <- x[[time.name]] <- as.factor(x[[time.name]])
@@ -176,10 +228,11 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
         }
     }
     
-    # if present, make group variable a factor (just like for id and time variables)
+    # if present, make group variable a factor (just like for id and
+    # time variables)
     if (!is.null(group.name)) {
         if (is.factor(x[[group.name]])){
-            group <- x[[group.name]] <- x[[group.name]][drop=TRUE] # drops unused levels of factor
+            group <- x[[group.name]] <- x[[group.name]][drop = TRUE]
         }
         else{
             group <- x[[group.name]] <- as.factor(x[[group.name]])
@@ -187,12 +240,13 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     }
     
     # sort by group (if given), then by id, then by time
-    if (! is.null(group.name)) x <- x[order(x[[group.name]], x[[id.name]], x[[time.name]]), ] # old: x <- x[order(id,time), ] 
+    if (! is.null(group.name)) x <- x[order(x[[group.name]], x[[id.name]], x[[time.name]]), ]
     else x <- x[order(x[[id.name]], x[[time.name]]), ]
 
-    # if requested: drop unused levels from factor variables
-    # (spare those serving for the index as their unused levels are dropped already
-    # (at least in the attribute "index" they need to be dropped b/c much code relies on it))
+    # if requested: drop unused levels from factor variables (spare
+    # those serving for the index as their unused levels are dropped
+    # already (at least in the attribute "index" they need to be
+    # dropped b/c much code relies on it))
     if (drop.unused.levels) {
         var.names <- setdiff(names(x), c(id.name, time.name, group.name))
         for (i in var.names){
@@ -211,9 +265,12 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     
     test_doub <- table(index[[1]], index[[2]], useNA = "ifany")
     if (anyNA(colnames(test_doub)) || anyNA(rownames(test_doub)))
-        cat(paste0("at least one couple (id-time) has NA in at least one index dimension in resulting pdata.frame\n to find out which, use e.g. table(index(your_pdataframe), useNA = \"ifany\")\n"))
+        cat(paste0("at least one couple (id-time) has NA in at least one index dimension",
+                   "in resulting pdata.frame\n to find out which, use e.g.",
+                   "table(index(your_pdataframe), useNA = \"ifany\")\n"))
     if (any(as.vector(test_doub[!is.na(rownames(test_doub)), !is.na(colnames(test_doub))]) > 1))
-        warning("duplicate couples (id-time) in resulting pdata.frame\n to find out which, use e.g. table(index(your_pdataframe), useNA = \"ifany\")")
+        warning(paste("duplicate couples (id-time) in resulting pdata.frame\n to find out which,",
+                      "use e.g. table(index(your_pdataframe), useNA = \"ifany\")"))
     
     if (row.names) {
         attr(x, "row.names") <- fancy.row.names(index)
@@ -475,7 +532,7 @@ as.data.frame.pdata.frame <- function(x, row.names = NULL, optional = FALSE, kee
       # make each column a pseries
       x <- lapply(x,
                   function(z){
-               #     names(z) <- row.names(x) # it does not seem possible to keep the names in the 'pseries' because the call to data.frame later deletes the names 
+                  #     names(z) <- row.names(x) # it does not seem possible to keep the names in the 'pseries' because the call to data.frame later deletes the names 
                     attr(z, "index") <- index
                     class(z) <- base::union("pseries", class(z))
                     return(z)
@@ -592,10 +649,8 @@ plot.pseries <- function(x, plot = c("lattice", "superposed"),
                    tindi <- tind[ind == unind[i]]
                    lines(x = tindi, y = scalefun(nxi),
                          col = col, lwd = lwd, ...)
-               }
-               
-           })
-    
+               }               
+           })    
 }
 
 summary.pseries <- function(object, ...) {
@@ -605,10 +660,15 @@ summary.pseries <- function(object, ...) {
         xm <- mean(object, na.rm = TRUE)
         Bid <-  Between(object, na.rm = TRUE)
         Btime <-  Between(object, effect = "time", na.rm = TRUE)
-        res <- structure(c(total = sumsq(object),
-                           between_id = sumsq(Bid),
-                           between_time = sumsq(Btime)), 
-                         class = c("summary.pseries", "numeric"))
+        ## res <- structure(c(total = sumsq(object),
+        ##                    between_id = sumsq(Bid),
+        ##                    between_time = sumsq(Btime)), 
+        ##                  class = c("summary.pseries", "numeric"))
+        res <- structure(c(total = sum( (na.omit(object) - mean(object, na.rm = TRUE)) ^ 2),
+                           between_id = sum( (na.omit(Bid) - mean(Bid, na.rm = TRUE)) ^ 2),
+                           between_time = sum( (na.omit(Btime) - mean(Btime, na.rm = TRUE)) ^ 2)), 
+                           class = c("summary.pseries", "numeric"))
+        
     } else {
         class(object) <- setdiff(class(object), c("pseries"))
         res <- summary(object, ...)
@@ -637,4 +697,136 @@ print.summary.pseries <- function(x, ...){
         class(x) <- setdiff(class(x), c("summary.pseries", special_treatment_vars))
         print(x, ...)
     }
+}
+
+is.pseries <- function(object) {
+ # checks if an object has the necessary features to qualify as a 'pseries'
+  res <- TRUE
+  if (!inherits(object, "pseries")) res <- FALSE
+  # class 'pseries' is always on top of basic class: min 2 classes needed, if 2 classes "pseries" needs to be first entry
+  if (!length(class(object)) >= 2L) res <- FALSE
+  if (length(class(object)) == 2L & class(object)[1] != "pseries") res <- FALSE
+  if (!has.index(object)) res <- FALSE
+  if (!any(c(is.numeric(object), is.factor(object), is.logical(object), 
+             is.character(object), is.complex(object)))) {
+    res <- FALSE
+  }
+  
+  return(res)
+}
+
+    
+## pdim 
+# Note: some parts of this code are copied verbatim to is.pbalanced()
+pdim <- function(x, ...){
+  UseMethod("pdim")
+}
+
+pdim.default <- function(x, y, ...){
+  if (length(x) != length(y)) stop("The length of the two vectors differs\n")
+  x <- x[drop = TRUE] # drop unused factor levels so that table() 
+  y <- y[drop = TRUE] # gives only needed combinations
+  z <- table(x,y)
+  Ti <- rowSums(z) # faster than: apply(z, 1, sum)
+  nt <- colSums(z) #              apply(z, 2, sum)
+  n <- nrow(z)
+  T <- ncol(z)
+  N <- length(x)
+  nT <- list(n = n, T = T, N = N)
+  id.names <- rownames(z)
+  time.names <- colnames(z)
+  panel.names <- list(id.names = id.names, time.names = time.names)
+  if (any(as.vector(z)==0)){
+    balanced <- FALSE
+  }
+  else balanced <- TRUE
+  if (any(as.vector(z) > 1)) stop("duplicate couples (id-time)\n")
+  Tint <- list(Ti = Ti, nt = nt)
+  z <- list(nT = nT, Tint = Tint, balanced = balanced, panel.names = panel.names)
+  class(z) <- "pdim"
+  z
+}  
+
+pdim.data.frame <- function(x, index = NULL, ...){
+  x <- pdata.frame(x, index)
+  index <- attr(x, "index")
+  id <- index[[1]]
+  time <- index[[2]]
+  pdim(id,time)
+}
+
+pdim.pdata.frame <- function(x,...){
+  index <- attr(x, "index")
+  pdim(index[[1]],index[[2]])
+}
+
+pdim.pseries <- function(x,...) {
+  index <- attr(x, "index")
+  pdim(index[[1]], index[[2]])
+}
+
+pdim.panelmodel <- function(x, ...){
+  x <- model.frame(x)
+  pdim(x)
+}
+
+pdim.pgmm <- function(x, ...){
+## pgmm is also class panelmodel, but take advantage of the pdim attribute in it
+  attr(x, "pdim")
+}
+
+print.pdim <- function(x, ...){
+  if (x$balanced){
+    cat("Balanced Panel: ")
+    cat(paste("n = ",x$nT$n,", ",sep=""))
+    cat(paste("T = ",x$nT$T,", ",sep=""))
+    cat(paste("N = ",x$nT$N,"\n",sep=""))
+  }
+  else{
+    cat("Unbalanced Panel: ")
+    cat(paste("n = ",x$nT$n,", ",sep=""))
+    cat(paste("T = ",min(x$Tint$Ti),"-",max(x$Tint$Ti),", ",sep=""))
+    cat(paste("N = ",x$nT$N,"\n",sep=""))
+  }
+}
+
+## Index methods
+
+index.pindex <- function(x, which = NULL, ...){
+    if (is.null(which)) which <- names(x)
+    else{
+        posindividual <- match("individual", which)
+        if (! is.na(posindividual)) which[posindividual] <- "id"
+    }
+    if (length(which) >  3) stop("the length of argument 'which' should be at most 3")
+    if (is.numeric(which)){
+        if (! all(which %in% 1:3))
+            stop("if integer, argument 'which' should contain only 1, 2 and/or 3")
+        if (ncol(x) == 2 & 3 %in% which) stop("no grouping variable, only 2 indexes")
+        which <- names(x)[which]
+    }
+    nindex <- names(x)
+    gindex <- c("id", "time")
+    if (ncol(x) == 3) gindex <- c(gindex, "group")
+    if (any(! which %in% c(nindex, gindex))) stop("unknown variable")
+    if ("id" %in% which) which[which == "id"] <- names(x)[1]
+    if ("time" %in% which) which[which == "time"] <- names(x)[2]
+    if ("group" %in% which) which[which == "group"] <- names(x)[3]
+    result <- x[ , which]
+    result
+}
+
+index.pdata.frame <- function(x, which = NULL, ...){
+  anindex <- attr(x, "index")
+  index(x = anindex, which = which)
+}
+
+index.pseries <- function(x, which = NULL, ...){
+  anindex <- attr(x, "index")
+  index(x = anindex, which = which)
+}
+  
+index.panelmodel <- function(x, which = NULL, ...){
+  anindex <- attr(x$model, "index")
+  index(x = anindex, which = which)
 }

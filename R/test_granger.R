@@ -47,7 +47,7 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar", "Wbar"), orde
                 "more than 2 variables, one LHS and one RHS variable, e.g. 'y ~ x'"))
   }
     
-  if (!(is.numeric(order) && all(round(order) == order) && all(order > 0))) 
+  if (!(is.numeric(order) && round(order) == order && all(order > 0))) 
     stop("Lag order 'order' must contain positive integer(s)")
   
   if (length(order) > 1 && length(order) != N) stop("'order' must have length 1 or the number of individuals")

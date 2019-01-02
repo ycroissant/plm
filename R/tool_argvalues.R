@@ -1,12 +1,11 @@
+## This file contain named vectors of the acceptable values for different
+## arguments used in plm functions.
+
+
 random.method.list <- c(swar    = "Swamy-Arora",
                         walhus  = "Wallace-Hussain",
                         amemiya = "Amemiya",
-                        nerlove = "Nerlove",
-                        ht      = "Hausman-Taylor")
-
-ht.method.list <- c(ht = "Hausman-Taylor estimator",
-                    am = "Amemiya-MaCurdy estimator",
-                    bms = "Breusch-Mizon-Schmidt estimator")
+                        nerlove = "Nerlove")
 
 effect.plm.list <- c(individual = "Oneway (individual) effect",
                      time       = "Oneway (time) effect",

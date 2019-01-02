@@ -29,7 +29,8 @@ pcce <- function (formula, data, subset, na.action,
                    index = NULL, trend = FALSE, ...) {
   
     ## Create a Formula object if necessary (from plm.R)
-    if (!inherits(formula, "pFormula")) formula <- pFormula(formula)
+#    if (!inherits(formula, "pFormula")) formula <- pFormula(formula)
+    if (!inherits(formula, "Formula")) formula <- as.Formula(formula)
 
     ## same as pggls but for effect, fixed at "individual" for compatibility
     ## ind for id, tind for time, k for K, coefnam for coef.names
