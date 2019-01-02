@@ -412,7 +412,9 @@ pFtest.plm <- function(x, z, ...){
 # arg 'vcov' non-NULL => the robust tests are carried out
 # arg df2adj == TRUE does finite-sample/cluster adjustment for F tests's df2
 # args .df1, .df2 are only there if user wants to do overwriting of dfs (user has final say)
-
+#
+# Chi-sq test for IV models as in Wooldridge (1990), A note on the Lagrange multiplier and F-statistics for two stage least
+#                                                    squares regressions, Economics Letters 34: 151-155.
 
 # trans_clubSandwich_vcov: helper function for pwaldtest()
 # translate vcov object from package clubSandwich so it is suitable for summary.plm, plm's pwaldtest.
@@ -457,12 +459,14 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
   tss <- tss(x)
   ssr <- deviance(x)
   vcov_arg <- vcov
+  int <- "(Intercept)"
+  coefs_wo_int <- coef(x)[!(names(coef(x)) %in% int)]
   
   # sanity check
   if (df2adj == TRUE && (is.null(vcov_arg) || test != "F")) {
     stop("df2adj == TRUE sensible only for robust F test, i.e. test == \"F\" and !is.null(vcov) and missing(.df2)")
   }
-
+  
   # if robust test: prepare robust vcov
   if (!is.null(vcov_arg)) {
     if (is.matrix(vcov_arg))   rvcov <- rvcov_orig <- vcov_arg
@@ -470,10 +474,7 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
     
     rvcov_name <- paste0(", vcov: ", paste0(deparse(substitute(vcov)))) # save "name" for later
     
-    coefs <- coef(x)
-    int <- "(Intercept)"
     if (int %in% names(coef(x))) { # drop intercept, if present
-      coefs <- coef(x)[!(names(coef(x)) %in% int)]
       rvcov <- rvcov_orig[!rownames(rvcov_orig) %in% int, !colnames(rvcov_orig) %in% int]
       attr(rvcov, which = "cluster") <- attr(rvcov_orig, which = "cluster") # restore dropped 'cluster' attribute
     }
@@ -491,18 +492,18 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
         cluster <- attr(rvcov, which = "cluster")
         pdim <- pdim(x)
         df2 <- switch(cluster,
-                        group = { if(pdim$nT$n == 1L) df2 else (pdim$nT$n - 1L) },
-                        time  = { if(pdim$nT$T == 1L) df2 else (pdim$nT$T - 1L) },
-                        # TODO: what about double clustering? vcovDC? vcovDC identifies itself as attr(obj, "cluster")="group-time")
-                        # default:
-                        { # warning("unknown/not implemented clustering, no df2 adjustment for finite-samples")
-                         df2}
-                        )
-        } else {
-          # no information on clustering found, do not adjust df2
-          # (other options would be: assume cluster = "group", or fall-back to non robust statistics (set vcov_arg <- NULL))
-          warning("no attribute 'cluster' in robust vcov found, no finite-sample adjustment for df2") # assuming cluster = \"group\"")
-          # df2 <- as.integer(pdim(x)$nT$n - 1) # assume cluster = "group"
+                      group = { if(pdim$nT$n == 1L) df2 else (pdim$nT$n - 1L) },
+                      time  = { if(pdim$nT$T == 1L) df2 else (pdim$nT$T - 1L) },
+                      # TODO: what about double clustering? vcovDC? vcovDC identifies itself as attr(obj, "cluster")="group-time")
+                      # default:
+                      { # warning("unknown/not implemented clustering, no df2 adjustment for finite-samples")
+                        df2}
+        )
+      } else {
+        # no information on clustering found, do not adjust df2
+        # (other options would be: assume cluster = "group", or fall-back to non robust statistics (set vcov_arg <- NULL))
+        warning("no attribute 'cluster' in robust vcov found, no finite-sample adjustment for df2") # assuming cluster = \"group\"")
+        # df2 <- as.integer(pdim(x)$nT$n - 1) # assume cluster = "group"
       }
     }
   }
@@ -514,31 +515,39 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
   if (test == "Chisq"){
     # perform "normal" chisq test
     if (is.null(vcov_arg)) {
-      stat <- (tss-ssr)/(ssr/df2)
+      stat <- if(length(formula(x))[2] > 1) {
+        # IV case: cannot take usual TSS-SSR-way to calc. stat
+        as.numeric(crossprod(solve(vcov(x)[names(coefs_wo_int), names(coefs_wo_int)], coefs_wo_int), coefs_wo_int))
+      } else {
+        # non IV
+        (tss-ssr)/(ssr/df2)
+      }
+      
       names(stat) <- "Chisq"
       pval <- pchisq(stat, df = df1, lower.tail = FALSE)
       parameter <- c(df = df1)
       method <- "Wald test"
     } else {
       # perform robust chisq test
-
-        # alternative:
-        # use package car for statistic:
-        # Note: has.intercept() returns TRUE for FE models, so do not use it here...
-        # return_car_lH <- car::linearHypothesis(x,
-        #                                        names(coef(x))[if ("(Intercept)" %in% names(coef(x))) -1 else TRUE],
-        #                                        test="Chisq",
-        #                                        vcov. = rvcov_orig)
-        # stat_car <- return_car_lH[["Chisq"]][2] # extract statistic
       
-      stat <- crossprod(solve(rvcov, coefs), coefs)
+      # alternative:
+      # use package car for statistic:
+      # Note: has.intercept() returns TRUE for FE models, so do not use it here...
+      # return_car_lH <- car::linearHypothesis(x,
+      #                                        names(coef(x))[if ("(Intercept)" %in% names(coef(x))) -1 else TRUE],
+      #                                        test="Chisq",
+      #                                        vcov. = rvcov_orig)
+      # stat_car <- return_car_lH[["Chisq"]][2] # extract statistic
+      
+      stat <- as.numeric(crossprod(solve(rvcov, coefs_wo_int), coefs_wo_int))
       names(stat) <- "Chisq"
       pval <- pchisq(stat, df = df1, lower.tail = FALSE)
       parameter <- c(df = df1)
       method <- paste0("Wald test (robust)", rvcov_name)
     }
   }
-  if (test == "F"){ 
+  if (test == "F"){
+    if(length(formula(x))[2] > 1) stop("test = \"F\" not sensible for IV models")
     if (is.null(vcov_arg)) {
       # perform "normal" F test
       stat <- (tss-ssr)/ssr*df2/df1
@@ -549,17 +558,17 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
     } else {
       # perform robust F test
       
-        # alternative:
-        # use package car for statistic:
-        # Note: has.intercept() returns TRUE for FE models, so do not use it here...
-        # Note: car::linearHypothesis does not adjust df2 for clustering
-        # return_car_lH <- car::linearHypothesis(x,
-        #                                        names(coef(x))[if ("(Intercept)" %in% names(coef(x))) -1 else TRUE],
-        #                                        test="F",
-        #                                        vcov. = rvcov_orig)
-        # stat_car <- return_car_lH[["F"]][2] # extract statistic
-
-      stat <- crossprod(solve(rvcov, coefs), coefs) / df1
+      # alternative:
+      # use package car for statistic:
+      # Note: has.intercept() returns TRUE for FE models, so do not use it here...
+      # Note: car::linearHypothesis does not adjust df2 for clustering
+      # return_car_lH <- car::linearHypothesis(x,
+      #                                        names(coef(x))[if ("(Intercept)" %in% names(coef(x))) -1 else TRUE],
+      #                                        test="F",
+      #                                        vcov. = rvcov_orig)
+      # stat_car <- return_car_lH[["F"]][2] # extract statistic
+      
+      stat <- as.numeric(crossprod(solve(rvcov, coefs_wo_int), coefs_wo_int) / df1)
       names(stat) <- "F"
       pval <- pf(stat, df1 = df1, df2 = df2, lower.tail = FALSE)
       parameter <- c(df1 = df1, df2 = df2) # Dfs
@@ -571,7 +580,29 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
               parameter = parameter,
               p.value   = pval,
               method    = method
-              )
+  )
+  class(res) <- "htest"
+  return(res)
+}
+
+pwaldtest.pvcm <- function(x, ...) {
+  model <- describe(x, "model")
+  if(!model == "random") stop("pwaldtest.pvcm only applicable to 'random' pvcm objects")
+  
+  coefs_wo_int <- x$coefficients[setdiff(names(x$coefficients), "(Intercept)")]
+  stat <- as.numeric(crossprod(solve(vcov(x)[names(coefs_wo_int), names(coefs_wo_int)], coefs_wo_int), coefs_wo_int))
+  names(stat) <- "Chisq"
+  df1 <- length(coefs_wo_int)
+  pval <- pchisq(stat, df = df1, lower.tail = FALSE)
+  parameter <- c(df = df1)
+  method <- "Wald test"
+  
+  res <- list(data.name = data.name(x),
+              statistic = stat,
+              parameter = parameter,
+              p.value   = pval,
+              method    = method
+  )
   class(res) <- "htest"
   return(res)
 }

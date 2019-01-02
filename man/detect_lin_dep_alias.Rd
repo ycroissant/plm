@@ -70,7 +70,7 @@ which indicates any such aliased coefficients by a named logical.
 Both functions, \code{detect.lindep} and \code{alias}, help to detect
 linear dependence and accomplish almost the same: \code{detect.lindep}
 is a stand alone implementation while \code{alias} is a wrapper around
-\code{\link[stats]{alias.lm}}, extending the \code{alias} generic to
+\code{\link[stats:alias]{alias.lm}}, extending the \code{alias} generic to
 classes \code{"plm"} and \code{"pdata.frame"}.  \code{alias} hinges on the
 availability of the package \CRANpkg{MASS} on the system. Not all
 arguments of \code{alias.lm} are supported.  Output of \code{alias} is
@@ -85,7 +85,7 @@ column numbers of the linear dependent columns in the object after data
 transformation, if any are present. \code{NULL} if no linear dependent
 columns are detected.
 
-For \code{alias}: return value of \code{\link[stats]{alias.lm}} run on
+For \code{alias}: return value of \code{\link[stats:alias]{alias.lm}} run on
 the (quasi-)demeaned model, i. e. the information outputted applies to
 the transformed model matrix, not the original data.  }
 
@@ -95,9 +95,9 @@ Boston, sec. 7-2, pp. 206--211.
 }
 
 \seealso{
-  \code{\link[stats]{alias}}, 
-  \code{\link[stats]{model.matrix}} and especially \code{plm}'s \code{\link[plm]{model.matrix}} for
-  (transformed) model matrices, \code{\link[plm]{model.frame}}.
+  \code{\link[stats:alias]{alias}}, 
+  \code{\link[stats]{model.matrix}} and especially \code{plm}'s \code{\link{model.matrix}} for
+  (transformed) model matrices, plm's \code{\link{model.frame}}.
 }
 
 \note{
@@ -113,24 +113,18 @@ Cigar[ , "fact1"] <- c(0,1)
 Cigar[ , "fact2"] <- c(1,0)
 Cigar.p <- pdata.frame(Cigar)
 
-# setup a pFormula and a model frame
+# setup a formula and a model frame
 form <- price ~ 0 + cpi + fact1 + fact2
-#pform <- pFormula(price ~ 0 + cpi + fact1 + fact2)
-#mf <- model.frame(pform, data = Cigar.p)
 mf <- model.frame(Cigar.p, form)
 # no linear dependence in the pooling model's model matrix
 # (with intercept in the formula, there would be linear depedence)
-#MM detect.lindep(model.matrix(pform, data = mf, model = "pooling"))
 detect.lindep(model.matrix(mf, model = "pooling"))
 # linear dependence present in the FE transformed model matrix
-#MM modmat_FE <- model.matrix(pform, data = mf, model = "within")
 modmat_FE <- model.matrix(mf, model = "within")
 detect.lindep(modmat_FE)
-#MM mod_FE <- plm(pform, data = Cigar.p, model = "within")
 mod_FE <- plm(form, data = Cigar.p, model = "within")
 detect.lindep(mod_FE) 
 alias(mod_FE) # => fact1 == -1*fact2
-#plm(pform, data = mf, model = "within")$aliased # "fact2" indicated as aliased
 plm(form, data = mf, model = "within")$aliased # "fact2" indicated as aliased
 
 # look at the data: after FE transformation fact1 == -1*fact2
@@ -154,23 +148,17 @@ Grunfeld$CEOage    <- c(replicate(10, seq(from=s<-sample(38:65, 1), to=s+19, by=
 head(Grunfeld, 50)
 
 form <- inv ~ value + capital + CEOtenure + CEOage
-#pform <- pFormula(inv ~ value + capital + CEOtenure + CEOage)
-#mf <- model.frame(pform, data=pdata.frame(Grunfeld))
 mf <- model.frame(pdata.frame(Grunfeld), form)
 # no linear dependent columns in original data/pooling model
-#MM modmat_pool <- model.matrix(pform, data = mf, model="pooling")
 modmat_pool <- model.matrix(mf, model="pooling")
 detect.lindep(modmat_pool)
-#MM mod_pool <- plm(pform, data = Grunfeld, model = "pooling")
 mod_pool <- plm(form, data = Grunfeld, model = "pooling")
 alias(mod_pool)
 
 # CEOtenure and CEOage are linear dependent after FE transformation
 # (demeaning per individual)
-#MM modmat_FE <- model.matrix(pform, data = mf, model="within")
 modmat_FE <- model.matrix(mf, model="within")
 detect.lindep(modmat_FE)
-#MM mod_FE <- plm(pform, data = Grunfeld, model = "within")
 mod_FE <- plm(form, data = Grunfeld, model = "within")
 detect.lindep(mod_FE)
 alias(mod_FE)

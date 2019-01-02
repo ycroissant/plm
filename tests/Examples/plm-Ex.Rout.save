@@ -1,5 +1,5 @@
 
-R version 3.5.1 (2018-07-02) -- "Feather Spray"
+R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
 Copyright (C) 2018 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -146,23 +146,18 @@ alternative hypothesis: Stationarity
 > Cigar[ , "fact2"] <- c(1,0)
 > Cigar.p <- pdata.frame(Cigar)
 > 
-> # setup a pFormula and a model frame
+> # setup a formula and a model frame
 > form <- price ~ 0 + cpi + fact1 + fact2
-> #pform <- pFormula(price ~ 0 + cpi + fact1 + fact2)
-> #mf <- model.frame(pform, data = Cigar.p)
 > mf <- model.frame(Cigar.p, form)
 > # no linear dependence in the pooling model's model matrix
 > # (with intercept in the formula, there would be linear depedence)
-> #MM detect.lindep(model.matrix(pform, data = mf, model = "pooling"))
 > detect.lindep(model.matrix(mf, model = "pooling"))
 [1] "No linear dependent column(s) detected."
 > # linear dependence present in the FE transformed model matrix
-> #MM modmat_FE <- model.matrix(pform, data = mf, model = "within")
 > modmat_FE <- model.matrix(mf, model = "within")
 > detect.lindep(modmat_FE)
 [1] "Suspiscious column number(s): 2, 3"
 [1] "Suspiscious column name(s):   fact1, fact2"
-> #MM mod_FE <- plm(pform, data = Cigar.p, model = "within")
 > mod_FE <- plm(form, data = Cigar.p, model = "within")
 > detect.lindep(mod_FE) 
 [1] "Suspiscious column number(s): 2, 3"
@@ -175,7 +170,6 @@ Complete :
       cpi fact1
 fact2  0  -1   
 
-> #plm(pform, data = mf, model = "within")$aliased # "fact2" indicated as aliased
 > plm(form, data = mf, model = "within")$aliased # "fact2" indicated as aliased
   cpi fact1 fact2 
 FALSE FALSE  TRUE 
@@ -260,15 +254,11 @@ FALSE FALSE  TRUE
 50    3 1944   56.8 1687.2   321.3        12     73
 > 
 > form <- inv ~ value + capital + CEOtenure + CEOage
-> #pform <- pFormula(inv ~ value + capital + CEOtenure + CEOage)
-> #mf <- model.frame(pform, data=pdata.frame(Grunfeld))
 > mf <- model.frame(pdata.frame(Grunfeld), form)
 > # no linear dependent columns in original data/pooling model
-> #MM modmat_pool <- model.matrix(pform, data = mf, model="pooling")
 > modmat_pool <- model.matrix(mf, model="pooling")
 > detect.lindep(modmat_pool)
 [1] "No linear dependent column(s) detected."
-> #MM mod_pool <- plm(pform, data = Grunfeld, model = "pooling")
 > mod_pool <- plm(form, data = Grunfeld, model = "pooling")
 > alias(mod_pool)
 Model :
@@ -277,12 +267,10 @@ Model :
 > 
 > # CEOtenure and CEOage are linear dependent after FE transformation
 > # (demeaning per individual)
-> #MM modmat_FE <- model.matrix(pform, data = mf, model="within")
 > modmat_FE <- model.matrix(mf, model="within")
 > detect.lindep(modmat_FE)
 [1] "Suspiscious column number(s): 3, 4"
 [1] "Suspiscious column name(s):   CEOtenure, CEOage"
-> #MM mod_FE <- plm(pform, data = Grunfeld, model = "within")
 > mod_FE <- plm(form, data = Grunfeld, model = "within")
 > detect.lindep(mod_FE)
 [1] "Suspiscious column number(s): 3, 4"
@@ -8838,7 +8826,9 @@ alternative hypothesis: Granger causality for at least one individual
 +           random.method = "ht", model = "random", inst.method = "baltagi")
 > summary(ht)
 Oneway (individual) effect Random Effect Model 
-   (NA's transformation)
+   (Hausman-Taylor's transformation)
+Instrumental variable estimation
+   (Baltagi's transformation)
 
 Call:
 plm(formula = lwage ~ wks + south + smsa + married + exp + I(exp^2) + 
@@ -8860,20 +8850,20 @@ Residuals:
 -12.643736  -0.466002   0.043285   0.524739  13.340263 
 
 Coefficients:
-               Estimate  Std. Error t-value  Pr(>|t|)    
+               Estimate  Std. Error z-value  Pr(>|z|)    
 (Intercept)  2.9127e+00  2.8365e-01 10.2687 < 2.2e-16 ***
-wks          8.3740e-04  5.9973e-04  1.3963   0.16270    
-southyes     7.4398e-03  3.1955e-02  0.2328   0.81591    
-smsayes     -4.1833e-02  1.8958e-02 -2.2066   0.02740 *  
-marriedyes  -2.9851e-02  1.8980e-02 -1.5728   0.11585    
+wks          8.3740e-04  5.9973e-04  1.3963   0.16263    
+southyes     7.4398e-03  3.1955e-02  0.2328   0.81590    
+smsayes     -4.1833e-02  1.8958e-02 -2.2066   0.02734 *  
+marriedyes  -2.9851e-02  1.8980e-02 -1.5728   0.11578    
 exp          1.1313e-01  2.4710e-03 45.7851 < 2.2e-16 ***
-I(exp^2)    -4.1886e-04  5.4598e-05 -7.6718 2.100e-14 ***
-bluecolyes  -2.0705e-02  1.3781e-02 -1.5024   0.13307    
-ind          1.3604e-02  1.5237e-02  0.8928   0.37202    
-unionyes     3.2771e-02  1.4908e-02  2.1982   0.02799 *  
-sexfemale   -1.3092e-01  1.2666e-01 -1.0337   0.30135    
-blackyes    -2.8575e-01  1.5570e-01 -1.8352   0.06654 .  
-ed           1.3794e-01  2.1248e-02  6.4919 9.471e-11 ***
+I(exp^2)    -4.1886e-04  5.4598e-05 -7.6718 1.696e-14 ***
+bluecolyes  -2.0705e-02  1.3781e-02 -1.5024   0.13299    
+ind          1.3604e-02  1.5237e-02  0.8928   0.37196    
+unionyes     3.2771e-02  1.4908e-02  2.1982   0.02794 *  
+sexfemale   -1.3092e-01  1.2666e-01 -1.0337   0.30129    
+blackyes    -2.8575e-01  1.5570e-01 -1.8352   0.06647 .  
+ed           1.3794e-01  2.1248e-02  6.4919 8.474e-11 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -8881,7 +8871,7 @@ Total Sum of Squares:    243.04
 Residual Sum of Squares: 4163.6
 R-Squared:      0.60945
 Adj. R-Squared: 0.60833
-F-statistic: -325.803 on 12 and 4152 DF, p-value: 1
+Chisq: 6891.87 on 12 DF, p-value: < 2.22e-16
 > 
 > am <- plm(lwage ~ wks + south + smsa + married + exp + I(exp ^ 2) + 
 +               bluecol + ind + union + sex + black + ed |
@@ -8891,7 +8881,9 @@ F-statistic: -325.803 on 12 and 4152 DF, p-value: 1
 +           random.method = "ht", model = "random", inst.method = "am")
 > summary(am)
 Oneway (individual) effect Random Effect Model 
-   (NA's transformation)
+   (Hausman-Taylor's transformation)
+Instrumental variable estimation
+   (Amemiya-MaCurdy's transformation)
 
 Call:
 plm(formula = lwage ~ wks + south + smsa + married + exp + I(exp^2) + 
@@ -8913,20 +8905,20 @@ Residuals:
 -12.643192  -0.464811   0.043216   0.523598  13.338789 
 
 Coefficients:
-               Estimate  Std. Error t-value  Pr(>|t|)    
+               Estimate  Std. Error z-value  Pr(>|z|)    
 (Intercept)  2.9273e+00  2.7513e-01 10.6399 < 2.2e-16 ***
-wks          8.3806e-04  5.9945e-04  1.3980   0.16218    
-southyes     7.2818e-03  3.1936e-02  0.2280   0.81965    
-smsayes     -4.1951e-02  1.8947e-02 -2.2141   0.02688 *  
-marriedyes  -3.0089e-02  1.8967e-02 -1.5864   0.11273    
+wks          8.3806e-04  5.9945e-04  1.3980   0.16210    
+southyes     7.2818e-03  3.1936e-02  0.2280   0.81964    
+smsayes     -4.1951e-02  1.8947e-02 -2.2141   0.02682 *  
+marriedyes  -3.0089e-02  1.8967e-02 -1.5864   0.11266    
 exp          1.1297e-01  2.4688e-03 45.7584 < 2.2e-16 ***
-I(exp^2)    -4.2140e-04  5.4554e-05 -7.7244 1.400e-14 ***
-bluecolyes  -2.0850e-02  1.3765e-02 -1.5147   0.12993    
-ind          1.3629e-02  1.5229e-02  0.8949   0.37088    
-unionyes     3.2475e-02  1.4894e-02  2.1804   0.02928 *  
-sexfemale   -1.3201e-01  1.2660e-01 -1.0427   0.29715    
-blackyes    -2.8590e-01  1.5549e-01 -1.8388   0.06602 .  
-ed           1.3720e-01  2.0570e-02  6.6703 2.889e-11 ***
+I(exp^2)    -4.2140e-04  5.4554e-05 -7.7244 1.124e-14 ***
+bluecolyes  -2.0850e-02  1.3765e-02 -1.5147   0.12986    
+ind          1.3629e-02  1.5229e-02  0.8949   0.37082    
+unionyes     3.2475e-02  1.4894e-02  2.1804   0.02922 *  
+sexfemale   -1.3201e-01  1.2660e-01 -1.0427   0.29709    
+blackyes    -2.8590e-01  1.5549e-01 -1.8388   0.06595 .  
+ed           1.3720e-01  2.0570e-02  6.6703 2.553e-11 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -8934,7 +8926,7 @@ Total Sum of Squares:    243.04
 Residual Sum of Squares: 4160.3
 R-Squared:      0.60948
 Adj. R-Squared: 0.60835
-F-statistic: -325.787 on 12 and 4152 DF, p-value: 1
+Chisq: 6879.2 on 12 DF, p-value: < 2.22e-16
 > 
 > ## deprecated way with pht() for HT
 > #ht <- pht(lwage ~ wks + south + smsa + married + exp + I(exp^2) +
@@ -9334,14 +9326,14 @@ Residuals:
 -0.106171 -0.024805 -0.001816 -0.000054  0.019795  0.182810 
 
 Coefficients:
-               Estimate  Std. Error t-value  Pr(>|t|)    
+               Estimate  Std. Error z-value  Pr(>|z|)    
 (Intercept)  2.08921088  0.14570204 14.3389 < 2.2e-16 ***
 log(pc)      0.27412419  0.02054440 13.3430 < 2.2e-16 ***
 log(emp)     0.73983766  0.02575046 28.7311 < 2.2e-16 ***
-log(hwy)     0.07273624  0.02202509  3.3024  0.001001 ** 
-log(water)   0.07645327  0.01385767  5.5170 4.642e-08 ***
-log(util)   -0.09437398  0.01677289 -5.6266 2.533e-08 ***
-unemp       -0.00616304  0.00090331 -6.8227 1.751e-11 ***
+log(hwy)     0.07273624  0.02202509  3.3024 0.0009585 ***
+log(water)   0.07645327  0.01385767  5.5170 3.448e-08 ***
+log(util)   -0.09437398  0.01677289 -5.6266 1.838e-08 ***
+unemp       -0.00616304  0.00090331 -6.8227 8.933e-12 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -9349,7 +9341,7 @@ Total Sum of Squares:    43.035
 Residual Sum of Squares: 1.1245
 R-Squared:      0.97387
 Adj. R-Squared: 0.97368
-F-statistic: 5025.33 on 6 and 809 DF, p-value: < 2.22e-16
+Chisq: 30152 on 6 DF, p-value: < 2.22e-16
 > summary(plm(form, data = pProduc, model = "random", effect = "nested",
 +             random.method = "walhus"))
 Nested effects Random Effect Model 
@@ -9376,14 +9368,14 @@ Residuals:
 -0.105014 -0.024736 -0.001879 -0.000056  0.019944  0.182082 
 
 Coefficients:
-               Estimate  Std. Error t-value  Pr(>|t|)    
+               Estimate  Std. Error z-value  Pr(>|z|)    
 (Intercept)  2.08165186  0.15034855 13.8455 < 2.2e-16 ***
 log(pc)      0.27256322  0.02093384 13.0202 < 2.2e-16 ***
 log(emp)     0.74164483  0.02607167 28.4464 < 2.2e-16 ***
-log(hwy)     0.07493204  0.02234932  3.3528 0.0008373 ***
-log(water)   0.07639159  0.01386702  5.5089 4.855e-08 ***
-log(util)   -0.09523031  0.01677247 -5.6778 1.902e-08 ***
-unemp       -0.00614840  0.00090786 -6.7724 2.436e-11 ***
+log(hwy)     0.07493204  0.02234932  3.3528 0.0008001 ***
+log(water)   0.07639159  0.01386702  5.5089 3.611e-08 ***
+log(util)   -0.09523031  0.01677247 -5.6778 1.365e-08 ***
+unemp       -0.00614840  0.00090786 -6.7724 1.267e-11 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -9391,7 +9383,7 @@ Total Sum of Squares:    40.423
 Residual Sum of Squares: 1.1195
 R-Squared:      0.97231
 Adj. R-Squared: 0.9721
-F-statistic: 4733.87 on 6 and 809 DF, p-value: < 2.22e-16
+Chisq: 28403.2 on 6 DF, p-value: < 2.22e-16
 > 
 > ## Hausman-Taylor estimator and Amemiya-MaCurdy estimator
 > ## replicate Baltagi (2005, 2013), table 7.4
@@ -9404,7 +9396,9 @@ F-statistic: 4733.87 on 6 and 809 DF, p-value: < 2.22e-16
 +           random.method = "ht", model = "random", inst.method = "baltagi")
 > summary(ht)
 Oneway (individual) effect Random Effect Model 
-   (NA's transformation)
+   (Hausman-Taylor's transformation)
+Instrumental variable estimation
+   (Baltagi's transformation)
 
 Call:
 plm(formula = lwage ~ wks + south + smsa + married + exp + I(exp^2) + 
@@ -9426,20 +9420,20 @@ Residuals:
 -12.643736  -0.466002   0.043285   0.524739  13.340263 
 
 Coefficients:
-               Estimate  Std. Error t-value  Pr(>|t|)    
+               Estimate  Std. Error z-value  Pr(>|z|)    
 (Intercept)  2.9127e+00  2.8365e-01 10.2687 < 2.2e-16 ***
-wks          8.3740e-04  5.9973e-04  1.3963   0.16270    
-southyes     7.4398e-03  3.1955e-02  0.2328   0.81591    
-smsayes     -4.1833e-02  1.8958e-02 -2.2066   0.02740 *  
-marriedyes  -2.9851e-02  1.8980e-02 -1.5728   0.11585    
+wks          8.3740e-04  5.9973e-04  1.3963   0.16263    
+southyes     7.4398e-03  3.1955e-02  0.2328   0.81590    
+smsayes     -4.1833e-02  1.8958e-02 -2.2066   0.02734 *  
+marriedyes  -2.9851e-02  1.8980e-02 -1.5728   0.11578    
 exp          1.1313e-01  2.4710e-03 45.7851 < 2.2e-16 ***
-I(exp^2)    -4.1886e-04  5.4598e-05 -7.6718 2.100e-14 ***
-bluecolyes  -2.0705e-02  1.3781e-02 -1.5024   0.13307    
-ind          1.3604e-02  1.5237e-02  0.8928   0.37202    
-unionyes     3.2771e-02  1.4908e-02  2.1982   0.02799 *  
-sexfemale   -1.3092e-01  1.2666e-01 -1.0337   0.30135    
-blackyes    -2.8575e-01  1.5570e-01 -1.8352   0.06654 .  
-ed           1.3794e-01  2.1248e-02  6.4919 9.471e-11 ***
+I(exp^2)    -4.1886e-04  5.4598e-05 -7.6718 1.696e-14 ***
+bluecolyes  -2.0705e-02  1.3781e-02 -1.5024   0.13299    
+ind          1.3604e-02  1.5237e-02  0.8928   0.37196    
+unionyes     3.2771e-02  1.4908e-02  2.1982   0.02794 *  
+sexfemale   -1.3092e-01  1.2666e-01 -1.0337   0.30129    
+blackyes    -2.8575e-01  1.5570e-01 -1.8352   0.06647 .  
+ed           1.3794e-01  2.1248e-02  6.4919 8.474e-11 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -9447,7 +9441,7 @@ Total Sum of Squares:    243.04
 Residual Sum of Squares: 4163.6
 R-Squared:      0.60945
 Adj. R-Squared: 0.60833
-F-statistic: -325.803 on 12 and 4152 DF, p-value: 1
+Chisq: 6891.87 on 12 DF, p-value: < 2.22e-16
 > 
 > am <- plm(lwage ~ wks + south + smsa + married + exp + I(exp ^ 2) + 
 +               bluecol + ind + union + sex + black + ed |
@@ -9457,7 +9451,9 @@ F-statistic: -325.803 on 12 and 4152 DF, p-value: 1
 +           random.method = "ht", model = "random", inst.method = "am")
 > summary(am)
 Oneway (individual) effect Random Effect Model 
-   (NA's transformation)
+   (Hausman-Taylor's transformation)
+Instrumental variable estimation
+   (Amemiya-MaCurdy's transformation)
 
 Call:
 plm(formula = lwage ~ wks + south + smsa + married + exp + I(exp^2) + 
@@ -9479,20 +9475,20 @@ Residuals:
 -12.643192  -0.464811   0.043216   0.523598  13.338789 
 
 Coefficients:
-               Estimate  Std. Error t-value  Pr(>|t|)    
+               Estimate  Std. Error z-value  Pr(>|z|)    
 (Intercept)  2.9273e+00  2.7513e-01 10.6399 < 2.2e-16 ***
-wks          8.3806e-04  5.9945e-04  1.3980   0.16218    
-southyes     7.2818e-03  3.1936e-02  0.2280   0.81965    
-smsayes     -4.1951e-02  1.8947e-02 -2.2141   0.02688 *  
-marriedyes  -3.0089e-02  1.8967e-02 -1.5864   0.11273    
+wks          8.3806e-04  5.9945e-04  1.3980   0.16210    
+southyes     7.2818e-03  3.1936e-02  0.2280   0.81964    
+smsayes     -4.1951e-02  1.8947e-02 -2.2141   0.02682 *  
+marriedyes  -3.0089e-02  1.8967e-02 -1.5864   0.11266    
 exp          1.1297e-01  2.4688e-03 45.7584 < 2.2e-16 ***
-I(exp^2)    -4.2140e-04  5.4554e-05 -7.7244 1.400e-14 ***
-bluecolyes  -2.0850e-02  1.3765e-02 -1.5147   0.12993    
-ind          1.3629e-02  1.5229e-02  0.8949   0.37088    
-unionyes     3.2475e-02  1.4894e-02  2.1804   0.02928 *  
-sexfemale   -1.3201e-01  1.2660e-01 -1.0427   0.29715    
-blackyes    -2.8590e-01  1.5549e-01 -1.8388   0.06602 .  
-ed           1.3720e-01  2.0570e-02  6.6703 2.889e-11 ***
+I(exp^2)    -4.2140e-04  5.4554e-05 -7.7244 1.124e-14 ***
+bluecolyes  -2.0850e-02  1.3765e-02 -1.5147   0.12986    
+ind          1.3629e-02  1.5229e-02  0.8949   0.37082    
+unionyes     3.2475e-02  1.4894e-02  2.1804   0.02922 *  
+sexfemale   -1.3201e-01  1.2660e-01 -1.0427   0.29709    
+blackyes    -2.8590e-01  1.5549e-01 -1.8388   0.06595 .  
+ed           1.3720e-01  2.0570e-02  6.6703 2.553e-11 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -9500,8 +9496,7 @@ Total Sum of Squares:    243.04
 Residual Sum of Squares: 4160.3
 R-Squared:      0.60948
 Adj. R-Squared: 0.60835
-F-statistic: -325.787 on 12 and 4152 DF, p-value: 1
-> 
+Chisq: 6879.2 on 12 DF, p-value: < 2.22e-16
 > 
 > 
 > 
@@ -9720,19 +9715,16 @@ Multiple R-squared: 0.99993
 > pGrunfeld <- pdata.frame(Grunfeld)
 > 
 > # then make a model frame from a pFormula and a pdata.frame
-> #MM pform <- pFormula(inv ~ value + capital)
-> #MM mf <- model.frame(pform, data = pGrunfeld)
+> 
 > 
 > form <- inv ~ value + capital
 > mf <- model.frame(pGrunfeld, form)
 > # construct (transformed) response of the within model
-> #MM resp <- pmodel.response(pform, data = mf, model = "within", effect = "individual")
 > resp <- pmodel.response(form, data = mf, model = "within", effect = "individual")
 > # retrieve (transformed) response directly from model frame
 > resp_mf <- pmodel.response(mf, model = "within", effect = "individual")
 > 
 > # retrieve (transformed) response from a plm object, i.e. an estimated model
-> #MM fe_model <- plm(pform, data = pGrunfeld, model = "within")
 > fe_model <- plm(form, data = pGrunfeld, model = "within")
 > pmodel.response(fe_model)
    1-1935    1-1936    1-1937    1-1938    1-1939    1-1940    1-1941    1-1942 
@@ -12238,9 +12230,8 @@ pvcm(formula = log(gsp) ~ log(pc) + log(hwy) + log(water) + log(util) +
 Balanced Panel: n = 48, T = 17, N = 816
 
 Residuals:
-total sum of squares: 29.74077 
-         id        time 
-0.960118923 0.007220712 
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+-0.23533 -0.06035  0.08087  0.09229  0.20421  0.97490 
 
 Estimated mean of the coefficients:
               Estimate Std. Error z-value Pr(>|z|)    
@@ -12275,6 +12266,7 @@ unemp        0.00016044
 Total Sum of Squares: 21431
 Residual Sum of Squares: 36.691
 Multiple R-Squared: 0.99829
+Chisq: 434.623 on 6 DF, p-value: < 2.22e-16
 >              
 > ## Not run: 
 > ##D # replicate Swamy (1970), p. 166, table 5.2
@@ -12293,7 +12285,7 @@ Multiple R-Squared: 0.99829
 > 
 > ### Name: pwaldtest
 > ### Title: Wald-style Chi-square Test and F Test
-> ### Aliases: pwaldtest pwaldtest.plm
+> ### Aliases: pwaldtest pwaldtest.plm pwaldtest.pvcm
 > ### Keywords: htest
 > 
 > ### ** Examples
@@ -13139,7 +13131,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 > ## robust significance test, cluster by group
 > ## (robust vs. serial correlation)
-> coeftest(zz, vcov. = vcovHC)
+> coeftest(zz, vcov.=vcovHC)
 
 t test of coefficients:
 
@@ -13153,7 +13145,7 @@ unemp       -0.0061725  0.0023326 -2.6461  0.008299 **
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 > ## idem with parameters, pass vcov as a function argument
-> coeftest(zz, vcov. = function(x) vcovHC(x, method = "arellano", type = "HC1"))
+> coeftest(zz, vcov.=function(x) vcovHC(x, method="arellano", type="HC1"))
 
 t test of coefficients:
 
@@ -13168,8 +13160,8 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 > ## idem, cluster by time period
 > ## (robust vs. cross-sectional correlation)
-> coeftest(zz, vcov. = function(x) vcovHC(x, method = "arellano",
-+  type = "HC1", cluster = "group"))
+> coeftest(zz, vcov.=function(x) vcovHC(x, method="arellano",
++  type="HC1", cluster="group"))
 
 t test of coefficients:
 
@@ -13183,7 +13175,7 @@ unemp       -0.0061725  0.0023398 -2.6380  0.008499 **
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 > ## idem with parameters, pass vcov as a matrix argument
-> coeftest(zz, vcov.=vcovHC(zz, method = "arellano", type="HC1"))
+> coeftest(zz, vcov.=vcovHC(zz, method="arellano", type="HC1"))
 
 t test of coefficients:
 
@@ -13197,7 +13189,7 @@ unemp       -0.0061725  0.0023398 -2.6380  0.008499 **
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 > ## joint restriction test
-> waldtest(zz, update(zz, .~.-log(emp)-unemp), vcov = vcovHC)
+> waldtest(zz, update(zz, .~.-log(emp)-unemp), vcov=vcovHC)
 Wald test
 
 Model 1: log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp
@@ -13208,7 +13200,7 @@ Model 2: log(gsp) ~ log(pcap) + log(pc)
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 > ## test of hyp.: 2*log(pc)=log(emp)
-> linearHypothesis(zz, "2*log(pc)=log(emp)", vcov. = vcovHC)
+> linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovHC)
 Linear hypothesis test
 
 Hypothesis:
@@ -13494,7 +13486,7 @@ attr(,"se")
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  15.9 1.1 16.99 NA NA 
+Time elapsed:  21.58 1.49 23.29 NA NA 
 > grDevices::dev.off()
 null device 
           1 

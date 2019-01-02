@@ -28,8 +28,8 @@ r.squared(object, model = NULL, type = c("cor", "rss", "ess"), dfcor = FALSE)
 }
 
 \seealso{
-\code{\link[plm]{plm}} for estimation of various models; 
-\code{\link[plm]{summary.plm}} which makes use of \code{r.squared}.
+\code{\link{plm}} for estimation of various models; 
+\code{\link{summary.plm}} which makes use of \code{r.squared}.
 }
 
 \examples{

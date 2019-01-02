@@ -1,5 +1,5 @@
 
-R version 3.5.1 (2018-07-02) -- "Feather Spray"
+R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
 Copyright (C) 2018 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -144,8 +144,8 @@ Residuals:
 -181.3556  -22.0352    5.7851   18.8320  253.9807 
 
 Coefficients:
-              Estimate Std. Error t-value Pr(>|t|)    
-(Intercept) -57.553864  25.335537 -2.2717  0.02419 *  
+              Estimate Std. Error z-value Pr(>|z|)    
+(Intercept) -57.553864  25.335537 -2.2717  0.02311 *  
 value         0.109710   0.010181 10.7756  < 2e-16 ***
 capital       0.307374   0.017272 17.7959  < 2e-16 ***
 ---
@@ -155,7 +155,7 @@ Total Sum of Squares:    2432400
 Residual Sum of Squares: 558340
 R-Squared:      0.77046
 Adj. R-Squared: 0.76813
-F-statistic: 330.612 on 2 and 197 DF, p-value: < 2.22e-16
+Chisq: 661.224 on 2 DF, p-value: < 2.22e-16
 > summary(plm_grunfeld_re_swar   )
 Oneway (individual) effect Random Effect Model 
    (Swamy-Arora's transformation)
@@ -177,8 +177,8 @@ Residuals:
 -177.6063  -19.7350    4.6851   19.5105  252.8743 
 
 Coefficients:
-              Estimate Std. Error t-value Pr(>|t|)    
-(Intercept) -57.834415  28.898935 -2.0013  0.04674 *  
+              Estimate Std. Error z-value Pr(>|z|)    
+(Intercept) -57.834415  28.898935 -2.0013  0.04536 *  
 value         0.109781   0.010493 10.4627  < 2e-16 ***
 capital       0.308113   0.017180 17.9339  < 2e-16 ***
 ---
@@ -188,7 +188,7 @@ Total Sum of Squares:    2381400
 Residual Sum of Squares: 548900
 R-Squared:      0.7695
 Adj. R-Squared: 0.76716
-F-statistic: 328.837 on 2 and 197 DF, p-value: < 2.22e-16
+Chisq: 657.674 on 2 DF, p-value: < 2.22e-16
 > summary(plm_grunfeld_re_amemiya)
 Oneway (individual) effect Random Effect Model 
    (Amemiya's transformation)
@@ -210,8 +210,8 @@ Residuals:
 -178.4834  -20.1692    4.9156   19.5200  253.1136 
 
 Coefficients:
-              Estimate Std. Error t-value Pr(>|t|)    
-(Intercept) -57.771054  27.961477 -2.0661  0.04013 *  
+              Estimate Std. Error z-value Pr(>|z|)    
+(Intercept) -57.771054  27.961477 -2.0661  0.03882 *  
 value         0.109764   0.010421 10.5328  < 2e-16 ***
 capital       0.307952   0.017200 17.9039  < 2e-16 ***
 ---
@@ -221,7 +221,7 @@ Total Sum of Squares:    2392500
 Residual Sum of Squares: 550970
 R-Squared:      0.76971
 Adj. R-Squared: 0.76738
-F-statistic: 329.229 on 2 and 197 DF, p-value: < 2.22e-16
+Chisq: 658.458 on 2 DF, p-value: < 2.22e-16
 > summary(plm_grunfeld_re_nerlove)
 Oneway (individual) effect Random Effect Model 
    (Nerlove's transformation)
@@ -243,8 +243,8 @@ Residuals:
 -176.5695  -19.8094    4.5578   19.4083  252.6067 
 
 Coefficients:
-              Estimate Std. Error t-value Pr(>|t|)    
-(Intercept) -57.907362  30.106995 -1.9234  0.05587 .  
+              Estimate Std. Error z-value Pr(>|z|)    
+(Intercept) -57.907362  30.106995 -1.9234  0.05443 .  
 value         0.109802   0.010576 10.3824  < 2e-16 ***
 capital       0.308294   0.017158 17.9676  < 2e-16 ***
 ---
@@ -254,7 +254,7 @@ Total Sum of Squares:    2368800
 Residual Sum of Squares: 546580
 R-Squared:      0.76926
 Adj. R-Squared: 0.76692
-F-statistic: 328.392 on 2 and 197 DF, p-value: < 2.22e-16
+Chisq: 656.784 on 2 DF, p-value: < 2.22e-16
 > 
 > #### oneway time balanced
 > plm_grunfeld_be_time         <- plm(inv ~ value + capital, data=Grunfeld, model="between", effect = "time")
@@ -337,8 +337,8 @@ Residuals:
 -291.6757  -30.0137    5.3033   34.8293  369.4464 
 
 Coefficients:
-               Estimate  Std. Error t-value  Pr(>|t|)    
-(Intercept) -42.7143694   9.5116760 -4.4907 1.207e-05 ***
+               Estimate  Std. Error z-value  Pr(>|z|)    
+(Intercept) -42.7143694   9.5116760 -4.4907 7.098e-06 ***
 value         0.1155622   0.0058357 19.8026 < 2.2e-16 ***
 capital       0.2306785   0.0254758  9.0548 < 2.2e-16 ***
 ---
@@ -348,7 +348,7 @@ Total Sum of Squares:    9359900
 Residual Sum of Squares: 1755900
 R-Squared:      0.81241
 Adj. R-Squared: 0.8105
-F-statistic: 426.576 on 2 and 197 DF, p-value: < 2.22e-16
+Chisq: 853.151 on 2 DF, p-value: < 2.22e-16
 > summary(plm_grunfeld_re_swar_time   )
 Oneway (time) effect Random Effect Model 
    (Swamy-Arora's transformation)
@@ -370,8 +370,8 @@ Residuals:
 -291.6757  -30.0137    5.3033   34.8293  369.4464 
 
 Coefficients:
-               Estimate  Std. Error t-value  Pr(>|t|)    
-(Intercept) -42.7143694   9.5116760 -4.4907 1.207e-05 ***
+               Estimate  Std. Error z-value  Pr(>|z|)    
+(Intercept) -42.7143694   9.5116760 -4.4907 7.098e-06 ***
 value         0.1155622   0.0058357 19.8026 < 2.2e-16 ***
 capital       0.2306785   0.0254758  9.0548 < 2.2e-16 ***
 ---
@@ -381,7 +381,7 @@ Total Sum of Squares:    9359900
 Residual Sum of Squares: 1755900
 R-Squared:      0.81241
 Adj. R-Squared: 0.8105
-F-statistic: 426.576 on 2 and 197 DF, p-value: < 2.22e-16
+Chisq: 853.151 on 2 DF, p-value: < 2.22e-16
 > summary(plm_grunfeld_re_amemiya_time)
 Oneway (time) effect Random Effect Model 
    (Amemiya's transformation)
@@ -403,8 +403,8 @@ Residuals:
 -291.6757  -30.0137    5.3033   34.8293  369.4464 
 
 Coefficients:
-               Estimate  Std. Error t-value  Pr(>|t|)    
-(Intercept) -42.7143694   9.5116760 -4.4907 1.207e-05 ***
+               Estimate  Std. Error z-value  Pr(>|z|)    
+(Intercept) -42.7143694   9.5116760 -4.4907 7.098e-06 ***
 value         0.1155622   0.0058357 19.8026 < 2.2e-16 ***
 capital       0.2306785   0.0254758  9.0548 < 2.2e-16 ***
 ---
@@ -414,7 +414,7 @@ Total Sum of Squares:    9359900
 Residual Sum of Squares: 1755900
 R-Squared:      0.81241
 Adj. R-Squared: 0.8105
-F-statistic: 426.576 on 2 and 197 DF, p-value: < 2.22e-16
+Chisq: 853.151 on 2 DF, p-value: < 2.22e-16
 > summary(plm_grunfeld_re_nerlove_time)
 Oneway (time) effect Random Effect Model 
    (Nerlove's transformation)
@@ -436,10 +436,10 @@ Residuals:
 -291.2135  -28.3774    5.6538   34.4465  371.6054 
 
 Coefficients:
-               Estimate  Std. Error t-value  Pr(>|t|)    
-(Intercept) -42.4667890  10.1886847 -4.1680 4.598e-05 ***
+               Estimate  Std. Error z-value  Pr(>|z|)    
+(Intercept) -42.4667890  10.1886847 -4.1680 3.072e-05 ***
 value         0.1157687   0.0058638 19.7429 < 2.2e-16 ***
-capital       0.2289722   0.0263535  8.6885 1.413e-15 ***
+capital       0.2289722   0.0263535  8.6885 < 2.2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -447,7 +447,7 @@ Total Sum of Squares:    9224900
 Residual Sum of Squares: 1746800
 R-Squared:      0.81064
 Adj. R-Squared: 0.80872
-F-statistic: 421.667 on 2 and 197 DF, p-value: < 2.22e-16
+Chisq: 843.335 on 2 DF, p-value: < 2.22e-16
 > 
 > #### oneway individual unbalanced
 > plm_grunfeld_be_unbal         <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="between")
@@ -531,10 +531,10 @@ Residuals:
 -177.211  -19.802    4.641   -0.017   19.687  252.771 
 
 Coefficients:
-              Estimate Std. Error t-value Pr(>|t|)    
-(Intercept) -57.874183  29.422867  -1.967   0.0506 .  
-value         0.109792   0.010552  10.405   <2e-16 ***
-capital       0.308181   0.017216  17.901   <2e-16 ***
+              Estimate Std. Error z-value Pr(>|z|)    
+(Intercept) -57.874183  29.422867  -1.967  0.04919 *  
+value         0.109792   0.010552  10.405  < 2e-16 ***
+capital       0.308181   0.017216  17.901  < 2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -542,7 +542,7 @@ Total Sum of Squares:    2376100
 Residual Sum of Squares: 548000
 R-Squared:      0.76937
 Adj. R-Squared: 0.76702
-F-statistic: 326.931 on 2 and 196 DF, p-value: < 2.22e-16
+Chisq: 653.862 on 2 DF, p-value: < 2.22e-16
 > summary(plm_grunfeld_re_swar_unbal   )
 Oneway (individual) effect Random Effect Model 
    (Swamy-Arora's transformation)
@@ -566,8 +566,8 @@ Residuals:
 -177.611  -19.815    4.769   -0.018   19.686  252.876 
 
 Coefficients:
-              Estimate Std. Error t-value Pr(>|t|)    
-(Intercept) -57.846046  28.969526 -1.9968  0.04723 *  
+              Estimate Std. Error z-value Pr(>|z|)    
+(Intercept) -57.846046  28.969526 -1.9968  0.04585 *  
 value         0.109784   0.010519 10.4364  < 2e-16 ***
 capital       0.308110   0.017224 17.8880  < 2e-16 ***
 ---
@@ -577,7 +577,7 @@ Total Sum of Squares:    2381000
 Residual Sum of Squares: 548910
 R-Squared:      0.76947
 Adj. R-Squared: 0.76711
-F-statistic: 327.102 on 2 and 196 DF, p-value: < 2.22e-16
+Chisq: 654.203 on 2 DF, p-value: < 2.22e-16
 > summary(plm_grunfeld_re_amemiya_unbal)
 Oneway (individual) effect Random Effect Model 
    (Amemiya's transformation)
@@ -601,8 +601,8 @@ Residuals:
 -177.811  -19.945    4.834   -0.018   19.678  252.929 
 
 Coefficients:
-              Estimate Std. Error t-value Pr(>|t|)    
-(Intercept) -57.831814  28.748169 -2.0117  0.04562 *  
+              Estimate Std. Error z-value Pr(>|z|)    
+(Intercept) -57.831814  28.748169 -2.0117  0.04425 *  
 value         0.109780   0.010503 10.4523  < 2e-16 ***
 capital       0.308074   0.017229 17.8813  < 2e-16 ***
 ---
@@ -612,7 +612,7 @@ Total Sum of Squares:    2383500
 Residual Sum of Squares: 549370
 R-Squared:      0.76951
 Adj. R-Squared: 0.76716
-F-statistic: 327.188 on 2 and 196 DF, p-value: < 2.22e-16
+Chisq: 654.377 on 2 DF, p-value: < 2.22e-16
 > # summary(plm_grunfeld_re_nerlove_unbal) # not implemented
 > 
 > #### oneway time unbalanced
@@ -699,8 +699,8 @@ Residuals:
 -291.8494  -29.8087    5.3955   34.7586  368.5334 
 
 Coefficients:
-               Estimate  Std. Error t-value  Pr(>|t|)    
-(Intercept) -43.0915664   9.5781503 -4.4989 1.169e-05 ***
+               Estimate  Std. Error z-value  Pr(>|z|)    
+(Intercept) -43.0915664   9.5781503 -4.4989 6.829e-06 ***
 value         0.1156300   0.0058506 19.7637 < 2.2e-16 ***
 capital       0.2310875   0.0255505  9.0443 < 2.2e-16 ***
 ---
@@ -710,7 +710,7 @@ Total Sum of Squares:    9340000
 Residual Sum of Squares: 1754400
 R-Squared:      0.81216
 Adj. R-Squared: 0.81025
-F-statistic: 423.727 on 2 and 196 DF, p-value: < 2.22e-16
+Chisq: 847.453 on 2 DF, p-value: < 2.22e-16
 > summary(plm_grunfeld_re_swar_time_unbal   )
 Oneway (time) effect Random Effect Model 
    (Swamy-Arora's transformation)
@@ -734,8 +734,8 @@ Residuals:
 -291.8494  -29.8087    5.3955   34.7586  368.5334 
 
 Coefficients:
-               Estimate  Std. Error t-value  Pr(>|t|)    
-(Intercept) -43.0915664   9.5781503 -4.4989 1.169e-05 ***
+               Estimate  Std. Error z-value  Pr(>|z|)    
+(Intercept) -43.0915664   9.5781503 -4.4989 6.829e-06 ***
 value         0.1156300   0.0058506 19.7637 < 2.2e-16 ***
 capital       0.2310875   0.0255505  9.0443 < 2.2e-16 ***
 ---
@@ -745,7 +745,7 @@ Total Sum of Squares:    9340000
 Residual Sum of Squares: 1754400
 R-Squared:      0.81216
 Adj. R-Squared: 0.81025
-F-statistic: 423.727 on 2 and 196 DF, p-value: < 2.22e-16
+Chisq: 847.453 on 2 DF, p-value: < 2.22e-16
 > summary(plm_grunfeld_re_amemiya_time_unbal)
 Oneway (time) effect Random Effect Model 
    (Amemiya's transformation)
@@ -769,8 +769,8 @@ Residuals:
 -291.8494  -29.8087    5.3955   34.7586  368.5334 
 
 Coefficients:
-               Estimate  Std. Error t-value  Pr(>|t|)    
-(Intercept) -43.0915664   9.5781503 -4.4989 1.169e-05 ***
+               Estimate  Std. Error z-value  Pr(>|z|)    
+(Intercept) -43.0915664   9.5781503 -4.4989 6.829e-06 ***
 value         0.1156300   0.0058506 19.7637 < 2.2e-16 ***
 capital       0.2310875   0.0255505  9.0443 < 2.2e-16 ***
 ---
@@ -780,7 +780,7 @@ Total Sum of Squares:    9340000
 Residual Sum of Squares: 1754400
 R-Squared:      0.81216
 Adj. R-Squared: 0.81025
-F-statistic: 423.727 on 2 and 196 DF, p-value: < 2.22e-16
+Chisq: 847.453 on 2 DF, p-value: < 2.22e-16
 > # summary(plm_grunfeld_re_nerlove_time_unbal) # not implemented
 > 
 > 
@@ -875,8 +875,8 @@ Residuals:
 -181.7595  -22.3727    5.9119   18.7001  254.1129 
 
 Coefficients:
-              Estimate Std. Error t-value Pr(>|t|)    
-(Intercept) -57.522213  25.012301 -2.2998  0.02251 *  
+              Estimate Std. Error z-value Pr(>|z|)    
+(Intercept) -57.522213  25.012301 -2.2998  0.02146 *  
 value         0.109703   0.010147 10.8113  < 2e-16 ***
 capital       0.307286   0.017283 17.7795  < 2e-16 ***
 ---
@@ -886,7 +886,7 @@ Total Sum of Squares:    2438400
 Residual Sum of Squares: 559450
 R-Squared:      0.77057
 Adj. R-Squared: 0.76824
-F-statistic: 330.818 on 2 and 197 DF, p-value: < 2.22e-16
+Chisq: 661.637 on 2 DF, p-value: < 2.22e-16
 > summary(plm_grunfeld_re_amemiya_tw)
 Twoways effects Random Effect Model 
    (Amemiya's transformation)
@@ -909,10 +909,10 @@ Residuals:
 -176.9062  -18.0431    3.2697   17.1719  234.1735 
 
 Coefficients:
-              Estimate Std. Error t-value Pr(>|t|)    
-(Intercept) -63.767791  29.851537 -2.1362   0.0339 *  
-value         0.111386   0.010909 10.2102   <2e-16 ***
-capital       0.323321   0.018772 17.2232   <2e-16 ***
+              Estimate Std. Error z-value Pr(>|z|)    
+(Intercept) -63.767791  29.851537 -2.1362  0.03267 *  
+value         0.111386   0.010909 10.2102  < 2e-16 ***
+capital       0.323321   0.018772 17.2232  < 2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -920,7 +920,7 @@ Total Sum of Squares:    2066800
 Residual Sum of Squares: 518200
 R-Squared:      0.74927
 Adj. R-Squared: 0.74673
-F-statistic: 294.358 on 2 and 197 DF, p-value: < 2.22e-16
+Chisq: 588.717 on 2 DF, p-value: < 2.22e-16
 > summary(plm_grunfeld_re_swar_tw   )
 Twoways effects Random Effect Model 
    (Swamy-Arora's transformation)
@@ -943,10 +943,10 @@ Residuals:
 -177.1700  -19.7576    4.6048   19.4676  252.7596 
 
 Coefficients:
-              Estimate Std. Error t-value Pr(>|t|)    
-(Intercept) -57.865377  29.393359 -1.9687   0.0504 .  
-value         0.109790   0.010528 10.4285   <2e-16 ***
-capital       0.308190   0.017171 17.9483   <2e-16 ***
+              Estimate Std. Error z-value Pr(>|z|)    
+(Intercept) -57.865377  29.393359 -1.9687  0.04899 *  
+value         0.109790   0.010528 10.4285  < 2e-16 ***
+capital       0.308190   0.017171 17.9483  < 2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -954,7 +954,7 @@ Total Sum of Squares:    2376000
 Residual Sum of Squares: 547910
 R-Squared:      0.7694
 Adj. R-Squared: 0.76706
-F-statistic: 328.647 on 2 and 197 DF, p-value: < 2.22e-16
+Chisq: 657.295 on 2 DF, p-value: < 2.22e-16
 > summary(plm_grunfeld_re_nerlove_tw)
 Twoways effects Random Effect Model 
    (Nerlove's transformation)
@@ -977,10 +977,10 @@ Residuals:
 -173.1203  -16.4742    2.0885   18.8439  221.8104 
 
 Coefficients:
-              Estimate Std. Error t-value Pr(>|t|)    
-(Intercept) -68.304674  33.457520 -2.0415  0.04253 *  
-value         0.112729   0.011330  9.9499  < 2e-16 ***
-capital       0.334494   0.019686 16.9917  < 2e-16 ***
+              Estimate Std. Error z-value Pr(>|z|)    
+(Intercept) -68.304674  33.457520 -2.0415   0.0412 *  
+value         0.112729   0.011330  9.9499   <2e-16 ***
+capital       0.334494   0.019686 16.9917   <2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -988,7 +988,7 @@ Total Sum of Squares:    1896600
 Residual Sum of Squares: 496930
 R-Squared:      0.73799
 Adj. R-Squared: 0.73533
-F-statistic: 277.437 on 2 and 197 DF, p-value: < 2.22e-16
+Chisq: 554.874 on 2 DF, p-value: < 2.22e-16
 > 
 > ##### twoways unbalanced
 > plm_grunfeld_pooled_tw_unbal     <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="pooling", effect = "twoways")
@@ -1076,7 +1076,7 @@ Residuals:
 -329.39  -41.02   10.57   -0.25   46.73  329.43 
 
 Coefficients:
-               Estimate  Std. Error t-value  Pr(>|t|)    
+               Estimate  Std. Error z-value  Pr(>|z|)    
 (Intercept) -5.7828e+01  5.4187e-01 -106.72 < 2.2e-16 ***
 value        1.0978e-01  1.9828e-04  553.65 < 2.2e-16 ***
 capital      3.0806e-01  3.2541e-04  946.70 < 2.2e-16 ***
@@ -1087,7 +1087,7 @@ Total Sum of Squares:    9340000
 Residual Sum of Squares: 1838200
 R-Squared:      0.80588
 Adj. R-Squared: 0.8039
-F-statistic: 399.938 on 2 and 196 DF, p-value: < 2.22e-16
+Chisq: 799.876 on 2 DF, p-value: < 2.22e-16
 > summary(plm_grunfeld_re_amemiya_tw_unbal)
 Twoways effects Random Effect Model 
    (Amemiya's transformation)
@@ -1114,7 +1114,7 @@ Residuals:
 -344.32  -44.34   14.98   -0.19   51.14  324.13 
 
 Coefficients:
-               Estimate  Std. Error t-value  Pr(>|t|)    
+               Estimate  Std. Error z-value  Pr(>|z|)    
 (Intercept) -6.5371e+01  6.0239e-01 -108.52 < 2.2e-16 ***
 value        1.1185e-01  2.1633e-04  517.04 < 2.2e-16 ***
 capital      3.2691e-01  3.7420e-04  873.62 < 2.2e-16 ***
@@ -1125,7 +1125,7 @@ Total Sum of Squares:    9340000
 Residual Sum of Squares: 1896700
 R-Squared:      0.80418
 Adj. R-Squared: 0.80218
-F-statistic: 384.597 on 2 and 196 DF, p-value: < 2.22e-16
+Chisq: 769.194 on 2 DF, p-value: < 2.22e-16
 > summary(plm_grunfeld_re_swar_tw_unbal   )
 Twoways effects Random Effect Model 
    (Swamy-Arora's transformation)
@@ -1156,7 +1156,7 @@ Residuals:
 -329.50  -41.03   10.61   -0.25   46.75  329.39 
 
 Coefficients:
-               Estimate  Std. Error t-value  Pr(>|t|)    
+               Estimate  Std. Error z-value  Pr(>|z|)    
 (Intercept) -5.7881e+01  5.5860e-01 -103.62 < 2.2e-16 ***
 value        1.0979e-01  1.9973e-04  549.70 < 2.2e-16 ***
 capital      3.0820e-01  3.2561e-04  946.53 < 2.2e-16 ***
@@ -1167,7 +1167,7 @@ Total Sum of Squares:    9340000
 Residual Sum of Squares: 1838600
 R-Squared:      0.80587
 Adj. R-Squared: 0.80389
-F-statistic: 399.846 on 2 and 196 DF, p-value: < 2.22e-16
+Chisq: 799.693 on 2 DF, p-value: < 2.22e-16
 > # summary(plm_grunfeld_re_nerlove_tw_unbal) # not implemented
 > 
 > 
@@ -1287,20 +1287,20 @@ Residuals:
 -0.62902 -0.06712 -0.00156 -0.00216  0.06858  0.54973 
 
 Coefficients:
-               Estimate  Std. Error  t-value  Pr(>|t|)    
+               Estimate  Std. Error  z-value  Pr(>|z|)    
 (Intercept)  9.6859e+00  1.9751e-01  49.0398 < 2.2e-16 ***
-crim        -7.4120e-03  1.0478e-03  -7.0738 5.211e-12 ***
-zn           7.8877e-05  6.5001e-04   0.1213 0.9034662    
-indus        1.5563e-03  4.0349e-03   0.3857 0.6998718    
-chasyes     -4.4247e-03  2.9212e-02  -0.1515 0.8796662    
-nox         -5.8425e-03  1.2452e-03  -4.6921 3.510e-06 ***
-rm           9.0552e-03  1.1886e-03   7.6182 1.331e-13 ***
-age         -8.5787e-04  4.6793e-04  -1.8333 0.0673581 .  
-dis         -1.4442e-01  4.4094e-02  -3.2753 0.0011301 ** 
-rad          9.5984e-02  2.6611e-02   3.6069 0.0003415 ***
-tax         -3.7740e-04  1.7693e-04  -2.1331 0.0334132 *  
-ptratio     -2.9476e-02  9.0698e-03  -3.2499 0.0012336 ** 
-blacks       5.6278e-01  1.0197e-01   5.5188 5.529e-08 ***
+crim        -7.4120e-03  1.0478e-03  -7.0738 1.508e-12 ***
+zn           7.8877e-05  6.5001e-04   0.1213 0.9034166    
+indus        1.5563e-03  4.0349e-03   0.3857 0.6997051    
+chasyes     -4.4247e-03  2.9212e-02  -0.1515 0.8796041    
+nox         -5.8425e-03  1.2452e-03  -4.6921 2.704e-06 ***
+rm           9.0552e-03  1.1886e-03   7.6182 2.573e-14 ***
+age         -8.5787e-04  4.6793e-04  -1.8333 0.0667541 .  
+dis         -1.4442e-01  4.4094e-02  -3.2753 0.0010557 ** 
+rad          9.5984e-02  2.6611e-02   3.6069 0.0003098 ***
+tax         -3.7740e-04  1.7693e-04  -2.1331 0.0329190 *  
+ptratio     -2.9476e-02  9.0698e-03  -3.2499 0.0011546 ** 
+blacks       5.6278e-01  1.0197e-01   5.5188 3.413e-08 ***
 lstat       -2.9107e-01  2.3927e-02 -12.1650 < 2.2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
@@ -1309,7 +1309,7 @@ Total Sum of Squares:    987.94
 Residual Sum of Squares: 8.9988
 R-Squared:      0.99091
 Adj. R-Squared: 0.99067
-F-statistic: 4117.13 on 13 and 492 DF, p-value: < 2.22e-16
+Chisq: 53522.6 on 13 DF, p-value: < 2.22e-16
 > 
 > ## do (weired) scaling of variables as in Baltagi/Chang (1994)
 > Hedonic$mv2      <- Hedonic$mv
@@ -1350,20 +1350,20 @@ Residuals:
 -0.62902 -0.06712 -0.00156 -0.00216  0.06858  0.54973 
 
 Coefficients:
-             Estimate Std. Error  t-value  Pr(>|t|)    
+             Estimate Std. Error  z-value  Pr(>|z|)    
 (Intercept)  9.685867   0.197510  49.0398 < 2.2e-16 ***
-crim2       -0.741197   0.104781  -7.0738 5.211e-12 ***
-zn2          0.078877   0.650012   0.1213 0.9034662    
-indus2       0.155634   0.403491   0.3857 0.6998718    
-chas2       -0.044247   0.292118  -0.1515 0.8796662    
-nox2        -0.584251   0.124518  -4.6921 3.510e-06 ***
-rm2          0.905517   0.118863   7.6182 1.331e-13 ***
-age2        -0.857873   0.467933  -1.8333 0.0673581 .  
-dis2        -1.444184   0.440937  -3.2753 0.0011301 ** 
-rad2         0.959839   0.266109   3.6069 0.0003415 ***
-tax2        -0.377396   0.176926  -2.1331 0.0334132 *  
-ptratio2    -2.947578   0.906984  -3.2499 0.0012336 ** 
-blacks       0.562775   0.101974   5.5188 5.529e-08 ***
+crim2       -0.741197   0.104781  -7.0738 1.508e-12 ***
+zn2          0.078877   0.650012   0.1213 0.9034166    
+indus2       0.155634   0.403491   0.3857 0.6997051    
+chas2       -0.044247   0.292118  -0.1515 0.8796041    
+nox2        -0.584251   0.124518  -4.6921 2.704e-06 ***
+rm2          0.905517   0.118863   7.6182 2.573e-14 ***
+age2        -0.857873   0.467933  -1.8333 0.0667541 .  
+dis2        -1.444184   0.440937  -3.2753 0.0010557 ** 
+rad2         0.959839   0.266109   3.6069 0.0003098 ***
+tax2        -0.377396   0.176926  -2.1331 0.0329190 *  
+ptratio2    -2.947578   0.906984  -3.2499 0.0011546 ** 
+blacks       0.562775   0.101974   5.5188 3.413e-08 ***
 lstat2      -2.910749   0.239273 -12.1650 < 2.2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
@@ -1372,7 +1372,7 @@ Total Sum of Squares:    987.94
 Residual Sum of Squares: 8.9988
 R-Squared:      0.99091
 Adj. R-Squared: 0.99067
-F-statistic: 4117.13 on 13 and 492 DF, p-value: < 2.22e-16
+Chisq: 53522.6 on 13 DF, p-value: < 2.22e-16
 > 
 > 
 > # pcce(., model = "mg") amd pmg(., model = "cmg") estimate  the same model but
@@ -1439,7 +1439,42 @@ Residual Sum of Squares: 0.056978
 Multiple R-squared: 0.99993
 > 
 > 
+> ## further run tests without intercept
+> plm(inv ~ 0 + value + capital + year, data = Grunfeld, model = "between")
+
+Model Formula: inv ~ 0 + value + capital + year
+
+Coefficients:
+    value   capital 
+0.1351278 0.0091422 
+
+> plm(inv ~ 0 + value + capital + year, data = Grunfeld, model = "random")
+
+Model Formula: inv ~ 0 + value + capital + year
+
+Coefficients:
+     value    capital   year1935   year1936   year1937   year1938   year1939 
+   0.11379    0.35435  -29.83815  -47.53304  -67.85332  -68.24177  -97.51343 
+  year1940   year1941   year1942   year1943   year1944   year1945   year1946 
+ -72.05556  -46.74154  -49.79337  -71.14771  -71.14670  -83.26433  -58.44853 
+  year1947   year1948   year1949   year1950   year1951   year1952   year1953 
+ -67.49265  -71.78949 -101.36137 -103.45708  -89.05656  -90.81574  -92.74262 
+  year1954 
+-118.42152 
+
+> plm(inv ~ 0 + value + capital + year, data = Grunfeld, model = "within")
+
+Model Formula: inv ~ 0 + value + capital + year
+
+Coefficients:
+   value  capital year1935 year1936 year1937 year1938 year1939 year1940 
+ 0.11772  0.35792 93.52622 74.32882 52.83621 54.29982 24.05593 49.29114 
+year1941 year1942 year1943 year1944 year1945 year1946 year1947 year1948 
+74.72176 72.38643 50.54860 50.42745 37.84318 62.35694 54.13398 49.80971 
+year1949 year1950 year1951 year1952 year1953 
+20.03112 17.63011 31.04531 28.89388 25.80826 
+
 > 
 > proc.time()
    user  system elapsed 
-   3.49    0.15    3.66 
+   3.49    0.21    3.69 

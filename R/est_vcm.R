@@ -201,50 +201,58 @@ pvcm.random <- function(formula, data, effect){
 }
 
 
-summary.pvcm <- function(object,...){
-    model <- describe(object, "model")
-    if (model == "random"){
-        std.err <- sqrt(diag(vcov(object)))
-        b <- object$coefficients
-        z <- b/std.err
-        p <- 2*pnorm(abs(z), lower.tail = FALSE)
-        coef <- cbind(b, std.err, z, p)
-        colnames(coef) <- c("Estimate", "Std. Error", "z-value", "Pr(>|z|)")
-        object$coefficients <- coef
-    }
-    object$ssr <- deviance(object)
-    object$tss <- tss(unlist(model.frame(object)))
-    object$rsqr <- 1-object$ssr/object$tss
-    class(object) <- c("summary.pvcm", "pvcm")
-    return(object)
+summary.pvcm <- function(object, ...) {
+  model <- describe(object, "model")
+  if (model == "random") {
+    object$waldstatistic <- pwaldtest(object)
+    std.err <- sqrt(diag(vcov(object)))
+    b <- object$coefficients
+    z <- b / std.err
+    p <- 2 * pnorm(abs(z), lower.tail = FALSE)
+    coef <- cbind(b, std.err, z, p)
+    colnames(coef) <-
+      c("Estimate", "Std. Error", "z-value", "Pr(>|z|)")
+    object$coefficients <- coef
+  }
+  object$ssr <- deviance(object)
+  object$tss <- tss(unlist(model.frame(object)))
+  object$rsqr <- 1 - object$ssr / object$tss
+  class(object) <- c("summary.pvcm", "pvcm")
+  return(object)
 }
 
 print.summary.pvcm <- function(x, digits = max(3, getOption("digits") - 2),
-                               width = getOption("width"),...){
+                               width = getOption("width"), ...) {
     effect <- describe(x, "effect")
     formula <- formula(x)
     model <- describe(x, "model")
-    cat(paste(effect.pvcm.list[effect]," ",sep=""))
-    cat(paste(model.pvcm.list[model],"\n",sep=""))
+    cat(paste(effect.pvcm.list[effect], " ", sep = ""))
+    cat(paste(model.pvcm.list[model], "\n", sep = ""))
     cat("\nCall:\n")
     print(x$call)
     cat("\n")
     print(pdim(model.frame(x)))
     cat("\nResiduals:\n")
-    print(summary(unlist(residuals(x))))
-    if (model == "random"){
-        cat("\nEstimated mean of the coefficients:\n")
-        printCoefmat(x$coefficients, digits = digits)
-        cat("\nEstimated variance of the coefficients:\n")
-        print(x$Delta, digits = digits)
+    print(sumres(x))
+    if (model == "random") {
+      cat("\nEstimated mean of the coefficients:\n")
+      printCoefmat(x$coefficients, digits = digits)
+      cat("\nEstimated variance of the coefficients:\n")
+      print(x$Delta, digits = digits)
     }
-    if (model == "within"){
-        cat("\nCoefficients:\n")
-        print(summary(x$coefficients))
+    if (model == "within") {
+      cat("\nCoefficients:\n")
+      print(summary(x$coefficients))
     }
     cat("\n")
-    cat(paste("Total Sum of Squares: ", signif(x$tss, digits), "\n", sep=""))
-    cat(paste("Residual Sum of Squares: ", signif(x$ssr, digits), "\n", sep=""))
-    cat(paste("Multiple R-Squared: ", signif(x$rsqr, digits), "\n", sep=""))
+    cat(paste0("Total Sum of Squares: ",    signif(x$tss, digits), "\n"))
+    cat(paste0("Residual Sum of Squares: ", signif(x$ssr, digits), "\n"))
+    cat(paste0("Multiple R-Squared: ",      signif(x$rsqr, digits), "\n"))
+    if (model == "random") {
+      waldstat <- x$waldstatistic
+      cat(paste0("Chisq: ", signif(waldstat$statistic), " on ",
+          waldstat$parameter, " DF, p-value: ",
+          format.pval(waldstat$p.value, digits = digits), "\n"))
+    }
     invisible(x)
-}
+  }

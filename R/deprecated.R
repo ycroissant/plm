@@ -91,225 +91,229 @@ lev2var <- function(x, ...){
 
 
 pht <- function(formula, data, subset, na.action, model = c("ht", "am", "bms"), index = NULL, ...){
-
+  
   .Deprecated(old = "pht",
               msg = "uses of 'pht()' and 'plm(., model = \"ht\"/\"am\"/\"bms\")' are discouraged, better use 'plm(., model =\"random\", random.method = \"ht\", inst.method = \"baltagi\"/\"am\"/\"bms\")'")
   
-
-    cl <- match.call(expand.dots = TRUE)
-    mf <- match.call()
+  cl <- match.call(expand.dots = TRUE)
+  mf <- match.call()
   
-    if (length(model) == 1 && model == "bmc") {
-        # accept "bmc" (a long-standing typo) for Breusch-Mizon-Schmidt due to backward compatibility
-        model <- "bms"
-        warning("Use of model = \"bmc\" discouraged, set to \"bms\" for Breusch-Mizon-Schmidt instrumental variable transformation")
-    }
-    model <- match.arg(model)
-    # compute the model.frame using plm with model = NA
-    mf[[1]] <- as.name("plm")
-    mf$model <- NA
-    data <- eval(mf, parent.frame())
-    # estimate the within model without instrument and extract the fixed
-    # effects
-    formula <- Formula(formula)
-    if (length(formula)[2] == 1) stop("a list of exogenous variables should be provided")
-    mf$model = "within"
-    mf$formula <- formula(formula, rhs = 1)
-    within <- eval(mf, parent.frame())
-    fixef <- fixef(within)
-    id <- index(data, "id")
-    time <- index(data, "time")
-    pdim <- pdim(data)
-    balanced <- pdim$balanced
-    T <- pdim$nT$T
-    n <- pdim$nT$n
-    N <- pdim$nT$N
-    Ti <- pdim$Tint$Ti
-    # get the typology of the variables
-    X <- model.matrix(data, rhs = 1, model = "within", cstcovar.rm = "all")
-    W <- model.matrix(data, rhs = 2, model = "within", cstcovar.rm = "all")
-    exo.all <- colnames(W)
-    all.all <- colnames(X)
-    edo.all <- all.all[!(all.all %in% exo.all)]
-    all.cst <- attr(X, "constant")
-    exo.cst <- attr(W, "constant")
-    if("(Intercept)" %in% all.cst) all.cst <- setdiff(all.cst, "(Intercept)")
-    if("(Intercept)" %in% exo.cst) exo.cst <- setdiff(exo.cst, "(Intercept)")
-    exo.var <- exo.all[!(exo.all %in% exo.cst)]
-    edo.cst <- all.cst[!(all.cst %in% exo.cst)]
-    edo.var <- edo.all[!(edo.all %in% edo.cst)]
-    
-    if (length(edo.cst) > length(exo.var)){
-        stop(" The number of endogenous time-invariant variables is greater
+  if (length(model) == 1 && model == "bmc") {
+    # accept "bmc" (a long-standing typo) for Breusch-Mizon-Schmidt due to backward compatibility
+    model <- "bms"
+    warning("Use of model = \"bmc\" discouraged, set to \"bms\" for Breusch-Mizon-Schmidt instrumental variable transformation")
+  }
+  model <- match.arg(model)
+  # compute the model.frame using plm with model = NA
+  mf[[1]] <- as.name("plm")
+  mf$model <- NA
+  data <- eval(mf, parent.frame())
+  # estimate the within model without instrument and extract the fixed
+  # effects
+  formula <- Formula(formula)
+  if (length(formula)[2] == 1) stop("a list of exogenous variables should be provided")
+  mf$model = "within"
+  mf$formula <- formula(formula, rhs = 1)
+  within <- eval(mf, parent.frame())
+  fixef <- fixef(within)
+  id <- index(data, "id")
+  time <- index(data, "time")
+  pdim <- pdim(data)
+  balanced <- pdim$balanced
+  T <- pdim$nT$T
+  n <- pdim$nT$n
+  N <- pdim$nT$N
+  Ti <- pdim$Tint$Ti
+  # get the typology of the variables
+  X <- model.matrix(data, rhs = 1, model = "within", cstcovar.rm = "all")
+  W <- model.matrix(data, rhs = 2, model = "within", cstcovar.rm = "all")
+  exo.all <- colnames(W)
+  all.all <- colnames(X)
+  edo.all <- all.all[!(all.all %in% exo.all)]
+  all.cst <- attr(X, "constant")
+  exo.cst <- attr(W, "constant")
+  if("(Intercept)" %in% all.cst) all.cst <- setdiff(all.cst, "(Intercept)")
+  if("(Intercept)" %in% exo.cst) exo.cst <- setdiff(exo.cst, "(Intercept)")
+  exo.var <- exo.all[!(exo.all %in% exo.cst)]
+  edo.cst <- all.cst[!(all.cst %in% exo.cst)]
+  edo.var <- edo.all[!(edo.all %in% edo.cst)]
+  
+  if (length(edo.cst) > length(exo.var)){
+    stop(" The number of endogenous time-invariant variables is greater
            than the number of exogenous time varying variables\n")
-    }
+  }
   
-    X <- model.matrix(data, model = "pooling", rhs = 1, lhs = 1)
-    if (length(exo.var) > 0) XV <- X[ , exo.var, drop = FALSE] else XV <- NULL
-    if (length(edo.var) > 0) NV <- X[ , edo.var, drop = FALSE] else NV <- NULL
-    if (length(exo.cst) > 0) XC <- X[ , exo.cst, drop = FALSE] else XC <- NULL
-    if (length(edo.cst) > 0) NC <- X[ , edo.cst, drop = FALSE] else NC <- NULL
-    if (length(all.cst) != 0 )
-        zo <- twosls(fixef[as.character(id)], cbind(XC, NC), cbind(XC, XV), TRUE)
-    else zo <- lm(fixef ~ 1)
-    
-    sigma2 <- list()
-    sigma2$idios <- deviance(within)/ (N - n)
-    sigma2$one <- deviance(zo) / n
-    if(balanced){
-        sigma2$id <- (sigma2$one - sigma2$idios)/ T
-        theta <- 1 - sqrt(sigma2$idios / sigma2$one)
+  X <- model.matrix(data, model = "pooling", rhs = 1, lhs = 1)
+  if (length(exo.var) > 0) XV <- X[ , exo.var, drop = FALSE] else XV <- NULL
+  if (length(edo.var) > 0) NV <- X[ , edo.var, drop = FALSE] else NV <- NULL
+  if (length(exo.cst) > 0) XC <- X[ , exo.cst, drop = FALSE] else XC <- NULL
+  if (length(edo.cst) > 0) NC <- X[ , edo.cst, drop = FALSE] else NC <- NULL
+  if (length(all.cst) != 0)
+    zo <- twosls(fixef[as.character(id)], cbind(XC, NC), cbind(XC, XV), TRUE)
+  else zo <- lm(fixef ~ 1)
+  
+  sigma2 <- list()
+  sigma2$one <- 0
+  sigma2$idios <- deviance(within)/ (N - n)
+  sigma2$one <- deviance(zo) / n
+  if(balanced){
+    sigma2$id <- (sigma2$one - sigma2$idios)/ T
+    theta <- 1 - sqrt(sigma2$idios / sigma2$one)
+  }
+  else{
+    # for unbalanced data, the harmonic mean of the Ti's is used ; why ??
+    barT <- n / sum(1 / Ti)
+    sigma2$id <- (sigma2$one - sigma2$idios) / barT
+    theta <- 1 - sqrt(sigma2$idios / (sigma2$idios + Ti * sigma2$id))
+    theta <- theta[as.character(id)]
+  }
+  estec <- structure(list(sigma2 = sigma2, theta = theta),
+                     class = "ercomp",
+                     balanced = balanced,
+                     effect = "individual")
+  y <- pmodel.response(data, model = "random", effect = "individual", theta = theta)
+  X <- model.matrix(data, model = "random", effect = "individual", theta = theta)
+  within.inst <- model.matrix(data, model = "within")
+  
+  if (model == "ht"){
+    between.inst <- model.matrix(data, model = "Between",
+                                 rhs = 2)[, exo.var, drop = FALSE]
+    W <- cbind(within.inst, XC, between.inst)
+  }
+  if (model == "am"){
+    Vx <- model.matrix(data, model = "pooling",
+                       rhs = 2)[, exo.var, drop = FALSE]
+    if (balanced){
+      # Plus rapide mais pas robuste au non cylindre
+      Vxstar <- Reduce("cbind",
+                       lapply(seq_len(ncol(Vx)),
+                              function(x)
+                                matrix(Vx[, x], ncol = T, byrow = TRUE)[rep(1:n, each = T), ]))
     }
     else{
-        # for unbalanced data, the harmonic mean of the Ti's is used ; why ??
-        barT <- n / sum(1 / Ti)
-        sigma2$id <- (sigma2$one - sigma2$idios) / barT
-        theta <- 1 - sqrt(sigma2$idios / (sigma2$idios + Ti * sigma2$id))
-        theta <- theta[as.character(id)]
-    }
-    estec <- structure(list(sigma2 = sigma2, theta = theta),
-                       class = "ercomp",
-                       balanced = balanced,
-                       effect = "individual")
-    y <- pmodel.response(data, model = "random", effect = "individual", theta = theta)
-    X <- model.matrix(data, model = "random", effect = "individual", theta = theta)
-    within.inst <- model.matrix(data, model = "within")
-    if (model == "ht"){
-        between.inst <- model.matrix(data, model = "Between",
-                                     rhs = 2)[, exo.var, drop = FALSE]
-        W <- cbind(within.inst, XC, between.inst)
-    }
-    if (model == "am"){
-        Vx <- model.matrix(data, model = "pooling",
-                           rhs = 2)[, exo.var, drop = FALSE]
-        if (balanced){
-            # Plus rapide mais pas robuste au non cylindre
-            Vxstar <- Reduce("cbind",
-                             lapply(seq_len(ncol(Vx)),
-                                    function(x)
-                                        matrix(Vx[, x], ncol = T, byrow = TRUE)[rep(1:n, each = T), ]))
-        }
-        else{
       Xs <- lapply(seq_len(ncol(Vx)), function(x)
-          structure(Vx[, x], index = index(data), class = c("pseries", class(Vx[, x]))))
+        structure(Vx[, x], index = index(data), class = c("pseries", class(Vx[, x]))))
       Vx2 <- Reduce("cbind", lapply(Xs, as.matrix))
       Vxstar <- Vx2[rep(1:n, times = Ti), ]
       Vxstar[is.na(Vxstar)] <- 0
-        }
-        W <- cbind(within.inst, XC, Vxstar)
     }
-    if (model == "bms"){
-        between.inst <- model.matrix(data, model = "Between",
-                                     rhs = 2)[, exo.var, drop = FALSE]
-        Vx <- within.inst
-        if (balanced){
-            # Plus rapide mais pas robuste au non cylindre
-            Vxstar <- Reduce("cbind",
-                             lapply(seq_len(ncol(Vx)),
-                                    function(x)
-                                        matrix(Vx[, x], ncol = T, byrow = TRUE)[rep(1:n, each = T), ]))
-        }
-        else{
-            Xs <- lapply(seq_len(ncol(Vx)), function(x)
-                structure(Vx[, x], index = index(data), class = c("pseries", class(Vx[, x]))))
-            Vx2 <- Reduce("cbind", lapply(Xs, as.matrix))
-            Vxstar <- Vx2[rep(1:n, times = Ti), ]
-            Vxstar[is.na(Vxstar)] <- 0
-        }
-        W <- cbind(within.inst, XC, between.inst, Vxstar)
+    W <- cbind(within.inst, XC, Vxstar)
+  }
+  if (model == "bms"){
+    between.inst <- model.matrix(data, model = "Between",
+                                 rhs = 2)[, exo.var, drop = FALSE]
+    Vx <- within.inst
+    if (balanced){
+      # Plus rapide mais pas robuste au non cylindre
+      Vxstar <- Reduce("cbind",
+                       lapply(seq_len(ncol(Vx)),
+                              function(x)
+                                matrix(Vx[, x], ncol = T, byrow = TRUE)[rep(1:n, each = T), ]))
     }
-    
-    result <- twosls(y, X, W)
-    K <- length(data)
-    ve <- lev2var(data)
-    varlist <- list(xv = unique(ve[exo.var]),
-                    nv = unique(ve[edo.var]),
-                    xc = unique(ve[exo.cst[exo.cst != "(Intercept)"]]),
-                    nc = unique(ve[edo.cst])
-                    )
-    varlist <- lapply(varlist, function(x){ names(x) <- NULL; x})
-    result <- list(coefficients = coef(result),
-                   vcov         = vcov(result),
-                   residuals    = resid(result),
-                   df.residual  = df.residual(result),
-                   formula      = formula, 
-                   model        = data,
-                   varlist      = varlist,
-                   ercomp       = estec,
-                   call         = cl,
-                   args         = list(model = "ht"))
-    names(result$coefficients) <- colnames(result$vcov) <-
-        rownames(result$vcov) <- colnames(X)
-    class(result) <- c("pht", "plm", "panelmodel")
-    result
+    else{
+      Xs <- lapply(seq_len(ncol(Vx)), function(x)
+        structure(Vx[, x], index = index(data), class = c("pseries", class(Vx[, x]))))
+      Vx2 <- Reduce("cbind", lapply(Xs, as.matrix))
+      Vxstar <- Vx2[rep(1:n, times = Ti), ]
+      Vxstar[is.na(Vxstar)] <- 0
+    }
+    W <- cbind(within.inst, XC, between.inst, Vxstar)
+  }
+  
+  result <- twosls(y, X, W)
+  K <- length(data)
+  ve <- lev2var(data)
+  varlist <- list(xv = unique(ve[exo.var]),
+                  nv = unique(ve[edo.var]),
+                  xc = unique(ve[exo.cst[exo.cst != "(Intercept)"]]),
+                  nc = unique(ve[edo.cst])
+  )
+  varlist <- lapply(varlist, function(x){ names(x) <- NULL; x})
+  result <- list(coefficients = coef(result),
+                 vcov         = vcov(result),
+                 residuals    = resid(result),
+                 df.residual  = df.residual(result),
+                 formula      = formula, 
+                 model        = data,
+                 varlist      = varlist,
+                 ercomp       = estec,
+                 call         = cl,
+                 args         = list(model = "ht", ht.method = model))
+  names(result$coefficients) <- colnames(result$vcov) <-
+    rownames(result$vcov) <- colnames(X)
+  class(result) <- c("pht", "plm", "panelmodel")
+  result
 }
 
 summary.pht <- function(object, ...){
-    object$fstatistic <- pwaldtest(object, test = "F")
-    # construct the table of coefficients
-    std.err <- sqrt(diag(vcov(object)))
-    b <- coefficients(object)
-    z <- b/std.err
-    p <- 2*pnorm(abs(z), lower.tail = FALSE)
-    object$coefficients <- cbind("Estimate"   = b,
-                                 "Std. Error" = std.err,
-                                 "z-value"    = z,
-                                 "Pr(>|z|)"   = p)
-    class(object) <- c("summary.pht", "pht", "plm", "panelmodel")
-    object
+	object$fstatistic <- pwaldtest(object, test = "Chisq")
+	# construct the table of coefficients
+	std.err <- sqrt(diag(vcov(object)))
+	b <- coefficients(object)
+	z <- b/std.err
+	p <- 2*pnorm(abs(z), lower.tail = FALSE)
+	object$coefficients <- cbind("Estimate"   = b,
+															 "Std. Error" = std.err,
+															 "z-value"    = z,
+															 "Pr(>|z|)"   = p)
+	class(object) <- c("summary.pht", "pht", "plm", "panelmodel")
+	object
 }
 
 print.summary.pht <- function(x, digits = max(3, getOption("digits") - 2),
                               width = getOption("width"), subset = NULL, ...){
-    formula <- formula(x)
-    has.instruments <- (length(formula)[2] == 2)
-    effect <- describe(x, "effect")
-    model <- describe(x, "model")
-    cat(paste(effect.plm.list[effect]," ",sep=""))
-    cat(paste(model.plm.list[model]," Model",sep=""))
-    cat("\nCall:\n")
-    print(x$call)
-
-      #    cat("\nTime-Varying Variables: ")
-    names.xv <- paste(x$varlist$xv,collapse=", ")
-    names.nv <- paste(x$varlist$nv,collapse=", ")
-    names.xc <- paste(x$varlist$xc,collapse=", ")
-    names.nc <- paste(x$varlist$nc,collapse=", ")
-    cat(paste("\nT.V. exo  : ",names.xv,"\n", sep = ""))
-    cat(paste("T.V. endo : ", names.nv,"\n",sep = ""))
-    #    cat("Time-Invariant Variables: ")
-    cat(paste("T.I. exo  : ", names.xc, "\n", sep= ""))
-    cat(paste("T.I. endo : ", names.nc, "\n", sep= ""))
-    cat("\n")
-    pdim <- pdim(x)
-    print(pdim)
-    cat("\nEffects:\n")
-    print(x$ercomp)
-    cat("\nResiduals:\n")
-    save.digits <- unlist(options(digits = digits))
-    on.exit(options(digits = save.digits))
-    print(sumres(x))
+  formula <- formula(x)
+  has.instruments <- (length(formula)[2] >= 2)
+  effect <- describe(x, "effect")
+  model <- describe(x, "model")
+  ht.method <- describe(x, "ht.method")
+  cat(paste(effect.plm.list[effect]," ",sep=""))
+  cat(paste(model.plm.list[model]," Model",sep=""),"\n")
+  cat(paste("(", ht.method.list[ht.method],")",sep=""),"\n")
   
-    cat("\nCoefficients:\n")
-    if (is.null(subset)) printCoefmat(coef(x), digits = digits)
-    else printCoefmat(coef(x)[subset, , drop = FALSE], digits = digits)
-    cat("\n")
-    cat(paste("Total Sum of Squares:    ",signif(tss(x),digits),"\n",sep=""))
-    cat(paste("Residual Sum of Squares: ",signif(deviance(x),digits),"\n",sep=""))
- #  cat(paste("Multiple R-Squared:      ",signif(x$rsq,digits),"\n",sep=""))
-    fstat <- x$fstatistic
-    if (names(fstat$statistic) == "F"){
-        cat(paste("F-statistic: ",signif(fstat$statistic),
-                  " on ",fstat$parameter["df1"]," and ",fstat$parameter["df2"],
-                  " DF, p-value: ",format.pval(fstat$p.value,digits=digits),"\n",sep=""))
-    }
-    else{
-        cat(paste("Chisq: ",signif(fstat$statistic),
-                  " on ",fstat$parameter,
-                  " DF, p-value: ",format.pval(fstat$p.value,digits=digits),"\n",sep=""))
-        
-    }
-    invisible(x)
+  cat("\nCall:\n")
+  print(x$call)
+  
+  #    cat("\nTime-Varying Variables: ")
+  names.xv <- paste(x$varlist$xv,collapse=", ")
+  names.nv <- paste(x$varlist$nv,collapse=", ")
+  names.xc <- paste(x$varlist$xc,collapse=", ")
+  names.nc <- paste(x$varlist$nc,collapse=", ")
+  cat(paste("\nT.V. exo  : ",names.xv,"\n", sep = ""))
+  cat(paste("T.V. endo : ", names.nv,"\n",sep = ""))
+  #    cat("Time-Invariant Variables: ")
+  cat(paste("T.I. exo  : ", names.xc, "\n", sep= ""))
+  cat(paste("T.I. endo : ", names.nc, "\n", sep= ""))
+  cat("\n")
+  pdim <- pdim(x)
+  print(pdim)
+  cat("\nEffects:\n")
+  print(x$ercomp)
+  cat("\nResiduals:\n")
+  save.digits <- unlist(options(digits = digits))
+  on.exit(options(digits = save.digits))
+  print(sumres(x))
+  
+  cat("\nCoefficients:\n")
+  if (is.null(subset)) printCoefmat(coef(x), digits = digits)
+  else printCoefmat(coef(x)[subset, , drop = FALSE], digits = digits)
+  cat("\n")
+  cat(paste("Total Sum of Squares:    ",signif(tss(x),digits),"\n",sep=""))
+  cat(paste("Residual Sum of Squares: ",signif(deviance(x),digits),"\n",sep=""))
+  #  cat(paste("Multiple R-Squared:      ",signif(x$rsq,digits),"\n",sep=""))
+  fstat <- x$fstatistic
+  if (names(fstat$statistic) == "F"){
+    cat(paste("F-statistic: ",signif(fstat$statistic),
+              " on ",fstat$parameter["df1"]," and ",fstat$parameter["df2"],
+              " DF, p-value: ",format.pval(fstat$p.value,digits=digits),"\n",sep=""))
+  }
+  else{
+    cat(paste("Chisq: ",signif(fstat$statistic),
+              " on ",fstat$parameter,
+              " DF, p-value: ",format.pval(fstat$p.value,digits=digits),"\n",sep=""))
+    
+  }
+  invisible(x)
 }
 
 ## dynformula

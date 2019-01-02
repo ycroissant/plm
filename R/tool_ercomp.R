@@ -301,8 +301,8 @@ ercomp.formula <- function(object, data,
         if (effect != "time") estm[[2]] <- plm.fit(data, model = secmod, effect = "individual")
         if (effect != "individual") estm[[3]] <- plm.fit(data, model = secmod, effect = "time")
         # check if Between model was estimated correctly
-#        swar_Between_check(estm[[2]], method)
-#        swar_Between_check(estm[[3]], method)
+        swar_Between_check(estm[[2]], method)
+        swar_Between_check(estm[[3]], method)
     }
     KS <- sapply(estm, function(x) length(coef(x))) - sapply(estm, function(x){ "(Intercept)" %in% names(coef(x))})
     quad <- vector(length = 3, mode = "numeric")
@@ -574,20 +574,18 @@ amemiya_check <- function(matA, matB, method) {
 
 
 swar_Between_check <- function(x, method) {
-    print(method)
-    print(describe(x, "model"))
-  ## non-exported, used in ercomp()
-  ## little helper function to check feasibility of Between model in Swamy-Arora estimation
-  ## in ercomp(): if model contains too few groups (individual, time) the Between
-  ## model is not estimable (but does not error)
-  if (method == "swar" && describe(x, "model") == "Between") {
-    pdim <- pdim(x)
-    grp <- switch(describe(x, "effect"),
-                  "individual" = pdim$nT$n,
-                  "time"       = pdim$nT$T)
-    # cannot use df.residual(x) here because that gives the number for the "uncompressed" Between model
-    if (length(x$aliased) >= grp) stop(paste0("'swar' model not estimable as there are ", length(x$aliased),
-                                              " coefficient(s) (incl. intercept) to be estimated for the between model but only ",
-                                              grp, " ", describe(x, "effect"), "(s)"))
-  } else NULL
+	## non-exported, used in ercomp()
+	## little helper function to check feasibility of Between model in Swamy-Arora estimation
+	## in ercomp(): if model contains too few groups (individual, time) the Between
+	## model is not estimable (but does not error)
+	if (describe(x, "model") %in% c("between", "Between")) {
+		pdim <- pdim(x)
+		grp <- switch(describe(x, "effect"),
+									"individual" = pdim$nT$n,
+									"time"       = pdim$nT$T)
+		# cannot use df.residual(x) here because that gives the number for the "uncompressed" Between model
+		if (length(x$aliased) >= grp) stop(paste0("model not estimable as there are ", length(x$aliased),
+																							" coefficient(s) (incl. intercept) to be estimated for the between model but only ",
+																							grp, " ", describe(x, "effect"), "(s)"))
+	} else NULL
 }

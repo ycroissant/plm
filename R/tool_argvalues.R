@@ -5,7 +5,8 @@
 random.method.list <- c(swar    = "Swamy-Arora",
                         walhus  = "Wallace-Hussain",
                         amemiya = "Amemiya",
-                        nerlove = "Nerlove")
+                        nerlove = "Nerlove",
+                        ht      = "Hausman-Taylor")
 
 effect.plm.list <- c(individual = "Oneway (individual) effect",
                      time       = "Oneway (time) effect",
@@ -27,6 +28,10 @@ model.plm.list <- c(pooling = "Pooling",
                     random  = "Random Effect",
                     ht      = "Hausman-Taylor",
                     fd      = "First-Difference")
+
+ht.method.list <- c(ht = "Hausman-Taylor estimator",
+                    am = "Amemiya-MaCurdy estimator",
+                    bms = "Breusch-Mizon-Schmidt estimator")
 
 model.pvcm.list <- c(within = "No-pooling model",
                      random = "Random coefficients model")

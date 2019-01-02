@@ -45,8 +45,8 @@ placed in the first column, see also \bold{Examples} for usage.
 % }
 
 \seealso{
-  \code{plm}'s \code{\link[plm]{model.matrix}} for (transformed) model matrix and the
-  corresponding \code{\link[plm]{model.frame}} method to construct a model frame.
+  \code{plm}'s \code{\link{model.matrix}} for (transformed) model matrix and the
+  corresponding \code{\link{model.frame}} method to construct a model frame.
 }
 
 \examples{
@@ -55,19 +55,16 @@ data("Grunfeld", package = "plm")
 pGrunfeld <- pdata.frame(Grunfeld)
 
 # then make a model frame from a pFormula and a pdata.frame
-#MM pform <- pFormula(inv ~ value + capital)
-#MM mf <- model.frame(pform, data = pGrunfeld)
+
 
 form <- inv ~ value + capital
 mf <- model.frame(pGrunfeld, form)
 # construct (transformed) response of the within model
-#MM resp <- pmodel.response(pform, data = mf, model = "within", effect = "individual")
 resp <- pmodel.response(form, data = mf, model = "within", effect = "individual")
 # retrieve (transformed) response directly from model frame
 resp_mf <- pmodel.response(mf, model = "within", effect = "individual")
 
 # retrieve (transformed) response from a plm object, i.e. an estimated model
-#MM fe_model <- plm(pform, data = pGrunfeld, model = "within")
 fe_model <- plm(form, data = pGrunfeld, model = "within")
 pmodel.response(fe_model)
 

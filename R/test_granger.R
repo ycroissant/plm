@@ -46,8 +46,8 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar", "Wbar"), orde
     stop(paste0("Argument 'formula' must be of class \"formula\" and may not contain ",
                 "more than 2 variables, one LHS and one RHS variable, e.g. 'y ~ x'"))
   }
-    
-  if (!(is.numeric(order) && round(order) == order && all(order > 0))) 
+  
+  if (!(is.numeric(order) && all(round(order) == order) && all(order > 0))) 
     stop("Lag order 'order' must contain positive integer(s)")
   
   if (length(order) > 1 && length(order) != N) stop("'order' must have length 1 or the number of individuals")
@@ -60,44 +60,44 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar", "Wbar"), orde
     if (test == "Ztilde" && !all((Ti > (5 + 3*order)))) {
       stop(paste0("Condition for test = \"Ztilde\" not met for all individuals: length of time series ",
                   "must be larger than 5+3*order (>5+3*", order, "=", 5 + 3*order,")"))
-      }
-    } else {
-      if (test == "Ztilde" && !all((Ti > (5 + 3*order)))) {
-        stop(paste0("Condition for test = \"Ztilde\" not met for all individuals: length of time series ",
-                    "must be larger than 5+3*order [where order is the order specified for the individuals]"))
-        }
     }
+  } else {
+    if (test == "Ztilde" && !all((Ti > (5 + 3*order)))) {
+      stop(paste0("Condition for test = \"Ztilde\" not met for all individuals: length of time series ",
+                  "must be larger than 5+3*order [where order is the order specified for the individuals]"))
+    }
+  }
   
   # give warning if data is not consecutive per individual
   if (!all(indi_con)) {
-     indnames <- pdim[["panel.names"]][["id.names"]]
-     wrn1 <- "pgrangertest: result may be unreliable due to individuals with non-consecutive time periods: "
-     wrn2 <- if (sum(!indi_con) <= 5) {
-               paste0(indnames[!indi_con], collapse = ", ") 
-             }
-             else { # cut off enumeration of individuals in warning message if more than 5
-               breakpoint <- which(cumsum(!indi_con) == 5)[1]
-               paste0(paste0(indnames[1:breakpoint][!indi_con[1:breakpoint]], collapse = ", "), ", ...")
-             }
-     wrn <- paste0(wrn1, wrn2)
-     warning(wrn)
+    indnames <- pdim[["panel.names"]][["id.names"]]
+    wrn1 <- "pgrangertest: result may be unreliable due to individuals with non-consecutive time periods: "
+    wrn2 <- if (sum(!indi_con) <= 5) {
+      paste0(indnames[!indi_con], collapse = ", ") 
+    }
+    else { # cut off enumeration of individuals in warning message if more than 5
+      breakpoint <- which(cumsum(!indi_con) == 5)[1]
+      paste0(paste0(indnames[1:breakpoint][!indi_con[1:breakpoint]], collapse = ", "), ", ...")
+    }
+    wrn <- paste0(wrn1, wrn2)
+    warning(wrn)
   }
   
   listdata <- split(data, indi) # split data per individual
   
   
- ## use lmtest::grangertest for the individual Granger tests
+  ## use lmtest::grangertest for the individual Granger tests
   
   # for this, if necessary, expand order argument for lmtest::grangertest to full length (N)
   # [but leave variable 'order' in its current length for later decision making]
   if (length(order) == 1) order_grangertest <- rep(order, N) else order_grangertest <- order
-
+  
   # Dumitrescu/Hurlin (2012), p. 1453 use the Chisq definition of the Granger test
   grangertests_i <- mapply(function(data, order)
-                            lmtest::grangertest(formula, data = data,
-                                                order = order, test = "Chisq"),
-                            listdata, order_grangertest, SIMPLIFY = FALSE)
-
+    lmtest::grangertest(formula, data = data,
+                        order = order, test = "Chisq"),
+    listdata, order_grangertest, SIMPLIFY = FALSE)
+  
   # extract Wald/Chisq-statistics and p-values of individual Granger tests
   Wi   <- lapply(grangertests_i, function(g) g[["Chisq"]][2])
   pWi  <- lapply(grangertests_i, function(g) g[["Pr(>Chisq)"]][[2]])
@@ -122,8 +122,8 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar", "Wbar"), orde
       # formula (33) in Dumitrescu/Hurlin (2012), p. 1459
       if (length(order) == 1) order <- rep(order, N) # replicate lag order for all invididuals
       stat <- c(   sqrt(N) * ( Wbar - 1/N * sum( order * (Ti - 3*order - 1) / (Ti - 3*order - 3) )) 
-                 * 1/sqrt( 1/N * sum( 2* order * ((Ti - 3*order - 1)^2 * (Ti - 2*order - 3)) / 
-                                                 ((Ti - 3*order - 3)^2 * (Ti - 3*order - 5)) ) ) )
+                   * 1/sqrt( 1/N * sum( 2* order * ((Ti - 3*order - 1)^2 * (Ti - 2*order - 3)) / 
+                                          ((Ti - 3*order - 3)^2 * (Ti - 3*order - 5)) ) ) )
     }
     names(stat) <- "Ztilde"
     pval <- 2*pnorm(abs(stat), lower.tail = F)

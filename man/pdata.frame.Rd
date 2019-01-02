@@ -87,7 +87,7 @@ pdata.frame(x, index = NULL, drop.index = FALSE, row.names = TRUE,
   \code{as.data.frame} removes the index from the \code{pdata.frame} and
   adds it to each column.
   
-  \code{as.list} behaves by default identical to \code{\link[base]{as.list.data.frame}}
+  \code{as.list} behaves by default identical to \code{\link[base:list]{as.list.data.frame}}
   which means it drops the attributes specific to a pdata.frame; if a list of pseries
   is wanted, the attribute \code{keep.attributes} can to be set to \code{TRUE}. This also
   makes \code{lapply} work as expected on a pdata.frame (see also \bold{Examples}).
@@ -95,9 +95,9 @@ pdata.frame(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 
 \seealso{
  \code{\link{index}} to extract the index variables from a 'pdata.frame' (and other objects),
- \code{\link{pdim}} to check the dimensions of a 'pdata.frame' (and other objects).
-% \code{\link{pvar}} to check for each variable if it varies cross-sectionally and over time. 
- To check if the time periods are consecutive per individual, see \code{\link[plm]{is.pconsecutive}}.
+ \code{\link{pdim}} to check the dimensions of a 'pdata.frame' (and other objects), 
+ \code{\link{pvar}} to check for each variable if it varies cross-sectionally and over time. 
+ To check if the time periods are consecutive per individual, see \code{\link{is.pconsecutive}}.
 }
 
 \examples{

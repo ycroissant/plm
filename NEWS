@@ -2,10 +2,12 @@ Changes in version 1.8-0
   * class pFormula is deprecated and will be removed soon.
   * model.frame now has a pdata.frame method (instead of a pFormula method) 
     and model.matrix has a pdata.frame method (a pdata.frame with a terms 
-	  attribute). formula as an argument in model.matrix was unnecessary as 
-	  the formula can be retrieved from the pdata.frame.
-	* A thrid vignette was added describing the plm model components
-	  (plmModelComponents.Rmd).
+    attribute). formula as an argument in model.matrix was unnecessary as 
+    the formula can be retrieved from the pdata.frame.
+  * A thrid vignette was added describing the plm model components
+    (plmModelComponents.Rmd).
+  * plm: the informative error message about the deprecated argument 'instruments'
+    is removed and this argument is no longer supported
 
 
 Changes in version 1.7-0
@@ -16,26 +18,63 @@ Changes in version 1.7-0
     dimension). The argument 'shift' is introduced to control shifting behaviour,
     possible values are "time" (default) and "row" (behaviour up until and incl.
     plm 1.6-6). Note that, however, the diff-ing performed in first-difference 
-    model estimationby plm(..., model = "fd") is based on row-wise differences of
-    the model matrix per individual.
+    model estimation by plm(..., model = "fd") is based on row-wise differences
+    of the model matrix per individual.
   * pbnftest: new function for (modified) BNF statistic (Durbin-Watson test 
     generalised to panels) and Baltagi/Wu's LBI statistic.
     (Bhargava/Franzini/Narendranathan (1982), Baltagi/Wu (1999)).
   * pcdtest: bias-corrected scaled LM test implemented (test = "bcsclm") as in
     Baltagi/Feng/Kao (2012).
+  * summary.plm: for all random models and for all instrumental variable models,
+    single coefficient tests are based on std. normal distribution and joint
+    coefficient (Wald) test on Chi-square distribution.
+  * pwaldtest: now handles IV models correctly (Wooldridge (1990)); method added
+    for random pvcm models added (and used in summary.pvcm).
+  * pht: fixed estimation (plm 1.6-6 introduced a slight regression).
+  * summary.pht: waldtest now uses Chi-square distribution (was F distribution).
+  * Fixed first-difference models (plm(., model = "fd"), pggls(., model = "fd"))
+    to have an intercept by default again (disappeared in plm 1.6-6).
+  * Between.matrix: bug fixed, so that the transformation can be correctly 
+    performed for a matrix without index attribute.
+  * make.pconsecutive for pseries: for consecutive pseries, the argument
+    'balanced' was not respected.
+  * pwfdtest: fixed error when one individual has one observation only.
+  * pmodel.response, fitted.plm, residuals.plm: for "between" and "fd" models, 
+    a pure numeric is returned, not an 'illegal' pseries anymore (these models 
+    compress data where having an index/pseries is useless and misleading).
+  * Between and Within methods for matrices are now exported.
+  * plm object: gained element 'weights' if weighted estimation was performed.
   * groupGenerics now used for 'pseries' objects, implemented as a wrapper 
     for methods in groups 'Math', 'Ops' and 'Complex' (see ?groupGeneric).
     Thus, propagation to a higher or lower data type works correctly when 
     performed on pseries, e.g. c("pseries", "integer") is propagated
     to c("pseries", "numeric") if an operation returns a decimal.
-  * Between.matrix: bug fixed, so that the transformation can
-    be correctly performed for a matrix without index attribute.
-  * Between and Within methods for matrices are now exported.
-  * pht, plm(., model = "ht"/"am"/"bms"): both uses discouraged, better use instead
-    plm(., model ="random", random.method ="ht", inst.method = "baltagi"/"am"/"bms")
-    to estimate Hausman-Taylor models.
+  * Vingettes: translated package's original vignette to Rmd format and renamed
+    to plmPackage.Rmd; added vignette plmFunction.Rmd for further explanation
+    about the estimation of error components models with the plm function;
+    in plmPackage.Rmd fixed typo in formula for cross-sectional dependence
+    scaled LM test.
+  
+  Deprecated/renamed:
+  * pht, plm(., model = "ht"/"am"/"bms"): both uses deprecated, better use instead
+    plm(., model="random", random.method ="ht", inst.method="baltagi"/"am"/"bms")
+    to estimate Hausman-Taylor-type models.
   * summary.plm: removed support for ill-named argument '.vcov', instead use
     'vcov'. '.vcov' has been deprecated in plm 1.6-4 on CRAN since 2016-11-30.
+  * pvcovHC: function deprecated, use vcovHC for same functionality.
+  * plm: using the 'instruments' argument errors now (gave deprecation warning).
+  * dynformula: the long deprecated function now gives a deprecation warning.
+  * detect.lindep: previously named detect_lin_dep; renamed for consistency in
+    function naming (back-compatible solution implemented).
+  
+  Minor items:
+  * pvar: added method for pseries.
+  * pgrangertest: better detection of infeasibility if a series is too short.
+  * pdata.frame: fixed bug so that pdata.frames with only one column can be 
+    created if drop.index = TRUE is set.
+  * pgmm object: removed element 'df.residual' for now as it contained the
+    function of the same name rather than a number; fixed handling of argument
+    'lost.ts''s second element.
   * as.data.frame.pdata.frame gained argument 'keep.attributes'.
   * [.pdata.frame: in case a single column, i.e., a pseries is returned, this 
     pseries now has names (now consistent to extraction by $.pdata.frame and
@@ -43,45 +82,25 @@ Changes in version 1.7-0
   * is.pseries: added function to check if an object qualifies as a pseries.
   * (internal) is.index, has.index: new non-exported functions to check if an
     object is or has a proper index (in the sense of the plm package).
-  * pdata.frame: fixed bug so that pdata.frames with only one column can be 
-    created if drop.index = TRUE is set.
-  * Fixed first-difference models (plm(., model = "fd"), pggls(., model = "fd"))
-    to have an intercept by default again (disappeared in plm 1.6-6).
-  * pht: fixed estimation (plm 1.6-6 introduced a regression).
-  * make.pconsecutive for pseries: for consecutive pseries, argument 'balanced'
-    was not respected.
-  * pvar: added method for pseries.
-  * pmodel.response, fitted.plm, residuals.plm: for "between" and "fd" models, 
-    a pure numeric is returned, not an 'illegal' pseries anymore (these models 
-    compress data where having an index/pseries is useless and misleading).
   * pvcm object: element 'residuals' is now of class c("pseries", "numeric") 
-    (were: "numeric" for within, "matrix" with one column for random model);
-    element 'df.residuals' renamed to 'df.residual' (cf. lm, plm, ...).
+    (was: "numeric" for within model); element 'coefficients' is numeric for
+    random model (was "matrix" with one column); element 'df.residuals' renamed
+    to 'df.residual' (as is standard, cf. lm, plm, ...).
   * print.pseries: prettier printing for c("pseries", "complex").
   * print.summary.plm: more informative for perfect fits (all residuals are 0).
-  * pgrangertest: better detection of infeasibility if a series is too short.
-  * plm object: gained element 'weights' if weighted estimation was performed.
-  * pgmm object: removed element 'df.residual' for now as it contained the
-    function of the same name rather than a number.
   * plm/ercomp: informative error messages for non-estimable 'swar' and 'amemiya'
     models when between model lacks observations ('swar') and individual or
     time dimension lacks within variation ('amemiya').
   * plm/model.matrix.pFormula: informative error message for non-finite values.
   * summary.purtest: give informative error message when run on purtest object
     containing result for Hadri's test.
-  * pggls models: display proper names in printed summary's topline.
-  * pcce models: display proper names in printed summary's topline; pooled model object's
-    element 'coefficients' is a numeric (was 1x1 matrix).
-  * pmg models: display distinguishing names in printed summary's topline.
-  * dynformula: the long deprecated function now gives a deprecation warning.
-  * pvcovHC: function deprecated, use vcovHC for same functionality.
-  * detect.lindep: renamed function detect_lin_dep for consistency in function
-    naming (back-compatible solution implemented).
-  * Vingettes: translated original package's vignette to Rmd format and renamed
-    to plmPackage.Rmd; added two additional vignettes.
-  * Dependencies: added to 'Suggests': knitr, rmarkdown, bookdown
-  * Addendum: In plm version 1.6-6, aneweytest() was changed to use the residuals
-    of the one-way individual within model (was: two-ways within model).
+  * pcce, pht, pmg, pggls models: proper names in printed summary's topline.
+  * pcce models: pooled model's element 'coefficients' is numeric (was 1x1 matrix).
+  * pwaldtest: in all cases, htest object's 'statistic' element is a numeric
+    (was 1x1 matrix for some cases).
+  * Data set 'Crime' extended with pre-computed log values as in original data.
+  
+  * Dependencies: added to 'Suggests': knitr, rmarkdown, bookdown.
 
 
 Changes in version 1.6-6

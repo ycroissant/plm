@@ -73,8 +73,8 @@ based on the index variables. The returned data are sorted as a stacked time ser
  (and, optionally, also balanced).\cr
  \code{\link{punbalancedness}} for two measures of unbalancedness,
  \code{\link{pdim}} to check the dimensions of a 'pdata.frame' (and other objects), 
-% \code{\link{pvar}} to check for individual and time variation of a 'pdata.frame' (and other objects),
- \code{\link[plm]{lag}} for lagging (and leading) values of a 'pseries' object.\cr
+ \code{\link{pvar}} to check for individual and time variation of a 'pdata.frame' (and other objects),
+ \code{\link{lag}} for lagging (and leading) values of a 'pseries' object.\cr
  \code{\link{pseries}}, \code{\link{data.frame}}, \code{\link{pdata.frame}}.
 }
 

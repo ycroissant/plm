@@ -40,7 +40,7 @@ plm(formula, data, subset, weights, na.action,
     \code{"between"}, \code{"random",} \code{"fd"}, or \code{"ht"},}
   \item{random.method}{method of estimation for the variance components
     in the random effects model, one of \code{"swar"} (default),
-    \code{"amemiya"}, \code{"walhus"}, \code{"nerlove"}, or \code{"ht"},}
+    \code{"amemiya"}, \code{"walhus"}, or \code{"nerlove"},}
   \item{random.models}{an alternative to the previous argument, the
   models used to compute the variance components estimations are indicated,}
   \item{random.dfcor}{a numeric vector of length 2 indicating which degree of
@@ -108,11 +108,12 @@ selects the instrument variable transformation method:
 
 The Hausman--Taylor estimator (Hausman and Taylor (1981)) is computed with arguments
 \code{random.method = "ht", model = "random", inst.method = "baltagi"} (the other
-way with only \code{model = "ht"} is deprecated). 
+way with only \code{model = "ht"} is deprecated).
 }
 
 \value{
 An object of class \code{c("plm", "panelmodel")}.
+
 A \code{"plm"} object has the following elements :
   
 \item{coefficients}{the vector of coefficients,}
@@ -130,7 +131,7 @@ A \code{"plm"} object has the following elements :
  estimation of the components of the errors (for random effects models only),}
 \item{aliased}{named logical vector indicating any aliased coefficients which 
 are silently dropped by \code{plm} due to linearly dependent terms (see also 
-\code{\link[plm]{detect_lin_dep}}),}
+\code{\link{detect.lindep}}),}
 \item{call}{the call.}
 
 % some elements not listed here...: "assign", "contrast", etc...
@@ -143,14 +144,14 @@ It has \code{print}, \code{summary} and \code{print.summary} methods.
 The \code{summary} method creates an object of class \code{"summary.plm"} that 
 extends the object it is run on with information about (inter alia) F statistic 
 and (adjusted) R-squared of model, standard errors, t--values, and p--values of 
-coefficients, (if supplied) the furnished vcov, see \code{\link[plm]{summary.plm}}
+coefficients, (if supplied) the furnished vcov, see \code{\link{summary.plm}}
 for further details.
 }
 
 \seealso{
-\code{\link[plm]{summary.plm}} for further details about the associated
+\code{\link{summary.plm}} for further details about the associated
 summary method and the "summary.plm" object both of which provide some
-model tests and tests of coefficients.  \code{\link[plm]{fixef}} to
+model tests and tests of coefficients.  \code{\link{fixef}} to
 compute the fixed effects for "within" models (=fixed effects models).
 }
 
@@ -259,7 +260,6 @@ am <- plm(lwage ~ wks + south + smsa + married + exp + I(exp ^ 2) +
           data = Wages, index = 595,
           random.method = "ht", model = "random", inst.method = "am")
 summary(am)
-
 }
 
 \keyword{regression}

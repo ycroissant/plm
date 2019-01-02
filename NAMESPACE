@@ -12,7 +12,7 @@ export(# estimation:
        punbalancedness, r.squared, has.intercept, detect.lindep, is.pseries,
        is.pconsecutive, is.pbalanced, make.pconsecutive, make.pbalanced,
        within_intercept,  pdim, index, fixef, ranef, cortab,
-       #deprecated:
+       # deprecated:
        dynformula, detect_lin_dep, plm.data, pht,
        # re-exports:
        maxLik # re-export maxLik::maxLik so we can place pkg 'maxLik'
@@ -245,6 +245,7 @@ S3method("summary", "purtest")
 S3method("print", "summary.purtest")
 # pwaldtest
 S3method("pwaldtest", "plm")
+S3method("pwaldtest", "pvcm")
 # detect.lindep, alias
 S3method("detect.lindep", "matrix")
 S3method("detect.lindep", "data.frame")

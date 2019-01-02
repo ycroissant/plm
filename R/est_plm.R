@@ -117,14 +117,6 @@ plm <- function(formula, data, subset, weights, na.action,
         return(ht)
     }
     
-    # the use of the instrument argument is deprecated, use 2-part Formulas instead
-    if (! is.null(dots$instruments)){
-        formula <- as.Formula(formula, dots$instruments)
-        deprec.instruments <- paste("the use of the instruments argument is deprecated,",
-                                    "use two-part formulas instead")
-        warning(deprec.instruments)
-    }
-    
     # check whether data and formula are pdata.frame and pFormula and if not
     # coerce them
     orig_rownames <- row.names(data)
@@ -218,6 +210,7 @@ plm.fit <- function(data, model, effect, random.method,
         # extract the matrix of instruments if necessary (means here that we
         # have a multi-parts formula)
         if (length(formula)[2] > 1){
+            if(!is.null(model.weights(data)) || any(w != 1)) stop("argument 'weights' not yet implemented for instrumental variable models")
             if (length(formula)[2] == 2){
                 W <- model.matrix(data, rhs = 2,
                                   model = model, effect = effect,
@@ -368,7 +361,7 @@ r.squared <- function(object, model = NULL,
 # describe function: extract characteristics of plm model
 describe <- function(x,
                      what = c("model", "effect", "random.method",
-                              "inst.method", "transformation")){
+                              "inst.method", "transformation", "ht.method")){
   what <- match.arg(what)
   cl <- x$args
   switch(what,
@@ -379,7 +372,8 @@ describe <- function(x,
          "inst.method"    = ifelse(!is.null(cl$inst.method),
                                  cl$inst.method, "bvk"),
          "transformation" = ifelse(!is.null(cl$transformation),
-                                 cl$transformation, "d")
+                                 cl$transformation, "d"),
+         "ht.method"      = ifelse(!is.null(cl$ht.method), cl$ht.method, "ht")
          )
 }
 

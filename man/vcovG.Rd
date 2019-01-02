@@ -32,8 +32,8 @@
 
 \details{
   \code{vcovG} is the generic building block for use by higher--level
-  wrappers \code{\link[plm]{vcovHC}}, \code{\link[plm]{vcovSCC}}, \code{\link[plm]{vcovDC}}, and
-  \code{\link[plm]{vcovNW}}.
+  wrappers \code{\link{vcovHC}}, \code{\link{vcovSCC}}, \code{\link{vcovDC}}, and
+  \code{\link{vcovNW}}.
 The main use of \code{vcovG} is to be used internally by the former, but
   it is made available in the user space for use in non--standard combinations. For more documentation, see
   see wrapper functions mentioned.
@@ -42,8 +42,8 @@ The main use of \code{vcovG} is to be used internally by the former, but
 \author{Giovanni Millo}
 
 \seealso{
-\code{\link[plm]{vcovHC}}, \code{\link[plm]{vcovSCC}}, \code{\link[plm]{vcovDC}}, \code{\link[plm]{vcovNW}},
-and \code{\link[plm]{vcovBK}} albeit the latter does not make use of vcovG.
+\code{\link{vcovHC}}, \code{\link{vcovSCC}}, \code{\link{vcovDC}}, \code{\link{vcovNW}},
+and \code{\link{vcovBK}} albeit the latter does not make use of vcovG.
 }
 
 \references{

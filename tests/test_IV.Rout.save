@@ -1,5 +1,5 @@
 
-R version 3.5.1 (2018-07-02) -- "Feather Spray"
+R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
 Copyright (C) 2018 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -19,6 +19,13 @@ Type 'q()' to quit R.
 > ## Replicate Baltagi (2013), Econometric Analysis of Panel Data, 5th edition, ch. 7.2 (p. 133)
 > ## (same as Baltagi (2006), Estimating an econometric model of crime using panel data from North Carolina,
 > ##                          Journal of Applied Econometrics 21(4), pp. 543-547.
+> ##
+> ## NB: Crime data set: results can diverge slightly form the values printed in Baltagi
+> ##     if logarithm computation is performed on the original variable. For the paper,
+> ##     a data set with pre-computed logarithms (variables l*) was used and those 
+> ##     logarithmic values diverge from what R's log() function gives.
+> ##     -> see the two FE2SLS example which is computed in both ways
+> 
 > 
 > library(plm)
 Loading required package: Formula
@@ -115,14 +122,16 @@ F-statistic: 21.6923 on 16 and 518 DF, p-value: < 2.22e-16
 > 
 > # replicates Table 7.1, column "FE2SLS"
 > form_iv <- log(crmrte) ~ log(prbarr) + log(prbconv) + log(prbpris) + log(avgsen) + log(polpc) + log(density) + log(wcon) + log(wtuc) + log(wtrd) + log(wfir) + log(wser) + log(wmfg) + log(wfed) + log(wsta) + log(wloc) + log(pctymle) + log(pctmin) + region + smsa | . -log(prbarr) - log(polpc) + log(taxpc) + log(mix)
-> fe_iv <- plm(form_iv, data = Crime, model = "within", effect = "twoways")
-> summary(fe_iv)
+> form_iv2 <- lcrmrte ~ lprbarr + lprbconv + lprbpris + lavgsen + lpolpc + ldensity + lwcon + lwtuc + lwtrd + lwfir + lwser + lwmfg + lwfed + lwsta + lwloc + lpctymle + lpctmin + region + smsa | . -lprbarr - lpolpc + ltaxpc + lmix
+> fe_iv <- plm(form_iv, data = Crime, model = "within", effect = "twoways", inst.method = "baltagi")
+> fe_iv2 <- plm(form_iv2, data = Crime, model = "within", effect = "twoways", inst.method = "baltagi")
+> summary(fe_iv)  # logs computed by R
 Twoways effects Within Model
 Instrumental variable estimation
-   (Balestra-Varadharajan-Krishnakumar's transformation)
 
 Call:
-plm(formula = form_iv, data = Crime, effect = "twoways", model = "within")
+plm(formula = form_iv, data = Crime, effect = "twoways", model = "within", 
+    inst.method = "baltagi")
 
 Balanced Panel: n = 90, T = 7, N = 630
 
@@ -131,29 +140,74 @@ Residuals:
 -0.7207996 -0.0682050 -0.0041004  0.0759313  0.5661408 
 
 Coefficients:
-               Estimate Std. Error t-value Pr(>|t|)
-log(prbarr)  -0.5753943  0.8019932 -0.7175   0.4734
-log(prbconv) -0.4230764  0.5018196 -0.8431   0.3996
-log(prbpris) -0.2502194  0.2793986 -0.8956   0.3709
-log(avgsen)   0.0090948  0.0489808  0.1857   0.8528
-log(polpc)    0.6574104  0.8466656  0.7765   0.4378
-log(density)  0.1395236  1.0210334  0.1366   0.8914
-log(wcon)    -0.0287310  0.0535109 -0.5369   0.5916
-log(wtuc)     0.0391296  0.0308542  1.2682   0.2053
-log(wtrd)    -0.0177599  0.0453090 -0.3920   0.6952
-log(wfir)    -0.0093412  0.0365471 -0.2556   0.7984
-log(wser)     0.0185815  0.0388087  0.4788   0.6323
-log(wmfg)    -0.2431858  0.4194999 -0.5797   0.5624
-log(wfed)    -0.4512812  0.5270259 -0.8563   0.3922
+               Estimate Std. Error z-value Pr(>|z|)
+log(prbarr)  -0.5753943  0.8019932 -0.7175   0.4731
+log(prbconv) -0.4230764  0.5018196 -0.8431   0.3992
+log(prbpris) -0.2502194  0.2793986 -0.8956   0.3705
+log(avgsen)   0.0090948  0.0489808  0.1857   0.8527
+log(polpc)    0.6574104  0.8466656  0.7765   0.4375
+log(density)  0.1395236  1.0210334  0.1366   0.8913
+log(wcon)    -0.0287310  0.0535109 -0.5369   0.5913
+log(wtuc)     0.0391296  0.0308542  1.2682   0.2047
+log(wtrd)    -0.0177599  0.0453090 -0.3920   0.6951
+log(wfir)    -0.0093412  0.0365471 -0.2556   0.7983
+log(wser)     0.0185815  0.0388087  0.4788   0.6321
+log(wmfg)    -0.2431858  0.4194999 -0.5797   0.5621
+log(wfed)    -0.4512812  0.5270259 -0.8563   0.3918
 log(wsta)    -0.0187117  0.2807606 -0.0666   0.9469
-log(wloc)     0.2631882  0.3122909  0.8428   0.3997
-log(pctymle)  0.3512984  1.0107677  0.3476   0.7283
+log(wloc)     0.2631882  0.3122909  0.8428   0.3994
+log(pctymle)  0.3512984  1.0107677  0.3476   0.7282
 
 Total Sum of Squares:    16.123
 Residual Sum of Squares: 11.535
 R-Squared:      0.39131
 Adj. R-Squared: 0.26087
-F-statistic: 12.8768 on 16 and 518 DF, p-value: < 2.22e-16
+Chisq: 56.2016 on 16 DF, p-value: 2.2539e-06
+> summary(fe_iv2) # logs as in data set by Baltagi -> results match exactly
+Twoways effects Within Model
+Instrumental variable estimation
+
+Call:
+plm(formula = form_iv2, data = Crime, effect = "twoways", model = "within", 
+    inst.method = "baltagi")
+
+Balanced Panel: n = 90, T = 7, N = 630
+
+Residuals:
+      Min.    1st Qu.     Median    3rd Qu.       Max. 
+-0.7209110 -0.0682207 -0.0041115  0.0759381  0.5661659 
+
+Coefficients:
+           Estimate Std. Error z-value Pr(>|z|)
+lprbarr  -0.5755058  0.8021842 -0.7174   0.4731
+lprbconv -0.4231446  0.5019375 -0.8430   0.3992
+lprbpris -0.2502550  0.2794602 -0.8955   0.3705
+lavgsen   0.0090987  0.0489879  0.1857   0.8527
+lpolpc    0.6575270  0.8468673  0.7764   0.4375
+ldensity  0.1394120  1.0212391  0.1365   0.8914
+lwcon    -0.0287308  0.0535145 -0.5369   0.5914
+lwtuc     0.0391292  0.0308568  1.2681   0.2048
+lwtrd    -0.0177536  0.0453142 -0.3918   0.6952
+lwfir    -0.0093443  0.0365519 -0.2556   0.7982
+lwser     0.0185854  0.0388155  0.4788   0.6321
+lwmfg    -0.2431684  0.4195485 -0.5796   0.5622
+lwfed    -0.4513372  0.5271232 -0.8562   0.3919
+lwsta    -0.0187458  0.2808182 -0.0668   0.9468
+lwloc     0.2632585  0.3123945  0.8427   0.3994
+lpctymle  0.3511166  1.0110334  0.3473   0.7284
+
+Total Sum of Squares:    16.123
+Residual Sum of Squares: 11.537
+R-Squared:      0.3913
+Adj. R-Squared: 0.26087
+Chisq: 56.1934 on 16 DF, p-value: 2.2609e-06
+> 
+> # ## felm example
+> # library(lfe)
+> # form_felm <- log(crmrte) ~  log(prbconv) + log(prbpris) + log(avgsen) + log(density) + log(wcon) + log(wtuc) + log(wtrd) + log(wfir) + log(wser) + log(wmfg) + log(wfed) + log(wsta) + log(wloc) + log(pctymle)  |
+> #   county + year |
+> #   (log(prbarr) + log(polpc) ~ log(prbpris) + log(avgsen) + log(density) + log(wcon) + log(wtuc) + log(wtrd) + log(wfir) + log(wser) + log(wmfg) + log(wfed) + log(wsta) + log(wloc) + log(pctymle) + log(taxpc) + log(mix))
+> # summary(felm(form_felm, data = Crime))
 > 
 > # replicates Table 7.1, column "BE2SLS"
 > be_iv <- plm(form_iv, data = Crime, model = "between")
@@ -173,28 +227,28 @@ Residuals:
 -0.5499406 -0.1041014  0.0029817  0.0986084  0.6020580 
 
 Coefficients:
-               Estimate Std. Error t-value  Pr(>|t|)    
-(Intercept)   -1.977222   4.000782 -0.4942  0.622728    
-log(prbarr)   -0.502946   0.240623 -2.0902  0.040288 *  
-log(prbconv)  -0.524770   0.099948 -5.2504 1.595e-06 ***
-log(prbpris)   0.187177   0.318292  0.5881  0.558407    
-log(avgsen)   -0.227225   0.178509 -1.2729  0.207324    
-log(polpc)     0.408439   0.192998  2.1163  0.037931 *  
-log(density)   0.225624   0.102474  2.2018  0.031027 *  
-log(wcon)      0.314005   0.259103  1.2119  0.229686    
-log(wtuc)     -0.198943   0.197119 -1.0093  0.316381    
-log(wtrd)      0.053559   0.296005  0.1809  0.856945    
-log(wfir)      0.041707   0.305622  0.1365  0.891850    
-log(wser)     -0.135428   0.173646 -0.7799  0.438113    
-log(wmfg)     -0.042002   0.156266 -0.2688  0.788899    
-log(wfed)      0.148024   0.325648  0.4546  0.650858    
-log(wsta)     -0.203080   0.298153 -0.6811  0.498071    
-log(wloc)      0.044440   0.494358  0.0899  0.928632    
-log(pctymle)  -0.094720   0.191805 -0.4938  0.622991    
-log(pctmin)    0.168902   0.052700  3.2049  0.002047 ** 
-regionwest    -0.204816   0.113836 -1.7992  0.076355 .  
-regioncentral -0.172932   0.066706 -2.5924  0.011624 *  
-smsayes       -0.080500   0.144232 -0.5581  0.578565    
+               Estimate Std. Error z-value  Pr(>|z|)    
+(Intercept)   -1.977222   4.000782 -0.4942  0.621159    
+log(prbarr)   -0.502946   0.240623 -2.0902  0.036601 *  
+log(prbconv)  -0.524770   0.099948 -5.2504 1.517e-07 ***
+log(prbpris)   0.187177   0.318292  0.5881  0.556487    
+log(avgsen)   -0.227225   0.178509 -1.2729  0.203052    
+log(polpc)     0.408439   0.192998  2.1163  0.034321 *  
+log(density)   0.225624   0.102474  2.2018  0.027681 *  
+log(wcon)      0.314005   0.259103  1.2119  0.225553    
+log(wtuc)     -0.198943   0.197119 -1.0093  0.312854    
+log(wtrd)      0.053559   0.296005  0.1809  0.856415    
+log(wfir)      0.041707   0.305622  0.1365  0.891453    
+log(wser)     -0.135428   0.173646 -0.7799  0.435446    
+log(wmfg)     -0.042002   0.156266 -0.2688  0.788097    
+log(wfed)      0.148024   0.325648  0.4546  0.649431    
+log(wsta)     -0.203080   0.298153 -0.6811  0.495792    
+log(wloc)      0.044440   0.494358  0.0899  0.928372    
+log(pctymle)  -0.094720   0.191805 -0.4938  0.621423    
+log(pctmin)    0.168902   0.052700  3.2049  0.001351 ** 
+regionwest    -0.204816   0.113836 -1.7992  0.071982 .  
+regioncentral -0.172932   0.066706 -2.5924  0.009530 ** 
+smsayes       -0.080500   0.144232 -0.5581  0.576758    
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -202,12 +256,14 @@ Total Sum of Squares:    26.913
 Residual Sum of Squares: 3.396
 R-Squared:      0.87385
 Adj. R-Squared: 0.83729
-F-statistic: 23.8906 on 20 and 69 DF, p-value: < 2.22e-16
+Chisq: 413.647 on 20 DF, p-value: < 2.22e-16
 > 
 > # replicates Table 7.1, column "EC2SLS"
 > ## need to include time dummies!
-> form_re_iv <- log(crmrte) ~ log(prbarr) + log(prbconv) + log(prbpris) + log(avgsen) + log(polpc) + log(density) + log(wcon) + log(wtuc) + log(wtrd) + log(wfir) + log(wser) + log(wmfg) + log(wfed) + log(wsta) + log(wloc) + log(pctymle) + log(pctmin) + region + smsa + factor(year) | . -log(prbarr) - log(polpc) + log(taxpc) + log(mix)
-> re_iv <- plm(form_re_iv, data = Crime, model = "random", inst.method = "baltagi")
+> form_re_iv  <- log(crmrte) ~ log(prbarr) + log(prbconv) + log(prbpris) + log(avgsen) + log(polpc) + log(density) + log(wcon) + log(wtuc) + log(wtrd) + log(wfir) + log(wser) + log(wmfg) + log(wfed) + log(wsta) + log(wloc) + log(pctymle) + log(pctmin) + region + smsa + factor(year) | . -log(prbarr) - log(polpc) + log(taxpc) + log(mix)
+> form_re_iv2 <- lcrmrte ~ lprbarr + lprbconv + lprbpris + lavgsen + lpolpc + ldensity + lwcon + lwtuc + lwtrd + lwfir + lwser + lwmfg + lwfed + lwsta + lwloc + lpctymle + lpctmin + region + smsa + factor(year) | . -lprbarr - lpolpc + ltaxpc + lmix
+> re_iv  <- plm(form_re_iv,  data = Crime, model = "random", inst.method = "baltagi")
+> re_iv2 <- plm(form_re_iv2, data = Crime, model = "random", inst.method = "baltagi")
 > summary(re_iv)
 Oneway (individual) effect Random Effect Model 
    (Swamy-Arora's transformation)
@@ -230,34 +286,34 @@ Residuals:
 -4.997164 -0.465637  0.027153  0.512779  3.917220 
 
 Coefficients:
-                 Estimate Std. Error t-value  Pr(>|t|)    
-(Intercept)    -0.9536145  1.2839853 -0.7427  0.457953    
-log(prbarr)    -0.4129201  0.0974056 -4.2392 2.595e-05 ***
-log(prbconv)   -0.3228859  0.0535539 -6.0292 2.873e-09 ***
-log(prbpris)   -0.1863204  0.0419391 -4.4426 1.057e-05 ***
-log(avgsen)    -0.0101739  0.0270229 -0.3765  0.706683    
-log(polpc)      0.4347568  0.0896981  4.8469 1.597e-06 ***
-log(density)    0.4290337  0.0548511  7.8218 2.339e-14 ***
-log(wcon)      -0.0074746  0.0395773 -0.1889  0.850266    
-log(wtuc)       0.0454430  0.0197925  2.2960  0.022020 *  
-log(wtrd)      -0.0081453  0.0413823 -0.1968  0.844026    
-log(wfir)      -0.0036394  0.0289236 -0.1258  0.899908    
-log(wser)       0.0056112  0.0201257  0.2788  0.780488    
-log(wmfg)      -0.2041324  0.0804418 -2.5376  0.011411 *  
-log(wfed)      -0.1635333  0.1594522 -1.0256  0.305494    
-log(wsta)      -0.0540400  0.1056774 -0.5114  0.609281    
-log(wloc)       0.1630405  0.1196368  1.3628  0.173456    
-log(pctymle)   -0.1080968  0.1397015 -0.7738  0.439370    
-log(pctmin)     0.1890388  0.0415013  4.5550 6.341e-06 ***
-regionwest     -0.2268401  0.0995975 -2.2776  0.023102 *  
-regioncentral  -0.1940408  0.0598277 -3.2433  0.001247 ** 
-smsayes        -0.2251624  0.1156369 -1.9471  0.051981 .  
-factor(year)82  0.0107457  0.0257968  0.4166  0.677154    
-factor(year)83 -0.0837924  0.0307088 -2.7286  0.006546 ** 
-factor(year)84 -0.1034973  0.0370886 -2.7905  0.005428 ** 
-factor(year)85 -0.0956959  0.0494505 -1.9352  0.053435 .  
-factor(year)86 -0.0688930  0.0595961 -1.1560  0.248139    
-factor(year)87 -0.0314024  0.0705204 -0.4453  0.656266    
+                 Estimate Std. Error z-value  Pr(>|z|)    
+(Intercept)    -0.9536145  1.2839853 -0.7427  0.457664    
+log(prbarr)    -0.4129201  0.0974056 -4.2392 2.243e-05 ***
+log(prbconv)   -0.3228859  0.0535539 -6.0292 1.648e-09 ***
+log(prbpris)   -0.1863204  0.0419391 -4.4426 8.886e-06 ***
+log(avgsen)    -0.0101739  0.0270229 -0.3765  0.706551    
+log(polpc)      0.4347568  0.0896981  4.8469 1.254e-06 ***
+log(density)    0.4290337  0.0548511  7.8218 5.208e-15 ***
+log(wcon)      -0.0074746  0.0395773 -0.1889  0.850202    
+log(wtuc)       0.0454430  0.0197925  2.2960  0.021678 *  
+log(wtrd)      -0.0081453  0.0413823 -0.1968  0.843960    
+log(wfir)      -0.0036394  0.0289236 -0.1258  0.899867    
+log(wser)       0.0056112  0.0201257  0.2788  0.780393    
+log(wmfg)      -0.2041324  0.0804418 -2.5376  0.011160 *  
+log(wfed)      -0.1635333  0.1594522 -1.0256  0.305083    
+log(wsta)      -0.0540400  0.1056774 -0.5114  0.609094    
+log(wloc)       0.1630405  0.1196368  1.3628  0.172947    
+log(pctymle)   -0.1080968  0.1397015 -0.7738  0.439067    
+log(pctmin)     0.1890388  0.0415013  4.5550 5.238e-06 ***
+regionwest     -0.2268401  0.0995975 -2.2776  0.022752 *  
+regioncentral  -0.1940408  0.0598277 -3.2433  0.001181 ** 
+smsayes        -0.2251624  0.1156369 -1.9471  0.051517 .  
+factor(year)82  0.0107457  0.0257968  0.4166  0.677006    
+factor(year)83 -0.0837924  0.0307088 -2.7286  0.006360 ** 
+factor(year)84 -0.1034973  0.0370886 -2.7905  0.005262 ** 
+factor(year)85 -0.0956959  0.0494505 -1.9352  0.052968 .  
+factor(year)86 -0.0688930  0.0595961 -1.1560  0.247681    
+factor(year)87 -0.0314024  0.0705204 -0.4453  0.656106    
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -265,73 +321,70 @@ Total Sum of Squares:    30.168
 Residual Sum of Squares: 544.47
 R-Squared:      0.59845
 Adj. R-Squared: 0.58114
-F-statistic: -21.9073 on 26 and 603 DF, p-value: 1
-> 
-> # replicates Baltagi (2013), p. 137 ("G2SLS") (not in Table 7.1)
-> re2_iv <- plm(form_re_iv, data = Crime, model = "random")
-> summary(re2_iv)
+Chisq: 575.685 on 26 DF, p-value: < 2.22e-16
+> summary(re_iv2)
 Oneway (individual) effect Random Effect Model 
    (Swamy-Arora's transformation)
 Instrumental variable estimation
-   (Balestra-Varadharajan-Krishnakumar's transformation)
+   (Baltagi's transformation)
 
 Call:
-plm(formula = form_re_iv, data = Crime, model = "random")
+plm(formula = form_re_iv2, data = Crime, model = "random", inst.method = "baltagi")
 
 Balanced Panel: n = 90, T = 7, N = 630
 
 Effects:
                   var std.dev share
-idiosyncratic 0.02227 0.14923 0.326
+idiosyncratic 0.02227 0.14924 0.326
 individual    0.04604 0.21456 0.674
-theta: 0.7458
+theta: 0.7457
 
 Residuals:
-      Min.    1st Qu.     Median    3rd Qu.       Max. 
--0.7485123 -0.0710015  0.0040742  0.0784401  0.4756493 
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-4.996927 -0.465655  0.027205  0.512780  3.917085 
 
 Coefficients:
-                 Estimate Std. Error t-value  Pr(>|t|)    
-(Intercept)    -0.4538241  1.7029840 -0.2665  0.789955    
-log(prbarr)    -0.4141200  0.2210540 -1.8734  0.061498 .  
-log(prbconv)   -0.3432383  0.1324679 -2.5911  0.009798 ** 
-log(prbpris)   -0.1900437  0.0733420 -2.5912  0.009796 ** 
-log(avgsen)    -0.0064374  0.0289406 -0.2224  0.824052    
-log(polpc)      0.5049285  0.2277811  2.2167  0.027014 *  
-log(density)    0.4343519  0.0711528  6.1045 1.847e-09 ***
-log(wcon)      -0.0042963  0.0414225 -0.1037  0.917426    
-log(wtuc)       0.0444572  0.0215449  2.0635  0.039495 *  
-log(wtrd)      -0.0085626  0.0419822 -0.2040  0.838456    
-log(wfir)      -0.0040302  0.0294565 -0.1368  0.891220    
-log(wser)       0.0105604  0.0215822  0.4893  0.624798    
-log(wmfg)      -0.2017917  0.0839423 -2.4039  0.016520 *  
-log(wfed)      -0.2134634  0.2151074 -0.9924  0.321421    
-log(wsta)      -0.0601083  0.1203146 -0.4996  0.617544    
-log(wloc)       0.1835137  0.1396721  1.3139  0.189383    
-log(pctymle)   -0.1458448  0.2268137 -0.6430  0.520458    
-log(pctmin)     0.1948760  0.0459409  4.2419 2.565e-05 ***
-regionwest     -0.2281780  0.1010317 -2.2585  0.024272 *  
-regioncentral  -0.1987675  0.0607510 -3.2718  0.001129 ** 
-smsayes        -0.2595423  0.1499780 -1.7305  0.084046 .  
-factor(year)82  0.0132140  0.0299923  0.4406  0.659676    
-factor(year)83 -0.0847676  0.0320008 -2.6489  0.008286 ** 
-factor(year)84 -0.1062004  0.0387893 -2.7379  0.006366 ** 
-factor(year)85 -0.0977398  0.0511685 -1.9102  0.056587 .  
-factor(year)86 -0.0719390  0.0605821 -1.1875  0.235512    
-factor(year)87 -0.0396520  0.0758537 -0.5227  0.601345    
+                 Estimate Std. Error z-value  Pr(>|z|)    
+(Intercept)    -0.9538032  1.2839664 -0.7429  0.457568    
+lprbarr        -0.4129261  0.0974020 -4.2394 2.241e-05 ***
+lprbconv       -0.3228872  0.0535517 -6.0295 1.645e-09 ***
+lprbpris       -0.1863195  0.0419382 -4.4427 8.883e-06 ***
+lavgsen        -0.0101765  0.0270231 -0.3766  0.706481    
+lpolpc          0.4347492  0.0896950  4.8470 1.254e-06 ***
+ldensity        0.4290282  0.0548483  7.8221 5.196e-15 ***
+lwcon          -0.0074751  0.0395775 -0.1889  0.850194    
+lwtuc           0.0454450  0.0197926  2.2961  0.021673 *  
+lwtrd          -0.0081412  0.0413828 -0.1967  0.844040    
+lwfir          -0.0036395  0.0289238 -0.1258  0.899865    
+lwser           0.0056098  0.0201259  0.2787  0.780447    
+lwmfg          -0.2041398  0.0804393 -2.5378  0.011155 *  
+lwfed          -0.1635108  0.1594496 -1.0255  0.305142    
+lwsta          -0.0540503  0.1056769 -0.5115  0.609024    
+lwloc           0.1630523  0.1196380  1.3629  0.172920    
+lpctymle       -0.1081057  0.1396949 -0.7739  0.439007    
+lpctmin         0.1890370  0.0414988  4.5552 5.233e-06 ***
+regionwest     -0.2268433  0.0995913 -2.2777  0.022742 *  
+regioncentral  -0.1940428  0.0598241 -3.2436  0.001180 ** 
+smsayes        -0.2251539  0.1156302 -1.9472  0.051512 .  
+factor(year)82  0.0107452  0.0257969  0.4165  0.677023    
+factor(year)83 -0.0837944  0.0307088 -2.7287  0.006359 ** 
+factor(year)84 -0.1034997  0.0370885 -2.7906  0.005261 ** 
+factor(year)85 -0.0957017  0.0494502 -1.9353  0.052952 .  
+factor(year)86 -0.0688982  0.0595956 -1.1561  0.247642    
+factor(year)87 -0.0314071  0.0705197 -0.4454  0.656055    
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Total Sum of Squares:    30.168
-Residual Sum of Squares: 12.418
-R-Squared:      0.59228
-Adj. R-Squared: 0.5747
-F-statistic: 33.1494 on 26 and 603 DF, p-value: < 2.22e-16
+Total Sum of Squares:    30.169
+Residual Sum of Squares: 544.4
+R-Squared:      0.59847
+Adj. R-Squared: 0.58115
+Chisq: 575.735 on 26 DF, p-value: < 2.22e-16
 > 
-> 
-> # further variants of the IV estimator
-> re_iv2 <- plm(form_re_iv, data = Crime, model = "random", inst.method = "bvk")
-> summary(re_iv2)
+> # replicates Baltagi (2013), p. 137 ("G2SLS") (not in Table 7.1)
+> re_iv_bvk  <- plm(form_re_iv,  data = Crime, model = "random", inst.method = "bvk")
+> re_iv_bvk2 <- plm(form_re_iv2, data = Crime, model = "random", inst.method = "bvk")
+> summary(re_iv_bvk)
 Oneway (individual) effect Random Effect Model 
    (Swamy-Arora's transformation)
 Instrumental variable estimation
@@ -353,34 +406,34 @@ Residuals:
 -0.7485123 -0.0710015  0.0040742  0.0784401  0.4756493 
 
 Coefficients:
-                 Estimate Std. Error t-value  Pr(>|t|)    
-(Intercept)    -0.4538241  1.7029840 -0.2665  0.789955    
-log(prbarr)    -0.4141200  0.2210540 -1.8734  0.061498 .  
-log(prbconv)   -0.3432383  0.1324679 -2.5911  0.009798 ** 
-log(prbpris)   -0.1900437  0.0733420 -2.5912  0.009796 ** 
-log(avgsen)    -0.0064374  0.0289406 -0.2224  0.824052    
-log(polpc)      0.5049285  0.2277811  2.2167  0.027014 *  
-log(density)    0.4343519  0.0711528  6.1045 1.847e-09 ***
-log(wcon)      -0.0042963  0.0414225 -0.1037  0.917426    
-log(wtuc)       0.0444572  0.0215449  2.0635  0.039495 *  
-log(wtrd)      -0.0085626  0.0419822 -0.2040  0.838456    
-log(wfir)      -0.0040302  0.0294565 -0.1368  0.891220    
-log(wser)       0.0105604  0.0215822  0.4893  0.624798    
-log(wmfg)      -0.2017917  0.0839423 -2.4039  0.016520 *  
-log(wfed)      -0.2134634  0.2151074 -0.9924  0.321421    
-log(wsta)      -0.0601083  0.1203146 -0.4996  0.617544    
-log(wloc)       0.1835137  0.1396721  1.3139  0.189383    
-log(pctymle)   -0.1458448  0.2268137 -0.6430  0.520458    
-log(pctmin)     0.1948760  0.0459409  4.2419 2.565e-05 ***
-regionwest     -0.2281780  0.1010317 -2.2585  0.024272 *  
-regioncentral  -0.1987675  0.0607510 -3.2718  0.001129 ** 
-smsayes        -0.2595423  0.1499780 -1.7305  0.084046 .  
-factor(year)82  0.0132140  0.0299923  0.4406  0.659676    
-factor(year)83 -0.0847676  0.0320008 -2.6489  0.008286 ** 
-factor(year)84 -0.1062004  0.0387893 -2.7379  0.006366 ** 
-factor(year)85 -0.0977398  0.0511685 -1.9102  0.056587 .  
-factor(year)86 -0.0719390  0.0605821 -1.1875  0.235512    
-factor(year)87 -0.0396520  0.0758537 -0.5227  0.601345    
+                 Estimate Std. Error z-value  Pr(>|z|)    
+(Intercept)    -0.4538241  1.7029840 -0.2665  0.789864    
+log(prbarr)    -0.4141200  0.2210540 -1.8734  0.061015 .  
+log(prbconv)   -0.3432383  0.1324679 -2.5911  0.009567 ** 
+log(prbpris)   -0.1900437  0.0733420 -2.5912  0.009564 ** 
+log(avgsen)    -0.0064374  0.0289406 -0.2224  0.823977    
+log(polpc)      0.5049285  0.2277811  2.2167  0.026642 *  
+log(density)    0.4343519  0.0711528  6.1045 1.031e-09 ***
+log(wcon)      -0.0042963  0.0414225 -0.1037  0.917392    
+log(wtuc)       0.0444572  0.0215449  2.0635  0.039068 *  
+log(wtrd)      -0.0085626  0.0419822 -0.2040  0.838387    
+log(wfir)      -0.0040302  0.0294565 -0.1368  0.891175    
+log(wser)       0.0105604  0.0215822  0.4893  0.624620    
+log(wmfg)      -0.2017917  0.0839423 -2.4039  0.016220 *  
+log(wfed)      -0.2134634  0.2151074 -0.9924  0.321023    
+log(wsta)      -0.0601083  0.1203146 -0.4996  0.617362    
+log(wloc)       0.1835137  0.1396721  1.3139  0.188884    
+log(pctymle)   -0.1458448  0.2268137 -0.6430  0.520214    
+log(pctmin)     0.1948760  0.0459409  4.2419 2.217e-05 ***
+regionwest     -0.2281780  0.1010317 -2.2585  0.023916 *  
+regioncentral  -0.1987675  0.0607510 -3.2718  0.001068 ** 
+smsayes        -0.2595423  0.1499780 -1.7305  0.083535 .  
+factor(year)82  0.0132140  0.0299923  0.4406  0.659518    
+factor(year)83 -0.0847676  0.0320008 -2.6489  0.008075 ** 
+factor(year)84 -0.1062004  0.0387893 -2.7379  0.006184 ** 
+factor(year)85 -0.0977398  0.0511685 -1.9102  0.056113 .  
+factor(year)86 -0.0719390  0.0605821 -1.1875  0.235045    
+factor(year)87 -0.0396520  0.0758537 -0.5227  0.601153    
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -388,10 +441,72 @@ Total Sum of Squares:    30.168
 Residual Sum of Squares: 12.418
 R-Squared:      0.59228
 Adj. R-Squared: 0.5747
-F-statistic: 33.1494 on 26 and 603 DF, p-value: < 2.22e-16
+Chisq: 542.435 on 26 DF, p-value: < 2.22e-16
+> summary(re_iv_bvk2)
+Oneway (individual) effect Random Effect Model 
+   (Swamy-Arora's transformation)
+Instrumental variable estimation
+   (Balestra-Varadharajan-Krishnakumar's transformation)
+
+Call:
+plm(formula = form_re_iv2, data = Crime, model = "random", inst.method = "bvk")
+
+Balanced Panel: n = 90, T = 7, N = 630
+
+Effects:
+                  var std.dev share
+idiosyncratic 0.02227 0.14924 0.326
+individual    0.04604 0.21456 0.674
+theta: 0.7457
+
+Residuals:
+      Min.    1st Qu.     Median    3rd Qu.       Max. 
+-0.7485357 -0.0709883  0.0040648  0.0784455  0.4756273 
+
+Coefficients:
+                 Estimate Std. Error z-value  Pr(>|z|)    
+(Intercept)    -0.4538501  1.7029831 -0.2665  0.789852    
+lprbarr        -0.4141383  0.2210496 -1.8735  0.060998 .  
+lprbconv       -0.3432506  0.1324648 -2.5913  0.009563 ** 
+lprbpris       -0.1900467  0.0733392 -2.5913  0.009560 ** 
+lavgsen        -0.0064389  0.0289407 -0.2225  0.823935    
+lpolpc          0.5049461  0.2277778  2.2168  0.026634 *  
+ldensity        0.4343449  0.0711496  6.1047 1.030e-09 ***
+lwcon          -0.0042958  0.0414226 -0.1037  0.917403    
+lwtuc           0.0444589  0.0215448  2.0636  0.039060 *  
+lwtrd          -0.0085579  0.0419829 -0.2038  0.838476    
+lwfir          -0.0040305  0.0294569 -0.1368  0.891166    
+lwser           0.0105602  0.0215823  0.4893  0.624630    
+lwmfg          -0.2018020  0.0839373 -2.4042  0.016208 *  
+lwfed          -0.2134579  0.2151046 -0.9923  0.321029    
+lwsta          -0.0601232  0.1203149 -0.4997  0.617275    
+lwloc           0.1835363  0.1396775  1.3140  0.188846    
+lpctymle       -0.1458703  0.2268086 -0.6431  0.520131    
+lpctmin         0.1948763  0.0459385  4.2421 2.214e-05 ***
+regionwest     -0.2281821  0.1010260 -2.2586  0.023905 *  
+regioncentral  -0.1987703  0.0607475 -3.2721  0.001068 ** 
+smsayes        -0.2595451  0.1499718 -1.7306  0.083518 .  
+factor(year)82  0.0132147  0.0299924  0.4406  0.659500    
+factor(year)83 -0.0847693  0.0320010 -2.6490  0.008074 ** 
+factor(year)84 -0.1062027  0.0387893 -2.7379  0.006183 ** 
+factor(year)85 -0.0977457  0.0511681 -1.9103  0.056097 .  
+factor(year)86 -0.0719451  0.0605819 -1.1876  0.235004    
+factor(year)87 -0.0396595  0.0758531 -0.5228  0.601081    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    30.169
+Residual Sum of Squares: 12.419
+R-Squared:      0.5923
+Adj. R-Squared: 0.57472
+Chisq: 542.478 on 26 DF, p-value: < 2.22e-16
+> cor(plm:::fitted_exp.plm(re_iv_bvk2), re_iv_bvk2$model[,1])^2 # overall R^2 as per Stata
+[1] 0.7724889
 > 
-> re_iv3 <- plm(form_re_iv, data = Crime, model = "random", inst.method = "am")
-> summary(re_iv3)
+> 
+> 
+> re_iv_am <- plm(form_re_iv, data = Crime, model = "random", inst.method = "am")
+> summary(re_iv_am)
 Oneway (individual) effect Random Effect Model 
    (Swamy-Arora's transformation)
 Instrumental variable estimation
@@ -413,34 +528,34 @@ Residuals:
 -5.03162 -0.44966  0.02556  0.52267  3.91770 
 
 Coefficients:
-                  Estimate  Std. Error  t-value  Pr(>|t|)    
-(Intercept)    -1.33632334  1.23078627  -1.0857  0.278024    
-log(prbarr)    -0.50748163  0.06389968  -7.9418 9.787e-15 ***
+                  Estimate  Std. Error  z-value  Pr(>|z|)    
+(Intercept)    -1.33632334  1.23078627  -1.0857  0.277591    
+log(prbarr)    -0.50748163  0.06389968  -7.9418 1.992e-15 ***
 log(prbconv)   -0.34533794  0.03277845 -10.5355 < 2.2e-16 ***
-log(prbpris)   -0.20890870  0.03625978  -5.7614 1.331e-08 ***
-log(avgsen)    -0.01239506  0.02713430  -0.4568  0.647976    
-log(polpc)      0.40886566  0.05070027   8.0644 3.980e-15 ***
-log(density)    0.39793218  0.05243491   7.5891 1.229e-13 ***
-log(wcon)      -0.00809298  0.03988932  -0.2029  0.839293    
-log(wtuc)       0.04333273  0.01983193   2.1850  0.029273 *  
-log(wtrd)      -0.00598336  0.04187735  -0.1429  0.886434    
-log(wfir)      -0.00455018  0.02925771  -0.1555  0.876463    
-log(wser)      -0.00021705  0.02011330  -0.0108  0.991393    
-log(wmfg)      -0.19832417  0.08110069  -2.4454  0.014754 *  
-log(wfed)      -0.14186228  0.15298059  -0.9273  0.354130    
-log(wsta)      -0.07010717  0.10510357  -0.6670  0.505009    
-log(wloc)       0.15985810  0.11853902   1.3486  0.177982    
-log(pctymle)   -0.12661034  0.12660867  -1.0000  0.317705    
-log(pctmin)     0.18750912  0.04148212   4.5202 7.437e-06 ***
-regionwest     -0.22780254  0.10080178  -2.2599  0.024183 *  
-regioncentral  -0.18398464  0.06045808  -3.0432  0.002443 ** 
-smsayes        -0.20813651  0.11197168  -1.8588  0.063538 .  
-factor(year)82  0.01352005  0.02557798   0.5286  0.597290    
-factor(year)83 -0.07835083  0.03092912  -2.5332  0.011554 *  
-factor(year)84 -0.09402494  0.03727559  -2.5224  0.011911 *  
-factor(year)85 -0.08691358  0.04985021  -1.7435  0.081757 .  
-factor(year)86 -0.06603092  0.06029136  -1.0952  0.273868    
-factor(year)87 -0.02893228  0.07079517  -0.4087  0.682923    
+log(prbpris)   -0.20890870  0.03625978  -5.7614 8.340e-09 ***
+log(avgsen)    -0.01239506  0.02713430  -0.4568  0.647812    
+log(polpc)      0.40886566  0.05070027   8.0644 7.362e-16 ***
+log(density)    0.39793218  0.05243491   7.5891 3.222e-14 ***
+log(wcon)      -0.00809298  0.03988932  -0.2029  0.839224    
+log(wtuc)       0.04333273  0.01983193   2.1850  0.028889 *  
+log(wtrd)      -0.00598336  0.04187735  -0.1429  0.886386    
+log(wfir)      -0.00455018  0.02925771  -0.1555  0.876411    
+log(wser)      -0.00021705  0.02011330  -0.0108  0.991390    
+log(wmfg)      -0.19832417  0.08110069  -2.4454  0.014469 *  
+log(wfed)      -0.14186228  0.15298059  -0.9273  0.353759    
+log(wsta)      -0.07010717  0.10510357  -0.6670  0.504753    
+log(wloc)       0.15985810  0.11853902   1.3486  0.177475    
+log(pctymle)   -0.12661034  0.12660867  -1.0000  0.317304    
+log(pctmin)     0.18750912  0.04148212   4.5202 6.177e-06 ***
+regionwest     -0.22780254  0.10080178  -2.2599  0.023827 *  
+regioncentral  -0.18398464  0.06045808  -3.0432  0.002341 ** 
+smsayes        -0.20813651  0.11197168  -1.8588  0.063051 .  
+factor(year)82  0.01352005  0.02557798   0.5286  0.597096    
+factor(year)83 -0.07835083  0.03092912  -2.5332  0.011301 *  
+factor(year)84 -0.09402494  0.03727559  -2.5224  0.011655 *  
+factor(year)85 -0.08691358  0.04985021  -1.7435  0.081247 .  
+factor(year)86 -0.06603092  0.06029136  -1.0952  0.273430    
+factor(year)87 -0.02893228  0.07079517  -0.4087  0.682777    
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -448,10 +563,10 @@ Total Sum of Squares:    30.168
 Residual Sum of Squares: 558.04
 R-Squared:      0.58975
 Adj. R-Squared: 0.57206
-F-statistic: -21.9385 on 26 and 603 DF, p-value: 1
+Chisq: 628.718 on 26 DF, p-value: < 2.22e-16
 > 
-> re_iv4 <- plm(form_re_iv, data = Crime, model = "random", inst.method = "bms")
-> summary(re_iv4)
+> re_iv_bms <- plm(form_re_iv, data = Crime, model = "random", inst.method = "bms")
+> summary(re_iv_bms)
 Oneway (individual) effect Random Effect Model 
    (Swamy-Arora's transformation)
 Instrumental variable estimation
@@ -473,34 +588,34 @@ Residuals:
 -5.03162 -0.44966  0.02556  0.52267  3.91770 
 
 Coefficients:
-                  Estimate  Std. Error  t-value  Pr(>|t|)    
-(Intercept)    -1.33632334  1.23078627  -1.0857  0.278024    
-log(prbarr)    -0.50748163  0.06389968  -7.9418 9.787e-15 ***
+                  Estimate  Std. Error  z-value  Pr(>|z|)    
+(Intercept)    -1.33632334  1.23078627  -1.0857  0.277591    
+log(prbarr)    -0.50748163  0.06389968  -7.9418 1.992e-15 ***
 log(prbconv)   -0.34533794  0.03277845 -10.5355 < 2.2e-16 ***
-log(prbpris)   -0.20890870  0.03625978  -5.7614 1.331e-08 ***
-log(avgsen)    -0.01239506  0.02713430  -0.4568  0.647976    
-log(polpc)      0.40886566  0.05070027   8.0644 3.980e-15 ***
-log(density)    0.39793218  0.05243491   7.5891 1.229e-13 ***
-log(wcon)      -0.00809298  0.03988932  -0.2029  0.839293    
-log(wtuc)       0.04333273  0.01983193   2.1850  0.029273 *  
-log(wtrd)      -0.00598336  0.04187735  -0.1429  0.886434    
-log(wfir)      -0.00455018  0.02925771  -0.1555  0.876463    
-log(wser)      -0.00021705  0.02011330  -0.0108  0.991393    
-log(wmfg)      -0.19832417  0.08110069  -2.4454  0.014754 *  
-log(wfed)      -0.14186228  0.15298059  -0.9273  0.354130    
-log(wsta)      -0.07010717  0.10510357  -0.6670  0.505009    
-log(wloc)       0.15985810  0.11853902   1.3486  0.177982    
-log(pctymle)   -0.12661034  0.12660867  -1.0000  0.317705    
-log(pctmin)     0.18750912  0.04148212   4.5202 7.437e-06 ***
-regionwest     -0.22780254  0.10080178  -2.2599  0.024183 *  
-regioncentral  -0.18398464  0.06045808  -3.0432  0.002443 ** 
-smsayes        -0.20813651  0.11197168  -1.8588  0.063538 .  
-factor(year)82  0.01352005  0.02557798   0.5286  0.597290    
-factor(year)83 -0.07835083  0.03092912  -2.5332  0.011554 *  
-factor(year)84 -0.09402494  0.03727559  -2.5224  0.011911 *  
-factor(year)85 -0.08691358  0.04985021  -1.7435  0.081757 .  
-factor(year)86 -0.06603092  0.06029136  -1.0952  0.273868    
-factor(year)87 -0.02893228  0.07079517  -0.4087  0.682923    
+log(prbpris)   -0.20890870  0.03625978  -5.7614 8.340e-09 ***
+log(avgsen)    -0.01239506  0.02713430  -0.4568  0.647812    
+log(polpc)      0.40886566  0.05070027   8.0644 7.362e-16 ***
+log(density)    0.39793218  0.05243491   7.5891 3.222e-14 ***
+log(wcon)      -0.00809298  0.03988932  -0.2029  0.839224    
+log(wtuc)       0.04333273  0.01983193   2.1850  0.028889 *  
+log(wtrd)      -0.00598336  0.04187735  -0.1429  0.886386    
+log(wfir)      -0.00455018  0.02925771  -0.1555  0.876411    
+log(wser)      -0.00021705  0.02011330  -0.0108  0.991390    
+log(wmfg)      -0.19832417  0.08110069  -2.4454  0.014469 *  
+log(wfed)      -0.14186228  0.15298059  -0.9273  0.353759    
+log(wsta)      -0.07010717  0.10510357  -0.6670  0.504753    
+log(wloc)       0.15985810  0.11853902   1.3486  0.177475    
+log(pctymle)   -0.12661034  0.12660867  -1.0000  0.317304    
+log(pctmin)     0.18750912  0.04148212   4.5202 6.177e-06 ***
+regionwest     -0.22780254  0.10080178  -2.2599  0.023827 *  
+regioncentral  -0.18398464  0.06045808  -3.0432  0.002341 ** 
+smsayes        -0.20813651  0.11197168  -1.8588  0.063051 .  
+factor(year)82  0.01352005  0.02557798   0.5286  0.597096    
+factor(year)83 -0.07835083  0.03092912  -2.5332  0.011301 *  
+factor(year)84 -0.09402494  0.03727559  -2.5224  0.011655 *  
+factor(year)85 -0.08691358  0.04985021  -1.7435  0.081247 .  
+factor(year)86 -0.06603092  0.06029136  -1.0952  0.273430    
+factor(year)87 -0.02893228  0.07079517  -0.4087  0.682777    
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -508,8 +623,8 @@ Total Sum of Squares:    30.168
 Residual Sum of Squares: 558.04
 R-Squared:      0.58975
 Adj. R-Squared: 0.57206
-F-statistic: -21.9385 on 26 and 603 DF, p-value: 1
+Chisq: 628.718 on 26 DF, p-value: < 2.22e-16
 > 
 > proc.time()
    user  system elapsed 
-   2.77    0.20    2.96 
+   3.80    0.34    4.16 

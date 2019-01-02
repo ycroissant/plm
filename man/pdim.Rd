@@ -59,8 +59,8 @@ pdim(x, \dots)
 \seealso{
  \code{\link{is.pbalanced}} to just determine balancedness of data (slightly faster than \code{pdim}),\cr
  \code{\link{punbalancedness}} for measures of unbalancedness,\cr
-% \code{\link{pvar}} to check for each variable if it varies cross-sectionally and over time,\cr
- \code{\link{nobs}}, \code{\link{pdata.frame}}.
+ \code{\link{nobs}}, \code{\link{pdata.frame}},\cr
+ \code{\link{pvar}} to check for each variable if it varies cross-sectionally and over time.
 }
 
 \examples{

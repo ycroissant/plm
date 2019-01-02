@@ -105,53 +105,67 @@ deviance.panelmodel <- function(object, model = NULL, ...){
 # summary.plm creates a specific summary.plm object that is derived
 # from the associated plm object
 summary.plm <- function(object, vcov = NULL, ...){
-    
-    vcov_arg <- vcov
-    
-    object$fstatistic <- pwaldtest(object, test = "F", vcov = vcov_arg)
-    model <- describe(object, "model")
-    effect <- describe(object, "effect")
-    object$r.squared <- c(rsq  = r.squared(object),
-                          adjrsq = r.squared(object, dfcor = TRUE))
-    # construct the table of coefficients
-    if (!is.null(vcov_arg)) {
-        if (is.matrix(vcov_arg))   rvcov <- vcov_arg
-        if (is.function(vcov_arg)) rvcov <- vcov_arg(object)
-        std.err <- sqrt(diag(rvcov))
-    } else {
-        std.err <- sqrt(diag(stats::vcov(object)))
-    }
-    b <- coefficients(object)
-    z <- b / std.err
-    p <- 2 * pt(abs(z), df = object$df.residual, lower.tail = FALSE)
-    
-    # construct the object of class summary.plm
-    object$coefficients <- cbind("Estimate"   = b,
-                                 "Std. Error" = std.err,
-                                 "t-value"    = z,
-                                 "Pr(>|t|)"   = p)
-    
-    ## add some info to summary.plm object 
-    # robust vcov (next to "normal" vcov)
-    if (!is.null(vcov_arg)) {
-        object$rvcov <- rvcov
-        rvcov.name <- paste0(deparse(substitute(vcov)))
-        attr(object$rvcov, which = "rvcov.name") <- rvcov.name 
-    }
-    
-    # mimics summary.lm's 'df' component
-    # 1st entry: no. coefs (w/o aliased coefs); 2nd: residual df; 3rd no. coefs /w aliased coefs
-    # NB: do not use length(object$coefficients) for 3rd entry!
-    object$df <- c(length(b), object$df.residual, length(object$aliased))
-    
-    class(object) <- c("summary.plm", "plm", "panelmodel")
-    object
+  
+  vcov_arg <- vcov
+  model <- describe(object, "model")
+  effect <- describe(object, "effect")
+  random.method <- describe(object, "random.method")
+  object$r.squared <- c(rsq    = r.squared(object),
+                        adjrsq = r.squared(object, dfcor = TRUE))
+  
+  ## determine if standard normal and Chisq test or t distribution and F test to be used
+  use.norm.chisq <- FALSE
+  if(model == "random") use.norm.chisq <- TRUE               # all random models
+  if(length(formula(object))[2] >= 2) use.norm.chisq <- TRUE # all IV models
+  if(model == "ht") use.norm.chisq <- TRUE                   # HT via plm(., model="ht")
+  
+  object$fstatistic <- pwaldtest(object,
+                                 test = ifelse(use.norm.chisq, "Chisq", "F"),
+                                 vcov = vcov_arg)
+  
+  # construct the table of coefficients
+  if (!is.null(vcov_arg)) {
+    if (is.matrix(vcov_arg))   rvcov <- vcov_arg
+    if (is.function(vcov_arg)) rvcov <- vcov_arg(object)
+    std.err <- sqrt(diag(rvcov))
+  } else {
+    std.err <- sqrt(diag(stats::vcov(object)))
+  }
+  b <- coefficients(object)
+  z <- b / std.err
+  p <- if(use.norm.chisq) {
+    2 * pnorm(abs(z), lower.tail = FALSE)
+  } else {
+    2 * pt(abs(z), df = object$df.residual, lower.tail = FALSE)
+  }
+  
+  # construct the object of class summary.plm
+  object$coefficients <- cbind(b, std.err, z, p)
+  colnames(object$coefficients) <- if(use.norm.chisq) {
+    c("Estimate", "Std. Error", "z-value", "Pr(>|z|)")
+  } else { c("Estimate", "Std. Error", "t-value", "Pr(>|t|)") }
+  
+  ## add some info to summary.plm object 
+  # robust vcov (next to "normal" vcov)
+  if (!is.null(vcov_arg)) {
+    object$rvcov <- rvcov
+    rvcov.name <- paste0(deparse(substitute(vcov)))
+    attr(object$rvcov, which = "rvcov.name") <- rvcov.name 
+  }
+  
+  # mimics summary.lm's 'df' component
+  # 1st entry: no. coefs (w/o aliased coefs); 2nd: residual df; 3rd no. coefs /w aliased coefs
+  # NB: do not use length(object$coefficients) for 3rd entry!
+  object$df <- c(length(b), object$df.residual, length(object$aliased))
+  
+  class(object) <- c("summary.plm", "plm", "panelmodel")
+  object
 }
 
 print.summary.plm <- function(x, digits = max(3, getOption("digits") - 2),
-                              width=getOption("width"), subset = NULL, ...){
+                              width = getOption("width"), subset = NULL, ...){
   formula <- formula(x)
-  has.instruments <- (length(formula)[2] == 2)
+  has.instruments <- (length(formula)[2] >= 2)
   effect <- describe(x, "effect")
   model  <- describe(x, "model")
   if (model != "pooling") { cat(paste(effect.plm.list[effect]," ",sep="")) }
@@ -169,16 +183,17 @@ print.summary.plm <- function(x, digits = max(3, getOption("digits") - 2),
   }
   
   if (has.instruments){
-    ivar <- describe(x, "inst.method")
-    cat(paste("Instrumental variable estimation\n   (",
-              inst.method.list[ivar],
-              "'s transformation)\n",
-              sep=""))
+    cat("Instrumental variable estimation\n")
+    if(model != "within") {
+      # don't print transformation method for FE models as there is only one
+      # such method for FE models but plenty for other model types
+      ivar <- describe(x, "inst.method")
+      cat(paste0("   (", inst.method.list[ivar], "'s transformation)\n"))
+    }
   }
   
   if (!is.null(x$rvcov)) {
-      cat("\nNote: Coefficient variance-covariance matrix supplied: ",
-          attr(x$rvcov, which = "rvcov.name"), "\n", sep = "")
+    cat("\nNote: Coefficient variance-covariance matrix supplied: ", attr(x$rvcov, which = "rvcov.name"), "\n", sep = "")
   }
   
   cat("\nCall:\n")
@@ -190,7 +205,7 @@ print.summary.plm <- function(x, digits = max(3, getOption("digits") - 2),
     # print this extra info, b/c model.frames of FD and between models
     # have original (undifferenced/"un-between-ed") obs/rows of the data
     cat(paste0("Observations used in estimation: ", nobs(x), "\n"))}
-
+  
   if (model == "random"){
     cat("\nEffects:\n")
     print(x$ercomp)
@@ -201,17 +216,11 @@ print.summary.plm <- function(x, digits = max(3, getOption("digits") - 2),
   if (rdf > 5L) {
     save.digits <- unlist(options(digits = digits))
     on.exit(options(digits = save.digits))
-    sr <- summary(unclass(resid(x)))
-    srm <- sr["Mean"]
-    if (abs(srm)<1e-10){
-        sr <- sr[c(1:3,5:6)]
-    }
-    print(sr)
-#    print(sumres(x))
+    print(sumres(x))
   } else if (rdf > 0L) print(residuals(x), digits = digits)
   if (rdf == 0L) { # estimation is a perfect fit
-   cat("ALL", x$df[1L], "residuals are 0: no residual degrees of freedom!")
-   cat("\n")
+    cat("ALL", x$df[1L], "residuals are 0: no residual degrees of freedom!")
+    cat("\n")
   }
   
   if (any(x$aliased, na.rm = TRUE)) {

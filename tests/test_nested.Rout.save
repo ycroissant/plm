@@ -1,6 +1,6 @@
 
-R version 3.4.2 (2017-09-28) -- "Short Summer"
-Copyright (C) 2017 The R Foundation for Statistical Computing
+R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
+Copyright (C) 2018 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -44,14 +44,14 @@ Residuals:
 -0.106171 -0.024805 -0.001816 -0.000054  0.019795  0.182810 
 
 Coefficients:
-               Estimate  Std. Error t-value  Pr(>|t|)    
+               Estimate  Std. Error z-value  Pr(>|z|)    
 (Intercept)  2.08921088  0.14570204 14.3389 < 2.2e-16 ***
 log(pc)      0.27412419  0.02054440 13.3430 < 2.2e-16 ***
 log(emp)     0.73983766  0.02575046 28.7311 < 2.2e-16 ***
-log(hwy)     0.07273624  0.02202509  3.3024  0.001001 ** 
-log(water)   0.07645327  0.01385767  5.5170 4.642e-08 ***
-log(util)   -0.09437398  0.01677289 -5.6266 2.533e-08 ***
-unemp       -0.00616304  0.00090331 -6.8227 1.751e-11 ***
+log(hwy)     0.07273624  0.02202509  3.3024 0.0009585 ***
+log(water)   0.07645327  0.01385767  5.5170 3.448e-08 ***
+log(util)   -0.09437398  0.01677289 -5.6266 1.838e-08 ***
+unemp       -0.00616304  0.00090331 -6.8227 8.933e-12 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -59,7 +59,7 @@ Total Sum of Squares:    43.035
 Residual Sum of Squares: 1.1245
 R-Squared:      0.97387
 Adj. R-Squared: 0.97368
-F-statistic: 5025.33 on 6 and 809 DF, p-value: < 2.22e-16
+Chisq: 30152 on 6 DF, p-value: < 2.22e-16
 > summary(plm(form, data = pProduc, model = "random", effect = "nested", random.method = "walhus"))
 Nested effects Random Effect Model 
    (Wallace-Hussain's transformation)
@@ -85,14 +85,14 @@ Residuals:
 -0.105014 -0.024736 -0.001879 -0.000056  0.019944  0.182082 
 
 Coefficients:
-               Estimate  Std. Error t-value  Pr(>|t|)    
+               Estimate  Std. Error z-value  Pr(>|z|)    
 (Intercept)  2.08165186  0.15034855 13.8455 < 2.2e-16 ***
 log(pc)      0.27256322  0.02093384 13.0202 < 2.2e-16 ***
 log(emp)     0.74164483  0.02607167 28.4464 < 2.2e-16 ***
-log(hwy)     0.07493204  0.02234932  3.3528 0.0008373 ***
-log(water)   0.07639159  0.01386702  5.5089 4.855e-08 ***
-log(util)   -0.09523031  0.01677247 -5.6778 1.902e-08 ***
-unemp       -0.00614840  0.00090786 -6.7724 2.436e-11 ***
+log(hwy)     0.07493204  0.02234932  3.3528 0.0008001 ***
+log(water)   0.07639159  0.01386702  5.5089 3.611e-08 ***
+log(util)   -0.09523031  0.01677247 -5.6778 1.365e-08 ***
+unemp       -0.00614840  0.00090786 -6.7724 1.267e-11 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -100,7 +100,7 @@ Total Sum of Squares:    40.423
 Residual Sum of Squares: 1.1195
 R-Squared:      0.97231
 Adj. R-Squared: 0.9721
-F-statistic: 4733.87 on 6 and 809 DF, p-value: < 2.22e-16
+Chisq: 28403.2 on 6 DF, p-value: < 2.22e-16
 > summary(plm(form, data = pProduc, model = "random", effect = "nested", random.method = "amemiya"))
 Nested effects Random Effect Model 
    (Amemiya's transformation)
@@ -126,14 +126,14 @@ Residuals:
 -0.104625 -0.024323 -0.002264 -0.000038  0.019351  0.178975 
 
 Coefficients:
-               Estimate  Std. Error t-value  Pr(>|t|)    
+               Estimate  Std. Error z-value  Pr(>|z|)    
 (Intercept)  2.13133109  0.16013819 13.3093 < 2.2e-16 ***
 log(pc)      0.26447567  0.02176030 12.1540 < 2.2e-16 ***
 log(emp)     0.75811017  0.02660794 28.4919 < 2.2e-16 ***
-log(hwy)     0.07211418  0.02362627  3.0523  0.002345 ** 
-log(water)   0.07616495  0.01401879  5.4331 7.334e-08 ***
-log(util)   -0.10150953  0.01705158 -5.9531 3.919e-09 ***
-unemp       -0.00583842  0.00091107 -6.4083 2.496e-10 ***
+log(hwy)     0.07211418  0.02362627  3.0523  0.002271 ** 
+log(water)   0.07616495  0.01401879  5.4331 5.539e-08 ***
+log(util)   -0.10150953  0.01705158 -5.9531 2.631e-09 ***
+unemp       -0.00583842  0.00091107 -6.4083 1.471e-10 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -141,8 +141,8 @@ Total Sum of Squares:    34.089
 Residual Sum of Squares: 1.0911
 R-Squared:      0.96799
 Adj. R-Squared: 0.96776
-F-statistic: 4077.78 on 6 and 809 DF, p-value: < 2.22e-16
+Chisq: 24466.7 on 6 DF, p-value: < 2.22e-16
 > 
 > proc.time()
    user  system elapsed 
-   2.74    0.15    2.90 
+   1.20    0.20    1.38 
