@@ -5,6 +5,7 @@ data("Grunfeld", package = "plm")
 pGrunfeld <- pdata.frame(Grunfeld)
 form <- inv ~ value + capital
 fd_id <- plm(form, data = Grunfeld, model = "fd")
+
 print(summary(fd_id))
 print(vcovHC(fd_id))
 print(vcovHC(fd_id, cluster = "time"))
@@ -19,7 +20,8 @@ print(vcovHC(fd_id, cluster = "time"))
 
 
 pGrunfeld <- pdata.frame(Grunfeld)
-modmat_id   <- model.matrix(pFormula(form), data = pGrunfeld, model = "fd", effect = "individual")
+#MM modmat_id   <- model.matrix(pFormula(form), data = pGrunfeld, model = "fd", effect = "individual")
+modmat_id   <- model.matrix(model.frame(pGrunfeld, form), model = "fd", effect = "individual")
 #YC modmat_time <- model.matrix(pFormula(form), data = pGrunfeld, model = "fd", effect = "time")
 
 if (nrow(modmat_id)   != 190) stop(paste0("nrow not correct, should be 190, is: ", nrow(modmat_id)))

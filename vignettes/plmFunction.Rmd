@@ -105,27 +105,26 @@ The first two arguments of `plm` are, like for most of the estimation
 functions of `R` a `formula` which describes the model to be estimated
 and a `data.frame`. `subset`, `weights` and `na.action` are also
 available and have the same behavior than in the `lm` function. Three
-more main arguments can be set :
+main more argument can be set :
 
 - `index` helps `plm` to understand the structure of the data : if
   `NULL`, the first two columns of the data are assumed to contain the
-  individual or the time index. Otherwise, supply the column names of 
-  the individual and time index as a character, e.g., use something like
+  individual or the time index. Otherwise, use something like
   `c("firm", "year")` or just `"firm"` if there is no explicit time
   index.
 - `effect` indicates the effects that should be taken into account ;
-  this is one of `"indiviudal"`, `"time"` and `"twoways"`.
-- `model` indicates the model to be estimated : `"pooling"` is just the
-  OLS estimation (equivalent to a call to `lm`), `"between"` performs
-  the estimation on the individual or time means, `"within"` on the
-  deviations from the individual or/and time mean, `"fd"` on the first
-  differences and `"random"` perform a feasible generalized least
+  this is one of `indiviudal`, `time` and `twoways`.
+- `model` indicates the model to be estimated : `pooling` is just the
+  OLS estimation (equivalent to a call to `lm`), `between` performs
+  the estimation on the individual or time means, `within` on the
+  deviations from the individual or/and time mean, `fd` on the first
+  differences and `random` perform a feasible generalized least
   squares estimation which takes into account the correlation induced
   by the presence of individual and/or time effects.
 
 The estimation of all but the last model is straightforward, as it
 requires only the estimation by *OLS* of obvious transformations of
-the data. The *GLS* model requires more explanation. In most of the
+the data. The *GLS* model requires more explanations. In most of the
 cases, the estimation is obtained by quasi-differencing the data from
 the individual and/or the time means. The coefficients used to perform
 this quasi-difference depends on estimators of the variance of the
@@ -150,42 +149,43 @@ individual (or time) means and the deviations from these
 means. Consistent estimators can be obtained by replacing the unknown
 errors by the residuals of a consistent preliminary estimation and by
 dropping the expecting value operator. Some degree of freedom
-correction can also be introduced. `plm` calls the general function
-`ercomp` to estimate the variances. Important arguments to `ercomp`
-are:
+correction can also be introduced. `plm` provides a general interface
+called `ercomp` to estimate the variances :
 
 - `models` indicates which models are estimated in order to calculate
-  the two quadratic forms ; for example `c("within", "Between")`.
+  the two quadratic forms ; for example `c("within", "Between")`
 - `dfcor` indicates what kind of degrees of freedom correction is
-  used : if `0`, the quadratic forms are divided by the number of
-  observations, respectively $N\times T$ and $N$ ; if `1`, the
+  used : if 0, the quadratic forms are divided by the number of
+  observations, respectively $N\times T$ and $N$ ; if 1, the
   numerators of the previous expressions are used ($N\times (T-1)$ and
-  $N$) ; if `2`, the number of estimated parameters in the preliminary
-  estimate $K$ is deduced. Finally, if `3`, the unbiased version is
+  $N$) ; if 2, the number of estimated parameters in the preliminary
+  estimate $K$ is deduced. Finally, if 3, the unbiased version is
   computed, which is based on much more complex computations, which
   relies on the calculus of the trace of different cross-products
   which depends on the preliminary models used.
 - `method` is an alternative to the `models` argument ; it is one of :
-    * `"walhus"` - which is equivalent to `models = c("pooling")`,
+    * `walhus` (which is equivalent) to `models = c("pooling")`
       @WALL:HUSS:69,
-    * `"swar"` - `models = c("within", "Between")`, @SWAM:AROR:72,
-    * `"amemiya"` - `models = c("within")`, @AMEM:71,
-    * `"ht"` is an slightly modified version of `amemiya` ; when there
+    * `swar` - `models = c("within", "Between")` @SWAM:AROR:72,
+    * `amemiya` - `models = c("within")` @AMEM:71,
+    * `ht` is an slightly modified version of `amemiya` ; when there
       are time-invariant covariates, the @AMEM:71 estimator of the
       individual component of the variance is under-estimated as the
-      time-invariant covariates disappear in the within regression. In
+      time-invariant covariates diseapear in the within regression. In
       this case @HAUS:TAYL:81 proposed to regress the estimation of
       the individual effects on the time-invariant covariates and use
       the residuals in order to estimate the components of the
       variance,
-    * `"nerlove"`, which is a specific method which doesn't fit to the
+    * `nerlove` which is a specific method which doesn't fit to the
       methodology described above (@NERLO:71).
 
-Note that when only one model is provided in `models`, this means that the same
+Note that when only one model is provided, this means that the same
 residuals are used to compute the two quadratic forms.
 
-To illustrate the use of `plm`, we use examples reproduced in @BALT:2013.
-Table 2.1 on page 21 presents EViews' results of the estimation on the
+    
+To illustrate the use of `plm`, we use examples reproduced in @BALT:13.
+
+Table 2.1 on page 21 presents EViews results of the estimation on the
 `Grunfeld` data set :
 
 ```{r grunfeld}
@@ -199,7 +199,7 @@ amemiya <- update(walhus, random.method = "amemiya")
 swar <- update(amemiya, random.method = "swar")
 ```
 
-Note that the `random.dfcor` argument is set to `3`, which means that
+Note that the `random.dfcor` argument is set to 3, which means that
 the unbiased version of the estimation of the error components is
 used. We use the `texreg` package to present the results :
 
@@ -210,17 +210,17 @@ screenreg(list(ols = ols, between = between, within = within,
         digits = 5, omit.coef = "(Intercept)")
 ```
 
-The estimated variance can be extracted using the `ercomp` function. For
+The estimated variance can be extract using the `ercomp` function. For
 example, for the `amemiya` model :
 
 ```{r ercompamemiya}
 ercomp(amemiya)
 ```
 
-@BALT:2013, p. 27, presents the Stata estimation of the Swamy-Arora
-estimator ; the Swamy-Arora estimator is the same if `random.dfcor` is
-set to `3` or `2` (the quadratic forms are divided by $\sum_n T_n - K - N$
-and by $N - K - 1$), so I don't know what is the behaviour of Stata for the
+@BALT:13, p.27, presents the Stata estimation of the Swamy-Arora
+estimator ; the Swamy-Arora estimator is the same if `random.dfcor` =
+3 or 2 (the quadratic forms are divided by $\sum_n T_n - K - N$ and by
+$N - K - 1$), so I don't know what is the behaviour of Stata for the
 other estimators for which the unbiased estimators differs from the
 simple one.
 
@@ -235,7 +235,7 @@ summary(PrSwar)
 # The twoways effect model
 
 The two-ways effect model is obtained by setting the `effect` argument
-to `"twoways"`. @BALT:2013 p. 44-46, presents EViews' output for the Grunfeld
+to `TRUE`. @BALT:13 p. 44-46, presents EViews output for the Grunfeld
 data set.
 
 ```{r grunfeld2ways}
@@ -243,13 +243,13 @@ Grw <- plm(inv ~ value + capital, Grunfeld, model = "random", effect = "twoways"
            random.method = "walhus", random.dfcor = 3)
 Grs <- update(Grw, random.method = "swar")
 Gra <- update(Grw, random.method = "amemiya")
-screenreg(list("Wallace-Hussain" = Grw, "Swamy-Arora" = Grs, "Amemiya" = Gra), digits = 5)
+screenreg(list("Wallace-Hussein" = Grw, "Swamy-Arora" = Grs, "Amemiya" = Gra), digits = 5)
 ```
 
-The estimated variance of the time component is negative for the 
-Wallace-Hussain as well as the Swamy-Arora models and `plm` sets it to 0.
+The estimated variance of the time component of the variance is
+negative for `whalus` and `swar`, it is set to 0.
 
-@BALT:09 p. 60-62, presents EViews' output for the `Produc` data.
+@BALT:09 p. 60-62, presents EViews output for the `Produc` data.
 
 ```{r produc2ways}
 data(Produc, package = "plm")
@@ -258,7 +258,7 @@ Prw <- plm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, Produc,
            effect = "twoways", random.dfcor = 3)
 Prs <- update(Prw, random.method = "swar")
 Pra <- update(Prw, random.method = "amemiya")
-screenreg(list("Wallace-Hussain" = Prw, "Swamy-Arora" = Prs, "Amemiya" = Pra), digits = 5)
+screenreg(list("Wallace-Hussein" = Prw, "Swamy-Arora" = Prs, "Amemiya" = Pra), digits = 5)
 ```
 
 
@@ -266,21 +266,21 @@ screenreg(list("Wallace-Hussain" = Prw, "Swamy-Arora" = Prs, "Amemiya" = Pra), d
 
 Two difficulties arise with unbalanced panels :
 
-- There are no obvious denominators for the quadratic forms of the
+- there are no obvious denominators for the quadratic forms of the
   residuals that are used to estimate the components of the
   variance. The strategy is then to compute the expected value and
-  equate it to the actual quadratic forms. Detailed formula are
+  equates it to the actual quadratic forms. Detailed formula are
   omitted here, they depend on the preliminary estimator.
-- For the one-way effect model, the estimator is still obtained by
+- for the one-way effect model, the estimator is still obtained by
   applying *OLS* on demeaned data (the individual **and** the time
   means are now deduced) for the within model and on quasi-demeaned
   data for the random effects model ; this is not the case for the
   two-ways effects model.
 
-@BALT:2013 and @BALT:09 present results of the estimation of the
-@SWAM:AROR:72 model with the `Hedonic` data set. @BALT:2013, p. 174,
-presents the Stata output as @BALT:09, p. 211 presents EViews'
-output. EViews' Wallace-Hussain estimator is reported in @BALT:09,
+@BALT:13 and @BALT:09 present results of the estimation of the
+@SWAM:AROR:72 model with the `Hedonic` data set. @BALT:13 p.174,
+presents the Stata output as @BALT:09 p.211 presents the EViews
+output. The EViews Wallace Hussain estimator is reported in @BALT:09,
 p. 210.
 
 ```{r hedonic}
@@ -292,26 +292,21 @@ HedStata <- plm(form, Hedonic, model = "random", index = "townid",
 HedEviews <- plm(form, Hedonic, model = "random", index = "townid", 
                  random.models = c("within", "Between"))
 HedEviewsWH <- update(HedEviews, random.models = "pooling")
-screenreg(list(EViews = HedEviews, Stata = HedStata, "Wallace-Hussain" = HedEviewsWH), 
+screenreg(list(Eviews = HedEviews, Stata = HedStata, "Walace-Hussein" = HedEviewsWH), 
           digits = 5, single.row = TRUE)
 ```
 
-The difference is due to the fact that Stata uses a between regression
-on $N$ observations while EViews uses a between regression on $\sum_n T_n$
+The difference is due to the fact that Stata use a between regression
+on $N$ observations as EViews a between regression on $\sum_n T_n$
 observations, which are not the same on unbalanced panels. Note the
-use of between with or without the B capitalized in the
-`random.models` argument. `plm`'s default is to use the between regression
-with $\sum_n T_n$ observations when setting
-`model = "random", random.method = "swar"`.
-The default employed is what the original paper for the unbalanced
-one-way Swamy-Arora estimator defined (in @BALT:CHA:94, p. 73). A more detailed
-analysis of Stata's Swamy-Arora estimation procedure is given by @COTT:2017.
+use of between with or without the B is capitalized in the
+random.models argument.
 
 
 # Instrumental variable estimators
 
 All of the models presented above may be estimated using instrumental
-variables (IV). The instruments are specified using two- or three-part
+variables. The instruments are specified using two or three-part
 formulas, each part being separated by a `|` sign :
 
 - the first part contains the covariates,
@@ -326,44 +321,40 @@ formulas, each part being separated by a `|` sign :
 The instrumental variables estimator used is indicated with the
 `inst.method` argument:
 
-- `"bvk"`, from @BALE:VARA:87, the default value : in this case, all the
+- `bvk`, from @BALE:VARA:87, the default value : in this case, all the
   instruments are introduced in quasi-differences, using the same
   transformation as for the response and the covariates,
-- `"baltagi"`, from @BALT:81, the instruments of the second part are
+- `baltagi`, from @BALT:81, the instruments of the second part are
   introduced twice using the between and the within transformation as
   those of the third are only introduced with the within
   transformation,
-- `"am"`, from @AMEM:MACUR:86, the within transformation of the variables
+- `am` for @AMEM:MACUR:86, the within transformation of the variables
   of the second parts for each period are also included as
   instruments,
-- `"bmc"`, from @BREU:MIZO:SCHMI:89, the within transformation of the
+- `bmc` for @BREU:MIZO:SCHMI:89, the within transformation of the
   variable of the second and of the third parts are included as
   instruments.
 
-The various possible values of the  `inst.method` argument are not relevant
-for fixed effect IV models as there is only one method for this type of IV
-models but many for random effect IV models.
-
-The instrumental variable estimators are illustrated in the following example
-from @BALT:2005, p. 120/ @BALT:2013, p. 137.
+ as illustrated on the following example from @BALT:01, p.120 @BALT:13, p.137.
   
 ```{r}
 data("Crime", package = "plm")
-crbalt <- plm(lcrmrte ~ lprbarr + lpolpc + lprbconv + lprbpris + lavgsen +
-              ldensity + lwcon + lwtuc + lwtrd + lwfir + lwser + lwmfg + lwfed +
-              lwsta + lwloc + lpctymle + lpctmin + region + smsa + factor(year)
-              | . - lprbarr - lpolpc + ltaxpc + lmix,
-              data = Crime, model = "random", inst.method = "baltagi")
+crbalt <- plm(log(crmrte) ~ log(prbarr) + log(polpc) + log(prbconv) +
+           log(prbpris) + log(avgsen) + log(density) + log(wcon) + 
+           log(wtuc) + log(wtrd) + log(wfir) + log(wser) + log(wmfg) + 
+          log(wfed) + log(wsta) + log(wloc) + log(pctymle) + log(pctmin) + 
+          region + smsa + factor(year) | . - log(prbarr) - log(polpc) + 
+          log(taxpc) + log(mix), data = Crime,
+          model = "random", inst.method = "baltagi")
 crbvk <- update(crbalt, inst.method = "bvk")
 crwth <- update(crbalt, model = "within")
-screenreg(list(FE2SLS = crwth, EC2SLS = crbalt, G2SLS = crbvk), 
-          single.row = TRUE, digits = 5, omit.coef = "(region)|(year)",
-          reorder.coef = c(1:16, 19, 18, 17))
+screenreg(list(within = crwth, EC2SLS = crbalt, G2SLS = crbalt), 
+          single.row = TRUE, digits = 5, omit.coef = "(region)|(year)")
 ```
 
-The Hausman-Taylor model (@HAUS:TAYL:81) may be estimated
-with the `plm` function by setting argument `random.method = "ht"`.
-The following example is from @BALT:2005, p. 130 and @BALT:2013, p. 146.
+The Hausman-Taylor model @HAUS:TAYL:81 may be estimated
+with the `plm` function. The following example is from
+@BALT:01, p.130 and @BALT:13, p.146.
 
 ```{r}
 data("Wages", package = "plm")
@@ -374,10 +365,14 @@ ht <- plm(lwage ~ wks + south + smsa + married + exp + I(exp^2) +
           data = Wages, index = 595, 
           inst.method = "baltagi", model = "random", 
           random.method = "ht")
-
-am <- update(ht, inst.method = "am")
-  
-screenreg(list("Hausman-Taylor" = ht, "Amemiya-MaCurdy" = am), 
+am <- plm(lwage ~ wks + south + smsa + married + exp + I(exp^2) + 
+            bluecol + ind + union + sex + black + ed | 
+            bluecol + south + smsa + ind + sex + black | 
+            wks + married + exp + I(exp^2) + union, 
+          data = Wages, index = 595, 
+          inst.method = "am", model = "random", 
+          random.method = "ht")
+screenreg(list("Hausman-Taylor" = ht, "Amemiya MaCurdy" = am), 
           digits = 5, single.row = TRUE)
 ```
 
@@ -392,7 +387,7 @@ swar <- plm(form <- log(gsp) ~ log(pc) + log(emp) + log(hwy) + log(water) + log(
             Produc, index = c("state", "year", "region"), effect = "nested", random.method = "swar")
 walhus <- update(swar, random.method = "walhus")
 amem <- update(swar, random.method = "amemiya")
-screenreg(list("Swamy-Arora" = swar, "Wallace-Hussain" = walhus, "Amemiya" = amem), digits = 5)
+screenreg(list("Swamy-Arora" = swar, "Walhus-Hussein" = walhus, "Amemiya" = amem), digits = 5)
 ```
 
 

@@ -754,6 +754,14 @@ wald <- function(object, param = c("coef", "time", "all"), vcov = NULL) {
   wald
 }
 
+# No of obs calculated as in print.summary.pgmm [code copied from there]
+nobs.pgmm <- function(object, ...) {
+  if (inherits(object, "pgmm")) return(sum(unlist(object$residuals) != 0))
+    else stop("Input 'object' needs to be of class 'pgmm', i. e., a GMM estimation with panel data estimated by pgmm()")
+}
+
+
+
 print.summary.pgmm <- function(x, digits = max(3, getOption("digits") - 2),
                                width = getOption("width"),
                                ...) {

@@ -15,8 +15,8 @@ summary(mod_fe_lin_dep)    # works with linear dep columns
 summary(mod_fe_no_lin_dep) 
 
 # detect linear dependence
-detect.lindep(model.matrix(mod_fe_lin_dep))
-detect.lindep(model.matrix(mod_fe_no_lin_dep))
+detect_lin_dep(model.matrix(mod_fe_lin_dep))
+detect_lin_dep(model.matrix(mod_fe_no_lin_dep))
 mod_fe_lin_dep$aliased
 mod_fe_no_lin_dep$aliased
 
@@ -45,7 +45,7 @@ if (!identical(vcovBK(mod_fe_lin_dep), vcovBK(mod_fe_no_lin_dep))) {
             model = "pooling")
   head(model.matrix(cr$formula, cr$model, rhs = 1))
   head(model.matrix(cr$formula, cr$model, rhs = 2))
-  detect.lindep(cr)
+  detect_lin_dep(cr)
   vcovHC(cr)
   vcovBK(cr)
   
@@ -54,9 +54,9 @@ if (!identical(vcovBK(mod_fe_lin_dep), vcovBK(mod_fe_no_lin_dep))) {
             | log(prbarr) + log(polpc) +
             log(taxpc) + log(mix) + I(2*log(mix)), data = Crime,
             model = "pooling")
-  detect.lindep(cr2) # does not inspect instrument matrix
+  detect_lin_dep(cr2) # does not inspect instrument matrix
   head(model.matrix(cr2$formula, cr2$model, rhs = 2))
-  detect.lindep(model.matrix(cr2$formula, cr2$model, rhs = 2))
+  detect_lin_dep(model.matrix(cr2$formula, cr2$model, rhs = 2))
   vcovHC(cr2)
   vcovBK(cr2)
 

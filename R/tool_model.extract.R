@@ -1,32 +1,32 @@
-## pFormula:
-## methods : formula, model.frame, model.matrix, pmodel.response
+# model.frame method for pdata.frame ; the formula argument must be a
+# pdata.frame and the data argument must be a formula, which is quite
+# hesoteric, but consistent with the argument list of
+# model.frame.Formula which is latter called.
 
-pFormula <- function(object) {
-    stopifnot(inherits(object, "formula"))
-    if (!inherits(object, "Formula")){
-        object <- Formula(object)
-    }
-    class(object) <- union("pFormula", class(object))
-    object
-}
-
-as.Formula.pFormula <- function(x, ...){
-    class(x) <- setdiff(class(x), "pFormula")
-    x
-}
-
-model.frame.pFormula <- function(formula, data, ..., lhs = NULL, rhs = NULL){
+model.frame.pdata.frame <- function(formula, data = NULL, ...,
+                                    lhs = NULL, rhs = NULL, dot = "separate"){
+    pdata <- formula
+    formula <- as.Formula(data)
     if (is.null(rhs)) rhs <- 1:(length(formula)[2])
     if (is.null(lhs)) lhs <- ifelse(length(formula)[1] > 0, 1, 0)
-    index <- attr(data, "index")
-    mf <- model.frame(as.Formula(formula), as.data.frame(data), ..., rhs = rhs)
+    index <- attr(pdata, "index")
+    mf <- model.frame(formula, as.data.frame(pdata), ...,
+                      lhs = lhs, rhs = rhs, dot = dot)
     index <- index[as.numeric(rownames(mf)), ]
     index <- droplevels(index)
     class(index) <- c("pindex", "data.frame")
     structure(mf,
               index = index,
+              formula = formula,
               class = c("pdata.frame", class(mf)))
 }
+
+formula.pdata.frame <- function(x, ...){
+    if (is.null(attr(x, "terms")))
+        stop("formula expect a model.frame and not an ordinary pdata.frame")
+    attr(x, "formula")
+}
+    
 
 model.matrix.plm <- function(object, ...){
     dots <- list(...)
@@ -37,12 +37,12 @@ model.matrix.plm <- function(object, ...){
     formula <- formula(object)
     data <- model.frame(object)
     if (model != "random"){
-        model.matrix(formula, data, model = model, effect = effect,
+        model.matrix(data, model = model, effect = effect,
                      rhs = rhs, cstcovar.rm = cstcovar.rm)
     }
     else{
         theta <- ercomp(object)$theta
-        model.matrix(formula, data, model = model, effect = effect,
+        model.matrix(data, model = model, effect = effect,
                      theta = theta, rhs = rhs, cstcovar.rm = cstcovar.rm)
     }
 }
@@ -76,10 +76,12 @@ pmodel.response.data.frame <- function(object, ...){
     ptransform(y, model = model, effect = effect, theta = theta)
 }
 
+# deprecated
 pmodel.response.formula <- function(object, data, ...){
     dots <- list(...)
     if (is.null(data)) stop("the data argument is mandatory")
-    if (is.null(attr(data, "terms"))) data <- model.frame(pFormula(object), data)
+    if (! inherits(data, "pdata.frame")) stop("the data argument must be a pdata.frame")
+    if (is.null(attr(data, "terms"))) data <- model.frame(data, object)
     model <- dots$model
     effect <- dots$effect
     theta <- dots$theta
@@ -122,33 +124,29 @@ ptransform <- function(x, model = NULL, effect = NULL, theta = NULL, ...){
 Mean <- function(x) matrix(.colMeans(x, nrow(x), ncol(x)),
                            nrow(x), ncol(x), byrow = TRUE)
 
-model.matrix.pFormula <- function(object, data,
-                                  model = c("pooling", "within", "Between", "Sum",
-                                            "between", "mean", "random", "fd"),
-                                  effect = c("individual", "time", "twoways", "nested"),
-                                  rhs = 1,
-                                  theta = NULL,
-                                  cstcovar.rm = NULL,
-                                  ...){
+model.matrix.pdata.frame <- function(object, 
+                                     model = c("pooling", "within", "Between", "Sum",
+                                               "between", "mean", "random", "fd"),
+                                     effect = c("individual", "time", "twoways", "nested"),
+                                     rhs = 1,
+                                     theta = NULL,
+                                     cstcovar.rm = NULL,
+                                     ...){
+    if (is.null(attr(object, "terms")))
+        stop("model.matrix expects a model.frame and not an ordinary pdata.frame")
     model <- match.arg(model)
     effect <- match.arg(effect)
-    formula <- object  
+    formula <- attr(object, "formula")
+    data <- object
     has.intercept <- has.intercept(formula, rhs = rhs)
     # relevant defaults for cstcovar.rm
     if (is.null(cstcovar.rm)) cstcovar.rm <- ifelse(model == "within", "intercept", "none")
     balanced <- is.pbalanced(data)
-    # check if inputted data is a model.frame, if not convert it to
-    # model.frame (important for NA handling of the original data when
-    # model.matrix.pFormula is called directly) As there is no own
-    # class for a model.frame, check if the 'terms' attribute is
-    # present (this mimics what lm does to detect a model.frame)    
-    if (is.null(attr(data, "terms")))
-        data <- model.frame.pFormula(pFormula(formula), data)  
-    # this goes to Formula::model.matrix.Formula:
-    X <- model.matrix(as.Formula(formula), rhs = rhs, data = data, ...)
+    X <- model.matrix(as.Formula(formula), data = data, rhs = rhs, dot = "previous", ...)
     # check for infinite or NA values and exit if there are some
-    if(any(! is.finite(X))) stop(paste("model matrix or response contains non-finite",
-                                       "values (NA/NaN/Inf/-Inf)"))
+    if(any(! is.finite(X)))
+        stop(paste("model matrix or response contains non-finite",
+                   "values (NA/NaN/Inf/-Inf)"))
     X.assi <- attr(X, "assign")
     X.contr <- attr(X, "contrasts")
     X.contr <- X.contr[ ! sapply(X.contr, is.null) ]

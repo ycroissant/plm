@@ -6,7 +6,7 @@
 \alias{detect.lindep.plm}
 \alias{alias}
 \alias{alias.plm}
-\alias{alias.pFormula}
+\alias{alias.pdata.frame}
 
 \title{Functions to detect linear dependence}
 
@@ -23,7 +23,7 @@ detect.lindep(object, \dots)
 \method{detect.lindep}{plm}(object, suppressPrint = FALSE, \dots)
 
 \method{alias}{plm}(object, \dots)
-\method{alias}{pFormula}(object, data,
+\method{alias}{pdata.frame}(object,  
       model = c("pooling", "within", "Between", "between", "mean", "random", "fd"),
       effect = c("individual", "time", "twoways"), \dots)
 }
@@ -36,10 +36,8 @@ detect.lindep(object, \dots)
   input a model matrix here or check an already estimated plm model,} 
   \item{suppressPrint}{for \code{detect.lindep} only: logical indicating whether a message shall be printed;
   defaults to printing the message, i. e. to \code{suppressPrint = FALSE},}
-  \item{data}{for \code{alias.pFormula} only: model frame (created by plm's \code{model.frame}
-    method),}
-  \item{model, effect}{for \code{alias} only: model and effect to specify the data 
-  transformation, see \code{\link{plm}},}
+  \item{model, effect}{for \code{alias.pdata.frame} only: model and effect to specify the data 
+  transformation, see \code{\link[plm]{plm}},}
   \item{\dots}{further arguments.}
 }
 
@@ -115,19 +113,19 @@ Cigar[ , "fact1"] <- c(0,1)
 Cigar[ , "fact2"] <- c(1,0)
 Cigar.p <- pdata.frame(Cigar)
 
-# setup a pFormula and a model frame
-pform <- pFormula(price ~ 0 + cpi + fact1 + fact2)
-mf <- model.frame(pform, data = Cigar.p)
+# setup a formula and a model frame
+form <- price ~ 0 + cpi + fact1 + fact2
+mf <- model.frame(Cigar.p, form)
 # no linear dependence in the pooling model's model matrix
 # (with intercept in the formula, there would be linear depedence)
-detect.lindep(model.matrix(pform, data = mf, model = "pooling"))
+detect.lindep(model.matrix(mf, model = "pooling"))
 # linear dependence present in the FE transformed model matrix
-modmat_FE <- model.matrix(pform, data = mf, model = "within")
+modmat_FE <- model.matrix(mf, model = "within")
 detect.lindep(modmat_FE)
-mod_FE <- plm(pform, data = Cigar.p, model = "within")
+mod_FE <- plm(form, data = Cigar.p, model = "within")
 detect.lindep(mod_FE) 
 alias(mod_FE) # => fact1 == -1*fact2
-plm(pform, data = mf, model = "within")$aliased # "fact2" indicated as aliased
+plm(form, data = mf, model = "within")$aliased # "fact2" indicated as aliased
 
 # look at the data: after FE transformation fact1 == -1*fact2
 head(modmat_FE)
@@ -149,19 +147,19 @@ Grunfeld$CEOage    <- c(replicate(10, seq(from=s<-sample(38:65, 1), to=s+19, by=
 # look at the data
 head(Grunfeld, 50)
 
-pform <- pFormula(inv ~ value + capital + CEOtenure + CEOage)
-mf <- model.frame(pform, data=pdata.frame(Grunfeld))
+form <- inv ~ value + capital + CEOtenure + CEOage
+mf <- model.frame(pdata.frame(Grunfeld), form)
 # no linear dependent columns in original data/pooling model
-modmat_pool <- model.matrix(pform, data = mf, model="pooling")
+modmat_pool <- model.matrix(mf, model="pooling")
 detect.lindep(modmat_pool)
-mod_pool <- plm(pform, data = Grunfeld, model = "pooling")
+mod_pool <- plm(form, data = Grunfeld, model = "pooling")
 alias(mod_pool)
 
 # CEOtenure and CEOage are linear dependent after FE transformation
 # (demeaning per individual)
-modmat_FE <- model.matrix(pform, data = mf, model="within")
+modmat_FE <- model.matrix(mf, model="within")
 detect.lindep(modmat_FE)
-mod_FE <- plm(pform, data = Grunfeld, model = "within")
+mod_FE <- plm(form, data = Grunfeld, model = "within")
 detect.lindep(mod_FE)
 alias(mod_FE)
 
