@@ -1,14 +1,3 @@
-Changes in version 1.8-0
-  * class pFormula is deprecated and will be removed soon.
-  * model.frame now has a pdata.frame method (instead of a pFormula method) 
-    and model.matrix has a pdata.frame method (a pdata.frame with a terms 
-    attribute). formula as an argument in model.matrix was unnecessary as 
-    the formula can be retrieved from the pdata.frame.
-  * A thrid vignette was added describing the plm model components
-    (plmModelComponents.Rmd).
-  * plm: the informative error message about the deprecated argument 'instruments'
-    is removed and this argument is no longer supported
-
 
 Changes in version 1.7-0
 
@@ -101,6 +90,9 @@ Changes in version 1.7-0
   * Data set 'Crime' extended with pre-computed log values as in original data.
   
   * Dependencies: added to 'Suggests': knitr, rmarkdown, bookdown.
+  
+  * Addendum: In plm version 1.6-6, aneweytest() was changed to use the residuals
+    of the one-way individual within model (was: two-ways within model).
 
 
 Changes in version 1.6-6
@@ -550,7 +542,7 @@ Changes in version 1.5-9
     a second time; phtest now also works with between model correctly (fixed degrees of freedom)
     tests/test_phtest_Hausman_regression.R added.
  
-  * plm(): original row names of inputted data are preserved in plm_object$model,
+  * plm(): original row names of input data are preserved in plm_object$model,
     so functions like pmodel.response(), model.frame(), model.matrix(), residuals()
     return the original row.names (and thus fancy rownames if those were to be computed by
     pdata.frame)
@@ -902,7 +894,7 @@ Changes since version 1-1.0
     and a pooling model" is removed so that two within models may be
     provided.
 
-  * for backward compatibility reasons, function pvcovHC is reintroduced.
+  * for backward compatibility reasons, the pvcovHC is reintroduced.
 
   * for backward compatibility reasons, argument test of pbsytest
     may be indicated in upper case.

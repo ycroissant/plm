@@ -14,16 +14,6 @@ ercomp.plm <- function(object, ...){
   object$ercomp
 }
 
-ercomp.pdata.frame <- function(object, effect = c("individual", "time", "twoways", "nested"),
-                               method = NULL,
-                               models = NULL,
-                               dfcor = NULL,
-                               index = NULL, ...){
-    data <- object
-    object <- attr(data, "formula")
-    ercomp(object, data, effect = effect, method = method, models = models, dfcor = dfcor, index = index, ...)
-}
-
 ercomp.formula <- function(object, data, 
                            effect = c("individual", "time", "twoways", "nested"),
                            method = NULL,
@@ -32,11 +22,14 @@ ercomp.formula <- function(object, data,
                            index = NULL, ...){
     effect <- match.arg(effect)
 
-    if (! inherits(object, "Formula")) object <- as.Formula(object)
+    # if formula is not a pFormula object, coerce it
+    if (!inherits(object, "pFormula")) object <- pFormula(object)
+
     # if the data argument is not a pdata.frame, create it using plm
     if (! inherits(data, "pdata.frame"))
         data <- plm(object, data, model = NA, index = index)
-    if(is.null(attr(data, "terms"))) data <- model.frame(data, object)
+    if(is.null(attr(data, "terms"))) data <- model.frame(object, data)
+    
     # check whether the panel is balanced
     balanced <- pdim(data)$balanced
     
@@ -65,7 +58,7 @@ ercomp.formula <- function(object, data,
 
     if (! is.null(method) && method == "nerlove"){
         if (! balanced) stop("Nerlove method only implemented for balanced models")
-        est <- plm.fit(data, model = "within", effect = effect)
+        est <- plm.fit(object, data, model = "within", effect = effect)
         pdim <- pdim(data)
         N <- pdim$nT$n
         TS <- pdim$nT$T
@@ -98,11 +91,11 @@ ercomp.formula <- function(object, data,
         N <- pdim$nT$n
         TS <- pdim$nT$T
         O <- pdim$nT$N
-        wm <- plm.fit(data, effect = "individual", model = "within")
-        X <- model.matrix(data, rhs = 1)
+        wm <- plm.fit(object, data, effect = "individual", model = "within")
+        X <- model.matrix(object, data, rhs = 1)
         constants <- apply(X, 2, function(x) all(tapply(x, index(data)[[1]], is.constant)))
         if (length(object)[2] > 1){
-            W1 <- model.matrix(data, rhs = 2)
+            W1 <- model.matrix(object, data, rhs = 2)
             ra <- twosls(fixef(wm, type = "dmean")[as.character(index(data)[[1]])], X[, constants, drop = FALSE], W1)
         }
         else{
@@ -162,9 +155,9 @@ ercomp.formula <- function(object, data,
         ids <- attr(data, "index")[[1]]
         gps <- attr(data, "index")[[3]]
         G <- length(unique(gps))
-        Z <- model.matrix(data, model = "pooling")
-        X <- model.matrix(data, model = "pooling", cstcovar.rm = "intercept")
-        y <- pmodel.response(data, model = "pooling", effect = "individual")
+        Z <- model.matrix(object, data, model = "pooling")
+        X <- model.matrix(object, data, model = "pooling", cstcovar.rm = "intercept")
+        y <- pmodel.response(object, data = data, model = "pooling", effect = "individual")
         O <- nrow(Z)
         K <- ncol(Z) - (ncol(Z) - ncol(X))
         pdim <- pdim(data)
@@ -183,7 +176,7 @@ ercomp.formula <- function(object, data,
                         c("nu", "eta", "lambda")))
         
         if (method == "walhus"){
-            estm <- plm.fit(data, model = "pooling", effect = "individual")
+            estm <- plm.fit(object, data, model = "pooling", effect = "individual")
             hateps <- resid(estm, model = "pooling")
             quad <- c(crossprod(Within(hateps, effect = "individual")),
                       crossprod(Between(hateps, effect = "individual") - Between(hateps, effect = "group")),
@@ -213,7 +206,7 @@ ercomp.formula <- function(object, data,
         }
         
         if (method == "amemiya"){
-            estm <- plm.fit(data, effect = "individual", model = "within")
+            estm <- plm.fit(object, data, effect = "individual", model = "within")
             hateps <- resid(estm, model = "pooling")
             quad <- c(crossprod(Within(hateps, effect = "individual")),
                       crossprod(Between(hateps, effect = "individual") - Between(hateps, effect = "group")),
@@ -240,16 +233,16 @@ ercomp.formula <- function(object, data,
         }
         
         if (method == "swar"){
-            yBetaBlambda <- pmodel.response(data, model = "Between", effect = "individual") -
-                pmodel.response(data, model = "Between", effect = "group")
+            yBetaBlambda <- pmodel.response(object, data = data, model = "Between", effect = "individual") -
+                pmodel.response(object, data = data, model = "Between", effect = "group")
             ZBetaBlambda <- Between(Z, "individual") - Between(Z, "group")
             XBetaBlambda <- Between(X, "individual") - Between(X, "group")
             ZBlambda <- Between(Z, "group")
-            yBlambda <- pmodel.response(data, model = "Between", effect = "group")
+            yBlambda <- pmodel.response(object, data = data, model = "Between", effect = "group")
             ZSeta <- Sum(Z, effect = "individual")
             ZSlambda <- Sum(Z, effect = "group")
             XSeta <- Sum(X, effect = "individual")
-            estm1 <- plm.fit(data, effect = "individual", model = "within")
+            estm1 <- plm.fit(object, data, effect = "individual", model = "within")
             estm2 <- lm.fit(ZBetaBlambda, yBetaBlambda)
             estm3 <- lm.fit(ZBlambda, yBlambda)
             quad <- c(crossprod(resid(estm1)),
@@ -278,7 +271,7 @@ ercomp.formula <- function(object, data,
     } ### END nested models
 
     # the "classic" error component model    
-    Z <- model.matrix(data)
+    Z <- model.matrix(object, data)
     O <- nrow(Z)
     K <- ncol(Z) - 1                                                                                       # INTERCEPT
     pdim <- pdim(data)
@@ -289,17 +282,17 @@ ercomp.formula <- function(object, data,
     Nt <- pdim$Tint$nt
     # Estimate the relevant models
     estm <- vector(length = 3, mode = "list")
-    estm[[1]] <- plm.fit(data, model = models[1], effect = effect)
+    estm[[1]] <- plm.fit(object, data, model = models[1], effect = effect)
     # Check what is the second model
     secmod <- na.omit(models[2:3])[1]
     if (secmod %in% c("within", "pooling")){
-        amodel <- plm.fit(data, model = secmod, effect = effect)
+        amodel <- plm.fit(object, data, model = secmod, effect = effect)
         if (effect != "time") estm[[2]] <- amodel
         if (effect != "individual") estm[[3]] <- amodel
     }
     if (secmod %in% c("between", "Between")){
-        if (effect != "time") estm[[2]] <- plm.fit(data, model = secmod, effect = "individual")
-        if (effect != "individual") estm[[3]] <- plm.fit(data, model = secmod, effect = "time")
+        if (effect != "time") estm[[2]] <- plm.fit(object, data, model = secmod, effect = "individual")
+        if (effect != "individual") estm[[3]] <- plm.fit(object, data, model = secmod, effect = "time")
         # check if Between model was estimated correctly
         swar_Between_check(estm[[2]], method)
         swar_Between_check(estm[[3]], method)
@@ -554,38 +547,4 @@ print.ercomp <- function(x, digits = max(3, getOption("digits") - 3), ...){
                         group = summary(x$theta$gp)))
         }
     }
-}
-
-amemiya_check <- function(matA, matB, method) {
-  ## non-exported, used in ercomp()
-  ## little helper function to check matrix multiplication compatibility
-  ## in ercomp() for the amemiya estimator: if model contains variables without
-  ## within variation (individual or time), the model is not estimable
-  if (NROW(matA) < NCOL(matB) && method == "amemiya" ) {
-    offending_vars <- setdiff(colnames(matB), rownames(matA))
-    offending_vars <- if (length(offending_vars) > 3) {
-      paste0(paste(offending_vars[1:3], collapse = ", "), ", ...") 
-      } else { 
-        paste(offending_vars, collapse = ", ")
-      }
-    stop(paste0("'amemiya' model not estimable due to variable(s) lacking within variation: ", offending_vars))
-  } else NULL
-}
-
-
-swar_Between_check <- function(x, method) {
-	## non-exported, used in ercomp()
-	## little helper function to check feasibility of Between model in Swamy-Arora estimation
-	## in ercomp(): if model contains too few groups (individual, time) the Between
-	## model is not estimable (but does not error)
-	if (describe(x, "model") %in% c("between", "Between")) {
-		pdim <- pdim(x)
-		grp <- switch(describe(x, "effect"),
-									"individual" = pdim$nT$n,
-									"time"       = pdim$nT$T)
-		# cannot use df.residual(x) here because that gives the number for the "uncompressed" Between model
-		if (length(x$aliased) >= grp) stop(paste0("model not estimable as there are ", length(x$aliased),
-																							" coefficient(s) (incl. intercept) to be estimated for the between model but only ",
-																							grp, " ", describe(x, "effect"), "(s)"))
-	} else NULL
 }

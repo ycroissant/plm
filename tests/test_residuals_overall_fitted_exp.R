@@ -45,11 +45,11 @@ fd_bal   <- plm(inv ~ value + capital, model = "fd", data = Grunfeld)
 fd_unbal <- plm(inv ~ value + capital, model = "fd", data = Grunfeld[1:199, ])
 
 # ht
-## data("Wages", package = "plm")
-## ht <- plm(lwage ~ wks + south + smsa + married + exp + I(exp^2) +
-##           bluecol + ind + union + sex + black + ed | 
-##           sex + black + bluecol + south + smsa + ind,
-##           data = Wages, model = "ht", index = 595)
+data("Wages", package = "plm")
+ht <- plm(lwage ~ wks + south + smsa + married + exp + I(exp^2) +
+          bluecol + ind + union + sex + black + ed | 
+          sex + black + bluecol + south + smsa + ind,
+          data = Wages, model = "ht", index = 595)
 
 ### Tests ###
 

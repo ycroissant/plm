@@ -25,6 +25,7 @@ remove_pseries_features <- function(x) {
 #  if (!is.pseries(x)) warning("removing pseries features now but object was not a proper pseries before")
   
   attr(x, "index") <- NULL
+  x <- check_propagation_correct_class(x)
  # attr(x, "class") <- setdiff(class(x), "pseries") # cannot use this, don't know why
   class(x) <- setdiff(class(x), "pseries")
   return(x)

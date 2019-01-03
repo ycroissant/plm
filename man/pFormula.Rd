@@ -37,7 +37,7 @@ For \code{as.Formula}, the return value is an object of class
 % \references{
 % }
 \seealso{
-  \code{plm}'s \code{\link[plm]{model.frame}} and \code{\link[plm]{model.matrix}} to create a
+  \code{plm}'s \code{\link{model.frame}} and \code{\link{model.matrix}} to create a
   model frame for panel data and a model matrix with data transformations applied, respectively.\cr
   \code{plm}'s \code{\link{pmodel.response}} for (transformed) response variable.\cr
   \code{\link[Formula]{Formula}} from package \code{Formula}.

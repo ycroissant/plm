@@ -1,7 +1,8 @@
 ## test of groupGernerics for 'pseries' objects work
 ## test of propagation
 ##
-## see further down below (4) for an example of R's behaviour for a wrapping class "myclass" without group Generics
+## see further down below (5) for an example of R's behaviour for a wrapping class "myclass" without group Generics
+## see also (6) for a case which cannot be worked around (best to my knowledge)
 library(plm)
 data("Grunfeld", package = "plm")
 Grunfeld[ , "integer"] <- rep(c(1L, 2L, 3L, 4L), 25)
@@ -219,3 +220,18 @@ class(logi) # myclass logical
 loginum <- logi - 1.5
 class(loginum) # myclass logical
 typeof(loginum) # double
+
+############## (6) demonstrate case of R's behaviour which cannot be worked around even with without group generics
+# dpois() (also dnorm() and likely more) does not strip unnecessary classes and custom attributes
+# before it performes its operations
+class(pGrunfeld$integer) #  "pseries" "integer"
+set.seed(42)
+res_dpois <- dpois(pGrunfeld$integer, sample(1:10, 200, replace = TRUE))
+class(res_dpois) # "pseries" "integer"  <-- can do nothing about his
+typeof(res_dpois) # double
+str(res_dpois)
+res_pmax <- pmax(res_dpois, .Machine[["double.eps"]])
+# this errored for a while when no correction in remove_pseries_features() was in place:
+if(isTRUE(all.equal(as.numeric(res_pmax), rep(.Machine[["double.eps"]], 200)))) {
+  stop("pmax gives wrong result due wrong coercion (integer/numeric)")
+}
