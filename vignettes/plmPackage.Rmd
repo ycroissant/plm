@@ -1021,7 +1021,7 @@ case, the model is estimated in first differences and time dummies are
 included.
 
 The `model` argument specifies whether a one-step or a
-two-steps model is required (`"onestep"` or
+two-steps model is requested (`"onestep"` or
 `"twosteps"`).
 
 The following example is from @AREL:BOND:91. Employment is
@@ -1085,7 +1085,7 @@ serial correlation has to be assumed away and the estimator is
 consistent with respect to the time dimension, keeping $n$ fixed.
 
 The function `pggls` estimates general FGLS models, with either
-fixed of "random" effects^[The "random effect" is better termed "general FGLS" 
+fixed or "random" effects^[The "random effect" is better termed "general FGLS" 
 model, as in fact it does not have a proper random effects structure, but we 
 keep this terminology for general language consistency.].
 
