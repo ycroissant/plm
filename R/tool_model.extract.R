@@ -171,7 +171,6 @@ model.matrix.pdata.frame <- function(object,
             X <- X - theta$id * Between(X, "individual") -
                 theta$time * Between(X, "time") + theta$total * Mean(X)
     }
-
     if (cstcovar.rm == "intercept"){
         posintercept <- match("(Intercept)", colnames(X))
         if (! is.na(posintercept)) X <- X[, - posintercept, drop = FALSE]

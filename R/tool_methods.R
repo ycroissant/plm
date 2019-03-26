@@ -328,7 +328,10 @@ residuals.plm <- function(object, model = NULL, effect = NULL,  ...){
     }
     else{
         cl <- match.call(expand.dots = FALSE)
-        cl[[1]] <- as.name("fitted.plm")
+        # fitted -> call to the plm method, used to be fitted.plm
+        # which is not exported
+#        cl[[1]] <- as.name("fitted.plm")
+        cl[[1]] <- as.name("fitted")
         bX <- eval(cl, parent.frame())
         if (is.null(model)) model <- describe(object, "model")
         if (is.null(effect)) effect <- describe(object, "effect")

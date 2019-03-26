@@ -199,9 +199,10 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
         }
         
         if (is.null(time.name)){
-            # if no time index is supplied, add time variable automatically
-            # order data by individual index, necessary for the automatic
-            # addition of time index to be succesfull if no time index was supplied
+            # if no time index is supplied, add time variable
+            # automatically order data by individual index, necessary
+            # for the automatic addition of time index to be
+            # succesfull if no time index was supplied
             x <- x[order(x[[id.name]]), ]
             Ti <- table(x[[id.name]]) # was: Ti <- table(id)
             n <- length(Ti)
