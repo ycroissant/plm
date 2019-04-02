@@ -65,6 +65,7 @@
 #' \code{pggls}),} \item{indcoef}{the matrix of individual coefficients from
 #' separate time series regressions.}
 #' @export
+#' @importFrom MASS ginv
 #' @author Giovanni Millo
 #' @references G. Kapetanios, M. Hashem Pesaran, T. Yamagata (2011), Panels
 #' with non-stationary multifactor error structures, \emph{Journal of

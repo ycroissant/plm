@@ -66,6 +66,8 @@
 #' @param suppressPrint for \code{detect.lindep} only: logical indicating
 #' whether a message shall be printed; defaults to printing the message, i. e.
 #' to \code{suppressPrint = FALSE},
+#' @param model (see `plm`),
+#' @param effect (see `plm`),
 #' @param \dots further arguments.
 #' @return For \code{detect.lindep}: A named numeric vector containing column
 #' numbers of the linear dependent columns in the object after data
@@ -78,6 +80,7 @@
 #' @note function \code{detect.lindep} was called \code{detect_lin_dep}
 #' initially but renamed for naming consistency later with a back-compatible
 #' solution.
+#' @export
 #' @author Kevin Tappe
 #' @seealso \code{\link[stats:alias]{alias}}, \code{\link[stats]{model.matrix}}
 #' and especially \code{plm}'s \code{\link{model.matrix}} for (transformed)
@@ -152,6 +155,8 @@ detect.lindep <- function(object, ...) {
   UseMethod("detect.lindep")
 }
 
+#' @rdname plm-deprecated
+#' @export
 detect_lin_dep <- function(object, ...) {
   .Deprecated(old = "detect_lin_dep", new = "detect.lindep",
               msg = "Function name 'detect_lin_dep' deprecated, please use 'detect.lindep'")
@@ -213,6 +218,10 @@ detect.lindep.plm <- function(object, suppressPrint = FALSE, ...) {
 # This is just a wrapper function to allow to apply the generic stats::alias on
 # plm objects and pFormulas with the _transformed data_ (the transformed model.matrix).
 # NB: arguments 'model' and 'effect' are not treated here.
+
+
+#' @rdname detect.lindep
+#' @export
 alias.plm <- function(object, ...) {
   dots <- list(...)
   if (!is.null(dots$inst.method)) stop("alias.plm/alias.pFormula: IV not supported")
@@ -279,6 +288,8 @@ alias.plm <- function(object, ...) {
 ## }
 
 
+#' @rdname detect.lindep
+#' @export
 alias.pdata.frame <- function(object,
                               model = c("pooling", "within", "Between", "between",
                                         "mean", "random", "fd"),

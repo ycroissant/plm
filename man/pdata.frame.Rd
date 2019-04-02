@@ -8,7 +8,9 @@
 \alias{$.pdata.frame}
 \alias{as.data.frame.pdata.frame}
 \alias{as.list.pdata.frame}
+\alias{$<-.pdata.frame}
 \alias{[.pdata.frame}
+\alias{[[.pdata.frame}
 \alias{$.pdata.frame}
 \alias{print.pdata.frame}
 \alias{as.list.pdata.frame}
@@ -20,7 +22,11 @@ pdata.frame(x, index = NULL, drop.index = FALSE, row.names = TRUE,
   drop.NA.series = FALSE, drop.const.series = FALSE,
   drop.unused.levels = FALSE)
 
+\method{$}{pdata.frame}(x, name) <- value
+
 \method{[}{pdata.frame}(x, i, j, drop)
+
+\method{[[}{pdata.frame}(x, y)
 
 \method{$}{pdata.frame}(x, y)
 
@@ -32,36 +38,44 @@ pdata.frame(x, index = NULL, drop.index = FALSE, row.names = TRUE,
   keep.attributes = TRUE, ...)
 }
 \arguments{
-\item{x}{a \code{data.frame} for the \code{pdata.frame} function and a
-\code{pdata.frame} for the methods,}
+\item{x}{a \code{data.frame} for the \code{pdata.frame} function
+and a \code{pdata.frame} for the methods,}
 
-\item{index}{this argument indicates the individual and time indexes. See
-\bold{Details},}
+\item{index}{this argument indicates the individual and time
+indexes. See \bold{Details},}
 
-\item{drop.index}{logical, indicates whether the indexes are to be excluded
-from the resulting pdata.frame,}
+\item{drop.index}{logical, indicates whether the indexes are to be
+excluded from the resulting pdata.frame,}
 
-\item{row.names}{\code{NULL} or logical, indicates whether ``fancy'' row
-names (a combination of individual index and time index) are to be added to
-the returned (p)data.frame (\code{NULL} and \code{FALSE} have the same
-meaning),}
+\item{row.names}{\code{NULL} or logical, indicates whether
+``fancy'' row names (a combination of individual index and time
+index) are to be added to the returned (p)data.frame
+(\code{NULL} and \code{FALSE} have the same meaning),}
 
-\item{stringsAsFactors}{logical, indicating whether character vectors are to
-be converted to factors,}
+\item{stringsAsFactors}{logical, indicating whether character
+vectors are to be converted to factors,}
 
-\item{replace.non.finite}{logical, indicating whether values for which
-\code{is.finite()} yields \code{TRUE} are to be replaced by \code{NA}
-values, except for character variables (defaults to \code{FALSE}),}
+\item{replace.non.finite}{logical, indicating whether values for
+which \code{is.finite()} yields \code{TRUE} are to be replaced
+by \code{NA} values, except for character variables (defaults
+to \code{FALSE}),}
 
-\item{drop.NA.series}{logical, indicating whether all-NA columns are to be
-removed from the pdata.frame (defaults to \code{FALSE}),}
+\item{drop.NA.series}{logical, indicating whether all-NA columns
+are to be removed from the pdata.frame (defaults to
+\code{FALSE}),}
 
-\item{drop.const.series}{logical, indicating whether constant columns are to
-be removed from the pdata.frame (defaults to \code{FALSE}),}
+\item{drop.const.series}{logical, indicating whether constant
+columns are to be removed from the pdata.frame (defaults to
+\code{FALSE}),}
 
-\item{drop.unused.levels}{logical, indicating whether unused levels of
-factors are to be dropped (defaults to \code{FALSE}) (unused levels are
-always dropped from variables serving to construct the index variables),}
+\item{drop.unused.levels}{logical, indicating whether unused levels
+of factors are to be dropped (defaults to \code{FALSE}) (unused
+levels are always dropped from variables serving to construct
+the index variables),}
+
+\item{name}{the name of the `data.frame`,}
+
+\item{value}{the name of the variable to include,}
 
 \item{i}{see \code{\link{Extract}},}
 
@@ -71,20 +85,22 @@ always dropped from variables serving to construct the index variables),}
 
 \item{y}{one of the columns of the \code{data.frame},}
 
-\item{\dots}{further arguments}
+\item{\dots}{further arguments.}
 
-\item{keep.attributes}{logical, only for as.list and as.data.frame methods,
-indicating whether the elements of the returned list/columns of the
-data.frame should have the pdata.frame's attributes added (default: FALSE
-for as.list, TRUE for as.data.frame),}
+\item{keep.attributes}{logical, only for as.list and as.data.frame
+methods, indicating whether the elements of the returned
+list/columns of the data.frame should have the pdata.frame's
+attributes added (default: FALSE for as.list, TRUE for
+as.data.frame),}
 
 \item{optional}{see \code{\link{as.data.frame}},}
 }
 \value{
-a \code{pdata.frame} object: this is a \code{data.frame} with an
-\code{index} attribute which is a \code{data.frame} with two variables, the
-individual and the time indexes, both being factors.  The resulting
-pdata.frame is sorted by the individual index, then by the time index.
+a \code{pdata.frame} object: this is a \code{data.frame}
+    with an \code{index} attribute which is a \code{data.frame}
+    with two variables, the individual and the time indexes, both
+    being factors.  The resulting pdata.frame is sorted by the
+    individual index, then by the time index.
 }
 \description{
 An object of class 'pdata.frame' is a data.frame with an index attribute
@@ -143,11 +159,12 @@ lapply(as.list(Wag[ , c("ed", "lwage")], keep.attributes = TRUE), lag)
 }
 \seealso{
 \code{\link{index}} to extract the index variables from a
-'pdata.frame' (and other objects), \code{\link{pdim}} to check the
-dimensions of a 'pdata.frame' (and other objects), \code{\link{pvar}} to
-check for each variable if it varies cross-sectionally and over time.  To
-check if the time periods are consecutive per individual, see
-\code{\link{is.pconsecutive}}.
+    'pdata.frame' (and other objects), \code{\link{pdim}} to check
+    the dimensions of a 'pdata.frame' (and other objects),
+    \code{\link{pvar}} to check for each variable if it varies
+    cross-sectionally and over time.  To check if the time periods
+    are consecutive per individual, see
+    \code{\link{is.pconsecutive}}.
 }
 \author{
 Yves Croissant

@@ -18,6 +18,7 @@
 #' choose the order of correlation to test for.
 #' 
 #' @aliases pbgtest
+#' @importFrom lmtest bgtest
 #' @param x an object of class \code{"panelmodel"} or of class
 #'     \code{"formula"},
 #' @param order an integer indicating the order of serial correlation
@@ -748,6 +749,7 @@ pbsytest.panelmodel <- function(x, test = c("ar", "re", "j"), re.normal = if (te
 #' generalized Durbin-Watson test for panels in \code{pbnftest}.
 #' 
 #' @aliases pdwtest
+#' @importFrom lmtest dwtest
 #' @param x an object of class \code{"panelmodel"} or of class
 #'     \code{"formula"},
 #' @param data a \code{data.frame},
@@ -1065,6 +1067,7 @@ pbnftest.formula <- function(x, data, test = c("bnf", "lbi"), model = c("pooling
 #' only, if set to \code{onesided}.
 #' 
 #' @aliases pbltest
+#' @importFrom nlme lme
 #' @param x a model formula or an estimated random--effects model of class
 #' \code{plm} ,
 #' @param data for the formula interface only: a \code{data.frame},

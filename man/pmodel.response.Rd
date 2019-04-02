@@ -4,6 +4,7 @@
 \alias{pmodel.response}
 \alias{pmodel.response.plm}
 \alias{pmodel.response.data.frame}
+\alias{pmodel.response.formula}
 \title{A function to extract the model.response}
 \usage{
 pmodel.response(object, ...)
@@ -11,6 +12,8 @@ pmodel.response(object, ...)
 \method{pmodel.response}{plm}(object, ...)
 
 \method{pmodel.response}{data.frame}(object, ...)
+
+\method{pmodel.response}{formula}(object, data, ...)
 }
 \arguments{
 \item{object}{an object of class \code{"plm"}, or a formula of class

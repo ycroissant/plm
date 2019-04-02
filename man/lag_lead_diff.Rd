@@ -2,7 +2,6 @@
 % Please edit documentation in R/tool_transformations.R
 \name{lag_lead_diff}
 \alias{lag_lead_diff}
-\alias{lag}
 \alias{lead}
 \alias{lag.pseries}
 \alias{lead.pseries}

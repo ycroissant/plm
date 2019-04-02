@@ -85,8 +85,8 @@ print.panelmodel <- function(x, digits = max(3, getOption("digits") - 2),
 #' "fd")} where the model frame does not yet contain the differences (see also
 #' \bold{Examples}).
 #'
-#' @name nobs
-#' @aliases nobs
+#' @name nobs.panelmodel
+#' @aliases nobs.panelmodel
 #' @param object a \code{panelmodel} object for which the number of total
 #' observations is to be extracted,
 #' @param \dots further arguments.
@@ -94,7 +94,6 @@ print.panelmodel <- function(x, digits = max(3, getOption("digits") - 2),
 #' @seealso \code{\link{pdim}}
 #' @keywords attribute
 #' @examples
-#' 
 #' 
 #' # estimate a panelmodel
 #' data("Produc", package = "plm")

@@ -308,6 +308,7 @@ is.pconsecutive <- function(x, ...){
 #' 'pdata.frame' (and other objects), \code{\link{pvar}} to check for
 #' individual and time variation of a 'pdata.frame' (and other objects),
 #' \code{\link{pseries}}, \code{\link{data.frame}}, \code{\link{pdata.frame}}.
+#' @export
 #' @keywords attribute
 #' @examples
 #' 

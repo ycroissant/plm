@@ -91,6 +91,7 @@
 #' methods.
 #' @author Yves Croissant
 #' @export
+#' @importFrom MASS ginv
 #' @seealso
 #' 
 #' \code{\link{sargan}} for the Hansen--Sargan test and
@@ -834,6 +835,7 @@ summary.pgmm <- function(object, robust = TRUE, time.dummies = FALSE, ...) {
 #' @param vcov a matrix of covariance for the coefficients or a function to
 #' compute it.
 #' @return An object of class \code{"htest"}.
+#' @export
 #' @author Yves Croissant
 #' @seealso \code{\link{pgmm}}
 #' @references Arellano, M. and Bond, S. (1991), Some Tests of Specification
@@ -1018,6 +1020,7 @@ print.summary.pgmm <- function(x, digits = max(3, getOption("digits") - 2),
 #' @param weights the weighting matrix to be used for the computation of the
 #' test.
 #' @return An object of class \code{"htest"}.
+#' @export
 #' @author Yves Croissant
 #' @seealso \code{\link{pgmm}}
 #' @references Hansen, L.P. (1982), Large Sample Properties of Generalized

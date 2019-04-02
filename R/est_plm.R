@@ -184,6 +184,14 @@ mylm <- function(y, X, W = NULL){
 #' statistic and (adjusted) R-squared of model, standard errors, t--values, and
 #' p--values of coefficients, (if supplied) the furnished vcov, see
 #' \code{\link{summary.plm}} for further details.
+#' @import Formula
+#' @importFrom stats alias approx as.formula coef coefficients cor delete.response
+#' @importFrom stats deviance df.residual dnorm fitted formula lm lm.fit model.frame
+#' @importFrom stats model.matrix model.response model.weights na.omit pchisq pf
+#' @importFrom stats pnorm printCoefmat pt qnorm reshape resid residuals sd terms
+#' @importFrom stats update var vcov
+#' @importFrom grDevices heat.colors rainbow
+#' @importFrom graphics abline axis barplot legend lines plot points
 #' @export
 #' @author Yves Croissant
 #' @seealso \code{\link{summary.plm}} for further details about the associated
@@ -191,44 +199,29 @@ mylm <- function(y, X, W = NULL){
 #' tests and tests of coefficients.  \code{\link{fixef}} to compute the fixed
 #' effects for "within" models (=fixed effects models).
 #' @references
+#'
+#' \insertRef{AMEM:71}{plm}
+#'
+#' \insertRef{AMEM:MACUR:86}{plm}
+#'
+#' \insertRef{BALE:VARA:87}{plm}
+#'
+#' \insertRef{BALT:81}{plm}
+#'
+#' \insertRef{BALT:SONG:JUNG:01}{plm}
+#'
+#' \insertRef{BALT:13}{plm}
+#'
+#' \insertRef{BREU:MIZO:SCHMI:89}{plm}
+#'
+#' \insertRef{HAUS:TAYL:81}{plm}
+#'
+#' \insertRef{NERLO:71}{plm}
+#'
+#' \insertRef{SWAM:AROR:72}{plm}
+#'
+#' \insertRef{WALL:HUSS:69}{plm}
 #' 
-#' Amemiya, T. (1971) The estimation of the variances in a variance--components
-#' model, \emph{International Economic Review}, \bold{12}(1), pp. 1--13.
-#' 
-#' Amemiya, T. and MaCurdy, T.E. (1986) Instrumental--variable estimation of an
-#' error components model, \emph{Econometrica}, \bold{54}(4), pp. 869--880.
-#' 
-#' Balestra, P. and Varadharajan-Krishnakumar, J. (1987) Full information
-#' estimations of a system of simultaneous equations with error components
-#' structure, \emph{Econometric Theory}, \bold{3}(2), pp. 223--246.
-#' 
-#' Baltagi, B.H. (1981) Simultaneous equations with error components,
-#' \emph{Journal of Econometrics}, \bold{17}(2), pp. 189--200.
-#' 
-#' Baltagi, B.H.; Song, S.H.; Jung, B.C. (2001), \dQuote{The unbalanced nested
-#' error component regression model}, \emph{Journal of Econometrics},
-#' \bold{101}(2), pp. 357--381.
-#' 
-#' Baltagi, B.H. (2013) \emph{Econometric Analysis of Panel Data}, 5th ed.,
-#' John Wiley and Sons.
-#' 
-#' Breusch, T.S., Mizon, G.E. and Schmidt, P. (1989) Efficient estimation using
-#' panel data, \emph{Econometrica}, \bold{57}(3), pp. 695--700.
-#' 
-#' Hausman, J.A. and Taylor, W.E. (1981) Panel data and unobservable individual
-#' effects, \emph{Econometrica}, \bold{49}(6), pp. 1377--1398.
-#' 
-#' Nerlove, M. (1971) Further evidence on the estimation of dynamic economic
-#' relations from a time series of cross sections, \emph{Econometrica},
-#' \bold{39}(2), pp. 359--382.
-#' 
-#' Swamy, P.A.V.B. and Arora, S.S. (1972) The exact finite sample properties of
-#' the estimators of coefficients in the error components regression models,
-#' \emph{Econometrica}, \bold{40}(2), pp. 261--275.
-#' 
-#' Wallace, T.D. and Hussain, A. (1969) The use of error components models in
-#' combining cross section with time series data, \emph{Econometrica},
-#' \bold{37}(1), pp. 55--72.
 #' @keywords regression
 #' @examples
 #' 
@@ -327,7 +320,6 @@ plm <- function(formula, data, subset, weights, na.action,
     if (! anyNA(model)) model <- ifelse(effect == "nested",
                                         "random", match.arg(model))
 
-
     # input checks for FD model: give informative error messages as
     # described in footnote in vignette
     if (! is.na(model) && model == "fd") {
@@ -363,8 +355,10 @@ plm <- function(formula, data, subset, weights, na.action,
     # check whether data and formula are pdata.frame and pFormula and if not
     # coerce them
     orig_rownames <- row.names(data)
+
     if (! inherits(data, "pdata.frame")) data <- pdata.frame(data, index)
     if (! inherits(formula, "Formula")) formula <- as.Formula(formula)
+
     # in case of 2-part formula, check whether the second part should
     # be updated, e.g. y ~ x1 + x2 + x3 | . - x2 + z becomes 
     # y ~ x1 + x2 + x3 | x1 + x3 + z

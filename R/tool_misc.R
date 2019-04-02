@@ -221,6 +221,7 @@ pres <- function(x) {  # pres.panelmodel
 #' \code{(p)data.frame} are considered, disregarding any NA values in the
 #' dependent or independent variable(s) which would be dropped during model
 #' estimation.
+#' @export
 #' @author Kevin Tappe
 #' @seealso \code{\link{nobs}}, \code{\link{pdim}}, \code{\link{pdata.frame}}
 #' @references Ahrens, H.; Pincus, R. (1981), \dQuote{On two measures of

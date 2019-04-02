@@ -28,8 +28,8 @@ pdim(x, ...)
 \method{print}{pdim}(x, ...)
 }
 \arguments{
-\item{x}{a \code{data.frame}, a \code{pdata.frame}, a \code{pseries}, a
-\code{panelmodel}, or a \code{pgmm} object,}
+\item{x}{a \code{data.frame}, a \code{pdata.frame}, a
+\code{pseries}, a \code{panelmodel}, or a \code{pgmm} object,}
 
 \item{\dots}{further arguments.}
 
@@ -38,17 +38,19 @@ pdim(x, ...)
 \item{index}{see \code{\link{pdata.frame}},}
 }
 \value{
-An object of class \code{pdim} containing the following elements:
+An object of class \code{pdim} containing the following
+    elements:
 
-\item{nT}{a list containing \code{n}, the number of individuals, \code{T},
-the number of time observations, \code{N} the total number of observations,}
-\item{Tint}{a list containing two vectors (of type integer): \code{Ti} gives
-the number of observations for each individual and \code{nt} gives the
-number of individuals observed for each period,} \item{balanced}{a logical
-value: \code{TRUE} for a balanced panel, \code{FALSE} for an unbalanced
-panel,} \item{panel.names}{a list of character vectors: \code{id.names}
-contains the names of each individual and \code{time.names} contains the
-names of each period.}
+\item{nT}{a list containing \code{n}, the number of individuals,
+\code{T}, the number of time observations, \code{N} the total
+number of observations,} \item{Tint}{a list containing two vectors
+(of type integer): \code{Ti} gives the number of observations for
+each individual and \code{nt} gives the number of individuals
+observed for each period,} \item{balanced}{a logical value:
+\code{TRUE} for a balanced panel, \code{FALSE} for an unbalanced
+panel,} \item{panel.names}{a list of character vectors:
+\code{id.names} contains the names of each individual and
+\code{time.names} contains the names of each period.}
 }
 \description{
 This function checks the number of individuals and time observations in the
@@ -59,14 +61,16 @@ panel and whether it is balanced or not.
 stand-alone.
 }
 \note{
-Calling \code{pdim} on an estimated \code{panelmodel} object and on
-the corresponding \code{(p)data.frame} used for this estimation does not
-necessarily yield the same result. When called on an estimated
-\code{panelmodel}, the number of observations (individual, time) actually
-used for model estimation are taken into account.  When called on a
-\code{(p)data.frame}, the rows in the \code{(p)data.frame} are considered,
-disregarding any NA values in the dependent or independent variable(s) which
-would be dropped during model estimation.
+Calling \code{pdim} on an estimated \code{panelmodel} object
+    and on the corresponding \code{(p)data.frame} used for this
+    estimation does not necessarily yield the same result. When
+    called on an estimated \code{panelmodel}, the number of
+    observations (individual, time) actually used for model
+    estimation are taken into account.  When called on a
+    \code{(p)data.frame}, the rows in the \code{(p)data.frame} are
+    considered, disregarding any NA values in the dependent or
+    independent variable(s) which would be dropped during model
+    estimation.
 }
 \examples{
 
@@ -91,11 +95,12 @@ pdim(z)
 
 }
 \seealso{
-\code{\link{is.pbalanced}} to just determine balancedness of data
-(slightly faster than \code{pdim}),\cr \code{\link{punbalancedness}} for
-measures of unbalancedness,\cr \code{\link{nobs}},
-\code{\link{pdata.frame}},\cr \code{\link{pvar}} to check for each variable
-if it varies cross-sectionally and over time.
+\code{\link{is.pbalanced}} to just determine balancedness
+    of data (slightly faster than \code{pdim}),\cr
+    \code{\link{punbalancedness}} for measures of
+    unbalancedness,\cr \code{\link{nobs}},
+    \code{\link{pdata.frame}},\cr \code{\link{pvar}} to check for
+    each variable if it varies cross-sectionally and over time.
 }
 \author{
 Yves Croissant

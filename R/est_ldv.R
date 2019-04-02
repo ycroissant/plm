@@ -26,6 +26,7 @@
 #' @param \dots further arguments.
 #' @return An object of class \code{c("plm","panelmodel")}.
 #' @export
+#' @importFrom maxLik maxLik
 #' @author Yves Croissant
 #' @references Honor\'e, Bo (1992). Trimmed LAD and least squares estimation of
 #' truncated and censored regression models with fixed effects,

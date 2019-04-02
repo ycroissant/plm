@@ -85,50 +85,60 @@ fancy.row.names <- function(index, sep = "-") {
 #' \bold{Examples}).
 #' 
 #' @aliases pdata.frame print.pdata.frame [.pdata.frame [[.pdata.frame
-#' $.pdata.frame as.data.frame.pdata.frame as.list.pdata.frame
-#' @param x a \code{data.frame} for the \code{pdata.frame} function and a
-#' \code{pdata.frame} for the methods,
+#'     $.pdata.frame as.data.frame.pdata.frame as.list.pdata.frame
+#' @param x a \code{data.frame} for the \code{pdata.frame} function
+#'     and a \code{pdata.frame} for the methods,
 #' @param i see \code{\link{Extract}},
 #' @param j see \code{\link{Extract}},
 #' @param y one of the columns of the \code{data.frame},
-#' @param index this argument indicates the individual and time indexes. See
-#' \bold{Details},
+#' @param index this argument indicates the individual and time
+#'     indexes. See \bold{Details},
 #' @param drop see \code{\link{Extract}},
-#' @param drop.index logical, indicates whether the indexes are to be excluded
-#' from the resulting pdata.frame,
+#' @param drop.index logical, indicates whether the indexes are to be
+#'     excluded from the resulting pdata.frame,
 #' @param optional see \code{\link{as.data.frame}},
-#' @param row.names \code{NULL} or logical, indicates whether ``fancy'' row
-#' names (a combination of individual index and time index) are to be added to
-#' the returned (p)data.frame (\code{NULL} and \code{FALSE} have the same
-#' meaning),
-#' @param stringsAsFactors logical, indicating whether character vectors are to
-#' be converted to factors,
-#' @param replace.non.finite logical, indicating whether values for which
-#' \code{is.finite()} yields \code{TRUE} are to be replaced by \code{NA}
-#' values, except for character variables (defaults to \code{FALSE}),
-#' @param drop.NA.series logical, indicating whether all-NA columns are to be
-#' removed from the pdata.frame (defaults to \code{FALSE}),
-#' @param drop.const.series logical, indicating whether constant columns are to
-#' be removed from the pdata.frame (defaults to \code{FALSE}),
-#' @param drop.unused.levels logical, indicating whether unused levels of
-#' factors are to be dropped (defaults to \code{FALSE}) (unused levels are
-#' always dropped from variables serving to construct the index variables),
-#' @param keep.attributes logical, only for as.list and as.data.frame methods,
-#' indicating whether the elements of the returned list/columns of the
-#' data.frame should have the pdata.frame's attributes added (default: FALSE
-#' for as.list, TRUE for as.data.frame),
-#' @param \dots further arguments
-#' @return a \code{pdata.frame} object: this is a \code{data.frame} with an
-#' \code{index} attribute which is a \code{data.frame} with two variables, the
-#' individual and the time indexes, both being factors.  The resulting
-#' pdata.frame is sorted by the individual index, then by the time index.
+#' @param row.names \code{NULL} or logical, indicates whether
+#'     ``fancy'' row names (a combination of individual index and time
+#'     index) are to be added to the returned (p)data.frame
+#'     (\code{NULL} and \code{FALSE} have the same meaning),
+#' @param stringsAsFactors logical, indicating whether character
+#'     vectors are to be converted to factors,
+#' @param replace.non.finite logical, indicating whether values for
+#'     which \code{is.finite()} yields \code{TRUE} are to be replaced
+#'     by \code{NA} values, except for character variables (defaults
+#'     to \code{FALSE}),
+#' @param drop.NA.series logical, indicating whether all-NA columns
+#'     are to be removed from the pdata.frame (defaults to
+#'     \code{FALSE}),
+#' @param drop.const.series logical, indicating whether constant
+#'     columns are to be removed from the pdata.frame (defaults to
+#'     \code{FALSE}),
+#' @param drop.unused.levels logical, indicating whether unused levels
+#'     of factors are to be dropped (defaults to \code{FALSE}) (unused
+#'     levels are always dropped from variables serving to construct
+#'     the index variables),
+#' @param keep.attributes logical, only for as.list and as.data.frame
+#'     methods, indicating whether the elements of the returned
+#'     list/columns of the data.frame should have the pdata.frame's
+#'     attributes added (default: FALSE for as.list, TRUE for
+#'     as.data.frame),
+#' @param name the name of the `data.frame`,
+#' @param value the name of the variable to include,
+#' @param \dots further arguments.
+#' @return a \code{pdata.frame} object: this is a \code{data.frame}
+#'     with an \code{index} attribute which is a \code{data.frame}
+#'     with two variables, the individual and the time indexes, both
+#'     being factors.  The resulting pdata.frame is sorted by the
+#'     individual index, then by the time index.
+#' @export
 #' @author Yves Croissant
 #' @seealso \code{\link{index}} to extract the index variables from a
-#' 'pdata.frame' (and other objects), \code{\link{pdim}} to check the
-#' dimensions of a 'pdata.frame' (and other objects), \code{\link{pvar}} to
-#' check for each variable if it varies cross-sectionally and over time.  To
-#' check if the time periods are consecutive per individual, see
-#' \code{\link{is.pconsecutive}}.
+#'     'pdata.frame' (and other objects), \code{\link{pdim}} to check
+#'     the dimensions of a 'pdata.frame' (and other objects),
+#'     \code{\link{pvar}} to check for each variable if it varies
+#'     cross-sectionally and over time.  To check if the time periods
+#'     are consecutive per individual, see
+#'     \code{\link{is.pconsecutive}}.
 #' @keywords classes
 #' @examples
 #' 
@@ -390,6 +400,8 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     return(x)
 }
 
+#' @rdname pdata.frame
+#' @export
 "$<-.pdata.frame" <- function(x, name, value){
   if (inherits(value, "pseries")){
     # remove pseries features before adding value as a column to pdata.frame
@@ -448,6 +460,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 
 
 #' @rdname pdata.frame
+#' @export
 "[.pdata.frame" <- function(x, i, j, drop) {
     # signature of [.data.frame here
   
@@ -555,6 +568,8 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     return(res)
 }
 
+#' @rdname pdata.frame
+#' @export
 "[[.pdata.frame" <- function(x, y){
   index <- attr(x, "index")
   attr(x, "index") <- NULL
@@ -573,11 +588,13 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 }
 
 #' @rdname pdata.frame
+#' @export
 "$.pdata.frame" <- function(x, y){
     "[[.pdata.frame"(x, paste(as.name(y)))
 }
 
 #' @rdname pdata.frame
+#' @export
 print.pdata.frame <- function(x, ...){
   attr(x, "index") <- NULL
   class(x) <- "data.frame"
@@ -607,6 +624,7 @@ print.pdata.frame <- function(x, ...){
 #  works as expected.
 
 #' @rdname pdata.frame
+#' @export
 as.list.pdata.frame <- function(x, keep.attributes = FALSE, ...) {
     if (!keep.attributes) {
         x <- as.list.data.frame(x)
@@ -630,6 +648,7 @@ as.list.pdata.frame <- function(x, keep.attributes = FALSE, ...) {
 }
 
 #' @rdname pdata.frame
+#' @export
 as.data.frame.pdata.frame <- function(x, row.names = NULL, optional = FALSE, keep.attributes = TRUE, ...){
     index <- attr(x, "index")
 
@@ -689,6 +708,8 @@ as.data.frame.pdata.frame <- function(x, row.names = NULL, optional = FALSE, kee
 #' \code{is.complex} is \code{TRUE}. }
 #' 
 #' @param object object to be checked for pseries features
+#'
+#' @export
 #' @return A logical indicating whether the object is a pseries (\code{TRUE})
 #' or not (\code{FALSE}).
 #' @seealso \code{\link{pseries}} for some computations on pseries and some
@@ -735,36 +756,42 @@ is.pseries <- function(object) {
 #'
 #' @name pdim
 #' @aliases pdim
-#' @param x a \code{data.frame}, a \code{pdata.frame}, a \code{pseries}, a
-#' \code{panelmodel}, or a \code{pgmm} object,
+#' @param x a \code{data.frame}, a \code{pdata.frame}, a
+#'     \code{pseries}, a \code{panelmodel}, or a \code{pgmm} object,
 #' @param y a vector,
 #' @param index see \code{\link{pdata.frame}},
 #' @param \dots further arguments.
-#' @return An object of class \code{pdim} containing the following elements:
+#' @return An object of class \code{pdim} containing the following
+#'     elements:
 #' 
-#' \item{nT}{a list containing \code{n}, the number of individuals, \code{T},
-#' the number of time observations, \code{N} the total number of observations,}
-#' \item{Tint}{a list containing two vectors (of type integer): \code{Ti} gives
-#' the number of observations for each individual and \code{nt} gives the
-#' number of individuals observed for each period,} \item{balanced}{a logical
-#' value: \code{TRUE} for a balanced panel, \code{FALSE} for an unbalanced
-#' panel,} \item{panel.names}{a list of character vectors: \code{id.names}
-#' contains the names of each individual and \code{time.names} contains the
-#' names of each period.}
-#' @note Calling \code{pdim} on an estimated \code{panelmodel} object and on
-#' the corresponding \code{(p)data.frame} used for this estimation does not
-#' necessarily yield the same result. When called on an estimated
-#' \code{panelmodel}, the number of observations (individual, time) actually
-#' used for model estimation are taken into account.  When called on a
-#' \code{(p)data.frame}, the rows in the \code{(p)data.frame} are considered,
-#' disregarding any NA values in the dependent or independent variable(s) which
-#' would be dropped during model estimation.
+#' \item{nT}{a list containing \code{n}, the number of individuals,
+#' \code{T}, the number of time observations, \code{N} the total
+#' number of observations,} \item{Tint}{a list containing two vectors
+#' (of type integer): \code{Ti} gives the number of observations for
+#' each individual and \code{nt} gives the number of individuals
+#' observed for each period,} \item{balanced}{a logical value:
+#' \code{TRUE} for a balanced panel, \code{FALSE} for an unbalanced
+#' panel,} \item{panel.names}{a list of character vectors:
+#' \code{id.names} contains the names of each individual and
+#' \code{time.names} contains the names of each period.}
+#' @note Calling \code{pdim} on an estimated \code{panelmodel} object
+#'     and on the corresponding \code{(p)data.frame} used for this
+#'     estimation does not necessarily yield the same result. When
+#'     called on an estimated \code{panelmodel}, the number of
+#'     observations (individual, time) actually used for model
+#'     estimation are taken into account.  When called on a
+#'     \code{(p)data.frame}, the rows in the \code{(p)data.frame} are
+#'     considered, disregarding any NA values in the dependent or
+#'     independent variable(s) which would be dropped during model
+#'     estimation.
+#' @export
 #' @author Yves Croissant
-#' @seealso \code{\link{is.pbalanced}} to just determine balancedness of data
-#' (slightly faster than \code{pdim}),\cr \code{\link{punbalancedness}} for
-#' measures of unbalancedness,\cr \code{\link{nobs}},
-#' \code{\link{pdata.frame}},\cr \code{\link{pvar}} to check for each variable
-#' if it varies cross-sectionally and over time.
+#' @seealso \code{\link{is.pbalanced}} to just determine balancedness
+#'     of data (slightly faster than \code{pdim}),\cr
+#'     \code{\link{punbalancedness}} for measures of
+#'     unbalancedness,\cr \code{\link{nobs}},
+#'     \code{\link{pdata.frame}},\cr \code{\link{pvar}} to check for
+#'     each variable if it varies cross-sectionally and over time.
 #' @keywords attribute
 #' @examples
 #' 
@@ -898,8 +925,7 @@ print.pdim <- function(x, ...){
 #' index (the latter only if the pdata frame was constructed with
 #' such).)
 #' 
-#' @name index
-#' @aliases index index.pindex
+#' @name index.pindex
 #' @param x an object of class \code{"pindex"}, \code{"pdata.frame"},
 #'     \code{"pseries"} or \code{"panelmodel"},
 #' @param which the index(es) to be extracted (see details),

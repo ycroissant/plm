@@ -2,7 +2,6 @@
 % Please edit documentation in R/tool_ranfixef.R
 \name{ranef.plm}
 \alias{ranef.plm}
-\alias{ranef}
 \title{Extract the Random Effects}
 \usage{
 \method{ranef}{plm}(object, effect = NULL, ...)

@@ -277,43 +277,27 @@ summary(am)
 
 }
 \references{
-Amemiya, T. (1971) The estimation of the variances in a variance--components
-model, \emph{International Economic Review}, \bold{12}(1), pp. 1--13.
+\insertRef{AMEM:71}{plm}
 
-Amemiya, T. and MaCurdy, T.E. (1986) Instrumental--variable estimation of an
-error components model, \emph{Econometrica}, \bold{54}(4), pp. 869--880.
+\insertRef{AMEM:MACUR:86}{plm}
 
-Balestra, P. and Varadharajan-Krishnakumar, J. (1987) Full information
-estimations of a system of simultaneous equations with error components
-structure, \emph{Econometric Theory}, \bold{3}(2), pp. 223--246.
+\insertRef{BALE:VARA:87}{plm}
 
-Baltagi, B.H. (1981) Simultaneous equations with error components,
-\emph{Journal of Econometrics}, \bold{17}(2), pp. 189--200.
+\insertRef{BALT:81}{plm}
 
-Baltagi, B.H.; Song, S.H.; Jung, B.C. (2001), \dQuote{The unbalanced nested
-error component regression model}, \emph{Journal of Econometrics},
-\bold{101}(2), pp. 357--381.
+\insertRef{BALT:SONG:JUNG:01}{plm}
 
-Baltagi, B.H. (2013) \emph{Econometric Analysis of Panel Data}, 5th ed.,
-John Wiley and Sons.
+\insertRef{BALT:13}{plm}
 
-Breusch, T.S., Mizon, G.E. and Schmidt, P. (1989) Efficient estimation using
-panel data, \emph{Econometrica}, \bold{57}(3), pp. 695--700.
+\insertRef{BREU:MIZO:SCHMI:89}{plm}
 
-Hausman, J.A. and Taylor, W.E. (1981) Panel data and unobservable individual
-effects, \emph{Econometrica}, \bold{49}(6), pp. 1377--1398.
+\insertRef{HAUS:TAYL:81}{plm}
 
-Nerlove, M. (1971) Further evidence on the estimation of dynamic economic
-relations from a time series of cross sections, \emph{Econometrica},
-\bold{39}(2), pp. 359--382.
+\insertRef{NERLO:71}{plm}
 
-Swamy, P.A.V.B. and Arora, S.S. (1972) The exact finite sample properties of
-the estimators of coefficients in the error components regression models,
-\emph{Econometrica}, \bold{40}(2), pp. 261--275.
+\insertRef{SWAM:AROR:72}{plm}
 
-Wallace, T.D. and Hussain, A. (1969) The use of error components models in
-combining cross section with time series data, \emph{Econometrica},
-\bold{37}(1), pp. 55--72.
+\insertRef{WALL:HUSS:69}{plm}
 }
 \seealso{
 \code{\link{summary.plm}} for further details about the associated

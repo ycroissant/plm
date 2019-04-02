@@ -21,7 +21,6 @@
 #' ensures proper NA handling, see \bold{Examples}.
 #'
 #' @name model.frame_model.matrix
-#' @aliases model.frame.pdata.frame
 #' @param object,formula an object of class \code{"pdata.frame"} or an
 #' estimated model object of class \code{"plm"},
 #' @param x a `model.frame`
@@ -76,6 +75,10 @@
 #' all.equal(mf, model.frame(fe_model), check.attributes = FALSE) # TRUE
 #' all.equal(modmat, model.matrix(fe_model), check.attributes = FALSE) # TRUE
 #' 
+NULL
+
+#' @rdname model.frame_model.matrix
+#' @export
 model.frame.pdata.frame <- function(formula, data = NULL, ...,
                                     lhs = NULL, rhs = NULL, dot = "separate"){
     pdata <- formula
@@ -287,6 +290,8 @@ pmodel.response.data.frame <- function(object, ...){
 }
 
 # deprecated
+#' @rdname pmodel.response
+#' @export
 pmodel.response.formula <- function(object, data, ...){
     dots <- list(...)
     if (is.null(data)) stop("the data argument is mandatory")

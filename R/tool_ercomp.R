@@ -31,6 +31,7 @@ is.constant <- function(x) (max(x) - min(x)) < sqrt(.Machine$double.eps)
 #' model a list of length 3 with the parameters. In case of a balanced model,
 #' the numeric has length 1 while for an unbalanced model, the numerics' length
 #' equal the number of observations. }
+#' @export
 #' @author Yves Croissant
 #' @seealso \code{\link{plm}} where the estimates of the variance components
 #' are used if a random effects model is estimated

@@ -29,7 +29,6 @@
 #' (2010), Ch. 10.5.3, pp. 308-309, formula (10.58).
 #'
 #' @name fixef.plm
-#' @aliases fixef
 #' @param x,object an object of class \code{"plm"}, an object of class
 #' \code{"fixef"} for the \code{print} and the \code{summary} method,
 #' @param effect one of \code{"individual"} or \code{"time"}, only relevant in
@@ -55,6 +54,7 @@
 #' the standard errors in the summary.fixef objects correspond to was requested
 #' in the \code{fixef} function by arguments \code{type} and \code{vcov},
 #' respectively.
+#' @export
 #' @author Yves Croissant
 #' @seealso \code{\link{within_intercept}} for the overall intercept of fixed
 #' effect models along its standard error, \code{\link{plm}} for plm objects
@@ -167,7 +167,8 @@ fixef.plm <- function(object, effect = NULL,
 }
 
 
-#' @rdname fixef
+#' @rdname fixef.plm
+#' @export
 print.fixef <- function(x, digits = max(3, getOption("digits") - 2),
                         width = getOption("width"), ...){
   
@@ -177,7 +178,8 @@ print.fixef <- function(x, digits = max(3, getOption("digits") - 2),
 }
 
 
-#' @rdname fixef
+#' @rdname fixef.plm
+#' @export
 summary.fixef <- function(object, ...){
     se <- attr(object, "se")
     df.res <- attr(object, "df.residual")
@@ -194,7 +196,8 @@ summary.fixef <- function(object, ...){
     res
 }
 
-#' @rdname fixef
+#' @rdname fixef.plm
+#' @export
 print.summary.fixef <- function(x, digits = max(3, getOption("digits") - 2), width = getOption("width"), ...){
     printCoefmat(x, digits = digits)
 }
@@ -225,7 +228,6 @@ fixef.pggls <- fixef.plm
 #' 
 #' Not all random effect model types are supported (yet?).
 #' 
-#' @aliases ranef.plm ranef
 #' @param object an object of class \code{"plm"}, needs to be a fitted random
 #' effects model,
 #' @param effect \code{NULL}, \code{"individual"}, or \code{"time"}, the
@@ -233,6 +235,7 @@ fixef.pggls <- fixef.plm
 #' @param \dots further arguments (currently not used).
 #' @return A named numeric with the random effects per dimension (individual or
 #' time).
+#' @export
 #' @author Kevin Tappe
 #' @seealso \code{\link{fixef}} to extract the fixed effects from a fixed
 #' effects model (within model).
@@ -361,6 +364,7 @@ ranef.plm <- function(object, effect = NULL, ...) {
 #' @return A named \code{numeric} of length one: The overall intercept for the
 #' estimated within model along attribute "se" which contains the standard
 #' error for the intercept.
+#' @export
 #' @author Kevin Tappe
 #' @seealso \code{\link{fixef}} to extract the fixed effects of a within model.
 #' @references Cottrell, A./Lucchetti, R., Gretl User's Guide,

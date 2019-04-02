@@ -28,6 +28,7 @@
 #' GLS).
 #' 
 #' @aliases pggls
+#' @importFrom bdsmatrix bdsmatrix
 #' @param formula a symbolic description of the model to be estimated,
 #' @param object,x an object of class \code{pggls},
 #' @param data a \code{data.frame},

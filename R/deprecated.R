@@ -16,7 +16,6 @@
 #' @name plm-deprecated
 #' @aliases plm-deprecated dynformula print.dynformula formula.dynformula
 #' plm.data detect_lin_dep
-#' @param object an object for the `detect_lin_dep` deprecated function
 #' @param formula a formula,
 #' @param lag.form a list containing the lag structure of each variable in the
 #' formula,
@@ -47,6 +46,7 @@ pvcovHC <- function(x, ...){
 # due to reference and testing (see tests/test_plm.data.R)
 
 #' @rdname plm-deprecated
+#' @export
 plm.data <- function(x, indexes = NULL) {
 
   .Deprecated(new = "pdata.frame", msg = "use of 'plm.data' is discouraged, better use 'pdata.frame' instead",
@@ -158,6 +158,7 @@ lev2var <- function(x, ...){
 #'     inst.method = "baltagi")}. The Amemiya--MaCurdy estimator and
 #'     the Breusch--Mizon--Schmidt estimator is computed likewise with
 #'     \code{plm}.
+#' @export
 #' @author Yves Croissant
 #' @references
 #' 
@@ -516,6 +517,7 @@ write.lags <- function(name,lags,diff){
 
 
 #' @rdname plm-deprecated
+#' @export
 dynformula <- function(formula, lag.form = NULL, diff.form = NULL, log.form = NULL) {
     
     .Deprecated(msg = "use of 'dynformula' is deprecated, use a multi-part formula instead",
@@ -593,6 +595,7 @@ print.dynformula <- function(x,...){
 }
 
 #' @rdname plm-deprecated
+#' @export
 pFormula <- function(object) {
   .Deprecated(msg = "class 'pFormula' is deprecated, simply use class 'Formula'",
               old = "pFormula", new = "Formula")

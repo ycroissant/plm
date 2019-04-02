@@ -58,7 +58,6 @@
 #' @return All these functions return an object of class
 #'     \code{pseries}, except:\cr \code{between}, which returns a
 #'     numeric vector, \code{as.matrix}, which returns a matrix.
-#' @export
 #' @author Yves Croissant
 #' @seealso \code{\link{is.pseries}} to check if an object is a
 #'     pseries. For more functions on class 'pseries' see
@@ -153,16 +152,17 @@ as.matrix.pseries <- function(x, idbyrow = TRUE, ...){
 ## > plot(pres(mod), panel=mypanel)
 
 #' @rdname pseries
+#' @importFrom lattice xyplot
 #' @export
 plot.pseries <- function(x, plot = c("lattice", "superposed"),
                          scale = FALSE, transparency = TRUE,
                          col = "blue", lwd = 1, ...) {
-
+    
     if(scale) {
-      scalefun <- function(x) scale(x)
+        scalefun <- function(x) scale(x)
     } else {
         scalefun <- function(x) return(x)}
-
+    
     nx <- as.numeric(x)
     ind <- attr(x, "index")[[1]]
     tind <- attr(x, "index")[[2]] # possibly as.numeric():
@@ -170,7 +170,7 @@ plot.pseries <- function(x, plot = c("lattice", "superposed"),
                                   # but loses time labels
 
     xdata <- data.frame(nx=nx, ind=ind, tind=tind)
-
+    
     switch(match.arg(plot),
            lattice = {
                ##require(lattice) # make a ggplot2 version
@@ -178,23 +178,23 @@ plot.pseries <- function(x, plot = c("lattice", "superposed"),
                
            }, superposed = {
                ylim <- c(min(tapply(scalefun(nx), ind, min, na.rm = TRUE)),
-                             max(tapply(scalefun(nx), ind, max, na.rm = TRUE)))
+                         max(tapply(scalefun(nx), ind, max, na.rm = TRUE)))
                unind <- unique(ind)
                nx1 <- nx[ind == unind[1]]
                tind1 <- as.numeric(tind[ind == unind[1]])
                ## plot empty plot to provide frame
                plot(NA, xlim = c(min(as.numeric(tind)),
-                               max(as.numeric(tind))),
+                                 max(as.numeric(tind))),
                     ylim = ylim, xlab = "", ylab = "", xaxt = "n", ...)
                axis(1, at = as.numeric(unique(tind)),
                     labels = unique(tind))
-
+               
                    ## determine lwd and transparency level as a function
                    ## of n
                if(transparency) {
-                   alpha <- 5/length(unind)
-                   col <- heat.colors(1, alpha=alpha)
-                   lwd <- length(unind)/10
+                   alpha <- 5 / length(unind)
+                   col <- heat.colors(1, alpha = alpha)
+                   lwd <- length(unind) / 10
                }
                ## plot lines (notice: tind. are factors, so they
                ## retain the correct labels which would be lost if
@@ -523,7 +523,6 @@ Within.matrix <- function(x, effect, rm.null = TRUE, ...){
 #' Examples.
 #' 
 #' @name lag_lead_diff
-#' @aliases lag
 #' @param x a \code{pseries} object,
 #' @param k an integer, the number of lags for the \code{lag} and \code{lead}
 #' methods (can also be negative).  For the \code{lag} method, a positive

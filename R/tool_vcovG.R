@@ -50,6 +50,7 @@
 #' @param \dots further arguments
 #' @return An object of class \code{"matrix"} containing the estimate
 #'     of the covariance matrix of coefficients.
+#' @export
 #' @author Giovanni Millo, partially ported from Daniel Hoechle's
 #'     (2007) Stata code
 #' @seealso \code{\link[sandwich]{vcovHC}} from the \CRANpkg{sandwich}
@@ -132,6 +133,7 @@ vcovSCC <- function(x, ...){
 #' @param \dots further arguments
 #' @return An object of class \code{"matrix"} containing the estimate
 #'     of the covariance matrix of coefficients.
+#' @export
 #' @author Giovanni Millo
 #' @seealso \code{\link[sandwich]{vcovHC}} from the \CRANpkg{sandwich}
 #'     package for weighting schemes (\code{type} argument).
@@ -213,6 +215,7 @@ vcovNW <- function(x, ...){
 #' @param \dots further arguments
 #' @return An object of class \code{"matrix"} containing the estimate
 #'     of the covariance matrix of coefficients.
+#' @export
 #' @author Giovanni Millo
 #' @seealso \code{\link[sandwich]{vcovHC}} from the \CRANpkg{sandwich}
 #'     package for weighting schemes (\code{type} argument).
@@ -282,6 +285,7 @@ vcovDC <- function(x, ...){
 #' @param \dots further arguments
 #' @return An object of class \code{"matrix"} containing the estimate of the
 #' covariance matrix of coefficients.
+#' @export
 #' @author Giovanni Millo
 #' @seealso \code{\link{vcovHC}}, \code{\link{vcovSCC}}, \code{\link{vcovDC}},
 #' \code{\link{vcovNW}}, and \code{\link{vcovBK}} albeit the latter does not
@@ -623,8 +627,7 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 #' A special procedure for \code{pgmm} objects, proposed by Windmeijer (2005),
 #' is also provided.
 #' 
-#' @name vcovHC
-#' @aliases vcovHC
+#' @name vcovHC.plm
 #' @param x an object of class \code{"plm"} which should be the result
 #'     of a random effects or a within model or a model of class
 #'     \code{"pgmm"} or an object of class \code{"pcce"},
@@ -639,6 +642,7 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 #'     of the asymptotic covariance matrix of coefficients.
 #' @note The function \code{pvcovHC} is deprecated. Use \code{vcovHC}
 #'     for the same functionality.
+#' @export
 #' @author Giovanni Millo & Yves Croissant
 #' @seealso \code{\link[sandwich]{vcovHC}} from the \CRANpkg{sandwich}
 #'     package for weighting schemes (\code{type} argument).
@@ -711,7 +715,6 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 #'             data = EmplUK, effect = "twoways", model = "twosteps")
 #' rv <- vcovHC(ar)
 #' mtest(ar, order = 2, vcov = rv)
-#' 
 #' 
 vcovHC.plm <- function(x, method=c("arellano", "white1", "white2"),
                        type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
@@ -847,6 +850,7 @@ vcovSCC.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 #' @param diagonal a logical value specifying whether to force nondiagonal
 #' elements to zero,
 #' @param \dots further arguments.
+#' @export
 #' @return An object of class \code{"matrix"} containing the estimate of the
 #' covariance matrix of coefficients.
 #' @author Giovanni Millo
@@ -1149,6 +1153,7 @@ vcovDC.pcce  <- vcovDC.plm
 ####################################
 
 #' @rdname vcovHC
+#' @importFrom MASS ginv
 #' @export
 vcovHC.pgmm <- function(x, ...){
   model <- describe(x, "model")
