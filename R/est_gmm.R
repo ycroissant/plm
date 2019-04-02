@@ -1,3 +1,160 @@
+#' Generalized Method of Moments (GMM) Estimation for Panel Data
+#' 
+#' Generalized method of moments estimation for static or dynamic models with
+#' panel data.
+#' 
+#' 
+#' \code{pgmm} estimates a model for panel data with a generalized method of
+#' moments (GMM) estimator. The description of the model to estimate is
+#' provided with a multi--part formula which is (or which is coerced to) a
+#' \code{Formula} object. The first right--hand side part describes the
+#' covariates. The second one, which is mandatory, describes the GMM
+#' instruments. The third one, which is optional, describes the 'normal'
+#' instruments. By default, all the variables of the model which are not used
+#' as GMM instruments are used as normal instruments with the same lag
+#' structure as the one specified in the model.
+#' 
+#' \code{y~lag(y, 1:2)+lag(x1, 0:1)+lag(x2, 0:2) | lag(y, 2:99)} is similar to
+#' \code{y~lag(y, 1:2)+lag(x1, 0:1)+lag(x2, 0:2) | lag(y, 2:99) | lag(x1,
+#' 0:1)+lag(x2, 0:2)} and indicates that all lags from 2 of \code{y} are used
+#' as GMM instruments.
+#' 
+#' \code{transformation} indicates how the model should be transformed for the
+#' estimation. \code{"d"} gives the ``difference GMM'' model (see Arellano and
+#' Bond (1991)), \code{"ld"} the ``system GMM'' model (see Blundell and Bond
+#' (1998)).
+#' 
+#' \code{pgmm} is an attempt to adapt GMM estimators available within the DPD
+#' library for GAUSS (see Arellano and Bond (1998)) and Ox (see Doornik,
+#' Arellano and Bond (2006)) and within the xtabond2 library for Stata (see
+#' Roodman (2009)).
+#' 
+#' @aliases pgmm
+#' @param formula a symbolic description for the model to be
+#'     estimated. The preferred interface is now to indicate a
+#'     multi--part formula, the first two parts describing the
+#'     covariates and the GMM instruments and, if any, the third part
+#'     the 'normal' instruments,
+#' @param object,x an object of class \code{"pgmm"},
+#' @param data a \code{data.frame} (neither factors nor character
+#'     vectors will be accepted in \code{data.frame}),
+#' @param subset see \code{\link{lm}},
+#' @param na.action see \code{\link{lm}},
+#' @param effect the effects introduced in the model, one of
+#'     \code{"twoways"} (the default) or \code{"individual"},
+#' @param model one of \code{"onestep"} (the default) or
+#'     \code{"twosteps"},
+#' @param collapse if \code{TRUE}, the GMM instruments are collapsed,
+#' @param lost.ts the number of lost time series: if \code{NULL}, this
+#'     is automatically computed. Otherwise, it can be defined by the
+#'     user as a numeric vector of length 1 or 2. The first element is
+#'     the number of lost time series in the model in difference, the
+#'     second one in the model in level. If the second element is
+#'     missing, it is set to the first one minus one,
+#' @param transformation the kind of transformation to apply to the
+#'     model: either \code{"d"} (the default value) for the
+#'     ``difference GMM'' model or \code{"ld"} for the ``system GMM'',
+#' @param fsm the matrix for the one step estimator: one of \code{"I"}
+#'     (identity matrix) or \code{"G"} (\eqn{=D'D} where \eqn{D} is
+#'     the first--difference operator) if \code{transformation="d"},
+#'     one of \code{"GI"} or \code{"full"} if
+#'     \code{transformation="ld"},
+#' @param index the indexes,
+#' @param digits digits,
+#' @param width the maximum length of the lines in the print output,
+#' @param robust if \code{TRUE}, robust inference is performed in the
+#'     summary,
+#' @param time.dummies if \code{TRUE}, the estimated coefficients of
+#'     time dummies are present in the table of coefficients,
+#' @param \dots further arguments.
+#' @return An object of class \code{c("pgmm","panelmodel")}, which has
+#'     the following elements:
+#' 
+#' \item{coefficients}{the vector (or the list for fixed effects) of
+#' coefficients,} \item{residuals}{the vector of residuals,}
+#' \item{vcov}{the covariance matrix of the coefficients,}
+#' \item{fitted.values}{the vector of fitted values,}
+#' \item{df.residual}{degrees of freedom of the residuals,}
+#' \item{model}{a list containing the variables used for the
+#' estimation for each individual,}
+#' 
+#' \item{W}{a list containing the instruments for each individual (two lists in
+#' case of ``sys--GMM''),}
+#' 
+#' \item{A1}{the weighting matrix for the one--step estimator,}
+#' 
+#' \item{A2}{the weighting matrix for the two--steps estimator,}
+#' 
+#' \item{call}{the call.}
+#' 
+#' It has \code{print}, \code{summary} and \code{print.summary}
+#' methods.
+#' @author Yves Croissant
+#' @export
+#' @seealso
+#' 
+#' \code{\link{sargan}} for the Hansen--Sargan test and
+#' \code{\link{mtest}} for Arellano--Bond's test of serial
+#' correlation.  \code{\link{dynformula}} for dynamic formulas
+#' (deprecated).
+#' @references Arellano, M. and Bond, S. (1991) Some Tests of
+#'     Specification for Panel Data: Monte Carlo Evidence and an
+#'     Application to Employment Equations, \emph{The Review of
+#'     Economic Studies}, \bold{58}(2), 1991, pp. 227--297.
+#' 
+#' Arellano, M. and Bond, S. (1998) Dynamic Panel Data Estimation Using DPD98
+#' for GAUSS: A Guide for Users.
+#' 
+#' Blundell, R. and Bond, S. (1998) Initial Conditions and Moment Restrictions
+#' in Dynamic Panel Data Models, \emph{Journal of Econometrics}, vol.
+#' \bold{87}(1), pp. 115--143.
+#' 
+#' Doornik, J., Arellano, M. and Bond, S. (2006) Panel Data Estimation using
+#' DPD for Ox.
+#' \url{http://www.doornik.com/download/oxmetrics7/Ox_Packages/dpd.pdf}
+#' 
+#' Roodman, D. (2009) How to do xtabond2: An introduction to
+#' difference and system GMM in Stata, \emph{Stata Journal},
+#' vol. \bold{9}(1), pp. 86--136.
+#' \url{http://www.stata-journal.com/article.html?article=st0159}. %
+#' full article in Stata Journal is now accessible % Working Paper
+#' version at \url{http://ideas.repec.org/p/cgd/wpaper/103.html}.
+#' @keywords regression
+#' @examples
+#' 
+#' data("EmplUK", package = "plm")
+#' 
+#' ## Arellano and Bond (1991), table 4 col. b 
+#' z1 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
+#'            + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
+#'             data = EmplUK, effect = "twoways", model = "twosteps")
+#' summary(z1, robust = FALSE)
+#' 
+#' ## Blundell and Bond (1998) table 4 (cf. DPD for OX p. 12 col. 4)
+#' z2 <- pgmm(log(emp) ~ lag(log(emp), 1)+ lag(log(wage), 0:1) +
+#'            lag(log(capital), 0:1) | lag(log(emp), 2:99) +
+#'            lag(log(wage), 2:99) + lag(log(capital), 2:99),        
+#'            data = EmplUK, effect = "twoways", model = "onestep", 
+#'            transformation = "ld")
+#' summary(z2, robust = TRUE)
+#' 
+#' \dontrun{
+#' ## Same with the old formula or dynformula interface
+#' ## Arellano and Bond (1991), table 4, col. b 
+#' z1 <- pgmm(log(emp) ~ log(wage) + log(capital) + log(output),
+#'             lag.form = list(2,1,0,1), data = EmplUK, 
+#'             effect = "twoways", model = "twosteps",
+#'             gmm.inst = ~log(emp), lag.gmm = list(c(2,99)))
+#' summary(z1, robust = FALSE)
+#' 
+#' ## Blundell and Bond (1998) table 4 (cf DPD for OX p. 12 col. 4)
+#' z2 <- pgmm(dynformula(log(emp) ~ log(wage) + log(capital), list(1,1,1)), 
+#'             data = EmplUK, effect = "twoways", model = "onestep", 
+#'             gmm.inst = ~log(emp) + log(wage) + log(capital), 
+#'             lag.gmm = c(2,99), transformation = "ld")
+#' summary(z2, robust = TRUE)
+#' }
+#' 
 pgmm <- function(formula, data, subset, na.action,
                  effect = c("twoways", "individual"),
                  model = c("onestep", "twosteps"),
@@ -611,7 +768,7 @@ makegmm <- function(x, g, TL1, collapse = FALSE){
 }
 
 
-makeW2<-function (x, collapse = FALSE){
+makeW2 <-function (x, collapse = FALSE){
   if (collapse) {
     u <- diff(x[-c(length(x))])
    }
@@ -621,6 +778,8 @@ makeW2<-function (x, collapse = FALSE){
    u
 }
 
+#' @rdname pgmm
+#' @export
 coef.pgmm <- function(object,...){
   model <- describe(object, "model")
   if (model == "onestep") coefficients <- object$coefficients
@@ -628,6 +787,8 @@ coef.pgmm <- function(object,...){
   coefficients
 }
 
+#' @rdname pgmm
+#' @export
 summary.pgmm <- function(object, robust = TRUE, time.dummies = FALSE, ...) {
   model <- describe(object, "model")
   effect <- describe(object, "effect")
@@ -659,6 +820,36 @@ summary.pgmm <- function(object, robust = TRUE, time.dummies = FALSE, ...) {
   object
 }
 
+#' Arellano--Bond test of Serial Correlation
+#' 
+#' Test of serial correlation for models estimated by GMM
+#' 
+#' The Arellano--Bond test is a test of correlation based on the residuals of
+#' the estimation. By default, the computation is done with the standard
+#' covariance matrix of the coefficients.  A robust estimator of this
+#' covariance matrix can be supplied with the \code{vcov} argument.
+#' 
+#' @param object an object of class \code{"pgmm"},
+#' @param order the order of the serial correlation (1 or 2),
+#' @param vcov a matrix of covariance for the coefficients or a function to
+#' compute it.
+#' @return An object of class \code{"htest"}.
+#' @author Yves Croissant
+#' @seealso \code{\link{pgmm}}
+#' @references Arellano, M. and Bond, S. (1991), Some Tests of Specification
+#' for Panel Data: Monte Carlo Evidence and an Application to Employment
+#' Equations, \emph{The Review of Economic Studies}, \bold{58}(2), 1991, pp.
+#' 227--297.
+#' @keywords htest
+#' @examples
+#' 
+#' data("EmplUK", package = "plm")
+#' ar <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) +
+#'            lag(log(capital), 0:2) + lag(log(output), 0:2) | lag(log(emp), 2:99),
+#'            data = EmplUK, effect = "twoways", model = "twosteps")
+#' mtest(ar, order = 1)
+#' mtest(ar, order = 2, vcov = vcovHC)
+#' 
 mtest <- function(object, order = 1, vcov = NULL) {
   if (!inherits(object, "pgmm")) stop("argument 'object' needs to be class 'pgmm'")
   myvcov <- vcov
@@ -762,6 +953,8 @@ nobs.pgmm <- function(object, ...) {
 
 
 
+#' @rdname pgmm
+#' @export
 print.summary.pgmm <- function(x, digits = max(3, getOption("digits") - 2),
                                width = getOption("width"),
                                ...) {
@@ -810,6 +1003,38 @@ print.summary.pgmm <- function(x, digits = max(3, getOption("digits") - 2),
   invisible(x)
 }
 
+
+#' Hansen--Sargan Test of Overidentifying Restrictions
+#' 
+#' A test of overidentifying restrictions for models estimated by GMM.
+#' 
+#' The Hansen--Sargan test calculates the quadratic form of the moment
+#' restrictions that is minimized while computing the GMM estimator. It follows
+#' asymptotically a chi-square distribution with number of degrees of freedom
+#' equal to the difference between the number of moment conditions and the
+#' number of coefficients.
+#' 
+#' @param object an object of class \code{"pgmm"},
+#' @param weights the weighting matrix to be used for the computation of the
+#' test.
+#' @return An object of class \code{"htest"}.
+#' @author Yves Croissant
+#' @seealso \code{\link{pgmm}}
+#' @references Hansen, L.P. (1982), Large Sample Properties of Generalized
+#' Methods of Moments Estimators, \emph{Econometrica}, \bold{50}(4), pp.
+#' 1029--1054.
+#' 
+#' Sargan, J.D. (1958), The Estimation of Economic Relationships using
+#' Instrumental Variables, \emph{Econometrica}, \bold{26}(3), pp. 393--415.
+#' @keywords htest
+#' @examples
+#' 
+#' data("EmplUK", package = "plm")
+#' ar <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) +
+#'            lag(log(capital), 0:2) + lag(log(output), 0:2) | lag(log(emp), 2:99),
+#'            data = EmplUK, effect = "twoways", model = "twosteps")
+#' sargan(ar)
+#' 
 sargan <- function(object, weights = c("twosteps", "onestep")) {
   if (!inherits(object, "pgmm")) stop("argument 'object' needs to be class 'pgmm'")
   weights <- match.arg(weights)

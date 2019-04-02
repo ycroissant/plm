@@ -12,6 +12,8 @@
 #   * make.pconsecutive
 #   * make.pbalanced
 
+#' @rdname is.pconsecutive
+#' @export
 is.pconsecutive.default <- function(x, id, time, na.rm.tindex = FALSE, ...) {
   # argument 'x' just used for input check (if it is not NULL and is a vector)
   
@@ -66,6 +68,8 @@ is.pconsecutive.default <- function(x, id, time, na.rm.tindex = FALSE, ...) {
   return(res)
 }
 
+#' @rdname is.pconsecutive
+#' @export
 is.pconsecutive.data.frame <- function(x, index = NULL, na.rm.tindex = FALSE, ...){
   if (!is.null(index) & length(index) != 2)
     stop("if argument 'index' is not NULL, 'index' needs to specify
@@ -89,6 +93,8 @@ is.pconsecutive.data.frame <- function(x, index = NULL, na.rm.tindex = FALSE, ..
   return(is.pconsecutive.default(x_ordered, id_ordered, time_ordered, na.rm.tindex = na.rm.tindex, ...))
 }
 
+#' @rdname is.pconsecutive
+#' @export
 is.pconsecutive.pseries <- function(x, na.rm.tindex = FALSE, ...){
   index <- attr(x, "index")
   id   <- index[[1]]
@@ -96,6 +102,9 @@ is.pconsecutive.pseries <- function(x, na.rm.tindex = FALSE, ...){
   return(is.pconsecutive.default(x, id, time, na.rm.tindex = na.rm.tindex, ...))
 }
 
+
+#' @rdname is.pconsecutive
+#' @export
 is.pconsecutive.pdata.frame <- function(x, na.rm.tindex = FALSE, ...){
   index <- attr(x, "index")
   id   <- index[[1]]
@@ -103,6 +112,8 @@ is.pconsecutive.pdata.frame <- function(x, na.rm.tindex = FALSE, ...){
   return(is.pconsecutive.default(x, id, time, na.rm.tindex = na.rm.tindex, ...))
 }
 
+#' @rdname is.pconsecutive
+#' @export
 is.pconsecutive.panelmodel <- function(x, na.rm.tindex = FALSE, ...){
   index <- attr(x$model, "index")
   id   <- index[[1]]
@@ -110,6 +121,148 @@ is.pconsecutive.panelmodel <- function(x, na.rm.tindex = FALSE, ...){
   return(is.pconsecutive.default(x, id, time, na.rm.tindex = na.rm.tindex, ...))
 }
 
+#' Check if time periods are consecutive
+#' 
+#' This function checks for each individual if its associated time periods are
+#' consecutive (no "gaps" in time dimension per individual)
+#' 
+#' (p)data.frame, pseries and estimated panelmodel objects can be tested if
+#' their time periods are consecutive per individual.  For evaluation of
+#' consecutiveness, the time dimension is interpreted to be numeric, and the
+#' data are tested for being a regularly spaced sequence with distance 1
+#' between the time periods for each individual (for each individual the time
+#' dimension can be interpreted as sequence t, t+1, t+2, \ldots{} where t is an
+#' integer). As such, the "numerical content" of the time index variable is
+#' considered for consecutiveness, not the "physical position" of the various
+#' observations for an individuals in the (p)data.frame/pseries (it is not
+#' about "neighbouring" rows). If the object to be evaluated is a pseries or a
+#' pdata.frame, the time index is coerced from factor via as.character to
+#' numeric, i.e. the series
+#' \code{as.numeric(as.character(index(<pseries/pdata.frame>)[[2]]))]} is
+#' evaluated for gaps.
+#' 
+#' The default method also works for argument \code{x} being an arbitrary
+#' vector (see \bold{Examples}), provided one can supply arguments \code{id}
+#' and \code{time}, which need to ordered as stacked time series. As only
+#' \code{id} and \code{time} are really necessary for the default method to
+#' evaluate the consecutiveness, \code{x = NULL} is also possible. However, if
+#' the vector \code{x} is also supplied, additional input checking for equality
+#' of the lengths of \code{x}, \code{id} and \code{time} is performed, which is
+#' safer.
+#' 
+#' For the data.frame interface, the data is ordered in the appropriate way
+#' (stacked time series) before the consecutiveness is evaluated. For the
+#' pdata.frame and pseries interface, ordering is not performed because both
+#' data types are already ordered in the appropriate way when created.
+#' 
+#' Note: Only the presence of the time period itself in the object is tested,
+#' not if there are any other variables.  \code{NA} values in individual index
+#' are not examined but silently dropped - In this case, it is not clear which
+#' individual is meant by id value \code{NA}, thus no statement about
+#' consecutiveness of time periods for those "\code{NA}-individuals" is
+#' possible.
+#'
+#' @name is.pconsecutive
+#' @aliases is.pconsecutive
+#' @param x usually, an object of class \code{pdata.frame},
+#'     \code{data.frame}, \code{pseries}, or an estimated
+#'     \code{panelmodel}; for the default method \code{x} can also be
+#'     an arbitrary vector or \code{NULL}, see \bold{Details},
+#' @param na.rm.tindex logical indicating whether any \code{NA} values
+#'     in the time index are removed before consecutiveness is
+#'     evaluated (defaults to \code{FALSE}),
+#' @param index only relevant for \code{data.frame} interface; if
+#'     \code{NULL}, the first two columns of the data.frame are
+#'     assumed to be the index variables; if not \code{NULL}, both
+#'     dimensions ('individual', 'time') need to be specified by
+#'     \code{index} for \code{is.pconsecutive} on data frames, for
+#'     further details see \code{\link{pdata.frame}},
+#' @param id,time only relevant for default method: vectors specifying
+#'     the id and time dimensions, i. e. a sequence of individual and
+#'     time identifiers, each as stacked time series,
+#' @param \dots further arguments.
+#' @return A named \code{logical} vector (names are those of the
+#'     individuals).  The i-th element of the returned vector
+#'     corresponds to the i-th individual.  The values of the i-th
+#'     element can be: \item{list("TRUE")}{if the i-th individual has
+#'     consecutive time periods,} \item{list("FALSE")}{if the i-th
+#'     individual has non-consecutive time periods,}
+#'     \item{list("NA")}{if there are any NA values in time index of
+#'     the i-th the individual; see also argument \code{na.rm.tindex}
+#'     to remove those.}
+#' @export
+#' @author Kevin Tappe
+#' @seealso \code{\link{make.pconsecutive}} to make data consecutive
+#'     (and, as an option, balanced at the same time) and
+#'     \code{\link{make.pbalanced}} to make data balanced.\cr
+#'     \code{\link{pdim}} to check the dimensions of a 'pdata.frame'
+#'     (and other objects), \code{\link{pvar}} to check for individual
+#'     and time variation of a 'pdata.frame' (and other objects),
+#'     \code{\link{lag}} for lagged (and leading) values of a
+#'     'pseries' object.\cr
+#' 
+#' \code{\link{pseries}}, \code{\link{data.frame}}, \code{\link{pdata.frame}},
+#' for class 'panelmodel' see \code{\link{plm}} and \code{\link{pgmm}}.
+#' @keywords attribute
+#' @examples
+#' 
+#' data("Grunfeld", package = "plm")
+#' is.pconsecutive(Grunfeld)
+#' is.pconsecutive(Grunfeld, index=c("firm", "year"))
+#' 
+#' # delete 2nd row (2nd time period for first individual)
+#' # -> non consecutive 
+#' Grunfeld_missing_period <- Grunfeld[-2, ]
+#' is.pconsecutive(Grunfeld_missing_period)
+#' all(is.pconsecutive(Grunfeld_missing_period)) # FALSE
+#' 
+#' # delete rows 1 and 2 (1st and 2nd time period for first individual)
+#' # -> consecutive
+#' Grunfeld_missing_period_other <- Grunfeld[-c(1,2), ]
+#' is.pconsecutive(Grunfeld_missing_period_other) # all TRUE
+#' 
+#' # delete year 1937 (3rd period) for _all_ individuals
+#' Grunfeld_wo_1937 <- Grunfeld[Grunfeld$year != 1937, ]
+#' is.pconsecutive(Grunfeld_wo_1937) # all FALSE
+#' 
+#' # pdata.frame interface
+#' pGrunfeld <- pdata.frame(Grunfeld)
+#' pGrunfeld_missing_period <- pdata.frame(Grunfeld_missing_period)
+#' is.pconsecutive(pGrunfeld) # all TRUE
+#' is.pconsecutive(pGrunfeld_missing_period) # first FALSE, others TRUE
+#' 
+#' 
+#' # panelmodel interface (first, estimate some models)
+#' mod_pGrunfeld <- plm(inv ~ value + capital, data = Grunfeld)
+#' mod_pGrunfeld_missing_period <- plm(inv ~ value + capital, data = Grunfeld_missing_period)
+#' 
+#' is.pconsecutive(mod_pGrunfeld)
+#' is.pconsecutive(mod_pGrunfeld_missing_period)
+#' 
+#' nobs(mod_pGrunfeld) # 200
+#' nobs(mod_pGrunfeld_missing_period) # 199
+#' 
+#' 
+#' # pseries interface
+#' pinv <- pGrunfeld$inv
+#' pinv_missing_period <- pGrunfeld_missing_period$inv
+#' 
+#' is.pconsecutive(pinv)
+#' is.pconsecutive(pinv_missing_period)
+#' 
+#' # default method for arbitrary vectors or NULL
+#' inv <- Grunfeld$inv
+#' inv_missing_period <- Grunfeld_missing_period$inv
+#' is.pconsecutive(inv, id = Grunfeld$firm, time = Grunfeld$year)
+#' is.pconsecutive(inv_missing_period, id = Grunfeld_missing_period$firm, 
+#'                                     time = Grunfeld_missing_period$year)
+#' 
+#' # (not run) demonstrate mismatch lengths of x, id, time 
+#' # is.pconsecutive(x = inv_missing_period, id = Grunfeld$firm, time = Grunfeld$year)
+#' 
+#' # only id and time are needed for evaluation
+#' is.pconsecutive(NULL, id = Grunfeld$firm, time = Grunfeld$year)
+#' 
 is.pconsecutive <- function(x, ...){
   UseMethod("is.pconsecutive")
 }
@@ -121,10 +274,63 @@ is.pconsecutive <- function(x, ...){
 ###
 ### copied (and adapted) methods and code from pdim.*
 ### (only relevant parts to determine balancedness)
+
+
+#' Check if data are balanced
+#' 
+#' This function checks if the data are balanced, i.e. if each individual has
+#' the same time periods
+#' 
+#' Balanced data are data for which each individual has the same time periods.
+#' The returned values of the \code{is.pbalanced(object)} methods are identical
+#' to \code{pdim(object)$balanced}.  \code{is.pbalanced} is provided as a short
+#' cut and is faster than \code{pdim(object)$balanced} because it avoids those
+#' computations performed by \code{pdim} which are unnecessary to determine the
+#' balancedness of the data.
+#' 
+#' @aliases is.pbalanced
+#' @param x an object of class \code{pdata.frame}, \code{data.frame},
+#' \code{pseries}, \code{panelmodel}, \code{pgmm};
+#' @param y **to describe**
+#' @param index only relevant for \code{data.frame} interface; if \code{NULL},
+#' the first two columns of the data.frame are assumed to be the index
+#' variables; if not \code{NULL}, both dimensions ('individual', 'time') need
+#' to be specified by \code{index} as character of length 2 for data frames,
+#' for further details see \code{\link{pdata.frame}},
+#' @param \dots further arguments.
+#' @return A logical indicating whether the data associated with object
+#' \code{x} are balanced (\code{TRUE}) or not (\code{FALSE}).
+#' @seealso \code{\link{punbalancedness}} for two measures of unbalancedness,
+#' \code{\link{make.pbalanced}} to make data balanced;
+#' \code{\link{is.pconsecutive}} to check if data are consecutive;
+#' \code{\link{make.pconsecutive}} to make data consecutive (and, optionally,
+#' also balanced).\cr \code{\link{pdim}} to check the dimensions of a
+#' 'pdata.frame' (and other objects), \code{\link{pvar}} to check for
+#' individual and time variation of a 'pdata.frame' (and other objects),
+#' \code{\link{pseries}}, \code{\link{data.frame}}, \code{\link{pdata.frame}}.
+#' @keywords attribute
+#' @examples
+#' 
+#' # take balanced data and make it unbalanced
+#' # by deletion of 2nd row (2nd time period for first individual)
+#' data("Grunfeld", package = "plm")
+#' Grunfeld_missing_period <- Grunfeld[-2, ]
+#' is.pbalanced(Grunfeld_missing_period)     # check if balanced: FALSE
+#' pdim(Grunfeld_missing_period)$balanced    # same
+#' 
+#' # pdata.frame interface
+#' pGrunfeld_missing_period <- pdata.frame(Grunfeld_missing_period)
+#' is.pbalanced(Grunfeld_missing_period)
+#' 
+#' # pseries interface
+#' is.pbalanced(pGrunfeld_missing_period$inv)
+#' 
 is.pbalanced <- function(x, ...) {
   UseMethod("is.pbalanced")
 }
 
+#' @rdname is.pbalanced
+#' @export
 is.pbalanced.default <- function(x, y, ...) {
   if (length(x) != length(y)) stop("The length of the two vectors differs\n")
   x <- x[drop = TRUE] # drop unused factor levels so that table 
@@ -139,6 +345,8 @@ is.pbalanced.default <- function(x, y, ...) {
   return(balanced)
 }
 
+#' @rdname is.pbalanced
+#' @export
 is.pbalanced.data.frame <- function(x, index = NULL, ...) {
   x <- pdata.frame(x, index)
   index <- attr(x, "index")
@@ -147,21 +355,29 @@ is.pbalanced.data.frame <- function(x, index = NULL, ...) {
   return(is.pbalanced(id, time))
 }
 
+#' @rdname is.pbalanced
+#' @export
 is.pbalanced.pdata.frame <- function(x, ...) {
   index <- attr(x, "index")
   return(is.pbalanced(index[[1]], index[[2]]))
 }
 
+#' @rdname is.pbalanced
+#' @export
 is.pbalanced.pseries <- function(x, ...) {
   index <- attr(x, "index")
   return(is.pbalanced(index[[1]], index[[2]]))
 }
 
+#' @rdname is.pbalanced
+#' @export
 is.pbalanced.panelmodel <- function(x, ...) {
   x <- model.frame(x)
   return(is.pbalanced(x))
 }
 
+#' @rdname is.pbalanced
+#' @export
 is.pbalanced.pgmm <- function(x, ...) {
 ## pgmm is also class panelmodel, but take advantage of the pdim attribute in it
   return(attr(x, "pdim")$balanced)

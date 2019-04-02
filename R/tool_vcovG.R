@@ -7,23 +7,311 @@
 ## Only vcovBK stays separate for simplicity reasons.
 
 
+
+
+#' Driscoll and Kraay (1998) Robust Covariance Matrix Estimator
+#' 
+#' Nonparametric robust covariance matrix estimators \emph{a la Driscoll and
+#' Kraay} for panel models with cross-sectional \emph{and} serial correlation.
+#' 
+#' \code{vcovSCC} is a function for estimating a robust covariance matrix of
+#' parameters for a panel model according to the Driscoll and Kraay (1998)
+#' method, which is consistent with cross--sectional and serial correlation in
+#' a T-asymptotic setting and irrespective of the N dimension. The use with
+#' random effects models is undocumented.
+#' 
+#' Weighting schemes specified by \code{type} are analogous to those
+#' in \code{\link[sandwich]{vcovHC}} in package \CRANpkg{sandwich} and
+#' are justified theoretically (although in the context of the
+#' standard linear model) by MacKinnon and White (1985) and
+#' Cribari-Neto (2004) (see Zeileis (2004)).
+#' 
+#' The main use of \code{vcovSCC} is to be an argument to other
+#' functions, e.g.  for Wald--type testing: argument \code{vcov.} to
+#' \code{coeftest()}, argument \code{vcov} to \code{waldtest()} and
+#' other methods in the \CRANpkg{lmtest} package; and argument
+#' \code{vcov.} to \code{linearHypothesis()} in the \CRANpkg{car}
+#' package (see the examples). Notice that the \code{vcov} and
+#' \code{vcov.} arguments allow to supply a function (which is the
+#' safest) or a matrix (see Zeileis (2004), 4.1-2 and examples below).
+#' 
+#' @aliases vcovSCC
+#' @param x an object of class \code{"plm"} or \code{"pcce"}
+#' @param type the weighting scheme used, one of \code{"HC0"},
+#'     \code{"sss"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"},
+#'     \code{"HC4"}, see Details,
+#' @param cluster switch for vcovG; set at \code{"time"} here,
+#' @param maxlag either \code{NULL} or a positive integer specifying
+#'     the maximum lag order before truncation
+#' @param inner the function to be applied to the residuals inside the
+#'     sandwich: \code{"cluster"} for SCC, \code{"white"} for
+#'     Newey-West, (\code{"diagavg"} for compatibility reasons)
+#' @param wj weighting function to be applied to lagged terms,
+#' @param \dots further arguments
+#' @return An object of class \code{"matrix"} containing the estimate
+#'     of the covariance matrix of coefficients.
+#' @author Giovanni Millo, partially ported from Daniel Hoechle's
+#'     (2007) Stata code
+#' @seealso \code{\link[sandwich]{vcovHC}} from the \CRANpkg{sandwich}
+#'     package for weighting schemes (\code{type} argument).
+#' @references Cribari-Neto, F. (2004) Asymptotic inference under
+#'     heteroskedasticity of unknown form. \emph{Computational
+#'     Statistics & Data Analysis} \bold{45(2)}, pp. 215--233.
+#' 
+#' Driscoll, J.C. and Kraay, A.C. (1998) Consistent Covariance Matrix
+#' Estimation with Spatially Dependent Panel Data. \emph{Review of Economics
+#' and Statistics} \bold{80(4)}, pp. 549--560.
+#' 
+#' Hoechle, D. (2007) Robust standard errors for panel regressions with
+#' cross-sectional dependence. \emph{Stata Journal}, \bold{7(3)}, pp. 281--312.
+#' 
+#' MacKinnon, J. G. and White, H. (1985) Some heteroskedasticity-consistent
+#' covariance matrix estimators with improved finite sample properties.
+#' \emph{Journal of Econometrics} \bold{29(3)}, pp. 305--325.
+#' 
+#' Zeileis, A. (2004) Econometric Computing with HC and HAC Covariance Matrix
+#' Estimators. \emph{Journal of Statistical Software}, \bold{11}(10), pp.
+#' 1--17.  URL \url{http://www.jstatsoft.org/v11/i10/}.
+#' @keywords regression
+#' @examples
+#' 
+#' library(lmtest)
+#' library(car)
+#' data("Produc", package="plm")
+#' zz <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc, model="pooling")
+#' ## standard coefficient significance test
+#' coeftest(zz)
+#' ## SCC robust significance test, default
+#' coeftest(zz, vcov.=vcovSCC)
+#' ## idem with parameters, pass vcov as a function argument
+#' coeftest(zz, vcov.=function(x) vcovSCC(x, type="HC1", maxlag=4))
+#' ## joint restriction test
+#' waldtest(zz, update(zz, .~.-log(emp)-unemp), vcov=vcovSCC)
+#' ## test of hyp.: 2*log(pc)=log(emp)
+#' linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovSCC)
+#' 
 vcovSCC <- function(x, ...){
   UseMethod("vcovSCC")
 }
 
+
+
+#' Newey and West (1987) Robust Covariance Matrix Estimator
+#' 
+#' Nonparametric robust covariance matrix estimators \emph{a la Newey and West}
+#' for panel models with serial correlation.
+#' 
+#' \code{vcovNW} is a function for estimating a robust covariance matrix of
+#' parameters for a panel model according to the Newey and West (1987) method.
+#' The function works as a restriction of the Driscoll and Kraay (1998)
+#' covariance (see \code{\link{vcovSCC}}) to no cross--sectional correlation.
+#' 
+#' Weighting schemes specified by \code{type} are analogous to those in
+#' \code{\link[sandwich]{vcovHC}} in package \CRANpkg{sandwich}
+#' and are justified theoretically (although in the context of the standard
+#' linear model) by MacKinnon and White (1985) and Cribari-Neto (2004) (see
+#' Zeileis (2004)).
+#' 
+#' The main use of \code{vcovNW} is to be an argument to other
+#' functions, e.g.  for Wald--type testing: argument \code{vcov.} to
+#' \code{coeftest()}, argument \code{vcov} to \code{waldtest()} and
+#' other methods in the \CRANpkg{lmtest} package; and argument
+#' \code{vcov.} to \code{linearHypothesis()} in the \CRANpkg{car}
+#' package (see the examples). Notice that the \code{vcov} and
+#' \code{vcov.} arguments allow to supply a function (which is the
+#' safest) or a matrix (see Zeileis (2004), 4.1-2 and examples below).
+#' 
+#' @aliases vcovNW
+#' @param x an object of class \code{"plm"} or \code{"pcce"}
+#' @param type the weighting scheme used, one of \code{"HC0"},
+#'     \code{"sss"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"},
+#'     \code{"HC4"}, see Details,
+#' @param maxlag either \code{NULL} or a positive integer specifying
+#'     the maximum lag order before truncation
+#' @param wj weighting function to be applied to lagged terms,
+#' @param \dots further arguments
+#' @return An object of class \code{"matrix"} containing the estimate
+#'     of the covariance matrix of coefficients.
+#' @author Giovanni Millo
+#' @seealso \code{\link[sandwich]{vcovHC}} from the \CRANpkg{sandwich}
+#'     package for weighting schemes (\code{type} argument).
+#' @references Cribari-Neto, F. (2004) Asymptotic inference under
+#'     heteroskedasticity of unknown form. \emph{Computational
+#'     Statistics & Data Analysis} \bold{45(2)}, pp. 215--233.
+#' 
+#' Driscoll, J.C. and Kraay, A.C. (1998) Consistent Covariance Matrix
+#' Estimation with Spatially Dependent Panel Data. \emph{Review of Economics
+#' and Statistics} \bold{80(4)}, pp. 549--560.
+#' 
+#' MacKinnon, J. G. and White, H. (1985) Some heteroskedasticity-consistent
+#' covariance matrix estimators with improved finite sample properties.
+#' \emph{Journal of Econometrics} \bold{29(3)}, pp. 305--325.
+#' 
+#' Newey, W.K. & West, K.D. (1987) A simple, positive semi-definite,
+#' heteroskedasticity and autocorrelation consistent covariance matrix.
+#' \emph{Econometrica} \bold{55(3)}, pp. 703--708.
+#' 
+#' Zeileis, A. (2004) Econometric Computing with HC and HAC Covariance Matrix
+#' Estimators. \emph{Journal of Statistical Software}, \bold{11}(10), pp.
+#' 1--17.  URL \url{http://www.jstatsoft.org/v11/i10/}.
+#' @keywords regression
+#' @examples
+#' 
+#' library(lmtest)
+#' library(car)
+#' data("Produc", package="plm")
+#' zz <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc, model="pooling")
+#' ## standard coefficient significance test
+#' coeftest(zz)
+#' ## NW robust significance test, default
+#' coeftest(zz, vcov.=vcovNW)
+#' ## idem with parameters, pass vcov as a function argument
+#' coeftest(zz, vcov.=function(x) vcovNW(x, type="HC1", maxlag=4))
+#' ## joint restriction test
+#' waldtest(zz, update(zz, .~.-log(emp)-unemp), vcov=vcovNW)
+#' ## test of hyp.: 2*log(pc)=log(emp)
+#' linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovNW)
+#' 
 vcovNW <- function(x, ...){
   UseMethod("vcovNW")
 }
 
+
+
+#' Double-Clustering Robust Covariance Matrix Estimator
+#' 
+#' High-level convenience wrapper for double-clustering robust covariance
+#' matrix estimators \emph{a la} Thompson (2011) and Cameron, Gelbach and
+#' Miller (2011) for panel models.
+#' 
+#' \code{vcovDC} is a function for estimating a robust covariance matrix of
+#' parameters for a panel model with errors clustering along both dimensions.
+#' The function is a convenience wrapper simply summing a group- and a
+#' time-clustered covariance matrix and subtracting a diagonal one \emph{a la}
+#' White.
+#' 
+#' Weighting schemes specified by \code{type} are analogous to those
+#' in \code{\link[sandwich]{vcovHC}} in package \CRANpkg{sandwich} and
+#' are justified theoretically (although in the context of the
+#' standard linear model) by MacKinnon and White (1985) and
+#' Cribari-Neto (2004) (see Zeileis (2004)).
+#' 
+#' The main use of \code{vcovDC} is to be an argument to other
+#' functions, e.g.  for Wald-type testing: argument \code{vcov.} to
+#' \code{coeftest()}, argument \code{vcov} to \code{waldtest()} and
+#' other methods in the \CRANpkg{lmtest} package; and argument
+#' \code{vcov.} to \code{linearHypothesis()} in the \CRANpkg{car}
+#' package (see the examples). Notice that the \code{vcov} and
+#' \code{vcov.} arguments allow to supply a function (which is the
+#' safest) or a matrix (see Zeileis (2004), 4.1-2 and examples below).
+#' 
+#' @aliases vcovDC
+#' @param x an object of class \code{"plm"} or \code{"pcce"}
+#' @param type the weighting scheme used, one of \code{"HC0"},
+#'     \code{"sss"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"},
+#'     \code{"HC4"}, see Details,
+#' @param \dots further arguments
+#' @return An object of class \code{"matrix"} containing the estimate
+#'     of the covariance matrix of coefficients.
+#' @author Giovanni Millo
+#' @seealso \code{\link[sandwich]{vcovHC}} from the \CRANpkg{sandwich}
+#'     package for weighting schemes (\code{type} argument).
+#' @references Cameron, A.C., Gelbach, J.B., & Miller, D.L. (2011)
+#'     Robust inference with multiway clustering, \emph{Journal of
+#'     Business and Economic Statistics} \bold{29(2)}, pp. 238--249.
+#' 
+#' Cribari-Neto, F. (2004) Asymptotic inference under heteroskedasticity of
+#' unknown form. \emph{Computational Statistics & Data Analysis} \bold{45(2)},
+#' pp. 215--233.
+#' 
+#' MacKinnon, J. G. and White, H. (1985) Some heteroskedasticity-consistent
+#' covariance matrix estimators with improved finite sample properties.
+#' \emph{Journal of Econometrics} \bold{29(3)}, pp. 305--325.
+#' 
+#' Thompson, S.B. (2011) Simple formulas for standard errors that cluster by
+#' both firm and time, \emph{Journal of Financial Economics} \bold{99(1)}, pp.
+#' 1--10.
+#' 
+#' Zeileis, A. (2004) Econometric Computing with HC and HAC Covariance Matrix
+#' Estimators. \emph{Journal of Statistical Software}, \bold{11}(10), pp.
+#' 1--17.  URL \url{http://www.jstatsoft.org/v11/i10/}.
+#' @keywords regression
+#' @examples
+#' 
+#' library(lmtest)
+#' library(car)
+#' data("Produc", package="plm")
+#' zz <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc, model="pooling")
+#' ## standard coefficient significance test
+#' coeftest(zz)
+#' ## DC robust significance test, default
+#' coeftest(zz, vcov.=vcovDC)
+#' ## idem with parameters, pass vcov as a function argument
+#' coeftest(zz, vcov.=function(x) vcovDC(x, type="HC1", maxlag=4))
+#' ## joint restriction test
+#' waldtest(zz, update(zz, .~.-log(emp)-unemp), vcov=vcovDC)
+#' ## test of hyp.: 2*log(pc)=log(emp)
+#' linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovDC)
+#' 
 vcovDC <- function(x, ...){
   UseMethod("vcovDC")
 }
 
+
+
+#' Generic Lego building block for Robust Covariance Matrix Estimators
+#' 
+#' Generic Lego building block for robust covariance matrix estimators of the
+#' vcovXX kind for panel models.
+#' 
+#' \code{vcovG} is the generic building block for use by higher--level wrappers
+#' \code{\link{vcovHC}}, \code{\link{vcovSCC}}, \code{\link{vcovDC}}, and
+#' \code{\link{vcovNW}}. The main use of \code{vcovG} is to be used internally
+#' by the former, but it is made available in the user space for use in
+#' non--standard combinations. For more documentation, see see wrapper
+#' functions mentioned.
+#' 
+#' @aliases vcovG
+#' @param x an object of class \code{"plm"} or \code{"pcce"}
+#' @param type the weighting scheme used, one of \code{"HC0"}, \code{"sss"},
+#' \code{"HC1"}, \code{"HC2"}, \code{"HC3"}, \code{"HC4"},
+#' @param cluster one of \code{"group"}, \code{"time"},
+#' @param l lagging order, defaulting to zero
+#' @param inner the function to be applied to the residuals inside the
+#' sandwich: one of \code{"cluster"} or \code{"white"} or \code{"diagavg"},
+#' @param \dots further arguments
+#' @return An object of class \code{"matrix"} containing the estimate of the
+#' covariance matrix of coefficients.
+#' @author Giovanni Millo
+#' @seealso \code{\link{vcovHC}}, \code{\link{vcovSCC}}, \code{\link{vcovDC}},
+#' \code{\link{vcovNW}}, and \code{\link{vcovBK}} albeit the latter does not
+#' make use of vcovG.
+#' @references Millo, G. (2017) Robust Standard Error Estimators for Panel
+#' Models: A Unifying Approach, \emph{Journal of Statistical Software}
+#' \bold{82}(3), pp. 1--27.
+#' @keywords regression
+#' @examples
+#' 
+#' data("Produc", package="plm")
+#' zz <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc,
+#' model="pooling")
+#' ## reproduce Arellano's covariance matrix
+#' vcovG(zz, cluster="group", inner="cluster", l=0)
+#' ## use in coefficient significance test
+#' library(lmtest)
+#' ## define custom covariance function
+#' ## (in this example, same as vcovHC)
+#' myvcov <- function(x) vcovG(x, cluster="group", inner="cluster", l=0)
+#' ## robust significance test
+#' coeftest(zz, vcov.=myvcov)
+#' 
 vcovG <- function(x, ...) {
     UseMethod("vcovG")
 }
 
 
+#' @rdname vcovG
+#' @export
 vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
                       cluster = c("group", "time"),
                       l = 0,
@@ -293,11 +581,138 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
     return(mycov)
 }
 
-
-#################################################################
-
-## user-level wrappers:
-
+#' Robust Covariance Matrix Estimators
+#' 
+#' Robust covariance matrix estimators \emph{a la White} for panel models.
+#' 
+#' \code{vcovHC} is a function for estimating a robust covariance matrix of
+#' parameters for a fixed effects or random effects panel model according to
+#' the White method (White 1980, 1984; Arellano 1987). Observations may be
+#' clustered by \code{"group"} (\code{"time"}) to account for serial
+#' (cross-sectional) correlation.
+#' 
+#' All types assume no intragroup (serial) correlation between errors and allow
+#' for heteroskedasticity across groups (time periods). As for the error
+#' covariance matrix of every single group of observations, \code{"white1"}
+#' allows for general heteroskedasticity but no serial (cross--sectional)
+#' correlation; \code{"white2"} is \code{"white1"} restricted to a common
+#' variance inside every group (time period) (see Greene (2003, Sec. 13.7.1-2;
+#' 2012, Sec. 11.6.1-2) and Wooldridge (2002), Sec. 10.7.2); \code{"arellano"}
+#' (see ibid. and the original ref. Arellano (1987)) allows a fully general
+#' structure w.r.t. heteroskedasticity and serial (cross--sectional)
+#' correlation.
+#' 
+#' Weighting schemes specified by \code{type} are analogous to those
+#' in \code{\link[sandwich]{vcovHC}} in package \CRANpkg{sandwich} and
+#' are justified theoretically (although in the context of the
+#' standard linear model) by MacKinnon and White (1985) and
+#' Cribari-Neto (2004) (see Zeileis (2004)). \code{type = "sss"}
+#' employs the small sample correction as used by Stata. % TODO: give
+#' formula for "sss"; elaborate why different result for FE models
+#' (intercept)
+#' 
+#' The main use of \code{vcovHC} is to be an argument to other
+#' functions, e.g.  for Wald--type testing: argument \code{vcov.} to
+#' \code{coeftest()}, argument \code{vcov} to \code{waldtest()} and
+#' other methods in the \CRANpkg{lmtest} package; and argument
+#' \code{vcov.} to \code{linearHypothesis()} in the \CRANpkg{car}
+#' package (see the examples). Notice that the \code{vcov} and
+#' \code{vcov.} arguments allow to supply a function (which is the
+#' safest) or a matrix (see Zeileis (2004), 4.1-2 and examples below).
+#' 
+#' A special procedure for \code{pgmm} objects, proposed by Windmeijer (2005),
+#' is also provided.
+#' 
+#' @name vcovHC
+#' @aliases vcovHC
+#' @param x an object of class \code{"plm"} which should be the result
+#'     of a random effects or a within model or a model of class
+#'     \code{"pgmm"} or an object of class \code{"pcce"},
+#' @param method one of \code{"arellano"}, \code{"white1"},
+#'     \code{"white2"},
+#' @param type the weighting scheme used, one of \code{"HC0"},
+#'     \code{"sss"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"},
+#'     \code{"HC4"}, see Details,
+#' @param cluster one of \code{"group"}, \code{"time"},
+#' @param \dots further arguments.
+#' @return An object of class \code{"matrix"} containing the estimate
+#'     of the asymptotic covariance matrix of coefficients.
+#' @note The function \code{pvcovHC} is deprecated. Use \code{vcovHC}
+#'     for the same functionality.
+#' @author Giovanni Millo & Yves Croissant
+#' @seealso \code{\link[sandwich]{vcovHC}} from the \CRANpkg{sandwich}
+#'     package for weighting schemes (\code{type} argument).
+#' @references Arellano, M. (1987) Computing robust standard errors
+#'     for within-group estimators, \emph{Oxford Bulletin of Economics
+#'     and Statistics}, \bold{49(4)}, pp. 431--434.
+#' 
+#' Cribari-Neto, F. (2004) Asymptotic inference under heteroskedasticity of
+#' unknown form. \emph{Computational Statistics & Data Analysis} \bold{45(2)},
+#' pp. 215--233.
+#' 
+#' Greene, W. H. (2003) \emph{Econometric Analysis}, 5th ed., Prentice
+#' Hall/Pearson, Upper Saddle River, New Jersey.
+#' 
+#' Greene, W. H. (2012) \emph{Econometric Analysis}, 7th ed., Prentice
+#' Hall/Pearson, Upper Saddle River, New Jersey.
+#' 
+#' MacKinnon, J. G. and White, H. (1985) Some heteroskedasticity-consistent
+#' covariance matrix estimators with improved finite sample properties.
+#' \emph{Journal of Econometrics} \bold{29(3)}, pp. 305--325.
+#' 
+#' Windmeijer, F. (2005) A finite sample correction for the variance of linear
+#' efficient two--step GMM estimators, \emph{Journal of Econometrics},
+#' \bold{126(1)}, pp. 25--51.
+#' 
+#' White, H. (1980) \emph{Asymptotic Theory for Econometricians}, Ch. 6,
+#' Academic Press, Orlando (FL).
+#' 
+#' White, H. (1984) A heteroskedasticity-consistent covariance matrix and a
+#' direct test for heteroskedasticity. \emph{Econometrica} \bold{48(4)}, pp.
+#' 817--838.
+#' 
+#' Wooldridge, J. M. (2002) \emph{Econometric Analysis of Cross Section and
+#' Panel Data}, MIT Press, Cambridge (MA).
+#' 
+#' Zeileis, A. (2004) Econometric Computing with HC and HAC Covariance Matrix
+#' Estimators. \emph{Journal of Statistical Software}, \bold{11}(10), pp.
+#' 1--17. URL \url{http://www.jstatsoft.org/v11/i10/}.
+#' @keywords regression
+#' @examples
+#' 
+#' library(lmtest)
+#' library(car)
+#' data("Produc", package = "plm")
+#' zz <- plm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
+#'           data = Produc, model = "random")
+#' ## standard coefficient significance test
+#' coeftest(zz)
+#' ## robust significance test, cluster by group
+#' ## (robust vs. serial correlation)
+#' coeftest(zz, vcov.=vcovHC)
+#' ## idem with parameters, pass vcov as a function argument
+#' coeftest(zz, vcov.=function(x) vcovHC(x, method="arellano", type="HC1"))
+#' ## idem, cluster by time period
+#' ## (robust vs. cross-sectional correlation)
+#' coeftest(zz, vcov.=function(x) vcovHC(x, method="arellano",
+#'  type="HC1", cluster="group"))
+#' ## idem with parameters, pass vcov as a matrix argument
+#' coeftest(zz, vcov.=vcovHC(zz, method="arellano", type="HC1"))
+#' ## joint restriction test
+#' waldtest(zz, update(zz, .~.-log(emp)-unemp), vcov=vcovHC)
+#' ## test of hyp.: 2*log(pc)=log(emp)
+#' linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovHC)
+#' 
+#' ## Robust inference for GMM models
+#' data("EmplUK", package="plm")
+#' ar <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
+#'            + log(capital) + lag(log(capital), 2) + log(output)
+#'            + lag(log(output),2) | lag(log(emp), 2:99),
+#'             data = EmplUK, effect = "twoways", model = "twosteps")
+#' rv <- vcovHC(ar)
+#' mtest(ar, order = 2, vcov = rv)
+#' 
+#' 
 vcovHC.plm <- function(x, method=c("arellano", "white1", "white2"),
                        type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
                        cluster=c("group", "time"), ...) {
@@ -313,6 +728,8 @@ vcovHC.plm <- function(x, method=c("arellano", "white1", "white2"),
                         l=0, inner=inner, ...))
 }
 
+#' @rdname vcovNW
+#' @export
 vcovNW.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
                        maxlag=NULL,
                        wj=function(j, maxlag) 1-j/(maxlag+1),
@@ -325,6 +742,8 @@ vcovNW.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
     return(vcovSCC(x, type=type, maxlag=maxlag, inner="white", wj=wj, ...))
 }
 
+#' @rdname vcovDC
+#' @export
 vcovDC.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
                        ...) {
     ## user-level wrapper for double-clustering (no persistence)
@@ -342,6 +761,8 @@ vcovDC.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
     return(res)
 }
 
+#' @rdname vcovSCC
+#' @export
 vcovSCC.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
                         cluster="time",
                         maxlag=NULL,
@@ -375,12 +796,114 @@ vcovSCC.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 
 ## separate function for BK (PCSE) covariance
 
+
+
+#' Beck and Katz Robust Covariance Matrix Estimators
+#' 
+#' Unconditional Robust covariance matrix estimators \emph{a la Beck and Katz}
+#' for panel models (a.k.a. Panel Corrected Standard Errors (PCSE)).
+#' 
+#' \code{vcovBK} is a function for estimating a robust covariance matrix of
+#' parameters for a panel model according to the Beck and Katz (1995) method,
+#' a.k.a. Panel Corrected Standard Errors (PCSE), which uses an unconditional
+#' estimate of the error covariance across time periods (groups) inside the
+#' standard formula for coefficient covariance. Observations may be clustered
+#' either by \code{"group"} to account for timewise heteroskedasticity and
+#' serial correlation or by \code{"time"} to account for cross-sectional
+#' heteroskedasticity and correlation. It must be borne in mind that the Beck
+#' and Katz formula is based on N- (T-) asymptotics and will not be appropriate
+#' elsewhere.
+#' 
+#' The \code{diagonal} logical argument can be used, if set to \code{TRUE}, to
+#' force to zero all nondiagonal elements in the estimated error covariances;
+#' this is appropriate if both serial and cross--sectional correlation are
+#' assumed out, and yields a timewise- (groupwise-)
+#' heteroskedasticity--consistent estimator.
+#' 
+#' Weighting schemes specified by \code{type} are analogous to those in
+#' \code{\link[sandwich]{vcovHC}} in package \CRANpkg{sandwich}
+#' and are justified theoretically (although in the context of the standard
+#' linear model) by MacKinnon and White (1985) and Cribari-Neto (2004) (see
+#' Zeileis (2004)).
+#' 
+#' % TODO: once "sss" has been added: \code{type = "sss"} employs the small
+#' sample correction as used by Stata. % give formula for "sss"; elaborate why
+#' different result for FE models (intercept)
+#' 
+#' The main use of \code{vcovBK} is to be an argument to other
+#' functions, e.g.  for Wald--type testing: argument \code{vcov.} to
+#' \code{coeftest()}, argument \code{vcov} to \code{waldtest()} and
+#' other methods in the \CRANpkg{lmtest} package; and argument
+#' \code{vcov.} to \code{linearHypothesis()} in the \CRANpkg{car}
+#' package (see the examples). Notice that the \code{vcov} and
+#' \code{vcov.} arguments allow to supply a function (which is the
+#' safest) or a matrix (see Zeileis (2004), 4.1-2 and examples below).
+#' 
+#' @aliases vcovBK vcovBK.plm
+#' @param x an object of class \code{"plm"},
+#' @param type the weighting scheme used, one of \code{"HC0"}, \code{"HC1"},
+#' \code{"HC2"}, \code{"HC3"}, \code{"HC4"}, see Details,
+#' @param cluster one of \code{"group"}, \code{"time"},
+#' @param diagonal a logical value specifying whether to force nondiagonal
+#' elements to zero,
+#' @param \dots further arguments.
+#' @return An object of class \code{"matrix"} containing the estimate of the
+#' covariance matrix of coefficients.
+#' @author Giovanni Millo
+#' @seealso \code{\link[sandwich]{vcovHC}} from the \CRANpkg{sandwich}
+#' package for weighting schemes (\code{type} argument).
+#' @references Beck, N. and Katz, J. (1995) What to do (and not to do) with
+#' time-series cross-section data in comparative politics. \emph{American
+#' Political Science Review}, \bold{89(3)}, pp. 634--647.
+#' 
+#' Cribari-Neto, F. (2004) Asymptotic inference under heteroskedasticity of
+#' unknown form. \emph{Computational Statistics & Data Analysis} \bold{45(2)},
+#' pp. 215--233.
+#' 
+#' Greene, W. H. (2003) \emph{Econometric Analysis}, 5th ed., Prentice
+#' Hall/Pearson, Upper Saddle River, New Jersey, Sec. 13.9.3, 13.9.7.
+#' 
+#' MacKinnon, J. G. and White, H. (1985) Some heteroskedasticity-consistent
+#' covariance matrix estimators with improved finite sample properties.
+#' \emph{Journal of Econometrics} \bold{29(3)}, pp. 305--325.
+#' 
+#' Zeileis, A. (2004) Econometric Computing with HC and HAC Covariance Matrix
+#' Estimators. \emph{Journal of Statistical Software}, \bold{11}(10), pp.
+#' 1--17.  URL \url{http://www.jstatsoft.org/v11/i10/}.
+#' @keywords regression
+#' @examples
+#' 
+#' library(lmtest)
+#' library(car)
+#' data("Produc", package="plm")
+#' zz <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc, model="random")
+#' ## standard coefficient significance test
+#' coeftest(zz)
+#' ## robust significance test, cluster by group
+#' ## (robust vs. serial correlation), default arguments
+#' coeftest(zz, vcov.=vcovBK)
+#' ## idem with parameters, pass vcov as a function argument
+#' coeftest(zz, vcov.=function(x) vcovBK(x, type="HC1"))
+#' ## idem, cluster by time period
+#' ## (robust vs. cross-sectional correlation)
+#' coeftest(zz, vcov.=function(x) vcovBK(x,
+#'  type="HC1", cluster="time"))
+#' ## idem with parameters, pass vcov as a matrix argument
+#' coeftest(zz, vcov.=vcovBK(zz, type="HC1"))
+#' ## joint restriction test
+#' waldtest(zz, update(zz, .~.-log(emp)-unemp), vcov=vcovBK)
+#' ## test of hyp.: 2*log(pc)=log(emp)
+#' linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovBK)
+#' 
 vcovBK <- function(x, ...) {
     UseMethod("vcovBK")
 }
 
 
 # TODO: add type "sss" for vcovBK
+
+#' @rdname vcovBK
+#' @export
 vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
                        cluster = c("group", "time"),
                        diagonal = FALSE, ...) {
@@ -625,6 +1148,8 @@ vcovDC.pcce  <- vcovDC.plm
 ## vcovHC method for pgmm objects ##
 ####################################
 
+#' @rdname vcovHC
+#' @export
 vcovHC.pgmm <- function(x, ...){
   model <- describe(x, "model")
   transformation <- describe(x, "transformation")

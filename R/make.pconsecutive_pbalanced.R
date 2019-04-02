@@ -113,6 +113,8 @@ make.pconsecutive.indexes <- function(x, index, balanced = FALSE, ...) {
 } ### END: make.pconsecutive.indexes
 
 
+#' @rdname make.pconsecutive
+#' @export
 make.pconsecutive.data.frame <- function(x, balanced = FALSE, index = NULL, ...){
   # if not NULL, index is must be character of length 2
   if (!is.null(index) & length(index) != 2)
@@ -144,6 +146,8 @@ make.pconsecutive.data.frame <- function(x, balanced = FALSE, index = NULL, ...)
   return(index_df_filled_plus_x)
 } ### END: make.pconsecutive.data.frame
 
+#' @rdname make.pconsecutive
+#' @export
 make.pconsecutive.pdata.frame <- function(x, balanced = FALSE, ...){
   orig_column_names <- names(x)
     
@@ -189,6 +193,8 @@ make.pconsecutive.pdata.frame <- function(x, balanced = FALSE, ...){
   return(x_pdf_filled)
 } ### END: make.pconsecutive.pdata.frame
 
+#' @rdname make.pconsecutive
+#' @export
 make.pconsecutive.pseries <- function(x, balanced = FALSE, ...) {
   is_p <- is.pconsecutive(x)
   is_bal <- is.pbalanced(x)
@@ -224,9 +230,130 @@ make.pconsecutive.pseries <- function(x, balanced = FALSE, ...) {
     x <- pdf_index_filled_plus_x$x
   }
   return(x)
-} ## END: make.pconsecutive.pseries
+}
 
-
+#' Make data consecutive (and, optionally, also balanced)
+#' 
+#' This function makes the data consecutive for each individual (no "gaps" in
+#' time dimension per individual) and, optionally, also balanced
+#' 
+#' (p)data.frame and pseries objects are made consecutive, meaning their time
+#' periods are made consecutive per individual.  For consecutiveness, the time
+#' dimension is interpreted to be numeric, and the data are extended to a
+#' regularly spaced sequence with distance 1 between the time periods for each
+#' individual (for each individual the time dimension become a sequence t, t+1,
+#' t+2, \ldots{} where t is an integer). Non--index variables are filled with
+#' \code{NA} for the inserted elements (rows for (p)data.frames, vector
+#' elements for pseries).
+#' 
+#' With argument \code{balanced = TRUE}, additionally to be made consecutive,
+#' the data also can be made a balanced panel/pseries.  Note: This means
+#' consecutive AND balanced; balancedness does not imply consecutiveness. In
+#' the result, each individual will have the same time periods in their time
+#' dimension by taking the min and max of the time index variable over all
+#' individuals (w/o \code{NA} values) and inserting the missing time periods.
+#' Looking at the number of rows of the resulting (pdata.frame) (elements for
+#' pseries), this results in nrow(make.pconsecutive, balanced = FALSE) <=
+#' nrow(make.pconsecutive, balanced = TRUE).  For making the data only
+#' balanced, i.e. not demanding consecutiveness at the same time, use
+#' \code{\link{make.pbalanced}} (see \bold{Examples} for a comparison)).
+#' 
+#' Note: rows of (p)data.frames (elements for pseries) with \code{NA} values in
+#' individual or time index are not examined but silently dropped before the
+#' data are made consecutive. In this case, it is not clear which individual or
+#' time period is meant by the missing value(s). Especially, this means: If
+#' there are \code{NA} values in the first/last position of the original time
+#' periods for an individual, which usually depicts the beginning and ending of
+#' the time series for that individual, the beginning/end of the resulting time
+#' series is taken to be the min and max (w/o \code{NA} values) of the original
+#' time series for that individual, see also \bold{Examples}. Thus, one might
+#' want to check if there are any \code{NA} values in the index variables
+#' before applying make.pconsecutive, and especially check for \code{NA} values
+#' in the first and last position for each individual in original data and, if
+#' so, maybe set those to some meaningful begin/end value for the time series.
+#' 
+#' @aliases make.pconsecutive
+#' @param x an object of class \code{pdata.frame}, \code{data.frame}, or
+#' \code{pseries},
+#' @param balanced logical, indicating whether the data should _additionally_
+#' be made balanced (default: FALSE),
+#' @param index only relevant for \code{data.frame} interface; if \code{NULL},
+#' the first two columns of the data.frame are assumed to be the index
+#' variables; if not \code{NULL}, both dimensions ('individual', 'time') need
+#' to be specified by \code{index} as character of length 2 for data frames,
+#' for further details see \code{\link{pdata.frame}},
+#' @param \dots further arguments.
+#' @return An object of the same class as the input \code{x}, i.e. a
+#' pdata.frame, data.frame or a pseries which is made time--consecutive based
+#' on the index variables. The returned data are sorted as a stacked time
+#' series.
+#' @export
+#' @author Kevin Tappe
+#' @seealso \code{\link{is.pconsecutive}} to check if data are consecutive;
+#' \code{\link{make.pbalanced}} to make data only balanced (not
+#' consecutive).\cr \code{\link{punbalancedness}} for two measures of
+#' unbalancedness, \code{\link{pdim}} to check the dimensions of a
+#' 'pdata.frame' (and other objects), \code{\link{pvar}} to check for
+#' individual and time variation of a 'pdata.frame' (and other objects),
+#' \code{\link{lag}} for lagged (and leading) values of a 'pseries' object.\cr
+#' \code{\link{pseries}}, \code{\link{data.frame}}, \code{\link{pdata.frame}}.
+#' @keywords attribute
+#' @examples
+#' 
+#' # take data and make it non-consecutive
+#' # by deletion of 2nd row (2nd time period for first individual)
+#' data("Grunfeld", package = "plm")
+#' nrow(Grunfeld)                             # 200 rows
+#' Grunfeld_missing_period <- Grunfeld[-2, ]
+#' is.pconsecutive(Grunfeld_missing_period)   # check for consecutiveness
+#' make.pconsecutive(Grunfeld_missing_period) # make it consecutiveness
+#' 
+#' 
+#' # argument balanced:
+#' # First, make data non-consecutive and unbalanced
+#' # by deletion of 2nd time period (year 1936) for all individuals
+#' # and more time periods for first individual only
+#' Grunfeld_unbalanced <- Grunfeld[Grunfeld$year != 1936, ]
+#' Grunfeld_unbalanced <- Grunfeld_unbalanced[-c(1,4), ]
+#' all(is.pconsecutive(Grunfeld_unbalanced)) # FALSE
+#' pdim(Grunfeld_unbalanced)$balanced        # FALSE
+#' 
+#' g_consec_bal <- make.pconsecutive(Grunfeld_unbalanced, balanced = TRUE)
+#' all(is.pconsecutive(g_consec_bal)) # TRUE
+#' pdim(g_consec_bal)$balanced        # TRUE
+#' nrow(g_consec_bal)                 # 200 rows
+#' head(g_consec_bal)                 # 1st individual: years 1935, 1936, 1939 are NA
+#' 
+#' g_consec <- make.pconsecutive(Grunfeld_unbalanced) # default: balanced = FALSE
+#' all(is.pconsecutive(g_consec)) # TRUE
+#' pdim(g_consec)$balanced        # FALSE
+#' nrow(g_consec)                 # 198 rows
+#' head(g_consec)                 # 1st individual: years 1935, 1936 dropped, 1939 is NA 
+#' 
+#' 
+#' # NA in 1st, 3rd time period (years 1935, 1937) for first individual
+#' Grunfeld_NA <- Grunfeld
+#' Grunfeld_NA[c(1, 3), "year"] <- NA
+#' g_NA <- make.pconsecutive(Grunfeld_NA)
+#' head(g_NA)        # 1936 is begin for 1st individual, 1937: NA for non-index vars
+#' nrow(g_NA)        # 199, year 1935 from original data is dropped
+#' 
+#' 
+#' # pdata.frame interface
+#' pGrunfeld_missing_period <- pdata.frame(Grunfeld_missing_period)
+#' make.pconsecutive(Grunfeld_missing_period)
+#' 
+#' 
+#' # pseries interface
+#' make.pconsecutive(pGrunfeld_missing_period$inv)
+#' 
+#' 
+#' # comparison to make.pbalanced (makes the data only balanced, not consecutive)
+#' g_bal <- make.pbalanced(Grunfeld_unbalanced)
+#' all(is.pconsecutive(g_bal)) # FALSE
+#' pdim(g_bal)$balanced        # TRUE
+#' nrow(g_bal) # 190 rows
+#' 
 make.pconsecutive <- function(x, ...){
   UseMethod("make.pconsecutive")
 }
@@ -245,6 +372,9 @@ make.pconsecutive <- function(x, ...){
 ##
 ##                "shared.individuals": drop individuals which don't have all time periods
 ##                                      (symmetric to "shared.times")
+
+#' @rdname make.pbalanced
+#' @export
 make.pbalanced.pdata.frame <- function(x, balance.type = c("fill", "shared.times", "shared.individuals"), ...) {
 
   if (length(balance.type) == 1 && balance.type == "shared") {
@@ -290,6 +420,8 @@ make.pbalanced.pdata.frame <- function(x, balance.type = c("fill", "shared.times
 } ## END make.pbalanced.pdata.frame
 
 
+#' @rdname make.pbalanced
+#' @export
 make.pbalanced.pseries <- function(x, balance.type = c("fill", "shared.times", "shared.individuals"), ...) {
 
   if (length(balance.type) == 1 && balance.type == "shared") {
@@ -341,6 +473,9 @@ make.pbalanced.pseries <- function(x, balance.type = c("fill", "shared.times", "
   return(result)
 } ## END make.pbalanced.pseries
 
+
+#' @rdname make.pbalanced
+#' @export
 make.pbalanced.data.frame <- function(x, balance.type = c("fill", "shared.times", "shared.individuals"), index = NULL, ...) {
   # NB: for data.frame interface: the data is also sorted as stack time series
 
@@ -384,6 +519,136 @@ make.pbalanced.data.frame <- function(x, balance.type = c("fill", "shared.times"
   return(result)
 } ## END make.pbalanced.data.frame
 
+
+
+#' Make data balanced
+#' 
+#' This function makes the data balanced, i.e. each individual has the same
+#' time periods, by filling in or dropping observations
+#' 
+#' (p)data.frame and pseries objects are made balanced, meaning each individual
+#' has the same time periods.  Depending on the value of \code{balance.type},
+#' the balancing is done in different ways: \itemize{ \item \code{balance.type
+#' = "fill"} (default): The union of available time periods over all
+#' individuals is taken (w/o \code{NA} values).  Missing time periods for an
+#' individual are identified and corresponding rows (elements for pseries) are
+#' inserted and filled with \code{NA} for the non--index variables (elements
+#' for a pseries).  This means, only time periods present for at least one
+#' individual are inserted, if missing.
+#' 
+#' \item \code{balance.type = "shared.times"}: The intersect of available time
+#' periods over all individuals is taken (w/o \code{NA} values).  Thus, time
+#' periods not available for all individuals are discarded, i. e., only time
+#' periods shared by all individuals are left in the result).
+#' 
+#' \item \code{balance.type = "shared.individuals"}: All available time periods
+#' are kept and those individuals are dropped for which not all time periods
+#' are available, i. e., only individuals shared by all time periods are left
+#' in the result (symmetric to \code{"shared.times"}).  }
+#' 
+#' The data are not necessarily made consecutive (regular time series with
+#' distance 1), because balancedness does not imply consecutiveness. For making
+#' the data consecutive, use \code{\link{make.pconsecutive}} (and, optionally,
+#' set argument \code{balanced = TRUE} to make consecutive and balanced, see
+#' also \bold{Examples} for a comparison of the two functions.
+#' 
+#' Note: Rows of (p)data.frames (elements for pseries) with \code{NA} values in
+#' individual or time index are not examined but silently dropped before the
+#' data are made balanced. In this case, it cannot be inferred which individual
+#' or time period is meant by the missing value(s) (see also \bold{Examples}).
+#' Especially, this means: \code{NA} values in the first/last position of the
+#' original time periods for an individual are dropped, which are usually meant
+#' to depict the beginning and ending of the time series for that individual.
+#' Thus, one might want to check if there are any \code{NA} values in the index
+#' variables before applying make.pbalanced, and especially check for \code{NA}
+#' values in the first and last position for each individual in original data
+#' and, if so, maybe set those to some meaningful begin/end value for the time
+#' series.
+#' 
+#' @aliases make.pbalanced
+#' @param x an object of class \code{pdata.frame}, \code{data.frame}, or
+#' \code{pseries};
+#' @param balance.type character, one of \code{"fill"}, \code{"shared.times"},
+#' or \code{"shared.individuals"}, see \bold{Details},
+#' @param index only relevant for \code{data.frame} interface; if \code{NULL},
+#' the first two columns of the data.frame are assumed to be the index
+#' variables; if not \code{NULL}, both dimensions ('individual', 'time') need
+#' to be specified by \code{index} as character of length 2 for data frames,
+#' for further details see \code{\link{pdata.frame}},
+#' @param \dots further arguments.
+#' @return An object of the same class as the input \code{x}, i.e. a
+#' pdata.frame, data.frame or a pseries which is made balanced based on the
+#' index variables. The returned data are sorted as a stacked time series.
+#' @author Kevin Tappe
+#' @seealso \code{\link{is.pbalanced}} to check if data are balanced;
+#' \code{\link{is.pconsecutive}} to check if data are consecutive;
+#' \code{\link{make.pconsecutive}} to make data consecutive (and, optionally,
+#' also balanced).\cr \code{\link{punbalancedness}} for two measures of
+#' unbalancedness, \code{\link{pdim}} to check the dimensions of a
+#' 'pdata.frame' (and other objects), \code{\link{pvar}} to check for
+#' individual and time variation of a 'pdata.frame' (and other objects),
+#' \code{\link{lag}} for lagging (and leading) values of a 'pseries' object.\cr
+#' \code{\link{pseries}}, \code{\link{data.frame}}, \code{\link{pdata.frame}}.
+#' @keywords attribute
+#' @examples
+#' 
+#' # take data and make it unbalanced
+#' # by deletion of 2nd row (2nd time period for first individual)
+#' data("Grunfeld", package = "plm")
+#' nrow(Grunfeld)                            # 200 rows
+#' Grunfeld_missing_period <- Grunfeld[-2, ]
+#' pdim(Grunfeld_missing_period)$balanced    # check if balanced: FALSE
+#' make.pbalanced(Grunfeld_missing_period)   # make it balanced (by filling)
+#' make.pbalanced(Grunfeld_missing_period, balance.type = "shared.times") # (shared periods)
+#' nrow(make.pbalanced(Grunfeld_missing_period))
+#' nrow(make.pbalanced(Grunfeld_missing_period, balance.type = "shared.times"))
+#' 
+#' # more complex data:
+#' # First, make data unbalanced (and non-consecutive) 
+#' # by deletion of 2nd time period (year 1936) for all individuals
+#' # and more time periods for first individual only
+#' Grunfeld_unbalanced <- Grunfeld[Grunfeld$year != 1936, ]
+#' Grunfeld_unbalanced <- Grunfeld_unbalanced[-c(1,4), ]
+#' pdim(Grunfeld_unbalanced)$balanced        # FALSE
+#' all(is.pconsecutive(Grunfeld_unbalanced)) # FALSE
+#' 
+#' g_bal <- make.pbalanced(Grunfeld_unbalanced)
+#' pdim(g_bal)$balanced        # TRUE
+#' unique(g_bal$year)          # all years but 1936
+#' nrow(g_bal)                 # 190 rows
+#' head(g_bal)                 # 1st individual: years 1935, 1939 are NA
+#' 
+#' # NA in 1st, 3rd time period (years 1935, 1937) for first individual
+#' Grunfeld_NA <- Grunfeld
+#' Grunfeld_NA[c(1, 3), "year"] <- NA
+#' g_bal_NA <- make.pbalanced(Grunfeld_NA)
+#' head(g_bal_NA)        # years 1935, 1937: NA for non-index vars
+#' nrow(g_bal_NA)        # 200
+#' 
+#' # pdata.frame interface
+#' pGrunfeld_missing_period <- pdata.frame(Grunfeld_missing_period)
+#' make.pbalanced(Grunfeld_missing_period)
+#' 
+#' # pseries interface
+#' make.pbalanced(pGrunfeld_missing_period$inv)
+#' 
+#' # comparison to make.pconsecutive
+#' g_consec <- make.pconsecutive(Grunfeld_unbalanced)
+#' all(is.pconsecutive(g_consec)) # TRUE
+#' pdim(g_consec)$balanced        # FALSE
+#' head(g_consec, 22)             # 1st individual:   no years 1935/6; 1939 is NA; 
+#'                                # other indviduals: years 1935-1954, 1936 is NA
+#' nrow(g_consec)                 # 198 rows
+#' 
+#' g_consec_bal <- make.pconsecutive(Grunfeld_unbalanced, balanced = TRUE)
+#' all(is.pconsecutive(g_consec_bal)) # TRUE
+#' pdim(g_consec_bal)$balanced        # TRUE
+#' head(g_consec_bal)                 # year 1936 is NA for all individuals
+#' nrow(g_consec_bal)                 # 200 rows
+#' 
+#' head(g_bal)                        # no year 1936 at all
+#' nrow(g_bal)                        # 190 rows
+#' 
 make.pbalanced <- function(x, balance.type = c("fill", "shared.times", "shared.individuals"), ...) {
   UseMethod("make.pbalanced")
 }

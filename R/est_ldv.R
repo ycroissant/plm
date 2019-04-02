@@ -1,3 +1,36 @@
+#' Panel estimators for limited dependent variables
+#' 
+#' Fixed and random effects estimators for truncated or censored limited
+#' dependent variable
+#' 
+#' \code{pldv} computes two kinds of models : maximum likelihood estimator with
+#' an assumed normal distribution for the individual effects and a LSQ/LAD
+#' estimator for the first-difference model.
+#' @aliases pldv
+#' @param formula a symbolic description for the model to be estimated,
+#' @param data a \code{data.frame},
+#' @param subset see \code{lm},
+#' @param weights see \code{lm},
+#' @param na.action see \code{lm},
+#' @param model one of \code{"fd"}, \code{"random"} or \code{"pooling"},
+#' @param index the indexes, see \code{\link{pdata.frame}},
+#' @param R the number of points for the gaussian quadrature,
+#' @param start a vector of starting values,
+#' @param lower the lower bound for the censored/truncated dependent variable,
+#' @param upper the upper bound for the censored/truncated dependent variable,
+#' @param objfun the objective function for the fixed effect model, one of
+#' \code{"lsq"} for least squares and \code{"lad"} for least absolute
+#' deviations,
+#' @param sample \code{"cens"} for a censored (tobit-like) sample,
+#' \code{"trunc"} for a truncated sample,
+#' @param \dots further arguments.
+#' @return An object of class \code{c("plm","panelmodel")}.
+#' @export
+#' @author Yves Croissant
+#' @references Honor\'e, Bo (1992). Trimmed LAD and least squares estimation of
+#' truncated and censored regression models with fixed effects,
+#' \emph{Econometrica}, \bold{60}(3), pp. 533--565.
+#' @keywords regression
 pldv <- function(formula, data, subset, weights, na.action,
                  model = c("fd", "random", "pooling"), index = NULL,
                  R = 20, start = NULL, lower = 0, upper = + Inf,

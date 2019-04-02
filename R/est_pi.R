@@ -1,3 +1,29 @@
+#' Chamberlain estimator and test for fixed effects
+#' 
+#' Angrist and Newey's version of the Chamberlain test
+#' 
+#' Angrist and Newey's test is based on the results of the artifactual
+#' regression of the within residuals on the covariates for all the periods.
+#' 
+#' @aliases aneweytest
+#' @param formula a symbolic description for the model to be estimated,
+#' @param data a \code{data.frame},
+#' @param subset see \code{\link{lm}},
+#' @param na.action see \code{\link{lm}},
+#' @param index the indexes,
+#' @param \dots further arguments.
+#' @return An object of class \code{"htest"}.
+#' @export
+#' @author Yves Croissant
+#' @references Angrist, J.D. and Newey, W.K. (1991). Over-identification tests
+#' in earnings functions with fixed effects, \emph{Journal of Business &
+#' Economic Statistics}, \bold{9(3)}, pp. 317--323.
+#' @keywords aneweytest
+#' @examples
+#' 
+#' data("RiceFarms", package = "plm")
+#' aneweytest(log(goutput) ~ log(seed) + log(totlabor) + log(size), RiceFarms, index = "id")
+#' 
 aneweytest <-  function(formula, data, subset, na.action, index = NULL,  ...){
     cl <- match.call(expand.dots = TRUE)
     mf <- match.call()
@@ -76,6 +102,37 @@ aneweytest <-  function(formula, data, subset, na.action, index = NULL,  ...){
     aneweytest
 }
 
+
+
+#' Chamberlain estimator and test for fixed effects
+#' 
+#' General estimator useful for testing the within specification
+#' 
+#' The Chamberlain method consists on using the covariates of all the
+#' periods as regressors. It allows to test the within specification.
+#' 
+#' @aliases piest
+#' @param formula a symbolic description for the model to be estimated,
+#' @param object,x an object of class \code{"plm"},
+#' @param data a \code{data.frame},
+#' @param subset see \code{\link{lm}},
+#' @param na.action see \code{\link{lm}},
+#' @param index the indexes,
+#' @param robust if \code{FALSE}, the error as assumed to be spherical,
+#' otherwise, a robust estimation of the covariance matrix is computed,
+#' @param \dots further arguments.
+#' @return An object of class \code{"piest"}.
+#' @export
+#' @author Yves Croissant
+#' @references Chamberlain, G. (1982) Multivariate regression for panel data,
+#' \emph{Journal of Econometrics}, \bold{18}(1), pp. 5--46.
+#' @keywords piest
+#' @examples
+#' 
+#' data("RiceFarms", package = "plm")
+#' pirice <- piest(log(goutput) ~ log(seed) + log(totlabor) + log(size), RiceFarms, index = "id")
+#' summary(pirice)
+#' 
 piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,  ...){
     cl <- match.call(expand.dots = TRUE)
     mf <- match.call()
@@ -209,8 +266,12 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
               class = c("piest", "panelmodel"))
 }
 
+#' @rdname piest
+#' @export
 print.piest <- function(x, ...) print(x$pitest)   
 
+#' @rdname piest
+#' @export
 summary.piest <- function(object,...){
 #  object$fstatistic <- Ftest(object, test = "F")
   # construct the table of coefficients
@@ -226,23 +287,10 @@ summary.piest <- function(object,...){
   object
 }
 
+#' @rdname piest
+#' @export
 print.summary.piest <- function(x, ...){
   print(x$coefficients)
   print(x$pitest)
 }
 
-## data(Produc, package="plm")
-## Produc <- subset(Produc, year >= 1970 & year < 1974)
-## T <- 3
-## N <- 8
-## K <- 2
-## data(Wages, package="plm")
-## Wages$time <- rep(1:7, 595)
-## Wages$id <- rep(1:595, each = 7)
-## Wages <- subset(Wages, time %in% c(1:T))
-## Wages <- pdata.frame(Wages, index=c("id", "time"))
-## #l <- piest(lwage ~ smsa+married, Wages)
-
-## data(Crime, package="plm")
-## plm(log(crmrte) ~ log(prbarr) + log(prbconv) + log(prbpris) + log(polpc) + log(density) + log(pctmin) + region + log(wtuc) + log(wmfg), Crime, effect = "twoways")
-## otime <- proc.time();za <- piest(log(crmrte) ~ log(prbarr) + log(prbconv) + log(prbpris) + log(polpc) + log(density) + log(pctmin) + region + log(wtuc) + log(wmfg), Crime);print(proc.time()-otime)

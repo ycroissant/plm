@@ -13,6 +13,254 @@
 ## stats). All of them have a shift argument which can be either "time"
 ## or "row".
 
+
+
+#' panel series
+#' 
+#' A class for panel series for which several useful computations and data
+#' transformations are available.
+#' 
+#' The functions \code{between}, \code{Between}, and \code{Within} perform
+#' specific data transformations, i. e. the between and within transformation.
+#' 
+#' \code{between} returns a vector containing the individual means (over time)
+#' with the length of the vector equal to the number of individuals (if
+#' \code{effect = "individual"} (default); if \code{effect = "time"}, it
+#' returns the time means (over individuals)). \code{Between} duplicates the
+#' values and returns a vector which length is the number of total
+#' observations. \code{Within} returns a vector containing the values in
+#' deviation from the individual means (if \code{effect = "individual"}, from
+#' time means if \code{effect = "time"}), the so called demeaned data.
+#' 
+#' For \code{between}, \code{Between}, and \code{Within} in presence of NA
+#' values it can be useful to supply \code{na.rm = TRUE} as an additional
+#' argument to keep as many observations as possible in the resulting
+#' transformation, see also \bold{Examples}.
+#' 
+#' @name pseries
+#' @aliases pseries
+#' @param x,object a \code{pseries} or a \code{summary.pseries}
+#'     object,
+#' @param effect character string indicating the \code{"individual"}
+#'     or \code{"time"} effect,
+#' @param idbyrow if \code{TRUE} in the \code{as.matrix} method, the
+#'     lines of the matrix are the individuals,
+#' @param rm.null if `TRUE`, for the `Within.matrix` method, remove
+#'     the empty columns,
+#' @param plot plot arguments,
+#' @param scale plot arguments,
+#' @param transparency plot arguments,
+#' @param col plot arguments,
+#' @param lwd plot arguments,
+#' @param \dots further arguments, e. g. \code{na.rm = TRUE} for
+#'     transformation functions like \code{beetween}, see
+#'     \bold{Details} and \bold{Examples}.
+#' @return All these functions return an object of class
+#'     \code{pseries}, except:\cr \code{between}, which returns a
+#'     numeric vector, \code{as.matrix}, which returns a matrix.
+#' @export
+#' @author Yves Croissant
+#' @seealso \code{\link{is.pseries}} to check if an object is a
+#'     pseries. For more functions on class 'pseries' see
+#'     \code{\link{lag}}, \code{\link{lead}}, \code{\link{diff}} for
+#'     lagging values, leading values (negative lags) and
+#'     differencing.
+#' @keywords classes
+#' @examples
+#' 
+#' # First, create a pdata.frame
+#' data("EmplUK", package = "plm")
+#' Em <- pdata.frame(EmplUK)
+#' 
+#' # Then extract a series, which becomes additionally a pseries
+#' z <- Em$output
+#' class(z)
+#' 
+#' # obtain the matrix representation
+#' as.matrix(z)
+#' 
+#' # compute the between and within transformations
+#' between(z)
+#' Within(z)
+#' 
+#' # Between replicates the values for each time observation
+#' Between(z)
+#' 
+#' # between, Between, and Within transformations on other dimension
+#' between(z, effect = "time")
+#' Between(z, effect = "time")
+#' Within(z, effect = "time")
+#' 
+#' # NA treatment for between, Between, and Within
+#' z2 <- z
+#' z2[length(z2)] <- NA # set last value to NA
+#' between(z2, na.rm = TRUE) # non-NA value for last individual
+#' Between(z2, na.rm = TRUE) # only the NA observation is lost
+#' Within(z2, na.rm = TRUE)  # only the NA observation is lost
+#' 
+#' sum(is.na(Between(z2))) # 9 observations lost due to one NA value
+#' sum(is.na(Between(z2, na.rm = TRUE))) # only the NA observation is lost
+#' sum(is.na(Within(z2))) # 9 observations lost due to one NA value
+#' sum(is.na(Within(z2, na.rm = TRUE))) # only the NA observation is lost
+#' 
+NULL
+
+
+
+#' @rdname pseries
+#' @export
+print.pseries <- function(x, ...){
+  attr(x, "index") <- NULL
+  attr(x, "class") <- base::setdiff(attr(x, "class"), "pseries")
+  if (length(attr(x, "class")) == 1 && class(x) %in% c("character", "logical", "numeric", "integer", "complex")) {
+    attr(x, "class") <- NULL
+  }
+  print(x, ...)
+}
+
+#' @rdname pseries
+#' @export
+as.matrix.pseries <- function(x, idbyrow = TRUE, ...){
+    index <- attr(x, "index")
+    id <- index[[1]]
+    time <- index[[2]]
+    time.names <- levels(time)
+    x <- split(data.frame(x, time), id)
+    x <- lapply(x, function(x){
+        rownames(x) <- x[ , 2]
+        x[ , -2, drop = FALSE]
+    })
+    x <- lapply(x, function(x){
+        x <- x[time.names, , drop = FALSE]
+        rownames(x) <- time.names
+        x
+    }
+    )
+    id.names <- names(x)
+    x <- as.matrix(as.data.frame((x)))
+    colnames(x) <- id.names
+    if (idbyrow) x <- t(x)
+    x
+}
+
+## plots a panel series by time index
+##
+## can supply any panel function, e.g. a loess smoother
+## > mypanel<-function(x,...) {
+## + panel.xyplot(x,...)
+## + panel.loess(x, col="red", ...)}
+## >
+## > plot(pres(mod), panel=mypanel)
+
+#' @rdname pseries
+#' @export
+plot.pseries <- function(x, plot = c("lattice", "superposed"),
+                         scale = FALSE, transparency = TRUE,
+                         col = "blue", lwd = 1, ...) {
+
+    if(scale) {
+      scalefun <- function(x) scale(x)
+    } else {
+        scalefun <- function(x) return(x)}
+
+    nx <- as.numeric(x)
+    ind <- attr(x, "index")[[1]]
+    tind <- attr(x, "index")[[2]] # possibly as.numeric():
+                                  # activates autom. tick
+                                  # but loses time labels
+
+    xdata <- data.frame(nx=nx, ind=ind, tind=tind)
+
+    switch(match.arg(plot),
+           lattice = {
+               ##require(lattice) # make a ggplot2 version
+               xyplot(nx ~ tind | ind, data = xdata, type = "l", col = col, ...)
+               
+           }, superposed = {
+               ylim <- c(min(tapply(scalefun(nx), ind, min, na.rm = TRUE)),
+                             max(tapply(scalefun(nx), ind, max, na.rm = TRUE)))
+               unind <- unique(ind)
+               nx1 <- nx[ind == unind[1]]
+               tind1 <- as.numeric(tind[ind == unind[1]])
+               ## plot empty plot to provide frame
+               plot(NA, xlim = c(min(as.numeric(tind)),
+                               max(as.numeric(tind))),
+                    ylim = ylim, xlab = "", ylab = "", xaxt = "n", ...)
+               axis(1, at = as.numeric(unique(tind)),
+                    labels = unique(tind))
+
+                   ## determine lwd and transparency level as a function
+                   ## of n
+               if(transparency) {
+                   alpha <- 5/length(unind)
+                   col <- heat.colors(1, alpha=alpha)
+                   lwd <- length(unind)/10
+               }
+               ## plot lines (notice: tind. are factors, so they
+               ## retain the correct labels which would be lost if
+               ## using as.numeric
+               for(i in 1:length(unind)) {
+                   nxi <- nx[ind == unind[i]]
+                   tindi <- tind[ind == unind[i]]
+                   lines(x = tindi, y = scalefun(nxi),
+                         col = col, lwd = lwd, ...)
+               }               
+           })    
+}
+
+#' @rdname pseries
+#' @export
+summary.pseries <- function(object, ...) {
+    if (!inherits(object, c("factor", "logical", "character"))) {
+        id <- attr(object, "index")[[1]]
+        time <- attr(object, "index")[[2]]
+        xm <- mean(object, na.rm = TRUE)
+        Bid <-  Between(object, na.rm = TRUE)
+        Btime <-  Between(object, effect = "time", na.rm = TRUE)
+        ## res <- structure(c(total = sumsq(object),
+        ##                    between_id = sumsq(Bid),
+        ##                    between_time = sumsq(Btime)), 
+        ##                  class = c("summary.pseries", "numeric"))
+        res <- structure(c(total = sum( (na.omit(object) - mean(object, na.rm = TRUE)) ^ 2),
+                           between_id = sum( (na.omit(Bid) - mean(Bid, na.rm = TRUE)) ^ 2),
+                           between_time = sum( (na.omit(Btime) - mean(Btime, na.rm = TRUE)) ^ 2)), 
+                           class = c("summary.pseries", "numeric"))
+        
+    } else {
+        class(object) <- setdiff(class(object), c("pseries"))
+        res <- summary(object, ...)
+        class(res) <- c("summary.pseries", class(object), class(res))
+    }
+    return(res)
+}
+
+#' @rdname pseries
+#' @export
+plot.summary.pseries <- function(x, ...){
+    x <- as.numeric(x)
+    share <- x[-1]/x[1] # vec with length == 2
+    names(share) <- c("id", "time")
+    barplot(share, ...)
+}
+
+#' @rdname pseries
+#' @export
+print.summary.pseries <- function(x, ...){
+    digits <- getOption("digits")
+    special_treatment_vars <- c("factor", "logical", "character")
+    if (!inherits(x, special_treatment_vars)) {
+        x <- as.numeric(x)
+        share <- x[-1]/x[1] # vec with length == 2
+        names(share) <- c("id", "time")
+        cat(paste("total sum of squares:", signif(x[1], digits = digits),"\n"))
+        print.default(share, ...)
+    } else {
+        class(x) <- setdiff(class(x), c("summary.pseries", special_treatment_vars))
+        print(x, ...)
+    }
+}
+
+
 Tapply <- function(x, ...){
     UseMethod("Tapply")
 }
@@ -78,20 +326,28 @@ Sum.matrix <- function(x, effect,...){
     }        
 }
 
+#' @rdname pseries
+#' @export
 Between <- function(x, ...){
     UseMethod("Between")
 }
 
+#' @rdname pseries
+#' @export
 Between.default <- function(x, effect, ...){
     if (!is.numeric(x)) stop("The Between function only applies to numeric vectors")
     Tapply(x, effect, mean, ...)
 }
 
+#' @rdname pseries
+#' @export
 Between.pseries <- function(x, effect = c("individual", "time", "group"), ...){
     effect <- match.arg(effect)
     Tapply(x, effect = effect, mean, ...)
 }
 
+#' @rdname pseries
+#' @export
 Between.matrix <- function(x, effect,...){
     #YC20180916 In the previous version the matrix wasn't returned
     #when there is no index attribute
@@ -107,15 +363,21 @@ Between.matrix <- function(x, effect,...){
     }        
 }
 
+#' @rdname pseries
+#' @export
 between <- function(x, ...){
     UseMethod("between")
 }
 
+#' @rdname pseries
+#' @export
 between.default <- function(x, effect, ...){
     if (!is.numeric(x)) stop("The between function only applies to numeric vectors")
     tapply(x, effect, mean, ...)
 }
 
+#' @rdname pseries
+#' @export
 between.pseries <- function(x, effect = c("individual", "time", "group"), ...){
     effect <- match.arg(effect)
     index <- attr(x, "index")
@@ -131,6 +393,8 @@ between.pseries <- function(x, effect = c("individual", "time", "group"), ...){
     x
 }
 
+#' @rdname pseries
+#' @export
 between.matrix <- function(x, effect,...){
     if (! effect %in% c("individual", "time", "group"))
         stop("irrelevant effect for a between transformation")
@@ -144,15 +408,21 @@ between.matrix <- function(x, effect,...){
     }        
 }
 
+#' @rdname pseries
+#' @export
 Within <- function(x, ...){
     UseMethod("Within")
 }
 
+#' @rdname pseries
+#' @export
 Within.default <- function(x, effect, ...){
     if (!is.numeric(x)) stop("the within function only applies to numeric vectors")
     x - Between(x, effect, ...)
 }
 
+#' @rdname pseries
+#' @export
 Within.pseries <- function(x, effect = c("individual", "time", "group", "twoways"), ...){
     effect <- match.arg(effect)
     if (effect != "twoways") x - Between(x, effect, ...)
@@ -170,6 +440,8 @@ Within.pseries <- function(x, effect = c("individual", "time", "group", "twoways
     }
 }
 
+#' @rdname pseries
+#' @export
 Within.matrix <- function(x, effect, rm.null = TRUE, ...){
     if (is.null(attr(x, "index"))){
         result <- Within.default(x, effect, ...)
@@ -219,23 +491,132 @@ Within.matrix <- function(x, effect, rm.null = TRUE, ...){
 # in the time dimension into account).
 
 # Generic needed only for lead (lag and diff generics are already included in base R)
+
+
+#' lag, lead, and diff for panel data
+#' 
+#' lag, lead, and diff functions for class pseries.
+#' 
+#' This set of functions perform lagging, leading (lagging in the opposite
+#' direction), and differencing operations on \code{pseries} objects, i. e.,
+#' they take the panel structure of the data into account by performing the
+#' operations per individual.
+#' 
+#' Argument \code{shift} controls the shifting of observations to be used by
+#' methods \code{lag}, \code{lead}, and \code{diff}:
+#' 
+#' \itemize{ \item\code{shift = "time"} (default): Methods respect the
+#' numerical value in the time dimension of the index.  The time dimension
+#' needs to be interpretable as a sequence t, t+1, t+2, \ldots{} where t is an
+#' integer (from a technical viewpoint,
+#' \code{as.numeric(as.character(index(your_pdata.frame)[[2]]))} needs to
+#' result in a meaningful integer).
+#' 
+#' \item\code{shift = "row": }Methods perform the shifting operation based
+#' solely on the "physical position" of the observations, i.e. neighbouring
+#' rows are shifted per individual. The value in the time index is not relevant
+#' in this case. }
+#' 
+#' For consecutive time periods per individual, a switch of shifting behaviour
+#' results in no difference. Different return values will occur for
+#' non-consecutive time periods per individual ("holes in time"), see also
+#' Examples.
+#' 
+#' @name lag_lead_diff
+#' @aliases lag
+#' @param x a \code{pseries} object,
+#' @param k an integer, the number of lags for the \code{lag} and \code{lead}
+#' methods (can also be negative).  For the \code{lag} method, a positive
+#' (negative) \code{k} gives lagged (leading) values.  For the \code{lead}
+#' method, a positive (negative) \code{k} gives leading (lagged) values, thus,
+#' \code{lag(x, k = -1)} yields the same as \code{lead(x, k = 1)}.  If \code{k}
+#' is an integer with length > 1 (\code{k = c(k1, k2, \dots{})}) a
+#' \code{matrix} with multiple lagged \code{pseries} is returned,
+#' @param lag the number of lags for the \code{diff} method, can also be of
+#' length > 1 (see argument \code{k}) (only non--negative values in argument
+#' \code{lag} are allowed for \code{diff}),
+#' @param shift character, either \code{"time"} (default) or \code{"row"}
+#' determining how the shifting in the \code{lag}/\code{lead}/\code{diff}
+#' functions is performed (see Details and Examples).
+#' @param \dots further arguments (currently none evaluated).
+#' @return \itemize{ \item An object of class \code{pseries}, if the argument
+#' specifying the lag has length 1 (argument \code{k} in functions \code{lag}
+#' and \code{lead}, argument \code{lag} in function \code{diff}).  \item A
+#' matrix containing the various series in its columns, if the argument
+#' specifying the lag has length > 1. }
+#' @note The sign of \code{k} in \code{lag.pseries} results in inverse
+#' behaviour compared to \code{\link[stats]{lag}} and
+#' \code{\link[zoo]{lag.zoo}}.
+#' @author Yves Croissant and Kevin Tappe
+#' @seealso To check if the time periods are consecutive per individual, see
+#' \code{\link{is.pconsecutive}}.
+#' 
+#' For further function for 'pseries' objects: \code{\link{between}},
+#' \code{\link{Between}}, \code{\link{Within}}, \code{\link{summary.pseries}},
+#' \code{\link{print.summary.pseries}}, \code{\link{as.matrix.pseries}}.
+#' @keywords classes
+#' @examples
+#' 
+#' # First, create a pdata.frame
+#' data("EmplUK", package = "plm")
+#' Em <- pdata.frame(EmplUK)
+#' 
+#' # Then extract a series, which becomes additionally a pseries
+#' z <- Em$output
+#' class(z)
+#' 
+#' # compute the first and third lag, and the difference lagged twice
+#' lag(z)
+#' lag(z, 3)
+#' diff(z, 2)
+#' 
+#' # compute negative lags (= leading values)
+#' lag(z, -1)
+#' lead(z, 1) # same as line above
+#' identical(lead(z, 1), lag(z, -1)) # TRUE
+#'  
+#' # compute more than one lag and diff at once (matrix returned)
+#' lag(z, c(1,2))
+#' diff(z, c(1,2))
+#' 
+#' ## demonstrate behaviour of shift = "time" vs. shift = "row"
+#' # delete 2nd time period for first individual (1978 is missing (not NA)):
+#' Em_hole <- Em[-2, ]
+#' is.pconsecutive(Em_hole) # check: non-consecutive for 1st individual now
+#' 
+#' # original non-consecutive data:
+#' head(Em_hole$emp, 10) 
+#' # for shift = "time", 1-1979 contains the value of former 1-1977 (2 periods lagged):
+#' head(lag(Em_hole$emp, k = 2, shift = "time"), 10)
+#' # for shift = "row", 1-1979 contains NA (2 rows lagged (and no entry for 1976):
+#' head(lag(Em_hole$emp, k = 2, shift = "row"), 10)
+#' 
+NULL
+
+#' @rdname lag_lead_diff
+#' @export
 lead <- function(x, k = 1, ...) {
   UseMethod("lead")
 }
 
-# Wrapper functions lag, lead, diff
+#' @rdname lag_lead_diff
+#' @export
 lag.pseries <- function(x, k = 1, shift = c("time", "row"), ...) {
   shift <- match.arg(shift)
   res <- if (shift == "time") lagt.pseries(x = x, k = k, ...) else lagr.pseries(x = x, k = k, ...)
   return(res)
 }
 
+#' @rdname lag_lead_diff
+#' @export
 lead.pseries <- function(x, k = 1, shift = c("time", "row"), ...) {
   shift <- match.arg(shift)
   res <- if (shift == "time") leadt.pseries(x = x, k = k, ...) else leadr.pseries(x = x, k = k, ...)
   return(res)
 }
 
+#' @rdname lag_lead_diff
+#' @export
 diff.pseries <- function(x, lag = 1, shift = c("time", "row"), ...) {
   shift <- match.arg(shift)
   res <- if (shift == "time") difft.pseries(x = x, lag = lag, ...) else diffr.pseries(x = x, lag = lag, ...)

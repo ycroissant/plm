@@ -1,6 +1,34 @@
-## some deprecated functions
-
-
+#' Deprecated functions of plm
+#' 
+#' \code{dynformula}, \code{pht}, \code{plm.data}, and \code{pvcovHC} are
+#' deprecated functions which could be removed from \pkg{plm} in a near future.
+#' 
+#' \code{dynformula} was used to construct a dynamic formula which was the
+#' first argument of \code{pgmm}. \code{pgmm} uses now multi-part formulas.
+#' 
+#' \code{pht} estimates the Hausman-Taylor model, which can now be estimated
+#' using the more general \code{plm} function.
+#' 
+#' \code{plm.data} is replaced by \code{pdata.frame}.
+#' 
+#' \code{pvcovHV} is replaced by \code{vcovHC}.
+#' 
+#' @name plm-deprecated
+#' @aliases plm-deprecated dynformula print.dynformula formula.dynformula
+#' plm.data detect_lin_dep
+#' @param object an object for the `detect_lin_dep` deprecated function
+#' @param formula a formula,
+#' @param lag.form a list containing the lag structure of each variable in the
+#' formula,
+#' @param diff.form a vector (or a list) of logical values indicating whether
+#' variables should be differenced,
+#' @param log.form a vector (or a list) of logical values indicating whether
+#' variables should be in logarithms.
+#' @param object,x an object of class \code{"plm"},
+#' @param data a \code{data.frame},
+#' @param \dots further arguments.
+#' @param indexes a vector (of length one or two) indicating the (individual
+#' and time) indexes (see Details),
 pvcovHC <- function(x, ...){
   .Deprecated(new = "pvcovHC", msg = "'pvcovHC' is deprecated, use 'vcovHC' instead for same functionality",
               old = "vcovHC")
@@ -18,6 +46,7 @@ pvcovHC <- function(x, ...){
 # The 'full' plm.data() function is kept non-exported as plm.data_depr_orig
 # due to reference and testing (see tests/test_plm.data.R)
 
+#' @rdname plm-deprecated
 plm.data <- function(x, indexes = NULL) {
 
   .Deprecated(new = "pdata.frame", msg = "use of 'plm.data' is discouraged, better use 'pdata.frame' instead",
@@ -90,6 +119,95 @@ lev2var <- function(x, ...){
 }
 
 
+#' Hausman--Taylor Estimator for Panel Data
+#' 
+#' The Hausman--Taylor estimator is an instrumental variable estimator without
+#' external instruments (function deprecated).
+#' 
+#' \code{pht} estimates panels models using the Hausman--Taylor estimator,
+#' Amemiya--MaCurdy estimator, or Breusch--Mizon--Schmidt estimator, depending
+#' on the argument \code{model}. The model is specified as a two--part formula,
+#' the second part containing the exogenous variables.
+#' 
+#' @aliases pht
+#' @param formula a symbolic description for the model to be
+#'     estimated,
+#' @param object,x an object of class \code{"plm"},
+#' @param data a \code{data.frame},
+#' @param subset see \code{\link{lm}} for \code{"plm"}, a character or
+#'     numeric vector indicating a subset of the table of coefficient
+#'     to be printed for \code{"print.summary.plm"},
+#' @param na.action see \code{\link{lm}},
+#' @param model one of \code{"ht"} for Hausman--Taylor, \code{"am"}
+#'     for Amemiya--MaCurdy and \code{"bms"} for
+#'     Breusch--Mizon--Schmidt,
+#' @param index the indexes,
+#' @param digits digits,
+#' @param width the maximum length of the lines in the print output,
+#' @param \dots further arguments.
+#' @return An object of class \code{c("pht", "plm", "panelmodel")}.
+#' 
+#' A \code{"pht"} object contains the same elements as \code{plm}
+#' object, with a further argument called \code{varlist} which
+#' describes the typology of the variables. It has \code{summary} and
+#' \code{print.summary} methods.
+#' @note The function \code{pht} is deprecated. Please use function
+#'     \code{plm} to estimate Taylor--Hausman models like this with a
+#'     three-part formula as shown in the example:\cr
+#'     \code{plm(<formula>, random.method = "ht", model = "random",
+#'     inst.method = "baltagi")}. The Amemiya--MaCurdy estimator and
+#'     the Breusch--Mizon--Schmidt estimator is computed likewise with
+#'     \code{plm}.
+#' @author Yves Croissant
+#' @references
+#' 
+#' Amemiya, T. and MaCurdy, T.E. (1986) Instrumental--variable estimation of an
+#' error components model, \emph{Econometrica}, \bold{54}(4), pp. 869--880.
+#' 
+#' Baltagi, Badi H. (2013) \emph{Econometric Analysis of Panel Data}, 5th ed.,
+#' John Wiley and Sons.
+#' 
+#' Breusch, T.S., Mizon, G.E. and Schmidt, P. (1989) Efficient estimation using
+#' panel data, \emph{Econometrica}, \bold{57}(3), pp. 695--700.
+#' 
+#' Hausman, J.A. and Taylor W.E. (1981) Panel data and unobservable individual
+#' effects, \emph{Econometrica}, \bold{49}(6), pp. 1377--1398.
+#' @keywords regression
+#' @examples
+#' 
+#' ## replicates Baltagi (2005, 2013), table 7.4
+#' ## preferred way with plm()
+#' data("Wages", package = "plm")
+#' ht <- plm(lwage ~ wks + south + smsa + married + exp + I(exp ^ 2) + 
+#'               bluecol + ind + union + sex + black + ed |
+#'               bluecol + south + smsa + ind + sex + black |
+#'               wks + married + union + exp + I(exp ^ 2), 
+#'           data = Wages, index = 595,
+#'           random.method = "ht", model = "random", inst.method = "baltagi")
+#' summary(ht)
+#' 
+#' am <- plm(lwage ~ wks + south + smsa + married + exp + I(exp ^ 2) + 
+#'               bluecol + ind + union + sex + black + ed |
+#'               bluecol + south + smsa + ind + sex + black |
+#'               wks + married + union + exp + I(exp ^ 2), 
+#'           data = Wages, index = 595,
+#'           random.method = "ht", model = "random", inst.method = "am")
+#' summary(am)
+#' 
+#' ## deprecated way with pht() for HT
+#' #ht <- pht(lwage ~ wks + south + smsa + married + exp + I(exp^2) +
+#' #          bluecol + ind + union + sex + black + ed | 
+#' #          sex + black + bluecol + south + smsa + ind,
+#' #          data = Wages, model = "ht", index = 595)
+#' #summary(ht)
+#' # deprecated way with pht() for AM
+#' #am <- pht(lwage ~ wks + south + smsa + married + exp + I(exp^2) +
+#' #          bluecol + ind + union + sex + black + ed | 
+#' #          sex + black + bluecol + south + smsa + ind,
+#' #          data = Wages, model = "am", index = 595)
+#' #summary(am)
+#' 
+#' 
 pht <- function(formula, data, subset, na.action, model = c("ht", "am", "bms"), index = NULL, ...){
   
   .Deprecated(old = "pht",
@@ -239,12 +357,14 @@ pht <- function(formula, data, subset, na.action, model = c("ht", "am", "bms"), 
                  ercomp       = estec,
                  call         = cl,
                  args         = list(model = "ht", ht.method = model))
-  names(result$coefficients) <- colnames(result$vcov) <-
-    rownames(result$vcov) <- colnames(X)
-  class(result) <- c("pht", "plm", "panelmodel")
-  result
+    names(result$coefficients) <- colnames(result$vcov) <-
+        rownames(result$vcov) <- colnames(X)
+    class(result) <- c("pht", "plm", "panelmodel")
+    result
 }
 
+#' @rdname pht
+#' @export
 summary.pht <- function(object, ...){
 	object$fstatistic <- pwaldtest(object, test = "Chisq")
 	# construct the table of coefficients
@@ -253,13 +373,15 @@ summary.pht <- function(object, ...){
 	z <- b/std.err
 	p <- 2*pnorm(abs(z), lower.tail = FALSE)
 	object$coefficients <- cbind("Estimate"   = b,
-															 "Std. Error" = std.err,
-															 "z-value"    = z,
-															 "Pr(>|z|)"   = p)
+                                     "Std. Error" = std.err,
+                                     "z-value"    = z,
+                                     "Pr(>|z|)"   = p)
 	class(object) <- c("summary.pht", "pht", "plm", "panelmodel")
 	object
 }
 
+#' @rdname pht
+#' @export
 print.summary.pht <- function(x, digits = max(3, getOption("digits") - 2),
                               width = getOption("width"), subset = NULL, ...){
   formula <- formula(x)
@@ -393,6 +515,7 @@ write.lags <- function(name,lags,diff){
 
 
 
+#' @rdname plm-deprecated
 dynformula <- function(formula, lag.form = NULL, diff.form = NULL, log.form = NULL) {
     
     .Deprecated(msg = "use of 'dynformula' is deprecated, use a multi-part formula instead",
@@ -469,6 +592,7 @@ print.dynformula <- function(x,...){
     print(formula(x), ...)
 }
 
+#' @rdname plm-deprecated
 pFormula <- function(object) {
   .Deprecated(msg = "class 'pFormula' is deprecated, simply use class 'Formula'",
               old = "pFormula", new = "Formula")

@@ -1,23 +1,91 @@
-#### pbgtest
-
+#' Breusch--Godfrey Test for Panel Models
+#' 
+#' Test of serial correlation for (the idiosyncratic component of) the errors
+#' in panel models.
+#' 
+#' This Lagrange multiplier test uses the auxiliary model on
+#' (quasi-)demeaned data taken from a model of class \code{plm} which
+#' may be a \code{pooling} (default for formula interface),
+#' \code{random} or \code{within} model. It performs a
+#' Breusch--Godfrey test (using \code{bgtest} from package
+#' \CRANpkg{lmtest} on the residuals of the (quasi-)demeaned model,
+#' which should be serially uncorrelated under the null of no serial
+#' correlation in idiosyncratic errors, as illustrated in Wooldridge
+#' (2002/2010). The function takes the demeaned data, estimates the
+#' model and calls \code{bgtest}.
+#' 
+#' Unlike most other tests for serial correlation in panels, this one allows to
+#' choose the order of correlation to test for.
+#' 
+#' @aliases pbgtest
+#' @param x an object of class \code{"panelmodel"} or of class
+#'     \code{"formula"},
+#' @param order an integer indicating the order of serial correlation
+#'     to be tested for. \code{NULL} (default) uses the minimum number
+#'     of observations over the time dimension (see also section
+#'     \bold{Details} below),
+#' @param type type of test statistic to be calculated; either
+#'     \code{"Chisq"} (default) for the Chi-squared test statistic or
+#'     \code{"F"} for the F test statistic,
+#' @param data only relevant for formula interface: data set for which
+#'     the respective panel model (see \code{model}) is to be
+#'     evaluated,
+#' @param model only relevant for formula interface: compute test
+#'     statistic for model \code{pooling} (default), \code{random}, or
+#'     \code{within}.  When \code{model} is used, the \code{data}
+#'     argument needs to be passed as well,
+#' @param \dots further arguments (see \code{\link[lmtest]{bgtest}}).
+#' @return An object of class \code{"htest"}.
+#' @note The argument \code{order} defaults to the minimum number of
+#'     observations over the time dimension, while for
+#'     \code{lmtest::bgtest} it defaults to \code{1}.
+#' @export
+#' @author Giovanni Millo
+#' @seealso For the original test in package \CRANpkg{"lmtest"} see
+#'     \code{\link[lmtest]{bgtest}}.  See \code{\link{pdwtest}} for
+#'     the analogous panel Durbin--Watson test.  See
+#'     \code{\link{pbltest}}, \code{\link{pbsytest}},
+#'     \code{\link{pwartest}} and \code{\link{pwfdtest}} for other
+#'     serial correlation tests for panel models.
+#' @references Breusch, T.S. (1978), \dQuote{Testing for
+#'     autocorrelation in dynamic linear models}, \emph{Australian
+#'     Economic Papers}, \bold{17}(31), pp. 334--355.
+#' 
+#' Godfrey, L.G. (1978), \dQuote{Testing against general autoregressive and
+#' moving average error models when the regressors include lagged dependent
+#' variables}, \emph{Econometrica}, \bold{46}(6), pp. 1293--1301.
+#' 
+#' Wooldridge, J.M. (2002) \emph{Econometric Analysis of Cross Section and
+#' Panel Data}, MIT Press, pp. 288--291.
+#' 
+#' Wooldridge, J.M. (2010) \emph{Econometric Analysis of Cross Section and
+#' Panel Data}, 2nd ed., MIT Press, pp. 328--334.
+#' 
+#' Wooldridge, J.M. (2013) \emph{Introductory Econometrics: A Modern Approach},
+#' 5th ed., South-Western (Cengage Learning), Sec. 12.2, pp. 421--422.
+#' @keywords htest
+#' @examples
+#' 
+#' data("Grunfeld", package = "plm")
+#' g <- plm(inv ~ value + capital, data = Grunfeld, model = "random")
+#' 
+#' # panelmodel interface
+#' pbgtest(g)
+#' pbgtest(g, order = 4)
+#' 
+#' # formula interface
+#' pbgtest(inv ~ value + capital, data = Grunfeld, model = "random")
+#' 
+#' # F test statistic (instead of default type="Chisq")
+#' pbgtest(g, type="F")
+#' pbgtest(inv ~ value + capital, data = Grunfeld, model = "random", type = "F")
+#' 
 pbgtest <- function (x, ...) {
     UseMethod("pbgtest")
 }
 
-pbgtest.formula <- function(x, order = NULL, type = c("Chisq", "F"), data, model=c("pooling", "random", "within"), ...) {
-    ## formula method for pbgtest;
-    ## defaults to a pooling model
-    cl <- match.call(expand.dots = TRUE)
-    if (names(cl)[3] == "") names(cl)[3] <- "data"
-    if (is.null(cl$model)) cl$model <- "pooling"
-    names(cl)[2] <- "formula"
-    m <- match(plm.arg, names(cl), 0)
-    cl <- cl[c(1L,m)]
-    cl[[1L]] <- quote(plm)
-    plm.model <- eval(cl,parent.frame())
-    pbgtest(plm.model, order = order, type = type, data = data, ...)
-}
-
+#' @rdname pbgtest
+#' @export
 pbgtest.panelmodel <- function(x, order = NULL, type = c("Chisq", "F"), ...) {
     ## residual serial correlation test based on the residuals of the demeaned
     ## model (see Wooldridge (2002), p. 288) and the regular lmtest::bgtest()
@@ -57,12 +125,82 @@ pbgtest.panelmodel <- function(x, order = NULL, type = c("Chisq", "F"), ...) {
     return(bgtest)
 }
 
-#### pwtest
+#' @rdname pbgtest
+#' @export
+pbgtest.formula <- function(x, order = NULL, type = c("Chisq", "F"), data, model=c("pooling", "random", "within"), ...) {
+    ## formula method for pbgtest;
+    ## defaults to a pooling model
+    cl <- match.call(expand.dots = TRUE)
+    if (names(cl)[3] == "") names(cl)[3] <- "data"
+    if (is.null(cl$model)) cl$model <- "pooling"
+    names(cl)[2] <- "formula"
+    m <- match(plm.arg, names(cl), 0)
+    cl <- cl[c(1L,m)]
+    cl[[1L]] <- quote(plm)
+    plm.model <- eval(cl,parent.frame())
+    pbgtest(plm.model, order = order, type = type, data = data, ...)
+}
 
+#' Wooldridge's Test for Unobserved Effects in Panel Models
+#' 
+#' Semi-parametric test for the presence of (individual or time) unobserved
+#' effects in panel models.
+#' 
+#' This semi-parametric test checks the null hypothesis of zero correlation
+#' between errors of the same group. Therefore, it has power both against
+#' individual effects and, more generally, any kind of serial correlation.
+#' 
+#' The test relies on large-N asymptotics. It is valid under error
+#' heteroskedasticity and departures from normality.
+#' 
+#' The above is valid if \code{effect="individual"}, which is the most likely
+#' usage. If \code{effect="time"}, symmetrically, the test relies on large-T
+#' asymptotics and has power against time effects and, more generally, against
+#' cross-sectional correlation.
+#' 
+#' If the panelmodel interface is used, the inputted model must be a pooling
+#' model.
+#' 
+#' @aliases pwtest
+#' @param x an object of class \code{"formula"}, or an estimated model of class
+#' \code{panelmodel},
+#' @param effect the effect to be tested for, one of \code{"individual"}
+#' (default) or \code{"time"},
+#' @param data a \code{data.frame},
+#' @param \dots further arguments passed to \code{plm}.
+#' @return An object of class \code{"htest"}.
+#' @export
+#' @author Giovanni Millo
+#' @seealso \code{\link{pbltest}}, \code{\link{pbgtest}},
+#' \code{\link{pdwtest}}, \code{\link{pbsytest}}, \code{\link{pwartest}},
+#' \code{\link{pwfdtest}} for tests for serial correlation in panel models.
+#' \code{\link{plmtest}} for tests for random effects.
+#' @references Wooldridge, J.M. (2002) \emph{Econometric Analysis of Cross
+#' Section and Panel Data}, MIT Press, Sec. 10.4.4., pp. 264--265.
+#' 
+#' Wooldridge, J.M. (2010) \emph{Econometric Analysis of Cross Section and
+#' Panel Data}, 2nd ed., MIT Press, Sec. 10.4.4, pp. 299--300.
+#' @keywords htest
+#' @examples
+#' 
+#' data("Produc", package = "plm")
+#' ## formula interface
+#' pwtest(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc)
+#' pwtest(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, effect = "time")
+#' 
+#' ## panelmodel interface
+#' # first, estimate a pooling model, than compute test statistics
+#' form <- formula(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp)
+#' pool_prodc <- plm(form, data = Produc, model = "pooling")
+#' pwtest(pool_prodc) # == effect="individual"
+#' pwtest(pool_prodc, effect="time")
+#' 
 pwtest <- function(x, ...){
   UseMethod("pwtest")
 }
 
+#' @rdname pwtest
+#' @export
 pwtest.formula <- function(x, data, effect = c("individual", "time"), ...) {
   
   effect <- match.arg(effect, choices = c("individual", "time")) # match effect to pass it on to pwtest.panelmodel
@@ -89,6 +227,8 @@ pwtest.formula <- function(x, data, effect = c("individual", "time"), ...) {
   ######### plm to my code
 }
 
+#' @rdname pwtest
+#' @export
 pwtest.panelmodel <- function(x, effect = c("individual", "time"), ...) {
   if (describe(x, "model") != "pooling") stop("pwtest only relevant for pooling models")
   effect <- match.arg(effect, choices = c("individual", "time")) # was: effect <- describe(x, "effect")
@@ -176,13 +316,61 @@ pwtest.panelmodel <- function(x, effect = c("individual", "time"), ...) {
   return(RVAL)
 }
 
-
-#### pwartest
-
+#' Wooldridge Test for AR(1) Errors in FE Panel Models
+#' 
+#' Test of serial correlation for (the idiosyncratic component of) the errors
+#' in fixed--effects panel models.
+#' 
+#' As Wooldridge (2003/2010, Sec. 10.5.4) observes, under the null of no serial
+#' correlation in the errors, the residuals of a FE model must be negatively
+#' serially correlated, with \eqn{cor(\hat{u}_{it}, \hat{u}_{is})=-1/(T-1)} for
+#' each \eqn{t,s}. He suggests basing a test for this null hypothesis on a
+#' pooled regression of FE residuals on their first lag: \eqn{\hat{u}_{i,t} =
+#' \alpha + \delta \hat{u}_{i,t-1} + \eta_{i,t}}. Rejecting the restriction
+#' \eqn{\delta = -1/(T-1)} makes us conclude against the original null of no
+#' serial correlation.
+#' 
+#' \code{pwartest} estimates the \code{within} model and retrieves residuals,
+#' then estimates an AR(1) \code{pooling} model on them. The test statistic is
+#' obtained by applying a F test to the latter model to test the above
+#' restriction on \eqn{\delta}, setting the covariance matrix to \code{vcovHC}
+#' with the option \code{method="arellano"} to control for serial correlation.
+#' 
+#' Unlike the \code{\link{pbgtest}} and \code{\link{pdwtest}}, this test does
+#' not rely on large--T asymptotics and has therefore good properties in
+#' ``short'' panels.  Furthermore, it is robust to general heteroskedasticity.
+#' 
+#' @aliases pwartest
+#' @param x an object of class \code{formula} or of class \code{panelmodel},
+#' @param data a \code{data.frame},
+#' @param \dots further arguments to be passed on to \code{vcovHC} (see Details
+#' and Examples).
+#' @return An object of class \code{"htest"}.
+#' @export
+#' @author Giovanni Millo
+#' @seealso \code{\link{pwfdtest}}, \code{\link{pdwtest}},
+#' \code{\link{pbgtest}}, \code{\link{pbltest}}, \code{\link{pbsytest}}.
+#' @references Wooldridge, J.M. (2002) \emph{Econometric Analysis of Cross
+#' Section and Panel Data}, MIT Press, Sec. 10.5.4, pp. 274--276.
+#' 
+#' Wooldridge, J.M. (2010) \emph{Econometric Analysis of Cross Section and
+#' Panel Data}, 2nd ed., MIT Press, Sec. 10.5.4, pp. 310--312.
+#' @keywords htest
+#' @examples
+#' 
+#' data("EmplUK", package = "plm")
+#' pwartest(log(emp) ~ log(wage) + log(capital), data = EmplUK)
+#' 
+#' # pass argument 'type' to vcovHC used in test
+#' pwartest(log(emp) ~ log(wage) + log(capital), data = EmplUK, type = "HC3")
+#' 
+#' 
 pwartest <- function(x, ...) {
   UseMethod("pwartest")
 }
 
+#' @rdname pwartest
+#' @export
 pwartest.formula <- function(x, data, ...) {
   ## small-sample serial correlation test for FE models
   ## ref.: Wooldridge (2002/2010) 10.5.4 
@@ -199,6 +387,8 @@ pwartest.formula <- function(x, data, ...) {
   pwartest(plm.model, ...)
 }
 
+#' @rdname pwartest
+#' @export
 pwartest.panelmodel <- function(x, ...) {
   
   if (describe(x, "model") != "within") stop("pwartest only relevant for within models")
@@ -251,8 +441,6 @@ pwartest.panelmodel <- function(x, ...) {
   return(RVAL)
 }
 
-#### pbsytest
-
 ## Bera, Sosa-Escudero and Yoon type LM test for random effects
 ## under serial correlation (H0: no random effects) or the inverse;
 ## test="ar": serial corr. test robust vs. RE
@@ -280,10 +468,132 @@ pwartest.panelmodel <- function(x, ...) {
 ## Notation in code largly follows Sosa-Escudero/Bera (2008) (m in Sosa-Escudero/Bera (2008) is total number of observations -> N_obs)
 ## NB: Baltagi's book matrix A is slightly different defined: A in Baltagi is -A in Sosa-Escudera/Bera (2008)
 
+
+
+#' Bera, Sosa-Escudero and Yoon Locally--Robust Lagrange Multiplier Tests for
+#' Panel Models and Joint Test by Baltagi and Li
+#' 
+#' Test for residual serial correlation (or individual random effects) locally
+#' robust vs. individual random effects (serial correlation) for panel models
+#' and joint test of serial correlation and the random effect specification by
+#' Baltagi and Li.
+#' 
+#' These Lagrange multiplier tests are robust vs. local misspecification of the
+#' alternative hypothesis, i.e. they test the null of serially uncorrelated
+#' residuals against AR(1) residuals in a pooling model, allowing for local
+#' departures from the assumption of no random effects; or they test the null
+#' of no random effects allowing for local departures from the assumption of no
+#' serial correlation in residuals.  They use only the residuals of the pooled
+#' OLS model and correct for local misspecification as outlined in Bera
+#' \emph{et al.} (2001).
+#' 
+#' For \code{test = "re"}, the default (\code{re.normal = TRUE}) is to compute
+#' a one-sided test which is expected to lead to a more powerful test
+#' (asymptotically N(0,1) distributed).  Setting \code{re.normal = FALSE} gives
+#' the two-sided test (asymptotically chi-squared(2) distributed). Argument
+#' \code{re.normal} is irrelevant for all other values of \code{test}.
+#' 
+#' The joint test of serial correlation and the random effect specification
+#' (\code{test = "j"}) is due to Baltagi and Li (1991) (also mentioned in
+#' Baltagi and Li (1995), pp. 135--136) and is added for convenience under this
+#' same function.
+#' 
+#' The unbalanced version of all tests are derived in Sosa-Escudero and Bera
+#' (2008). The functions implemented are suitable for balanced as well as
+#' unbalanced panel data sets.
+#' 
+#' A concise treatment of the statistics for only balanced panels is given in
+#' Baltagi (2013), p. 108.
+#' 
+#' Here is an overview of how the various values of the \code{test} argument
+#' relate to the literature:
+#' 
+#' \itemize{ \item \code{test = "ar"}: \itemize{ \item \eqn{RS*_{\rho}} in Bera
+#' et al. (2001), p. 9 (balanced) \item \eqn{LM*_{\rho}} in Baltagi (2013), p.
+#' 108 (balanced) \item \eqn{RS*_{\lambda}} in Sosa-Escudero/Bera (2008), p. 73
+#' (unbalanced) }
+#' 
+#' \item \code{test = "re", re.normal = TRUE} (default) (one-sided test,
+#' asymptotically N(0,1) distributed): \itemize{ \item \eqn{RSO*_{\mu}} in Bera
+#' et al. (2001), p. 11 (balanced) \item \eqn{RSO*_{\mu}} in Sosa-Escudero/Bera
+#' (2008), p. 75 (unbalanced) }
+#' 
+#' \item \code{test = "re", re.normal = FALSE} (two-sided test, asymptotically
+#' chi-squared(2) distributed): \itemize{ \item \eqn{RS*_{\mu}} in Bera et al.
+#' (2001), p. 7 (balanced) \item \eqn{LM*_{\mu}} in Baltagi (2013), p. 108
+#' (balanced) \item \eqn{RS*_{\mu}} in Sosa-Escudero/Bera (2008), p. 73
+#' (unbalanced) }
+#' 
+#' \item \code{test = "j"}: \itemize{ \item \eqn{RS_{\mu\rho}} in Bera et al.
+#' (2001), p. 10 (balanced) \item \eqn{LM} in Baltagi/Li (2001), p. 279
+#' (balanced) \item \eqn{LM_{1}} in Baltagi and Li (1995), pp. 135--136
+#' (balanced) \item \eqn{LM1} in Baltagi (2013), p. 108 (balanced) \item
+#' \eqn{RS_{\lambda\rho}} in Sosa-Escudero/Bera (2008), p. 74 (unbalanced) } }
+#' 
+#' @aliases pbsytest
+#' @param x an object of class \code{formula} or of class \code{panelmodel},
+#' @param data a \code{data.frame},
+#' @param test a character string indicating which test to perform:
+#' first--order serial correlation (\code{"ar"}), random effects (\code{"re"})
+#' or joint test for either of them (\code{"j"}),
+#' @param re.normal logical, only relevant for \code{test = "re"}: \code{TRUE}
+#' (default) computes the one-sided \code{"re"} test, \code{FALSE} the
+#' two-sided test (see also Details); not relevant for other values of
+#' \code{test} and, thus, should be \code{NULL},
+#' @param \dots further arguments.
+#' @return An object of class \code{"htest"}.
+#' @export
+#' @author Giovanni Millo (initial implementation) & Kevin Tappe (extension to
+#' unbalanced panels)
+#' @seealso \code{\link{plmtest}} for individual and/or time random effects
+#' tests based on a correctly specified model; \code{\link{pbltest}},
+#' \code{\link{pbgtest}} and \code{\link{pdwtest}} for serial correlation tests
+#' in random effects models.
+#' @references Bera, A.K., Sosa-Escudero, W. and Yoon, M. (2001), Tests for the
+#' error component model in the presence of local misspecification,
+#' \emph{Journal of Econometrics}, \bold{101}(1), pp. 1--23.
+#' 
+#' Baltagi, B. H. (2013) \emph{Econometric Analysis of Panel Data}, 5th
+#' edition, Wiley.
+#' 
+#' Baltagi, B. H. and Li, Q. (1991), A joint test for serial correlation and
+#' random individual effects, \emph{Statistics and Probability Letters},
+#' \bold{11}(3), pp. 277--280.
+#' 
+#' Baltagi, B. H. and Li, Q. (1995), Testing AR(1) against MA(1) disturbances
+#' in an error component model, \emph{Journal of Econometrics}, \bold{68}(1),
+#' pp. 133--151.
+#' 
+#' Sosa-Escudero, W. and Bera, A.K. (2008), Tests for unbalanced
+#' error--components models under local misspecification, \emph{The Stata
+#' Journal}, \bold{8}(1), pp. 68--78.
+#' @keywords htest
+#' @examples
+#' 
+#' ## Bera et al. (2001), p. 13, table 1 use a subset of the original Grunfeld
+#' ## data which contains three errors -> construct this subset:
+#' data("Grunfeld", package = "plm")
+#' Grunsubset <- rbind(Grunfeld[1:80, ], Grunfeld[141:160, ])
+#' Grunsubset[Grunsubset$firm == 2 & Grunsubset$year %in% c(1940, 1952), ][["inv"]] <- c(261.6, 645.2)
+#' Grunsubset[Grunsubset$firm == 2 & Grunsubset$year == 1946, ][["capital"]] <- 232.6
+#' 
+#' ## default is AR testing (formula interface)
+#' pbsytest(inv ~ value + capital, data = Grunsubset, index = c("firm", "year"))
+#' pbsytest(inv ~ value + capital, data = Grunsubset, index = c("firm", "year"), test = "re")
+#' pbsytest(inv ~ value + capital, data = Grunsubset, index = c("firm", "year"), 
+#'   test = "re", re.normal = FALSE)
+#' pbsytest(inv ~ value + capital, data = Grunsubset, index = c("firm", "year"), test = "j")
+#' 
+#' ## plm interface
+#' mod <- plm(inv ~ value + capital, data = Grunsubset, model = "pooling")
+#' pbsytest(mod)
+#' 
 pbsytest <- function (x, ...) {
   UseMethod("pbsytest")
 }
 
+#' @rdname pbsytest
+#' @export
 pbsytest.formula <- function(x, data, ..., test = c("ar", "re", "j"), re.normal = if (test == "re") TRUE else NULL) {
 
   ######### from here generic testing interface from
@@ -303,6 +613,8 @@ pbsytest.formula <- function(x, data, ..., test = c("ar", "re", "j"), re.normal 
   pbsytest(plm.model, test = test, re.normal = re.normal, ...)
 }
 
+#' @rdname pbsytest
+#' @export
 pbsytest.panelmodel <- function(x, test = c("ar", "re", "j"), re.normal = if (test == "re") TRUE else NULL, ...) {
   test <- match.arg(test)
   if (describe(x, "model") != "pooling") stop("pbsytest only relevant for pooling models")
@@ -418,26 +730,75 @@ pbsytest.panelmodel <- function(x, test = c("ar", "re", "j"), re.normal = if (te
   return(RVAL)
 }
 
-#### pdwtest
+#' Durbin--Watson Test for Panel Models
+#' 
+#' Test of serial correlation for (the idiosyncratic component of) the errors
+#' in panel models.
+#' 
+#' This Durbin--Watson test uses the auxiliary model on
+#' (quasi-)demeaned data taken from a model of class \code{plm} which
+#' may be a \code{pooling} (the default), \code{random} or
+#' \code{within} model. It performs a Durbin--Watson test (using
+#' \code{dwtest} from package \CRANpkg{lmtest} on the residuals of the
+#' (quasi-)demeaned model, which should be serially uncorrelated under
+#' the null of no serial correlation in idiosyncratic errors. The
+#' function takes the demeaned data, estimates the model and calls
+#' \code{dwtest}. Thus, this test does not take the panel structure of
+#' the residuals into consideration; it shall not be confused with the
+#' generalized Durbin-Watson test for panels in \code{pbnftest}.
+#' 
+#' @aliases pdwtest
+#' @param x an object of class \code{"panelmodel"} or of class
+#'     \code{"formula"},
+#' @param data a \code{data.frame},
+#' @param \dots further arguments to be passed on to \code{dwtest},
+#'     e.g.  \code{alternative}, see \code{\link[lmtest]{dwtest}} for
+#'     further details.
+#' @return An object of class \code{"htest"}.
+#' @export
+#' @author Giovanni Millo
+#' @seealso \code{\link[lmtest]{dwtest}} for the Durbin--Watson test
+#'     in \CRANpkg{lmtest}, \code{\link{pbgtest}} for the analogous
+#'     Breusch--Godfrey test for panel models,
+#'     \code{\link[lmtest]{bgtest}} for the Breusch--Godfrey test for
+#'     serial correlation in the linear model. \code{\link{pbltest}},
+#'     \code{\link{pbsytest}}, \code{\link{pwartest}} and
+#'     \code{\link{pwfdtest}} for other serial correlation tests for
+#'     panel models.
+#' 
+#' For the Durbin-Watson test generalized to panel data models see
+#' \code{\link{pbnftest}}.
+#' @references Durbin, J. and Watson, G.S. (1950), Testing for Serial
+#' Correlation in Least Squares Regression. I, \emph{Biometrika},
+#' \bold{37}(3/4), pp. 409--428.
+#' 
+#' Durbin, J. and Watson, G.S. (1951), Testing for Serial Correlation in Least
+#' Squares Regression. II, \emph{Biometrika}, \bold{38}(1/2), pp. 159--177.
+#' 
+#' Durbin, J. and Watson, G.S. (1971), Testing for Serial Correlation in Least
+#' Squares Regression. III, \emph{Biometrika}, \bold{58}(1), pp. 1--19.
+#' 
+#' Wooldridge, J.M. (2002) \emph{Econometric Analysis of Cross Section and
+#' Panel Data}, MIT Press, p. 288.
+#' 
+#' Wooldridge, J.M. (2010) \emph{Econometric Analysis of Cross Section and
+#' Panel Data}, 2nd ed., MIT Press, p. 328.
+#' @keywords htest
+#' @examples
+#' 
+#' data("Grunfeld", package = "plm")
+#' g <- plm(inv ~ value + capital, data = Grunfeld, model="random")
+#' pdwtest(g)
+#' pdwtest(g, alternative="two.sided")
+#' ## formula interface
+#' pdwtest(inv ~ value + capital, data=Grunfeld, model="random")
+#' 
 pdwtest <- function (x, ...) {
     UseMethod("pdwtest")
 }
 
-pdwtest.formula <- function(x, data, ...) {
-  ## formula method for pdwtest;
-  ## defaults to pooling model
-
-  cl <- match.call(expand.dots = TRUE)
-  if (is.null(cl$model)) cl$model <- "pooling"
-  names(cl)[2] <- "formula"
-  if (names(cl)[3] == "") names(cl)[3] <- "data"
-  m <- match(plm.arg, names(cl), 0)
-  cl <- cl[c(1L,m)]
-  cl[[1L]] <- quote(plm)
-  plm.model <- eval(cl, parent.frame())
-  pdwtest(plm.model, ...)
-}
-
+#' @rdname pdwtest
+#' @export
 pdwtest.panelmodel <- function(x, ...) {
     ## does not respect panel structure: 
     ## residual serial correlation test based on the residuals of the demeaned
@@ -485,7 +846,24 @@ pdwtest.panelmodel <- function(x, ...) {
     return(ARtest)
 }
 
-#### pbnftest
+#' @rdname pdwtest
+#' @export
+pdwtest.formula <- function(x, data, ...) {
+  ## formula method for pdwtest;
+  ## defaults to pooling model
+
+  cl <- match.call(expand.dots = TRUE)
+  if (is.null(cl$model)) cl$model <- "pooling"
+  names(cl)[2] <- "formula"
+  if (names(cl)[3] == "") names(cl)[3] <- "data"
+  m <- match(plm.arg, names(cl), 0)
+  cl <- cl[c(1L,m)]
+  cl[[1L]] <- quote(plm)
+  plm.model <- eval(cl, parent.frame())
+  pdwtest(plm.model, ...)
+}
+
+
 
 ## references:
 ## * balanced and consecutive:
@@ -495,28 +873,88 @@ pdwtest.panelmodel <- function(x, ...) {
 ##    Baltagi/Wu (1999), Unequally spaced panel data regressions with AR(1) disturbances. Econometric Theory, 15(6), pp. 814-823.
 ##    (an example is also in Baltagi (2005/2013), p. 90/101)  
 
+
+
+#' Modified BNF--Durbin--Watson Test and Baltagi--Wu's LBI Test for Panel
+#' Models
+#' 
+#' Tests for AR(1) disturbances in panel models.
+#' 
+#' The default, \code{test = "bnf"}, gives the (modified) BNF statistic, the
+#' generalised Durbin-Watson statistic for panels. For balanced and consecutive
+#' panels, the reference is Bhargava/Franzini/Narendranathan (1982). The
+#' modified BNF is given for unbalanced and/or non-consecutive panels (d1 in
+#' formula 16 of Baltagi/Wu (1999)).
+#' 
+#' \code{test = "lbi"} yields Baltagi--Wu's LBI statistic (Baltagi/Wu (1999)),
+#' the locally best invariant test which is based on the modified BNF
+#' statistic.
+#' 
+#' No specific variants of these tests are available for random effect models.
+#' As the within estimator is consistent also under the random effects
+#' assumptions, the test for random effect models is performed by taking the
+#' within residuals.
+#' 
+#' No p-values are given for the statistics as their distribution is quite
+#' difficult. Bhargava et al. (1982) supply tabulated bounds for p = 0.05 for
+#' the balanced case and consecutive case.
+#' 
+#' For large N, Bhargava et al. (1982) suggest it is sufficient to check
+#' whether the BNF statistic is < 2 to test against positive serial
+#' correlation.
+#' 
+#' @aliases pbnftest
+#' @param x an object of class \code{"panelmodel"} or of class
+#' \code{"formula"},
+#' @param test a character indicating the test to be performed, either
+#' \code{"bnf"} or \code{"lbi"} for the (modified) BNF statistic or
+#' Baltagi--Wu's LBI statistic, respectively,
+#' @param data a \code{data.frame} (only relevant for formula interface),
+#' @param model a character indicating on which type of model the test shall be
+#' performed (\code{"pooling"}, \code{"within"}, \code{"random"}, only relevant
+#' for formula interface),
+#' @param \dots only relevant for formula interface: further arguments to
+#' specify the model to test (arguments passed on to plm()), e.g.
+#' \code{effect}.
+#' @return An object of class \code{"htest"}.
+#' @export
+#' @author Kevin Tappe
+#' @seealso \code{\link{pdwtest}} for the original Durbin--Watson test using
+#' (quasi-)demeaned residuals of the panel model without taking the panel
+#' structure into account. \code{\link{pbltest}}, \code{\link{pbsytest}},
+#' \code{\link{pwartest}} and \code{\link{pwfdtest}} for other serial
+#' correlation tests for panel models.
+#' @references Baltagi, B.H. (2013) \emph{Econometric Analysis of Panel Data},
+#' 5th ed., John Wiley and Sons, pp. 100--101, 109--110.
+#' 
+#' Baltagi, B. H. and Wu, P. X. (1999), Unequally spaced panel data regressions
+#' with AR(1) disturbances. \emph{Econometric Theory}, \bold{15}(6), pp.
+#' 814--823.
+#' 
+#' Bhargava, A., Franzini, L., and Narendranathan, W. (1982), Serial
+#' Correlation and the Fixed Effects Model, \emph{Review of Economic Studies},
+#' \bold{XLIX}(4), pp. 533--549.
+#' @keywords htest
+#' @examples
+#' 
+#' data("Grunfeld", package = "plm")
+#' 
+#' # formula interface, replicate Baltagi/Wu (1999), table 1, test case A:
+#' data_A <- Grunfeld[!Grunfeld[["year"]] %in% c("1943", "1944"), ]
+#' pbnftest(inv ~ value + capital, data = data_A, model = "within")
+#' pbnftest(inv ~ value + capital, data = data_A, test = "lbi", model = "within")
+#' 
+#' # replicate Baltagi (2013), p. 101, table 5.1:
+#' re <- plm(inv ~ value + capital, data = Grunfeld, model = "random")
+#' pbnftest(re)
+#' pbnftest(re, test = "lbi")
+#' 
 pbnftest <- function (x, ...) {
   UseMethod("pbnftest")
 }
 
-pbnftest.formula <- function(x, data, test = c("bnf", "lbi"), model = c("pooling", "within", "random"), ...) {
-  ## formula method for pdwtest;
-  ## defaults to pooling model
-  
-  test  <- match.arg(test)
-  model <- match.arg(model)
-  
-  cl <- match.call(expand.dots = TRUE)
-  if (is.null(model)) model <- "pooling"
-  names(cl)[2] <- "formula"
-  if (names(cl)[3] == "") names(cl)[3] <- "data"
-  m <- match(plm.arg, names(cl), 0)
-  cl <- cl[c(1L,m)]
-  cl[[1L]] <- quote(plm)
-  plm.model <- eval(cl, parent.frame())
-  pbnftest(plm.model, test = test)
-}
-
+#' @rdname pbnftest
+#' @export
 pbnftest.panelmodel <- function(x, test = c("bnf", "lbi"), ...) {
   
   test <- match.arg(test)
@@ -580,7 +1018,25 @@ pbnftest.panelmodel <- function(x, test = c("bnf", "lbi"), ...) {
   return(result) 
 }
 
-#### pbltest
+#' @rdname pbnftest
+#' @export
+pbnftest.formula <- function(x, data, test = c("bnf", "lbi"), model = c("pooling", "within", "random"), ...) {
+  ## formula method for pdwtest;
+  ## defaults to pooling model
+  
+  test  <- match.arg(test)
+  model <- match.arg(model)
+  
+  cl <- match.call(expand.dots = TRUE)
+  if (is.null(model)) model <- "pooling"
+  names(cl)[2] <- "formula"
+  if (names(cl)[3] == "") names(cl)[3] <- "data"
+  m <- match(plm.arg, names(cl), 0)
+  cl <- cl[c(1L,m)]
+  cl[[1L]] <- quote(plm)
+  plm.model <- eval(cl, parent.frame())
+  pbnftest(plm.model, test = test)
+}
 
 ######### Baltagi and Li's LM_rho|mu ########
 ## ex Baltagi and Li (1995) Testing AR(1) against MA(1)...,
@@ -594,6 +1050,63 @@ pbnftest.panelmodel <- function(x, test = c("bnf", "lbi"), ...) {
 ## on N=3000, T=10 and even 20000x10 (55'') is no problem;
 ## lme() hits the memory limit at ca. 20000x20)
 
+#' Baltagi and Li Serial Dependence Test For Random Effects Models
+#' 
+#' Baltagi and Li (1995)'s Lagrange multiplier test for AR(1) or MA(1)
+#' idiosyncratic errors in panel models with random effects.
+#' 
+#' This is a Lagrange multiplier test for the null of no serial
+#' correlation, against the alternative of either an AR(1) or an MA(1)
+#' process, in the idiosyncratic component of the error term in a
+#' random effects panel model (as the analytical expression of the
+#' test turns out to be the same under both alternatives, see Baltagi
+#' and Li (1995, 1997)). The \code{alternative} argument, defaulting
+#' to \code{twosided}, allows testing for positive serial correlation
+#' only, if set to \code{onesided}.
+#' 
+#' @aliases pbltest
+#' @param x a model formula or an estimated random--effects model of class
+#' \code{plm} ,
+#' @param data for the formula interface only: a \code{data.frame},
+#' @param alternative one of \code{"twosided"}, \code{"onesided"}. Selects
+#' either \eqn{H_A: \rho \neq 0} or \eqn{H_A: \rho = 0} (i.e., the Normal or
+#' the Chi-squared version of the test),
+#' @param index the index of the \code{data.frame},
+#' @param \dots further arguments.
+#' @return An object of class \code{"htest"}.
+#' @export
+#' @author Giovanni Millo
+#' @seealso \code{\link{pdwtest}}, \code{bgtest}, \code{\link{pbsytest}},
+#' \code{\link{pwartest}} and \code{\link{pwfdtest}} for other serial
+#' correlation tests for panel models.
+#' @references Baltagi, B.H. and Li, Q. (1995) Testing AR(1) against MA(1)
+#' disturbances in an error component model, \emph{Journal of Econometrics}
+#' \bold{68}(1), pp. 133--151.
+#' 
+#' Baltagi, B.H. and Li, Q. (1997) Monte Carlo results on pure and pretest
+#' estimators of an error component model with autocorrelated disturbances,
+#' \emph{Annales d'economie et de statistique} \bold{48}, pp. 69--82.
+#' @keywords htest
+#' @examples
+#' 
+#' data("Grunfeld", package = "plm")
+#' 
+#' # formula interface
+#' pbltest(inv ~ value + capital, data = Grunfeld)
+#' 
+#' # plm interface
+#' re_mod <- plm(inv ~ value + capital, data = Grunfeld, model = "random")
+#' pbltest(re_mod)
+#' pbltest(re_mod, alternative = "onesided")
+#' 
+pbltest <- function (x, ...) 
+{
+  UseMethod("pbltest")
+}
+
+
+#' @rdname pbltest
+#' @export
 pbltest.formula <- function(x, data, alternative = c("twosided", "onesided"), index = NULL, ...) {
  ## this version (pbltest0) based on a "formula, pdataframe" interface
 
@@ -709,6 +1222,8 @@ pbltest.formula <- function(x, data, alternative = c("twosided", "onesided"), in
   res
 }
 
+#' @rdname pbltest
+#' @export
 pbltest.plm <- function(x, alternative = c("twosided", "onesided"), ...) {
   # only continue if random effects model
   if (describe(x, "model") != "random") stop("Test is only for random effects models.")
@@ -717,17 +1232,95 @@ pbltest.plm <- function(x, alternative = c("twosided", "onesided"), ...) {
   pbltest.formula(formula(x$formula), data=cbind(index(x), x$model), index=names(index(x)), alternative = alternative, ...)
 }
 
-pbltest <- function (x, ...) 
-{
-  UseMethod("pbltest")
-}
-
-#### pwfdtest
-
+#' Wooldridge first--difference--based test for AR(1) errors in levels or
+#' first--differenced panel models
+#' 
+#' First--differencing--based test of serial correlation for (the idiosyncratic
+#' component of) the errors in either levels or first--differenced panel
+#' models.
+#' 
+#' As Wooldridge (2003/2010, Sec. 10.6.3) observes, if the
+#' idiosyncratic errors in the model in levels are uncorrelated (which
+#' we label hypothesis \code{"fe"}), then the errors of the model in
+#' first differences (FD) must be serially correlated with
+#' \eqn{cor(\hat{e}_{it}, \hat{e}_{is}) = -0.5} for each \eqn{t,s}. If
+#' on the contrary the levels model's errors are a random walk, then
+#' there must be no serial correlation in the FD errors (hypothesis
+#' \code{"fd"}). Both the fixed effects (FE) and the
+#' first--differenced (FD) estimators remain consistent under either
+#' assumption, but the relative efficiency changes: FE is more
+#' efficient under \code{"fe"}, FD under \code{"fd"}.
+#' 
+#' Wooldridge (ibid.) suggests basing a test for either hypothesis on
+#' a pooled regression of FD residuals on their first lag:
+#' \eqn{\hat{e}_{i,t}=\alpha + \rho \hat{e}_{i,t-1} +
+#' \eta_{i,t}}. Rejecting the restriction \eqn{\rho = -0.5} makes us
+#' conclude against the null of no serial correlation in errors of the
+#' levels equation (\code{"fe"}). The null hypothesis of no serial
+#' correlation in differenced errors (\code{"fd"}) is tested in a
+#' similar way, but based on the zero restriction on \eqn{\rho}
+#' (\eqn{\rho = 0}). Rejecting \code{"fe"} favours the use of the
+#' first--differences estimator and the contrary, although it is
+#' possible that both be rejected.
+#' 
+#' \code{pwfdtest} estimates the \code{fd} model (or takes an
+#' \code{fd} model as input for the panelmodel interface) and
+#' retrieves its residuals, then estimates an AR(1) \code{pooling}
+#' model on them. The test statistic is obtained by applying a F test
+#' to the latter model to test the relevant restriction on \eqn{\rho},
+#' setting the covariance matrix to \code{vcovHC} with the option
+#' \code{method="arellano"} to control for serial correlation.
+#' 
+#' Unlike the \code{pbgtest} and \code{pdwtest}, this test does not
+#' rely on large--T asymptotics and has therefore good properties in
+#' ''short'' panels.  Furthermore, it is robust to general
+#' heteroskedasticity. The \code{"fe"} version can be used to test for
+#' error autocorrelation regardless of whether the maintained
+#' specification has fixed or random effects (see Drukker (2003)).
+#' 
+#' @aliases pwfdtest
+#' @param x an object of class \code{formula} or a \code{"fd"}-model (plm
+#' object),
+#' @param data a \code{data.frame},
+#' @param h0 the null hypothesis: one of \code{"fd"}, \code{"fe"},
+#' @param \dots further arguments to be passed on to \code{vcovHC} (see Details
+#' and Examples).
+#' @return An object of class \code{"htest"}.
+#' @export
+#' @author Giovanni Millo
+#' @seealso \code{pdwtest}, \code{pbgtest}, \code{pwartest},
+#' @references Drukker, D.M. (2003) Testing for serial correlation in linear
+#' panel--data models, \emph{The Stata Journal}, \bold{3(2)}, pp. 168--177.
+#' 
+#' Wooldridge, J.M. (2003) \emph{Econometric Analysis of Cross Section and
+#' Panel Data}, MIT Press, Sec. 10.6.3, pp. 282--283.
+#' 
+#' Wooldridge, J.M. (2010) \emph{Econometric Analysis of Cross Section and
+#' Panel Data}, 2nd ed., MIT Press, Sec. 10.6.3, pp. 319--320.
+#' @keywords htest
+#' @examples
+#' 
+#' data("EmplUK" , package = "plm")
+#' pwfdtest(log(emp) ~ log(wage) + log(capital), data = EmplUK)
+#' pwfdtest(log(emp) ~ log(wage) + log(capital), data = EmplUK, h0 = "fe")
+#' 
+#' # pass argument 'type' to vcovHC used in test
+#' pwfdtest(log(emp) ~ log(wage) + log(capital), data = EmplUK, type = "HC3", h0 = "fe")
+#' 
+#' 
+#' # same with panelmodel interface
+#' mod <- plm(log(emp) ~ log(wage) + log(capital), data = EmplUK, model = "fd")
+#' pwfdtest(mod)
+#' pwfdtest(mod, h0 = "fe")
+#' pwfdtest(mod, type = "HC3", h0 = "fe")
+#' 
+#' 
 pwfdtest <- function(x, ...) {
   UseMethod("pwfdtest")
 }
 
+#' @rdname pwfdtest
+#' @export
 pwfdtest.formula <- function(x, data, ..., h0 = c("fd", "fe")) {
   cl <- match.call(expand.dots = TRUE)
   if (is.null(cl$model)) cl$model <- "fd"
@@ -740,6 +1333,8 @@ pwfdtest.formula <- function(x, data, ..., h0 = c("fd", "fe")) {
   pwfdtest(plm.model, ..., h0 = h0)
 }
 
+#' @rdname pwfdtest
+#' @export
 pwfdtest.panelmodel <- function(x, ..., h0 = c("fd", "fe")) {
   ## first-difference-based serial correlation test for panel models
   ## ref.: Wooldridge (2002/2010), par. 10.6.3 

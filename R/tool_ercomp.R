@@ -2,18 +2,84 @@ trace <- function(x) sum(diag(x))
 
 is.constant <- function(x) (max(x) - min(x)) < sqrt(.Machine$double.eps)
 
-### ercomp(formula, data, random.method, effect)
-
+#' Estimation of the error components
+#' 
+#' This function enables the estimation of the variance components of a panel
+#' model.
+#' 
+#' 
+#' @aliases ercomp
+#' @param object a \code{formula} or a \code{plm} object,
+#' @param data a \code{data.frame},
+#' @param effect the effects introduced in the model, see \code{\link{plm}} for
+#' details,
+#' @param method method of estimation for the variance components, see
+#' \code{\link{plm}} for details,
+#' @param models the models used to estimate the variance components (an
+#' alternative to the previous argument),
+#' @param dfcor a numeric vector of length 2 indicating which degree of freedom
+#' should be used,
+#' @param index the indexes,
+#' @param x an \code{ercomp} object,
+#' @param digits digits,
+#' @param \dots further arguments.
+#' @return An object of class \code{"ercomp"}: a list containing \itemize{
+#' \item \code{sigma2} a named numeric with estimates of the variance
+#' components, \item \code{theta} contains the parameter(s) used for the
+#' transformation of the variables: For a one-way model, a numeric
+#' corresponding to the selected effect (individual or time); for a two-ways
+#' model a list of length 3 with the parameters. In case of a balanced model,
+#' the numeric has length 1 while for an unbalanced model, the numerics' length
+#' equal the number of observations. }
+#' @author Yves Croissant
+#' @seealso \code{\link{plm}} where the estimates of the variance components
+#' are used if a random effects model is estimated
+#' @references
+#' 
+#' Amemiya, T. (1971) The estimation of the variances in a variance--components
+#' model, \emph{International Economic Review}, \bold{12}(1), pp. 1--13.
+#' 
+#' Nerlove, M. (1971) Further evidence on the estimation of dynamic economic
+#' relations from a time series of cross sections, \emph{Econometrica},
+#' \bold{39}(2), pp. 359--382.
+#' 
+#' Swamy, P.A.V.B. and Arora, S.S. (1972) The exact finite sample properties of
+#' the estimators of coefficients in the error components regression models,
+#' \emph{Econometrica}, \bold{40}(2), pp. 261--275.
+#' 
+#' Wallace, T.D. and Hussain, A. (1969) The use of error components models in
+#' combining cross section with time series data, \emph{Econometrica},
+#' \bold{37}(1), pp. 55--72.
+#' @keywords regression
+#' @examples
+#' 
+#' data("Produc", package = "plm")
+#' # an example of the formula method
+#' ercomp(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc,
+#'        method = "walhus", effect = "time")
+#' # same with the plm method
+#' z <- plm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
+#'          data = Produc, random.method = "walhus",
+#'          effect = "time", model = "random")
+#' ercomp(z)
+#' # a two-ways model
+#' ercomp(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc,
+#'        method = "amemiya", effect = "twoways")
+#' 
 ercomp <- function(object, ...){
   UseMethod("ercomp")
 }
 
+#' @rdname ercomp
+#' @export
 ercomp.plm <- function(object, ...){
   model <- describe(object, "model")
   if (model != "random") stop("ercomp only relevant for random models")
   object$ercomp
 }
 
+#' @rdname ercomp
+#' @export
 ercomp.pdata.frame <- function(object, effect = c("individual", "time", "twoways", "nested"),
                                method = NULL,
                                models = NULL,
@@ -24,6 +90,8 @@ ercomp.pdata.frame <- function(object, effect = c("individual", "time", "twoways
     ercomp(object, data, effect = effect, method = method, models = models, dfcor = dfcor, index = index, ...)
 }
 
+#' @rdname ercomp
+#' @export
 ercomp.formula <- function(object, data, 
                            effect = c("individual", "time", "twoways", "nested"),
                            method = NULL,
@@ -497,6 +565,8 @@ ercomp.formula <- function(object, data,
     structure(result, class = "ercomp", balanced = balanced, effect = effect)
 }
 
+#' @rdname ercomp
+#' @export
 print.ercomp <- function(x, digits = max(3, getOption("digits") - 3), ...){
     effect <- attr(x, "effect")
     balanced <- attr(x, "balanced")
@@ -585,7 +655,7 @@ swar_Between_check <- function(x, method) {
 									"time"       = pdim$nT$T)
 		# cannot use df.residual(x) here because that gives the number for the "uncompressed" Between model
 		if (length(x$aliased) >= grp) stop(paste0("model not estimable as there are ", length(x$aliased),
-																							" coefficient(s) (incl. intercept) to be estimated for the between model but only ",
-																							grp, " ", describe(x, "effect"), "(s)"))
+                                                          " coefficient(s) (incl. intercept) to be estimated for the between model but only ",
+                                                          grp, " ", describe(x, "effect"), "(s)"))
 	} else NULL
 }

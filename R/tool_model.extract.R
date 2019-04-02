@@ -3,6 +3,79 @@
 # hesoteric, but consistent with the argument list of
 # model.frame.Formula which is latter called.
 
+
+
+#' model.frame and model.matrix for panel data
+#' 
+#' Methods to create model frame and model matrix for panel data.
+#' 
+#' The \code{lhs} and \code{rhs} arguments are inherited from \code{Formula},
+#' see there for more details.\cr The \code{model.frame} methods return a
+#' \code{pdata.frame} object suitable as an input to plm's
+#' \code{model.matrix}.\cr The \code{model.matrix} methods builds a model
+#' matrix with transformations performed as specified by the \code{model} and
+#' \code{effect} arguments (and \code{theta} if \code{model = "random"} is
+#' requested), in this case the supplied \code{data} argument should be a model
+#' frame created by plm's \code{model.frame} method. If not, it is tried to
+#' construct the model frame from the data. Constructing the model frame first
+#' ensures proper NA handling, see \bold{Examples}.
+#'
+#' @name model.frame_model.matrix
+#' @aliases model.frame.pdata.frame
+#' @param object,formula an object of class \code{"pdata.frame"} or an
+#' estimated model object of class \code{"plm"},
+#' @param x a `model.frame`
+#' @param data a \code{formula}, see \bold{Details},
+#' @param effect the effects introduced in the model, one of
+#' \code{"individual"}, \code{"time"}, \code{"twoways"} or \code{"nested"},
+#' @param model one of \code{"pooling"}, \code{"within"}, \code{"Sum"},
+#' \code{"Between"}, \code{"between"}, \code{"random",} \code{"fd"} and
+#' \code{"ht"},
+#' @param theta the parameter for the transformation if \code{model =
+#' "random"},
+#' @param cstcovar.rm remove the constant columns, one of \code{"none",
+#' "intercept", "covariates", "all")},
+#' @param lhs inherited from package \code{\link[Formula]{Formula}} (see
+#' there),
+#' @param rhs inherited from package \code{\link[Formula]{Formula}} (see
+#' there),
+#' @param dot inherited from package \code{\link[Formula]{Formula}} (see
+#' there),
+#' @param \dots further arguments.
+#' @return The \code{model.frame} methods return a \code{pdata.frame}.\cr The
+#' \code{model.matrix} methods return a \code{matrix}.
+#' @author Yves Croissant
+#' @seealso \code{\link{pmodel.response}} for (transformed) response
+#' variable.\cr \code{\link[Formula]{Formula}} from package \code{Formula},
+#' especially for the \code{lhs} and \code{rhs} arguments.
+#' @keywords classes
+#' @examples
+#' 
+#' # First, make a pdata.frame
+#' data("Grunfeld", package = "plm")
+#' pGrunfeld <- pdata.frame(Grunfeld)
+#' 
+#' # then make a model frame from a pFormula and a pdata.frame
+#' #pform <- pFormula(inv ~ value + capital)
+#' #mf <- model.frame(pform, data = pGrunfeld)
+#' form <- inv ~ value
+#' mf <- model.frame(pGrunfeld, form)
+#' 
+#' # then construct the (transformed) model matrix (design matrix)
+#' # from formula and model frame
+#' #modmat <- model.matrix(pform, data = mf, model = "within")
+#' modmat <- model.matrix(mf, model = "within")
+#' 
+#' ## retrieve model frame and model matrix from an estimated plm object
+#' #fe_model <- plm(pform, data = pGrunfeld, model = "within")
+#' fe_model <- plm(form, data = pGrunfeld, model = "within")
+#' model.frame(fe_model)
+#' model.matrix(fe_model)
+#' 
+#' # same as constructed before
+#' all.equal(mf, model.frame(fe_model), check.attributes = FALSE) # TRUE
+#' all.equal(modmat, model.matrix(fe_model), check.attributes = FALSE) # TRUE
+#' 
 model.frame.pdata.frame <- function(formula, data = NULL, ...,
                                     lhs = NULL, rhs = NULL, dot = "separate"){
     pdata <- formula
@@ -21,6 +94,9 @@ model.frame.pdata.frame <- function(formula, data = NULL, ...,
               class = c("pdata.frame", class(mf)))
 }
 
+
+#' @rdname model.frame_model.matrix
+#' @export
 formula.pdata.frame <- function(x, ...){
     if (is.null(attr(x, "terms")))
         stop("formula expect a model.frame and not an ordinary pdata.frame")
@@ -28,6 +104,8 @@ formula.pdata.frame <- function(x, ...){
 }
     
 
+#' @rdname model.frame_model.matrix
+#' @export
 model.matrix.plm <- function(object, ...){
     dots <- list(...)
     model <- ifelse(is.null(dots$model), describe(object, "model"), dots$model)
@@ -47,83 +125,11 @@ model.matrix.plm <- function(object, ...){
     }
 }
 
-pmodel.response <- function(object, ...) {
-    UseMethod("pmodel.response")
-}
-
-pmodel.response.plm <- function(object, ...){
-    y <- model.response(model.frame(object))
-    dots <- list(...)
-    if (is.null(dots$model)) model <- describe(object, "model") else model <- dots$model
-    if (is.null(dots$effect))
-        effect <- describe(object, "effect") else effect <- dots$effect
-    if (is.null(dots$theta)){
-        if (describe(object, "model") == "random")
-            theta <- ercomp(object)$theta else theta <- NULL
-    }
-    else theta <- dots$theta
-    ptransform(y, model = model, effect = effect, theta = theta)
-}
-
-pmodel.response.data.frame <- function(object, ...){
-    dots <- list(...)
-    if (is.null(attr(object, "terms"))) stop("not a model.frame")
-    model <- ifelse(is.null(dots$model), "pooling", dots$model)
-    effect <- ifelse(is.null(dots$effect), "individual", dots$effect)
-    if (is.null(dots$theta)) theta <- NULL else theta <- dots$theta
-#    theta <- ifelse(is.null(dots$theta), NULL, dots$theta)
-    y <- model.response(object)
-    ptransform(y, model = model, effect = effect, theta = theta)
-}
-
-# deprecated
-pmodel.response.formula <- function(object, data, ...){
-    dots <- list(...)
-    if (is.null(data)) stop("the data argument is mandatory")
-    if (! inherits(data, "pdata.frame")) stop("the data argument must be a pdata.frame")
-    if (is.null(attr(data, "terms"))) data <- model.frame(data, object)
-    model <- dots$model
-    effect <- dots$effect
-    theta <- dots$theta
-    if (is.null(model)) model <- "pooling"
-    if (is.null(effect)) effect <- "individual"
-    if (model == "random" & is.null(theta)) stop("the theta argument is mandatory")
-    y <- model.response(data)
-    ptransform(y, model = model, effect = effect, theta = theta)
-}
-
-ptransform <- function(x, model = NULL, effect = NULL, theta = NULL, ...){
-    if (model == "pooling") return(x)
-    if (effect == "twoways" & model %in% c("between", "fd"))
-        stop("twoways effect only relevant for within, random and pooling models")
-    if (model == "within") x <- Within(x, effect)
-    if (model == "between") x <- between(x, effect)
-    if (model == "Between") x <- Between(x, effect)
-    if (model == "fd") x <- pdiff(x, "individual")
-    if (model == "random"){
-        if (is.null(theta)) stop("a theta argument should be provided")
-        if (effect %in% c("time", "individual")) x <- x - theta * Between(x, effect)
-        if (effect == "nested") x <- x - theta$id * Between(x, "individual") -
-                                    theta$gp * Between(x, "group")
-        if (effect == "twoways" & is.pbalanced(x))
-            x <- x - theta$id * Between(x, "individual") -
-                theta$time * Between(x, "time") + theta$total * mean(x)
-    }
-    
-    res <- if (model %in% c("between", "fd")) {
-    # these models "compress" the data, thus an index does not make sense here -> no pseries
-               x
-           } else {
-               structure(x, index = index(x), class = union("pseries", class(x)))
-           }
-    return(res)
-}
-
-####
-
 Mean <- function(x) matrix(.colMeans(x, nrow(x), ncol(x)),
                            nrow(x), ncol(x), byrow = TRUE)
 
+#' @rdname model.frame_model.matrix
+#' @export
 model.matrix.pdata.frame <- function(object, 
                                      model = c("pooling", "within", "Between", "Sum",
                                                "between", "mean", "random", "fd"),
@@ -193,3 +199,135 @@ model.matrix.pdata.frame <- function(object,
     }
     structure(X, assign = X.assi, contrasts = X.contr, index = index)
 }
+
+
+
+#' A function to extract the model.response
+#' 
+#' pmodel.response has several methods to conveniently extract the response of
+#' several objects.
+#' 
+#' The model response is extracted from a \code{pdata.frame} (where the
+#' response must reside in the first column; this is the case for a model
+#' frame), a \code{pFormula} + \code{data} or a \code{plm} object, and the
+#' transformation specified by \code{effect} and \code{model} is applied to
+#' it.\cr Constructing the model frame first ensures proper NA handling and the
+#' response being placed in the first column, see also \bold{Examples} for
+#' usage.
+#' 
+#' @aliases pmodel.response
+#' @param object an object of class \code{"plm"}, or a formula of class
+#' \code{"pFormula"},
+#' @param data a \code{data.frame}
+#' @param \dots further arguments.
+#' @return A pseries except if model responses' of a \code{"between"} or "fd"
+#' model as these models "compress" the data (the number of observations used
+#' in estimation is smaller than the original data due to the specific
+#' transformation). A numeric is returned for the "between" and "fd" model.
+#' @export
+#' @author Yves Croissant
+#' @seealso \code{plm}'s \code{\link{model.matrix}} for (transformed) model
+#' matrix and the corresponding \code{\link{model.frame}} method to construct a
+#' model frame.
+#' @keywords manip
+#' @examples
+#' 
+#' # First, make a pdata.frame
+#' data("Grunfeld", package = "plm")
+#' pGrunfeld <- pdata.frame(Grunfeld)
+#' 
+#' # then make a model frame from a pFormula and a pdata.frame
+#' 
+#' 
+#' form <- inv ~ value + capital
+#' mf <- model.frame(pGrunfeld, form)
+#' # construct (transformed) response of the within model
+#' resp <- pmodel.response(form, data = mf, model = "within", effect = "individual")
+#' # retrieve (transformed) response directly from model frame
+#' resp_mf <- pmodel.response(mf, model = "within", effect = "individual")
+#' 
+#' # retrieve (transformed) response from a plm object, i.e. an estimated model
+#' fe_model <- plm(form, data = pGrunfeld, model = "within")
+#' pmodel.response(fe_model)
+#' 
+#' # same as constructed before
+#' all.equal(resp, pmodel.response(fe_model), check.attributes = FALSE) # TRUE
+#' 
+pmodel.response <- function(object, ...) {
+    UseMethod("pmodel.response")
+}
+
+#' @rdname pmodel.response
+#' @export
+pmodel.response.plm <- function(object, ...){
+    y <- model.response(model.frame(object))
+    dots <- list(...)
+    if (is.null(dots$model)) model <- describe(object, "model") else model <- dots$model
+    if (is.null(dots$effect))
+        effect <- describe(object, "effect") else effect <- dots$effect
+    if (is.null(dots$theta)){
+        if (describe(object, "model") == "random")
+            theta <- ercomp(object)$theta else theta <- NULL
+    }
+    else theta <- dots$theta
+    ptransform(y, model = model, effect = effect, theta = theta)
+}
+
+#' @rdname pmodel.response
+#' @export
+pmodel.response.data.frame <- function(object, ...){
+    dots <- list(...)
+    if (is.null(attr(object, "terms"))) stop("not a model.frame")
+    model <- ifelse(is.null(dots$model), "pooling", dots$model)
+    effect <- ifelse(is.null(dots$effect), "individual", dots$effect)
+    if (is.null(dots$theta)) theta <- NULL else theta <- dots$theta
+#    theta <- ifelse(is.null(dots$theta), NULL, dots$theta)
+    y <- model.response(object)
+    ptransform(y, model = model, effect = effect, theta = theta)
+}
+
+# deprecated
+pmodel.response.formula <- function(object, data, ...){
+    dots <- list(...)
+    if (is.null(data)) stop("the data argument is mandatory")
+    if (! inherits(data, "pdata.frame")) stop("the data argument must be a pdata.frame")
+    if (is.null(attr(data, "terms"))) data <- model.frame(data, object)
+    model <- dots$model
+    effect <- dots$effect
+    theta <- dots$theta
+    if (is.null(model)) model <- "pooling"
+    if (is.null(effect)) effect <- "individual"
+    if (model == "random" & is.null(theta)) stop("the theta argument is mandatory")
+    y <- model.response(data)
+    ptransform(y, model = model, effect = effect, theta = theta)
+}
+
+ptransform <- function(x, model = NULL, effect = NULL, theta = NULL, ...){
+    if (model == "pooling") return(x)
+    if (effect == "twoways" & model %in% c("between", "fd"))
+        stop("twoways effect only relevant for within, random and pooling models")
+    if (model == "within") x <- Within(x, effect)
+    if (model == "between") x <- between(x, effect)
+    if (model == "Between") x <- Between(x, effect)
+    if (model == "fd") x <- pdiff(x, "individual")
+    if (model == "random"){
+        if (is.null(theta)) stop("a theta argument should be provided")
+        if (effect %in% c("time", "individual")) x <- x - theta * Between(x, effect)
+        if (effect == "nested") x <- x - theta$id * Between(x, "individual") -
+                                    theta$gp * Between(x, "group")
+        if (effect == "twoways" & is.pbalanced(x))
+            x <- x - theta$id * Between(x, "individual") -
+                theta$time * Between(x, "time") + theta$total * mean(x)
+    }
+    
+    res <- if (model %in% c("between", "fd")) {
+    # these models "compress" the data, thus an index does not make sense here -> no pseries
+               x
+           } else {
+               structure(x, index = index(x), class = union("pseries", class(x)))
+           }
+    return(res)
+}
+
+####
+

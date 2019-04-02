@@ -22,31 +22,45 @@
 # - fitted
 
 
+#' @rdname plm
+#' @export
 terms.panelmodel <- function(x,...){
   terms(formula(x))
 }
 
+#' @rdname plm
+#' @export
 vcov.panelmodel <- function(object,...){
   object$vcov
 }
 
+#' @rdname plm
+#' @export
 fitted.panelmodel <- function(object,...){
   object$fitted.values 
 }
 
+#' @rdname plm
+#' @export
 residuals.panelmodel <- function(object,...){
   object$residuals
 }
 
+#' @rdname plm
+#' @export
 df.residual.panelmodel <- function(object,...){
   object$df.residual
 }
 
+#' @rdname plm
+#' @export
 coef.panelmodel <- function(object,...){
   object$coefficients
 }
 
-print.panelmodel <- function(x,digits=max(3, getOption("digits") - 2),
+#' @rdname plm
+#' @export
+print.panelmodel <- function(x, digits = max(3, getOption("digits") - 2),
                              width = getOption("width"),...){
   cat("\nModel Formula: ")
   print(formula(x))
@@ -56,11 +70,57 @@ print.panelmodel <- function(x,digits=max(3, getOption("digits") - 2),
   invisible(x)
 }
 
+
+#' Extract Total Number of Observations Used in Estimated Panelmodel
+#' 
+#' This function extracts the total number of 'observations' from a fitted
+#' panel model.
+#' 
+#' The number of observations is usually the length of the residuals vector.
+#' Thus, \code{nobs} gives the number of observations actually used by the
+#' estimation procedure. It is not necessarily the number of observations of
+#' the model frame (number of rows in the model frame), because sometimes the
+#' model frame is further reduced by the estimation procedure. This is e.g. the
+#' case for first--difference models estimated by \code{plm(\dots{}, model =
+#' "fd")} where the model frame does not yet contain the differences (see also
+#' \bold{Examples}).
+#'
+#' @name nobs
+#' @aliases nobs
+#' @param object a \code{panelmodel} object for which the number of total
+#' observations is to be extracted,
+#' @param \dots further arguments.
+#' @return A single number, normally an integer.
+#' @seealso \code{\link{pdim}}
+#' @keywords attribute
+#' @examples
+#' 
+#' 
+#' # estimate a panelmodel
+#' data("Produc", package = "plm")
+#' z <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp,data=Produc,
+#'          model="random", subset = gsp > 5000)
+#'          
+#' nobs(z)       # total observations used in estimation
+#' pdim(z)$nT$N  # same information
+#' pdim(z)       # more information about the dimensions (no. of individuals and time periods)
+#' 
+#' # illustrate difference between nobs and pdim for first-difference model
+#' data("Grunfeld", package = "plm")
+#' fdmod <- plm(inv ~ value + capital, data = Grunfeld, model = "fd")
+#' nobs(fdmod)      # 190
+#' pdim(fdmod)$nT$N # 200
+#' 
+NULL
+
 # nobs() function to extract total number of observations used for estimating the panelmodel
 # like stats::nobs for lm objects
 # NB: here, use object$residuals rather than residuals(object)
 #     [b/c the latter could do NA padding once NA padding works for plm objects.
 #      NA padded residuals would yield wrong result for nobs!]
+
+#' @rdname nobs
+#' @export
 nobs.panelmodel <- function(object, ...) {
   if (inherits(object, "plm") | inherits(object, "panelmodel")) return(length(object$residuals))
     else stop("Input 'object' needs to be of class 'plm' or 'panelmodel'")
@@ -69,6 +129,9 @@ nobs.panelmodel <- function(object, ...) {
 # Almost the same as the default method except that update.formula is
 # replaced by update, so that the Formula method is used to update the
 # formula
+
+#' @rdname plm
+#' @export
 update.panelmodel <- function (object, formula., ..., evaluate = TRUE){
     if (is.null(call <- object$call)) # was: getCall(object))) 
         stop("need an object with call component")
@@ -95,6 +158,8 @@ update.panelmodel <- function (object, formula., ..., evaluate = TRUE){
     else call
 }
 
+#' @rdname plm
+#' @export
 deviance.panelmodel <- function(object, model = NULL, ...){
   if (is.null(model)) as.numeric(crossprod(resid(object)))
   else as.numeric(crossprod(residuals(object, model = model)))
@@ -104,6 +169,88 @@ deviance.panelmodel <- function(object, model = NULL, ...){
 
 # summary.plm creates a specific summary.plm object that is derived
 # from the associated plm object
+
+
+#' Summary for plm objects
+#' 
+#' The summary method for plm objects generates some more information about
+#' estimated plm models.
+#' 
+#' The \code{summary} method for plm objects (\code{summary.plm}) creates an
+#' object of class \code{c("summary.plm", "plm", "panelmodel")} that extends
+#' the plm object it is run on with various information about the estimated
+#' model like (inferential) statistics, see \bold{Value}. It has an associated
+#' print method (\code{print.summary.plm}).
+#' 
+#' @aliases summary.plm
+#' @param object an object of class \code{"plm"},
+#' @param x an object of class \code{"summary.plm"},
+#' @param subset a character or numeric vector indicating a subset of the table
+#' of coefficients to be printed for \code{"print.summary.plm"},
+#' @param vcov a variance--covariance matrix furnished by the user or a
+#' function to calculate one (see \bold{Examples}),
+#' @param digits number of digits for printed output,
+#' @param width the maximum length of the lines in the printed output,
+#' @param \dots further arguments.
+#' @return An object of class \code{c("summary.plm", "plm", "panelmodel")}.
+#' Some of its elements are carried over from the associated plm object and
+#' described there (\code{\link{plm}}). The following elements are new or
+#' changed relative to the elements of a plm object:
+#' 
+#' \item{fstatistic}{'htest' object: joint test of significance of coefficients
+#' (F or Chi-square test) (robust statistic in case of supplied argument
+#' \code{vcov}, see \code{\link{pwaldtest}} for details),}
+#' \item{coefficients}{a matrix with the estimated coefficients, standard
+#' errors, t--values, and p--values, if argument \code{vcov} was set to
+#' non-\code{NULL} the standard errors (and t-- and p--values) in their
+#' respective robust variant,} \item{vcov}{the "regular" variance--covariance
+#' matrix of the coefficients (class "matrix"),} \item{rvcov}{only present if
+#' argument \code{vcov} was set to non-\code{NULL}: the furnished
+#' variance--covariance matrix of the coefficients (class "matrix"),}
+#' \item{r.squared}{a named numeric containing the R-squared ("rsq") and the
+#' adjusted R-squared ("adjrsq") of the model,} \item{df}{an integer vector
+#' with 3 components, (p, n-p, p*), where p is the number of estimated
+#' (non-aliased) coefficients of the model, n-p are the residual degrees of
+#' freedom (n being number of observations), and p* is the total number of
+#' coefficients (incl. any aliased ones).}
+#' @export
+#' @author Yves Croissant
+#' @seealso \code{\link{plm}} for estimation of various models;
+#' \code{\link{vcovHC}} for an example of a robust estimation of
+#' variance--covariance matrix; \code{\link{r.squared}} for the function to
+#' calculate R-squared; \code{\link[stats:print.power.htest]{print.htest}} for
+#' some information about class "htest"; \code{\link{fixef}} to compute the
+#' fixed effects for "within" (=fixed effects) models and
+#' \code{\link{within_intercept}} for an "overall intercept" for such models;
+#' \code{\link{pwaldtest}}
+#' @keywords regression
+#' @examples
+#' 
+#' data("Produc", package = "plm")
+#' zz <- plm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
+#'           data = Produc, index = c("state","year"))
+#' summary(zz)
+#' 
+#' # summary with a funished vcov, passed as matrix, as function, and
+#' # as function with additional argument
+#' data("Grunfeld", package = "plm")
+#' wi <- plm(inv ~ value + capital,
+#'           data = Grunfeld, model="within", effect = "individual")
+#' summary(wi, vcov = vcovHC(wi))
+#' summary(wi, vcov = vcovHC)
+#' summary(wi, vcov = function(x) vcovHC(x, method = "white2"))
+#' 
+#' # extract F statistic
+#' wi_summary <- summary(wi)
+#' Fstat <- wi_summary[["fstatistic"]]
+#' 
+#' # extract estimates and p-values
+#' est <- wi_summary[["coefficients"]][ , "Estimate"]
+#' pval <- wi_summary[["coefficients"]][ , "Pr(>|t|)"]
+#' 
+#' # print summary only for coefficent "value"
+#' print(wi_summary, subset = "value")
+#' 
 summary.plm <- function(object, vcov = NULL, ...){
   
   vcov_arg <- vcov
@@ -162,6 +309,8 @@ summary.plm <- function(object, vcov = NULL, ...){
   object
 }
 
+#' @rdname summary.plm
+#' @export
 print.summary.plm <- function(x, digits = max(3, getOption("digits") - 2),
                               width = getOption("width"), subset = NULL, ...){
   formula <- formula(x)
@@ -251,6 +400,8 @@ print.summary.plm <- function(x, digits = max(3, getOption("digits") - 2),
   invisible(x)
 }
 
+#' @rdname plm
+#' @export
 predict.plm <- function(object, newdata = NULL, ...){
   tt <- terms(object)
   if (is.null(newdata)){
@@ -266,10 +417,14 @@ predict.plm <- function(object, newdata = NULL, ...){
   result
 }
 
+#' @rdname plm
+#' @export
 formula.plm <- function(x, ...){
   x$formula
 }
 
+#' @rdname plm
+#' @export
 plot.plm <- function(x, dx = 0.2, N = NULL, seed = 1,
                      within = TRUE, pooling = TRUE,
                      between = FALSE, random = FALSE, ...){
@@ -321,6 +476,8 @@ plot.plm <- function(x, dx = 0.2, N = NULL, seed = 1,
     }
 }
 
+#' @rdname plm
+#' @export
 residuals.plm <- function(object, model = NULL, effect = NULL,  ...){
     if (is.null(model) & is.null(effect)){
         model <- describe(object, "model")
@@ -348,6 +505,8 @@ residuals.plm <- function(object, model = NULL, effect = NULL,  ...){
     return(res)
 }
 
+#' @rdname plm
+#' @export
 fitted.plm <- function(object, model = NULL, effect = NULL, ...){
     fittedmodel <- describe(object, "model")
     if (is.null(model)) model <- fittedmodel

@@ -23,10 +23,66 @@
 #tss <- plm:::tss
 
 
+
+
+#' Common Correlated Effects estimators
+#' 
+#' Common Correlated Effects Mean Groups (CCEMG) and Pooled (CCEP) estimators
+#' for panel data with common factors (balanced or unbalanced)
+#' 
+#' \code{pcce} is a function for the estimation of linear panel models by the
+#' Common Correlated Effects Mean Groups or Pooled estimator, consistent under
+#' the hypothesis of unobserved common factors and idiosyncratic factor
+#' loadings. The CCE estimator works by augmenting the model by cross-sectional
+#' averages of the dependent variable and regressors in order to account for
+#' the common factors, and adding individual intercepts and possibly trends.
+#' 
+#' @aliases pcce
+#' @param formula a symbolic description of the model to be estimated,
+#' @param object,x an object of class \code{"pcce"},
+#' @param data a \code{data.frame},
+#' @param subset see \code{lm},
+#' @param na.action see \code{lm},
+#' @param model one of \code{"mg"}, \code{"p"}, selects Mean Groups vs. Pooled
+#' CCE model,
+#' @param index the indexes, see \code{\link{pdata.frame}},
+#' @param trend logical specifying whether an individual-specific trend has to
+#' be included,
+#' @param digits digits,
+#' @param width the maximum length of the lines in the print output,
+#' @param type one of `"defactored"` or `"standard"`,
+#' @param \dots further arguments.
+#' @return An object of class \code{c("pcce", "panelmodel")} containing:
+#' \item{coefficients}{the vector of coefficients,} \item{residuals}{the vector
+#' of (defactored) residuals,} \item{stdres}{the vector of (raw) residuals,}
+#' \item{tr.model}{the transformed data after projection on H,}
+#' \item{fitted.values}{the vector of fitted values,} \item{vcov}{the
+#' covariance matrix of the coefficients,} \item{df.residual}{degrees of
+#' freedom of the residuals,} \item{model}{a data.frame containing the
+#' variables used for the estimation,} \item{call}{the call,}
+#' \item{sigma}{always \code{NULL}, \code{sigma} is here only for compatibility
+#' reasons (to allow using the same \code{summary} and \code{print} methods as
+#' \code{pggls}),} \item{indcoef}{the matrix of individual coefficients from
+#' separate time series regressions.}
+#' @export
+#' @author Giovanni Millo
+#' @references G. Kapetanios, M. Hashem Pesaran, T. Yamagata (2011), Panels
+#' with non-stationary multifactor error structures, \emph{Journal of
+#' Econometrics}, \bold{160}(2), pp. 326--348.
+#' @keywords regression
+#' @examples
+#' 
+#' data("Produc", package = "plm")
+#' ccepmod <- pcce(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model="p")
+#' summary(ccepmod)
+#' 
+#' ccemgmod <- pcce(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model="mg")
+#' summary(ccemgmod)
+#' 
 pcce <- function (formula, data, subset, na.action,
-                   model = c("mg", "p"),
+                  model = c("mg", "p"),
                    #residuals = c("defactored", "standard"),
-                   index = NULL, trend = FALSE, ...) {
+                  index = NULL, trend = FALSE, ...) {
   
     ## Create a Formula object if necessary (from plm.R)
 #    if (!inherits(formula, "pFormula")) formula <- pFormula(formula)
@@ -349,7 +405,8 @@ pcce <- function (formula, data, subset, na.action,
     pccemod
 }
 
-
+#' @rdname pcce
+#' @export
 summary.pcce <- function(object, ...){
   pmodel <- attr(object, "pmodel")
   std.err <- sqrt(diag(object$vcov))
@@ -367,6 +424,8 @@ summary.pcce <- function(object, ...){
   return(object)
 }
 
+#' @rdname pcce
+#' @export
 print.summary.pcce <- function(x, digits = max(3, getOption("digits") - 2), width = getOption("width"), ...){
   pmodel <- attr(x, "pmodel")
   pdim <- attr(x, "pdim")
@@ -388,6 +447,8 @@ print.summary.pcce <- function(x, digits = max(3, getOption("digits") - 2), widt
   invisible(x)
 }
 
+#' @rdname pcce
+#' @export
 residuals.pcce <- function(object,
                            type = c("defactored", "standard"),
                            ...) {
@@ -405,10 +466,14 @@ residuals.pcce <- function(object,
     return(residuals)
 }
 
+#' @rdname pcce
+#' @export
 model.matrix.pcce <- function(object, ...) {
     object$tr.model$X
 }
 
+#' @rdname pcce
+#' @export
 pmodel.response.pcce <- function(object, ...) {
     object$tr.model$y
 }

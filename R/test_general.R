@@ -6,10 +6,87 @@ data.name <- function(x){
 
 ############## phtest() ############################################
 # Hausman test
+
+
+#' Hausman Test for Panel Models
+#' 
+#' Specification test for panel models.
+#' 
+#' The Hausman test (sometimes also called Durbin--Wu--Hausman test) is based
+#' on the difference of the vectors of coefficients of two different models.
+#' The \code{panelmodel} method computes the original version of the test based
+#' on a quadratic form (Hausman (1978)). The \code{formula} method, if
+#' \code{method="chisq"} (default), computes the original version of the test
+#' based on a quadratic form; if \code{method="aux"} then the
+#' auxiliary-regression-based version in Wooldridge (2010, Sec. 10.7.3.) is
+#' computed instead. Only the latter can be robustified by specifying a robust
+#' covariance estimator as a function through the argument \code{vcov} (see
+#' \bold{Examples}).
+#' 
+#' The equivalent tests in the \bold{one-way} case using a between model
+#' (either "within vs. between" or "random vs. between") (see Hausman/Taylor
+#' (1981) or Baltagi (2013), Sec. 4.3) can also be performed by \code{phtest},
+#' but only for \code{test = "chisq"}, not for the regression-based test. NB:
+#' These equivalent tests using the between model do not extend to the two-ways
+#' case.  (There are, however, some other equivalent tests, see Kang (1985) or
+#' Baltagi (2013), Sec. 4.3.7), but those are unsupported by \code{phtest}.)
+#' 
+#' @aliases phtest
+#' @param x an object of class \code{"panelmodel"} or \code{"formula"},
+#' @param x2 an object of class \code{"panelmodel"},
+#' @param model a character vector containing the names of two models
+#' (length(model) must be 2),
+#' @param data a \code{data.frame},
+#' @param method one of \code{"chisq"} or \code{"aux"},
+#' @param index an optional vector of index variables,
+#' @param vcov an optional covariance function,
+#' @param \dots further arguments to be passed on. For the formula method,
+#' place argument \code{effect} here to compare e.g. twoway models
+#' (\code{effect = "twoways"}) Note: Argument \code{effect} is not respected in
+#' the panelmodel method.
+#' @return An object of class \code{"htest"}.
+#' @export
+#' @author Yves Croissant, Giovanni Millo
+#' @references Hausman, J.A. (1978), Specification tests in econometrics,
+#' \emph{Econometrica}, \bold{46}(6), pp. 1251--1271.
+#' 
+#' Hausman, J.A./Taylor, W.E. (1981), Panel data and unobservable individual
+#' effects, \emph{Econometrica}, \bold{49}(6), pp. 1377--1398.
+#' 
+#' Kang, Suk (1985), A note on the equivalence of specification tests in the
+#' two-factor multivariate variance components model, \emph{Journal of
+#' Econometrics}, \bold{28}(2), pp. 193--203.
+#' 
+#' Wooldridge, Jeffrey M. (2010), \emph{Econometric Analysis of Cross Section
+#' and Panel Data}, 2nd ed., MIT Press, Sec. 10.7.3., pp. 328--334.
+#' 
+#' Baltagi, Badi H. (2013), \emph{Econometric Analysis of Panel Data}, 5th ed.,
+#' John Wiley and Sons., Sec. 4.3.
+#' @keywords htest
+#' @examples
+#' 
+#' data("Gasoline", package = "plm")
+#' form <- lgaspcar ~ lincomep + lrpmg + lcarpcap
+#' wi <- plm(form, data = Gasoline, model = "within")
+#' re <- plm(form, data = Gasoline, model = "random")
+#' phtest(wi, re)
+#' phtest(form, data = Gasoline)
+#' phtest(form, data = Gasoline, method = "aux")
+#' 
+#' # robust Hausman test (regression-based)
+#' phtest(form, data = Gasoline, method = "aux", vcov = vcovHC)
+#' 
+#' # robust Hausman test with vcov supplied as a
+#' # function and additional parameters
+#' phtest(form, data = Gasoline, method = "aux",
+#'   vcov = function(x) vcovHC(x, method="white2", type="HC3"))
+#' 
 phtest <- function(x,...){
   UseMethod("phtest")
 }
 
+#' @rdname phtest
+#' @export
 phtest.formula <- function(x, data, model = c("within", "random"),
                             method = c("chisq", "aux"),
                             index = NULL, vcov = NULL, ...) {
@@ -137,6 +214,8 @@ phtest.formula <- function(x, data, model = c("within", "random"),
            })
 }
 
+#' @rdname phtest
+#' @export
 phtest.panelmodel <- function(x, x2, ...){
   coef.wi <- coef(x)
   coef.re <- coef(x2)
@@ -223,10 +302,103 @@ pchibarsq <- function(q, df, weights, lower.tail = TRUE, ... ) {
 }
 
 
+
+
+#' Lagrange Multiplier Tests for Panel Models
+#' 
+#' Test of individual and/or time effects for panel models.
+#' 
+#' These Lagrange multiplier tests use only the residuals of the pooling model.
+#' The first argument of this function may be either a pooling model of class
+#' \code{plm} or an object of class \code{formula} describing the model. For
+#' inputted within (fixed effects) or random effects models, the corresponding
+#' pooling model is calculated internally first as the tests are based on the
+#' residuals of the pooling model.
+#' 
+#' The \code{"bp"} test for unbalanced panels was derived in Baltagi/Li (1990),
+#' the \code{"kw"} test for unbalanced panels in Baltagi/Chang/Li (1998). The
+#' \code{"ghm"} test and the \code{"kw"} test were extended to two-way effects
+#' in Baltagi/Chang/Li (1992).\cr For a concise overview of all these
+#' statistics see Baltagi (2013), Sec. 4.2, pp. 68--76 (for balanced panels)
+#' and Sec. 9.5, pp. 200--203 (for unbalanced panels).
+#' 
+#' @aliases plmtest
+#' @param x an object of class \code{"plm"} or a formula of class
+#' \code{"formula"},
+#' @param data a \code{data.frame},
+#' @param effect a character string indicating which effects are tested:
+#' individual effects (\code{"individual"}), time effects (\code{"time"}) or
+#' both (\code{"twoways"}),
+#' @param type a character string indicating the test to be performed:
+#' \itemize{ \item \code{"honda"} (default) for Honda (1985), \item \code{"bp"}
+#' for Breusch/Pagan (1980), \item \code{"kw"} for King/Wu (1997), or \item
+#' \code{"ghm"} for Gourieroux/Holly/Monfort (1982); } for unbalanced panel
+#' data sets, the respective unbalanced version of the tests are computed,
+#' @param \dots further arguments passed to \code{plmtest}.
+#' @return An object of class \code{"htest"}.
+#' @note For the King-Wu statistics (\code{"kw"}), the oneway statistics
+#' (\code{"individual"} and \code{"time"}) coincide with the respective Honda
+#' statistics (\code{"honda"}); twoway statistics of \code{"kw"} and
+#' \code{"honda"} differ.
+#' @export
+#' @author Yves Croissant (initial implementation), Kevin Tappe (generalization
+#' to unbalanced panels)
+#' @seealso \code{\link{pFtest}} for individual and/or time effects tests based
+#' on the within model.
+#' @references
+#' 
+#' Baltagi, B. H. (2013) \emph{Econometric Analysis of Panel Data}, 5th
+#' edition, Sec. 4.2, pp. 68--76 and Sec. 9.5, pp. 200--203.
+#' 
+#' Baltagi, B. H./Li, Q. (1990) A lagrange multiplier test for the error
+#' components model with incomplete panels, \emph{Econometric Reviews},
+#' \bold{9}(1), pp. 103--107.
+#' 
+#' Baltagi B. H./Chang, Y./Li, Q. (1992) Monte Carlo results on several new and
+#' existing tests for the error component model, \emph{Journal of Econometrics,
+#' \bold{54}(1-3), pp. 95--120.}
+#' 
+#' Baltagi B. H./Chang, Y./Li, Q. (1998) Testing for random individual and time
+#' effects using unbalanced panel data, \emph{Advances in Econometrics,
+#' \bold{13}, pp. 1--20.}
+#' 
+#' Breusch, T. S./Pagan, A. R. (1980) The Lagrange multiplier test and its
+#' applications to model specification in econometrics, \emph{Review of
+#' Economic Studies}, \bold{47}(1), pp. 239--253.
+#' 
+#' Gourieroux, C./Holly, A./Monfort, A. (1982) Likelihood ratio test, Wald
+#' test, and Kuhn--Tucker test in linear models with inequality constraints on
+#' the regression parameters, \emph{Econometrica}, \bold{50}(1), pp. 63--80.
+#' 
+#' Honda, Y. (1985) Testing the error components model with non--normal
+#' disturbances, \emph{Review of Economic Studies}, \bold{52}(4), pp. 681--690.
+#' 
+#' King, M. L./Wu, P. X. (1997) Locally optimal one--sided tests for
+#' multiparameter hypotheses, \emph{Econometric Reviews}, \bold{16}(2), pp.
+#' 131--156.
+#' @keywords htest
+#' @examples
+#' 
+#' data("Grunfeld", package = "plm")
+#' g <- plm(inv ~ value + capital, data = Grunfeld, model = "pooling")
+#' plmtest(g)
+#' plmtest(g, effect="time")
+#' plmtest(inv ~ value + capital, data = Grunfeld, type = "honda")
+#' plmtest(inv ~ value + capital, data = Grunfeld, type = "bp")
+#' plmtest(inv ~ value + capital, data = Grunfeld, type = "bp",  effect = "twoways")
+#' plmtest(inv ~ value + capital, data = Grunfeld, type = "ghm", effect = "twoways")
+#' plmtest(inv ~ value + capital, data = Grunfeld, type = "kw",  effect = "twoways")
+#' 
+#' Grunfeld_unbal <- Grunfeld[1:(nrow(Grunfeld)-1), ] # create an unbalanced panel data set
+#' g_unbal <- plm(inv ~ value + capital, data = Grunfeld_unbal, model = "pooling")
+#' plmtest(g_unbal) # unbalanced version of test is indicated in output
+#' 
 plmtest <- function(x, ...){
   UseMethod("plmtest")
 }
 
+#' @rdname plmtest
+#' @export
 plmtest.plm <- function(x,
                         effect = c("individual", "time", "twoways"),
                         type = c("honda", "bp", "ghm", "kw"),
@@ -340,7 +512,8 @@ plmtest.plm <- function(x,
   return(RVAL)
 }
 
-
+#' @rdname plmtest
+#' @export
 plmtest.formula <- function(x, data, ...,
                             effect = c("individual", "time", "twoways"),
                             type = c("honda", "bp", "ghm", "kw")) {
@@ -358,11 +531,48 @@ plmtest.formula <- function(x, data, ...,
 }
 
 
-############## pFtest() ############################################
+#' F Test for Individual and/or Time Effects
+#' 
+#' Test of individual and/or time effects based on the comparison of the
+#' \code{within} and the \code{pooling} model.
+#' 
+#' For the \code{plm} method, the argument of this function is two \code{plm}
+#' objects, the first being a within model, the second a pooling model. The
+#' effects tested are either individual, time or twoways, depending on the
+#' effects introduced in the within model.
+#' 
+#' @aliases pFtest
+#' @param x an object of class \code{"plm"} or of class \code{"formula"},
+#' @param z an object of class \code{"plm"},
+#' @param data a \code{data.frame},
+#' @param \dots further arguments.
+#' @return An object of class \code{"htest"}.
+#' @export
+#' @author Yves Croissant
+#' @seealso \code{\link{plmtest}} for Lagrange multiplier tests of individuals
+#' and/or time effects.
+#' @keywords htest
+#' @examples
+#' 
+#' data("Grunfeld", package="plm")
+#' gp <- plm(inv ~ value + capital, data = Grunfeld, model = "pooling")
+#' gi <- plm(inv ~ value + capital, data = Grunfeld,
+#'           effect = "individual", model = "within")
+#' gt <- plm(inv ~ value + capital, data = Grunfeld,
+#'           effect = "time", model = "within")
+#' gd <- plm(inv ~ value + capital, data = Grunfeld,
+#'           effect = "twoways", model = "within")
+#' pFtest(gi, gp)
+#' pFtest(gt, gp)
+#' pFtest(gd, gp)
+#' pFtest(inv ~ value + capital, data = Grunfeld, effect = "twoways")
+#' 
 pFtest <- function(x, ...){
   UseMethod("pFtest")
 }
 
+#' @rdname pFtest
+#' @export
 pFtest.formula <- function(x, data, ...){
   cl <- match.call(expand.dots = TRUE)
   cl$model <- "within"
@@ -375,6 +585,8 @@ pFtest.formula <- function(x, data, ...){
   pFtest(plm.within, plm.pooling, ...)
 }
 
+#' @rdname pFtest
+#' @export
 pFtest.plm <- function(x, z, ...){
   within <- x
   pooling <- z
@@ -448,6 +660,8 @@ trans_clubSandwich_vcov <- function(CSvcov, index) {
 }
 
 
+#' @rdname pwaldtest
+#' @export
 pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
                           df2adj = (test == "F" && !is.null(vcov) && missing(.df2)), .df1, .df2, ...) {
   model <- describe(x, "model")
@@ -585,6 +799,8 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
   return(res)
 }
 
+#' @rdname pwaldtest
+#' @export
 pwaldtest.pvcm <- function(x, ...) {
   model <- describe(x, "model")
   if(!model == "random") stop("pwaldtest.pvcm only applicable to 'random' pvcm objects")
@@ -611,33 +827,152 @@ pwaldtest.default <- function(x, ...) {
   pwaldtest.plm(x, ...)
 }
 
+
+
+#' Wald-style Chi-square Test and F Test
+#' 
+#' Wald-style Chi-square test and F test of slope coefficients being zero
+#' jointly, including robust versions of the tests.
+#' 
+#' 
+#' \code{pwaldtest} can be used stand--alone with a plm object or a pvcm object
+#' (for the latter only the 'random' type is valid and no further arguments are
+#' processed). It is also used in \code{\link{summary.plm}} to produce the F
+#' statistic and the Chi-square statistic for the joint test of coefficients.
+#' 
+#' \code{pwaldtest} performs the test if the slope coefficients of a
+#' panel regression are jointly zero. It does not perform general
+#' purpose Wald-style tests (for those, see
+#' \code{\link[lmtest]{waldtest}} (from package \CRANpkg{lmtest}) or
+#' \code{linearHypothesis} (from package \CRANpkg{car})).
+#' 
+#' If a user specified variance-covariance matrix/function is given in argument
+#' \code{vcov}, the robust version of the tests are carried out.  In that case,
+#' if the F test is requested (\code{test = "F"}) and no overwriting of the
+#' second degrees of freedom parameter is given (by supplying argument
+#' (\code{.df2})), the adjustment of the second degrees of freedom parameter is
+#' performed by default. The second degrees of freedom parameter is adjusted to
+#' be the number of unique elements of the cluster variable - 1, e. g. the
+#' number of individuals - 1. For the degrees of freedom adjustment of the F
+#' test in general, see e. g. Cameron/Miller (2015), section VII;
+#' Andress/Golsch/Schmidt (2013), pp. 126, footnote 4.
+#' 
+#' The degrees of freedom adjustment requires the vcov object supplied
+#' or created by a supplied function to carry an attribute called
+#' "cluster" with a known clustering described as a character (for now
+#' this could be either \code{"group"} or \code{"time"}). The vcovXX
+#' functions of the package \pkg{plm} provide such an attribute for
+#' their returned variance--covariance matrices. No adjustment is done
+#' for unknown descriptions given in the attribute "cluster" or when
+#' the attribute "cluster" is not present. Robust vcov
+#' objects/functions from package \CRANpkg{clubSandwich} work as
+#' inputs to \code{pwaldtest}'s F test because a they are translated
+#' internally to match the needs described above.
+#' 
+#' @aliases pwaldtest
+#' @param x an estimated model of which the coefficients should be tested
+#' (usually of class \code{"plm"}/\code{"pvcm"}),
+#' @param test a character, indicating the test to be performed, may be either
+#' \code{"Chisq"} or \code{"F"} for the Wald-style Chi-square test or F test,
+#' respectively,
+#' @param vcov \code{NULL} by default; a \code{matrix} giving a
+#' variance--covariance matrix or a function which computes such; if supplied
+#' (non \code{NULL}), the test is carried out using the variance--covariance
+#' matrix indicated resulting in a robust test,
+#' @param df2adj logical, only relevant for \code{test = "F"}, indicating
+#' whether the adjustment for clustered standard errors for the second degrees
+#' of freedom parameter should be performed (see \bold{Details}, also for
+#' further requirements regarding the variance--covariance matrix in
+#' \code{vcov} for the adjustment to be performed),
+#' @param .df1 a numeric, used if one wants to overwrite the first degrees of
+#' freedom parameter in the performed test (usually not used),
+#' @param .df2 a numeric, used if one wants to overwrite the second degrees of
+#' freedom parameter for the F test (usually not used),
+#' @param \dots further arguments (currently none).
+#' @return An object of class \code{"htest"}.
+#' @export
+#' @author Yves Croissant (initial implementation) and Kevin Tappe (extensions:
+#' vcov argument and F test's df2 adjustment)
+#' @seealso
+#' 
+#' \code{\link{vcovHC}} for an example of the vcovXX functions, a robust
+#' estimation for the variance--covariance matrix; \code{\link{summary.plm}}
+#' @references Wooldridge, J.M. (2010) \emph{Econometric Analysis of Cross
+#' Section and Panel Data}, 2nd ed., MIT Press, Sec. 4.2.3, pp. 60--62.
+#' 
+#' Andress, H.-J./Golsch, K./Schmidt, A. (2013), Applied Panel Data Analysis
+#' for Economic and Social Surveys, Springer, Heidelberg et al.
+#' 
+#' Cameron, A. C./Miller, D. L. (2015), "A Practitioner's Guide to
+#' Cluster-Robust Inference", \emph{Journal of Human Resources}, 2015,
+#' \bold{50}(2), pp. 317--373; see also the supplements at
+#' \url{http://cameron.econ.ucdavis.edu/research/papers.html}.
+#' @keywords htest
+#' @examples
+#' 
+#' data("Grunfeld", package = "plm")
+#' mod_fe <- plm(inv ~ value + capital, data = Grunfeld, model = "within")
+#' mod_re <- plm(inv ~ value + capital, data = Grunfeld, model = "random")
+#' pwaldtest(mod_fe, test = "F")
+#' pwaldtest(mod_re, test = "Chisq")
+#' 
+#' # with robust vcov (matrix, function)
+#' pwaldtest(mod_fe, vcov = vcovHC(mod_fe))
+#' pwaldtest(mod_fe, vcov = function(x) vcovHC(x, type = "HC3"))
+#' 
+#' pwaldtest(mod_fe, vcov = vcovHC(mod_fe), df2adj = FALSE) # w/o df2 adjustment
+#' 
+#' # example without attribute "cluster" in the vcov
+#' vcov_mat <- vcovHC(mod_fe)
+#' attr(vcov_mat, "cluster") <- NULL  # remove attribute
+#' pwaldtest(mod_fe, vcov = vcov_mat) # no df2 adjustment performed
+#' 
+#' 
 pwaldtest <- function(x, ...) {
   UseMethod("pwaldtest")
 }
 
-
-############## pooltest() ############################################
-
+#' Test of Poolability
+#' 
+#' A Chow test for the poolability of the data.
+#' 
+#' \code{pooltest} is a \emph{F} test of stability (or Chow test) for the
+#' coefficients of a panel model. For argument \code{x}, the estimated
+#' \code{plm} object should be a \code{"pooling"} model or a \code{"within"}
+#' model (the default); intercepts are assumed to be identical in the first
+#' case and different in the second case.
+#' 
+#' @aliases pooltest
+#' @param x an object of class \code{"plm"} for the plm method; an object of
+#' class \code{"formula"} for the formula interface,
+#' @param z an object of class \code{"pvcm"} obtained with
+#' \code{model="within"},
+#' @param data a \code{data.frame},
+#' @param \dots further arguments passed to plm.
+#' @return An object of class \code{"htest"}.
+#' @export
+#' @author Yves Croissant
+#' @keywords htest
+#' @examples
+#' 
+#' data("Gasoline", package = "plm")
+#' form <- lgaspcar ~ lincomep + lrpmg + lcarpcap
+#' gasw <- plm(form, data = Gasoline, model = "within")
+#' gasp <- plm(form, data = Gasoline, model = "pooling")
+#' gasnp <- pvcm(form, data = Gasoline, model = "within")
+#' pooltest(gasw, gasnp)
+#' pooltest(gasp, gasnp)
+#' 
+#' pooltest(form, data = Gasoline, effect = "individual", model = "within")
+#' pooltest(form, data = Gasoline, effect = "individual", model = "pooling")
+#' 
 pooltest <- function(x,...){
   UseMethod("pooltest")
 }
 
-pooltest.formula <- function(x, data, ...){
-  cl <- match.call(expand.dots = TRUE)
-  cl[[1]] <- as.name("plm")
-  names(cl)[[2]] <- "formula"
-  if (is.null(cl$effect)) cl$effect <- "individual"
-  plm.model <- eval(cl,parent.frame())
 
-  cl[[1]] <- as.name("pvcm")
-  names(cl)[[2]] <- "formula"
-  if (is.null(cl$effect)) cl$effect <- "individual"
-  cl$model <- "within"
-  pvcm.model <- eval(cl,parent.frame())
-  
-  pooltest(plm.model,pvcm.model)
-}
-
+#' @rdname pooltest
+#' @export
 pooltest.plm <- function(x, z, ...){
   rss <- deviance(x)
   uss <- sum(unlist(residuals(z))^2)
@@ -657,5 +992,23 @@ pooltest.plm <- function(x, z, ...){
               method      = "F statistic")
   class(res) <- "htest"
   res
+}
+
+#' @rdname pooltest
+#' @export
+pooltest.formula <- function(x, data, ...){
+  cl <- match.call(expand.dots = TRUE)
+  cl[[1]] <- as.name("plm")
+  names(cl)[[2]] <- "formula"
+  if (is.null(cl$effect)) cl$effect <- "individual"
+  plm.model <- eval(cl,parent.frame())
+
+  cl[[1]] <- as.name("pvcm")
+  names(cl)[[2]] <- "formula"
+  if (is.null(cl$effect)) cl$effect <- "individual"
+  cl$model <- "within"
+  pvcm.model <- eval(cl,parent.frame())
+  
+  pooltest(plm.model,pvcm.model)
 }
 

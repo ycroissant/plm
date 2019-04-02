@@ -47,6 +47,108 @@ fancy.row.names <- function(index, sep = "-") {
 }
 
 
+
+
+#' data.frame for panel data
+#' 
+#' An object of class 'pdata.frame' is a data.frame with an index attribute
+#' that describes its individual and time dimensions.
+#' 
+#' The \code{index} argument indicates the dimensions of the panel. It can be:
+#' \itemize{ \item a vector of two character strings which contains the names
+#' of the individual and of the time indexes, \item a character string which is
+#' the name of the individual index variable. In this case, the time index is
+#' created automatically and a new variable called ``time'' is added, assuming
+#' consecutive and ascending time periods in the order of the original data,
+#' \item an integer, the number of individuals. In this case, the data need to
+#' be a balanced panel and be organized as a stacked time series (successive
+#' blocks of individuals, each block being a time series for the respective
+#' individual) assuming consecutive and ascending time periods in the order of
+#' the original data. Two new variables are added: ``id'' and ``time'' which
+#' contain the individual and the time indexes.  }
+#' 
+#' The \code{"[["} and \code{"$"} extract a series from the \code{pdata.frame}.
+#' The \code{"index"} attribute is then added to the series and a class
+#' attribute \code{"pseries"} is added. The \code{"["} method behaves as for
+#' \code{data.frame}, except that the extraction is also applied to the
+#' \code{index} attribute.  A safe way to extract the index attribute is to use
+#' the function \code{\link{index}} for 'pdata.frames' (and other objects).
+#' 
+#' \code{as.data.frame} removes the index from the \code{pdata.frame} and adds
+#' it to each column.
+#' 
+#' \code{as.list} behaves by default identical to
+#' \code{\link[base:list]{as.list.data.frame}} which means it drops the
+#' attributes specific to a pdata.frame; if a list of pseries is wanted, the
+#' attribute \code{keep.attributes} can to be set to \code{TRUE}. This also
+#' makes \code{lapply} work as expected on a pdata.frame (see also
+#' \bold{Examples}).
+#' 
+#' @aliases pdata.frame print.pdata.frame [.pdata.frame [[.pdata.frame
+#' $.pdata.frame as.data.frame.pdata.frame as.list.pdata.frame
+#' @param x a \code{data.frame} for the \code{pdata.frame} function and a
+#' \code{pdata.frame} for the methods,
+#' @param i see \code{\link{Extract}},
+#' @param j see \code{\link{Extract}},
+#' @param y one of the columns of the \code{data.frame},
+#' @param index this argument indicates the individual and time indexes. See
+#' \bold{Details},
+#' @param drop see \code{\link{Extract}},
+#' @param drop.index logical, indicates whether the indexes are to be excluded
+#' from the resulting pdata.frame,
+#' @param optional see \code{\link{as.data.frame}},
+#' @param row.names \code{NULL} or logical, indicates whether ``fancy'' row
+#' names (a combination of individual index and time index) are to be added to
+#' the returned (p)data.frame (\code{NULL} and \code{FALSE} have the same
+#' meaning),
+#' @param stringsAsFactors logical, indicating whether character vectors are to
+#' be converted to factors,
+#' @param replace.non.finite logical, indicating whether values for which
+#' \code{is.finite()} yields \code{TRUE} are to be replaced by \code{NA}
+#' values, except for character variables (defaults to \code{FALSE}),
+#' @param drop.NA.series logical, indicating whether all-NA columns are to be
+#' removed from the pdata.frame (defaults to \code{FALSE}),
+#' @param drop.const.series logical, indicating whether constant columns are to
+#' be removed from the pdata.frame (defaults to \code{FALSE}),
+#' @param drop.unused.levels logical, indicating whether unused levels of
+#' factors are to be dropped (defaults to \code{FALSE}) (unused levels are
+#' always dropped from variables serving to construct the index variables),
+#' @param keep.attributes logical, only for as.list and as.data.frame methods,
+#' indicating whether the elements of the returned list/columns of the
+#' data.frame should have the pdata.frame's attributes added (default: FALSE
+#' for as.list, TRUE for as.data.frame),
+#' @param \dots further arguments
+#' @return a \code{pdata.frame} object: this is a \code{data.frame} with an
+#' \code{index} attribute which is a \code{data.frame} with two variables, the
+#' individual and the time indexes, both being factors.  The resulting
+#' pdata.frame is sorted by the individual index, then by the time index.
+#' @author Yves Croissant
+#' @seealso \code{\link{index}} to extract the index variables from a
+#' 'pdata.frame' (and other objects), \code{\link{pdim}} to check the
+#' dimensions of a 'pdata.frame' (and other objects), \code{\link{pvar}} to
+#' check for each variable if it varies cross-sectionally and over time.  To
+#' check if the time periods are consecutive per individual, see
+#' \code{\link{is.pconsecutive}}.
+#' @keywords classes
+#' @examples
+#' 
+#' # Gasoline contains two variables which are individual and time indexes
+#' data("Gasoline", package = "plm")
+#' Gas <- pdata.frame(Gasoline, index = c("country", "year"), drop.index = TRUE)
+#' 
+#' # Hedonic is an unbalanced panel, townid is the individual index
+#' data("Hedonic", package = "plm")
+#' Hed <- pdata.frame(Hedonic, index = "townid", row.names = FALSE)
+#' 
+#' # In case of balanced panel, it is sufficient to give number of individuals 
+#' # data set 'Wages' is organized as a stacked time series
+#' data("Wages", package = "plm")
+#' Wag <- pdata.frame(Wages, 595)
+#' 
+#' # lapply on a pdata.frame by making it a list of pseries first
+#' lapply(as.list(Wag[ , c("ed", "lwage")], keep.attributes = TRUE), lag)
+#' 
+#' 
 pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
                         stringsAsFactors = default.stringsAsFactors(),
                         replace.non.finite = FALSE,
@@ -345,6 +447,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 # }
 
 
+#' @rdname pdata.frame
 "[.pdata.frame" <- function(x, i, j, drop) {
     # signature of [.data.frame here
   
@@ -469,10 +572,12 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
   result
 }
 
+#' @rdname pdata.frame
 "$.pdata.frame" <- function(x, y){
     "[[.pdata.frame"(x, paste(as.name(y)))
 }
 
+#' @rdname pdata.frame
 print.pdata.frame <- function(x, ...){
   attr(x, "index") <- NULL
   class(x) <- "data.frame"
@@ -500,6 +605,8 @@ print.pdata.frame <- function(x, ...){
 #  and lapply can be used as usual, now working on a list of pseries, e.g.
 #    lapply(as.list(pdata.frame[ , your_cols], keep.attributes), lag)
 #  works as expected.
+
+#' @rdname pdata.frame
 as.list.pdata.frame <- function(x, keep.attributes = FALSE, ...) {
     if (!keep.attributes) {
         x <- as.list.data.frame(x)
@@ -522,6 +629,7 @@ as.list.pdata.frame <- function(x, keep.attributes = FALSE, ...) {
     return(x)
 }
 
+#' @rdname pdata.frame
 as.data.frame.pdata.frame <- function(x, row.names = NULL, optional = FALSE, keep.attributes = TRUE, ...){
     index <- attr(x, "index")
 
@@ -557,149 +665,49 @@ as.data.frame.pdata.frame <- function(x, row.names = NULL, optional = FALSE, kee
     return(x)
 }
 
-# pseries
 
-print.pseries <- function(x, ...){
-  attr(x, "index") <- NULL
-  attr(x, "class") <- base::setdiff(attr(x, "class"), "pseries")
-  if (length(attr(x, "class")) == 1 && class(x) %in% c("character", "logical", "numeric", "integer", "complex")) {
-    attr(x, "class") <- NULL
-  }
-  print(x, ...)
-}
 
-as.matrix.pseries <- function(x, idbyrow = TRUE, ...){
-    index <- attr(x, "index")
-    id <- index[[1]]
-    time <- index[[2]]
-    time.names <- levels(time)
-    x <- split(data.frame(x, time), id)
-    x <- lapply(x, function(x){
-        rownames(x) <- x[ , 2]
-        x[ , -2, drop = FALSE]
-    })
-    x <- lapply(x, function(x){
-        x <- x[time.names, , drop = FALSE]
-        rownames(x) <- time.names
-        x
-    }
-    )
-    id.names <- names(x)
-    x <- as.matrix(as.data.frame((x)))
-    colnames(x) <- id.names
-    if (idbyrow) x <- t(x)
-    x
-}
 
-## plots a panel series by time index
-##
-## can supply any panel function, e.g. a loess smoother
-## > mypanel<-function(x,...) {
-## + panel.xyplot(x,...)
-## + panel.loess(x, col="red", ...)}
-## >
-## > plot(pres(mod), panel=mypanel)
 
-plot.pseries <- function(x, plot = c("lattice", "superposed"),
-                         scale = FALSE, transparency = TRUE,
-                         col = "blue", lwd = 1, ...) {
 
-    if(scale) {
-      scalefun <- function(x) scale(x)
-    } else {
-        scalefun <- function(x) return(x)}
 
-    nx <- as.numeric(x)
-    ind <- attr(x, "index")[[1]]
-    tind <- attr(x, "index")[[2]] # possibly as.numeric():
-                                  # activates autom. tick
-                                  # but loses time labels
 
-    xdata <- data.frame(nx=nx, ind=ind, tind=tind)
 
-    switch(match.arg(plot),
-           lattice = {
-               ##require(lattice) # make a ggplot2 version
-               xyplot(nx ~ tind | ind, data = xdata, type = "l", col = col, ...)
-               
-           }, superposed = {
-               ylim <- c(min(tapply(scalefun(nx), ind, min, na.rm = TRUE)),
-                             max(tapply(scalefun(nx), ind, max, na.rm = TRUE)))
-               unind <- unique(ind)
-               nx1 <- nx[ind == unind[1]]
-               tind1 <- as.numeric(tind[ind == unind[1]])
-               ## plot empty plot to provide frame
-               plot(NA, xlim = c(min(as.numeric(tind)),
-                               max(as.numeric(tind))),
-                    ylim = ylim, xlab = "", ylab = "", xaxt = "n", ...)
-               axis(1, at = as.numeric(unique(tind)),
-                    labels = unique(tind))
 
-                   ## determine lwd and transparency level as a function
-                   ## of n
-               if(transparency) {
-                   alpha <- 5/length(unind)
-                   col <- heat.colors(1, alpha=alpha)
-                   lwd <- length(unind)/10
-               }
-               ## plot lines (notice: tind. are factors, so they
-               ## retain the correct labels which would be lost if
-               ## using as.numeric
-               for(i in 1:length(unind)) {
-                   nxi <- nx[ind == unind[i]]
-                   tindi <- tind[ind == unind[i]]
-                   lines(x = tindi, y = scalefun(nxi),
-                         col = col, lwd = lwd, ...)
-               }               
-           })    
-}
-
-summary.pseries <- function(object, ...) {
-    if (!inherits(object, c("factor", "logical", "character"))) {
-        id <- attr(object, "index")[[1]]
-        time <- attr(object, "index")[[2]]
-        xm <- mean(object, na.rm = TRUE)
-        Bid <-  Between(object, na.rm = TRUE)
-        Btime <-  Between(object, effect = "time", na.rm = TRUE)
-        ## res <- structure(c(total = sumsq(object),
-        ##                    between_id = sumsq(Bid),
-        ##                    between_time = sumsq(Btime)), 
-        ##                  class = c("summary.pseries", "numeric"))
-        res <- structure(c(total = sum( (na.omit(object) - mean(object, na.rm = TRUE)) ^ 2),
-                           between_id = sum( (na.omit(Bid) - mean(Bid, na.rm = TRUE)) ^ 2),
-                           between_time = sum( (na.omit(Btime) - mean(Btime, na.rm = TRUE)) ^ 2)), 
-                           class = c("summary.pseries", "numeric"))
-        
-    } else {
-        class(object) <- setdiff(class(object), c("pseries"))
-        res <- summary(object, ...)
-        class(res) <- c("summary.pseries", class(object), class(res))
-    }
-    return(res)
-}
-
-plot.summary.pseries <- function(x, ...){
-    x <- as.numeric(x)
-    share <- x[-1]/x[1] # vec with length == 2
-    names(share) <- c("id", "time")
-    barplot(share, ...)
-}
-
-print.summary.pseries <- function(x, ...){
-    digits <- getOption("digits")
-    special_treatment_vars <- c("factor", "logical", "character")
-    if (!inherits(x, special_treatment_vars)) {
-        x <- as.numeric(x)
-        share <- x[-1]/x[1] # vec with length == 2
-        names(share) <- c("id", "time")
-        cat(paste("total sum of squares:", signif(x[1], digits = digits),"\n"))
-        print.default(share, ...)
-    } else {
-        class(x) <- setdiff(class(x), c("summary.pseries", special_treatment_vars))
-        print(x, ...)
-    }
-}
-
+#' Check if an object is a pseries
+#' 
+#' This function checks if an object qualifies as a pseries
+#' 
+#' A \code{"pseries"} is a wrapper around a "basic class" (numeric, factor,
+#' logical, or character).
+#' 
+#' To qualify as a pseries, an object needs to have the following features:
+#' \itemize{ \item class contains \code{"pseries"} and there are at least two
+#' classes (\code{"pseries"} and the basic class), \item have an appropriate
+#' index attribute (defines the panel structure), \item any of
+#' \code{is.numeric}, \code{is.factor}, \code{is.logical}, \code{is.character},
+#' \code{is.complex} is \code{TRUE}. }
+#' 
+#' @param object object to be checked for pseries features
+#' @return A logical indicating whether the object is a pseries (\code{TRUE})
+#' or not (\code{FALSE}).
+#' @seealso \code{\link{pseries}} for some computations on pseries and some
+#' further links.
+#' @keywords attribute
+#' @examples
+#' 
+#' # Create a pdata.frame and extract a series, which becomes a pseries
+#' data("EmplUK", package = "plm")
+#' Em <- pdata.frame(EmplUK)
+#' z <- Em$output
+#' 
+#' class(z) # pseries as indicated by class
+#' is.pseries(z) # and confirmed by check
+#' 
+#' # destroy index of pseries and re-check
+#' attr(z, "index") <- NA
+#' is.pseries(z) # now FALSE
+#' 
 is.pseries <- function(object) {
  # checks if an object has the necessary features to qualify as a 'pseries'
   res <- TRUE
@@ -716,13 +724,75 @@ is.pseries <- function(object) {
   return(res)
 }
 
-    
-## pdim 
-# Note: some parts of this code are copied verbatim to is.pbalanced()
+
+#' Check for the Dimensions of the Panel
+#' 
+#' This function checks the number of individuals and time observations in the
+#' panel and whether it is balanced or not.
+#' 
+#' \code{pdim} is called by the estimation functions and can be also used
+#' stand-alone.
+#'
+#' @name pdim
+#' @aliases pdim
+#' @param x a \code{data.frame}, a \code{pdata.frame}, a \code{pseries}, a
+#' \code{panelmodel}, or a \code{pgmm} object,
+#' @param y a vector,
+#' @param index see \code{\link{pdata.frame}},
+#' @param \dots further arguments.
+#' @return An object of class \code{pdim} containing the following elements:
+#' 
+#' \item{nT}{a list containing \code{n}, the number of individuals, \code{T},
+#' the number of time observations, \code{N} the total number of observations,}
+#' \item{Tint}{a list containing two vectors (of type integer): \code{Ti} gives
+#' the number of observations for each individual and \code{nt} gives the
+#' number of individuals observed for each period,} \item{balanced}{a logical
+#' value: \code{TRUE} for a balanced panel, \code{FALSE} for an unbalanced
+#' panel,} \item{panel.names}{a list of character vectors: \code{id.names}
+#' contains the names of each individual and \code{time.names} contains the
+#' names of each period.}
+#' @note Calling \code{pdim} on an estimated \code{panelmodel} object and on
+#' the corresponding \code{(p)data.frame} used for this estimation does not
+#' necessarily yield the same result. When called on an estimated
+#' \code{panelmodel}, the number of observations (individual, time) actually
+#' used for model estimation are taken into account.  When called on a
+#' \code{(p)data.frame}, the rows in the \code{(p)data.frame} are considered,
+#' disregarding any NA values in the dependent or independent variable(s) which
+#' would be dropped during model estimation.
+#' @author Yves Croissant
+#' @seealso \code{\link{is.pbalanced}} to just determine balancedness of data
+#' (slightly faster than \code{pdim}),\cr \code{\link{punbalancedness}} for
+#' measures of unbalancedness,\cr \code{\link{nobs}},
+#' \code{\link{pdata.frame}},\cr \code{\link{pvar}} to check for each variable
+#' if it varies cross-sectionally and over time.
+#' @keywords attribute
+#' @examples
+#' 
+#' # There are 595 individuals
+#' data("Wages", package = "plm")
+#' pdim(Wages, 595)
+#' 
+#' # Gasoline contains two variables which are individual and time indexes
+#' # and are the first two variables
+#' data("Gasoline", package="plm")
+#' pdim(Gasoline)
+#' 
+#' # Hedonic is an unbalanced panel, townid is the individual index
+#' data("Hedonic", package = "plm")
+#' pdim(Hedonic, "townid")
+#' 
+#' # An example of the panelmodel method
+#' data("Produc", package = "plm")
+#' z <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp,data=Produc,
+#'          model="random", subset = gsp > 5000)
+#' pdim(z)
+#' 
 pdim <- function(x, ...){
   UseMethod("pdim")
 }
 
+#' @rdname pdim
+#' @export
 pdim.default <- function(x, y, ...){
   if (length(x) != length(y)) stop("The length of the two vectors differs\n")
   x <- x[drop = TRUE] # drop unused factor levels so that table() 
@@ -748,6 +818,8 @@ pdim.default <- function(x, y, ...){
   z
 }  
 
+#' @rdname pdim
+#' @export
 pdim.data.frame <- function(x, index = NULL, ...){
   x <- pdata.frame(x, index)
   index <- attr(x, "index")
@@ -756,43 +828,108 @@ pdim.data.frame <- function(x, index = NULL, ...){
   pdim(id,time)
 }
 
+#' @rdname pdim
+#' @export
 pdim.pdata.frame <- function(x,...){
   index <- attr(x, "index")
   pdim(index[[1]],index[[2]])
 }
 
+#' @rdname pdim
+#' @export
 pdim.pseries <- function(x,...) {
   index <- attr(x, "index")
   pdim(index[[1]], index[[2]])
 }
 
+#' @rdname pdim
+#' @export
 pdim.panelmodel <- function(x, ...){
   x <- model.frame(x)
   pdim(x)
 }
 
+#' @rdname pdim
+#' @export
 pdim.pgmm <- function(x, ...){
 ## pgmm is also class panelmodel, but take advantage of the pdim attribute in it
   attr(x, "pdim")
 }
 
+#' @rdname pdim
+#' @export
 print.pdim <- function(x, ...){
   if (x$balanced){
-    cat("Balanced Panel: ")
-    cat(paste("n = ",x$nT$n,", ",sep=""))
-    cat(paste("T = ",x$nT$T,", ",sep=""))
-    cat(paste("N = ",x$nT$N,"\n",sep=""))
+      cat("Balanced Panel: ")
+      cat(paste("n = ",x$nT$n,", ",sep=""))
+      cat(paste("T = ",x$nT$T,", ",sep=""))
+      cat(paste("N = ",x$nT$N,"\n",sep=""))
   }
   else{
-    cat("Unbalanced Panel: ")
-    cat(paste("n = ",x$nT$n,", ",sep=""))
-    cat(paste("T = ",min(x$Tint$Ti),"-",max(x$Tint$Ti),", ",sep=""))
-    cat(paste("N = ",x$nT$N,"\n",sep=""))
+      cat("Unbalanced Panel: ")
+      cat(paste("n = ",x$nT$n,", ",sep=""))
+      cat(paste("T = ",min(x$Tint$Ti),"-",max(x$Tint$Ti),", ",sep=""))
+      cat(paste("N = ",x$nT$N,"\n",sep=""))
   }
 }
 
-## Index methods
-
+#' Extract the indexes of panel data
+#' 
+#' This function extracts the information about the structure of the
+#' individual and time dimensions of panel data. Grouping information
+#' can also be extracted if the panel data were created with a
+#' grouping variable.
+#' 
+#' Panel data are stored in a \code{"pdata.frame"} which has an
+#' \code{"index"} attribute. Fitted models in \code{"plm"} have a
+#' \code{"model"} element which is also a \code{"pdata.frame"} and
+#' therefore also has an \code{"index"} attribute. Finally, each
+#' series, once extracted from a \code{"pdata.frame"}, becomes of
+#' class \code{"pseries"}, which also has this \code{"index"}
+#' attribute.  \code{"index"} methods are available for all these
+#' objects.  The argument \code{"which"} indicates which index should
+#' be extracted. If \code{which = NULL}, all indexes are
+#' extracted. \code{"which"} can also be a vector of length 1, 2, or 3
+#' (3 only if the pdata frame was constructed with an additional group
+#' index) containing either characters (the names of the individual
+#' variable and/or of the time variable and/or the group variable or
+#' \code{"id"} and \code{"time"}) and \code{"group"} or integers (1
+#' for the individual index, 2 for the time index, and 3 for the group
+#' index (the latter only if the pdata frame was constructed with
+#' such).)
+#' 
+#' @name index
+#' @aliases index index.pindex
+#' @param x an object of class \code{"pindex"}, \code{"pdata.frame"},
+#'     \code{"pseries"} or \code{"panelmodel"},
+#' @param which the index(es) to be extracted (see details),
+#' @param \dots further arguments.
+#' @return A vector or an object of class \code{c("pindex",
+#'     "data.frame")} containing either one index, individual and time
+#'     index, or (any combination of) individual, time and group
+#'     indexes.
+#' @export
+#' @author Yves Croissant
+#' @seealso \code{\link{pdata.frame}}, \code{\link{plm}}
+#' @keywords attribute
+#' @examples
+#' 
+#' data("Grunfeld", package = "plm")
+#' Gr <- pdata.frame(Grunfeld, index = c("firm", "year"))
+#' m <- plm(inv ~ value + capital, data = Gr)
+#' index(Gr, "firm")
+#' index(Gr, "time")
+#' index(Gr$inv, c(2, 1))
+#' index(m, "id")
+#' 
+#' # with additional group index
+#' data("Produc", package = "plm")
+#' pProduc <- pdata.frame(Produc, index = c("state", "year", "region"))
+#' index(pProduc, 3)
+#' index(pProduc, "region")
+#' index(pProduc, "group")
+#' 
+#' 
 index.pindex <- function(x, which = NULL, ...){
     if (is.null(which)) which <- names(x)
     else{
@@ -817,16 +954,22 @@ index.pindex <- function(x, which = NULL, ...){
     result
 }
 
+#' @rdname index
+#' @export
 index.pdata.frame <- function(x, which = NULL, ...){
   anindex <- attr(x, "index")
   index(x = anindex, which = which)
 }
 
+#' @rdname index
+#' @export
 index.pseries <- function(x, which = NULL, ...){
   anindex <- attr(x, "index")
   index(x = anindex, which = which)
 }
   
+#' @rdname index
+#' @export
 index.panelmodel <- function(x, which = NULL, ...){
   anindex <- attr(x$model, "index")
   index(x = anindex, which = which)

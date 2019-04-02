@@ -18,3 +18,4 @@ Description: A set of estimators and tests for panel data econometrics.
 License: GPL (>=2)
 VignetteBuilder: knitr
 URL: https://cran.r-project.org/package=plm, https://r-forge.r-project.org/projects/plm/
+RoxygenNote: 6.0.1
