@@ -4,12 +4,18 @@
 \name{Cigar}
 \alias{Cigar}
 \title{Cigarette Consumption}
-\format{A data frame containing : \describe{ \item{state}{state
-abbreviation} \item{year}{the year} \item{price}{price per pack of
-cigarettes} \item{pop}{population} \item{pop16}{population above the age of
-16} \item{cpi}{consumer price index (1983=100)} \item{ndi}{per capita
-disposable income} \item{sales}{cigarette sales in packs per capita}
-\item{pimin}{minimum price in adjoining states per pack of cigarettes} }}
+\format{A data frame containing :
+\describe{
+\item{state}{state abbreviation}
+\item{year}{the year}
+\item{price}{price per pack of cigarettes}
+\item{pop}{population}
+\item{pop16}{population above the age of 16}
+\item{cpi}{consumer price index (1983=100)}
+\item{ndi}{per capita disposable income}
+\item{sales}{cigarette sales in packs per capita}
+\item{pimin}{minimum price in adjoining states per pack of cigarettes}
+}}
 \source{
 Online complements to Baltagi (2001):
 
@@ -30,19 +36,12 @@ a panel of 46 observations from 1963 to 1992
 \emph{country} : United States
 }
 \references{
-Baltagi, Badi H. (2001) \emph{Econometric Analysis of Panel
-Data}, 2nd ed., John Wiley and Sons.
+\insertRef{BALT:01}{plm}
 
-Baltagi, Badi H. (2013) \emph{Econometric Analysis of Panel Data}, 5th ed.,
-John Wiley and Sons.
+\insertRef{BALT:13}{plm}
 
-Baltagi, B.H. and D. Levin (1992) \dQuote{Cigarette taxation: raising
-revenues and reducing consumption}, \emph{Structural Changes and Economic
-Dynamics}, \bold{3}(2), pp. 321--335.
+\insertRef{BALT:LEVI:92}{plm}
 
-Baltagi, B.H., J.M. Griffin and W. Xiong (2000) \dQuote{To pool or not to
-pool: homogeneous versus heterogeneous estimators applied to cigarette
-demand}, \emph{Review of Economics and Statistics}, \bold{82}(1), pp.
-117--126.
+\insertRef{BALT:GRIF:XION:00}{plm}
 }
 \keyword{datasets}

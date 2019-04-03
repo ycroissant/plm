@@ -51,19 +51,15 @@
 #' @references Breusch, T.S. (1978), \dQuote{Testing for
 #'     autocorrelation in dynamic linear models}, \emph{Australian
 #'     Economic Papers}, \bold{17}(31), pp. 334--355.
-#' 
-#' Godfrey, L.G. (1978), \dQuote{Testing against general autoregressive and
-#' moving average error models when the regressors include lagged dependent
-#' variables}, \emph{Econometrica}, \bold{46}(6), pp. 1293--1301.
-#' 
-#' Wooldridge, J.M. (2002) \emph{Econometric Analysis of Cross Section and
-#' Panel Data}, MIT Press, pp. 288--291.
-#' 
-#' Wooldridge, J.M. (2010) \emph{Econometric Analysis of Cross Section and
-#' Panel Data}, 2nd ed., MIT Press, pp. 328--334.
-#' 
-#' Wooldridge, J.M. (2013) \emph{Introductory Econometrics: A Modern Approach},
-#' 5th ed., South-Western (Cengage Learning), Sec. 12.2, pp. 421--422.
+#'
+#' \insertRef{GODF:78}{plm}
+#'
+#' \insertRef{WOOL:02}{plm}
+#'
+#' \insertRef{WOOL:10}{plm}
+#'
+#' \insertRef{WOOL:13}{plm}
+#'  Sec. 12.2, pp. 421--422.
 #' @keywords htest
 #' @examples
 #' 
@@ -176,11 +172,12 @@ pbgtest.formula <- function(x, order = NULL, type = c("Chisq", "F"), data, model
 #' \code{\link{pdwtest}}, \code{\link{pbsytest}}, \code{\link{pwartest}},
 #' \code{\link{pwfdtest}} for tests for serial correlation in panel models.
 #' \code{\link{plmtest}} for tests for random effects.
-#' @references Wooldridge, J.M. (2002) \emph{Econometric Analysis of Cross
-#' Section and Panel Data}, MIT Press, Sec. 10.4.4., pp. 264--265.
+#' @references
+#'
+#' \insertRef{WOOL:02}{plm}
+#'
+#' \insertRef{WOOL:10}{plm}
 #' 
-#' Wooldridge, J.M. (2010) \emph{Econometric Analysis of Cross Section and
-#' Panel Data}, 2nd ed., MIT Press, Sec. 10.4.4, pp. 299--300.
 #' @keywords htest
 #' @examples
 #' 
@@ -351,11 +348,12 @@ pwtest.panelmodel <- function(x, effect = c("individual", "time"), ...) {
 #' @author Giovanni Millo
 #' @seealso \code{\link{pwfdtest}}, \code{\link{pdwtest}},
 #' \code{\link{pbgtest}}, \code{\link{pbltest}}, \code{\link{pbsytest}}.
-#' @references Wooldridge, J.M. (2002) \emph{Econometric Analysis of Cross
-#' Section and Panel Data}, MIT Press, Sec. 10.5.4, pp. 274--276.
-#' 
-#' Wooldridge, J.M. (2010) \emph{Econometric Analysis of Cross Section and
-#' Panel Data}, 2nd ed., MIT Press, Sec. 10.5.4, pp. 310--312.
+#' @references
+#'
+#' \insertRef{WOOL:02}{plm}
+#'
+#' \insertRef{WOOL:10}{plm}
+#'
 #' @keywords htest
 #' @examples
 #' 
@@ -553,6 +551,7 @@ pwartest.panelmodel <- function(x, ...) {
 #' @references Bera, A.K., Sosa-Escudero, W. and Yoon, M. (2001), Tests for the
 #' error component model in the presence of local misspecification,
 #' \emph{Journal of Econometrics}, \bold{101}(1), pp. 1--23.
+#'
 #' 
 #' Baltagi, B. H. (2013) \emph{Econometric Analysis of Panel Data}, 5th
 #' edition, Wiley.

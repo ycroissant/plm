@@ -43,9 +43,10 @@
 #' \code{print.summary} methods.
 #' @export
 #' @author Yves Croissant
-#' @references Swamy, P.A.V.B. (1970). Efficient Inference in a Random
-#' Coefficient Regression Model, \emph{Econometrica}, \bold{38}(2), pp.
-#' 311--323.
+#' @references
+#'
+#' \insertRef{SWAM:70}{plm}
+#' 
 #' @keywords regression
 #' @examples
 #' 

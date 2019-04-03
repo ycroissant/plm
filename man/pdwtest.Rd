@@ -71,13 +71,13 @@ Panel Data}, 2nd ed., MIT Press, p. 328.
 }
 \seealso{
 \code{\link[lmtest]{dwtest}} for the Durbin--Watson test
-    in \CRANpkg{lmtest}, \code{\link{pbgtest}} for the analogous
-    Breusch--Godfrey test for panel models,
-    \code{\link[lmtest]{bgtest}} for the Breusch--Godfrey test for
-    serial correlation in the linear model. \code{\link{pbltest}},
-    \code{\link{pbsytest}}, \code{\link{pwartest}} and
-    \code{\link{pwfdtest}} for other serial correlation tests for
-    panel models.
+in \CRANpkg{lmtest}, \code{\link{pbgtest}} for the analogous
+Breusch--Godfrey test for panel models,
+\code{\link[lmtest]{bgtest}} for the Breusch--Godfrey test for
+serial correlation in the linear model. \code{\link{pbltest}},
+\code{\link{pbsytest}}, \code{\link{pwartest}} and
+\code{\link{pwfdtest}} for other serial correlation tests for
+panel models.
 
 For the Durbin-Watson test generalized to panel data models see
 \code{\link{pbnftest}}.

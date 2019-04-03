@@ -30,7 +30,7 @@ is.pbalanced(x, ...)
 
 \item{\dots}{further arguments.}
 
-\item{y}{**to describe**}
+\item{y}{\strong{to describe}}
 
 \item{index}{only relevant for \code{data.frame} interface; if \code{NULL},
 the first two columns of the data.frame are assumed to be the index

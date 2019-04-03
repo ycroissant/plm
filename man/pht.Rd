@@ -60,12 +60,12 @@ the second part containing the exogenous variables.
 }
 \note{
 The function \code{pht} is deprecated. Please use function
-    \code{plm} to estimate Taylor--Hausman models like this with a
-    three-part formula as shown in the example:\cr
-    \code{plm(<formula>, random.method = "ht", model = "random",
+\code{plm} to estimate Taylor--Hausman models like this with a
+three-part formula as shown in the example:\cr
+\code{plm(<formula>, random.method = "ht", model = "random",
     inst.method = "baltagi")}. The Amemiya--MaCurdy estimator and
-    the Breusch--Mizon--Schmidt estimator is computed likewise with
-    \code{plm}.
+the Breusch--Mizon--Schmidt estimator is computed likewise with
+\code{plm}.
 }
 \examples{
 

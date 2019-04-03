@@ -39,7 +39,7 @@ pdim(x, ...)
 }
 \value{
 An object of class \code{pdim} containing the following
-    elements:
+elements:
 
 \item{nT}{a list containing \code{n}, the number of individuals,
 \code{T}, the number of time observations, \code{N} the total
@@ -62,15 +62,15 @@ stand-alone.
 }
 \note{
 Calling \code{pdim} on an estimated \code{panelmodel} object
-    and on the corresponding \code{(p)data.frame} used for this
-    estimation does not necessarily yield the same result. When
-    called on an estimated \code{panelmodel}, the number of
-    observations (individual, time) actually used for model
-    estimation are taken into account.  When called on a
-    \code{(p)data.frame}, the rows in the \code{(p)data.frame} are
-    considered, disregarding any NA values in the dependent or
-    independent variable(s) which would be dropped during model
-    estimation.
+and on the corresponding \code{(p)data.frame} used for this
+estimation does not necessarily yield the same result. When
+called on an estimated \code{panelmodel}, the number of
+observations (individual, time) actually used for model
+estimation are taken into account.  When called on a
+\code{(p)data.frame}, the rows in the \code{(p)data.frame} are
+considered, disregarding any NA values in the dependent or
+independent variable(s) which would be dropped during model
+estimation.
 }
 \examples{
 
@@ -96,11 +96,11 @@ pdim(z)
 }
 \seealso{
 \code{\link{is.pbalanced}} to just determine balancedness
-    of data (slightly faster than \code{pdim}),\cr
-    \code{\link{punbalancedness}} for measures of
-    unbalancedness,\cr \code{\link{nobs}},
-    \code{\link{pdata.frame}},\cr \code{\link{pvar}} to check for
-    each variable if it varies cross-sectionally and over time.
+of data (slightly faster than \code{pdim}),\cr
+\code{\link{punbalancedness}} for measures of
+unbalancedness,\cr \code{\link{nobs}},
+\code{\link{pdata.frame}},\cr \code{\link{pvar}} to check for
+each variable if it varies cross-sectionally and over time.
 }
 \author{
 Yves Croissant

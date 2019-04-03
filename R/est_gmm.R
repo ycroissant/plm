@@ -98,28 +98,19 @@
 #' \code{\link{mtest}} for Arellano--Bond's test of serial
 #' correlation.  \code{\link{dynformula}} for dynamic formulas
 #' (deprecated).
-#' @references Arellano, M. and Bond, S. (1991) Some Tests of
-#'     Specification for Panel Data: Monte Carlo Evidence and an
-#'     Application to Employment Equations, \emph{The Review of
-#'     Economic Studies}, \bold{58}(2), 1991, pp. 227--297.
+#' @references
+#'
+#' \insertRef{AREL:BOND:91}{plm}
+#'
+#' \insertRef{AREL:BOND:98}{plm}
+#'
+#' \insertRef{BLUN:BOND:98}{plm}
 #' 
-#' Arellano, M. and Bond, S. (1998) Dynamic Panel Data Estimation Using DPD98
-#' for GAUSS: A Guide for Users.
+#' \insertRef{DOOR:AREL:BOND:06}{plm}
+#'
+#' \insertRef{ROOD:09}{plm}
 #' 
-#' Blundell, R. and Bond, S. (1998) Initial Conditions and Moment Restrictions
-#' in Dynamic Panel Data Models, \emph{Journal of Econometrics}, vol.
-#' \bold{87}(1), pp. 115--143.
-#' 
-#' Doornik, J., Arellano, M. and Bond, S. (2006) Panel Data Estimation using
-#' DPD for Ox.
-#' \url{http://www.doornik.com/download/oxmetrics7/Ox_Packages/dpd.pdf}
-#' 
-#' Roodman, D. (2009) How to do xtabond2: An introduction to
-#' difference and system GMM in Stata, \emph{Stata Journal},
-#' vol. \bold{9}(1), pp. 86--136.
-#' \url{http://www.stata-journal.com/article.html?article=st0159}. %
-#' full article in Stata Journal is now accessible % Working Paper
-#' version at \url{http://ideas.repec.org/p/cgd/wpaper/103.html}.
+#'
 #' @keywords regression
 #' @examples
 #' 

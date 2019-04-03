@@ -20,7 +20,7 @@ make.pconsecutive(x, ...)
 \item{x}{an object of class \code{pdata.frame}, \code{data.frame}, or
 \code{pseries},}
 
-\item{balanced}{logical, indicating whether the data should _additionally_
+\item{balanced}{logical, indicating whether the data should \emph{additionally}
 be made balanced (default: FALSE),}
 
 \item{index}{only relevant for \code{data.frame} interface; if \code{NULL},

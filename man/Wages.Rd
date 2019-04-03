@@ -5,15 +5,19 @@
 \alias{Wages}
 \title{Panel Data of Individual Wages}
 \format{A data frame containing:
-
-\describe{ \item{exp}{years of full-time work experience.} \item{wks}{weeks
-worked.} \item{bluecol}{blue collar?} \item{ind}{works in a manufacturing
-industry?} \item{south}{resides in the south?} \item{smsa}{resides in a
-standard metropolitan statistical area?} \item{married}{married?}
+\describe{
+\item{exp}{years of full-time work experience.}
+\item{wks}{weeks  worked.}
+\item{bluecol}{blue collar?}
+\item{ind}{works in a manufacturing industry?}
+\item{south}{resides in the south?}
+\item{smsa}{resides in a standard metropolitan statistical area?}
+\item{married}{married?}
 \item{sex}{a factor with levels \code{"male"} and \code{"female"}}
-\item{union}{individual's wage set by a union contract?} \item{ed}{years of
-education.} \item{black}{is the individual black?} \item{lwage}{logarithm of
-wage.} }}
+\item{union}{individual's wage set by a union contract?}
+\item{ed}{years of education.}
+\item{black}{is the individual black?}
+\item{lwage}{logarithm of wage.} }}
 \source{
 Online complements to Baltagi (2001):
 
@@ -44,14 +48,10 @@ Wag <- pdata.frame(Wages, index=595)
 
 }
 \references{
-Baltagi, Badi H. (2001) \emph{Econometric Analysis of Panel
-Data}, 2nd ed., John Wiley and Sons.
+\insertRef{BALT:01}{plm}
 
-Baltagi, Badi H. (2013) \emph{Econometric Analysis of Panel Data}, 5th ed.,
-John Wiley and Sons.
+\insertRef{BALT:13}{plm}
 
-Cornwell, C. and P. Rupert (1988) \dQuote{Efficient estimation with panel
-data: an empirical comparison of instrumental variables estimators},
-\emph{Journal of Applied Econometrics}, \bold{3}(2), pp. 149--155.
+\insertRef{CORN:RUPE:88}{plm}
 }
 \keyword{datasets}

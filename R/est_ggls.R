@@ -54,21 +54,16 @@
 #'     covariance of errors,}
 #' @export
 #' @author Giovanni Millo
-#' @references Kiefer, N. M. (1980) Estimation of Fixed Effects Models
-#'     for Time Series of Cross-Sections with Arbitrary Intertemporal
-#'     Covariance, \emph{Journal of Econometrics}, \bold{14}(2),
-#'     pp. 195--202.
+#' @references
+#'
+#' \insertRef{IM:SEUN:SCHM:WOOL:99}{plm}
+#'
+#' \insertRef{KIEF:80}{plm}
 #' 
-#' Im, K. S. and Ahn, S. C. and Schmidt, P. and Wooldridge, J. M. (1999)
-#' Efficient Estimation of Panel Data Models with Strictly Exogenous
-#' Explanatory Variables, \emph{Journal of Econometrics}, \bold{93}(1), pp.
-#' 177--201.
+#' \insertRef{WOOL:02}{plm}
 #' 
-#' Wooldridge, J. M. (2002) \emph{Econometric Analysis of Cross Section and
-#' Panel Data}, MIT Press.
+#' \insertRef{WOOL:10}{plm}
 #' 
-#' Wooldridge, J. M. (2010) \emph{Econometric Analysis of Cross Section and
-#' Panel Data}, 2nd ed., MIT Press.
 #' @keywords regression
 #' @examples
 #' 

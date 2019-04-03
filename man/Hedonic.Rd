@@ -4,17 +4,22 @@
 \name{Hedonic}
 \alias{Hedonic}
 \title{Hedonic Prices of Census Tracts in the Boston Area}
-\format{A dataframe containing: \describe{ \item{mv}{median value of
-owner--occupied homes} \item{crim}{crime rate} \item{zn}{proportion of
-25,000 square feet residential lots} \item{indus}{proportion of no--retail
-business acres} \item{chas}{is the tract bounds the Charles River?}
-\item{nox}{annual average nitrogen oxide concentration in parts per hundred
-million} \item{rm}{average number of rooms} \item{age}{proportion of owner
-units built prior to 1940} \item{dis}{weighted distances to five employment
-centers in the Boston area} \item{rad}{index of accessibility to radial
-highways} \item{tax}{full value property tax rate ($/$10,000)}
-\item{ptratio}{pupil/teacher ratio} \item{blacks}{proportion of blacks in
-the population} \item{lstat}{proportion of population that is lower status}
+\format{A dataframe containing:
+\describe{
+\item{mv}{median value of owner--occupied homes}
+\item{crim}{crime rate}
+\item{zn}{proportion of 25,000 square feet residential lots}
+\item{indus}{proportion of no--retail business acres}
+\item{chas}{is the tract bounds the Charles River?}
+\item{nox}{annual average nitrogen oxide concentration in parts per hundred million}
+\item{rm}{average number of rooms}
+\item{age}{proportion of owner units built prior to 1940}
+\item{dis}{weighted distances to five employment centers in the Boston area}
+\item{rad}{index of accessibility to radial highways}
+\item{tax}{full value property tax rate ($/$10,000)}
+\item{ptratio}{pupil/teacher ratio}
+\item{blacks}{proportion of blacks in the population}
+\item{lstat}{proportion of population that is lower status}
 \item{townid}{town identifier} }}
 \source{
 Online complements to Baltagi (2001):
@@ -36,18 +41,12 @@ A cross-section
 \emph{country} : United States
 }
 \references{
-Baltagi, Badi H. (2001) \emph{Econometric Analysis of Panel
-Data}, 2nd ed., John Wiley and Sons.
+\insertRef{BALT:01}{plm}
 
-Baltagi, Badi H. (2013) \emph{Econometric Analysis of Panel Data}, 5th ed.,
-John Wiley and Sons.
+\insertRef{BALT:13}{plm}
 
-Belsley, D.A., E. Kuh and R. E. Welsch (1980): \emph{Regression Diagnostics:
-Identifying Influential Data and Sources of Collinearity}, John Wiley, New
-York.
+\insertRef{BESL:KUH:WELS:80}{plm}
 
-Harrison, D. and D.L. Rubinfeld (1978): \dQuote{Hedonic housing prices and
-the demand for clean air}, \emph{Journal of Environmental Economics and
-Management}, \bold{5}(1), pp. 81--102.
+\insertRef{HARR:RUBI:78}{plm}
 }
 \keyword{datasets}

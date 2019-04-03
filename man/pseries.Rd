@@ -84,13 +84,13 @@ lines of the matrix are the individuals,}
 \item{effect}{character string indicating the \code{"individual"}
 or \code{"time"} effect,}
 
-\item{rm.null}{if `TRUE`, for the `Within.matrix` method, remove
+\item{rm.null}{if \code{TRUE}, for the \code{Within.matrix} method, remove
 the empty columns,}
 }
 \value{
 All these functions return an object of class
-    \code{pseries}, except:\cr \code{between}, which returns a
-    numeric vector, \code{as.matrix}, which returns a matrix.
+\code{pseries}, except:\cr \code{between}, which returns a
+numeric vector, \code{as.matrix}, which returns a matrix.
 }
 \description{
 A class for panel series for which several useful computations and data
@@ -154,10 +154,10 @@ sum(is.na(Within(z2, na.rm = TRUE))) # only the NA observation is lost
 }
 \seealso{
 \code{\link{is.pseries}} to check if an object is a
-    pseries. For more functions on class 'pseries' see
-    \code{\link{lag}}, \code{\link{lead}}, \code{\link{diff}} for
-    lagging values, leading values (negative lags) and
-    differencing.
+pseries. For more functions on class 'pseries' see
+\code{\link{lag}}, \code{\link{lead}}, \code{\link{diff}} for
+lagging values, leading values (negative lags) and
+differencing.
 }
 \author{
 Yves Croissant

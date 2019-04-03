@@ -48,7 +48,7 @@ be included,}
 
 \item{width}{the maximum length of the lines in the print output,}
 
-\item{type}{one of `"defactored"` or `"standard"`,}
+\item{type}{one of \code{"defactored"} or \code{"standard"},}
 }
 \value{
 An object of class \code{c("pcce", "panelmodel")} containing:

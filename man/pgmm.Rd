@@ -49,7 +49,7 @@ missing, it is set to the first one minus one,}
 
 \item{transformation}{the kind of transformation to apply to the
 model: either \code{"d"} (the default value) for the
-``difference GMM'' model or \code{"ld"} for the ``system GMM'',}
+\code{difference GMM'' model or \code{"ld"} for the }system GMM'',}
 
 \item{fsm}{the matrix for the one step estimator: one of \code{"I"}
 (identity matrix) or \code{"G"} (\eqn{=D'D} where \eqn{D} is
@@ -75,7 +75,7 @@ time dummies are present in the table of coefficients,}
 }
 \value{
 An object of class \code{c("pgmm","panelmodel")}, which has
-    the following elements:
+the following elements:
 
 \item{coefficients}{the vector (or the list for fixed effects) of
 coefficients,} \item{residuals}{the vector of residuals,}
@@ -118,8 +118,7 @@ structure as the one specified in the model.
 as GMM instruments.
 
 \code{transformation} indicates how the model should be transformed for the
-estimation. \code{"d"} gives the ``difference GMM'' model (see Arellano and
-Bond (1991)), \code{"ld"} the ``system GMM'' model (see Blundell and Bond
+estimation. \code{"d"} gives the \code{difference GMM'' model (see Arellano and Bond (1991)), \code{"ld"} the }system GMM'' model (see Blundell and Bond
 (1998)).
 
 \code{pgmm} is an attempt to adapt GMM estimators available within the DPD
@@ -165,9 +164,9 @@ summary(z2, robust = TRUE)
 }
 \references{
 Arellano, M. and Bond, S. (1991) Some Tests of
-    Specification for Panel Data: Monte Carlo Evidence and an
-    Application to Employment Equations, \emph{The Review of
-    Economic Studies}, \bold{58}(2), 1991, pp. 227--297.
+Specification for Panel Data: Monte Carlo Evidence and an
+Application to Employment Equations, \emph{The Review of
+Economic Studies}, \bold{58}(2), 1991, pp. 227--297.
 
 Arellano, M. and Bond, S. (1998) Dynamic Panel Data Estimation Using DPD98
 for GAUSS: A Guide for Users.

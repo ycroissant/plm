@@ -202,7 +202,7 @@ mylm <- function(y, X, W = NULL){
 #'
 #' \insertRef{AMEM:71}{plm}
 #'
-#' \insertRef{AMEM:MACUR:86}{plm}
+#' \insertRef{AMEM:MACU:86}{plm}
 #'
 #' \insertRef{BALE:VARA:87}{plm}
 #'
@@ -212,7 +212,7 @@ mylm <- function(y, X, W = NULL){
 #'
 #' \insertRef{BALT:13}{plm}
 #'
-#' \insertRef{BREU:MIZO:SCHMI:89}{plm}
+#' \insertRef{BREU:MIZO:SCHM:89}{plm}
 #'
 #' \insertRef{HAUS:TAYL:81}{plm}
 #'

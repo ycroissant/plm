@@ -47,14 +47,14 @@ further details see \code{\link{pdata.frame}},}
 }
 \value{
 A named \code{logical} vector (names are those of the
-    individuals).  The i-th element of the returned vector
-    corresponds to the i-th individual.  The values of the i-th
-    element can be: \item{list("TRUE")}{if the i-th individual has
-    consecutive time periods,} \item{list("FALSE")}{if the i-th
-    individual has non-consecutive time periods,}
-    \item{list("NA")}{if there are any NA values in time index of
-    the i-th the individual; see also argument \code{na.rm.tindex}
-    to remove those.}
+individuals).  The i-th element of the returned vector
+corresponds to the i-th individual.  The values of the i-th
+element can be: \item{list("TRUE")}{if the i-th individual has
+consecutive time periods,} \item{list("FALSE")}{if the i-th
+individual has non-consecutive time periods,}
+\item{list("NA")}{if there are any NA values in time index of
+the i-th the individual; see also argument \code{na.rm.tindex}
+to remove those.}
 }
 \description{
 This function checks for each individual if its associated time periods are
@@ -159,13 +159,13 @@ is.pconsecutive(NULL, id = Grunfeld$firm, time = Grunfeld$year)
 }
 \seealso{
 \code{\link{make.pconsecutive}} to make data consecutive
-    (and, as an option, balanced at the same time) and
-    \code{\link{make.pbalanced}} to make data balanced.\cr
-    \code{\link{pdim}} to check the dimensions of a 'pdata.frame'
-    (and other objects), \code{\link{pvar}} to check for individual
-    and time variation of a 'pdata.frame' (and other objects),
-    \code{\link{lag}} for lagged (and leading) values of a
-    'pseries' object.\cr
+(and, as an option, balanced at the same time) and
+\code{\link{make.pbalanced}} to make data balanced.\cr
+\code{\link{pdim}} to check the dimensions of a 'pdata.frame'
+(and other objects), \code{\link{pvar}} to check for individual
+and time variation of a 'pdata.frame' (and other objects),
+\code{\link{lag}} for lagged (and leading) values of a
+'pseries' object.\cr
 
 \code{\link{pseries}}, \code{\link{data.frame}}, \code{\link{pdata.frame}},
 for class 'panelmodel' see \code{\link{plm}} and \code{\link{pgmm}}.

@@ -28,9 +28,11 @@ object,}
 A named numeric containing either two or three entries, depending on
 the panel structure inputted:
 
-\item{*}{For the two-dimensional panel structure, the entries are called
-\code{gamma} and \code{nu},} \item{*}{For a nested panel structure, the
-entries are called \code{c1}, \code{c2}, \code{c3}.}
+\item{*}{For the two-dimensional panel structure, the entries are
+called \code{gamma} and \code{nu},}
+
+\item{*}{For a nested panel structure, the entries are called
+\code{c1}, \code{c2}, \code{c3}.}
 }
 \description{
 This function reports unbalancedness measures for panel data as defined in
@@ -40,26 +42,32 @@ Ahrens/Pincus (1981) and Baltagi/Song/Jung (2001).
 \code{punbalancedness} returns measures for the unbalancedness of a panel
 data set.
 
-\itemize{ \item For two-dimensional data:\cr The two measures of
-Ahrens/Pincus (1981) are calculated, called "gamma" (\eqn{\gamma}) and "nu"
-(\eqn{\nu}).
+\itemize{
 
-If the panel data are balanced, both measures equal 1. The more "unbalanced"
-the panel data, the lower the measures (but > 0). The upper and lower bounds
-as given in Ahrens/Pincus (1981) are:\cr \eqn{0 < \gamma, \nu \le 1}, and
-for \eqn{\nu} more precisely \eqn{\frac{1}{n} < \nu \le 1}{% 1/n < \nu \le
-1}, with \eqn{n} being the number of individuals (as in
-\code{pdim(x)$nT$n}).
+\item For two-dimensional data:\cr The two measures of
+Ahrens/Pincus (1981) are calculated, called "gamma" (\eqn{\gamma})
+and "nu" (\eqn{\nu}).
+
+If the panel data are balanced, both measures equal 1. The more
+"unbalanced" the panel data, the lower the measures (but > 0). The
+upper and lower bounds as given in Ahrens/Pincus (1981) are:\cr
+\eqn{0 < \gamma, \nu \le 1}, and for \eqn{\nu} more precisely
+\eqn{\frac{1}{n} < \nu \le 1}{1/n < \nu \le 1}, with \eqn{n}
+being the number of individuals (as in \code{pdim(x)$nT$n}).
 
 \item For nested panel data (meaning including a grouping variable):\cr The
 extension of the above measures by Baltagi/Song/Jung (2001), p. 368, are
-calculated:\cr \itemize{ \item c1: measure of subgroup (individual)
-unbalancedness, \item c2: measure of time unbalancedness, \item c3: measure of
-group unbalancedness due to each group size.  } Values are 1 if the data are
-balanced and become smaller as the data become more unbalanced.
+calculated:\cr
+\itemize{
+\item c1: measure of subgroup (individual) unbalancedness,
+\item c2: measure of time unbalancedness,
+\item c3: measure of group unbalancedness due to each group size.
+}
 
-} % itemize
- 
+Values are 1 if the data are balanced and become smaller as the
+data become more unbalanced.
+}
+
 An application of the measure "gamma" is found in e. g.  Baltagi/Song/Jung
 (2002), pp. 488-491, and Baltagi/Chang (1994), pp. 78--87, where it is used
 to measure the unbalancedness of various unbalanced data sets used for Monte

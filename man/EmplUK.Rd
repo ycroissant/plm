@@ -4,14 +4,18 @@
 \name{EmplUK}
 \alias{EmplUK}
 \title{Employment and Wages in the United Kingdom}
-\format{A data frame containing : \describe{ \item{firm}{firm index}
-\item{year}{year} \item{sector}{the sector of activity}
-\item{emp}{employment} \item{wage}{wages} \item{capital}{capital}
-\item{output}{output} }}
+\format{A data frame containing :
+\describe{
+\item{firm}{firm index}
+\item{year}{year}
+\item{sector}{the sector of activity}
+\item{emp}{employment}
+\item{wage}{wages}
+\item{capital}{capital}
+\item{output}{output}
+}}
 \source{
-Arellano, M. and Bond, S. (1991), Some Tests of Specification for
-Panel Data: Monte Carlo Evidence and an Application to Employment Equations,
-\emph{The Review of Economic Studies}, \bold{58}(2), 1991, pp. 227--297.
+\insertRef{AREL:BOND:91}{plm}
 }
 \description{
 An unbalanced panel of 140 observations from 1976 to 1984

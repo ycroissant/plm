@@ -26,7 +26,7 @@ the maximum lag order before truncation}
 }
 \value{
 An object of class \code{"matrix"} containing the estimate
-    of the covariance matrix of coefficients.
+of the covariance matrix of coefficients.
 }
 \description{
 Nonparametric robust covariance matrix estimators \emph{a la Newey and West}
@@ -73,8 +73,8 @@ linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovNW)
 }
 \references{
 Cribari-Neto, F. (2004) Asymptotic inference under
-    heteroskedasticity of unknown form. \emph{Computational
-    Statistics & Data Analysis} \bold{45(2)}, pp. 215--233.
+heteroskedasticity of unknown form. \emph{Computational
+Statistics & Data Analysis} \bold{45(2)}, pp. 215--233.
 
 Driscoll, J.C. and Kraay, A.C. (1998) Consistent Covariance Matrix
 Estimation with Spatially Dependent Panel Data. \emph{Review of Economics
@@ -94,7 +94,7 @@ Estimators. \emph{Journal of Statistical Software}, \bold{11}(10), pp.
 }
 \seealso{
 \code{\link[sandwich]{vcovHC}} from the \CRANpkg{sandwich}
-    package for weighting schemes (\code{type} argument).
+package for weighting schemes (\code{type} argument).
 }
 \author{
 Giovanni Millo

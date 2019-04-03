@@ -73,7 +73,7 @@ of factors are to be dropped (defaults to \code{FALSE}) (unused
 levels are always dropped from variables serving to construct
 the index variables),}
 
-\item{name}{the name of the `data.frame`,}
+\item{name}{the name of the \code{data.frame},}
 
 \item{value}{the name of the variable to include,}
 
@@ -97,10 +97,10 @@ as.data.frame),}
 }
 \value{
 a \code{pdata.frame} object: this is a \code{data.frame}
-    with an \code{index} attribute which is a \code{data.frame}
-    with two variables, the individual and the time indexes, both
-    being factors.  The resulting pdata.frame is sorted by the
-    individual index, then by the time index.
+with an \code{index} attribute which is a \code{data.frame}
+with two variables, the individual and the time indexes, both
+being factors.  The resulting pdata.frame is sorted by the
+individual index, then by the time index.
 }
 \description{
 An object of class 'pdata.frame' is a data.frame with an index attribute
@@ -108,17 +108,21 @@ that describes its individual and time dimensions.
 }
 \details{
 The \code{index} argument indicates the dimensions of the panel. It can be:
-\itemize{ \item a vector of two character strings which contains the names
-of the individual and of the time indexes, \item a character string which is
-the name of the individual index variable. In this case, the time index is
-created automatically and a new variable called ``time'' is added, assuming
-consecutive and ascending time periods in the order of the original data,
-\item an integer, the number of individuals. In this case, the data need to
-be a balanced panel and be organized as a stacked time series (successive
-blocks of individuals, each block being a time series for the respective
-individual) assuming consecutive and ascending time periods in the order of
-the original data. Two new variables are added: ``id'' and ``time'' which
-contain the individual and the time indexes.  }
+\itemize{
+\item a vector of two character strings which contains the names of
+the individual and of the time indexes,
+\item a character string which is the name of the individual index
+variable. In this case, the time index is created automatically and
+a new variable called "time" is added, assuming consecutive and
+ascending time periods in the order of the original data,
+\item an integer, the number of individuals. In this case, the data
+need to be a balanced panel and be organized as a stacked time
+series (successive blocks of individuals, each block being a time
+series for the respective individual) assuming consecutive and
+ascending time periods in the order of the original data. Two new
+variables are added: "id" and "time" which contain the individual
+and the time indexes.
+}
 
 The \code{"[["} and \code{"$"} extract a series from the \code{pdata.frame}.
 The \code{"index"} attribute is then added to the series and a class
@@ -131,11 +135,11 @@ the function \code{\link{index}} for 'pdata.frames' (and other objects).
 it to each column.
 
 \code{as.list} behaves by default identical to
-\code{\link[base:list]{as.list.data.frame}} which means it drops the
-attributes specific to a pdata.frame; if a list of pseries is wanted, the
-attribute \code{keep.attributes} can to be set to \code{TRUE}. This also
-makes \code{lapply} work as expected on a pdata.frame (see also
-\bold{Examples}).
+\code{\link[base:list]{as.list.data.frame}} which means it drops
+the attributes specific to a pdata.frame; if a list of pseries is
+wanted, the attribute \code{keep.attributes} can to be set to
+\code{TRUE}. This also makes \code{lapply} work as expected on a
+pdata.frame (see also \bold{Examples}).
 }
 \examples{
 
@@ -159,12 +163,12 @@ lapply(as.list(Wag[ , c("ed", "lwage")], keep.attributes = TRUE), lag)
 }
 \seealso{
 \code{\link{index}} to extract the index variables from a
-    'pdata.frame' (and other objects), \code{\link{pdim}} to check
-    the dimensions of a 'pdata.frame' (and other objects),
-    \code{\link{pvar}} to check for each variable if it varies
-    cross-sectionally and over time.  To check if the time periods
-    are consecutive per individual, see
-    \code{\link{is.pconsecutive}}.
+'pdata.frame' (and other objects), \code{\link{pdim}} to check
+the dimensions of a 'pdata.frame' (and other objects),
+\code{\link{pvar}} to check for each variable if it varies
+cross-sectionally and over time.  To check if the time periods
+are consecutive per individual, see
+\code{\link{is.pconsecutive}}.
 }
 \author{
 Yves Croissant

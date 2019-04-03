@@ -55,17 +55,21 @@ fancy.row.names <- function(index, sep = "-") {
 #' that describes its individual and time dimensions.
 #' 
 #' The \code{index} argument indicates the dimensions of the panel. It can be:
-#' \itemize{ \item a vector of two character strings which contains the names
-#' of the individual and of the time indexes, \item a character string which is
-#' the name of the individual index variable. In this case, the time index is
-#' created automatically and a new variable called ``time'' is added, assuming
-#' consecutive and ascending time periods in the order of the original data,
-#' \item an integer, the number of individuals. In this case, the data need to
-#' be a balanced panel and be organized as a stacked time series (successive
-#' blocks of individuals, each block being a time series for the respective
-#' individual) assuming consecutive and ascending time periods in the order of
-#' the original data. Two new variables are added: ``id'' and ``time'' which
-#' contain the individual and the time indexes.  }
+#' \itemize{
+#' \item a vector of two character strings which contains the names of
+#' the individual and of the time indexes,
+#' \item a character string which is the name of the individual index
+#' variable. In this case, the time index is created automatically and
+#' a new variable called "time" is added, assuming consecutive and
+#' ascending time periods in the order of the original data,
+#' \item an integer, the number of individuals. In this case, the data
+#' need to be a balanced panel and be organized as a stacked time
+#' series (successive blocks of individuals, each block being a time
+#' series for the respective individual) assuming consecutive and
+#' ascending time periods in the order of the original data. Two new
+#' variables are added: "id" and "time" which contain the individual
+#' and the time indexes.
+#' }
 #' 
 #' The \code{"[["} and \code{"$"} extract a series from the \code{pdata.frame}.
 #' The \code{"index"} attribute is then added to the series and a class
@@ -78,11 +82,11 @@ fancy.row.names <- function(index, sep = "-") {
 #' it to each column.
 #' 
 #' \code{as.list} behaves by default identical to
-#' \code{\link[base:list]{as.list.data.frame}} which means it drops the
-#' attributes specific to a pdata.frame; if a list of pseries is wanted, the
-#' attribute \code{keep.attributes} can to be set to \code{TRUE}. This also
-#' makes \code{lapply} work as expected on a pdata.frame (see also
-#' \bold{Examples}).
+#' \code{\link[base:list]{as.list.data.frame}} which means it drops
+#' the attributes specific to a pdata.frame; if a list of pseries is
+#' wanted, the attribute \code{keep.attributes} can to be set to
+#' \code{TRUE}. This also makes \code{lapply} work as expected on a
+#' pdata.frame (see also \bold{Examples}).
 #' 
 #' @aliases pdata.frame print.pdata.frame [.pdata.frame [[.pdata.frame
 #'     $.pdata.frame as.data.frame.pdata.frame as.list.pdata.frame

@@ -79,9 +79,10 @@
 #' individual coefficients from separate time series regressions.}
 #' @export
 #' @author Giovanni Millo
-#' @references M. Hashem Pesaran (2006), Estimation and Inference in Large
-#' Heterogeneous Panels with a Multifactor Error Structure,
-#' \emph{Econometrica}, \bold{74}(4), pp. 967--1012.
+#' @references
+#'
+#' \insertRef{PESA:06}{plm}
+#'
 #' @keywords regression
 #' @examples
 #' 

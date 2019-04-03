@@ -21,7 +21,7 @@ vcovDC(x, ...)
 }
 \value{
 An object of class \code{"matrix"} containing the estimate
-    of the covariance matrix of coefficients.
+of the covariance matrix of coefficients.
 }
 \description{
 High-level convenience wrapper for double-clustering robust covariance
@@ -70,8 +70,8 @@ linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovDC)
 }
 \references{
 Cameron, A.C., Gelbach, J.B., & Miller, D.L. (2011)
-    Robust inference with multiway clustering, \emph{Journal of
-    Business and Economic Statistics} \bold{29(2)}, pp. 238--249.
+Robust inference with multiway clustering, \emph{Journal of
+Business and Economic Statistics} \bold{29(2)}, pp. 238--249.
 
 Cribari-Neto, F. (2004) Asymptotic inference under heteroskedasticity of
 unknown form. \emph{Computational Statistics & Data Analysis} \bold{45(2)},
@@ -91,7 +91,7 @@ Estimators. \emph{Journal of Statistical Software}, \bold{11}(10), pp.
 }
 \seealso{
 \code{\link[sandwich]{vcovHC}} from the \CRANpkg{sandwich}
-    package for weighting schemes (\code{type} argument).
+package for weighting schemes (\code{type} argument).
 }
 \author{
 Giovanni Millo

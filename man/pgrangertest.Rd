@@ -29,9 +29,9 @@ further details see \code{\link{pdata.frame}}.}
 \value{
 An object of class \code{c("pgrangertest",
     "htest")}. Besides the usual elements of a \code{htest} object,
-    it contains the data frame \code{indgranger} which carries the
-    Granger test statistics per individual along the associated
-    p-values, degrees of freedom and the specified lag order.
+it contains the data frame \code{indgranger} which carries the
+Granger test statistics per individual along the associated
+p-values, degrees of freedom and the specified lag order.
 }
 \description{
 Test for Granger (non-)causality in panel data.
@@ -94,7 +94,7 @@ panel data, % \emph{IRENE Working paper 17-03}, September 11, 2017.
 }
 \seealso{
 \code{\link[lmtest]{grangertest}} for the original
-    (non-panel) Granger causality test in \CRANpkg{lmtest}.
+(non-panel) Granger causality test in \CRANpkg{lmtest}.
 }
 \author{
 Kevin Tappe

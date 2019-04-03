@@ -109,10 +109,10 @@ restrictions on the coefficients,}
 
 \item{formula.}{a new formula for the update method,}
 
-\item{evaluate}{a boolean for the update method, if `TRUE` the
-updated model is returned, if `FALSE` the call is returned,}
+\item{evaluate}{a boolean for the update method, if \code{TRUE} the
+updated model is returned, if \code{FALSE} the call is returned,}
 
-\item{newdata}{the new data set for the `predict` method,}
+\item{newdata}{the new data set for the \code{predict} method,}
 
 \item{dx}{the half--length of the individual lines for the plot
 method (relative to x range),}
@@ -131,7 +131,6 @@ method (relative to x range),}
 }
 \value{
 An object of class \code{"plm"}.
-
 
 A \code{"plm"} object has the following elements :
 
@@ -154,7 +153,6 @@ models only),}
 coefficients which are silently dropped by \code{plm} due to
 linearly dependent terms (see also \code{\link{detect.lindep}}),}
 \item{call}{the call.}
-
 
 It has \code{print}, \code{summary} and \code{print.summary} methods. The
 \code{summary} method creates an object of class \code{"summary.plm"} that
@@ -279,7 +277,7 @@ summary(am)
 \references{
 \insertRef{AMEM:71}{plm}
 
-\insertRef{AMEM:MACUR:86}{plm}
+\insertRef{AMEM:MACU:86}{plm}
 
 \insertRef{BALE:VARA:87}{plm}
 
@@ -289,7 +287,7 @@ summary(am)
 
 \insertRef{BALT:13}{plm}
 
-\insertRef{BREU:MIZO:SCHMI:89}{plm}
+\insertRef{BREU:MIZO:SCHM:89}{plm}
 
 \insertRef{HAUS:TAYL:81}{plm}
 

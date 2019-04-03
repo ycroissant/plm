@@ -44,15 +44,15 @@ pggls(formula, data, subset, na.action, effect = c("individual", "time"),
 }
 \value{
 An object of class \code{c("pggls","panelmodel")}
-    containing: \item{coefficients}{the vector of coefficients,}
-    \item{residuals}{the vector of residuals,}
-    \item{fitted.values}{the vector of fitted values,}
-    \item{vcov}{the covariance matrix of the coefficients,}
-    \item{df.residual}{degrees of freedom of the residuals,}
-    \item{model}{a data.frame containing the variables used for the
-    estimation,} \item{call}{the call,} \item{sigma}{the estimated
-    intragroup (or cross-sectional, if \code{effect = "time"})
-    covariance of errors,}
+containing: \item{coefficients}{the vector of coefficients,}
+\item{residuals}{the vector of residuals,}
+\item{fitted.values}{the vector of fitted values,}
+\item{vcov}{the covariance matrix of the coefficients,}
+\item{df.residual}{degrees of freedom of the residuals,}
+\item{model}{a data.frame containing the variables used for the
+estimation,} \item{call}{the call,} \item{sigma}{the estimated
+intragroup (or cross-sectional, if \code{effect = "time"})
+covariance of errors,}
 }
 \description{
 General FGLS estimators for panel data (balanced or unbalanced)
@@ -101,9 +101,9 @@ summary(zz_fd)
 }
 \references{
 Kiefer, N. M. (1980) Estimation of Fixed Effects Models
-    for Time Series of Cross-Sections with Arbitrary Intertemporal
-    Covariance, \emph{Journal of Econometrics}, \bold{14}(2),
-    pp. 195--202.
+for Time Series of Cross-Sections with Arbitrary Intertemporal
+Covariance, \emph{Journal of Econometrics}, \bold{14}(2),
+pp. 195--202.
 
 Im, K. S. and Ahn, S. C. and Schmidt, P. and Wooldridge, J. M. (1999)
 Efficient Estimation of Panel Data Models with Strictly Exogenous

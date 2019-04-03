@@ -4,13 +4,19 @@
 \name{Produc}
 \alias{Produc}
 \title{US States Production}
-\format{A data frame containing : \describe{ \item{state}{the state}
-\item{year}{the year} \item{region}{the region} \item{pcap}{public capital
-stock} \item{hwy}{highway and streets} \item{water}{water and sewer
-facilities} \item{util}{other public buildings and structures}
-\item{pc}{private capital stock} \item{gsp}{gross state product}
-\item{emp}{labor input measured by the employment in non--agricultural
-payrolls} \item{unemp}{state unemployment rate} }}
+\format{A data frame containing :
+\describe{
+\item{state}{the state}
+\item{year}{the year}
+\item{region}{the region}
+\item{pcap}{public capital stock}
+\item{hwy}{highway and streets}
+item{water}{water and sewer facilities}
+\item{util}{other public buildings and structures}
+\item{pc}{private capital stock}
+\item{gsp}{gross state product}
+\item{emp}{labor input measured by the employment in non--agricultural payrolls}
+\item{unemp}{state unemployment rate} }}
 \source{
 Online complements to Baltagi (2001):
 
@@ -31,18 +37,12 @@ A panel of 48 observations from 1970 to 1986
 \emph{country} : United States
 }
 \references{
-Baltagi, Badi H. (2001) \emph{Econometric Analysis of Panel
-Data}, 2nd ed., John Wiley and Sons.
+\insertRef{BALT:01}{plm}
 
-Baltagi, Badi H. (2013) \emph{Econometric Analysis of Panel Data}, 5th ed.,
-John Wiley and Sons.
+\insertRef{BALT:13}{plm}
 
-Baltagi, B. H.  and N.  Pinnoi (1995) \dQuote{Public capital stock and state
-productivity growth: further evidence}, \emph{Empirical Economics},
-\bold{20}(2), pp. 351--359.
+\insertRef{BALT:PINN:95}{plm}
 
-Munnell, A.H. (1990) \dQuote{Why has productivity growth declined?
-Productivity and public investment}, \emph{New England Economic Review}, pp.
-3--22.
+\insertRef{MUNN:90}{plm}
 }
 \keyword{datasets}

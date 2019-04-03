@@ -61,8 +61,8 @@ choose the order of correlation to test for.
 }
 \note{
 The argument \code{order} defaults to the minimum number of
-    observations over the time dimension, while for
-    \code{lmtest::bgtest} it defaults to \code{1}.
+observations over the time dimension, while for
+\code{lmtest::bgtest} it defaults to \code{1}.
 }
 \examples{
 
@@ -83,8 +83,8 @@ pbgtest(inv ~ value + capital, data = Grunfeld, model = "random", type = "F")
 }
 \references{
 Breusch, T.S. (1978), \dQuote{Testing for
-    autocorrelation in dynamic linear models}, \emph{Australian
-    Economic Papers}, \bold{17}(31), pp. 334--355.
+autocorrelation in dynamic linear models}, \emph{Australian
+Economic Papers}, \bold{17}(31), pp. 334--355.
 
 Godfrey, L.G. (1978), \dQuote{Testing against general autoregressive and
 moving average error models when the regressors include lagged dependent
@@ -101,11 +101,11 @@ Wooldridge, J.M. (2013) \emph{Introductory Econometrics: A Modern Approach},
 }
 \seealso{
 For the original test in package \CRANpkg{"lmtest"} see
-    \code{\link[lmtest]{bgtest}}.  See \code{\link{pdwtest}} for
-    the analogous panel Durbin--Watson test.  See
-    \code{\link{pbltest}}, \code{\link{pbsytest}},
-    \code{\link{pwartest}} and \code{\link{pwfdtest}} for other
-    serial correlation tests for panel models.
+\code{\link[lmtest]{bgtest}}.  See \code{\link{pdwtest}} for
+the analogous panel Durbin--Watson test.  See
+\code{\link{pbltest}}, \code{\link{pbsytest}},
+\code{\link{pwartest}} and \code{\link{pwfdtest}} for other
+serial correlation tests for panel models.
 }
 \author{
 Giovanni Millo

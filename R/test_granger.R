@@ -73,21 +73,13 @@
 #' @seealso \code{\link[lmtest]{grangertest}} for the original
 #'     (non-panel) Granger causality test in \CRANpkg{lmtest}.
 #' @references
+#'
+#' \insertRef{DUMI:HURL/12}{plm}
+#'
+#' \insertRef{GRAN:69}{plm}
+#'
+#' \insertRef{LOPE:WEBE:17}{plm}
 #' 
-#' Dumitrescu, E.-I./Hurlin, C. (2012), Testing for Granger non--causality in
-#' heterogeneous panels, \emph{Economic Modelling}, \bold{29}(4), pp.
-#' 1450--1460. % supplements (test data, MATLAB code):
-#' http://www.runmycode.org/companion/view/42
-#' 
-#' Granger, C. W. J. (1969), Investigating Causal Relations by Econometric
-#' Models and Cross--spectral Methods, \emph{Econometrica}, \bold{37}(3), pp.
-#' 424--438.
-#' 
-#' Lopez, L./Weber, S. (2017), Testing for Granger causality in panel data,
-#' \emph{The Stata Journal}, \bold{17}(4), pp. 972--984. % supplements
-#' (xtgcause for Stata): https://ideas.repec.org/c/boc/bocode/s458308.html %
-#' Working Paper: Lopez, L./Weber, S. (2017), Testing for Granger causality in
-#' panel data, % \emph{IRENE Working paper 17-03}, September 11, 2017.
 #' @keywords htest
 #' @examples
 #' 

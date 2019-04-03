@@ -13,22 +13,26 @@ models and to make (robust) inference.
 For a gentle and comprehensive introduction to the package, please see the
 package's vignette.
 
-The main functions to estimate models are: \tabular{ll}{ \code{plm} \tab
-panel data estimators using \code{lm} on transformed data, } \tabular{ll}{
-\code{pgmm} \tab generalized method of moments (GMM) estimation for panel
-data, } \tabular{ll}{ \code{pvcm} \tab variable coefficients models for
-panel data, } \tabular{ll}{ \code{pmg} \tab mean groups (MG), demeaned MG
-and common correlated effects (CCEMG) estimators.  }
+The main functions to estimate models are:
+\itemize{
+\item \code{plm} : panel data estimators using \code{lm} on transformed data,
+-\code{pgmm} generalized method of moments (GMM) estimation for panel
+data,
+\item \code{pvcm} variable coefficients models
+\item \code{pmg} mean groups (MG), demeaned MG and common correlated effects
+(CCEMG) estimators.
+}
 
-Next to the model estimation functions, the package offers several functions
-for statistical tests related to panel data/models.
+Next to the model estimation functions, the package offers several
+functions for statistical tests related to panel data/models.
 
-Multiple functions for (robust) variance--covariance matrices are at hand as
-well.
+Multiple functions for (robust) variance--covariance matrices are
+at hand as well.
 
 The package also provides data sets to demonstrate functions and to
-replicate some text book/paper results.  Use \code{data(package="plm")} to
-view a list of available data sets in the package.
+replicate some text book/paper results.  Use
+\code{data(package="plm")} to view a list of available data sets in
+the package.
 }
 \examples{
 

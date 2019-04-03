@@ -34,7 +34,7 @@ there),}
 \item{dot}{inherited from package \code{\link[Formula]{Formula}} (see
 there),}
 
-\item{x}{a `model.frame`}
+\item{x}{a \code{model.frame}}
 
 \item{object, formula}{an object of class \code{"pdata.frame"} or an
 estimated model object of class \code{"plm"},}

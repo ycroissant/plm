@@ -15,9 +15,10 @@
 #' @return An object of class \code{"htest"}.
 #' @export
 #' @author Yves Croissant
-#' @references Angrist, J.D. and Newey, W.K. (1991). Over-identification tests
-#' in earnings functions with fixed effects, \emph{Journal of Business &
-#' Economic Statistics}, \bold{9(3)}, pp. 317--323.
+#' @references
+#'
+#' \insertRef{ANGR:NEWE:91}{plm}
+#' 
 #' @keywords aneweytest
 #' @examples
 #' 
@@ -124,8 +125,10 @@ aneweytest <-  function(formula, data, subset, na.action, index = NULL,  ...){
 #' @return An object of class \code{"piest"}.
 #' @export
 #' @author Yves Croissant
-#' @references Chamberlain, G. (1982) Multivariate regression for panel data,
-#' \emph{Journal of Econometrics}, \bold{18}(1), pp. 5--46.
+#' @references
+#'
+#' \insertRef{CHAM:82}{plm}
+#'
 #' @keywords piest
 #' @examples
 #' 

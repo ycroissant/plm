@@ -4,11 +4,15 @@
 \name{SumHes}
 \alias{SumHes}
 \title{The Penn World Table, v. 5}
-\format{A data frame containing : \describe{ \item{year}{the year}
-\item{country}{the country name (factor)} \item{opec}{OPEC member?}
-\item{com}{communist regime? } \item{pop}{country's population (in
-thousands)} \item{gdp}{real GDP per capita (in 1985 US dollars)}
-\item{sr}{saving rate (in percent)} }}
+\format{A data frame containing :
+\describe{
+\item{year}{the year}
+\item{country}{the country name (factor)}
+\item{opec}{OPEC member?}
+\item{com}{communist regime? }
+\item{pop}{country's population (in thousands)}
+\item{gdp}{real GDP per capita (in 1985 US dollars)}
+\item{sr}{saving rate (in percent)}}}
 \source{
 Online supplements to Hayashi (2000).
 
@@ -25,11 +29,8 @@ A panel of 125 observations from 1960 to 1985
 \emph{country} : World
 }
 \references{
-Hayashi, F. (2000) \emph{Econometrics}, Princeton University
-Press, chapter 5, pp. 358--363.
+\insertRef{HAYA:00}{plm}
 
-Summers, R. and A. Heston (1991) \dQuote{The Penn World Table (Mark 5): An
-expanded set of international comparisons, 1950--1988}, \emph{Quarterly
-Journal of Economics}, \bold{106}(2), pp. 327-368.
+\insertRef{SUMM:HEST:91}{plm}
 }
 \keyword{datasets}

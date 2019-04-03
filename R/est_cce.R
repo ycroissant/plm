@@ -67,9 +67,10 @@
 #' @export
 #' @importFrom MASS ginv
 #' @author Giovanni Millo
-#' @references G. Kapetanios, M. Hashem Pesaran, T. Yamagata (2011), Panels
-#' with non-stationary multifactor error structures, \emph{Journal of
-#' Econometrics}, \bold{160}(2), pp. 326--348.
+#' @references
+#'
+#' \insertRef{kappesyam11}{plm}
+#' 
 #' @keywords regression
 #' @examples
 #' 

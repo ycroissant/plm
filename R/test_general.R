@@ -47,21 +47,18 @@ data.name <- function(x){
 #' @return An object of class \code{"htest"}.
 #' @export
 #' @author Yves Croissant, Giovanni Millo
-#' @references Hausman, J.A. (1978), Specification tests in econometrics,
-#' \emph{Econometrica}, \bold{46}(6), pp. 1251--1271.
+#' @references
+#'
+#' \insertRef{HAUS:78}{plm}
+#'
+#' \insertRef{HAUS:TAYL:81}{plm}
+#'
+#' \insertRef{KANG:85}{plm}
+#'
+#' \insertRef{WOOL:10}{plm}
+#'
+#' \insertRef{BALT:13}{plm}
 #' 
-#' Hausman, J.A./Taylor, W.E. (1981), Panel data and unobservable individual
-#' effects, \emph{Econometrica}, \bold{49}(6), pp. 1377--1398.
-#' 
-#' Kang, Suk (1985), A note on the equivalence of specification tests in the
-#' two-factor multivariate variance components model, \emph{Journal of
-#' Econometrics}, \bold{28}(2), pp. 193--203.
-#' 
-#' Wooldridge, Jeffrey M. (2010), \emph{Econometric Analysis of Cross Section
-#' and Panel Data}, 2nd ed., MIT Press, Sec. 10.7.3., pp. 328--334.
-#' 
-#' Baltagi, Badi H. (2013), \emph{Econometric Analysis of Panel Data}, 5th ed.,
-#' John Wiley and Sons., Sec. 4.3.
 #' @keywords htest
 #' @examples
 #' 
@@ -346,36 +343,23 @@ pchibarsq <- function(q, df, weights, lower.tail = TRUE, ... ) {
 #' @seealso \code{\link{pFtest}} for individual and/or time effects tests based
 #' on the within model.
 #' @references
+#'
+#' \insertRef{BALT:13}{plm}
+#'
+#' \insertRef{BALT:LI:90}{plm}
+#'
+#' \insertRef{BALT:CHAN:LI:92}{plm}
+#'
+#' \insertRef{BALT:CHAN:LI:98}{plm}
+#'
+#' \insertRef{BREU:PAGA:80}{plm}
+#'
+#' \insertRef{GOUR:HOLL:MONF:82}{plm}
+#'
+#' \insertRef{HOND:85}{plm}
+#'
+#' \insertRef{KING:WU:97}{plm}
 #' 
-#' Baltagi, B. H. (2013) \emph{Econometric Analysis of Panel Data}, 5th
-#' edition, Sec. 4.2, pp. 68--76 and Sec. 9.5, pp. 200--203.
-#' 
-#' Baltagi, B. H./Li, Q. (1990) A lagrange multiplier test for the error
-#' components model with incomplete panels, \emph{Econometric Reviews},
-#' \bold{9}(1), pp. 103--107.
-#' 
-#' Baltagi B. H./Chang, Y./Li, Q. (1992) Monte Carlo results on several new and
-#' existing tests for the error component model, \emph{Journal of Econometrics,
-#' \bold{54}(1-3), pp. 95--120.}
-#' 
-#' Baltagi B. H./Chang, Y./Li, Q. (1998) Testing for random individual and time
-#' effects using unbalanced panel data, \emph{Advances in Econometrics,
-#' \bold{13}, pp. 1--20.}
-#' 
-#' Breusch, T. S./Pagan, A. R. (1980) The Lagrange multiplier test and its
-#' applications to model specification in econometrics, \emph{Review of
-#' Economic Studies}, \bold{47}(1), pp. 239--253.
-#' 
-#' Gourieroux, C./Holly, A./Monfort, A. (1982) Likelihood ratio test, Wald
-#' test, and Kuhn--Tucker test in linear models with inequality constraints on
-#' the regression parameters, \emph{Econometrica}, \bold{50}(1), pp. 63--80.
-#' 
-#' Honda, Y. (1985) Testing the error components model with non--normal
-#' disturbances, \emph{Review of Economic Studies}, \bold{52}(4), pp. 681--690.
-#' 
-#' King, M. L./Wu, P. X. (1997) Locally optimal one--sided tests for
-#' multiparameter hypotheses, \emph{Econometric Reviews}, \bold{16}(2), pp.
-#' 131--156.
 #' @keywords htest
 #' @examples
 #' 
@@ -897,16 +881,14 @@ pwaldtest.default <- function(x, ...) {
 #' 
 #' \code{\link{vcovHC}} for an example of the vcovXX functions, a robust
 #' estimation for the variance--covariance matrix; \code{\link{summary.plm}}
-#' @references Wooldridge, J.M. (2010) \emph{Econometric Analysis of Cross
-#' Section and Panel Data}, 2nd ed., MIT Press, Sec. 4.2.3, pp. 60--62.
+#' @references
+#'
+#' \insertRef{WOOL:10}{plm}
+#'
+#' \insertRef{ANDR:GOLS:SCMI:13}{plm}
+#'
+#' \insertRef{CAME:MILL:15}{plm}
 #' 
-#' Andress, H.-J./Golsch, K./Schmidt, A. (2013), Applied Panel Data Analysis
-#' for Economic and Social Surveys, Springer, Heidelberg et al.
-#' 
-#' Cameron, A. C./Miller, D. L. (2015), "A Practitioner's Guide to
-#' Cluster-Robust Inference", \emph{Journal of Human Resources}, 2015,
-#' \bold{50}(2), pp. 317--373; see also the supplements at
-#' \url{http://cameron.econ.ucdavis.edu/research/papers.html}.
 #' @keywords htest
 #' @examples
 #' 

@@ -4,14 +4,21 @@
 \name{Males}
 \alias{Males}
 \title{Wages and Education of Young Males}
-\format{A data frame containing : \describe{ \item{nr}{identifier}
-\item{year}{year} \item{school}{years of schooling} \item{exper}{years of
-experience (computed as \code{age-6-school})} \item{union}{wage set by
-collective bargaining ?} \item{ethn}{a factor with levels \code{black, hisp,
-other}} \item{married}{married?} \item{health}{health problem ?}
-\item{wage}{log of hourly wage} \item{industry}{a factor with 12 levels}
-\item{occupation}{a factor with 9 levels} \item{residence}{a factor with
-levels \code{rural area, north east, northern central, south}} }}
+\format{A data frame containing :
+\describe{
+\item{nr}{identifier}
+\item{year}{year}
+\item{school}{years of schooling}
+\item{exper}{years of experience (computed as \code{age-6-school})}
+\item{union}{wage set by collective bargaining ?}
+\item{ethn}{a factor with levels \code{black, hisp, other}}
+\item{married}{married?}
+\item{health}{health problem ?}
+\item{wage}{log of hourly wage}
+\item{industry}{a factor with 12 levels}
+\item{occupation}{a factor with 9 levels}
+\item{residence}{a factor with levels \code{rural area, north east, northern central, south}}
+}}
 \source{
 Journal of Applied Econometrics data archive
 \url{http://qed.econ.queensu.ca/jae/1998-v13.2/vella-verbeek/}.
@@ -27,11 +34,8 @@ A panel of 545 observations from 1980 to 1987
 \emph{country} : United States
 }
 \references{
-Vella, F. and M. Verbeek (1998) \dQuote{Whose Wages Do Unions
-Raise? A Dynamic Model of Unionism and Wage Rate Determination for Young
-Men}, \emph{Journal of Applied Econometrics}, \bold{13}(2), pp. 163--183.
+\insertRef{VELL:VERB:98}{plm}
 
-Verbeek, M. (2004) \emph{A Guide to Modern Econometrics}, John Wiley and
-Sons, chapter 10.
+\insertRef{VERB:04}{plm}
 }
 \keyword{datasets}

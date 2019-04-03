@@ -28,9 +28,10 @@
 #' @export
 #' @importFrom maxLik maxLik
 #' @author Yves Croissant
-#' @references Honor\'e, Bo (1992). Trimmed LAD and least squares estimation of
-#' truncated and censored regression models with fixed effects,
-#' \emph{Econometrica}, \bold{60}(3), pp. 533--565.
+#' @references
+#'
+#' \insertRef{HONO:92}{plm}
+#' 
 #' @keywords regression
 pldv <- function(formula, data, subset, weights, na.action,
                  model = c("fd", "random", "pooling"), index = NULL,
