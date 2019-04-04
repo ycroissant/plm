@@ -20,8 +20,8 @@
 #' as GMM instruments.
 #' 
 #' \code{transformation} indicates how the model should be transformed for the
-#' estimation. \code{"d"} gives the ``difference GMM'' model (see Arellano and
-#' Bond (1991)), \code{"ld"} the ``system GMM'' model (see Blundell and Bond
+#' estimation. \code{"d"} gives the "difference GMM" model (see Arellano and
+#' Bond (1991)), \code{"ld"} the "system GMM" model (see Blundell and Bond
 #' (1998)).
 #' 
 #' \code{pgmm} is an attempt to adapt GMM estimators available within the DPD
@@ -53,7 +53,7 @@
 #'     missing, it is set to the first one minus one,
 #' @param transformation the kind of transformation to apply to the
 #'     model: either \code{"d"} (the default value) for the
-#'     ``difference GMM'' model or \code{"ld"} for the ``system GMM'',
+#'     "difference GMM" model or \code{"ld"} for the "system GMM",
 #' @param fsm the matrix for the one step estimator: one of \code{"I"}
 #'     (identity matrix) or \code{"G"} (\eqn{=D'D} where \eqn{D} is
 #'     the first--difference operator) if \code{transformation="d"},
@@ -79,7 +79,7 @@
 #' estimation for each individual,}
 #' 
 #' \item{W}{a list containing the instruments for each individual (two lists in
-#' case of ``sys--GMM''),}
+#' case of "sys--GMM"),}
 #' 
 #' \item{A1}{the weighting matrix for the one--step estimator,}
 #' 

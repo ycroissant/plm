@@ -49,7 +49,7 @@ missing, it is set to the first one minus one,}
 
 \item{transformation}{the kind of transformation to apply to the
 model: either \code{"d"} (the default value) for the
-\code{difference GMM'' model or \code{"ld"} for the }system GMM'',}
+"difference GMM" model or \code{"ld"} for the "system GMM",}
 
 \item{fsm}{the matrix for the one step estimator: one of \code{"I"}
 (identity matrix) or \code{"G"} (\eqn{=D'D} where \eqn{D} is
@@ -86,7 +86,7 @@ coefficients,} \item{residuals}{the vector of residuals,}
 estimation for each individual,}
 
 \item{W}{a list containing the instruments for each individual (two lists in
-case of ``sys--GMM''),}
+case of "sys--GMM"),}
 
 \item{A1}{the weighting matrix for the one--step estimator,}
 
@@ -118,7 +118,8 @@ structure as the one specified in the model.
 as GMM instruments.
 
 \code{transformation} indicates how the model should be transformed for the
-estimation. \code{"d"} gives the \code{difference GMM'' model (see Arellano and Bond (1991)), \code{"ld"} the }system GMM'' model (see Blundell and Bond
+estimation. \code{"d"} gives the "difference GMM" model (see Arellano and
+Bond (1991)), \code{"ld"} the "system GMM" model (see Blundell and Bond
 (1998)).
 
 \code{pgmm} is an attempt to adapt GMM estimators available within the DPD

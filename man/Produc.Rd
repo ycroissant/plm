@@ -11,7 +11,7 @@
 \item{region}{the region}
 \item{pcap}{public capital stock}
 \item{hwy}{highway and streets}
-item{water}{water and sewer facilities}
+\item{water}{water and sewer facilities}
 \item{util}{other public buildings and structures}
 \item{pc}{private capital stock}
 \item{gsp}{gross state product}
