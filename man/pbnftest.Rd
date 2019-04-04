@@ -78,16 +78,11 @@ pbnftest(re, test = "lbi")
 
 }
 \references{
-Baltagi, B.H. (2013) \emph{Econometric Analysis of Panel Data},
-5th ed., John Wiley and Sons, pp. 100--101, 109--110.
+\insertRef{BALT:13}{plm}
 
-Baltagi, B. H. and Wu, P. X. (1999), Unequally spaced panel data regressions
-with AR(1) disturbances. \emph{Econometric Theory}, \bold{15}(6), pp.
-814--823.
+\insertRef{BALT:WU:99}{plm}
 
-Bhargava, A., Franzini, L., and Narendranathan, W. (1982), Serial
-Correlation and the Fixed Effects Model, \emph{Review of Economic Studies},
-\bold{XLIX}(4), pp. 533--549.
+\insertRef{BHAR:FRAN:NARE:82}{plm}
 }
 \seealso{
 \code{\link{pdwtest}} for the original Durbin--Watson test using

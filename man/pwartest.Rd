@@ -58,11 +58,9 @@ pwartest(log(emp) ~ log(wage) + log(capital), data = EmplUK, type = "HC3")
 
 }
 \references{
-Wooldridge, J.M. (2002) \emph{Econometric Analysis of Cross
-Section and Panel Data}, MIT Press, Sec. 10.5.4, pp. 274--276.
+\insertRef{WOOL:02}{plm}
 
-Wooldridge, J.M. (2010) \emph{Econometric Analysis of Cross Section and
-Panel Data}, 2nd ed., MIT Press, Sec. 10.5.4, pp. 310--312.
+\insertRef{WOOL:10}{plm}
 }
 \seealso{
 \code{\link{pwfdtest}}, \code{\link{pdwtest}},

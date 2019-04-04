@@ -80,21 +80,15 @@ phtest(form, data = Gasoline, method = "aux",
 
 }
 \references{
-Hausman, J.A. (1978), Specification tests in econometrics,
-\emph{Econometrica}, \bold{46}(6), pp. 1251--1271.
+\insertRef{HAUS:78}{plm}
 
-Hausman, J.A./Taylor, W.E. (1981), Panel data and unobservable individual
-effects, \emph{Econometrica}, \bold{49}(6), pp. 1377--1398.
+\insertRef{HAUS:TAYL:81}{plm}
 
-Kang, Suk (1985), A note on the equivalence of specification tests in the
-two-factor multivariate variance components model, \emph{Journal of
-Econometrics}, \bold{28}(2), pp. 193--203.
+\insertRef{KANG:85}{plm}
 
-Wooldridge, Jeffrey M. (2010), \emph{Econometric Analysis of Cross Section
-and Panel Data}, 2nd ed., MIT Press, Sec. 10.7.3., pp. 328--334.
+\insertRef{WOOL:10}{plm}
 
-Baltagi, Badi H. (2013), \emph{Econometric Analysis of Panel Data}, 5th ed.,
-John Wiley and Sons., Sec. 4.3.
+\insertRef{BALT:13}{plm}
 }
 \author{
 Yves Croissant, Giovanni Millo

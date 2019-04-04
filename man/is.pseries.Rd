@@ -20,12 +20,13 @@ This function checks if an object qualifies as a pseries
 A \code{"pseries"} is a wrapper around a "basic class" (numeric, factor,
 logical, or character).
 
-To qualify as a pseries, an object needs to have the following features:
-\itemize{ \item class contains \code{"pseries"} and there are at least two
-classes (\code{"pseries"} and the basic class), \item have an appropriate
-index attribute (defines the panel structure), \item any of
-\code{is.numeric}, \code{is.factor}, \code{is.logical}, \code{is.character},
-\code{is.complex} is \code{TRUE}. }
+To qualify as a pseries, an object needs to have the following
+features: \itemize{ \item class contains \code{"pseries"} and there
+are at least two classes (\code{"pseries"} and the basic class),
+\item have an appropriate index attribute (defines the panel
+structure), \item any of \code{is.numeric}, \code{is.factor},
+\code{is.logical}, \code{is.character}, \code{is.complex} is
+\code{TRUE}. }
 }
 \examples{
 

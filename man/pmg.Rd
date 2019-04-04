@@ -90,9 +90,7 @@ ccemgmod <- pmg(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
 summary(ccemgmod) 
 }
 \references{
-M. Hashem Pesaran (2006), Estimation and Inference in Large
-Heterogeneous Panels with a Multifactor Error Structure,
-\emph{Econometrica}, \bold{74}(4), pp. 967--1012.
+\insertRef{PESA:06}{plm}
 }
 \author{
 Giovanni Millo

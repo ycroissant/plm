@@ -74,7 +74,7 @@
 #'     (non-panel) Granger causality test in \CRANpkg{lmtest}.
 #' @references
 #'
-#' \insertRef{DUMI:HURL/12}{plm}
+#' \insertRef{DUMI:HURL:12}{plm}
 #'
 #' \insertRef{GRAN:69}{plm}
 #'

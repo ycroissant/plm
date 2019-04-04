@@ -552,22 +552,16 @@ pwartest.panelmodel <- function(x, ...) {
 #' error component model in the presence of local misspecification,
 #' \emph{Journal of Econometrics}, \bold{101}(1), pp. 1--23.
 #'
+#' \insertRef{BALT:13}{plm}
+#'
+#' \insertRef{BALT:LI:91}{plm}
 #' 
-#' Baltagi, B. H. (2013) \emph{Econometric Analysis of Panel Data}, 5th
-#' edition, Wiley.
-#' 
-#' Baltagi, B. H. and Li, Q. (1991), A joint test for serial correlation and
-#' random individual effects, \emph{Statistics and Probability Letters},
-#' \bold{11}(3), pp. 277--280.
-#' 
-#' Baltagi, B. H. and Li, Q. (1995), Testing AR(1) against MA(1) disturbances
-#' in an error component model, \emph{Journal of Econometrics}, \bold{68}(1),
-#' pp. 133--151.
-#' 
-#' Sosa-Escudero, W. and Bera, A.K. (2008), Tests for unbalanced
-#' error--components models under local misspecification, \emph{The Stata
-#' Journal}, \bold{8}(1), pp. 68--78.
+#' \insertRef{BALT:LI:95}{plm}
+#'
+#' \insertRef{SOSA:BERA:08}{plm}
+#'
 #' @keywords htest
+#'
 #' @examples
 #' 
 #' ## Bera et al. (2001), p. 13, table 1 use a subset of the original Grunfeld
@@ -769,21 +763,18 @@ pbsytest.panelmodel <- function(x, test = c("ar", "re", "j"), re.normal = if (te
 #' 
 #' For the Durbin-Watson test generalized to panel data models see
 #' \code{\link{pbnftest}}.
-#' @references Durbin, J. and Watson, G.S. (1950), Testing for Serial
-#' Correlation in Least Squares Regression. I, \emph{Biometrika},
-#' \bold{37}(3/4), pp. 409--428.
-#' 
-#' Durbin, J. and Watson, G.S. (1951), Testing for Serial Correlation in Least
-#' Squares Regression. II, \emph{Biometrika}, \bold{38}(1/2), pp. 159--177.
-#' 
-#' Durbin, J. and Watson, G.S. (1971), Testing for Serial Correlation in Least
-#' Squares Regression. III, \emph{Biometrika}, \bold{58}(1), pp. 1--19.
-#' 
-#' Wooldridge, J.M. (2002) \emph{Econometric Analysis of Cross Section and
-#' Panel Data}, MIT Press, p. 288.
-#' 
-#' Wooldridge, J.M. (2010) \emph{Econometric Analysis of Cross Section and
-#' Panel Data}, 2nd ed., MIT Press, p. 328.
+#' @references
+#'
+#' \insertRef{DURB:WATS:50}{plm}
+#'
+#' \insertRef{DURB:WATS:51}{plm}
+#'
+#' \insertRef{DURB:WATS:71}{plm}
+#'
+#' \insertRef{WOOL:02}{plm}
+#'
+#' \insertRef{WOOL:10}{plm}
+#'
 #' @keywords htest
 #' @examples
 #' 
@@ -925,16 +916,14 @@ pdwtest.formula <- function(x, data, ...) {
 #' structure into account. \code{\link{pbltest}}, \code{\link{pbsytest}},
 #' \code{\link{pwartest}} and \code{\link{pwfdtest}} for other serial
 #' correlation tests for panel models.
-#' @references Baltagi, B.H. (2013) \emph{Econometric Analysis of Panel Data},
-#' 5th ed., John Wiley and Sons, pp. 100--101, 109--110.
+#' @references
+#'
+#' \insertRef{BALT:13}{plm}
+#'
+#' \insertRef{BALT:WU:99}{plm}
+#'
+#' \insertRef{BHAR:FRAN:NARE:82}{plm}
 #' 
-#' Baltagi, B. H. and Wu, P. X. (1999), Unequally spaced panel data regressions
-#' with AR(1) disturbances. \emph{Econometric Theory}, \bold{15}(6), pp.
-#' 814--823.
-#' 
-#' Bhargava, A., Franzini, L., and Narendranathan, W. (1982), Serial
-#' Correlation and the Fixed Effects Model, \emph{Review of Economic Studies},
-#' \bold{XLIX}(4), pp. 533--549.
 #' @keywords htest
 #' @examples
 #' 
@@ -967,9 +956,11 @@ pbnftest.panelmodel <- function(x, test = c("bnf", "lbi"), ...) {
   consec <- all(is.pconsecutive(x))
   balanced <- is.pbalanced(x)
   
-  # residuals are now class pseries, so diff.pseries is used and the differences are computed within observational units
-  # (not across as it would be the case if base::diff() is used and as it is done for lm-objects)
-  # NAs are introduced by the differencing as one observation is lost per observational unit
+  # residuals are now class pseries, so diff.pseries is used and the
+  # differences are computed within observational units (not across as
+  # it would be the case if base::diff() is used and as it is done for
+  # lm-objects) NAs are introduced by the differencing as one
+  # observation is lost per observational unit
   if (!inherits(residuals(x), "pseries")) stop("pdwtest internal error: residuals are not of class \"pseries\"") # check to be safe: need pseries
   
   ind <- index(x)[[1]]
@@ -1067,27 +1058,28 @@ pbnftest.formula <- function(x, data, test = c("bnf", "lbi"), model = c("pooling
 #' 
 #' @aliases pbltest
 #' @importFrom nlme lme
-#' @param x a model formula or an estimated random--effects model of class
-#' \code{plm} ,
+#' @param x a model formula or an estimated random--effects model of
+#'     class \code{plm} ,
 #' @param data for the formula interface only: a \code{data.frame},
-#' @param alternative one of \code{"twosided"}, \code{"onesided"}. Selects
-#' either \eqn{H_A: \rho \neq 0} or \eqn{H_A: \rho = 0} (i.e., the Normal or
-#' the Chi-squared version of the test),
+#' @param alternative one of \code{"twosided"},
+#'     \code{"onesided"}. Selects either \eqn{H_A: \rho \neq 0} or
+#'     \eqn{H_A: \rho = 0} (i.e., the Normal or the Chi-squared
+#'     version of the test),
 #' @param index the index of the \code{data.frame},
 #' @param \dots further arguments.
 #' @return An object of class \code{"htest"}.
 #' @export
 #' @author Giovanni Millo
-#' @seealso \code{\link{pdwtest}}, \code{bgtest}, \code{\link{pbsytest}},
-#' \code{\link{pwartest}} and \code{\link{pwfdtest}} for other serial
-#' correlation tests for panel models.
-#' @references Baltagi, B.H. and Li, Q. (1995) Testing AR(1) against MA(1)
-#' disturbances in an error component model, \emph{Journal of Econometrics}
-#' \bold{68}(1), pp. 133--151.
-#' 
-#' Baltagi, B.H. and Li, Q. (1997) Monte Carlo results on pure and pretest
-#' estimators of an error component model with autocorrelated disturbances,
-#' \emph{Annales d'economie et de statistique} \bold{48}, pp. 69--82.
+#' @seealso \code{\link{pdwtest}}, \code{bgtest},
+#'     \code{\link{pbsytest}}, \code{\link{pwartest}} and
+#'     \code{\link{pwfdtest}} for other serial correlation tests for
+#'     panel models.
+#' @references
+#'
+#' \insertRef{BALT:LI:95}{plm}
+#'
+#' \insertRef{BALT:LI:97}{plm}
+#'
 #' @keywords htest
 #' @examples
 #' 
@@ -1291,14 +1283,16 @@ pbltest.plm <- function(x, alternative = c("twosided", "onesided"), ...) {
 #' @export
 #' @author Giovanni Millo
 #' @seealso \code{pdwtest}, \code{pbgtest}, \code{pwartest},
-#' @references Drukker, D.M. (2003) Testing for serial correlation in linear
-#' panel--data models, \emph{The Stata Journal}, \bold{3(2)}, pp. 168--177.
+#' @references
+#'
+#' \insertRef{DRUK:03}{plm}
+#'
+#' \insertRef{WOOL:02}{plm}
+#' Sec. 10.6.3, pp. 282--283.
+#'
+#' \insertRef{WOOL:10}{plm}
+#' Sec. 10.6.3, pp. 319--320
 #' 
-#' Wooldridge, J.M. (2003) \emph{Econometric Analysis of Cross Section and
-#' Panel Data}, MIT Press, Sec. 10.6.3, pp. 282--283.
-#' 
-#' Wooldridge, J.M. (2010) \emph{Econometric Analysis of Cross Section and
-#' Panel Data}, 2nd ed., MIT Press, Sec. 10.6.3, pp. 319--320.
 #' @keywords htest
 #' @examples
 #' 

@@ -17,25 +17,26 @@
 make.pconsecutive(x, ...)
 }
 \arguments{
-\item{x}{an object of class \code{pdata.frame}, \code{data.frame}, or
-\code{pseries},}
+\item{x}{an object of class \code{pdata.frame}, \code{data.frame},
+or \code{pseries},}
 
-\item{balanced}{logical, indicating whether the data should \emph{additionally}
-be made balanced (default: FALSE),}
+\item{balanced}{logical, indicating whether the data should
+\emph{additionally} be made balanced (default: FALSE),}
 
-\item{index}{only relevant for \code{data.frame} interface; if \code{NULL},
-the first two columns of the data.frame are assumed to be the index
-variables; if not \code{NULL}, both dimensions ('individual', 'time') need
-to be specified by \code{index} as character of length 2 for data frames,
-for further details see \code{\link{pdata.frame}},}
+\item{index}{only relevant for \code{data.frame} interface; if
+\code{NULL}, the first two columns of the data.frame are
+assumed to be the index variables; if not \code{NULL}, both
+dimensions ('individual', 'time') need to be specified by
+\code{index} as character of length 2 for data frames, for
+further details see \code{\link{pdata.frame}},}
 
 \item{\dots}{further arguments.}
 }
 \value{
 An object of the same class as the input \code{x}, i.e. a
-pdata.frame, data.frame or a pseries which is made time--consecutive based
-on the index variables. The returned data are sorted as a stacked time
-series.
+pdata.frame, data.frame or a pseries which is made
+time--consecutive based on the index variables. The returned
+data are sorted as a stacked time series.
 }
 \description{
 This function makes the data consecutive for each individual (no "gaps" in
@@ -135,14 +136,16 @@ nrow(g_bal) # 190 rows
 
 }
 \seealso{
-\code{\link{is.pconsecutive}} to check if data are consecutive;
-\code{\link{make.pbalanced}} to make data only balanced (not
-consecutive).\cr \code{\link{punbalancedness}} for two measures of
-unbalancedness, \code{\link{pdim}} to check the dimensions of a
-'pdata.frame' (and other objects), \code{\link{pvar}} to check for
-individual and time variation of a 'pdata.frame' (and other objects),
-\code{\link{lag}} for lagged (and leading) values of a 'pseries' object.\cr
-\code{\link{pseries}}, \code{\link{data.frame}}, \code{\link{pdata.frame}}.
+\code{\link{is.pconsecutive}} to check if data are
+consecutive; \code{\link{make.pbalanced}} to make data only
+balanced (not consecutive).\cr \code{\link{punbalancedness}}
+for two measures of unbalancedness, \code{\link{pdim}} to check
+the dimensions of a 'pdata.frame' (and other objects),
+\code{\link{pvar}} to check for individual and time variation
+of a 'pdata.frame' (and other objects), \code{\link{lag}} for
+lagged (and leading) values of a 'pseries' object.\cr
+\code{\link{pseries}}, \code{\link{data.frame}},
+\code{\link{pdata.frame}}.
 }
 \author{
 Kevin Tappe

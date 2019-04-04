@@ -16,31 +16,32 @@ pmodel.response(object, ...)
 \method{pmodel.response}{formula}(object, data, ...)
 }
 \arguments{
-\item{object}{an object of class \code{"plm"}, or a formula of class
-\code{"pFormula"},}
+\item{object}{an object of class \code{"plm"}, or a formula of
+class \code{"pFormula"},}
 
 \item{\dots}{further arguments.}
 
 \item{data}{a \code{data.frame}}
 }
 \value{
-A pseries except if model responses' of a \code{"between"} or "fd"
-model as these models "compress" the data (the number of observations used
-in estimation is smaller than the original data due to the specific
-transformation). A numeric is returned for the "between" and "fd" model.
+A pseries except if model responses' of a \code{"between"}
+or "fd" model as these models "compress" the data (the number
+of observations used in estimation is smaller than the original
+data due to the specific transformation). A numeric is returned
+for the "between" and "fd" model.
 }
 \description{
-pmodel.response has several methods to conveniently extract the response of
-several objects.
+pmodel.response has several methods to conveniently extract the
+response of several objects.
 }
 \details{
-The model response is extracted from a \code{pdata.frame} (where the
-response must reside in the first column; this is the case for a model
-frame), a \code{pFormula} + \code{data} or a \code{plm} object, and the
-transformation specified by \code{effect} and \code{model} is applied to
-it.\cr Constructing the model frame first ensures proper NA handling and the
-response being placed in the first column, see also \bold{Examples} for
-usage.
+The model response is extracted from a \code{pdata.frame} (where
+the response must reside in the first column; this is the case for
+a model frame), a \code{pFormula} + \code{data} or a \code{plm}
+object, and the transformation specified by \code{effect} and
+\code{model} is applied to it.\cr Constructing the model frame
+first ensures proper NA handling and the response being placed in
+the first column, see also \bold{Examples} for usage.
 }
 \examples{
 
@@ -67,9 +68,9 @@ all.equal(resp, pmodel.response(fe_model), check.attributes = FALSE) # TRUE
 
 }
 \seealso{
-\code{plm}'s \code{\link{model.matrix}} for (transformed) model
-matrix and the corresponding \code{\link{model.frame}} method to construct a
-model frame.
+\code{plm}'s \code{\link{model.matrix}} for (transformed)
+model matrix and the corresponding \code{\link{model.frame}}
+method to construct a model frame.
 }
 \author{
 Yves Croissant

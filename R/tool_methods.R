@@ -73,22 +73,23 @@ print.panelmodel <- function(x, digits = max(3, getOption("digits") - 2),
 
 #' Extract Total Number of Observations Used in Estimated Panelmodel
 #' 
-#' This function extracts the total number of 'observations' from a fitted
-#' panel model.
+#' This function extracts the total number of 'observations' from a
+#' fitted panel model.
 #' 
-#' The number of observations is usually the length of the residuals vector.
-#' Thus, \code{nobs} gives the number of observations actually used by the
-#' estimation procedure. It is not necessarily the number of observations of
-#' the model frame (number of rows in the model frame), because sometimes the
-#' model frame is further reduced by the estimation procedure. This is e.g. the
-#' case for first--difference models estimated by \code{plm(\dots{}, model =
-#' "fd")} where the model frame does not yet contain the differences (see also
-#' \bold{Examples}).
+#' The number of observations is usually the length of the residuals
+#' vector.  Thus, \code{nobs} gives the number of observations
+#' actually used by the estimation procedure. It is not necessarily
+#' the number of observations of the model frame (number of rows in
+#' the model frame), because sometimes the model frame is further
+#' reduced by the estimation procedure. This is e.g. the case for
+#' first--difference models estimated by \code{plm(\dots{}, model =
+#' "fd")} where the model frame does not yet contain the differences
+#' (see also \bold{Examples}).
 #'
 #' @name nobs.panelmodel
 #' @aliases nobs.panelmodel
-#' @param object a \code{panelmodel} object for which the number of total
-#' observations is to be extracted,
+#' @param object a \code{panelmodel} object for which the number of
+#'     total observations is to be extracted,
 #' @param \dots further arguments.
 #' @return A single number, normally an integer.
 #' @seealso \code{\link{pdim}}
@@ -175,53 +176,59 @@ deviance.panelmodel <- function(object, model = NULL, ...){
 #' The summary method for plm objects generates some more information about
 #' estimated plm models.
 #' 
-#' The \code{summary} method for plm objects (\code{summary.plm}) creates an
-#' object of class \code{c("summary.plm", "plm", "panelmodel")} that extends
-#' the plm object it is run on with various information about the estimated
-#' model like (inferential) statistics, see \bold{Value}. It has an associated
-#' print method (\code{print.summary.plm}).
+#' The \code{summary} method for plm objects (\code{summary.plm})
+#' creates an object of class \code{c("summary.plm", "plm",
+#' "panelmodel")} that extends the plm object it is run on with
+#' various information about the estimated model like (inferential)
+#' statistics, see \bold{Value}. It has an associated print method
+#' (\code{print.summary.plm}).
 #' 
 #' @aliases summary.plm
 #' @param object an object of class \code{"plm"},
 #' @param x an object of class \code{"summary.plm"},
-#' @param subset a character or numeric vector indicating a subset of the table
-#' of coefficients to be printed for \code{"print.summary.plm"},
-#' @param vcov a variance--covariance matrix furnished by the user or a
-#' function to calculate one (see \bold{Examples}),
+#' @param subset a character or numeric vector indicating a subset of
+#'     the table of coefficients to be printed for
+#'     \code{"print.summary.plm"},
+#' @param vcov a variance--covariance matrix furnished by the user or
+#'     a function to calculate one (see \bold{Examples}),
 #' @param digits number of digits for printed output,
 #' @param width the maximum length of the lines in the printed output,
 #' @param \dots further arguments.
-#' @return An object of class \code{c("summary.plm", "plm", "panelmodel")}.
-#' Some of its elements are carried over from the associated plm object and
-#' described there (\code{\link{plm}}). The following elements are new or
-#' changed relative to the elements of a plm object:
+#' @return An object of class \code{c("summary.plm", "plm",
+#'     "panelmodel")}.  Some of its elements are carried over from the
+#'     associated plm object and described there
+#'     (\code{\link{plm}}). The following elements are new or changed
+#'     relative to the elements of a plm object:
 #' 
-#' \item{fstatistic}{'htest' object: joint test of significance of coefficients
-#' (F or Chi-square test) (robust statistic in case of supplied argument
-#' \code{vcov}, see \code{\link{pwaldtest}} for details),}
-#' \item{coefficients}{a matrix with the estimated coefficients, standard
-#' errors, t--values, and p--values, if argument \code{vcov} was set to
-#' non-\code{NULL} the standard errors (and t-- and p--values) in their
-#' respective robust variant,} \item{vcov}{the "regular" variance--covariance
-#' matrix of the coefficients (class "matrix"),} \item{rvcov}{only present if
+#' \item{fstatistic}{'htest' object: joint test of significance of
+#' coefficients (F or Chi-square test) (robust statistic in case of
+#' supplied argument \code{vcov}, see \code{\link{pwaldtest}} for
+#' details),} \item{coefficients}{a matrix with the estimated
+#' coefficients, standard errors, t--values, and p--values, if
+#' argument \code{vcov} was set to non-\code{NULL} the standard errors
+#' (and t-- and p--values) in their respective robust variant,}
+#' \item{vcov}{the "regular" variance--covariance matrix of the
+#' coefficients (class "matrix"),} \item{rvcov}{only present if
 #' argument \code{vcov} was set to non-\code{NULL}: the furnished
 #' variance--covariance matrix of the coefficients (class "matrix"),}
-#' \item{r.squared}{a named numeric containing the R-squared ("rsq") and the
-#' adjusted R-squared ("adjrsq") of the model,} \item{df}{an integer vector
-#' with 3 components, (p, n-p, p*), where p is the number of estimated
-#' (non-aliased) coefficients of the model, n-p are the residual degrees of
-#' freedom (n being number of observations), and p* is the total number of
-#' coefficients (incl. any aliased ones).}
+#' \item{r.squared}{a named numeric containing the R-squared ("rsq")
+#' and the adjusted R-squared ("adjrsq") of the model,} \item{df}{an
+#' integer vector with 3 components, (p, n-p, p*), where p is the
+#' number of estimated (non-aliased) coefficients of the model, n-p
+#' are the residual degrees of freedom (n being number of
+#' observations), and p* is the total number of coefficients
+#' (incl. any aliased ones).}
 #' @export
 #' @author Yves Croissant
 #' @seealso \code{\link{plm}} for estimation of various models;
-#' \code{\link{vcovHC}} for an example of a robust estimation of
-#' variance--covariance matrix; \code{\link{r.squared}} for the function to
-#' calculate R-squared; \code{\link[stats:print.power.htest]{print.htest}} for
-#' some information about class "htest"; \code{\link{fixef}} to compute the
-#' fixed effects for "within" (=fixed effects) models and
-#' \code{\link{within_intercept}} for an "overall intercept" for such models;
-#' \code{\link{pwaldtest}}
+#'     \code{\link{vcovHC}} for an example of a robust estimation of
+#'     variance--covariance matrix; \code{\link{r.squared}} for the
+#'     function to calculate R-squared;
+#'     \code{\link[stats:print.power.htest]{print.htest}} for some
+#'     information about class "htest"; \code{\link{fixef}} to compute
+#'     the fixed effects for "within" (=fixed effects) models and
+#'     \code{\link{within_intercept}} for an "overall intercept" for
+#'     such models; \code{\link{pwaldtest}}
 #' @keywords regression
 #' @examples
 #' 

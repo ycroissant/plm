@@ -16,31 +16,34 @@ vcovG(x, ...)
 
 \item{\dots}{further arguments}
 
-\item{type}{the weighting scheme used, one of \code{"HC0"}, \code{"sss"},
-\code{"HC1"}, \code{"HC2"}, \code{"HC3"}, \code{"HC4"},}
+\item{type}{the weighting scheme used, one of \code{"HC0"},
+\code{"sss"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"},
+\code{"HC4"},}
 
 \item{cluster}{one of \code{"group"}, \code{"time"},}
 
 \item{l}{lagging order, defaulting to zero}
 
 \item{inner}{the function to be applied to the residuals inside the
-sandwich: one of \code{"cluster"} or \code{"white"} or \code{"diagavg"},}
+sandwich: one of \code{"cluster"} or \code{"white"} or
+\code{"diagavg"},}
 }
 \value{
-An object of class \code{"matrix"} containing the estimate of the
-covariance matrix of coefficients.
+An object of class \code{"matrix"} containing the estimate
+of the covariance matrix of coefficients.
 }
 \description{
 Generic Lego building block for robust covariance matrix estimators of the
 vcovXX kind for panel models.
 }
 \details{
-\code{vcovG} is the generic building block for use by higher--level wrappers
-\code{\link{vcovHC}}, \code{\link{vcovSCC}}, \code{\link{vcovDC}}, and
-\code{\link{vcovNW}}. The main use of \code{vcovG} is to be used internally
-by the former, but it is made available in the user space for use in
-non--standard combinations. For more documentation, see see wrapper
-functions mentioned.
+\code{vcovG} is the generic building block for use by higher--level
+wrappers \code{\link{vcovHC}}, \code{\link{vcovSCC}},
+\code{\link{vcovDC}}, and \code{\link{vcovNW}}. The main use of
+\code{vcovG} is to be used internally by the former, but it is made
+available in the user space for use in non--standard
+combinations. For more documentation, see see wrapper functions
+mentioned.
 }
 \examples{
 
@@ -59,14 +62,13 @@ coeftest(zz, vcov.=myvcov)
 
 }
 \references{
-Millo, G. (2017) Robust Standard Error Estimators for Panel
-Models: A Unifying Approach, \emph{Journal of Statistical Software}
-\bold{82}(3), pp. 1--27.
+\insertRef{mil17b}{plm}
 }
 \seealso{
-\code{\link{vcovHC}}, \code{\link{vcovSCC}}, \code{\link{vcovDC}},
-\code{\link{vcovNW}}, and \code{\link{vcovBK}} albeit the latter does not
-make use of vcovG.
+\code{\link{vcovHC}}, \code{\link{vcovSCC}},
+\code{\link{vcovDC}}, \code{\link{vcovNW}}, and
+\code{\link{vcovBK}} albeit the latter does not make use of
+vcovG.
 }
 \author{
 Giovanni Millo

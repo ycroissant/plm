@@ -104,16 +104,11 @@ pwaldtest(mod_fe, vcov = vcov_mat) # no df2 adjustment performed
 
 }
 \references{
-Wooldridge, J.M. (2010) \emph{Econometric Analysis of Cross
-Section and Panel Data}, 2nd ed., MIT Press, Sec. 4.2.3, pp. 60--62.
+\insertRef{WOOL:10}{plm}
 
-Andress, H.-J./Golsch, K./Schmidt, A. (2013), Applied Panel Data Analysis
-for Economic and Social Surveys, Springer, Heidelberg et al.
+\insertRef{ANDR:GOLS:SCMI:13}{plm}
 
-Cameron, A. C./Miller, D. L. (2015), "A Practitioner's Guide to
-Cluster-Robust Inference", \emph{Journal of Human Resources}, 2015,
-\bold{50}(2), pp. 317--373; see also the supplements at
-\url{http://cameron.econ.ucdavis.edu/research/papers.html}.
+\insertRef{CAME:MILL:15}{plm}
 }
 \seealso{
 \code{\link{vcovHC}} for an example of the vcovXX functions, a robust

@@ -53,21 +53,15 @@ pdwtest(inv ~ value + capital, data=Grunfeld, model="random")
 
 }
 \references{
-Durbin, J. and Watson, G.S. (1950), Testing for Serial
-Correlation in Least Squares Regression. I, \emph{Biometrika},
-\bold{37}(3/4), pp. 409--428.
+\insertRef{DURB:WATS:50}{plm}
 
-Durbin, J. and Watson, G.S. (1951), Testing for Serial Correlation in Least
-Squares Regression. II, \emph{Biometrika}, \bold{38}(1/2), pp. 159--177.
+\insertRef{DURB:WATS:51}{plm}
 
-Durbin, J. and Watson, G.S. (1971), Testing for Serial Correlation in Least
-Squares Regression. III, \emph{Biometrika}, \bold{58}(1), pp. 1--19.
+\insertRef{DURB:WATS:71}{plm}
 
-Wooldridge, J.M. (2002) \emph{Econometric Analysis of Cross Section and
-Panel Data}, MIT Press, p. 288.
+\insertRef{WOOL:02}{plm}
 
-Wooldridge, J.M. (2010) \emph{Econometric Analysis of Cross Section and
-Panel Data}, 2nd ed., MIT Press, p. 328.
+\insertRef{WOOL:10}{plm}
 }
 \seealso{
 \code{\link[lmtest]{dwtest}} for the Durbin--Watson test

@@ -91,14 +91,13 @@ pwfdtest(mod, type = "HC3", h0 = "fe")
 
 }
 \references{
-Drukker, D.M. (2003) Testing for serial correlation in linear
-panel--data models, \emph{The Stata Journal}, \bold{3(2)}, pp. 168--177.
+\insertRef{DRUK:03}{plm}
 
-Wooldridge, J.M. (2003) \emph{Econometric Analysis of Cross Section and
-Panel Data}, MIT Press, Sec. 10.6.3, pp. 282--283.
+\insertRef{WOOL:02}{plm}
+Sec. 10.6.3, pp. 282--283.
 
-Wooldridge, J.M. (2010) \emph{Econometric Analysis of Cross Section and
-Panel Data}, 2nd ed., MIT Press, Sec. 10.6.3, pp. 319--320.
+\insertRef{WOOL:10}{plm}
+Sec. 10.6.3, pp. 319--320
 }
 \seealso{
 \code{pdwtest}, \code{pbgtest}, \code{pwartest},

@@ -119,20 +119,13 @@ Bera, A.K., Sosa-Escudero, W. and Yoon, M. (2001), Tests for the
 error component model in the presence of local misspecification,
 \emph{Journal of Econometrics}, \bold{101}(1), pp. 1--23.
 
-Baltagi, B. H. (2013) \emph{Econometric Analysis of Panel Data}, 5th
-edition, Wiley.
+\insertRef{BALT:13}{plm}
 
-Baltagi, B. H. and Li, Q. (1991), A joint test for serial correlation and
-random individual effects, \emph{Statistics and Probability Letters},
-\bold{11}(3), pp. 277--280.
+\insertRef{BALT:LI:91}{plm}
 
-Baltagi, B. H. and Li, Q. (1995), Testing AR(1) against MA(1) disturbances
-in an error component model, \emph{Journal of Econometrics}, \bold{68}(1),
-pp. 133--151.
+\insertRef{BALT:LI:95}{plm}
 
-Sosa-Escudero, W. and Bera, A.K. (2008), Tests for unbalanced
-error--components models under local misspecification, \emph{The Stata
-Journal}, \bold{8}(1), pp. 68--78.
+\insertRef{SOSA:BERA:08}{plm}
 }
 \seealso{
 \code{\link{plmtest}} for individual and/or time random effects

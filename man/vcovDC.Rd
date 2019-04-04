@@ -69,25 +69,15 @@ linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovDC)
 
 }
 \references{
-Cameron, A.C., Gelbach, J.B., & Miller, D.L. (2011)
-Robust inference with multiway clustering, \emph{Journal of
-Business and Economic Statistics} \bold{29(2)}, pp. 238--249.
+\insertRef{CAME:GELB:MILL:11}{plm}
 
-Cribari-Neto, F. (2004) Asymptotic inference under heteroskedasticity of
-unknown form. \emph{Computational Statistics & Data Analysis} \bold{45(2)},
-pp. 215--233.
+\insertRef{CRIB:04}{plm}
 
-MacKinnon, J. G. and White, H. (1985) Some heteroskedasticity-consistent
-covariance matrix estimators with improved finite sample properties.
-\emph{Journal of Econometrics} \bold{29(3)}, pp. 305--325.
+\insertRef{MACK:WHIT:85}{plm}
 
-Thompson, S.B. (2011) Simple formulas for standard errors that cluster by
-both firm and time, \emph{Journal of Financial Economics} \bold{99(1)}, pp.
-1--10.
+\insertRef{THOM:11}{plm}
 
-Zeileis, A. (2004) Econometric Computing with HC and HAC Covariance Matrix
-Estimators. \emph{Journal of Statistical Software}, \bold{11}(10), pp.
-1--17.  URL \url{http://www.jstatsoft.org/v11/i10/}.
+\insertRef{ZEIL:04}{plm}
 }
 \seealso{
 \code{\link[sandwich]{vcovHC}} from the \CRANpkg{sandwich}

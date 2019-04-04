@@ -138,18 +138,12 @@ pcdtest(g, w = w)
 
 }
 \references{
-Baltagi, B.H.; Feng, Q.; Kao, C. (2012), A Lagrange Multiplier
-test for cross--sectional dependence in a fixed effects panel data model,
-\emph{Journal of Econometrics}, \bold{170}(1), pp. 164--177.
+\insertRef{BALT:FENG:KAO:12}{plm}
 
-Breusch, T.S. and A.R. Pagan (1980), The Lagrange multiplier test and its
-applications to model specification in econometrics, \emph{Review of
-Economic Studies}, \bold{47}(1), pp. 239--253.
+\insertRef{BREU:PAGA:80}{plm}
 
-Pesaran, M.H. (2004), General Diagnostic Tests for Cross Section Dependence
-in Panels, \emph{CESifo} Working Paper 1229.
+\insertRef{PESA:04}{plm}
 
-Pesaran, M.H. (2015), Testing Weak Cross--Sectional Dependence in Large
-Panels, \emph{Econometric Reviews}, \bold{34}(6-10), pp. 1089--1117.
+\insertRef{PESA:15}{plm}
 }
 \keyword{htest}

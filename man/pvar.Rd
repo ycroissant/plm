@@ -29,18 +29,25 @@ pvar(x, ...)
 \item{index}{see \code{\link{pdata.frame}},}
 }
 \value{
-An object of class \code{pvar} containing the following elements:
+An object of class \code{pvar} containing the following
+elements:
 
-\item{id.variation}{a logical vector with \code{TRUE} values if the variable
-has individual variation, \code{FALSE} if not,} \item{time.variation}{a
+\item{id.variation}{a logical vector with \code{TRUE} values if the
+variable has individual variation, \code{FALSE} if not,}
+
+\item{time.variation}{a
 logical vector with \code{TRUE} values if the variable has time variation,
-\code{FALSE} if not,} \item{id.variation_anyNA}{a logical vector with
-\code{TRUE} values if the variable has at least one individual-time
-combination with all NA values in the individual dimension for at least one
-time period, \code{FALSE} if not,} \item{time.variation_anyNA}{a logical
-vector with \code{TRUE} values if the variable has at least one
-individual-time combination with all NA values in the time dimension for at
-least one individual, \code{FALSE} if not.}
+\code{FALSE} if not,}
+
+\item{id.variation_anyNA}{a logical vector with \code{TRUE} values
+if the variable has at least one individual-time combination with
+all NA values in the individual dimension for at least one time
+period, \code{FALSE} if not,}
+
+\item{time.variation_anyNA}{a logical vector with \code{TRUE}
+values if the variable has at least one individual-time combination
+with all NA values in the time dimension for at least one
+individual, \code{FALSE} if not.}
 }
 \description{
 This function checks for each variable of a panel if it varies

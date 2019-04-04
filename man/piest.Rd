@@ -51,8 +51,7 @@ summary(pirice)
 
 }
 \references{
-Chamberlain, G. (1982) Multivariate regression for panel data,
-\emph{Journal of Econometrics}, \bold{18}(1), pp. 5--46.
+\insertRef{CHAM:82}{plm}
 }
 \author{
 Yves Croissant

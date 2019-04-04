@@ -89,9 +89,7 @@ gw <- pvcm(invest ~ value + capital, data = Grunfeld, index = c("firm", "year"))
 
 }
 \references{
-Swamy, P.A.V.B. (1970). Efficient Inference in a Random
-Coefficient Regression Model, \emph{Econometrica}, \bold{38}(2), pp.
-311--323.
+\insertRef{SWAM:70}{plm}
 }
 \author{
 Yves Croissant

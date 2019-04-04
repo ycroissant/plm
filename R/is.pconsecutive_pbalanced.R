@@ -290,24 +290,28 @@ is.pconsecutive <- function(x, ...){
 #' 
 #' @aliases is.pbalanced
 #' @param x an object of class \code{pdata.frame}, \code{data.frame},
-#' \code{pseries}, \code{panelmodel}, \code{pgmm};
+#'     \code{pseries}, \code{panelmodel}, \code{pgmm};
 #' @param y **to describe**
-#' @param index only relevant for \code{data.frame} interface; if \code{NULL},
-#' the first two columns of the data.frame are assumed to be the index
-#' variables; if not \code{NULL}, both dimensions ('individual', 'time') need
-#' to be specified by \code{index} as character of length 2 for data frames,
-#' for further details see \code{\link{pdata.frame}},
+#' @param index only relevant for \code{data.frame} interface; if
+#'     \code{NULL}, the first two columns of the data.frame are
+#'     assumed to be the index variables; if not \code{NULL}, both
+#'     dimensions ('individual', 'time') need to be specified by
+#'     \code{index} as character of length 2 for data frames, for
+#'     further details see \code{\link{pdata.frame}},
 #' @param \dots further arguments.
-#' @return A logical indicating whether the data associated with object
-#' \code{x} are balanced (\code{TRUE}) or not (\code{FALSE}).
-#' @seealso \code{\link{punbalancedness}} for two measures of unbalancedness,
-#' \code{\link{make.pbalanced}} to make data balanced;
-#' \code{\link{is.pconsecutive}} to check if data are consecutive;
-#' \code{\link{make.pconsecutive}} to make data consecutive (and, optionally,
-#' also balanced).\cr \code{\link{pdim}} to check the dimensions of a
-#' 'pdata.frame' (and other objects), \code{\link{pvar}} to check for
-#' individual and time variation of a 'pdata.frame' (and other objects),
-#' \code{\link{pseries}}, \code{\link{data.frame}}, \code{\link{pdata.frame}}.
+#' @return A logical indicating whether the data associated with
+#'     object \code{x} are balanced (\code{TRUE}) or not
+#'     (\code{FALSE}).
+#' @seealso \code{\link{punbalancedness}} for two measures of
+#'     unbalancedness, \code{\link{make.pbalanced}} to make data
+#'     balanced; \code{\link{is.pconsecutive}} to check if data are
+#'     consecutive; \code{\link{make.pconsecutive}} to make data
+#'     consecutive (and, optionally, also balanced).\cr
+#'     \code{\link{pdim}} to check the dimensions of a 'pdata.frame'
+#'     (and other objects), \code{\link{pvar}} to check for individual
+#'     and time variation of a 'pdata.frame' (and other objects),
+#'     \code{\link{pseries}}, \code{\link{data.frame}},
+#'     \code{\link{pdata.frame}}.
 #' @export
 #' @keywords attribute
 #' @examples

@@ -72,25 +72,15 @@ linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovNW)
 
 }
 \references{
-Cribari-Neto, F. (2004) Asymptotic inference under
-heteroskedasticity of unknown form. \emph{Computational
-Statistics & Data Analysis} \bold{45(2)}, pp. 215--233.
+\insertRef{CRIB:04}{plm}
 
-Driscoll, J.C. and Kraay, A.C. (1998) Consistent Covariance Matrix
-Estimation with Spatially Dependent Panel Data. \emph{Review of Economics
-and Statistics} \bold{80(4)}, pp. 549--560.
+\insertRef{DRIS:KRAA:98}{plm}
 
-MacKinnon, J. G. and White, H. (1985) Some heteroskedasticity-consistent
-covariance matrix estimators with improved finite sample properties.
-\emph{Journal of Econometrics} \bold{29(3)}, pp. 305--325.
+\insertRef{MACK:WHIT:85}{plm}
 
-Newey, W.K. & West, K.D. (1987) A simple, positive semi-definite,
-heteroskedasticity and autocorrelation consistent covariance matrix.
-\emph{Econometrica} \bold{55(3)}, pp. 703--708.
+\insertRef{NEWE:WEST:87}{plm}
 
-Zeileis, A. (2004) Econometric Computing with HC and HAC Covariance Matrix
-Estimators. \emph{Journal of Statistical Software}, \bold{11}(10), pp.
-1--17.  URL \url{http://www.jstatsoft.org/v11/i10/}.
+\insertRef{ZEIL:04}{plm}
 }
 \seealso{
 \code{\link[sandwich]{vcovHC}} from the \CRANpkg{sandwich}

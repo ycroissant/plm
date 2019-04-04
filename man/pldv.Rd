@@ -54,9 +54,7 @@ an assumed normal distribution for the individual effects and a LSQ/LAD
 estimator for the first-difference model.
 }
 \references{
-Honor'e, Bo (1992). Trimmed LAD and least squares estimation of
-truncated and censored regression models with fixed effects,
-\emph{Econometrica}, \bold{60}(3), pp. 533--565.
+\insertRef{HONO:92}{plm}
 }
 \author{
 Yves Croissant

@@ -14,16 +14,17 @@ pbltest(x, ...)
 \method{pbltest}{plm}(x, alternative = c("twosided", "onesided"), ...)
 }
 \arguments{
-\item{x}{a model formula or an estimated random--effects model of class
-\code{plm} ,}
+\item{x}{a model formula or an estimated random--effects model of
+class \code{plm} ,}
 
 \item{\dots}{further arguments.}
 
 \item{data}{for the formula interface only: a \code{data.frame},}
 
-\item{alternative}{one of \code{"twosided"}, \code{"onesided"}. Selects
-either \eqn{H_A: \rho \neq 0} or \eqn{H_A: \rho = 0} (i.e., the Normal or
-the Chi-squared version of the test),}
+\item{alternative}{one of \code{"twosided"},
+\code{"onesided"}. Selects either \eqn{H_A: \rho \neq 0} or
+\eqn{H_A: \rho = 0} (i.e., the Normal or the Chi-squared
+version of the test),}
 
 \item{index}{the index of the \code{data.frame},}
 }
@@ -58,18 +59,15 @@ pbltest(re_mod, alternative = "onesided")
 
 }
 \references{
-Baltagi, B.H. and Li, Q. (1995) Testing AR(1) against MA(1)
-disturbances in an error component model, \emph{Journal of Econometrics}
-\bold{68}(1), pp. 133--151.
+\insertRef{BALT:LI:95}{plm}
 
-Baltagi, B.H. and Li, Q. (1997) Monte Carlo results on pure and pretest
-estimators of an error component model with autocorrelated disturbances,
-\emph{Annales d'economie et de statistique} \bold{48}, pp. 69--82.
+\insertRef{BALT:LI:97}{plm}
 }
 \seealso{
-\code{\link{pdwtest}}, \code{bgtest}, \code{\link{pbsytest}},
-\code{\link{pwartest}} and \code{\link{pwfdtest}} for other serial
-correlation tests for panel models.
+\code{\link{pdwtest}}, \code{bgtest},
+\code{\link{pbsytest}}, \code{\link{pwartest}} and
+\code{\link{pwfdtest}} for other serial correlation tests for
+panel models.
 }
 \author{
 Giovanni Millo

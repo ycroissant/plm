@@ -16,17 +16,17 @@ punbalancedness(x, ...)
 \method{punbalancedness}{panelmodel}(x, ...)
 }
 \arguments{
-\item{x}{a \code{panelmodel}, a \code{data.frame}, or a \code{pdata.frame}
-object,}
+\item{x}{a \code{panelmodel}, a \code{data.frame}, or a
+\code{pdata.frame} object,}
 
 \item{\dots}{further arguments.}
 
-\item{index}{only relevant for \code{data.frame} interface, for details see
-\code{\link{pdata.frame}},}
+\item{index}{only relevant for \code{data.frame} interface, for
+details see \code{\link{pdata.frame}},}
 }
 \value{
-A named numeric containing either two or three entries, depending on
-the panel structure inputted:
+A named numeric containing either two or three entries,
+depending on the panel structure inputted:
 
 \item{*}{For the two-dimensional panel structure, the entries are
 called \code{gamma} and \code{nu},}
@@ -35,12 +35,12 @@ called \code{gamma} and \code{nu},}
 \code{c1}, \code{c2}, \code{c3}.}
 }
 \description{
-This function reports unbalancedness measures for panel data as defined in
-Ahrens/Pincus (1981) and Baltagi/Song/Jung (2001).
+This function reports unbalancedness measures for panel data as
+defined in Ahrens/Pincus (1981) and Baltagi/Song/Jung (2001).
 }
 \details{
-\code{punbalancedness} returns measures for the unbalancedness of a panel
-data set.
+\code{punbalancedness} returns measures for the unbalancedness of a
+panel data set.
 
 \itemize{
 
@@ -52,8 +52,8 @@ If the panel data are balanced, both measures equal 1. The more
 "unbalanced" the panel data, the lower the measures (but > 0). The
 upper and lower bounds as given in Ahrens/Pincus (1981) are:\cr
 \eqn{0 < \gamma, \nu \le 1}, and for \eqn{\nu} more precisely
-\eqn{\frac{1}{n} < \nu \le 1}{1/n < \nu \le 1}, with \eqn{n}
-being the number of individuals (as in \code{pdim(x)$nT$n}).
+\eqn{\frac{1}{n} < \nu \le 1}{1/n < \nu \le 1}, with \eqn{n} being
+the number of individuals (as in \code{pdim(x)$nT$n}).
 
 \item For nested panel data (meaning including a grouping variable):\cr The
 extension of the above measures by Baltagi/Song/Jung (2001), p. 368, are
@@ -81,14 +81,16 @@ returns detailed information about the number of individuals and time
 observations (see \code{\link{pdim}}).
 }
 \note{
-Calling \code{punbalancedness} on an estimated \code{panelmodel}
-object and on the corresponding \code{(p)data.frame} used for this
-estimation does not necessarily yield the same result (true also for
-\code{pdim}). When called on an estimated \code{panelmodel}, the number of
-observations (individual, time) actually used for model estimation are taken
-into account. When called on a \code{(p)data.frame}, the rows in the
-\code{(p)data.frame} are considered, disregarding any NA values in the
-dependent or independent variable(s) which would be dropped during model
+Calling \code{punbalancedness} on an estimated
+\code{panelmodel} object and on the corresponding
+\code{(p)data.frame} used for this estimation does not
+necessarily yield the same result (true also for
+\code{pdim}). When called on an estimated \code{panelmodel},
+the number of observations (individual, time) actually used for
+model estimation are taken into account. When called on a
+\code{(p)data.frame}, the rows in the \code{(p)data.frame} are
+considered, disregarding any NA values in the dependent or
+independent variable(s) which would be dropped during model
 estimation.
 }
 \examples{
@@ -125,26 +127,17 @@ punbalancedness(Produc, index = c("state", "year"))
 
 }
 \references{
-Ahrens, H.; Pincus, R. (1981), \dQuote{On two measures of
-unbalancedness in a one-way model and their relation to efficiency},
-\emph{Biometrical Journal}, \bold{23}(3), pp. 227--235.
+\insertRef{AHRE:PINC:81}{plm}
 
-Baltagi, Badi H.; Chang, Young-Jae (1994), \dQuote{Incomplete panels: A
-comparative study of alternative estimators for the unbalanced one-way error
-component regression model}, \emph{Journal of Econometrics}, \bold{62}(2),
-pp. 67--89.
+\insertRef{BALT:CHAN:94}{plm}
 
-Baltagi, Badi H.; Song, Seuck Heun; Jung, Byoung Cheol (2001), \dQuote{The
-unbalanced nested error component regression model}, \emph{Journal of
-Econometrics}, \bold{101}(2), pp. 357--381.
+\insertRef{BALT:SONG:JUNG:01}{plm}
 
-Baltagi, Badi H.; Song, Seuck H.; Jung, Byoung C. (2002), \dQuote{A
-comparative study of alternative estimators for the unbalanced two-way error
-component regression model}, \emph{Econometrics Journal}, \bold{5}(2), pp.
-480--493.
+\insertRef{BALT:SONG:JUNG:02}{plm}
 }
 \seealso{
-\code{\link{nobs}}, \code{\link{pdim}}, \code{\link{pdata.frame}}
+\code{\link{nobs}}, \code{\link{pdim}},
+\code{\link{pdata.frame}}
 }
 \author{
 Kevin Tappe

@@ -107,29 +107,28 @@ An object of class 'pdata.frame' is a data.frame with an index attribute
 that describes its individual and time dimensions.
 }
 \details{
-The \code{index} argument indicates the dimensions of the panel. It can be:
-\itemize{
-\item a vector of two character strings which contains the names of
-the individual and of the time indexes,
-\item a character string which is the name of the individual index
+The \code{index} argument indicates the dimensions of the panel. It
+can be: \itemize{ \item a vector of two character strings which
+contains the names of the individual and of the time indexes, \item
+a character string which is the name of the individual index
 variable. In this case, the time index is created automatically and
 a new variable called "time" is added, assuming consecutive and
-ascending time periods in the order of the original data,
-\item an integer, the number of individuals. In this case, the data
-need to be a balanced panel and be organized as a stacked time
-series (successive blocks of individuals, each block being a time
-series for the respective individual) assuming consecutive and
-ascending time periods in the order of the original data. Two new
-variables are added: "id" and "time" which contain the individual
-and the time indexes.
-}
+ascending time periods in the order of the original data, \item an
+integer, the number of individuals. In this case, the data need to
+be a balanced panel and be organized as a stacked time series
+(successive blocks of individuals, each block being a time series
+for the respective individual) assuming consecutive and ascending
+time periods in the order of the original data. Two new variables
+are added: "id" and "time" which contain the individual and the
+time indexes.  }
 
-The \code{"[["} and \code{"$"} extract a series from the \code{pdata.frame}.
-The \code{"index"} attribute is then added to the series and a class
-attribute \code{"pseries"} is added. The \code{"["} method behaves as for
-\code{data.frame}, except that the extraction is also applied to the
-\code{index} attribute.  A safe way to extract the index attribute is to use
-the function \code{\link{index}} for 'pdata.frames' (and other objects).
+The \code{"[["} and \code{"$"} extract a series from the
+\code{pdata.frame}.  The \code{"index"} attribute is then added to
+the series and a class attribute \code{"pseries"} is added. The
+\code{"["} method behaves as for \code{data.frame}, except that the
+extraction is also applied to the \code{index} attribute.  A safe
+way to extract the index attribute is to use the function
+\code{\link{index}} for 'pdata.frames' (and other objects).
 
 \code{as.data.frame} removes the index from the \code{pdata.frame} and adds
 it to each column.

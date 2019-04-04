@@ -163,28 +163,15 @@ summary(z2, robust = TRUE)
 
 }
 \references{
-Arellano, M. and Bond, S. (1991) Some Tests of
-Specification for Panel Data: Monte Carlo Evidence and an
-Application to Employment Equations, \emph{The Review of
-Economic Studies}, \bold{58}(2), 1991, pp. 227--297.
+\insertRef{AREL:BOND:91}{plm}
 
-Arellano, M. and Bond, S. (1998) Dynamic Panel Data Estimation Using DPD98
-for GAUSS: A Guide for Users.
+\insertRef{AREL:BOND:98}{plm}
 
-Blundell, R. and Bond, S. (1998) Initial Conditions and Moment Restrictions
-in Dynamic Panel Data Models, \emph{Journal of Econometrics}, vol.
-\bold{87}(1), pp. 115--143.
+\insertRef{BLUN:BOND:98}{plm}
 
-Doornik, J., Arellano, M. and Bond, S. (2006) Panel Data Estimation using
-DPD for Ox.
-\url{http://www.doornik.com/download/oxmetrics7/Ox_Packages/dpd.pdf}
+\insertRef{DOOR:AREL:BOND:12}{plm}
 
-Roodman, D. (2009) How to do xtabond2: An introduction to
-difference and system GMM in Stata, \emph{Stata Journal},
-vol. \bold{9}(1), pp. 86--136.
-\url{http://www.stata-journal.com/article.html?article=st0159}. %
-full article in Stata Journal is now accessible % Working Paper
-version at \url{http://ideas.repec.org/p/cgd/wpaper/103.html}.
+\insertRef{ROOD:09}{plm}
 }
 \seealso{
 \code{\link{sargan}} for the Hansen--Sargan test and

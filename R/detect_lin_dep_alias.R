@@ -85,8 +85,10 @@
 #' @seealso \code{\link[stats:alias]{alias}}, \code{\link[stats]{model.matrix}}
 #' and especially \code{plm}'s \code{\link{model.matrix}} for (transformed)
 #' model matrices, plm's \code{\link{model.frame}}.
-#' @references Wooldridge, J.M. (2016) \emph{Introductory Econometrics: A
-#' Modern Approach}, 6th ed., Cengage Learning, Boston, sec. 7-2, pp. 206--211.
+#' @references
+#'
+#' \insertRef{WOOL:13}{plm}
+#'
 #' @keywords manip array
 #' @examples
 #' 

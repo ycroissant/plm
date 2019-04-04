@@ -86,18 +86,14 @@ Breusch, T.S. (1978), \dQuote{Testing for
 autocorrelation in dynamic linear models}, \emph{Australian
 Economic Papers}, \bold{17}(31), pp. 334--355.
 
-Godfrey, L.G. (1978), \dQuote{Testing against general autoregressive and
-moving average error models when the regressors include lagged dependent
-variables}, \emph{Econometrica}, \bold{46}(6), pp. 1293--1301.
+\insertRef{GODF:78}{plm}
 
-Wooldridge, J.M. (2002) \emph{Econometric Analysis of Cross Section and
-Panel Data}, MIT Press, pp. 288--291.
+\insertRef{WOOL:02}{plm}
 
-Wooldridge, J.M. (2010) \emph{Econometric Analysis of Cross Section and
-Panel Data}, 2nd ed., MIT Press, pp. 328--334.
+\insertRef{WOOL:10}{plm}
 
-Wooldridge, J.M. (2013) \emph{Introductory Econometrics: A Modern Approach},
-5th ed., South-Western (Cengage Learning), Sec. 12.2, pp. 421--422.
+\insertRef{WOOL:13}{plm}
+Sec. 12.2, pp. 421--422.
 }
 \seealso{
 For the original test in package \CRANpkg{"lmtest"} see

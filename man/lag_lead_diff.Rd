@@ -19,30 +19,33 @@ lead(x, k = 1, ...)
 \arguments{
 \item{x}{a \code{pseries} object,}
 
-\item{k}{an integer, the number of lags for the \code{lag} and \code{lead}
-methods (can also be negative).  For the \code{lag} method, a positive
-(negative) \code{k} gives lagged (leading) values.  For the \code{lead}
-method, a positive (negative) \code{k} gives leading (lagged) values, thus,
-\code{lag(x, k = -1)} yields the same as \code{lead(x, k = 1)}.  If \code{k}
-is an integer with length > 1 (\code{k = c(k1, k2, \dots{})}) a
+\item{k}{an integer, the number of lags for the \code{lag} and
+\code{lead} methods (can also be negative).  For the \code{lag}
+method, a positive (negative) \code{k} gives lagged (leading)
+values.  For the \code{lead} method, a positive (negative)
+\code{k} gives leading (lagged) values, thus, \code{lag(x, k =
+    -1)} yields the same as \code{lead(x, k = 1)}.  If \code{k} is
+an integer with length > 1 (\code{k = c(k1, k2, \dots{})}) a
 \code{matrix} with multiple lagged \code{pseries} is returned,}
 
 \item{\dots}{further arguments (currently none evaluated).}
 
-\item{shift}{character, either \code{"time"} (default) or \code{"row"}
-determining how the shifting in the \code{lag}/\code{lead}/\code{diff}
-functions is performed (see Details and Examples).}
+\item{shift}{character, either \code{"time"} (default) or
+\code{"row"} determining how the shifting in the
+\code{lag}/\code{lead}/\code{diff} functions is performed (see
+Details and Examples).}
 
-\item{lag}{the number of lags for the \code{diff} method, can also be of
-length > 1 (see argument \code{k}) (only non--negative values in argument
-\code{lag} are allowed for \code{diff}),}
+\item{lag}{the number of lags for the \code{diff} method, can also
+be of length > 1 (see argument \code{k}) (only non--negative
+values in argument \code{lag} are allowed for \code{diff}),}
 }
 \value{
-\itemize{ \item An object of class \code{pseries}, if the argument
-specifying the lag has length 1 (argument \code{k} in functions \code{lag}
-and \code{lead}, argument \code{lag} in function \code{diff}).  \item A
-matrix containing the various series in its columns, if the argument
-specifying the lag has length > 1. }
+\itemize{ \item An object of class \code{pseries}, if the
+argument specifying the lag has length 1 (argument \code{k} in
+functions \code{lag} and \code{lead}, argument \code{lag} in
+function \code{diff}).  \item A matrix containing the various
+series in its columns, if the argument specifying the lag has
+length > 1. }
 }
 \description{
 lag, lead, and diff functions for class pseries.
@@ -116,8 +119,8 @@ head(lag(Em_hole$emp, k = 2, shift = "row"), 10)
 
 }
 \seealso{
-To check if the time periods are consecutive per individual, see
-\code{\link{is.pconsecutive}}.
+To check if the time periods are consecutive per
+individual, see \code{\link{is.pconsecutive}}.
 
 For further function for 'pseries' objects: \code{\link{between}},
 \code{\link{Between}}, \code{\link{Within}}, \code{\link{summary.pseries}},

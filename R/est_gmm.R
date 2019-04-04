@@ -106,7 +106,7 @@
 #'
 #' \insertRef{BLUN:BOND:98}{plm}
 #' 
-#' \insertRef{DOOR:AREL:BOND:06}{plm}
+#' \insertRef{DOOR:AREL:BOND:12}{plm}
 #'
 #' \insertRef{ROOD:09}{plm}
 #' 

@@ -10,43 +10,46 @@ within_intercept(object, ...)
 \method{within_intercept}{plm}(object, vcov = NULL, ...)
 }
 \arguments{
-\item{object}{object of class \code{plm} which must be a within model (fixed
-effects model),}
+\item{object}{object of class \code{plm} which must be a within
+model (fixed effects model),}
 
 \item{\dots}{further arguments (currently none).}
 
-\item{vcov}{if not \code{NULL} (default), a function to calculate a user
-defined variance--covariance matrix (function for robust vcov),}
+\item{vcov}{if not \code{NULL} (default), a function to calculate a
+user defined variance--covariance matrix (function for robust
+vcov),}
 }
 \value{
-A named \code{numeric} of length one: The overall intercept for the
-estimated within model along attribute "se" which contains the standard
-error for the intercept.
+A named \code{numeric} of length one: The overall intercept
+for the estimated within model along attribute "se" which
+contains the standard error for the intercept.
 }
 \description{
 This function gives an overall intercept for within models and its
 accompanying standard error
 }
 \details{
-The (somewhat artificial) intercept for within models (fixed effects models)
-was made popular by Stata of StataCorp (see Gould (2013)), EViews of IHS,
-and gretl (see Cottrell/Lucchetti (2016), p. 160-161 (example 18.1)), see
-for treatment in the literature, e.g. Greene (2012), Ch. 11.4.4, p. 364. It
-can be considered an overall intercept in the within model framework and is
-the weighted mean of fixed effects (see \bold{Examples} for the
-relationship).
+The (somewhat artificial) intercept for within models (fixed
+effects models) was made popular by Stata of StataCorp (see Gould
+(2013)), EViews of IHS, and gretl (see Cottrell/Lucchetti (2016),
+p. 160-161 (example 18.1)), see for treatment in the literature,
+e.g. Greene (2012), Ch. 11.4.4, p. 364. It can be considered an
+overall intercept in the within model framework and is the weighted
+mean of fixed effects (see \bold{Examples} for the relationship).
 
-\code{within_intercept} estimates a new model which is computationally more
-demanding than just taking the weighted mean. However, with
-\code{within_intercept} one also gets the associated standard error and it
-is possible to get an overall intercept for twoway fixed effect models.
+\code{within_intercept} estimates a new model which is
+computationally more demanding than just taking the weighted
+mean. However, with \code{within_intercept} one also gets the
+associated standard error and it is possible to get an overall
+intercept for twoway fixed effect models.
 
-Users can set argument \code{vcov} to a function to calculate a specific
-(robust) variance--covariance matrix and get the respective (robust)
-standard error for the overall intercept, e.g. the function
-\code{\link{vcovHC}}, see examples for usage. Note: The argument \code{vcov}
-must be a function, not a matrix, because the model to calculate the overall
-intercept for the within model is different from the within model itself.
+Users can set argument \code{vcov} to a function to calculate a
+specific (robust) variance--covariance matrix and get the
+respective (robust) standard error for the overall intercept,
+e.g. the function \code{\link{vcovHC}}, see examples for
+usage. Note: The argument \code{vcov} must be a function, not a
+matrix, because the model to calculate the overall intercept for
+the within model is different from the within model itself.
 }
 \examples{
 
@@ -73,18 +76,16 @@ within_intercept(gi, vcov = function(x) vcovHC(x, method="arellano", type="HC0")
 
 }
 \references{
-Cottrell, A./Lucchetti, R., Gretl User's Guide,
-\url{http://gretl.sourceforge.net/gretl-help/gretl-guide.pdf}.
+\insertRef{gretl}{plm}
 
-Gould, W. (2013), \dQuote{How can there be an intercept in the fixed-effects
-model estimated by xtreg, fe?},
-\url{http://www.stata.com/support/faqs/statistics/intercept-in-fixed-effects-model/}.
+\insertRef{GOUL:13}{plm}
 
-Greene, W. H. (2012), Econometric Analysis, 7th ed., Prentice Hall, Ch.
-11.4.4.
+\insertRef{GREE:12}{plm}
+Ch. 11.4.4.
 }
 \seealso{
-\code{\link{fixef}} to extract the fixed effects of a within model.
+\code{\link{fixef}} to extract the fixed effects of a
+within model.
 }
 \author{
 Kevin Tappe

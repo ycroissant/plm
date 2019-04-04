@@ -11,14 +11,16 @@
 
 #' Driscoll and Kraay (1998) Robust Covariance Matrix Estimator
 #' 
-#' Nonparametric robust covariance matrix estimators \emph{a la Driscoll and
-#' Kraay} for panel models with cross-sectional \emph{and} serial correlation.
+#' Nonparametric robust covariance matrix estimators \emph{a la
+#' Driscoll and Kraay} for panel models with cross-sectional
+#' \emph{and} serial correlation.
 #' 
-#' \code{vcovSCC} is a function for estimating a robust covariance matrix of
-#' parameters for a panel model according to the Driscoll and Kraay (1998)
-#' method, which is consistent with cross--sectional and serial correlation in
-#' a T-asymptotic setting and irrespective of the N dimension. The use with
-#' random effects models is undocumented.
+#' \code{vcovSCC} is a function for estimating a robust covariance
+#' matrix of parameters for a panel model according to the Driscoll
+#' and Kraay (1998) method, which is consistent with cross--sectional
+#' and serial correlation in a T-asymptotic setting and irrespective
+#' of the N dimension. The use with random effects models is
+#' undocumented.
 #' 
 #' Weighting schemes specified by \code{type} are analogous to those
 #' in \code{\link[sandwich]{vcovHC}} in package \CRANpkg{sandwich} and
@@ -58,21 +60,15 @@
 #' @references Cribari-Neto, F. (2004) Asymptotic inference under
 #'     heteroskedasticity of unknown form. \emph{Computational
 #'     Statistics & Data Analysis} \bold{45(2)}, pp. 215--233.
+#'
+#' \insertRef{DRIS:KRAA:98}{plm}
 #' 
-#' Driscoll, J.C. and Kraay, A.C. (1998) Consistent Covariance Matrix
-#' Estimation with Spatially Dependent Panel Data. \emph{Review of Economics
-#' and Statistics} \bold{80(4)}, pp. 549--560.
+#' \insertRef{HOEC:07}{plm}
+#'
+#' \insertRef{MACK:WHIT:85}{plm}
 #' 
-#' Hoechle, D. (2007) Robust standard errors for panel regressions with
-#' cross-sectional dependence. \emph{Stata Journal}, \bold{7(3)}, pp. 281--312.
+#' \insertRef{ZEIL:04}{plm}
 #' 
-#' MacKinnon, J. G. and White, H. (1985) Some heteroskedasticity-consistent
-#' covariance matrix estimators with improved finite sample properties.
-#' \emph{Journal of Econometrics} \bold{29(3)}, pp. 305--325.
-#' 
-#' Zeileis, A. (2004) Econometric Computing with HC and HAC Covariance Matrix
-#' Estimators. \emph{Journal of Statistical Software}, \bold{11}(10), pp.
-#' 1--17.  URL \url{http://www.jstatsoft.org/v11/i10/}.
 #' @keywords regression
 #' @examples
 #' 
@@ -137,25 +133,18 @@ vcovSCC <- function(x, ...){
 #' @author Giovanni Millo
 #' @seealso \code{\link[sandwich]{vcovHC}} from the \CRANpkg{sandwich}
 #'     package for weighting schemes (\code{type} argument).
-#' @references Cribari-Neto, F. (2004) Asymptotic inference under
-#'     heteroskedasticity of unknown form. \emph{Computational
-#'     Statistics & Data Analysis} \bold{45(2)}, pp. 215--233.
+#' @references
+#'
+#' \insertRef{CRIB:04}{plm}
 #' 
-#' Driscoll, J.C. and Kraay, A.C. (1998) Consistent Covariance Matrix
-#' Estimation with Spatially Dependent Panel Data. \emph{Review of Economics
-#' and Statistics} \bold{80(4)}, pp. 549--560.
+#' \insertRef{DRIS:KRAA:98}{plm}
+#'
+#' \insertRef{MACK:WHIT:85}{plm}
 #' 
-#' MacKinnon, J. G. and White, H. (1985) Some heteroskedasticity-consistent
-#' covariance matrix estimators with improved finite sample properties.
-#' \emph{Journal of Econometrics} \bold{29(3)}, pp. 305--325.
+#' \insertRef{NEWE:WEST:87}{plm}
+#'
+#' \insertRef{ZEIL:04}{plm}
 #' 
-#' Newey, W.K. & West, K.D. (1987) A simple, positive semi-definite,
-#' heteroskedasticity and autocorrelation consistent covariance matrix.
-#' \emph{Econometrica} \bold{55(3)}, pp. 703--708.
-#' 
-#' Zeileis, A. (2004) Econometric Computing with HC and HAC Covariance Matrix
-#' Estimators. \emph{Journal of Statistical Software}, \bold{11}(10), pp.
-#' 1--17.  URL \url{http://www.jstatsoft.org/v11/i10/}.
 #' @keywords regression
 #' @examples
 #' 
@@ -219,25 +208,19 @@ vcovNW <- function(x, ...){
 #' @author Giovanni Millo
 #' @seealso \code{\link[sandwich]{vcovHC}} from the \CRANpkg{sandwich}
 #'     package for weighting schemes (\code{type} argument).
-#' @references Cameron, A.C., Gelbach, J.B., & Miller, D.L. (2011)
-#'     Robust inference with multiway clustering, \emph{Journal of
-#'     Business and Economic Statistics} \bold{29(2)}, pp. 238--249.
+#' @references
+#'
+#'
+#' \insertRef{CAME:GELB:MILL:11}{plm}
 #' 
-#' Cribari-Neto, F. (2004) Asymptotic inference under heteroskedasticity of
-#' unknown form. \emph{Computational Statistics & Data Analysis} \bold{45(2)},
-#' pp. 215--233.
+#' \insertRef{CRIB:04}{plm}
+#'
+#' \insertRef{MACK:WHIT:85}{plm}
 #' 
-#' MacKinnon, J. G. and White, H. (1985) Some heteroskedasticity-consistent
-#' covariance matrix estimators with improved finite sample properties.
-#' \emph{Journal of Econometrics} \bold{29(3)}, pp. 305--325.
+#' \insertRef{THOM:11}{plm}
 #' 
-#' Thompson, S.B. (2011) Simple formulas for standard errors that cluster by
-#' both firm and time, \emph{Journal of Financial Economics} \bold{99(1)}, pp.
-#' 1--10.
+#' \insertRef{ZEIL:04}{plm}
 #' 
-#' Zeileis, A. (2004) Econometric Computing with HC and HAC Covariance Matrix
-#' Estimators. \emph{Journal of Statistical Software}, \bold{11}(10), pp.
-#' 1--17.  URL \url{http://www.jstatsoft.org/v11/i10/}.
 #' @keywords regression
 #' @examples
 #' 
@@ -267,32 +250,37 @@ vcovDC <- function(x, ...){
 #' Generic Lego building block for robust covariance matrix estimators of the
 #' vcovXX kind for panel models.
 #' 
-#' \code{vcovG} is the generic building block for use by higher--level wrappers
-#' \code{\link{vcovHC}}, \code{\link{vcovSCC}}, \code{\link{vcovDC}}, and
-#' \code{\link{vcovNW}}. The main use of \code{vcovG} is to be used internally
-#' by the former, but it is made available in the user space for use in
-#' non--standard combinations. For more documentation, see see wrapper
-#' functions mentioned.
+#' \code{vcovG} is the generic building block for use by higher--level
+#' wrappers \code{\link{vcovHC}}, \code{\link{vcovSCC}},
+#' \code{\link{vcovDC}}, and \code{\link{vcovNW}}. The main use of
+#' \code{vcovG} is to be used internally by the former, but it is made
+#' available in the user space for use in non--standard
+#' combinations. For more documentation, see see wrapper functions
+#' mentioned.
 #' 
 #' @aliases vcovG
 #' @param x an object of class \code{"plm"} or \code{"pcce"}
-#' @param type the weighting scheme used, one of \code{"HC0"}, \code{"sss"},
-#' \code{"HC1"}, \code{"HC2"}, \code{"HC3"}, \code{"HC4"},
+#' @param type the weighting scheme used, one of \code{"HC0"},
+#'     \code{"sss"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"},
+#'     \code{"HC4"},
 #' @param cluster one of \code{"group"}, \code{"time"},
 #' @param l lagging order, defaulting to zero
 #' @param inner the function to be applied to the residuals inside the
-#' sandwich: one of \code{"cluster"} or \code{"white"} or \code{"diagavg"},
+#'     sandwich: one of \code{"cluster"} or \code{"white"} or
+#'     \code{"diagavg"},
 #' @param \dots further arguments
-#' @return An object of class \code{"matrix"} containing the estimate of the
-#' covariance matrix of coefficients.
+#' @return An object of class \code{"matrix"} containing the estimate
+#'     of the covariance matrix of coefficients.
 #' @export
 #' @author Giovanni Millo
-#' @seealso \code{\link{vcovHC}}, \code{\link{vcovSCC}}, \code{\link{vcovDC}},
-#' \code{\link{vcovNW}}, and \code{\link{vcovBK}} albeit the latter does not
-#' make use of vcovG.
-#' @references Millo, G. (2017) Robust Standard Error Estimators for Panel
-#' Models: A Unifying Approach, \emph{Journal of Statistical Software}
-#' \bold{82}(3), pp. 1--27.
+#' @seealso \code{\link{vcovHC}}, \code{\link{vcovSCC}},
+#'     \code{\link{vcovDC}}, \code{\link{vcovNW}}, and
+#'     \code{\link{vcovBK}} albeit the latter does not make use of
+#'     vcovG.
+#' @references
+#'
+#' \insertRef{mil17b}{plm}
+#'
 #' @keywords regression
 #' @examples
 #' 
@@ -587,24 +575,27 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 
 #' Robust Covariance Matrix Estimators
 #' 
-#' Robust covariance matrix estimators \emph{a la White} for panel models.
+#' Robust covariance matrix estimators \emph{a la White} for panel
+#' models.
 #' 
-#' \code{vcovHC} is a function for estimating a robust covariance matrix of
-#' parameters for a fixed effects or random effects panel model according to
-#' the White method (White 1980, 1984; Arellano 1987). Observations may be
-#' clustered by \code{"group"} (\code{"time"}) to account for serial
-#' (cross-sectional) correlation.
-#' 
-#' All types assume no intragroup (serial) correlation between errors and allow
-#' for heteroskedasticity across groups (time periods). As for the error
-#' covariance matrix of every single group of observations, \code{"white1"}
-#' allows for general heteroskedasticity but no serial (cross--sectional)
-#' correlation; \code{"white2"} is \code{"white1"} restricted to a common
-#' variance inside every group (time period) (see Greene (2003, Sec. 13.7.1-2;
-#' 2012, Sec. 11.6.1-2) and Wooldridge (2002), Sec. 10.7.2); \code{"arellano"}
-#' (see ibid. and the original ref. Arellano (1987)) allows a fully general
-#' structure w.r.t. heteroskedasticity and serial (cross--sectional)
+#' \code{vcovHC} is a function for estimating a robust covariance
+#' matrix of parameters for a fixed effects or random effects panel
+#' model according to the White method (White 1980, 1984; Arellano
+#' 1987). Observations may be clustered by \code{"group"}
+#' (\code{"time"}) to account for serial (cross-sectional)
 #' correlation.
+#' 
+#' All types assume no intragroup (serial) correlation between errors
+#' and allow for heteroskedasticity across groups (time periods). As
+#' for the error covariance matrix of every single group of
+#' observations, \code{"white1"} allows for general heteroskedasticity
+#' but no serial (cross--sectional) correlation; \code{"white2"} is
+#' \code{"white1"} restricted to a common variance inside every group
+#' (time period) (see Greene (2003, Sec. 13.7.1-2; 2012,
+#' Sec. 11.6.1-2) and Wooldridge (2002), Sec. 10.7.2);
+#' \code{"arellano"} (see ibid. and the original ref. Arellano (1987))
+#' allows a fully general structure w.r.t. heteroskedasticity and
+#' serial (cross--sectional) correlation.
 #' 
 #' Weighting schemes specified by \code{type} are analogous to those
 #' in \code{\link[sandwich]{vcovHC}} in package \CRANpkg{sandwich} and
@@ -649,38 +640,26 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 #' @references Arellano, M. (1987) Computing robust standard errors
 #'     for within-group estimators, \emph{Oxford Bulletin of Economics
 #'     and Statistics}, \bold{49(4)}, pp. 431--434.
+#'
+#' \insertRef{CRIB:04}{plm}
+#'
+#' \insertRef{GREE:03}{plm}
+#'
+#' \insertRef{GREE:12}{plm}
+#'
+#' \insertRef{MACK:WHIT:85}{plm}
+#'
+#' \insertRef{WIND:05}{plm}
 #' 
-#' Cribari-Neto, F. (2004) Asymptotic inference under heteroskedasticity of
-#' unknown form. \emph{Computational Statistics & Data Analysis} \bold{45(2)},
-#' pp. 215--233.
+#' \insertRef{WHIT:84b}{plm}
+#' chap. 6
+#'
+#' \insertRef{WHIT:80}{plm}
 #' 
-#' Greene, W. H. (2003) \emph{Econometric Analysis}, 5th ed., Prentice
-#' Hall/Pearson, Upper Saddle River, New Jersey.
+#' \insertRef{WOOL:02}{plm}
+#'
+#' \insertRef{ZEIL:04}{plm}
 #' 
-#' Greene, W. H. (2012) \emph{Econometric Analysis}, 7th ed., Prentice
-#' Hall/Pearson, Upper Saddle River, New Jersey.
-#' 
-#' MacKinnon, J. G. and White, H. (1985) Some heteroskedasticity-consistent
-#' covariance matrix estimators with improved finite sample properties.
-#' \emph{Journal of Econometrics} \bold{29(3)}, pp. 305--325.
-#' 
-#' Windmeijer, F. (2005) A finite sample correction for the variance of linear
-#' efficient two--step GMM estimators, \emph{Journal of Econometrics},
-#' \bold{126(1)}, pp. 25--51.
-#' 
-#' White, H. (1980) \emph{Asymptotic Theory for Econometricians}, Ch. 6,
-#' Academic Press, Orlando (FL).
-#' 
-#' White, H. (1984) A heteroskedasticity-consistent covariance matrix and a
-#' direct test for heteroskedasticity. \emph{Econometrica} \bold{48(4)}, pp.
-#' 817--838.
-#' 
-#' Wooldridge, J. M. (2002) \emph{Econometric Analysis of Cross Section and
-#' Panel Data}, MIT Press, Cambridge (MA).
-#' 
-#' Zeileis, A. (2004) Econometric Computing with HC and HAC Covariance Matrix
-#' Estimators. \emph{Journal of Statistical Software}, \bold{11}(10), pp.
-#' 1--17. URL \url{http://www.jstatsoft.org/v11/i10/}.
 #' @keywords regression
 #' @examples
 #' 
@@ -803,31 +782,33 @@ vcovSCC.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 
 #' Beck and Katz Robust Covariance Matrix Estimators
 #' 
-#' Unconditional Robust covariance matrix estimators \emph{a la Beck and Katz}
-#' for panel models (a.k.a. Panel Corrected Standard Errors (PCSE)).
+#' Unconditional Robust covariance matrix estimators \emph{a la Beck
+#' and Katz} for panel models (a.k.a. Panel Corrected Standard Errors
+#' (PCSE)).
 #' 
-#' \code{vcovBK} is a function for estimating a robust covariance matrix of
-#' parameters for a panel model according to the Beck and Katz (1995) method,
-#' a.k.a. Panel Corrected Standard Errors (PCSE), which uses an unconditional
-#' estimate of the error covariance across time periods (groups) inside the
-#' standard formula for coefficient covariance. Observations may be clustered
-#' either by \code{"group"} to account for timewise heteroskedasticity and
-#' serial correlation or by \code{"time"} to account for cross-sectional
-#' heteroskedasticity and correlation. It must be borne in mind that the Beck
-#' and Katz formula is based on N- (T-) asymptotics and will not be appropriate
-#' elsewhere.
+#' \code{vcovBK} is a function for estimating a robust covariance
+#' matrix of parameters for a panel model according to the Beck and
+#' Katz (1995) method, a.k.a. Panel Corrected Standard Errors (PCSE),
+#' which uses an unconditional estimate of the error covariance across
+#' time periods (groups) inside the standard formula for coefficient
+#' covariance. Observations may be clustered either by \code{"group"}
+#' to account for timewise heteroskedasticity and serial correlation
+#' or by \code{"time"} to account for cross-sectional
+#' heteroskedasticity and correlation. It must be borne in mind that
+#' the Beck and Katz formula is based on N- (T-) asymptotics and will
+#' not be appropriate elsewhere.
 #' 
-#' The \code{diagonal} logical argument can be used, if set to \code{TRUE}, to
-#' force to zero all nondiagonal elements in the estimated error covariances;
-#' this is appropriate if both serial and cross--sectional correlation are
-#' assumed out, and yields a timewise- (groupwise-)
-#' heteroskedasticity--consistent estimator.
+#' The \code{diagonal} logical argument can be used, if set to
+#' \code{TRUE}, to force to zero all nondiagonal elements in the
+#' estimated error covariances; this is appropriate if both serial and
+#' cross--sectional correlation are assumed out, and yields a
+#' timewise- (groupwise-) heteroskedasticity--consistent estimator.
 #' 
-#' Weighting schemes specified by \code{type} are analogous to those in
-#' \code{\link[sandwich]{vcovHC}} in package \CRANpkg{sandwich}
-#' and are justified theoretically (although in the context of the standard
-#' linear model) by MacKinnon and White (1985) and Cribari-Neto (2004) (see
-#' Zeileis (2004)).
+#' Weighting schemes specified by \code{type} are analogous to those
+#' in \code{\link[sandwich]{vcovHC}} in package \CRANpkg{sandwich} and
+#' are justified theoretically (although in the context of the
+#' standard linear model) by MacKinnon and White (1985) and
+#' Cribari-Neto (2004) (see Zeileis (2004)).
 #' 
 #' % TODO: once "sss" has been added: \code{type = "sss"} employs the small
 #' sample correction as used by Stata. % give formula for "sss"; elaborate why
@@ -844,36 +825,32 @@ vcovSCC.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 #' 
 #' @aliases vcovBK vcovBK.plm
 #' @param x an object of class \code{"plm"},
-#' @param type the weighting scheme used, one of \code{"HC0"}, \code{"HC1"},
-#' \code{"HC2"}, \code{"HC3"}, \code{"HC4"}, see Details,
+#' @param type the weighting scheme used, one of \code{"HC0"},
+#'     \code{"HC1"}, \code{"HC2"}, \code{"HC3"}, \code{"HC4"}, see
+#'     Details,
 #' @param cluster one of \code{"group"}, \code{"time"},
-#' @param diagonal a logical value specifying whether to force nondiagonal
-#' elements to zero,
+#' @param diagonal a logical value specifying whether to force
+#'     nondiagonal elements to zero,
 #' @param \dots further arguments.
 #' @export
-#' @return An object of class \code{"matrix"} containing the estimate of the
-#' covariance matrix of coefficients.
+#' @return An object of class \code{"matrix"} containing the estimate
+#'     of the covariance matrix of coefficients.
 #' @author Giovanni Millo
 #' @seealso \code{\link[sandwich]{vcovHC}} from the \CRANpkg{sandwich}
-#' package for weighting schemes (\code{type} argument).
-#' @references Beck, N. and Katz, J. (1995) What to do (and not to do) with
-#' time-series cross-section data in comparative politics. \emph{American
-#' Political Science Review}, \bold{89(3)}, pp. 634--647.
+#'     package for weighting schemes (\code{type} argument).
+#' @references Beck, N. and Katz, J. (1995) What to do (and not to do)
+#'     with time-series cross-section data in comparative
+#'     politics. \emph{American Political Science Review},
+#'     \bold{89(3)}, pp. 634--647.
+#'
+#' \insertRef{CRIB:04}{plm}
+#'
+#' \insertRef{GREE:03}{plm}
+#'
+#' \insertRef{MACK:WHIT:85}{plm}
+#'
+#' \insertRef{ZEIL:04}{plm}
 #' 
-#' Cribari-Neto, F. (2004) Asymptotic inference under heteroskedasticity of
-#' unknown form. \emph{Computational Statistics & Data Analysis} \bold{45(2)},
-#' pp. 215--233.
-#' 
-#' Greene, W. H. (2003) \emph{Econometric Analysis}, 5th ed., Prentice
-#' Hall/Pearson, Upper Saddle River, New Jersey, Sec. 13.9.3, 13.9.7.
-#' 
-#' MacKinnon, J. G. and White, H. (1985) Some heteroskedasticity-consistent
-#' covariance matrix estimators with improved finite sample properties.
-#' \emph{Journal of Econometrics} \bold{29(3)}, pp. 305--325.
-#' 
-#' Zeileis, A. (2004) Econometric Computing with HC and HAC Covariance Matrix
-#' Estimators. \emph{Journal of Statistical Software}, \bold{11}(10), pp.
-#' 1--17.  URL \url{http://www.jstatsoft.org/v11/i10/}.
 #' @keywords regression
 #' @examples
 #' 
