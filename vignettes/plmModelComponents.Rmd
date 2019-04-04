@@ -137,6 +137,7 @@ which correspond respectively to `dot = "seperate"` (the default) and
 
 
 ```{r }
+library("Formula")
 head(model.frame(Formula(formiv2), SeatBelt), 3)
 head(model.frame(Formula(formiv2), SeatBelt, dot = "previous"), 3)
 ```

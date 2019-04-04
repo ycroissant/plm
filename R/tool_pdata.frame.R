@@ -87,8 +87,6 @@ fancy.row.names <- function(index, sep = "-") {
 #' \code{TRUE}. This also makes \code{lapply} work as expected on a
 #' pdata.frame (see also \bold{Examples}).
 #' 
-#' @aliases pdata.frame print.pdata.frame [.pdata.frame [[.pdata.frame
-#'     $.pdata.frame as.data.frame.pdata.frame as.list.pdata.frame
 #' @param x a \code{data.frame} for the \code{pdata.frame} function
 #'     and a \code{pdata.frame} for the methods,
 #' @param i see \code{\link{Extract}},
@@ -929,16 +927,15 @@ print.pdim <- function(x, ...){
 #' index (the latter only if the pdata frame was constructed with
 #' such).)
 #' 
-#' @name index.pindex
+#' @name index.plm
 #' @param x an object of class \code{"pindex"}, \code{"pdata.frame"},
 #'     \code{"pseries"} or \code{"panelmodel"},
 #' @param which the index(es) to be extracted (see details),
 #' @param \dots further arguments.
-#' @return A vector or an object of class \code{c("pindex",
-#'     "data.frame")} containing either one index, individual and time
-#'     index, or (any combination of) individual, time and group
-#'     indexes.
-#' @export
+#' @return A vector or an object of class
+#'     \code{c("pindex","data.frame")} containing either one index,
+#'     individual and time index, or (any combination of) individual,
+#'     time and group indexes.
 #' @author Yves Croissant
 #' @seealso \code{\link{pdata.frame}}, \code{\link{plm}}
 #' @keywords attribute
@@ -959,7 +956,10 @@ print.pdim <- function(x, ...){
 #' index(pProduc, "region")
 #' index(pProduc, "group")
 #' 
-#' 
+NULL
+
+#' @rdname index.plm
+#' @export
 index.pindex <- function(x, which = NULL, ...){
     if (is.null(which)) which <- names(x)
     else{
@@ -984,21 +984,21 @@ index.pindex <- function(x, which = NULL, ...){
     result
 }
 
-#' @rdname index
+#' @rdname index.plm
 #' @export
 index.pdata.frame <- function(x, which = NULL, ...){
   anindex <- attr(x, "index")
   index(x = anindex, which = which)
 }
 
-#' @rdname index
+#' @rdname index.plm
 #' @export
 index.pseries <- function(x, which = NULL, ...){
   anindex <- attr(x, "index")
   index(x = anindex, which = which)
 }
   
-#' @rdname index
+#' @rdname index.plm
 #' @export
 index.panelmodel <- function(x, which = NULL, ...){
   anindex <- attr(x$model, "index")

@@ -41,4 +41,4 @@ aneweytest(log(goutput) ~ log(seed) + log(totlabor) + log(size), RiceFarms, inde
 \author{
 Yves Croissant
 }
-\keyword{aneweytest}
+\keyword{htest}

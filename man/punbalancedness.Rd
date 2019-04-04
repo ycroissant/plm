@@ -27,12 +27,12 @@ details see \code{\link{pdata.frame}},}
 \value{
 A named numeric containing either two or three entries,
 depending on the panel structure inputted:
-
-\item{*}{For the two-dimensional panel structure, the entries are
-called \code{gamma} and \code{nu},}
-
-\item{*}{For a nested panel structure, the entries are called
-\code{c1}, \code{c2}, \code{c3}.}
+\itemize{
+\item For the two-dimensional panel structure, the entries are called
+\code{gamma} and \code{nu},
+\item For a nested panel structure, the entries are called \code{c1},
+\code{c2}, \code{c3}.
+}
 }
 \description{
 This function reports unbalancedness measures for panel data as

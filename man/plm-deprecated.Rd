@@ -3,11 +3,6 @@
 \name{plm-deprecated}
 \alias{plm-deprecated}
 \alias{pvcovHC}
-\alias{dynformula}
-\alias{print.dynformula}
-\alias{formula.dynformula}
-\alias{plm.data}
-\alias{detect_lin_dep}
 \alias{plm.data}
 \alias{dynformula}
 \alias{pFormula}
@@ -28,7 +23,7 @@ detect_lin_dep(object, ...)
 \item{\dots}{further arguments.}
 
 \item{indexes}{a vector (of length one or two) indicating the (individual
-and time) indexes (see Details),}
+and time) indexes (see Details);}
 
 \item{formula}{a formula,}
 
@@ -59,4 +54,6 @@ using the more general \code{plm} function.
 \code{plm.data} is replaced by \code{pdata.frame}.
 
 \code{pvcovHV} is replaced by \code{vcovHC}.
+
+\code{detect_lin_dep} is replaced by \code{detect.lindep}.
 }

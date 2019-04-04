@@ -19,7 +19,7 @@
 #'
 #' \insertRef{ANGR:NEWE:91}{plm}
 #' 
-#' @keywords aneweytest
+#' @keywords htest
 #' @examples
 #' 
 #' data("RiceFarms", package = "plm")
@@ -129,7 +129,7 @@ aneweytest <-  function(formula, data, subset, na.action, index = NULL,  ...){
 #'
 #' \insertRef{CHAM:82}{plm}
 #'
-#' @keywords piest
+#' @keywords htest
 #' @examples
 #' 
 #' data("RiceFarms", package = "plm")

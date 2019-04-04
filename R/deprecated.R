@@ -12,10 +12,10 @@
 #' \code{plm.data} is replaced by \code{pdata.frame}.
 #' 
 #' \code{pvcovHV} is replaced by \code{vcovHC}.
+#'
+#' \code{detect_lin_dep} is replaced by \code{detect.lindep}.
 #' 
 #' @name plm-deprecated
-#' @aliases plm-deprecated dynformula print.dynformula formula.dynformula
-#' plm.data detect_lin_dep
 #' @param formula a formula,
 #' @param lag.form a list containing the lag structure of each variable in the
 #' formula,
@@ -27,7 +27,10 @@
 #' @param data a \code{data.frame},
 #' @param \dots further arguments.
 #' @param indexes a vector (of length one or two) indicating the (individual
-#' and time) indexes (see Details),
+#' and time) indexes (see Details);
+NULL
+
+#' @rdname plm-deprecated
 pvcovHC <- function(x, ...){
   .Deprecated(new = "pvcovHC", msg = "'pvcovHC' is deprecated, use 'vcovHC' instead for same functionality",
               old = "vcovHC")
@@ -39,11 +42,11 @@ pvcovHC <- function(x, ...){
 # for backward compatibility of users' code out there and packages, especially 
 # for package 'systemfit'.
 #
-# While plm.data() was a 'full function' once, it now is now using pdata.frame()
-# and re-works the properties of the "plm.dim" objects original created by the
-# 'full' plm.data() function.
-# The 'full' plm.data() function is kept non-exported as plm.data_depr_orig
-# due to reference and testing (see tests/test_plm.data.R)
+# While plm.data() was a 'full function' once, it now is now using
+# pdata.frame() and re-works the properties of the "plm.dim" objects
+# original created by the 'full' plm.data() function.  The 'full'
+# plm.data() function is kept non-exported as plm.data_depr_orig due
+# to reference and testing (see tests/test_plm.data.R)
 
 #' @rdname plm-deprecated
 #' @export

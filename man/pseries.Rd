@@ -71,15 +71,7 @@ transformation functions like \code{beetween}, see
 \item{idbyrow}{if \code{TRUE} in the \code{as.matrix} method, the
 lines of the matrix are the individuals,}
 
-\item{plot}{plot arguments,}
-
-\item{scale}{plot arguments,}
-
-\item{transparency}{plot arguments,}
-
-\item{col}{plot arguments,}
-
-\item{lwd}{plot arguments,}
+\item{plot, scale, transparency, col, lwd}{plot arguments,}
 
 \item{effect}{character string indicating the \code{"individual"}
 or \code{"time"} effect,}

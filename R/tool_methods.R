@@ -86,8 +86,7 @@ print.panelmodel <- function(x, digits = max(3, getOption("digits") - 2),
 #' "fd")} where the model frame does not yet contain the differences
 #' (see also \bold{Examples}).
 #'
-#' @name nobs.panelmodel
-#' @aliases nobs.panelmodel
+#' @name nobs.plm
 #' @param object a \code{panelmodel} object for which the number of
 #'     total observations is to be extracted,
 #' @param \dots further arguments.
@@ -119,7 +118,7 @@ NULL
 #     [b/c the latter could do NA padding once NA padding works for plm objects.
 #      NA padded residuals would yield wrong result for nobs!]
 
-#' @rdname nobs
+#' @rdname nobs.plm
 #' @export
 nobs.panelmodel <- function(object, ...) {
   if (inherits(object, "plm") | inherits(object, "panelmodel")) return(length(object$residuals))

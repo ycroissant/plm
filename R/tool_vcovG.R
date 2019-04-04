@@ -694,7 +694,10 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 #'             data = EmplUK, effect = "twoways", model = "twosteps")
 #' rv <- vcovHC(ar)
 #' mtest(ar, order = 2, vcov = rv)
-#' 
+NULL
+
+#' @rdname vcovHC.plm
+#' @export
 vcovHC.plm <- function(x, method=c("arellano", "white1", "white2"),
                        type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
                        cluster=c("group", "time"), ...) {
@@ -823,7 +826,6 @@ vcovSCC.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 #' \code{vcov.} arguments allow to supply a function (which is the
 #' safest) or a matrix (see Zeileis (2004), 4.1-2 and examples below).
 #' 
-#' @aliases vcovBK vcovBK.plm
 #' @param x an object of class \code{"plm"},
 #' @param type the weighting scheme used, one of \code{"HC0"},
 #'     \code{"HC1"}, \code{"HC2"}, \code{"HC3"}, \code{"HC4"}, see
@@ -1129,7 +1131,7 @@ vcovDC.pcce  <- vcovDC.plm
 ## vcovHC method for pgmm objects ##
 ####################################
 
-#' @rdname vcovHC
+#' @rdname vcovHC.plm
 #' @importFrom MASS ginv
 #' @export
 vcovHC.pgmm <- function(x, ...){

@@ -56,4 +56,4 @@ summary(pirice)
 \author{
 Yves Croissant
 }
-\keyword{piest}
+\keyword{htest}

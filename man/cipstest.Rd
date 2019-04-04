@@ -37,7 +37,7 @@ standard (\code{model="mg"}) or cross-sectionally demeaned
 (\code{model="dmg"}) versions of the IPS test.
 
 % TODO: maybe be more verbose here? write about type arg which corresponds
-to % cases III, II, I in Pesaran (2007) etc.
+% cases III, II, I in Pesaran (2007) etc.
 }
 \examples{
 

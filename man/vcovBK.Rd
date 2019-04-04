@@ -3,7 +3,6 @@
 \name{vcovBK}
 \alias{vcovBK}
 \alias{vcovBK.plm}
-\alias{vcovBK.plm}
 \title{Beck and Katz Robust Covariance Matrix Estimators}
 \usage{
 vcovBK(x, ...)

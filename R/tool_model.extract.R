@@ -22,7 +22,7 @@
 #' model frame from the data. Constructing the model frame first
 #' ensures proper NA handling, see \bold{Examples}.
 #'
-#' @name model.frame_model.matrix
+#' @name model.frame.pdata.frame
 #' @param object,formula an object of class \code{"pdata.frame"} or an
 #'     estimated model object of class \code{"plm"},
 #' @param x a `model.frame`
@@ -82,7 +82,7 @@
 #' 
 NULL
 
-#' @rdname model.frame_model.matrix
+#' @rdname model.frame.pdata.frame
 #' @export
 model.frame.pdata.frame <- function(formula, data = NULL, ...,
                                     lhs = NULL, rhs = NULL, dot = "separate"){
@@ -103,7 +103,7 @@ model.frame.pdata.frame <- function(formula, data = NULL, ...,
 }
 
 
-#' @rdname model.frame_model.matrix
+#' @rdname model.frame.pdata.frame
 #' @export
 formula.pdata.frame <- function(x, ...){
     if (is.null(attr(x, "terms")))
@@ -112,7 +112,7 @@ formula.pdata.frame <- function(x, ...){
 }
     
 
-#' @rdname model.frame_model.matrix
+#' @rdname model.frame.pdata.frame
 #' @export
 model.matrix.plm <- function(object, ...){
     dots <- list(...)
@@ -136,7 +136,7 @@ model.matrix.plm <- function(object, ...){
 Mean <- function(x) matrix(.colMeans(x, nrow(x), ncol(x)),
                            nrow(x), ncol(x), byrow = TRUE)
 
-#' @rdname model.frame_model.matrix
+#' @rdname model.frame.pdata.frame
 #' @export
 model.matrix.pdata.frame <- function(object, 
                                      model = c("pooling", "within", "Between", "Sum",

@@ -61,6 +61,4 @@ walhus <- plm(inv ~ value + capital,
               effect = "twoways")
 
 }
-\keyword{model}
 \keyword{package}
-\keyword{regression}

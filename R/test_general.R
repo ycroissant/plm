@@ -643,6 +643,111 @@ trans_clubSandwich_vcov <- function(CSvcov, index) {
   return(CSvcov)
 }
 
+#' Wald-style Chi-square Test and F Test
+#' 
+#' Wald-style Chi-square test and F test of slope coefficients being
+#' zero jointly, including robust versions of the tests.
+#' 
+#' 
+#' \code{pwaldtest} can be used stand--alone with a plm object or a
+#' pvcm object (for the latter only the 'random' type is valid and no
+#' further arguments are processed). It is also used in
+#' \code{\link{summary.plm}} to produce the F statistic and the
+#' Chi-square statistic for the joint test of coefficients.
+#' 
+#' \code{pwaldtest} performs the test if the slope coefficients of a
+#' panel regression are jointly zero. It does not perform general
+#' purpose Wald-style tests (for those, see
+#' \code{\link[lmtest]{waldtest}} (from package \CRANpkg{lmtest}) or
+#' \code{linearHypothesis} (from package \CRANpkg{car})).
+#' 
+#' If a user specified variance-covariance matrix/function is given in
+#' argument \code{vcov}, the robust version of the tests are carried
+#' out.  In that case, if the F test is requested (\code{test = "F"})
+#' and no overwriting of the second degrees of freedom parameter is
+#' given (by supplying argument (\code{.df2})), the adjustment of the
+#' second degrees of freedom parameter is performed by default. The
+#' second degrees of freedom parameter is adjusted to be the number of
+#' unique elements of the cluster variable - 1, e. g. the number of
+#' individuals - 1. For the degrees of freedom adjustment of the F
+#' test in general, see e. g. Cameron/Miller (2015), section VII;
+#' Andress/Golsch/Schmidt (2013), pp. 126, footnote 4.
+#' 
+#' The degrees of freedom adjustment requires the vcov object supplied
+#' or created by a supplied function to carry an attribute called
+#' "cluster" with a known clustering described as a character (for now
+#' this could be either \code{"group"} or \code{"time"}). The vcovXX
+#' functions of the package \pkg{plm} provide such an attribute for
+#' their returned variance--covariance matrices. No adjustment is done
+#' for unknown descriptions given in the attribute "cluster" or when
+#' the attribute "cluster" is not present. Robust vcov
+#' objects/functions from package \CRANpkg{clubSandwich} work as
+#' inputs to \code{pwaldtest}'s F test because a they are translated
+#' internally to match the needs described above.
+#' 
+#' @aliases pwaldtest
+#' @param x an estimated model of which the coefficients should be
+#'     tested (usually of class \code{"plm"}/\code{"pvcm"}),
+#' @param test a character, indicating the test to be performed, may
+#'     be either \code{"Chisq"} or \code{"F"} for the Wald-style
+#'     Chi-square test or F test, respectively,
+#' @param vcov \code{NULL} by default; a \code{matrix} giving a
+#'     variance--covariance matrix or a function which computes such;
+#'     if supplied (non \code{NULL}), the test is carried out using
+#'     the variance--covariance matrix indicated resulting in a robust
+#'     test,
+#' @param df2adj logical, only relevant for \code{test = "F"},
+#'     indicating whether the adjustment for clustered standard errors
+#'     for the second degrees of freedom parameter should be performed
+#'     (see \bold{Details}, also for further requirements regarding
+#'     the variance--covariance matrix in \code{vcov} for the
+#'     adjustment to be performed),
+#' @param .df1 a numeric, used if one wants to overwrite the first
+#'     degrees of freedom parameter in the performed test (usually not
+#'     used),
+#' @param .df2 a numeric, used if one wants to overwrite the second
+#'     degrees of freedom parameter for the F test (usually not used),
+#' @param \dots further arguments (currently none).
+#' @return An object of class \code{"htest"}.
+#' @export
+#' @author Yves Croissant (initial implementation) and Kevin Tappe
+#'     (extensions: vcov argument and F test's df2 adjustment)
+#' @seealso
+#' 
+#' \code{\link{vcovHC}} for an example of the vcovXX functions, a robust
+#' estimation for the variance--covariance matrix; \code{\link{summary.plm}}
+#' @references
+#'
+#' \insertRef{WOOL:10}{plm}
+#'
+#' \insertRef{ANDR:GOLS:SCMI:13}{plm}
+#'
+#' \insertRef{CAME:MILL:15}{plm}
+#' 
+#' @keywords htest
+#' @examples
+#' 
+#' data("Grunfeld", package = "plm")
+#' mod_fe <- plm(inv ~ value + capital, data = Grunfeld, model = "within")
+#' mod_re <- plm(inv ~ value + capital, data = Grunfeld, model = "random")
+#' pwaldtest(mod_fe, test = "F")
+#' pwaldtest(mod_re, test = "Chisq")
+#' 
+#' # with robust vcov (matrix, function)
+#' pwaldtest(mod_fe, vcov = vcovHC(mod_fe))
+#' pwaldtest(mod_fe, vcov = function(x) vcovHC(x, type = "HC3"))
+#' 
+#' pwaldtest(mod_fe, vcov = vcovHC(mod_fe), df2adj = FALSE) # w/o df2 adjustment
+#' 
+#' # example without attribute "cluster" in the vcov
+#' vcov_mat <- vcovHC(mod_fe)
+#' attr(vcov_mat, "cluster") <- NULL  # remove attribute
+#' pwaldtest(mod_fe, vcov = vcov_mat) # no df2 adjustment performed
+#' 
+#' 
+pwaldtest <- function(x, ...) {
+  UseMethod("pwaldtest")
+}
 
 #' @rdname pwaldtest
 #' @export
@@ -809,109 +914,6 @@ pwaldtest.pvcm <- function(x, ...) {
 
 pwaldtest.default <- function(x, ...) {
   pwaldtest.plm(x, ...)
-}
-
-
-
-#' Wald-style Chi-square Test and F Test
-#' 
-#' Wald-style Chi-square test and F test of slope coefficients being zero
-#' jointly, including robust versions of the tests.
-#' 
-#' 
-#' \code{pwaldtest} can be used stand--alone with a plm object or a pvcm object
-#' (for the latter only the 'random' type is valid and no further arguments are
-#' processed). It is also used in \code{\link{summary.plm}} to produce the F
-#' statistic and the Chi-square statistic for the joint test of coefficients.
-#' 
-#' \code{pwaldtest} performs the test if the slope coefficients of a
-#' panel regression are jointly zero. It does not perform general
-#' purpose Wald-style tests (for those, see
-#' \code{\link[lmtest]{waldtest}} (from package \CRANpkg{lmtest}) or
-#' \code{linearHypothesis} (from package \CRANpkg{car})).
-#' 
-#' If a user specified variance-covariance matrix/function is given in argument
-#' \code{vcov}, the robust version of the tests are carried out.  In that case,
-#' if the F test is requested (\code{test = "F"}) and no overwriting of the
-#' second degrees of freedom parameter is given (by supplying argument
-#' (\code{.df2})), the adjustment of the second degrees of freedom parameter is
-#' performed by default. The second degrees of freedom parameter is adjusted to
-#' be the number of unique elements of the cluster variable - 1, e. g. the
-#' number of individuals - 1. For the degrees of freedom adjustment of the F
-#' test in general, see e. g. Cameron/Miller (2015), section VII;
-#' Andress/Golsch/Schmidt (2013), pp. 126, footnote 4.
-#' 
-#' The degrees of freedom adjustment requires the vcov object supplied
-#' or created by a supplied function to carry an attribute called
-#' "cluster" with a known clustering described as a character (for now
-#' this could be either \code{"group"} or \code{"time"}). The vcovXX
-#' functions of the package \pkg{plm} provide such an attribute for
-#' their returned variance--covariance matrices. No adjustment is done
-#' for unknown descriptions given in the attribute "cluster" or when
-#' the attribute "cluster" is not present. Robust vcov
-#' objects/functions from package \CRANpkg{clubSandwich} work as
-#' inputs to \code{pwaldtest}'s F test because a they are translated
-#' internally to match the needs described above.
-#' 
-#' @aliases pwaldtest
-#' @param x an estimated model of which the coefficients should be tested
-#' (usually of class \code{"plm"}/\code{"pvcm"}),
-#' @param test a character, indicating the test to be performed, may be either
-#' \code{"Chisq"} or \code{"F"} for the Wald-style Chi-square test or F test,
-#' respectively,
-#' @param vcov \code{NULL} by default; a \code{matrix} giving a
-#' variance--covariance matrix or a function which computes such; if supplied
-#' (non \code{NULL}), the test is carried out using the variance--covariance
-#' matrix indicated resulting in a robust test,
-#' @param df2adj logical, only relevant for \code{test = "F"}, indicating
-#' whether the adjustment for clustered standard errors for the second degrees
-#' of freedom parameter should be performed (see \bold{Details}, also for
-#' further requirements regarding the variance--covariance matrix in
-#' \code{vcov} for the adjustment to be performed),
-#' @param .df1 a numeric, used if one wants to overwrite the first degrees of
-#' freedom parameter in the performed test (usually not used),
-#' @param .df2 a numeric, used if one wants to overwrite the second degrees of
-#' freedom parameter for the F test (usually not used),
-#' @param \dots further arguments (currently none).
-#' @return An object of class \code{"htest"}.
-#' @export
-#' @author Yves Croissant (initial implementation) and Kevin Tappe (extensions:
-#' vcov argument and F test's df2 adjustment)
-#' @seealso
-#' 
-#' \code{\link{vcovHC}} for an example of the vcovXX functions, a robust
-#' estimation for the variance--covariance matrix; \code{\link{summary.plm}}
-#' @references
-#'
-#' \insertRef{WOOL:10}{plm}
-#'
-#' \insertRef{ANDR:GOLS:SCMI:13}{plm}
-#'
-#' \insertRef{CAME:MILL:15}{plm}
-#' 
-#' @keywords htest
-#' @examples
-#' 
-#' data("Grunfeld", package = "plm")
-#' mod_fe <- plm(inv ~ value + capital, data = Grunfeld, model = "within")
-#' mod_re <- plm(inv ~ value + capital, data = Grunfeld, model = "random")
-#' pwaldtest(mod_fe, test = "F")
-#' pwaldtest(mod_re, test = "Chisq")
-#' 
-#' # with robust vcov (matrix, function)
-#' pwaldtest(mod_fe, vcov = vcovHC(mod_fe))
-#' pwaldtest(mod_fe, vcov = function(x) vcovHC(x, type = "HC3"))
-#' 
-#' pwaldtest(mod_fe, vcov = vcovHC(mod_fe), df2adj = FALSE) # w/o df2 adjustment
-#' 
-#' # example without attribute "cluster" in the vcov
-#' vcov_mat <- vcovHC(mod_fe)
-#' attr(vcov_mat, "cluster") <- NULL  # remove attribute
-#' pwaldtest(mod_fe, vcov = vcov_mat) # no df2 adjustment performed
-#' 
-#' 
-pwaldtest <- function(x, ...) {
-  UseMethod("pwaldtest")
 }
 
 #' Test of Poolability

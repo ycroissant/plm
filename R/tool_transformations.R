@@ -47,11 +47,7 @@
 #'     lines of the matrix are the individuals,
 #' @param rm.null if `TRUE`, for the `Within.matrix` method, remove
 #'     the empty columns,
-#' @param plot plot arguments,
-#' @param scale plot arguments,
-#' @param transparency plot arguments,
-#' @param col plot arguments,
-#' @param lwd plot arguments,
+#' @param plot,scale,transparency,col,lwd plot arguments,
 #' @param \dots further arguments, e. g. \code{na.rm = TRUE} for
 #'     transformation functions like \code{beetween}, see
 #'     \bold{Details} and \bold{Examples}.
@@ -522,7 +518,7 @@ Within.matrix <- function(x, effect, rm.null = TRUE, ...){
 #' non-consecutive time periods per individual ("holes in time"), see also
 #' Examples.
 #' 
-#' @name lag_lead_diff
+#' @name lag.plm
 #' @param x a \code{pseries} object,
 #' @param k an integer, the number of lags for the \code{lag} and
 #'     \code{lead} methods (can also be negative).  For the \code{lag}
@@ -595,13 +591,13 @@ Within.matrix <- function(x, effect, rm.null = TRUE, ...){
 #' 
 NULL
 
-#' @rdname lag_lead_diff
+#' @rdname lag.plm
 #' @export
 lead <- function(x, k = 1, ...) {
   UseMethod("lead")
 }
 
-#' @rdname lag_lead_diff
+#' @rdname lag.plm
 #' @export
 lag.pseries <- function(x, k = 1, shift = c("time", "row"), ...) {
   shift <- match.arg(shift)
@@ -609,7 +605,7 @@ lag.pseries <- function(x, k = 1, shift = c("time", "row"), ...) {
   return(res)
 }
 
-#' @rdname lag_lead_diff
+#' @rdname lag.plm
 #' @export
 lead.pseries <- function(x, k = 1, shift = c("time", "row"), ...) {
   shift <- match.arg(shift)
@@ -617,7 +613,7 @@ lead.pseries <- function(x, k = 1, shift = c("time", "row"), ...) {
   return(res)
 }
 
-#' @rdname lag_lead_diff
+#' @rdname lag.plm
 #' @export
 diff.pseries <- function(x, lag = 1, shift = c("time", "row"), ...) {
   shift <- match.arg(shift)

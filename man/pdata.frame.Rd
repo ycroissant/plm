@@ -2,12 +2,6 @@
 % Please edit documentation in R/tool_pdata.frame.R
 \name{pdata.frame}
 \alias{pdata.frame}
-\alias{print.pdata.frame}
-\alias{[.pdata.frame}
-\alias{[[.pdata.frame}
-\alias{$.pdata.frame}
-\alias{as.data.frame.pdata.frame}
-\alias{as.list.pdata.frame}
 \alias{$<-.pdata.frame}
 \alias{[.pdata.frame}
 \alias{[[.pdata.frame}

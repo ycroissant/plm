@@ -215,11 +215,11 @@ pres <- function(x) {  # pres.panelmodel
 #' @return A named numeric containing either two or three entries,
 #'     depending on the panel structure inputted:
 #' 
-#' \item{*}{For the two-dimensional panel structure, the entries are
-#' called \code{gamma} and \code{nu},}
+#' - For the two-dimensional panel structure, the entries are called
+#' \code{gamma} and \code{nu},
 #'
-#' \item{*}{For a nested panel structure, the entries are called
-#' \code{c1}, \code{c2}, \code{c3}.}
+#' - For a nested panel structure, the entries are called \code{c1},
+#' \code{c2}, \code{c3}.
 #' 
 #' @note Calling \code{punbalancedness} on an estimated
 #'     \code{panelmodel} object and on the corresponding
