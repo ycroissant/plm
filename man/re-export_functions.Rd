@@ -15,7 +15,12 @@ These functions are imported from other packages and re-exported by
 links to view the function's original documentation.
 }
 \details{
-\describe{ \itemize{ \item\code{maxLik}:
-\code{\link[maxLik]{maxLik}} from package \pkg{maxLik} } }
+\itemize{
+\item index
+\item fixef
+\item ranef
+\item vcovHC
+\item nobs
+}
 }
 \keyword{internal}
