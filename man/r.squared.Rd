@@ -40,7 +40,7 @@ r.squared(p, dfcor = TRUE)
 
 }
 \seealso{
-\code{\link{plm}} for estimation of various models;
-\code{\link{summary.plm}} which makes use of \code{r.squared}.
+\code{\link[=plm]{plm()}} for estimation of various models;
+\code{\link[=summary.plm]{summary.plm()}} which makes use of \code{r.squared}.
 }
 \keyword{htest}

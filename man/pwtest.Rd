@@ -31,17 +31,18 @@ Semi-parametric test for the presence of (individual or time) unobserved
 effects in panel models.
 }
 \details{
-This semi-parametric test checks the null hypothesis of zero correlation
-between errors of the same group. Therefore, it has power both against
-individual effects and, more generally, any kind of serial correlation.
+This semi-parametric test checks the null hypothesis of zero
+correlation between errors of the same group. Therefore, it has
+power both against individual effects and, more generally, any kind
+of serial correlation.
 
 The test relies on large-N asymptotics. It is valid under error
 heteroskedasticity and departures from normality.
 
-The above is valid if \code{effect="individual"}, which is the most likely
-usage. If \code{effect="time"}, symmetrically, the test relies on large-T
-asymptotics and has power against time effects and, more generally, against
-cross-sectional correlation.
+The above is valid if \code{effect="individual"}, which is the most
+likely usage. If \code{effect="time"}, symmetrically, the test relies on
+large-T asymptotics and has power against time effects and, more
+generally, against cross-sectional correlation.
 
 If the panelmodel interface is used, the inputted model must be a pooling
 model.
@@ -67,10 +68,10 @@ pwtest(pool_prodc, effect="time")
 \insertRef{WOOL:10}{plm}
 }
 \seealso{
-\code{\link{pbltest}}, \code{\link{pbgtest}},
-\code{\link{pdwtest}}, \code{\link{pbsytest}}, \code{\link{pwartest}},
-\code{\link{pwfdtest}} for tests for serial correlation in panel models.
-\code{\link{plmtest}} for tests for random effects.
+\code{\link[=pbltest]{pbltest()}}, \code{\link[=pbgtest]{pbgtest()}},
+\code{\link[=pdwtest]{pdwtest()}}, \code{\link[=pbsytest]{pbsytest()}}, \code{\link[=pwartest]{pwartest()}},
+\code{\link[=pwfdtest]{pwfdtest()}} for tests for serial correlation in panel models.
+\code{\link[=plmtest]{plmtest()}} for tests for random effects.
 }
 \author{
 Giovanni Millo

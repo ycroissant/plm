@@ -32,18 +32,19 @@ version of the test),}
 An object of class \code{"htest"}.
 }
 \description{
-Baltagi and Li (1995)'s Lagrange multiplier test for AR(1) or MA(1)
-idiosyncratic errors in panel models with random effects.
+\insertCite{BALT:LI:95;textual}{plm}'s Lagrange multiplier test for
+AR(1) or MA(1) idiosyncratic errors in panel models with random
+effects.
 }
 \details{
 This is a Lagrange multiplier test for the null of no serial
 correlation, against the alternative of either an AR(1) or an MA(1)
 process, in the idiosyncratic component of the error term in a
 random effects panel model (as the analytical expression of the
-test turns out to be the same under both alternatives, see Baltagi
-and Li (1995, 1997)). The \code{alternative} argument, defaulting
-to \code{twosided}, allows testing for positive serial correlation
-only, if set to \code{onesided}.
+test turns out to be the same under both alternatives,
+\insertCite{@see @BALT:LI:95 and @BALT:LI:97}{plm}. The
+\code{alternative} argument, defaulting to \code{twosided}, allows testing
+for positive serial correlation only, if set to \code{onesided}.
 }
 \examples{
 
@@ -64,9 +65,9 @@ pbltest(re_mod, alternative = "onesided")
 \insertRef{BALT:LI:97}{plm}
 }
 \seealso{
-\code{\link{pdwtest}}, \code{bgtest},
-\code{\link{pbsytest}}, \code{\link{pwartest}} and
-\code{\link{pwfdtest}} for other serial correlation tests for
+\code{\link[=pdwtest]{pdwtest()}}, \code{bgtest},
+\code{\link[=pbsytest]{pbsytest()}}, \code{\link[=pwartest]{pwartest()}} and
+\code{\link[=pwfdtest]{pwfdtest()}} for other serial correlation tests for
 panel models.
 }
 \author{

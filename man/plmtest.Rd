@@ -4,7 +4,7 @@
 \alias{plmtest}
 \alias{plmtest.plm}
 \alias{plmtest.formula}
-\title{Lagrange Multiplier Tests for Panel Models}
+\title{Lagrange FF Multiplier Tests for Panel Models}
 \usage{
 plmtest(x, ...)
 
@@ -20,15 +20,19 @@ plmtest(x, ...)
 
 \item{\dots}{further arguments passed to \code{plmtest}.}
 
-\item{effect}{a character string indicating which effects are tested:
-individual effects (\code{"individual"}), time effects (\code{"time"}) or
-both (\code{"twoways"}),}
+\item{effect}{a character string indicating which effects are
+tested: individual effects (\code{"individual"}), time effects
+(\code{"time"}) or both (\code{"twoways"}),}
 
 \item{type}{a character string indicating the test to be performed:
-\itemize{ \item \code{"honda"} (default) for Honda (1985), \item \code{"bp"}
-for Breusch/Pagan (1980), \item \code{"kw"} for King/Wu (1997), or \item
-\code{"ghm"} for Gourieroux/Holly/Monfort (1982); } for unbalanced panel
-data sets, the respective unbalanced version of the tests are computed,}
+\itemize{
+\item \code{"honda"} (default) for \insertCite{HOND:85;textual}{plm},
+\item \code{"bp"} for \insertCite{BREU:PAGA:80;textual}{plm},
+\item \code{"kw"} for \insertCite{KING:WU:97;textual}{plm}, or
+\item \code{"ghm"} for \insertCite{GOUR:HOLL:MONF:82;textual}{plm} for
+unbalanced panel data sets, the respective unbalanced version
+of the tests are computed,
+}}
 
 \item{data}{a \code{data.frame},}
 }
@@ -39,24 +43,30 @@ An object of class \code{"htest"}.
 Test of individual and/or time effects for panel models.
 }
 \details{
-These Lagrange multiplier tests use only the residuals of the pooling model.
-The first argument of this function may be either a pooling model of class
-\code{plm} or an object of class \code{formula} describing the model. For
-inputted within (fixed effects) or random effects models, the corresponding
-pooling model is calculated internally first as the tests are based on the
-residuals of the pooling model.
+These Lagrange multiplier tests use only the residuals of the
+pooling model.  The first argument of this function may be either a
+pooling model of class \code{plm} or an object of class \code{formula}
+describing the model. For inputted within (fixed effects) or random
+effects models, the corresponding pooling model is calculated
+internally first as the tests are based on the residuals of the
+pooling model.
 
-The \code{"bp"} test for unbalanced panels was derived in Baltagi/Li (1990),
-the \code{"kw"} test for unbalanced panels in Baltagi/Chang/Li (1998). The
-\code{"ghm"} test and the \code{"kw"} test were extended to two-way effects
-in Baltagi/Chang/Li (1992).\cr For a concise overview of all these
-statistics see Baltagi (2013), Sec. 4.2, pp. 68--76 (for balanced panels)
-and Sec. 9.5, pp. 200--203 (for unbalanced panels).
+The \code{"bp"} test for unbalanced panels was derived in
+\insertCite{BALT:LI:90;textual}{plm}
+(1990), the \code{"kw"} test for unbalanced panels in
+\insertCite{BALT:CHAN:LI:98;textual}{plm}.
+
+The \code{"ghm"} test and the \code{"kw"} test were extended to two-way
+effects in \insertCite{BALT:CHAN:LI:92;textual}{plm}.
+
+For a concise overview of all these statistics see
+\insertCite{BALT:03;textual}{plm}, Sec. 4.2, pp. 68--76 (for balanced
+panels) and Sec. 9.5, pp. 200--203 (for unbalanced panels).
 }
 \note{
 For the King-Wu statistics (\code{"kw"}), the oneway statistics
-(\code{"individual"} and \code{"time"}) coincide with the respective Honda
-statistics (\code{"honda"}); twoway statistics of \code{"kw"} and
+(\code{"individual"} and \code{"time"}) coincide with the respective
+Honda statistics (\code{"honda"}); twoway statistics of \code{"kw"} and
 \code{"honda"} differ.
 }
 \examples{
@@ -94,11 +104,11 @@ plmtest(g_unbal) # unbalanced version of test is indicated in output
 \insertRef{KING:WU:97}{plm}
 }
 \seealso{
-\code{\link{pFtest}} for individual and/or time effects tests based
+\code{\link[=pFtest]{pFtest()}} for individual and/or time effects tests based
 on the within model.
 }
 \author{
-Yves Croissant (initial implementation), Kevin Tappe (generalization
-to unbalanced panels)
+Yves Croissant (initial implementation), Kevin Tappe
+(generalization to unbalanced panels)
 }
 \keyword{htest}

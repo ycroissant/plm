@@ -14,50 +14,47 @@ pbgtest(x, ...)
   model = c("pooling", "random", "within"), ...)
 }
 \arguments{
-\item{x}{an object of class \code{"panelmodel"} or of class
-\code{"formula"},}
+\item{x}{an object of class \code{"panelmodel"} or of class \code{"formula"},}
 
 \item{\dots}{further arguments (see \code{\link[lmtest]{bgtest}}).}
 
 \item{order}{an integer indicating the order of serial correlation
-to be tested for. \code{NULL} (default) uses the minimum number
-of observations over the time dimension (see also section
+to be tested for. \code{NULL} (default) uses the minimum number of
+observations over the time dimension (see also section
 \bold{Details} below),}
 
 \item{type}{type of test statistic to be calculated; either
-\code{"Chisq"} (default) for the Chi-squared test statistic or
-\code{"F"} for the F test statistic,}
+\code{"Chisq"} (default) for the Chi-squared test statistic or \code{"F"}
+for the F test statistic,}
 
 \item{data}{only relevant for formula interface: data set for which
-the respective panel model (see \code{model}) is to be
-evaluated,}
+the respective panel model (see \code{model}) is to be evaluated,}
 
 \item{model}{only relevant for formula interface: compute test
-statistic for model \code{pooling} (default), \code{random}, or
-\code{within}.  When \code{model} is used, the \code{data}
-argument needs to be passed as well,}
+statistic for model \code{pooling} (default), \code{random}, or \code{within}.
+When \code{model} is used, the \code{data} argument needs to be passed as
+well,}
 }
 \value{
 An object of class \code{"htest"}.
 }
 \description{
-Test of serial correlation for (the idiosyncratic component of) the errors
-in panel models.
+Test of serial correlation for (the idiosyncratic component of) the
+errors in panel models.
 }
 \details{
 This Lagrange multiplier test uses the auxiliary model on
-(quasi-)demeaned data taken from a model of class \code{plm} which
-may be a \code{pooling} (default for formula interface),
-\code{random} or \code{within} model. It performs a
-Breusch--Godfrey test (using \code{bgtest} from package
-\CRANpkg{lmtest} on the residuals of the (quasi-)demeaned model,
-which should be serially uncorrelated under the null of no serial
-correlation in idiosyncratic errors, as illustrated in Wooldridge
-(2002/2010). The function takes the demeaned data, estimates the
-model and calls \code{bgtest}.
+(quasi-)demeaned data taken from a model of class \code{plm} which may
+be a \code{pooling} (default for formula interface), \code{random} or
+\code{within} model. It performs a Breusch--Godfrey test (using \code{bgtest}
+from package \CRANpkg{lmtest} on the residuals of the
+(quasi-)demeaned model, which should be serially uncorrelated under
+the null of no serial correlation in idiosyncratic errors, as
+illustrated in \insertCite{WOOL:10;textual}{plm}. The function
+takes the demeaned data, estimates the model and calls \code{bgtest}.
 
-Unlike most other tests for serial correlation in panels, this one allows to
-choose the order of correlation to test for.
+Unlike most other tests for serial correlation in panels, this one
+allows to choose the order of correlation to test for.
 }
 \note{
 The argument \code{order} defaults to the minimum number of
@@ -82,9 +79,7 @@ pbgtest(inv ~ value + capital, data = Grunfeld, model = "random", type = "F")
 
 }
 \references{
-Breusch, T.S. (1978), \dQuote{Testing for
-autocorrelation in dynamic linear models}, \emph{Australian
-Economic Papers}, \bold{17}(31), pp. 334--355.
+\insertRef{BREU:78}{plm}
 
 \insertRef{GODF:78}{plm}
 
@@ -96,12 +91,11 @@ Economic Papers}, \bold{17}(31), pp. 334--355.
 Sec. 12.2, pp. 421--422.
 }
 \seealso{
-For the original test in package \CRANpkg{"lmtest"} see
-\code{\link[lmtest]{bgtest}}.  See \code{\link{pdwtest}} for
-the analogous panel Durbin--Watson test.  See
-\code{\link{pbltest}}, \code{\link{pbsytest}},
-\code{\link{pwartest}} and \code{\link{pwfdtest}} for other
-serial correlation tests for panel models.
+For the original test in package \CRANpkg{lmtest} see
+\code{\link[lmtest]{bgtest}}.  See \code{\link[=pdwtest]{pdwtest()}} for the analogous
+panel Durbin--Watson test.  See \code{\link[=pbltest]{pbltest()}}, \code{\link[=pbsytest]{pbsytest()}},
+\code{\link[=pwartest]{pwartest()}} and \code{\link[=pwfdtest]{pwfdtest()}} for other serial correlation
+tests for panel models.
 }
 \author{
 Giovanni Millo

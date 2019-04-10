@@ -41,24 +41,28 @@ An object of class \code{"htest"}.
 Specification test for panel models.
 }
 \details{
-The Hausman test (sometimes also called Durbin--Wu--Hausman test) is based
-on the difference of the vectors of coefficients of two different models.
-The \code{panelmodel} method computes the original version of the test based
-on a quadratic form (Hausman (1978)). The \code{formula} method, if
-\code{method="chisq"} (default), computes the original version of the test
-based on a quadratic form; if \code{method="aux"} then the
-auxiliary-regression-based version in Wooldridge (2010, Sec. 10.7.3.) is
-computed instead. Only the latter can be robustified by specifying a robust
+The Hausman test (sometimes also called Durbin--Wu--Hausman test)
+is based on the difference of the vectors of coefficients of two
+different models.  The \code{panelmodel} method computes the original
+version of the test based on a quadratic form
+\insertCite{HAUS:78}{plm}. The \code{formula} method, if
+\code{method="chisq"} (default), computes the original version of the
+test based on a quadratic form; if \code{method="aux"} then the
+auxiliary-regression-based version in Wooldridge (2010,
+Sec. 10.7.3.) is computed instead \insertCite{@WOOL:10 Sec.10.7.3}{plm}.
+Only the latter can be robustified by specifying a robust
 covariance estimator as a function through the argument \code{vcov} (see
 \bold{Examples}).
 
-The equivalent tests in the \bold{one-way} case using a between model
-(either "within vs. between" or "random vs. between") (see Hausman/Taylor
-(1981) or Baltagi (2013), Sec. 4.3) can also be performed by \code{phtest},
-but only for \code{test = "chisq"}, not for the regression-based test. NB:
-These equivalent tests using the between model do not extend to the two-ways
-case.  (There are, however, some other equivalent tests, see Kang (1985) or
-Baltagi (2013), Sec. 4.3.7), but those are unsupported by \code{phtest}.)
+The equivalent tests in the \bold{one-way} case using a between
+model (either "within vs. between" or "random vs. between")
+\insertCite{@see @HAUS:TAYL:81 or @BALT:13 Sec.4.3}{plm} can also
+be performed by \code{phtest}, but only for \code{test = "chisq"}, not for
+the regression-based test. NB: These equivalent tests using the
+between model do not extend to the two-ways case.  There are,
+however, some other equivalent tests,
+\insertCite{@see @KANG:85 or @BALT:13 Sec.4.3.7}{plm},
+but those are unsupported by \code{phtest}.
 }
 \examples{
 

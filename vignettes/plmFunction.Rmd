@@ -12,7 +12,7 @@ output:
       collapsed: true
       smooth_scroll: true
     number_sections: true
-bibliography: bibliojss.bib
+bibliography: ../inst/REFERENCES.bib
 vignette: >
   %\VignetteIndexEntry{Estimation of error component models with the plm function}
   %\VignetteEngine{knitr::rmarkdown}
@@ -184,7 +184,7 @@ are:
 Note that when only one model is provided in `models`, this means that the same
 residuals are used to compute the two quadratic forms.
 
-To illustrate the use of `plm`, we use examples reproduced in @BALT:2013.
+To illustrate the use of `plm`, we use examples reproduced in @BALT:13.
 Table 2.1 on page 21 presents EViews' results of the estimation on the
 `Grunfeld` data set :
 
@@ -217,7 +217,7 @@ example, for the `amemiya` model :
 ercomp(amemiya)
 ```
 
-@BALT:2013, p. 27, presents the Stata estimation of the Swamy-Arora
+@BALT:13, p. 27, presents the Stata estimation of the Swamy-Arora
 estimator ; the Swamy-Arora estimator is the same if `random.dfcor` is
 set to `3` or `2` (the quadratic forms are divided by $\sum_n T_n - K - N$
 and by $N - K - 1$), so I don't know what is the behaviour of Stata for the
@@ -235,7 +235,7 @@ summary(PrSwar)
 # The twoways effect model
 
 The two-ways effect model is obtained by setting the `effect` argument
-to `"twoways"`. @BALT:2013 p. 44-46, presents EViews' output for the Grunfeld
+to `"twoways"`. @BALT:13 p. 44-46, presents EViews' output for the Grunfeld
 data set.
 
 ```{r grunfeld2ways}
@@ -277,8 +277,8 @@ Two difficulties arise with unbalanced panels :
   data for the random effects model ; this is not the case for the
   two-ways effects model.
 
-@BALT:2013 and @BALT:09 present results of the estimation of the
-@SWAM:AROR:72 model with the `Hedonic` data set. @BALT:2013, p. 174,
+@BALT:13 and @BALT:09 present results of the estimation of the
+@SWAM:AROR:72 model with the `Hedonic` data set. @BALT:13, p. 174,
 presents the Stata output as @BALT:09, p. 211 presents EViews'
 output. EViews' Wallace-Hussain estimator is reported in @BALT:09,
 p. 210.
@@ -304,7 +304,7 @@ the use of between with or without the B capitalized in the
 regression with $\sum_n T_n$ observations when setting `model =
 "random", random.method = "swar"`.  The default employed is what the
 original paper for the unbalanced one-way Swamy-Arora estimator
-defined (in @BALT:CHA:94, p. 73). A more detailed analysis of Stata's
+defined (in @BALT:CHAN:94, p. 73). A more detailed analysis of Stata's
 Swamy-Arora estimation procedure is given by @COTT:2017.
 
 
@@ -333,10 +333,10 @@ The instrumental variables estimator used is indicated with the
   introduced twice using the between and the within transformation as
   those of the third are only introduced with the within
   transformation,
-- `"am"`, from @AMEM:MACUR:86, the within transformation of the variables
+- `"am"`, from @AMEM:MACU:86, the within transformation of the variables
   of the second parts for each period are also included as
   instruments,
-- `"bmc"`, from @BREU:MIZO:SCHMI:89, the within transformation of the
+- `"bmc"`, from @BREU:MIZO:SCHM:89, the within transformation of the
   variable of the second and of the third parts are included as
   instruments.
 
@@ -345,7 +345,7 @@ for fixed effect IV models as there is only one method for this type of IV
 models but many for random effect IV models.
 
 The instrumental variable estimators are illustrated in the following example
-from @BALT:2005, p. 120/ @BALT:2013, p. 137.
+from @BALT:2005, p. 120/ @BALT:13, p. 137.
   
 ```{r}
 data("Crime", package = "plm")
@@ -363,7 +363,7 @@ screenreg(list(FE2SLS = crwth, EC2SLS = crbalt, G2SLS = crbvk),
 
 The Hausman-Taylor model (@HAUS:TAYL:81) may be estimated
 with the `plm` function by setting argument `random.method = "ht"`.
-The following example is from @BALT:2005, p. 130 and @BALT:2013, p. 146.
+The following example is from @BALT:2005, p. 130 and @BALT:13, p. 146.
 
 ```{r}
 data("Wages", package = "plm")

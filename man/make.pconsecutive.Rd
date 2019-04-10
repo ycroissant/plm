@@ -30,7 +30,7 @@ or \code{pseries},}
 assumed to be the index variables; if not \code{NULL}, both
 dimensions ('individual', 'time') need to be specified by
 \code{index} as character of length 2 for data frames, for
-further details see \code{\link{pdata.frame}},}
+further details see \code{\link[=pdata.frame]{pdata.frame()}},}
 }
 \value{
 An object of the same class as the input \code{x}, i.e. a
@@ -62,7 +62,7 @@ Looking at the number of rows of the resulting (pdata.frame) (elements for
 pseries), this results in nrow(make.pconsecutive, balanced = FALSE) <=
 nrow(make.pconsecutive, balanced = TRUE).  For making the data only
 balanced, i.e. not demanding consecutiveness at the same time, use
-\code{\link{make.pbalanced}} (see \bold{Examples} for a comparison)).
+\code{\link[=make.pbalanced]{make.pbalanced()}} (see \bold{Examples} for a comparison)).
 
 Note: rows of (p)data.frames (elements for pseries) with \code{NA} values in
 individual or time index are not examined but silently dropped before the
@@ -136,16 +136,16 @@ nrow(g_bal) # 190 rows
 
 }
 \seealso{
-\code{\link{is.pconsecutive}} to check if data are
-consecutive; \code{\link{make.pbalanced}} to make data only
-balanced (not consecutive).\cr \code{\link{punbalancedness}}
-for two measures of unbalancedness, \code{\link{pdim}} to check
+\code{\link[=is.pconsecutive]{is.pconsecutive()}} to check if data are
+consecutive; \code{\link[=make.pbalanced]{make.pbalanced()}} to make data only
+balanced (not consecutive).\cr \code{\link[=punbalancedness]{punbalancedness()}}
+for two measures of unbalancedness, \code{\link[=pdim]{pdim()}} to check
 the dimensions of a 'pdata.frame' (and other objects),
-\code{\link{pvar}} to check for individual and time variation
-of a 'pdata.frame' (and other objects), \code{\link{lag}} for
+\code{\link[=pvar]{pvar()}} to check for individual and time variation
+of a 'pdata.frame' (and other objects), \code{\link[=lag]{lag()}} for
 lagged (and leading) values of a 'pseries' object.\cr
-\code{\link{pseries}}, \code{\link{data.frame}},
-\code{\link{pdata.frame}}.
+\code{\link[=pseries]{pseries()}}, \code{\link[=data.frame]{data.frame()}},
+\code{\link[=pdata.frame]{pdata.frame()}}.
 }
 \author{
 Kevin Tappe

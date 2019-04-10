@@ -28,7 +28,7 @@ pvcm(formula, data, subset, na.action, effect = c("individual", "time"),
 
 \item{model}{one of \code{"within"}, \code{"random"},}
 
-\item{index}{the indexes, see \code{\link{pdata.frame}},}
+\item{index}{the indexes, see \code{\link[=pdata.frame]{pdata.frame()}},}
 
 \item{\dots}{further arguments.}
 
@@ -42,19 +42,29 @@ pvcm(formula, data, subset, na.action, effect = c("individual", "time"),
 An object of class \code{c("pvcm", "panelmodel")}, which has the
 following elements:
 
-\item{coefficients}{the vector (or the data frame for fixed effects) of
-coefficients,} \item{residuals}{the vector of residuals,}
-\item{fitted.values}{the vector of fitted values,} \item{vcov}{the
-covariance matrix of the coefficients (a list for fixed effects),}
-\item{df.residual}{degrees of freedom of the residuals,} \item{model}{a data
-frame containing the variables used for the estimation,} \item{call}{the
-call,} \item{Delta}{the estimation of the covariance matrix of the
-coefficients (random effect models only),} \item{std.error}{a data frame
-containing standard errors for all coefficients for each individual (within
-models only).}
+\item{coefficients}{the vector (or the data frame for fixed
+effects) of coefficients,}
 
-\code{pvcm} objects have \code{print}, \code{summary} and
-\code{print.summary} methods.
+\item{residuals}{the vector of
+residuals,}
+
+\item{fitted.values}{the vector of fitted values,}
+
+\item{vcov}{the covariance matrix of the coefficients (a list for
+fixed effects),}
+
+\item{df.residual}{degrees of freedom of the residuals,}
+
+\item{model}{a data frame containing the variables used for the
+estimation,}
+
+\item{call}{the call,} \item{Delta}{the estimation of the
+covariance matrix of the coefficients (random effect models only),}
+
+\item{std.error}{a data frame containing standard errors for all
+coefficients for each individual (within models only).}
+
+\code{pvcm} objects have \code{print}, \code{summary} and \code{print.summary} methods.
 }
 \description{
 Estimators for random and fixed effects models with variable coefficients.
@@ -64,11 +74,12 @@ Estimators for random and fixed effects models with variable coefficients.
 effects are introduced, respectively, if \code{effect = "time"} or
 \code{effect = "individual"} (the default value).
 
-Coefficients are assumed to be fixed if \code{model = "within"} and random
-if \code{model = "random"}. In the first case, a different model is
-estimated for each individual (or time period). In the second case, the
-Swamy (1970) model is estimated. It is a generalized least squares model
-which uses the results of the previous model.
+Coefficients are assumed to be fixed if \code{model = "within"} and
+random if \code{model = "random"}. In the first case, a different model
+is estimated for each individual (or time period). In the second
+case, the \insertCite{SWAM:70;textual}{plm} model is estimated. It
+is a generalized least squares model which uses the results of the
+previous model.
 }
 \examples{
 

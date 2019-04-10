@@ -20,9 +20,9 @@ piest(formula, data, subset, na.action, index = NULL, robust = TRUE, ...)
 
 \item{data}{a \code{data.frame},}
 
-\item{subset}{see \code{\link{lm}},}
+\item{subset}{see \code{\link[=lm]{lm()}},}
 
-\item{na.action}{see \code{\link{lm}},}
+\item{na.action}{see \code{\link[=lm]{lm()}},}
 
 \item{index}{the indexes,}
 

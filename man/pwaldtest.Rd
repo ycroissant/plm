@@ -51,41 +51,43 @@ Wald-style Chi-square test and F test of slope coefficients being
 zero jointly, including robust versions of the tests.
 }
 \details{
-\code{pwaldtest} can be used stand--alone with a plm object or a
-pvcm object (for the latter only the 'random' type is valid and no
+\code{pwaldtest} can be used stand--alone with a plm object or a pvcm
+object (for the latter only the 'random' type is valid and no
 further arguments are processed). It is also used in
-\code{\link{summary.plm}} to produce the F statistic and the
-Chi-square statistic for the joint test of coefficients.
+\code{\link[=summary.plm]{summary.plm()}} to produce the F statistic and the Chi-square
+statistic for the joint test of coefficients.
 
-\code{pwaldtest} performs the test if the slope coefficients of a
-panel regression are jointly zero. It does not perform general
-purpose Wald-style tests (for those, see
-\code{\link[lmtest]{waldtest}} (from package \CRANpkg{lmtest}) or
-\code{linearHypothesis} (from package \CRANpkg{car})).
+\code{pwaldtest} performs the test if the slope coefficients of a panel
+regression are jointly zero. It does not perform general purpose
+Wald-style tests (for those, see \code{\link[lmtest]{waldtest}} (from
+package \CRANpkg{lmtest}) or \code{linearHypothesis} (from package
+\CRANpkg{car})).
 
 If a user specified variance-covariance matrix/function is given in
-argument \code{vcov}, the robust version of the tests are carried
-out.  In that case, if the F test is requested (\code{test = "F"})
-and no overwriting of the second degrees of freedom parameter is
-given (by supplying argument (\code{.df2})), the adjustment of the
-second degrees of freedom parameter is performed by default. The
-second degrees of freedom parameter is adjusted to be the number of
-unique elements of the cluster variable - 1, e. g. the number of
-individuals - 1. For the degrees of freedom adjustment of the F
-test in general, see e. g. Cameron/Miller (2015), section VII;
-Andress/Golsch/Schmidt (2013), pp. 126, footnote 4.
+argument \code{vcov}, the robust version of the tests are carried out.
+In that case, if the F test is requested (\code{test = "F"}) and no
+overwriting of the second degrees of freedom parameter is given (by
+supplying argument (\code{.df2})), the adjustment of the second degrees
+of freedom parameter is performed by default. The second degrees of
+freedom parameter is adjusted to be the number of unique elements
+of the cluster variable - 1, e. g. the number of individuals -
+\enumerate{
+\item For the degrees of freedom adjustment of the F test in general,
+see e. g. \insertCite{CAME:MILL:15;textual}{plm}, section VII;
+\insertCite{ANDR:GOLS:SCMI:13}{plm}, pp. 126, footnote 4.
+}
 
 The degrees of freedom adjustment requires the vcov object supplied
 or created by a supplied function to carry an attribute called
 "cluster" with a known clustering described as a character (for now
-this could be either \code{"group"} or \code{"time"}). The vcovXX
-functions of the package \pkg{plm} provide such an attribute for
-their returned variance--covariance matrices. No adjustment is done
-for unknown descriptions given in the attribute "cluster" or when
-the attribute "cluster" is not present. Robust vcov
-objects/functions from package \CRANpkg{clubSandwich} work as
-inputs to \code{pwaldtest}'s F test because a they are translated
-internally to match the needs described above.
+this could be either \code{"group"} or \code{"time"}). The vcovXX functions
+of the package \pkg{plm} provide such an attribute for their
+returned variance--covariance matrices. No adjustment is done for
+unknown descriptions given in the attribute "cluster" or when the
+attribute "cluster" is not present. Robust vcov objects/functions
+from package \CRANpkg{clubSandwich} work as inputs to \code{pwaldtest}'s
+F test because a they are translated internally to match the needs
+described above.
 }
 \examples{
 
@@ -116,8 +118,8 @@ pwaldtest(mod_fe, vcov = vcov_mat) # no df2 adjustment performed
 \insertRef{CAME:MILL:15}{plm}
 }
 \seealso{
-\code{\link{vcovHC}} for an example of the vcovXX functions, a robust
-estimation for the variance--covariance matrix; \code{\link{summary.plm}}
+\code{\link[=vcovHC]{vcovHC()}} for an example of the vcovXX functions, a robust
+estimation for the variance--covariance matrix; \code{\link[=summary.plm]{summary.plm()}}
 }
 \author{
 Yves Croissant (initial implementation) and Kevin Tappe

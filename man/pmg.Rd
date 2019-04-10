@@ -22,16 +22,16 @@ pmg(formula, data, subset, na.action, model = c("mg", "cmg", "dmg"),
 
 \item{data}{a \code{data.frame},}
 
-\item{subset}{see \code{\link{lm}},}
+\item{subset}{see \code{\link[=lm]{lm()}},}
 
-\item{na.action}{see \code{\link{lm}},}
+\item{na.action}{see \code{\link[=lm]{lm()}},}
 
 \item{model}{one of \code{c("mg", "cmg", "dmg")},}
 
-\item{index}{the indexes, see \code{\link{pdata.frame}},}
+\item{index}{the indexes, see \code{\link[=pdata.frame]{pdata.frame()}},}
 
-\item{trend}{logical specifying whether an individual-specific trend has to
-be included,}
+\item{trend}{logical specifying whether an individual-specific
+trend has to be included,}
 
 \item{\dots}{further arguments.}
 
@@ -43,34 +43,36 @@ be included,}
 }
 \value{
 An object of class \code{c("pmg", "panelmodel")} containing:
-\item{coefficients}{the vector of coefficients,} \item{residuals}{the vector
-of residuals,} \item{fitted.values}{the vector of fitted values,}
+\item{coefficients}{the vector of coefficients,}
+\item{residuals}{the vector of residuals,}
+\item{fitted.values}{the vector of fitted values,}
 \item{vcov}{the covariance matrix of the coefficients,}
-\item{df.residual}{degrees of freedom of the residuals,} \item{model}{a
-data.frame containing the variables used for the estimation,}
-\item{call}{the call,} \item{sigma}{always \code{NULL}, \code{sigma} is here
-only for compatibility reasons (to allow using the same \code{summary} and
-\code{print} methods as \code{pggls}),} \item{indcoef}{the matrix of
-individual coefficients from separate time series regressions.}
+\item{df.residual}{degrees of freedom of the residuals,}
+\item{model}{a data.frame containing the variables used for the
+estimation,} \item{call}{the call,} \item{sigma}{always \code{NULL},
+\code{sigma} is here only for compatibility reasons (to allow using
+the same \code{summary} and \code{print} methods as \code{pggls}),}
+\item{indcoef}{the matrix of individual coefficients from
+separate time series regressions.}
 }
 \description{
-Mean Groups (MG), Demeaned MG (DMG) and Common Correlated Effects MG (CCEMG)
-estimators for heterogeneous panel models, possibly with common factors
-(CCEMG)
+Mean Groups (MG), Demeaned MG (DMG) and Common Correlated Effects
+MG (CCEMG) estimators for heterogeneous panel models, possibly with
+common factors (CCEMG)
 }
 \details{
 \code{pmg} is a function for the estimation of linear panel models with
-heterogeneous coefficients by the Mean Groups estimator. \code{model = "mg"}
-specifies the standard Mean Groups estimator, based on the average of
-individual time series regressions. If \code{model = "dmg"} the data are
-demeaned cross-sectionally, which is believed to reduce the influence of
-common factors (and is akin to what is done in homogeneous panels when
-\code{model = "within"} and \code{effect = "time"}). Lastly, if \code{model
-= "cmg"} the CCEMG estimator is employed: this latter is consistent under
-the hypothesis of unobserved common factors and idiosyncratic factor
-loadings; it works by augmenting the model by cross-sectional averages of
-the dependent variable and regressors in order to account for the common
-factors, and adding individual intercepts and possibly trends.
+heterogeneous coefficients by the Mean Groups estimator. \code{model = "mg"} specifies the standard Mean Groups estimator, based on the
+average of individual time series regressions. If \code{model = "dmg"}
+the data are demeaned cross-sectionally, which is believed to
+reduce the influence of common factors (and is akin to what is done
+in homogeneous panels when \code{model = "within"} and \code{effect = "time"}). Lastly, if \code{model = "cmg"} the CCEMG estimator is
+employed: this latter is consistent under the hypothesis of
+unobserved common factors and idiosyncratic factor loadings; it
+works by augmenting the model by cross-sectional averages of the
+dependent variable and regressors in order to account for the
+common factors, and adding individual intercepts and possibly
+trends.
 }
 \examples{
 

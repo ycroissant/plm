@@ -61,50 +61,48 @@ Within(x, ...)
 \method{Within}{matrix}(x, effect, rm.null = TRUE, ...)
 }
 \arguments{
-\item{x, object}{a \code{pseries} or a \code{summary.pseries}
-object,}
+\item{x, object}{a \code{pseries} or a \code{summary.pseries} object,}
 
 \item{\dots}{further arguments, e. g. \code{na.rm = TRUE} for
-transformation functions like \code{beetween}, see
-\bold{Details} and \bold{Examples}.}
+transformation functions like \code{beetween}, see \bold{Details}
+and \bold{Examples}.}
 
-\item{idbyrow}{if \code{TRUE} in the \code{as.matrix} method, the
-lines of the matrix are the individuals,}
+\item{idbyrow}{if \code{TRUE} in the \code{as.matrix} method, the lines of
+the matrix are the individuals,}
 
 \item{plot, scale, transparency, col, lwd}{plot arguments,}
 
-\item{effect}{character string indicating the \code{"individual"}
-or \code{"time"} effect,}
+\item{effect}{character string indicating the \code{"individual"} or
+\code{"time"} effect,}
 
 \item{rm.null}{if \code{TRUE}, for the \code{Within.matrix} method, remove
 the empty columns,}
 }
 \value{
-All these functions return an object of class
-\code{pseries}, except:\cr \code{between}, which returns a
-numeric vector, \code{as.matrix}, which returns a matrix.
+All these functions return an object of class \code{pseries},
+except:\cr \code{between}, which returns a numeric vector,
+\code{as.matrix}, which returns a matrix.
 }
 \description{
-A class for panel series for which several useful computations and data
-transformations are available.
+A class for panel series for which several useful computations and
+data transformations are available.
 }
 \details{
-The functions \code{between}, \code{Between}, and \code{Within} perform
-specific data transformations, i. e. the between and within transformation.
+The functions \code{between}, \code{Between}, and \code{Within} perform specific
+data transformations, i. e. the between and within transformation.
 
-\code{between} returns a vector containing the individual means (over time)
-with the length of the vector equal to the number of individuals (if
-\code{effect = "individual"} (default); if \code{effect = "time"}, it
-returns the time means (over individuals)). \code{Between} duplicates the
-values and returns a vector which length is the number of total
-observations. \code{Within} returns a vector containing the values in
-deviation from the individual means (if \code{effect = "individual"}, from
-time means if \code{effect = "time"}), the so called demeaned data.
+\code{between} returns a vector containing the individual means (over
+time) with the length of the vector equal to the number of
+individuals (if \code{effect = "individual"} (default); if \code{effect = "time"}, it returns the time means (over individuals)). \code{Between}
+duplicates the values and returns a vector which length is the
+number of total observations. \code{Within} returns a vector containing
+the values in deviation from the individual means (if \code{effect = "individual"}, from time means if \code{effect = "time"}), the so called
+demeaned data.
 
-For \code{between}, \code{Between}, and \code{Within} in presence of NA
-values it can be useful to supply \code{na.rm = TRUE} as an additional
-argument to keep as many observations as possible in the resulting
-transformation, see also \bold{Examples}.
+For \code{between}, \code{Between}, and \code{Within} in presence of NA values it
+can be useful to supply \code{na.rm = TRUE} as an additional argument to
+keep as many observations as possible in the resulting
+transformation, see also \strong{Examples}.
 }
 \examples{
 
@@ -145,10 +143,9 @@ sum(is.na(Within(z2, na.rm = TRUE))) # only the NA observation is lost
 
 }
 \seealso{
-\code{\link{is.pseries}} to check if an object is a
-pseries. For more functions on class 'pseries' see
-\code{\link{lag}}, \code{\link{lead}}, \code{\link{diff}} for
-lagging values, leading values (negative lags) and
+\code{\link[=is.pseries]{is.pseries()}} to check if an object is a pseries. For
+more functions on class 'pseries' see \code{\link[=lag]{lag()}}, \code{\link[=lead]{lead()}},
+\code{\link[=diff]{diff()}} for lagging values, leading values (negative lags) and
 differencing.
 }
 \author{

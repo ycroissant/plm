@@ -19,28 +19,28 @@ purtest(object, data = NULL, index = NULL, test = c("levinlin", "ips",
 \method{print}{summary.purtest}(x, ...)
 }
 \arguments{
-\item{object, x}{Either a \code{"data.frame"} or a matrix containing
-the time series, a \code{"pseries"} object, a formula, or the
-name of a column of a \code{"data.frame"}, or a
-\code{"pdata.frame"} on which the test has to be computed; a
-\code{"purtest"} object for the print and summary methods,}
+\item{object, x}{Either a \code{"data.frame"} or a matrix containing the
+time series, a \code{"pseries"} object, a formula, or the name of a
+column of a \code{"data.frame"}, or a \code{"pdata.frame"} on which the
+test has to be computed; a \code{"purtest"} object for the print and
+summary methods,}
 
 \item{data}{a \code{"data.frame"} or a \code{"pdata.frame"} object,}
 
 \item{index}{the indexes,}
 
 \item{test}{the test to be computed: one of \code{"levinlin"} for
-Levin, Lin and Chu (2002), \code{"ips"} for Im, Pesaran and
-Shin (2003), \code{"madwu"} for Maddala and Wu (1999),
-\code{"Pm"} , \code{"invnormal"}, or \code{"logit"} for various
-tests as in Choi (2001), or \code{"hadri"} for Hadri (2000),
-see Details,}
+\insertCite{LEVIN:LIN:CHU:02;textual}{plm}, \code{"ips"} for
+\insertCite{IM:PESAR:SHIN:03;textual}{plm}, \code{"madwu"} for
+\insertCite{MADDA:WU:99;textual}{plm}, \code{"Pm"} , \code{"invnormal"},
+or \code{"logit"} for various tests as in
+\insertCite{CHOI:01;textual}{plm}, or \code{"hadri"} for
+\insertCite{HADR:00;textual}{plm}, see Details,}
 
 \item{exo}{the exogenous variables to introduce in the augmented
 Dickey--Fuller (ADF) regressions, one of: no exogenous
-variables (\code{"none"}), individual intercepts
-(\code{"intercept"}), or individual intercepts and trends
-(\code{"trend"}), but see Details,}
+variables (\code{"none"}), individual intercepts (\code{"intercept"}), or
+individual intercepts and trends (\code{"trend"}), but see Details,}
 
 \item{lags}{the number of lags to be used for the augmented
 Dickey-Fuller regressions: either an integer (the number of
@@ -48,13 +48,13 @@ lags for all time series), a vector of integers (one for each
 time series), or a character string for an automatic
 computation of the number of lags, based on either the AIC
 (\code{"AIC"}), the SIC (\code{"SIC"}), or on the method by
-Hall (1994) (\code{"Hall"}),}
+\insertCite{HALL:94;textual}{plm} (\code{"Hall"}),}
 
 \item{pmax}{maximum number of lags,}
 
 \item{Hcons}{logical, only relevant for \code{test = "hadri"},
 indicating whether the heteroskedasticity-consistent test of
-Hadri (2000) should be computed,}
+\insertCite{HADR:00;textual}{plm} should be computed,}
 
 \item{q}{the bandwidth for the estimation of the long-run variance,}
 
@@ -69,55 +69,62 @@ observations,}
 \item{\dots}{further arguments.}
 }
 \value{
-An object of class \code{"purtest"}: a list with the
-elements \code{"statistic"} (a \code{"htest"} object),
-\code{"call"}, \code{"args"}, \code{"idres"} (containing
-results from the individual regressions), and \code{"adjval"}
-(containing the simulated means and variances needed to compute
-the statistic).
+An object of class \code{"purtest"}: a list with the elements
+\code{"statistic"} (a \code{"htest"} object), \code{"call"}, \code{"args"},
+\code{"idres"} (containing results from the individual regressions),
+and \code{"adjval"} (containing the simulated means and variances
+needed to compute the statistic).
 }
 \description{
 \code{purtest} implements several testing procedures that have been proposed
 to test unit root hypotheses with panel data.
 }
 \details{
-% TODO: in general, write more about the various tests % TODO: mention which
-test is suitable for unbalanced panels (once the data pre-processing in
-purtest() is fixed to handle unbalanced data) % TODO: mention which
-statistic of IPS (2003) we output: Ztbar or Wtbar? (it is not t-bar, the
-mean of t statistics)
+% TODO: in general, write more about the various tests
+% TODO: mention which test is suitable for unbalanced panels (once the data pre-processing in
+% purtest() is fixed to handle unbalanced data)
+% TODO: mention which statistic of IPS (2003) we output: Ztbar or Wtbar? (it is not t-bar, the
+% mean of t statistics)
 
 All these tests except \code{"hadri"} are based on the estimation of
-augmented Dickey-Fuller (ADF) regressions for each time series. A statistic
-is then computed using the t-statistics associated with the lagged variable.
-The Hadri residual-based LM statistic is the cross-sectional average of the
-individual KPSS statistics (Kwiatkowski/Phillips/Schmidt/Shin (1992)),
-standardized by their asymptotic mean and standard deviation.
+augmented Dickey-Fuller (ADF) regressions for each time series. A
+statistic is then computed using the t-statistics associated with
+the lagged variable.  The Hadri residual-based LM statistic is the
+cross-sectional average of the individual KPSS statistics
+\insertCite{KWIA:PHIL:SCHM:SHIN:92}{plm}, standardized by their
+asymptotic mean and standard deviation.
 
-Several Fisher-type tests that combine p-values from tests based on ADF
-regressions per individual are available: \itemize{ \item \code{"madwu"} is
-the inverse chi-squared test (Maddala and Wu (1999)), also called P test by
-Choi (2001)), \item \code{"Pm"} is the modified P test proposed by Choi
-(2001) for large N, \item \code{"invnormal"} is the inverse normal test by
-Choi (2001), and \item \code{"logit"} is the logit test by Choi (2001). }
-The individual p-values for the Fisher-type tests are approximated as
-described in MacKinnon (1994).
+Several Fisher-type tests that combine p-values from tests based on
+ADF regressions per individual are available:
+\itemize{
+\item \code{"madwu"} is the inverse chi-squared test
+\insertCite{MADDA:WU:99}{plm}, also called P test by
+\insertCite{CHOI:01;textual}{plm}.
+\item \code{"Pm"} is the modified P test proposed by
+\insertCite{CHOI:01;textual}{plm} for large N,
+\item \code{"invnormal"} is the inverse normal test by \insertCite{CHOI:01}{plm}, and
+\item \code{"logit"} is the logit test by \insertCite{CHOI:01}{plm}.
+}
 
-The kind of test to be computed can be specified in several ways, depending
-on how the data is handed over to the function: \itemize{ \item For the
-\code{formula}/\code{data} interface (if \code{data} is a \code{data.frame},
-an additional \code{index} argument should be specified); the formula should
-be of the form: \code{y ~ 0}, \code{y ~ 1}, or \code{y ~ trend} for a test
+The individual p-values for the Fisher-type tests are approximated
+as described in \insertCite{MACK:94;textual}{plm}.
+
+The kind of test to be computed can be specified in several ways,
+depending on how the data is handed over to the function:
+\itemize{
+\item For the \code{formula}/\code{data} interface (if \code{data} is a \code{data.frame},
+an additional \code{index} argument should be specified); the formula
+should be of the form: \code{y ~ 0}, \code{y ~ 1}, or \code{y ~ trend} for a test
 with no exogenous variables, with an intercept, or with individual
-intercepts and time trend, respectively. The \code{exo} argument is ignored
-in this case.
+intercepts and time trend, respectively. The \code{exo} argument is
+ignored in this case.
+\item For the \code{data.frame}, \code{matrix}, and \code{pseries} interfaces: in
+these cases, the exogenous variables are specified using the \code{exo}
+argument.
+}
 
-\item For the \code{data.frame}, \code{matrix}, and \code{pseries}
-interfaces: in these cases, the exogenous variables are specified
-using the \code{exo} argument. }
-
-With the associated \code{summary} and \code{print} methods,
-additional information can be extracted/displayed (see also Value).
+With the associated \code{summary} and \code{print} methods, additional
+information can be extracted/displayed (see also Value).
 }
 \examples{
 
@@ -131,26 +138,10 @@ purtest(inv ~ 1, data = Grunfeld, index = c("firm", "year"), pmax = 4, test = "m
 
 }
 \references{
-Choi, I. (2001). ``Unit root tests for panel data'', \emph{Journal of
-International Money and Finance}, \bold{20}(2), pp. 249--272.
-
-Hadri K. (2000). ``Testing for Stationarity in Heterogeneous Panel Data'',
-\emph{The Econometrics Journal}, \bold{3}(2), pp. 148--161.
-
-\insertRef{HALL:94}{plm}
-
-\insertRef{IM:PESAR:SHIN:03}{plm}
-
-\insertRef{KWIA:PHIL:SCHM:SHIN:92}{plm}
-
-\insertRef{LEVIN:LIN:CHU:02}{plm}
-
-\insertRef{MACK:94}{plm}
-
-\insertRef{MADDA:WU:99}{plm}
+\insertAllCited{}
 }
 \seealso{
-\code{\link{cipstest}}
+\code{\link[=cipstest]{cipstest()}}
 }
 \author{
 Yves Croissant and for "Pm", "invnormal", and "logit" Kevin

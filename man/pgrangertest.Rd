@@ -24,7 +24,7 @@ number of individuals (to specify a lag order per individual),}
 \item{index}{only relevant if \code{data} is \code{data.frame} and
 not a \code{pdata.frame}; if \code{NULL}, the first two columns
 of the data.frame are assumed to be the index variables, for
-further details see \code{\link{pdata.frame}}.}
+further details see \code{\link[=pdata.frame]{pdata.frame()}}.}
 }
 \value{
 An object of class \code{c("pgrangertest",
@@ -40,10 +40,10 @@ Test for Granger (non-)causality in panel data.
 % TODO: write about assumptions of panel Granger test: % * cross-sectional
 independence % * convergence
 
-The panel Granger (non-)causality test is a combination of Granger tests
-(Granger (1969)) performed per individual. The test is developed by
-Dumitrescu/Hurlin (2012), a shorter exposition is given in Lopez/Weber
-(2017).
+The panel Granger (non-)causality test is a combination of Granger
+tests \insertCite{GRAN:69}{plm} performed per individual. The test
+is developed by \insertCite{DUMI:HURL:12;textual}{plm}, a shorter
+exposition is given in \insertCite{LOPE:WEBE:17;textual}{plm}.
 
 The formula \code{formula} describes the direction of the (panel) Granger
 causation where \code{y ~ x} means "x (panel) Granger causes y".

@@ -43,7 +43,7 @@ evaluated (defaults to \code{FALSE}),}
 assumed to be the index variables; if not \code{NULL}, both
 dimensions ('individual', 'time') need to be specified by
 \code{index} for \code{is.pconsecutive} on data frames, for
-further details see \code{\link{pdata.frame}},}
+further details see \code{\link[=pdata.frame]{pdata.frame()}},}
 }
 \value{
 A named \code{logical} vector (names are those of the
@@ -96,6 +96,8 @@ are not examined but silently dropped - In this case, it is not clear which
 individual is meant by id value \code{NA}, thus no statement about
 consecutiveness of time periods for those "\code{NA}-individuals" is
 possible.
+
+[[2]: R:[2
 }
 \examples{
 
@@ -158,17 +160,17 @@ is.pconsecutive(NULL, id = Grunfeld$firm, time = Grunfeld$year)
 
 }
 \seealso{
-\code{\link{make.pconsecutive}} to make data consecutive
+\code{\link[=make.pconsecutive]{make.pconsecutive()}} to make data consecutive
 (and, as an option, balanced at the same time) and
-\code{\link{make.pbalanced}} to make data balanced.\cr
-\code{\link{pdim}} to check the dimensions of a 'pdata.frame'
-(and other objects), \code{\link{pvar}} to check for individual
+\code{\link[=make.pbalanced]{make.pbalanced()}} to make data balanced.\cr
+\code{\link[=pdim]{pdim()}} to check the dimensions of a 'pdata.frame'
+(and other objects), \code{\link[=pvar]{pvar()}} to check for individual
 and time variation of a 'pdata.frame' (and other objects),
-\code{\link{lag}} for lagged (and leading) values of a
+\code{\link[=lag]{lag()}} for lagged (and leading) values of a
 'pseries' object.\cr
 
-\code{\link{pseries}}, \code{\link{data.frame}}, \code{\link{pdata.frame}},
-for class 'panelmodel' see \code{\link{plm}} and \code{\link{pgmm}}.
+\code{\link[=pseries]{pseries()}}, \code{\link[=data.frame]{data.frame()}}, \code{\link[=pdata.frame]{pdata.frame()}},
+for class 'panelmodel' see \code{\link[=plm]{plm()}} and \code{\link[=pgmm]{pgmm()}}.
 }
 \author{
 Kevin Tappe

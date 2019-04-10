@@ -35,13 +35,13 @@ pmodel.response has several methods to conveniently extract the
 response of several objects.
 }
 \details{
-The model response is extracted from a \code{pdata.frame} (where
-the response must reside in the first column; this is the case for
-a model frame), a \code{pFormula} + \code{data} or a \code{plm}
-object, and the transformation specified by \code{effect} and
-\code{model} is applied to it.\cr Constructing the model frame
-first ensures proper NA handling and the response being placed in
-the first column, see also \bold{Examples} for usage.
+The model response is extracted from a \code{pdata.frame} (where the
+response must reside in the first column; this is the case for a
+model frame), a \code{pFormula} + \code{data} or a \code{plm} object, and the
+transformation specified by \code{effect} and \code{model} is applied to
+it.\cr Constructing the model frame first ensures proper NA
+handling and the response being placed in the first column, see
+also \bold{Examples} for usage.
 }
 \examples{
 
@@ -68,8 +68,8 @@ all.equal(resp, pmodel.response(fe_model), check.attributes = FALSE) # TRUE
 
 }
 \seealso{
-\code{plm}'s \code{\link{model.matrix}} for (transformed)
-model matrix and the corresponding \code{\link{model.frame}}
+\code{plm}'s \code{\link[=model.matrix]{model.matrix()}} for (transformed)
+model matrix and the corresponding \code{\link[=model.frame]{model.frame()}}
 method to construct a model frame.
 }
 \author{

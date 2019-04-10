@@ -30,16 +30,16 @@
 #' about "neighbouring" rows). If the object to be evaluated is a pseries or a
 #' pdata.frame, the time index is coerced from factor via as.character to
 #' numeric, i.e. the series
-#' \code{as.numeric(as.character(index(<pseries/pdata.frame>)[[2]]))]} is
+#' `as.numeric(as.character(index(<pseries/pdata.frame>)[[2]]))]` is
 #' evaluated for gaps.
 #' 
-#' The default method also works for argument \code{x} being an arbitrary
-#' vector (see \bold{Examples}), provided one can supply arguments \code{id}
-#' and \code{time}, which need to ordered as stacked time series. As only
-#' \code{id} and \code{time} are really necessary for the default method to
-#' evaluate the consecutiveness, \code{x = NULL} is also possible. However, if
-#' the vector \code{x} is also supplied, additional input checking for equality
-#' of the lengths of \code{x}, \code{id} and \code{time} is performed, which is
+#' The default method also works for argument `x` being an arbitrary
+#' vector (see \bold{Examples}), provided one can supply arguments `id`
+#' and `time`, which need to ordered as stacked time series. As only
+#' `id` and `time` are really necessary for the default method to
+#' evaluate the consecutiveness, `x = NULL` is also possible. However, if
+#' the vector `x` is also supplied, additional input checking for equality
+#' of the lengths of `x`, `id` and `time` is performed, which is
 #' safer.
 #' 
 #' For the data.frame interface, the data is ordered in the appropriate way
@@ -48,53 +48,53 @@
 #' data types are already ordered in the appropriate way when created.
 #' 
 #' Note: Only the presence of the time period itself in the object is tested,
-#' not if there are any other variables.  \code{NA} values in individual index
+#' not if there are any other variables.  `NA` values in individual index
 #' are not examined but silently dropped - In this case, it is not clear which
-#' individual is meant by id value \code{NA}, thus no statement about
-#' consecutiveness of time periods for those "\code{NA}-individuals" is
+#' individual is meant by id value `NA`, thus no statement about
+#' consecutiveness of time periods for those "`NA`-individuals" is
 #' possible.
 #'
 #' @name is.pconsecutive
 #' @aliases is.pconsecutive
-#' @param x usually, an object of class \code{pdata.frame},
-#'     \code{data.frame}, \code{pseries}, or an estimated
-#'     \code{panelmodel}; for the default method \code{x} can also be
-#'     an arbitrary vector or \code{NULL}, see \bold{Details},
-#' @param na.rm.tindex logical indicating whether any \code{NA} values
+#' @param x usually, an object of class `pdata.frame`,
+#'     `data.frame`, `pseries`, or an estimated
+#'     `panelmodel`; for the default method `x` can also be
+#'     an arbitrary vector or `NULL`, see \bold{Details},
+#' @param na.rm.tindex logical indicating whether any `NA` values
 #'     in the time index are removed before consecutiveness is
-#'     evaluated (defaults to \code{FALSE}),
-#' @param index only relevant for \code{data.frame} interface; if
-#'     \code{NULL}, the first two columns of the data.frame are
-#'     assumed to be the index variables; if not \code{NULL}, both
+#'     evaluated (defaults to `FALSE`),
+#' @param index only relevant for `data.frame` interface; if
+#'     `NULL`, the first two columns of the data.frame are
+#'     assumed to be the index variables; if not `NULL`, both
 #'     dimensions ('individual', 'time') need to be specified by
-#'     \code{index} for \code{is.pconsecutive} on data frames, for
-#'     further details see \code{\link{pdata.frame}},
+#'     `index` for `is.pconsecutive` on data frames, for
+#'     further details see [pdata.frame()],
 #' @param id,time only relevant for default method: vectors specifying
 #'     the id and time dimensions, i. e. a sequence of individual and
 #'     time identifiers, each as stacked time series,
 #' @param \dots further arguments.
-#' @return A named \code{logical} vector (names are those of the
+#' @return A named `logical` vector (names are those of the
 #'     individuals).  The i-th element of the returned vector
 #'     corresponds to the i-th individual.  The values of the i-th
 #'     element can be: \item{list("TRUE")}{if the i-th individual has
 #'     consecutive time periods,} \item{list("FALSE")}{if the i-th
 #'     individual has non-consecutive time periods,}
 #'     \item{list("NA")}{if there are any NA values in time index of
-#'     the i-th the individual; see also argument \code{na.rm.tindex}
+#'     the i-th the individual; see also argument `na.rm.tindex`
 #'     to remove those.}
 #' @export
 #' @author Kevin Tappe
-#' @seealso \code{\link{make.pconsecutive}} to make data consecutive
+#' @seealso [make.pconsecutive()] to make data consecutive
 #'     (and, as an option, balanced at the same time) and
-#'     \code{\link{make.pbalanced}} to make data balanced.\cr
-#'     \code{\link{pdim}} to check the dimensions of a 'pdata.frame'
-#'     (and other objects), \code{\link{pvar}} to check for individual
+#'     [make.pbalanced()] to make data balanced.\cr
+#'     [pdim()] to check the dimensions of a 'pdata.frame'
+#'     (and other objects), [pvar()] to check for individual
 #'     and time variation of a 'pdata.frame' (and other objects),
-#'     \code{\link{lag}} for lagged (and leading) values of a
+#'     [lag()] for lagged (and leading) values of a
 #'     'pseries' object.\cr
 #' 
-#' \code{\link{pseries}}, \code{\link{data.frame}}, \code{\link{pdata.frame}},
-#' for class 'panelmodel' see \code{\link{plm}} and \code{\link{pgmm}}.
+#' [pseries()], [data.frame()], [pdata.frame()],
+#' for class 'panelmodel' see [plm()] and [pgmm()].
 #' @keywords attribute
 #' @examples
 #' 
@@ -284,36 +284,36 @@ is.pconsecutive.panelmodel <- function(x, na.rm.tindex = FALSE, ...){
 #' the same time periods
 #' 
 #' Balanced data are data for which each individual has the same time periods.
-#' The returned values of the \code{is.pbalanced(object)} methods are identical
-#' to \code{pdim(object)$balanced}.  \code{is.pbalanced} is provided as a short
-#' cut and is faster than \code{pdim(object)$balanced} because it avoids those
-#' computations performed by \code{pdim} which are unnecessary to determine the
+#' The returned values of the `is.pbalanced(object)` methods are identical
+#' to `pdim(object)$balanced`.  `is.pbalanced` is provided as a short
+#' cut and is faster than `pdim(object)$balanced` because it avoids those
+#' computations performed by `pdim` which are unnecessary to determine the
 #' balancedness of the data.
 #' 
 #' @aliases is.pbalanced
-#' @param x an object of class \code{pdata.frame}, \code{data.frame},
-#'     \code{pseries}, \code{panelmodel}, \code{pgmm};
+#' @param x an object of class `pdata.frame`, `data.frame`,
+#'     `pseries`, `panelmodel`, `pgmm`;
 #' @param y **to describe**
-#' @param index only relevant for \code{data.frame} interface; if
-#'     \code{NULL}, the first two columns of the data.frame are
-#'     assumed to be the index variables; if not \code{NULL}, both
+#' @param index only relevant for `data.frame` interface; if
+#'     `NULL`, the first two columns of the data.frame are
+#'     assumed to be the index variables; if not `NULL`, both
 #'     dimensions ('individual', 'time') need to be specified by
-#'     \code{index} as character of length 2 for data frames, for
-#'     further details see \code{\link{pdata.frame}},
+#'     `index` as character of length 2 for data frames, for
+#'     further details see [pdata.frame()],
 #' @param \dots further arguments.
 #' @return A logical indicating whether the data associated with
-#'     object \code{x} are balanced (\code{TRUE}) or not
-#'     (\code{FALSE}).
-#' @seealso \code{\link{punbalancedness}} for two measures of
-#'     unbalancedness, \code{\link{make.pbalanced}} to make data
-#'     balanced; \code{\link{is.pconsecutive}} to check if data are
-#'     consecutive; \code{\link{make.pconsecutive}} to make data
+#'     object `x` are balanced (`TRUE`) or not
+#'     (`FALSE`).
+#' @seealso [punbalancedness()] for two measures of
+#'     unbalancedness, [make.pbalanced()] to make data
+#'     balanced; [is.pconsecutive()] to check if data are
+#'     consecutive; [make.pconsecutive()] to make data
 #'     consecutive (and, optionally, also balanced).\cr
-#'     \code{\link{pdim}} to check the dimensions of a 'pdata.frame'
-#'     (and other objects), \code{\link{pvar}} to check for individual
+#'     [pdim()] to check the dimensions of a 'pdata.frame'
+#'     (and other objects), [pvar()] to check for individual
 #'     and time variation of a 'pdata.frame' (and other objects),
-#'     \code{\link{pseries}}, \code{\link{data.frame}},
-#'     \code{\link{pdata.frame}}.
+#'     [pseries()], [data.frame()],
+#'     [pdata.frame()].
 #' @export
 #' @keywords attribute
 #' @examples

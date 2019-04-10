@@ -33,15 +33,14 @@ An object of class \code{"matrix"} containing the estimate
 of the covariance matrix of coefficients.
 }
 \description{
-Generic Lego building block for robust covariance matrix estimators of the
-vcovXX kind for panel models.
+Generic Lego building block for robust covariance matrix estimators
+of the vcovXX kind for panel models.
 }
 \details{
 \code{vcovG} is the generic building block for use by higher--level
-wrappers \code{\link{vcovHC}}, \code{\link{vcovSCC}},
-\code{\link{vcovDC}}, and \code{\link{vcovNW}}. The main use of
-\code{vcovG} is to be used internally by the former, but it is made
-available in the user space for use in non--standard
+wrappers \code{\link[=vcovHC]{vcovHC()}}, \code{\link[=vcovSCC]{vcovSCC()}}, \code{\link[=vcovDC]{vcovDC()}}, and \code{\link[=vcovNW]{vcovNW()}}. The
+main use of \code{vcovG} is to be used internally by the former, but it
+is made available in the user space for use in non--standard
 combinations. For more documentation, see see wrapper functions
 mentioned.
 }
@@ -65,9 +64,9 @@ coeftest(zz, vcov.=myvcov)
 \insertRef{mil17b}{plm}
 }
 \seealso{
-\code{\link{vcovHC}}, \code{\link{vcovSCC}},
-\code{\link{vcovDC}}, \code{\link{vcovNW}}, and
-\code{\link{vcovBK}} albeit the latter does not make use of
+\code{\link[=vcovHC]{vcovHC()}}, \code{\link[=vcovSCC]{vcovSCC()}},
+\code{\link[=vcovDC]{vcovDC()}}, \code{\link[=vcovNW]{vcovNW()}}, and
+\code{\link[=vcovBK]{vcovBK()}} albeit the latter does not make use of
 vcovG.
 }
 \author{

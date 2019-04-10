@@ -43,7 +43,7 @@ Equations, \emph{The Review of Economic Studies}, \bold{58}(2), 1991, pp.
 227--297.
 }
 \seealso{
-\code{\link{pgmm}}
+\code{\link[=pgmm]{pgmm()}}
 }
 \author{
 Yves Croissant

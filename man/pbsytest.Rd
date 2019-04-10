@@ -4,8 +4,8 @@
 \alias{pbsytest}
 \alias{pbsytest.formula}
 \alias{pbsytest.panelmodel}
-\title{Bera, Sosa-Escudero and Yoon Locally--Robust Lagrange Multiplier Tests for
-Panel Models and Joint Test by Baltagi and Li}
+\title{Bera, Sosa-Escudero and Yoon Locally--Robust Lagrange Multiplier
+Tests for Panel Models and Joint Test by Baltagi and Li}
 \usage{
 pbsytest(x, ...)
 
@@ -35,20 +35,21 @@ two-sided test (see also Details); not relevant for other values of
 An object of class \code{"htest"}.
 }
 \description{
-Test for residual serial correlation (or individual random effects) locally
-robust vs. individual random effects (serial correlation) for panel models
-and joint test of serial correlation and the random effect specification by
-Baltagi and Li.
+Test for residual serial correlation (or individual random effects)
+locally robust vs. individual random effects (serial correlation)
+for panel models and joint test of serial correlation and the
+random effect specification by Baltagi and Li.
 }
 \details{
-These Lagrange multiplier tests are robust vs. local misspecification of the
-alternative hypothesis, i.e. they test the null of serially uncorrelated
-residuals against AR(1) residuals in a pooling model, allowing for local
-departures from the assumption of no random effects; or they test the null
-of no random effects allowing for local departures from the assumption of no
-serial correlation in residuals.  They use only the residuals of the pooled
-OLS model and correct for local misspecification as outlined in Bera
-\emph{et al.} (2001).
+These Lagrange multiplier tests are robust vs. local
+misspecification of the alternative hypothesis, i.e. they test the
+null of serially uncorrelated residuals against AR(1) residuals in
+a pooling model, allowing for local departures from the assumption
+of no random effects; or they test the null of no random effects
+allowing for local departures from the assumption of no serial
+correlation in residuals.  They use only the residuals of the
+pooled OLS model and correct for local misspecification as outlined
+in \insertCite{BERA:SOSA:YOON:01;textual}{plm}.
 
 For \code{test = "re"}, the default (\code{re.normal = TRUE}) is to compute
 a one-sided test which is expected to lead to a more powerful test
@@ -56,20 +57,21 @@ a one-sided test which is expected to lead to a more powerful test
 the two-sided test (asymptotically chi-squared(2) distributed). Argument
 \code{re.normal} is irrelevant for all other values of \code{test}.
 
-The joint test of serial correlation and the random effect specification
-(\code{test = "j"}) is due to Baltagi and Li (1991) (also mentioned in
-Baltagi and Li (1995), pp. 135--136) and is added for convenience under this
-same function.
+The joint test of serial correlation and the random effect
+specification (\code{test = "j"}) is due to
+\insertCite{BALT:LI:91;textual}{plm} (also mentioned in
+\insertCite{BALT:LI:95;textual}{plm}, pp. 135--136) and is added
+for convenience under this same function.
 
-The unbalanced version of all tests are derived in Sosa-Escudero and Bera
-(2008). The functions implemented are suitable for balanced as well as
-unbalanced panel data sets.
+The unbalanced version of all tests are derived in
+\insertCite{SOSA:BERA:08;textual}{plm}. The functions implemented
+are suitable for balanced as well as unbalanced panel data sets.
 
-A concise treatment of the statistics for only balanced panels is given in
-Baltagi (2013), p. 108.
+A concise treatment of the statistics for only balanced panels is
+given in \insertCite{BALT:13;textual}{plm}, p. 108.
 
-Here is an overview of how the various values of the \code{test} argument
-relate to the literature:
+Here is an overview of how the various values of the \code{test}
+argument relate to the literature:
 
 \itemize{ \item \code{test = "ar"}: \itemize{ \item \eqn{RS*_{\rho}} in Bera
 et al. (2001), p. 9 (balanced) \item \eqn{LM*_{\rho}} in Baltagi (2013), p.
@@ -95,7 +97,8 @@ chi-squared(2) distributed): \itemize{ \item \eqn{RS*_{\mu}} in Bera et al.
 }
 \examples{
 
-## Bera et al. (2001), p. 13, table 1 use a subset of the original Grunfeld
+## Bera et. al (2001), p. 13, table 1 use
+## a subset of the original Grunfeld
 ## data which contains three errors -> construct this subset:
 data("Grunfeld", package = "plm")
 Grunsubset <- rbind(Grunfeld[1:80, ], Grunfeld[141:160, ])
@@ -115,9 +118,7 @@ pbsytest(mod)
 
 }
 \references{
-Bera, A.K., Sosa-Escudero, W. and Yoon, M. (2001), Tests for the
-error component model in the presence of local misspecification,
-\emph{Journal of Econometrics}, \bold{101}(1), pp. 1--23.
+\insertRef{BERA:SOSA:YOON:01}{plm}
 
 \insertRef{BALT:13}{plm}
 
@@ -128,9 +129,9 @@ error component model in the presence of local misspecification,
 \insertRef{SOSA:BERA:08}{plm}
 }
 \seealso{
-\code{\link{plmtest}} for individual and/or time random effects
-tests based on a correctly specified model; \code{\link{pbltest}},
-\code{\link{pbgtest}} and \code{\link{pdwtest}} for serial correlation tests
+\code{\link[=plmtest]{plmtest()}} for individual and/or time random effects
+tests based on a correctly specified model; \code{\link[=pbltest]{pbltest()}},
+\code{\link[=pbgtest]{pbgtest()}} and \code{\link[=pdwtest]{pdwtest()}} for serial correlation tests
 in random effects models.
 }
 \author{

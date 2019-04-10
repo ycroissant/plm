@@ -11,9 +11,9 @@ aneweytest(formula, data, subset, na.action, index = NULL, ...)
 
 \item{data}{a \code{data.frame},}
 
-\item{subset}{see \code{\link{lm}},}
+\item{subset}{see \code{\link[=lm]{lm()}},}
 
-\item{na.action}{see \code{\link{lm}},}
+\item{na.action}{see \code{\link[=lm]{lm()}},}
 
 \item{index}{the indexes,}
 
@@ -27,7 +27,8 @@ Angrist and Newey's version of the Chamberlain test
 }
 \details{
 Angrist and Newey's test is based on the results of the artifactual
-regression of the within residuals on the covariates for all the periods.
+regression of the within residuals on the covariates for all the
+periods.
 }
 \examples{
 

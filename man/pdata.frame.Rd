@@ -32,8 +32,8 @@ pdata.frame(x, index = NULL, drop.index = FALSE, row.names = TRUE,
   keep.attributes = TRUE, ...)
 }
 \arguments{
-\item{x}{a \code{data.frame} for the \code{pdata.frame} function
-and a \code{pdata.frame} for the methods,}
+\item{x}{a \code{data.frame} for the \code{pdata.frame} function and a
+\code{pdata.frame} for the methods,}
 
 \item{index}{this argument indicates the individual and time
 indexes. See \bold{Details},}
@@ -41,22 +41,20 @@ indexes. See \bold{Details},}
 \item{drop.index}{logical, indicates whether the indexes are to be
 excluded from the resulting pdata.frame,}
 
-\item{row.names}{\code{NULL} or logical, indicates whether
-``fancy'' row names (a combination of individual index and time
-index) are to be added to the returned (p)data.frame
-(\code{NULL} and \code{FALSE} have the same meaning),}
+\item{row.names}{\code{NULL} or logical, indicates whether ``fancy'' row
+names (a combination of individual index and time index) are to
+be added to the returned (p)data.frame (\code{NULL} and `FALSE` have
+the same meaning),}
 
 \item{stringsAsFactors}{logical, indicating whether character
 vectors are to be converted to factors,}
 
 \item{replace.non.finite}{logical, indicating whether values for
-which \code{is.finite()} yields \code{TRUE} are to be replaced
-by \code{NA} values, except for character variables (defaults
-to \code{FALSE}),}
+which \code{is.finite()} yields \code{TRUE} are to be replaced by \code{NA}
+values, except for character variables (defaults to \code{FALSE}),}
 
 \item{drop.NA.series}{logical, indicating whether all-NA columns
-are to be removed from the pdata.frame (defaults to
-\code{FALSE}),}
+are to be removed from the pdata.frame (defaults to \code{FALSE}),}
 
 \item{drop.const.series}{logical, indicating whether constant
 columns are to be removed from the pdata.frame (defaults to
@@ -71,11 +69,11 @@ the index variables),}
 
 \item{value}{the name of the variable to include,}
 
-\item{i}{see \code{\link{Extract}},}
+\item{i}{see \code{\link[=Extract]{Extract()}},}
 
-\item{j}{see \code{\link{Extract}},}
+\item{j}{see \code{\link[=Extract]{Extract()}},}
 
-\item{drop}{see \code{\link{Extract}},}
+\item{drop}{see \code{\link[=Extract]{Extract()}},}
 
 \item{y}{one of the columns of the \code{data.frame},}
 
@@ -87,22 +85,22 @@ list/columns of the data.frame should have the pdata.frame's
 attributes added (default: FALSE for as.list, TRUE for
 as.data.frame),}
 
-\item{optional}{see \code{\link{as.data.frame}},}
+\item{optional}{see \code{\link[=as.data.frame]{as.data.frame()}},}
 }
 \value{
-a \code{pdata.frame} object: this is a \code{data.frame}
-with an \code{index} attribute which is a \code{data.frame}
-with two variables, the individual and the time indexes, both
-being factors.  The resulting pdata.frame is sorted by the
-individual index, then by the time index.
+a \code{pdata.frame} object: this is a \code{data.frame} with an
+\code{index} attribute which is a \code{data.frame} with two variables,
+the individual and the time indexes, both being factors.  The
+resulting pdata.frame is sorted by the individual index, then
+by the time index.
 }
 \description{
-An object of class 'pdata.frame' is a data.frame with an index attribute
-that describes its individual and time dimensions.
+An object of class 'pdata.frame' is a data.frame with an index
+attribute that describes its individual and time dimensions.
 }
 \details{
-The \code{index} argument indicates the dimensions of the panel. It
-can be: \itemize{ \item a vector of two character strings which
+The \code{index} argument indicates the dimensions of the panel. It can
+be: \itemize{ \item a vector of two character strings which
 contains the names of the individual and of the time indexes, \item
 a character string which is the name of the individual index
 variable. In this case, the time index is created automatically and
@@ -116,27 +114,31 @@ time periods in the order of the original data. Two new variables
 are added: "id" and "time" which contain the individual and the
 time indexes.  }
 
-The \code{"[["} and \code{"$"} extract a series from the
-\code{pdata.frame}.  The \code{"index"} attribute is then added to
-the series and a class attribute \code{"pseries"} is added. The
-\code{"["} method behaves as for \code{data.frame}, except that the
-extraction is also applied to the \code{index} attribute.  A safe
-way to extract the index attribute is to use the function
-\code{\link{index}} for 'pdata.frames' (and other objects).
+The \code{"[["} and \code{"$"} extract a series from the \code{pdata.frame}.  The
+\code{"index"} attribute is then added to the series and a class
+attribute \code{"pseries"} is added. The \code{"["} method behaves as for
+\code{data.frame}, except that the extraction is also applied to the
+\code{index} attribute.  A safe way to extract the index attribute is to
+use the function [index()] for 'pdata.frames' (and other objects).
 
 \code{as.data.frame} removes the index from the \code{pdata.frame} and adds
 it to each column.
 
 \code{as.list} behaves by default identical to
-\code{\link[base:list]{as.list.data.frame}} which means it drops
-the attributes specific to a pdata.frame; if a list of pseries is
+\code{\link[base:list]{as.list.data.frame}} which means it drops the
+attributes specific to a pdata.frame; if a list of pseries is
 wanted, the attribute \code{keep.attributes} can to be set to
-\code{TRUE}. This also makes \code{lapply} work as expected on a
-pdata.frame (see also \bold{Examples}).
+\code{TRUE}. This also makes \code{lapply} work as expected on a pdata.frame
+(see also \bold{Examples}).
+
+[["\code{and}"$"\code{extract a series from the}pdata.frame\code{.  The }"index"\code{attribute is then added to the series and a class attribute}"pseries"\code{is added. The}"["\code{method behaves as for}data.frame\code{, except that the extraction is also applied to the }index` attribute.  A safe way to extract the index attribute is to
+use the function [index()]: R:[%22%60%20and%20%60%22$%22%60%20extract%20a%20series%20from%20the%20%60pdata.frame%60.%20%20The%0A%60%22index%22%60%20attribute%20is%20then%20added%20to%20the%20series%20and%20a%20class%0Aattribute%20%60%22pseries%22%60%20is%20added.%20The%20%60%22[%22%60%20method%20behaves%20as%20for%0A%60data.frame%60,%20except%20that%20the%20extraction%20is%20also%20applied%20to%20the%0A%60index%60%20attribute.%20%20A%20safe%20way%20to%20extract%20the%20index%20attribute%20is%20to%0Ause%20the%20function%20[index()
+[base:list]: R:base:list
 }
 \examples{
 
-# Gasoline contains two variables which are individual and time indexes
+# Gasoline contains two variables which are individual and time
+# indexes
 data("Gasoline", package = "plm")
 Gas <- pdata.frame(Gasoline, index = c("country", "year"), drop.index = TRUE)
 
@@ -144,8 +146,9 @@ Gas <- pdata.frame(Gasoline, index = c("country", "year"), drop.index = TRUE)
 data("Hedonic", package = "plm")
 Hed <- pdata.frame(Hedonic, index = "townid", row.names = FALSE)
 
-# In case of balanced panel, it is sufficient to give number of individuals 
-# data set 'Wages' is organized as a stacked time series
+# In case of balanced panel, it is sufficient to give number of
+# individuals data set 'Wages' is organized as a stacked time
+# series
 data("Wages", package = "plm")
 Wag <- pdata.frame(Wages, 595)
 
@@ -155,13 +158,12 @@ lapply(as.list(Wag[ , c("ed", "lwage")], keep.attributes = TRUE), lag)
 
 }
 \seealso{
-\code{\link{index}} to extract the index variables from a
-'pdata.frame' (and other objects), \code{\link{pdim}} to check
-the dimensions of a 'pdata.frame' (and other objects),
-\code{\link{pvar}} to check for each variable if it varies
-cross-sectionally and over time.  To check if the time periods
-are consecutive per individual, see
-\code{\link{is.pconsecutive}}.
+\code{\link[=index]{index()}} to extract the index variables from a
+'pdata.frame' (and other objects), \code{\link[=pdim]{pdim()}} to check the
+dimensions of a 'pdata.frame' (and other objects), \code{\link[=pvar]{pvar()}} to
+check for each variable if it varies cross-sectionally and over
+time.  To check if the time periods are consecutive per
+individual, see \code{\link[=is.pconsecutive]{is.pconsecutive()}}.
 }
 \author{
 Yves Croissant

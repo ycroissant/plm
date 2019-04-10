@@ -34,7 +34,7 @@ or \code{pseries};}
 assumed to be the index variables; if not \code{NULL}, both
 dimensions ('individual', 'time') need to be specified by
 \code{index} as character of length 2 for data frames, for
-further details see \code{\link{pdata.frame}},}
+further details see \code{\link[=pdata.frame]{pdata.frame()}},}
 }
 \value{
 An object of the same class as the input \code{x}, i.e. a
@@ -71,7 +71,7 @@ in the result (symmetric to \code{"shared.times"}).  }
 The data are not necessarily made consecutive (regular time series
 with distance 1), because balancedness does not imply
 consecutiveness. For making the data consecutive, use
-\code{\link{make.pconsecutive}} (and, optionally, set argument
+\code{\link[=make.pconsecutive]{make.pconsecutive()}} (and, optionally, set argument
 \code{balanced = TRUE} to make consecutive and balanced, see also
 \bold{Examples} for a comparison of the two functions.
 
@@ -151,17 +151,17 @@ nrow(g_bal)                        # 190 rows
 
 }
 \seealso{
-\code{\link{is.pbalanced}} to check if data are balanced;
-\code{\link{is.pconsecutive}} to check if data are consecutive;
-\code{\link{make.pconsecutive}} to make data consecutive (and,
-optionally, also balanced).\cr \code{\link{punbalancedness}}
-for two measures of unbalancedness, \code{\link{pdim}} to check
+\code{\link[=is.pbalanced]{is.pbalanced()}} to check if data are balanced;
+\code{\link[=is.pconsecutive]{is.pconsecutive()}} to check if data are consecutive;
+\code{\link[=make.pconsecutive]{make.pconsecutive()}} to make data consecutive (and,
+optionally, also balanced).\cr \code{\link[=punbalancedness]{punbalancedness()}}
+for two measures of unbalancedness, \code{\link[=pdim]{pdim()}} to check
 the dimensions of a 'pdata.frame' (and other objects),
-\code{\link{pvar}} to check for individual and time variation
-of a 'pdata.frame' (and other objects), \code{\link{lag}} for
+\code{\link[=pvar]{pvar()}} to check for individual and time variation
+of a 'pdata.frame' (and other objects), \code{\link[=lag]{lag()}} for
 lagging (and leading) values of a 'pseries' object.\cr
-\code{\link{pseries}}, \code{\link{data.frame}},
-\code{\link{pdata.frame}}.
+\code{\link[=pseries]{pseries()}}, \code{\link[=data.frame]{data.frame()}},
+\code{\link[=pdata.frame]{pdata.frame()}}.
 }
 \author{
 Kevin Tappe

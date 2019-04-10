@@ -7,7 +7,7 @@ output:
       collapsed: true
       smooth_scroll: true
     number_sections: true
-bibliography: bibliojss.bib
+bibliography: ../inst/REFERENCES.bib
 abstract: |
   This introduction to the `plm` package is a slightly
   modified version of @Croissant:Millo:2008, published in the
@@ -79,8 +79,8 @@ two-dimensional data, especially in the case of unbalanced panels.
 This paper is organized as follows: Section \@ref(the-linear-panel-model)
 presents a very short overview of the typical model
 taxonomy^[Comprehensive treatments are to be found in many econometrics textbooks,
-e.g. @BALT:2005, @BALT:2013 or @WOOL:02, @WOOL:2010: the reader is referred to
-these, especially to the first 9 chapters of @BALT:2005, @BALT:2013.].
+e.g. @BALT:05, @BALT:13 or @WOOL:02, @WOOL:10: the reader is referred to
+these, especially to the first 9 chapters of @BALT:05, @BALT:13.].
 Section \@ref(software-approach) discusses the
 software approach used in the package. The next three sections present
 the functionalities of the package in more detail: data management
@@ -139,39 +139,39 @@ The appropriate estimation method for this model depends on the
 properties of the two error components. The idiosyncratic error
 $\epsilon_{it}$ is usually assumed well-behaved and independent of
 both the regressors $x_{it}$ and the individual error component
-$\mu_i$. The individual component may be in turn either independent
-of the regressors or correlated.
+$\mu_i$. The individual component may be in turn either independent of
+the regressors or correlated.
 
-If it is correlated, the ordinary least squares (OLS)
-estimator of $\beta$ would be inconsistent, so it is customary to
-treat the $\mu_i$ as a further set of $n$ parameters to be estimated, as
-if in the general model $\alpha_{it}=\alpha_{i}$ for all $t$. This is
-called the fixed effects (a.k.a. *within* or *least squares dummy variables*)
-model, usually estimated by OLS on transformed data, and gives consistent
-estimates for $\beta$.
+If it is correlated, the ordinary least squares (OLS) estimator of
+$\beta$ would be inconsistent, so it is customary to treat the $\mu_i$
+as a further set of $n$ parameters to be estimated, as if in the
+general model $\alpha_{it}=\alpha_{i}$ for all $t$. This is called the
+fixed effects (a.k.a. *within* or *least squares dummy variables*)
+model, usually estimated by OLS on transformed data, and gives
+consistent estimates for $\beta$.
 
 If the individual-specific component $\mu_i$ is uncorrelated with the
-regressors, a situation which is usually termed *random effects*,
-the overall error $u_{it}$ also is, so the OLS estimator is
+regressors, a situation which is usually termed *random effects*, the
+overall error $u_{it}$ also is, so the OLS estimator is
 consistent. Nevertheless, the common error component over individuals
-induces correlation across the composite error terms, making
-OLS estimation inefficient, so one has to resort to some form
-of feasible generalized least squares (GLS) estimators. This
-is based on the estimation of the variance of the two error components,
-for which there are a number of different procedures available.
+induces correlation across the composite error terms, making OLS
+estimation inefficient, so one has to resort to some form of feasible
+generalized least squares (GLS) estimators. This is based on the
+estimation of the variance of the two error components, for which
+there are a number of different procedures available.
 
-If the individual component is missing altogether, pooled OLS
-is the most efficient estimator for $\beta$. This set of assumptions
-is usually labelled *pooling* model, although this actually refers
-to the errors' properties and the appropriate estimation method rather
-than the model itself.  If one relaxes the usual hypotheses of
+If the individual component is missing altogether, pooled OLS is the
+most efficient estimator for $\beta$. This set of assumptions is
+usually labelled *pooling* model, although this actually refers to the
+errors' properties and the appropriate estimation method rather than
+the model itself.  If one relaxes the usual hypotheses of
 well-behaved, white noise errors and allows for the idiosyncratic
 error $\epsilon_{it}$ to be arbitrarily heteroskedastic and serially
-correlated over time, a more general kind of feasible GLS is
-needed, called the *unrestricted* or *general* GLS.
-This specification can also be augmented with
-individual-specific error components possibly correlated with the
-regressors, in which case it is termed *fixed effects* GLS.
+correlated over time, a more general kind of feasible GLS is needed,
+called the *unrestricted* or *general* GLS.  This specification can
+also be augmented with individual-specific error components possibly
+correlated with the regressors, in which case it is termed *fixed
+effects* GLS.
 
 Another way of estimating unobserved effects models through removing
 time-invariant individual components is by first-differencing the
@@ -457,18 +457,17 @@ theoretically most suitable for situations which forbid it
 computationally: e.g., "short" micropanels with thousands of
 individuals observed over few time periods.
 
-`R` has general facilities for fast matrix computation based
-on object orientation: particular types of matrices (symmetric,
-sparse, dense etc.) are assigned the relevant class and the additional
-information on structure is used in the computations, sometimes with
-dramatic effects on performance (see @BATE:04) and packages
-`Matrix` (see @BATE:MAEC:2016) and `SparseM`
-(see @KOEN:NG:2016). Some optimized linear algebra routines are
-available in the `R` package `bdsmatrix`
-(see @THER:2017) which exploit the particular
-block-diagonal and symmetric structure of $\hat{V}$ making it
-possible to implement a fast and reliable full-matrix solution to
-problems of any practically relevant size.
+`R` has general facilities for fast matrix computation based on object
+orientation: particular types of matrices (symmetric, sparse, dense
+etc.) are assigned the relevant class and the additional information
+on structure is used in the computations, sometimes with dramatic
+effects on performance (see @BATE:04) and packages `Matrix` (see
+@BATE:MAEC:2016) and `SparseM` (see @KOEN:NG:2016). Some optimized
+linear algebra routines are available in the `R` package `bdsmatrix`
+(see @THER:14) which exploit the particular block-diagonal and
+symmetric structure of $\hat{V}$ making it possible to implement a
+fast and reliable full-matrix solution to problems of any practically
+relevant size.
 
 The $\hat{V}$ matrix is constructed as an object of class
 `bdsmatrix`. The peculiar properties of this matrix class are used for
@@ -788,7 +787,7 @@ with one notable exception:
 
 The following example is using data used by @HARR:RUBI:78 to
 estimate an hedonic housing prices function. It is reproduced in
-@BALT:2005, p.174/ @BALT:2013, p.197.
+@BALT:05, p.174/ @BALT:13, p.197.
 
 ```{r hedonic}
 data("Hedonic", package = "plm")
@@ -798,7 +797,7 @@ summary(Hed)
 ```
 Measures for the unbalancedness of a panel data set or the data used in
 estimated models are provided by function `punbalancedness`. It gives
-the measures $\gamma$ and $\nu$ from @AH:PI:1981 where for both 1 represents
+the measures $\gamma$ and $\nu$ from @AHRE:PINC:81 where for both 1 represents
 balanced data and the more unbalanced the data the lower the value.
 
 ```{r hedonic-punbal}
@@ -817,11 +816,11 @@ The instrumental variables estimator used is indicated with the
 
 - `"bvk"`, from  @BALE:VARA:87, the default value,
 - `"baltagi"`, from @BALT:81,
-- `"am"`, from @AMEM:MACUR:86,
-- `"bms"`, from @BREU:MIZO:SCHMI:89.
+- `"am"`, from @AMEM:MACU:86,
+- `"bms"`, from @BREU:MIZO:SCHM:89.
 
 An illustration is in the following example from 
-@BALT:2005, p.120 / @BALT:2013, p.137 ("G2SLS").
+@BALT:05, p.120 / @BALT:13, p.137 ("G2SLS").
   
 ```{r }
 data("Crime", package = "plm")
@@ -835,7 +834,7 @@ summary(cr)
 
 The Hausman-Taylor model (see @HAUS:TAYL:81) may be estimated
 with the `plm` function by setting parameters accordingly like in
-the example below. The following replicates @BALT:2005, p. 130/ @BALT:2013, p. 146.
+the example below. The following replicates @BALT:05, p. 130/ @BALT:13, p. 146.
 
 ```{r }
 ## (note: function pht is a deprecated way to estimate this type of model
@@ -1172,14 +1171,15 @@ be computed. The argument `type` is one of:
 (`"honda"`); however, the twoway statistics of `"kw"`  and `"honda"` differ.],
 - `"ghm"`: @GOUR:HOLL:MONF:82.
 
-The effects tested are indicated with the `effect` argument (one
-of `"individual"`, `"time"`, or `"twoways"`). The test statistics 
-implemented are also suitable for unbalanced panels.^[The `"bp"` test for 
-unbalanced panels was derived in @BALT:LI:90, the `"kw"` test for unbalanced 
-panels in @BALT:CHA:LI:98. The `"ghm"` test and the `"kw"` test were extended 
-to two--way effects in @BALT:CHA:LI:92. For a concise overview of all these 
-statistics see @BALT:2013 Sec. 4.2, pp. 68--76 (for balanced panels) and 
-Sec. 9.5, pp. 200--203 (for unbalanced panels).]
+The effects tested are indicated with the `effect` argument (one of
+`"individual"`, `"time"`, or `"twoways"`). The test statistics
+implemented are also suitable for unbalanced panels.^[The `"bp"` test
+for unbalanced panels was derived in @BALT:LI:90, the `"kw"` test for
+unbalanced panels in @BALT:CHAN:LI:98. The `"ghm"` test and the `"kw"`
+test were extended to two--way effects in @BALT:CHAN:LI:92. For a
+concise overview of all these statistics see @BALT:13 Sec. 4.2,
+pp. 68--76 (for balanced panels) and Sec. 9.5, pp. 200--203 (for
+unbalanced panels).]
 
 To test the presence of individual and time effects in the
 `Grunfeld` example, using the @GOUR:HOLL:MONF:82 test,
@@ -1232,16 +1232,16 @@ phtest(gw, gr)
 
 A model with individual effects has composite errors that are serially
 correlated by definition. The presence of the time-invariant error
-component^[Here we treat fixed and random effects alike, as components of the 
-error term, according with the modern approach in econometrics (see @WOOL:02, 
-@WOOL:2010).] gives rise to serial correlation which does not die out over 
-time, thus standard tests applied on pooled data always end up rejecting the
-null of spherical residuals^[Neglecting time effects may also lead to serial
-correlation in residuals (as observed in @WOOL:02 10.4.1).].
-There may also be serial correlation of the
-"usual" kind in the idiosyncratic error terms, e.g. as an AR(1)
-process. By "testing for serial correlation" we mean testing for
-this latter kind of dependence.
+component^[Here we treat fixed and random effects alike, as components
+of the error term, according with the modern approach in econometrics
+(see @WOOL:02, @WOOL:10).] gives rise to serial correlation which does
+not die out over time, thus standard tests applied on pooled data
+always end up rejecting the null of spherical residuals^[Neglecting
+time effects may also lead to serial correlation in residuals (as
+observed in @WOOL:02 10.4.1).].  There may also be serial correlation
+of the "usual" kind in the idiosyncratic error terms, e.g. as an AR(1)
+process. By "testing for serial correlation" we mean testing for this
+latter kind of dependence.
 
 For these reasons, the subjects of testing for individual error
 components and for serially correlated idiosyncratic errors are
@@ -1412,28 +1412,27 @@ correlation is to apply a standard serial correlation test to the
 quasi-demeaned model. The same applies in a pooled model, w.r.t. the
 original data.
 
-The FE case needs some qualification. It is well-known that
-if the original model's errors are uncorrelated then FE
-residuals are negatively serially correlated, with $cor(\hat{u}_{it},
-\hat{u}_{is})=-1/(T-1)$ for each $t,s$
-(see @WOOL:02 10.5.4). This correlation clearly dies out as T
-increases, so this kind of AR test is applicable to `within`
-model objects only for T "sufficiently large"^[Baltagi and Li derive a basically
-analogous T-asymptotic test for first-order serial correlation in a FE panel
-model as a Breusch-Godfrey LM test on within residuals
-(see @BALT:LI:95 par. 2.3 and formula 12). They also observe that the test on 
-within residuals can be used for testing on the RE model, as "the within 
-transformation [time-demeaning, in our terminology] wipes out the individual 
-effects, whether fixed or random". Generalizing the Durbin-Watson test to FE 
-models by applying it to fixed effects residuals is documented in 
-@BHAR:FRAN:NARE:82, a (modified) version for unbalanced and/or non-consecutive 
-panels is implemented in `pbnftest` as is Baltagi-Wu's LBI statistic (for both 
-see @BALT:WU:99).].
-On the converse, in short panels the test gets severely
-biased towards rejection (or, as the induced correlation is negative, towards
-acceptance in the case of the one-sided DW test with
-`alternative="greater"`). See below for a serial correlation test
-applicable to "short" FE panel models.
+The FE case needs some qualification. It is well-known that if the
+original model's errors are uncorrelated then FE residuals are
+negatively serially correlated, with $cor(\hat{u}_{it},
+\hat{u}_{is})=-1/(T-1)$ for each $t,s$ (see @WOOL:02 10.5.4). This
+correlation clearly dies out as T increases, so this kind of AR test
+is applicable to `within` model objects only for T "sufficiently
+large"^[Baltagi and Li derive a basically analogous T-asymptotic test
+for first-order serial correlation in a FE panel model as a
+Breusch-Godfrey LM test on within residuals (see @BALT:LI:95 par. 2.3
+and formula 12). They also observe that the test on within residuals
+can be used for testing on the RE model, as "the within transformation
+[time-demeaning, in our terminology] wipes out the individual effects,
+whether fixed or random". Generalizing the Durbin-Watson test to FE
+models by applying it to fixed effects residuals is documented in
+@BHAR:FRAN:NARE:82, a (modified) version for unbalanced and/or
+non-consecutive panels is implemented in `pbnftest` as is Baltagi-Wu's
+LBI statistic (for both see @BALT:WU:99).].  On the converse, in short
+panels the test gets severely biased towards rejection (or, as the
+induced correlation is negative, towards acceptance in the case of the
+one-sided DW test with `alternative="greater"`). See below for a
+serial correlation test applicable to "short" FE panel models.
 
 
 `plm` objects retain the "demeaned" data, so the procedure is
@@ -1596,7 +1595,7 @@ and distributed as a standard normal (see @PESA:04).
 
 A bias-corrected scaled version, $BCSCLM$, for the *fixed effect model with individual
 effects* only is also available which is simply the $SCLM$ with a term correcting
-for the bias (@BALT:FENG:KAO:2012)^[The unbalanced version of this statistic uses
+for the bias (@BALT:FENG:KAO:12)^[The unbalanced version of this statistic uses
 max(Tij) for T in the bias-correction term]. This statistic is also asympotically
 distributed as standard normal.
 $$BCSCLM=\sqrt{\frac{1}{n(n-1)}} ( \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} T_{ij} \hat{\rho}_{ij}^2 -1)-\frac{n}{2(T-1)}$$
@@ -1604,7 +1603,7 @@ $$BCSCLM=\sqrt{\frac{1}{n(n-1)}} ( \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} T_{ij} \hat
 
 
 
-Pesaran's (@PESA:04, @PESA:2015) $CD$ test 
+Pesaran's (@PESA:04, @PESA:15) $CD$ test 
 
 $$CD=\sqrt{\frac{2}{n(n-1)}} ( \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} \sqrt{T_{ij}} \hat{\rho}_{ij} )$$
 
@@ -1816,7 +1815,7 @@ package.
 Robust estimators of the covariance matrix of coefficients are
 provided, mostly for use in Wald-type tests. `vcovHC`
 estimates three "flavours" of White's heteroskedasticity-consistent
-covariance matrix^[See @WHIT:80 and @WHIT:84.]
+covariance matrix^[See @WHIT:80 and @WHIT:84b.]
 (known as the *sandwich* estimator). Interestingly, in the
 context of panel data the most general version also proves consistent
 vs. serial correlation.
@@ -1863,25 +1862,28 @@ The latter is, as already observed, consistent w.r.t. timewise
 correlation of the errors, but on the converse, unlike the White 1 and
 2 methods, it relies on large $n$ asymptotics with small $T$.
 
-The fixed effects case, as already observed in Section \@ref(tests-of-serial-correlation) on
-serial correlation, is complicated by the fact that the demeaning
-induces serial correlation in the errors. The original White estimator
-(`white1`) turns out to be inconsistent for fixed $T$ as $n$
-grows, so in this case it is advisable to use the `arellano`
-version (see @STOC:WATS:08).
+The fixed effects case, as already observed in Section
+\@ref(tests-of-serial-correlation) on serial correlation, is
+complicated by the fact that the demeaning induces serial correlation
+in the errors. The original White estimator (`white1`) turns out to be
+inconsistent for fixed $T$ as $n$ grows, so in this case it is
+advisable to use the `arellano` version (see @STOC:WATS:08).
 
 The errors may be weighted according to the schemes proposed by
-@MACK:WHIT:85 and @CRIB:04 to improve small-sample
-performance^[The HC3 and HC4 weighting schemes are computationally expensive and may hit memory limits for $nT$ in the thousands, where on the other hand it makes little sense to apply small sample corrections.].
+@MACK:WHIT:85 and @CRIB:04 to improve small-sample performance^[The
+HC3 and HC4 weighting schemes are computationally expensive and may
+hit memory limits for $nT$ in the thousands, where on the other hand
+it makes little sense to apply small sample corrections.].
 
 The main use of `vcovHC` is together with testing functions from the
-`lmtest` and `car` packages. These typically allow passing the
-`vcov` parameter either as a matrix or as a function 
-(see @ZEIL:04). If one is happy with the defaults, it is easiest to
-pass the function itself^[For `coeftest` set `df = Inf` to have the coefficients'
-tests be performed with standard normal distribution instead of t distribution
-as we deal with a random effects model here. For these types of models, the 
-precise distribution of the coefficients estimates is unknown]:
+`lmtest` and `car` packages. These typically allow passing the `vcov`
+parameter either as a matrix or as a function (see @ZEIL:04). If one
+is happy with the defaults, it is easiest to pass the function
+itself^[For `coeftest` set `df = Inf` to have the coefficients' tests
+be performed with standard normal distribution instead of t
+distribution as we deal with a random effects model here. For these
+types of models, the precise distribution of the coefficients
+estimates is unknown]:
 
 ```{r }
 library("lmtest")
@@ -1897,10 +1899,11 @@ else one may do the covariance computation inside the call to
 coeftest(re, vcovHC(re, method="white2", type="HC3"), df = Inf)
 ``` 
 
-For some tests, e.g. for multiple model comparisons by
-`waldtest`, one should always provide a function^[Joint zero-restriction testing still allows providing the `vcov` of the unrestricted model as a matrix, see the documentation of package `lmtest`.].
-In this case, optional parameters are provided as
-shown below (see also @ZEIL:04, p. 12):
+For some tests, e.g. for multiple model comparisons by `waldtest`, one
+should always provide a function^[Joint zero-restriction testing still
+allows providing the `vcov` of the unrestricted model as a matrix, see
+the documentation of package `lmtest`.].  In this case, optional
+parameters are provided as shown below (see also @ZEIL:04, p. 12):
 
 ```{r waldtest}
 waldtest(re, update(re,.~.-capital),
@@ -1923,28 +1926,33 @@ provided which implements the robust covariance matrix proposed by
 # plm versus nlme and lme4
 \label{sec:nlme}
 
-The models termed *panel* by the econometricians have counterparts
-in the statistics literature on *mixed* models (or *hierarchical models*, or *models for longitudinal data*),
-although there are both differences in jargon and more substantial
-distinctions. This language inconsistency between the two communities,
-together with the more complicated general structure of statistical
-models for longitudinal data and the associated notation in the
-software, is likely to scare some practicing econometricians away from
-some potentially useful features of the `R` environment, so it may be
-useful to provide here a brief reconciliation between the typical
-panel data specifications used in econometrics and the general
-framework used in statistics for mixed models^[This discussion does not consider GMM models. One of the basic reasons for econometricians not to choose maximum likelihood methods in estimation is that the strict exogeneity of regressors assumption required for consistency of the ML models reported in the following is often inappropriate in economic settings.].
+The models termed *panel* by the econometricians have counterparts in
+the statistics literature on *mixed* models (or *hierarchical models*,
+or *models for longitudinal data*), although there are both
+differences in jargon and more substantial distinctions. This language
+inconsistency between the two communities, together with the more
+complicated general structure of statistical models for longitudinal
+data and the associated notation in the software, is likely to scare
+some practicing econometricians away from some potentially useful
+features of the `R` environment, so it may be useful to provide here a
+brief reconciliation between the typical panel data specifications
+used in econometrics and the general framework used in statistics for
+mixed models^[This discussion does not consider GMM models. One of the
+basic reasons for econometricians not to choose maximum likelihood
+methods in estimation is that the strict exogeneity of regressors
+assumption required for consistency of the ML models reported in the
+following is often inappropriate in economic settings.].
 
-`R` is particularly strong on mixed models' estimation,
-thanks to the long-standing `nlme` package
-(see @PINH:BATE:DEBR:SARK:07) and the more recent `lme4`
-package, based on S4 classes (see @BATE:07)^[The standard reference on the subject of mixed models in `S`/`R` is @PINH:BATE:00.].
-In the following
-we will refer to the more established `nlme` to give some examples
-of "econometric" panel models that can be estimated in a likelihood
-framework, also including some likelihood ratio tests.  Some of them
-are not feasible in `plm` and make a useful complement to the
-econometric "toolbox" available in `R`.
+`R` is particularly strong on mixed models' estimation, thanks to the
+long-standing `nlme` package (see @PINH:BATE:DEBR:SARK:07) and the
+more recent `lme4` package, based on S4 classes (see @BATE:07)^[The
+standard reference on the subject of mixed models in `S`/`R` is
+@PINH:BATE:00.].  In the following we will refer to the more
+established `nlme` to give some examples of "econometric" panel models
+that can be estimated in a likelihood framework, also including some
+likelihood ratio tests.  Some of them are not feasible in `plm` and
+make a useful complement to the econometric "toolbox" available in
+`R`.
 
 ## Fundamental differences between the two approaches
 
@@ -1958,15 +1966,18 @@ non-parametric, and heteroskedasticity-consistent techniques are
 becoming standard practice both in estimation and testing.
  
 For all these reasons, although the maximum likelihood framework is
-important in testing^[Lagrange Multiplier tests based on the likelihood principle are suitable for testing against more general alternatives on the basis of a maintained model with spherical residuals and find therefore application in testing for departures from the classical hypotheses on the error term. The seminal reference is @BREU:PAGA:80.]
-and sometimes
-used in estimation as well, panel model
-estimation in econometrics is mostly accomplished in the generalized
-least squares framework based on Aitken's Theorem and, when possible,
-in its special case OLS, which are free from distributional assumptions
-(although these kick in at the diagnostic testing stage). On the
-contrary, longitudinal data models in `nlme` and `lme4`
-are estimated by (restricted or unrestricted) maximum
+important in testing^[Lagrange Multiplier tests based on the
+likelihood principle are suitable for testing against more general
+alternatives on the basis of a maintained model with spherical
+residuals and find therefore application in testing for departures
+from the classical hypotheses on the error term. The seminal reference
+is @BREU:PAGA:80.]  and sometimes used in estimation as well, panel
+model estimation in econometrics is mostly accomplished in the
+generalized least squares framework based on Aitken's Theorem and,
+when possible, in its special case OLS, which are free from
+distributional assumptions (although these kick in at the diagnostic
+testing stage). On the contrary, longitudinal data models in `nlme`
+and `lme4` are estimated by (restricted or unrestricted) maximum
 likelihood. While under normality, homoskedasticity and no serial
 correlation of the errors OLS are also the maximum likelihood
 estimator, in all the other cases there are important differences.
@@ -1996,14 +2007,15 @@ recognized since Mundlak's classic paper (@MUND:78) that the
 fundamental issue is whether the unobserved effects are correlated
 with the regressors or not. In this last case, they can safely be left
 in the error term, and the serial correlation they induce is cared for
-by means of appropriate GLS transformations. On the contrary, in the case of
-correlation, "fixed effects" methods such as least
-squares dummy variables or time-demeaning are needed, which
-explicitly, although inconsistently^[For fixed effects estimation, as the sample
-grows (on the dimension on which the fixed effects are specified) so does the
-number of parameters to be estimated. Estimation of individual fixed effects
-is $T$-- (but not $n$--) consistent, and the opposite.], estimate a 
-group-- (or time--) invariant additional parameter for each group (or time period).
+by means of appropriate GLS transformations. On the contrary, in the
+case of correlation, "fixed effects" methods such as least squares
+dummy variables or time-demeaning are needed, which explicitly,
+although inconsistently^[For fixed effects estimation, as the sample
+grows (on the dimension on which the fixed effects are specified) so
+does the number of parameters to be estimated. Estimation of
+individual fixed effects is $T$-- (but not $n$--) consistent, and the
+opposite.], estimate a group-- (or time--) invariant additional
+parameter for each group (or time period).
 
 Thus, from the point of view of model specification, having
 *fixed effects* in an econometric model has the meaning of allowing the
@@ -2041,13 +2053,24 @@ errors uncorrelated across groups.
 
 
 ## A common taxonomy
+
 To reconcile the two terminologies, in the following we report the
-specification of the panel models in `plm` according to the
-general expression of a mixed model in Laird-Ware form [see the web appendix to @FOX:02] and the `nlme` estimation commands for
-maximum likelihood estimation of an equivalent
-specification^[In doing so, we stress that "equivalence" concerns only the specification of the model, and neither the appropriateness nor the relative efficiency of the relevant estimation techniques, which will of course be dependent on the context. Unlike their mixed model counterparts, the specifications in `plm` are, strictly speaking, distribution-free. Nevertheless, for the sake of exposition, in the following we present them in the setting which ensures consistency and efficiency (e.g., we consider the hypothesis of spherical errors part of the specification of pooled OLS and so forth).].
+specification of the panel models in `plm` according to the general
+expression of a mixed model in Laird-Ware form [see the web appendix
+to @FOX:02] and the `nlme` estimation commands for maximum likelihood
+estimation of an equivalent specification^[In doing so, we stress that
+"equivalence" concerns only the specification of the model, and
+neither the appropriateness nor the relative efficiency of the
+relevant estimation techniques, which will of course be dependent on
+the context. Unlike their mixed model counterparts, the specifications
+in `plm` are, strictly speaking, distribution-free. Nevertheless, for
+the sake of exposition, in the following we present them in the
+setting which ensures consistency and efficiency (e.g., we consider
+the hypothesis of spherical errors part of the specification of pooled
+OLS and so forth).].
 
 ### The Laird-Ware representation for mixed models
+
 A general representation for the linear mixed effects model is given
 in @LAIR:WARE:82.
 
@@ -2071,15 +2094,16 @@ representing the correlation structure of the errors within each group
 variance $\sigma^2$.
 
 ### Pooling and Within
-The *pooling* specification in `plm` is equivalent to a
-classical linear model (i.e., no random effects regressor and
-spherical errors: $b_{iq}=0 \phantom{p} \forall i,q, \phantom{p}
-\lambda_{ijj}=\sigma^2$ for $j=j'$, $0$ else). The *within* one is
-the same with the regressors' set augmented by $n-1$ group
-dummies. There is no point in using `nlme` as parameters can be
-estimated by OLS which is also ML.
+
+The *pooling* specification in `plm` is equivalent to a classical
+linear model (i.e., no random effects regressor and spherical errors:
+$b_{iq}=0 \phantom{p} \forall i,q, \phantom{p} \lambda_{ijj}=\sigma^2$
+for $j=j'$, $0$ else). The *within* one is the same with the
+regressors' set augmented by $n-1$ group dummies. There is no point in
+using `nlme` as parameters can be estimated by OLS which is also ML.
 
 ### Random effects
+
 In the Laird and Ware notation, the RE specification is a model with
 only one random effects regressor: the intercept. Formally, $z_{1ij}=1
 \phantom{p}\forall i,j, \phantom{p} z_{qij}=0 \phantom{p} \forall i,
@@ -2099,8 +2123,8 @@ coef(reGLS)
 summary(reML)$coefficients$fixed
 ```
 
-
 ### Variable coefficients, "random"
+
 Swamy's variable coefficients model [@SWAM:70] has coefficients
 varying randomly (and independently of each other) around a set of
 fixed values, so the equivalent specification is $z_{q}=x_{q}
@@ -2125,11 +2149,12 @@ summary(vcmML)$coefficients$fixed
 ```
 
 ### Variable coefficients, "within"
+
 This specification actually entails separate estimation of $T$
 different standard linear models, one for each group in the data, so
-the estimation approach is the same: OLS. In `nlme` this is
-done by creating an `lmList` object, so that the two models
-below are equivalent (output suppressed):
+the estimation approach is the same: OLS. In `nlme` this is done by
+creating an `lmList` object, so that the two models below are
+equivalent (output suppressed):
 
 
 ```{r vcmfixed}
@@ -2139,9 +2164,10 @@ vcmfML <- lmList(inv~value+capital|year, data=Grunfeld)
 ```
 
 ### General FGLS
+
 The general, or unrestricted, feasible GLS (FGLS), `pggls` in the
-`plm` nomenclature, is equivalent to a model with no random
-effects regressors ($b_{iq}=0 \phantom{p} \forall i,q$) and an error
+`plm` nomenclature, is equivalent to a model with no random effects
+regressors ($b_{iq}=0 \phantom{p} \forall i,q$) and an error
 covariance structure which is unrestricted within groups apart from
 the usual requirements. The function for estimating such models with
 correlation in the errors but no random effects is `gls()`.
@@ -2172,10 +2198,13 @@ Finally, amongst the many possible specifications estimable with
 interesting to applied econometricians.
 
 ### AR(1) pooling or random effects panel
-Linear models with groupwise structures of
-time-dependence^[Take heed that here, in contrast to the usual meaning of serial correlation in time series, we always speak of serial correlation *between the errors of each group*.]
-may be fitted by `gls()`, specifying the correlation structure in the
-`correlation` option^[note that the time index is coerced to numeric before the estimation.]:
+
+Linear models with groupwise structures of time-dependence^[Take heed
+that here, in contrast to the usual meaning of serial correlation in
+time series, we always speak of serial correlation *between the errors
+of each group*.]  may be fitted by `gls()`, specifying the correlation
+structure in the `correlation` option^[note that the time index is
+coerced to numeric before the estimation.]:
 
 
 ```{r lmAR1}
@@ -2185,7 +2214,7 @@ lmAR1ML <- gls(inv~value+capital,data=Grunfeld,
 ```
 
 and analogously the random effects panel with, e.g., AR(1) errors
-(see @BALT:2005, @BALT:2013, ch. 5), which is a very common specification in
+(see @BALT:05, @BALT:13, ch. 5), which is a very common specification in
 econometrics, may be fit by `lme` specifying an additional
 random intercept:
 
@@ -2203,9 +2232,9 @@ coef(reAR1ML$modelStruct$corStruct, unconstrained=FALSE)
 ```
 
 Significance statistics for the regressors' coefficients are to be
-found in the usual `summary` object, while to get the
-significance test of the serial correlation coefficient one can do a
-likelihood ratio test as shown in the following.
+found in the usual `summary` object, while to get the significance
+test of the serial correlation coefficient one can do a likelihood
+ratio test as shown in the following.
 
 ### An LR test for serial correlation and one for random effects
 
@@ -2263,12 +2292,12 @@ random effects once we control for serial correlation in the data.
 
 \label{sec:conclusions}
 
-With `plm` we aim at providing a comprehensive package
-containing the standard functionalities that are needed for the
-management and the econometric analysis of panel data. In particular,
-we provide: functions for data transformation; estimators for pooled,
-random and fixed effects static panel models and variable coefficients
-models, general GLS for general covariance structures, and generalized method
+With `plm` we aim at providing a comprehensive package containing the
+standard functionalities that are needed for the management and the
+econometric analysis of panel data. In particular, we provide:
+functions for data transformation; estimators for pooled, random and
+fixed effects static panel models and variable coefficients models,
+general GLS for general covariance structures, and generalized method
 of moments estimators for dynamic panels; specification and diagnostic
 tests. Instrumental variables estimation is supported. Most estimators
 allow working with unbalanced panels. While among the different

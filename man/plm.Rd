@@ -61,11 +61,11 @@ estimated,}
 
 \item{data}{a \code{data.frame},}
 
-\item{subset}{see \code{\link{lm}},}
+\item{subset}{see \code{\link[stats:lm]{stats::lm()}},}
 
-\item{weights}{see \code{\link{lm}},}
+\item{weights}{see \code{\link[stats:lm]{stats::lm()}},}
 
-\item{na.action}{see \code{\link{lm}}; currently, not fully
+\item{na.action}{see \code{\link[stats:lm]{stats::lm()}}; currently, not fully
 supported,}
 
 \item{effect}{the effects introduced in the model, one of
@@ -151,7 +151,7 @@ estimation of the components of the errors (for random effects
 models only),}
 \item{aliased}{named logical vector indicating any aliased
 coefficients which are silently dropped by \code{plm} due to
-linearly dependent terms (see also \code{\link{detect.lindep}}),}
+linearly dependent terms (see also \code{\link[=detect.lindep]{detect.lindep()}}),}
 \item{call}{the call.}
 
 It has \code{print}, \code{summary} and \code{print.summary} methods. The
@@ -159,7 +159,7 @@ It has \code{print}, \code{summary} and \code{print.summary} methods. The
 extends the object it is run on with information about (inter alia) F
 statistic and (adjusted) R-squared of model, standard errors, t--values, and
 p--values of coefficients, (if supplied) the furnished vcov, see
-\code{\link{summary.plm}} for further details.
+\code{\link[=summary.plm]{summary.plm()}} for further details.
 }
 \description{
 Linear models for panel data estimated using the \code{lm} function on
@@ -168,28 +168,28 @@ transformed data.
 \details{
 \code{plm} is a general function for the estimation of linear panel
 models.  It supports the following estimation methods: pooled OLS
-(\code{model = "pooling"}), fixed effects (\code{"within"}), random
-effects (\code{"random"}), first--differences (\code{"fd"}), and
-between (\code{"between"}). It supports unbalanced panels and
-two--way effects (although not with all methods).
+(\code{model = "pooling"}), fixed effects (\code{"within"}), random effects
+(\code{"random"}), first--differences (\code{"fd"}), and between
+(\code{"between"}). It supports unbalanced panels and two--way effects
+(although not with all methods).
 
-For random effects models, four estimators of the transformation parameter
-are available by setting \code{random.method} to one of \code{"swar"} (Swamy
-and Arora (1972)) (default), \code{"amemiya"} (Amemiya (1971)),
-\code{"walhus"} (Wallace and Hussain (1969)), or \code{"nerlove"} (Nerlove
-(1971)).
+For random effects models, four estimators of the transformation
+parameter are available by setting \code{random.method} to one of
+\code{"swar"} \insertCite{SWAM:AROR:72}{plm} (default), \code{"amemiya"}
+\insertCite{AMEM:71}{plm}, \code{"walhus"}
+\insertCite{WALL:HUSS:69}{plm}, or \code{"nerlove"}
+\insertCite{NERLO:71}{plm}.
 
-For first--difference models, the intercept is maintained (which from a
-specification viewpoint amounts to allowing for a trend in the levels
-model). The user can exclude it from the estimated specification the usual
-way by adding \code{"-1"} to the model formula.
+For first--difference models, the intercept is maintained (which
+from a specification viewpoint amounts to allowing for a trend in
+the levels model). The user can exclude it from the estimated
+specification the usual way by adding \code{"-1"} to the model formula.
 
-Instrumental variables estimation is obtained using two--part formulas, the
-second part indicating the instrumental variables used. This can be a
-complete list of instrumental variables or an update of the first part. If,
-for example, the model is \code{y ~ x1 + x2 + x3}, with \code{x1} and
-\code{x2} endogenous and \code{z1} and \code{z2} external instruments, the
-model can be estimated with:
+Instrumental variables estimation is obtained using two--part
+formulas, the second part indicating the instrumental variables
+used. This can be a complete list of instrumental variables or an
+update of the first part. If, for example, the model is \code{y ~ x1 + x2 + x3}, with \code{x1} and \code{x2} endogenous and \code{z1} and \code{z2} external
+instruments, the model can be estimated with:
 
 \itemize{
 \item \code{formula = y~x1+x2+x3 | x3+z1+z2},
@@ -197,15 +197,16 @@ model can be estimated with:
 }
 
 If an instrument variable estimation is requested, argument
-\code{inst.method} selects the instrument variable transformation method:
+\code{inst.method} selects the instrument variable transformation
+method:
 \itemize{
-\item \code{"bvk"} (default) for Balestra and Varadharajan-Krishnakumar (1987),
-\item \code{"baltagi"} for Baltagi (1981),
-\item \code{"am"} for Amemiya and MaCurdy (1986),
-\item \code{"bms"} for Breusch, Mizon, and Schmidt (1989).
+\item \code{"bvk"} (default) for \insertCite{BALE:VARA:87;textual}{plm},
+\item \code{"baltagi"} for \insertCite{BALT:81;textual}{plm},
+\item \code{"am"} for \insertCite{AMEM:MACU:86;textual}{plm},
+\item \code{"bms"} for \insertCite{BREU:MIZO:SCHM:89;textual}{plm}.
 }
 
-The Hausman--Taylor estimator (Hausman and Taylor (1981)) is
+The Hausman--Taylor estimator \insertCite{HAUS:TAYL:81}{plm} is
 computed with arguments \code{random.method = "ht"}, \code{model =
 "random"}, \code{inst.method = "baltagi"} (the other way with only
 \code{model = "ht"} is deprecated).
@@ -298,9 +299,9 @@ summary(am)
 \insertRef{WALL:HUSS:69}{plm}
 }
 \seealso{
-\code{\link{summary.plm}} for further details about the associated
+\code{\link[=summary.plm]{summary.plm()}} for further details about the associated
 summary method and the "summary.plm" object both of which provide some model
-tests and tests of coefficients.  \code{\link{fixef}} to compute the fixed
+tests and tests of coefficients.  \code{\link[=fixef]{fixef()}} to compute the fixed
 effects for "within" models (=fixed effects models).
 }
 \author{

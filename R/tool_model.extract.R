@@ -9,49 +9,43 @@
 #' 
 #' Methods to create model frame and model matrix for panel data.
 #' 
-#' The \code{lhs} and \code{rhs} arguments are inherited from
-#' \code{Formula}, see there for more details.\cr The
-#' \code{model.frame} methods return a \code{pdata.frame} object
-#' suitable as an input to plm's \code{model.matrix}.\cr The
-#' \code{model.matrix} methods builds a model matrix with
-#' transformations performed as specified by the \code{model} and
-#' \code{effect} arguments (and \code{theta} if \code{model =
-#' "random"} is requested), in this case the supplied \code{data}
-#' argument should be a model frame created by plm's
-#' \code{model.frame} method. If not, it is tried to construct the
-#' model frame from the data. Constructing the model frame first
-#' ensures proper NA handling, see \bold{Examples}.
+#' The `lhs` and `rhs` arguments are inherited from `Formula`, see
+#' there for more details.\cr The `model.frame` methods return a
+#' `pdata.frame` object suitable as an input to plm's
+#' `model.matrix`.\cr The `model.matrix` methods builds a model matrix
+#' with transformations performed as specified by the `model` and
+#' `effect` arguments (and `theta` if \code{model = "random"} is
+#' requested), in this case the supplied `data` argument should be a
+#' model frame created by plm's `model.frame` method. If not, it is
+#' tried to construct the model frame from the data. Constructing the
+#' model frame first ensures proper NA handling, see \bold{Examples}.
 #'
 #' @name model.frame.pdata.frame
-#' @param object,formula an object of class \code{"pdata.frame"} or an
-#'     estimated model object of class \code{"plm"},
+#' @param object,formula an object of class `"pdata.frame"` or an
+#'     estimated model object of class `"plm"`,
 #' @param x a `model.frame`
-#' @param data a \code{formula}, see \bold{Details},
+#' @param data a `formula`, see \bold{Details},
 #' @param effect the effects introduced in the model, one of
-#'     \code{"individual"}, \code{"time"}, \code{"twoways"} or
-#'     \code{"nested"},
-#' @param model one of \code{"pooling"}, \code{"within"},
-#'     \code{"Sum"}, \code{"Between"}, \code{"between"},
-#'     \code{"random",} \code{"fd"} and \code{"ht"},
+#'     `"individual"`, `"time"`, `"twoways"` or `"nested"`,
+#' @param model one of `"pooling"`, `"within"`, `"Sum"`, `"Between"`,
+#'     `"between"`, `"random",` `"fd"` and `"ht"`,
 #' @param theta the parameter for the transformation if \code{model =
 #'     "random"},
-#' @param cstcovar.rm remove the constant columns, one of
-#'     \code{"none", "intercept", "covariates", "all")},
-#' @param lhs inherited from package \code{\link[Formula]{Formula}}
-#'     (see there),
-#' @param rhs inherited from package \code{\link[Formula]{Formula}}
-#'     (see there),
-#' @param dot inherited from package \code{\link[Formula]{Formula}}
-#'     (see there),
+#' @param cstcovar.rm remove the constant columns, one of `"none",
+#'     "intercept", "covariates", "all")`,
+#' @param lhs inherited from package `\link[Formula]{Formula`} (see
+#'     there),
+#' @param rhs inherited from package `\link[Formula]{Formula`} (see
+#'     there),
+#' @param dot inherited from package `\link[Formula]{Formula`} (see
+#'     there),
 #' @param \dots further arguments.
-#' @return The \code{model.frame} methods return a
-#'     \code{pdata.frame}.\cr The \code{model.matrix} methods return a
-#'     \code{matrix}.
+#' @return The `model.frame` methods return a `pdata.frame`.\cr The
+#'     `model.matrix` methods return a `matrix`.
 #' @author Yves Croissant
-#' @seealso \code{\link{pmodel.response}} for (transformed) response
-#'     variable.\cr \code{\link[Formula]{Formula}} from package
-#'     \code{Formula}, especially for the \code{lhs} and \code{rhs}
-#'     arguments.
+#' @seealso [pmodel.response()] for (transformed) response
+#'     variable.\cr `\link[Formula]{Formula`} from package `Formula`,
+#'     especially for the `lhs` and `rhs` arguments.
 #' @keywords classes
 #' @examples
 #' 
@@ -215,28 +209,28 @@ model.matrix.pdata.frame <- function(object,
 #' pmodel.response has several methods to conveniently extract the
 #' response of several objects.
 #' 
-#' The model response is extracted from a \code{pdata.frame} (where
-#' the response must reside in the first column; this is the case for
-#' a model frame), a \code{pFormula} + \code{data} or a \code{plm}
-#' object, and the transformation specified by \code{effect} and
-#' \code{model} is applied to it.\cr Constructing the model frame
-#' first ensures proper NA handling and the response being placed in
-#' the first column, see also \bold{Examples} for usage.
+#' The model response is extracted from a `pdata.frame` (where the
+#' response must reside in the first column; this is the case for a
+#' model frame), a `pFormula` + `data` or a `plm` object, and the
+#' transformation specified by `effect` and `model` is applied to
+#' it.\cr Constructing the model frame first ensures proper NA
+#' handling and the response being placed in the first column, see
+#' also \bold{Examples} for usage.
 #' 
 #' @aliases pmodel.response
-#' @param object an object of class \code{"plm"}, or a formula of
-#'     class \code{"pFormula"},
-#' @param data a \code{data.frame}
+#' @param object an object of class `"plm"`, or a formula of
+#'     class `"pFormula"`,
+#' @param data a `data.frame`
 #' @param \dots further arguments.
-#' @return A pseries except if model responses' of a \code{"between"}
+#' @return A pseries except if model responses' of a `"between"`
 #'     or "fd" model as these models "compress" the data (the number
 #'     of observations used in estimation is smaller than the original
 #'     data due to the specific transformation). A numeric is returned
 #'     for the "between" and "fd" model.
 #' @export
 #' @author Yves Croissant
-#' @seealso \code{plm}'s \code{\link{model.matrix}} for (transformed)
-#'     model matrix and the corresponding \code{\link{model.frame}}
+#' @seealso `plm`'s [model.matrix()] for (transformed)
+#'     model matrix and the corresponding [model.frame()]
 #'     method to construct a model frame.
 #' @keywords manip
 #' @examples

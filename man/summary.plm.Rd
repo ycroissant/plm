@@ -32,25 +32,30 @@ the table of coefficients to be printed for
 An object of class \code{c("summary.plm", "plm",
     "panelmodel")}.  Some of its elements are carried over from the
 associated plm object and described there
-(\code{\link{plm}}). The following elements are new or changed
+(\code{\link[=plm]{plm()}}). The following elements are new or changed
 relative to the elements of a plm object:
 
 \item{fstatistic}{'htest' object: joint test of significance of
 coefficients (F or Chi-square test) (robust statistic in case of
-supplied argument \code{vcov}, see \code{\link{pwaldtest}} for
-details),} \item{coefficients}{a matrix with the estimated
-coefficients, standard errors, t--values, and p--values, if
-argument \code{vcov} was set to non-\code{NULL} the standard errors
-(and t-- and p--values) in their respective robust variant,}
-\item{vcov}{the "regular" variance--covariance matrix of the
-coefficients (class "matrix"),} \item{rvcov}{only present if
-argument \code{vcov} was set to non-\code{NULL}: the furnished
-variance--covariance matrix of the coefficients (class "matrix"),}
+supplied argument \code{vcov}, see \code{\link[=pwaldtest]{pwaldtest()}} for details),}
+
+\item{coefficients}{a matrix with the estimated coefficients,
+standard errors, t--values, and p--values, if argument \code{vcov} was
+set to non-\code{NULL} the standard errors (and t-- and p--values) in
+their respective robust variant,}
+
+\item{vcov}{the "regular" variance--covariance matrix of the coefficients (class "matrix"),}
+
+\item{rvcov}{only present if argument \code{vcov} was set to non-\code{NULL}:
+the furnished variance--covariance matrix of the coefficients
+(class "matrix"),}
+
 \item{r.squared}{a named numeric containing the R-squared ("rsq")
-and the adjusted R-squared ("adjrsq") of the model,} \item{df}{an
-integer vector with 3 components, (p, n-p, p*), where p is the
-number of estimated (non-aliased) coefficients of the model, n-p
-are the residual degrees of freedom (n being number of
+and the adjusted R-squared ("adjrsq") of the model,}
+
+\item{df}{an integer vector with 3 components, (p, n-p, p*), where
+p is the number of estimated (non-aliased) coefficients of the
+model, n-p are the residual degrees of freedom (n being number of
 observations), and p* is the total number of coefficients
 (incl. any aliased ones).}
 }
@@ -59,11 +64,11 @@ The summary method for plm objects generates some more information about
 estimated plm models.
 }
 \details{
-The \code{summary} method for plm objects (\code{summary.plm})
-creates an object of class \code{c("summary.plm", "plm",
-"panelmodel")} that extends the plm object it is run on with
-various information about the estimated model like (inferential)
-statistics, see \bold{Value}. It has an associated print method
+The \code{summary} method for plm objects (\code{summary.plm}) creates an
+object of class \code{c("summary.plm", "plm", "panelmodel")} that
+extends the plm object it is run on with various information about
+the estimated model like (inferential) statistics, see
+\bold{Value}. It has an associated print method
 (\code{print.summary.plm}).
 }
 \examples{
@@ -95,15 +100,14 @@ print(wi_summary, subset = "value")
 
 }
 \seealso{
-\code{\link{plm}} for estimation of various models;
-\code{\link{vcovHC}} for an example of a robust estimation of
-variance--covariance matrix; \code{\link{r.squared}} for the
-function to calculate R-squared;
+\code{\link[=plm]{plm()}} for estimation of various models; \code{\link[=vcovHC]{vcovHC()}} for
+an example of a robust estimation of variance--covariance
+matrix; \code{\link[=r.squared]{r.squared()}} for the function to calculate R-squared;
 \code{\link[stats:print.power.htest]{print.htest}} for some
-information about class "htest"; \code{\link{fixef}} to compute
-the fixed effects for "within" (=fixed effects) models and
-\code{\link{within_intercept}} for an "overall intercept" for
-such models; \code{\link{pwaldtest}}
+information about class "htest"; \code{\link[=fixef]{fixef()}} to compute the fixed
+effects for "within" (=fixed effects) models and
+\code{\link[=within_intercept]{within_intercept()}} for an "overall intercept" for such
+models; \code{\link[=pwaldtest]{pwaldtest()}}
 }
 \author{
 Yves Croissant

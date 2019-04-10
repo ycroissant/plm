@@ -12,7 +12,7 @@ output:
       collapsed: true
       smooth_scroll: true
     number_sections: true
-bibliography: bibliojss.bib
+bibliography: ../inst/REFERENCES.bib
 vignette: >
   %\VignetteIndexEntry{Model components for fitted models with plm}
   %\VignetteEngine{knitr::rmarkdown}

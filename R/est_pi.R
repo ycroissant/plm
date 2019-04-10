@@ -1,18 +1,20 @@
+
 #' Chamberlain estimator and test for fixed effects
 #' 
 #' Angrist and Newey's version of the Chamberlain test
 #' 
 #' Angrist and Newey's test is based on the results of the artifactual
-#' regression of the within residuals on the covariates for all the periods.
+#' regression of the within residuals on the covariates for all the
+#' periods.
 #' 
 #' @aliases aneweytest
 #' @param formula a symbolic description for the model to be estimated,
-#' @param data a \code{data.frame},
-#' @param subset see \code{\link{lm}},
-#' @param na.action see \code{\link{lm}},
+#' @param data a `data.frame`,
+#' @param subset see [lm()],
+#' @param na.action see [lm()],
 #' @param index the indexes,
 #' @param \dots further arguments.
-#' @return An object of class \code{"htest"}.
+#' @return An object of class `"htest"`.
 #' @export
 #' @author Yves Croissant
 #' @references
@@ -114,15 +116,15 @@ aneweytest <-  function(formula, data, subset, na.action, index = NULL,  ...){
 #' 
 #' @aliases piest
 #' @param formula a symbolic description for the model to be estimated,
-#' @param object,x an object of class \code{"plm"},
-#' @param data a \code{data.frame},
-#' @param subset see \code{\link{lm}},
-#' @param na.action see \code{\link{lm}},
+#' @param object,x an object of class `"plm"`,
+#' @param data a `data.frame`,
+#' @param subset see [lm()],
+#' @param na.action see [lm()],
 #' @param index the indexes,
-#' @param robust if \code{FALSE}, the error as assumed to be spherical,
+#' @param robust if `FALSE`, the error as assumed to be spherical,
 #' otherwise, a robust estimation of the covariance matrix is computed,
 #' @param \dots further arguments.
-#' @return An object of class \code{"piest"}.
+#' @return An object of class `"piest"`.
 #' @export
 #' @author Yves Croissant
 #' @references

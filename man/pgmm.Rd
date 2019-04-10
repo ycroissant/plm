@@ -25,23 +25,22 @@ multi--part formula, the first two parts describing the
 covariates and the GMM instruments and, if any, the third part
 the 'normal' instruments,}
 
-\item{data}{a \code{data.frame} (neither factors nor character
-vectors will be accepted in \code{data.frame}),}
+\item{data}{a \code{data.frame} (neither factors nor character vectors
+will be accepted in \code{data.frame}),}
 
-\item{subset}{see \code{\link{lm}},}
+\item{subset}{see \code{\link[=lm]{lm()}},}
 
-\item{na.action}{see \code{\link{lm}},}
+\item{na.action}{see \code{\link[=lm]{lm()}},}
 
 \item{effect}{the effects introduced in the model, one of
 \code{"twoways"} (the default) or \code{"individual"},}
 
-\item{model}{one of \code{"onestep"} (the default) or
-\code{"twosteps"},}
+\item{model}{one of \code{"onestep"} (the default) or \code{"twosteps"},}
 
 \item{collapse}{if \code{TRUE}, the GMM instruments are collapsed,}
 
-\item{lost.ts}{the number of lost time series: if \code{NULL}, this
-is automatically computed. Otherwise, it can be defined by the
+\item{lost.ts}{the number of lost time series: if \code{NULL}, this is
+automatically computed. Otherwise, it can be defined by the
 user as a numeric vector of length 1 or 2. The first element is
 the number of lost time series in the model in difference, the
 second one in the model in level. If the second element is
@@ -52,10 +51,9 @@ model: either \code{"d"} (the default value) for the
 "difference GMM" model or \code{"ld"} for the "system GMM",}
 
 \item{fsm}{the matrix for the one step estimator: one of \code{"I"}
-(identity matrix) or \code{"G"} (\eqn{=D'D} where \eqn{D} is
-the first--difference operator) if \code{transformation="d"},
-one of \code{"GI"} or \code{"full"} if
-\code{transformation="ld"},}
+(identity matrix) or \code{"G"} (\eqn{=D'D} where \eqn{D} is the
+first--difference operator) if \code{transformation="d"}, one of
+\code{"GI"} or \code{"full"} if \code{transformation="ld"},}
 
 \item{index}{the indexes,}
 
@@ -66,16 +64,16 @@ one of \code{"GI"} or \code{"full"} if
 \item{robust}{if \code{TRUE}, robust inference is performed in the
 summary,}
 
-\item{time.dummies}{if \code{TRUE}, the estimated coefficients of
-time dummies are present in the table of coefficients,}
+\item{time.dummies}{if \code{TRUE}, the estimated coefficients of time
+dummies are present in the table of coefficients,}
 
 \item{digits}{digits,}
 
 \item{width}{the maximum length of the lines in the print output,}
 }
 \value{
-An object of class \code{c("pgmm","panelmodel")}, which has
-the following elements:
+An object of class \code{c("pgmm","panelmodel")}, which has the
+following elements:
 
 \item{coefficients}{the vector (or the list for fixed effects) of
 coefficients,} \item{residuals}{the vector of residuals,}
@@ -84,33 +82,30 @@ coefficients,} \item{residuals}{the vector of residuals,}
 \item{df.residual}{degrees of freedom of the residuals,}
 \item{model}{a list containing the variables used for the
 estimation for each individual,}
-
 \item{W}{a list containing the instruments for each individual (two lists in
 case of "sys--GMM"),}
-
 \item{A1}{the weighting matrix for the one--step estimator,}
-
 \item{A2}{the weighting matrix for the two--steps estimator,}
-
 \item{call}{the call.}
 
 It has \code{print}, \code{summary} and \code{print.summary}
 methods.
 }
 \description{
-Generalized method of moments estimation for static or dynamic models with
-panel data.
+Generalized method of moments estimation for static or dynamic
+models with panel data.
 }
 \details{
-\code{pgmm} estimates a model for panel data with a generalized method of
-moments (GMM) estimator. The description of the model to estimate is
-provided with a multi--part formula which is (or which is coerced to) a
-\code{Formula} object. The first right--hand side part describes the
-covariates. The second one, which is mandatory, describes the GMM
-instruments. The third one, which is optional, describes the 'normal'
-instruments. By default, all the variables of the model which are not used
-as GMM instruments are used as normal instruments with the same lag
-structure as the one specified in the model.
+\code{pgmm} estimates a model for panel data with a generalized method
+of moments (GMM) estimator. The description of the model to
+estimate is provided with a multi--part formula which is (or which
+is coerced to) a \code{Formula} object. The first right--hand side part
+describes the covariates. The second one, which is mandatory,
+describes the GMM instruments. The third one, which is optional,
+describes the 'normal' instruments. By default, all the variables
+of the model which are not used as GMM instruments are used as
+normal instruments with the same lag structure as the one specified
+in the model.
 
 \code{y~lag(y, 1:2)+lag(x1, 0:1)+lag(x2, 0:2) | lag(y, 2:99)} is similar to
 
@@ -120,15 +115,15 @@ structure as the one specified in the model.
 and indicates that all lags from 2 of \code{y} are used
 as GMM instruments.
 
-\code{transformation} indicates how the model should be transformed for the
-estimation. \code{"d"} gives the "difference GMM" model (see Arellano and
-Bond (1991)), \code{"ld"} the "system GMM" model (see Blundell and Bond
-(1998)).
+\code{transformation} indicates how the model should be transformed for
+the estimation. \code{"d"} gives the "difference GMM" model
+\insertCite{@see @AREL:BOND:91}{plm}, \code{"ld"} the "system GMM" model
+\insertCite{@see @BLUN:BOND:98}{plm}.
 
-\code{pgmm} is an attempt to adapt GMM estimators available within the DPD
-library for GAUSS (see Arellano and Bond (1998)) and Ox (see Doornik,
-Arellano and Bond (2006)) and within the xtabond2 library for Stata (see
-Roodman (2009)).
+\code{pgmm} is an attempt to adapt GMM estimators available within the
+DPD library for GAUSS \insertCite{@see @AREL:BOND:98}{plm} and Ox
+\insertCite{@see @DOOR:AREL:BOND:12}{plm} and within the xtabond2
+library for Stata \insertCite{@see @ROOD:09}{plm}.
 }
 \examples{
 
@@ -167,21 +162,12 @@ summary(z2, robust = TRUE)
 
 }
 \references{
-\insertRef{AREL:BOND:91}{plm}
-
-\insertRef{AREL:BOND:98}{plm}
-
-\insertRef{BLUN:BOND:98}{plm}
-
-\insertRef{DOOR:AREL:BOND:12}{plm}
-
-\insertRef{ROOD:09}{plm}
+\insertAllCited{}
 }
 \seealso{
-\code{\link{sargan}} for the Hansen--Sargan test and
-\code{\link{mtest}} for Arellano--Bond's test of serial
-correlation.  \code{\link{dynformula}} for dynamic formulas
-(deprecated).
+\code{\link[=sargan]{sargan()}} for the Hansen--Sargan test and \code{\link[=mtest]{mtest()}} for
+Arellano--Bond's test of serial correlation.  \code{\link[=dynformula]{dynformula()}} for
+dynamic formulas (deprecated).
 }
 \author{
 Yves Croissant

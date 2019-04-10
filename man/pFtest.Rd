@@ -30,9 +30,9 @@ Test of individual and/or time effects based on the comparison of the
 }
 \details{
 For the \code{plm} method, the argument of this function is two \code{plm}
-objects, the first being a within model, the second a pooling model. The
-effects tested are either individual, time or twoways, depending on the
-effects introduced in the within model.
+objects, the first being a within model, the second a pooling
+model. The effects tested are either individual, time or twoways,
+depending on the effects introduced in the within model.
 }
 \examples{
 
@@ -51,7 +51,7 @@ pFtest(inv ~ value + capital, data = Grunfeld, effect = "twoways")
 
 }
 \seealso{
-\code{\link{plmtest}} for Lagrange multiplier tests of individuals
+\code{\link[=plmtest]{plmtest()}} for Lagrange multiplier tests of individuals
 and/or time effects.
 }
 \author{

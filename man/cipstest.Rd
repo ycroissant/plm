@@ -16,8 +16,8 @@ cipstest(x, lags = 2, type = c("trend", "drift", "none"), model = c("cmg",
 
 \item{model}{one of \code{"cmg"}, \code{"mg"}, \code{"dmg"},}
 
-\item{truncated}{logical specifying whether to calculate the truncated
-version of the test,}
+\item{truncated}{logical specifying whether to calculate the
+truncated version of the test,}
 
 \item{\dots}{further arguments passed to \code{critvals}.}
 }
@@ -25,16 +25,17 @@ version of the test,}
 An object of class \code{"htest"}.
 }
 \description{
-Cross-sectionally augmented Im, Pesaran and Shin (IPS) test for unit roots
-in panel models.
+Cross-sectionally augmented Im, Pesaran and Shin (IPS) test for
+unit roots in panel models.
 }
 \details{
-This cross-sectionally augmented version of the IPS unit root test (H0: the
-\code{pseries} has a unit root) is a so-called second-generation panel unit
-root test: it is in fact robust against cross-sectional dependence, provided
-that the default \code{type="cmg"} is calculated. Else one can obtain the
-standard (\code{model="mg"}) or cross-sectionally demeaned
-(\code{model="dmg"}) versions of the IPS test.
+This cross-sectionally augmented version of the IPS unit root test
+(H0: the \code{pseries} has a unit root) is a so-called
+second-generation panel unit root test: it is in fact robust
+against cross-sectional dependence, provided that the default
+\code{type="cmg"} is calculated. Else one can obtain the standard
+(\code{model="mg"}) or cross-sectionally demeaned (\code{model="dmg"})
+versions of the IPS test.
 
 % TODO: maybe be more verbose here? write about type arg which corresponds
 % cases III, II, I in Pesaran (2007) etc.
@@ -51,7 +52,7 @@ cipstest(Produc$gsp, type = "trend")
 \insertRef{pes07}{plm}
 }
 \seealso{
-\code{\link{purtest}}
+\code{\link[=purtest]{purtest()}}
 }
 \author{
 Giovanni Millo

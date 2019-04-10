@@ -2,45 +2,57 @@
 #' 
 #' Estimators for random and fixed effects models with variable coefficients.
 #' 
-#' \code{pvcm} estimates variable coefficients models. Time or individual
-#' effects are introduced, respectively, if \code{effect = "time"} or
-#' \code{effect = "individual"} (the default value).
+#' `pvcm` estimates variable coefficients models. Time or individual
+#' effects are introduced, respectively, if `effect = "time"` or
+#' `effect = "individual"` (the default value).
 #' 
-#' Coefficients are assumed to be fixed if \code{model = "within"} and random
-#' if \code{model = "random"}. In the first case, a different model is
-#' estimated for each individual (or time period). In the second case, the
-#' Swamy (1970) model is estimated. It is a generalized least squares model
-#' which uses the results of the previous model.
+#' Coefficients are assumed to be fixed if `model = "within"` and
+#' random if `model = "random"`. In the first case, a different model
+#' is estimated for each individual (or time period). In the second
+#' case, the \insertCite{SWAM:70;textual}{plm} model is estimated. It
+#' is a generalized least squares model which uses the results of the
+#' previous model.
 #' 
 #' @aliases pvcm
 #' @param formula a symbolic description for the model to be estimated,
-#' @param object,x an object of class \code{"pvcm"},
-#' @param data a \code{data.frame},
-#' @param subset see \code{lm},
-#' @param na.action see \code{lm},
+#' @param object,x an object of class `"pvcm"`,
+#' @param data a `data.frame`,
+#' @param subset see `lm`,
+#' @param na.action see `lm`,
 #' @param effect the effects introduced in the model: one of
-#' \code{"individual"}, \code{"time"},
-#' @param model one of \code{"within"}, \code{"random"},
-#' @param index the indexes, see \code{\link{pdata.frame}},
+#' `"individual"`, `"time"`,
+#' @param model one of `"within"`, `"random"`,
+#' @param index the indexes, see [pdata.frame()],
 #' @param digits digits,
 #' @param width the maximum length of the lines in the print output,
 #' @param \dots further arguments.
-#' @return An object of class \code{c("pvcm", "panelmodel")}, which has the
+#' @return An object of class `c("pvcm", "panelmodel")`, which has the
 #' following elements:
 #' 
-#' \item{coefficients}{the vector (or the data frame for fixed effects) of
-#' coefficients,} \item{residuals}{the vector of residuals,}
-#' \item{fitted.values}{the vector of fitted values,} \item{vcov}{the
-#' covariance matrix of the coefficients (a list for fixed effects),}
-#' \item{df.residual}{degrees of freedom of the residuals,} \item{model}{a data
-#' frame containing the variables used for the estimation,} \item{call}{the
-#' call,} \item{Delta}{the estimation of the covariance matrix of the
-#' coefficients (random effect models only),} \item{std.error}{a data frame
-#' containing standard errors for all coefficients for each individual (within
-#' models only).}
+#' \item{coefficients}{the vector (or the data frame for fixed
+#' effects) of coefficients,}
+#'
+#' \item{residuals}{the vector of
+#' residuals,}
+#'
+#' \item{fitted.values}{the vector of fitted values,}
 #' 
-#' \code{pvcm} objects have \code{print}, \code{summary} and
-#' \code{print.summary} methods.
+#' \item{vcov}{the covariance matrix of the coefficients (a list for
+#' fixed effects),}
+#'
+#' \item{df.residual}{degrees of freedom of the residuals,}
+#'
+#' \item{model}{a data frame containing the variables used for the
+#' estimation,}
+#'
+#' \item{call}{the call,} \item{Delta}{the estimation of the
+#' covariance matrix of the coefficients (random effect models only),}
+#'
+#' \item{std.error}{a data frame containing standard errors for all
+#' coefficients for each individual (within models only).}
+#' 
+#' `pvcm` objects have `print`, `summary` and `print.summary` methods.
+#' 
 #' @export
 #' @author Yves Croissant
 #' @references

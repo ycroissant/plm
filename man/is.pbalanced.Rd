@@ -37,7 +37,7 @@ is.pbalanced(x, ...)
 assumed to be the index variables; if not \code{NULL}, both
 dimensions ('individual', 'time') need to be specified by
 \code{index} as character of length 2 for data frames, for
-further details see \code{\link{pdata.frame}},}
+further details see \code{\link[=pdata.frame]{pdata.frame()}},}
 }
 \value{
 A logical indicating whether the data associated with
@@ -74,15 +74,15 @@ is.pbalanced(pGrunfeld_missing_period$inv)
 
 }
 \seealso{
-\code{\link{punbalancedness}} for two measures of
-unbalancedness, \code{\link{make.pbalanced}} to make data
-balanced; \code{\link{is.pconsecutive}} to check if data are
-consecutive; \code{\link{make.pconsecutive}} to make data
+\code{\link[=punbalancedness]{punbalancedness()}} for two measures of
+unbalancedness, \code{\link[=make.pbalanced]{make.pbalanced()}} to make data
+balanced; \code{\link[=is.pconsecutive]{is.pconsecutive()}} to check if data are
+consecutive; \code{\link[=make.pconsecutive]{make.pconsecutive()}} to make data
 consecutive (and, optionally, also balanced).\cr
-\code{\link{pdim}} to check the dimensions of a 'pdata.frame'
-(and other objects), \code{\link{pvar}} to check for individual
+\code{\link[=pdim]{pdim()}} to check the dimensions of a 'pdata.frame'
+(and other objects), \code{\link[=pvar]{pvar()}} to check for individual
 and time variation of a 'pdata.frame' (and other objects),
-\code{\link{pseries}}, \code{\link{data.frame}},
-\code{\link{pdata.frame}}.
+\code{\link[=pseries]{pseries()}}, \code{\link[=data.frame]{data.frame()}},
+\code{\link[=pdata.frame]{pdata.frame()}}.
 }
 \keyword{attribute}

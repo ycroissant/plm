@@ -29,48 +29,48 @@
 #' % TODO: write about assumptions of panel Granger test: % * cross-sectional
 #' independence % * convergence
 #' 
-#' The panel Granger (non-)causality test is a combination of Granger tests
-#' (Granger (1969)) performed per individual. The test is developed by
-#' Dumitrescu/Hurlin (2012), a shorter exposition is given in Lopez/Weber
-#' (2017).
+#' The panel Granger (non-)causality test is a combination of Granger
+#' tests \insertCite{GRAN:69}{plm} performed per individual. The test
+#' is developed by \insertCite{DUMI:HURL:12;textual}{plm}, a shorter
+#' exposition is given in \insertCite{LOPE:WEBE:17;textual}{plm}.
 #' 
-#' The formula \code{formula} describes the direction of the (panel) Granger
-#' causation where \code{y ~ x} means "x (panel) Granger causes y".
+#' The formula `formula` describes the direction of the (panel) Granger
+#' causation where `y ~ x` means "x (panel) Granger causes y".
 #' 
-#' By setting argument \code{test} to either \code{"Ztilde"} (default) or
-#' \code{"Zbar"}, two different statistics can be requested. \code{"Ztilde"}
+#' By setting argument `test` to either `"Ztilde"` (default) or
+#' `"Zbar"`, two different statistics can be requested. `"Ztilde"`
 #' gives the standardised statistic recommended by Dumitrescu/Hurlin (2012) for
-#' fixed T samples. If set to \code{"Wbar"}, the intermediate Wbar statistic
+#' fixed T samples. If set to `"Wbar"`, the intermediate Wbar statistic
 #' (average of individual Granger chi-square statistics) is given which is used
 #' to derive the other two.
 #' 
 #' The Zbar statistic is not suitable for unbalanced panels. For the Wbar
 #' statistic, no p-value is available.
 #' 
-#' The implementation uses \code{\link[lmtest]{grangertest}} from
+#' The implementation uses `\link[lmtest]{grangertest`} from
 #' package \CRANpkg{lmtest} to perform the individual Granger tests.
 #' 
-#' @param formula a \code{formula} object to describe the direction of
+#' @param formula a `formula` object to describe the direction of
 #'     the hypothesized Granger causation,
-#' @param data a \code{pdata.frame} or a \code{data.frame},
+#' @param data a `pdata.frame` or a `data.frame`,
 #' @param test a character to request the statistic to be returned,
-#'     either \code{"Ztilde"} (default), or \code{"Zbar"},
+#'     either `"Ztilde"` (default), or `"Zbar"`,
 #' @param order integer(s) giving the number of lags to include in the
 #'     test's auxiliary regressions, the length of order must be
 #'     either 1 (same lag order for all individuals) or equal to the
 #'     number of individuals (to specify a lag order per individual),
-#' @param index only relevant if \code{data} is \code{data.frame} and
-#'     not a \code{pdata.frame}; if \code{NULL}, the first two columns
+#' @param index only relevant if `data` is `data.frame` and
+#'     not a `pdata.frame`; if `NULL`, the first two columns
 #'     of the data.frame are assumed to be the index variables, for
-#'     further details see \code{\link{pdata.frame}}.
+#'     further details see [pdata.frame()].
 #' @return An object of class \code{c("pgrangertest",
-#'     "htest")}. Besides the usual elements of a \code{htest} object,
-#'     it contains the data frame \code{indgranger} which carries the
+#'     "htest")}. Besides the usual elements of a `htest` object,
+#'     it contains the data frame `indgranger` which carries the
 #'     Granger test statistics per individual along the associated
 #'     p-values, degrees of freedom and the specified lag order.
 #' @export
 #' @author Kevin Tappe
-#' @seealso \code{\link[lmtest]{grangertest}} for the original
+#' @seealso `\link[lmtest]{grangertest`} for the original
 #'     (non-panel) Granger causality test in \CRANpkg{lmtest}.
 #' @references
 #'

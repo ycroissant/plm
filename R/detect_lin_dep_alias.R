@@ -24,67 +24,67 @@
 #' and harder to detect for less experienced applied statisticians. The so
 #' called "dummy variable trap" is a common and probably the best--known
 #' fallacy of this kind (see e. g. Wooldridge (2016), sec. 7-2.). When building
-#' linear models with \code{lm} or \code{plm}'s \code{pooling} model, linear
+#' linear models with `lm` or `plm`'s `pooling` model, linear
 #' dependence in one's model is easily detected, at times post hoc.
 #' 
 #' However, linear dependence might also occur after some transformations of
 #' the data, albeit it is not present in the untransformed data. The within
 #' transformation (also called fixed effect transformation) used in the
-#' \code{"within"} model can result in such linear dependence and this is
+#' `"within"` model can result in such linear dependence and this is
 #' harder to come to mind when building a model. See \bold{Examples} for two
 #' examples of linear dependent columns after the within transformation: ex. 1)
 #' the transformed variables have the opposite sign of one another; ex. 2) the
 #' transformed variables are identical.
 #' 
-#' During \code{plm}'s model estimation, linear dependent columns and their
+#' During `plm`'s model estimation, linear dependent columns and their
 #' corresponding coefficients in the resulting object are silently dropped,
 #' while the corresponding model frame and model matrix still contain the
-#' affected columns.  The plm object contains an element \code{aliased} which
+#' affected columns.  The plm object contains an element `aliased` which
 #' indicates any such aliased coefficients by a named logical.
 #' 
-#' Both functions, \code{detect.lindep} and \code{alias}, help to
+#' Both functions, `detect.lindep` and `alias`, help to
 #' detect linear dependence and accomplish almost the same:
-#' \code{detect.lindep} is a stand alone implementation while
-#' \code{alias} is a wrapper around
-#' \code{\link[stats:alias]{alias.lm}}, extending the \code{alias}
-#' generic to classes \code{"plm"} and \code{"pdata.frame"}.
-#' \code{alias} hinges on the availability of the package
-#' \CRANpkg{MASS} on the system. Not all arguments of \code{alias.lm}
-#' are supported.  Output of \code{alias} is more informative as it
+#' `detect.lindep` is a stand alone implementation while
+#' `alias` is a wrapper around
+#' `\link[stats:alias]{alias.lm`}, extending the `alias`
+#' generic to classes `"plm"` and `"pdata.frame"`.
+#' `alias` hinges on the availability of the package
+#' \CRANpkg{MASS} on the system. Not all arguments of `alias.lm`
+#' are supported.  Output of `alias` is more informative as it
 #' gives the linear combination of dependent columns (after data
 #' transformations, i. e. after (quasi)-demeaning) while
-#' \code{detect.lindep} only gives columns involved in the linear
+#' `detect.lindep` only gives columns involved in the linear
 #' dependence in a simple format (thus being more suited for automatic
 #' post--processing of the information).
 #' 
 #' @aliases detect.lindep
-#' @param object for \code{detect.lindep}: an object which should be checked
-#' for linear dependence (of class \code{"matrix"}, \code{"data.frame"}, or
-#' \code{"plm"}); for \code{alias}: either an estimated model of class
-#' \code{"plm"} or a \code{"pdata.frame"}. Usually, one wants to input a model
+#' @param object for `detect.lindep`: an object which should be checked
+#' for linear dependence (of class `"matrix"`, `"data.frame"`, or
+#' `"plm"`); for `alias`: either an estimated model of class
+#' `"plm"` or a `"pdata.frame"`. Usually, one wants to input a model
 #' matrix here or check an already estimated plm model,
-#' @param suppressPrint for \code{detect.lindep} only: logical indicating
+#' @param suppressPrint for `detect.lindep` only: logical indicating
 #' whether a message shall be printed; defaults to printing the message, i. e.
-#' to \code{suppressPrint = FALSE},
+#' to `suppressPrint = FALSE`,
 #' @param model (see `plm`),
 #' @param effect (see `plm`),
 #' @param \dots further arguments.
-#' @return For \code{detect.lindep}: A named numeric vector containing column
+#' @return For `detect.lindep`: A named numeric vector containing column
 #' numbers of the linear dependent columns in the object after data
-#' transformation, if any are present. \code{NULL} if no linear dependent
+#' transformation, if any are present. `NULL` if no linear dependent
 #' columns are detected.
 #' 
-#' For \code{alias}: return value of \code{\link[stats:alias]{alias.lm}} run on
+#' For `alias`: return value of `\link[stats:alias]{alias.lm`} run on
 #' the (quasi-)demeaned model, i. e. the information outputted applies to the
 #' transformed model matrix, not the original data.
-#' @note function \code{detect.lindep} was called \code{detect_lin_dep}
+#' @note function `detect.lindep` was called `detect_lin_dep`
 #' initially but renamed for naming consistency later with a back-compatible
 #' solution.
 #' @export
 #' @author Kevin Tappe
-#' @seealso \code{\link[stats:alias]{alias}}, \code{\link[stats]{model.matrix}}
-#' and especially \code{plm}'s \code{\link{model.matrix}} for (transformed)
-#' model matrices, plm's \code{\link{model.frame}}.
+#' @seealso `\link[stats:alias]{alias`}, `\link[stats]{model.matrix`}
+#' and especially `plm`'s [model.matrix()] for (transformed)
+#' model matrices, plm's [model.frame()].
 #' @references
 #'
 #' \insertRef{WOOL:13}{plm}

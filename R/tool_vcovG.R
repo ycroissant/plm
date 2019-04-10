@@ -1,66 +1,56 @@
-#############################################
-## vcovXX functions for robust covariances ##
-#############################################
 
-## According to new framework, based on generic Lego block vcovG
-## and wrapper functions for vcovHC, vcovNW, vcovSCC, vcovDC.
-## Only vcovBK stays separate for simplicity reasons.
-
-
-
-
-#' Driscoll and Kraay (1998) Robust Covariance Matrix Estimator
+#' \insertCite{DRIS:KRAA:98;textual}{plm} Robust Covariance Matrix
+#' Estimator
 #' 
 #' Nonparametric robust covariance matrix estimators \emph{a la
 #' Driscoll and Kraay} for panel models with cross-sectional
 #' \emph{and} serial correlation.
 #' 
-#' \code{vcovSCC} is a function for estimating a robust covariance
-#' matrix of parameters for a panel model according to the Driscoll
-#' and Kraay (1998) method, which is consistent with cross--sectional
-#' and serial correlation in a T-asymptotic setting and irrespective
-#' of the N dimension. The use with random effects models is
-#' undocumented.
+#' `vcovSCC` is a function for estimating a robust covariance matrix
+#' of parameters for a panel model according to the
+#' \insertCite{DRIS:KRAA:98;textual}{plm} method, which is consistent
+#' with cross--sectional and serial correlation in a T-asymptotic
+#' setting and irrespective of the N dimension. The use with random
+#' effects models is undocumented.
 #' 
-#' Weighting schemes specified by \code{type} are analogous to those
-#' in \code{\link[sandwich]{vcovHC}} in package \CRANpkg{sandwich} and
-#' are justified theoretically (although in the context of the
-#' standard linear model) by MacKinnon and White (1985) and
-#' Cribari-Neto (2004) (see Zeileis (2004)).
+#' Weighting schemes specified by `type` are analogous to those in
+#' `\link[sandwich]{vcovHC`} in package \CRANpkg{sandwich} and are
+#' justified theoretically (although in the context of the standard
+#' linear model) by \insertCite{MACK:WHIT:85;textual}{plm} and
+#' \insertCite{CRIB:04;textual}{plm} \insertCite{@see @ZEIL:04}{plm}).
 #' 
-#' The main use of \code{vcovSCC} is to be an argument to other
-#' functions, e.g.  for Wald--type testing: argument \code{vcov.} to
-#' \code{coeftest()}, argument \code{vcov} to \code{waldtest()} and
-#' other methods in the \CRANpkg{lmtest} package; and argument
-#' \code{vcov.} to \code{linearHypothesis()} in the \CRANpkg{car}
-#' package (see the examples). Notice that the \code{vcov} and
-#' \code{vcov.} arguments allow to supply a function (which is the
-#' safest) or a matrix (see Zeileis (2004), 4.1-2 and examples below).
+#' The main use of `vcovSCC` is to be an argument to other functions,
+#' e.g.  for Wald--type testing: argument `vcov.` to `coeftest()`,
+#' argument `vcov` to `waldtest()` and other methods in the
+#' \CRANpkg{lmtest} package; and argument `vcov.` to
+#' `linearHypothesis()` in the \CRANpkg{car} package (see the
+#' examples). Notice that the `vcov` and `vcov.` arguments allow to
+#' supply a function (which is the safest) or a matrix
+#' \insertCite{@see @ZEIL:04, 4.1-2 and examples below}{plm}.
 #' 
 #' @aliases vcovSCC
-#' @param x an object of class \code{"plm"} or \code{"pcce"}
-#' @param type the weighting scheme used, one of \code{"HC0"},
-#'     \code{"sss"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"},
-#'     \code{"HC4"}, see Details,
-#' @param cluster switch for vcovG; set at \code{"time"} here,
-#' @param maxlag either \code{NULL} or a positive integer specifying
-#'     the maximum lag order before truncation
+#' @param x an object of class `"plm"` or `"pcce"`
+#' @param type the weighting scheme used, one of `"HC0"`, `"sss"`,
+#'     `"HC1"`, `"HC2"`, `"HC3"`, `"HC4"`, see Details,
+#' @param cluster switch for vcovG; set at `"time"` here,
+#' @param maxlag either `NULL` or a positive integer specifying the
+#'     maximum lag order before truncation
 #' @param inner the function to be applied to the residuals inside the
-#'     sandwich: \code{"cluster"} for SCC, \code{"white"} for
-#'     Newey-West, (\code{"diagavg"} for compatibility reasons)
+#'     sandwich: `"cluster"` for SCC, `"white"` for Newey-West,
+#'     (`"diagavg"` for compatibility reasons)
 #' @param wj weighting function to be applied to lagged terms,
 #' @param \dots further arguments
-#' @return An object of class \code{"matrix"} containing the estimate
-#'     of the covariance matrix of coefficients.
+#' @return An object of class `"matrix"` containing the estimate of
+#'     the covariance matrix of coefficients.
 #' @export
 #' @author Giovanni Millo, partially ported from Daniel Hoechle's
 #'     (2007) Stata code
-#' @seealso \code{\link[sandwich]{vcovHC}} from the \CRANpkg{sandwich}
-#'     package for weighting schemes (\code{type} argument).
-#' @references Cribari-Neto, F. (2004) Asymptotic inference under
-#'     heteroskedasticity of unknown form. \emph{Computational
-#'     Statistics & Data Analysis} \bold{45(2)}, pp. 215--233.
+#' @seealso `\link[sandwich]{vcovHC`} from the \CRANpkg{sandwich}
+#'     package for weighting schemes (`type` argument).
+#' @references
 #'
+#' \insertRef{CRIB:04}{plm}
+#' 
 #' \insertRef{DRIS:KRAA:98}{plm}
 #' 
 #' \insertRef{HOEC:07}{plm}
@@ -93,46 +83,47 @@ vcovSCC <- function(x, ...){
 
 
 
-#' Newey and West (1987) Robust Covariance Matrix Estimator
+#' \insertCite{NEWE:WEST:87;textual}{plm} Robust Covariance Matrix
+#' Estimator
 #' 
-#' Nonparametric robust covariance matrix estimators \emph{a la Newey and West}
-#' for panel models with serial correlation.
+#' Nonparametric robust covariance matrix estimators \emph{a la Newey
+#' and West} for panel models with serial correlation.
 #' 
-#' \code{vcovNW} is a function for estimating a robust covariance matrix of
-#' parameters for a panel model according to the Newey and West (1987) method.
-#' The function works as a restriction of the Driscoll and Kraay (1998)
-#' covariance (see \code{\link{vcovSCC}}) to no cross--sectional correlation.
+#' `vcovNW` is a function for estimating a robust covariance matrix of
+#' parameters for a panel model according to the
+#' \insertCite{NEWE:WEST:87;textual}{plm} method.  The function works
+#' as a restriction of the \insertCite{DRIS:KRAA:98;textual}{plm} covariance (see
+#' [vcovSCC()]) to no cross--sectional correlation.
 #' 
-#' Weighting schemes specified by \code{type} are analogous to those in
-#' \code{\link[sandwich]{vcovHC}} in package \CRANpkg{sandwich}
-#' and are justified theoretically (although in the context of the standard
-#' linear model) by MacKinnon and White (1985) and Cribari-Neto (2004) (see
-#' Zeileis (2004)).
+#' Weighting schemes specified by `type` are analogous to those in
+#' `\link[sandwich]{vcovHC`} in package \CRANpkg{sandwich} and are
+#' justified theoretically (although in the context of the standard
+#' linear model) by \insertCite{MACK:WHIT:85;textual}{plm} and
+#' \insertCite{CRIB:04;textual}{plm} \insertCite{@see @ZEIL:04}{plm}.
 #' 
-#' The main use of \code{vcovNW} is to be an argument to other
-#' functions, e.g.  for Wald--type testing: argument \code{vcov.} to
-#' \code{coeftest()}, argument \code{vcov} to \code{waldtest()} and
-#' other methods in the \CRANpkg{lmtest} package; and argument
-#' \code{vcov.} to \code{linearHypothesis()} in the \CRANpkg{car}
-#' package (see the examples). Notice that the \code{vcov} and
-#' \code{vcov.} arguments allow to supply a function (which is the
-#' safest) or a matrix (see Zeileis (2004), 4.1-2 and examples below).
+#' The main use of `vcovNW` is to be an argument to other functions,
+#' e.g.  for Wald--type testing: argument `vcov.` to `coeftest()`,
+#' argument `vcov` to `waldtest()` and other methods in the
+#' \CRANpkg{lmtest} package; and argument `vcov.` to
+#' `linearHypothesis()` in the \CRANpkg{car} package (see the
+#' examples). Notice that the `vcov` and `vcov.` arguments allow to
+#' supply a function (which is the safest) or a matrix
+#' \insertCite{@see @ZEIL:04, 4.1-2 and examples below}{plm}.
 #' 
 #' @aliases vcovNW
-#' @param x an object of class \code{"plm"} or \code{"pcce"}
-#' @param type the weighting scheme used, one of \code{"HC0"},
-#'     \code{"sss"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"},
-#'     \code{"HC4"}, see Details,
-#' @param maxlag either \code{NULL} or a positive integer specifying
-#'     the maximum lag order before truncation
+#' @param x an object of class `"plm"` or `"pcce"`
+#' @param type the weighting scheme used, one of `"HC0"`, `"sss"`,
+#'     `"HC1"`, `"HC2"`, `"HC3"`, `"HC4"`, see Details,
+#' @param maxlag either `NULL` or a positive integer specifying the
+#'     maximum lag order before truncation
 #' @param wj weighting function to be applied to lagged terms,
 #' @param \dots further arguments
-#' @return An object of class \code{"matrix"} containing the estimate
-#'     of the covariance matrix of coefficients.
+#' @return An object of class `"matrix"` containing the estimate of
+#'     the covariance matrix of coefficients.
 #' @export
 #' @author Giovanni Millo
-#' @seealso \code{\link[sandwich]{vcovHC}} from the \CRANpkg{sandwich}
-#'     package for weighting schemes (\code{type} argument).
+#' @seealso `\link[sandwich]{vcovHC`} from the \CRANpkg{sandwich}
+#'     package for weighting schemes (`type` argument).
 #' @references
 #'
 #' \insertRef{CRIB:04}{plm}
@@ -171,45 +162,44 @@ vcovNW <- function(x, ...){
 
 #' Double-Clustering Robust Covariance Matrix Estimator
 #' 
-#' High-level convenience wrapper for double-clustering robust covariance
-#' matrix estimators \emph{a la} Thompson (2011) and Cameron, Gelbach and
-#' Miller (2011) for panel models.
+#' High-level convenience wrapper for double-clustering robust
+#' covariance matrix estimators \emph{a la}
+#' \insertCite{THOM:11;textual}{plm} and
+#' \insertCite{CAME:GELB:MILL:11;textual}{plm} for panel models.
 #' 
-#' \code{vcovDC} is a function for estimating a robust covariance matrix of
+#' `vcovDC` is a function for estimating a robust covariance matrix of
 #' parameters for a panel model with errors clustering along both dimensions.
 #' The function is a convenience wrapper simply summing a group- and a
 #' time-clustered covariance matrix and subtracting a diagonal one \emph{a la}
 #' White.
 #' 
-#' Weighting schemes specified by \code{type} are analogous to those
-#' in \code{\link[sandwich]{vcovHC}} in package \CRANpkg{sandwich} and
-#' are justified theoretically (although in the context of the
-#' standard linear model) by MacKinnon and White (1985) and
-#' Cribari-Neto (2004) (see Zeileis (2004)).
+#' Weighting schemes specified by `type` are analogous to those in
+#' `\link[sandwich]{vcovHC`} in package \CRANpkg{sandwich} and are
+#' justified theoretically (although in the context of the standard
+#' linear model) by \insertCite{MACK:WHIT:85;textual}{plm} and
+#' \insertCite{CRIB:04;textual}{plm} \insertCite{@see @ZEIL:04}{plm}.
 #' 
-#' The main use of \code{vcovDC} is to be an argument to other
-#' functions, e.g.  for Wald-type testing: argument \code{vcov.} to
-#' \code{coeftest()}, argument \code{vcov} to \code{waldtest()} and
-#' other methods in the \CRANpkg{lmtest} package; and argument
-#' \code{vcov.} to \code{linearHypothesis()} in the \CRANpkg{car}
-#' package (see the examples). Notice that the \code{vcov} and
-#' \code{vcov.} arguments allow to supply a function (which is the
-#' safest) or a matrix (see Zeileis (2004), 4.1-2 and examples below).
+#' The main use of `vcovDC` is to be an argument to other functions,
+#' e.g.  for Wald-type testing: argument `vcov.` to `coeftest()`,
+#' argument `vcov` to `waldtest()` and other methods in the
+#' \CRANpkg{lmtest} package; and argument `vcov.` to
+#' `linearHypothesis()` in the \CRANpkg{car} package (see the
+#' examples). Notice that the `vcov` and `vcov.` arguments allow to
+#' supply a function (which is the safest) or a matrix
+#' \insertCite{@see @ZEIL:04, 4.1-2 and examples below}{plm}.
 #' 
 #' @aliases vcovDC
-#' @param x an object of class \code{"plm"} or \code{"pcce"}
-#' @param type the weighting scheme used, one of \code{"HC0"},
-#'     \code{"sss"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"},
-#'     \code{"HC4"}, see Details,
+#' @param x an object of class `"plm"` or `"pcce"`
+#' @param type the weighting scheme used, one of `"HC0"`, `"sss"`,
+#'     `"HC1"`, `"HC2"`, `"HC3"`, `"HC4"`, see Details,
 #' @param \dots further arguments
-#' @return An object of class \code{"matrix"} containing the estimate
-#'     of the covariance matrix of coefficients.
+#' @return An object of class `"matrix"` containing the estimate of
+#'     the covariance matrix of coefficients.
 #' @export
 #' @author Giovanni Millo
-#' @seealso \code{\link[sandwich]{vcovHC}} from the \CRANpkg{sandwich}
-#'     package for weighting schemes (\code{type} argument).
+#' @seealso `\link[sandwich]{vcovHC`} from the \CRANpkg{sandwich}
+#'     package for weighting schemes (`type` argument).
 #' @references
-#'
 #'
 #' \insertRef{CAME:GELB:MILL:11}{plm}
 #' 
@@ -247,35 +237,34 @@ vcovDC <- function(x, ...){
 
 #' Generic Lego building block for Robust Covariance Matrix Estimators
 #' 
-#' Generic Lego building block for robust covariance matrix estimators of the
-#' vcovXX kind for panel models.
+#' Generic Lego building block for robust covariance matrix estimators
+#' of the vcovXX kind for panel models.
 #' 
-#' \code{vcovG} is the generic building block for use by higher--level
-#' wrappers \code{\link{vcovHC}}, \code{\link{vcovSCC}},
-#' \code{\link{vcovDC}}, and \code{\link{vcovNW}}. The main use of
-#' \code{vcovG} is to be used internally by the former, but it is made
-#' available in the user space for use in non--standard
+#' `vcovG` is the generic building block for use by higher--level
+#' wrappers [vcovHC()], [vcovSCC()], [vcovDC()], and [vcovNW()]. The
+#' main use of `vcovG` is to be used internally by the former, but it
+#' is made available in the user space for use in non--standard
 #' combinations. For more documentation, see see wrapper functions
 #' mentioned.
 #' 
 #' @aliases vcovG
-#' @param x an object of class \code{"plm"} or \code{"pcce"}
-#' @param type the weighting scheme used, one of \code{"HC0"},
-#'     \code{"sss"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"},
-#'     \code{"HC4"},
-#' @param cluster one of \code{"group"}, \code{"time"},
+#' @param x an object of class `"plm"` or `"pcce"`
+#' @param type the weighting scheme used, one of `"HC0"`,
+#'     `"sss"`, `"HC1"`, `"HC2"`, `"HC3"`,
+#'     `"HC4"`,
+#' @param cluster one of `"group"`, `"time"`,
 #' @param l lagging order, defaulting to zero
 #' @param inner the function to be applied to the residuals inside the
-#'     sandwich: one of \code{"cluster"} or \code{"white"} or
-#'     \code{"diagavg"},
+#'     sandwich: one of `"cluster"` or `"white"` or
+#'     `"diagavg"`,
 #' @param \dots further arguments
-#' @return An object of class \code{"matrix"} containing the estimate
+#' @return An object of class `"matrix"` containing the estimate
 #'     of the covariance matrix of coefficients.
 #' @export
 #' @author Giovanni Millo
-#' @seealso \code{\link{vcovHC}}, \code{\link{vcovSCC}},
-#'     \code{\link{vcovDC}}, \code{\link{vcovNW}}, and
-#'     \code{\link{vcovBK}} albeit the latter does not make use of
+#' @seealso [vcovHC()], [vcovSCC()],
+#'     [vcovDC()], [vcovNW()], and
+#'     [vcovBK()] albeit the latter does not make use of
 #'     vcovG.
 #' @references
 #'
@@ -578,69 +567,67 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 #' Robust covariance matrix estimators \emph{a la White} for panel
 #' models.
 #' 
-#' \code{vcovHC} is a function for estimating a robust covariance
-#' matrix of parameters for a fixed effects or random effects panel
-#' model according to the White method (White 1980, 1984; Arellano
-#' 1987). Observations may be clustered by \code{"group"}
-#' (\code{"time"}) to account for serial (cross-sectional)
-#' correlation.
+#' `vcovHC` is a function for estimating a robust covariance matrix of
+#' parameters for a fixed effects or random effects panel model
+#' according to the White method
+#' \insertCite{WHIT:80,WHIT:84b,AREL:87}{plm}. Observations may be
+#' clustered by `"group"` (`"time"`) to account for serial
+#' (cross-sectional) correlation.
 #' 
 #' All types assume no intragroup (serial) correlation between errors
 #' and allow for heteroskedasticity across groups (time periods). As
 #' for the error covariance matrix of every single group of
-#' observations, \code{"white1"} allows for general heteroskedasticity
-#' but no serial (cross--sectional) correlation; \code{"white2"} is
-#' \code{"white1"} restricted to a common variance inside every group
-#' (time period) (see Greene (2003, Sec. 13.7.1-2; 2012,
-#' Sec. 11.6.1-2) and Wooldridge (2002), Sec. 10.7.2);
-#' \code{"arellano"} (see ibid. and the original ref. Arellano (1987))
-#' allows a fully general structure w.r.t. heteroskedasticity and
-#' serial (cross--sectional) correlation.
+#' observations, `"white1"` allows for general heteroskedasticity but
+#' no serial (cross--sectional) correlation; `"white2"` is `"white1"`
+#' restricted to a common variance inside every group (time period)
+#' \insertCite{@see @GREE:03, Sec. 13.7.1-2, @GREE:12, Sec. 11.6.1-2
+#' and @WOOL:02, Sec. 10.7.2}{plm}; `"arellano"` \insertCite{@see
+#' ibid. and the original ref. @AREL:87}{plm} allows a fully general
+#' structure w.r.t. heteroskedasticity and serial (cross--sectional)
+#' correlation.
 #' 
-#' Weighting schemes specified by \code{type} are analogous to those
-#' in \code{\link[sandwich]{vcovHC}} in package \CRANpkg{sandwich} and
-#' are justified theoretically (although in the context of the
-#' standard linear model) by MacKinnon and White (1985) and
-#' Cribari-Neto (2004) (see Zeileis (2004)). \code{type = "sss"}
-#' employs the small sample correction as used by Stata. % TODO: give
-#' formula for "sss"; elaborate why different result for FE models
-#' (intercept)
+#' Weighting schemes specified by `type` are analogous to those in
+#' `\link[sandwich]{vcovHC`} in package \CRANpkg{sandwich} and are
+#' justified theoretically (although in the context of the standard
+#' linear model) by \insertCite{MACK:WHIT:85;textual}{plm} and
+#' \insertCite{CRIB:04;textual}{plm}
+#' \insertCite{ZEIL:04}{plm}. `type = "sss"` employs the small sample
+#' correction as used by Stata. % TODO: give formula for "sss";
+#' elaborate why different result for FE models (intercept)
 #' 
-#' The main use of \code{vcovHC} is to be an argument to other
-#' functions, e.g.  for Wald--type testing: argument \code{vcov.} to
-#' \code{coeftest()}, argument \code{vcov} to \code{waldtest()} and
-#' other methods in the \CRANpkg{lmtest} package; and argument
-#' \code{vcov.} to \code{linearHypothesis()} in the \CRANpkg{car}
-#' package (see the examples). Notice that the \code{vcov} and
-#' \code{vcov.} arguments allow to supply a function (which is the
-#' safest) or a matrix (see Zeileis (2004), 4.1-2 and examples below).
+#' The main use of `vcovHC` is to be an argument to other functions,
+#' e.g.  for Wald--type testing: argument `vcov.` to `coeftest()`,
+#' argument `vcov` to `waldtest()` and other methods in the
+#' \CRANpkg{lmtest} package; and argument `vcov.` to
+#' `linearHypothesis()` in the \CRANpkg{car} package (see the
+#' examples). Notice that the `vcov` and `vcov.` arguments allow to
+#' supply a function (which is the safest) or a matrix
+#' \insertCite{@ZEIL:04, 4.1-2 and examples below}{plm}.
 #' 
-#' A special procedure for \code{pgmm} objects, proposed by Windmeijer (2005),
-#' is also provided.
+#' A special procedure for `pgmm` objects, proposed by
+#' \insertCite{WIND:05;textual}{plm}, is also provided.
 #' 
 #' @name vcovHC.plm
-#' @param x an object of class \code{"plm"} which should be the result
-#'     of a random effects or a within model or a model of class
-#'     \code{"pgmm"} or an object of class \code{"pcce"},
-#' @param method one of \code{"arellano"}, \code{"white1"},
-#'     \code{"white2"},
-#' @param type the weighting scheme used, one of \code{"HC0"},
-#'     \code{"sss"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"},
-#'     \code{"HC4"}, see Details,
-#' @param cluster one of \code{"group"}, \code{"time"},
+#' @param x an object of class `"plm"` which should be the result of a
+#'     random effects or a within model or a model of class `"pgmm"`
+#'     or an object of class `"pcce"`,
+#' @param method one of `"arellano"`, `"white1"`, `"white2"`,
+#' @param type the weighting scheme used, one of `"HC0"`, `"sss"`,
+#'     `"HC1"`, `"HC2"`, `"HC3"`, `"HC4"`, see Details,
+#' @param cluster one of `"group"`, `"time"`,
 #' @param \dots further arguments.
-#' @return An object of class \code{"matrix"} containing the estimate
-#'     of the asymptotic covariance matrix of coefficients.
-#' @note The function \code{pvcovHC} is deprecated. Use \code{vcovHC}
-#'     for the same functionality.
+#' @return An object of class `"matrix"` containing the estimate of
+#'     the asymptotic covariance matrix of coefficients.
+#' @note The function `pvcovHC` is deprecated. Use `vcovHC` for the
+#'     same functionality.
 #' @export
 #' @author Giovanni Millo & Yves Croissant
-#' @seealso \code{\link[sandwich]{vcovHC}} from the \CRANpkg{sandwich}
-#'     package for weighting schemes (\code{type} argument).
-#' @references Arellano, M. (1987) Computing robust standard errors
-#'     for within-group estimators, \emph{Oxford Bulletin of Economics
-#'     and Statistics}, \bold{49(4)}, pp. 431--434.
+#' @seealso `\link[sandwich]{vcovHC`} from the \CRANpkg{sandwich}
+#'     package for weighting schemes (`type` argument).
+#' @references
 #'
+#' \insertRef{AREL:87}{plm}
+#' 
 #' \insertRef{CRIB:04}{plm}
 #'
 #' \insertRef{GREE:03}{plm}
@@ -777,6 +764,8 @@ vcovSCC.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
     return(S0)
 }
 
+                                        # ICI
+
 ##############################################################
 
 ## separate function for BK (PCSE) covariance
@@ -789,61 +778,61 @@ vcovSCC.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 #' and Katz} for panel models (a.k.a. Panel Corrected Standard Errors
 #' (PCSE)).
 #' 
-#' \code{vcovBK} is a function for estimating a robust covariance
-#' matrix of parameters for a panel model according to the Beck and
-#' Katz (1995) method, a.k.a. Panel Corrected Standard Errors (PCSE),
-#' which uses an unconditional estimate of the error covariance across
-#' time periods (groups) inside the standard formula for coefficient
-#' covariance. Observations may be clustered either by \code{"group"}
-#' to account for timewise heteroskedasticity and serial correlation
-#' or by \code{"time"} to account for cross-sectional
-#' heteroskedasticity and correlation. It must be borne in mind that
-#' the Beck and Katz formula is based on N- (T-) asymptotics and will
-#' not be appropriate elsewhere.
+#' `vcovBK` is a function for estimating a robust covariance matrix of
+#' parameters for a panel model according to the
+#' \insertCite{BECK:KATZ:95;textual}{plm} method, a.k.a. Panel
+#' Corrected Standard Errors (PCSE), which uses an unconditional
+#' estimate of the error covariance across time periods (groups)
+#' inside the standard formula for coefficient
+#' covariance. Observations may be clustered either by `"group"` to
+#' account for timewise heteroskedasticity and serial correlation or
+#' by `"time"` to account for cross-sectional heteroskedasticity and
+#' correlation. It must be borne in mind that the Beck and Katz
+#' formula is based on N- (T-) asymptotics and will not be appropriate
+#' elsewhere.
 #' 
-#' The \code{diagonal} logical argument can be used, if set to
-#' \code{TRUE}, to force to zero all nondiagonal elements in the
+#' The `diagonal` logical argument can be used, if set to
+#' `TRUE`, to force to zero all nondiagonal elements in the
 #' estimated error covariances; this is appropriate if both serial and
 #' cross--sectional correlation are assumed out, and yields a
 #' timewise- (groupwise-) heteroskedasticity--consistent estimator.
 #' 
-#' Weighting schemes specified by \code{type} are analogous to those
-#' in \code{\link[sandwich]{vcovHC}} in package \CRANpkg{sandwich} and
-#' are justified theoretically (although in the context of the
-#' standard linear model) by MacKinnon and White (1985) and
-#' Cribari-Neto (2004) (see Zeileis (2004)).
+#' Weighting schemes specified by `type` are analogous to those in
+#' `\link[sandwich]{vcovHC`} in package \CRANpkg{sandwich} and are
+#' justified theoretically (although in the context of the standard
+#' linear model) by \insertCite{MACK:WHIT:85;textual}{plm} and
+#' \insertCite{CRIB:04;textual}{plm} \insertCite{@see @ZEIL:04}{plm}.
 #' 
-#' % TODO: once "sss" has been added: \code{type = "sss"} employs the small
-#' sample correction as used by Stata. % give formula for "sss"; elaborate why
-#' different result for FE models (intercept)
+#' % TODO: once "sss" has been added: `type = "sss"` employs the small
+#' % sample correction as used by Stata. give formula for "sss";
+#' % elaborate why different result for FE models (intercept)
 #' 
-#' The main use of \code{vcovBK} is to be an argument to other
-#' functions, e.g.  for Wald--type testing: argument \code{vcov.} to
-#' \code{coeftest()}, argument \code{vcov} to \code{waldtest()} and
-#' other methods in the \CRANpkg{lmtest} package; and argument
-#' \code{vcov.} to \code{linearHypothesis()} in the \CRANpkg{car}
-#' package (see the examples). Notice that the \code{vcov} and
-#' \code{vcov.} arguments allow to supply a function (which is the
-#' safest) or a matrix (see Zeileis (2004), 4.1-2 and examples below).
+#' The main use of `vcovBK` is to be an argument to other functions,
+#' e.g.  for Wald--type testing: argument `vcov.` to `coeftest()`,
+#' argument `vcov` to `waldtest()` and other methods in the
+#' \CRANpkg{lmtest} package; and argument `vcov.` to
+#' `linearHypothesis()` in the \CRANpkg{car} package (see the
+#' examples). Notice that the `vcov` and `vcov.` arguments allow to
+#' supply a function (which is the safest) or a matrix
+#' \insertCite{@see @ZEIL:04, 4.1-2 and examples below}{plm}.
 #' 
-#' @param x an object of class \code{"plm"},
-#' @param type the weighting scheme used, one of \code{"HC0"},
-#'     \code{"HC1"}, \code{"HC2"}, \code{"HC3"}, \code{"HC4"}, see
-#'     Details,
-#' @param cluster one of \code{"group"}, \code{"time"},
+#' @param x an object of class `"plm"`,
+#' @param type the weighting scheme used, one of `"HC0"`, `"HC1"`,
+#'     `"HC2"`, `"HC3"`, `"HC4"`, see Details,
+#' @param cluster one of `"group"`, `"time"`,
 #' @param diagonal a logical value specifying whether to force
 #'     nondiagonal elements to zero,
 #' @param \dots further arguments.
 #' @export
-#' @return An object of class \code{"matrix"} containing the estimate
-#'     of the covariance matrix of coefficients.
+#' @return An object of class `"matrix"` containing the estimate of
+#'     the covariance matrix of coefficients.
 #' @author Giovanni Millo
-#' @seealso \code{\link[sandwich]{vcovHC}} from the \CRANpkg{sandwich}
-#'     package for weighting schemes (\code{type} argument).
-#' @references Beck, N. and Katz, J. (1995) What to do (and not to do)
-#'     with time-series cross-section data in comparative
-#'     politics. \emph{American Political Science Review},
-#'     \bold{89(3)}, pp. 634--647.
+#' @seealso `\link[sandwich]{vcovHC`} from the \CRANpkg{sandwich}
+#'     package for weighting schemes (`type` argument).
+#' @references
+#'
+#'
+#' \insertRef{BECK:KATZ:95}{plm}
 #'
 #' \insertRef{CRIB:04}{plm}
 #'

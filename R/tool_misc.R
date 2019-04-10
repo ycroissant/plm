@@ -157,85 +157,85 @@ pres <- function(x) {  # pres.panelmodel
 
 
 # punbalancedness: measures for unbalancedness of a pandel data set as
-# defined in Ahrens/Pincus (1981), p. 228 (gamma and nu) and for
-# nested panel structures as in Baltagi/Song/Jung (2001), pp. 368-369
+# defined in \insertCite{AHRE:PINC:81;textual}{plm}, p. 228 (gamma and
+# nu) and for nested panel structures as in
+# \insertCite{BALT:SONG:JUNG:01;textual}{plm}, pp. 368-369
 
 
 #' Measures for Unbalancedness of Panel Data
 #' 
 #' This function reports unbalancedness measures for panel data as
-#' defined in Ahrens/Pincus (1981) and Baltagi/Song/Jung (2001).
+#' defined in \insertCite{AHRE:PINC:81;textual}{plm} and
+#' \insertCite{BALT:SONG:JUNG:01;textual}{plm}.
 #' 
-#' \code{punbalancedness} returns measures for the unbalancedness of a
+#' `punbalancedness` returns measures for the unbalancedness of a
 #' panel data set.
 #' 
-#' \itemize{
-#'
-#' \item For two-dimensional data:\cr The two measures of
-#' Ahrens/Pincus (1981) are calculated, called "gamma" (\eqn{\gamma})
-#' and "nu" (\eqn{\nu}).
+#' - For two-dimensional data:\cr The two measures of
+#' \insertCite{AHRE:PINC:81;textual}{plm} are calculated, called
+#' "gamma" (\eqn{\gamma}) and "nu" (\eqn{\nu}).
 #' 
 #' If the panel data are balanced, both measures equal 1. The more
 #' "unbalanced" the panel data, the lower the measures (but > 0). The
-#' upper and lower bounds as given in Ahrens/Pincus (1981) are:\cr
+#' upper and lower bounds as given in \insertCite{AHRE:PINC:81;textual}{plm}
+#' are:\cr
 #' \eqn{0 < \gamma, \nu \le 1}, and for \eqn{\nu} more precisely
 #' \eqn{\frac{1}{n} < \nu \le 1}{1/n < \nu \le 1}, with \eqn{n} being
-#' the number of individuals (as in \code{pdim(x)$nT$n}).
+#' the number of individuals (as in `pdim(x)$nT$n`).
 #' 
-#' \item For nested panel data (meaning including a grouping variable):\cr The
-#' extension of the above measures by Baltagi/Song/Jung (2001), p. 368, are
+#' - For nested panel data (meaning including a grouping variable):\cr
+#' The extension of the above measures by
+#' \insertCite{BALT:SONG:JUNG:01;textual}{plm}, p. 368, are
 #' calculated:\cr
-#' \itemize{
-#' \item c1: measure of subgroup (individual) unbalancedness,
-#' \item c2: measure of time unbalancedness,
-#' \item c3: measure of group unbalancedness due to each group size.
-#' }
+#'
+#'   - c1: measure of subgroup (individual) unbalancedness,
+#'   - c2: measure of time unbalancedness,
+#'   - c3: measure of group unbalancedness due to each group size.
 #'
 #' Values are 1 if the data are balanced and become smaller as the
 #' data become more unbalanced.
-#' }
+#' 
 #'  
-#' An application of the measure "gamma" is found in e. g.  Baltagi/Song/Jung
-#' (2002), pp. 488-491, and Baltagi/Chang (1994), pp. 78--87, where it is used
-#' to measure the unbalancedness of various unbalanced data sets used for Monte
-#' Carlo simulation studies. Measures c1, c2, c3 are used for similar purposes
-#' in Baltagi/Song/Jung (2001).
+#' An application of the measure "gamma" is found in e. g.
+#' \insertCite{BALT:SONG:JUNG:01;textual}{plm}, pp. 488-491, and
+#' \insertCite{BALT:CHAN:94;textual}{plm}, pp. 78--87, where it is
+#' used to measure the unbalancedness of various unbalanced data sets
+#' used for Monte Carlo simulation studies. Measures c1, c2, c3 are
+#' used for similar purposes in
+#' \insertCite{BALT:SONG:JUNG:01;textual}{plm}.
 #' 
-#' In the two-dimensional case, \code{punbalancedness} uses output of
-#' \code{\link{pdim}} to calculate the two unbalancedness measures, so inputs
-#' to \code{punbalancedness} can be whatever \code{pdim} works on. \code{pdim}
-#' returns detailed information about the number of individuals and time
-#' observations (see \code{\link{pdim}}).
+#' In the two-dimensional case, `punbalancedness` uses output of
+#' [pdim()] to calculate the two unbalancedness measures, so inputs to
+#' `punbalancedness` can be whatever `pdim` works on. `pdim` returns
+#' detailed information about the number of individuals and time
+#' observations (see [pdim()]).
 #' 
-#' @param x a \code{panelmodel}, a \code{data.frame}, or a
-#'     \code{pdata.frame} object,
-#' @param index only relevant for \code{data.frame} interface, for
-#'     details see \code{\link{pdata.frame}},
+#' @param x a `panelmodel`, a `data.frame`, or a `pdata.frame` object,
+#' @param index only relevant for `data.frame` interface, for details
+#'     see [pdata.frame()],
 #' @param \dots further arguments.
 #' @return A named numeric containing either two or three entries,
 #'     depending on the panel structure inputted:
 #' 
 #' - For the two-dimensional panel structure, the entries are called
-#' \code{gamma} and \code{nu},
+#' `gamma` and `nu`,
 #'
-#' - For a nested panel structure, the entries are called \code{c1},
-#' \code{c2}, \code{c3}.
+#' - For a nested panel structure, the entries are called `c1`, `c2`,
+#' `c3`.
 #' 
-#' @note Calling \code{punbalancedness} on an estimated
-#'     \code{panelmodel} object and on the corresponding
-#'     \code{(p)data.frame} used for this estimation does not
-#'     necessarily yield the same result (true also for
-#'     \code{pdim}). When called on an estimated \code{panelmodel},
-#'     the number of observations (individual, time) actually used for
+#' @note Calling `punbalancedness` on an estimated `panelmodel` object
+#'     and on the corresponding `(p)data.frame` used for this
+#'     estimation does not necessarily yield the same result (true
+#'     also for `pdim`). When called on an estimated `panelmodel`, the
+#'     number of observations (individual, time) actually used for
 #'     model estimation are taken into account. When called on a
-#'     \code{(p)data.frame}, the rows in the \code{(p)data.frame} are
+#'     `(p)data.frame`, the rows in the `(p)data.frame` are
 #'     considered, disregarding any NA values in the dependent or
 #'     independent variable(s) which would be dropped during model
 #'     estimation.
 #' @export
 #' @author Kevin Tappe
-#' @seealso \code{\link{nobs}}, \code{\link{pdim}},
-#'     \code{\link{pdata.frame}}
+#' @seealso [nobs()], [pdim()], [pdata.frame()]
 #' @references
 #'
 #' \insertRef{AHRE:PINC:81}{plm}
@@ -362,44 +362,44 @@ myvar <- function(x){
 #' This function checks for each variable of a panel if it varies
 #' cross-sectionally and over time.
 #' 
-#' For (p)data.frame and matrix interface: All-NA columns are removed prior to
-#' calculation of variation due to coercing to pdata.frame first.
+#' For (p)data.frame and matrix interface: All-NA columns are removed
+#' prior to calculation of variation due to coercing to pdata.frame
+#' first.
 #' 
 #' @aliases pvar
-#' @param x a \code{(p)data.frame} or a \code{matrix},
-#' @param index see \code{\link{pdata.frame}},
+#' @param x a `(p)data.frame` or a `matrix`,
+#' @param index see [pdata.frame()],
 #' @param \dots further arguments.
-#' @return An object of class \code{pvar} containing the following
+#' @return An object of class `pvar` containing the following
 #'     elements:
 #' 
-#' \item{id.variation}{a logical vector with \code{TRUE} values if the
-#' variable has individual variation, \code{FALSE} if not,}
+#' \item{id.variation}{a logical vector with `TRUE` values if the
+#' variable has individual variation, `FALSE` if not,}
 #'
-#' \item{time.variation}{a
-#' logical vector with \code{TRUE} values if the variable has time variation,
-#' \code{FALSE} if not,}
+#' \item{time.variation}{a logical vector with `TRUE` values if the
+#' variable has time variation, `FALSE` if not,}
 #'
-#' \item{id.variation_anyNA}{a logical vector with \code{TRUE} values
-#' if the variable has at least one individual-time combination with
-#' all NA values in the individual dimension for at least one time
-#' period, \code{FALSE} if not,}
+#' \item{id.variation_anyNA}{a logical vector with `TRUE` values if
+#' the variable has at least one individual-time combination with all
+#' NA values in the individual dimension for at least one time period,
+#' `FALSE` if not,}
 #'
-#' \item{time.variation_anyNA}{a logical vector with \code{TRUE}
-#' values if the variable has at least one individual-time combination
-#' with all NA values in the time dimension for at least one
-#' individual, \code{FALSE} if not.}
+#' \item{time.variation_anyNA}{a logical vector with `TRUE` values if
+#' the variable has at least one individual-time combination with all
+#' NA values in the time dimension for at least one individual,
+#' `FALSE` if not.}
 #' 
-#' @note \code{pvar} can be time consuming for ``big'' panels.
+#' @note `pvar` can be time consuming for ``big'' panels.
 #' @export
 #' @author Yves Croissant
-#' @seealso \code{\link{pdim}} to check the dimensions of a 'pdata.frame' (and
-#' other objects),
+#' @seealso [pdim()] to check the dimensions of a 'pdata.frame' (and
+#'     other objects),
 #' @keywords attribute
 #' @examples
 #' 
 #' 
-#' # Gasoline contains two variables which are individual and time indexes
-#' # and are the first two variables
+#' # Gasoline contains two variables which are individual and time
+#' # indexes and are the first two variables
 #' data("Gasoline", package = "plm")
 #' pvar(Gasoline)
 #' 

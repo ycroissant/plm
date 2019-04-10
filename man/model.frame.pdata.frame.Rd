@@ -25,55 +25,49 @@
 
 \item{\dots}{further arguments.}
 
-\item{lhs}{inherited from package \code{\link[Formula]{Formula}}
-(see there),}
+\item{lhs}{inherited from package \code{\link[Formula]{Formula}} (see
+there),}
 
-\item{rhs}{inherited from package \code{\link[Formula]{Formula}}
-(see there),}
+\item{rhs}{inherited from package \code{\link[Formula]{Formula}} (see
+there),}
 
-\item{dot}{inherited from package \code{\link[Formula]{Formula}}
-(see there),}
+\item{dot}{inherited from package \code{\link[Formula]{Formula}} (see
+there),}
 
 \item{x}{a \code{model.frame}}
 
 \item{object, formula}{an object of class \code{"pdata.frame"} or an
 estimated model object of class \code{"plm"},}
 
-\item{model}{one of \code{"pooling"}, \code{"within"},
-\code{"Sum"}, \code{"Between"}, \code{"between"},
-\code{"random",} \code{"fd"} and \code{"ht"},}
+\item{model}{one of \code{"pooling"}, \code{"within"}, \code{"Sum"}, \code{"Between"},
+\code{"between"}, \code{"random",} \code{"fd"} and \code{"ht"},}
 
 \item{effect}{the effects introduced in the model, one of
-\code{"individual"}, \code{"time"}, \code{"twoways"} or
-\code{"nested"},}
+\code{"individual"}, \code{"time"}, \code{"twoways"} or \code{"nested"},}
 
 \item{theta}{the parameter for the transformation if \code{model =
 "random"},}
 
-\item{cstcovar.rm}{remove the constant columns, one of
-\code{"none", "intercept", "covariates", "all")},}
+\item{cstcovar.rm}{remove the constant columns, one of \code{"none", "intercept", "covariates", "all")},}
 }
 \value{
-The \code{model.frame} methods return a
-\code{pdata.frame}.\cr The \code{model.matrix} methods return a
-\code{matrix}.
+The \code{model.frame} methods return a \code{pdata.frame}.\cr The
+\code{model.matrix} methods return a \code{matrix}.
 }
 \description{
 Methods to create model frame and model matrix for panel data.
 }
 \details{
-The \code{lhs} and \code{rhs} arguments are inherited from
-\code{Formula}, see there for more details.\cr The
-\code{model.frame} methods return a \code{pdata.frame} object
-suitable as an input to plm's \code{model.matrix}.\cr The
-\code{model.matrix} methods builds a model matrix with
-transformations performed as specified by the \code{model} and
-\code{effect} arguments (and \code{theta} if \code{model =
-"random"} is requested), in this case the supplied \code{data}
-argument should be a model frame created by plm's
-\code{model.frame} method. If not, it is tried to construct the
-model frame from the data. Constructing the model frame first
-ensures proper NA handling, see \bold{Examples}.
+The \code{lhs} and \code{rhs} arguments are inherited from \code{Formula}, see
+there for more details.\cr The \code{model.frame} methods return a
+\code{pdata.frame} object suitable as an input to plm's
+\code{model.matrix}.\cr The \code{model.matrix} methods builds a model matrix
+with transformations performed as specified by the \code{model} and
+\code{effect} arguments (and \code{theta} if \code{model = "random"} is
+requested), in this case the supplied \code{data} argument should be a
+model frame created by plm's \code{model.frame} method. If not, it is
+tried to construct the model frame from the data. Constructing the
+model frame first ensures proper NA handling, see \bold{Examples}.
 }
 \examples{
 
@@ -104,10 +98,9 @@ all.equal(modmat, model.matrix(fe_model), check.attributes = FALSE) # TRUE
 
 }
 \seealso{
-\code{\link{pmodel.response}} for (transformed) response
-variable.\cr \code{\link[Formula]{Formula}} from package
-\code{Formula}, especially for the \code{lhs} and \code{rhs}
-arguments.
+\code{\link[=pmodel.response]{pmodel.response()}} for (transformed) response
+variable.\cr \code{\link[Formula]{Formula}} from package \code{Formula},
+especially for the \code{lhs} and \code{rhs} arguments.
 }
 \author{
 Yves Croissant

@@ -15,9 +15,8 @@ vcovBK(x, ...)
 
 \item{\dots}{further arguments.}
 
-\item{type}{the weighting scheme used, one of \code{"HC0"},
-\code{"HC1"}, \code{"HC2"}, \code{"HC3"}, \code{"HC4"}, see
-Details,}
+\item{type}{the weighting scheme used, one of \code{"HC0"}, \code{"HC1"},
+\code{"HC2"}, \code{"HC3"}, \code{"HC4"}, see Details,}
 
 \item{cluster}{one of \code{"group"}, \code{"time"},}
 
@@ -25,8 +24,8 @@ Details,}
 nondiagonal elements to zero,}
 }
 \value{
-An object of class \code{"matrix"} containing the estimate
-of the covariance matrix of coefficients.
+An object of class \code{"matrix"} containing the estimate of
+the covariance matrix of coefficients.
 }
 \description{
 Unconditional Robust covariance matrix estimators \emph{a la Beck
@@ -34,17 +33,18 @@ and Katz} for panel models (a.k.a. Panel Corrected Standard Errors
 (PCSE)).
 }
 \details{
-\code{vcovBK} is a function for estimating a robust covariance
-matrix of parameters for a panel model according to the Beck and
-Katz (1995) method, a.k.a. Panel Corrected Standard Errors (PCSE),
-which uses an unconditional estimate of the error covariance across
-time periods (groups) inside the standard formula for coefficient
-covariance. Observations may be clustered either by \code{"group"}
-to account for timewise heteroskedasticity and serial correlation
-or by \code{"time"} to account for cross-sectional
-heteroskedasticity and correlation. It must be borne in mind that
-the Beck and Katz formula is based on N- (T-) asymptotics and will
-not be appropriate elsewhere.
+\code{vcovBK} is a function for estimating a robust covariance matrix of
+parameters for a panel model according to the
+\insertCite{BECK:KATZ:95;textual}{plm} method, a.k.a. Panel
+Corrected Standard Errors (PCSE), which uses an unconditional
+estimate of the error covariance across time periods (groups)
+inside the standard formula for coefficient
+covariance. Observations may be clustered either by \code{"group"} to
+account for timewise heteroskedasticity and serial correlation or
+by \code{"time"} to account for cross-sectional heteroskedasticity and
+correlation. It must be borne in mind that the Beck and Katz
+formula is based on N- (T-) asymptotics and will not be appropriate
+elsewhere.
 
 The \code{diagonal} logical argument can be used, if set to
 \code{TRUE}, to force to zero all nondiagonal elements in the
@@ -52,24 +52,24 @@ estimated error covariances; this is appropriate if both serial and
 cross--sectional correlation are assumed out, and yields a
 timewise- (groupwise-) heteroskedasticity--consistent estimator.
 
-Weighting schemes specified by \code{type} are analogous to those
-in \code{\link[sandwich]{vcovHC}} in package \CRANpkg{sandwich} and
-are justified theoretically (although in the context of the
-standard linear model) by MacKinnon and White (1985) and
-Cribari-Neto (2004) (see Zeileis (2004)).
+Weighting schemes specified by \code{type} are analogous to those in
+\code{\link[sandwich]{vcovHC}} in package \CRANpkg{sandwich} and are
+justified theoretically (although in the context of the standard
+linear model) by \insertCite{MACK:WHIT:85;textual}{plm} and
+\insertCite{CRIB:04;textual}{plm} \insertCite{@see @ZEIL:04}{plm}.
 
 % TODO: once "sss" has been added: \code{type = "sss"} employs the small
-sample correction as used by Stata. % give formula for "sss"; elaborate why
-different result for FE models (intercept)
+% sample correction as used by Stata. give formula for "sss";
+% elaborate why different result for FE models (intercept)
 
-The main use of \code{vcovBK} is to be an argument to other
-functions, e.g.  for Wald--type testing: argument \code{vcov.} to
-\code{coeftest()}, argument \code{vcov} to \code{waldtest()} and
-other methods in the \CRANpkg{lmtest} package; and argument
-\code{vcov.} to \code{linearHypothesis()} in the \CRANpkg{car}
-package (see the examples). Notice that the \code{vcov} and
-\code{vcov.} arguments allow to supply a function (which is the
-safest) or a matrix (see Zeileis (2004), 4.1-2 and examples below).
+The main use of \code{vcovBK} is to be an argument to other functions,
+e.g.  for Wald--type testing: argument \code{vcov.} to \code{coeftest()},
+argument \code{vcov} to \code{waldtest()} and other methods in the
+\CRANpkg{lmtest} package; and argument \code{vcov.} to
+\code{linearHypothesis()} in the \CRANpkg{car} package (see the
+examples). Notice that the \code{vcov} and \code{vcov.} arguments allow to
+supply a function (which is the safest) or a matrix
+\insertCite{@see @ZEIL:04, 4.1-2 and examples below}{plm}.
 }
 \examples{
 
@@ -97,10 +97,7 @@ linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovBK)
 
 }
 \references{
-Beck, N. and Katz, J. (1995) What to do (and not to do)
-with time-series cross-section data in comparative
-politics. \emph{American Political Science Review},
-\bold{89(3)}, pp. 634--647.
+\insertRef{BECK:KATZ:95}{plm}
 
 \insertRef{CRIB:04}{plm}
 

@@ -15,18 +15,18 @@ vcovDC(x, ...)
 
 \item{\dots}{further arguments}
 
-\item{type}{the weighting scheme used, one of \code{"HC0"},
-\code{"sss"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"},
-\code{"HC4"}, see Details,}
+\item{type}{the weighting scheme used, one of \code{"HC0"}, \code{"sss"},
+\code{"HC1"}, \code{"HC2"}, \code{"HC3"}, \code{"HC4"}, see Details,}
 }
 \value{
-An object of class \code{"matrix"} containing the estimate
-of the covariance matrix of coefficients.
+An object of class \code{"matrix"} containing the estimate of
+the covariance matrix of coefficients.
 }
 \description{
-High-level convenience wrapper for double-clustering robust covariance
-matrix estimators \emph{a la} Thompson (2011) and Cameron, Gelbach and
-Miller (2011) for panel models.
+High-level convenience wrapper for double-clustering robust
+covariance matrix estimators \emph{a la}
+\insertCite{THOM:11;textual}{plm} and
+\insertCite{CAME:GELB:MILL:11;textual}{plm} for panel models.
 }
 \details{
 \code{vcovDC} is a function for estimating a robust covariance matrix of
@@ -35,20 +35,20 @@ The function is a convenience wrapper simply summing a group- and a
 time-clustered covariance matrix and subtracting a diagonal one \emph{a la}
 White.
 
-Weighting schemes specified by \code{type} are analogous to those
-in \code{\link[sandwich]{vcovHC}} in package \CRANpkg{sandwich} and
-are justified theoretically (although in the context of the
-standard linear model) by MacKinnon and White (1985) and
-Cribari-Neto (2004) (see Zeileis (2004)).
+Weighting schemes specified by \code{type} are analogous to those in
+\code{\link[sandwich]{vcovHC}} in package \CRANpkg{sandwich} and are
+justified theoretically (although in the context of the standard
+linear model) by \insertCite{MACK:WHIT:85;textual}{plm} and
+\insertCite{CRIB:04;textual}{plm} \insertCite{@see @ZEIL:04}{plm}.
 
-The main use of \code{vcovDC} is to be an argument to other
-functions, e.g.  for Wald-type testing: argument \code{vcov.} to
-\code{coeftest()}, argument \code{vcov} to \code{waldtest()} and
-other methods in the \CRANpkg{lmtest} package; and argument
-\code{vcov.} to \code{linearHypothesis()} in the \CRANpkg{car}
-package (see the examples). Notice that the \code{vcov} and
-\code{vcov.} arguments allow to supply a function (which is the
-safest) or a matrix (see Zeileis (2004), 4.1-2 and examples below).
+The main use of \code{vcovDC} is to be an argument to other functions,
+e.g.  for Wald-type testing: argument \code{vcov.} to \code{coeftest()},
+argument \code{vcov} to \code{waldtest()} and other methods in the
+\CRANpkg{lmtest} package; and argument \code{vcov.} to
+\code{linearHypothesis()} in the \CRANpkg{car} package (see the
+examples). Notice that the \code{vcov} and \code{vcov.} arguments allow to
+supply a function (which is the safest) or a matrix
+\insertCite{@see @ZEIL:04, 4.1-2 and examples below}{plm}.
 }
 \examples{
 

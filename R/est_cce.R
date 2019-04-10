@@ -23,47 +23,49 @@
 #tss <- plm:::tss
 
 
-
-
 #' Common Correlated Effects estimators
 #' 
-#' Common Correlated Effects Mean Groups (CCEMG) and Pooled (CCEP) estimators
-#' for panel data with common factors (balanced or unbalanced)
+#' Common Correlated Effects Mean Groups (CCEMG) and Pooled (CCEP)
+#' estimators for panel data with common factors (balanced or
+#' unbalanced)
 #' 
-#' \code{pcce} is a function for the estimation of linear panel models by the
-#' Common Correlated Effects Mean Groups or Pooled estimator, consistent under
-#' the hypothesis of unobserved common factors and idiosyncratic factor
-#' loadings. The CCE estimator works by augmenting the model by cross-sectional
-#' averages of the dependent variable and regressors in order to account for
-#' the common factors, and adding individual intercepts and possibly trends.
+#' `pcce` is a function for the estimation of linear panel models by
+#' the Common Correlated Effects Mean Groups or Pooled estimator,
+#' consistent under the hypothesis of unobserved common factors and
+#' idiosyncratic factor loadings. The CCE estimator works by
+#' augmenting the model by cross-sectional averages of the dependent
+#' variable and regressors in order to account for the common factors,
+#' and adding individual intercepts and possibly trends.
 #' 
 #' @aliases pcce
 #' @param formula a symbolic description of the model to be estimated,
-#' @param object,x an object of class \code{"pcce"},
-#' @param data a \code{data.frame},
-#' @param subset see \code{lm},
-#' @param na.action see \code{lm},
-#' @param model one of \code{"mg"}, \code{"p"}, selects Mean Groups vs. Pooled
-#' CCE model,
-#' @param index the indexes, see \code{\link{pdata.frame}},
-#' @param trend logical specifying whether an individual-specific trend has to
-#' be included,
+#' @param object,x an object of class `"pcce"`,
+#' @param data a `data.frame`,
+#' @param subset see `lm`,
+#' @param na.action see `lm`,
+#' @param model one of `"mg"`, `"p"`, selects Mean Groups vs. Pooled
+#'     CCE model,
+#' @param index the indexes, see [pdata.frame()],
+#' @param trend logical specifying whether an individual-specific
+#'     trend has to be included,
 #' @param digits digits,
 #' @param width the maximum length of the lines in the print output,
 #' @param type one of `"defactored"` or `"standard"`,
 #' @param \dots further arguments.
-#' @return An object of class \code{c("pcce", "panelmodel")} containing:
-#' \item{coefficients}{the vector of coefficients,} \item{residuals}{the vector
-#' of (defactored) residuals,} \item{stdres}{the vector of (raw) residuals,}
-#' \item{tr.model}{the transformed data after projection on H,}
-#' \item{fitted.values}{the vector of fitted values,} \item{vcov}{the
-#' covariance matrix of the coefficients,} \item{df.residual}{degrees of
-#' freedom of the residuals,} \item{model}{a data.frame containing the
-#' variables used for the estimation,} \item{call}{the call,}
-#' \item{sigma}{always \code{NULL}, \code{sigma} is here only for compatibility
-#' reasons (to allow using the same \code{summary} and \code{print} methods as
-#' \code{pggls}),} \item{indcoef}{the matrix of individual coefficients from
-#' separate time series regressions.}
+#' @return An object of class `c("pcce", "panelmodel")` containing:
+#'     \item{coefficients}{the vector of coefficients,}
+#'     \item{residuals}{the vector of (defactored) residuals,}
+#'     \item{stdres}{the vector of (raw) residuals,}
+#'     \item{tr.model}{the transformed data after projection on H,}
+#'     \item{fitted.values}{the vector of fitted values,}
+#'     \item{vcov}{the covariance matrix of the coefficients,}
+#'     \item{df.residual}{degrees of freedom of the residuals,}
+#'     \item{model}{a data.frame containing the variables used for the
+#'     estimation,} \item{call}{the call,} \item{sigma}{always `NULL`,
+#'     `sigma` is here only for compatibility reasons (to allow using
+#'     the same `summary` and `print` methods as `pggls`),}
+#'     \item{indcoef}{the matrix of individual coefficients from
+#'     separate time series regressions.}
 #' @export
 #' @importFrom MASS ginv
 #' @author Giovanni Millo

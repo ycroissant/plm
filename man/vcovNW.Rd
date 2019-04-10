@@ -3,7 +3,8 @@
 \name{vcovNW}
 \alias{vcovNW}
 \alias{vcovNW.plm}
-\title{Newey and West (1987) Robust Covariance Matrix Estimator}
+\title{\insertCite{NEWE:WEST:87;textual}{plm} Robust Covariance Matrix
+Estimator}
 \usage{
 vcovNW(x, ...)
 
@@ -15,43 +16,43 @@ vcovNW(x, ...)
 
 \item{\dots}{further arguments}
 
-\item{type}{the weighting scheme used, one of \code{"HC0"},
-\code{"sss"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"},
-\code{"HC4"}, see Details,}
+\item{type}{the weighting scheme used, one of \code{"HC0"}, \code{"sss"},
+\code{"HC1"}, \code{"HC2"}, \code{"HC3"}, \code{"HC4"}, see Details,}
 
-\item{maxlag}{either \code{NULL} or a positive integer specifying
-the maximum lag order before truncation}
+\item{maxlag}{either \code{NULL} or a positive integer specifying the
+maximum lag order before truncation}
 
 \item{wj}{weighting function to be applied to lagged terms,}
 }
 \value{
-An object of class \code{"matrix"} containing the estimate
-of the covariance matrix of coefficients.
+An object of class \code{"matrix"} containing the estimate of
+the covariance matrix of coefficients.
 }
 \description{
-Nonparametric robust covariance matrix estimators \emph{a la Newey and West}
-for panel models with serial correlation.
+Nonparametric robust covariance matrix estimators \emph{a la Newey
+and West} for panel models with serial correlation.
 }
 \details{
 \code{vcovNW} is a function for estimating a robust covariance matrix of
-parameters for a panel model according to the Newey and West (1987) method.
-The function works as a restriction of the Driscoll and Kraay (1998)
-covariance (see \code{\link{vcovSCC}}) to no cross--sectional correlation.
+parameters for a panel model according to the
+\insertCite{NEWE:WEST:87;textual}{plm} method.  The function works
+as a restriction of the \insertCite{DRIS:KRAA:98;textual}{plm} covariance (see
+\code{\link[=vcovSCC]{vcovSCC()}}) to no cross--sectional correlation.
 
 Weighting schemes specified by \code{type} are analogous to those in
-\code{\link[sandwich]{vcovHC}} in package \CRANpkg{sandwich}
-and are justified theoretically (although in the context of the standard
-linear model) by MacKinnon and White (1985) and Cribari-Neto (2004) (see
-Zeileis (2004)).
+\code{\link[sandwich]{vcovHC}} in package \CRANpkg{sandwich} and are
+justified theoretically (although in the context of the standard
+linear model) by \insertCite{MACK:WHIT:85;textual}{plm} and
+\insertCite{CRIB:04;textual}{plm} \insertCite{@see @ZEIL:04}{plm}.
 
-The main use of \code{vcovNW} is to be an argument to other
-functions, e.g.  for Wald--type testing: argument \code{vcov.} to
-\code{coeftest()}, argument \code{vcov} to \code{waldtest()} and
-other methods in the \CRANpkg{lmtest} package; and argument
-\code{vcov.} to \code{linearHypothesis()} in the \CRANpkg{car}
-package (see the examples). Notice that the \code{vcov} and
-\code{vcov.} arguments allow to supply a function (which is the
-safest) or a matrix (see Zeileis (2004), 4.1-2 and examples below).
+The main use of \code{vcovNW} is to be an argument to other functions,
+e.g.  for Wald--type testing: argument \code{vcov.} to \code{coeftest()},
+argument \code{vcov} to \code{waldtest()} and other methods in the
+\CRANpkg{lmtest} package; and argument \code{vcov.} to
+\code{linearHypothesis()} in the \CRANpkg{car} package (see the
+examples). Notice that the \code{vcov} and \code{vcov.} arguments allow to
+supply a function (which is the safest) or a matrix
+\insertCite{@see @ZEIL:04, 4.1-2 and examples below}{plm}.
 }
 \examples{
 

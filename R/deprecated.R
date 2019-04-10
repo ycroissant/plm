@@ -1,19 +1,19 @@
 #' Deprecated functions of plm
 #' 
-#' \code{dynformula}, \code{pht}, \code{plm.data}, and \code{pvcovHC} are
+#' `dynformula`, `pht`, `plm.data`, and `pvcovHC` are
 #' deprecated functions which could be removed from \pkg{plm} in a near future.
 #' 
-#' \code{dynformula} was used to construct a dynamic formula which was the
-#' first argument of \code{pgmm}. \code{pgmm} uses now multi-part formulas.
+#' `dynformula` was used to construct a dynamic formula which was the
+#' first argument of `pgmm`. `pgmm` uses now multi-part formulas.
 #' 
-#' \code{pht} estimates the Hausman-Taylor model, which can now be estimated
-#' using the more general \code{plm} function.
+#' `pht` estimates the Hausman-Taylor model, which can now be estimated
+#' using the more general `plm` function.
 #' 
-#' \code{plm.data} is replaced by \code{pdata.frame}.
+#' `plm.data` is replaced by `pdata.frame`.
 #' 
-#' \code{pvcovHV} is replaced by \code{vcovHC}.
+#' `pvcovHV` is replaced by `vcovHC`.
 #'
-#' \code{detect_lin_dep} is replaced by \code{detect.lindep}.
+#' `detect_lin_dep` is replaced by `detect.lindep`.
 #' 
 #' @name plm-deprecated
 #' @param formula a formula,
@@ -23,8 +23,8 @@
 #' variables should be differenced,
 #' @param log.form a vector (or a list) of logical values indicating whether
 #' variables should be in logarithms.
-#' @param object,x an object of class \code{"plm"},
-#' @param data a \code{data.frame},
+#' @param object,x an object of class `"plm"`,
+#' @param data a `data.frame`,
 #' @param \dots further arguments.
 #' @param indexes a vector (of length one or two) indicating the (individual
 #' and time) indexes (see Details);
@@ -127,40 +127,40 @@ lev2var <- function(x, ...){
 #' The Hausman--Taylor estimator is an instrumental variable estimator without
 #' external instruments (function deprecated).
 #' 
-#' \code{pht} estimates panels models using the Hausman--Taylor estimator,
+#' `pht` estimates panels models using the Hausman--Taylor estimator,
 #' Amemiya--MaCurdy estimator, or Breusch--Mizon--Schmidt estimator, depending
-#' on the argument \code{model}. The model is specified as a two--part formula,
+#' on the argument `model`. The model is specified as a two--part formula,
 #' the second part containing the exogenous variables.
 #' 
 #' @aliases pht
 #' @param formula a symbolic description for the model to be
 #'     estimated,
-#' @param object,x an object of class \code{"plm"},
-#' @param data a \code{data.frame},
-#' @param subset see \code{\link{lm}} for \code{"plm"}, a character or
+#' @param object,x an object of class `"plm"`,
+#' @param data a `data.frame`,
+#' @param subset see [lm()] for `"plm"`, a character or
 #'     numeric vector indicating a subset of the table of coefficient
-#'     to be printed for \code{"print.summary.plm"},
-#' @param na.action see \code{\link{lm}},
-#' @param model one of \code{"ht"} for Hausman--Taylor, \code{"am"}
-#'     for Amemiya--MaCurdy and \code{"bms"} for
+#'     to be printed for `"print.summary.plm"`,
+#' @param na.action see [lm()],
+#' @param model one of `"ht"` for Hausman--Taylor, `"am"`
+#'     for Amemiya--MaCurdy and `"bms"` for
 #'     Breusch--Mizon--Schmidt,
 #' @param index the indexes,
 #' @param digits digits,
 #' @param width the maximum length of the lines in the print output,
 #' @param \dots further arguments.
-#' @return An object of class \code{c("pht", "plm", "panelmodel")}.
+#' @return An object of class `c("pht", "plm", "panelmodel")`.
 #' 
-#' A \code{"pht"} object contains the same elements as \code{plm}
-#' object, with a further argument called \code{varlist} which
-#' describes the typology of the variables. It has \code{summary} and
-#' \code{print.summary} methods.
-#' @note The function \code{pht} is deprecated. Please use function
-#'     \code{plm} to estimate Taylor--Hausman models like this with a
+#' A `"pht"` object contains the same elements as `plm`
+#' object, with a further argument called `varlist` which
+#' describes the typology of the variables. It has `summary` and
+#' `print.summary` methods.
+#' @note The function `pht` is deprecated. Please use function
+#'     `plm` to estimate Taylor--Hausman models like this with a
 #'     three-part formula as shown in the example:\cr
 #'     \code{plm(<formula>, random.method = "ht", model = "random",
 #'     inst.method = "baltagi")}. The Amemiya--MaCurdy estimator and
 #'     the Breusch--Mizon--Schmidt estimator is computed likewise with
-#'     \code{plm}.
+#'     `plm`.
 #' @export
 #' @author Yves Croissant
 #' @references

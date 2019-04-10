@@ -22,17 +22,16 @@ pggls(formula, data, subset, na.action, effect = c("individual", "time"),
 
 \item{data}{a \code{data.frame},}
 
-\item{subset}{see \code{\link{lm}},}
+\item{subset}{see \code{\link[=lm]{lm()}},}
 
-\item{na.action}{see \code{\link{lm}},}
+\item{na.action}{see \code{\link[=lm]{lm()}},}
 
 \item{effect}{the effects introduced in the model, one of
 \code{"individual"} or \code{"time"},}
 
-\item{model}{one of \code{"within"}, \code{"pooling"},
-\code{"random"} or \code{"fd"},}
+\item{model}{one of \code{"within"}, \code{"pooling"}, \code{"random"} or \code{"fd"},}
 
-\item{index}{the indexes, see \code{\link{pdata.frame}},}
+\item{index}{the indexes, see \code{\link[=pdata.frame]{pdata.frame()}},}
 
 \item{\dots}{further arguments.}
 
@@ -43,44 +42,44 @@ pggls(formula, data, subset, na.action, effect = c("individual", "time"),
 \item{width}{the maximum length of the lines in the print output,}
 }
 \value{
-An object of class \code{c("pggls","panelmodel")}
-containing: \item{coefficients}{the vector of coefficients,}
+An object of class \code{c("pggls","panelmodel")} containing:
+\item{coefficients}{the vector of coefficients,}
 \item{residuals}{the vector of residuals,}
 \item{fitted.values}{the vector of fitted values,}
 \item{vcov}{the covariance matrix of the coefficients,}
 \item{df.residual}{degrees of freedom of the residuals,}
 \item{model}{a data.frame containing the variables used for the
-estimation,} \item{call}{the call,} \item{sigma}{the estimated
-intragroup (or cross-sectional, if \code{effect = "time"})
-covariance of errors,}
+estimation,}
+\item{call}{the call,}
+\item{sigma}{the estimated intragroup (or cross-sectional, if
+\code{effect = "time"}) covariance of errors,}
 }
 \description{
 General FGLS estimators for panel data (balanced or unbalanced)
 }
 \details{
-\code{pggls} is a function for the estimation of linear panel
-models by general feasible generalized least squares, either with
-or without fixed effects. General FGLS is based on a two-step
-estimation process: first a model is estimated by OLS (\code{model
-= "pooling"}), fixed effects (\code{model = "within"}) or first
+\code{pggls} is a function for the estimation of linear panel models by
+general feasible generalized least squares, either with or without
+fixed effects. General FGLS is based on a two-step estimation
+process: first a model is estimated by OLS (\code{model =
+"pooling"}), fixed effects (\code{model = "within"}) or first
 differences (\code{model = "fd"}), then its residuals are used to
 estimate an error covariance matrix for use in a feasible-GLS
 analysis. This framework allows the error covariance structure
-inside every group (if \code{effect = "individual"}, else
-symmetric) of observations to be fully unrestricted and is
-therefore robust against any type of intragroup heteroskedasticity
-and serial correlation. Conversely, this structure is assumed
-identical across groups and thus general FGLS estimation is
-inefficient under groupwise heteroskedasticity. Note also that this
-method requires estimation of \eqn{T(T+1)/2} variance parameters,
-thus efficiency requires N >> T (if \code{effect = "individual"},
-else the opposite). Setting \code{model = "random"} or \code{model
-= "pooling"}, both produce an unrestricted FGLS model as in
-Wooldridge, Ch. 10.5, although the former is deprecated and
-included only for retro--compatibility reasons. If \code{model =
-"within"} (the default) then a FEGLS (fixed effects GLS, see ibid.)
-is estimated; if \code{model = "fd"} a FDGLS (first-difference
-GLS).
+inside every group (if \code{effect = "individual"}, else symmetric) of
+observations to be fully unrestricted and is therefore robust
+against any type of intragroup heteroskedasticity and serial
+correlation. Conversely, this structure is assumed identical across
+groups and thus general FGLS estimation is inefficient under
+groupwise heteroskedasticity. Note also that this method requires
+estimation of \eqn{T(T+1)/2} variance parameters, thus efficiency
+requires N >> T (if \code{effect = "individual"}, else the
+opposite). Setting \code{model = "random"} or \code{model = "pooling"},
+both produce an unrestricted FGLS model as in Wooldridge, Ch. 10.5,
+although the former is deprecated and included only for
+retro--compatibility reasons. If \code{model = "within"} (the
+default) then a FEGLS (fixed effects GLS, see ibid.)  is estimated;
+if \code{model = "fd"} a FDGLS (first-difference GLS).
 }
 \examples{
 

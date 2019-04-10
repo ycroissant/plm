@@ -3,7 +3,8 @@
 \name{vcovSCC}
 \alias{vcovSCC}
 \alias{vcovSCC.plm}
-\title{Driscoll and Kraay (1998) Robust Covariance Matrix Estimator}
+\title{\insertCite{DRIS:KRAA:98;textual}{plm} Robust Covariance Matrix
+Estimator}
 \usage{
 vcovSCC(x, ...)
 
@@ -16,24 +17,23 @@ vcovSCC(x, ...)
 
 \item{\dots}{further arguments}
 
-\item{type}{the weighting scheme used, one of \code{"HC0"},
-\code{"sss"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"},
-\code{"HC4"}, see Details,}
+\item{type}{the weighting scheme used, one of \code{"HC0"}, \code{"sss"},
+\code{"HC1"}, \code{"HC2"}, \code{"HC3"}, \code{"HC4"}, see Details,}
 
 \item{cluster}{switch for vcovG; set at \code{"time"} here,}
 
-\item{maxlag}{either \code{NULL} or a positive integer specifying
-the maximum lag order before truncation}
+\item{maxlag}{either \code{NULL} or a positive integer specifying the
+maximum lag order before truncation}
 
 \item{inner}{the function to be applied to the residuals inside the
-sandwich: \code{"cluster"} for SCC, \code{"white"} for
-Newey-West, (\code{"diagavg"} for compatibility reasons)}
+sandwich: \code{"cluster"} for SCC, \code{"white"} for Newey-West,
+(\code{"diagavg"} for compatibility reasons)}
 
 \item{wj}{weighting function to be applied to lagged terms,}
 }
 \value{
-An object of class \code{"matrix"} containing the estimate
-of the covariance matrix of coefficients.
+An object of class \code{"matrix"} containing the estimate of
+the covariance matrix of coefficients.
 }
 \description{
 Nonparametric robust covariance matrix estimators \emph{a la
@@ -41,27 +41,27 @@ Driscoll and Kraay} for panel models with cross-sectional
 \emph{and} serial correlation.
 }
 \details{
-\code{vcovSCC} is a function for estimating a robust covariance
-matrix of parameters for a panel model according to the Driscoll
-and Kraay (1998) method, which is consistent with cross--sectional
-and serial correlation in a T-asymptotic setting and irrespective
-of the N dimension. The use with random effects models is
-undocumented.
+\code{vcovSCC} is a function for estimating a robust covariance matrix
+of parameters for a panel model according to the
+\insertCite{DRIS:KRAA:98;textual}{plm} method, which is consistent
+with cross--sectional and serial correlation in a T-asymptotic
+setting and irrespective of the N dimension. The use with random
+effects models is undocumented.
 
-Weighting schemes specified by \code{type} are analogous to those
-in \code{\link[sandwich]{vcovHC}} in package \CRANpkg{sandwich} and
-are justified theoretically (although in the context of the
-standard linear model) by MacKinnon and White (1985) and
-Cribari-Neto (2004) (see Zeileis (2004)).
+Weighting schemes specified by \code{type} are analogous to those in
+\code{\link[sandwich]{vcovHC}} in package \CRANpkg{sandwich} and are
+justified theoretically (although in the context of the standard
+linear model) by \insertCite{MACK:WHIT:85;textual}{plm} and
+\insertCite{CRIB:04;textual}{plm} \insertCite{@see @ZEIL:04}{plm}).
 
-The main use of \code{vcovSCC} is to be an argument to other
-functions, e.g.  for Wald--type testing: argument \code{vcov.} to
-\code{coeftest()}, argument \code{vcov} to \code{waldtest()} and
-other methods in the \CRANpkg{lmtest} package; and argument
-\code{vcov.} to \code{linearHypothesis()} in the \CRANpkg{car}
-package (see the examples). Notice that the \code{vcov} and
-\code{vcov.} arguments allow to supply a function (which is the
-safest) or a matrix (see Zeileis (2004), 4.1-2 and examples below).
+The main use of \code{vcovSCC} is to be an argument to other functions,
+e.g.  for Wald--type testing: argument \code{vcov.} to \code{coeftest()},
+argument \code{vcov} to \code{waldtest()} and other methods in the
+\CRANpkg{lmtest} package; and argument \code{vcov.} to
+\code{linearHypothesis()} in the \CRANpkg{car} package (see the
+examples). Notice that the \code{vcov} and \code{vcov.} arguments allow to
+supply a function (which is the safest) or a matrix
+\insertCite{@see @ZEIL:04, 4.1-2 and examples below}{plm}.
 }
 \examples{
 
@@ -82,9 +82,7 @@ linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovSCC)
 
 }
 \references{
-Cribari-Neto, F. (2004) Asymptotic inference under
-heteroskedasticity of unknown form. \emph{Computational
-Statistics & Data Analysis} \bold{45(2)}, pp. 215--233.
+\insertRef{CRIB:04}{plm}
 
 \insertRef{DRIS:KRAA:98}{plm}
 

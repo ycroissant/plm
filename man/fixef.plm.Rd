@@ -19,65 +19,60 @@
   width = getOption("width"), ...)
 }
 \arguments{
-\item{effect}{one of \code{"individual"} or \code{"time"}, only
-relevant in case of two--ways effects models,}
+\item{effect}{one of \code{"individual"} or \code{"time"}, only relevant in
+case of two--ways effects models,}
 
-\item{type}{one of \code{"level"}, \code{"dfirst"}, or
-\code{"dmean"},}
+\item{type}{one of \code{"level"}, \code{"dfirst"}, or \code{"dmean"},}
 
 \item{vcov}{a variance--covariance matrix furnished by the user or
-a function to calculate one (see \bold{Examples}),}
+a function to calculate one (see \strong{Examples}),}
 
 \item{\dots}{further arguments.}
 
 \item{x, object}{an object of class \code{"plm"}, an object of class
-\code{"fixef"} for the \code{print} and the \code{summary}
-method,}
+\code{"fixef"} for the \code{print} and the \code{summary} method,}
 
 \item{digits}{digits,}
 
 \item{width}{the maximum length of the lines in the print output,}
 }
 \value{
-For function \code{fixef} an object of class
-\code{c("fixef", "numeric")} is returned:\cr It is a numeric
-vector containing the fixed effects with attribute \code{se}
-which contains the standard errors. There are two further
-attributes: attribute \code{type} contains the chosen type (the
-value of argument \code{type} as a character); attribute
-\code{df.residual} holds the residual degrees of freedom
-(integer) from the fixed effects model (plm object) on which
-\code{fixef} was run.
+For function \code{fixef} an object of class \code{c("fixef", "numeric")} is returned:\cr It is a numeric vector containing
+the fixed effects with attribute \code{se} which contains the
+standard errors. There are two further attributes: attribute
+\code{type} contains the chosen type (the value of argument \code{type}
+as a character); attribute \code{df.residual} holds the residual
+degrees of freedom (integer) from the fixed effects model (plm
+object) on which \code{fixef} was run.
 
-For function \code{summary.fixef} an object of class
-\code{c("summary.fixef", "matrix")} is returned:\cr It is a matrix
-with four columns in this order: the estimated fixed effects, their
-standard errors and associated t--values and p--values.  The type
-of the fixed effects and the standard errors in the summary.fixef
-objects correspond to was requested in the \code{fixef} function by
-arguments \code{type} and \code{vcov}, respectively.
+For function \code{summary.fixef} an object of class \code{c("summary.fixef", "matrix")} is returned:\cr It is a matrix with four columns in this
+order: the estimated fixed effects, their standard errors and
+associated t--values and p--values.  The type of the fixed effects
+and the standard errors in the summary.fixef objects correspond to
+was requested in the \code{fixef} function by arguments \code{type} and
+\code{vcov}, respectively.
 }
 \description{
 Function to extract the fixed effects from a \code{plm} object and
 associated summary method.
 }
 \details{
-Function \code{fixef} calculates the fixed effects and returns an
-object of class \code{c("fixef", "numeric")}. By setting the
-\code{type} argument, the fixed effects may be returned in levels
-(\code{"level"}), as deviations from the first value of the index
-(\code{"dfirst"}), or as deviations from the overall mean
-(\code{"dmean"}). If the argument \code{vcov} was specified, the
-standard errors (stored as attribute "se" in the return value) are
-the respective robust standard errors.
+Function \code{fixef} calculates the fixed effects and returns an object
+of class \code{c("fixef", "numeric")}. By setting the \code{type} argument,
+the fixed effects may be returned in levels (\code{"level"}), as
+deviations from the first value of the index (\code{"dfirst"}), or as
+deviations from the overall mean (\code{"dmean"}). If the argument
+\code{vcov} was specified, the standard errors (stored as attribute "se"
+in the return value) are the respective robust standard errors.
 
-The associated \code{summary} method returns an extended object of
-class \code{c("summary.fixef", "matrix")} with more information
-(see sections \bold{Value} and \bold{Examples}).
+The associated \code{summary} method returns an extended object of class
+\code{c("summary.fixef", "matrix")} with more information (see sections
+\bold{Value} and \bold{Examples}).
 
 References with formulae (except for the two-ways unbalanced case)
-are, e.g., Greene (2012), Ch. 11.4.4, p. 364, formulae (11-25);
-Wooldridge (2010), Ch. 10.5.3, pp. 308-309, formula (10.58).
+are, e.g., \insertCite{GREE:12;textual}{plm}, Ch. 11.4.4, p. 364,
+formulae (11-25); \insertCite{WOOL:10;textual}{plm}, Ch. 10.5.3,
+pp. 308-309, formula (10.58).
 }
 \examples{
 
@@ -112,18 +107,14 @@ fitted_by_hand <- fixefs + gi$coefficients["value"] * gi$model$value +
 
 }
 \references{
-\insertRef{GREE:12}{plm}
-Ch. 11.4.4.
-
-\insertRef{WOOL:10}{plm}
-Ch. 10.5.3.
+\insertAllCited{}
 }
 \seealso{
-\code{\link{within_intercept}} for the overall intercept
-of fixed effect models along its standard error,
-\code{\link{plm}} for plm objects and within models (= fixed
-effects models) in general. See \code{\link{ranef}} to extract
-the random effects from a random effects model.
+\code{\link[=within_intercept]{within_intercept()}} for the overall intercept of fixed
+effect models along its standard error, \code{\link[=plm]{plm()}} for plm objects
+and within models (= fixed effects models) in general. See
+\code{\link[=ranef]{ranef()}} to extract the random effects from a random effects
+model.
 }
 \author{
 Yves Croissant

@@ -32,8 +32,8 @@ A Chow test for the poolability of the data.
 \details{
 \code{pooltest} is a \emph{F} test of stability (or Chow test) for the
 coefficients of a panel model. For argument \code{x}, the estimated
-\code{plm} object should be a \code{"pooling"} model or a \code{"within"}
-model (the default); intercepts are assumed to be identical in the first
+\code{plm} object should be a \code{"pooling"} model or a \code{"within"} model
+(the default); intercepts are assumed to be identical in the first
 case and different in the second case.
 }
 \examples{

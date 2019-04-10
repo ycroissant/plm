@@ -15,12 +15,11 @@ pbnftest(x, ...)
   model = c("pooling", "within", "random"), ...)
 }
 \arguments{
-\item{x}{an object of class \code{"panelmodel"} or of class
-\code{"formula"},}
+\item{x}{an object of class \code{"panelmodel"} or of class \code{"formula"},}
 
-\item{\dots}{only relevant for formula interface: further arguments to
-specify the model to test (arguments passed on to plm()), e.g.
-\code{effect}.}
+\item{\dots}{only relevant for formula interface: further arguments
+to specify the model to test (arguments passed on to plm()),
+e.g.  \code{effect}.}
 
 \item{test}{a character indicating the test to be performed, either
 \code{"bnf"} or \code{"lbi"} for the (modified) BNF statistic or
@@ -28,9 +27,9 @@ Baltagi--Wu's LBI statistic, respectively,}
 
 \item{data}{a \code{data.frame} (only relevant for formula interface),}
 
-\item{model}{a character indicating on which type of model the test shall be
-performed (\code{"pooling"}, \code{"within"}, \code{"random"}, only relevant
-for formula interface),}
+\item{model}{a character indicating on which type of model the test
+shall be performed (\code{"pooling"}, \code{"within"}, \code{"random"}, only
+relevant for formula interface),}
 }
 \value{
 An object of class \code{"htest"}.
@@ -39,28 +38,30 @@ An object of class \code{"htest"}.
 Tests for AR(1) disturbances in panel models.
 }
 \details{
-The default, \code{test = "bnf"}, gives the (modified) BNF statistic, the
-generalised Durbin-Watson statistic for panels. For balanced and consecutive
-panels, the reference is Bhargava/Franzini/Narendranathan (1982). The
-modified BNF is given for unbalanced and/or non-consecutive panels (d1 in
-formula 16 of Baltagi/Wu (1999)).
+The default, \code{test = "bnf"}, gives the (modified) BNF statistic,
+the generalised Durbin-Watson statistic for panels. For balanced
+and consecutive panels, the reference is
+Bhargava/Franzini/Narendranathan (1982). The modified BNF is given
+for unbalanced and/or non-consecutive panels (d1 in formula 16 of
+\insertCite{BALT:WU:99;textual}{plm}).
 
-\code{test = "lbi"} yields Baltagi--Wu's LBI statistic (Baltagi/Wu (1999)),
-the locally best invariant test which is based on the modified BNF
-statistic.
+\code{test = "lbi"} yields Baltagi--Wu's LBI statistic
+\insertCite{BALT:WU:99}{plm}, the locally best invariant test which
+is based on the modified BNF statistic.
 
 No specific variants of these tests are available for random effect models.
 As the within estimator is consistent also under the random effects
 assumptions, the test for random effect models is performed by taking the
 within residuals.
 
-No p-values are given for the statistics as their distribution is quite
-difficult. Bhargava et al. (1982) supply tabulated bounds for p = 0.05 for
-the balanced case and consecutive case.
+No p-values are given for the statistics as their distribution is
+quite difficult. \insertCite{BHAR:FRAN:NARE:82;textual}{plm} supply
+tabulated bounds for p = 0.05 for the balanced case and consecutive
+case.
 
-For large N, Bhargava et al. (1982) suggest it is sufficient to check
-whether the BNF statistic is < 2 to test against positive serial
-correlation.
+For large N, \insertCite{BHAR:FRAN:NARE:82}{plm} suggest it is
+sufficient to check whether the BNF statistic is < 2 to test
+against positive serial correlation.
 }
 \examples{
 
@@ -85,11 +86,11 @@ pbnftest(re, test = "lbi")
 \insertRef{BHAR:FRAN:NARE:82}{plm}
 }
 \seealso{
-\code{\link{pdwtest}} for the original Durbin--Watson test using
-(quasi-)demeaned residuals of the panel model without taking the panel
-structure into account. \code{\link{pbltest}}, \code{\link{pbsytest}},
-\code{\link{pwartest}} and \code{\link{pwfdtest}} for other serial
-correlation tests for panel models.
+\code{\link[=pdwtest]{pdwtest()}} for the original Durbin--Watson test using
+(quasi-)demeaned residuals of the panel model without taking
+the panel structure into account. \code{\link[=pbltest]{pbltest()}}, \code{\link[=pbsytest]{pbsytest()}},
+\code{\link[=pwartest]{pwartest()}} and \code{\link[=pwfdtest]{pwfdtest()}} for other serial correlation
+tests for panel models.
 }
 \author{
 Kevin Tappe

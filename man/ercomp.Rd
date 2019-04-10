@@ -27,11 +27,11 @@ ercomp(object, ...)
 
 \item{\dots}{further arguments.}
 
-\item{effect}{the effects introduced in the model, see
-\code{\link{plm}} for details,}
+\item{effect}{the effects introduced in the model, see \code{\link[=plm]{plm()}} for
+details,}
 
 \item{method}{method of estimation for the variance components, see
-\code{\link{plm}} for details,}
+\code{\link[=plm]{plm()}} for details,}
 
 \item{models}{the models used to estimate the variance components
 (an alternative to the previous argument),}
@@ -48,15 +48,15 @@ of freedom should be used,}
 \item{digits}{digits,}
 }
 \value{
-An object of class \code{"ercomp"}: a list containing
-\itemize{ \item \code{sigma2} a named numeric with estimates of
-the variance components, \item \code{theta} contains the
-parameter(s) used for the transformation of the variables: For
-a one-way model, a numeric corresponding to the selected effect
-(individual or time); for a two-ways model a list of length 3
-with the parameters. In case of a balanced model, the numeric
-has length 1 while for an unbalanced model, the numerics'
-length equal the number of observations. }
+An object of class \code{"ercomp"}: a list containing \itemize{
+\item \code{sigma2} a named numeric with estimates of the variance
+components, \item \code{theta} contains the parameter(s) used for
+the transformation of the variables: For a one-way model, a
+numeric corresponding to the selected effect (individual or
+time); for a two-ways model a list of length 3 with the
+parameters. In case of a balanced model, the numeric has length
+1 while for an unbalanced model, the numerics' length equal the
+number of observations. }
 }
 \description{
 This function enables the estimation of the variance components of a panel
@@ -88,8 +88,8 @@ ercomp(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc,
 \insertRef{WALL:HUSS:69}{plm}
 }
 \seealso{
-\code{\link{plm}} where the estimates of the variance
-components are used if a random effects model is estimated
+\code{\link[=plm]{plm()}} where the estimates of the variance components are
+used if a random effects model is estimated
 }
 \author{
 Yves Croissant

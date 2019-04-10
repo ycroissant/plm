@@ -9,70 +9,63 @@
 
 #' Extract the Fixed Effects
 #' 
-#' Function to extract the fixed effects from a \code{plm} object and
+#' Function to extract the fixed effects from a `plm` object and
 #' associated summary method.
 #' 
-#' Function \code{fixef} calculates the fixed effects and returns an
-#' object of class \code{c("fixef", "numeric")}. By setting the
-#' \code{type} argument, the fixed effects may be returned in levels
-#' (\code{"level"}), as deviations from the first value of the index
-#' (\code{"dfirst"}), or as deviations from the overall mean
-#' (\code{"dmean"}). If the argument \code{vcov} was specified, the
-#' standard errors (stored as attribute "se" in the return value) are
-#' the respective robust standard errors.
+#' Function `fixef` calculates the fixed effects and returns an object
+#' of class `c("fixef", "numeric")`. By setting the `type` argument,
+#' the fixed effects may be returned in levels (`"level"`), as
+#' deviations from the first value of the index (`"dfirst"`), or as
+#' deviations from the overall mean (`"dmean"`). If the argument
+#' `vcov` was specified, the standard errors (stored as attribute "se"
+#' in the return value) are the respective robust standard errors.
 #' 
-#' The associated \code{summary} method returns an extended object of
-#' class \code{c("summary.fixef", "matrix")} with more information
-#' (see sections \bold{Value} and \bold{Examples}).
+#' The associated `summary` method returns an extended object of class
+#' `c("summary.fixef", "matrix")` with more information (see sections
+#' \bold{Value} and \bold{Examples}).
 #' 
 #' References with formulae (except for the two-ways unbalanced case)
-#' are, e.g., Greene (2012), Ch. 11.4.4, p. 364, formulae (11-25);
-#' Wooldridge (2010), Ch. 10.5.3, pp. 308-309, formula (10.58).
+#' are, e.g., \insertCite{GREE:12;textual}{plm}, Ch. 11.4.4, p. 364,
+#' formulae (11-25); \insertCite{WOOL:10;textual}{plm}, Ch. 10.5.3,
+#' pp. 308-309, formula (10.58).
 #'
 #' @name fixef.plm
-#' @param x,object an object of class \code{"plm"}, an object of class
-#'     \code{"fixef"} for the \code{print} and the \code{summary}
-#'     method,
-#' @param effect one of \code{"individual"} or \code{"time"}, only
-#'     relevant in case of two--ways effects models,
+#' @param x,object an object of class `"plm"`, an object of class
+#'     `"fixef"` for the `print` and the `summary` method,
+#' @param effect one of `"individual"` or `"time"`, only relevant in
+#'     case of two--ways effects models,
 #' @param vcov a variance--covariance matrix furnished by the user or
-#'     a function to calculate one (see \bold{Examples}),
-#' @param type one of \code{"level"}, \code{"dfirst"}, or
-#'     \code{"dmean"},
+#'     a function to calculate one (see **Examples**),
+#' @param type one of `"level"`, `"dfirst"`, or `"dmean"`,
 #' @param digits digits,
 #' @param width the maximum length of the lines in the print output,
 #' @param \dots further arguments.
-#' @return For function \code{fixef} an object of class
-#'     \code{c("fixef", "numeric")} is returned:\cr It is a numeric
-#'     vector containing the fixed effects with attribute \code{se}
-#'     which contains the standard errors. There are two further
-#'     attributes: attribute \code{type} contains the chosen type (the
-#'     value of argument \code{type} as a character); attribute
-#'     \code{df.residual} holds the residual degrees of freedom
-#'     (integer) from the fixed effects model (plm object) on which
-#'     \code{fixef} was run.
+#' @return For function `fixef` an object of class `c("fixef",
+#'     "numeric")` is returned:\cr It is a numeric vector containing
+#'     the fixed effects with attribute `se` which contains the
+#'     standard errors. There are two further attributes: attribute
+#'     `type` contains the chosen type (the value of argument `type`
+#'     as a character); attribute `df.residual` holds the residual
+#'     degrees of freedom (integer) from the fixed effects model (plm
+#'     object) on which `fixef` was run.
 #' 
-#' For function \code{summary.fixef} an object of class
-#' \code{c("summary.fixef", "matrix")} is returned:\cr It is a matrix
-#' with four columns in this order: the estimated fixed effects, their
-#' standard errors and associated t--values and p--values.  The type
-#' of the fixed effects and the standard errors in the summary.fixef
-#' objects correspond to was requested in the \code{fixef} function by
-#' arguments \code{type} and \code{vcov}, respectively.
+#' For function `summary.fixef` an object of class `c("summary.fixef",
+#' "matrix")` is returned:\cr It is a matrix with four columns in this
+#' order: the estimated fixed effects, their standard errors and
+#' associated t--values and p--values.  The type of the fixed effects
+#' and the standard errors in the summary.fixef objects correspond to
+#' was requested in the `fixef` function by arguments `type` and
+#' `vcov`, respectively.
 #' @export
 #' @author Yves Croissant
-#' @seealso \code{\link{within_intercept}} for the overall intercept
-#'     of fixed effect models along its standard error,
-#'     \code{\link{plm}} for plm objects and within models (= fixed
-#'     effects models) in general. See \code{\link{ranef}} to extract
-#'     the random effects from a random effects model.
+#' @seealso [within_intercept()] for the overall intercept of fixed
+#'     effect models along its standard error, [plm()] for plm objects
+#'     and within models (= fixed effects models) in general. See
+#'     [ranef()] to extract the random effects from a random effects
+#'     model.
 #' @references
 #'
-#' \insertRef{GREE:12}{plm}
-#' Ch. 11.4.4.
-#'
-#' \insertRef{WOOL:10}{plm}
-#' Ch. 10.5.3.
+#' \insertAllCited{}
 #'
 #' @keywords regression
 #' @examples
@@ -224,30 +217,30 @@ fixef.pggls <- fixef.plm
 
 #' Extract the Random Effects
 #' 
-#' Function to calculate the random effects from a \code{plm} object (random
-#' effects model).
+#' Function to calculate the random effects from a `plm` object
+#' (random effects model).
 #' 
-#' Function \code{ranef} calculates the random effects of a fitted
-#' random effects model. For one-way models, the effects of the
-#' estimated model are extracted (either individual or time
-#' effects). For two-way models, extracting the individual effects is
-#' the default (both, argument \code{effect = NULL} and \code{effect =
-#' "individual"} will give individual effects). Time effects can be
-#' extracted by setting \code{effect = "time"}.
+#' Function `ranef` calculates the random effects of a fitted random
+#' effects model. For one-way models, the effects of the estimated
+#' model are extracted (either individual or time effects). For
+#' two-way models, extracting the individual effects is the default
+#' (both, argument `effect = NULL` and \code{effect = "individual"}
+#' will give individual effects). Time effects can be extracted by
+#' setting `effect = "time"`.
 #' 
 #' Not all random effect model types are supported (yet?).
 #' 
-#' @param object an object of class \code{"plm"}, needs to be a fitted
+#' @param object an object of class `"plm"`, needs to be a fitted
 #'     random effects model,
-#' @param effect \code{NULL}, \code{"individual"}, or \code{"time"},
-#'     the effects to be extracted, see \bold{Details},
+#' @param effect `NULL`, `"individual"`, or `"time"`, the effects to
+#'     be extracted, see \bold{Details},
 #' @param \dots further arguments (currently not used).
 #' @return A named numeric with the random effects per dimension
 #'     (individual or time).
 #' @export
 #' @author Kevin Tappe
-#' @seealso \code{\link{fixef}} to extract the fixed effects from a
-#'     fixed effects model (within model).
+#' @seealso [fixef()] to extract the fixed effects from a fixed
+#'     effects model (within model).
 #' @keywords regression
 #' @examples
 #' 
@@ -255,7 +248,8 @@ fixef.pggls <- fixef.plm
 #' m1 <- plm(inv ~ value + capital, data = Grunfeld, model = "random")
 #' ranef(m1) # individual random effects
 #' 
-#' # compare to random effects by ML estimation via lmer from package lme4
+#' # compare to random effects by ML estimation via lmer from package
+#' # lme4
 #' \dontrun{
 #'   library(lme4)
 #'   m2 <- lmer(inv ~ value + capital + (1 | firm), data = Grunfeld) 
@@ -345,51 +339,47 @@ ranef.plm <- function(object, effect = NULL, ...) {
 #' accompanying standard error
 #' 
 #' The (somewhat artificial) intercept for within models (fixed
-#' effects models) was made popular by Stata of StataCorp (see Gould
-#' (2013)), EViews of IHS, and gretl (see Cottrell/Lucchetti (2016),
-#' p. 160-161 (example 18.1)), see for treatment in the literature,
-#' e.g. Greene (2012), Ch. 11.4.4, p. 364. It can be considered an
-#' overall intercept in the within model framework and is the weighted
-#' mean of fixed effects (see \bold{Examples} for the relationship).
+#' effects models) was made popular by Stata of StataCorp
+#' \insertCite{@see @GOUL:13}{plm}, EViews of IHS, and gretl
+#' \insertCite{@gretl p. 160-161, example 18.1}{plm}, see for
+#' treatment in the literature,
+#' e.g. \insertCite{GREE:12;textual}{plm}, Ch. 11.4.4, p. 364. It can
+#' be considered an overall intercept in the within model framework
+#' and is the weighted mean of fixed effects (see **Examples** for the
+#' relationship).
 #' 
-#' \code{within_intercept} estimates a new model which is
+#' `within_intercept` estimates a new model which is
 #' computationally more demanding than just taking the weighted
-#' mean. However, with \code{within_intercept} one also gets the
+#' mean. However, with `within_intercept` one also gets the
 #' associated standard error and it is possible to get an overall
 #' intercept for twoway fixed effect models.
 #' 
-#' Users can set argument \code{vcov} to a function to calculate a
+#' Users can set argument `vcov` to a function to calculate a
 #' specific (robust) variance--covariance matrix and get the
 #' respective (robust) standard error for the overall intercept,
-#' e.g. the function \code{\link{vcovHC}}, see examples for
-#' usage. Note: The argument \code{vcov} must be a function, not a
+#' e.g. the function [vcovHC()], see examples for
+#' usage. Note: The argument `vcov` must be a function, not a
 #' matrix, because the model to calculate the overall intercept for
 #' the within model is different from the within model itself.
 #' 
 #' @aliases within_intercept
-#' @param object object of class \code{plm} which must be a within
+#' @param object object of class `plm` which must be a within
 #'     model (fixed effects model),
-#' @param vcov if not \code{NULL} (default), a function to calculate a
+#' @param vcov if not `NULL` (default), a function to calculate a
 #'     user defined variance--covariance matrix (function for robust
 #'     vcov),
 #' @param \dots further arguments (currently none).
-#' @return A named \code{numeric} of length one: The overall intercept
+#' @return A named `numeric` of length one: The overall intercept
 #'     for the estimated within model along attribute "se" which
 #'     contains the standard error for the intercept.
 #' @export
 #' @author Kevin Tappe
-#' @seealso \code{\link{fixef}} to extract the fixed effects of a
+#' @seealso [fixef()] to extract the fixed effects of a
 #'     within model.
 #' @references
 #'
+#' \insertAllCited{}
 #'
-#' \insertRef{gretl}{plm}
-#'
-#' \insertRef{GOUL:13}{plm}
-#'
-#' \insertRef{GREE:12}{plm}
-#'  Ch. 11.4.4.
-#' 
 #' @keywords attribute
 #' @examples
 #' 
@@ -400,10 +390,12 @@ ranef.plm <- function(object, effect = NULL, ...) {
 #' overallint <- within_intercept(mod_fe)
 #' attr(overallint, "se") # standard error
 #' 
-#' # overall intercept is the weighted mean of fixed effects in the one-way case
+#' # overall intercept is the weighted mean of fixed effects in the
+#' # one-way case
 #' weighted.mean(fixef(mod_fe), as.numeric(table(index(mod_fe)[[1]])))
 #' 
-#' # relationship of type="dmean", "level" and within_intercept in the one-way case
+#' # relationship of type="dmean", "level" and within_intercept in the
+#' # one-way case
 #' data("Grunfeld", package = "plm")
 #' gi <- plm(inv ~ value + capital, data = Grunfeld, model = "within")
 #' fx_level <- fixef(gi, type = "level")
@@ -480,8 +472,8 @@ within_intercept.plm <- function(object, vcov = NULL, ...) {
                             "individual" = pdim$nT$n,
                             "time"       = pdim$nT$T,
                             "twoways"    = pdim$nT$n + pdim$nT$T - 1)
-    
     df <- df.residual(auxreg) - card.fixef  + 1 # just for within_intercept: here we need '+1' to correct for the intercept
+    
     vcov_new <- vcov(auxreg)
     vcov_new <- vcov_new * df.residual(auxreg) / df
   } else {

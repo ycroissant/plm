@@ -25,63 +25,63 @@
 #' regularly spaced sequence with distance 1 between the time periods for each
 #' individual (for each individual the time dimension become a sequence t, t+1,
 #' t+2, \ldots{} where t is an integer). Non--index variables are filled with
-#' \code{NA} for the inserted elements (rows for (p)data.frames, vector
+#' `NA` for the inserted elements (rows for (p)data.frames, vector
 #' elements for pseries).
 #' 
-#' With argument \code{balanced = TRUE}, additionally to be made consecutive,
+#' With argument `balanced = TRUE`, additionally to be made consecutive,
 #' the data also can be made a balanced panel/pseries.  Note: This means
 #' consecutive AND balanced; balancedness does not imply consecutiveness. In
 #' the result, each individual will have the same time periods in their time
 #' dimension by taking the min and max of the time index variable over all
-#' individuals (w/o \code{NA} values) and inserting the missing time periods.
+#' individuals (w/o `NA` values) and inserting the missing time periods.
 #' Looking at the number of rows of the resulting (pdata.frame) (elements for
 #' pseries), this results in nrow(make.pconsecutive, balanced = FALSE) <=
 #' nrow(make.pconsecutive, balanced = TRUE).  For making the data only
 #' balanced, i.e. not demanding consecutiveness at the same time, use
-#' \code{\link{make.pbalanced}} (see \bold{Examples} for a comparison)).
+#' [make.pbalanced()] (see \bold{Examples} for a comparison)).
 #' 
-#' Note: rows of (p)data.frames (elements for pseries) with \code{NA} values in
+#' Note: rows of (p)data.frames (elements for pseries) with `NA` values in
 #' individual or time index are not examined but silently dropped before the
 #' data are made consecutive. In this case, it is not clear which individual or
 #' time period is meant by the missing value(s). Especially, this means: If
-#' there are \code{NA} values in the first/last position of the original time
+#' there are `NA` values in the first/last position of the original time
 #' periods for an individual, which usually depicts the beginning and ending of
 #' the time series for that individual, the beginning/end of the resulting time
-#' series is taken to be the min and max (w/o \code{NA} values) of the original
+#' series is taken to be the min and max (w/o `NA` values) of the original
 #' time series for that individual, see also \bold{Examples}. Thus, one might
-#' want to check if there are any \code{NA} values in the index variables
-#' before applying make.pconsecutive, and especially check for \code{NA} values
+#' want to check if there are any `NA` values in the index variables
+#' before applying make.pconsecutive, and especially check for `NA` values
 #' in the first and last position for each individual in original data and, if
 #' so, maybe set those to some meaningful begin/end value for the time series.
 #' 
 #' @aliases make.pconsecutive
-#' @param x an object of class \code{pdata.frame}, \code{data.frame},
-#'     or \code{pseries},
+#' @param x an object of class `pdata.frame`, `data.frame`,
+#'     or `pseries`,
 #' @param balanced logical, indicating whether the data should
 #'     _additionally_ be made balanced (default: FALSE),
-#' @param index only relevant for \code{data.frame} interface; if
-#'     \code{NULL}, the first two columns of the data.frame are
-#'     assumed to be the index variables; if not \code{NULL}, both
+#' @param index only relevant for `data.frame` interface; if
+#'     `NULL`, the first two columns of the data.frame are
+#'     assumed to be the index variables; if not `NULL`, both
 #'     dimensions ('individual', 'time') need to be specified by
-#'     \code{index} as character of length 2 for data frames, for
-#'     further details see \code{\link{pdata.frame}},
+#'     `index` as character of length 2 for data frames, for
+#'     further details see [pdata.frame()],
 #' @param \dots further arguments.
-#' @return An object of the same class as the input \code{x}, i.e. a
+#' @return An object of the same class as the input `x`, i.e. a
 #'     pdata.frame, data.frame or a pseries which is made
 #'     time--consecutive based on the index variables. The returned
 #'     data are sorted as a stacked time series.
 #' @export
 #' @author Kevin Tappe
-#' @seealso \code{\link{is.pconsecutive}} to check if data are
-#'     consecutive; \code{\link{make.pbalanced}} to make data only
-#'     balanced (not consecutive).\cr \code{\link{punbalancedness}}
-#'     for two measures of unbalancedness, \code{\link{pdim}} to check
+#' @seealso [is.pconsecutive()] to check if data are
+#'     consecutive; [make.pbalanced()] to make data only
+#'     balanced (not consecutive).\cr [punbalancedness()]
+#'     for two measures of unbalancedness, [pdim()] to check
 #'     the dimensions of a 'pdata.frame' (and other objects),
-#'     \code{\link{pvar}} to check for individual and time variation
-#'     of a 'pdata.frame' (and other objects), \code{\link{lag}} for
+#'     [pvar()] to check for individual and time variation
+#'     of a 'pdata.frame' (and other objects), [lag()] for
 #'     lagged (and leading) values of a 'pseries' object.\cr
-#'     \code{\link{pseries}}, \code{\link{data.frame}},
-#'     \code{\link{pdata.frame}}.
+#'     [pseries()], [data.frame()],
+#'     [pdata.frame()].
 #' @keywords attribute
 #' @examples
 #' 
@@ -387,77 +387,77 @@ make.pconsecutive.pseries <- function(x, balanced = FALSE, ...) {
 #' 
 #' (p)data.frame and pseries objects are made balanced, meaning each
 #' individual has the same time periods.  Depending on the value of
-#' \code{balance.type}, the balancing is done in different ways:
-#' \itemize{ \item \code{balance.type = "fill"} (default): The union
+#' `balance.type`, the balancing is done in different ways:
+#' \itemize{ \item `balance.type = "fill"` (default): The union
 #' of available time periods over all individuals is taken (w/o
-#' \code{NA} values).  Missing time periods for an individual are
+#' `NA` values).  Missing time periods for an individual are
 #' identified and corresponding rows (elements for pseries) are
-#' inserted and filled with \code{NA} for the non--index variables
+#' inserted and filled with `NA` for the non--index variables
 #' (elements for a pseries).  This means, only time periods present
 #' for at least one individual are inserted, if missing.
 #' 
-#' \item \code{balance.type = "shared.times"}: The intersect of available time
-#' periods over all individuals is taken (w/o \code{NA} values).  Thus, time
+#' \item `balance.type = "shared.times"`: The intersect of available time
+#' periods over all individuals is taken (w/o `NA` values).  Thus, time
 #' periods not available for all individuals are discarded, i. e., only time
 #' periods shared by all individuals are left in the result).
 #' 
-#' \item \code{balance.type = "shared.individuals"}: All available time periods
+#' \item `balance.type = "shared.individuals"`: All available time periods
 #' are kept and those individuals are dropped for which not all time periods
 #' are available, i. e., only individuals shared by all time periods are left
-#' in the result (symmetric to \code{"shared.times"}).  }
+#' in the result (symmetric to `"shared.times"`).  }
 #' 
 #' The data are not necessarily made consecutive (regular time series
 #' with distance 1), because balancedness does not imply
 #' consecutiveness. For making the data consecutive, use
-#' \code{\link{make.pconsecutive}} (and, optionally, set argument
-#' \code{balanced = TRUE} to make consecutive and balanced, see also
+#' [make.pconsecutive()] (and, optionally, set argument
+#' `balanced = TRUE` to make consecutive and balanced, see also
 #' \bold{Examples} for a comparison of the two functions.
 #' 
-#' Note: Rows of (p)data.frames (elements for pseries) with \code{NA}
+#' Note: Rows of (p)data.frames (elements for pseries) with `NA`
 #' values in individual or time index are not examined but silently
 #' dropped before the data are made balanced. In this case, it cannot
 #' be inferred which individual or time period is meant by the missing
 #' value(s) (see also \bold{Examples}).  Especially, this means:
-#' \code{NA} values in the first/last position of the original time
+#' `NA` values in the first/last position of the original time
 #' periods for an individual are dropped, which are usually meant to
 #' depict the beginning and ending of the time series for that
 #' individual.  Thus, one might want to check if there are any
-#' \code{NA} values in the index variables before applying
-#' make.pbalanced, and especially check for \code{NA} values in the
+#' `NA` values in the index variables before applying
+#' make.pbalanced, and especially check for `NA` values in the
 #' first and last position for each individual in original data and,
 #' if so, maybe set those to some meaningful begin/end value for the
 #' time series.
 #' 
 #' @aliases make.pbalanced
-#' @param x an object of class \code{pdata.frame}, \code{data.frame},
-#'     or \code{pseries};
-#' @param balance.type character, one of \code{"fill"},
-#'     \code{"shared.times"}, or \code{"shared.individuals"}, see
+#' @param x an object of class `pdata.frame`, `data.frame`,
+#'     or `pseries`;
+#' @param balance.type character, one of `"fill"`,
+#'     `"shared.times"`, or `"shared.individuals"`, see
 #'     \bold{Details},
-#' @param index only relevant for \code{data.frame} interface; if
-#'     \code{NULL}, the first two columns of the data.frame are
-#'     assumed to be the index variables; if not \code{NULL}, both
+#' @param index only relevant for `data.frame` interface; if
+#'     `NULL`, the first two columns of the data.frame are
+#'     assumed to be the index variables; if not `NULL`, both
 #'     dimensions ('individual', 'time') need to be specified by
-#'     \code{index} as character of length 2 for data frames, for
-#'     further details see \code{\link{pdata.frame}},
+#'     `index` as character of length 2 for data frames, for
+#'     further details see [pdata.frame()],
 #' @param \dots further arguments.
-#' @return An object of the same class as the input \code{x}, i.e. a
+#' @return An object of the same class as the input `x`, i.e. a
 #'     pdata.frame, data.frame or a pseries which is made balanced
 #'     based on the index variables. The returned data are sorted as a
 #'     stacked time series.
 #' @export
 #' @author Kevin Tappe
-#' @seealso \code{\link{is.pbalanced}} to check if data are balanced;
-#'     \code{\link{is.pconsecutive}} to check if data are consecutive;
-#'     \code{\link{make.pconsecutive}} to make data consecutive (and,
-#'     optionally, also balanced).\cr \code{\link{punbalancedness}}
-#'     for two measures of unbalancedness, \code{\link{pdim}} to check
+#' @seealso [is.pbalanced()] to check if data are balanced;
+#'     [is.pconsecutive()] to check if data are consecutive;
+#'     [make.pconsecutive()] to make data consecutive (and,
+#'     optionally, also balanced).\cr [punbalancedness()]
+#'     for two measures of unbalancedness, [pdim()] to check
 #'     the dimensions of a 'pdata.frame' (and other objects),
-#'     \code{\link{pvar}} to check for individual and time variation
-#'     of a 'pdata.frame' (and other objects), \code{\link{lag}} for
+#'     [pvar()] to check for individual and time variation
+#'     of a 'pdata.frame' (and other objects), [lag()] for
 #'     lagging (and leading) values of a 'pseries' object.\cr
-#'     \code{\link{pseries}}, \code{\link{data.frame}},
-#'     \code{\link{pdata.frame}}.
+#'     [pseries()], [data.frame()],
+#'     [pdata.frame()].
 #' @keywords attribute
 #' @examples
 #' 

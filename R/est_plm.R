@@ -58,78 +58,79 @@ mylm <- function(y, X, W = NULL){
 
 #' Panel Data Estimators
 #' 
-#' Linear models for panel data estimated using the \code{lm} function on
+#' Linear models for panel data estimated using the `lm` function on
 #' transformed data.
 #' 
-#' \code{plm} is a general function for the estimation of linear panel
+#' `plm` is a general function for the estimation of linear panel
 #' models.  It supports the following estimation methods: pooled OLS
-#' (\code{model = "pooling"}), fixed effects (\code{"within"}), random
-#' effects (\code{"random"}), first--differences (\code{"fd"}), and
-#' between (\code{"between"}). It supports unbalanced panels and
-#' two--way effects (although not with all methods).
+#' (`model = "pooling"`), fixed effects (`"within"`), random effects
+#' (`"random"`), first--differences (`"fd"`), and between
+#' (`"between"`). It supports unbalanced panels and two--way effects
+#' (although not with all methods).
 #' 
-#' For random effects models, four estimators of the transformation parameter
-#' are available by setting \code{random.method} to one of \code{"swar"} (Swamy
-#' and Arora (1972)) (default), \code{"amemiya"} (Amemiya (1971)),
-#' \code{"walhus"} (Wallace and Hussain (1969)), or \code{"nerlove"} (Nerlove
-#' (1971)).
+#' For random effects models, four estimators of the transformation
+#' parameter are available by setting `random.method` to one of
+#' `"swar"` \insertCite{SWAM:AROR:72}{plm} (default), `"amemiya"`
+#' \insertCite{AMEM:71}{plm}, `"walhus"`
+#' \insertCite{WALL:HUSS:69}{plm}, or `"nerlove"`
+#' \insertCite{NERLO:71}{plm}.
 #' 
-#' For first--difference models, the intercept is maintained (which from a
-#' specification viewpoint amounts to allowing for a trend in the levels
-#' model). The user can exclude it from the estimated specification the usual
-#' way by adding \code{"-1"} to the model formula.
+#' For first--difference models, the intercept is maintained (which
+#' from a specification viewpoint amounts to allowing for a trend in
+#' the levels model). The user can exclude it from the estimated
+#' specification the usual way by adding `"-1"` to the model formula.
 #' 
-#' Instrumental variables estimation is obtained using two--part formulas, the
-#' second part indicating the instrumental variables used. This can be a
-#' complete list of instrumental variables or an update of the first part. If,
-#' for example, the model is \code{y ~ x1 + x2 + x3}, with \code{x1} and
-#' \code{x2} endogenous and \code{z1} and \code{z2} external instruments, the
-#' model can be estimated with:
+#' Instrumental variables estimation is obtained using two--part
+#' formulas, the second part indicating the instrumental variables
+#' used. This can be a complete list of instrumental variables or an
+#' update of the first part. If, for example, the model is `y ~ x1 +
+#' x2 + x3`, with `x1` and `x2` endogenous and `z1` and `z2` external
+#' instruments, the model can be estimated with:
 #' 
 #' \itemize{
-#' \item \code{formula = y~x1+x2+x3 | x3+z1+z2},
-#' \item \code{formula = y~x1+x2+x3 | . -x1-x2+z1+z2}.
+#' \item `formula = y~x1+x2+x3 | x3+z1+z2`,
+#' \item `formula = y~x1+x2+x3 | . -x1-x2+z1+z2`.
 #' }
 #' 
 #' If an instrument variable estimation is requested, argument
-#' \code{inst.method} selects the instrument variable transformation method:
-#' \itemize{
-#' \item \code{"bvk"} (default) for Balestra and Varadharajan-Krishnakumar (1987),
-#' \item \code{"baltagi"} for Baltagi (1981),
-#' \item \code{"am"} for Amemiya and MaCurdy (1986),
-#' \item \code{"bms"} for Breusch, Mizon, and Schmidt (1989).
-#' }
+#' `inst.method` selects the instrument variable transformation
+#' method:
+#'
+#' - `"bvk"` (default) for \insertCite{BALE:VARA:87;textual}{plm},
+#' - `"baltagi"` for \insertCite{BALT:81;textual}{plm},
+#' - `"am"` for \insertCite{AMEM:MACU:86;textual}{plm},
+#' - `"bms"` for \insertCite{BREU:MIZO:SCHM:89;textual}{plm}.
 #' 
-#' The Hausman--Taylor estimator (Hausman and Taylor (1981)) is
-#' computed with arguments \code{random.method = "ht"}, \code{model =
-#' "random"}, \code{inst.method = "baltagi"} (the other way with only
-#' \code{model = "ht"} is deprecated).
+#' The Hausman--Taylor estimator \insertCite{HAUS:TAYL:81}{plm} is
+#' computed with arguments `random.method = "ht"`, \code{model =
+#' "random"}, `inst.method = "baltagi"` (the other way with only
+#' `model = "ht"` is deprecated).
 #' 
 #' @aliases plm has.intercept
 #' @param formula a symbolic description for the model to be
 #'     estimated,
-#' @param x,object an object of class \code{"plm"},
-#' @param data a \code{data.frame},
-#' @param subset see \code{\link{lm}},
-#' @param weights see \code{\link{lm}},
-#' @param na.action see \code{\link{lm}}; currently, not fully
+#' @param x,object an object of class `"plm"`,
+#' @param data a `data.frame`,
+#' @param subset see [stats::lm()],
+#' @param weights see [stats::lm()],
+#' @param na.action see [stats::lm()]; currently, not fully
 #'     supported,
 #' @param effect the effects introduced in the model, one of
-#'     \code{"individual"}, \code{"time"}, \code{"twoways"}, or
-#'     \code{"nested"},
-#' @param model one of \code{"pooling"}, \code{"within"},
-#'     \code{"between"}, \code{"random"} \code{"fd"}, or \code{"ht"},
+#'     `"individual"`, `"time"`, `"twoways"`, or
+#'     `"nested"`,
+#' @param model one of `"pooling"`, `"within"`,
+#'     `"between"`, `"random"` `"fd"`, or `"ht"`,
 #' @param random.method method of estimation for the variance
-#'     components in the random effects model, one of \code{"swar"}
-#'     (default), \code{"amemiya"}, \code{"walhus"}, or
-#'     \code{"nerlove"},
+#'     components in the random effects model, one of `"swar"`
+#'     (default), `"amemiya"`, `"walhus"`, or
+#'     `"nerlove"`,
 #' @param random.models an alternative to the previous argument, the
 #'     models used to compute the variance components estimations are
 #'     indicated,
 #' @param random.dfcor a numeric vector of length 2 indicating which
 #'     degree of freedom should be used,
 #' @param inst.method the instrumental variable transformation: one of
-#'     \code{"bvk"}, \code{"baltagi"}, \code{"am"}, or \code{"bms"}
+#'     `"bvk"`, `"baltagi"`, `"am"`, or `"bms"`
 #'     (see also Details),
 #' @param index the indexes,
 #' @param restrict.matrix a matrix which defines linear restrictions
@@ -142,20 +143,20 @@ mylm <- function(y, X, W = NULL){
 #'     method (relative to x range),
 #' @param N the number of individual to plot,
 #' @param seed the seed which will lead to individual selection,
-#' @param within if \code{TRUE}, the within model is plotted,
-#' @param pooling if \code{TRUE}, the pooling model is plotted,
-#' @param between if \code{TRUE}, the between model is plotted,
-#' @param random if \code{TRUE}, the random effect model is plotted,
+#' @param within if `TRUE`, the within model is plotted,
+#' @param pooling if `TRUE`, the pooling model is plotted,
+#' @param between if `TRUE`, the between model is plotted,
+#' @param random if `TRUE`, the random effect model is plotted,
 #' @param formula. a new formula for the update method,
 #' @param evaluate a boolean for the update method, if `TRUE` the
 #'     updated model is returned, if `FALSE` the call is returned,
 #' @param newdata the new data set for the `predict` method,
 #' @param \dots further arguments.
 #' 
-#' @return An object of class \code{"plm"}.
+#' @return An object of class `"plm"`.
 #'
 #' 
-#' A \code{"plm"} object has the following elements :
+#' A `"plm"` object has the following elements :
 #'
 #' \item{coefficients}{the vector of coefficients,}
 #' \item{vcov}{the variance--covariance matrix of the coefficients,}
@@ -164,26 +165,26 @@ mylm <- function(y, X, W = NULL){
 #' \item{weights}{(only for weighted estimations) weights as
 #' specified,}
 #' \item{df.residual}{degrees of freedom of the residuals,}
-#' \item{formula}{an object of class \code{"pFormula"} describing the model,}
-#' \item{model}{the model frame as a \code{"pdata.frame"} containing the
+#' \item{formula}{an object of class `"pFormula"` describing the model,}
+#' \item{model}{the model frame as a `"pdata.frame"` containing the
 #' variables used for estimation: the response is in first column followed by
 #' the other variables, the individual and time indexes are in the 'index'
-#' attribute of \code{model},}
-#' \item{ercomp}{an object of class \code{"ercomp"} providing the
+#' attribute of `model`,}
+#' \item{ercomp}{an object of class `"ercomp"` providing the
 #' estimation of the components of the errors (for random effects
 #' models only),}
 #' \item{aliased}{named logical vector indicating any aliased
-#' coefficients which are silently dropped by \code{plm} due to
-#' linearly dependent terms (see also \code{\link{detect.lindep}}),}
+#' coefficients which are silently dropped by `plm` due to
+#' linearly dependent terms (see also [detect.lindep()]),}
 #' \item{call}{the call.}
 #' 
 #' 
-#' It has \code{print}, \code{summary} and \code{print.summary} methods. The
-#' \code{summary} method creates an object of class \code{"summary.plm"} that
+#' It has `print`, `summary` and `print.summary` methods. The
+#' `summary` method creates an object of class `"summary.plm"` that
 #' extends the object it is run on with information about (inter alia) F
 #' statistic and (adjusted) R-squared of model, standard errors, t--values, and
 #' p--values of coefficients, (if supplied) the furnished vcov, see
-#' \code{\link{summary.plm}} for further details.
+#' [summary.plm()] for further details.
 #' @import Formula
 #' @importFrom stats alias approx as.formula coef coefficients cor delete.response
 #' @importFrom stats deviance df.residual dnorm fitted formula lm lm.fit model.frame
@@ -194,9 +195,9 @@ mylm <- function(y, X, W = NULL){
 #' @importFrom graphics abline axis barplot legend lines plot points
 #' @export
 #' @author Yves Croissant
-#' @seealso \code{\link{summary.plm}} for further details about the associated
+#' @seealso [summary.plm()] for further details about the associated
 #' summary method and the "summary.plm" object both of which provide some model
-#' tests and tests of coefficients.  \code{\link{fixef}} to compute the fixed
+#' tests and tests of coefficients.  [fixef()] to compute the fixed
 #' effects for "within" models (=fixed effects models).
 #' @references
 #'
@@ -576,20 +577,20 @@ tss.plm <- function(x, model = NULL){
 #' squared is to be computed and which method for calculation is used.
 #' 
 #' 
-#' @param object an object of class \code{"plm"},
+#' @param object an object of class `"plm"`,
 #' @param model on which transformation of the data the R-squared is to be
-#' computed. If \code{NULL}, the transformation used to estimate the model is
+#' computed. If `NULL`, the transformation used to estimate the model is
 #' also used for the computation of R squared,
 #' @param type indicates method which is used to compute R squared. One of\cr
-#' \code{"rss"} (residual sum of squares),\cr \code{"ess"} (explained sum of
-#' squares), or\cr \code{"cor"} (coefficient of correlation between the fitted
+#' `"rss"` (residual sum of squares),\cr `"ess"` (explained sum of
+#' squares), or\cr `"cor"` (coefficient of correlation between the fitted
 #' values and the response),
-#' @param dfcor if \code{TRUE}, the adjusted R squared is computed.
+#' @param dfcor if `TRUE`, the adjusted R squared is computed.
 #' @return A numerical value. The R squared or adjusted R squared of the model
 #' estimated on the transformed data, e. g. for the within model the so called
 #' "within R squared".
-#' @seealso \code{\link{plm}} for estimation of various models;
-#' \code{\link{summary.plm}} which makes use of \code{r.squared}.
+#' @seealso [plm()] for estimation of various models;
+#' [summary.plm()] which makes use of `r.squared`.
 #' @keywords htest
 #' @export
 #' @examples

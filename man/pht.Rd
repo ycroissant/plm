@@ -20,11 +20,11 @@ estimated,}
 
 \item{data}{a \code{data.frame},}
 
-\item{subset}{see \code{\link{lm}} for \code{"plm"}, a character or
+\item{subset}{see \code{\link[=lm]{lm()}} for \code{"plm"}, a character or
 numeric vector indicating a subset of the table of coefficient
 to be printed for \code{"print.summary.plm"},}
 
-\item{na.action}{see \code{\link{lm}},}
+\item{na.action}{see \code{\link[=lm]{lm()}},}
 
 \item{model}{one of \code{"ht"} for Hausman--Taylor, \code{"am"}
 for Amemiya--MaCurdy and \code{"bms"} for

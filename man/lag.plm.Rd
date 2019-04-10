@@ -19,67 +19,67 @@ lead(x, k = 1, ...)
 \arguments{
 \item{x}{a \code{pseries} object,}
 
-\item{k}{an integer, the number of lags for the \code{lag} and
-\code{lead} methods (can also be negative).  For the \code{lag}
-method, a positive (negative) \code{k} gives lagged (leading)
-values.  For the \code{lead} method, a positive (negative)
-\code{k} gives leading (lagged) values, thus, \code{lag(x, k =
-    -1)} yields the same as \code{lead(x, k = 1)}.  If \code{k} is
-an integer with length > 1 (\code{k = c(k1, k2, \dots{})}) a
-\code{matrix} with multiple lagged \code{pseries} is returned,}
+\item{k}{an integer, the number of lags for the \code{lag} and \code{lead}
+methods (can also be negative).  For the \code{lag} method, a
+positive (negative) \code{k} gives lagged (leading) values.  For the
+\code{lead} method, a positive (negative) \code{k} gives leading (lagged)
+values, thus, \code{lag(x, k = -1)} yields the same as \code{lead(x, k = 1)}.  If \code{k} is an integer with length > 1 (\code{k = c(k1, k2, \dots{})}) a \code{matrix} with multiple lagged \code{pseries} is
+returned,}
 
 \item{\dots}{further arguments (currently none evaluated).}
 
-\item{shift}{character, either \code{"time"} (default) or
-\code{"row"} determining how the shifting in the
-\code{lag}/\code{lead}/\code{diff} functions is performed (see
-Details and Examples).}
+\item{shift}{character, either \code{"time"} (default) or \code{"row"}
+determining how the shifting in the \code{lag}/\code{lead}/\code{diff}
+functions is performed (see Details and Examples).}
 
-\item{lag}{the number of lags for the \code{diff} method, can also
-be of length > 1 (see argument \code{k}) (only non--negative
-values in argument \code{lag} are allowed for \code{diff}),}
+\item{lag}{the number of lags for the \code{diff} method, can also be of
+length > 1 (see argument \code{k}) (only non--negative values in
+argument \code{lag} are allowed for \code{diff}),}
 }
 \value{
-\itemize{ \item An object of class \code{pseries}, if the
-argument specifying the lag has length 1 (argument \code{k} in
-functions \code{lag} and \code{lead}, argument \code{lag} in
-function \code{diff}).  \item A matrix containing the various
-series in its columns, if the argument specifying the lag has
-length > 1. }
+\itemize{
+\item An object of class \code{pseries}, if the argument specifying the lag
+has length 1 (argument \code{k} in functions \code{lag} and \code{lead},
+argument \code{lag} in function \code{diff}).
+\item A matrix containing the various series in its columns, if the
+argument specifying the lag has length > 1.
+}
 }
 \description{
 lag, lead, and diff functions for class pseries.
 }
 \details{
-This set of functions perform lagging, leading (lagging in the opposite
-direction), and differencing operations on \code{pseries} objects, i. e.,
-they take the panel structure of the data into account by performing the
-operations per individual.
+This set of functions perform lagging, leading (lagging in the
+opposite direction), and differencing operations on \code{pseries}
+objects, i. e., they take the panel structure of the data into
+account by performing the operations per individual.
 
-Argument \code{shift} controls the shifting of observations to be used by
-methods \code{lag}, \code{lead}, and \code{diff}:
+Argument \code{shift} controls the shifting of observations to be used
+by methods \code{lag}, \code{lead}, and \code{diff}:
 
-\itemize{ \item\code{shift = "time"} (default): Methods respect the
-numerical value in the time dimension of the index.  The time dimension
-needs to be interpretable as a sequence t, t+1, t+2, \ldots{} where t is an
-integer (from a technical viewpoint,
+#' - \code{shift = "time"} (default): Methods respect the
+numerical value in the time dimension of the index.  The time
+dimension needs to be interpretable as a sequence t, t+1, t+2,
+\ldots{} where t is an integer (from a technical viewpoint,
 \code{as.numeric(as.character(index(your_pdata.frame)[[2]]))} needs to
 result in a meaningful integer).
+\itemize{
+\item \code{shift = "row": }Methods perform the shifting operation based
+solely on the "physical position" of the observations,
+i.e. neighbouring rows are shifted per individual. The value in the
+time index is not relevant in this case.
+}
 
-\item\code{shift = "row": }Methods perform the shifting operation based
-solely on the "physical position" of the observations, i.e. neighbouring
-rows are shifted per individual. The value in the time index is not relevant
-in this case. }
+For consecutive time periods per individual, a switch of shifting
+behaviour results in no difference. Different return values will
+occur for non-consecutive time periods per individual
+("holes in time"), see also Examples.
 
-For consecutive time periods per individual, a switch of shifting behaviour
-results in no difference. Different return values will occur for
-non-consecutive time periods per individual ("holes in time"), see also
-Examples.
+[[2]: R:[2
 }
 \note{
-The sign of \code{k} in \code{lag.pseries} results in inverse
-behaviour compared to \code{\link[stats]{lag}} and
-\code{\link[zoo]{lag.zoo}}.
+The sign of \code{k} in \code{lag.pseries} results in inverse behaviour
+compared to \code{\link[stats]{lag}} and \code{\link[zoo]{lag.zoo}}.
 }
 \examples{
 
@@ -120,11 +120,11 @@ head(lag(Em_hole$emp, k = 2, shift = "row"), 10)
 }
 \seealso{
 To check if the time periods are consecutive per
-individual, see \code{\link{is.pconsecutive}}.
+individual, see \code{\link[=is.pconsecutive]{is.pconsecutive()}}.
 
-For further function for 'pseries' objects: \code{\link{between}},
-\code{\link{Between}}, \code{\link{Within}}, \code{\link{summary.pseries}},
-\code{\link{print.summary.pseries}}, \code{\link{as.matrix.pseries}}.
+For further function for 'pseries' objects: \code{\link[=between]{between()}},
+\link[=between]{Between()}, \code{\link[=Within]{Within()}}, \code{\link[=summary.pseries]{summary.pseries()}},
+\code{\link[=print.summary.pseries]{print.summary.pseries()}}, \code{\link[=as.matrix.pseries]{as.matrix.pseries()}}.
 }
 \author{
 Yves Croissant and Kevin Tappe

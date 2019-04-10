@@ -26,7 +26,7 @@ pvar(x, ...)
 
 \item{\dots}{further arguments.}
 
-\item{index}{see \code{\link{pdata.frame}},}
+\item{index}{see \code{\link[=pdata.frame]{pdata.frame()}},}
 }
 \value{
 An object of class \code{pvar} containing the following
@@ -35,27 +35,27 @@ elements:
 \item{id.variation}{a logical vector with \code{TRUE} values if the
 variable has individual variation, \code{FALSE} if not,}
 
-\item{time.variation}{a
-logical vector with \code{TRUE} values if the variable has time variation,
+\item{time.variation}{a logical vector with \code{TRUE} values if the
+variable has time variation, \code{FALSE} if not,}
+
+\item{id.variation_anyNA}{a logical vector with \code{TRUE} values if
+the variable has at least one individual-time combination with all
+NA values in the individual dimension for at least one time period,
 \code{FALSE} if not,}
 
-\item{id.variation_anyNA}{a logical vector with \code{TRUE} values
-if the variable has at least one individual-time combination with
-all NA values in the individual dimension for at least one time
-period, \code{FALSE} if not,}
-
-\item{time.variation_anyNA}{a logical vector with \code{TRUE}
-values if the variable has at least one individual-time combination
-with all NA values in the time dimension for at least one
-individual, \code{FALSE} if not.}
+\item{time.variation_anyNA}{a logical vector with \code{TRUE} values if
+the variable has at least one individual-time combination with all
+NA values in the time dimension for at least one individual,
+\code{FALSE} if not.}
 }
 \description{
 This function checks for each variable of a panel if it varies
 cross-sectionally and over time.
 }
 \details{
-For (p)data.frame and matrix interface: All-NA columns are removed prior to
-calculation of variation due to coercing to pdata.frame first.
+For (p)data.frame and matrix interface: All-NA columns are removed
+prior to calculation of variation due to coercing to pdata.frame
+first.
 }
 \note{
 \code{pvar} can be time consuming for ``big'' panels.
@@ -63,8 +63,8 @@ calculation of variation due to coercing to pdata.frame first.
 \examples{
 
 
-# Gasoline contains two variables which are individual and time indexes
-# and are the first two variables
+# Gasoline contains two variables which are individual and time
+# indexes and are the first two variables
 data("Gasoline", package = "plm")
 pvar(Gasoline)
 
@@ -84,7 +84,7 @@ pvar(Gasoline_mat, index=c("country", "year"))
 
 }
 \seealso{
-\code{\link{pdim}} to check the dimensions of a 'pdata.frame' (and
+\code{\link[=pdim]{pdim()}} to check the dimensions of a 'pdata.frame' (and
 other objects),
 }
 \author{

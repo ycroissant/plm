@@ -13,73 +13,71 @@
 \method{vcovHC}{pgmm}(x, ...)
 }
 \arguments{
-\item{x}{an object of class \code{"plm"} which should be the result
-of a random effects or a within model or a model of class
-\code{"pgmm"} or an object of class \code{"pcce"},}
+\item{x}{an object of class \code{"plm"} which should be the result of a
+random effects or a within model or a model of class \code{"pgmm"}
+or an object of class \code{"pcce"},}
 
-\item{method}{one of \code{"arellano"}, \code{"white1"},
-\code{"white2"},}
+\item{method}{one of \code{"arellano"}, \code{"white1"}, \code{"white2"},}
 
-\item{type}{the weighting scheme used, one of \code{"HC0"},
-\code{"sss"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"},
-\code{"HC4"}, see Details,}
+\item{type}{the weighting scheme used, one of \code{"HC0"}, \code{"sss"},
+\code{"HC1"}, \code{"HC2"}, \code{"HC3"}, \code{"HC4"}, see Details,}
 
 \item{cluster}{one of \code{"group"}, \code{"time"},}
 
 \item{\dots}{further arguments.}
 }
 \value{
-An object of class \code{"matrix"} containing the estimate
-of the asymptotic covariance matrix of coefficients.
+An object of class \code{"matrix"} containing the estimate of
+the asymptotic covariance matrix of coefficients.
 }
 \description{
 Robust covariance matrix estimators \emph{a la White} for panel
 models.
 }
 \details{
-\code{vcovHC} is a function for estimating a robust covariance
-matrix of parameters for a fixed effects or random effects panel
-model according to the White method (White 1980, 1984; Arellano
-1987). Observations may be clustered by \code{"group"}
-(\code{"time"}) to account for serial (cross-sectional)
-correlation.
+\code{vcovHC} is a function for estimating a robust covariance matrix of
+parameters for a fixed effects or random effects panel model
+according to the White method
+\insertCite{WHIT:80,WHIT:84b,AREL:87}{plm}. Observations may be
+clustered by \code{"group"} (\code{"time"}) to account for serial
+(cross-sectional) correlation.
 
 All types assume no intragroup (serial) correlation between errors
 and allow for heteroskedasticity across groups (time periods). As
 for the error covariance matrix of every single group of
-observations, \code{"white1"} allows for general heteroskedasticity
-but no serial (cross--sectional) correlation; \code{"white2"} is
-\code{"white1"} restricted to a common variance inside every group
-(time period) (see Greene (2003, Sec. 13.7.1-2; 2012,
-Sec. 11.6.1-2) and Wooldridge (2002), Sec. 10.7.2);
-\code{"arellano"} (see ibid. and the original ref. Arellano (1987))
-allows a fully general structure w.r.t. heteroskedasticity and
-serial (cross--sectional) correlation.
+observations, \code{"white1"} allows for general heteroskedasticity but
+no serial (cross--sectional) correlation; \code{"white2"} is \code{"white1"}
+restricted to a common variance inside every group (time period)
+\insertCite{@see @GREE:03, Sec. 13.7.1-2, @GREE:12, Sec. 11.6.1-2
+and @WOOL:02, Sec. 10.7.2}{plm}; \code{"arellano"} \insertCite{@see
+ibid. and the original ref. @AREL:87}{plm} allows a fully general
+structure w.r.t. heteroskedasticity and serial (cross--sectional)
+correlation.
 
-Weighting schemes specified by \code{type} are analogous to those
-in \code{\link[sandwich]{vcovHC}} in package \CRANpkg{sandwich} and
-are justified theoretically (although in the context of the
-standard linear model) by MacKinnon and White (1985) and
-Cribari-Neto (2004) (see Zeileis (2004)). \code{type = "sss"}
-employs the small sample correction as used by Stata. % TODO: give
-formula for "sss"; elaborate why different result for FE models
-(intercept)
+Weighting schemes specified by \code{type} are analogous to those in
+\code{\link[sandwich]{vcovHC}} in package \CRANpkg{sandwich} and are
+justified theoretically (although in the context of the standard
+linear model) by \insertCite{MACK:WHIT:85;textual}{plm} and
+\insertCite{CRIB:04;textual}{plm}
+\insertCite{ZEIL:04}{plm}. \code{type = "sss"} employs the small sample
+correction as used by Stata. % TODO: give formula for "sss";
+elaborate why different result for FE models (intercept)
 
-The main use of \code{vcovHC} is to be an argument to other
-functions, e.g.  for Wald--type testing: argument \code{vcov.} to
-\code{coeftest()}, argument \code{vcov} to \code{waldtest()} and
-other methods in the \CRANpkg{lmtest} package; and argument
-\code{vcov.} to \code{linearHypothesis()} in the \CRANpkg{car}
-package (see the examples). Notice that the \code{vcov} and
-\code{vcov.} arguments allow to supply a function (which is the
-safest) or a matrix (see Zeileis (2004), 4.1-2 and examples below).
+The main use of \code{vcovHC} is to be an argument to other functions,
+e.g.  for Wald--type testing: argument \code{vcov.} to \code{coeftest()},
+argument \code{vcov} to \code{waldtest()} and other methods in the
+\CRANpkg{lmtest} package; and argument \code{vcov.} to
+\code{linearHypothesis()} in the \CRANpkg{car} package (see the
+examples). Notice that the \code{vcov} and \code{vcov.} arguments allow to
+supply a function (which is the safest) or a matrix
+\insertCite{@ZEIL:04, 4.1-2 and examples below}{plm}.
 
-A special procedure for \code{pgmm} objects, proposed by Windmeijer (2005),
-is also provided.
+A special procedure for \code{pgmm} objects, proposed by
+\insertCite{WIND:05;textual}{plm}, is also provided.
 }
 \note{
-The function \code{pvcovHC} is deprecated. Use \code{vcovHC}
-for the same functionality.
+The function \code{pvcovHC} is deprecated. Use \code{vcovHC} for the
+same functionality.
 }
 \examples{
 
@@ -116,9 +114,7 @@ rv <- vcovHC(ar)
 mtest(ar, order = 2, vcov = rv)
 }
 \references{
-Arellano, M. (1987) Computing robust standard errors
-for within-group estimators, \emph{Oxford Bulletin of Economics
-and Statistics}, \bold{49(4)}, pp. 431--434.
+\insertRef{AREL:87}{plm}
 
 \insertRef{CRIB:04}{plm}
 

@@ -17,48 +17,47 @@
 
 #' panel series
 #' 
-#' A class for panel series for which several useful computations and data
-#' transformations are available.
+#' A class for panel series for which several useful computations and
+#' data transformations are available.
 #' 
-#' The functions \code{between}, \code{Between}, and \code{Within} perform
-#' specific data transformations, i. e. the between and within transformation.
+#' The functions `between`, `Between`, and `Within` perform specific
+#' data transformations, i. e. the between and within transformation.
 #' 
-#' \code{between} returns a vector containing the individual means (over time)
-#' with the length of the vector equal to the number of individuals (if
-#' \code{effect = "individual"} (default); if \code{effect = "time"}, it
-#' returns the time means (over individuals)). \code{Between} duplicates the
-#' values and returns a vector which length is the number of total
-#' observations. \code{Within} returns a vector containing the values in
-#' deviation from the individual means (if \code{effect = "individual"}, from
-#' time means if \code{effect = "time"}), the so called demeaned data.
+#' `between` returns a vector containing the individual means (over
+#' time) with the length of the vector equal to the number of
+#' individuals (if `effect = "individual"` (default); if `effect =
+#' "time"`, it returns the time means (over individuals)). `Between`
+#' duplicates the values and returns a vector which length is the
+#' number of total observations. `Within` returns a vector containing
+#' the values in deviation from the individual means (if `effect =
+#' "individual"`, from time means if `effect = "time"`), the so called
+#' demeaned data.
 #' 
-#' For \code{between}, \code{Between}, and \code{Within} in presence of NA
-#' values it can be useful to supply \code{na.rm = TRUE} as an additional
-#' argument to keep as many observations as possible in the resulting
-#' transformation, see also \bold{Examples}.
+#' For `between`, `Between`, and `Within` in presence of NA values it
+#' can be useful to supply `na.rm = TRUE` as an additional argument to
+#' keep as many observations as possible in the resulting
+#' transformation, see also **Examples**.
 #' 
 #' @name pseries
 #' @aliases pseries
-#' @param x,object a \code{pseries} or a \code{summary.pseries}
-#'     object,
-#' @param effect character string indicating the \code{"individual"}
-#'     or \code{"time"} effect,
-#' @param idbyrow if \code{TRUE} in the \code{as.matrix} method, the
-#'     lines of the matrix are the individuals,
+#' @param x,object a `pseries` or a `summary.pseries` object,
+#' @param effect character string indicating the `"individual"` or
+#'     `"time"` effect,
+#' @param idbyrow if `TRUE` in the `as.matrix` method, the lines of
+#'     the matrix are the individuals,
 #' @param rm.null if `TRUE`, for the `Within.matrix` method, remove
 #'     the empty columns,
 #' @param plot,scale,transparency,col,lwd plot arguments,
-#' @param \dots further arguments, e. g. \code{na.rm = TRUE} for
-#'     transformation functions like \code{beetween}, see
-#'     \bold{Details} and \bold{Examples}.
-#' @return All these functions return an object of class
-#'     \code{pseries}, except:\cr \code{between}, which returns a
-#'     numeric vector, \code{as.matrix}, which returns a matrix.
+#' @param \dots further arguments, e. g. `na.rm = TRUE` for
+#'     transformation functions like `beetween`, see \bold{Details}
+#'     and \bold{Examples}.
+#' @return All these functions return an object of class `pseries`,
+#'     except:\cr `between`, which returns a numeric vector,
+#'     `as.matrix`, which returns a matrix.
 #' @author Yves Croissant
-#' @seealso \code{\link{is.pseries}} to check if an object is a
-#'     pseries. For more functions on class 'pseries' see
-#'     \code{\link{lag}}, \code{\link{lead}}, \code{\link{diff}} for
-#'     lagging values, leading values (negative lags) and
+#' @seealso [is.pseries()] to check if an object is a pseries. For
+#'     more functions on class 'pseries' see [lag()], [lead()],
+#'     [diff()] for lagging values, leading values (negative lags) and
 #'     differencing.
 #' @keywords classes
 #' @examples
@@ -493,65 +492,66 @@ Within.matrix <- function(x, effect, rm.null = TRUE, ...){
 #' 
 #' lag, lead, and diff functions for class pseries.
 #' 
-#' This set of functions perform lagging, leading (lagging in the opposite
-#' direction), and differencing operations on \code{pseries} objects, i. e.,
-#' they take the panel structure of the data into account by performing the
-#' operations per individual.
+#' This set of functions perform lagging, leading (lagging in the
+#' opposite direction), and differencing operations on `pseries`
+#' objects, i. e., they take the panel structure of the data into
+#' account by performing the operations per individual.
 #' 
-#' Argument \code{shift} controls the shifting of observations to be used by
-#' methods \code{lag}, \code{lead}, and \code{diff}:
+#' Argument `shift` controls the shifting of observations to be used
+#' by methods `lag`, `lead`, and `diff`:
 #' 
-#' \itemize{ \item\code{shift = "time"} (default): Methods respect the
-#' numerical value in the time dimension of the index.  The time dimension
-#' needs to be interpretable as a sequence t, t+1, t+2, \ldots{} where t is an
-#' integer (from a technical viewpoint,
-#' \code{as.numeric(as.character(index(your_pdata.frame)[[2]]))} needs to
+#' #' - `shift = "time"` (default): Methods respect the
+#' numerical value in the time dimension of the index.  The time
+#' dimension needs to be interpretable as a sequence t, t+1, t+2,
+#' \ldots{} where t is an integer (from a technical viewpoint,
+#' `as.numeric(as.character(index(your_pdata.frame)[[2]]))` needs to
 #' result in a meaningful integer).
 #' 
-#' \item\code{shift = "row": }Methods perform the shifting operation based
-#' solely on the "physical position" of the observations, i.e. neighbouring
-#' rows are shifted per individual. The value in the time index is not relevant
-#' in this case. }
+#' - `shift = "row": `Methods perform the shifting operation based
+#' solely on the "physical position" of the observations,
+#' i.e. neighbouring rows are shifted per individual. The value in the
+#' time index is not relevant in this case.
 #' 
-#' For consecutive time periods per individual, a switch of shifting behaviour
-#' results in no difference. Different return values will occur for
-#' non-consecutive time periods per individual ("holes in time"), see also
-#' Examples.
+#' For consecutive time periods per individual, a switch of shifting
+#' behaviour results in no difference. Different return values will
+#' occur for non-consecutive time periods per individual
+#' ("holes in time"), see also Examples.
 #' 
 #' @name lag.plm
-#' @param x a \code{pseries} object,
-#' @param k an integer, the number of lags for the \code{lag} and
-#'     \code{lead} methods (can also be negative).  For the \code{lag}
-#'     method, a positive (negative) \code{k} gives lagged (leading)
-#'     values.  For the \code{lead} method, a positive (negative)
-#'     \code{k} gives leading (lagged) values, thus, \code{lag(x, k =
-#'     -1)} yields the same as \code{lead(x, k = 1)}.  If \code{k} is
-#'     an integer with length > 1 (\code{k = c(k1, k2, \dots{})}) a
-#'     \code{matrix} with multiple lagged \code{pseries} is returned,
-#' @param lag the number of lags for the \code{diff} method, can also
-#'     be of length > 1 (see argument \code{k}) (only non--negative
-#'     values in argument \code{lag} are allowed for \code{diff}),
-#' @param shift character, either \code{"time"} (default) or
-#'     \code{"row"} determining how the shifting in the
-#'     \code{lag}/\code{lead}/\code{diff} functions is performed (see
-#'     Details and Examples).
+#' @param x a `pseries` object,
+#' @param k an integer, the number of lags for the `lag` and `lead`
+#'     methods (can also be negative).  For the `lag` method, a
+#'     positive (negative) `k` gives lagged (leading) values.  For the
+#'     `lead` method, a positive (negative) `k` gives leading (lagged)
+#'     values, thus, \code{lag(x, k = -1)} yields the same as `lead(x,
+#'     k = 1)`.  If `k` is an integer with length > 1 (`k = c(k1, k2,
+#'     \dots{`)}) a `matrix` with multiple lagged `pseries` is
+#'     returned,
+#' @param lag the number of lags for the `diff` method, can also be of
+#'     length > 1 (see argument `k`) (only non--negative values in
+#'     argument `lag` are allowed for `diff`),
+#' @param shift character, either `"time"` (default) or `"row"`
+#'     determining how the shifting in the `lag`/`lead`/`diff`
+#'     functions is performed (see Details and Examples).
 #' @param \dots further arguments (currently none evaluated).
-#' @return \itemize{ \item An object of class \code{pseries}, if the
-#'     argument specifying the lag has length 1 (argument \code{k} in
-#'     functions \code{lag} and \code{lead}, argument \code{lag} in
-#'     function \code{diff}).  \item A matrix containing the various
-#'     series in its columns, if the argument specifying the lag has
-#'     length > 1. }
-#' @note The sign of \code{k} in \code{lag.pseries} results in inverse
-#'     behaviour compared to \code{\link[stats]{lag}} and
-#'     \code{\link[zoo]{lag.zoo}}.
+#' @return
+#'
+#' - An object of class `pseries`, if the argument specifying the lag
+#'     has length 1 (argument `k` in functions `lag` and `lead`,
+#'     argument `lag` in function `diff`).
+#' 
+#' - A matrix containing the various series in its columns, if the
+#'     argument specifying the lag has length > 1.
+#' 
+#' @note The sign of `k` in `lag.pseries` results in inverse behaviour
+#'     compared to `\link[stats]{lag`} and `\link[zoo]{lag.zoo`}.
 #' @author Yves Croissant and Kevin Tappe
 #' @seealso To check if the time periods are consecutive per
-#'     individual, see \code{\link{is.pconsecutive}}.
+#'     individual, see [is.pconsecutive()].
 #' 
-#' For further function for 'pseries' objects: \code{\link{between}},
-#' \code{\link{Between}}, \code{\link{Within}}, \code{\link{summary.pseries}},
-#' \code{\link{print.summary.pseries}}, \code{\link{as.matrix.pseries}}.
+#' For further function for 'pseries' objects: [between()],
+#' [Between()], [Within()], [summary.pseries()],
+#' [print.summary.pseries()], [as.matrix.pseries()].
 #' @keywords classes
 #' @examples
 #' 

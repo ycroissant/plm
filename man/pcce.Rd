@@ -35,10 +35,10 @@ pcce(formula, data, subset, na.action, model = c("mg", "p"), index = NULL,
 \item{model}{one of \code{"mg"}, \code{"p"}, selects Mean Groups vs. Pooled
 CCE model,}
 
-\item{index}{the indexes, see \code{\link{pdata.frame}},}
+\item{index}{the indexes, see \code{\link[=pdata.frame]{pdata.frame()}},}
 
-\item{trend}{logical specifying whether an individual-specific trend has to
-be included,}
+\item{trend}{logical specifying whether an individual-specific
+trend has to be included,}
 
 \item{\dots}{further arguments.}
 
@@ -52,29 +52,33 @@ be included,}
 }
 \value{
 An object of class \code{c("pcce", "panelmodel")} containing:
-\item{coefficients}{the vector of coefficients,} \item{residuals}{the vector
-of (defactored) residuals,} \item{stdres}{the vector of (raw) residuals,}
+\item{coefficients}{the vector of coefficients,}
+\item{residuals}{the vector of (defactored) residuals,}
+\item{stdres}{the vector of (raw) residuals,}
 \item{tr.model}{the transformed data after projection on H,}
-\item{fitted.values}{the vector of fitted values,} \item{vcov}{the
-covariance matrix of the coefficients,} \item{df.residual}{degrees of
-freedom of the residuals,} \item{model}{a data.frame containing the
-variables used for the estimation,} \item{call}{the call,}
-\item{sigma}{always \code{NULL}, \code{sigma} is here only for compatibility
-reasons (to allow using the same \code{summary} and \code{print} methods as
-\code{pggls}),} \item{indcoef}{the matrix of individual coefficients from
+\item{fitted.values}{the vector of fitted values,}
+\item{vcov}{the covariance matrix of the coefficients,}
+\item{df.residual}{degrees of freedom of the residuals,}
+\item{model}{a data.frame containing the variables used for the
+estimation,} \item{call}{the call,} \item{sigma}{always \code{NULL},
+\code{sigma} is here only for compatibility reasons (to allow using
+the same \code{summary} and \code{print} methods as \code{pggls}),}
+\item{indcoef}{the matrix of individual coefficients from
 separate time series regressions.}
 }
 \description{
-Common Correlated Effects Mean Groups (CCEMG) and Pooled (CCEP) estimators
-for panel data with common factors (balanced or unbalanced)
+Common Correlated Effects Mean Groups (CCEMG) and Pooled (CCEP)
+estimators for panel data with common factors (balanced or
+unbalanced)
 }
 \details{
-\code{pcce} is a function for the estimation of linear panel models by the
-Common Correlated Effects Mean Groups or Pooled estimator, consistent under
-the hypothesis of unobserved common factors and idiosyncratic factor
-loadings. The CCE estimator works by augmenting the model by cross-sectional
-averages of the dependent variable and regressors in order to account for
-the common factors, and adding individual intercepts and possibly trends.
+\code{pcce} is a function for the estimation of linear panel models by
+the Common Correlated Effects Mean Groups or Pooled estimator,
+consistent under the hypothesis of unobserved common factors and
+idiosyncratic factor loadings. The CCE estimator works by
+augmenting the model by cross-sectional averages of the dependent
+variable and regressors in order to account for the common factors,
+and adding individual intercepts and possibly trends.
 }
 \examples{
 

@@ -1,30 +1,33 @@
 #' Panel estimators for limited dependent variables
 #' 
-#' Fixed and random effects estimators for truncated or censored limited
-#' dependent variable
+#' Fixed and random effects estimators for truncated or censored
+#' limited dependent variable
 #' 
-#' \code{pldv} computes two kinds of models : maximum likelihood estimator with
-#' an assumed normal distribution for the individual effects and a LSQ/LAD
-#' estimator for the first-difference model.
+#' `pldv` computes two kinds of models : maximum likelihood estimator
+#' with an assumed normal distribution for the individual effects and
+#' a LSQ/LAD estimator for the first-difference model.
 #' @aliases pldv
-#' @param formula a symbolic description for the model to be estimated,
-#' @param data a \code{data.frame},
-#' @param subset see \code{lm},
-#' @param weights see \code{lm},
-#' @param na.action see \code{lm},
-#' @param model one of \code{"fd"}, \code{"random"} or \code{"pooling"},
-#' @param index the indexes, see \code{\link{pdata.frame}},
+#' @param formula a symbolic description for the model to be
+#'     estimated,
+#' @param data a `data.frame`,
+#' @param subset see `lm`,
+#' @param weights see `lm`,
+#' @param na.action see `lm`,
+#' @param model one of `"fd"`, `"random"` or `"pooling"`,
+#' @param index the indexes, see [pdata.frame()],
 #' @param R the number of points for the gaussian quadrature,
 #' @param start a vector of starting values,
-#' @param lower the lower bound for the censored/truncated dependent variable,
-#' @param upper the upper bound for the censored/truncated dependent variable,
-#' @param objfun the objective function for the fixed effect model, one of
-#' \code{"lsq"} for least squares and \code{"lad"} for least absolute
-#' deviations,
-#' @param sample \code{"cens"} for a censored (tobit-like) sample,
-#' \code{"trunc"} for a truncated sample,
+#' @param lower the lower bound for the censored/truncated dependent
+#'     variable,
+#' @param upper the upper bound for the censored/truncated dependent
+#'     variable,
+#' @param objfun the objective function for the fixed effect model,
+#'     one of `"lsq"` for least squares and `"lad"` for least absolute
+#'     deviations,
+#' @param sample `"cens"` for a censored (tobit-like) sample,
+#'     `"trunc"` for a truncated sample,
 #' @param \dots further arguments.
-#' @return An object of class \code{c("plm","panelmodel")}.
+#' @return An object of class `c("plm","panelmodel")`.
 #' @export
 #' @importFrom maxLik maxLik
 #' @author Yves Croissant

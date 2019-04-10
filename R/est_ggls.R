@@ -3,55 +3,54 @@
 #' General FGLS estimators for panel data (balanced or unbalanced)
 #' 
 #' 
-#' \code{pggls} is a function for the estimation of linear panel
-#' models by general feasible generalized least squares, either with
-#' or without fixed effects. General FGLS is based on a two-step
-#' estimation process: first a model is estimated by OLS (\code{model
-#' = "pooling"}), fixed effects (\code{model = "within"}) or first
-#' differences (\code{model = "fd"}), then its residuals are used to
+#' `pggls` is a function for the estimation of linear panel models by
+#' general feasible generalized least squares, either with or without
+#' fixed effects. General FGLS is based on a two-step estimation
+#' process: first a model is estimated by OLS (\code{model =
+#' "pooling"}), fixed effects (`model = "within"`) or first
+#' differences (`model = "fd"`), then its residuals are used to
 #' estimate an error covariance matrix for use in a feasible-GLS
 #' analysis. This framework allows the error covariance structure
-#' inside every group (if \code{effect = "individual"}, else
-#' symmetric) of observations to be fully unrestricted and is
-#' therefore robust against any type of intragroup heteroskedasticity
-#' and serial correlation. Conversely, this structure is assumed
-#' identical across groups and thus general FGLS estimation is
-#' inefficient under groupwise heteroskedasticity. Note also that this
-#' method requires estimation of \eqn{T(T+1)/2} variance parameters,
-#' thus efficiency requires N >> T (if \code{effect = "individual"},
-#' else the opposite). Setting \code{model = "random"} or \code{model
-#' = "pooling"}, both produce an unrestricted FGLS model as in
-#' Wooldridge, Ch. 10.5, although the former is deprecated and
-#' included only for retro--compatibility reasons. If \code{model =
-#' "within"} (the default) then a FEGLS (fixed effects GLS, see ibid.)
-#' is estimated; if \code{model = "fd"} a FDGLS (first-difference
-#' GLS).
+#' inside every group (if `effect = "individual"`, else symmetric) of
+#' observations to be fully unrestricted and is therefore robust
+#' against any type of intragroup heteroskedasticity and serial
+#' correlation. Conversely, this structure is assumed identical across
+#' groups and thus general FGLS estimation is inefficient under
+#' groupwise heteroskedasticity. Note also that this method requires
+#' estimation of \eqn{T(T+1)/2} variance parameters, thus efficiency
+#' requires N >> T (if `effect = "individual"`, else the
+#' opposite). Setting `model = "random"` or \code{model = "pooling"},
+#' both produce an unrestricted FGLS model as in Wooldridge, Ch. 10.5,
+#' although the former is deprecated and included only for
+#' retro--compatibility reasons. If \code{model = "within"} (the
+#' default) then a FEGLS (fixed effects GLS, see ibid.)  is estimated;
+#' if `model = "fd"` a FDGLS (first-difference GLS).
 #' 
 #' @aliases pggls
 #' @importFrom bdsmatrix bdsmatrix
 #' @param formula a symbolic description of the model to be estimated,
-#' @param object,x an object of class \code{pggls},
-#' @param data a \code{data.frame},
-#' @param subset see \code{\link{lm}},
-#' @param na.action see \code{\link{lm}},
+#' @param object,x an object of class `pggls`,
+#' @param data a `data.frame`,
+#' @param subset see [lm()],
+#' @param na.action see [lm()],
 #' @param effect the effects introduced in the model, one of
-#'     \code{"individual"} or \code{"time"},
-#' @param model one of \code{"within"}, \code{"pooling"},
-#'     \code{"random"} or \code{"fd"},
-#' @param index the indexes, see \code{\link{pdata.frame}},
+#'     `"individual"` or `"time"`,
+#' @param model one of `"within"`, `"pooling"`, `"random"` or `"fd"`,
+#' @param index the indexes, see [pdata.frame()],
 #' @param digits digits,
 #' @param width the maximum length of the lines in the print output,
 #' @param \dots further arguments.
-#' @return An object of class \code{c("pggls","panelmodel")}
-#'     containing: \item{coefficients}{the vector of coefficients,}
+#' @return An object of class `c("pggls","panelmodel")` containing:
+#'     \item{coefficients}{the vector of coefficients,}
 #'     \item{residuals}{the vector of residuals,}
 #'     \item{fitted.values}{the vector of fitted values,}
 #'     \item{vcov}{the covariance matrix of the coefficients,}
 #'     \item{df.residual}{degrees of freedom of the residuals,}
 #'     \item{model}{a data.frame containing the variables used for the
-#'     estimation,} \item{call}{the call,} \item{sigma}{the estimated
-#'     intragroup (or cross-sectional, if \code{effect = "time"})
-#'     covariance of errors,}
+#'     estimation,}
+#'     \item{call}{the call,}
+#'     \item{sigma}{the estimated intragroup (or cross-sectional, if
+#'     `effect = "time"`) covariance of errors,}
 #' @export
 #' @author Giovanni Millo
 #' @references

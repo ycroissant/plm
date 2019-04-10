@@ -30,12 +30,14 @@ accompanying standard error
 }
 \details{
 The (somewhat artificial) intercept for within models (fixed
-effects models) was made popular by Stata of StataCorp (see Gould
-(2013)), EViews of IHS, and gretl (see Cottrell/Lucchetti (2016),
-p. 160-161 (example 18.1)), see for treatment in the literature,
-e.g. Greene (2012), Ch. 11.4.4, p. 364. It can be considered an
-overall intercept in the within model framework and is the weighted
-mean of fixed effects (see \bold{Examples} for the relationship).
+effects models) was made popular by Stata of StataCorp
+\insertCite{@see @GOUL:13}{plm}, EViews of IHS, and gretl
+\insertCite{@gretl p. 160-161, example 18.1}{plm}, see for
+treatment in the literature,
+e.g. \insertCite{GREE:12;textual}{plm}, Ch. 11.4.4, p. 364. It can
+be considered an overall intercept in the within model framework
+and is the weighted mean of fixed effects (see \strong{Examples} for the
+relationship).
 
 \code{within_intercept} estimates a new model which is
 computationally more demanding than just taking the weighted
@@ -46,7 +48,7 @@ intercept for twoway fixed effect models.
 Users can set argument \code{vcov} to a function to calculate a
 specific (robust) variance--covariance matrix and get the
 respective (robust) standard error for the overall intercept,
-e.g. the function \code{\link{vcovHC}}, see examples for
+e.g. the function \code{\link[=vcovHC]{vcovHC()}}, see examples for
 usage. Note: The argument \code{vcov} must be a function, not a
 matrix, because the model to calculate the overall intercept for
 the within model is different from the within model itself.
@@ -60,10 +62,12 @@ mod_fe <- plm(mv ~ age + crim, data = Hedonic, index = "townid")
 overallint <- within_intercept(mod_fe)
 attr(overallint, "se") # standard error
 
-# overall intercept is the weighted mean of fixed effects in the one-way case
+# overall intercept is the weighted mean of fixed effects in the
+# one-way case
 weighted.mean(fixef(mod_fe), as.numeric(table(index(mod_fe)[[1]])))
 
-# relationship of type="dmean", "level" and within_intercept in the one-way case
+# relationship of type="dmean", "level" and within_intercept in the
+# one-way case
 data("Grunfeld", package = "plm")
 gi <- plm(inv ~ value + capital, data = Grunfeld, model = "within")
 fx_level <- fixef(gi, type = "level")
@@ -76,15 +80,10 @@ within_intercept(gi, vcov = function(x) vcovHC(x, method="arellano", type="HC0")
 
 }
 \references{
-\insertRef{gretl}{plm}
-
-\insertRef{GOUL:13}{plm}
-
-\insertRef{GREE:12}{plm}
-Ch. 11.4.4.
+\insertAllCited{}
 }
 \seealso{
-\code{\link{fixef}} to extract the fixed effects of a
+\code{\link[=fixef]{fixef()}} to extract the fixed effects of a
 within model.
 }
 \author{

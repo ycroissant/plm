@@ -43,7 +43,7 @@ Sargan, J.D. (1958), The Estimation of Economic Relationships using
 Instrumental Variables, \emph{Econometrica}, \bold{26}(3), pp. 393--415.
 }
 \seealso{
-\code{\link{pgmm}}
+\code{\link[=pgmm]{pgmm()}}
 }
 \author{
 Yves Croissant
