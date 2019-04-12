@@ -102,8 +102,8 @@ mylm <- function(y, X, W = NULL){
 #' - `"bms"` for \insertCite{BREU:MIZO:SCHM:89;textual}{plm}.
 #' 
 #' The Hausman--Taylor estimator \insertCite{HAUS:TAYL:81}{plm} is
-#' computed with arguments `random.method = "ht"`, \code{model =
-#' "random"}, `inst.method = "baltagi"` (the other way with only
+#' computed with arguments `random.method = "ht"`, `model =
+#' "random"`, `inst.method = "baltagi"` (the other way with only
 #' `model = "ht"` is deprecated).
 #' 
 #' @aliases plm has.intercept

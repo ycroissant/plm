@@ -67,7 +67,7 @@ in the return value) are the respective robust standard errors.
 
 The associated \code{summary} method returns an extended object of class
 \code{c("summary.fixef", "matrix")} with more information (see sections
-\bold{Value} and \bold{Examples}).
+\strong{Value} and \strong{Examples}).
 
 References with formulae (except for the two-ways unbalanced case)
 are, e.g., \insertCite{GREE:12;textual}{plm}, Ch. 11.4.4, p. 364,

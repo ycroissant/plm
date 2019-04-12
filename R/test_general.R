@@ -19,9 +19,9 @@ data.name <- function(x){
 #' Sec. 10.7.3.) is computed instead \insertCite{@WOOL:10 Sec.10.7.3}{plm}.
 #' Only the latter can be robustified by specifying a robust
 #' covariance estimator as a function through the argument `vcov` (see
-#' \bold{Examples}).
+#' **Examples**).
 #' 
-#' The equivalent tests in the \bold{one-way} case using a between
+#' The equivalent tests in the **one-way** case using a between
 #' model (either "within vs. between" or "random vs. between")
 #' \insertCite{@see @HAUS:TAYL:81 or @BALT:13 Sec.4.3}{plm} can also
 #' be performed by `phtest`, but only for `test = "chisq"`, not for
@@ -667,8 +667,8 @@ trans_clubSandwich_vcov <- function(CSvcov, index) {
 #' 
 #' `pwaldtest` performs the test if the slope coefficients of a panel
 #' regression are jointly zero. It does not perform general purpose
-#' Wald-style tests (for those, see `\link[lmtest]{waldtest`} (from
-#' package \CRANpkg{lmtest}) or `linearHypothesis` (from package
+#' Wald-style tests (for those, see [lmtest::waldtest()] (from package
+#' \CRANpkg{lmtest}) or [car::linearHypothesis()] (from package
 #' \CRANpkg{car})).
 #' 
 #' If a user specified variance-covariance matrix/function is given in
@@ -709,7 +709,7 @@ trans_clubSandwich_vcov <- function(CSvcov, index) {
 #' @param df2adj logical, only relevant for `test = "F"`,
 #'     indicating whether the adjustment for clustered standard errors
 #'     for the second degrees of freedom parameter should be performed
-#'     (see \bold{Details}, also for further requirements regarding
+#'     (see **Details**, also for further requirements regarding
 #'     the variance--covariance matrix in `vcov` for the
 #'     adjustment to be performed),
 #' @param .df1 a numeric, used if one wants to overwrite the first
@@ -930,7 +930,7 @@ pwaldtest.default <- function(x, ...) {
 #' 
 #' A Chow test for the poolability of the data.
 #' 
-#' `pooltest` is a \emph{F} test of stability (or Chow test) for the
+#' `pooltest` is a *F* test of stability (or Chow test) for the
 #' coefficients of a panel model. For argument `x`, the estimated
 #' `plm` object should be a `"pooling"` model or a `"within"` model
 #' (the default); intercepts are assumed to be identical in the first

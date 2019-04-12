@@ -34,7 +34,7 @@
 #' evaluated for gaps.
 #' 
 #' The default method also works for argument `x` being an arbitrary
-#' vector (see \bold{Examples}), provided one can supply arguments `id`
+#' vector (see **Examples**), provided one can supply arguments `id`
 #' and `time`, which need to ordered as stacked time series. As only
 #' `id` and `time` are really necessary for the default method to
 #' evaluate the consecutiveness, `x = NULL` is also possible. However, if
@@ -59,7 +59,7 @@
 #' @param x usually, an object of class `pdata.frame`,
 #'     `data.frame`, `pseries`, or an estimated
 #'     `panelmodel`; for the default method `x` can also be
-#'     an arbitrary vector or `NULL`, see \bold{Details},
+#'     an arbitrary vector or `NULL`, see **Details**,
 #' @param na.rm.tindex logical indicating whether any `NA` values
 #'     in the time index are removed before consecutiveness is
 #'     evaluated (defaults to `FALSE`),

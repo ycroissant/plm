@@ -84,7 +84,7 @@ print.panelmodel <- function(x, digits = max(3, getOption("digits") - 2),
 #' estimation procedure. This is e.g. the case for first--difference
 #' models estimated by `plm(\dots{`, model = "fd")} where the model
 #' frame does not yet contain the differences (see also
-#' \bold{Examples}).
+#' **Examples**).
 #'
 #' @name nobs.plm
 #' @param object a `panelmodel` object for which the number of
@@ -187,10 +187,10 @@ deviance.panelmodel <- function(object, model = NULL, ...){
 #' estimated plm models.
 #' 
 #' The `summary` method for plm objects (`summary.plm`) creates an
-#' object of class \code{c("summary.plm", "plm", "panelmodel")} that
+#' object of class `c("summary.plm", "plm", "panelmodel")` that
 #' extends the plm object it is run on with various information about
 #' the estimated model like (inferential) statistics, see
-#' \bold{Value}. It has an associated print method
+#' **Value**. It has an associated print method
 #' (`print.summary.plm`).
 #' 
 #' @aliases summary.plm
@@ -200,12 +200,12 @@ deviance.panelmodel <- function(object, model = NULL, ...){
 #'     the table of coefficients to be printed for
 #'     `"print.summary.plm"`,
 #' @param vcov a variance--covariance matrix furnished by the user or
-#'     a function to calculate one (see \bold{Examples}),
+#'     a function to calculate one (see **Examples**),
 #' @param digits number of digits for printed output,
 #' @param width the maximum length of the lines in the printed output,
 #' @param \dots further arguments.
-#' @return An object of class \code{c("summary.plm", "plm",
-#'     "panelmodel")}.  Some of its elements are carried over from the
+#' @return An object of class `c("summary.plm", "plm",
+#'     "panelmodel")`.  Some of its elements are carried over from the
 #'     associated plm object and described there
 #'     ([plm()]). The following elements are new or changed
 #'     relative to the elements of a plm object:
@@ -239,11 +239,10 @@ deviance.panelmodel <- function(object, model = NULL, ...){
 #' @seealso [plm()] for estimation of various models; [vcovHC()] for
 #'     an example of a robust estimation of variance--covariance
 #'     matrix; [r.squared()] for the function to calculate R-squared;
-#'     `\link[stats:print.power.htest]{print.htest`} for some
-#'     information about class "htest"; [fixef()] to compute the fixed
-#'     effects for "within" (=fixed effects) models and
-#'     [within_intercept()] for an "overall intercept" for such
-#'     models; [pwaldtest()]
+#'     [stats::print.power.htest()] for some information about class
+#'     "htest"; [fixef()] to compute the fixed effects for "within"
+#'     (=fixed effects) models and [within_intercept()] for an
+#'     "overall intercept" for such models; [pwaldtest()]
 #' @keywords regression
 #' @examples
 #' 

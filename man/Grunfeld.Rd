@@ -34,7 +34,7 @@ A balanced panel of 10 observational units (firms) from 1935 to 1954
 }
 \note{
 The Grunfeld data as provided in package \code{plm} is the
-same data as used in Baltagi (2001), see \bold{Examples} below.
+same data as used in Baltagi (2001), see \strong{Examples} below.
 
 NB:\cr Various versions of the Grunfeld data circulate
 online. Also, various text books (and also varying among editions)
@@ -71,6 +71,6 @@ Grunfeld data:
 }
 \seealso{
 For the complete Grunfeld data (11 firms), see
-\code{\link[AER]{Grunfeld}}, in the \code{AER} package.
+\link[AER:Grunfeld]{AER::Grunfeld}, in the \code{AER} package.
 }
 \keyword{datasets}

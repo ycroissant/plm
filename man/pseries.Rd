@@ -64,8 +64,8 @@ Within(x, ...)
 \item{x, object}{a \code{pseries} or a \code{summary.pseries} object,}
 
 \item{\dots}{further arguments, e. g. \code{na.rm = TRUE} for
-transformation functions like \code{beetween}, see \bold{Details}
-and \bold{Examples}.}
+transformation functions like \code{beetween}, see \strong{Details}
+and \strong{Examples}.}
 
 \item{idbyrow}{if \code{TRUE} in the \code{as.matrix} method, the lines of
 the matrix are the individuals,}

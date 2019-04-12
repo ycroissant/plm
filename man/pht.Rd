@@ -59,12 +59,10 @@ on the argument \code{model}. The model is specified as a two--part formula,
 the second part containing the exogenous variables.
 }
 \note{
-The function \code{pht} is deprecated. Please use function
-\code{plm} to estimate Taylor--Hausman models like this with a
-three-part formula as shown in the example:\cr
-\code{plm(<formula>, random.method = "ht", model = "random",
-    inst.method = "baltagi")}. The Amemiya--MaCurdy estimator and
-the Breusch--Mizon--Schmidt estimator is computed likewise with
+The function \code{pht} is deprecated. Please use function \code{plm}
+to estimate Taylor--Hausman models like this with a three-part
+formula as shown in the example:\cr \code{plm(<formula>, random.method = "ht", model = "random", inst.method = "baltagi")}. The Amemiya--MaCurdy estimator and the
+Breusch--Mizon--Schmidt estimator is computed likewise with
 \code{plm}.
 }
 \examples{
@@ -104,17 +102,13 @@ summary(am)
 
 }
 \references{
-Amemiya, T. and MaCurdy, T.E. (1986) Instrumental--variable estimation of an
-error components model, \emph{Econometrica}, \bold{54}(4), pp. 869--880.
+\insertCite{AMEM:MACU:86}{plm}
 
-Baltagi, Badi H. (2013) \emph{Econometric Analysis of Panel Data}, 5th ed.,
-John Wiley and Sons.
+\insertCite{BALT:13}{plm}
 
-Breusch, T.S., Mizon, G.E. and Schmidt, P. (1989) Efficient estimation using
-panel data, \emph{Econometrica}, \bold{57}(3), pp. 695--700.
+\insertCite{BREU:MIZO:SCHM:89}{plm}
 
-Hausman, J.A. and Taylor W.E. (1981) Panel data and unobservable individual
-effects, \emph{Econometrica}, \bold{49}(6), pp. 1377--1398.
+\insertCite{HAUS:TAYL:81}{plm}
 }
 \author{
 Yves Croissant

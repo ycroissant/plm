@@ -36,7 +36,7 @@ pdata.frame(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 \code{pdata.frame} for the methods,}
 
 \item{index}{this argument indicates the individual and time
-indexes. See \bold{Details},}
+indexes. See \strong{Details},}
 
 \item{drop.index}{logical, indicates whether the indexes are to be
 excluded from the resulting pdata.frame,}
@@ -125,15 +125,15 @@ use the function [index()] for 'pdata.frames' (and other objects).
 it to each column.
 
 \code{as.list} behaves by default identical to
-\code{\link[base:list]{as.list.data.frame}} which means it drops the
+[base::as.list.data.frame()] which means it drops the
 attributes specific to a pdata.frame; if a list of pseries is
 wanted, the attribute \code{keep.attributes} can to be set to
 \code{TRUE}. This also makes \code{lapply} work as expected on a pdata.frame
-(see also \bold{Examples}).
+(see also \strong{Examples}).
 
 [["\code{and}"$"\code{extract a series from the}pdata.frame\code{.  The }"index"\code{attribute is then added to the series and a class attribute}"pseries"\code{is added. The}"["\code{method behaves as for}data.frame\code{, except that the extraction is also applied to the }index` attribute.  A safe way to extract the index attribute is to
 use the function [index()]: R:[%22%60%20and%20%60%22$%22%60%20extract%20a%20series%20from%20the%20%60pdata.frame%60.%20%20The%0A%60%22index%22%60%20attribute%20is%20then%20added%20to%20the%20series%20and%20a%20class%0Aattribute%20%60%22pseries%22%60%20is%20added.%20The%20%60%22[%22%60%20method%20behaves%20as%20for%0A%60data.frame%60,%20except%20that%20the%20extraction%20is%20also%20applied%20to%20the%0A%60index%60%20attribute.%20%20A%20safe%20way%20to%20extract%20the%20index%20attribute%20is%20to%0Ause%20the%20function%20[index()
-[base:list]: R:base:list
+[base::as.list.data.frame()]: R:base::as.list.data.frame()
 }
 \examples{
 

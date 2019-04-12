@@ -41,7 +41,7 @@ model frame), a \code{pFormula} + \code{data} or a \code{plm} object, and the
 transformation specified by \code{effect} and \code{model} is applied to
 it.\cr Constructing the model frame first ensures proper NA
 handling and the response being placed in the first column, see
-also \bold{Examples} for usage.
+also \strong{Examples} for usage.
 }
 \examples{
 

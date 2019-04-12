@@ -23,7 +23,7 @@
 #' @param order an integer indicating the order of serial correlation
 #'     to be tested for. `NULL` (default) uses the minimum number of
 #'     observations over the time dimension (see also section
-#'     \bold{Details} below),
+#'     **Details** below),
 #' @param type type of test statistic to be calculated; either
 #'     `"Chisq"` (default) for the Chi-squared test statistic or `"F"`
 #'     for the F test statistic,
@@ -33,7 +33,7 @@
 #'     statistic for model `pooling` (default), `random`, or `within`.
 #'     When `model` is used, the `data` argument needs to be passed as
 #'     well,
-#' @param \dots further arguments (see `\link[lmtest]{bgtest`}).
+#' @param \dots further arguments (see [lmtest::bgtest()]).
 #' @return An object of class `"htest"`.
 #' @note The argument `order` defaults to the minimum number of
 #'     observations over the time dimension, while for
@@ -41,7 +41,7 @@
 #' @export
 #' @author Giovanni Millo
 #' @seealso For the original test in package \CRANpkg{lmtest} see
-#'     `\link[lmtest]{bgtest`}.  See [pdwtest()] for the analogous
+#'     [lmtest::bgtest()].  See [pdwtest()] for the analogous
 #'     panel Durbin--Watson test.  See [pbltest()], [pbsytest()],
 #'     [pwartest()] and [pwfdtest()] for other serial correlation
 #'     tests for panel models.
@@ -751,15 +751,15 @@ pbsytest.panelmodel <- function(x, test = c("ar", "re", "j"), re.normal = if (te
 #'     `"formula"`,
 #' @param data a `data.frame`,
 #' @param \dots further arguments to be passed on to `dwtest`,
-#'     e.g.  `alternative`, see `\link[lmtest]{dwtest`} for
+#'     e.g.  `alternative`, see [lmtest::dwtest()] for
 #'     further details.
 #' @return An object of class `"htest"`.
 #' @export
 #' @author Giovanni Millo
-#' @seealso `\link[lmtest]{dwtest`} for the Durbin--Watson test
+#' @seealso [lmtest::dwtest()] for the Durbin--Watson test
 #'     in \CRANpkg{lmtest}, [pbgtest()] for the analogous
 #'     Breusch--Godfrey test for panel models,
-#'     `\link[lmtest]{bgtest`} for the Breusch--Godfrey test for
+#'     [lmtest::bgtest()] for the Breusch--Godfrey test for
 #'     serial correlation in the linear model. [pbltest()],
 #'     [pbsytest()], [pwartest()] and
 #'     [pwfdtest()] for other serial correlation tests for

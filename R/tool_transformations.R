@@ -49,8 +49,8 @@
 #'     the empty columns,
 #' @param plot,scale,transparency,col,lwd plot arguments,
 #' @param \dots further arguments, e. g. `na.rm = TRUE` for
-#'     transformation functions like `beetween`, see \bold{Details}
-#'     and \bold{Examples}.
+#'     transformation functions like `beetween`, see **Details**
+#'     and **Examples**.
 #' @return All these functions return an object of class `pseries`,
 #'     except:\cr `between`, which returns a numeric vector,
 #'     `as.matrix`, which returns a matrix.
@@ -523,8 +523,8 @@ Within.matrix <- function(x, effect, rm.null = TRUE, ...){
 #'     methods (can also be negative).  For the `lag` method, a
 #'     positive (negative) `k` gives lagged (leading) values.  For the
 #'     `lead` method, a positive (negative) `k` gives leading (lagged)
-#'     values, thus, \code{lag(x, k = -1)} yields the same as `lead(x,
-#'     k = 1)`.  If `k` is an integer with length > 1 (`k = c(k1, k2,
+#'     values, thus, `lag(x, k = -1)` yields the same as `lead(x, k =
+#'     1)`.  If `k` is an integer with length > 1 (`k = c(k1, k2,
 #'     \dots{`)}) a `matrix` with multiple lagged `pseries` is
 #'     returned,
 #' @param lag the number of lags for the `diff` method, can also be of
@@ -544,7 +544,7 @@ Within.matrix <- function(x, effect, rm.null = TRUE, ...){
 #'     argument specifying the lag has length > 1.
 #' 
 #' @note The sign of `k` in `lag.pseries` results in inverse behaviour
-#'     compared to `\link[stats]{lag`} and `\link[zoo]{lag.zoo`}.
+#'     compared to [stats::lag()] and [zoo::lag.zoo()].
 #' @author Yves Croissant and Kevin Tappe
 #' @seealso To check if the time periods are consecutive per
 #'     individual, see [is.pconsecutive()].

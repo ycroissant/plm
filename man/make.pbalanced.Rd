@@ -25,7 +25,7 @@ or \code{pseries};}
 
 \item{balance.type}{character, one of \code{"fill"},
 \code{"shared.times"}, or \code{"shared.individuals"}, see
-\bold{Details},}
+\strong{Details},}
 
 \item{\dots}{further arguments.}
 
@@ -73,13 +73,13 @@ with distance 1), because balancedness does not imply
 consecutiveness. For making the data consecutive, use
 \code{\link[=make.pconsecutive]{make.pconsecutive()}} (and, optionally, set argument
 \code{balanced = TRUE} to make consecutive and balanced, see also
-\bold{Examples} for a comparison of the two functions.
+\strong{Examples} for a comparison of the two functions.
 
 Note: Rows of (p)data.frames (elements for pseries) with \code{NA}
 values in individual or time index are not examined but silently
 dropped before the data are made balanced. In this case, it cannot
 be inferred which individual or time period is meant by the missing
-value(s) (see also \bold{Examples}).  Especially, this means:
+value(s) (see also \strong{Examples}).  Especially, this means:
 \code{NA} values in the first/last position of the original time
 periods for an individual are dropped, which are usually meant to
 depict the beginning and ending of the time series for that

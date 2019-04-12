@@ -21,17 +21,17 @@
   theta = NULL, cstcovar.rm = NULL, ...)
 }
 \arguments{
-\item{data}{a \code{formula}, see \bold{Details},}
+\item{data}{a \code{formula}, see \strong{Details},}
 
 \item{\dots}{further arguments.}
 
-\item{lhs}{inherited from package \code{\link[Formula]{Formula}} (see
+\item{lhs}{inherited from package \code{\link[Formula:Formula]{Formula::Formula()}} (see
 there),}
 
-\item{rhs}{inherited from package \code{\link[Formula]{Formula}} (see
+\item{rhs}{inherited from package \code{\link[Formula:Formula]{Formula::Formula()}} (see
 there),}
 
-\item{dot}{inherited from package \code{\link[Formula]{Formula}} (see
+\item{dot}{inherited from package \code{\link[Formula:Formula]{Formula::Formula()}} (see
 there),}
 
 \item{x}{a \code{model.frame}}
@@ -45,8 +45,7 @@ estimated model object of class \code{"plm"},}
 \item{effect}{the effects introduced in the model, one of
 \code{"individual"}, \code{"time"}, \code{"twoways"} or \code{"nested"},}
 
-\item{theta}{the parameter for the transformation if \code{model =
-"random"},}
+\item{theta}{the parameter for the transformation if \code{model = "random"},}
 
 \item{cstcovar.rm}{remove the constant columns, one of \code{"none", "intercept", "covariates", "all")},}
 }
@@ -67,7 +66,7 @@ with transformations performed as specified by the \code{model} and
 requested), in this case the supplied \code{data} argument should be a
 model frame created by plm's \code{model.frame} method. If not, it is
 tried to construct the model frame from the data. Constructing the
-model frame first ensures proper NA handling, see \bold{Examples}.
+model frame first ensures proper NA handling, see \strong{Examples}.
 }
 \examples{
 
@@ -99,7 +98,7 @@ all.equal(modmat, model.matrix(fe_model), check.attributes = FALSE) # TRUE
 }
 \seealso{
 \code{\link[=pmodel.response]{pmodel.response()}} for (transformed) response
-variable.\cr \code{\link[Formula]{Formula}} from package \code{Formula},
+variable.\cr \code{\link[Formula:Formula]{Formula::Formula()}} from package \code{Formula},
 especially for the \code{lhs} and \code{rhs} arguments.
 }
 \author{

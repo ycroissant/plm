@@ -14,7 +14,7 @@
 \item{object}{an object of class \code{"plm"},}
 
 \item{vcov}{a variance--covariance matrix furnished by the user or
-a function to calculate one (see \bold{Examples}),}
+a function to calculate one (see \strong{Examples}),}
 
 \item{\dots}{further arguments.}
 
@@ -29,8 +29,7 @@ the table of coefficients to be printed for
 \code{"print.summary.plm"},}
 }
 \value{
-An object of class \code{c("summary.plm", "plm",
-    "panelmodel")}.  Some of its elements are carried over from the
+An object of class \code{c("summary.plm", "plm", "panelmodel")}.  Some of its elements are carried over from the
 associated plm object and described there
 (\code{\link[=plm]{plm()}}). The following elements are new or changed
 relative to the elements of a plm object:
@@ -68,7 +67,7 @@ The \code{summary} method for plm objects (\code{summary.plm}) creates an
 object of class \code{c("summary.plm", "plm", "panelmodel")} that
 extends the plm object it is run on with various information about
 the estimated model like (inferential) statistics, see
-\bold{Value}. It has an associated print method
+\strong{Value}. It has an associated print method
 (\code{print.summary.plm}).
 }
 \examples{
@@ -103,11 +102,10 @@ print(wi_summary, subset = "value")
 \code{\link[=plm]{plm()}} for estimation of various models; \code{\link[=vcovHC]{vcovHC()}} for
 an example of a robust estimation of variance--covariance
 matrix; \code{\link[=r.squared]{r.squared()}} for the function to calculate R-squared;
-\code{\link[stats:print.power.htest]{print.htest}} for some
-information about class "htest"; \code{\link[=fixef]{fixef()}} to compute the fixed
-effects for "within" (=fixed effects) models and
-\code{\link[=within_intercept]{within_intercept()}} for an "overall intercept" for such
-models; \code{\link[=pwaldtest]{pwaldtest()}}
+\code{\link[stats:print.power.htest]{stats::print.power.htest()}} for some information about class
+"htest"; \code{\link[=fixef]{fixef()}} to compute the fixed effects for "within"
+(=fixed effects) models and \code{\link[=within_intercept]{within_intercept()}} for an
+"overall intercept" for such models; \code{\link[=pwaldtest]{pwaldtest()}}
 }
 \author{
 Yves Croissant

@@ -2,9 +2,9 @@
 #' \insertCite{DRIS:KRAA:98;textual}{plm} Robust Covariance Matrix
 #' Estimator
 #' 
-#' Nonparametric robust covariance matrix estimators \emph{a la
-#' Driscoll and Kraay} for panel models with cross-sectional
-#' \emph{and} serial correlation.
+#' Nonparametric robust covariance matrix estimators *a la
+#' Driscoll and Kraay* for panel models with cross-sectional
+#' *and* serial correlation.
 #' 
 #' `vcovSCC` is a function for estimating a robust covariance matrix
 #' of parameters for a panel model according to the
@@ -14,7 +14,7 @@
 #' effects models is undocumented.
 #' 
 #' Weighting schemes specified by `type` are analogous to those in
-#' `\link[sandwich]{vcovHC`} in package \CRANpkg{sandwich} and are
+#' [sandwich::vcovHC()] in package \CRANpkg{sandwich} and are
 #' justified theoretically (although in the context of the standard
 #' linear model) by \insertCite{MACK:WHIT:85;textual}{plm} and
 #' \insertCite{CRIB:04;textual}{plm} \insertCite{@see @ZEIL:04}{plm}).
@@ -45,7 +45,7 @@
 #' @export
 #' @author Giovanni Millo, partially ported from Daniel Hoechle's
 #'     (2007) Stata code
-#' @seealso `\link[sandwich]{vcovHC`} from the \CRANpkg{sandwich}
+#' @seealso [sandwich::vcovHC()] from the \CRANpkg{sandwich}
 #'     package for weighting schemes (`type` argument).
 #' @references
 #'
@@ -86,8 +86,8 @@ vcovSCC <- function(x, ...){
 #' \insertCite{NEWE:WEST:87;textual}{plm} Robust Covariance Matrix
 #' Estimator
 #' 
-#' Nonparametric robust covariance matrix estimators \emph{a la Newey
-#' and West} for panel models with serial correlation.
+#' Nonparametric robust covariance matrix estimators *a la Newey
+#' and West* for panel models with serial correlation.
 #' 
 #' `vcovNW` is a function for estimating a robust covariance matrix of
 #' parameters for a panel model according to the
@@ -96,7 +96,7 @@ vcovSCC <- function(x, ...){
 #' [vcovSCC()]) to no cross--sectional correlation.
 #' 
 #' Weighting schemes specified by `type` are analogous to those in
-#' `\link[sandwich]{vcovHC`} in package \CRANpkg{sandwich} and are
+#' [sandwich::vcovHC()] in package \CRANpkg{sandwich} and are
 #' justified theoretically (although in the context of the standard
 #' linear model) by \insertCite{MACK:WHIT:85;textual}{plm} and
 #' \insertCite{CRIB:04;textual}{plm} \insertCite{@see @ZEIL:04}{plm}.
@@ -122,8 +122,8 @@ vcovSCC <- function(x, ...){
 #'     the covariance matrix of coefficients.
 #' @export
 #' @author Giovanni Millo
-#' @seealso `\link[sandwich]{vcovHC`} from the \CRANpkg{sandwich}
-#'     package for weighting schemes (`type` argument).
+#' @seealso [sandwich::vcovHC()] from the \CRANpkg{sandwich} package
+#'     for weighting schemes (`type` argument).
 #' @references
 #'
 #' \insertRef{CRIB:04}{plm}
@@ -163,18 +163,18 @@ vcovNW <- function(x, ...){
 #' Double-Clustering Robust Covariance Matrix Estimator
 #' 
 #' High-level convenience wrapper for double-clustering robust
-#' covariance matrix estimators \emph{a la}
+#' covariance matrix estimators *a la*
 #' \insertCite{THOM:11;textual}{plm} and
 #' \insertCite{CAME:GELB:MILL:11;textual}{plm} for panel models.
 #' 
 #' `vcovDC` is a function for estimating a robust covariance matrix of
 #' parameters for a panel model with errors clustering along both dimensions.
 #' The function is a convenience wrapper simply summing a group- and a
-#' time-clustered covariance matrix and subtracting a diagonal one \emph{a la}
+#' time-clustered covariance matrix and subtracting a diagonal one *a la*
 #' White.
 #' 
 #' Weighting schemes specified by `type` are analogous to those in
-#' `\link[sandwich]{vcovHC`} in package \CRANpkg{sandwich} and are
+#' [sandwich::vcovHC()] in package \CRANpkg{sandwich} and are
 #' justified theoretically (although in the context of the standard
 #' linear model) by \insertCite{MACK:WHIT:85;textual}{plm} and
 #' \insertCite{CRIB:04;textual}{plm} \insertCite{@see @ZEIL:04}{plm}.
@@ -197,7 +197,7 @@ vcovNW <- function(x, ...){
 #'     the covariance matrix of coefficients.
 #' @export
 #' @author Giovanni Millo
-#' @seealso `\link[sandwich]{vcovHC`} from the \CRANpkg{sandwich}
+#' @seealso [sandwich::vcovHC()] from the \CRANpkg{sandwich}
 #'     package for weighting schemes (`type` argument).
 #' @references
 #'
@@ -564,7 +564,7 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 
 #' Robust Covariance Matrix Estimators
 #' 
-#' Robust covariance matrix estimators \emph{a la White} for panel
+#' Robust covariance matrix estimators *a la White* for panel
 #' models.
 #' 
 #' `vcovHC` is a function for estimating a robust covariance matrix of
@@ -587,7 +587,7 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 #' correlation.
 #' 
 #' Weighting schemes specified by `type` are analogous to those in
-#' `\link[sandwich]{vcovHC`} in package \CRANpkg{sandwich} and are
+#' [sandwich::vcovHC()] in package \CRANpkg{sandwich} and are
 #' justified theoretically (although in the context of the standard
 #' linear model) by \insertCite{MACK:WHIT:85;textual}{plm} and
 #' \insertCite{CRIB:04;textual}{plm}
@@ -622,7 +622,7 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 #'     same functionality.
 #' @export
 #' @author Giovanni Millo & Yves Croissant
-#' @seealso `\link[sandwich]{vcovHC`} from the \CRANpkg{sandwich}
+#' @seealso [sandwich::vcovHC()] from the \CRANpkg{sandwich}
 #'     package for weighting schemes (`type` argument).
 #' @references
 #'
@@ -774,8 +774,8 @@ vcovSCC.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 
 #' Beck and Katz Robust Covariance Matrix Estimators
 #' 
-#' Unconditional Robust covariance matrix estimators \emph{a la Beck
-#' and Katz} for panel models (a.k.a. Panel Corrected Standard Errors
+#' Unconditional Robust covariance matrix estimators *a la Beck
+#' and Katz* for panel models (a.k.a. Panel Corrected Standard Errors
 #' (PCSE)).
 #' 
 #' `vcovBK` is a function for estimating a robust covariance matrix of
@@ -798,7 +798,7 @@ vcovSCC.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 #' timewise- (groupwise-) heteroskedasticity--consistent estimator.
 #' 
 #' Weighting schemes specified by `type` are analogous to those in
-#' `\link[sandwich]{vcovHC`} in package \CRANpkg{sandwich} and are
+#' [sandwich::vcovHC()] in package \CRANpkg{sandwich} and are
 #' justified theoretically (although in the context of the standard
 #' linear model) by \insertCite{MACK:WHIT:85;textual}{plm} and
 #' \insertCite{CRIB:04;textual}{plm} \insertCite{@see @ZEIL:04}{plm}.
@@ -827,7 +827,7 @@ vcovSCC.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 #' @return An object of class `"matrix"` containing the estimate of
 #'     the covariance matrix of coefficients.
 #' @author Giovanni Millo
-#' @seealso `\link[sandwich]{vcovHC`} from the \CRANpkg{sandwich}
+#' @seealso [sandwich::vcovHC()] from the \CRANpkg{sandwich}
 #'     package for weighting schemes (`type` argument).
 #' @references
 #'

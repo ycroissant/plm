@@ -11,7 +11,7 @@
 random effects model,}
 
 \item{effect}{\code{NULL}, \code{"individual"}, or \code{"time"}, the effects to
-be extracted, see \bold{Details},}
+be extracted, see \strong{Details},}
 
 \item{\dots}{further arguments (currently not used).}
 }
@@ -28,9 +28,9 @@ Function \code{ranef} calculates the random effects of a fitted random
 effects model. For one-way models, the effects of the estimated
 model are extracted (either individual or time effects). For
 two-way models, extracting the individual effects is the default
-(both, argument \code{effect = NULL} and \code{effect = "individual"}
-will give individual effects). Time effects can be extracted by
-setting \code{effect = "time"}.
+(both, argument \code{effect = NULL} and \code{effect = "individual"} will
+give individual effects). Time effects can be extracted by setting
+\code{effect = "time"}.
 
 Not all random effect model types are supported (yet?).
 }

@@ -32,7 +32,7 @@ frame), because sometimes the model frame is further reduced by the
 estimation procedure. This is e.g. the case for first--difference
 models estimated by \code{plm(\dots{}, model = "fd")} where the model
 frame does not yet contain the differences (see also
-\bold{Examples}).
+\strong{Examples}).
 }
 \examples{
 

@@ -38,7 +38,7 @@
 #' pseries), this results in nrow(make.pconsecutive, balanced = FALSE) <=
 #' nrow(make.pconsecutive, balanced = TRUE).  For making the data only
 #' balanced, i.e. not demanding consecutiveness at the same time, use
-#' [make.pbalanced()] (see \bold{Examples} for a comparison)).
+#' [make.pbalanced()] (see **Examples** for a comparison)).
 #' 
 #' Note: rows of (p)data.frames (elements for pseries) with `NA` values in
 #' individual or time index are not examined but silently dropped before the
@@ -48,7 +48,7 @@
 #' periods for an individual, which usually depicts the beginning and ending of
 #' the time series for that individual, the beginning/end of the resulting time
 #' series is taken to be the min and max (w/o `NA` values) of the original
-#' time series for that individual, see also \bold{Examples}. Thus, one might
+#' time series for that individual, see also **Examples**. Thus, one might
 #' want to check if there are any `NA` values in the index variables
 #' before applying make.pconsecutive, and especially check for `NA` values
 #' in the first and last position for each individual in original data and, if
@@ -411,13 +411,13 @@ make.pconsecutive.pseries <- function(x, balanced = FALSE, ...) {
 #' consecutiveness. For making the data consecutive, use
 #' [make.pconsecutive()] (and, optionally, set argument
 #' `balanced = TRUE` to make consecutive and balanced, see also
-#' \bold{Examples} for a comparison of the two functions.
+#' **Examples** for a comparison of the two functions.
 #' 
 #' Note: Rows of (p)data.frames (elements for pseries) with `NA`
 #' values in individual or time index are not examined but silently
 #' dropped before the data are made balanced. In this case, it cannot
 #' be inferred which individual or time period is meant by the missing
-#' value(s) (see also \bold{Examples}).  Especially, this means:
+#' value(s) (see also **Examples**).  Especially, this means:
 #' `NA` values in the first/last position of the original time
 #' periods for an individual are dropped, which are usually meant to
 #' depict the beginning and ending of the time series for that
@@ -433,7 +433,7 @@ make.pconsecutive.pseries <- function(x, balanced = FALSE, ...) {
 #'     or `pseries`;
 #' @param balance.type character, one of `"fill"`,
 #'     `"shared.times"`, or `"shared.individuals"`, see
-#'     \bold{Details},
+#'     **Details**,
 #' @param index only relevant for `data.frame` interface; if
 #'     `NULL`, the first two columns of the data.frame are
 #'     assumed to be the index variables; if not `NULL`, both

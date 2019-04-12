@@ -52,9 +52,9 @@ auxiliary-regression-based version in Wooldridge (2010,
 Sec. 10.7.3.) is computed instead \insertCite{@WOOL:10 Sec.10.7.3}{plm}.
 Only the latter can be robustified by specifying a robust
 covariance estimator as a function through the argument \code{vcov} (see
-\bold{Examples}).
+\strong{Examples}).
 
-The equivalent tests in the \bold{one-way} case using a between
+The equivalent tests in the \strong{one-way} case using a between
 model (either "within vs. between" or "random vs. between")
 \insertCite{@see @HAUS:TAYL:81 or @BALT:13 Sec.4.3}{plm} can also
 be performed by \code{phtest}, but only for \code{test = "chisq"}, not for

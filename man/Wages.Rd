@@ -30,7 +30,7 @@ Online complements to Baltagi (2013):
 \description{
 A panel of 595 individuals from 1976 to 1982, taken from the Panel Study of
 Income Dynamics (PSID).\cr\cr The data are organized as a stacked time
-series/balanced panel, see \bold{Examples} on how to convert to a
+series/balanced panel, see \strong{Examples} on how to convert to a
 \code{pdata.frame}.
 }
 \details{

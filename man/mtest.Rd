@@ -37,10 +37,7 @@ mtest(ar, order = 2, vcov = vcovHC)
 
 }
 \references{
-Arellano, M. and Bond, S. (1991), Some Tests of Specification
-for Panel Data: Monte Carlo Evidence and an Application to Employment
-Equations, \emph{The Review of Economic Studies}, \bold{58}(2), 1991, pp.
-227--297.
+\insertCite{AREL:BOND:91}{plm}
 }
 \seealso{
 \code{\link[=pgmm]{pgmm()}}

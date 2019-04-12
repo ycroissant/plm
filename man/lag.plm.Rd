@@ -79,7 +79,7 @@ occur for non-consecutive time periods per individual
 }
 \note{
 The sign of \code{k} in \code{lag.pseries} results in inverse behaviour
-compared to \code{\link[stats]{lag}} and \code{\link[zoo]{lag.zoo}}.
+compared to \code{\link[stats:lag]{stats::lag()}} and \code{\link[zoo:lag.zoo]{zoo::lag.zoo()}}.
 }
 \examples{
 

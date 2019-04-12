@@ -17,8 +17,8 @@
 #' 
 #' `y~lag(y, 1:2)+lag(x1, 0:1)+lag(x2, 0:2) | lag(y, 2:99)` is similar to
 #' 
-#' \code{y~lag(y, 1:2)+lag(x1, 0:1)+lag(x2, 0:2) | lag(y, 2:99) | lag(x1,
-#' 0:1)+lag(x2, 0:2)}
+#' `y~lag(y, 1:2)+lag(x1, 0:1)+lag(x2, 0:2) | lag(y, 2:99) | lag(x1,
+#' 0:1)+lag(x2, 0:2)`
 #'
 #' and indicates that all lags from 2 of `y` are used
 #' as GMM instruments.
@@ -817,10 +817,10 @@ summary.pgmm <- function(object, robust = TRUE, time.dummies = FALSE, ...) {
 #' @export
 #' @author Yves Croissant
 #' @seealso [pgmm()]
-#' @references Arellano, M. and Bond, S. (1991), Some Tests of Specification
-#' for Panel Data: Monte Carlo Evidence and an Application to Employment
-#' Equations, \emph{The Review of Economic Studies}, \bold{58}(2), 1991, pp.
-#' 227--297.
+#' @references
+#'
+#' \insertCite{AREL:BOND:91}{plm}
+#' 
 #' @keywords htest
 #' @examples
 #' 
@@ -994,12 +994,12 @@ print.summary.pgmm <- function(x, digits = max(3, getOption("digits") - 2),
 #' @export
 #' @author Yves Croissant
 #' @seealso [pgmm()]
-#' @references Hansen, L.P. (1982), Large Sample Properties of Generalized
-#' Methods of Moments Estimators, \emph{Econometrica}, \bold{50}(4), pp.
-#' 1029--1054.
+#' @references
+#'
+#' \insertCite{HANS:82}{plm}
+#'
+#' \insertCite{SARG:58}{plm}
 #' 
-#' Sargan, J.D. (1958), The Estimation of Economic Relationships using
-#' Instrumental Variables, \emph{Econometrica}, \bold{26}(3), pp. 393--415.
 #' @keywords htest
 #' @examples
 #' 

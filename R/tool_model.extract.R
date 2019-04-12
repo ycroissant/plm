@@ -14,37 +14,37 @@
 #' `pdata.frame` object suitable as an input to plm's
 #' `model.matrix`.\cr The `model.matrix` methods builds a model matrix
 #' with transformations performed as specified by the `model` and
-#' `effect` arguments (and `theta` if \code{model = "random"} is
+#' `effect` arguments (and `theta` if `model = "random"` is
 #' requested), in this case the supplied `data` argument should be a
 #' model frame created by plm's `model.frame` method. If not, it is
 #' tried to construct the model frame from the data. Constructing the
-#' model frame first ensures proper NA handling, see \bold{Examples}.
+#' model frame first ensures proper NA handling, see **Examples**.
 #'
 #' @name model.frame.pdata.frame
 #' @param object,formula an object of class `"pdata.frame"` or an
 #'     estimated model object of class `"plm"`,
 #' @param x a `model.frame`
-#' @param data a `formula`, see \bold{Details},
+#' @param data a `formula`, see **Details**,
 #' @param effect the effects introduced in the model, one of
 #'     `"individual"`, `"time"`, `"twoways"` or `"nested"`,
 #' @param model one of `"pooling"`, `"within"`, `"Sum"`, `"Between"`,
 #'     `"between"`, `"random",` `"fd"` and `"ht"`,
-#' @param theta the parameter for the transformation if \code{model =
-#'     "random"},
+#' @param theta the parameter for the transformation if `model =
+#'     "random"`,
 #' @param cstcovar.rm remove the constant columns, one of `"none",
 #'     "intercept", "covariates", "all")`,
-#' @param lhs inherited from package `\link[Formula]{Formula`} (see
+#' @param lhs inherited from package [Formula::Formula()] (see
 #'     there),
-#' @param rhs inherited from package `\link[Formula]{Formula`} (see
+#' @param rhs inherited from package [Formula::Formula()] (see
 #'     there),
-#' @param dot inherited from package `\link[Formula]{Formula`} (see
+#' @param dot inherited from package [Formula::Formula()] (see
 #'     there),
 #' @param \dots further arguments.
 #' @return The `model.frame` methods return a `pdata.frame`.\cr The
 #'     `model.matrix` methods return a `matrix`.
 #' @author Yves Croissant
 #' @seealso [pmodel.response()] for (transformed) response
-#'     variable.\cr `\link[Formula]{Formula`} from package `Formula`,
+#'     variable.\cr [Formula::Formula()] from package `Formula`,
 #'     especially for the `lhs` and `rhs` arguments.
 #' @keywords classes
 #' @examples
@@ -215,7 +215,7 @@ model.matrix.pdata.frame <- function(object,
 #' transformation specified by `effect` and `model` is applied to
 #' it.\cr Constructing the model frame first ensures proper NA
 #' handling and the response being placed in the first column, see
-#' also \bold{Examples} for usage.
+#' also **Examples** for usage.
 #' 
 #' @aliases pmodel.response
 #' @param object an object of class `"plm"`, or a formula of

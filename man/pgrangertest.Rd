@@ -8,8 +8,8 @@ pgrangertest(formula, data, test = c("Ztilde", "Zbar", "Wbar"), order = 1L,
   index = NULL)
 }
 \arguments{
-\item{formula}{a \code{formula} object to describe the direction of
-the hypothesized Granger causation,}
+\item{formula}{a \code{formula} object to describe the direction of the
+hypothesized Granger causation,}
 
 \item{data}{a \code{pdata.frame} or a \code{data.frame},}
 
@@ -21,17 +21,17 @@ test's auxiliary regressions, the length of order must be
 either 1 (same lag order for all individuals) or equal to the
 number of individuals (to specify a lag order per individual),}
 
-\item{index}{only relevant if \code{data} is \code{data.frame} and
-not a \code{pdata.frame}; if \code{NULL}, the first two columns
-of the data.frame are assumed to be the index variables, for
-further details see \code{\link[=pdata.frame]{pdata.frame()}}.}
+\item{index}{only relevant if \code{data} is \code{data.frame} and not a
+\code{pdata.frame}; if \code{NULL}, the first two columns of the
+data.frame are assumed to be the index variables, for further
+details see \code{\link[=pdata.frame]{pdata.frame()}}.}
 }
 \value{
-An object of class \code{c("pgrangertest",
-    "htest")}. Besides the usual elements of a \code{htest} object,
-it contains the data frame \code{indgranger} which carries the
-Granger test statistics per individual along the associated
-p-values, degrees of freedom and the specified lag order.
+An object of class \code{c("pgrangertest", "htest")}. Besides
+the usual elements of a \code{htest} object, it contains the data
+frame \code{indgranger} which carries the Granger test statistics
+per individual along the associated p-values, degrees of
+freedom and the specified lag order.
 }
 \description{
 Test for Granger (non-)causality in panel data.
@@ -58,7 +58,7 @@ to derive the other two.
 The Zbar statistic is not suitable for unbalanced panels. For the Wbar
 statistic, no p-value is available.
 
-The implementation uses \code{\link[lmtest]{grangertest}} from
+The implementation uses \code{\link[lmtest:grangertest]{lmtest::grangertest()}} from
 package \CRANpkg{lmtest} to perform the individual Granger tests.
 }
 \examples{
@@ -84,8 +84,8 @@ pgrangertest(inv ~ value, data = Grunfeld, order = c(rep(2L, 9), 3L))
 \insertRef{LOPE:WEBE:17}{plm}
 }
 \seealso{
-\code{\link[lmtest]{grangertest}} for the original
-(non-panel) Granger causality test in \CRANpkg{lmtest}.
+\code{\link[lmtest:grangertest]{lmtest::grangertest()}} for the original (non-panel)
+Granger causality test in \CRANpkg{lmtest}.
 }
 \author{
 Kevin Tappe

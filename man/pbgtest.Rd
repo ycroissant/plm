@@ -16,12 +16,12 @@ pbgtest(x, ...)
 \arguments{
 \item{x}{an object of class \code{"panelmodel"} or of class \code{"formula"},}
 
-\item{\dots}{further arguments (see \code{\link[lmtest]{bgtest}}).}
+\item{\dots}{further arguments (see \code{\link[lmtest:bgtest]{lmtest::bgtest()}}).}
 
 \item{order}{an integer indicating the order of serial correlation
 to be tested for. \code{NULL} (default) uses the minimum number of
 observations over the time dimension (see also section
-\bold{Details} below),}
+\strong{Details} below),}
 
 \item{type}{type of test statistic to be calculated; either
 \code{"Chisq"} (default) for the Chi-squared test statistic or \code{"F"}
@@ -92,7 +92,7 @@ Sec. 12.2, pp. 421--422.
 }
 \seealso{
 For the original test in package \CRANpkg{lmtest} see
-\code{\link[lmtest]{bgtest}}.  See \code{\link[=pdwtest]{pdwtest()}} for the analogous
+\code{\link[lmtest:bgtest]{lmtest::bgtest()}}.  See \code{\link[=pdwtest]{pdwtest()}} for the analogous
 panel Durbin--Watson test.  See \code{\link[=pbltest]{pbltest()}}, \code{\link[=pbsytest]{pbsytest()}},
 \code{\link[=pwartest]{pwartest()}} and \code{\link[=pwfdtest]{pwfdtest()}} for other serial correlation
 tests for panel models.

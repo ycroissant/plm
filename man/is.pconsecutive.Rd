@@ -26,7 +26,7 @@ is.pconsecutive(x, ...)
 \item{x}{usually, an object of class \code{pdata.frame},
 \code{data.frame}, \code{pseries}, or an estimated
 \code{panelmodel}; for the default method \code{x} can also be
-an arbitrary vector or \code{NULL}, see \bold{Details},}
+an arbitrary vector or \code{NULL}, see \strong{Details},}
 
 \item{\dots}{further arguments.}
 
@@ -77,7 +77,7 @@ numeric, i.e. the series
 evaluated for gaps.
 
 The default method also works for argument \code{x} being an arbitrary
-vector (see \bold{Examples}), provided one can supply arguments \code{id}
+vector (see \strong{Examples}), provided one can supply arguments \code{id}
 and \code{time}, which need to ordered as stacked time series. As only
 \code{id} and \code{time} are really necessary for the default method to
 evaluate the consecutiveness, \code{x = NULL} is also possible. However, if

@@ -22,7 +22,7 @@
 #' 
 #' The associated `summary` method returns an extended object of class
 #' `c("summary.fixef", "matrix")` with more information (see sections
-#' \bold{Value} and \bold{Examples}).
+#' **Value** and **Examples**).
 #' 
 #' References with formulae (except for the two-ways unbalanced case)
 #' are, e.g., \insertCite{GREE:12;textual}{plm}, Ch. 11.4.4, p. 364,
@@ -224,16 +224,16 @@ fixef.pggls <- fixef.plm
 #' effects model. For one-way models, the effects of the estimated
 #' model are extracted (either individual or time effects). For
 #' two-way models, extracting the individual effects is the default
-#' (both, argument `effect = NULL` and \code{effect = "individual"}
-#' will give individual effects). Time effects can be extracted by
-#' setting `effect = "time"`.
+#' (both, argument `effect = NULL` and `effect = "individual"` will
+#' give individual effects). Time effects can be extracted by setting
+#' `effect = "time"`.
 #' 
 #' Not all random effect model types are supported (yet?).
 #' 
 #' @param object an object of class `"plm"`, needs to be a fitted
 #'     random effects model,
 #' @param effect `NULL`, `"individual"`, or `"time"`, the effects to
-#'     be extracted, see \bold{Details},
+#'     be extracted, see **Details**,
 #' @param \dots further arguments (currently not used).
 #' @return A named numeric with the random effects per dimension
 #'     (individual or time).

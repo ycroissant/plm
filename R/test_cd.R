@@ -1,3 +1,4 @@
+
 ############## Pesaran's CD test and Breusch/Pagan LM Test (also scaled) ###############
 
   ## Pesaran's CD test for cross-sectional dependence in panel data models
@@ -53,8 +54,8 @@
 #' cross-sectional dependence after the introduction of time fixed
 #' effects to account for common shocks.
 #' 
-#' A \emph{local} version of either test can be computed by supplying
-#' a proximity matrix (elements coercible to `logical`) with argument
+#' A **local** version of either test can be computed by supplying a
+#' proximity matrix (elements coercible to `logical`) with argument
 #' `w` which provides information on whether any pair of individuals
 #' are neighbours or not. If `w` is supplied, only neighbouring pairs
 #' will be used in computing the test; else, `w` will default to
@@ -78,11 +79,10 @@
 #' 
 #' The test on a `pseries` is the same as a test on a pooled
 #' regression model of that variable on a constant, i.e.
-#' `pcdtest(some_pseries)` is equivalent to \code{pcdtest(plm(some_var
-#' ~ 1, data = some_pdata.frame, model = "pooling")} and also
-#' equivalent to \code{pcdtest(some_var ~ 1, data = some_data)}, where
-#' `some_var` is the variable name in the data which corresponds to
-#' `some_pseries`.
+#' `pcdtest(some_pseries)` is equivalent to `pcdtest(plm(some_var ~ 1,
+#' data = some_pdata.frame, model = "pooling")` and also equivalent to
+#' `code{pcdtest(some_var ~ 1, data = some_data)`, where `some_var` is
+#' the variable name in the data which corresponds to `some_pseries`.
 #' 
 #' @aliases pcdtest
 #' @param x an object of class `formula`, `panelmodel`, or `pseries`
@@ -112,8 +112,8 @@
 #'     that `as.logical(b)==FALSE` elsewhere. Only the lower
 #'     triangular part (without diagonal) of `w` after coercing by
 #'     `as.logical()` is evaluated for neighbouring information (but
-#'     `w` can be symmetric). See also \bold{Details} and
-#'     \bold{Examples},
+#'     `w` can be symmetric). See also **Details** and
+#'     **Examples**,
 #' @param \dots further arguments to be passed on to `plm`, such as
 #'     `effect` or `random.method`.
 #' @return An object of class `"htest"`.

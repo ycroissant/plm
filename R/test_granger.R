@@ -47,11 +47,11 @@
 #' The Zbar statistic is not suitable for unbalanced panels. For the Wbar
 #' statistic, no p-value is available.
 #' 
-#' The implementation uses `\link[lmtest]{grangertest`} from
+#' The implementation uses [lmtest::grangertest()] from
 #' package \CRANpkg{lmtest} to perform the individual Granger tests.
 #' 
-#' @param formula a `formula` object to describe the direction of
-#'     the hypothesized Granger causation,
+#' @param formula a `formula` object to describe the direction of the
+#'     hypothesized Granger causation,
 #' @param data a `pdata.frame` or a `data.frame`,
 #' @param test a character to request the statistic to be returned,
 #'     either `"Ztilde"` (default), or `"Zbar"`,
@@ -59,19 +59,19 @@
 #'     test's auxiliary regressions, the length of order must be
 #'     either 1 (same lag order for all individuals) or equal to the
 #'     number of individuals (to specify a lag order per individual),
-#' @param index only relevant if `data` is `data.frame` and
-#'     not a `pdata.frame`; if `NULL`, the first two columns
-#'     of the data.frame are assumed to be the index variables, for
-#'     further details see [pdata.frame()].
-#' @return An object of class \code{c("pgrangertest",
-#'     "htest")}. Besides the usual elements of a `htest` object,
-#'     it contains the data frame `indgranger` which carries the
-#'     Granger test statistics per individual along the associated
-#'     p-values, degrees of freedom and the specified lag order.
+#' @param index only relevant if `data` is `data.frame` and not a
+#'     `pdata.frame`; if `NULL`, the first two columns of the
+#'     data.frame are assumed to be the index variables, for further
+#'     details see [pdata.frame()].
+#' @return An object of class `c("pgrangertest", "htest")`. Besides
+#'     the usual elements of a `htest` object, it contains the data
+#'     frame `indgranger` which carries the Granger test statistics
+#'     per individual along the associated p-values, degrees of
+#'     freedom and the specified lag order.
 #' @export
 #' @author Kevin Tappe
-#' @seealso `\link[lmtest]{grangertest`} for the original
-#'     (non-panel) Granger causality test in \CRANpkg{lmtest}.
+#' @seealso [lmtest::grangertest()] for the original (non-panel)
+#'     Granger causality test in \CRANpkg{lmtest}.
 #' @references
 #'
 #' \insertRef{DUMI:HURL:12}{plm}

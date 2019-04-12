@@ -36,7 +36,7 @@ time-clustered covariance matrix and subtracting a diagonal one \emph{a la}
 White.
 
 Weighting schemes specified by \code{type} are analogous to those in
-\code{\link[sandwich]{vcovHC}} in package \CRANpkg{sandwich} and are
+\code{\link[sandwich:vcovHC]{sandwich::vcovHC()}} in package \CRANpkg{sandwich} and are
 justified theoretically (although in the context of the standard
 linear model) by \insertCite{MACK:WHIT:85;textual}{plm} and
 \insertCite{CRIB:04;textual}{plm} \insertCite{@see @ZEIL:04}{plm}.
@@ -80,7 +80,7 @@ linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovDC)
 \insertRef{ZEIL:04}{plm}
 }
 \seealso{
-\code{\link[sandwich]{vcovHC}} from the \CRANpkg{sandwich}
+\code{\link[sandwich:vcovHC]{sandwich::vcovHC()}} from the \CRANpkg{sandwich}
 package for weighting schemes (\code{type} argument).
 }
 \author{

@@ -31,7 +31,7 @@
 #' the data, albeit it is not present in the untransformed data. The within
 #' transformation (also called fixed effect transformation) used in the
 #' `"within"` model can result in such linear dependence and this is
-#' harder to come to mind when building a model. See \bold{Examples} for two
+#' harder to come to mind when building a model. See **Examples** for two
 #' examples of linear dependent columns after the within transformation: ex. 1)
 #' the transformed variables have the opposite sign of one another; ex. 2) the
 #' transformed variables are identical.
@@ -46,7 +46,7 @@
 #' detect linear dependence and accomplish almost the same:
 #' `detect.lindep` is a stand alone implementation while
 #' `alias` is a wrapper around
-#' `\link[stats:alias]{alias.lm`}, extending the `alias`
+#' [stats::alias.lm()], extending the `alias`
 #' generic to classes `"plm"` and `"pdata.frame"`.
 #' `alias` hinges on the availability of the package
 #' \CRANpkg{MASS} on the system. Not all arguments of `alias.lm`
@@ -74,17 +74,17 @@
 #' transformation, if any are present. `NULL` if no linear dependent
 #' columns are detected.
 #' 
-#' For `alias`: return value of `\link[stats:alias]{alias.lm`} run on
-#' the (quasi-)demeaned model, i. e. the information outputted applies to the
-#' transformed model matrix, not the original data.
+#' For `alias`: return value of [stats::alias.lm()] run on the
+#' (quasi-)demeaned model, i. e. the information outputted applies to
+#' the transformed model matrix, not the original data.
 #' @note function `detect.lindep` was called `detect_lin_dep`
-#' initially but renamed for naming consistency later with a back-compatible
-#' solution.
+#'     initially but renamed for naming consistency later with a
+#'     back-compatible solution.
 #' @export
 #' @author Kevin Tappe
-#' @seealso `\link[stats:alias]{alias`}, `\link[stats]{model.matrix`}
-#' and especially `plm`'s [model.matrix()] for (transformed)
-#' model matrices, plm's [model.frame()].
+#' @seealso [stats::alias()], [stats::model.matrix()] and especially
+#'     `plm`'s [model.matrix()] for (transformed) model matrices,
+#'     plm's [model.frame()].
 #' @references
 #'
 #' \insertRef{WOOL:13}{plm}

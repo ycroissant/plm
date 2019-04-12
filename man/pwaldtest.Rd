@@ -32,7 +32,7 @@ test,}
 \item{df2adj}{logical, only relevant for \code{test = "F"},
 indicating whether the adjustment for clustered standard errors
 for the second degrees of freedom parameter should be performed
-(see \bold{Details}, also for further requirements regarding
+(see \strong{Details}, also for further requirements regarding
 the variance--covariance matrix in \code{vcov} for the
 adjustment to be performed),}
 
@@ -59,8 +59,8 @@ statistic for the joint test of coefficients.
 
 \code{pwaldtest} performs the test if the slope coefficients of a panel
 regression are jointly zero. It does not perform general purpose
-Wald-style tests (for those, see \code{\link[lmtest]{waldtest}} (from
-package \CRANpkg{lmtest}) or \code{linearHypothesis} (from package
+Wald-style tests (for those, see \code{\link[lmtest:waldtest]{lmtest::waldtest()}} (from package
+\CRANpkg{lmtest}) or \code{\link[car:linearHypothesis]{car::linearHypothesis()}} (from package
 \CRANpkg{car})).
 
 If a user specified variance-covariance matrix/function is given in

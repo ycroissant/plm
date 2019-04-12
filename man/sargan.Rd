@@ -35,12 +35,9 @@ sargan(ar)
 
 }
 \references{
-Hansen, L.P. (1982), Large Sample Properties of Generalized
-Methods of Moments Estimators, \emph{Econometrica}, \bold{50}(4), pp.
-1029--1054.
+\insertCite{HANS:82}{plm}
 
-Sargan, J.D. (1958), The Estimation of Economic Relationships using
-Instrumental Variables, \emph{Econometrica}, \bold{26}(3), pp. 393--415.
+\insertCite{SARG:58}{plm}
 }
 \seealso{
 \code{\link[=pgmm]{pgmm()}}

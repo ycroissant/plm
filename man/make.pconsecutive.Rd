@@ -62,7 +62,7 @@ Looking at the number of rows of the resulting (pdata.frame) (elements for
 pseries), this results in nrow(make.pconsecutive, balanced = FALSE) <=
 nrow(make.pconsecutive, balanced = TRUE).  For making the data only
 balanced, i.e. not demanding consecutiveness at the same time, use
-\code{\link[=make.pbalanced]{make.pbalanced()}} (see \bold{Examples} for a comparison)).
+\code{\link[=make.pbalanced]{make.pbalanced()}} (see \strong{Examples} for a comparison)).
 
 Note: rows of (p)data.frames (elements for pseries) with \code{NA} values in
 individual or time index are not examined but silently dropped before the
@@ -72,7 +72,7 @@ there are \code{NA} values in the first/last position of the original time
 periods for an individual, which usually depicts the beginning and ending of
 the time series for that individual, the beginning/end of the resulting time
 series is taken to be the min and max (w/o \code{NA} values) of the original
-time series for that individual, see also \bold{Examples}. Thus, one might
+time series for that individual, see also \strong{Examples}. Thus, one might
 want to check if there are any \code{NA} values in the index variables
 before applying make.pconsecutive, and especially check for \code{NA} values
 in the first and last position for each individual in original data and, if

@@ -80,11 +80,11 @@ fancy.row.names <- function(index, sep = "-") {
 #' it to each column.
 #' 
 #' `as.list` behaves by default identical to
-#' `\link[base:list]{as.list.data.frame`} which means it drops the
+#' [base::as.list.data.frame()] which means it drops the
 #' attributes specific to a pdata.frame; if a list of pseries is
 #' wanted, the attribute `keep.attributes` can to be set to
 #' `TRUE`. This also makes `lapply` work as expected on a pdata.frame
-#' (see also \bold{Examples}).
+#' (see also **Examples**).
 #' 
 #' @param x a `data.frame` for the `pdata.frame` function and a
 #'     `pdata.frame` for the methods,
@@ -92,7 +92,7 @@ fancy.row.names <- function(index, sep = "-") {
 #' @param j see [Extract()],
 #' @param y one of the columns of the `data.frame`,
 #' @param index this argument indicates the individual and time
-#'     indexes. See \bold{Details},
+#'     indexes. See **Details**,
 #' @param drop see [Extract()],
 #' @param drop.index logical, indicates whether the indexes are to be
 #'     excluded from the resulting pdata.frame,

@@ -17,7 +17,7 @@ pdwtest(x, ...)
 \code{"formula"},}
 
 \item{\dots}{further arguments to be passed on to \code{dwtest},
-e.g.  \code{alternative}, see \code{\link[lmtest]{dwtest}} for
+e.g.  \code{alternative}, see \code{\link[lmtest:dwtest]{lmtest::dwtest()}} for
 further details.}
 
 \item{data}{a \code{data.frame},}
@@ -64,10 +64,10 @@ pdwtest(inv ~ value + capital, data=Grunfeld, model="random")
 \insertRef{WOOL:10}{plm}
 }
 \seealso{
-\code{\link[lmtest]{dwtest}} for the Durbin--Watson test
+\code{\link[lmtest:dwtest]{lmtest::dwtest()}} for the Durbin--Watson test
 in \CRANpkg{lmtest}, \code{\link[=pbgtest]{pbgtest()}} for the analogous
 Breusch--Godfrey test for panel models,
-\code{\link[lmtest]{bgtest}} for the Breusch--Godfrey test for
+\code{\link[lmtest:bgtest]{lmtest::bgtest()}} for the Breusch--Godfrey test for
 serial correlation in the linear model. \code{\link[=pbltest]{pbltest()}},
 \code{\link[=pbsytest]{pbsytest()}}, \code{\link[=pwartest]{pwartest()}} and
 \code{\link[=pwfdtest]{pwfdtest()}} for other serial correlation tests for
