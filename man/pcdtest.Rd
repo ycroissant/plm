@@ -64,6 +64,55 @@ An object of class \code{"htest"}.
 Pesaran's CD or Breusch--Pagan's LM (local or global) tests for cross
 sectional dependence in panel models
 }
+\details{
+These tests are originally meant to use the residuals of separate
+estimation of one time--series regression for each cross-sectional
+unit in order to check for cross--sectional dependence. If a
+different model specification (\code{within}, \code{random}, \ldots{}) is
+assumed consistent, one can resort to its residuals for testing
+(which is common, e.g., when the time dimension's length is
+insufficient for estimating the heterogeneous model).  If the time
+dimension is insufficient and \code{model=NULL}, the function defaults
+to estimation of a \code{within} model and issues a warning. The main
+argument of this function may be either a model of class
+\code{panelmodel} or a \code{formula} and \code{dataframe}; in the second case,
+unless \code{model} is set to \code{NULL}, all usual parameters relative to
+the estimation of a \code{plm} model may be passed on. The test is
+compatible with any consistent \code{panelmodel} for the data at hand,
+with any specification of \code{effect}. E.g., specifying
+\code{effect="time"} or \code{effect="twoways"} allows to test for residual
+cross-sectional dependence after the introduction of time fixed
+effects to account for common shocks.
+
+A \strong{local} version of either test can be computed by supplying a
+proximity matrix (elements coercible to \code{logical}) with argument
+\code{w} which provides information on whether any pair of individuals
+are neighbours or not. If \code{w} is supplied, only neighbouring pairs
+will be used in computing the test; else, \code{w} will default to
+\code{NULL} and all observations will be used. The matrix need not be
+binary, so commonly used "row--standardized" matrices can be
+employed as well. \code{nb} objects from \CRANpkg{spdep} must instead be
+transformed into matrices by \CRANpkg{spdep}'s function \code{nb2mat}
+before using.
+
+The methods implemented are suitable also for unbalanced panels.
+
+Pesaran's CD test (\code{test="cd"}), Breusch and Pagan's LM test
+(\code{test="lm"}), and its scaled version (\code{test="sclm"}) are all
+described in \insertCite{PESA:04;textual}{plm} (and complemented by
+Pesaran (2005)). The bias-corrected scaled test (\code{test="bcsclm"})
+is due to \insertCite{BALT:FENG:KAO:12}{plm} and only valid for
+within models including the individual effect (it's unbalanced
+version uses max(Tij) for T) in the bias-correction term).
+\insertCite{BREU:PAGA:80;textual}{plm} is the original source for
+the LM test.
+
+The test on a \code{pseries} is the same as a test on a pooled
+regression model of that variable on a constant, i.e.
+\code{pcdtest(some_pseries)} is equivalent to \code{pcdtest(plm(some_var ~ 1, data = some_pdata.frame, model = "pooling")} and also equivalent to
+\code{pcdtest(some_var ~ 1, data = some_data)}, where \code{some_var} is
+the variable name in the data which corresponds to \code{some_pseries}.
+}
 \examples{
 
 data("Grunfeld", package = "plm")

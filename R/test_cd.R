@@ -60,7 +60,7 @@
 #' are neighbours or not. If `w` is supplied, only neighbouring pairs
 #' will be used in computing the test; else, `w` will default to
 #' `NULL` and all observations will be used. The matrix need not be
-#' binary, so commonly used ``row--standardized'' matrices can be
+#' binary, so commonly used "row--standardized" matrices can be
 #' employed as well. `nb` objects from \CRANpkg{spdep} must instead be
 #' transformed into matrices by \CRANpkg{spdep}'s function `nb2mat`
 #' before using.
@@ -81,7 +81,7 @@
 #' regression model of that variable on a constant, i.e.
 #' `pcdtest(some_pseries)` is equivalent to `pcdtest(plm(some_var ~ 1,
 #' data = some_pdata.frame, model = "pooling")` and also equivalent to
-#' `code{pcdtest(some_var ~ 1, data = some_data)`, where `some_var` is
+#' `pcdtest(some_var ~ 1, data = some_data)`, where `some_var` is
 #' the variable name in the data which corresponds to `some_pseries`.
 #' 
 #' @aliases pcdtest
