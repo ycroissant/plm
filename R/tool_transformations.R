@@ -681,12 +681,16 @@ alagt <- function(x, ak) {
     id   <- index[[1]]
     time <- index[[2]]
     
-    # Idea: split times in blocks per individuals and do lagging there by computation of correct time shifting
+    # Idea: split times in blocks per individuals and do lagging there
+    # by computation of correct time shifting
     
-    # need to convert to numeric, do this by coering to character first (otherwise wrong results!)
+    # need to convert to numeric, do this by coering to character
+    # first (otherwise wrong results!)
     #  see R FAQ 7.10 for coercing factors to numeric: 
-    #      as.numeric(levels(factor_var))[as.integer(factor_var)]   is more efficient than
+    #      as.numeric(levels(factor_var))[as.integer(factor_var)] is
+    #      more efficient than
     #      as.numeric(as.character(factor_var))
+
     time <- as.numeric(levels(time))[as.integer(time)]
     
     list_id_timevar <- split(time, id, drop = TRUE)

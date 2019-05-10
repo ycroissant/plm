@@ -90,18 +90,41 @@ twosls <- function(y, X, W, intercept = FALSE){
 
 
 ##### has.intercept methods #####
+
+#' Check for the presence of an intercept in a formula or in a fitted
+#' model
+#'
+#' The presence of an intercept is checked using the formula which is
+#' either provided as the argument of the function or extracted from
+#' a fitted model
+#'
+#' @param object a `formula`, a `Formula` or a fitted model (of class
+#'     `plm` or `panelmodel`),
+#' @param rhs,part the index of the right hand sides part of the
+#'     formula for which one wants to check the presence of an
+#'     intercept (relevant for the `Formula` and the `plm` methods),
+#' @param \dots further arguments.
+#'
+#' @return a boolean
+#' @export
 has.intercept <- function(object, ...) {
   UseMethod("has.intercept")
 }
 
+#' @rdname has.intercept
+#' @export
 has.intercept.default <- function(object, ...) {
   has.intercept(formula(object), ...)
 }
 
+#' @rdname has.intercept
+#' @export
 has.intercept.formula <- function(object, ...) {
   attr(terms(object), "intercept") == 1L
 }
 
+#' @rdname has.intercept
+#' @export
 has.intercept.Formula <- function(object, rhs = NULL, ...) {
   ## NOTE: returns a logical vector of the necessary length
   ## (which might be > 1)
@@ -115,11 +138,15 @@ has.intercept.Formula <- function(object, rhs = NULL, ...) {
     )
 }
 
+#' @rdname has.intercept
+#' @export
 has.intercept.panelmodel <- function(object, ...) {
   object <- attr(model.frame(object), "formula")
   has.intercept(object)
 }
 
+#' @rdname has.intercept
+#' @export
 has.intercept.plm <- function(object, part = "first", ...) {
   has.intercept(formula(object), part = part)
 }

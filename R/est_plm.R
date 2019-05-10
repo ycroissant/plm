@@ -106,7 +106,7 @@ mylm <- function(y, X, W = NULL){
 #' "random"`, `inst.method = "baltagi"` (the other way with only
 #' `model = "ht"` is deprecated).
 #' 
-#' @aliases plm has.intercept
+#' @aliases plm
 #' @param formula a symbolic description for the model to be
 #'     estimated,
 #' @param x,object an object of class `"plm"`,

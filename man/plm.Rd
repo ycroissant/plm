@@ -2,7 +2,6 @@
 % Please edit documentation in R/est_plm.R, R/tool_methods.R
 \name{plm}
 \alias{plm}
-\alias{has.intercept}
 \alias{terms.panelmodel}
 \alias{vcov.panelmodel}
 \alias{fitted.panelmodel}
