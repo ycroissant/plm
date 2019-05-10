@@ -76,6 +76,7 @@ man/cortab.Rd -text
 man/detect.lindep.Rd -text
 man/ercomp.Rd -text
 man/fixef.plm.Rd -text
+man/has.intercept.Rd -text
 man/index.plm.Rd -text
 man/is.pbalanced.Rd -text
 man/is.pconsecutive.Rd -text

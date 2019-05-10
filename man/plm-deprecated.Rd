@@ -6,6 +6,10 @@
 \alias{plm.data}
 \alias{dynformula}
 \alias{pFormula}
+\alias{as.Formula.pFormula}
+\alias{as.Formula.pFormula}
+\alias{model.frame.pFormula}
+\alias{model.matrix.pFormula}
 \alias{detect_lin_dep}
 \title{Deprecated functions of plm}
 \usage{
@@ -16,6 +20,17 @@ plm.data(x, indexes = NULL)
 dynformula(formula, lag.form = NULL, diff.form = NULL, log.form = NULL)
 
 pFormula(object)
+
+\method{as.Formula}{pFormula}(x, ...)
+
+\method{as.Formula}{pFormula}(x, ...)
+
+\method{model.frame}{pFormula}(formula, data, ..., lhs = NULL, rhs = NULL)
+
+\method{model.matrix}{pFormula}(object, data, model = c("pooling", "within",
+  "Between", "Sum", "between", "mean", "random", "fd"),
+  effect = c("individual", "time", "twoways", "nested"), rhs = 1,
+  theta = NULL, cstcovar.rm = NULL, ...)
 
 detect_lin_dep(object, ...)
 }
@@ -39,6 +54,18 @@ variables should be in logarithms.}
 \item{object, x}{an object of class \code{"plm"},}
 
 \item{data}{a \code{data.frame},}
+
+\item{lhs}{see Formula}
+
+\item{rhs}{see Formula}
+
+\item{model}{see plm}
+
+\item{effect}{see plm}
+
+\item{theta}{the parameter of transformation for the random effect model}
+
+\item{cstcovar.rm}{remove the constant columns or not}
 }
 \description{
 \code{dynformula}, \code{pht}, \code{plm.data}, and \code{pvcovHC} are
