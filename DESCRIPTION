@@ -1,6 +1,6 @@
 Package: plm
 Version: 1.8-0
-Date: 2019-04-09
+Date: 2019-05-10
 Title: Linear Models for Panel Data
 Authors@R: c(person(given = "Yves",      family = "Croissant",    role = c("aut", "cre"), email = "yves.croissant@univ-reunion.fr"),
              person(given = "Giovanni",  family = "Millo",        role = "aut", email = "Giovanni.Millo@Generali.com"),
@@ -20,3 +20,4 @@ URL: https://cran.r-project.org/package=plm, https://r-forge.r-project.org/proje
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)
 RdMacros: Rdpack
+Encoding: UTF-8
