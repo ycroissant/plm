@@ -1,7 +1,7 @@
 * text=auto !eol
 /DESCRIPTION -text
 /NAMESPACE -text
-/NEWS -text
+/NEWS.md -text
 R/deprecated.R -text
 R/detect_lin_dep_alias.R -text
 R/est_cce.R -text
@@ -132,7 +132,6 @@ man/vcovHC.plm.Rd -text
 man/vcovNW.Rd -text
 man/vcovSCC.Rd -text
 man/within_intercept.Rd -text
-tests/Examples/plm-Ex.Rout -text
 tests/Examples/plm-Ex.Rout.save -text
 tests/test_Chow.R -text
 tests/test_Chow.Rout.save -text
@@ -219,7 +218,6 @@ tests/test_summary.pseries_character_logical_factor.R -text
 tests/test_vcovG_lin_dep.R -text
 tests/test_within_intercept.R -text
 tests/test_within_intercept.Rout.save -text
-vignettes/bibliojss.bib -text
 vignettes/plmFunction.Rmd -text
 vignettes/plmModelComponents.Rmd -text
 vignettes/plmPackage.Rmd -text
