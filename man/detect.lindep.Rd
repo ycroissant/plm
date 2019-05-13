@@ -101,6 +101,8 @@ back-compatible solution.
 }
 \examples{
 
+\dontshow{suppressWarnings(RNGversion("3.5.0"))}
+
 ### Example 1 ###
 # prepare the data
 data("Cigar" , package = "plm")

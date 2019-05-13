@@ -10,7 +10,7 @@
     (plmModelComponents.Rmd).
 * plm: the informative error message about the deprecated argument
     'instruments' is removed and this argument is no longer supported
-
+* man pages and NAMESPACE files are now generated using roxygen2
 
 # plm 1.7-0
 
