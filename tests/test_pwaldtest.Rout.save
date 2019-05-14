@@ -1,7 +1,7 @@
 
-R version 3.3.2 (2016-10-31) -- "Sincere Pumpkin Patch"
-Copyright (C) 2016 The R Foundation for Statistical Computing
-Platform: x86_64-w64-mingw32/x64 (64-bit)
+R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -21,7 +21,6 @@ Type 'q()' to quit R.
 > options(scipen = 999)
 > options(digits = 8)
 > library(plm)
-Loading required package: Formula
 > data("Grunfeld", package="plm")
 > gp <- plm(inv ~ value + capital, data = Grunfeld, model = "pooling")
 > gi <- plm(inv ~ value + capital, data = Grunfeld,
@@ -518,4 +517,4 @@ F = 39.3548, df1 = 2, df2 = 9, p-value = 0.000035512
 > 
 > proc.time()
    user  system elapsed 
-   2.16    0.15    2.37 
+  1.515   0.069   1.572 

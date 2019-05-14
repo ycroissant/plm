@@ -123,6 +123,7 @@ length(residuals(plm_gr_na_omit)) + 1 == length(residuals(plm_gr_na_exclude))
 
 # test with randomly missing data
 Grunfeld_NA_rand <- Grunfeld
+set.seed(1)
 Grunfeld_NA_rand[sample(1:nrow(Grunfeld_NA_rand), size = 25), "inv"] <- NA
 sum(is.na(Grunfeld_NA_rand$inv))
 plm_gr_wi_na_exclude <- plm(form, data = Grunfeld_NA_rand, model = "within", na.action = na.exclude)

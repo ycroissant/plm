@@ -1,7 +1,7 @@
 
-R version 3.5.1 (2018-07-02) -- "Feather Spray"
+R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
 Copyright (C) 2018 The R Foundation for Statistical Computing
-Platform: x86_64-w64-mingw32/x64 (64-bit)
+Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -18,7 +18,6 @@ Type 'q()' to quit R.
 > ## Test of various models involving first-differences
 > 
 > library(plm)
-Loading required package: Formula
 > data("Produc", package = "plm")
 > 
 > 
@@ -169,4 +168,4 @@ attr(,"cluster")
 > 
 > proc.time()
    user  system elapsed 
-   0.88    0.12    0.98 
+  0.780   0.052   0.814 

@@ -1,7 +1,7 @@
 
-R version 3.4.1 (2017-06-30) -- "Single Candle"
-Copyright (C) 2017 The R Foundation for Statistical Computing
-Platform: x86_64-w64-mingw32/x64 (64-bit)
+R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -17,7 +17,6 @@ Type 'q()' to quit R.
 
 > # Various run tests for purtest()
 > library(plm)
-Loading required package: Formula
 > data("Grunfeld", package = "plm")
 > pG <- pdata.frame(Grunfeld)
 > 
@@ -240,4 +239,4 @@ In selectT(l, theTs) : the time series is short
 > 
 > proc.time()
    user  system elapsed 
-   1.37    0.14    1.51 
+  0.868   0.051   0.908 

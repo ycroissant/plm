@@ -1476,4 +1476,4 @@ year1949 year1950 year1951 year1952 year1953
 > 
 > proc.time()
    user  system elapsed 
-  2.865   0.068   2.933 
+  3.193   0.077   3.251 
