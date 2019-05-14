@@ -44,13 +44,13 @@ The following objects are masked from 'package:base':
 +                       effect = "twoways", index = c("state","year"), random.method = "walhus")
 > 
 > coef_test(plm_unweighted, vcov = "CR1", cluster = "individual", test = "naive-t")
-      Coef Estimate   SE p-val (naive-t) Sig.
-1    legal     4.42 2.13           0.043    *
-2 beertaxa    30.25 5.99          <0.001  ***
+     Coef. Estimate   SE t-stat p-val (naive-t) Sig.
+1    legal     4.42 2.13   2.08           0.043    *
+2 beertaxa    30.25 5.99   5.05          <0.001  ***
 > coef_test(plm_unweighted, vcov = "CR1", cluster = "individual", test = "Satterthwaite")
-      Coef Estimate   SE  d.f. p-val (Satt) Sig.
-1    legal     4.42 2.13 20.62       0.0504    .
-2 beertaxa    30.25 5.99  8.89       <0.001  ***
+     Coef. Estimate   SE t-stat  d.f. p-val (Satt) Sig.
+1    legal     4.42 2.13   2.08 20.62       0.0504    .
+2 beertaxa    30.25 5.99   5.05  8.89       <0.001  ***
 > 
 > 
 > vcov_club_id   <- vcovCR(plm_unweighted, type = "CR0", cluster = "individual")
@@ -501,29 +501,29 @@ F = 3.8957, df1 = 2, df2 = 49, p-value = 0.02691
 
 > 
 > clubSandwich::coef_test(plm_unweighted, vcov = "CR0")
-      Coef Estimate   SE  d.f. p-val (Satt) Sig.
-1    legal     4.42 2.10 20.62       0.0483    *
-2 beertaxa    30.25 5.93  8.89       <0.001  ***
+     Coef. Estimate   SE t-stat  d.f. p-val (Satt) Sig.
+1    legal     4.42 2.10    2.1 20.62       0.0483    *
+2 beertaxa    30.25 5.93    5.1  8.89       <0.001  ***
 > clubSandwich::coef_test(plm_unweighted, vcov = "CR0", test = "naive-t")
-      Coef Estimate   SE p-val (naive-t) Sig.
-1    legal     4.42 2.10           0.041    *
-2 beertaxa    30.25 5.93          <0.001  ***
+     Coef. Estimate   SE t-stat p-val (naive-t) Sig.
+1    legal     4.42 2.10    2.1           0.041    *
+2 beertaxa    30.25 5.93    5.1          <0.001  ***
 > clubSandwich::coef_test(plm_unweighted, vcov = "CR0", test = "saddlepoint")
-      Coef Estimate   SE  s.p. p-val (Saddle) Sig.
-1    legal     4.42 2.10 0.369         0.0491    *
-2 beertaxa    30.25 5.93 0.453         <0.001  ***
+     Coef. Estimate   SE t-stat  s.p. p-val (Saddle) Sig.
+1    legal     4.42 2.10    2.1 0.369         0.0491    *
+2 beertaxa    30.25 5.93    5.1 0.453         <0.001  ***
 > 
 > clubSandwich::coef_test(plm_unweighted, vcov = vcov_club_id, test = "naive-t")
-      Coef Estimate   SE p-val (naive-t) Sig.
-1    legal     4.42 2.10           0.041    *
-2 beertaxa    30.25 5.93          <0.001  ***
+     Coef. Estimate   SE t-stat p-val (naive-t) Sig.
+1    legal     4.42 2.10    2.1           0.041    *
+2 beertaxa    30.25 5.93    5.1          <0.001  ***
 > clubSandwich::coef_test(plm_unweighted, vcov = "CR0", test = "All")
-      Coef Estimate   SE p-val (z) Sig. p-val (naive-t) Sig.  d.f. p-val (Satt)
-1    legal     4.42 2.10    0.0358    *           0.041    * 20.62       0.0483
-2 beertaxa    30.25 5.93    <0.001  ***          <0.001  ***  8.89       <0.001
-  Sig.  s.p. p-val (Saddle) Sig.
-1    * 0.369         0.0491    *
-2  *** 0.453         <0.001  ***
+     Coef. Estimate   SE t-stat p-val (z) Sig. p-val (naive-t) Sig.  d.f.
+1    legal     4.42 2.10    2.1    0.0358    *           0.041    * 20.62
+2 beertaxa    30.25 5.93    5.1    <0.001  ***          <0.001  ***  8.89
+  p-val (Satt) Sig.  s.p. p-val (Saddle) Sig.
+1       0.0483    * 0.369         0.0491    *
+2       <0.001  *** 0.453         <0.001  ***
 > lmtest::coeftest(plm_unweighted, vcov. = vcov_plm_id)
 
 t test of coefficients:
@@ -585,4 +585,4 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 > 
 > proc.time()
    user  system elapsed 
-  1.307   0.072   1.372 
+  1.240   0.068   1.301 
