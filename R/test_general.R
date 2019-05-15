@@ -133,9 +133,9 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                   if (!is.null(dots$effect)) effect <- dots$effect else effect <- NULL
                # calculatate FE and RE model
 
-                  fe_mod <- plm(formula = x, data = data, model = model[1], effect = effect)
+                fe_mod <- plm(formula = x, data = data, model = model[1], effect = effect)
 
-               re_mod <- plm(formula = x, data = data, model = model[2], effect = effect)
+                re_mod <- plm(formula = x, data = data, model = model[2], effect = effect)
 
                 ## DEBUG printing:
                  # print(effect)
@@ -225,7 +225,7 @@ phtest.panelmodel <- function(x, x2, ...){
   coef.h <- common_coef_names
   dbeta <- coef.wi[coef.h] - coef.re[coef.h]
   df <- length(dbeta)
-  dvcov <- vcov.re[coef.h, coef.h] - vcov.wi[coef.h, coef.h]
+  dvcov <- vcov.wi[coef.h, coef.h] - vcov.re[coef.h, coef.h]
   
   #### BEGIN cater for equivalent test within vs. between
     # Baltagi (2013), Sec. 4.3, pp. 77, 81
@@ -244,7 +244,7 @@ phtest.panelmodel <- function(x, x2, ...){
     # the variances need to be added (not subtracted like in the other cases)
     if (  (modx  == "within" && modx2 == "between")
         | (modx2 == "within" && modx  == "between")) {
-      dvcov <- vcov.re[coef.h, coef.h] + vcov.wi[coef.h, coef.h]
+      dvcov <- vcov.wi[coef.h, coef.h] + vcov.re[coef.h, coef.h]
     }
   #### END cater for equivalent tests with between model
 
