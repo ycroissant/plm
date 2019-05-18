@@ -39,6 +39,9 @@ aneweytest(log(goutput) ~ log(seed) + log(totlabor) + log(size), RiceFarms, inde
 \references{
 \insertRef{ANGR:NEWE:91}{plm}
 }
+\seealso{
+\code{\link[=piest]{piest()}} for Chamberlain's test
+}
 \author{
 Yves Croissant
 }

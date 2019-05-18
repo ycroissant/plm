@@ -18,9 +18,9 @@
 #' @export
 #' @author Yves Croissant
 #' @references
-#'
 #' \insertRef{ANGR:NEWE:91}{plm}
 #' 
+#' @seealso [piest()] for Chamberlain's test
 #' @keywords htest
 #' @examples
 #' 
@@ -131,6 +131,7 @@ aneweytest <-  function(formula, data, subset, na.action, index = NULL,  ...){
 #'
 #' \insertRef{CHAM:82}{plm}
 #'
+#' @seealso [aneweytest()]
 #' @keywords htest
 #' @examples
 #' 
