@@ -130,12 +130,12 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                # signature for formula interface/test="aux": see if effect is in dots and extract
                   dots <- list(...)
                   # print(dots) # DEBUG printing
-                  if (!is.null(dots$effect)) effect <- dots$effect else effect <- NULL
+               if (!is.null(dots$effect)) effect <- dots$effect else effect <- NULL
                # calculatate FE and RE model
 
-                fe_mod <- plm(formula = x, data = data, model = model[1], effect = effect)
+               fe_mod <- plm(formula = x, data = data, model = model[1], effect = effect)
 
-                re_mod <- plm(formula = x, data = data, model = model[2], effect = effect)
+               re_mod <- plm(formula = x, data = data, model = model[2], effect = effect)
 
                 ## DEBUG printing:
                  # print(effect)
@@ -147,8 +147,8 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                reY <- pmodel.response(re_mod)
 #               reX <- model.matrix(re_mod)[ , -1, drop = FALSE] # intercept not needed; drop=F needed to prevent matrix
 #               feX <- model.matrix(fe_mod, cstcovar.rm = TRUE)                      # from degenerating to vector if only one regressor
-               reX <- model.matrix(re_mod, cstcovar.rm = "intercept") # intercept not needed; drop=F needed to prevent matrix
-               feX <- model.matrix(fe_mod, cstcovar.rm = "all")                      # from degenerating to vector if only one regressor
+               reX <- model.matrix(re_mod, cstcovar.rm = "intercept")
+               feX <- model.matrix(fe_mod, cstcovar.rm = "all")
 
                dimnames(feX)[[2]] <- paste(dimnames(feX)[[2]], "tilde", sep=".")
                ## estimated models could have fewer obs (due dropping of NAs) compared to the original data
@@ -221,8 +221,8 @@ phtest.panelmodel <- function(x, x2, ...){
   names.wi <- names(coef.wi)
   names.re <- names(coef.re)
   common_coef_names <- names.re[names.re %in% names.wi]
-  common_coef_names <- common_coef_names[!(common_coef_names %in% "(Intercept)")] # drop intercept if included (relevant when between model inputted)
-  coef.h <- common_coef_names
+  coef.h <- common_coef_names[!(common_coef_names %in% "(Intercept)")] # drop intercept if included (relevant when between model inputed)
+  if(length(coef.h) == 0) stop("no common coefficients in models")
   dbeta <- coef.wi[coef.h] - coef.re[coef.h]
   df <- length(dbeta)
   dvcov <- vcov.wi[coef.h, coef.h] - vcov.re[coef.h, coef.h]
