@@ -26,15 +26,15 @@
     model estimation by plm(..., model = "fd") is based on row-wise differences
     of the model matrix per individual.
 * pbnftest: new function for (modified) BNF statistic (Durbin-Watson test 
-    generalised to panels) and Baltagi/Wu's LBI statistic.
+    generalised to panels) and Baltagi/Wu's LBI statistic
     (Bhargava/Franzini/Narendranathan (1982), Baltagi/Wu (1999)).
 * pcdtest: bias-corrected scaled LM test implemented (test = "bcsclm") as in
     Baltagi/Feng/Kao (2012).
 * summary.plm: for all random models and for all instrumental variable models,
     single coefficient tests are based on std. normal distribution and joint
     coefficient (Wald) test on Chi-square distribution.
-* pwaldtest: now handles IV models correctly (Wooldridge (1990)); method added
-    for random pvcm models added (and used in summary.pvcm).
+* pwaldtest: now handles IV models correctly (Wooldridge (1990)); method for
+    random pvcm models added (and used in summary.pvcm).
 * pht: fixed estimation (plm 1.6-6 introduced a slight regression).
 * summary.pht: waldtest now uses Chi-square distribution (was F distribution).
 * Fixed first-difference models (plm(., model = "fd"), pggls(., model = "fd"))
