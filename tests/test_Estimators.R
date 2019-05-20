@@ -253,7 +253,7 @@ pmgccemgmod <- pmg(form, data = Produc, model="cmg")
 common <- intersect(names(pccemgmod[["coefficients"]]), names(pmgccemgmod[["coefficients"]]))
 coef_pccemgmod   <- round(pccemgmod[["coefficients"]][common],   digits = 7)
 coef_pmgccemgmod <- round(pmgccemgmod[["coefficients"]][common], digits = 7)
-stopifnot(all.equal(coef_pccemgmod, coef_pmgccemgmod))
+stopifnot(all.equal(coef_pccemgmod, coef_pmgccemgmod, tolerance = 1E-06))
 print(summary(pccemgmod))
 print(summary(pmgccemgmod))
 

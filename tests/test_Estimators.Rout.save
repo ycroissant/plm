@@ -1383,7 +1383,7 @@ Chisq: 53522.6 on 13 DF, p-value: < 2.22e-16
 > common <- intersect(names(pccemgmod[["coefficients"]]), names(pmgccemgmod[["coefficients"]]))
 > coef_pccemgmod   <- round(pccemgmod[["coefficients"]][common],   digits = 7)
 > coef_pmgccemgmod <- round(pmgccemgmod[["coefficients"]][common], digits = 7)
-> stopifnot(all.equal(coef_pccemgmod, coef_pmgccemgmod))
+> stopifnot(all.equal(coef_pccemgmod, coef_pmgccemgmod, tolerance = 1E-06))
 > print(summary(pccemgmod))
 Common Correlated Effects Mean Groups model
 
@@ -1476,4 +1476,4 @@ year1949 year1950 year1951 year1952 year1953
 > 
 > proc.time()
    user  system elapsed 
-  3.193   0.077   3.251 
+  3.088   0.085   3.156 
