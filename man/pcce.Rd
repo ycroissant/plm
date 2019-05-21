@@ -9,8 +9,8 @@
 \alias{pmodel.response.pcce}
 \title{Common Correlated Effects estimators}
 \usage{
-pcce(formula, data, subset, na.action, model = c("mg", "p"), index = NULL,
-  trend = FALSE, ...)
+pcce(formula, data, subset, na.action, model = c("mg", "p"),
+  index = NULL, trend = FALSE, ...)
 
 \method{summary}{pcce}(object, ...)
 

@@ -9,7 +9,8 @@
 pwaldtest(x, ...)
 
 \method{pwaldtest}{plm}(x, test = c("Chisq", "F"), vcov = NULL,
-  df2adj = (test == "F" && !is.null(vcov) && missing(.df2)), .df1, .df2, ...)
+  df2adj = (test == "F" && !is.null(vcov) && missing(.df2)), .df1, .df2,
+  ...)
 
 \method{pwaldtest}{pvcm}(x, ...)
 }

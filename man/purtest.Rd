@@ -7,10 +7,10 @@
 \alias{print.summary.purtest}
 \title{Unit root tests for panel data}
 \usage{
-purtest(object, data = NULL, index = NULL, test = c("levinlin", "ips",
-  "madwu", "Pm", "invnormal", "logit", "hadri"), exo = c("none", "intercept",
-  "trend"), lags = c("SIC", "AIC", "Hall"), pmax = 10, Hcons = TRUE,
-  q = NULL, dfcor = FALSE, fixedT = TRUE, ...)
+purtest(object, data = NULL, index = NULL, test = c("levinlin",
+  "ips", "madwu", "Pm", "invnormal", "logit", "hadri"), exo = c("none",
+  "intercept", "trend"), lags = c("SIC", "AIC", "Hall"), pmax = 10,
+  Hcons = TRUE, q = NULL, dfcor = FALSE, fixedT = TRUE, ...)
 
 \method{print}{purtest}(x, ...)
 

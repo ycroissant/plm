@@ -2,14 +2,13 @@
 % Please edit documentation in R/tool_model.extract.R
 \name{model.frame.pdata.frame}
 \alias{model.frame.pdata.frame}
-\alias{model.frame.pdata.frame}
 \alias{formula.pdata.frame}
 \alias{model.matrix.plm}
 \alias{model.matrix.pdata.frame}
 \title{model.frame and model.matrix for panel data}
 \usage{
-\method{model.frame}{pdata.frame}(formula, data = NULL, ..., lhs = NULL,
-  rhs = NULL, dot = "separate")
+\method{model.frame}{pdata.frame}(formula, data = NULL, ...,
+  lhs = NULL, rhs = NULL, dot = "previous")
 
 \method{formula}{pdata.frame}(x, ...)
 

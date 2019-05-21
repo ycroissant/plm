@@ -12,9 +12,9 @@
 \title{data.frame for panel data}
 \usage{
 pdata.frame(x, index = NULL, drop.index = FALSE, row.names = TRUE,
-  stringsAsFactors = default.stringsAsFactors(), replace.non.finite = FALSE,
-  drop.NA.series = FALSE, drop.const.series = FALSE,
-  drop.unused.levels = FALSE)
+  stringsAsFactors = default.stringsAsFactors(),
+  replace.non.finite = FALSE, drop.NA.series = FALSE,
+  drop.const.series = FALSE, drop.unused.levels = FALSE)
 
 \method{$}{pdata.frame}(x, name) <- value
 
@@ -28,8 +28,8 @@ pdata.frame(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 
 \method{as.list}{pdata.frame}(x, keep.attributes = FALSE, ...)
 
-\method{as.data.frame}{pdata.frame}(x, row.names = NULL, optional = FALSE,
-  keep.attributes = TRUE, ...)
+\method{as.data.frame}{pdata.frame}(x, row.names = NULL,
+  optional = FALSE, keep.attributes = TRUE, ...)
 }
 \arguments{
 \item{x}{a \code{data.frame} for the \code{pdata.frame} function and a
@@ -119,21 +119,17 @@ The \code{"[["} and \code{"$"} extract a series from the \code{pdata.frame}.  Th
 attribute \code{"pseries"} is added. The \code{"["} method behaves as for
 \code{data.frame}, except that the extraction is also applied to the
 \code{index} attribute.  A safe way to extract the index attribute is to
-use the function [index()] for 'pdata.frames' (and other objects).
+use the function \code{\link[=index]{index()}} for 'pdata.frames' (and other objects).
 
 \code{as.data.frame} removes the index from the \code{pdata.frame} and adds
 it to each column.
 
 \code{as.list} behaves by default identical to
-[base::as.list.data.frame()] which means it drops the
+\code{\link[base:as.list.data.frame]{base::as.list.data.frame()}} which means it drops the
 attributes specific to a pdata.frame; if a list of pseries is
 wanted, the attribute \code{keep.attributes} can to be set to
 \code{TRUE}. This also makes \code{lapply} work as expected on a pdata.frame
 (see also \strong{Examples}).
-
-[["\code{and}"$"\code{extract a series from the}pdata.frame\code{.  The }"index"\code{attribute is then added to the series and a class attribute}"pseries"\code{is added. The}"["\code{method behaves as for}data.frame\code{, except that the extraction is also applied to the }index` attribute.  A safe way to extract the index attribute is to
-use the function [index()]: R:[%22%60%20and%20%60%22$%22%60%20extract%20a%20series%20from%20the%20%60pdata.frame%60.%20%20The%0A%60%22index%22%60%20attribute%20is%20then%20added%20to%20the%20series%20and%20a%20class%0Aattribute%20%60%22pseries%22%60%20is%20added.%20The%20%60%22[%22%60%20method%20behaves%20as%20for%0A%60data.frame%60,%20except%20that%20the%20extraction%20is%20also%20applied%20to%20the%0A%60index%60%20attribute.%20%20A%20safe%20way%20to%20extract%20the%20index%20attribute%20is%20to%0Ause%20the%20function%20[index()
-[base::as.list.data.frame()]: R:base::as.list.data.frame()
 }
 \examples{
 

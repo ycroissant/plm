@@ -4,8 +4,8 @@
 \alias{pgrangertest}
 \title{Panel Granger (Non-)Causality Test (Dumitrescu/Hurlin (2012))}
 \usage{
-pgrangertest(formula, data, test = c("Ztilde", "Zbar", "Wbar"), order = 1L,
-  index = NULL)
+pgrangertest(formula, data, test = c("Ztilde", "Zbar", "Wbar"),
+  order = 1L, index = NULL)
 }
 \arguments{
 \item{formula}{a \code{formula} object to describe the direction of the

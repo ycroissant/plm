@@ -8,10 +8,11 @@
 \usage{
 pbgtest(x, ...)
 
-\method{pbgtest}{panelmodel}(x, order = NULL, type = c("Chisq", "F"), ...)
+\method{pbgtest}{panelmodel}(x, order = NULL, type = c("Chisq", "F"),
+  ...)
 
-\method{pbgtest}{formula}(x, order = NULL, type = c("Chisq", "F"), data,
-  model = c("pooling", "random", "within"), ...)
+\method{pbgtest}{formula}(x, order = NULL, type = c("Chisq", "F"),
+  data, model = c("pooling", "random", "within"), ...)
 }
 \arguments{
 \item{x}{an object of class \code{"panelmodel"} or of class \code{"formula"},}

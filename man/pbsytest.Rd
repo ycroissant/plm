@@ -12,8 +12,8 @@ pbsytest(x, ...)
 \method{pbsytest}{formula}(x, data, ..., test = c("ar", "re", "j"),
   re.normal = if (test == "re") TRUE else NULL)
 
-\method{pbsytest}{panelmodel}(x, test = c("ar", "re", "j"), re.normal = if
-  (test == "re") TRUE else NULL, ...)
+\method{pbsytest}{panelmodel}(x, test = c("ar", "re", "j"),
+  re.normal = if (test == "re") TRUE else NULL, ...)
 }
 \arguments{
 \item{x}{an object of class \code{formula} or of class \code{panelmodel},}

@@ -8,8 +8,8 @@
 \usage{
 pbltest(x, ...)
 
-\method{pbltest}{formula}(x, data, alternative = c("twosided", "onesided"),
-  index = NULL, ...)
+\method{pbltest}{formula}(x, data, alternative = c("twosided",
+  "onesided"), index = NULL, ...)
 
 \method{pbltest}{plm}(x, alternative = c("twosided", "onesided"), ...)
 }

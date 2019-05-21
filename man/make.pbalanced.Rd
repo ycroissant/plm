@@ -13,8 +13,8 @@ make.pbalanced(x, balance.type = c("fill", "shared.times",
 \method{make.pbalanced}{pdata.frame}(x, balance.type = c("fill",
   "shared.times", "shared.individuals"), ...)
 
-\method{make.pbalanced}{pseries}(x, balance.type = c("fill", "shared.times",
-  "shared.individuals"), ...)
+\method{make.pbalanced}{pseries}(x, balance.type = c("fill",
+  "shared.times", "shared.individuals"), ...)
 
 \method{make.pbalanced}{data.frame}(x, balance.type = c("fill",
   "shared.times", "shared.individuals"), index = NULL, ...)

@@ -15,8 +15,8 @@
 
 \method{summary}{fixef}(object, ...)
 
-\method{print}{summary.fixef}(x, digits = max(3, getOption("digits") - 2),
-  width = getOption("width"), ...)
+\method{print}{summary.fixef}(x, digits = max(3, getOption("digits") -
+  2), width = getOption("width"), ...)
 }
 \arguments{
 \item{effect}{one of \code{"individual"} or \code{"time"}, only relevant in

@@ -10,13 +10,14 @@
 pcdtest(x, ...)
 
 \method{pcdtest}{formula}(x, data, index = NULL, model = NULL,
-  test = c("cd", "sclm", "bcsclm", "lm", "rho", "absrho"), w = NULL, ...)
+  test = c("cd", "sclm", "bcsclm", "lm", "rho", "absrho"), w = NULL,
+  ...)
 
-\method{pcdtest}{panelmodel}(x, test = c("cd", "sclm", "bcsclm", "lm", "rho",
-  "absrho"), w = NULL, ...)
+\method{pcdtest}{panelmodel}(x, test = c("cd", "sclm", "bcsclm", "lm",
+  "rho", "absrho"), w = NULL, ...)
 
-\method{pcdtest}{pseries}(x, test = c("cd", "sclm", "bcsclm", "lm", "rho",
-  "absrho"), w = NULL, ...)
+\method{pcdtest}{pseries}(x, test = c("cd", "sclm", "bcsclm", "lm",
+  "rho", "absrho"), w = NULL, ...)
 }
 \arguments{
 \item{x}{an object of class \code{formula}, \code{panelmodel}, or \code{pseries}

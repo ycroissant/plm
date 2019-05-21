@@ -74,8 +74,6 @@ For consecutive time periods per individual, a switch of shifting
 behaviour results in no difference. Different return values will
 occur for non-consecutive time periods per individual
 ("holes in time"), see also Examples.
-
-[[2]: R:[2
 }
 \note{
 The sign of \code{k} in \code{lag.pseries} results in inverse behaviour

@@ -8,8 +8,9 @@ Estimator}
 \usage{
 vcovNW(x, ...)
 
-\method{vcovNW}{plm}(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
-  maxlag = NULL, wj = function(j, maxlag) 1 - j/(maxlag + 1), ...)
+\method{vcovNW}{plm}(x, type = c("HC0", "sss", "HC1", "HC2", "HC3",
+  "HC4"), maxlag = NULL, wj = function(j, maxlag) 1 - j/(maxlag + 1),
+  ...)
 }
 \arguments{
 \item{x}{an object of class \code{"plm"} or \code{"pcce"}}

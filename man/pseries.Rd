@@ -26,8 +26,8 @@
 
 \method{as.matrix}{pseries}(x, idbyrow = TRUE, ...)
 
-\method{plot}{pseries}(x, plot = c("lattice", "superposed"), scale = FALSE,
-  transparency = TRUE, col = "blue", lwd = 1, ...)
+\method{plot}{pseries}(x, plot = c("lattice", "superposed"),
+  scale = FALSE, transparency = TRUE, col = "blue", lwd = 1, ...)
 
 \method{summary}{pseries}(object, ...)
 
@@ -39,7 +39,8 @@ Between(x, ...)
 
 \method{Between}{default}(x, effect, ...)
 
-\method{Between}{pseries}(x, effect = c("individual", "time", "group"), ...)
+\method{Between}{pseries}(x, effect = c("individual", "time", "group"),
+  ...)
 
 \method{Between}{matrix}(x, effect, ...)
 
@@ -47,7 +48,8 @@ between(x, ...)
 
 \method{between}{default}(x, effect, ...)
 
-\method{between}{pseries}(x, effect = c("individual", "time", "group"), ...)
+\method{between}{pseries}(x, effect = c("individual", "time", "group"),
+  ...)
 
 \method{between}{matrix}(x, effect, ...)
 

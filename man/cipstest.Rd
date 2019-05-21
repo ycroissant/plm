@@ -4,8 +4,8 @@
 \alias{cipstest}
 \title{Cross-sectionally Augmented IPS Test for Unit Roots in Panel Models}
 \usage{
-cipstest(x, lags = 2, type = c("trend", "drift", "none"), model = c("cmg",
-  "mg", "dmg"), truncated = FALSE, ...)
+cipstest(x, lags = 2, type = c("trend", "drift", "none"),
+  model = c("cmg", "mg", "dmg"), truncated = FALSE, ...)
 }
 \arguments{
 \item{x}{an object of class \code{"pseries"},}

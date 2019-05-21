@@ -12,8 +12,8 @@ pggls(formula, data, subset, na.action, effect = c("individual", "time"),
 
 \method{summary}{pggls}(object, ...)
 
-\method{print}{summary.pggls}(x, digits = max(3, getOption("digits") - 2),
-  width = getOption("width"), ...)
+\method{print}{summary.pggls}(x, digits = max(3, getOption("digits") -
+  2), width = getOption("width"), ...)
 
 \method{residuals}{pggls}(object, ...)
 }

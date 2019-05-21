@@ -19,10 +19,11 @@
 \title{Panel Data Estimators}
 \usage{
 plm(formula, data, subset, weights, na.action, effect = c("individual",
-  "time", "twoways", "nested"), model = c("within", "random", "ht", "between",
-  "pooling", "fd"), random.method = NULL, random.models = NULL,
-  random.dfcor = NULL, inst.method = c("bvk", "baltagi", "am", "bms"),
-  restrict.matrix = NULL, restrict.rhs = NULL, index = NULL, ...)
+  "time", "twoways", "nested"), model = c("within", "random", "ht",
+  "between", "pooling", "fd"), random.method = NULL,
+  random.models = NULL, random.dfcor = NULL, inst.method = c("bvk",
+  "baltagi", "am", "bms"), restrict.matrix = NULL, restrict.rhs = NULL,
+  index = NULL, ...)
 
 \method{terms}{panelmodel}(x, ...)
 

@@ -13,8 +13,8 @@ is.pconsecutive(x, ...)
 
 \method{is.pconsecutive}{default}(x, id, time, na.rm.tindex = FALSE, ...)
 
-\method{is.pconsecutive}{data.frame}(x, index = NULL, na.rm.tindex = FALSE,
-  ...)
+\method{is.pconsecutive}{data.frame}(x, index = NULL,
+  na.rm.tindex = FALSE, ...)
 
 \method{is.pconsecutive}{pseries}(x, na.rm.tindex = FALSE, ...)
 
@@ -96,8 +96,6 @@ are not examined but silently dropped - In this case, it is not clear which
 individual is meant by id value \code{NA}, thus no statement about
 consecutiveness of time periods for those "\code{NA}-individuals" is
 possible.
-
-[[2]: R:[2
 }
 \examples{
 
