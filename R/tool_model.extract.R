@@ -79,7 +79,7 @@ NULL
 #' @rdname model.frame.pdata.frame
 #' @export
 model.frame.pdata.frame <- function(formula, data = NULL, ...,
-                                    lhs = NULL, rhs = NULL, dot = "separate"){
+                                    lhs = NULL, rhs = NULL, dot = "previous"){
     pdata <- formula
     formula <- as.Formula(data)
     if (is.null(rhs)) rhs <- 1:(length(formula)[2])

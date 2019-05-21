@@ -1,6 +1,9 @@
 # plm 2.0-1
 
-* Minor update: tests updated to pacify CRAN's testing procedure with OpenBLAS.
+* Minor update: tests updated to pacify CRAN's testing procedure with
+  OpenBLAS.
+* bug fix in model.frame.pdata.frame : dot previously set to
+  "separate" now set to "previous"  
 
 # plm 2.0-0
 
