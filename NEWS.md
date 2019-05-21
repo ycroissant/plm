@@ -1,5 +1,6 @@
-# plm 2.1-0
-* TBD
+# plm 2.0-1
+
+* Minor update: tests updated to pacify CRAN's testing procedure with OpenBLAS.
 
 # plm 2.0-0
 

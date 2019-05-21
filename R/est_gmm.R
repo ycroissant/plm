@@ -547,11 +547,11 @@ pgmm <- function(formula, data, subset, na.action,
     coef1s <- coefficients
     Y2 <- crossprod(t(crossprod(WX, A2)), Wy)
     coefficients <- as.numeric(crossprod(B2, Y2))
-    names(coefficients) <- c(names.coef)
+    names(coefficients) <- names.coef
     vcov <- B2
   }
   else vcov <- B1
-  rownames(vcov) <- colnames(vcov) <- c(names.coef)
+  rownames(vcov) <- colnames(vcov) <- names.coef
   residuals <- lapply(yX,
                       function(x){
                         nz <- rownames(x)
