@@ -145,10 +145,6 @@ alternative hypothesis: Stationarity
 > ### ** Examples
 > 
 > 
-> ## Don't show: 
-> suppressWarnings(RNGversion("3.5.0"))
-> ## End(Don't show)
-> 
 > ### Example 1 ###
 > # prepare the data
 > data("Cigar" , package = "plm")
@@ -5814,8 +5810,8 @@ FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
 > 
 > ### Name: model.frame.pdata.frame
 > ### Title: model.frame and model.matrix for panel data
-> ### Aliases: model.frame.pdata.frame model.frame.pdata.frame
-> ###   formula.pdata.frame model.matrix.plm model.matrix.pdata.frame
+> ### Aliases: model.frame.pdata.frame formula.pdata.frame model.matrix.plm
+> ###   model.matrix.pdata.frame
 > ### Keywords: classes
 > 
 > ### ** Examples
@@ -13217,7 +13213,7 @@ detaching ‘package:lmtest’, ‘package:zoo’
 > 
 > ### Name: vcovHC.plm
 > ### Title: Robust Covariance Matrix Estimators
-> ### Aliases: vcovHC.plm vcovHC.plm vcovHC.pgmm
+> ### Aliases: vcovHC.plm vcovHC.pgmm
 > ### Keywords: regression
 > 
 > ### ** Examples
@@ -13616,7 +13612,7 @@ attr(,"se")
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  13.392 0.327 13.884 0 0 
+Time elapsed:  12.521 0.248 12.819 0.001 0.004 
 > grDevices::dev.off()
 null device 
           1 
