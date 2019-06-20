@@ -12,7 +12,7 @@
 pcce(formula, data, subset, na.action, model = c("mg", "p"),
   index = NULL, trend = FALSE, ...)
 
-\method{summary}{pcce}(object, ...)
+\method{summary}{pcce}(object, vcov = NULL, ...)
 
 \method{print}{summary.pcce}(x, digits = max(3, getOption("digits") - 2),
   width = getOption("width"), ...)
@@ -43,6 +43,8 @@ trend has to be included,}
 \item{\dots}{further arguments.}
 
 \item{object, x}{an object of class \code{"pcce"},}
+
+\item{vcov}{a variance–covariance matrix furnished by the user or a function to calculate one,}
 
 \item{digits}{digits,}
 
@@ -85,6 +87,7 @@ and adding individual intercepts and possibly trends.
 data("Produc", package = "plm")
 ccepmod <- pcce(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model="p")
 summary(ccepmod)
+summary(ccepmod, vcov = vcovHC) # use argument vcov for robust std. errors
 
 ccemgmod <- pcce(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model="mg")
 summary(ccemgmod)

@@ -1,5 +1,7 @@
-# plm 2.1
-* tbd
+# plm 2.0-2
+* vcovXX functions for pcce models exported again (export was lost in plm 2.0-0).
+* summary.pcce gained argument 'vcov', summary.pcce object carries robust vcov in
+  element 'rvcov'.
 
 # plm 2.0-1
 

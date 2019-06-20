@@ -673,6 +673,11 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 #' ## test of hyp.: 2*log(pc)=log(emp)
 #' linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovHC)
 #' 
+#' ## Robust inference for CCE models
+#' data("Produc", package = "plm")
+#' ccepmod <- pcce(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model="p")
+#' summary(ccepmod, vcov = vcovHC)
+#' 
 #' ## Robust inference for GMM models
 #' data("EmplUK", package="plm")
 #' ar <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
@@ -1109,11 +1114,15 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
 ## data from model.matrix.pcce and pmodel.response.pcce
 
 ## TODO: vcovBK.pcce missing? Or not valid?
+
+#' @export
 vcovG.pcce   <- vcovG.plm
+#' @export
 vcovHC.pcce  <- vcovHC.plm
+#' @export
 vcovNW.pcce  <- vcovNW.plm
+#' @export
 vcovSCC.pcce <- vcovSCC.plm
-vcovDC.pcce  <- vcovDC.plm
 
 
 ####################################

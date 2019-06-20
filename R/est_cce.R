@@ -51,6 +51,7 @@
 #' @param digits digits,
 #' @param width the maximum length of the lines in the print output,
 #' @param type one of `"defactored"` or `"standard"`,
+#' @param vcov a variance–covariance matrix furnished by the user or a function to calculate one,
 #' @param \dots further arguments.
 #' @return An object of class `c("pcce", "panelmodel")` containing:
 #'     \item{coefficients}{the vector of coefficients,}
@@ -79,6 +80,7 @@
 #' data("Produc", package = "plm")
 #' ccepmod <- pcce(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model="p")
 #' summary(ccepmod)
+#' summary(ccepmod, vcov = vcovHC) # use argument vcov for robust std. errors
 #' 
 #' ccemgmod <- pcce(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model="mg")
 #' summary(ccemgmod)
@@ -411,9 +413,16 @@ pcce <- function (formula, data, subset, na.action,
 
 #' @rdname pcce
 #' @export
-summary.pcce <- function(object, ...){
+summary.pcce <- function(object, vcov = NULL, ...){
   pmodel <- attr(object, "pmodel")
-  std.err <- sqrt(diag(object$vcov))
+  vcov_arg <- vcov
+  std.err <- if (!is.null(vcov_arg)) {
+    if (is.matrix(vcov_arg))   rvcov <- vcov_arg
+    if (is.function(vcov_arg)) rvcov <- vcov_arg(object)
+    sqrt(diag(rvcov))
+  } else {
+    sqrt(diag(stats::vcov(object)))
+  }
   b <- object$coefficients
   z <- b/std.err
   p <- 2*pnorm(abs(z), lower.tail = FALSE)
@@ -424,6 +433,13 @@ summary.pcce <- function(object, ...){
   object$tss <- tss(y)
   object$ssr <- as.numeric(crossprod(residuals(object)))
   object$rsqr <- object$r.squared #1-object$ssr/object$tss
+  ## add some info to summary.pcce object 
+  # robust vcov (next to "normal" vcov)
+  if (!is.null(vcov_arg)) {
+    object$rvcov <- rvcov
+    rvcov.name <- paste0(deparse(substitute(vcov)))
+    attr(object$rvcov, which = "rvcov.name") <- rvcov.name 
+  }
   class(object) <- c("summary.pcce")
   return(object)
 }
@@ -437,6 +453,9 @@ print.summary.pcce <- function(x, digits = max(3, getOption("digits") - 2), widt
   model.name <- pmodel$model.name
   cat("Common Correlated Effects ")
   cat(paste(model.pcce.list[model.name], "\n", sep = ""))
+  if (!is.null(x$rvcov)) {
+    cat("\nNote: Coefficient variance-covariance matrix supplied: ", attr(x$rvcov, which = "rvcov.name"), "\n", sep = "")
+  }
   cat("\nCall:\n")
   print(x$call)
   cat("\n")

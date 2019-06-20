@@ -103,6 +103,11 @@ waldtest(zz, update(zz, .~.-log(emp)-unemp), vcov=vcovHC)
 ## test of hyp.: 2*log(pc)=log(emp)
 linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovHC)
 
+## Robust inference for CCE models
+data("Produc", package = "plm")
+ccepmod <- pcce(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model="p")
+summary(ccepmod, vcov = vcovHC)
+
 ## Robust inference for GMM models
 data("EmplUK", package="plm")
 ar <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
