@@ -1,7 +1,11 @@
+# plm 2.1-0
+* TBD
+
 # plm 2.0-2
-* vcovXX functions for pcce models exported again (export was lost in plm 2.0-0).
+* vcovXX.pcce functions exported again (export was lost in plm 2.0-0).
 * summary.pcce gained argument 'vcov', summary.pcce object carries robust vcov in
   element 'rvcov'.
+* vignettes switched from bookdown::html_document2 to html_vignette.
 
 # plm 2.0-1
 

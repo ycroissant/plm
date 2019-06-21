@@ -443,12 +443,12 @@ within_intercept.plm <- function(object, vcov = NULL, ...) {
   # demean groupwise and add back grand mean of each variable, then run OLS
   mf      <- model.frame(object)
   withinY <- pmodel.response(object, cstcovar.rm = "all") # returns the response specific to the 'effect' of the est. FE model object
-    meanY   <- mean(mf[ , 1])          # mean of original data's response
+  meanY   <- mean(mf[ , 1])          # mean of original data's response
   transY  <- withinY + meanY
   
   withinM <- model.matrix(object) # returns the model.matrix specific to the 'effect' of the est. FE model object
-    M <- model.matrix(mf)
-    M <- M[, colnames(M) %in% colnames(withinM)]           # just to be sure: should be same columns
+  M <- model.matrix(mf)
+  M <- M[, colnames(M) %in% colnames(withinM)] # just to be sure: should be same columns
   meansM <- colMeans(M)
   transM <- t(t(withinM) + meansM)
   
@@ -485,7 +485,8 @@ within_intercept.plm <- function(object, vcov = NULL, ...) {
   
   coef_se <- lmtest::coeftest(auxreg)
   intercept <- coef_se[1,1]
-  attr(intercept, which = "se") <- coef_se[1,2]
+  attr(intercept, which = "se") <- coef_se[1, 2]
+  attr(intercept, which = "full.model") <- auxreg
   names(intercept) <- "(overall_intercept)"
   
   return(intercept)
