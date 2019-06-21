@@ -3,11 +3,16 @@
 \name{vcovG}
 \alias{vcovG}
 \alias{vcovG.plm}
+\alias{vcovG.pcce}
 \title{Generic Lego building block for Robust Covariance Matrix Estimators}
 \usage{
 vcovG(x, ...)
 
 \method{vcovG}{plm}(x, type = c("HC0", "sss", "HC1", "HC2", "HC3",
+  "HC4"), cluster = c("group", "time"), l = 0, inner = c("cluster",
+  "white", "diagavg"), ...)
+
+\method{vcovG}{pcce}(x, type = c("HC0", "sss", "HC1", "HC2", "HC3",
   "HC4"), cluster = c("group", "time"), l = 0, inner = c("cluster",
   "white", "diagavg"), ...)
 }

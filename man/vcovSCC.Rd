@@ -3,12 +3,17 @@
 \name{vcovSCC}
 \alias{vcovSCC}
 \alias{vcovSCC.plm}
+\alias{vcovSCC.pcce}
 \title{\insertCite{DRIS:KRAA:98;textual}{plm} Robust Covariance Matrix
 Estimator}
 \usage{
 vcovSCC(x, ...)
 
 \method{vcovSCC}{plm}(x, type = c("HC0", "sss", "HC1", "HC2", "HC3",
+  "HC4"), cluster = "time", maxlag = NULL, inner = c("cluster",
+  "white", "diagavg"), wj = function(j, maxlag) 1 - j/(maxlag + 1), ...)
+
+\method{vcovSCC}{pcce}(x, type = c("HC0", "sss", "HC1", "HC2", "HC3",
   "HC4"), cluster = "time", maxlag = NULL, inner = c("cluster",
   "white", "diagavg"), wj = function(j, maxlag) 1 - j/(maxlag + 1), ...)
 }

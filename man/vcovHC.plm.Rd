@@ -2,10 +2,15 @@
 % Please edit documentation in R/tool_vcovG.R
 \name{vcovHC.plm}
 \alias{vcovHC.plm}
+\alias{vcovHC.pcce}
 \alias{vcovHC.pgmm}
 \title{Robust Covariance Matrix Estimators}
 \usage{
 \method{vcovHC}{plm}(x, method = c("arellano", "white1", "white2"),
+  type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
+  cluster = c("group", "time"), ...)
+
+\method{vcovHC}{pcce}(x, method = c("arellano", "white1", "white2"),
   type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
   cluster = c("group", "time"), ...)
 

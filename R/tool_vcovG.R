@@ -1115,12 +1115,19 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
 
 ## TODO: vcovBK.pcce missing? Or not valid?
 
+#' @rdname vcovG
 #' @export
 vcovG.pcce   <- vcovG.plm
+
+#' @rdname vcovHC.plm
 #' @export
 vcovHC.pcce  <- vcovHC.plm
+
+#' @rdname vcovNW
 #' @export
 vcovNW.pcce  <- vcovNW.plm
+
+#' @rdname vcovSCC
 #' @export
 vcovSCC.pcce <- vcovSCC.plm
 

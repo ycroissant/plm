@@ -4,14 +4,7 @@ author:
 - name: Yves Croissant
   affiliation: University of La Reunion
 date: '`r Sys.Date()`'
-output:
-  bookdown::html_document2:
-    toc: true
-    toc_depth: 1
-    toc_float:
-      collapsed: true
-      smooth_scroll: true
-    number_sections: true
+output: rmarkdown::html_vignette
 bibliography: ../inst/REFERENCES.bib
 vignette: >
   %\VignetteIndexEntry{Model components for fitted models with plm}

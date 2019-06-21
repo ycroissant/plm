@@ -1,12 +1,5 @@
 ---
-output: 
-  bookdown::html_document2:
-    toc: true
-    toc_depth: 4
-    toc_float:
-      collapsed: true
-      smooth_scroll: true
-    number_sections: true
+output: rmarkdown::html_vignette
 bibliography: ../inst/REFERENCES.bib
 abstract: |
   This introduction to the `plm` package is a slightly
