@@ -486,8 +486,6 @@ within_intercept.plm <- function(object, vcov = NULL, ...) {
   coef_se <- lmtest::coeftest(auxreg)
   intercept <- coef_se[1,1]
   attr(intercept, which = "se") <- coef_se[1, 2]
-  attr(intercept, which = "full.model") <- auxreg
   names(intercept) <- "(overall_intercept)"
-  
   return(intercept)
 } # END within_intercept.plm
