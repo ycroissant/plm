@@ -16,9 +16,7 @@ title: 'Panel data econometrics in R:'
 subtitle: 'the plm package'
 author: 
 - name: Yves Croissant
-  affiliation: University of La Reunion
 - name: Giovanni Millo
-  affiliation: University of Trieste and Generali SpA
 vignette: >
   %\VignetteIndexEntry{Panel data econometrics with R: the plm package}
   %\VignetteEngine{knitr::rmarkdown}

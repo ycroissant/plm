@@ -2,7 +2,6 @@
 title: Model components for fitted models with plm
 author:
 - name: Yves Croissant
-  affiliation: University of La Reunion
 date: '`r Sys.Date()`'
 output: rmarkdown::html_vignette
 bibliography: ../inst/REFERENCES.bib

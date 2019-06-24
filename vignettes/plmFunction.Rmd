@@ -1,8 +1,7 @@
 ---
 title: "Estimation of error components models with the plm function"
 author:
-- name: Yves Croissant
-  affiliation: University of La Reunion
+  - name: Yves Croissant
 date: '`r Sys.Date()`'
 output: rmarkdown::html_vignette
 bibliography: ../inst/REFERENCES.bib
@@ -74,6 +73,7 @@ setMethod("extract", signature = className("plm", "plm"),
     definition = extract.plm)
 
 ```
+
 `plm` is a very versatile function which enable the estimation of a
 wide range of error component models. Those models can be written as
 follow :
