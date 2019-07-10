@@ -1,5 +1,5 @@
 # plm 2.1-0
-* TBD
+* problems with vignettes (all the text in italics fixed)
 
 # plm 2.0-2
 * vcovXX.pcce functions exported again (export was lost in plm 2.0-0).
