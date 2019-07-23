@@ -1,5 +1,6 @@
 # plm 2.1-0
 * problems with vignettes (all the text in italics fixed)
+* in test_Estimators, L256, tolerance lowered to 1E-04
 
 # plm 2.0-2
 * vcovXX.pcce functions exported again (export was lost in plm 2.0-0).
