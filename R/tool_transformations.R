@@ -691,7 +691,17 @@ alagt <- function(x, ak) {
     #      more efficient than
     #      as.numeric(as.character(factor_var))
 
-    time <- as.numeric(levels(time))[as.integer(time)]
+    # YC 2019/08/29 only works of time values can be coerced to
+    ## numeric, ie integers like years. When year is period (ie 5 years),
+    ## values used to be 1950 for the 1950-54 period, time is now a
+    ## factor in the original data.frame with levels "1950-54",
+    ## "1955-59", ... In this case coercing the levels to a numeric gives
+    ## NA so coerce the *factor* to a numeric.
+    
+    levtime <- levels(time)
+    numlevtime <- suppressWarnings(as.numeric(levtime))
+    if (! any(is.na(numlevtime))) time <- as.numeric(levels(time))[as.integer(time)]
+    else time <- as.numeric(time)
     
     list_id_timevar <- split(time, id, drop = TRUE)
     
