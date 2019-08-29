@@ -1,6 +1,7 @@
 # plm 2.2-0
 * lagt is changed so that it can deal with time factors for which
   cannot be coerced to numeric (ex "1950-54", "1955-59", ...)
+* cortab was not exported, it is now 
 
 # plm 2.1-0
 * problems with vignettes (all the text in italics fixed)

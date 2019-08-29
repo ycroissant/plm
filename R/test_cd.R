@@ -484,6 +484,7 @@ preshape <- function(x, na.rm = TRUE, ...) {
 #' @param value to complete
 #' @param \dots further arguments
 #' @return A matrix
+#' @export
 #' @keywords htest
 cortab <- function(x, grouping, groupnames = NULL,
                    value = "statistic", ...) {
