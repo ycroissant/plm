@@ -180,6 +180,8 @@ plm.list <- function(formula, data, subset, na.action,
   return(m)
 }
 
+#' @rdname summary.plm
+#' @export
 summary.plm.list <- function(object, ...){
   class(object) <- setdiff(class(object), "plm.list")
   formulas <- eval(object$call$formula)
@@ -210,11 +212,16 @@ summary.plm.list <- function(object, ...){
   object
 }
 
+
+#' @rdname summary.plm
+#' @export
 coef.summary.plm.list <- function(object, eq = NULL, ...){
   if (is.null(eq)) object$coefficients
   else object$models[[eq]]
 }
 
+#' @rdname summary.plm
+#' @export
 print.summary.plm.list <- function(x, digits = max(3, getOption("digits") - 2),
                                    width = getOption("width"), ...){
   effect <- describe(x, "effect")
@@ -269,6 +276,8 @@ print.summary.plm.list <- function(x, digits = max(3, getOption("digits") - 2),
   invisible(x)
 }
 
+#' @rdname plm
+#' @export
 print.plm.list <- function(x, digits = max(3, getOption("digits") - 2), width = getOption("width"),...){
   cat("\nModel Formulas:\n")
   for (l in 1:length(formula(x))){

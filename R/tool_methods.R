@@ -203,6 +203,7 @@ deviance.panelmodel <- function(object, model = NULL, ...){
 #'     a function to calculate one (see **Examples**),
 #' @param digits number of digits for printed output,
 #' @param width the maximum length of the lines in the printed output,
+#' @param eq the selected equation for list objects
 #' @param \dots further arguments.
 #' @return An object of class `c("summary.plm", "plm",
 #'     "panelmodel")`.  Some of its elements are carried over from the

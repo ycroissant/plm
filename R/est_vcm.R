@@ -177,16 +177,15 @@ pvcm.random <- function(formula, data, effect){
     ml <- ml[nr]
     attr(ml, "index") <- index
     ols <- lapply(ml,
-                function(x){
-                    X <- model.matrix(formula, x)
-                    if (nrow(X) <= ncol(X)) stop("insufficient number of observations")
-                    y <- pmodel.response(x)
-                    r <- lm(y ~ X - 1)
-                    nc <- colnames(model.frame(r)$X)
-                    names(r$coefficients) <- nc
-                    r
-                })
-    
+                  function(x){
+                      X <- model.matrix(formula, x,)
+                      if (nrow(X) <= ncol(X)) stop("insufficient number of observations")
+                      y <- pmodel.response(x)
+                      r <- lm(y ~ X - 1)
+                      nc <- colnames(model.frame(r)$X)
+                      names(r$coefficients) <- nc
+                      r
+                  })
     # matrix of coefficients
     coefm <- t(sapply(ols, coef))
     # number of covariates
@@ -243,12 +242,17 @@ pvcm.random <- function(formula, data, effect){
     beta.names <- rownames(beta)
     beta <- as.numeric(beta)
     names(beta) <- beta.names
-  
+    
     weightsn <- lapply(seq_len(card.cond),
                        function(i){
+                           # YC2019/30/08
+                           #old
+#                           vcovn <- vcov(ols[[i]])
+#                           Deltan <- Delta[! coefna[i,], ! coefna[i,]]
+#                           wn <- solve(vcovn + Deltan)
+                           #new
                            vcovn <- vcov(ols[[i]])
-                           Deltan <- Delta[!coefna[i,], !coefna[i,]]
-                           wn <- solve(vcovn + Deltan)
+                           wn <- solve((vcovn + Delta)[! coefna[i, ], ! coefna[i, ]])
                            z <- matrix(0, ncol(coefm), ncol(coefm),
                                        dimnames = list(colnames(coefm), colnames(coefm)))
                            z[!coefna[i,], !coefna[i,]] <- wn
