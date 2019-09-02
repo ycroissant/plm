@@ -8,6 +8,7 @@
 \alias{vcovHC}
 \alias{lag}
 \alias{nobs}
+\alias{maxLik}
 \title{Functions exported from other packages}
 \description{
 These functions are imported from other packages and re-exported by
@@ -21,6 +22,7 @@ links to view the function's original documentation.
 \item ranef
 \item vcovHC
 \item nobs
+\item maxLik
 }
 }
 \keyword{internal}

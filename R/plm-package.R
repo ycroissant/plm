@@ -10,6 +10,7 @@
 #' \item ranef
 #' \item vcovHC
 #' \item nobs
+#' \item maxLik
 #' }
 #' 
 #' 
@@ -51,6 +52,12 @@ NULL
 #' @rdname re-export_functions
 #' @name nobs
 #' @importFrom stats nobs
+#' @export
+NULL
+
+#' @rdname re-export_functions
+#' @name maxLik
+#' @importFrom maxLik maxLik
 #' @export
 NULL
 
