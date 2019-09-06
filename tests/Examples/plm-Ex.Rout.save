@@ -9226,10 +9226,11 @@ F-statistic: 3064.81 on 4 and 764 DF, p-value: < 2.22e-16
 > 
 > ### Name: plm
 > ### Title: Panel Data Estimators
-> ### Aliases: plm terms.panelmodel vcov.panelmodel fitted.panelmodel
-> ###   residuals.panelmodel df.residual.panelmodel coef.panelmodel
-> ###   print.panelmodel update.panelmodel deviance.panelmodel predict.plm
-> ###   formula.plm plot.plm residuals.plm fitted.plm
+> ### Aliases: plm print.plm.list terms.panelmodel vcov.panelmodel
+> ###   fitted.panelmodel residuals.panelmodel df.residual.panelmodel
+> ###   coef.panelmodel print.panelmodel update.panelmodel
+> ###   deviance.panelmodel predict.plm formula.plm plot.plm residuals.plm
+> ###   fitted.plm
 > ### Keywords: regression
 > 
 > ### ** Examples
@@ -12763,9 +12764,10 @@ chisq = 31.381, df = 25, p-value = 0.1767
 > 
 > flush(stderr()); flush(stdout())
 > 
-> ### Name: summary.plm
+> ### Name: summary.plm.list
 > ### Title: Summary for plm objects
-> ### Aliases: summary.plm print.summary.plm
+> ### Aliases: summary.plm.list coef.summary.plm.list print.summary.plm.list
+> ###   summary.plm print.summary.plm
 > ### Keywords: regression
 > 
 > ### ** Examples
@@ -13668,7 +13670,7 @@ attr(,"se")
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  11.331 0.248 11.666 0.001 0.006 
+Time elapsed:  11.784 0.288 12.66 0 0.007 
 > grDevices::dev.off()
 null device 
           1 
