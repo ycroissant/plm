@@ -592,8 +592,10 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 #' linear model) by \insertCite{MACK:WHIT:85;textual}{plm} and
 #' \insertCite{CRIB:04;textual}{plm}
 #' \insertCite{ZEIL:04}{plm}. `type = "sss"` employs the small sample
-#' correction as used by Stata. % TODO: give formula for "sss";
-#' elaborate why different result for FE models (intercept)
+#' correction as used by Stata.
+#' 
+# % TODO: give formula for "sss";
+# elaborate why different result for FE models (intercept)
 #' 
 #' The main use of `vcovHC` is to be an argument to other functions,
 #' e.g.  for Wald--type testing: argument `vcov.` to `coeftest()`,
@@ -808,9 +810,9 @@ vcovSCC.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 #' linear model) by \insertCite{MACK:WHIT:85;textual}{plm} and
 #' \insertCite{CRIB:04;textual}{plm} \insertCite{@see @ZEIL:04}{plm}.
 #' 
-#' % TODO: once "sss" has been added: `type = "sss"` employs the small
-#' % sample correction as used by Stata. give formula for "sss";
-#' % elaborate why different result for FE models (intercept)
+# % TODO: once "sss" has been added: `type = "sss"` employs the small
+# % sample correction as used by Stata. give formula for "sss";
+# % elaborate why different result for FE models (intercept)
 #' 
 #' The main use of `vcovBK` is to be an argument to other functions,
 #' e.g.  for Wald--type testing: argument `vcov.` to `coeftest()`,

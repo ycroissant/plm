@@ -12,13 +12,22 @@
 
 \method{coef}{summary.plm.list}(object, eq = NULL, ...)
 
-\method{print}{summary.plm.list}(x, digits = max(3, getOption("digits") -
-  2), width = getOption("width"), ...)
+\method{print}{summary.plm.list}(
+  x,
+  digits = max(3, getOption("digits") - 2),
+  width = getOption("width"),
+  ...
+)
 
 \method{summary}{plm}(object, vcov = NULL, ...)
 
-\method{print}{summary.plm}(x, digits = max(3, getOption("digits") - 2),
-  width = getOption("width"), subset = NULL, ...)
+\method{print}{summary.plm}(
+  x,
+  digits = max(3, getOption("digits") - 2),
+  width = getOption("width"),
+  subset = NULL,
+  ...
+)
 }
 \arguments{
 \item{object}{an object of class \code{"plm"},}

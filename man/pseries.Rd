@@ -26,8 +26,15 @@
 
 \method{as.matrix}{pseries}(x, idbyrow = TRUE, ...)
 
-\method{plot}{pseries}(x, plot = c("lattice", "superposed"),
-  scale = FALSE, transparency = TRUE, col = "blue", lwd = 1, ...)
+\method{plot}{pseries}(
+  x,
+  plot = c("lattice", "superposed"),
+  scale = FALSE,
+  transparency = TRUE,
+  col = "blue",
+  lwd = 1,
+  ...
+)
 
 \method{summary}{pseries}(object, ...)
 
@@ -39,8 +46,7 @@ Between(x, ...)
 
 \method{Between}{default}(x, effect, ...)
 
-\method{Between}{pseries}(x, effect = c("individual", "time", "group"),
-  ...)
+\method{Between}{pseries}(x, effect = c("individual", "time", "group"), ...)
 
 \method{Between}{matrix}(x, effect, ...)
 
@@ -48,8 +54,7 @@ between(x, ...)
 
 \method{between}{default}(x, effect, ...)
 
-\method{between}{pseries}(x, effect = c("individual", "time", "group"),
-  ...)
+\method{between}{pseries}(x, effect = c("individual", "time", "group"), ...)
 
 \method{between}{matrix}(x, effect, ...)
 
@@ -57,8 +62,7 @@ Within(x, ...)
 
 \method{Within}{default}(x, effect, ...)
 
-\method{Within}{pseries}(x, effect = c("individual", "time", "group",
-  "twoways"), ...)
+\method{Within}{pseries}(x, effect = c("individual", "time", "group", "twoways"), ...)
 
 \method{Within}{matrix}(x, effect, rm.null = TRUE, ...)
 }
@@ -95,10 +99,12 @@ data transformations, i. e. the between and within transformation.
 
 \code{between} returns a vector containing the individual means (over
 time) with the length of the vector equal to the number of
-individuals (if \code{effect = "individual"} (default); if \code{effect = "time"}, it returns the time means (over individuals)). \code{Between}
+individuals (if \code{effect = "individual"} (default); if \code{effect = "time"},
+it returns the time means (over individuals)). \code{Between}
 duplicates the values and returns a vector which length is the
 number of total observations. \code{Within} returns a vector containing
-the values in deviation from the individual means (if \code{effect = "individual"}, from time means if \code{effect = "time"}), the so called
+the values in deviation from the individual means (if \verb{effect = ' "individual"},
+from time means if \code{effect = "time"}), the so called
 demeaned data.
 
 For \code{between}, \code{Between}, and \code{Within} in presence of NA values it

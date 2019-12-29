@@ -9,8 +9,7 @@
 \usage{
 make.pconsecutive(x, ...)
 
-\method{make.pconsecutive}{data.frame}(x, balanced = FALSE,
-  index = NULL, ...)
+\method{make.pconsecutive}{data.frame}(x, balanced = FALSE, index = NULL, ...)
 
 \method{make.pconsecutive}{pdata.frame}(x, balanced = FALSE, ...)
 

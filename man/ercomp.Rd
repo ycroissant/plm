@@ -12,13 +12,26 @@ ercomp(object, ...)
 
 \method{ercomp}{plm}(object, ...)
 
-\method{ercomp}{pdata.frame}(object, effect = c("individual", "time",
-  "twoways", "nested"), method = NULL, models = NULL, dfcor = NULL,
-  index = NULL, ...)
+\method{ercomp}{pdata.frame}(
+  object,
+  effect = c("individual", "time", "twoways", "nested"),
+  method = NULL,
+  models = NULL,
+  dfcor = NULL,
+  index = NULL,
+  ...
+)
 
-\method{ercomp}{formula}(object, data, effect = c("individual", "time",
-  "twoways", "nested"), method = NULL, models = NULL, dfcor = NULL,
-  index = NULL, ...)
+\method{ercomp}{formula}(
+  object,
+  data,
+  effect = c("individual", "time", "twoways", "nested"),
+  method = NULL,
+  models = NULL,
+  dfcor = NULL,
+  index = NULL,
+  ...
+)
 
 \method{print}{ercomp}(x, digits = max(3, getOption("digits") - 3), ...)
 }

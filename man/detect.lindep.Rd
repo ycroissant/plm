@@ -19,9 +19,12 @@ detect.lindep(object, ...)
 
 \method{alias}{plm}(object, ...)
 
-\method{alias}{pdata.frame}(object, model = c("pooling", "within",
-  "Between", "between", "mean", "random", "fd"), effect = c("individual",
-  "time", "twoways"), ...)
+\method{alias}{pdata.frame}(
+  object,
+  model = c("pooling", "within", "Between", "between", "mean", "random", "fd"),
+  effect = c("individual", "time", "twoways"),
+  ...
+)
 }
 \arguments{
 \item{object}{for \code{detect.lindep}: an object which should be checked

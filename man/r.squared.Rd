@@ -4,8 +4,7 @@
 \alias{r.squared}
 \title{R squared and adjusted R squared for panel models}
 \usage{
-r.squared(object, model = NULL, type = c("cor", "rss", "ess"),
-  dfcor = FALSE)
+r.squared(object, model = NULL, type = c("cor", "rss", "ess"), dfcor = FALSE)
 }
 \arguments{
 \item{object}{an object of class \code{"plm"},}

@@ -77,12 +77,12 @@ print.panelmodel <- function(x, digits = max(3, getOption("digits") - 2),
 #' fitted panel model.
 #' 
 #' The number of observations is usually the length of the residuals
-#' vector.  Thus, `nobs` gives the number of observations actually
+#' vector. Thus, `nobs` gives the number of observations actually
 #' used by the estimation procedure. It is not necessarily the number
 #' of observations of the model frame (number of rows in the model
 #' frame), because sometimes the model frame is further reduced by the
 #' estimation procedure. This is e.g. the case for first--difference
-#' models estimated by `plm(\dots{`, model = "fd")} where the model
+#' models estimated by `plm(..., model = "fd")` where the model
 #' frame does not yet contain the differences (see also
 #' **Examples**).
 #'

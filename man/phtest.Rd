@@ -8,8 +8,15 @@
 \usage{
 phtest(x, ...)
 
-\method{phtest}{formula}(x, data, model = c("within", "random"),
-  method = c("chisq", "aux"), index = NULL, vcov = NULL, ...)
+\method{phtest}{formula}(
+  x,
+  data,
+  model = c("within", "random"),
+  method = c("chisq", "aux"),
+  index = NULL,
+  vcov = NULL,
+  ...
+)
 
 \method{phtest}{panelmodel}(x, x2, ...)
 }

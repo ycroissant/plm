@@ -7,8 +7,7 @@
 \usage{
 vcovDC(x, ...)
 
-\method{vcovDC}{plm}(x, type = c("HC0", "sss", "HC1", "HC2", "HC3",
-  "HC4"), ...)
+\method{vcovDC}{plm}(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"), ...)
 }
 \arguments{
 \item{x}{an object of class \code{"plm"} or \code{"pcce"}}

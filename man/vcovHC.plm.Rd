@@ -6,13 +6,21 @@
 \alias{vcovHC.pgmm}
 \title{Robust Covariance Matrix Estimators}
 \usage{
-\method{vcovHC}{plm}(x, method = c("arellano", "white1", "white2"),
+\method{vcovHC}{plm}(
+  x,
+  method = c("arellano", "white1", "white2"),
   type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
-  cluster = c("group", "time"), ...)
+  cluster = c("group", "time"),
+  ...
+)
 
-\method{vcovHC}{pcce}(x, method = c("arellano", "white1", "white2"),
+\method{vcovHC}{pcce}(
+  x,
+  method = c("arellano", "white1", "white2"),
   type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
-  cluster = c("group", "time"), ...)
+  cluster = c("group", "time"),
+  ...
+)
 
 \method{vcovHC}{pgmm}(x, ...)
 }
@@ -64,8 +72,7 @@ justified theoretically (although in the context of the standard
 linear model) by \insertCite{MACK:WHIT:85;textual}{plm} and
 \insertCite{CRIB:04;textual}{plm}
 \insertCite{ZEIL:04}{plm}. \code{type = "sss"} employs the small sample
-correction as used by Stata. % TODO: give formula for "sss";
-elaborate why different result for FE models (intercept)
+correction as used by Stata.
 
 The main use of \code{vcovHC} is to be an argument to other functions,
 e.g.  for Wald--type testing: argument \code{vcov.} to \code{coeftest()},

@@ -11,8 +11,13 @@ pbnftest(x, ...)
 
 \method{pbnftest}{panelmodel}(x, test = c("bnf", "lbi"), ...)
 
-\method{pbnftest}{formula}(x, data, test = c("bnf", "lbi"),
-  model = c("pooling", "within", "random"), ...)
+\method{pbnftest}{formula}(
+  x,
+  data,
+  test = c("bnf", "lbi"),
+  model = c("pooling", "within", "random"),
+  ...
+)
 }
 \arguments{
 \item{x}{an object of class \code{"panelmodel"} or of class \code{"formula"},}

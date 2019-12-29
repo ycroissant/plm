@@ -6,13 +6,25 @@
 \alias{print.summary.pvcm}
 \title{Variable Coefficients Models for Panel Data}
 \usage{
-pvcm(formula, data, subset, na.action, effect = c("individual", "time"),
-  model = c("within", "random"), index = NULL, ...)
+pvcm(
+  formula,
+  data,
+  subset,
+  na.action,
+  effect = c("individual", "time"),
+  model = c("within", "random"),
+  index = NULL,
+  ...
+)
 
 \method{summary}{pvcm}(object, ...)
 
-\method{print}{summary.pvcm}(x, digits = max(3, getOption("digits") - 2),
-  width = getOption("width"), ...)
+\method{print}{summary.pvcm}(
+  x,
+  digits = max(3, getOption("digits") - 2),
+  width = getOption("width"),
+  ...
+)
 }
 \arguments{
 \item{formula}{a symbolic description for the model to be estimated,}

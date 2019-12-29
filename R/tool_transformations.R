@@ -25,12 +25,12 @@
 #' 
 #' `between` returns a vector containing the individual means (over
 #' time) with the length of the vector equal to the number of
-#' individuals (if `effect = "individual"` (default); if `effect =
-#' "time"`, it returns the time means (over individuals)). `Between`
+#' individuals (if `effect = "individual"` (default); if `effect = "time"`,
+#' it returns the time means (over individuals)). `Between`
 #' duplicates the values and returns a vector which length is the
 #' number of total observations. `Within` returns a vector containing
-#' the values in deviation from the individual means (if `effect =
-#' "individual"`, from time means if `effect = "time"`), the so called
+#' the values in deviation from the individual means (if `effect = ' "individual"`,
+#' from time means if `effect = "time"`), the so called
 #' demeaned data.
 #' 
 #' For `between`, `Between`, and `Within` in presence of NA values it
@@ -523,17 +523,16 @@ Within.matrix <- function(x, effect, rm.null = TRUE, ...){
 #'     methods (can also be negative).  For the `lag` method, a
 #'     positive (negative) `k` gives lagged (leading) values.  For the
 #'     `lead` method, a positive (negative) `k` gives leading (lagged)
-#'     values, thus, `lag(x, k = -1)` yields the same as `lead(x, k =
-#'     1)`.  If `k` is an integer with length > 1 (`k = c(k1, k2,
-#'     \dots{`)}) a `matrix` with multiple lagged `pseries` is
-#'     returned,
+#'     values, thus, `lag(x, k = -1)` yields the same as `lead(x, k = 1)`.
+#'     If `k` is an integer with length > 1 (`k = c(k1, k2, ...)`), a 
+#'     `matrix` with multiple lagged `pseries` is returned,
 #' @param lag the number of lags for the `diff` method, can also be of
 #'     length > 1 (see argument `k`) (only non--negative values in
 #'     argument `lag` are allowed for `diff`),
 #' @param shift character, either `"time"` (default) or `"row"`
 #'     determining how the shifting in the `lag`/`lead`/`diff`
 #'     functions is performed (see Details and Examples).
-#' @param \dots further arguments (currently none evaluated).
+#' @param ... further arguments (currently none evaluated).
 #' @return
 #'
 #' - An object of class `pseries`, if the argument specifying the lag

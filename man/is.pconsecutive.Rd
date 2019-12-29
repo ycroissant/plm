@@ -13,8 +13,7 @@ is.pconsecutive(x, ...)
 
 \method{is.pconsecutive}{default}(x, id, time, na.rm.tindex = FALSE, ...)
 
-\method{is.pconsecutive}{data.frame}(x, index = NULL,
-  na.rm.tindex = FALSE, ...)
+\method{is.pconsecutive}{data.frame}(x, index = NULL, na.rm.tindex = FALSE, ...)
 
 \method{is.pconsecutive}{pseries}(x, na.rm.tindex = FALSE, ...)
 
@@ -73,7 +72,7 @@ observations for an individuals in the (p)data.frame/pseries (it is not
 about "neighbouring" rows). If the object to be evaluated is a pseries or a
 pdata.frame, the time index is coerced from factor via as.character to
 numeric, i.e. the series
-\code{as.numeric(as.character(index(<pseries/pdata.frame>)[[2]]))]} is
+\verb{as.numeric(as.character(index(<pseries/pdata.frame>)[[2]]))]} is
 evaluated for gaps.
 
 The default method also works for argument \code{x} being an arbitrary

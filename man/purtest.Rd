@@ -7,10 +7,20 @@
 \alias{print.summary.purtest}
 \title{Unit root tests for panel data}
 \usage{
-purtest(object, data = NULL, index = NULL, test = c("levinlin",
-  "ips", "madwu", "Pm", "invnormal", "logit", "hadri"), exo = c("none",
-  "intercept", "trend"), lags = c("SIC", "AIC", "Hall"), pmax = 10,
-  Hcons = TRUE, q = NULL, dfcor = FALSE, fixedT = TRUE, ...)
+purtest(
+  object,
+  data = NULL,
+  index = NULL,
+  test = c("levinlin", "ips", "madwu", "Pm", "invnormal", "logit", "hadri"),
+  exo = c("none", "intercept", "trend"),
+  lags = c("SIC", "AIC", "Hall"),
+  pmax = 10,
+  Hcons = TRUE,
+  q = NULL,
+  dfcor = FALSE,
+  fixedT = TRUE,
+  ...
+)
 
 \method{print}{purtest}(x, ...)
 
@@ -20,12 +30,11 @@ purtest(object, data = NULL, index = NULL, test = c("levinlin",
 }
 \arguments{
 \item{object, x}{Either a \code{"data.frame"} or a matrix containing the
-time series, a \code{"pseries"} object, a formula, or the name of a
-column of a \code{"data.frame"}, or a \code{"pdata.frame"} on which the
-test has to be computed; a \code{"purtest"} object for the print and
-summary methods,}
+time series (individuals as columns), a \code{"pseries"} object, a formula;
+a \code{"purtest"} object for the print and summary methods,}
 
-\item{data}{a \code{"data.frame"} or a \code{"pdata.frame"} object,}
+\item{data}{a \code{"data.frame"} or a \code{"pdata.frame"} object (required for
+formula interface, see Details and Examples),}
 
 \item{index}{the indexes,}
 
@@ -46,7 +55,7 @@ individual intercepts and trends (\code{"trend"}), but see Details,}
 Dickey-Fuller regressions: either an integer (the number of
 lags for all time series), a vector of integers (one for each
 time series), or a character string for an automatic
-computation of the number of lags, based on either the AIC
+computation of the number of lags, based on the AIC
 (\code{"AIC"}), the SIC (\code{"SIC"}), or on the method by
 \insertCite{HALL:94;textual}{plm} (\code{"Hall"}),}
 
@@ -56,7 +65,9 @@ computation of the number of lags, based on either the AIC
 indicating whether the heteroskedasticity-consistent test of
 \insertCite{HADR:00;textual}{plm} should be computed,}
 
-\item{q}{the bandwidth for the estimation of the long-run variance,}
+\item{q}{the bandwidth for the estimation of the long-run variance
+(only relevant for test = "levinlin", the default (`q = NULL``)
+gives the value as suggested by the authors as round(3.21 * T^(1/3))),}
 
 \item{dfcor}{logical, indicating whether the standard deviation of
 the regressions is to be computed using a degrees-of-freedom
@@ -80,16 +91,10 @@ needed to compute the statistic).
 to test unit root hypotheses with panel data.
 }
 \details{
-% TODO: in general, write more about the various tests
-% TODO: mention which test is suitable for unbalanced panels (once the data pre-processing in
-% purtest() is fixed to handle unbalanced data)
-% TODO: mention which statistic of IPS (2003) we output: Ztbar or Wtbar? (it is not t-bar, the
-% mean of t statistics)
-
 All these tests except \code{"hadri"} are based on the estimation of
 augmented Dickey-Fuller (ADF) regressions for each time series. A
 statistic is then computed using the t-statistics associated with
-the lagged variable.  The Hadri residual-based LM statistic is the
+the lagged variable. The Hadri residual-based LM statistic is the
 cross-sectional average of the individual KPSS statistics
 \insertCite{KWIA:PHIL:SCHM:SHIN:92}{plm}, standardized by their
 asymptotic mean and standard deviation.
@@ -108,6 +113,9 @@ ADF regressions per individual are available:
 
 The individual p-values for the Fisher-type tests are approximated
 as described in \insertCite{MACK:94;textual}{plm}.
+
+Hadri's test and the test of Levin/Lin/Chu are not applicable to unbalanced
+panels.
 
 The kind of test to be computed can be specified in several ways,
 depending on how the data is handed over to the function:
@@ -129,7 +137,7 @@ information can be extracted/displayed (see also Value).
 \examples{
 
 data("Grunfeld", package = "plm")
-y <- data.frame(split(Grunfeld$inv, Grunfeld$firm))
+y <- data.frame(split(Grunfeld$inv, Grunfeld$firm)) # individuals in columns
 
 purtest(y, pmax = 4, exo = "intercept", test = "madwu")
 

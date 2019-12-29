@@ -26,8 +26,8 @@
 #' Test for Granger (non-)causality in panel data.
 #' 
 #' 
-#' % TODO: write about assumptions of panel Granger test: % * cross-sectional
-#' independence % * convergence
+# % TODO: write about assumptions of panel Granger test: % * cross-sectional
+# independence % * convergence
 #' 
 #' The panel Granger (non-)causality test is a combination of Granger
 #' tests \insertCite{GRAN:69}{plm} performed per individual. The test

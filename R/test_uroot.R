@@ -91,55 +91,56 @@ adj.ips <- aperm(adj.ips, c(2,1,3,4))
 # table 2 in LLC (2002): mean and standard deviation adjustments
 Tn <- c(  25,  30,  35,  40,  45,  50,  60,   70,   80,   90,  100,  250,   500)
 
-v <- c(c( .004, .003, .002, .002, .001, .001, .001,0.000,0.000,0.000,0.000,0.000,0.000),
-       c(1.049,1.035,1.027,1.021,1.017,1.014,1.011,1.008,1.007,1.006,1.005,1.001,1.000),
-       c(-.554,-.546,-.541,-.537,-.533,-.531,-.527,-.524,-.521,-.520,-.518,-.509,-.500),
-       c(0.919,0.889,0.867,0.850,0.837,0.826,0.810,0.798,0.789,0.782,0.776,0.742,0.707),
-       c(-.703,-.674,-.653,-.637,-.624,-.614,-.598,-.587,-.578,-.571,-.566,-.533,-.500),
-       c(1.003,0.949,0.906,0.871,0.842,0.818,0.780,0.751,0.728,0.710,0.695,0.603,0.500)
+v <- c(c( 0.004,  0.003,  0.002,  0.002,  0.001,  0.001,  0.001,  0.000,  0.000,  0.000,  0.000,  0.000,  0.000),
+       c( 1.049,  1.035,  1.027,  1.021,  1.017,  1.014,  1.011,  1.008,  1.007,  1.006,  1.005,  1.001,  1.000),
+       c(-0.554, -0.546, -0.541, -0.537, -0.533, -0.531, -0.527, -0.524, -0.521, -0.520, -0.518, -0.509, -0.500),
+       c( 0.919,  0.889,  0.867,  0.850,  0.837,  0.826,  0.810,  0.798,  0.789,  0.782,  0.776,  0.742,  0.707),
+       c(-0.703, -0.674, -0.653, -0.637, -0.624, -0.614, -0.598, -0.587, -0.578, -0.571, -0.566, -0.533, -0.500),
+       c( 1.003,  0.949,  0.906,  0.871,  0.842,  0.818,  0.780,  0.751,  0.728,  0.710,  0.695,  0.603,  0.500)
        )
 
-adj.levinlin <- array(v, dim=c(13,2,3),
-                      dimnames = list(Tn, c("mu","sigma"),
-                        c("none", "intercept", "trend")))
+adj.levinlin <- array(v, dim = c(13, 2, 3),
+                      dimnames = list(Tn,
+                                      c("mu", "sigma"),
+                                      c("none", "intercept", "trend")))
 
-purtest.names.exo <- c(none = "None",
+purtest.names.exo <- c(none      = "None",
                        intercept = "Individual Intercepts",
-                       trend = "Individual Intercepts and Trend")
+                       trend     = "Individual Intercepts and Trend")
 
-purtest.names.test <- c(levinlin = "Levin-Lin-Chu Unit-Root Test",
-                ips = "Im-Pesaran-Shin Unit-Root Test",
-                madwu = "Maddala-Wu Unit-Root Test",
-                Pm = "Choi's modified P Unit-Root Test",
-                invnormal = "Choi's Inverse Normal Unit-Root Test",
-                logit = "Choi's Logit Unit-Root Test",
-                hadri = "Hadri Test")
+purtest.names.test <- c(levinlin  = "Levin-Lin-Chu Unit-Root Test",
+                        ips       = "Im-Pesaran-Shin Unit-Root Test",
+                        madwu     = "Maddala-Wu Unit-Root Test",
+                        Pm        = "Choi's modified P Unit-Root Test",
+                        invnormal = "Choi's Inverse Normal Unit-Root Test",
+                        logit     = "Choi's Logit Unit-Root Test",
+                        hadri     = "Hadri Test")
 
 my.lm.fit <- function(X, y, dfcor = TRUE, ...){
-  object <- lm.fit(X, y)
+  reg <- lm.fit(X, y)
   ## 'as' summary method for lm.fit
-  p <- object$rank
-  Qr <- object$qr
+  p <- reg$rank
+  Qr <- reg$qr
   n <- NROW(Qr$qr)
   rdf <- n - p
   p1 <- 1L:p
-  r <- object$residuals
-  rss <- sum(r^2)
-  resvar <- ifelse(dfcor, rss/rdf, rss/n)
+  r <- reg$residuals
+  rss <- as.numeric(crossprod(r))
+  resvar <- if (dfcor) rss/rdf else rss/n
   sigma <- sqrt(resvar)
   R <- chol2inv(Qr$qr[p1, p1, drop = FALSE])
-  thecoef <- object$coefficients[Qr$pivot[p1]] #[lags+1]
-  these <- sigma*sqrt(diag(R)) #[lags+1])
+  thecoef <- reg$coefficients[Qr$pivot[p1]] #[lags+1]
+  these <- sigma * sqrt(diag(R)) #[lags+1])
   list(coef = thecoef, se = these, sigma = sigma,
        rss = rss, n = n, K = p, rdf = rdf)
 }
 
 
-## General functions to transform series :
+## General functions to transform series:
 
 YClags <- function(object,  k = 3){
   if (k > 0)
-    sapply(1:k, function(x) c(rep(NA,x),object[1:(length(object)-x)]))
+    sapply(1:k, function(x) c(rep(NA, x), object[1:(length(object)-x)]))
   else
     NULL
 }
@@ -168,15 +169,14 @@ selectT <- function(x, Ts){
 lagsel <- function(object, exo = c("intercept", "none", "trend"),
                    method = c("Hall", "AIC", "SIC"), pmax = 10, 
                    dfcor = FALSE, fixedT = TRUE, ...){
-  # select the optimal number of lags using Hall method or AIC or SIC
-  # method
+  # select the optimal number of lags using Hall method, AIC, or SIC
   method <- match.arg(method)
   y <- object
   Dy <- YCdiff(object)
   Ly <- c(NA, object[1:(length(object)-1)])
-  if (exo == "none") m <- NULL
+  if (exo == "none")      m <- NULL
   if (exo == "intercept") m <- rep(1, length(object))
-  if (exo == "trend") m <- cbind(1, YCtrend(object))
+  if (exo == "trend")     m <- cbind(1, YCtrend(object))
   LDy <- YClags(Dy, pmax)
   decreasei <- TRUE
   i <- 0
@@ -203,9 +203,11 @@ lagsel <- function(object, exo = c("intercept", "none", "trend"),
       X <- cbind(Ly, LDy[ , 0:lags], m)[-narow,,drop=FALSE]
       y <- Dy[-narow]
       sres <- my.lm.fit(X, y, dfcor = dfcor)
-      AIC <- ifelse(method == "AIC",
-                    log(sres$rss/sres$n)+2*sres$K/sres$n,
-                    log(sres$rss/sres$n)+sres$K*log(sres$n)/sres$n)
+      AIC <- if (method == "AIC") {
+        log(sres$rss / sres$n) + 2 * sres$K / sres$n
+      } else {
+        log(sres$rss / sres$n) + sres$K * log(sres$n) / sres$n
+      }
       l <- c(l, AIC)
       i <- i + 1
     }
@@ -225,12 +227,11 @@ adj.levinlin.value <- function(l, exo = c("intercept", "none", "trend")){
   else{
     low <- adj.levinlin[as.character(Ts[1]), , exo]
     high <- adj.levinlin[as.character(Ts[2]), , exo]
-    return(low + (l - Ts[1])/(Ts[2] - Ts[1])*(high - low))
+    return(low + (l - Ts[1])/(Ts[2] - Ts[1]) * (high - low))
   }
 }
 
-adj.ips.value <- function(l = 30, lags = 2,
-                          exo = c("intercept", "trend")){
+adj.ips.value <- function(l = 30, lags = 2, exo = c("intercept", "trend")){
   ## extract the adjustment values for Im-Pesaran-Shin test
   if (!lags %in% 0:8) warning("lags should be an integer between 0 and 8")
   lags <- min(lags, 8)
@@ -240,9 +241,9 @@ adj.ips.value <- function(l = 30, lags = 2,
     return(adj.ips[as.character(lags),as.character(Ts),,exo])
   }
   else{
-    low <- adj.ips[as.character(lags),as.character(Ts[1]),,exo]
-    high <- adj.ips[as.character(lags),as.character(Ts[2]),,exo]
-    return(low + (l - Ts[1])/(Ts[2] - Ts[1])*(high - low))
+    low  <- adj.ips[as.character(lags), as.character(Ts[1]), , exo]
+    high <- adj.ips[as.character(lags), as.character(Ts[2]), , exo]
+    return(low + (l - Ts[1])/(Ts[2] - Ts[1]) * (high - low))
   }
 }
 
@@ -253,10 +254,10 @@ tsadf <- function(object, exo = c("intercept", "none", "trend"),
   y <- object
   L <- length(y)
   Dy <- YCdiff(object)
-  Ly <- c(NA, object[1:(length(object)-1)])
-  if (exo == "none") m <- NULL
+  Ly <- c(NA, object[1:(length(object) - 1)])
+  if (exo == "none")      m <- NULL
   if (exo == "intercept") m <- rep(1, length(object))
-  if (exo == "trend") m <- cbind(1, YCtrend(object))
+  if (exo == "trend")     m <- cbind(1, YCtrend(object))
   narow <- 1:(lags+1)
   LDy <- YClags(Dy, lags)
   X <- cbind(Ly, LDy, m)[-narow, , drop = FALSE]
@@ -266,19 +267,19 @@ tsadf <- function(object, exo = c("intercept", "none", "trend"),
   rho <- result$coef[1]
   sdrho <- result$se[1]
   trho <- rho/sdrho
-  result <- list(rho = rho,
+  result <- list(rho   = rho,
                  sdrho = sdrho,
-                 trho = trho,
+                 trho  = trho,
                  sigma = sigma,
-                 T = L,
-                 lags = lags)
+                 T     = L,
+                 lags  = lags)
   
   if (comp.aux.reg){
     # for Levin-Lin-Chu test only, compute the residuals of the auxiliary
     # regressions
     X <- cbind(LDy[ , 0:lags], m)[-narow, , drop = FALSE]
     if (lags == 0 && exo == "none"){
-      resid.diff <- Dy[-narow]/sigma
+      resid.diff  <- Dy[-narow]/sigma
       resid.level <- Ly[-narow]/sigma
     }
     else{
@@ -287,25 +288,30 @@ tsadf <- function(object, exo = c("intercept", "none", "trend"),
       y <- Ly[-narow]
       resid.level <- lm.fit(X, y)$residuals/sigma
     }
-    result$resid <- data.frame(resid.diff = resid.diff, resid.level = resid.level)
+    result$resid <- data.frame(resid.diff  = resid.diff,
+                               resid.level = resid.level)
   }
   result
-}        
-  
+}
+
 
 longrunvar <- function(x, exo = c("intercept", "none", "trend"), q = NULL){
   # compute the long run variance of the dependent variable
+
+  # q: lag truncation parameter: default (q == NULL) as in LLC, p. 14
+  # it can be seen from LLC, table 2, that round() was used to get an
+  # integer from that formula (not, e.g. trunc)
   T <- length(x)
-  if (is.null(q)) q <- round(3.21*T^(1/3))
-  dx <- x[2:T]-x[1:(T-1)]
+  if (is.null(q)) q <- round(3.21 * T^(1/3))
+  dx <- x[2:T] - x[1:(T-1)]
   if (exo == "intercept") dx <- dx - mean(dx)
-  if (exo == "trend") dx <- lm.fit(cbind(1,1:length(dx)), dx)$residuals
+  if (exo == "trend") dx <- lm.fit(cbind(1, 1:length(dx)), dx)$residuals
   dx <- c(NA, dx)
-  1/(T-1)*sum(dx[-1]^2)+
+  res <- 1/(T-1)*sum(dx[-1]^2)+
     2*sum(
           sapply(1:q,
                  function(L){
-                   sum(dx[2:(T-L)]*dx[(L+2):T]) / (T-1) *
+                   sum(dx[2:(T-L)] * dx[(L+2):T]) / (T-1) *
                      (1 - L / (q+1))
                  }
                  )
@@ -313,22 +319,98 @@ longrunvar <- function(x, exo = c("intercept", "none", "trend"), q = NULL){
 }
 
 
+hadritest <- function(object, exo, Hcons, dfcor, method,
+                      cl, args, data.name, ...) {
+  ## used by purtest(<.>, test = "hadri"); non-exported function
+  ## Hadri's test is applicable to balanced data only
+  ## object is a list with observations per individual
+  if (!is.list(object)) stop("argument 'object' in hadritest is supposed to be a list")
+  if (exo == "none") stop("exo = \"none\" is not a valid option for Hadri's test")
+  if (length(unique(sapply(object, length))) > 1L) stop("Hadri test is not applicable to unbalanced panels")
+  # determine L (= time periods), unique for balanced panel and number of individuals (n)
+  L <- unique(sapply(object, length))
+  n <- length(object)
+  
+  if (exo == "intercept"){
+    resid <- lapply(object, function(x) lm(x ~ 1)$residuals)
+    adj <- c(1/6, 1/45) # xi, zeta^2 in eq. (17) in Hadri (2000)
+  }
+  
+  if (exo == "trend"){
+    resid <- lapply(object,
+                    function(x){
+                      trend <- 1:length(x)
+                      lm(x ~ trend)$residuals
+                    })
+    adj <- c(1/15, 11/6300) # xi, zeta^2 in eq. (25) in Hadri (2000)
+  }
+  
+  cumres2 <- lapply(resid, function(x) cumsum(x)^2)
+  if (!Hcons){
+    sigma2 <- if (!dfcor) { 
+      mean(unlist(resid)^2)
+    } else {
+      # df correction as suggested in Hadri (2000), p. 157
+      # -> apply to full length residuals over all individuals -> n*(L-1) or n*(L-2)
+      dfcorval <- switch(exo, "intercept" = n * (L-1), "trend" = n * (L-2))
+      sum(unlist(resid)^2) / dfcorval
+    }
+    S <- sum(unlist(cumres2))/(L^2 * n)
+    LM <- S / sigma2
+    
+    ## This would give the individual LM statistics for this case:
+    ## TODO: generalise for all cases and plug in in returned object,
+    ## so summary() on a Hadri returns these
+    # indsigma2 <- unlist(lapply(resid, function(x) mean(x^2)))
+    # indS <- unlist(lapply(cumres2, function(x) sum(x)))
+    # indLM <- indS / (L^2 * n) / indsigma2
+  }
+  else{
+    sigma2i <- if (!dfcor) {
+      lapply(resid, function(x) mean(x^2))
+    } else {
+      # df correction as suggested in Hadri (2000), p. 157
+      # -> apply to individual residuals' length, so just L -> L-1 or L-2
+      dfcorval <- switch(exo, "intercept" = (L-1), "trend" = (L-2))
+      lapply(resid, function(x) sum(x^2)/dfcorval)
+    }
+    Sit2 <- mapply("/", cumres2, sigma2i)
+    LM <- sum(unlist(Sit2))/ (L^2 * n)
+    method <- paste0(method, " (Heterosked. Consistent)")
+  }
+  stat <- c(z = sqrt(n) * (LM - adj[1])  / sqrt(adj[2])) # eq. (14), (22) in Hadri (2000)
+  pvalue <- pnorm(stat, lower.tail = FALSE) # is one-sided! was until rev. 572: 2*(pnorm(abs(stat), lower.tail = FALSE))
+  
+  htest <- structure(list(statistic   = stat,
+                          parameter   = NULL,
+                          alternative = "at least one series has a unit root", # correct alternative (at least one unit root)
+                          data.name   = data.name,
+                          method      = method,
+                          p.value     = pvalue),
+                     class = "htest")
+  
+  result <- list(statistic = htest,
+                 call = cl,
+                 args = args)
+  
+  class(result) <- "purtest"
+  return(result)
+} # END hadritest
+
+
+# TODO: mention which statistic of IPS (2003) we output: Ztbar or Wtbar?
+#       it is not t-bar, the mean of t statistics
 
 #' Unit root tests for panel data
 #' 
 #' `purtest` implements several testing procedures that have been proposed
 #' to test unit root hypotheses with panel data.
 #' 
-#' % TODO: in general, write more about the various tests
-#' % TODO: mention which test is suitable for unbalanced panels (once the data pre-processing in
-#' % purtest() is fixed to handle unbalanced data)
-#' % TODO: mention which statistic of IPS (2003) we output: Ztbar or Wtbar? (it is not t-bar, the
-#' % mean of t statistics)
 #' 
 #' All these tests except `"hadri"` are based on the estimation of
 #' augmented Dickey-Fuller (ADF) regressions for each time series. A
 #' statistic is then computed using the t-statistics associated with
-#' the lagged variable.  The Hadri residual-based LM statistic is the
+#' the lagged variable. The Hadri residual-based LM statistic is the
 #' cross-sectional average of the individual KPSS statistics
 #' \insertCite{KWIA:PHIL:SCHM:SHIN:92}{plm}, standardized by their
 #' asymptotic mean and standard deviation.
@@ -350,6 +432,9 @@ longrunvar <- function(x, exo = c("intercept", "none", "trend"), q = NULL){
 #' The individual p-values for the Fisher-type tests are approximated
 #' as described in \insertCite{MACK:94;textual}{plm}.
 #' 
+#' Hadri's test and the test of Levin/Lin/Chu are not applicable to unbalanced
+#' panels.
+#' 
 #' The kind of test to be computed can be specified in several ways,
 #' depending on how the data is handed over to the function:
 #' 
@@ -369,11 +454,10 @@ longrunvar <- function(x, exo = c("intercept", "none", "trend"), q = NULL){
 #' 
 #' @aliases purtest
 #' @param object,x Either a `"data.frame"` or a matrix containing the
-#'     time series, a `"pseries"` object, a formula, or the name of a
-#'     column of a `"data.frame"`, or a `"pdata.frame"` on which the
-#'     test has to be computed; a `"purtest"` object for the print and
-#'     summary methods,
-#' @param data a `"data.frame"` or a `"pdata.frame"` object,
+#'     time series (individuals as columns), a `"pseries"` object, a formula;
+#'     a `"purtest"` object for the print and summary methods,
+#' @param data a `"data.frame"` or a `"pdata.frame"` object (required for
+#'     formula interface, see Details and Examples),
 #' @param index the indexes,
 #' @param test the test to be computed: one of `"levinlin"` for
 #'     \insertCite{LEVIN:LIN:CHU:02;textual}{plm}, `"ips"` for
@@ -390,14 +474,16 @@ longrunvar <- function(x, exo = c("intercept", "none", "trend"), q = NULL){
 #'     Dickey-Fuller regressions: either an integer (the number of
 #'     lags for all time series), a vector of integers (one for each
 #'     time series), or a character string for an automatic
-#'     computation of the number of lags, based on either the AIC
+#'     computation of the number of lags, based on the AIC
 #'     (`"AIC"`), the SIC (`"SIC"`), or on the method by
 #'     \insertCite{HALL:94;textual}{plm} (`"Hall"`),
 #' @param pmax maximum number of lags,
 #' @param Hcons logical, only relevant for `test = "hadri"`,
 #'     indicating whether the heteroskedasticity-consistent test of
 #'     \insertCite{HADR:00;textual}{plm} should be computed,
-#' @param q the bandwidth for the estimation of the long-run variance,
+#' @param q the bandwidth for the estimation of the long-run variance 
+#'     (only relevant for test = "levinlin", the default (`q = NULL``)
+#'     gives the value as suggested by the authors as round(3.21 * T^(1/3))),
 #' @param dfcor logical, indicating whether the standard deviation of
 #'     the regressions is to be computed using a degrees-of-freedom
 #'     correction,
@@ -422,7 +508,7 @@ longrunvar <- function(x, exo = c("intercept", "none", "trend"), q = NULL){
 #' @examples
 #' 
 #' data("Grunfeld", package = "plm")
-#' y <- data.frame(split(Grunfeld$inv, Grunfeld$firm))
+#' y <- data.frame(split(Grunfeld$inv, Grunfeld$firm)) # individuals in columns
 #' 
 #' purtest(y, pmax = 4, exo = "intercept", test = "madwu")
 #' 
@@ -435,15 +521,12 @@ purtest <- function(object, data = NULL, index = NULL,
                     lags = c("SIC", "AIC", "Hall"),
                     pmax = 10, Hcons = TRUE,
                     q = NULL, dfcor = FALSE, fixedT = TRUE, ...){
-
-## TODO: While some statistics seems to be appropriate for the unbalanced cases,
-##       data pre-processing done before does not allow for unbalanced cases
-##       (most notably as.data.frame(split(object, id)) but other instances likely too).
   
   data.name <- paste(deparse(substitute(object)))
 
   id <- NULL
   if (inherits(object, "formula")){
+    # exo is derived from specified formula:
     terms <- terms(object)
     lab <- labels(terms)
     if (length(lab) == 0){
@@ -462,6 +545,7 @@ purtest <- function(object, data = NULL, index = NULL,
     else{
       if (is.null(data)) stop("unknown response")
       else{
+        if (!inherits(data, "data.frame")) stop("'data' does not specify a data.frame/pdata.frame")
         if (object %in% names(data)){
           object <- data[[object]]
           if (!inherits(data, "pdata.frame")){
@@ -471,109 +555,50 @@ purtest <- function(object, data = NULL, index = NULL,
           id <- attr(data, "index")[[1]]
         }
         else{
-          stop("unknown response")
+          stop(paste0("unknown response (\"", object, "\" not in data)"))
         }
       }
     }
-  }
+  } # END object is a formula
   else{
     exo <- match.arg(exo)
     if (is.null(dim(object))){
       if (inherits(object, "pseries")){
         id <- attr(object, "index")[[1]]
       }
-      else stop("the individual dimension is undefined")
+      else stop("the individual dimension is undefined") # cannot derive individual dimension from a vector if not pseries
     }
-    if (is.matrix(object)) object <- as.data.frame(object)
+    if (is.matrix(object) || is.data.frame(object)) {
+      if (!is.null(data)) stop("object is data.frame or matrix but data is not NULL")
+      if (is.matrix(object)) object <- as.data.frame(object)
+    }
   }
+  
+  # by now, object is either a pseries to be split or a data.frame 
+  
   if (!inherits(object, "data.frame")){
     if (is.null(id)) stop("the individual dimension is undefined")
-    object <- as.data.frame(split(object, id))
+    object <- split(object, id)
+  } else {
+    if (!ncol(object) > 1) warning("data.frame or matrix specified in argument object does not contain more than one individual (individuals are supposed to be in columns)")
+    object <- as.list(object)
   }
-
+  
   cl <- match.call()
   test <- match.arg(test)
   if (is.character(lags)) lags <- match.arg(lags) # if character, select one possible value
   args <- list(test = test, exo = exo, pmax = pmax, lags = lags,
                dfcor = dfcor, fixedT = fixedT)
-  L <- nrow(object)
-  n <- ncol(object)
+  
+  n <- length(object) # number of individuals, assumes object is a list
+  
   alternative <- "stationarity"
   method <- paste0(purtest.names.test[test], " (ex. var.: ",
                    purtest.names.exo[exo],")")
-
-  if (test == "hadri"){
-    ## Hadri's test is applicable to balanced data only
-    ## TODO: catch unbalanced case
-    if (exo == "none") stop("exo = \"none\" is not a valid option for Hadri's test")
-    
-    if (exo == "intercept"){
-      resid <- lapply(object, function(x) lm(x~1)$residuals)
-      adj <- c(1/6, 1/45) # xi, zeta^2 in eq. (17) in Hadri (2000)
-    }
-    
-    if (exo == "trend"){
-      resid <- lapply(object,
-                      function(x){
-                        trend <- 1:length(x)
-                        lm(x~trend)$residuals
-                        })
-      adj <- c(1/15, 11/6300) # xi, zeta^2 in eq. (25) in Hadri (2000)
-    }
-    
-    cumres2 <- lapply(resid, function(x) cumsum(x)^2)
-    if (!Hcons){
-      sigma2 <- if (!dfcor) { 
-                  mean(unlist(resid)^2)
-                } else {
-                  # df correction as suggested in Hadri (2000), p. 157
-                  # -> apply to full length residuals over all individuals -> n*(L-1) or n*(L-2)
-                  dfcorval <- switch(exo, "intercept" = n*(L-1),
-                                          "trend"     = n*(L-2))
-                  sum(unlist(resid)^2) / dfcorval
-                }
-      S <- sum(unlist(cumres2))/(L^2 * n)
-      LM <- S / sigma2
-      
-      ## This would give the individual LM statistics for this case:
-        ## TODO: generalise for all cases and plug in in returned object,
-        ## so summary() on a Hadri returns these
-      # indsigma2 <- unlist(lapply(resid, function(x) mean(x^2)))
-      # indS <- unlist(lapply(cumres2, function(x) sum(x)))
-      # indLM <- indS / (L^2 * n) / indsigma2
-    }
-    else{
-      sigma2i <- if (!dfcor) {
-                  lapply(resid, function(x) mean(x^2))
-                 } else {
-                   # df correction as suggested in Hadri (2000), p. 157
-                   # -> apply to individual residuals length, so just L -> L-1 or L-2
-                   dfcorval <- switch(exo, "intercept" = (L-1),
-                                           "trend"     = (L-2))
-                   lapply(resid, function(x) sum(x^2)/dfcorval)
-                 }
-      Sit2 <- mapply("/", cumres2, sigma2i)
-      LM <- sum(unlist(Sit2))/ (L^2 * n)
-      method <- paste0(method, " (Heterosked. Consistent)")
-    }
-    stat <- c(z = sqrt(n) * (LM - adj[1])  / sqrt(adj[2])) # eq. (14), (22) in Hadri (2000)
-    pvalue <- pnorm(stat, lower.tail = FALSE) # is one-sided! was until rev. 572: 2*(pnorm(abs(stat), lower.tail = FALSE))
-    
-    htest <- structure(list(statistic   = stat,
-                            parameter   = NULL,
-                            alternative = "at least one series has a unit root",
-                            data.name   = data.name,
-                            method      = method,
-                            p.value     = pvalue),
-                       class = "htest")
   
-    result <- list(statistic = htest,
-                   call = cl,
-                   args = args)
-
-    class(result) <- "purtest"
-    return(result) # early exit for hadri
-  }
+  # If Hadri test, call function and exit early
+  if (test == "hadri") return(hadritest(object, exo, Hcons, dfcor,
+                                        method, cl, args, data.name, ...)) 
   
   # compute the lags for each time series if necessary
   if (is.numeric(lags)){
@@ -586,70 +611,74 @@ purtest <- function(object, data = NULL, index = NULL,
   else{
     lags <- match.arg(lags)
     lags <- sapply(object, function(x)
-                   lagsel(x, exo = exo, method = lags,
-                          pmax = pmax, dfcor = dfcor, fixedT = fixedT))
+      lagsel(x, exo = exo, method = lags,
+             pmax = pmax, dfcor = dfcor, fixedT = fixedT))
   }
   
   # compute the augmented Dickey-Fuller regressions for each time series
   comp.aux.reg <- (test == "levinlin")
   idres <- mapply(function(x, y)
-                  tsadf(x, exo = exo, lags = y, dfcor = dfcor,
-                        comp.aux.reg = comp.aux.reg),
+                  tsadf(x, exo = exo, lags = y, dfcor = dfcor, comp.aux.reg = comp.aux.reg),
                   object, as.list(lags), SIMPLIFY = FALSE)
   
   if (test == "levinlin"){
+    if (length(unique(sapply(object, length))) > 1L) stop("test = \"levinlin\" is not applicable to unbalanced panels")
+    
+    L.levinlin <- unique(sapply(object, length)) # time periods
+    
     # get the adjustment parameters for the mean and the variance
-    adjval <- adj.levinlin.value(L, exo = exo)
-    mymu <- adjval[1]
+    adjval <- adj.levinlin.value(L.levinlin, exo = exo)
+    mymu  <- adjval[1]
     mysig <- adjval[2]
     # calculate the ratio of LT/ST variance
     sigmaST <- sapply(idres, function(x) x[["sigma"]])
     sigmaLT <- sqrt(sapply(object, longrunvar, exo = exo, q = q))
-    si <- sigmaLT/sigmaST
-    sbar <- mean(si)
+    si <- sigmaLT/sigmaST # LLC (2002), formula 6
+    sbar <- mean(si) 
+
     # stack the residuals of each time series and perform the pooled
     # regression
     res.level <- unlist(lapply(idres, function(x) x$resid[["resid.level"]]))
-    res.diff <- unlist(lapply(idres, function(x) x$resid[["resid.diff"]]))
+    res.diff  <- unlist(lapply(idres, function(x) x$resid[["resid.diff"]]))
     z <- my.lm.fit(as.matrix(res.level), res.diff, dfcor = dfcor)
     # compute the Levin-Lin-Chu statistic
-    tildeT <- L-mean(lags)-1
-    sigmaeps2 <- z$rss/(n*tildeT)
+    tildeT <- L.levinlin - mean(lags) - 1
+    sigmaeps2 <- z$rss / (n * tildeT)
     rho <- z$coef
     sdrho <- z$se
     trho <- rho/sdrho
-    stat <- (trho - n * tildeT * sbar / sigmaeps2 * sdrho * mymu)/mysig
+    stat <- (trho - n * tildeT * sbar / sigmaeps2 * sdrho * mymu)/mysig # LLC (2002), formula 12
     names(stat) <- "z" # avoids a concatenated name like z.x1
     pvalue <- pnorm(stat, lower.tail = TRUE) # need lower.tail = TRUE (like ADF one-sided to the left)
     parameter <- NULL
   }
-
+  
   if (test == "ips"){
     if (exo == "none") stop("exo = \"none\" is not a valid option for the Im-Pesaran-Shin test")
     lags <- sapply(idres, function(x) x[["lags"]])
-    L <- sapply(idres, function(x) x[["T"]]) - lags - 1
+    L.ips <- sapply(idres, function(x) x[["T"]]) - lags - 1
     adjval <- mapply(function(x, y) adj.ips.value(x, y, exo = exo),
-                     as.list(L), as.list(lags))
+                     as.list(L.ips), as.list(lags))
     # get the adjustment parameters for the mean and the variance of the individual t statistics
     trho <- sapply(idres, function(x) x[["trho"]])
     tbar <- mean(trho)
-    Etbar <- mean(adjval[1,])
-    Vtbar <- mean(adjval[2,])
-    stat <- c(z = sqrt(n) * (tbar-Etbar) / sqrt(Vtbar)) # (3.13) or (4.10) in IPS (2003)? [Ztbar or Wtbar]
+    Etbar <- mean(adjval[1, ])
+    Vtbar <- mean(adjval[2, ])
+    stat <- c(z = sqrt(n) * (tbar - Etbar) / sqrt(Vtbar)) # (3.13) or (4.10) in IPS (2003)? [Ztbar or Wtbar]
     pvalue <- pnorm(stat, lower.tail = TRUE) # need lower.tail = TRUE (like ADF one-sided to the left), was until rev. 577: 2*pnorm(abs(stat), lower.tail = FALSE)
     parameter <- NULL
   }
-
+  
   if (test == "madwu"){
     # Maddala/Wu (1999), pp. 636-637; Choi (2001), p. 253; Baltagi (2013), pp. 283-285
     ## does not require a balanced panel
     
     trho <- sapply(idres, function(x) x[["trho"]])
- #   pvalues.trho <- 2*pnorm(abs(trho), lower.tail = FALSE)  # ... until rev. 551
+    #   pvalues.trho <- 2*pnorm(abs(trho), lower.tail = FALSE)  # ... until rev. 551
     pvalues.trho <- padf(trho, exo = exo)
     stat <- c(chisq = - 2 * sum(log(pvalues.trho)))
-    n <- length(trho)
-    parameter <- c(df = 2 * n)
+    n.madwu <- length(trho)
+    parameter <- c(df = 2 * n.madwu)
     pvalue <- pchisq(stat, df = parameter, lower.tail = FALSE)
     adjval <- NULL
   }
@@ -658,9 +687,9 @@ purtest <- function(object, data = NULL, index = NULL,
     ## Choi Pm (modified P) [proposed for large N]
     trho <- sapply(idres, function(x) x[["trho"]])
     pvalues.trho <- padf(trho, exo = exo)
-    n <- length(trho)
+    n.Pm <- length(trho)
     # formula (18) in Choi (2001), p. 255:
-    stat <- c( "Pm" = 1/(2*sqrt(n)) * sum(-2*log(pvalues.trho) -2) ) # == 1/sqrt(n) * sum(log(pvalues.trho) +1)
+    stat <- c( "Pm" = 1/(2 * sqrt(n.Pm)) * sum(-2 * log(pvalues.trho) - 2) ) # == 1/sqrt(n.Pm) * sum(log(pvalues.trho) +1)
     pvalue <- pnorm(stat, lower.tail = FALSE) # one-sided
     parameter <- NULL
     adjval <- NULL
@@ -670,8 +699,8 @@ purtest <- function(object, data = NULL, index = NULL,
     # inverse normal test as in Choi (2001)
     trho <- sapply(idres, function(x) x[["trho"]])
     pvalues.trho <- padf(trho, exo = exo)
-    n <- length(trho)
-    stat <- c("z" = sum(qnorm(pvalues.trho))/sqrt(n)) # formula (9), Choi (2001), p. 253
+    n.invnormal <- length(trho)
+    stat <- c("z" = sum(qnorm(pvalues.trho)) / sqrt(n.invnormal)) # formula (9), Choi (2001), p. 253
     pvalue <- pnorm(stat, lower.tail = TRUE) # formula (12), Choi, p. 254
     parameter <- NULL
     adjval <- NULL
@@ -681,11 +710,11 @@ purtest <- function(object, data = NULL, index = NULL,
     # logit test as in Choi (2001)
     trho <- sapply(idres, function(x) x[["trho"]])
     pvalues.trho <- padf(trho, exo = exo)
-    n <- length(trho)
+    n.logit <- length(trho)
     l_stat <-  c("L*" = sum(log(pvalues.trho / (1 - pvalues.trho)))) # formula (10), Choi (2001), p. 253
-    k <- (3 * (5*n + 4)) / (pi^2 * n * (5*n + 2))
+    k <- (3 * (5 * n.logit + 4)) / (pi^2 * n.logit * (5 * n.logit + 2))
     stat <- sqrt(k) * l_stat  # formula (13), Choi (2001), p. 254
-    parameter <- c("df" = 5*n+4)
+    parameter <- c("df" = 5 * n.logit + 4)
     pvalue <- pt(stat, df = parameter, lower.tail = TRUE)
     adjval <- NULL
   }
@@ -721,16 +750,14 @@ summary.purtest <- function(object, ...){
     stop("summary() not applicable for Hadri's test, i.e. for the result of purtest(<.>, test = \"hadri\")")
   }
   
-  lags <- sapply(object$idres, function(x) x[["lags"]])
-  L <- sapply(object$idres, function(x) x[["T"]])
-  nam <- names(object$idres)
-  rho <- sapply(object$idres, function(x) x[["rho"]])
+  lags  <- sapply(object$idres, function(x) x[["lags"]])
+  L     <- sapply(object$idres, function(x) x[["T"]])
+  rho   <- sapply(object$idres, function(x) x[["rho"]])
   sdrho <- sapply(object$idres, function(x) x[["sdrho"]])
+  nam <- names(object$idres)
   trho <- rho / sdrho
   sumidres <- cbind(lags = lags, obs = L - lags - 1, rho = rho, trho = trho)
-  if (object$args$test == "ips"){
-    sumidres <- cbind(sumidres, t(object$adjval))
-  }
+  if (object$args$test == "ips") sumidres <- cbind(sumidres, t(object$adjval))
   rownames(sumidres) <- nam
   object$sumidres <- sumidres
   class(object) <- c("summary.purtest", "purtest")
@@ -752,7 +779,7 @@ print.summary.purtest <- function(x, ...){
     cat("User-provided lags\n")
   }
   cat(paste("statistic:", round(x$statistic$statistic, 3), "\n"))
-  cat(paste("p-value:", round(x$statistic$p.value, 3), "\n"))
+  cat(paste("p-value:",   round(x$statistic$p.value, 3),   "\n"))
   print(x$sumidres, ...)
 }
 

@@ -6,13 +6,25 @@
 \alias{print.summary.pht}
 \title{Hausman--Taylor Estimator for Panel Data}
 \usage{
-pht(formula, data, subset, na.action, model = c("ht", "am", "bms"),
-  index = NULL, ...)
+pht(
+  formula,
+  data,
+  subset,
+  na.action,
+  model = c("ht", "am", "bms"),
+  index = NULL,
+  ...
+)
 
 \method{summary}{pht}(object, ...)
 
-\method{print}{summary.pht}(x, digits = max(3, getOption("digits") - 2),
-  width = getOption("width"), subset = NULL, ...)
+\method{print}{summary.pht}(
+  x,
+  digits = max(3, getOption("digits") - 2),
+  width = getOption("width"),
+  subset = NULL,
+  ...
+)
 }
 \arguments{
 \item{formula}{a symbolic description for the model to be
@@ -61,7 +73,7 @@ the second part containing the exogenous variables.
 \note{
 The function \code{pht} is deprecated. Please use function \code{plm}
 to estimate Taylor--Hausman models like this with a three-part
-formula as shown in the example:\cr \code{plm(<formula>, random.method = "ht", model = "random", inst.method = "baltagi")}. The Amemiya--MaCurdy estimator and the
+formula as shown in the example:\cr \verb{plm(<formula>, random.method = "ht", model = "random", inst.method = "baltagi")}. The Amemiya--MaCurdy estimator and the
 Breusch--Mizon--Schmidt estimator is computed likewise with
 \code{plm}.
 }

@@ -9,15 +9,29 @@
 \usage{
 pcdtest(x, ...)
 
-\method{pcdtest}{formula}(x, data, index = NULL, model = NULL,
-  test = c("cd", "sclm", "bcsclm", "lm", "rho", "absrho"), w = NULL,
-  ...)
+\method{pcdtest}{formula}(
+  x,
+  data,
+  index = NULL,
+  model = NULL,
+  test = c("cd", "sclm", "bcsclm", "lm", "rho", "absrho"),
+  w = NULL,
+  ...
+)
 
-\method{pcdtest}{panelmodel}(x, test = c("cd", "sclm", "bcsclm", "lm",
-  "rho", "absrho"), w = NULL, ...)
+\method{pcdtest}{panelmodel}(
+  x,
+  test = c("cd", "sclm", "bcsclm", "lm", "rho", "absrho"),
+  w = NULL,
+  ...
+)
 
-\method{pcdtest}{pseries}(x, test = c("cd", "sclm", "bcsclm", "lm",
-  "rho", "absrho"), w = NULL, ...)
+\method{pcdtest}{pseries}(
+  x,
+  test = c("cd", "sclm", "bcsclm", "lm", "rho", "absrho"),
+  w = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{an object of class \code{formula}, \code{panelmodel}, or \code{pseries}
@@ -48,7 +62,7 @@ correlation coefficient, \item \code{"absrho"} for the average
 absolute correlation coefficient,}}
 
 \item{w}{either \code{NULL} (default) for the global tests or -- for the
-local versions of the statistics -- a \code{n x n} \code{matrix}
+local versions of the statistics -- a \verb{n x n} \code{matrix}
 describing proximity between individuals, with \eqn{w_ij = a}
 where \eqn{a} is any number such that \code{as.logical(a)==TRUE}, if
 \eqn{i,j} are neighbours, \eqn{0} or any number \eqn{b} such
@@ -110,7 +124,7 @@ the LM test.
 
 The test on a \code{pseries} is the same as a test on a pooled
 regression model of that variable on a constant, i.e.
-\code{pcdtest(some_pseries)} is equivalent to \code{pcdtest(plm(some_var ~ 1, data = some_pdata.frame, model = "pooling")} and also equivalent to
+\code{pcdtest(some_pseries)} is equivalent to \verb{pcdtest(plm(some_var ~ 1, data = some_pdata.frame, model = "pooling")} and also equivalent to
 \code{pcdtest(some_var ~ 1, data = some_data)}, where \code{some_var} is
 the variable name in the data which corresponds to \code{some_pseries}.
 }

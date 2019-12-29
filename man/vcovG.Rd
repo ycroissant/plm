@@ -8,13 +8,23 @@
 \usage{
 vcovG(x, ...)
 
-\method{vcovG}{plm}(x, type = c("HC0", "sss", "HC1", "HC2", "HC3",
-  "HC4"), cluster = c("group", "time"), l = 0, inner = c("cluster",
-  "white", "diagavg"), ...)
+\method{vcovG}{plm}(
+  x,
+  type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
+  cluster = c("group", "time"),
+  l = 0,
+  inner = c("cluster", "white", "diagavg"),
+  ...
+)
 
-\method{vcovG}{pcce}(x, type = c("HC0", "sss", "HC1", "HC2", "HC3",
-  "HC4"), cluster = c("group", "time"), l = 0, inner = c("cluster",
-  "white", "diagavg"), ...)
+\method{vcovG}{pcce}(
+  x,
+  type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
+  cluster = c("group", "time"),
+  l = 0,
+  inner = c("cluster", "white", "diagavg"),
+  ...
+)
 }
 \arguments{
 \item{x}{an object of class \code{"plm"} or \code{"pcce"}}

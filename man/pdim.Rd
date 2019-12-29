@@ -66,12 +66,12 @@ stand-alone.
 }
 \note{
 Calling \code{pdim} on an estimated \code{panelmodel} object
-and on the corresponding \code{(p)data.frame} used for this
+and on the corresponding \verb{(p)data.frame} used for this
 estimation does not necessarily yield the same result. When
 called on an estimated \code{panelmodel}, the number of
 observations (individual, time) actually used for model
 estimation are taken into account.  When called on a
-\code{(p)data.frame}, the rows in the \code{(p)data.frame} are
+\verb{(p)data.frame}, the rows in the \verb{(p)data.frame} are
 considered, disregarding any NA values in the dependent or
 independent variable(s) which would be dropped during model
 estimation.

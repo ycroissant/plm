@@ -9,13 +9,25 @@
 \alias{pmodel.response.pcce}
 \title{Common Correlated Effects estimators}
 \usage{
-pcce(formula, data, subset, na.action, model = c("mg", "p"),
-  index = NULL, trend = FALSE, ...)
+pcce(
+  formula,
+  data,
+  subset,
+  na.action,
+  model = c("mg", "p"),
+  index = NULL,
+  trend = FALSE,
+  ...
+)
 
 \method{summary}{pcce}(object, vcov = NULL, ...)
 
-\method{print}{summary.pcce}(x, digits = max(3, getOption("digits") - 2),
-  width = getOption("width"), ...)
+\method{print}{summary.pcce}(
+  x,
+  digits = max(3, getOption("digits") - 2),
+  width = getOption("width"),
+  ...
+)
 
 \method{residuals}{pcce}(object, type = c("defactored", "standard"), ...)
 

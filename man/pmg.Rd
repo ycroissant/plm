@@ -7,13 +7,25 @@
 \alias{residuals.pmg}
 \title{Mean Groups (MG), Demeaned MG and CCE MG estimators}
 \usage{
-pmg(formula, data, subset, na.action, model = c("mg", "cmg", "dmg"),
-  index = NULL, trend = FALSE, ...)
+pmg(
+  formula,
+  data,
+  subset,
+  na.action,
+  model = c("mg", "cmg", "dmg"),
+  index = NULL,
+  trend = FALSE,
+  ...
+)
 
 \method{summary}{pmg}(object, ...)
 
-\method{print}{summary.pmg}(x, digits = max(3, getOption("digits") - 2),
-  width = getOption("width"), ...)
+\method{print}{summary.pmg}(
+  x,
+  digits = max(3, getOption("digits") - 2),
+  width = getOption("width"),
+  ...
+)
 
 \method{residuals}{pmg}(object, ...)
 }

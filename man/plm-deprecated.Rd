@@ -16,8 +16,7 @@ pvcovHC(x, ...)
 
 plm.data(x, indexes = NULL)
 
-dynformula(formula, lag.form = NULL, diff.form = NULL,
-  log.form = NULL)
+dynformula(formula, lag.form = NULL, diff.form = NULL, log.form = NULL)
 
 pFormula(object)
 
@@ -25,13 +24,18 @@ pFormula(object)
 
 \method{as.Formula}{pFormula}(x, ...)
 
-\method{model.frame}{pFormula}(formula, data, ..., lhs = NULL,
-  rhs = NULL)
+\method{model.frame}{pFormula}(formula, data, ..., lhs = NULL, rhs = NULL)
 
-\method{model.matrix}{pFormula}(object, data, model = c("pooling",
-  "within", "Between", "Sum", "between", "mean", "random", "fd"),
-  effect = c("individual", "time", "twoways", "nested"), rhs = 1,
-  theta = NULL, cstcovar.rm = NULL, ...)
+\method{model.matrix}{pFormula}(
+  object,
+  data,
+  model = c("pooling", "within", "Between", "Sum", "between", "mean", "random", "fd"),
+  effect = c("individual", "time", "twoways", "nested"),
+  rhs = 1,
+  theta = NULL,
+  cstcovar.rm = NULL,
+  ...
+)
 
 detect_lin_dep(object, ...)
 }

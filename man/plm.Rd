@@ -19,15 +19,30 @@
 \alias{fitted.plm}
 \title{Panel Data Estimators}
 \usage{
-plm(formula, data, subset, weights, na.action, effect = c("individual",
-  "time", "twoways", "nested"), model = c("within", "random", "ht",
-  "between", "pooling", "fd"), random.method = NULL,
-  random.models = NULL, random.dfcor = NULL, inst.method = c("bvk",
-  "baltagi", "am", "bms"), restrict.matrix = NULL, restrict.rhs = NULL,
-  index = NULL, ...)
+plm(
+  formula,
+  data,
+  subset,
+  weights,
+  na.action,
+  effect = c("individual", "time", "twoways", "nested"),
+  model = c("within", "random", "ht", "between", "pooling", "fd"),
+  random.method = NULL,
+  random.models = NULL,
+  random.dfcor = NULL,
+  inst.method = c("bvk", "baltagi", "am", "bms"),
+  restrict.matrix = NULL,
+  restrict.rhs = NULL,
+  index = NULL,
+  ...
+)
 
-\method{print}{plm.list}(x, digits = max(3, getOption("digits") - 2),
-  width = getOption("width"), ...)
+\method{print}{plm.list}(
+  x,
+  digits = max(3, getOption("digits") - 2),
+  width = getOption("width"),
+  ...
+)
 
 \method{terms}{panelmodel}(x, ...)
 
@@ -41,8 +56,12 @@ plm(formula, data, subset, weights, na.action, effect = c("individual",
 
 \method{coef}{panelmodel}(object, ...)
 
-\method{print}{panelmodel}(x, digits = max(3, getOption("digits") - 2),
-  width = getOption("width"), ...)
+\method{print}{panelmodel}(
+  x,
+  digits = max(3, getOption("digits") - 2),
+  width = getOption("width"),
+  ...
+)
 
 \method{update}{panelmodel}(object, formula., ..., evaluate = TRUE)
 
@@ -52,8 +71,17 @@ plm(formula, data, subset, weights, na.action, effect = c("individual",
 
 \method{formula}{plm}(x, ...)
 
-\method{plot}{plm}(x, dx = 0.2, N = NULL, seed = 1, within = TRUE,
-  pooling = TRUE, between = FALSE, random = FALSE, ...)
+\method{plot}{plm}(
+  x,
+  dx = 0.2,
+  N = NULL,
+  seed = 1,
+  within = TRUE,
+  pooling = TRUE,
+  between = FALSE,
+  random = FALSE,
+  ...
+)
 
 \method{residuals}{plm}(object, model = NULL, effect = NULL, ...)
 

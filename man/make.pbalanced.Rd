@@ -7,17 +7,30 @@
 \alias{make.pbalanced.data.frame}
 \title{Make data balanced}
 \usage{
-make.pbalanced(x, balance.type = c("fill", "shared.times",
-  "shared.individuals"), ...)
+make.pbalanced(
+  x,
+  balance.type = c("fill", "shared.times", "shared.individuals"),
+  ...
+)
 
-\method{make.pbalanced}{pdata.frame}(x, balance.type = c("fill",
-  "shared.times", "shared.individuals"), ...)
+\method{make.pbalanced}{pdata.frame}(
+  x,
+  balance.type = c("fill", "shared.times", "shared.individuals"),
+  ...
+)
 
-\method{make.pbalanced}{pseries}(x, balance.type = c("fill",
-  "shared.times", "shared.individuals"), ...)
+\method{make.pbalanced}{pseries}(
+  x,
+  balance.type = c("fill", "shared.times", "shared.individuals"),
+  ...
+)
 
-\method{make.pbalanced}{data.frame}(x, balance.type = c("fill",
-  "shared.times", "shared.individuals"), index = NULL, ...)
+\method{make.pbalanced}{data.frame}(
+  x,
+  balance.type = c("fill", "shared.times", "shared.individuals"),
+  index = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{an object of class \code{pdata.frame}, \code{data.frame},

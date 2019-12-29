@@ -8,11 +8,20 @@
 \usage{
 plmtest(x, ...)
 
-\method{plmtest}{plm}(x, effect = c("individual", "time", "twoways"),
-  type = c("honda", "bp", "ghm", "kw"), ...)
+\method{plmtest}{plm}(
+  x,
+  effect = c("individual", "time", "twoways"),
+  type = c("honda", "bp", "ghm", "kw"),
+  ...
+)
 
-\method{plmtest}{formula}(x, data, ..., effect = c("individual", "time",
-  "twoways"), type = c("honda", "bp", "ghm", "kw"))
+\method{plmtest}{formula}(
+  x,
+  data,
+  ...,
+  effect = c("individual", "time", "twoways"),
+  type = c("honda", "bp", "ghm", "kw")
+)
 }
 \arguments{
 \item{x}{an object of class \code{"plm"} or a formula of class

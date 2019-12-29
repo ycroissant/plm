@@ -22,7 +22,7 @@ pvar(x, ...)
 \method{print}{pvar}(x, ...)
 }
 \arguments{
-\item{x}{a \code{(p)data.frame} or a \code{matrix},}
+\item{x}{a \verb{(p)data.frame} or a \code{matrix},}
 
 \item{\dots}{further arguments.}
 

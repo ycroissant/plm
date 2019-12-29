@@ -7,18 +7,31 @@
 \alias{print.summary.pgmm}
 \title{Generalized Method of Moments (GMM) Estimation for Panel Data}
 \usage{
-pgmm(formula, data, subset, na.action, effect = c("twoways",
-  "individual"), model = c("onestep", "twosteps"), collapse = FALSE,
-  lost.ts = NULL, transformation = c("d", "ld"), fsm = NULL,
-  index = NULL, ...)
+pgmm(
+  formula,
+  data,
+  subset,
+  na.action,
+  effect = c("twoways", "individual"),
+  model = c("onestep", "twosteps"),
+  collapse = FALSE,
+  lost.ts = NULL,
+  transformation = c("d", "ld"),
+  fsm = NULL,
+  index = NULL,
+  ...
+)
 
 \method{coef}{pgmm}(object, ...)
 
-\method{summary}{pgmm}(object, robust = TRUE, time.dummies = FALSE,
-  ...)
+\method{summary}{pgmm}(object, robust = TRUE, time.dummies = FALSE, ...)
 
-\method{print}{summary.pgmm}(x, digits = max(3, getOption("digits") - 2),
-  width = getOption("width"), ...)
+\method{print}{summary.pgmm}(
+  x,
+  digits = max(3, getOption("digits") - 2),
+  width = getOption("width"),
+  ...
+)
 }
 \arguments{
 \item{formula}{a symbolic description for the model to be

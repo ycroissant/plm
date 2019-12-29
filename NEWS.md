@@ -1,5 +1,5 @@
-# plm 2.3-0
-## tbd
+# plm 2.2-1
+* purtest: tests now support unbalanced panel data, where applicable.
 
 # plm 2.2-0
 * methods for plm.list where not exported, now exported.
@@ -23,8 +23,8 @@
 
 * Minor update: tests updated to pacify CRAN's testing procedure with
   OpenBLAS.
-* bug fix in model.frame.pdata.frame : dot previously set to
-  "separate" now set to "previous".
+* bug fix in model.frame.pdata.frame: dot previously set to "separate" now set
+  to "previous".
 
 # plm 2.0-0
 
@@ -162,16 +162,16 @@
 * purtest:
   * for test = 
     * "madwu": Maddala-Wu test statistic used to be computed using p-values from 
-                  the normal distribution, fixed now, by using approximated p-values
-                  for the tau distribution described by MacKinnon (1994).
+               the normal distribution, fixed now, by using approximated p-values
+               for the tau distribution described by MacKinnon (1994).
     * "hadri": * fixed p-value (now based on one-sided test).
-                * fixed statistic in non-heteroskedasticity case (Hcons = FALSE).
-                * degrees of freedom correction implemented (set dfcor = TRUE).
+               * fixed statistic in non-heteroskedasticity case (Hcons = FALSE).
+               * degrees of freedom correction implemented (set dfcor = TRUE).
     * "ips", "levinlin": p-values fixed (now one-sided to the left).
-  * new tests: Choi (2001) modified P ("Pm"), inverse normal ("invnormal"),
-                   logit ("logit").
+    * new tests: Choi (2001) modified P ("Pm"), inverse normal ("invnormal"),
+      logit ("logit").
     * cosmetic: when argument 'lags' is not specified by user, the returned
-        object does not contain all three possible values in args\$lags anymore.
+      object does not contain all three possible values in args\$lags anymore.
 * cipstest: for the truncated version of the test, the constants used in the
               calculation were mixed up for type = "none" and "trend". 
 * pldv: new function to compute fixed and random effects models for truncated 

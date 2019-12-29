@@ -11,10 +11,17 @@
 \alias{as.data.frame.pdata.frame}
 \title{data.frame for panel data}
 \usage{
-pdata.frame(x, index = NULL, drop.index = FALSE, row.names = TRUE,
+pdata.frame(
+  x,
+  index = NULL,
+  drop.index = FALSE,
+  row.names = TRUE,
   stringsAsFactors = default.stringsAsFactors(),
-  replace.non.finite = FALSE, drop.NA.series = FALSE,
-  drop.const.series = FALSE, drop.unused.levels = FALSE)
+  replace.non.finite = FALSE,
+  drop.NA.series = FALSE,
+  drop.const.series = FALSE,
+  drop.unused.levels = FALSE
+)
 
 \method{$}{pdata.frame}(x, name) <- value
 
@@ -28,8 +35,13 @@ pdata.frame(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 
 \method{as.list}{pdata.frame}(x, keep.attributes = FALSE, ...)
 
-\method{as.data.frame}{pdata.frame}(x, row.names = NULL,
-  optional = FALSE, keep.attributes = TRUE, ...)
+\method{as.data.frame}{pdata.frame}(
+  x,
+  row.names = NULL,
+  optional = FALSE,
+  keep.attributes = TRUE,
+  ...
+)
 }
 \arguments{
 \item{x}{a \code{data.frame} for the \code{pdata.frame} function and a

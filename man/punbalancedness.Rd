@@ -59,8 +59,8 @@ the number of individuals (as in \code{pdim(x)$nT$n}).
 The extension of the above measures by
 \insertCite{BALT:SONG:JUNG:01;textual}{plm}, p. 368, are
 calculated:\cr
-\item c1: measure of subgroup (individual) unbalancedness,
 \itemize{
+\item c1: measure of subgroup (individual) unbalancedness,
 \item c2: measure of time unbalancedness,
 \item c3: measure of group unbalancedness due to each group size.
 }
@@ -85,12 +85,12 @@ observations (see \code{\link[=pdim]{pdim()}}).
 }
 \note{
 Calling \code{punbalancedness} on an estimated \code{panelmodel} object
-and on the corresponding \code{(p)data.frame} used for this
+and on the corresponding \verb{(p)data.frame} used for this
 estimation does not necessarily yield the same result (true
 also for \code{pdim}). When called on an estimated \code{panelmodel}, the
 number of observations (individual, time) actually used for
 model estimation are taken into account. When called on a
-\code{(p)data.frame}, the rows in the \code{(p)data.frame} are
+\verb{(p)data.frame}, the rows in the \verb{(p)data.frame} are
 considered, disregarding any NA values in the dependent or
 independent variable(s) which would be dropped during model
 estimation.

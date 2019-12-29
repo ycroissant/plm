@@ -4,10 +4,22 @@
 \alias{pldv}
 \title{Panel estimators for limited dependent variables}
 \usage{
-pldv(formula, data, subset, weights, na.action, model = c("fd", "random",
-  "pooling"), index = NULL, R = 20, start = NULL, lower = 0,
-  upper = +Inf, objfun = c("lsq", "lad"), sample = c("cens",
-  "trunc"), ...)
+pldv(
+  formula,
+  data,
+  subset,
+  weights,
+  na.action,
+  model = c("fd", "random", "pooling"),
+  index = NULL,
+  R = 20,
+  start = NULL,
+  lower = 0,
+  upper = +Inf,
+  objfun = c("lsq", "lad"),
+  sample = c("cens", "trunc"),
+  ...
+)
 }
 \arguments{
 \item{formula}{a symbolic description for the model to be

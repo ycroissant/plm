@@ -9,11 +9,20 @@ Tests for Panel Models and Joint Test by Baltagi and Li}
 \usage{
 pbsytest(x, ...)
 
-\method{pbsytest}{formula}(x, data, ..., test = c("ar", "re", "j"),
-  re.normal = if (test == "re") TRUE else NULL)
+\method{pbsytest}{formula}(
+  x,
+  data,
+  ...,
+  test = c("ar", "re", "j"),
+  re.normal = if (test == "re") TRUE else NULL
+)
 
-\method{pbsytest}{panelmodel}(x, test = c("ar", "re", "j"),
-  re.normal = if (test == "re") TRUE else NULL, ...)
+\method{pbsytest}{panelmodel}(
+  x,
+  test = c("ar", "re", "j"),
+  re.normal = if (test == "re") TRUE else NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{an object of class \code{formula} or of class \code{panelmodel},}
@@ -78,12 +87,12 @@ et al. (2001), p. 9 (balanced) \item \eqn{LM*_{\rho}} in Baltagi (2013), p.
 108 (balanced) \item \eqn{RS*_{\lambda}} in Sosa-Escudero/Bera (2008), p. 73
 (unbalanced) }
 
-\item \code{test = "re", re.normal = TRUE} (default) (one-sided test,
+\item \verb{test = "re", re.normal = TRUE} (default) (one-sided test,
 asymptotically N(0,1) distributed): \itemize{ \item \eqn{RSO*_{\mu}} in Bera
 et al. (2001), p. 11 (balanced) \item \eqn{RSO*_{\mu}} in Sosa-Escudero/Bera
 (2008), p. 75 (unbalanced) }
 
-\item \code{test = "re", re.normal = FALSE} (two-sided test, asymptotically
+\item \verb{test = "re", re.normal = FALSE} (two-sided test, asymptotically
 chi-squared(2) distributed): \itemize{ \item \eqn{RS*_{\mu}} in Bera et al.
 (2001), p. 7 (balanced) \item \eqn{LM*_{\mu}} in Baltagi (2013), p. 108
 (balanced) \item \eqn{RS*_{\mu}} in Sosa-Escudero/Bera (2008), p. 73

@@ -4,8 +4,13 @@
 \alias{pgrangertest}
 \title{Panel Granger (Non-)Causality Test (Dumitrescu/Hurlin (2012))}
 \usage{
-pgrangertest(formula, data, test = c("Ztilde", "Zbar", "Wbar"),
-  order = 1L, index = NULL)
+pgrangertest(
+  formula,
+  data,
+  test = c("Ztilde", "Zbar", "Wbar"),
+  order = 1L,
+  index = NULL
+)
 }
 \arguments{
 \item{formula}{a \code{formula} object to describe the direction of the
@@ -37,9 +42,6 @@ freedom and the specified lag order.
 Test for Granger (non-)causality in panel data.
 }
 \details{
-% TODO: write about assumptions of panel Granger test: % * cross-sectional
-independence % * convergence
-
 The panel Granger (non-)causality test is a combination of Granger
 tests \insertCite{GRAN:69}{plm} performed per individual. The test
 is developed by \insertCite{DUMI:HURL:12;textual}{plm}, a shorter

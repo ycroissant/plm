@@ -7,8 +7,7 @@
 \alias{print.summary.piest}
 \title{Chamberlain estimator and test for fixed effects}
 \usage{
-piest(formula, data, subset, na.action, index = NULL, robust = TRUE,
-  ...)
+piest(formula, data, subset, na.action, index = NULL, robust = TRUE, ...)
 
 \method{print}{piest}(x, ...)
 

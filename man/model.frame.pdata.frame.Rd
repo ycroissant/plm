@@ -7,17 +7,28 @@
 \alias{model.matrix.pdata.frame}
 \title{model.frame and model.matrix for panel data}
 \usage{
-\method{model.frame}{pdata.frame}(formula, data = NULL, ...,
-  lhs = NULL, rhs = NULL, dot = "previous")
+\method{model.frame}{pdata.frame}(
+  formula,
+  data = NULL,
+  ...,
+  lhs = NULL,
+  rhs = NULL,
+  dot = "previous"
+)
 
 \method{formula}{pdata.frame}(x, ...)
 
 \method{model.matrix}{plm}(object, ...)
 
-\method{model.matrix}{pdata.frame}(object, model = c("pooling", "within",
-  "Between", "Sum", "between", "mean", "random", "fd"),
-  effect = c("individual", "time", "twoways", "nested"), rhs = 1,
-  theta = NULL, cstcovar.rm = NULL, ...)
+\method{model.matrix}{pdata.frame}(
+  object,
+  model = c("pooling", "within", "Between", "Sum", "between", "mean", "random", "fd"),
+  effect = c("individual", "time", "twoways", "nested"),
+  rhs = 1,
+  theta = NULL,
+  cstcovar.rm = NULL,
+  ...
+)
 }
 \arguments{
 \item{data}{a \code{formula}, see \strong{Details},}
@@ -39,14 +50,14 @@ there),}
 estimated model object of class \code{"plm"},}
 
 \item{model}{one of \code{"pooling"}, \code{"within"}, \code{"Sum"}, \code{"Between"},
-\code{"between"}, \code{"random",} \code{"fd"} and \code{"ht"},}
+\code{"between"}, \verb{"random",} \code{"fd"} and \code{"ht"},}
 
 \item{effect}{the effects introduced in the model, one of
 \code{"individual"}, \code{"time"}, \code{"twoways"} or \code{"nested"},}
 
 \item{theta}{the parameter for the transformation if \code{model = "random"},}
 
-\item{cstcovar.rm}{remove the constant columns, one of \code{"none", "intercept", "covariates", "all")},}
+\item{cstcovar.rm}{remove the constant columns, one of \verb{"none", "intercept", "covariates", "all")},}
 }
 \value{
 The \code{model.frame} methods return a \code{pdata.frame}.\cr The

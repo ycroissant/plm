@@ -2,8 +2,9 @@
 library(plm)
 data("Grunfeld", package = "plm")
 pG <- pdata.frame(Grunfeld)
-
 y <- data.frame(split(Grunfeld$inv, Grunfeld$firm))
+
+# some general run tests
 
 purtest(pG$inv, pmax = 4, exo = "intercept", test = "ips")
 purtest(inv ~ 1, data = Grunfeld, index = "firm", pmax = 4, test = "madwu")
@@ -27,10 +28,11 @@ purtest(pdata.frame(Grunfeld)[ , "inv"],  pmax = 4, test = "ips", exo = "interce
 purtest(pdata.frame(Grunfeld)[ , "inv"],  pmax = 4, test = "ips", exo = "trend")     # works
 # purtest(pdata.frame(Grunfeld)[ , "inv"],  pmax = 4, test = "ips", exo = "none")      # works as intended: gives informative error msg
 
-### pdata.frame
-# purtest(pdata.frame(Grunfeld)[ , "inv", drop = F],  pmax = 4, test = "ips", exo = "intercept") # runs but but gives different results! and a warning!
-# purtest(pdata.frame(Grunfeld)[ , "inv", drop = F],  pmax = 4, test = "ips", exo = "trend")     # runs but but gives different results! and a warning!
-# purtest(pdata.frame(Grunfeld)[ , "inv", drop = F],  pmax = 4, test = "ips", exo = "none")     # works as intended: gives informative error msg
+### pdata.frame - individuals must be in columns!
+df_inv <- data.frame(split(Grunfeld$inv, Grunfeld$firm)) 
+purtest(df_inv, pmax = 4, test = "ips", exo = "intercept")
+### matrix
+purtest(as.matrix(df_inv), pmax = 4, test = "ips", exo = "intercept")
 
 
 #### Hadri (2000) test
@@ -51,15 +53,38 @@ b <- purtest(pG$value, test = "ips", exo = "intercept", lags = 0, dfcor = TRUE)
 unlist(lapply(b$idres, function(x) x[["rho"]]))
 unlist(lapply(b$idres, function(x) x[["trho"]]))
 
-## lags = 2 to match gretl and EViews exactly (lags > 0 gives the Wtbar stat in gretl and EViews)
+## lags = 2 (lags > 0 gives the Wtbar stat in gretl and EViews)
 b_lag2 <- purtest(pG$value, test = "ips", exo = "intercept", lags = 2, dfcor = TRUE)
 unlist(lapply(b_lag2$idres, function(x) x[["rho"]]))
 unlist(lapply(b_lag2$idres, function(x) x[["trho"]]))
 
-#### various tests from Choi (2001)
-purtest(pG$value, test = "Pm", exo = "intercept", lags = 2, dfcor = TRUE)
-purtest(pG$value, test = "invnormal", exo = "intercept", lags = 2, dfcor = TRUE)
-purtest(pG$value, test = "logit", exo = "intercept", lags = 2, dfcor = TRUE)
 
-### Levin-Lin-Chu test
-purtest(pG$value, test = "levinlin", exo = "intercept", lags = 0, dfcor = TRUE)
+
+#### various tests from Choi (2001)
+purtest(pG$value, test = "Pm",        exo = "intercept", lags = 2, dfcor = TRUE)
+purtest(pG$value, test = "invnormal", exo = "intercept", lags = 2, dfcor = TRUE)
+purtest(pG$value, test = "logit",     exo = "intercept", lags = 2, dfcor = TRUE)
+
+
+
+#### Levin-Lin-Chu test
+# matches gretl (almost) exactly: match gretl, set dfcor = FALSE
+# NB: one remaining (asymptotically irrelevant) difference
+# between gretl and purtest for LLC. Bandwidth calc for Bartlett kernel (in longrunvar),
+# 3.21 * T^(1/3) purtest rounds, gretl truncates (no clear answer to this, LLC
+# use rounding as becomes clear from their table 2 as they apply rounding for their
+# "quick-and-dirty" values for bandwidth cutoff).
+llc <- purtest(pG$value, test = "levinlin", exo = "none", lags = 0, dfcor = FALSE)
+summary(llc)
+unlist(lapply(llc$idres, function(x) x[["rho"]]))
+unlist(lapply(llc$idres, function(x) x[["trho"]]))
+
+llc_int <- purtest(pG$value, test = "levinlin", exo = "intercept", lags = 0, dfcor = FALSE)
+summary(llc_int)
+unlist(lapply(llc_int$idres, function(x) x[["rho"]]))
+unlist(lapply(llc_int$idres, function(x) x[["trho"]]))
+
+llc_trend <- purtest(pG$value, test = "levinlin", exo = "trend", lags = 0, dfcor = FALSE)
+summary(llc_trend)
+unlist(lapply(llc_trend$idres, function(x) x[["rho"]]))
+unlist(lapply(llc_trend$idres, function(x) x[["trho"]]))

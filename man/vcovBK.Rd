@@ -7,8 +7,13 @@
 \usage{
 vcovBK(x, ...)
 
-\method{vcovBK}{plm}(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
-  cluster = c("group", "time"), diagonal = FALSE, ...)
+\method{vcovBK}{plm}(
+  x,
+  type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
+  cluster = c("group", "time"),
+  diagonal = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{an object of class \code{"plm"},}
@@ -57,10 +62,6 @@ Weighting schemes specified by \code{type} are analogous to those in
 justified theoretically (although in the context of the standard
 linear model) by \insertCite{MACK:WHIT:85;textual}{plm} and
 \insertCite{CRIB:04;textual}{plm} \insertCite{@see @ZEIL:04}{plm}.
-
-% TODO: once "sss" has been added: \code{type = "sss"} employs the small
-% sample correction as used by Stata. give formula for "sss";
-% elaborate why different result for FE models (intercept)
 
 The main use of \code{vcovBK} is to be an argument to other functions,
 e.g.  for Wald--type testing: argument \code{vcov.} to \code{coeftest()},

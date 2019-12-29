@@ -31,8 +31,8 @@
 #' (`model="mg"`) or cross-sectionally demeaned (`model="dmg"`)
 #' versions of the IPS test.
 #' 
-#' % TODO: maybe be more verbose here? write about type arg which corresponds
-#' % cases III, II, I in Pesaran (2007) etc.
+# TODO: maybe be more verbose here? write about type arg which corresponds
+# cases III, II, I in Pesaran (2007) etc.
 #' 
 #' @aliases cipstest
 #' @param x an object of class `"pseries"`,

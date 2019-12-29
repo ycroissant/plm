@@ -1,7 +1,7 @@
 
-R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
-Copyright (C) 2018 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
+R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -19,8 +19,9 @@ Type 'q()' to quit R.
 > library(plm)
 > data("Grunfeld", package = "plm")
 > pG <- pdata.frame(Grunfeld)
-> 
 > y <- data.frame(split(Grunfeld$inv, Grunfeld$firm))
+> 
+> # some general run tests
 > 
 > purtest(pG$inv, pmax = 4, exo = "intercept", test = "ips")
 
@@ -45,17 +46,17 @@ Exogenous variables: Individual Intercepts
 Automatic selection of lags using SIC: 0 - 8 lags (max: 8)
 statistic: NA 
 p-value: NA 
-    lags obs         rho        trho    mean    var
-X1     8  11  0.57372489   7.2972878      NA     NA
-X2     7  12 -1.33500743  -2.1403062      NA     NA
-X3     8  11 -0.24069010  -1.8357409      NA     NA
-X4     0  19 -0.05374775  -0.4175477 -1.5204 0.8654
-X5     7  12  1.43387118   3.6341172      NA     NA
-X6     8  11  1.47800229  45.8810140      NA     NA
-X7     0  19 -0.13861644  -0.8207942 -1.5204 0.8654
-X8     8  11 -1.54461692 -12.2711923      NA     NA
-X9     8  11 -1.72024968 -10.6042569      NA     NA
-X10    7  12 -4.64427462 -34.2629736      NA     NA
+   lags obs         rho        trho    mean    var
+1     8  11  0.57372489   7.2972878      NA     NA
+2     7  12 -1.33500743  -2.1403062      NA     NA
+3     8  11 -0.24069010  -1.8357409      NA     NA
+4     0  19 -0.05374775  -0.4175477 -1.5204 0.8654
+5     7  12  1.43387118   3.6341172      NA     NA
+6     8  11  1.47800229  45.8810140      NA     NA
+7     0  19 -0.13861644  -0.8207942 -1.5204 0.8654
+8     8  11 -1.54461692 -12.2711923      NA     NA
+9     8  11 -1.72024968 -10.6042569      NA     NA
+10    7  12 -4.64427462 -34.2629736      NA     NA
 > print(a1$args$lags)
 [1] "SIC"
 > if (length(a1$args$lags) != 1) stop("length(return_value$args$lags must be 1")
@@ -67,17 +68,17 @@ Exogenous variables: Individual Intercepts
 User-provided lags
 statistic: 4.51 
 p-value: 1 
-    lags obs         rho        trho    mean    var
-X1     2  17  0.37455746  1.69705718 -1.4034 1.0344
-X2     2  17 -0.33653803 -1.31826344 -1.4034 1.0344
-X3     2  17 -0.12937014 -0.65968273 -1.4034 1.0344
-X4     2  17  0.19494339  1.06936162 -1.4034 1.0344
-X5     2  17  0.02327321  0.08084075 -1.4034 1.0344
-X6     2  17  0.28398534  2.60790962 -1.4034 1.0344
-X7     2  17  0.13957097  0.65174468 -1.4034 1.0344
-X8     2  17 -0.28331574 -1.30317041 -1.4034 1.0344
-X9     2  17 -0.37152816 -1.88381502 -1.4034 1.0344
-X10    2  17 -0.07346420 -0.46967793 -1.4034 1.0344
+   lags obs         rho        trho    mean    var
+1     2  17  0.37455746  1.69705718 -1.4034 1.0344
+2     2  17 -0.33653803 -1.31826344 -1.4034 1.0344
+3     2  17 -0.12937014 -0.65968273 -1.4034 1.0344
+4     2  17  0.19494339  1.06936162 -1.4034 1.0344
+5     2  17  0.02327321  0.08084075 -1.4034 1.0344
+6     2  17  0.28398534  2.60790962 -1.4034 1.0344
+7     2  17  0.13957097  0.65174468 -1.4034 1.0344
+8     2  17 -0.28331574 -1.30317041 -1.4034 1.0344
+9     2  17 -0.37152816 -1.88381502 -1.4034 1.0344
+10    2  17 -0.07346420 -0.46967793 -1.4034 1.0344
 > print(a2$args$lags)
 [1] 2
 > if (length(a2$args$lags) != 1) stop("length(return_value$args$lags must be 1")
@@ -88,17 +89,17 @@ Exogenous variables: Individual Intercepts
 User-provided lags
 statistic: NA 
 p-value: NA 
-    lags obs         rho        trho    mean    var
-X1     2  17  0.37455746  1.69705718 -1.4034 1.0344
-X2     3  16 -0.21033975 -0.81675296 -1.3754 1.1522
-X3     1  18 -0.27302816 -1.65614389 -1.5108 0.9534
-X4     5  14  0.85015585  1.04616383      NA     NA
-X5     8  11  1.06680894  1.96954663      NA     NA
-X6     1  18  0.21710976  2.51472363 -1.5108 0.9534
-X7     4  15  0.01600785  0.05406133 -1.2600 1.2790
-X8     6  13 -0.12662404 -0.38012322      NA     NA
-X9     7  12 -0.89993048 -4.03185909      NA     NA
-X10    1  18 -0.23247810 -1.68616532 -1.5108 0.9534
+   lags obs         rho        trho    mean    var
+1     2  17  0.37455746  1.69705718 -1.4034 1.0344
+2     3  16 -0.21033975 -0.81675296 -1.3754 1.1522
+3     1  18 -0.27302816 -1.65614389 -1.5108 0.9534
+4     5  14  0.85015585  1.04616383      NA     NA
+5     8  11  1.06680894  1.96954663      NA     NA
+6     1  18  0.21710976  2.51472363 -1.5108 0.9534
+7     4  15  0.01600785  0.05406133 -1.2600 1.2790
+8     6  13 -0.12662404 -0.38012322      NA     NA
+9     7  12 -0.89993048 -4.03185909      NA     NA
+10    1  18 -0.23247810 -1.68616532 -1.5108 0.9534
 > length(a3$args$lags)
 [1] 10
 > print(a3$args$lags)
@@ -125,10 +126,25 @@ alternative hypothesis: stationarity
 
 > # purtest(pdata.frame(Grunfeld)[ , "inv"],  pmax = 4, test = "ips", exo = "none")      # works as intended: gives informative error msg
 > 
-> ### pdata.frame
-> # purtest(pdata.frame(Grunfeld)[ , "inv", drop = F],  pmax = 4, test = "ips", exo = "intercept") # runs but but gives different results! and a warning!
-> # purtest(pdata.frame(Grunfeld)[ , "inv", drop = F],  pmax = 4, test = "ips", exo = "trend")     # runs but but gives different results! and a warning!
-> # purtest(pdata.frame(Grunfeld)[ , "inv", drop = F],  pmax = 4, test = "ips", exo = "none")     # works as intended: gives informative error msg
+> ### pdata.frame - individuals must be in columns!
+> df_inv <- data.frame(split(Grunfeld$inv, Grunfeld$firm)) 
+> purtest(df_inv, pmax = 4, test = "ips", exo = "intercept")
+
+	Im-Pesaran-Shin Unit-Root Test (ex. var.: Individual Intercepts)
+
+data:  df_inv
+z = 2.5801, p-value = 0.9951
+alternative hypothesis: stationarity
+
+> ### matrix
+> purtest(as.matrix(df_inv), pmax = 4, test = "ips", exo = "intercept")
+
+	Im-Pesaran-Shin Unit-Root Test (ex. var.: Individual Intercepts)
+
+data:  as.matrix(df_inv)
+z = 2.5801, p-value = 0.9951
+alternative hypothesis: stationarity
+
 > 
 > 
 > #### Hadri (2000) test
@@ -176,31 +192,33 @@ alternative hypothesis: at least one series has a unit root
 > ## use dfcor = TRUE to match gretl 2017c and EViews 9.5 exactly
 > b <- purtest(pG$value, test = "ips", exo = "intercept", lags = 0, dfcor = TRUE)
 > unlist(lapply(b$idres, function(x) x[["rho"]]))
-     X1.Ly      X2.Ly      X3.Ly      X4.Ly      X5.Ly      X6.Ly      X7.Ly 
+      1.Ly       2.Ly       3.Ly       4.Ly       5.Ly       6.Ly       7.Ly 
 -0.7221173 -0.8376784 -0.5503275 -0.9812049 -0.0246934  0.1313902 -0.2767321 
-     X8.Ly      X9.Ly     X10.Ly 
+      8.Ly       9.Ly      10.Ly 
 -0.2343526 -0.3064189 -0.6898608 
 > unlist(lapply(b$idres, function(x) x[["trho"]]))
-     X1.Ly      X2.Ly      X3.Ly      X4.Ly      X5.Ly      X6.Ly      X7.Ly 
+      1.Ly       2.Ly       3.Ly       4.Ly       5.Ly       6.Ly       7.Ly 
 -3.0980241 -3.9708351 -2.4918122 -4.4232340 -0.2247631  2.0376353 -1.5074566 
-     X8.Ly      X9.Ly     X10.Ly 
+      8.Ly       9.Ly      10.Ly 
 -1.4013933 -1.4852375 -2.8137835 
 > 
-> ## lags = 2 to match gretl and EViews exactly (lags > 0 gives the Wtbar stat in gretl and EViews)
+> ## lags = 2 (lags > 0 gives the Wtbar stat in gretl and EViews)
 > b_lag2 <- purtest(pG$value, test = "ips", exo = "intercept", lags = 2, dfcor = TRUE)
 > unlist(lapply(b_lag2$idres, function(x) x[["rho"]]))
-      X1.Ly       X2.Ly       X3.Ly       X4.Ly       X5.Ly       X6.Ly 
+       1.Ly        2.Ly        3.Ly        4.Ly        5.Ly        6.Ly 
 -0.77717841 -0.66130878 -0.53160334 -1.07349948 -0.01866852  0.25337574 
-      X7.Ly       X8.Ly       X9.Ly      X10.Ly 
+       7.Ly        8.Ly        9.Ly       10.Ly 
 -0.38352999  0.35686831 -0.86010702 -0.83869431 
 > unlist(lapply(b_lag2$idres, function(x) x[["trho"]]))
-      X1.Ly       X2.Ly       X3.Ly       X4.Ly       X5.Ly       X6.Ly 
+       1.Ly        2.Ly        3.Ly        4.Ly        5.Ly        6.Ly 
 -1.43117190 -1.83739675 -1.58422268 -2.15851492 -0.08602929  2.80099666 
-      X7.Ly       X8.Ly       X9.Ly      X10.Ly 
+       7.Ly        8.Ly        9.Ly       10.Ly 
 -1.75556519  1.02362053 -2.07408161 -2.11875217 
 > 
+> 
+> 
 > #### various tests from Choi (2001)
-> purtest(pG$value, test = "Pm", exo = "intercept", lags = 2, dfcor = TRUE)
+> purtest(pG$value, test = "Pm",        exo = "intercept", lags = 2, dfcor = TRUE)
 
 	Choi's modified P Unit-Root Test (ex. var.: Individual Intercepts)
 
@@ -216,7 +234,7 @@ data:  pG$value
 z = 1.4928, p-value = 0.9322
 alternative hypothesis: stationarity
 
-> purtest(pG$value, test = "logit", exo = "intercept", lags = 2, dfcor = TRUE)
+> purtest(pG$value, test = "logit",     exo = "intercept", lags = 2, dfcor = TRUE)
 
 	Choi's Logit Unit-Root Test (ex. var.: Individual Intercepts)
 
@@ -225,18 +243,108 @@ L* = 1.943, df = 54, p-value = 0.9714
 alternative hypothesis: stationarity
 
 > 
-> ### Levin-Lin-Chu test
-> purtest(pG$value, test = "levinlin", exo = "intercept", lags = 0, dfcor = TRUE)
-
-	Levin-Lin-Chu Unit-Root Test (ex. var.: Individual Intercepts)
-
-data:  pG$value
-z = 0.31527, p-value = 0.6237
-alternative hypothesis: stationarity
-
+> 
+> 
+> #### Levin-Lin-Chu test
+> # matches gretl (almost) exactly: match gretl, set dfcor = FALSE
+> # NB: one remaining (asymptotically irrelevant) difference
+> # between gretl and purtest for LLC. Bandwidth calc for Bartlett kernel (in longrunvar),
+> # 3.21 * T^(1/3) purtest rounds, gretl truncates (no clear answer to this, LLC
+> # use rounding as becomes clear from their table 2 as they apply rounding for their
+> # "quick-and-dirty" values for bandwidth cutoff).
+> llc <- purtest(pG$value, test = "levinlin", exo = "none", lags = 0, dfcor = FALSE)
 Warning message:
 In selectT(l, theTs) : the time series is short
+> summary(llc)
+Levin-Lin-Chu Unit-Root Test 
+Exogenous variables: None 
+User-provided lags
+statistic: 2.589 
+p-value: 0.995 
+   lags obs           rho        trho
+1     0  19  0.0019996109  0.03663606
+2     0  19  0.0007285916  0.01736171
+3     0  19  0.0227319953  0.48356807
+4     0  19 -0.0294427058 -0.42462225
+5     0  19  0.0428128365  1.42801803
+6     0  19  0.1036547749  4.03388318
+7     0  19  0.0067226451  0.17399747
+8     0  19  0.0572121415  1.19245684
+9     0  19  0.0149651207  0.34199426
+10    0  19 -0.0194609404 -0.57389170
+> unlist(lapply(llc$idres, function(x) x[["rho"]]))
+         1.Ly          2.Ly          3.Ly          4.Ly          5.Ly 
+ 0.0019996109  0.0007285916  0.0227319953 -0.0294427058  0.0428128365 
+         6.Ly          7.Ly          8.Ly          9.Ly         10.Ly 
+ 0.1036547749  0.0067226451  0.0572121415  0.0149651207 -0.0194609404 
+> unlist(lapply(llc$idres, function(x) x[["trho"]]))
+       1.Ly        2.Ly        3.Ly        4.Ly        5.Ly        6.Ly 
+ 0.03663606  0.01736171  0.48356807 -0.42462225  1.42801803  4.03388318 
+       7.Ly        8.Ly        9.Ly       10.Ly 
+ 0.17399747  1.19245684  0.34199426 -0.57389170 
+> 
+> llc_int <- purtest(pG$value, test = "levinlin", exo = "intercept", lags = 0, dfcor = FALSE)
+Warning message:
+In selectT(l, theTs) : the time series is short
+> summary(llc_int)
+Levin-Lin-Chu Unit-Root Test 
+Exogenous variables: Individual Intercepts 
+User-provided lags
+statistic: 0.119 
+p-value: 0.547 
+   lags obs        rho       trho
+1     0  19 -0.7221173 -3.2751947
+2     0  19 -0.8376784 -4.1979203
+3     0  19 -0.5503275 -2.6343147
+4     0  19 -0.9812049 -4.6761911
+5     0  19 -0.0246934 -0.2376169
+6     0  19  0.1313902  2.1541642
+7     0  19 -0.2767321 -1.5936655
+8     0  19 -0.2343526 -1.4815366
+9     0  19 -0.3064189 -1.5701756
+10    0  19 -0.6898608 -2.9746990
+> unlist(lapply(llc_int$idres, function(x) x[["rho"]]))
+      1.Ly       2.Ly       3.Ly       4.Ly       5.Ly       6.Ly       7.Ly 
+-0.7221173 -0.8376784 -0.5503275 -0.9812049 -0.0246934  0.1313902 -0.2767321 
+      8.Ly       9.Ly      10.Ly 
+-0.2343526 -0.3064189 -0.6898608 
+> unlist(lapply(llc_int$idres, function(x) x[["trho"]]))
+      1.Ly       2.Ly       3.Ly       4.Ly       5.Ly       6.Ly       7.Ly 
+-3.2751947 -4.1979203 -2.6343147 -4.6761911 -0.2376169  2.1541642 -1.5936655 
+      8.Ly       9.Ly      10.Ly 
+-1.4815366 -1.5701756 -2.9746990 
+> 
+> llc_trend <- purtest(pG$value, test = "levinlin", exo = "trend", lags = 0, dfcor = FALSE)
+Warning message:
+In selectT(l, theTs) : the time series is short
+> summary(llc_trend)
+Levin-Lin-Chu Unit-Root Test 
+Exogenous variables: Individual Intercepts and Trend 
+User-provided lags
+statistic: -2.645 
+p-value: 0.004 
+   lags obs        rho       trho
+1     0  19 -0.7836305 -3.4975211
+2     0  19 -0.8400949 -4.2846206
+3     0  19 -0.5536329 -2.6416769
+4     0  19 -1.0539785 -4.8189393
+5     0  19 -0.3289082 -1.9170742
+6     0  19 -0.0473435 -0.3191513
+7     0  19 -0.2737291 -1.5856239
+8     0  19 -0.4713268 -2.3192335
+9     0  19 -0.4875576 -2.3614046
+10    0  19 -0.7854102 -3.4617227
+> unlist(lapply(llc_trend$idres, function(x) x[["rho"]]))
+      1.Ly       2.Ly       3.Ly       4.Ly       5.Ly       6.Ly       7.Ly 
+-0.7836305 -0.8400949 -0.5536329 -1.0539785 -0.3289082 -0.0473435 -0.2737291 
+      8.Ly       9.Ly      10.Ly 
+-0.4713268 -0.4875576 -0.7854102 
+> unlist(lapply(llc_trend$idres, function(x) x[["trho"]]))
+      1.Ly       2.Ly       3.Ly       4.Ly       5.Ly       6.Ly       7.Ly 
+-3.4975211 -4.2846206 -2.6416769 -4.8189393 -1.9170742 -0.3191513 -1.5856239 
+      8.Ly       9.Ly      10.Ly 
+-2.3192335 -2.3614046 -3.4617227 
 > 
 > proc.time()
    user  system elapsed 
-  0.868   0.051   0.908 
+   0.79    0.09    0.85 
