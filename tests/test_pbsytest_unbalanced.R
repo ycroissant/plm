@@ -48,7 +48,8 @@ plmtest(pool_grunfeld, type = "bp") # LM_mu in Baltagi's book
 #
 # NB: this data set contains 3 errors compared to the original Grunfeld data, see e.g. the 
 #     analysis of various different Grundfeld data sets circulating at http://statmath.wu-wien.ac.at/~zeileis/grunfeld/
-
+#     or https://eeecon.uibk.ac.at/~zeileis/grunfeld/
+#
 ## commented due to file download
 
 # Grunfeld_greene_5firms <- read.csv("http://pages.stern.nyu.edu/~wgreene/Text/tables/TableF13-1.txt", sep="")

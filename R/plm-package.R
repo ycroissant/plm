@@ -388,7 +388,8 @@ NULL
 #' 
 #'  website accompanying the paper with various variants of the
 #' Grunfeld data:
-#' \url{http://statmath.wu-wien.ac.at/~zeileis/grunfeld/}.
+#' \url{https://eeecon.uibk.ac.at/~zeileis/grunfeld/}.
+# \url{http://statmath.wu-wien.ac.at/~zeileis/grunfeld/}.
 #' 
 #' @source Online complements to Baltagi (2001):
 #' 

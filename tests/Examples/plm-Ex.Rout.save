@@ -13420,8 +13420,7 @@ detaching 'package:car', 'package:carData', 'package:lmtest',
 > flush(stderr()); flush(stdout())
 > 
 > ### Name: vcovNW
-> ### Title: \insertCiteNEWE:WEST:87;textualplm Robust Covariance Matrix
-> ###   Estimator
+> ### Title: Newey and West (1987) Robust Covariance Matrix Estimator
 > ### Aliases: vcovNW vcovNW.plm vcovNW.pcce
 > ### Keywords: regression
 > 
@@ -13524,8 +13523,7 @@ detaching 'package:car', 'package:carData', 'package:lmtest',
 > flush(stderr()); flush(stdout())
 > 
 > ### Name: vcovSCC
-> ### Title: \insertCiteDRIS:KRAA:98;textualplm Robust Covariance Matrix
-> ###   Estimator
+> ### Title: Driscoll and Kraay (1998) Robust Covariance Matrix Estimator
 > ### Aliases: vcovSCC vcovSCC.plm vcovSCC.pcce
 > ### Keywords: regression
 > 
@@ -13673,7 +13671,7 @@ attr(,"se")
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  11.51 0.63 12.15 NA NA 
+Time elapsed:  9.83 0.61 11.3 NA NA 
 > grDevices::dev.off()
 null device 
           1 

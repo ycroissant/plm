@@ -22,9 +22,9 @@ padf <- function(x, exo = c("none", "intercept", "trend")){
 }
 
 
-
+## IPS (2003), table 3 for Wtbar statistic
 # x1: means without time trend from table 3 in IPS (2003)
-x1 <- c(
+adj.ips.wtbar.x1 <- c(
 -1.504,-1.514,-1.522,-1.520,-1.526,-1.523,-1.527,-1.519,-1.524,-1.532,
 -1.488,-1.503,-1.516,-1.514,-1.519,-1.520,-1.524,-1.519,-1.522,-1.530,
 -1.319,-1.387,-1.428,-1.443,-1.460,-1.476,-1.493,-1.490,-1.498,-1.514,
@@ -36,7 +36,7 @@ x1 <- c(
     NA,    NA,    NA,-1.212,-1.266,-1.329,-1.377,-1.393,-1.415,-1.456
 )
 # x2: variances without time trend from table 3 in IPS (2003)
-x2 <- c(
+adj.ips.wtbar.x2 <- c(
 1.069,0.923,0.851,0.809,0.789,0.770,0.760,0.749,0.736,0.735,
 1.255,1.011,0.915,0.861,0.831,0.803,0.781,0.770,0.753,0.745,
 1.421,1.078,0.969,0.905,0.865,0.830,0.798,0.789,0.766,0.754,
@@ -49,7 +49,7 @@ x2 <- c(
 )
 
 # x3: means with time trend from table 3 in IPS (2003)
-x3 <- c(
+adj.ips.wtbar.x3 <- c(
 -2.166,-2.167,-2.168,-2.167,-2.172,-2.173,-2.176,-2.174,-2.174,-2.177,
 -2.173,-2.169,-2.172,-2.172,-2.173,-2.177,-2.180,-2.178,-2.176,-2.179,
 -1.914,-1.999,-2.047,-2.074,-2.095,-2.120,-2.137,-2.143,-2.146,-2.158,
@@ -62,7 +62,7 @@ x3 <- c(
 )
 
 # x4: variances with time trend from table 3 in IPS (2003)
-x4 <- c(
+adj.ips.wtbar.x4 <- c(
 1.132,0.869,0.763,0.713,0.690,0.655,0.633,0.621,0.610,0.597,
 1.453,0.975,0.845,0.769,0.734,0.687,0.654,0.641,0.627,0.605,
 1.627,1.036,0.882,0.796,0.756,0.702,0.661,0.653,0.634,0.613,
@@ -74,17 +74,116 @@ x4 <- c(
    NA,   NA,   NA,1.208,1.063,0.902,0.808,0.766,0.728,0.670
 )
 
-adj.ips <- c(x1, x2, x3, x4)
+adj.ips.wtbar <- c(adj.ips.wtbar.x1, adj.ips.wtbar.x2,
+                   adj.ips.wtbar.x3, adj.ips.wtbar.x4)
 
-adj.ips <- array(adj.ips, dim=c(10,9,2,2),
-           dimnames = list(
-             c(10,15,20,25,30,40,50,60,70,100),
-             0:8,
-             c("mean", "var"),
-             c("intercept", "trend"))
-           )
+adj.ips.wtbar <- array(adj.ips.wtbar, dim = c(10, 9, 2, 2),
+                 dimnames = list(
+                   c(10, 15, 20, 25, 30, 40, 50, 60, 70, 100),
+                   0:8,
+                   c("mean", "var"),
+                   c("intercept", "trend"))
+)
 
-adj.ips <- aperm(adj.ips, c(2,1,3,4))
+adj.ips.wtbar <- aperm(adj.ips.wtbar, c(2, 1, 3, 4))
+
+
+
+###############
+## IPS (2003), table 2 (obvious typos (missing minus signs corrected))
+
+# intercept 1% critical values
+critval.ips.tbar.int1 <- c(
+-3.79, -2.66, -2.54, -2.50, -2.46, -2.44, -2.43, -2.42, -2.42, -2.40, -2.40,
+-3.45, -2.47, -2.38, -2.33, -2.32, -2.31, -2.29, -2.28, -2.28, -2.28, -2.27,
+-3.06, -2.32, -2.24, -2.21, -2.19, -2.18, -2.16, -2.16, -2.16, -2.16, -2.15,
+-2.79, -2.14, -2.10, -2.08, -2.07, -2.05, -2.04, -2.05, -2.04, -2.04, -2.04,
+-2.61, -2.06, -2.02, -2.00, -1.99, -1.99, -1.98, -1.98, -1.98, -1.97, -1.97,
+-2.51, -2.01, -1.97, -1.95, -1.94, -1.94, -1.93, -1.93, -1.93, -1.93, -1.92,
+-2.20, -1.85, -1.83, -1.82, -1.82, -1.82, -1.81, -1.81, -1.81, -1.81, -1.81,
+-2.00, -1.75, -1.74, -1.73, -1.73, -1.73, -1.73, -1.73, -1.73, -1.73, -1.73)
+# intercept 5% critical values
+critval.ips.tbar.int5 <- c(
+-2.76, -2.28, -2.21, -2.19, -2.18, -2.16, -2.16, -2.15, -2.16, -2.15,-2.15,
+-2.57, -2.17, -2.11, -2.09, -2.08, -2.07, -2.07, -2.06, -2.06, -2.06,-2.05,
+-2.42, -2.06, -2.02, -1.99, -1.99, -1.99, -1.98, -1.98, -1.97, -1.98,-1.97,
+-2.28, -1.95, -1.92, -1.91, -1.90, -1.90, -1.90, -1.89, -1.89, -1.89,-1.89,
+-2.18, -1.89, -1.87, -1.86, -1.85, -1.85, -1.85, -1.85, -1.84, -1.84,-1.84,
+-2.11, -1.85, -1.83, -1.82, -1.82, -1.82, -1.81, -1.81, -1.81, -1.81,-1.81,
+-1.95, -1.75, -1.74, -1.73, -1.73, -1.73, -1.73, -1.73, -1.73, -1.73,-1.73,
+-1.84, -1.68, -1.67, -1.67, -1.67, -1.67, -1.67, -1.67, -1.67, -1.67,-1.67)
+# intercept 10% critical values	
+critval.ips.tbar.int10 <- c(
+-2.38, -2.10, -2.06, -2.04, -2.04, -2.02, -2.02, -2.02, -2.02, -2.02, -2.01,
+-2.27, -2.01, -1.98, -1.96, -1.95, -1.95, -1.95, -1.95, -1.94, -1.95, -1.94,
+-2.17, -1.93, -1.90, -1.89, -1.88, -1.88, -1.88, -1.88, -1.88, -1.88, -1.88,
+-2.06, -1.85, -1.83, -1.82, -1.82, -1.82, -1.81, -1.81, -1.81, -1.81, -1.81,
+-2.00, -1.80, -1.79, -1.78, -1.78, -1.78, -1.78, -1.78, -1.78, -1.77, -1.77,
+-1.96, -1.77, -1.76, -1.75, -1.75, -1.75, -1.75, -1.75, -1.75, -1.75, -1.75,
+-1.85, -1.70, -1.69, -1.69, -1.69, -1.69, -1.68, -1.68, -1.68, -1.68, -1.69,
+-1.77, -1.64, -1.64, -1.64, -1.64, -1.64, -1.64, -1.64, -1.64, -1.64, -1.64)
+# trend 1% critical values
+critval.ips.tbar.trend1 <- c(
+-8.12, -3.42, -3.21, -3.13, -3.09, -3.05, -3.03, -3.02, -3.00, -3.00, -2.99,
+-7.36, -3.20, -3.03, -2.97, -2.94, -2.93, -2.90, -2.88, -2.88, -2.87, -2.86,
+-6.44, -3.03, -2.88, -2.84, -2.82, -2.79, -2.78, -2.77, -2.76, -2.75, -2.75,
+-5.72, -2.86, -2.74, -2.71, -2.69, -2.68, -2.67, -2.65, -2.66, -2.65, -2.64,
+-5.54, -2.75, -2.67, -2.63, -2.62, -2.61, -2.59, -2.60, -2.59, -2.58, -2.58,
+-5.16, -2.69, -2.61, -2.58, -2.58, -2.56, -2.55, -2.55, -2.55, -2.54, -2.54,
+-4.50, -2.53, -2.48, -2.46, -2.45, -2.45, -2.44, -2.44, -2.44, -2.44, -2.43,
+-4.00, -2.42, -2.39, -2.38, -2.37, -2.37, -2.36, -2.36, -2.36, -2.36, -2.36)
+# trend 5% critical values
+critval.ips.tbar.trend5 <- c(
+-4.66, -2.98, -2.87, -2.82, -2.80, -2.79, -2.77, -2.76, -2.75, -2.75, -2.75,
+-4.38, -2.85, -2.76, -2.72, -2.70, -2.69, -2.68, -2.67, -2.67, -2.66, -2.66,
+-4.11, -2.74, -2.66, -2.63, -2.62, -2.60, -2.60, -2.59, -2.59, -2.58, -2.58,
+-3.88, -2.63, -2.57, -2.55, -2.53, -2.53, -2.52, -2.52, -2.52, -2.51, -2.51,
+-3.73, -2.56, -2.52, -2.49, -2.48, -2.48, -2.48, -2.47, -2.47, -2.46, -2.46,
+-3.62, -2.52, -2.48, -2.46, -2.45, -2.45, -2.44, -2.44, -2.44, -2.44, -2.43,
+-3.35, -2.42, -2.38, -2.38, -2.37, -2.37, -2.36, -2.36, -2.36, -2.36, -2.36,
+-3.13, -2.34, -2.32, -2.32, -2.31, -2.31, -2.31, -2.31, -2.31, -2.31, -2.31)
+# trend 10% critical values
+critval.ips.tbar.trend10 <- c(
+-3.73, -2.77, -2.70, -2.67, -2.65, -2.64, -2.63, -2.62, -2.63, -2.62, -2.62,
+-3.60, -2.68, -2.62, -2.59, -2.58, -2.57, -2.57, -2.56, -2.56, -2.55, -2.55,
+-3.45, -2.59, -2.54, -2.52, -2.51, -2.51, -2.50, -2.50, -2.50, -2.49, -2.49,
+-3.33, -2.52, -2.47, -2.46, -2.45, -2.45, -2.44, -2.44, -2.44, -2.44, -2.44,
+-3.26, -2.47, -2.44, -2.42, -2.41, -2.41, -2.41, -2.40, -2.40, -2.40, -2.40,
+-3.18, -2.44, -2.40, -2.39, -2.39, -2.38, -2.38, -2.38, -2.38, -2.38, -2.38,
+-3.02, -2.36, -2.33, -2.33, -2.33, -2.32, -2.32, -2.32, -2.32, -2.32, -2.32,
+-2.90, -2.30, -2.29, -2.28, -2.28, -2.28, -2.28, -2.28, -2.28, -2.28, -2.28)
+
+
+critval.ips.tbar <- c(critval.ips.tbar.int1,
+                      critval.ips.tbar.int5,
+                      critval.ips.tbar.int10,
+                      critval.ips.tbar.trend1,
+                      critval.ips.tbar.trend5,
+                      critval.ips.tbar.trend10)
+
+critval.ips.tbar <- array(critval.ips.tbar, dim = c(11, 8, 3, 2),
+                 dimnames = list(
+                   c(5, 10, 15, 20, 25, 30, 40, 50, 60, 70, 100),
+                   c(5, 7, 10, 15, 20, 25, 50, 100),
+                   c("1%", "5%", "10%"),
+                   c("intercept", "trend"))
+)
+
+critval.ips.tbar <- aperm(critval.ips.tbar, c(2, 1, 3, 4))
+
+
+###############
+
+## IPS (2003), table 1
+# right hand pane of table 1 for Ztbar statistic
+adj.ips.zbar.time  <- c(6, 7, 8, 9, 10, 15, 20, 25, 30, 40, 50, 100, 500, 1000, 2000)
+adj.ips.zbar.means <- c(-1.520, -1.514, -1.501, -1.501, -1.504, -1.514, -1.522, -1.520, -1.526, -1.523, -1.527, -1.532, -1.531, -1.529, -1.533)
+adj.ips.zbar.vars  <- c(1.745, 1.414, 1.228, 1.132, 1.069, 0.923, 0.851, 0.809, 0.789, 0.770, 0.760, 0.735, 0.715, 0.707, 0.706) 
+names(adj.ips.zbar.time) <- names(adj.ips.zbar.means) <- names(adj.ips.zbar.vars) <- adj.ips.zbar.time
+
+# left pane of table 1 [not used]
+adj.ips.zbarL.means <- c(-1.125, -1.178, -1.214, -1.244, -1.274, -1.349, -1.395, -1.423, -1.439, -1.463, -1.477, -1.504, -1.526, -1.526, -1.533)
+adj.ips.zbarL.vars  <- c(0.497, 0.506, 0.506, 0.527, 0.521, 0.565, 0.592, 0.609, 0.623, 0.639, 0.656, 0.683, 0.704, 0.702, 0.706)
 
 ################
 
@@ -162,8 +261,8 @@ selectT <- function(x, Ts){
     warning("the time series is long")
     return(Ts[length(Ts)])
   }
-  pos <- which((Ts - x)>0)[1]
-  return(Ts[c(pos-1,pos)])
+  pos <- which((Ts - x) > 0)[1]
+  return(Ts[c(pos - 1, pos)])
 }
 
 lagsel <- function(object, exo = c("intercept", "none", "trend"),
@@ -231,19 +330,137 @@ adj.levinlin.value <- function(l, exo = c("intercept", "none", "trend")){
   }
 }
 
-adj.ips.value <- function(l = 30, lags = 2, exo = c("intercept", "trend")){
-  ## extract the adjustment values for Im-Pesaran-Shin test
+adj.ips.wtbar.value <- function(l = 30, lags = 2, exo = c("intercept", "trend")){
+  ## extract the adjustment values for Im-Pesaran-Shin test for Wtbar statistic (table 3 in IPS (2003))
   if (!lags %in% 0:8) warning("lags should be an integer between 0 and 8")
   lags <- min(lags, 8)
-  theTs <- as.numeric(dimnames(adj.ips)[[2]])
+  theTs <- as.numeric(dimnames(adj.ips.wtbar)[[2L]])
   Ts <- selectT(l, theTs)
   if (length(Ts) == 1){
-    return(adj.ips[as.character(lags),as.character(Ts),,exo])
+    # take value as in table
+    return(adj.ips.wtbar[as.character(lags), as.character(Ts), , exo])
   }
   else{
-    low  <- adj.ips[as.character(lags), as.character(Ts[1]), , exo]
-    high <- adj.ips[as.character(lags), as.character(Ts[2]), , exo]
+    # interpolate value from table
+    low  <- adj.ips.wtbar[as.character(lags), as.character(Ts[1L]), , exo]
+    high <- adj.ips.wtbar[as.character(lags), as.character(Ts[2L]), , exo]
     return(low + (l - Ts[1])/(Ts[2] - Ts[1]) * (high - low))
+  }
+}
+
+adj.ips.ztbar.value <- function(l = 30L, time, means, vars){
+  ## extract the adjustment values for Im-Pesaran-Shin test's Ztbar statistic
+  ## from table 1, right hand pane in IPS (2003) fed by arguments means and vars
+  Ts <- selectT(l, time)
+  if (length(Ts) == 1L){
+    # take value as in table
+    return(c(means[as.character(Ts)], vars[as.character(Ts)]))
+  }
+  else{
+    # interpolate value from table
+    low  <- c(means[as.character(Ts[1L])], vars[as.character(Ts[1L])])
+    high <- c(means[as.character(Ts[2L])], vars[as.character(Ts[2L])])
+    return(low + (l - Ts[1L])/(Ts[2L] - Ts[1L]) * (high - low))
+  }
+}
+
+critval.ips.tbar.value <- function(ind = 10L, time = 19L, critvals, exo = c("intercept", "trend")){
+  ## extract the critical values for Im-Pesaran-Shin test for tbar statistic (table 2 in IPS (2003))
+  theInds <-  as.numeric(dimnames(critvals)[[1L]])
+  theTs <-  as.numeric(dimnames(critvals)[[2L]])
+  Inds <- selectT(ind, theInds)
+  Ts <- selectT(time, theTs)
+  
+  # DEBUG / TODO:
+  experimental_critval.ips.tbar.value <- TRUE  ## switch for experimental implementation
+  
+  if (length(Inds) == 1L && length(Ts) == 1L) {
+    # exact hit for individual AND time: take value as in table
+    return(critvals[as.character(Inds), as.character(Ts), , exo])
+  }
+  else{
+    if (experimental_critval.ips.tbar.value) return(NA) # TODO
+    
+    if (length(Inds) == 1L || length(Ts) == 1L) {
+      # exact hit for individual (X)OR time: interpolate other dimension
+      if (length(Inds) == 1L) {
+        low  <- critvals[as.character(Inds), as.character(Ts[1L]), , exo]
+        high <- critvals[as.character(Inds), as.character(Ts[2L]), , exo]
+        return(low + (Inds - Ts[1L])/(Ts[2L] - Ts[1L]) * (high - low))
+      }
+      if (length(Ts) == 1L) {
+        # TODO: cannot be correct as, e.g. ind = 6, time = 10 yield same value as for ind = 5, time = 10
+        low  <- critvals[as.character(Inds[1L]), as.character(Ts), , exo]
+        high <- critvals[as.character(Inds[2L]), as.character(Ts), , exo]
+       return(low + (Ts - Inds[1L])/(Inds[2L] - Inds[1L]) * (high - low))
+        
+        # TODO: can take this(?):
+        # w1 <- 1 / abs(ind - Inds[1L])
+        # w2 <- 1 / abs(ind - Inds[2L])
+        # return ( (w1* low + w2*high )/ (w1 + w2))
+      }
+    } else {
+      # only get to this part when both dimensions are not an exact hit:
+      # interpolate from both dimensions via billinear interpolation 
+      # by solving a system of linear equations
+      
+      # DEBUG:
+      print("interpolate both dimensions")
+      
+      # extract the 4 critical values as basis of interpolation ("corners of box")
+      crit4   <- critvals[as.character(Inds), as.character(Ts), , exo]
+      dot <- c(ind, time) # point of interest
+      p <- c("1%", "5%", "10%")
+      funcval <- sapply(p, function(p) as.numeric(crit4[ , , p]))
+      m <- as.matrix(expand.grid(Inds, Ts))
+      mat <- cbind(1, m, m[ , 1] * m[ , 2])
+      s <- solve(mat, funcval)
+      vec <- c(1, dot[1], dot[2], dot[1]*dot[2])
+      res <- as.numeric(crossprod(s, vec))
+      names(res) <- p
+      return(res)
+      
+      ## gretl: seems to apply inverse distance weighting (IDS) via euclidean distance - why? calculation below
+      ## Stata: derived from Stata's documentation per example, Stata seems to just take the "upper right" value, i.e. Inds[2], Ts[2]
+      # extract the 4 critical values as basis of interpolation interpolate ("corners of box")
+      #
+      # crit4 <- critvals[as.character(Inds), as.character(Ts), , exo]
+      # dot <- c(ind, time) # point of interest
+      # m <- as.matrix(expand.grid(Inds, Ts))
+      # colnames(m) <- c("ind", "time")
+      # distance <- lapply(1:4, function(x) m[x, ] - dot)
+      # weight <- vapply(distance, function(x) 1/sqrt(as.numeric(crossprod(x))), 0.0)
+      # 
+      #  res <- (
+      #     crit4[as.character(Inds[1L]), as.character(Ts[1L]), ] * weight[1] +
+      #     crit4[as.character(Inds[2L]), as.character(Ts[1L]), ] * weight[2] +
+      #     crit4[as.character(Inds[1L]), as.character(Ts[2L]), ] * weight[3] +
+      #     crit4[as.character(Inds[2L]), as.character(Ts[2L]), ] * weight[4]) / sum(weight)
+      # return(res)
+      
+       
+       ## example from Wikipedia: https://en.wikipedia.org/wiki/Bilinear_interpolation
+       # funcval2 <- c(91,162,210,95)
+       # dot2 <- c(20.2, 14.5)
+       # m2 <- matrix(c(20,14,21,14,20,15,21,15), ncol = 2, byrow = TRUE)
+       # 
+       # mat2 <- cbind(1, m2, m2[ , 1] * m2[ , 2])
+       # s2 <- solve(mat2, funcval2)
+       # vec2 <- c(1, dot2[1], dot2[2], dot2[1]*dot2[2])
+       # 
+       # print(as.numeric(crossprod(s2, vec2))) # == s[1] + s[2] * dot2[1] + s[3] * dot2[2] + s[4] * dot2[1]*dot2[2]
+       # 
+       #   # gretl:
+       #   funcval2mat <- matrix(funcval2, ncol = 2, byrow = F)
+       #   distance2 <- lapply(1:4, function(x) m2[x, ] - dot2)
+       #   weight2 <- vapply(distance2, function(x) 1/sqrt(as.numeric(crossprod(x))), 0.0)
+       #   
+       #   res <- 
+       #     (funcval2[1] * weight2[1] +
+       #     funcval2[2] * weight2[2] +
+       #     funcval2[3] * weight2[3] + 
+       #     funcval2[4] * weight2[4] ) / sum(weight2)
+    }
   }
 }
 
@@ -316,6 +533,7 @@ longrunvar <- function(x, exo = c("intercept", "none", "trend"), q = NULL){
                  }
                  )
           )
+  return(res)
 }
 
 
@@ -398,9 +616,6 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
 } # END hadritest
 
 
-# TODO: mention which statistic of IPS (2003) we output: Ztbar or Wtbar?
-#       it is not t-bar, the mean of t statistics
-
 #' Unit root tests for panel data
 #' 
 #' `purtest` implements several testing procedures that have been proposed
@@ -435,8 +650,12 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
 #' Hadri's test and the test of Levin/Lin/Chu are not applicable to unbalanced
 #' panels.
 #' 
-#' The kind of test to be computed can be specified in several ways,
-#' depending on how the data is handed over to the function:
+# TODO: once code changed, change comment here
+#' For the test statistic tbar of the test of Im/Peseran/Shin (2003)
+#' (`ips.stat = "tbar`), no p-value is computed.
+#' 
+#' The exogeneous instruments of the tests (where applicable) can be specified
+#' in several ways, depending on how the data is handed over to the function:
 #' 
 #' - For the `formula`/`data` interface (if `data` is a `data.frame`,
 #' an additional `index` argument should be specified); the formula
@@ -482,7 +701,7 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
 #'     indicating whether the heteroskedasticity-consistent test of
 #'     \insertCite{HADR:00;textual}{plm} should be computed,
 #' @param q the bandwidth for the estimation of the long-run variance 
-#'     (only relevant for test = "levinlin", the default (`q = NULL``)
+#'     (only relevant for `test = "levinlin"`, the default (`q = NULL``)
 #'     gives the value as suggested by the authors as round(3.21 * T^(1/3))),
 #' @param dfcor logical, indicating whether the standard deviation of
 #'     the regressions is to be computed using a degrees-of-freedom
@@ -490,6 +709,9 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
 #' @param fixedT logical, indicating whether the different ADF
 #'     regressions are to be computed using the same number of
 #'     observations,
+#' @param ips.stat `NULL` or character of length 1 to request a specific
+#'     IPS statistic, one of `"Wtbar"` (also default if `ips.stat = NULL`),
+#'     `"Ztbar"`, `"tbar"`,
 #' @param \dots further arguments.
 #' @return An object of class `"purtest"`: a list with the elements
 #'     `"statistic"` (a `"htest"` object), `"call"`, `"args"`,
@@ -519,8 +741,8 @@ purtest <- function(object, data = NULL, index = NULL,
                     test = c("levinlin", "ips", "madwu", "Pm" , "invnormal", "logit", "hadri"),
                     exo = c("none", "intercept", "trend"),
                     lags = c("SIC", "AIC", "Hall"),
-                    pmax = 10, Hcons = TRUE,
-                    q = NULL, dfcor = FALSE, fixedT = TRUE, ...){
+                    pmax = 10, Hcons = TRUE, q = NULL, dfcor = FALSE, 
+                    fixedT = TRUE, ips.stat = NULL, ...) {
   
   data.name <- paste(deparse(substitute(object)))
 
@@ -586,12 +808,12 @@ purtest <- function(object, data = NULL, index = NULL,
   
   cl <- match.call()
   test <- match.arg(test)
+  ips.stat <- if (is.null(ips.stat)) "Wtbar" else ips.stat # set default for IPS test
   if (is.character(lags)) lags <- match.arg(lags) # if character, select one possible value
   args <- list(test = test, exo = exo, pmax = pmax, lags = lags,
-               dfcor = dfcor, fixedT = fixedT)
-  
+               dfcor = dfcor, fixedT = fixedT, ips.stat = ips.stat)
   n <- length(object) # number of individuals, assumes object is a list
-  
+  sigma2 <- NULL  
   alternative <- "stationarity"
   method <- paste0(purtest.names.test[test], " (ex. var.: ",
                    purtest.names.exo[exo],")")
@@ -644,29 +866,60 @@ purtest <- function(object, data = NULL, index = NULL,
     # compute the Levin-Lin-Chu statistic
     tildeT <- L.levinlin - mean(lags) - 1
     sigmaeps2 <- z$rss / (n * tildeT)
-    rho <- z$coef
+    rho   <- z$coef
     sdrho <- z$se
-    trho <- rho/sdrho
+    trho  <- rho/sdrho
     stat <- (trho - n * tildeT * sbar / sigmaeps2 * sdrho * mymu)/mysig # LLC (2002), formula 12
     names(stat) <- "z" # avoids a concatenated name like z.x1
     pvalue <- pnorm(stat, lower.tail = TRUE) # need lower.tail = TRUE (like ADF one-sided to the left)
     parameter <- NULL
+    sigma2 <- cbind(sigmaST^2, sigmaLT^2)
+    colnames(sigma2) <- c("sigma2ST", "sigma2LT")
   }
   
   if (test == "ips"){
     if (exo == "none") stop("exo = \"none\" is not a valid option for the Im-Pesaran-Shin test")
-    lags <- sapply(idres, function(x) x[["lags"]])
+    if (!is.null(ips.stat) && !any(ips.stat %in% c("Wtbar", "Ztbar", "tbar"))) stop("argument 'ips.stat' must be one of \"Wtbar\", \"Ztbar\", \"tbar\"")
+    
+    lags  <- sapply(idres, function(x) x[["lags"]])
     L.ips <- sapply(idres, function(x) x[["T"]]) - lags - 1
-    adjval <- mapply(function(x, y) adj.ips.value(x, y, exo = exo),
-                     as.list(L.ips), as.list(lags))
-    # get the adjustment parameters for the mean and the variance of the individual t statistics
     trho <- sapply(idres, function(x) x[["trho"]])
     tbar <- mean(trho)
-    Etbar <- mean(adjval[1, ])
-    Vtbar <- mean(adjval[2, ])
-    stat <- c(z = sqrt(n) * (tbar - Etbar) / sqrt(Vtbar)) # (3.13) or (4.10) in IPS (2003)? [Ztbar or Wtbar]
-    pvalue <- pnorm(stat, lower.tail = TRUE) # need lower.tail = TRUE (like ADF one-sided to the left), was until rev. 577: 2*pnorm(abs(stat), lower.tail = FALSE)
     parameter <- NULL
+    adjval <- NULL
+    
+    if (is.null(ips.stat) || ips.stat == "Wtbar") {
+      # calc Wtbar - default
+      adjval <- mapply(function(x, y) adj.ips.wtbar.value(x, y, exo = exo),
+                       as.list(L.ips), as.list(lags))
+      Etbar <- mean(adjval[1, ])
+      Vtbar <- mean(adjval[2, ])
+      stat <- c("Wtbar" = sqrt(n) * (tbar - Etbar) / sqrt(Vtbar)) # (3.13) = (4.10) in IPS (2003) [same generic formula for Ztbar and Wtbar]
+      pvalue <- pnorm(stat, lower.tail = TRUE) # need lower.tail = TRUE (like ADF one-sided to the left), was until rev. 577: 2*pnorm(abs(stat), lower.tail = FALSE)
+    }
+    
+    if (!is.null(ips.stat) && ips.stat == "Ztbar") {
+      # calc Ztbar
+      
+      ## TODO: check lags -> need to be as in Wtbar, i.e. - lags - 1? (lags fed into adjval.ztbar!)
+      experimental_Ztbar <- TRUE
+      if (experimental_Ztbar) warning("still experimental, check lags - likely not correct!")
+      
+      adjval <- adjval.ztbar <- sapply(L.ips, adj.ips.ztbar.value, adj.ips.zbar.time, adj.ips.zbar.means, adj.ips.zbar.vars)
+      Etbar.ztbar <- mean(adjval.ztbar[1, ])
+      Vtbar.ztbar <- mean(adjval.ztbar[2, ])
+      stat <- stat.ztbar <- c("Ztbar" = sqrt(n) * (tbar - Etbar.ztbar) / sqrt(Vtbar.ztbar)) # (3.13) = (4.10) in IPS (2003) [same generic formula for Ztbar and Wtbar]
+      pvalue <- pvalue.ztbar <- pnorm(stat.ztbar, lower.tail = TRUE)
+    }
+    
+    if (!is.null(ips.stat) && ips.stat == "tbar") {
+      # give tbar
+      ## TODO: check lags -> need to be as in Wtbar, i.e. - lags - 1? (lags fed into adjval)
+      stat <- tbar
+      names(stat) <- "tbar"
+      pvalue <- NA # TODO: interpolate / connect to function critval.ips.tbar.value
+      adjval <- NULL
+    }
   }
   
   if (test == "madwu"){
@@ -731,7 +984,8 @@ purtest <- function(object, data = NULL, index = NULL,
                  call      = cl,
                  args      = args,
                  idres     = idres,
-                 adjval    = adjval)
+                 adjval    = adjval,
+                 sigma2    = sigma2)
   class(result) <- "purtest"
   result
 }
@@ -754,10 +1008,16 @@ summary.purtest <- function(object, ...){
   L     <- sapply(object$idres, function(x) x[["T"]])
   rho   <- sapply(object$idres, function(x) x[["rho"]])
   sdrho <- sapply(object$idres, function(x) x[["sdrho"]])
+  trho  <- sapply(object$idres, function(x) x[["trho"]])
   nam <- names(object$idres)
-  trho <- rho / sdrho
   sumidres <- cbind(lags = lags, obs = L - lags - 1, rho = rho, trho = trho)
-  if (object$args$test == "ips") sumidres <- cbind(sumidres, t(object$adjval))
+  if (object$args$test == "ips" && !object$args$ips.stat == "tbar") {
+    sumidres <- cbind(sumidres, t(object$adjval))
+  }
+  if (object$args$test == "levinlin") {
+    sumidres <- cbind(sumidres, object$sigma2)
+  }
+  
   rownames(sumidres) <- nam
   object$sumidres <- sumidres
   class(object) <- c("summary.purtest", "purtest")
@@ -778,8 +1038,12 @@ print.summary.purtest <- function(x, ...){
   else{
     cat("User-provided lags\n")
   }
-  cat(paste("statistic:", round(x$statistic$statistic, 3), "\n"))
-  cat(paste("p-value:",   round(x$statistic$p.value, 3),   "\n"))
+  if (x$args$test == "ips") {
+    cat(paste(paste0("statistic (", x$args$ips.stat,"):"), round(x$statistic$statistic, 3), "\n"))
+  } else {
+    cat(paste("statistic:", round(x$statistic$statistic, 3), "\n"))
+  }
+  cat(paste("p-value:", round(x$statistic$p.value, 3),   "\n"))
   print(x$sumidres, ...)
 }
 

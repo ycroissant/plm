@@ -19,6 +19,7 @@ purtest(
   q = NULL,
   dfcor = FALSE,
   fixedT = TRUE,
+  ips.stat = NULL,
   ...
 )
 
@@ -66,7 +67,7 @@ indicating whether the heteroskedasticity-consistent test of
 \insertCite{HADR:00;textual}{plm} should be computed,}
 
 \item{q}{the bandwidth for the estimation of the long-run variance
-(only relevant for test = "levinlin", the default (`q = NULL``)
+(only relevant for \code{test = "levinlin"}, the default (`q = NULL``)
 gives the value as suggested by the authors as round(3.21 * T^(1/3))),}
 
 \item{dfcor}{logical, indicating whether the standard deviation of
@@ -76,6 +77,10 @@ correction,}
 \item{fixedT}{logical, indicating whether the different ADF
 regressions are to be computed using the same number of
 observations,}
+
+\item{ips.stat}{\code{NULL} or character of length 1 to request a specific
+IPS statistic, one of \code{"Wtbar"} (also default if \code{ips.stat = NULL}),
+\code{"Ztbar"}, \code{"tbar"},}
 
 \item{\dots}{further arguments.}
 }
@@ -117,8 +122,11 @@ as described in \insertCite{MACK:94;textual}{plm}.
 Hadri's test and the test of Levin/Lin/Chu are not applicable to unbalanced
 panels.
 
-The kind of test to be computed can be specified in several ways,
-depending on how the data is handed over to the function:
+For the test statistic tbar of the test of Im/Peseran/Shin (2003)
+(\verb{ips.stat = "tbar}), no p-value is computed.
+
+The exogeneous instruments of the tests (where applicable) can be specified
+in several ways, depending on how the data is handed over to the function:
 \itemize{
 \item For the \code{formula}/\code{data} interface (if \code{data} is a \code{data.frame},
 an additional \code{index} argument should be specified); the formula

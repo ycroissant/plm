@@ -58,6 +58,21 @@ b_lag2 <- purtest(pG$value, test = "ips", exo = "intercept", lags = 2, dfcor = T
 unlist(lapply(b_lag2$idres, function(x) x[["rho"]]))
 unlist(lapply(b_lag2$idres, function(x) x[["trho"]]))
 
+# unbalanced IPS
+pG_unbal2 <- pG[1:190, ]
+b_unbal <- purtest(pG_unbal2$value, test = "ips", exo = "intercept", lags = 0, dfcor = TRUE)
+summary(b_unbal) 
+
+# IPS - Ztbar
+# matches gretl exactly # Z_tbar = -1.12782 [0.1297]; difference to EViews: Adjustment parameters (Etbar, Vtbar):
+summary(b_unbal3 <- purtest(pG_unbal2$value, test = "ips", exo = "intercept", lags = 0, dfcor = TRUE, ips.stat = "Ztbar"))
+
+summary(b_ztbar <- purtest(pG$value, test = "ips", exo = "intercept", lags = 0, dfcor = TRUE, ips.stat = "Ztbar"))
+
+summary(b_lag2_ztbar <- purtest(pG$value, test = "ips", exo = "intercept", lags = 2, dfcor = TRUE, ips.stat = "Ztbar"))
+
+summary(b_lag2_tbar <- purtest(pG$value, test = "ips", exo = "intercept", lags = 2, dfcor = TRUE, ips.stat = "tbar"))
+
 
 
 #### various tests from Choi (2001)

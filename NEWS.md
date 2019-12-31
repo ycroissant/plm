@@ -1,9 +1,16 @@
 # plm 2.2-1
-* purtest: tests now support unbalanced panel data, where applicable.
+* purtest:
+   * tests now support unbalanced panel data, where applicable.
+   * gained argument 'ips.stat' to select statistic for IPS test,
+     default is "Wtbar" (as before), added "Ztbar" and "tbar".
+   * purtest.summary(.print): for Levin/Lin/Chu test, contains short-run and
+     long-run variance.
+* doc Grunfeld data: URL for overview of various Grunfeld data sets updated to
+  https://eeecon.uibk.ac.at/~zeileis/grunfeld/. 
 
 # plm 2.2-0
 * methods for plm.list where not exported, now exported.
-* lagt is changed so that it can deal with time factors for which
+* lagt is changed so that it can deal with time factors which
   cannot be coerced to numeric (ex "1950-54", "1955-59", ...).
 * cortab was not exported, now exported.
 * pvcm failed for random effect models when there are some NA coefs for
