@@ -55,6 +55,7 @@ ranef(tw)                   # individual random effects
 ranef(tw, effect = "time")  # time random effects
 
 
+
 }
 \seealso{
 \code{\link[=fixef]{fixef()}} to extract the fixed effects from a fixed

@@ -205,11 +205,7 @@ print.summary.fixef <- function(x, digits = max(3, getOption("digits") - 2), wid
 
 fixef.pggls <- fixef.plm
 
-# TODO:
-#      Check if the same procedure can be applied to
-#       * unbalanced two-way case (for now: implemented the same way, but not entirely sure)
-#       * random IV models
-#       * nested random effect models
+
 
 
 
@@ -262,7 +258,13 @@ fixef.pggls <- fixef.plm
 #' ranef(tw)                   # individual random effects
 #' ranef(tw, effect = "time")  # time random effects
 #' 
-#' 
+#'
+#'
+# TODO:
+#      Check if the same procedure can be applied to
+#       * unbalanced two-way case (for now: implemented the same way, but not entirely sure)
+#       * random IV models
+#       * nested random effect models
 ranef.plm <- function(object, effect = NULL, ...) {
   model <- describe(object, "model")
   obj.effect <- describe(object, "effect")
@@ -383,8 +385,9 @@ ranef.plm <- function(object, effect = NULL, ...) {
 #' @keywords attribute
 #' @examples
 #' 
-#' # TODO: two-way unbalanced case, once fixef() produces results that
-#' # are compatible estimate within model (unbalanced data)
+# TODO: two-way unbalanced case, once fixef() produces results that
+# are compatible estimate within model (unbalanced data)
+#
 #' data("Hedonic", package = "plm")
 #' mod_fe <- plm(mv ~ age + crim, data = Hedonic, index = "townid")
 #' overallint <- within_intercept(mod_fe)

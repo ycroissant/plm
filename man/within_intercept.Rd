@@ -55,8 +55,6 @@ the within model is different from the within model itself.
 }
 \examples{
 
-# TODO: two-way unbalanced case, once fixef() produces results that
-# are compatible estimate within model (unbalanced data)
 data("Hedonic", package = "plm")
 mod_fe <- plm(mv ~ age + crim, data = Hedonic, index = "townid")
 overallint <- within_intercept(mod_fe)
