@@ -266,8 +266,6 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
 
   
   ## CIPS statistic as an average of the t-stats on the coefficient of 'le'
-    # tstats <- rep(NA, n)
-    # for(i in 1:n)  tstats[i] <- coef(summary(tmods[[i]]))["le",3]
   tstats <- vapply(tmods, function(mod) gettvalue(mod, "le"), FUN.VALUE = 0.0)
   
   if(truncated) {
@@ -518,15 +516,15 @@ for(i in 1:3) {
     ## on N dim
     if(n %in% rnam) {
         ## if n is exactly one of the tabulated values:
-        tl <- cvals[which(rnam==n), tintl, i]
-        th <- cvals[which(rnam==n), tinth, i]
+        tl <- cvals[which(rnam == n), tintl, i]
+        th <- cvals[which(rnam == n), tinth, i]
 
     } else {
         ## interpolate interval of interest to get cvals(n,T.)
         tl <- approx(nintv, cvals[nintl:ninth, tintl, i],
-                     n=max(nintv)-min(nintv))$y[n-min(nintv)]
+                     n = max(nintv) - min(nintv))$y[n - min(nintv)]
         th <- approx(nintv, cvals[nintl:ninth, tinth, i],
-                     n=max(nintv)-min(nintv))$y[n-min(nintv)]
+                     n = max(nintv) - min(nintv))$y[n - min(nintv)]
     }
 
     ## on T. dim
@@ -534,21 +532,21 @@ for(i in 1:3) {
         ## if T. is exactly one of the tabulated values:
         if(n %in% rnam) {
             ## ... and n too:
-            cv[i] <- cvals[which(rnam==n), which(cnam==T.), i]
+            cv[i] <- cvals[which(rnam == n), which(cnam == T.), i]
         } else {
             ## or if n is not, interpolate n on T.'s exact row:
-            cv[i] <- approx(nintv, cvals[nintl:ninth, which(cnam==T.), i],
-                            n=max(nintv)-min(nintv))$y[n-min(nintv)]
+            cv[i] <- approx(nintv, cvals[nintl:ninth, which(cnam == T.), i],
+                            n = max(nintv) - min(nintv))$y[n - min(nintv)]
         }
     } else {
         ## idem: interpolate T.-interval to get critical value
         cv[i] <- approx(tintv, c(tl, th),
-                        n=max(tintv)-min(tintv))$y[T.-min(tintv)]
+                        n = max(tintv) - min(tintv))$y[T. - min(tintv)]
     }
 }
 
 ## approximate p-values' sequence
-cvprox <- approx(cv, c(0.01,0.05,0.1), n=200)
+cvprox <- approx(cv, c(0.01, 0.05, 0.1), n = 200)
 cvseq <- cvprox$x
 pvseq <- cvprox$y
 
@@ -560,7 +558,7 @@ if(stat < min(cv)) {
         } else {
             if(stat %in% cv) {
                 ## if exactly one of the tabulated values
-                pval <- c(0.01, 0.05, 0.10)[which(cv==stat)]
+                pval <- c(0.01, 0.05, 0.10)[which(cv == stat)]
             } else {
                 ## find interval where true p-value lies and
                 ## set p-value as the mean of bounds
