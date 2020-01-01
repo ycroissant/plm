@@ -5,6 +5,7 @@
      default is "Wtbar" (as before), added "Ztbar" and "tbar".
    * purtest.summary(.print): for Levin/Lin/Chu test, contains short-run and
      long-run variance.
+* print.fixef: respects / forwards arguments supplied.
 * doc Grunfeld data: URL for overview of various Grunfeld data sets updated to
   https://eeecon.uibk.ac.at/~zeileis/grunfeld/. 
 
