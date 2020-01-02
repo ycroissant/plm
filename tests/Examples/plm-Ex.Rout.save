@@ -12258,7 +12258,7 @@ gamma    nu
 	Maddala-Wu Unit-Root Test (ex. var.: Individual Intercepts)
 
 data:  y
-chisq = 14.719, df = 20, p-value = 0.7922
+chisq = 14.719, df = 20, p-value = 0.7923
 alternative hypothesis: stationarity
 
 > 
@@ -12268,7 +12268,7 @@ alternative hypothesis: stationarity
 	Maddala-Wu Unit-Root Test (ex. var.: Individual Intercepts)
 
 data:  inv ~ 1
-chisq = 14.719, df = 20, p-value = 0.7922
+chisq = 14.719, df = 20, p-value = 0.7923
 alternative hypothesis: stationarity
 
 > 
@@ -13670,7 +13670,7 @@ attr(,"se")
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  9.27 0.51 9.85 NA NA 
+Time elapsed:  10.06 0.72 10.85 NA NA 
 > grDevices::dev.off()
 null device 
           1 

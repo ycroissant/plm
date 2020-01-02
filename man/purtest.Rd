@@ -85,11 +85,12 @@ IPS statistic, one of \code{"Wtbar"} (also default if \code{ips.stat = NULL}),
 \item{\dots}{further arguments.}
 }
 \value{
-An object of class \code{"purtest"}: a list with the elements
+For purtest: An object of class \code{"purtest"}: a list with the elements
 \code{"statistic"} (a \code{"htest"} object), \code{"call"}, \code{"args"},
 \code{"idres"} (containing results from the individual regressions),
 and \code{"adjval"} (containing the simulated means and variances
-needed to compute the statistic).
+needed to compute the statistic), \code{"sigma2"} short-run and long-run
+variance (for \code{"test = levinlin"}, otherwise NULL).
 }
 \description{
 \code{purtest} implements several testing procedures that have been proposed
@@ -117,13 +118,15 @@ ADF regressions per individual are available:
 }
 
 The individual p-values for the Fisher-type tests are approximated
-as described in \insertCite{MACK:94;textual}{plm}.
-
-Hadri's test and the test of Levin/Lin/Chu are not applicable to unbalanced
-panels.
+as described in \insertCite{MACK:96;textual}{plm} if the package 'urca'
+(\insertCite{PFAFF:08;textual}{plm}) is available, otherwise as described in
+\insertCite{MACK:94;textual}{plm}.
 
 For the test statistic tbar of the test of Im/Peseran/Shin (2003)
 (\verb{ips.stat = "tbar}), no p-value is computed.
+
+Hadri's test and the test of Levin/Lin/Chu are not applicable to unbalanced
+panels.
 
 The exogeneous instruments of the tests (where applicable) can be specified
 in several ways, depending on how the data is handed over to the function:

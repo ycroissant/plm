@@ -1,24 +1,74 @@
-padf <- function(x, exo = c("none", "intercept", "trend")){
- # p-value approx. by MacKinnon (1994), used in some panel unit root tests
+padf <- function(x, exo = c("none", "intercept", "trend"), p.approx = NULL){
+ # p-value approximation for tau distribution of (augmented) Dickey-Fuller test
+ # as used in some panel unit root tests in purtest().
   
-  # values from MacKinnon (1994), table 3, 4
-      small <- matrix(c(0.6344, 1.2378, 3.2496,
-                        2.1659, 1.4412, 3.8269,
-                        3.2512, 1.6047, 4.9588),
-                      nrow = 3, byrow = TRUE)
-      small <- t(t(small) / c(1, 1, 100))
-      large <- matrix(c(0.4797, 9.3557, -0.6999,  3.3066,
-                        1.7339, 9.3202, -1.2745, -1.0368,
-                        2.5261, 6.1654, -3.7956, -6.0285),
-                      nrow = 3, byrow = TRUE)
-      large <- t(t(large) / c(1, 10, 10, 100))
-      limit <- c(-1.04, -1.61, -2.89)
-      rownames(small) <- rownames(large) <- names(limit) <- c("none", "intercept", "trend")
-  
+ # p-values approximation is performed by the method of MacKinnon (1994) or
+ # MacKinnon (1996), the latter yielding better approximated p-values but
+ # requires package 'urca'.
+ # Default is NULL: check for availability of 'urca' and, if available, perform
+ # MacKinnon (1996); fall back to MacKinnon (1994) if 'urca' is not available.
+ # User can demand a specific method by setting the argument 'p.approx' to either
+ # "MacKinnon1994" or "MacKinnon1996".
+
   exo <- match.arg(exo)
-  psmall <- apply(small[exo, ] * rbind(1, x, x ^ 2), 2, sum)
-  plarge <- apply(large[exo, ] * rbind(1, x, x ^ 2, x ^ 3), 2, sum)
-  as.numeric(pnorm(psmall * (x <= limit[exo]) + plarge * (x > limit[exo])))
+  
+  if (!is.null(p.approx) && !p.approx %in% c("MacKinnon1994", "MacKinnon1996"))
+    stop(paste0("unknown 'p.approx' argument: ", p.approx))
+  
+  # Check if package 'urca' is available on local machine. We placed 'urca' 
+  # in 'Suggests' rather than 'Imports' so that it is not an absolutely 
+  # required depedency.)
+  ## Procedure for pkg check for pkg in 'Suggests' as recommended in 
+  ## Wickham, R packages (http://r-pkgs.had.co.nz/description.html).
+  urca <- if (!requireNamespace("urca", quietly = TRUE)) FALSE else TRUE
+  
+  # default: if no p.approx specified by input (NULL),
+  # use MacKinnon (1996) if 'urca' is available, else MacKinnon (1994)
+  p.approx <- if (is.null(p.approx)) { if (urca)  "MacKinnon1996" else "MacKinnon1994" } else p.approx
+  
+  if (!is.null(p.approx) && p.approx == "MacKinnon1996" && !urca) {
+    # catch case when user demands MacKinnon (1996) per argument but 'urca' is unavailable
+    warning("method MacKinnon (1996) requested via argument 'p.approx' but requires non-installed package 'urca'; falling back to MacKinnon (1994)")
+    p.approx <- "MacKinnon1994"
+  }
+  
+  
+  
+  if (p.approx == "MacKinnon1996") {
+    # translate exo argument to what urca::punitroot expects
+    punitroot.exo <- switch (exo,
+                             "none" = "nc",
+                             "intercept" = "c",
+                             "trend" = "ct")
+
+    res <- urca::punitroot(x, N = Inf, trend = punitroot.exo) # return asymptotic value
+  }
+  
+  if (p.approx == "MacKinnon1994") {
+    # values from MacKinnon (1994), table 3, 4
+    small <- matrix(c(0.6344, 1.2378, 3.2496,
+                      2.1659, 1.4412, 3.8269,
+                      3.2512, 1.6047, 4.9588),
+                    nrow = 3, byrow = TRUE)
+    small <- t(t(small) / c(1, 1, 100))
+    large <- matrix(c(0.4797, 9.3557, -0.6999,  3.3066,
+                      1.7339, 9.3202, -1.2745, -1.0368,
+                      2.5261, 6.1654, -3.7956, -6.0285),
+                    nrow = 3, byrow = TRUE)
+    large <- t(t(large) / c(1, 10, 10, 100))
+    limit <- c(-1.04, -1.61, -2.89)
+    rownames(small) <- rownames(large) <- names(limit) <- c("none", "intercept", "trend")
+    
+    res <- if (x <= limit[exo]) {
+      psmall <- as.numeric(apply(small[exo, ] * rbind(1, x, x ^ 2), 2, sum))
+      pnorm(psmall)
+    } else {
+      plarge <- as.numeric(apply(large[exo, ] * rbind(1, x, x ^ 2, x ^ 3), 2, sum))
+      pnorm(plarge)
+    }
+  }
+  attr(res, "p.approx") <- p.approx
+  return(res)
 }
 
 
@@ -650,14 +700,16 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
 #' - `"logit"` is the logit test by \insertCite{CHOI:01}{plm}.
 #'
 #' The individual p-values for the Fisher-type tests are approximated
-#' as described in \insertCite{MACK:94;textual}{plm}.
-#' 
-#' Hadri's test and the test of Levin/Lin/Chu are not applicable to unbalanced
-#' panels.
+#' as described in \insertCite{MACK:96;textual}{plm} if the package 'urca' 
+#' (\insertCite{PFAFF:08;textual}{plm}) is available, otherwise as described in
+#' \insertCite{MACK:94;textual}{plm}.
 #' 
 # TODO: once code changed, change comment here
 #' For the test statistic tbar of the test of Im/Peseran/Shin (2003)
 #' (`ips.stat = "tbar`), no p-value is computed.
+#'
+#' Hadri's test and the test of Levin/Lin/Chu are not applicable to unbalanced
+#' panels.
 #' 
 #' The exogeneous instruments of the tests (where applicable) can be specified
 #' in several ways, depending on how the data is handed over to the function:
@@ -718,11 +770,12 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
 #'     IPS statistic, one of `"Wtbar"` (also default if `ips.stat = NULL`),
 #'     `"Ztbar"`, `"tbar"`,
 #' @param \dots further arguments.
-#' @return An object of class `"purtest"`: a list with the elements
+#' @return For purtest: An object of class `"purtest"`: a list with the elements
 #'     `"statistic"` (a `"htest"` object), `"call"`, `"args"`,
 #'     `"idres"` (containing results from the individual regressions),
 #'     and `"adjval"` (containing the simulated means and variances
-#'     needed to compute the statistic).
+#'     needed to compute the statistic), `"sigma2"` short-run and long-run
+#'     variance (for `"test = levinlin"`, otherwise NULL).
 #' @export
 #' @author Yves Croissant and for "Pm", "invnormal", and "logit" Kevin
 #'     Tappe
@@ -992,7 +1045,6 @@ purtest <- function(object, data = NULL, index = NULL,
                  args      = args,
                  idres     = idres,
                  adjval    = adjval,
-                 p.trho    = pvalues.trho,
                  sigma2    = sigma2)
   class(result) <- "purtest"
   result

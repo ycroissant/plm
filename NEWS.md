@@ -3,12 +3,20 @@
    * tests now support unbalanced panel data, where applicable.
    * gained argument 'ips.stat' to select statistic for IPS test,
      default is "Wtbar" (as before), added "Ztbar" and "tbar".
-   * return value contains p-values of individual ADF-regressions (p.trho).
+   * return value's element idres contains p-values of individual
+     ADF-regressions (p.trho).
    * purtest.summary(.print): for Levin/Lin/Chu test, summary contains
      short-run and long-run variance; p.trho printed for all tests (if applicable).
-* print.fixef: respects / forwards arguments supplied to generic print method.
-* Grunfeld data doc: URL for overview of various Grunfeld data sets updated to
-  https://eeecon.uibk.ac.at/~zeileis/grunfeld/. 
+   * if package 'urca' is available, p-values used in individual (augmented)
+     Dicker-Fuller regressionsare (for applicable tests) are based on
+     MacKinnon (1996) instead of MacKinnon (1994) yielding better p-value
+     approximations for tau distribution.
+     
+* Minors:
+   * print.fixef: respects / forwards arguments supplied to generic print method.
+   * DESCRIPTION: package 'urca' added to "Suggests".
+   * Grunfeld data doc: URL for overview of various Grunfeld data sets updated to
+     https://eeecon.uibk.ac.at/~zeileis/grunfeld/. 
 
 # plm 2.2-0
 * methods for plm.list where not exported, now exported.
