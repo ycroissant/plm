@@ -32,8 +32,6 @@ padf <- function(x, exo = c("none", "intercept", "trend"), p.approx = NULL){
     p.approx <- "MacKinnon1994"
   }
   
-  
-  
   if (p.approx == "MacKinnon1996") {
     # translate exo argument to what urca::punitroot expects
     punitroot.exo <- switch (exo,

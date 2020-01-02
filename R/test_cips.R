@@ -41,7 +41,8 @@
 #' @param model one of `"cmg"`, `"mg"`, `"dmg"`,
 #' @param truncated logical specifying whether to calculate the
 #'     truncated version of the test,
-#' @param \dots further arguments passed to `critvals`.
+#' @param \dots further arguments passed to `critvals.cips`
+#' (non-exported function).
 #' @return An object of class `"htest"`.
 #' @author Giovanni Millo
 #' @export
@@ -290,7 +291,8 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
   ## here allow for '...' to pass 'na.rm=TRUE' in case (but see what happens
   ## if unbalanced!
   cipstat <- mean(tstats, ...) #sum(tstats)/n
-  pval <- critvals(stat=cipstat, n=n, T.=T., type=type, truncated=truncated)
+  pval <- critvals.cips(stat = cipstat, n= n, T. = T.,
+                        type = type, truncated = truncated)
 
   ## if pval out of critical values' then set at boundary and issue
   ## a warning
@@ -320,255 +322,255 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
 
 ## separate function computing critical values:
 
-critvals <- function(stat, n, T., type=c("trend", "drift", "none"),
+critvals.cips <- function(stat, n, T., type=c("trend", "drift", "none"),
                      truncated = FALSE) {
-    ## auxiliary function for cipstest()
-    ## extracts --or calculates by interpolation-- p-values for the
-    ## (averaged) CIPS statistic depending on whether n and T,
-    ## given the critical values of average of individual cross-sectionally
-    ## augmented Dickey-Fuller distribution
-
-
-## Non truncated version
-rnam <- c(10, 15, 20, 30, 50, 70, 100, 200)
-cnam <- rnam
-znam <- c(1, 5, 10)
-
-## In all following tables N in rows, T in cols unlike Pesaran (2007)
-
-## No intercept, no trend (Case I); Table II(a) Pesaran (2007), p. 279
-
-## 1% critical values
-nvals1 <- cbind(
-c(-2.16, -2.02, -1.93, -1.85, -1.78, -1.74, -1.71, -1.70),
-c(-2.03, -1.91, -1.84, -1.77, -1.71, -1.68, -1.66, -1.63),
-c(-2.00, -1.89, -1.83, -1.76, -1.70, -1.67, -1.65, -1.62),
-c(-1.98, -1.87, -1.80, -1.74, -1.69, -1.67, -1.64, -1.61),
-c(-1.97, -1.86, -1.80, -1.74, -1.69, -1.66, -1.63, -1.61),
-c(-1.95, -1.86, -1.80, -1.74, -1.68, -1.66, -1.63, -1.61),
-c(-1.94, -1.85, -1.79, -1.74, -1.68, -1.65, -1.63, -1.61),
-c(-1.95, -1.85, -1.79, -1.73, -1.68, -1.65, -1.63, -1.61)
-)
-
-## 5% critical values
-nvals5 <- cbind(
-c(-1.80, -1.71, -1.67, -1.61, -1.58, -1.56, -1.54, -1.53),
-c(-1.74, -1.67, -1.63, -1.58, -1.55, -1.53, -1.52, -1.51),
-c(-1.72, -1.65, -1.62, -1.58, -1.54, -1.53, -1.52, -1.50),
-c(-1.72, -1.65, -1.61, -1.57, -1.55, -1.54, -1.52, -1.50),
-c(-1.72, -1.64, -1.61, -1.57, -1.54, -1.53, -1.52, -1.51),
-c(-1.71, -1.65, -1.61, -1.57, -1.54, -1.53, -1.52, -1.51),
-c(-1.71, -1.64, -1.61, -1.57, -1.54, -1.53, -1.52, -1.51),
-c(-1.71, -1.65, -1.61, -1.57, -1.54, -1.53, -1.52, -1.51)
-)
-
-## 10% critical values
-nvals10 <- cbind(
-c(-1.61, -1.56, -1.52, -1.49, -1.46, -1.45, -1.44, -1.43),
-c(-1.58, -1.53, -1.50, -1.48, -1.45, -1.44, -1.44, -1.43),
-c(-1.58, -1.52, -1.50, -1.47, -1.45, -1.45, -1.44, -1.43),
-c(-1.57, -1.53, -1.50, -1.47, -1.46, -1.45, -1.44, -1.43),
-c(-1.58, -1.52, -1.50, -1.47, -1.45, -1.45, -1.44, -1.43),
-c(-1.57, -1.52, -1.50, -1.47, -1.46, -1.45, -1.44, -1.43),
-c(-1.56, -1.52, -1.50, -1.48, -1.46, -1.45, -1.44, -1.43),
-c(-1.57, -1.53, -1.50, -1.47, -1.45, -1.45, -1.44, -1.43)
-)
-
-## make critical values' cube
-nvals <- array(dim=c(8,8,3))
-nvals[,,1] <- nvals1
-nvals[,,2] <- nvals5
-nvals[,,3] <- nvals10
-dimnames(nvals) <- list(rnam, cnam, znam)
-
-## Intercept only (Case II), Table II(b) in Pesaran (2007), p. 280
-
-## 1% critical values
-dvals1 <- cbind(
-c(-2.97, -2.76, -2.64, -2.51, -2.41, -2.37, -2.33, -2.28),
-c(-2.66, -2.52, -2.45, -2.34, -2.26, -2.23, -2.19, -2.16),
-c(-2.60, -2.47, -2.40, -2.32, -2.25, -2.20, -2.18, -2.14),
-c(-2.57, -2.45, -2.38, -2.30, -2.23, -2.19, -2.17, -2.14),
-c(-2.55, -2.44, -2.36, -2.30, -2.23, -2.20, -2.17, -2.14),
-c(-2.54, -2.43, -2.36, -2.30, -2.23, -2.20, -2.17, -2.14),
-c(-2.53, -2.42, -2.36, -2.30, -2.23, -2.20, -2.18, -2.15),
-c(-2.53, -2.43, -2.36, -2.30, -2.23, -2.21, -2.18, -2.15)
-)
-
-## 5% critical values
-dvals5 <- cbind(
-c(-2.52, -2.40, -2.33, -2.25, -2.19, -2.16, -2.14, -2.10),
-c(-2.37, -2.28, -2.22, -2.17, -2.11, -2.09, -2.07, -2.04),
-c(-2.34, -2.26, -2.21, -2.15, -2.11, -2.08, -2.07, -2.04),
-c(-2.33, -2.25, -2.20, -2.15, -2.11, -2.08, -2.07, -2.05),
-c(-2.33, -2.25, -2.20, -2.16, -2.11, -2.10, -2.08, -2.06),
-c(-2.33, -2.25, -2.20, -2.15, -2.12, -2.10, -2.08, -2.06),
-c(-2.32, -2.25, -2.20, -2.16, -2.12, -2.10, -2.08, -2.07),
-c(-2.32, -2.25, -2.20, -2.16, -2.12, -2.10, -2.08, -2.07)
-)
-
-## 10% critical values
-dvals10 <- cbind(
-c(-2.31, -2.22, -2.18, -2.12, -2.07, -2.05, -2.03, -2.01),
-c(-2.22, -2.16, -2.11, -2.07, -2.03, -2.01, -2.00, -1.98),
-c(-2.21, -2.14, -2.10, -2.07, -2.03, -2.01, -2.00, -1.99),
-c(-2.21, -2.14, -2.11, -2.07, -2.04, -2.02, -2.01, -2.00),
-c(-2.21, -2.14, -2.11, -2.08, -2.05, -2.03, -2.02, -2.01),
-c(-2.21, -2.15, -2.11, -2.08, -2.05, -2.03, -2.02, -2.01),
-c(-2.21, -2.15, -2.11, -2.08, -2.05, -2.03, -2.03, -2.02),
-c(-2.21, -2.15, -2.11, -2.08, -2.05, -2.04, -2.03, -2.02)
-)
-
-## make critical values' cube
-dvals <- array(dim=c(8,8,3))
-dvals[,,1] <- dvals1
-dvals[,,2] <- dvals5
-dvals[,,3] <- dvals10
-dimnames(dvals) <- list(rnam, cnam, znam)
-
-## Intercept and trend (Case III), Table II(c) in Pesaran (2007), p. 281
-
-## 1% critical values
-tvals1 <- cbind(
-c(-3.88, -3.61, -3.46, -3.30, -3.15, -3.10, -3.05, -2.98),
-c(-3.24, -3.09, -3.00, -2.89, -2.81, -2.77, -2.74, -2.71),
-c(-3.15, -3.01, -2.92, -2.83, -2.76, -2.72, -2.70, -2.65),
-c(-3.10, -2.96, -2.88, -2.81, -2.73, -2.69, -2.66, -2.63),
-c(-3.06, -2.93, -2.85, -2.78, -2.72, -2.68, -2.65, -2.62),
-c(-3.04, -2.93, -2.85, -2.78, -2.71, -2.68, -2.65, -2.62),
-c(-3.03, -2.92, -2.85, -2.77, -2.71, -2.68, -2.65, -2.62),
-c(-3.03, -2.91, -2.85, -2.77, -2.71, -2.67, -2.65, -2.62)
-)
-
-## 5% critical values
-tvals5 <- cbind(
-c(-3.27, -3.11, -3.02, -2.94, -2.86, -2.82, -2.79, -2.75),
-c(-2.93, -2.83, -2.77, -2.70, -2.64, -2.62, -2.60, -2.57),
-c(-2.88, -2.78, -2.73, -2.67, -2.62, -2.59, -2.57, -2.55),
-c(-2.86, -2.76, -2.72, -2.66, -2.61, -2.58, -2.56, -2.54),
-c(-2.84, -2.76, -2.71, -2.65, -2.60, -2.58, -2.56, -2.54),
-c(-2.83, -2.76, -2.70, -2.65, -2.61, -2.58, -2.57, -2.54),
-c(-2.83, -2.75, -2.70, -2.65, -2.61, -2.59, -2.56, -2.55),
-c(-2.83, -2.75, -2.70, -2.65, -2.61, -2.59, -2.57, -2.55)
-)
-
-## 10% critical values
-tvals10 <- cbind(
-c(-2.98, -2.89, -2.82, -2.76, -2.71, -2.68, -2.66, -2.63),
-c(-2.76, -2.69, -2.65, -2.60, -2.56, -2.54, -2.52, -2.50),
-c(-2.74, -2.67, -2.63, -2.58, -2.54, -2.53, -2.51, -2.49),
-c(-2.73, -2.66, -2.63, -2.58, -2.54, -2.52, -2.51, -2.49),
-c(-2.73, -2.66, -2.63, -2.58, -2.55, -2.53, -2.51, -2.50),
-c(-2.72, -2.66, -2.62, -2.58, -2.55, -2.53, -2.52, -2.50),
-c(-2.72, -2.66, -2.63, -2.59, -2.55, -2.53, -2.52, -2.50),
-c(-2.73, -2.66, -2.63, -2.59, -2.55, -2.54, -2.52, -2.51)
-)
-
-## make critical values' cube
-tvals <- array(dim=c(8,8,3))
-tvals[,,1] <- tvals1
-tvals[,,2] <- tvals5
-tvals[,,3] <- tvals10
-dimnames(tvals) <- list(rnam, cnam, znam)
-
-## if truncated substitute values according to Tables II(a), II(b), II(c)
-## in Pesaran (2007)
-
-if(truncated) {
-  # Case III (Intercept and trend)
+  ## auxiliary function for cipstest()
+  ## extracts --or calculates by interpolation-- p-values for the
+  ## (averaged) CIPS statistic depending on whether n and T,
+  ## given the critical values of average of individual cross-sectionally
+  ## augmented Dickey-Fuller distribution
+  
+  
+  ## Non truncated version
+  rnam <- c(10, 15, 20, 30, 50, 70, 100, 200)
+  cnam <- rnam
+  znam <- c(1, 5, 10)
+  
+  ## In all following tables N in rows, T in cols unlike Pesaran (2007)
+  
+  ## No intercept, no trend (Case I); Table II(a) Pesaran (2007), p. 279
+  
+  ## 1% critical values
+  nvals1 <- cbind(
+    c(-2.16, -2.02, -1.93, -1.85, -1.78, -1.74, -1.71, -1.70),
+    c(-2.03, -1.91, -1.84, -1.77, -1.71, -1.68, -1.66, -1.63),
+    c(-2.00, -1.89, -1.83, -1.76, -1.70, -1.67, -1.65, -1.62),
+    c(-1.98, -1.87, -1.80, -1.74, -1.69, -1.67, -1.64, -1.61),
+    c(-1.97, -1.86, -1.80, -1.74, -1.69, -1.66, -1.63, -1.61),
+    c(-1.95, -1.86, -1.80, -1.74, -1.68, -1.66, -1.63, -1.61),
+    c(-1.94, -1.85, -1.79, -1.74, -1.68, -1.65, -1.63, -1.61),
+    c(-1.95, -1.85, -1.79, -1.73, -1.68, -1.65, -1.63, -1.61)
+  )
+  
+  ## 5% critical values
+  nvals5 <- cbind(
+    c(-1.80, -1.71, -1.67, -1.61, -1.58, -1.56, -1.54, -1.53),
+    c(-1.74, -1.67, -1.63, -1.58, -1.55, -1.53, -1.52, -1.51),
+    c(-1.72, -1.65, -1.62, -1.58, -1.54, -1.53, -1.52, -1.50),
+    c(-1.72, -1.65, -1.61, -1.57, -1.55, -1.54, -1.52, -1.50),
+    c(-1.72, -1.64, -1.61, -1.57, -1.54, -1.53, -1.52, -1.51),
+    c(-1.71, -1.65, -1.61, -1.57, -1.54, -1.53, -1.52, -1.51),
+    c(-1.71, -1.64, -1.61, -1.57, -1.54, -1.53, -1.52, -1.51),
+    c(-1.71, -1.65, -1.61, -1.57, -1.54, -1.53, -1.52, -1.51)
+  )
+  
+  ## 10% critical values
+  nvals10 <- cbind(
+    c(-1.61, -1.56, -1.52, -1.49, -1.46, -1.45, -1.44, -1.43),
+    c(-1.58, -1.53, -1.50, -1.48, -1.45, -1.44, -1.44, -1.43),
+    c(-1.58, -1.52, -1.50, -1.47, -1.45, -1.45, -1.44, -1.43),
+    c(-1.57, -1.53, -1.50, -1.47, -1.46, -1.45, -1.44, -1.43),
+    c(-1.58, -1.52, -1.50, -1.47, -1.45, -1.45, -1.44, -1.43),
+    c(-1.57, -1.52, -1.50, -1.47, -1.46, -1.45, -1.44, -1.43),
+    c(-1.56, -1.52, -1.50, -1.48, -1.46, -1.45, -1.44, -1.43),
+    c(-1.57, -1.53, -1.50, -1.47, -1.45, -1.45, -1.44, -1.43)
+  )
+  
+  ## make critical values' cube
+  nvals <- array(dim=c(8,8,3))
+  nvals[,,1] <- nvals1
+  nvals[,,2] <- nvals5
+  nvals[,,3] <- nvals10
+  dimnames(nvals) <- list(rnam, cnam, znam)
+  
+  ## Intercept only (Case II), Table II(b) in Pesaran (2007), p. 280
+  
+  ## 1% critical values
+  dvals1 <- cbind(
+    c(-2.97, -2.76, -2.64, -2.51, -2.41, -2.37, -2.33, -2.28),
+    c(-2.66, -2.52, -2.45, -2.34, -2.26, -2.23, -2.19, -2.16),
+    c(-2.60, -2.47, -2.40, -2.32, -2.25, -2.20, -2.18, -2.14),
+    c(-2.57, -2.45, -2.38, -2.30, -2.23, -2.19, -2.17, -2.14),
+    c(-2.55, -2.44, -2.36, -2.30, -2.23, -2.20, -2.17, -2.14),
+    c(-2.54, -2.43, -2.36, -2.30, -2.23, -2.20, -2.17, -2.14),
+    c(-2.53, -2.42, -2.36, -2.30, -2.23, -2.20, -2.18, -2.15),
+    c(-2.53, -2.43, -2.36, -2.30, -2.23, -2.21, -2.18, -2.15)
+  )
+  
+  ## 5% critical values
+  dvals5 <- cbind(
+    c(-2.52, -2.40, -2.33, -2.25, -2.19, -2.16, -2.14, -2.10),
+    c(-2.37, -2.28, -2.22, -2.17, -2.11, -2.09, -2.07, -2.04),
+    c(-2.34, -2.26, -2.21, -2.15, -2.11, -2.08, -2.07, -2.04),
+    c(-2.33, -2.25, -2.20, -2.15, -2.11, -2.08, -2.07, -2.05),
+    c(-2.33, -2.25, -2.20, -2.16, -2.11, -2.10, -2.08, -2.06),
+    c(-2.33, -2.25, -2.20, -2.15, -2.12, -2.10, -2.08, -2.06),
+    c(-2.32, -2.25, -2.20, -2.16, -2.12, -2.10, -2.08, -2.07),
+    c(-2.32, -2.25, -2.20, -2.16, -2.12, -2.10, -2.08, -2.07)
+  )
+  
+  ## 10% critical values
+  dvals10 <- cbind(
+    c(-2.31, -2.22, -2.18, -2.12, -2.07, -2.05, -2.03, -2.01),
+    c(-2.22, -2.16, -2.11, -2.07, -2.03, -2.01, -2.00, -1.98),
+    c(-2.21, -2.14, -2.10, -2.07, -2.03, -2.01, -2.00, -1.99),
+    c(-2.21, -2.14, -2.11, -2.07, -2.04, -2.02, -2.01, -2.00),
+    c(-2.21, -2.14, -2.11, -2.08, -2.05, -2.03, -2.02, -2.01),
+    c(-2.21, -2.15, -2.11, -2.08, -2.05, -2.03, -2.02, -2.01),
+    c(-2.21, -2.15, -2.11, -2.08, -2.05, -2.03, -2.03, -2.02),
+    c(-2.21, -2.15, -2.11, -2.08, -2.05, -2.04, -2.03, -2.02)
+  )
+  
+  ## make critical values' cube
+  dvals <- array(dim=c(8,8,3))
+  dvals[,,1] <- dvals1
+  dvals[,,2] <- dvals5
+  dvals[,,3] <- dvals10
+  dimnames(dvals) <- list(rnam, cnam, znam)
+  
+  ## Intercept and trend (Case III), Table II(c) in Pesaran (2007), p. 281
+  
+  ## 1% critical values
+  tvals1 <- cbind(
+    c(-3.88, -3.61, -3.46, -3.30, -3.15, -3.10, -3.05, -2.98),
+    c(-3.24, -3.09, -3.00, -2.89, -2.81, -2.77, -2.74, -2.71),
+    c(-3.15, -3.01, -2.92, -2.83, -2.76, -2.72, -2.70, -2.65),
+    c(-3.10, -2.96, -2.88, -2.81, -2.73, -2.69, -2.66, -2.63),
+    c(-3.06, -2.93, -2.85, -2.78, -2.72, -2.68, -2.65, -2.62),
+    c(-3.04, -2.93, -2.85, -2.78, -2.71, -2.68, -2.65, -2.62),
+    c(-3.03, -2.92, -2.85, -2.77, -2.71, -2.68, -2.65, -2.62),
+    c(-3.03, -2.91, -2.85, -2.77, -2.71, -2.67, -2.65, -2.62)
+  )
+  
+  ## 5% critical values
+  tvals5 <- cbind(
+    c(-3.27, -3.11, -3.02, -2.94, -2.86, -2.82, -2.79, -2.75),
+    c(-2.93, -2.83, -2.77, -2.70, -2.64, -2.62, -2.60, -2.57),
+    c(-2.88, -2.78, -2.73, -2.67, -2.62, -2.59, -2.57, -2.55),
+    c(-2.86, -2.76, -2.72, -2.66, -2.61, -2.58, -2.56, -2.54),
+    c(-2.84, -2.76, -2.71, -2.65, -2.60, -2.58, -2.56, -2.54),
+    c(-2.83, -2.76, -2.70, -2.65, -2.61, -2.58, -2.57, -2.54),
+    c(-2.83, -2.75, -2.70, -2.65, -2.61, -2.59, -2.56, -2.55),
+    c(-2.83, -2.75, -2.70, -2.65, -2.61, -2.59, -2.57, -2.55)
+  )
+  
+  ## 10% critical values
+  tvals10 <- cbind(
+    c(-2.98, -2.89, -2.82, -2.76, -2.71, -2.68, -2.66, -2.63),
+    c(-2.76, -2.69, -2.65, -2.60, -2.56, -2.54, -2.52, -2.50),
+    c(-2.74, -2.67, -2.63, -2.58, -2.54, -2.53, -2.51, -2.49),
+    c(-2.73, -2.66, -2.63, -2.58, -2.54, -2.52, -2.51, -2.49),
+    c(-2.73, -2.66, -2.63, -2.58, -2.55, -2.53, -2.51, -2.50),
+    c(-2.72, -2.66, -2.62, -2.58, -2.55, -2.53, -2.52, -2.50),
+    c(-2.72, -2.66, -2.63, -2.59, -2.55, -2.53, -2.52, -2.50),
+    c(-2.73, -2.66, -2.63, -2.59, -2.55, -2.54, -2.52, -2.51)
+  )
+  
+  ## make critical values' cube
+  tvals <- array(dim = c(8, 8, 3))
+  tvals[ , , 1] <- tvals1
+  tvals[ , , 2] <- tvals5
+  tvals[ , , 3] <- tvals10
+  dimnames(tvals) <- list(rnam, cnam, znam)
+  
+  ## if truncated substitute values according to Tables II(a), II(b), II(c)
+  ## in Pesaran (2007)
+  
+  if(truncated) {
+    # Case III (Intercept and trend)
     tvals[,1,1] <- -c(3.51, 3.31, 3.20, 3.10, 3.00, 2.96, 2.93, 2.88) # II(c),  1%
     tvals[,2,1] <- -c(3.21, 3.07, 2.98, 2.88, 2.80, 2.76, 2.74, 2.70) # II(c),  1%
     tvals[,1,2] <- -c(3.10, 2.97, 2.89, 2.82, 2.75, 2.73, 2.70, 2.67) # II(c),  5%
     tvals[,2,2] <- -c(2.92, 2.82, 2.76, 2.69, 2.64, 2.62, 2.59, 2.57) # II(c),  5%
     tvals[,1,3] <- -c(2.87, 2.78, 2.73, 2.67, 2.63, 2.60, 2.58, 2.56) # II(c), 10%
     tvals[,2,3] <- -c(2.76, 2.68, 2.64, 2.59, 2.55, 2.53, 2.51, 2.50) # II(c), 10%
-
-  # Case II (Intercept only)
+    
+    # Case II (Intercept only)
     dvals[,1,1] <- -c(2.85, 2.66, 2.56, 2.44, 2.36, 2.32, 2.29, 2.25) # II(b),  1%
     dvals[,1,2] <- -c(2.47, 2.35, 2.29, 2.22, 2.16, 2.13, 2.11, 2.08) # II(b),  5%
     dvals[,1,3] <- -c(2.28, 2.20, 2.15, 2.10, 2.05, 2.03, 2.01, 1.99) # II(b), 10%
-
-  # Case I (No intercept, no trend)
+    
+    # Case I (No intercept, no trend)
     nvals[,1,1] <- -c(2.14, 2.00 ,1.91, 1.84, 1.77, 1.73, 1.71, 1.69) # II(a),  1%
     nvals[,1,2] <- -c(1.79, 1.71, 1.66, 1.61, 1.57, 1.55, 1.53, 1.52) # II(a),  5%
     nvals[,1,3][c(2,4,7)] <- -c(1.55, 1.48, 1.43)                     # II(a), 10%
-}
-
-## set this according to model
-switch(match.arg(type), 
+  }
+  
+  ## set this according to model
+  switch(match.arg(type), 
          trend = {cvals <- tvals},
          drift = {cvals <- dvals},
          none  = {cvals <- nvals})
-
-
-## find intervals for current n and T.
-nintl <- findInterval(n, rnam)
-ninth <- nintl+1
-nintv <- rnam[nintl:ninth]
-tintl <- findInterval(T., cnam)
-tinth <- tintl+1
-tintv <- cnam[tintl:tinth]
-
-## for each critical value
-cv <- numeric(3)
-for(i in 1:3) {
-
+  
+  
+  ## find intervals for current n and T.
+  nintl <- findInterval(n, rnam)
+  ninth <- nintl+1
+  nintv <- rnam[nintl:ninth]
+  tintl <- findInterval(T., cnam)
+  tinth <- tintl+1
+  tintv <- cnam[tintl:tinth]
+  
+  ## for each critical value
+  cv <- numeric(3)
+  for(i in 1:3) {
+    
     ## on N dim
     if(n %in% rnam) {
-        ## if n is exactly one of the tabulated values:
-        tl <- cvals[which(rnam == n), tintl, i]
-        th <- cvals[which(rnam == n), tinth, i]
-
+      ## if n is exactly one of the tabulated values:
+      tl <- cvals[which(rnam == n), tintl, i]
+      th <- cvals[which(rnam == n), tinth, i]
+      
     } else {
-        ## interpolate interval of interest to get cvals(n,T.)
-        tl <- approx(nintv, cvals[nintl:ninth, tintl, i],
-                     n = max(nintv) - min(nintv))$y[n - min(nintv)]
-        th <- approx(nintv, cvals[nintl:ninth, tinth, i],
-                     n = max(nintv) - min(nintv))$y[n - min(nintv)]
+      ## interpolate interval of interest to get cvals(n,T.)
+      tl <- approx(nintv, cvals[nintl:ninth, tintl, i],
+                   n = max(nintv) - min(nintv))$y[n - min(nintv)]
+      th <- approx(nintv, cvals[nintl:ninth, tinth, i],
+                   n = max(nintv) - min(nintv))$y[n - min(nintv)]
     }
-
+    
     ## on T. dim
     if(T. %in% cnam) {
-        ## if T. is exactly one of the tabulated values:
-        if(n %in% rnam) {
-            ## ... and n too:
-            cv[i] <- cvals[which(rnam == n), which(cnam == T.), i]
-        } else {
-            ## or if n is not, interpolate n on T.'s exact row:
-            cv[i] <- approx(nintv, cvals[nintl:ninth, which(cnam == T.), i],
-                            n = max(nintv) - min(nintv))$y[n - min(nintv)]
-        }
+      ## if T. is exactly one of the tabulated values:
+      if(n %in% rnam) {
+        ## ... and n too:
+        cv[i] <- cvals[which(rnam == n), which(cnam == T.), i]
+      } else {
+        ## or if n is not, interpolate n on T.'s exact row:
+        cv[i] <- approx(nintv, cvals[nintl:ninth, which(cnam == T.), i],
+                        n = max(nintv) - min(nintv))$y[n - min(nintv)]
+      }
     } else {
-        ## idem: interpolate T.-interval to get critical value
-        cv[i] <- approx(tintv, c(tl, th),
-                        n = max(tintv) - min(tintv))$y[T. - min(tintv)]
+      ## idem: interpolate T.-interval to get critical value
+      cv[i] <- approx(tintv, c(tl, th),
+                      n = max(tintv) - min(tintv))$y[T. - min(tintv)]
     }
-}
-
-## approximate p-values' sequence
-cvprox <- approx(cv, c(0.01, 0.05, 0.1), n = 200)
-cvseq <- cvprox$x
-pvseq <- cvprox$y
-
-if(stat < min(cv)) {
+  }
+  
+  ## approximate p-values' sequence
+  cvprox <- approx(cv, c(0.01, 0.05, 0.1), n = 200)
+  cvseq <- cvprox$x
+  pvseq <- cvprox$y
+  
+  if(stat < min(cv)) {
     pval <- "< 0.01"
-} else {
+  } else {
     if(stat > max(cv)) {
-        pval <- "> 0.10"
-        } else {
-            if(stat %in% cv) {
-                ## if exactly one of the tabulated values
-                pval <- c(0.01, 0.05, 0.10)[which(cv == stat)]
-            } else {
-                ## find interval where true p-value lies and
-                ## set p-value as the mean of bounds
-                kk <- findInterval(stat, cvseq)
-                pval <- mean(pvseq[kk:(kk+1)])
-            }
-        }
-}
-
-return(pval)
+      pval <- "> 0.10"
+    } else {
+      if(stat %in% cv) {
+        ## if exactly one of the tabulated values
+        pval <- c(0.01, 0.05, 0.10)[which(cv == stat)]
+      } else {
+        ## find interval where true p-value lies and
+        ## set p-value as the mean of bounds
+        kk <- findInterval(stat, cvseq)
+        pval <- mean(pvseq[kk:(kk+1)])
+      }
+    }
+  }
+  
+  return(pval)
 }
 
 

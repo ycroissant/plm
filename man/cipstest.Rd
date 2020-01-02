@@ -25,7 +25,8 @@ cipstest(
 \item{truncated}{logical specifying whether to calculate the
 truncated version of the test,}
 
-\item{\dots}{further arguments passed to \code{critvals}.}
+\item{\dots}{further arguments passed to \code{critvals.cips}
+(non-exported function).}
 }
 \value{
 An object of class \code{"htest"}.
