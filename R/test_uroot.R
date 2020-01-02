@@ -153,7 +153,6 @@ critval.ips.tbar.trend10 <- c(
 -3.02, -2.36, -2.33, -2.33, -2.33, -2.32, -2.32, -2.32, -2.32, -2.32, -2.32,
 -2.90, -2.30, -2.29, -2.28, -2.28, -2.28, -2.28, -2.28, -2.28, -2.28, -2.28)
 
-
 critval.ips.tbar <- c(critval.ips.tbar.int1,
                       critval.ips.tbar.int5,
                       critval.ips.tbar.int10,
@@ -354,12 +353,12 @@ adj.ips.ztbar.value <- function(l = 30L, time, means, vars){
   Ts <- selectT(l, time)
   if (length(Ts) == 1L){
     # take value as in table
-    return(c(means[as.character(Ts)], vars[as.character(Ts)]))
+    return(c("mean" = means[as.character(Ts)], "var" = vars[as.character(Ts)]))
   }
   else{
     # interpolate value from table
-    low  <- c(means[as.character(Ts[1L])], vars[as.character(Ts[1L])])
-    high <- c(means[as.character(Ts[2L])], vars[as.character(Ts[2L])])
+    low  <- c("mean" = means[as.character(Ts[1L])], "var" = vars[as.character(Ts[1L])])
+    high <- c("mean" = means[as.character(Ts[2L])], "var" = vars[as.character(Ts[2L])])
     return(low + (l - Ts[1L])/(Ts[2L] - Ts[1L]) * (high - low))
   }
 }
@@ -421,6 +420,10 @@ critval.ips.tbar.value <- function(ind = 10L, time = 19L, critvals, exo = c("int
       return(res)
       
       ## gretl: seems to apply inverse distance weighting (IDS) via euclidean distance - why? calculation below
+      ##   https://stats.stackexchange.com/questions/64538/how-do-i-find-values-not-given-in-interpolate-in-statistical-tables
+      ##    -> mentions the inverse linear approx often gives a better approximation as as t, chi^2, and F distribution as
+      ##       values are linear in the reciprocal.
+
       ## Stata: derived from Stata's documentation per example, Stata seems to just take the "upper right" value, i.e. Inds[2], Ts[2]
       # extract the 4 critical values as basis of interpolation interpolate ("corners of box")
       #
@@ -484,12 +487,14 @@ tsadf <- function(object, exo = c("intercept", "none", "trend"),
   rho <- result$coef[1]
   sdrho <- result$se[1]
   trho <- rho/sdrho
-  result <- list(rho   = rho,
-                 sdrho = sdrho,
-                 trho  = trho,
-                 sigma = sigma,
-                 T     = L,
-                 lags  = lags)
+  p.trho <- padf(trho, exo = exo)
+  result <- list(rho    = rho,
+                 sdrho  = sdrho,
+                 trho   = trho,
+                 sigma  = sigma,
+                 T      = L,
+                 lags   = lags,
+                 p.trho = p.trho)
   
   if (comp.aux.reg){
     # for Levin-Lin-Chu test only, compute the residuals of the auxiliary
@@ -813,7 +818,8 @@ purtest <- function(object, data = NULL, index = NULL,
   args <- list(test = test, exo = exo, pmax = pmax, lags = lags,
                dfcor = dfcor, fixedT = fixedT, ips.stat = ips.stat)
   n <- length(object) # number of individuals, assumes object is a list
-  sigma2 <- NULL  
+  sigma2 <- NULL
+  pvalues.trho <- NULL
   alternative <- "stationarity"
   method <- paste0(purtest.names.test[test], " (ex. var.: ",
                    purtest.names.exo[exo],")")
@@ -842,6 +848,10 @@ purtest <- function(object, data = NULL, index = NULL,
   idres <- mapply(function(x, y)
                   tsadf(x, exo = exo, lags = y, dfcor = dfcor, comp.aux.reg = comp.aux.reg),
                   object, as.list(lags), SIMPLIFY = FALSE)
+  # data requirement per individual to be able to derive all estimates in ADF regression:
+  #    obs - lags - 1 >= lags + x + 1 + 1, where x = 1 ("none"), 2 ("intercept"), 3 ("trend")
+  # => obs >= 2 * lags + 1|2|3 + 1 + 1
+  
   
   if (test == "levinlin"){
     if (length(unique(sapply(object, length))) > 1L) stop("test = \"levinlin\" is not applicable to unbalanced panels")
@@ -875,6 +885,7 @@ purtest <- function(object, data = NULL, index = NULL,
     parameter <- NULL
     sigma2 <- cbind(sigmaST^2, sigmaLT^2)
     colnames(sigma2) <- c("sigma2ST", "sigma2LT")
+    pvalues.trho <- sapply(idres, function(x) x[["p.trho"]])
   }
   
   if (test == "ips"){
@@ -883,10 +894,11 @@ purtest <- function(object, data = NULL, index = NULL,
     
     lags  <- sapply(idres, function(x) x[["lags"]])
     L.ips <- sapply(idres, function(x) x[["T"]]) - lags - 1
-    trho <- sapply(idres, function(x) x[["trho"]])
+    trho  <- sapply(idres, function(x) x[["trho"]])
     tbar <- mean(trho)
     parameter <- NULL
     adjval <- NULL
+    pvalues.trho <- padf(trho, exo = exo)
     
     if (is.null(ips.stat) || ips.stat == "Wtbar") {
       # calc Wtbar - default
@@ -900,12 +912,9 @@ purtest <- function(object, data = NULL, index = NULL,
     
     if (!is.null(ips.stat) && ips.stat == "Ztbar") {
       # calc Ztbar
-      
-      ## TODO: check lags -> need to be as in Wtbar, i.e. - lags - 1? (lags fed into adjval.ztbar!)
-      experimental_Ztbar <- TRUE
-      if (experimental_Ztbar) warning("still experimental, check lags - likely not correct!")
-      
-      adjval <- adjval.ztbar <- sapply(L.ips, adj.ips.ztbar.value, adj.ips.zbar.time, adj.ips.zbar.means, adj.ips.zbar.vars)
+      adjval <- adjval.ztbar <- sapply(L.ips, adj.ips.ztbar.value, 
+                                       adj.ips.zbar.time, adj.ips.zbar.means, adj.ips.zbar.vars)
+      rownames(adjval) <- rownames(adjval.ztbar) <- c("mean", "var")
       Etbar.ztbar <- mean(adjval.ztbar[1, ])
       Vtbar.ztbar <- mean(adjval.ztbar[2, ])
       stat <- stat.ztbar <- c("Ztbar" = sqrt(n) * (tbar - Etbar.ztbar) / sqrt(Vtbar.ztbar)) # (3.13) = (4.10) in IPS (2003) [same generic formula for Ztbar and Wtbar]
@@ -914,7 +923,6 @@ purtest <- function(object, data = NULL, index = NULL,
     
     if (!is.null(ips.stat) && ips.stat == "tbar") {
       # give tbar
-      ## TODO: check lags -> need to be as in Wtbar, i.e. - lags - 1? (lags fed into adjval)
       stat <- tbar
       names(stat) <- "tbar"
       pvalue <- NA # TODO: interpolate / connect to function critval.ips.tbar.value
@@ -927,8 +935,7 @@ purtest <- function(object, data = NULL, index = NULL,
     ## does not require a balanced panel
     
     trho <- sapply(idres, function(x) x[["trho"]])
-    #   pvalues.trho <- 2*pnorm(abs(trho), lower.tail = FALSE)  # ... until rev. 551
-    pvalues.trho <- padf(trho, exo = exo)
+    pvalues.trho <- sapply(idres, function(x) x[["p.trho"]])
     stat <- c(chisq = - 2 * sum(log(pvalues.trho)))
     n.madwu <- length(trho)
     parameter <- c(df = 2 * n.madwu)
@@ -939,7 +946,7 @@ purtest <- function(object, data = NULL, index = NULL,
   if (test == "Pm"){
     ## Choi Pm (modified P) [proposed for large N]
     trho <- sapply(idres, function(x) x[["trho"]])
-    pvalues.trho <- padf(trho, exo = exo)
+    pvalues.trho <- sapply(idres, function(x) x[["p.trho"]])
     n.Pm <- length(trho)
     # formula (18) in Choi (2001), p. 255:
     stat <- c( "Pm" = 1/(2 * sqrt(n.Pm)) * sum(-2 * log(pvalues.trho) - 2) ) # == 1/sqrt(n.Pm) * sum(log(pvalues.trho) +1)
@@ -951,7 +958,7 @@ purtest <- function(object, data = NULL, index = NULL,
   if (test == "invnormal"){
     # inverse normal test as in Choi (2001)
     trho <- sapply(idres, function(x) x[["trho"]])
-    pvalues.trho <- padf(trho, exo = exo)
+    pvalues.trho <- sapply(idres, function(x) x[["p.trho"]])
     n.invnormal <- length(trho)
     stat <- c("z" = sum(qnorm(pvalues.trho)) / sqrt(n.invnormal)) # formula (9), Choi (2001), p. 253
     pvalue <- pnorm(stat, lower.tail = TRUE) # formula (12), Choi, p. 254
@@ -962,7 +969,7 @@ purtest <- function(object, data = NULL, index = NULL,
   if (test == "logit"){
     # logit test as in Choi (2001)
     trho <- sapply(idres, function(x) x[["trho"]])
-    pvalues.trho <- padf(trho, exo = exo)
+    pvalues.trho <- sapply(idres, function(x) x[["p.trho"]])
     n.logit <- length(trho)
     l_stat <-  c("L*" = sum(log(pvalues.trho / (1 - pvalues.trho)))) # formula (10), Choi (2001), p. 253
     k <- (3 * (5 * n.logit + 4)) / (pi^2 * n.logit * (5 * n.logit + 2))
@@ -985,6 +992,7 @@ purtest <- function(object, data = NULL, index = NULL,
                  args      = args,
                  idres     = idres,
                  adjval    = adjval,
+                 p.trho    = pvalues.trho,
                  sigma2    = sigma2)
   class(result) <- "purtest"
   result
@@ -1004,13 +1012,18 @@ summary.purtest <- function(object, ...){
     stop("summary() not applicable for Hadri's test, i.e. for the result of purtest(<.>, test = \"hadri\")")
   }
   
-  lags  <- sapply(object$idres, function(x) x[["lags"]])
-  L     <- sapply(object$idres, function(x) x[["T"]])
-  rho   <- sapply(object$idres, function(x) x[["rho"]])
-  sdrho <- sapply(object$idres, function(x) x[["sdrho"]])
-  trho  <- sapply(object$idres, function(x) x[["trho"]])
+  lags   <- sapply(object$idres, function(x) x[["lags"]])
+  L      <- sapply(object$idres, function(x) x[["T"]])
+  rho    <- sapply(object$idres, function(x) x[["rho"]])
+  trho   <- sapply(object$idres, function(x) x[["trho"]])
+  p.trho <- sapply(object$idres, function(x) x[["p.trho"]])
   nam <- names(object$idres)
-  sumidres <- cbind(lags = lags, obs = L - lags - 1, rho = rho, trho = trho)
+  sumidres <- cbind(
+      "lags"   = lags,
+      "obs"    = L - lags - 1,
+      "rho"    = rho,
+      "trho"   = trho,
+      "p.trho" = p.trho)
   if (object$args$test == "ips" && !object$args$ips.stat == "tbar") {
     sumidres <- cbind(sumidres, t(object$adjval))
   }

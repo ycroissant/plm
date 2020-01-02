@@ -53,6 +53,12 @@ b <- purtest(pG$value, test = "ips", exo = "intercept", lags = 0, dfcor = TRUE)
 unlist(lapply(b$idres, function(x) x[["rho"]]))
 unlist(lapply(b$idres, function(x) x[["trho"]]))
 
+# NB: In case of lags = 0 (DF-regression), gretl 2019d takes the finite sample p-values
+#    (finite sample p-values are not applicable for augmented DF-regressions)
+#    Also, gretl uses MacKinnon (1996) [in R: implemented in urca::punitroot]
+# urca::punitroot(b$idres$`1`$trho, N = Inf, trend = "c") # asymptotic p = 0.02672553 
+# urca::punitroot(b$idres$`1`$trho, N = 19, trend = "c")  # finite p = 0.04386944 
+
 ## lags = 2 (lags > 0 gives the Wtbar stat in gretl and EViews)
 b_lag2 <- purtest(pG$value, test = "ips", exo = "intercept", lags = 2, dfcor = TRUE)
 unlist(lapply(b_lag2$idres, function(x) x[["rho"]]))
@@ -68,6 +74,10 @@ summary(b_unbal)
 summary(b_unbal3 <- purtest(pG_unbal2$value, test = "ips", exo = "intercept", lags = 0, dfcor = TRUE, ips.stat = "Ztbar"))
 
 summary(b_ztbar <- purtest(pG$value, test = "ips", exo = "intercept", lags = 0, dfcor = TRUE, ips.stat = "Ztbar"))
+summary(b_ztbar_unbal <- purtest(pG_unbal2$value, test = "ips", exo = "intercept", lags = 0, dfcor = TRUE, ips.stat = "Ztbar"))
+summary(b_ztbar_unbal2 <- purtest(pG_unbal2$value, test = "ips", exo = "intercept", lags = 2, dfcor = TRUE, ips.stat = "Ztbar"))
+
+
 
 summary(b_lag2_ztbar <- purtest(pG$value, test = "ips", exo = "intercept", lags = 2, dfcor = TRUE, ips.stat = "Ztbar"))
 

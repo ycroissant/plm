@@ -411,10 +411,10 @@ theta: 0.9464 (id) 0.8104 (time) 0.8084 (total)
 > data("Grunfeld", package = "plm")
 > gi <- plm(inv ~ value + capital, data = Grunfeld, model = "within")
 > fixef(gi)
-          1           2           3           4           5           6 
- -70.296717  101.905814 -235.571841  -27.809295 -114.616813  -23.161295 
-          7           8           9          10 
- -66.553474  -57.545657  -87.222272   -6.567844 
+        1         2         3         4         5         6         7         8 
+ -70.2967  101.9058 -235.5718  -27.8093 -114.6168  -23.1613  -66.5535  -57.5457 
+        9        10 
+ -87.2223   -6.5678 
 > summary(fixef(gi))
     Estimate Std. Error t-value  Pr(>|t|)    
 1   -70.2967    49.7080 -1.4142   0.15896    
@@ -453,12 +453,12 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 > gi_tw <- plm(inv ~ value + capital, data = Grunfeld,
 +           model = "within", effect = "twoways")
 > fixef(gi_tw, effect = "time")
-      1935       1936       1937       1938       1939       1940       1941 
- -32.83632  -52.03372  -73.52633  -72.06272 -102.30660  -77.07140  -51.64078 
-      1942       1943       1944       1945       1946       1947       1948 
- -53.97611  -75.81394  -75.93509  -88.51936  -64.00560  -72.22856  -76.55283 
-      1949       1950       1951       1952       1953       1954 
--106.33142 -108.73243  -95.31723  -97.46866 -100.55428 -126.36254 
+    1935     1936     1937     1938     1939     1940     1941     1942 
+ -32.836  -52.034  -73.526  -72.063 -102.307  -77.071  -51.641  -53.976 
+    1943     1944     1945     1946     1947     1948     1949     1950 
+ -75.814  -75.935  -88.519  -64.006  -72.229  -76.553 -106.331 -108.732 
+    1951     1952     1953     1954 
+ -95.317  -97.469 -100.554 -126.363 
 > 
 > # with supplied variance-covariance matrix as matrix, function,
 > # and function with additional arguments
@@ -12730,6 +12730,7 @@ alternative hypothesis: unobserved effect
 > 
 > 
 > 
+> 
 > cleanEx()
 > nameEx("sargan")
 > ### * sargan
@@ -13633,8 +13634,6 @@ detaching 'package:car', 'package:carData', 'package:lmtest',
 > ### ** Examples
 > 
 > 
-> # TODO: two-way unbalanced case, once fixef() produces results that
-> # are compatible estimate within model (unbalanced data)
 > data("Hedonic", package = "plm")
 > mod_fe <- plm(mv ~ age + crim, data = Hedonic, index = "townid")
 > overallint <- within_intercept(mod_fe)
@@ -13671,7 +13670,7 @@ attr(,"se")
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  9.83 0.61 11.3 NA NA 
+Time elapsed:  9.27 0.51 9.85 NA NA 
 > grDevices::dev.off()
 null device 
           1 

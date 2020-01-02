@@ -3,10 +3,11 @@
    * tests now support unbalanced panel data, where applicable.
    * gained argument 'ips.stat' to select statistic for IPS test,
      default is "Wtbar" (as before), added "Ztbar" and "tbar".
-   * purtest.summary(.print): for Levin/Lin/Chu test, contains short-run and
-     long-run variance.
-* print.fixef: respects / forwards arguments supplied.
-* doc Grunfeld data: URL for overview of various Grunfeld data sets updated to
+   * return value contains p-values of individual ADF-regressions (p.trho).
+   * purtest.summary(.print): for Levin/Lin/Chu test, summary contains
+     short-run and long-run variance; p.trho printed for all tests (if applicable).
+* print.fixef: respects / forwards arguments supplied to generic print method.
+* Grunfeld data doc: URL for overview of various Grunfeld data sets updated to
   https://eeecon.uibk.ac.at/~zeileis/grunfeld/. 
 
 # plm 2.2-0
