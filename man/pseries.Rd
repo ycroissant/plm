@@ -103,7 +103,7 @@ individuals (if \code{effect = "individual"} (default); if \code{effect = "time"
 it returns the time means (over individuals)). \code{Between}
 duplicates the values and returns a vector which length is the
 number of total observations. \code{Within} returns a vector containing
-the values in deviation from the individual means (if \verb{effect = ' "individual"},
+the values in deviation from the individual means (if \code{effect = "individual"},
 from time means if \code{effect = "time"}), the so called
 demeaned data.
 

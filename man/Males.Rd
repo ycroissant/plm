@@ -10,10 +10,10 @@
 \item{year}{year}
 \item{school}{years of schooling}
 \item{exper}{years of experience (computed as \code{age-6-school})}
-\item{union}{wage set by collective bargaining ?}
+\item{union}{wage set by collective bargaining?}
 \item{ethn}{a factor with levels \verb{black, hisp, other}}
 \item{married}{married?}
-\item{health}{health problem ?}
+\item{health}{health problem?}
 \item{wage}{log of hourly wage}
 \item{industry}{a factor with 12 levels}
 \item{occupation}{a factor with 9 levels}

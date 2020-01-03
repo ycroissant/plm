@@ -29,7 +29,7 @@
 #' it returns the time means (over individuals)). `Between`
 #' duplicates the values and returns a vector which length is the
 #' number of total observations. `Within` returns a vector containing
-#' the values in deviation from the individual means (if `effect = ' "individual"`,
+#' the values in deviation from the individual means (if `effect = "individual"`,
 #' from time means if `effect = "time"`), the so called
 #' demeaned data.
 #' 
