@@ -965,10 +965,15 @@ NULL
 #' @rdname index.plm
 #' @export
 index.pindex <- function(x, which = NULL, ...){
-    if (is.null(which)) which <- names(x)
+    if (is.null(which)) {
+      # if no specific index is requested, select all index variables
+      which <- names(x)
+    }
     else{
-        posindividual <- match("individual", which)
-        if (! is.na(posindividual)) which[posindividual] <- "id"
+      # catch case when someone enters "individual" albeit proper value is
+      # "id" to extract individual index
+      posindividual <- match("individual", which)
+      if (! is.na(posindividual)) which[posindividual] <- "id"
     }
     if (length(which) >  3) stop("the length of argument 'which' should be at most 3")
     if (is.numeric(which)){
@@ -981,9 +986,9 @@ index.pindex <- function(x, which = NULL, ...){
     gindex <- c("id", "time")
     if (ncol(x) == 3) gindex <- c(gindex, "group")
     if (any(! which %in% c(nindex, gindex))) stop("unknown variable")
-    if ("id" %in% which) which[which == "id"] <- names(x)[1]
-    if ("time" %in% which) which[which == "time"] <- names(x)[2]
-    if ("group" %in% which) which[which == "group"] <- names(x)[3]
+    if ("id"    %in% which) which[which == "id"]    <- names(x)[1]
+    if ("time"  %in% which) which[which == "time"]  <- names(x)[2]
+    if (ncol(x) == 3) if ("group" %in% which) which[which == "group"] <- names(x)[3]
     result <- x[ , which]
     result
 }

@@ -99,6 +99,12 @@ pdim(Wag)
 ttC2 <-  tryCatch(pdata.frame(Wages, index=c(595, 3)), error=function(e) e, warning = function(w) w)
 if(!is(ttC2,"warning") | ttC2$message != "The time index (second element of 'index' argument) will be ignored\n") stop("warning about unused time index not sent")
 
+# test of index() when individual index is called "group" (fixed in revision 904)
+data("Produc", package = "plm")
+Produc$group <- Produc$region
+pProduc  <- pdata.frame(Produc, index = "group")
+index(pProduc)
+
 # test for error about length(index)>2
 # Should result in error with informative message
 #ttC3 <-  tryCatch(pdata.frame(Wages, index=c(595, 3, 5)), error=function(e) e, warning = function(w) w)

@@ -8,10 +8,12 @@
    * purtest.summary(.print): for Levin/Lin/Chu test, summary contains
      short-run and long-run variance; p.trho printed for all tests (if applicable).
    * if package 'urca' is available, p-values used in individual (augmented)
-     Dicker-Fuller regressionsare (for applicable tests) are based on
+     Dicker-Fuller regressions are (for applicable tests) based on
      MacKinnon (1996) instead of MacKinnon (1994) yielding better p-value
      approximations for tau distribution.
      
+* index.pindex: fixed bug when individual index variable is called "group".
+
 * Minors:
    * print.fixef: respects / forwards arguments supplied to generic print method.
    * DESCRIPTION: package 'urca' added to "Suggests".

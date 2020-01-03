@@ -1,0 +1,1201 @@
+
+R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> # Test of conversion to pdata.frame if only an individual index in supplied
+> # bug fixed in rev. 204
+>  
+> 
+> library(plm)
+> data("Hedonic", package = "plm")
+> 
+> # insert test columns
+> Hedonic$str <- c(rep(c(letters), nrow(Hedonic)%/%length(letters)), letters[1:(nrow(Hedonic)%%length(letters))])
+> Hedonic$str_const <- rep("const", nrow(Hedonic))
+> temp <- pdata.frame(Hedonic, index = "townid")
+> Hedonic$fac <- factor(Hedonic$str)
+> Hedonic$fac_const <- rep(factor("fac_const"), nrow(Hedonic))
+> Hedonic$na <- rep(NA, nrow(Hedonic))
+> temp <- pdata.frame(Hedonic, index = "townid")
+> Hedonic$na2 <- rep(NA, nrow(Hedonic))
+> 
+> rm(temp)
+> 
+> Hedonic2 <- Hedonic[order(Hedonic$mv), ] # sorted a different way
+> Hedonic3 <- Hedonic[order(Hedonic$townid, decreasing = TRUE), ] # in descending order
+> 
+> Hed1 <- pdata.frame(Hedonic, index = "townid", stringsAsFactors = FALSE) # works 
+> pdim(Hed1)
+Unbalanced Panel: n = 92, T = 1-30, N = 506
+> head(Hed1)
+          mv    crim zn    indus chas     nox      rm      age     dis     rad
+1-1 10.08580 0.00632 18 2.309999   no 28.9444 43.2306 65.19995 1.40854 0.00000
+2-1  9.98045 0.02731  0 7.070000   no 21.9961 41.2292 78.89996 1.60283 0.69315
+2-2 10.45450 0.02730  0 7.070000   no 21.9961 51.6242 61.09998 1.60283 0.69315
+3-1 10.41630 0.03237  0 2.179998   no 20.9764 48.9720 45.79999 1.80207 1.09861
+3-2 10.49680 0.06905  0 2.179998   no 20.9764 51.0796 54.19998 1.80207 1.09861
+3-3 10.26470 0.02985  0 2.179998   no 20.9764 41.3449 58.69998 1.80207 1.09861
+    tax  ptratio  blacks    lstat townid str str_const fac fac_const na na2
+1-1 296 15.29999 0.39690 -3.00074      1   a     const   a fac_const NA  NA
+2-1 242 17.79999 0.39690 -2.39251      2   b     const   b fac_const NA  NA
+2-2 242 17.79999 0.39283 -3.21165      2   c     const   c fac_const NA  NA
+3-1 222 18.70000 0.39464 -3.52744      3   d     const   d fac_const NA  NA
+3-2 222 18.70000 0.39690 -2.93163      3   e     const   e fac_const NA  NA
+3-3 222 18.70000 0.39412 -2.95555      3   f     const   f fac_const NA  NA
+    time
+1-1    1
+2-1    1
+2-2    2
+3-1    1
+3-2    2
+3-3    3
+> 
+> Hed1_2.1 <- pdata.frame(Hedonic, index = "townid", stringsAsFactors = TRUE) # works 
+> pdim(Hed1_2.1)
+Unbalanced Panel: n = 92, T = 1-30, N = 506
+> head(Hed1_2.1)
+          mv    crim zn    indus chas     nox      rm      age     dis     rad
+1-1 10.08580 0.00632 18 2.309999   no 28.9444 43.2306 65.19995 1.40854 0.00000
+2-1  9.98045 0.02731  0 7.070000   no 21.9961 41.2292 78.89996 1.60283 0.69315
+2-2 10.45450 0.02730  0 7.070000   no 21.9961 51.6242 61.09998 1.60283 0.69315
+3-1 10.41630 0.03237  0 2.179998   no 20.9764 48.9720 45.79999 1.80207 1.09861
+3-2 10.49680 0.06905  0 2.179998   no 20.9764 51.0796 54.19998 1.80207 1.09861
+3-3 10.26470 0.02985  0 2.179998   no 20.9764 41.3449 58.69998 1.80207 1.09861
+    tax  ptratio  blacks    lstat townid str str_const fac fac_const na na2
+1-1 296 15.29999 0.39690 -3.00074      1   a     const   a fac_const NA  NA
+2-1 242 17.79999 0.39690 -2.39251      2   b     const   b fac_const NA  NA
+2-2 242 17.79999 0.39283 -3.21165      2   c     const   c fac_const NA  NA
+3-1 222 18.70000 0.39464 -3.52744      3   d     const   d fac_const NA  NA
+3-2 222 18.70000 0.39690 -2.93163      3   e     const   e fac_const NA  NA
+3-3 222 18.70000 0.39412 -2.95555      3   f     const   f fac_const NA  NA
+    time
+1-1    1
+2-1    1
+2-2    2
+3-1    1
+3-2    2
+3-3    3
+> #str(Hed1_2.1)
+> sapply(Hed1_2.1, function(x) class(x))
+       mv      crim        zn     indus      chas       nox        rm       age 
+"numeric" "numeric" "numeric" "numeric"  "factor" "numeric" "numeric" "numeric" 
+      dis       rad       tax   ptratio    blacks     lstat    townid       str 
+"numeric" "numeric" "integer" "numeric" "numeric" "numeric"  "factor"  "factor" 
+str_const       fac fac_const        na       na2      time 
+ "factor"  "factor"  "factor" "logical" "logical"  "factor" 
+> 
+> Hed1_2.2 <- pdata.frame(Hedonic, index = "townid", stringsAsFactors = FALSE) # works 
+> pdim(Hed1_2.2)
+Unbalanced Panel: n = 92, T = 1-30, N = 506
+> head(Hed1_2.2)
+          mv    crim zn    indus chas     nox      rm      age     dis     rad
+1-1 10.08580 0.00632 18 2.309999   no 28.9444 43.2306 65.19995 1.40854 0.00000
+2-1  9.98045 0.02731  0 7.070000   no 21.9961 41.2292 78.89996 1.60283 0.69315
+2-2 10.45450 0.02730  0 7.070000   no 21.9961 51.6242 61.09998 1.60283 0.69315
+3-1 10.41630 0.03237  0 2.179998   no 20.9764 48.9720 45.79999 1.80207 1.09861
+3-2 10.49680 0.06905  0 2.179998   no 20.9764 51.0796 54.19998 1.80207 1.09861
+3-3 10.26470 0.02985  0 2.179998   no 20.9764 41.3449 58.69998 1.80207 1.09861
+    tax  ptratio  blacks    lstat townid str str_const fac fac_const na na2
+1-1 296 15.29999 0.39690 -3.00074      1   a     const   a fac_const NA  NA
+2-1 242 17.79999 0.39690 -2.39251      2   b     const   b fac_const NA  NA
+2-2 242 17.79999 0.39283 -3.21165      2   c     const   c fac_const NA  NA
+3-1 222 18.70000 0.39464 -3.52744      3   d     const   d fac_const NA  NA
+3-2 222 18.70000 0.39690 -2.93163      3   e     const   e fac_const NA  NA
+3-3 222 18.70000 0.39412 -2.95555      3   f     const   f fac_const NA  NA
+    time
+1-1    1
+2-1    1
+2-2    2
+3-1    1
+3-2    2
+3-3    3
+> #str(Hed1_2.2)
+> sapply(Hed1_2.2, function(x) class(x))
+         mv        crim          zn       indus        chas         nox 
+  "numeric"   "numeric"   "numeric"   "numeric"    "factor"   "numeric" 
+         rm         age         dis         rad         tax     ptratio 
+  "numeric"   "numeric"   "numeric"   "numeric"   "integer"   "numeric" 
+     blacks       lstat      townid         str   str_const         fac 
+  "numeric"   "numeric"    "factor" "character" "character"    "factor" 
+  fac_const          na         na2        time 
+   "factor"   "logical"   "logical"    "factor" 
+> 
+> 
+> 
+> Hed2 <- pdata.frame(Hedonic2, index = "townid")
+> pdim(Hed2)
+Unbalanced Panel: n = 92, T = 1-30, N = 506
+> head(Hed2)
+          mv    crim zn    indus chas     nox      rm      age     dis     rad
+1-1 10.08580 0.00632 18 2.309999   no 28.9444 43.2306 65.19995 1.40854 0.00000
+2-1  9.98045 0.02731  0 7.070000   no 21.9961 41.2292 78.89996 1.60283 0.69315
+2-2 10.45450 0.02730  0 7.070000   no 21.9961 51.6242 61.09998 1.60283 0.69315
+3-1 10.26470 0.02985  0 2.179998   no 20.9764 41.3449 58.69998 1.80207 1.09861
+3-2 10.41630 0.03237  0 2.179998   no 20.9764 48.9720 45.79999 1.80207 1.09861
+3-3 10.49680 0.06905  0 2.179998   no 20.9764 51.0796 54.19998 1.80207 1.09861
+    tax  ptratio  blacks    lstat townid str str_const fac fac_const na na2
+1-1 296 15.29999 0.39690 -3.00074      1   a     const   a fac_const NA  NA
+2-1 242 17.79999 0.39690 -2.39251      2   b     const   b fac_const NA  NA
+2-2 242 17.79999 0.39283 -3.21165      2   c     const   c fac_const NA  NA
+3-1 222 18.70000 0.39412 -2.95555      3   f     const   f fac_const NA  NA
+3-2 222 18.70000 0.39464 -3.52744      3   d     const   d fac_const NA  NA
+3-3 222 18.70000 0.39690 -2.93163      3   e     const   e fac_const NA  NA
+    time
+1-1    1
+2-1    1
+2-2    2
+3-1    1
+3-2    2
+3-3    3
+> 
+> Hed2_2 <- pdata.frame(Hedonic2, index = "townid")
+> pdim(Hed2_2)
+Unbalanced Panel: n = 92, T = 1-30, N = 506
+> head(Hed2_2)
+          mv    crim zn    indus chas     nox      rm      age     dis     rad
+1-1 10.08580 0.00632 18 2.309999   no 28.9444 43.2306 65.19995 1.40854 0.00000
+2-1  9.98045 0.02731  0 7.070000   no 21.9961 41.2292 78.89996 1.60283 0.69315
+2-2 10.45450 0.02730  0 7.070000   no 21.9961 51.6242 61.09998 1.60283 0.69315
+3-1 10.26470 0.02985  0 2.179998   no 20.9764 41.3449 58.69998 1.80207 1.09861
+3-2 10.41630 0.03237  0 2.179998   no 20.9764 48.9720 45.79999 1.80207 1.09861
+3-3 10.49680 0.06905  0 2.179998   no 20.9764 51.0796 54.19998 1.80207 1.09861
+    tax  ptratio  blacks    lstat townid str str_const fac fac_const na na2
+1-1 296 15.29999 0.39690 -3.00074      1   a     const   a fac_const NA  NA
+2-1 242 17.79999 0.39690 -2.39251      2   b     const   b fac_const NA  NA
+2-2 242 17.79999 0.39283 -3.21165      2   c     const   c fac_const NA  NA
+3-1 222 18.70000 0.39412 -2.95555      3   f     const   f fac_const NA  NA
+3-2 222 18.70000 0.39464 -3.52744      3   d     const   d fac_const NA  NA
+3-3 222 18.70000 0.39690 -2.93163      3   e     const   e fac_const NA  NA
+    time
+1-1    1
+2-1    1
+2-2    2
+3-1    1
+3-2    2
+3-3    3
+> head(Hedonic2)
+         mv     crim zn    indus chas     nox      rm       age     dis     rad
+399 8.51719 38.35180  0 18.09999   no 48.0248 29.7352 100.00000 0.39851 3.17805
+406 8.51719 67.92080  0 18.09999   no 48.0248 32.2965 100.00000 0.35445 3.17805
+401 8.63052 25.04610  0 18.09999   no 48.0248 35.8442 100.00000 0.46298 3.17805
+400 8.74831  9.91655  0 18.09999   no 48.0248 34.2459  77.79999 0.40573 3.17805
+415 8.85367 45.74610  0 18.09999   no 48.0248 20.4213 100.00000 0.50573 3.17805
+490 8.85367  0.18337  0 27.73999   no 37.0881 29.3114  98.29999 0.56270 1.38629
+    tax  ptratio  blacks    lstat townid str str_const fac fac_const na na2
+399 666 20.20000 0.39690 -1.18453     81   i     const   i fac_const NA  NA
+406 666 20.20000 0.38497 -1.47072     81   p     const   p fac_const NA  NA
+401 666 20.20000 0.39690 -1.31793     81   k     const   k fac_const NA  NA
+400 666 20.20000 0.33817 -1.20481     81   j     const   j fac_const NA  NA
+415 666 20.20000 0.08827 -0.99474     83   y     const   y fac_const NA  NA
+490 711 20.09999 0.34405 -1.42828     90   v     const   v fac_const NA  NA
+> 
+> 
+> Hed3 <- pdata.frame(Hedonic3, index = "townid")
+> pdim(Hed3)
+Unbalanced Panel: n = 92, T = 1-30, N = 506
+> head(Hed3)
+          mv    crim zn    indus chas     nox      rm      age     dis     rad
+1-1 10.08580 0.00632 18 2.309999   no 28.9444 43.2306 65.19995 1.40854 0.00000
+2-1  9.98045 0.02731  0 7.070000   no 21.9961 41.2292 78.89996 1.60283 0.69315
+2-2 10.45450 0.02730  0 7.070000   no 21.9961 51.6242 61.09998 1.60283 0.69315
+3-1 10.41630 0.03237  0 2.179998   no 20.9764 48.9720 45.79999 1.80207 1.09861
+3-2 10.49680 0.06905  0 2.179998   no 20.9764 51.0796 54.19998 1.80207 1.09861
+3-3 10.26470 0.02985  0 2.179998   no 20.9764 41.3449 58.69998 1.80207 1.09861
+    tax  ptratio  blacks    lstat townid str str_const fac fac_const na na2
+1-1 296 15.29999 0.39690 -3.00074      1   a     const   a fac_const NA  NA
+2-1 242 17.79999 0.39690 -2.39251      2   b     const   b fac_const NA  NA
+2-2 242 17.79999 0.39283 -3.21165      2   c     const   c fac_const NA  NA
+3-1 222 18.70000 0.39464 -3.52744      3   d     const   d fac_const NA  NA
+3-2 222 18.70000 0.39690 -2.93163      3   e     const   e fac_const NA  NA
+3-3 222 18.70000 0.39412 -2.95555      3   f     const   f fac_const NA  NA
+    time
+1-1    1
+2-1    1
+2-2    2
+3-1    1
+3-2    2
+3-3    3
+> 
+> Hed3_2 <- pdata.frame(Hedonic3, index = "townid")
+> pdim(Hed3_2)
+Unbalanced Panel: n = 92, T = 1-30, N = 506
+> head(Hed3_2)
+          mv    crim zn    indus chas     nox      rm      age     dis     rad
+1-1 10.08580 0.00632 18 2.309999   no 28.9444 43.2306 65.19995 1.40854 0.00000
+2-1  9.98045 0.02731  0 7.070000   no 21.9961 41.2292 78.89996 1.60283 0.69315
+2-2 10.45450 0.02730  0 7.070000   no 21.9961 51.6242 61.09998 1.60283 0.69315
+3-1 10.41630 0.03237  0 2.179998   no 20.9764 48.9720 45.79999 1.80207 1.09861
+3-2 10.49680 0.06905  0 2.179998   no 20.9764 51.0796 54.19998 1.80207 1.09861
+3-3 10.26470 0.02985  0 2.179998   no 20.9764 41.3449 58.69998 1.80207 1.09861
+    tax  ptratio  blacks    lstat townid str str_const fac fac_const na na2
+1-1 296 15.29999 0.39690 -3.00074      1   a     const   a fac_const NA  NA
+2-1 242 17.79999 0.39690 -2.39251      2   b     const   b fac_const NA  NA
+2-2 242 17.79999 0.39283 -3.21165      2   c     const   c fac_const NA  NA
+3-1 222 18.70000 0.39464 -3.52744      3   d     const   d fac_const NA  NA
+3-2 222 18.70000 0.39690 -2.93163      3   e     const   e fac_const NA  NA
+3-3 222 18.70000 0.39412 -2.95555      3   f     const   f fac_const NA  NA
+    time
+1-1    1
+2-1    1
+2-2    2
+3-1    1
+3-2    2
+3-3    3
+> head(Hedonic3)
+          mv    crim zn     indus chas     nox      rm      age     dis     rad
+502 10.01680 0.06263  0 11.929993   no 32.8329 43.4677 69.09998 0.90769 0.00000
+503  9.93305 0.04527  0 11.929993   no 32.8329 37.4544 76.69995 0.82746 0.00000
+504 10.08160 0.06076  0 11.929993   no 32.8329 48.6646 91.00000 0.77357 0.00000
+505  9.99880 0.10959  0 11.929993   no 32.8329 46.1584 89.29999 0.87083 0.00000
+506  9.38429 0.04741  0 11.929993   no 32.8329 36.3609 80.79999 0.91829 0.00000
+494  9.98967 0.17331  0  9.689995   no 34.2225 32.5698 54.00000 0.86781 1.79176
+    tax ptratio  blacks    lstat townid str str_const fac fac_const na na2
+502 273    21.0 0.39199 -2.33604     92   h     const   h fac_const NA  NA
+503 273    21.0 0.39690 -2.39910     92   i     const   i fac_const NA  NA
+504 273    21.0 0.39690 -2.87582     92   j     const   j fac_const NA  NA
+505 273    21.0 0.39346 -2.73630     92   k     const   k fac_const NA  NA
+506 273    21.0 0.39690 -2.54033     92   l     const   l fac_const NA  NA
+494 391    19.2 0.39690 -2.11943     91   z     const   z fac_const NA  NA
+> 
+> # test for warning of duplicated couples
+>   data("Grunfeld", package = "plm")
+>   Grunfeld_dup <- rbind(Grunfeld, Grunfeld[200, ])
+>   ttC <-  tryCatch(pdata.frame(Grunfeld_dup), error=function(e) e, warning=function(w) w)
+>   if(!is(ttC,"warning") | ttC$message != "duplicate couples (id-time) in resulting pdata.frame\n to find out which, use e.g. table(index(your_pdataframe), useNA = \"ifany\")")
++     stop("warning of duplicated couples not successful")
+> 
+> 
+> # test: character as individual index
+> Grunfeld.p <- pdata.frame(Grunfeld)
+> Grunfeld_charac <- Grunfeld
+> Grunfeld_charac$firm <- as.character(Grunfeld_charac$firm)
+> Grunfeld_charac.p <- pdata.frame(Grunfeld_charac)
+> Grunfeld_charac.p2 <- pdata.frame(Grunfeld_charac, stringsAsFactors = FALSE)
+> if(!identical(Grunfeld_charac.p, Grunfeld_charac.p2)) stop("pdata.frames not identical)")
+> pdim(Grunfeld_charac.p)
+Balanced Panel: n = 10, T = 20, N = 200
+> pdim(Grunfeld_charac.p2)
+Balanced Panel: n = 10, T = 20, N = 200
+> 
+> 
+> # test: character as individual index
+> Grunfeld_charac2 <- Grunfeld
+> Grunfeld_charac2$firm <- as.character(Grunfeld_charac2$firm)
+> Grunfeld_charac2$year <- as.character(Grunfeld_charac2$year)
+> Grunfeld_charac2.p <- pdata.frame(Grunfeld_charac2)
+> Grunfeld_charac2.p2 <- pdata.frame(Grunfeld_charac2, stringsAsFactors = FALSE)
+> if(!identical(Grunfeld_charac2.p, Grunfeld_charac2.p2)) stop("pdata.frames not identical)")
+> pdim(Grunfeld_charac2.p)
+Balanced Panel: n = 10, T = 20, N = 200
+> pdim(Grunfeld_charac2.p2)
+Balanced Panel: n = 10, T = 20, N = 200
+> 
+> # index with two variables
+> Grunfeld.p3 <- pdata.frame(Grunfeld, index = c("firm", "year"))
+> pdim(Grunfeld.p3)
+Balanced Panel: n = 10, T = 20, N = 200
+> 
+> # index is numeric
+> data("Wages", package = "plm")
+> Wag <- pdata.frame(Wages, 595)
+> pdim(Wag)
+Balanced Panel: n = 595, T = 7, N = 4165
+> 
+> # test for warning about time index
+> ttC2 <-  tryCatch(pdata.frame(Wages, index=c(595, 3)), error=function(e) e, warning = function(w) w)
+> if(!is(ttC2,"warning") | ttC2$message != "The time index (second element of 'index' argument) will be ignored\n") stop("warning about unused time index not sent")
+> 
+> # test of index() when individual index is called "group" (fixed in revision 904)
+> data("Produc", package = "plm")
+> Produc$group <- Produc$region
+> pProduc  <- pdata.frame(Produc, index = "group")
+> index(pProduc)
+    group time
+86      1    1
+87      1    2
+88      1    3
+89      1    4
+90      1    5
+91      1    6
+92      1    7
+93      1    8
+94      1    9
+95      1   10
+96      1   11
+97      1   12
+98      1   13
+99      1   14
+100     1   15
+101     1   16
+102     1   17
+273     1   18
+274     1   19
+275     1   20
+276     1   21
+277     1   22
+278     1   23
+279     1   24
+280     1   25
+281     1   26
+282     1   27
+283     1   28
+284     1   29
+285     1   30
+286     1   31
+287     1   32
+288     1   33
+289     1   34
+307     1   35
+308     1   36
+309     1   37
+310     1   38
+311     1   39
+312     1   40
+313     1   41
+314     1   42
+315     1   43
+316     1   44
+317     1   45
+318     1   46
+319     1   47
+320     1   48
+321     1   49
+322     1   50
+323     1   51
+443     1   52
+444     1   53
+445     1   54
+446     1   55
+447     1   56
+448     1   57
+449     1   58
+450     1   59
+451     1   60
+452     1   61
+453     1   62
+454     1   63
+455     1   64
+456     1   65
+457     1   66
+458     1   67
+459     1   68
+613     1   69
+614     1   70
+615     1   71
+616     1   72
+617     1   73
+618     1   74
+619     1   75
+620     1   76
+621     1   77
+622     1   78
+623     1   79
+624     1   80
+625     1   81
+626     1   82
+627     1   83
+628     1   84
+629     1   85
+715     1   86
+716     1   87
+717     1   88
+718     1   89
+719     1   90
+720     1   91
+721     1   92
+722     1   93
+723     1   94
+724     1   95
+725     1   96
+726     1   97
+727     1   98
+728     1   99
+729     1  100
+730     1  101
+731     1  102
+460     2    1
+461     2    2
+462     2    3
+463     2    4
+464     2    5
+465     2    6
+466     2    7
+467     2    8
+468     2    9
+469     2   10
+470     2   11
+471     2   12
+472     2   13
+473     2   14
+474     2   15
+475     2   16
+476     2   17
+494     2   18
+495     2   19
+496     2   20
+497     2   21
+498     2   22
+499     2   23
+500     2   24
+501     2   25
+502     2   26
+503     2   27
+504     2   28
+505     2   29
+506     2   30
+507     2   31
+508     2   32
+509     2   33
+510     2   34
+596     2   35
+597     2   36
+598     2   37
+599     2   38
+600     2   39
+601     2   40
+602     2   41
+603     2   42
+604     2   43
+605     2   44
+606     2   45
+607     2   46
+608     2   47
+609     2   48
+610     2   49
+611     2   50
+612     2   51
+171     3    1
+172     3    2
+173     3    3
+174     3    4
+175     3    5
+176     3    6
+177     3    7
+178     3    8
+179     3    9
+180     3   10
+181     3   11
+182     3   12
+183     3   13
+184     3   14
+185     3   15
+186     3   16
+187     3   17
+188     3   18
+189     3   19
+190     3   20
+191     3   21
+192     3   22
+193     3   23
+194     3   24
+195     3   25
+196     3   26
+197     3   27
+198     3   28
+199     3   29
+200     3   30
+201     3   31
+202     3   32
+203     3   33
+204     3   34
+324     3   35
+325     3   36
+326     3   37
+327     3   38
+328     3   39
+329     3   40
+330     3   41
+331     3   42
+332     3   43
+333     3   44
+334     3   45
+335     3   46
+336     3   47
+337     3   48
+338     3   49
+339     3   50
+340     3   51
+545     3   52
+546     3   53
+547     3   54
+548     3   55
+549     3   56
+550     3   57
+551     3   58
+552     3   59
+553     3   60
+554     3   61
+555     3   62
+556     3   63
+557     3   64
+558     3   65
+559     3   66
+560     3   67
+561     3   68
+783     3   69
+784     3   70
+785     3   71
+786     3   72
+787     3   73
+788     3   74
+789     3   75
+790     3   76
+791     3   77
+792     3   78
+793     3   79
+794     3   80
+795     3   81
+796     3   82
+797     3   83
+798     3   84
+799     3   85
+205     4    1
+206     4    2
+207     4    3
+208     4    4
+209     4    5
+210     4    6
+211     4    7
+212     4    8
+213     4    9
+214     4   10
+215     4   11
+216     4   12
+217     4   13
+218     4   14
+219     4   15
+220     4   16
+221     4   17
+222     4   18
+223     4   19
+224     4   20
+225     4   21
+226     4   22
+227     4   23
+228     4   24
+229     4   25
+230     4   26
+231     4   27
+232     4   28
+233     4   29
+234     4   30
+235     4   31
+236     4   32
+237     4   33
+238     4   34
+341     4   35
+342     4   36
+343     4   37
+344     4   38
+345     4   39
+346     4   40
+347     4   41
+348     4   42
+349     4   43
+350     4   44
+351     4   45
+352     4   46
+353     4   47
+354     4   48
+355     4   49
+356     4   50
+357     4   51
+375     4   52
+376     4   53
+377     4   54
+378     4   55
+379     4   56
+380     4   57
+381     4   58
+382     4   59
+383     4   60
+384     4   61
+385     4   62
+386     4   63
+387     4   64
+388     4   65
+389     4   66
+390     4   67
+391     4   68
+409     4   69
+410     4   70
+411     4   71
+412     4   72
+413     4   73
+414     4   74
+415     4   75
+416     4   76
+417     4   77
+418     4   78
+419     4   79
+420     4   80
+421     4   81
+422     4   82
+423     4   83
+424     4   84
+425     4   85
+528     4   86
+529     4   87
+530     4   88
+531     4   89
+532     4   90
+533     4   91
+534     4   92
+535     4   93
+536     4   94
+537     4   95
+538     4   96
+539     4   97
+540     4   98
+541     4   99
+542     4  100
+543     4  101
+544     4  102
+647     4  103
+648     4  104
+649     4  105
+650     4  106
+651     4  107
+652     4  108
+653     4  109
+654     4  110
+655     4  111
+656     4  112
+657     4  113
+658     4  114
+659     4  115
+660     4  116
+661     4  117
+662     4  118
+663     4  119
+103     5    1
+104     5    2
+105     5    3
+106     5    4
+107     5    5
+108     5    6
+109     5    7
+110     5    8
+111     5    9
+112     5   10
+113     5   11
+114     5   12
+115     5   13
+116     5   14
+117     5   15
+118     5   16
+119     5   17
+120     5   18
+121     5   19
+122     5   20
+123     5   21
+124     5   22
+125     5   23
+126     5   24
+127     5   25
+128     5   26
+129     5   27
+130     5   28
+131     5   29
+132     5   30
+133     5   31
+134     5   32
+135     5   33
+136     5   34
+137     5   35
+138     5   36
+139     5   37
+140     5   38
+141     5   39
+142     5   40
+143     5   41
+144     5   42
+145     5   43
+146     5   44
+147     5   45
+148     5   46
+149     5   47
+150     5   48
+151     5   49
+152     5   50
+153     5   51
+290     5   52
+291     5   53
+292     5   54
+293     5   55
+294     5   56
+295     5   57
+296     5   58
+297     5   59
+298     5   60
+299     5   61
+300     5   62
+301     5   63
+302     5   64
+303     5   65
+304     5   66
+305     5   67
+306     5   68
+511     5   69
+512     5   70
+513     5   71
+514     5   72
+515     5   73
+516     5   74
+517     5   75
+518     5   76
+519     5   77
+520     5   78
+521     5   79
+522     5   80
+523     5   81
+524     5   82
+525     5   83
+526     5   84
+527     5   85
+630     5   86
+631     5   87
+632     5   88
+633     5   89
+634     5   90
+635     5   91
+636     5   92
+637     5   93
+638     5   94
+639     5   95
+640     5   96
+641     5   97
+642     5   98
+643     5   99
+644     5  100
+645     5  101
+646     5  102
+732     5  103
+733     5  104
+734     5  105
+735     5  106
+736     5  107
+737     5  108
+738     5  109
+739     5  110
+740     5  111
+741     5  112
+742     5  113
+743     5  114
+744     5  115
+745     5  116
+746     5  117
+747     5  118
+748     5  119
+766     5  120
+767     5  121
+768     5  122
+769     5  123
+770     5  124
+771     5  125
+772     5  126
+773     5  127
+774     5  128
+775     5  129
+776     5  130
+777     5  131
+778     5  132
+779     5  133
+780     5  134
+781     5  135
+782     5  136
+1       6    1
+2       6    2
+3       6    3
+4       6    4
+5       6    5
+6       6    6
+7       6    7
+8       6    8
+9       6    9
+10      6   10
+11      6   11
+12      6   12
+13      6   13
+14      6   14
+15      6   15
+16      6   16
+17      6   17
+239     6   18
+240     6   19
+241     6   20
+242     6   21
+243     6   22
+244     6   23
+245     6   24
+246     6   25
+247     6   26
+248     6   27
+249     6   28
+250     6   29
+251     6   30
+252     6   31
+253     6   32
+254     6   33
+255     6   34
+358     6   35
+359     6   36
+360     6   37
+361     6   38
+362     6   39
+363     6   40
+364     6   41
+365     6   42
+366     6   43
+367     6   44
+368     6   45
+369     6   46
+370     6   47
+371     6   48
+372     6   49
+373     6   50
+374     6   51
+664     6   52
+665     6   53
+666     6   54
+667     6   55
+668     6   56
+669     6   57
+670     6   58
+671     6   59
+672     6   60
+673     6   61
+674     6   62
+675     6   63
+676     6   64
+677     6   65
+678     6   66
+679     6   67
+680     6   68
+35      7    1
+36      7    2
+37      7    3
+38      7    4
+39      7    5
+40      7    6
+41      7    7
+42      7    8
+43      7    9
+44      7   10
+45      7   11
+46      7   12
+47      7   13
+48      7   14
+49      7   15
+50      7   16
+51      7   17
+256     7   18
+257     7   19
+258     7   20
+259     7   21
+260     7   22
+261     7   23
+262     7   24
+263     7   25
+264     7   26
+265     7   27
+266     7   28
+267     7   29
+268     7   30
+269     7   31
+270     7   32
+271     7   33
+272     7   34
+562     7   35
+563     7   36
+564     7   37
+565     7   38
+566     7   39
+567     7   40
+568     7   41
+569     7   42
+570     7   43
+571     7   44
+572     7   45
+573     7   46
+574     7   47
+575     7   48
+576     7   49
+577     7   50
+578     7   51
+681     7   52
+682     7   53
+683     7   54
+684     7   55
+685     7   56
+686     7   57
+687     7   58
+688     7   59
+689     7   60
+690     7   61
+691     7   62
+692     7   63
+693     7   64
+694     7   65
+695     7   66
+696     7   67
+697     7   68
+18      8    1
+19      8    2
+20      8    3
+21      8    4
+22      8    5
+23      8    6
+24      8    7
+25      8    8
+26      8    9
+27      8   10
+28      8   11
+29      8   12
+30      8   13
+31      8   14
+32      8   15
+33      8   16
+34      8   17
+69      8   18
+70      8   19
+71      8   20
+72      8   21
+73      8   22
+74      8   23
+75      8   24
+76      8   25
+77      8   26
+78      8   27
+79      8   28
+80      8   29
+81      8   30
+82      8   31
+83      8   32
+84      8   33
+85      8   34
+154     8   35
+155     8   36
+156     8   37
+157     8   38
+158     8   39
+159     8   40
+160     8   41
+161     8   42
+162     8   43
+163     8   44
+164     8   45
+165     8   46
+166     8   47
+167     8   48
+168     8   49
+169     8   50
+170     8   51
+392     8   52
+393     8   53
+394     8   54
+395     8   55
+396     8   56
+397     8   57
+398     8   58
+399     8   59
+400     8   60
+401     8   61
+402     8   62
+403     8   63
+404     8   64
+405     8   65
+406     8   66
+407     8   67
+408     8   68
+426     8   69
+427     8   70
+428     8   71
+429     8   72
+430     8   73
+431     8   74
+432     8   75
+433     8   76
+434     8   77
+435     8   78
+436     8   79
+437     8   80
+438     8   81
+439     8   82
+440     8   83
+441     8   84
+442     8   85
+477     8   86
+478     8   87
+479     8   88
+480     8   89
+481     8   90
+482     8   91
+483     8   92
+484     8   93
+485     8   94
+486     8   95
+487     8   96
+488     8   97
+489     8   98
+490     8   99
+491     8  100
+492     8  101
+493     8  102
+698     8  103
+699     8  104
+700     8  105
+701     8  106
+702     8  107
+703     8  108
+704     8  109
+705     8  110
+706     8  111
+707     8  112
+708     8  113
+709     8  114
+710     8  115
+711     8  116
+712     8  117
+713     8  118
+714     8  119
+800     8  120
+801     8  121
+802     8  122
+803     8  123
+804     8  124
+805     8  125
+806     8  126
+807     8  127
+808     8  128
+809     8  129
+810     8  130
+811     8  131
+812     8  132
+813     8  133
+814     8  134
+815     8  135
+816     8  136
+52      9    1
+53      9    2
+54      9    3
+55      9    4
+56      9    5
+57      9    6
+58      9    7
+59      9    8
+60      9    9
+61      9   10
+62      9   11
+63      9   12
+64      9   13
+65      9   14
+66      9   15
+67      9   16
+68      9   17
+579     9   18
+580     9   19
+581     9   20
+582     9   21
+583     9   22
+584     9   23
+585     9   24
+586     9   25
+587     9   26
+588     9   27
+589     9   28
+590     9   29
+591     9   30
+592     9   31
+593     9   32
+594     9   33
+595     9   34
+749     9   35
+750     9   36
+751     9   37
+752     9   38
+753     9   39
+754     9   40
+755     9   41
+756     9   42
+757     9   43
+758     9   44
+759     9   45
+760     9   46
+761     9   47
+762     9   48
+763     9   49
+764     9   50
+765     9   51
+> 
+> # test for error about length(index)>2
+> # Should result in error with informative message
+> #ttC3 <-  tryCatch(pdata.frame(Wages, index=c(595, 3, 5)), error=function(e) e, warning = function(w) w)
+> #if(!is(ttC3,"error") | ttC3$message != "'index' can be of length 2 at the most (one individual and one time index)") stop("error about length(index)>2 not sent")
+> #YC deprecated, the index can be now of length 3
+> 
+> #### larger data set ###
+> ## commented because needs other package
+> # require(plm)
+> # library(ggplot2)
+> # data("diamonds", package = "ggplot2")
+> # 
+> # class(diamonds$cut) # ordered factor
+> # 
+> # diamonds.p <- pdata.frame(diamonds, index = "cut") # wrong indexes created
+> # pdim(diamonds.p)
+> # 
+> # # order data set
+> # diamonds3_asc <- diamonds[order(diamonds$cut), ]
+> # diamonds3_asc.p <- pdata.frame(diamonds3_asc, index = "cut")
+> # pdim(diamonds3_asc.p) # works
+> # 
+> # diamonds3_desc <- diamonds[order(diamonds$cut, decreasing = T), ]
+> # diamonds3_desc.p <- pdata.frame(diamonds3_desc, index = "cut")
+> # pdim(diamonds3_desc.p)
+> # 
+> # 
+> # # try numeric index
+> # diamonds2 <- diamonds
+> # diamonds2$cut_num  <- as.numeric(diamonds2$cut) # make index numeric
+> # 
+> # diamonds2_asc  <- diamonds2[order(diamonds2$cut_num), ] # ascending order of index
+> # diamonds2_desc <- diamonds2[order(diamonds2$cut_num, decreasing = T), ] # descending order of index
+> # 
+> # head(diamonds2_asc)
+> # head(diamonds2_desc)
+> # 
+> # diamonds2_asc.p <- pdata.frame(diamonds2_asc, index = "cut_num")
+> # pdim(diamonds2_asc.p)
+> # 
+> # diamonds2_desc.p <- pdata.frame(diamonds2_desc, index = "cut_num") # wrong index created
+> # pdim(diamonds2_desc.p)
+> # 
+> # 
+> # # Some further tests about the blocks of individuals
+> # # - does it depend on asc. block length?
+> # # -> no, works fine
+> # diamonds2_asc_short <- diamonds2_asc[-c(33940:nrow(diamonds2_asc)), ]
+> # diamonds2_asc_short.p <- pdata.frame(diamonds2_asc_short, index = "cut_num")
+> # pdim(diamonds2_asc_short.p)
+> # 
+> # diamonds2_asc_short2 <- diamonds2_asc[-c(6517:18517), ]
+> # diamonds2_asc_short2.p <- pdata.frame(diamonds2_asc_short2, index = "cut_num")
+> # pdim(diamonds2_asc_short2.p)
+> 
+> proc.time()
+   user  system elapsed 
+   0.57    0.14    0.68 
