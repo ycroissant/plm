@@ -58,9 +58,10 @@ lags for all time series), a vector of integers (one for each
 time series), or a character string for an automatic
 computation of the number of lags, based on the AIC
 (\code{"AIC"}), the SIC (\code{"SIC"}), or on the method by
-\insertCite{HALL:94;textual}{plm} (\code{"Hall"}),}
+\insertCite{HALL:94;textual}{plm} (\code{"Hall"}); argument is irrelevant
+for \code{test = "hadri"},}
 
-\item{pmax}{maximum number of lags,}
+\item{pmax}{maximum number of lags (irrelevant for \code{test = "hadri"}),}
 
 \item{Hcons}{logical, only relevant for \code{test = "hadri"},
 indicating whether the heteroskedasticity-consistent test of

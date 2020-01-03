@@ -3,14 +3,15 @@
    * tests now support unbalanced panel data, where applicable.
    * gained argument 'ips.stat' to select statistic for IPS test,
      default is "Wtbar" (as before), added "Ztbar" and "tbar".
-   * return value's element idres contains p-values of individual
-     ADF-regressions (p.trho).
-   * purtest.summary(.print): for Levin/Lin/Chu test, summary contains
-     short-run and long-run variance; p.trho printed for all tests (if applicable).
    * if package 'urca' is available, p-values used in individual (augmented)
      Dicker-Fuller regressions are (for applicable tests) based on
      MacKinnon (1996) instead of MacKinnon (1994) yielding better p-value
-     approximations for tau distribution.
+     approximations for tau distribution (via urca::punitroot).
+   * return value's element idres contains p-values of individual
+     ADF-regressions (p.trho) and printed in summary (where applicable).
+   * for Levin/Lin/Chu test, object and summary contains short-run and
+     long-run variance.
+   * for Hadri's test, a summary is now available.
      
 * index.pindex: fixed bug when individual index variable is called "group".
 

@@ -1,4 +1,8 @@
 # Various run tests for purtest()
+
+# NB: p-values can differ slightly relative to .Rout.save file due to availabilty of package 'urca'
+#     for p-value approximation in individiual (A)DF-regressions.
+
 library(plm)
 data("Grunfeld", package = "plm")
 pG <- pdata.frame(Grunfeld)
@@ -36,15 +40,27 @@ purtest(as.matrix(df_inv), pmax = 4, test = "ips", exo = "intercept")
 
 
 #### Hadri (2000) test
-## matches results vom EViews 9.5:
+## matches results vom EViews 9.5 (if dfcor = FALSE):
 ## z stat     =  4.18428, p = 0.0000 (intercept)
 ## z stat het = 10.1553,  p = 0.0000 (intercept)
 ## z stat     =  4.53395, p = 0.0000 (trend)
 ## z stat het =  9.57816, p = 0.0000 (trend)
-purtest(pG$value, exo = "intercept", test = "hadri", Hcons = FALSE)
-purtest(pG$value, exo = "intercept", test = "hadri")
-purtest(pG$value, exo = "trend", test = "hadri", Hcons = FALSE)
-purtest(pG$value, exo = "trend", test = "hadri")
+h_1.1 <- purtest(pG$value, exo = "intercept", test = "hadri", Hcons = FALSE)
+h_1.2 <- purtest(pG$value, exo = "intercept", test = "hadri", Hcons = FALSE, dfcor = TRUE)
+h_2.1 <- purtest(pG$value, exo = "intercept", test = "hadri")
+h_2.2 <- purtest(pG$value, exo = "intercept", test = "hadri", dfcor = TRUE)
+h_3.1 <- purtest(pG$value, exo = "trend", test = "hadri", Hcons = FALSE)
+h_3.2 <- purtest(pG$value, exo = "trend", test = "hadri", Hcons = FALSE, dfcor = TRUE)
+h_4.1 <- purtest(pG$value, exo = "trend", test = "hadri")
+h_4.2 <- purtest(pG$value, exo = "trend", test = "hadri", dfcor = TRUE)
+summary(h_1.1)
+summary(h_1.2)
+summary(h_2.1)
+summary(h_2.2)
+summary(h_3.1)
+summary(h_3.2)
+summary(h_4.1)
+summary(h_4.2)
 
 
 ### IPS (2003) test

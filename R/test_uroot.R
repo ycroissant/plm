@@ -73,64 +73,64 @@ padf <- function(x, exo = c("none", "intercept", "trend"), p.approx = NULL){
 ## IPS (2003), table 3 for Wtbar statistic
 # x1: means without time trend from table 3 in IPS (2003)
 adj.ips.wtbar.x1 <- c(
--1.504,-1.514,-1.522,-1.520,-1.526,-1.523,-1.527,-1.519,-1.524,-1.532,
--1.488,-1.503,-1.516,-1.514,-1.519,-1.520,-1.524,-1.519,-1.522,-1.530,
--1.319,-1.387,-1.428,-1.443,-1.460,-1.476,-1.493,-1.490,-1.498,-1.514,
--1.306,-1.366,-1.413,-1.433,-1.453,-1.471,-1.489,-1.486,-1.495,-1.512,
--1.171,-1.260,-1.329,-1.363,-1.394,-1.428,-1.454,-1.458,-1.470,-1.495,
-    NA,    NA,-1.313,-1.351,-1.384,-1.421,-1.451,-1.454,-1.467,-1.494,
-    NA,    NA,    NA,-1.289,-1.331,-1.380,-1.418,-1.427,-1.444,-1.476,
-    NA,    NA,    NA,-1.273,-1.319,-1.371,-1.411,-1.423,-1.441,-1.474,
-    NA,    NA,    NA,-1.212,-1.266,-1.329,-1.377,-1.393,-1.415,-1.456
+  -1.504,-1.514,-1.522,-1.520,-1.526,-1.523,-1.527,-1.519,-1.524,-1.532,
+  -1.488,-1.503,-1.516,-1.514,-1.519,-1.520,-1.524,-1.519,-1.522,-1.530,
+  -1.319,-1.387,-1.428,-1.443,-1.460,-1.476,-1.493,-1.490,-1.498,-1.514,
+  -1.306,-1.366,-1.413,-1.433,-1.453,-1.471,-1.489,-1.486,-1.495,-1.512,
+  -1.171,-1.260,-1.329,-1.363,-1.394,-1.428,-1.454,-1.458,-1.470,-1.495,
+  NA,    NA,-1.313,-1.351,-1.384,-1.421,-1.451,-1.454,-1.467,-1.494,
+  NA,    NA,    NA,-1.289,-1.331,-1.380,-1.418,-1.427,-1.444,-1.476,
+  NA,    NA,    NA,-1.273,-1.319,-1.371,-1.411,-1.423,-1.441,-1.474,
+  NA,    NA,    NA,-1.212,-1.266,-1.329,-1.377,-1.393,-1.415,-1.456
 )
 # x2: variances without time trend from table 3 in IPS (2003)
 adj.ips.wtbar.x2 <- c(
-1.069,0.923,0.851,0.809,0.789,0.770,0.760,0.749,0.736,0.735,
-1.255,1.011,0.915,0.861,0.831,0.803,0.781,0.770,0.753,0.745,
-1.421,1.078,0.969,0.905,0.865,0.830,0.798,0.789,0.766,0.754,
-1.759,1.181,1.037,0.952,0.907,0.858,0.819,0.802,0.782,0.761,
-2.080,1.279,1.097,1.005,0.946,0.886,0.842,0.819,0.801,0.771,
-   NA,   NA,1.171,1.055,0.980,0.912,0.863,0.839,0.814,0.781,
-   NA,   NA,   NA,1.114,1.023,0.942,0.886,0.858,0.834,0.795,
-   NA,   NA,   NA,1.164,1.062,0.968,0.910,0.875,0.851,0.806,
-   NA,   NA,   NA,1.217,1.105,0.996,0.929,0.896,0.871,0.818
+  1.069,0.923,0.851,0.809,0.789,0.770,0.760,0.749,0.736,0.735,
+  1.255,1.011,0.915,0.861,0.831,0.803,0.781,0.770,0.753,0.745,
+  1.421,1.078,0.969,0.905,0.865,0.830,0.798,0.789,0.766,0.754,
+  1.759,1.181,1.037,0.952,0.907,0.858,0.819,0.802,0.782,0.761,
+  2.080,1.279,1.097,1.005,0.946,0.886,0.842,0.819,0.801,0.771,
+  NA,   NA,1.171,1.055,0.980,0.912,0.863,0.839,0.814,0.781,
+  NA,   NA,   NA,1.114,1.023,0.942,0.886,0.858,0.834,0.795,
+  NA,   NA,   NA,1.164,1.062,0.968,0.910,0.875,0.851,0.806,
+  NA,   NA,   NA,1.217,1.105,0.996,0.929,0.896,0.871,0.818
 )
 
 # x3: means with time trend from table 3 in IPS (2003)
 adj.ips.wtbar.x3 <- c(
--2.166,-2.167,-2.168,-2.167,-2.172,-2.173,-2.176,-2.174,-2.174,-2.177,
--2.173,-2.169,-2.172,-2.172,-2.173,-2.177,-2.180,-2.178,-2.176,-2.179,
--1.914,-1.999,-2.047,-2.074,-2.095,-2.120,-2.137,-2.143,-2.146,-2.158,
--1.922,-1.977,-2.032,-2.065,-2.091,-2.117,-2.137,-2.142,-2.146,-2.158,
--1.750,-1.823,-1.911,-1.968,-2.009,-2.057,-2.091,-2.103,-2.114,-2.135,
-    NA,    NA,-1.888,-1.955,-1.998,-2.051,-2.087,-2.101,-2.111,-2.135,
-    NA,    NA,    NA,-1.868,-1.923,-1.995,-2.042,-2.065,-2.081,-2.113,
-    NA,    NA,    NA,-1.851,-1.912,-1.986,-2.036,-2.063,-2.079,-2.112,
-    NA,    NA,    NA,-1.761,-1.835,-1.925,-1.987,-2.024,-2.046,-2.088
+  -2.166,-2.167,-2.168,-2.167,-2.172,-2.173,-2.176,-2.174,-2.174,-2.177,
+  -2.173,-2.169,-2.172,-2.172,-2.173,-2.177,-2.180,-2.178,-2.176,-2.179,
+  -1.914,-1.999,-2.047,-2.074,-2.095,-2.120,-2.137,-2.143,-2.146,-2.158,
+  -1.922,-1.977,-2.032,-2.065,-2.091,-2.117,-2.137,-2.142,-2.146,-2.158,
+  -1.750,-1.823,-1.911,-1.968,-2.009,-2.057,-2.091,-2.103,-2.114,-2.135,
+  NA,    NA,-1.888,-1.955,-1.998,-2.051,-2.087,-2.101,-2.111,-2.135,
+  NA,    NA,    NA,-1.868,-1.923,-1.995,-2.042,-2.065,-2.081,-2.113,
+  NA,    NA,    NA,-1.851,-1.912,-1.986,-2.036,-2.063,-2.079,-2.112,
+  NA,    NA,    NA,-1.761,-1.835,-1.925,-1.987,-2.024,-2.046,-2.088
 )
 
 # x4: variances with time trend from table 3 in IPS (2003)
 adj.ips.wtbar.x4 <- c(
-1.132,0.869,0.763,0.713,0.690,0.655,0.633,0.621,0.610,0.597,
-1.453,0.975,0.845,0.769,0.734,0.687,0.654,0.641,0.627,0.605,
-1.627,1.036,0.882,0.796,0.756,0.702,0.661,0.653,0.634,0.613,
-2.482,1.214,0.983,0.861,0.808,0.735,0.688,0.674,0.650,0.625,
-3.947,1.332,1.052,0.913,0.845,0.759,0.705,0.685,0.662,0.629,
-   NA,   NA,1.165,0.991,0.899,0.792,0.730,0.705,0.673,0.638,
-   NA,   NA,   NA,1.055,0.945,0.828,0.753,0.725,0.689,0.650,
-   NA,   NA,   NA,1.145,1.009,0.872,0.786,0.747,0.713,0.661,
-   NA,   NA,   NA,1.208,1.063,0.902,0.808,0.766,0.728,0.670
+  1.132,0.869,0.763,0.713,0.690,0.655,0.633,0.621,0.610,0.597,
+  1.453,0.975,0.845,0.769,0.734,0.687,0.654,0.641,0.627,0.605,
+  1.627,1.036,0.882,0.796,0.756,0.702,0.661,0.653,0.634,0.613,
+  2.482,1.214,0.983,0.861,0.808,0.735,0.688,0.674,0.650,0.625,
+  3.947,1.332,1.052,0.913,0.845,0.759,0.705,0.685,0.662,0.629,
+  NA,   NA,1.165,0.991,0.899,0.792,0.730,0.705,0.673,0.638,
+  NA,   NA,   NA,1.055,0.945,0.828,0.753,0.725,0.689,0.650,
+  NA,   NA,   NA,1.145,1.009,0.872,0.786,0.747,0.713,0.661,
+  NA,   NA,   NA,1.208,1.063,0.902,0.808,0.766,0.728,0.670
 )
 
 adj.ips.wtbar <- c(adj.ips.wtbar.x1, adj.ips.wtbar.x2,
                    adj.ips.wtbar.x3, adj.ips.wtbar.x4)
 
 adj.ips.wtbar <- array(adj.ips.wtbar, dim = c(10, 9, 2, 2),
-                 dimnames = list(
-                   c(10, 15, 20, 25, 30, 40, 50, 60, 70, 100),
-                   0:8,
-                   c("mean", "var"),
-                   c("intercept", "trend"))
+                       dimnames = list(
+                         c(10, 15, 20, 25, 30, 40, 50, 60, 70, 100),
+                         0:8,
+                         c("mean", "var"),
+                         c("intercept", "trend"))
 )
 
 adj.ips.wtbar <- aperm(adj.ips.wtbar, c(2, 1, 3, 4))
@@ -142,64 +142,64 @@ adj.ips.wtbar <- aperm(adj.ips.wtbar, c(2, 1, 3, 4))
 
 # intercept 1% critical values
 critval.ips.tbar.int1 <- c(
--3.79, -2.66, -2.54, -2.50, -2.46, -2.44, -2.43, -2.42, -2.42, -2.40, -2.40,
--3.45, -2.47, -2.38, -2.33, -2.32, -2.31, -2.29, -2.28, -2.28, -2.28, -2.27,
--3.06, -2.32, -2.24, -2.21, -2.19, -2.18, -2.16, -2.16, -2.16, -2.16, -2.15,
--2.79, -2.14, -2.10, -2.08, -2.07, -2.05, -2.04, -2.05, -2.04, -2.04, -2.04,
--2.61, -2.06, -2.02, -2.00, -1.99, -1.99, -1.98, -1.98, -1.98, -1.97, -1.97,
--2.51, -2.01, -1.97, -1.95, -1.94, -1.94, -1.93, -1.93, -1.93, -1.93, -1.92,
--2.20, -1.85, -1.83, -1.82, -1.82, -1.82, -1.81, -1.81, -1.81, -1.81, -1.81,
--2.00, -1.75, -1.74, -1.73, -1.73, -1.73, -1.73, -1.73, -1.73, -1.73, -1.73)
+  -3.79, -2.66, -2.54, -2.50, -2.46, -2.44, -2.43, -2.42, -2.42, -2.40, -2.40,
+  -3.45, -2.47, -2.38, -2.33, -2.32, -2.31, -2.29, -2.28, -2.28, -2.28, -2.27,
+  -3.06, -2.32, -2.24, -2.21, -2.19, -2.18, -2.16, -2.16, -2.16, -2.16, -2.15,
+  -2.79, -2.14, -2.10, -2.08, -2.07, -2.05, -2.04, -2.05, -2.04, -2.04, -2.04,
+  -2.61, -2.06, -2.02, -2.00, -1.99, -1.99, -1.98, -1.98, -1.98, -1.97, -1.97,
+  -2.51, -2.01, -1.97, -1.95, -1.94, -1.94, -1.93, -1.93, -1.93, -1.93, -1.92,
+  -2.20, -1.85, -1.83, -1.82, -1.82, -1.82, -1.81, -1.81, -1.81, -1.81, -1.81,
+  -2.00, -1.75, -1.74, -1.73, -1.73, -1.73, -1.73, -1.73, -1.73, -1.73, -1.73)
 # intercept 5% critical values
 critval.ips.tbar.int5 <- c(
--2.76, -2.28, -2.21, -2.19, -2.18, -2.16, -2.16, -2.15, -2.16, -2.15,-2.15,
--2.57, -2.17, -2.11, -2.09, -2.08, -2.07, -2.07, -2.06, -2.06, -2.06,-2.05,
--2.42, -2.06, -2.02, -1.99, -1.99, -1.99, -1.98, -1.98, -1.97, -1.98,-1.97,
--2.28, -1.95, -1.92, -1.91, -1.90, -1.90, -1.90, -1.89, -1.89, -1.89,-1.89,
--2.18, -1.89, -1.87, -1.86, -1.85, -1.85, -1.85, -1.85, -1.84, -1.84,-1.84,
--2.11, -1.85, -1.83, -1.82, -1.82, -1.82, -1.81, -1.81, -1.81, -1.81,-1.81,
--1.95, -1.75, -1.74, -1.73, -1.73, -1.73, -1.73, -1.73, -1.73, -1.73,-1.73,
--1.84, -1.68, -1.67, -1.67, -1.67, -1.67, -1.67, -1.67, -1.67, -1.67,-1.67)
+  -2.76, -2.28, -2.21, -2.19, -2.18, -2.16, -2.16, -2.15, -2.16, -2.15,-2.15,
+  -2.57, -2.17, -2.11, -2.09, -2.08, -2.07, -2.07, -2.06, -2.06, -2.06,-2.05,
+  -2.42, -2.06, -2.02, -1.99, -1.99, -1.99, -1.98, -1.98, -1.97, -1.98,-1.97,
+  -2.28, -1.95, -1.92, -1.91, -1.90, -1.90, -1.90, -1.89, -1.89, -1.89,-1.89,
+  -2.18, -1.89, -1.87, -1.86, -1.85, -1.85, -1.85, -1.85, -1.84, -1.84,-1.84,
+  -2.11, -1.85, -1.83, -1.82, -1.82, -1.82, -1.81, -1.81, -1.81, -1.81,-1.81,
+  -1.95, -1.75, -1.74, -1.73, -1.73, -1.73, -1.73, -1.73, -1.73, -1.73,-1.73,
+  -1.84, -1.68, -1.67, -1.67, -1.67, -1.67, -1.67, -1.67, -1.67, -1.67,-1.67)
 # intercept 10% critical values	
 critval.ips.tbar.int10 <- c(
--2.38, -2.10, -2.06, -2.04, -2.04, -2.02, -2.02, -2.02, -2.02, -2.02, -2.01,
--2.27, -2.01, -1.98, -1.96, -1.95, -1.95, -1.95, -1.95, -1.94, -1.95, -1.94,
--2.17, -1.93, -1.90, -1.89, -1.88, -1.88, -1.88, -1.88, -1.88, -1.88, -1.88,
--2.06, -1.85, -1.83, -1.82, -1.82, -1.82, -1.81, -1.81, -1.81, -1.81, -1.81,
--2.00, -1.80, -1.79, -1.78, -1.78, -1.78, -1.78, -1.78, -1.78, -1.77, -1.77,
--1.96, -1.77, -1.76, -1.75, -1.75, -1.75, -1.75, -1.75, -1.75, -1.75, -1.75,
--1.85, -1.70, -1.69, -1.69, -1.69, -1.69, -1.68, -1.68, -1.68, -1.68, -1.69,
--1.77, -1.64, -1.64, -1.64, -1.64, -1.64, -1.64, -1.64, -1.64, -1.64, -1.64)
+  -2.38, -2.10, -2.06, -2.04, -2.04, -2.02, -2.02, -2.02, -2.02, -2.02, -2.01,
+  -2.27, -2.01, -1.98, -1.96, -1.95, -1.95, -1.95, -1.95, -1.94, -1.95, -1.94,
+  -2.17, -1.93, -1.90, -1.89, -1.88, -1.88, -1.88, -1.88, -1.88, -1.88, -1.88,
+  -2.06, -1.85, -1.83, -1.82, -1.82, -1.82, -1.81, -1.81, -1.81, -1.81, -1.81,
+  -2.00, -1.80, -1.79, -1.78, -1.78, -1.78, -1.78, -1.78, -1.78, -1.77, -1.77,
+  -1.96, -1.77, -1.76, -1.75, -1.75, -1.75, -1.75, -1.75, -1.75, -1.75, -1.75,
+  -1.85, -1.70, -1.69, -1.69, -1.69, -1.69, -1.68, -1.68, -1.68, -1.68, -1.69,
+  -1.77, -1.64, -1.64, -1.64, -1.64, -1.64, -1.64, -1.64, -1.64, -1.64, -1.64)
 # trend 1% critical values
 critval.ips.tbar.trend1 <- c(
--8.12, -3.42, -3.21, -3.13, -3.09, -3.05, -3.03, -3.02, -3.00, -3.00, -2.99,
--7.36, -3.20, -3.03, -2.97, -2.94, -2.93, -2.90, -2.88, -2.88, -2.87, -2.86,
--6.44, -3.03, -2.88, -2.84, -2.82, -2.79, -2.78, -2.77, -2.76, -2.75, -2.75,
--5.72, -2.86, -2.74, -2.71, -2.69, -2.68, -2.67, -2.65, -2.66, -2.65, -2.64,
--5.54, -2.75, -2.67, -2.63, -2.62, -2.61, -2.59, -2.60, -2.59, -2.58, -2.58,
--5.16, -2.69, -2.61, -2.58, -2.58, -2.56, -2.55, -2.55, -2.55, -2.54, -2.54,
--4.50, -2.53, -2.48, -2.46, -2.45, -2.45, -2.44, -2.44, -2.44, -2.44, -2.43,
--4.00, -2.42, -2.39, -2.38, -2.37, -2.37, -2.36, -2.36, -2.36, -2.36, -2.36)
+  -8.12, -3.42, -3.21, -3.13, -3.09, -3.05, -3.03, -3.02, -3.00, -3.00, -2.99,
+  -7.36, -3.20, -3.03, -2.97, -2.94, -2.93, -2.90, -2.88, -2.88, -2.87, -2.86,
+  -6.44, -3.03, -2.88, -2.84, -2.82, -2.79, -2.78, -2.77, -2.76, -2.75, -2.75,
+  -5.72, -2.86, -2.74, -2.71, -2.69, -2.68, -2.67, -2.65, -2.66, -2.65, -2.64,
+  -5.54, -2.75, -2.67, -2.63, -2.62, -2.61, -2.59, -2.60, -2.59, -2.58, -2.58,
+  -5.16, -2.69, -2.61, -2.58, -2.58, -2.56, -2.55, -2.55, -2.55, -2.54, -2.54,
+  -4.50, -2.53, -2.48, -2.46, -2.45, -2.45, -2.44, -2.44, -2.44, -2.44, -2.43,
+  -4.00, -2.42, -2.39, -2.38, -2.37, -2.37, -2.36, -2.36, -2.36, -2.36, -2.36)
 # trend 5% critical values
 critval.ips.tbar.trend5 <- c(
--4.66, -2.98, -2.87, -2.82, -2.80, -2.79, -2.77, -2.76, -2.75, -2.75, -2.75,
--4.38, -2.85, -2.76, -2.72, -2.70, -2.69, -2.68, -2.67, -2.67, -2.66, -2.66,
--4.11, -2.74, -2.66, -2.63, -2.62, -2.60, -2.60, -2.59, -2.59, -2.58, -2.58,
--3.88, -2.63, -2.57, -2.55, -2.53, -2.53, -2.52, -2.52, -2.52, -2.51, -2.51,
--3.73, -2.56, -2.52, -2.49, -2.48, -2.48, -2.48, -2.47, -2.47, -2.46, -2.46,
--3.62, -2.52, -2.48, -2.46, -2.45, -2.45, -2.44, -2.44, -2.44, -2.44, -2.43,
--3.35, -2.42, -2.38, -2.38, -2.37, -2.37, -2.36, -2.36, -2.36, -2.36, -2.36,
--3.13, -2.34, -2.32, -2.32, -2.31, -2.31, -2.31, -2.31, -2.31, -2.31, -2.31)
+  -4.66, -2.98, -2.87, -2.82, -2.80, -2.79, -2.77, -2.76, -2.75, -2.75, -2.75,
+  -4.38, -2.85, -2.76, -2.72, -2.70, -2.69, -2.68, -2.67, -2.67, -2.66, -2.66,
+  -4.11, -2.74, -2.66, -2.63, -2.62, -2.60, -2.60, -2.59, -2.59, -2.58, -2.58,
+  -3.88, -2.63, -2.57, -2.55, -2.53, -2.53, -2.52, -2.52, -2.52, -2.51, -2.51,
+  -3.73, -2.56, -2.52, -2.49, -2.48, -2.48, -2.48, -2.47, -2.47, -2.46, -2.46,
+  -3.62, -2.52, -2.48, -2.46, -2.45, -2.45, -2.44, -2.44, -2.44, -2.44, -2.43,
+  -3.35, -2.42, -2.38, -2.38, -2.37, -2.37, -2.36, -2.36, -2.36, -2.36, -2.36,
+  -3.13, -2.34, -2.32, -2.32, -2.31, -2.31, -2.31, -2.31, -2.31, -2.31, -2.31)
 # trend 10% critical values
 critval.ips.tbar.trend10 <- c(
--3.73, -2.77, -2.70, -2.67, -2.65, -2.64, -2.63, -2.62, -2.63, -2.62, -2.62,
--3.60, -2.68, -2.62, -2.59, -2.58, -2.57, -2.57, -2.56, -2.56, -2.55, -2.55,
--3.45, -2.59, -2.54, -2.52, -2.51, -2.51, -2.50, -2.50, -2.50, -2.49, -2.49,
--3.33, -2.52, -2.47, -2.46, -2.45, -2.45, -2.44, -2.44, -2.44, -2.44, -2.44,
--3.26, -2.47, -2.44, -2.42, -2.41, -2.41, -2.41, -2.40, -2.40, -2.40, -2.40,
--3.18, -2.44, -2.40, -2.39, -2.39, -2.38, -2.38, -2.38, -2.38, -2.38, -2.38,
--3.02, -2.36, -2.33, -2.33, -2.33, -2.32, -2.32, -2.32, -2.32, -2.32, -2.32,
--2.90, -2.30, -2.29, -2.28, -2.28, -2.28, -2.28, -2.28, -2.28, -2.28, -2.28)
+  -3.73, -2.77, -2.70, -2.67, -2.65, -2.64, -2.63, -2.62, -2.63, -2.62, -2.62,
+  -3.60, -2.68, -2.62, -2.59, -2.58, -2.57, -2.57, -2.56, -2.56, -2.55, -2.55,
+  -3.45, -2.59, -2.54, -2.52, -2.51, -2.51, -2.50, -2.50, -2.50, -2.49, -2.49,
+  -3.33, -2.52, -2.47, -2.46, -2.45, -2.45, -2.44, -2.44, -2.44, -2.44, -2.44,
+  -3.26, -2.47, -2.44, -2.42, -2.41, -2.41, -2.41, -2.40, -2.40, -2.40, -2.40,
+  -3.18, -2.44, -2.40, -2.39, -2.39, -2.38, -2.38, -2.38, -2.38, -2.38, -2.38,
+  -3.02, -2.36, -2.33, -2.33, -2.33, -2.32, -2.32, -2.32, -2.32, -2.32, -2.32,
+  -2.90, -2.30, -2.29, -2.28, -2.28, -2.28, -2.28, -2.28, -2.28, -2.28, -2.28)
 
 critval.ips.tbar <- c(critval.ips.tbar.int1,
                       critval.ips.tbar.int5,
@@ -209,11 +209,11 @@ critval.ips.tbar <- c(critval.ips.tbar.int1,
                       critval.ips.tbar.trend10)
 
 critval.ips.tbar <- array(critval.ips.tbar, dim = c(11, 8, 3, 2),
-                 dimnames = list(
-                   c(5, 10, 15, 20, 25, 30, 40, 50, 60, 70, 100),
-                   c(5, 7, 10, 15, 20, 25, 50, 100),
-                   c("1%", "5%", "10%"),
-                   c("intercept", "trend"))
+                          dimnames = list(
+                            c(5, 10, 15, 20, 25, 30, 40, 50, 60, 70, 100),
+                            c(5, 7, 10, 15, 20, 25, 50, 100),
+                            c("1%", "5%", "10%"),
+                            c("intercept", "trend"))
 )
 
 critval.ips.tbar <- aperm(critval.ips.tbar, c(2, 1, 3, 4))
@@ -243,7 +243,7 @@ v <- c(c( 0.004,  0.003,  0.002,  0.002,  0.001,  0.001,  0.001,  0.000,  0.000,
        c( 0.919,  0.889,  0.867,  0.850,  0.837,  0.826,  0.810,  0.798,  0.789,  0.782,  0.776,  0.742,  0.707),
        c(-0.703, -0.674, -0.653, -0.637, -0.624, -0.614, -0.598, -0.587, -0.578, -0.571, -0.566, -0.533, -0.500),
        c( 1.003,  0.949,  0.906,  0.871,  0.842,  0.818,  0.780,  0.751,  0.728,  0.710,  0.695,  0.603,  0.500)
-       )
+)
 
 adj.levinlin <- array(v, dim = c(13, 2, 3),
                       dimnames = list(Tn,
@@ -439,7 +439,7 @@ critval.ips.tbar.value <- function(ind = 10L, time = 19L, critvals, exo = c("int
         # TODO: cannot be correct as, e.g. ind = 6, time = 10 yield same value as for ind = 5, time = 10
         low  <- critvals[as.character(Inds[1L]), as.character(Ts), , exo]
         high <- critvals[as.character(Inds[2L]), as.character(Ts), , exo]
-       return(low + (Ts - Inds[1L])/(Inds[2L] - Inds[1L]) * (high - low))
+        return(low + (Ts - Inds[1L])/(Inds[2L] - Inds[1L]) * (high - low))
         
         # TODO: can take this(?):
         # w1 <- 1 / abs(ind - Inds[1L])
@@ -471,7 +471,7 @@ critval.ips.tbar.value <- function(ind = 10L, time = 19L, critvals, exo = c("int
       ##   https://stats.stackexchange.com/questions/64538/how-do-i-find-values-not-given-in-interpolate-in-statistical-tables
       ##    -> mentions the inverse linear approx often gives a better approximation as as t, chi^2, and F distribution as
       ##       values are linear in the reciprocal.
-
+      
       ## Stata: derived from Stata's documentation per example, Stata seems to just take the "upper right" value, i.e. Inds[2], Ts[2]
       # extract the 4 critical values as basis of interpolation interpolate ("corners of box")
       #
@@ -489,28 +489,28 @@ critval.ips.tbar.value <- function(ind = 10L, time = 19L, critvals, exo = c("int
       #     crit4[as.character(Inds[2L]), as.character(Ts[2L]), ] * weight[4]) / sum(weight)
       # return(res)
       
-       
-       ## example from Wikipedia: https://en.wikipedia.org/wiki/Bilinear_interpolation
-       # funcval2 <- c(91,162,210,95)
-       # dot2 <- c(20.2, 14.5)
-       # m2 <- matrix(c(20,14,21,14,20,15,21,15), ncol = 2, byrow = TRUE)
-       # 
-       # mat2 <- cbind(1, m2, m2[ , 1] * m2[ , 2])
-       # s2 <- solve(mat2, funcval2)
-       # vec2 <- c(1, dot2[1], dot2[2], dot2[1]*dot2[2])
-       # 
-       # print(as.numeric(crossprod(s2, vec2))) # == s[1] + s[2] * dot2[1] + s[3] * dot2[2] + s[4] * dot2[1]*dot2[2]
-       # 
-       #   # gretl:
-       #   funcval2mat <- matrix(funcval2, ncol = 2, byrow = F)
-       #   distance2 <- lapply(1:4, function(x) m2[x, ] - dot2)
-       #   weight2 <- vapply(distance2, function(x) 1/sqrt(as.numeric(crossprod(x))), 0.0)
-       #   
-       #   res <- 
-       #     (funcval2[1] * weight2[1] +
-       #     funcval2[2] * weight2[2] +
-       #     funcval2[3] * weight2[3] + 
-       #     funcval2[4] * weight2[4] ) / sum(weight2)
+      
+      ## example from Wikipedia: https://en.wikipedia.org/wiki/Bilinear_interpolation
+      # funcval2 <- c(91,162,210,95)
+      # dot2 <- c(20.2, 14.5)
+      # m2 <- matrix(c(20,14,21,14,20,15,21,15), ncol = 2, byrow = TRUE)
+      # 
+      # mat2 <- cbind(1, m2, m2[ , 1] * m2[ , 2])
+      # s2 <- solve(mat2, funcval2)
+      # vec2 <- c(1, dot2[1], dot2[2], dot2[1]*dot2[2])
+      # 
+      # print(as.numeric(crossprod(s2, vec2))) # == s[1] + s[2] * dot2[1] + s[3] * dot2[2] + s[4] * dot2[1]*dot2[2]
+      # 
+      #   # gretl:
+      #   funcval2mat <- matrix(funcval2, ncol = 2, byrow = F)
+      #   distance2 <- lapply(1:4, function(x) m2[x, ] - dot2)
+      #   weight2 <- vapply(distance2, function(x) 1/sqrt(as.numeric(crossprod(x))), 0.0)
+      #   
+      #   res <- 
+      #     (funcval2[1] * weight2[1] +
+      #     funcval2[2] * weight2[2] +
+      #     funcval2[3] * weight2[3] + 
+      #     funcval2[4] * weight2[4] ) / sum(weight2)
     }
   }
 }
@@ -567,7 +567,7 @@ tsadf <- function(object, exo = c("intercept", "none", "trend"),
 
 longrunvar <- function(x, exo = c("intercept", "none", "trend"), q = NULL){
   # compute the long run variance of the dependent variable
-
+  
   # q: lag truncation parameter: default (q == NULL) as in LLC, p. 14
   # it can be seen from LLC, table 2, that round() was used to get an
   # integer from that formula (not, e.g. trunc)
@@ -579,13 +579,13 @@ longrunvar <- function(x, exo = c("intercept", "none", "trend"), q = NULL){
   dx <- c(NA, dx)
   res <- 1/(T-1)*sum(dx[-1]^2)+
     2*sum(
-          sapply(1:q,
-                 function(L){
-                   sum(dx[2:(T-L)] * dx[(L+2):T]) / (T-1) *
-                     (1 - L / (q+1))
-                 }
-                 )
-          )
+      sapply(1:q,
+             function(L){
+               sum(dx[2:(T-L)] * dx[(L+2):T]) / (T-1) *
+                 (1 - L / (q+1))
+             }
+      )
+    )
   return(res)
 }
 
@@ -594,7 +594,7 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
                       cl, args, data.name, ...) {
   ## used by purtest(<.>, test = "hadri"); non-exported function
   ## Hadri's test is applicable to balanced data only
-  ## object is a list with observations per individual
+  ## input 'object' is a list with observations per individual
   if (!is.list(object)) stop("argument 'object' in hadritest is supposed to be a list")
   if (exo == "none") stop("exo = \"none\" is not a valid option for Hadri's test")
   if (length(unique(sapply(object, length))) > 1L) stop("Hadri test is not applicable to unbalanced panels")
@@ -617,38 +617,29 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
   }
   
   cumres2 <- lapply(resid, function(x) cumsum(x)^2)
-  if (!Hcons){
-    sigma2 <- if (!dfcor) { 
-      mean(unlist(resid)^2)
-    } else {
-      # df correction as suggested in Hadri (2000), p. 157
-      # -> apply to full length residuals over all individuals -> n*(L-1) or n*(L-2)
-      dfcorval <- switch(exo, "intercept" = n * (L-1), "trend" = n * (L-2))
-      sum(unlist(resid)^2) / dfcorval
-    }
-    S <- sum(unlist(cumres2))/(L^2 * n)
-    LM <- S / sigma2
-    
-    ## This would give the individual LM statistics for this case:
-    ## TODO: generalise for all cases and plug in in returned object,
-    ## so summary() on a Hadri returns these
-    # indsigma2 <- unlist(lapply(resid, function(x) mean(x^2)))
-    # indS <- unlist(lapply(cumres2, function(x) sum(x)))
-    # indLM <- indS / (L^2 * n) / indsigma2
+  
+  if (!dfcor) {
+    sigma2  <- mean(unlist(resid)^2)
+    sigma2i <- unlist(lapply(resid, function(x) mean(x^2)))
+  } else {
+    # df correction as suggested in Hadri (2000), p. 157
+    dfcorval <- switch(exo, "intercept" = (L-1), "trend" = (L-2))
+    # -> apply to full length residuals over all individuals -> n*(L-1) or n*(L-2)
+    sigma2 <- sum(unlist(resid)^2) / (n * dfcorval)
+    # -> apply to individual residuals' length, so just L -> L-1 or L-2
+    sigma2i <- unlist(lapply(resid, function(x) sum(x^2)/dfcorval))
   }
-  else{
-    sigma2i <- if (!dfcor) {
-      lapply(resid, function(x) mean(x^2))
-    } else {
-      # df correction as suggested in Hadri (2000), p. 157
-      # -> apply to individual residuals' length, so just L -> L-1 or L-2
-      dfcorval <- switch(exo, "intercept" = (L-1), "trend" = (L-2))
-      lapply(resid, function(x) sum(x^2)/dfcorval)
-    }
-    Sit2 <- mapply("/", cumres2, sigma2i)
-    LM <- sum(unlist(Sit2))/ (L^2 * n)
+  
+  Si2 <- unlist(lapply(cumres2, function(x) sum(x)))
+  numerator <- 1/n * sum(1/(L^2) * Si2)
+  LM <- numerator / sigma2 # non-het consist case (Hcons == FALSE)
+  LMi <- 1/(L^2) * Si2 / sigma2i # individual LM statistics
+  
+  if (Hcons) {
+    LM <- mean(LMi)
     method <- paste0(method, " (Heterosked. Consistent)")
   }
+  
   stat <- c(z = sqrt(n) * (LM - adj[1])  / sqrt(adj[2])) # eq. (14), (22) in Hadri (2000)
   pvalue <- pnorm(stat, lower.tail = FALSE) # is one-sided! was until rev. 572: 2*(pnorm(abs(stat), lower.tail = FALSE))
   
@@ -660,9 +651,13 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
                           p.value     = pvalue),
                      class = "htest")
   
+  idres <- mapply(list, LMi, sigma2i, SIMPLIFY = F)
+  idres <- lapply(idres, setNames, c("LM", "sigma2"))
+  
   result <- list(statistic = htest,
-                 call = cl,
-                 args = args)
+                 call      = cl,
+                 args      = args,
+                 idres     = idres)
   
   class(result) <- "purtest"
   return(result)
@@ -750,8 +745,9 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
 #'     time series), or a character string for an automatic
 #'     computation of the number of lags, based on the AIC
 #'     (`"AIC"`), the SIC (`"SIC"`), or on the method by
-#'     \insertCite{HALL:94;textual}{plm} (`"Hall"`),
-#' @param pmax maximum number of lags,
+#'     \insertCite{HALL:94;textual}{plm} (`"Hall"`); argument is irrelevant
+#'     for `test = "hadri"`,
+#' @param pmax maximum number of lags (irrelevant for `test = "hadri"`),
 #' @param Hcons logical, only relevant for `test = "hadri"`,
 #'     indicating whether the heteroskedasticity-consistent test of
 #'     \insertCite{HADR:00;textual}{plm} should be computed,
@@ -775,6 +771,7 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
 #'     needed to compute the statistic), `"sigma2"` short-run and long-run
 #'     variance (for `"test = levinlin"`, otherwise NULL).
 #' @export
+#' @importFrom stats setNames
 #' @author Yves Croissant and for "Pm", "invnormal", and "logit" Kevin
 #'     Tappe
 #' @seealso [cipstest()]
@@ -918,7 +915,7 @@ purtest <- function(object, data = NULL, index = NULL,
     sigmaLT <- sqrt(sapply(object, longrunvar, exo = exo, q = q))
     si <- sigmaLT/sigmaST # LLC (2002), formula 6
     sbar <- mean(si) 
-
+    
     # stack the residuals of each time series and perform the pooled
     # regression
     res.level <- unlist(lapply(idres, function(x) x$resid[["resid.level"]]))
@@ -1000,7 +997,7 @@ purtest <- function(object, data = NULL, index = NULL,
     pvalues.trho <- sapply(idres, function(x) x[["p.trho"]])
     n.Pm <- length(trho)
     # formula (18) in Choi (2001), p. 255:
-    stat <- c( "Pm" = 1/(2 * sqrt(n.Pm)) * sum(-2 * log(pvalues.trho) - 2) ) # == 1/sqrt(n.Pm) * sum(log(pvalues.trho) +1)
+    stat <- c( "Pm" = 1/(2 * sqrt(n.Pm)) * sum(-2 * log(pvalues.trho) - 2) ) # == -1/sqrt(n.Pm) * sum(log(pvalues.trho) +1)
     pvalue <- pnorm(stat, lower.tail = FALSE) # one-sided
     parameter <- NULL
     adjval <- NULL
@@ -1058,29 +1055,33 @@ print.purtest <- function(x, ...){
 #' @rdname purtest
 #' @export
 summary.purtest <- function(object, ...){
-  if (object$args$test == "hadri"){
-    stop("summary() not applicable for Hadri's test, i.e. for the result of purtest(<.>, test = \"hadri\")")
-  }
-  
-  lags   <- sapply(object$idres, function(x) x[["lags"]])
-  L      <- sapply(object$idres, function(x) x[["T"]])
-  rho    <- sapply(object$idres, function(x) x[["rho"]])
-  trho   <- sapply(object$idres, function(x) x[["trho"]])
-  p.trho <- sapply(object$idres, function(x) x[["p.trho"]])
-  nam <- names(object$idres)
-  sumidres <- cbind(
+  if (!object$args$test == "hadri"){
+    lags   <- sapply(object$idres, function(x) x[["lags"]])
+    L      <- sapply(object$idres, function(x) x[["T"]])
+    rho    <- sapply(object$idres, function(x) x[["rho"]])
+    trho   <- sapply(object$idres, function(x) x[["trho"]])
+    p.trho <- sapply(object$idres, function(x) x[["p.trho"]])
+    sumidres <- cbind(
       "lags"   = lags,
       "obs"    = L - lags - 1,
       "rho"    = rho,
       "trho"   = trho,
       "p.trho" = p.trho)
-  if (object$args$test == "ips" && !object$args$ips.stat == "tbar") {
-    sumidres <- cbind(sumidres, t(object$adjval))
-  }
-  if (object$args$test == "levinlin") {
-    sumidres <- cbind(sumidres, object$sigma2)
+    
+    if (object$args$test == "ips" && !object$args$ips.stat == "tbar") {
+      sumidres <- cbind(sumidres, t(object$adjval))
+    }
+    if (object$args$test == "levinlin") {
+      sumidres <- cbind(sumidres, object$sigma2)
+    }
+  } else {
+    # hadri
+    LM     <- sapply(object$idres, function(x) x[["LM"]])
+    sigma2 <- sapply(object$idres, function(x) x[["sigma2"]])
+    sumidres <- cbind("LM" = LM, "sigma2" = sigma2)
   }
   
+  nam <- names(object$idres)
   rownames(sumidres) <- nam
   object$sumidres <- sumidres
   class(object) <- c("summary.purtest", "purtest")
@@ -1092,15 +1093,18 @@ summary.purtest <- function(object, ...){
 print.summary.purtest <- function(x, ...){
   cat(paste(purtest.names.test[x$args$test], "\n"))
   cat(paste("Exogenous variables:", purtest.names.exo[x$args$exo], "\n"))
-  thelags <- sapply(x$idres, function(x) x[["lags"]])
-  if (is.character(x$args$lags)){
-    lagselectionmethod <- if (x$args$lags == "Hall") "Hall's method" else x$args$lags
-    cat(paste0("Automatic selection of lags using ", lagselectionmethod, ": ",
-              min(thelags), " - ", max(thelags), " lags (max: ", x$args$pmax, ")\n"))
+  if (x$args$test != "hadri") {
+    thelags <- sapply(x$idres, function(x) x[["lags"]])
+    if (is.character(x$args$lags)){
+      lagselectionmethod <- if (x$args$lags == "Hall") "Hall's method" else x$args$lags
+      cat(paste0("Automatic selection of lags using ", lagselectionmethod, ": ",
+                 min(thelags), " - ", max(thelags), " lags (max: ", x$args$pmax, ")\n"))
+    }
+    else{
+      cat("User-provided lags\n")
+    }
   }
-  else{
-    cat("User-provided lags\n")
-  }
+  
   if (x$args$test == "ips") {
     cat(paste(paste0("statistic (", x$args$ips.stat,"):"), round(x$statistic$statistic, 3), "\n"))
   } else {

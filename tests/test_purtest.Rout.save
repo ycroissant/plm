@@ -16,6 +16,10 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 Type 'q()' to quit R.
 
 > # Various run tests for purtest()
+> 
+> # NB: p-values can differ slightly relative to .Rout.save file due to availabilty of package 'urca'
+> #     for p-value approximation in individiual (A)DF-regressions.
+> 
 > library(plm)
 > data("Grunfeld", package = "plm")
 > pG <- pdata.frame(Grunfeld)
@@ -148,44 +152,147 @@ alternative hypothesis: stationarity
 > 
 > 
 > #### Hadri (2000) test
-> ## matches results vom EViews 9.5:
+> ## matches results vom EViews 9.5 (if dfcor = FALSE):
 > ## z stat     =  4.18428, p = 0.0000 (intercept)
 > ## z stat het = 10.1553,  p = 0.0000 (intercept)
 > ## z stat     =  4.53395, p = 0.0000 (trend)
 > ## z stat het =  9.57816, p = 0.0000 (trend)
-> purtest(pG$value, exo = "intercept", test = "hadri", Hcons = FALSE)
-
-	Hadri Test (ex. var.: Individual Intercepts)
-
-data:  pG$value
-z = 4.1843, p-value = 1.43e-05
-alternative hypothesis: at least one series has a unit root
-
-> purtest(pG$value, exo = "intercept", test = "hadri")
-
-	Hadri Test (ex. var.: Individual Intercepts) (Heterosked. Consistent)
-
-data:  pG$value
-z = 10.155, p-value < 2.2e-16
-alternative hypothesis: at least one series has a unit root
-
-> purtest(pG$value, exo = "trend", test = "hadri", Hcons = FALSE)
-
-	Hadri Test (ex. var.: Individual Intercepts and Trend)
-
-data:  pG$value
-z = 4.5339, p-value = 2.895e-06
-alternative hypothesis: at least one series has a unit root
-
-> purtest(pG$value, exo = "trend", test = "hadri")
-
-	Hadri Test (ex. var.: Individual Intercepts and Trend) (Heterosked.
-	Consistent)
-
-data:  pG$value
-z = 9.5782, p-value < 2.2e-16
-alternative hypothesis: at least one series has a unit root
-
+> h_1.1 <- purtest(pG$value, exo = "intercept", test = "hadri", Hcons = FALSE)
+> h_1.2 <- purtest(pG$value, exo = "intercept", test = "hadri", Hcons = FALSE, dfcor = TRUE)
+> h_2.1 <- purtest(pG$value, exo = "intercept", test = "hadri")
+> h_2.2 <- purtest(pG$value, exo = "intercept", test = "hadri", dfcor = TRUE)
+> h_3.1 <- purtest(pG$value, exo = "trend", test = "hadri", Hcons = FALSE)
+> h_3.2 <- purtest(pG$value, exo = "trend", test = "hadri", Hcons = FALSE, dfcor = TRUE)
+> h_4.1 <- purtest(pG$value, exo = "trend", test = "hadri")
+> h_4.2 <- purtest(pG$value, exo = "trend", test = "hadri", dfcor = TRUE)
+> summary(h_1.1)
+Hadri Test 
+Exogenous variables: Individual Intercepts 
+statistic: 4.184 
+p-value: 0 
+          LM       sigma2
+1  0.3143392 776878.74047
+2  0.0974765  86121.20788
+3  0.1464531 162702.95487
+4  0.2507621  24502.54190
+5  1.5352867   5179.84410
+6  1.7158789  44738.61027
+7  0.3565975   1030.01290
+8  1.0287779  46985.26090
+9  0.6875534   5669.88650
+10 0.3207828     81.68617
+> summary(h_1.2)
+Hadri Test 
+Exogenous variables: Individual Intercepts 
+statistic: 3.798 
+p-value: 0 
+           LM       sigma2
+1  0.29862219 817767.09524
+2  0.09260268  90653.90303
+3  0.13913042 171266.26829
+4  0.23822401  25792.14937
+5  1.45852236   5452.46747
+6  1.63008494  47093.27397
+7  0.33876762   1084.22411
+8  0.97733904  49458.16937
+9  0.65317574   5968.30158
+10 0.30474367     85.98544
+> summary(h_2.1)
+Hadri Test 
+Exogenous variables: Individual Intercepts 
+statistic: 10.155 
+p-value: 0 
+          LM       sigma2
+1  0.3143392 776878.74047
+2  0.0974765  86121.20788
+3  0.1464531 162702.95487
+4  0.2507621  24502.54190
+5  1.5352867   5179.84410
+6  1.7158789  44738.61027
+7  0.3565975   1030.01290
+8  1.0287779  46985.26090
+9  0.6875534   5669.88650
+10 0.3207828     81.68617
+> summary(h_2.2)
+Hadri Test 
+Exogenous variables: Individual Intercepts 
+statistic: 9.471 
+p-value: 0 
+           LM       sigma2
+1  0.29862219 817767.09524
+2  0.09260268  90653.90303
+3  0.13913042 171266.26829
+4  0.23822401  25792.14937
+5  1.45852236   5452.46747
+6  1.63008494  47093.27397
+7  0.33876762   1084.22411
+8  0.97733904  49458.16937
+9  0.65317574   5968.30158
+10 0.30474367     85.98544
+> summary(h_3.1)
+Hadri Test 
+Exogenous variables: Individual Intercepts and Trend 
+statistic: 4.534 
+p-value: 0 
+           LM       sigma2
+1  0.12037588 671266.58182
+2  0.10309400  86050.07644
+3  0.15460710 160987.22169
+4  0.04652752  21859.45611
+5  0.32820347   1319.04037
+6  0.41795730   6990.22810
+7  0.34773700   1022.55237
+8  0.16362350  21248.56152
+9  0.15446576   3832.05673
+10 0.09570977     71.11004
+> summary(h_3.2)
+Hadri Test 
+Exogenous variables: Individual Intercepts and Trend 
+statistic: 3.576 
+p-value: 0 
+           LM       sigma2
+1  0.10833829 745851.75758
+2  0.09278460  95611.19605
+3  0.13914639 178874.69077
+4  0.04187476  24288.28457
+5  0.29538313   1465.60041
+6  0.37616157   7766.92011
+7  0.31296330   1136.16930
+8  0.14726115  23609.51281
+9  0.13901919   4257.84081
+10 0.08613879     79.01116
+> summary(h_4.1)
+Hadri Test 
+Exogenous variables: Individual Intercepts and Trend 
+statistic: 9.578 
+p-value: 0 
+           LM       sigma2
+1  0.12037588 671266.58182
+2  0.10309400  86050.07644
+3  0.15460710 160987.22169
+4  0.04652752  21859.45611
+5  0.32820347   1319.04037
+6  0.41795730   6990.22810
+7  0.34773700   1022.55237
+8  0.16362350  21248.56152
+9  0.15446576   3832.05673
+10 0.09570977     71.11004
+> summary(h_4.2)
+Hadri Test 
+Exogenous variables: Individual Intercepts and Trend 
+statistic: 8.116 
+p-value: 0 
+           LM       sigma2
+1  0.10833829 745851.75758
+2  0.09278460  95611.19605
+3  0.13914639 178874.69077
+4  0.04187476  24288.28457
+5  0.29538313   1465.60041
+6  0.37616157   7766.92011
+7  0.31296330   1136.16930
+8  0.14726115  23609.51281
+9  0.13901919   4257.84081
+10 0.08613879     79.01116
 > 
 > 
 > ### IPS (2003) test
@@ -486,4 +593,4 @@ p-value: 0.004
 > 
 > proc.time()
    user  system elapsed 
-   1.21    0.12    1.34 
+   1.20    0.10    1.29 
