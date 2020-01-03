@@ -15,11 +15,11 @@ package's vignette.
 
 The main functions to estimate models are:
 \itemize{
-\item \code{plm} : panel data estimators using \code{lm} on transformed data,
--\code{pgmm} generalized method of moments (GMM) estimation for panel
+\item \code{plm}: panel data estimators using \code{lm} on transformed data,
+\item \code{pgmm}: generalized method of moments (GMM) estimation for panel
 data,
-\item \code{pvcm} variable coefficients models
-\item \code{pmg} mean groups (MG), demeaned MG and common correlated effects
+\item \code{pvcm}: variable coefficients models
+\item \code{pmg}: mean groups (MG), demeaned MG and common correlated effects
 (CCEMG) estimators.
 }
 

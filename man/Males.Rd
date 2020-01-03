@@ -17,7 +17,7 @@
 \item{wage}{log of hourly wage}
 \item{industry}{a factor with 12 levels}
 \item{occupation}{a factor with 9 levels}
-\item{residence}{a factor with levels \verb{rural area, north east, northern central, south}}
+\item{residence}{a factor with levels \verb{rural_area, north_east, northern_central, south}}
 }}
 \source{
 Journal of Applied Econometrics data archive

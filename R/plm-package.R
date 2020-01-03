@@ -73,11 +73,11 @@ NULL
 #' 
 #' The main functions to estimate models are:
 #'
-#' - `plm` : panel data estimators using `lm` on transformed data,
-#' -`pgmm` generalized method of moments (GMM) estimation for panel
+#' - `plm`: panel data estimators using `lm` on transformed data,
+#' - `pgmm`: generalized method of moments (GMM) estimation for panel
 #' data,
-#' - `pvcm` variable coefficients models
-#' - `pmg` mean groups (MG), demeaned MG and common correlated effects
+#' - `pvcm`: variable coefficients models
+#' - `pmg`: mean groups (MG), demeaned MG and common correlated effects
 #' (CCEMG) estimators.
 #'
 #' Next to the model estimation functions, the package offers several
@@ -528,7 +528,7 @@ NULL
 #' \item{wage}{log of hourly wage}
 #' \item{industry}{a factor with 12 levels}
 #' \item{occupation}{a factor with 9 levels}
-#' \item{residence}{a factor with levels `rural area, north east, northern central, south`}
+#' \item{residence}{a factor with levels `rural_area, north_east, northern_central, south`}
 #' }
 #' 
 #' @references
