@@ -67,32 +67,31 @@ data management tasks such as lagging, summing and, more in general,
 although conceptually simple, become cumbersome and error-prone on
 two-dimensional data, especially in the case of unbalanced panels.
 
-This paper is organized as follows: Section \@ref(the-linear-panel-model)
+This paper is organized as follows: Section [linear panel model](#linear-panel-model)
 presents a very short overview of the typical model
 taxonomy^[Comprehensive treatments are to be found in many econometrics textbooks,
 e.g. @BALT:05, @BALT:13 or @WOOL:02, @WOOL:10: the reader is referred to
 these, especially to the first 9 chapters of @BALT:05, @BALT:13.].
-Section \@ref(software-approach) discusses the
+Section [software approach](#software-approach) discusses the
 software approach used in the package. The next three sections present
 the functionalities of the package in more detail: data management
-(Section \@ref(managing-data-and-formulae)), estimation
-(Section \@ref(model-estimation)) and testing (Section \@ref(tests)),
+(Section [managing data and formulae](#managing-data-and-formulae)), estimation
+(Section [model estimation](#model-estimation)) and testing (Section [tests](#tests)),
 giving a short description and illustrating them with
-examples. Section \@ref(plm-versus-nlme-and-lme4) compares the approach in `plm` to
+examples. Section [plm vs nlme and lme4](#nlme) compares the approach in `plm` to
 that of `nlme` and `lme4`, highlighting the features of the
 latter two that an econometrician might find most useful.
-Section \@ref(conclusions) concludes the paper.
+Section [conclusion](#conclusions) concludes the paper.
 
 
-# The linear panel model
-\label{sec:linearpanelmodel}
+# The linear panel model{#linear-panel-model}
 
 The basic linear panel models used in econometrics can be described
 through suitable restrictions of the following general model:
 
-\begin{equation}
+\begin{equation*}
  y_{it}=\alpha_{it} +  \beta_{it}^\top x_{it} + u_{it}
-\end{equation}
+\end{equation*}
 
 where $i=1, ..., n$ is the individual (group, country ...) index,
 $t=1, ..., T$ is the time index and $u_{it}$ a random disturbance
@@ -107,9 +106,9 @@ The most common one is parameter homogeneity, which means that
 $\alpha_{it}=\alpha$ for all $i,t$ and $\beta_{it}=\beta$ for all
 $i,t$. The resulting model
 
-\begin{equation}
+\begin{equation*}
  y_{it}=\alpha +  \beta^\top x_{it} + u_{it}
-\end{equation}
+\end{equation*}
 
 is a standard linear model pooling all the data across $i$ and $t$.
 
@@ -170,9 +169,9 @@ data: lagging the model and subtracting, the time-invariant components
 (the intercept and the individual error component) are eliminated, and
 the model
 
-\begin{equation}
+\begin{equation*}
  \Delta y_{it}=  \beta^\top  \Delta x_{it} + \Delta u_{it}
-\end{equation}
+\end{equation*}
 
 (where $\Delta y_{it}=y_{it}-y_{i,t-1}$, $\Delta
 x_{it}=x_{it}-x_{i,t-1}$ and, from \@ref(eq:errcomp), $\Delta
@@ -264,8 +263,7 @@ demeaned model, a common pitfall), so we felt there was need for an
 "all in one" econometrics-oriented package allowing to make
 specification searches, estimation and inference in a natural way.
 
-# Software approach
-\label{sec:software}
+# Software approach{#software-approach}
 
 ## Data structure
 
@@ -435,7 +433,7 @@ coefficients' covariance matrix estimator also benefits from this
 framework, as they can be readily calculated applying the standard
 OLS formulas to the demeaned data, which are contained inside
 `plm` objects. This will be the subject of
-Subsection \@ref(inference-in-the-panel-model).
+subsection [inference in the panel model](#inference).
 
 
 ### The object oriented approach to general GLS computations
@@ -469,8 +467,7 @@ computing times and memory usage.  The resulting matrix is then used
 resulting in speed comparable to that of the demeaning solution.
 
 
-## Inference in the panel model
-\label{subsec:inference}
+## Inference in the panel model{#inference}
 
 
 General frameworks for restrictions and linear hypotheses testing are
@@ -499,9 +496,9 @@ flexible method for computing robust coefficient covariance matrices
 
 A general White system estimator for panel data is:
 
-\begin{equation}
+\begin{equation*}
   \hat{V}_R(\beta)=(X^\top X)^{-1} \sum_{i=1}^n{X_i^\top  E_i X_i} (X^\top X)^{-1}
-\end{equation}
+\end{equation*}
 
 where $E_i$ is a function of the residuals $\hat{e}_{it}, \; t=1,
 \dots T$ chosen according to the relevant heteroskedasticity and
@@ -518,8 +515,7 @@ structures and weighting schemes can be passed on to the testing
 functions.
 
 
-# Managing data and formulae
-\label{sec:dataformula}
+# Managing data and formulae{#dataformula}
 
 The package is now illustrated by application to some well-known
 examples. It is loaded using
@@ -656,8 +652,7 @@ In the second case, the `.` means the previous parts which
 describes the covariates and this part is "updated". This is
 particularly interesting when there are a few external instruments.
 
-# Model estimation
-\label{modelestimation}
+# Model estimation{#modelestimation}
 
 
 ## Estimation of the basic models with plm
@@ -857,18 +852,18 @@ least squares model which uses the results of the previous
 model. Denoting $\hat{\beta}_i$ the vectors of coefficients obtained
 for each individual, we get:
 
-\begin{equation}
+\begin{equation*}
 \hat{\beta}=\left(\sum_{i=1}^n \left(\hat{\Delta}+\hat{\sigma}_i^2(X_i^\top X_i)^{-1}\right)^{-1}\right)\left(\hat{\Delta}+\hat{\sigma}_i^2(X_i^\top X_i)^{-1}\right)^{-1}\hat{\beta}_i
-\end{equation}
+\end{equation*}
 
 where $\hat{\sigma}_i^2$ is the unbiased estimator of the variance of
 the errors for individual $i$ obtained from the preliminary estimation
 and:
 
-\begin{equation}
+\begin{equation*}
   \hat{\Delta}=\frac{1}{n-1}\sum_{i=1}^n\left(\hat{\beta}_i-\frac{1}{n}\sum_{i=1}^n\hat{\beta}_i\right)
   \left(\hat{\beta}_i-\frac{1}{n}\sum_{i=1}^n\hat{\beta}_i\right)^\top -\frac{1}{n}\sum_{i=1}^n\hat{\sigma}_i^2(X_i^\top X_i)^{-1}
-\end{equation}
+\end{equation*}
 
 If this matrix is not positive-definite, the second term is dropped.
 
@@ -885,15 +880,15 @@ summary(grun.varr)
 The generalized method of moments is mainly used in panel data
 econometrics to estimate dynamic models [@AREL:BOND:91; @HOLT:NEWE:ROSE:88].
 
-\begin{equation}
+\begin{equation*}
 y_{it}=\rho y_{it-1}+\beta^\top x_{it}+\mu_i+\epsilon_{it}
-\end{equation}
+\end{equation*}
 
 The model is first differenced to get rid of the individual effect:
 
-\begin{equation}
+\begin{equation*}
 \Delta y_{it}=\rho \Delta  y_{it-1}+\beta^\top \Delta x_{it}+\Delta \epsilon_{it}
-\end{equation}
+\end{equation*}
 
 Least squares are inconsistent because $\Delta \epsilon_{it}$ is
 correlated with $\Delta y_{it-1}$.  $y_{it-2}$ is a valid, but weak
@@ -906,7 +901,7 @@ the number of valid instruments is growing with $t$:
 
 For individual $i$, the matrix of instruments is then:
 
-\begin{equation}
+\begin{equation*}
 W_i=\left(
 \begin{array}{ccccccccccccc}
 y_1 & 0   & 0   & 0    & 0   & 0   & ... & 0    & 0   &  0   &        0      & x_{i3} \\
@@ -916,28 +911,28 @@ y_1 & 0   & 0   & 0    & 0   & 0   & ... & 0    & 0   &  0   &        0      & x
 0   & 0   & 0   & 0    & ...   & ...    &  ...      & y_1  & y_2 & ... & y_{t-2} & x_{iT-2} &\\
 \end{array}
 \right)
-\end{equation}
+\end{equation*}
 
 The moment conditions are: $\sum_{i=1}^n W_i^\top e_i(\beta)$ where
 $e_i(\beta)$ is the vector of residuals for individual $i$. The GMM
 estimator minimizes:
 
-\begin{equation}
+\begin{equation*}
 \left(\sum_{i=1}^n e_i(\beta)^\top W_i\right) A \left(\sum_{i=1}^n W_i^\top e_i(\beta)\right)
-\end{equation}
+\end{equation*}
 
 where $A$ is the weighting matrix of the moments. 
 
 One-step estimators are computed using a known weighting matrix. For
 the model in first differences, one uses:
 
-\begin{equation}
+\begin{equation*}
 A^{(1)}=\left(\sum_{i=1}^n W_i^\top H^{(1)}W_i\right)^{-1}
-\end{equation}
+\end{equation*}
 
 with:
 
-\begin{equation}
+\begin{equation*}
 H^{(1)}=d^\top d=\left(
 \begin{array}{ccccc}
 2 & -1 & 0 & ... & 0\\
@@ -947,7 +942,7 @@ H^{(1)}=d^\top d=\left(
 0 & 0 & 0 & -1  & 2\\
 \end{array}
 \right)
-\end{equation}
+\end{equation*}
 
 Two-steps estimators are obtained using 
 $H^{(2)}_i=\sum_{i=1}^n e^{(1)}_i e^{(1)\top }_i$ 
@@ -1101,11 +1096,9 @@ the model objects instead of the usual estimated variances of the two
 error components.
 
 
-# Tests
+# Tests{#tests}
 
-\label{sec:tests}
-
-As sketched in Section \@ref(the-linear-panel-model), specification
+As sketched in Section [linear panel model](#linear-panel-model)), specification
 testing in panel models involves essentially testing for poolability,
 for individual or time unobserved effects and for correlation between
 these latter and the regressors (Hausman-type tests). As for the other
@@ -1113,7 +1106,7 @@ usual diagnostic checks, we provide a suite of serial correlation
 tests, while not touching on the issue of heteroskedasticity
 testing. Instead, we provide heteroskedasticity-robust covariance
 estimators, to be described in
-Subsection \@ref(robust-covariance-matrix-estimation).
+subsection [robust covariance matrix estimation](#robust).
 
 ## Tests of poolability
 
@@ -1217,8 +1210,7 @@ gr <- plm(inv~value+capital, data=Grunfeld, model="random")
 phtest(gw, gr)
 ```
 
-## Tests of serial correlation
-\label{subsec:serialcor}
+## Tests of serial correlation{#serialcor}
 
 
 A model with individual effects has composite errors that are serially
@@ -1378,7 +1370,7 @@ reason, the test is applicable only to balanced panels.
 No test has been implemented to date for the symmetric hypothesis of
 no random effects in a model with errors following an AR(1) process,
 but an asymptotically equivalent likelihood ratio test is available in
-the `nlme` package (see Section \@ref(plm-versus-nlme-and-lme4)).
+the `nlme` package (see Section [plm versus nlme and lme4](#nlme)).
 
 ### General serial correlation tests
 
@@ -1391,7 +1383,7 @@ estimation performed on "demeaned" data, where, in the case of
 individual effects (else symmetric), this means time-demeaning for the
 FE (`within`) model, quasi-time-demeaning for the RE
 (`random`) model and original data, with no demeaning at all, for
-the pooled OLS (`pooling`) model (see Section \@ref(software-approach)).
+the pooled OLS (`pooling`) model (see Section [software appraoch](#software-approach)).
 
 For the random effects model, @WOOL:02 observes that
 under the null of homoskedasticity and no serial correlation in the
@@ -1463,7 +1455,7 @@ are lagged and a `pooling` AR(1) model is estimated. The test
 statistic is obtained by applying the above restriction on 
 $\delta$ and supplying a heteroskedasticity- and autocorrelation-consistent 
 covariance matrix (`vcovHC` with the appropriate options, in particular
-`method="arellano"`)^[see Subsection \@ref(robust-covariance-matrix-estimation).].
+`method="arellano"`)^[see subsection [robust covariance matrix estimation](#robust).].
 
 ```{r pwartest}
 pwartest(log(emp) ~ log(wage) + log(capital), data=EmplUK)
@@ -1524,7 +1516,7 @@ estimator corresponding to `h0`. Should the truth lie in the
 middle (both rejected), whichever estimator is chosen will have
 serially correlated errors: therefore it will be advisable to use the
 autocorrelation-robust covariance estimators from the
-Subsection \@ref(robust-covariance-matrix-estimation) in inference.
+subsection [robust covariance matrix estimation](#robust) in inference.
 
 
 ## Tests for cross-sectional dependence
@@ -1800,8 +1792,7 @@ given in table 2 of the original paper and are also available in the
 package.
 
 
-## Robust covariance matrix estimation
-\label{subsec:robust}
+## Robust covariance matrix estimation{#robust}
 
 Robust estimators of the covariance matrix of coefficients are
 provided, mostly for use in Wald-type tests. `vcovHC`
@@ -1854,7 +1845,7 @@ correlation of the errors, but on the converse, unlike the White 1 and
 2 methods, it relies on large $n$ asymptotics with small $T$.
 
 The fixed effects case, as already observed in Section
-\@ref(tests-of-serial-correlation) on serial correlation, is
+[tests of serial correlation](#serialcor) on serial correlation, is
 complicated by the fact that the demeaning induces serial correlation
 in the errors. The original White estimator (`white1`) turns out to be
 inconsistent for fixed $T$ as $n$ grows, so in this case it is
@@ -1914,8 +1905,7 @@ provided which implements the robust covariance matrix proposed by
 @WIND:05 for generalized method of moments estimators.
 
 
-# plm versus nlme and lme4
-\label{sec:nlme}
+# plm versus nlme and lme4{#nlme}
 
 The models termed *panel* by the econometricians have counterparts in
 the statistics literature on *mixed* models (or *hierarchical models*,
@@ -2279,9 +2269,7 @@ whence we see that the Grunfeld model specification doesn't seem to need any
 random effects once we control for serial correlation in the data.
 
 
-# Conclusions
-
-\label{sec:conclusions}
+# Conclusions{#conclusions}
 
 With `plm` we aim at providing a comprehensive package containing the
 standard functionalities that are needed for the management and the

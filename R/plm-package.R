@@ -74,11 +74,15 @@ NULL
 #' The main functions to estimate models are:
 #'
 #' - `plm`: panel data estimators using `lm` on transformed data,
+#' - `pvcm`: variable coefficients models
 #' - `pgmm`: generalized method of moments (GMM) estimation for panel
 #' data,
-#' - `pvcm`: variable coefficients models
+#' - `pggls`: estimation of general feasible generalized least squares models,
 #' - `pmg`: mean groups (MG), demeaned MG and common correlated effects
-#' (CCEMG) estimators.
+#' (CCEMG) estimators,
+#' - `pcce`: estimators for common correlated effects mean groups (CCEMG) and
+#' pooled (CCEP) for panel data with common factors,
+#' - `pldv`: panel estimators for limited dependent variables.
 #'
 #' Next to the model estimation functions, the package offers several
 #' functions for statistical tests related to panel data/models.

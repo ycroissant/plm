@@ -16,11 +16,15 @@ package's vignette.
 The main functions to estimate models are:
 \itemize{
 \item \code{plm}: panel data estimators using \code{lm} on transformed data,
+\item \code{pvcm}: variable coefficients models
 \item \code{pgmm}: generalized method of moments (GMM) estimation for panel
 data,
-\item \code{pvcm}: variable coefficients models
+\item \code{pggls}: estimation of general feasible generalized least squares models,
 \item \code{pmg}: mean groups (MG), demeaned MG and common correlated effects
-(CCEMG) estimators.
+(CCEMG) estimators,
+\item \code{pcce}: estimators for common correlated effects mean groups (CCEMG) and
+pooled (CCEP) for panel data with common factors,
+\item \code{pldv}: panel estimators for limited dependent variables.
 }
 
 Next to the model estimation functions, the package offers several
