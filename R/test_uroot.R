@@ -415,109 +415,69 @@ adj.ips.ztbar.value <- function(l = 30L, time, means, vars){
 }
 
 critval.ips.tbar.value <- function(ind = 10L, time = 19L, critvals, exo = c("intercept", "trend")){
-  ## extract the critical values for Im-Pesaran-Shin test for tbar statistic (table 2 in IPS (2003))
-  theInds <-  as.numeric(dimnames(critvals)[[1L]])
-  theTs <-  as.numeric(dimnames(critvals)[[2L]])
+  ## extract and interpolate 1%, 5%, 10% critical values for Im-Pesaran-Shin test's
+  ## tbar statistic (table 2 in IPS (2003))
+  ##
+  ## Interpolation is based on inverse distance weighting (IDS) of
+  ## L1 distance (1d case) and L2 distance (euclidean distance) (2d case)
+  ## (optical inspections shows this method is a good approxmimation)
+  
+  theInds <- as.numeric(dimnames(critvals)[[1L]])
+  theTs <- as.numeric(dimnames(critvals)[[2L]])
   Inds <- selectT(ind, theInds)
   Ts <- selectT(time, theTs)
   
-  # DEBUG / TODO:
-  experimental_critval.ips.tbar.value <- TRUE  ## switch for experimental implementation
+  exo <- match.arg(exo)
   
   if (length(Inds) == 1L && length(Ts) == 1L) {
     # exact hit for individual AND time: take value as in table
     return(critvals[as.character(Inds), as.character(Ts), , exo])
   }
   else{
-    if (experimental_critval.ips.tbar.value) return(NA) # TODO
-    
     if (length(Inds) == 1L || length(Ts) == 1L) {
       # exact hit for individual (X)OR time: interpolate other dimension
       if (length(Inds) == 1L) {
         low  <- critvals[as.character(Inds), as.character(Ts[1L]), , exo]
         high <- critvals[as.character(Inds), as.character(Ts[2L]), , exo]
-        return(low + (Inds - Ts[1L])/(Ts[2L] - Ts[1L]) * (high - low))
+        # L1 distances and inverse weighting for time dimension
+        dist1 <- abs(time - Ts[1L])
+        dist2 <- abs(time - Ts[2L])
+        weight1 <- 1/dist1
+        weight2 <- 1/dist2
+        return ((weight1 * low + weight2 * high ) / (weight1 + weight2))
       }
       if (length(Ts) == 1L) {
-        # TODO: cannot be correct as, e.g. ind = 6, time = 10 yield same value as for ind = 5, time = 10
+        # L1 distances and inverse weighting for individual dimension
         low  <- critvals[as.character(Inds[1L]), as.character(Ts), , exo]
         high <- critvals[as.character(Inds[2L]), as.character(Ts), , exo]
-        return(low + (Ts - Inds[1L])/(Inds[2L] - Inds[1L]) * (high - low))
-        
-        # TODO: can take this(?):
-        # w1 <- 1 / abs(ind - Inds[1L])
-        # w2 <- 1 / abs(ind - Inds[2L])
-        # return ( (w1* low + w2*high )/ (w1 + w2))
+        dist1 <- abs(ind - Inds[1L])
+        dist2 <- abs(ind - Inds[2L])
+        weight1 <- 1/dist1
+        weight2 <- 1/dist2
+        return ((weight1 * low + weight2 * high ) / (weight1 + weight2))
       }
     } else {
       # only get to this part when both dimensions are not an exact hit:
-      # interpolate from both dimensions via billinear interpolation 
-      # by solving a system of linear equations
+      # 2d interpolate
       
-      # DEBUG:
-      print("interpolate both dimensions")
-      
-      # extract the 4 critical values as basis of interpolation ("corners of box")
-      crit4   <- critvals[as.character(Inds), as.character(Ts), , exo]
-      dot <- c(ind, time) # point of interest
-      p <- c("1%", "5%", "10%")
-      funcval <- sapply(p, function(p) as.numeric(crit4[ , , p]))
-      m <- as.matrix(expand.grid(Inds, Ts))
-      mat <- cbind(1, m, m[ , 1] * m[ , 2])
-      s <- solve(mat, funcval)
-      vec <- c(1, dot[1], dot[2], dot[1]*dot[2])
-      res <- as.numeric(crossprod(s, vec))
-      names(res) <- p
-      return(res)
-      
-      ## gretl: seems to apply inverse distance weighting (IDS) via euclidean distance - why? calculation below
-      ##   https://stats.stackexchange.com/questions/64538/how-do-i-find-values-not-given-in-interpolate-in-statistical-tables
-      ##    -> mentions the inverse linear approx often gives a better approximation as as t, chi^2, and F distribution as
-      ##       values are linear in the reciprocal.
-      
-      ## Stata: derived from Stata's documentation per example, Stata seems to just take the "upper right" value, i.e. Inds[2], Ts[2]
       # extract the 4 critical values as basis of interpolation interpolate ("corners of box")
-      #
-      # crit4 <- critvals[as.character(Inds), as.character(Ts), , exo]
-      # dot <- c(ind, time) # point of interest
-      # m <- as.matrix(expand.grid(Inds, Ts))
-      # colnames(m) <- c("ind", "time")
-      # distance <- lapply(1:4, function(x) m[x, ] - dot)
-      # weight <- vapply(distance, function(x) 1/sqrt(as.numeric(crossprod(x))), 0.0)
-      # 
-      #  res <- (
-      #     crit4[as.character(Inds[1L]), as.character(Ts[1L]), ] * weight[1] +
-      #     crit4[as.character(Inds[2L]), as.character(Ts[1L]), ] * weight[2] +
-      #     crit4[as.character(Inds[1L]), as.character(Ts[2L]), ] * weight[3] +
-      #     crit4[as.character(Inds[2L]), as.character(Ts[2L]), ] * weight[4]) / sum(weight)
-      # return(res)
+      crit4 <- critvals[as.character(Inds), as.character(Ts), , exo]
+      dot <- c(ind, time) # point of interest
+      m <- as.matrix(expand.grid(Inds, Ts))
+      colnames(m) <- c("ind", "time")
+      dist <- lapply(1:4, function(x) m[x, ] - dot)
+      dist <- vapply(dist, function(x) sqrt(as.numeric(crossprod(x))), 0.0)
+      weight <- 1/dist
       
-      
-      ## example from Wikipedia: https://en.wikipedia.org/wiki/Bilinear_interpolation
-      # funcval2 <- c(91,162,210,95)
-      # dot2 <- c(20.2, 14.5)
-      # m2 <- matrix(c(20,14,21,14,20,15,21,15), ncol = 2, byrow = TRUE)
-      # 
-      # mat2 <- cbind(1, m2, m2[ , 1] * m2[ , 2])
-      # s2 <- solve(mat2, funcval2)
-      # vec2 <- c(1, dot2[1], dot2[2], dot2[1]*dot2[2])
-      # 
-      # print(as.numeric(crossprod(s2, vec2))) # == s[1] + s[2] * dot2[1] + s[3] * dot2[2] + s[4] * dot2[1]*dot2[2]
-      # 
-      #   # gretl:
-      #   funcval2mat <- matrix(funcval2, ncol = 2, byrow = F)
-      #   distance2 <- lapply(1:4, function(x) m2[x, ] - dot2)
-      #   weight2 <- vapply(distance2, function(x) 1/sqrt(as.numeric(crossprod(x))), 0.0)
-      #   
-      #   res <- 
-      #     (funcval2[1] * weight2[1] +
-      #     funcval2[2] * weight2[2] +
-      #     funcval2[3] * weight2[3] + 
-      #     funcval2[4] * weight2[4] ) / sum(weight2)
+      res <- (
+          crit4[as.character(Inds[1L]), as.character(Ts[1L]), ] * weight[1] +
+          crit4[as.character(Inds[2L]), as.character(Ts[1L]), ] * weight[2] +
+          crit4[as.character(Inds[1L]), as.character(Ts[2L]), ] * weight[3] +
+          crit4[as.character(Inds[2L]), as.character(Ts[2L]), ] * weight[4]) / sum(weight)
+      return(res)
     }
   }
 }
-
 
 tsadf <- function(object, exo = c("intercept", "none", "trend"),
                   lags = NULL, dfcor = FALSE, comp.aux.reg = FALSE, ...){
@@ -700,9 +660,10 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
 #' (\insertCite{PFAFF:08;textual}{plm}) is available, otherwise as described in
 #' \insertCite{MACK:94;textual}{plm}.
 #' 
-# TODO: once code changed, change comment here
 #' For the test statistic tbar of the test of Im/Peseran/Shin (2003)
-#' (`ips.stat = "tbar`), no p-value is computed.
+#' (`ips.stat = "tbar`), no p-value is given but 1%, 5%, and 10% critical
+#' values (interpolated from paper's tabulated values via inverse distance
+#' weighting).
 #'
 #' Hadri's test and the test of Levin/Lin/Chu are not applicable to unbalanced
 #' panels.
@@ -786,6 +747,8 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
 #' \insertAllCited{}
 #'  
 #' @keywords htest
+#
+# TODO: add more examples / interfaces
 #' @examples
 #' 
 #' data("Grunfeld", package = "plm")
@@ -980,7 +943,11 @@ purtest <- function(object, data = NULL, index = NULL,
       # give tbar
       stat <- tbar
       names(stat) <- "tbar"
-      pvalue <- NA # TODO: interpolate / connect to function critval.ips.tbar.value
+      pvalue <- NA
+      # TODO: which parameters to critval.ips.tbar.value function? And: balanced data only?
+#      crit <- critval.ips.tbar.value(ind = , time =  , critval.ips.tbar, exo = exo)
+      # TODO: how to give critical values in output object and in print.summary.purtest (the latter being easy)
+      # ===> maybe look at cipstest where the same question is solved?
       adjval <- NULL
     }
   }
