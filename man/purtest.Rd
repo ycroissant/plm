@@ -75,15 +75,18 @@ gives the value as suggested by the authors as round(3.21 * T^(1/3))),}
 the regressions is to be computed using a degrees-of-freedom
 correction,}
 
-\item{fixedT}{logical, indicating whether the different ADF
+\item{fixedT}{logical, indicating whether the individual ADF
 regressions are to be computed using the same number of
-observations,}
+observations (irrelevant for \code{test = "hadri"}),}
 
 \item{ips.stat}{\code{NULL} or character of length 1 to request a specific
 IPS statistic, one of \code{"Wtbar"} (also default if \code{ips.stat = NULL}),
 \code{"Ztbar"}, \code{"tbar"},}
 
-\item{\dots}{further arguments.}
+\item{\dots}{further arguments (can set argument 'p.approx' to be passed on
+to non-exported functino 'padf' to either "MacKinnon1994" or "MacKinnon1996"
+to force a specific method for p-value approximation, the latter only being
+possible if package 'urca' is installed).}
 }
 \value{
 For purtest: An object of class \code{"purtest"}: a list with the elements

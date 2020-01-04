@@ -72,8 +72,16 @@ unlist(lapply(b$idres, function(x) x[["trho"]]))
 # NB: In case of lags = 0 (DF-regression), gretl 2019d takes the finite sample p-values
 #    (finite sample p-values are not applicable for augmented DF-regressions)
 #    Also, gretl uses MacKinnon (1996) [in R: implemented in urca::punitroot]
+#    which is used in purtest() if package 'urca' is on the local machine; otherwise
+#    MacKinnon (1994) is applied. However, If p.approx = "MacKinnon1994" or
+#    "MacKinnon1996" is given in the ellipsis ("dots") of purtest, one can force
+#    a specific method (for MacKinnon (1996) onyl if 'urca' is available).
 # urca::punitroot(b$idres$`1`$trho, N = Inf, trend = "c") # asymptotic p = 0.02672553 
 # urca::punitroot(b$idres$`1`$trho, N = 19, trend = "c")  # finite p = 0.04386944 
+
+# For reference/reproducability purposes, use MacKinnon (1994) and MacKinnon (1996) each once:
+summary(purtest(pG$value, test = "ips", exo = "intercept", lags = 2, dfcor = TRUE, p.approx = "MacKinnon1994"))
+summary(purtest(pG$value, test = "ips", exo = "intercept", lags = 2, dfcor = TRUE, p.approx = "MacKinnon1996"))
 
 ## lags = 2 (lags > 0 gives the Wtbar stat in gretl and EViews)
 b_lag2 <- purtest(pG$value, test = "ips", exo = "intercept", lags = 2, dfcor = TRUE)

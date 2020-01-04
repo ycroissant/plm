@@ -1,6 +1,8 @@
-padf <- function(x, exo = c("none", "intercept", "trend"), p.approx = NULL){
+padf <- function(x, exo = c("none", "intercept", "trend"), p.approx = NULL, ...){
  # p-value approximation for tau distribution of (augmented) Dickey-Fuller test
  # as used in some panel unit root tests in purtest().
+ 
+ # argument 'x' must be a numeric (can be length == 1 or >= 1)
   
  # p-values approximation is performed by the method of MacKinnon (1994) or
  # MacKinnon (1996), the latter yielding better approximated p-values but
@@ -11,6 +13,11 @@ padf <- function(x, exo = c("none", "intercept", "trend"), p.approx = NULL){
  # "MacKinnon1994" or "MacKinnon1996".
 
   exo <- match.arg(exo)
+  
+  # check if ellipsis (dots) has p.approx (could be passed from purtest()'s dots)
+  # and if so, use p.approx from ellipsis
+  dots <- list(...)
+  if (!is.null(dots$p.approx)) p.approx <- dots$p.approx
   
   if (!is.null(p.approx) && !p.approx %in% c("MacKinnon1994", "MacKinnon1996"))
     stop(paste0("unknown 'p.approx' argument: ", p.approx))
@@ -57,13 +64,9 @@ padf <- function(x, exo = c("none", "intercept", "trend"), p.approx = NULL){
     limit <- c(-1.04, -1.61, -2.89)
     rownames(small) <- rownames(large) <- names(limit) <- c("none", "intercept", "trend")
     
-    res <- if (x <= limit[exo]) {
-      psmall <- as.numeric(apply(small[exo, ] * rbind(1, x, x ^ 2), 2, sum))
-      pnorm(psmall)
-    } else {
-      plarge <- as.numeric(apply(large[exo, ] * rbind(1, x, x ^ 2, x ^ 3), 2, sum))
-      pnorm(plarge)
-    }
+    psmall <- apply(small[exo, ] * rbind(1, x, x ^ 2), 2, sum)
+    plarge <- apply(large[exo, ] * rbind(1, x, x ^ 2, x ^ 3), 2, sum)
+    res <- as.numeric(pnorm(psmall * (x <= limit[exo]) + plarge * (x > limit[exo])))
   }
   attr(res, "p.approx") <- p.approx
   return(res)
@@ -535,7 +538,7 @@ tsadf <- function(object, exo = c("intercept", "none", "trend"),
   rho <- result$coef[1]
   sdrho <- result$se[1]
   trho <- rho/sdrho
-  p.trho <- padf(trho, exo = exo)
+  p.trho <- padf(trho, exo = exo, ...)
   result <- list(rho    = rho,
                  sdrho  = sdrho,
                  trho   = trho,
@@ -757,13 +760,16 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
 #' @param dfcor logical, indicating whether the standard deviation of
 #'     the regressions is to be computed using a degrees-of-freedom
 #'     correction,
-#' @param fixedT logical, indicating whether the different ADF
+#' @param fixedT logical, indicating whether the individual ADF
 #'     regressions are to be computed using the same number of
-#'     observations,
+#'     observations (irrelevant for `test = "hadri"`),
 #' @param ips.stat `NULL` or character of length 1 to request a specific
 #'     IPS statistic, one of `"Wtbar"` (also default if `ips.stat = NULL`),
 #'     `"Ztbar"`, `"tbar"`,
-#' @param \dots further arguments.
+#' @param \dots further arguments (can set argument 'p.approx' to be passed on
+#'  to non-exported functino 'padf' to either "MacKinnon1994" or "MacKinnon1996"
+#'  to force a specific method for p-value approximation, the latter only being 
+#'  possible if package 'urca' is installed).
 #' @return For purtest: An object of class `"purtest"`: a list with the elements
 #'     `"statistic"` (a `"htest"` object), `"call"`, `"args"`,
 #'     `"idres"` (containing results from the individual regressions),
@@ -894,7 +900,7 @@ purtest <- function(object, data = NULL, index = NULL,
   # compute the augmented Dickey-Fuller regressions for each time series
   comp.aux.reg <- (test == "levinlin")
   idres <- mapply(function(x, y)
-                  tsadf(x, exo = exo, lags = y, dfcor = dfcor, comp.aux.reg = comp.aux.reg),
+                  tsadf(x, exo = exo, lags = y, dfcor = dfcor, comp.aux.reg = comp.aux.reg, ...),
                   object, as.list(lags), SIMPLIFY = FALSE)
   # data requirement per individual to be able to derive all estimates in ADF regression:
   #    obs - lags - 1 >= lags + x + 1 + 1, where x = 1 ("none"), 2 ("intercept"), 3 ("trend")
@@ -943,10 +949,11 @@ purtest <- function(object, data = NULL, index = NULL,
     lags  <- sapply(idres, function(x) x[["lags"]])
     L.ips <- sapply(idres, function(x) x[["T"]]) - lags - 1
     trho  <- sapply(idres, function(x) x[["trho"]])
+    pvalues.trho <- sapply(idres, function(x) x[["p.trho"]])
     tbar <- mean(trho)
     parameter <- NULL
     adjval <- NULL
-    pvalues.trho <- padf(trho, exo = exo)
+    
     
     if (is.null(ips.stat) || ips.stat == "Wtbar") {
       # calc Wtbar - default

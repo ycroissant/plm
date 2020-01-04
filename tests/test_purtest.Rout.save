@@ -312,8 +312,48 @@ p-value: 0
 > # NB: In case of lags = 0 (DF-regression), gretl 2019d takes the finite sample p-values
 > #    (finite sample p-values are not applicable for augmented DF-regressions)
 > #    Also, gretl uses MacKinnon (1996) [in R: implemented in urca::punitroot]
+> #    which is used in purtest() if package 'urca' is on the local machine; otherwise
+> #    MacKinnon (1994) is applied. However, If p.approx = "MacKinnon1994" or
+> #    "MacKinnon1996" is given in the ellipsis ("dots") of purtest, one can force
+> #    a specific method (for MacKinnon (1996) onyl if 'urca' is available).
 > # urca::punitroot(b$idres$`1`$trho, N = Inf, trend = "c") # asymptotic p = 0.02672553 
 > # urca::punitroot(b$idres$`1`$trho, N = 19, trend = "c")  # finite p = 0.04386944 
+> 
+> # For reference/reproducability purposes, use MacKinnon (1994) and MacKinnon (1996) each once:
+> summary(purtest(pG$value, test = "ips", exo = "intercept", lags = 2, dfcor = TRUE, p.approx = "MacKinnon1994"))
+Im-Pesaran-Shin Unit-Root Test 
+Exogenous variables: Individual Intercepts 
+User-provided lags
+statistic (Wtbar): 1.496 
+p-value: 0.933 
+   lags obs         rho        trho    p.trho    mean    var
+1     2  17 -0.77717841 -1.43117190 0.5672441 -1.4034 1.0344
+2     2  17 -0.66130878 -1.83739675 0.3620596 -1.4034 1.0344
+3     2  17 -0.53160334 -1.58422268 0.4915140 -1.4034 1.0344
+4     2  17 -1.07349948 -2.15851492 0.2216450 -1.4034 1.0344
+5     2  17 -0.01866852 -0.08602929 0.9508124 -1.4034 1.0344
+6     2  17  0.25337574  2.80099666 0.9990856 -1.4034 1.0344
+7     2  17 -0.38352999 -1.75556519 0.4027346 -1.4034 1.0344
+8     2  17  0.35686831  1.02362053 0.9945090 -1.4034 1.0344
+9     2  17 -0.86010702 -2.07408161 0.2550634 -1.4034 1.0344
+10    2  17 -0.83869431 -2.11875217 0.2370414 -1.4034 1.0344
+> summary(purtest(pG$value, test = "ips", exo = "intercept", lags = 2, dfcor = TRUE, p.approx = "MacKinnon1996"))
+Im-Pesaran-Shin Unit-Root Test 
+Exogenous variables: Individual Intercepts 
+User-provided lags
+statistic (Wtbar): 1.496 
+p-value: 0.933 
+   lags obs         rho        trho    p.trho    mean    var
+1     2  17 -0.77717841 -1.43117190 0.5685499 -1.4034 1.0344
+2     2  17 -0.66130878 -1.83739675 0.3626320 -1.4034 1.0344
+3     2  17 -0.53160334 -1.58422268 0.4906848 -1.4034 1.0344
+4     2  17 -1.07349948 -2.15851492 0.2218810 -1.4034 1.0344
+5     2  17 -0.01866852 -0.08602929 0.9492112 -1.4034 1.0344
+6     2  17  0.25337574  2.80099666 0.9999971 -1.4034 1.0344
+7     2  17 -0.38352999 -1.75556519 0.4031653 -1.4034 1.0344
+8     2  17  0.35686831  1.02362053 0.9969373 -1.4034 1.0344
+9     2  17 -0.86010702 -2.07408161 0.2554070 -1.4034 1.0344
+10    2  17 -0.83869431 -2.11875217 0.2373267 -1.4034 1.0344
 > 
 > ## lags = 2 (lags > 0 gives the Wtbar stat in gretl and EViews)
 > b_lag2 <- purtest(pG$value, test = "ips", exo = "intercept", lags = 2, dfcor = TRUE)
@@ -593,4 +633,4 @@ p-value: 0.004
 > 
 > proc.time()
    user  system elapsed 
-   1.20    0.10    1.29 
+   1.04    0.17    1.20 
