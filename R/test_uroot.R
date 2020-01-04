@@ -767,7 +767,7 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
 #'     IPS statistic, one of `"Wtbar"` (also default if `ips.stat = NULL`),
 #'     `"Ztbar"`, `"tbar"`,
 #' @param \dots further arguments (can set argument 'p.approx' to be passed on
-#'  to non-exported functino 'padf' to either "MacKinnon1994" or "MacKinnon1996"
+#'  to non-exported function 'padf' to either "MacKinnon1994" or "MacKinnon1996"
 #'  to force a specific method for p-value approximation, the latter only being 
 #'  possible if package 'urca' is installed).
 #' @return For purtest: An object of class `"purtest"`: a list with the elements

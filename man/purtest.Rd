@@ -84,7 +84,7 @@ IPS statistic, one of \code{"Wtbar"} (also default if \code{ips.stat = NULL}),
 \code{"Ztbar"}, \code{"tbar"},}
 
 \item{\dots}{further arguments (can set argument 'p.approx' to be passed on
-to non-exported functino 'padf' to either "MacKinnon1994" or "MacKinnon1996"
+to non-exported function 'padf' to either "MacKinnon1994" or "MacKinnon1996"
 to force a specific method for p-value approximation, the latter only being
 possible if package 'urca' is installed).}
 }

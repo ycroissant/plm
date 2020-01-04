@@ -1383,7 +1383,7 @@ estimation performed on "demeaned" data, where, in the case of
 individual effects (else symmetric), this means time-demeaning for the
 FE (`within`) model, quasi-time-demeaning for the RE
 (`random`) model and original data, with no demeaning at all, for
-the pooled OLS (`pooling`) model (see Section [software appraoch](#software-approach)).
+the pooled OLS (`pooling`) model (see Section [software approach](#software-approach)).
 
 For the random effects model, @WOOL:02 observes that
 under the null of homoskedasticity and no serial correlation in the
@@ -1579,7 +1579,7 @@ and distributed as a standard normal (see @PESA:04).
 A bias-corrected scaled version, $BCSCLM$, for the *fixed effect model with individual
 effects* only is also available which is simply the $SCLM$ with a term correcting
 for the bias (@BALT:FENG:KAO:12)^[The unbalanced version of this statistic uses
-max(Tij) for T in the bias-correction term]. This statistic is also asympotically
+max(Tij) for T in the bias-correction term]. This statistic is also asymptotically
 distributed as standard normal.
 $$BCSCLM=\sqrt{\frac{1}{n(n-1)}} ( \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} T_{ij} \hat{\rho}_{ij}^2 -1)-\frac{n}{2(T-1)}$$
 
@@ -1640,7 +1640,7 @@ warning.
 A *local* variant of the $CD$ test, called $CD(p)$ test
 [@PESA:04], takes into account an appropriate subset of *neighbouring*
 cross-sectional units to check the null of no XSD against the alternative
-of *local* XSD, i.e. dependence between neighboursonly. To do so, the pairs
+of *local* XSD, i.e. dependence between neighbours only. To do so, the pairs
 of neighbouring units are selected by means of a binary proximity matrix
 like those used in spatial models. In the original paper, a regular
 ordering of observations is assumed, so that the $m$-th

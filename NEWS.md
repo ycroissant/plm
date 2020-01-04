@@ -8,16 +8,16 @@
      MacKinnon (1996) instead of MacKinnon (1994) yielding better p-value
      approximations for tau distribution (via urca::punitroot).
    * return value's element idres contains p-values of individual
-     ADF-regressions (p.trho) and printed in summary (where applicable).
-   * for Levin/Lin/Chu test, object and summary contains short-run and
+     ADF-regressions (p.trho) and p-values printed in summary (where applicable).
+   * for Levin/Lin/Chu test, object and summary contain short-run and
      long-run variance.
-   * for Hadri's test, a summary is now available.
+   * for Hadri's test, summary is now applicable.
      
 * index.pindex: fixed bug when individual index variable is called "group".
 
 * Minors:
    * print.fixef: respects / forwards arguments supplied to generic print method.
-   * DESCRIPTION: package 'urca' added to "Suggests".
+   * DESCRIPTION/Dependencies: package 'urca' added to "Suggests".
    * Grunfeld data doc: URL for overview of various Grunfeld data sets updated to
      https://eeecon.uibk.ac.at/~zeileis/grunfeld/. 
 
