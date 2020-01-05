@@ -44,12 +44,13 @@ chisq = 14.719, df = 20, p-value = 0.7923
 alternative hypothesis: stationarity
 
 > 
-> summary(a1 <- purtest(pG$inv, lags = "SIC", exo = "intercept", test = "ips", pmax = 8))
+> summary(a1 <- purtest(pG$inv, lags = "SIC", exo = "intercept", test = "ips", pmax = 8)) # TODO: why is the data requirement check not triggered
 Im-Pesaran-Shin Unit-Root Test 
 Exogenous variables: Individual Intercepts 
 Automatic selection of lags using SIC: 0 - 8 lags (max: 8)
 statistic (Wtbar): NA 
 p-value: NA 
+
    lags obs         rho        trho       p.trho    mean    var
 1     8  11  0.57372489   7.2972878 1.000000e+00      NA     NA
 2     7  12 -1.33500743  -2.1403062 2.288844e-01      NA     NA
@@ -72,6 +73,7 @@ Exogenous variables: Individual Intercepts
 User-provided lags
 statistic (Wtbar): 4.51 
 p-value: 1 
+
    lags obs         rho        trho    p.trho    mean    var
 1     2  17  0.37455746  1.69705718 0.9996764 -1.4034 1.0344
 2     2  17 -0.33653803 -1.31826344 0.6233556 -1.4034 1.0344
@@ -87,12 +89,13 @@ p-value: 1
 [1] 2
 > if (length(a2$args$lags) != 1) stop("length(return_value$args$lags must be 1")
 > 
-> summary(a3 <- purtest(pG$inv, lags = c(2,3,1,5,8,1,4,6,7,1), exo = "intercept", test = "ips"))
+> summary(a3 <- purtest(pG$inv, lags = c(2,3,1,5,8,1,4,6,7,1), exo = "intercept", test = "ips")) # TODO: why is the data requirement check not triggered
 Im-Pesaran-Shin Unit-Root Test 
 Exogenous variables: Individual Intercepts 
 User-provided lags
 statistic (Wtbar): NA 
 p-value: NA 
+
    lags obs         rho        trho      p.trho    mean    var
 1     2  17  0.37455746  1.69705718 0.999676427 -1.4034 1.0344
 2     3  16 -0.21033975 -0.81675296 0.813913698 -1.3754 1.1522
@@ -104,6 +107,24 @@ p-value: NA
 8     6  13 -0.12662404 -0.38012322 0.910249725      NA     NA
 9     7  12 -0.89993048 -4.03185909 0.001255622      NA     NA
 10    1  18 -0.23247810 -1.68616532 0.438360790 -1.5108 0.9534
+> summary(a3_ok <- purtest(pG$inv, lags = c(2,3,1,4,4,1,4,4,4,1), exo = "intercept", test = "ips")) # TODO: ... and this works
+Im-Pesaran-Shin Unit-Root Test 
+Exogenous variables: Individual Intercepts 
+User-provided lags
+statistic (Wtbar): 4.225 
+p-value: 1 
+
+   lags obs         rho        trho    p.trho    mean    var
+1     2  17  0.37455746  1.69705718 0.9996764 -1.4034 1.0344
+2     3  16 -0.21033975 -0.81675296 0.8139137 -1.3754 1.1522
+3     1  18 -0.27302816 -1.65614389 0.4537287 -1.5108 0.9534
+4     4  15  0.81391748  1.73056665 0.9997139 -1.2600 1.2790
+5     4  15  0.50411533  1.18402747 0.9981328 -1.2600 1.2790
+6     1  18  0.21710976  2.51472363 0.9999887 -1.5108 0.9534
+7     4  15  0.01600785  0.05406133 0.9622083 -1.2600 1.2790
+8     4  15 -0.20997786 -0.85212458 0.8036037 -1.2600 1.2790
+9     4  15 -0.34115868 -1.48936970 0.5392619 -1.2600 1.2790
+10    1  18 -0.23247810 -1.68616532 0.4383608 -1.5108 0.9534
 > length(a3$args$lags)
 [1] 10
 > print(a3$args$lags)
@@ -128,7 +149,7 @@ data:  pdata.frame(Grunfeld)[, "inv"]
 Wtbar = -3.0337, p-value = 0.001208
 alternative hypothesis: stationarity
 
-> # purtest(pdata.frame(Grunfeld)[ , "inv"],  pmax = 4, test = "ips", exo = "none")      # works as intended: gives informative error msg
+> # purtest(pdata.frame(Grunfeld)[ , "inv"],  pmax = 4, test = "ips", exo = "none")    # works as intended: gives informative error msg
 > 
 > ### pdata.frame - individuals must be in columns!
 > df_inv <- data.frame(split(Grunfeld$inv, Grunfeld$firm)) 
@@ -170,6 +191,7 @@ Hadri Test
 Exogenous variables: Individual Intercepts 
 statistic: 4.184 
 p-value: 0 
+
           LM       sigma2
 1  0.3143392 776878.74047
 2  0.0974765  86121.20788
@@ -186,6 +208,7 @@ Hadri Test
 Exogenous variables: Individual Intercepts 
 statistic: 3.798 
 p-value: 0 
+
            LM       sigma2
 1  0.29862219 817767.09524
 2  0.09260268  90653.90303
@@ -202,6 +225,7 @@ Hadri Test
 Exogenous variables: Individual Intercepts 
 statistic: 10.155 
 p-value: 0 
+
           LM       sigma2
 1  0.3143392 776878.74047
 2  0.0974765  86121.20788
@@ -218,6 +242,7 @@ Hadri Test
 Exogenous variables: Individual Intercepts 
 statistic: 9.471 
 p-value: 0 
+
            LM       sigma2
 1  0.29862219 817767.09524
 2  0.09260268  90653.90303
@@ -234,6 +259,7 @@ Hadri Test
 Exogenous variables: Individual Intercepts and Trend 
 statistic: 4.534 
 p-value: 0 
+
            LM       sigma2
 1  0.12037588 671266.58182
 2  0.10309400  86050.07644
@@ -250,6 +276,7 @@ Hadri Test
 Exogenous variables: Individual Intercepts and Trend 
 statistic: 3.576 
 p-value: 0 
+
            LM       sigma2
 1  0.10833829 745851.75758
 2  0.09278460  95611.19605
@@ -266,6 +293,7 @@ Hadri Test
 Exogenous variables: Individual Intercepts and Trend 
 statistic: 9.578 
 p-value: 0 
+
            LM       sigma2
 1  0.12037588 671266.58182
 2  0.10309400  86050.07644
@@ -282,6 +310,7 @@ Hadri Test
 Exogenous variables: Individual Intercepts and Trend 
 statistic: 8.116 
 p-value: 0 
+
            LM       sigma2
 1  0.10833829 745851.75758
 2  0.09278460  95611.19605
@@ -298,26 +327,27 @@ p-value: 0
 > ### IPS (2003) test
 > ## use dfcor = TRUE to match gretl 2017c and EViews 9.5 exactly
 > b <- purtest(pG$value, test = "ips", exo = "intercept", lags = 0, dfcor = TRUE)
-> unlist(lapply(b$idres, function(x) x[["rho"]]))
-      1.Ly       2.Ly       3.Ly       4.Ly       5.Ly       6.Ly       7.Ly 
--0.7221173 -0.8376784 -0.5503275 -0.9812049 -0.0246934  0.1313902 -0.2767321 
-      8.Ly       9.Ly      10.Ly 
--0.2343526 -0.3064189 -0.6898608 
-> unlist(lapply(b$idres, function(x) x[["trho"]]))
-      1.Ly       2.Ly       3.Ly       4.Ly       5.Ly       6.Ly       7.Ly 
--3.0980241 -3.9708351 -2.4918122 -4.4232340 -0.2247631  2.0376353 -1.5074566 
-      8.Ly       9.Ly      10.Ly 
--1.4013933 -1.4852375 -2.8137835 
+> summary(b)
+Im-Pesaran-Shin Unit-Root Test 
+Exogenous variables: Individual Intercepts 
+User-provided lags
+statistic (Wtbar): -1.419 
+p-value: 0.078 
+
+   lags obs        rho       trho       p.trho    mean    var
+1     0  19 -0.7221173 -3.0980241 0.0267255342 -1.5204 0.8654
+2     0  19 -0.8376784 -3.9708351 0.0015756584 -1.5204 0.8654
+3     0  19 -0.5503275 -2.4918122 0.1174272537 -1.5204 0.8654
+4     0  19 -0.9812049 -4.4232340 0.0002648235 -1.5204 0.8654
+5     0  19 -0.0246934 -0.2247631 0.9329996429 -1.5204 0.8654
+6     0  19  0.1313902  2.0376353 0.9999127394 -1.5204 0.8654
+7     0  19 -0.2767321 -1.5074566 0.5300598000 -1.5204 0.8654
+8     0  19 -0.2343526 -1.4013933 0.5833071748 -1.5204 0.8654
+9     0  19 -0.3064189 -1.4852375 0.5413593097 -1.5204 0.8654
+10    0  19 -0.6898608 -2.8137835 0.0562945264 -1.5204 0.8654
 > 
 > # NB: In case of lags = 0 (DF-regression), gretl 2019d takes the finite sample p-values
 > #    (finite sample p-values are not applicable for augmented DF-regressions)
-> #    Also, gretl uses MacKinnon (1996) [in R: implemented in urca::punitroot]
-> #    which is used in purtest() if package 'urca' is on the local machine; otherwise
-> #    MacKinnon (1994) is applied. However, If p.approx = "MacKinnon1994" or
-> #    "MacKinnon1996" is given in the ellipsis ("dots") of purtest, one can force
-> #    a specific method (for MacKinnon (1996) onyl if 'urca' is available).
-> # urca::punitroot(b$idres$`1`$trho, N = Inf, trend = "c") # asymptotic p = 0.02672553 
-> # urca::punitroot(b$idres$`1`$trho, N = 19, trend = "c")  # finite p = 0.04386944 
 > 
 > # For reference/reproducability purposes, use MacKinnon (1994) and MacKinnon (1996) each once:
 > summary(purtest(pG$value, test = "ips", exo = "intercept", lags = 2, dfcor = TRUE, p.approx = "MacKinnon1994"))
@@ -326,6 +356,7 @@ Exogenous variables: Individual Intercepts
 User-provided lags
 statistic (Wtbar): 1.496 
 p-value: 0.933 
+
    lags obs         rho        trho    p.trho    mean    var
 1     2  17 -0.77717841 -1.43117190 0.5672441 -1.4034 1.0344
 2     2  17 -0.66130878 -1.83739675 0.3620596 -1.4034 1.0344
@@ -343,6 +374,7 @@ Exogenous variables: Individual Intercepts
 User-provided lags
 statistic (Wtbar): 1.496 
 p-value: 0.933 
+
    lags obs         rho        trho    p.trho    mean    var
 1     2  17 -0.77717841 -1.43117190 0.5685499 -1.4034 1.0344
 2     2  17 -0.66130878 -1.83739675 0.3626320 -1.4034 1.0344
@@ -357,28 +389,37 @@ p-value: 0.933
 > 
 > ## lags = 2 (lags > 0 gives the Wtbar stat in gretl and EViews)
 > b_lag2 <- purtest(pG$value, test = "ips", exo = "intercept", lags = 2, dfcor = TRUE)
-> unlist(lapply(b_lag2$idres, function(x) x[["rho"]]))
-       1.Ly        2.Ly        3.Ly        4.Ly        5.Ly        6.Ly 
--0.77717841 -0.66130878 -0.53160334 -1.07349948 -0.01866852  0.25337574 
-       7.Ly        8.Ly        9.Ly       10.Ly 
--0.38352999  0.35686831 -0.86010702 -0.83869431 
-> unlist(lapply(b_lag2$idres, function(x) x[["trho"]]))
-       1.Ly        2.Ly        3.Ly        4.Ly        5.Ly        6.Ly 
--1.43117190 -1.83739675 -1.58422268 -2.15851492 -0.08602929  2.80099666 
-       7.Ly        8.Ly        9.Ly       10.Ly 
--1.75556519  1.02362053 -2.07408161 -2.11875217 
+> summary(b_lag2)
+Im-Pesaran-Shin Unit-Root Test 
+Exogenous variables: Individual Intercepts 
+User-provided lags
+statistic (Wtbar): 1.496 
+p-value: 0.933 
+
+   lags obs         rho        trho    p.trho    mean    var
+1     2  17 -0.77717841 -1.43117190 0.5685499 -1.4034 1.0344
+2     2  17 -0.66130878 -1.83739675 0.3626320 -1.4034 1.0344
+3     2  17 -0.53160334 -1.58422268 0.4906848 -1.4034 1.0344
+4     2  17 -1.07349948 -2.15851492 0.2218810 -1.4034 1.0344
+5     2  17 -0.01866852 -0.08602929 0.9492112 -1.4034 1.0344
+6     2  17  0.25337574  2.80099666 0.9999971 -1.4034 1.0344
+7     2  17 -0.38352999 -1.75556519 0.4031653 -1.4034 1.0344
+8     2  17  0.35686831  1.02362053 0.9969373 -1.4034 1.0344
+9     2  17 -0.86010702 -2.07408161 0.2554070 -1.4034 1.0344
+10    2  17 -0.83869431 -2.11875217 0.2373267 -1.4034 1.0344
 > 
 > # unbalanced IPS
 > pG_unbal2 <- pG[1:190, ]
 > b_unbal <- purtest(pG_unbal2$value, test = "ips", exo = "intercept", lags = 0, dfcor = TRUE)
 Warning message:
 In selectT(l, theTs) : the time series is short
-> summary(b_unbal) 
+> summary(b_unbal)
 Im-Pesaran-Shin Unit-Root Test 
 Exogenous variables: Individual Intercepts 
 User-provided lags
 statistic (Wtbar): -1.131 
 p-value: 0.129 
+
    lags obs        rho       trho       p.trho    mean    var
 1     0  19 -0.7221173 -3.0980241 0.0267255342 -1.5204 0.8654
 2     0  19 -0.8376784 -3.9708351 0.0015756584 -1.5204 0.8654
@@ -399,6 +440,7 @@ Exogenous variables: Individual Intercepts
 User-provided lags
 statistic (Ztbar): -1.128 
 p-value: 0.13 
+
    lags obs        rho       trho       p.trho    mean    var
 1     0  19 -0.7221173 -3.0980241 0.0267255342 -1.5204 0.8654
 2     0  19 -0.8376784 -3.9708351 0.0015756584 -1.5204 0.8654
@@ -411,12 +453,13 @@ p-value: 0.13
 9     0  19 -0.3064189 -1.4852375 0.5413593097 -1.5204 0.8654
 10    0   9 -0.7843684 -1.9879749 0.2923700508 -1.5010 1.1320
 > 
-> summary(b_ztbar <- purtest(pG$value, test = "ips", exo = "intercept", lags = 0, dfcor = TRUE, ips.stat = "Ztbar"))
+> summary(b_ztbar        <- purtest(pG$value,        test = "ips", exo = "intercept", lags = 0, dfcor = TRUE, ips.stat = "Ztbar"))
 Im-Pesaran-Shin Unit-Root Test 
 Exogenous variables: Individual Intercepts 
 User-provided lags
 statistic (Ztbar): -1.419 
 p-value: 0.078 
+
    lags obs        rho       trho       p.trho    mean    var
 1     0  19 -0.7221173 -3.0980241 0.0267255342 -1.5204 0.8654
 2     0  19 -0.8376784 -3.9708351 0.0015756584 -1.5204 0.8654
@@ -428,12 +471,13 @@ p-value: 0.078
 8     0  19 -0.2343526 -1.4013933 0.5833071748 -1.5204 0.8654
 9     0  19 -0.3064189 -1.4852375 0.5413593097 -1.5204 0.8654
 10    0  19 -0.6898608 -2.8137835 0.0562945264 -1.5204 0.8654
-> summary(b_ztbar_unbal <- purtest(pG_unbal2$value, test = "ips", exo = "intercept", lags = 0, dfcor = TRUE, ips.stat = "Ztbar"))
+> summary(b_ztbar_unbal  <- purtest(pG_unbal2$value, test = "ips", exo = "intercept", lags = 0, dfcor = TRUE, ips.stat = "Ztbar"))
 Im-Pesaran-Shin Unit-Root Test 
 Exogenous variables: Individual Intercepts 
 User-provided lags
 statistic (Ztbar): -1.128 
 p-value: 0.13 
+
    lags obs        rho       trho       p.trho    mean    var
 1     0  19 -0.7221173 -3.0980241 0.0267255342 -1.5204 0.8654
 2     0  19 -0.8376784 -3.9708351 0.0015756584 -1.5204 0.8654
@@ -451,6 +495,7 @@ Exogenous variables: Individual Intercepts
 User-provided lags
 statistic (Ztbar): 2.468 
 p-value: 0.993 
+
    lags obs         rho        trho    p.trho    mean    var
 1     2  17 -0.77717841 -1.43117190 0.5685499 -1.5172 0.8942
 2     2  17 -0.66130878 -1.83739675 0.3626320 -1.5172 0.8942
@@ -462,15 +507,13 @@ p-value: 0.993
 8     2  17  0.35686831  1.02362053 0.9969373 -1.5172 0.8942
 9     2  17 -0.86010702 -2.07408161 0.2554070 -1.5172 0.8942
 10    2   7 -0.75040885 -0.47470530 0.8937273 -1.5140 1.4140
-> 
-> 
-> 
-> summary(b_lag2_ztbar <- purtest(pG$value, test = "ips", exo = "intercept", lags = 2, dfcor = TRUE, ips.stat = "Ztbar"))
+> summary(b_lag2_ztbar   <- purtest(pG$value,        test = "ips", exo = "intercept", lags = 2, dfcor = TRUE, ips.stat = "Ztbar"))
 Im-Pesaran-Shin Unit-Root Test 
 Exogenous variables: Individual Intercepts 
 User-provided lags
 statistic (Ztbar): 1.99 
 p-value: 0.977 
+
    lags obs         rho        trho    p.trho    mean    var
 1     2  17 -0.77717841 -1.43117190 0.5685499 -1.5172 0.8942
 2     2  17 -0.66130878 -1.83739675 0.3626320 -1.5172 0.8942
@@ -483,27 +526,59 @@ p-value: 0.977
 9     2  17 -0.86010702 -2.07408161 0.2554070 -1.5172 0.8942
 10    2  17 -0.83869431 -2.11875217 0.2373267 -1.5172 0.8942
 > 
-> summary(b_lag2_tbar <- purtest(pG$value, test = "ips", exo = "intercept", lags = 2, dfcor = TRUE, ips.stat = "tbar"))
+> 
+> ## these two correctly errors with an informative message:
+> # summary(b_lag2_tbar <- purtest(pG$value, test = "ips", exo = "intercept", lags = 2, dfcor = TRUE, ips.stat = "tbar"))
+> 
+> # TODO: in case of automatic lag selection, the selected lags need to be outputted
+> # purtest(pG$value, test = "ips", dfcor = TRUE, ips.stat = "wtbar", exo = "intercept") # due to automatic lag selection (yields 10)
+> 
+> 
+> value4 <- pG[pG$year %in% as.character(1935:1938), ]$value
+> purtest(value4, test = "ips", dfcor = TRUE, ips.stat = "tbar", exo = "intercept", lags = 0)
+
+	Im-Pesaran-Shin Unit-Root Test (ex. var.: Individual Intercepts)
+
+data:  value4
+tbar = -1.8539, p-value = NA
+alternative hypothesis: stationarity
+
+tbar critival values:
+   1%    5%   10% 
+-3.06 -2.42 -2.17 
+Warning message:
+In selectT(time, theTs) : the time series is short
+> 
+> 
+> 
+> purtest(pG$value, test = "ips", exo = "intercept", lags = 5, dfcor = TRUE, ips.stat = "Wtbar") # TODO: how to detect this not detected?
+
+	Im-Pesaran-Shin Unit-Root Test (ex. var.: Individual Intercepts)
+
+data:  pG$value
+Wtbar = NA, p-value = NA
+alternative hypothesis: stationarity
+
+> summary(purtest(pG$value, test = "ips", exo = "intercept", lags = 4, dfcor = TRUE, ips.stat = "Wtbar"))
 Im-Pesaran-Shin Unit-Root Test 
 Exogenous variables: Individual Intercepts 
 User-provided lags
-statistic (tbar): -0.922 
-p-value: NA 
-   lags obs         rho        trho    p.trho
-1     2  17 -0.77717841 -1.43117190 0.5685499
-2     2  17 -0.66130878 -1.83739675 0.3626320
-3     2  17 -0.53160334 -1.58422268 0.4906848
-4     2  17 -1.07349948 -2.15851492 0.2218810
-5     2  17 -0.01866852 -0.08602929 0.9492112
-6     2  17  0.25337574  2.80099666 0.9999971
-7     2  17 -0.38352999 -1.75556519 0.4031653
-8     2  17  0.35686831  1.02362053 0.9969373
-9     2  17 -0.86010702 -2.07408161 0.2554070
-10    2  17 -0.83869431 -2.11875217 0.2373267
+statistic (Wtbar): 1.394 
+p-value: 0.918 
+
+   lags obs        rho       trho    p.trho  mean   var
+1     4  15 -1.9906352 -2.3035551 0.1708438 -1.26 1.279
+2     4  15 -0.6131793 -1.3338339 0.6159886 -1.26 1.279
+3     4  15 -0.8232601 -1.6864510 0.4382149 -1.26 1.279
+4     4  15 -1.3023670 -1.4943688 0.5367235 -1.26 1.279
+5     4  15  0.7068690  2.8414342 0.9999976 -1.26 1.279
+6     4  15  0.4590103  1.5479686 0.9994468 -1.26 1.279
+7     4  15 -0.4063862 -1.2425923 0.6581524 -1.26 1.279
+8     4  15 -0.3520056 -0.4971782 0.8894773 -1.26 1.279
+9     4  15 -0.9076888 -1.2201156 0.6681135 -1.26 1.279
+10    4  15 -0.8549814 -2.2267094 0.1968232 -1.26 1.279
 > 
-> 
-> 
-> #### various tests from Choi (2001)
+> #### various tests from Choi (2001) [besides test = "madwu"]
 > purtest(pG$value, test = "Pm",        exo = "intercept", lags = 2, dfcor = TRUE)
 
 	Choi's modified P Unit-Root Test (ex. var.: Individual Intercepts)
@@ -547,6 +622,7 @@ Exogenous variables: None
 User-provided lags
 statistic: 2.589 
 p-value: 0.995 
+
    lags obs           rho        trho    p.trho     sigma2ST    sigma2LT
 1     0  19  0.0019996109  0.03663606 0.6945257 1072129.7840 279480.6956
 2     0  19  0.0007285916  0.01736171 0.6883316  132098.1511  41445.4322
@@ -558,16 +634,6 @@ p-value: 0.995
 8     0  19  0.0572121415  1.19245684 0.9407269   19632.2543  24489.4498
 9     0  19  0.0149651207  0.34199426 0.7839193    4049.2102   1790.0814
 10    0  19 -0.0194609404 -0.57389170 0.4689788     113.6714     21.3401
-> unlist(lapply(llc$idres, function(x) x[["rho"]]))
-         1.Ly          2.Ly          3.Ly          4.Ly          5.Ly 
- 0.0019996109  0.0007285916  0.0227319953 -0.0294427058  0.0428128365 
-         6.Ly          7.Ly          8.Ly          9.Ly         10.Ly 
- 0.1036547749  0.0067226451  0.0572121415  0.0149651207 -0.0194609404 
-> unlist(lapply(llc$idres, function(x) x[["trho"]]))
-       1.Ly        2.Ly        3.Ly        4.Ly        5.Ly        6.Ly 
- 0.03663606  0.01736171  0.48356807 -0.42462225  1.42801803  4.03388318 
-       7.Ly        8.Ly        9.Ly       10.Ly 
- 0.17399747  1.19245684  0.34199426 -0.57389170 
 > 
 > llc_int <- purtest(pG$value, test = "levinlin", exo = "intercept", lags = 0, dfcor = FALSE)
 Warning message:
@@ -578,6 +644,7 @@ Exogenous variables: Individual Intercepts
 User-provided lags
 statistic: 0.119 
 p-value: 0.547 
+
    lags obs        rho       trho       p.trho     sigma2ST     sigma2LT
 1     0  19 -0.7221173 -3.2751947 1.605723e-02 674102.29560 211234.03828
 2     0  19 -0.8376784 -4.1979203 6.603715e-04  67719.34761  40064.61858
@@ -589,16 +656,6 @@ p-value: 0.547
 8     0  19 -0.2343526 -1.4815366 5.432370e-01  16445.93254  11560.53123
 9     0  19 -0.3064189 -1.5701756 4.979070e-01   3523.27233   1184.33960
 10    0  19 -0.6898608 -2.9746990 3.733484e-02     78.58803     18.19652
-> unlist(lapply(llc_int$idres, function(x) x[["rho"]]))
-      1.Ly       2.Ly       3.Ly       4.Ly       5.Ly       6.Ly       7.Ly 
--0.7221173 -0.8376784 -0.5503275 -0.9812049 -0.0246934  0.1313902 -0.2767321 
-      8.Ly       9.Ly      10.Ly 
--0.2343526 -0.3064189 -0.6898608 
-> unlist(lapply(llc_int$idres, function(x) x[["trho"]]))
-      1.Ly       2.Ly       3.Ly       4.Ly       5.Ly       6.Ly       7.Ly 
--3.2751947 -4.1979203 -2.6343147 -4.6761911 -0.2376169  2.1541642 -1.5936655 
-      8.Ly       9.Ly      10.Ly 
--1.4815366 -1.5701756 -2.9746990 
 > 
 > llc_trend <- purtest(pG$value, test = "levinlin", exo = "trend", lags = 0, dfcor = FALSE)
 Warning message:
@@ -609,6 +666,7 @@ Exogenous variables: Individual Intercepts and Trend
 User-provided lags
 statistic: -2.645 
 p-value: 0.004 
+
    lags obs        rho       trho      p.trho    sigma2ST    sigma2LT
 1     0  19 -0.7836305 -3.4975211 0.039570557 641603.1359 211062.8757
 2     0  19 -0.8400949 -4.2846206 0.003261168  65367.5041  39183.4989
@@ -620,17 +678,7 @@ p-value: 0.004
 8     0  19 -0.4713268 -2.3192335 0.422845594  14287.3717  11267.6335
 9     0  19 -0.4875576 -2.3614046 0.400000183   3009.0288    767.5460
 10    0  19 -0.7854102 -3.4617227 0.043582736     69.7076     21.5264
-> unlist(lapply(llc_trend$idres, function(x) x[["rho"]]))
-      1.Ly       2.Ly       3.Ly       4.Ly       5.Ly       6.Ly       7.Ly 
--0.7836305 -0.8400949 -0.5536329 -1.0539785 -0.3289082 -0.0473435 -0.2737291 
-      8.Ly       9.Ly      10.Ly 
--0.4713268 -0.4875576 -0.7854102 
-> unlist(lapply(llc_trend$idres, function(x) x[["trho"]]))
-      1.Ly       2.Ly       3.Ly       4.Ly       5.Ly       6.Ly       7.Ly 
--3.4975211 -4.2846206 -2.6416769 -4.8189393 -1.9170742 -0.3191513 -1.5856239 
-      8.Ly       9.Ly      10.Ly 
--2.3192335 -2.3614046 -3.4617227 
 > 
 > proc.time()
    user  system elapsed 
-   1.04    0.17    1.20 
+   1.12    0.12    1.23 

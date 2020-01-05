@@ -81,10 +81,10 @@ adj.ips.wtbar.x1 <- c(
   -1.319,-1.387,-1.428,-1.443,-1.460,-1.476,-1.493,-1.490,-1.498,-1.514,
   -1.306,-1.366,-1.413,-1.433,-1.453,-1.471,-1.489,-1.486,-1.495,-1.512,
   -1.171,-1.260,-1.329,-1.363,-1.394,-1.428,-1.454,-1.458,-1.470,-1.495,
-  NA,    NA,-1.313,-1.351,-1.384,-1.421,-1.451,-1.454,-1.467,-1.494,
-  NA,    NA,    NA,-1.289,-1.331,-1.380,-1.418,-1.427,-1.444,-1.476,
-  NA,    NA,    NA,-1.273,-1.319,-1.371,-1.411,-1.423,-1.441,-1.474,
-  NA,    NA,    NA,-1.212,-1.266,-1.329,-1.377,-1.393,-1.415,-1.456
+      NA,    NA,-1.313,-1.351,-1.384,-1.421,-1.451,-1.454,-1.467,-1.494,
+      NA,    NA,    NA,-1.289,-1.331,-1.380,-1.418,-1.427,-1.444,-1.476,
+      NA,    NA,    NA,-1.273,-1.319,-1.371,-1.411,-1.423,-1.441,-1.474,
+      NA,    NA,    NA,-1.212,-1.266,-1.329,-1.377,-1.393,-1.415,-1.456
 )
 # x2: variances without time trend from table 3 in IPS (2003)
 adj.ips.wtbar.x2 <- c(
@@ -93,10 +93,10 @@ adj.ips.wtbar.x2 <- c(
   1.421,1.078,0.969,0.905,0.865,0.830,0.798,0.789,0.766,0.754,
   1.759,1.181,1.037,0.952,0.907,0.858,0.819,0.802,0.782,0.761,
   2.080,1.279,1.097,1.005,0.946,0.886,0.842,0.819,0.801,0.771,
-  NA,   NA,1.171,1.055,0.980,0.912,0.863,0.839,0.814,0.781,
-  NA,   NA,   NA,1.114,1.023,0.942,0.886,0.858,0.834,0.795,
-  NA,   NA,   NA,1.164,1.062,0.968,0.910,0.875,0.851,0.806,
-  NA,   NA,   NA,1.217,1.105,0.996,0.929,0.896,0.871,0.818
+     NA,   NA,1.171,1.055,0.980,0.912,0.863,0.839,0.814,0.781,
+     NA,   NA,   NA,1.114,1.023,0.942,0.886,0.858,0.834,0.795,
+     NA,   NA,   NA,1.164,1.062,0.968,0.910,0.875,0.851,0.806,
+     NA,   NA,   NA,1.217,1.105,0.996,0.929,0.896,0.871,0.818
 )
 
 # x3: means with time trend from table 3 in IPS (2003)
@@ -106,10 +106,10 @@ adj.ips.wtbar.x3 <- c(
   -1.914,-1.999,-2.047,-2.074,-2.095,-2.120,-2.137,-2.143,-2.146,-2.158,
   -1.922,-1.977,-2.032,-2.065,-2.091,-2.117,-2.137,-2.142,-2.146,-2.158,
   -1.750,-1.823,-1.911,-1.968,-2.009,-2.057,-2.091,-2.103,-2.114,-2.135,
-  NA,    NA,-1.888,-1.955,-1.998,-2.051,-2.087,-2.101,-2.111,-2.135,
-  NA,    NA,    NA,-1.868,-1.923,-1.995,-2.042,-2.065,-2.081,-2.113,
-  NA,    NA,    NA,-1.851,-1.912,-1.986,-2.036,-2.063,-2.079,-2.112,
-  NA,    NA,    NA,-1.761,-1.835,-1.925,-1.987,-2.024,-2.046,-2.088
+      NA,    NA,-1.888,-1.955,-1.998,-2.051,-2.087,-2.101,-2.111,-2.135,
+      NA,    NA,    NA,-1.868,-1.923,-1.995,-2.042,-2.065,-2.081,-2.113,
+      NA,    NA,    NA,-1.851,-1.912,-1.986,-2.036,-2.063,-2.079,-2.112,
+      NA,    NA,    NA,-1.761,-1.835,-1.925,-1.987,-2.024,-2.046,-2.088
 )
 
 # x4: variances with time trend from table 3 in IPS (2003)
@@ -119,10 +119,10 @@ adj.ips.wtbar.x4 <- c(
   1.627,1.036,0.882,0.796,0.756,0.702,0.661,0.653,0.634,0.613,
   2.482,1.214,0.983,0.861,0.808,0.735,0.688,0.674,0.650,0.625,
   3.947,1.332,1.052,0.913,0.845,0.759,0.705,0.685,0.662,0.629,
-  NA,   NA,1.165,0.991,0.899,0.792,0.730,0.705,0.673,0.638,
-  NA,   NA,   NA,1.055,0.945,0.828,0.753,0.725,0.689,0.650,
-  NA,   NA,   NA,1.145,1.009,0.872,0.786,0.747,0.713,0.661,
-  NA,   NA,   NA,1.208,1.063,0.902,0.808,0.766,0.728,0.670
+     NA,   NA,1.165,0.991,0.899,0.792,0.730,0.705,0.673,0.638,
+     NA,   NA,   NA,1.055,0.945,0.828,0.753,0.725,0.689,0.650,
+     NA,   NA,   NA,1.145,1.009,0.872,0.786,0.747,0.713,0.661,
+     NA,   NA,   NA,1.208,1.063,0.902,0.808,0.766,0.728,0.670
 )
 
 adj.ips.wtbar <- c(adj.ips.wtbar.x1, adj.ips.wtbar.x2,
@@ -334,7 +334,7 @@ lagsel <- function(object, exo = c("intercept", "none", "trend"),
     while(decreasei){
       lags <- pmax - i
       if (!fixedT) narow <- 1:(lags+1)
-      X <- cbind(Ly, LDy[ , 0:lags], m)[-narow,,drop=FALSE]
+      X <- cbind(Ly, LDy[ , 0:lags], m)[-narow, , drop = FALSE]
       y <- Dy[-narow]
       sres <- my.lm.fit(X, y, dfcor = dfcor)
       tml <- sres$coef[lags+1]/sres$se[lags+1]
@@ -349,7 +349,7 @@ lagsel <- function(object, exo = c("intercept", "none", "trend"),
     while(i <= pmax){
       lags <- pmax - i
       if (!fixedT) narow <- 1:(lags+1)
-      X <- cbind(Ly, LDy[ , 0:lags], m)[-narow,,drop=FALSE]
+      X <- cbind(Ly, LDy[ , 0:lags], m)[-narow, , drop = FALSE]
       y <- Dy[-narow]
       sres <- my.lm.fit(X, y, dfcor = dfcor)
       AIC <- if (method == "AIC") {
@@ -418,7 +418,7 @@ critval.ips.tbar.value <- function(ind = 10L, time = 19L, critvals, exo = c("int
   ## extract and interpolate 1%, 5%, 10% critical values for Im-Pesaran-Shin test's
   ## tbar statistic (table 2 in IPS (2003))
   ##
-  ## Interpolation is based on inverse distance weighting (IDS) of
+  ## Interpolation is based on inverse distance weighting (IDW) of
   ## L1 distance (1d case) and L2 distance (euclidean distance) (2d case)
   ## (optical inspections shows this method is a good approxmimation)
   
@@ -660,13 +660,15 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
 #' (\insertCite{PFAFF:08;textual}{plm}) is available, otherwise as described in
 #' \insertCite{MACK:94;textual}{plm}.
 #' 
-#' For the test statistic tbar of the test of Im/Peseran/Shin (2003)
+#' For the test statistic tbar of the test of Im/Pesaran/Shin (2003)
 #' (`ips.stat = "tbar`), no p-value is given but 1%, 5%, and 10% critical
-#' values (interpolated from paper's tabulated values via inverse distance
-#' weighting).
+#' values are interpolated from paper's tabulated values via inverse distance
+#' weighting (printed and contained in the returned value's element
+#' statistic$ips.tbar.crit).
 #'
-#' Hadri's test and the test of Levin/Lin/Chu are not applicable to unbalanced
-#' panels.
+#' Hadri's test, the test of Levin/Lin/Chu, and the tbar statistic of
+#' Im/Pesaran/Shin are not applicable to unbalanced panels; the tbar statistic
+#' is not applicable when `lags > 0` is given.
 #' 
 #' The exogeneous instruments of the tests (where applicable) can be specified
 #' in several ways, depending on how the data is handed over to the function:
@@ -837,6 +839,7 @@ purtest <- function(object, data = NULL, index = NULL,
   n <- length(object) # number of individuals, assumes object is a list
   sigma2 <- NULL
   pvalues.trho <- NULL
+  ips.tbar.crit <- NULL
   alternative <- "stationarity"
   method <- paste0(purtest.names.test[test], " (ex. var.: ",
                    purtest.names.exo[exo],")")
@@ -865,18 +868,15 @@ purtest <- function(object, data = NULL, index = NULL,
   idres <- mapply(function(x, y)
                   tsadf(x, exo = exo, lags = y, dfcor = dfcor, comp.aux.reg = comp.aux.reg, ...),
                   object, as.list(lags), SIMPLIFY = FALSE)
-  # data requirement per individual to be able to derive all estimates in ADF regression:
-  #    obs - lags - 1 >= lags + x + 1 + 1, where x = 1 ("none"), 2 ("intercept"), 3 ("trend")
-  # => obs >= 2 * lags + 1|2|3 + 1 + 1
   
   
   if (test == "levinlin"){
     if (length(unique(sapply(object, length))) > 1L) stop("test = \"levinlin\" is not applicable to unbalanced panels")
     
-    L.levinlin <- unique(sapply(object, length)) # time periods
+    T.levinlin <- unique(sapply(object, length)) # time periods
     
     # get the adjustment parameters for the mean and the variance
-    adjval <- adj.levinlin.value(L.levinlin, exo = exo)
+    adjval <- adj.levinlin.value(T.levinlin, exo = exo)
     mymu  <- adjval[1]
     mysig <- adjval[2]
     # calculate the ratio of LT/ST variance
@@ -891,7 +891,7 @@ purtest <- function(object, data = NULL, index = NULL,
     res.diff  <- unlist(lapply(idres, function(x) x$resid[["resid.diff"]]))
     z <- my.lm.fit(as.matrix(res.level), res.diff, dfcor = dfcor)
     # compute the Levin-Lin-Chu statistic
-    tildeT <- L.levinlin - mean(lags) - 1
+    tildeT <- T.levinlin - mean(lags) - 1
     sigmaeps2 <- z$rss / (n * tildeT)
     rho   <- z$coef
     sdrho <- z$se
@@ -941,13 +941,14 @@ purtest <- function(object, data = NULL, index = NULL,
     
     if (!is.null(ips.stat) && ips.stat == "tbar") {
       # give tbar
+      T.tbar <- unique(sapply(object, length))
+      if (length(T.tbar) > 1L) stop("tbar statistic is not applicable to unbalanced panels")
+      if (any(lags > 0L)) stop("tbar statistic is not applicable when 'lags' > 0 is specified")
+      L.tbar <- T.tbar - 1
       stat <- tbar
       names(stat) <- "tbar"
       pvalue <- NA
-      # TODO: which parameters to critval.ips.tbar.value function? And: balanced data only?
-#      crit <- critval.ips.tbar.value(ind = , time =  , critval.ips.tbar, exo = exo)
-      # TODO: how to give critical values in output object and in print.summary.purtest (the latter being easy)
-      # ===> maybe look at cipstest where the same question is solved?
+      ips.tbar.crit <- critval.ips.tbar.value(ind = n, time = L.tbar, critval.ips.tbar, exo = exo)
       adjval <- NULL
     }
   }
@@ -1001,12 +1002,13 @@ purtest <- function(object, data = NULL, index = NULL,
     adjval <- NULL
   }
   
-  htest <- structure(list(statistic   = stat,
-                          parameter   = parameter,
-                          alternative = alternative,
-                          data.name   = data.name,
-                          method      = method,
-                          p.value     = pvalue),
+  htest <- structure(list(statistic     = stat,
+                          parameter     = parameter,
+                          alternative   = alternative,
+                          data.name     = data.name,
+                          method        = method,
+                          p.value       = pvalue,
+                          ips.tbar.crit = ips.tbar.crit),
                      class = "htest")
   
   result <- list(statistic = htest,
@@ -1024,6 +1026,10 @@ purtest <- function(object, data = NULL, index = NULL,
 #' @export
 print.purtest <- function(x, ...){
   print(x$statistic, ...)
+  if (x$args$test == "ips" && x$args$ips.stat == "tbar"){
+    cat("tbar critival values:\n")
+    print(x$statistic$ips.tbar.crit, ...)
+  }
 }
 
 #' @rdname purtest
@@ -1085,6 +1091,11 @@ print.summary.purtest <- function(x, ...){
     cat(paste("statistic:", round(x$statistic$statistic, 3), "\n"))
   }
   cat(paste("p-value:", round(x$statistic$p.value, 3),   "\n"))
+  if (x$args$test == "ips" && x$args$ips.stat == "tbar"){
+    cat("tbar critival values:\n")
+    print(x$statistic$ips.tbar.crit, ...)
+  }
+  cat("\n")
   print(x$sumidres, ...)
 }
 
