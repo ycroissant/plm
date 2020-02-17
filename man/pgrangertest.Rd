@@ -66,7 +66,7 @@ package \CRANpkg{lmtest} to perform the individual Granger tests.
 \examples{
 
 ## not meaningful, just to demonstrate usage
-## H0: 'value' Granger causes 'inv' for all invididuals
+## H0: 'value' does not Granger cause 'inv' for all invididuals
 
 data("Grunfeld", package = "plm")
 pgrangertest(inv ~ value, data = Grunfeld)
