@@ -1,7 +1,7 @@
 
 R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
 Copyright (C) 2019 The R Foundation for Statistical Computing
-Platform: x86_64-w64-mingw32/x64 (64-bit)
+Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -227,4 +227,4 @@ alternative hypothesis: significant effects
 > 
 > proc.time()
    user  system elapsed 
-   0.62    0.14    0.75 
+  0.721   0.053   0.766 

@@ -1,6 +1,6 @@
 
-R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
-Copyright (C) 2018 The R Foundation for Statistical Computing
+R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
+Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -584,4 +584,4 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 > 
 > proc.time()
    user  system elapsed 
-  1.613   0.087   1.691 
+  1.227   0.091   1.305 
