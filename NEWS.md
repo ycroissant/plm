@@ -1,4 +1,8 @@
-# plm 2.2-1
+# plm 2.2-3
+ * tbd
+
+
+# plm 2.2-2
 * purtest:
    * tests now support unbalanced panel data, where applicable.
    * gained argument 'ips.stat' to select statistic for IPS test,
