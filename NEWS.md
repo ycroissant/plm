@@ -11,7 +11,7 @@
      Dicker-Fuller regressions are (for applicable tests) based on
      MacKinnon (1996) instead of MacKinnon (1994) yielding better p-value
      approximations for tau distribution (via urca::punitroot).
-   * return value's element idres contains p-values of individual
+   * return value's element 'idres' contains p-values of individual
      ADF-regressions (p.trho) and p-values printed in summary (where applicable).
    * for Levin/Lin/Chu test, object and summary contain short-run and
      long-run variance.
@@ -19,7 +19,8 @@
      
 * index.pindex: fixed bug when individual index variable is called "group".
 
-* Minors:
+## Minor items:
+
    * print.fixef: respects / forwards arguments supplied to generic print method.
    * DESCRIPTION/Dependencies: package 'urca' added to "Suggests".
    * Grunfeld data doc: URL for overview of various Grunfeld data sets updated to
@@ -55,7 +56,7 @@
 * class 'pFormula' is deprecated and will be removed soon.
 * model.frame now has a pdata.frame method (instead of a pFormula
     method) and model.matrix has a pdata.frame method (a pdata.frame
-    with a terms attribute). formula as an argument in model.matrix
+    with a terms attribute). 'formula' as an argument in model.matrix
     was unnecessary as the formula can be retrieved from the
     pdata.frame.
 * A thrid vignette was added describing the plm model components
@@ -195,7 +196,7 @@
     * new tests: Choi (2001) modified P ("Pm"), inverse normal ("invnormal"),
       logit ("logit").
     * cosmetic: when argument 'lags' is not specified by user, the returned
-      object does not contain all three possible values in args\$lags anymore.
+      object does not contain all three possible values in 'args\$lags' anymore.
 * cipstest: for the truncated version of the test, the constants used in the
               calculation were mixed up for type = "none" and "trend". 
 * pldv: new function to compute fixed and random effects models for truncated 
@@ -348,7 +349,7 @@
     in model matrix).
 * phtest:
   * better support for between models.
-  * for method="aux", argument effect is now extracted from dots.
+  * for method="aux", argument 'effect' is now extracted from dots.
 
 
 # plm 1.5-33
@@ -421,7 +422,7 @@
 
 * make.pconsecutive: new function to make a (p)data.frame or pseries consecutive, meaning having consecutive
                        time periods, t, t+1, t+2, ..., where t is an integer (fills in missing time periods).
-                       Optionally, by argument balanced, (p)data.frames or pseries can be made consecutive 
+                       Optionally, by argument 'balanced', (p)data.frames or pseries can be made consecutive 
                        and at the same time also balanced.
 * make.pbalanced: new function to make a (p)data.frame or pseries balanced (but not consecutive)
                     (fills in missing time periods).
@@ -619,20 +620,20 @@
     references are also more specific now).
   
 * pbgtest: fixed/enabled type="F" (F test of lmtest::bgtest) in wrapper pbgtest() and
-    fixed/enabled passing of argument order.by= [additional argument in
+    fixed/enabled passing of argument 'order.by' [additional argument in
     lmtest::bgtest] [tests/testpbgtest.R added, docs updated and extended].
 
-* phtest( , method="aux") [Hausman regression-based test]: fixed bug when data contain more
+* phtest(., method="aux") [Hausman regression-based test]: fixed bug when data contain more
     cases than there are used in model estimation (due to NA values); avoid calc. of RE model
     a second time; phtest now also works with between model correctly (fixed degrees of freedom)
     tests/test_phtest_Hausman_regression.R added.
  
-* plm(): original row names of inputted data are preserved in plm_object\$model,
+* plm(): original row names of input data are preserved in plm_object\$model,
     so functions like pmodel.response(), model.frame(), model.matrix(), residuals()
     return the original row.names (and thus fancy rownames if those were to be computed by
     pdata.frame)
 
-* as.data.frame.pdata.frame(): respects row.names argument.
+* as.data.frame.pdata.frame(): respects 'row.names' argument.
 
 
 # plm 1.5-8
@@ -686,7 +687,7 @@
 
 # plm 1.3-1
 
-* a subset argument is added to print.summary.plm and summary.pht
+* a 'subset' argument is added to print.summary.plm and summary.pht
     so that a subset of coefficients may be selected.
 
 * fixed a small problem on the printing of the typology of the
@@ -695,9 +696,9 @@
 * the "name" of the tests is now the formula truncated so that it
     prints on only one line.
 
-* restrict.matrix argument added to deal with linear restrictions.
+* 'restrict.matrix' argument added to deal with linear restrictions.
 
-* a vcov argument is added to summary.plm so that a variance matrix can be supplied.
+* a 'vcov' argument is added to summary.plm so that a variance matrix can be supplied.
 
 * the deviance method for panelmodel objects is now exported (12/02).
 
@@ -721,7 +722,7 @@
 * the printing of the removed variables (cst or NA) is improved.
 
 * the pgmm function has been improved to deal correctly with holes
-    in the cross-sections ; a collapse argument is added to limit the
+    in the cross-sections ; a 'collapse' argument is added to limit the
     number of gmm instruments.
 
 * the CoefTable element of summary.pgmm objects is renamed to
@@ -729,7 +730,7 @@
 
 * the default value for robust is now TRUE in the summary.pgmm method.
 
-* a new argument lost.ts is added in pgmm to select manually the
+* a new argument 'lost.ts' is added to pgmm to select manually the
     number of lost time series.
 
 * almost null columns of instruments are removed (this happens when
@@ -829,11 +830,11 @@
 
 * in fitted.plm, the extraction of the index is updated.
 
-* the residuals.plm method now has a model argument.
+* the residuals.plm method now has a 'model' argument.
 
 * new function r.squared introduced.
 
-* pmodel.response.plm is modified: no explicit effect and model
+* pmodel.response.plm is modified: no explicit 'effect' and 'model'
     arguments anymore (like in model.matrix.plm).
 
 
@@ -848,7 +849,7 @@
     interface. Old formula and dynformula interfaces are kept for
     backward compatibility but won't be maintained in the future.
 
-* subset, na.action are added to the list of arguments of pgmm and oldpgmm.
+* 'subset' and 'na.action' are added to the list of arguments of pgmm and oldpgmm.
 
 * lag.pseries is now able to deal with vector arguments for lags, 
     e.g. lag(x, c(1,3)).
@@ -910,7 +911,7 @@
 
 Change since version 1-1.4
 
-* an args argument is added to plm objects, and the internal
+* an 'args' argument is added to plm objects, and the internal
     function relies now on it (and not on the call as previously).
 
 * more attention is paid when one of the estimated components of
@@ -972,7 +973,7 @@ Change since version 1-1.4
 
 # plm 1-1.0
 
-* in fixef, the effect argument default is now NULL:
+* in fixef, the 'effect' argument default is now NULL:
     fixef(model_with_time_effect) now works correctly.
 
 * in pFtest, the error message "the arguments should be a within
@@ -981,7 +982,7 @@ Change since version 1-1.4
 
 * for backward compatibility reasons, function pvcovHC is reintroduced.
 
-* for backward compatibility reasons, argument test of pbsytest
+* for backward compatibility reasons, argument 'test' of pbsytest
     may be indicated in upper case.
 
 * we switched back to old names for two arguments of plm ercomp ->
@@ -999,11 +1000,11 @@ Change since version 1-1.4
     ercomp, inst.method -> ivar), the old names are accepted with a
     warning.
 
-* the instruments argument is removed, instrumental variable
-    estimation is performed using extended formula. The instruments
+* the 'instruments' argument is removed, instrumental variable
+    estimation is performed using extended formula. The 'instruments'
     argument is still accepted with a warning.
 
-* the model argument of plm objects are now ordinary data.frame,
+* the 'model' element of plm objects are now ordinary data.frame,
     and not data.frame with elements y and X. Moreover, this
     data.frame contains untransformed data.
 
@@ -1070,8 +1071,8 @@ Change since version 1-1.4
 * the degrees of freedom for a within time effect model was wrong
     and has been corrected.
 
-* the arguments type and weights in pvcovHC.panelmodel are renamed
-    method and type respectively. The default method (type in previous
+* the arguments 'type' and 'weights' in pvcovHC.panelmodel are renamed
+    to 'method' and 'type', respectively. The default method (type in previous
     versions) is arellano and not white1.
 
 * honda is now the default option for plmtest.
@@ -1084,7 +1085,7 @@ Change since version 1-1.4
 
 * a bug in the plm method of plmtest has been fixed.
 
-* in plmtest, the argument effect "id" is renamed "individual".
+* in plmtest, for argument 'effect' value "id" is renamed "individual".
 
 * three testing functions are added : pbsytest (Bera,
     Sosa-Escudero and Yoon test), pARtest (Breusch-Godfrey test) and
@@ -1144,6 +1145,6 @@ Change since version 1-1.4
 * pgmm is a new function for general method of moments estimator.
 
 * for all estimation functions, the first four arguments are now
-    formula, data, effect, model.
+    'formula', 'data', 'effect', 'model'.
 
 * robust inference is now provided by the pvcovHC function.

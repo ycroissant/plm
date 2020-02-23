@@ -856,10 +856,10 @@ purtest <- function(object, data = NULL, index = NULL,
       else lags <- as.list(lags)
     }
   }
-  else{
-    lags <- match.arg(lags)
+  else{ # lag selection procedure SIC, AIC, or Hall
+    lag.method <- match.arg(lags)
     lags <- sapply(object, function(x)
-      lagsel(x, exo = exo, method = lags,
+      lagsel(x, exo = exo, method = lag.method,
              pmax = pmax, dfcor = dfcor, fixedT = fixedT))
   }
   
