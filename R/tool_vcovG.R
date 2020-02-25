@@ -678,7 +678,9 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 #' ## Robust inference for CCE models
 #' data("Produc", package = "plm")
 #' ccepmod <- pcce(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model="p")
+#' ## IGNORE_RDIFF_BEGIN
 #' summary(ccepmod, vcov = vcovHC)
+#' ## IGNORE_RDIFF_END
 #' 
 #' ## Robust inference for GMM models
 #' data("EmplUK", package="plm")

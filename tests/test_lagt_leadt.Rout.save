@@ -1089,4 +1089,4 @@ at least one couple (id-time) has NA in at least one index dimensionin resulting
 > 
 > proc.time()
    user  system elapsed 
-  0.735   0.060   0.784 
+  1.088   0.052   1.141 

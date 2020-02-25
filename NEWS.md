@@ -1,8 +1,7 @@
 # plm 2.2-3
- * tbd
+* IGNORE_RDIFF_BEGIN/END added on tests and man pages
 
-
-# plm 2.2-2
+# plm 2.2-1
 * purtest:
    * tests now support unbalanced panel data, where applicable.
    * gained argument 'ips.stat' to select statistic for IPS test,

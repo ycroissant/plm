@@ -57,4 +57,4 @@ F-statistic: 3064.81 on 4 and 764 DF, p-value: < 2.22e-16
 > 
 > proc.time()
    user  system elapsed 
-  0.537   0.036   0.563 
+  0.527   0.052   0.575 

@@ -25,6 +25,7 @@ Type 'q()' to quit R.
 > zw <- pvcm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model = "within")
 > zr <- pvcm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model = "random")
 > 
+> ## IGNORE_RDIFF_BEGIN
 > print(zw$residuals)
          ALABAMA.1          ALABAMA.2          ALABAMA.3          ALABAMA.4 
      -2.784630e-02       1.383510e-02       2.577634e-02       2.092742e-02 
@@ -434,6 +435,7 @@ SOUTH_CAROLINA.645 SOUTH_CAROLINA.646   SOUTH_DAKOTA.647   SOUTH_DAKOTA.648
       5.426246e-04       6.077214e-02       5.074829e-02       3.223871e-02 
        WYOMING.813        WYOMING.814        WYOMING.815        WYOMING.816 
       1.714261e-02      -2.256130e-03      -7.721989e-03      -3.867911e-02 
+> ## IGNORE_RDIFF_END
 > class(zw$residuals)
 [1] "pseries" "numeric"
 > print(zw$coefficients)
@@ -521,6 +523,7 @@ Total Sum of Squares: 19352
 Residual Sum of Squares: 0.33009
 Multiple R-Squared: 0.99998
 > 
+> ## IGNORE_RDIFF_BEGIN
 > print(zr$residuals)
             1             2             3             4             5 
 -0.1598309367 -0.1413932393 -0.1296755830 -0.1256475777 -0.1456964364 
@@ -850,6 +853,7 @@ Multiple R-Squared: 0.99998
  0.4759799521  0.4495227669  0.4331758016  0.4311517407  0.4184801848 
           816 
  0.3943271427 
+> ## IGNORE_RDIFF_END
 > class(zr$residuals)
 [1] "pseries" "numeric"
 > print(zr$coefficients)
@@ -903,4 +907,4 @@ Chisq: 946.626 on 4 DF, p-value: < 2.22e-16
 > 
 > proc.time()
    user  system elapsed 
-  0.859   0.070   0.918 
+  0.882   0.056   0.929 

@@ -246,4 +246,4 @@ Wald test for coefficients: chisq(5) = 20061.48 (p-value = < 2.22e-16)
 > 
 > proc.time()
    user  system elapsed 
-  2.119   0.085   2.192 
+  2.053   0.112   2.143 

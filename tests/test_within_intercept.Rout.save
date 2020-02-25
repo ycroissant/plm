@@ -375,4 +375,4 @@ attr(,"se")
 > 
 > proc.time()
    user  system elapsed 
-  0.906   0.056   0.948 
+  0.884   0.052   0.937 

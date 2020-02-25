@@ -323,4 +323,4 @@ alternative hypothesis: one model is inconsistent
 > 
 > proc.time()
    user  system elapsed 
-  1.216   0.102   1.308 
+  1.207   0.052   1.263 

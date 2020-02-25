@@ -801,6 +801,7 @@ Chisq: 847.453 on 2 DF, p-value: < 2.22e-16
 > plm_grunfeld_re_swar_tw    <- plm(inv ~ value + capital, data=Grunfeld, model="random", random.method="swar",    effect = "twoways")
 > plm_grunfeld_re_nerlove_tw <- plm(inv ~ value + capital, data=Grunfeld, model="random", random.method="nerlove", effect = "twoways")
 > 
+> ## IGNORE_RDIFF_BEGIN
 > summary(plm_grunfeld_pooled_tw    )
 Pooling Model
 
@@ -988,6 +989,7 @@ Residual Sum of Squares: 496930
 R-Squared:      0.73799
 Adj. R-Squared: 0.73533
 Chisq: 554.874 on 2 DF, p-value: < 2.22e-16
+> ## IGNORE_RDIFF_END
 > 
 > ##### twoways unbalanced
 > plm_grunfeld_pooled_tw_unbal     <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="pooling", effect = "twoways")
@@ -998,6 +1000,7 @@ Chisq: 554.874 on 2 DF, p-value: < 2.22e-16
 > ## not implemented:
 > # plm_grunfeld_re_nerlove_tw_unbal <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="nerlove", effect = "twoways")
 > 
+> ## IGNORE_RDIFF_BEGINN
 > summary(plm_grunfeld_pooled_tw_unbal    )
 Pooling Model
 
@@ -1168,8 +1171,7 @@ R-Squared:      0.80587
 Adj. R-Squared: 0.80389
 Chisq: 799.693 on 2 DF, p-value: < 2.22e-16
 > # summary(plm_grunfeld_re_nerlove_tw_unbal) # not implemented
-> 
-> 
+> ## IGNORE_RDIFF_END
 > 
 > ### "amemiya" and "swar" have the same idiosyncratic variance (both based on the within variance)
 > # if (!isTRUE(all.equal(ercomp(plm_grunfeld_re_amemiya)[["sigma2"]][["idios"]], ercomp(plm_grunfeld_re_swar)[["sigma2"]][["idios"]])))
@@ -1384,6 +1386,7 @@ Chisq: 53522.6 on 13 DF, p-value: < 2.22e-16
 > coef_pccemgmod   <- round(pccemgmod[["coefficients"]][common],   digits = 7)
 > coef_pmgccemgmod <- round(pmgccemgmod[["coefficients"]][common], digits = 7)
 > stopifnot(all.equal(coef_pccemgmod, coef_pmgccemgmod, tolerance = 1E-04))
+> ## IGNORE_RDIFF_BEGIN
 > print(summary(pccemgmod))
 Common Correlated Effects Mean Groups model
 
@@ -1436,6 +1439,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 Total Sum of Squares: 849.81
 Residual Sum of Squares: 0.056978
 Multiple R-squared: 0.99993
+> ##IGNORE_RDIFF_END
 > 
 > 
 > ## further run tests without intercept
@@ -1476,4 +1480,4 @@ year1949 year1950 year1951 year1952 year1953
 > 
 > proc.time()
    user  system elapsed 
-  2.320   0.060   2.376 
+  2.454   0.034   2.484 

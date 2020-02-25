@@ -40,4 +40,4 @@ Error in model.matrix.pdata.frame(data) :
 > 
 > proc.time()
    user  system elapsed 
-  0.431   0.039   0.458 
+  0.474   0.032   0.498 

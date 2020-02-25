@@ -681,4 +681,4 @@ p-value: 0.004
 > 
 > proc.time()
    user  system elapsed 
-  1.489   0.052   1.530 
+  1.420   0.050   1.472 

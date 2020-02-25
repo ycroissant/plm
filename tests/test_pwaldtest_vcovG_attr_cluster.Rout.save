@@ -369,4 +369,4 @@ Chisq = 209.701, df = 2, p-value < 0.000000000000000222
 > 
 > proc.time()
    user  system elapsed 
-  1.602   0.076   1.665 
+  1.345   0.056   1.392 

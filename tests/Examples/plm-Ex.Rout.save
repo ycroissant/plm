@@ -6848,6 +6848,7 @@ alternative hypothesis: AR(1) errors sub random effects
 > 
 > data("Produc", package = "plm")
 > ccepmod <- pcce(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model="p")
+> ## IGNORE_RDIFF_BEGIN
 > summary(ccepmod)
 Common Correlated Effects Pooled model
 
@@ -6898,8 +6899,10 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 Total Sum of Squares: 849.81
 Residual Sum of Squares: 0.11927
 HPY R-squared: 0.99077
+> ## IGNORE_RDIFF_END
 > 
 > ccemgmod <- pcce(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model="mg")
+> ## IGNORE_RDIFF_BEGIN
 > summary(ccemgmod)
 Common Correlated Effects Mean Groups model
 
@@ -6924,6 +6927,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 Total Sum of Squares: 849.81
 Residual Sum of Squares: 0.056978
 HPY R-squared: 0.99312
+> ## IGNORE_RDIFF_END
 > 
 > 
 > 
@@ -13365,6 +13369,7 @@ Note: Coefficient covariance matrix supplied.
 > ## Robust inference for CCE models
 > data("Produc", package = "plm")
 > ccepmod <- pcce(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model="p")
+> ## IGNORE_RDIFF_BEGIN
 > summary(ccepmod, vcov = vcovHC)
 Common Correlated Effects Pooled model
 
@@ -13391,6 +13396,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 Total Sum of Squares: 849.81
 Residual Sum of Squares: 0.11927
 HPY R-squared: 0.99077
+> ## IGNORE_RDIFF_END
 > 
 > ## Robust inference for GMM models
 > data("EmplUK", package="plm")
@@ -13669,7 +13675,7 @@ attr(,"se")
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  10.097 0.276 10.385 0.001 0.004 
+Time elapsed:  13.448 0.309 13.805 0.001 0.004 
 > grDevices::dev.off()
 null device 
           1 

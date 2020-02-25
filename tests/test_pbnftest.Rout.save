@@ -89,4 +89,4 @@ alternative hypothesis: serial correlation in idiosyncratic errors
 > 
 > proc.time()
    user  system elapsed 
-  0.813   0.064   0.864 
+  0.859   0.023   0.866 

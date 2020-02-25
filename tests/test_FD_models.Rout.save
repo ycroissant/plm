@@ -168,4 +168,4 @@ attr(,"cluster")
 > 
 > proc.time()
    user  system elapsed 
-  0.649   0.052   0.687 
+  0.680   0.051   0.715 

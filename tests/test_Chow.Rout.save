@@ -63,4 +63,4 @@ alternative hypothesis: unstability
 > 
 > proc.time()
    user  system elapsed 
-  0.779   0.039   0.809 
+  0.865   0.034   0.887 

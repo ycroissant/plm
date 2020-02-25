@@ -8,13 +8,17 @@ data("Produc", package = "plm")
 zw <- pvcm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model = "within")
 zr <- pvcm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model = "random")
 
+## IGNORE_RDIFF_BEGIN
 print(zw$residuals)
+## IGNORE_RDIFF_END
 class(zw$residuals)
 print(zw$coefficients)
 class(zw$coefficients)
 summary(zw)
 
+## IGNORE_RDIFF_BEGIN
 print(zr$residuals)
+## IGNORE_RDIFF_END
 class(zr$residuals)
 print(zr$coefficients)
 class(zr$coefficients)

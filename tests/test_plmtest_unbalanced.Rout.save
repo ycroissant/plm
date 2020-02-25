@@ -662,4 +662,4 @@ chibarsq
 > 
 > proc.time()
    user  system elapsed 
-  0.937   0.065   0.990 
+  0.875   0.050   0.919 

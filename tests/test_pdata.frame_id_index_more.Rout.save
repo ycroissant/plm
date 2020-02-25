@@ -1198,4 +1198,4 @@ Balanced Panel: n = 595, T = 7, N = 4165
 > 
 > proc.time()
    user  system elapsed 
-  0.687   0.054   0.729 
+  0.701   0.055   0.746 

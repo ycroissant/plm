@@ -411,4 +411,4 @@ Chisq: 146.991 on 2 DF, p-value: < 2.22e-16
 > 
 > proc.time()
    user  system elapsed 
-  1.339   0.057   1.389 
+  1.666   0.097   1.758 

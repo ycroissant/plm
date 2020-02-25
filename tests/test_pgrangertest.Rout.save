@@ -107,4 +107,4 @@ alternative hypothesis: Granger causality for at least one individual
 > 
 > proc.time()
    user  system elapsed 
-  1.154   0.067   1.209 
+  1.042   0.068   1.108 

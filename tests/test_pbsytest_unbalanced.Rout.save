@@ -227,4 +227,4 @@ alternative hypothesis: significant effects
 > 
 > proc.time()
    user  system elapsed 
-  0.721   0.053   0.766 
+  0.679   0.035   0.708 

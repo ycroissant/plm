@@ -995,4 +995,4 @@ FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
 > 
 > proc.time()
    user  system elapsed 
-  0.608   0.060   0.657 
+  0.786   0.087   0.860 
