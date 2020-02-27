@@ -122,7 +122,7 @@ plm_grunfeld_re_swar_tw_unbal    <- plm(inv ~ value + capital, data=Grunfeld_unb
 ## not implemented:
 # plm_grunfeld_re_nerlove_tw_unbal <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="nerlove", effect = "twoways")
 
-## IGNORE_RDIFF_BEGINN
+## IGNORE_RDIFF_BEGIN
 summary(plm_grunfeld_pooled_tw_unbal    )
 summary(plm_grunfeld_fe_tw_unbal        )
 summary(plm_grunfeld_re_walhus_tw_unbal )

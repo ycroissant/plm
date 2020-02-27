@@ -1000,7 +1000,7 @@ Chisq: 554.874 on 2 DF, p-value: < 2.22e-16
 > ## not implemented:
 > # plm_grunfeld_re_nerlove_tw_unbal <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="nerlove", effect = "twoways")
 > 
-> ## IGNORE_RDIFF_BEGINN
+> ## IGNORE_RDIFF_BEGIN
 > summary(plm_grunfeld_pooled_tw_unbal    )
 Pooling Model
 
@@ -1480,4 +1480,4 @@ year1949 year1950 year1951 year1952 year1953
 > 
 > proc.time()
    user  system elapsed 
-  2.454   0.034   2.484 
+  2.354   0.076   2.445 
