@@ -1,3 +1,6 @@
+# plm 2.2-4
+* tbd
+
 # plm 2.2-3
 * IGNORE_RDIFF_BEGIN/END added on tests and man pages
 
@@ -26,21 +29,21 @@
      https://eeecon.uibk.ac.at/~zeileis/grunfeld/. 
 
 # plm 2.2-0
-* methods for plm.list where not exported, now exported.
+* methods for plm.list were not exported, now exported.
 * lagt is changed so that it can deal with time factors which
   cannot be coerced to numeric (ex "1950-54", "1955-59", ...).
 * cortab was not exported, now exported.
-* pvcm failed for random effect models when there are some NA coefs for
+* pvcm failed for random effect models when there are some NA coefficients for
   some individual level OLS regressions, fixed.
 
 # plm 2.1-0
 * problems with vignettes fixed (full text was in italics).
-* in test_Estimators, L256, tolerance lowered to 1E-04.
+* in test file 'test_Estimators.R', L256, tolerance lowered to 1E-04.
 
 # plm 2.0-2
 * vcovXX.pcce functions exported again (export was lost in plm 2.0-0).
-* summary.pcce gained argument 'vcov', summary.pcce object carries robust vcov in
-  element 'rvcov'.
+* summary.pcce gained argument 'vcov', summary.pcce object carries robust vcov
+  in element 'rvcov'.
 * vignettes switched from bookdown::html_document2 to html_vignette.
 
 # plm 2.0-1
