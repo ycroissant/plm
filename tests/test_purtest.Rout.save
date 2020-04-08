@@ -186,6 +186,8 @@ alternative hypothesis: stationarity
 > h_3.2 <- purtest(pG$value, exo = "trend", test = "hadri", Hcons = FALSE, dfcor = TRUE)
 > h_4.1 <- purtest(pG$value, exo = "trend", test = "hadri")
 > h_4.2 <- purtest(pG$value, exo = "trend", test = "hadri", dfcor = TRUE)
+> 
+> ## IGNORE_RDIFF_BEGIN
 > summary(h_1.1)
 Hadri Test 
 Exogenous variables: Individual Intercepts 
@@ -322,7 +324,7 @@ p-value: 0
 8  0.14726115  23609.51281
 9  0.13901919   4257.84081
 10 0.08613879     79.01116
-> 
+> ## IGNORE_RDIFF_END
 > 
 > ### IPS (2003) test
 > ## use dfcor = TRUE to match gretl 2017c and EViews 9.5 exactly
@@ -681,4 +683,4 @@ p-value: 0.004
 > 
 > proc.time()
    user  system elapsed 
-  1.420   0.050   1.472 
+  1.351   0.073   1.428 
