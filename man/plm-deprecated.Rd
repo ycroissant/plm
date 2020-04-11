@@ -5,6 +5,8 @@
 \alias{pvcovHC}
 \alias{plm.data}
 \alias{dynformula}
+\alias{formula.dynformula}
+\alias{print.dynformula}
 \alias{pFormula}
 \alias{as.Formula.pFormula}
 \alias{model.frame.pFormula}
@@ -17,6 +19,10 @@ pvcovHC(x, ...)
 plm.data(x, indexes = NULL)
 
 dynformula(formula, lag.form = NULL, diff.form = NULL, log.form = NULL)
+
+\method{formula}{dynformula}(x, ...)
+
+\method{print}{dynformula}(x, ...)
 
 pFormula(object)
 

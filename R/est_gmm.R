@@ -784,8 +784,8 @@ summary.pgmm <- function(object, robust = TRUE, time.dummies = FALSE, ...) {
   object$sargan <- sargan(object, "twosteps")
   object$m1 <- mtest(object, 1, vv)
   object$m2 <- mtest(object, 2, vv)
-  object$wald.coef <- wald(object, "coef", vv)
-  if (effect == "twoways") object$wald.td <- wald(object, "time", vv)
+  object$wald.coef <- pwaldtest(object, "coef", vv)
+  if (effect == "twoways") object$wald.td <- pwaldtest(object, "time", vv)
   Kt <- length(object$args$namest)
   if (! time.dummies && effect == "twoways") rowsel <- -c((K - Kt + 1):K)
   else rowsel <- 1:K
@@ -881,50 +881,6 @@ mtest <- function(object, order = 1, vcov = NULL) {
   mtest
 }
 
-wald <- function(object, param = c("coef", "time", "all"), vcov = NULL) {
-  if (!inherits(object, "pgmm")) stop("argument 'object' needs to be class 'pgmm'")
-  param <- match.arg(param)
-  myvcov <- vcov
-  if (is.null(vcov)) vv <- vcov(object)
-  else if (is.function(vcov)) vv <- myvcov(object)
-  else vv <- myvcov
-  model <- describe(object, "model")
-  effect <- describe(object, "effect")
-  if (param == "time" && effect == "individual") stop("no time dummies in this model")
-  transformation <- describe(object, "transformation")
-  if (model == "onestep") coefficients <- object$coefficients
-  else coefficients <- object$coefficients[[2]]
-  Ktot <- length(coefficients)
-  Kt <- length(object$args$namest)
-  
-  switch(param,
-         "time" = {
-           start <- Ktot - Kt + ifelse(transformation == "ld", 2, 1)
-           end <- Ktot
-         },
-         "coef" = {
-           start <- 1
-           end <- if (effect == "twoways") Ktot - Kt else Ktot
-         },
-         "all" = {
-           start <- 1
-           end <- Ktot
-         })
-  coef <- coefficients[start:end]
-  vv <- vv[start:end, start:end]
-  stat <- as.numeric(crossprod(coef, crossprod(solve(vv), coef)))
-  names(stat) <- "chisq"
-  parameter <- length(coef)
-  names(parameter) <- "df"
-  pval <- pchisq(stat, df = parameter, lower.tail = FALSE)
-  wald <- list(statistic = stat,
-               p.value   = pval,
-               parameter = parameter,
-               method    = "Wald test",
-               data.name = data.name(object))
-  class(wald) <- "htest"
-  wald
-}
 
 #' @rdname pgmm
 #' @export

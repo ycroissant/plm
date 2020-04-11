@@ -306,12 +306,13 @@ pres <- function(x) {  # pres.panelmodel
 #' punbalancedness(Produc, index = c("state", "year", "region"))
 #' punbalancedness(Produc, index = c("state", "year")) 
 #' 
+#' @rdname punbalancedness
+#' @export
 punbalancedness <- function(x, ...) {
   UseMethod("punbalancedness")
 }
 
-#' @rdname punbalancedness
-#' @export
+
 punbalancedness.default <- function(x, ...) {
 
   ii <- index(x)

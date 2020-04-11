@@ -38,6 +38,7 @@
 NULL
 
 #' @rdname plm-deprecated
+#' @export
 pvcovHC <- function(x, ...){
   .Deprecated(new = "pvcovHC", msg = "'pvcovHC' is deprecated, use 'vcovHC' instead for same functionality",
               old = "vcovHC")
@@ -561,7 +562,8 @@ dynformula <- function(formula, lag.form = NULL, diff.form = NULL, log.form = NU
               diff = diff.form, log = log.form, var = c(endog,exo))
 }
 
-
+#' @rdname plm-deprecated
+#' @export
 formula.dynformula <- function(x, ...){
     log.form <- attr(x, "log")
     lag.form <- attr(x, "lag")
@@ -598,6 +600,8 @@ formula.dynformula <- function(x, ...){
     formod
 }
 
+#' @rdname plm-deprecated
+#' @export
 print.dynformula <- function(x,...){
     print(formula(x), ...)
 }

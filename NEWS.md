@@ -1,5 +1,8 @@
 # plm 2.2-4 (in development)
-* fixef.pggls: export was lost in plm 2.0-0, re-exported again.
+* exported: fixef.pggls and deprecated methods/function formula.dynformula,
+  print.dynformula, pvcov: exports were lost in plm 2.0-0, exported again.
+* pwaldtest.pgmm: non-exported function wald() now exported as method
+  pwaldtest.pgmm.
 
 # plm 2.2-3
 * IGNORE_RDIFF_BEGIN/END added on tests and man pages

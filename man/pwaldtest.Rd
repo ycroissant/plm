@@ -4,6 +4,7 @@
 \alias{pwaldtest}
 \alias{pwaldtest.plm}
 \alias{pwaldtest.pvcm}
+\alias{pwaldtest.pgmm}
 \title{Wald-style Chi-square Test and F Test}
 \usage{
 pwaldtest(x, ...)
@@ -19,10 +20,12 @@ pwaldtest(x, ...)
 )
 
 \method{pwaldtest}{pvcm}(x, ...)
+
+\method{pwaldtest}{pgmm}(x, param = c("coef", "time", "all"), vcov = NULL, ...)
 }
 \arguments{
 \item{x}{an estimated model of which the coefficients should be
-tested (usually of class \code{"plm"}/\code{"pvcm"}),}
+tested (usually of class \code{"plm"}/\code{"pvcm"}/\code{"pgmm"})`,}
 
 \item{\dots}{further arguments (currently none).}
 
@@ -49,6 +52,9 @@ used),}
 
 \item{.df2}{a numeric, used if one wants to overwrite the second
 degrees of freedom parameter for the F test (usually not used),}
+
+\item{param}{(for pgmm method only): select the parameters to be tested:
+\code{"coef"}, \code{"time"}, or `"all"``.}
 }
 \value{
 An object of class \code{"htest"}.
@@ -58,11 +64,12 @@ Wald-style Chi-square test and F test of slope coefficients being
 zero jointly, including robust versions of the tests.
 }
 \details{
-\code{pwaldtest} can be used stand--alone with a plm object or a pvcm
-object (for the latter only the 'random' type is valid and no
-further arguments are processed). It is also used in
+\code{pwaldtest} can be used stand--alone with a plm object, a pvcm object,
+and a pgmm object (for pvcm objects only the 'random' type is valid and no
+further arguments are processed; for pgmm objects only arguments \code{param}
+and \code{vcov} are valid). It is also used in
 \code{\link[=summary.plm]{summary.plm()}} to produce the F statistic and the Chi-square
-statistic for the joint test of coefficients.
+statistic for the joint test of coefficients and in \code{\link[=summary.pgmm]{summary.pgmm()}}.
 
 \code{pwaldtest} performs the test if the slope coefficients of a panel
 regression are jointly zero. It does not perform general purpose
@@ -77,12 +84,10 @@ overwriting of the second degrees of freedom parameter is given (by
 supplying argument (\code{.df2})), the adjustment of the second degrees
 of freedom parameter is performed by default. The second degrees of
 freedom parameter is adjusted to be the number of unique elements
-of the cluster variable - 1, e. g. the number of individuals -
-\enumerate{
-\item For the degrees of freedom adjustment of the F test in general,
+of the cluster variable - 1, e. g., the number of individuals minus 1.
+For the degrees of freedom adjustment of the F test in general,
 see e. g. \insertCite{CAME:MILL:15;textual}{plm}, section VII;
 \insertCite{ANDR:GOLS:SCMI:13}{plm}, pp. 126, footnote 4.
-}
 
 The degrees of freedom adjustment requires the vcov object supplied
 or created by a supplied function to carry an attribute called

@@ -659,11 +659,12 @@ trans_clubSandwich_vcov <- function(CSvcov, index) {
 #' zero jointly, including robust versions of the tests.
 #' 
 #' 
-#' `pwaldtest` can be used stand--alone with a plm object or a pvcm
-#' object (for the latter only the 'random' type is valid and no
-#' further arguments are processed). It is also used in
+#' `pwaldtest` can be used stand--alone with a plm object, a pvcm object,
+#' and a pgmm object (for pvcm objects only the 'random' type is valid and no
+#' further arguments are processed; for pgmm objects only arguments `param`
+#' and `vcov` are valid). It is also used in
 #' [summary.plm()] to produce the F statistic and the Chi-square
-#' statistic for the joint test of coefficients.
+#' statistic for the joint test of coefficients and in [summary.pgmm()].
 #' 
 #' `pwaldtest` performs the test if the slope coefficients of a panel
 #' regression are jointly zero. It does not perform general purpose
@@ -678,8 +679,8 @@ trans_clubSandwich_vcov <- function(CSvcov, index) {
 #' supplying argument (`.df2`)), the adjustment of the second degrees
 #' of freedom parameter is performed by default. The second degrees of
 #' freedom parameter is adjusted to be the number of unique elements
-#' of the cluster variable - 1, e. g. the number of individuals -
-#' 1. For the degrees of freedom adjustment of the F test in general,
+#' of the cluster variable - 1, e. g., the number of individuals minus 1.
+#' For the degrees of freedom adjustment of the F test in general,
 #' see e. g. \insertCite{CAME:MILL:15;textual}{plm}, section VII;
 #' \insertCite{ANDR:GOLS:SCMI:13}{plm}, pp. 126, footnote 4.
 #' 
@@ -697,7 +698,7 @@ trans_clubSandwich_vcov <- function(CSvcov, index) {
 #' 
 #' @aliases pwaldtest
 #' @param x an estimated model of which the coefficients should be
-#'     tested (usually of class `"plm"`/`"pvcm"`),
+#'     tested (usually of class `"plm"`/`"pvcm"`/`"pgmm"`)`,
 #' @param test a character, indicating the test to be performed, may
 #'     be either `"Chisq"` or `"F"` for the Wald-style
 #'     Chi-square test or F test, respectively,
@@ -717,6 +718,8 @@ trans_clubSandwich_vcov <- function(CSvcov, index) {
 #'     used),
 #' @param .df2 a numeric, used if one wants to overwrite the second
 #'     degrees of freedom parameter for the F test (usually not used),
+#' @param param (for pgmm method only): select the parameters to be tested:
+#'     `"coef"`, `"time"`, or `"all"``.
 #' @param \dots further arguments (currently none).
 #' @return An object of class `"htest"`.
 #' @export
@@ -920,6 +923,53 @@ pwaldtest.pvcm <- function(x, ...) {
   )
   class(res) <- "htest"
   return(res)
+}
+
+
+#' @rdname pwaldtest
+#' @export
+pwaldtest.pgmm <- function(x, param = c("coef", "time", "all"), vcov = NULL, ...) {
+  param <- match.arg(param)
+  myvcov <- vcov
+  if (is.null(vcov)) vv <- vcov(x)
+  else if (is.function(vcov)) vv <- myvcov(x)
+  else vv <- myvcov
+  model <- describe(x, "model")
+  effect <- describe(x, "effect")
+  if (param == "time" && effect == "individual") stop("no time dummies in this model")
+  transformation <- describe(x, "transformation")
+  if (model == "onestep") coefficients <- x$coefficients
+  else coefficients <- x$coefficients[[2]]
+  Ktot <- length(coefficients)
+  Kt <- length(x$args$namest)
+  
+  switch(param,
+         "time" = {
+           start <- Ktot - Kt + ifelse(transformation == "ld", 2, 1)
+           end <- Ktot
+         },
+         "coef" = {
+           start <- 1
+           end <- if (effect == "twoways") Ktot - Kt else Ktot
+         },
+         "all" = {
+           start <- 1
+           end <- Ktot
+         })
+  coef <- coefficients[start:end]
+  vv <- vv[start:end, start:end]
+  stat <- as.numeric(crossprod(coef, crossprod(solve(vv), coef)))
+  names(stat) <- "chisq"
+  parameter <- length(coef)
+  names(parameter) <- "df"
+  pval <- pchisq(stat, df = parameter, lower.tail = FALSE)
+  wald.pgmm <- list(statistic = stat,
+                    p.value   = pval,
+                    parameter = parameter,
+                    method    = "Wald test",
+                    data.name = data.name(x))
+  class(wald.pgmm) <- "htest"
+  return(wald.pgmm)
 }
 
 pwaldtest.default <- function(x, ...) {

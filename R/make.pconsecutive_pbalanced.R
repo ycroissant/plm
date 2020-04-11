@@ -143,6 +143,7 @@ make.pconsecutive <- function(x, ...){
   UseMethod("make.pconsecutive")
 }
 
+# no export needed
 make.pconsecutive.indexes <- function(x, index, balanced = FALSE, ...) {
 # make.pconsecutive.indexes: helper function, not exported
 # returns list with 3 elements:
