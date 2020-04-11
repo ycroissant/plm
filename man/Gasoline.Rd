@@ -4,7 +4,8 @@
 \name{Gasoline}
 \alias{Gasoline}
 \title{Gasoline Consumption}
-\format{A data frame containing :
+\format{
+A data frame containing :
 \describe{
 \item{country}{a factor with 18 levels}
 \item{year}{the year}
@@ -12,7 +13,8 @@
 \item{lincomep}{logarithm of real per-capita income}
 \item{lrpmg}{logarithm of real motor gasoline price}
 \item{lcarpcap}{logarithm of the stock of cars per capita}
-}}
+}
+}
 \source{
 Online complements to Baltagi (2001):
 

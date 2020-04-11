@@ -310,6 +310,8 @@ punbalancedness <- function(x, ...) {
   UseMethod("punbalancedness")
 }
 
+#' @rdname punbalancedness
+#' @export
 punbalancedness.default <- function(x, ...) {
 
   ii <- index(x)

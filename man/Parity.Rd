@@ -4,7 +4,8 @@
 \name{Parity}
 \alias{Parity}
 \title{Purchasing Power Parity and other parity relationships}
-\format{A data frame containing :
+\format{
+A data frame containing :
 \describe{
 \item{country}{country codes: a factor with 17 levels}
 \item{time}{the quarter index, 1973Q1-1998Q4}
@@ -14,7 +15,8 @@
 \item{il}{long term interest rate}
 \item{ld}{log price differential vs. USA}
 \item{uis}{U.S. short term interest rate}
-\item{uil}{U.S. long term interest rate} }}
+\item{uil}{U.S. long term interest rate} }
+}
 \source{
 \insertRef{COAK:FUER:SMIT:06}{plm}
 }

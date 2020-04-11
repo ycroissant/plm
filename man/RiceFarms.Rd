@@ -4,7 +4,8 @@
 \name{RiceFarms}
 \alias{RiceFarms}
 \title{Production of Rice in Indonesia}
-\format{A dataframe containing :
+\format{
+A dataframe containing :
 \describe{
 \item{id}{the farm identifier}
 
@@ -56,7 +57,8 @@ in terms of rice)}
 \code{'gunungwangi'}, \code{'malausma'}, \code{'sukaambit'},
 \code{'ciwangi'}}
 
-}}
+}
+}
 \source{
 \insertRef{FENG:HORR:12}{plm}
 }

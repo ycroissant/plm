@@ -4,7 +4,8 @@
 \name{Crime}
 \alias{Crime}
 \title{Crime in North Carolina}
-\format{A data frame containing :
+\format{
+A data frame containing :
 \describe{
 \item{county}{county identifier}
 \item{year}{year from 1981 to 1987}
@@ -49,7 +50,8 @@
 \item{lwsta}{log of weekly wage in state government}
 \item{lwloc}{log of weekly wage in local government}
 \item{lmix}{log of offence mix: face-to-face/other}
-\item{lpctymle}{log of percentage of young males (between ages 15 to 24)}}}
+\item{lpctymle}{log of percentage of young males (between ages 15 to 24)}}
+}
 \source{
 Journal of Applied Econometrics Data Archive (complements Baltagi
 (2006)):

@@ -4,7 +4,8 @@
 \name{EmplUK}
 \alias{EmplUK}
 \title{Employment and Wages in the United Kingdom}
-\format{A data frame containing :
+\format{
+A data frame containing :
 \describe{
 \item{firm}{firm index}
 \item{year}{year}
@@ -13,7 +14,8 @@
 \item{wage}{wages}
 \item{capital}{capital}
 \item{output}{output}
-}}
+}
+}
 \source{
 \insertRef{AREL:BOND:91}{plm}
 }

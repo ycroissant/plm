@@ -4,7 +4,8 @@
 \name{Wages}
 \alias{Wages}
 \title{Panel Data of Individual Wages}
-\format{A data frame containing:
+\format{
+A data frame containing:
 \describe{
 \item{exp}{years of full-time work experience.}
 \item{wks}{weeks  worked.}
@@ -17,7 +18,8 @@
 \item{union}{individual's wage set by a union contract?}
 \item{ed}{years of education.}
 \item{black}{is the individual black?}
-\item{lwage}{logarithm of wage.} }}
+\item{lwage}{logarithm of wage.} }
+}
 \source{
 Online complements to Baltagi (2001):
 

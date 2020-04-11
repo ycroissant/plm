@@ -4,7 +4,8 @@
 \name{Males}
 \alias{Males}
 \title{Wages and Education of Young Males}
-\format{A data frame containing :
+\format{
+A data frame containing :
 \describe{
 \item{nr}{identifier}
 \item{year}{year}
@@ -18,7 +19,8 @@
 \item{industry}{a factor with 12 levels}
 \item{occupation}{a factor with 9 levels}
 \item{residence}{a factor with levels \verb{rural_area, north_east, northern_central, south}}
-}}
+}
+}
 \source{
 Journal of Applied Econometrics data archive
 \url{http://qed.econ.queensu.ca/jae/1998-v13.2/vella-verbeek/}.

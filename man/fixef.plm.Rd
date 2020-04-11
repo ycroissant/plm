@@ -5,6 +5,7 @@
 \alias{print.fixef}
 \alias{summary.fixef}
 \alias{print.summary.fixef}
+\alias{fixef.pggls}
 \title{Extract the Fixed Effects}
 \usage{
 \method{fixef}{plm}(
@@ -28,6 +29,14 @@
   x,
   digits = max(3, getOption("digits") - 2),
   width = getOption("width"),
+  ...
+)
+
+\method{fixef}{pggls}(
+  object,
+  effect = NULL,
+  type = c("level", "dfirst", "dmean"),
+  vcov = NULL,
   ...
 )
 }

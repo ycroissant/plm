@@ -4,7 +4,8 @@
 \name{LaborSupply}
 \alias{LaborSupply}
 \title{Wages and Hours Worked}
-\format{A data frame containing :
+\format{
+A data frame containing :
 \describe{
 \item{lnhr}{log of annual hours worked}
 \item{lnwg}{log of hourly wage}
@@ -13,7 +14,8 @@
 \item{disab}{bad health}
 \item{id}{id}
 \item{year}{year}
-}}
+}
+}
 \source{
 Online complements to Ziliak (1997).
 

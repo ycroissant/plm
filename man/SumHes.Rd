@@ -4,7 +4,8 @@
 \name{SumHes}
 \alias{SumHes}
 \title{The Penn World Table, v. 5}
-\format{A data frame containing :
+\format{
+A data frame containing :
 \describe{
 \item{year}{the year}
 \item{country}{the country name (factor)}
@@ -12,7 +13,8 @@
 \item{com}{communist regime? }
 \item{pop}{country's population (in thousands)}
 \item{gdp}{real GDP per capita (in 1985 US dollars)}
-\item{sr}{saving rate (in percent)}}}
+\item{sr}{saving rate (in percent)}}
+}
 \source{
 Online supplements to Hayashi (2000).
 

@@ -1,5 +1,5 @@
-# plm 2.2-4
-* tbd
+# plm 2.2-4 (in development)
+* fixef.pggls: export was lost in plm 2.0-0, re-exported again.
 
 # plm 2.2-3
 * IGNORE_RDIFF_BEGIN/END added on tests and man pages

@@ -4,7 +4,8 @@
 \name{Produc}
 \alias{Produc}
 \title{US States Production}
-\format{A data frame containing :
+\format{
+A data frame containing :
 \describe{
 \item{state}{the state}
 \item{year}{the year}
@@ -16,7 +17,8 @@
 \item{pc}{private capital stock}
 \item{gsp}{gross state product}
 \item{emp}{labor input measured by the employment in non--agricultural payrolls}
-\item{unemp}{state unemployment rate} }}
+\item{unemp}{state unemployment rate} }
+}
 \source{
 Online complements to Baltagi (2001):
 

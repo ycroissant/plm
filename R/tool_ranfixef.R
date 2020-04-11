@@ -203,6 +203,8 @@ print.summary.fixef <- function(x, digits = max(3, getOption("digits") - 2), wid
     printCoefmat(x, digits = digits)
 }
 
+#' @rdname fixef.plm
+#' @export
 fixef.pggls <- fixef.plm
 
 
