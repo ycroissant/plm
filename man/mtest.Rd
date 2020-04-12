@@ -2,7 +2,7 @@
 % Please edit documentation in R/est_gmm.R
 \name{mtest}
 \alias{mtest}
-\title{Arellano--Bond test of Serial Correlation}
+\title{Arellano--Bond Test of Serial Correlation}
 \usage{
 mtest(object, order = 1, vcov = NULL)
 }

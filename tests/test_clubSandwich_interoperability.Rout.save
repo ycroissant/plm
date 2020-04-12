@@ -1,7 +1,7 @@
 
-R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
-Copyright (C) 2019 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
+R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+Copyright (C) 2020 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -493,10 +493,12 @@ F-statistic: 14.0476 on 2 and 13 DF, p-value: 0.00056362
 > # run test, gave error pre rev. 637 (in case an intercept is in the model):
 > pwaldtest(plm_unweighted_re, vcov = vcovCR(plm_unweighted, type = "CR2"), test = "F")
 
-	F test (robust), vcov: vcovCR(plm_unweighted, type = "CR2")
+	F test for joint significance (robust), vcov: vcovCR(plm_unweighted,
+	type = "CR2")
 
 data:  mrate ~ legal + beertaxa
 F = 3.8957, df1 = 2, df2 = 49, p-value = 0.02691
+alternative hypothesis: at least one coefficient is not null
 
 > 
 > clubSandwich::coef_test(plm_unweighted, vcov = "CR0")
@@ -584,4 +586,4 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 > 
 > proc.time()
    user  system elapsed 
-  1.532   0.087   1.614 
+   2.00    0.25    2.28 

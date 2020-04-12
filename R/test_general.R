@@ -829,7 +829,7 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
   if (!missing(.df2)) df2 <- .df2
   
   if (test == "Chisq"){
-    # perform "normal" chisq test
+    # perform non-robust chisq test
     if (is.null(vcov_arg)) {
       stat <- if(length(formula(x))[2] > 1) {
         # IV case: cannot take usual TSS-SSR-way to calc. stat
@@ -842,24 +842,14 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
       names(stat) <- "Chisq"
       pval <- pchisq(stat, df = df1, lower.tail = FALSE)
       parameter <- c(df = df1)
-      method <- "Wald test"
+      method <- "Wald test for foint significance"
     } else {
       # perform robust chisq test
-      
-      # alternative:
-      # use package car for statistic:
-      # Note: has.intercept() returns TRUE for FE models, so do not use it here...
-      # return_car_lH <- car::linearHypothesis(x,
-      #                                        names(coef(x))[if ("(Intercept)" %in% names(coef(x))) -1 else TRUE],
-      #                                        test="Chisq",
-      #                                        vcov. = rvcov_orig)
-      # stat_car <- return_car_lH[["Chisq"]][2] # extract statistic
-      
       stat <- as.numeric(crossprod(solve(rvcov, coefs_wo_int), coefs_wo_int))
       names(stat) <- "Chisq"
       pval <- pchisq(stat, df = df1, lower.tail = FALSE)
       parameter <- c(df = df1)
-      method <- paste0("Wald test (robust)", rvcov_name)
+      method <- paste0("Wald test for joint significance (robust)", rvcov_name)
     }
   }
   if (test == "F"){
@@ -870,32 +860,22 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
       names(stat) <- "F"
       pval <- pf(stat, df1 = df1, df2 = df2, lower.tail = FALSE)
       parameter <- c(df1 = df1, df2 = df2)
-      method <- "F test"
+      method <- "F test for joint significance"
     } else {
       # perform robust F test
-      
-      # alternative:
-      # use package car for statistic:
-      # Note: has.intercept() returns TRUE for FE models, so do not use it here...
-      # Note: car::linearHypothesis does not adjust df2 for clustering
-      # return_car_lH <- car::linearHypothesis(x,
-      #                                        names(coef(x))[if ("(Intercept)" %in% names(coef(x))) -1 else TRUE],
-      #                                        test="F",
-      #                                        vcov. = rvcov_orig)
-      # stat_car <- return_car_lH[["F"]][2] # extract statistic
-      
       stat <- as.numeric(crossprod(solve(rvcov, coefs_wo_int), coefs_wo_int) / df1)
       names(stat) <- "F"
       pval <- pf(stat, df1 = df1, df2 = df2, lower.tail = FALSE)
       parameter <- c(df1 = df1, df2 = df2) # Dfs
-      method  <- paste0("F test (robust)", rvcov_name)
+      method  <- paste0("F test for joint significance (robust)", rvcov_name)
     }
   }
   res <- list(data.name = data.name(x),
               statistic = stat,
               parameter = parameter,
               p.value   = pval,
-              method    = method
+              method    = method,
+              alternative = "at least one coefficient is not null"
   )
   class(res) <- "htest"
   return(res)
@@ -906,6 +886,8 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
 pwaldtest.pvcm <- function(x, ...) {
   model <- describe(x, "model")
   if(!model == "random") stop("pwaldtest.pvcm only applicable to 'random' pvcm objects")
+  # TODO: for pvcm within, pwaldtest.pvcm could return a list of individual
+  #       Wald tests in an own extended class c("pvcm.within", "htest")
   
   coefs_wo_int <- x$coefficients[setdiff(names(x$coefficients), "(Intercept)")]
   stat <- as.numeric(crossprod(solve(vcov(x)[names(coefs_wo_int), names(coefs_wo_int)], coefs_wo_int), coefs_wo_int))
@@ -913,13 +895,14 @@ pwaldtest.pvcm <- function(x, ...) {
   df1 <- length(coefs_wo_int)
   pval <- pchisq(stat, df = df1, lower.tail = FALSE)
   parameter <- c(df = df1)
-  method <- "Wald test"
+  method <- "Wald test for joint significance"
   
   res <- list(data.name = data.name(x),
               statistic = stat,
               parameter = parameter,
               p.value   = pval,
-              method    = method
+              method    = method,
+              alternative = "at least one coefficient is not null"
   )
   class(res) <- "htest"
   return(res)
@@ -930,6 +913,7 @@ pwaldtest.pvcm <- function(x, ...) {
 #' @export
 pwaldtest.pgmm <- function(x, param = c("coef", "time", "all"), vcov = NULL, ...) {
   param <- match.arg(param)
+  vcov_supplied <- !is.null(vcov)
   myvcov <- vcov
   if (is.null(vcov)) vv <- vcov(x)
   else if (is.function(vcov)) vv <- myvcov(x)
@@ -963,10 +947,16 @@ pwaldtest.pgmm <- function(x, param = c("coef", "time", "all"), vcov = NULL, ...
   parameter <- length(coef)
   names(parameter) <- "df"
   pval <- pchisq(stat, df = parameter, lower.tail = FALSE)
+  method <- "Wald test for joint significance"
+  if (vcov_supplied) {
+    rvcov_name <- paste0(", vcov: ", paste0(deparse(substitute(vcov))))
+    method <- paste0(method, " (robust)", rvcov_name)
+  }
   wald.pgmm <- list(statistic = stat,
                     p.value   = pval,
                     parameter = parameter,
-                    method    = "Wald test",
+                    method    = method,
+                    alternative = "at least one coefficient is not null",
                     data.name = data.name(x))
   class(wald.pgmm) <- "htest"
   return(wald.pgmm)

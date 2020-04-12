@@ -782,10 +782,10 @@ summary.pgmm <- function(object, robust = TRUE, time.dummies = FALSE, ...) {
   if (model == "onestep") K <- length(object$coefficients)
   else  K <- length(object$coefficients[[2]])
   object$sargan <- sargan(object, "twosteps")
-  object$m1 <- mtest(object, 1, vv)
-  object$m2 <- mtest(object, 2, vv)
-  object$wald.coef <- pwaldtest(object, "coef", vv)
-  if (effect == "twoways") object$wald.td <- pwaldtest(object, "time", vv)
+  object$m1 <- mtest(object, order = 1, vcov = vv)
+  object$m2 <- mtest(object, order = 2, vcov = vv)
+  object$wald.coef <- pwaldtest(object, param = "coef", vcov = vv)
+  if (effect == "twoways") object$wald.td <- pwaldtest(object, param = "time", vcov = vv)
   Kt <- length(object$args$namest)
   if (! time.dummies && effect == "twoways") rowsel <- -c((K - Kt + 1):K)
   else rowsel <- 1:K
@@ -800,7 +800,7 @@ summary.pgmm <- function(object, robust = TRUE, time.dummies = FALSE, ...) {
   object
 }
 
-#' Arellano--Bond test of Serial Correlation
+#' Arellano--Bond Test of Serial Correlation
 #' 
 #' Test of serial correlation for models estimated by GMM
 #' 
@@ -864,7 +864,7 @@ mtest <- function(object, order = 1, vcov = NULL) {
   EVE <- Reduce("+",
                 mapply(function(x, y) t(y) %*% x %*% t(x) %*% y, resid, residl, SIMPLIFY = FALSE))
   EX <- Reduce("+", mapply(crossprod, residl, X, SIMPLIFY = FALSE))
-  XZ <- Reduce("+", mapply(crossprod, W, X, SIMPLIFY = FALSE))
+  XZ <- Reduce("+", mapply(crossprod, W,      X, SIMPLIFY = FALSE))
   ZVE <- Reduce("+",
                 mapply(function(x, y, z) t(x) %*% y %*% t(y) %*% z, W, resid, residl, SIMPLIFY = FALSE))
 
@@ -873,10 +873,11 @@ mtest <- function(object, order = 1, vcov = NULL) {
   stat <- num / sqrt(denom)
   names(stat) <- "normal"
   pval <- 2 * pnorm(abs(stat), lower.tail = FALSE)
-  mtest <- list(statistic = stat,
-                p.value   = pval,
-                method    = paste("Autocorrelation test of degree", order),
-                data.name = data.name(object))
+  mtest <- list(statistic   = stat,
+                p.value     = pval,
+                alternative = "autocorrelation present",
+                method      = paste("Arellano-Bond autocorrelation test of degree", order),
+                data.name   = data.name(object))
   class(mtest) <- "htest"
   mtest
 }
@@ -969,7 +970,6 @@ sargan <- function(object, weights = c("twosteps", "onestep")) {
   if (!inherits(object, "pgmm")) stop("argument 'object' needs to be class 'pgmm'")
   weights <- match.arg(weights)
   model <- describe(object, "model")
-  transformation <- describe(object, "transformation")
   if (model == "onestep") Ktot <- length(object$coefficients)
   else Ktot <- length(object$coefficients[[2]])
   N <- length(residuals(object))
@@ -988,6 +988,7 @@ sargan <- function(object, weights = c("twosteps", "onestep")) {
                  p.value   = pval,
                  parameter = parameter,
                  method    = method,
+                 alternative = "overidentifying restrictions not valid",
                  data.name = data.name(object))
   class(sargan) <- "htest"
   sargan

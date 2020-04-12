@@ -1,7 +1,7 @@
 
-R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
-Copyright (C) 2019 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
+R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+Copyright (C) 2020 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -71,297 +71,337 @@ Type 'q()' to quit R.
 > # pooling model F test - robust - function
 > plm::pwaldtest(gp, test = "F", vcov = vcovHC)
 
-	F test (robust), vcov: vcovHC
+	F test for joint significance (robust), vcov: vcovHC
 
 data:  inv ~ value + capital
 F = 57.9049, df1 = 2, df2 = 9, p-value = 0.0000072606
+alternative hypothesis: at least one coefficient is not null
 
 > plm::pwaldtest(gp, test = "F", vcov = vcovBK)
 
-	F test (robust), vcov: vcovBK
+	F test for joint significance (robust), vcov: vcovBK
 
 data:  inv ~ value + capital
 F = 32.9422, df1 = 2, df2 = 9, p-value = 0.000072332
+alternative hypothesis: at least one coefficient is not null
 
 > plm::pwaldtest(gp, test = "F", vcov = vcovSCC)
 
-	F test (robust), vcov: vcovSCC
+	F test for joint significance (robust), vcov: vcovSCC
 
 data:  inv ~ value + capital
 F = 105.718, df1 = 2, df2 = 19, p-value = 0.000000000050573
+alternative hypothesis: at least one coefficient is not null
 
 > plm::pwaldtest(gp, test = "F", vcov = vcovNW)
 
-	F test (robust), vcov: vcovNW
+	F test for joint significance (robust), vcov: vcovNW
 
 data:  inv ~ value + capital
 F = 92.1225, df1 = 2, df2 = 19, p-value = 0.00000000016671
+alternative hypothesis: at least one coefficient is not null
 
 > plm::pwaldtest(gp, test = "F", vcov = vcovDC) # no finite-sample adj. for df2 done, because not yet clear how to handle "group-time" clustering
 
-	F test (robust), vcov: vcovDC
+	F test for joint significance (robust), vcov: vcovDC
 
 data:  inv ~ value + capital
 F = 65.0889, df1 = 2, df2 = 197, p-value < 0.000000000000000222
+alternative hypothesis: at least one coefficient is not null
 
 > 
 > # within model individual F test - robust - function
 > plm::pwaldtest(gi, test = "F", vcov = vcovHC)
 
-	F test (robust), vcov: vcovHC
+	F test for joint significance (robust), vcov: vcovHC
 
 data:  inv ~ value + capital
 F = 31.7744, df1 = 2, df2 = 9, p-value = 0.000083417
+alternative hypothesis: at least one coefficient is not null
 
 > plm::pwaldtest(gi, test = "F", vcov = vcovBK)
 
-	F test (robust), vcov: vcovBK
+	F test for joint significance (robust), vcov: vcovBK
 
 data:  inv ~ value + capital
 F = 64.3086, df1 = 2, df2 = 9, p-value = 0.000004678
+alternative hypothesis: at least one coefficient is not null
 
 > plm::pwaldtest(gi, test = "F", vcov = vcovSCC)
 
-	F test (robust), vcov: vcovSCC
+	F test for joint significance (robust), vcov: vcovSCC
 
 data:  inv ~ value + capital
 F = 75.9419, df1 = 2, df2 = 19, p-value = 0.00000000086597
+alternative hypothesis: at least one coefficient is not null
 
 > plm::pwaldtest(gi, test = "F", vcov = vcovNW)
 
-	F test (robust), vcov: vcovNW
+	F test for joint significance (robust), vcov: vcovNW
 
 data:  inv ~ value + capital
 F = 29.0557, df1 = 2, df2 = 19, p-value = 0.0000016616
+alternative hypothesis: at least one coefficient is not null
 
 > plm::pwaldtest(gi, test = "F", vcov = vcovDC) # no finite-sample adj. for df2 done, because not yet clear how to handle "group-time" clustering
 
-	F test (robust), vcov: vcovDC
+	F test for joint significance (robust), vcov: vcovDC
 
 data:  inv ~ value + capital
 F = 55.4686, df1 = 2, df2 = 188, p-value < 0.000000000000000222
+alternative hypothesis: at least one coefficient is not null
 
 > 
 > # within model time F test - robust - function
 > plm::pwaldtest(gt, test = "F", vcov = vcovHC)
 
-	F test (robust), vcov: vcovHC
+	F test for joint significance (robust), vcov: vcovHC
 
 data:  inv ~ value + capital
 F = 62.1078, df1 = 2, df2 = 9, p-value = 0.0000054149
+alternative hypothesis: at least one coefficient is not null
 
 > plm::pwaldtest(gt, test = "F", vcov = vcovBK)
 
-	F test (robust), vcov: vcovBK
+	F test for joint significance (robust), vcov: vcovBK
 
 data:  inv ~ value + capital
 F = 28.7897, df1 = 2, df2 = 9, p-value = 0.00012276
+alternative hypothesis: at least one coefficient is not null
 
 > plm::pwaldtest(gt, test = "F", vcov = vcovSCC)
 
-	F test (robust), vcov: vcovSCC
+	F test for joint significance (robust), vcov: vcovSCC
 
 data:  inv ~ value + capital
 F = 89.0247, df1 = 2, df2 = 19, p-value = 0.00000000022372
+alternative hypothesis: at least one coefficient is not null
 
 > plm::pwaldtest(gt, test = "F", vcov = vcovNW)
 
-	F test (robust), vcov: vcovNW
+	F test for joint significance (robust), vcov: vcovNW
 
 data:  inv ~ value + capital
 F = 103.116, df1 = 2, df2 = 19, p-value = 0.000000000062831
+alternative hypothesis: at least one coefficient is not null
 
 > plm::pwaldtest(gt, test = "F", vcov = vcovDC) # no finite-sample adj. for df2 done, because not yet clear how to handle "group-time" clustering
 
-	F test (robust), vcov: vcovDC
+	F test for joint significance (robust), vcov: vcovDC
 
 data:  inv ~ value + capital
 F = 64.2897, df1 = 2, df2 = 178, p-value < 0.000000000000000222
+alternative hypothesis: at least one coefficient is not null
 
 > 
 > # within model twoways F test - robust - function
 > plm::pwaldtest(gd, test = "F", vcov = vcovHC)
 
-	F test (robust), vcov: vcovHC
+	F test for joint significance (robust), vcov: vcovHC
 
 data:  inv ~ value + capital
 F = 74.6338, df1 = 2, df2 = 9, p-value = 0.0000024936
+alternative hypothesis: at least one coefficient is not null
 
 > plm::pwaldtest(gd, test = "F", vcov = vcovBK)
 
-	F test (robust), vcov: vcovBK
+	F test for joint significance (robust), vcov: vcovBK
 
 data:  inv ~ value + capital
 F = 58.0144, df1 = 2, df2 = 9, p-value = 0.0000072035
+alternative hypothesis: at least one coefficient is not null
 
 > plm::pwaldtest(gd, test = "F", vcov = vcovSCC)
 
-	F test (robust), vcov: vcovSCC
+	F test for joint significance (robust), vcov: vcovSCC
 
 data:  inv ~ value + capital
 F = 46.9641, df1 = 2, df2 = 19, p-value = 0.000000044313
+alternative hypothesis: at least one coefficient is not null
 
 > plm::pwaldtest(gd, test = "F", vcov = vcovNW)
 
-	F test (robust), vcov: vcovNW
+	F test for joint significance (robust), vcov: vcovNW
 
 data:  inv ~ value + capital
 F = 33.8818, df1 = 2, df2 = 19, p-value = 0.00000054194
+alternative hypothesis: at least one coefficient is not null
 
 > plm::pwaldtest(gd, test = "F", vcov = vcovDC) # no finite-sample adj. for df2 done, because not yet clear how to handle "group-time" clustering
 
-	F test (robust), vcov: vcovDC
+	F test for joint significance (robust), vcov: vcovDC
 
 data:  inv ~ value + capital
 F = 104.851, df1 = 2, df2 = 169, p-value < 0.000000000000000222
+alternative hypothesis: at least one coefficient is not null
 
 > 
 > # pooling model Chisq - robust - function
 > plm::pwaldtest(gp, test = "Chisq", vcov = vcovHC)
 
-	Wald test (robust), vcov: vcovHC
+	Wald test for joint significance (robust), vcov: vcovHC
 
 data:  inv ~ value + capital
 Chisq = 115.81, df = 2, p-value < 0.000000000000000222
+alternative hypothesis: at least one coefficient is not null
 
 > plm::pwaldtest(gp, test = "Chisq", vcov = vcovBK)
 
-	Wald test (robust), vcov: vcovBK
+	Wald test for joint significance (robust), vcov: vcovBK
 
 data:  inv ~ value + capital
 Chisq = 65.8844, df = 2, p-value = 0.0000000000000049361
+alternative hypothesis: at least one coefficient is not null
 
 > plm::pwaldtest(gp, test = "Chisq", vcov = vcovSCC)
 
-	Wald test (robust), vcov: vcovSCC
+	Wald test for joint significance (robust), vcov: vcovSCC
 
 data:  inv ~ value + capital
 Chisq = 211.437, df = 2, p-value < 0.000000000000000222
+alternative hypothesis: at least one coefficient is not null
 
 > plm::pwaldtest(gp, test = "Chisq", vcov = vcovNW)
 
-	Wald test (robust), vcov: vcovNW
+	Wald test for joint significance (robust), vcov: vcovNW
 
 data:  inv ~ value + capital
 Chisq = 184.245, df = 2, p-value < 0.000000000000000222
+alternative hypothesis: at least one coefficient is not null
 
 > plm::pwaldtest(gp, test = "Chisq", vcov = vcovDC) # finite-sample adj. for df2 irrelevant b/c Chisq test
 
-	Wald test (robust), vcov: vcovDC
+	Wald test for joint significance (robust), vcov: vcovDC
 
 data:  inv ~ value + capital
 Chisq = 130.178, df = 2, p-value < 0.000000000000000222
+alternative hypothesis: at least one coefficient is not null
 
 > 
 > # within model individual Chisq - robust - function
 > plm::pwaldtest(gi, test = "Chisq", vcov = vcovHC)
 
-	Wald test (robust), vcov: vcovHC
+	Wald test for joint significance (robust), vcov: vcovHC
 
 data:  inv ~ value + capital
 Chisq = 63.5489, df = 2, p-value = 0.000000000000015869
+alternative hypothesis: at least one coefficient is not null
 
 > plm::pwaldtest(gi, test = "Chisq", vcov = vcovBK)
 
-	Wald test (robust), vcov: vcovBK
+	Wald test for joint significance (robust), vcov: vcovBK
 
 data:  inv ~ value + capital
 Chisq = 128.617, df = 2, p-value < 0.000000000000000222
+alternative hypothesis: at least one coefficient is not null
 
 > plm::pwaldtest(gi, test = "Chisq", vcov = vcovSCC)
 
-	Wald test (robust), vcov: vcovSCC
+	Wald test for joint significance (robust), vcov: vcovSCC
 
 data:  inv ~ value + capital
 Chisq = 151.884, df = 2, p-value < 0.000000000000000222
+alternative hypothesis: at least one coefficient is not null
 
 > plm::pwaldtest(gi, test = "Chisq", vcov = vcovNW)
 
-	Wald test (robust), vcov: vcovNW
+	Wald test for joint significance (robust), vcov: vcovNW
 
 data:  inv ~ value + capital
 Chisq = 58.1114, df = 2, p-value = 0.00000000000024058
+alternative hypothesis: at least one coefficient is not null
 
 > plm::pwaldtest(gi, test = "Chisq", vcov = vcovDC) # finite-sample adj. for df2 irrelevant b/c Chisq test
 
-	Wald test (robust), vcov: vcovDC
+	Wald test for joint significance (robust), vcov: vcovDC
 
 data:  inv ~ value + capital
 Chisq = 110.937, df = 2, p-value < 0.000000000000000222
+alternative hypothesis: at least one coefficient is not null
 
 > 
 > # within model time Chisq - robust - function
 > plm::pwaldtest(gt, test = "Chisq", vcov = vcovHC)
 
-	Wald test (robust), vcov: vcovHC
+	Wald test for joint significance (robust), vcov: vcovHC
 
 data:  inv ~ value + capital
 Chisq = 124.216, df = 2, p-value < 0.000000000000000222
+alternative hypothesis: at least one coefficient is not null
 
 > plm::pwaldtest(gt, test = "Chisq", vcov = vcovBK)
 
-	Wald test (robust), vcov: vcovBK
+	Wald test for joint significance (robust), vcov: vcovBK
 
 data:  inv ~ value + capital
 Chisq = 57.5795, df = 2, p-value = 0.00000000000031389
+alternative hypothesis: at least one coefficient is not null
 
 > plm::pwaldtest(gt, test = "Chisq", vcov = vcovSCC)
 
-	Wald test (robust), vcov: vcovSCC
+	Wald test for joint significance (robust), vcov: vcovSCC
 
 data:  inv ~ value + capital
 Chisq = 178.049, df = 2, p-value < 0.000000000000000222
+alternative hypothesis: at least one coefficient is not null
 
 > plm::pwaldtest(gt, test = "Chisq", vcov = vcovNW)
 
-	Wald test (robust), vcov: vcovNW
+	Wald test for joint significance (robust), vcov: vcovNW
 
 data:  inv ~ value + capital
 Chisq = 206.232, df = 2, p-value < 0.000000000000000222
+alternative hypothesis: at least one coefficient is not null
 
 > plm::pwaldtest(gt, test = "Chisq", vcov = vcovDC) # finite-sample adj. for df2 irrelevant b/c Chisq test
 
-	Wald test (robust), vcov: vcovDC
+	Wald test for joint significance (robust), vcov: vcovDC
 
 data:  inv ~ value + capital
 Chisq = 128.579, df = 2, p-value < 0.000000000000000222
+alternative hypothesis: at least one coefficient is not null
 
 > 
 > # within model twoways Chisq - robust - function
 > plm::pwaldtest(gd, test = "Chisq", vcov = vcovHC)
 
-	Wald test (robust), vcov: vcovHC
+	Wald test for joint significance (robust), vcov: vcovHC
 
 data:  inv ~ value + capital
 Chisq = 149.268, df = 2, p-value < 0.000000000000000222
+alternative hypothesis: at least one coefficient is not null
 
 > plm::pwaldtest(gd, test = "Chisq", vcov = vcovBK)
 
-	Wald test (robust), vcov: vcovBK
+	Wald test for joint significance (robust), vcov: vcovBK
 
 data:  inv ~ value + capital
 Chisq = 116.029, df = 2, p-value < 0.000000000000000222
+alternative hypothesis: at least one coefficient is not null
 
 > plm::pwaldtest(gd, test = "Chisq", vcov = vcovSCC)
 
-	Wald test (robust), vcov: vcovSCC
+	Wald test for joint significance (robust), vcov: vcovSCC
 
 data:  inv ~ value + capital
 Chisq = 93.9283, df = 2, p-value < 0.000000000000000222
+alternative hypothesis: at least one coefficient is not null
 
 > plm::pwaldtest(gd, test = "Chisq", vcov = vcovNW)
 
-	Wald test (robust), vcov: vcovNW
+	Wald test for joint significance (robust), vcov: vcovNW
 
 data:  inv ~ value + capital
 Chisq = 67.7637, df = 2, p-value = 0.0000000000000019289
+alternative hypothesis: at least one coefficient is not null
 
 > plm::pwaldtest(gd, test = "Chisq", vcov = vcovDC) # finite-sample adj. for df2 irrelevant b/c Chisq test
 
-	Wald test (robust), vcov: vcovDC
+	Wald test for joint significance (robust), vcov: vcovDC
 
 data:  inv ~ value + capital
 Chisq = 209.701, df = 2, p-value < 0.000000000000000222
+alternative hypothesis: at least one coefficient is not null
 
 > 
 > 
@@ -369,4 +409,4 @@ Chisq = 209.701, df = 2, p-value < 0.000000000000000222
 > 
 > proc.time()
    user  system elapsed 
-  1.345   0.056   1.392 
+   2.56    0.23    2.78 

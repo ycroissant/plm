@@ -6462,7 +6462,7 @@ attr(,"index")
 > flush(stderr()); flush(stdout())
 > 
 > ### Name: mtest
-> ### Title: Arellano-Bond test of Serial Correlation
+> ### Title: Arellano-Bond Test of Serial Correlation
 > ### Aliases: mtest
 > ### Keywords: htest
 > 
@@ -6475,17 +6475,19 @@ attr(,"index")
 +            data = EmplUK, effect = "twoways", model = "twosteps")
 > mtest(ar, order = 1)
 
-	Autocorrelation test of degree 1
+	Arellano-Bond autocorrelation test of degree 1
 
 data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + lag(log(capital),  ...
 normal = -2.9998, p-value = 0.002702
+alternative hypothesis: autocorrelation present
 
 > mtest(ar, order = 2, vcov = vcovHC)
 
-	Autocorrelation test of degree 2
+	Arellano-Bond autocorrelation test of degree 2
 
 data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + lag(log(capital),  ...
 normal = -0.36744, p-value = 0.7133
+alternative hypothesis: autocorrelation present
 
 > 
 > 
@@ -12423,41 +12425,47 @@ Chisq: 434.623 on 6 DF, p-value: < 2.22e-16
 > mod_re <- plm(inv ~ value + capital, data = Grunfeld, model = "random")
 > pwaldtest(mod_fe, test = "F")
 
-	F test
+	F test for joint significance
 
 data:  inv ~ value + capital
 F = 309.01, df1 = 2, df2 = 188, p-value < 2.2e-16
+alternative hypothesis: at least one coefficient is not null
 
 > pwaldtest(mod_re, test = "Chisq")
 
-	Wald test
+	Wald test for foint significance
 
 data:  inv ~ value + capital
 Chisq = 657.67, df = 2, p-value < 2.2e-16
+alternative hypothesis: at least one coefficient is not null
 
 > 
 > # with robust vcov (matrix, function)
 > pwaldtest(mod_fe, vcov = vcovHC(mod_fe))
 
-	Wald test (robust), vcov: vcovHC(mod_fe)
+	Wald test for joint significance (robust), vcov: vcovHC(mod_fe)
 
 data:  inv ~ value + capital
 Chisq = 63.549, df = 2, p-value = 1.587e-14
+alternative hypothesis: at least one coefficient is not null
 
 > pwaldtest(mod_fe, vcov = function(x) vcovHC(x, type = "HC3"))
 
-	Wald test (robust), vcov: function(x) vcovHC(x, type = "HC3")
+	Wald test for joint significance (robust), vcov: function(x) vcovHC(x,
+	type = "HC3")
 
 data:  inv ~ value + capital
 Chisq = 45.836, df = 2, p-value = 1.114e-10
+alternative hypothesis: at least one coefficient is not null
 
 > 
 > pwaldtest(mod_fe, vcov = vcovHC(mod_fe), df2adj = FALSE) # w/o df2 adjustment
 
-	Wald test (robust), vcov: vcovHC(mod_fe)
+	Wald test for joint significance (robust), vcov: vcovHC(mod_fe)
 
 data:  inv ~ value + capital
 Chisq = 63.549, df = 2, p-value = 1.587e-14
+alternative hypothesis: at least one coefficient is not null
 
 > 
 > # example without attribute "cluster" in the vcov
@@ -12465,10 +12473,11 @@ Chisq = 63.549, df = 2, p-value = 1.587e-14
 > attr(vcov_mat, "cluster") <- NULL  # remove attribute
 > pwaldtest(mod_fe, vcov = vcov_mat) # no df2 adjustment performed
 
-	Wald test (robust), vcov: vcov_mat
+	Wald test for joint significance (robust), vcov: vcov_mat
 
 data:  inv ~ value + capital
 Chisq = 63.549, df = 2, p-value = 1.587e-14
+alternative hypothesis: at least one coefficient is not null
 
 > 
 > 
@@ -12760,6 +12769,7 @@ alternative hypothesis: unobserved effect
 
 data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + lag(log(capital),  ...
 chisq = 31.381, df = 25, p-value = 0.1767
+alternative hypothesis: overidentifying restrictions not valid
 
 > 
 > 
@@ -13409,10 +13419,11 @@ HPY R-squared: 0.99077
 > rv <- vcovHC(ar)
 > mtest(ar, order = 2, vcov = rv)
 
-	Autocorrelation test of degree 2
+	Arellano-Bond autocorrelation test of degree 2
 
 data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + log(capital) +  ...
 normal = -0.1165, p-value = 0.9073
+alternative hypothesis: autocorrelation present
 
 > 
 > 
@@ -13677,7 +13688,7 @@ attr(,"se")
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  20.97 1.17 22.61 NA NA 
+Time elapsed:  11.42 0.66 12.11 NA NA 
 > grDevices::dev.off()
 null device 
           1 
