@@ -602,28 +602,67 @@ tss.plm <- function(x, model = NULL){
 #' 
 r.squared <- function(object, model = NULL,
                       type = c("cor", "rss", "ess"), dfcor = FALSE){
+  ## TODO: doees not handle non-intercept models correctly
+  ##       see below r.squared_no_intercept
+  if (is.null(model)) model <- describe(object, "model")
+  effect <- describe(object, "effect")
+  type <- match.arg(type)
+  if (type == "cor"){
+    y <- pmodel.response(object, model = model, effect = effect)
+    haty <- fitted(object, model = model, effect = effect)
+    R2 <- cor(y, haty)^2
+  }
+  if (type == "rss"){
+    R2 <- 1 - deviance(object, model = model) / tss(object, model = model)
+  }
+  if (type == "ess"){
+    haty <- fitted(object, model = model)
+    mhaty <- mean(haty)
+    ess <- as.numeric(crossprod((haty - mhaty)))
+    R2 <- ess / tss(object, model = model)
+  }
+  ### adj. R2 Still wrong for models without intercept
+  if (dfcor) R2 <- 1 - (1 - R2) * (length(resid(object)) - 1) / df.residual(object)
+  R2
+}
+
+## first try at r.squared adapted to be suitable for non-intercept models
+r.squared_no_intercept <- function(object, model = NULL,
+                      type = c("cor", "rss", "ess"), dfcor = FALSE){
     if (is.null(model)) model <- describe(object, "model")
     effect <- describe(object, "effect")
     type <- match.arg(type)
+    has.int <- if (model != "within") has.intercept(object)[1] else FALSE # [1] as has.intercept returns > 1 boolean for IV models 
+    
     if (type == "cor"){
+        if(!has.int) warning("for models without intercept, type = \"cor\" is not so sane")
         y <- pmodel.response(object, model = model, effect = effect)
         haty <- fitted(object, model = model, effect = effect)
         R2 <- cor(y, haty)^2
     }
     if (type == "rss"){
         R2 <- 1 - deviance(object, model = model) / tss(object, model = model)
+        if (!has.int) {
+          R2 <- 1 - deviance(object, model = model) / as.numeric(crossprod(pmodel.response(object, model = model)))
+        }
     }
     if (type == "ess"){
         haty <- fitted(object, model = model)
         mhaty <- mean(haty)
-        ess <- as.numeric(crossprod((haty - mhaty)))
-        R2 <- ess / tss(object, model = model)
+        if(!has.int) {
+          ess <- as.numeric(crossprod(haty))
+          tss <- as.numeric(crossprod(pmodel.response(object, model = model)))
+          }
+        else {
+          ess <- as.numeric(crossprod(haty - mhaty))
+          tss <- tss(object, model = model)
+        }
+        R2 <- ess / tss
     }
-    # Kevin Tappe 2015-10-19, the computation of the adjusted R2 was wrong
-    if (dfcor) R2 <- 1 - (1 - R2) * (length(resid(object)) - 1) / df.residual(object)
-    R2
+    if (dfcor) R2 <- 1 - (1 - R2) * (length(resid(object)) - has.int) / df.residual(object)
+    
+    return(R2)
 }
-
 
 
 # describe function: extract characteristics of plm model
