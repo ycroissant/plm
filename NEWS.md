@@ -3,7 +3,8 @@
   print.dynformula, pvcovHC: exports were lost in plm 2.0-0, exported again.
 * pwaldtest.pgmm: non-exported function wald() now exported as method
   pwaldtest.pgmm.
-* mtest, sargan, pwaldtest: added for each string for alternative hypothesis.
+* mtest, sargan, pwaldtest, piest, aneweytest: added for each string for
+  alternative hypothesis.
 
 # plm 2.2-3
 * IGNORE_RDIFF_BEGIN/END added on tests and man pages

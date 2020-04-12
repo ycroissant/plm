@@ -2,7 +2,7 @@
 % Please edit documentation in R/est_pi.R
 \name{aneweytest}
 \alias{aneweytest}
-\title{Chamberlain estimator and test for fixed effects}
+\title{Angrist and Newey's version of Chamberlain test for fixed effects}
 \usage{
 aneweytest(formula, data, subset, na.action, index = NULL, ...)
 }

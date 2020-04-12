@@ -80,7 +80,8 @@ Type 'q()' to quit R.
 > flush(stderr()); flush(stdout())
 > 
 > ### Name: aneweytest
-> ### Title: Chamberlain estimator and test for fixed effects
+> ### Title: Angrist and Newey's version of Chamberlain test for fixed
+> ###   effects
 > ### Aliases: aneweytest
 > ### Keywords: htest
 > 
@@ -94,6 +95,7 @@ Type 'q()' to quit R.
 
 data:  log(goutput) ~ log(seed) + log(totlabor) + log(size)
 chisq = 141.89, df = 87, p-value = 0.0001851
+alternative hypothesis: within specification does not apply
 
 > 
 > 
@@ -9154,6 +9156,7 @@ log(size).6     -0.355043589 0.04222026 -8.4093186  4.123995e-17
 
 data:  log(goutput) ~ log(seed) + log(totlabor) + log(size)
 chisq = 113.72, df = 87, p-value = 0.02882
+alternative hypothesis: within specification does not apply
 
 > 
 > 
@@ -13688,7 +13691,7 @@ attr(,"se")
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  11.42 0.66 12.11 NA NA 
+Time elapsed:  10.33 0.56 10.89 NA NA 
 > grDevices::dev.off()
 null device 
           1 

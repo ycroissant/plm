@@ -1,5 +1,5 @@
 
-#' Chamberlain estimator and test for fixed effects
+#' Angrist and Newey's version of Chamberlain test for fixed effects
 #' 
 #' Angrist and Newey's version of the Chamberlain test
 #' 
@@ -28,7 +28,6 @@
 #' aneweytest(log(goutput) ~ log(seed) + log(totlabor) + log(size), RiceFarms, index = "id")
 #' 
 aneweytest <-  function(formula, data, subset, na.action, index = NULL,  ...){
-    cl <- match.call(expand.dots = TRUE)
     mf <- match.call()
     # compute the model.frame using plm with model = NA
     mf[[1]] <- as.name("plm")
@@ -42,7 +41,6 @@ aneweytest <-  function(formula, data, subset, na.action, index = NULL,  ...){
     time <- index(data, "time")
     years <- unique(time)
     pdim <- pdim(data)
-    balanced <- pdim$balanced
     T <- pdim$nT$T
     n <- pdim$nT$n
     N <- pdim$nT$N
@@ -67,8 +65,8 @@ aneweytest <-  function(formula, data, subset, na.action, index = NULL,  ...){
     if (length(cst) > 0) cst <- cst[- match("(Intercept)", cst)]
     if (length(cst) > 0){
         vr <- colnames(X)[!(colnames(X) %in% cst)]
-        Z <- X[, cst, drop = FALSE]
-        X <- X[, vr, drop = FALSE]
+        Z <- X[ , cst, drop = FALSE]
+        X <- X[ , vr, drop = FALSE]
         Kz <- ncol(Z)
         namesZ <- colnames(Z)
     }
@@ -78,7 +76,6 @@ aneweytest <-  function(formula, data, subset, na.action, index = NULL,  ...){
         namesZ <- NULL
     }
     Kx <- ncol(X)
-    namesX <- colnames(X)
     # split by time period and remove the mean
     X <- lapply(as.list(years), function(x) X[time == x, , drop = FALSE])
     X <- lapply(X, function(x) t(t(x) - .colMeans(x, nrow(x), ncol(x))))
@@ -96,11 +93,12 @@ aneweytest <-  function(formula, data, subset, na.action, index = NULL,  ...){
     DEV <- sapply(LMS, deviance)
     stat <- c("chisq" = sum(1 - DEV / YTOT) * (n - ncol(XX)))
     df <- c("df" = (T ^ 2 - T - 1) * Kx)
-    aneweytest <- structure(list(statistic = stat,
-                                 parameter = df,
-                                 method    = "Angrist and Newey's test of within model",
-                                 p.value   = pchisq(stat, df = df, lower.tail = FALSE),
-                                 data.name = paste(deparse(formula))),
+    aneweytest <- structure(list(statistic   = stat,
+                                 parameter   = df,
+                                 method      = "Angrist and Newey's test of within model",
+                                 p.value     = pchisq(stat, df = df, lower.tail = FALSE),
+                                 alternative = "within specification does not apply",
+                                 data.name   = paste(deparse(formula))),
                             class = "htest")
     aneweytest
 }
@@ -169,8 +167,8 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
     if (length(cst) > 0) cst <- cst[- match("(Intercept)", cst)]
     if (length(cst) > 0){
         vr <- colnames(X)[!(colnames(X) %in% cst)]
-        Z <- X[, cst, drop = FALSE]
-        X <- X[, vr, drop = FALSE]
+        Z <- X[ , cst, drop = FALSE]
+        X <- X[ , vr, drop = FALSE]
         Kz <- ncol(Z)
         namesZ <- colnames(Z)
     }
@@ -233,7 +231,7 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
     names(.coef) <- rownames(A) <- colnames(A) <- namescoef
     resb <- as.numeric(R %*% .coef) - as.numeric(pi)
     piconst <- matrix(R %*% .coef, ncol = T)
-    OOmega <- Omega
+    OOmega <- Omega                                       ## TODO: OOmega is never used
     .resid <- as.matrix(as.data.frame(Y)) - XX %*% piconst
     if(TRUE){                                             ## TODO: this is always TRUE...?!
         if (robust){
@@ -251,24 +249,25 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
     stat <- c("chisq" = n * resb %*% solve(Omega) %*% resb)
     df <- c("df" = Kx * (T ^ 2 - T - 1))                  ## TODO: df is overwritten in next line...?!
     df <- c("df" = length(pi) - length(.coef))
-    pitest <- list(statistic = stat,
-                   parameter = df,
-                   method = "Chamberlain's pi test",
-                   p.value = pchisq(stat, df = df, lower.tail = FALSE),
-                   data.name = paste(deparse(formula))
+    pitest <- list(statistic   = stat,
+                   parameter   = df,
+                   method      = "Chamberlain's pi test",
+                   p.value     = pchisq(stat, df = df, lower.tail = FALSE),
+                   alternative = "within specification does not apply",
+                   data.name   = paste(deparse(formula))
                    )
     
     structure(list(coefficients = .coef,
-                   pi = pi,
-                   daub = resb,
-                   vcov =  A / n,
+                   pi      = pi,
+                   daub    = resb,
+                   vcov    =  A / n,
                    formula = formula,
-                   R = R,
-                   model = data,
-                   pitest = structure(pitest, class = "htest"),
-                   Omega = Omega,
+                   R       = R,
+                   model   = data,
+                   pitest  = structure(pitest, class = "htest"),
+                   Omega   = Omega,
                    moments = resb,
-                   call = cl),
+                   call    = cl),
               class = c("piest", "panelmodel"))
 }
 
