@@ -57,7 +57,9 @@ degrees of freedom parameter for the F test (usually not used),}
 \code{"coef"}, \code{"time"}, or `"all"``.}
 }
 \value{
-An object of class \code{"htest"}.
+An object of class \code{"htest"}, except for pvcm's within model for which
+a data.frame with results of the Wald chi-square tes and F test per
+regression is returned.
 }
 \description{
 Wald-style Chi-square test and F test of slope coefficients being

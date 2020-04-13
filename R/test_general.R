@@ -721,7 +721,9 @@ trans_clubSandwich_vcov <- function(CSvcov, index) {
 #' @param param (for pgmm method only): select the parameters to be tested:
 #'     `"coef"`, `"time"`, or `"all"``.
 #' @param \dots further arguments (currently none).
-#' @return An object of class `"htest"`.
+#' @return An object of class `"htest"`, except for pvcm's within model for which
+#'         a data.frame with results of the Wald chi-square tests and F tests per
+#'         regression is returned.
 #' @export
 #' @author Yves Croissant (initial implementation) and Kevin Tappe
 #'     (extensions: vcov argument and F test's df2 adjustment)
@@ -885,10 +887,44 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
 #' @export
 pwaldtest.pvcm <- function(x, ...) {
   model <- describe(x, "model")
-  if(!model == "random") stop("pwaldtest.pvcm only applicable to 'random' pvcm objects")
-  # TODO: for pvcm within, pwaldtest.pvcm could return a list of individual
-  #       Wald tests in an own extended class c("pvcm.within", "htest")
+  effect <- describe(x, "effect")
   
+  if(model == "within") {
+    # for the within case, simply return a data.frame with all test results
+    # of single estimations (per individual or per time period)
+    
+    ii <- switch(effect, "individual" = 1, "time" = 2)
+    residl <- split(x$residuals, index(x)[[ii]])
+    
+    # vcocs and coefficients w/o intercept
+    coefs.no.int <- !names(x$coefficients) %in% "(Intercept)"
+    vcovl <- lapply(x$vcov, function(x) x[coefs.no.int, coefs.no.int])
+    coefl <- as.list(data.frame(t(x$coefficients[ , coefs.no.int])))
+    
+    
+    df1 <- ncol(x$coefficients[ , coefs.no.int]) # is same df1 for all models (as all models estimate the same coefs)
+    df2 <- lengths(residl) - ncol(x$coefficients) # (any intercept is subtracted)
+    
+    statChisqs <- mapply(FUN = function(v, c) as.numeric(crossprod(solve(v, c), c)),
+                     vcovl, coefl)
+    statFs <- statChisqs / df1
+    
+    
+    
+    pstatChisqs <- pchisq(statChisqs, df = df1, lower.tail = FALSE)
+    pstatFs <- pf(statFs, df1 = df1, df2 = df2, lower.tail = FALSE)
+    
+    stats.pvcm.within <- as.data.frame(cbind("Chisq"    = statChisqs,
+                                             "p(chisq)" = pstatChisqs,
+                                             "F"        = statFs,
+                                             "p(F)"     = pstatFs,
+                                             "df1"      = rep(df1, length(residl)),
+                                             "df2"      = df2))
+    # early return
+    return(stats.pvcm.within)
+  }
+  
+  ## case: model == "random"
   coefs_wo_int <- x$coefficients[setdiff(names(x$coefficients), "(Intercept)")]
   stat <- as.numeric(crossprod(solve(vcov(x)[names(coefs_wo_int), names(coefs_wo_int)], coefs_wo_int), coefs_wo_int))
   names(stat) <- "Chisq"

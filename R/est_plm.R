@@ -507,7 +507,7 @@ plm.fit <- function(data, model, effect, random.method,
                        residuals    = resid(result),
                        weights      = w,
                        df.residual  = df,
-                       formula      = formula,  #fForm
+                       formula      = formula,
                        model        = data)
         if (is.null(model.weights(data))) result$weights <- NULL
         if (model == "random") result$ercomp <- estec
@@ -536,7 +536,7 @@ plm.fit <- function(data, model, effect, random.method,
             as.numeric(model.matrix(data, rhs = 1, model = "pooling") %*% gamma)
         result <- list(coefficients = gamma,
                        vcov         = solve(XPX),
-                       formula      = formula, #fForm
+                       formula      = formula,
                        model        = data,
                        ercomp       = estec,
                        df.residual  = nrow(X) - ncol(X),
@@ -621,21 +621,22 @@ r.squared <- function(object, model = NULL,
     ess <- as.numeric(crossprod((haty - mhaty)))
     R2 <- ess / tss(object, model = model)
   }
-  ### adj. R2 Still wrong for models without intercept
+  ### adj. R2 Still wrong for models without intercept, e.g. pooling models
+  # (but could be correct for within models, see comment below in function r.squared_no_intercept)
   if (dfcor) R2 <- 1 - (1 - R2) * (length(resid(object)) - 1) / df.residual(object)
   R2
 }
 
 ## first try at r.squared adapted to be suitable for non-intercept models
 r.squared_no_intercept <- function(object, model = NULL,
-                      type = c("cor", "rss", "ess"), dfcor = FALSE){
+                      type = c("cor", "rss", "ess"), dfcor = FALSE){ # TODO: see comment about "cor" below -> shall we have "cor" as default or rahter rss?
     if (is.null(model)) model <- describe(object, "model")
     effect <- describe(object, "effect")
     type <- match.arg(type)
-    has.int <- if (model != "within") has.intercept(object)[1] else FALSE # [1] as has.intercept returns > 1 boolean for IV models 
+    has.int <- if (model != "within") has.intercept(object)[1] else FALSE # [1] as has.intercept returns > 1 boolean for IV models # TODO: to check if this is sane
     
     if (type == "cor"){
-        if(!has.int) warning("for models without intercept, type = \"cor\" is not so sane")
+        if(!has.int) warning("for models without intercept, type = \"cor\" is not so sane") # TODO: tbd if warning is good
         y <- pmodel.response(object, model = model, effect = effect)
         haty <- fitted(object, model = model, effect = effect)
         R2 <- cor(y, haty)^2
@@ -659,6 +660,8 @@ r.squared_no_intercept <- function(object, model = NULL,
         }
         R2 <- ess / tss
     }
+    # this takes care of the intercept
+    # Still unclear, how the adjustment for within models should look like, i.e. subtract 1 for intercept or not
     if (dfcor) R2 <- 1 - (1 - R2) * (length(resid(object)) - has.int) / df.residual(object)
     
     return(R2)

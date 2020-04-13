@@ -1,8 +1,10 @@
 # plm 2.2-4 (in development)
 * exported: fixef.pggls and deprecated methods/function formula.dynformula,
   print.dynformula, pvcovHC: exports were lost in plm 2.0-0, exported again.
-* pwaldtest.pgmm: non-exported function wald() now exported as method
-  pwaldtest.pgmm.
+* pwaldtest:
+   * non-exported function wald() now exported as method pwaldtest.pgmm.
+   * method for pvcm models now allows for pvcm's "within" specification,
+     returning a data.frame with test results for each regression.
 * mtest, sargan, pwaldtest, piest, aneweytest: added for each string for
   alternative hypothesis.
 

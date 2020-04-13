@@ -2,9 +2,9 @@
 #' 
 #' Estimators for random and fixed effects models with variable coefficients.
 #' 
-#' `pvcm` estimates variable coefficients models. Time or individual
-#' effects are introduced, respectively, if `effect = "time"` or
-#' `effect = "individual"` (the default value).
+#' `pvcm` estimates variable coefficients models. Individual or time
+#' effects are introduced, respectively, if `effect = "individual"` 
+#' (default) or `effect = "time"`.
 #' 
 #' Coefficients are assumed to be fixed if `model = "within"` and
 #' random if `model = "random"`. In the first case, a different model

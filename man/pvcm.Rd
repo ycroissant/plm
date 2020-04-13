@@ -82,9 +82,9 @@ coefficients for each individual (within models only).}
 Estimators for random and fixed effects models with variable coefficients.
 }
 \details{
-\code{pvcm} estimates variable coefficients models. Time or individual
-effects are introduced, respectively, if \code{effect = "time"} or
-\code{effect = "individual"} (the default value).
+\code{pvcm} estimates variable coefficients models. Individual or time
+effects are introduced, respectively, if \code{effect = "individual"}
+(default) or \code{effect = "time"}.
 
 Coefficients are assumed to be fixed if \code{model = "within"} and
 random if \code{model = "random"}. In the first case, a different model
