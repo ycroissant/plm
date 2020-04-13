@@ -377,11 +377,14 @@ myvar <- function(x){
   x.na <- is.na(x)
   if(anyNA(x.na)) x <- x[!x.na]
   n <- length(x)
-  
-  z <- switch(as.character(n),
-              "0" = NA,
-              "1" = 0,
-              ifelse(!(is.factor(x) || is.character(x)), var(x), !all(duplicated(x)[-1L]))) # [var() on factors is deprecated as of R 3.2.3]
+
+  if(n <= 1L) {
+    if(n == 0L) z <- NA
+    if(n == 1L) z <- 0
+  } else {
+    z <- if(!(is.factor(x) || is.character(x))) var(x)
+         else !all(duplicated(x)[-1L])
+  }
   z
 }
 
@@ -458,7 +461,7 @@ pvar.default <- function(x, id, time, ...){
   id.variation   <- rep(TRUE, len)
   time.variation_anyNA <- rep(FALSE, len)
   id.variation_anyNA   <- rep(FALSE, len)
-  lid <- split(x, id)
+  lid <- split(x, id)   # these split() functions seem particularly slow
   ltime <- split(x, time)
   if (is.list(x)){
     if (len == 1){

@@ -1,0 +1,164 @@
+
+R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+Copyright (C) 2020 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(plm)
+> data("Grunfeld", package = "plm")
+> 
+> 
+> ## IGNORE_RDIFF_BEGIN
+> 
+> # corner case make one - id NA and rest non varying 
+> # non-variation was detected prior to rev. 206
+> Grunfeld_1NA_nonvari <- Grunfeld
+> Grunfeld_1NA_nonvari[ 1:20,  "capital"] <- NA
+> Grunfeld_1NA_nonvari[21:200, "capital"] <- Grunfeld_1NA_nonvari[21:200, "firm"]
+> print(pvar(Grunfeld_1NA_nonvari))
+no time variation:       firm capital 
+no individual variation: year capital 
+all NA in time dimension for at least one individual:  capital 
+all NA in ind. dimension for at least one time period: capital 
+> 
+> Grunfeld_1NA_nonvari_time <- Grunfeld
+> Grunfeld_1NA_nonvari_time[Grunfeld_1NA_nonvari_time$year == 1935, "capital"] <- NA
+> Grunfeld_1NA_nonvari_time[Grunfeld_1NA_nonvari_time$year != 1935, "capital"] <- Grunfeld_1NA_nonvari_time[Grunfeld_1NA_nonvari_time$year != 1935, "year"]
+> print(pvar(Grunfeld_1NA_nonvari_time))
+no time variation:       firm capital 
+no individual variation: year capital 
+all NA in time dimension for at least one individual:  capital 
+all NA in ind. dimension for at least one time period: capital 
+> 
+> 
+> ## for one id all NA -> time dimension affected
+> Grunfeld_1NA <- Grunfeld
+> Grunfeld_1NA[1:20, "capital"] <- NA
+> print(pvar(Grunfeld_1NA))
+no time variation:       firm 
+no individual variation: year capital 
+all NA in time dimension for at least one individual:  capital 
+all NA in ind. dimension for at least one time period: capital 
+> 
+> Grunfeld_2NA <- Grunfeld
+> Grunfeld_2NA[1:20, "capital"] <- NA
+> Grunfeld_2NA[21:40, "value"] <- NA
+> print(pvar(Grunfeld_2NA))
+no time variation:       firm 
+no individual variation: year value capital 
+all NA in time dimension for at least one individual:  value capital 
+all NA in ind. dimension for at least one time period: value capital 
+> 
+> 
+> ## one time period all NA -> id dimension affected
+> Grunfeld_1NA_time <- Grunfeld
+> Grunfeld_1NA_time[Grunfeld_1NA_time$year == 1935, "capital"] <- NA
+> print(pvar(Grunfeld_1NA_time))
+no time variation:       firm capital 
+no individual variation: year 
+all NA in time dimension for at least one individual:  capital 
+all NA in ind. dimension for at least one time period: capital 
+> 
+> Grunfeld_2NA_time <- Grunfeld
+> Grunfeld_2NA_time[Grunfeld_2NA_time$year == 1935, c("value", "capital")] <- NA
+> print(pvar(Grunfeld_2NA_time))
+no time variation:       firm value capital 
+no individual variation: year 
+all NA in time dimension for at least one individual:  value capital 
+all NA in ind. dimension for at least one time period: value capital 
+> 
+> 
+> 
+> # input only 1-column data.frame (1 variable) with all NA for one id
+> Grunfeld_1var <- Grunfeld
+> Grunfeld_1var <- pdata.frame(Grunfeld, drop.index = TRUE)
+> Grunfeld_1var$inv <- NULL
+> Grunfeld_1var$value <- NULL
+> Grunfeld_1var1NA <- Grunfeld_1var
+> Grunfeld_1var1NA[c(1:20), "capital"] <- NA
+> print(pvar(Grunfeld_1var1NA))
+no individual variation: capital 
+all NA in time dimension for at least one individual:  capital 
+all NA in ind. dimension for at least one time period: capital 
+> 
+> Grunfeld_1var1NA_time <- Grunfeld_1var
+> Grunfeld_1var1NA_time[c(1,21,41,61,81,101,121,141,161,181), "capital"] <- NA
+> print(pvar(Grunfeld_1var1NA_time))
+no time variation:       capital 
+all NA in time dimension for at least one individual:  capital 
+all NA in ind. dimension for at least one time period: capital 
+> 
+> 
+> ## data.frame 
+> print(pvar(Grunfeld, index=c("firm")))
+no time variation:       firm 
+no individual variation: year time 
+> 
+> ## one variable all NA -> gets removed by pdata.frame
+> Grunfeld_allNA <- Grunfeld
+> Grunfeld_allNA[ , "capital"] <- NA
+> print(pvar(Grunfeld_allNA))
+no time variation:       firm capital 
+no individual variation: year capital 
+all NA in time dimension for at least one individual:  capital 
+all NA in ind. dimension for at least one time period: capital 
+> 
+> 
+> 
+> 
+> # Matrix
+> Grunfeld_mat <- as.matrix(Grunfeld)
+> 
+> Grunfeld_mat <- as.matrix(Grunfeld)
+> pvar(Grunfeld_mat)
+no time variation:       firm 
+no individual variation: year 
+> pvar(Grunfeld_mat, index=c("firm"))
+no time variation:       firm 
+no individual variation: year time 
+> 
+> Grunfeld_mat_allNA <- as.matrix(Grunfeld_allNA)
+> pvar(Grunfeld_mat_allNA)
+no time variation:       firm capital 
+no individual variation: year capital 
+all NA in time dimension for at least one individual:  capital 
+all NA in ind. dimension for at least one time period: capital 
+> 
+> 
+> 
+> ## pseries
+> pGrunfeld <- pdata.frame(Grunfeld)
+> pvar(pGrunfeld$capital)          # should indicate variation in both dimensions (nothing is printed)
+> pvar(pGrunfeld[1:20, ]$capital)  # should indicate no indivivual variation (b/c only 1 individual is evaluated)
+no individual variation: x 
+> 
+> 
+> # library(foreign);library(plm)
+> # jtrain <- read.dta("http://fmwww.bc.edu/ec-p/data/wooldridge/jtrain.dta")
+> # 
+> # # Define panel data (for 1987 and 1988 only)
+> # jtrain.87.88 <- subset(jtrain,year<=1988)
+> # jtrain.p<-pdata.frame(jtrain.87.88, index=c("fcode","year"))
+> # 
+> # pvar(jtrain.p)
+> # print(pvar(jtrain.p))
+> # 
+> # pvar(jtrain.p[ , c(20:26)])
+> # print(pvar(jtrain.p[ , c(20:26)]))
+> 
+> ## IGNORE_RDIFF_END
+> 
+> proc.time()
+   user  system elapsed 
+   0.81    0.14    0.92 
