@@ -803,11 +803,12 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
   if (test == "Chisq"){
     # perform non-robust chisq test
     if (is.null(vcov_arg)) {
-      stat <- if(length(formula(x))[2] > 1) {
+      stat <- if(model == "random" || length(formula(x))[2] > 1) { ## TODO: need to check F test as well?
+        # random case (makes a difference for unbalanced random models! make due to our tss, ssr definitions)
         # IV case: cannot take usual TSS-SSR-way to calc. stat
         as.numeric(crossprod(solve(vcov(x)[names(coefs_wo_int), names(coefs_wo_int)], coefs_wo_int), coefs_wo_int))
       } else {
-        # non IV
+        # non-random, non-IV models
         (tss-ssr)/(ssr/df2)
       }
       
@@ -828,7 +829,11 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
     if(length(formula(x))[2] > 1) stop("test = \"F\" not sensible for IV models")
     if (is.null(vcov_arg)) {
       # perform "normal" F test
-      stat <- (tss-ssr)/ssr*df2/df1
+      if(model == "random") {
+        stat <- as.numeric(crossprod(solve(vcov(x)[names(coefs_wo_int), names(coefs_wo_int)], coefs_wo_int), coefs_wo_int)) / df1
+      } else {
+        stat <- (tss-ssr)/ssr*df2/df1
+      }
       names(stat) <- "F"
       pval <- pf(stat, df1 = df1, df2 = df2, lower.tail = FALSE)
       parameter <- c(df1 = df1, df2 = df2)

@@ -9452,7 +9452,7 @@ Total Sum of Squares:    43.035
 Residual Sum of Squares: 1.1245
 R-Squared:      0.97387
 Adj. R-Squared: 0.97368
-Chisq: 30152 on 6 DF, p-value: < 2.22e-16
+Chisq: 20213.5 on 6 DF, p-value: < 2.22e-16
 > summary(plm(form, data = pProduc, model = "random", effect = "nested",
 +             random.method = "walhus"))
 Nested effects Random Effect Model 
@@ -9494,7 +9494,7 @@ Total Sum of Squares:    40.423
 Residual Sum of Squares: 1.1195
 R-Squared:      0.97231
 Adj. R-Squared: 0.9721
-Chisq: 28403.2 on 6 DF, p-value: < 2.22e-16
+Chisq: 19579.7 on 6 DF, p-value: < 2.22e-16
 > 
 > ## Hausman-Taylor estimator and Amemiya-MaCurdy estimator
 > ## replicate Baltagi (2005, 2013), table 7.4
@@ -13442,7 +13442,8 @@ detaching 'package:car', 'package:carData', 'package:lmtest',
 > flush(stderr()); flush(stdout())
 > 
 > ### Name: vcovNW
-> ### Title: Newey and West (1987) Robust Covariance Matrix Estimator
+> ### Title: \insertCiteNEWE:WEST:87;textualplm Robust Covariance Matrix
+> ###   Estimator
 > ### Aliases: vcovNW vcovNW.plm vcovNW.pcce
 > ### Keywords: regression
 > 
@@ -13545,7 +13546,8 @@ detaching 'package:car', 'package:carData', 'package:lmtest',
 > flush(stderr()); flush(stdout())
 > 
 > ### Name: vcovSCC
-> ### Title: Driscoll and Kraay (1998) Robust Covariance Matrix Estimator
+> ### Title: \insertCiteDRIS:KRAA:98;textualplm Robust Covariance Matrix
+> ###   Estimator
 > ### Aliases: vcovSCC vcovSCC.plm vcovSCC.pcce
 > ### Keywords: regression
 > 
@@ -13691,7 +13693,7 @@ attr(,"se")
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  10.33 0.56 10.89 NA NA 
+Time elapsed:  10.97 0.56 11.55 NA NA 
 > grDevices::dev.off()
 null device 
           1 

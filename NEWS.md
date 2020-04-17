@@ -1,9 +1,12 @@
-# plm 2.2-4 (in development)
+# plm 2.2-4
 
 * exported: fixef.pggls and deprecated methods/function formula.dynformula,
   print.dynformula, pvcovHC: exports were lost in plm 2.0-0, exported again.
 * pwaldtest:
    * non-exported function wald() now exported as method pwaldtest.pgmm.
+   * unbalanced random effect models now use approach via
+     crossprod(solve(vcov(x), coefs), coefs)), not (tss-ssr)/(ssr/df2)
+     anymore.
    * method for pvcm models now allows for pvcm's "within" specification,
      returning a data.frame with test results for each regression.
 * mtest, sargan, pwaldtest, piest, aneweytest: added for each string for

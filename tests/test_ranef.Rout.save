@@ -1,7 +1,7 @@
 
-R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
-Copyright (C) 2019 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
+R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+Copyright (C) 2020 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -174,7 +174,7 @@ Total Sum of Squares:    425110
 Residual Sum of Squares: 412670
 R-Squared:      0.029272
 Adj. R-Squared: 0.028567
-Chisq: 41.5232 on 1 DF, p-value: 1.1648e-10
+Chisq: 41.4373 on 1 DF, p-value: 1.2172e-10
 > summary(obj_unbal_time)
 Oneway (time) effect Random Effect Model 
    (Swamy-Arora's transformation)
@@ -208,7 +208,7 @@ Total Sum of Squares:    1213200
 Residual Sum of Squares: 1200600
 R-Squared:      0.010345
 Adj. R-Squared: 0.0096263
-Chisq: 14.3869 on 1 DF, p-value: 0.00014884
+Chisq: 15.0358 on 1 DF, p-value: 0.00010549
 > 
 > ranef(obj_unbal_ind)
           1           3           4           5           7           8 
@@ -360,7 +360,7 @@ Total Sum of Squares:    1324300
 Residual Sum of Squares: 1196500
 R-Squared:      0.096564
 Adj. R-Squared: 0.095251
-Chisq: 146.991 on 2 DF, p-value: < 2.22e-16
+Chisq: 41645.3 on 2 DF, p-value: < 2.22e-16
 > ranef(obj_unbal_tw)
           1           3           4           5           7           8 
 -16.2146713 -10.8796414  -8.3461136  -8.5509485  -3.5478700  26.6062307 
@@ -411,4 +411,4 @@ Chisq: 146.991 on 2 DF, p-value: < 2.22e-16
 > 
 > proc.time()
    user  system elapsed 
-  1.666   0.097   1.758 
+   2.39    0.21    2.56 
