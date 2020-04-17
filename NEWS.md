@@ -1,4 +1,5 @@
 # plm 2.2-4 (in development)
+
 * exported: fixef.pggls and deprecated methods/function formula.dynformula,
   print.dynformula, pvcovHC: exports were lost in plm 2.0-0, exported again.
 * pwaldtest:
@@ -9,9 +10,11 @@
   alternative hypothesis.
 
 # plm 2.2-3
-* IGNORE_RDIFF_BEGIN/END added on tests and man pages
+
+* IGNORE_RDIFF_BEGIN/END added on tests and man pages.
 
 # plm 2.2-1
+
 * purtest:
    * tests now support unbalanced panel data, where applicable.
    * gained argument 'ips.stat' to select statistic for IPS test,
@@ -29,13 +32,13 @@
 * index.pindex: fixed bug when individual index variable is called "group".
 
 ## Minor items:
-
    * print.fixef: respects / forwards arguments supplied to generic print method.
    * DESCRIPTION/Dependencies: package 'urca' added to "Suggests".
    * Grunfeld data doc: URL for overview of various Grunfeld data sets updated to
      https://eeecon.uibk.ac.at/~zeileis/grunfeld/. 
 
 # plm 2.2-0
+
 * methods for plm.list were not exported, now exported.
 * lagt is changed so that it can deal with time factors which
   cannot be coerced to numeric (ex "1950-54", "1955-59", ...).
@@ -44,10 +47,12 @@
   some individual level OLS regressions, fixed.
 
 # plm 2.1-0
+
 * problems with vignettes fixed (full text was in italics).
 * in test file 'test_Estimators.R', L256, tolerance lowered to 1E-04.
 
 # plm 2.0-2
+
 * vcovXX.pcce functions exported again (export was lost in plm 2.0-0).
 * summary.pcce gained argument 'vcov', summary.pcce object carries robust vcov
   in element 'rvcov'.

@@ -559,6 +559,7 @@ tss <- function(x, ...){
 }
 
 tss.default <- function(x){
+  # always gives centered TSS (= demeaned TSS)
   var(x) * (length(x) - 1)
 }
 
@@ -629,43 +630,57 @@ r.squared <- function(object, model = NULL,
 
 ## first try at r.squared adapted to be suitable for non-intercept models
 r.squared_no_intercept <- function(object, model = NULL,
-                      type = c("cor", "rss", "ess"), dfcor = FALSE){ # TODO: see comment about "cor" below -> shall we have "cor" as default or rahter rss?
+                      type = c("rss", "ess", "cor"), dfcor = FALSE){
     if (is.null(model)) model <- describe(object, "model")
     effect <- describe(object, "effect")
     type <- match.arg(type)
+    ## TODO: check what is sane for IV and what for within
     has.int <- if (model != "within") has.intercept(object)[1] else FALSE # [1] as has.intercept returns > 1 boolean for IV models # TODO: to check if this is sane
     
-    if (type == "cor"){
-        if(!has.int) warning("for models without intercept, type = \"cor\" is not so sane") # TODO: tbd if warning is good
-        y <- pmodel.response(object, model = model, effect = effect)
-        haty <- fitted(object, model = model, effect = effect)
-        R2 <- cor(y, haty)^2
-    }
     if (type == "rss"){
-        R2 <- 1 - deviance(object, model = model) / tss(object, model = model)
-        if (!has.int) {
-          R2 <- 1 - deviance(object, model = model) / as.numeric(crossprod(pmodel.response(object, model = model)))
-        }
+      # approach: 1 - RSS / TSS
+      R2 <- if (has.int) {
+        1 - deviance(object, model = model) / tss(object, model = model)  
+      } else {
+        # use non-centered (=non-demeaned) TSS
+        1 - deviance(object, model = model) / as.numeric(crossprod(pmodel.response(object, model = model)))
+      }
     }
+        
     if (type == "ess"){
-        haty <- fitted(object, model = model)
+      # approach: ESS / TSS
+      haty <- fitted(object, model = model)
+      R2 <- if(has.int) {
         mhaty <- mean(haty)
-        if(!has.int) {
-          ess <- as.numeric(crossprod(haty))
-          tss <- as.numeric(crossprod(pmodel.response(object, model = model)))
-          }
-        else {
-          ess <- as.numeric(crossprod(haty - mhaty))
-          tss <- tss(object, model = model)
-        }
-        R2 <- ess / tss
+        ess <- as.numeric(crossprod(haty - mhaty))
+        tss <- tss(object, model = model)
+        ess / tss
+      }
+      else {
+        # use non-centered (=non-demeaned) ESS and non-centered TSS
+        ess <- as.numeric(crossprod(haty))
+        tss <- as.numeric(crossprod(pmodel.response(object, model = model)))
+        ess / tss
+      }
     }
+    
+    if (type == "cor"){
+      # approach: squared-correlation(dependent variable, predicted value), only for models with intercept
+      if(!has.int) warning("for models without intercept, type = \"cor\" may not be sane") # TODO: tbd if warning is good
+      
+      # TODO: Check should this be for "cor" the original variable? This makes a differnce for (at least) RE models!
+      y <- pmodel.response(object, model = model, effect = effect)
+      haty <- fitted(object, model = model, effect = effect)
+      R2 <- cor(y, haty)^2
+    }
+    
     # this takes care of the intercept
     # Still unclear, how the adjustment for within models should look like, i.e. subtract 1 for intercept or not
     if (dfcor) R2 <- 1 - (1 - R2) * (length(resid(object)) - has.int) / df.residual(object)
     
     return(R2)
 }
+
 
 
 # describe function: extract characteristics of plm model

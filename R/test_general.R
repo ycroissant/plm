@@ -611,8 +611,9 @@ pFtest.plm <- function(x, z, ...){
 }
 
 ############## pwaldtest() ############################################
-# pwaldtest is used in summary.plm, summary.pht to compute the F statistic, but can be used 
-# as a stand-alone test of joint significance of all slopes
+# pwaldtest is used in summary.plm, summary.pht, summary.pgmm to compute the
+# Chi-square or F statistic, but can be used as a stand-alone test of
+# joint significance of all slopes
 #
 # Short intro (but see associated help file)
 # arg 'vcov' non-NULL => the robust tests are carried out
@@ -621,37 +622,6 @@ pFtest.plm <- function(x, z, ...){
 #
 # Chi-sq test for IV models as in Wooldridge (1990), A note on the Lagrange multiplier and F-statistics for two stage least
 #                                                    squares regressions, Economics Letters 34: 151-155.
-
-# trans_clubSandwich_vcov: helper function for pwaldtest()
-# translate vcov object from package clubSandwich so it is suitable for summary.plm, plm's pwaldtest.
-# Attribute "cluster" in clubSandwich's vcov objects contains the cluster variable itself.
-# plm's vcov object also has attribute "cluster" but it contains a character as
-# information about the cluster dimension (either "group" or "time")
-#
-# inputs:
-#   * CSvcov: a vcov as returned by clubSandwich's vcovCR function [class c("vcovCR", "clubSandwich")]
-#   * index: the index belonging to a plm object/model
-# return value:
-#   * modified CSvcov (substituted attribute "cluster" with suitable character or NULL)
-
-trans_clubSandwich_vcov <- function(CSvcov, index) {
-  clustervar <- attr(CSvcov, "cluster")
-  if (!is.null(clustervar)) {
-      if (isTRUE(all.equal(index[[1]], clustervar))) {
-        attr(CSvcov, "cluster") <- "group"
-        return(CSvcov)
-      }
-      if (isTRUE(all.equal(index[[2]], clustervar))) {
-        attr(CSvcov, "cluster") <- "time"
-        return(CSvcov)
-      } else {
-        attr(CSvcov, "cluster") <- NULL
-        return(CSvcov)
-      }
-  }
-  warning("no attribute \"cluster\" found in supplied vcov object")
-  return(CSvcov)
-}
 
 #' Wald-style Chi-square Test and F Test
 #' 
@@ -1001,6 +971,39 @@ pwaldtest.pgmm <- function(x, param = c("coef", "time", "all"), vcov = NULL, ...
 pwaldtest.default <- function(x, ...) {
   pwaldtest.plm(x, ...)
 }
+
+
+# trans_clubSandwich_vcov: helper function for pwaldtest()
+# translate vcov object from package clubSandwich so it is suitable for summary.plm, plm's pwaldtest.
+# Attribute "cluster" in clubSandwich's vcov objects contains the cluster variable itself.
+# plm's vcov object also has attribute "cluster" but it contains a character as
+# information about the cluster dimension (either "group" or "time")
+#
+# inputs:
+#   * CSvcov: a vcov as returned by clubSandwich's vcovCR function [class c("vcovCR", "clubSandwich")]
+#   * index: the index belonging to a plm object/model
+# return value:
+#   * modified CSvcov (substituted attribute "cluster" with suitable character or NULL)
+trans_clubSandwich_vcov <- function(CSvcov, index) {
+  clustervar <- attr(CSvcov, "cluster")
+  if (!is.null(clustervar)) {
+    if (isTRUE(all.equal(index[[1]], clustervar))) {
+      attr(CSvcov, "cluster") <- "group"
+      return(CSvcov)
+    }
+    if (isTRUE(all.equal(index[[2]], clustervar))) {
+      attr(CSvcov, "cluster") <- "time"
+      return(CSvcov)
+    } else {
+      attr(CSvcov, "cluster") <- NULL
+      return(CSvcov)
+    }
+  }
+  warning("no attribute \"cluster\" found in supplied vcov object")
+  return(CSvcov)
+}
+
+
 
 #' Test of Poolability
 #' 

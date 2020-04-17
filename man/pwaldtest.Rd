@@ -58,7 +58,7 @@ degrees of freedom parameter for the F test (usually not used),}
 }
 \value{
 An object of class \code{"htest"}, except for pvcm's within model for which
-a data.frame with results of the Wald chi-square tes and F test per
+a data.frame with results of the Wald chi-square tests and F tests per
 regression is returned.
 }
 \description{
