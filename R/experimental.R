@@ -28,7 +28,7 @@ residuals_overall_exp.plm <- function(x, ...) { #### experimental, non-exported 
     # make residuals a pseries
     res <- structure(res, index = index(x), class = c("pseries", class(res)))
       
-  } else { # all plm models except random (also also except ht)
+  } else { # all plm models except random (and also except ht)
     res <- residuals(x)
   }
   return(res)
