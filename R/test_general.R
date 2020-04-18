@@ -744,8 +744,8 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
                 length(coef(x)),
                 length(coef(x)) - has.intercept(x))
   df2 <- df.residual(x)
-  tss <- tss(x)
-  ssr <- deviance(x)
+#  tss <- tss(x)        # not good for models without intercept
+#  ssr <- deviance(x)   # -- " --
   vcov_arg <- vcov
   int <- "(Intercept)"
   coefs_wo_int <- coef(x)[!(names(coef(x)) %in% int)]
