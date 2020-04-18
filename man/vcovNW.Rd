@@ -4,8 +4,7 @@
 \alias{vcovNW}
 \alias{vcovNW.plm}
 \alias{vcovNW.pcce}
-\title{\insertCite{NEWE:WEST:87;textual}{plm} Robust Covariance Matrix
-Estimator}
+\title{Newey and West (1987) Robust Covariance Matrix Estimator}
 \usage{
 vcovNW(x, ...)
 

@@ -4,8 +4,7 @@
 \alias{vcovSCC}
 \alias{vcovSCC.plm}
 \alias{vcovSCC.pcce}
-\title{\insertCite{DRIS:KRAA:98;textual}{plm} Robust Covariance Matrix
-Estimator}
+\title{Driscoll and Kraay (1998) Robust Covariance Matrix Estimator}
 \usage{
 vcovSCC(x, ...)
 

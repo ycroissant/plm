@@ -669,8 +669,11 @@ r.squared_no_intercept <- function(object, model = NULL,
       if(!has.int) warning("for models without intercept, type = \"cor\" may not be sane") # TODO: tbd if warning is good
       
       # TODO: Check should this be for "cor" the original variable? This makes a differnce for (at least) RE models!
-      y <- pmodel.response(object, model = model, effect = effect)
-      haty <- fitted(object, model = model, effect = effect)
+      #       and on the fitted values which are not given by fitted() for RE models
+#      y <- pmodel.response(object, model = model, effect = effect)
+#      haty <- fitted(object, model = model, effect = effect)
+      y <- pmodel.response(object, model = "pooling")
+      haty <- fitted_exp.plm(object)
       R2 <- cor(y, haty)^2
     }
     

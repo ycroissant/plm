@@ -1,6 +1,5 @@
 
-#' \insertCite{DRIS:KRAA:98;textual}{plm} Robust Covariance Matrix
-#' Estimator
+#' Driscoll and Kraay (1998) Robust Covariance Matrix Estimator
 #' 
 #' Nonparametric robust covariance matrix estimators *a la
 #' Driscoll and Kraay* for panel models with cross-sectional
@@ -83,8 +82,7 @@ vcovSCC <- function(x, ...){
 
 
 
-#' \insertCite{NEWE:WEST:87;textual}{plm} Robust Covariance Matrix
-#' Estimator
+#' Newey and West (1987) Robust Covariance Matrix Estimator
 #' 
 #' Nonparametric robust covariance matrix estimators *a la Newey
 #' and West* for panel models with serial correlation.
