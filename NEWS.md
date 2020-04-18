@@ -4,7 +4,7 @@
   print.dynformula, pvcovHC: exports were lost in plm 2.0-0, exported again.
 * pwaldtest:
    * non-exported function wald() now exported as method pwaldtest.pgmm.
-   * unbalanced random effect models now use approach via
+   * for all plm models use approach via
      crossprod(solve(vcov(x), coefs), coefs)), not (tss-ssr)/(ssr/df2)
      anymore.
    * method for pvcm models now allows for pvcm's "within" specification,
