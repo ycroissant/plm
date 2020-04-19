@@ -311,6 +311,7 @@ ptransform <- function(x, model = NULL, effect = NULL, theta = NULL, ...){
     if (model == "pooling") return(x)
     if (effect == "twoways" & model %in% c("between", "fd"))
         stop("twoways effect only relevant for within, random and pooling models")
+    balanced <- is.pbalanced(x) # need to check this right here as long as x is a pseries
     if (model == "within") x <- Within(x, effect)
     if (model == "between") x <- between(x, effect)
     if (model == "Between") x <- Between(x, effect)
@@ -320,7 +321,7 @@ ptransform <- function(x, model = NULL, effect = NULL, theta = NULL, ...){
         if (effect %in% c("time", "individual")) x <- x - theta * Between(x, effect)
         if (effect == "nested") x <- x - theta$id * Between(x, "individual") -
                                     theta$gp * Between(x, "group")
-        if (effect == "twoways" & is.pbalanced(x))
+        if (effect == "twoways" & balanced)
             x <- x - theta$id * Between(x, "individual") -
                 theta$time * Between(x, "time") + theta$total * mean(x)
     }
