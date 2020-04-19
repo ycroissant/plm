@@ -784,8 +784,8 @@ purtest <- function(object, data = NULL, index = NULL,
       exo <- "trend"
     }
     object <- paste(deparse(object[[2]]))
-    if (exists(object) && is.atomic(get(object))){
-      # is.atomic because, eg, inv exists as a function
+    if (exists(object) && is.vector(get(object))){
+      # is.vector because, eg, inv exists as a function
       object <- get(object)
     }
     else{
