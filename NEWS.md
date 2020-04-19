@@ -1,5 +1,7 @@
 # plm 2.2-4
 
+* ptransform (internal functino): check balancedness before pseries index is
+  removed, fixing a bug when variable is of class("pseries", "something", "numeric").
 * exported: fixef.pggls and deprecated methods/function formula.dynformula,
   print.dynformula, pvcovHC: exports were lost in plm 2.0-0, exported again.
 * pwaldtest:
