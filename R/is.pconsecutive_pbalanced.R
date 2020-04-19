@@ -168,7 +168,7 @@ is.pconsecutive.default <- function(x, id, time, na.rm.tindex = FALSE, ...) {
   if (length(id) != length(time)) 
     stop(paste0("arguments 'id' and 'time' must have same length: length(id): ", length(id), ", length(time) ", length(time)))
   
-  if (!is.null(x) && is.vector(x)) {
+  if (!is.null(x) && is.atomic(x)) {
     if (!(length(x) == length(id) && length(x) == length(time) && length(id) == length(time)))
       stop(paste0("arguments 'x', 'id', 'time' must have same length: length(x): ", 
                   length(x), ", length(id): ", length(id), ", length(time): ", length(time)))

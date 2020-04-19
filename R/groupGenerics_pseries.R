@@ -7,7 +7,6 @@
 ## group generic for Summary (all, any, sum, prod, min, max, range) not needed 
 ## as functions in this group do not change the data type
 ##
-## groupGenerics need to be registered in NAMESPACE
 ##
 ## groupGenerics are used to allow automatic propagation to higher/lower data type
 ## when operations are performed on pseries, 
@@ -65,9 +64,11 @@ Ops.pseries <- function(e1, e2) {
   
   # result could be e.g. matrix. So check if adding back pseries features
   # makes sense (e.g., do not create something of class c("pseries", "matrix"))
+  # is is.atomic rather than is.vector as is.vector is too strict (any other
+  # attributes present but names results in FALSE for is.vector)
   # (check for is.factor is probably superfluous here as the result probably
   #  cannot be a factor)
-  add_back_pseries <- if (is.vector(res) || is.factor(res)) TRUE else FALSE
+  add_back_pseries <- if (is.atomic(res) || is.factor(res)) TRUE else FALSE
   if (add_back_pseries) {
     if (miss_e2 && e1_pseries) relevant_index <- index_e1
     if ( e1_pseries && !e2_pseries) relevant_index <- index_e1

@@ -1,7 +1,5 @@
 # plm 2.2-4
 
-* ptransform (internal functino): check balancedness before pseries index is
-  removed, fixing a bug when variable is of class("pseries", "something", "numeric").
 * exported: fixef.pggls and deprecated methods/function formula.dynformula,
   print.dynformula, pvcovHC: exports were lost in plm 2.0-0, exported again.
 * pwaldtest:
@@ -13,6 +11,10 @@
      returning a data.frame with test results for each regression.
 * mtest, sargan, pwaldtest, piest, aneweytest: added for each string for
   alternative hypothesis.
+* Ops.pseries: use is.atomic instead of is.vector, fixing potential bugs.
+* ptransform (internal function): check balancedness before pseries index is
+  removed.
+
 
 # plm 2.2-3
 
