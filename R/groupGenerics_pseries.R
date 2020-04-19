@@ -40,6 +40,7 @@ add_pseries_features <- function(x, index) {
   return(x)
 }
 
+#' @export
 Ops.pseries <- function(e1, e2) {
 #  print("Ops.pseries executed!") # debug output
 
@@ -64,10 +65,10 @@ Ops.pseries <- function(e1, e2) {
           }
   
   # result could be e.g. matrix. So check if adding back pseries features
-  # makes sense (e.g., do not create something of class c("pseries", "matrix"))
-  # (check for is.factor is probably superfluous here as the result probably
-  #  cannot be a factor)
-  add_back_pseries <- if (is.vector(res) || is.factor(res)) TRUE else FALSE
+  # makes sense (e.g., do not create something of class c("pseries", "matrix")).
+  # Need is.atomic because is.vector is too strict, however need to sort out
+  # some other data types
+  add_back_pseries <- if (is.atomic(res) && !is.matrix(res) && !is.pairlist(res)) TRUE else FALSE
   if (add_back_pseries) {
     if (miss_e2 && e1_pseries) relevant_index <- index_e1
     if ( e1_pseries && !e2_pseries) relevant_index <- index_e1
@@ -85,7 +86,8 @@ Ops.pseries <- function(e1, e2) {
   
   return(res)
 }
-  
+
+#' @export
 Math.pseries <- function(x, ...) {
 #  print("Math.pseries executed!") # debug output
 
@@ -97,6 +99,7 @@ Math.pseries <- function(x, ...) {
   return(x)
 }
 
+#' @export
 Complex.pseries <- function(z) {
 #  print("Complex.pseries executed!") # debug output
 
