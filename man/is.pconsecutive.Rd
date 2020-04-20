@@ -48,10 +48,10 @@ further details see \code{\link[=pdata.frame]{pdata.frame()}},}
 A named \code{logical} vector (names are those of the
 individuals).  The i-th element of the returned vector
 corresponds to the i-th individual.  The values of the i-th
-element can be: \item{list("TRUE")}{if the i-th individual has
-consecutive time periods,} \item{list("FALSE")}{if the i-th
+element can be: \item{"TRUE"}{if the i-th individual has
+consecutive time periods,} \item{"FALSE"}{if the i-th
 individual has non-consecutive time periods,}
-\item{list("NA")}{if there are any NA values in time index of
+\item{"NA"}{if there are any NA values in time index of
 the i-th the individual; see also argument \code{na.rm.tindex}
 to remove those.}
 }
