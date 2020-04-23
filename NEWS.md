@@ -2,11 +2,11 @@
 
 * ptransform (internal function): check balancedness before pseries index is
   removed.
-* exported again after were lost in plm 2.0-0: fixef.pggls, Math.pseries,
-  Ops.pseries, Complex.pseries and deprecated methods/function formula.dynformula,
-  print.dynformula, pvcovHC.
+* exported/registerd again in NAMESPACE after export/registration lost in plm 2.0-0:
+  fixef.pggls, Math.pseries, Ops.pseries, Complex.pseries and deprecated
+  methods/function formula.dynformula, print.dynformula, pvcovHC.
 * Ops.pseries: use of is.vector() was too strict, now uses is.atomic() with
-  sorting out additional data types.
+  taking care for additional data types.
 * pwaldtest:
    * non-exported function wald() now exported as method pwaldtest.pgmm.
    * for all plm models use approach via
