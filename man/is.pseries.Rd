@@ -18,7 +18,7 @@ This function checks if an object qualifies as a pseries
 }
 \details{
 A \code{"pseries"} is a wrapper around a "basic class" (numeric, factor,
-logical, or character).
+logical, character, or complex).
 
 To qualify as a pseries, an object needs to have the following
 features:
