@@ -839,13 +839,14 @@ diffr.pseries <- function(x, lag = 1, ...){
 ## pdiff is (only) used in model.matrix.pFormula to calculate the
 ## model.matrix for FD models, works for effect = "individual" only,
 ## see model.matrix on how to call pdiff.  Result is in order (id,
-## time) for both effects Performs row-wise shifting
+## time) for both effects
+## Performs row-wise shifting
 pdiff <- function(x, effect = c("individual", "time"), has.intercept = FALSE){
   # NB: x is assumed to have an index attribute, e.g., a pseries
   #     can check with has.index(x)
     effect <- match.arg(effect)
     cond <- as.numeric(attr(x, "index")[[1]])
-    n <- ifelse(is.matrix(x), nrow(x), length(x))
+    n <- if(is.matrix(x)) nrow(x) else length(x)
     cond <- c(NA, cond[2:n] - cond[1:(n-1)]) # this assumes a certain ordering
     cond[cond != 0] <- NA
     if (! is.matrix(x)){
