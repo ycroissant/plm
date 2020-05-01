@@ -584,3 +584,34 @@ print.pvar <- function(x, ...){
     if (length(var_anyNA)!=0) cat(paste("all NA in ind. dimension for at least one time period:", paste(var_anyNA,collapse=" "),"\n"))
   }
 }
+
+## Non-exported internal function for subsetting of pseries. Can be used
+## internally. 
+## Currently we do not have "proper" subsetting function for pseries
+## ([.pseries) which applies in any case (but see the sketch to be tested in
+##  tool_pdata.frame.R)
+subset_pseries <- function(x, ...) {
+
+ ## use '...' instead of only one specific argument, because subsetting for
+ ## factors can have argument 'drop', e.g., x[i, drop=TRUE] see ?Extract.factor
+  index <- attr(x, "index")
+  if (is.null(index)) warning("pseries object with is.null(index(pseries)) == TRUE encountered, trying to continue anyway...")
+  if (!is.index(index)) stop(paste0("pseries object has illegal index with class(index) == ", paste0(class(index), collapse = ", ")))
+  names_orig <- names(x)
+  x <- remove_pseries_features(x)
+  result <- x[...]
+
+  # subset index / identify rows to keep in the index:
+  keep_rownr <- seq_along(names_orig)  # full length row numbers original pseries
+  names(keep_rownr) <- names_orig
+  keep_rownr <- keep_rownr[names(result)] # row numbers to keep after subsetting
+  index <- index[keep_rownr, ]
+
+  # drop unused levels (like in subsetting of pdata.frames)
+  index <- droplevels(index)
+
+  result <- add_pseries_features(result, index)
+  return(result)
+}
+
+

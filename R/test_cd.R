@@ -261,11 +261,18 @@ pcdtest.pseries <- function(x, test = c("cd", "sclm", "bcsclm", "lm", "rho", "ab
   
     ## calculates local or global CD test on a pseries 'x' just as it
     ## would on model residuals
-
     ## important difference here: a pseries _can_ have NAs
-
+  
     # input check
     if (!inherits(x, "pseries")) stop("input 'x' needs to be of class \"pseries\"")
+    form <- paste(deparse(substitute(x)))
+  
+    pos.na <- is.na(x)
+    if (any(pos.na)) {
+      x <- subset_pseries(x, !pos.na)
+      warning("NA values encountered in input and removed")
+      if (length(x) == 0L) stop("input is empty after removal of NA values")
+    }
   
     ## get indices
     tind <- as.numeric(attr(x, "index")[[2]])
@@ -292,7 +299,7 @@ pcdtest.pseries <- function(x, test = c("cd", "sclm", "bcsclm", "lm", "rho", "ab
     #          }
 
     return(pcdres(tres = tres, n = n, w = w,
-                  form = paste(deparse(substitute(x))),
+                  form = form,
                   test = match.arg(test)))
 }
 
@@ -304,7 +311,7 @@ pcdres <- function(tres, n, w, form, test) {
   ## (from here on, what's needed for rho_ij is ok)
     
   ## this function is the modulus calculating the test,
-  ## to be called from either pcdtest.formula or
+  ## to be called from pcdtest.formula,
   ## pcdtest.panelmodel or pcdtest.pseries
 
   ## now (since v10) tres is the pseries of model residuals
