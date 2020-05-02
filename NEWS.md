@@ -2,7 +2,7 @@
 
 * ptransform (internal function): check balancedness before pseries index is
   removed.
-* exported/registerd again in NAMESPACE after export/registration lost in plm 2.0-0:
+* exported/registered again in NAMESPACE after export/registration lost in plm 2.0-0:
   fixef.pggls, Math.pseries, Ops.pseries, Complex.pseries and deprecated
   methods/function formula.dynformula, print.dynformula, pvcovHC.
 * Ops.pseries: use of is.vector() was too strict, now uses is.atomic() with
@@ -14,6 +14,8 @@
      anymore.
    * method for pvcm models now allows for pvcm's "within" specification,
      returning a data.frame with test results for each regression.
+* pcdtest.pseries: NA values in input variable are now removed before any
+  further processing. A warning is issues in case of NA removal.
 * mtest, sargan, pwaldtest, piest, aneweytest: added for each a string for
   alternative hypothesis.
 
