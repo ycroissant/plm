@@ -83,8 +83,8 @@ observations (irrelevant for \code{test = "hadri"}),}
 IPS statistic, one of \code{"Wtbar"} (also default if \code{ips.stat = NULL}),
 \code{"Ztbar"}, \code{"tbar"},}
 
-\item{\dots}{further arguments (can set argument 'p.approx' to be passed on
-to non-exported function 'padf' to either "MacKinnon1994" or "MacKinnon1996"
+\item{\dots}{further arguments (can set argument \code{p.approx} to be passed on
+to non-exported function \code{padf} to either \code{"MacKinnon1994"} or \code{"MacKinnon1996"}
 to force a specific method for p-value approximation, the latter only being
 possible if package 'urca' is installed).}
 }
@@ -93,8 +93,9 @@ For purtest: An object of class \code{"purtest"}: a list with the elements
 \code{"statistic"} (a \code{"htest"} object), \code{"call"}, \code{"args"},
 \code{"idres"} (containing results from the individual regressions),
 and \code{"adjval"} (containing the simulated means and variances
-needed to compute the statistic), \code{"sigma2"} short-run and long-run
-variance (for \code{"test = levinlin"}, otherwise NULL).
+needed to compute the statistic, for \code{"test = levinlin"} and \code{"ips"},
+otherwise \code{NULL}), \code{"sigma2"} (short-run and long-run variance for
+\code{"test = levinlin"}, otherwise NULL).
 }
 \description{
 \code{purtest} implements several testing procedures that have been proposed

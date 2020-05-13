@@ -15,7 +15,7 @@
    * method for pvcm models now allows for pvcm's "within" specification,
      returning a data.frame with test results for each regression.
 * pcdtest.pseries: NA values in input variable are now removed before any
-  further processing. A warning is issues in case of NA removal.
+  further processing. A warning is issued in case of NA removal.
 * mtest, sargan, pwaldtest, piest, aneweytest: added for each a string for
   alternative hypothesis.
 

@@ -42,9 +42,9 @@ padf <- function(x, exo = c("none", "intercept", "trend"), p.approx = NULL, ...)
   if (p.approx == "MacKinnon1996") {
     # translate exo argument to what urca::punitroot expects
     punitroot.exo <- switch (exo,
-                             "none" = "nc",
+                             "none"      = "nc",
                              "intercept" = "c",
-                             "trend" = "ct")
+                             "trend"     = "ct")
 
     res <- urca::punitroot(x, N = Inf, trend = punitroot.exo) # return asymptotic value
   }
@@ -729,16 +729,17 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
 #' @param ips.stat `NULL` or character of length 1 to request a specific
 #'     IPS statistic, one of `"Wtbar"` (also default if `ips.stat = NULL`),
 #'     `"Ztbar"`, `"tbar"`,
-#' @param \dots further arguments (can set argument 'p.approx' to be passed on
-#'  to non-exported function 'padf' to either "MacKinnon1994" or "MacKinnon1996"
+#' @param \dots further arguments (can set argument `p.approx` to be passed on
+#'  to non-exported function `padf` to either `"MacKinnon1994"` or `"MacKinnon1996"`
 #'  to force a specific method for p-value approximation, the latter only being 
 #'  possible if package 'urca' is installed).
 #' @return For purtest: An object of class `"purtest"`: a list with the elements
 #'     `"statistic"` (a `"htest"` object), `"call"`, `"args"`,
 #'     `"idres"` (containing results from the individual regressions),
 #'     and `"adjval"` (containing the simulated means and variances
-#'     needed to compute the statistic), `"sigma2"` short-run and long-run
-#'     variance (for `"test = levinlin"`, otherwise NULL).
+#'     needed to compute the statistic, for `"test = levinlin"` and `"ips"`,
+#'     otherwise `NULL`), `"sigma2"` (short-run and long-run variance for
+#'     `"test = levinlin"`, otherwise NULL).
 #' @export
 #' @importFrom stats setNames
 #' @author Yves Croissant and for "Pm", "invnormal", and "logit" Kevin
@@ -956,7 +957,6 @@ purtest <- function(object, data = NULL, index = NULL,
   if (test == "madwu"){
     # Maddala/Wu (1999), pp. 636-637; Choi (2001), p. 253; Baltagi (2013), pp. 283-285
     ## does not require a balanced panel
-    
     trho <- sapply(idres, function(x) x[["trho"]])
     pvalues.trho <- sapply(idres, function(x) x[["p.trho"]])
     stat <- c(chisq = - 2 * sum(log(pvalues.trho)))
