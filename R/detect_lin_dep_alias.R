@@ -187,8 +187,8 @@ detect.lindep.matrix <- function(object, suppressPrint = FALSE, ...) {
     if (is.null(num)) {
       print("No linear dependent column(s) detected.")
     } else {
-      print(paste0("Suspiscious column number(s): ", paste(num,        collapse = ", ")))
-      print(paste0("Suspiscious column name(s):   ", paste(names(num), collapse = ", ")))
+      print(paste0("Suspicious column number(s): ", paste(num,        collapse = ", ")))
+      print(paste0("Suspicious column name(s):   ", paste(names(num), collapse = ", ")))
     }
     return(invisible(num))
   }

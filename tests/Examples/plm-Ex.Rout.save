@@ -165,12 +165,12 @@ alternative hypothesis: Stationarity
 > # linear dependence present in the FE transformed model matrix
 > modmat_FE <- model.matrix(mf, model = "within")
 > detect.lindep(modmat_FE)
-[1] "Suspiscious column number(s): 2, 3"
-[1] "Suspiscious column name(s):   fact1, fact2"
+[1] "Suspicious column number(s): 2, 3"
+[1] "Suspicious column name(s):   fact1, fact2"
 > mod_FE <- plm(form, data = Cigar.p, model = "within")
 > detect.lindep(mod_FE) 
-[1] "Suspiscious column number(s): 2, 3"
-[1] "Suspiscious column name(s):   fact1, fact2"
+[1] "Suspicious column number(s): 2, 3"
+[1] "Suspicious column name(s):   fact1, fact2"
 > alias(mod_FE) # => fact1 == -1*fact2
 Model :
 [1] "price ~ 0 + cpi + fact1 + fact2"
@@ -278,12 +278,12 @@ Model :
 > # (demeaning per individual)
 > modmat_FE <- model.matrix(mf, model="within")
 > detect.lindep(modmat_FE)
-[1] "Suspiscious column number(s): 3, 4"
-[1] "Suspiscious column name(s):   CEOtenure, CEOage"
+[1] "Suspicious column number(s): 3, 4"
+[1] "Suspicious column name(s):   CEOtenure, CEOage"
 > mod_FE <- plm(form, data = Grunfeld, model = "within")
 > detect.lindep(mod_FE)
-[1] "Suspiscious column number(s): 3, 4"
-[1] "Suspiscious column name(s):   CEOtenure, CEOage"
+[1] "Suspicious column number(s): 3, 4"
+[1] "Suspicious column name(s):   CEOtenure, CEOage"
 > alias(mod_FE)
 Model :
 [1] "inv ~ value + capital + CEOtenure + CEOage"
