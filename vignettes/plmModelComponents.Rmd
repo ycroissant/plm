@@ -13,12 +13,12 @@ vignette: >
 
 plm tries to follow as close as possible the way models are fitted
 using `lm`. This relies on the following steps, using the
-`formula`-`data` :
+`formula`-`data`:
 
 - compute internally the `model.frame` by getting the relevant
   arguments (`formula`, `data`, `subset`, `weights`, `na.action` and
   `offset`) and the supplementary argument,
-- extract from the `model.frame` the response (with `model.response`),
+- extract from the `model.frame` the response (with `model.response`) and
   the model matrix (with `model.matrix`),
 - call the estimation function `plm.fit` with `X` and `y` as arguments.
 
@@ -30,7 +30,7 @@ returns a `pdata.frame` object which can be used as the `data`
 argument of `plm`. If the `data` argument of `plm` is an ordinary
 `data.frame`, the `index` argument can also be used as an argument of
 `plm`. In this case, the `pdata.frame` function is used internally to
-transform the data. 
+transform the data.
 
 Next, the `formula`, which is the first and mandatory argument of
 `plm` is coerced to a `Formula` object. 
@@ -58,7 +58,7 @@ The response `y` is usually extracted using `model.response`, with a
 not generic. We therefore create a generic called `pmodel.response`
 and provide a `pmodel.response.pdata.frame` method. We illustrate
 these features using a simplified (in terms of covariates) example
-with the `SeatBelt` data set :
+with the `SeatBelt` data set:
 
 ```{r }
 library("plm")
@@ -67,8 +67,7 @@ SeatBelt$occfat <- with(SeatBelt, log(farsocc / (vmtrural + vmturban)))
 pSB <- pdata.frame(SeatBelt)
 ```
 
-We start with an OLS (`pooling`) specification. 
-
+We start with an OLS (`pooling`) specification: 
 
 ```{r }
 formols <- occfat ~ log(usage) + log(percapin)
@@ -78,7 +77,7 @@ y <- pmodel.response(mfols)
 coef(lm.fit(Xols, y))
 ```
 
-which is equivalent with :
+which is equivalent to:
 
 ```{r }
 coef(plm(formols, SeatBelt, model = "pooling"))
@@ -86,18 +85,17 @@ coef(plm(formols, SeatBelt, model = "pooling"))
 
 Next we use an instrumental variables specification. `usage` is
 endogenous and instrumented by three variables indicating the law
-context : `ds`, `dp` and `dsp`. 
+context: `ds`, `dp` and `dsp`. 
 
 The model is described using a two-parts formula, the first part of
 the RHS describing the covariates and the second part the
-instruments. The following two formulations can be used :
-
+instruments. The following two formulations can be used:
 
 ```{r }
 formiv1 <- occfat ~ log(usage) + log(percapin) | log(percapin) + ds + dp + dsp
 formiv2 <- occfat ~ log(usage) + log(percapin) | . - log(usage) + ds + dp + dsp
 ```
-The second formulation has two advantages :
+The second formulation has two advantages:
 
 - in the common case when a lot of covariates are instruments, these
   covariates don't need to be indicated in the second RHS part of the
@@ -106,9 +104,9 @@ The second formulation has two advantages :
   `-` sign in the second RHS part of the formula.
 
 The formula is coerced to a `Formula`, using the `Formula`
-package. `model.matrix.pdata.frame` then internally calls the
+package. `model.matrix.pdata.frame` then internally calls 
 `model.matrix.Formula` in order to extract the covariates and
-instruments model matrices :
+instruments model matrices:
 
 
 ```{r }
@@ -119,13 +117,13 @@ head(X1, 3) ; head(W1, 3)
 ```
 For the second (and preferred formulation), the `dot` argument should
 be set and is passed to the `Formula` methods. `.` has actually two
-meanings : 
+meanings: 
 
-- all the available covariates,
+- all available covariates,
 - the previous covariates used while updating a formula.
 
 which correspond respectively to `dot = "seperate"` (the default) and
-`dot = "previous"`. See the difference between :
+`dot = "previous"`. See the difference between the following two examples:
 
 
 ```{r }
@@ -146,27 +144,27 @@ X2 <- model.matrix(mfSB2, rhs = 1)
 W2 <- model.matrix(mfSB2, rhs = 2)
 head(X2, 3) ; head(W2, 3)
 ```
-The iv estimator can then be obtained as a 2SLS estimator : first
-regress the covariates on the instruments and get the fitted values :
+The IV estimator can then be obtained as a 2SLS estimator: first
+regress the covariates on the instruments and get the fitted values:
 
 
 ```{r }
 HX1 <- lm.fit(W1, X1)$fitted.values
 head(HX1, 3)
 ```
-Next regress the response on these fitted values :
+Next regress the response on these fitted values:
 
 ```{r }
 coef(lm.fit(HX1, y))
 ```
 
-Or using the `formula`-`data` interface with the `ivreg` function :
+Or using the `formula`-`data` interface with the `ivreg` function:
 
 ```{r }
 coef(AER::ivreg(formiv1, data = SeatBelt))
 ```
 
-or `plm` :
+or `plm`:
 
 
 ```{r }
