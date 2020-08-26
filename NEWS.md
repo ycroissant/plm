@@ -1,7 +1,7 @@
 # plm 2.2-4
 
 * ptransform (internal function): check balancedness before pseries index is
-  removed.
+  removed (fixes some spurious bug, e.g. when package tibble is used).
 * exported/registered again in NAMESPACE after export/registration lost in plm 2.0-0:
   fixef.pggls, Math.pseries, Ops.pseries, Complex.pseries and deprecated
   methods/function formula.dynformula, print.dynformula, pvcovHC.
@@ -18,6 +18,8 @@
   further processing. A warning is issued in case of NA removal.
 * mtest, sargan, pwaldtest, piest, aneweytest: added for each a string for
   alternative hypothesis.
+* Dependencies: removed package 'clubSandwich' from 'Suggests' as it was
+  removed from CRAN (archived).
 
 # plm 2.2-3
 
