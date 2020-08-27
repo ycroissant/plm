@@ -1,5 +1,5 @@
 
-R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+R version 4.0.2 (2020-06-22) -- "Taking Off Again"
 Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -42,10 +42,10 @@ Type 'q()' to quit R.
 > 
 > ## check Ops: non-vector result, result is matrix (may not be class c("pseries", "matrix"))
 > mdat <- matrix(c(1:200), nrow = 200, ncol = 1, byrow = TRUE)
-> stopifnot(all(class(pGrunfeld$integer * mdat) == "matrix"))
-> stopifnot(all(class(pGrunfeld$logi * mdat)    == "matrix"))
-> stopifnot(all(class(mdat * pGrunfeld$integer) == "matrix"))
-> stopifnot(all(class(mdat * pGrunfeld$logi)    == "matrix"))
+> stopifnot(inherits(pGrunfeld$integer * mdat, "matrix"))
+> stopifnot(inherits(pGrunfeld$logi * mdat,    "matrix"))
+> stopifnot(inherits(mdat * pGrunfeld$integer, "matrix"))
+> stopifnot(inherits(mdat * pGrunfeld$logi,    "matrix"))
 > 
 > # check Math: also with optional second argument (check calculation and class)
 > stopifnot(all.equal(log(Grunfeld$integer), as.numeric(log(pGrunfeld$integer))))
@@ -1178,4 +1178,4 @@ attr(,"class")
 > 
 > proc.time()
    user  system elapsed 
-   0.84    0.17    1.03 
+   0.79    0.17    0.96 
