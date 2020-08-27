@@ -137,7 +137,7 @@ use the function \code{\link[=index]{index()}} for 'pdata.frames' (and other obj
 it to each column.
 
 \code{as.list} behaves by default identical to
-\code{\link[base:as.list.data.frame]{base::as.list.data.frame()}} which means it drops the
+\code{\link[base:list]{base::as.list.data.frame()}} which means it drops the
 attributes specific to a pdata.frame; if a list of pseries is
 wanted, the attribute \code{keep.attributes} can to be set to
 \code{TRUE}. This also makes \code{lapply} work as expected on a pdata.frame

@@ -60,7 +60,7 @@ Journal of Applied Econometrics Data Archive (complements Baltagi
 
 Online complements to Baltagi (2001):
 
-\url{http://www.wiley.com/legacy/wileychi/baltagi/}
+\url{https://www.wiley.com/legacy/wileychi/baltagi/}
 
 Online complements to Baltagi (2013):
 

@@ -20,7 +20,7 @@ A data frame containing :
 Online complements to Ziliak (1997).
 
 Journal of Business Economics and Statistics web site:
-\url{http://amstat.tandfonline.com/loi/ubes20/}.
+\url{https://amstat.tandfonline.com/loi/ubes20/}.
 }
 \description{
 A panel of 532 observations from 1979 to 1988

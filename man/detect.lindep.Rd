@@ -49,7 +49,7 @@ numbers of the linear dependent columns in the object after data
 transformation, if any are present. \code{NULL} if no linear dependent
 columns are detected.
 
-For \code{alias}: return value of \code{\link[stats:alias.lm]{stats::alias.lm()}} run on the
+For \code{alias}: return value of \code{\link[stats:alias]{stats::alias.lm()}} run on the
 (quasi-)demeaned model, i. e. the information outputted applies to
 the transformed model matrix, not the original data.
 }
@@ -86,7 +86,7 @@ Both functions, \code{detect.lindep} and \code{alias}, help to
 detect linear dependence and accomplish almost the same:
 \code{detect.lindep} is a stand alone implementation while
 \code{alias} is a wrapper around
-\code{\link[stats:alias.lm]{stats::alias.lm()}}, extending the \code{alias}
+\code{\link[stats:alias]{stats::alias.lm()}}, extending the \code{alias}
 generic to classes \code{"plm"} and \code{"pdata.frame"}.
 \code{alias} hinges on the availability of the package
 \CRANpkg{MASS} on the system. Not all arguments of \code{alias.lm}

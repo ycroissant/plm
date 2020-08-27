@@ -21,7 +21,7 @@ A data frame containing :
 \source{
 Online complements to Baltagi (2001):
 
-\url{http://www.wiley.com/legacy/wileychi/baltagi/}
+\url{https://www.wiley.com/legacy/wileychi/baltagi/}
 
 Online complements to Baltagi (2013):
 
