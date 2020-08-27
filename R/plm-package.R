@@ -169,7 +169,7 @@ NULL
 #'
 #' Online complements to Baltagi (2001):
 #' 
-#' \url{http://www.wiley.com/legacy/wileychi/baltagi/}
+#' \url{https://www.wiley.com/legacy/wileychi/baltagi/}
 #' 
 #' Online complements to Baltagi (2013):
 #' 
@@ -262,7 +262,7 @@ NULL
 #' 
 #' Online complements to Baltagi (2001):
 #' 
-#' \url{http://www.wiley.com/legacy/wileychi/baltagi/}
+#' \url{https://www.wiley.com/legacy/wileychi/baltagi/}
 #' 
 #' Online complements to Baltagi (2013):
 #' 
@@ -499,7 +499,7 @@ NULL
 #' @source Online complements to Ziliak (1997).
 #' 
 #' Journal of Business Economics and Statistics web site:
-#' \url{http://amstat.tandfonline.com/loi/ubes20/}.
+#' \url{https://amstat.tandfonline.com/loi/ubes20/}.
 #'
 #' @keywords datasets
 NULL
@@ -741,7 +741,7 @@ NULL
 
 #' @source Journal of Business Economics and Statistics data archive:
 #' 
-#' \url{http://amstat.tandfonline.com/loi/ubes20/}.
+#' \url{https://amstat.tandfonline.com/loi/ubes20/}.
 #'
 #' @keywords datasets
 NULL
