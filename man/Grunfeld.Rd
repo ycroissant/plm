@@ -16,9 +16,9 @@ A data frame containing :
 \source{
 Online complements to Baltagi (2001):
 
-\url{http://www.wiley.com/legacy/wileychi/baltagi/}
+\url{https://www.wiley.com/legacy/wileychi/baltagi/}
 
-\url{http://www.wiley.com/legacy/wileychi/baltagi/supp/Grunfeld.fil}
+\url{https://www.wiley.com/legacy/wileychi/baltagi/supp/Grunfeld.fil}
 
 Online complements to Baltagi (2013):
 

@@ -1,6 +1,6 @@
 Package: plm
 Version: 2.2-4
-Date: 2020-08-27
+Date: 2020-08-28
 Title: Linear Models for Panel Data
 Authors@R: c(person(given = "Yves",      family = "Croissant",    role = c("aut", "cre"), email = "yves.croissant@univ-reunion.fr"),
              person(given = "Giovanni",  family = "Millo",        role = "aut", email = "Giovanni.Millo@Generali.com"),
@@ -22,7 +22,7 @@ Description: A set of estimators and tests for panel data
 License: GPL (>=2)
 VignetteBuilder: knitr
 URL: https://cran.r-project.org/package=plm, https://r-forge.r-project.org/projects/plm/
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE)
 RdMacros: Rdpack
 Encoding: UTF-8

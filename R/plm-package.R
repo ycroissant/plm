@@ -337,7 +337,7 @@ NULL
 #'
 #' Online complements to Baltagi (2001):
 #' 
-#' \url{http://www.wiley.com/legacy/wileychi/baltagi/}
+#' \url{https://www.wiley.com/legacy/wileychi/baltagi/}
 #' 
 #' Online complements to Baltagi (2013):
 #' 
@@ -397,9 +397,9 @@ NULL
 #' 
 #' @source Online complements to Baltagi (2001):
 #' 
-#' \url{http://www.wiley.com/legacy/wileychi/baltagi/}
+#' \url{https://www.wiley.com/legacy/wileychi/baltagi/}
 #'
-#' \url{http://www.wiley.com/legacy/wileychi/baltagi/supp/Grunfeld.fil}
+#' \url{https://www.wiley.com/legacy/wileychi/baltagi/supp/Grunfeld.fil}
 #' 
 #' Online complements to Baltagi (2013):
 #' 
@@ -462,7 +462,7 @@ NULL
 
 #' @source Online complements to Baltagi (2001):
 #' 
-#' \url{http://www.wiley.com/legacy/wileychi/baltagi/}
+#' \url{https://www.wiley.com/legacy/wileychi/baltagi/}
 #' 
 #' Online complements to Baltagi (2013):
 #' 
@@ -626,7 +626,7 @@ NULL
 #' 
 #' @source Online complements to Baltagi (2001):
 #' 
-#' \url{http://www.wiley.com/legacy/wileychi/baltagi/}
+#' \url{https://www.wiley.com/legacy/wileychi/baltagi/}
 #' 
 #' Online complements to Baltagi (2013):
 #' 
@@ -823,7 +823,7 @@ NULL
 #' 
 #' @source Online complements to Baltagi (2001):
 #' 
-#' \url{http://www.wiley.com/legacy/wileychi/baltagi/}
+#' \url{https://www.wiley.com/legacy/wileychi/baltagi/}
 #' 
 #' Online complements to Baltagi (2013):
 #' 
