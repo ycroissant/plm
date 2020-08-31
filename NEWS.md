@@ -1,3 +1,6 @@
+# plm 2.2-5
+* TBD
+
 # plm 2.2-4
 
 * ptransform (internal function): check balancedness before pseries index is
