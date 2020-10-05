@@ -1,5 +1,7 @@
 # plm 2.2-5
-* TBD
+
+* Removed a duplicated entry in REFERENCES.bib (Rdpack complained).
+
 
 # plm 2.2-4
 
