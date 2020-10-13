@@ -1,3 +1,8 @@
+# plm 2.2-6
+
+TBD
+
+
 # plm 2.2-5
 
 * Removed duplicated entries in REFERENCES.bib (dependency Rdpack 2.0 warned).
@@ -23,8 +28,10 @@
   further processing. A warning is issued in case of NA removal.
 * mtest, sargan, pwaldtest, piest, aneweytest: added for each a string for
   alternative hypothesis.
-* Dependencies: removed package 'clubSandwich' from 'Suggests' as it was
-  removed from CRAN (archived).
+  
+### Dependencies:
+* removed package 'clubSandwich' from 'Suggests' as it was removed from CRAN
+  (archived).
 
 # plm 2.2-3
 
@@ -141,7 +148,7 @@
     in plmPackage.Rmd fixed typo in formula for cross-sectional dependence
     scaled LM test.
   
-##  Deprecated/renamed:
+### Deprecated/renamed:
 
 * pht, plm(., model = "ht"/"am"/"bms"): both uses deprecated, better use instead
     plm(., model="random", random.method ="ht", inst.method="baltagi"/"am"/"bms")
@@ -154,7 +161,7 @@
 * detect.lindep: previously named detect_lin_dep; renamed for consistency in
     function naming (back-compatible solution implemented).
   
-##  Minor items:
+### Minor items:
 
 * pvar: added method for pseries.
 * pgrangertest: better detection of infeasibility if a series is too short.
@@ -187,7 +194,9 @@
 * pwaldtest: in all cases, htest object's 'statistic' element is a numeric
     (was 1x1 matrix for some cases).
 * Data set 'Crime' extended with pre-computed log values as in original data.  
-* Dependencies: added to 'Suggests': knitr, rmarkdown, bookdown.
+
+### Dependencies:
+* added to 'Suggests': knitr, rmarkdown, bookdown.
 
 
 # plm 1.6-6
@@ -293,7 +302,8 @@
 * print.summary.plm: prints information about dropped coefficients due to singularities
                        (mimics print.summary.lm).
 * cosmetic: some print functions now have better aligned whitespacing.
-* Dependencies:
+
+### Dependencies:
   * R version >= 3.1.0 required now.
   * 'Imports': maxLik added, function maxLik::maxLik is re-exported by
     plm.
