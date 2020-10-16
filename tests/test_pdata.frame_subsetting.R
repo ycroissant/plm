@@ -57,9 +57,9 @@ if (!identical(pGrunfeld, pGrunfeld2))
   stop("pdata.frame not identical after \"subsetting\" with all rows (which should actually not do any subsetting))")
 
 ### compare object sizes
-object.size(pGrunfeld)  # 37392 bytes
-object.size(pGrunfeld2) # 37392 bytes since rev. 252 # (was: 83072 bytes in pre rev.251, considerably larger!)
-                                                     # (was: 26200 bytes in rev. 251)
+# object.size(pGrunfeld)  # 37392 bytes
+# object.size(pGrunfeld2) # 37392 bytes since rev. 252 # (was: 83072 bytes in pre rev.251, considerably larger!)
+                                                       # (was: 26200 bytes in rev. 251)
 if (!object.size(pGrunfeld) == object.size(pGrunfeld2))
   print("pdata.frame not same object size after \"subsetting\" with all rows (which should actually not do any subsetting))")
 

@@ -1,7 +1,7 @@
 
-R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
-Copyright (C) 2019 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
+R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
+Copyright (C) 2020 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -483,11 +483,9 @@ Type 'q()' to quit R.
 +   stop("pdata.frame not identical after \"subsetting\" with all rows (which should actually not do any subsetting))")
 > 
 > ### compare object sizes
-> object.size(pGrunfeld)  # 37392 bytes
-41376 bytes
-> object.size(pGrunfeld2) # 37392 bytes since rev. 252 # (was: 83072 bytes in pre rev.251, considerably larger!)
-41376 bytes
->                                                      # (was: 26200 bytes in rev. 251)
+> # object.size(pGrunfeld)  # 37392 bytes
+> # object.size(pGrunfeld2) # 37392 bytes since rev. 252 # (was: 83072 bytes in pre rev.251, considerably larger!)
+>                                                        # (was: 26200 bytes in rev. 251)
 > if (!object.size(pGrunfeld) == object.size(pGrunfeld2))
 +   print("pdata.frame not same object size after \"subsetting\" with all rows (which should actually not do any subsetting))")
 > 
@@ -763,4 +761,4 @@ NULL
 > 
 > proc.time()
    user  system elapsed 
-  0.628   0.028   0.652 
+   0.79    0.18    0.98 
