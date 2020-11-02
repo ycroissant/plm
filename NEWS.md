@@ -31,7 +31,8 @@ TBD
   
 ### Dependencies:
 * removed package 'clubSandwich' from 'Suggests' as it was removed from CRAN
-  (archived).
+  (archived) [the package was re-added to CRAN at a later point in time but
+  not made a 'Suggests' dependency for plm again].
 
 # plm 2.2-3
 
