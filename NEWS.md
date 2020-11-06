@@ -98,7 +98,7 @@ TBD
     with a terms attribute). 'formula' as an argument in model.matrix
     was unnecessary as the formula can be retrieved from the
     pdata.frame.
-* A thrid vignette was added describing the plm model components
+* A third vignette was added describing the plm model components
     (plmModelComponents.Rmd).
 * plm: the informative error message about the deprecated argument
     'instruments' is removed and this argument is no longer supported.

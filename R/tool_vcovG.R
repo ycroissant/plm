@@ -309,7 +309,7 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
     type <- match.arg(type)
     model <- describe(x, "model")
     if (!model %in% c("random", "within", "pooling", "fd")) {
-        stop("Model has to be either random, within, pooling or fd model")
+        stop("Model has to be either \"random\", \"within\", \"pooling\", or \"fd\" model")
     }
 
   ## extract demeaned data
@@ -930,7 +930,7 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
     type <- match.arg(type)
     model <- describe(x, "model")
     if (!model %in% c("random", "within", "pooling", "fd")) {
-        stop("Model has to be either random, within, pooling or fd model")
+        stop("Model has to be either \"random\", \"within\", \"pooling\", or \"fd\" model")
     }
     
   ## extract demeaned data
