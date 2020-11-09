@@ -1,6 +1,7 @@
 # plm 2.2-6
 
-TBD
+* Between.matrix and Tapply.matrix: epllipsis (three dots) is passed on,
+  allowing for, e.g., na.rm = TRUE (like already possible for between.matrix etc.).
 
 
 # plm 2.2-5

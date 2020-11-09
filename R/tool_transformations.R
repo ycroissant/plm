@@ -288,7 +288,7 @@ Tapply.pseries <- function(x, effect = c("individual", "time", "group"), func, .
 
 Tapply.matrix <- function(x, effect, func, ...){
     na.x <- is.na(x)
-    uniqval <- apply(x, 2, tapply, effect, func)
+    uniqval <- apply(x, 2, tapply, effect, func, ...)
     result <- uniqval[as.character(effect), , drop = F]
     result[na.x] <- NA
     result
@@ -308,7 +308,7 @@ Sum.pseries <- function(x, effect = c("individual", "time", "group"), ...){
     Tapply(x, effect, sum, ...)
 }
 
-Sum.matrix <- function(x, effect,...){
+Sum.matrix <- function(x, effect, ...){
     if (! effect %in% c("individual", "time", "group"))
         stop("irrelevant effect for a Sum transformation")
     if (is.null(attr(x, "index"))) Sum.default(x, effect)
@@ -317,7 +317,7 @@ Sum.matrix <- function(x, effect,...){
             stop("for matrices with index attributes, the effect argument must be a character")
         xindex <- attr(x, "index")
         effect <- index(xindex, effect)
-        Tapply(x, effect, sum)
+        Tapply(x, effect, sum, ...)
     }        
 }
 
@@ -343,7 +343,7 @@ Between.pseries <- function(x, effect = c("individual", "time", "group"), ...){
 
 #' @rdname pseries
 #' @export
-Between.matrix <- function(x, effect,...){
+Between.matrix <- function(x, effect, ...){
     #YC20180916 In the previous version the matrix wasn't returned
     #when there is no index attribute
     if (is.null(attr(x, "index"))) return(Between.default(x, effect))
@@ -351,11 +351,11 @@ Between.matrix <- function(x, effect,...){
         stop("irrelevant effect for a between transformation")
     else{
         if (length(effect) > 1)
-            stop("for matrices with index attributes, the effect argument must be a character")
+        stop("for matrices with index attributes, the effect argument must be a character")
         xindex <- attr(x, "index")
         effect <- index(xindex, effect)
-        Tapply(x, effect, mean)
-    }        
+        Tapply(x, effect, mean, ...)
+    }
 }
 
 #' @rdname pseries
@@ -400,7 +400,7 @@ between.matrix <- function(x, effect,...){
         xindex <- attr(x, "index")
         effect <- index(xindex, effect)
         apply(x, 2, tapply, effect, mean, ...)
-    }        
+    }
 }
 
 #' @rdname pseries
