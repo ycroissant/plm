@@ -1,6 +1,6 @@
 Package: plm
 Version: 2.2-6
-Date: 2020-11.-10
+Date: 2020-11-11
 Title: Linear Models for Panel Data
 Authors@R: c(person(given = "Yves",      family = "Croissant",    role = c("aut", "cre"), email = "yves.croissant@univ-reunion.fr"),
              person(given = "Giovanni",  family = "Millo",        role = "aut", email = "Giovanni.Millo@Generali.com"),
@@ -24,5 +24,5 @@ VignetteBuilder: knitr
 URL: https://cran.r-project.org/package=plm, https://r-forge.r-project.org/projects/plm/
 RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE)
-RdMacros: Rdpack
+#RdMacros: Rdpack
 Encoding: UTF-8

@@ -2,6 +2,8 @@
 
 * Between.matrix and Tapply.matrix: epllipsis (three dots) is passed on,
   allowing for, e.g., na.rm = TRUE (like already possible for between.matrix etc.).
+* between.default: keeps original sequence of elements' occurrence (before,
+  compressed output was sorted by the factor's *level* order).
 
 
 # plm 2.2-5

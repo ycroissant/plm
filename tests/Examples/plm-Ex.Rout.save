@@ -1,5 +1,5 @@
 
-R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+R version 4.0.2 (2020-06-22) -- "Taking Off Again"
 Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -10916,8 +10916,8 @@ alternative hypothesis: unstability
 > 
 > # between, Between, and Within transformations on other dimension
 > between(z, effect = "time")
-     1976      1977      1978      1979      1980      1981      1982      1983 
-108.98092 110.32734 111.23714 111.06937 103.80583  95.70594  93.83759  95.36660 
+     1977      1978      1979      1980      1981      1982      1983      1976 
+110.32734 111.23714 111.06937 103.80583  95.70594  93.83759  95.36660 108.98092 
      1984 
  98.42776 
 > Between(z, effect = "time")
@@ -13691,7 +13691,7 @@ attr(,"se")
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  27.23 1.34 32.78 NA NA 
+Time elapsed:  19.53 1.47 21.3 NA NA 
 > grDevices::dev.off()
 null device 
           1 

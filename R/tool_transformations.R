@@ -368,7 +368,9 @@ between <- function(x, ...){
 #' @export
 between.default <- function(x, effect, ...){
     if (!is.numeric(x)) stop("The between function only applies to numeric vectors")
-    tapply(x, effect, mean, ...)
+    res <- tapply(x, effect, mean, ...)
+    res <- res[as.character(effect[!duplicated(effect)])] # restore original order (as tapply's output is sorted by levels factor effect)
+    return(res)
 }
 
 #' @rdname pseries
