@@ -833,7 +833,7 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
       stat <- as.numeric(crossprod(solve(rvcov, coefs_wo_int), coefs_wo_int) / df1)
       names(stat) <- "F"
       pval <- pf(stat, df1 = df1, df2 = df2, lower.tail = FALSE)
-      parameter <- c(df1 = df1, df2 = df2) # Dfs
+      parameter <- c(df1 = df1, df2 = df2)
       method  <- paste0("F test for joint significance (robust)", rvcov_name)
     }
   }
@@ -866,15 +866,12 @@ pwaldtest.pvcm <- function(x, ...) {
     vcovl <- lapply(x$vcov, function(x) x[coefs.no.int, coefs.no.int])
     coefl <- as.list(data.frame(t(x$coefficients[ , coefs.no.int])))
     
-    
     df1 <- ncol(x$coefficients[ , coefs.no.int]) # is same df1 for all models (as all models estimate the same coefs)
     df2 <- lengths(residl) - ncol(x$coefficients) # (any intercept is subtracted)
     
     statChisqs <- mapply(FUN = function(v, c) as.numeric(crossprod(solve(v, c), c)),
                      vcovl, coefl)
     statFs <- statChisqs / df1
-    
-    
     
     pstatChisqs <- pchisq(statChisqs, df = df1, lower.tail = FALSE)
     pstatFs <- pf(statFs, df1 = df1, df2 = df2, lower.tail = FALSE)
