@@ -28,7 +28,10 @@
 ## substantial optimization for speed, now fast (few seconds) on N=3000
 ## all methods pass on a pseries to pcdres()
 
-
+## make toy example
+#dati <- data.frame(ind=rep(1:7, 4), time=rep(1:4, each=7), x=rnorm(28),
+#                   group=rep(c(1,1,2,2,2,3,3), 4))
+#pdati <- pdata.frame(dati)
 
 #' Tests of cross-section dependence for panel models
 #' 
@@ -409,7 +412,7 @@ pcdres <- function(tres, n, w, form, test) {
    },
    sclm = {
     CDstat        <- sqrt(1/(2*elem.num))*sum((t.ij*rho^2-1)[selector.mat])
-    pCD           <- 2*pnorm(abs(CDstat), lower.tail = FALSE) # was until rev. 293: pnorm(CDstat, lower.tail=F)
+    pCD           <- 2*pnorm(abs(CDstat), lower.tail = FALSE)
     names(CDstat) <- "z"
     parm          <- NULL
     testname      <- "Scaled LM test"
@@ -573,8 +576,5 @@ cortab <- function(x, grouping, groupnames = NULL,
 }
 
 
-## make toy example
-#dati <- data.frame(ind=rep(1:7, 4), time=rep(1:4, each=7), x=rnorm(28),
-#                   group=rep(c(1,1,2,2,2,3,3), 4))
-#pdati <- pdata.frame(dati)
+
 
