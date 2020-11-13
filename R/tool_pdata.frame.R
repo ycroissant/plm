@@ -9,7 +9,7 @@
 ## pdata.frame : 
 ## - $<-
 ## - [
-## - $    
+## - $
 ## - [[
 ## - print
 ## - as.list
@@ -34,7 +34,7 @@
 ## - print.pdim
  
 ## index :
-## - index.pindex    
+## - index.pindex
 ## - index.pdata.frame
 ## - index.pseries
 ## - index.panelmodel
@@ -401,7 +401,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 
 #' @rdname pdata.frame
 #' @export
-"$<-.pdata.frame" <- function(x, name, value){
+"$<-.pdata.frame" <- function(x, name, value) {
   if (inherits(value, "pseries")){
     # remove pseries features before adding value as a column to pdata.frame
     if (length(class(value)) == 1) value <- unclass(value)
@@ -545,7 +545,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     
     mydata <- eval(sc_mod)
 
-    if (is.null(dim(mydata))){
+    if (is.null(dim(mydata))) {
       # subsetting returned a vector or a factor or NULL (nothing more is left)
       if (is.null(mydata)) {
         # since R 3.4.0 NULL cannot have attributes, so special case it
@@ -569,7 +569,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 
 #' @rdname pdata.frame
 #' @export
-"[[.pdata.frame" <- function(x, y){
+"[[.pdata.frame" <- function(x, y) {
   index <- attr(x, "index")
   attr(x, "index") <- NULL
   class(x) <- "data.frame"
@@ -588,13 +588,13 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 
 #' @rdname pdata.frame
 #' @export
-"$.pdata.frame" <- function(x, y){
+"$.pdata.frame" <- function(x, y) {
     "[[.pdata.frame"(x, paste(as.name(y)))
 }
 
 #' @rdname pdata.frame
 #' @export
-print.pdata.frame <- function(x, ...){
+print.pdata.frame <- function(x, ...) {
   attr(x, "index") <- NULL
   class(x) <- "data.frame"
   # This is a workaround: print.data.frame cannot handle
@@ -648,7 +648,7 @@ as.list.pdata.frame <- function(x, keep.attributes = FALSE, ...) {
 
 #' @rdname pdata.frame
 #' @export
-as.data.frame.pdata.frame <- function(x, row.names = NULL, optional = FALSE, keep.attributes = TRUE, ...){
+as.data.frame.pdata.frame <- function(x, row.names = NULL, optional = FALSE, keep.attributes = TRUE, ...) {
     index <- attr(x, "index")
 
      if (!keep.attributes) {
@@ -823,13 +823,13 @@ is.pseries <- function(object) {
 #'          model="random", subset = gsp > 5000)
 #' pdim(z)
 #' 
-pdim <- function(x, ...){
+pdim <- function(x, ...) {
   UseMethod("pdim")
 }
 
 #' @rdname pdim
 #' @export
-pdim.default <- function(x, y, ...){
+pdim.default <- function(x, y, ...) {
   if (length(x) != length(y)) stop("The length of the two vectors differs\n")
   x <- x[drop = TRUE] # drop unused factor levels so that table() 
   y <- y[drop = TRUE] # gives only needed combinations
@@ -856,7 +856,7 @@ pdim.default <- function(x, y, ...){
 
 #' @rdname pdim
 #' @export
-pdim.data.frame <- function(x, index = NULL, ...){
+pdim.data.frame <- function(x, index = NULL, ...) {
   x <- pdata.frame(x, index)
   index <- attr(x, "index")
   id <- index[[1]]
@@ -866,7 +866,7 @@ pdim.data.frame <- function(x, index = NULL, ...){
 
 #' @rdname pdim
 #' @export
-pdim.pdata.frame <- function(x,...){
+pdim.pdata.frame <- function(x,...) {
   index <- attr(x, "index")
   pdim(index[[1]],index[[2]])
 }
@@ -880,21 +880,21 @@ pdim.pseries <- function(x,...) {
 
 #' @rdname pdim
 #' @export
-pdim.panelmodel <- function(x, ...){
+pdim.panelmodel <- function(x, ...) {
   x <- model.frame(x)
   pdim(x)
 }
 
 #' @rdname pdim
 #' @export
-pdim.pgmm <- function(x, ...){
+pdim.pgmm <- function(x, ...) {
 ## pgmm is also class panelmodel, but take advantage of the pdim attribute in it
   attr(x, "pdim")
 }
 
 #' @rdname pdim
 #' @export
-print.pdim <- function(x, ...){
+print.pdim <- function(x, ...) {
   if (x$balanced){
       cat("Balanced Panel: ")
       cat(paste("n = ",x$nT$n,", ",sep=""))
@@ -964,7 +964,8 @@ NULL
 
 #' @rdname index.plm
 #' @export
-index.pindex <- function(x, which = NULL, ...){
+index.pindex <- function(x, which = NULL, ...) {
+
     if (is.null(which)) {
       # if no specific index is requested, select all index variables
       which <- names(x)
@@ -986,30 +987,40 @@ index.pindex <- function(x, which = NULL, ...){
     gindex <- c("id", "time")
     if (ncol(x) == 3) gindex <- c(gindex, "group")
     if (any(! which %in% c(nindex, gindex))) stop("unknown variable")
-    if ("id"    %in% which) which[which == "id"]    <- names(x)[1]
-    if ("time"  %in% which) which[which == "time"]  <- names(x)[2]
-    if (ncol(x) == 3) if ("group" %in% which) which[which == "group"] <- names(x)[3]
+    if ("id"    %in% which) {
+      which[which == "id"]    <- names(x)[1]
+      if("id" %in% names(x)[-1]) warning("an index variable not being the invidiual index is called 'id'. Likely, any results are distorted.") 
+    }
+    if ("time"  %in% which) {
+      which[which == "time"]  <- names(x)[2]
+      if("time" %in% names(x)[-2]) warning("an index variable not being the time index is called 'time'. Likely, any results are distorted.") 
+    }
+    if (ncol(x) == 3) if ("group" %in% which) {
+      which[which == "group"] <- names(x)[3]
+      if("group" %in% names(x)[-3]) warning("an index variable not being the group index is called 'group'. Likely, any results are distorted.") 
+    }
+    
     result <- x[ , which]
     result
 }
 
 #' @rdname index.plm
 #' @export
-index.pdata.frame <- function(x, which = NULL, ...){
+index.pdata.frame <- function(x, which = NULL, ...) {
   anindex <- attr(x, "index")
   index(x = anindex, which = which)
 }
 
 #' @rdname index.plm
 #' @export
-index.pseries <- function(x, which = NULL, ...){
+index.pseries <- function(x, which = NULL, ...) {
   anindex <- attr(x, "index")
   index(x = anindex, which = which)
 }
   
 #' @rdname index.plm
 #' @export
-index.panelmodel <- function(x, which = NULL, ...){
+index.panelmodel <- function(x, which = NULL, ...) {
   anindex <- attr(x$model, "index")
   index(x = anindex, which = which)
 }

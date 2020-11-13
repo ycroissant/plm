@@ -105,6 +105,27 @@ Produc$group <- Produc$region
 pProduc  <- pdata.frame(Produc, index = "group")
 index(pProduc)
 
+
+# test of 'appropriate' (="non-confusing") index names -> should issue warning
+data("Produc", package = "plm")
+Produc_confuse <- transform(Produc, id = year)
+Produc_confuse <- transform(Produc_confuse, time = state)
+
+p2 <- pdata.frame(Produc_confuse, index=c("state", "id"))
+p3 <- pdata.frame(Produc_confuse, index=c("time", "id"))
+
+index(p2) # gives wrong index (2x individual variable) with warning
+index(p2, which = "individual") # with warning
+index(p2, which = "id") # with warning
+index(p2, which = "time") # with warning
+
+index(p3) # gives wrong index (2x individual variable)
+index(p3, which = "individual") # with warning
+index(p3, which = "id") # with warning
+index(p3, which = "time") # with warning
+
+
+
 # test for error about length(index)>2
 # Should result in error with informative message
 #ttC3 <-  tryCatch(pdata.frame(Wages, index=c(595, 3, 5)), error=function(e) e, warning = function(w) w)

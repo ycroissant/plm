@@ -1,9 +1,14 @@
 # plm 2.2-6
 
-* Between.matrix and Tapply.matrix: epllipsis (three dots) is passed on,
+* Between.matrix and (internal) Tapply.matrix: ellipsis (three dots) is passed on,
   allowing for, e.g., na.rm = TRUE (like already possible for between.matrix etc.).
+* Within.pseries/matrix: now handle na.rm argument in ellipsis.
 * between.default: keeps original sequence of elements' occurrence (before,
   compressed output was sorted by the factor's *level* order).
+* index: gives warning if argument 'which' contains "confusing" values.
+  "confusing": an index variable called by user 'id', 'time', or 'group' if it
+  does not refer to the respective index (e.g., time index variable is called 'id'
+  in the user's data frame.)
 
 
 # plm 2.2-5
@@ -14,7 +19,7 @@
 # plm 2.2-4
 
 * ptransform (internal function): check balancedness before pseries index is
-  removed (fixes some spurious bug, e.g. when package tibble is used).
+  removed (fixes some spurious bug, e.g., when package tibble is used).
 * exported/registered again in NAMESPACE after export/registration lost in plm 2.0-0:
   fixef.pggls, Math.pseries, Ops.pseries, Complex.pseries and deprecated
   methods/function formula.dynformula, print.dynformula, pvcovHC.
