@@ -256,11 +256,23 @@ print.summary.pseries <- function(x, ...){
 }
 
 
-Tapply <- function(x, ...){
+Tapply <- function(x, ...) {
     UseMethod("Tapply")
 }
 
-Tapply.default <- function(x, effect, func, ...){
+myave <- function(x, ...) {
+  UseMethod("myave")
+}
+
+# TODO:
+# dots <- match.call(expand.dots = FALSE)$`...`
+# na.rm <- if(is.null(dots[["na.rm"]])) { 
+#   FALSE }# default of plm::between 
+# else { 
+#   dots[["na.rm"]]
+# }
+
+Tapply.default <- function(x, effect, func, ...) {
     na.x <- is.na(x)
     uniqval <- tapply(x, effect, func, ...)
     nms <- attr(uniqval, "dimnames")[[1]]
@@ -269,6 +281,15 @@ Tapply.default <- function(x, effect, func, ...){
     result <- uniqval[as.character(effect)]
     result[na.x] <- NA
     result
+}
+
+#' @importFrom stats ave
+myave.default <- function(x, effect, func, ...) {
+  na.x <- is.na(x)
+  res <- ave(x, effect, FUN = function(x) func(x, ...))
+  names(res) <- as.character(effect)
+  res[na.x] <- NA
+  return(res)
 }
 
 Tapply.pseries <- function(x, effect = c("individual", "time", "group"), func, ...){
@@ -286,7 +307,22 @@ Tapply.pseries <- function(x, effect = c("individual", "time", "group"), func, .
     z
 }
 
-Tapply.matrix <- function(x, effect, func, ...){
+myave.pseries <- function(x, effect = c("individual", "time", "group"), func, ...) {
+  effect <- match.arg(effect)
+  index <- attr(x, "index")
+  effect <- switch(effect,
+                   "individual"= index[[1]],
+                   "time"      = index[[2]],
+                   "group"     = index[[3]]
+  )
+  x <- as.numeric(x)
+  z <- myave.default(x, effect, func, ...)
+  attr(z, "index") <- index
+  class(z) <- c("pseries", class(z))
+  return(z)
+}
+
+Tapply.matrix <- function(x, effect, func, ...) {
     na.x <- is.na(x)
     uniqval <- apply(x, 2, tapply, effect, func, ...)
     result <- uniqval[as.character(effect), , drop = F]
@@ -294,21 +330,30 @@ Tapply.matrix <- function(x, effect, func, ...){
     result
 }
 
+myave.matrix <- function(x, effect, func, ...) {
+  na.x <- is.na(x)
+  result <- apply(x, 2, FUN = function(x) ave(x, effect, FUN = function(y) func(y, ...)))
+  result[na.x] <- NA
+  return(result)
+}
+
 Sum <- function(x, ...){
     UseMethod("Sum")
 }
 
-Sum.default <- function(x, effect, ...){
+Sum.default <- function(x, effect, ...) {
     if (!is.numeric(x)) stop("The Sum function only applies to numeric vectors")
-    Tapply(x, effect, sum, ...)
+  #   Tapply(x, effect, sum, ...)
+  return(myave(x, effect, sum, ...))
 }
 
 Sum.pseries <- function(x, effect = c("individual", "time", "group"), ...){
     effect <- match.arg(effect)
-    Tapply(x, effect, sum, ...)
+    #   Tapply(x, effect, sum, ...)
+    return(myave(x, effect, sum, ...))
 }
 
-Sum.matrix <- function(x, effect, ...){
+Sum.matrix <- function(x, effect, ...) {
     if (! effect %in% c("individual", "time", "group"))
         stop("irrelevant effect for a Sum transformation")
     if (is.null(attr(x, "index"))) Sum.default(x, effect)
@@ -317,33 +362,36 @@ Sum.matrix <- function(x, effect, ...){
             stop("for matrices with index attributes, the effect argument must be a character")
         xindex <- attr(x, "index")
         effect <- index(xindex, effect)
-        Tapply(x, effect, sum, ...)
+        #       Tapply(x, effect, sum, ...)
+        return(myave(x, effect, sum, ...))
     }        
 }
 
 #' @rdname pseries
 #' @export
-Between <- function(x, ...){
+Between <- function(x, ...) {
     UseMethod("Between")
 }
 
 #' @rdname pseries
 #' @export
-Between.default <- function(x, effect, ...){
+Between.default <- function(x, effect, ...) {
     if (!is.numeric(x)) stop("The Between function only applies to numeric vectors")
-    Tapply(x, effect, mean, ...)
+    #   Tapply(x, effect, mean, ...)
+    return(myave(x, effect, mean, ...))
 }
 
 #' @rdname pseries
 #' @export
-Between.pseries <- function(x, effect = c("individual", "time", "group"), ...){
+Between.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
     effect <- match.arg(effect)
-    Tapply(x, effect = effect, mean, ...)
+    #   Tapply(x, effect = effect, mean, ...)
+    return(myave(x, effect = effect, mean, ...))
 }
 
 #' @rdname pseries
 #' @export
-Between.matrix <- function(x, effect, ...){
+Between.matrix <- function(x, effect, ...) {
     #YC20180916 In the previous version the matrix wasn't returned
     #when there is no index attribute
     if (is.null(attr(x, "index"))) return(Between.default(x, effect))
@@ -354,28 +402,34 @@ Between.matrix <- function(x, effect, ...){
         stop("for matrices with index attributes, the effect argument must be a character")
         xindex <- attr(x, "index")
         effect <- index(xindex, effect)
-        Tapply(x, effect, mean, ...)
+        #       Tapply(x, effect, mean, ...)
+        return(myave.matrix(x, effect, mean, ...))
     }
 }
 
 #' @rdname pseries
 #' @export
-between <- function(x, ...){
+between <- function(x, ...) {
     UseMethod("between")
 }
 
 #' @rdname pseries
 #' @export
-between.default <- function(x, effect, ...){
+between.default <- function(x, effect, ...) {
     if (!is.numeric(x)) stop("The between function only applies to numeric vectors")
-    res <- tapply(x, effect, mean, ...)
-    res <- res[as.character(effect[!duplicated(effect)])] # restore original order (as tapply's output is sorted by levels factor effect)
+    #    res <- tapply(x, effect, mean, ...)
+    ##   res <- res[as.character(effect[!duplicated(effect)])] # restore original order (as tapply's output is sorted by levels factor effect)
+    res <- ave(x, effect, FUN = function(x) mean(x, ...))
+    # reduce down to number of unique elements in effect
+    keep <- !duplicated(effect)
+    res <- res[keep]
+    names(res) <- as.character(effect[keep])
     return(res)
 }
 
 #' @rdname pseries
 #' @export
-between.pseries <- function(x, effect = c("individual", "time", "group"), ...){
+between.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
     effect <- match.arg(effect)
     index <- attr(x, "index")
     effect <- switch(effect,
@@ -384,53 +438,59 @@ between.pseries <- function(x, effect = c("individual", "time", "group"), ...){
                      "group"      = index[[3]]
                      )
     x <- between.default(x, effect = effect, ...)
-    nms <- attr(x, "dimnames")[[1]]
-    attr(x, "dimnames") <- attr(x, "dim") <- NULL
-    names(x) <- nms
-    x
+    #    nms <- attr(x, "dimnames")[[1]]
+    #    attr(x, "dimnames") <- attr(x, "dim") <- NULL
+    #    names(x) <- nms
+    return(x)
 }
 
 #' @rdname pseries
 #' @export
-between.matrix <- function(x, effect,...){
+between.matrix <- function(x, effect,...) {
     if (! effect %in% c("individual", "time", "group"))
         stop("irrelevant effect for a between transformation")
-    if (is.null(attr(x, "index"))) Between.default(x, effect)
+    if (is.null(attr(x, "index"))) Between.default(x, effect, ...)
     else{
         if (length(effect) > 1)
             stop("for matrices with index attributes, the effect argument must be a character")
         xindex <- attr(x, "index")
         effect <- index(xindex, effect)
-        apply(x, 2, tapply, effect, mean, ...)
+        #       res <- apply(x, 2, tapply, effect, mean, ...)
+        res <- apply(x, 2, FUN = function(x) ave(x, effect, FUN = function(y) mean(y, ...)))
+        # compress data down to #elements of index dimension:
+        keep <- !duplicated(effect)
+        res <- res[keep, ]
+        rownames(res) <- as.character(effect[keep])
+        return(res)
     }
 }
 
 #' @rdname pseries
 #' @export
-Within <- function(x, ...){
+Within <- function(x, ...) {
     UseMethod("Within")
 }
 
 #' @rdname pseries
 #' @export
-Within.default <- function(x, effect, ...){
+Within.default <- function(x, effect, ...) {
     if (!is.numeric(x)) stop("the within function only applies to numeric vectors")
     x - Between(x, effect, ...)
 }
 
 #' @rdname pseries
 #' @export
-Within.pseries <- function(x, effect = c("individual", "time", "group", "twoways"), ...){
+Within.pseries <- function(x, effect = c("individual", "time", "group", "twoways"), ...) {
     effect <- match.arg(effect)
     if (effect != "twoways") x - Between(x, effect, ...)
     else{
-        if (is.pbalanced(x)) x - Between(x, "individual", ...) - Between(x, "time") + mean(x)
+        if (is.pbalanced(x)) x - Between(x, "individual", ...) - Between(x, "time") + mean(x, ...)
         else{
             time <- index(x)[[2]]
             Dmu <- model.matrix(~ time - 1)
             attr(Dmu, "index") <- index(x)
-            W1 <- Within(x, "individual")
-            WDmu <- Within(Dmu, "individual")
+            W1 <- Within(x, "individual", ...)
+            WDmu <- Within(Dmu, "individual", ...)
             W2 <- fitted(lm.fit(WDmu, x))
             W1 - W2
         }
@@ -448,29 +508,29 @@ Within.matrix <- function(x, effect, rm.null = TRUE, ...){
             attr(result, "constant") <- character(0)
         }
         else attr(result, "constant") <- colnames(x)[! othervar]
-        result
+        return(result)
     }
     else{
-        if (effect %in% c("individual", "time", "group")) result <- x - Between(x, effect)
+        if (effect %in% c("individual", "time", "group")) result <- x - Between(x, effect, ...)
         if (effect == "twoways"){
             xindex <- attr(x, "index")
             if (is.pbalanced(xindex)) {
-                result <- x - Between(x, "individual") - Between(x, "time") +
-                    matrix(colMeans(x), nrow = nrow(x), ncol = ncol(x), byrow = TRUE)
+                result <- x - Between(x, "individual", ...) - Between(x, "time", ...) +
+                    matrix(colMeans(x, ...), nrow = nrow(x), ncol = ncol(x), byrow = TRUE)
             }
             else{ # unbalanced twoways
                 time <- index(xindex, "time")
                 id <- index(xindex, "individual")
                 Dmu <- model.matrix(~ time - 1)
                 attr(Dmu, "index") <- xindex
-                W1 <- Within(x, "individual", rm.null = FALSE)
-                WDmu <- Within(Dmu, "individual")
+                W1 <- Within(x, "individual", rm.null = FALSE, ...)
+                WDmu <- Within(Dmu, "individual", ...)
                 W2 <- fitted(lm.fit(WDmu, x))
                 result <- W1 - W2
             }
         }
     }
-    result
+    return(result)
 }
 
 ############### LAG and DIFF

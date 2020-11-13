@@ -5,10 +5,11 @@
 * Within.pseries/matrix: now handle na.rm argument in ellipsis.
 * between.default: keeps original sequence of elements' occurrence (before,
   compressed output was sorted by the factor's *level* order).
+* (internal) (b/B)etween/Within methods: now use ave() intead of tapply().
 * index: gives warning if argument 'which' contains "confusing" values.
   "confusing": an index variable called by user 'id', 'time', or 'group' if it
   does not refer to the respective index (e.g., time index variable is called 'id'
-  in the user's data frame.)
+  in the user's data frame).
 
 
 # plm 2.2-5
