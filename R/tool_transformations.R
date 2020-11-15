@@ -35,8 +35,10 @@
 #' 
 #' For `between`, `Between`, and `Within` in presence of NA values it
 #' can be useful to supply `na.rm = TRUE` as an additional argument to
-#' keep as many observations as possible in the resulting
-#' transformation, see also **Examples**.
+#' keep as many observations as possible in the resulting transformation.
+#' na.rm is passed on to the mean() function used by these transformations
+#' (i.e., it does not remove NAs prior to any processing!), see also 
+#' **Examples**. 
 #' 
 #' @name pseries
 #' @aliases pseries
@@ -48,7 +50,7 @@
 #' @param rm.null if `TRUE`, for the `Within.matrix` method, remove
 #'     the empty columns,
 #' @param plot,scale,transparency,col,lwd plot arguments,
-#' @param \dots further arguments, e. g. `na.rm = TRUE` for
+#' @param \dots further arguments, e. g., `na.rm = TRUE` for
 #'     transformation functions like `beetween`, see **Details**
 #'     and **Examples**.
 #' @return All these functions return an object of class `pseries`,
@@ -264,14 +266,6 @@ myave <- function(x, ...) {
   UseMethod("myave")
 }
 
-# TODO:
-# dots <- match.call(expand.dots = FALSE)$`...`
-# na.rm <- if(is.null(dots[["na.rm"]])) { 
-#   FALSE }# default of plm::between 
-# else { 
-#   dots[["na.rm"]]
-# }
-
 Tapply.default <- function(x, effect, func, ...) {
     na.x <- is.na(x)
     uniqval <- tapply(x, effect, func, ...)
@@ -280,7 +274,7 @@ Tapply.default <- function(x, effect, func, ...) {
     names(uniqval) <- nms
     result <- uniqval[as.character(effect)]
     result[na.x] <- NA
-    result
+    return(result)
 }
 
 #' @importFrom stats ave
@@ -304,7 +298,7 @@ Tapply.pseries <- function(x, effect = c("individual", "time", "group"), func, .
     z <- Tapply.default(x, effect, func, ...)
     attr(z, "index") <- index
     class(z) <- c("pseries", class(z))
-    z
+    return(z)
 }
 
 myave.pseries <- function(x, effect = c("individual", "time", "group"), func, ...) {
@@ -327,7 +321,7 @@ Tapply.matrix <- function(x, effect, func, ...) {
     uniqval <- apply(x, 2, tapply, effect, func, ...)
     result <- uniqval[as.character(effect), , drop = F]
     result[na.x] <- NA
-    result
+    return(result)
 }
 
 myave.matrix <- function(x, effect, func, ...) {
@@ -337,7 +331,7 @@ myave.matrix <- function(x, effect, func, ...) {
   return(result)
 }
 
-Sum <- function(x, ...){
+Sum <- function(x, ...) {
     UseMethod("Sum")
 }
 
@@ -347,7 +341,7 @@ Sum.default <- function(x, effect, ...) {
   return(myave(x, effect, sum, ...))
 }
 
-Sum.pseries <- function(x, effect = c("individual", "time", "group"), ...){
+Sum.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
     effect <- match.arg(effect)
     #   Tapply(x, effect, sum, ...)
     return(myave(x, effect, sum, ...))
@@ -356,7 +350,7 @@ Sum.pseries <- function(x, effect = c("individual", "time", "group"), ...){
 Sum.matrix <- function(x, effect, ...) {
     if (! effect %in% c("individual", "time", "group"))
         stop("irrelevant effect for a Sum transformation")
-    if (is.null(attr(x, "index"))) Sum.default(x, effect)
+    if (is.null(attr(x, "index"))) return(Sum.default(x, effect, ...))
     else{
         if (length(effect) > 1)
             stop("for matrices with index attributes, the effect argument must be a character")
@@ -364,7 +358,7 @@ Sum.matrix <- function(x, effect, ...) {
         effect <- index(xindex, effect)
         #       Tapply(x, effect, sum, ...)
         return(myave(x, effect, sum, ...))
-    }        
+    }
 }
 
 #' @rdname pseries
@@ -394,7 +388,7 @@ Between.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
 Between.matrix <- function(x, effect, ...) {
     #YC20180916 In the previous version the matrix wasn't returned
     #when there is no index attribute
-    if (is.null(attr(x, "index"))) return(Between.default(x, effect))
+    if (is.null(attr(x, "index"))) return(Between.default(x, effect, ...))
     if (! effect %in% c("individual", "time", "group"))
         stop("irrelevant effect for a between transformation")
     else{
@@ -482,9 +476,9 @@ Within.default <- function(x, effect, ...) {
 #' @export
 Within.pseries <- function(x, effect = c("individual", "time", "group", "twoways"), ...) {
     effect <- match.arg(effect)
-    if (effect != "twoways") x - Between(x, effect, ...)
+    if (effect != "twoways") result <- x - Between(x, effect, ...)
     else{
-        if (is.pbalanced(x)) x - Between(x, "individual", ...) - Between(x, "time") + mean(x, ...)
+        if (is.pbalanced(x)) result <- x - Between(x, "individual", ...) - Between(x, "time") + mean(x, ...)
         else{
             time <- index(x)[[2]]
             Dmu <- model.matrix(~ time - 1)
@@ -492,9 +486,10 @@ Within.pseries <- function(x, effect = c("individual", "time", "group", "twoways
             W1 <- Within(x, "individual", ...)
             WDmu <- Within(Dmu, "individual", ...)
             W2 <- fitted(lm.fit(WDmu, x))
-            W1 - W2
+            result <- W1 - W2
         }
     }
+    return(result)
 }
 
 #' @rdname pseries
