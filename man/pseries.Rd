@@ -69,7 +69,7 @@ Within(x, ...)
 \arguments{
 \item{x, object}{a \code{pseries} or a \code{summary.pseries} object,}
 
-\item{\dots}{further arguments, e. g. \code{na.rm = TRUE} for
+\item{\dots}{further arguments, e. g., \code{na.rm = TRUE} for
 transformation functions like \code{beetween}, see \strong{Details}
 and \strong{Examples}.}
 
@@ -109,8 +109,10 @@ demeaned data.
 
 For \code{between}, \code{Between}, and \code{Within} in presence of NA values it
 can be useful to supply \code{na.rm = TRUE} as an additional argument to
-keep as many observations as possible in the resulting
-transformation, see also \strong{Examples}.
+keep as many observations as possible in the resulting transformation.
+na.rm is passed on to the mean() function used by these transformations
+(i.e., it does not remove NAs prior to any processing!), see also
+\strong{Examples}.
 }
 \examples{
 
