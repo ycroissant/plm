@@ -441,11 +441,11 @@ between.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
 #' @rdname pseries
 #' @export
 between.matrix <- function(x, effect,...) {
-    if (! effect %in% c("individual", "time", "group"))
+    if(! effect %in% c("individual", "time", "group"))
         stop("irrelevant effect for a between transformation")
-    if (is.null(attr(x, "index"))) Between.default(x, effect, ...)
-    else{
-        if (length(effect) > 1)
+    if(is.null(attr(x, "index"))) return(Between.default(x, effect, ...))
+    else {
+        if(length(effect) > 1)
             stop("for matrices with index attributes, the effect argument must be a character")
         xindex <- attr(x, "index")
         effect <- index(xindex, effect)
@@ -468,8 +468,10 @@ Within <- function(x, ...) {
 #' @rdname pseries
 #' @export
 Within.default <- function(x, effect, ...) {
+  # NB: Contrary to the other Within.* methdos, Within.default does not handle
+  #     twoways effects
     if (!is.numeric(x)) stop("the within function only applies to numeric vectors")
-    x - Between(x, effect, ...)
+    return(x - Between(x, effect, ...))
 }
 
 #' @rdname pseries
@@ -477,9 +479,9 @@ Within.default <- function(x, effect, ...) {
 Within.pseries <- function(x, effect = c("individual", "time", "group", "twoways"), ...) {
     effect <- match.arg(effect)
     if (effect != "twoways") result <- x - Between(x, effect, ...)
-    else{
-        if (is.pbalanced(x)) result <- x - Between(x, "individual", ...) - Between(x, "time") + mean(x, ...)
-        else{
+    else {
+        if(is.pbalanced(x)) result <- x - Between(x, "individual", ...) - Between(x, "time") + mean(x, ...)
+        else {
             time <- index(x)[[2]]
             Dmu <- model.matrix(~ time - 1)
             attr(Dmu, "index") <- index(x)
@@ -494,26 +496,26 @@ Within.pseries <- function(x, effect = c("individual", "time", "group", "twoways
 
 #' @rdname pseries
 #' @export
-Within.matrix <- function(x, effect, rm.null = TRUE, ...){
-    if (is.null(attr(x, "index"))){
+Within.matrix <- function(x, effect, rm.null = TRUE, ...) {
+    if (is.null(attr(x, "index"))) {
         result <- Within.default(x, effect, ...)
         othervar <- colSums(abs(x)) > sqrt(.Machine$double.eps)
-        if (rm.null){
+        if(rm.null) {
             result <- result[ , othervar, drop = FALSE]
             attr(result, "constant") <- character(0)
         }
         else attr(result, "constant") <- colnames(x)[! othervar]
         return(result)
     }
-    else{
-        if (effect %in% c("individual", "time", "group")) result <- x - Between(x, effect, ...)
-        if (effect == "twoways"){
+    else {
+        if(effect %in% c("individual", "time", "group")) result <- x - Between(x, effect, ...)
+        if(effect == "twoways") {
             xindex <- attr(x, "index")
             if (is.pbalanced(xindex)) {
                 result <- x - Between(x, "individual", ...) - Between(x, "time", ...) +
                     matrix(colMeans(x, ...), nrow = nrow(x), ncol = ncol(x), byrow = TRUE)
             }
-            else{ # unbalanced twoways
+            else { # unbalanced twoways
                 time <- index(xindex, "time")
                 id <- index(xindex, "individual")
                 Dmu <- model.matrix(~ time - 1)
