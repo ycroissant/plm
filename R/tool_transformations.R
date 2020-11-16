@@ -348,12 +348,12 @@ Sum.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
 }
 
 Sum.matrix <- function(x, effect, ...) {
-    if (! effect %in% c("individual", "time", "group"))
-        stop("irrelevant effect for a Sum transformation")
     if (is.null(attr(x, "index"))) return(Sum.default(x, effect, ...))
     else{
         if (length(effect) > 1)
             stop("for matrices with index attributes, the effect argument must be a character")
+        if (! effect %in% c("individual", "time", "group"))
+            stop("irrelevant effect for a Sum transformation")
         xindex <- attr(x, "index")
         effect <- index(xindex, effect)
         #       Tapply(x, effect, sum, ...)
@@ -429,7 +429,7 @@ between.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
     effect <- switch(effect,
                      "individual" = index[[1]],
                      "time"       = index[[2]],
-                     "group"      = index[[3]]
+                     "group"      = index[[3]],
                      )
     x <- between.default(x, effect = effect, ...)
     #    nms <- attr(x, "dimnames")[[1]]

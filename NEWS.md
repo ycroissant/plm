@@ -6,6 +6,7 @@
 * between.default: keeps original sequence of elements' occurrence (before,
   compressed output was sorted by the factor's *level* order).
 * (internal) (b/B)etween/Within methods: now use ave() intead of tapply().
+* (internal) Sum.matrix allows for non-character effect in non-index case.
 * index: gives warning if argument 'which' contains "confusing" values.
   "confusing": an index variable called by user 'id', 'time', or 'group' if it
   does not refer to the respective index (e.g., time index variable is called 'id'
