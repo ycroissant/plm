@@ -26,11 +26,12 @@ is.pbalanced(x, ...)
 }
 \arguments{
 \item{x}{an object of class \code{pdata.frame}, \code{data.frame},
-\code{pseries}, \code{panelmodel}, \code{pgmm};}
+\code{pseries}, \code{panelmodel}, or \code{pgmm},}
 
 \item{\dots}{further arguments.}
 
-\item{y}{\strong{to describe}}
+\item{y}{(only in default method) the time index variable (2nd index
+variable),}
 
 \item{index}{only relevant for \code{data.frame} interface; if
 \code{NULL}, the first two columns of the data.frame are

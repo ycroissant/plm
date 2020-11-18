@@ -200,11 +200,11 @@ is.pconsecutive.default <- function(x, id, time, na.rm.tindex = FALSE, ...) {
   res <- sapply(list_id_timevar, function(id_timevar) { if(anyNA(id_timevar)) {
                                                            NA # return NA if NA found in the time periods for individual
                                                           } else {
-                                                              begin <- id_timevar[1]
+                                                              begin <- id_timevar[1L]
                                                               end   <- id_timevar[length(id_timevar)]
                                                  
                                                               # compare to length(original id_timevar) to find out if times are consecutive
-                                                              (end - begin + 1) == length(id_timevar)
+                                                              (end - begin + 1L) == length(id_timevar)
                                                               
                                                               # Alternative way of checking:
                                                                 # consecutive time periods from begin to end (if id_timevar were consecutive)
@@ -218,15 +218,15 @@ is.pconsecutive.default <- function(x, id, time, na.rm.tindex = FALSE, ...) {
 #' @rdname is.pconsecutive
 #' @export
 is.pconsecutive.data.frame <- function(x, index = NULL, na.rm.tindex = FALSE, ...){
-  if (!is.null(index) & length(index) != 2)
+  if (!is.null(index) & length(index) != 2L)
     stop("if argument 'index' is not NULL, 'index' needs to specify
          'individual' and 'time' dimension for is.pconsecutive to work on a data.frame")
   
   if (is.null(index)) index_orig_names <- names(x)[1:2] # assume first two columns to be the index vars
     else index_orig_names <- index
   
-  id   <- x[ , index_orig_names[1]]
-  time <- x[ , index_orig_names[2]]
+  id   <- x[ , index_orig_names[1L]]
+  time <- x[ , index_orig_names[2L]]
 
   # order as stacked time series (by id and time) first, otherwise default method does not work correctly!
   ord <- order(id, time)
@@ -244,8 +244,8 @@ is.pconsecutive.data.frame <- function(x, index = NULL, na.rm.tindex = FALSE, ..
 #' @export
 is.pconsecutive.pseries <- function(x, na.rm.tindex = FALSE, ...){
   index <- attr(x, "index")
-  id   <- index[[1]]
-  time <- index[[2]]
+  id   <- index[[1L]]
+  time <- index[[2L]]
   return(is.pconsecutive.default(x, id, time, na.rm.tindex = na.rm.tindex, ...))
 }
 
@@ -254,8 +254,8 @@ is.pconsecutive.pseries <- function(x, na.rm.tindex = FALSE, ...){
 #' @export
 is.pconsecutive.pdata.frame <- function(x, na.rm.tindex = FALSE, ...){
   index <- attr(x, "index")
-  id   <- index[[1]]
-  time <- index[[2]]
+  id   <- index[[1L]]
+  time <- index[[2L]]
   return(is.pconsecutive.default(x, id, time, na.rm.tindex = na.rm.tindex, ...))
 }
 
@@ -263,8 +263,8 @@ is.pconsecutive.pdata.frame <- function(x, na.rm.tindex = FALSE, ...){
 #' @export
 is.pconsecutive.panelmodel <- function(x, na.rm.tindex = FALSE, ...){
   index <- attr(x$model, "index")
-  id   <- index[[1]]
-  time <- index[[2]]
+  id   <- index[[1L]]
+  time <- index[[2L]]
   return(is.pconsecutive.default(x, id, time, na.rm.tindex = na.rm.tindex, ...))
 }
 
@@ -292,8 +292,9 @@ is.pconsecutive.panelmodel <- function(x, na.rm.tindex = FALSE, ...){
 #' 
 #' @aliases is.pbalanced
 #' @param x an object of class `pdata.frame`, `data.frame`,
-#'     `pseries`, `panelmodel`, `pgmm`;
-#' @param y **to describe**
+#'     `pseries`, `panelmodel`, or `pgmm`,
+#' @param y (only in default method) the time index variable (2nd index
+#' variable),
 #' @param index only relevant for `data.frame` interface; if
 #'     `NULL`, the first two columns of the data.frame are
 #'     assumed to be the index variables; if not `NULL`, both
@@ -343,11 +344,11 @@ is.pbalanced.default <- function(x, y, ...) {
   x <- x[drop = TRUE] # drop unused factor levels so that table 
   y <- y[drop = TRUE] # gives only needed combinations
   z <- table(x, y)
-  if (any(as.vector(z) == 0)) {
+  if (any(v <- as.vector(z) == 0L)) {
     balanced <- FALSE
   } else { balanced <- TRUE }
   
-  if (any(as.vector(z) > 1)) warning("duplicate couples (id-time)\n")
+  if (any(v > 1L)) warning("duplicate couples (id-time)\n")
   
   return(balanced)
 }
@@ -357,8 +358,8 @@ is.pbalanced.default <- function(x, y, ...) {
 is.pbalanced.data.frame <- function(x, index = NULL, ...) {
   x <- pdata.frame(x, index)
   index <- attr(x, "index")
-  id <- index[[1]]
-  time <- index[[2]]
+  id <- index[[1L]]
+  time <- index[[2L]]
   return(is.pbalanced(id, time))
 }
 
@@ -366,14 +367,14 @@ is.pbalanced.data.frame <- function(x, index = NULL, ...) {
 #' @export
 is.pbalanced.pdata.frame <- function(x, ...) {
   index <- attr(x, "index")
-  return(is.pbalanced(index[[1]], index[[2]]))
+  return(is.pbalanced(index[[1L]], index[[2L]]))
 }
 
 #' @rdname is.pbalanced
 #' @export
 is.pbalanced.pseries <- function(x, ...) {
   index <- attr(x, "index")
-  return(is.pbalanced(index[[1]], index[[2]]))
+  return(is.pbalanced(index[[1L]], index[[2L]]))
 }
 
 #' @rdname is.pbalanced
