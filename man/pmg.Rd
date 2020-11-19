@@ -87,7 +87,6 @@ common factors, and adding individual intercepts and possibly
 trends.
 }
 \examples{
-
 data("Produc", package = "plm")
 ## Mean Groups estimator
 mgmod <- pmg(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc)

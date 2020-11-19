@@ -1,5 +1,5 @@
 
-R version 4.0.2 (2020-06-22) -- "Taking Off Again"
+R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
 Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -9716,7 +9716,6 @@ alternative hypothesis: significant effects
 > 
 > ### ** Examples
 > 
-> 
 > data("Produc", package = "plm")
 > ## Mean Groups estimator
 > mgmod <- pmg(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc)
@@ -13691,7 +13690,7 @@ attr(,"se")
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  19.53 1.47 21.3 NA NA 
+Time elapsed:  11.36 0.46 11.83 NA NA 
 > grDevices::dev.off()
 null device 
           1 

@@ -1,16 +1,20 @@
 # plm 2.2-6
 
+* between.default: keeps original sequence of elements' occurrence (before,
+  compressed output was sorted by the factor's *level* order).
 * Between.matrix and (internal) Tapply.matrix: ellipsis (three dots) is passed on,
   allowing for, e.g., na.rm = TRUE (like already possible for between.matrix etc.).
 * Within.pseries/matrix: now handle na.rm argument in ellipsis.
-* between.default: keeps original sequence of elements' occurrence (before,
-  compressed output was sorted by the factor's *level* order).
-* (internal) (b/B)etween/Within methods: now use ave() intead of tapply().
-* (internal) Sum.matrix allows for non-character effect in non-index case.
 * index: gives warning if argument 'which' contains "confusing" values.
   "confusing": an index variable called by user 'id', 'time', or 'group' if it
   does not refer to the respective index (e.g., time index variable is called 'id'
   in the user's data frame).
+
+### Internals:
+* Between.*, between.*, Within.* methods: now use ave() intead of tapply().
+* Sum.matrix (non-exported) allows for non-character effect in non-index case.
+* pmg: now uses the general Between() of the pacakge (instead of "own" between 
+  transformation implementation within pmg function).
 
 
 # plm 2.2-5

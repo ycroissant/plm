@@ -1,9 +1,8 @@
-#pmg <- function(formula,index,tindex=NULL,data=ls(),type=c("mg","cmg","dmg")) {
   ## Mean Group estimator
   ## ref. Coakley, Fuertes and Smith 2004
   ##
   ## This version 10:
-  ##   added R2=1-var(resid)/var(y) as a measure of fit
+  ##   added R2 = 1-var(resid)/var(y) as a measure of fit
   ## from version 9:
   ##   fixed residuals
   ##   output matrix of individual coefficients as 'indcoef' aptly named
@@ -89,7 +88,6 @@
 #'
 #' @keywords regression
 #' @examples
-#' 
 #' data("Produc", package = "plm")
 #' ## Mean Groups estimator
 #' mgmod <- pmg(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc)
@@ -174,36 +172,38 @@ pmg <- function(formula, data, subset, na.action,
   tres <- vector("list", n)
 
   switch(model,
-    mg = {
-      ## for each x-sect. i=1..n
+    "mg" = {
+      ## for each x-sect. i = 1..n
       unind <- unique(ind)
       for(i in 1:n) {
-        tX <- X[ind == unind[i],]
+        tX <- X[ind == unind[i], ]
         ty <- y[ind == unind[i]]
         if(trend) tX <- cbind(tX, 1:(dim(tX)[[1]]))
         tfit <- lm.fit(tX, ty)
         tcoef[ , i] <- tfit$coefficients
-        tres[[i]] <- tfit$residuals
+        tres[[i]]   <- tfit$residuals
       }
       ## 'trend' always comes last
       if(trend) coef.names <- c(coef.names, "trend")
       ## adjust k
       k <- length(coef.names)
       },
-    cmg = {
-
+    
+    "cmg" = {
       ## between-periods transformation (take means over groups for each t)
-      be <- function(x,index,na.rm=TRUE) tapply(x,index,mean,na.rm=na.rm)
-      Xm <- apply(X,2,FUN=be,index=tind)[tind,]
-      ym <- apply(as.matrix(as.numeric(y)),2,FUN=be,index=tind)[tind]
-
-      augX <- cbind(X, ym, Xm[ ,-1])
+         #  be <- function(x, index , na.rm = TRUE) tapply(x, index, mean, na.rm = na.rm)
+         #  Xm <- apply(X, 2, FUN = be, index = tind)[tind, ]
+         #  ym <- apply(as.matrix(as.numeric(y)), 2, FUN = be, index = tind)[tind]
+      Xm <- Between(X, effect = "time", na.rm = TRUE)
+      ym <- as.numeric(Between(y, effect = "time", na.rm = TRUE))
+      
+      augX <- cbind(X, ym, Xm[ , -1])
 
       ## allow for extended coef vector
       tcoef0 <- matrix(NA, nrow = 2*k+kt, ncol = n)
 
-      ## for each x-sect. i=1..n estimate (over t) an augmented model
-      ## y_it = alfa_i + beta_i*X_it + c1_i*my_t + c2_i*mX_t + err_it
+      ## for each x-sect. i = 1..n estimate (over t) an augmented model
+      ## y_it = alpha_i + beta_i*X_it + c1_i*my_t + c2_i*mX_t + err_it
       unind <- unique(ind)
       for(i in 1:n) {
         taugX <- augX[ind == unind[i], ]
@@ -212,8 +212,8 @@ pmg <- function(formula, data, subset, na.action,
         if(trend) taugX <- cbind(taugX, 1:(dim(taugX)[[1]]))
 
         tfit <- lm.fit(taugX, ty)
-        tcoef0[ ,i] <- tfit$coefficients
-        tres[[i]] <- tfit$residuals
+        tcoef0[ , i] <- tfit$coefficients
+        tres[[i]]    <- tfit$residuals
       }
       tcoef <- tcoef0[1:k, ]
       tcoef.bar <- tcoef0[-(1:k), ]
@@ -231,12 +231,14 @@ pmg <- function(formula, data, subset, na.action,
 
       ## TODO: adjust model formula etc. etc. (else breaks waldtest, update, ...)
       },
-    dmg = {
-
+    
+    "dmg" = {
       ## between-periods transformation (take means over group for each t)
-      be <- function(x, index, na.rm = TRUE) tapply(x, index, mean, na.rm = na.rm)
-      Xm <- apply(X, 2, FUN = be, index = tind)[tind, ]
-      ym <- apply(as.matrix(as.numeric(y)), 2, FUN = be, index = tind)[tind]
+         #  be <- function(x, index, na.rm = TRUE) tapply(x, index, mean, na.rm = na.rm)
+         #  Xm <- apply(X, 2, FUN = be, index = tind)[tind, ]
+         #  ym <- apply(as.matrix(as.numeric(y)), 2, FUN = be, index = tind)[tind]
+      Xm <- Between(X, effect = "time", na.rm = TRUE)
+      ym <- as.numeric(Between(y, effect = "time", na.rm = TRUE))
       ## ...but of course we do not demean the intercept!
       Xm[ , 1] <- 0
 
@@ -260,12 +262,10 @@ pmg <- function(formula, data, subset, na.action,
       k <- length(coef.names)
   })
 
-
     ## coefs are averages across individual regressions
     coef <- rowMeans(tcoef) # == apply(tcoef, 1, mean)
 
     ## make matrix of cross-products of demeaned individual coefficients
-
     coefmat <- array(dim = c(k, k, n))
     demcoef <- tcoef - coef # gets recycled n times by column
 
@@ -274,7 +274,7 @@ pmg <- function(formula, data, subset, na.action,
     ## covariance matrix of coefs
     vcov <- apply(coefmat, 1:2, sum)/(n*(n-1))
 
-    ######### na.omit=T in apply was the big problem!!
+    ######### na.omit = T in apply was the big problem!!
 
     ## code as in pggls, only difference is here there is no 'sigma'
     residuals <- unlist(tres)
