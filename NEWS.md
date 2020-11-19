@@ -10,6 +10,7 @@
   does not refer to the respective index (e.g., time index variable is called 'id'
   in the user's data frame).
 
+
 ### Internals:
 * Between.*, between.*, Within.* methods: now use ave() intead of tapply().
 * Sum.matrix (non-exported) allows for non-character effect in non-index case.
