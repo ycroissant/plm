@@ -191,8 +191,8 @@ pmg <- function(formula, data, subset, na.action,
     
     "cmg" = {
       ## between-periods transformation (take means over groups for each t)
-         #  be <- function(x, index , na.rm = TRUE) tapply(x, index, mean, na.rm = na.rm)
-         #  Xm <- apply(X, 2, FUN = be, index = tind)[tind, ]
+         #  be <- function(x, index, na.rm = TRUE) tapply(x, index, mean, na.rm = na.rm)
+         #  Xm <- apply(X, 2, FUN = be, index = tind)[tind, , drop = FALSE]
          #  ym <- apply(as.matrix(as.numeric(y)), 2, FUN = be, index = tind)[tind]
       Xm <- Between(X, effect = "time", na.rm = TRUE)
       ym <- as.numeric(Between(y, effect = "time", na.rm = TRUE))
@@ -235,7 +235,7 @@ pmg <- function(formula, data, subset, na.action,
     "dmg" = {
       ## between-periods transformation (take means over group for each t)
          #  be <- function(x, index, na.rm = TRUE) tapply(x, index, mean, na.rm = na.rm)
-         #  Xm <- apply(X, 2, FUN = be, index = tind)[tind, ]
+         #  Xm <- apply(X, 2, FUN = be, index = tind)[tind, , drop = FALSE]
          #  ym <- apply(as.matrix(as.numeric(y)), 2, FUN = be, index = tind)[tind]
       Xm <- Between(X, effect = "time", na.rm = TRUE)
       ym <- as.numeric(Between(y, effect = "time", na.rm = TRUE))

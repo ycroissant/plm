@@ -56,7 +56,7 @@ trend has to be included,}
 
 \item{object, x}{an object of class \code{"pcce"},}
 
-\item{vcov}{a variance–covariance matrix furnished by the user or a function to calculate one,}
+\item{vcov}{a variance-covariance matrix furnished by the user or a function to calculate one,}
 
 \item{digits}{digits,}
 

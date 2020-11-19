@@ -13,7 +13,7 @@
 ### Internals:
 * Between.*, between.*, Within.* methods: now use ave() intead of tapply().
 * Sum.matrix (non-exported) allows for non-character effect in non-index case.
-* pmg: now uses the general Between() of the pacakge (instead of "own" between 
+* pmg, pcce: now uses the general Between() of the pacakge (instead of "own" between 
   transformation implementation within pmg function).
 
 

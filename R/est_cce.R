@@ -51,7 +51,7 @@
 #' @param digits digits,
 #' @param width the maximum length of the lines in the print output,
 #' @param type one of `"defactored"` or `"standard"`,
-#' @param vcov a variance–covariance matrix furnished by the user or a function to calculate one,
+#' @param vcov a variance-covariance matrix furnished by the user or a function to calculate one,
 #' @param \dots further arguments.
 #' @return An object of class `c("pcce", "panelmodel")` containing:
 #'     \item{coefficients}{the vector of coefficients,}
@@ -180,9 +180,11 @@ pcce <- function (formula, data, subset, na.action,
 
     ## group-invariant part, goes in Hhat
       ## between-periods transformation (take means over groups for each t)
-      be <- function(x, index, na.rm = TRUE) tapply(x, index, mean, na.rm = na.rm)
-      Xm <- apply(X, 2, FUN = be, index = tind)[tind, , drop = FALSE]
-      ym <- apply(as.matrix(as.numeric(y)), 2, FUN = be, index = tind)[tind]
+         # be <- function(x, index, na.rm = TRUE) tapply(x, index, mean, na.rm = na.rm)
+         # Xm <- apply(X, 2, FUN = be, index = tind)[tind, , drop = FALSE]
+         # ym <- apply(as.matrix(as.numeric(y)), 2, FUN = be, index = tind)[tind]
+        Xm <- Between(X, effect = "time", na.rm = TRUE)
+        ym <- as.numeric(Between(y, effect = "time", na.rm = TRUE))
 
       if(attr(terms(plm.model), "intercept")) {
               Hhat <- cbind(ym, Xm, 1)
@@ -289,14 +291,14 @@ pcce <- function (formula, data, subset, na.action,
 
     ## calc. coef and vcov according to model
     switch(model,
-           mg = {
+           "mg" = {
             ## assign beta CCEMG
             coef <- coefmg
-            for(i in 1:n) Rmat[,,i] <-  outer(demcoef[,i], demcoef[,i])
+            for(i in 1:n) Rmat[,,i] <- outer(demcoef[,i], demcoef[,i])
             vcov <- 1/(n*(n-1)) * apply(Rmat, 1:2, sum)
             },
            
-           p = {
+           "p" = {
             ## calc beta_CCEP
             sXMX <- apply(XMX, 1:2, sum)
             sXMy <- apply(XMy, 1:2, sum)
@@ -333,14 +335,14 @@ pcce <- function (formula, data, subset, na.action,
                 ## cce residuals as M_i(y_i - X_i * bCCEP)
                 cceres[[i]] <- tMhat %*% (ty - tX %*% coef)
                 ## std. (raw) residuals as y_i - X_i * bCCEMG_i - a_i
-                ta <- mean(ty-tX)
+                ta <- mean(ty - tX)
                 stdres[[i]] <- ty - tX %*% coef - ta
             }
     })
 
     ## calc. measures of fit according to model type
     switch(model,
-           mg = {
+           "mg" = {
 
             ## R2 as in HPY 2010: sigma2ccemg = average (over n) of variances
             ## of defactored residuals
@@ -361,7 +363,7 @@ pcce <- function (formula, data, subset, na.action,
             sigma2cce <- 1/n*sum(unlist(sigma2cce.i))
             },
            
-           p = {
+           "p" = {
 
             ## variance of defactored residuals sigma2ccep as in Holly,
             ## Pesaran and Yamagata, (3.15)
