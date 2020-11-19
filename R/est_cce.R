@@ -180,10 +180,10 @@ pcce <- function (formula, data, subset, na.action,
 
     ## group-invariant part, goes in Hhat
       ## between-periods transformation (take means over groups for each t)
-         # be <- function(x, index, na.rm = TRUE) tapply(x, index, mean, na.rm = na.rm)
-         # Xm <- apply(X, 2, FUN = be, index = tind)[tind, , drop = FALSE]
-         # ym <- apply(as.matrix(as.numeric(y)), 2, FUN = be, index = tind)[tind]
-        Xm <- Between(X, effect = "time", na.rm = TRUE)
+        #  be <- function(x, index, na.rm = TRUE) tapply(x, index, mean, na.rm = na.rm)
+        #  Xm2 <- apply(X, 2, FUN = be, index = tind)[tind, , drop = FALSE]
+        #  ym2 <- apply(as.matrix(as.numeric(y)), 2, FUN = be, index = tind)[tind]
+        Xm <- Between(X, effect = tind, na.rm = TRUE)
         ym <- as.numeric(Between(y, effect = "time", na.rm = TRUE))
 
       if(attr(terms(plm.model), "intercept")) {
