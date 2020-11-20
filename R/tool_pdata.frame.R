@@ -170,6 +170,11 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
         stop("'index' can be of length 3 at the most (one index variable for individual, time, group)")
     }
     
+    # prune input: x is supposed to be a plain data.frame. Other classes building
+    # on top of R's data frame can inject attributes etc. that confuse functions
+    # in pkg plm.
+    data <- data.frame(x)
+    
     # if requested: coerce character vectors to factors
     if (stringsAsFactors) {
         x.char <- names(x)[sapply(x, is.character)]

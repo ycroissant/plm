@@ -9,7 +9,8 @@
   "confusing": an index variable called by user 'id', 'time', or 'group' if it
   does not refer to the respective index (e.g., time index variable is called 'id'
   in the user's data frame).
-
+* pdata.frame: input 'x' is always pruned by data.frame(x) as a clean data frame
+  is needed.
 
 ### Internals:
 * Between.*, between.*, Within.* methods: now use ave() intead of tapply().
