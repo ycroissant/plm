@@ -118,13 +118,13 @@ print.pseries <- function(x, ...){
 #' @export
 as.matrix.pseries <- function(x, idbyrow = TRUE, ...){
     index <- attr(x, "index")
-    id <- index[[1]]
-    time <- index[[2]]
+    id <- index[[1L]]
+    time <- index[[2L]]
     time.names <- levels(time)
     x <- split(data.frame(x, time), id)
     x <- lapply(x, function(x){
-        rownames(x) <- x[ , 2]
-        x[ , -2, drop = FALSE]
+        rownames(x) <- x[ , 2L]
+        x[ , -2L, drop = FALSE]
     })
     x <- lapply(x, function(x){
         x <- x[time.names, , drop = FALSE]
@@ -161,8 +161,8 @@ plot.pseries <- function(x, plot = c("lattice", "superposed"),
         scalefun <- function(x) return(x)}
     
     nx <- as.numeric(x)
-    ind <- attr(x, "index")[[1]]
-    tind <- attr(x, "index")[[2]] # possibly as.numeric():
+    ind <- attr(x, "index")[[1L]]
+    tind <- attr(x, "index")[[2L]] # possibly as.numeric():
                                   # activates autom. tick
                                   # but loses time labels
 
@@ -209,8 +209,8 @@ plot.pseries <- function(x, plot = c("lattice", "superposed"),
 #' @export
 summary.pseries <- function(object, ...) {
     if (!inherits(object, c("factor", "logical", "character"))) {
-        id <- attr(object, "index")[[1]]
-        time <- attr(object, "index")[[2]]
+        id <- attr(object, "index")[[1L]]
+        time <- attr(object, "index")[[2L]]
         xm <- mean(object, na.rm = TRUE)
         Bid <-  Between(object, na.rm = TRUE)
         Btime <-  Between(object, effect = "time", na.rm = TRUE)
@@ -218,9 +218,9 @@ summary.pseries <- function(object, ...) {
         ##                    between_id = sumsq(Bid),
         ##                    between_time = sumsq(Btime)), 
         ##                  class = c("summary.pseries", "numeric"))
-        res <- structure(c(total = sum( (na.omit(object) - mean(object, na.rm = TRUE)) ^ 2),
-                           between_id = sum( (na.omit(Bid) - mean(Bid, na.rm = TRUE)) ^ 2),
-                           between_time = sum( (na.omit(Btime) - mean(Btime, na.rm = TRUE)) ^ 2)), 
+        res <- structure(c(total =        sum( (na.omit(object) - mean(object, na.rm = TRUE)) ^ 2),
+                           between_id =   sum( (na.omit(Bid)    - mean(Bid,    na.rm = TRUE)) ^ 2),
+                           between_time = sum( (na.omit(Btime)  - mean(Btime,  na.rm = TRUE)) ^ 2)), 
                            class = c("summary.pseries", "numeric"))
         
     } else {
@@ -269,7 +269,7 @@ myave <- function(x, ...) {
 Tapply.default <- function(x, effect, func, ...) {
     na.x <- is.na(x)
     uniqval <- tapply(x, effect, func, ...)
-    nms <- attr(uniqval, "dimnames")[[1]]
+    nms <- attr(uniqval, "dimnames")[[1L]]
     attr(uniqval, "dimnames") <- attr(uniqval, "dim") <- NULL
     names(uniqval) <- nms
     result <- uniqval[as.character(effect)]
@@ -290,9 +290,9 @@ Tapply.pseries <- function(x, effect = c("individual", "time", "group"), func, .
     effect <- match.arg(effect)
     index <- attr(x, "index")
     effect <- switch(effect,
-                     "individual"= index[[1]],
-                     "time"      = index[[2]],
-                     "group"     = index[[3]]
+                     "individual"= index[[1L]],
+                     "time"      = index[[2L]],
+                     "group"     = index[[3L]]
                      )
     x <- as.numeric(x)
     z <- Tapply.default(x, effect, func, ...)
@@ -304,13 +304,13 @@ Tapply.pseries <- function(x, effect = c("individual", "time", "group"), func, .
 myave.pseries <- function(x, effect = c("individual", "time", "group"), func, ...) {
   effect <- match.arg(effect)
   index <- attr(x, "index")
-  effect <- switch(effect,
-                   "individual"= index[[1]],
-                   "time"      = index[[2]],
-                   "group"     = index[[3]]
+  eff.fac <- switch(effect,
+                   "individual"= index[[1L]],
+                   "time"      = index[[2L]],
+                   "group"     = index[[3L]]
   )
   x <- as.numeric(x)
-  z <- myave.default(x, effect, func, ...)
+  z <- myave.default(x, eff.fac, func, ...)
   attr(z, "index") <- index
   class(z) <- c("pseries", class(z))
   return(z)
@@ -370,6 +370,7 @@ Between <- function(x, ...) {
 #' @rdname pseries
 #' @export
 Between.default <- function(x, effect, ...) {
+    # argument 'effect' is assumed to be a factor
     if (!is.numeric(x)) stop("The Between function only applies to numeric vectors")
     #   Tapply(x, effect, mean, ...)
     return(myave(x, effect, mean, ...))
@@ -410,6 +411,7 @@ between <- function(x, ...) {
 #' @rdname pseries
 #' @export
 between.default <- function(x, effect, ...) {
+    # argument 'effect' is assumed to be a factor
     if (!is.numeric(x)) stop("The between function only applies to numeric vectors")
     #    res <- tapply(x, effect, mean, ...)
     ##   res <- res[as.character(effect[!duplicated(effect)])] # restore original order (as tapply's output is sorted by levels factor effect)
@@ -427,14 +429,11 @@ between.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
     effect <- match.arg(effect)
     index <- attr(x, "index")
     effect <- switch(effect,
-                     "individual" = index[[1]],
-                     "time"       = index[[2]],
-                     "group"      = index[[3]],
+                     "individual" = index[[1L]],
+                     "time"       = index[[2L]],
+                     "group"      = index[[3L]],
                      )
     x <- between.default(x, effect = effect, ...)
-    #    nms <- attr(x, "dimnames")[[1]]
-    #    attr(x, "dimnames") <- attr(x, "dim") <- NULL
-    #    names(x) <- nms
     return(x)
 }
 
@@ -468,7 +467,7 @@ Within <- function(x, ...) {
 #' @rdname pseries
 #' @export
 Within.default <- function(x, effect, ...) {
-  # NB: Contrary to the other Within.* methdos, Within.default does not handle
+  # NB: Contrary to the other Within.* methods, Within.default does not handle
   #     twoways effects
     if (!is.numeric(x)) stop("the within function only applies to numeric vectors")
     return(x - Between(x, effect, ...))
@@ -682,10 +681,10 @@ diff.pseries <- function(x, lag = 1, shift = c("time", "row"), ...) {
 ## lagt.pseries lagging taking the time variable into account
 lagt.pseries <- function(x, k = 1, ...) {
   index <- attr(x, "index")
-  id <- index[[1]]
-  time <- index[[2]]
+  id <- index[[1L]]
+  time <- index[[2L]]
   
-  if (length(k) > 1) {
+  if (length(k) > 1L) {
     rval <- sapply(k, function(i) alagt(x, i))
     colnames(rval) <- k
   }
@@ -736,8 +735,8 @@ alagt <- function(x, ak) {
   if (round(ak) != ak) stop("Lagging value 'k' must be whole-numbered (positive, negative or zero)")
   if (ak != 0) {
     index <- attr(x, "index")
-    id   <- index[[1]]
-    time <- index[[2]]
+    id   <- index[[1L]]
+    time <- index[[2L]]
     
     # Idea: split times in blocks per individuals and do lagging there
     # by computation of correct time shifting
@@ -799,8 +798,8 @@ alagt <- function(x, ak) {
 ## lagr: lagging row-wise
 lagr.pseries <- function(x, k = 1, ...) {
     index <- attr(x, "index")
-    id <- index[[1]]
-    time <- index[[2]]
+    id <- index[[1L]]
+    time <- index[[2L]]
   
     # catch the case when an index of pdata.frame shall be lagged
     # (index variables are always factors) NB: this catches -
@@ -904,7 +903,7 @@ pdiff <- function(x, effect = c("individual", "time"), has.intercept = FALSE){
   # NB: x is assumed to have an index attribute, e.g., a pseries
   #     can check with has.index(x)
     effect <- match.arg(effect)
-    cond <- as.numeric(attr(x, "index")[[1]])
+    cond <- as.numeric(attr(x, "index")[[1L]])
     n <- if(is.matrix(x)) nrow(x) else length(x)
     cond <- c(NA, cond[2:n] - cond[1:(n-1)]) # this assumes a certain ordering
     cond[cond != 0] <- NA
