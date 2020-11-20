@@ -255,15 +255,15 @@ ercomp.formula <- function(object, data,
             ZSeta <- model.matrix(estm, model = "Sum", effect = "individual")
             ZSlambda <- Sum(Z, effect = "group")
             CPZM <- solve(crossprod(Z))
-            CPZSeta <-    crossprod(ZSeta,    Z)
+            CPZSeta    <- crossprod(ZSeta,    Z)
             CPZSlambda <- crossprod(ZSlambda, Z)
             CPZW <- crossprod(Z - Between(Z, "individual"))
-            CPZBetaBlambda <-     crossprod(Between(Z, "individual") - Between(Z, "group"))
+            CPZBetaBlambda     <- crossprod(Between(Z, "individual") - Between(Z, "group"))
             CPZBetaBlambdaSeta <- crossprod(Between(Z, "individual") - Between(Z, "group") , ZSeta)
             CPZBlambdaSeta <- crossprod(Between(Z, "group"), ZSeta)
             CPZBlambda <- crossprod(Between(Z, "group"))
             M["w", "nu"] <- O - N - trace(crossprod(CPZM, CPZW))
-            M["w", "eta"] <-    trace( CPZM %*% CPZW %*% CPZM %*% CPZSeta)
+            M["w", "eta"]    <- trace( CPZM %*% CPZW %*% CPZM %*% CPZSeta)
             M["w", "lambda"] <- trace( CPZM %*% CPZW %*% CPZM %*% CPZSlambda)
             M["id", "nu"] <- N - G - trace(crossprod(CPZM, CPZBetaBlambda))
             M["id", "eta"] <- O - sum(TG) - 2 * trace(crossprod(CPZM, CPZBetaBlambdaSeta)) +
@@ -344,7 +344,7 @@ ercomp.formula <- function(object, data,
     # the "classic" error component model    
     Z <- model.matrix(data)
     O <- nrow(Z)
-    K <- ncol(Z) - 1                                                                                       # INTERCEPT
+    K <- ncol(Z) - 1  # INTERCEPT
     pdim <- pdim(data)
     N <- pdim$nT$n
     TS <- pdim$nT$T
@@ -473,7 +473,7 @@ ercomp.formula <- function(object, data,
 #            MK <- length(attr(WX, "constant")) - 1
             KW <- ncol(WX)
             if (models[1] == "within"){
-                M["w", "nu"] <- O - NTS - KW# + MK                                        # INTERCEPT
+                M["w", "nu"] <- O - NTS - KW # + MK                                        # INTERCEPT
                 if (effect != "time") M["w", "eta"] <- 0
                 if (effect != "individual") M["w", "mu"] <- 0
             }
@@ -481,7 +481,7 @@ ercomp.formula <- function(object, data,
                 CPXM <- solve(crossprod(WX))
                 if (effect != "time"){
                     XBeta <- model.matrix(estm[[2]], model = "Between",
-                                          effect = "individual")[, -1, drop = FALSE]    # INTERCEPT
+                                          effect = "individual")[ , -1, drop = FALSE]    # INTERCEPT
                     XBeta <- t(t(XBeta) - colMeans(XBeta))
                     CPXBeta <- crossprod(XBeta)
                     amemiya_check(CPXM, CPXBeta, method) # catch non-estimable 'amemiya'
@@ -490,7 +490,7 @@ ercomp.formula <- function(object, data,
                 }
                 if (effect != "individual"){
                     XBmu <- model.matrix(estm[[3]], model = "Between",
-                                         effect = "time")[, -1, drop = FALSE]           # INTERCEPT
+                                         effect = "time")[ , -1, drop = FALSE]           # INTERCEPT
                     XBmu <- t(t(XBmu) - colMeans(XBmu))
                     CPXBmu <- crossprod(XBmu)
                     amemiya_check(CPXM, CPXBmu, method) # catch non-estimable 'amemiya'

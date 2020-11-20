@@ -13,10 +13,10 @@
   is needed.
 
 ### Internals:
-* Between.*, between.*, Within.* methods: now use ave() intead of tapply().
+* Between, between, and Within methods: now use ave() instead of tapply().
 * Sum.matrix (non-exported) allows for non-character effect in non-index case.
-* pmg, pcce: now uses the general Between() of the pacakge (instead of "own" between 
-  transformation implementation within pmg function).
+* pmg, pcce: now use the general Between() function of the package (instead of
+  "own" between transformation implemented within the respective functions).
 
 
 # plm 2.2-5

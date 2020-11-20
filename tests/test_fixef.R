@@ -82,10 +82,12 @@ if (!isTRUE(all.equal(sum_mod_pool[["coefficients"]][-c(1:3) , "Pr(>|t|)"], sum_
 ##  -> different results for every new call
 #
 # library(lfe)
+# data("Grunfeld", package = "plm")
 # mod_felm <- felm(inv ~ value + capital | firm, data = Grunfeld)
 # summary(mod_felm)
-#
+# 
 # fe_lfe <- getfe(mod_felm, se = TRUE, bN = 50)
 # print(fe_lfe)
+
 # sum_f_level <- summary(f_level)
 # print(sum_f_level)
