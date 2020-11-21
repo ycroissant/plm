@@ -24,7 +24,7 @@ padf <- function(x, exo = c("none", "intercept", "trend"), p.approx = NULL, ...)
   
   # Check if package 'urca' is available on local machine. We placed 'urca' 
   # in 'Suggests' rather than 'Imports' so that it is not an absolutely 
-  # required depedency.)
+  # required dependency.)
   ## Procedure for pkg check for pkg in 'Suggests' as recommended in 
   ## Wickham, R packages (http://r-pkgs.had.co.nz/description.html).
   urca <- if (!requireNamespace("urca", quietly = TRUE)) FALSE else TRUE

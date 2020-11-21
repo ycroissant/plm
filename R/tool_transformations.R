@@ -267,6 +267,7 @@ myave <- function(x, ...) {
 }
 
 Tapply.default <- function(x, effect, func, ...) {
+    # argument 'effect' is assumed to be a factor
     na.x <- is.na(x)
     uniqval <- tapply(x, effect, func, ...)
     nms <- attr(uniqval, "dimnames")[[1L]]
@@ -279,6 +280,7 @@ Tapply.default <- function(x, effect, func, ...) {
 
 #' @importFrom stats ave
 myave.default <- function(x, effect, func, ...) {
+  # argument 'effect' is assumed to be a factor
   na.x <- is.na(x)
   res <- ave(x, effect, FUN = function(x) func(x, ...))
   names(res) <- as.character(effect)
@@ -336,9 +338,10 @@ Sum <- function(x, ...) {
 }
 
 Sum.default <- function(x, effect, ...) {
+    # argument 'effect' is assumed to be a factor
     if (!is.numeric(x)) stop("The Sum function only applies to numeric vectors")
-  #   Tapply(x, effect, sum, ...)
-  return(myave(x, effect, sum, ...))
+    #   Tapply(x, effect, sum, ...)
+    return(myave(x, effect, sum, ...))
 }
 
 Sum.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
@@ -348,17 +351,18 @@ Sum.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
 }
 
 Sum.matrix <- function(x, effect, ...) {
-    if (is.null(attr(x, "index"))) return(Sum.default(x, effect, ...))
-    else{
-        if (length(effect) > 1)
-            stop("for matrices with index attributes, the effect argument must be a character")
-        if (! effect %in% c("individual", "time", "group"))
-            stop("irrelevant effect for a Sum transformation")
-        xindex <- attr(x, "index")
-        effect <- index(xindex, effect)
-        #       Tapply(x, effect, sum, ...)
-        return(myave(x, effect, sum, ...))
+    if(is.null(attr(x, "index"))) {
+      return(Sum.default(x, effect, ...))
+    } else {
+      if(!is.character(effect) && length(effect) > 1L)
+          stop("for matrices with index attributes, the effect argument must be a character")
+      if(! effect %in% c("individual", "time", "group"))
+          stop("irrelevant effect for a Sum transformation")
     }
+    xindex <- attr(x, "index")
+    effect <- index(xindex, effect)
+    #       Tapply(x, effect, sum, ...)
+    return(myave(x, effect, sum, ...))
 }
 
 #' @rdname pseries
@@ -389,17 +393,18 @@ Between.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
 Between.matrix <- function(x, effect, ...) {
     #YC20180916 In the previous version the matrix wasn't returned
     #when there is no index attribute
-    if (is.null(attr(x, "index"))) return(Between.default(x, effect, ...))
-    if (! effect %in% c("individual", "time", "group"))
-        stop("irrelevant effect for a between transformation")
-    else{
-        if (length(effect) > 1)
+    if (is.null(attr(x, "index"))) {
+      return(Between.default(x, effect, ...))
+    } else {
+      if(!is.character(effect) && length(effect) > 1L)
         stop("for matrices with index attributes, the effect argument must be a character")
-        xindex <- attr(x, "index")
-        effect <- index(xindex, effect)
-        #       Tapply(x, effect, mean, ...)
-        return(myave.matrix(x, effect, mean, ...))
+      if (! effect %in% c("individual", "time", "group"))
+          stop("irrelevant effect for a between transformation")  
     }
+    xindex <- attr(x, "index")
+    effect <- index(xindex, effect)
+    #       Tapply(x, effect, mean, ...)
+    return(myave.matrix(x, effect, mean, ...))
 }
 
 #' @rdname pseries
@@ -440,22 +445,23 @@ between.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
 #' @rdname pseries
 #' @export
 between.matrix <- function(x, effect, ...) {
-    if(is.null(attr(x, "index"))) return(between.default(x, effect, ...))
-    if(! effect %in% c("individual", "time", "group")) {
-        stop("irrelevant effect for a between transformation")
+    if(is.null(attr(x, "index"))) {
+      return(between.default(x, effect, ...))
     } else {
-        if(length(effect) > 1)
-            stop("for matrices with index attributes, the effect argument must be a character")
-        xindex <- attr(x, "index")
-        effect <- index(xindex, effect)
-        #       res <- apply(x, 2, tapply, effect, mean, ...)
-        res <- apply(x, 2, FUN = function(x) ave(x, effect, FUN = function(y) mean(y, ...)))
-        # compress data down to #elements of index dimension:
-        keep <- !duplicated(effect)
-        res <- res[keep, ]
-        rownames(res) <- as.character(effect[keep])
-        return(res)
+      if(!is.character(effect) && length(effect) > 1L)
+        stop("for matrices with index attributes, the effect argument must be a character")
+      if(! effect %in% c("individual", "time", "group"))
+        stop("irrelevant effect for a between transformation")  
     }
+    xindex <- attr(x, "index")
+    effect <- index(xindex, effect)
+    #       res <- apply(x, 2, tapply, effect, mean, ...)
+    res <- apply(x, 2, FUN = function(x) ave(x, effect, FUN = function(y) mean(y, ...)))
+    # compress data down to #elements of index dimension:
+    keep <- !duplicated(effect)
+    res <- res[keep, ]
+    rownames(res) <- as.character(effect[keep])
+    return(res)
 }
 
 #' @rdname pseries
