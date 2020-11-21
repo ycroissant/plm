@@ -439,11 +439,11 @@ between.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
 
 #' @rdname pseries
 #' @export
-between.matrix <- function(x, effect,...) {
-    if(! effect %in% c("individual", "time", "group"))
+between.matrix <- function(x, effect, ...) {
+    if(is.null(attr(x, "index"))) return(between.default(x, effect, ...))
+    if(! effect %in% c("individual", "time", "group")) {
         stop("irrelevant effect for a between transformation")
-    if(is.null(attr(x, "index"))) return(Between.default(x, effect, ...))
-    else {
+    } else {
         if(length(effect) > 1)
             stop("for matrices with index attributes, the effect argument must be a character")
         xindex <- attr(x, "index")
