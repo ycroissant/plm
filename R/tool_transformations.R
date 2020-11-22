@@ -319,6 +319,7 @@ myave.pseries <- function(x, effect = c("individual", "time", "group"), func, ..
 }
 
 Tapply.matrix <- function(x, effect, func, ...) {
+    # argument 'effect' is assumed to be a factor
     na.x <- is.na(x)
     uniqval <- apply(x, 2, tapply, effect, func, ...)
     result <- uniqval[as.character(effect), , drop = F]
@@ -327,10 +328,12 @@ Tapply.matrix <- function(x, effect, func, ...) {
 }
 
 myave.matrix <- function(x, effect, func, ...) {
-  na.x <- is.na(x)
-  result <- apply(x, 2, FUN = function(x) ave(x, effect, FUN = function(y) func(y, ...)))
-  result[na.x] <- NA
-  return(result)
+    # argument 'effect' is assumed to be a factor
+    na.x <- is.na(x)
+    result <- apply(x, 2, FUN = function(x) ave(x, effect, FUN = function(y) func(y, ...)))
+    rownames(result) <- as.character(effect)
+    result[na.x] <- NA
+    return(result)
 }
 
 Sum <- function(x, ...) {
