@@ -1,5 +1,5 @@
 
-R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
 Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -868,7 +868,7 @@ Effects:
 idiosyncratic 3188.06   56.46 0.359
 individual    5685.23   75.40 0.641
 time             0.00    0.00 0.000
-theta: 0.8349 (id) 0 (time) 2.776e-17 (total)
+theta: 0.8349 (id) 0 (time) 0 (total)
 
 Residuals:
      Min.   1st Qu.    Median   3rd Qu.      Max. 
@@ -936,7 +936,7 @@ Effects:
 idiosyncratic 2675.43   51.72 0.274
 individual    7095.25   84.23 0.726
 time             0.00    0.00 0.000
-theta: 0.864 (id) 0 (time) 5.551e-17 (total)
+theta: 0.864 (id) 0 (time) 0 (total)
 
 Residuals:
      Min.   1st Qu.    Median   3rd Qu.      Max. 
@@ -1068,10 +1068,10 @@ idiosyncratic 3078.75   55.49 0.287
 individual    7655.76   87.50 0.713
 time             0.00    0.00 0.000
 theta:
-           Min.  1st Qu.   Median         Mean  3rd Qu.         Max.
-id    0.8560314 0.859604 0.859604 8.592629e-01 0.859604 8.596040e-01
-time  0.0000000 0.000000 0.000000 0.000000e+00 0.000000 0.000000e+00
-total 0.0000000 0.000000 0.000000 5.300060e-18 0.000000 5.551115e-17
+           Min.  1st Qu.   Median      Mean  3rd Qu.     Max.
+id    0.8560314 0.859604 0.859604 0.8592629 0.859604 0.859604
+time  0.0000000 0.000000 0.000000 0.0000000 0.000000 0.000000
+total 0.0000000 0.000000 0.000000 0.0000000 0.000000 0.000000
 
 Residuals:
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
@@ -1144,14 +1144,10 @@ idiosyncratic 2675.67   51.73 0.273
 individual    7131.05   84.45 0.727
 time             0.00    0.00 0.000
 theta:
-               Min.      1st Qu.       Median         Mean      3rd Qu.
-id     8.608394e-01 8.642973e-01 8.642973e-01 8.639671e-01 8.642973e-01
-time   0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00
-total -5.551115e-17 2.775558e-17 2.775558e-17 1.980549e-17 2.775558e-17
-              Max.
-id    8.642973e-01
-time  0.000000e+00
-total 2.775558e-17
+           Min.   1st Qu.    Median      Mean   3rd Qu.      Max.
+id    0.8608394 0.8642973 0.8642973 0.8639671 0.8642973 0.8642973
+time  0.0000000 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000
+total 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000
 
 Residuals:
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
@@ -1480,4 +1476,4 @@ year1949 year1950 year1951 year1952 year1953
 > 
 > proc.time()
    user  system elapsed 
-   2.14    0.26    2.39 
+   2.50    0.12    2.61 

@@ -11,6 +11,11 @@
   in the user's data frame).
 * pdata.frame: input 'x' is always pruned by data.frame(x) as a clean data frame
   is needed.
+* ercomp: cosmetic: if one of theta$id, theta$time  is 0 => theta$total must be 
+  0 and is set to 0 (before, for some data and platforms, theta$toal could be a
+  very small positive or negative number, due to limited computational precision).
+  This leads to nicer printing in summary outputs as well.
+  
 
 ### Internals:
 * Between, between, and Within methods: now use ave() instead of tapply().
