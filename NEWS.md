@@ -7,8 +7,8 @@
   run faster.
   
   Technically, the speed gains are achieved by weaving in the fast data
-  transformation functions provided in Sebastian Krantz' package 'collapse'
-  which needs to be available installed ('Suggests' dependency).
+  transformation functions provided in Sebastian Krantz' package 'collapse',
+  which needs to be installed ('Suggests' dependency).
   
   Functions benefiting from speed-up are currently (used heavily in, e.g., plm()):
     * Between,
