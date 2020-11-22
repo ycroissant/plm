@@ -32,6 +32,7 @@ R/tool_model.extract.R -text
 R/tool_pdata.frame.R -text
 R/tool_ranfixef.R -text
 R/tool_transformations.R -text
+R/tool_transformations_collapse.R -text
 R/tool_vcovG.R -text
 /THANKS -text
 data/Cigar.rda -text
@@ -103,6 +104,7 @@ man/pgrangertest.Rd -text
 man/pht.Rd -text
 man/phtest.Rd -text
 man/piest.Rd -text
+man/pkg.plm.fast.Rd -text
 man/pldv.Rd -text
 man/plm-deprecated.Rd -text
 man/plm-package.Rd -text
@@ -218,6 +220,7 @@ tests/test_ranef.Rout.save -text
 tests/test_residuals_overall_fitted_exp.R -text
 tests/test_summary.plm_vcov.R -text
 tests/test_summary.pseries_character_logical_factor.R -text
+tests/test_transformations_collapse.R -text
 tests/test_vcovG_lin_dep.R -text
 tests/test_within_intercept.R -text
 tests/test_within_intercept.Rout.save -text

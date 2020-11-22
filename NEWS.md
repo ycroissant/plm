@@ -1,4 +1,22 @@
-# plm 2.2-6
+# plm 2.3-0
+
+### Speed up:
+* Significant speed improvement (optionally): A significant speed-up of the
+  package is available by executing `pkg.plm.fast(TRUE)` once per session
+  (switch-off by `pkg.plm.fast(FALSE)` such that panel model estimations
+  run faster.
+  
+  Technically, the speed gains are achieved by weaving in the fast data
+  transformation functions provided in Sebastian Krantz' package 'collapse'
+  which needs to be available installed ('Suggests' dependency).
+  
+  Functions benefiting from speed-up are currently (used heavily in, e.g., plm()):
+    * Between,
+    * between,
+    * Sum (internal),
+    * Within.
+
+### Fixes:
 
 * between.default: keeps original sequence of elements' occurrence (before,
   compressed output was sorted by the factor's *level* order).
@@ -12,17 +30,19 @@
 * pdata.frame: input 'x' is always pruned by data.frame(x) as a clean data frame
   is needed.
 * ercomp: cosmetic: if one of theta\$id, theta\$time  is 0 => theta\$total must be 
-  0 and is set to 0 (before, for some data and platforms, theta$toal could be a
+  0 and is set to 0 (before, for some data and platforms, theta$total could be a
   very small positive or negative number, due to limited computational precision).
   This leads to nicer printing in summary outputs as well.
-  
 
 ### Internals:
-* Between, between, and Within methods: now use ave() instead of tapply().
-* between.martrix and Sum.matrix (the latter is non-exported) allow for
+* Between.\*, between.\*, and Within.\* methods: now use ave() instead of tapply().
+* between.matrix and Sum.matrix (the latter is non-exported) allow for
   non-character effect in non-index case.
 * pmg, pcce: now use the general Between() function of the package (instead of
   "own" between transformation implemented within the respective functions).
+
+#### Dependencies:
+ * added package 'collapse' to 'Suggests'.
 
 
 # plm 2.2-5
@@ -163,7 +183,7 @@
 * groupGenerics now used for 'pseries' objects, implemented as a wrapper 
     for methods in groups 'Math', 'Ops' and 'Complex' (see ?groupGeneric).
     Thus, propagation to a higher or lower data type works correctly when 
-    performed on pseries, e.g. c("pseries", "integer") is propagated
+    performed on pseries, e.g., c("pseries", "integer") is propagated
     to c("pseries", "numeric") if an operation returns a decimal.
 * Vingettes: translated package's original vignette to Rmd format and renamed
     to plmPackage.Rmd; added vignette plmFunction.Rmd for further explanation
@@ -516,9 +536,9 @@
 * new function as.list.pdata.frame: Default behaviour is to act
       identical to as.list.data.frame (some code relies on this, do
       not change!).  By setting arg 'keep.attributes = TRUE', one gets
-      a list of pseries and can operate (e.g. 'lapply') over this list
+      a list of pseries and can operate (e.g., 'lapply') over this list
       as one would expect for operations on the columns of a
-      pdata.frame, e.g. to lag over more than one column and get a
+      pdata.frame, e.g., to lag over more than one column and get a
       list of lagged columns back, use: lapply(as.list(pdataframe[ ,
       your_cols], keep.attributes = TRUE), lag).
 
@@ -602,7 +622,7 @@
   * Ftest later renamed to pwaldtest (in version 1.6-3).
 * (internal) vcovXX functions: furnished vcovs gain attribute
                                  "cluster" which give info about
-                                 clustering, e.g. "group" or "time".
+                                 clustering, e.g., "group" or "time".
 * fixef: gains new argument '.vcov'.
 
 
@@ -645,7 +665,7 @@
 * lead.pseries: added function as a wrapper for lag.pseries(x, k = -1) for convenience,
     i.e. lag(x, k = -1) == lead(x, k = 1).
 * diff.pseries: prevented negative lags as input to avoid confusion.
-* doc for pseries functions are made available under their name, e.g. ?lag now displays helpfile for
+* doc for pseries functions are made available under their name, e.g., ?lag now displays helpfile for
     lag.pseries in the help overview (besides e.g. stats::lag).
 * pdim.default: make error message "duplicate couples (time-id)" printed as proper error message
     (removed cat() around the message in stop(), was printed as regular string on screen before).
@@ -916,7 +936,7 @@
 * 'subset' and 'na.action' are added to the list of arguments of pgmm and oldpgmm.
 
 * lag.pseries is now able to deal with vector arguments for lags, 
-    e.g. lag(x, c(1,3)).
+    e.g., lag(x, c(1,3)).
 
 * suml(x) is replaced by Reduce("+", x).
 
