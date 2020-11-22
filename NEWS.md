@@ -272,9 +272,10 @@
     * "madwu": Maddala-Wu test statistic used to be computed using p-values from 
                the normal distribution, fixed now, by using approximated p-values
                for the tau distribution described by MacKinnon (1994).
-    * "hadri": * fixed p-value (now based on one-sided test).
-               * fixed statistic in non-heteroskedasticity case (Hcons = FALSE).
-               * degrees of freedom correction implemented (set dfcor = TRUE).
+    * "hadri": 
+      * fixed p-value (now based on one-sided test).
+      * fixed statistic in non-heteroskedasticity case (Hcons = FALSE).
+      * degrees of freedom correction implemented (set dfcor = TRUE).
     * "ips", "levinlin": p-values fixed (now one-sided to the left).
     * new tests: Choi (2001) modified P ("Pm"), inverse normal ("invnormal"),
       logit ("logit").
