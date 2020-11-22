@@ -259,8 +259,13 @@ stopifnot(all.equal(coef_pccemgmod, coef_pmgccemgmod, tolerance = 1E-04))
 ## IGNORE_RDIFF_BEGIN
 print(summary(pccemgmod))
 print(summary(pmgccemgmod))
-##IGNORE_RDIFF_END
 
+
+# run and output tests for pcce/pmg with model = 'p'/'mg'/'dmg'
+print(summary(pcce(form, data = Produc, model="p")))
+print(summary(pmg (form, data = Produc, model="mg")))
+print(summary(pmg (form, data = Produc, model="dmg")))
+##IGNORE_RDIFF_END
 
 ## further run tests without intercept
 plm(inv ~ 0 + value + capital + year, data = Grunfeld, model = "between")

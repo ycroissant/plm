@@ -1435,8 +1435,81 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 Total Sum of Squares: 849.81
 Residual Sum of Squares: 0.056978
 Multiple R-squared: 0.99993
-> ##IGNORE_RDIFF_END
 > 
+> 
+> # run and output tests for pcce/pmg with model = 'p'/'mg'/'dmg'
+> print(summary(pcce(form, data = Produc, model="p")))
+Common Correlated Effects Pooled model
+
+Call:
+pcce(formula = form, data = Produc, model = "p")
+
+Balanced Panel: n = 48, T = 17, N = 816
+
+Residuals:
+      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+-0.0918843 -0.0060964  0.0005035  0.0000000  0.0059796  0.0682325 
+
+Coefficients:
+            Estimate Std. Error z-value  Pr(>|z|)    
+log(pcap)  0.0432376  0.1041125  0.4153    0.6779    
+log(pc)    0.0363922  0.0368432  0.9878    0.3233    
+log(emp)   0.8209632  0.1390202  5.9054 3.519e-09 ***
+unemp     -0.0020925  0.0014973 -1.3976    0.1622    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Total Sum of Squares: 849.81
+Residual Sum of Squares: 0.11927
+HPY R-squared: 0.99077
+> print(summary(pmg (form, data = Produc, model="mg")))
+Mean Groups model
+
+Call:
+pmg(formula = form, data = Produc, model = "mg")
+
+Balanced Panel: n = 48, T = 17, N = 816
+
+Residuals:
+      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+-0.0828079 -0.0118150  0.0004247  0.0000000  0.0126479  0.1189647 
+
+Coefficients:
+              Estimate Std. Error z-value  Pr(>|z|)    
+(Intercept)  2.6722392  0.4126515  6.4758 9.433e-11 ***
+log(pcap)   -0.1048507  0.0799132 -1.3121   0.18950    
+log(pc)      0.2182539  0.0500862  4.3576 1.315e-05 ***
+log(emp)     0.9334776  0.0750072 12.4452 < 2.2e-16 ***
+unemp       -0.0037216  0.0016427 -2.2655   0.02348 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Total Sum of Squares: 849.81
+Residual Sum of Squares: 0.33009
+Multiple R-squared: 0.99961
+> print(summary(pmg (form, data = Produc, model="dmg")))
+Demeaned Mean Groups model
+
+Call:
+pmg(formula = form, data = Produc, model = "dmg")
+
+Balanced Panel: n = 48, T = 17, N = 816
+
+Residuals:
+      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+-0.0834415 -0.0076164 -0.0001226  0.0000000  0.0078109  0.1177009 
+
+Coefficients:
+              Estimate Std. Error z-value  Pr(>|z|)    
+(Intercept)  0.0580979  0.1042881  0.5571  0.577466    
+log(pcap)   -0.0629002  0.1021706 -0.6156  0.538133    
+log(pc)      0.1607882  0.0591334  2.7191  0.006546 ** 
+log(emp)     0.8425585  0.0704896 11.9529 < 2.2e-16 ***
+unemp       -0.0050181  0.0020770 -2.4160  0.015693 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Total Sum of Squares: 849.81
+Residual Sum of Squares: 0.23666
+Multiple R-squared: 0.99972
+> ##IGNORE_RDIFF_END
 > 
 > ## further run tests without intercept
 > plm(inv ~ 0 + value + capital + year, data = Grunfeld, model = "between")
@@ -1476,4 +1549,4 @@ year1949 year1950 year1951 year1952 year1953
 > 
 > proc.time()
    user  system elapsed 
-   2.50    0.12    2.61 
+   2.42    0.25    2.62 
