@@ -1,23 +1,22 @@
 # plm 2.3-0
 
 ### Speed up:
-* Significant speed improvement (optionally): A significant speed-up of the
-  package is available by executing `pkg.plm.fast(TRUE)` once per session
-  (switch-off by `pkg.plm.fast(FALSE)` such that panel model estimations
-  run faster.
+Significant speed improvement (optionally): A significant speed-up of the
+package is available by executing `pkg.plm.fast(TRUE)` once per session
+(switch-off by `pkg.plm.fast(FALSE)` such that panel model estimations
+run faster.
   
-  Technically, the speed gains are achieved by weaving in the fast data
-  transformation functions provided in Sebastian Krantz' package 'collapse',
-  which needs to be installed ('Suggests' dependency).
-  
-  Functions benefiting from speed-up are currently (used heavily in, e.g., plm()):
-    * Between,
-    * between,
-    * Sum (internal),
-    * Within.
+Technically, the speed gains are achieved by weaving in the fast data
+transformation functions provided in Sebastian Krantz' package 'collapse',
+which needs to be installed ('Suggests' dependency).
+
+Functions benefiting from speed-up are currently (used heavily in, e.g., plm()):
+  * Between,
+  * between,
+  * Sum (internal),
+  * Within.
 
 ### Fixes:
-
 * between.default: keeps original sequence of elements' occurrence (before,
   compressed output was sorted by the factor's *level* order).
 * Between.matrix and (internal) Tapply.matrix: ellipsis (three dots) is passed on,
@@ -41,8 +40,8 @@
 * pmg, pcce: now use the general Between() function of the package (instead of
   "own" between transformation implemented within the respective functions).
 
-#### Dependencies:
- * added package 'collapse' to 'Suggests'.
+### Dependencies:
+ * Added package 'collapse' to 'Suggests'.
 
 
 # plm 2.2-5
@@ -72,7 +71,7 @@
   alternative hypothesis.
   
 ### Dependencies:
-* removed package 'clubSandwich' from 'Suggests' as it was removed from CRAN
+* Removed package 'clubSandwich' from 'Suggests' as it was removed from CRAN
   (archived) [the package was re-added to CRAN at a later point in time but
   not made a 'Suggests' dependency for plm again].
 
@@ -106,7 +105,7 @@
 
 # plm 2.2-0
 
-* methods for plm.list were not exported, now exported.
+* Methods for plm.list were not exported, now exported.
 * lagt is changed so that it can deal with time factors which
   cannot be coerced to numeric (ex "1950-54", "1955-59", ...).
 * cortab was not exported, now exported.
@@ -115,21 +114,21 @@
 
 # plm 2.1-0
 
-* problems with vignettes fixed (full text was in italics).
-* in test file 'test_Estimators.R', L256, tolerance lowered to 1E-04.
+* Iroblems with vignettes fixed (full text was in italics).
+* In test file 'test_Estimators.R', L256, tolerance lowered to 1E-04.
 
 # plm 2.0-2
 
 * vcovXX.pcce functions exported again (export was lost in plm 2.0-0).
 * summary.pcce gained argument 'vcov', summary.pcce object carries robust vcov
   in element 'rvcov'.
-* vignettes switched from bookdown::html_document2 to html_vignette.
+* Vignettes switched from bookdown::html_document2 to html_vignette.
 
 # plm 2.0-1
 
 * Minor update: tests updated to pacify CRAN's testing procedure with
   OpenBLAS.
-* bug fix in model.frame.pdata.frame: dot previously set to "separate" now set
+* Bug fix in model.frame.pdata.frame: dot previously set to "separate" now set
   to "previous".
 
 # plm 2.0-0
@@ -144,7 +143,7 @@
     (plmModelComponents.Rmd).
 * plm: the informative error message about the deprecated argument
     'instruments' is removed and this argument is no longer supported.
-* man pages and NAMESPACE file are now generated using roxygen2.
+* Man pages and NAMESPACE file are now generated using roxygen2.
 
 # plm 1.7-0
 
@@ -192,7 +191,6 @@
     scaled LM test.
   
 ### Deprecated/renamed:
-
 * pht, plm(., model = "ht"/"am"/"bms"): both uses deprecated, better use instead
     plm(., model="random", random.method ="ht", inst.method="baltagi"/"am"/"bms")
     to estimate Hausman-Taylor-type models.
@@ -239,7 +237,7 @@
 * Data set 'Crime' extended with pre-computed log values as in original data.  
 
 ### Dependencies:
-* added to 'Suggests': knitr, rmarkdown, bookdown.
+* Added to 'Suggests': knitr, rmarkdown, bookdown.
 
 
 # plm 1.6-6
