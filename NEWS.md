@@ -1,7 +1,7 @@
 # plm 2.3-0
 
 ### Speed up:
-Significant speed improvement (optionally): A significant speed-up of the
+Significant speed improvement (optional): A significant speed-up of the
 package is available by executing `pkg.plm.fast(TRUE)` once per session
 (switch-off by `pkg.plm.fast(FALSE)` such that panel model estimations
 run faster.
@@ -10,11 +10,12 @@ Technically, the speed gains are achieved by weaving in the fast data
 transformation functions provided in Sebastian Krantz' package 'collapse',
 which needs to be installed ('Suggests' dependency).
 
-Functions benefiting from speed-up are currently (used heavily in, e.g., plm()):
-  * Between,
-  * between,
-  * Sum (internal),
-  * Within.
+Basic functions benefiting from speed-up are currently (used heavily in, e.g., plm()):
+
+* Between,
+* between,
+* Sum (internal),
+* Within.
 
 ### Fixes:
 * between.default: keeps original sequence of elements' occurrence (before,
@@ -38,7 +39,7 @@ Functions benefiting from speed-up are currently (used heavily in, e.g., plm()):
 * between.matrix and Sum.matrix (the latter is non-exported) allow for
   non-character effect in non-index case.
 * pmg, pcce: now use the general Between() function of the package (instead of
-  "own" between transformation implemented within the respective functions).
+  "own" between transformation implemented inside the respective functions).
 
 ### Dependencies:
  * Added package 'collapse' to 'Suggests'.
