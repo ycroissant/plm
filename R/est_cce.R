@@ -94,61 +94,61 @@ pcce <- function (formula, data, subset, na.action,
                    #residuals = c("defactored", "standard"),
                   index = NULL, trend = FALSE, ...) {
   
-    ## Create a Formula object if necessary (from plm.R)
-#    if (!inherits(formula, "pFormula")) formula <- pFormula(formula)
-    if (!inherits(formula, "Formula")) formula <- as.Formula(formula)
+  ## Create a Formula object if necessary (from plm.R)
+#  if (!inherits(formula, "pFormula")) formula <- pFormula(formula)
+  if (!inherits(formula, "Formula")) formula <- as.Formula(formula)
 
-    ## same as pggls but for effect, fixed at "individual" for compatibility
-    ## ind for id, tind for time, k for K, coefnam for coef.names
-    effect <- "individual"
+  ## same as pggls but for effect, fixed at "individual" for compatibility
+  ## ind for id, tind for time, k for K, coefnam for coef.names
+  effect <- "individual"
 
-    ## record call etc.
-    model <- match.arg(model)
-    model.name <- paste("cce", model, sep="")
-    data.name <- paste(deparse(substitute(data)))
-    cl <- match.call()
-    plm.model <- match.call(expand.dots = FALSE)
-    m <- match(c("formula", "data", "subset", "na.action", "effect",
-        "model", "index"), names(plm.model), 0)
-    plm.model <- plm.model[c(1, m)]
-    plm.model[[1]] <- as.name("plm")
-    ## change the 'model' in call
-    plm.model$model <- "pooling"
-    ## evaluates the call, modified with model = "pooling", inside the
-    ## parent frame resulting in the pooling model on formula, data
-    plm.model <- eval(plm.model, parent.frame())
-    index <- attr(model.frame(plm.model), "index")
-    ## group index
-    ind <- index[[1]]
-    ## time index
-    tind <- index[[2]]
-    ## set dimension variables
-    pdim <- pdim(plm.model)
-    balanced <- pdim$balanced
-    nt <- pdim$Tint$nt
-    Ti <- pdim$Tint$Ti
-    T. <- pdim$nT$T
-    n <- pdim$nT$n
-    N <- pdim$nT$N
-    ## set index names
-    time.names <- pdim$panel.names$time.names
-    id.names <- pdim$panel.names$id.names
-    coef.names <- names(coef(plm.model))
-    ## number of coefficients
-    k <- length(coef.names)
+  ## record call etc.
+  model <- match.arg(model)
+  model.name <- paste("cce", model, sep="")
+  data.name <- paste(deparse(substitute(data)))
+  cl <- match.call()
+  plm.model <- match.call(expand.dots = FALSE)
+  m <- match(c("formula", "data", "subset", "na.action", "effect",
+      "model", "index"), names(plm.model), 0)
+  plm.model <- plm.model[c(1, m)]
+  plm.model[[1]] <- as.name("plm")
+  ## change the 'model' in call
+  plm.model$model <- "pooling"
+  ## evaluates the call, modified with model = "pooling", inside the
+  ## parent frame resulting in the pooling model on formula, data
+  plm.model <- eval(plm.model, parent.frame())
+  index <- attr(model.frame(plm.model), "index")
+  ## group index
+  ind <- index[[1]]
+  ## time index
+  tind <- index[[2]]
+  ## set dimension variables
+  pdim <- pdim(plm.model)
+  balanced <- pdim$balanced
+  nt <- pdim$Tint$nt
+  Ti <- pdim$Tint$Ti
+  T. <- pdim$nT$T
+  n <- pdim$nT$n
+  N <- pdim$nT$N
+  ## set index names
+  time.names <- pdim$panel.names$time.names
+  id.names <- pdim$panel.names$id.names
+  coef.names <- names(coef(plm.model))
+  ## number of coefficients
+  k <- length(coef.names)
 
-    ## model data
-    X <- model.matrix(plm.model)
-    y <- model.response(model.frame(plm.model))
+  ## model data
+  X <- model.matrix(plm.model)
+  y <- model.response(model.frame(plm.model))
 
   ## det. *minimum* group numerosity
   t <- min(tapply(X[ , 1], ind, length))
 
   ## check min. t numerosity
-  ## NB it is also possible to allow estimation if there *is* one group
-  ## with t large enough and average on coefficients removing NAs
-  ## Here we choose the explicit way: let estimation fail if we lose df
-  ## but a warning would do...
+    ## NB it is also possible to allow estimation if there *is* one group
+    ## with t large enough and average on coefficients removing NAs
+    ## Here we choose the explicit way: let estimation fail if we lose df
+    ## but a warning would do...
   if(t < (k+1)) stop("Insufficient number of time periods")
 
   ## one regression for each group i in 1..n
@@ -157,10 +157,10 @@ pcce <- function (formula, data, subset, na.action,
   ## as min(t) > k+1)
 
   ## subtract intercept from parms number and names
-    if(attr(terms(plm.model), "intercept")) {
-        k <- k-1
-        coef.names <- coef.names[-1]
-    }
+  if(attr(terms(plm.model), "intercept")) {
+      k <- k-1
+      coef.names <- coef.names[-1]
+  }
 
   ## "pre-allocate" coefficients matrix for the n models
   tcoef <- matrix(NA, nrow = k, ncol = n)
@@ -172,29 +172,29 @@ pcce <- function (formula, data, subset, na.action,
 
   ## CCE by-group estimation
 
-    ## must put the intercept into the group-invariant part!!
-    ## so first drop it from X
-    if(attr(terms(plm.model), "intercept")) {
-        X <- X[ , -1, drop = FALSE]
-    }
+  ## must put the intercept into the group-invariant part!!
+  ## so first drop it from X
+  if(attr(terms(plm.model), "intercept")) {
+      X <- X[ , -1, drop = FALSE]
+  }
 
-    ## group-invariant part, goes in Hhat
-      ## between-periods transformation (take means over groups for each t)
-        #  be <- function(x, index, na.rm = TRUE) tapply(x, index, mean, na.rm = na.rm)
-        #  Xm2 <- apply(X, 2, FUN = be, index = tind)[tind, , drop = FALSE]
-        #  ym2 <- apply(as.matrix(as.numeric(y)), 2, FUN = be, index = tind)[tind]
-        Xm <- Between(X, effect = tind, na.rm = TRUE)
-        ym <- as.numeric(Between(y, effect = "time", na.rm = TRUE))
+  ## group-invariant part, goes in Hhat
+    ## between-periods transformation (take means over groups for each t)
+      #  be <- function(x, index, na.rm = TRUE) tapply(x, index, mean, na.rm = na.rm)
+      #  Xm2 <- apply(X, 2, FUN = be, index = tind)[tind, , drop = FALSE]
+      #  ym2 <- apply(as.matrix(as.numeric(y)), 2, FUN = be, index = tind)[tind]
+      Xm <- Between(X, effect = tind, na.rm = TRUE)
+      ym <- as.numeric(Between(y, effect = "time", na.rm = TRUE))
 
       if(attr(terms(plm.model), "intercept")) {
-              Hhat <- cbind(ym, Xm, 1)
+          Hhat <- cbind(ym, Xm, 1)
           } else {
-              Hhat <- cbind(ym, Xm)
-          }
+            Hhat <- cbind(ym, Xm)
+      }
 
       ## prepare XMX, XMy arrays
-      XMX <- array(dim = c(k, k, n))
-      XMy <- array(dim = c(k, 1, n))
+      XMX <- array(data = NA_real_, dim = c(k, k, n))
+      XMy <- array(data = NA_real_, dim = c(k, 1, n))
 
       ## hence calc. beta_i anyway because of vcov
 
@@ -227,10 +227,11 @@ pcce <- function (formula, data, subset, na.action,
           tcoef[ , i] <- tb
 
           ## cce (defactored) residuals as M_i(y_i - X_i * bCCEMG_i)
-          cceres[[i]] <- tMhat %*% (ty - tX %*% tb)
+          tytXtb <- ty - tX %*% tb
+          cceres[[i]] <- tMhat %*% tytXtb
           ## std. (raw) residuals as y_i - X_i * bCCEMG_i - a_i
           ta <- mean(ty - tX)
-          stdres[[i]] <- ty - tX %*% tb - ta
+          stdres[[i]] <- tytXtb - ta
         }
 
   ## module for making transformed data My, MX for vcovHC use
@@ -284,21 +285,21 @@ pcce <- function (formula, data, subset, na.action,
     coefmg <- rowMeans(tcoef) # was: apply(tcoef, 1, mean)
 
     ## make matrix of cross-products of demeaned individual coefficients
-    Rmat <- array(dim = c(k, k, n))
+    Rmat <- array(data = NA_real_, dim = c(k, k, n))
 
     ## make b_i - b_CCEMG
     demcoef <- tcoef - coefmg # coefmg gets recycled n times by column
 
     ## calc. coef and vcov according to model
     switch(model,
-           "mg" = {
+        "mg" = {
             ## assign beta CCEMG
             coef <- coefmg
             for(i in 1:n) Rmat[,,i] <- outer(demcoef[,i], demcoef[,i])
             vcov <- 1/(n*(n-1)) * apply(Rmat, 1:2, sum)
-            },
+        },
            
-           "p" = {
+        "p" = {
             ## calc beta_CCEP
             sXMX <- apply(XMX, 1:2, sum)
             sXMy <- apply(XMy, 1:2, sum)
@@ -333,16 +334,17 @@ pcce <- function (formula, data, subset, na.action,
                     tHhat %*% solve(crossprod(tHhat), t(tHhat))
     
                 ## cce residuals as M_i(y_i - X_i * bCCEP)
-                cceres[[i]] <- tMhat %*% (ty - tX %*% coef)
+                tytXcoef <- ty - tX %*% coef
+                cceres[[i]] <- tMhat %*% tytXcoef
                 ## std. (raw) residuals as y_i - X_i * bCCEMG_i - a_i
                 ta <- mean(ty - tX)
-                stdres[[i]] <- ty - tX %*% coef - ta
+                stdres[[i]] <- tytXcoef - ta
             }
     })
 
     ## calc. measures of fit according to model type
     switch(model,
-           "mg" = {
+        "mg" = {
 
             ## R2 as in HPY 2010: sigma2ccemg = average (over n) of variances
             ## of defactored residuals
@@ -361,9 +363,9 @@ pcce <- function (formula, data, subset, na.action,
                     1/(length(cceres[[i]])-2*k-2)
             }
             sigma2cce <- 1/n*sum(unlist(sigma2cce.i))
-            },
+        },
            
-           "p" = {
+        "p" = {
 
             ## variance of defactored residuals sigma2ccep as in Holly,
             ## Pesaran and Yamagata, (3.15)
