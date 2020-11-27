@@ -78,8 +78,10 @@ the matrix are the individuals,}
 
 \item{plot, scale, transparency, col, lwd}{plot arguments,}
 
-\item{effect}{character string indicating the \code{"individual"} or
-\code{"time"} effect,}
+\item{effect}{for the pseries methods: character string indicating the
+\code{"individual"}, \code{"time"}, or \code{"group"} effect, for \code{Within}
+\code{"twoways"} additionally; for non-pseries methods, \code{effect} is a factor
+specifing the dimension (\code{"twoways"} is not possible),}
 
 \item{rm.null}{if \code{TRUE}, for the \code{Within.matrix} method, remove
 the empty columns,}

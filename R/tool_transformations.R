@@ -43,8 +43,10 @@
 #' @name pseries
 #' @aliases pseries
 #' @param x,object a `pseries` or a `summary.pseries` object,
-#' @param effect character string indicating the `"individual"` or
-#'     `"time"` effect,
+#' @param effect for the pseries methods: character string indicating the
+#'     `"individual"`, `"time"`, or `"group"` effect, for `Within` 
+#'     `"twoways"` additionally; for non-pseries methods, `effect` is a factor
+#'     specifing the dimension (`"twoways"` is not possible),
 #' @param idbyrow if `TRUE` in the `as.matrix` method, the lines of
 #'     the matrix are the individuals,
 #' @param rm.null if `TRUE`, for the `Within.matrix` method, remove
