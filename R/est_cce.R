@@ -110,18 +110,16 @@ pcce <- function (formula, data, subset, na.action,
   plm.model <- match.call(expand.dots = FALSE)
   m <- match(c("formula", "data", "subset", "na.action", "effect",
       "model", "index"), names(plm.model), 0)
-  plm.model <- plm.model[c(1, m)]
-  plm.model[[1]] <- as.name("plm")
+  plm.model <- plm.model[c(1L, m)]
+  plm.model[[1L]] <- as.name("plm")
   ## change the 'model' in call
   plm.model$model <- "pooling"
   ## evaluates the call, modified with model = "pooling", inside the
   ## parent frame resulting in the pooling model on formula, data
   plm.model <- eval(plm.model, parent.frame())
   index <- attr(model.frame(plm.model), "index")
-  ## group index
-  ind <- index[[1]]
-  ## time index
-  tind <- index[[2]]
+  ind  <- index[[1L]] ## individual index
+  tind <- index[[2L]] ## time index
   ## set dimension variables
   pdim <- pdim(plm.model)
   balanced <- pdim$balanced
@@ -159,7 +157,7 @@ pcce <- function (formula, data, subset, na.action,
   ## subtract intercept from parms number and names
   if(attr(terms(plm.model), "intercept")) {
       k <- k-1
-      coef.names <- coef.names[-1]
+      coef.names <- coef.names[-1L]
   }
 
   ## "pre-allocate" coefficients matrix for the n models
@@ -175,7 +173,7 @@ pcce <- function (formula, data, subset, na.action,
   ## must put the intercept into the group-invariant part!!
   ## so first drop it from X
   if(attr(terms(plm.model), "intercept")) {
-      X <- X[ , -1, drop = FALSE]
+      X <- X[ , -1L, drop = FALSE]
   }
 
   ## group-invariant part, goes in Hhat
@@ -187,14 +185,14 @@ pcce <- function (formula, data, subset, na.action,
       ym <- as.numeric(Between(y, effect = "time", na.rm = TRUE))
 
       if(attr(terms(plm.model), "intercept")) {
-          Hhat <- cbind(ym, Xm, 1)
-          } else {
-            Hhat <- cbind(ym, Xm)
+        Hhat <- cbind(ym, Xm, 1)
+        } else {
+          Hhat <- cbind(ym, Xm)
       }
 
       ## prepare XMX, XMy arrays
       XMX <- array(data = NA_real_, dim = c(k, k, n))
-      XMy <- array(data = NA_real_, dim = c(k, 1, n))
+      XMy <- array(data = NA_real_, dim = c(k, 1L, n))
 
       ## hence calc. beta_i anyway because of vcov
 
@@ -207,7 +205,7 @@ pcce <- function (formula, data, subset, na.action,
           tHhat <- Hhat[ind == unind[i], , drop = FALSE]
 
           ## if 'trend' then augment the xs-invariant component
-          if(trend) tHhat <- cbind(tHhat, 1:(dim(tHhat)[[1]]))
+          if(trend) tHhat <- cbind(tHhat, 1:(dim(tHhat)[[1L]]))
 
           ## NB tHat, tMhat should be i-invariant
           tMhat <- diag(1, length(ty)) -
@@ -244,7 +242,7 @@ pcce <- function (formula, data, subset, na.action,
     tHhat1 <- Hhat[ind == unind[1], , drop = FALSE]
 
     ## if 'trend' then augment the xs-invariant component
-    if(trend) tHhat1 <- cbind(tHhat1, 1:(dim(tHhat)[[1]]))
+    if(trend) tHhat1 <- cbind(tHhat1, 1:(dim(tHhat)[[1L]]))
 
     ## NB tHat, tMhat should be i-invariant (but beware of unbalanced)
     tMhat1 <- diag(1, length(ty1)) -
@@ -308,8 +306,8 @@ pcce <- function (formula, data, subset, na.action,
             ## calc CCEP covariance:
             psi.star <- 1/N * sXMX
     
-            for(i in 1:n) Rmat[,,i] <- XMX[,,i] %*%
-                outer(demcoef[,i], demcoef[,i]) %*% XMX[,,i]
+            for(i in 1:n) Rmat[ , , i] <- XMX[ , , i] %*%
+                outer(demcoef[ , i], demcoef[ , i]) %*% XMX[ , , i]
             ## summing over the n-dimension of the array we get the
             ## covariance matrix of coefs
             R.star <- 1/(n-1) * apply(Rmat, 1:2, sum) * 1/(t^2)
@@ -437,7 +435,7 @@ summary.pcce <- function(object, vcov = NULL, ...){
   CoefTable <- cbind(b, std.err, z, p)
   colnames(CoefTable) <- c("Estimate", "Std. Error", "z-value", "Pr(>|z|)")
   object$CoefTable <- CoefTable
-  y <- object$model[[1]]
+  y <- object$model[[1L]]
   object$tss <- tss(y)
   object$ssr <- as.numeric(crossprod(residuals(object)))
   object$rsqr <- object$r.squared #1-object$ssr/object$tss
@@ -487,12 +485,12 @@ residuals.pcce <- function(object,
     ## defactored residuals (default) or raw residuals
     defres <- pres(object)
     switch(match.arg(type),
-           standard = {
+           "standard" = {
                ## add panel features and names from 'defres'
                residuals <- add_pseries_features(object$stdres, index(defres))
                names(residuals) <- names(defres)
               },
-           defactored = { residuals <- defres }
+           "defactored" = { residuals <- defres }
            )
     return(residuals)
 }

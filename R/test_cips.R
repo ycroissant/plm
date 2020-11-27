@@ -103,7 +103,7 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
     pmod <- plm(adffm, data = dati, model = "pooling")
   ## this as in pmg()
     index <- attr(model.frame(pmod), "index")
-    ind  <- index[[1L]] ## group index
+    ind  <- index[[1L]] ## individual index
     tind <- index[[2L]] ## time index
     ## set dimension variables
     pdim <- pdim(pmod)
@@ -312,9 +312,7 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
 
   parameter <- lags
   names(parameter) <- "lag order"
-
   dname <- paste(deparse(substitute(x)))
-
   names(cipstat) <- "CIPS test"
 
   RVAL <- list(statistic = cipstat, parameter = parameter,
@@ -328,7 +326,7 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
 
 ## separate function computing critical values:
 
-critvals.cips <- function(stat, n, T., type=c("trend", "drift", "none"),
+critvals.cips <- function(stat, n, T., type = c("trend", "drift", "none"),
                      truncated = FALSE) {
   ## auxiliary function for cipstest()
   ## extracts --or calculates by interpolation-- p-values for the
@@ -383,7 +381,7 @@ critvals.cips <- function(stat, n, T., type=c("trend", "drift", "none"),
   )
   
   ## make critical values' cube
-  nvals <- array(data = NA_real_, dim = c(8,8,3))
+  nvals <- array(data = NA_real_, dim = c(8, 8, 3))
   nvals[,,1] <- nvals1
   nvals[,,2] <- nvals5
   nvals[,,3] <- nvals10
@@ -428,7 +426,7 @@ critvals.cips <- function(stat, n, T., type=c("trend", "drift", "none"),
   )
   
   ## make critical values' cube
-  dvals <- array(data = NA_real_, dim = c(8,8,3))
+  dvals <- array(data = NA_real_, dim = c(8, 8, 3))
   dvals[ , , 1] <- dvals1
   dvals[ , , 2] <- dvals5
   dvals[ , , 3] <- dvals10
@@ -600,13 +598,13 @@ pseries2pdataframe <- function(x, pdata.frame = TRUE, ...) {
   ## in positions 1, 2 and (if present) 3 (individual index, time index, group index).
   ## if pdataframe = TRUE -> return a pdata.frame, if FALSE -> return a data.frame
   ## ellipsis (dots) passed on to pdata.frame()
-  if (!inherits(x, "pseries")) stop("input needs to be of class 'pseries'")
+  if(!inherits(x, "pseries")) stop("input needs to be of class 'pseries'")
   indices <- attr(x, "index")
   class(indices) <- setdiff(class(indices), "pindex")
   vx <- remove_pseries_features(x)
   dfx <- cbind(indices, vx)
-  dimnames(dfx)[[2]] <- c(names(indices), deparse(substitute(x)))
-  if (pdata.frame == TRUE) {
+  dimnames(dfx)[[2L]] <- c(names(indices), deparse(substitute(x)))
+  if(pdata.frame == TRUE) {
     res <- pdata.frame(dfx, index = names(indices), ...)
    } else { res <- dfx }
   return(res)
@@ -626,7 +624,7 @@ pmerge <- function(x, y, ...) {
   
   # input to merge() needs to be data.frames; not yet suitable for 3rd index (group variable)
   z <- merge(x, y,
-             by.x = dimnames(x)[[2]][1:2],
-             by.y = dimnames(y)[[2]][1:2], ...)
+             by.x = dimnames(x)[[2L]][1:2],
+             by.y = dimnames(y)[[2L]][1:2], ...)
   return(z)
 }

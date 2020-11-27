@@ -113,13 +113,13 @@ pmg <- function(formula, data, subset, na.action,
 
     ## record call etc.
     model <- match.arg(model)
-    model.name <- paste0("", model)    # TODO give internal name for model
+    model.name <- model
     data.name <- paste(deparse(substitute(data)))
     cl <- match.call()
     plm.model <- match.call(expand.dots = FALSE)
     m <- match(c("formula", "data", "subset", "na.action", "effect",
         "model", "index"), names(plm.model), 0)
-    plm.model <- plm.model[c(1, m)]
+    plm.model <- plm.model[c(1L, m)]
     plm.model[[1L]] <- as.name("plm")
     ## change the 'model' in call
     plm.model$model <- "pooling"
@@ -127,10 +127,8 @@ pmg <- function(formula, data, subset, na.action,
     ## parent frame resulting in the pooling model on formula, data
     plm.model <- eval(plm.model, parent.frame())
     index <- attr(model.frame(plm.model), "index")
-    ## group index
-    ind <- index[[1L]]
-    ## time index
-    tind <- index[[2L]]
+    ind  <- index[[1L]] ## individual index
+    tind <- index[[2L]] ## time index
     ## set dimension variables
     pdim <- pdim(plm.model)
     balanced <- pdim$balanced
@@ -209,7 +207,7 @@ pmg <- function(formula, data, subset, na.action,
         taugX <- augX[ind == unind[i], ]
         ty <- y[ind == unind[i]]
 
-        if(trend) taugX <- cbind(taugX, 1:(dim(taugX)[[1]]))
+        if(trend) taugX <- cbind(taugX, 1:(dim(taugX)[[1L]]))
 
         tfit <- lm.fit(taugX, ty)
         tcoef0[ , i] <- tfit$coefficients
@@ -218,7 +216,7 @@ pmg <- function(formula, data, subset, na.action,
       tcoef <- tcoef0[1:k, ]
       tcoef.bar <- tcoef0[-(1:k), ]
 
-      coef.names.bar <- c("y.bar", paste(coef.names[-1], ".bar", sep=""))
+      coef.names.bar <- c("y.bar", paste(coef.names[-1L], ".bar", sep=""))
 
       ## 'trend' always comes last
       if(trend) coef.names.bar <- c(coef.names.bar, "trend")
@@ -241,7 +239,6 @@ pmg <- function(formula, data, subset, na.action,
           # ym <- as.numeric(Between(y, effect = "time", na.rm = TRUE))
           ## ...but of course we do not demean the intercept!
           # Xm[ , 1] <- 0
-    
           # demX <- X - Xm
           # demy <- y - ym
       
@@ -258,7 +255,7 @@ pmg <- function(formula, data, subset, na.action,
         if(trend) tdemX <- cbind(tdemX, 1:(dim(tdemX)[[1L]]))
         tfit <- lm.fit(tdemX, tdemy)
         tcoef[ , i] <- tfit$coefficients
-        tres[[i]] <- tfit$residuals
+        tres[[i]]   <- tfit$residuals
       }
       ## 'trend' always comes last
       if(trend) coef.names <- c(coef.names, "trend")
@@ -317,7 +314,7 @@ summary.pmg <- function(object, ...){
   CoefTable <- cbind(b, std.err, z, p)
   colnames(CoefTable) <- c("Estimate", "Std. Error", "z-value", "Pr(>|z|)")
   object$CoefTable <- CoefTable
-  y <- object$model[[1]]
+  y <- object$model[[1L]]
   object$tss <- tss(y)
   object$ssr <- sum(residuals(object)^2)
   object$rsqr <- 1-object$ssr/object$tss
@@ -350,5 +347,5 @@ print.summary.pmg <- function(x, digits = max(3, getOption("digits") - 2), width
 #' @rdname pmg
 #' @export
 residuals.pmg <- function(object, ...) {
-    return(pres(object))
+  return(pres(object))
 }

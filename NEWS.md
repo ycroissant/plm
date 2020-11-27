@@ -39,8 +39,8 @@ Basic functions benefiting from speed-up are currently (used heavily in, e.g., p
 * between.matrix and Sum.matrix (the latter is non-exported) allow for
   non-character effect in non-index case.
 * pmg, pcce, cipstest: now use the general Between()/Within() functions of the
-  package (instead of "own" between transformation implemented inside the
-  respective functions).
+  package (instead of "own" between/within transformation implemented inside the
+  respective function).
 
 ### Dependencies:
  * Added package 'collapse' to 'Suggests'.
