@@ -89,9 +89,9 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
   dimnames(dati)[[2]][3:(lags+4)] <- clnames
 
   deterministic <- switch(match.arg(type),
-                          trend={"+as.numeric(tind)"},
-                          drift={""},
-                          none={"-1"})
+                          "trend" = {"+as.numeric(tind)"},
+                          "drift" = {""},
+                          "none"  = {"-1"})
 
   ## make formula
   adffm <- as.formula(paste("de~le+",
@@ -178,10 +178,13 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
     
     "dmg" = {
       ## between-periods transformation (take means over group for each t)
-      ## TODO: use general B/between() framework here
-      be <- function(x,index,na.rm=TRUE) tapply(x,index,mean,na.rm=na.rm)
-      Xm <- apply(X,2,FUN=be,index=tind)[tind,]
-      ym <- apply(as.matrix(as.numeric(y)),2,FUN=be,index=tind)[tind]
+         # be <- function(x, index, na.rm = TRUE) tapply(x, index, mean, na.rm = na.rm)
+         # Xm <- apply(X, 2 , FUN = be, index = tind)[tind, , drop = FALSE]
+         # ym <- apply(as.matrix(as.numeric(y)), 2 , FUN = be, index = tind)[tind]
+      attr(X, "index") <- NULL
+      Xm <- Between(X, effect = tind, na.rm = TRUE)
+      ym <- as.numeric(Between(y, effect = tind, na.rm = TRUE))
+
       ## we do not care about demeaning the intercept or not as it is
       ## eliminated anyway
 
@@ -216,9 +219,9 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
     
     "cmg" = {
       deterministic2 <- switch(match.arg(type),
-                               trend={"+trend"},
-                               drift={""},
-                               none={"-1"})
+                               "trend" = {"+trend"},
+                               "drift" = {""},
+                               "none"  = {"-1"})
       ## adjust formula
       adffm <- as.formula(paste("de~le+",
                            paste(clnames[3:(lags+2)], collapse = "+"),
@@ -227,11 +230,13 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
                           deterministic2, sep = ""))
 
       ## between-periods transformation (take means over groups for each t)
-      ## TODO: use general B/between() framework here
-      be <- function(x,index,na.rm=TRUE) tapply(x,index,mean,na.rm=na.rm)
-      Xm <- apply(X,2,FUN=be,index=tind)[tind,]
-      ym <- apply(as.matrix(as.numeric(y)),2,FUN=be,index=tind)[tind]
-
+          # be <- function(x, index, na.rm = TRUE) tapply(x, index, mean, na.rm = na.rm)
+          # Xm <- apply(X, 2, FUN = be, index = tind)[tind, , drop = FALSE]
+          # ym <- apply(as.matrix(as.numeric(y)), 2, FUN = be, index = tind)[tind]
+      attr(X, "index") <- NULL
+      Xm <- Between(X, effect = tind, na.rm = TRUE)
+      ym <- as.numeric(Between(y, effect = tind, na.rm = TRUE))
+      
       ## final data as dataframe, to be subsetted for single TS models
       ## (purge intercepts etc., if 'trend' fix this variable's name)
       switch(match.arg(type),
@@ -280,9 +285,9 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
         ## "with a linear trend (Case III):           K1 = 6.42, K2 = 1.70"
         ## (use negative values for K1's to ease assignment if bound is reached)
       trbounds <- switch(match.arg(type),
-                          none  = {c(-6.12, 4.16)},
-                          drift = {c(-6.19, 2.61)},
-                          trend = {c(-6.42, 1.70)})
+                          "none"  = {c(-6.12, 4.16)},
+                          "drift" = {c(-6.19, 2.61)},
+                          "trend" = {c(-6.42, 1.70)})
       ## formulae (34) in Pesaran (2007):
       ## truncate at lower bound 
       tstats <- ifelse(tstats > trbounds[1L], tstats, trbounds[1L])
@@ -500,9 +505,9 @@ critvals.cips <- function(stat, n, T., type=c("trend", "drift", "none"),
   
   ## set this according to model
   switch(match.arg(type), 
-         trend = {cvals <- tvals},
-         drift = {cvals <- dvals},
-         none  = {cvals <- nvals})
+         "trend" = {cvals <- tvals},
+         "drift" = {cvals <- dvals},
+         "none"  = {cvals <- nvals})
   
   
   ## find intervals for current n and T.

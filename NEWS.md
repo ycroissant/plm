@@ -38,8 +38,9 @@ Basic functions benefiting from speed-up are currently (used heavily in, e.g., p
 * Between.\*, between.\*, and Within.\* methods: now use ave() instead of tapply().
 * between.matrix and Sum.matrix (the latter is non-exported) allow for
   non-character effect in non-index case.
-* pmg, pcce: now use the general Between() function of the package (instead of
-  "own" between transformation implemented inside the respective functions).
+* pmg, pcce, cipstest: now use the general Between() function of the package
+  (instead of "own" between transformation implemented inside the respective
+  functions).
 
 ### Dependencies:
  * Added package 'collapse' to 'Suggests'.
