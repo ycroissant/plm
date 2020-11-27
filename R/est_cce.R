@@ -142,7 +142,7 @@ pcce <- function (formula, data, subset, na.action,
   y <- model.response(model.frame(plm.model))
 
   ## det. *minimum* group numerosity
-  t <- min(tapply(X[ , 1], ind, length))
+  t <- min(Ti) # ==  min(tapply(X[ , 1], ind, length))
 
   ## check min. t numerosity
     ## NB it is also possible to allow estimation if there *is* one group

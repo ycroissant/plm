@@ -120,7 +120,7 @@ pmg <- function(formula, data, subset, na.action,
     m <- match(c("formula", "data", "subset", "na.action", "effect",
         "model", "index"), names(plm.model), 0)
     plm.model <- plm.model[c(1, m)]
-    plm.model[[1]] <- as.name("plm")
+    plm.model[[1L]] <- as.name("plm")
     ## change the 'model' in call
     plm.model$model <- "pooling"
     ## evaluates the call, modified with model = "pooling", inside the
@@ -128,9 +128,9 @@ pmg <- function(formula, data, subset, na.action,
     plm.model <- eval(plm.model, parent.frame())
     index <- attr(model.frame(plm.model), "index")
     ## group index
-    ind <- index[[1]]
+    ind <- index[[1L]]
     ## time index
-    tind <- index[[2]]
+    tind <- index[[2L]]
     ## set dimension variables
     pdim <- pdim(plm.model)
     balanced <- pdim$balanced
@@ -152,7 +152,7 @@ pmg <- function(formula, data, subset, na.action,
 
 
   ## det. *minimum* group numerosity
-  t <- min(tapply(X[ , 1], ind, length))
+  t <- min(Ti) # == min(tapply(X[ , 1], ind, length))
 
   ## check min. t numerosity
   ## NB it is also possible to allow estimation if there *is* one group
@@ -167,8 +167,8 @@ pmg <- function(formula, data, subset, na.action,
   ## as min(t)>k+1)
 
   ## "pre-allocate" coefficients matrix for the n models
-  kt <- if (trend) 1 else 0
-  tcoef <- matrix(NA, nrow = k+kt, ncol = n)
+  kt <- if (trend) 1L else 0L
+  tcoef <- matrix(data = NA_real_, nrow = k+kt, ncol = n)
   tres <- vector("list", n)
 
   switch(model,
@@ -178,7 +178,7 @@ pmg <- function(formula, data, subset, na.action,
       for(i in 1:n) {
         tX <- X[ind == unind[i], ]
         ty <- y[ind == unind[i]]
-        if(trend) tX <- cbind(tX, 1:(dim(tX)[[1]]))
+        if(trend) tX <- cbind(tX, 1:(dim(tX)[[1L]]))
         tfit <- lm.fit(tX, ty)
         tcoef[ , i] <- tfit$coefficients
         tres[[i]]   <- tfit$residuals
@@ -200,7 +200,7 @@ pmg <- function(formula, data, subset, na.action,
       augX <- cbind(X, ym, Xm[ , -1])
 
       ## allow for extended coef vector
-      tcoef0 <- matrix(NA, nrow = 2*k+kt, ncol = n)
+      tcoef0 <- matrix(data = NA_real_, nrow = 2*k+kt, ncol = n)
 
       ## for each x-sect. i = 1..n estimate (over t) an augmented model
       ## y_it = alpha_i + beta_i*X_it + c1_i*my_t + c2_i*mX_t + err_it
@@ -221,7 +221,7 @@ pmg <- function(formula, data, subset, na.action,
       coef.names.bar <- c("y.bar", paste(coef.names[-1], ".bar", sep=""))
 
       ## 'trend' always comes last
-      if (trend) coef.names.bar <- c(coef.names.bar, "trend")
+      if(trend) coef.names.bar <- c(coef.names.bar, "trend")
 
       ## output complete coefs
       tcoef <- tcoef0
@@ -229,7 +229,7 @@ pmg <- function(formula, data, subset, na.action,
       ## adjust k
       k <- length(coef.names)
 
-      ## TODO: adjust model formula etc. etc. (else breaks waldtest, update, ...)
+      ## TODO: adjust model formula etc. (else breaks waldtest, update, ...)
       },
     
     "dmg" = {
@@ -246,18 +246,18 @@ pmg <- function(formula, data, subset, na.action,
       demy <- y - ym
 
       ## for each x-sect. i=1..n estimate (over t) a demeaned model
-      ## (y_it-my_t) = alfa_i + beta_i*(X_it-mX_t) + err_it
+      ## (y_it-my_t) = alpha_i + beta_i*(X_it-mX_t) + err_it
       unind <- unique(ind)
       for (i in 1:n) {
         tdemX <- demX[ind == unind[i], ]
         tdemy <- demy[ind == unind[i]]
-        if(trend) tdemX <- cbind(tdemX, 1:(dim(tdemX)[[1]]))
+        if(trend) tdemX <- cbind(tdemX, 1:(dim(tdemX)[[1L]]))
         tfit <- lm.fit(tdemX, tdemy)
-        tcoef[ ,i] <- tfit$coefficients
+        tcoef[ , i] <- tfit$coefficients
         tres[[i]] <- tfit$residuals
       }
       ## 'trend' always comes last
-      if (trend) coef.names <- c(coef.names, "trend")
+      if(trend) coef.names <- c(coef.names, "trend")
       ## adjust k
       k <- length(coef.names)
   })
@@ -266,7 +266,7 @@ pmg <- function(formula, data, subset, na.action,
     coef <- rowMeans(tcoef) # == apply(tcoef, 1, mean)
 
     ## make matrix of cross-products of demeaned individual coefficients
-    coefmat <- array(dim = c(k, k, n))
+    coefmat <- array(data = NA_real_, dim = c(k, k, n))
     demcoef <- tcoef - coef # gets recycled n times by column
 
     for (i in 1:n) coefmat[ , , i] <- outer(demcoef[ , i], demcoef[ , i])

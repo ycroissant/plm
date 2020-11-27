@@ -5,7 +5,7 @@
 # - vcov
 # - fitted
 # - residuals
-# - df.residuals
+# - df.residual
 # - coef
 # - print
 # - update

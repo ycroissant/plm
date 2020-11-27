@@ -237,12 +237,12 @@ pwtest.panelmodel <- function(x, effect = c("individual", "time"), ...) {
   ## if effect="individual" std., else swap
   index <- attr(data, "index")
   if (effect == "individual"){
-    index <- index[[1]]
-    tindex <- index[[2]]
+    index  <- index[[1L]]
+    tindex <- index[[2L]]
   }
   else{
-    index <- index[[2]]
-    tindex <- index[[1]]
+    index  <- index[[2L]]
+    tindex <- index[[1L]]
   }
   ## det. number of groups and df
   n <- length(unique(index))
@@ -252,7 +252,7 @@ pwtest.panelmodel <- function(x, effect = c("individual", "time"), ...) {
   ## det. total number of obs. (robust vs. unbalanced panels)
   nT <- nrow(X)
   ## det. max. group numerosity
-  t <- max(tapply(X[,1],index,length))
+  t <- max(tapply(X[ , 1L], index, length))
 
   ## ref. Wooldridge (2002), p.264 / Wooldridge (2010), p.299
     
@@ -283,7 +283,7 @@ pwtest.panelmodel <- function(x, effect = c("individual", "time"), ...) {
     return(uts)}
   
   ## det. # of upper triangle members (n*t(t-1)/2 if balanced)
-  ti <- sapply(tres, function(x) dim(x)[[1]])
+  ti <- sapply(tres, function(x) dim(x)[[1L]])
   uptrinum <- sum(ti*(ti-1)/2)  # don't need this!!
 
   ## ...apply to list and sum over resulting vector (df corrected)
@@ -378,10 +378,10 @@ pwartest.formula <- function(x, data, ...) {
   cl <- match.call(expand.dots = TRUE)
   if (is.null(cl$model)) cl$model <- "within"
   if (cl$model != "within") stop("pwartest only relevant for within models")
-  if (names(cl)[3] == "") names(cl)[3] <- "data"
-  names(cl)[2] <- "formula"
+  if (names(cl)[3L] == "") names(cl)[3L] <- "data"
+  names(cl)[2L] <- "formula"
   m <- match(plm.arg, names(cl), 0)
-  cl <- cl[c(1L,m)]
+  cl <- cl[c(1L, m)]
   cl[[1L]] <- quote(plm)
   plm.model <- eval(cl, parent.frame())
   pwartest(plm.model, ...)
@@ -403,12 +403,12 @@ pwartest.panelmodel <- function(x, ...) {
   N <- length(FEres)
   FEres.1 <- c(NA,FEres[1:(N-1)])
   index <- attr(data, "index")
-  id <- index[[1]]
-  time <- index[[2]]
-  lagid <- as.numeric(id) - c(NA,as.numeric(id)[1:(N-1)])
-  FEres.1[lagid!=0] <- NA
+  id   <- index[[1L]]
+  time <- index[[2L]]
+  lagid <- as.numeric(id) - c(NA, as.numeric(id)[1:(N-1)])
+  FEres.1[lagid != 0] <- NA
   data <- data.frame(id, time, FEres = unclass(FEres), FEres.1 = unclass(FEres.1))
-  names(data)[c(1,2)] <- c("id", "time")
+  names(data)[c(1L, 2L)] <- c("id", "time")
   data <- na.omit(data)
   
   # calc. auxiliary model
@@ -602,11 +602,11 @@ pbsytest.formula <- function(x, data, ..., test = c("ar", "re", "j"), re.normal 
   cl <- match.call(expand.dots = TRUE)
   if (is.null(cl$model)) cl$model <- "pooling"
   if (cl$model != "pooling") stop("pbsytest only relevant for pooling models")
-  names(cl)[2] <- "formula"
-  if (names(cl)[3] == "") names(cl)[3] <- "data"
+  names(cl)[2L] <- "formula"
+  if (names(cl)[3L] == "") names(cl)[3L] <- "data"
   m <- match(plm.arg ,names(cl), 0)
   cl <- cl[c(1, m)]
-  cl[[1]] <- as.name("plm")
+  cl[[1L]] <- as.name("plm")
   plm.model <- eval(cl, parent.frame())
   pbsytest(plm.model, test = test, re.normal = re.normal, ...)
 }
@@ -625,8 +625,8 @@ pbsytest.panelmodel <- function(x, test = c("ar", "re", "j"), re.normal = if (te
   data <- model.frame(x)
   ## extract indices
   index <- attr(data, "index")
-  tindex <- index[[2]]
-  iindex <- index[[1]]
+  tindex <- index[[2L]]
+  iindex <- index[[1L]]
   
   
   ## till here.
@@ -671,7 +671,7 @@ pbsytest.panelmodel <- function(x, test = c("ar", "re", "j"), re.normal = if (te
   a <- sum(T_i^2) # Sosa-Escudera/Bera (2008), p. 69
   
   switch(test,
-           ar = {
+           "ar" = {
              # RS*_lambda from Sosa-Escudero/Bera (2008), p. 73 (unbalanced formula)
              stat <- (B + (((N_obs - n)/(a - N_obs)) * A))^2 * (((a - N_obs)*N_obs^2) / ((N_obs - n)*(a - 3*N_obs + 2*n)))
              df <- c(df = 1)
@@ -681,8 +681,8 @@ pbsytest.panelmodel <- function(x, test = c("ar", "re", "j"), re.normal = if (te
              myH0_alt <- "AR(1) errors sub random effects"
            },
            
-           re = {
-             if (re.normal) {
+           "re" = {
+             if(re.normal) {
                # RSO*_mu from Sosa-Escudero/Bera (2008), p. 75 (unbalanced formula), normally distributed
                stat <- -sqrt( (N_obs^2) / (2*(a - 3*N_obs + 2*n))) * (A + 2*B)
                names(stat) <- "z"
@@ -701,7 +701,7 @@ pbsytest.panelmodel <- function(x, test = c("ar", "re", "j"), re.normal = if (te
              }
            },
            
-           j = {
+           "j" = {
              # RS_lambda_mu in Sosa-Escudero/Bera (2008), p. 74 (unbalanced formula)
              stat <- N_obs^2 * ( ((A^2 + 4*A*B + 4*B^2) / (2*(a - 3*N_obs + 2*n))) + (B^2/(N_obs - n)))
              # Degrees of freedom in the joint test (test="j") of Baltagi/Li (1991) are 2 (chisquare(2) distributed),
@@ -850,10 +850,10 @@ pdwtest.formula <- function(x, data, ...) {
 
   cl <- match.call(expand.dots = TRUE)
   if (is.null(cl$model)) cl$model <- "pooling"
-  names(cl)[2] <- "formula"
-  if (names(cl)[3] == "") names(cl)[3] <- "data"
+  names(cl)[2L] <- "formula"
+  if (names(cl)[3L] == "") names(cl)[3L] <- "data"
   m <- match(plm.arg, names(cl), 0)
-  cl <- cl[c(1L,m)]
+  cl <- cl[c(1L, m)]
   cl[[1L]] <- quote(plm)
   plm.model <- eval(cl, parent.frame())
   pdwtest(plm.model, ...)
@@ -968,7 +968,7 @@ pbnftest.panelmodel <- function(x, test = c("bnf", "lbi"), ...) {
   # observation is lost per observational unit
   if (!inherits(residuals(x), "pseries")) stop("pdwtest internal error: residuals are not of class \"pseries\"") # check to be safe: need pseries
   
-  ind <- index(x)[[1]]
+  ind <- index(x)[[1L]]
   obs1 <- !duplicated(ind)                  # first ob of each individual
   obsn <- !duplicated(ind, fromLast = TRUE) # last ob of each individual
   
@@ -1026,10 +1026,10 @@ pbnftest.formula <- function(x, data, test = c("bnf", "lbi"), model = c("pooling
   
   cl <- match.call(expand.dots = TRUE)
   if (is.null(model)) model <- "pooling"
-  names(cl)[2] <- "formula"
-  if (names(cl)[3] == "") names(cl)[3] <- "data"
+  names(cl)[2L] <- "formula"
+  if (names(cl)[3L] == "") names(cl)[3L] <- "data"
   m <- match(plm.arg, names(cl), 0)
-  cl <- cl[c(1L,m)]
+  cl <- cl[c(1L, m)]
   cl[[1L]] <- quote(plm)
   plm.model <- eval(cl, parent.frame())
   pbnftest(plm.model, test = test)
@@ -1119,7 +1119,7 @@ pbltest.formula <- function(x, data, alternative = c("twosided", "onesided"), in
         data <- pdata.frame(data, index = index)
 
   ## need name of individual index
-  gindex <- dimnames(attr(data, "index"))[[2]][1]
+  gindex <- dimnames(attr(data, "index"))[[2L]][1L]
 
  ## make random effects formula
   rformula <- NULL
@@ -1138,10 +1138,10 @@ pbltest.formula <- function(x, data, alternative = c("twosided", "onesided"), in
   for(i in 2:t.) {
     G[i-1,i] <- 1
     G[i,i-1] <- 1
-    }
+  }
 
   ## retrieve composite (=lowest level) residuals
-  uhat <- residuals(mymod, level=0)
+  uhat <- residuals(mymod, level = 0)
 
   ## sigma2.e and sigma2.1 as in BL
   ## break up residuals by group to get rid of Kronecker prod.
@@ -1190,7 +1190,7 @@ pbltest.formula <- function(x, data, alternative = c("twosided", "onesided"), in
   ## this is the same as J11 <- solve(Jmat)[1,1], see BL page 73
 
   switch(match.arg(alternative),
-         onesided = {
+         "onesided" = {
            LMr.m <- Drho * sqrt(J11)
            pval <- pnorm(LMr.m, lower.tail = FALSE)
            names(LMr.m) <- "z"
@@ -1198,7 +1198,7 @@ pbltest.formula <- function(x, data, alternative = c("twosided", "onesided"), in
            method2 <- "H0: rho = 0, HA: rho > 0"
            parameter <- NULL
          },
-         twosided = {
+         "twosided" = {
            LMr.m <- Drho^2 * J11
            pval <- pchisq(LMr.m, df = 1, lower.tail = FALSE)
            names(LMr.m) <- "chisq"
@@ -1327,10 +1327,10 @@ pwfdtest <- function(x, ...) {
 pwfdtest.formula <- function(x, data, ..., h0 = c("fd", "fe")) {
   cl <- match.call(expand.dots = TRUE)
   if (is.null(cl$model)) cl$model <- "fd"
-  names(cl)[2] <- "formula"
-  if (names(cl)[3] == "") names(cl)[3] <- "data"
+  names(cl)[2L] <- "formula"
+  if (names(cl)[3L] == "") names(cl)[3L] <- "data"
   m <- match(plm.arg, names(cl), 0)
-  cl <- cl[c(1L,m)]
+  cl <- cl[c(1L, m)]
   cl[[1L]] <- quote(plm)
   plm.model <- eval(cl, parent.frame())
   pwfdtest(plm.model, ..., h0 = h0)
@@ -1352,8 +1352,8 @@ pwfdtest.panelmodel <- function(x, ..., h0 = c("fd", "fe")) {
   ## this is an ad-hoc solution for the fact that the 'fd' model
   ## carries on the full indices while losing the first time period
   index <- attr(model.frame(x), "index")
-  time <- as.numeric(index[[2]])
-  id <- as.numeric(index[[1]])
+  time <- as.numeric(index[[2L]])
+  id   <- as.numeric(index[[1L]])
   
   ## fetch dimensions and adapt to those of indices
   pdim <- pdim(x)
@@ -1388,11 +1388,12 @@ pwfdtest.panelmodel <- function(x, ..., h0 = c("fd", "fe")) {
   auxmod <- plm(FDres ~ FDres.1, data = auxdata, model = "pooling")
   
   switch(match.arg(h0), 
-         fd = {h0des <- "differenced"
+         "fd" = {h0des <- "differenced"
          ## theoretical rho under H0: no serial 
          ## corr. in differenced errors is 0
          rho.H0 <- 0},
-         fe = {h0des <- "original"
+         
+         "fe" = {h0des <- "original"
          ## theoretical rho under H0: no serial 
          ## corr. in original errors is -0.5
          rho.H0 <- -0.5})
