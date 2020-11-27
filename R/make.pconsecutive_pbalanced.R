@@ -248,7 +248,7 @@ make.pconsecutive.indexes <- function(x, index, balanced = FALSE, ...) {
 #' @export
 make.pconsecutive.data.frame <- function(x, balanced = FALSE, index = NULL, ...){
   # if not NULL, index is must be character of length 2
-  if (!is.null(index) & length(index) != 2)
+  if (!is.null(index) && length(index) != 2)
     stop("if argument 'index' is not NULL, 'index' needs to specify
          'individual' and 'time' dimension for make.pconsecutive to work on a data.frame")
   

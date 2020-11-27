@@ -238,7 +238,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     # grouping variable, this should be the third element of the index
     # vector or any "group" named element of this vector
     group.name <- NULL
-    if (! is.null(names(index)) | length(index == 3)){
+    if (! is.null(names(index)) || length(index == 3)){
         if (! is.null(names(index))){
             grouppos <- match("group", names(index))
             if (! is.na(grouppos)){

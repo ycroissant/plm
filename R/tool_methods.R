@@ -121,7 +121,7 @@ NULL
 #' @rdname nobs.plm
 #' @export
 nobs.panelmodel <- function(object, ...) {
-  if (inherits(object, "plm") | inherits(object, "panelmodel")) return(length(object$residuals))
+  if (inherits(object, "plm") || inherits(object, "panelmodel")) return(length(object$residuals))
     else stop("Input 'object' needs to be of class 'plm' or 'panelmodel'")
 }
 

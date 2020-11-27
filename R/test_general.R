@@ -242,8 +242,8 @@ phtest.panelmodel <- function(x, x2, ...){
     
     # in case of one-way within vs. between (m3 in Baltagi (2013), pp. 77, 81)
     # the variances need to be added (not subtracted like in the other cases)
-    if (  (modx  == "within" && modx2 == "between")
-        | (modx2 == "within" && modx  == "between")) {
+    if (   (modx  == "within" && modx2 == "between")
+        || (modx2 == "within" && modx  == "between")) {
       dvcov <- vcov.wi[coef.h, coef.h] + vcov.re[coef.h, coef.h]
     }
   #### END cater for equivalent tests with between model

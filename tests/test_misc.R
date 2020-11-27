@@ -16,7 +16,7 @@ plm(inv ~ value, Grunfeld_unbal, model = "random", random.method = "amemiya", ef
 # and there should be no 'pseries' in the resulting data.frame in first place
 pGrunfeld <- pdata.frame(Grunfeld)
 df_after_pmerge <- plm:::pmerge(pGrunfeld$inv, pGrunfeld$value)
-if (inherits(df_after_pmerge$ind, "pseries") & is.null(attr(df_after_pmerge$ind, "index"))) stop("illegal pseries (no index) produced by pmerge")
+if (inherits(df_after_pmerge$ind, "pseries") && is.null(attr(df_after_pmerge$ind, "index"))) stop("illegal pseries (no index) produced by pmerge")
 if ("pseries" %in% unlist(lapply(df_after_pmerge, class))) stop("pmerge returned a column with pseries")
 if (!"data.frame" == class(df_after_pmerge)) stop("pmerge did not return a pure data.frame according to class()")
 

@@ -16,7 +16,7 @@ plm.data_depr_orig <- function(x, indexes = NULL){
     id <- indexes[1]
     time <- indexes[2]
   }
-  if (is.null(id) & is.null(time)){
+  if (is.null(id) && is.null(time)){
     id.name <- names(x)[1]
     time.name <- names(x)[2]
   }

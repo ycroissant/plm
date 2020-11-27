@@ -105,11 +105,11 @@ ercomp.formula <- function(object, data,
     balanced <- pdim(data)$balanced
     
     # method and models arguments can't be both set
-    if (! is.null(method) & ! is.null(models))
+    if (! is.null(method) && ! is.null(models))
         stop("you can't use both, the 'method' and the 'models' arguments")
 
     # method and models arguments aren't set, use swar
-    if (is.null(method) & is.null(models)) method <- "swar"
+    if (is.null(method) && is.null(models)) method <- "swar"
     
     # dfcor is set, coerce it to a length 2 vector if necessary
     if (! is.null(dfcor)){

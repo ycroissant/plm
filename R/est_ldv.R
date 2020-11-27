@@ -337,7 +337,7 @@ lnl.tobit <- function(param, y, X, id, lower = 0, upper = +Inf, model = "pooling
         lnPn <- lapply(1:R, function(i) rn$weights[i] * exp(lnPnr[[i]]))
         lnPn <- log(Reduce("+", lnPn)) - 0.5 * log(pi)
         lnL <- sum(lnPn)
-        if (compute.gradient | compute.hessian){
+        if (compute.gradient || compute.hessian){
             glnPnr <- lapply(1:R, function(i) g(i = i))
             pwn <- lapply(1:R, function(i) exp(lnPnr[[i]] - lnPn))
             pwnt <- lapply(1:R, function(i) pwn[[i]][as.character(id)])

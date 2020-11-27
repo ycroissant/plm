@@ -239,7 +239,7 @@ pcdtest.panelmodel <- function(x, test = c("cd", "sclm", "bcsclm", "lm", "rho", 
     test <- match.arg(test)
     model <- describe(x, "model")
     effect <- describe(x, "effect")
-    eff <- (effect == "individual" | effect == "twoways")
+    eff <- (effect == "individual" || effect == "twoways")
     if (test == "bcsclm")
       if (model != "within" || !eff) stop("for test = 'bcsclm', model x must be a within individual or twoways model")
   
