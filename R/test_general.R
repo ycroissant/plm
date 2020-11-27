@@ -861,7 +861,7 @@ pwaldtest.pvcm <- function(x, ...) {
     ii <- switch(effect, "individual" = 1, "time" = 2)
     residl <- split(x$residuals, index(x)[[ii]])
     
-    # vcocs and coefficients w/o intercept
+    # vcovs and coefficients w/o intercept
     coefs.no.int <- !names(x$coefficients) %in% "(Intercept)"
     vcovl <- lapply(x$vcov, function(x) x[coefs.no.int, coefs.no.int])
     coefl <- as.list(data.frame(t(x$coefficients[ , coefs.no.int])))

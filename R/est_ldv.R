@@ -117,7 +117,7 @@ pldv <- function(formula, data, subset, weights, na.action,
             bdx <- as.numeric(X %*% param)
             lnl <- - psi(ytm1, yt, bdx)
             selobs <- (bdx > - ytm1 & bdx < yt)
-            if (objfun == "lsq" & sample == "cens"){
+            if (objfun == "lsq" && sample == "cens"){
                 attr(lnl, "gradient") <- -
                     ( (ytm1 > - bdx & yt > bdx) * (- 2 * (yt - ytm1 - bdx)) +
                       (ytm1 > - bdx & yt < bdx) * (  2 * ytm1) +
