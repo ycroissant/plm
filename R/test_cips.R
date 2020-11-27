@@ -103,10 +103,8 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
     pmod <- plm(adffm, data = dati, model = "pooling")
   ## this as in pmg()
     index <- attr(model.frame(pmod), "index")
-    ## group index
-    ind <- index[[1L]]
-    ## time index
-    tind <- index[[2L]]
+    ind  <- index[[1L]] ## group index
+    tind <- index[[2L]] ## time index
     ## set dimension variables
     pdim <- pdim(pmod)
     balanced <- pdim$balanced
@@ -125,9 +123,10 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
     ## CIPS test needs an ADF regression with k lags
     ## so fm <- has to be like diff(e) ~ lag(e)+diff(lag(e)) etc.
 
-    ## model data
+    ## model data, remove index and pseries attributes
     X <- model.matrix(pmod)
-    y <- as.numeric(model.response(model.frame(pmod))) # remove pseries attribs
+    attr(X, "index") <- NULL
+    y <- as.numeric(model.response(model.frame(pmod)))
     
   ## det. *minimum* group numerosity
   t <- min(Ti) # == min(tapply(X[,1], ind, length))
@@ -177,19 +176,20 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
       },
     
     "dmg" = {
-      ## between-periods transformation (take means over group for each t)
-         # be <- function(x, index, na.rm = TRUE) tapply(x, index, mean, na.rm = na.rm)
-         # Xm <- apply(X, 2 , FUN = be, index = tind)[tind, , drop = FALSE]
-         # ym <- apply(as.matrix(as.numeric(y)), 2 , FUN = be, index = tind)[tind]
-      attr(X, "index") <- NULL
-      Xm <- Between(X, effect = tind, na.rm = TRUE)
-      ym <- as.numeric(Between(y, effect = tind, na.rm = TRUE))
-
+      ## old: between-periods transformation (take means over group for each t)
+         ## be <- function(x, index, na.rm = TRUE) tapply(x, index, mean, na.rm = na.rm)
+         ## Xm <- apply(X, 2 , FUN = be, index = tind)[tind, , drop = FALSE]
+         ## ym <- apply(as.matrix(as.numeric(y)), 2 , FUN = be, index = tind)[tind]
+         # Xm <- Between(X, effect = tind, na.rm = TRUE)
+         # ym <- Between(y, effect = tind, na.rm = TRUE)
+         ## demean
+         # demX <- X - Xm
+         # demy <- y - ym
+      
       ## we do not care about demeaning the intercept or not as it is
       ## eliminated anyway
-
-      demX <- X - Xm
-      demy <- y - ym
+      demX <- Within(X, effect = tind, na.rm = TRUE)
+      demy <- Within(y, effect = tind, na.rm = TRUE)
 
       ## final data as dataframe, to be subsetted for single TS models
       ## (if 'trend' fix this variable's name)
@@ -233,9 +233,8 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
           # be <- function(x, index, na.rm = TRUE) tapply(x, index, mean, na.rm = na.rm)
           # Xm <- apply(X, 2, FUN = be, index = tind)[tind, , drop = FALSE]
           # ym <- apply(as.matrix(as.numeric(y)), 2, FUN = be, index = tind)[tind]
-      attr(X, "index") <- NULL
       Xm <- Between(X, effect = tind, na.rm = TRUE)
-      ym <- as.numeric(Between(y, effect = tind, na.rm = TRUE))
+      ym <- Between(y, effect = tind, na.rm = TRUE)
       
       ## final data as dataframe, to be subsetted for single TS models
       ## (purge intercepts etc., if 'trend' fix this variable's name)

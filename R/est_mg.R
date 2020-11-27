@@ -233,18 +233,22 @@ pmg <- function(formula, data, subset, na.action,
       },
     
     "dmg" = {
-      ## between-periods transformation (take means over group for each t)
-         #  be <- function(x, index, na.rm = TRUE) tapply(x, index, mean, na.rm = na.rm)
-         #  Xm <- apply(X, 2, FUN = be, index = tind)[tind, , drop = FALSE]
-         #  ym <- apply(as.matrix(as.numeric(y)), 2, FUN = be, index = tind)[tind]
-      Xm <- Between(X, effect = "time", na.rm = TRUE)
-      ym <- as.numeric(Between(y, effect = "time", na.rm = TRUE))
-      ## ...but of course we do not demean the intercept!
-      Xm[ , 1] <- 0
-
-      demX <- X - Xm
-      demy <- y - ym
-
+      ## old: between-periods transformation (take means over group for each t)
+         ##  be <- function(x, index, na.rm = TRUE) tapply(x, index, mean, na.rm = na.rm)
+         ##  Xm <- apply(X, 2, FUN = be, index = tind)[tind, , drop = FALSE]
+         ##  ym <- apply(as.matrix(as.numeric(y)), 2, FUN = be, index = tind)[tind]
+          # Xm <- Between(X, effect = "time", na.rm = TRUE)
+          # ym <- as.numeric(Between(y, effect = "time", na.rm = TRUE))
+          ## ...but of course we do not demean the intercept!
+          # Xm[ , 1] <- 0
+    
+          # demX <- X - Xm
+          # demy <- y - ym
+      
+      demX <- Within(X, effect = "time", na.rm = TRUE)
+      demX[ , 1] <- 1 # put back intercept lost by within transformation
+      demy <- as.numeric(Within(y, effect = "time", na.rm = TRUE))
+      
       ## for each x-sect. i=1..n estimate (over t) a demeaned model
       ## (y_it-my_t) = alpha_i + beta_i*(X_it-mX_t) + err_it
       unind <- unique(ind)
