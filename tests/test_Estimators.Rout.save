@@ -1376,8 +1376,8 @@ Chisq: 1199.5 on 13 DF, p-value: < 2.22e-16
 > # in a different way - coefficients need to match
 > data("Produc", package = "plm")
 > form <- log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp
-> pccemgmod <- pcce(form, data = Produc, model="mg")
-> pmgccemgmod <- pmg(form, data = Produc, model="cmg")
+> pccemgmod   <- pcce(form, data = Produc, model = "mg")
+> pmgccemgmod <- pmg (form, data = Produc, model = "cmg")
 > common <- intersect(names(pccemgmod[["coefficients"]]), names(pmgccemgmod[["coefficients"]]))
 > coef_pccemgmod   <- round(pccemgmod[["coefficients"]][common],   digits = 7)
 > coef_pmgccemgmod <- round(pmgccemgmod[["coefficients"]][common], digits = 7)
@@ -1438,7 +1438,7 @@ Multiple R-squared: 0.99993
 > 
 > 
 > # run and output tests for pcce/pmg with model = 'p'/'mg'/'dmg'
-> print(summary(pcce(form, data = Produc, model="p")))
+> print(summary(pcce(form, data = Produc, model = "p")))
 Common Correlated Effects Pooled model
 
 Call:
@@ -1461,7 +1461,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 Total Sum of Squares: 849.81
 Residual Sum of Squares: 0.11927
 HPY R-squared: 0.99077
-> print(summary(pmg (form, data = Produc, model="mg")))
+> print(summary(pmg (form, data = Produc, model = "mg")))
 Mean Groups model
 
 Call:
@@ -1485,7 +1485,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 Total Sum of Squares: 849.81
 Residual Sum of Squares: 0.33009
 Multiple R-squared: 0.99961
-> print(summary(pmg (form, data = Produc, model="dmg")))
+> print(summary(pmg (form, data = Produc, model = "dmg")))
 Demeaned Mean Groups model
 
 Call:
@@ -1509,6 +1509,86 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 Total Sum of Squares: 849.81
 Residual Sum of Squares: 0.23666
 Multiple R-squared: 0.99972
+> print(summary(pmg (form, data = Produc, model = "cmg", trend = TRUE)))
+Common Correlated Effects Mean Groups model
+
+Call:
+pmg(formula = form, data = Produc, model = "cmg", trend = TRUE)
+
+Balanced Panel: n = 48, T = 17, N = 816
+
+Residuals:
+      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+-0.0344687 -0.0031627  0.0002988  0.0000000  0.0032869  0.0376922 
+
+Coefficients:
+                Estimate Std. Error z-value  Pr(>|z|)    
+(Intercept)   -1.5070998  2.3224783 -0.6489 0.5163909    
+log(pcap)      0.0158617  0.1630186  0.0973 0.9224881    
+log(pc)        0.0142806  0.0501462  0.2848 0.7758130    
+log(emp)       0.6437498  0.1028653  6.2582 3.895e-10 ***
+unemp         -0.0026343  0.0016265 -1.6196 0.1053197    
+y.bar          1.0783238  0.1403259  7.6844 1.537e-14 ***
+log(pcap).bar -0.1257206  0.2293070 -0.5483 0.5835113    
+log(pc).bar    0.1368755  0.1655543  0.8268 0.4083669    
+log(emp).bar  -0.7235769  0.2041846 -3.5437 0.0003945 ***
+unemp.bar      0.0027532  0.0041063  0.6705 0.5025474    
+trend         -0.0024686  0.0075303 -0.3278 0.7430488    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Total Sum of Squares: 849.81
+Residual Sum of Squares: 0.039344
+Multiple R-squared: 0.99995
+> print(summary(pmg (form, data = Produc, model = "mg",  trend = TRUE)))
+Mean Groups model
+
+Call:
+pmg(formula = form, data = Produc, model = "mg", trend = TRUE)
+
+Balanced Panel: n = 48, T = 17, N = 816
+
+Residuals:
+      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+-7.609e-02 -8.280e-03 -6.593e-05  0.000e+00  8.590e-03  1.238e-01 
+
+Coefficients:
+              Estimate Std. Error z-value  Pr(>|z|)    
+(Intercept)  4.9053650  1.2456243  3.9381 8.214e-05 ***
+log(pcap)    0.1900332  0.1055302  1.8007   0.07174 .  
+log(pc)     -0.0613999  0.0535890 -1.1458   0.25190    
+log(emp)     0.6259588  0.1207121  5.1856 2.154e-07 ***
+unemp       -0.0089830  0.0022760 -3.9468 7.921e-05 ***
+trend        0.0133940  0.0029888  4.4814 7.414e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Total Sum of Squares: 849.81
+Residual Sum of Squares: 0.19488
+Multiple R-squared: 0.99977
+> print(summary(pmg (form, data = Produc, model = "dmg", trend = TRUE)))
+Demeaned Mean Groups model
+
+Call:
+pmg(formula = form, data = Produc, model = "dmg", trend = TRUE)
+
+Balanced Panel: n = 48, T = 17, N = 816
+
+Residuals:
+      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+-0.0850324 -0.0058607 -0.0002824  0.0000000  0.0065328  0.0613773 
+
+Coefficients:
+              Estimate Std. Error z-value Pr(>|z|)    
+(Intercept) -0.0721421  0.1828551 -0.3945  0.69319    
+log(pcap)    0.0826555  0.1273591  0.6490  0.51634    
+log(pc)      0.0421269  0.0386986  1.0886  0.27633    
+log(emp)     0.9059747  0.0773599 11.7112  < 2e-16 ***
+unemp       -0.0025406  0.0014973 -1.6968  0.08973 .  
+trend        0.0024740  0.0016826  1.4704  0.14145    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Total Sum of Squares: 849.81
+Residual Sum of Squares: 0.12972
+Multiple R-squared: 0.99985
 > ##IGNORE_RDIFF_END
 > 
 > ## further run tests without intercept
@@ -1549,4 +1629,4 @@ year1949 year1950 year1951 year1952 year1953
 > 
 > proc.time()
    user  system elapsed 
-   2.42    0.25    2.62 
+   2.53    0.10    2.76 

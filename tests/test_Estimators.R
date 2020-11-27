@@ -250,8 +250,8 @@ summary(plm(form2, data = pHedonic2, model = "random"))
 # in a different way - coefficients need to match
 data("Produc", package = "plm")
 form <- log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp
-pccemgmod <- pcce(form, data = Produc, model="mg")
-pmgccemgmod <- pmg(form, data = Produc, model="cmg")
+pccemgmod   <- pcce(form, data = Produc, model = "mg")
+pmgccemgmod <- pmg (form, data = Produc, model = "cmg")
 common <- intersect(names(pccemgmod[["coefficients"]]), names(pmgccemgmod[["coefficients"]]))
 coef_pccemgmod   <- round(pccemgmod[["coefficients"]][common],   digits = 7)
 coef_pmgccemgmod <- round(pmgccemgmod[["coefficients"]][common], digits = 7)
@@ -262,9 +262,12 @@ print(summary(pmgccemgmod))
 
 
 # run and output tests for pcce/pmg with model = 'p'/'mg'/'dmg'
-print(summary(pcce(form, data = Produc, model="p")))
-print(summary(pmg (form, data = Produc, model="mg")))
-print(summary(pmg (form, data = Produc, model="dmg")))
+print(summary(pcce(form, data = Produc, model = "p")))
+print(summary(pmg (form, data = Produc, model = "mg")))
+print(summary(pmg (form, data = Produc, model = "dmg")))
+print(summary(pmg (form, data = Produc, model = "cmg", trend = TRUE)))
+print(summary(pmg (form, data = Produc, model = "mg",  trend = TRUE)))
+print(summary(pmg (form, data = Produc, model = "dmg", trend = TRUE)))
 ##IGNORE_RDIFF_END
 
 ## further run tests without intercept

@@ -1,0 +1,235 @@
+
+R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
+Copyright (C) 2020 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> ## run tests for cipstest()
+> library(plm)
+> data("Produc", package = "plm")
+> Produc <- pdata.frame(Produc, index=c("state", "year"))
+> 
+> ##IGNORE_RDIFF_BEGIN
+> 
+> # truncated = FALSE (default)
+> cipstest(Produc$gsp, type = "trend", model = "cmg")
+
+	Pesaran's CIPS test for unit roots
+
+data:  Produc$gsp
+CIPS test = -0.58228, lag order = 2, p-value = 0.1
+alternative hypothesis: Stationarity
+
+Warning message:
+In cipstest(Produc$gsp, type = "trend", model = "cmg") :
+  p-value greater than printed p-value
+> cipstest(Produc$gsp, type = "drift", model = "cmg")
+
+	Pesaran's CIPS test for unit roots
+
+data:  Produc$gsp
+CIPS test = -0.59924, lag order = 2, p-value = 0.1
+alternative hypothesis: Stationarity
+
+Warning message:
+In cipstest(Produc$gsp, type = "drift", model = "cmg") :
+  p-value greater than printed p-value
+> cipstest(Produc$gsp, type = "none",  model = "cmg")
+
+	Pesaran's CIPS test for unit roots
+
+data:  Produc$gsp
+CIPS test = -0.52464, lag order = 2, p-value = 0.1
+alternative hypothesis: Stationarity
+
+Warning message:
+In cipstest(Produc$gsp, type = "none", model = "cmg") :
+  p-value greater than printed p-value
+> 
+> cipstest(Produc$gsp, type = "trend", model = "mg")
+
+	Pesaran's CIPS test for unit roots
+
+data:  Produc$gsp
+CIPS test = -1.658, lag order = 2, p-value = 0.1
+alternative hypothesis: Stationarity
+
+Warning message:
+In cipstest(Produc$gsp, type = "trend", model = "mg") :
+  p-value greater than printed p-value
+> cipstest(Produc$gsp, type = "drift", model = "mg")
+
+	Pesaran's CIPS test for unit roots
+
+data:  Produc$gsp
+CIPS test = -0.011214, lag order = 2, p-value = 0.1
+alternative hypothesis: Stationarity
+
+Warning message:
+In cipstest(Produc$gsp, type = "drift", model = "mg") :
+  p-value greater than printed p-value
+> cipstest(Produc$gsp, type = "none",  model = "mg")
+
+	Pesaran's CIPS test for unit roots
+
+data:  Produc$gsp
+CIPS test = 1.7254, lag order = 2, p-value = 0.1
+alternative hypothesis: Stationarity
+
+Warning message:
+In cipstest(Produc$gsp, type = "none", model = "mg") :
+  p-value greater than printed p-value
+> 
+> cipstest(Produc$gsp, type = "trend", model = "dmg")
+
+	Pesaran's CIPS test for unit roots
+
+data:  Produc$gsp
+CIPS test = 0.032088, lag order = 2, p-value = 0.1
+alternative hypothesis: Stationarity
+
+Warning message:
+In cipstest(Produc$gsp, type = "trend", model = "dmg") :
+  p-value greater than printed p-value
+> cipstest(Produc$gsp, type = "drift", model = "dmg")
+
+	Pesaran's CIPS test for unit roots
+
+data:  Produc$gsp
+CIPS test = 0.032088, lag order = 2, p-value = 0.1
+alternative hypothesis: Stationarity
+
+Warning message:
+In cipstest(Produc$gsp, type = "drift", model = "dmg") :
+  p-value greater than printed p-value
+> cipstest(Produc$gsp, type = "none",  model = "dmg")
+
+	Pesaran's CIPS test for unit roots
+
+data:  Produc$gsp
+CIPS test = 1.2753, lag order = 2, p-value = 0.1
+alternative hypothesis: Stationarity
+
+Warning message:
+In cipstest(Produc$gsp, type = "none", model = "dmg") :
+  p-value greater than printed p-value
+> 
+> # truncated = TRUE
+> cipstest(Produc$gsp, type = "trend", model = "cmg", truncated = TRUE)
+
+	Pesaran's CIPS test for unit roots
+
+data:  Produc$gsp
+CIPS test = -0.61357, lag order = 2, p-value = 0.1
+alternative hypothesis: Stationarity
+
+Warning message:
+In cipstest(Produc$gsp, type = "trend", model = "cmg", truncated = TRUE) :
+  p-value greater than printed p-value
+> cipstest(Produc$gsp, type = "drift", model = "cmg", truncated = TRUE)
+
+	Pesaran's CIPS test for unit roots
+
+data:  Produc$gsp
+CIPS test = -0.59924, lag order = 2, p-value = 0.1
+alternative hypothesis: Stationarity
+
+Warning message:
+In cipstest(Produc$gsp, type = "drift", model = "cmg", truncated = TRUE) :
+  p-value greater than printed p-value
+> cipstest(Produc$gsp, type = "none",  model = "cmg", truncated = TRUE)
+
+	Pesaran's CIPS test for unit roots
+
+data:  Produc$gsp
+CIPS test = -0.52464, lag order = 2, p-value = 0.1
+alternative hypothesis: Stationarity
+
+Warning message:
+In cipstest(Produc$gsp, type = "none", model = "cmg", truncated = TRUE) :
+  p-value greater than printed p-value
+> 
+> cipstest(Produc$gsp, type = "trend", model = "mg", truncated = TRUE)
+
+	Pesaran's CIPS test for unit roots
+
+data:  Produc$gsp
+CIPS test = -1.658, lag order = 2, p-value = 0.1
+alternative hypothesis: Stationarity
+
+Warning message:
+In cipstest(Produc$gsp, type = "trend", model = "mg", truncated = TRUE) :
+  p-value greater than printed p-value
+> cipstest(Produc$gsp, type = "drift", model = "mg", truncated = TRUE)
+
+	Pesaran's CIPS test for unit roots
+
+data:  Produc$gsp
+CIPS test = -0.011214, lag order = 2, p-value = 0.1
+alternative hypothesis: Stationarity
+
+Warning message:
+In cipstest(Produc$gsp, type = "drift", model = "mg", truncated = TRUE) :
+  p-value greater than printed p-value
+> cipstest(Produc$gsp, type = "none",  model = "mg", truncated = TRUE)
+
+	Pesaran's CIPS test for unit roots
+
+data:  Produc$gsp
+CIPS test = 1.7254, lag order = 2, p-value = 0.1
+alternative hypothesis: Stationarity
+
+Warning message:
+In cipstest(Produc$gsp, type = "none", model = "mg", truncated = TRUE) :
+  p-value greater than printed p-value
+> 
+> cipstest(Produc$gsp, type = "trend", model = "dmg", truncated = TRUE)
+
+	Pesaran's CIPS test for unit roots
+
+data:  Produc$gsp
+CIPS test = -0.052654, lag order = 2, p-value = 0.1
+alternative hypothesis: Stationarity
+
+Warning message:
+In cipstest(Produc$gsp, type = "trend", model = "dmg", truncated = TRUE) :
+  p-value greater than printed p-value
+> cipstest(Produc$gsp, type = "drift", model = "dmg", truncated = TRUE)
+
+	Pesaran's CIPS test for unit roots
+
+data:  Produc$gsp
+CIPS test = 0.0054748, lag order = 2, p-value = 0.1
+alternative hypothesis: Stationarity
+
+Warning message:
+In cipstest(Produc$gsp, type = "drift", model = "dmg", truncated = TRUE) :
+  p-value greater than printed p-value
+> cipstest(Produc$gsp, type = "none",  model = "dmg", truncated = TRUE)
+
+	Pesaran's CIPS test for unit roots
+
+data:  Produc$gsp
+CIPS test = 1.2753, lag order = 2, p-value = 0.1
+alternative hypothesis: Stationarity
+
+Warning message:
+In cipstest(Produc$gsp, type = "none", model = "dmg", truncated = TRUE) :
+  p-value greater than printed p-value
+> 
+> ##IGNORE_RDIFF_END
+> 
+> proc.time()
+   user  system elapsed 
+   2.34    0.12    2.45 
