@@ -108,7 +108,7 @@ NULL
 print.pseries <- function(x, ...){
   attr(x, "index") <- NULL
   attr(x, "class") <- base::setdiff(attr(x, "class"), "pseries")
-  if (length(attr(x, "class")) == 1 && class(x) %in% c("character", "logical", "numeric", "integer", "complex")) {
+  if(length(attr(x, "class")) == 1 && class(x) %in% c("character", "logical", "numeric", "integer", "complex")) {
     attr(x, "class") <- NULL
   }
   print(x, ...)
@@ -135,7 +135,7 @@ as.matrix.pseries <- function(x, idbyrow = TRUE, ...){
     id.names <- names(x)
     x <- as.matrix(as.data.frame((x)))
     colnames(x) <- id.names
-    if (idbyrow) x <- t(x)
+    if(idbyrow) x <- t(x)
     x
 }
 
@@ -208,7 +208,7 @@ plot.pseries <- function(x, plot = c("lattice", "superposed"),
 #' @rdname pseries
 #' @export
 summary.pseries <- function(object, ...) {
-    if (!inherits(object, c("factor", "logical", "character"))) {
+    if(!inherits(object, c("factor", "logical", "character"))) {
         id <- attr(object, "index")[[1L]]
         time <- attr(object, "index")[[2L]]
         xm <- mean(object, na.rm = TRUE)
@@ -245,7 +245,7 @@ plot.summary.pseries <- function(x, ...){
 print.summary.pseries <- function(x, ...){
     digits <- getOption("digits")
     special_treatment_vars <- c("factor", "logical", "character")
-    if (!inherits(x, special_treatment_vars)) {
+    if(!inherits(x, special_treatment_vars)) {
         x <- as.numeric(x)
         share <- x[-1]/x[1] # vec with length == 2
         names(share) <- c("id", "time")
@@ -342,7 +342,7 @@ Sum <- function(x, ...) {
 
 Sum.default <- function(x, effect, ...) {
     # argument 'effect' is assumed to be a factor
-    if (!is.numeric(x)) stop("The Sum function only applies to numeric vectors")
+    if(!is.numeric(x)) stop("The Sum function only applies to numeric vectors")
     #   Tapply(x, effect, sum, ...)
     return(myave(x, effect, sum, ...))
 }
@@ -378,7 +378,7 @@ Between <- function(x, ...) {
 #' @export
 Between.default <- function(x, effect, ...) {
     # argument 'effect' is assumed to be a factor
-    if (!is.numeric(x)) stop("The Between function only applies to numeric vectors")
+    if(!is.numeric(x)) stop("The Between function only applies to numeric vectors")
     #   Tapply(x, effect, mean, ...)
     return(myave(x, effect, mean, ...))
 }
@@ -396,12 +396,12 @@ Between.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
 Between.matrix <- function(x, effect, ...) {
     #YC20180916 In the previous version the matrix wasn't returned
     #when there is no index attribute
-    if (is.null(attr(x, "index"))) {
+    if(is.null(attr(x, "index"))) {
       return(Between.default(x, effect, ...))
     } else {
       if(!is.character(effect) && length(effect) > 1L)
         stop("for matrices with index attributes, the effect argument must be a character")
-      if (! effect %in% c("individual", "time", "group"))
+      if(! effect %in% c("individual", "time", "group"))
           stop("irrelevant effect for a between transformation")  
     }
     xindex <- attr(x, "index")
@@ -420,7 +420,7 @@ between <- function(x, ...) {
 #' @export
 between.default <- function(x, effect, ...) {
     # argument 'effect' is assumed to be a factor
-    if (!is.numeric(x)) stop("The between function only applies to numeric vectors")
+    if(!is.numeric(x)) stop("The between function only applies to numeric vectors")
     #    res <- tapply(x, effect, mean, ...)
     ##   res <- res[as.character(effect[!duplicated(effect)])] # restore original order (as tapply's output is sorted by levels factor effect)
     res <- ave(x, effect, FUN = function(x) mean(x, ...))
@@ -478,7 +478,7 @@ Within <- function(x, ...) {
 Within.default <- function(x, effect, ...) {
   # NB: Contrary to the other Within.* methods, Within.default does not handle
   #     twoways effects
-    if (!is.numeric(x)) stop("the within function only applies to numeric vectors")
+    if(!is.numeric(x)) stop("the within function only applies to numeric vectors")
     return(x - Between(x, effect, ...))
 }
 
@@ -486,7 +486,7 @@ Within.default <- function(x, effect, ...) {
 #' @export
 Within.pseries <- function(x, effect = c("individual", "time", "group", "twoways"), ...) {
     effect <- match.arg(effect)
-    if (effect != "twoways") result <- x - Between(x, effect, ...)
+    if(effect != "twoways") result <- x - Between(x, effect, ...)
     else {
         if(is.pbalanced(x)) result <- x - Between(x, "individual", ...) - Between(x, "time") + mean(x, ...)
         else {
@@ -505,7 +505,7 @@ Within.pseries <- function(x, effect = c("individual", "time", "group", "twoways
 #' @rdname pseries
 #' @export
 Within.matrix <- function(x, effect, rm.null = TRUE, ...) {
-    if (is.null(attr(x, "index"))) {
+    if(is.null(attr(x, "index"))) {
         result <- Within.default(x, effect, ...)
         othervar <- colSums(abs(x)) > sqrt(.Machine$double.eps)
         if(rm.null) {
@@ -519,7 +519,7 @@ Within.matrix <- function(x, effect, rm.null = TRUE, ...) {
         if(effect %in% c("individual", "time", "group")) result <- x - Between(x, effect, ...)
         if(effect == "twoways") {
             xindex <- attr(x, "index")
-            if (is.pbalanced(xindex)) {
+            if(is.pbalanced(xindex)) {
                 result <- x - Between(x, "individual", ...) - Between(x, "time", ...) +
                     matrix(colMeans(x, ...), nrow = nrow(x), ncol = ncol(x), byrow = TRUE)
             }
@@ -667,7 +667,7 @@ lead <- function(x, k = 1, ...) {
 #' @export
 lag.pseries <- function(x, k = 1, shift = c("time", "row"), ...) {
   shift <- match.arg(shift)
-  res <- if (shift == "time") lagt.pseries(x = x, k = k, ...) else lagr.pseries(x = x, k = k, ...)
+  res <- if(shift == "time") lagt.pseries(x = x, k = k, ...) else lagr.pseries(x = x, k = k, ...)
   return(res)
 }
 
@@ -675,7 +675,7 @@ lag.pseries <- function(x, k = 1, shift = c("time", "row"), ...) {
 #' @export
 lead.pseries <- function(x, k = 1, shift = c("time", "row"), ...) {
   shift <- match.arg(shift)
-  res <- if (shift == "time") leadt.pseries(x = x, k = k, ...) else leadr.pseries(x = x, k = k, ...)
+  res <- if(shift == "time") leadt.pseries(x = x, k = k, ...) else leadr.pseries(x = x, k = k, ...)
   return(res)
 }
 
@@ -683,7 +683,7 @@ lead.pseries <- function(x, k = 1, shift = c("time", "row"), ...) {
 #' @export
 diff.pseries <- function(x, lag = 1, shift = c("time", "row"), ...) {
   shift <- match.arg(shift)
-  res <- if (shift == "time") difft.pseries(x = x, lag = lag, ...) else diffr.pseries(x = x, lag = lag, ...)
+  res <- if(shift == "time") difft.pseries(x = x, lag = lag, ...) else diffr.pseries(x = x, lag = lag, ...)
   return(res)
 }
 
@@ -693,7 +693,7 @@ lagt.pseries <- function(x, k = 1, ...) {
   id <- index[[1L]]
   time <- index[[2L]]
   
-  if (length(k) > 1L) {
+  if(length(k) > 1L) {
     rval <- sapply(k, function(i) alagt(x, i))
     colnames(rval) <- k
   }
@@ -706,7 +706,7 @@ lagt.pseries <- function(x, k = 1, ...) {
 ## leadt.pseries(x, k) is a wrapper for lagt.pseries(x, -k)
 leadt.pseries <- function(x, k = 1, ...) {
   ret <- lagt.pseries(x, k = -k)
-  if (length(k) > 1) colnames(ret) <- k
+  if(length(k) > 1L) colnames(ret) <- k
   return(ret)
 }
 
@@ -714,19 +714,19 @@ leadt.pseries <- function(x, k = 1, ...) {
 difft.pseries <- function(x, lag = 1, ...){
   ## copied/adapted from diffr.pseries except lines which use lagt() ("t") instead of lagr() ("r")
   islogi <- is.logical(x)
-  if (! (is.numeric(x) || islogi)) stop("diff is only relevant for numeric or logical series")
+  if(! (is.numeric(x) || islogi)) stop("diff is only relevant for numeric or logical series")
   
   non.int <- vapply(lag, function(l) round(l) != l, FUN.VALUE = TRUE)
-  if (any(non.int)) stop("Lagging value(s) in 'lag' must be whole-numbered (and non-negative)")
+  if(any(non.int)) stop("Lagging value(s) in 'lag' must be whole-numbered (and non-negative)")
   
   # prevent input of negative values, because it will most likely confuse users
   # what difft would do in this case
   neg <- vapply(lag, function(l) l < 0, FUN.VALUE = TRUE)
-  if (any(neg)) stop("diff is only relevant for non-negative values in 'lag'")
+  if(any(neg)) stop("diff is only relevant for non-negative values in 'lag'")
   
   lagtx <- lagt.pseries(x, k = lag) # use "time-based" lagging for difft
   
-  if (is.matrix(lagtx)) {
+  if(is.matrix(lagtx)) {
     # if 'lagtx' is matrix (case length(lag) > 1):
     # perform subtraction without pseries feature of 'x', because otherwise 
     # the result would be c("pseries", "matrix") which is not supported
@@ -741,8 +741,8 @@ difft.pseries <- function(x, lag = 1, ...){
 ## alagt: non-exported helper function for lagt (actual work horse),
 ## performes shifting of observations while respecting the time dimension
 alagt <- function(x, ak) {
-  if (round(ak) != ak) stop("Lagging value 'k' must be whole-numbered (positive, negative or zero)")
-  if (ak != 0) {
+  if(round(ak) != ak) stop("Lagging value 'k' must be whole-numbered (positive, negative or zero)")
+  if(ak != 0) {
     index <- attr(x, "index")
     id   <- index[[1L]]
     time <- index[[2L]]
@@ -766,7 +766,7 @@ alagt <- function(x, ak) {
     
     levtime <- levels(time)
     numlevtime <- suppressWarnings(as.numeric(levtime))
-    if (! any(is.na(numlevtime))) time <- as.numeric(levels(time))[as.integer(time)]
+    if(! anyNA(numlevtime)) time <- as.numeric(levels(time))[as.integer(time)]
     else time <- as.numeric(time)
     
     list_id_timevar <- split(time, id, drop = TRUE)
@@ -777,7 +777,7 @@ alagt <- function(x, ak) {
                                     },
                                     simplify = FALSE)
     
-    # translate blockwise positions to positions in full vector
+    # translate block-wise positions to positions in full vector
     index_lag_ak_all <- unlist(index_lag_ak_all_list, use.names = FALSE)
     
     NApos <- is.na(index_lag_ak_all) # save NA positions for later
@@ -817,14 +817,14 @@ lagr.pseries <- function(x, k = 1, ...) {
     # variables but not the index variable itself
     #
     # -> shall we prevent lagging of index variables at all? -> turned
-    # off for now, 2016-03-03 if (is.factor(x)) if
+    # off for now, 2016-03-03 if(is.factor(x)) if
     # (all(as.character(x) == as.character(id)) |
     # all(as.character(x)==as.character(time))) stop("Lagged vector
     # cannot be index.")
   
     alagr <- function(x, ak){
-        if (round(ak) != ak) stop("Lagging value 'k' must be whole-numbered (positive, negative or zero)")
-        if (ak > 0) {
+        if(round(ak) != ak) stop("Lagging value 'k' must be whole-numbered (positive, negative or zero)")
+        if(ak > 0) {
       
         # NB: this code does row-wise shifting
 
@@ -838,7 +838,7 @@ lagr.pseries <- function(x, k = 1, ...) {
             result[(ak+1):length(result)] <- x[1:(length(x)-ak)]    # ... shift and ...
             result[isNA] <- NA                                      # ... make more NAs in between: this way, we keep: all factor levels, names, classes
       
-        } else if (ak < 0) { # => compute leading values
+        } else if(ak < 0) { # => compute leading values
       
         # delete last |ak| observations for each unit
             num_time <- as.numeric(time)
@@ -859,7 +859,7 @@ lagr.pseries <- function(x, k = 1, ...) {
         return(result)
     } # END function alagr
   
-    if (length(k) > 1) {
+    if(length(k) > 1L) {
         rval <- sapply(k, function(i) alagr(x, i))
         colnames(rval) <- k
     }
@@ -873,26 +873,26 @@ lagr.pseries <- function(x, k = 1, ...) {
 # leadr.pseries(x, k) is a wrapper for lagr.pseries(x, -k)
 leadr.pseries <- function(x, k = 1, ...) {
     ret <- lagr.pseries(x, k = -k)
-    if (length(k) > 1) colnames(ret) <- k
+    if(length(k) > 1L) colnames(ret) <- k
     return(ret)
 }
 
 ## diffr: lagging row-wise
 diffr.pseries <- function(x, lag = 1, ...){
     islogi <- is.logical(x)
-    if (! (is.numeric(x) || islogi)) stop("diff is only relevant for numeric or logical series")
+    if(! (is.numeric(x) || islogi)) stop("diff is only relevant for numeric or logical series")
     
     non.int <- vapply(lag, function(l) round(l) != l, FUN.VALUE = TRUE)
-    if (any(non.int)) stop("Lagging value(s) in 'lag' must be whole-numbered (and non-negative)")
+    if(any(non.int)) stop("Lagging value(s) in 'lag' must be whole-numbered (and non-negative)")
     
     # prevent input of negative values, because it will most likely confuse users
     # what diff would do in this case
     neg <- vapply(lag, function(l) l < 0, FUN.VALUE = TRUE)
-    if (any(neg)) stop("diff is only relevant for non-negative values in 'lag'")
+    if(any(neg)) stop("diff is only relevant for non-negative values in 'lag'")
 
     lagrx <- lagr.pseries(x, k = lag)
     
-    if (is.matrix(lagrx)) {
+    if(is.matrix(lagrx)) {
       # if 'lagrx' is matrix (case length(lag) > 1):
       # perform subtraction without pseries feature of 'x', because otherwise 
       # the result would be c("pseries", "matrix") which is not supported
@@ -916,7 +916,7 @@ pdiff <- function(x, effect = c("individual", "time"), has.intercept = FALSE){
     n <- if(is.matrix(x)) nrow(x) else length(x)
     cond <- c(NA, cond[2:n] - cond[1:(n-1)]) # this assumes a certain ordering
     cond[cond != 0] <- NA
-    if (! is.matrix(x)){
+    if(! is.matrix(x)){
         result <- c(NA , x[2:n] - x[1:(n-1)])
         result[is.na(cond)] <- NA
         result <- na.omit(result)
@@ -926,7 +926,7 @@ pdiff <- function(x, effect = c("individual", "time"), has.intercept = FALSE){
         result[is.na(cond), ] <- NA
         result <- na.omit(result)
         result <- result[ , apply(result, 2, var) > 1E-12, drop = FALSE]
-        if (has.intercept){
+        if(has.intercept){
             result <- cbind(1, result)
             colnames(result)[1] <- "(Intercept)"
         }
