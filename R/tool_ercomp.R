@@ -115,7 +115,7 @@ ercomp.formula <- function(object, data,
     if (! is.null(dfcor)){
         if (length(dfcor) > 2) stop("dfcor length should be at most 2")
         if (length(dfcor) == 1) dfcor <- rep(dfcor, 2)
-        if (! balanced & any(dfcor != 3))
+        if (! balanced && any(dfcor != 3))
             stop("dfcor should equal 3 for unbalanced panels")
     }
 

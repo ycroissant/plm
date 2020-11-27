@@ -427,7 +427,7 @@ plm.fit <- function(data, model, effect, random.method,
 
     # For all models except the unbalanced twoways random model, the
     # estimator is obtained as a linear regression on transformed data
-    if (! (model == "random" & effect == "twoways" && ! is.balanced)){
+    if (! (model == "random" && effect == "twoways" && ! is.balanced)){
         # extract the model.matrix and the model.response actually, this can be
         # done by providing model.matrix and pmodel.response's methods
         # to pdata.frames

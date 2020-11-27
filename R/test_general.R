@@ -237,8 +237,8 @@ phtest.panelmodel <- function(x, x2, ...){
     # Tests with between model do not extend to two-ways case -> give error
     # There are, however, some equiv. tests with the individual/time between 
     # model, but let's not support them (see Kang (1985), Baltagi (2013), Sec. 4.3.7)
-    if (   (modx  == "between" | modx2 == "between")
-        && (effx == "twoways" | effx2 == "twoways")) stop("tests with between model in twoways case not supported")
+    if (   (modx  == "between" || modx2 == "between")
+        && (effx == "twoways" || effx2 == "twoways")) stop("tests with between model in twoways case not supported")
     
     # in case of one-way within vs. between (m3 in Baltagi (2013), pp. 77, 81)
     # the variances need to be added (not subtracted like in the other cases)
@@ -767,7 +767,7 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
       attr(rvcov, which = "cluster") <- attr(rvcov_orig, which = "cluster") # restore dropped 'cluster' attribute
     }
     # if robust F test: by default, do finite-sample adjustment for df2
-    if (df2adj == TRUE & test == "F") {
+    if (df2adj == TRUE && test == "F") {
       # determine the variable that the clustering is done on by
       # attribute "cluster" in the vcov (matrix object)
       # if only one member in cluster: fall back to original df2

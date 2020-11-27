@@ -271,7 +271,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     }
     # if both id and time are NULL, the names of the index are the first
     # two names of x
-    if (is.null(id) & is.null(time)){
+    if (is.null(id) && is.null(time)){
         id.name <- names(x)[1]
         time.name <- names(x)[2]
     }
@@ -985,7 +985,7 @@ index.pindex <- function(x, which = NULL, ...) {
     if (is.numeric(which)){
         if (! all(which %in% 1:3))
             stop("if integer, argument 'which' should contain only 1, 2 and/or 3")
-        if (ncol(x) == 2 & 3 %in% which) stop("no grouping variable, only 2 indexes")
+        if (ncol(x) == 2 && 3 %in% which) stop("no grouping variable, only 2 indexes")
         which <- names(x)[which]
     }
     nindex <- names(x)

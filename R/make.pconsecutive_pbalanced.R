@@ -639,7 +639,7 @@ make.pbalanced.data.frame <- function(x, balance.type = c("fill", "shared.times"
 
   ## identify index of data.frame  
       # if not NULL, index is must be character of length 2
-      if (!is.null(index) & length(index) != 2)
+      if (!is.null(index) && length(index) != 2)
         stop("if argument 'index' is not NULL, 'index' needs to specify
              'individual' and 'time' dimension for make.pconsecutive to work on a data.frame")
       

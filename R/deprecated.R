@@ -687,7 +687,7 @@ model.matrix.pFormula <- function(object, data,
     index <- index(data)
     if (anyNA(index[[1]])) stop("NA in the individual index variable")
     attr(X, "index") <- index
-    if (effect == "twoways" & model %in% c("between", "fd"))
+    if (effect == "twoways" && model %in% c("between", "fd"))
         stop("twoways effect only relevant for within, random and pooling models")
     if (model == "within") X <- Within(X, effect)
     if (model == "Sum") X <- Sum(X, effect)
@@ -701,7 +701,7 @@ model.matrix.pFormula <- function(object, data,
         if (effect %in% c("time", "individual")) X <- X - theta * Between(X, effect)
         if (effect == "nested") X <- X - theta$id * Between(X, "individual") -
                                     theta$gp * Between(X, "group")
-        if (effect == "twoways" & balanced)
+        if (effect == "twoways" && balanced)
             X <- X - theta$id * Between(X, "individual") -
                 theta$time * Between(X, "time") + theta$total * Mean(X)
     }

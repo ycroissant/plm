@@ -161,7 +161,7 @@ model.matrix.pdata.frame <- function(object,
     index <- index(data)
     if (anyNA(index[[1]])) stop("NA in the individual index variable")
     attr(X, "index") <- index
-    if (effect == "twoways" & model %in% c("between", "fd"))
+    if (effect == "twoways" && model %in% c("between", "fd"))
         stop("twoways effect only relevant for within, random and pooling models")
     if (model == "within") X <- Within(X, effect)
     if (model == "Sum") X <- Sum(X, effect)
@@ -175,7 +175,7 @@ model.matrix.pdata.frame <- function(object,
         if (effect %in% c("time", "individual")) X <- X - theta * Between(X, effect)
         if (effect == "nested") X <- X - theta$id * Between(X, "individual") -
                                     theta$gp * Between(X, "group")
-        if (effect == "twoways" & balanced)
+        if (effect == "twoways" && balanced)
             X <- X - theta$id * Between(X, "individual") -
                 theta$time * Between(X, "time") + theta$total * Mean(X)
     }
@@ -302,14 +302,14 @@ pmodel.response.formula <- function(object, data, ...){
     theta <- dots$theta
     if (is.null(model)) model <- "pooling"
     if (is.null(effect)) effect <- "individual"
-    if (model == "random" & is.null(theta)) stop("the theta argument is mandatory")
+    if (model == "random" && is.null(theta)) stop("the theta argument is mandatory")
     y <- model.response(data)
     ptransform(y, model = model, effect = effect, theta = theta)
 }
 
 ptransform <- function(x, model = NULL, effect = NULL, theta = NULL, ...){
     if (model == "pooling") return(x)
-    if (effect == "twoways" & model %in% c("between", "fd"))
+    if (effect == "twoways" && model %in% c("between", "fd"))
         stop("twoways effect only relevant for within, random and pooling models")
     balanced <- is.pbalanced(x) # need to check this right here as long as x is a pseries
     if (model == "within") x <- Within(x, effect)
@@ -321,7 +321,7 @@ ptransform <- function(x, model = NULL, effect = NULL, theta = NULL, ...){
         if (effect %in% c("time", "individual")) x <- x - theta * Between(x, effect)
         if (effect == "nested") x <- x - theta$id * Between(x, "individual") -
                                     theta$gp * Between(x, "group")
-        if (effect == "twoways" & balanced)
+        if (effect == "twoways" && balanced)
             x <- x - theta$id * Between(x, "individual") -
                 theta$time * Between(x, "time") + theta$total * mean(x)
     }

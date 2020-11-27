@@ -500,7 +500,7 @@ plot.plm <- function(x, dx = 0.2, N = NULL, seed = 1,
 #' @rdname plm
 #' @export
 residuals.plm <- function(object, model = NULL, effect = NULL,  ...){
-    if (is.null(model) & is.null(effect)){
+    if (is.null(model) && is.null(effect)){
         model <- describe(object, "model")
         res <- object$residuals
     }

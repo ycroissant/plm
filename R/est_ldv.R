@@ -128,7 +128,7 @@ pldv <- function(formula, data, subset, weights, na.action,
         }
         maxl[c("logLik", "start")] <- list(BO, start)
         result <- eval(maxl, parent.frame())
-        if (objfun == "lsq" & sample == "cens"){
+        if (objfun == "lsq" && sample == "cens"){
             bdx <- as.numeric(X %*% coef(result))
             V4 <- yt ^ 2 * (bdx <= - ytm1) + ytm1 ^ 2 * (yt <= bdx) +
                 (yt - ytm1 - bdx) ^ 2 * (bdx > - ytm1 & bdx < yt)

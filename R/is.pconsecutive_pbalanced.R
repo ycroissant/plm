@@ -218,7 +218,7 @@ is.pconsecutive.default <- function(x, id, time, na.rm.tindex = FALSE, ...) {
 #' @rdname is.pconsecutive
 #' @export
 is.pconsecutive.data.frame <- function(x, index = NULL, na.rm.tindex = FALSE, ...){
-  if (!is.null(index) & length(index) != 2L)
+  if (!is.null(index) && length(index) != 2L)
     stop("if argument 'index' is not NULL, 'index' needs to specify
          'individual' and 'time' dimension for is.pconsecutive to work on a data.frame")
   

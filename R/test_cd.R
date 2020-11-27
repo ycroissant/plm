@@ -178,7 +178,7 @@ pcdtest.formula <- function(x, data, index = NULL, model = NULL,
     if (is.null(model) && test == "bcsclm") stop("for test = 'bcsclm', set argument model = 'within'")
     mymod <- if (test != "bcsclm") plm(x, data = data, index = index, model = "pooling", ...)
               else plm(x, data = data, index = index, model = "within", ...)
-    if(is.null(model) & min(pdim(mymod)$Tint$Ti) < length(mymod$coefficients)+1) 
+    if(is.null(model) && min(pdim(mymod)$Tint$Ti) < length(mymod$coefficients)+1) 
       {
         warning("Insufficient number of observations in time to estimate heterogeneous model: using within residuals",
             call. = FALSE)
