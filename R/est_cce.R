@@ -161,7 +161,7 @@ pcce <- function (formula, data, subset, na.action,
   }
 
   ## "pre-allocate" coefficients matrix for the n models
-  tcoef <- matrix(NA, nrow = k, ncol = n)
+  tcoef <- matrix(NA_real_, nrow = k, ncol = n)
 
   ## pre-allocate residuals lists for individual regressions
   ## (lists allow for unbalanced panels)
@@ -210,8 +210,10 @@ pcce <- function (formula, data, subset, na.action,
           ## NB tHat, tMhat should be i-invariant
           tMhat <- diag(1, length(ty)) -
               tHhat %*% solve(crossprod(tHhat), t(tHhat))
-          tXMX <- crossprod(tX, tMhat %*% tX)
-          tXMy <- crossprod(tX, tMhat %*% ty)
+          
+          CP.tXtMhat <- crossprod(tX, tMhat)
+          tXMX <- tcrossprod(CP.tXtMhat, t(tX))
+          tXMy <- tcrossprod(CP.tXtMhat, t(ty))
 
           ## XMX_i, XMy_i
           XMX[ , , i] <- tXMX
@@ -293,7 +295,7 @@ pcce <- function (formula, data, subset, na.action,
         "mg" = {
             ## assign beta CCEMG
             coef <- coefmg
-            for(i in 1:n) Rmat[,,i] <- outer(demcoef[,i], demcoef[,i])
+            for(i in 1:n) Rmat[ , , i] <- outer(demcoef[ , i], demcoef[ , i])
             vcov <- 1/(n*(n-1)) * apply(Rmat, 1:2, sum)
         },
            
