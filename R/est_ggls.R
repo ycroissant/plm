@@ -94,10 +94,10 @@ pggls <- function(formula, data, subset, na.action,
     }
     data.name <- paste(deparse(substitute(data)))
     cl <- match.call()
-    plm.model <- match.call(expand.dots=FALSE)
+    plm.model <- match.call(expand.dots = FALSE)
     m <- match(c("formula", "data", "subset", "na.action", "effect", "model", "index"), names(plm.model), 0)
-    plm.model <- plm.model[c(1,m)]
-    plm.model[[1]] <- as.name("plm")
+    plm.model <- plm.model[c(1L, m)]
+    plm.model[[1L]] <- as.name("plm")
     plm.model$model <- model.name
     plm.model <- eval(plm.model, parent.frame())
     
@@ -112,17 +112,17 @@ pggls <- function(formula, data, subset, na.action,
     
     if (model.name == "fd") {
     ## eliminate first year in indices
-        nt <- pdim$Tint$nt[-1]
+        nt <- pdim$Tint$nt[-1L]
         Ti <- pdim$Tint$Ti - 1
         T <- pdim$nT$T - 1
         n <- pdim$nT$n
-        N <- pdim$nT$N - pdim$Tint$nt[1]
-        time.names <- pdim$panel.names$time.names[-1]
-        tind <- as.numeric(index[,2])
+        N <- pdim$nT$N - pdim$Tint$nt[1L]
+        time.names <- pdim$panel.names$time.names[-1L]
+        tind <- as.numeric(index[ , 2L])
         sel <- (tind-c(-1,tind[-length(tind)]))==1
         index <- index[sel, ]
-        id <- index[[1]]
-        time <- factor(index[[2]], levels = attr(index[ ,2], "levels")[-1])
+        id <- index[[1L]]
+        time <- factor(index[[2L]], levels = attr(index[ , 2L], "levels")[-1L])
     } else {
         nt <- pdim$Tint$nt
         Ti <- pdim$Tint$Ti
@@ -130,8 +130,8 @@ pggls <- function(formula, data, subset, na.action,
         n <- pdim$nT$n
         N <- pdim$nT$N
         
-        id <- index[[1]]
-        time <- index[[2]]
+        id <- index[[1L]]
+        time <- index[[2L]]
     }
     
     if (effect == "time") {
@@ -155,9 +155,9 @@ pggls <- function(formula, data, subset, na.action,
     myord <- order(cond, other)
     X <- model.matrix(plm.model)[myord, , drop = FALSE]
     commonpars <- intersect(names(coef(plm.model)), colnames(X))
-    X <- X[, commonpars, drop = FALSE]
+    X <- X[ , commonpars, drop = FALSE]
     y <- pmodel.response(plm.model)[myord]
-    resid <- resid(lm.fit(X,y))
+    resid <- resid(lm.fit(X, y))
     
     cond <- cond[myord]
     other <- other[myord]
@@ -188,9 +188,9 @@ pggls <- function(formula, data, subset, na.action,
         cond <- cond[t1]
         other <- other[t1]
         nother <- nother - 1
-        other.names <- other.names[-1]
+        other.names <- other.names[-1L]
     }
-    tres <- array(NA, dim = c(nother, nother, ncond),
+    tres <- array(NA_real_, dim = c(nother, nother, ncond),
                   dimnames = list(other.names, other.names, cond.names))
     lcnd <- levels(cond)
     if (balanced) {
@@ -257,7 +257,7 @@ summary.pggls <- function(object,...){
   CoefTable <- cbind(b,std.err,z,p)
   colnames(CoefTable) <- c("Estimate", "Std. Error", "z-value", "Pr(>|z|)")
   object$CoefTable <- CoefTable
-  y <- object$model[[1]]
+  y <- object$model[[1L]]
   object$tss <- tss(y)
   object$ssr <- sum(residuals(object)^2)
   object$rsqr <- 1-object$ssr/object$tss
