@@ -343,7 +343,7 @@ ercomp.formula <- function(object, data,
             M["id", "lambda"] <- 0
             M["gp", "nu"]     <- G - K - 1
             ## TOOD: speed-up
-            # cp.ZBlambda <- crossprod(ZBlambda)
+            # CPZBlambda <- crossprod(ZBlambda)
             M["gp", "eta"]    <- sum(TG) - trace( solve(crossprod(ZBlambda)) %*% crossprod(ZBlambda, ZSeta))
             M["gp", "lambda"] <- O - trace( solve(crossprod(ZBlambda)) %*% crossprod(ZSlambda, Z))
         }

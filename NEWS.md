@@ -3,14 +3,15 @@
 ### Speed up:
 Significant speed improvement (optional): A significant speed-up of the
 package is available by executing `pkg.plm.fast(TRUE)` once per session
-(switch-off by `pkg.plm.fast(FALSE)` such that panel model estimations
+(switch-off by `pkg.plm.fast(FALSE)`) such that panel model estimations
 run faster.
   
 Technically, the speed gains are achieved by weaving in the fast data
 transformation functions provided in Sebastian Krantz' package 'collapse',
 which needs to be installed ('Suggests' dependency).
 
-Basic functions benefiting from speed-up are currently (used heavily in, e.g., plm()):
+Basic functions benefiting from speed-up are currently (used heavily in, e.g.,
+plm()):
 
 * Between,
 * between,
@@ -29,10 +30,10 @@ Basic functions benefiting from speed-up are currently (used heavily in, e.g., p
   in the user's data frame).
 * pdata.frame: input 'x' is always pruned by data.frame(x) as a clean data frame
   is needed.
-* ercomp: cosmetic: if one of theta\$id, theta\$time  is 0 => theta\$total must be 
+* ercomp: cosmetic: if one of theta\$id, theta\$time is 0 => theta\$total must be 
   0 and is set to 0 (before, for some data and platforms, theta$total could be a
   very small positive or negative number, due to limited computational precision).
-  This leads to nicer printing in summary outputs as well.
+  This leads to nicer printing for summary outputs as well.
 
 ### Internals:
 * Between.\*, between.\*, and Within.\* methods: now use ave() instead of tapply().
@@ -116,7 +117,7 @@ Basic functions benefiting from speed-up are currently (used heavily in, e.g., p
 
 # plm 2.1-0
 
-* Iroblems with vignettes fixed (full text was in italics).
+* Problems with vignettes fixed (full text was in italics).
 * In test file 'test_Estimators.R', L256, tolerance lowered to 1E-04.
 
 # plm 2.0-2

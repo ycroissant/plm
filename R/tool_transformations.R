@@ -171,11 +171,11 @@ plot.pseries <- function(x, plot = c("lattice", "superposed"),
     xdata <- data.frame(nx=nx, ind=ind, tind=tind)
     
     switch(match.arg(plot),
-           lattice = {
+           "lattice" = {
                ##require(lattice) # make a ggplot2 version
                xyplot(nx ~ tind | ind, data = xdata, type = "l", col = col, ...)
                
-           }, superposed = {
+           }, "superposed" = {
                ylim <- c(min(tapply(scalefun(nx), ind, min, na.rm = TRUE)),
                          max(tapply(scalefun(nx), ind, max, na.rm = TRUE)))
                unind <- unique(ind)
