@@ -1,5 +1,5 @@
 
-R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
 Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -142,6 +142,131 @@ R-Squared:      0.96799
 Adj. R-Squared: 0.96776
 Chisq: 18055 on 6 DF, p-value: < 2.22e-16
 > 
+> pProduc_unbal <- pProduc[-c(2, 20:45, 75, 83:85, 500:510, 632:688, 700, 750), ]
+> summary(plm(form, data = pProduc_unbal, model = "random", effect = "nested"))
+Nested effects Random Effect Model 
+   (Swamy-Arora's transformation)
+
+Call:
+plm(formula = form, data = pProduc_unbal, effect = "nested", 
+    model = "random")
+
+Unbalanced Panel: n = 46, T = 2-17, N = 715
+
+Effects:
+                   var  std.dev share
+idiosyncratic 0.001419 0.037675 0.168
+individual    0.004411 0.066412 0.522
+group         0.002621 0.051199 0.310
+theta:
+           Min.    1st Qu.     Median       Mean   3rd Qu.      Max.
+id    0.6276977 0.86369441 0.86369441 0.85962816 0.8636944 0.8636944
+group 0.0541083 0.06164602 0.06742969 0.07072604 0.0758478 0.2904928
+
+Residuals:
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-0.106934 -0.024858 -0.002859 -0.000148  0.019879  0.181828 
+
+Coefficients:
+              Estimate Std. Error z-value  Pr(>|z|)    
+(Intercept)  2.0321973  0.1577280 12.8842 < 2.2e-16 ***
+log(pc)      0.2853607  0.0228505 12.4881 < 2.2e-16 ***
+log(emp)     0.7218179  0.0286988 25.1515 < 2.2e-16 ***
+log(hwy)     0.0767983  0.0237052  3.2397  0.001196 ** 
+log(water)   0.0757904  0.0164164  4.6168 3.898e-06 ***
+log(util)   -0.0899237  0.0182257 -4.9339 8.061e-07 ***
+unemp       -0.0070859  0.0010199 -6.9474 3.721e-12 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    33.485
+Residual Sum of Squares: 1.0325
+R-Squared:      0.96917
+Adj. R-Squared: 0.96891
+Chisq: 16047.9 on 6 DF, p-value: < 2.22e-16
+> summary(plm(form, data = pProduc_unbal, model = "random", effect = "nested", random.method = "walhus"))
+Nested effects Random Effect Model 
+   (Wallace-Hussain's transformation)
+
+Call:
+plm(formula = form, data = pProduc_unbal, effect = "nested", 
+    model = "random", random.method = "walhus")
+
+Unbalanced Panel: n = 46, T = 2-17, N = 715
+
+Effects:
+                   var  std.dev share
+idiosyncratic 0.001507 0.038816 0.169
+individual    0.004534 0.067336 0.508
+group         0.002881 0.053677 0.323
+theta:
+            Min.   1st Qu.     Median       Mean    3rd Qu.      Max.
+id    0.62253879 0.8615362 0.86153617 0.85741272 0.86153617 0.8615362
+group 0.05672819 0.0643782 0.07021705 0.07356107 0.07867239 0.2969478
+
+Residuals:
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-0.107045 -0.024879 -0.002859 -0.000151  0.019814  0.181937 
+
+Coefficients:
+              Estimate Std. Error z-value  Pr(>|z|)    
+(Intercept)  2.0281839  0.1571527 12.9058 < 2.2e-16 ***
+log(pc)      0.2858283  0.0228012 12.5357 < 2.2e-16 ***
+log(emp)     0.7206212  0.0286704 25.1347 < 2.2e-16 ***
+log(hwy)     0.0770974  0.0236227  3.2637    0.0011 ** 
+log(water)   0.0758658  0.0164032  4.6251 3.745e-06 ***
+log(util)   -0.0894263  0.0182002 -4.9135 8.947e-07 ***
+unemp       -0.0071093  0.0010199 -6.9702 3.164e-12 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    33.762
+Residual Sum of Squares: 1.0348
+R-Squared:      0.96936
+Adj. R-Squared: 0.9691
+Chisq: 16143.7 on 6 DF, p-value: < 2.22e-16
+> summary(plm(form, data = pProduc_unbal, model = "random", effect = "nested", random.method = "amemiya"))
+Nested effects Random Effect Model 
+   (Amemiya's transformation)
+
+Call:
+plm(formula = form, data = pProduc_unbal, effect = "nested", 
+    model = "random", random.method = "amemiya")
+
+Unbalanced Panel: n = 46, T = 2-17, N = 715
+
+Effects:
+                   var  std.dev share
+idiosyncratic 0.001419 0.037675 0.139
+individual    0.006713 0.081933 0.659
+group         0.002056 0.045342 0.202
+theta:
+            Min.    1st Qu.     Median       Mean    3rd Qu.      Max.
+id    0.69078564 0.88916192 0.88916192 0.88579289 0.88916192 0.8891619
+group 0.03058569 0.03628007 0.04091226 0.04361291 0.04806296 0.2186737
+
+Residuals:
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-0.105106 -0.024277 -0.002881 -0.000097  0.019620  0.179820 
+
+Coefficients:
+              Estimate Std. Error z-value  Pr(>|z|)    
+(Intercept)  2.0757687  0.1665550 12.4630 < 2.2e-16 ***
+log(pc)      0.2794706  0.0236526 11.8157 < 2.2e-16 ***
+log(emp)     0.7358457  0.0291822 25.2156 < 2.2e-16 ***
+log(hwy)     0.0739908  0.0248387  2.9789  0.002893 ** 
+log(water)   0.0749155  0.0165758  4.5196 6.196e-06 ***
+log(util)   -0.0956244  0.0185165 -5.1643 2.413e-07 ***
+unemp       -0.0068164  0.0010224 -6.6674 2.604e-11 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    28.79
+Residual Sum of Squares: 1.0065
+R-Squared:      0.96504
+Adj. R-Squared: 0.96475
+Chisq: 14790.8 on 6 DF, p-value: < 2.22e-16
+> 
 > proc.time()
    user  system elapsed 
-   1.78    0.25    2.04 
+   1.23    0.26    1.39 

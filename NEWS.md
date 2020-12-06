@@ -42,6 +42,7 @@ plm()):
 * pmg, pcce, cipstest: now use the general Between()/Within() functions of the
   package (instead of "own" between/within transformation implemented inside the
   respective function).
+* ercomp: now faster by saving and re-usage intermediate results.
 
 ### Dependencies:
  * Added package 'collapse' to 'Suggests'.
