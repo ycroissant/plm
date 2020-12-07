@@ -6,7 +6,7 @@
 ## respectively the data.frame containing the index and the dimensions
 ## of the panel
 
-## pdata.frame : 
+## pdata.frame:
 ## - $<-
 ## - [
 ## - $
@@ -15,7 +15,7 @@
 ## - as.list
 ## - as.data.frame
 
-## pseries :
+## pseries:
 ## - print
 ## - as.matrix
 ## - plot
@@ -24,7 +24,7 @@
 ## - print.summary
 ## - is.pseries
 
-## pdim :
+## pdim:
 ## - pdim.default
 ## - pdim.data.frame
 ## - pdim.pdata.frame
@@ -33,16 +33,16 @@
 ## - pdim.pgmm
 ## - print.pdim
  
-## index :
+## index:
 ## - index.pindex
 ## - index.pdata.frame
 ## - index.pseries
 ## - index.panelmodel
 
 fancy.row.names <- function(index, sep = "-") {
-  if (length(index) == 2) {result <- paste(index[[1]], index[[2]], sep = sep)}
+  if (length(index) == 2) {result <- paste(index[[1L]], index[[2L]], sep = sep)}
   # this in the order also used for sorting (group, id, time):
-  if (length(index) == 3) {result <- paste(index[[3]], index[[1]], index[[2]], sep = sep)}
+  if (length(index) == 3) {result <- paste(index[[3L]], index[[1L]], index[[2L]], sep = sep)}
   return(result)
 }
 
@@ -266,14 +266,14 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     # if the length of index is 2, the first element is id, the second
     # is time
     if (length(index) == 2){
-        id <- index[1]
-        time <- index[2]
+        id <- index[1L]
+        time <- index[2L]
     }
     # if both id and time are NULL, the names of the index are the first
     # two names of x
     if (is.null(id) && is.null(time)){
-        id.name <- names(x)[1]
-        time.name <- names(x)[2]
+        id.name <- names(x)[1L]
+        time.name <- names(x)[2L]
     }
     else{
         id.name <- id
@@ -305,7 +305,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     }
     else{
         # id.name is not numeric, i.e. individual index is supplied
-        if (!id.name %in% names(x)) stop(paste("variable ",id.name," does not exist (individual index)", sep=""))
+        if (!id.name %in% names(x)) stop(paste("variable ", id.name, " does not exist (individual index)", sep=""))
         
         if (is.factor(x[[id.name]])){
             id <- x[[id.name]] <- x[[id.name]][drop=TRUE] # drops unused levels of factor
@@ -318,7 +318,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
             # if no time index is supplied, add time variable
             # automatically order data by individual index, necessary
             # for the automatic addition of time index to be
-            # succesfull if no time index was supplied
+            # successful if no time index was supplied
             x <- x[order(x[[id.name]]), ]
             Ti <- table(x[[id.name]]) # was: Ti <- table(id)
             n <- length(Ti)
@@ -522,12 +522,12 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     }
     
     # delete attribute with old index first:
-    # this preseves the order of the attributes because 
+    # this preserves the order of the attributes because 
     # order of non-standard attributes is scrambled by R's data.frame subsetting with `[.`
     # (need to add new index later anyway)
     attr(x, "index") <- NULL
     
-    # Set class to "data.frame" first to avoid coering which enlarges the (p)data.frame 
+    # Set class to "data.frame" first to avoid coercing which enlarges the (p)data.frame 
     # (probably by as.data.frame.pdata.frame).
     # Coercing is the built-in behaviour for extraction from data.frames by "[." (see ?`[.data.frame`) 
     # and it seems this cannot be avoided; thus we need to make sure, not to have any coercing going on
@@ -744,7 +744,7 @@ is.pseries <- function(object) {
   if (!inherits(object, "pseries")) res <- FALSE
   # class 'pseries' is always on top of basic class: min 2 classes needed, if 2 classes "pseries" needs to be first entry
   if (!length(class(object)) >= 2L) res <- FALSE
-  if (length(class(object)) == 2L & class(object)[1] != "pseries") res <- FALSE
+  if (length(class(object)) == 2L && class(object)[1] != "pseries") res <- FALSE
   if (!has.index(object)) res <- FALSE
   if (!any(c(is.numeric(object), is.factor(object), is.logical(object), 
              is.character(object), is.complex(object)))) {
@@ -864,8 +864,8 @@ pdim.default <- function(x, y, ...) {
 pdim.data.frame <- function(x, index = NULL, ...) {
   x <- pdata.frame(x, index)
   index <- attr(x, "index")
-  id <- index[[1]]
-  time <- index[[2]]
+  id <- index[[1L]]
+  time <- index[[2L]]
   pdim(id,time)
 }
 
@@ -873,14 +873,14 @@ pdim.data.frame <- function(x, index = NULL, ...) {
 #' @export
 pdim.pdata.frame <- function(x,...) {
   index <- attr(x, "index")
-  pdim(index[[1]],index[[2]])
+  pdim(index[[1L]], index[[2L]])
 }
 
 #' @rdname pdim
 #' @export
 pdim.pseries <- function(x,...) {
   index <- attr(x, "index")
-  pdim(index[[1]], index[[2]])
+  pdim(index[[1L]], index[[2L]])
 }
 
 #' @rdname pdim
@@ -902,15 +902,15 @@ pdim.pgmm <- function(x, ...) {
 print.pdim <- function(x, ...) {
   if (x$balanced){
       cat("Balanced Panel: ")
-      cat(paste("n = ",x$nT$n,", ",sep=""))
-      cat(paste("T = ",x$nT$T,", ",sep=""))
-      cat(paste("N = ",x$nT$N,"\n",sep=""))
+      cat(paste("n = ", x$nT$n, ", ", sep=""))
+      cat(paste("T = ", x$nT$T, ", ", sep=""))
+      cat(paste("N = ", x$nT$N, "\n", sep=""))
   }
   else{
       cat("Unbalanced Panel: ")
-      cat(paste("n = ",x$nT$n,", ",sep=""))
-      cat(paste("T = ",min(x$Tint$Ti),"-",max(x$Tint$Ti),", ",sep=""))
-      cat(paste("N = ",x$nT$N,"\n",sep=""))
+      cat(paste("n = ", x$nT$n,", ", sep=""))
+      cat(paste("T = ", min(x$Tint$Ti), "-", max(x$Tint$Ti), ", ", sep=""))
+      cat(paste("N = ", x$nT$N, "\n", sep=""))
   }
 }
 
@@ -993,16 +993,16 @@ index.pindex <- function(x, which = NULL, ...) {
     if (ncol(x) == 3) gindex <- c(gindex, "group")
     if (any(! which %in% c(nindex, gindex))) stop("unknown variable")
     if ("id"    %in% which) {
-      which[which == "id"]    <- names(x)[1]
-      if("id" %in% names(x)[-1]) warning("an index variable not being the invidiual index is called 'id'. Likely, any results are distorted.") 
+      which[which == "id"]    <- names(x)[1L]
+      if("id" %in% names(x)[-1L]) warning("an index variable not being the invidiual index is called 'id'. Likely, any results are distorted.") 
     }
     if ("time"  %in% which) {
-      which[which == "time"]  <- names(x)[2]
-      if("time" %in% names(x)[-2]) warning("an index variable not being the time index is called 'time'. Likely, any results are distorted.") 
+      which[which == "time"]  <- names(x)[2L]
+      if("time" %in% names(x)[-2L]) warning("an index variable not being the time index is called 'time'. Likely, any results are distorted.") 
     }
     if (ncol(x) == 3) if ("group" %in% which) {
-      which[which == "group"] <- names(x)[3]
-      if("group" %in% names(x)[-3]) warning("an index variable not being the group index is called 'group'. Likely, any results are distorted.") 
+      which[which == "group"] <- names(x)[3L]
+      if("group" %in% names(x)[-3L]) warning("an index variable not being the group index is called 'group'. Likely, any results are distorted.") 
     }
     
     result <- x[ , which]

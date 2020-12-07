@@ -282,7 +282,7 @@ print.summary.pggls <- function(x, digits = max(3, getOption("digits") - 2), wid
   cat("\nResiduals:\n")
   print(summary(unlist(residuals(x))))
   cat("\nCoefficients:\n")
-  printCoefmat(x$CoefTable,digits=digits)
+  printCoefmat(x$CoefTable, digits = digits)
   cat(paste("Total Sum of Squares: ",    signif(x$tss,digits),  "\n", sep=""))
   cat(paste("Residual Sum of Squares: ", signif(x$ssr,digits),  "\n", sep=""))
   cat(paste("Multiple R-squared: ",      signif(x$rsqr,digits), "\n", sep=""))

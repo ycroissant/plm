@@ -1,5 +1,5 @@
 ## This file contains the relevant transformations used for panel data,
-## namely of course Within and between/Between, but also Sum (usefull for
+## namely of course Within and between/Between, but also Sum (useful for
 ## unbalanced panels).
 
 ## They are all generics and have default, pseries and matrix
@@ -174,13 +174,13 @@ plot.pseries <- function(x, plot = c("lattice", "superposed"),
            "lattice" = {
                ##require(lattice) # make a ggplot2 version
                xyplot(nx ~ tind | ind, data = xdata, type = "l", col = col, ...)
-               
-           }, "superposed" = {
+           },
+           "superposed" = {
                ylim <- c(min(tapply(scalefun(nx), ind, min, na.rm = TRUE)),
                          max(tapply(scalefun(nx), ind, max, na.rm = TRUE)))
                unind <- unique(ind)
-               nx1 <- nx[ind == unind[1]]
-               tind1 <- as.numeric(tind[ind == unind[1]])
+               nx1 <- nx[ind == unind[1L]]
+               tind1 <- as.numeric(tind[ind == unind[1L]])
                ## plot empty plot to provide frame
                plot(NA, xlim = c(min(as.numeric(tind)),
                                  max(as.numeric(tind))),
@@ -325,7 +325,7 @@ Tapply.matrix <- function(x, effect, func, ...) {
     na.x <- is.na(x)
     uniqval <- apply(x, 2, tapply, effect, func, ...)
     result <- uniqval[as.character(effect), , drop = F]
-    result[na.x] <- NA
+    result[na.x] <- NA_real_
     return(result)
 }
 
@@ -334,7 +334,7 @@ myave.matrix <- function(x, effect, func, ...) {
     na.x <- is.na(x)
     result <- apply(x, 2, FUN = function(x) ave(x, effect, FUN = function(y) func(y, ...)))
     rownames(result) <- as.character(effect)
-    result[na.x] <- NA
+    result[na.x] <- NA_real_
     return(result)
 }
 
@@ -741,7 +741,7 @@ difft.pseries <- function(x, lag = 1, ...){
 }
 
 ## alagt: non-exported helper function for lagt (actual work horse),
-## performes shifting of observations while respecting the time dimension
+## performs shifting of observations while respecting the time dimension
 alagt <- function(x, ak) {
   if(round(ak) != ak) stop("Lagging value 'k' must be whole-numbered (positive, negative or zero)")
   if(ak != 0) {
@@ -752,14 +752,14 @@ alagt <- function(x, ak) {
     # Idea: split times in blocks per individuals and do lagging there
     # by computation of correct time shifting
     
-    # need to convert to numeric, do this by coering to character
+    # need to convert to numeric, do this by coercing to character
     # first (otherwise wrong results!)
     #  see R FAQ 7.10 for coercing factors to numeric: 
     #      as.numeric(levels(factor_var))[as.integer(factor_var)] is
     #      more efficient than
     #      as.numeric(as.character(factor_var))
 
-    # YC 2019/08/29 only works of time values can be coerced to
+    # YC 2019/08/29 only works if time values can be coerced to
     ## numeric, ie integers like years. When year is period (ie 5 years),
     ## values used to be 1950 for the 1950-54 period, time is now a
     ## factor in the original data.frame with levels "1950-54",
@@ -907,8 +907,9 @@ diffr.pseries <- function(x, lag = 1, ...){
 
 ## pdiff is (only) used in model.matrix.pFormula to calculate the
 ## model.matrix for FD models, works for effect = "individual" only,
-## see model.matrix on how to call pdiff.  Result is in order (id,
+## see model.matrix on how to call pdiff. Result is in order (id,
 ## time) for both effects
+##
 ## Performs row-wise shifting
 pdiff <- function(x, effect = c("individual", "time"), has.intercept = FALSE){
   # NB: x is assumed to have an index attribute, e.g., a pseries
@@ -930,7 +931,7 @@ pdiff <- function(x, effect = c("individual", "time"), has.intercept = FALSE){
         result <- result[ , apply(result, 2, var) > 1E-12, drop = FALSE]
         if(has.intercept){
             result <- cbind(1, result)
-            colnames(result)[1] <- "(Intercept)"
+            colnames(result)[1L] <- "(Intercept)"
         }
     }
     attr(result, "na.action") <- NULL
