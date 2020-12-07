@@ -82,7 +82,7 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
   if(lags > 1L) {
       for(i in 2:lags) {
           dati <- pmerge(dati, diff(lag(x, i)))
-          clnames <- c(clnames, paste("d", i, "e", sep=""))
+          clnames <- c(clnames, paste("d", i, "e", sep = ""))
       }
   }
 
@@ -95,8 +95,8 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
 
   ## make formula
   adffm <- as.formula(paste("de~le+",
-                            paste(clnames[3:(lags+2)], collapse="+"),
-                            deterministic, sep=""))
+                            paste(clnames[3:(lags+2)], collapse = "+"),
+                            deterministic, sep = ""))
 
   ## estimate preliminary pooling plm, to take care of all diffs
   ## and lags in a 'panel' way (would be lost in single TS regr.s)
@@ -382,9 +382,9 @@ critvals.cips <- function(stat, n, T., type = c("trend", "drift", "none"),
   
   ## make critical values' cube
   nvals <- array(data = NA_real_, dim = c(8, 8, 3))
-  nvals[,,1] <- nvals1
-  nvals[,,2] <- nvals5
-  nvals[,,3] <- nvals10
+  nvals[ , , 1] <- nvals1
+  nvals[ , , 2] <- nvals5
+  nvals[ , , 3] <- nvals10
   dimnames(nvals) <- list(rnam, cnam, znam)
   
   ## Intercept only (Case II), Table II(b) in Pesaran (2007), p. 280
@@ -584,8 +584,9 @@ critvals.cips <- function(stat, n, T., type = c("trend", "drift", "none"),
 gettvalue <- function(x, coefname) {
   # x: model object (usually class plm or lm) coefname: character
   # indicating name(s) of coefficient(s) for which the t value(s) is
-  # (are) requested return: named numeric vector of length ==
-  # length(coefname) with requested t value(s)
+  # (are) requested
+  # return value: named numeric vector of length == length(coefname)
+  # with requested t value(s)
     beta <- coef(x)[coefname]
     se <- sqrt(diag(vcov(x))[coefname])
     tvalue <- beta / se
@@ -604,9 +605,9 @@ pseries2pdataframe <- function(x, pdata.frame = TRUE, ...) {
   vx <- remove_pseries_features(x)
   dfx <- cbind(indices, vx)
   dimnames(dfx)[[2L]] <- c(names(indices), deparse(substitute(x)))
-  if(pdata.frame == TRUE) {
-    res <- pdata.frame(dfx, index = names(indices), ...)
-   } else { res <- dfx }
+  res <- if(pdata.frame == TRUE) {
+    pdata.frame(dfx, index = names(indices), ...)
+   } else { dfx }
   return(res)
 }
 
