@@ -479,7 +479,7 @@ pwartest.panelmodel <- function(x, ...) {
 #' random effect specification by Baltagi and Li.
 #' 
 #' These Lagrange multiplier tests are robust vs. local
-#' misspecification of the alternative hypothesis, i.e. they test the
+#' misspecification of the alternative hypothesis, i.e., they test the
 #' null of serially uncorrelated residuals against AR(1) residuals in
 #' a pooling model, allowing for local departures from the assumption
 #' of no random effects; or they test the null of no random effects
@@ -751,7 +751,7 @@ pbsytest.panelmodel <- function(x, test = c("ar", "re", "j"), re.normal = if (te
 #'     `"formula"`,
 #' @param data a `data.frame`,
 #' @param \dots further arguments to be passed on to `dwtest`,
-#'     e.g.  `alternative`, see [lmtest::dwtest()] for
+#'     e.g., `alternative`, see [lmtest::dwtest()] for
 #'     further details.
 #' @return An object of class `"htest"`.
 #' @export
@@ -912,7 +912,7 @@ pdwtest.formula <- function(x, data, ...) {
 #'     relevant for formula interface),
 #' @param \dots only relevant for formula interface: further arguments
 #'     to specify the model to test (arguments passed on to plm()),
-#'     e.g.  `effect`.
+#'     e.g., `effect`.
 #' @return An object of class `"htest"`.
 #' @export
 #' @author Kevin Tappe

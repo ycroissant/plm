@@ -361,7 +361,7 @@ plm <- function(formula, data, subset, weights, na.action,
     if (! inherits(formula, "Formula")) formula <- as.Formula(formula)
 
     # in case of 2-part formula, check whether the second part should
-    # be updated, e.g. y ~ x1 + x2 + x3 | . - x2 + z becomes 
+    # be updated, e.g., y ~ x1 + x2 + x3 | . - x2 + z becomes 
     # y ~ x1 + x2 + x3 | x1 + x3 + z
     # use length(formula)[2] because the length is now a vector of length 2
 #    if (length(formula)[2] == 2) formula <- expand.formula(formula)
@@ -409,7 +409,7 @@ plm <- function(formula, data, subset, weights, na.action,
 plm.fit <- function(data, model, effect, random.method, 
                     random.models, random.dfcor, inst.method){
     formula <- attr(data, "formula")
-    # check for 0 cases like in stats::lm.fit (e.g. due to NA dropping) 
+    # check for 0 cases like in stats::lm.fit (e.g., due to NA dropping) 
     if (nrow(data) == 0L) stop("0 (non-NA) cases")
 
     # if a random effect model is estimated, compute the error components
@@ -622,7 +622,7 @@ r.squared <- function(object, model = NULL,
     ess <- as.numeric(crossprod((haty - mhaty)))
     R2 <- ess / tss(object, model = model)
   }
-  ### adj. R2 Still wrong for models without intercept, e.g. pooling models
+  ### adj. R2 Still wrong for models without intercept, e.g., pooling models
   # (but could be correct for within models, see comment below in function r.squared_no_intercept)
   if (dfcor) R2 <- 1 - (1 - R2) * (length(resid(object)) - 1) / df.residual(object)
   R2
@@ -678,7 +678,8 @@ r.squared_no_intercept <- function(object, model = NULL,
     }
     
     # this takes care of the intercept
-    # Still unclear, how the adjustment for within models should look like, i.e. subtract 1 for intercept or not
+    # Still unclear, how the adjustment for within models should look like,
+    # i.e., subtract 1 for intercept or not
     if (dfcor) R2 <- 1 - (1 - R2) * (length(resid(object)) - has.int) / df.residual(object)
     
     return(R2)

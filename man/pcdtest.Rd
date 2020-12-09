@@ -123,7 +123,7 @@ version uses max(Tij) for T) in the bias-correction term).
 the LM test.
 
 The test on a \code{pseries} is the same as a test on a pooled
-regression model of that variable on a constant, i.e.
+regression model of that variable on a constant, i.e.,
 \code{pcdtest(some_pseries)} is equivalent to \verb{pcdtest(plm(some_var ~ 1, data = some_pdata.frame, model = "pooling")} and also equivalent to
 \code{pcdtest(some_var ~ 1, data = some_data)}, where \code{some_var} is
 the variable name in the data which corresponds to \code{some_pseries}.

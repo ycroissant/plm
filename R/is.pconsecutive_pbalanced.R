@@ -1,6 +1,6 @@
 ########### is.pconsecutive ##############
 # little helper function to determine if the time periods of an object are consecutive per id.
-# By consecutive we mean "consecutive in the numbers", i.e. is.pconsecutive takes the numerical
+# By consecutive we mean "consecutive in the numbers", i.e., is.pconsecutive takes the numerical
 # value of the time variable into account: t, t+1, t+2, ... where t is an integer
 #
 # For this, we need as.numeric(as.character(time_var)) where as.character is a crucial part!
@@ -29,7 +29,7 @@
 #' observations for an individuals in the (p)data.frame/pseries (it is not
 #' about "neighbouring" rows). If the object to be evaluated is a pseries or a
 #' pdata.frame, the time index is coerced from factor via as.character to
-#' numeric, i.e. the series
+#' numeric, i.e., the series
 #' `as.numeric(as.character(index(<pseries/pdata.frame>)[[2]]))]` is
 #' evaluated for gaps.
 #' 
@@ -280,7 +280,7 @@ is.pconsecutive.panelmodel <- function(x, na.rm.tindex = FALSE, ...){
 
 #' Check if data are balanced
 #' 
-#' This function checks if the data are balanced, i.e. if each individual has
+#' This function checks if the data are balanced, i.e., if each individual has
 #' the same time periods
 #' 
 #' Balanced data are data for which each individual has the same time periods.

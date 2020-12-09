@@ -1,4 +1,4 @@
-# tests of lagr and leadr (shifting of rows), i.e. lag(..., shift = "row")
+# tests of lagr and leadr (shifting of rows), i.e., lag(..., shift = "row")
 #
 #  (1) test of lagging of index variable
 #  (2) some dropped factor levels / whole period missing
@@ -31,14 +31,14 @@ plm:::lagr.pseries(Grunfeld$firm2)
 
 ############## (2.1) tests with eliminated factor levels ##########
 
-# lag by 1 eliminates some factor levels (e.g. "1" in the last observations)
+# lag by 1 eliminates some factor levels (e.g., "1" in the last observations)
 # from the sample's unique factor levels, but it should stay in the levels
 plm:::lagr.pseries(Grunfeld$fac)
 if (!(length(unique(Grunfeld$fac)) == 200)) stop("wrong factor values") # 200
 if (!(length(unique(plm:::lagr.pseries(Grunfeld$fac))) == 191)) stop("plm:::lagr.pseries: wrong actually uniquely occuring factor values")  # 191
 if (!(length(levels(plm:::lagr.pseries(Grunfeld$fac))) == 200)) stop("wrong factor levels")  # 200
 
-# plm::lead eliminates e.g. level "200"
+# plm::lead eliminates e.g., level "200"
 plm:::leadr.pseries(Grunfeld$fac)
 if (!(length(unique(Grunfeld$fac)) == 200)) stop("wrong factor levels") # 200
 if (!(length(unique(plm:::leadr.pseries(Grunfeld$fac))) == 191)) stop("plm:::leadr.pseries: wrong actually uniquely occuring factor values") # 191
@@ -51,7 +51,7 @@ obs_3rd <- 3 + 20*c(0:9)
 Grunfeld_wo_1937 <- pdata.frame(Grunfeld[-obs_3rd, ])
 
 # illustration:
-levels(Grunfeld_wo_1937$year) # no year 1937 anymore and no level for 1937 anymore (a year in between, i.e. not consecutive series anymore)
+levels(Grunfeld_wo_1937$year) # no year 1937 anymore and no level for 1937 anymore (a year in between, i.e., not consecutive series anymore)
 as.numeric(Grunfeld_wo_1937$year)                # as.numeric produces a consecutive series!
 any(diff(as.numeric(Grunfeld_wo_1937$year)) > 1) # FALSE -> no gap detected
 

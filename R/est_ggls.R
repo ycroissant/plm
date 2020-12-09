@@ -163,7 +163,7 @@ pggls <- function(formula, data, subset, na.action,
     other <- other[myord]
     drop1 <- FALSE
     if (drop1 && model.name %in% c("within", "fd")) {
-    ## drop one time period (e.g. first as we do here)
+    ## drop one time period (e.g., first as we do here)
     ## (see Wooldridge (2002) 10.5, eq. 10.61)/Woolridge (2010),10.5.5, eq.10.61)
     ## this is needed according to Wooldridge (2002), p.277 / Wooldridge (2010), p. 312
     ## but is not totally robust to unbalancedness, dummies etc.

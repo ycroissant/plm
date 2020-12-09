@@ -1,4 +1,4 @@
-# various test of subsetting ("indexing") a pdata.frame, e.g. that subsetting by rownames preserves the index
+# various test of subsetting ("indexing") a pdata.frame, e.g., that subsetting by rownames preserves the index
 #  (pre rev. 187/189 all entries were set to NA)
 #  (pre rev. 251 subsetting a pdata.frame added extra information due to coercing rules of "[.data.frame")
 #  (pre rev. 668 subsetting a pdata.frame with [.pdata.frame such that a single column (pseries) is returned was lacking names)

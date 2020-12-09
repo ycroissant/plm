@@ -50,13 +50,13 @@ dimensions ('individual', 'time') need to be specified by
 further details see \code{\link[=pdata.frame]{pdata.frame()}},}
 }
 \value{
-An object of the same class as the input \code{x}, i.e. a
+An object of the same class as the input \code{x}, i.e., a
 pdata.frame, data.frame or a pseries which is made balanced
 based on the index variables. The returned data are sorted as a
 stacked time series.
 }
 \description{
-This function makes the data balanced, i.e. each individual has the same
+This function makes the data balanced, i.e., each individual has the same
 time periods, by filling in or dropping observations
 }
 \details{

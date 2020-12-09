@@ -24,7 +24,7 @@ phtest(x, ...)
 \item{x}{an object of class \code{"panelmodel"} or \code{"formula"},}
 
 \item{\dots}{further arguments to be passed on. For the formula method,
-place argument \code{effect} here to compare e.g. twoway models
+place argument \code{effect} here to compare, e.g., twoway models
 (\code{effect = "twoways"}) Note: Argument \code{effect} is not respected in
 the panelmodel method.}
 

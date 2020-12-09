@@ -11,7 +11,7 @@
 ##
 ## groupGenerics are used to allow automatic propagation to higher/lower data type
 ## when operations are performed on pseries, 
-## e.g. class c("pseries", "integer") -> c("pseries", "numeric") when a function
+## e.g., class c("pseries", "integer") -> c("pseries", "numeric") when a function
 ## takes an integer as input and outputs a numeric. Without the group generics,
 ## the class of the results would stay as c("pseries", "integer") while the values
 ## themselves are numerics. The associated test file demonstrates the behaviour,
@@ -64,7 +64,7 @@ Ops.pseries <- function(e1, e2) {
             get(.Generic)(e1)
           }
   
-  # result could be e.g. matrix. So check if adding back pseries features
+  # result could be, e.g., matrix. So check if adding back pseries features
   # makes sense (e.g., do not create something of class c("pseries", "matrix")).
   # Need is.atomic because is.vector is too strict, however need to sort out
   # some other data types

@@ -24,7 +24,7 @@ pbnftest(x, ...)
 
 \item{\dots}{only relevant for formula interface: further arguments
 to specify the model to test (arguments passed on to plm()),
-e.g.  \code{effect}.}
+e.g., \code{effect}.}
 
 \item{test}{a character indicating the test to be performed, either
 \code{"bnf"} or \code{"lbi"} for the (modified) BNF statistic or

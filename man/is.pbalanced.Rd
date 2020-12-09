@@ -46,7 +46,7 @@ object \code{x} are balanced (\code{TRUE}) or not
 (\code{FALSE}).
 }
 \description{
-This function checks if the data are balanced, i.e. if each individual has
+This function checks if the data are balanced, i.e., if each individual has
 the same time periods
 }
 \details{

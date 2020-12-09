@@ -17,7 +17,7 @@ pdwtest(x, ...)
 \code{"formula"},}
 
 \item{\dots}{further arguments to be passed on to \code{dwtest},
-e.g.  \code{alternative}, see \code{\link[lmtest:dwtest]{lmtest::dwtest()}} for
+e.g., \code{alternative}, see \code{\link[lmtest:dwtest]{lmtest::dwtest()}} for
 further details.}
 
 \item{data}{a \code{data.frame},}

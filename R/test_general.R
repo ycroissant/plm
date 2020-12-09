@@ -41,7 +41,7 @@ data.name <- function(x){
 #' @param index an optional vector of index variables,
 #' @param vcov an optional covariance function,
 #' @param \dots further arguments to be passed on. For the formula method,
-#' place argument `effect` here to compare e.g. twoway models
+#' place argument `effect` here to compare, e.g., twoway models
 #' (`effect = "twoways"`) Note: Argument `effect` is not respected in
 #' the panelmodel method.
 #' @return An object of class `"htest"`.
@@ -414,7 +414,7 @@ plmtest.plm <- function(x,
   res <- resid(x)
   
   ### calc of parts of test statistic ##
-  # calc. is done w/o using matrix calculation, see e.g. Baltagi/Li (1990), p. 106
+  # calc. is done w/o using matrix calculation, see, e.g., Baltagi/Li (1990), p. 106
   A1 <- as.numeric(crossprod(tapply(res, id, sum)) / sum(res ^ 2) - 1)   # == A1 <- sum(tapply(res,id,sum)^2)/sum(res^2) - 1
   A2 <- as.numeric(crossprod(tapply(res, time, sum)) / sum(res ^ 2) - 1) # == A2 <- sum(tapply(res,time,sum)^2)/sum(res^2) - 1
   
@@ -752,7 +752,7 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
   
   # sanity check
   if (df2adj == TRUE && (is.null(vcov_arg) || test != "F")) {
-    stop("df2adj == TRUE sensible only for robust F test, i.e. test == \"F\" and !is.null(vcov) and missing(.df2)")
+    stop("df2adj == TRUE sensible only for robust F test, i.e., test == \"F\" and !is.null(vcov) and missing(.df2)")
   }
   
   # if robust test: prepare robust vcov

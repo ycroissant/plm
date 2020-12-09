@@ -1,6 +1,6 @@
 residuals_overall_exp.plm <- function(x, ...) { #### experimental, non-exported function
 # residuals_overall.plm: gives the residuals of the "overall"/outer model for all types of plm models.
-# In the future, this could be integrated with residuals.plm by some argument, e.g. overall = FALSE (default).
+# In the future, this could be integrated with residuals.plm by some argument, e.g., overall = FALSE (default).
 # see also test file tests/test_residuals_overall_fitted_exp.R
   
   # no na.action eval yet
@@ -94,7 +94,7 @@ has.index <- function(object) {
 # names are the names of the index variables
 #
 # returns c(NA, NA) / c(NA, NA, NA) if the index variables are not a column in the pdata.frame
-# (e.g. for pdata.frames created with drop.index = TRUE).
+# (e.g., for pdata.frames created with drop.index = TRUE).
 # Cannot detect index variables if their columns names were changed after creation of the pdata.frame
 
 pos.index <- function(x, ...) {

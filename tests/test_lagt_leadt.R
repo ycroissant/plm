@@ -2,8 +2,8 @@
 # -> there is also a test file (test_lag_lead_factor_levels.R) for plm::lagr which does not
 #    treat the time variable as a numeric value (merely shifts rows)
 #
-# The lagging with respect to the time dimension is the default for lag since plm version 1.7-0, i.e.
-#  lag(..., shift = "time") is a wrapper for plm::lagt
+# The lagging with respect to the time dimension is the default for lag since
+#  plm version 1.7-0, i.e., lag(..., shift = "time") is a wrapper for plm::lagt
 #
 #
 #  (1) test of lagging of index variable
@@ -32,14 +32,14 @@ lag(Grunfeld$firm2)
 
 ############## (2.1) tests with eliminated factor levels ##########
 
-# lag by 1 eliminates some factor levels (e.g. "1" in the last observations)
+# lag by 1 eliminates some factor levels (e.g., "1" in the last observations)
 # from the sample's unique factor levels, but it should stay in the levels
 lag(Grunfeld$fac)
 if (!(length(unique(Grunfeld$fac)) == 200)) stop("wrong factor levels") # 200
 if (!(length(unique(lag(Grunfeld$fac))) == 191)) stop("wrong actually uniquely occuring factor levels")  # 191
 if (!(length(levels(lag(Grunfeld$fac))) == 200)) stop("wrong factor levels")  # 200
 
-# lead eliminates e.g. level "200"
+# lead eliminates e.g., level "200"
 lead(Grunfeld$fac)
 if (!(length(unique(Grunfeld$fac)) == 200)) stop("wrong factor levels") # 200
 if (!(length(unique(lead(Grunfeld$fac))) == 191)) stop("wrong factor levels") # 191

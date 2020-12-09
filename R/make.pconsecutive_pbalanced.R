@@ -5,7 +5,7 @@
 ### is.pconsecutive.* is in separate file is.pconsecutive.R
 
 #  consecutive: "consecutive in the numbers": t, t+1, t+2, ... where t is an integer,
-#                i.e. the time index var is interpreted as a numerical
+#                i.e., the time index var is interpreted as a numerical
 # 
 
 ## in the future, maybe make.pconsective could gain an additional argument 'fill' for the filled value (currently NA)
@@ -37,7 +37,7 @@
 #' Looking at the number of rows of the resulting (pdata.frame) (elements for
 #' pseries), this results in nrow(make.pconsecutive, balanced = FALSE) <=
 #' nrow(make.pconsecutive, balanced = TRUE).  For making the data only
-#' balanced, i.e. not demanding consecutiveness at the same time, use
+#' balanced, i.e., not demanding consecutiveness at the same time, use
 #' [make.pbalanced()] (see **Examples** for a comparison)).
 #' 
 #' Note: rows of (p)data.frames (elements for pseries) with `NA` values in
@@ -66,7 +66,7 @@
 #'     `index` as character of length 2 for data frames, for
 #'     further details see [pdata.frame()],
 #' @param \dots further arguments.
-#' @return An object of the same class as the input `x`, i.e. a
+#' @return An object of the same class as the input `x`, i.e., a
 #'     pdata.frame, data.frame or a pseries which is made
 #'     time--consecutive based on the index variables. The returned
 #'     data are sorted as a stacked time series.
@@ -383,7 +383,7 @@ make.pconsecutive.pseries <- function(x, balanced = FALSE, ...) {
 
 #' Make data balanced
 #' 
-#' This function makes the data balanced, i.e. each individual has the same
+#' This function makes the data balanced, i.e., each individual has the same
 #' time periods, by filling in or dropping observations
 #' 
 #' (p)data.frame and pseries objects are made balanced, meaning each
@@ -442,7 +442,7 @@ make.pconsecutive.pseries <- function(x, balanced = FALSE, ...) {
 #'     `index` as character of length 2 for data frames, for
 #'     further details see [pdata.frame()],
 #' @param \dots further arguments.
-#' @return An object of the same class as the input `x`, i.e. a
+#' @return An object of the same class as the input `x`, i.e., a
 #'     pdata.frame, data.frame or a pseries which is made balanced
 #'     based on the index variables. The returned data are sorted as a
 #'     stacked time series.

@@ -19,7 +19,7 @@
 #' \insertCite{CRIB:04;textual}{plm} \insertCite{@see @ZEIL:04}{plm}).
 #' 
 #' The main use of `vcovSCC` is to be an argument to other functions,
-#' e.g.  for Wald--type testing: argument `vcov.` to `coeftest()`,
+#' e.g.,for Wald--type testing: argument `vcov.` to `coeftest()`,
 #' argument `vcov` to `waldtest()` and other methods in the
 #' \CRANpkg{lmtest} package; and argument `vcov.` to
 #' `linearHypothesis()` in the \CRANpkg{car} package (see the
@@ -100,7 +100,7 @@ vcovSCC <- function(x, ...){
 #' \insertCite{CRIB:04;textual}{plm} \insertCite{@see @ZEIL:04}{plm}.
 #' 
 #' The main use of `vcovNW` is to be an argument to other functions,
-#' e.g.  for Wald--type testing: argument `vcov.` to `coeftest()`,
+#' e.g., for Wald--type testing: argument `vcov.` to `coeftest()`,
 #' argument `vcov` to `waldtest()` and other methods in the
 #' \CRANpkg{lmtest} package; and argument `vcov.` to
 #' `linearHypothesis()` in the \CRANpkg{car} package (see the
@@ -178,7 +178,7 @@ vcovNW <- function(x, ...){
 #' \insertCite{CRIB:04;textual}{plm} \insertCite{@see @ZEIL:04}{plm}.
 #' 
 #' The main use of `vcovDC` is to be an argument to other functions,
-#' e.g.  for Wald-type testing: argument `vcov.` to `coeftest()`,
+#' e.g., for Wald-type testing: argument `vcov.` to `coeftest()`,
 #' argument `vcov` to `waldtest()` and other methods in the
 #' \CRANpkg{lmtest} package; and argument `vcov.` to
 #' `linearHypothesis()` in the \CRANpkg{car} package (see the
@@ -454,7 +454,7 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
   ## robustifying against either serial or xs intragroup dependence:
   ## if 'group' then keep current indexing, if 'time' then swap i<->t
   ## so that residuals get 'clustered' by time period instead of by
-  ## group (i.e. the vcov estimator is robust vs. xsectional dependence)
+  ## group (i.e., the vcov estimator is robust vs. xsectional dependence)
 
   ## extract indices
     groupind <- as.numeric(attr(x$model, "index")[,1])
@@ -503,7 +503,7 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
   ## know who the grouping index 'g' is
 
   ## set number of clusters for Stata-like small sample correction
-  ## (if clustering, i.e. inner="cluster", then G is the cardinality of
+  ## (if clustering, i.e., inner="cluster", then G is the cardinality of
   ## the grouping index; if inner="white" it is simply the sample size)
     ## find some more elegant solution for this!
     ## (perhaps if white then sss->HC1 but check...)
@@ -555,7 +555,8 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
     ## sandwich
     mycov <- pane %*% salame %*% pane
     
-    # save information about cluster variable in matrix (needed for e.g. robust F test)
+    # save information about cluster variable in matrix (needed for e.g.,
+    # robust F test)
     attr(mycov, which = "cluster") <- match.arg(cluster)
     return(mycov)
 }
@@ -596,7 +597,7 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 # elaborate why different result for FE models (intercept)
 #' 
 #' The main use of `vcovHC` is to be an argument to other functions,
-#' e.g.  for Wald--type testing: argument `vcov.` to `coeftest()`,
+#' e.g., for Wald--type testing: argument `vcov.` to `coeftest()`,
 #' argument `vcov` to `waldtest()` and other methods in the
 #' \CRANpkg{lmtest} package; and argument `vcov.` to
 #' `linearHypothesis()` in the \CRANpkg{car} package (see the
@@ -735,7 +736,8 @@ vcovDC.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 
     res <- Vcx + Vct - Vw
     
-    # save information about cluster variable in matrix (needed for e.g. robust F test)
+    # save information about cluster variable in matrix (needed for e.g.,
+    # robust F test)
     attr(res, which = "cluster") <- "group-time"
     return(res)
 }
@@ -815,7 +817,7 @@ vcovSCC.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 # % elaborate why different result for FE models (intercept)
 #' 
 #' The main use of `vcovBK` is to be an argument to other functions,
-#' e.g.  for Wald--type testing: argument `vcov.` to `coeftest()`,
+#' e.g., for Wald--type testing: argument `vcov.` to `coeftest()`,
 #' argument `vcov` to `waldtest()` and other methods in the
 #' \CRANpkg{lmtest} package; and argument `vcov.` to
 #' `linearHypothesis()` in the \CRANpkg{car} package (see the
@@ -962,7 +964,7 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
   ## robustifying against either serial or xs intragroup dependence:
   ## if 'group' then keep current indexing, if 'time' then swap i<->t
   ## so that residuals get 'clustered' by time period instead of by
-  ## group (i.e. the vcov estimator is robust vs. xsectional dependence)
+  ## group (i.e., the vcov estimator is robust vs. xsectional dependence)
 
   ## extract indices
     groupind <- as.numeric(attr(x$model, "index")[,1])
@@ -1071,7 +1073,7 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
     }
 
     ## average over all omega blocks, removing NAs (apply preserving
-    ## *two* dimensions, i.e. over the third) to get the unconditional
+    ## *two* dimensions, i.e., over the third) to get the unconditional
     ## covariance matrix of errors for a group (viz. time period):
     OmegaT <- apply(tres, 1:2, mean, na.rm = TRUE)
 
@@ -1100,7 +1102,8 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
   ## sandwich
   mycov <- pane %*% salame %*% pane
   
-  # save information about cluster variable in matrix (needed for e.g. robust F test)
+  # save information about cluster variable in matrix (needed for e.g. ,
+  # robust F test)
   attr(mycov, which = "cluster") <- match.arg(cluster)
   return(mycov)
 }

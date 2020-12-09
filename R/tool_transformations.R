@@ -143,7 +143,7 @@ as.matrix.pseries <- function(x, idbyrow = TRUE, ...){
 
 ## plots a panel series by time index
 ##
-## can supply any panel function, e.g. a loess smoother
+## can supply any panel function, e.g., a loess smoother
 ## > mypanel<-function(x,...) {
 ## + panel.xyplot(x,...)
 ## + panel.loess(x, col="red", ...)}
@@ -578,7 +578,7 @@ Within.matrix <- function(x, effect, rm.null = TRUE, ...) {
 #' 
 #' - `shift = "row": `Methods perform the shifting operation based
 #' solely on the "physical position" of the observations,
-#' i.e. neighbouring rows are shifted per individual. The value in the
+#' i.e., neighbouring rows are shifted per individual. The value in the
 #' time index is not relevant in this case.
 #' 
 #' For consecutive time periods per individual, a switch of shifting

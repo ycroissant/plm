@@ -119,7 +119,7 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar", "Wbar"), orde
   # some input checks
   if (!inherits(formula, "formula") || length(all.vars(formula)) > 2) {
     stop(paste0("Argument 'formula' must be of class \"formula\" and may not contain ",
-                "more than 2 variables, one LHS and one RHS variable, e.g. 'y ~ x'"))
+                "more than 2 variables, one LHS and one RHS variable, e.g., 'y ~ x'"))
   }
   
   if (!(is.numeric(order) && all(round(order) == order) && all(order > 0))) 

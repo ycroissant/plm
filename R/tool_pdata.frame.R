@@ -304,7 +304,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
         }
     }
     else{
-        # id.name is not numeric, i.e. individual index is supplied
+        # id.name is not numeric, i.e., individual index is supplied
         if (!id.name %in% names(x)) stop(paste("variable ", id.name, " does not exist (individual index)", sep=""))
         
         if (is.factor(x[[id.name]])){
@@ -383,11 +383,11 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     test_doub <- table(index[[1]], index[[2]], useNA = "ifany")
     if (anyNA(colnames(test_doub)) || anyNA(rownames(test_doub)))
         cat(paste0("at least one couple (id-time) has NA in at least one index dimension",
-                   "in resulting pdata.frame\n to find out which, use e.g.",
+                   "in resulting pdata.frame\n to find out which, use e.g.,",
                    "table(index(your_pdataframe), useNA = \"ifany\")\n"))
     if (any(as.vector(test_doub[!is.na(rownames(test_doub)), !is.na(colnames(test_doub))]) > 1))
         warning(paste("duplicate couples (id-time) in resulting pdata.frame\n to find out which,",
-                      "use e.g. table(index(your_pdataframe), useNA = \"ifany\")"))
+                      "use e.g., table(index(your_pdataframe), useNA = \"ifany\")"))
     
     if (row.names) {
         attr(x, "row.names") <- fancy.row.names(index)
@@ -623,7 +623,7 @@ print.pdata.frame <- function(x, ...) {
 #
 #  By setting argument keep.attributes = TRUE, the attributes of the pdata.frame
 #  are preserved by as.list.pdata.frame: a list of pseries is returned
-#  and lapply can be used as usual, now working on a list of pseries, e.g.
+#  and lapply can be used as usual, now working on a list of pseries, e.g.,
 #    lapply(as.list(pdata.frame[ , your_cols], keep.attributes), lag)
 #  works as expected.
 

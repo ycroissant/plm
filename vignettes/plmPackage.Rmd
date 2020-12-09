@@ -70,7 +70,7 @@ two-dimensional data, especially in the case of unbalanced panels.
 This paper is organized as follows: Section [linear panel model](#linear-panel-model)
 presents a very short overview of the typical model
 taxonomy^[Comprehensive treatments are to be found in many econometrics textbooks,
-e.g. @BALT:05, @BALT:13 or @WOOL:02, @WOOL:10: the reader is referred to
+e.g., @BALT:05, @BALT:13 or @WOOL:02, @WOOL:10: the reader is referred to
 these, especially to the first 9 chapters of @BALT:05, @BALT:13.].
 Section [software approach](#software-approach) discusses the
 software approach used in the package. The next three sections present
@@ -202,7 +202,7 @@ $\beta_{it}=\beta+\eta_{i}$ for all $t$, where $\eta_{i}$ is a group--
 <!--
 The hypotheses on parameters and error terms (and hence the choice of
 the most appropriate estimator) are usually tested by means of: *pooling*
-tests to check poolability, i.e. the hypothesis that the
+tests to check poolability, i.e., the hypothesis that the
 same coefficients apply across all individuals; and random effects
 tests, comparing the null of spherical residuals with the alternative
 of group (time) specific effects in the error term. If the homogeneity
@@ -221,7 +221,7 @@ The hypotheses on parameters and error terms (and hence the choice of
 the most appropriate estimator) are usually tested by means of:
 
 
-- *pooling* tests to check poolability, i.e. the hypothesis
+- *pooling* tests to check poolability, i.e., the hypothesis
   that the same coefficients apply across all individuals,
 - if the homogeneity assumption over the coefficients is
   established, the next step is to establish the presence of
@@ -299,7 +299,7 @@ and then to use the `pdata.frame` in the estimation functions.
 `plm` provides various functions for estimation, among them:
 
 - `plm`: estimation of the
-  basic panel models, *i.e.* within, between and random effect
+  basic panel models, *i.e.*, within, between and random effect
   models. Models are estimated using the `lm` function to
   transformed data,
 - `pvcm`: estimation of models with variable coefficients,
@@ -319,10 +319,10 @@ function. Namely, their first two arguments are `formula` and
 mandatory). Three additional arguments are common to these functions:
 
 - `index`: this argument enables the estimation functions
-  to identify the structure of the data, *i.e.* the individual
+  to identify the structure of the data, *i.e.*, the individual
   and the time period for each observation,
 - `effect`: the kind of effects to include in the model,
-  *i.e.* individual effects, time effects or both^[Although in most models the 
+  *i.e.*, individual effects, time effects or both^[Although in most models the 
   individual and time effects cases are symmetric, there are exceptions: 
   estimating the *first-difference* model on time effects is meaningless
   because cross-sections do not generally have a natural ordering, so trying 
@@ -382,7 +382,7 @@ of the need to invert the $N\times N$ $\hat{V}$ matrix. With the
 advances in computer power, this is no more so, and it is possible to
 program the "naive" estimator \@ref(eq:naive) in `R` with standard
 matrix algebra operators and have it working seamlessly for the
-standard "guinea pigs", e.g. the Grunfeld data. Estimation with a
+standard "guinea pigs", e.g., the Grunfeld data. Estimation with a
 couple of thousands of data points also becomes feasible on a modern
 machine, although excruciatingly slow and definitely not suitable for
 everyday econometric practice. Memory limits would also be very near
@@ -1057,7 +1057,7 @@ heteroskedasticity. Cross-sectional correlation is excluded a priori.
 
 Moreover, the number of variance parameters to be estimated with $N=n\times T$
 data points is $T(T+1)/2$, which makes these estimators particularly
-suited for situations where $n>>T$, as e.g. in labour or household
+suited for situations where $n>>T$, as e.g., in labour or household
 income surveys, while problematic for "long" panels, where $\hat{V}$
 tends to become singular and standard errors therefore become biased
 downwards.
@@ -1222,7 +1222,7 @@ not die out over time, thus standard tests applied on pooled data
 always end up rejecting the null of spherical residuals^[Neglecting
 time effects may also lead to serial correlation in residuals (as
 observed in @WOOL:02 10.4.1).].  There may also be serial correlation
-of the "usual" kind in the idiosyncratic error terms, e.g. as an AR(1)
+of the "usual" kind in the idiosyncratic error terms, e.g., as an AR(1)
 process. By "testing for serial correlation" we mean testing for this
 latter kind of dependence.
 
@@ -1881,7 +1881,7 @@ else one may do the covariance computation inside the call to
 coeftest(re, vcovHC(re, method="white2", type="HC3"), df = Inf)
 ``` 
 
-For some tests, e.g. for multiple model comparisons by `waldtest`, one
+For some tests, e.g., for multiple model comparisons by `waldtest`, one
 should always provide a function^[Joint zero-restriction testing still
 allows providing the `vcov` of the unrestricted model as a matrix, see
 the documentation of package `lmtest`.].  In this case, optional
@@ -1890,7 +1890,7 @@ parameters are provided as shown below (see also @ZEIL:04, p. 12):
 ```{r waldtest}
 waldtest(re, update(re,.~.-capital),
          vcov=function(x) vcovHC(x, method="white2", type="HC3"))
-``` 
+```
 
 Moreover, `linearHypothesis` from package `car` may be used to test 
 for linear restrictions:

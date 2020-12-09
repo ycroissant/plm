@@ -67,7 +67,7 @@ result in a meaningful integer).
 \itemize{
 \item \verb{shift = "row": }Methods perform the shifting operation based
 solely on the "physical position" of the observations,
-i.e. neighbouring rows are shifted per individual. The value in the
+i.e., neighbouring rows are shifted per individual. The value in the
 time index is not relevant in this case.
 }
 

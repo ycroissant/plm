@@ -308,10 +308,10 @@ variables (IV). The instruments are specified using two- or three-part
 formulas, each part being separated by a `|` sign :
 
 - the first part contains the covariates,
-- the second part contains the "double-exogenous" instruments, *i.e.*
+- the second part contains the "double-exogenous" instruments, *i.e.*,
   variables that can be used twice as instruments, using their within
   and the between transformation,
-- the third part contains the "single-exogenous" instruments, *i.e.*
+- the third part contains the "single-exogenous" instruments, *i.e.*,
   variables for which only the within transformation can be used as
   instruments, those variables being correlated with the individual
   effects.

@@ -653,11 +653,11 @@ plm()):
 
 # plm 1.5-14
 
-* mylm: added commented (i.e. inactive) warning about dropped coefficients in estimation.
-* fitted.plm: added commented (i.e. inactive) warning in about dropped coefficients in
+* mylm: added commented (i.e., inactive) warning about dropped coefficients in estimation.
+* fitted.plm: added commented (i.e., inactive) warning in about dropped coefficients in
     estimated model compared to specified model.matrix.
 * added testfile tests/test_fitted.plm.R (some of those test currently do not run
-    (commented, i.e. inactive)).
+    (commented, i.e., inactive)).
 * pmodel.response.pFormula: make sure supplied formula is a pFormula before we continue
     (coerce to pFormula), fixes "bugs" (rather unexpected, but documented behaviour) like:
       pmodel.response.pFormula(regular_formula, data = dat, model = "pooling")
@@ -666,7 +666,7 @@ plm()):
 * some testfiles: fixed wired encodings.
 * lag.pseries: modified to handle negative lags (=leading values).
 * lead.pseries: added function as a wrapper for lag.pseries(x, k = -1) for convenience,
-    i.e. lag(x, k = -1) == lead(x, k = 1).
+    i.e., lag(x, k = -1) == lead(x, k = 1).
 * diff.pseries: prevented negative lags as input to avoid confusion.
 * doc for pseries functions are made available under their name, e.g., ?lag now displays helpfile for
     lag.pseries in the help overview (besides e.g. stats::lag).

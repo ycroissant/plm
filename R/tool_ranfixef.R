@@ -125,7 +125,7 @@ fixef.plm <- function(object, effect = NULL,
     nw <- names(coef(object))
   
     # For procedure to get the individual/time effects by muliplying the within
-    # estimates with the between-ed data, see e.g.
+    # estimates with the between-ed data, see e.g.:
     #  Wooldridge (2010), Econometric Analysis of Cross Section and Panel Data, 2nd ed., 
     #                     Ch. 10.5.3, pp. 308-309, formula (10.58)
     #  Greene (2012), Econometric Analysis,
@@ -347,7 +347,7 @@ ranef.plm <- function(object, effect = NULL, ...) {
 #' \insertCite{@see @GOUL:13}{plm}, EViews of IHS, and gretl
 #' \insertCite{@gretl p. 160-161, example 18.1}{plm}, see for
 #' treatment in the literature,
-#' e.g. \insertCite{GREE:12;textual}{plm}, Ch. 11.4.4, p. 364. It can
+#' e.g., \insertCite{GREE:12;textual}{plm}, Ch. 11.4.4, p. 364. It can
 #' be considered an overall intercept in the within model framework
 #' and is the weighted mean of fixed effects (see **Examples** for the
 #' relationship).
@@ -361,7 +361,7 @@ ranef.plm <- function(object, effect = NULL, ...) {
 #' Users can set argument `vcov` to a function to calculate a
 #' specific (robust) variance--covariance matrix and get the
 #' respective (robust) standard error for the overall intercept,
-#' e.g. the function [vcovHC()], see examples for
+#' e.g., the function [vcovHC()], see examples for
 #' usage. Note: The argument `vcov` must be a function, not a
 #' matrix, because the model to calculate the overall intercept for
 #' the within model is different from the within model itself.
@@ -435,11 +435,11 @@ within_intercept.plm <- function(object, vcov = NULL, ...) {
   
   # vcov must be a function, because the auxiliary model estimated to get the
   # overall intercept next to its standard errors is different from
-  # the FE model for which the intercept is estimated, e.g. dimensions
+  # the FE model for which the intercept is estimated, e.g., dimensions
   # of vcov differ for FE and for auxiliary model.
   if (!is.null(vcov)) {
-    if (is.matrix(vcov)) stop("for within_intercept, 'vcov' may not be of class 'matrix', it must be supplied as a function, e.g. vcov = function(x) vcovHC(x)")
-    if (!is.function(vcov)) stop("for within_intercept, argument 'vcov' must be a function, e.g. vcov = function(x) vcovHC(x)")
+    if (is.matrix(vcov)) stop("for within_intercept, 'vcov' may not be of class 'matrix', it must be supplied as a function, e.g., vcov = function(x) vcovHC(x)")
+    if (!is.function(vcov)) stop("for within_intercept, argument 'vcov' must be a function, e.g., vcov = function(x) vcovHC(x)")
   }
   
   index <- attr(object$model, which = "index")

@@ -32,7 +32,7 @@ dimensions ('individual', 'time') need to be specified by
 further details see \code{\link[=pdata.frame]{pdata.frame()}},}
 }
 \value{
-An object of the same class as the input \code{x}, i.e. a
+An object of the same class as the input \code{x}, i.e., a
 pdata.frame, data.frame or a pseries which is made
 time--consecutive based on the index variables. The returned
 data are sorted as a stacked time series.
@@ -60,7 +60,7 @@ individuals (w/o \code{NA} values) and inserting the missing time periods.
 Looking at the number of rows of the resulting (pdata.frame) (elements for
 pseries), this results in nrow(make.pconsecutive, balanced = FALSE) <=
 nrow(make.pconsecutive, balanced = TRUE).  For making the data only
-balanced, i.e. not demanding consecutiveness at the same time, use
+balanced, i.e., not demanding consecutiveness at the same time, use
 \code{\link[=make.pbalanced]{make.pbalanced()}} (see \strong{Examples} for a comparison)).
 
 Note: rows of (p)data.frames (elements for pseries) with \code{NA} values in

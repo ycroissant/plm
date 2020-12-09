@@ -16,7 +16,7 @@
 
   ## In principle, the test can be performed on the results of *any*
   ## panelmodel object. Some issues remain regarding standardization of
-  ## model output: some missing pieces are e.g. the 'model$indexes'
+  ## model output: some missing pieces are, e.g., the 'model$indexes'
   ## in ggls. ''fd'' models are also not compatible because of indexes
   ## keeping the original timespan, while data lose the first period.
 
@@ -81,7 +81,7 @@
 #' the LM test.
 #' 
 #' The test on a `pseries` is the same as a test on a pooled
-#' regression model of that variable on a constant, i.e.
+#' regression model of that variable on a constant, i.e.,
 #' `pcdtest(some_pseries)` is equivalent to `pcdtest(plm(some_var ~ 1,
 #' data = some_pdata.frame, model = "pooling")` and also equivalent to
 #' `pcdtest(some_var ~ 1, data = some_data)`, where `some_var` is
@@ -460,7 +460,7 @@ pcdres <- function(tres, n, w, form, test) {
 
 preshape <- function(x, na.rm = TRUE, ...) {
     ## reshapes pseries,
-    ## e.g. of residuals from a panelmodel,
+    ## e.g., of residuals from a panelmodel,
     ## in wide form
     inames <- names(attr(x, "index"))
     mres <- reshape(cbind(as.vector(x), attr(x, "index")),
@@ -522,7 +522,7 @@ cortab <- function(x, grouping, groupnames = NULL,
 
     ## make matrices of between-regions correlations
     ## (includes within correlation on diagonal)
-    ## for each pair of regions (nb: no duplicates, e.g. 3.1 but not 1.3)
+    ## for each pair of regions (nb: no duplicates, e.g., 3.1 but not 1.3)
 
     ## make w<1.n>:
     for(h in 1:length(regs)) {

@@ -34,7 +34,7 @@ effects models) was made popular by Stata of StataCorp
 \insertCite{@see @GOUL:13}{plm}, EViews of IHS, and gretl
 \insertCite{@gretl p. 160-161, example 18.1}{plm}, see for
 treatment in the literature,
-e.g. \insertCite{GREE:12;textual}{plm}, Ch. 11.4.4, p. 364. It can
+e.g., \insertCite{GREE:12;textual}{plm}, Ch. 11.4.4, p. 364. It can
 be considered an overall intercept in the within model framework
 and is the weighted mean of fixed effects (see \strong{Examples} for the
 relationship).
@@ -48,7 +48,7 @@ intercept for twoway fixed effect models.
 Users can set argument \code{vcov} to a function to calculate a
 specific (robust) variance--covariance matrix and get the
 respective (robust) standard error for the overall intercept,
-e.g. the function \code{\link[=vcovHC]{vcovHC()}}, see examples for
+e.g., the function \code{\link[=vcovHC]{vcovHC()}}, see examples for
 usage. Note: The argument \code{vcov} must be a function, not a
 matrix, because the model to calculate the overall intercept for
 the within model is different from the within model itself.

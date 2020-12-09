@@ -14,12 +14,12 @@ if(!isTRUE(all.equal(names(residuals(gr)),       row.names(Grunfeld)))) stop("or
 
 
 # make a pdata.frame with "fancy" row.names (default)
-# [i.e. combination of individual index an time index]
+# [i.e., combination of individual index an time index]
 pGrunfeld <- pdata.frame(Grunfeld, index = c("firm", "year"))
 row.names(pGrunfeld) # fancy row.names
 gr_fancy_rownames <- plm(inv ~ value + capital, data=pGrunfeld, model="pooling")
 
-# original row.names of pGrunfeld (i.e. "fancy" row.names) are preserved
+# original row.names of pGrunfeld (i.e., "fancy" row.names) are preserved
 if(!isTRUE(all.equal(row.names(gr_fancy_rownames$model), row.names(pGrunfeld)))) stop("original rownames not preserved in plm_obj$model")
 if(!isTRUE(all.equal(row.names(model.frame(gr_fancy_rownames)), row.names(pGrunfeld)))) stop("original rownames not preserved in model.frame(plm_obj)")
 if(!isTRUE(all.equal(names(pmodel.response(gr_fancy_rownames)), row.names(pGrunfeld)))) stop("original rownames not preserved in names(pmodel.response(plm_obj))")

@@ -59,7 +59,7 @@ resp <- pmodel.response(form, data = mf, model = "within", effect = "individual"
 # retrieve (transformed) response directly from model frame
 resp_mf <- pmodel.response(mf, model = "within", effect = "individual")
 
-# retrieve (transformed) response from a plm object, i.e. an estimated model
+# retrieve (transformed) response from a plm object, i.e., an estimated model
 fe_model <- plm(form, data = pGrunfeld, model = "within")
 pmodel.response(fe_model)
 

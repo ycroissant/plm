@@ -71,7 +71,7 @@ considered for consecutiveness, not the "physical position" of the various
 observations for an individuals in the (p)data.frame/pseries (it is not
 about "neighbouring" rows). If the object to be evaluated is a pseries or a
 pdata.frame, the time index is coerced from factor via as.character to
-numeric, i.e. the series
+numeric, i.e., the series
 \verb{as.numeric(as.character(index(<pseries/pdata.frame>)[[2]]))]} is
 evaluated for gaps.
 
