@@ -1,7 +1,7 @@
 
-R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
-Copyright (C) 2019 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
+R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
+Copyright (C) 2020 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -32,7 +32,7 @@ Type 'q()' to quit R.
 > dat <- data.frame(y, x, ind=rep(ind, T), t=rep(1:T, each=length(ind)))
 > data <- pdata.frame(dat, index=c("ind", "t"))
 at least one couple (id-time) has NA in at least one index dimensionin resulting pdata.frame
- to find out which, use e.g.table(index(your_pdataframe), useNA = "ifany")
+ to find out which, use e.g., table(index(your_pdataframe), useNA = "ifany")
 > a <- try(m <- plm(y ~ x, data=data, model="random"))
 Error in model.matrix.pdata.frame(data) : 
   NA in the individual index variable
@@ -40,4 +40,4 @@ Error in model.matrix.pdata.frame(data) :
 > 
 > proc.time()
    user  system elapsed 
-  0.474   0.032   0.498 
+   0.67    0.09    0.71 

@@ -274,7 +274,7 @@ Unbalanced Panel: n = 92, T = 1-30, N = 506
 >   data("Grunfeld", package = "plm")
 >   Grunfeld_dup <- rbind(Grunfeld, Grunfeld[200, ])
 >   ttC <-  tryCatch(pdata.frame(Grunfeld_dup), error=function(e) e, warning=function(w) w)
->   if(!is(ttC,"warning") | ttC$message != "duplicate couples (id-time) in resulting pdata.frame\n to find out which, use e.g. table(index(your_pdataframe), useNA = \"ifany\")")
+>   if(!is(ttC,"warning") | ttC$message != "duplicate couples (id-time) in resulting pdata.frame\n to find out which, use e.g., table(index(your_pdataframe), useNA = \"ifany\")")
 +     stop("warning of duplicated couples not successful")
 > 
 > 
@@ -3434,4 +3434,4 @@ In index.pindex(x = anindex, which = which) :
 > 
 > proc.time()
    user  system elapsed 
-   0.62    0.23    0.81 
+   0.71    0.18    0.89 

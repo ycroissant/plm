@@ -1,7 +1,7 @@
 
-R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
-Copyright (C) 2019 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
+R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
+Copyright (C) 2020 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -19,8 +19,8 @@ Type 'q()' to quit R.
 > # -> there is also a test file (test_lag_lead_factor_levels.R) for plm::lagr which does not
 > #    treat the time variable as a numeric value (merely shifts rows)
 > #
-> # The lagging with respect to the time dimension is the default for lag since plm version 1.7-0, i.e.
-> #  lag(..., shift = "time") is a wrapper for plm::lagt
+> # The lagging with respect to the time dimension is the default for lag since
+> #  plm version 1.7-0, i.e., lag(..., shift = "time") is a wrapper for plm::lagt
 > #
 > #
 > #  (1) test of lagging of index variable
@@ -131,7 +131,7 @@ Levels: 1 2 3 4 5 6 7 8 9 10
 > 
 > ############## (2.1) tests with eliminated factor levels ##########
 > 
-> # lag by 1 eliminates some factor levels (e.g. "1" in the last observations)
+> # lag by 1 eliminates some factor levels (e.g., "1" in the last observations)
 > # from the sample's unique factor levels, but it should stay in the levels
 > lag(Grunfeld$fac)
  1-1935  1-1936  1-1937  1-1938  1-1939  1-1940  1-1941  1-1942  1-1943  1-1944 
@@ -179,7 +179,7 @@ Levels: 1 2 3 4 5 6 7 8 9 10
 > if (!(length(unique(lag(Grunfeld$fac))) == 191)) stop("wrong actually uniquely occuring factor levels")  # 191
 > if (!(length(levels(lag(Grunfeld$fac))) == 200)) stop("wrong factor levels")  # 200
 > 
-> # lead eliminates e.g. level "200"
+> # lead eliminates e.g., level "200"
 > lead(Grunfeld$fac)
  1-1935  1-1936  1-1937  1-1938  1-1939  1-1940  1-1941  1-1942  1-1943  1-1944 
     199     198     197     196     195     194     193     192     191     190 
@@ -1031,7 +1031,7 @@ FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
 > 
 > pdfNA <- pdata.frame(dfNA)
 at least one couple (id-time) has NA in at least one index dimensionin resulting pdata.frame
- to find out which, use e.g.table(index(your_pdataframe), useNA = "ifany")
+ to find out which, use e.g., table(index(your_pdataframe), useNA = "ifany")
 > 
 > if (!isTRUE(all.equal(as.numeric(plm:::lagt.pseries(pdfNA$a)), c(NA, 1.0, NA, NA, NA), check.attributes = FALSE)))
 +   stop("NA in time period not dealt with correctly")
@@ -1089,4 +1089,4 @@ at least one couple (id-time) has NA in at least one index dimensionin resulting
 > 
 > proc.time()
    user  system elapsed 
-  1.088   0.052   1.141 
+   0.78    0.18    0.89 

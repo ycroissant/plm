@@ -1,7 +1,7 @@
 
-R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
-Copyright (C) 2019 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
+R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
+Copyright (C) 2020 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -15,7 +15,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> # tests of lagr and leadr (shifting of rows), i.e. lag(..., shift = "row")
+> # tests of lagr and leadr (shifting of rows), i.e., lag(..., shift = "row")
 > #
 > #  (1) test of lagging of index variable
 > #  (2) some dropped factor levels / whole period missing
@@ -130,7 +130,7 @@ Levels: 1 2 3 4 5 6 7 8 9 10
 > 
 > ############## (2.1) tests with eliminated factor levels ##########
 > 
-> # lag by 1 eliminates some factor levels (e.g. "1" in the last observations)
+> # lag by 1 eliminates some factor levels (e.g., "1" in the last observations)
 > # from the sample's unique factor levels, but it should stay in the levels
 > plm:::lagr.pseries(Grunfeld$fac)
  1-1935  1-1936  1-1937  1-1938  1-1939  1-1940  1-1941  1-1942  1-1943  1-1944 
@@ -178,7 +178,7 @@ Levels: 1 2 3 4 5 6 7 8 9 10
 > if (!(length(unique(plm:::lagr.pseries(Grunfeld$fac))) == 191)) stop("plm:::lagr.pseries: wrong actually uniquely occuring factor values")  # 191
 > if (!(length(levels(plm:::lagr.pseries(Grunfeld$fac))) == 200)) stop("wrong factor levels")  # 200
 > 
-> # plm::lead eliminates e.g. level "200"
+> # plm::lead eliminates e.g., level "200"
 > plm:::leadr.pseries(Grunfeld$fac)
  1-1935  1-1936  1-1937  1-1938  1-1939  1-1940  1-1941  1-1942  1-1943  1-1944 
     199     198     197     196     195     194     193     192     191     190 
@@ -232,7 +232,7 @@ Levels: 1 2 3 4 5 6 7 8 9 10
 > Grunfeld_wo_1937 <- pdata.frame(Grunfeld[-obs_3rd, ])
 > 
 > # illustration:
-> levels(Grunfeld_wo_1937$year) # no year 1937 anymore and no level for 1937 anymore (a year in between, i.e. not consecutive series anymore)
+> levels(Grunfeld_wo_1937$year) # no year 1937 anymore and no level for 1937 anymore (a year in between, i.e., not consecutive series anymore)
  [1] "1935" "1936" "1938" "1939" "1940" "1941" "1942" "1943" "1944" "1945"
 [11] "1946" "1947" "1948" "1949" "1950" "1951" "1952" "1953" "1954"
 > as.numeric(Grunfeld_wo_1937$year)                # as.numeric produces a consecutive series!
@@ -995,4 +995,4 @@ FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
 > 
 > proc.time()
    user  system elapsed 
-  0.786   0.087   0.860 
+   0.73    0.10    0.81 

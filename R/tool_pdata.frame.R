@@ -383,7 +383,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     test_doub <- table(index[[1]], index[[2]], useNA = "ifany")
     if (anyNA(colnames(test_doub)) || anyNA(rownames(test_doub)))
         cat(paste0("at least one couple (id-time) has NA in at least one index dimension",
-                   "in resulting pdata.frame\n to find out which, use e.g.,",
+                   "in resulting pdata.frame\n to find out which, use e.g., ",
                    "table(index(your_pdataframe), useNA = \"ifany\")\n"))
     if (any(as.vector(test_doub[!is.na(rownames(test_doub)), !is.na(colnames(test_doub))]) > 1))
         warning(paste("duplicate couples (id-time) in resulting pdata.frame\n to find out which,",
