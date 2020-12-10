@@ -9897,7 +9897,7 @@ Multiple R-squared: 0.99993
 > # retrieve (transformed) response directly from model frame
 > resp_mf <- pmodel.response(mf, model = "within", effect = "individual")
 > 
-> # retrieve (transformed) response from a plm object, i.e. an estimated model
+> # retrieve (transformed) response from a plm object, i.e., an estimated model
 > fe_model <- plm(form, data = pGrunfeld, model = "within")
 > pmodel.response(fe_model)
    1-1935    1-1936    1-1937    1-1938    1-1939    1-1940    1-1941    1-1942 
@@ -13748,7 +13748,7 @@ attr(,"se")
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  10.7 0.51 11.22 NA NA 
+Time elapsed:  10.39 0.43 10.85 NA NA 
 > grDevices::dev.off()
 null device 
           1 
