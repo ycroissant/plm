@@ -233,13 +233,13 @@ alias.plm <- function(object, ...) {
   if (!is.null(dots[["partial"]])) {
     if (dots[["partial"]]) {
       dots[["partial"]] <- FALSE
-      warning("alias.plm/alias.pFormula: arg partial = \"TRUE\" not supported, changed to FALSE")
+      warning("alias.plm/alias.pFormula: arg partial = TRUE not supported, changed to FALSE")
     }
   } 
   if (!is.null(dots[["partial.pattern"]])) {
     if (dots[["partial.pattern"]]) {
       dots[["partial.pattern"]] <- FALSE
-      warning("alias.plm/alias.pFormula: arg partial.pattern = \"TRUE\" not supported, changed to FALSE")
+      warning("alias.plm/alias.pFormula: arg partial.pattern = TRUE not supported, changed to FALSE")
     }
   }
   
