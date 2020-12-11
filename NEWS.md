@@ -18,6 +18,13 @@ plm()):
 * Sum (internal),
 * Within.
 
+### Features:
+* within_intercept gains argument 'return.model' (default is FALSE and the
+  functions works as previously). If set to TRUE, a full model object is
+  returned which is the input's within model with an intercept (see
+  documentation for more details).
+
+
 ### Fixes:
 * between.default: keeps original sequence of elements' occurrence (before,
   compressed output was sorted by the factor's *level* order).

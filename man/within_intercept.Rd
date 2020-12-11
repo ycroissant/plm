@@ -7,7 +7,7 @@
 \usage{
 within_intercept(object, ...)
 
-\method{within_intercept}{plm}(object, vcov = NULL, ...)
+\method{within_intercept}{plm}(object, vcov = NULL, return.model = FALSE, ...)
 }
 \arguments{
 \item{object}{object of class \code{plm} which must be a within
@@ -17,16 +17,22 @@ model (fixed effects model),}
 
 \item{vcov}{if not \code{NULL} (default), a function to calculate a
 user defined variance--covariance matrix (function for robust
-vcov),}
+vcov), only used if \code{return.model = FALSE},}
+
+\item{return.model}{a logical to indicate whether only the overall intercept
+(\code{FALSE} is default) or a full model object (\code{TRUE}) is to be returned,}
 }
 \value{
-A named \code{numeric} of length one: The overall intercept
-for the estimated within model along attribute "se" which
-contains the standard error for the intercept.
+Depending on argument \code{return.model}:  If \code{FALSE} (default), a named
+\code{numeric} of length one: The overall intercept for the estimated within model
+along attribute "se" which contains the standard error for the intercept.
+If \code{return.model = TRUE}, the full model object, a within model with the
+overall intercept (NB: the model identifies itself as a pooling model, e.g.,
+in summary()).
 }
 \description{
 This function gives an overall intercept for within models and its
-accompanying standard error
+accompanying standard error or an within model with the overall intercept
 }
 \details{
 The (somewhat artificial) intercept for within models (fixed
@@ -52,6 +58,9 @@ e.g., the function \code{\link[=vcovHC]{vcovHC()}}, see examples for
 usage. Note: The argument \code{vcov} must be a function, not a
 matrix, because the model to calculate the overall intercept for
 the within model is different from the within model itself.
+
+If argument \code{return.model = TRUE} is set, the full model object is returned,
+while in the default case only the intercept is returned.
 }
 \examples{
 
@@ -75,6 +84,12 @@ all.equal(overallint + fx_dmean, fx_level, check.attributes = FALSE) # TRUE
 
 # overall intercept with robust standard error
 within_intercept(gi, vcov = function(x) vcovHC(x, method="arellano", type="HC0"))
+
+# have a model returned
+mod_fe_int <- within_intercept(gi, return.model = TRUE)
+summary(mod_fe_int)
+# replicates Stata's robust standard errors
+summary(mod_fe_int, vcvov = function(x) vcovHC(x, type = "sss")) 
 
 }
 \references{

@@ -24,6 +24,7 @@ effect.pgmm.list <- c(individual = "Oneway (individual) effect",
 
 model.plm.list <- c(pooling = "Pooling",
                     within  = "Within",
+                    within_intercept = "Within intercept non-standard", # for within_intercept(., return.model = TRUE)
                     between = "Between",
                     random  = "Random Effect",
                     ht      = "Hausman-Taylor",

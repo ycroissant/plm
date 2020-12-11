@@ -13740,6 +13740,60 @@ detaching 'package:car', 'package:carData', 'package:lmtest',
 attr(,"se")
 [1] 26.05445
 > 
+> # have a model returned
+> mod_fe_int <- within_intercept(gi, return.model = TRUE)
+> summary(mod_fe_int)
+Pooling Model
+
+Call:
+plm(formula = form, data = data, model = "pooling")
+
+Balanced Panel: n = 10, T = 20, N = 200
+
+Residuals:
+      Min.    1st Qu.     Median    3rd Qu.       Max. 
+-184.00857  -17.64316    0.56337   19.19222  250.70974 
+
+Coefficients:
+              Estimate Std. Error t-value  Pr(>|t|)    
+(Intercept) -58.743939  12.165891 -4.8286 2.755e-06 ***
+value         0.110124   0.011583  9.5076 < 2.2e-16 ***
+capital       0.310065   0.016953 18.2892 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    2244400
+Residual Sum of Squares: 523480
+R-Squared:      0.76676
+Adj. R-Squared: 0.76439
+F-statistic: 323.807 on 2 and 197 DF, p-value: < 2.22e-16
+> # replicates Stata's robust standard errors
+> summary(mod_fe_int, vcvov = function(x) vcovHC(x, type = "sss")) 
+Pooling Model
+
+Call:
+plm(formula = form, data = data, model = "pooling")
+
+Balanced Panel: n = 10, T = 20, N = 200
+
+Residuals:
+      Min.    1st Qu.     Median    3rd Qu.       Max. 
+-184.00857  -17.64316    0.56337   19.19222  250.70974 
+
+Coefficients:
+              Estimate Std. Error t-value  Pr(>|t|)    
+(Intercept) -58.743939  12.165891 -4.8286 2.755e-06 ***
+value         0.110124   0.011583  9.5076 < 2.2e-16 ***
+capital       0.310065   0.016953 18.2892 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    2244400
+Residual Sum of Squares: 523480
+R-Squared:      0.76676
+Adj. R-Squared: 0.76439
+F-statistic: 323.807 on 2 and 197 DF, p-value: < 2.22e-16
+> 
 > 
 > 
 > 
@@ -13748,7 +13802,7 @@ attr(,"se")
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  10.39 0.43 10.85 NA NA 
+Time elapsed:  22.54 1.14 24.64 NA NA 
 > grDevices::dev.off()
 null device 
           1 

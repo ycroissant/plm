@@ -340,7 +340,7 @@ ranef.plm <- function(object, effect = NULL, ...) {
 #' Overall Intercept for Within Models Along its Standard Error
 #' 
 #' This function gives an overall intercept for within models and its
-#' accompanying standard error
+#' accompanying standard error or an within model with the overall intercept
 #' 
 #' The (somewhat artificial) intercept for within models (fixed
 #' effects models) was made popular by Stata of StataCorp
@@ -366,16 +366,25 @@ ranef.plm <- function(object, effect = NULL, ...) {
 #' matrix, because the model to calculate the overall intercept for
 #' the within model is different from the within model itself.
 #' 
+#' If argument `return.model = TRUE` is set, the full model object is returned,
+#' while in the default case only the intercept is returned.
+#' 
 #' @aliases within_intercept
 #' @param object object of class `plm` which must be a within
 #'     model (fixed effects model),
 #' @param vcov if not `NULL` (default), a function to calculate a
 #'     user defined variance--covariance matrix (function for robust
-#'     vcov),
+#'     vcov), only used if `return.model = FALSE`,
+#' @param return.model a logical to indicate whether only the overall intercept
+#'     (`FALSE` is default) or a full model object (`TRUE`) is to be returned, 
 #' @param \dots further arguments (currently none).
-#' @return A named `numeric` of length one: The overall intercept
-#'     for the estimated within model along attribute "se" which
-#'     contains the standard error for the intercept.
+#' @return Depending on argument `return.model`:  If `FALSE` (default), a named
+#' `numeric` of length one: The overall intercept for the estimated within model
+#'  along attribute "se" which contains the standard error for the intercept.
+#'  If `return.model = TRUE`, the full model object, a within model with the
+#'  overall intercept (NB: the model identifies itself as a pooling model, e.g.,
+#'  in summary()).
+#'  
 #' @export
 #' @author Kevin Tappe
 #' @seealso [fixef()] to extract the fixed effects of a
@@ -410,7 +419,14 @@ ranef.plm <- function(object, effect = NULL, ...) {
 #' 
 #' # overall intercept with robust standard error
 #' within_intercept(gi, vcov = function(x) vcovHC(x, method="arellano", type="HC0"))
-#' 
+#'
+#' # have a model returned
+#' mod_fe_int <- within_intercept(gi, return.model = TRUE)
+#' summary(mod_fe_int)
+#' # replicates Stata's robust standard errors
+#' summary(mod_fe_int, vcvov = function(x) vcovHC(x, type = "sss")) 
+# 
+#'
 within_intercept <- function(object, ...) {
   UseMethod("within_intercept")
 }
@@ -426,8 +442,8 @@ within_intercept <- function(object, ...) {
 
 #' @rdname within_intercept
 #' @export
-within_intercept.plm <- function(object, vcov = NULL, ...) {
-  
+within_intercept.plm <- function(object, vcov = NULL, return.model = FALSE, ...) {
+  # TODO: check 2-way FE case  
   if (!inherits(object, "plm")) stop("input 'object' needs to be a \"within\" model estimated by plm()")
   model  <- describe(object, what = "model")
   effect <- describe(object, what = "effect")
@@ -437,9 +453,9 @@ within_intercept.plm <- function(object, vcov = NULL, ...) {
   # overall intercept next to its standard errors is different from
   # the FE model for which the intercept is estimated, e.g., dimensions
   # of vcov differ for FE and for auxiliary model.
-  if (!is.null(vcov)) {
-    if (is.matrix(vcov)) stop("for within_intercept, 'vcov' may not be of class 'matrix', it must be supplied as a function, e.g., vcov = function(x) vcovHC(x)")
-    if (!is.function(vcov)) stop("for within_intercept, argument 'vcov' must be a function, e.g., vcov = function(x) vcovHC(x)")
+  if(!is.null(vcov)) {
+    if(is.matrix(vcov)) stop("for within_intercept, 'vcov' may not be of class 'matrix', it must be supplied as a function, e.g., vcov = function(x) vcovHC(x)")
+    if(!is.function(vcov)) stop("for within_intercept, argument 'vcov' must be a function, e.g., vcov = function(x) vcovHC(x)")
   }
   
   index <- attr(object$model, which = "index")
@@ -467,30 +483,36 @@ within_intercept.plm <- function(object, vcov = NULL, ...) {
   form <- as.formula(paste0(names(data)[1], "~", paste(names(data)[-1], collapse = "+")))
   auxreg <- plm(form, data = data, model = "pooling")
   
-  ## Two cases:
-  ##  (1) in case of "normal" vcov, we need to adjust the vcov by the corrected degrees of freedom
-  ##  (2) in case of robust vcov, which is supplied by a function, no adjustment to the robust vcov is necessary
-  if (!is.function(vcov)) {
-    # (1) degrees of freedom correction due to FE transformation for "normal" vcov [copied over from plm.fit]
-    pdim <- pdim(index)
-    card.fixef <- switch(effect,
-                            "individual" = pdim$nT$n,
-                            "time"       = pdim$nT$T,
-                            "twoways"    = pdim$nT$n + pdim$nT$T - 1)
-    df <- df.residual(auxreg) - card.fixef  + 1 # just for within_intercept: here we need '+1' to correct for the intercept
+
+  res <- if(!return.model) {
+    #### return only intercept with SE as attribute
+    ## Two cases:
+    ##  (1) in case of "normal" vcov, we need to adjust the vcov by the corrected degrees of freedom
+    ##  (2) in case of robust vcov, which is supplied by a function, no adjustment to the robust vcov is necessary
+    if(!is.function(vcov)) {
+      # (1) degrees of freedom correction due to FE transformation for "normal" vcov [copied over from plm.fit]
+      pdim <- pdim(index)
+      card.fixef <- switch(effect,
+                           "individual" = pdim$nT$n,
+                           "time"       = pdim$nT$T,
+                           "twoways"    = pdim$nT$n + pdim$nT$T - 1)
+      df <- df.residual(auxreg) - card.fixef  + 1 # just for within_intercept: here we need '+1' to correct for the intercept
+      
+      vcov_mat <- vcov(auxreg)
+      vcov_mat <- vcov_mat * df.residual(auxreg) / df
+    } else {
+      # (2) robust vcov estimated by function supplied in vcov
+      vcov_mat <- vcov(auxreg)
+    }
     
-    vcov_new <- vcov(auxreg)
-    vcov_new <- vcov_new * df.residual(auxreg) / df
+    intercept <- auxreg[["coefficients"]]["(Intercept)"]
+    attr(intercept, which = "se") <- sqrt(vcov_mat[1, 1])
+    names(intercept) <- "(overall_intercept)"
+    intercept
   } else {
-    # (2) robust vcov estimated by function supplied in vcov
-      vcov_new <- vcov(auxreg)
+    ### return model
+    if(!is.null(vcov)) warning("argument 'vcov' is non-NULL and is ignored as 'return.model = TRUE' is set")
+    auxreg
   }
-  
-  auxreg$vcov <- vcov_new # plug in new vcov (adjusted "normal" vcov or robust vcov) in auxiliary model
-  
-  coef_se <- lmtest::coeftest(auxreg)
-  intercept <- coef_se[1,1]
-  attr(intercept, which = "se") <- coef_se[1, 2]
-  names(intercept) <- "(overall_intercept)"
-  return(intercept)
+  return(res)
 } # END within_intercept.plm
