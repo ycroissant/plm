@@ -50,6 +50,9 @@ plm()):
   package (instead of "own" between/within transformation implemented inside the
   respective function).
 * ercomp: now faster by saving and re-using intermediate results.
+* dhat (non-exported function in vcovG): faster as it now calculates the needed
+  diagonal of the quadratic form more efficiently.
+
 
 ### Dependencies:
  * Added package 'collapse' to 'Suggests'.

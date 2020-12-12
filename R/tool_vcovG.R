@@ -345,8 +345,15 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
   ## (see the theoretical comments in pvcovHC)
 
     ## diaghat function for matrices
-    dhat <- function(x) {tx <- t(x)
-                         diag(crossprod(tx, solve(crossprod(x), tx)))}
+
+# old:
+#    dhat <- function(x) {tx <- t(x)
+#                         diag(crossprod(tx, solve(crossprod(x), tx)))}
+    
+    dhat <- function(x) {
+      res <-  rowSums(crossprod(t(x), solve(crossprod(x))) * x) # == diag(crossprod(tx, solve(crossprod(x), tx)))
+      return(res)
+    }
 
     ## this is computationally heavy, do only if needed
     switch(match.arg(type), HC0 = {diaghat <- NULL},
@@ -409,7 +416,7 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
                   for(i in 1:length(names(u))) {
                       for(j in 1:length(names(v))) {
                           if(names(u)[i] == names(v)[j]) {
-                              eres[i,j] <- efull[i,j]
+                              eres[i, j] <- efull[i, j]
                           }
                       }
                   }
@@ -435,7 +442,7 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
                   for(i in 1:length(names(u))) {
                       for(j in 1:length(names(v))) {
                           if(names(u)[i] == names(v)[j]) {
-                              eres[i,j] <- efull[i,j]
+                              eres[i, j] <- efull[i, j]
                           }
                       }
                   }
@@ -457,8 +464,8 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
   ## group (i.e., the vcov estimator is robust vs. xsectional dependence)
 
   ## extract indices
-    groupind <- as.numeric(attr(x$model, "index")[,1])
-    timeind  <- as.numeric(attr(x$model, "index")[,2])
+    groupind <- as.numeric(attr(x$model, "index")[ , 1L])
+    timeind  <- as.numeric(attr(x$model, "index")[ , 2L])
 
   ## adjust for 'fd' model (losing first time period)
     if(model == "fd") {
@@ -530,7 +537,7 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
       ul <- uhat[tind[[(i-l)]]]
       names(ul) <- tlab[[(i-l)]]
       ## calculate V_yy
-      Sl[, , i-l] <- crossprod(X, E(u, ul)) %*% Xl
+      Sl[ , , i-l] <- crossprod(X, E(u, ul)) %*% Xl
     }
     
     ## in order to sum on available observations two things can be done:
@@ -967,8 +974,8 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
   ## group (i.e., the vcov estimator is robust vs. xsectional dependence)
 
   ## extract indices
-    groupind <- as.numeric(attr(x$model, "index")[,1])
-    timeind  <- as.numeric(attr(x$model, "index")[,2])
+    groupind <- as.numeric(attr(x$model, "index")[ , 1L])
+    timeind  <- as.numeric(attr(x$model, "index")[ , 2L])
 
   ## Achim's fix for 'fd' model (losing first time period)
     if(model == "fd") {
@@ -1008,8 +1015,16 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
   ## (see the theoretical comments in pvcovHC)
 
     ## diaghat function for matrices
-    dhat <- function(x) {tx <- t(x)
-                         diag(crossprod(tx, solve(crossprod(x), tx)))}
+    
+    ## old:
+    # dhat <- function(x) {tx <- t(x)
+    #                      diag(crossprod(tx, solve(crossprod(x), tx)))}
+    
+    dhat <- function(x) {
+      res <-  rowSums(crossprod(t(x), solve(crossprod(x))) * x) # == diag(crossprod(tx, solve(crossprod(x), tx)))
+      return(res)
+    }
+    
 
     ## this is computationally heavy, do only if needed
     switch(match.arg(type), HC0 = {diaghat <- NULL},
