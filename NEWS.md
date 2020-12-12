@@ -50,8 +50,9 @@ plm()):
   package (instead of "own" between/within transformation implemented inside the
   respective function).
 * ercomp: now faster by saving and re-using intermediate results.
-* dhat (non-exported function in vcovG): faster as it now calculates the needed
-  diagonal of the quadratic form more efficiently.
+* dhat (non-exported function used in vcovXX/vcovG with type = "HC2" to "HC4"):
+  now faster as needed diagonal of the quadratic form is calculated more
+  efficiently.
 
 
 ### Dependencies:
