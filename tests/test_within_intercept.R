@@ -15,6 +15,7 @@ gi <- plm(inv ~ value + capital, data = Grunfeld, model = "within", effect = "in
 f_level_gi <- fixef(gi, type = "level")
 f_dmean_gi <- fixef(gi, type = "dmean")
 int_gi <- within_intercept(gi)
+mod_int_gi <- within_intercept(gi, return.model = TRUE)
 int_manual_gi <- mean(fixef(gi))
 individual_intercepts_gi <- int_gi + f_dmean_gi
 
@@ -28,6 +29,8 @@ gt <- plm(inv ~ value + capital, data = Grunfeld, model = "within", effect = "ti
 f_level_gt <- fixef(gt, type = "level")
 f_dmean_gt <- fixef(gt, type = "dmean")
 int_gt <- within_intercept(gt)
+mod_int_gt <- within_intercept(gt, return.model = TRUE)
+
 int_manual_gt <- mean(fixef(gt))
 individual_intercepts_gt <- int_gt + f_dmean_gt
 
@@ -44,6 +47,7 @@ f_level_tw_t <- fixef(gtw, type = "level", effect = "time")
 f_dmean_tw_t <- fixef(gtw, type = "dmean", effect = "time")
 
 int_tw <- within_intercept(gtw)
+mod_int_tw <- within_intercept(gtw, return.model = TRUE)
 
 # In the balanced case, the mean of the level effects must be the same
 # and the means are the overall intercept
@@ -76,6 +80,7 @@ f_dmean_gi_u <- fixef(gi_u, type = "dmean")
 # in the one-way unbalanced case: is the overall intercept is the weighted mean of the effects
 # (with the current fixef implementation) - this check also depends on how type = "dmean" is calculated in fixef
 int_gi_u <- within_intercept(gi_u)
+mod_int_gi_u <- within_intercept(gi_u, return.model = TRUE)
 individual_intercepts_gi_u <- int_gi_u + f_dmean_gi_u
 
 int_manual_gi_u <- weighted.mean(fixef(gi_u), as.numeric(table(index(gi_u)[[1]])))
@@ -97,6 +102,7 @@ gt_u <- plm(inv ~ value + capital, data = Grunfeld_unbalanced, model = "within",
 f_level_gt_u <- fixef(gt_u, type = "level")
 f_dmean_gt_u <- fixef(gt_u, type = "dmean")
 int_gt_u <- within_intercept(gt_u)
+mod_int_gt_u <- within_intercept(gt_u, return.model = TRUE)
 individual_intercepts_gt_u <- int_gt_u + f_dmean_gt_u
 
 
@@ -173,22 +179,24 @@ print(within_intercept(gtw_u))
 
 ######### Test with reference case: balanced panel
 ## commented because it needs extra library 'foreign'
-# library(foreign);library(plm)
-# wagepan<-read.dta("http://fmwww.bc.edu/ec-p/data/wooldridge/wagepan.dta")
+# library(foreign)
+# library(plm)
+# wagepan <- read.dta("http://fmwww.bc.edu/ec-p/data/wooldridge/wagepan.dta")
 # pwagepan <- pdata.frame(wagepan, index = c("nr", "year"))
 # pdim(pwagepan)
 # 
 # mod_fe_ind <- plm(lwage ~ exper + hours + married + expersq, data = pwagepan, model = "within", effect = "individual")
 # summary(mod_fe_ind)
 # # matches gretl, balanced panel, individual effect (see below)
-# inter_mod_fe_ind <- plm:::within_intercept.plm(mod_fe_ind)
+# inter_mod_fe_ind <- within_intercept(mod_fe_ind)
 # print(inter_mod_fe_ind)
 # mean(fixef(mod_fe_ind))
+# print(inter_mod_fe_ind)
 # 
 # # matches Gretl robust SE
-# inter_mod_fe_ind_robust <- plm:::within_intercept.plm(mod_fe_ind, vcov = function(x) plm::vcovHC(x, method="arellano", type="HC0"))
+# inter_mod_fe_ind_robust <- within_intercept(mod_fe_ind, vcov = function(x) vcovHC(x, method="arellano", type="HC0"))
 # print(inter_mod_fe_ind_robust)
-
+# print(summary(within_intercept(mod_fe_ind, return.model = TRUE), vcov = function(x) vcovHC(x, method="arellano", type="HC0")))
 
 # Some data to compare to:
 # gretl: Data wagepan, individual effects, "normal" standard errors

@@ -480,33 +480,28 @@ within_intercept.plm <- function(object, vcov = NULL, return.model = FALSE, ...)
 
   # estimation by plm() - to apply robust vcov function if supplied
   data <- pdata.frame(data.frame(cbind(index, transY, transM)), drop.index = TRUE)
-  form <- as.formula(paste0(names(data)[1], "~", paste(names(data)[-1], collapse = "+")))
+  form <- as.formula(paste0(names(data)[1], "~", paste(names(data)[-1L], collapse = "+")))
   auxreg <- plm(form, data = data, model = "pooling")
   
+  # degrees of freedom correction due to FE transformation for "normal" vcov [copied over from plm.fit]
+  pdim <- pdim(index)
+  card.fixef <- switch(effect,
+                       "individual" = pdim$nT$n,
+                       "time"       = pdim$nT$T,
+                       "twoways"    = pdim$nT$n + pdim$nT$T - 1L)
+  df <- df.residual(auxreg) - card.fixef  + 1 # just for within_intercept: here we need '+1' to correct for the intercept
+  
+  vcov_mat <- vcov(auxreg)
+  vcov_mat <- vcov_mat * df.residual(auxreg) / df
+  auxreg$vcov <- vcov_mat # plug in new vcov (adjusted "normal" vcov) in auxiliary model
 
   res <- if(!return.model) {
     #### return only intercept with SE as attribute
-    ## Two cases:
-    ##  (1) in case of "normal" vcov, we need to adjust the vcov by the corrected degrees of freedom
-    ##  (2) in case of robust vcov, which is supplied by a function, no adjustment to the robust vcov is necessary
-    if(!is.function(vcov)) {
-      # (1) degrees of freedom correction due to FE transformation for "normal" vcov [copied over from plm.fit]
-      pdim <- pdim(index)
-      card.fixef <- switch(effect,
-                           "individual" = pdim$nT$n,
-                           "time"       = pdim$nT$T,
-                           "twoways"    = pdim$nT$n + pdim$nT$T - 1)
-      df <- df.residual(auxreg) - card.fixef  + 1 # just for within_intercept: here we need '+1' to correct for the intercept
-      
-      vcov_mat <- vcov(auxreg)
-      vcov_mat <- vcov_mat * df.residual(auxreg) / df
-    } else {
-      # (2) robust vcov estimated by function supplied in vcov
-      vcov_mat <- vcov(auxreg)
-    }
-    
+    ##  in case of robust vcov, which is supplied by a function
+    ##  no adjustment to the robust vcov is necessary
+    if(is.function(vcov)) vcov_mat <- vcov(auxreg) # robust vcov as supplied by a function
     intercept <- auxreg[["coefficients"]]["(Intercept)"]
-    attr(intercept, which = "se") <- sqrt(vcov_mat[1, 1])
+    attr(intercept, which = "se") <- sqrt(vcov_mat[1L, 1L])
     names(intercept) <- "(overall_intercept)"
     intercept
   } else {
