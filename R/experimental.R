@@ -51,7 +51,7 @@ residuals_overall_e_exp <- function(object) { ### experimental non-exported func
 }
 
 fitted_exp.plm <- function(x, ...) { #### experimental, non-exported function
-# fitted_exp.plm: gives the fitted values of all types of plm models by substracting the overall
+# fitted_exp.plm: gives the fitted values of all types of plm models by subtracting the overall
 #                 residuals from the untransformed response variable; does not have
 #                 a model argument so it is not as versatile as 'fitted.plm' below.
 # see also test file tests/test_residuals_overall_fitted_exp.R
@@ -65,7 +65,7 @@ fitted_exp.plm <- function(x, ...) { #### experimental, non-exported function
   if (model %in% c("between", "fd")) {
     y <- pmodel.response(x)
   } else {
-    y <- model.frame(x)[ , 1]
+    y <- model.frame(x)[ , 1L]
   }
   return(y - res)
 }
@@ -114,7 +114,7 @@ pos.index <- function(x, ...) {
 # operations do not change the first value of class attribute for
 # c("pseries", "logical/integer"). However, using groupGenerics as wrapper around
 # pseries objects, this does not happen anymore.
-# E.g.
+# E.g.,
 #  x <- c(1L, 2L, 3L)
 #  x + 1.5
 # results in class propagation from class "integer" to "numeric" 
