@@ -45,7 +45,7 @@ pldv <- function(formula, data, subset, weights, na.action,
 ## and re-export it via NAMESPACE as plm::maxLik with a minimal documentation 
 ## pointing to the original documentation.
 ## This way, we can keep the flexibility of eval() ## [evalutate in parent frame] 
-## and can lessen the dependency burden by palacing pkg maxLik in 'Imports'
+## and can lessen the dependency burden by placing pkg maxLik in 'Imports'
 ## rather than 'Depends' in DESCRIPTION.
   
     # use the plm interface to compute the model.frame
@@ -162,7 +162,7 @@ pldv <- function(formula, data, subset, weights, na.action,
         
           # The following is the only instance of statmod::gauss.quad, so check for 
           # the package's availability. (We placed 'statmod' in 'Suggests' rather
-          # than 'Imports' so that it is not an absolutely required depedency.)
+          # than 'Imports' so that it is not an absolutely required dependency.)
           ## Procedure for pkg check for pkg in 'Suggests' as recommended in 
           ## Wickham, R packages (http://r-pkgs.had.co.nz/description.html).
           if (!requireNamespace("statmod", quietly = TRUE)) {
