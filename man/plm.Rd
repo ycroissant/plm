@@ -109,8 +109,7 @@ supported,}
 
 \item{random.method}{method of estimation for the variance
 components in the random effects model, one of \code{"swar"}
-(default), \code{"amemiya"}, \code{"walhus"}, or
-\code{"nerlove"},}
+(default), \code{"amemiya"}, \code{"walhus"}, or \code{"nerlove"},}
 
 \item{random.models}{an alternative to the previous argument, the
 models used to compute the variance components estimations are
@@ -120,8 +119,7 @@ indicated,}
 degree of freedom should be used,}
 
 \item{inst.method}{the instrumental variable transformation: one of
-\code{"bvk"}, \code{"baltagi"}, \code{"am"}, or \code{"bms"}
-(see also Details),}
+\code{"bvk"}, \code{"baltagi"}, \code{"am"}, or \code{"bms"} (see also Details),}
 
 \item{restrict.matrix}{a matrix which defines linear restrictions
 on the coefficients,}
@@ -239,8 +237,9 @@ method:
 }
 
 The Hausman--Taylor estimator \insertCite{HAUS:TAYL:81}{plm} is
-computed with arguments \code{random.method = "ht"}, \code{model = "random"}, \code{inst.method = "baltagi"} (the other way with only
-\code{model = "ht"} is deprecated).
+computed with arguments \code{random.method = "ht"}, \code{model = "random"},
+\code{inst.method = "baltagi"} (the other way with only \code{model = "ht"}
+is deprecated).
 }
 \examples{
 
