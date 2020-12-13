@@ -3,56 +3,8 @@
 #' These functions are imported from other packages and re-exported by
 #' \pkg{plm} to enable smooth use within \pkg{plm}.  Please follow the
 #' links to view the function's original documentation.
-#' 
-#' \itemize{
-#' \item index
-#' \item fixef
-#' \item ranef
-#' \item vcovHC
-#' \item nobs
-#' \item maxLik
-#' }
-#' 
-#' 
-#' 
 #' @name re-export_functions
 #' @keywords internal
-NULL
-
-#' @rdname re-export_functions
-#' @name index
-#' @importFrom zoo index
-#' @export
-NULL
-
-#' @rdname re-export_functions
-#' @name fixef
-#' @importFrom nlme fixef
-#' @export
-NULL
-
-#' @rdname re-export_functions
-#' @name ranef
-#' @importFrom nlme ranef
-#' @export
-NULL
-
-#' @rdname re-export_functions
-#' @name vcovHC
-#' @importFrom sandwich vcovHC
-#' @export
-NULL
-
-#' @rdname re-export_functions
-#' @name lag
-#' @importFrom stats lag
-#' @export
-NULL
-
-#' @rdname re-export_functions
-#' @name nobs
-#' @importFrom stats nobs
-#' @export
 NULL
 
 #' @rdname re-export_functions

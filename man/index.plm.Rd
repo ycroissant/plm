@@ -2,6 +2,7 @@
 % Please edit documentation in R/tool_pdata.frame.R
 \name{index.plm}
 \alias{index.plm}
+\alias{index}
 \alias{index.pindex}
 \alias{index.pdata.frame}
 \alias{index.pseries}

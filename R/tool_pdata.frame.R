@@ -938,6 +938,9 @@ print.pdim <- function(x, ...) {
 #' frame was constructed with such).)
 #' 
 #' @name index.plm
+#' @aliases index
+#' @importFrom zoo index 
+#' @export index
 #' @param x an object of class `"pindex"`, `"pdata.frame"`,
 #'     `"pseries"` or `"panelmodel"`,
 #' @param which the index(es) to be extracted (see details),
@@ -964,7 +967,7 @@ print.pdim <- function(x, ...) {
 #' index(pProduc, 3)
 #' index(pProduc, "region")
 #' index(pProduc, "group")
-#' 
+#'
 NULL
 
 #' @rdname index.plm

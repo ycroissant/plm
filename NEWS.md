@@ -37,6 +37,10 @@ plm()):
   in the user's data frame).
 * pdata.frame: input 'x' is always pruned by data.frame(x) as a clean data frame
   is needed.
+* Access to documentation with a generic defined in another package fixed
+  (such as lag, diff, nobs, ...), so that the help systems offers to access the
+  plm-specific documentation (regression introduced when pkg plm adopted roxygen2
+  for documentation in version 2.0-0).
 * ercomp: cosmetic: if one of theta\$id, theta\$time is 0 => theta\$total must be 
   0 and is set to 0 (before, for some data and platforms, theta$total could be a
   very small positive or negative number, due to limited computational precision).

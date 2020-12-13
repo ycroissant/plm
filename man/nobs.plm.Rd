@@ -2,6 +2,7 @@
 % Please edit documentation in R/tool_methods.R
 \name{nobs.plm}
 \alias{nobs.plm}
+\alias{nobs}
 \alias{nobs.panelmodel}
 \alias{nobs.pgmm}
 \title{Extract Total Number of Observations Used in Estimated Panelmodel}

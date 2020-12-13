@@ -87,6 +87,9 @@ print.panelmodel <- function(x, digits = max(3, getOption("digits") - 2),
 #' **Examples**).
 #'
 #' @name nobs.plm
+#' @aliases nobs
+#' @importFrom stats nobs
+#' @export nobs
 #' @param object a `panelmodel` object for which the number of
 #'     total observations is to be extracted,
 #' @param \dots further arguments.

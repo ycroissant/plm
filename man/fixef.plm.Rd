@@ -2,6 +2,7 @@
 % Please edit documentation in R/tool_ranfixef.R
 \name{fixef.plm}
 \alias{fixef.plm}
+\alias{fixef}
 \alias{print.fixef}
 \alias{summary.fixef}
 \alias{print.summary.fixef}

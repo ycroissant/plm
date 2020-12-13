@@ -2,6 +2,7 @@
 % Please edit documentation in R/tool_ranfixef.R
 \name{ranef.plm}
 \alias{ranef.plm}
+\alias{ranef}
 \title{Extract the Random Effects}
 \usage{
 \method{ranef}{plm}(object, effect = NULL, ...)
@@ -53,7 +54,6 @@ data("Cigar", package = "plm")
 tw <- plm(sales ~ pop + price, data = Cigar, model = "random", effect = "twoways")
 ranef(tw)                   # individual random effects
 ranef(tw, effect = "time")  # time random effects
-
 
 
 }

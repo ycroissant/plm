@@ -2,27 +2,11 @@
 % Please edit documentation in R/plm-package.R
 \name{re-export_functions}
 \alias{re-export_functions}
-\alias{index}
-\alias{fixef}
-\alias{ranef}
-\alias{vcovHC}
-\alias{lag}
-\alias{nobs}
 \alias{maxLik}
 \title{Functions exported from other packages}
 \description{
 These functions are imported from other packages and re-exported by
 \pkg{plm} to enable smooth use within \pkg{plm}.  Please follow the
 links to view the function's original documentation.
-}
-\details{
-\itemize{
-\item index
-\item fixef
-\item ranef
-\item vcovHC
-\item nobs
-\item maxLik
-}
 }
 \keyword{internal}

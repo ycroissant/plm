@@ -404,7 +404,7 @@ theta: 0.9464 (id) 0.8104 (time) 0.8084 (total)
 > 
 > ### Name: fixef.plm
 > ### Title: Extract the Fixed Effects
-> ### Aliases: fixef.plm print.fixef summary.fixef print.summary.fixef
+> ### Aliases: fixef.plm fixef print.fixef summary.fixef print.summary.fixef
 > ###   fixef.pggls
 > ### Keywords: regression
 > 
@@ -499,7 +499,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 > 
 > ### Name: index.plm
 > ### Title: Extract the indexes of panel data
-> ### Aliases: index.plm index.pindex index.pdata.frame index.pseries
+> ### Aliases: index.plm index index.pindex index.pdata.frame index.pseries
 > ###   index.panelmodel
 > ### Keywords: attribute
 > 
@@ -1014,7 +1014,7 @@ TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
 > 
 > ### Name: lag.plm
 > ### Title: lag, lead, and diff for panel data
-> ### Aliases: lag.plm lead lag.pseries lead.pseries diff.pseries
+> ### Aliases: lag.plm lag lead diff lag.pseries lead.pseries diff.pseries
 > ### Keywords: classes
 > 
 > ### ** Examples
@@ -6504,7 +6504,7 @@ alternative hypothesis: autocorrelation present
 > ### Name: nobs.plm
 > ### Title: Extract Total Number of Observations Used in Estimated
 > ###   Panelmodel
-> ### Aliases: nobs.plm nobs.panelmodel nobs.pgmm
+> ### Aliases: nobs.plm nobs nobs.panelmodel nobs.pgmm
 > ### Keywords: attribute
 > 
 > ### ** Examples
@@ -12746,7 +12746,7 @@ alternative hypothesis: unobserved effect
 > 
 > ### Name: ranef.plm
 > ### Title: Extract the Random Effects
-> ### Aliases: ranef.plm
+> ### Aliases: ranef.plm ranef
 > ### Keywords: regression
 > 
 > ### ** Examples
@@ -12799,7 +12799,6 @@ alternative hypothesis: unobserved effect
  3.0305218  2.9219323  2.3839785  1.3038537  0.2722306 -1.0413612 -1.9688282 
         91         92 
 -2.3758022  0.5637823 
-> 
 > 
 > 
 > 
@@ -13318,7 +13317,7 @@ detaching 'package:lmtest', 'package:zoo'
 > 
 > ### Name: vcovHC.plm
 > ### Title: Robust Covariance Matrix Estimators
-> ### Aliases: vcovHC.plm vcovHC.pcce vcovHC.pgmm
+> ### Aliases: vcovHC.plm vcovHC vcovHC.pcce vcovHC.pgmm
 > ### Keywords: regression
 > 
 > ### ** Examples
@@ -13802,7 +13801,7 @@ F-statistic: 309.014 on 2 and 197 DF, p-value: < 2.22e-16
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  20.85 1.24 22.22 NA NA 
+Time elapsed:  12.03 0.64 12.67 NA NA 
 > grDevices::dev.off()
 null device 
           1 

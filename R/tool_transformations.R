@@ -587,6 +587,8 @@ Within.matrix <- function(x, effect, rm.null = TRUE, ...) {
 #' ("holes in time"), see also Examples.
 #' 
 #' @name lag.plm
+#' @aliases lag lead diff
+#' @importFrom stats lag
 #' @param x a `pseries` object,
 #' @param k an integer, the number of lags for the `lag` and `lead`
 #'     methods (can also be negative).  For the `lag` method, a

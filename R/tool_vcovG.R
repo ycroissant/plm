@@ -616,6 +616,9 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 #' \insertCite{WIND:05;textual}{plm}, is also provided.
 #' 
 #' @name vcovHC.plm
+#' @aliases vcovHC
+#' @importFrom sandwich vcovHC
+#' @export vcovHC
 #' @param x an object of class `"plm"` which should be the result of a
 #'     random effects or a within model or a model of class `"pgmm"`
 #'     or an object of class `"pcce"`,
@@ -628,7 +631,6 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 #'     the asymptotic covariance matrix of coefficients.
 #' @note The function `pvcovHC` is deprecated. Use `vcovHC` for the
 #'     same functionality.
-#' @export
 #' @author Giovanni Millo & Yves Croissant
 #' @seealso [sandwich::vcovHC()] from the \CRANpkg{sandwich}
 #'     package for weighting schemes (`type` argument).

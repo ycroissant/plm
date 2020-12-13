@@ -30,6 +30,9 @@
 #' pp. 308-309, formula (10.58).
 #'
 #' @name fixef.plm
+#' @aliases fixef
+#' @importFrom nlme fixef
+#' @export fixef
 #' @param x,object an object of class `"plm"`, an object of class
 #'     `"fixef"` for the `print` and the `summary` method,
 #' @param effect one of `"individual"` or `"time"`, only relevant in
@@ -56,7 +59,6 @@
 #' and the standard errors in the summary.fixef objects correspond to
 #' was requested in the `fixef` function by arguments `type` and
 #' `vcov`, respectively.
-#' @export
 #' @author Yves Croissant
 #' @seealso [within_intercept()] for the overall intercept of fixed
 #'     effect models along its standard error, [plm()] for plm objects
@@ -98,7 +100,11 @@
 #' fixefs <- fixef(gi)[index(gi, which = "id")]
 #' fitted_by_hand <- fixefs + gi$coefficients["value"] * gi$model$value +
 #'                            gi$coefficients["capital"] * gi$model$capital
-#' 
+#'
+NULL
+
+#' @rdname fixef.plm
+#' @export
 fixef.plm <- function(object, effect = NULL,
                       type = c("level", "dfirst", "dmean"),
                       vcov = NULL, ...){
@@ -235,7 +241,10 @@ fixef.pggls <- fixef.plm
 #' @param \dots further arguments (currently not used).
 #' @return A named numeric with the random effects per dimension
 #'     (individual or time).
-#' @export
+#' @name ranef.plm
+#' @aliases ranef
+#' @importFrom nlme ranef
+#' @export ranef
 #' @author Kevin Tappe
 #' @seealso [fixef()] to extract the fixed effects from a fixed
 #'     effects model (within model).
@@ -261,13 +270,16 @@ fixef.pggls <- fixef.plm
 #' ranef(tw, effect = "time")  # time random effects
 #' 
 #'
-#'
-# TODO:
-#      Check if the same procedure can be applied to
-#       * unbalanced two-way case (for now: implemented the same way, but not entirely sure)
-#       * random IV models
-#       * nested random effect models
+NULL
+
+#' @rdname ranef.plm
+#' @export
 ranef.plm <- function(object, effect = NULL, ...) {
+  # TODO:
+  #      Check if the same procedure can be applied to
+  #       * unbalanced two-way case (for now: implemented the same way, but not entirely sure)
+  #       * random IV models
+  #       * nested random effect models
   model <- describe(object, "model")
   obj.effect <- describe(object, "effect")
   balanced <- is.pbalanced(object)
@@ -332,9 +344,6 @@ ranef.plm <- function(object, effect = NULL, ...) {
 }
 
 
-
-
-# generic
 
 
 #' Overall Intercept for Within Models Along its Standard Error

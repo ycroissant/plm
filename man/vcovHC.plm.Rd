@@ -2,6 +2,7 @@
 % Please edit documentation in R/tool_vcovG.R
 \name{vcovHC.plm}
 \alias{vcovHC.plm}
+\alias{vcovHC}
 \alias{vcovHC.pcce}
 \alias{vcovHC.pgmm}
 \title{Robust Covariance Matrix Estimators}
