@@ -158,7 +158,7 @@ pgmm <- function(formula, data, subset, na.action,
   ##### interface
   #################################################################
   
-  if (inherits(formula, "dynformula") || length(Formula(formula))[2] == 1){
+  if (inherits(formula, "dynformula") || length(Formula(formula))[2L] == 1){
     if (!inherits(formula, "dynformula")){
       formula <- match.call(expand.dots = TRUE)
       m <- match(c("formula", "lag.form", "diff.form", "log.form"),names(formula),0)
@@ -166,10 +166,10 @@ pgmm <- function(formula, data, subset, na.action,
       formula[[1]] <- as.name("dynformula")
       formula <- cl$formula <- eval(formula, parent.frame())
     }
-    response.name <- paste(deparse(formula[[2]]))
+    response.name <- paste(deparse(formula[[2L]]))
     main.lags <- attr(formula, "lag")
-    if (length(main.lags[[1]]) == 1 && main.lags[[1]] > 1)
-      main.lags[[1]] <- c(1, main.lags[[1]])
+    if (length(main.lags[[1L]]) == 1 && main.lags[[1L]] > 1)
+      main.lags[[1L]] <- c(1, main.lags[[1L]])
     main.lags[2:length(main.lags)] <- lapply(main.lags[2:length(main.lags)],
                         function(x){
                           if (length(x) == 1 && x != 0) x <- c(0, x)
@@ -230,7 +230,7 @@ pgmm <- function(formula, data, subset, na.action,
   # normal instruments except maybe time dummies
   
   # the third part of the formula (if any) deals with the 'normal' instruments
-  if (length(x)[2] == 3){
+  if (length(x)[2L] == 3){
     normal.instruments <- TRUE
     inst.form <- formula(x, rhs = 3, lhs = 0)
     # the . - x1 + x2 syntax is allowed, in this case update with the first part
@@ -265,8 +265,8 @@ pgmm <- function(formula, data, subset, na.action,
     if (!is.numeric(lost.ts)) stop("lost.ts should be numeric")
     lost.ts <- as.numeric(lost.ts)
     if (!(length(lost.ts) %in% c(1, 2))) stop("lost.ts should be of length 1 or 2")
-    TL1 <- lost.ts[1]
-    TL2 <- ifelse(length(lost.ts) == 1, TL1 - 1, lost.ts[2])
+    TL1 <- lost.ts[1L]
+    TL2 <- ifelse(length(lost.ts) == 1, TL1 - 1, lost.ts[2L])
   }
   else{
     # How many time series are lost ? May be the maximum number of lags
@@ -299,15 +299,15 @@ pgmm <- function(formula, data, subset, na.action,
   m <- match(c("formula", "data", "subset", "na.action", "index"), names(mf), 0)
   mf <- mf[c(1, m)]
   mf$drop.unused.levels <- TRUE
-  mf[[1]] <- as.name("plm")
+  mf[[1L]] <- as.name("plm")
   mf$model <- NA
   mf$formula <- Form
   mf$na.action <- "na.pass"
   mf$subset <- NULL
   data <- eval(mf, parent.frame())
   index <- index(data)
-  N <- length(levels(index[[1]]))
-  T <- length(levels(index[[2]]))
+  N <- length(levels(index[[1L]]))
+  T <- length(levels(index[[2L]]))
   pdim <- pdim(data)
   balanced <- pdim$balanced
 
@@ -334,7 +334,7 @@ pgmm <- function(formula, data, subset, na.action,
 
   attr(data, "formula") <- formula(main.form)
   yX <- extract.data(data)
-  names.coef <- colnames(yX[[1]])[-1]
+  names.coef <- colnames(yX[[1L]])[-1L]
   if (normal.instruments){
     attr(data, "formula") <- inst.form
     Z <- extract.data(data)
@@ -351,7 +351,7 @@ pgmm <- function(formula, data, subset, na.action,
   W1 <- lapply(W,
                function(x){
                  u <- mapply(makegmm, x, gmm.lags, TL1, collapse, SIMPLIFY = FALSE)
-                 u <- matrix(unlist(u), nrow = nrow(u[[1]]))
+                 u <- matrix(unlist(u), nrow = nrow(u[[1L]]))
                  u
                }
                )
@@ -601,7 +601,7 @@ dynterms <- function(x){
 getvar <- function(x){
   x <- as.list(x)
   result <- lapply(x, function(y){
-    deb <- as.numeric(gregexpr("lag\\(", y)[[1]])
+    deb <- as.numeric(gregexpr("lag\\(", y)[[1L]])
     if (deb == -1){
       lags <- 0
       avar <- y
@@ -609,7 +609,7 @@ getvar <- function(x){
     else{
 #      inspar <- substr(y, deb + 2, nchar(y) - 1)
       inspar <- substr(y, deb + 4, nchar(y) - 1)
-      coma <- as.numeric(gregexpr(",", inspar)[[1]][1])
+      coma <- as.numeric(gregexpr(",", inspar)[[1L]][1L])
       if (coma == -1){
         endvar <- nchar(inspar)
         lags <- 1
@@ -624,8 +624,8 @@ getvar <- function(x){
     list(avar, lags)
   }
                    )
-  nres <- sapply(result, function(x) x[[1]])
-  result <- lapply(result, function(x) x[[2]])
+  nres <- sapply(result, function(x) x[[1L]])
+  result <- lapply(result, function(x) x[[2L]])
   names(result) <- nres
   result
 }
@@ -636,9 +636,9 @@ dynterms2formula <- function(x, response.name = NULL){
     theinst <- x[[i]]
     # if the first element is zero, write the variable without lag and
     # drop the 0 from the vector
-    if (theinst[1] == 0){
+    if (theinst[1L] == 0){
       at <- names(x)[i]
-      theinst <- theinst[-1]
+      theinst <- theinst[-1L]
     }
     else{
       at <- character(0)
@@ -676,11 +676,11 @@ extract.data <- function(data, as.matrix = TRUE){
   
   X <- model.matrix(form, data)
   if (has.response){
-    X <- cbind(data[[1]], X)
-    colnames(X)[1] <- deparse(trms[[2]])
+    X <- cbind(data[[1L]], X)
+    colnames(X)[1L] <- deparse(trms[[2L]])
   }
-  data <- split(as.data.frame(X), index[[1]])
-  time <- split(index[[2]], index[[1]])
+  data <- split(as.data.frame(X), index[[1L]])
+  time <- split(index[[2L]], index[[1L]])
   data <- mapply(
                  function(x, y){
                    rownames(x) <- y
@@ -703,7 +703,7 @@ G <- function(t){
 }
 
 FD <- function(t){
-  FD <- Id(t)[-1, ]
+  FD <- Id(t)[-1L, ]
   for (i in 1:(t-1)){
     FD[i,i] <- -1
   }
@@ -727,10 +727,10 @@ makegmm <- function(x, g, TL1, collapse = FALSE){
   T <- length(x)
   rg <- range(g)
   z <- as.list((TL1 + 1):T)
-  x <- lapply(z, function(y) x[max(1, y - rg[2]):(y - rg[1])])
+  x <- lapply(z, function(y) x[max(1, y - rg[2L]):(y - rg[1L])])
   if (collapse) {      
     x <- lapply(x, rev)
-    m <- matrix(0, T - TL1, min(T - rg[1], rg[2]+1-rg[1]))
+    m <- matrix(0, T - TL1, min(T - rg[1L], rg[2L]+1-rg[1L]))
     for (y in 1:length(x)){ m[y, 1:length(x[[y]])] <- x[[y]]}
     result <- m
    }
@@ -763,7 +763,7 @@ makeW2 <-function (x, collapse = FALSE){
 coef.pgmm <- function(object,...){
   model <- describe(object, "model")
   if (model == "onestep") coefficients <- object$coefficients
-  else coefficients <- object$coefficients[[2]]
+  else coefficients <- object$coefficients[[2L]]
   coefficients
 }
 
@@ -780,7 +780,7 @@ summary.pgmm <- function(object, robust = TRUE, time.dummies = FALSE, ...) {
     vv <- vcov(object)
   }
   if (model == "onestep") K <- length(object$coefficients)
-  else  K <- length(object$coefficients[[2]])
+  else  K <- length(object$coefficients[[2L]])
   object$sargan <- sargan(object, "twosteps")
   object$m1 <- mtest(object, order = 1, vcov = vv)
   object$m2 <- mtest(object, order = 2, vcov = vv)
@@ -857,7 +857,7 @@ mtest <- function(object, order = 1, vcov = NULL) {
                               c(rep(0, order), x[1:(Kt - order - 1)], rep(0, Kt)))
          })
   
-  X <- lapply(object$model, function(x) x[ , -1, drop = FALSE])
+  X <- lapply(object$model, function(x) x[ , -1L, drop = FALSE])
   W <- object$W
   if (model == "onestep") A <- object$A1
   else  A <- object$A2
@@ -971,12 +971,12 @@ sargan <- function(object, weights = c("twosteps", "onestep")) {
   weights <- match.arg(weights)
   model <- describe(object, "model")
   if (model == "onestep") Ktot <- length(object$coefficients)
-  else Ktot <- length(object$coefficients[[2]])
+  else Ktot <- length(object$coefficients[[2L]])
   N <- length(residuals(object))
   z <- as.numeric(Reduce("+",
                          lapply(seq_len(N),
                                 function(i) crossprod(object$W[[i]], residuals(object)[[i]]))))
-  p <- ncol(object$W[[1]])
+  p <- ncol(object$W[[1L]])
   if (weights == "onestep") A <- object$A1 else A <- object$A2
   stat <- as.numeric(tcrossprod(z, crossprod(z, A)))
   parameter <- p - Ktot
