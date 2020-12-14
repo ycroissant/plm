@@ -1,5 +1,5 @@
 
-R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
 Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -35,7 +35,7 @@ Type 'q()' to quit R.
 > # Chisq
 > plm::pwaldtest(gp, test = "Chisq")
 
-	Wald test for foint significance
+	Wald test for joint significance
 
 data:  inv ~ value + capital
 Chisq = 853.151, df = 2, p-value < 0.000000000000000222
@@ -43,7 +43,7 @@ alternative hypothesis: at least one coefficient is not null
 
 > plm::pwaldtest(gi, test = "Chisq")
 
-	Wald test for foint significance
+	Wald test for joint significance
 
 data:  inv ~ value + capital
 Chisq = 618.028, df = 2, p-value < 0.000000000000000222
@@ -51,7 +51,7 @@ alternative hypothesis: at least one coefficient is not null
 
 > plm::pwaldtest(gt, test = "Chisq")
 
-	Wald test for foint significance
+	Wald test for joint significance
 
 data:  inv ~ value + capital
 Chisq = 729.289, df = 2, p-value < 0.000000000000000222
@@ -59,7 +59,7 @@ alternative hypothesis: at least one coefficient is not null
 
 > plm::pwaldtest(gd, test = "Chisq")
 
-	Wald test for foint significance
+	Wald test for joint significance
 
 data:  inv ~ value + capital
 Chisq = 434.885, df = 2, p-value < 0.000000000000000222
@@ -67,7 +67,7 @@ alternative hypothesis: at least one coefficient is not null
 
 > plm::pwaldtest(gre, test = "Chisq")
 
-	Wald test for foint significance
+	Wald test for joint significance
 
 data:  inv ~ value + capital
 Chisq = 657.674, df = 2, p-value < 0.000000000000000222
@@ -551,4 +551,4 @@ alternative hypothesis: at least one coefficient is not null
 > 
 > proc.time()
    user  system elapsed 
-   1.59    0.21    1.82 
+   1.00    0.17    1.15 

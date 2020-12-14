@@ -808,7 +808,7 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
       names(stat) <- "Chisq"
       pval <- pchisq(stat, df = df1, lower.tail = FALSE)
       parameter <- c(df = df1)
-      method <- "Wald test for foint significance"
+      method <- "Wald test for joint significance"
     } else {
       # perform robust chisq test
       stat <- as.numeric(crossprod(solve(rvcov, coefs_wo_int), coefs_wo_int))

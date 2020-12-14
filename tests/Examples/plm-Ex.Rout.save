@@ -12493,7 +12493,7 @@ alternative hypothesis: at least one coefficient is not null
 
 > pwaldtest(mod_re, test = "Chisq")
 
-	Wald test for foint significance
+	Wald test for joint significance
 
 data:  inv ~ value + capital
 Chisq = 657.67, df = 2, p-value < 2.2e-16
@@ -13801,7 +13801,7 @@ F-statistic: 309.014 on 2 and 197 DF, p-value: < 2.22e-16
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  12.03 0.64 12.67 NA NA 
+Time elapsed:  18.14 0.94 19.77 NA NA 
 > grDevices::dev.off()
 null device 
           1 
