@@ -173,7 +173,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     # prune input: x is supposed to be a plain data.frame. Other classes building
     # on top of R's data frame can inject attributes etc. that confuse functions
     # in pkg plm.
-    data <- data.frame(x)
+    x <- data.frame(x)
     
     # if requested: coerce character vectors to factors
     if (stringsAsFactors) {
