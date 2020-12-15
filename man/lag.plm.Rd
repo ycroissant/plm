@@ -10,7 +10,7 @@
 \alias{diff.pseries}
 \title{lag, lead, and diff for panel data}
 \usage{
-lead(x, ...)
+lead(x, k = 1, ...)
 
 \method{lag}{pseries}(x, k = 1, shift = c("time", "row"), ...)
 
@@ -21,8 +21,6 @@ lead(x, ...)
 \arguments{
 \item{x}{a \code{pseries} object,}
 
-\item{...}{further arguments (currently none evaluated).}
-
 \item{k}{an integer, the number of lags for the \code{lag} and \code{lead}
 methods (can also be negative).  For the \code{lag} method, a
 positive (negative) \code{k} gives lagged (leading) values.  For the
@@ -30,6 +28,8 @@ positive (negative) \code{k} gives lagged (leading) values.  For the
 values, thus, \code{lag(x, k = -1)} yields the same as \code{lead(x, k = 1)}.
 If \code{k} is an integer with length > 1 (\code{k = c(k1, k2, ...)}), a
 \code{matrix} with multiple lagged \code{pseries} is returned,}
+
+\item{...}{further arguments (currently none evaluated).}
 
 \item{shift}{character, either \code{"time"} (default) or \code{"row"}
 determining how the shifting in the \code{lag}/\code{lead}/\code{diff}
