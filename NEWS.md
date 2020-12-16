@@ -4,7 +4,7 @@
 Significant speed improvement (optional): A significant speed-up of the
 package is available by executing `pkg.plm.fast(TRUE)` once per session
 (switch-off by `pkg.plm.fast(FALSE)`) such that panel model estimations
-run faster.
+and others run faster.
   
 Technically, the speed gains are achieved by weaving in the fast data
 transformation functions provided in Sebastian Krantz' package 'collapse',
@@ -39,8 +39,8 @@ plm()):
   is needed.
 * Access to documentation with a generic defined in another package fixed
   (such as lag, diff, nobs, ...), so that the help systems offers to access the
-  plm-specific documentation (regression introduced when pkg plm adopted roxygen2
-  for documentation in version 2.0-0).
+  plm-specific documentation (regression introduced when pkg plm 2.0-0 adopted
+  roxygen2 for documentation).
 * ercomp: cosmetic: if one of theta\$id, theta\$time is 0 => theta\$total must be 
   0 and is set to 0 (before, for some data and platforms, theta$total could be a
   very small positive or negative number, due to limited computational precision).
@@ -55,8 +55,7 @@ plm()):
   respective function).
 * ercomp: now faster by saving and re-using intermediate results.
 * dhat (non-exported function used in vcovXX/vcovG with type = "HC2" to "HC4"):
-  now faster as needed diagonal of the quadratic form is calculated more
-  efficiently.
+  now faster as diagonal of the quadratic form is calculated more efficiently.
 
 
 ### Dependencies:
