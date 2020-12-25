@@ -1,29 +1,109 @@
-## NB: New *.collapse functions/methods need to be (de-)registered in
-##     in function pkg.plm.fast(), see bottom of this file.
-
 ## Structural changes made to plm's original data transformation functions
 ## need to be mimicked in the *.collapse versions and vice versa.
 
-# environment to store status about usage of package 'collapse':
-pkg.plm.env <- new.env(parent = emptyenv())
-pkg.plm.env$use.pkg.collapse <- FALSE # default
+## 1) Give the base-R version of the functions defined in tool_transformations.R
+##    a new name (*.baseR).
+## 2) Implement wrapper switched which call the *.baseR or *.collapse versions
+##    based on the option plm.fast (a logical, the preferred way to set the
+##    option is via function pkg.plm.fast() but the option can be set directly
+##    via R's regular option mechanism). Unset option plm.fast results in the
+##    base-R versions of functions being used.
 
-# save original functions as backups under *.plm
-between.default.plm <- plm:::between.default
-between.pseries.plm <- plm:::between.pseries
-between.matrix.plm  <- plm:::between.matrix
+## ad 1) new name for base R functions defined in tool_transformations.R
+Sum.default.baseR <- plm:::Sum.default
+Sum.pseries.baseR <- plm:::Sum.pseries
+Sum.matrix.baseR  <- plm:::Sum.matrix
 
-Between.default.plm <- plm:::Between.default
-Between.pseries.plm <- plm:::Between.pseries
-Between.matrix.plm  <- plm:::Between.matrix
+between.default.baseR <- plm:::between.default
+between.pseries.baseR <- plm:::between.pseries
+between.matrix.baseR  <- plm:::between.matrix
 
-Within.default.plm <- plm:::Within.default
-Within.pseries.plm <- plm:::Within.pseries
-Within.matrix.plm  <- plm:::Within.matrix
+Between.default.baseR <- plm:::Between.default
+Between.pseries.baseR <- plm:::Between.pseries
+Between.matrix.baseR  <- plm:::Between.matrix
 
-Sum.default.plm <- plm:::Sum.default
-Sum.pseries.plm <- plm:::Sum.pseries
-Sum.matrix.plm  <- plm:::Sum.matrix
+Within.default.baseR <- plm:::Within.default
+Within.pseries.baseR <- plm:::Within.pseries
+Within.matrix.baseR  <- plm:::Within.matrix
+
+## ad 2) implement wrapper switches
+
+#### Sum wrapper switches ####
+Sum.default <- function(x, effect, ...) {
+	if(!isTRUE(getOption("plm.fast"))) {
+		Sum.default.baseR(x, effect, ...) } else {
+		Sum.default.collapse(x, effect, ...) }
+}
+
+Sum.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
+	if(!isTRUE(getOption("plm.fast"))) {
+		Sum.pseries.baseR(x, effect, ...) } else {
+		Sum.pseries.collapse(x, effect, ...) }
+}
+
+Sum.matrix <- function(x, effect, ...) {
+	if(!isTRUE(getOption("plm.fast"))) {
+		Sum.matrix.baseR(x, effect, ...) } else {
+		Sum.matrix.collapse(x, effect, ...) }
+}
+
+#### Between wrapper switches ####
+Between.default <- function(x, effect, ...) {
+	if(!isTRUE(getOption("plm.fast"))) {
+		Between.default.baseR(x, effect, ...) } else {
+		Between.default.collapse(x, effect, ...) }
+}
+	
+Between.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
+	if(!isTRUE(getOption("plm.fast"))) {
+		Between.pseries.baseR(x, effect, ...) } else {
+		Between.pseries.collapse(x, effect, ...) }
+}
+
+Between.matrix <- function(x, effect, ...) {
+	if(!isTRUE(getOption("plm.fast"))) {
+		Between.matrix.baseR(x, effect, ...) } else {
+		Between.matrix.collapse(x, effect, ...) }
+}
+
+#### between wrapper switches ####
+between.default <- function(x, effect, ...) {
+  if(!isTRUE(getOption("plm.fast"))) {
+     between.default.baseR(x, effect, ...) } else {
+     between.default.collapse(x, effect, ...) }
+}
+
+between.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
+	if(!isTRUE(getOption("plm.fast"))) {
+		between.pseries.baseR(x, effect, ...) } else {
+		between.pseries.collapse(x, effect, ...) }
+}
+
+between.matrix <- function(x, effect, ...) {
+	if(!isTRUE(getOption("plm.fast"))) {
+		between.matrix.baseR(x, effect, ...) } else {
+		between.matrix.collapse(x, effect, ...) }
+}
+
+#### Within wrapper switches ####
+Within.default <- function(x, effect, ...) {
+	if(!isTRUE(getOption("plm.fast"))) {
+		Within.default.baseR(x, effect, ...) } else {
+		Within.default.collapse(x, effect, ...) }
+}
+
+Within.pseries <- function(x, effect = c("individual", "time", "group", "twoways"), ...) {
+	if(!isTRUE(getOption("plm.fast"))) {
+		Within.pseries.baseR(x, effect, ...) } else {
+		Within.pseries.collapse(x, effect, ...) }
+}
+
+Within.matrix <- function(x, effect, rm.null = TRUE, ...) {
+	if(!isTRUE(getOption("plm.fast"))) {
+		Within.matrix.baseR(x, effect, ...) } else {
+		Within.matrix.collapse(x, effect, ...) }
+}
+
 
 #### Sum ####
 
@@ -404,7 +484,10 @@ Within.matrix.collapse <- function(x, effect, rm.null = TRUE, ...) {
 	return(result)
 }
 
-
+#### Here are non-active functions which use lfe::demeanlist for within trans.
+#### These are on par in the one-way cases but faster than collapse in the
+#### two-way case, esp. in the unbalanced two-way case
+#### (collapse 1.4.2, lfe 2.8-5.1).
 # Within.pseries.collapse.lfe <- function(x, effect = c("individual", "time", "group", "twoways"), ...) {
 # 	# print("fwithin.pseries.collapse")
 # 	# browser()
@@ -433,8 +516,6 @@ Within.matrix.collapse <- function(x, effect, rm.null = TRUE, ...) {
 # 		}
 # 	return(res)
 # }
-
-
 
 # Within.matrix.collapse.lfe <- function(x, effect, rm.null = TRUE, ...) {
 # # print("fwithin.matrix.collapse.lfe")
@@ -496,27 +577,26 @@ Within.matrix.collapse <- function(x, effect, rm.null = TRUE, ...) {
 #' The package will then make use of the faster functions until the session
 #' ends or the speed-up is disabled by executing `pkg.plm.fast(use = FALSE)`.
 #' 
-#' Having package `collapse` installed locally, is a requirement for this function.
-#' However, this package currently not a hard dependency for package `plm` but
-#' a 'Suggests' dependency.
+#' Having package `collapse` installed is a requirement for this function and
+#' the speed up. However, this package currently not a hard dependency for
+#' package `plm` but a 'Suggests' dependency.
 #' 
 #' Currently, these functions benefit from the speed-up (more functions are
 #' under investigation):
 #' \itemize{
 #'   \item between,
 #'   \item Between,
-#'   \item Sum (internal function),
+#'   \item Sum,
 #'   \item Within.
 #' }
 #' 
 #' @param use logical, indicating whether the fast data transformations shall
-#' be turned on (`TRUE`, the default) or off (`FALSE`).
+#' be turned on (`TRUE`, the default) or off again (`FALSE`).
 #' @param suppressPrint logical (default is `FALSE`), indicating whether the
 #' function shall print messages about (de-)activation of the fast functions.
 #' @return A logical (`TRUE` if `use = TRUE` was set, `FALSE` if `use = FALSE`),
 #' returned invisibly.
 #' @seealso [package 'collapse' on CRAN](https://cran.r-project.org/package=collapse)
-#' @importFrom utils assignInNamespace
 #' @export
 #' @examples
 #' \dontrun{
@@ -563,79 +643,32 @@ Within.matrix.collapse <- function(x, effect, rm.null = TRUE, ...) {
 #' print(bench_res_collapse, unit = "s")
 #' }
 pkg.plm.fast <- function(use = TRUE, suppressPrint = FALSE) {
-	if(use == TRUE) {
-		if(!requireNamespace("collapse", quietly = TRUE)) {
-			stop(paste("package 'collapse' needed to use fast data transformation functions.",
+  if(use == TRUE) {
+    if(!requireNamespace("collapse", quietly = TRUE)) {
+      stop(paste("package 'collapse' needed to use fast data transformation functions.",
 								 "Please install it, e.g., with 'install.packages(\"collapse\")"),
 					 call. = FALSE)
-		}
-		assignInNamespace("between.default.plm", between.default.plm, envir = as.environment("package:plm"))
-		assignInNamespace("between.pseries.plm", between.pseries.plm, envir = as.environment("package:plm"))
-		assignInNamespace("between.matrix.plm",  between.matrix.plm,  envir = as.environment("package:plm"))
-		
-		assignInNamespace("Between.default.plm", Between.default.plm, envir = as.environment("package:plm"))
-		assignInNamespace("Between.pseries.plm", Between.pseries.plm, envir = as.environment("package:plm"))
-		assignInNamespace("Between.matrix.plm",  Between.matrix.plm,  envir = as.environment("package:plm"))
-		
-		assignInNamespace("Within.default.plm", Within.default.plm, envir = as.environment("package:plm"))
-		assignInNamespace("Within.pseries.plm", Within.pseries.plm, envir = as.environment("package:plm"))
-		assignInNamespace("Within.matrix.plm",  Within.matrix.plm,  envir = as.environment("package:plm"))
-		
-		assignInNamespace("Sum.default.plm", Sum.default.plm, envir = as.environment("package:plm"))
-		assignInNamespace("Sum.pseries.plm", Sum.pseries.plm, envir = as.environment("package:plm"))
-		assignInNamespace("Sum.matrix.plm",  Sum.matrix.plm,  envir = as.environment("package:plm"))
-		
-		# register collapse versions of functions/methods
-		assignInNamespace("between.default", between.default.collapse, envir = as.environment("package:plm"))
-		assignInNamespace("between.pseries", between.pseries.collapse, envir = as.environment("package:plm"))
-		assignInNamespace("between.matrix",  between.matrix.collapse,  envir = as.environment("package:plm"))
-		
-		assignInNamespace("Between.default", Between.default.collapse, envir = as.environment("package:plm"))
-		assignInNamespace("Between.pseries", Between.pseries.collapse, envir = as.environment("package:plm"))
-		assignInNamespace("Between.matrix",  Between.matrix.collapse,  envir = as.environment("package:plm"))
-		
-		assignInNamespace("Within.default", Within.default.collapse, envir = as.environment("package:plm"))
-		assignInNamespace("Within.pseries", Within.pseries.collapse, envir = as.environment("package:plm"))
-		assignInNamespace("Within.matrix",  Within.matrix.collapse,  envir = as.environment("package:plm"))
-		
-		assignInNamespace("Sum.default", Sum.default.collapse, envir = as.environment("package:plm"))
-		assignInNamespace("Sum.pseries", Sum.pseries.collapse, envir = as.environment("package:plm"))
-		assignInNamespace("Sum.matrix",  Sum.matrix.collapse,  envir = as.environment("package:plm"))
-		
-		if(pkg.plm.env$use.pkg.collapse == TRUE) {
-			if(!suppressPrint) print("fast data transformations of package 'collapse' were already enabled; enabled again...")
-		} else {
-			if(!suppressPrint) print("plm will now use package 'collapse' for fast data transformations")
-			pkg.plm.env$use.pkg.collapse <- TRUE
-		}
-		res <- TRUE
-		
-	} else {
-		
-		# (re-)register original plm versions of functions/methods
-		assignInNamespace("between.default", between.default.plm, envir = as.environment("package:plm"))
-		assignInNamespace("between.pseries", between.pseries.plm, envir = as.environment("package:plm"))
-		assignInNamespace("between.matrix",  between.matrix.plm,  envir = as.environment("package:plm"))
-		
-		assignInNamespace("Between.default", Between.default.plm, envir = as.environment("package:plm"))
-		assignInNamespace("Between.pseries", Between.pseries.plm, envir = as.environment("package:plm"))
-		assignInNamespace("Between.matrix",  Between.matrix.plm,  envir = as.environment("package:plm"))
-		
-		assignInNamespace("Within.default", Within.default.plm, envir = as.environment("package:plm"))
-		assignInNamespace("Within.pseries", Within.pseries.plm, envir = as.environment("package:plm"))
-		assignInNamespace("Within.matrix",  Within.matrix.plm,  envir = as.environment("package:plm"))
-		
-		assignInNamespace("Sum.default", Sum.default.plm, envir = as.environment("package:plm"))
-		assignInNamespace("Sum.pseries", Sum.pseries.plm, envir = as.environment("package:plm"))
-		assignInNamespace("Sum.matrix",  Sum.matrix.plm,  envir = as.environment("package:plm"))
-		
-		if(pkg.plm.env$use.pkg.collapse == FALSE) {
-			if(!suppressPrint) print("fast data transformations of package 'collapse' where already disabled; disabled again...")
-		} else {
-			if(!suppressPrint) print("disabled using package 'collapse' for fast data transformations")
-			pkg.plm.env$use.pkg.collapse <- FALSE
-		}
-		res <- FALSE
-	}
-	invisible(res)
+    }
+
+    if(isTRUE(getOption("plm.fast"))) {
+       if(!suppressPrint) print("fast data transformations of package 'collapse' were already enabled; enabled again...")
+    } else {
+      if(!suppressPrint) print("plm will now use package 'collapse' for fast data transformations")
+      # set option
+      options("plm.fast" = TRUE)
+    }
+    res <- TRUE
+
+  } else { ## use = FALSE
+
+    if(!isTRUE(getOption("plm.fast"))) {
+      if(!suppressPrint) print("fast data transformations of package 'collapse' where already disabled; disabled again...")
+    } else {
+      if(!suppressPrint) print("disabled using package 'collapse' for fast data transformations")
+      # set option
+      options("plm.fast" = FALSE)
+    }
+    res <- FALSE
+  }
+  invisible(res)
 }

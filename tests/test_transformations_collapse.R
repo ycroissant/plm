@@ -1,3 +1,5 @@
+## Tests equivalence of collapse to base-R version of transformation functions
+## B/between, Within, Sum.
 
 ## Run tests only if package 'collapse' is available (as it is Suggests dependency)
 collapse.avail <- if (!requireNamespace("collapse", quietly = TRUE)) FALSE else TRUE
@@ -44,23 +46,23 @@ attr(mat_unbal_wona, "index") <- index(pwlddev[-attr(wlddev_unbal_wona, "na.acti
 
 #### Sum - default ####
 
-Sum.default.plm <- plm:::Sum.default.plm
-Sum.pseries.plm <- plm:::Sum.pseries.plm
-Sum.matrix.plm  <- plm:::Sum.matrix.plm
+Sum.default.baseR <- plm:::Sum.default.baseR
+Sum.pseries.baseR <- plm:::Sum.pseries.baseR
+Sum.matrix.baseR  <- plm:::Sum.matrix.baseR
 
 Sum.default.collapse <- plm:::Sum.default.collapse
 Sum.pseries.collapse <- plm:::Sum.pseries.collapse
 Sum.matrix.collapse  <- plm:::Sum.matrix.collapse
 
 # individual
-S1_d_ind      <- Sum.default.plm(as.numeric(LIFEEX), effect = index(LIFEEX)[[1L]]) # default
-S1_d_ind_narm <- Sum.default.plm(as.numeric(LIFEEX), effect = index(LIFEEX)[[1L]], na.rm = TRUE)
+S1_d_ind      <- Sum.default.baseR(as.numeric(LIFEEX), effect = index(LIFEEX)[[1L]]) # default
+S1_d_ind_narm <- Sum.default.baseR(as.numeric(LIFEEX), effect = index(LIFEEX)[[1L]], na.rm = TRUE)
 
 S2_d_ind      <- Sum.default.collapse(as.numeric(LIFEEX), effect = index(LIFEEX)[[1L]]) # default
 S2_d_ind_narm <- Sum.default.collapse(as.numeric(LIFEEX), effect = index(LIFEEX)[[1L]], na.rm = TRUE)
 
-S1_d_ind_unbal      <- Sum.default.plm(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[1L]]) # default
-S1_d_ind_narm_unbal <- Sum.default.plm(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[1L]], na.rm = TRUE)
+S1_d_ind_unbal      <- Sum.default.baseR(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[1L]]) # default
+S1_d_ind_narm_unbal <- Sum.default.baseR(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[1L]], na.rm = TRUE)
 
 S2_d_ind_unbal      <- Sum.default.collapse(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[1L]]) # default
 S2_d_ind_narm_unbal <- Sum.default.collapse(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[1L]], na.rm = TRUE)
@@ -71,14 +73,14 @@ stopifnot(isTRUE(all.equal(S1_d_ind_unbal,      S2_d_ind_unbal,      check.attri
 stopifnot(isTRUE(all.equal(S1_d_ind_narm_unbal, S2_d_ind_narm_unbal, check.attributes = TRUE))) # TRUE
 
 # time
-S1_d_ti      <- Sum.default.plm(as.numeric(LIFEEX), effect = index(LIFEEX)[[2L]]) # default
-S1_d_ti_narm <- Sum.default.plm(as.numeric(LIFEEX), effect = index(LIFEEX)[[2L]], na.rm = TRUE)
+S1_d_ti      <- Sum.default.baseR(as.numeric(LIFEEX), effect = index(LIFEEX)[[2L]]) # default
+S1_d_ti_narm <- Sum.default.baseR(as.numeric(LIFEEX), effect = index(LIFEEX)[[2L]], na.rm = TRUE)
 
 S2_d_ti      <- Sum.default.collapse(as.numeric(LIFEEX), effect = index(LIFEEX)[[2L]]) # default
 S2_d_ti_narm <- Sum.default.collapse(as.numeric(LIFEEX), effect = index(LIFEEX)[[2L]], na.rm = TRUE)
 
-S1_d_ti_unbal      <- Sum.default.plm(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[2L]]) # default
-S1_d_ti_narm_unbal <- Sum.default.plm(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[2L]], na.rm = TRUE)
+S1_d_ti_unbal      <- Sum.default.baseR(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[2L]]) # default
+S1_d_ti_narm_unbal <- Sum.default.baseR(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[2L]], na.rm = TRUE)
 
 S2_d_ti_unbal      <- Sum.default.collapse(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[2L]]) # default
 S2_d_ti_narm_unbal <- Sum.default.collapse(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[2L]], na.rm = TRUE)
@@ -91,14 +93,14 @@ stopifnot(isTRUE(all.equal(S1_d_ti_narm_unbal, S2_d_ti_narm_unbal, check.attribu
 #### Sum - pseries ####
 
 # individual
-S1_ind      <- Sum.pseries.plm(LIFEEX, effect = "individual") # default
-S1_ind_narm <- Sum.pseries.plm(LIFEEX, effect = "individual", na.rm = TRUE)
+S1_ind      <- Sum.pseries.baseR(LIFEEX, effect = "individual") # default
+S1_ind_narm <- Sum.pseries.baseR(LIFEEX, effect = "individual", na.rm = TRUE)
 
 S2_ind      <- Sum.pseries.collapse(LIFEEX, effect = "individual") # default
 S2_ind_narm <- Sum.pseries.collapse(LIFEEX, effect = "individual", na.rm = TRUE)
 
-S1_ind_unbal      <- Sum.pseries.plm(LIFEEX_unbal, effect = "individual") # default
-S1_ind_narm_unbal <- Sum.pseries.plm(LIFEEX_unbal, effect = "individual", na.rm = TRUE)
+S1_ind_unbal      <- Sum.pseries.baseR(LIFEEX_unbal, effect = "individual") # default
+S1_ind_narm_unbal <- Sum.pseries.baseR(LIFEEX_unbal, effect = "individual", na.rm = TRUE)
 
 S2_ind_unbal      <- Sum.pseries.collapse(LIFEEX_unbal, effect = "individual") # default
 S2_ind_narm_unbal <- Sum.pseries.collapse(LIFEEX_unbal, effect = "individual", na.rm = TRUE)
@@ -109,14 +111,14 @@ stopifnot(isTRUE(all.equal(S1_ind_unbal,        S2_ind_unbal,        check.attri
 stopifnot(isTRUE(all.equal(S1_ind_narm_unbal,   S2_ind_narm_unbal,   check.attributes = TRUE))) # TRUE
 
 # time
-S1_ti      <- Sum.pseries.plm(LIFEEX, effect = "time") # default
-S1_ti_narm <- Sum.pseries.plm(LIFEEX, effect = "time", na.rm = TRUE)
+S1_ti      <- Sum.pseries.baseR(LIFEEX, effect = "time") # default
+S1_ti_narm <- Sum.pseries.baseR(LIFEEX, effect = "time", na.rm = TRUE)
 
 S2_ti      <- Sum.pseries.collapse(LIFEEX, effect = "time") # default
 S2_ti_narm <- Sum.pseries.collapse(LIFEEX, effect = "time", na.rm = TRUE)
 
-S1_ti_unbal      <- Sum.pseries.plm(LIFEEX_unbal, effect = "time") # default
-S1_ti_narm_unbal <- Sum.pseries.plm(LIFEEX_unbal, effect = "time", na.rm = TRUE)
+S1_ti_unbal      <- Sum.pseries.baseR(LIFEEX_unbal, effect = "time") # default
+S1_ti_narm_unbal <- Sum.pseries.baseR(LIFEEX_unbal, effect = "time", na.rm = TRUE)
 
 S2_ti_unbal      <- Sum.pseries.collapse(LIFEEX_unbal, effect = "time") # default
 S2_ti_narm_unbal <- Sum.pseries.collapse(LIFEEX_unbal, effect = "time", na.rm = TRUE)
@@ -129,11 +131,11 @@ stopifnot(isTRUE(all.equal(S1_ti_narm_unbal,   S2_ti_narm_unbal,   check.attribu
 #### Sum - matrix ####
 
 # individual
-S1_mat_ind      <- Sum.matrix.plm(mat, effect = "individual") # default
-S1_mat_ind_narm <- Sum.matrix.plm(mat, effect = "individual", na.rm = TRUE)
+S1_mat_ind      <- Sum.matrix.baseR(mat, effect = "individual") # default
+S1_mat_ind_narm <- Sum.matrix.baseR(mat, effect = "individual", na.rm = TRUE)
 
-S1_mat_no_index_ind      <- Sum.matrix.plm(mat_noindex, effect = mat_index[[1L]]) # default
-S1_mat_no_index_ind_narm <- Sum.matrix.plm(mat_noindex, effect = mat_index[[1L]], na.rm = TRUE)
+S1_mat_no_index_ind      <- Sum.matrix.baseR(mat_noindex, effect = mat_index[[1L]]) # default
+S1_mat_no_index_ind_narm <- Sum.matrix.baseR(mat_noindex, effect = mat_index[[1L]], na.rm = TRUE)
 
 S2_mat_ind      <- Sum.matrix.collapse(mat, effect = "individual") # default
 S2_mat_ind_narm <- Sum.matrix.collapse(mat, effect = "individual", na.rm = TRUE)
@@ -141,11 +143,11 @@ S2_mat_ind_narm <- Sum.matrix.collapse(mat, effect = "individual", na.rm = TRUE)
 S2_mat_no_index_ind      <- Sum.matrix.collapse(mat_noindex, effect = mat_index[[1L]]) # default
 S2_mat_no_index_ind_narm <- Sum.matrix.collapse(mat_noindex, effect = mat_index[[1L]], na.rm = TRUE)
 
-S1_mat_ind_unbal      <- Sum.matrix.plm(mat_unbal, effect = "individual") # default
-S1_mat_ind_narm_unbal <- Sum.matrix.plm(mat_unbal, effect = "individual", na.rm = TRUE)
+S1_mat_ind_unbal      <- Sum.matrix.baseR(mat_unbal, effect = "individual") # default
+S1_mat_ind_narm_unbal <- Sum.matrix.baseR(mat_unbal, effect = "individual", na.rm = TRUE)
 
-S1_mat_no_index_ind_unbal      <- Sum.matrix.plm(mat_noindex_unbal, effect = mat_index_unbal[[1L]]) # default
-S1_mat_no_index_ind_narm_unbal <- Sum.matrix.plm(mat_noindex_unbal, effect = mat_index_unbal[[1L]], na.rm = TRUE)
+S1_mat_no_index_ind_unbal      <- Sum.matrix.baseR(mat_noindex_unbal, effect = mat_index_unbal[[1L]]) # default
+S1_mat_no_index_ind_narm_unbal <- Sum.matrix.baseR(mat_noindex_unbal, effect = mat_index_unbal[[1L]], na.rm = TRUE)
 
 S2_mat_ind_unbal      <- Sum.matrix.collapse(mat_unbal, effect = "individual") # default
 S2_mat_ind_narm_unbal <- Sum.matrix.collapse(mat_unbal, effect = "individual", na.rm = TRUE)
@@ -164,11 +166,11 @@ stopifnot(isTRUE(all.equal(S1_mat_no_index_ind_unbal,        S2_mat_no_index_ind
 stopifnot(isTRUE(all.equal(S1_mat_no_index_ind_narm_unbal,   S2_mat_no_index_ind_narm_unbal,   check.attributes = TRUE))) # TRUE
 
 # time
-S1_mat_ti      <- Sum.matrix.plm(mat, effect = "time") # default
-S1_mat_ti_narm <- Sum.matrix.plm(mat, effect = "time", na.rm = TRUE)
+S1_mat_ti      <- Sum.matrix.baseR(mat, effect = "time") # default
+S1_mat_ti_narm <- Sum.matrix.baseR(mat, effect = "time", na.rm = TRUE)
 
-S1_mat_no_index_ti      <- Sum.matrix.plm(mat_noindex, effect = mat_index[[2L]]) # default
-S1_mat_no_index_ti_narm <- Sum.matrix.plm(mat_noindex, effect = mat_index[[2L]], na.rm = TRUE)
+S1_mat_no_index_ti      <- Sum.matrix.baseR(mat_noindex, effect = mat_index[[2L]]) # default
+S1_mat_no_index_ti_narm <- Sum.matrix.baseR(mat_noindex, effect = mat_index[[2L]], na.rm = TRUE)
 
 S2_mat_ti      <- Sum.matrix.collapse(mat, effect = "time") # default
 S2_mat_ti_narm <- Sum.matrix.collapse(mat, effect = "time", na.rm = TRUE)
@@ -176,11 +178,11 @@ S2_mat_ti_narm <- Sum.matrix.collapse(mat, effect = "time", na.rm = TRUE)
 S2_mat_no_index_ti      <- Sum.matrix.collapse(mat_noindex, effect = mat_index[[2L]]) # default
 S2_mat_no_index_ti_narm <- Sum.matrix.collapse(mat_noindex, effect = mat_index[[2L]], na.rm = TRUE)
 
-S1_mat_ti_unbal      <- Sum.matrix.plm(mat_unbal, effect = "time") # default
-S1_mat_ti_narm_unbal <- Sum.matrix.plm(mat_unbal, effect = "time", na.rm = TRUE)
+S1_mat_ti_unbal      <- Sum.matrix.baseR(mat_unbal, effect = "time") # default
+S1_mat_ti_narm_unbal <- Sum.matrix.baseR(mat_unbal, effect = "time", na.rm = TRUE)
 
-S1_mat_no_index_ti_unbal      <- Sum.matrix.plm(mat_noindex_unbal, effect = mat_index_unbal[[2L]]) # default
-S1_mat_no_index_ti_narm_unbal <- Sum.matrix.plm(mat_noindex_unbal, effect = mat_index_unbal[[2L]], na.rm = TRUE)
+S1_mat_no_index_ti_unbal      <- Sum.matrix.baseR(mat_noindex_unbal, effect = mat_index_unbal[[2L]]) # default
+S1_mat_no_index_ti_narm_unbal <- Sum.matrix.baseR(mat_noindex_unbal, effect = mat_index_unbal[[2L]], na.rm = TRUE)
 
 S2_mat_ti_unbal      <- Sum.matrix.collapse(mat_unbal, effect = "time") # default
 S2_mat_ti_narm_unbal <- Sum.matrix.collapse(mat_unbal, effect = "time", na.rm = TRUE)
@@ -201,33 +203,33 @@ stopifnot(isTRUE(all.equal(S1_mat_no_index_ti_narm_unbal,   S2_mat_no_index_ti_n
 
 
 #### between/Between - default ####
-between.default.plm <- plm:::between.default.plm
-Between.default.plm <- plm:::Between.default.plm
+between.default.baseR <- plm:::between.default.baseR
+Between.default.baseR <- plm:::Between.default.baseR
 
 between.default.collapse <- plm:::between.default.collapse
 Between.default.collapse <- plm:::Between.default.collapse
 
 # individual
-b1_d_ind      <- between.default.plm(as.numeric(LIFEEX), effect = index(LIFEEX)[[1L]]) # default
-b1_d_ind_narm <- between.default.plm(as.numeric(LIFEEX), effect = index(LIFEEX)[[1L]], na.rm = TRUE)
+b1_d_ind      <- between.default.baseR(as.numeric(LIFEEX), effect = index(LIFEEX)[[1L]]) # default
+b1_d_ind_narm <- between.default.baseR(as.numeric(LIFEEX), effect = index(LIFEEX)[[1L]], na.rm = TRUE)
 
 b2_d_ind      <- between.default.collapse(as.numeric(LIFEEX), effect = index(LIFEEX)[[1L]]) # default
 b2_d_ind_narm <- between.default.collapse(as.numeric(LIFEEX), effect = index(LIFEEX)[[1L]], na.rm = TRUE)
 
-B1_d_ind      <- Between.default.plm(as.numeric(LIFEEX), effect = index(LIFEEX)[[1L]]) # default
-B1_d_ind_narm <- Between.default.plm(as.numeric(LIFEEX), effect = index(LIFEEX)[[1L]], na.rm = TRUE)
+B1_d_ind      <- Between.default.baseR(as.numeric(LIFEEX), effect = index(LIFEEX)[[1L]]) # default
+B1_d_ind_narm <- Between.default.baseR(as.numeric(LIFEEX), effect = index(LIFEEX)[[1L]], na.rm = TRUE)
 
 B2_d_ind      <- Between.default.collapse(as.numeric(LIFEEX), effect = index(LIFEEX)[[1L]]) # default
 B2_d_ind_narm <- Between.default.collapse(as.numeric(LIFEEX), effect = index(LIFEEX)[[1L]], na.rm = TRUE)
 
-b1_d_ind_unbal      <- between.default.plm(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[1L]]) # default
-b1_d_ind_narm_unbal <- between.default.plm(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[1L]], na.rm = TRUE)
+b1_d_ind_unbal      <- between.default.baseR(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[1L]]) # default
+b1_d_ind_narm_unbal <- between.default.baseR(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[1L]], na.rm = TRUE)
 
 b2_d_ind_unbal      <- between.default.collapse(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[1L]]) # default
 b2_d_ind_narm_unbal <- between.default.collapse(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[1L]], na.rm = TRUE)
 
-B1_d_ind_unbal      <- Between.default.plm(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[1L]]) # default
-B1_d_ind_narm_unbal <- Between.default.plm(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[1L]], na.rm = TRUE)
+B1_d_ind_unbal      <- Between.default.baseR(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[1L]]) # default
+B1_d_ind_narm_unbal <- Between.default.baseR(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[1L]], na.rm = TRUE)
 
 B2_d_ind_unbal      <- Between.default.collapse(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[1L]]) # default
 B2_d_ind_narm_unbal <- Between.default.collapse(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[1L]], na.rm = TRUE)
@@ -246,26 +248,26 @@ stopifnot(isTRUE(all.equal(B1_d_ind_unbal,      B2_d_ind_unbal,      check.attri
 stopifnot(isTRUE(all.equal(B1_d_ind_narm_unbal, B2_d_ind_narm_unbal, check.attributes = TRUE))) # TRUE
 
 # time
-b1_d_ti      <- between.default.plm(as.numeric(LIFEEX), effect = index(LIFEEX)[[2L]]) # default
-b1_d_ti_narm <- between.default.plm(as.numeric(LIFEEX), effect = index(LIFEEX)[[2L]], na.rm = TRUE)
+b1_d_ti      <- between.default.baseR(as.numeric(LIFEEX), effect = index(LIFEEX)[[2L]]) # default
+b1_d_ti_narm <- between.default.baseR(as.numeric(LIFEEX), effect = index(LIFEEX)[[2L]], na.rm = TRUE)
 
 b2_d_ti      <- between.default.collapse(as.numeric(LIFEEX), effect = index(LIFEEX)[[2L]]) # default
 b2_d_ti_narm <- between.default.collapse(as.numeric(LIFEEX), effect = index(LIFEEX)[[2L]], na.rm = TRUE)
 
-B1_d_ti      <- Between.default.plm(as.numeric(LIFEEX), effect = index(LIFEEX)[[2L]]) # default
-B1_d_ti_narm <- Between.default.plm(as.numeric(LIFEEX), effect = index(LIFEEX)[[2L]], na.rm = TRUE)
+B1_d_ti      <- Between.default.baseR(as.numeric(LIFEEX), effect = index(LIFEEX)[[2L]]) # default
+B1_d_ti_narm <- Between.default.baseR(as.numeric(LIFEEX), effect = index(LIFEEX)[[2L]], na.rm = TRUE)
 
 B2_d_ti      <- Between.default.collapse(as.numeric(LIFEEX), effect = index(LIFEEX)[[2L]]) # default
 B2_d_ti_narm <- Between.default.collapse(as.numeric(LIFEEX), effect = index(LIFEEX)[[2L]], na.rm = TRUE)
 
-b1_d_ti_unbal      <- between.default.plm(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[2L]]) # default
-b1_d_ti_narm_unbal <- between.default.plm(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[2L]], na.rm = TRUE)
+b1_d_ti_unbal      <- between.default.baseR(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[2L]]) # default
+b1_d_ti_narm_unbal <- between.default.baseR(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[2L]], na.rm = TRUE)
 
 b2_d_ti_unbal      <- between.default.collapse(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[2L]]) # default
 b2_d_ti_narm_unbal <- between.default.collapse(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[2L]], na.rm = TRUE)
 
-B1_d_ti_unbal      <- Between.default.plm(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[2L]]) # default
-B1_d_ti_narm_unbal <- Between.default.plm(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[2L]], na.rm = TRUE)
+B1_d_ti_unbal      <- Between.default.baseR(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[2L]]) # default
+B1_d_ti_narm_unbal <- Between.default.baseR(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[2L]], na.rm = TRUE)
 
 B2_d_ti_unbal      <- Between.default.collapse(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[2L]]) # default
 B2_d_ti_narm_unbal <- Between.default.collapse(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[2L]], na.rm = TRUE)
@@ -284,17 +286,17 @@ stopifnot(isTRUE(all.equal(B1_d_ti_unbal,      B2_d_ti_unbal,      check.attribu
 stopifnot(isTRUE(all.equal(B1_d_ti_narm_unbal, B2_d_ti_narm_unbal, check.attributes = TRUE))) # TRUE
 
 #### between/Between - pseries ####
-between.pseries.plm <- plm:::between.pseries
-Between.pseries.plm <- plm:::Between.pseries
+between.pseries.baseR <- plm:::between.pseries.baseR
+Between.pseries.baseR <- plm:::Between.pseries.baseR
 
 between.pseries.collapse <- plm:::between.pseries.collapse
 Between.pseries.collapse <- plm:::Between.pseries.collapse
 
-b1_ind      <- between.pseries.plm(LIFEEX, effect = "individual") # default
-b1_ind_narm <- between.pseries.plm(LIFEEX, effect = "individual", na.rm = TRUE)
+b1_ind      <- between.pseries.baseR(LIFEEX, effect = "individual") # default
+b1_ind_narm <- between.pseries.baseR(LIFEEX, effect = "individual", na.rm = TRUE)
 
-B1_ind      <- Between.pseries.plm(LIFEEX, effect = "individual") # default
-B1_ind_narm <- Between.pseries.plm(LIFEEX, effect = "individual", na.rm = TRUE)
+B1_ind      <- Between.pseries.baseR(LIFEEX, effect = "individual") # default
+B1_ind_narm <- Between.pseries.baseR(LIFEEX, effect = "individual", na.rm = TRUE)
 
 b2_ind       <- between.pseries.collapse(LIFEEX, effect = "individual")
 b2_ind_narm  <- between.pseries.collapse(LIFEEX, effect = "individual", na.rm = TRUE)
@@ -307,11 +309,11 @@ stopifnot(isTRUE(all.equal(b1_ind_narm, b2_ind_narm, check.attributes = TRUE))) 
 stopifnot(isTRUE(all.equal(B1_ind,      B2_ind,      check.attributes = TRUE))) # TRUE
 stopifnot(isTRUE(all.equal(B1_ind_narm, B2_ind_narm, check.attributes = TRUE))) # TRUE
 
-b1_ind_unbal      <- between.pseries.plm(LIFEEX_unbal, effect = "individual") # default
-b1_ind_unbal_narm <- between.pseries.plm(LIFEEX_unbal, effect = "individual", na.rm = TRUE)
+b1_ind_unbal      <- between.pseries.baseR(LIFEEX_unbal, effect = "individual") # default
+b1_ind_unbal_narm <- between.pseries.baseR(LIFEEX_unbal, effect = "individual", na.rm = TRUE)
 
-B1_ind_unbal      <- Between.pseries.plm(LIFEEX_unbal, effect = "individual") # default
-B1_ind_unbal_narm <- Between.pseries.plm(LIFEEX_unbal, effect = "individual", na.rm = TRUE)
+B1_ind_unbal      <- Between.pseries.baseR(LIFEEX_unbal, effect = "individual") # default
+B1_ind_unbal_narm <- Between.pseries.baseR(LIFEEX_unbal, effect = "individual", na.rm = TRUE)
 
 b2_ind_unbal       <- between.pseries.collapse(LIFEEX_unbal, effect = "individual")
 b2_ind_unbal_narm  <- between.pseries.collapse(LIFEEX_unbal, effect = "individual", na.rm = TRUE)
@@ -325,11 +327,11 @@ stopifnot(isTRUE(all.equal(B1_ind_unbal,      B2_ind_unbal,      check.attribute
 stopifnot(isTRUE(all.equal(B1_ind_unbal_narm, B2_ind_unbal_narm, check.attributes = TRUE))) # TRUE
 
 # time
-b1_ti      <- between.pseries.plm(LIFEEX, effect = "time") # default
-b1_ti_narm <- between.pseries.plm(LIFEEX, effect = "time", na.rm = TRUE)
+b1_ti      <- between.pseries.baseR(LIFEEX, effect = "time") # default
+b1_ti_narm <- between.pseries.baseR(LIFEEX, effect = "time", na.rm = TRUE)
 
-B1_ti      <- Between.pseries.plm(LIFEEX, effect = "time") # default
-B1_ti_narm <- Between.pseries.plm(LIFEEX, effect = "time", na.rm = TRUE)
+B1_ti      <- Between.pseries.baseR(LIFEEX, effect = "time") # default
+B1_ti_narm <- Between.pseries.baseR(LIFEEX, effect = "time", na.rm = TRUE)
 
 b2_ti       <- between.pseries.collapse(LIFEEX, effect = "time")
 b2_ti_narm  <- between.pseries.collapse(LIFEEX, effect = "time", na.rm = TRUE)
@@ -342,11 +344,11 @@ stopifnot(isTRUE(all.equal(b1_ti_narm, b2_ti_narm, check.attributes = TRUE))) # 
 stopifnot(isTRUE(all.equal(B1_ti,      B2_ti,      check.attributes = TRUE))) # TRUE
 stopifnot(isTRUE(all.equal(B1_ti_narm, B2_ti_narm, check.attributes = TRUE))) # TRUE
 
-b1_ti_unbal      <- between.pseries.plm(LIFEEX_unbal, effect = "time") # default
-b1_ti_unbal_narm <- between.pseries.plm(LIFEEX_unbal, effect = "time", na.rm = TRUE)
+b1_ti_unbal      <- between.pseries.baseR(LIFEEX_unbal, effect = "time") # default
+b1_ti_unbal_narm <- between.pseries.baseR(LIFEEX_unbal, effect = "time", na.rm = TRUE)
 
-B1_ti_unbal      <- Between.pseries.plm(LIFEEX_unbal, effect = "time") # default
-B1_ti_unbal_narm <- Between.pseries.plm(LIFEEX_unbal, effect = "time", na.rm = TRUE)
+B1_ti_unbal      <- Between.pseries.baseR(LIFEEX_unbal, effect = "time") # default
+B1_ti_unbal_narm <- Between.pseries.baseR(LIFEEX_unbal, effect = "time", na.rm = TRUE)
 
 b2_ti_unbal       <- between.pseries.collapse(LIFEEX_unbal, effect = "time")
 b2_ti_unbal_narm  <- between.pseries.collapse(LIFEEX_unbal, effect = "time", na.rm = TRUE)
@@ -361,18 +363,18 @@ stopifnot(isTRUE(all.equal(B1_ti_unbal_narm, B2_ti_unbal_narm, check.attributes 
 
 #### between/Between - matrix ####
 
-between.matrix.plm <- plm:::between.matrix
-Between.matrix.plm <- plm:::Between.matrix
+between.matrix.baseR <- plm:::between.matrix.baseR
+Between.matrix.baseR <- plm:::Between.matrix.baseR
 
 between.matrix.collapse <- plm:::between.matrix.collapse
 Between.matrix.collapse <- plm:::Between.matrix.collapse
 
 # individual
-b1_mat_ind      <- between.matrix.plm(mat, effect = "individual") # default
-b1_mat_ind_narm <- between.matrix.plm(mat, effect = "individual", na.rm = TRUE)
+b1_mat_ind      <- between.matrix.baseR(mat, effect = "individual") # default
+b1_mat_ind_narm <- between.matrix.baseR(mat, effect = "individual", na.rm = TRUE)
 
-B1_mat_ind      <- Between.matrix.plm(mat, effect = "individual") # default
-B1_mat_ind_narm <- Between.matrix.plm(mat, effect = "individual", na.rm = TRUE)
+B1_mat_ind      <- Between.matrix.baseR(mat, effect = "individual") # default
+B1_mat_ind_narm <- Between.matrix.baseR(mat, effect = "individual", na.rm = TRUE)
 
 b2_mat_ind       <- between.matrix.collapse(mat, effect = "individual")
 b2_mat_ind_narm  <- between.matrix.collapse(mat, effect = "individual", na.rm = TRUE)
@@ -380,11 +382,11 @@ b2_mat_ind_narm  <- between.matrix.collapse(mat, effect = "individual", na.rm = 
 B2_mat_ind       <- Between.matrix.collapse(mat, effect = "individual")
 B2_mat_ind_narm  <- Between.matrix.collapse(mat, effect = "individual", na.rm = TRUE)
 
-b1_mat_noindex_ind      <- between.matrix.plm(mat_noindex, effect = mat_index[[1L]]) # default
-b1_mat_noindex_ind_narm <- between.matrix.plm(mat_noindex, effect = mat_index[[1L]], na.rm = TRUE)
+b1_mat_noindex_ind      <- between.matrix.baseR(mat_noindex, effect = mat_index[[1L]]) # default
+b1_mat_noindex_ind_narm <- between.matrix.baseR(mat_noindex, effect = mat_index[[1L]], na.rm = TRUE)
 
-B1_mat_noindex_ind      <- Between.matrix.plm(mat_noindex, effect = mat_index[[1L]]) # default
-B1_mat_noindex_ind_narm <- Between.matrix.plm(mat_noindex, effect = mat_index[[1L]], na.rm = TRUE)
+B1_mat_noindex_ind      <- Between.matrix.baseR(mat_noindex, effect = mat_index[[1L]]) # default
+B1_mat_noindex_ind_narm <- Between.matrix.baseR(mat_noindex, effect = mat_index[[1L]], na.rm = TRUE)
 
 b2_mat_noindex_ind      <- between.matrix.collapse(mat_noindex, effect = mat_index[[1L]]) # default
 b2_mat_noindex_ind_narm <- between.matrix.collapse(mat_noindex, effect = mat_index[[1L]], na.rm = TRUE)
@@ -403,11 +405,11 @@ stopifnot(isTRUE(all.equal(B1_mat_noindex_ind,      B2_mat_noindex_ind,      che
 stopifnot(isTRUE(all.equal(B1_mat_noindex_ind_narm, B2_mat_noindex_ind_narm, check.attributes = TRUE))) # TRUE
 
 # individual unbalanced
-b1_mat_unbal_ind      <- between.matrix.plm(mat_unbal, effect = "individual") # default
-b1_mat_unbal_ind_narm <- between.matrix.plm(mat_unbal, effect = "individual", na.rm = TRUE)
+b1_mat_unbal_ind      <- between.matrix.baseR(mat_unbal, effect = "individual") # default
+b1_mat_unbal_ind_narm <- between.matrix.baseR(mat_unbal, effect = "individual", na.rm = TRUE)
 
-B1_mat_unbal_ind      <- Between.matrix.plm(mat_unbal, effect = "individual") # default
-B1_mat_unbal_ind_narm <- Between.matrix.plm(mat_unbal, effect = "individual", na.rm = TRUE)
+B1_mat_unbal_ind      <- Between.matrix.baseR(mat_unbal, effect = "individual") # default
+B1_mat_unbal_ind_narm <- Between.matrix.baseR(mat_unbal, effect = "individual", na.rm = TRUE)
 
 b2_mat_unbal_ind       <- between.matrix.collapse(mat_unbal, effect = "individual")
 b2_mat_unbal_ind_narm  <- between.matrix.collapse(mat_unbal, effect = "individual", na.rm = TRUE)
@@ -415,11 +417,11 @@ b2_mat_unbal_ind_narm  <- between.matrix.collapse(mat_unbal, effect = "individua
 B2_mat_unbal_ind       <- Between.matrix.collapse(mat_unbal, effect = "individual")
 B2_mat_unbal_ind_narm  <- Between.matrix.collapse(mat_unbal, effect = "individual", na.rm = TRUE)
 
-b1_mat_noindex_unbal_ind      <- between.matrix.plm(mat_noindex_unbal, effect = mat_index_unbal[[1L]]) # default
-b1_mat_noindex_unbal_ind_narm <- between.matrix.plm(mat_noindex_unbal, effect = mat_index_unbal[[1L]], na.rm = TRUE)
+b1_mat_noindex_unbal_ind      <- between.matrix.baseR(mat_noindex_unbal, effect = mat_index_unbal[[1L]]) # default
+b1_mat_noindex_unbal_ind_narm <- between.matrix.baseR(mat_noindex_unbal, effect = mat_index_unbal[[1L]], na.rm = TRUE)
 
-B1_mat_noindex_unbal_ind      <- Between.matrix.plm(mat_noindex_unbal, effect = mat_index_unbal[[1L]]) # default
-B1_mat_noindex_unbal_ind_narm <- Between.matrix.plm(mat_noindex_unbal, effect = mat_index_unbal[[1L]], na.rm = TRUE)
+B1_mat_noindex_unbal_ind      <- Between.matrix.baseR(mat_noindex_unbal, effect = mat_index_unbal[[1L]]) # default
+B1_mat_noindex_unbal_ind_narm <- Between.matrix.baseR(mat_noindex_unbal, effect = mat_index_unbal[[1L]], na.rm = TRUE)
 
 b2_mat_noindex_unbal_ind      <- between.matrix.collapse(mat_noindex_unbal, effect = mat_index_unbal[[1L]]) # default
 b2_mat_noindex_unbal_ind_narm <- between.matrix.collapse(mat_noindex_unbal, effect = mat_index_unbal[[1L]], na.rm = TRUE)
@@ -438,11 +440,11 @@ stopifnot(isTRUE(all.equal(B1_mat_noindex_unbal_ind,      B2_mat_noindex_unbal_i
 stopifnot(isTRUE(all.equal(B1_mat_noindex_unbal_ind_narm, B2_mat_noindex_unbal_ind_narm, check.attributes = TRUE))) # TRUE
 
 # time
-b1_mat_ti      <- between.matrix.plm(mat, effect = "time") # default
-b1_mat_ti_narm <- between.matrix.plm(mat, effect = "time", na.rm = TRUE)
+b1_mat_ti      <- between.matrix.baseR(mat, effect = "time") # default
+b1_mat_ti_narm <- between.matrix.baseR(mat, effect = "time", na.rm = TRUE)
 
-B1_mat_ti      <- Between.matrix.plm(mat, effect = "time") # default
-B1_mat_ti_narm <- Between.matrix.plm(mat, effect = "time", na.rm = TRUE)
+B1_mat_ti      <- Between.matrix.baseR(mat, effect = "time") # default
+B1_mat_ti_narm <- Between.matrix.baseR(mat, effect = "time", na.rm = TRUE)
 
 b2_mat_ti       <- between.matrix.collapse(mat, effect = "time")
 b2_mat_ti_narm  <- between.matrix.collapse(mat, effect = "time", na.rm = TRUE)
@@ -450,11 +452,11 @@ b2_mat_ti_narm  <- between.matrix.collapse(mat, effect = "time", na.rm = TRUE)
 B2_mat_ti       <- Between.matrix.collapse(mat, effect = "time")
 B2_mat_ti_narm  <- Between.matrix.collapse(mat, effect = "time", na.rm = TRUE)
 
-b1_mat_noindex_ti      <- between.matrix.plm(mat_noindex, effect = mat_index[[2L]]) # default
-b1_mat_noindex_ti_narm <- between.matrix.plm(mat_noindex, effect = mat_index[[2L]], na.rm = TRUE)
+b1_mat_noindex_ti      <- between.matrix.baseR(mat_noindex, effect = mat_index[[2L]]) # default
+b1_mat_noindex_ti_narm <- between.matrix.baseR(mat_noindex, effect = mat_index[[2L]], na.rm = TRUE)
 
-B1_mat_noindex_ti      <- Between.matrix.plm(mat_noindex, effect = mat_index[[2L]]) # default
-B1_mat_noindex_ti_narm <- Between.matrix.plm(mat_noindex, effect = mat_index[[2L]], na.rm = TRUE)
+B1_mat_noindex_ti      <- Between.matrix.baseR(mat_noindex, effect = mat_index[[2L]]) # default
+B1_mat_noindex_ti_narm <- Between.matrix.baseR(mat_noindex, effect = mat_index[[2L]], na.rm = TRUE)
 
 b2_mat_noindex_ti      <- between.matrix.collapse(mat_noindex, effect = mat_index[[2L]]) # default
 b2_mat_noindex_ti_narm <- between.matrix.collapse(mat_noindex, effect = mat_index[[2L]], na.rm = TRUE)
@@ -473,11 +475,11 @@ stopifnot(isTRUE(all.equal(B1_mat_noindex_ti,      B2_mat_noindex_ti,      check
 stopifnot(isTRUE(all.equal(B1_mat_noindex_ti_narm, B2_mat_noindex_ti_narm, check.attributes = TRUE))) # TRUE
 
 # time unbalanced
-b1_mat_unbal_ti      <- between.matrix.plm(mat_unbal, effect = "time") # default
-b1_mat_unbal_ti_narm <- between.matrix.plm(mat_unbal, effect = "time", na.rm = TRUE)
+b1_mat_unbal_ti      <- between.matrix.baseR(mat_unbal, effect = "time") # default
+b1_mat_unbal_ti_narm <- between.matrix.baseR(mat_unbal, effect = "time", na.rm = TRUE)
 
-B1_mat_unbal_ti      <- Between.matrix.plm(mat_unbal, effect = "time") # default
-B1_mat_unbal_ti_narm <- Between.matrix.plm(mat_unbal, effect = "time", na.rm = TRUE)
+B1_mat_unbal_ti      <- Between.matrix.baseR(mat_unbal, effect = "time") # default
+B1_mat_unbal_ti_narm <- Between.matrix.baseR(mat_unbal, effect = "time", na.rm = TRUE)
 
 b2_mat_unbal_ti       <- between.matrix.collapse(mat_unbal, effect = "time")
 b2_mat_unbal_ti_narm  <- between.matrix.collapse(mat_unbal, effect = "time", na.rm = TRUE)
@@ -485,11 +487,11 @@ b2_mat_unbal_ti_narm  <- between.matrix.collapse(mat_unbal, effect = "time", na.
 B2_mat_unbal_ti       <- Between.matrix.collapse(mat_unbal, effect = "time")
 B2_mat_unbal_ti_narm  <- Between.matrix.collapse(mat_unbal, effect = "time", na.rm = TRUE)
 
-b1_mat_noindex_unbal_ti      <- between.matrix.plm(mat_noindex_unbal, effect = mat_index_unbal[[2L]]) # default
-b1_mat_noindex_unbal_ti_narm <- between.matrix.plm(mat_noindex_unbal, effect = mat_index_unbal[[2L]], na.rm = TRUE)
+b1_mat_noindex_unbal_ti      <- between.matrix.baseR(mat_noindex_unbal, effect = mat_index_unbal[[2L]]) # default
+b1_mat_noindex_unbal_ti_narm <- between.matrix.baseR(mat_noindex_unbal, effect = mat_index_unbal[[2L]], na.rm = TRUE)
 
-B1_mat_noindex_unbal_ti      <- Between.matrix.plm(mat_noindex_unbal, effect = mat_index_unbal[[2L]]) # default
-B1_mat_noindex_unbal_ti_narm <- Between.matrix.plm(mat_noindex_unbal, effect = mat_index_unbal[[2L]], na.rm = TRUE)
+B1_mat_noindex_unbal_ti      <- Between.matrix.baseR(mat_noindex_unbal, effect = mat_index_unbal[[2L]]) # default
+B1_mat_noindex_unbal_ti_narm <- Between.matrix.baseR(mat_noindex_unbal, effect = mat_index_unbal[[2L]], na.rm = TRUE)
 
 b2_mat_noindex_unbal_ti      <- between.matrix.collapse(mat_noindex_unbal, effect = mat_index_unbal[[2L]]) # default
 b2_mat_noindex_unbal_ti_narm <- between.matrix.collapse(mat_noindex_unbal, effect = mat_index_unbal[[2L]], na.rm = TRUE)
@@ -509,21 +511,21 @@ stopifnot(isTRUE(all.equal(B1_mat_noindex_unbal_ti_narm, B2_mat_noindex_unbal_ti
 
 #### within - default ####
 
-Within.default.plm      <- plm:::Within.default
+Within.default.baseR    <- plm:::Within.default.baseR
 Within.default.collapse <- plm:::Within.default.collapse
 
 # individual (balanced + unbalanced)
-W1_d_ind      <- Within.default.plm(as.numeric(LIFEEX), effect = index(LIFEEX)[[1]])
-W1_d_ind_narm <- Within.default.plm(as.numeric(LIFEEX), effect = index(LIFEEX)[[1]], na.rm = TRUE)
+W1_d_ind      <- Within.default.baseR(as.numeric(LIFEEX), effect = index(LIFEEX)[[1L]])
+W1_d_ind_narm <- Within.default.baseR(as.numeric(LIFEEX), effect = index(LIFEEX)[[1L]], na.rm = TRUE)
 
-W2_d_ind      <- Within.default.collapse(as.numeric(LIFEEX), effect = index(LIFEEX)[[1]])
-W2_d_ind_narm <- Within.default.collapse(as.numeric(LIFEEX), effect = index(LIFEEX)[[1]], na.rm = TRUE)
+W2_d_ind      <- Within.default.collapse(as.numeric(LIFEEX), effect = index(LIFEEX)[[1L]])
+W2_d_ind_narm <- Within.default.collapse(as.numeric(LIFEEX), effect = index(LIFEEX)[[1L]], na.rm = TRUE)
 
-W1_d_ind_unbal      <- Within.default.plm(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[1]])
-W1_d_ind_narm_unbal <- Within.default.plm(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[1]], na.rm = TRUE)
+W1_d_ind_unbal      <- Within.default.baseR(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[1L]])
+W1_d_ind_narm_unbal <- Within.default.baseR(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[1L]], na.rm = TRUE)
 
-W2_d_ind_unbal      <- Within.default.collapse(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[1]])
-W2_d_ind_narm_unbal <- Within.default.collapse(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[1]], na.rm = TRUE)
+W2_d_ind_unbal      <- Within.default.collapse(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[1L]])
+W2_d_ind_narm_unbal <- Within.default.collapse(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[1L]], na.rm = TRUE)
 
 
 stopifnot(isTRUE(all.equal(W1_d_ind,      W2_d_ind,      check.attributes = TRUE))) # TRUE
@@ -533,17 +535,17 @@ stopifnot(isTRUE(all.equal(W1_d_ind_unbal,      W2_d_ind_unbal,      check.attri
 stopifnot(isTRUE(all.equal(W1_d_ind_narm_unbal, W2_d_ind_narm_unbal, check.attributes = TRUE))) # TRUE
 
 # time (balanced + unbalanced)
-W1_d_ti      <- Within.default.plm(as.numeric(LIFEEX), effect = index(LIFEEX)[[2]])
-W1_d_ti_narm <- Within.default.plm(as.numeric(LIFEEX), effect = index(LIFEEX)[[2]], na.rm = TRUE)
+W1_d_ti      <- Within.default.baseR(as.numeric(LIFEEX), effect = index(LIFEEX)[[2L]])
+W1_d_ti_narm <- Within.default.baseR(as.numeric(LIFEEX), effect = index(LIFEEX)[[2L]], na.rm = TRUE)
 
-W2_d_ti      <- Within.default.collapse(as.numeric(LIFEEX), effect = index(LIFEEX)[[2]])
-W2_d_ti_narm <- Within.default.collapse(as.numeric(LIFEEX), effect = index(LIFEEX)[[2]], na.rm = TRUE)
+W2_d_ti      <- Within.default.collapse(as.numeric(LIFEEX), effect = index(LIFEEX)[[2L]])
+W2_d_ti_narm <- Within.default.collapse(as.numeric(LIFEEX), effect = index(LIFEEX)[[2L]], na.rm = TRUE)
 
-W1_d_ti_unbal      <- Within.default.plm(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[2]])
-W1_d_ti_narm_unbal <- Within.default.plm(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[2]], na.rm = TRUE)
+W1_d_ti_unbal      <- Within.default.baseR(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[2L]])
+W1_d_ti_narm_unbal <- Within.default.baseR(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[2L]], na.rm = TRUE)
 
-W2_d_ti_unbal      <- Within.default.collapse(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[2]])
-W2_d_ti_narm_unbal <- Within.default.collapse(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[2]], na.rm = TRUE)
+W2_d_ti_unbal      <- Within.default.collapse(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[2L]])
+W2_d_ti_narm_unbal <- Within.default.collapse(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[2L]], na.rm = TRUE)
 
 stopifnot(isTRUE(all.equal(W1_d_ti,      W2_d_ti,      check.attributes = TRUE))) # TRUE
 stopifnot(isTRUE(all.equal(W1_d_ti_narm, W2_d_ti_narm, check.attributes = TRUE))) # TRUE
@@ -555,17 +557,18 @@ stopifnot(isTRUE(all.equal(W1_d_ti_narm_unbal, W2_d_ti_narm_unbal, check.attribu
 
 #### within - pseries ####
 
-Within.pseries.plm      <- plm:::Within.pseries
+Within.pseries.baseR    <- plm:::Within.pseries.baseR
+
 Within.pseries.collapse <- plm:::Within.pseries.collapse
 
-W1_ind      <- Within.pseries.plm(LIFEEX, effect = "individual") # default
-W1_ind_narm <- Within.pseries.plm(LIFEEX, effect = "individual", na.rm = TRUE)
+W1_ind      <- Within.pseries.baseR(LIFEEX, effect = "individual") # default
+W1_ind_narm <- Within.pseries.baseR(LIFEEX, effect = "individual", na.rm = TRUE)
 
 W2_ind       <- Within.pseries.collapse(LIFEEX, effect = "individual")
 W2_ind_narm  <- Within.pseries.collapse(LIFEEX, effect = "individual", na.rm = TRUE)
 
-W1_ind_unbal      <- Within.pseries.plm(LIFEEX_unbal, effect = "individual") # default
-W1_ind_narm_unbal <- Within.pseries.plm(LIFEEX_unbal, effect = "individual", na.rm = TRUE)
+W1_ind_unbal      <- Within.pseries.baseR(LIFEEX_unbal, effect = "individual") # default
+W1_ind_narm_unbal <- Within.pseries.baseR(LIFEEX_unbal, effect = "individual", na.rm = TRUE)
 
 W2_ind_unbal       <- Within.pseries.collapse(LIFEEX_unbal, effect = "individual")
 W2_ind_narm_unbal  <- Within.pseries.collapse(LIFEEX_unbal, effect = "individual", na.rm = TRUE)
@@ -577,14 +580,14 @@ stopifnot(isTRUE(all.equal(W1_ind_unbal,      W2_ind_unbal,      check.attribute
 stopifnot(isTRUE(all.equal(W1_ind_narm_unbal, W2_ind_narm_unbal, check.attributes = TRUE))) # TRUE
 
 # time
-W1_ti      <- Within.pseries.plm(LIFEEX, effect = "time") # default
-W1_ti_narm <- Within.pseries.plm(LIFEEX, effect = "time", na.rm = TRUE)
+W1_ti      <- Within.pseries.baseR(LIFEEX, effect = "time") # default
+W1_ti_narm <- Within.pseries.baseR(LIFEEX, effect = "time", na.rm = TRUE)
 
 W2_ti       <- Within.pseries.collapse(LIFEEX, effect = "time")
 W2_ti_narm  <- Within.pseries.collapse(LIFEEX, effect = "time", na.rm = TRUE)
 
-W1_ti_unbal      <- Within.pseries.plm(LIFEEX_unbal, effect = "time") # default
-W1_ti_narm_unbal <- Within.pseries.plm(LIFEEX_unbal, effect = "time", na.rm = TRUE)
+W1_ti_unbal      <- Within.pseries.baseR(LIFEEX_unbal, effect = "time") # default
+W1_ti_narm_unbal <- Within.pseries.baseR(LIFEEX_unbal, effect = "time", na.rm = TRUE)
 
 W2_ti_unbal       <- Within.pseries.collapse(LIFEEX_unbal, effect = "time")
 W2_ti_narm_unbal  <- Within.pseries.collapse(LIFEEX_unbal, effect = "time", na.rm = TRUE)
@@ -598,8 +601,8 @@ stopifnot(isTRUE(all.equal(W1_ti_narm_unbal, W2_ti_narm_unbal, check.attributes 
 # twoways
 # need to use non-NA data for plm's original 2-way FE unbalanced transformation (due to lm.fit being used)
 	## so these cannot work
-	# W1_tw      <- Within.pseries.plm(LIFEEX, effect = "twoways") # default
-	# W1_tw_narm <- Within.pseries.plm(LIFEEX, effect = "twoways", na.rm = TRUE)
+	# W1_tw      <- Within.pseries.baseR(LIFEEX, effect = "twoways") # default
+	# W1_tw_narm <- Within.pseries.baseR(LIFEEX, effect = "twoways", na.rm = TRUE)
 	# 
 	# W2_tw       <- Within.pseries.collapse(LIFEEX, effect = "twoways")
 	# W2_tw_narm  <- Within.pseries.collapse(LIFEEX, effect = "twoways", na.rm = TRUE)
@@ -607,8 +610,8 @@ stopifnot(isTRUE(all.equal(W1_ti_narm_unbal, W2_ti_narm_unbal, check.attributes 
 	# stopifnot(isTRUE(all.equal(W1_tw_narm, W2_tw_narm, check.attributes = TRUE))) # TRUE
 
 ## but these:
-W1_tw_unbal_wona      <- Within.pseries.plm(LIFEEX_unbal_wona, effect = "twoways") # default
-W1_tw_narm_unbal_wona <- Within.pseries.plm(LIFEEX_unbal_wona, effect = "twoways", na.rm = TRUE)
+W1_tw_unbal_wona      <- Within.pseries.baseR(LIFEEX_unbal_wona, effect = "twoways") # default
+W1_tw_narm_unbal_wona <- Within.pseries.baseR(LIFEEX_unbal_wona, effect = "twoways", na.rm = TRUE)
 
 W2_tw_unbal_wona       <- Within.pseries.collapse(LIFEEX_unbal_wona, effect = "twoways")
 W2_tw_narm_unbal_wona  <- Within.pseries.collapse(LIFEEX_unbal_wona, effect = "twoways", na.rm = TRUE)
@@ -618,12 +621,13 @@ stopifnot(isTRUE(all.equal(W1_tw_narm_unbal_wona, W2_tw_narm_unbal_wona, check.a
 
 #### within - matrix ####
 
-Within.matrix.plm      <- plm:::Within.matrix
+Within.matrix.baseR    <- plm:::Within.matrix.baseR
+
 Within.matrix.collapse <- plm:::Within.matrix.collapse
 
 # individual effect - balanced
-W1_mat_ind      <- Within.matrix.plm(mat, effect = "individual") # default
-W1_mat_ind_narm <- Within.matrix.plm(mat, effect = "individual", na.rm = TRUE)
+W1_mat_ind      <- Within.matrix.baseR(mat, effect = "individual") # default
+W1_mat_ind_narm <- Within.matrix.baseR(mat, effect = "individual", na.rm = TRUE)
 
 W2_mat_ind       <- Within.matrix.collapse(mat, effect = "individual")
 W2_mat_ind_narm  <- Within.matrix.collapse(mat, effect = "individual", na.rm = TRUE)
@@ -632,8 +636,8 @@ stopifnot(isTRUE(all.equal(W1_mat_ind,      W2_mat_ind,      check.attributes = 
 stopifnot(isTRUE(all.equal(W1_mat_ind_narm, W2_mat_ind_narm, check.attributes = TRUE))) # TRUE
 
 # individual effect - unbalanced
-W1_mat_unbal_ind      <- Within.matrix.plm(mat_unbal, effect = "individual") # default
-W1_mat_unbal_ind_narm <- Within.matrix.plm(mat_unbal, effect = "individual", na.rm = TRUE)
+W1_mat_unbal_ind      <- Within.matrix.baseR(mat_unbal, effect = "individual") # default
+W1_mat_unbal_ind_narm <- Within.matrix.baseR(mat_unbal, effect = "individual", na.rm = TRUE)
 
 W2_mat_unbal_ind       <- Within.matrix.collapse(mat_unbal, effect = "individual")
 W2_mat_unbal_ind_narm  <- Within.matrix.collapse(mat_unbal, effect = "individual", na.rm = TRUE)
@@ -642,8 +646,8 @@ stopifnot(isTRUE(all.equal(W1_mat_unbal_ind,      W2_mat_unbal_ind,      check.a
 stopifnot(isTRUE(all.equal(W1_mat_unbal_ind_narm, W2_mat_unbal_ind_narm, check.attributes = TRUE))) # TRUE
 
 # time effect - balanced
-W1_mat_ti      <- Within.matrix.plm(mat, effect = "time") # default
-W1_mat_ti_narm <- Within.matrix.plm(mat, effect = "time", na.rm = TRUE)
+W1_mat_ti      <- Within.matrix.baseR(mat, effect = "time") # default
+W1_mat_ti_narm <- Within.matrix.baseR(mat, effect = "time", na.rm = TRUE)
 
 W2_mat_ti       <- Within.matrix.collapse(mat, effect = "time")
 W2_mat_ti_narm  <- Within.matrix.collapse(mat, effect = "time", na.rm = TRUE)
@@ -652,8 +656,8 @@ stopifnot(isTRUE(all.equal(W1_mat_ti,      W2_mat_ti,      check.attributes = TR
 stopifnot(isTRUE(all.equal(W1_mat_ti_narm, W2_mat_ti_narm, check.attributes = TRUE))) # TRUE
 
 # time effect - unbalanced
-W1_mat_unbal_ti      <- Within.matrix.plm(mat_unbal, effect = "time") # default
-W1_mat_unbal_ti_narm <- Within.matrix.plm(mat_unbal, effect = "time", na.rm = TRUE)
+W1_mat_unbal_ti      <- Within.matrix.baseR(mat_unbal, effect = "time") # default
+W1_mat_unbal_ti_narm <- Within.matrix.baseR(mat_unbal, effect = "time", na.rm = TRUE)
 
 W2_mat_unbal_ti       <- Within.matrix.collapse(mat_unbal, effect = "time")
 W2_mat_unbal_ti_narm  <- Within.matrix.collapse(mat_unbal, effect = "time", na.rm = TRUE)
@@ -662,8 +666,8 @@ stopifnot(isTRUE(all.equal(W1_mat_unbal_ti,      W2_mat_unbal_ti,      check.att
 stopifnot(isTRUE(all.equal(W1_mat_unbal_ti_narm, W2_mat_unbal_ti_narm, check.attributes = TRUE))) # TRUE
 
 # twoways - balanced
-W1_mat_tw      <- Within.matrix.plm(mat, effect = "twoways") # default
-W1_mat_tw_narm <- Within.matrix.plm(mat, effect = "twoways", na.rm = TRUE)
+W1_mat_tw      <- Within.matrix.baseR(mat, effect = "twoways") # default
+W1_mat_tw_narm <- Within.matrix.baseR(mat, effect = "twoways", na.rm = TRUE)
 
 W2_mat_tw       <- Within.matrix.collapse(mat, effect = "twoways")
 W2_mat_tw_narm  <- Within.matrix.collapse(mat, effect = "twoways", na.rm = TRUE)
@@ -673,8 +677,8 @@ stopifnot(isTRUE(all.equal(W1_mat_tw_narm, W2_mat_tw_narm, check.attributes = TR
 
 # twoways - unbalanced
 # need to use non-NA data for plm's original 2-way FE unbalanced transformation (due to lm.fit being used)
-W1_mat_unbal_tw      <- Within.matrix.plm(mat_unbal_wona, effect = "twoways") # default
-W1_mat_unbal_tw_narm <- Within.matrix.plm(mat_unbal_wona, effect = "twoways", na.rm = TRUE)
+W1_mat_unbal_tw      <- Within.matrix.baseR(mat_unbal_wona, effect = "twoways") # default
+W1_mat_unbal_tw_narm <- Within.matrix.baseR(mat_unbal_wona, effect = "twoways", na.rm = TRUE)
 
 W2_mat_unbal_tw       <- Within.matrix.collapse(mat_unbal_wona, effect = "twoways")
 W2_mat_unbal_tw_narm  <- Within.matrix.collapse(mat_unbal_wona, effect = "twoways", na.rm = TRUE)

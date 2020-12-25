@@ -8,7 +8,7 @@ pkg.plm.fast(use = TRUE, suppressPrint = FALSE)
 }
 \arguments{
 \item{use}{logical, indicating whether the fast data transformations shall
-be turned on (\code{TRUE}, the default) or off (\code{FALSE}).}
+be turned on (\code{TRUE}, the default) or off again (\code{FALSE}).}
 
 \item{suppressPrint}{logical (default is \code{FALSE}), indicating whether the
 function shall print messages about (de-)activation of the fast functions.}
@@ -33,16 +33,16 @@ To enable the speed-up, execute \code{pkg.plm.fast(use = TRUE)} once per session
 The package will then make use of the faster functions until the session
 ends or the speed-up is disabled by executing \code{pkg.plm.fast(use = FALSE)}.
 
-Having package \code{collapse} installed locally, is a requirement for this function.
-However, this package currently not a hard dependency for package \code{plm} but
-a 'Suggests' dependency.
+Having package \code{collapse} installed is a requirement for this function and
+the speed up. However, this package currently not a hard dependency for
+package \code{plm} but a 'Suggests' dependency.
 
 Currently, these functions benefit from the speed-up (more functions are
 under investigation):
 \itemize{
 \item between,
 \item Between,
-\item Sum (internal function),
+\item Sum,
 \item Within.
 }
 }
