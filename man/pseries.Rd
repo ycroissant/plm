@@ -8,6 +8,10 @@
 \alias{summary.pseries}
 \alias{plot.summary.pseries}
 \alias{print.summary.pseries}
+\alias{Sum}
+\alias{Sum.default}
+\alias{Sum.pseries}
+\alias{Sum.matrix}
 \alias{Between}
 \alias{Between.default}
 \alias{Between.pseries}
@@ -42,6 +46,14 @@
 
 \method{print}{summary.pseries}(x, ...)
 
+Sum(x, ...)
+
+\method{Sum}{default}(x, effect, ...)
+
+\method{Sum}{pseries}(x, effect = c("individual", "time", "group"), ...)
+
+\method{Sum}{matrix}(x, effect, ...)
+
 Between(x, ...)
 
 \method{Between}{default}(x, effect, ...)
@@ -67,7 +79,7 @@ Within(x, ...)
 \method{Within}{matrix}(x, effect, rm.null = TRUE, ...)
 }
 \arguments{
-\item{x, object}{a \code{pseries} or a \code{summary.pseries} object,}
+\item{x, object}{a \code{pseries} or a matrix; or a \code{summary.pseries} object,}
 
 \item{\dots}{further arguments, e. g., \code{na.rm = TRUE} for
 transformation functions like \code{beetween}, see \strong{Details}
@@ -81,14 +93,14 @@ the matrix are the individuals,}
 \item{effect}{for the pseries methods: character string indicating the
 \code{"individual"}, \code{"time"}, or \code{"group"} effect, for \code{Within}
 \code{"twoways"} additionally; for non-pseries methods, \code{effect} is a factor
-specifing the dimension (\code{"twoways"} is not possible),}
+specifying the dimension (\code{"twoways"} is not possible),}
 
 \item{rm.null}{if \code{TRUE}, for the \code{Within.matrix} method, remove
 the empty columns,}
 }
 \value{
-All these functions return an object of class \code{pseries},
-except:\cr \code{between}, which returns a numeric vector,
+All these functions return an object of class \code{pseries} or a matrix,
+except:\cr \code{between}, which returns a numeric vector or a matrix;
 \code{as.matrix}, which returns a matrix.
 }
 \description{
@@ -96,23 +108,27 @@ A class for panel series for which several useful computations and
 data transformations are available.
 }
 \details{
-The functions \code{between}, \code{Between}, and \code{Within} perform specific
-data transformations, i. e. the between and within transformation.
+The functions \code{between}, \code{Between}, \code{Within}, and \code{Sum} perform specific
+data transformations, i. e., the between, within, and sum transformation,
+respectively.
 
-\code{between} returns a vector containing the individual means (over
+\code{between} returns a vector/matrix containing the individual means (over
 time) with the length of the vector equal to the number of
 individuals (if \code{effect = "individual"} (default); if \code{effect = "time"},
 it returns the time means (over individuals)). \code{Between}
-duplicates the values and returns a vector which length is the
-number of total observations. \code{Within} returns a vector containing
-the values in deviation from the individual means (if \code{effect = "individual"},
-from time means if \code{effect = "time"}), the so called
-demeaned data.
+duplicates the values and returns a vector/matrix which length/number of rows
+is the number of total observations. \code{Within} returns a vector/matrix
+containing the values in deviation from the individual means
+(if \code{effect = "individual"}, from time means if \code{effect = "time"}), the so
+called demeaned data. \code{Sum} returns a vector/matrix with sum per individual
+(over time) or the sum per time period (over individuals) with
+\code{effect = "individual"} or \code{effect = "time"}, respectively, and has length/
+number of rows of the total observations (like \code{Between}).
 
-For \code{between}, \code{Between}, and \code{Within} in presence of NA values it
+For \code{between}, \code{Between}, \code{Within}, and \code{Sum} in presence of NA values it
 can be useful to supply \code{na.rm = TRUE} as an additional argument to
 keep as many observations as possible in the resulting transformation.
-na.rm is passed on to the mean() function used by these transformations
+na.rm is passed on to the mean()/sum() function used by these transformations
 (i.e., it does not remove NAs prior to any processing!), see also
 \strong{Examples}.
 }
@@ -133,25 +149,30 @@ as.matrix(z)
 between(z)
 Within(z)
 
-# Between replicates the values for each time observation
+# Between and Sum replicate the values for each time observation
 Between(z)
+Sum(z)
 
-# between, Between, and Within transformations on other dimension
+# between, Between, Within, and Sum transformations on other dimension
 between(z, effect = "time")
 Between(z, effect = "time")
 Within(z, effect = "time")
+Sum(z, effect = "time")
 
-# NA treatment for between, Between, and Within
+# NA treatment for between, Between, Within, and Sum
 z2 <- z
 z2[length(z2)] <- NA # set last value to NA
 between(z2, na.rm = TRUE) # non-NA value for last individual
 Between(z2, na.rm = TRUE) # only the NA observation is lost
 Within(z2, na.rm = TRUE)  # only the NA observation is lost
+Sum(z2, na.rm = TRUE)     # only the NA observation is lost
 
 sum(is.na(Between(z2))) # 9 observations lost due to one NA value
 sum(is.na(Between(z2, na.rm = TRUE))) # only the NA observation is lost
 sum(is.na(Within(z2))) # 9 observations lost due to one NA value
 sum(is.na(Within(z2, na.rm = TRUE))) # only the NA observation is lost
+sum(is.na(Sum(z2))) # 9 observations lost due to one NA value
+sum(is.na(Sum(z2, na.rm = TRUE))) # only the NA observation is lost
 
 }
 \seealso{

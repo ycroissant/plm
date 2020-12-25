@@ -20,33 +20,37 @@
 #' A class for panel series for which several useful computations and
 #' data transformations are available.
 #' 
-#' The functions `between`, `Between`, and `Within` perform specific
-#' data transformations, i. e. the between and within transformation.
+#' The functions `between`, `Between`, `Within`, and `Sum` perform specific
+#' data transformations, i. e., the between, within, and sum transformation,
+#' respectively.
 #' 
-#' `between` returns a vector containing the individual means (over
+#' `between` returns a vector/matrix containing the individual means (over
 #' time) with the length of the vector equal to the number of
 #' individuals (if `effect = "individual"` (default); if `effect = "time"`,
 #' it returns the time means (over individuals)). `Between`
-#' duplicates the values and returns a vector which length is the
-#' number of total observations. `Within` returns a vector containing
-#' the values in deviation from the individual means (if `effect = "individual"`,
-#' from time means if `effect = "time"`), the so called
-#' demeaned data.
+#' duplicates the values and returns a vector/matrix which length/number of rows
+#' is the number of total observations. `Within` returns a vector/matrix
+#' containing the values in deviation from the individual means
+#' (if `effect = "individual"`, from time means if `effect = "time"`), the so
+#' called demeaned data. `Sum` returns a vector/matrix with sum per individual
+#' (over time) or the sum per time period (over individuals) with
+#' `effect = "individual"` or `effect = "time"`, respectively, and has length/
+#' number of rows of the total observations (like `Between`).
 #' 
-#' For `between`, `Between`, and `Within` in presence of NA values it
+#' For `between`, `Between`, `Within`, and `Sum` in presence of NA values it
 #' can be useful to supply `na.rm = TRUE` as an additional argument to
 #' keep as many observations as possible in the resulting transformation.
-#' na.rm is passed on to the mean() function used by these transformations
+#' na.rm is passed on to the mean()/sum() function used by these transformations
 #' (i.e., it does not remove NAs prior to any processing!), see also 
 #' **Examples**. 
 #' 
 #' @name pseries
 #' @aliases pseries
-#' @param x,object a `pseries` or a `summary.pseries` object,
+#' @param x,object a `pseries` or a matrix; or a `summary.pseries` object,
 #' @param effect for the pseries methods: character string indicating the
 #'     `"individual"`, `"time"`, or `"group"` effect, for `Within` 
 #'     `"twoways"` additionally; for non-pseries methods, `effect` is a factor
-#'     specifing the dimension (`"twoways"` is not possible),
+#'     specifying the dimension (`"twoways"` is not possible),
 #' @param idbyrow if `TRUE` in the `as.matrix` method, the lines of
 #'     the matrix are the individuals,
 #' @param rm.null if `TRUE`, for the `Within.matrix` method, remove
@@ -55,8 +59,8 @@
 #' @param \dots further arguments, e. g., `na.rm = TRUE` for
 #'     transformation functions like `beetween`, see **Details**
 #'     and **Examples**.
-#' @return All these functions return an object of class `pseries`,
-#'     except:\cr `between`, which returns a numeric vector,
+#' @return All these functions return an object of class `pseries` or a matrix,
+#'     except:\cr `between`, which returns a numeric vector or a matrix;
 #'     `as.matrix`, which returns a matrix.
 #' @author Yves Croissant
 #' @seealso [is.pseries()] to check if an object is a pseries. For
@@ -81,25 +85,30 @@
 #' between(z)
 #' Within(z)
 #' 
-#' # Between replicates the values for each time observation
+#' # Between and Sum replicate the values for each time observation
 #' Between(z)
+#' Sum(z)
 #' 
-#' # between, Between, and Within transformations on other dimension
+#' # between, Between, Within, and Sum transformations on other dimension
 #' between(z, effect = "time")
 #' Between(z, effect = "time")
 #' Within(z, effect = "time")
+#' Sum(z, effect = "time")
 #' 
-#' # NA treatment for between, Between, and Within
+#' # NA treatment for between, Between, Within, and Sum
 #' z2 <- z
 #' z2[length(z2)] <- NA # set last value to NA
 #' between(z2, na.rm = TRUE) # non-NA value for last individual
 #' Between(z2, na.rm = TRUE) # only the NA observation is lost
 #' Within(z2, na.rm = TRUE)  # only the NA observation is lost
+#' Sum(z2, na.rm = TRUE)     # only the NA observation is lost
 #' 
 #' sum(is.na(Between(z2))) # 9 observations lost due to one NA value
 #' sum(is.na(Between(z2, na.rm = TRUE))) # only the NA observation is lost
 #' sum(is.na(Within(z2))) # 9 observations lost due to one NA value
 #' sum(is.na(Within(z2, na.rm = TRUE))) # only the NA observation is lost
+#' sum(is.na(Sum(z2))) # 9 observations lost due to one NA value
+#' sum(is.na(Sum(z2, na.rm = TRUE))) # only the NA observation is lost
 #' 
 NULL
 
@@ -338,10 +347,14 @@ myave.matrix <- function(x, effect, func, ...) {
     return(result)
 }
 
+#' @rdname pseries
+#' @export
 Sum <- function(x, ...) {
     UseMethod("Sum")
 }
 
+#' @rdname pseries
+#' @export
 Sum.default <- function(x, effect, ...) {
     # argument 'effect' is assumed to be a factor
     if(!is.numeric(x)) stop("The Sum function only applies to numeric vectors")
@@ -349,12 +362,16 @@ Sum.default <- function(x, effect, ...) {
     return(myave(x, effect, sum, ...))
 }
 
+#' @rdname pseries
+#' @export
 Sum.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
     effect <- match.arg(effect)
     #   Tapply(x, effect, sum, ...)
     return(myave(x, effect, sum, ...))
 }
 
+#' @rdname pseries
+#' @export
 Sum.matrix <- function(x, effect, ...) {
     if(is.null(attr(x, "index"))) {
       return(Sum.default(x, effect, ...))

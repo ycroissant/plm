@@ -1,4 +1,4 @@
-# plm 2.3-0
+# plm 2.4-0
 
 ### Speed up:
 Significant speed improvement (optional): A significant speed-up of the
@@ -15,14 +15,16 @@ plm()):
 
 * Between,
 * between,
-* Sum (internal),
+* Sum,
 * Within.
+
 
 ### Features:
 * within_intercept gains argument 'return.model' (default is FALSE and the
   functions works as previously). If set to TRUE, a full model object is
   returned which is the input's within model with an intercept (see
   documentation for more details).
+* Sum is now exported.
 
 
 ### Fixes:
