@@ -46,63 +46,63 @@ attr(mat_unbal_wona, "index") <- index(pGrunfeld[-attr(Grunfeld_unbal_wona, "na.
 
 #### Sum - default ####
 
-# # individual
-# xS1_d_ind      <- plm::Sum(as.numeric(inv), effect = index(inv)[[1L]]) # default
-# xS1_d_ind_narm <- plm:::Sum(as.numeric(inv), effect = index(inv)[[1L]], na.rm = TRUE)
-# 
-# xS1_d_ind_unbal      <- Sum(as.numeric(inv_unbal), effect = index(inv_unbal)[[1L]]) # default
-# xS1_d_ind_narm_unbal <- Sum(as.numeric(inv_unbal), effect = index(inv_unbal)[[1L]], na.rm = TRUE)
-# 
-# # time
-# xS1_d_ti      <- Sum(as.numeric(inv), effect = index(inv)[[2L]]) # default
-# xS1_d_ti_narm <- Sum(as.numeric(inv), effect = index(inv)[[2L]], na.rm = TRUE)
-# 
-# xS1_d_ti_unbal      <- Sum(as.numeric(inv_unbal), effect = index(inv_unbal)[[2L]]) # default
-# xS1_d_ti_narm_unbal <- Sum(as.numeric(inv_unbal), effect = index(inv_unbal)[[2L]], na.rm = TRUE)
-# 
-# #### Sum - pseries ####
-# 
-# # individual
-# xS1_ind      <- Sum(inv, effect = "individual") # default
-# xS1_ind_narm <- Sum(inv, effect = "individual", na.rm = TRUE)
-# 
-# xS1_ind_unbal      <- Sum(inv_unbal, effect = "individual") # default
-# xS1_ind_narm_unbal <- Sum(inv_unbal, effect = "individual", na.rm = TRUE)
-# 
-# # time
-# xS1_ti      <- Sum(inv, effect = "time") # default
-# xS1_ti_narm <- Sum(inv, effect = "time", na.rm = TRUE)
-# 
-# xS1_ti_unbal      <- Sum(inv_unbal, effect = "time") # default
-# xS1_ti_narm_unbal <- Sum(inv_unbal, effect = "time", na.rm = TRUE)
-# 
-# #### Sum - matrix ####
-# 
-# # individual
-# xS1_mat_ind      <- Sum(mat, effect = "individual") # default
-# xS1_mat_ind_narm <- Sum(mat, effect = "individual", na.rm = TRUE)
-# 
-# xS1_mat_no_index_ind      <- Sum(mat_noindex, effect = mat_index[[1L]]) # default
-# xS1_mat_no_index_ind_narm <- Sum(mat_noindex, effect = mat_index[[1L]], na.rm = TRUE)
-# 
-# xS1_mat_ind_unbal      <- Sum(mat_unbal, effect = "individual") # default
-# xS1_mat_ind_narm_unbal <- Sum(mat_unbal, effect = "individual", na.rm = TRUE)
-# 
-# xS1_mat_no_index_ind_unbal      <- Sum(mat_noindex_unbal, effect = mat_index_unbal[[1L]]) # default
-# xS1_mat_no_index_ind_narm_unbal <- Sum(mat_noindex_unbal, effect = mat_index_unbal[[1L]], na.rm = TRUE)
-# 
-# # time
-# xS1_mat_ti      <- Sum(mat, effect = "time") # default
-# xS1_mat_ti_narm <- Sum(mat, effect = "time", na.rm = TRUE)
-# 
-# xS1_mat_no_index_ti      <- Sum(mat_noindex, effect = mat_index[[2L]]) # default
-# xS1_mat_no_index_ti_narm <- Sum(mat_noindex, effect = mat_index[[2L]], na.rm = TRUE)
-# 
-# xS1_mat_ti_unbal      <- Sum.matrix(mat_unbal, effect = "time") # default
-# xS1_mat_ti_narm_unbal <- Sum.matrix(mat_unbal, effect = "time", na.rm = TRUE)
-# 
-# xS1_mat_no_index_ti_unbal      <- Sum(mat_noindex_unbal, effect = mat_index_unbal[[2L]]) # default
-# xS1_mat_no_index_ti_narm_unbal <- Sum(mat_noindex_unbal, effect = mat_index_unbal[[2L]], na.rm = TRUE)
+# individual
+xS1_d_ind      <- Sum(as.numeric(inv), effect = index(inv)[[1L]]) # default
+xS1_d_ind_narm <- Sum(as.numeric(inv), effect = index(inv)[[1L]], na.rm = TRUE)
+
+xS1_d_ind_unbal      <- Sum(as.numeric(inv_unbal), effect = index(inv_unbal)[[1L]]) # default
+xS1_d_ind_narm_unbal <- Sum(as.numeric(inv_unbal), effect = index(inv_unbal)[[1L]], na.rm = TRUE)
+
+# time
+xS1_d_ti      <- Sum(as.numeric(inv), effect = index(inv)[[2L]]) # default
+xS1_d_ti_narm <- Sum(as.numeric(inv), effect = index(inv)[[2L]], na.rm = TRUE)
+
+xS1_d_ti_unbal      <- Sum(as.numeric(inv_unbal), effect = index(inv_unbal)[[2L]]) # default
+xS1_d_ti_narm_unbal <- Sum(as.numeric(inv_unbal), effect = index(inv_unbal)[[2L]], na.rm = TRUE)
+
+#### Sum - pseries ####
+
+# individual
+xS1_ind      <- Sum(inv, effect = "individual") # default
+xS1_ind_narm <- Sum(inv, effect = "individual", na.rm = TRUE)
+
+xS1_ind_unbal      <- Sum(inv_unbal, effect = "individual") # default
+xS1_ind_narm_unbal <- Sum(inv_unbal, effect = "individual", na.rm = TRUE)
+
+# time
+xS1_ti      <- Sum(inv, effect = "time") # default
+xS1_ti_narm <- Sum(inv, effect = "time", na.rm = TRUE)
+
+xS1_ti_unbal      <- Sum(inv_unbal, effect = "time") # default
+xS1_ti_narm_unbal <- Sum(inv_unbal, effect = "time", na.rm = TRUE)
+
+#### Sum - matrix ####
+
+# individual
+xS1_mat_ind      <- Sum(mat, effect = "individual") # default
+xS1_mat_ind_narm <- Sum(mat, effect = "individual", na.rm = TRUE)
+
+xS1_mat_no_index_ind      <- Sum(mat_noindex, effect = mat_index[[1L]]) # default
+xS1_mat_no_index_ind_narm <- Sum(mat_noindex, effect = mat_index[[1L]], na.rm = TRUE)
+
+xS1_mat_ind_unbal      <- Sum(mat_unbal, effect = "individual") # default
+xS1_mat_ind_narm_unbal <- Sum(mat_unbal, effect = "individual", na.rm = TRUE)
+
+xS1_mat_no_index_ind_unbal      <- Sum(mat_noindex_unbal, effect = mat_index_unbal[[1L]]) # default
+xS1_mat_no_index_ind_narm_unbal <- Sum(mat_noindex_unbal, effect = mat_index_unbal[[1L]], na.rm = TRUE)
+
+# time
+xS1_mat_ti      <- Sum(mat, effect = "time") # default
+xS1_mat_ti_narm <- Sum(mat, effect = "time", na.rm = TRUE)
+
+xS1_mat_no_index_ti      <- Sum(mat_noindex, effect = mat_index[[2L]]) # default
+xS1_mat_no_index_ti_narm <- Sum(mat_noindex, effect = mat_index[[2L]], na.rm = TRUE)
+
+xS1_mat_ti_unbal      <- Sum(mat_unbal, effect = "time") # default
+xS1_mat_ti_narm_unbal <- Sum(mat_unbal, effect = "time", na.rm = TRUE)
+
+xS1_mat_no_index_ti_unbal      <- Sum(mat_noindex_unbal, effect = mat_index_unbal[[2L]]) # default
+xS1_mat_no_index_ti_narm_unbal <- Sum(mat_noindex_unbal, effect = mat_index_unbal[[2L]], na.rm = TRUE)
 
 #### between/Between - default ####
 
@@ -283,68 +283,73 @@ xW1_mat_unbal_tw      <- Within(mat_unbal_wona, effect = "twoways") # default
 xW1_mat_unbal_tw_narm <- Within(mat_unbal_wona, effect = "twoways", na.rm = TRUE)
 
 ###################### same but with fast functions ############################
+
+## Run tests only if package 'collapse' is available (as it is Suggests dependency)
+collapse.avail <- if (!requireNamespace("collapse", quietly = TRUE)) FALSE else TRUE
+
+if(collapse.avail) {
 pkg.plm.fast(TRUE)
 
 
 #### Sum - default ####
 
-# # individual
-# xS1_d_ind      <- plm::Sum(as.numeric(inv), effect = index(inv)[[1L]]) # default
-# xS1_d_ind_narm <- plm:::Sum(as.numeric(inv), effect = index(inv)[[1L]], na.rm = TRUE)
-# 
-# xS1_d_ind_unbal      <- Sum(as.numeric(inv_unbal), effect = index(inv_unbal)[[1L]]) # default
-# xS1_d_ind_narm_unbal <- Sum(as.numeric(inv_unbal), effect = index(inv_unbal)[[1L]], na.rm = TRUE)
-# 
-# # time
-# xS1_d_ti      <- Sum(as.numeric(inv), effect = index(inv)[[2L]]) # default
-# xS1_d_ti_narm <- Sum(as.numeric(inv), effect = index(inv)[[2L]], na.rm = TRUE)
-# 
-# xS1_d_ti_unbal      <- Sum(as.numeric(inv_unbal), effect = index(inv_unbal)[[2L]]) # default
-# xS1_d_ti_narm_unbal <- Sum(as.numeric(inv_unbal), effect = index(inv_unbal)[[2L]], na.rm = TRUE)
-# 
-# #### Sum - pseries ####
-# 
-# # individual
-# xS1_ind      <- Sum(inv, effect = "individual") # default
-# xS1_ind_narm <- Sum(inv, effect = "individual", na.rm = TRUE)
-# 
-# xS1_ind_unbal      <- Sum(inv_unbal, effect = "individual") # default
-# xS1_ind_narm_unbal <- Sum(inv_unbal, effect = "individual", na.rm = TRUE)
-# 
-# # time
-# xS1_ti      <- Sum(inv, effect = "time") # default
-# xS1_ti_narm <- Sum(inv, effect = "time", na.rm = TRUE)
-# 
-# xS1_ti_unbal      <- Sum(inv_unbal, effect = "time") # default
-# xS1_ti_narm_unbal <- Sum(inv_unbal, effect = "time", na.rm = TRUE)
-# 
-# #### Sum - matrix ####
-# 
-# # individual
-# xS1_mat_ind      <- Sum(mat, effect = "individual") # default
-# xS1_mat_ind_narm <- Sum(mat, effect = "individual", na.rm = TRUE)
-# 
-# xS1_mat_no_index_ind      <- Sum(mat_noindex, effect = mat_index[[1L]]) # default
-# xS1_mat_no_index_ind_narm <- Sum(mat_noindex, effect = mat_index[[1L]], na.rm = TRUE)
-# 
-# xS1_mat_ind_unbal      <- Sum(mat_unbal, effect = "individual") # default
-# xS1_mat_ind_narm_unbal <- Sum(mat_unbal, effect = "individual", na.rm = TRUE)
-# 
-# xS1_mat_no_index_ind_unbal      <- Sum(mat_noindex_unbal, effect = mat_index_unbal[[1L]]) # default
-# xS1_mat_no_index_ind_narm_unbal <- Sum(mat_noindex_unbal, effect = mat_index_unbal[[1L]], na.rm = TRUE)
-# 
-# # time
-# xS1_mat_ti      <- Sum(mat, effect = "time") # default
-# xS1_mat_ti_narm <- Sum(mat, effect = "time", na.rm = TRUE)
-# 
-# xS1_mat_no_index_ti      <- Sum(mat_noindex, effect = mat_index[[2L]]) # default
-# xS1_mat_no_index_ti_narm <- Sum(mat_noindex, effect = mat_index[[2L]], na.rm = TRUE)
-# 
-# xS1_mat_ti_unbal      <- Sum.matrix(mat_unbal, effect = "time") # default
-# xS1_mat_ti_narm_unbal <- Sum.matrix(mat_unbal, effect = "time", na.rm = TRUE)
-# 
-# xS1_mat_no_index_ti_unbal      <- Sum(mat_noindex_unbal, effect = mat_index_unbal[[2L]]) # default
-# xS1_mat_no_index_ti_narm_unbal <- Sum(mat_noindex_unbal, effect = mat_index_unbal[[2L]], na.rm = TRUE)
+# individual
+xS1_d_ind      <- Sum(as.numeric(inv), effect = index(inv)[[1L]]) # default
+xS1_d_ind_narm <- Sum(as.numeric(inv), effect = index(inv)[[1L]], na.rm = TRUE)
+
+xS1_d_ind_unbal      <- Sum(as.numeric(inv_unbal), effect = index(inv_unbal)[[1L]]) # default
+xS1_d_ind_narm_unbal <- Sum(as.numeric(inv_unbal), effect = index(inv_unbal)[[1L]], na.rm = TRUE)
+
+# time
+xS1_d_ti      <- Sum(as.numeric(inv), effect = index(inv)[[2L]]) # default
+xS1_d_ti_narm <- Sum(as.numeric(inv), effect = index(inv)[[2L]], na.rm = TRUE)
+
+xS1_d_ti_unbal      <- Sum(as.numeric(inv_unbal), effect = index(inv_unbal)[[2L]]) # default
+xS1_d_ti_narm_unbal <- Sum(as.numeric(inv_unbal), effect = index(inv_unbal)[[2L]], na.rm = TRUE)
+
+#### Sum - pseries ####
+
+# individual
+xS1_ind      <- Sum(inv, effect = "individual") # default
+xS1_ind_narm <- Sum(inv, effect = "individual", na.rm = TRUE)
+
+xS1_ind_unbal      <- Sum(inv_unbal, effect = "individual") # default
+xS1_ind_narm_unbal <- Sum(inv_unbal, effect = "individual", na.rm = TRUE)
+
+# time
+xS1_ti      <- Sum(inv, effect = "time") # default
+xS1_ti_narm <- Sum(inv, effect = "time", na.rm = TRUE)
+
+xS1_ti_unbal      <- Sum(inv_unbal, effect = "time") # default
+xS1_ti_narm_unbal <- Sum(inv_unbal, effect = "time", na.rm = TRUE)
+
+#### Sum - matrix ####
+
+# individual
+xS1_mat_ind      <- Sum(mat, effect = "individual") # default
+xS1_mat_ind_narm <- Sum(mat, effect = "individual", na.rm = TRUE)
+
+xS1_mat_no_index_ind      <- Sum(mat_noindex, effect = mat_index[[1L]]) # default
+xS1_mat_no_index_ind_narm <- Sum(mat_noindex, effect = mat_index[[1L]], na.rm = TRUE)
+
+xS1_mat_ind_unbal      <- Sum(mat_unbal, effect = "individual") # default
+xS1_mat_ind_narm_unbal <- Sum(mat_unbal, effect = "individual", na.rm = TRUE)
+
+xS1_mat_no_index_ind_unbal      <- Sum(mat_noindex_unbal, effect = mat_index_unbal[[1L]]) # default
+xS1_mat_no_index_ind_narm_unbal <- Sum(mat_noindex_unbal, effect = mat_index_unbal[[1L]], na.rm = TRUE)
+
+# time
+xS1_mat_ti      <- Sum(mat, effect = "time") # default
+xS1_mat_ti_narm <- Sum(mat, effect = "time", na.rm = TRUE)
+
+xS1_mat_no_index_ti      <- Sum(mat_noindex, effect = mat_index[[2L]]) # default
+xS1_mat_no_index_ti_narm <- Sum(mat_noindex, effect = mat_index[[2L]], na.rm = TRUE)
+
+xS1_mat_ti_unbal      <- Sum(mat_unbal, effect = "time") # default
+xS1_mat_ti_narm_unbal <- Sum(mat_unbal, effect = "time", na.rm = TRUE)
+
+xS1_mat_no_index_ti_unbal      <- Sum(mat_noindex_unbal, effect = mat_index_unbal[[2L]]) # default
+xS1_mat_no_index_ti_narm_unbal <- Sum(mat_noindex_unbal, effect = mat_index_unbal[[2L]], na.rm = TRUE)
 
 #### between/Between - default ####
 
@@ -523,3 +528,5 @@ xW1_mat_tw_narm <- Within(mat, effect = "twoways", na.rm = TRUE)
 # need to use non-NA data for plm's original 2-way FE unbalanced transformation (due to lm.fit being used)
 xW1_mat_unbal_tw      <- Within(mat_unbal_wona, effect = "twoways") # default
 xW1_mat_unbal_tw_narm <- Within(mat_unbal_wona, effect = "twoways", na.rm = TRUE)
+
+}
