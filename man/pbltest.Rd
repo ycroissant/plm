@@ -37,7 +37,7 @@ effects.
 }
 \details{
 This is a Lagrange multiplier test for the null of no serial
-correlation, against the alternative of either an AR(1) or an MA(1)
+correlation, against the alternative of either an AR(1) or a MA(1)
 process, in the idiosyncratic component of the error term in a
 random effects panel model (as the analytical expression of the
 test turns out to be the same under both alternatives,

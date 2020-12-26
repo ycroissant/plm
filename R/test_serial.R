@@ -104,10 +104,6 @@ pbgtest.panelmodel <- function(x, order = NULL, type = c("Chisq", "F"), ...) {
 
     ## lmtest::bgtest on the demeaned model:
   
-    ## check package availability and load if necessary ## not needed anymore as importFrom in NAMESPACE is now used
-    #lm.ok <- require("lmtest")
-    #if(!lm.ok) stop("package lmtest is needed but not available")
-  
     ## pbgtest is the return value of lmtest::bgtest, exception made for the method attribute
     auxformula <- demy ~ demX - 1 #if(model == "within") demy~demX-1 else demy~demX
     lm.mod <- lm(auxformula)
@@ -227,10 +223,7 @@ pwtest.formula <- function(x, data, effect = c("individual", "time"), ...) {
 #' @export
 pwtest.panelmodel <- function(x, effect = c("individual", "time"), ...) {
   if (describe(x, "model") != "pooling") stop("pwtest only relevant for pooling models")
-  effect <- match.arg(effect, choices = c("individual", "time")) # was: effect <- describe(x, "effect")
-                                                                 # here we want the effect as in the call of pwtest(),
-                                                                 # not of the already estimated model, because that is
-                                                                 # always a pooling model
+  effect <- match.arg(effect, choices = c("individual", "time"))
   data <- model.frame(x)
   ## extract indices
 
@@ -268,7 +261,7 @@ pwtest.panelmodel <- function(x, effect = c("individual", "time"), ...) {
   ## for each group 1..n 
   ## (possibly different sizes if unbal., thus a list
   ## and thus, unlike Wooldridge (eq.10.37), we divide 
-  ## every block by *his* t(t-1)/2)
+  ## every block by *its* t(t-1)/2)
   unind <- unique(index) # ????
  
   for(i in 1:n) {
@@ -465,7 +458,7 @@ pwartest.panelmodel <- function(x, ...) {
 #
 ## Implementation follows the formulae for unbalanced panels, which reduce for balanced data to the formulae for balanced panels.
 ##
-## Notation in code largly follows Sosa-Escudero/Bera (2008) (m in Sosa-Escudero/Bera (2008) is total number of observations -> N_obs)
+## Notation in code largely follows Sosa-Escudero/Bera (2008) (m in Sosa-Escudero/Bera (2008) is total number of observations -> N_obs)
 ## NB: Baltagi's book matrix A is slightly different defined: A in Baltagi is -A in Sosa-Escudera/Bera (2008)
 
 
@@ -993,11 +986,11 @@ pbnftest.panelmodel <- function(x, test = c("bnf", "lbi"), ...) {
   }
   
   if (test == "lbi")  {
-    ## d2 contains the "earlier" obs sourrounded by gaps in time periods
+    ## d2 contains the "earlier" obs surrounded by gaps in time periods
     d2_contrib <- as.logical(is.na(lead(residuals(x), shift = "time")) - obsn)
     d2 <- sum(residuals(x)[d2_contrib]^2) / res_crossprod
     
-    ## d3, d4: sum squared residual of first/last time period for all inviduals / crossprod(residuals)
+    ## d3, d4: sum squared residual of first/last time period for all individuals / crossprod(residuals)
     d3 <- sum(residuals(x)[obs1]^2) / res_crossprod
     d4 <- sum(residuals(x)[obsn]^2) / res_crossprod
     
@@ -1054,7 +1047,7 @@ pbnftest.formula <- function(x, data, test = c("bnf", "lbi"), model = c("pooling
 #' effects.
 #' 
 #' This is a Lagrange multiplier test for the null of no serial
-#' correlation, against the alternative of either an AR(1) or an MA(1)
+#' correlation, against the alternative of either an AR(1) or a MA(1)
 #' process, in the idiosyncratic component of the error term in a
 #' random effects panel model (as the analytical expression of the
 #' test turns out to be the same under both alternatives,
@@ -1136,8 +1129,8 @@ pbltest.formula <- function(x, data, alternative = c("twosided", "onesided"), in
   ## make 'bidiagonal' matrix (see BL, p.136)
   G <- matrix(0, ncol = t., nrow = t.)
   for(i in 2:t.) {
-    G[i-1,i] <- 1
-    G[i,i-1] <- 1
+    G[i-1, i] <- 1
+    G[i, i-1] <- 1
   }
 
   ## retrieve composite (=lowest level) residuals
@@ -1182,9 +1175,9 @@ pbltest.formula <- function(x, data, alternative = c("twosided", "onesided"), in
 
   ## build up information matrix
   Jmat <- matrix(nrow = 3, ncol = 3)
-  Jmat[1,] <- c(j.rr, j.12, j.13)
-  Jmat[2,] <- c(j.12, j.22, j.23)
-  Jmat[3,] <- c(j.13, j.23, j.33)
+  Jmat[1, ] <- c(j.rr, j.12, j.13)
+  Jmat[2, ] <- c(j.12, j.22, j.23)
+  Jmat[3, ] <- c(j.13, j.23, j.33)
 
   J11 <- n.^2 * t.^2 * (t.-1) / (det(Jmat) * 4*sigma2.1^2 * sigma2.e^2)
   ## this is the same as J11 <- solve(Jmat)[1,1], see BL page 73
@@ -1229,7 +1222,8 @@ pbltest.plm <- function(x, alternative = c("twosided", "onesided"), ...) {
   if (describe(x, "model") != "random") stop("Test is only for random effects models.")
   
   # call pbltest.formula the right way
-  pbltest.formula(formula(x$formula), data=cbind(index(x), x$model), index=names(index(x)), alternative = alternative, ...)
+  pbltest.formula(formula(x$formula), data=cbind(index(x), x$model),
+                  index=names(index(x)), alternative = alternative, ...)
 }
 
 #' Wooldridge first--difference--based test for AR(1) errors in levels
@@ -1361,7 +1355,7 @@ pwfdtest.panelmodel <- function(x, ..., h0 = c("fd", "fe")) {
   Ti_minus_one <- pdim$Tint$Ti-1
   
   ## generate new individual index: drop one observation per individual
-  ## NB: This is based on the assumption that the estimated FD model performes
+  ## NB: This is based on the assumption that the estimated FD model performs
   ##     its diff-ing row-wise (it currently does so). If the diff-ing for FD
   ##     is changed to diff-ing based on time dimension, this part about index
   ##     creation needs to be re-worked because more than 1 observation per
@@ -1375,13 +1369,13 @@ pwfdtest.panelmodel <- function(x, ..., h0 = c("fd", "fe")) {
   if(length(red_id) == 0)
     stop("only individuals with one observation in original data: test not feasible")
   
-  # make pdata.frame for auxiliary regression: time dimension is not relvant
+  # make pdata.frame for auxiliary regression: time dimension is not relevant
   # as the first observation of each individual was dropped -> let time dimension
   # be created (is not related to the original times anymore)
   auxdata <- pdata.frame(as.data.frame(cbind(red_id, FDres)), index = "red_id")
   
-  # lag residuals by row (as the FD model diffes by row)
-  # NB: need to consoder change to shift = "time" if behaviour of FD model is changed
+  # lag residuals by row (as the FD model diffs by row)
+  # NB: need to consider change to shift = "time" if behaviour of FD model is changed
   auxdata[["FDres.1"]] <- lag(auxdata[["FDres"]], shift = "row")
   
   ## pooling model FDres vs. lag(FDres), with intercept (might as well do it w.o.)
