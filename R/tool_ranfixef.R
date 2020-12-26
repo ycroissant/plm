@@ -104,6 +104,7 @@
 NULL
 
 #' @rdname fixef.plm
+#' @importFrom stats weighted.mean
 #' @export
 fixef.plm <- function(object, effect = NULL,
                       type = c("level", "dfirst", "dmean"),
@@ -130,19 +131,19 @@ fixef.plm <- function(object, effect = NULL,
     # (names of the within variables)
     nw <- names(coef(object))
   
-    # For procedure to get the individual/time effects by muliplying the within
-    # estimates with the between-ed data, see e.g.:
+    # For procedure to get the individual/time effects by multiplying the within
+    # estimates with the between-ed data, see, e.g.:
     #  Wooldridge (2010), Econometric Analysis of Cross Section and Panel Data, 2nd ed., 
     #                     Ch. 10.5.3, pp. 308-309, formula (10.58)
     #  Greene (2012), Econometric Analysis,
     #                 Ch. 11.4.4, p. 364, formulae (11-25)
     #
-    # NB: These formulae do not give the correct results in the two-ways unbalanced case,
+    # NB: These textbook formulae do not give the correct results in the two-ways unbalanced case,
     #     all other cases (twoways/balanced; oneway(ind/time)/balanced/unbalanced) seem to
     #     work with these formulae.
     Xb <- model.matrix(data, rhs = 1, model = "between", effect = effect)
     yb <- pmodel.response(data, model = "between", effect = effect)
-    fixef <- yb - as.vector(crossprod(t(Xb[, nw, drop = FALSE]), coef(object)))
+    fixef <- yb - as.vector(crossprod(t(Xb[ , nw, drop = FALSE]), coef(object)))
   
     # use robust vcov if supplied
     if (! is.null(vcov)) {
@@ -168,9 +169,13 @@ fixef.plm <- function(object, effect = NULL,
     fixef <- switch(type,
                     "level"  = fixef,
                     "dfirst" = fixef[2:length(fixef)] - fixef[1],
-                    "dmean"  = fixef - mean(fixef)
-                    )
-    structure(fixef, se = sefixef, class = c("fixef", "numeric"), type = type, df.residual = df.residual(object))
+                    "dmean"  = { if(pdim$balanced) {
+                                  fixef - mean(fixef)
+                                } else {
+                                  fixef - weighted.mean(fixef, w = nother)
+                                }})
+    structure(fixef, se = sefixef, class = c("fixef", "numeric"),
+              type = type, df.residual = df.residual(object))
 }
 
 
