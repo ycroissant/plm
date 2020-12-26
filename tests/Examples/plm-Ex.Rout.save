@@ -13542,13 +13542,21 @@ alternative hypothesis: unobserved effect
            7            8            9           10 
   -7.8977584    0.6726376  -28.1393497   50.3144442 
 > 
-> # compare to random effects by ML estimation via lmer from package
-> # lme4
-> ## Not run: 
-> ##D   library(lme4)
-> ##D   m2 <- lmer(inv ~ value + capital + (1 | firm), data = Grunfeld) 
-> ##D   cbind("plm" = ranef(m1), "lmer" = unname(ranef(m2)$firm))
-> ## End(Not run)
+> # compare to random effects by ML estimation via lme from package nlme
+> library(nlme)
+> m2 <- lme(inv ~ value + capital, random = ~1|firm, data = Grunfeld)
+> cbind("plm" = ranef(m1), "lme" = unname(ranef(m2)))
+            plm          lme
+1    -9.5242955   -9.5862170
+2   157.8910235  157.9998348
+3  -172.8958044 -173.0410642
+4    29.9119801   29.9489570
+5   -54.6790089  -54.7281533
+6    34.3461316   34.3899639
+7    -7.8977584   -7.8986758
+8     0.6726376    0.6906331
+9   -28.1393497  -28.1556448
+10   50.3144442   50.3803664
 > 
 > # two-ways RE model, calculate individual and time random effects
 > data("Cigar", package = "plm")
@@ -13585,8 +13593,10 @@ alternative hypothesis: unobserved effect
 > 
 > 
 > 
-> 
 > cleanEx()
+
+detaching 'package:nlme'
+
 > nameEx("sargan")
 > ### * sargan
 > 
@@ -14513,7 +14523,7 @@ F-statistic: 309.014 on 2 and 197 DF, p-value: < 2.22e-16
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  10.3 0.57 10.97 NA NA 
+Time elapsed:  10.2 0.4 10.84 NA NA 
 > grDevices::dev.off()
 null device 
           1 
