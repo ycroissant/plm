@@ -94,7 +94,6 @@ same functionality.
 \examples{
 
 library(lmtest)
-library(car)
 data("Produc", package = "plm")
 zz <- plm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
           data = Produc, model = "random")
@@ -113,9 +112,11 @@ coeftest(zz, vcov.=function(x) vcovHC(x, method="arellano",
 coeftest(zz, vcov.=vcovHC(zz, method="arellano", type="HC1"))
 ## joint restriction test
 waldtest(zz, update(zz, .~.-log(emp)-unemp), vcov=vcovHC)
+\dontrun{
 ## test of hyp.: 2*log(pc)=log(emp)
+library(car)
 linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovHC)
-
+}
 ## Robust inference for CCE models
 data("Produc", package = "plm")
 ccepmod <- pcce(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model="p")

@@ -13809,8 +13809,6 @@ The following objects are masked from 'package:base':
 
     as.Date, as.Date.numeric
 
-> library(car)
-Loading required package: carData
 > data("Produc", package="plm")
 > zz <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc, model="random")
 > ## standard coefficient significance test
@@ -13897,29 +13895,17 @@ Model 2: log(gsp) ~ log(pcap) + log(pc)
 2    813 -2 411.05  < 2.2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-> ## test of hyp.: 2*log(pc)=log(emp)
-> linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovBK)
-Linear hypothesis test
-
-Hypothesis:
-2 log(pc) - log(emp) = 0
-
-Model 1: restricted model
-Model 2: log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp
-
-Note: Coefficient covariance matrix supplied.
-
-  Res.Df Df  Chisq Pr(>Chisq)
-1    812                     
-2    811  1 0.8152     0.3666
-> 
+> ## Not run: 
+> ##D ## test of hyp.: 2*log(pc)=log(emp)
+> ##D library(car)
+> ##D linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovBK)
+> ## End(Not run)
 > 
 > 
 > 
 > cleanEx()
 
-detaching 'package:car', 'package:carData', 'package:lmtest',
-  'package:zoo'
+detaching 'package:lmtest', 'package:zoo'
 
 > nameEx("vcovDC")
 > ### * vcovDC
@@ -13943,8 +13929,6 @@ The following objects are masked from 'package:base':
 
     as.Date, as.Date.numeric
 
-> library(car)
-Loading required package: carData
 > data("Produc", package="plm")
 > zz <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc, model="pooling")
 > ## standard coefficient significance test
@@ -14000,29 +13984,17 @@ Model 2: log(gsp) ~ log(pcap) + log(pc)
 2    813 -2 109.61  < 2.2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-> ## test of hyp.: 2*log(pc)=log(emp)
-> linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovDC)
-Linear hypothesis test
-
-Hypothesis:
-2 log(pc) - log(emp) = 0
-
-Model 1: restricted model
-Model 2: log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp
-
-Note: Coefficient covariance matrix supplied.
-
-  Res.Df Df  Chisq Pr(>Chisq)
-1    812                     
-2    811  1 0.0299     0.8626
-> 
+> ## Not run: 
+> ##D ## test of hyp.: 2*log(pc)=log(emp)
+> ##D library(car)
+> ##D linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovDC)
+> ## End(Not run)
 > 
 > 
 > 
 > cleanEx()
 
-detaching 'package:car', 'package:carData', 'package:lmtest',
-  'package:zoo'
+detaching 'package:lmtest', 'package:zoo'
 
 > nameEx("vcovG")
 > ### * vcovG
@@ -14114,8 +14086,6 @@ The following objects are masked from 'package:base':
 
     as.Date, as.Date.numeric
 
-> library(car)
-Loading required package: carData
 > data("Produc", package = "plm")
 > zz <- plm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
 +           data = Produc, model = "random")
@@ -14203,22 +14173,11 @@ Model 2: log(gsp) ~ log(pcap) + log(pc)
 2    813 -2 404.16  < 2.2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-> ## test of hyp.: 2*log(pc)=log(emp)
-> linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovHC)
-Linear hypothesis test
-
-Hypothesis:
-2 log(pc) - log(emp) = 0
-
-Model 1: restricted model
-Model 2: log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp
-
-Note: Coefficient covariance matrix supplied.
-
-  Res.Df Df  Chisq Pr(>Chisq)
-1    812                     
-2    811  1 0.5878     0.4433
-> 
+> ## Not run: 
+> ##D ## test of hyp.: 2*log(pc)=log(emp)
+> ##D library(car)
+> ##D linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovHC)
+> ## End(Not run)
 > ## Robust inference for CCE models
 > data("Produc", package = "plm")
 > ccepmod <- pcce(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model="p")
@@ -14271,8 +14230,7 @@ alternative hypothesis: autocorrelation present
 > 
 > cleanEx()
 
-detaching 'package:car', 'package:carData', 'package:lmtest',
-  'package:zoo'
+detaching 'package:lmtest', 'package:zoo'
 
 > nameEx("vcovNW")
 > ### * vcovNW
@@ -14296,8 +14254,6 @@ The following objects are masked from 'package:base':
 
     as.Date, as.Date.numeric
 
-> library(car)
-Loading required package: carData
 > data("Produc", package="plm")
 > zz <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc, model="pooling")
 > ## standard coefficient significance test
@@ -14353,29 +14309,17 @@ Model 2: log(gsp) ~ log(pcap) + log(pc)
 2    813 -2 480.18  < 2.2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-> ## test of hyp.: 2*log(pc)=log(emp)
-> linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovNW)
-Linear hypothesis test
-
-Hypothesis:
-2 log(pc) - log(emp) = 0
-
-Model 1: restricted model
-Model 2: log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp
-
-Note: Coefficient covariance matrix supplied.
-
-  Res.Df Df  Chisq Pr(>Chisq)
-1    812                     
-2    811  1 0.1531     0.6956
-> 
+> ## Not run: 
+> ##D ## test of hyp.: 2*log(pc)=log(emp)
+> ##D library(car)
+> ##D linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovNW)
+> ## End(Not run)
 > 
 > 
 > 
 > cleanEx()
 
-detaching 'package:car', 'package:carData', 'package:lmtest',
-  'package:zoo'
+detaching 'package:lmtest', 'package:zoo'
 
 > nameEx("vcovSCC")
 > ### * vcovSCC
@@ -14399,8 +14343,6 @@ The following objects are masked from 'package:base':
 
     as.Date, as.Date.numeric
 
-> library(car)
-Loading required package: carData
 > data("Produc", package="plm")
 > zz <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc, model="pooling")
 > ## standard coefficient significance test
@@ -14456,29 +14398,17 @@ Model 2: log(gsp) ~ log(pcap) + log(pc)
 2    813 -2   531  < 2.2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-> ## test of hyp.: 2*log(pc)=log(emp)
-> linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovSCC)
-Linear hypothesis test
-
-Hypothesis:
-2 log(pc) - log(emp) = 0
-
-Model 1: restricted model
-Model 2: log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp
-
-Note: Coefficient covariance matrix supplied.
-
-  Res.Df Df  Chisq Pr(>Chisq)
-1    812                     
-2    811  1 0.2413     0.6233
-> 
+> ## Not run: 
+> ##D ## test of hyp.: 2*log(pc)=log(emp)
+> ##D library(car)
+> ##D linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovSCC)
+> ## End(Not run)
 > 
 > 
 > 
 > cleanEx()
 
-detaching 'package:car', 'package:carData', 'package:lmtest',
-  'package:zoo'
+detaching 'package:lmtest', 'package:zoo'
 
 > nameEx("within_intercept")
 > ### * within_intercept
@@ -14583,7 +14513,7 @@ F-statistic: 309.014 on 2 and 197 DF, p-value: < 2.22e-16
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  10.82 0.51 11.36 NA NA 
+Time elapsed:  10.3 0.57 10.97 NA NA 
 > grDevices::dev.off()
 null device 
           1 

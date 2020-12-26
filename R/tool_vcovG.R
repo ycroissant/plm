@@ -62,7 +62,6 @@
 #' @examples
 #' 
 #' library(lmtest)
-#' library(car)
 #' data("Produc", package="plm")
 #' zz <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc, model="pooling")
 #' ## standard coefficient significance test
@@ -73,9 +72,11 @@
 #' coeftest(zz, vcov.=function(x) vcovSCC(x, type="HC1", maxlag=4))
 #' ## joint restriction test
 #' waldtest(zz, update(zz, .~.-log(emp)-unemp), vcov=vcovSCC)
+#' \dontrun{
 #' ## test of hyp.: 2*log(pc)=log(emp)
+#' library(car)
 #' linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovSCC)
-#' 
+#' }
 vcovSCC <- function(x, ...){
   UseMethod("vcovSCC")
 }
@@ -138,7 +139,6 @@ vcovSCC <- function(x, ...){
 #' @examples
 #' 
 #' library(lmtest)
-#' library(car)
 #' data("Produc", package="plm")
 #' zz <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc, model="pooling")
 #' ## standard coefficient significance test
@@ -149,9 +149,11 @@ vcovSCC <- function(x, ...){
 #' coeftest(zz, vcov.=function(x) vcovNW(x, type="HC1", maxlag=4))
 #' ## joint restriction test
 #' waldtest(zz, update(zz, .~.-log(emp)-unemp), vcov=vcovNW)
+#' \dontrun{
 #' ## test of hyp.: 2*log(pc)=log(emp)
+#' library(car)
 #' linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovNW)
-#' 
+#' }
 vcovNW <- function(x, ...){
   UseMethod("vcovNW")
 }
@@ -213,7 +215,6 @@ vcovNW <- function(x, ...){
 #' @examples
 #' 
 #' library(lmtest)
-#' library(car)
 #' data("Produc", package="plm")
 #' zz <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc, model="pooling")
 #' ## standard coefficient significance test
@@ -224,9 +225,11 @@ vcovNW <- function(x, ...){
 #' coeftest(zz, vcov.=function(x) vcovDC(x, type="HC1", maxlag=4))
 #' ## joint restriction test
 #' waldtest(zz, update(zz, .~.-log(emp)-unemp), vcov=vcovDC)
+#' \dontrun{
 #' ## test of hyp.: 2*log(pc)=log(emp)
+#' library(car)
 #' linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovDC)
-#' 
+#' }
 vcovDC <- function(x, ...){
   UseMethod("vcovDC")
 }
@@ -661,7 +664,6 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 #' @examples
 #' 
 #' library(lmtest)
-#' library(car)
 #' data("Produc", package = "plm")
 #' zz <- plm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
 #'           data = Produc, model = "random")
@@ -680,9 +682,11 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 #' coeftest(zz, vcov.=vcovHC(zz, method="arellano", type="HC1"))
 #' ## joint restriction test
 #' waldtest(zz, update(zz, .~.-log(emp)-unemp), vcov=vcovHC)
+#' \dontrun{
 #' ## test of hyp.: 2*log(pc)=log(emp)
+#' library(car)
 #' linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovHC)
-#' 
+#' }
 #' ## Robust inference for CCE models
 #' data("Produc", package = "plm")
 #' ccepmod <- pcce(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model="p")
@@ -864,7 +868,6 @@ vcovSCC.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 #' @examples
 #' 
 #' library(lmtest)
-#' library(car)
 #' data("Produc", package="plm")
 #' zz <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc, model="random")
 #' ## standard coefficient significance test
@@ -882,9 +885,11 @@ vcovSCC.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 #' coeftest(zz, vcov.=vcovBK(zz, type="HC1"))
 #' ## joint restriction test
 #' waldtest(zz, update(zz, .~.-log(emp)-unemp), vcov=vcovBK)
+#' \dontrun{
 #' ## test of hyp.: 2*log(pc)=log(emp)
+#' library(car)
 #' linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovBK)
-#' 
+#' }
 vcovBK <- function(x, ...) {
     UseMethod("vcovBK")
 }

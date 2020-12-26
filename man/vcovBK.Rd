@@ -75,7 +75,6 @@ supply a function (which is the safest) or a matrix
 \examples{
 
 library(lmtest)
-library(car)
 data("Produc", package="plm")
 zz <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc, model="random")
 ## standard coefficient significance test
@@ -93,9 +92,11 @@ coeftest(zz, vcov.=function(x) vcovBK(x,
 coeftest(zz, vcov.=vcovBK(zz, type="HC1"))
 ## joint restriction test
 waldtest(zz, update(zz, .~.-log(emp)-unemp), vcov=vcovBK)
+\dontrun{
 ## test of hyp.: 2*log(pc)=log(emp)
+library(car)
 linearHypothesis(zz, "2*log(pc)=log(emp)", vcov.=vcovBK)
-
+}
 }
 \references{
 \insertRef{BECK:KATZ:95}{plm}
