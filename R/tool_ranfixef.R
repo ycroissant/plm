@@ -111,12 +111,12 @@ fixef.plm <- function(object, effect = NULL,
                       vcov = NULL, ...){
     
     model.effect <- describe(object, "effect")
-    if (is.null(effect)){
+    if(is.null(effect)){
         effect <- ifelse(model.effect == "time", "time", "individual")
     }
     else{
-        if (! effect %in% c("individual", "time")) stop("wrong effect argument")
-        if (model.effect != "twoways" && model.effect != effect) stop("wrong effect argument")
+        if(! effect %in% c("individual", "time")) stop("wrong effect argument")
+        if(model.effect != "twoways" && model.effect != effect) stop("wrong effect argument")
     }
     type <- match.arg(type)
     if (!is.null(object$call)){
@@ -169,11 +169,8 @@ fixef.plm <- function(object, effect = NULL,
     fixef <- switch(type,
                     "level"  = fixef,
                     "dfirst" = fixef[2:length(fixef)] - fixef[1],
-                    "dmean"  = { if(pdim$balanced) {
-                                  fixef - mean(fixef)
-                                } else {
-                                  fixef - weighted.mean(fixef, w = nother)
-                                }})
+                    "dmean"  = fixef - mean(fixef))
+    
     structure(fixef, se = sefixef, class = c("fixef", "numeric"),
               type = type, df.residual = df.residual(object))
 }
