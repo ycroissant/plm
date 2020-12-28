@@ -7,11 +7,14 @@
 
 
 
+#' @title
 #' Extract the Fixed Effects
 #' 
+#' @description 
 #' Function to extract the fixed effects from a `plm` object and
 #' associated summary method.
 #' 
+#' @details
 #' Function `fixef` calculates the fixed effects and returns an object
 #' of class `c("fixef", "numeric")`. By setting the `type` argument,
 #' the fixed effects may be returned in levels (`"level"`), as
@@ -19,6 +22,13 @@
 #' deviations from the overall mean (`"dmean"`). If the argument
 #' `vcov` was specified, the standard errors (stored as attribute "se"
 #' in the return value) are the respective robust standard errors.
+#' For two-way fixed-effect models, argument `effect` controls which
+#' of the fixed effects are to be extracted: `"individual"`, `"time"`, or 
+#' the sum of individual and time effects (`"twoways"`).
+#' NB: See **Examples** for how the sum of effects can be split in an individual
+#' and a time component.
+#' For one-way models, the effects of the model are extracted and the
+#' argument `effect` is disrespected.
 #' 
 #' The associated `summary` method returns an extended object of class
 #' `c("summary.fixef", "matrix")` with more information (see sections
@@ -28,47 +38,44 @@
 #' are, e.g., \insertCite{GREE:12;textual}{plm}, Ch. 11.4.4, p. 364,
 #' formulae (11-25); \insertCite{WOOL:10;textual}{plm}, Ch. 10.5.3,
 #' pp. 308-309, formula (10.58).
-#'
 #' @name fixef.plm
 #' @aliases fixef
-#' @importFrom nlme fixef
-#' @export fixef
 #' @param x,object an object of class `"plm"`, an object of class
 #'     `"fixef"` for the `print` and the `summary` method,
-#' @param effect one of `"individual"` or `"time"`, only relevant in
-#'     case of two--ways effects models,
+#' @param effect one of `"individual"`, `"time"`, or `"twoways"`, only relevant in
+#'     case of two--ways effects models (where it defaults to `"individual"`),
 #' @param vcov a variance--covariance matrix furnished by the user or
 #'     a function to calculate one (see **Examples**),
 #' @param type one of `"level"`, `"dfirst"`, or `"dmean"`,
 #' @param digits digits,
 #' @param width the maximum length of the lines in the print output,
 #' @param \dots further arguments.
-#' @return For function `fixef` an object of class `c("fixef",
-#'     "numeric")` is returned:\cr It is a numeric vector containing
+#' @return For function `fixef`, an object of class `c("fixef", "numeric")`
+#'     is returned: It is a numeric vector containing
 #'     the fixed effects with attribute `se` which contains the
 #'     standard errors. There are two further attributes: attribute
 #'     `type` contains the chosen type (the value of argument `type`
 #'     as a character); attribute `df.residual` holds the residual
 #'     degrees of freedom (integer) from the fixed effects model (plm
-#'     object) on which `fixef` was run.
-#' 
-#' For function `summary.fixef` an object of class `c("summary.fixef",
-#' "matrix")` is returned:\cr It is a matrix with four columns in this
-#' order: the estimated fixed effects, their standard errors and
-#' associated t--values and p--values.  The type of the fixed effects
-#' and the standard errors in the summary.fixef objects correspond to
-#' was requested in the `fixef` function by arguments `type` and
-#' `vcov`, respectively.
+#'     object) on which `fixef` was run. For the two-way unbalanced case, only
+#'     attribute `type` is added.
+#'     
+#' For function `summary.fixef`, an object of class
+#' `c("summary.fixef", "matrix")` is returned: It is a matrix with four
+#' columns in this order: the estimated fixed effects, their standard
+#' errors and associated t--values and p--values. 
+#' For the two-ways unbalanced case, the matrix contains only the estimates.
+#' The type of the fixed effects and the standard errors in the 
+#' summary.fixef object correspond to was requested in the `fixef`
+#' function by arguments `type` and `vcov`, respectively.
+#'     
 #' @author Yves Croissant
 #' @seealso [within_intercept()] for the overall intercept of fixed
 #'     effect models along its standard error, [plm()] for plm objects
 #'     and within models (= fixed effects models) in general. See
 #'     [ranef()] to extract the random effects from a random effects
 #'     model.
-#' @references
-#'
-#' \insertAllCited{}
-#'
+#' @references \insertAllCited{}
 #' @keywords regression
 #' @examples
 #' 
@@ -98,9 +105,29 @@
 #' 
 #' # calc. fitted values of oneway within model:
 #' fixefs <- fixef(gi)[index(gi, which = "id")]
-#' fitted_by_hand <- fixefs + gi$coefficients["value"] * gi$model$value +
+#' fitted_by_hand <- fixefs + gi$coefficients["value"]   * gi$model$value +
 #'                            gi$coefficients["capital"] * gi$model$capital
 #'
+#' # calc. fittes values of twoway unbalanced within model via effects:
+#' gtw_u <- plm(inv ~ value + capital, data = Grunfeld[-200, ], effect = "twoways")
+#' yhat <- as.numeric(gtw_u$model[ , 1] - gtw_u$residuals) # reference
+#' pred_beta <- as.numeric(tcrossprod(coef(gtw_u), as.matrix(gtw_u$model[ , -1])))
+#' pred_effs <- as.numeric(fixef(gtw_u, "twoways")) # sum of ind and time effects
+#' all.equal(pred_effs + pred_beta, yhat) # TRUE
+#' 
+#' # Splits of summed up individual and time effects:
+#' # use one "level" and one "dfirst"
+#' ii <- index(gtw_u)[[1L]]; it <- index(gtw_u)[[2L]]
+#' eff_id_dfirst <- c(0, as.numeric(fixef(gtw_u, "individual", "dfirst")))[ii]
+#' eff_ti_dfirst <- c(0, as.numeric(fixef(gtw_u, "time",       "dfirst")))[it]
+#' eff_id_level <- as.numeric(fixef(gtw_u, "individual"))[ii]
+#' eff_ti_level <- as.numeric(fixef(gtw_u, "time"))[it]
+#' 
+#' all.equal(pred_effs, eff_id_level  + eff_ti_dfirst) # TRUE
+#' all.equal(pred_effs, eff_id_dfirst + eff_ti_level)  # TRUE
+#'
+#' @importFrom nlme fixef
+#' @export fixef
 NULL
 
 #' @rdname fixef.plm
@@ -112,15 +139,20 @@ fixef.plm <- function(object, effect = NULL,
     
     model.effect <- describe(object, "effect")
     if(is.null(effect)){
-        effect <- ifelse(model.effect == "time", "time", "individual")
+        # default for twoway model to individual effect
+        effect <- switch(model.effect,
+                           "individual" = "individual",
+                           "time"       = "time",
+                           "twoways"    = "individual")
     }
     else{
-        if(! effect %in% c("individual", "time")) stop("wrong effect argument")
         if(model.effect != "twoways" && model.effect != effect) stop("wrong effect argument")
+        if(!effect %in% c("individual", "time", "twoways")) stop("wrong effect argument")
     }
+    
     type <- match.arg(type)
-    if (!is.null(object$call)){
-        if (describe(object, "model") != "within")
+    if(!is.null(object$call)){
+        if(describe(object, "model") != "within")
       stop("fixef is relevant only for within models")
     }
     formula <- formula(object)
@@ -130,7 +162,7 @@ fixef.plm <- function(object, effect = NULL,
     # within model doesn't. So select the relevant elements using nw
     # (names of the within variables)
     nw <- names(coef(object))
-  
+    
     # For procedure to get the individual/time effects by multiplying the within
     # estimates with the between-ed data, see, e.g.:
     #  Wooldridge (2010), Econometric Analysis of Cross Section and Panel Data, 2nd ed., 
@@ -139,40 +171,100 @@ fixef.plm <- function(object, effect = NULL,
     #                 Ch. 11.4.4, p. 364, formulae (11-25)
     #
     # NB: These textbook formulae do not give the correct results in the two-ways unbalanced case,
-    #     all other cases (twoways/balanced; oneway(ind/time)/balanced/unbalanced) seem to
-    #     work with these formulae.
-    Xb <- model.matrix(data, rhs = 1, model = "between", effect = effect)
-    yb <- pmodel.response(data, model = "between", effect = effect)
-    fixef <- yb - as.vector(crossprod(t(Xb[ , nw, drop = FALSE]), coef(object)))
-  
-    # use robust vcov if supplied
-    if (! is.null(vcov)) {
+    #     all other cases (twoways/balanced; oneway(ind/time)/balanced/unbalanced) are correct
+    #     for these formulae.
+    if(model.effect != "twoways") {
+      Xb <- model.matrix(data, rhs = 1, model = "between", effect = effect)
+      yb <- pmodel.response(data, model = "between", effect = effect)
+      fixef <- yb - as.vector(crossprod(t(Xb[ , nw, drop = FALSE]), coef(object)))
+      
+      # use robust vcov if supplied
+      if (! is.null(vcov)) {
         if (is.matrix(vcov))   vcov <- vcov[nw, nw]
         if (is.function(vcov)) vcov <- vcov(object)[nw, nw]
-    } else {
+      } else {
         vcov <- vcov(object)[nw, nw]
-    }
-
-    nother <- switch(effect,
-                     "individual" = pdim$Tint$Ti,
-                     "time"       = pdim$Tint$nt)
-  
-    s2 <- deviance(object) / df.residual(object)
-    if (type != "dfirst") {
-        sefixef <- sqrt(s2 / nother + apply(Xb[, nw, drop = FALSE],1,function(x) t(x) %*% vcov %*% x))
-    } else {
+      }
+      
+      nother <- switch(effect,
+                       "individual" = pdim$Tint$Ti,
+                       "time"       = pdim$Tint$nt)
+      
+      s2 <- deviance(object) / df.residual(object)
+      if (type != "dfirst") {
+        sefixef <- sqrt(s2 / nother + apply(Xb[, nw, drop = FALSE], 1,
+                                            function(x) t(x) %*% vcov %*% x))
+      } else {
         Xb <- t(t(Xb[-1, ]) - Xb[1, ])
         sefixef <- sqrt(s2 * (1 / nother[-1] + 1 / nother[1])+
-                        apply(Xb[, nw, drop = FALSE],1,function(x) t(x) %*% vcov %*% x))
+                          apply(Xb[, nw, drop = FALSE], 1,
+                                function(x) t(x) %*% vcov %*% x))
+      }
+      fixef <- switch(type,
+                      "level"  = fixef,
+                      "dfirst" = fixef[2:length(fixef)] - fixef[1],
+                      "dmean"  = (fixef - weighted.mean(fixef, w = nother)))
+      
+      res <- structure(fixef, se = sefixef, class = c("fixef", "numeric"),
+                type = type, df.residual = df.residual(object))  
+      return(res)
     }
     
-    fixef <- switch(type,
-                    "level"  = fixef,
-                    "dfirst" = fixef[2:length(fixef)] - fixef[1],
-                    "dmean"  = fixef - mean(fixef))
-    
-    structure(fixef, se = sefixef, class = c("fixef", "numeric"),
-              type = type, df.residual = df.residual(object))
+    ## treat separately here:
+    ##  * two-way balanced/unbalanced model for all effects
+    if(model.effect == "twoways") {
+      beta.data <- as.numeric(tcrossprod(coef(object), as.matrix(object$model[ , -1])))
+      yhat <- object$model[ , 1] - object$residuals
+      tw.fixef.lvl <- yhat - beta.data # sum of both effects in levels
+      
+      idx <- switch(effect,
+                    "individual" = 1L,
+                    "time"       = 2L,
+                    "twoways"    = NA_integer_) # needed for weighted.mean below -> leads to no weights
+
+      if(effect %in% c("individual", "time")) {
+        other.eff <- switch(effect,
+                            "individual" = "time",
+                            "time"       = "individual")
+        
+        other.idx <- switch(effect,
+                          "individual" = 2L,
+                          "time"       = 1L)
+
+        Xb <- model.matrix(data, rhs = 1, model = "between", effect = other.eff)
+        yb <- pmodel.response(data, model = "between", effect = other.eff)
+        other.fixef.lvl <- yb - as.vector(crossprod(t(Xb[ , nw, drop = FALSE]), coef(object)))
+        
+        ## other dmean
+        #other.fixef.dmean <- other.fixef.lvl - mean(other.fixef.lvl)
+        #other.fixef.dmean <- other.fixef.dmean[index(object)[[other.idx]]]
+        #tw.fixef.lvl <- tw.fixef.lvl - other.fixef.dmean
+        
+        ## other level
+        # tw.fixef.lvl <- tw.fixef.lvl - other.fixef.lvl[index(object)[[other.idx]]]
+        
+        ## other dfirst
+        other.fixef.dfirst <- other.fixef.lvl - other.fixef.lvl[1L]
+        tw.fixef.lvl <- tw.fixef.lvl - other.fixef.dfirst[index(object)[[other.idx]]]
+        
+        tw.fixef.lvl <- tw.fixef.lvl[!duplicated(index(object)[[idx]])]
+        names(tw.fixef.lvl) <- pdim[["panel.names"]][[idx]]
+      }
+      
+      tw.fixef <- switch(type,
+                      "level"  = tw.fixef.lvl,
+                      "dfirst" = tw.fixef.lvl[2:length(tw.fixef.lvl)] - tw.fixef.lvl[1],
+                      "dmean"  = {
+                          if(pdim$balanced || effect == "twoways") {
+                            tw.fixef.lvl - mean(tw.fixef.lvl) 
+                          } else {
+                            tw.fixef.lvl - weighted.mean(tw.fixef.lvl, w = pdim$Tint[[idx]])
+                          }})
+      
+      tw.fixef <- structure(tw.fixef, se = NULL, class = c("fixef", "numeric"),
+                            type = type, df.residual = NULL)
+      return(tw.fixef)
+    }
 }
 
 
@@ -181,7 +273,7 @@ fixef.plm <- function(object, effect = NULL,
 print.fixef <- function(x, digits = max(3, getOption("digits") - 2),
                         width = getOption("width"), ...){
   
-    # prevent attributs from being printed
+    # prevent attributes from being printed
     attr(x, "se") <- attr(x, "type") <- attr(x, "class") <- attr(x, "df.residual") <- attr(x, "index") <- NULL
     print.default(x, digits, width, ...)
 }
@@ -189,7 +281,9 @@ print.fixef <- function(x, digits = max(3, getOption("digits") - 2),
 
 #' @rdname fixef.plm
 #' @export
-summary.fixef <- function(object, ...){
+summary.fixef <- function(object, ...) {
+  # for 2-way unbalanced, there are currently no further attributes -> skip construction
+  res <- if(!is.null(attr(object, "se"))) {
     se <- attr(object, "se")
     df.res <- attr(object, "df.residual")
     tvalue <- (object) / se
@@ -203,6 +297,10 @@ summary.fixef <- function(object, ...){
     attr(res, "type") <- attr(object, "type")
     attr(res, "df.residual") <- df.res
     res
+  } else {
+    matrix(object, dimnames = list(names(object), "Estimate"))
+  }
+  res
 }
 
 #' @rdname fixef.plm
@@ -402,10 +500,6 @@ ranef.plm <- function(object, effect = NULL, ...) {
 #'
 #' @keywords attribute
 #' @examples
-#' 
-# TODO: two-way unbalanced case, once fixef() produces results that
-# are compatible estimate within model (unbalanced data)
-#
 #' data("Hedonic", package = "plm")
 #' mod_fe <- plm(mv ~ age + crim, data = Hedonic, index = "townid")
 #' overallint <- within_intercept(mod_fe)
@@ -413,27 +507,34 @@ ranef.plm <- function(object, effect = NULL, ...) {
 #' 
 #' # overall intercept is the weighted mean of fixed effects in the
 #' # one-way case
-#' weighted.mean(fixef(mod_fe), as.numeric(table(index(mod_fe)[[1]])))
+#' weighted.mean(fixef(mod_fe), pdim(mod_fe)$Tint$Ti)
 #' 
-#' # relationship of type="dmean", "level" and within_intercept in the
-#' # one-way case
+#' ### relationship of type="dmean", "level" and within_intercept
+#' ## one-way balanced case
 #' data("Grunfeld", package = "plm")
 #' gi <- plm(inv ~ value + capital, data = Grunfeld, model = "within")
 #' fx_level <- fixef(gi, type = "level")
 #' fx_dmean <- fixef(gi, type = "dmean")
 #' overallint <- within_intercept(gi)
 #' all.equal(overallint + fx_dmean, fx_level, check.attributes = FALSE) # TRUE
+#' ## two-ways unbalanced case
+#' gtw_u <- plm(inv ~ value + capital, data = Grunfeld[-200, ], effect = "twoways")
+#' int_tw_u <- within_intercept(gtw_u)
+#' fx_dmean_tw_i_u <- fixef(gtw_u, type = "dmean", effect = "individual")[index(gtw_u)[[1L]]]
+#' fx_dmean_tw_t_u <- fixef(gtw_u, type = "dmean", effect = "time")[index(gtw_u)[[2L]]]
+#' fx_level_tw_u <- as.numeric(fixef(gtw_u, "twoways", "level"))
+#' fx_level_tw_u2 <- int_tw_u + fx_dmean_tw_i_u + fx_dmean_tw_t_u
+#' all.equal(fx_level_tw_u, fx_level_tw_u2, check.attributes = FALSE) # TRUE
 #' 
-#' # overall intercept with robust standard error
+#' ## overall intercept with robust standard error
 #' within_intercept(gi, vcov = function(x) vcovHC(x, method="arellano", type="HC0"))
 #'
-#' # have a model returned
+#' ## have a model returned
 #' mod_fe_int <- within_intercept(gi, return.model = TRUE)
 #' summary(mod_fe_int)
 #' # replicates Stata's robust standard errors
 #' summary(mod_fe_int, vcvov = function(x) vcovHC(x, type = "sss")) 
 # 
-#'
 within_intercept <- function(object, ...) {
   UseMethod("within_intercept")
 }
@@ -450,7 +551,7 @@ within_intercept <- function(object, ...) {
 #' @rdname within_intercept
 #' @export
 within_intercept.plm <- function(object, vcov = NULL, return.model = FALSE, ...) {
-  # TODO: check 2-way FE case  
+  # TODO: check 2-way FE case -> is ok for balanced case
   if (!inherits(object, "plm")) stop("input 'object' needs to be a \"within\" model estimated by plm()")
   model  <- describe(object, what = "model")
   effect <- describe(object, what = "effect")

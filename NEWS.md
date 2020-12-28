@@ -24,6 +24,8 @@ plm()):
   functions works as previously). If set to TRUE, a full model object is
   returned which is the input's within model with an intercept (see
   documentation for more details).
+* fixef gained new argument value 'effect = "twoways"' to extract the
+  sum of individual and time effect (for two-way models).
 * Sum is now exported.
 
 
@@ -43,6 +45,8 @@ plm()):
   (such as lag, diff, nobs, ...), so that the help systems offers to access the
   plm-specific documentation (regression introduced when pkg plm 2.0-0 adopted
   roxygen2 for documentation).
+* fixef: calculation for two-way models fixed; type = "dmean" for unbalanced
+  models fixed (by using weighted.mean()).
 * ercomp: cosmetic: if one of theta\$id, theta\$time is 0 => theta\$total must be 
   0 and is set to 0 (before, for some data and platforms, theta$total could be a
   very small positive or negative number, due to limited computational precision).

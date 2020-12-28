@@ -21,7 +21,7 @@ Grunfeld_unbalanced <- Grunfeld[1:199, ]
 plm_fe_oneway_ind <- plm(inv ~ value + capital, data = Grunfeld, model = "within", effect = "individual")
 fixef_plm_oneway_ind_dfirst  <- fixef(plm_fe_oneway_ind, type = "dfirst", effect = "individual")
 
-if (!isTRUE(all.equal(as.numeric(plm:::fitted_exp.plm(plm_fe_oneway_ind)),
+if(!isTRUE(all.equal(as.numeric(plm:::fitted_exp.plm(plm_fe_oneway_ind)),
                        (within_intercept(plm_fe_oneway_ind) + 
                         fixef(plm_fe_oneway_ind, type = "dmean", effect = "individual")[as.character(index(plm_fe_oneway_ind)[[1]])] + 
                         as.vector(tcrossprod(coef(plm_fe_oneway_ind), as.matrix(plm_fe_oneway_ind$model[ , 2:3])))), check.attributes = FALSE))) stop("1way unbal/id: effects not correct")
@@ -30,7 +30,7 @@ if (!isTRUE(all.equal(as.numeric(plm:::fitted_exp.plm(plm_fe_oneway_ind)),
 plm_fe_oneway_time <- plm(inv ~ value + capital, data = Grunfeld, model = "within", effect = "time")
 fixef_plm_oneway_time_dfirst <- fixef(plm_fe_oneway_time, type = "dfirst", effect = "time")
 
-if (!isTRUE(all.equal(as.numeric(plm:::fitted_exp.plm(plm_fe_oneway_time)),
+if(!isTRUE(all.equal(as.numeric(plm:::fitted_exp.plm(plm_fe_oneway_time)),
                       (within_intercept(plm_fe_oneway_time) + 
                        fixef(plm_fe_oneway_time, type = "dmean", effect = "time")[as.character(index(plm_fe_oneway_time)[[2]])] +
                        as.vector(tcrossprod(coef(plm_fe_oneway_time), as.matrix(plm_fe_oneway_time$model[ , 2:3])))), check.attributes = FALSE))) stop("1way unbal/time: effects not correct")
@@ -40,7 +40,7 @@ plm_fe_tw <- plm(inv ~ value + capital, data = Grunfeld, model = "within", effec
 fixef_plm_tw_ind_dfirst  <- fixef(plm_fe_tw, type = "dfirst", effect = "individual")
 fixef_plm_tw_time_dfirst <- fixef(plm_fe_tw, type = "dfirst", effect = "time")
 
-if (!isTRUE(all.equal(as.numeric(plm:::fitted_exp.plm(plm_fe_tw)),
+if(!isTRUE(all.equal(as.numeric(plm:::fitted_exp.plm(plm_fe_tw)),
                       (within_intercept(plm_fe_tw) + 
                        fixef(plm_fe_tw, type = "dmean", effect = "individual")[as.character(index(plm_fe_tw)[[1]])] + 
                        fixef(plm_fe_tw, type = "dmean", effect = "time")[as.character(index(plm_fe_tw)[[2]])] +
@@ -61,27 +61,27 @@ fixef_lm_tw_time_dfirst <- lm_fe_tw$coefficients[13:31]
 
 
 # Test residuals oneway individual and time; twoway balanced
-if (!isTRUE(all.equal(residuals(lm_fe_oneway_ind), as.numeric(residuals(plm_fe_oneway_ind)), check.attributes = FALSE)))
+if(!isTRUE(all.equal(residuals(lm_fe_oneway_ind), as.numeric(residuals(plm_fe_oneway_ind)), check.attributes = FALSE)))
   stop("one-way individual balanced model: residuals do not match (lm vs. plm)")
 
-if (!isTRUE(all.equal(residuals(lm_fe_oneway_time), as.numeric(residuals(lm_fe_oneway_time)), check.attributes = FALSE)))
+if(!isTRUE(all.equal(residuals(lm_fe_oneway_time), as.numeric(residuals(lm_fe_oneway_time)), check.attributes = FALSE)))
   stop("one-way time balanced model: residuals do not match (lm vs. plm)")
 
-if (!isTRUE(all.equal(residuals(lm_fe_tw), as.numeric(residuals(plm_fe_tw)), check.attributes = FALSE)))
+if(!isTRUE(all.equal(residuals(lm_fe_tw), as.numeric(residuals(plm_fe_tw)), check.attributes = FALSE)))
   stop("two-ways balanced model: residuals do not match (lm vs. plm)")
 
 
 # Test balanced one-way and two-way dfirst fixefs: lm vs. plm
-if (!isTRUE(all.equal(fixef_lm_oneway_ind_dfirst, as.numeric(fixef_plm_oneway_ind_dfirst), check.attributes = FALSE)))
+if(!isTRUE(all.equal(fixef_lm_oneway_ind_dfirst, as.numeric(fixef_plm_oneway_ind_dfirst), check.attributes = FALSE)))
   stop("individual effects do not match")
 
-if (!isTRUE(all.equal(fixef_lm_oneway_time_dfirst, as.numeric(fixef_plm_oneway_time_dfirst), check.attributes = FALSE)))
+if(!isTRUE(all.equal(fixef_lm_oneway_time_dfirst, as.numeric(fixef_plm_oneway_time_dfirst), check.attributes = FALSE)))
   stop("time effects do not match")
 
-if (!isTRUE(all.equal(fixef_lm_tw_ind_dfirst, as.numeric(fixef_plm_tw_ind_dfirst), check.attributes = FALSE)))
+if(!isTRUE(all.equal(fixef_lm_tw_ind_dfirst, as.numeric(fixef_plm_tw_ind_dfirst), check.attributes = FALSE)))
   stop("individual effects do not match")
 
-if (!isTRUE(all.equal(fixef_lm_tw_time_dfirst, as.numeric(fixef_plm_tw_time_dfirst), check.attributes = FALSE)))
+if(!isTRUE(all.equal(fixef_lm_tw_time_dfirst, as.numeric(fixef_plm_tw_time_dfirst), check.attributes = FALSE)))
   stop("time effects do not match")
 
 
@@ -93,19 +93,19 @@ if (!isTRUE(all.equal(fixef_lm_tw_time_dfirst, as.numeric(fixef_plm_tw_time_dfir
 plm_fe_oneway_ind_u <- plm(inv ~ value + capital, data = Grunfeld_unbalanced, model = "within", effect = "individual")
 fixef_plm_oneway_ind_dfirst_u <- fixef(plm_fe_oneway_ind_u, type = "dfirst", effect = "individual")
 
-# if (!isTRUE(all.equal(as.numeric(plm:::fitted_exp.plm(plm_fe_oneway_ind_u)),
-#                       (within_intercept(plm_fe_oneway_ind_u) +
-#                        fixef(plm_fe_oneway_ind_u, type = "dmean", effect = "individual")[as.character(index(plm_fe_oneway_ind_u)[[1]])] +
-#                        as.vector(tcrossprod(coef(plm_fe_oneway_ind_u), as.matrix(plm_fe_oneway_ind_u$model[ , 2:3])))), check.attributes = FALSE))) stop("1way unbal/id: effects not correct")
+if(!isTRUE(all.equal(as.numeric(plm:::fitted_exp.plm(plm_fe_oneway_ind_u)),
+                      (within_intercept(plm_fe_oneway_ind_u) +
+                       fixef(plm_fe_oneway_ind_u, type = "dmean", effect = "individual")[as.character(index(plm_fe_oneway_ind_u)[[1]])] +
+                       as.vector(tcrossprod(coef(plm_fe_oneway_ind_u), as.matrix(plm_fe_oneway_ind_u$model[ , 2:3])))), check.attributes = FALSE))) stop("1way unbal/id: effects not correct")
 
 # plm one-way time unbalanced
 plm_fe_oneway_time_u <- plm(inv ~ value + capital, data = Grunfeld_unbalanced, model = "within", effect = "time")
 fixef_plm_oneway_time_dfirst_u <- fixef(plm_fe_oneway_time_u, type = "dfirst", effect = "time")
 
-# if (!isTRUE(all.equal(as.numeric(plm:::fitted_exp.plm(plm_fe_oneway_time_u)),
-#                       (within_intercept(plm_fe_oneway_time_u) +
-#                        fixef(plm_fe_oneway_time_u, type = "dmean", effect = "time")[as.character(index(plm_fe_oneway_time_u)[[2]])] +
-#                        as.vector(tcrossprod(coef(plm_fe_oneway_time_u), as.matrix(plm_fe_oneway_time_u$model[ , 2:3])))), check.attributes = FALSE))) stop("1way unbal/time: effects not correct")
+if(!isTRUE(all.equal(as.numeric(plm:::fitted_exp.plm(plm_fe_oneway_time_u)),
+                      (within_intercept(plm_fe_oneway_time_u) +
+                       fixef(plm_fe_oneway_time_u, type = "dmean", effect = "time")[as.character(index(plm_fe_oneway_time_u)[[2]])] +
+                       as.vector(tcrossprod(coef(plm_fe_oneway_time_u), as.matrix(plm_fe_oneway_time_u$model[ , 2:3])))), check.attributes = FALSE))) stop("1way unbal/time: effects not correct")
 
 
 # plm twoways unbalanced
@@ -114,11 +114,11 @@ fixef_plm_tw_ind_dfirst_u  <- fixef(plm_fe_tw_u, type = "dfirst", effect = "indi
 fixef_plm_tw_time_dfirst_u <- fixef(plm_fe_tw_u, type = "dfirst", effect = "time")
 
 ## the level effects in case of 2-way unbalanced are not correct?, hence the dmean specification is not correct?
-# if (!isTRUE(all.equal(as.numeric(plm:::fitted_exp.plm(plm_fe_tw_u)),
-#                       (within_intercept(plm_fe_tw_u) + 
-#                        fixef(plm_fe_tw_u, type = "dmean", effect = "individual")[as.character(index(plm_fe_tw_u)[[1]])] + 
-#                        fixef(plm_fe_tw_u, type = "dmean", effect = "time")[as.character(index(plm_fe_tw_u)[[2]])] +
-#                        as.vector(tcrossprod(coef(plm_fe_tw_u), as.matrix(plm_fe_tw_u$model[ , 2:3])))), check.attributes = FALSE))) stop("tw unbal: effects not correct")
+if(!isTRUE(all.equal(as.numeric(plm:::fitted_exp.plm(plm_fe_tw_u)),
+                      (within_intercept(plm_fe_tw_u) +
+                       fixef(plm_fe_tw_u, type = "dmean", effect = "individual")[as.character(index(plm_fe_tw_u)[[1]])] +
+                       fixef(plm_fe_tw_u, type = "dmean", effect = "time")[as.character(index(plm_fe_tw_u)[[2]])] +
+                       as.vector(tcrossprod(coef(plm_fe_tw_u), as.matrix(plm_fe_tw_u$model[ , 2:3])))), check.attributes = FALSE))) stop("tw unbal: effects not correct")
 
 
 # lm oneway individual unbalanced
@@ -160,44 +160,44 @@ fixef(plm_fe_oneway_time_u)
 
 
 
-# Test residuals oneway individual and time; twoway unbalanced
-if (!isTRUE(all.equal(residuals(lm_fe_oneway_ind_u), as.numeric(residuals(plm_fe_oneway_ind_u)), check.attributes = FALSE)))
+# Test unbalanced residuals oneway individual and time; twoway 
+if(!isTRUE(all.equal(residuals(lm_fe_oneway_ind_u), as.numeric(residuals(plm_fe_oneway_ind_u)), check.attributes = FALSE)))
   stop("one-way individual unbalanced model: residuals do not match (lm vs. plm)")
 
-if (!isTRUE(all.equal(residuals(lm_fe_oneway_time_u), as.numeric(residuals(lm_fe_oneway_time_u)), check.attributes = FALSE)))
+if(!isTRUE(all.equal(residuals(lm_fe_oneway_time_u), as.numeric(residuals(lm_fe_oneway_time_u)), check.attributes = FALSE)))
   stop("one-way time unbalanced model: residuals do not match (lm vs. plm)")
 
-if (!isTRUE(all.equal(residuals(lm_fe_tw_u), as.numeric(residuals(plm_fe_tw_u)), check.attributes = FALSE)))
+if(!isTRUE(all.equal(residuals(lm_fe_tw_u), as.numeric(residuals(plm_fe_tw_u)), check.attributes = FALSE)))
   stop("two-ways unbalanced model: residuals do not match (lm vs. plm)")
 
 
 # Test unbalanced one-way and two-way dfirst fixefs: lm vs. plm
-if (!isTRUE(all.equal(fixef_lm_oneway_ind_dfirst_u,  as.numeric(fixef_plm_oneway_ind_dfirst_u), check.attributes = FALSE)))
+if(!isTRUE(all.equal(fixef_lm_oneway_ind_dfirst_u,  as.numeric(fixef_plm_oneway_ind_dfirst_u), check.attributes = FALSE)))
   stop("oneway individual unbalanced: dfirst fixefs do not match")
 
-if (!isTRUE(all.equal(fixef_lm_oneway_time_dfirst_u, as.numeric(fixef_plm_oneway_time_dfirst_u), check.attributes = FALSE)))
+if(!isTRUE(all.equal(fixef_lm_oneway_time_dfirst_u, as.numeric(fixef_plm_oneway_time_dfirst_u), check.attributes = FALSE)))
   stop("oneway time unbalanced: dfirst fixefs do not match")
 
-#if (!isTRUE(all.equal(fixef_lm_tw_ind_dfirst_u,  as.numeric(fixef_plm_tw_ind_dfirst_u), check.attributes = FALSE)))
-#  stop("two-ways individual unbalanced: dfirst fixefs do not match")
+if(!isTRUE(all.equal(fixef_lm_tw_ind_dfirst_u,  as.numeric(fixef_plm_tw_ind_dfirst_u), check.attributes = FALSE)))
+  stop("two-ways individual unbalanced: dfirst fixefs do not match")
  
-#if (!isTRUE(all.equal(fixef_lm_tw_time_dfirst_u,  as.numeric(fixef_plm_tw_time_dfirst_u), check.attributes = FALSE)))
-#  stop("two-ways time unbalanced: dfirst fixefs do not match")
+if(!isTRUE(all.equal(fixef_lm_tw_time_dfirst_u,  as.numeric(fixef_plm_tw_time_dfirst_u), check.attributes = FALSE)))
+  stop("two-ways time unbalanced: dfirst fixefs do not match")
 
 
-#### test with levels: first component of individual and time effect should differ?
-## balanced
-#plm_fw_tw_ind_level  <- fixef(plm_fe_tw, type = "level", effect = "individual")
-#plm_fw_tw_time_level <- fixef(plm_fe_tw, type = "level", effect = "time")
-#if (isTRUE(all.equal(plm_fw_tw_ind_level[1], plm_fw_tw_time_level[1]))) {
-#  stop("two-ways balanced levels: first components of individual and time effect are equal (but should not")
-#}
+#### test with levels: first component of individual and time effect _in levels_ equal?
+# ## balanced
+plm_fw_tw_ind_level  <- fixef(plm_fe_tw, type = "level", effect = "individual")
+plm_fw_tw_time_level <- fixef(plm_fe_tw, type = "level", effect = "time")
+if(isTRUE(!all.equal(plm_fw_tw_ind_level[1], plm_fw_tw_time_level[1], check.attributes = FALSE))) {
+  stop("two-ways balanced levels: first components of individual and time effect in levels are not equal")
+}
 ## unbalanced
-#plm_fw_tw_ind_level_u  <- fixef(plm_fe_tw_u, type = "level", effect = "individual")
-#plm_fw_tw_time_level_u <- fixef(plm_fe_tw_u, type = "level", effect = "time")
-#if (isTRUE(all.equal(plm_fw_tw_ind_level_u[1], plm_fw_tw_time_level_u[1]))) {
-#  stop("two-ways unbalanced levels: first components of individual and time effect are equal (but should not")
-#}
+plm_fw_tw_ind_level_u  <- fixef(plm_fe_tw_u, type = "level", effect = "individual")
+plm_fw_tw_time_level_u <- fixef(plm_fe_tw_u, type = "level", effect = "time")
+if(isTRUE(!all.equal(plm_fw_tw_ind_level_u[1], plm_fw_tw_time_level_u[1], check.attributes = FALSE))) {
+  stop("two-ways unbalanced levels: first components of individual and time effect in levels are not equal")
+}
 
 
 ######### (3) Test of standard errors, balanced and unbalanced ############
@@ -225,22 +225,23 @@ sum_plm_fixef_lm_tw_ind_dfirst_u  <- summary(fixef_plm_tw_ind_dfirst_u)
 sum_plm_fixef_lm_tw_time_dfirst_u <- summary(fixef_plm_tw_time_dfirst_u)
 
 # one-way balanced
-if (!isTRUE(all.equal(sum_lm_fe_oneway_ind[["coefficients"]][c(4:12) , "Std. Error"], sum_plm_fixef_lm_oneway_ind_dfirst[ , "Std. Error"], check.attributes = FALSE)))
+if(!isTRUE(all.equal(sum_lm_fe_oneway_ind[["coefficients"]][c(4:12) , "Std. Error"], sum_plm_fixef_lm_oneway_ind_dfirst[ , "Std. Error"], check.attributes = FALSE)))
   stop("standard errors diverge: summary.plm vs. summary.fixef(..., type = \"dfirst\")")
-if (!isTRUE(all.equal(sum_lm_fe_oneway_time[["coefficients"]][c(4:22) , "Std. Error"], sum_plm_fixef_lm_oneway_time_dfirst[ , "Std. Error"], check.attributes = FALSE)))
+if(!isTRUE(all.equal(sum_lm_fe_oneway_time[["coefficients"]][c(4:22) , "Std. Error"], sum_plm_fixef_lm_oneway_time_dfirst[ , "Std. Error"], check.attributes = FALSE)))
   stop("standard errors diverge: summary.plm vs. summary.fixef(..., type = \"dfirst\")")
 
 # one-way unbalanced
-if (!isTRUE(all.equal(sum_lm_fe_oneway_ind_u[["coefficients"]][c(4:12) , "Std. Error"], sum_plm_fixef_lm_oneway_ind_dfirst_u[ , "Std. Error"], check.attributes = FALSE)))
+if(!isTRUE(all.equal(sum_lm_fe_oneway_ind_u[["coefficients"]][c(4:12) , "Std. Error"], sum_plm_fixef_lm_oneway_ind_dfirst_u[ , "Std. Error"], check.attributes = FALSE)))
   stop("standard errors diverge: summary.plm vs. summary.fixef(..., type = \"dfirst\")")
-if (!isTRUE(all.equal(sum_lm_fe_oneway_time_u[["coefficients"]][c(4:22) , "Std. Error"], sum_plm_fixef_lm_oneway_time_dfirst_u[ , "Std. Error"], check.attributes = FALSE)))
+if(!isTRUE(all.equal(sum_lm_fe_oneway_time_u[["coefficients"]][c(4:22) , "Std. Error"], sum_plm_fixef_lm_oneway_time_dfirst_u[ , "Std. Error"], check.attributes = FALSE)))
   stop("standard errors diverge: summary.plm vs. summary.fixef(..., type = \"dfirst\")")
 
 # two-ways balanced
-if (!isTRUE(all.equal(sum_lm_fe_tw[["coefficients"]][c(4:12) , "Std. Error"], sum_plm_fixef_lm_tw_ind_dfirst[ , "Std. Error"], check.attributes = FALSE)))
-  stop("standard errors diverge: summary.plm vs. summary.fixef(..., type = \"dfirst\")")
-if (!isTRUE(all.equal(sum_lm_fe_tw[["coefficients"]][c(13:31) , "Std. Error"], sum_plm_fixef_lm_tw_time_dfirst[ , "Std. Error"], check.attributes = FALSE)))
-  stop("standard errors diverge: summary.plm vs. summary.fixef(..., type = \"dfirst\")")
+##### Tests deactivated as SEs are currently not computed for two-way FE
+#if(!isTRUE(all.equal(sum_lm_fe_tw[["coefficients"]][c(4:12) , "Std. Error"], sum_plm_fixef_lm_tw_ind_dfirst[ , "Std. Error"], check.attributes = FALSE)))
+#  stop("standard errors diverge: summary.plm vs. summary.fixef(..., type = \"dfirst\")")
+#if(!isTRUE(all.equal(sum_lm_fe_tw[["coefficients"]][c(13:31) , "Std. Error"], sum_plm_fixef_lm_tw_time_dfirst[ , "Std. Error"], check.attributes = FALSE)))
+#  stop("standard errors diverge: summary.plm vs. summary.fixef(..., type = \"dfirst\")")
 
 # two-ways unbalanced - does not yet match
 # if (!isTRUE(all.equal(sum_lm_fe_tw_u[["coefficients"]][c(4:12) , "Std. Error"], sum_plm_fixef_lm_tw_ind_dfirst_u[ , "Std. Error"], check.attributes = FALSE)))

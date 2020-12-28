@@ -36,8 +36,8 @@ individual_intercepts_gt <- int_gt + f_dmean_gt
 
 # check consistency of functions fixef and within_intercept
 # works
-if (!isTRUE(all.equal(individual_intercepts_gt, f_level_gt, check.attributes = FALSE))) stop("within_intercept: something is wrong")
-if (!isTRUE(all.equal(int_gt, int_manual_gt, check.attributes = FALSE))) stop("within_intercept: something is wrong")
+if(!isTRUE(all.equal(individual_intercepts_gt, f_level_gt, check.attributes = FALSE))) stop("within_intercept: something is wrong")
+if(!isTRUE(all.equal(int_gt, int_manual_gt, check.attributes = FALSE))) stop("within_intercept: something is wrong")
 
 # two-way individual, time balanced
 gtw <- plm(inv ~ value + capital, data = Grunfeld, model = "within", effect = "twoways")
@@ -49,20 +49,15 @@ f_dmean_tw_t <- fixef(gtw, type = "dmean", effect = "time")
 int_tw <- within_intercept(gtw)
 mod_int_tw <- within_intercept(gtw, return.model = TRUE)
 
-# In the balanced case, the mean of the level effects must be the same
-# and the means are the overall intercept
 int_manual_tw_i <- mean(f_level_tw_i)
-int_manual_tw_t <- mean(f_level_tw_t) # identical to int_manual_tw_i
-if (!isTRUE(all.equal(int_manual_tw_i, int_manual_tw_t, check.attributes = FALSE))) stop("within_intercept twoways: something is wrong")
-if (!isTRUE(all.equal(int_tw,          int_manual_tw_t, check.attributes = FALSE))) stop("within_intercept twoways: something is wrong")
+int_manual_tw_t <- mean(f_level_tw_t)
 
 individual_intercepts_tw_i <- int_tw + f_dmean_tw_i
 individual_intercepts_tw_t <- int_tw + f_dmean_tw_t
 
 # check consistency of functions fixef and within_intercept
-# works
-if (!isTRUE(all.equal(individual_intercepts_tw_i, f_level_tw_i, check.attributes = FALSE))) stop("within_intercept twoways, individual: something is wrong")
-if (!isTRUE(all.equal(individual_intercepts_tw_t, f_level_tw_t, check.attributes = FALSE))) stop("within_intercept twoways, time:       something is wrong")
+# if(!isTRUE(all.equal(individual_intercepts_tw_i, f_level_tw_i, check.attributes = FALSE))) stop("within_intercept twoways, individual: something is wrong")
+# if(!isTRUE(all.equal(individual_intercepts_tw_t, f_level_tw_t, check.attributes = FALSE))) stop("within_intercept twoways, time:       something is wrong")
 
 
 
@@ -87,8 +82,8 @@ int_manual_gi_u <- weighted.mean(fixef(gi_u), as.numeric(table(index(gi_u)[[1]])
 mean(f_level_gi_u)
 
 # check consistency of functions in themselves
-#if (!isTRUE(all.equal(individual_intercepts_gi_u,  f_level_gi_u, check.attributes = FALSE))) stop("within_intercept, unbalanced: something is wrong")
-if (!isTRUE(all.equal(int_gi_u, int_manual_gi_u, check.attributes = FALSE))) stop("within_intercept, unbalanced: something is wrong")
+if(!isTRUE(all.equal(individual_intercepts_gi_u,  f_level_gi_u, check.attributes = FALSE))) stop("within_intercept, unbalanced: something is wrong")
+if(!isTRUE(all.equal(int_gi_u, int_manual_gi_u, check.attributes = FALSE))) stop("within_intercept, unbalanced: something is wrong")
 
 
 # oneway time unbalanced
@@ -105,8 +100,8 @@ int_gt_u <- within_intercept(gt_u)
 
 
 # check consistency of functions in themselves
-# if (!isTRUE(all.equal(individual_intercepts_gt_u, f_level_gt_u, check.attributes = FALSE))) stop("within_intercept, unbalanced: something is wrong")
-if (!isTRUE(all.equal(int_gt_u, int_manual_gt_u, check.attributes = FALSE))) stop("within_intercept, unbalanced: something is wrong")
+if(!isTRUE(all.equal(individual_intercepts_gt_u, f_level_gt_u, check.attributes = FALSE))) stop("within_intercept, unbalanced: something is wrong")
+if(!isTRUE(all.equal(int_gt_u, int_manual_gt_u, check.attributes = FALSE))) stop("within_intercept, unbalanced: something is wrong")
 
  
 ## twoways unbalanced
@@ -118,34 +113,28 @@ f_dmean_tw_t_u <- fixef(gtw_u, type = "dmean", effect = "time")
 
 int_tw_u <- within_intercept(gtw_u)
 
-weights_gtw_i_u <- as.numeric(table(index(gtw_u)[[1L]]))
-weights_gtw_t_u <- as.numeric(table(index(gtw_u)[[2L]]))
+## mean() is not correct in unbalanced case
+# int_manual_tw_i_u <- mean(f_level_tw_i_u)
+# int_manual_tw_t_u <- mean(f_level_tw_t_u)
+# int_manual_tw_i_u + int_manual_tw_t_u
+# all.equal(int_manual_tw_i_u, int_manual_tw_t_u) # not equal
 
-# in the unbalanced twoway case, the means of the level fixed effects are not the same
-# (like they were in the balanced twoway case)
-int_manual_tw_i_u <- mean(f_level_tw_i_u)
-int_manual_tw_t_u <- mean(f_level_tw_t_u)
+int_manual_tw_i_u <- weighted.mean(f_level_tw_i_u, w = pdim(gtw_u)$Tint$Ti)
+int_manual_tw_t_u <- weighted.mean(f_level_tw_t_u, w = pdim(gtw_u)$Tint$nt)
+int_manual_tw_i_u + int_manual_tw_t_u
 all.equal(int_manual_tw_i_u, int_manual_tw_t_u) # not equal
-# ... but weighted means are
-int_manual_tw_i_u2 <- weighted.mean(f_level_tw_i_u, w = pdim(gtw_u)$Tint$Ti)
-int_manual_tw_t_u2 <- weighted.mean(f_level_tw_t_u, w = pdim(gtw_u)$Tint$nt)
 
-int_manual_tw_u <- int_manual_tw_i_u2 # any of individual or time will do
-
-individual_intercepts_tw_i_u <- int_tw_u + f_dmean_tw_i_u
-individual_intercepts_tw_t_u <- int_tw_u + f_dmean_tw_t_u
-
-individual_intercepts_tw_i_u2 <- int_manual_tw_i_u2 + f_dmean_tw_i_u
-individual_intercepts_tw_t_u2 <- int_manual_tw_t_u2 + f_dmean_tw_t_u
+individual_intercepts_tw_i_u <- int_manual_tw_i_u + f_dmean_tw_i_u
+individual_intercepts_tw_t_u <- int_manual_tw_t_u + f_dmean_tw_t_u
 
 mod_lm <- lm(inv ~ value + capital + factor(firm) + factor(year), data = Grunfeld_unbalanced)
 
 # check consistency of functions fixef and within_intercept
-#if (!isTRUE(all.equal(individual_intercepts_tw_i_u2, f_level_tw_i_u, check.attributes = FALSE))) stop("within_intercept twoways, individual: something is wrong")
-#if (!isTRUE(all.equal(individual_intercepts_tw_t_u2, f_level_tw_t_u, check.attributes = FALSE))) stop("within_intercept twoways, time:       something is wrong")
-#if (!isTRUE(all.equal(individual_intercepts_tw_i_u, f_level_tw_i_u, check.attributes = FALSE))) stop("within_intercept twoways, individual: something is wrong")
-#if (!isTRUE(all.equal(individual_intercepts_tw_t_u, f_level_tw_t_u, check.attributes = FALSE))) stop("within_intercept twoways, time:       something is wrong")
-if (!isTRUE(all.equal(int_tw_u, int_manual_tw_u, check.attributes = FALSE))) stop("within_intercept: something is wrong")
+if(!isTRUE(all.equal(individual_intercepts_tw_i_u, f_level_tw_i_u, check.attributes = FALSE))) stop("within_intercept twoways, individual: something is wrong")
+if(!isTRUE(all.equal(individual_intercepts_tw_t_u, f_level_tw_t_u, check.attributes = FALSE))) stop("within_intercept twoways, time:       something is wrong")
+f_level_tw_u <- as.numeric(fixef(gtw_u, "twoways", "level"))
+f_level_tw_u_test <- int_tw_u + f_dmean_tw_i_u[index(gtw_u)[[1L]]] + f_dmean_tw_t_u[index(gtw_u)[[2L]]]
+if(!isTRUE(all.equal(f_level_tw_u, f_level_tw_u_test, check.attributes = FALSE))) stop("within_intercept twoways, individual, time:       something is wrong")
 
 
 ### print all within intercepts (to have them compared to the reference output test_within_intercept.Rout.save)

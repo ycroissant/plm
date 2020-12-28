@@ -456,12 +456,10 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 > gi_tw <- plm(inv ~ value + capital, data = Grunfeld,
 +           model = "within", effect = "twoways")
 > fixef(gi_tw, effect = "time")
-    1935     1936     1937     1938     1939     1940     1941     1942 
- -32.836  -52.034  -73.526  -72.063 -102.307  -77.071  -51.641  -53.976 
-    1943     1944     1945     1946     1947     1948     1949     1950 
- -75.814  -75.935  -88.519  -64.006  -72.229  -76.553 -106.331 -108.732 
-    1951     1952     1953     1954 
- -95.317  -97.469 -100.554 -126.363 
+   1935    1936    1937    1938    1939    1940    1941    1942    1943    1944 
+ -86.90 -106.10 -127.59 -126.13 -156.37 -131.14 -105.70 -108.04 -129.88 -130.00 
+   1945    1946    1947    1948    1949    1950    1951    1952    1953    1954 
+-142.58 -118.07 -126.29 -130.62 -160.40 -162.80 -149.38 -151.53 -154.62 -180.43 
 > 
 > # with supplied variance-covariance matrix as matrix, function,
 > # and function with additional arguments
@@ -485,8 +483,29 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 > 
 > # calc. fitted values of oneway within model:
 > fixefs <- fixef(gi)[index(gi, which = "id")]
-> fitted_by_hand <- fixefs + gi$coefficients["value"] * gi$model$value +
+> fitted_by_hand <- fixefs + gi$coefficients["value"]   * gi$model$value +
 +                            gi$coefficients["capital"] * gi$model$capital
+> 
+> # calc. fittes values of twoway unbalanced within model via effects:
+> gtw_u <- plm(inv ~ value + capital, data = Grunfeld[-200, ], effect = "twoways")
+> yhat <- as.numeric(gtw_u$model[ , 1] - gtw_u$residuals) # reference
+> pred_beta <- as.numeric(tcrossprod(coef(gtw_u), as.matrix(gtw_u$model[ , -1])))
+> pred_effs <- as.numeric(fixef(gtw_u, "twoways")) # sum of ind and time effects
+> all.equal(pred_effs + pred_beta, yhat) # TRUE
+[1] TRUE
+> 
+> # Splits of summed up individual and time effects:
+> # use one "level" and one "dfirst"
+> ii <- index(gtw_u)[[1L]]; it <- index(gtw_u)[[2L]]
+> eff_id_dfirst <- c(0, as.numeric(fixef(gtw_u, "individual", "dfirst")))[ii]
+> eff_ti_dfirst <- c(0, as.numeric(fixef(gtw_u, "time",       "dfirst")))[it]
+> eff_id_level <- as.numeric(fixef(gtw_u, "individual"))[ii]
+> eff_ti_level <- as.numeric(fixef(gtw_u, "time"))[it]
+> 
+> all.equal(pred_effs, eff_id_level  + eff_ti_dfirst) # TRUE
+[1] TRUE
+> all.equal(pred_effs, eff_id_dfirst + eff_ti_level)  # TRUE
+[1] TRUE
 > 
 > 
 > 
@@ -14432,7 +14451,6 @@ detaching 'package:lmtest', 'package:zoo'
 > 
 > ### ** Examples
 > 
-> 
 > data("Hedonic", package = "plm")
 > mod_fe <- plm(mv ~ age + crim, data = Hedonic, index = "townid")
 > overallint <- within_intercept(mod_fe)
@@ -14441,11 +14459,11 @@ detaching 'package:lmtest', 'package:zoo'
 > 
 > # overall intercept is the weighted mean of fixed effects in the
 > # one-way case
-> weighted.mean(fixef(mod_fe), as.numeric(table(index(mod_fe)[[1]])))
+> weighted.mean(fixef(mod_fe), pdim(mod_fe)$Tint$Ti)
 [1] 10.25964
 > 
-> # relationship of type="dmean", "level" and within_intercept in the
-> # one-way case
+> ### relationship of type="dmean", "level" and within_intercept
+> ## one-way balanced case
 > data("Grunfeld", package = "plm")
 > gi <- plm(inv ~ value + capital, data = Grunfeld, model = "within")
 > fx_level <- fixef(gi, type = "level")
@@ -14453,15 +14471,24 @@ detaching 'package:lmtest', 'package:zoo'
 > overallint <- within_intercept(gi)
 > all.equal(overallint + fx_dmean, fx_level, check.attributes = FALSE) # TRUE
 [1] TRUE
+> ## two-ways unbalanced case
+> gtw_u <- plm(inv ~ value + capital, data = Grunfeld[-200, ], effect = "twoways")
+> int_tw_u <- within_intercept(gtw_u)
+> fx_dmean_tw_i_u <- fixef(gtw_u, type = "dmean", effect = "individual")[index(gtw_u)[[1L]]]
+> fx_dmean_tw_t_u <- fixef(gtw_u, type = "dmean", effect = "time")[index(gtw_u)[[2L]]]
+> fx_level_tw_u <- as.numeric(fixef(gtw_u, "twoways", "level"))
+> fx_level_tw_u2 <- int_tw_u + fx_dmean_tw_i_u + fx_dmean_tw_t_u
+> all.equal(fx_level_tw_u, fx_level_tw_u2, check.attributes = FALSE) # TRUE
+[1] TRUE
 > 
-> # overall intercept with robust standard error
+> ## overall intercept with robust standard error
 > within_intercept(gi, vcov = function(x) vcovHC(x, method="arellano", type="HC0"))
 (overall_intercept) 
           -58.74394 
 attr(,"se")
 [1] 26.05445
 > 
-> # have a model returned
+> ## have a model returned
 > mod_fe_int <- within_intercept(gi, return.model = TRUE)
 > summary(mod_fe_int)
 Pooling Model
@@ -14517,13 +14544,12 @@ F-statistic: 309.014 on 2 and 197 DF, p-value: < 2.22e-16
 > 
 > 
 > 
-> 
 > ### * <FOOTER>
 > ###
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  10.2 0.4 10.84 NA NA 
+Time elapsed:  10.24 0.33 10.64 NA NA 
 > grDevices::dev.off()
 null device 
           1 

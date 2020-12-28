@@ -42,8 +42,8 @@
 )
 }
 \arguments{
-\item{effect}{one of \code{"individual"} or \code{"time"}, only relevant in
-case of two--ways effects models,}
+\item{effect}{one of \code{"individual"}, \code{"time"}, or \code{"twoways"}, only relevant in
+case of two--ways effects models (where it defaults to \code{"individual"}),}
 
 \item{type}{one of \code{"level"}, \code{"dfirst"}, or \code{"dmean"},}
 
@@ -60,20 +60,24 @@ a function to calculate one (see \strong{Examples}),}
 \item{width}{the maximum length of the lines in the print output,}
 }
 \value{
-For function \code{fixef} an object of class \code{c("fixef", "numeric")} is returned:\cr It is a numeric vector containing
+For function \code{fixef}, an object of class \code{c("fixef", "numeric")}
+is returned: It is a numeric vector containing
 the fixed effects with attribute \code{se} which contains the
 standard errors. There are two further attributes: attribute
 \code{type} contains the chosen type (the value of argument \code{type}
 as a character); attribute \code{df.residual} holds the residual
 degrees of freedom (integer) from the fixed effects model (plm
-object) on which \code{fixef} was run.
+object) on which \code{fixef} was run. For the two-way unbalanced case, only
+attribute \code{type} is added.
 
-For function \code{summary.fixef} an object of class \code{c("summary.fixef", "matrix")} is returned:\cr It is a matrix with four columns in this
-order: the estimated fixed effects, their standard errors and
-associated t--values and p--values.  The type of the fixed effects
-and the standard errors in the summary.fixef objects correspond to
-was requested in the \code{fixef} function by arguments \code{type} and
-\code{vcov}, respectively.
+For function \code{summary.fixef}, an object of class
+\code{c("summary.fixef", "matrix")} is returned: It is a matrix with four
+columns in this order: the estimated fixed effects, their standard
+errors and associated t--values and p--values.
+For the two-ways unbalanced case, the matrix contains only the estimates.
+The type of the fixed effects and the standard errors in the
+summary.fixef object correspond to was requested in the \code{fixef}
+function by arguments \code{type} and \code{vcov}, respectively.
 }
 \description{
 Function to extract the fixed effects from a \code{plm} object and
@@ -87,6 +91,13 @@ deviations from the first value of the index (\code{"dfirst"}), or as
 deviations from the overall mean (\code{"dmean"}). If the argument
 \code{vcov} was specified, the standard errors (stored as attribute "se"
 in the return value) are the respective robust standard errors.
+For two-way fixed-effect models, argument \code{effect} controls which
+of the fixed effects are to be extracted: \code{"individual"}, \code{"time"}, or
+the sum of individual and time effects (\code{"twoways"}).
+NB: See \strong{Examples} for how the sum of effects can be split in an individual
+and a time component.
+For one-way models, the effects of the model are extracted and the
+argument \code{effect} is disrespected.
 
 The associated \code{summary} method returns an extended object of class
 \code{c("summary.fixef", "matrix")} with more information (see sections
@@ -125,8 +136,26 @@ summary(fx_level_robust1) # gives fixed effects, robust SEs, t- and p-values
 
 # calc. fitted values of oneway within model:
 fixefs <- fixef(gi)[index(gi, which = "id")]
-fitted_by_hand <- fixefs + gi$coefficients["value"] * gi$model$value +
+fitted_by_hand <- fixefs + gi$coefficients["value"]   * gi$model$value +
                            gi$coefficients["capital"] * gi$model$capital
+
+# calc. fittes values of twoway unbalanced within model via effects:
+gtw_u <- plm(inv ~ value + capital, data = Grunfeld[-200, ], effect = "twoways")
+yhat <- as.numeric(gtw_u$model[ , 1] - gtw_u$residuals) # reference
+pred_beta <- as.numeric(tcrossprod(coef(gtw_u), as.matrix(gtw_u$model[ , -1])))
+pred_effs <- as.numeric(fixef(gtw_u, "twoways")) # sum of ind and time effects
+all.equal(pred_effs + pred_beta, yhat) # TRUE
+
+# Splits of summed up individual and time effects:
+# use one "level" and one "dfirst"
+ii <- index(gtw_u)[[1L]]; it <- index(gtw_u)[[2L]]
+eff_id_dfirst <- c(0, as.numeric(fixef(gtw_u, "individual", "dfirst")))[ii]
+eff_ti_dfirst <- c(0, as.numeric(fixef(gtw_u, "time",       "dfirst")))[it]
+eff_id_level <- as.numeric(fixef(gtw_u, "individual"))[ii]
+eff_ti_level <- as.numeric(fixef(gtw_u, "time"))[it]
+
+all.equal(pred_effs, eff_id_level  + eff_ti_dfirst) # TRUE
+all.equal(pred_effs, eff_id_dfirst + eff_ti_level)  # TRUE
 
 }
 \references{

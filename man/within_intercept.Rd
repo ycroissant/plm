@@ -63,7 +63,6 @@ If argument \code{return.model = TRUE} is set, the full model object is returned
 while in the default case only the intercept is returned.
 }
 \examples{
-
 data("Hedonic", package = "plm")
 mod_fe <- plm(mv ~ age + crim, data = Hedonic, index = "townid")
 overallint <- within_intercept(mod_fe)
@@ -71,26 +70,33 @@ attr(overallint, "se") # standard error
 
 # overall intercept is the weighted mean of fixed effects in the
 # one-way case
-weighted.mean(fixef(mod_fe), as.numeric(table(index(mod_fe)[[1]])))
+weighted.mean(fixef(mod_fe), pdim(mod_fe)$Tint$Ti)
 
-# relationship of type="dmean", "level" and within_intercept in the
-# one-way case
+### relationship of type="dmean", "level" and within_intercept
+## one-way balanced case
 data("Grunfeld", package = "plm")
 gi <- plm(inv ~ value + capital, data = Grunfeld, model = "within")
 fx_level <- fixef(gi, type = "level")
 fx_dmean <- fixef(gi, type = "dmean")
 overallint <- within_intercept(gi)
 all.equal(overallint + fx_dmean, fx_level, check.attributes = FALSE) # TRUE
+## two-ways unbalanced case
+gtw_u <- plm(inv ~ value + capital, data = Grunfeld[-200, ], effect = "twoways")
+int_tw_u <- within_intercept(gtw_u)
+fx_dmean_tw_i_u <- fixef(gtw_u, type = "dmean", effect = "individual")[index(gtw_u)[[1L]]]
+fx_dmean_tw_t_u <- fixef(gtw_u, type = "dmean", effect = "time")[index(gtw_u)[[2L]]]
+fx_level_tw_u <- as.numeric(fixef(gtw_u, "twoways", "level"))
+fx_level_tw_u2 <- int_tw_u + fx_dmean_tw_i_u + fx_dmean_tw_t_u
+all.equal(fx_level_tw_u, fx_level_tw_u2, check.attributes = FALSE) # TRUE
 
-# overall intercept with robust standard error
+## overall intercept with robust standard error
 within_intercept(gi, vcov = function(x) vcovHC(x, method="arellano", type="HC0"))
 
-# have a model returned
+## have a model returned
 mod_fe_int <- within_intercept(gi, return.model = TRUE)
 summary(mod_fe_int)
 # replicates Stata's robust standard errors
 summary(mod_fe_int, vcvov = function(x) vcovHC(x, type = "sss")) 
-
 }
 \references{
 \insertAllCited{}
