@@ -150,11 +150,12 @@ ercomp.formula <- function(object, data,
             theta$total <- theta$id + theta$time - 1 +
                 (1 + N * sigma2["time"] / sigma2["idios"] +
                     TS * sigma2["id"]   / sigma2["idios"]) ^ (-0.5)
+            names(theta$total) <- "total"
                # tweak for numerical precision:
             	  # if either theta$id or theta$time is 0 => theta$total must be zero
             	  # but in calculation above some precision is lost
-        		 if(  isTRUE(all.equal(sigma2[["time"]], 0, check.attributes = FALSE))
-        		 	 || isTRUE(all.equal(sigma2[["id"]],   0, check.attributes = FALSE)))
+        		if(  isTRUE(all.equal(sigma2[["time"]], 0, check.attributes = FALSE))
+        		  || isTRUE(all.equal(sigma2[["id"]],   0, check.attributes = FALSE)))
         		 	     theta$total <- 0
         }
         if (effect != "twoways") theta <- theta[[1L]]
@@ -597,11 +598,12 @@ ercomp.formula <- function(object, data,
         theta$total <- theta$id + theta$time - 1 +
             (1 + Nts * sigma2["time"] / sigma2["idios"] +
                  Tns * sigma2["id"]   / sigma2["idios"]) ^ (-0.5)
+        names(theta$total) <- if(balanced) "total" else seq_len(O) # seq_len -> names are the row numbers
         # tweak for numerical precision:
         # if either theta$id or theta$time is 0 => theta$total must be zero
         # but in calculation above some precision is lost
         if(     isTRUE(all.equal(sigma2[["time"]], 0, check.attributes = FALSE))
-                 || isTRUE(all.equal(sigma2[["id"]],   0, check.attributes = FALSE)))
+             || isTRUE(all.equal(sigma2[["id"]],   0, check.attributes = FALSE)))
             theta$total <- 0
     }
     if (effect != "twoways") theta <- theta[[1L]]
