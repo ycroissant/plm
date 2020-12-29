@@ -213,7 +213,7 @@ fixef.plm <- function(object, effect = NULL,
     ## treat separately here:
     ##  * two-way balanced/unbalanced model for all effects
     if(model.effect == "twoways") {
-      beta.data <- as.numeric(tcrossprod(coef(object), as.matrix(object$model[ , -1])))
+      beta.data <- as.numeric(tcrossprod(coef(object), as.matrix(object$model[ , -1, drop = FALSE])))
       yhat <- object$model[ , 1] - object$residuals
       tw.fixef.lvl <- yhat - beta.data # sum of both effects in levels
       
