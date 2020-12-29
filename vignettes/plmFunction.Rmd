@@ -107,7 +107,7 @@ more main arguments can be set :
   `c("firm", "year")` or just `"firm"` if there is no explicit time
   index.
 - `effect` indicates the effects that should be taken into account ;
-  this is one of `"indiviudal"`, `"time"` and `"twoways"`.
+  this is one of `"individual"`, `"time"` and `"twoways"`.
 - `model` indicates the model to be estimated : `"pooling"` is just the
   OLS estimation (equivalent to a call to `lm`), `"between"` performs
   the estimation on the individual or time means, `"within"` on the
@@ -272,7 +272,7 @@ Two difficulties arise with unbalanced panels :
 
 @BALT:13 and @BALT:09 present results of the estimation of the
 @SWAM:AROR:72 model with the `Hedonic` data set. @BALT:13, p. 174,
-presents the Stata output as @BALT:09, p. 211 presents EViews'
+presents the Stata output and @BALT:09, p. 211 presents EViews'
 output. EViews' Wallace-Hussain estimator is reported in @BALT:09,
 p. 210.
 
@@ -329,7 +329,7 @@ The instrumental variables estimator used is indicated with the
 - `"am"`, from @AMEM:MACU:86, the within transformation of the variables
   of the second parts for each period are also included as
   instruments,
-- `"bmc"`, from @BREU:MIZO:SCHM:89, the within transformation of the
+- `"bms"`, from @BREU:MIZO:SCHM:89, the within transformation of the
   variable of the second and of the third parts are included as
   instruments.
 
@@ -377,7 +377,8 @@ screenreg(list("Hausman-Taylor" = ht, "Amemiya-MaCurdy" = am),
 
 # Nested error component model
 
-@BALT:SONG:JUNG:01
+This section shows how the nested error component model as per
+@BALT:SONG:JUNG:01 can be estimated.
 
 ```{r}
 data("Produc", package = "plm")
