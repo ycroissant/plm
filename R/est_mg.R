@@ -195,7 +195,7 @@ pmg <- function(formula, data, subset, na.action,
       Xm <- Between(X, effect = "time", na.rm = TRUE)
       ym <- as.numeric(Between(y, effect = "time", na.rm = TRUE))
       
-      augX <- cbind(X, ym, Xm[ , -1])
+      augX <- cbind(X, ym, Xm[ , -1, drop = FALSE])
 
       ## allow for extended coef vector
       tcoef0 <- matrix(data = NA_real_, nrow = 2*k+kt, ncol = n)

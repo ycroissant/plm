@@ -468,7 +468,7 @@ preshape <- function(x, na.rm = TRUE, ...) {
                     timevar = inames[2],
                     idvar = inames[1])
     ## drop ind in first column
-    mres <- mres[ , -1]
+    mres <- mres[ , -1, drop = FALSE]
     ## reorder columns (may be scrambled depending on first
     ## available obs in unbalanced panels)
     mres <- mres[ , order(dimnames(mres)[[2]])]

@@ -509,8 +509,8 @@ pgmm <- function(formula, data, subset, na.action,
   ## for (i in 1:N) W[[i]] <- W[[i]][, - zerolines]
 
   WX <- mapply(function(x, y) crossprod(x, y), W, yX, SIMPLIFY = FALSE)
-  Wy <- lapply(WX, function(x) x[ , 1])
-  WX <- lapply(WX, function(x) x[ , -1])
+  Wy <- lapply(WX, function(x) x[ ,  1])
+  WX <- lapply(WX, function(x) x[ , -1, drop = FALSE])
   A1 <- lapply(W, function(x) crossprod(t(crossprod(x, A1)), x))
   A1 <- Reduce("+", A1)
   minevA1 <- min(eigen(A1)$values)
