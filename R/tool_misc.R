@@ -6,7 +6,7 @@
 ## - pres : extract model residuals as pseries (used in several estimation functions)
 
 bdiag <- function(...){
-  if (nargs() == 1)
+  if (nargs() == 1L)
     x <- as.list(...)
   else
     x <- list(...)
@@ -15,21 +15,21 @@ bdiag <- function(...){
   x <- lapply(x, function(y) if(length(y)) as.matrix(y) else
               stop("Zero-length component in x"))
   d <- array(unlist(lapply(x, dim)), c(2, n))
-  rr <- d[1,]
-  cc <- d[2,]
+  rr <- d[1, ]
+  cc <- d[2, ]
   rsum <- sum(rr)
   csum <- sum(cc)
   out <- array(0, c(rsum, csum))
   ind <- array(0, c(4, n))
   rcum <- cumsum(rr)
   ccum <- cumsum(cc)
-  ind[1,-1] <- rcum[-n]
-  ind[2,] <- rcum
-  ind[3,-1] <- ccum[-n]
-  ind[4,] <- ccum
+  ind[1, -1] <- rcum[-n]
+  ind[2,   ] <- rcum
+  ind[3, -1] <- ccum[-n]
+  ind[4,   ] <- ccum
   imat <- array(1:(rsum * csum), c(rsum, csum))
-  iuse <- apply(ind, 2, function(y, imat) imat[(y[1]+1):y[2],
-                                               (y[3]+1):y[4]], imat=imat)
+  iuse <- apply(ind, 2, function(y, imat) imat[(y[1L]+1):y[2L],
+                                               (y[3L]+1):y[4L]], imat=imat)
   iuse <- as.vector(unlist(iuse))
   out[iuse] <- unlist(x)
   return(out)
@@ -39,7 +39,7 @@ bdiag <- function(...){
 twosls <- function(y, X, W, intercept = FALSE){
   Xhat <- lm(X ~ W)$fitted.values
   if(!is.matrix(Xhat)){
-    Xhat <- matrix(Xhat, ncol = 1)
+    Xhat <- matrix(Xhat, ncol = 1L)
     colnames(Xhat) <- colnames(X)
   }
   if(intercept){
@@ -132,7 +132,7 @@ has.intercept.Formula <- function(object, rhs = NULL, ...) {
     sapply(rhs, function(x){
         aform <- formula(object, lhs = 0, rhs = x)
         # expand the dot if any in all the parts except the first
-        if (x > 1) aform <- update(formula(object, lhs = 0, rhs = 1), aform)
+        if(x > 1) aform <- update(formula(object, lhs = 0, rhs = 1), aform)
         has.intercept(aform)
     }
     )
@@ -157,8 +157,8 @@ pres <- function(x) {  # pres.panelmodel
   ## but used in residuals.pggls, residuals.pcce, residuals.pmg
   
   ## extract indices
-  groupind <-attr(x$model, "index")[,1]
-  timeind  <-attr(x$model, "index")[,2]
+  groupind <-attr(x$model, "index")[ , 1L]
+  timeind  <-attr(x$model, "index")[ , 2L]
   
   # fix to allow operation with pggls, pmg
   # [TODO: one day, make this cleaner; with the describe framework?]
@@ -170,7 +170,7 @@ pres <- function(x) {  # pres.panelmodel
     groupi <- as.numeric(groupind)
     ## make vector =1 on first obs in each group, 0 elsewhere
     selector <- groupi - c(0, groupi[-length(groupi)])
-    selector[1] <- 1 # the first must always be 1
+    selector[1L] <- 1 # the first must always be 1
     ## eliminate first obs in time for each group
     groupind <- groupind[!selector]
     timeind <- timeind[!selector]
@@ -317,7 +317,7 @@ punbalancedness.default <- function(x, ...) {
 
   ii <- index(x)
   
-  if (ncol(ii) == 2) {
+  if (ncol(ii) == 2L) {
    ## original Ahrens/Pincus (1981)
     pdim <- pdim(x, ...)
     N <- pdim$nT$n # no. of individuals
@@ -329,12 +329,12 @@ punbalancedness.default <- function(x, ...) {
     r2 <- 1 / (N * (sum( (Ti/Totalobs)^2)))
     result <- c(gamma = r1, nu = r2)
   } else {
-    if (ncol(ii) == 3) {
+    if (ncol(ii) == 3L) {
      ## extension to nested model with additional group variable
      ## Baltagi/Song/Jung (2001), pp. 368-369
-      ids <- ii[[1]]
-      tss <- ii[[2]]
-      gps <- ii[[3]]
+      ids <- ii[[1L]]
+      tss <- ii[[2L]]
+      gps <- ii[[3L]]
       Tis <- unique(data.frame(tss, gps))
       Tis <- table(Tis$gps)               # no of max time periods per group
       Nis <- unique(data.frame(ids, gps))
@@ -463,8 +463,8 @@ pvar.default <- function(x, id, time, ...){
   id.variation_anyNA   <- rep(FALSE, len)
   lid <- split(x, id)   # these split() functions seem particularly slow
   ltime <- split(x, time)
-  if (is.list(x)){
-    if (len == 1){
+  if(is.list(x)){
+    if(len == 1L){
       # time variation
       temp_time.var          <- sapply(lid, function(x) sapply(x, myvar))
       temp_time.var_sumNoVar <- sum(temp_time.var == 0, na.rm = TRUE) # number of non-varying id-time comb. (without all NA groups)
@@ -545,8 +545,8 @@ pvar.data.frame <- function(x, index = NULL, ...){
 #' @export
 pvar.pdata.frame <- function(x, ...){
   index <- attr(x, "index")
-  id <- index[[1]]
-  time <- index[[2]]
+  id <- index[[1L]]
+  time <- index[[2L]]
   pvar.default(x, id, time)
 }
 
@@ -564,12 +564,12 @@ pvar.pseries <- function(x, ...){
 print.pvar <- function(x, ...){
   varnames <- names(x$time.variation)
   if(any(!x$time.variation)){
-    var <- varnames[x$time.variation==FALSE]
+    var <- varnames[x$time.variation == FALSE]
     #    if (!is.null(y)) var <- var[-which(var==y$id)]
     if (length(var)!=0) cat(paste("no time variation:      ", paste(var,collapse=" "),"\n"))
   }
   if(any(!x$id.variation)){
-    var <- varnames[x$id.variation==FALSE]
+    var <- varnames[x$id.variation == FALSE]
     #    if (!is.null(y)) var <- var[-which(var==y$time)]
     if(length(var)!=0) cat(paste("no individual variation:", paste(var,collapse=" "),"\n"))
   }
@@ -613,5 +613,3 @@ subset_pseries <- function(x, ...) {
   result <- add_pseries_features(result, index)
   return(result)
 }
-
-
