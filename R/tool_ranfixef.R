@@ -249,6 +249,10 @@ fixef.plm <- function(object, effect = NULL,
         
         tw.fixef.lvl <- tw.fixef.lvl[!duplicated(index(object)[[idx]])]
         names(tw.fixef.lvl) <- pdim[["panel.names"]][[idx]]
+      } else {
+        # everything already computed, just set names
+        names(tw.fixef.lvl) <- paste0(pdim[["panel.names"]][[1L]][index(object)[[1L]]], "-",
+                                      pdim[["panel.names"]][[2L]][index(object)[[2L]]])
       }
       
       tw.fixef <- switch(type,
