@@ -598,7 +598,7 @@ ercomp.formula <- function(object, data,
         theta$total <- theta$id + theta$time - 1 +
             (1 + Nts * sigma2["time"] / sigma2["idios"] +
                  Tns * sigma2["id"]   / sigma2["idios"]) ^ (-0.5)
-        names(theta$total) <- if(balanced) "total" else seq_len(O) # seq_len -> names are the row numbers
+        names(theta$total) <- if(balanced) "total" else paste0(names(theta$id), "-", names(theta$time))
         # tweak for numerical precision:
         # if either theta$id or theta$time is 0 => theta$total must be zero
         # but in calculation above some precision is lost
