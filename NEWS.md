@@ -35,6 +35,8 @@ plm()):
 * Between.matrix and (internal) Tapply.matrix: ellipsis (three dots) is passed on,
   allowing for, e.g., na.rm = TRUE (like already possible for between.matrix etc.).
 * Within.pseries/matrix: now handle na.rm argument in ellipsis.
+* fixef: calculation for two-way models fixed; type = "dmean" for unbalanced
+  models fixed (by using weighted.mean()).
 * index: gives warning if argument 'which' contains "confusing" values.
   "confusing": an index variable called by user 'id', 'time', or 'group' if it
   does not refer to the respective index (e.g., time index variable is called 'id'
@@ -45,8 +47,6 @@ plm()):
   (such as lag, diff, nobs, ...), so that the help systems offers to access the
   plm-specific documentation (regression introduced when pkg plm 2.0-0 adopted
   roxygen2 for documentation).
-* fixef: calculation for two-way models fixed; type = "dmean" for unbalanced
-  models fixed (by using weighted.mean()).
 * ercomp: cosmetic: if one of theta\$id, theta\$time is 0 => theta\$total must be 
   0 and is set to 0 (before, for some data and platforms, theta$total could be a
   very small positive or negative number, due to limited computational precision).
@@ -62,7 +62,9 @@ plm()):
 * ercomp: now faster by saving and re-using intermediate results.
 * dhat (non-exported function used in vcovXX/vcovG with type = "HC2" to "HC4"):
   now faster as diagonal of the quadratic form is calculated more efficiently.
-
+* pht(., model ="bmc") and plm(., inst.method = "bmc") now error informatively
+  (previously gave warnings) as "bms" is to be used for Breusch-Mizon-Schmidt IV
+  transformation.
 
 ### Dependencies:
  * Added package 'collapse' to 'Suggests'.

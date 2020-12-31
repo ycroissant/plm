@@ -331,11 +331,12 @@ plm <- function(formula, data, subset, weights, na.action,
     
     # Deprecated section
     
-    # accept "bmc" (a long-standing typo) for Breusch-Mizon-Schmidt
-    # due to backward compatibility
     if (length(inst.method) == 1 && inst.method == "bmc") {
+      # catch "bmc" (a long-standing typo) for Breusch-Mizon-Schmidt
+      # error since 2020-12-31 (R-Forge), was a warning before
+      # remove catch at some point in the future
       inst.method <- "bms"
-        warning(paste("Use of inst.method = \"bmc\" discouraged, set to \"bms\"",
+        stop(paste("Use of inst.method = \"bmc\" disallowed, set to \"bms\"",
                       "for Breusch-Mizon-Schmidt instrumental variable transformation"))
     }
     inst.method <- match.arg(inst.method)
