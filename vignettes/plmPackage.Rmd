@@ -765,11 +765,7 @@ transformation are printed.
 
 ### Unbalanced panels
 
-Most of the features of `plm` are implemented for unbalanced panel models
-with one notable exception:
-
-- there is no random two-ways effect model for `random.method = "nerlove"`.
-
+Estimations by `plm` support unbalanced panel models.
 
 The following example is using data used by @HARR:RUBI:78 to
 estimate an hedonic housing prices function. It is reproduced in

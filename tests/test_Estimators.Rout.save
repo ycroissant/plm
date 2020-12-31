@@ -454,8 +454,7 @@ Chisq: 843.335 on 2 DF, p-value: < 2.22e-16
 > plm_grunfeld_re_walhus_unbal  <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="walhus")
 > plm_grunfeld_re_amemiya_unbal <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="amemiya")
 > plm_grunfeld_re_swar_unbal    <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="swar")
-> ## not implemented
-> # plm_grunfeld_re_nerlove_unbal <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="nerlove")
+> plm_grunfeld_re_nerlove_unbal <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="nerlove")
 > 
 > summary(plm_grunfeld_be_unbal        )
 Oneway (individual) effect Between Model
@@ -612,7 +611,41 @@ Residual Sum of Squares: 549370
 R-Squared:      0.76951
 Adj. R-Squared: 0.76716
 Chisq: 654.521 on 2 DF, p-value: < 2.22e-16
-> # summary(plm_grunfeld_re_nerlove_unbal) # not implemented
+> summary(plm_grunfeld_re_nerlove_unbal)
+Oneway (individual) effect Random Effect Model 
+   (Nerlove's transformation)
+
+Call:
+plm(formula = inv ~ value + capital, data = Grunfeld_unbal, model = "random", 
+    random.method = "nerlove")
+
+Unbalanced Panel: n = 10, T = 19-20, N = 199
+
+Effects:
+                  var std.dev share
+idiosyncratic 2630.54   51.29 0.263
+individual    7371.22   85.86 0.737
+theta:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.8642  0.8676  0.8676  0.8673  0.8676  0.8676 
+
+Residuals:
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+-176.592  -19.821    4.568   -0.017   19.688  252.613 
+
+Coefficients:
+              Estimate Std. Error z-value Pr(>|z|)    
+(Intercept) -57.917118  30.158311 -1.9204   0.0548 .  
+value         0.109804   0.010601 10.3577   <2e-16 ***
+capital       0.308288   0.017203 17.9211   <2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    2368700
+Residual Sum of Squares: 546620
+R-Squared:      0.76923
+Adj. R-Squared: 0.76688
+Chisq: 653.474 on 2 DF, p-value: < 2.22e-16
 > 
 > #### oneway time unbalanced
 > plm_grunfeld_be_time_unbal         <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="between", effect = "time")
@@ -620,8 +653,7 @@ Chisq: 654.521 on 2 DF, p-value: < 2.22e-16
 > plm_grunfeld_re_walhus_time_unbal  <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="walhus",  effect = "time")
 > plm_grunfeld_re_amemiya_time_unbal <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="amemiya", effect = "time")
 > plm_grunfeld_re_swar_time_unbal    <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="swar",    effect = "time")
-> ## not implemented:
-> # plm_grunfeld_re_nerlove_time_unbal <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="nerlove", effect = "time")
+> plm_grunfeld_re_nerlove_time_unbal <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="nerlove", effect = "time")
 > 
 > summary(plm_grunfeld_be_time_unbal        )
 Oneway (time) effect Between Model
@@ -780,7 +812,41 @@ Residual Sum of Squares: 1754400
 R-Squared:      0.81216
 Adj. R-Squared: 0.81025
 Chisq: 847.453 on 2 DF, p-value: < 2.22e-16
-> # summary(plm_grunfeld_re_nerlove_time_unbal) # not implemented
+> summary(plm_grunfeld_re_nerlove_time_unbal)
+Oneway (time) effect Random Effect Model 
+   (Nerlove's transformation)
+
+Call:
+plm(formula = inv ~ value + capital, data = Grunfeld_unbal, effect = "time", 
+    model = "random", random.method = "nerlove")
+
+Unbalanced Panel: n = 10, T = 19-20, N = 199
+
+Effects:
+                  var std.dev share
+idiosyncratic 8602.31   92.75 0.974
+time           231.60   15.22 0.026
+theta:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.1028  0.1124  0.1124  0.1119  0.1124  0.1124 
+
+Residuals:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+-291.08  -28.31    5.81    0.00   34.04  370.70 
+
+Coefficients:
+               Estimate  Std. Error z-value  Pr(>|z|)    
+(Intercept) -42.8982645  10.2559971 -4.1827  2.88e-05 ***
+value         0.1158167   0.0058773 19.7057 < 2.2e-16 ***
+capital       0.2296520   0.0264490  8.6828 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    9201200
+Residual Sum of Squares: 1745500
+R-Squared:      0.81029
+Adj. R-Squared: 0.80836
+Chisq: 836.775 on 2 DF, p-value: < 2.22e-16
 > 
 > 
 > 
@@ -997,8 +1063,7 @@ Chisq: 554.874 on 2 DF, p-value: < 2.22e-16
 > plm_grunfeld_re_walhus_tw_unbal  <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="walhus",  effect = "twoways")
 > plm_grunfeld_re_amemiya_tw_unbal <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="amemiya", effect = "twoways")
 > plm_grunfeld_re_swar_tw_unbal    <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="swar",    effect = "twoways")
-> ## not implemented:
-> # plm_grunfeld_re_nerlove_tw_unbal <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="nerlove", effect = "twoways")
+> plm_grunfeld_re_nerlove_tw_unbal <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="nerlove", effect = "twoways")
 > 
 > ## IGNORE_RDIFF_BEGIN
 > summary(plm_grunfeld_pooled_tw_unbal    )
@@ -1166,7 +1231,44 @@ Residual Sum of Squares: 1838600
 R-Squared:      0.80587
 Adj. R-Squared: 0.80389
 Chisq: 1827600 on 2 DF, p-value: < 2.22e-16
-> # summary(plm_grunfeld_re_nerlove_tw_unbal) # not implemented
+> summary(plm_grunfeld_re_nerlove_tw_unbal)
+Twoways effects Random Effect Model 
+   (Nerlove's transformation)
+
+Call:
+plm(formula = inv ~ value + capital, data = Grunfeld_unbal, effect = "twoways", 
+    model = "random", random.method = "nerlove")
+
+Unbalanced Panel: n = 10, T = 19-20, N = 199
+
+Effects:
+                  var std.dev share
+idiosyncratic 2258.86   47.53 0.199
+individual    8507.69   92.24 0.750
+time           576.05   24.00 0.051
+theta:
+           Min.   1st Qu.    Median      Mean   3rd Qu.      Max.
+id    0.8826053 0.8855384 0.8855384 0.8852583 0.8855384 0.8855384
+time  0.4491128 0.4692672 0.4692672 0.4683557 0.4692672 0.4692672
+total 0.4474297 0.4674017 0.4674017 0.4664846 0.4674017 0.4674017
+
+Residuals:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+-352.09  -44.32   15.52   -0.16   51.19  321.29 
+
+Coefficients:
+               Estimate  Std. Error z-value  Pr(>|z|)    
+(Intercept) -6.9329e+01  6.7047e-01 -103.40 < 2.2e-16 ***
+value        1.1305e-01  2.2642e-04  499.27 < 2.2e-16 ***
+capital      3.3639e-01  3.9545e-04  850.66 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    9340000
+Residual Sum of Squares: 1935200
+R-Squared:      0.80335
+Adj. R-Squared: 0.80135
+Chisq: 1381720 on 2 DF, p-value: < 2.22e-16
 > ## IGNORE_RDIFF_END
 > 
 > ### "amemiya" and "swar" have the same idiosyncratic variance (both based on the within variance)
@@ -1629,4 +1731,4 @@ year1949 year1950 year1951 year1952 year1953
 > 
 > proc.time()
    user  system elapsed 
-   2.53    0.10    2.76 
+   2.64    0.23    2.92 

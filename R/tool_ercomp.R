@@ -123,12 +123,11 @@ ercomp.formula <- function(object, data,
     # select the relevant lines
 
     therows <- switch(effect,
-                      individual = 1:2,
-                      time = c(1, 3),
-                      twoways = 1:3)
+                      "individual" = 1:2,
+                      "time"       = c(1, 3),
+                      "twoways"    = 1:3)
 
-    if (! is.null(method) && method == "nerlove"){
-        if (! balanced) stop("Nerlove method only implemented for balanced models")
+    if(! is.null(method) && method == "nerlove") {
         est <- plm.fit(data, model = "within", effect = effect)
         pdim <- pdim(data)
         N <- pdim$nT$n
@@ -138,25 +137,62 @@ ercomp.formula <- function(object, data,
         s2nu <- deviance(est) / O
         # NB: Nerlove takes within residual sums of squares divided by #obs without df correction (Baltagi (2013), p. 23/45)
         s2eta <- s2mu <- NULL
-        if (effect != "time")
+        if(balanced) {
+          if (effect != "time")
             s2eta <- sum(fixef(est, type = "dmean", effect = "individual") ^ 2) / (N - 1)
-        if (effect != "individual")
+          if (effect != "individual")
             s2mu <- sum(fixef(est, type = "dmean", effect = "time") ^ 2) / (TS - 1)
-        sigma2 <- c(idios = s2nu, id = s2eta, time = s2mu)
-        theta <- list()
-        if (effect != "time")       theta$id   <- (1 - (1 + TS * sigma2["id"]   / sigma2["idios"]) ^ (-0.5))
-        if (effect != "individual") theta$time <- (1 - (1 + N  * sigma2["time"] / sigma2["idios"]) ^ (-0.5))
-        if (effect == "twoways") {
+          sigma2 <- c(idios = s2nu, id = s2eta, time = s2mu)
+          theta <- list()
+          if (effect != "time")       theta$id   <- (1 - (1 + TS * sigma2["id"]  / sigma2["idios"]) ^ (-0.5))
+          if (effect != "individual") theta$time <- (1 - (1 + N * sigma2["time"] / sigma2["idios"]) ^ (-0.5))
+          if (effect == "twoways") {
             theta$total <- theta$id + theta$time - 1 +
-                (1 + N * sigma2["time"] / sigma2["idios"] +
-                    TS * sigma2["id"]   / sigma2["idios"]) ^ (-0.5)
+              (1 + N * sigma2["time"] / sigma2["idios"] +
+                 TS * sigma2["id"]   / sigma2["idios"]) ^ (-0.5)
             names(theta$total) <- "total"
-               # tweak for numerical precision:
-            	  # if either theta$id or theta$time is 0 => theta$total must be zero
-            	  # but in calculation above some precision is lost
-        		if(  isTRUE(all.equal(sigma2[["time"]], 0, check.attributes = FALSE))
-        		  || isTRUE(all.equal(sigma2[["id"]],   0, check.attributes = FALSE)))
-        		 	     theta$total <- 0
+            # tweak for numerical precision:
+            # if either theta$id or theta$time is 0 => theta$total must be zero
+            # but in calculation above some precision is lost
+            if(    isTRUE(all.equal(sigma2[["time"]], 0, check.attributes = FALSE))
+                || isTRUE(all.equal(sigma2[["id"]],   0, check.attributes = FALSE)))
+              theta$total <- 0
+          }
+        } else {
+          # Nerlove unbalances as in Cottrell (2017), gretl working paper #4
+          # -> use weighting
+          # (albeit the formula for unbalanced panels reduce to the original
+          # Nerlove for balanced data, we keep it separated)
+          if (effect != "time")
+            s2eta <- sum( (fixef(est, type = "dmean", effect = "individual"))^2 * 
+                           pdim$Tint$Ti / pdim$nT$N) * (pdim$nT$n/(pdim$nT$n-1))
+          if (effect != "individual")
+            s2mu <- sum( (fixef(est, type = "dmean", effect = "time"))^2 *
+                          pdim$Tint$nt / pdim$nT$N) * (pdim$nT$T/(pdim$nT$T-1))
+          sigma2 <- c(idios = s2nu, id = s2eta, time = s2mu)
+          theta <- list()
+          
+          # Tns, Nts: full length
+          ids <- index(data)[[1L]]
+          tss <- index(data)[[2L]]
+          Tns <- pdim$Tint$Ti[as.character(ids)]
+          Nts <- pdim$Tint$nt[as.character(tss)]
+          
+          if (effect != "time")       theta$id   <- (1 - (1 + Tns * sigma2["id"]   / sigma2["idios"]) ^ (-0.5))
+          if (effect != "individual") theta$time <- (1 - (1 + Nts * sigma2["time"] / sigma2["idios"]) ^ (-0.5))
+          if (effect == "twoways") {
+            theta$total <- theta$id + theta$time - 1 +
+              (1 + Nts * sigma2["time"] / sigma2["idios"] +
+                   Tns * sigma2["id"]   / sigma2["idios"]) ^ (-0.5)
+            names(theta$total) <- paste0(names(theta$id), "-", names(theta$time))
+            # tweak for numerical precision:
+            # if either theta$id or theta$time is 0 => theta$total must be zero
+            # but in calculation above some precision is lost
+            if(    isTRUE(all.equal(sigma2[["time"]], 0, check.attributes = FALSE))
+                || isTRUE(all.equal(sigma2[["id"]],   0, check.attributes = FALSE)))
+              theta$total <- 0
+          
+          }
         }
         if (effect != "twoways") theta <- theta[[1L]]
         result <- list(sigma2 = sigma2, theta = theta)
@@ -496,7 +532,7 @@ ercomp.formula <- function(object, data,
                 CPZBetaSmu <- crossprod(ZBeta, ZSmu)
                 CPZM.CPZBetaSmu <- crossprod(CPZM, CPZBetaSmu)
                 CPZM.CPZBmuSeta <- crossprod(CPZM, CPZBmuSeta)
-                	## These are already calc. by effect != "individual" / effect != "time"
+                	## These are already calc. by effect != "individual" and effect != "time"
                 	# CPZM.CPZSmu <- crossprod(CPZM, CPZSmu) 
                 	# CPZM.CPZBmu <- crossprod(CPZM, CPZBmu)
                 	# CPZM.CPZBeta <- crossprod(CPZM, CPZBeta)

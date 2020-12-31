@@ -27,6 +27,8 @@ plm()):
 * fixef gained new argument value 'effect = "twoways"' to extract the
   sum of individual and time effect (for two-way models).
 * Sum is now exported.
+* plm/ercomp: random effect model estimation with Nerlove's method extended to
+  unbalanced panels by weighting of the fixed effects (Cottrell (2017)).
 
 
 ### Fixes:
