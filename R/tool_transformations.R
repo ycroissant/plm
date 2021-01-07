@@ -455,13 +455,13 @@ between.default <- function(x, effect, ...) {
 between.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
     effect <- match.arg(effect)
     index <- attr(x, "index")
-    effect <- switch(effect,
+    eff.fac <- switch(effect,
                      "individual" = index[[1L]],
                      "time"       = index[[2L]],
                      "group"      = index[[3L]],
                      )
-    x <- between.default(x, effect = effect, ...)
-    return(x)
+    res <- between.default(x, effect = eff.fac, ...)
+    return(res)
 }
 
 #' @rdname pseries
