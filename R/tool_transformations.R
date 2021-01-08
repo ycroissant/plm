@@ -373,18 +373,23 @@ Sum.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
 #' @rdname pseries
 #' @export
 Sum.matrix <- function(x, effect, ...) {
-    if(is.null(attr(x, "index"))) {
-      return(Sum.default(x, effect, ...))
-    } else {
-      if(!is.character(effect) && length(effect) > 1L)
-          stop("for matrices with index attributes, the effect argument must be a character")
-      if(! effect %in% c("individual", "time", "group"))
-          stop("irrelevant effect for a Sum transformation")
-    }
+  # if no index attribute, argument 'effect' is assumed to be a factor
+  eff.fac <- if(is.null(attr(x, "index"))) {
+    effect
+  } else {
+    if(!is.character(effect) && length(effect) > 1)
+      stop("for matrices with index attributes, the effect argument must be a character")
+    if(! effect %in% c("individual", "time", "group"))
+      stop("irrelevant effect for a between transformation")
+    eff.no <- switch(effect,
+                     "individual" = 1L,
+                     "time"       = 2L,
+                     "group"      = 3L,
+                     stop("unknown value of argument 'effect'"))
     xindex <- attr(x, "index")
-    effect <- index(xindex, effect)
-    #       Tapply(x, effect, sum, ...)
-    return(myave(x, effect, sum, ...))
+    xindex[ , eff.no]
+  }
+  return(myave(x, eff.fac, sum, ...))
 }
 
 #' @rdname pseries
@@ -413,20 +418,23 @@ Between.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
 #' @rdname pseries
 #' @export
 Between.matrix <- function(x, effect, ...) {
-    #YC20180916 In the previous version the matrix wasn't returned
-    #when there is no index attribute
-    if(is.null(attr(x, "index"))) {
-      return(Between.default(x, effect, ...))
-    } else {
-      if(!is.character(effect) && length(effect) > 1L)
-        stop("for matrices with index attributes, the effect argument must be a character")
-      if(! effect %in% c("individual", "time", "group"))
-          stop("irrelevant effect for a between transformation")  
-    }
+  # if no index attribute, argument 'effect' is assumed to be a factor
+  eff.fac <- if(is.null(attr(x, "index"))) {
+    effect
+  } else {
+    if(!is.character(effect) && length(effect) > 1)
+      stop("for matrices with index attributes, the effect argument must be a character")
+    if(! effect %in% c("individual", "time", "group"))
+      stop("irrelevant effect for a between transformation")
+    eff.no <- switch(effect,
+                     "individual" = 1L,
+                     "time"       = 2L,
+                     "group"      = 3L,
+                     stop("unknown value of argument 'effect'"))
     xindex <- attr(x, "index")
-    effect <- index(xindex, effect)
-    #       Tapply(x, effect, mean, ...)
-    return(myave.matrix(x, effect, mean, ...))
+    xindex[ , eff.no]
+  }
+  return(myave.matrix(x, eff.fac, mean, ...))
 }
 
 #' @rdname pseries
@@ -467,23 +475,28 @@ between.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
 #' @rdname pseries
 #' @export
 between.matrix <- function(x, effect, ...) {
-    if(is.null(attr(x, "index"))) {
-      return(between.default(x, effect, ...))
-    } else {
-      if(!is.character(effect) && length(effect) > 1L)
-        stop("for matrices with index attributes, the effect argument must be a character")
-      if(! effect %in% c("individual", "time", "group"))
-        stop("irrelevant effect for a between transformation")  
-    }
+  # if no index attribute, argument 'effect' is assumed to be a factor
+  eff.fac <- if(is.null(attr(x, "index"))) {
+    effect
+  } else {
+    if(!is.character(effect) && length(effect) > 1)
+      stop("for matrices with index attributes, the effect argument must be a character")
+    if(! effect %in% c("individual", "time", "group"))
+      stop("irrelevant effect for a between transformation")
+    eff.no <- switch(effect,
+                     "individual" = 1L,
+                     "time"       = 2L,
+                     "group"      = 3L,
+                     stop("unknown value of argument 'effect'"))
     xindex <- attr(x, "index")
-    effect <- index(xindex, effect)
-    #       res <- apply(x, 2, tapply, effect, mean, ...)
-    res <- apply(x, 2, FUN = function(x) ave(x, effect, FUN = function(y) mean(y, ...)))
-    # compress data down to #elements of index dimension:
-    keep <- !duplicated(effect)
-    res <- res[keep, ]
-    rownames(res) <- as.character(effect[keep])
-    return(res)
+    xindex[ , eff.no]
+  }
+  res <- apply(x, 2, FUN = function(x) ave(x, eff.fac, FUN = function(y) mean(y, ...)))
+  rownames(res) <- as.character(eff.fac)
+  # compress data down to #elements of index dimension:
+  keep <- !duplicated(eff.fac)
+  res <- res[keep, ]
+  return(res)
 }
 
 #' @rdname pseries
