@@ -158,35 +158,34 @@ Sum.pseries.collapse <- function(x, effect = c("individual", "time", "group"), .
 Sum.matrix.collapse <- function(x, effect, ...) {
 # print("Sum.matrix.collapse")
 # browser()
-		if(is.null(attr(x, "index"))) {
-			return(Sum.default(x, effect, ...))
+	# if no index attribute, argument 'effect' is assumed to be a factor
+		eff.fac <- if(is.null(attr(x, "index"))) {
+			effect
 		} else {
 			if(!is.character(effect) && length(effect) > 1)
 				stop("for matrices with index attributes, the effect argument must be a character")
 			if(! effect %in% c("individual", "time", "group"))
 				stop("irrelevant effect for a Sum transformation")
-		}
-		# translate arguments
-		dots <- match.call(expand.dots = FALSE)$`...`
-		na.rm <- if(is.null(dots[["na.rm"]])) { 
-			FALSE } # default of plm's functions
-		else { 
-			dots[["na.rm"]]
-		}
-		eff.no <- switch(effect,
-										 "individual" = 1L,
-										 "time"       = 2L,
-										 "group"      = 3L,
-										 stop("unknown value of argument 'effect'"))
-
-		xindex <- attr(x, "index")
-		eff.fac <- xindex[ , eff.no]
-		na.x <- is.na(x)
-		res <- collapse::fsum(x, g = eff.fac, w = NULL, na.rm = na.rm, drop = FALSE)
-		res <- res[eff.fac, ] # need to expand data to original length
-		rownames(res) <- as.character(eff.fac)
-		res[na.x] <- NA
-		return(res)
+			eff.no <- switch(effect,
+											 "individual" = 1L,
+											 "time"       = 2L,
+											 "group"      = 3L,
+											 stop("unknown value of argument 'effect'"))
+			xindex <- attr(x, "index")
+			xindex[ , eff.no]
+	}
+	dots <- match.call(expand.dots = FALSE)$`...`
+	na.rm <- if(is.null(dots[["na.rm"]])) { 
+		FALSE } # default of plm's functions
+	else { 
+		dots[["na.rm"]]
+	}
+	na.x <- is.na(x)
+	res <- collapse::fsum(x, g = eff.fac, w = NULL, na.rm = na.rm, drop = FALSE)
+	res <- res[eff.fac, ] # need to expand data to original length
+	rownames(res) <- as.character(eff.fac)
+	res[na.x] <- NA
+	return(res)
 }
 
 #### B/between ####
@@ -290,39 +289,32 @@ between.pseries.collapse <- function(x, effect = c("individual", "time", "group"
 Between.matrix.collapse <- function(x, effect, ...) {
 # print("Between.matrix.collapse")
 # browser()
-	
-	if(is.null(attr(x, "index"))) {
-		return(Between.default(x, effect, ...))
+	# if no index attribute, argument 'effect' is assumed to be a factor
+	eff.fac <- if(is.null(attr(x, "index"))) {
+		effect
 	} else {
-		if(!is.character(effect) && length(effect) > 1L)
+		if(!is.character(effect) && length(effect) > 1)
 			stop("for matrices with index attributes, the effect argument must be a character")
 		if(! effect %in% c("individual", "time", "group"))
-			stop("irrelevant effect for a between transformation")  
-	}	
-
-	# translate arguments
+			stop("irrelevant effect for a between transformation")
+		eff.no <- switch(effect,
+										 "individual" = 1L,
+										 "time"       = 2L,
+										 "group"      = 3L,
+										 stop("unknown value of argument 'effect'"))
+		xindex <- attr(x, "index")
+		xindex[ , eff.no]
+	}
 	dots <- match.call(expand.dots = FALSE)$`...`
 	na.rm <- if(is.null(dots[["na.rm"]])) { 
 		FALSE }# default of plm::between 
 	else { 
 		dots[["na.rm"]]
-	}	
-	effect <- if(!is.null(effect)) {
-		switch(effect,
-					 "individual" = 1L,
-					 "time"       = 2L,
-					 "group"      = 3L,
-					 stop("unknown value of argument 'effect'"))
-	} else {
-		1L # 1L is default of collapse::fbetween 
 	}
-	
-	i <- attr(x, "index")
-	i <- i[ , effect]
 	na.x <- is.na(x)
-	res <- collapse::fbetween(x, g = i, w = NULL, na.rm = na.rm, fill = TRUE)
+	res <- collapse::fbetween(x, g = eff.fac, w = NULL, na.rm = na.rm, fill = TRUE)
 	attr(res, "index") <- NULL
-	rownames(res) <- as.character(i)
+	rownames(res) <- as.character(eff.fac)
 	res[na.x] <- NA
 	return(res)
 }
@@ -330,38 +322,31 @@ Between.matrix.collapse <- function(x, effect, ...) {
 between.matrix.collapse <- function(x, effect, ...) {
 # print("between.matrix.collapse")
 # browser()
-	
-	if(is.null(attr(x, "index"))) {
-		return(between.default(x, effect, ...))
+	# if no index attribute, argument 'effect' is assumed to be a factor
+	eff.fac <- if(is.null(attr(x, "index"))) {
+		effect
 	} else {
-		if(!is.character(effect) && length(effect) > 1L)
+		if(!is.character(effect) && length(effect) > 1)
 			stop("for matrices with index attributes, the effect argument must be a character")
 		if(! effect %in% c("individual", "time", "group"))
-			stop("irrelevant effect for a between transformation")  
+			stop("irrelevant effect for a between transformation")
+		eff.no <- switch(effect,
+										 "individual" = 1L,
+										 "time"       = 2L,
+										 "group"      = 3L,
+										 stop("unknown value of argument 'effect'"))
+		xindex <- attr(x, "index")
+		xindex[ , eff.no]
 	}
-
-	# translate arguments	
 	dots <- match.call(expand.dots = FALSE)$`...`
 	na.rm <- if(is.null(dots[["na.rm"]])) { 
 		FALSE }# default of plm::between 
 	else { 
 		dots[["na.rm"]]
 	}
-	effect.no <- if(!is.null(effect)) {
-		switch(effect,
-					 "individual" = 1L,
-					 "time"       = 2L,
-					 "group"      = 3L,
-					 stop("unknown value of argument 'effect'"))
-	} else {
-		1L # 1L is default of collapse::fbetween 
-	}
-	
-	i <- attr(x, "index")
-	i <- i[ , effect.no]
-	res <- collapse::fbetween(x, g = i, w = NULL, na.rm = na.rm, fill = TRUE)
-	rownames(res) <- as.character(i)
-	res <- res[!duplicated(i), ]
+	res <- collapse::fbetween(x, g = eff.fac, w = NULL, na.rm = na.rm, fill = TRUE)
+	rownames(res) <- as.character(eff.fac)
+	res <- res[!duplicated(eff.fac), ]
 	return(res)
 }
 
@@ -488,15 +473,15 @@ Within.matrix.collapse <- function(x, effect, rm.null = TRUE, ...) {
 #### These are on par in the one-way cases but faster than collapse in the
 #### two-way case, esp. in the unbalanced two-way case
 #### (collapse 1.4.2, lfe 2.8-5.1).
-# Within.pseries.collapse.lfe <- function(x, effect = c("individual", "time", "group", "twoways"), ...) {
-# 	# print("fwithin.pseries.collapse")
+# Within.pseries.lfe <- function(x, effect = c("individual", "time", "group", "twoways"), ...) {
+# 	# print("fwithin.pseries.lfe")
 # 	# browser()
-# 	
+# 
 # 	effect <- match.arg(effect)
 # 	dots <- match.call(expand.dots = FALSE)$`...`
-# 	na.rm <- if(is.null(dots[["na.rm"]])) { 
-# 		FALSE }# default of plm::between 
-# 	else { 
+# 	na.rm <- if(is.null(dots[["na.rm"]])) {
+# 		FALSE }# default of plm::between
+# 	else {
 # 		dots[["na.rm"]]
 # 	}
 # 	if(effect != "twoways") {
@@ -512,22 +497,22 @@ Within.matrix.collapse <- function(x, effect, rm.null = TRUE, ...) {
 # 			xindex <- attr(x, "index")
 # 			eff.list <- list(xindex[[1L]], xindex[[2L]])
 # 			res <- unlist(lfe::demeanlist(x, fl = eff.list, na.rm = na.rm))
-# 			res <- add_pseries_features(res, i)
+# 			res <- plm:::add_pseries_features(res, xindex)
 # 		}
 # 	return(res)
 # }
-
-# Within.matrix.collapse.lfe <- function(x, effect, rm.null = TRUE, ...) {
-# # print("fwithin.matrix.collapse.lfe")
+# 
+# Within.matrix.lfe <- function(x, effect, rm.null = TRUE, ...) {
+# # print("fwithin.matrix.lfe")
 # # browser()
-# 	
+# 
 # 	dots <- match.call(expand.dots = FALSE)$`...`
 # 	na.rm <- if(is.null(dots[["na.rm"]])) {
 # 		FALSE }# default of plm::between
 # 	else {
 # 		dots[["na.rm"]]
 # 	}
-# 	
+# 
 # 	if(is.null(attr(x, "index"))) {
 # 		result <- Within.default(x, effect, ...)
 # 		othervar <- colSums(abs(x)) > sqrt(.Machine$double.eps)
@@ -545,7 +530,7 @@ Within.matrix.collapse <- function(x, effect, rm.null = TRUE, ...) {
 # 												"time"       = attr(x, "index")[[2L]],
 # 												"group"      = attr(x, "index")[[3L]],
 # 												stop("unknown value of argument 'effect'"))
-# 			
+# 
 # 			result <- collapse::fwithin(x, g = eff.fac, w = NULL, na.rm = na.rm, mean = 0)
 # 			# =(plm)= result <- x - Between(x, effect)
 # 		}

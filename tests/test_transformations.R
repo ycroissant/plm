@@ -14,8 +14,8 @@ data("Grunfeld", package = "plm")
 class(Grunfeld)
 Grunfeld[10, "inv"] <- NA
 pGrunfeld <- pdata.frame(Grunfeld, index = c("firm", "year"))
-#capital <- pGrunfeld$capital # PCGDP # TODO
-inv     <- pGrunfeld$inv      # LIFEEX # TODO
+#capital <- pGrunfeld$capital
+inv     <- pGrunfeld$inv
 rm.rows <- c(1:5,50:58, 154:160)
 pGrunfeld_unbal <-pGrunfeld[-rm.rows, ]
 inv_unbal <- pGrunfeld_unbal[ , "inv"]
