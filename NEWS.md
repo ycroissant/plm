@@ -2,10 +2,12 @@
 
 ### Speed up:
 Significant speed improvement (optional): A significant speed-up of the
-package is available by executing `pkg.plm.fast(TRUE)` once per session
-(switch-off by `pkg.plm.fast(FALSE)`) such that panel model estimations
-and others run faster.
-  
+package is available by a newly introduced option called `plm.fast` such that
+panel model estimations and others run faster. Set option `plm.fast` to `TRUE`
+(`options("plm.fast" = TRUE)`) for speed up, switch off by 
+`options("plm.fast" = FALSE)` (current default). See documentation `?plm.fast`
+for more information and a benchmarked example.
+
 Technically, the speed gains are achieved by weaving in the fast data
 transformation functions provided in Sebastian Krantz' package 'collapse',
 which needs to be installed ('Suggests' dependency).
@@ -18,7 +20,6 @@ plm()):
 * Sum,
 * Within.
 
-
 ### Features:
 * within_intercept gains argument 'return.model' (default is FALSE and the
   functions works as previously). If set to TRUE, a full model object is
@@ -29,7 +30,6 @@ plm()):
 * Sum is now exported.
 * plm/ercomp: random effect model estimation with Nerlove's method extended to
   unbalanced panels by weighting of the fixed effects (Cottrell (2017)).
-
 
 ### Fixes:
 * between.default: keeps original sequence of elements' occurrence (before,

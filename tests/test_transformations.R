@@ -288,7 +288,7 @@ xW1_mat_unbal_tw_narm <- Within(mat_unbal_wona, effect = "twoways", na.rm = TRUE
 collapse.avail <- if (!requireNamespace("collapse", quietly = TRUE)) FALSE else TRUE
 
 if(collapse.avail) {
-pkg.plm.fast(TRUE)
+options("plm.fast" = TRUE)
 
 
 #### Sum - default ####

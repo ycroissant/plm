@@ -104,11 +104,11 @@ man/pgrangertest.Rd -text
 man/pht.Rd -text
 man/phtest.Rd -text
 man/piest.Rd -text
-man/pkg.plm.fast.Rd -text
 man/pldv.Rd -text
 man/plm-deprecated.Rd -text
 man/plm-package.Rd -text
 man/plm.Rd -text
+man/plm.fast.Rd -text
 man/plmtest.Rd -text
 man/pmg.Rd -text
 man/pmodel.response.Rd -text

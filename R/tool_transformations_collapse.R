@@ -4,10 +4,8 @@
 ## 1) Give the base-R version of the functions defined in tool_transformations.R
 ##    a new name (*.baseR).
 ## 2) Implement wrapper switched which call the *.baseR or *.collapse versions
-##    based on the option plm.fast (a logical, the preferred way to set the
-##    option is via function pkg.plm.fast() but the option can be set directly
-##    via R's regular option mechanism). Unset option plm.fast results in the
-##    base-R versions of functions being used.
+##    based on the option plm.fast (a logical, can be set via R's regular option
+##    mechanism: options("plm.fast" = TRUE).
 
 ## ad 1) new name for base R functions defined in tool_transformations.R
 Sum.default.baseR <- plm:::Sum.default
@@ -26,24 +24,28 @@ Within.default.baseR <- plm:::Within.default
 Within.pseries.baseR <- plm:::Within.pseries
 Within.matrix.baseR  <- plm:::Within.matrix
 
+
 ## ad 2) implement wrapper switches
 
 #### Sum wrapper switches ####
 Sum.default <- function(x, effect, ...) {
 	if(!isTRUE(getOption("plm.fast"))) {
 		Sum.default.baseR(x, effect, ...) } else {
+		if(!avail.collapse()) stop(txt.no.collapse, call. = FALSE)
 		Sum.default.collapse(x, effect, ...) }
 }
 
 Sum.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
 	if(!isTRUE(getOption("plm.fast"))) {
 		Sum.pseries.baseR(x, effect, ...) } else {
+		if(!avail.collapse()) stop(txt.no.collapse, call. = FALSE)
 		Sum.pseries.collapse(x, effect, ...) }
 }
 
 Sum.matrix <- function(x, effect, ...) {
 	if(!isTRUE(getOption("plm.fast"))) {
 		Sum.matrix.baseR(x, effect, ...) } else {
+		if(!avail.collapse()) stop(txt.no.collapse, call. = FALSE)
 		Sum.matrix.collapse(x, effect, ...) }
 }
 
@@ -51,18 +53,21 @@ Sum.matrix <- function(x, effect, ...) {
 Between.default <- function(x, effect, ...) {
 	if(!isTRUE(getOption("plm.fast"))) {
 		Between.default.baseR(x, effect, ...) } else {
+		if(!avail.collapse()) stop(txt.no.collapse, call. = FALSE)
 		Between.default.collapse(x, effect, ...) }
 }
 	
 Between.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
 	if(!isTRUE(getOption("plm.fast"))) {
 		Between.pseries.baseR(x, effect, ...) } else {
+		if(!avail.collapse()) stop(txt.no.collapse, call. = FALSE)
 		Between.pseries.collapse(x, effect, ...) }
 }
 
 Between.matrix <- function(x, effect, ...) {
 	if(!isTRUE(getOption("plm.fast"))) {
 		Between.matrix.baseR(x, effect, ...) } else {
+		if(!avail.collapse()) stop(txt.no.collapse, call. = FALSE)
 		Between.matrix.collapse(x, effect, ...) }
 }
 
@@ -70,18 +75,21 @@ Between.matrix <- function(x, effect, ...) {
 between.default <- function(x, effect, ...) {
   if(!isTRUE(getOption("plm.fast"))) {
      between.default.baseR(x, effect, ...) } else {
+     if(!avail.collapse()) stop(txt.no.collapse, call. = FALSE)
      between.default.collapse(x, effect, ...) }
 }
 
 between.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
 	if(!isTRUE(getOption("plm.fast"))) {
 		between.pseries.baseR(x, effect, ...) } else {
+		if(!avail.collapse()) stop(txt.no.collapse, call. = FALSE)
 		between.pseries.collapse(x, effect, ...) }
 }
 
 between.matrix <- function(x, effect, ...) {
 	if(!isTRUE(getOption("plm.fast"))) {
 		between.matrix.baseR(x, effect, ...) } else {
+		if(!avail.collapse()) stop(txt.no.collapse, call. = FALSE)
 		between.matrix.collapse(x, effect, ...) }
 }
 
@@ -89,18 +97,21 @@ between.matrix <- function(x, effect, ...) {
 Within.default <- function(x, effect, ...) {
 	if(!isTRUE(getOption("plm.fast"))) {
 		Within.default.baseR(x, effect, ...) } else {
+		if(!avail.collapse()) stop(txt.no.collapse, call. = FALSE)
 		Within.default.collapse(x, effect, ...) }
 }
 
 Within.pseries <- function(x, effect = c("individual", "time", "group", "twoways"), ...) {
 	if(!isTRUE(getOption("plm.fast"))) {
 		Within.pseries.baseR(x, effect, ...) } else {
+		if(!avail.collapse()) stop(txt.no.collapse, call. = FALSE)
 		Within.pseries.collapse(x, effect, ...) }
 }
 
 Within.matrix <- function(x, effect, rm.null = TRUE, ...) {
 	if(!isTRUE(getOption("plm.fast"))) {
 		Within.matrix.baseR(x, effect, ...) } else {
+		if(!avail.collapse()) stop(txt.no.collapse, call. = FALSE)
 		Within.matrix.collapse(x, effect, ...) }
 }
 
@@ -546,25 +557,24 @@ Within.matrix.collapse <- function(x, effect, rm.null = TRUE, ...) {
 # }
 
 
-#' Function to Switch On/Off Fast Data Transformations
+#' Option to Switch On/Off Fast Data Transformations
 #' 
 #' A significant speed up can be gained by using fast (panel) data transformation
-#' functions from package `collapse`. By default, this speed up is not enabled
-#' and function `pkg.plm.fast` can be used to enable/disable the speed up.
+#' functions from package `collapse`.
+#' @details By default, this speed up is not enabled.
+#' Option `plm.fast` can be used to enable/disable the speed up. The option is
+#' evaluated prior to execution of supported transformations (see below), so 
+#' `option("plm.fast" = TRUE)` enables the speed up while 
+#' `option("plm.fast" = FALSE)` disables the speed up.
 #' 
-#' The package `collapse` provides fast data transformation functions written
+#' See **Examples** for how to use the option and for a benchmarking example.
+#'
+#' By default, package `plm` uses base R implementations and R-based code. The
+#' package `collapse` provides fast data transformation functions written
 #' in C/C++, among them some especially suitable for panel data.
-#' 
-#' By default, package `plm` uses base R implementations and R-based code
-#' in from package `plm`. A significant speed-up can be gained by using the
-#' functions provided in package `collapse`.
-#' To enable the speed-up, execute `pkg.plm.fast(use = TRUE)` once per session.
-#' The package will then make use of the faster functions until the session
-#' ends or the speed-up is disabled by executing `pkg.plm.fast(use = FALSE)`.
-#' 
-#' Having package `collapse` installed is a requirement for this function and
-#' the speed up. However, this package currently not a hard dependency for
-#' package `plm` but a 'Suggests' dependency.
+#' Having package `collapse` installed is a requirement for the speed up.
+#' However, this package is currently not a hard dependency for package `plm`
+#' but a 'Suggests' dependency.
 #' 
 #' Currently, these functions benefit from the speed-up (more functions are
 #' under investigation):
@@ -575,14 +585,8 @@ Within.matrix.collapse <- function(x, effect, rm.null = TRUE, ...) {
 #'   \item Within.
 #' }
 #' 
-#' @param use logical, indicating whether the fast data transformations shall
-#' be turned on (`TRUE`, the default) or off again (`FALSE`).
-#' @param suppressPrint logical (default is `FALSE`), indicating whether the
-#' function shall print messages about (de-)activation of the fast functions.
-#' @return A logical (`TRUE` if `use = TRUE` was set, `FALSE` if `use = FALSE`),
-#' returned invisibly.
-#' @seealso [package 'collapse' on CRAN](https://cran.r-project.org/package=collapse)
-#' @export
+#' @name plm.fast
+#' @keywords sysdata manip
 #' @examples
 #' \dontrun{
 #' ### A benchmark plm without and with speed-up
@@ -608,52 +612,38 @@ Within.matrix.collapse <- function(x, effect, rm.null = TRUE, ...) {
 #' # data <- na.omit(data)
 #' # pdim(data) # Unbalanced Panel: n = 13300, T = 1-31, N = 93900
 #'
-#' pkg.plm.fast(use = FALSE) # default: fast functions of 'collapse' not in use
-#' times <- 3 # no. of repetitions for benchmark
-#' bench_res_plm <- microbenchmark(
+#' options("plm.fast" = FALSE) # default: fast functions of 'collapse' not in use
+#' times <- 3 # no. of repetitions for benchmark - this takes quite long!
+#' bench_res_plm_baseR <- microbenchmark(
 #'   plm(form, data = data, model = "within"),
 #'   plm(form, data = data, model = "within", effect = "twoways"),
 #'   plm(form, data = data, model = "random"),
 #'   plm(form, data = data, model = "random", effect = "twoways"),
 #'  times = times)
 #'
-#' pkg.plm.fast(use = TRUE)
-#' bench_res_collapse <- microbenchmark(
+#' options("plm.fast" = TRUE)
+#' bench_res_plm_collapse <- microbenchmark(
 #'   plm(form, data = data, model = "within"),
 #'   plm(form, data = data, model = "within", effect = "twoways"),
 #'   plm(form, data = data, model = "random"),
 #'   plm(form, data = data, model = "random", effect = "twoways"),
 #'  times = times)
-#' print(bench_res_plm,      unit = "s")
-#' print(bench_res_collapse, unit = "s")
+#' print(bench_res_plm_baseR,    unit = "s")
+#' print(bench_res_plm_collapse, unit = "s")
 #' }
-pkg.plm.fast <- function(use = TRUE, suppressPrint = FALSE) {
-  if(use == TRUE) {
-    if(!requireNamespace("collapse", quietly = TRUE)) {
-      stop(paste("package 'collapse' needed to use fast data transformation functions.",
-								 "Please install it, e.g., with 'install.packages(\"collapse\")"),
-					 call. = FALSE)
-    }
+NULL
 
-    if(isTRUE(getOption("plm.fast"))) {
-       if(!suppressPrint) print("fast data transformations of package 'collapse' were already enabled; enabled again...")
-    } else {
-      if(!suppressPrint) print("plm will now use package 'collapse' for fast data transformations")
-      # set option
-      options("plm.fast" = TRUE)
-    }
-    res <- TRUE
-
-  } else { ## use = FALSE
-
-    if(!isTRUE(getOption("plm.fast"))) {
-      if(!suppressPrint) print("fast data transformations of package 'collapse' where already disabled; disabled again...")
-    } else {
-      if(!suppressPrint) print("disabled using package 'collapse' for fast data transformations")
-      # set option
-      options("plm.fast" = FALSE)
-    }
-    res <- FALSE
-  }
-  invisible(res)
+## helper function, non-exported
+avail.collapse <- function() {
+	res <- if(!requireNamespace("collapse", quietly = TRUE)) {
+		FALSE
+	} else {
+		TRUE
+	}
+	invisible(res)
 }
+
+txt.no.collapse <- paste("option(\"plm.fast\") is set to TRUE but package 'collapse'",
+												 "is not available which is needed for fast data transformation functions.",
+												 "Either set 'options(\"plm.fast\" = FALSE)' or install the",
+												 "missing package, e.g., with 'install.packages(\"collapse\")")

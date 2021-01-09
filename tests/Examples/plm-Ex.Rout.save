@@ -9182,64 +9182,6 @@ alternative hypothesis: within specification does not apply
 > 
 > 
 > cleanEx()
-> nameEx("pkg.plm.fast")
-> ### * pkg.plm.fast
-> 
-> flush(stderr()); flush(stdout())
-> 
-> ### Name: pkg.plm.fast
-> ### Title: Function to Switch On/Off Fast Data Transformations
-> ### Aliases: pkg.plm.fast
-> 
-> ### ** Examples
-> 
-> ## Not run: 
-> ##D ### A benchmark plm without and with speed-up
-> ##D library("plm")
-> ##D library("collapse")
-> ##D library("microbenchmark")
-> ##D rm(list = ls())
-> ##D data("wlddev", package = "collapse")
-> ##D form <- LIFEEX ~ PCGDP + GINI
-> ##D 
-> ##D # produce big data set (taken from collapse's vignette)
-> ##D wlddevsmall <- get_vars(wlddev, c("iso3c","year","OECD","PCGDP","LIFEEX","GINI","ODA"))
-> ##D wlddevsmall$iso3c <- as.character(wlddevsmall$iso3c)
-> ##D data <- replicate(100, wlddevsmall, simplify = FALSE)
-> ##D rm(wlddevsmall)
-> ##D uniquify <- function(x, i) {
-> ##D 	x$iso3c <- paste0(x$iso3c, i)
-> ##D 	x
-> ##D }
-> ##D data <- unlist2d(Map(uniquify, data, as.list(1:100)), idcols = FALSE)
-> ##D data <- pdata.frame(data, index = c("iso3c", "year"))
-> ##D pdim(data) # Balanced Panel: n = 21600, T = 59, N = 1274400 // but many NAs
-> ##D # data <- na.omit(data)
-> ##D # pdim(data) # Unbalanced Panel: n = 13300, T = 1-31, N = 93900
-> ##D 
-> ##D pkg.plm.fast(use = FALSE) # default: fast functions of 'collapse' not in use
-> ##D times <- 3 # no. of repetitions for benchmark
-> ##D bench_res_plm <- microbenchmark(
-> ##D   plm(form, data = data, model = "within"),
-> ##D   plm(form, data = data, model = "within", effect = "twoways"),
-> ##D   plm(form, data = data, model = "random"),
-> ##D   plm(form, data = data, model = "random", effect = "twoways"),
-> ##D  times = times)
-> ##D 
-> ##D pkg.plm.fast(use = TRUE)
-> ##D bench_res_collapse <- microbenchmark(
-> ##D   plm(form, data = data, model = "within"),
-> ##D   plm(form, data = data, model = "within", effect = "twoways"),
-> ##D   plm(form, data = data, model = "random"),
-> ##D   plm(form, data = data, model = "random", effect = "twoways"),
-> ##D  times = times)
-> ##D print(bench_res_plm,      unit = "s")
-> ##D print(bench_res_collapse, unit = "s")
-> ## End(Not run)
-> 
-> 
-> 
-> cleanEx()
 > nameEx("plm-package")
 > ### * plm-package
 > 
@@ -9686,6 +9628,65 @@ R-Squared:      0.60948
 Adj. R-Squared: 0.60835
 Chisq: 6879.2 on 12 DF, p-value: < 2.22e-16
 > 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("plm.fast")
+> ### * plm.fast
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: plm.fast
+> ### Title: Option to Switch On/Off Fast Data Transformations
+> ### Aliases: plm.fast
+> ### Keywords: manip sysdata
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D ### A benchmark plm without and with speed-up
+> ##D library("plm")
+> ##D library("collapse")
+> ##D library("microbenchmark")
+> ##D rm(list = ls())
+> ##D data("wlddev", package = "collapse")
+> ##D form <- LIFEEX ~ PCGDP + GINI
+> ##D 
+> ##D # produce big data set (taken from collapse's vignette)
+> ##D wlddevsmall <- get_vars(wlddev, c("iso3c","year","OECD","PCGDP","LIFEEX","GINI","ODA"))
+> ##D wlddevsmall$iso3c <- as.character(wlddevsmall$iso3c)
+> ##D data <- replicate(100, wlddevsmall, simplify = FALSE)
+> ##D rm(wlddevsmall)
+> ##D uniquify <- function(x, i) {
+> ##D 	x$iso3c <- paste0(x$iso3c, i)
+> ##D 	x
+> ##D }
+> ##D data <- unlist2d(Map(uniquify, data, as.list(1:100)), idcols = FALSE)
+> ##D data <- pdata.frame(data, index = c("iso3c", "year"))
+> ##D pdim(data) # Balanced Panel: n = 21600, T = 59, N = 1274400 // but many NAs
+> ##D # data <- na.omit(data)
+> ##D # pdim(data) # Unbalanced Panel: n = 13300, T = 1-31, N = 93900
+> ##D 
+> ##D options("plm.fast" = FALSE) # default: fast functions of 'collapse' not in use
+> ##D times <- 3 # no. of repetitions for benchmark - this takes quite long!
+> ##D bench_res_plm_baseR <- microbenchmark(
+> ##D   plm(form, data = data, model = "within"),
+> ##D   plm(form, data = data, model = "within", effect = "twoways"),
+> ##D   plm(form, data = data, model = "random"),
+> ##D   plm(form, data = data, model = "random", effect = "twoways"),
+> ##D  times = times)
+> ##D 
+> ##D options("plm.fast" = TRUE)
+> ##D bench_res_plm_collapse <- microbenchmark(
+> ##D   plm(form, data = data, model = "within"),
+> ##D   plm(form, data = data, model = "within", effect = "twoways"),
+> ##D   plm(form, data = data, model = "random"),
+> ##D   plm(form, data = data, model = "random", effect = "twoways"),
+> ##D  times = times)
+> ##D print(bench_res_plm_baseR,    unit = "s")
+> ##D print(bench_res_plm_collapse, unit = "s")
+> ## End(Not run)
 > 
 > 
 > 
@@ -14549,7 +14550,7 @@ F-statistic: 309.014 on 2 and 197 DF, p-value: < 2.22e-16
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  10.24 0.33 10.64 NA NA 
+Time elapsed:  10.42 0.5 11.03 NA NA 
 > grDevices::dev.off()
 null device 
           1 

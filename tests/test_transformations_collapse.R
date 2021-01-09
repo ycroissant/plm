@@ -47,7 +47,7 @@ attr(mat_unbal_wona, "index") <- index(pwlddev[-attr(wlddev_unbal_wona, "na.acti
 #### Sum - default ####
 
 # individual
-pkg.plm.fast(FALSE)
+options("plm.fast" = FALSE)
 
 S1_d_ind      <- plm:::Sum.default(as.numeric(LIFEEX), effect = index(LIFEEX)[[1L]]) # default
 S1_d_ind_narm <- plm:::Sum.default(as.numeric(LIFEEX), effect = index(LIFEEX)[[1L]], na.rm = TRUE)
@@ -55,7 +55,7 @@ S1_d_ind_narm <- plm:::Sum.default(as.numeric(LIFEEX), effect = index(LIFEEX)[[1
 S1_d_ind_unbal      <- plm:::Sum.default(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[1L]]) # default
 S1_d_ind_narm_unbal <- plm:::Sum.default(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[1L]], na.rm = TRUE)
 
-pkg.plm.fast(TRUE)
+options("plm.fast" = TRUE)
 
 S2_d_ind_unbal      <- plm:::Sum.default(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[1L]]) # default
 S2_d_ind_narm_unbal <- plm:::Sum.default(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[1L]], na.rm = TRUE)
@@ -69,7 +69,7 @@ stopifnot(isTRUE(all.equal(S1_d_ind_unbal,      S2_d_ind_unbal,      check.attri
 stopifnot(isTRUE(all.equal(S1_d_ind_narm_unbal, S2_d_ind_narm_unbal, check.attributes = TRUE))) # TRUE
 
 # time
-pkg.plm.fast(FALSE)
+options("plm.fast" = FALSE)
 
 S1_d_ti      <- plm:::Sum.default(as.numeric(LIFEEX), effect = index(LIFEEX)[[2L]]) # default
 S1_d_ti_narm <- plm:::Sum.default(as.numeric(LIFEEX), effect = index(LIFEEX)[[2L]], na.rm = TRUE)
@@ -77,7 +77,7 @@ S1_d_ti_narm <- plm:::Sum.default(as.numeric(LIFEEX), effect = index(LIFEEX)[[2L
 S1_d_ti_unbal      <- plm:::Sum.default(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[2L]]) # default
 S1_d_ti_narm_unbal <- plm:::Sum.default(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[2L]], na.rm = TRUE)
 
-pkg.plm.fast(TRUE)
+options("plm.fast" = TRUE)
 
 S2_d_ti      <- plm:::Sum.default(as.numeric(LIFEEX), effect = index(LIFEEX)[[2L]]) # default
 S2_d_ti_narm <- plm:::Sum.default(as.numeric(LIFEEX), effect = index(LIFEEX)[[2L]], na.rm = TRUE)
@@ -93,7 +93,7 @@ stopifnot(isTRUE(all.equal(S1_d_ti_narm_unbal, S2_d_ti_narm_unbal, check.attribu
 #### Sum - pseries ####
 
 # individual
-pkg.plm.fast(FALSE)
+options("plm.fast" = FALSE)
 
 S1_ind      <- plm:::Sum.pseries(LIFEEX, effect = "individual") # default
 S1_ind_narm <- plm:::Sum.pseries(LIFEEX, effect = "individual", na.rm = TRUE)
@@ -101,7 +101,7 @@ S1_ind_narm <- plm:::Sum.pseries(LIFEEX, effect = "individual", na.rm = TRUE)
 S1_ind_unbal      <- plm:::Sum.pseries(LIFEEX_unbal, effect = "individual") # default
 S1_ind_narm_unbal <- plm:::Sum.pseries(LIFEEX_unbal, effect = "individual", na.rm = TRUE)
 
-pkg.plm.fast(TRUE)
+options("plm.fast" = TRUE)
 
 S2_ind      <- plm:::Sum.pseries(LIFEEX, effect = "individual") # default
 S2_ind_narm <- plm:::Sum.pseries(LIFEEX, effect = "individual", na.rm = TRUE)
@@ -115,7 +115,7 @@ stopifnot(isTRUE(all.equal(S1_ind_unbal,      S2_ind_unbal,      check.attribute
 stopifnot(isTRUE(all.equal(S1_ind_narm_unbal, S2_ind_narm_unbal, check.attributes = TRUE))) # TRUE
 
 # time
-pkg.plm.fast(FALSE)
+options("plm.fast" = FALSE)
 
 S1_ti      <- plm:::Sum.pseries(LIFEEX, effect = "time") # default
 S1_ti_narm <- plm:::Sum.pseries(LIFEEX, effect = "time", na.rm = TRUE)
@@ -123,7 +123,7 @@ S1_ti_narm <- plm:::Sum.pseries(LIFEEX, effect = "time", na.rm = TRUE)
 S1_ti_unbal      <- plm:::Sum.pseries(LIFEEX_unbal, effect = "time") # default
 S1_ti_narm_unbal <- plm:::Sum.pseries(LIFEEX_unbal, effect = "time", na.rm = TRUE)
 
-pkg.plm.fast(TRUE)
+options("plm.fast" = TRUE)
 
 S2_ti      <- plm:::Sum.pseries(LIFEEX, effect = "time") # default
 S2_ti_narm <- plm:::Sum.pseries(LIFEEX, effect = "time", na.rm = TRUE)
@@ -139,7 +139,7 @@ stopifnot(isTRUE(all.equal(S1_ti_narm_unbal, S2_ti_narm_unbal, check.attributes 
 #### Sum - matrix ####
 
 # individual
-pkg.plm.fast(FALSE)
+options("plm.fast" = FALSE)
 
 S1_mat_ind      <- plm:::Sum.matrix(mat, effect = "individual") # default
 S1_mat_ind_narm <- plm:::Sum.matrix(mat, effect = "individual", na.rm = TRUE)
@@ -153,7 +153,7 @@ S1_mat_ind_narm_unbal <- plm:::Sum.matrix(mat_unbal, effect = "individual", na.r
 S1_mat_no_index_ind_unbal      <- plm:::Sum.matrix(mat_noindex_unbal, effect = mat_index_unbal[[1L]]) # default
 S1_mat_no_index_ind_narm_unbal <- plm:::Sum.matrix(mat_noindex_unbal, effect = mat_index_unbal[[1L]], na.rm = TRUE)
 
-pkg.plm.fast(TRUE)
+options("plm.fast" = TRUE)
 
 S2_mat_ind      <- plm:::Sum.matrix(mat, effect = "individual") # default
 S2_mat_ind_narm <- plm:::Sum.matrix(mat, effect = "individual", na.rm = TRUE)
@@ -178,7 +178,7 @@ stopifnot(isTRUE(all.equal(S1_mat_no_index_ind_unbal,      S2_mat_no_index_ind_u
 stopifnot(isTRUE(all.equal(S1_mat_no_index_ind_narm_unbal, S2_mat_no_index_ind_narm_unbal, check.attributes = TRUE))) # TRUE
 
 # time
-pkg.plm.fast(FALSE)
+options("plm.fast" = FALSE)
 
 S1_mat_ti      <- plm:::Sum.matrix(mat, effect = "time") # default
 S1_mat_ti_narm <- plm:::Sum.matrix(mat, effect = "time", na.rm = TRUE)
@@ -192,7 +192,7 @@ S1_mat_ti_narm_unbal <- plm:::Sum.matrix(mat_unbal, effect = "time", na.rm = TRU
 S1_mat_no_index_ti_unbal      <- plm:::Sum.matrix(mat_noindex_unbal, effect = mat_index_unbal[[2L]]) # default
 S1_mat_no_index_ti_narm_unbal <- plm:::Sum.matrix(mat_noindex_unbal, effect = mat_index_unbal[[2L]], na.rm = TRUE)
 
-pkg.plm.fast(TRUE)
+options("plm.fast" = TRUE)
 
 S2_mat_ti      <- plm:::Sum.matrix(mat, effect = "time") # default
 S2_mat_ti_narm <- plm:::Sum.matrix(mat, effect = "time", na.rm = TRUE)
@@ -219,7 +219,7 @@ stopifnot(isTRUE(all.equal(S1_mat_no_index_ti_narm_unbal, S2_mat_no_index_ti_nar
 #### between/Between - default ####
 
 # individual
-pkg.plm.fast(FALSE)
+options("plm.fast" = FALSE)
 
 b1_d_ind      <- plm:::between.default(as.numeric(LIFEEX), effect = index(LIFEEX)[[1L]]) # default
 b1_d_ind_narm <- plm:::between.default(as.numeric(LIFEEX), effect = index(LIFEEX)[[1L]], na.rm = TRUE)
@@ -233,7 +233,7 @@ B1_d_ind_narm <- plm:::Between.default(as.numeric(LIFEEX), effect = index(LIFEEX
 B1_d_ind_unbal      <- plm:::Between.default(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[1L]]) # default
 B1_d_ind_narm_unbal <- plm:::Between.default(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[1L]], na.rm = TRUE)
 
-pkg.plm.fast(TRUE)
+options("plm.fast" = TRUE)
 
 b2_d_ind      <- plm:::between.default(as.numeric(LIFEEX), effect = index(LIFEEX)[[1L]]) # default
 b2_d_ind_narm <- plm:::between.default(as.numeric(LIFEEX), effect = index(LIFEEX)[[1L]], na.rm = TRUE)
@@ -258,7 +258,7 @@ stopifnot(isTRUE(all.equal(B1_d_ind_unbal,      B2_d_ind_unbal,      check.attri
 stopifnot(isTRUE(all.equal(B1_d_ind_narm_unbal, B2_d_ind_narm_unbal, check.attributes = TRUE))) # TRUE
 
 # time
-pkg.plm.fast(FALSE)
+options("plm.fast" = FALSE)
 
 b1_d_ti      <- plm:::between.default(as.numeric(LIFEEX), effect = index(LIFEEX)[[2L]]) # default
 b1_d_ti_narm <- plm:::between.default(as.numeric(LIFEEX), effect = index(LIFEEX)[[2L]], na.rm = TRUE)
@@ -272,7 +272,7 @@ B1_d_ti_narm <- plm:::Between.default(as.numeric(LIFEEX), effect = index(LIFEEX)
 B1_d_ti_unbal      <- plm:::Between.default(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[2L]]) # default
 B1_d_ti_narm_unbal <- plm:::Between.default(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[2L]], na.rm = TRUE)
 
-pkg.plm.fast(TRUE)
+options("plm.fast" = TRUE)
 
 b2_d_ti      <- plm:::between.default(as.numeric(LIFEEX), effect = index(LIFEEX)[[2L]]) # default
 b2_d_ti_narm <- plm:::between.default(as.numeric(LIFEEX), effect = index(LIFEEX)[[2L]], na.rm = TRUE)
@@ -298,7 +298,7 @@ stopifnot(isTRUE(all.equal(B1_d_ti_narm_unbal, B2_d_ti_narm_unbal, check.attribu
 
 #### between/Between - pseries ####
 
-pkg.plm.fast(FALSE)
+options("plm.fast" = FALSE)
 
 b1_ind      <- plm:::between.pseries(LIFEEX, effect = "individual") # default
 b1_ind_narm <- plm:::between.pseries(LIFEEX, effect = "individual", na.rm = TRUE)
@@ -312,7 +312,7 @@ B1_ind_narm <- plm:::Between.pseries(LIFEEX, effect = "individual", na.rm = TRUE
 B1_ind_unbal      <- plm:::Between.pseries(LIFEEX_unbal, effect = "individual") # default
 B1_ind_unbal_narm <- plm:::Between.pseries(LIFEEX_unbal, effect = "individual", na.rm = TRUE)
 
-pkg.plm.fast(TRUE)
+options("plm.fast" = TRUE)
 
 b2_ind       <- plm:::between.pseries(LIFEEX, effect = "individual")
 b2_ind_narm  <- plm:::between.pseries(LIFEEX, effect = "individual", na.rm = TRUE)
@@ -337,7 +337,7 @@ stopifnot(isTRUE(all.equal(B1_ind_unbal,      B2_ind_unbal,      check.attribute
 stopifnot(isTRUE(all.equal(B1_ind_unbal_narm, B2_ind_unbal_narm, check.attributes = TRUE))) # TRUE
 
 # time
-pkg.plm.fast(FALSE)
+options("plm.fast" = FALSE)
 
 b1_ti      <- plm:::between.pseries(LIFEEX, effect = "time") # default
 b1_ti_narm <- plm:::between.pseries(LIFEEX, effect = "time", na.rm = TRUE)
@@ -351,7 +351,7 @@ B1_ti_narm <- plm:::Between.pseries(LIFEEX, effect = "time", na.rm = TRUE)
 B1_ti_unbal      <- plm:::Between.pseries(LIFEEX_unbal, effect = "time") # default
 B1_ti_unbal_narm <- plm:::Between.pseries(LIFEEX_unbal, effect = "time", na.rm = TRUE)
 
-pkg.plm.fast(TRUE)
+options("plm.fast" = TRUE)
 
 b2_ti       <- plm:::between.pseries(LIFEEX, effect = "time")
 b2_ti_narm  <- plm:::between.pseries(LIFEEX, effect = "time", na.rm = TRUE)
@@ -379,7 +379,7 @@ stopifnot(isTRUE(all.equal(B1_ti_unbal_narm, B2_ti_unbal_narm, check.attributes 
 
 
 # individual
-pkg.plm.fast(FALSE)
+options("plm.fast" = FALSE)
 
 b1_mat_ind      <- plm:::between.matrix(mat, effect = "individual") # default
 b1_mat_ind_narm <- plm:::between.matrix(mat, effect = "individual", na.rm = TRUE)
@@ -405,7 +405,7 @@ B1_mat_noindex_ind_narm <- plm:::Between.matrix(mat_noindex, effect = mat_index[
 B1_mat_noindex_unbal_ind      <- plm:::Between.matrix(mat_noindex_unbal, effect = mat_index_unbal[[1L]]) # default
 B1_mat_noindex_unbal_ind_narm <- plm:::Between.matrix(mat_noindex_unbal, effect = mat_index_unbal[[1L]], na.rm = TRUE)
 
-pkg.plm.fast(TRUE)
+options("plm.fast" = TRUE)
 
 b2_mat_ind       <- plm:::between.matrix(mat, effect = "individual")
 b2_mat_ind_narm  <- plm:::between.matrix(mat, effect = "individual", na.rm = TRUE)
@@ -452,7 +452,7 @@ stopifnot(isTRUE(all.equal(B1_mat_noindex_unbal_ind,      B2_mat_noindex_unbal_i
 stopifnot(isTRUE(all.equal(B1_mat_noindex_unbal_ind_narm, B2_mat_noindex_unbal_ind_narm, check.attributes = TRUE))) # TRUE
 
 # time
-pkg.plm.fast(FALSE)
+options("plm.fast" = FALSE)
 
 b1_mat_ti      <- plm:::between.matrix(mat, effect = "time") # default
 b1_mat_ti_narm <- plm:::between.matrix(mat, effect = "time", na.rm = TRUE)
@@ -466,7 +466,7 @@ B1_mat_ti_narm <- plm:::Between.matrix(mat, effect = "time", na.rm = TRUE)
 B1_mat_noindex_ti      <- plm:::Between.matrix(mat_noindex, effect = mat_index[[2L]]) # default
 B1_mat_noindex_ti_narm <- plm:::Between.matrix(mat_noindex, effect = mat_index[[2L]], na.rm = TRUE)
 
-pkg.plm.fast(TRUE)
+options("plm.fast" = TRUE)
 
 b2_mat_ti       <- plm:::between.matrix(mat, effect = "time")
 b2_mat_ti_narm  <- plm:::between.matrix(mat, effect = "time", na.rm = TRUE)
@@ -491,7 +491,7 @@ stopifnot(isTRUE(all.equal(B1_mat_noindex_ti,      B2_mat_noindex_ti,      check
 stopifnot(isTRUE(all.equal(B1_mat_noindex_ti_narm, B2_mat_noindex_ti_narm, check.attributes = TRUE))) # TRUE
 
 # time unbalanced
-pkg.plm.fast(FALSE)
+options("plm.fast" = FALSE)
 
 b1_mat_unbal_ti      <- plm:::between.matrix(mat_unbal, effect = "time") # default
 b1_mat_unbal_ti_narm <- plm:::between.matrix(mat_unbal, effect = "time", na.rm = TRUE)
@@ -505,7 +505,7 @@ B1_mat_unbal_ti_narm <- plm:::Between.matrix(mat_unbal, effect = "time", na.rm =
 B1_mat_noindex_unbal_ti      <- plm:::Between.matrix(mat_noindex_unbal, effect = mat_index_unbal[[2L]]) # default
 B1_mat_noindex_unbal_ti_narm <- plm:::Between.matrix(mat_noindex_unbal, effect = mat_index_unbal[[2L]], na.rm = TRUE)
 
-pkg.plm.fast(TRUE)
+options("plm.fast" = TRUE)
 
 b2_mat_unbal_ti       <- plm:::between.matrix(mat_unbal, effect = "time")
 b2_mat_unbal_ti_narm  <- plm:::between.matrix(mat_unbal, effect = "time", na.rm = TRUE)
@@ -532,7 +532,7 @@ stopifnot(isTRUE(all.equal(B1_mat_noindex_unbal_ti_narm, B2_mat_noindex_unbal_ti
 #### within - default ####
 
 # individual (balanced + unbalanced)
-pkg.plm.fast(FALSE)
+options("plm.fast" = FALSE)
 
 W1_d_ind      <- plm:::Within.default(as.numeric(LIFEEX), effect = index(LIFEEX)[[1L]])
 W1_d_ind_narm <- plm:::Within.default(as.numeric(LIFEEX), effect = index(LIFEEX)[[1L]], na.rm = TRUE)
@@ -540,7 +540,7 @@ W1_d_ind_narm <- plm:::Within.default(as.numeric(LIFEEX), effect = index(LIFEEX)
 W1_d_ind_unbal      <- plm:::Within.default(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[1L]])
 W1_d_ind_narm_unbal <- plm:::Within.default(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[1L]], na.rm = TRUE)
 
-pkg.plm.fast(TRUE)
+options("plm.fast" = TRUE)
 
 W2_d_ind      <- plm:::Within.default(as.numeric(LIFEEX), effect = index(LIFEEX)[[1L]])
 W2_d_ind_narm <- plm:::Within.default(as.numeric(LIFEEX), effect = index(LIFEEX)[[1L]], na.rm = TRUE)
@@ -554,7 +554,7 @@ stopifnot(isTRUE(all.equal(W1_d_ind_unbal,      W2_d_ind_unbal,      check.attri
 stopifnot(isTRUE(all.equal(W1_d_ind_narm_unbal, W2_d_ind_narm_unbal, check.attributes = TRUE))) # TRUE
 
 # time (balanced + unbalanced)
-pkg.plm.fast(FALSE)
+options("plm.fast" = FALSE)
 
 W1_d_ti      <- plm:::Within.default(as.numeric(LIFEEX), effect = index(LIFEEX)[[2L]])
 W1_d_ti_narm <- plm:::Within.default(as.numeric(LIFEEX), effect = index(LIFEEX)[[2L]], na.rm = TRUE)
@@ -562,7 +562,7 @@ W1_d_ti_narm <- plm:::Within.default(as.numeric(LIFEEX), effect = index(LIFEEX)[
 W1_d_ti_unbal      <- plm:::Within.default(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[2L]])
 W1_d_ti_narm_unbal <- plm:::Within.default(as.numeric(LIFEEX_unbal), effect = index(LIFEEX_unbal)[[2L]], na.rm = TRUE)
 
-pkg.plm.fast(TRUE)
+options("plm.fast" = TRUE)
 
 W2_d_ti      <- plm:::Within.default(as.numeric(LIFEEX), effect = index(LIFEEX)[[2L]])
 W2_d_ti_narm <- plm:::Within.default(as.numeric(LIFEEX), effect = index(LIFEEX)[[2L]], na.rm = TRUE)
@@ -578,7 +578,7 @@ stopifnot(isTRUE(all.equal(W1_d_ti_narm_unbal, W2_d_ti_narm_unbal, check.attribu
 # NB: Within.default does not handle twoways effects
 
 #### within - pseries ####
-pkg.plm.fast(FALSE)
+options("plm.fast" = FALSE)
 
 W1_ind      <- plm:::Within.pseries(LIFEEX, effect = "individual") # default
 W1_ind_narm <- plm:::Within.pseries(LIFEEX, effect = "individual", na.rm = TRUE)
@@ -586,7 +586,7 @@ W1_ind_narm <- plm:::Within.pseries(LIFEEX, effect = "individual", na.rm = TRUE)
 W1_ind_unbal      <- plm:::Within.pseries(LIFEEX_unbal, effect = "individual") # default
 W1_ind_narm_unbal <- plm:::Within.pseries(LIFEEX_unbal, effect = "individual", na.rm = TRUE)
 
-pkg.plm.fast(TRUE)
+options("plm.fast" = TRUE)
 
 W2_ind       <- plm:::Within.pseries(LIFEEX, effect = "individual")
 W2_ind_narm  <- plm:::Within.pseries(LIFEEX, effect = "individual", na.rm = TRUE)
@@ -600,7 +600,7 @@ stopifnot(isTRUE(all.equal(W1_ind_unbal,      W2_ind_unbal,      check.attribute
 stopifnot(isTRUE(all.equal(W1_ind_narm_unbal, W2_ind_narm_unbal, check.attributes = TRUE))) # TRUE
 
 # time
-pkg.plm.fast(FALSE)
+options("plm.fast" = FALSE)
 
 W1_ti      <- plm:::Within.pseries(LIFEEX, effect = "time") # default
 W1_ti_narm <- plm:::Within.pseries(LIFEEX, effect = "time", na.rm = TRUE)
@@ -608,7 +608,7 @@ W1_ti_narm <- plm:::Within.pseries(LIFEEX, effect = "time", na.rm = TRUE)
 W1_ti_unbal      <- plm:::Within.pseries(LIFEEX_unbal, effect = "time") # default
 W1_ti_narm_unbal <- plm:::Within.pseries(LIFEEX_unbal, effect = "time", na.rm = TRUE)
 
-pkg.plm.fast(TRUE)
+options("plm.fast" = TRUE)
 
 W2_ti       <- plm:::Within.pseries(LIFEEX, effect = "time")
 W2_ti_narm  <- plm:::Within.pseries(LIFEEX, effect = "time", na.rm = TRUE)
@@ -633,12 +633,12 @@ stopifnot(isTRUE(all.equal(W1_ti_narm_unbal, W2_ti_narm_unbal, check.attributes 
 	# stopifnot(isTRUE(all.equal(W1_tw_narm, W2_tw_narm, check.attributes = TRUE))) # TRUE
 
 ## but these:
-pkg.plm.fast(FALSE)
+options("plm.fast" = FALSE)
 
 W1_tw_unbal_wona      <- plm:::Within.pseries(LIFEEX_unbal_wona, effect = "twoways") # default
 W1_tw_narm_unbal_wona <- plm:::Within.pseries(LIFEEX_unbal_wona, effect = "twoways", na.rm = TRUE)
 
-pkg.plm.fast(TRUE)
+options("plm.fast" = TRUE)
 
 W2_tw_unbal_wona       <- plm:::Within.pseries(LIFEEX_unbal_wona, effect = "twoways")
 W2_tw_narm_unbal_wona  <- plm:::Within.pseries(LIFEEX_unbal_wona, effect = "twoways", na.rm = TRUE)
@@ -649,12 +649,12 @@ stopifnot(isTRUE(all.equal(W1_tw_narm_unbal_wona, W2_tw_narm_unbal_wona, check.a
 #### within - matrix ####
 
 # individual effect - balanced
-pkg.plm.fast(FALSE)
+options("plm.fast" = FALSE)
 
 W1_mat_ind      <- plm:::Within.matrix(mat, effect = "individual") # default
 W1_mat_ind_narm <- plm:::Within.matrix(mat, effect = "individual", na.rm = TRUE)
 
-pkg.plm.fast(TRUE)
+options("plm.fast" = TRUE)
 
 W2_mat_ind       <- plm:::Within.matrix(mat, effect = "individual")
 W2_mat_ind_narm  <- plm:::Within.matrix(mat, effect = "individual", na.rm = TRUE)
@@ -663,12 +663,12 @@ stopifnot(isTRUE(all.equal(W1_mat_ind,      W2_mat_ind,      check.attributes = 
 stopifnot(isTRUE(all.equal(W1_mat_ind_narm, W2_mat_ind_narm, check.attributes = TRUE))) # TRUE
 
 # individual effect - unbalanced
-pkg.plm.fast(FALSE)
+options("plm.fast" = FALSE)
 
 W1_mat_unbal_ind      <- plm:::Within.matrix(mat_unbal, effect = "individual") # default
 W1_mat_unbal_ind_narm <- plm:::Within.matrix(mat_unbal, effect = "individual", na.rm = TRUE)
 
-pkg.plm.fast(TRUE)
+options("plm.fast" = TRUE)
 
 W2_mat_unbal_ind       <- plm:::Within.matrix(mat_unbal, effect = "individual")
 W2_mat_unbal_ind_narm  <- plm:::Within.matrix(mat_unbal, effect = "individual", na.rm = TRUE)
@@ -677,12 +677,12 @@ stopifnot(isTRUE(all.equal(W1_mat_unbal_ind,      W2_mat_unbal_ind,      check.a
 stopifnot(isTRUE(all.equal(W1_mat_unbal_ind_narm, W2_mat_unbal_ind_narm, check.attributes = TRUE))) # TRUE
 
 # time effect - balanced
-pkg.plm.fast(FALSE)
+options("plm.fast" = FALSE)
 
 W1_mat_ti      <- plm:::Within.matrix(mat, effect = "time") # default
 W1_mat_ti_narm <- plm:::Within.matrix(mat, effect = "time", na.rm = TRUE)
 
-pkg.plm.fast(TRUE)
+options("plm.fast" = TRUE)
 
 W2_mat_ti       <- plm:::Within.matrix(mat, effect = "time")
 W2_mat_ti_narm  <- plm:::Within.matrix(mat, effect = "time", na.rm = TRUE)
@@ -691,12 +691,12 @@ stopifnot(isTRUE(all.equal(W1_mat_ti,      W2_mat_ti,      check.attributes = TR
 stopifnot(isTRUE(all.equal(W1_mat_ti_narm, W2_mat_ti_narm, check.attributes = TRUE))) # TRUE
 
 # time effect - unbalanced
-pkg.plm.fast(FALSE)
+options("plm.fast" = FALSE)
 
 W1_mat_unbal_ti      <- plm:::Within.matrix(mat_unbal, effect = "time") # default
 W1_mat_unbal_ti_narm <- plm:::Within.matrix(mat_unbal, effect = "time", na.rm = TRUE)
 
-pkg.plm.fast(TRUE)
+options("plm.fast" = TRUE)
 
 W2_mat_unbal_ti       <- plm:::Within.matrix(mat_unbal, effect = "time")
 W2_mat_unbal_ti_narm  <- plm:::Within.matrix(mat_unbal, effect = "time", na.rm = TRUE)
@@ -705,12 +705,12 @@ stopifnot(isTRUE(all.equal(W1_mat_unbal_ti,      W2_mat_unbal_ti,      check.att
 stopifnot(isTRUE(all.equal(W1_mat_unbal_ti_narm, W2_mat_unbal_ti_narm, check.attributes = TRUE))) # TRUE
 
 # twoways - balanced
-pkg.plm.fast(FALSE)
+options("plm.fast" = FALSE)
 
 W1_mat_tw      <- plm:::Within.matrix(mat, effect = "twoways") # default
 W1_mat_tw_narm <- plm:::Within.matrix(mat, effect = "twoways", na.rm = TRUE)
 
-pkg.plm.fast(TRUE)
+options("plm.fast" = TRUE)
 
 W2_mat_tw       <- plm:::Within.matrix(mat, effect = "twoways")
 W2_mat_tw_narm  <- plm:::Within.matrix(mat, effect = "twoways", na.rm = TRUE)
@@ -720,12 +720,12 @@ stopifnot(isTRUE(all.equal(W1_mat_tw_narm, W2_mat_tw_narm, check.attributes = TR
 
 # twoways - unbalanced
 # need to use non-NA data for plm's original 2-way FE unbalanced transformation (due to lm.fit being used)
-pkg.plm.fast(FALSE)
+options("plm.fast" = FALSE)
 
 W1_mat_unbal_tw      <- plm:::Within.matrix(mat_unbal_wona, effect = "twoways") # default
 W1_mat_unbal_tw_narm <- plm:::Within.matrix(mat_unbal_wona, effect = "twoways", na.rm = TRUE)
 
-pkg.plm.fast(TRUE)
+options("plm.fast" = TRUE)
 
 W2_mat_unbal_tw       <- plm:::Within.matrix(mat_unbal_wona, effect = "twoways")
 W2_mat_unbal_tw_narm  <- plm:::Within.matrix(mat_unbal_wona, effect = "twoways", na.rm = TRUE)
@@ -762,7 +762,7 @@ stopifnot(isTRUE(all.equal(W1_mat_unbal_tw_narm, W2_mat_unbal_tw_narm, check.att
 # # data <- na.omit(data)
 # # pdim(data) # Unbalanced Panel: n = 13300, T = 1-31, N = 93900
 # 
-# pkg.plm.fast(use = FALSE) # default: fast functions of 'collapse' not in use
+# options("plm.fast" = FALSE) # default: fast functions of 'collapse' not in use
 # times <- 3 # no. of repetitions for benchmark
 # bench_res_plm <- microbenchmark(
 #                           plm(form, data = data, model = "within"),
@@ -771,7 +771,7 @@ stopifnot(isTRUE(all.equal(W1_mat_unbal_tw_narm, W2_mat_unbal_tw_narm, check.att
 #                           plm(form, data = data, model = "random", effect = "twoways"),
 #                       times = times)
 # 
-# pkg.plm.fast(use = TRUE)
+# options("plm.fast" = TRUE)
 # bench_res_collapse <- microbenchmark(
 #                           plm(form, data = data, model = "within"),
 #                           plm(form, data = data, model = "within", effect = "twoways"),
@@ -783,7 +783,7 @@ stopifnot(isTRUE(all.equal(W1_mat_unbal_tw_narm, W2_mat_unbal_tw_narm, check.att
 # 
 # 
 # ## 2-FE unbalanced: collapse vs. lfe
-# pkg.plm.fast(use = TRUE)
+# options("plm.fast" = TRUE)
 # bench_2FE_collapse <- microbenchmark(
 #                           plm(form, data = data, model = "within", effect = "twoways"),
 #                         times = 10)
