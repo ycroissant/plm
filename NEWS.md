@@ -2,23 +2,18 @@
 
 ### Speed up:
 Significant speed improvement (optional): A significant speed-up of the
-package is available by a newly introduced option called `plm.fast` such that
-panel model estimations and others run faster. Set option `plm.fast` to `TRUE`
-(`options("plm.fast" = TRUE)`) for speed up, switch off by 
-`options("plm.fast" = FALSE)` (current default). See documentation `?plm.fast`
-for more information and a benchmarked example.
+package is available by a newly introduced **option** called plm.fast such that
+panel model estimations and others run faster. Set option 'plm.fast' to 'TRUE'
+by `options("plm.fast" = TRUE)` for speed up, switch off by 
+`options("plm.fast" = FALSE)` (switched off speed up is current default). See
+documentation `?plm.fast` for more information and a benchmarked example.
 
 Technically, the speed gains are achieved by weaving in the fast data
 transformation functions provided in Sebastian Krantz' package 'collapse',
 which needs to be installed ('Suggests' dependency).
 
 Basic functions benefiting from speed-up are currently (used heavily in, e.g.,
-plm()):
-
-* Between,
-* between,
-* Sum,
-* Within.
+plm()): Between, between, Sum, Within.
 
 ### Features:
 * within_intercept gains argument 'return.model' (default is FALSE and the
@@ -27,18 +22,18 @@ plm()):
   documentation for more details).
 * fixef gained new argument value 'effect = "twoways"' to extract the
   sum of individual and time effect (for two-way models).
-* Sum is now exported.
 * plm/ercomp: random effect model estimation with Nerlove's method extended to
   unbalanced panels by weighting of the fixed effects (Cottrell (2017)).
+* Sum is now exported.
 
 ### Fixes:
+* fixef: calculation for two-way models fixed; type = "dmean" for unbalanced
+  models fixed (by using weighted.mean()).
 * between.default: keeps original sequence of elements' occurrence (before,
   compressed output was sorted by the factor's *level* order).
 * Between.matrix and (internal) Tapply.matrix: ellipsis (three dots) is passed on,
   allowing for, e.g., na.rm = TRUE (like already possible for between.matrix etc.).
 * Within.pseries/matrix: now handle na.rm argument in ellipsis.
-* fixef: calculation for two-way models fixed; type = "dmean" for unbalanced
-  models fixed (by using weighted.mean()).
 * index: gives warning if argument 'which' contains "confusing" values.
   "confusing": an index variable called by user 'id', 'time', or 'group' if it
   does not refer to the respective index (e.g., time index variable is called 'id'
@@ -49,15 +44,15 @@ plm()):
   (such as lag, diff, nobs, ...), so that the help systems offers to access the
   plm-specific documentation (regression introduced when pkg plm 2.0-0 adopted
   roxygen2 for documentation).
-* ercomp: cosmetic: if one of theta\$id, theta\$time is 0 => theta\$total must be 
+* ercomp: (cosmetic) if one of theta\$id, theta\$time is 0 => theta\$total must be 
   0 and is set to 0 (before, for some data and platforms, theta$total could be a
   very small positive or negative number, due to limited computational precision).
   This leads to nicer printing for summary outputs as well.
 
 ### Internals:
 * Between.\*, between.\*, and Within.\* methods: now use ave() instead of tapply().
-* between.matrix and Sum.matrix (the latter is non-exported) allow for
-  non-character effect in non-index case.
+* between.matrix and Sum.matrix allow for non-character 'effect' argument in
+  non-index case.
 * pmg, pcce, cipstest: now use the general Between()/Within() functions of the
   package (instead of "own" between/within transformation implemented inside the
   respective function).
