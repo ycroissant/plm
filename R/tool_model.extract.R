@@ -87,7 +87,7 @@ model.frame.pdata.frame <- function(formula, data = NULL, ...,
     index <- attr(pdata, "index")
     mf <- model.frame(formula, as.data.frame(pdata), ...,
                       lhs = lhs, rhs = rhs, dot = dot)
-    index <- index[as.numeric(rownames(mf)), ]
+    index <- index[as.numeric(rownames(mf)), ] # reduce index down to rows left in model frame
     index <- droplevels(index)
     class(index) <- c("pindex", "data.frame")
     structure(mf,
@@ -127,8 +127,6 @@ model.matrix.plm <- function(object, ...){
     }
 }
 
-Mean <- function(x) matrix(.colMeans(x, nrow(x), ncol(x)),
-                           nrow(x), ncol(x), byrow = TRUE)
 
 #' @rdname model.frame.pdata.frame
 #' @export

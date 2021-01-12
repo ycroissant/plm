@@ -347,6 +347,10 @@ myave.matrix <- function(x, effect, func, ...) {
     return(result)
 }
 
+## non-exported
+Mean <- function(x) matrix(.colMeans(x, nrow(x), ncol(x)),
+                           nrow(x), ncol(x), byrow = TRUE)
+
 #' @rdname pseries
 #' @export
 Sum <- function(x, ...) {
