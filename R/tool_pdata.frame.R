@@ -76,8 +76,11 @@ fancy.row.names <- function(index, sep = "-") {
 #' `index` attribute.  A safe way to extract the index attribute is to
 #' use the function [index()] for 'pdata.frames' (and other objects).
 #' 
-#' `as.data.frame` removes the index from the `pdata.frame` and adds
-#' it to each column.
+#' `as.data.frame` removes the index attribute from the `pdata.frame`
+#' and adds it to each column. For its argument `row.names` set to 
+#' `FALSE` row names are an integer series, `TRUE` gives "fancy" row
+#' names; if a character (with length of the resulting data frame),
+#' the row names will be the character's elements.
 #' 
 #' `as.list` behaves by default identical to
 #' [base::as.list.data.frame()] which means it drops the
@@ -97,10 +100,11 @@ fancy.row.names <- function(index, sep = "-") {
 #' @param drop.index logical, indicates whether the indexes are to be
 #'     excluded from the resulting pdata.frame,
 #' @param optional see [as.data.frame()],
-#' @param row.names `NULL` or logical, indicates whether ``fancy'' row
-#'     names (a combination of individual index and time index) are to
+#' @param row.names `NULL` or logical, indicates whether "fancy" row
+#'     names (combination of individual index and time index) are to
 #'     be added to the returned (p)data.frame (`NULL` and `FALSE` have
-#'     the same meaning),
+#'     the same meaning for `pdata.frame`; for
+#'     `as.data.frame.pdata.frame` see Details),
 #' @param stringsAsFactors logical, indicating whether character
 #'     vectors are to be converted to factors,
 #' @param replace.non.finite logical, indicating whether values for
@@ -656,35 +660,46 @@ as.list.pdata.frame <- function(x, keep.attributes = FALSE, ...) {
 as.data.frame.pdata.frame <- function(x, row.names = NULL, optional = FALSE, keep.attributes = TRUE, ...) {
     index <- attr(x, "index")
 
-     if (!keep.attributes) {
-       attr(x, "index") <- NULL
-       class(x) <- "data.frame"
-       rownames(x) <- NULL
-     } else {
-      # make each column a pseries
+    if(!keep.attributes) {
+      attr(x, "index") <- NULL
+      class(x) <- "data.frame"
+      rownames(x) <- NULL
+    } else {
+      # make each column a pseries (w/o names)
       x <- lapply(x,
                   function(z){
-                  #     names(z) <- row.names(x) # it does not seem possible to keep the names in the 'pseries' because the call to data.frame later deletes the names 
+                  #     names(z) <- row.names(x) # it is not possible to keep the names in the 'pseries'/
+                                                 # in columns because the call to data.frame later deletes
+                                                 # the names attribute of columns (definition of data frame)
                     attr(z, "index") <- index
                     class(z) <- base::union("pseries", class(z))
                     return(z)
-                  }
-      )
+                  })
     }
     
-    if (is.null(row.names) || row.names == FALSE) {
-        x <- data.frame(x)
+    if(is.null(row.names)) {
+      # do as base::as.data.frame does for NULL
+      x <- as.data.frame(x, row.names = NULL)
     } else {
-        if (row.names == TRUE) { # set fancy row names
-            x <- data.frame(x)
-            row.names(x) <- fancy.row.names(index)
-            # using row.names(x) <- "something" is safer (does not allow
-            # duplicate row.names) than # attr(x,"row.names") <- "something"
+      if(is.logical(row.names) && row.names == FALSE) {
+        # set row names to integer sequence 1, 2, 3, ...
+        x <- as.data.frame(x)
+        row.names(x) <- NULL
+      }
+      if(is.logical(row.names) && row.names == TRUE) {
+        # set fancy row names
+        x <- as.data.frame(x)
+        row.names(x) <- fancy.row.names(index)
+      }
+      if(is.character(row.names)) {
+        x <- as.data.frame(x)
+        row.names(x) <- row.names
+      }
+      if(!(isTRUE(row.names) || isFALSE(row.names) || is.character(row.names)))
+        stop("argument 'row.names' is none of NULL, FALSE, TRUE, and not a character")
+      # using row.names(x) <- "something" is safer (does not allow
+      # duplicate row.names) than # attr(x,"row.names") <- "something"
     }
-    ## not implemented: if row.names is a character vector, row.names
-    ## could also be passed here to base::data.frame, see
-    ## ?base::data.frame
-    } 
     return(x)
 }
 

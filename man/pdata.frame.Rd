@@ -53,10 +53,11 @@ indexes. See \strong{Details},}
 \item{drop.index}{logical, indicates whether the indexes are to be
 excluded from the resulting pdata.frame,}
 
-\item{row.names}{\code{NULL} or logical, indicates whether ``fancy'' row
-names (a combination of individual index and time index) are to
-be added to the returned (p)data.frame (\code{NULL} and `FALSE` have
-the same meaning),}
+\item{row.names}{\code{NULL} or logical, indicates whether "fancy" row
+names (combination of individual index and time index) are to
+be added to the returned (p)data.frame (\code{NULL} and \code{FALSE} have
+the same meaning for \code{pdata.frame}; for
+\code{as.data.frame.pdata.frame} see Details),}
 
 \item{stringsAsFactors}{logical, indicating whether character
 vectors are to be converted to factors,}
@@ -133,8 +134,11 @@ attribute \code{"pseries"} is added. The \code{"["} method behaves as for
 \code{index} attribute.  A safe way to extract the index attribute is to
 use the function \code{\link[=index]{index()}} for 'pdata.frames' (and other objects).
 
-\code{as.data.frame} removes the index from the \code{pdata.frame} and adds
-it to each column.
+\code{as.data.frame} removes the index attribute from the \code{pdata.frame}
+and adds it to each column. For its argument \code{row.names} set to
+\code{FALSE} row names are an integer series, \code{TRUE} gives "fancy" row
+names; if a character (with length of the resulting data frame),
+the row names will be the character's elements.
 
 \code{as.list} behaves by default identical to
 \code{\link[base:list]{base::as.list.data.frame()}} which means it drops the

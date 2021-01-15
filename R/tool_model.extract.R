@@ -85,7 +85,7 @@ model.frame.pdata.frame <- function(formula, data = NULL, ...,
     if (is.null(rhs)) rhs <- 1:(length(formula)[2])
     if (is.null(lhs)) lhs <- ifelse(length(formula)[1] > 0, 1, 0)
     index <- attr(pdata, "index")
-    mf <- model.frame(formula, as.data.frame(pdata), ...,
+    mf <- model.frame(formula, as.data.frame(pdata, row.names = FALSE), ..., # NB need row.names = FALSE to ensure mf has integer sequence as row names
                       lhs = lhs, rhs = rhs, dot = dot)
     index <- index[as.numeric(rownames(mf)), ] # reduce index down to rows left in model frame
     index <- droplevels(index)

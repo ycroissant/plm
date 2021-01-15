@@ -48,6 +48,13 @@ plm()): Between, between, Sum, Within.
   0 and is set to 0 (before, for some data and platforms, theta$total could be a
   very small positive or negative number, due to limited computational precision).
   This leads to nicer printing for summary outputs as well.
+* plm: fix error when fed with a data frame with one (more more) columns having
+  a 'names' attribute (data frames do not have names attribute for columns!),
+  stemming from, e.g., a conversation from a tibble.
+* as.data.frame.pdata.frame: clarify argument 'row.names' a bit: FALSE will give
+  an integer sequence of row names, TRUE "fancy" row names, and (new) a character
+  will gives row names set to the character's elements (length matching the row
+  numbers required).
 
 ### Internals:
 * Between.\*, between.\*, and Within.\* methods: now use ave() instead of tapply().
@@ -736,7 +743,7 @@ plm()): Between, between, Sum, Within.
  
 * plm(): original row names of input data are preserved in plm_object\$model,
     so functions like pmodel.response(), model.frame(), model.matrix(), residuals()
-    return the original row.names (and thus fancy rownames if those were to be computed by
+    return the original row names (and thus fancy row names if those were to be computed by
     pdata.frame)
 
 * as.data.frame.pdata.frame(): respects 'row.names' argument.
