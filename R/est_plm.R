@@ -52,8 +52,8 @@ mylm <- function(y, X, W = NULL){
 
 # some elements not listed here...: "assign", "contrast",
 # etc... \item{na.action}{if relevant, information about handling of
-# NAs by the % model.frame function,} % NB: na.action is currently not
-# included as it is not supported
+# NAs by the  model.frame function,}
+# NB: na.action is currently not included as it is not supported
 
 
 #' Panel Data Estimators
@@ -415,7 +415,7 @@ plm.fit <- function(data, model, effect, random.method,
     if (model == "random"){
         is.balanced <- is.pbalanced(data)
         estec <- ercomp(data, effect, method = random.method,
-                        models = random.models, dfcor = random.dfcor)        
+                        models = random.models, dfcor = random.dfcor)
         sigma2 <- estec$sigma2
         theta <- estec$theta
         if (length(formula)[2L] == 2 && effect == "twoways")
@@ -635,14 +635,14 @@ r.squared_no_intercept <- function(object, model = NULL,
     effect <- describe(object, "effect")
     type <- match.arg(type)
     ## TODO: check what is sane for IV and what for within
-    has.int <- if (model != "within") has.intercept(object)[1L] else FALSE # [1] as has.intercept returns > 1 boolean for IV models # TODO: to check if this is sane
+    has.int <- if (model != "within") has.intercept(object)[1L] else FALSE # [1L] as has.intercept returns > 1 boolean for IV models # TODO: to check if this is sane
     
     if (type == "rss"){
       # approach: 1 - RSS / TSS
       R2 <- if (has.int) {
         1 - deviance(object, model = model) / tss(object, model = model)  
       } else {
-        # use non-centered (=non-demeaned) TSS
+        # use non-centered (= non-demeaned) TSS
         1 - deviance(object, model = model) / as.numeric(crossprod(pmodel.response(object, model = model)))
       }
     }
@@ -694,14 +694,17 @@ describe <- function(x,
   what <- match.arg(what)
   cl <- x$args
   switch(what,
-         "model"          = ifelse(!is.null(cl$model), cl$model, "within"),
-         "effect"         = ifelse(!is.null(cl$effect), cl$effect, "individual"),
+         "model"          = ifelse(!is.null(cl$model),
+                                   cl$model, "within"),
+         "effect"         = ifelse(!is.null(cl$effect),
+                                   cl$effect, "individual"),
          "random.method"  = ifelse(!is.null(cl$random.method),
-                                 cl$random.method, "swar"),
+                                   cl$random.method, "swar"),
          "inst.method"    = ifelse(!is.null(cl$inst.method),
-                                 cl$inst.method, "bvk"),
+                                   cl$inst.method, "bvk"),
          "transformation" = ifelse(!is.null(cl$transformation),
-                                 cl$transformation, "d"),
-         "ht.method"      = ifelse(!is.null(cl$ht.method), cl$ht.method, "ht")
+                                   cl$transformation, "d"),
+         "ht.method"      = ifelse(!is.null(cl$ht.method),
+                                   cl$ht.method, "ht")
          )
 }
