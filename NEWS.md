@@ -16,15 +16,15 @@ Basic functions benefiting from speed-up are currently (used heavily in, e.g.,
 plm()): Between, between, Sum, Within.
 
 ### Features:
-* within_intercept gains argument 'return.model' (default is FALSE and the
+* within_intercept: gains argument 'return.model' (default is FALSE and the
   functions works as previously). If set to TRUE, a full model object is
   returned which is the input's within model with an intercept (see
   documentation for more details).
-* fixef gained new argument value 'effect = "twoways"' to extract the
+* fixef: gained new argument value 'effect = "twoways"' to extract the
   sum of individual and time effect (for two-way models).
 * plm/ercomp: random effect model estimation with Nerlove's method extended to
   unbalanced panels by weighting of the fixed effects (Cottrell (2017)).
-* Sum is now exported.
+* Sum: is now exported.
 
 ### Fixes:
 * fixef: calculation for two-way models fixed; type = "dmean" for unbalanced
@@ -52,9 +52,9 @@ plm()): Between, between, Sum, Within.
   a 'names' attribute (data frames do not have names attribute for columns!),
   stemming from, e.g., a conversation from a tibble.
 * as.data.frame.pdata.frame: clarify argument 'row.names' a bit: FALSE will give
-  an integer sequence of row names, TRUE "fancy" row names, and (new) a character
-  will gives row names set to the character's elements (length matching the row
-  numbers required).
+  an integer sequence as row names, TRUE "fancy" row names, and (new) a character
+  will gives row names set to the character's elements (character's length is
+  required to match the number of rows).
 
 ### Internals:
 * Between.\*, between.\*, and Within.\* methods: now use ave() instead of tapply().
