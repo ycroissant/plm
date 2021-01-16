@@ -51,7 +51,6 @@ data/SumHes.rda -text
 data/Wages.rda -text
 inst/CITATION -text
 inst/REFERENCES.bib -text
-inst/logo.R -text
 inst/removed/dynformula.Rd -text
 inst/removed/pFormula.Rd -text
 inst/removed/plm.data.Rd -text
