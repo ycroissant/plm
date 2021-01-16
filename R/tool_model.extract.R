@@ -54,18 +54,18 @@
 #' pGrunfeld <- pdata.frame(Grunfeld)
 #' 
 #' # then make a model frame from a pFormula and a pdata.frame
-#' #pform <- pFormula(inv ~ value + capital)
-#' #mf <- model.frame(pform, data = pGrunfeld)
+##pform <- pFormula(inv ~ value + capital)
+##mf <- model.frame(pform, data = pGrunfeld)
 #' form <- inv ~ value
 #' mf <- model.frame(pGrunfeld, form)
 #' 
 #' # then construct the (transformed) model matrix (design matrix)
 #' # from formula and model frame
-#' #modmat <- model.matrix(pform, data = mf, model = "within")
+##modmat <- model.matrix(pform, data = mf, model = "within")
 #' modmat <- model.matrix(mf, model = "within")
 #' 
 #' ## retrieve model frame and model matrix from an estimated plm object
-#' #fe_model <- plm(pform, data = pGrunfeld, model = "within")
+## #fe_model <- plm(pform, data = pGrunfeld, model = "within")
 #' fe_model <- plm(form, data = pGrunfeld, model = "within")
 #' model.frame(fe_model)
 #' model.matrix(fe_model)
