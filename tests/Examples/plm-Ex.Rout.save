@@ -5845,18 +5845,14 @@ FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
 > pGrunfeld <- pdata.frame(Grunfeld)
 > 
 > # then make a model frame from a pFormula and a pdata.frame
-> #pform <- pFormula(inv ~ value + capital)
-> #mf <- model.frame(pform, data = pGrunfeld)
 > form <- inv ~ value
 > mf <- model.frame(pGrunfeld, form)
 > 
 > # then construct the (transformed) model matrix (design matrix)
 > # from formula and model frame
-> #modmat <- model.matrix(pform, data = mf, model = "within")
 > modmat <- model.matrix(mf, model = "within")
 > 
 > ## retrieve model frame and model matrix from an estimated plm object
-> #fe_model <- plm(pform, data = pGrunfeld, model = "within")
 > fe_model <- plm(form, data = pGrunfeld, model = "within")
 > model.frame(fe_model)
             inv   value
@@ -14550,7 +14546,7 @@ F-statistic: 309.014 on 2 and 197 DF, p-value: < 2.22e-16
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  10.42 0.5 11.03 NA NA 
+Time elapsed:  10.6 0.45 11.2 NA NA 
 > grDevices::dev.off()
 null device 
           1 
