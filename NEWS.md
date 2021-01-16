@@ -48,7 +48,7 @@ plm()): Between, between, Sum, Within.
   0 and is set to 0 (before, for some data and platforms, theta$total could be a
   very small positive or negative number, due to limited computational precision).
   This leads to nicer printing for summary outputs as well.
-* plm: fix error when fed with a data frame with one (or more) columns having
+* plm: fix error when fed with a data frame with one (or more) column(s) having
   a 'names' attribute (data frames do not have names attribute for columns!),
   stemming from, e.g., a conversation from a tibble.
 * as.data.frame.pdata.frame: clarify argument 'row.names' a bit: FALSE will give
