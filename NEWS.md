@@ -52,7 +52,7 @@ plm()): Between, between, Sum, Within.
   This leads to nicer printing for summary outputs as well.
 * plm: fix error when fed with a data frame with one (or more) column(s) having
   a 'names' attribute (data frames do not have names attribute for columns!),
-  stemming from, e.g., a conversation from a tibble.
+  stemming from, e.g., a conversion from a tibble.
 * as.data.frame.pdata.frame: clarify argument 'row.names' a bit: FALSE will give
   an integer sequence as row names, TRUE "fancy" row names, and (new) a character
   will gives row names set to the character's elements (character's length is
