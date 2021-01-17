@@ -567,6 +567,9 @@ Within.matrix.collapse <- function(x, effect, rm.null = TRUE, ...) {
 #' `option("plm.fast" = TRUE)` enables the speed up while 
 #' `option("plm.fast" = FALSE)` disables the speed up.
 #' 
+#' To have it always switched on, put `options("plm.fast" = TRUE)` in your 
+#' .Rprofile file.
+#' 
 #' See **Examples** for how to use the option and for a benchmarking example.
 #'
 #' By default, package `plm` uses base R implementations and R-based code. The

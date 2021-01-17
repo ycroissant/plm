@@ -1,12 +1,14 @@
 # plm 2.4-0
 
 ### Speed up:
-Significant speed improvement (optional): A significant speed-up of the
-package is available by a newly introduced **option** called plm.fast such that
-panel model estimations and others run faster. Set option 'plm.fast' to 'TRUE'
-by `options("plm.fast" = TRUE)` for speed up, switch off by 
-`options("plm.fast" = FALSE)` (switched off speed up is current default). See
-documentation `?plm.fast` for more information and a benchmarked example.
+Significant speed improvement (optional, for the time being): A significant
+speed-up of the package is available by a newly introduced **option** called
+plm.fast such that panel model estimations and others run faster. Set option
+'plm.fast' to 'TRUE' by `options("plm.fast" = TRUE)` for speed up, switch off by 
+`options("plm.fast" = FALSE)` (switched off speed up is current default).
+To have it always switched on, put `options("plm.fast" = TRUE)` in your 
+.Rprofile file. See documentation `?plm.fast` for more information and a
+benchmarked example.
 
 Technically, the speed gains are achieved by weaving in the fast data
 transformation functions provided in Sebastian Krantz' package 'collapse',

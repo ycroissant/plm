@@ -14,6 +14,9 @@ evaluated prior to execution of supported transformations (see below), so
 \code{option("plm.fast" = TRUE)} enables the speed up while
 \code{option("plm.fast" = FALSE)} disables the speed up.
 
+To have it always switched on, put \code{options("plm.fast" = TRUE)} in your
+.Rprofile file.
+
 See \strong{Examples} for how to use the option and for a benchmarking example.
 
 By default, package \code{plm} uses base R implementations and R-based code. The
