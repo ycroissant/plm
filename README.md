@@ -8,10 +8,14 @@ data econometrics. It provides:
 - a set of testing functions,
 - a set of robust covariance matrix estimators.
 
-To install the released version on CRAN:
+To install the released version from **CRAN**:
 
 `install.packages("plm")`
 
-To install the development version on **RForge**:
+The package's CRAN website is: https://cran.r-project.org/package=plm
 
-`install.packages("plm", repos = 'http://R-Forge.R-project.org'))`
+To install the development version from **RForge**:
+
+`install.packages("plm", repos = 'http://R-Forge.R-project.org')`
+
+The development of package `plm` currently takes place on R-Forge in a SVN repository: https://r-forge.r-project.org/R/?group_id=406
