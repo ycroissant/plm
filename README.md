@@ -19,4 +19,4 @@ To install the development version from **RForge**:
 `install.packages("plm", repos = 'http://R-Forge.R-project.org')`
 
 The development of package `plm` currently takes place on R-Forge in a SVN repository: https://r-forge.r-project.org/R/?group_id=406
-However, GitHub's `plm` repository, GitHub's issue tracker is used (but nothing else, currently).
+However, in GitHub's `plm` repository, GitHub's issue tracker is used for the package (but nothing else, currently).
