@@ -69,7 +69,7 @@ comparison of various Grunfeld data sets in use.
 
 website accompanying the paper with various variants of the
 Grunfeld data:
-\url{https://eeecon.uibk.ac.at/~zeileis/grunfeld/}.
+\url{https://www.zeileis.org/grunfeld/}.
 }
 \seealso{
 For the complete Grunfeld data (11 firms), see

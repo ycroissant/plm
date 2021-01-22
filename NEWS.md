@@ -57,6 +57,8 @@ plm()): Between, between, Sum, Within.
   an integer sequence as row names, TRUE "fancy" row names, and (new) a character
   will gives row names set to the character's elements (character's length is
   required to match the number of rows).
+* DESCRIPTION file: added line BugReports pointing to a GitHub repository which is
+  currently only used for GitHub's issue tracker feature (https://github.com/ycroissant/plm/issues).
 
 ### Internals:
 * Between.\*, between.\*, and Within.\* methods: now use ave() instead of tapply().
