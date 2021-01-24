@@ -1,5 +1,12 @@
 # The `plm` package
 
+<!-- badges: start -->
+[![CRAN
+status](https://www.r-pkg.org/badges/version/plm)](https://CRAN.R-project.org/package=plm)
+[![Downloads](https://cranlogs.r-pkg.org/badges/plm)](https://CRAN.R-project.org/package=plm)
+<!-- badges: end -->
+
+
 `plm`, first posted on **CRAN** in 2006, is an **R** package for panel
 data econometrics. It provides:
 
@@ -12,11 +19,11 @@ To install the released version from **CRAN**:
 
 `install.packages("plm")`
 
-The package's CRAN website is: https://cran.r-project.org/package=plm
+The package's CRAN website is https://cran.r-project.org/package=plm.
 
 To install the development version from **RForge**:
 
 `install.packages("plm", repos = 'http://R-Forge.R-project.org')`
 
-The development of package `plm` currently takes place on R-Forge in a SVN repository: https://r-forge.r-project.org/R/?group_id=406
+The development of package `plm` currently takes place on R-Forge in a SVN repository: https://r-forge.r-project.org/R/?group_id=406.
 However, in GitHub's `plm` repository, GitHub's issue tracker is used for the package (but nothing else, currently).
