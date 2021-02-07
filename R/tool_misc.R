@@ -157,15 +157,15 @@ pres <- function(x) {  # pres.panelmodel
   ## but used in residuals.pggls, residuals.pcce, residuals.pmg
   
   ## extract indices
-  groupind <-attr(x$model, "index")[ , 1L]
-  timeind  <-attr(x$model, "index")[ , 2L]
+  groupind <- attr(x$model, "index")[ , 1L]
+  timeind  <- attr(x$model, "index")[ , 2L]
   
   # fix to allow operation with pggls, pmg
   # [TODO: one day, make this cleaner; with the describe framework?]
   if (!is.null(x$args$model))                 maybe_fd <- x$args$model
   if (!is.null(attr(x, "pmodel")$model.name)) maybe_fd <- attr(x, "pmodel")$model.name # this line is currently needed to detect pggls models
   
-  ## Achim's fix: reduce id and time index to accomodate first-differences model's number of observations
+  ## Achim's fix: reduce id and time index to accommodate first-differences model's number of observations
   if(exists("maybe_fd") && maybe_fd == "fd") {
     groupi <- as.numeric(groupind)
     ## make vector =1 on first obs in each group, 0 elsewhere
@@ -184,9 +184,14 @@ pres <- function(x) {  # pres.panelmodel
 
 
 # punbalancedness: measures for unbalancedness of a pandel data set as
-# defined in \insertCite{AHRE:PINC:81;textual}{plm}, p. 228 (gamma and
-# nu) and for nested panel structures as in
-# \insertCite{BALT:SONG:JUNG:01;textual}{plm}, pp. 368-369
+# defined in Ahrens/Pincus (1981), p. 228 (gamma and
+# nu) and for nested panel structures as in Baltagi/Song/Jung (2001), pp. 368-369 .
+#
+# Ahrens/Pincus (1981), On Two Measures of Unbalancedness in a One-Way Model
+#  and Their Relation to Efficiency, Biometrical Journal, Vol. 23, pp. 227-235.
+# 
+# Baltagi/Song/Jung (2001), The unbalanced nested error component regression model,
+#  Journal of Econometrics, Vol. 101, pp. 357-381
 
 
 #' Measures for Unbalancedness of Panel Data
@@ -585,31 +590,4 @@ print.pvar <- function(x, ...){
   }
 }
 
-## Non-exported internal function for subsetting of pseries. Can be used
-## internally. 
-## Currently we do not have "proper" subsetting function for pseries
-## ([.pseries) which applies in any case (but see the sketch to be tested in
-##  tool_pdata.frame.R)
-subset_pseries <- function(x, ...) {
 
- ## use '...' instead of only one specific argument, because subsetting for
- ## factors can have argument 'drop', e.g., x[i, drop=TRUE] see ?Extract.factor
-  index <- attr(x, "index")
-  if (is.null(index)) warning("pseries object with is.null(index(pseries)) == TRUE encountered, trying to continue anyway...")
-  if (!is.index(index)) stop(paste0("pseries object has illegal index with class(index) == ", paste0(class(index), collapse = ", ")))
-  names_orig <- names(x)
-  x <- remove_pseries_features(x)
-  result <- x[...]
-
-  # subset index / identify rows to keep in the index:
-  keep_rownr <- seq_along(names_orig)  # full length row numbers original pseries
-  names(keep_rownr) <- names_orig
-  keep_rownr <- keep_rownr[names(result)] # row numbers to keep after subsetting
-  index <- index[keep_rownr, ]
-
-  # drop unused levels (like in subsetting of pdata.frames)
-  index <- droplevels(index)
-
-  result <- add_pseries_features(result, index)
-  return(result)
-}
