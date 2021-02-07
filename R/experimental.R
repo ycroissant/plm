@@ -85,6 +85,28 @@ has.index <- function(object) {
   return(is.index(index))
 }
 
+checkNA.index <- function(index, which = "all", error = TRUE) {
+  # not exported, helper function
+  # check if any NA in indexes (all or specific dimension)
+  
+  feedback <- if(error) stop else warning
+  
+  if(which == "all") {
+    if(anyNA(index[[1L]])) feedback("NA in the individual index variable")
+    if(anyNA(index[[2L]])) feedback("NA in the time index variable")
+    if(ncol(index) == 3L) { if(anyNA(index[[3L]])) feedback("NA in the group index variable") }
+  }
+  if(which == 1L) {
+    if(anyNA(index[[1L]])) feedback("NA in the individual index variable")
+  }
+  if(which == 2L) {
+    if(anyNA(index[[2L]])) feedback("NA in the time index variable")
+  }
+  if(which == 3L) {
+    if(anyNA(index[[3L]])) feedback("NA in the group index variable")
+  }
+}
+
 # pos.index:
 # not exported, helper function
 #
