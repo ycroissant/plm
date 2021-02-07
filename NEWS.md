@@ -4,6 +4,8 @@
 
  * model.frame.pdata.frame: now errors informatively if any index dimension has
    NA values.
+ * pdata.frame: now warns if NA in index dimension is encountered (before, only
+   a plain message was printed).
 
 ### Internals:
 

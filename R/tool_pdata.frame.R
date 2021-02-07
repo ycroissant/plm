@@ -55,19 +55,22 @@ fancy.row.names <- function(index, sep = "-") {
 #' attribute that describes its individual and time dimensions.
 #' 
 #' The `index` argument indicates the dimensions of the panel. It can
-#' be: \itemize{ \item a vector of two character strings which
-#' contains the names of the individual and of the time indexes, \item
+#' be: \itemize{
+#' \item a vector of two character strings which
+#' contains the names of the individual and of the time indexes,
+#' \item
 #' a character string which is the name of the individual index
 #' variable. In this case, the time index is created automatically and
 #' a new variable called "time" is added, assuming consecutive and
-#' ascending time periods in the order of the original data, \item an
-#' integer, the number of individuals. In this case, the data need to
-#' be a balanced panel and be organized as a stacked time series
+#' ascending time periods in the order of the original data,
+#' \item an integer, the number of individuals. In this case, the data
+#' need to be a balanced panel and be organized as a stacked time series
 #' (successive blocks of individuals, each block being a time series
 #' for the respective individual) assuming consecutive and ascending
 #' time periods in the order of the original data. Two new variables
 #' are added: "id" and "time" which contain the individual and the
-#' time indexes.  }
+#' time indexes.
+#' }
 #' 
 #' The `"[["` and `"$"` extract a series from the `pdata.frame`.  The
 #' `"index"` attribute is then added to the series and a class
@@ -238,7 +241,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
       x <- x[, !cst.check]
     }
   
-    # sanity check for 'index' argument. First check the presence of a
+    # sanity check for 'index' argument. First, check the presence of a
     # grouping variable, this should be the third element of the index
     # vector or any "group" named element of this vector
     group.name <- NULL
@@ -381,17 +384,30 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     index <- x[, posindex]
     if (drop.index) {
         x <- x[ , -posindex, drop = FALSE]
-        if (ncol(x) == 0L) cat("after dropping of index variables, the pdata.frame contains 0 columns")
+        if (ncol(x) == 0L) warning("after dropping of index variables, the pdata.frame contains 0 columns")
     }
     
-    test_doub <- table(index[[1]], index[[2]], useNA = "ifany")
-    if (anyNA(colnames(test_doub)) || anyNA(rownames(test_doub)))
-        cat(paste0("at least one couple (id-time) has NA in at least one index dimension",
-                   "in resulting pdata.frame\n to find out which, use e.g., ",
-                   "table(index(your_pdataframe), useNA = \"ifany\")\n"))
-    if (any(as.vector(test_doub[!is.na(rownames(test_doub)), !is.na(colnames(test_doub))]) > 1))
-        warning(paste("duplicate couples (id-time) in resulting pdata.frame\n to find out which,",
-                      "use e.g., table(index(your_pdataframe), useNA = \"ifany\")"))
+    ### warn if duplicate couples
+    test_doub <- table(index[[1L]], index[[2L]], useNA = "ifany")
+    if (any(as.vector(test_doub[!is.na(rownames(test_doub)), !is.na(colnames(test_doub))]) > 1L))
+      warning(paste("duplicate couples (id-time) in resulting pdata.frame\n to find out which,",
+                    "use, e.g., table(index(your_pdataframe), useNA = \"ifany\")"))
+    
+    ### warn if NAs in index as likely not sane
+    if (anyNA(index[[1L]]) || anyNA(index[[2L]]) || (if(ncol(index) == 3L) anyNA(index[[3L]]) else FALSE))
+        warning(paste0("at least one NA in at least one index dimension ",
+                       "in resulting pdata.frame\n to find out which, use, e.g., ",
+                       "table(index(your_pdataframe), useNA = \"ifany\")\n"))
+    
+    ### Could also remove rows with NA in any index' dimension
+    # drop.rows <- is.na(index[[1L]]) | is.na(index[[2L]])
+    # if(ncol(index) == 3L) drop.rows <- drop.rows | is.na(index[[3L]])
+    # if((no.drop.rows <- sum(drop.rows)) > 0L) {
+    #   x <- x[!drop.rows, ]
+    #   index <- index[!drop.rows, ]
+    #   txt.drop.rows <- paste0(no.drop.rows, " row(s) dropped in resulting pdata.frame due to NA(s) in at least one index dimension")
+    #   warning(txt.drop.rows)
+    # }
     
     if (row.names) {
         attr(x, "row.names") <- fancy.row.names(index)
