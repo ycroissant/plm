@@ -88,6 +88,7 @@ model.frame.pdata.frame <- function(formula, data = NULL, ...,
     mf <- model.frame(formula, as.data.frame(pdata, row.names = FALSE), ..., # NB need row.names = FALSE to ensure mf has integer sequence as row names
                       lhs = lhs, rhs = rhs, dot = dot)
     index <- index[as.numeric(rownames(mf)), ] # reduce index down to rows left in model frame
+    checkNA.index(index) # check for NAs in model.frame's index and error if any
     index <- droplevels(index)
     class(index) <- c("pindex", "data.frame")
     structure(mf,
@@ -157,7 +158,6 @@ model.matrix.pdata.frame <- function(object,
     X.contr <- attr(X, "contrasts")
     X.contr <- X.contr[ ! sapply(X.contr, is.null) ]
     index <- index(data)
-    if (anyNA(index[[1]])) stop("NA in the individual index variable")
     attr(X, "index") <- index
     if (effect == "twoways" && model %in% c("between", "fd"))
         stop("twoways effect only relevant for within, random and pooling models")

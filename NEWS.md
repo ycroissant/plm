@@ -1,6 +1,15 @@
-# plm 2.5-0 
+# plm 2.5-9999 
 
-### Development version
+### Development version (likely to be changed to 2.4-1 or 2.6 for CRAN release)
+
+ * model.frame.pdata.frame: now errors informatively if any index dimension has
+   NA values.
+
+### Internals:
+
+ * checkNa.index: new non-exported helper function to check for NA in all or
+   a specific dimension of a pdata.frame's or pseries' index.
+
 
 # plm 2.4-0
 
@@ -561,9 +570,9 @@ plm()): Between, between, Sum, Within.
   * fixed: special case of indexing by [i] (missing j) which erroneously returned rows instead of columns.
 * pdata.frame's warnings:
   * if duplicate couples or NA values in the index variables are found
-         while creating a pdata.frame, the warning now gives users a
-         hint how to find those (table(index(your_pdataframe), useNA =
-         "ifany").
+    while creating a pdata.frame, the warning now gives users a
+    hint how to find those (table(index(your_pdataframe), useNA =
+    "ifany").
   * printed is now "id-time" (was: "time-id") to be consistent with
     order of index variables.
 
