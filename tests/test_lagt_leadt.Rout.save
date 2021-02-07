@@ -1030,8 +1030,11 @@ FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
 +                  b=c(1,2,3,3.1,3.2))
 > 
 > pdfNA <- pdata.frame(dfNA)
-at least one couple (id-time) has NA in at least one index dimensionin resulting pdata.frame
- to find out which, use e.g., table(index(your_pdataframe), useNA = "ifany")
+Warning message:
+In pdata.frame(dfNA) :
+  at least one NA in at least one index dimension in resulting pdata.frame
+ to find out which, use, e.g., table(index(your_pdataframe), useNA = "ifany")
+
 > 
 > if (!isTRUE(all.equal(as.numeric(plm:::lagt.pseries(pdfNA$a)), c(NA, 1.0, NA, NA, NA), check.attributes = FALSE)))
 +   stop("NA in time period not dealt with correctly")
@@ -1089,4 +1092,4 @@ at least one couple (id-time) has NA in at least one index dimensionin resulting
 > 
 > proc.time()
    user  system elapsed 
-   0.78    0.18    0.89 
+   2.00    0.12    2.07 

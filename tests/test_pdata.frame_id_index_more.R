@@ -61,7 +61,7 @@ head(Hedonic3)
   data("Grunfeld", package = "plm")
   Grunfeld_dup <- rbind(Grunfeld, Grunfeld[200, ])
   ttC <-  tryCatch(pdata.frame(Grunfeld_dup), error=function(e) e, warning=function(w) w)
-  if(!is(ttC,"warning") | ttC$message != "duplicate couples (id-time) in resulting pdata.frame\n to find out which, use e.g., table(index(your_pdataframe), useNA = \"ifany\")")
+  if(!is(ttC,"warning") | ttC$message != "duplicate couples (id-time) in resulting pdata.frame\n to find out which, use, e.g., table(index(your_pdataframe), useNA = \"ifany\")")
     stop("warning of duplicated couples not successful")
 
 

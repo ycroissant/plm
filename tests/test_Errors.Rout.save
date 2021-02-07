@@ -31,13 +31,15 @@ Type 'q()' to quit R.
 > y <- x + alpha + eps
 > dat <- data.frame(y, x, ind=rep(ind, T), t=rep(1:T, each=length(ind)))
 > data <- pdata.frame(dat, index=c("ind", "t"))
-at least one couple (id-time) has NA in at least one index dimensionin resulting pdata.frame
- to find out which, use e.g., table(index(your_pdataframe), useNA = "ifany")
+Warning message:
+In pdata.frame(dat, index = c("ind", "t")) :
+  at least one NA in at least one index dimension in resulting pdata.frame
+ to find out which, use, e.g., table(index(your_pdataframe), useNA = "ifany")
+
 > a <- try(m <- plm(y ~ x, data=data, model="random"))
-Error in model.matrix.pdata.frame(data) : 
-  NA in the individual index variable
+Error in checkNA.index(index) : NA in the individual index variable
 >                            # should give an error: NA in the individual index
 > 
 > proc.time()
    user  system elapsed 
-   0.67    0.09    0.71 
+   1.34    0.17    1.50 
