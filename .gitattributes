@@ -230,6 +230,6 @@ tests/test_transformations_collapse.R -text
 tests/test_vcovG_lin_dep.R -text
 tests/test_within_intercept.R -text
 tests/test_within_intercept.Rout.save -text
-vignettes/plmFunction.Rmd -text
-vignettes/plmModelComponents.Rmd -text
-vignettes/plmPackage.Rmd -text
+vignettes/01_plmPackage.Rmd -text
+vignettes/02_plmFunction.Rmd -text
+vignettes/03_plmModelComponents.Rmd -text

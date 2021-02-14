@@ -7,8 +7,10 @@
  * pdata.frame: warns if NA in index dimension is encountered (before, only
    a plain message was printed).
 
-### Internals:
-
+### Internals/Others:
+ 
+ * Vignettes: file names renamed to contain numbering so that the Vignettes are
+   sorted on CRAN's plm page in an order better suited for new package users.
  * checkNA.index: new non-exported helper function to check for NA in index 
    of a pdata.frame or pseries (all dimensions or a specific one).
 
