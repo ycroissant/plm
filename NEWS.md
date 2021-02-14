@@ -2,15 +2,15 @@
 
 ### Development version (likely to be changed to 2.4-1 or 2.6 for CRAN release)
 
- * model.frame.pdata.frame: now errors informatively if any index dimension has
+ * model.frame.pdata.frame: errors informatively if any index dimension has
    NA values.
- * pdata.frame: now warns if NA in index dimension is encountered (before, only
+ * pdata.frame: warns if NA in index dimension is encountered (before, only
    a plain message was printed).
 
 ### Internals:
 
- * checkNa.index: new non-exported helper function to check for NA in all or
-   a specific dimension of a pdata.frame's or pseries' index.
+ * checkNA.index: new non-exported helper function to check for NA in index 
+   of a pdata.frame or pseries (all dimensions or a specific one).
 
 
 # plm 2.4-0
