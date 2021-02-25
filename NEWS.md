@@ -8,7 +8,7 @@
    a plain message was printed).
 
 ### Internals/Others:
- 
+ * fix export of generics for lag and diff (went lost in 2.4-0).
  * Vignettes: file names renamed to contain numbering so that the Vignettes are
    sorted on CRAN's plm page in an order better suited for new package users.
  * checkNA.index: new non-exported helper function to check for NA in index 
@@ -20,7 +20,7 @@
 ### Speed up:
 Significant speed improvement (optional, for the time being): A significant
 speed-up of the package is available by a newly introduced **option** called
-plm.fast such that panel model estimations and others run faster. Set option
+'plm.fast' such that panel model estimations and others run faster. Set option
 'plm.fast' to 'TRUE' by `options("plm.fast" = TRUE)` for speed up, switch off by 
 `options("plm.fast" = FALSE)` (switched off speed up is current default).
 To have it always switched on, put `options("plm.fast" = TRUE)` in your 

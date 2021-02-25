@@ -702,7 +702,8 @@ lead <- function(x, k = 1, ...) {
 }
 
 #' @rdname lag.plm
-#' @export
+#' @exportS3Method
+#' @export lag
 lag.pseries <- function(x, k = 1, shift = c("time", "row"), ...) {
   shift <- match.arg(shift)
   res <- if(shift == "time") lagt.pseries(x = x, k = k, ...) else lagr.pseries(x = x, k = k, ...)
@@ -717,8 +718,11 @@ lead.pseries <- function(x, k = 1, shift = c("time", "row"), ...) {
   return(res)
 }
 
+# this generates a warning by roxygen as diff generic is in base and we shall
+# not import from base.
 #' @rdname lag.plm
-#' @export
+#' @exportS3Method
+#' @export diff
 diff.pseries <- function(x, lag = 1, shift = c("time", "row"), ...) {
   shift <- match.arg(shift)
   res <- if(shift == "time") difft.pseries(x = x, lag = lag, ...) else diffr.pseries(x = x, lag = lag, ...)
