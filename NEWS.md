@@ -1,4 +1,4 @@
-# plm 2.5-9999 
+# plm 2.4-0-9999 
 
 ### Development version (likely to be changed to 2.4-1 or 2.6 for CRAN release)
 
