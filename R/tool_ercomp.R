@@ -736,8 +736,8 @@ swar_Between_check <- function(x, method) {
                         "individual" = pdim$nT$n,
                         "time"       = pdim$nT$T)
     # cannot use df.residual(x) here because that gives the number for the "uncompressed" Between model
-    if (length(x$aliased) >= grp) stop(paste0("model not estimable as there are ", length(x$aliased),
-                                                          " coefficient(s) (incl. intercept) to be estimated for the between model but only ",
-                                                          grp, " ", describe(x, "effect"), "(s)"))
+    if (length(x$aliased) >= grp) stop(paste0("model not estimable: ", length(x$aliased),
+                                       " coefficient(s) (incl. intercept) to be estimated for the between model but only ",
+                                       grp, " ", describe(x, "effect"), "(s)"))
     } else NULL
 }
