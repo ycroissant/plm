@@ -11,12 +11,12 @@ bdiag <- function(...){
   else
     x <- list(...)
   n <- length(x)
-  if(n == 0) return(NULL)
+  if(n == 0L) return(NULL)
   x <- lapply(x, function(y) if(length(y)) as.matrix(y) else
               stop("Zero-length component in x"))
   d <- array(unlist(lapply(x, dim)), c(2, n))
-  rr <- d[1, ]
-  cc <- d[2, ]
+  rr <- d[1L, ]
+  cc <- d[2L, ]
   rsum <- sum(rr)
   csum <- sum(cc)
   out <- array(0, c(rsum, csum))
@@ -29,7 +29,7 @@ bdiag <- function(...){
   ind[4,   ] <- ccum
   imat <- array(1:(rsum * csum), c(rsum, csum))
   iuse <- apply(ind, 2, function(y, imat) imat[(y[1L]+1):y[2L],
-                                               (y[3L]+1):y[4L]], imat=imat)
+                                               (y[3L]+1):y[4L]], imat = imat)
   iuse <- as.vector(unlist(iuse))
   out[iuse] <- unlist(x)
   return(out)
@@ -183,7 +183,7 @@ pres <- function(x) {  # pres.panelmodel
 }
 
 
-# punbalancedness: measures for unbalancedness of a pandel data set as
+# punbalancedness: measures for unbalancedness of a panel data set as
 # defined in Ahrens/Pincus (1981), p. 228 (gamma and
 # nu) and for nested panel structures as in Baltagi/Song/Jung (2001), pp. 368-369 .
 #
@@ -321,6 +321,7 @@ punbalancedness <- function(x, ...) {
 punbalancedness.default <- function(x, ...) {
 
   ii <- index(x)
+  if(!is.index(ii)) stop("no valid index found for input object 'x'")
   
   if (ncol(ii) == 2L) {
    ## original Ahrens/Pincus (1981)
@@ -466,7 +467,7 @@ pvar.default <- function(x, id, time, ...){
   id.variation   <- rep(TRUE, len)
   time.variation_anyNA <- rep(FALSE, len)
   id.variation_anyNA   <- rep(FALSE, len)
-  lid <- split(x, id)   # these split() functions seem particularly slow
+  lid   <- split(x, id)   # these split() functions seem particularly slow
   ltime <- split(x, time)
   if(is.list(x)){
     if(len == 1L){
@@ -550,7 +551,7 @@ pvar.data.frame <- function(x, index = NULL, ...){
 #' @export
 pvar.pdata.frame <- function(x, ...){
   index <- attr(x, "index")
-  id <- index[[1L]]
+  id   <- index[[1L]]
   time <- index[[2L]]
   pvar.default(x, id, time)
 }
@@ -571,7 +572,7 @@ print.pvar <- function(x, ...){
   if(any(!x$time.variation)){
     var <- varnames[x$time.variation == FALSE]
     #    if (!is.null(y)) var <- var[-which(var==y$id)]
-    if (length(var)!=0) cat(paste("no time variation:      ", paste(var,collapse=" "),"\n"))
+    if(length(var)!=0) cat(paste("no time variation:      ", paste(var,collapse=" "),"\n"))
   }
   if(any(!x$id.variation)){
     var <- varnames[x$id.variation == FALSE]
@@ -582,11 +583,11 @@ print.pvar <- function(x, ...){
   # any individual-time combinations all NA?
   if(any(x$time.variation_anyNA)){
     var_anyNA <- varnames[x$time.variation_anyNA]
-    if (length(var_anyNA)!=0) cat(paste("all NA in time dimension for at least one individual: ", paste(var_anyNA,collapse=" "),"\n"))
+    if(length(var_anyNA)!=0) cat(paste("all NA in time dimension for at least one individual: ", paste(var_anyNA,collapse=" "),"\n"))
   }
   if(any(x$id.variation_anyNA)){
     var_anyNA <- varnames[x$id.variation_anyNA]
-    if (length(var_anyNA)!=0) cat(paste("all NA in ind. dimension for at least one time period:", paste(var_anyNA,collapse=" "),"\n"))
+    if(length(var_anyNA)!=0) cat(paste("all NA in ind. dimension for at least one time period:", paste(var_anyNA,collapse=" "),"\n"))
   }
 }
 
