@@ -67,7 +67,7 @@
 #'     the usual elements of a `htest` object, it contains the data
 #'     frame `indgranger` which carries the Granger test statistics
 #'     per individual along the associated p-values, degrees of
-#'     freedom and the specified lag order.
+#'     freedom, and the specified lag order.
 #' @export
 #' @author Kevin Tappe
 #' @seealso [lmtest::grangertest()] for the original (non-panel)
@@ -100,7 +100,7 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar", "Wbar"), orde
   # compared to Dumistrescu/Hurlin (2012), because "Note however that T in DH's formulas 
   # must be understood as the number of observations remaining in the estimations, that 
   # is the number of periods minus the number of lags included. In order to be consistent
-  # with our notation, we therefore replaced DH's T by T - K in the follwing formulas of
+  # with our notation, we therefore replaced DH's T by T - K in the following formulas of
   # the present paper."
   
   # y ~ x: to test whether x (panel) Granger causes y
@@ -193,7 +193,7 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar", "Wbar"), orde
                   * ( (T. - 3*order - 3) / (T. - 3*order - 1) * Wbar - order))
     } else {
       # unbalanced and/or varying lag order
-      # unbal stat seems to reduce to the balanced case for balanced data but rather treat it separately here
+      # unbal stat reduces to the balanced case for balanced data but rather treat it separately here
       # formula (33) in Dumitrescu/Hurlin (2012), p. 1459
       if (length(order) == 1) order <- rep(order, N) # replicate lag order for all individuals
       stat <- c(   sqrt(N) * ( Wbar - 1/N * sum( order * (Ti - 3*order - 1) / (Ti - 3*order - 3) )) 
