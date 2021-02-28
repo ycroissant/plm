@@ -6,9 +6,15 @@
    NA values.
  * pdata.frame: warns if NA in index dimension is encountered (before, only
    a plain message was printed).
+ * Between/between/Sum/Within: Methods which rely on the index attribute
+   (\*.pseries and partly \*.matrix) now error informatively if NA in any index
+   dimension is encountered.
+
 
 ### Internals/Others:
- * fix export of generics for lag and diff (went lost in 2.4-0).
+ * Fix export of generics for lag and diff (went lost in 2.4-0; the
+   panel-specific lag and diff were executed anyway if general lag() and diff()
+   encountered a pseries).
  * Vignettes: file names renamed to contain numbering so that the Vignettes are
    sorted on CRAN's plm page in an order better suited for new package users.
  * checkNA.index: new non-exported helper function to check for NA in index 

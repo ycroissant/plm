@@ -154,15 +154,16 @@ Sum.pseries.collapse <- function(x, effect = c("individual", "time", "group"), .
 									 "time"       = 2L,
 									 "group"      = 3L,
 									 stop("unknown value of argument 'effect'"))
-	i <- index(x)
-	eff.fac <- i[ , eff.no]
+	xindex <- index(x)
+	checkNA.index(xindex) # index may not contain any NA
+	eff.fac <- xindex[ , eff.no]
 	nms <- as.character(eff.fac)
 	na.x <- is.na(x)
 	res <- collapse::fsum(x, g = eff.fac, w = NULL, na.rm = na.rm)
 	res <- res[eff.fac] # need to expand data to original length
 	names(res) <- nms
 	res[na.x] <- NA
-	res <- add_pseries_features(res, i)
+	res <- add_pseries_features(res, xindex)
 	return(res)
 }
 
@@ -183,6 +184,7 @@ Sum.matrix.collapse <- function(x, effect, ...) {
 											 "group"      = 3L,
 											 stop("unknown value of argument 'effect'"))
 			xindex <- attr(x, "index")
+			checkNA.index(xindex) # index may not contain any NA
 			xindex[ , eff.no]
 	}
 	dots <- match.call(expand.dots = FALSE)$`...`
@@ -258,7 +260,10 @@ Between.pseries.collapse <- function(x, effect = c("individual", "time", "group"
 						"time"       = 2L,
 					  "group"      = 3L,
 					  stop("unknown value of argument 'effect'"))
-	nms <- as.character(index(x)[[eff.no]])
+	
+	xindex <- index(x)
+	checkNA.index(xindex) # index may not contain any NA
+	nms <- as.character(xindex[[eff.no]])
 	na.x <- is.na(x)
 	# must be fill = TRUE [to catch case when 1 obs of an individual is NA (otherwise result could contain non-intended NA)]
 	res <- collapse::fbetween(x, effect = eff.no, w = NULL, na.rm = na.rm, fill = TRUE)
@@ -283,7 +288,9 @@ between.pseries.collapse <- function(x, effect = c("individual", "time", "group"
 					 "group"      = 3L,
 					 stop("unknown value of argument 'effect'"))
 	
-	i <- index(x, which = eff.no)
+	xindex <- index(x)
+	checkNA.index(xindex) # index may not contain any NA
+	i <- xindex[ , eff.no]
 	# use collapse-version
 	# must be fill = TRUE [to catch case when 1 obs of an individual is NA
 	# (otherwise result could contain non-intended NA)]
@@ -314,6 +321,7 @@ Between.matrix.collapse <- function(x, effect, ...) {
 										 "group"      = 3L,
 										 stop("unknown value of argument 'effect'"))
 		xindex <- attr(x, "index")
+		checkNA.index(xindex) # index may not contain any NA
 		xindex[ , eff.no]
 	}
 	dots <- match.call(expand.dots = FALSE)$`...`
@@ -347,6 +355,7 @@ between.matrix.collapse <- function(x, effect, ...) {
 										 "group"      = 3L,
 										 stop("unknown value of argument 'effect'"))
 		xindex <- attr(x, "index")
+		checkNA.index(xindex) # index may not contain any NA
 		xindex[ , eff.no]
 	}
 	dots <- match.call(expand.dots = FALSE)$`...`
@@ -395,6 +404,8 @@ Within.pseries.collapse <- function(x, effect = c("individual", "time", "group",
 	else { 
 		dots[["na.rm"]]
 	}
+	xindex <- index(x)
+	checkNA.index(xindex) # index may not contain any NA
 	if(effect != "twoways") {
 		eff.no <- switch(effect,
 						 "individual" = 1L,
@@ -405,15 +416,16 @@ Within.pseries.collapse <- function(x, effect = c("individual", "time", "group",
 	} else {
 		if(is.pbalanced(x)) {
 			# effect = "twoways" - balanced
-			res <-   collapse::fwithin( x, effect = 1L, w = NULL, na.rm = na.rm, mean = "overall.mean") -
-			         collapse::fbetween(x, effect = 2L, w = NULL, na.rm = na.rm, fill = TRUE)
+			res <- collapse::fwithin(  x, effect = 1L, w = NULL, na.rm = na.rm, mean = "overall.mean") -
+			        collapse::fbetween(x, effect = 2L, w = NULL, na.rm = na.rm, fill = TRUE)
 			      # =(plm)= res <- x - Between(x, "individual", ...) - Between(x, "time", ...) + mean(x, ...)
 		} else {
 			# effect = "twoways" - unbalanced
-			time <- index(x)[[2L]]
+			id   <- xindex[[1L]]
+			time <- xindex[[2L]]
 			Dmu <- model.matrix(~ time - 1)
-			W1 <- collapse::fwithin(x, effect = 1L, w = NULL, na.rm = na.rm, mean = 0) # pseries interface
-			WDmu <- collapse::fwithin(Dmu, g = index(x)[[1L]], w = NULL, na.rm = na.rm, mean = 0) # matrix interface
+			W1   <- collapse::fwithin(x,   effect = 1L, w = NULL, na.rm = na.rm, mean = 0) # pseries interface
+			WDmu <- collapse::fwithin(Dmu, g      = id, w = NULL, na.rm = na.rm, mean = 0) # matrix interface
 			W2 <- fitted(lm.fit(WDmu, x))
 			res <- W1 - W2
 		}
@@ -444,32 +456,32 @@ Within.matrix.collapse <- function(x, effect, rm.null = TRUE, ...) {
 		return(result)
 	}
 	else {
+		xindex <- attr(x, "index")
+		checkNA.index(xindex) # index may not contain any NA
 		if(effect %in% c("individual", "time", "group")) {
 			eff.fac <- switch(effect,
-											 "individual" = attr(x, "index")[[1L]],
-											 "time"       = attr(x, "index")[[2L]],
-											 "group"      = attr(x, "index")[[3L]],
+											 "individual" = xindex[[1L]],
+											 "time"       = xindex[[2L]],
+											 "group"      = xindex[[3L]],
 											 stop("unknown value of argument 'effect'"))
 			
 			result <- collapse::fwithin(x, g = eff.fac, w = NULL, na.rm = na.rm, mean = 0)
 			# =(plm)= result <- x - Between(x, effect)
 		}
 		if(effect == "twoways") {
-			xindex <- attr(x, "index")
 			if(is.pbalanced(xindex)) {
 				# balanced twoways
-				eff.ind.fac  <- attr(x, "index")[[1L]]
-				eff.time.fac <- attr(x, "index")[[2L]]
-				result <- collapse::fwithin( x, g = eff.ind.fac,  w = NULL, na.rm = na.rm, mean = "overall.mean") -
-				          collapse::fbetween(x, g = eff.time.fac, w = NULL, na.rm = na.rm, fill = TRUE)
+				eff.ind.fac  <- xindex[[1L]]
+				eff.time.fac <- xindex[[2L]]
+				result <- collapse::fwithin(  x, g = eff.ind.fac,  w = NULL, na.rm = na.rm, mean = "overall.mean") -
+				           collapse::fbetween(x, g = eff.time.fac, w = NULL, na.rm = na.rm, fill = TRUE)
 				# =(plm)= result <- x - Between(x, "individual", ...) - Between(x, "time", ...) +
 				#                        matrix(colMeans(x, ...), nrow = nrow(x), ncol = ncol(x), byrow = TRUE)
 			}
 			else { # unbalanced twoways
-				time <- index(xindex, "time")
-				id <- index(xindex, "individual")
+				eff.fac.ind <- xindex[[1L]]
+				time <- xindex[[2L]]
 				Dmu <- model.matrix(~ time - 1)
-				eff.fac.ind <- attr(x, "index")[[1L]]
 				W1   <- collapse::fwithin(x,   g = eff.fac.ind, w = NULL, na.rm = na.rm, mean = 0)
 				WDmu <- collapse::fwithin(Dmu, g = eff.fac.ind, w = NULL, na.rm = na.rm, mean = 0)
 				W2 <- fitted(lm.fit(WDmu, x))
@@ -491,10 +503,11 @@ Within.matrix.collapse <- function(x, effect, rm.null = TRUE, ...) {
 # 	effect <- match.arg(effect)
 # 	dots <- match.call(expand.dots = FALSE)$`...`
 # 	na.rm <- if(is.null(dots[["na.rm"]])) {
-# 		FALSE }# default of plm::between
 # 	else {
 # 		dots[["na.rm"]]
 # 	}
+#   xindex <- index(x)
+#   checkNA.index(xindex) # index may not contain any NA
 # 	if(effect != "twoways") {
 # 		eff.no <- switch(effect,
 # 										 "individual" = 1L,
@@ -535,6 +548,8 @@ Within.matrix.collapse <- function(x, effect, rm.null = TRUE, ...) {
 # 		return(result)
 # 	}
 # 	else {
+#     xindex <- attr(x, "index")
+#     checkNA.index(xindex) # index may not contain any NA
 # 		if(effect %in% c("individual", "time", "group")) {
 # 			eff.fac <- switch(effect,
 # 												"individual" = attr(x, "index")[[1L]],
