@@ -174,10 +174,10 @@ plot.pseries <- function(x, plot = c("lattice", "superposed"),
     nx <- as.numeric(x)
     ind <- attr(x, "index")[[1L]]
     tind <- attr(x, "index")[[2L]] # possibly as.numeric():
-                                  # activates autom. tick
-                                  # but loses time labels
+                                   # activates autom. tick
+                                   # but loses time labels
 
-    xdata <- data.frame(nx=nx, ind=ind, tind=tind)
+    xdata <- data.frame(nx = nx, ind = ind, tind = tind)
     
     switch(match.arg(plot),
            "lattice" = {
@@ -197,8 +197,8 @@ plot.pseries <- function(x, plot = c("lattice", "superposed"),
                axis(1, at = as.numeric(unique(tind)),
                     labels = unique(tind))
                
-                   ## determine lwd and transparency level as a function
-                   ## of n
+               ## determine lwd and transparency level as a function
+               ## of n
                if(transparency) {
                    alpha <- 5 / length(unind)
                    col <- heat.colors(1, alpha = alpha)
@@ -212,8 +212,8 @@ plot.pseries <- function(x, plot = c("lattice", "superposed"),
                    tindi <- tind[ind == unind[i]]
                    lines(x = tindi, y = scalefun(nxi),
                          col = col, lwd = lwd, ...)
-               }               
-           })    
+               }
+           }) 
 }
 
 #' @rdname pseries
@@ -222,18 +222,16 @@ summary.pseries <- function(object, ...) {
     if(!inherits(object, c("factor", "logical", "character"))) {
         id <- attr(object, "index")[[1L]]
         time <- attr(object, "index")[[2L]]
-        xm <- mean(object, na.rm = TRUE)
         Bid <-  Between(object, na.rm = TRUE)
         Btime <-  Between(object, effect = "time", na.rm = TRUE)
         ## res <- structure(c(total = sumsq(object),
         ##                    between_id = sumsq(Bid),
         ##                    between_time = sumsq(Btime)), 
         ##                  class = c("summary.pseries", "numeric"))
-        res <- structure(c(total =        sum( (na.omit(object) - mean(object, na.rm = TRUE)) ^ 2),
-                           between_id =   sum( (na.omit(Bid)    - mean(Bid,    na.rm = TRUE)) ^ 2),
+        res <- structure(c(total        = sum( (na.omit(object) - mean(object, na.rm = TRUE)) ^ 2),
+                           between_id   = sum( (na.omit(Bid)    - mean(Bid,    na.rm = TRUE)) ^ 2),
                            between_time = sum( (na.omit(Btime)  - mean(Btime,  na.rm = TRUE)) ^ 2)), 
-                           class = c("summary.pseries", "numeric"))
-        
+                          class = c("summary.pseries", "numeric"))
     } else {
         class(object) <- setdiff(class(object), c("pseries"))
         res <- summary(object, ...)
@@ -581,13 +579,12 @@ Within.matrix <- function(x, effect, rm.null = TRUE, ...) {
 #
 # The "t" and "r" methods are not exported (by intention).
 #
-
 # The "t" methods perform shifting while taking the time period into
 # account (they "look" at the value in the time dimension).
-
+#
 # The "r" methods perform shifting row-wise (without taking the value
 # in the time dimension into account).
-
+#
 # Generic needed only for lead (lag and diff generics are already included in base R)
 
 
