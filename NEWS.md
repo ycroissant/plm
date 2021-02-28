@@ -12,8 +12,8 @@
 
 
 ### Internals/Others:
- * Fix export of generics for lag and diff (went lost in 2.4-0; the
-   panel-specific lag and diff were executed anyway if general lag() and diff()
+ * Fix export of generics for lag (went lost in 2.4-0; the
+   panel-specific lag and diff were executed anyway if general lag()
    encountered a pseries).
  * Vignettes: file names renamed to contain numbering so that the Vignettes are
    sorted on CRAN's plm page in an order better suited for new package users.
