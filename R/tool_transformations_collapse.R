@@ -503,6 +503,7 @@ Within.matrix.collapse <- function(x, effect, rm.null = TRUE, ...) {
 # 	effect <- match.arg(effect)
 # 	dots <- match.call(expand.dots = FALSE)$`...`
 # 	na.rm <- if(is.null(dots[["na.rm"]])) {
+# 		FALSE }# default of plm::between
 # 	else {
 # 		dots[["na.rm"]]
 # 	}
