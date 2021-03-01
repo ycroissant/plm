@@ -1,6 +1,7 @@
 # plm 2.4-1
 
-
+ * lag: fix export of generic for lag (lost in 2.4-0; the panel-specific lag
+   method was executed anyway if base R's lag() encountered a pseries).
  * model.frame.pdata.frame: errors informatively if any index dimension has
    NA values.
  * pdata.frame: warns if NA in index dimension is encountered (before, only
@@ -8,8 +9,6 @@
  * Between/between/Sum/Within: Methods which rely on the index attribute
    (\*.pseries and partly \*.matrix) now error informatively if NA in any index
    dimension is encountered.
- * Fix export of generic for lag (lost in 2.4-0; the panel-specific lag method
-   was executed anyway if general lag() encountered a pseries).
  * Vignettes: file names renamed to contain numbering so that the Vignettes are
    sorted on CRAN's plm page in an order better suited for new package users.
  * checkNA.index: new non-exported helper function to check for NA in index 
@@ -151,9 +150,12 @@ plm()): Between, between, Sum, Within.
 
 ### Minor items:
    * print.fixef: respects / forwards arguments supplied to generic print method.
-   * DESCRIPTION/Dependencies: package 'urca' added to "Suggests".
    * Grunfeld data doc: URL for overview of various Grunfeld data sets updated to
      https://eeecon.uibk.ac.at/~zeileis/grunfeld/. 
+
+### Dependencies:
+   * Package 'urca' added to "Suggests".
+
 
 # plm 2.2-0
 
