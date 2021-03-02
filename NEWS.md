@@ -1,3 +1,7 @@
+# development version 2.4-19999 
+ * likely set to either 2.4-2 or 2.6 for CRAN release
+
+
 # plm 2.4-1
 
  * lag: fix export of generic for lag (lost in 2.4-0; the panel-specific lag
