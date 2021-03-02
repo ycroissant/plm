@@ -24,48 +24,48 @@
 
 #' @rdname plm
 #' @export
-terms.panelmodel <- function(x,...){
+terms.panelmodel <- function(x, ...){
   terms(formula(x))
 }
 
 #' @rdname plm
 #' @export
-vcov.panelmodel <- function(object,...){
+vcov.panelmodel <- function(object, ...){
   object$vcov
 }
 
 #' @rdname plm
 #' @export
-fitted.panelmodel <- function(object,...){
+fitted.panelmodel <- function(object, ...){
   object$fitted.values 
 }
 
 #' @rdname plm
 #' @export
-residuals.panelmodel <- function(object,...){
+residuals.panelmodel <- function(object, ...){
   object$residuals
 }
 
 #' @rdname plm
 #' @export
-df.residual.panelmodel <- function(object,...){
+df.residual.panelmodel <- function(object, ...){
   object$df.residual
 }
 
 #' @rdname plm
 #' @export
-coef.panelmodel <- function(object,...){
+coef.panelmodel <- function(object, ...){
   object$coefficients
 }
 
 #' @rdname plm
 #' @export
 print.panelmodel <- function(x, digits = max(3, getOption("digits") - 2),
-                             width = getOption("width"),...){
+                             width = getOption("width"), ...){
   cat("\nModel Formula: ")
   print(formula(x))
   cat("\nCoefficients:\n")
-  print(coef(x),digits=digits)
+  print(coef(x), digits = digits)
   cat("\n")
   invisible(x)
 }
@@ -154,7 +154,7 @@ update.panelmodel <- function (object, formula., ..., evaluate = TRUE){
 
     if (! missing(formula.)){
         newform <- Formula(formula.)
-        if (length(newform)[2] == 2 && attr(newform, "rhs")[2] == as.name("."))
+        if (length(newform)[2L] == 2L && attr(newform, "rhs")[2L] == as.name("."))
             newform <- formula(newform, rhs = 1)
         call$formula <- update(formula(object), newform)
     }
@@ -286,9 +286,9 @@ summary.plm <- function(object, vcov = NULL, ...){
   
   ## determine if standard normal and Chisq test or t distribution and F test to be used
   use.norm.chisq <- FALSE
-  if(model == "random") use.norm.chisq <- TRUE               # all random models
-  if(length(formula(object))[2] >= 2) use.norm.chisq <- TRUE # all IV models
-  if(model == "ht") use.norm.chisq <- TRUE                   # HT via plm(., model="ht")
+  if(model == "random") use.norm.chisq <- TRUE                 # all random models
+  if(length(formula(object))[2L] >= 2L) use.norm.chisq <- TRUE # all IV models
+  if(model == "ht") use.norm.chisq <- TRUE                     # HT via plm(., model="ht")
   
   object$fstatistic <- pwaldtest(object,
                                  test = ifelse(use.norm.chisq, "Chisq", "F"),
@@ -338,18 +338,18 @@ summary.plm <- function(object, vcov = NULL, ...){
 print.summary.plm <- function(x, digits = max(3, getOption("digits") - 2),
                               width = getOption("width"), subset = NULL, ...){
   formula <- formula(x)
-  has.instruments <- (length(formula)[2] >= 2)
+  has.instruments <- (length(formula)[2L] >= 2L)
   effect <- describe(x, "effect")
   model  <- describe(x, "model")
-  if (model != "pooling") { cat(paste(effect.plm.list[effect]," ",sep="")) }
-  cat(paste(model.plm.list[model]," Model",sep=""))
+  if (model != "pooling") { cat(paste(effect.plm.list[effect], " ", sep = "")) }
+  cat(paste(model.plm.list[model], " Model", sep = ""))
   
   if (model == "random"){
     ercomp <- describe(x, "random.method")
     cat(paste(" \n   (",
               random.method.list[ercomp],
               "'s transformation)\n",
-              sep=""))
+              sep = ""))
   }
   else{
     cat("\n")
@@ -407,19 +407,18 @@ print.summary.plm <- function(x, digits = max(3, getOption("digits") - 2),
   cat("\n")
   cat(paste("Total Sum of Squares:    ", signif(tss(x),      digits), "\n", sep = ""))
   cat(paste("Residual Sum of Squares: ", signif(deviance(x), digits), "\n", sep = ""))
-  cat(paste("R-Squared:      ", signif(x$r.squared[1], digits),       "\n", sep = ""))
-  cat(paste("Adj. R-Squared: ", signif(x$r.squared[2], digits),       "\n", sep = ""))
+  cat(paste("R-Squared:      ", signif(x$r.squared[1L], digits),      "\n", sep = ""))
+  cat(paste("Adj. R-Squared: ", signif(x$r.squared[2L], digits),      "\n", sep = ""))
   fstat <- x$fstatistic
   if (names(fstat$statistic) == "F"){
-    cat(paste("F-statistic: ",signif(fstat$statistic),
-              " on ",fstat$parameter["df1"]," and ",fstat$parameter["df2"],
-              " DF, p-value: ",format.pval(fstat$p.value,digits=digits), "\n", sep=""))
+    cat(paste("F-statistic: ", signif(fstat$statistic),
+              " on ", fstat$parameter["df1"]," and ", fstat$parameter["df2"],
+              " DF, p-value: ", format.pval(fstat$p.value,digits=digits), "\n", sep=""))
   }
   else{
-    cat(paste("Chisq: ",signif(fstat$statistic),
-              " on ",fstat$parameter,
-              " DF, p-value: ",format.pval(fstat$p.value,digits=digits), "\n", sep=""))
-    
+    cat(paste("Chisq: ", signif(fstat$statistic),
+              " on ", fstat$parameter,
+              " DF, p-value: ", format.pval(fstat$p.value, digits = digits), "\n", sep=""))
   }
   invisible(x)
 }
@@ -464,13 +463,13 @@ plot.plm <- function(x, dx = 0.2, N = NULL, seed = 1,
     ids <- unique(index(x, "id"))
     if (subs) ids <- ids[sample(1:length(ids), N, replace = FALSE)]
     sel <- index(x, "id") %in% ids
-    T <- pdim$nT$T
+    T. <- pdim$nT$T
     cols <- rainbow(N)
     pts <- sample(1:25, N, replace = TRUE)
-    thex <- as.numeric(model.matrix(x, model = "pooling")[sel, 2])
+    thex <- as.numeric(model.matrix(x, model = "pooling")[sel, 2L])
     they <- as.numeric(pmodel.response(x, model = "pooling")[sel])
-    plot(thex, they, col = rep(cols, each = T),
-         pch = rep(pts, each = T), ann = FALSE, las = 1)
+    plot(thex, they, col = rep(cols, each = T.),
+         pch = rep(pts, each = T.), ann = FALSE, las = 1)
     idsel <- as.numeric(index(x, "id")[sel])
     meanx <- tapply(thex, idsel, mean)
     meany <- tapply(they, idsel, mean)
@@ -487,7 +486,7 @@ plot.plm <- function(x, dx = 0.2, N = NULL, seed = 1,
             lines(c(xmin, xmax), c(ymin, ymax), col = cols[i])
         }
     }
-    if(random) abline(coef(re)[1], coef(re)[2], lty = "dotted")
+    if(random) abline(coef(re)[1L], coef(re)[2L], lty = "dotted")
     if(pooling) abline(coef(mco), lty = "dashed")
     if(between) abline(coef(be), lty = "dotdash")
     # where to put the legends, depends on the sign of the OLS slope
@@ -511,10 +510,10 @@ residuals.plm <- function(object, model = NULL, effect = NULL,  ...){
         cl <- match.call(expand.dots = FALSE)
         # fitted -> call to the plm method, used to be fitted.plm
         # which is not exported
-#        cl[[1]] <- as.name("fitted.plm")
-        cl[[1]] <- as.name("fitted")
+#        cl[[1L]] <- as.name("fitted.plm")
+        cl[[1L]] <- as.name("fitted")
         bX <- eval(cl, parent.frame())
-        if (is.null(model)) model <- describe(object, "model")
+        if (is.null(model))  model  <- describe(object, "model")
         if (is.null(effect)) effect <- describe(object, "effect")
         y <- pmodel.response(object, model = model, effect = effect)
         res <- y - bX
