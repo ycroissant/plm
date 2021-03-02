@@ -25,7 +25,7 @@ Online complements to Baltagi (2001):
 
 Online complements to Baltagi (2013):
 
-\url{http://bcs.wiley.com/he-bcs/Books?action=resource&bcsId=4338&itemId=1118672321&resourceId=13452}
+\url{https://bcs.wiley.com/he-bcs/Books?action=resource&bcsId=4338&itemId=1118672321&resourceId=13452}
 }
 \description{
 a panel of 46 observations from 1963 to 1992

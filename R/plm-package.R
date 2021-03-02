@@ -125,7 +125,7 @@ NULL
 #' 
 #' Online complements to Baltagi (2013):
 #' 
-#' \url{http://bcs.wiley.com/he-bcs/Books?action=resource&bcsId=4338&itemId=1118672321&resourceId=13452}
+#' \url{https://bcs.wiley.com/he-bcs/Books?action=resource&bcsId=4338&itemId=1118672321&resourceId=13452}
 #' @importFrom Rdpack reprompt
 #' @keywords datasets
 NULL
@@ -218,7 +218,7 @@ NULL
 #' 
 #' Online complements to Baltagi (2013):
 #' 
-#' \url{http://bcs.wiley.com/he-bcs/Books?action=resource&bcsId=4338&itemId=1118672321&resourceId=13452}
+#' \url{https://bcs.wiley.com/he-bcs/Books?action=resource&bcsId=4338&itemId=1118672321&resourceId=13452}
 #' 
 #' See also Journal of Applied Econometrics data archive entry for
 #' Baltagi (2006) at
@@ -293,7 +293,7 @@ NULL
 #' 
 #' Online complements to Baltagi (2013):
 #' 
-#' \url{http://bcs.wiley.com/he-bcs/Books?action=resource&bcsId=4338&itemId=1118672321&resourceId=13452}
+#' \url{https://bcs.wiley.com/he-bcs/Books?action=resource&bcsId=4338&itemId=1118672321&resourceId=13452}
 #' @keywords datasets
 NULL
 
@@ -356,7 +356,7 @@ NULL
 #' 
 #' Online complements to Baltagi (2013):
 #' 
-#' \url{http://bcs.wiley.com/he-bcs/Books?action=resource&bcsId=4338&itemId=1118672321&resourceId=13452}
+#' \url{https://bcs.wiley.com/he-bcs/Books?action=resource&bcsId=4338&itemId=1118672321&resourceId=13452}
 #' @keywords datasets
 #' @examples
 #' 
@@ -419,7 +419,7 @@ NULL
 #' 
 #' Online complements to Baltagi (2013):
 #' 
-#' \url{http://bcs.wiley.com/he-bcs/Books?action=resource&bcsId=4338&itemId=1118672321&resourceId=13452}
+#' \url{https://bcs.wiley.com/he-bcs/Books?action=resource&bcsId=4338&itemId=1118672321&resourceId=13452}
 #' @keywords datasets
 NULL
 
@@ -583,7 +583,7 @@ NULL
 #' 
 #' Online complements to Baltagi (2013):
 #' 
-#' \url{http://bcs.wiley.com/he-bcs/Books?action=resource&bcsId=4338&itemId=1118672321&resourceId=13452}
+#' \url{https://bcs.wiley.com/he-bcs/Books?action=resource&bcsId=4338&itemId=1118672321&resourceId=13452}
 #' @keywords datasets
 NULL
 
@@ -780,7 +780,7 @@ NULL
 #' 
 #' Online complements to Baltagi (2013):
 #' 
-#' \url{http://bcs.wiley.com/he-bcs/Books?action=resource&bcsId=4338&itemId=1118672321&resourceId=13452}
+#' \url{https://bcs.wiley.com/he-bcs/Books?action=resource&bcsId=4338&itemId=1118672321&resourceId=13452}
 #' @keywords datasets
 #' @examples
 #' 

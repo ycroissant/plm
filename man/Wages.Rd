@@ -27,7 +27,7 @@ Online complements to Baltagi (2001):
 
 Online complements to Baltagi (2013):
 
-\url{http://bcs.wiley.com/he-bcs/Books?action=resource&bcsId=4338&itemId=1118672321&resourceId=13452}
+\url{https://bcs.wiley.com/he-bcs/Books?action=resource&bcsId=4338&itemId=1118672321&resourceId=13452}
 }
 \description{
 A panel of 595 individuals from 1976 to 1982, taken from the Panel Study of
