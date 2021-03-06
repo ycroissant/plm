@@ -85,18 +85,18 @@ $$
 where $n$ and $t$ are the individual and time indexes, $y$ the
 response, $x$ a vector of covariates, $\alpha$ the overall intercept
 and $\beta$ the vector of parameters of interest that we are willing
-to estimate. The error term is composed of three elements :
+to estimate. The error term $\epsilon_{nt}$ is composed of three elements :
 
 - $\eta_n$ is the individual effect,
 - $\mu_t$ is the time effect, 
-- $\epsilon_{nt}$ is the idiosyncratic error.
+- $\nu_{nt}$ is the idiosyncratic error.
 
 
 # Basic use of `plm`
 
 The first two arguments of `plm` are, like for most of the estimation
 functions of `R` a `formula` which describes the model to be estimated
-and a `data.frame`. `subset`, `weights` and `na.action` are also
+and a `data.frame`. `subset`, `weights`, and `na.action` are also
 available and have the same behavior as in the `lm` function. Three
 more main arguments can be set :
 
@@ -107,7 +107,7 @@ more main arguments can be set :
   `c("firm", "year")` or just `"firm"` if there is no explicit time
   index.
 - `effect` indicates the effects that should be taken into account ;
-  this is one of `"individual"`, `"time"` and `"twoways"`.
+  this is one of `"individual"`, `"time"`, and `"twoways"`.
 - `model` indicates the model to be estimated : `"pooling"` is just the
   OLS estimation (equivalent to a call to `lm`), `"between"` performs
   the estimation on the individual or time means, `"within"` on the
@@ -154,7 +154,7 @@ are:
   observations, respectively $N\times T$ and $N$ ; if `1`, the
   numerators of the previous expressions are used ($N\times (T-1)$ and
   $N$) ; if `2`, the number of estimated parameters in the preliminary
-  estimate $K$ is deduced. Finally, if `3`, the unbiased version is
+  estimate $K$ is deducted. Finally, if `3`, the unbiased version is
   computed, which is based on much more complex computations, which
   relies on the calculus of the trace of different cross-products
   which depends on the preliminary models used.
@@ -266,7 +266,7 @@ Two difficulties arise with unbalanced panels :
   omitted here, they depend on the preliminary estimator.
 - For the one-way effect model, the estimator is still obtained by
   applying *OLS* on demeaned data (the individual **and** the time
-  means are now deduced) for the within model and on quasi-demeaned
+  means are now deducted) for the within model and on quasi-demeaned
   data for the random effects model ; this is not the case for the
   two-ways effects model.
 
