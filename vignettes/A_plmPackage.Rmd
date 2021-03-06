@@ -492,7 +492,7 @@ In the same framework, robust inference is accomplished substituting
 matrix into the Wald statistic formula. In the panel context, the
 estimator of choice is the White system estimator. This called for a
 flexible method for computing robust coefficient covariance matrices
-*\`a la White* for `plm` objects.
+*à la White* for `plm` objects.
 
 A general White system estimator for panel data is:
 
@@ -1094,7 +1094,7 @@ error components.
 
 # Tests{#tests}
 
-As sketched in Section [linear panel model](#linear-panel-model)), specification
+As sketched in Section [linear panel model](#linear-panel-model), specification
 testing in panel models involves essentially testing for poolability,
 for individual or time unobserved effects and for correlation between
 these latter and the regressors (Hausman-type tests). As for the other
@@ -1244,7 +1244,7 @@ assumptions.
 
 ### Unobserved effects test
 
-The unobserved effects test *\`a la Wooldridge*
+The unobserved effects test *à la Wooldridge*
 (see @WOOL:02 10.4.4), is a semiparametric test for the null
 hypothesis that $\sigma^2_{\mu}=0$, i.e. that there are no unobserved
 effects in the residuals. Given that under the null the covariance
