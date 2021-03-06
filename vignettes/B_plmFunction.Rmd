@@ -76,7 +76,7 @@ setMethod("extract", signature = className("plm", "plm"),
 
 `plm` is a very versatile function which enable the estimation of a
 wide range of error component models. Those models can be written as
-follow :
+follows :
 
 $$
 y_{nt}=\alpha + \beta^\top x_{nt} + \epsilon_{nt} = \alpha + \beta^\top x_{nt} + \eta_n + \mu_t + \nu_{nt}
@@ -85,7 +85,8 @@ $$
 where $n$ and $t$ are the individual and time indexes, $y$ the
 response, $x$ a vector of covariates, $\alpha$ the overall intercept
 and $\beta$ the vector of parameters of interest that we are willing
-to estimate. The error term $\epsilon_{nt}$ is composed of three elements :
+to estimate. The error term $\epsilon_{nt}$ is composed of three elements 
+(in the two-way case):
 
 - $\eta_n$ is the individual effect,
 - $\mu_t$ is the time effect, 
@@ -378,7 +379,21 @@ screenreg(list("Hausman-Taylor" = ht, "Amemiya-MaCurdy" = am),
 # Nested error component model
 
 This section shows how the nested error component model as per
-@BALT:SONG:JUNG:01 can be estimated.
+@BALT:SONG:JUNG:01 can be estimated. The model is given by :
+
+$$
+y_{nt}=\alpha + \beta^\top x_{jnt} + u_{jnt} = \alpha + \beta^\top x_{jnt} + \mu_{j} + \nu_{jn} + \epsilon_{jnt}
+$$
+where $n$ and $t$ are the individual and time indexes and $j$ is the group index in
+which the individuals are nested. The error $u_{jnt}$ consists of three components :
+
+- $\mu_j$ is the group effect,
+- $\nu_{jn}$ the nested effect of the individual nested in group $j$
+- $\epsilon_{jnt}$ is the idiosyncratic error.
+
+In the estimated examples below, states are nested within regions. The group
+index is given in the 3rd position of the `index` argument to `pdata.frame`
+or to `plm` directly and `plm`'s argument `effect` is set to `"nested"`:
 
 ```{r}
 data("Produc", package = "plm")
