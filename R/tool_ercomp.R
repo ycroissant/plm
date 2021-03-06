@@ -737,7 +737,9 @@ swar_Between_check <- function(x, method) {
                         "time"       = pdim$nT$T)
     # cannot use df.residual(x) here because that gives the number for the "uncompressed" Between model
     if (length(x$aliased) >= grp) stop(paste0("model not estimable: ", length(x$aliased),
-                                       " coefficient(s) (incl. intercept) to be estimated for the between model but only ",
-                                       grp, " ", describe(x, "effect"), "(s)"))
+                                       " coefficient(s) (incl. intercept) to be estimated",
+                                       " but only ", grp, " ", describe(x, "effect"), "(s)",
+                                       " in data for the between model necessary for",
+                                       " Swamy-Arora random-effect model estimation"))
     } else NULL
 }
