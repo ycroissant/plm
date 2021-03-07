@@ -13,23 +13,24 @@ vignette: >
 
 plm tries to follow as close as possible the way models are fitted
 using `lm`. This relies on the following steps, using the
-`formula`-`data`:
+`formula`-`data` with some modifications:
 
 - compute internally the `model.frame` by getting the relevant
   arguments (`formula`, `data`, `subset`, `weights`, `na.action` and
   `offset`) and the supplementary argument,
-- extract from the `model.frame` the response (with `model.response`) and
-  the model matrix (with `model.matrix`),
-- call the estimation function `plm.fit` with `X` and `y` as arguments.
+- extract from the `model.frame` the response `y` (with `pmodel.response`) and
+  the model matrix `X` (with `model.matrix`),
+- call the (non-exported) estimation function `plm.fit` with `X` and `y` as
+  arguments.
 
-with some modifications.
 
-Firstly, panel data has a special structure which is describe by an
-`index` argument. This can be used in the `pdata.frame` function which
-returns a `pdata.frame` object which can be used as the `data`
+
+Panel data has a special structure which is described by an
+`index` argument. This argument can be used in the `pdata.frame` function which
+returns a `pdata.frame` object. A `pdata.frame` can be used as input to the `data`
 argument of `plm`. If the `data` argument of `plm` is an ordinary
-`data.frame`, the `index` argument can also be used as an argument of
-`plm`. In this case, the `pdata.frame` function is used internally to
+`data.frame`, the `index` argument can also be supplied as an argument of
+`plm`. In this case, the `pdata.frame` function is called internally to
 transform the data.
 
 Next, the `formula`, which is the first and mandatory argument of
@@ -41,7 +42,7 @@ second position. This unusual order of the arguments enables to use a
 specific `model.frame.pdata.frame` method defined in `plm`.
 
 As for the `model.frame.formula` method, a `data.frame` is returned,
-with a `terms` attribute. 
+with a `terms` attribute.
 
 Next, the `X` matrix is extracted using `model.matrix`. The usual way
 to do so is to feed the function with two arguments, a `formula` or a
@@ -144,32 +145,34 @@ X2 <- model.matrix(mfSB2, rhs = 1)
 W2 <- model.matrix(mfSB2, rhs = 2)
 head(X2, 3) ; head(W2, 3)
 ```
-The IV estimator can then be obtained as a 2SLS estimator: first
+The IV estimator can then be obtained as a 2SLS estimator: First,
 regress the covariates on the instruments and get the fitted values:
-
 
 ```{r }
 HX1 <- lm.fit(W1, X1)$fitted.values
 head(HX1, 3)
 ```
+
 Next, regress the response on these fitted values:
 
 ```{r }
 coef(lm.fit(HX1, y))
 ```
 
-Or using the `formula`-`data` interface with the `ivreg` function:
+The same can be achieved in one command by using the `formula`-`data` interface
+with the `ivreg` function:
 
 ```{r }
 coef(AER::ivreg(formiv1, data = SeatBelt))
 ```
 
-or `plm`:
-
+or with `plm`:
 
 ```{r }
 coef(plm(formiv1, SeatBelt, model = "pooling"))
 ```
+
+
 
 ```{r eval = FALSE, include = FALSE}
 X2 <- model.matrix(Formula(form1), mfSB, rhs = 2, dot = "previous")
