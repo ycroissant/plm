@@ -459,18 +459,18 @@ ercomp.formula <- function(object, data,
         # The number of time series in the balanced panel is replaced
         # by the harmonic mean of the number of time series in case of
         # unbalanced panels
-        barT <- ifelse(balanced, TS, length(Tn) / sum(Tn ^ (- 1)))
+        barT <- if(balanced) TS else { length(Tn) / sum(Tn ^ (- 1)) }
         M["w", "nu"] <- O
         if (dfcor[1L] == 1L) M["w", "nu"] <- M["w", "nu"] - NTS
         if (dfcor[1L] == 2L) M["w", "nu"] <- M["w", "nu"] - NTS - KS[1L]
         if (effect != "time"){
             M["w", "eta"] <- 0
-            M["id", "nu"] <- ifelse(dfcor[2L] == 2L, N - KS[2L] - 1, N)
+            M["id", "nu"] <- if(dfcor[2L] == 2L) { N - KS[2L] - 1 } else  N
             M["id", "eta"] <- barT * M["id", "nu"]
         }
         if (effect != "individual"){
             M["w", "mu"] <- 0
-            M["ts", "nu"] <- ifelse(dfcor[2L] == 2L, TS - KS[3L] - 1, TS)
+            M["ts", "nu"] <- if(dfcor[2L] == 2L) { TS - KS[3L] - 1 } else  TS
             M["ts", "mu"] <- N * M["ts", "nu"]
         }
         if (effect == "twoways") {
