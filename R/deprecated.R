@@ -642,7 +642,7 @@ as.Formula.pFormula <- function(x, ...){
 #' @export
 model.frame.pFormula <- function(formula, data, ..., lhs = NULL, rhs = NULL){
     if (is.null(rhs)) rhs <- 1:(length(formula)[2])
-    if (is.null(lhs)) lhs <- ifelse(length(formula)[1] > 0, 1, 0)
+    if (is.null(lhs)) lhs <- if(length(formula)[1] > 0L) 1 else 0
     index <- attr(data, "index")
     mf <- model.frame(as.Formula(formula), as.data.frame(data), ..., rhs = rhs)
     index <- index[as.numeric(rownames(mf)), ]
@@ -716,10 +716,10 @@ model.matrix.pFormula <- function(object, data,
         cols <- apply(X, 2, is.constant)
         cstcol <- names(cols)[cols]
         posintercept <- match("(Intercept)", cstcol)
-        cstintercept <- ifelse(is.na(posintercept), FALSE, TRUE)
-        zeroint <- ifelse(cstintercept &&
-                          max(X[, posintercept]) < sqrt(.Machine$double.eps),
-                          TRUE, FALSE)
+        cstintercept <- if(is.na(posintercept)) FALSE else TRUE
+        zeroint <- if(cstintercept &&
+                          max(X[, posintercept]) < sqrt(.Machine$double.eps))
+                          TRUE else FALSE
         if (length(cstcol) > 0){
             if ((cstcovar.rm == "covariates" || !zeroint) && cstintercept) cstcol <- cstcol[- posintercept]
             if (length(cstcol) > 0){

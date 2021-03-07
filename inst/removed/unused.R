@@ -223,7 +223,7 @@ print.form <- function(x, length.line){
 opdiff <- function(x, cond, effect = c("individual", "time"), has.intercept = FALSE){
     effect <- match.arg(effect)
     cond <- as.numeric(cond)
-    n <- ifelse(is.matrix(x), nrow(x), length(x))
+    n <- if(is.matrix(x)) nrow(x) else length(x)
   
     # code below is written for effect="individual". If effect="time" is
     # requested, order x so that the code works and later restore original order of x

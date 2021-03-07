@@ -316,8 +316,7 @@ plm <- function(formula, data, subset, weights, na.action,
     # check and match the effect and model arguments
     effect <- match.arg(effect)
     # note that model can be NA, in this case the model.frame is returned
-    if (! anyNA(model)) model <- ifelse(effect == "nested",
-                                        "random", match.arg(model))
+    if (! anyNA(model)) model <- if(effect == "nested") "random" else match.arg(model)
 
     # input checks for FD model: give informative error messages as
     # described in footnote in vignette
@@ -694,17 +693,17 @@ describe <- function(x,
   what <- match.arg(what)
   cl <- x$args
   switch(what,
-         "model"          = ifelse(!is.null(cl$model),
-                                   cl$model, "within"),
-         "effect"         = ifelse(!is.null(cl$effect),
-                                   cl$effect, "individual"),
-         "random.method"  = ifelse(!is.null(cl$random.method),
-                                   cl$random.method, "swar"),
-         "inst.method"    = ifelse(!is.null(cl$inst.method),
-                                   cl$inst.method, "bvk"),
-         "transformation" = ifelse(!is.null(cl$transformation),
-                                   cl$transformation, "d"),
-         "ht.method"      = ifelse(!is.null(cl$ht.method),
-                                   cl$ht.method, "ht")
+         "model"          = if(!is.null(cl$model))
+                                   cl$model else  "within",
+         "effect"         = if(!is.null(cl$effect)) 
+                                   cl$effect else "individual",
+         "random.method"  = if(!is.null(cl$random.method))
+                                   cl$random.method else "swar",
+         "inst.method"    = if(!is.null(cl$inst.method))
+                                   cl$inst.method else "bvk",
+         "transformation" = if(!is.null(cl$transformation))
+                                   cl$transformation else "d",
+         "ht.method"      = if(!is.null(cl$ht.method))
+                                   cl$ht.method else "ht"
          )
 }

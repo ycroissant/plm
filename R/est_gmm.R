@@ -266,7 +266,7 @@ pgmm <- function(formula, data, subset, na.action,
     lost.ts <- as.numeric(lost.ts)
     if (!(length(lost.ts) %in% c(1, 2))) stop("lost.ts should be of length 1 or 2")
     TL1 <- lost.ts[1L]
-    TL2 <- ifelse(length(lost.ts) == 1, TL1 - 1, lost.ts[2L])
+    TL2 <- if(length(lost.ts) == 1L) { TL1 - 1 } else lost.ts[2L]
   }
   else{
     # How many time series are lost ? May be the maximum number of lags
@@ -392,7 +392,7 @@ pgmm <- function(formula, data, subset, na.action,
                    # condition with the intercept. In this case, a row
                    # of 0 should be added. Otherwise, the number of
                    # rows is just T - TL2
-                   nrow.ud <- ifelse(TL2 == 1, T - 2, T - TL2)
+                   nrow.ud <- if(TL2 == 1L) { T - 2 } else { T - TL2 }
                    u <- matrix(unlist(u), nrow = nrow.ud)
                    if (TL2 == 1) u <- rbind(0, u)
                    u
