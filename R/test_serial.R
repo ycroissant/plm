@@ -708,7 +708,7 @@ pbsytest.panelmodel <- function(x, test = c("ar", "re", "j"), re.normal = if (te
   ) # END switch
   
   dname <- paste(deparse(substitute(formula)))
-  balanced.type <- ifelse(pdim$balanced, "balanced", "unbalanced")
+  balanced.type <- if(pdim$balanced) "balanced" else "unbalanced"
   tname <- paste(tname, "-", balanced.type, "panel", collapse = " ")
 
   RVAL <- list(statistic   = stat,

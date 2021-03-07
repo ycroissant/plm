@@ -44,7 +44,7 @@ residuals_overall_e_exp <- function(object) { ### experimental non-exported func
   if (obj.eff == "twoways") {
     res_ov_e <- res_ov - ranef(object, "individual")[index(object, "id")] - ranef(object, "time")[index(object, "time")]
   } else {
-    res_ov_e <- res_ov - ranef(object)[index(object, ifelse(obj.eff == "individual", "id", "time"))]
+    res_ov_e <- res_ov - ranef(object)[index(object, if(obj.eff == "individual") "id" else "time")]
   }
   names(res_ov_e) <- names(res_ov)
   return(res_ov_e)

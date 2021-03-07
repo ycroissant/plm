@@ -82,8 +82,8 @@ model.frame.pdata.frame <- function(formula, data = NULL, ...,
                                     lhs = NULL, rhs = NULL, dot = "previous"){
     pdata <- formula
     formula <- as.Formula(data)
-    if (is.null(rhs)) rhs <- 1:(length(formula)[2])
-    if (is.null(lhs)) lhs <- ifelse(length(formula)[1] > 0, 1, 0)
+    if (is.null(rhs)) rhs <- 1:(length(formula)[2L])
+    if (is.null(lhs)) lhs <- if(length(formula)[1] > 0) 1 else 0
     index <- attr(pdata, "index")
     mf <- model.frame(formula, as.data.frame(pdata, row.names = FALSE), ..., # NB need row.names = FALSE to ensure mf has integer sequence as row names
                       lhs = lhs, rhs = rhs, dot = dot)
@@ -111,9 +111,9 @@ formula.pdata.frame <- function(x, ...){
 #' @export
 model.matrix.plm <- function(object, ...){
     dots <- list(...)
-    model <- ifelse(is.null(dots$model), describe(object, "model"), dots$model)
-    effect <- ifelse(is.null(dots$effect), describe(object, "effect"), dots$effect)
-    rhs <- ifelse(is.null(dots$rhs), 1, dots$rhs)
+    model  <- if(is.null(dots$model))  describe(object, "model")  else dots$model
+    effect <- if(is.null(dots$effect)) describe(object, "effect") else dots$effect
+    rhs    <- if(is.null(dots$rhs)) 1 else dots$rhs
     cstcovar.rm <- dots$cstcovar.rm
     formula <- formula(object)
     data <- model.frame(object)
@@ -147,7 +147,7 @@ model.matrix.pdata.frame <- function(object,
     data <- object
     has.intercept <- has.intercept(formula, rhs = rhs)
     # relevant defaults for cstcovar.rm
-    if (is.null(cstcovar.rm)) cstcovar.rm <- ifelse(model == "within", "intercept", "none")
+    if (is.null(cstcovar.rm)) cstcovar.rm <- if(model == "within") "intercept" else "none"
     balanced <- is.pbalanced(data)
     X <- model.matrix(as.Formula(formula), data = data, rhs = rhs, dot = "previous", ...)
     # check for infinite or NA values and exit if there are some
@@ -185,10 +185,10 @@ model.matrix.pdata.frame <- function(object,
         cols <- apply(X, 2, is.constant)
         cstcol <- names(cols)[cols]
         posintercept <- match("(Intercept)", cstcol)
-        cstintercept <- ifelse(is.na(posintercept), FALSE, TRUE)
-        zeroint <- ifelse(cstintercept &&
-                          max(X[, posintercept]) < sqrt(.Machine$double.eps),
-                          TRUE, FALSE)
+        cstintercept <- if(is.na(posintercept)) FALSE else TRUE
+        zeroint <- if(cstintercept &&
+                          max(X[, posintercept]) < sqrt(.Machine$double.eps))
+                          TRUE else FALSE
         if (length(cstcol) > 0){
             if ((cstcovar.rm == "covariates" || !zeroint) && cstintercept) cstcol <- cstcol[- posintercept]
             if (length(cstcol) > 0){
@@ -279,9 +279,9 @@ pmodel.response.plm <- function(object, ...){
 pmodel.response.data.frame <- function(object, ...){
     dots <- list(...)
     if (is.null(attr(object, "terms"))) stop("not a model.frame")
-    model <- ifelse(is.null(dots$model), "pooling", dots$model)
-    effect <- ifelse(is.null(dots$effect), "individual", dots$effect)
-    if (is.null(dots$theta)) theta <- NULL else theta <- dots$theta
+    model  <- if(is.null(dots$model))  "pooling"    else dots$model
+    effect <- if(is.null(dots$effect)) "individual" else dots$effect
+    if(is.null(dots$theta)) theta <- NULL else theta <- dots$theta
 #    theta <- ifelse(is.null(dots$theta), NULL, dots$theta)
     y <- model.response(object)
     ptransform(y, model = model, effect = effect, theta = theta)

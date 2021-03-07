@@ -291,7 +291,7 @@ summary.plm <- function(object, vcov = NULL, ...){
   if(model == "ht") use.norm.chisq <- TRUE                     # HT via plm(., model="ht")
   
   object$fstatistic <- pwaldtest(object,
-                                 test = ifelse(use.norm.chisq, "Chisq", "F"),
+                                 test = if(use.norm.chisq) "Chisq" else "F",
                                  vcov = vcov_arg)
   
   # construct the table of coefficients

@@ -431,7 +431,7 @@ plmtest.plm <- function(x,
     if (!type %in% c("honda", "bp", "kw"))
       stop("type must be one of \"honda\", \"bp\" or \"kw\" for a one way model") # kw oneway coincides with honda
     
-    stat <- ifelse(effect == "individual", LM1, LM2)
+    stat <- if(effect == "individual") LM1 else LM2
     stat <- switch(type,
                      honda = c(normal = stat),
                      bp    = c(chisq  = stat ^ 2),
@@ -480,7 +480,7 @@ plmtest.plm <- function(x,
                             time    = "time effects",
                             twoways = "two-ways effects")
   
-  balanced.type <- ifelse(balanced, "balanced", "unbalanced")
+  balanced.type <- if(balanced) "balanced" else "unbalanced"
   
   method <- paste("Lagrange Multiplier Test - ", method.effect,
                   " (", method.type, ") for ", balanced.type, " panels", sep="")
@@ -740,9 +740,7 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
                           df2adj = (test == "F" && !is.null(vcov) && missing(.df2)), .df1, .df2, ...) {
   model <- describe(x, "model")
   test <- match.arg(test)
-  df1 <- ifelse(model == "within",
-                length(coef(x)),
-                length(coef(x)) - has.intercept(x))
+  df1 <- if(model == "within") length(coef(x)) else { length(coef(x)) - has.intercept(x) }
   df2 <- df.residual(x)
 #  tss <- tss(x)        # not good for models without intercept
 #  ssr <- deviance(x)   # -- " --
@@ -927,7 +925,7 @@ pwaldtest.pgmm <- function(x, param = c("coef", "time", "all"), vcov = NULL, ...
   
   switch(param,
          "time" = {
-           start <- Ktot - Kt + ifelse(transformation == "ld", 2, 1)
+           start <- Ktot - Kt + if(transformation == "ld") 2 else 1
            end <- Ktot
          },
          "coef" = {

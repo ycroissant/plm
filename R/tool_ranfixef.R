@@ -388,7 +388,7 @@ ranef.plm <- function(object, effect = NULL, ...) {
   # TODO: Are random effects for nested models and IV models calculated the same way?
   #       Be defensive here and error for such models.
   if (obj.effect == "nested")  stop("nested random effect models are not supported (yet?)")
-  if (length(object$formula)[2] == 2) stop("IV models not supported (yet?)")
+  if (length(object$formula)[2L] == 2L) stop("IV models not supported (yet?)")
   
   if (!is.null(effect) && !(effect %in% c("individual", "time"))) 
       stop("argument 'effect' must be NULL, \"individual\", or \"time\"")
@@ -417,19 +417,19 @@ ranef.plm <- function(object, effect = NULL, ...) {
   
   if (obj.effect == "twoways" && balanced) {
     theta <- switch(effect,
-                    "individual" = theta[1],
-                    "time"       = theta[2])
+                    "individual" = theta[1L],
+                    "time"       = theta[2L])
   }
   if (obj.effect == "twoways" && !balanced) {
-    theta <- erc[["theta"]][[ifelse(effect == "individual", "id", "time")]]
+    theta <- erc[["theta"]][[if(effect == "individual") "id" else "time"]]
   }
   
   if (!balanced) {
     # in the unbalanced cases, ercomp[["theta"]] is full length (# obs)
     #  -> reduce to per id/time
     select <- switch(effect,
-                     "individual" = !duplicated(index(object$model)[1]),
-                     "time"       = !duplicated(index(object$model)[2]))
+                     "individual" = !duplicated(index(object$model)[1L]),
+                     "time"       = !duplicated(index(object$model)[2L]))
     theta <- theta[select]
   }
   
