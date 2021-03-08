@@ -132,7 +132,7 @@ has.intercept.Formula <- function(object, rhs = NULL, ...) {
   res <- sapply(rhs, function(x) {
     aform <- formula(object, lhs = 0, rhs = x)
     # expand the dot if any in all the parts except the first
-    if (x > 1) aform <- update(formula(object, lhs = 0, rhs = 1), aform)
+    if (x > 1L) aform <- update(formula(object, lhs = 0, rhs = 1), aform)
     has.intercept(aform)
   })
   return(res)
@@ -148,8 +148,9 @@ has.intercept.panelmodel <- function(object, ...) {
 #' @rdname has.intercept
 #' @export
 has.intercept.plm <- function(object, part = "first", ...) {
-  has.intercept(formula(object), part = part)
-}
+  has.intercept(formula(object), part = part) # TODO: likely this should be rhs = part (instead of part = part)
+}                                             #        and part should allow integer inputs (as well as a value for
+                                              #        all parts (NULL, "all" or similar))
 
 pres <- function(x) {  # pres.panelmodel
   ## extracts model residuals as pseries
