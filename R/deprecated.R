@@ -73,13 +73,13 @@ plm.data <- function(x, indexes = NULL) {
   #  -> call pdata.frame accordingly and adjust afterwards
   orig_col_order <- colnames(x)
   
-  x <- pdata.frame(x, index = indexes,
-                      drop.index = FALSE,
-                      row.names = FALSE,
-                      stringsAsFactors = TRUE,
+  x <- pdata.frame(x, index              = indexes,
+                      drop.index         = FALSE,
+                      row.names          = FALSE,
+                      stringsAsFactors   = TRUE,
                       replace.non.finite = TRUE,
-                      drop.NA.series = TRUE,
-                      drop.const.series = FALSE)
+                      drop.NA.series     = TRUE,
+                      drop.const.series  = FALSE)
 
   # determine position and names of index vars in pdata.frame
   pos_indexes <- pos.index(x)
@@ -118,7 +118,7 @@ lev2var <- function(x, ...){
     nf <- rep(names(nl),nl)
     result <- unlist(wl)
     names(result) <- nf
-    result <- paste(names(result),result,sep="")
+    result <- paste(names(result), result, sep = "")
     names(nf) <- result
     c(nf, not.fact)
   }
@@ -226,7 +226,7 @@ pht <- function(formula, data, subset, na.action, model = c("ht", "am", "bms"), 
   cl <- match.call(expand.dots = TRUE)
   mf <- match.call()
   
-  if (length(model) == 1 && model == "bmc") {
+  if (length(model) == 1L && model == "bmc") {
     # catch "bmc" (a long-standing typo) for Breusch-Mizon-Schmidt due to backward compatibility
   	# error since 2020-12-31 (R-Forge), was a warning before
   	# remove catch at some point in the future
@@ -235,13 +235,13 @@ pht <- function(formula, data, subset, na.action, model = c("ht", "am", "bms"), 
   }
   model <- match.arg(model)
   # compute the model.frame using plm with model = NA
-  mf[[1]] <- as.name("plm")
+  mf[[1L]] <- as.name("plm")
   mf$model <- NA
   data <- eval(mf, parent.frame())
   # estimate the within model without instrument and extract the fixed
   # effects
   formula <- Formula(formula)
-  if (length(formula)[2] == 1) stop("a list of exogenous variables should be provided")
+  if (length(formula)[2L] == 1L) stop("a list of exogenous variables should be provided")
   mf$model = "within"
   mf$formula <- formula(formula, rhs = 1)
   within <- eval(mf, parent.frame())
@@ -384,7 +384,7 @@ summary.pht <- function(object, ...){
 	b <- coefficients(object)
 	z <- b/std.err
 	p <- 2*pnorm(abs(z), lower.tail = FALSE)
-	object$coefficients <- cbind("Estimate"   = b,
+	object$coefficients <- cbind("Estimate"         = b,
                                      "Std. Error" = std.err,
                                      "z-value"    = z,
                                      "Pr(>|z|)"   = p)
@@ -397,13 +397,13 @@ summary.pht <- function(object, ...){
 print.summary.pht <- function(x, digits = max(3, getOption("digits") - 2),
                               width = getOption("width"), subset = NULL, ...){
   formula <- formula(x)
-  has.instruments <- (length(formula)[2] >= 2)
+  has.instruments <- (length(formula)[2L] >= 2L)
   effect <- describe(x, "effect")
   model <- describe(x, "model")
   ht.method <- describe(x, "ht.method")
-  cat(paste(effect.plm.list[effect]," ",sep=""))
-  cat(paste(model.plm.list[model]," Model",sep=""),"\n")
-  cat(paste("(", ht.method.list[ht.method],")",sep=""),"\n")
+  cat(paste(effect.plm.list[effect]," ", sep=""))
+  cat(paste(model.plm.list[model]," Model", sep=""),"\n")
+  cat(paste("(", ht.method.list[ht.method],")", sep=""),"\n")
   
   cat("\nCall:\n")
   print(x$call)
@@ -432,8 +432,8 @@ print.summary.pht <- function(x, digits = max(3, getOption("digits") - 2),
   if (is.null(subset)) printCoefmat(coef(x), digits = digits)
   else printCoefmat(coef(x)[subset, , drop = FALSE], digits = digits)
   cat("\n")
-  cat(paste("Total Sum of Squares:    ",signif(tss(x),digits),"\n",sep=""))
-  cat(paste("Residual Sum of Squares: ",signif(deviance(x),digits),"\n",sep=""))
+  cat(paste("Total Sum of Squares:    ", signif(tss(x),digits),"\n",sep=""))
+  cat(paste("Residual Sum of Squares: ", signif(deviance(x),digits),"\n",sep=""))
   #  cat(paste("Multiple R-Squared:      ",signif(x$rsq,digits),"\n",sep=""))
   fstat <- x$fstatistic
   if (names(fstat$statistic) == "F"){
@@ -455,8 +455,8 @@ print.summary.pht <- function(x, digits = max(3, getOption("digits") - 2),
 sumres <- function(x){
     sr <- summary(unclass(resid(x)))
     srm <- sr["Mean"]
-    if (abs(srm)<1e-10){
-        sr <- sr[c(1:3,5:6)]
+    if (abs(srm) < 1e-10){
+        sr <- sr[c(1:3, 5:6)]
     }
     sr
 }
@@ -476,7 +476,7 @@ create.list <- function(alist, K, has.int, has.resp, endog, exo, default){
         if (any (nam == "")){
       # case where one element is unnamed, and therefore is the default
             unnamed <- which(nam == "")
-            if (length(unnamed) > 1) stop("Only one unnamed element is admitted")
+            if (length(unnamed) > 1L) stop("Only one unnamed element is admitted")
             default <- alist[[unnamed]]
         }
         else{
@@ -490,40 +490,40 @@ create.list <- function(alist, K, has.int, has.resp, endog, exo, default){
     else{
     # case where there are no names, in this case the relevant length is
     # whether 1 or K+1
-        if (length(alist) == 1) alist <- rep(alist, c(K+has.resp))
+        if (length(alist) == 1L) alist <- rep(alist, c(K+has.resp))
         else if (!length(alist) %in% c(K+has.resp)) stop("irrelevant length for alist")
     }
     names(alist) <- c(endog,exo)
     alist
 }
 
-write.lags <- function(name,lags,diff){
+write.lags <- function(name, lags, diff){
     lags <- switch(length(lags),
-                   "1"=c(0,lags),
-                   "2"=sort(lags),
+                   "1" = c(0, lags),
+                   "2" = sort(lags),
                    stop("lags should be of length 1 or 2\n")
                    )
-    lag.string <- ifelse(diff,"diff","lag")
+    lag.string <- ifelse(diff, "diff", "lag")
     chlag <- c()
-    if (lags[2]!=0){
+    if (lags[2] != 0){
         lags <- lags[1]:lags[2]
         for (i in lags){
-            if (i==0){
-                if (diff) chlag <- c(chlag,paste("diff(",name,")")) else chlag <- c(chlag,name)
+            if (i == 0){
+                if (diff) chlag <- c(chlag, paste("diff(",name,")")) else chlag <- c(chlag,name)
             }
             else{
                 ichar <- paste(i)
-                chlag <- c(chlag,paste(lag.string,"(",name,",",i,")",sep=""))
+                chlag <- c(chlag, paste(lag.string,"(",name,",",i,")",sep=""))
             }
         }
-        ret <- paste(chlag,collapse="+")
+        ret <- paste(chlag, collapse="+")
     }
     else{
         if (diff) chlag <- paste("diff(",name,")") else chlag <- name
         ret <- chlag
     }
     ret
-}   
+}
 
 
 
@@ -544,8 +544,8 @@ dynformula <- function(formula, lag.form = NULL, diff.form = NULL, log.form = NU
     # K is the number of exogenous variables
     exo <- attr(terms(formula), "term.labels")
     has.int <- attr(terms(formula), "intercept") == 1
-    if(length(formula) == 3){
-        endog <- deparse(formula[[2]])
+    if(length(formula) == 3L){
+        endog <- deparse(formula[[2L]])
         has.resp <- TRUE
     }
     else{
@@ -570,35 +570,35 @@ formula.dynformula <- function(x, ...){
     log.form <- attr(x, "log")
     lag.form <- attr(x, "lag")
     diff.form <- attr(x, "diff")
-    has.resp <- length(x) == 3
+    has.resp <- length(x) == 3L
     exo <- attr(x, "var")
     if (has.resp){
-        endog <- exo[1]
-        exo <- exo[-1]
+        endog <- exo[1L]
+        exo <- exo[-1L]
     }
     has.int <- attr(terms(x), "intercept") == 1
     chexo <- c()
     if (has.resp){
-        if (log.form[1]) endog <- paste("log(",endog,")",sep="")
-        if (diff.form[1]) endog <- paste("diff(",endog,")",sep="")
-        if (length(lag.form[[1]]) == 1 && lag.form[[1]]!=0) lag.form[[1]] <- c(1,lag.form[[1]])
-        if (!(length(lag.form[[1]]) == 1 && lag.form[[1]]==0))
-            chexo <- c(chexo,write.lags(endog,lag.form[[1]],diff.form[1]))
+        if (log.form[1L]) endog <- paste("log(",endog,")",sep="")
+        if (diff.form[1L]) endog <- paste("diff(",endog,")",sep="")
+        if (  length(lag.form[[1L]]) == 1 && lag.form[[1L]] != 0) lag.form[[1L]] <- c(1, lag.form[[1L]])
+        if (!(length(lag.form[[1L]]) == 1 && lag.form[[1L]] == 0))
+          chexo <- c(chexo, write.lags(endog, lag.form[[1L]], diff.form[1L]))
     }
     for (i in exo){
         lag.formi <- lag.form[[i]]
         diff.formi <- diff.form[i]
-        if (log.form[[i]]) i <- paste("log(",i,")",sep="")
-        chexo <- c(chexo,write.lags(i,lag.formi,diff.formi))
+        if (log.form[[i]]) i <- paste("log(",i,")", sep = "")
+        chexo <- c(chexo, write.lags(i, lag.formi, diff.formi))
     }
-    chexo <- paste(chexo,collapse="+")
+    chexo <- paste(chexo, collapse = "+")
     if (has.resp){
-        formod <- as.formula(paste(endog,"~",chexo,sep=""))
+        formod <- as.formula(paste(endog, "~", chexo, sep = ""))
     }
     else{
-        formod <- as.formula(paste("~",chexo,sep=""))
+        formod <- as.formula(paste("~", chexo, sep = ""))
     }
-    if (!has.int) formod <- update(formod,.~.-1)
+    if (!has.int) formod <- update(formod, . ~ . -1)
     formod
 }
 
@@ -641,8 +641,8 @@ as.Formula.pFormula <- function(x, ...){
 #' @rdname plm-deprecated
 #' @export
 model.frame.pFormula <- function(formula, data, ..., lhs = NULL, rhs = NULL){
-    if (is.null(rhs)) rhs <- 1:(length(formula)[2])
-    if (is.null(lhs)) lhs <- if(length(formula)[1] > 0L) 1 else 0
+    if (is.null(rhs)) rhs <- 1:(length(formula)[2L])
+    if (is.null(lhs)) lhs <- if(length(formula)[1L] > 0L) 1 else 0
     index <- attr(data, "index")
     mf <- model.frame(as.Formula(formula), as.data.frame(data), ..., rhs = rhs)
     index <- index[as.numeric(rownames(mf)), ]
@@ -687,16 +687,16 @@ model.matrix.pFormula <- function(object, data,
     X.contr <- attr(X, "contrasts")
     X.contr <- X.contr[ ! sapply(X.contr, is.null) ]
     index <- index(data)
-    if (anyNA(index[[1]])) stop("NA in the individual index variable")
+    checkNA.index(index) # check for NAs in model.frame's index and error if any
     attr(X, "index") <- index
     if (effect == "twoways" && model %in% c("between", "fd"))
         stop("twoways effect only relevant for within, random and pooling models")
-    if (model == "within") X <- Within(X, effect)
-    if (model == "Sum") X <- Sum(X, effect)
+    if (model == "within")  X <- Within(X, effect)
+    if (model == "Sum")     X <- Sum(X, effect)
     if (model == "Between") X <- Between(X, effect)
     if (model == "between") X <- between(X, effect)
-    if (model == "mean") X <- Mean(X)
-    if (model == "fd") X <- pdiff(X, effect = "individual",
+    if (model == "mean")    X <- Mean(X)
+    if (model == "fd")      X <- pdiff(X, effect = "individual",
                                   has.intercept = has.intercept)
     if (model == "random"){
         if (is.null(theta)) stop("a theta argument should be provided")
