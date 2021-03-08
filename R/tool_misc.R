@@ -33,7 +33,7 @@ bdiag <- function(...){
   iuse <- as.vector(unlist(iuse))
   out[iuse] <- unlist(x)
   return(out)
-} 
+}
 
 
 twosls <- function(y, X, W, intercept = FALSE){
@@ -128,14 +128,14 @@ has.intercept.formula <- function(object, ...) {
 has.intercept.Formula <- function(object, rhs = NULL, ...) {
   ## NOTE: returns a logical vector of the necessary length
   ## (which might be > 1)
-    if(is.null(rhs)) rhs <- 1:length(attr(object, "rhs"))
-    sapply(rhs, function(x){
-        aform <- formula(object, lhs = 0, rhs = x)
-        # expand the dot if any in all the parts except the first
-        if(x > 1) aform <- update(formula(object, lhs = 0, rhs = 1), aform)
-        has.intercept(aform)
-    }
-    )
+  if (is.null(rhs)) rhs <- 1:length(attr(object, "rhs"))
+  res <- sapply(rhs, function(x) {
+    aform <- formula(object, lhs = 0, rhs = x)
+    # expand the dot if any in all the parts except the first
+    if (x > 1) aform <- update(formula(object, lhs = 0, rhs = 1), aform)
+    has.intercept(aform)
+  })
+  return(res)
 }
 
 #' @rdname has.intercept

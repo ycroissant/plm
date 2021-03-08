@@ -1,6 +1,6 @@
 data.name <- function(x){
   data.name <- paste(deparse(x$call$formula))
-  if (length(data.name) > 1) paste(data.name[1], "...")
+  if (length(data.name) > 1L) paste(data.name[1L], "...")
   else data.name
 }
 
@@ -92,7 +92,7 @@ phtest.formula <- function(x, data, model = c("within", "random"),
   #     and since rev. 305 due to extraction from dots (...) in method="aux" as a quick fix
   #    If introduced as argument, change doc accordingly (currently, effect arg is mentioned in ...)
   
-    if (length(model)!=2) stop("two models should be indicated")
+    if (length(model) != 2) stop("two models should be indicated")
     for (i in 1:2){
         model.name <- model[i]
         if(!(model.name %in% names(model.plm.list))){
@@ -102,18 +102,18 @@ phtest.formula <- function(x, data, model = c("within", "random"),
     switch(match.arg(method),
            chisq={
                cl <- match.call(expand.dots = TRUE)
-               cl$model <- model[1]
-               names(cl)[2] <- "formula"
-               m <- match(plm.arg, names(cl), 0)
-               cl <- cl[c(1,m)]
-               cl[[1]] <- as.name("plm")
+               cl$model <- model[1L]
+               names(cl)[2L] <- "formula"
+               m <- match(plm.arg, names(cl), 0L)
+               cl <- cl[c(1L, m)]
+               cl[[1L]] <- as.name("plm")
                plm.model.1 <- eval(cl, parent.frame())
-               plm.model.2 <- update(plm.model.1, model = model[2])
+               plm.model.2 <- update(plm.model.1, model = model[2L])
                return(phtest(plm.model.1, plm.model.2))
            },
            aux={
                ## some interface checks here
-               if (model[1] != "within") {
+               if (model[1L] != "within") {
                    stop("Please supply 'within' as first model type")
                }
              
@@ -133,9 +133,8 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                if (!is.null(dots$effect)) effect <- dots$effect else effect <- NULL
                # calculatate FE and RE model
 
-               fe_mod <- plm(formula = x, data = data, model = model[1], effect = effect)
-
-               re_mod <- plm(formula = x, data = data, model = model[2], effect = effect)
+               fe_mod <- plm(formula = x, data = data, model = model[1L], effect = effect)
+               re_mod <- plm(formula = x, data = data, model = model[2L], effect = effect)
 
                 ## DEBUG printing:
                  # print(effect)
@@ -150,7 +149,7 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                reX <- model.matrix(re_mod, cstcovar.rm = "intercept")
                feX <- model.matrix(fe_mod, cstcovar.rm = "all")
 
-               dimnames(feX)[[2]] <- paste(dimnames(feX)[[2]], "tilde", sep=".")
+               dimnames(feX)[[2L]] <- paste(dimnames(feX)[[2L]], "tilde", sep=".")
                ## estimated models could have fewer obs (due dropping of NAs) compared to the original data
                ## => match original data and observations used in estimated models
                ## routine adapted from lmtest::bptest
@@ -174,12 +173,12 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                ## construct data set and formula for auxiliary regression
                data <- pdata.frame(cbind(index(data), reY, reX, feX))
                auxfm <- as.formula(paste("reY~",
-                                         paste(dimnames(reX)[[2]],
+                                         paste(dimnames(reX)[[2L]],
                                                collapse="+"), "+",
-                                         paste(dimnames(feX)[[2]],
+                                         paste(dimnames(feX)[[2L]],
                                                collapse="+"), sep=""))
                auxmod <- plm(formula = auxfm, data = data, model = "pooling")
-               nvars <- dim(feX)[[2]]
+               nvars <- dim(feX)[[2L]]
                R <- diag(1, nvars)
                r <- rep(0, nvars) # here just for clarity of illustration
                omega0 <- vcov(auxmod)[(nvars+2):(nvars*2+1),
@@ -222,7 +221,7 @@ phtest.panelmodel <- function(x, x2, ...){
   names.re <- names(coef.re)
   common_coef_names <- names.re[names.re %in% names.wi]
   coef.h <- common_coef_names[!(common_coef_names %in% "(Intercept)")] # drop intercept if included (relevant when between model inputed)
-  if(length(coef.h) == 0) stop("no common coefficients in models")
+  if(length(coef.h) == 0L) stop("no common coefficients in models")
   dbeta <- coef.wi[coef.h] - coef.re[coef.h]
   df <- length(dbeta)
   dvcov <- vcov.wi[coef.h, coef.h] - vcov.re[coef.h, coef.h]
@@ -407,8 +406,8 @@ plmtest.plm <- function(x,
   N_obs <- pdim$nT$N
   balanced <- pdim$balanced
   index <- attr(model.frame(x), "index")
-  id <- index[[1]]
-  time <- index[[2]]
+  id <- index[[1L]]
+  time <- index[[2L]]
   T_i <- pdim$Tint$Ti
   N_t <- pdim$Tint$nt
   res <- resid(x)
@@ -516,10 +515,10 @@ plmtest.formula <- function(x, data, ...,
   cl$model <- "pooling" # plmtest is performed on the pooling model...
   cl$effect <- NULL     # ... and pooling model has no argument effect...
   cl$type <- NULL       # ... and no argument type => see below: pass on args effect and type to plmtest.plm()
-  names(cl)[2] <- "formula"
-  m <- match(plm.arg, names(cl), 0)
-  cl <- cl[c(1,m)]
-  cl[[1]] <- as.name("plm")
+  names(cl)[2L] <- "formula"
+  m <- match(plm.arg, names(cl), 0L)
+  cl <- cl[c(1L, m)]
+  cl[[1L]] <- as.name("plm")
   plm.model <- eval(cl, parent.frame())
   plmtest(plm.model, effect = effect, type = type) # pass on args effect and type to plmtest.plm()
 }
@@ -570,10 +569,10 @@ pFtest <- function(x, ...){
 pFtest.formula <- function(x, data, ...){
   cl <- match.call(expand.dots = TRUE)
   cl$model <- "within"
-  names(cl)[2] <- "formula"
-  m <- match(plm.arg,names(cl),0)
-  cl <- cl[c(1,m)]
-  cl[[1]] <- as.name("plm")
+  names(cl)[2L] <- "formula"
+  m <- match(plm.arg,names(cl), 0L)
+  cl <- cl[c(1L, m)]
+  cl[[1L]] <- as.name("plm")
   plm.within <- eval(cl,parent.frame())
   plm.pooling <- update(plm.within, model = "pooling")
   pFtest(plm.within, plm.pooling, ...)
@@ -740,7 +739,7 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
                           df2adj = (test == "F" && !is.null(vcov) && missing(.df2)), .df1, .df2, ...) {
   model <- describe(x, "model")
   test <- match.arg(test)
-  df1 <- if(model == "within") length(coef(x)) else { length(coef(x)) - has.intercept(x) }
+  df1 <- if(model == "within") length(coef(x)) else { length(coef(x)) - has.intercept(x)[1L] }
   df2 <- df.residual(x)
 #  tss <- tss(x)        # not good for models without intercept
 #  ssr <- deviance(x)   # -- " --
@@ -817,7 +816,7 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
     }
   }
   if (test == "F"){
-    if(length(formula(x))[2] > 1) stop("test = \"F\" not sensible for IV models")
+    if(length(formula(x))[2L] > 1L) stop("test = \"F\" not sensible for IV models")
     if (is.null(vcov_arg)) {
       # perform "normal" F test
       stat <- as.numeric(crossprod(solve(vcov(x)[names(coefs_wo_int), names(coefs_wo_int)], coefs_wo_int), coefs_wo_int)) / df1
@@ -856,7 +855,7 @@ pwaldtest.pvcm <- function(x, ...) {
     # for the within case, simply return a data.frame with all test results
     # of single estimations (per individual or per time period)
     
-    ii <- switch(effect, "individual" = 1, "time" = 2)
+    ii <- switch(effect, "individual" = 1L, "time" = 2L)
     residl <- split(x$residuals, index(x)[[ii]])
     
     # vcovs and coefficients w/o intercept
@@ -914,12 +913,13 @@ pwaldtest.pgmm <- function(x, param = c("coef", "time", "all"), vcov = NULL, ...
   if (is.null(vcov)) vv <- vcov(x)
   else if (is.function(vcov)) vv <- myvcov(x)
   else vv <- myvcov
+
   model <- describe(x, "model")
   effect <- describe(x, "effect")
   if (param == "time" && effect == "individual") stop("no time dummies in this model")
   transformation <- describe(x, "transformation")
   if (model == "onestep") coefficients <- x$coefficients
-  else coefficients <- x$coefficients[[2]]
+  else coefficients <- x$coefficients[[2L]]
   Ktot <- length(coefficients)
   Kt <- length(x$args$namest)
   
@@ -977,11 +977,11 @@ pwaldtest.default <- function(x, ...) {
 trans_clubSandwich_vcov <- function(CSvcov, index) {
   clustervar <- attr(CSvcov, "cluster")
   if (!is.null(clustervar)) {
-    if (isTRUE(all.equal(index[[1]], clustervar))) {
+    if (isTRUE(all.equal(index[[1L]], clustervar))) {
       attr(CSvcov, "cluster") <- "group"
       return(CSvcov)
     }
-    if (isTRUE(all.equal(index[[2]], clustervar))) {
+    if (isTRUE(all.equal(index[[2L]], clustervar))) {
       attr(CSvcov, "cluster") <- "time"
       return(CSvcov)
     } else {
@@ -1041,7 +1041,7 @@ pooltest.plm <- function(x, z, ...){
   uss <- sum(unlist(residuals(z))^2)
   dlr <- df.residual(x)
   dlu <- df.residual(z)
-  df1 <- dlr-dlu
+  df1 <- dlr - dlu
   df2 <- dlu
   stat <- (rss-uss)/uss*df2/df1
   pval <- pf(stat, df1, df2, lower.tail = FALSE)
@@ -1061,17 +1061,17 @@ pooltest.plm <- function(x, z, ...){
 #' @export
 pooltest.formula <- function(x, data, ...){
   cl <- match.call(expand.dots = TRUE)
-  cl[[1]] <- as.name("plm")
-  names(cl)[[2]] <- "formula"
+  cl[[1L]] <- as.name("plm")
+  names(cl)[[2L]] <- "formula"
   if (is.null(cl$effect)) cl$effect <- "individual"
-  plm.model <- eval(cl,parent.frame())
+  plm.model <- eval(cl, parent.frame())
 
-  cl[[1]] <- as.name("pvcm")
-  names(cl)[[2]] <- "formula"
+  cl[[1L]] <- as.name("pvcm")
+  names(cl)[[2L]] <- "formula"
   if (is.null(cl$effect)) cl$effect <- "individual"
   cl$model <- "within"
-  pvcm.model <- eval(cl,parent.frame())
+  pvcm.model <- eval(cl, parent.frame())
   
-  pooltest(plm.model,pvcm.model)
+  pooltest(plm.model, pvcm.model)
 }
 
