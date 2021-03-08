@@ -11,7 +11,7 @@
 #' 
 #' `plm.data` is replaced by `pdata.frame`.
 #' 
-#' `pvcovHV` is replaced by `vcovHC`.
+#' `pvcovHC` is replaced by `vcovHC`.
 #'
 #' `detect_lin_dep` is replaced by `detect.lindep`.
 #' 
@@ -106,7 +106,7 @@ lev2var <- function(x, ...){
   # names of the vector being the names of the effect
   
   is.fact <- sapply(x, is.factor)
-  if (sum(is.fact) > 0){
+  if (sum(is.fact) > 0L){
     not.fact <- names(x)[!is.fact]
     names(not.fact) <- not.fact
     x <- x[is.fact]
@@ -274,11 +274,11 @@ pht <- function(formula, data, subset, na.action, model = c("ht", "am", "bms"), 
   }
   
   X <- model.matrix(data, model = "pooling", rhs = 1, lhs = 1)
-  if (length(exo.var) > 0) XV <- X[ , exo.var, drop = FALSE] else XV <- NULL
-  if (length(edo.var) > 0) NV <- X[ , edo.var, drop = FALSE] else NV <- NULL
-  if (length(exo.cst) > 0) XC <- X[ , exo.cst, drop = FALSE] else XC <- NULL
-  if (length(edo.cst) > 0) NC <- X[ , edo.cst, drop = FALSE] else NC <- NULL
-  if (length(all.cst) != 0)
+  if (length(exo.var) > 0L) XV <- X[ , exo.var, drop = FALSE] else XV <- NULL
+  if (length(edo.var) > 0L) NV <- X[ , edo.var, drop = FALSE] else NV <- NULL
+  if (length(exo.cst) > 0L) XC <- X[ , exo.cst, drop = FALSE] else XC <- NULL
+  if (length(edo.cst) > 0L) NC <- X[ , edo.cst, drop = FALSE] else NC <- NULL
+  if (length(all.cst) != 0L)
     zo <- twosls(fixef[as.character(id)], cbind(XC, NC), cbind(XC, XV), TRUE)
   else zo <- lm(fixef ~ 1)
   
@@ -413,8 +413,8 @@ print.summary.pht <- function(x, digits = max(3, getOption("digits") - 2),
   names.nv <- paste(x$varlist$nv,collapse=", ")
   names.xc <- paste(x$varlist$xc,collapse=", ")
   names.nc <- paste(x$varlist$nc,collapse=", ")
-  cat(paste("\nT.V. exo  : ",names.xv,"\n", sep = ""))
-  cat(paste("T.V. endo : ", names.nv,"\n",sep = ""))
+  cat(paste("\nT.V. exo  : ", names.xv,"\n", sep = ""))
+  cat(paste("T.V. endo : ",   names.nv,"\n", sep = ""))
   #    cat("Time-Invariant Variables: ")
   cat(paste("T.I. exo  : ", names.xc, "\n", sep= ""))
   cat(paste("T.I. endo : ", names.nc, "\n", sep= ""))
@@ -432,8 +432,8 @@ print.summary.pht <- function(x, digits = max(3, getOption("digits") - 2),
   if (is.null(subset)) printCoefmat(coef(x), digits = digits)
   else printCoefmat(coef(x)[subset, , drop = FALSE], digits = digits)
   cat("\n")
-  cat(paste("Total Sum of Squares:    ", signif(tss(x),digits),"\n",sep=""))
-  cat(paste("Residual Sum of Squares: ", signif(deviance(x),digits),"\n",sep=""))
+  cat(paste("Total Sum of Squares:    ", signif(tss(x), digits),     "\n", sep = ""))
+  cat(paste("Residual Sum of Squares: ", signif(deviance(x),digits), "\n", sep = ""))
   #  cat(paste("Multiple R-Squared:      ",signif(x$rsq,digits),"\n",sep=""))
   fstat <- x$fstatistic
   if (names(fstat$statistic) == "F"){
@@ -505,10 +505,10 @@ write.lags <- function(name, lags, diff){
                    )
     lag.string <- ifelse(diff, "diff", "lag")
     chlag <- c()
-    if (lags[2] != 0){
-        lags <- lags[1]:lags[2]
+    if (lags[2L] != 0L){
+        lags <- lags[1L]:lags[2L]
         for (i in lags){
-            if (i == 0){
+            if (i == 0L){
                 if (diff) chlag <- c(chlag, paste("diff(",name,")")) else chlag <- c(chlag,name)
             }
             else{
@@ -558,7 +558,7 @@ dynformula <- function(formula, lag.form = NULL, diff.form = NULL, log.form = NU
     # default values
     lag.form <- create.list(lag.form, K, has.int, has.resp, endog, exo, 0)
     diff.form <- unlist(create.list(diff.form, K, has.int, has.resp, endog, exo, FALSE))
-    log.form <- unlist(create.list(log.form, K, has.int, has.resp, endog, exo, FALSE))
+    log.form  <- unlist(create.list(log.form,  K, has.int, has.resp, endog, exo, FALSE))
     
     structure(formula, class = c("dynformula", "formula"), lag = lag.form,
               diff = diff.form, log = log.form, var = c(endog,exo))
@@ -581,8 +581,8 @@ formula.dynformula <- function(x, ...){
     if (has.resp){
         if (log.form[1L]) endog <- paste("log(",endog,")",sep="")
         if (diff.form[1L]) endog <- paste("diff(",endog,")",sep="")
-        if (  length(lag.form[[1L]]) == 1 && lag.form[[1L]] != 0) lag.form[[1L]] <- c(1, lag.form[[1L]])
-        if (!(length(lag.form[[1L]]) == 1 && lag.form[[1L]] == 0))
+        if (  length(lag.form[[1L]]) == 1L && lag.form[[1L]] != 0L) lag.form[[1L]] <- c(1, lag.form[[1L]])
+        if (!(length(lag.form[[1L]]) == 1L && lag.form[[1L]] == 0L))
           chexo <- c(chexo, write.lags(endog, lag.form[[1L]], diff.form[1L]))
     }
     for (i in exo){
@@ -604,7 +604,7 @@ formula.dynformula <- function(x, ...){
 
 #' @rdname plm-deprecated
 #' @export
-print.dynformula <- function(x,...){
+print.dynformula <- function(x, ...){
     print(formula(x), ...)
 }
 
@@ -720,9 +720,9 @@ model.matrix.pFormula <- function(object, data,
         zeroint <- if(cstintercept &&
                           max(X[, posintercept]) < sqrt(.Machine$double.eps))
                           TRUE else FALSE
-        if (length(cstcol) > 0){
+        if (length(cstcol) > 0L){
             if ((cstcovar.rm == "covariates" || !zeroint) && cstintercept) cstcol <- cstcol[- posintercept]
-            if (length(cstcol) > 0){
+            if (length(cstcol) > 0L){
                 X <- X[, - match(cstcol, colnames(X)), drop = FALSE]
                 attr(X, "constant") <- cstcol
             }

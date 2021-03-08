@@ -91,7 +91,7 @@ using the more general \code{plm} function.
 
 \code{plm.data} is replaced by \code{pdata.frame}.
 
-\code{pvcovHV} is replaced by \code{vcovHC}.
+\code{pvcovHC} is replaced by \code{vcovHC}.
 
 \code{detect_lin_dep} is replaced by \code{detect.lindep}.
 }
