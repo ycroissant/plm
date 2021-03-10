@@ -1,6 +1,8 @@
 # development version 2.4-19999 
  * likely set to either 2.4-2 or 2.6 for CRAN release
-
+ 
+ * Vignettes: Added formula for nested error component model (2nd vignette),
+   fixed a few typos.
 
 # plm 2.4-1
 
@@ -13,9 +15,10 @@
  * Between/between/Sum/Within: Methods which rely on the index attribute
    (\*.pseries and partly \*.matrix) now error informatively if NA in any index
    dimension is encountered.
- * Vignettes: file names renamed to contain numbering so that the Vignettes are
-   sorted on CRAN's plm page in an order better suited for new package users.
- * checkNA.index: new non-exported helper function to check for NA in index 
+ * Vignettes: file names renamed to start with "A_", "B_", "C_" so that the
+   Vignettes are sorted on CRAN's plm page in an order better suited for new
+   package users.
+ * checkNA.index: new non-exported helper function to check for NA in index
    of a pdata.frame or pseries (all dimensions or a specific one).
 
 
