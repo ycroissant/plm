@@ -739,7 +739,7 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
                           df2adj = (test == "F" && !is.null(vcov) && missing(.df2)), .df1, .df2, ...) {
   model <- describe(x, "model")
   test <- match.arg(test)
-  df1 <- if(model == "within") length(coef(x)) else { length(coef(x)) - has.intercept(x)[1L] }
+  df1 <- if(model == "within") length(coef(x)) else { length(coef(x)) - has.intercept(x) }
   df2 <- df.residual(x)
 #  tss <- tss(x)        # not good for models without intercept
 #  ssr <- deviance(x)   # -- " --

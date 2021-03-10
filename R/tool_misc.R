@@ -96,16 +96,17 @@ twosls <- function(y, X, W, intercept = FALSE){
 #'
 #' The presence of an intercept is checked using the formula which is
 #' either provided as the argument of the function or extracted from
-#' a fitted model
+#' a fitted model.
 #'
 #' @param object a `formula`, a `Formula` or a fitted model (of class
 #'     `plm` or `panelmodel`),
-#' @param rhs,part the index of the right hand sides part of the
-#'     formula for which one wants to check the presence of an
-#'     intercept (relevant for the `Formula` and the `plm` methods),
+#' @param rhs an integer (length > 1 is possible), indicating the parts of right
+#'      hand sides of the formula to be evaluated for the presence of an
+#'      intercept or NULL for all parts of the right hand side
+#'      (relevant for the `Formula` and the `plm` methods)
 #' @param \dots further arguments.
 #'
-#' @return a boolean
+#' @return a logical
 #' @export
 has.intercept <- function(object, ...) {
   UseMethod("has.intercept")
@@ -147,10 +148,24 @@ has.intercept.panelmodel <- function(object, ...) {
 
 #' @rdname has.intercept
 #' @export
-has.intercept.plm <- function(object, part = "first", ...) {
-  has.intercept(formula(object), part = part) # TODO: likely this should be rhs = part (instead of part = part)
-}                                             #        and part should allow integer inputs (as well as a value for
-                                              #        all parts (NULL, "all" or similar))
+has.intercept.plm <- function(object, rhs = 1L, ...) {
+    
+  # catch deprecated argument "part": convert and warn / 2021-03-10
+  dots <- list(...)
+  if(!is.null(part <- dots[["part"]])) {
+    warning("has.intercept.plm: argument 'part' is deprecated and will soon be removed, use argument 'rhs' instead")
+    warning("has.intercept.plm: arguement 'rhs' (if present) overwritten by argument 'part'")
+    if(part[1L] == "first") {
+      rhs <- 1L
+      } else {
+        if(is.numeric(part)) {
+          rhs <- part
+          } else stop("unsupported value for argument 'part', only \"first\" or an integer allowed") 
+      }
+  }
+  has.intercept(formula(object), rhs = rhs)
+}
+
 
 pres <- function(x) {  # pres.panelmodel
   ## extracts model residuals as pseries

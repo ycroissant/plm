@@ -1,5 +1,9 @@
 # development version 2.4-19999 
- * likely set to either 2.4-2 or 2.6 for CRAN release
+ **likely set to either 2.4-2 or 2.6 for CRAN release**
+ 
+ * has.intercept.plm: argument 'part' renamed to 'rhs', argument values
+   (integer or NULL) aligned with and correctly passed on to 
+   has.intercept.Formula (with a *temporary* back-compatible solution).
  
  * Vignettes: Added formula for nested error component model (2nd vignette),
    fixed a few typos.

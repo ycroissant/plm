@@ -20,7 +20,7 @@ has.intercept(object, ...)
 
 \method{has.intercept}{panelmodel}(object, ...)
 
-\method{has.intercept}{plm}(object, part = "first", ...)
+\method{has.intercept}{plm}(object, rhs = 1L, ...)
 }
 \arguments{
 \item{object}{a \code{formula}, a \code{Formula} or a fitted model (of class
@@ -28,15 +28,16 @@ has.intercept(object, ...)
 
 \item{\dots}{further arguments.}
 
-\item{rhs, part}{the index of the right hand sides part of the
-formula for which one wants to check the presence of an
-intercept (relevant for the \code{Formula} and the \code{plm} methods),}
+\item{rhs}{an integer (length > 1 is possible), indicating the parts of right
+hand sides of the formula to be evaluated for the presence of an
+intercept or NULL for all parts of the right hand side
+(relevant for the \code{Formula} and the \code{plm} methods)}
 }
 \value{
-a boolean
+a logical
 }
 \description{
 The presence of an intercept is checked using the formula which is
 either provided as the argument of the function or extracted from
-a fitted model
+a fitted model.
 }
