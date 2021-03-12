@@ -31,21 +31,21 @@ Within.matrix.baseR  <- plm:::Within.matrix
 Sum.default <- function(x, effect, ...) {
   if(!isTRUE(getOption("plm.fast"))) {
     Sum.default.baseR(x, effect, ...) } else {
-    if(!avail.collapse()) stop(txt.no.collapse, call. = FALSE)
+    if(!requireNamespace("collapse", quietly = TRUE)) stop(txt.no.collapse, call. = FALSE)
     Sum.default.collapse(x, effect, ...) }
 }
 
 Sum.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
   if(!isTRUE(getOption("plm.fast"))) {
     Sum.pseries.baseR(x, effect, ...) } else {
-    if(!avail.collapse()) stop(txt.no.collapse, call. = FALSE)
+    if(!requireNamespace("collapse", quietly = TRUE)) stop(txt.no.collapse, call. = FALSE)
     Sum.pseries.collapse(x, effect, ...) }
 }
 
 Sum.matrix <- function(x, effect, ...) {
   if(!isTRUE(getOption("plm.fast"))) {
     Sum.matrix.baseR(x, effect, ...) } else {
-    if(!avail.collapse()) stop(txt.no.collapse, call. = FALSE)
+    if(!requireNamespace("collapse", quietly = TRUE)) stop(txt.no.collapse, call. = FALSE)
     Sum.matrix.collapse(x, effect, ...) }
 }
 
@@ -53,21 +53,21 @@ Sum.matrix <- function(x, effect, ...) {
 Between.default <- function(x, effect, ...) {
   if(!isTRUE(getOption("plm.fast"))) {
     Between.default.baseR(x, effect, ...) } else {
-    if(!avail.collapse()) stop(txt.no.collapse, call. = FALSE)
+    if(!requireNamespace("collapse", quietly = TRUE)) stop(txt.no.collapse, call. = FALSE)
     Between.default.collapse(x, effect, ...) }
 }
   
 Between.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
   if(!isTRUE(getOption("plm.fast"))) {
     Between.pseries.baseR(x, effect, ...) } else {
-    if(!avail.collapse()) stop(txt.no.collapse, call. = FALSE)
+    if(!requireNamespace("collapse", quietly = TRUE)) stop(txt.no.collapse, call. = FALSE)
     Between.pseries.collapse(x, effect, ...) }
 }
 
 Between.matrix <- function(x, effect, ...) {
   if(!isTRUE(getOption("plm.fast"))) {
     Between.matrix.baseR(x, effect, ...) } else {
-    if(!avail.collapse()) stop(txt.no.collapse, call. = FALSE)
+    if(!requireNamespace("collapse", quietly = TRUE)) stop(txt.no.collapse, call. = FALSE)
     Between.matrix.collapse(x, effect, ...) }
 }
 
@@ -75,21 +75,21 @@ Between.matrix <- function(x, effect, ...) {
 between.default <- function(x, effect, ...) {
   if(!isTRUE(getOption("plm.fast"))) {
      between.default.baseR(x, effect, ...) } else {
-     if(!avail.collapse()) stop(txt.no.collapse, call. = FALSE)
+     if(!requireNamespace("collapse", quietly = TRUE)) stop(txt.no.collapse, call. = FALSE)
      between.default.collapse(x, effect, ...) }
 }
 
 between.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
   if(!isTRUE(getOption("plm.fast"))) {
     between.pseries.baseR(x, effect, ...) } else {
-    if(!avail.collapse()) stop(txt.no.collapse, call. = FALSE)
+    if(!requireNamespace("collapse", quietly = TRUE)) stop(txt.no.collapse, call. = FALSE)
     between.pseries.collapse(x, effect, ...) }
 }
 
 between.matrix <- function(x, effect, ...) {
   if(!isTRUE(getOption("plm.fast"))) {
     between.matrix.baseR(x, effect, ...) } else {
-    if(!avail.collapse()) stop(txt.no.collapse, call. = FALSE)
+    if(!requireNamespace("collapse", quietly = TRUE)) stop(txt.no.collapse, call. = FALSE)
     between.matrix.collapse(x, effect, ...) }
 }
 
@@ -97,22 +97,22 @@ between.matrix <- function(x, effect, ...) {
 Within.default <- function(x, effect, ...) {
   if(!isTRUE(getOption("plm.fast"))) {
     Within.default.baseR(x, effect, ...) } else {
-    if(!avail.collapse()) stop(txt.no.collapse, call. = FALSE)
+    if(!requireNamespace("collapse", quietly = TRUE)) stop(txt.no.collapse, call. = FALSE)
     Within.default.collapse(x, effect, ...) }
 }
 
 Within.pseries <- function(x, effect = c("individual", "time", "group", "twoways"), ...) {
   if(!isTRUE(getOption("plm.fast"))) {
     Within.pseries.baseR(x, effect, ...) } else {
-    if(!avail.collapse()) stop(txt.no.collapse, call. = FALSE)
+    if(!requireNamespace("collapse", quietly = TRUE)) stop(txt.no.collapse, call. = FALSE)
     Within.pseries.collapse(x, effect, ...) }
 }
 
 Within.matrix <- function(x, effect, rm.null = TRUE, ...) {
   if(!isTRUE(getOption("plm.fast"))) {
     Within.matrix.baseR(x, effect, ...) } else {
-    if(!avail.collapse()) stop(txt.no.collapse, call. = FALSE)
-    Within.matrix.collapse(x, effect, ...) }
+    if(!requireNamespace("collapse", quietly = TRUE)) stop(txt.no.collapse, call. = FALSE)
+      Within.matrix.collapse(x, effect, ...) }
 }
 
 
@@ -643,15 +643,6 @@ Within.matrix.collapse <- function(x, effect, rm.null = TRUE, ...) {
 #' }
 NULL
 
-## helper function, non-exported
-avail.collapse <- function() {
-  res <- if(!requireNamespace("collapse", quietly = TRUE)) {
-    FALSE
-  } else {
-    TRUE
-  }
-  invisible(res)
-}
 
 txt.no.collapse <- paste("option(\"plm.fast\") is set to TRUE but package 'collapse'",
                          "is not available which is needed for fast data transformation functions.",
