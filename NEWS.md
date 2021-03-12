@@ -23,8 +23,8 @@
  * pdata.frame: warns if NA in index dimension is encountered (before, only
    a plain message was printed).
  * Between/between/Sum/Within: Methods which rely on the index attribute
-   (\*.pseries and partly \*.matrix) now error informatively if NA in any index
-   dimension is encountered.
+   (\*.pseries and (if with index attribute) \*.matrix) now error informatively
+   if NA in any index dimension is encountered.
  * Vignettes: file names renamed to start with "A_", "B_", "C_" so that the
    Vignettes are sorted on CRAN's plm page in an order better suited for new
    package users.
