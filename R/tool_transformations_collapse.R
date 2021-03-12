@@ -468,7 +468,7 @@ Within.matrix.collapse <- function(x, effect, rm.null = TRUE, ...) {
         #                        matrix(colMeans(x, ...), nrow = nrow(x), ncol = ncol(x), byrow = TRUE)
       }
       else { # unbalanced twoways
-        eff.fac.ind <- xindex[[1L]]
+        eff.fac.ind <- collapse::GRP(attr(x, "index")[[1L]], group.sizes = FALSE, return.groups = FALSE, call = FALSE) # as factor is used twice below, make it a GRP object
         time <- xindex[[2L]]
         Dmu <- model.matrix(~ time - 1)
         W1   <- collapse::fwithin(x,   g = eff.fac.ind, w = NULL, na.rm = na.rm, mean = 0)
@@ -487,8 +487,8 @@ Within.matrix.collapse <- function(x, effect, rm.null = TRUE, ...) {
 #### two-way case, esp. in the unbalanced two-way case
 #### (collapse 1.4.2, lfe 2.8-5.1).
 # Within.pseries.collapse.lfe <- function(x, effect = c("individual", "time", "group", "twoways"), ...) {
-#   # print("fwithin.pseries.collapse.lfe")
-#   # browser()
+# # print("fwithin.pseries.collapse.lfe")
+# # browser()
 # 
 #   effect <- match.arg(effect)
 #   dots <- match.call(expand.dots = FALSE)$`...`
