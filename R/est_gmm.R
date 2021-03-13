@@ -113,7 +113,7 @@
 #' ## Blundell and Bond (1998) table 4 (cf. DPD for OX p. 12 col. 4)
 #' z2 <- pgmm(log(emp) ~ lag(log(emp), 1)+ lag(log(wage), 0:1) +
 #'            lag(log(capital), 0:1) | lag(log(emp), 2:99) +
-#'            lag(log(wage), 2:99) + lag(log(capital), 2:99),        
+#'            lag(log(wage), 2:99) + lag(log(capital), 2:99),
 #'            data = EmplUK, effect = "twoways", model = "onestep", 
 #'            transformation = "ld")
 #' summary(z2, robust = TRUE)
@@ -230,7 +230,7 @@ pgmm <- function(formula, data, subset, na.action,
   # normal instruments except maybe time dummies
   
   # the third part of the formula (if any) deals with the 'normal' instruments
-  if (length(x)[2L] == 3){
+  if (length(x)[2L] == 3L){
     normal.instruments <- TRUE
     inst.form <- formula(x, rhs = 3, lhs = 0)
     # the . - x1 + x2 syntax is allowed, in this case update with the first part
@@ -356,7 +356,7 @@ pgmm <- function(formula, data, subset, na.action,
                }
                )
 
-  # differenciate the matrix of response/covariates (and of normal
+  # differentiate the matrix of response/covariates (and of normal
   # instruments if any) and remove T1 - 1 time series (xd is already
   # differenced)
   yX1 <- lapply(yX,
@@ -644,8 +644,8 @@ dynterms2formula <- function(x, response.name = NULL){
       at <- character(0)
     }
     # if there are still some lags, write them
-    if (length(theinst) > 0){
-      if (length(theinst) > 1){
+    if (length(theinst) > 0L){
+      if (length(theinst) > 1L){
         at <- c(at, paste("lag(",names(x)[i],",c(",
                           paste(theinst, collapse = ","), "))", sep =""))
       }
@@ -705,7 +705,7 @@ G <- function(t){
 FD <- function(t){
   FD <- Id(t)[-1L, ]
   for (i in 1:(t-1)){
-    FD[i,i] <- -1
+    FD[i, i] <- -1
   }
   FD
 }
@@ -783,6 +783,7 @@ summary.pgmm <- function(object, robust = TRUE, time.dummies = FALSE, ...) {
   else  K <- length(object$coefficients[[2L]])
   object$sargan <- sargan(object, "twosteps")
   object$m1 <- mtest(object, order = 1, vcov = vv)
+  # TODO: catch case when order= 2 is not feasible due to too few data
   object$m2 <- mtest(object, order = 2, vcov = vv)
   object$wald.coef <- pwaldtest(object, param = "coef", vcov = vv)
   if (effect == "twoways") object$wald.td <- pwaldtest(object, param = "time", vcov = vv)
