@@ -368,15 +368,15 @@ lagsel <- function(object, exo = c("intercept", "none", "trend"),
 
 adj.levinlin.value <- function(l, exo = c("intercept", "none", "trend")){
   ## extract the adjustment values for Levin-Lin-Chu test
-  theTs <- as.numeric(dimnames(adj.levinlin)[[1]])
+  theTs <- as.numeric(dimnames(adj.levinlin)[[1L]])
   Ts <- selectT(l, theTs)
-  if (length(Ts) == 1){
+  if (length(Ts) == 1L){
     return(adj.levinlin[as.character(Ts), , exo])
   }
   else{
-    low <- adj.levinlin[as.character(Ts[1]), , exo]
-    high <- adj.levinlin[as.character(Ts[2]), , exo]
-    return(low + (l - Ts[1])/(Ts[2] - Ts[1]) * (high - low))
+    low <- adj.levinlin[as.character(Ts[1L]), , exo]
+    high <- adj.levinlin[as.character(Ts[2L]), , exo]
+    return(low + (l - Ts[1L])/(Ts[2L] - Ts[1L]) * (high - low))
   }
 }
 
@@ -420,7 +420,7 @@ critval.ips.tbar.value <- function(ind = 10L, time = 19L, critvals, exo = c("int
   ##
   ## Interpolation is based on inverse distance weighting (IDW) of
   ## L1 distance (1d case) and L2 distance (euclidean distance) (2d case)
-  ## (optical inspections shows this method is a good approxmimation)
+  ## (optical inspections shows this method is a good approximation)
   
   theInds <- as.numeric(dimnames(critvals)[[1L]])
   theTs <- as.numeric(dimnames(critvals)[[2L]])
@@ -470,10 +470,10 @@ critval.ips.tbar.value <- function(ind = 10L, time = 19L, critvals, exo = c("int
       weight <- 1/dist
       
       res <- (
-          crit4[as.character(Inds[1L]), as.character(Ts[1L]), ] * weight[1] +
-          crit4[as.character(Inds[2L]), as.character(Ts[1L]), ] * weight[2] +
-          crit4[as.character(Inds[1L]), as.character(Ts[2L]), ] * weight[3] +
-          crit4[as.character(Inds[2L]), as.character(Ts[2L]), ] * weight[4]) / sum(weight)
+          crit4[as.character(Inds[1L]), as.character(Ts[1L]), ] * weight[1L] +
+          crit4[as.character(Inds[2L]), as.character(Ts[1L]), ] * weight[2L] +
+          crit4[as.character(Inds[1L]), as.character(Ts[2L]), ] * weight[3L] +
+          crit4[as.character(Inds[2L]), as.character(Ts[2L]), ] * weight[4L]) / sum(weight)
       return(res)
     }
   }
@@ -495,8 +495,8 @@ tsadf <- function(object, exo = c("intercept", "none", "trend"),
   y <- Dy[- narow]
   result <- my.lm.fit(X, y, dfcor = dfcor)
   sigma <- result$sigma
-  rho <- result$coef[1]
-  sdrho <- result$se[1]
+  rho <- result$coef[1L]
+  sdrho <- result$se[1L]
   trho <- rho/sdrho
   p.trho <- padf(trho, exo = exo, ...)
   result <- list(rho    = rho,
@@ -603,7 +603,7 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
     method <- paste0(method, " (Heterosked. Consistent)")
   }
   
-  stat <- c(z = sqrt(n) * (LM - adj[1])  / sqrt(adj[2])) # eq. (14), (22) in Hadri (2000)
+  stat <- c(z = sqrt(n) * (LM - adj[1L])  / sqrt(adj[2L])) # eq. (14), (22) in Hadri (2000)
   pvalue <- pnorm(stat, lower.tail = FALSE) # is one-sided! was until rev. 572: 2*(pnorm(abs(stat), lower.tail = FALSE))
   
   htest <- structure(list(statistic   = stat,
@@ -776,15 +776,15 @@ purtest <- function(object, data = NULL, index = NULL,
     # exo is derived from specified formula:
     terms <- terms(object)
     lab <- labels(terms)
-    if (length(lab) == 0){
+    if (length(lab) == 0L){
       if (attr(terms, "intercept")) exo <- "intercept"
       else exo <- "none"
     }
     else{
-      if (length(lab) > 1 || lab != "trend") stop("incorrect formula")
+      if (length(lab) > 1L || lab != "trend") stop("incorrect formula")
       exo <- "trend"
     }
-    object <- paste(deparse(object[[2]]))
+    object <- paste(deparse(object[[2L]]))
     if (exists(object) && is.vector(get(object))){
       # is.vector because, eg, inv exists as a function
       object <- get(object)
@@ -799,7 +799,7 @@ purtest <- function(object, data = NULL, index = NULL,
             if (is.null(index)) stop("the index attribute is required")
             else data <- pdata.frame(data, index)
           }
-          id <- attr(data, "index")[[1]]
+          id <- attr(data, "index")[[1L]]
         }
         else{
           stop(paste0("unknown response (\"", object, "\" not in data)"))
@@ -811,7 +811,7 @@ purtest <- function(object, data = NULL, index = NULL,
     exo <- match.arg(exo)
     if (is.null(dim(object))){
       if (inherits(object, "pseries")){
-        id <- attr(object, "index")[[1]]
+        id <- attr(object, "index")[[1L]]
       }
       else stop("the individual dimension is undefined") # cannot derive individual dimension from a vector if not pseries
     }
@@ -827,7 +827,7 @@ purtest <- function(object, data = NULL, index = NULL,
     if (is.null(id)) stop("the individual dimension is undefined")
     object <- split(object, id)
   } else {
-    if (!ncol(object) > 1) warning("data.frame or matrix specified in argument object does not contain more than one individual (individuals are supposed to be in columns)")
+    if (!ncol(object) > 1L) warning("data.frame or matrix specified in argument object does not contain more than one individual (individuals are supposed to be in columns)")
     object <- as.list(object)
   }
   
@@ -878,8 +878,8 @@ purtest <- function(object, data = NULL, index = NULL,
     
     # get the adjustment parameters for the mean and the variance
     adjval <- adj.levinlin.value(T.levinlin, exo = exo)
-    mymu  <- adjval[1]
-    mysig <- adjval[2]
+    mymu  <- adjval[1L]
+    mysig <- adjval[2L]
     # calculate the ratio of LT/ST variance
     sigmaST <- sapply(idres, function(x) x[["sigma"]])
     sigmaLT <- sqrt(sapply(object, longrunvar, exo = exo, q = q))
@@ -923,8 +923,8 @@ purtest <- function(object, data = NULL, index = NULL,
       # calc Wtbar - default
       adjval <- mapply(function(x, y) adj.ips.wtbar.value(x, y, exo = exo),
                        as.list(L.ips), as.list(lags))
-      Etbar <- mean(adjval[1, ])
-      Vtbar <- mean(adjval[2, ])
+      Etbar <- mean(adjval[1L, ])
+      Vtbar <- mean(adjval[2L, ])
       stat <- c("Wtbar" = sqrt(n) * (tbar - Etbar) / sqrt(Vtbar)) # (3.13) = (4.10) in IPS (2003) [same generic formula for Ztbar and Wtbar]
       pvalue <- pnorm(stat, lower.tail = TRUE) # need lower.tail = TRUE (like ADF one-sided to the left), was until rev. 577: 2*pnorm(abs(stat), lower.tail = FALSE)
     }
@@ -934,8 +934,8 @@ purtest <- function(object, data = NULL, index = NULL,
       adjval <- adjval.ztbar <- sapply(L.ips, adj.ips.ztbar.value, 
                                        adj.ips.zbar.time, adj.ips.zbar.means, adj.ips.zbar.vars)
       rownames(adjval) <- rownames(adjval.ztbar) <- c("mean", "var")
-      Etbar.ztbar <- mean(adjval.ztbar[1, ])
-      Vtbar.ztbar <- mean(adjval.ztbar[2, ])
+      Etbar.ztbar <- mean(adjval.ztbar[1L, ])
+      Vtbar.ztbar <- mean(adjval.ztbar[2L, ])
       stat <- stat.ztbar <- c("Ztbar" = sqrt(n) * (tbar - Etbar.ztbar) / sqrt(Vtbar.ztbar)) # (3.13) = (4.10) in IPS (2003) [same generic formula for Ztbar and Wtbar]
       pvalue <- pvalue.ztbar <- pnorm(stat.ztbar, lower.tail = TRUE)
     }
