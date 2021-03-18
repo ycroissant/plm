@@ -327,10 +327,11 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
         demZ <- model.matrix(x, model = model, rhs = 2, cstcovar.rm = "all")
         ## substitute (transformed) X with projection of X on Z
         ## any linear dependence in Z (demZ) is appropriately taken care of by lm.fit()
+        nms <- colnames(demX)
         demX <- fitted(lm.fit(demZ, demX))
         # catches case with only one regressor -> need to convert numeric 
         # returned from fitted() to matrix:
-        if(!is.matrix(demX)) demX <- matrix(demX)
+        if(!is.matrix(demX)) demX <- matrix(demX, dimnames = list(NULL, nms[1L]))
     }
 
     pdim <- pdim(x)
@@ -965,10 +966,11 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
         demZ <- model.matrix(x, model = model, rhs = 2, cstcovar.rm = "all")
         ## substitute (transformed) X with projection of X on Z
         ## any linear dependence in Z (demZ) is appropriately taken care of by lm.fit()
+        nms <- colnames(demX)
         demX <- fitted(lm.fit(demZ, demX))
         # catches case with only one regressor -> need to convert numeric 
         # returned from fitted() to matrix:
-        if(!is.matrix(demX)) demX <- matrix(demX)
+        if(!is.matrix(demX)) demX <- matrix(demX, dimnames = list(NULL, nms[1L]))
     }
 
     pdim <- pdim(x)
