@@ -7,7 +7,7 @@
 \usage{
 hansi(object, alpha = 0.05)
 
-\method{print}{hansi}(object, cutoff = 10L, ...)
+\method{print}{hansi}(x, cutoff = 10L, ...)
 }
 \arguments{
 \item{object}{either a numeric containing p-values of individual unit root
@@ -17,13 +17,15 @@ test results (does not need to be sorted) or a suitable \code{purtest} object
 
 \item{alpha}{numeric, the pre-specified significance level (defaults to \code{0.05}),}
 
+\item{x}{an object of class c("hansi", "list") as produced by \code{hansi} to be printed,}
+
 \item{cutoff}{integer, cutoff value for printing of enumeration of individuals with
 rejected individual H0, for print method only,}
 
 \item{\dots}{further arguments (currently not used).}
 }
 \value{
-An object of class \code{c("hansi", "list")} which is a list with the elements:
+For \code{hansi}, an object of class \code{c("hansi", "list")} which is a list with the elements:
 \itemize{
 \item \code{id}: integer, the identifier of the individual (integer sequence referring to
 position in input),

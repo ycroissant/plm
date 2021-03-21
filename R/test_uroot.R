@@ -1138,11 +1138,12 @@ print.summary.purtest <- function(x, ...){
 #' (as produced by `purtest()` for a test which gives p-values of the individuals
 #' (Hadri's test in `purtest` is not suitable)),
 #' @param alpha numeric, the pre-specified significance level (defaults to `0.05`),
+#' @param x an object of class c("hansi", "list") as produced by `hansi` to be printed,
 #' @param cutoff integer, cutoff value for printing of enumeration of individuals with
 #' rejected individual H0, for print method only,
 #' @param \dots further arguments (currently not used).
 #' 
-#' @return An object of class `c("hansi", "list")` which is a list with the elements:
+#' @return For `hansi`, an object of class `c("hansi", "list")` which is a list with the elements:
 #' - `id`: integer, the identifier of the individual (integer sequence referring to
 #' position in input),
 #' - `name`: character, name of the input's individual (if it has a name,
@@ -1230,7 +1231,7 @@ hansi <- function(object, alpha = 0.05) {
 
 #' @rdname hansi
 #' @export
-print.hansi <- function(object, cutoff = 10L, ...) {
+print.hansi <- function(x, cutoff = 10L, ...) {
   if(round(cutoff) != cutoff) stop("Argument 'cutoff' has to be an integer")
   id         <- object$id
   alpha      <- object$alpha
@@ -1239,7 +1240,6 @@ print.hansi <- function(object, cutoff = 10L, ...) {
   n <- length(rej.ind)
   H0.txt <- "H0: All individual series have a unit root\n"
   HA.txt <- "HA: Stationarity for at least some individuals\n"
-#  H0.rej.txt <- paste0("Global H0 rejected for ", rej.ind.no, " individuals\n")
   H0.rej.txt <- "H0 rejected (globally)"
   test.txt <- "    Simes Test as Panel Unit Root Test (Hanck (2013))\n"
   
