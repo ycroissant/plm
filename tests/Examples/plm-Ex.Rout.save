@@ -537,7 +537,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 > h <- hansi(pvals)
 > print(h)              # (explicitly) prints test's evaluation
 
-    Simes Test as Panel Unit Root Test (Hanck (2013))
+        Simes Test as Panel Unit Root Test (Hanck (2013))
 
 H0: All individual series have a unit root
 HA: Stationarity for at least some individuals
@@ -548,11 +548,11 @@ Number of individuals: 19
 Evaluation:
  H0 rejected (globally)
 
- Individual H0 rejected for 10 individual(s) (integer id):
+ Individual H0 rejected for 10 individual(s) (integer id(s)):
   1, 2, 3, 4, 5, 6, 7, 8, 9, 10
 > print(h, cutoff = 3L) # print only first 3 rejected ids 
 
-    Simes Test as Panel Unit Root Test (Hanck (2013))
+        Simes Test as Panel Unit Root Test (Hanck (2013))
 
 H0: All individual series have a unit root
 HA: Stationarity for at least some individuals
@@ -563,7 +563,7 @@ Number of individuals: 19
 Evaluation:
  H0 rejected (globally)
 
- Individual H0 rejected for 10 individuals, only first 3 printed (integer id):
+ Individual H0 rejected for 10 individuals, only first 3 printed (integer id(s)):
   1, 2, 3, ...
 > h$rejected # logical indicating the individuals with rejected individual H0
   Argentina      Sweden      Norway      Mexico       Italy     Finland 
@@ -583,7 +583,7 @@ Netherlands    Portugal      Canada       Spain     Denmark Switzerland
 > 
 > hansi(obj)
 
-    Simes Test as Panel Unit Root Test (Hanck (2013))
+        Simes Test as Panel Unit Root Test (Hanck (2013))
 
 H0: All individual series have a unit root
 HA: Stationarity for at least some individuals
@@ -592,7 +592,7 @@ Alpha: 0.05
 Number of individuals: 10
 
 Evaluation:
- Global H0 not rejected
+ H0 rejected (globally)
 > 
 > 
 > 
@@ -14633,7 +14633,7 @@ F-statistic: 309.014 on 2 and 197 DF, p-value: < 2.22e-16
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  14.32 0.78 15.27 NA NA 
+Time elapsed:  11.3 0.78 12.3 NA NA 
 > grDevices::dev.off()
 null device 
           1 
