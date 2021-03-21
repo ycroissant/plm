@@ -1233,10 +1233,10 @@ hansi <- function(object, alpha = 0.05) {
 #' @export
 print.hansi <- function(x, cutoff = 10L, ...) {
   if(round(cutoff) != cutoff) stop("Argument 'cutoff' has to be an integer")
-  id         <- object$id
-  alpha      <- object$alpha
-  rej.ind    <- object$rejected
-  rej.ind.no <- object$rejected.no
+  id         <- x$id
+  alpha      <- x$alpha
+  rej.ind    <- x$rejected
+  rej.ind.no <- x$rejected.no
   n <- length(rej.ind)
   H0.txt <- "H0: All individual series have a unit root\n"
   HA.txt <- "HA: Stationarity for at least some individuals\n"
