@@ -1240,11 +1240,12 @@ print.hansi <- function(x, cutoff = 10L, ...) {
   n <- length(rej.ind)
   H0.txt <- "H0: All individual series have a unit root\n"
   HA.txt <- "HA: Stationarity for at least some individuals\n"
-  H0.rej.txt <- "H0 rejected (globally)"
-  test.txt <- "    Simes Test as Panel Unit Root Test (Hanck (2013))\n"
+  H0.rej.txt     <- "H0 rejected (globally)"
+  H0.not.rej.txt <- "H0 not rejected (globally)"
+  test.txt <- "    Simes Test as Panel Unit Root Test (Hanck (2013))"
   
   cat("\n")
-  cat(test.txt)
+  cat(paste0("    ", test.txt, "\n"))
   cat("\n")
   cat(H0.txt)
   cat(HA.txt)
@@ -1260,18 +1261,18 @@ print.hansi <- function(x, cutoff = 10L, ...) {
     
     if(rej.ind.no <= cutoff) {
       ind10 <- paste0(paste0(id[rej.ind], collapse = ", "))
-      ind.txt <- paste0("Individual H0 rejected for ", rej.ind.no, " individual(s) (integer id):\n")
+      ind.txt <- paste0("Individual H0 rejected for ", rej.ind.no, " individual(s) (integer id(s)):\n")
       cat(paste0(" ", ind.txt))
       cat(paste0("  ", ind10, "\n"))
     }
     else { # cut off enumeration of individuals if more than specified in cutoff
       ind10 <- paste0(paste0(id[rej.ind][1L:cutoff], collapse = ", "), ", ...")
-      ind.txt <- paste0("Individual H0 rejected for ", rej.ind.no ," individuals, only first ", cutoff , " printed (integer id):\n")
+      ind.txt <- paste0("Individual H0 rejected for ", rej.ind.no ," individuals, only first ", cutoff , " printed (integer id(s)):\n")
       cat(paste0(" ", ind.txt))
       cat(paste0("  ", ind10, "\n"))
     }
   } else {
-    cat(" Global H0 not rejected\n")
+    cat(paste0(" ", H0.rej.txt, "\n"))
   }
 }
 
