@@ -56,7 +56,7 @@ cipstest(Produc$gsp, type = "trend")
 \insertRef{pes07}{plm}
 }
 \seealso{
-\code{\link[=purtest]{purtest()}}
+\code{\link[=purtest]{purtest()}}, \code{\link[=hansi]{hansi()}}
 }
 \author{
 Giovanni Millo

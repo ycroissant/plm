@@ -46,7 +46,7 @@
 #' @return An object of class `"htest"`.
 #' @author Giovanni Millo
 #' @export
-#' @seealso [purtest()]
+#' @seealso [purtest()], [hansi()]
 #' @references
 #'
 #' \insertRef{pes07}{plm}
