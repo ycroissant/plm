@@ -1,6 +1,11 @@
 # development version 2.4-19999 
  **likely set to either 2.4-2 or 2.6 for CRAN release**
 
+### Features:
+ * hansi: new function for Simes (1986) test applied to panels for panel unit
+   root testing, as suggested in Hanck (2013).
+
+### Fixes & Others:
  * vcovG (hence vcovHC, vcovDC, vcovNW, vcovSCC), vcovBK: fix error in case of
    IV estimation with only one regressor.
  
@@ -13,7 +18,7 @@
    R's generic diff (like dplyr does for base R's lag)). By doing this, it is
    ensured plm::diff, plm::lag, and plm::lead will always dispatch to the
    operations respecting the panel structure, if called on a pseries.
-
+ 
  * Vignettes: Added formula for nested error component model (2nd vignette),
    fixed a few typos.
 

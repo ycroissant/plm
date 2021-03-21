@@ -152,7 +152,7 @@ summary(z1, robust = FALSE)
 ## Blundell and Bond (1998) table 4 (cf. DPD for OX p. 12 col. 4)
 z2 <- pgmm(log(emp) ~ lag(log(emp), 1)+ lag(log(wage), 0:1) +
            lag(log(capital), 0:1) | lag(log(emp), 2:99) +
-           lag(log(wage), 2:99) + lag(log(capital), 2:99),        
+           lag(log(wage), 2:99) + lag(log(capital), 2:99),
            data = EmplUK, effect = "twoways", model = "onestep", 
            transformation = "ld")
 summary(z2, robust = TRUE)

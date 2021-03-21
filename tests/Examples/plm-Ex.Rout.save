@@ -1,6 +1,6 @@
 
-R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R version 4.0.4 (2021-02-15) -- "Lost Library Book"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -506,6 +506,93 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 [1] TRUE
 > all.equal(pred_effs, eff_id_dfirst + eff_ti_level)  # TRUE
 [1] TRUE
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("hansi")
+> ### * hansi
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: hansi
+> ### Title: Simes Test for unit roots in panel data
+> ### Aliases: hansi print.hansi
+> ### Keywords: htest
+> 
+> ### ** Examples
+> 
+> 
+> ### input is numeric (p-values)
+> #### example from Hanck (2013), Table 11 (left side)
+> pvals <- c(0.0001,0.0001,0.0001,0.0001,0.0001,0.0001,0.0050,0.0050,0.0050,
++            0.0050,0.0175,0.0175,0.0200,0.0250,0.0400,0.0500,0.0575,0.2375,0.2475)
+> 
+> countries <- c("Argentina","Sweden","Norway","Mexico","Italy","Finland","France",
++               "Germany","Belgium","U.K.","Brazil","Australia","Netherlands",
++               "Portugal","Canada", "Spain","Denmark","Switzerland","Japan")
+> names(pvals) <- countries
+> 
+> h <- hansi(pvals)
+> print(h)              # (explicitly) prints test's evaluation
+
+    Simes Test as Panel Unit Root Test (Hanck (2013))
+
+H0: All individual series have a unit root
+HA: Stationarity for at least some individuals
+
+Alpha: 0.05
+Number of individuals: 19
+
+Evaluation:
+ H0 rejected (globally)
+
+ Individual H0 rejected for 10 individual(s) (integer id):
+  1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+> print(h, cutoff = 3L) # print only first 3 rejected ids 
+
+    Simes Test as Panel Unit Root Test (Hanck (2013))
+
+H0: All individual series have a unit root
+HA: Stationarity for at least some individuals
+
+Alpha: 0.05
+Number of individuals: 19
+
+Evaluation:
+ H0 rejected (globally)
+
+ Individual H0 rejected for 10 individuals, only first 3 printed (integer id):
+  1, 2, 3, ...
+> h$rejected # logical indicating the individuals with rejected individual H0
+  Argentina      Sweden      Norway      Mexico       Italy     Finland 
+       TRUE        TRUE        TRUE        TRUE        TRUE        TRUE 
+     France     Germany     Belgium        U.K.      Brazil   Australia 
+       TRUE        TRUE        TRUE        TRUE       FALSE       FALSE 
+Netherlands    Portugal      Canada       Spain     Denmark Switzerland 
+      FALSE       FALSE       FALSE       FALSE       FALSE       FALSE 
+      Japan 
+      FALSE 
+> 
+> 
+> ### input is a (suitable) purtest object
+> data("Grunfeld", package = "plm")
+> y <- data.frame(split(Grunfeld$inv, Grunfeld$firm))
+> obj <- purtest(y, pmax = 4, exo = "intercept", test = "madwu")
+> 
+> hansi(obj)
+
+    Simes Test as Panel Unit Root Test (Hanck (2013))
+
+H0: All individual series have a unit root
+HA: Stationarity for at least some individuals
+
+Alpha: 0.05
+Number of individuals: 10
+
+Evaluation:
+ Global H0 not rejected
 > 
 > 
 > 
@@ -8801,7 +8888,7 @@ Wald test for time dummies: chisq(6) = 26.9045 (p-value = 0.0001509)
 > ## Blundell and Bond (1998) table 4 (cf. DPD for OX p. 12 col. 4)
 > z2 <- pgmm(log(emp) ~ lag(log(emp), 1)+ lag(log(wage), 0:1) +
 +            lag(log(capital), 0:1) | lag(log(emp), 2:99) +
-+            lag(log(wage), 2:99) + lag(log(capital), 2:99),        
++            lag(log(wage), 2:99) + lag(log(capital), 2:99),
 +            data = EmplUK, effect = "twoways", model = "onestep", 
 +            transformation = "ld")
 > summary(z2, robust = TRUE)
@@ -9655,8 +9742,8 @@ Chisq: 6879.2 on 12 DF, p-value: < 2.22e-16
 > ##D data <- replicate(100, wlddevsmall, simplify = FALSE)
 > ##D rm(wlddevsmall)
 > ##D uniquify <- function(x, i) {
-> ##D 	x$iso3c <- paste0(x$iso3c, i)
-> ##D 	x
+> ##D   x$iso3c <- paste0(x$iso3c, i)
+> ##D   x
 > ##D }
 > ##D data <- unlist2d(Map(uniquify, data, as.list(1:100)), idcols = FALSE)
 > ##D data <- pdata.frame(data, index = c("iso3c", "year"))
@@ -14546,7 +14633,7 @@ F-statistic: 309.014 on 2 and 197 DF, p-value: < 2.22e-16
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  10.6 0.45 11.2 NA NA 
+Time elapsed:  14.32 0.78 15.27 NA NA 
 > grDevices::dev.off()
 null device 
           1 

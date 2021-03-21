@@ -1,7 +1,7 @@
 
-R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
-Copyright (C) 2019 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
+R version 4.0.4 (2021-02-15) -- "Lost Library Book"
+Copyright (C) 2021 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -15,10 +15,10 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> # Various run tests for purtest()
+> # Various run tests for purtest() and hansi()
 > 
-> # NB: p-values can differ slightly relative to .Rout.save file due to availabilty of package 'urca'
-> #     for p-value approximation in individiual (A)DF-regressions.
+> # NB: p-values can differ slightly relative to .Rout.save file due to availability of package 'urca'
+> #     for p-value approximation in individual (A)DF-regressions.
 > 
 > library(plm)
 > data("Grunfeld", package = "plm")
@@ -681,6 +681,170 @@ p-value: 0.004
 9     0  19 -0.4875576 -2.3614046 0.400000183   3009.0288    767.5460
 10    0  19 -0.7854102 -3.4617227 0.043582736     69.7076     21.5264
 > 
+> 
+> ## Simes Test for panels by Hanck
+> hansi(llc)
+
+    Simes Test as Panel Unit Root Test (Hanck (2013))
+
+H0: All individual series have a unit root
+HA: Stationarity for at least some individuals
+
+Alpha: 0.05
+Number of individuals: 10
+
+Evaluation:
+ Global H0 not rejected
+> hansi(llc_int)
+
+    Simes Test as Panel Unit Root Test (Hanck (2013))
+
+H0: All individual series have a unit root
+HA: Stationarity for at least some individuals
+
+Alpha: 0.05
+Number of individuals: 10
+
+Evaluation:
+ H0 rejected (globally)
+
+ Individual H0 rejected for 2 individual(s) (integer id):
+  2, 4
+> hansi(llc_trend)
+
+    Simes Test as Panel Unit Root Test (Hanck (2013))
+
+H0: All individual series have a unit root
+HA: Stationarity for at least some individuals
+
+Alpha: 0.05
+Number of individuals: 10
+
+Evaluation:
+ H0 rejected (globally)
+
+ Individual H0 rejected for 2 individual(s) (integer id):
+  2, 4
+> hansi(purtest(pG$value, test = "Pm",        exo = "intercept", lags = 2, dfcor = TRUE))
+
+    Simes Test as Panel Unit Root Test (Hanck (2013))
+
+H0: All individual series have a unit root
+HA: Stationarity for at least some individuals
+
+Alpha: 0.05
+Number of individuals: 10
+
+Evaluation:
+ Global H0 not rejected
+> hansi(purtest(pG$value, test = "invnormal", exo = "intercept", lags = 2, dfcor = TRUE))
+
+    Simes Test as Panel Unit Root Test (Hanck (2013))
+
+H0: All individual series have a unit root
+HA: Stationarity for at least some individuals
+
+Alpha: 0.05
+Number of individuals: 10
+
+Evaluation:
+ Global H0 not rejected
+> hansi(purtest(pG$value, test = "logit",     exo = "intercept", lags = 2, dfcor = TRUE))
+
+    Simes Test as Panel Unit Root Test (Hanck (2013))
+
+H0: All individual series have a unit root
+HA: Stationarity for at least some individuals
+
+Alpha: 0.05
+Number of individuals: 10
+
+Evaluation:
+ Global H0 not rejected
+> 
+> hansi(purtest(inv ~ 1, data = Grunfeld, index = "firm", pmax = 4, test = "madwu"))
+
+    Simes Test as Panel Unit Root Test (Hanck (2013))
+
+H0: All individual series have a unit root
+HA: Stationarity for at least some individuals
+
+Alpha: 0.05
+Number of individuals: 10
+
+Evaluation:
+ Global H0 not rejected
+> 
+> hansi(b_unbal3)
+
+    Simes Test as Panel Unit Root Test (Hanck (2013))
+
+H0: All individual series have a unit root
+HA: Stationarity for at least some individuals
+
+Alpha: 0.05
+Number of individuals: 10
+
+Evaluation:
+ H0 rejected (globally)
+
+ Individual H0 rejected for 2 individual(s) (integer id):
+  2, 4
+> hansi(b_ztbar)
+
+    Simes Test as Panel Unit Root Test (Hanck (2013))
+
+H0: All individual series have a unit root
+HA: Stationarity for at least some individuals
+
+Alpha: 0.05
+Number of individuals: 10
+
+Evaluation:
+ H0 rejected (globally)
+
+ Individual H0 rejected for 2 individual(s) (integer id):
+  2, 4
+> hansi(b_ztbar_unbal)
+
+    Simes Test as Panel Unit Root Test (Hanck (2013))
+
+H0: All individual series have a unit root
+HA: Stationarity for at least some individuals
+
+Alpha: 0.05
+Number of individuals: 10
+
+Evaluation:
+ H0 rejected (globally)
+
+ Individual H0 rejected for 2 individual(s) (integer id):
+  2, 4
+> hansi(b_ztbar_unbal2)
+
+    Simes Test as Panel Unit Root Test (Hanck (2013))
+
+H0: All individual series have a unit root
+HA: Stationarity for at least some individuals
+
+Alpha: 0.05
+Number of individuals: 10
+
+Evaluation:
+ Global H0 not rejected
+> hansi(b_lag2_ztbar)
+
+    Simes Test as Panel Unit Root Test (Hanck (2013))
+
+H0: All individual series have a unit root
+HA: Stationarity for at least some individuals
+
+Alpha: 0.05
+Number of individuals: 10
+
+Evaluation:
+ Global H0 not rejected
+> 
 > proc.time()
    user  system elapsed 
-  1.351   0.073   1.428 
+   2.43    0.25    2.67 

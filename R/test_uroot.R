@@ -744,9 +744,9 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
 #' @importFrom stats setNames
 #' @author Yves Croissant and for "Pm", "invnormal", and "logit" Kevin
 #'     Tappe
-#' @seealso [cipstest()]
+#' @seealso [cipstest()], [hansi()]
+
 #' @references
-#'
 #' \insertAllCited{}
 #'  
 #' @keywords htest
@@ -1097,5 +1097,181 @@ print.summary.purtest <- function(x, ...){
   }
   cat("\n")
   print(x$sumidres, ...)
+}
+
+
+
+
+
+#' Simes Test for unit roots in panel data
+#' 
+#' Simes' test of intersection of individual hypothesis tests
+#' \insertCite{SIMES:86}{plm} applied to panel unit root tests as suggested by
+#' \insertCite{HANCK:13}{plm}.
+#' 
+#' Simes' approach to testing is combining p-values from single hypothesis tests
+#' with a global (intersected) hypothesis. \insertCite{HANCK:13}{plm} mentions it can
+#' be applied to any panel unit root test which yield a p-value for each
+#' individual series.
+#' The test is robust versus general patterns of cross-sectional dependence.
+#' 
+#' Further, this approach allows to discriminate between individuals for which
+#' the individual H0 (unit root present for individual series) is rejected/
+#' is not rejected by Hommel's procedure (\insertCite{HOMM:88}{plm}) for family-wise
+#' error rate control (FWER) at pre-specified significance level alpha via
+#' argument `alpha` (defaulting to `0.05`), i.e., it controls for the multiplicity
+#' in testing.
+#' 
+#' The function `hansi` takes as main input `object` either a plain numeric
+#' containing p-values of individual tests or a `purtest` object which holds
+#' a suitable pre-computed panel unit root test (one that produces p-values per
+#' individual series).
+#' 
+#' The functions return value (see section Value) is a list with detailed
+#' evaluation of the applied Simes test.
+#' 
+#' The associated `print` method prints a verbal evaluation.
+#' 
+#' @aliases hansi
+#' @param object either a numeric containing p-values of individual unit root 
+#' test results (does not need to be sorted) or a suitable `purtest` object
+#' (as produced by `purtest()` for a test which gives p-values of the individuals
+#' (Hadri's test in `purtest` is not suitable)),
+#' @param alpha numeric, the pre-specified significance level (defaults to `0.05`),
+#' @param cutoff integer, cutoff value for printing of enumeration of individuals with
+#' rejected individual H0, for print method only,
+#' @param \dots further arguments (currently not used).
+#' 
+#' @return An object of class `c("hansi", "list")` which is a list with the elements:
+#' - `id`: integer, the identifier of the individual (integer sequence referring to
+#' position in input),
+#' - `name`: character, name of the input's individual (if it has a name,
+#' otherwise "1", "2", "3", ...),
+#' - `p`: numeric, p-values as input (either the numeric or extracted from
+#' the purtest object),
+#' - `p.hommel`: numeric, p-values after Hommel's transformation,
+#' - `rejected`: logical, indicating for which individual the individual null
+#' hypothesis is rejected (`TRUE`)/non-rejected (`FALSE`) (after controlling
+#' for multiplicity),
+#' - `rejected.no`: integer, giving the total number of rejected individual series,
+#' - `alpha`: numeric, the input `alpha`.
+#' 
+#' @export
+#' @importFrom stats p.adjust
+#' 
+#' @author Kevin Tappe
+#' @seealso [purtest()], [cipstest()]
+#' 
+#' @references
+#' \insertAllCited{}
+#'  
+#' @keywords htest
+#
+#' @examples
+#' 
+#' ### input is numeric (p-values)
+#' #### example from Hanck (2013), Table 11 (left side)
+#' pvals <- c(0.0001,0.0001,0.0001,0.0001,0.0001,0.0001,0.0050,0.0050,0.0050,
+#'            0.0050,0.0175,0.0175,0.0200,0.0250,0.0400,0.0500,0.0575,0.2375,0.2475)
+#'
+#' countries <- c("Argentina","Sweden","Norway","Mexico","Italy","Finland","France",
+#'               "Germany","Belgium","U.K.","Brazil","Australia","Netherlands",
+#'               "Portugal","Canada", "Spain","Denmark","Switzerland","Japan")
+#' names(pvals) <- countries
+#' 
+#' h <- hansi(pvals)
+#' print(h)              # (explicitly) prints test's evaluation
+#' print(h, cutoff = 3L) # print only first 3 rejected ids 
+#' h$rejected # logical indicating the individuals with rejected individual H0
+#' 
+#' 
+#' ### input is a (suitable) purtest object
+#' data("Grunfeld", package = "plm")
+#' y <- data.frame(split(Grunfeld$inv, Grunfeld$firm))
+#' obj <- purtest(y, pmax = 4, exo = "intercept", test = "madwu")
+#' 
+#' hansi(obj)
+#' 
+hansi <- function(object, alpha = 0.05) {
+  
+  is.purtest <- if(inherits(object, "purtest")) TRUE else FALSE
+  if(!is.purtest) {
+    if(is.numeric(object)) {
+      if(anyNA(object)) stop("input p-values 'p' contain at least one NA/NaN value")
+      n <- length(object)
+      p <- object
+    } else {
+      stop("argument 'p' needs to specify either a 'purtest' object or a numeric")
+    }
+  } else {
+    # purtest object
+    if(object$args$test == "hadri") stop("hansi() [Hanck/Simes' test] not possible for purtest objects based on Hadri's test")
+    p <- sapply(object$idres, function(x) x[["p.trho"]])
+    n <- length(p)
+  }
+  
+  id <- seq_len(n)
+  names(id) <- if(!is.null(names(p))) names(p) else id
+  
+  p.hommel <- p.adjust(p, method = "hommel")
+  rejected.ind <- p.hommel <= alpha    # TRUE for individual-H0-rejected individuals
+  rejected.ind.no <- sum(rejected.ind) # number of rejected individuals
+  
+  res <- structure(list(id           = id,
+                        name         = names(id),
+                        p            = p,
+                        p.hommel     = p.hommel,
+                        rejected     = rejected.ind,
+                        rejected.no  = rejected.ind.no,
+                        alpha        = alpha),
+                   class = c("hansi", "list"))
+  return(res)
+}
+
+#' @rdname hansi
+#' @export
+print.hansi <- function(object, cutoff = 10L, ...) {
+  if(round(cutoff) != cutoff) stop("Argument 'cutoff' has to be an integer")
+  id         <- object$id
+  alpha      <- object$alpha
+  rej.ind    <- object$rejected
+  rej.ind.no <- object$rejected.no
+  n <- length(rej.ind)
+  H0.txt <- "H0: All individual series have a unit root\n"
+  HA.txt <- "HA: Stationarity for at least some individuals\n"
+#  H0.rej.txt <- paste0("Global H0 rejected for ", rej.ind.no, " individuals\n")
+  H0.rej.txt <- "H0 rejected (globally)"
+  test.txt <- "    Simes Test as Panel Unit Root Test (Hanck (2013))\n"
+  
+  cat("\n")
+  cat(test.txt)
+  cat("\n")
+  cat(H0.txt)
+  cat(HA.txt)
+  cat("\n")
+  cat(paste0("Alpha: ", alpha, "\n"))
+  cat(paste0("Number of individuals: ", n, "\n"))
+  
+  cat("\n")
+  cat("Evaluation:\n")
+  if(rej.ind.no > 0L) {
+    cat(paste0(" ", H0.rej.txt, "\n"))
+    cat("\n")
+    
+    if(rej.ind.no <= cutoff) {
+      ind10 <- paste0(paste0(id[rej.ind], collapse = ", "))
+      ind.txt <- paste0("Individual H0 rejected for ", rej.ind.no, " individual(s) (integer id):\n")
+      cat(paste0(" ", ind.txt))
+      cat(paste0("  ", ind10, "\n"))
+    }
+    else { # cut off enumeration of individuals if more than specified in cutoff
+      ind10 <- paste0(paste0(id[rej.ind][1L:cutoff], collapse = ", "), ", ...")
+      ind.txt <- paste0("Individual H0 rejected for ", rej.ind.no ," individuals, only first ", cutoff , " printed (integer id):\n")
+      cat(paste0(" ", ind.txt))
+      cat(paste0("  ", ind10, "\n"))
+    }
+  } else {
+    cat(" Global H0 not rejected\n")
+  }
 }
 
