@@ -23,11 +23,11 @@
 #' Cross-sectionally augmented Im, Pesaran and Shin (IPS) test for
 #' unit roots in panel models.
 #' 
-#' This cross-sectionally augmented version of the IPS unit root test
-#' (H0: the `pseries` has a unit root) is a so-called
-#' second-generation panel unit root test: it is in fact robust
-#' against cross-sectional dependence, provided that the default
-#' `type="cmg"` is calculated. Else one can obtain the standard
+#' Peseran's \insertCite{pes07}{plm} cross-sectionally augmented version of 
+#' the IPS unit root test \insertCite{IM:PESAR:SHIN:03}{plm} (H0: `pseries` 
+#' has a unit root) is a so-called second-generation panel unit root test: it 
+#' is in fact robust against cross-sectional dependence, provided that the default
+#' `model="cmg"` is calculated. Else one can obtain the standard
 #' (`model="mg"`) or cross-sectionally demeaned (`model="dmg"`)
 #' versions of the IPS test.
 #' 
@@ -49,7 +49,7 @@
 #' @seealso [purtest()], [hansi()]
 #' @references
 #'
-#' \insertRef{pes07}{plm}
+#' \insertAllCited{}
 #' 
 #' @keywords htest
 #' @examples

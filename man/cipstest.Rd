@@ -36,11 +36,11 @@ Cross-sectionally augmented Im, Pesaran and Shin (IPS) test for
 unit roots in panel models.
 }
 \details{
-This cross-sectionally augmented version of the IPS unit root test
-(H0: the \code{pseries} has a unit root) is a so-called
-second-generation panel unit root test: it is in fact robust
-against cross-sectional dependence, provided that the default
-\code{type="cmg"} is calculated. Else one can obtain the standard
+Peseran's \insertCite{pes07}{plm} cross-sectionally augmented version of
+the IPS unit root test \insertCite{IM:PESAR:SHIN:03}{plm} (H0: \code{pseries}
+has a unit root) is a so-called second-generation panel unit root test: it
+is in fact robust against cross-sectional dependence, provided that the default
+\code{model="cmg"} is calculated. Else one can obtain the standard
 (\code{model="mg"}) or cross-sectionally demeaned (\code{model="dmg"})
 versions of the IPS test.
 }
@@ -53,7 +53,7 @@ cipstest(Produc$gsp, type = "trend")
 
 }
 \references{
-\insertRef{pes07}{plm}
+\insertAllCited{}
 }
 \seealso{
 \code{\link[=purtest]{purtest()}}, \code{\link[=hansi]{hansi()}}

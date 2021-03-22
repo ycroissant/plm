@@ -656,15 +656,15 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
 #' - `"logit"` is the logit test by \insertCite{CHOI:01}{plm}.
 #'
 #' The individual p-values for the Fisher-type tests are approximated
-#' as described in \insertCite{MACK:96;textual}{plm} if the package 'urca' 
+#' as described in \insertCite{MACK:96;textual}{plm} if the package \CRANpkg{urca}
 #' (\insertCite{PFAFF:08;textual}{plm}) is available, otherwise as described in
 #' \insertCite{MACK:94;textual}{plm}.
 #' 
 #' For the test statistic tbar of the test of Im/Pesaran/Shin (2003)
-#' (`ips.stat = "tbar`), no p-value is given but 1%, 5%, and 10% critical
+#' (`ips.stat = "tbar"`), no p-value is given but 1%, 5%, and 10% critical
 #' values are interpolated from paper's tabulated values via inverse distance
 #' weighting (printed and contained in the returned value's element
-#' statistic$ips.tbar.crit).
+#' `statistic$ips.tbar.crit`).
 #'
 #' Hadri's test, the test of Levin/Lin/Chu, and the tbar statistic of
 #' Im/Pesaran/Shin are not applicable to unbalanced panels; the tbar statistic
@@ -706,7 +706,7 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
 #'     variables (`"none"`), individual intercepts (`"intercept"`), or
 #'     individual intercepts and trends (`"trend"`), but see Details,
 #' @param lags the number of lags to be used for the augmented
-#'     Dickey-Fuller regressions: either an integer (the number of
+#'     Dickey-Fuller regressions: either a single value integer (the number of
 #'     lags for all time series), a vector of integers (one for each
 #'     time series), or a character string for an automatic
 #'     computation of the number of lags, based on the AIC
@@ -718,7 +718,7 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
 #'     indicating whether the heteroskedasticity-consistent test of
 #'     \insertCite{HADR:00;textual}{plm} should be computed,
 #' @param q the bandwidth for the estimation of the long-run variance 
-#'     (only relevant for `test = "levinlin"`, the default (`q = NULL``)
+#'     (only relevant for `test = "levinlin"`, the default (`q = NULL`)
 #'     gives the value as suggested by the authors as round(3.21 * T^(1/3))),
 #' @param dfcor logical, indicating whether the standard deviation of
 #'     the regressions is to be computed using a degrees-of-freedom
@@ -734,12 +734,14 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
 #'  to force a specific method for p-value approximation, the latter only being 
 #'  possible if package 'urca' is installed).
 #' @return For purtest: An object of class `"purtest"`: a list with the elements
-#'     `"statistic"` (a `"htest"` object), `"call"`, `"args"`,
-#'     `"idres"` (containing results from the individual regressions),
-#'     and `"adjval"` (containing the simulated means and variances
-#'     needed to compute the statistic, for `"test = levinlin"` and `"ips"`,
-#'     otherwise `NULL`), `"sigma2"` (short-run and long-run variance for
-#'     `"test = levinlin"`, otherwise NULL).
+#'   named:
+#' - `"statistic"` (a `"htest"` object),
+#' - `"call"`,
+#' - `"args"`,
+#' - `"idres"` (containing results from the individual regressions),
+#' - `"adjval"` (containing the simulated means and variances needed to compute 
+#'      the statistic, for `test = "levinlin"` and `"ips"`, otherwise `NULL`),
+#' - `"sigma2"` (short-run and long-run variance for `test = "levinlin"`, otherwise NULL).
 #' @export
 #' @importFrom stats setNames
 #' @author Yves Croissant and for "Pm", "invnormal", and "logit" Kevin
