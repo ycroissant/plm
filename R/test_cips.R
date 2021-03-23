@@ -31,10 +31,11 @@
 #' (`model="mg"`) or cross-sectionally demeaned (`model="dmg"`)
 #' versions of the IPS test.
 #' 
-# TODO: maybe be more verbose here? write about type arg which corresponds
-# cases III, II, I in Pesaran (2007) etc.
+#' Argument `type` controls how test is executed:
+#' - `"none"`: no intercept, no trend (Case I in \insertCite{pes07}{plm}),
+#' - `"drift"`: with intercept, no trend (Case II),
+#' - `"trend"` (default): with intercept, with trend (Case III).
 #' 
-#' @aliases cipstest
 #' @param x an object of class `"pseries"`,
 #' @param lags lag order for Dickey-Fuller augmentation,
 #' @param type one of `"trend"`, `"drift"`, `"none"`,
@@ -51,6 +52,7 @@
 #'
 #' \insertAllCited{}
 #' 
+#' @aliases cipstest
 #' @keywords htest
 #' @examples
 #' 
@@ -115,7 +117,7 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
     N <- pdim$nT$N
     ## set index names
     time.names <- pdim$panel.names$time.names
-    id.names <- pdim$panel.names$id.names
+    id.names   <- pdim$panel.names$id.names
     coef.names <- names(coef(pmod))
     ## number of coefficients
     k <- length(coef.names)
@@ -149,17 +151,17 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
   switch(match.arg(model),
          
     "mg" = {
-      ## final data as dataframe, to be subsetted for single TS models
+      ## final data as dataframe, to be subset for single TS models
       ## (if 'trend' fix this variable's name)
       switch(match.arg(type),
         "trend" = {
-          ## make datafr. subtracting intercept and add trend
-          adfdati <- data.frame(cbind(y, X[ , -1L]))
+          ## make datafr. removing intercept and add trend
+          adfdati <- data.frame(cbind(y, X[ , -1L, drop = FALSE]))
           dimnames(adfdati)[[2L]] <- c(clnames, "trend")
           adffm <- update(adffm, . ~ . -as.numeric(tind) + trend)},
         "drift" = {
-          ## make df subtracting intercept
-          adfdati <- data.frame(cbind(y, X[ , -1L]))
+          ## make df removing intercept
+          adfdati <- data.frame(cbind(y, X[ , -1L, drop = FALSE]))
           dimnames(adfdati)[[2L]] <- clnames},
         "none" = {
           ## just make df (intercept isn't there)
@@ -191,17 +193,17 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
       demX <- Within(X, effect = tind, na.rm = TRUE)
       demy <- Within(y, effect = tind, na.rm = TRUE)
 
-      ## final data as dataframe, to be subsetted for single TS models
+      ## final data as dataframe, to be subset for single TS models
       ## (if 'trend' fix this variable's name)
       switch(match.arg(type),
         "trend" = {
-          ## make datafr. subtracting intercept and add trend
-          adfdati <- data.frame(cbind(demy, demX[ , -1L]))
+          ## make datafr. removing intercept and add trend
+          adfdati <- data.frame(cbind(demy, demX[ , -1L, drop = FALSE]))
           dimnames(adfdati)[[2L]] <- c(clnames, "trend")
           adffm <- update(adffm, . ~ . -as.numeric(tind) + trend)},
         "drift" = {
-          ## make df subtracting intercept
-          adfdati <- data.frame(cbind(demy, demX[ , -1L]))
+          ## make df removing intercept
+          adfdati <- data.frame(cbind(demy, demX[ , -1L, drop = FALSE]))
           dimnames(adfdati)[[2L]] <- clnames},
         "none" = {
           ## just make df (intercept isn't there)
@@ -236,27 +238,27 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
       Xm <- Between(X, effect = tind, na.rm = TRUE)
       ym <- Between(y, effect = tind, na.rm = TRUE)
       
-      ## final data as dataframe, to be subsetted for single TS models
+      ## final data as dataframe, to be subset for single TS models
       ## (purge intercepts etc., if 'trend' fix this variable's name)
       switch(match.arg(type),
         "trend" = {
-          augX <- cbind(X[ , -1L], ym, Xm[ , -1L])
-          adfdati <- data.frame(cbind(y, augX))
           ## purge intercept, averaged intercept and averaged trend
-          ## (which is always last col.)
-          adfdati <- adfdati[,-(dim(adfdati)[[2L]])]
+          ## (the latter is always last col. of Xm)
+          augX <- cbind(X[ , -1L, drop = FALSE], ym, Xm[ , -c(1L, dim(Xm)[[2L]]), drop = FALSE])
+          adfdati <- data.frame(cbind(y, augX))
           dimnames(adfdati)[[2L]] <- c(clnames, "trend",
                                       paste(clnames, "bar", sep="."))
           adffm <- update(adffm, . ~ . -as.numeric(tind) + trend)},
         
         "drift" = {
-          augX <- cbind(X[ , -1L], ym, Xm[ , -1L])
+          # remove intercepts
+          augX <- cbind(X[ , -1L, drop = FALSE], ym, Xm[ , -1L, drop = FALSE])
           adfdati <- data.frame(cbind(y, augX))
-          dimnames(adfdati)[[2]] <- c(clnames,
+          dimnames(adfdati)[[2L]] <- c(clnames,
                                       paste(clnames, "bar", sep="."))},
         "none" = {
-          ## no intercepts here
-          augX <- cbind(X,ym,Xm)
+          ## no intercepts here, so none to be removed
+          augX <- cbind(X, ym, Xm)
           adfdati <- data.frame(cbind(y, augX))
           dimnames(adfdati)[[2L]] <- c(clnames,
                                       paste(clnames, "bar", sep="."))

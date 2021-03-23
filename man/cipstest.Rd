@@ -43,6 +43,13 @@ is in fact robust against cross-sectional dependence, provided that the default
 \code{model="cmg"} is calculated. Else one can obtain the standard
 (\code{model="mg"}) or cross-sectionally demeaned (\code{model="dmg"})
 versions of the IPS test.
+
+Argument \code{type} controls how test is executed:
+\itemize{
+\item \code{"none"}: no intercept, no trend (Case I in \insertCite{pes07}{plm}),
+\item \code{"drift"}: with intercept, no trend (Case II),
+\item \code{"trend"} (default): with intercept, with trend (Case III).
+}
 }
 \examples{
 
