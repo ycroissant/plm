@@ -16,14 +16,14 @@ cipstest(
 \arguments{
 \item{x}{an object of class \code{"pseries"},}
 
-\item{lags}{lag order for Dickey-Fuller augmentation,}
+\item{lags}{integer, lag order for Dickey-Fuller augmentation,}
 
-\item{type}{one of \code{"trend"}, \code{"drift"}, \code{"none"},}
+\item{type}{one of \code{"trend"} (default), \code{"drift"}, \code{"none"},}
 
-\item{model}{one of \code{"cmg"}, \code{"mg"}, \code{"dmg"},}
+\item{model}{one of \code{"cmg"} (default), \code{"mg"}, \code{"dmg"},}
 
-\item{truncated}{logical specifying whether to calculate the
-truncated version of the test,}
+\item{truncated}{logical, specifying whether to calculate the
+truncated version of the test (default: \code{FALSE}),}
 
 \item{\dots}{further arguments passed to \code{critvals.cips}
 (non-exported function).}
@@ -44,7 +44,7 @@ is in fact robust against cross-sectional dependence, provided that the default
 (\code{model="mg"}) or cross-sectionally demeaned (\code{model="dmg"})
 versions of the IPS test.
 
-Argument \code{type} controls how test is executed:
+Argument \code{type} controls how the test is executed:
 \itemize{
 \item \code{"none"}: no intercept, no trend (Case I in \insertCite{pes07}{plm}),
 \item \code{"drift"}: with intercept, no trend (Case II),

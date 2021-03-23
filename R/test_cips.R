@@ -31,17 +31,17 @@
 #' (`model="mg"`) or cross-sectionally demeaned (`model="dmg"`)
 #' versions of the IPS test.
 #' 
-#' Argument `type` controls how test is executed:
+#' Argument `type` controls how the test is executed:
 #' - `"none"`: no intercept, no trend (Case I in \insertCite{pes07}{plm}),
 #' - `"drift"`: with intercept, no trend (Case II),
 #' - `"trend"` (default): with intercept, with trend (Case III).
 #' 
 #' @param x an object of class `"pseries"`,
-#' @param lags lag order for Dickey-Fuller augmentation,
-#' @param type one of `"trend"`, `"drift"`, `"none"`,
-#' @param model one of `"cmg"`, `"mg"`, `"dmg"`,
-#' @param truncated logical specifying whether to calculate the
-#'     truncated version of the test,
+#' @param lags integer, lag order for Dickey-Fuller augmentation,
+#' @param type one of `"trend"` (default), `"drift"`, `"none"`,
+#' @param model one of `"cmg"` (default), `"mg"`, `"dmg"`,
+#' @param truncated logical, specifying whether to calculate the
+#'     truncated version of the test (default: `FALSE`),
 #' @param \dots further arguments passed to `critvals.cips`
 #' (non-exported function).
 #' @return An object of class `"htest"`.
@@ -383,10 +383,10 @@ critvals.cips <- function(stat, n, T., type = c("trend", "drift", "none"),
   )
   
   ## make critical values' cube
-  nvals <- array(data = NA_real_, dim = c(8, 8, 3))
-  nvals[ , , 1] <- nvals1
-  nvals[ , , 2] <- nvals5
-  nvals[ , , 3] <- nvals10
+  nvals <- array(data = NA_real_, dim = c(8L, 8L, 3L))
+  nvals[ , , 1L] <- nvals1
+  nvals[ , , 2L] <- nvals5
+  nvals[ , , 3L] <- nvals10
   dimnames(nvals) <- list(rnam, cnam, znam)
   
   ## Intercept only (Case II), Table II(b) in Pesaran (2007), p. 280
@@ -428,10 +428,10 @@ critvals.cips <- function(stat, n, T., type = c("trend", "drift", "none"),
   )
   
   ## make critical values' cube
-  dvals <- array(data = NA_real_, dim = c(8, 8, 3))
-  dvals[ , , 1] <- dvals1
-  dvals[ , , 2] <- dvals5
-  dvals[ , , 3] <- dvals10
+  dvals <- array(data = NA_real_, dim = c(8L, 8L, 3L))
+  dvals[ , , 1L] <- dvals1
+  dvals[ , , 2L] <- dvals5
+  dvals[ , , 3L] <- dvals10
   dimnames(dvals) <- list(rnam, cnam, znam)
   
   ## Intercept and trend (Case III), Table II(c) in Pesaran (2007), p. 281
@@ -473,10 +473,10 @@ critvals.cips <- function(stat, n, T., type = c("trend", "drift", "none"),
   )
   
   ## make critical values' cube
-  tvals <- array(data = NA_real_, dim = c(8, 8, 3))
-  tvals[ , , 1] <- tvals1
-  tvals[ , , 2] <- tvals5
-  tvals[ , , 3] <- tvals10
+  tvals <- array(data = NA_real_, dim = c(8L, 8L, 3L))
+  tvals[ , , 1L] <- tvals1
+  tvals[ , , 2L] <- tvals5
+  tvals[ , , 3L] <- tvals10
   dimnames(tvals) <- list(rnam, cnam, znam)
   
   ## if truncated substitute values according to Tables II(a), II(b), II(c)
