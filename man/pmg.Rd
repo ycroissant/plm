@@ -38,7 +38,7 @@ pmg(
 
 \item{na.action}{see \code{\link[=lm]{lm()}},}
 
-\item{model}{one of \code{c("mg", "cmg", "dmg")},}
+\item{model}{one of \code{"mg"}, \code{"cmg"}, or \code{"dmg"},}
 
 \item{index}{the indexes, see \code{\link[=pdata.frame]{pdata.frame()}},}
 
@@ -61,8 +61,8 @@ An object of class \code{c("pmg", "panelmodel")} containing:
 \item{vcov}{the covariance matrix of the coefficients,}
 \item{df.residual}{degrees of freedom of the residuals,}
 \item{model}{a data.frame containing the variables used for the
-estimation,} \item{call}{the call,} \item{sigma}{always \code{NULL},
-\code{sigma} is here only for compatibility reasons (to allow using
+estimation,} \item{call}{the call,} \item{sigma}{always \code{NULL}
+(\code{sigma} is here only for compatibility reasons to allow using
 the same \code{summary} and \code{print} methods as \code{pggls}),}
 \item{indcoef}{the matrix of individual coefficients from
 separate time series regressions.}
@@ -74,12 +74,14 @@ common factors (CCEMG)
 }
 \details{
 \code{pmg} is a function for the estimation of linear panel models with
-heterogeneous coefficients by the Mean Groups estimator. \code{model = "mg"} specifies the standard Mean Groups estimator, based on the
+heterogeneous coefficients by various Mean Groups estimators. Setting
+argument \code{model = "mg"} specifies the standard Mean Groups estimator, based on the
 average of individual time series regressions. If \code{model = "dmg"}
 the data are demeaned cross-sectionally, which is believed to
 reduce the influence of common factors (and is akin to what is done
-in homogeneous panels when \code{model = "within"} and \code{effect = "time"}). Lastly, if \code{model = "cmg"} the CCEMG estimator is
-employed: this latter is consistent under the hypothesis of
+in homogeneous panels when \code{model = "within"} and \code{effect = "time"}).
+Lastly, if \code{model = "cmg"} the CCEMG estimator is
+employed which is consistent under the hypothesis of
 unobserved common factors and idiosyncratic factor loadings; it
 works by augmenting the model by cross-sectional averages of the
 dependent variable and regressors in order to account for the
@@ -100,7 +102,7 @@ summary(dmgmod)
 ## Common Correlated Effects Mean Groups
 ccemgmod <- pmg(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
                 data = Produc, model = "cmg")
-summary(ccemgmod) 
+summary(ccemgmod)
 }
 \references{
 \insertRef{PESA:06}{plm}

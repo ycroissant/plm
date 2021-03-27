@@ -41,14 +41,14 @@
 #' common factors (CCEMG)
 #' 
 #' `pmg` is a function for the estimation of linear panel models with
-#' heterogeneous coefficients by the Mean Groups estimator. `model =
-#' "mg"` specifies the standard Mean Groups estimator, based on the
+#' heterogeneous coefficients by various Mean Groups estimators. Setting
+#' argument `model = "mg"` specifies the standard Mean Groups estimator, based on the
 #' average of individual time series regressions. If `model = "dmg"`
 #' the data are demeaned cross-sectionally, which is believed to
 #' reduce the influence of common factors (and is akin to what is done
-#' in homogeneous panels when `model = "within"` and `effect =
-#' "time"`). Lastly, if `model = "cmg"` the CCEMG estimator is
-#' employed: this latter is consistent under the hypothesis of
+#' in homogeneous panels when `model = "within"` and `effect = "time"`).
+#' Lastly, if `model = "cmg"` the CCEMG estimator is
+#' employed which is consistent under the hypothesis of
 #' unobserved common factors and idiosyncratic factor loadings; it
 #' works by augmenting the model by cross-sectional averages of the
 #' dependent variable and regressors in order to account for the
@@ -61,13 +61,14 @@
 #' @param data a `data.frame`,
 #' @param subset see [lm()],
 #' @param na.action see [lm()],
-#' @param model one of `c("mg", "cmg", "dmg")`,
+#' @param model one of `"mg"`, `"cmg"`, or `"dmg"`,
 #' @param index the indexes, see [pdata.frame()],
 #' @param trend logical specifying whether an individual-specific
 #'     trend has to be included,
 #' @param digits digits,
 #' @param width the maximum length of the lines in the print output,
 #' @param \dots further arguments.
+#' 
 #' @return An object of class `c("pmg", "panelmodel")` containing:
 #'     \item{coefficients}{the vector of coefficients,}
 #'     \item{residuals}{the vector of residuals,}
@@ -75,8 +76,8 @@
 #'     \item{vcov}{the covariance matrix of the coefficients,}
 #'     \item{df.residual}{degrees of freedom of the residuals,}
 #'     \item{model}{a data.frame containing the variables used for the
-#'     estimation,} \item{call}{the call,} \item{sigma}{always `NULL`,
-#'     `sigma` is here only for compatibility reasons (to allow using
+#'     estimation,} \item{call}{the call,} \item{sigma}{always `NULL`
+#'     (`sigma` is here only for compatibility reasons to allow using
 #'     the same `summary` and `print` methods as `pggls`),}
 #'     \item{indcoef}{the matrix of individual coefficients from
 #'     separate time series regressions.}
@@ -101,7 +102,7 @@
 #' ## Common Correlated Effects Mean Groups
 #' ccemgmod <- pmg(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
 #'                 data = Produc, model = "cmg")
-#' summary(ccemgmod) 
+#' summary(ccemgmod)
 pmg <- function(formula, data, subset, na.action,
                 model = c("mg", "cmg", "dmg"), index = NULL,
                 trend = FALSE, ...)
@@ -205,7 +206,7 @@ pmg <- function(formula, data, subset, na.action,
       unind <- unique(ind)
       for(i in 1:n) {
         taugX <- augX[ind == unind[i], ]
-        ty <- y[ind == unind[i]]
+        ty    <-    y[ind == unind[i]]
 
         if(trend) taugX <- cbind(taugX, 1:(dim(taugX)[[1L]]))
 
