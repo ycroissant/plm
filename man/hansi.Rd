@@ -44,18 +44,18 @@ for multiplicity),
 \description{
 Simes' test of intersection of individual hypothesis tests
 \insertCite{SIMES:86}{plm} applied to panel unit root tests as suggested by
-\insertCite{HANCK:13}{plm}.
+\insertCite{HANCK:13;textual}{plm}.
 }
 \details{
 Simes' approach to testing is combining p-values from single hypothesis tests
-with a global (intersected) hypothesis. \insertCite{HANCK:13}{plm} mentions it can
+with a global (intersected) hypothesis. \insertCite{HANCK:13;textual}{plm} mentions it can
 be applied to any panel unit root test which yield a p-value for each
 individual series.
 The test is robust versus general patterns of cross-sectional dependence.
 
 Further, this approach allows to discriminate between individuals for which
 the individual H0 (unit root present for individual series) is rejected/
-is not rejected by Hommel's procedure (\insertCite{HOMM:88}{plm}) for family-wise
+is not rejected by Hommel's procedure (\insertCite{HOMM:88;textual}{plm}) for family-wise
 error rate control (FWER) at pre-specified significance level alpha via
 argument \code{alpha} (defaulting to \code{0.05}), i.e., it controls for the multiplicity
 in testing.

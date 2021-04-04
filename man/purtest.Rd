@@ -122,8 +122,8 @@ ADF regressions per individual are available:
 \insertCite{CHOI:01;textual}{plm}.
 \item \code{"Pm"} is the modified P test proposed by
 \insertCite{CHOI:01;textual}{plm} for large N,
-\item \code{"invnormal"} is the inverse normal test by \insertCite{CHOI:01}{plm}, and
-\item \code{"logit"} is the logit test by \insertCite{CHOI:01}{plm}.
+\item \code{"invnormal"} is the inverse normal test by \insertCite{CHOI:01;textual}{plm}, and
+\item \code{"logit"} is the logit test by \insertCite{CHOI:01;textual}{plm}.
 }
 
 The individual p-values for the Fisher-type tests are approximated
