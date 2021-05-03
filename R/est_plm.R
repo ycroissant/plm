@@ -43,6 +43,8 @@ mylm <- function(y, X, W = NULL){
   result$W <- W
   # aliased is an element of summary.lm-objects:
   # since plm drops aliased coefs, store this info in plm object
+  # NB: this only sets coefs to NA that are detected/set to NA by mylm()/lm.fit();
+  #     covariates dropped earlier by model.matrix( , cstcovar.rm) are not included here anymore
   result$aliased <- na.coef
   names(result$aliased) <- names.X
   names(result$coefficients) <- colnames(result$vcov) <- 
