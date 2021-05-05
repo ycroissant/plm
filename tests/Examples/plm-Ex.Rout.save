@@ -1,5 +1,5 @@
 
-R version 4.0.4 (2021-02-15) -- "Lost Library Book"
+R version 4.0.5 (2021-03-31) -- "Shake and Throw"
 Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -9938,7 +9938,7 @@ Multiple R-squared: 0.99972
 > ## Common Correlated Effects Mean Groups
 > ccemgmod <- pmg(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
 +                 data = Produc, model = "cmg")
-> summary(ccemgmod) 
+> summary(ccemgmod)
 Common Correlated Effects Mean Groups model
 
 Call:
@@ -13214,6 +13214,17 @@ chisq = 14.719, df = 20, p-value = 0.7923
 alternative hypothesis: stationarity
 
 > 
+> ## same via pseries interface
+> pGrunfeld <- pdata.frame(Grunfeld, index = c("firm", "year"))
+> purtest(pGrunfeld$inv, pmax = 4, exo = "intercept", test = "madwu")
+
+	Maddala-Wu Unit-Root Test (ex. var.: Individual Intercepts)
+
+data:  pGrunfeld$inv
+chisq = 14.719, df = 20, p-value = 0.7923
+alternative hypothesis: stationarity
+
+> 
 > ## same via formula interface
 > purtest(inv ~ 1, data = Grunfeld, index = c("firm", "year"), pmax = 4, test = "madwu")
 
@@ -14633,7 +14644,7 @@ F-statistic: 309.014 on 2 and 197 DF, p-value: < 2.22e-16
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  11.3 0.78 12.3 NA NA 
+Time elapsed:  11.25 0.58 12.19 NA NA 
 > grDevices::dev.off()
 null device 
           1 

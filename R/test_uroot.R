@@ -761,6 +761,10 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
 #' 
 #' purtest(y, pmax = 4, exo = "intercept", test = "madwu")
 #' 
+#' ## same via pseries interface
+#' pGrunfeld <- pdata.frame(Grunfeld, index = c("firm", "year"))
+#' purtest(pGrunfeld$inv, pmax = 4, exo = "intercept", test = "madwu")
+#' 
 #' ## same via formula interface
 #' purtest(inv ~ 1, data = Grunfeld, index = c("firm", "year"), pmax = 4, test = "madwu")
 #' 
