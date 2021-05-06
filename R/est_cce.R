@@ -185,7 +185,7 @@ pcce <- function (formula, data, subset, na.action,
       ym <- as.numeric(Between(y, effect = "time", na.rm = TRUE))
 
       if(attr(terms(plm.model), "intercept")) {
-        Hhat <- cbind(ym, Xm, 1)
+        Hhat <- cbind(ym, Xm, 1L)
         } else {
           Hhat <- cbind(ym, Xm)
       }
@@ -239,9 +239,9 @@ pcce <- function (formula, data, subset, na.action,
     ## Some redundancy because this might be moved to model.matrix.pcce
 
     ## initialize
-    tX1 <- X[ind == unind[1], , drop = FALSE]
-    ty1 <- y[ind == unind[1]]
-    tHhat1 <- Hhat[ind == unind[1], , drop = FALSE]
+    tX1 <- X[ind == unind[1L], , drop = FALSE]
+    ty1 <- y[ind == unind[1L]]
+    tHhat1 <- Hhat[ind == unind[1L], , drop = FALSE]
 
     ## if 'trend' then augment the xs-invariant component
     if(trend) tHhat1 <- cbind(tHhat1, 1:(dim(tHhat)[[1L]]))
@@ -257,7 +257,7 @@ pcce <- function (formula, data, subset, na.action,
         tHhat <- Hhat[ind == unind[i], , drop = FALSE]
 
         ## if 'trend' then augment the xs-invariant component
-        if(trend) tHhat <- cbind(tHhat, 1:(dim(tHhat)[[1]]))
+        if(trend) tHhat <- cbind(tHhat, 1:(dim(tHhat)[[1L]]))
 
         ## NB tHat, tMhat should be i-invariant
         tMhat <- diag(1, length(ty)) -
@@ -326,7 +326,7 @@ pcce <- function (formula, data, subset, na.action,
                 tHhat <- Hhat[ind == unind[i], , drop = FALSE]
     
                 ## if 'trend' then augment the xs-invariant component
-                if(trend) tHhat <- cbind(tHhat, 1:(dim(tHhat)[[1]]))
+                if(trend) tHhat <- cbind(tHhat, 1:(dim(tHhat)[[1L]]))
     
                 ## NB tHat, tMhat should be i-invariant (but for the
                 ## group size if unbalanced)
@@ -390,7 +390,7 @@ pcce <- function (formula, data, subset, na.action,
     ## add transformed data (for now a simple list)
     tr.model <- list(y = My, X = MX)
     ## so that if the model is ccepmod,
-    ## > lm(ccepmod$tr.model[["y"]]~ccepmod$tr.model[["X"]]-1)
+    ## > lm(ccepmod$tr.model[["y"]] ~ ccepmod$tr.model[["X"]]-1)
     ## reproduces the model results
 
     ## Final model object:
@@ -405,15 +405,21 @@ pcce <- function (formula, data, subset, na.action,
     dimnames(tcoef) <- list(coef.names, id.names)
     pmodel <- attr(plm.model, "pmodel")
     pmodel$model.name <- model.name
-    pccemod <- list(coefficients = coef, residuals = residuals,
-                  stdres = stdres, tr.model = tr.model,
-                  fitted.values = fitted.values, vcov = vcov,
-                  df.residual = df.residual,
-                  model = model.frame(plm.model), sigma = NULL,
-                  indcoef = tcoef, r.squared = r2cce,
-                  #cceres = as.vector(cceres),
-                  #ccemgres = as.vector(ccemgres),
-                  formula = formula, call = cl)
+    pccemod <- list(coefficients  = coef,
+                    residuals     = residuals,
+                    stdres        = stdres,
+                    tr.model      = tr.model,
+                    fitted.values = fitted.values,
+                    vcov          = vcov,
+                    df.residual   = df.residual,
+                    model         = model.frame(plm.model),
+                    sigma         = NULL,
+                    indcoef       = tcoef,
+                    r.squared     = r2cce,
+                    #cceres   = as.vector(cceres),
+                    #ccemgres = as.vector(ccemgres),
+                    formula       = formula,
+                    call          = cl)
     pccemod <- structure(pccemod, pdim = pdim, pmodel = pmodel)
     class(pccemod) <- c("pcce", "panelmodel")
     pccemod
