@@ -1,6 +1,6 @@
 Package: plm
 Version: 2.4-19999
-Date: 2021-03-21
+Date: 2021-05-17
 Title: Linear Models for Panel Data
 Authors@R: c(person(given = "Yves",      family = "Croissant",    role = c("aut", "cre"), email = "yves.croissant@univ-reunion.fr"),
              person(given = "Giovanni",  family = "Millo",        role = "aut", email = "Giovanni.Millo@Generali.com"),
@@ -16,7 +16,7 @@ Imports: MASS, bdsmatrix, zoo, nlme, sandwich, lattice, lmtest, maxLik, Rdpack, 
 Suggests: AER, car, pcse, clusterSEs, collapse, pglm, spdep, splm, statmod, urca, Ecdat, pder,
           stargazer, texreg, foreign, knitr, rmarkdown, bookdown
 Description: A set of estimators and tests for panel data
-             econometrics, as described in Baltagi (2013), Econometric Analysis of Panel Data, ISBN-13:978-1-118-67232-7,
+             econometrics, as described in Baltagi (2021), Econometric Analysis of Panel Data, ISBN-13:978-3-030-53952-8,
              Hsiao (2014), Analysis of Panel Data <doi:10.1017/CBO9781139839327>, and
              Croissant and Millo (2018), Panel Data Econometrics with R, ISBN-13:978-1-118-94918-4.
 License: GPL (>=2)
