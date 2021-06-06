@@ -331,27 +331,26 @@ plm <- function(formula, data, subset, weights, na.action,
     }
     
     # Deprecated section
+      if (length(inst.method) == 1 && inst.method == "bmc") {
+        # catch "bmc" (a long-standing typo) for Breusch-Mizon-Schmidt
+        # error since 2020-12-31 (R-Forge) / 2021-01-23 (CRAN), was warning before
+        # remove catch at some point in the future
+        inst.method <- "bms"
+          stop(paste("Use of inst.method = \"bmc\" disallowed, set to \"bms\"",
+                        "for Breusch-Mizon-Schmidt instrumental variable transformation"))
+      }
+      inst.method <- match.arg(inst.method)
     
-    if (length(inst.method) == 1 && inst.method == "bmc") {
-      # catch "bmc" (a long-standing typo) for Breusch-Mizon-Schmidt
-      # error since 2020-12-31 (R-Forge), was a warning before
-      # remove catch at some point in the future
-      inst.method <- "bms"
-        stop(paste("Use of inst.method = \"bmc\" disallowed, set to \"bms\"",
-                      "for Breusch-Mizon-Schmidt instrumental variable transformation"))
-    }
-    inst.method <- match.arg(inst.method)
-  
-    
-    # pht is no longer maintained
-    if (! is.na(model) && model == "ht"){
-        ht <- match.call(expand.dots = FALSE)
-        m <- match(c("formula", "data", "subset", "na.action", "index"), names(ht), 0)
-        ht <- ht[c(1L, m)]
-        ht[[1L]] <- as.name("pht")
-        ht <- eval(ht, parent.frame())
-        return(ht)
-    }
+      
+      # pht is no longer maintained, but working
+      if (! is.na(model) && model == "ht"){
+          ht <- match.call(expand.dots = FALSE)
+          m <- match(c("formula", "data", "subset", "na.action", "index"), names(ht), 0)
+          ht <- ht[c(1L, m)]
+          ht[[1L]] <- as.name("pht")
+          ht <- eval(ht, parent.frame())
+          return(ht)
+      }
     
     # check whether data and formula are pdata.frame and pFormula and if not
     # coerce them
@@ -419,7 +418,7 @@ plm.fit <- function(data, model, effect, random.method,
                         models = random.models, dfcor = random.dfcor)
         sigma2 <- estec$sigma2
         theta <- estec$theta
-        if (length(formula)[2L] == 2 && effect == "twoways")
+        if (length(formula)[2L] == 2L && effect == "twoways")
             stop(paste("Instrumental variable random effect estimation",
                        "not implemented for two-ways panels"))
     }
@@ -435,7 +434,7 @@ plm.fit <- function(data, model, effect, random.method,
                           effect = effect, theta = theta, cstcovar.rm = "all")
         y <- pmodel.response(data, model = model, 
                              effect = effect, theta = theta)
-        if (ncol(X) == 0) stop("empty model")
+        if (ncol(X) == 0L) stop("empty model")
         
         w <- model.weights(data)
         if (! is.null(w)){
@@ -445,11 +444,14 @@ plm.fit <- function(data, model, effect, random.method,
         }
         else w <- 1
         
-        # extract the matrix of instruments if necessary (means here that we
-        # have a multi-parts formula)
-        if (length(formula)[2L] > 1){
+        # IV case: extract the matrix of instruments if necessary
+        # (means here that we have a multi-parts formula)
+        if (length(formula)[2L] > 1L){
+          
             if(!is.null(model.weights(data)) || any(w != 1)) stop("argument 'weights' not yet implemented for instrumental variable models")
-            if (length(formula)[2L] == 2){
+            
+            #  all IV cases except RE baltagi, am, bms; elg., FE/BE IV and RE "bvk" estimator
+            if (length(formula)[2L] == 2L){
                 W <- model.matrix(data, rhs = 2,
                                   model = model, effect = effect,
                                   theta = theta, cstcovar.rm = "all")
@@ -458,8 +460,10 @@ plm.fit <- function(data, model, effect, random.method,
                 W <- model.matrix(data, rhs = c(2, 3), model = model,
                                       effect = effect, theta = theta, cstcovar.rm = "all")
             }
+          
+            # calc. estimators "baltagi", "am", and "bms":
+            # TODO: this does not seem optimal as "bvk" or FE IV (W) is always calculated but not needed for other estimators
             if (model == "random" && inst.method != "bvk"){
-                # the bvk estimator seems to have disappeared
                 X <- X / sqrt(sigma2["idios"])
                 y <- y / sqrt(sigma2["idios"])
                 W1 <- model.matrix(data, rhs = 2, model = "within",
@@ -470,7 +474,8 @@ plm.fit <- function(data, model, effect, random.method,
                 if (inst.method %in% c("am", "bms")) 
                     StarW1 <- starX(formula, data, rhs = 2, model = "within",
                                     effect = effect)
-                if (length(formula)[2L] == 3){
+                if (length(formula)[2L] == 3L){
+                  # eval. 3rd part of formula, if present
                     W2 <- model.matrix(data, rhs = 3, model = "within",
                                            effect = effect, theta = theta, cstcovar.rm = "all")
                     if (inst.method == "bms")
@@ -478,13 +483,14 @@ plm.fit <- function(data, model, effect, random.method,
                                         effect = effect)
                 }
                 else W2 <- StarW2 <- NULL
-                if (inst.method == "baltagi") W <- sqrt(w) * cbind(W1, W2, B1)
-                if (inst.method == "am")  W <- sqrt(w) * cbind(W1, W2, B1, StarW1)
-                if (inst.method == "bms") W <- sqrt(w) * cbind(W1, W2, B1, StarW1, StarW2)
+                if (inst.method == "baltagi") W <- sqrt(w) * cbind(W1, W2, B1)                 # TODO: here, some weighting is done but prevented earlier
+                if (inst.method == "am")      W <- sqrt(w) * cbind(W1, W2, B1, StarW1)         #       by stop()?!
+                if (inst.method == "bms")     W <- sqrt(w) * cbind(W1, W2, B1, StarW1, StarW2) #       bvk/FE IV does not have weighting code...
             }
+      
             if (ncol(W) < ncol(X)) stop("insufficient number of instruments")
         }
-        else W <- NULL
+        else W <- NULL # no instruments (no IV case)
         
         result <- mylm(y, X, W)
         df <- df.residual(result)
@@ -502,6 +508,7 @@ plm.fit <- function(data, model, effect, random.method,
             df <- df.residual(result) - card.fixef
             vcov <- result$vcov * df.residual(result) / df
         }
+        
         result <- list(coefficients = coef(result),
                        vcov         = vcov,
                        residuals    = resid(result),
@@ -509,6 +516,7 @@ plm.fit <- function(data, model, effect, random.method,
                        df.residual  = df,
                        formula      = formula,
                        model        = data)
+        
         if (is.null(model.weights(data))) result$weights <- NULL
         if (model == "random") result$ercomp <- estec
     }
@@ -535,6 +543,7 @@ plm.fit <- function(data, model, effect, random.method,
         # model but of the 'outer' model
         e <- pmodel.response(data, model = "pooling", effect = effect) -
             as.numeric(model.matrix(data, rhs = 1, model = "pooling") %*% gamma)
+        
         result <- list(coefficients = gamma,
                        vcov         = solve(XPX),
                        formula      = formula,
