@@ -12,6 +12,9 @@
  * has.intercept.plm: argument 'part' renamed to 'rhs', argument values
    (integer or NULL) aligned with and correctly passed on to 
    has.intercept.Formula (with a *temporary* back-compatible solution).
+   
+ * within_intercept: fix bug which caused an error for FE models with only one
+   regressor. 
  
  * (re-)export base::diff's generic as plm::diff to always be able to call
    plm::diff and get panel-diff-ing (in case some other package overwrites base
