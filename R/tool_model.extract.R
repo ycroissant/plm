@@ -295,9 +295,9 @@ pmodel.response.formula <- function(object, data, ...){
     if (is.null(data)) stop("the data argument is mandatory")
     if (! inherits(data, "pdata.frame")) stop("the data argument must be a pdata.frame")
     if (is.null(attr(data, "terms"))) data <- model.frame(data, object)
-    model <- dots$model
+    model  <- dots$model
     effect <- dots$effect
-    theta <- dots$theta
+    theta  <- dots$theta
     if (is.null(model)) model <- "pooling"
     if (is.null(effect)) effect <- "individual"
     if (model == "random" && is.null(theta)) stop("the theta argument is mandatory")
@@ -308,20 +308,21 @@ pmodel.response.formula <- function(object, data, ...){
 ptransform <- function(x, model = NULL, effect = NULL, theta = NULL, ...){
     if (model == "pooling") return(x)
     if (effect == "twoways" && model %in% c("between", "fd"))
-        stop("twoways effect only relevant for within, random and pooling models")
-    balanced <- is.pbalanced(x) # need to check this right here as long as x is a pseries
-    if (model == "within") x <- Within(x, effect)
+        stop("twoways effect only relevant for within, random, and pooling models")
+    
+    if (model == "within")  x <- Within(x, effect)
     if (model == "between") x <- between(x, effect)
     if (model == "Between") x <- Between(x, effect)
-    if (model == "fd") x <- pdiff(x, "individual")
-    if (model == "random"){
+    if (model == "fd")      x <- pdiff(x, "individual")
+    if (model == "random") {
+        balanced <- is.pbalanced(x) # need to check this right here as long as x is a pseries
         if (is.null(theta)) stop("a theta argument should be provided")
         if (effect %in% c("time", "individual")) x <- x - theta * Between(x, effect)
         if (effect == "nested") x <- x - theta$id * Between(x, "individual") -
-                                    theta$gp * Between(x, "group")
+                                         theta$gp * Between(x, "group")
         if (effect == "twoways" && balanced)
             x <- x - theta$id * Between(x, "individual") -
-                theta$time * Between(x, "time") + theta$total * mean(x)
+                   theta$time * Between(x, "time") + theta$total * mean(x)
     }
     
     res <- if (model %in% c("between", "fd")) {
@@ -332,6 +333,4 @@ ptransform <- function(x, model = NULL, effect = NULL, theta = NULL, ...){
            }
     return(res)
 }
-
-####
 
