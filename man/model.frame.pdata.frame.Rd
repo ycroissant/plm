@@ -84,12 +84,12 @@ model frame first ensures proper NA handling, see \strong{Examples}.
 data("Grunfeld", package = "plm")
 pGrunfeld <- pdata.frame(Grunfeld)
 
-# then make a model frame from a pFormula and a pdata.frame
+# then make a model frame from a formula and a pdata.frame
 form <- inv ~ value
 mf <- model.frame(pGrunfeld, form)
 
 # then construct the (transformed) model matrix (design matrix)
-# from formula and model frame
+# from model frame
 modmat <- model.matrix(mf, model = "within")
 
 ## retrieve model frame and model matrix from an estimated plm object
