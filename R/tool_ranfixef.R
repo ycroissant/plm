@@ -555,7 +555,6 @@ within_intercept <- function(object, ...) {
 #' @rdname within_intercept
 #' @export
 within_intercept.plm <- function(object, vcov = NULL, return.model = FALSE, ...) {
-  # TODO: check 2-way FE case -> is ok for balanced case
   if (!inherits(object, "plm")) stop("input 'object' needs to be a \"within\" model estimated by plm()")
   model  <- describe(object, what = "model")
   effect <- describe(object, what = "effect")
@@ -575,13 +574,13 @@ within_intercept.plm <- function(object, vcov = NULL, return.model = FALSE, ...)
   # Transformation to get the overall intercept is:
   # demean groupwise and add back grand mean of each variable, then run OLS
   mf      <- model.frame(object)
-  withinY <- pmodel.response(object, cstcovar.rm = "all") # returns the response specific to the 'effect' of the est. FE model object
-  meanY   <- mean(mf[ , 1])          # mean of original data's response
+  withinY <- pmodel.response(object) # returns the response specific to the 'effect' of the est. FE model object
+  meanY   <- mean(mf[ , 1L]) # mean of original data's response
   transY  <- withinY + meanY
   
   withinM <- model.matrix(object) # returns the model.matrix specific to the 'effect' of the est. FE model object
-  M <- model.matrix(mf)
-  M <- M[, colnames(M) %in% colnames(withinM)] # just to be sure: should be same columns
+  M <- model.matrix(mf, cstcovar.rm = "all")
+  M <- M[ , colnames(M) %in% colnames(withinM), drop = FALSE] # just to be sure: should be same columns
   meansM <- colMeans(M)
   transM <- t(t(withinM) + meansM)
   
@@ -601,7 +600,7 @@ within_intercept.plm <- function(object, vcov = NULL, return.model = FALSE, ...)
                        "individual" = pdim$nT$n,
                        "time"       = pdim$nT$T,
                        "twoways"    = pdim$nT$n + pdim$nT$T - 1L)
-  df <- df.residual(auxreg) - card.fixef  + 1 # just for within_intercept: here we need '+1' to correct for the intercept
+  df <- df.residual(auxreg) - card.fixef  + 1L # just for within_intercept: here we need '+1' to correct for the intercept
   
   vcov_mat <- vcov(auxreg)
   vcov_mat <- vcov_mat * df.residual(auxreg) / df
