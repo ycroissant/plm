@@ -1,5 +1,5 @@
 
-R version 4.0.5 (2021-03-31) -- "Shake and Throw"
+R version 4.1.0 (2021-05-18) -- "Camp Pontanezen"
 Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -5931,12 +5931,12 @@ FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
 > data("Grunfeld", package = "plm")
 > pGrunfeld <- pdata.frame(Grunfeld)
 > 
-> # then make a model frame from a pFormula and a pdata.frame
+> # then make a model frame from a formula and a pdata.frame
 > form <- inv ~ value
 > mf <- model.frame(pGrunfeld, form)
 > 
 > # then construct the (transformed) model matrix (design matrix)
-> # from formula and model frame
+> # from model frame
 > modmat <- model.matrix(mf, model = "within")
 > 
 > ## retrieve model frame and model matrix from an estimated plm object
@@ -9742,8 +9742,8 @@ Chisq: 6879.2 on 12 DF, p-value: < 2.22e-16
 > ##D data <- replicate(100, wlddevsmall, simplify = FALSE)
 > ##D rm(wlddevsmall)
 > ##D uniquify <- function(x, i) {
-> ##D   x$iso3c <- paste0(x$iso3c, i)
-> ##D   x
+> ##D 	x$iso3c <- paste0(x$iso3c, i)
+> ##D 	x
 > ##D }
 > ##D data <- unlist2d(Map(uniquify, data, as.list(1:100)), idcols = FALSE)
 > ##D data <- pdata.frame(data, index = c("iso3c", "year"))
@@ -14644,7 +14644,7 @@ F-statistic: 309.014 on 2 and 197 DF, p-value: < 2.22e-16
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  11.25 0.58 12.19 NA NA 
+Time elapsed:  9.94 0.48 10.47 NA NA 
 > grDevices::dev.off()
 null device 
           1 
