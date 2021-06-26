@@ -21,7 +21,7 @@ To install the released version from **CRAN**:
 
 The package's CRAN website is https://cran.r-project.org/package=plm.
 
-To install the development version from **RForge**:
+To install the development version from **R-Forge**:
 
 `install.packages("plm", repos = 'http://R-Forge.R-project.org')`
 
