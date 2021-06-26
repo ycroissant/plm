@@ -195,14 +195,14 @@ fixef.plm <- function(object, effect = NULL,
         sefixef <- sqrt(s2 / nother + apply(Xb[, nw, drop = FALSE], 1,
                                             function(x) t(x) %*% vcov %*% x))
       } else {
-        Xb <- t(t(Xb[-1, ]) - Xb[1, ])
+        Xb <- t(t(Xb[-1, ]) - Xb[1L, ])
         sefixef <- sqrt(s2 * (1 / nother[-1] + 1 / nother[1])+
                           apply(Xb[, nw, drop = FALSE], 1,
                                 function(x) t(x) %*% vcov %*% x))
       }
       fixef <- switch(type,
                       "level"  = fixef,
-                      "dfirst" = fixef[2:length(fixef)] - fixef[1],
+                      "dfirst" = fixef[2:length(fixef)] - fixef[1L],
                       "dmean"  = (fixef - weighted.mean(fixef, w = nother)))
       
       res <- structure(fixef, se = sefixef, class = c("fixef", "numeric"),
@@ -214,7 +214,7 @@ fixef.plm <- function(object, effect = NULL,
     ##  * two-way balanced/unbalanced model for all effects
     if(model.effect == "twoways") {
       beta.data <- as.numeric(tcrossprod(coef(object), as.matrix(object$model[ , -1, drop = FALSE])))
-      yhat <- object$model[ , 1] - object$residuals
+      yhat <- object$model[ , 1L] - object$residuals
       tw.fixef.lvl <- yhat - beta.data # sum of both effects in levels
       
       idx <- switch(effect,
@@ -257,7 +257,7 @@ fixef.plm <- function(object, effect = NULL,
       
       tw.fixef <- switch(type,
                       "level"  = tw.fixef.lvl,
-                      "dfirst" = tw.fixef.lvl[2:length(tw.fixef.lvl)] - tw.fixef.lvl[1],
+                      "dfirst" = tw.fixef.lvl[2:length(tw.fixef.lvl)] - tw.fixef.lvl[1L],
                       "dmean"  = {
                           if(pdim$balanced || effect == "twoways") {
                             tw.fixef.lvl - mean(tw.fixef.lvl) 
@@ -309,7 +309,8 @@ summary.fixef <- function(object, ...) {
 
 #' @rdname fixef.plm
 #' @export
-print.summary.fixef <- function(x, digits = max(3, getOption("digits") - 2), width = getOption("width"), ...){
+print.summary.fixef <- function(x, digits = max(3, getOption("digits") - 2),
+                                width = getOption("width"), ...){
     printCoefmat(x, digits = digits)
 }
 
@@ -496,8 +497,7 @@ ranef.plm <- function(object, effect = NULL, ...) {
 #'  
 #' @export
 #' @author Kevin Tappe
-#' @seealso [fixef()] to extract the fixed effects of a
-#'     within model.
+#' @seealso [fixef()] to extract the fixed effects of a within model.
 #' @references
 #'
 #' \insertAllCited{}
@@ -590,8 +590,9 @@ within_intercept.plm <- function(object, vcov = NULL, return.model = FALSE, ...)
     # summary(auxreg)
 
   # estimation by plm() - to apply robust vcov function if supplied
+  # NB: this changes variable names slightly (data.frame uses make.names to, e.g., get rid of parentheses in variable names)
   data <- pdata.frame(data.frame(cbind(index, transY, transM)), drop.index = TRUE)
-  form <- as.formula(paste0(names(data)[1], "~", paste(names(data)[-1L], collapse = "+")))
+  form <- as.formula(paste0(names(data)[1L], "~", paste(names(data)[-1L], collapse = "+")))
   auxreg <- plm(form, data = data, model = "pooling")
   
   # degrees of freedom correction due to FE transformation for "normal" vcov [copied over from plm.fit]
