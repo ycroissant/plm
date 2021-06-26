@@ -439,6 +439,7 @@ plm.fit <- function(data, model, effect, random.method,
         w <- model.weights(data)
         if (! is.null(w)){
             if (! is.numeric(w)) stop("'weights' must be a numeric vector")
+            if (any(w < 0 | is.na(w))) stop("missing or negative weights not allowed")
             X <- X * sqrt(w)
             y <- y * sqrt(w)
         }
