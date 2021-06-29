@@ -451,7 +451,7 @@ plm.fit <- function(data, model, effect, random.method,
           
             if(!is.null(model.weights(data)) || any(w != 1)) stop("argument 'weights' not yet implemented for instrumental variable models")
             
-            #  all IV cases except RE baltagi, am, bms; elg., FE/BE IV and RE "bvk" estimator
+            #  all IV cases except RE baltagi, am, bms; i.e., FE/BE IV and RE "bvk" estimator
             if (length(formula)[2L] == 2L){
                 W <- model.matrix(data, rhs = 2,
                                   model = model, effect = effect,
@@ -462,8 +462,9 @@ plm.fit <- function(data, model, effect, random.method,
                                       effect = effect, theta = theta, cstcovar.rm = "all")
             }
           
-            # calc. estimators "baltagi", "am", and "bms":
-            # TODO: this does not seem optimal as "bvk" or FE IV (W) is always calculated but not needed for other estimators
+            # calc. estimators RE "baltagi", "am", and "bms":
+             # TODO: this does not seem optimal as W (for RE "bvk" and BE/FE IV) is always calculated
+             #       in the previous step but not needed for other estimators.
             if (model == "random" && inst.method != "bvk"){
                 X <- X / sqrt(sigma2["idios"])
                 y <- y / sqrt(sigma2["idios"])
@@ -486,7 +487,7 @@ plm.fit <- function(data, model, effect, random.method,
                 else W2 <- StarW2 <- NULL
                 if (inst.method == "baltagi") W <- sqrt(w) * cbind(W1, W2, B1)                 # TODO: here, some weighting is done but prevented earlier
                 if (inst.method == "am")      W <- sqrt(w) * cbind(W1, W2, B1, StarW1)         #       by stop()?!
-                if (inst.method == "bms")     W <- sqrt(w) * cbind(W1, W2, B1, StarW1, StarW2) #       bvk/FE IV does not have weighting code...
+                if (inst.method == "bms")     W <- sqrt(w) * cbind(W1, W2, B1, StarW1, StarW2) #       also: RE bvk/BE/FE IV does not have weighting code...
             }
       
             if (ncol(W) < ncol(X)) stop("insufficient number of instruments")
@@ -584,7 +585,7 @@ tss.plm <- function(x, model = NULL){
 
 #' R squared and adjusted R squared for panel models
 #' 
-#' This function computes R squared or adjusted R squared for plm objects.  It
+#' This function computes R squared or adjusted R squared for plm objects. It
 #' allows to define on which transformation of the data the (adjusted) R
 #' squared is to be computed and which method for calculation is used.
 #' 
@@ -599,7 +600,7 @@ tss.plm <- function(x, model = NULL){
 #' values and the response),
 #' @param dfcor if `TRUE`, the adjusted R squared is computed.
 #' @return A numerical value. The R squared or adjusted R squared of the model
-#' estimated on the transformed data, e. g. for the within model the so called
+#' estimated on the transformed data, e. g., for the within model the so called
 #' "within R squared".
 #' @seealso [plm()] for estimation of various models;
 #' [summary.plm()] which makes use of `r.squared`.

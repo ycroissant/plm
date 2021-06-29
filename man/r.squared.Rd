@@ -22,11 +22,11 @@ values and the response),}
 }
 \value{
 A numerical value. The R squared or adjusted R squared of the model
-estimated on the transformed data, e. g. for the within model the so called
+estimated on the transformed data, e. g., for the within model the so called
 "within R squared".
 }
 \description{
-This function computes R squared or adjusted R squared for plm objects.  It
+This function computes R squared or adjusted R squared for plm objects. It
 allows to define on which transformation of the data the (adjusted) R
 squared is to be computed and which method for calculation is used.
 }
