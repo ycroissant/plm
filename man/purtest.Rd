@@ -111,14 +111,14 @@ augmented Dickey-Fuller (ADF) regressions for each time series. A
 statistic is then computed using the t-statistics associated with
 the lagged variable. The Hadri residual-based LM statistic is the
 cross-sectional average of the individual KPSS statistics
-\insertCite{KWIA:PHIL:SCHM:SHIN:92}{plm}, standardized by their
+\insertCite{KWIA:PHIL:SCHM:SHIN:92;textual}{plm}, standardized by their
 asymptotic mean and standard deviation.
 
 Several Fisher-type tests that combine p-values from tests based on
 ADF regressions per individual are available:
 \itemize{
 \item \code{"madwu"} is the inverse chi-squared test
-\insertCite{MADDA:WU:99}{plm}, also called P test by
+\insertCite{MADDA:WU:99;textual}{plm}, also called P test by
 \insertCite{CHOI:01;textual}{plm}.
 \item \code{"Pm"} is the modified P test proposed by
 \insertCite{CHOI:01;textual}{plm} for large N,

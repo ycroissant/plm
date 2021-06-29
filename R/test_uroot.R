@@ -638,14 +638,14 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
 #' statistic is then computed using the t-statistics associated with
 #' the lagged variable. The Hadri residual-based LM statistic is the
 #' cross-sectional average of the individual KPSS statistics
-#' \insertCite{KWIA:PHIL:SCHM:SHIN:92}{plm}, standardized by their
+#' \insertCite{KWIA:PHIL:SCHM:SHIN:92;textual}{plm}, standardized by their
 #' asymptotic mean and standard deviation.
 #' 
 #' Several Fisher-type tests that combine p-values from tests based on
 #' ADF regressions per individual are available:
 #'
 #' - `"madwu"` is the inverse chi-squared test
-#' \insertCite{MADDA:WU:99}{plm}, also called P test by
+#' \insertCite{MADDA:WU:99;textual}{plm}, also called P test by
 #' \insertCite{CHOI:01;textual}{plm}.
 #'
 #' - `"Pm"` is the modified P test proposed by
@@ -1112,7 +1112,7 @@ print.summary.purtest <- function(x, ...){
 #' Simes Test for unit roots in panel data
 #' 
 #' Simes' test of intersection of individual hypothesis tests
-#' \insertCite{SIMES:86}{plm} applied to panel unit root tests as suggested by
+#' \insertCite{SIMES:86;textual}{plm} applied to panel unit root tests as suggested by
 #' \insertCite{HANCK:13;textual}{plm}.
 #' 
 #' Simes' approach to testing is combining p-values from single hypothesis tests
@@ -1144,7 +1144,7 @@ print.summary.purtest <- function(x, ...){
 #' (as produced by `purtest()` for a test which gives p-values of the individuals
 #' (Hadri's test in `purtest` is not suitable)),
 #' @param alpha numeric, the pre-specified significance level (defaults to `0.05`),
-#' @param x an object of class c("hansi", "list") as produced by `hansi` to be printed,
+#' @param x an object of class `c("hansi", "list")` as produced by `hansi` to be printed,
 #' @param cutoff integer, cutoff value for printing of enumeration of individuals with
 #' rejected individual H0, for print method only,
 #' @param \dots further arguments (currently not used).
