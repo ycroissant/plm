@@ -1,8 +1,8 @@
 starX <- function(formula, data, model, rhs = 1, effect){
     apdim <- pdim(data)
     amatrix <- model.matrix(data, model, effect, rhs)
-    T <- length(unique(index(data, 2)))
-    N <- length(unique(index(data, 1)))
+    T <- length(unique(index(data, 2L))) # TODO: could use information from apdim object for T and N?!
+    N <- length(unique(index(data, 1L)))
     if (apdim$balanced){
         result <- Reduce("cbind",
                         lapply(seq_len(ncol(amatrix)),
@@ -300,7 +300,7 @@ plm <- function(formula, data, subset, weights, na.action,
                 ...){
 
     if (is.list(formula)){
-        # if the first argument is a list (of formulas), then call plmlist and exit
+        # if the first argument is a list (of formulas), then call plmlist and early exit
         plmlist <- match.call(expand.dots = FALSE)
         plmlist[[1L]] <- as.name("plm.list")
         # eval in nframe and not the usual parent.frame(), relevant?
@@ -342,7 +342,8 @@ plm <- function(formula, data, subset, weights, na.action,
       inst.method <- match.arg(inst.method)
     
       
-      # pht is no longer maintained, but working
+      # model = "ht" in plm() and pht() are no longer maintained, but working
+      # -> call pht() and early exit
       if (! is.na(model) && model == "ht"){
           ht <- match.call(expand.dots = FALSE)
           m <- match(c("formula", "data", "subset", "na.action", "index"), names(ht), 0)
@@ -364,6 +365,7 @@ plm <- function(formula, data, subset, weights, na.action,
     # y ~ x1 + x2 + x3 | x1 + x3 + z
     # use length(formula)[2] because the length is now a vector of length 2
 #    if (length(formula)[2] == 2) formula <- expand.formula(formula)
+    
     # eval the model.frame
     cl <- match.call()
     mf <- match.call(expand.dots = FALSE)
@@ -385,7 +387,7 @@ plm <- function(formula, data, subset, weights, na.action,
     # dropped
     row.names(data) <- orig_rownames[as.numeric(row.names(data))]
 
-    # return the model.frame or estimate the model
+    # return the model.frame (via early exit) if model = NA, else estimate model
     if (is.na(model)){
         attr(data, "formula") <- formula
         return(data)
