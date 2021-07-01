@@ -1,4 +1,5 @@
-# various test of subsetting ("indexing") a pdata.frame, e.g., that subsetting by rownames preserves the index
+# various test of subsetting ("indexing") a pdata.frame and a pseries (the latter currently commented),
+# e.g., that subsetting by rownames preserves the index
 #  (pre rev. 187/189 all entries were set to NA)
 #  (pre rev. 251 subsetting a pdata.frame added extra information due to coercing rules of "[.data.frame")
 #  (pre rev. 668 subsetting a pdata.frame with [.pdata.frame such that a single column (pseries) is returned was lacking names)
@@ -60,8 +61,8 @@ if (!identical(pGrunfeld, pGrunfeld2))
 # object.size(pGrunfeld)  # 37392 bytes
 # object.size(pGrunfeld2) # 37392 bytes since rev. 252 # (was: 83072 bytes in pre rev.251, considerably larger!)
                                                        # (was: 26200 bytes in rev. 251)
-if (!object.size(pGrunfeld) == object.size(pGrunfeld2))
-  print("pdata.frame not same object size after \"subsetting\" with all rows (which should actually not do any subsetting))")
+# if (!object.size(pGrunfeld) == object.size(pGrunfeld2))
+#   print("pdata.frame not same object size after \"subsetting\" with all rows (which should actually not do any subsetting))")
 
 # this is likely to be unnecessarily pedandic, because by default attrib.as.set is TRUE
 # and from ?attributes "Attributes are not stored internally as a list and should be 
@@ -221,8 +222,9 @@ Grunfeld[Grunfeld$firm == "19", "valueNonExistent"]
 
 ############### test pseries subsetting ("[.pseries") ################
 #### a sketch for "[.pseries" is in pdata.frame.R, but it does not work with FD models yet
+# data("EmplUK", package = "plm")
 # (plm(log(emp) ~ log(wage) + log(capital), data = EmplUK, model = "fd"))
-#
+# 
 # data("Grunfeld", package = "plm")
 # Grunfeld$fac <- factor(c("a", "b", "c", "d"))
 # pGrunfeld <- pdata.frame(Grunfeld)
@@ -234,11 +236,26 @@ Grunfeld[Grunfeld$firm == "19", "valueNonExistent"]
 # pseries[1]
 # pseries[c(1,2)]
 # pseries[-c(1,2)]
-# # this also checks for the both indexes having the same levels after subsetting
-# # (unused levels in index are dropped):
+# # # this also checks for the both indexes having the same levels after subsetting
+# # # (unused levels in index are dropped):
 # if(!isTRUE(all.equal(index(pseries[c(1)]),    index(pGrunfeld[c(1), ])))) stop("indexes not the same")
 # if(!isTRUE(all.equal(index(pseries[c(1,2)]),  index(pGrunfeld[c(1,2), ])))) stop("indexes not the same")
 # if(!isTRUE(all.equal(index(pseries[-c(1,2)]), index(pGrunfeld[-c(1,2), ])))) stop("indexes not the same")
+
+# subsetting when there are no names (in this case (dummy) names are used in the subsetting code)
+# pseries_nn <- unname(pGrunfeld$inv)
+# pfac_nn <- unname(pGrunfeld$fac)
+# fac_nn <- unname(Grunfeld$fac)
+# 
+# pseries_nn[1]
+# pseries_nn[c(1,2)]
+# pseries_nn[-c(1,2)]
+# # # this also checks for the both indexes having the same levels after subsetting
+# # # (unused levels in index are dropped):
+# if(!isTRUE(all.equal(index(pseries_nn[c(1)]),    index(pGrunfeld[c(1), ])))) stop("indexes not the same")
+# if(!isTRUE(all.equal(index(pseries_nn[c(1,2)]),  index(pGrunfeld[c(1,2), ])))) stop("indexes not the same")
+# if(!isTRUE(all.equal(index(pseries_nn[-c(1,2)]), index(pGrunfeld[-c(1,2), ])))) stop("indexes not the same")
+# 
 # 
 # 
 # # subsetting with character
@@ -246,27 +263,27 @@ Grunfeld[Grunfeld$firm == "19", "valueNonExistent"]
 # pseries[c("10-1935", "10-1946")]
 # 
 # # character subsetting works for plain numeric:
-# series <- Grunfeld$inv
-# names(series) <- names(pseries)
-# names(fac) <- names(pfac)
-# series["10-1946"] 
+#  series <- Grunfeld$inv
+#  names(series) <- names(pseries)
+#  names(fac) <- names(pfac)
+#  series["10-1946"]
 # 
-# if(!isTRUE(all.equal(index(pseries["10-1946"]),               index(pGrunfeld["10-1946", ])))) stop("indexes not the same")
-# if(!isTRUE(all.equal(index(pseries[c("10-1935", "10-1946")]), index(pGrunfeld[c("10-1935", "10-1946"), ])))) stop("indexes not the same")
+#  if(!isTRUE(all.equal(index(pseries["10-1946"]),               index(pGrunfeld["10-1946", ])))) stop("indexes not the same")
+#  if(!isTRUE(all.equal(index(pseries[c("10-1935", "10-1946")]), index(pGrunfeld[c("10-1935", "10-1946"), ])))) stop("indexes not the same")
 # 
 # 
 # ### For c("pseries", "factor") perform additional tests of 'drop' argument
-# pfac[1, drop = TRUE]   # only level "a" should be left
-# pfac[1:3][drop = TRUE] # only level "a", "b", "c" should be left
+#  pfac[1, drop = TRUE]   # only level "a" should be left
+#  pfac[1:3][drop = TRUE] # only level "a", "b", "c" should be left
 # 
-# fac[1, drop = TRUE]
-# fac[1:3][drop = TRUE]
+#  fac[1, drop = TRUE]
+#  fac[1:3][drop = TRUE]
 # 
-# pfac["nonExist"] # should be NA and levels "a" to "d"
-# fac["nonExist"]
+#  pfac["nonExist"] # should be NA and levels "a" to "d"
+#  fac["nonExist"]
 # 
-# pfac["nonExist"][drop = TRUE] # should be NA and no level left
-# fac["nonExist"][drop = TRUE]
+#  pfac["nonExist"][drop = TRUE] # should be NA and no level left
+#  fac["nonExist"][drop = TRUE]
 # 
 # # check subsetting with NA:
 # if(!isTRUE(all.equal(as.numeric(pseries[NA]), series[NA], check.attributes = FALSE))) stop("subsetting with NA not the same for pseries")

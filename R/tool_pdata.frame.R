@@ -461,29 +461,40 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 #        Warning in Ops.pseries(x[2:n], x[1:(n - 1)]) :
 #        indexes of pseries have same length but not same content: result was assigned first operand's index
 #
+## @export
 # "[.pseries" <- function(x, ...) {
 # 
 #  ## use '...' instead of only one specific argument, because subsetting for
 #  ## factors can have argument 'drop', e.g., x[i, drop=TRUE] see ?Extract.factor
-#  stop()
+# #stop()
 #   index <- attr(x, "index")
-#   if (is.null(index)) stop("pseries object with is.null(index(pseries)) == TRUE encountered")
+#   if (is.null(index)) warning("pseries object with is.null(index(pseries)) == TRUE encountered")
 #   if (!is.null(index) && !is.index(index)) stop(paste0("pseries object has illegal index with class(index) == ", paste0(class(index), collapse = ", ")))
 #   names_orig <- names(x)
-#   x <- remove_pseries_features(x)
-#   result <- x[...]
-# 
-#   # subset index / identify rows to keep in the index:
-#   # TODO: not all have names -> find other way to identify eliminated elements
-#   keep_rownr <- seq_along(names_orig)  # full length row numbers original pseries
+#   keep_rownr <- seq_along(x) # full length row numbers original pseries
 #   names(keep_rownr) <- names_orig
+# 
+#   if (is.null(names_orig)) {
+#     names(x) <- keep_rownr # if no names are present, set names as integer sequence to identify rows to keep later
+#     names(keep_rownr) <- keep_rownr
+#   }
+#   x <- remove_pseries_features(x)
+#   result <- x[...] # actual subsetting
+# 
+#   # identify rows to keep in the index:
 #   keep_rownr <- keep_rownr[names(result)] # row numbers to keep after subsetting
-#   index <- index[keep_rownr, ]
+#   if (!is.null(names_orig)) names(result) <- names_orig[keep_rownr] else names(result) <- NULL # restore and subset original names if any
 # 
-#   # drop unused levels (like in subsetting of pdata.frames)
-#   index <- droplevels(index)
+#   # Subset index accordingly:
+#   # Check if index is null is a workaround for R's data frame subsetting not
+#   # stripping class pseries but its attributes for factor (for other data types, pseries class is dropped)
+#   # see https://bugs.r-project.org/bugzilla/show_bug.cgi?id=18140
+#   if (!is.null(index)) {
+#     index <- index[keep_rownr, ]
+#     index <- droplevels(index) # drop unused levels (like in subsetting of pdata.frames)
+#   }
 # 
-#   ### TODO: test for is.null before adding back? see [[.pdata.frame
+#   ### TODO: test result for is.null before adding back? see [[.pdata.frame
 # 
 #   result <- add_pseries_features(result, index)
 #   return(result)
@@ -499,21 +510,31 @@ subset_pseries <- function(x, ...) {
   ## use '...' instead of only one specific argument, because subsetting for
   ## factors can have argument 'drop', e.g., x[i, drop=TRUE] see ?Extract.factor
   index <- attr(x, "index")
-  if (is.null(index)) warning("pseries object with is.null(index(pseries)) == TRUE encountered, trying to continue anyway...")
+  if (is.null(index)) warning("pseries object with is.null(index(pseries)) == TRUE encountered")
   if (!is.null(index) && !is.index(index)) stop(paste0("pseries object has illegal index with class(index) == ", paste0(class(index), collapse = ", ")))
   names_orig <- names(x)
+  keep_rownr <- seq_along(x)  # full length row numbers original pseries
+  names(keep_rownr) <- names_orig
+  
+  if (is.null(names_orig)) {
+    names(x) <- keep_rownr # if no names are present, set names as integer sequence to identify rows to keep later
+    names(keep_rownr) <- keep_rownr
+  }
   x <- remove_pseries_features(x)
-  result <- x[...]
+  result <- x[...] # actual subsetting
   
   # subset index / identify rows to keep in the index:
-  keep_rownr <- seq_along(names_orig)  # full length row numbers original pseries
-  names(keep_rownr) <- names_orig
   keep_rownr <- keep_rownr[names(result)] # row numbers to keep after subsetting
-  index <- index[keep_rownr, ]
+  if (!is.null(names_orig)) names(result) <- names_orig[keep_rownr] else names(result) <- NULL # restore and subset original names if any
   
-  # drop unused levels (like in subsetting of pdata.frames)
-  index <- droplevels(index)
-  
+  # Subset index accordingly
+  # Check if index is null is a workaround for R's data frame subsetting not
+  # stripping class pseries but its attributes for factor (for other data types, pseries class is dropped)
+  # see https://bugs.r-project.org/bugzilla/show_bug.cgi?id=18140
+  if (!is.null(index)) {
+    index <- index[keep_rownr, ]
+    index <- droplevels(index) # drop unused levels (like in subsetting of pdata.frames)
+  }
   result <- add_pseries_features(result, index)
   return(result)
 }
@@ -812,7 +833,7 @@ is.pseries <- function(object) {
   if (!inherits(object, "pseries")) res <- FALSE
   # class 'pseries' is always on top of basic class: min 2 classes needed, if 2 classes "pseries" needs to be first entry
   if (!length(class(object)) >= 2L) res <- FALSE
-  if (length(class(object)) == 2L && class(object)[1] != "pseries") res <- FALSE
+  if (length(class(object)) == 2L && class(object)[1L] != "pseries") res <- FALSE
   if (!has.index(object)) res <- FALSE
   if (!any(c(is.numeric(object), is.factor(object), is.logical(object), 
              is.character(object), is.complex(object)))) {
@@ -1052,16 +1073,16 @@ index.pindex <- function(x, which = NULL, ...) {
       posindividual <- match("individual", which)
       if (! is.na(posindividual)) which[posindividual] <- "id"
     }
-    if (length(which) >  3) stop("the length of argument 'which' should be at most 3")
+    if (length(which) >  3L) stop("the length of argument 'which' should be at most 3")
     if (is.numeric(which)){
         if (! all(which %in% 1:3))
             stop("if integer, argument 'which' should contain only 1, 2 and/or 3")
-        if (ncol(x) == 2 && 3 %in% which) stop("no grouping variable, only 2 indexes")
+        if (ncol(x) == 2L && 3 %in% which) stop("no grouping variable, only 2 indexes")
         which <- names(x)[which]
     }
     nindex <- names(x)
     gindex <- c("id", "time")
-    if (ncol(x) == 3) gindex <- c(gindex, "group")
+    if (ncol(x) == 3L) gindex <- c(gindex, "group")
     if (any(! which %in% c(nindex, gindex))) stop("unknown variable")
     if ("id"    %in% which) {
       which[which == "id"]    <- names(x)[1L]
@@ -1071,7 +1092,7 @@ index.pindex <- function(x, which = NULL, ...) {
       which[which == "time"]  <- names(x)[2L]
       if("time" %in% names(x)[-2L]) warning("an index variable not being the time index is called 'time'. Likely, any results are distorted.") 
     }
-    if (ncol(x) == 3) if ("group" %in% which) {
+    if (ncol(x) == 3L) if ("group" %in% which) {
       which[which == "group"] <- names(x)[3L]
       if("group" %in% names(x)[-3L]) warning("an index variable not being the group index is called 'group'. Likely, any results are distorted.") 
     }
