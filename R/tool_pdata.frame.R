@@ -38,6 +38,9 @@
 ## - index.pdata.frame
 ## - index.pseries
 ## - index.panelmodel
+## - is.index
+## - has.index
+## - checkNA.index (non-exported)
 
 fancy.row.names <- function(index, sep = "-") {
   if (length(index) == 2) {result <- paste(index[[1L]], index[[2L]], sep = sep)}
@@ -173,7 +176,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 
     if (inherits(x, "pdata.frame")) stop("already a pdata.frame")
   
-    if (length(index) > 3){
+    if (length(index) > 3L){
         stop("'index' can be of length 3 at the most (one index variable for individual, time, group)")
     }
     
@@ -202,20 +205,19 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
   
     # if requested: check and remove complete NA series
     if (drop.NA.series) {
-      na.check <- sapply(x,function(x) sum(!is.na(x))==0)
+      na.check <- sapply(x, function(x) sum(!is.na(x)) == 0L)
       na.serie <- names(x)[na.check]
-      if (length(na.serie) > 0){
-        if (length(na.serie) == 1)
+      if (length(na.serie) > 0L){
+        if (length(na.serie) == 1L)
           cat(paste0("This series is NA and has been removed: ", na.serie, "\n"))
         else
           cat(paste0("These series are NA and have been removed: ", paste(na.serie, collapse = ", "), "\n"))
       }
-      x <- x[, !na.check]
+      x <- x[ , !na.check]
     }
 
     # if requested: check for constant series and remove
     if (drop.const.series) {
-      # old: cst.check <- sapply(x, function(x) var(as.numeric(x), na.rm = TRUE)==0)
       # -> var() and sd() on factors is deprecated as of R 3.2.3 -> use duplicated()
       cst.check <- sapply(x, function(x) {
                               if (is.factor(x) || is.character(x)) {
@@ -229,8 +231,8 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
       # following line: bug fixed thanks to Marciej Szelfer
       cst.check <- cst.check | is.na(cst.check)
       cst.serie <- names(x)[cst.check]
-      if (length(cst.serie) > 0){
-        if (length(cst.serie) == 1){
+      if (length(cst.serie) > 0L){
+        if (length(cst.serie) == 1L){
           cat(paste0("This series is constant and has been removed: ", cst.serie, "\n"))
         }
         else{
@@ -238,14 +240,14 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
                        paste(cst.serie, collapse = ", "), "\n"))
         }
       }
-      x <- x[, !cst.check]
+      x <- x[ , !cst.check]
     }
   
     # sanity check for 'index' argument. First, check the presence of a
     # grouping variable, this should be the third element of the index
     # vector or any "group" named element of this vector
     group.name <- NULL
-    if (! is.null(names(index)) || length(index == 3)){
+    if (! is.null(names(index)) || length(index == 3L)){
         if (! is.null(names(index))){
             grouppos <- match("group", names(index))
             if (! is.na(grouppos)){
@@ -253,12 +255,12 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
                 index <- index[- grouppos]
             }
         }
-        if (length(index) == 3){
-            group.name <- index[3]
-            index <- index[- 3]
+        if (length(index) == 3L){
+            group.name <- index[3L]
+            index <- index[-3L]
         }
     }
-    if (length(index) == 0) index <- NULL
+    if (length(index) == 0L) index <- NULL
 
     # if index is NULL, both id and time are NULL
     if (is.null(index)){
@@ -266,13 +268,13 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
         time <- NULL
     }
     # if the length of index is 1, id = index and time is NULL
-    if (length(index) == 1){
+    if (length(index) == 1L){
         id <- index
         time <- NULL
     }
     # if the length of index is 2, the first element is id, the second
     # is time
-    if (length(index) == 2){
+    if (length(index) == 2L){
         id <- index[1L]
         time <- index[2L]
     }
@@ -313,9 +315,8 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     else{
         # id.name is not numeric, i.e., individual index is supplied
         if (!id.name %in% names(x)) stop(paste("variable ", id.name, " does not exist (individual index)", sep=""))
-        
         if (is.factor(x[[id.name]])){
-            id <- x[[id.name]] <- x[[id.name]][drop=TRUE] # drops unused levels of factor
+            id <- x[[id.name]] <- x[[id.name]][drop = TRUE] # drops unused levels of factor
         }
         else{
             id <- x[[id.name]] <- as.factor(x[[id.name]])
@@ -344,7 +345,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
                 stop(paste0("variable ", time.name, " does not exist (time index)"))
             
             if (is.factor(x[[time.name]])){
-                time <- x[[time.name]] <- x[[time.name]][drop=TRUE]
+                time <- x[[time.name]] <- x[[time.name]][drop = TRUE]
             }
             else{
                 time <- x[[time.name]] <- as.factor(x[[time.name]])
@@ -381,7 +382,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     }
     
     posindex <- match(c(id.name, time.name, group.name), names(x))
-    index <- x[, posindex]
+    index <- x[ , posindex]
     if (drop.index) {
         x <- x[ , -posindex, drop = FALSE]
         if (ncol(x) == 0L) warning("after dropping of index variables, the pdata.frame contains 0 columns")
@@ -429,7 +430,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 "$<-.pdata.frame" <- function(x, name, value) {
   if (inherits(value, "pseries")){
     # remove pseries features before adding value as a column to pdata.frame
-    if (length(class(value)) == 1) value <- unclass(value)
+    if (length(class(value)) == 1L) value <- unclass(value)
     else attr(value, "class") <- setdiff(class(value), "pseries")
     attr(value, "index") <- NULL
   }
@@ -453,21 +454,27 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 # 
 #     There is a working sketch below, but check if it does not interfere with anything else.
 #     * check if it works with FD and between models (these models compress the data and, thus,
-#       pmodel.reponse for these does not return a pseries but a pure numeric)
+#       pmodel.response for these does not return a pseries but a pure numeric)
+#
+#     * enabling results in a lot of warnings from generics framework like the following
+#       * TODO: define behaviour of operators in Ops.pseries
+#        Warning in Ops.pseries(x[2:n], x[1:(n - 1)]) :
+#        indexes of pseries have same length but not same content: result was assigned first operand's index
 #
 # "[.pseries" <- function(x, ...) {
 # 
 #  ## use '...' instead of only one specific argument, because subsetting for
 #  ## factors can have argument 'drop', e.g., x[i, drop=TRUE] see ?Extract.factor
-# #stop()
+#  stop()
 #   index <- attr(x, "index")
-#   if (is.null(index)) warning("pseries object with is.null(index(pseries)) == TRUE encountered, trying to continue anyway...")
-#   if (!is.index(index)) stop(paste0("pseries object has illegal index with class(index) == ", paste0(class(index), collapse = ", ")))
+#   if (is.null(index)) stop("pseries object with is.null(index(pseries)) == TRUE encountered")
+#   if (!is.null(index) && !is.index(index)) stop(paste0("pseries object has illegal index with class(index) == ", paste0(class(index), collapse = ", ")))
 #   names_orig <- names(x)
 #   x <- remove_pseries_features(x)
 #   result <- x[...]
 # 
 #   # subset index / identify rows to keep in the index:
+#   # TODO: not all have names -> find other way to identify eliminated elements
 #   keep_rownr <- seq_along(names_orig)  # full length row numbers original pseries
 #   names(keep_rownr) <- names_orig
 #   keep_rownr <- keep_rownr[names(result)] # row numbers to keep after subsetting
@@ -493,7 +500,7 @@ subset_pseries <- function(x, ...) {
   ## factors can have argument 'drop', e.g., x[i, drop=TRUE] see ?Extract.factor
   index <- attr(x, "index")
   if (is.null(index)) warning("pseries object with is.null(index(pseries)) == TRUE encountered, trying to continue anyway...")
-  if (!is.index(index)) stop(paste0("pseries object has illegal index with class(index) == ", paste0(class(index), collapse = ", ")))
+  if (!is.null(index) && !is.index(index)) stop(paste0("pseries object has illegal index with class(index) == ", paste0(class(index), collapse = ", ")))
   names_orig <- names(x)
   x <- remove_pseries_features(x)
   result <- x[...]
@@ -589,18 +596,19 @@ subset_pseries <- function(x, ...) {
     # use sys.call (and not match.call) because arguments other than drop may not be named
     # need to evaluate i, j, drop, if supplied, before passing on (do not pass on as the sys.call caught originally)
     sc_mod <- sc
-    sc_mod[[1]] <- quote(`[.data.frame`)
-    sc_mod[[2]] <- quote(x)
+    sc_mod[[1L]] <- quote(`[.data.frame`)
+    sc_mod[[2L]] <- quote(x)
     
-    if (!missing.i) sc_mod[[3]] <- i # if present, i is always in pos 3
-    if (!missing.j) sc_mod[[4]] <- j # if present, j is always in pos 4
+    if (!missing.i) sc_mod[[3L]] <- i # if present, i is always in pos 3
+    if (!missing.j) sc_mod[[4L]] <- j # if present, j is always in pos 4
     if (!missing.drop) sc_mod[[length(sc)]] <- drop # if present, drop is always in last position (4 or 5,
                                                     # depending on the call structure and whether missing j or not)
     
     mydata <- eval(sc_mod)
 
     if (is.null(dim(mydata))) {
-      # subsetting returned a vector or a factor or NULL (nothing more is left)
+      # if dim is NULL, subsetting did not return a data frame but  a vector or a
+      #   factor or NULL (nothing more is left)
       if (is.null(mydata)) {
         # since R 3.4.0 NULL cannot have attributes, so special case it
         res <- NULL
@@ -612,7 +620,7 @@ subset_pseries <- function(x, ...) {
                          class = base::union("pseries", class(mydata)))
       }
     } else {
-          # subsetting returned a data.frame -> add missing attributes to make it a pdata.frame again
+          # subsetting returned a data.frame -> add attributes to make it a pdata.frame again
           res <- structure(mydata,
                            index = index,
                            class = c("pdata.frame", "data.frame"))
@@ -653,7 +661,7 @@ print.pdata.frame <- function(x, ...) {
   class(x) <- "data.frame"
   # This is a workaround: print.data.frame cannot handle
   # duplicated row names which are currently possible for pdata frames
-  if (any(duplicated(rownames(x)))) {
+  if (anyDuplicated(rownames(x))) {
       print("Note: pdata.frame contains duplicated row names, thus original row names are not printed")
       rownames(x) <- NULL 
   }
