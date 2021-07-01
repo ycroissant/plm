@@ -1,26 +1,26 @@
 starX <- function(formula, data, model, rhs = 1, effect){
     apdim <- pdim(data)
     amatrix <- model.matrix(data, model, effect, rhs)
-    T <- length(unique(index(data, 2L))) # TODO: could use information from apdim object for T and N?!
-    N <- length(unique(index(data, 1L)))
+    T <- apdim$nT$T # was (same): length(unique(index(data, 2L)))
+    N <- apdim$nT$n # was (same): length(unique(index(data, 1L)))
     if (apdim$balanced){
         result <- Reduce("cbind",
                         lapply(seq_len(ncol(amatrix)),
                                function(x)
-                               matrix(amatrix[, x], 
+                               matrix(amatrix[ , x], 
                                       ncol = T, byrow = TRUE)[rep(1:N, each = T), ]))
     }
-    else{
+    else{ # unbalanced
         Ti <- apdim$Tint$Ti
         result <- lapply(seq_len(ncol(amatrix)), function(x)
-                     structure(amatrix[, x], index = index(data), 
-                               class = c("pseries", class(amatrix[, x]))))
+                     structure(amatrix[ , x], index = index(data),
+                               class = c("pseries", class(amatrix[ , x]))))
         result <- Reduce("cbind", lapply(result, as.matrix))
         result <- result[rep(1:N, times = Ti), ]
         result[is.na(result)] <- 0
     }
     result
-}   
+}
 
 mylm <- function(y, X, W = NULL){
   names.X <- colnames(X)
@@ -453,7 +453,8 @@ plm.fit <- function(data, model, effect, random.method,
           
             if(!is.null(model.weights(data)) || any(w != 1)) stop("argument 'weights' not yet implemented for instrumental variable models")
             
-            #  all IV cases except RE baltagi, am, bms; i.e., FE/BE IV and RE "bvk" estimator
+            #  This is executed for all IV cases
+            #   but W seems only needed for FE/BE IV and RE "bvk" estimator, not for RE baltagi, am, bms
             if (length(formula)[2L] == 2L){
                 W <- model.matrix(data, rhs = 2,
                                   model = model, effect = effect,
