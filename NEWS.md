@@ -22,6 +22,9 @@
    ensured plm::diff (as prev. for plm::lag, and plm::lead) will always dispatch
    to the operations respecting the panel structure, if called on a pseries.
  
+ * plm: for the nested random effect model, check that argument `'model = "random"`,
+   warns and adjusts accordingly if not (might become an error in the future).
+ 
  * Vignettes: Added formula for nested error component model (2nd vignette),
    fixed a few typos.
    

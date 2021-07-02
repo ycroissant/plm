@@ -318,11 +318,19 @@ plm <- function(formula, data, subset, weights, na.action,
     # check and match the effect and model arguments
     effect <- match.arg(effect)
     # note that model can be NA, in this case the model.frame is returned
-    if (! anyNA(model)) model <- if(effect == "nested") "random" else match.arg(model)
-
+    if (! anyNA(model)) model <- match.arg(model) 
+    if (! anyNA(model) && effect == "nested" && model != "random") {
+      # input check for nested RE model
+      # warns since 2021-07-02 on R-Forge (prev. silently changed model = "random");
+      # should become an error in the future
+      warning(paste0("effect = \"nested\" only valid for model = \"random\", but input is model = \"",
+                     model, "\", changed to \"random\""))
+      model <- "random"
+    }
+    
     # input checks for FD model: give informative error messages as
     # described in footnote in vignette
-    if (! is.na(model) && model == "fd") {
+    if (! anyNA(model) && model == "fd") {
         if (effect == "time") stop(paste("effect = \"time\" for first-difference model",
                                          "meaningless because cross-sections do not",
                                          "generally have a natural ordering"))
@@ -344,7 +352,7 @@ plm <- function(formula, data, subset, weights, na.action,
       
       # model = "ht" in plm() and pht() are no longer maintained, but working
       # -> call pht() and early exit
-      if (! is.na(model) && model == "ht"){
+      if (! anyNA(model) && model == "ht"){
           ht <- match.call(expand.dots = FALSE)
           m <- match(c("formula", "data", "subset", "na.action", "index"), names(ht), 0)
           ht <- ht[c(1L, m)]

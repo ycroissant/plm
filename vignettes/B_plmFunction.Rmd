@@ -398,7 +398,7 @@ or to `plm` directly and `plm`'s argument `effect` is set to `"nested"`:
 ```{r}
 data("Produc", package = "plm")
 swar <- plm(form <- log(gsp) ~ log(pc) + log(emp) + log(hwy) + log(water) + log(util) + unemp, 
-            Produc, index = c("state", "year", "region"), effect = "nested", random.method = "swar")
+            Produc, index = c("state", "year", "region"), model = "random", effect = "nested", random.method = "swar")
 walhus <- update(swar, random.method = "walhus")
 amem <- update(swar, random.method = "amemiya")
 screenreg(list("Swamy-Arora" = swar, "Wallace-Hussain" = walhus, "Amemiya" = amem), digits = 5)
