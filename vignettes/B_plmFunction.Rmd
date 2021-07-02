@@ -178,7 +178,7 @@ are:
       quadratic form methodology described above (@NERLO:71).
 
 Note that for `plm`, the arguments are `random.models`, `random.dfcor`, and 
-`random.method` correspond to arguments `models`, `method`, and
+`random.method` and correspond to arguments `models`, `method`, and
 `random.dfcor` of function `ercomp` with the same values as above, respectively.
 
 To illustrate the use of `plm`, we use examples reproduced in @BALT:13.
@@ -327,9 +327,8 @@ The instrumental variables estimator used is indicated with the
   instruments are introduced in quasi-differences, using the same
   transformation as for the response and the covariates,
 - `"baltagi"`, from @BALT:81, the instruments of the second part are
-  introduced twice using the between and the within transformation as
-  those of the third are only introduced with the within
-  transformation,
+  introduced twice using the between and the within transformation and
+  those of the third are only introduced with the within transformation,
 - `"am"`, from @AMEM:MACU:86, the within transformation of the variables
   of the second parts for each period are also included as
   instruments,
@@ -337,7 +336,7 @@ The instrumental variables estimator used is indicated with the
   variable of the second and of the third parts are included as
   instruments.
 
-The various possible values of the  `inst.method` argument are not relevant
+The various possible values of the `inst.method` argument are not relevant
 for fixed effect IV models as there is only one method for this type of IV
 models but many for random effect IV models.
 
