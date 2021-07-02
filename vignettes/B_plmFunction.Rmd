@@ -161,7 +161,7 @@ are:
   computed, which is based on much more complex computations, which
   relies on the calculus of the trace of different cross-products
   which depends on the preliminary models used.
-- `random.method` is an alternative to the `models` argument; it is one of :
+- `method` is an alternative to the `models` argument; it is one of :
     * `"walhus"` (equivalent to setting `models = c("pooling")`),
       @WALL:HUSS:69,
     * `"swar"` (equivalent to `models = c("within", "Between")`), @SWAM:AROR:72,
@@ -176,6 +176,10 @@ are:
       variance,
     * `"nerlove"`, which is a specific method which doesn't fit to the
       quadratic form methodology described above (@NERLO:71).
+
+Note that for `plm`, the arguments are `random.models`, `random.dfcor`, and 
+`random.method` correspond to arguments `models`, `method`, and
+`random.dfcor` of function `ercomp` with the same values as above, respectively.
 
 To illustrate the use of `plm`, we use examples reproduced in @BALT:13.
 Table 2.1 on page 21 presents EViews' results of the estimation on the
