@@ -160,7 +160,7 @@ model.matrix.pdata.frame <- function(object,
     index <- index(data)
     attr(X, "index") <- index
     if (effect == "twoways" && model %in% c("between", "fd"))
-        stop("twoways effect only relevant for within, random and pooling models")
+        stop("twoways effect only relevant for within, random, and pooling models")
     if (model == "within")  X <- Within(X, effect)
     if (model == "Sum")     X <- Sum(X, effect)
     if (model == "Between") X <- Between(X, effect)
@@ -179,7 +179,7 @@ model.matrix.pdata.frame <- function(object,
     }
     if (cstcovar.rm == "intercept"){
         posintercept <- match("(Intercept)", colnames(X))
-        if (! is.na(posintercept)) X <- X[, - posintercept, drop = FALSE]
+        if (! is.na(posintercept)) X <- X[ , - posintercept, drop = FALSE]
     }
     if (cstcovar.rm %in% c("covariates", "all")){
         cols <- apply(X, 2, is.constant)
@@ -192,7 +192,7 @@ model.matrix.pdata.frame <- function(object,
         if (length(cstcol) > 0L){
             if ((cstcovar.rm == "covariates" || !zeroint) && cstintercept) cstcol <- cstcol[- posintercept]
             if (length(cstcol) > 0L){
-                X <- X[, - match(cstcol, colnames(X)), drop = FALSE]
+                X <- X[ , - match(cstcol, colnames(X)), drop = FALSE]
                 attr(X, "constant") <- cstcol
             }
         }
@@ -299,7 +299,7 @@ pmodel.response.formula <- function(object, data, ...){
     theta  <- dots$theta
     if (is.null(model)) model <- "pooling"
     if (is.null(effect)) effect <- "individual"
-    if (model == "random" && is.null(theta)) stop("the theta argument is mandatory")
+    if (model == "random" && is.null(theta)) stop("the theta argument is mandatory for model = \"random\"")
     y <- model.response(data)
     ptransform(y, model = model, effect = effect, theta = theta)
 }
@@ -317,14 +317,14 @@ ptransform <- function(x, model = NULL, effect = NULL, theta = NULL, ...){
     if (model == "fd")      x <- pdiff(x, "individual")
     if (model == "random") {
         balanced <- is.pbalanced(x) # need to check this right here as long as x is a pseries
-        if (is.null(theta)) stop("a theta argument should be provided")
+        if (is.null(theta)) stop("a theta argument must be provided")
         if (effect %in% c("time", "individual")) x <- x - theta * Between(x, effect)
         if (effect == "nested") x <- x - theta$id * Between(x, "individual") -
                                          theta$gp * Between(x, "group")
 
         if (effect == "twoways" && balanced)
-            x <- x - theta$id * Between(x, "individual") -
-                   theta$time * Between(x, "time") + theta$total * mean(x)
+            x <- x - theta$id   * Between(x, "individual") -
+                     theta$time * Between(x, "time") + theta$total * mean(x)
         ## could catch non-treated case to error gracefully:
         # if (effect == "twoways" && !balanced) stop("two-way unbalanced case not implemented in ptransform")
     }
