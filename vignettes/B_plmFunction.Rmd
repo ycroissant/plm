@@ -149,7 +149,9 @@ correction can also be introduced. `plm` calls the general function
 are:
 
 - `models` indicates which models are estimated in order to calculate
-  the two quadratic forms ; for example `c("within", "Between")`.
+  the two quadratic forms ; for example `c("within", "Between")`. Note that
+  when only one model is provided in `models`, this means that the same
+  residuals are used to compute the two quadratic forms.
 - `dfcor` indicates what kind of degrees of freedom correction is
   used : if `0`, the quadratic forms are divided by the number of
   observations, respectively $N\times T$ and $N$ ; if `1`, the
@@ -159,11 +161,11 @@ are:
   computed, which is based on much more complex computations, which
   relies on the calculus of the trace of different cross-products
   which depends on the preliminary models used.
-- `method` is an alternative to the `models` argument ; it is one of :
-    * `"walhus"` - which is equivalent to `models = c("pooling")`,
+- `random.method` is an alternative to the `models` argument; it is one of :
+    * `"walhus"` (equivalent to setting `models = c("pooling")`),
       @WALL:HUSS:69,
-    * `"swar"` - `models = c("within", "Between")`, @SWAM:AROR:72,
-    * `"amemiya"` - `models = c("within")`, @AMEM:71,
+    * `"swar"` (equivalent to `models = c("within", "Between")`), @SWAM:AROR:72,
+    * `"amemiya"` (equivalent to `models = c("within")`), @AMEM:71,
     * `"ht"` is an slightly modified version of `amemiya` ; when there
       are time-invariant covariates, the @AMEM:71 estimator of the
       individual component of the variance is under-estimated as the
@@ -173,10 +175,7 @@ are:
       the residuals in order to estimate the components of the
       variance,
     * `"nerlove"`, which is a specific method which doesn't fit to the
-      methodology described above (@NERLO:71).
-
-Note that when only one model is provided in `models`, this means that the same
-residuals are used to compute the two quadratic forms.
+      quadratic form methodology described above (@NERLO:71).
 
 To illustrate the use of `plm`, we use examples reproduced in @BALT:13.
 Table 2.1 on page 21 presents EViews' results of the estimation on the
@@ -293,10 +292,10 @@ screenreg(list(EViews = HedEviews, Stata = HedStata, "Wallace-Hussain" = HedEvie
 The difference is due to the fact that Stata uses a between regression
 on $N$ observations while EViews uses a between regression on $\sum_n
 T_n$ observations, which are not the same on unbalanced panels. Note
-the use of between with or without the B capitalized in the
-`random.models` argument. `plm`'s default is to use the between
-regression with $\sum_n T_n$ observations when setting `model =
-"random", random.method = "swar"`.  The default employed is what the
+the use of between with or without the B capitalized (`"Between"` and
+`"between"`) in the `random.models` argument. `plm`'s default is to use
+the between regression with $\sum_n T_n$ observations when setting
+`model = "random", random.method = "swar"`.  The default employed is what the
 original paper for the unbalanced one-way Swamy-Arora estimator
 defined (in @BALT:CHAN:94, p. 73). A more detailed analysis of Stata's
 Swamy-Arora estimation procedure is given by @COTT:2017.
