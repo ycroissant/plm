@@ -128,6 +128,8 @@ ercomp.formula <- function(object, data,
                       "twoways"    = 1:3)
 
     if(! is.null(method) && method == "nerlove") {
+      ## special case Nerlove estimator with early exit
+      if (effect == "nested") stop("nested random effect model not implemented for Nerlove's estimator")
         est <- plm.fit(data, model = "within", effect = effect)
         pdim <- pdim(data)
         N <- pdim$nT$n
@@ -198,9 +200,10 @@ ercomp.formula <- function(object, data,
         result <- list(sigma2 = sigma2, theta = theta)
         result <- structure(result, class = "ercomp", balanced = balanced, effect = effect)
         return(result)
-    }
+    } ## end Nerlove case
 
     if (! is.null(method) && method == "ht"){
+      ## special case HT with early exit
         pdim <- pdim(data)
         N <- pdim$nT$n
         TS <- pdim$nT$T
@@ -208,7 +211,7 @@ ercomp.formula <- function(object, data,
         wm <- plm.fit(data, effect = "individual", model = "within")
         X <- model.matrix(data, rhs = 1)
         constants <- apply(X, 2, function(x) all(tapply(x, index(data)[[1L]], is.constant)))
-        if (length(object)[2L] > 1){
+        if (length(object)[2L] > 1L){
             W1 <- model.matrix(data, rhs = 2)
             ra <- twosls(fixef(wm, type = "dmean")[as.character(index(data)[[1L]])], X[ , constants, drop = FALSE], W1)
         }
@@ -225,7 +228,7 @@ ercomp.formula <- function(object, data,
         result <- list(sigma2 = sigma2, theta = theta)
         result <- structure(result, class = "ercomp", balanced = balanced, effect = effect)
         return(result)
-    }
+    } ## end HT
     
     # method argument is used, check its validity and set the relevant
     # models and dfcor
@@ -313,7 +316,7 @@ ercomp.formula <- function(object, data,
             CPZM.CPZW.CPZM.CPZSlambda <- crossprod(t(CPZM.CPZW), CPZM.CPZSlambda)
             
             CPZBetaBlambda     <- crossprod(Between.Z.ind_minus_Between.Z.group)
-            CPZBetaBlambdaSeta <- crossprod(Between.Z.ind_minus_Between.Z.group , ZSeta)
+            CPZBetaBlambdaSeta <- crossprod(Between.Z.ind_minus_Between.Z.group, ZSeta)
             CPZBlambdaSeta     <- crossprod(Between.Z.group, ZSeta)
             
             CPZM.CPZBetaBlambda <- crossprod(CPZM, CPZBetaBlambda)
@@ -577,7 +580,7 @@ ercomp.formula <- function(object, data,
                     M["ts", "mu"] <- O - sum(Nt ^ 2) / O
                 }
                 if (effect == "twoways"){
-                    M["id", "mu"] <- N - sum(Nt ^ 2) / O
+                    M["id", "mu"]  <- N  - sum(Nt ^ 2) / O
                     M["ts", "eta"] <- TS - sum(Tn ^ 2) / O
                 }
             }
