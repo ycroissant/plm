@@ -75,7 +75,8 @@ mylm <- function(y, X, W = NULL){
 #' `"swar"` \insertCite{SWAM:AROR:72}{plm} (default), `"amemiya"`
 #' \insertCite{AMEM:71}{plm}, `"walhus"`
 #' \insertCite{WALL:HUSS:69}{plm}, or `"nerlove"`
-#' \insertCite{NERLO:71}{plm}.
+#' \insertCite{NERLO:71}{plm} (see below for Hausman-Taylor instrumental
+#' variable case).
 #' 
 #' For first--difference models, the intercept is maintained (which
 #' from a specification viewpoint amounts to allowing for a trend in
@@ -124,7 +125,8 @@ mylm <- function(y, X, W = NULL){
 #'     `"between"`, `"random"` `"fd"`, or `"ht"`,
 #' @param random.method method of estimation for the variance
 #'     components in the random effects model, one of `"swar"`
-#'     (default), `"amemiya"`, `"walhus"`, or `"nerlove"`,
+#'     (default), `"amemiya"`, `"walhus"`, `"nerlove"`; for
+#'     Hausman-Taylor estimation set to `"ht"` (see Details and Examples), 
 #' @param random.models an alternative to the previous argument, the
 #'     models used to compute the variance components estimations are
 #'     indicated,
@@ -382,7 +384,7 @@ plm <- function(formula, data, subset, weights, na.action,
     names(mf)[2:3] <- c("formula", "data")
     mf$drop.unused.levels <- TRUE
     mf[[1L]] <- as.name("model.frame")
-    # use the pFormula and pdata.frame which were created if necessary (and not
+    # use the Formula and pdata.frame which were created if necessary (and not
     # the original formula / data)
     mf$formula <- data
     mf$data <- formula
@@ -458,23 +460,28 @@ plm.fit <- function(data, model, effect, random.method,
         # IV case: extract the matrix of instruments if necessary
         # (means here that we have a multi-parts formula)
         if (length(formula)[2L] > 1L){
-          
+# print("dddddddddddd")
+# browser()
             if(!is.null(model.weights(data)) || any(w != 1)) stop("argument 'weights' not yet implemented for instrumental variable models")
             
             #  This is executed for all IV cases
-            #   but W seems only needed for FE/BE IV and RE "bvk" estimator, not for RE baltagi, am, bms
+            
+          
+          if ( ! (model == "random" && inst.method != "bvk")) {
+          #  FD/FE/BE IV and RE "bvk" IV estimator
             if (length(formula)[2L] == 2L){
-                W <- model.matrix(data, rhs = 2,
-                                  model = model, effect = effect,
-                                  theta = theta, cstcovar.rm = "all")
-            }
-            else{
-                W <- model.matrix(data, rhs = c(2, 3), model = model,
-                                      effect = effect, theta = theta, cstcovar.rm = "all")
+                  W <- model.matrix(data, rhs = 2,
+                                    model = model, effect = effect,
+                                    theta = theta, cstcovar.rm = "all")
+              }
+              else{
+                  W <- model.matrix(data, rhs = c(2, 3), model = model,
+                                        effect = effect, theta = theta, cstcovar.rm = "all")
+              }
             }
           
             # calc. estimators RE "baltagi", "am", and "bms":
-             # TODO: this does not seem optimal as W (for RE "bvk" and BE/FE IV) is always calculated
+             # TODO: this does not seem optimal as W (for RE "bvk" and FD/BE/FE IV) is always calculated
              #       in the previous step but not needed for other estimators.
             if (model == "random" && inst.method != "bvk"){
                 X <- X / sqrt(sigma2["idios"])
@@ -483,8 +490,9 @@ plm.fit <- function(data, model, effect, random.method,
                                    effect = effect, theta = theta, cstcovar.rm = "all")
                 B1 <- model.matrix(data, rhs = 2, model = "Between",
                                    effect = effect, theta = theta, cstcovar.rm = "all")
-                
-                if (inst.method %in% c("am", "bms")) 
+
+#browser()
+                if (inst.method %in% c("am", "bms"))  ## TODO: could check sanity of 3rd part is available somewhere?
                     StarW1 <- starX(formula, data, rhs = 2, model = "within",
                                     effect = effect)
                 if (length(formula)[2L] == 3L){

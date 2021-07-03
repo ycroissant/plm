@@ -8,23 +8,26 @@
 ### Fixes & Others:
  * vcovG (hence vcovHC, vcovDC, vcovNW, vcovSCC), vcovBK: fix error in case of
    IV estimation with only one regressor.
- 
- * has.intercept.plm: argument 'part' renamed to 'rhs', argument values
-   (integer or NULL) aligned with and correctly passed on to 
-   has.intercept.Formula (with a *temporary* back-compatible solution).
-   
+
  * within_intercept: fix bug which caused an error for FE models with only one
-   regressor. 
+   regressor.
  
+  
  * (re-)export base::diff's generic as plm::diff to always be able to call
    plm::diff and get panel-diff-ing (in case some other package overwrites base
    R's generic diff (like dplyr does for base R's lag)). By doing this, it is
    ensured plm::diff (as prev. for plm::lag, and plm::lead) will always dispatch
    to the operations respecting the panel structure, if called on a pseries.
  
- * plm: for the nested random effect model, check that argument `'model = "random"`,
-   warns and adjusts accordingly if not (might become an error in the future).
- 
+ * plm:
+    * for the nested random effect model, check that argument `'model = "random"`,
+     warns and adjusts accordingly if not (might become an error in the future).
+    * Non-default random IV cases computed a little faster.
+
+ * has.intercept.plm: argument 'part' renamed to 'rhs', argument values
+   (integer or NULL) aligned with and correctly passed on to 
+   has.intercept.Formula (with a *temporary* back-compatible solution).
+
  * Vignettes: Added formula for nested error component model (2nd vignette),
    fixed a few typos.
    

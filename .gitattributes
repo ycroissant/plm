@@ -141,12 +141,12 @@ tests/test_Errors.R -text
 tests/test_Errors.Rout.save -text
 tests/test_Estimators.R -text
 tests/test_Estimators.Rout.save -text
+tests/test_EstimatorsIV.R -text
+tests/test_EstimatorsIV.Rout.save -text
 tests/test_Evaluation.R -text
 tests/test_Evaluation.Rout.save -text
 tests/test_FD_models.R -text
 tests/test_FD_models.Rout.save -text
-tests/test_IV.R -text
-tests/test_IV.Rout.save -text
 tests/test_R2_adj_R2.R -text
 tests/test_as.data.frame_as.matrix.R -text
 tests/test_as.list.pdata.frame.R -text

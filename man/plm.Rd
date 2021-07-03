@@ -109,7 +109,8 @@ supported,}
 
 \item{random.method}{method of estimation for the variance
 components in the random effects model, one of \code{"swar"}
-(default), \code{"amemiya"}, \code{"walhus"}, or \code{"nerlove"},}
+(default), \code{"amemiya"}, \code{"walhus"}, \code{"nerlove"}; for
+Hausman-Taylor estimation set to \code{"ht"} (see Details and Examples),}
 
 \item{random.models}{an alternative to the previous argument, the
 models used to compute the variance components estimations are
@@ -208,7 +209,8 @@ parameter are available by setting \code{random.method} to one of
 \code{"swar"} \insertCite{SWAM:AROR:72}{plm} (default), \code{"amemiya"}
 \insertCite{AMEM:71}{plm}, \code{"walhus"}
 \insertCite{WALL:HUSS:69}{plm}, or \code{"nerlove"}
-\insertCite{NERLO:71}{plm}.
+\insertCite{NERLO:71}{plm} (see below for Hausman-Taylor instrumental
+variable case).
 
 For first--difference models, the intercept is maintained (which
 from a specification viewpoint amounts to allowing for a trend in
