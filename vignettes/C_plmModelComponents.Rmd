@@ -68,7 +68,7 @@ SeatBelt$occfat <- with(SeatBelt, log(farsocc / (vmtrural + vmturban)))
 pSB <- pdata.frame(SeatBelt)
 ```
 
-We start with an OLS (`pooling`) specification: 
+We start with an OLS (pooling) specification: 
 
 ```{r }
 formols <- occfat ~ log(usage) + log(percapin)
@@ -84,7 +84,7 @@ which is equivalent to:
 coef(plm(formols, SeatBelt, model = "pooling"))
 ```
 
-Next, we use an instrumental variables specification. `usage` is
+Next, we use an instrumental variables specification. Variable `usage` is
 endogenous and instrumented by three variables indicating the law
 context: `ds`, `dp`, and `dsp`. 
 
@@ -160,16 +160,17 @@ coef(lm.fit(HX1, y))
 ```
 
 The same can be achieved in one command by using the `formula`-`data` interface
-with the `ivreg` function:
-
-```{r }
-coef(AER::ivreg(formiv1, data = SeatBelt))
-```
-
-or with `plm`:
+with `plm`:
 
 ```{r }
 coef(plm(formiv1, SeatBelt, model = "pooling"))
+```
+
+
+or with the `ivreg` function from package `AER`:
+
+```{r }
+coef(AER::ivreg(formiv1, data = SeatBelt))
 ```
 
 
