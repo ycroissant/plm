@@ -185,7 +185,7 @@ lev2var <- function(x, ...){
 #' @keywords regression
 #' @examples
 #' 
-#' ## replicates Baltagi (2005, 2013), table 7.4
+#' ## replicates Baltagi (2005, 2013), table 7.4; Baltagi (2021), table 7.5
 #' ## preferred way with plm()
 #' data("Wages", package = "plm")
 #' ht <- plm(lwage ~ wks + south + smsa + married + exp + I(exp ^ 2) + 

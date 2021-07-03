@@ -1,7 +1,7 @@
 
-R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
-Copyright (C) 2019 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
+R version 4.1.0 (2021-05-18) -- "Camp Pontanezen"
+Copyright (C) 2021 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -16,7 +16,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 Type 'q()' to quit R.
 
 > 
-> # replicates Baltagi (2005, 2013), table 7.4
+> # replicates Baltagi (2005, 2013), table 7.4; Baltagi (2021), table 7.5
 > # pht vs plm(., random.model="ht", inst.method="ht/am/bms") vs. plm(, model = "ht")
 > library("plm")
 > data("Wages", package = "plm")
@@ -417,4 +417,4 @@ Chisq: 6467.37 on 12 DF, p-value: < 2.22e-16
 > 
 > proc.time()
    user  system elapsed 
-  3.236   0.083   3.314 
+   4.89    0.29    5.18 

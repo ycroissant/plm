@@ -1,5 +1,5 @@
 
-# replicates Baltagi (2005, 2013), table 7.4
+# replicates Baltagi (2005, 2013), table 7.4; Baltagi (2021), table 7.5
 # pht vs plm(., random.model="ht", inst.method="ht/am/bms") vs. plm(, model = "ht")
 library("plm")
 data("Wages", package = "plm")

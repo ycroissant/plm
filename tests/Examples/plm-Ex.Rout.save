@@ -9015,7 +9015,7 @@ alternative hypothesis: Granger causality for at least one individual
 > ### ** Examples
 > 
 > 
-> ## replicates Baltagi (2005, 2013), table 7.4
+> ## replicates Baltagi (2005, 2013), table 7.4; Baltagi (2021), table 7.5
 > ## preferred way with plm()
 > data("Wages", package = "plm")
 > ht <- plm(lwage ~ wks + south + smsa + married + exp + I(exp ^ 2) + 
@@ -9599,7 +9599,7 @@ Adj. R-Squared: 0.9721
 Chisq: 19579.7 on 6 DF, p-value: < 2.22e-16
 > 
 > ## Hausman-Taylor estimator and Amemiya-MaCurdy estimator
-> ## replicate Baltagi (2005, 2013), table 7.4
+> ## replicate Baltagi (2005, 2013), table 7.4; Baltagi (2021), table 7.5
 > data("Wages", package = "plm")
 > ht <- plm(lwage ~ wks + south + smsa + married + exp + I(exp ^ 2) + 
 +               bluecol + ind + union + sex + black + ed |
@@ -9742,8 +9742,8 @@ Chisq: 6879.2 on 12 DF, p-value: < 2.22e-16
 > ##D data <- replicate(100, wlddevsmall, simplify = FALSE)
 > ##D rm(wlddevsmall)
 > ##D uniquify <- function(x, i) {
-> ##D 	x$iso3c <- paste0(x$iso3c, i)
-> ##D 	x
+> ##D   x$iso3c <- paste0(x$iso3c, i)
+> ##D   x
 > ##D }
 > ##D data <- unlist2d(Map(uniquify, data, as.list(1:100)), idcols = FALSE)
 > ##D data <- pdata.frame(data, index = c("iso3c", "year"))
@@ -14644,7 +14644,7 @@ F-statistic: 309.014 on 2 and 197 DF, p-value: < 2.22e-16
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  9.94 0.48 10.47 NA NA 
+Time elapsed:  12.14 0.54 12.79 NA NA 
 > grDevices::dev.off()
 null device 
           1 

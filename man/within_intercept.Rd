@@ -102,8 +102,7 @@ summary(mod_fe_int, vcvov = function(x) vcovHC(x, type = "sss"))
 \insertAllCited{}
 }
 \seealso{
-\code{\link[=fixef]{fixef()}} to extract the fixed effects of a
-within model.
+\code{\link[=fixef]{fixef()}} to extract the fixed effects of a within model.
 }
 \author{
 Kevin Tappe

@@ -269,7 +269,7 @@ mylm <- function(y, X, W = NULL){
 #'             random.method = "walhus"))
 #' 
 #' ## Hausman-Taylor estimator and Amemiya-MaCurdy estimator
-#' ## replicate Baltagi (2005, 2013), table 7.4
+#' ## replicate Baltagi (2005, 2013), table 7.4; Baltagi (2021), table 7.5
 #' data("Wages", package = "plm")
 #' ht <- plm(lwage ~ wks + south + smsa + married + exp + I(exp ^ 2) + 
 #'               bluecol + ind + union + sex + black + ed |
