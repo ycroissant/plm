@@ -547,206 +547,6 @@ Chisq: 542.478 on 26 DF, p-value: < 2.22e-16
 > 
 > 
 > 
-> 
-> form_re_iv2 <- lcrmrte ~ lprbarr + lprbconv + lprbpris + lavgsen + lpolpc + ldensity + lwcon + lwtuc + lwtrd + lwfir + lwser + lwmfg + lwfed + lwsta + lwloc + lpctymle + lpctmin + region + smsa + factor(year) | . -lprbarr - lpolpc + ltaxpc + lmix
-> 
-> 
-> re_iv_am <- plm(form_re_iv, data = Crime, model = "random", inst.method = "am")
-> summary(re_iv_am)
-Oneway (individual) effect Random Effect Model 
-   (Swamy-Arora's transformation)
-Instrumental variable estimation
-   (Amemiya-MaCurdy's transformation)
-
-Call:
-plm(formula = form_re_iv, data = Crime, model = "random", inst.method = "am")
-
-Balanced Panel: n = 90, T = 7, N = 630
-
-Effects:
-                  var std.dev share
-idiosyncratic 0.02227 0.14923 0.326
-individual    0.04604 0.21456 0.674
-theta: 0.7458
-
-Residuals:
-    Min.  1st Qu.   Median  3rd Qu.     Max. 
--5.03162 -0.44966  0.02556  0.52267  3.91770 
-
-Coefficients:
-                  Estimate  Std. Error  z-value  Pr(>|z|)    
-(Intercept)    -1.33632334  1.23078627  -1.0857  0.277591    
-log(prbarr)    -0.50748163  0.06389968  -7.9418 1.992e-15 ***
-log(prbconv)   -0.34533794  0.03277845 -10.5355 < 2.2e-16 ***
-log(prbpris)   -0.20890870  0.03625978  -5.7614 8.340e-09 ***
-log(avgsen)    -0.01239506  0.02713430  -0.4568  0.647812    
-log(polpc)      0.40886566  0.05070027   8.0644 7.362e-16 ***
-log(density)    0.39793218  0.05243491   7.5891 3.222e-14 ***
-log(wcon)      -0.00809298  0.03988932  -0.2029  0.839224    
-log(wtuc)       0.04333273  0.01983193   2.1850  0.028889 *  
-log(wtrd)      -0.00598336  0.04187735  -0.1429  0.886386    
-log(wfir)      -0.00455018  0.02925771  -0.1555  0.876411    
-log(wser)      -0.00021705  0.02011330  -0.0108  0.991390    
-log(wmfg)      -0.19832417  0.08110069  -2.4454  0.014469 *  
-log(wfed)      -0.14186228  0.15298059  -0.9273  0.353759    
-log(wsta)      -0.07010717  0.10510357  -0.6670  0.504753    
-log(wloc)       0.15985810  0.11853902   1.3486  0.177475    
-log(pctymle)   -0.12661034  0.12660867  -1.0000  0.317304    
-log(pctmin)     0.18750912  0.04148212   4.5202 6.177e-06 ***
-regionwest     -0.22780254  0.10080178  -2.2599  0.023827 *  
-regioncentral  -0.18398464  0.06045808  -3.0432  0.002341 ** 
-smsayes        -0.20813651  0.11197168  -1.8588  0.063051 .  
-factor(year)82  0.01352005  0.02557798   0.5286  0.597096    
-factor(year)83 -0.07835083  0.03092912  -2.5332  0.011301 *  
-factor(year)84 -0.09402494  0.03727559  -2.5224  0.011655 *  
-factor(year)85 -0.08691358  0.04985021  -1.7435  0.081247 .  
-factor(year)86 -0.06603092  0.06029136  -1.0952  0.273430    
-factor(year)87 -0.02893228  0.07079517  -0.4087  0.682777    
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Total Sum of Squares:    30.168
-Residual Sum of Squares: 558.04
-R-Squared:      0.58975
-Adj. R-Squared: 0.57206
-Chisq: 628.718 on 26 DF, p-value: < 2.22e-16
-> 
-> re_iv_bms <- plm(form_re_iv, data = Crime, model = "random", inst.method = "bms")
-> summary(re_iv_bms)
-Oneway (individual) effect Random Effect Model 
-   (Swamy-Arora's transformation)
-Instrumental variable estimation
-   (Breusch-Mizon-Schmidt's transformation)
-
-Call:
-plm(formula = form_re_iv, data = Crime, model = "random", inst.method = "bms")
-
-Balanced Panel: n = 90, T = 7, N = 630
-
-Effects:
-                  var std.dev share
-idiosyncratic 0.02227 0.14923 0.326
-individual    0.04604 0.21456 0.674
-theta: 0.7458
-
-Residuals:
-    Min.  1st Qu.   Median  3rd Qu.     Max. 
--5.03162 -0.44966  0.02556  0.52267  3.91770 
-
-Coefficients:
-                  Estimate  Std. Error  z-value  Pr(>|z|)    
-(Intercept)    -1.33632334  1.23078627  -1.0857  0.277591    
-log(prbarr)    -0.50748163  0.06389968  -7.9418 1.992e-15 ***
-log(prbconv)   -0.34533794  0.03277845 -10.5355 < 2.2e-16 ***
-log(prbpris)   -0.20890870  0.03625978  -5.7614 8.340e-09 ***
-log(avgsen)    -0.01239506  0.02713430  -0.4568  0.647812    
-log(polpc)      0.40886566  0.05070027   8.0644 7.362e-16 ***
-log(density)    0.39793218  0.05243491   7.5891 3.222e-14 ***
-log(wcon)      -0.00809298  0.03988932  -0.2029  0.839224    
-log(wtuc)       0.04333273  0.01983193   2.1850  0.028889 *  
-log(wtrd)      -0.00598336  0.04187735  -0.1429  0.886386    
-log(wfir)      -0.00455018  0.02925771  -0.1555  0.876411    
-log(wser)      -0.00021705  0.02011330  -0.0108  0.991390    
-log(wmfg)      -0.19832417  0.08110069  -2.4454  0.014469 *  
-log(wfed)      -0.14186228  0.15298059  -0.9273  0.353759    
-log(wsta)      -0.07010717  0.10510357  -0.6670  0.504753    
-log(wloc)       0.15985810  0.11853902   1.3486  0.177475    
-log(pctymle)   -0.12661034  0.12660867  -1.0000  0.317304    
-log(pctmin)     0.18750912  0.04148212   4.5202 6.177e-06 ***
-regionwest     -0.22780254  0.10080178  -2.2599  0.023827 *  
-regioncentral  -0.18398464  0.06045808  -3.0432  0.002341 ** 
-smsayes        -0.20813651  0.11197168  -1.8588  0.063051 .  
-factor(year)82  0.01352005  0.02557798   0.5286  0.597096    
-factor(year)83 -0.07835083  0.03092912  -2.5332  0.011301 *  
-factor(year)84 -0.09402494  0.03727559  -2.5224  0.011655 *  
-factor(year)85 -0.08691358  0.04985021  -1.7435  0.081247 .  
-factor(year)86 -0.06603092  0.06029136  -1.0952  0.273430    
-factor(year)87 -0.02893228  0.07079517  -0.4087  0.682777    
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Total Sum of Squares:    30.168
-Residual Sum of Squares: 558.04
-R-Squared:      0.58975
-Adj. R-Squared: 0.57206
-Chisq: 628.718 on 26 DF, p-value: < 2.22e-16
-> 
-> texreg::screenreg(list(re_iv_am, re_iv_bms))
-
-======================================
-                Model 1     Model 2   
---------------------------------------
-(Intercept)      -1.34       -1.34    
-                 (1.23)      (1.23)   
-log(prbarr)      -0.51 ***   -0.51 ***
-                 (0.06)      (0.06)   
-log(prbconv)     -0.35 ***   -0.35 ***
-                 (0.03)      (0.03)   
-log(prbpris)     -0.21 ***   -0.21 ***
-                 (0.04)      (0.04)   
-log(avgsen)      -0.01       -0.01    
-                 (0.03)      (0.03)   
-log(polpc)        0.41 ***    0.41 ***
-                 (0.05)      (0.05)   
-log(density)      0.40 ***    0.40 ***
-                 (0.05)      (0.05)   
-log(wcon)        -0.01       -0.01    
-                 (0.04)      (0.04)   
-log(wtuc)         0.04 *      0.04 *  
-                 (0.02)      (0.02)   
-log(wtrd)        -0.01       -0.01    
-                 (0.04)      (0.04)   
-log(wfir)        -0.00       -0.00    
-                 (0.03)      (0.03)   
-log(wser)        -0.00       -0.00    
-                 (0.02)      (0.02)   
-log(wmfg)        -0.20 *     -0.20 *  
-                 (0.08)      (0.08)   
-log(wfed)        -0.14       -0.14    
-                 (0.15)      (0.15)   
-log(wsta)        -0.07       -0.07    
-                 (0.11)      (0.11)   
-log(wloc)         0.16        0.16    
-                 (0.12)      (0.12)   
-log(pctymle)     -0.13       -0.13    
-                 (0.13)      (0.13)   
-log(pctmin)       0.19 ***    0.19 ***
-                 (0.04)      (0.04)   
-regionwest       -0.23 *     -0.23 *  
-                 (0.10)      (0.10)   
-regioncentral    -0.18 **    -0.18 ** 
-                 (0.06)      (0.06)   
-smsayes          -0.21       -0.21    
-                 (0.11)      (0.11)   
-factor(year)82    0.01        0.01    
-                 (0.03)      (0.03)   
-factor(year)83   -0.08 *     -0.08 *  
-                 (0.03)      (0.03)   
-factor(year)84   -0.09 *     -0.09 *  
-                 (0.04)      (0.04)   
-factor(year)85   -0.09       -0.09    
-                 (0.05)      (0.05)   
-factor(year)86   -0.07       -0.07    
-                 (0.06)      (0.06)   
-factor(year)87   -0.03       -0.03    
-                 (0.07)      (0.07)   
---------------------------------------
-s_idios           0.15        0.15    
-s_id              0.21        0.21    
-R^2               0.59        0.59    
-Adj. R^2          0.57        0.57    
-Num. obs.       630         630       
-======================================
-*** p < 0.001; ** p < 0.01; * p < 0.05
-> identical(ercomp(re_iv_am), ercomp(re_iv_bms))
-[1] TRUE
-> 
-> form_iv2 <- lcrmrte ~ lprbarr + lprbconv + lprbpris + lavgsen + lpolpc + ldensity + lwcon + lwtuc + lwtrd + lwfir + lwser + lwmfg + lwfed + lwsta + lwloc + lpctymle + lpctmin + region + smsa | . -lprbarr - lpolpc + ltaxpc + lmix
-> 
-> 
-> 
-> 
-> 
 > ## Hausman-Taylor estimator:
 > ## replicates Baltagi (2005, 2013), table 7.4; Baltagi (2021), table 7.5
 > # (chisq values in Baltagi (2021) are not those of the models but of Hausman test
@@ -755,7 +555,7 @@ Num. obs.       630         630
 > #
 > # Table 7.5 claims to replicate Baltagi/Khanti-Akom (1990), table II, but values
 > # for all models but within are largely different (even the GLS case!), making
-> # the book reproducible but not the paper.
+> # the book reproducible but not the paper (likely the paper is in error!).
 > data("Wages", package = "plm")
 > 
 > form_wage <- lwage ~ wks + south + smsa + married + exp + I(exp ^ 2) + 
@@ -842,7 +642,6 @@ Residual Sum of Squares: 82.267
 R-Squared:      0.65815
 Adj. R-Squared: 0.60026
 F-statistic: 761.751 on 9 and 3561 DF, p-value: < 2.22e-16
-> 
 > 
 > ht <- plm(form_wage_iv,
 +           data = Wages, index = 595,
@@ -991,7 +790,7 @@ R-Squared:      0.60686
 Adj. R-Squared: 0.60572
 Chisq: 6467.37 on 12 DF, p-value: < 2.22e-16
 > 
-> #texreg::screenreg(list(ht, am, bms))
+> # texreg::screenreg(list(ht, am, bms))
 > 
 > phtest(within, ht) # 5.2577 -> match Baltagi (2021), p. 175 for statistic but
 
@@ -1015,7 +814,7 @@ alternative hypothesis: one model is inconsistent
 > 
 > 
 > 
-> 
+> ### IV estimators ##
 > form_wage_iv2 <- lwage ~ wks + married + exp + I(exp ^ 2) + bluecol |
 +                    bluecol + married  |
 +                    wks + married +  exp + I(exp ^ 2)
@@ -1188,32 +987,8 @@ R-Squared:      0.3761
 Adj. R-Squared: 0.37535
 Chisq: 2499.66 on 5 DF, p-value: < 2.22e-16
 > 
-> texreg::screenreg(list("BVK" = IVbvk, "Baltagi" = IVbalt, "AM" = IVam, "BMS" = IVbms),
-+                   digits = 5)
-
-===========================================================================
-             BVK             Baltagi         AM              BMS           
----------------------------------------------------------------------------
-(Intercept)     5.39166 ***     4.71718 ***     4.72702 ***     5.38304 ***
-               (0.05231)       (0.06463)       (0.06433)       (0.05316)   
-wks             0.00111         0.00107         0.00109         0.00097    
-               (0.00077)       (0.00090)       (0.00090)       (0.00078)   
-marriedyes     -0.01396        -0.04310        -0.04267        -0.01393    
-               (0.02179)       (0.02524)       (0.02515)       (0.02179)   
-exp             0.08605 ***     0.11206 ***     0.11158 ***     0.08804 ***
-               (0.00292)       (0.00371)       (0.00369)       (0.00314)   
-exp^2          -0.00079 ***    -0.00043 ***    -0.00044 ***    -0.00084 ***
-               (0.00006)       (0.00008)       (0.00008)       (0.00007)   
-bluecolyes     -0.11180 ***    -0.11394 ***    -0.11394 ***    -0.11129 ***
-               (0.01596)       (0.01849)       (0.01842)       (0.01597)   
----------------------------------------------------------------------------
-s_idios         0.15215         0.15215         0.15215         0.15215    
-s_id            0.31509         0.31509         0.31509         0.31509    
-R^2             0.37618         0.36364         0.36382         0.37610    
-Adj. R^2        0.37543         0.36288         0.36305         0.37535    
-Num. obs.    4165            4165            4165            4165          
-===========================================================================
-*** p < 0.001; ** p < 0.01; * p < 0.05
+> # texreg::screenreg(list("BVK" = IVbvk, "Baltagi" = IVbalt, "AM" = IVam, "BMS" = IVbms),
+> #                  digits = 5)
 > 
 > 
 > IVbvkt <- plm(form_wage_iv2,
@@ -1384,32 +1159,8 @@ R-Squared:      0.26153
 Adj. R-Squared: 0.26064
 Chisq: 1445.51 on 5 DF, p-value: < 2.22e-16
 > 
-> texreg::screenreg(list("BVK t" = IVbvkt, "Baltagi t" = IVbaltt, "AM t" = IVamt, "BMS t" = IVbmst),
-+                   digits = 5)
-
-===========================================================================
-             BVK t           Baltagi t       AM t            BMS t         
----------------------------------------------------------------------------
-(Intercept)     6.01315 ***     5.99984 ***     5.99984 ***     5.99984 ***
-               (0.06097)       (0.06104)       (0.06104)       (0.06104)   
-wks             0.00363 **      0.00417 ***     0.00417 ***     0.00417 ***
-               (0.00120)       (0.00121)       (0.00121)       (0.00121)   
-marriedyes      0.31837 ***     0.32040 ***     0.32040 ***     0.32040 ***
-               (0.01612)       (0.01612)       (0.01612)       (0.01612)   
-exp             0.03688 ***     0.03593 ***     0.03593 ***     0.03593 ***
-               (0.00244)       (0.00244)       (0.00244)       (0.00244)   
-exp^2          -0.00065 ***    -0.00064 ***    -0.00064 ***    -0.00064 ***
-               (0.00005)       (0.00005)       (0.00005)       (0.00005)   
-bluecolyes     -0.32165 ***    -0.32086 ***    -0.32086 ***    -0.32086 ***
-               (0.01237)       (0.01237)       (0.01237)       (0.01237)   
----------------------------------------------------------------------------
-s_idios         0.35648         0.35648         0.35648         0.35648    
-s_time          0.00000         0.00000         0.00000         0.00000    
-R^2             0.26170         0.26153         0.26153         0.26153    
-Adj. R^2        0.26081         0.26064         0.26064         0.26064    
-Num. obs.    4165            4165            4165            4165          
-===========================================================================
-*** p < 0.001; ** p < 0.01; * p < 0.05
+> # texreg::screenreg(list("BVK t" = IVbvkt, "Baltagi t" = IVbaltt, "AM t" = IVamt, "BMS t" = IVbmst),
+> #                  digits = 5)
 > 
 > 
 > IVbvktw <- plm(form_wage_iv2,
@@ -1475,4 +1226,4 @@ Chisq: 2499.88 on 5 DF, p-value: < 2.22e-16
 > 
 > proc.time()
    user  system elapsed 
-  19.20    0.42   20.14 
+  13.68    0.25   14.26 
