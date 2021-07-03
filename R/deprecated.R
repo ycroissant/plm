@@ -221,14 +221,17 @@ lev2var <- function(x, ...){
 pht <- function(formula, data, subset, na.action, model = c("ht", "am", "bms"), index = NULL, ...){
   
   .Deprecated(old = "pht",
-              msg = "uses of 'pht()' and 'plm(., model = \"ht\"/\"am\"/\"bms\")' are discouraged, better use 'plm(., model =\"random\", random.method = \"ht\", inst.method = \"baltagi\"/\"am\"/\"bms\")'")
+              msg = paste0("uses of 'pht()' and 'plm(., model = \"ht\")' are discouraged, ",
+                           "better use 'plm(., model = \"random\", random.method = \"ht\", ",
+                           "inst.method = \"baltagi\"/\"am\"/\"bms\")' for Hausman-Taylor, ",
+                           "Amemiya-MaCurdy, and Breusch-Mizon-Schmidt estimator"))
   
   cl <- match.call(expand.dots = TRUE)
   mf <- match.call()
   
   if (length(model) == 1L && model == "bmc") {
     # catch "bmc" (a long-standing typo) for Breusch-Mizon-Schmidt due to backward compatibility
-  	# error since 2020-12-31 (R-Forge), was a warning before
+  	# error since 2020-12-31 (R-Forge) / 2021-01-23 (CRAN), was a warning before
   	# remove catch at some point in the future
     model <- "bms"
     stop("Use of model = \"bmc\" disallowed, set to \"bms\" for Breusch-Mizon-Schmidt instrumental variable transformation")
@@ -297,28 +300,30 @@ pht <- function(formula, data, subset, na.action, model = c("ht", "am", "bms"), 
     theta <- 1 - sqrt(sigma2$idios / (sigma2$idios + Ti * sigma2$id))
     theta <- theta[as.character(id)]
   }
+  
   estec <- structure(list(sigma2 = sigma2, theta = theta),
                      class = "ercomp",
                      balanced = balanced,
                      effect = "individual")
+  
   y <- pmodel.response(data, model = "random", effect = "individual", theta = theta)
   X <- model.matrix(data, model = "random", effect = "individual", theta = theta)
   within.inst <- model.matrix(data, model = "within")
   
   if (model == "ht"){
     between.inst <- model.matrix(data, model = "Between",
-                                 rhs = 2)[, exo.var, drop = FALSE]
+                                 rhs = 2)[ , exo.var, drop = FALSE]
     W <- cbind(within.inst, XC, between.inst)
   }
   if (model == "am"){
     Vx <- model.matrix(data, model = "pooling",
-                       rhs = 2)[, exo.var, drop = FALSE]
+                       rhs = 2)[ , exo.var, drop = FALSE]
     if (balanced){
       # Plus rapide mais pas robuste au non cylindre
       Vxstar <- Reduce("cbind",
                        lapply(seq_len(ncol(Vx)),
                               function(x)
-                                matrix(Vx[, x], ncol = T, byrow = TRUE)[rep(1:n, each = T), ]))
+                                matrix(Vx[ , x], ncol = T, byrow = TRUE)[rep(1:n, each = T), ]))
     }
     else{
       Xs <- lapply(seq_len(ncol(Vx)), function(x)
@@ -331,14 +336,14 @@ pht <- function(formula, data, subset, na.action, model = c("ht", "am", "bms"), 
   }
   if (model == "bms"){
     between.inst <- model.matrix(data, model = "Between",
-                                 rhs = 2)[, exo.var, drop = FALSE]
+                                 rhs = 2)[ , exo.var, drop = FALSE]
     Vx <- within.inst
     if (balanced){
       # Plus rapide mais pas robuste au non cylindre
       Vxstar <- Reduce("cbind",
                        lapply(seq_len(ncol(Vx)),
                               function(x)
-                                matrix(Vx[, x], ncol = T, byrow = TRUE)[rep(1:n, each = T), ]))
+                                matrix(Vx[ , x], ncol = T, byrow = TRUE)[rep(1:n, each = T), ]))
     }
     else{
       Xs <- lapply(seq_len(ncol(Vx)), function(x)
@@ -401,18 +406,18 @@ print.summary.pht <- function(x, digits = max(3, getOption("digits") - 2),
   effect <- describe(x, "effect")
   model <- describe(x, "model")
   ht.method <- describe(x, "ht.method")
-  cat(paste(effect.plm.list[effect]," ", sep=""))
-  cat(paste(model.plm.list[model]," Model", sep=""),"\n")
-  cat(paste("(", ht.method.list[ht.method],")", sep=""),"\n")
+  cat(paste(effect.plm.list[effect]," ", sep = ""))
+  cat(paste(model.plm.list[model]," Model", sep = ""), "\n")
+  cat(paste("(", ht.method.list[ht.method], ")", sep = ""), "\n")
   
   cat("\nCall:\n")
   print(x$call)
   
   #    cat("\nTime-Varying Variables: ")
-  names.xv <- paste(x$varlist$xv,collapse=", ")
-  names.nv <- paste(x$varlist$nv,collapse=", ")
-  names.xc <- paste(x$varlist$xc,collapse=", ")
-  names.nc <- paste(x$varlist$nc,collapse=", ")
+  names.xv <- paste(x$varlist$xv, collapse=", ")
+  names.nv <- paste(x$varlist$nv, collapse=", ")
+  names.xc <- paste(x$varlist$xc, collapse=", ")
+  names.nc <- paste(x$varlist$nc, collapse=", ")
   cat(paste("\nT.V. exo  : ", names.xv,"\n", sep = ""))
   cat(paste("T.V. endo : ",   names.nv,"\n", sep = ""))
   #    cat("Time-Invariant Variables: ")
@@ -442,9 +447,9 @@ print.summary.pht <- function(x, digits = max(3, getOption("digits") - 2),
               " DF, p-value: ",format.pval(fstat$p.value,digits=digits),"\n",sep=""))
   }
   else{
-    cat(paste("Chisq: ",signif(fstat$statistic),
-              " on ",fstat$parameter,
-              " DF, p-value: ",format.pval(fstat$p.value,digits=digits),"\n",sep=""))
+    cat(paste("Chisq: ", signif(fstat$statistic),
+              " on ", fstat$parameter,
+              " DF, p-value: ", format.pval(fstat$p.value,digits=digits), "\n", sep=""))
     
   }
   invisible(x)
@@ -531,7 +536,7 @@ write.lags <- function(name, lags, diff){
 #' @export
 dynformula <- function(formula, lag.form = NULL, diff.form = NULL, log.form = NULL) {
     
-    .Deprecated(msg = "use of 'dynformula' is deprecated, use a multi-part formula instead",
+    .Deprecated(msg = "use of 'dynformula()' is deprecated, use a multi-part formula instead",
                 old = "dynformula")
 
     # for backward compatibility, accept a list argument and coerce it
