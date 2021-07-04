@@ -1853,9 +1853,12 @@ HC3 and HC4 weighting schemes are computationally expensive and may
 hit memory limits for $nT$ in the thousands, where on the other hand
 it makes little sense to apply small sample corrections.].
 
-The main use of `vcovHC` is together with testing functions from the
-`lmtest` and `car` packages. These typically allow passing the `vcov`
-parameter either as a matrix or as a function (see @ZEIL:04). If one
+The main use of `vcovHC` (and the other variance-covariance estimators provided
+in the package `vcovBK`, `vcovNW`, `vcovDC`, `vcovSCC`) is to pass it to plm's
+own functions like `summary`, `pwaldtest`, and `phtest` or together with testing
+functions from the `lmtest` and `car` packages. All of these typically allow
+passing the `vcov` or `vcov.` parameter either as a matrix or as a function 
+(see also @ZEIL:04). If one
 is happy with the defaults, it is easiest to pass the function
 itself^[For `coeftest` set `df = Inf` to have the coefficients' tests
 be performed with standard normal distribution instead of t
@@ -1864,16 +1867,18 @@ types of models, the precise distribution of the coefficients
 estimates is unknown]:
 
 ```{r }
+re <- plm(inv~value+capital, data = Grunfeld, model = "random")
+summary(re, vcov = vcovHC) # gives usual summary output but with robust test statistics
+
 library("lmtest")
-re <- plm(inv~value+capital, data=Grunfeld, model="random")
 coeftest(re, vcovHC, df = Inf)
 ```
 
 
-else one may do the covariance computation inside the call to
-`coeftest`, thus passing on a matrix:
+else one may do the covariance computation inside the call, thus passing on a matrix:
 
 ```{r results='hide'}
+summary(re, vcov = vcovHC(re, method="white2", type="HC3"), df = Inf)
 coeftest(re, vcovHC(re, method="white2", type="HC3"), df = Inf)
 ``` 
 
@@ -1893,11 +1898,11 @@ for linear restrictions:
 
 ```{r }
 library("car")
-linearHypothesis(re, "2*value=capital", vcov.=vcovHC)
+linearHypothesis(re, "2*value=capital", vcov. = vcovHC)
 ```
 
-A specific `vcovHC` method for `pgmm` objects is also
-provided which implements the robust covariance matrix proposed by
+A specific methods are also provided for `pcce` and `pgmm` objects, for the latter
+`vcovHC` provides the robust covariance matrix proposed by
 @WIND:05 for generalized method of moments estimators.
 
 

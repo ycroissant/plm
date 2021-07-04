@@ -28,8 +28,10 @@
    (integer or NULL) aligned with and correctly passed on to 
    has.intercept.Formula (with a *temporary* back-compatible solution).
 
- * Vignettes: Added formula for nested error component model (2nd vignette),
-   fixed a few typos.
+ * Vignettes:
+    * 1st vignette: added a little more information on the use of vcoVXX.
+    * 2nd vignette: Added formula for nested error component model.
+    * all: fixed a few typos.
    
 
 # plm 2.4-1
