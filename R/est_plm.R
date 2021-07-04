@@ -436,7 +436,7 @@ plm.fit <- function(data, model, effect, random.method,
                         models = random.models, dfcor = random.dfcor)
         sigma2 <- estec$sigma2
         theta <- estec$theta
-        if (length(formula)[2L] == 2L && effect == "twoways")
+        if (length(formula)[2L] >1L && effect == "twoways")
             stop(paste("Instrumental variable random effect estimation",
                        "not implemented for two-ways panels"))
     }
