@@ -73,6 +73,7 @@ cor(plm:::fitted_exp.plm(re_iv_bvk2), re_iv_bvk2$model[ , 1])^2 # overall R^2 as
 # for all models but within are largely different (even the GLS case!), making
 # the book reproducible but not the paper (likely the paper is in error!).
 data("Wages", package = "plm")
+pWages <- pdata.frame(Wages, index = 595)
 
 form_wage <- lwage ~ wks + south + smsa + married + exp + I(exp ^ 2) + 
   bluecol + ind + union + sex + black + ed
@@ -82,24 +83,24 @@ form_wage_iv <- lwage ~ wks + south + smsa + married + exp + I(exp ^ 2) +
   bluecol + south + smsa + ind + sex + black |
   wks + married + union + exp + I(exp ^ 2)
 
-gls <- plm(form_wage, data = Wages, index = 595, model = "random")
+gls <- plm(form_wage, data = pWages, model = "random")
 summary(gls)
 
-within <- plm(form_wage, data = Wages, index = 595, model = "within")
+within <- plm(form_wage, data = pWages, model = "within")
 summary(within)
 
 ht <- plm(form_wage_iv,
-          data = Wages, index = 595,
+          data = pWages,
           random.method = "ht", model = "random", inst.method = "baltagi")
 summary(ht)
 
 am <- plm(form_wage_iv, 
-          data = Wages, index = 595,
+          data = pWages,
           random.method = "ht", model = "random", inst.method = "am")
 summary(am)
 
 bms <- plm(form_wage_iv,
-          data = Wages, index = 595,
+          data = pWages,
           random.method = "ht", model = "random", inst.method = "bms")
 summary(bms)
 
@@ -115,50 +116,81 @@ phtest(ht, am) # 14.66 -> close to Baltagi's 17.74 (df = 12 vs. 13)
 
 ### IV estimators ##
 form_wage_iv2 <- lwage ~ wks + married + exp + I(exp ^ 2) + bluecol |
-                   bluecol + married  |
+                   wks + exp + bluecol |
                    wks + married +  exp + I(exp ^ 2)
 
+## balanced one-way individual
 IVbvk <- plm(form_wage_iv2,
-          data = Wages, index = 595,
+          data = pWages,
           model = "random", inst.method = "bvk")
 summary(IVbvk)
 
 IVbalt <- plm(form_wage_iv2,
-          data = Wages, index = 595,
+          data = pWages,
           model = "random", inst.method = "baltagi")
 summary(IVbalt)
 
 IVam <- plm(form_wage_iv2, 
-          data = Wages, index = 595,
+          data = pWages,
           model = "random", inst.method = "am")
 summary(IVam)
 
 IVbms <- plm(form_wage_iv2,
-           data = Wages, index = 595,
+           data = pWages,
            model = "random", inst.method = "bms")
 summary(IVbms)
 
 # texreg::screenreg(list("BVK" = IVbvk, "Baltagi" = IVbalt, "AM" = IVam, "BMS" = IVbms),
 #                  digits = 5)
 
+## unbalanced one-way individual
 
+pWages_ubal <- pWages[-c(2:7, 79:82, 500:505), ]
+pdim(pWages_ubal)
+IVbvk_ubal <- plm(form_wage_iv2,
+             data = pWages_ubal,
+             model = "random", inst.method = "bvk")
+summary(IVbvk_ubal)
+
+IVbalt_ubal <- plm(form_wage_iv2,
+              data = pWages_ubal,
+              model = "random", inst.method = "baltagi")
+summary(IVbalt_ubal)
+
+IVam_ubal <- plm(form_wage_iv2, 
+            data = pWages_ubal,
+            model = "random", inst.method = "am")
+summary(IVam_ubal)
+
+IVbms_ubal <- plm(form_wage_iv2,
+             data = pWages_ubal,
+             model = "random", inst.method = "bms")
+summary(IVbms_ubal)
+
+# texreg::screenreg(list("BVK ui" = IVbvk_ubal, "Baltagi ui" = IVbalt_ubal, "AM ui" = IVam_ubal, "BMS ui" = IVbms_ubal),
+#                  digits = 5)
+
+
+## balanced one-way time
+# gives identical results for "am" and "bms" results are identical to "baltagi",
+# likely because  function StarX is not symmetric in effect
 IVbvkt <- plm(form_wage_iv2,
-             data = Wages, index = 595,
+             data = pWages,
              model = "random", inst.method = "bvk", effect = "time")
 summary(IVbvkt)
 
 IVbaltt <- plm(form_wage_iv2,
-              data = Wages, index = 595,
+              data = pWages,
               model = "random", inst.method = "baltagi", effect = "time")
 summary(IVbaltt)
 
 IVamt <- plm(form_wage_iv2, 
-            data = Wages, index = 595,
+            data = pWages,
             model = "random", inst.method = "am", effect = "time")
 summary(IVamt)
 
 IVbmst <- plm(form_wage_iv2,
-             data = Wages, index = 595,
+             data = pWages,
              model = "random", inst.method = "bms", effect = "time")
 summary(IVbmst)
 
@@ -167,22 +199,22 @@ summary(IVbmst)
 
 
 IVbvktw <- plm(form_wage_iv2,
-              data = Wages, index = 595,
+              data = pWages,
               model = "random", inst.method = "bvk", effect = "twoways")
 summary(IVbvktw)
 
 # IVbalttw <- plm(form_wage_iv2,
-#                data = Wages, index = 595,
+#                data = pWages,
 #                model = "random", inst.method = "baltagi", effect = "twoways")
 # summary(IVbalttw)
 # 
 # IVamtw <- plm(form_wage_iv2,
-#              data = Wages, index = 595,
+#              data = pWages,
 #              model = "random", inst.method = "am", effect = "twoways")
 # summary(IVamtw)
 # 
 # IVbmstw <- plm(form_wage_iv2,
-#               data = Wages, index = 595,
+#               data = pWages,
 #               model = "random", inst.method = "bms", effect = "twoways")
 # summary(IVbmstw)
 # 

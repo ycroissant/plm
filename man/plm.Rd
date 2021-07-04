@@ -242,6 +242,9 @@ The Hausman--Taylor estimator \insertCite{HAUS:TAYL:81}{plm} is
 computed with arguments \code{random.method = "ht"}, \code{model = "random"},
 \code{inst.method = "baltagi"} (the other way with only \code{model = "ht"}
 is deprecated).
+
+See also the vignettes for introductions to model estimations (and more) with
+examples.
 }
 \examples{
 
