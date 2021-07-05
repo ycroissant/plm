@@ -522,6 +522,8 @@ examples. It is loaded using
 
 ```{r echo=FALSE,results='hide'}
 options(prompt= "R> ", useFancyQuotes = FALSE, scipen = 999)
+library("knitr")
+opts_chunk$set(message = FALSE, warning = FALSE)
 ```
 
 ```{r echo=TRUE, results='hide'}

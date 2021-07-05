@@ -11,6 +11,11 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+```{r setup, echo=FALSE}
+library("knitr")
+opts_chunk$set(message = FALSE, warning = FALSE)
+```
+
 plm tries to follow as close as possible the way models are fitted
 using `lm`. This relies on the following steps, using the
 `formula`-`data` with some modifications:
