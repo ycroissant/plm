@@ -1180,10 +1180,10 @@ Chisq: 2473.49 on 5 DF, p-value: < 2.22e-16
 > ## balanced one-way time
 > # gives identical results for "am" and "bms" results are identical to "baltagi",
 > # likely because  function StarX is not symmetric in effect
-> IVbvkt <- plm(form_wage_iv2,
+> IVbvk_t <- plm(form_wage_iv2,
 +              data = pWages,
 +              model = "random", inst.method = "bvk", effect = "time")
-> summary(IVbvkt)
+> summary(IVbvk_t)
 Oneway (time) effect Random Effect Model 
    (Swamy-Arora's transformation)
 Instrumental variable estimation
@@ -1222,10 +1222,10 @@ R-Squared:      0.2617
 Adj. R-Squared: 0.26081
 Chisq: 1474.21 on 5 DF, p-value: < 2.22e-16
 > 
-> IVbaltt <- plm(form_wage_iv2,
+> IVbalt_t <- plm(form_wage_iv2,
 +               data = pWages,
 +               model = "random", inst.method = "baltagi", effect = "time")
-> summary(IVbaltt)
+> summary(IVbalt_t)
 Oneway (time) effect Random Effect Model 
    (Swamy-Arora's transformation)
 Instrumental variable estimation
@@ -1264,10 +1264,10 @@ R-Squared:      0.2617
 Adj. R-Squared: 0.26081
 Chisq: 1474.19 on 5 DF, p-value: < 2.22e-16
 > 
-> IVamt <- plm(form_wage_iv2, 
+> IVam_t <- plm(form_wage_iv2, 
 +             data = pWages,
 +             model = "random", inst.method = "am", effect = "time")
-> summary(IVamt)
+> summary(IVam_t)
 Oneway (time) effect Random Effect Model 
    (Swamy-Arora's transformation)
 Instrumental variable estimation
@@ -1306,10 +1306,10 @@ R-Squared:      0.2617
 Adj. R-Squared: 0.26081
 Chisq: 1474.19 on 5 DF, p-value: < 2.22e-16
 > 
-> IVbmst <- plm(form_wage_iv2,
+> IVbms_t <- plm(form_wage_iv2,
 +              data = pWages,
 +              model = "random", inst.method = "bms", effect = "time")
-> summary(IVbmst)
+> summary(IVbms_t)
 Oneway (time) effect Random Effect Model 
    (Swamy-Arora's transformation)
 Instrumental variable estimation
@@ -1348,53 +1348,196 @@ R-Squared:      0.2617
 Adj. R-Squared: 0.26081
 Chisq: 1474.19 on 5 DF, p-value: < 2.22e-16
 > 
-> # texreg::screenreg(list("BVK t" = IVbvkt, "Baltagi t" = IVbaltt, "AM t" = IVamt, "BMS t" = IVbmst),
+> # texreg::screenreg(list("BVK t" = IVbvk_t, "Baltagi t" = IVbalt_t, "AM t" = IVam_t, "BMS t" = IVbms_t),
 > #                  digits = 5)
 > 
-> 
-> IVbvktw <- plm(form_wage_iv2,
-+               data = pWages,
-+               model = "random", inst.method = "bvk", effect = "twoways")
-> summary(IVbvktw)
-Twoways effects Random Effect Model 
+> ## unbalanced one-way time
+> IVbvk_t_ubal <- plm(form_wage_iv2,
++               data = pWages_ubal,
++               model = "random", inst.method = "bvk", effect = "time")
+> summary(IVbvk_t_ubal)
+Oneway (time) effect Random Effect Model 
    (Swamy-Arora's transformation)
 Instrumental variable estimation
    (Balestra-Varadharajan-Krishnakumar's transformation)
 
 Call:
-plm(formula = form_wage_iv2, data = pWages, effect = "twoways", 
+plm(formula = form_wage_iv2, data = pWages_ubal, effect = "time", 
     model = "random", inst.method = "bvk")
 
-Balanced Panel: n = 595, T = 7, N = 4165
+Unbalanced Panel: n = 595, T = 1-7, N = 4149
 
 Effects:
-                    var   std.dev share
-idiosyncratic 2.297e-02 1.515e-01 0.188
-individual    9.931e-02 3.151e-01 0.812
-time          2.742e-07 5.236e-04 0.000
-theta: 0.8212 (id) 0.003533 (time) 0.003512 (total)
+                 var std.dev share
+idiosyncratic 0.1267  0.3559     1
+time          0.0000  0.0000     0
+theta:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      0       0       0       0       0       0 
 
 Residuals:
       Min.    1st Qu.     Median    3rd Qu.       Max. 
--1.9664994 -0.1176333  0.0089811  0.1188984  2.0929466 
+-1.9960628 -0.2575742 -0.0060508  0.2675715  2.1579866 
 
 Coefficients:
-               Estimate  Std. Error  z-value  Pr(>|z|)    
-(Intercept)  5.39197508  0.05228723 103.1222 < 2.2e-16 ***
-wks          0.00110886  0.00077076   1.4387    0.1502    
-marriedyes  -0.01410474  0.02176766  -0.6480    0.5170    
-exp          0.08597041  0.00291755  29.4666 < 2.2e-16 ***
-I(exp^2)    -0.00078935  0.00006445 -12.2474 < 2.2e-16 ***
-bluecolyes  -0.11120440  0.01594588  -6.9739 3.084e-12 ***
+               Estimate  Std. Error  z-value Pr(>|z|)    
+(Intercept)  6.0335e+00  6.1226e-02  98.5444   <2e-16 ***
+wks          3.3238e-03  1.2072e-03   2.7533   0.0059 ** 
+marriedyes   3.2084e-01  1.6130e-02  19.8905   <2e-16 ***
+exp          3.6349e-02  2.4441e-03  14.8720   <2e-16 ***
+I(exp^2)    -6.3990e-04  5.3793e-05 -11.8954   <2e-16 ***
+bluecolyes  -3.2373e-01  1.2389e-02 -26.1299   <2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Total Sum of Squares:    260.21
-Residual Sum of Squares: 162.52
-R-Squared:      0.37542
-Adj. R-Squared: 0.37467
-Chisq: 2499.88 on 5 DF, p-value: < 2.22e-16
+Total Sum of Squares:    883.99
+Residual Sum of Squares: 652.02
+R-Squared:      0.26241
+Adj. R-Squared: 0.26152
+Chisq: 1473.97 on 5 DF, p-value: < 2.22e-16
 > 
+> IVbalt_t_ubal <- plm(form_wage_iv2,
++                data = pWages_ubal,
++                model = "random", inst.method = "baltagi", effect = "time")
+> summary(IVbalt_t_ubal)
+Oneway (time) effect Random Effect Model 
+   (Swamy-Arora's transformation)
+Instrumental variable estimation
+   (Baltagi's transformation)
+
+Call:
+plm(formula = form_wage_iv2, data = pWages_ubal, effect = "time", 
+    model = "random", inst.method = "baltagi")
+
+Unbalanced Panel: n = 595, T = 1-7, N = 4149
+
+Effects:
+                 var std.dev share
+idiosyncratic 0.1267  0.3559     1
+time          0.0000  0.0000     0
+theta:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      0       0       0       0       0       0 
+
+Residuals:
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-5.608286 -0.723549 -0.016968  0.751478  6.062804 
+
+Coefficients:
+               Estimate  Std. Error  z-value  Pr(>|z|)    
+(Intercept)  6.0336e+00  6.1226e-02  98.5463 < 2.2e-16 ***
+wks          3.3236e-03  1.2072e-03   2.7532  0.005902 ** 
+marriedyes   3.2096e-01  1.6130e-02  19.8980 < 2.2e-16 ***
+exp          3.6323e-02  2.4442e-03  14.8609 < 2.2e-16 ***
+I(exp^2)    -6.3932e-04  5.3795e-05 -11.8844 < 2.2e-16 ***
+bluecolyes  -3.2374e-01  1.2389e-02 -26.1307 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    883.99
+Residual Sum of Squares: 5147.1
+R-Squared:      0.26241
+Adj. R-Squared: 0.26152
+Chisq: 1473.99 on 5 DF, p-value: < 2.22e-16
+> 
+> IVam_t_ubal <- plm(form_wage_iv2, 
++              data = pWages_ubal,
++              model = "random", inst.method = "am", effect = "time")
+> summary(IVam_t_ubal)
+Oneway (time) effect Random Effect Model 
+   (Swamy-Arora's transformation)
+Instrumental variable estimation
+   (Amemiya-MaCurdy's transformation)
+
+Call:
+plm(formula = form_wage_iv2, data = pWages_ubal, effect = "time", 
+    model = "random", inst.method = "am")
+
+Unbalanced Panel: n = 595, T = 1-7, N = 4149
+
+Effects:
+                 var std.dev share
+idiosyncratic 0.1267  0.3559     1
+time          0.0000  0.0000     0
+theta:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      0       0       0       0       0       0 
+
+Residuals:
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-5.608287 -0.723547 -0.016967  0.751478  6.062799 
+
+Coefficients:
+               Estimate  Std. Error  z-value  Pr(>|z|)    
+(Intercept)  6.0336e+00  6.1226e-02  98.5463 < 2.2e-16 ***
+wks          3.3236e-03  1.2072e-03   2.7532  0.005902 ** 
+marriedyes   3.2096e-01  1.6130e-02  19.8980 < 2.2e-16 ***
+exp          3.6323e-02  2.4442e-03  14.8607 < 2.2e-16 ***
+I(exp^2)    -6.3931e-04  5.3795e-05 -11.8842 < 2.2e-16 ***
+bluecolyes  -3.2374e-01  1.2389e-02 -26.1307 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    883.99
+Residual Sum of Squares: 5147.1
+R-Squared:      0.26241
+Adj. R-Squared: 0.26152
+Chisq: 1473.99 on 5 DF, p-value: < 2.22e-16
+> 
+> IVbms_t_ubal <- plm(form_wage_iv2,
++               data = pWages_ubal,
++               model = "random", inst.method = "bms", effect = "time")
+> summary(IVbms_t_ubal)
+Oneway (time) effect Random Effect Model 
+   (Swamy-Arora's transformation)
+Instrumental variable estimation
+   (Breusch-Mizon-Schmidt's transformation)
+
+Call:
+plm(formula = form_wage_iv2, data = pWages_ubal, effect = "time", 
+    model = "random", inst.method = "bms")
+
+Unbalanced Panel: n = 595, T = 1-7, N = 4149
+
+Effects:
+                 var std.dev share
+idiosyncratic 0.1267  0.3559     1
+time          0.0000  0.0000     0
+theta:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      0       0       0       0       0       0 
+
+Residuals:
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-5.608281 -0.723591 -0.017027  0.751556  6.062881 
+
+Coefficients:
+               Estimate  Std. Error  z-value  Pr(>|z|)    
+(Intercept)  6.0335e+00  6.1226e-02  98.5452 < 2.2e-16 ***
+wks          3.3233e-03  1.2072e-03   2.7529  0.005907 ** 
+marriedyes   3.2099e-01  1.6130e-02  19.8997 < 2.2e-16 ***
+exp          3.6332e-02  2.4442e-03  14.8648 < 2.2e-16 ***
+I(exp^2)    -6.3952e-04  5.3794e-05 -11.8884 < 2.2e-16 ***
+bluecolyes  -3.2374e-01  1.2389e-02 -26.1307 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    883.99
+Residual Sum of Squares: 5147.1
+R-Squared:      0.26241
+Adj. R-Squared: 0.26152
+Chisq: 1474.18 on 5 DF, p-value: < 2.22e-16
+> 
+> # texreg::screenreg(list("BVK tu" = IVbvk_t_ubal, "Baltagi tu" = IVbalt_t_ubal, "AM tu" = IVam_t_ubal, "BMS tu" = IVbms_t_ubal),
+> #                  digits = 5)
+> 
+> 
+> ### twoway RE estimation: currently prevented (error informatively)
+> # IVbvktw <- plm(form_wage_iv2,
+> #               data = pWages,
+> #               model = "random", inst.method = "bvk", effect = "twoways")
+> # summary(IVbvktw)
+> #
 > # IVbalttw <- plm(form_wage_iv2,
 > #                data = pWages,
 > #                model = "random", inst.method = "baltagi", effect = "twoways")
@@ -1415,4 +1558,4 @@ Chisq: 2499.88 on 5 DF, p-value: < 2.22e-16
 > 
 > proc.time()
    user  system elapsed 
-   8.65    0.17    8.85 
+  10.45    0.18   10.65 

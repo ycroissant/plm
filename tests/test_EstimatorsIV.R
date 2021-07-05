@@ -174,35 +174,60 @@ summary(IVbms_ubal)
 ## balanced one-way time
 # gives identical results for "am" and "bms" results are identical to "baltagi",
 # likely because  function StarX is not symmetric in effect
-IVbvkt <- plm(form_wage_iv2,
+IVbvk_t <- plm(form_wage_iv2,
              data = pWages,
              model = "random", inst.method = "bvk", effect = "time")
-summary(IVbvkt)
+summary(IVbvk_t)
 
-IVbaltt <- plm(form_wage_iv2,
+IVbalt_t <- plm(form_wage_iv2,
               data = pWages,
               model = "random", inst.method = "baltagi", effect = "time")
-summary(IVbaltt)
+summary(IVbalt_t)
 
-IVamt <- plm(form_wage_iv2, 
+IVam_t <- plm(form_wage_iv2, 
             data = pWages,
             model = "random", inst.method = "am", effect = "time")
-summary(IVamt)
+summary(IVam_t)
 
-IVbmst <- plm(form_wage_iv2,
+IVbms_t <- plm(form_wage_iv2,
              data = pWages,
              model = "random", inst.method = "bms", effect = "time")
-summary(IVbmst)
+summary(IVbms_t)
 
-# texreg::screenreg(list("BVK t" = IVbvkt, "Baltagi t" = IVbaltt, "AM t" = IVamt, "BMS t" = IVbmst),
+# texreg::screenreg(list("BVK t" = IVbvk_t, "Baltagi t" = IVbalt_t, "AM t" = IVam_t, "BMS t" = IVbms_t),
+#                  digits = 5)
+
+## unbalanced one-way time
+IVbvk_t_ubal <- plm(form_wage_iv2,
+              data = pWages_ubal,
+              model = "random", inst.method = "bvk", effect = "time")
+summary(IVbvk_t_ubal)
+
+IVbalt_t_ubal <- plm(form_wage_iv2,
+               data = pWages_ubal,
+               model = "random", inst.method = "baltagi", effect = "time")
+summary(IVbalt_t_ubal)
+
+IVam_t_ubal <- plm(form_wage_iv2, 
+             data = pWages_ubal,
+             model = "random", inst.method = "am", effect = "time")
+summary(IVam_t_ubal)
+
+IVbms_t_ubal <- plm(form_wage_iv2,
+              data = pWages_ubal,
+              model = "random", inst.method = "bms", effect = "time")
+summary(IVbms_t_ubal)
+
+# texreg::screenreg(list("BVK tu" = IVbvk_t_ubal, "Baltagi tu" = IVbalt_t_ubal, "AM tu" = IVam_t_ubal, "BMS tu" = IVbms_t_ubal),
 #                  digits = 5)
 
 
-IVbvktw <- plm(form_wage_iv2,
-              data = pWages,
-              model = "random", inst.method = "bvk", effect = "twoways")
-summary(IVbvktw)
-
+### twoway RE estimation: currently prevented (error informatively)
+# IVbvktw <- plm(form_wage_iv2,
+#               data = pWages,
+#               model = "random", inst.method = "bvk", effect = "twoways")
+# summary(IVbvktw)
+#
 # IVbalttw <- plm(form_wage_iv2,
 #                data = pWages,
 #                model = "random", inst.method = "baltagi", effect = "twoways")
