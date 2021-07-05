@@ -163,8 +163,8 @@ ercomp.formula <- function(object, data,
         } else {
           # Nerlove unbalances as in Cottrell (2017), gretl working paper #4
           # -> use weighting
-          # (albeit the formula for unbalanced panels reduce to the original
-          # Nerlove for balanced data, we keep it separated)
+          # (albeit the formula for unbalanced panels reduces to original
+          # Nerlove formula for balanced data, we keep it separated)
           if (effect != "time")
             s2eta <- sum( (fixef(est, type = "dmean", effect = "individual"))^2 * 
                            pdim$Tint$Ti / pdim$nT$N) * (pdim$nT$n/(pdim$nT$n-1))
@@ -254,9 +254,9 @@ ercomp.formula <- function(object, data,
         if (models[1L] %in% c("Between", "between"))
             stop("the between estimator is only relevant for the between quadratic form")
         # if the argument is of length 2, duplicate the second value
-        if (length(models) == 2) models <- c(models[1L], rep(models[2L], 2L))
+        if (length(models) == 2L) models <- c(models[1L], rep(models[2L], 2L))
         # if the argument is of length 1, triple its value
-        if (length(models) == 1) models <- c(rep(models, 3L))
+        if (length(models) == 1L) models <- c(rep(models, 3L))
         # set one of the last two values to NA in the case of one way
         # model
         if (effect == "individual") models[3L] <- NA
@@ -320,8 +320,6 @@ ercomp.formula <- function(object, data,
             CPZBlambdaSeta     <- crossprod(Between.Z.group, ZSeta)
             
             CPZM.CPZBetaBlambda <- crossprod(CPZM, CPZBetaBlambda)
-            CPZM.CPZBlambda     <- crossprod(CPZM, CPZBlambda)
-            CPZM.CPZSeta        <- crossprod(CPZM, CPZSeta)
             CPZM.CPZBlambda     <- crossprod(CPZM, CPZBlambda)
             
             M["w", "nu"]      <- O - N - trace(CPZM.CPZW)
@@ -718,7 +716,7 @@ amemiya_check <- function(matA, matB, method) {
   ## within variation (individual or time), the model is not estimable
   if (NROW(matA) < NCOL(matB) && method == "amemiya" ) {
     offending_vars <- setdiff(colnames(matB), rownames(matA))
-    offending_vars <- if (length(offending_vars) > 3) {
+    offending_vars <- if (length(offending_vars) > 3L) {
       paste0(paste(offending_vars[1:3], collapse = ", "), ", ...") 
       } else { 
         paste(offending_vars, collapse = ", ")
