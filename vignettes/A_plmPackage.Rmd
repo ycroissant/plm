@@ -70,8 +70,8 @@ two-dimensional data, especially in the case of unbalanced panels.
 This paper is organized as follows: Section [linear panel model](#linear-panel-model)
 presents a very short overview of the typical model
 taxonomy^[Comprehensive treatments are to be found in many econometrics textbooks,
-e.g., @BALT:05, @BALT:13 or @WOOL:02, @WOOL:10: the reader is referred to
-these, especially to the first 9 chapters of @BALT:05, @BALT:13.].
+e.g., @BALT:05, @BALT:13, @BALT:21 or @WOOL:02, @WOOL:10: the reader is referred to
+these, especially to the first 9 chapters of @BALT:05, @BALT:13, @BALT:21.].
 Section [software approach](#software-approach) discusses the
 software approach used in the package. The next three sections present
 the functionalities of the package in more detail: data management
@@ -521,10 +521,10 @@ The package is now illustrated by application to some well-known
 examples. It is loaded using
 
 ```{r echo=FALSE,results='hide'}
-options(prompt= "R> ", useFancyQuotes = FALSE)
+options(prompt= "R> ", useFancyQuotes = FALSE, scipen = 999)
 ```
 
-```{r echo=TRUE,results='hide'}
+```{r echo=TRUE, results='hide'}
 library("plm")
 ``` 
 
@@ -643,7 +643,7 @@ The `Formula` package provides a class which enables to construct
 multi-part formula, each part being separated by a pipe sign (`|`).
 
 The two formulas below are identical:
-```{r }
+```
 emp ~ wage + capital | lag(wage,1) + capital
 emp ~ wage + capital | . -wage + lag(wage,1)
 ``` 
@@ -726,6 +726,8 @@ value of the argument `random.method`:
 - `"walhus"`: from @WALL:HUSS:69,
 - `"amemiya"`: from @AMEM:71,
 - `"nerlove"`: from @NERLO:71.
+- `"ht"`: for Hausman-Taylor-type instrumental variable (IV) estimation,
+discussed later, see Section [Instrumental variable estimator](#instrumental-variable-est).
 
 For example, to use the `amemiya` estimator:
 
@@ -769,7 +771,8 @@ Estimations by `plm` support unbalanced panel models.
 
 The following example is using data used by @HARR:RUBI:78 to
 estimate an hedonic housing prices function. It is reproduced in
-@BALT:05, p.174/ @BALT:13, p.197.
+@BALT:CHAN:94, table 2 (and in @BALT:05, pp. 172/4; @BALT:13, pp. 195/7
+tables 9.1/3).
 
 ```{r hedonic}
 data("Hedonic", package = "plm")
@@ -786,7 +789,7 @@ balanced data and the more unbalanced the data the lower the value.
 punbalancedness(Hed)
 ```
 
-### Instrumental variable estimators
+### Instrumental variable estimators{#instrumental-variable-est}
 
 
 All of the models presented above may be estimated using instrumental
@@ -802,7 +805,7 @@ The instrumental variables estimator used is indicated with the
 - `"bms"`, from @BREU:MIZO:SCHM:89.
 
 An illustration is in the following example from 
-@BALT:05, p.120 / @BALT:13, p.137 ("G2SLS").
+@BALT:05, p. 120; @BALT:13, p. 137; @BALT:21, p. 165, table 7.3 ("G2SLS").
   
 ```{r }
 data("Crime", package = "plm")
@@ -815,21 +818,21 @@ summary(cr)
 ```
 
 The Hausman-Taylor model (see @HAUS:TAYL:81) may be estimated
-with the `plm` function by setting parameters accordingly like in
-the example below. The following replicates @BALT:05, p. 130/ @BALT:13, p. 146.
+with the `plm`^[Function `pht` is a deprecated way to estimate this type of model:
+`ht <- pht(lwage~wks+south+smsa+married+exp+I(exp^2)+ bluecol+ind+union+sex+black+ed 
+| sex+black+bluecol+south+smsa+ind, data=Wages,index=595)`] 
+function by setting parameters `random.method = "ht"` and
+`inst.method = "baltagi"` like in
+the example below. The following replicates @BALT:05, pp. 129/30;
+@BALT:13, pp. 145/6, tables 7.4/5; @BALT:21, pp. 174/5 tables 7.5/6:
 
 ```{r }
-## (note: function pht is a deprecated way to estimate this type of model
-## ht <- pht(lwage~wks+south+smsa+married+exp+I(exp^2)+
-##           bluecol+ind+union+sex+black+ed | 
-##           sex+black+bluecol+south+smsa+ind,
-##           data=Wages,index=595)
 ht <- plm(lwage ~ wks + south + smsa + married + exp + I(exp ^ 2) + 
               bluecol + ind + union + sex + black + ed |
               bluecol + south + smsa + ind + sex + black |
               wks + married + union + exp + I(exp ^ 2), 
           data = Wages, index = 595,
-          random.method = "ht", model = "random", inst.method = "baltagi")
+           model = "random", random.method = "ht", inst.method = "baltagi")
 summary(ht)
 ```
 
@@ -1159,7 +1162,8 @@ unbalanced panels in @BALT:CHAN:LI:98. The `"ghm"` test and the `"kw"`
 test were extended to two--way effects in @BALT:CHAN:LI:92. For a
 concise overview of all these statistics see @BALT:13 Sec. 4.2,
 pp. 68--76 (for balanced panels) and Sec. 9.5, pp. 200--203 (for
-unbalanced panels).]
+unbalanced panels) or @BALT:21, Sec. 4.2, pp. 81-84 (balanced), Sec. 9.6,
+pp. 243-246 (unbalanced).]
 
 To test the presence of individual and time effects in the
 `Grunfeld` example, using the @GOUR:HOLL:MONF:82 test,
@@ -2196,8 +2200,8 @@ lmAR1ML <- gls(inv~value+capital,data=Grunfeld,
 ```
 
 and analogously the random effects panel with, e.g., AR(1) errors
-(see @BALT:05, @BALT:13, ch. 5), which is a very common specification in
-econometrics, may be fit by `lme` specifying an additional
+(see @BALT:05; @BALT:13; @BALT:21, ch. 5), which is a very common specification
+in econometrics, may be fit by `lme` specifying an additional
 random intercept:
 
 ```{r reAR1}

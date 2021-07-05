@@ -22,12 +22,12 @@ extract.plm <- function(model, include.rsquared = TRUE, include.adjrs = TRUE,
     include.nobs = TRUE, include.ercomp = TRUE, ...) {
   s <- summary(model, ...)
   coefficient.names <- rownames(coef(s))
-  coefficients <- coef(s)[, 1]
-  standard.errors <- coef(s)[, 2]
-  significance <- coef(s)[, 4]
+  coefficients <- coef(s)[ , 1L]
+  standard.errors <- coef(s)[ , 2L]
+  significance <- coef(s)[ , 4L]
   
-  rs <- s$r.squared[1]
-  adj <- s$r.squared[2]
+  rs <- s$r.squared[1L]
+  adj <- s$r.squared[2L]
   n <- length(model$residuals)
   
   gof <- numeric()
@@ -181,8 +181,8 @@ Note that for `plm`, the arguments are `random.models`, `random.dfcor`, and
 `random.method` and correspond to arguments `models`, `method`, and
 `random.dfcor` of function `ercomp` with the same values as above, respectively.
 
-To illustrate the use of `plm`, we use examples reproduced in @BALT:13.
-Table 2.1 on page 21 presents EViews' results of the estimation on the
+To illustrate the use of `plm`, we use examples reproduced in @BALT:13, p. 21; 
+@BALT:21, p. 31, table 2.1 presents EViews' results of the estimation on the
 `Grunfeld` data set :
 
 ```{r grunfeld}
@@ -214,7 +214,7 @@ example, for the `amemiya` model :
 ercomp(amemiya)
 ```
 
-@BALT:13, p. 27, presents the Stata estimation of the Swamy-Arora
+@BALT:13, p. 27; @BALT:21, p. 31 presents the Stata estimation of the Swamy-Arora
 estimator ; the Swamy-Arora estimator is the same if `random.dfcor` is
 set to `3` or `2` (the quadratic forms are divided by $\sum_n T_n - K - N$
 and by $N - K - 1$), so I don't know what is the behaviour of Stata for the
@@ -232,8 +232,8 @@ summary(PrSwar)
 # The twoways effect model
 
 The two-ways effect model is obtained by setting the `effect` argument
-to `"twoways"`. @BALT:13 p. 44-46, presents EViews' output for the Grunfeld
-data set.
+to `"twoways"`. @BALT:13 pp. 51-53; @BALT:21, pp. 61-62, tables 3.1-3.3, presents
+EViews' output for the Grunfeld data set.
 
 ```{r grunfeld2ways}
 Grw <- plm(inv ~ value + capital, Grunfeld, model = "random", effect = "twoways", 
@@ -246,7 +246,7 @@ screenreg(list("Wallace-Hussain" = Grw, "Swamy-Arora" = Grs, "Amemiya" = Gra), d
 The estimated variance of the time component is negative for the 
 Wallace-Hussain as well as the Swamy-Arora models and `plm` sets it to 0.
 
-@BALT:09 p. 60-62, presents EViews' output for the `Produc` data.
+@BALT:09 pp. 60-62, presents EViews' output for the `Produc` data.
 
 ```{r produc2ways}
 data("Produc", package = "plm")
@@ -274,11 +274,11 @@ Two difficulties arise with unbalanced panels :
   data for the random effects model ; this is not the case for the
   two-ways effects model.
 
-@BALT:13 and @BALT:09 present results of the estimation of the
-@SWAM:AROR:72 model with the `Hedonic` data set. @BALT:13, p. 174,
-presents the Stata output and @BALT:09, p. 211 presents EViews'
-output. EViews' Wallace-Hussain estimator is reported in @BALT:09,
-p. 210.
+@BALT:21, @BALT:13, and @BALT:09 present results of the estimation of the
+@SWAM:AROR:72 model with the `Hedonic` data set. @BALT:13, p. 195;
+@BALT:21, p. 237, table 9.1, presents the Stata output and @BALT:09,
+p. 211 presents EViews' output. EViews' Wallace-Hussain estimator is
+reported in @BALT:09, p. 210.
 
 ```{r hedonic}
 data("Hedonic", package = "plm")
@@ -326,22 +326,23 @@ The instrumental variables estimator used is indicated with the
 - `"bvk"`, from @BALE:VARA:87, the default value : in this case, all the
   instruments are introduced in quasi-differences, using the same
   transformation as for the response and the covariates,
-- `"baltagi"`, from @BALT:81, the instruments of the second part are
-  introduced twice using the between and the within transformation and
-  those of the third are only introduced with the within transformation,
-- `"am"`, from @AMEM:MACU:86, the within transformation of the variables
-  of the second parts for each period are also included as
-  instruments,
-- `"bms"`, from @BREU:MIZO:SCHM:89, the within transformation of the
-  variable of the second and of the third parts are included as
-  instruments.
+- `"baltagi"`, from @BALT:81, the instruments of the *second* part are
+  introduced twice by using the between and the within transformation and
+  instruments of the *third* part are introduced with only the within
+  transformation,
+- `"am"`, from @AMEM:MACU:86, in addition to the instrument set of `"baltagi"`,
+  the within transformation of the variables of the *second* part for each period
+  are also included as instruments,
+- `"bms"`, from @BREU:MIZO:SCHM:89, in addition to the instrument set of
+  `"baltagi"`, the within transformation of the variables of the *second*
+  and the *third* part for each period are included as instruments.
 
 The various possible values of the `inst.method` argument are not relevant
 for fixed effect IV models as there is only one method for this type of IV
 models but many for random effect IV models.
 
 The instrumental variable estimators are illustrated in the following example
-from @BALT:2005, p. 120/ @BALT:13, p. 137.
+from @BALT:05, pp. 117/120; @BALT:13, pp. 133/137; @BALT:21, pp. 162/165, tables 7.1, 7.3.
   
 ```{r}
 data("Crime", package = "plm")
@@ -352,14 +353,17 @@ crbalt <- plm(lcrmrte ~ lprbarr + lpolpc + lprbconv + lprbpris + lavgsen +
               data = Crime, model = "random", inst.method = "baltagi")
 crbvk <- update(crbalt, inst.method = "bvk")
 crwth <- update(crbalt, model = "within")
-screenreg(list(FE2SLS = crwth, EC2SLS = crbalt, G2SLS = crbvk), 
-          single.row = TRUE, digits = 5, omit.coef = "(region)|(year)",
+crbe  <- update(crbalt, model = "between")
+screenreg(list(FE2SLS = crwth, BE2SLS = crbe, EC2SLS = crbalt, G2SLS = crbvk), 
+          single.row = FALSE, digits = 5, omit.coef = "(region)|(year)",
           reorder.coef = c(1:16, 19, 18, 17))
 ```
 
 The Hausman-Taylor model (@HAUS:TAYL:81) may be estimated
-with the `plm` function by setting argument `random.method = "ht"`.
-The following example is from @BALT:2005, p. 130 and @BALT:13, p. 146.
+with the `plm` function by setting argument `random.method = "ht"` and
+`inst.method = "baltagi"`.
+The following example is from @BALT:05, p. 130; @BALT:13, pp. 145-7,
+tables 7.4-7.6; @BALT:21, pp. 174-6 , tables 7.5-7.7.
 
 ```{r}
 data("Wages", package = "plm")
@@ -371,10 +375,11 @@ ht <- plm(lwage ~ wks + south + smsa + married + exp + I(exp^2) +
           inst.method = "baltagi", model = "random", 
           random.method = "ht")
 
-am <- update(ht, inst.method = "am")
-  
-screenreg(list("Hausman-Taylor" = ht, "Amemiya-MaCurdy" = am), 
-          digits = 5, single.row = TRUE)
+am  <- update(ht, inst.method = "am")
+bms <- update(ht, inst.method = "bms")
+screenreg(list("Hausman-Taylor" = ht, "Amemiya-MaCurdy" = am,
+               "Breusch-Mizon-Schmidt" = bms),
+          digits = 5, single.row = FALSE)
 ```
 
 
@@ -393,9 +398,11 @@ which the individuals are nested. The error $u_{jnt}$ consists of three componen
 - $\nu_{jn}$ the nested effect of the individual nested in group $j$
 - $\epsilon_{jnt}$ is the idiosyncratic error.
 
-In the estimated examples below, states are nested within regions. The group
-index is given in the 3rd position of the `index` argument to `pdata.frame`
-or to `plm` directly and `plm`'s argument `effect` is set to `"nested"`:
+In the estimated examples below (replication of @BALT:SONG:JUNG:01, p. 378,
+table 6; @BALT:21, p. 248, table 9.1), states are nested within regions.
+The group index is given in the 3rd position of the `index` argument to
+`pdata.frame` or to `plm` directly and `plm`'s argument `effect` is set to
+`"nested"`:
 
 ```{r}
 data("Produc", package = "plm")
