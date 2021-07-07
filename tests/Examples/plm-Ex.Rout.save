@@ -134,6 +134,32 @@ alternative hypothesis: Stationarity
 > 
 > 
 > cleanEx()
+> nameEx("cortab")
+> ### * cortab
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: cortab
+> ### Title: Cross-sectional correlation matrix
+> ### Aliases: cortab
+> ### Keywords: htest
+> 
+> ### ** Examples
+> 
+> 
+> data("Grunfeld", package = "plm")
+> pGrunfeld <- pdata.frame(Grunfeld)
+> grp <- c(rep(1, 100), rep(2, 50), rep(3, 50)) # make 3 groups
+> cortab(pGrunfeld$value, grouping = grp, groupnames = c("A", "B", "C"))
+          A         B          C
+A 0.5562310        NA         NA
+B 0.5431652 0.5406152         NA
+C 0.3799585 0.2999645 -0.1665637
+> 
+> 
+> 
+> 
+> cleanEx()
 > nameEx("detect.lindep")
 > ### * detect.lindep
 > 
@@ -14644,7 +14670,7 @@ F-statistic: 309.014 on 2 and 197 DF, p-value: < 2.22e-16
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  12.14 0.54 12.79 NA NA 
+Time elapsed:  23.82 1.25 27.32 NA NA 
 > grDevices::dev.off()
 null device 
           1 
