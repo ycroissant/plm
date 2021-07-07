@@ -13,14 +13,23 @@ cortab(x, grouping, groupnames = NULL, value = "statistic", ...)
 
 \item{groupnames}{a character vector of group names,}
 
-\item{value}{to complete}
+\item{value}{to complete,}
 
-\item{\dots}{further arguments}
+\item{\dots}{further arguments.}
 }
 \value{
-A matrix
+A matrix with average correlation coefficients within a group
+(diagonal) and between groups (off-diagonal).
 }
 \description{
 Computes the cross--sectional correlation matrix
+}
+\examples{
+
+data("Grunfeld", package = "plm")
+pGrunfeld <- pdata.frame(Grunfeld)
+grp <- c(rep(1, 100), rep(2, 50), rep(3, 50)) # make 3 groups
+cortab(pGrunfeld$value, grouping = grp, groupnames = c("A", "B", "C"))
+
 }
 \keyword{htest}
