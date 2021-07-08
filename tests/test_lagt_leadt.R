@@ -162,7 +162,7 @@ if (!is.na(test_Grun_miss_p_lag1["1-1937"])) stop("lag(pGrunfeld_missing_period$
 
 
 if (!is.na(test_Grun_miss_p_lag3["1-1938"])) {
-  if(!isTRUE(all.equal(test_Grun_miss_p_lag3["1-1938"], pGrunfeld_missing_period$inv["1-1935"], check.names = FALSE)))
+  if(!isTRUE(all.equal(test_Grun_miss_p_lag3["1-1938"], pGrunfeld_missing_period$inv["1-1935"], check.attributes = FALSE)))
     stop("'lag(pGrunfeld_missing_period$inv, 3)' for '1-1938' is not the expected value of '1-1935' of original data 'pGrunfeld_missing_period$inv'")
   } else stop("'lag(pGrunfeld_missing_period$inv, 3)' is NA for '1-1938' but should be the value of '1-1935' from original data 'pGrunfeld_missing_period$inv'")
 
@@ -192,12 +192,12 @@ if(!is.na(test_Hed_miss_p_lag1["4-6"])) stop("lag(Hed_missing_period$age, 1)' fo
 
 # lag(, 2)
 if (!is.na(test_Hed_miss_p_lag2["3-3"])) {
-  if(!isTRUE(all.equal(test_Hed_miss_p_lag2["3-3"], Hed_missing_period$age["3-1"], check.names = FALSE)))
+  if(!isTRUE(all.equal(test_Hed_miss_p_lag2["3-3"], Hed_missing_period$age["3-1"], check.attributes = FALSE)))
     stop("'lag(Hed_missing_period$age, 2)' for '3-3' is not the expected value of '3-1' of original data 'Hed_missing_period$age'")
   } else stop("'lag(Hed_missing_period$age, 2)' is NA for '3-3' but should be the value of '3-1' from original data 'Hed_missing_period$age'")
 
 if (!is.na(test_Hed_miss_p_lag2["4-6"])) {
-  if(!isTRUE(all.equal(test_Hed_miss_p_lag2["4-6"], Hed_missing_period$age["4-4"], check.names = FALSE)))
+  if(!isTRUE(all.equal(test_Hed_miss_p_lag2["4-6"], Hed_missing_period$age["4-4"], check.attributes = FALSE)))
     stop("'lag(Hed_missing_period$age, 2)' for '4-6' is not the expected value of '4-4' of original data 'Hed_missing_period$age'")
   } else stop("'lag(Hed_missing_period$age, 2)' is NA for '4-6' but should be the value of '4-4' from original data 'Hed_missing_period$age'")
 
@@ -220,13 +220,13 @@ head(lag(Hed_missing_period2$age, c(0,1,2,3)), 20) # view all at once
 
 ## lag(, 2)
 if (!is.na(test_Hed_miss2_p_lag2["3-3"])) {
- if(!isTRUE(all.equal(test_Hed_miss2_p_lag2["3-3"], Hed_missing_period2$age["3-1"], check.names = FALSE)))
+ if(!isTRUE(all.equal(test_Hed_miss2_p_lag2["3-3"], Hed_missing_period2$age["3-1"], check.attributes = FALSE)))
    stop("'lag(Hed_missing_period2$age, 2)' for '3-3' is not the expected value of '3-1' of original data 'Hed_missing_period2$age'")
  } else stop("'lag(Hed_missing_period2$age, 2)' is NA for '3-3' but should be the value of '3-1' from original data 'Hed_missing_period2$age'")
 
 # lag(, 3)
 if (!is.na(test_Hed_miss2_p_lag3["4-7"])) {
- if(!isTRUE(all.equal(test_Hed_miss2_p_lag3["4-7"], Hed_missing_period2$age["4-4"], check.names = FALSE)))
+ if(!isTRUE(all.equal(test_Hed_miss2_p_lag3["4-7"], Hed_missing_period2$age["4-4"], check.attributes = FALSE)))
    stop("'lag(Hed_missing_period2$age, 3)' for '4-7' is not the expected value of '4-4' of original data 'Hed_missing_period2$age'")
  } else stop("'lag(Hed_missing_period2$age, 3)' is NA for '4-7' but should be the value of '4-4' from original data 'Hed_missing_period2$age'")
 

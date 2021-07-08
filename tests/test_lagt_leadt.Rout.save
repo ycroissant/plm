@@ -1,6 +1,6 @@
 
-R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R version 4.1.0 (2021-05-18) -- "Camp Pontanezen"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -829,7 +829,7 @@ FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
 > 
 > 
 > if (!is.na(test_Grun_miss_p_lag3["1-1938"])) {
-+   if(!isTRUE(all.equal(test_Grun_miss_p_lag3["1-1938"], pGrunfeld_missing_period$inv["1-1935"], check.names = FALSE)))
++   if(!isTRUE(all.equal(test_Grun_miss_p_lag3["1-1938"], pGrunfeld_missing_period$inv["1-1935"], check.attributes = FALSE)))
 +     stop("'lag(pGrunfeld_missing_period$inv, 3)' for '1-1938' is not the expected value of '1-1935' of original data 'pGrunfeld_missing_period$inv'")
 +   } else stop("'lag(pGrunfeld_missing_period$inv, 3)' is NA for '1-1938' but should be the value of '1-1935' from original data 'pGrunfeld_missing_period$inv'")
 > 
@@ -915,12 +915,12 @@ FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
 > 
 > # lag(, 2)
 > if (!is.na(test_Hed_miss_p_lag2["3-3"])) {
-+   if(!isTRUE(all.equal(test_Hed_miss_p_lag2["3-3"], Hed_missing_period$age["3-1"], check.names = FALSE)))
++   if(!isTRUE(all.equal(test_Hed_miss_p_lag2["3-3"], Hed_missing_period$age["3-1"], check.attributes = FALSE)))
 +     stop("'lag(Hed_missing_period$age, 2)' for '3-3' is not the expected value of '3-1' of original data 'Hed_missing_period$age'")
 +   } else stop("'lag(Hed_missing_period$age, 2)' is NA for '3-3' but should be the value of '3-1' from original data 'Hed_missing_period$age'")
 > 
 > if (!is.na(test_Hed_miss_p_lag2["4-6"])) {
-+   if(!isTRUE(all.equal(test_Hed_miss_p_lag2["4-6"], Hed_missing_period$age["4-4"], check.names = FALSE)))
++   if(!isTRUE(all.equal(test_Hed_miss_p_lag2["4-6"], Hed_missing_period$age["4-4"], check.attributes = FALSE)))
 +     stop("'lag(Hed_missing_period$age, 2)' for '4-6' is not the expected value of '4-4' of original data 'Hed_missing_period$age'")
 +   } else stop("'lag(Hed_missing_period$age, 2)' is NA for '4-6' but should be the value of '4-4' from original data 'Hed_missing_period$age'")
 > 
@@ -1004,13 +1004,13 @@ FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
 > 
 > ## lag(, 2)
 > if (!is.na(test_Hed_miss2_p_lag2["3-3"])) {
-+  if(!isTRUE(all.equal(test_Hed_miss2_p_lag2["3-3"], Hed_missing_period2$age["3-1"], check.names = FALSE)))
++  if(!isTRUE(all.equal(test_Hed_miss2_p_lag2["3-3"], Hed_missing_period2$age["3-1"], check.attributes = FALSE)))
 +    stop("'lag(Hed_missing_period2$age, 2)' for '3-3' is not the expected value of '3-1' of original data 'Hed_missing_period2$age'")
 +  } else stop("'lag(Hed_missing_period2$age, 2)' is NA for '3-3' but should be the value of '3-1' from original data 'Hed_missing_period2$age'")
 > 
 > # lag(, 3)
 > if (!is.na(test_Hed_miss2_p_lag3["4-7"])) {
-+  if(!isTRUE(all.equal(test_Hed_miss2_p_lag3["4-7"], Hed_missing_period2$age["4-4"], check.names = FALSE)))
++  if(!isTRUE(all.equal(test_Hed_miss2_p_lag3["4-7"], Hed_missing_period2$age["4-4"], check.attributes = FALSE)))
 +    stop("'lag(Hed_missing_period2$age, 3)' for '4-7' is not the expected value of '4-4' of original data 'Hed_missing_period2$age'")
 +  } else stop("'lag(Hed_missing_period2$age, 3)' is NA for '4-7' but should be the value of '4-4' from original data 'Hed_missing_period2$age'")
 > 
@@ -1092,4 +1092,4 @@ In pdata.frame(dfNA) :
 > 
 > proc.time()
    user  system elapsed 
-   2.00    0.12    2.07 
+   0.92    0.14    1.07 
