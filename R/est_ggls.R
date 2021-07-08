@@ -183,7 +183,7 @@ pggls <- function(formula, data, subset, na.action,
         y0 <- y
         X <- X[t1, ]
         y <- y[t1]
-        resid <- resid(lm.fit(X,y))
+        resid <- resid(lm.fit(X, y))
                                         #resid[t1]
         cond <- cond[t1]
         other <- other[t1]
@@ -280,7 +280,7 @@ print.summary.pggls <- function(x, digits = max(3, getOption("digits") - 2), wid
   cat("\n")
   print(pdim)
   cat("\nResiduals:\n")
-  print(summary(unlist(residuals(x))))
+  print(sumres(x)) # was until rev. 1176:  print(summary(unlist(residuals(x))))
   cat("\nCoefficients:\n")
   printCoefmat(x$CoefTable, digits = digits)
   cat(paste("Total Sum of Squares: ",    signif(x$tss,digits),  "\n", sep=""))
