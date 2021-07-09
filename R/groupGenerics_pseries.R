@@ -77,9 +77,13 @@ Ops.pseries <- function(e1, e2) {
       # decide on index for result:
       # if objects vary in length: shorter object is recycled by R
       #  -> must take index of non-recycled object (= longer pseries)
+      #
+      # Also, base R uses the names of the first operand -> additional justification
       relevant_index <- if (nrow(index_e1) >= nrow(index_e2)) index_e1 else index_e2
-      if ((nrow(index_e1) == nrow(index_e2)) && !isTRUE(all.equal(index_e1, index_e2)))
-        warning("indexes of pseries have same length but not same content: result was assigned first operand's index")
+      
+      # do not warn anymore (since rev. 1181)
+  #    if ((nrow(index_e1) == nrow(index_e2)) && !isTRUE(all.equal(index_e1, index_e2)))
+  #      warning("indexes of pseries have same length but not same content: result was assigned first operand's index")
     }
     res <- add_pseries_features(res, relevant_index)
   }

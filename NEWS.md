@@ -4,6 +4,10 @@
 ### Features:
  * hansi: new function for Simes (1986) test applied to panels for panel unit
    root testing, as suggested in Hanck (2013).
+ * [.pseries: implemented function to allow subetting on pseries while retaining
+   the pseries properties, i.e., `some_pseries[<some subsetting condition>]` is
+   remains a pseries (before, subsetting on pseries worked as the base R
+   subsetting for vectors was used but the pseries properties were lost).
 
 ### Fixes & Others:
  * vcovG (hence vcovHC, vcovDC, vcovNW, vcovSCC), vcovBK: fix error in case of
@@ -12,7 +16,6 @@
  * within_intercept: fix bug which caused an error for FE models with only one
    regressor.
  
-  
  * (re-)export base::diff's generic as plm::diff to always be able to call
    plm::diff and get panel-diff-ing (in case some other package overwrites base
    R's generic diff (like dplyr does for base R's lag)). By doing this, it is
@@ -28,10 +31,15 @@
    (integer or NULL) aligned with and correctly passed on to 
    has.intercept.Formula (with a *temporary* back-compatible solution).
 
+ * groupGenerics: no more warning in arithmetic operations on pseries when index
+   of both operands have same length but different content (e.g., something like
+   this does not warn anymore: `pseries[1:(length(pseries)-1)] + pseries[2:length(p2)]`).
+
  * Vignettes:
     * 1st vignette: added a little more information on the use of vcoVXX.
-    * 2nd vignette: Added formula for nested error component model.
-    * all: references updated to include Baltagi (2021); fixed a few typos.
+    * 2nd vignette: added formula for nested error component model.
+    * all: references updated to include Baltagi (2021), the 6th edition of the
+      textbook; fixed a few typos.
    
 
 # plm 2.4-1

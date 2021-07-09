@@ -1,6 +1,6 @@
 
-R version 4.0.2 (2020-06-22) -- "Taking Off Again"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R version 4.1.0 (2021-05-18) -- "Camp Pontanezen"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -651,13 +651,7 @@ F-statistic: 3064.81 on 4 and 764 DF, p-value: < 2.22e-16
 > Gr$firm <- sort(rep(LETTERS[1:10], 20)) # make individual index different
 > pGr <- pdata.frame(Gr, stringsAsFactors = FALSE)
 > e1e2_e <- `*`(pGr$integer,       pGrunfeld$integer)
-Warning message:
-In Ops.pseries(pGr$integer, pGrunfeld$integer) :
-  indexes of pseries have same length but not same content: result was assigned first operand's index
 > e1e2_f <- `*`(pGrunfeld$integer, pGr$integer)
-Warning message:
-In Ops.pseries(pGrunfeld$integer, pGr$integer) :
-  indexes of pseries have same length but not same content: result was assigned first operand's index
 > index(e1e2_e)
     firm year
 1      A 1935
@@ -1068,6 +1062,7 @@ In Ops.pseries(pGrunfeld$integer, pGr$integer) :
 > 
 > 
 > ############## (5) demonstration of R's behaviour for a wrapping class "myclass" without group generics
+> 
 > x <- c(1L, 2L, 3L)
 > class(x) # integer
 [1] "integer"
@@ -1155,7 +1150,8 @@ attr(,"class")
 > 
 > ############## (6) demonstrate case of R's behaviour which cannot be worked around even with without group generics
 > # dpois() (also dnorm() and likely more) does not strip unnecessary classes and custom attributes
-> # before it performes its operations
+> # before it performs its operations
+> ## see also ## see also: https://bugs.r-project.org/bugzilla/show_bug.cgi?id=17516
 > class(pGrunfeld$integer) #  "pseries" "integer"
 [1] "pseries" "integer"
 > set.seed(42)
@@ -1178,4 +1174,4 @@ attr(,"class")
 > 
 > proc.time()
    user  system elapsed 
-   0.79    0.17    0.96 
+   0.76    0.31    1.06 

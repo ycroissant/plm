@@ -3,6 +3,7 @@
 S3method("$",pdata.frame)
 S3method("$<-",pdata.frame)
 S3method("[",pdata.frame)
+S3method("[",pseries)
 S3method("[[",pdata.frame)
 S3method(Between,default)
 S3method(Between,matrix)

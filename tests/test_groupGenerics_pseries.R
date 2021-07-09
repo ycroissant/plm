@@ -169,6 +169,7 @@ stopifnot(is.pseries(e1e2_f))
 
 
 ############## (5) demonstration of R's behaviour for a wrapping class "myclass" without group generics
+
 x <- c(1L, 2L, 3L)
 class(x) # integer
 mode(x)
@@ -223,7 +224,8 @@ typeof(loginum) # double
 
 ############## (6) demonstrate case of R's behaviour which cannot be worked around even with without group generics
 # dpois() (also dnorm() and likely more) does not strip unnecessary classes and custom attributes
-# before it performes its operations
+# before it performs its operations
+## see also ## see also: https://bugs.r-project.org/bugzilla/show_bug.cgi?id=17516
 class(pGrunfeld$integer) #  "pseries" "integer"
 set.seed(42)
 res_dpois <- dpois(pGrunfeld$integer, sample(1:10, 200, replace = TRUE))

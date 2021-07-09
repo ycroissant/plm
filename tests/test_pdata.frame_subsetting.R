@@ -64,13 +64,13 @@ if (!identical(pGrunfeld, pGrunfeld2))
 # if (!object.size(pGrunfeld) == object.size(pGrunfeld2))
 #   print("pdata.frame not same object size after \"subsetting\" with all rows (which should actually not do any subsetting))")
 
-# this is likely to be unnecessarily pedandic, because by default attrib.as.set is TRUE
+# this is likely to be unnecessarily pedantic, because by default attrib.as.set is TRUE
 # and from ?attributes "Attributes are not stored internally as a list and should be 
 # thought of as a set and not a vector."
 identical(Grunfeld, Grunfeld2,   attrib.as.set = FALSE)  # TRUE for data.frame
 identical(pGrunfeld, pGrunfeld2, attrib.as.set = FALSE)  # FALSE for pdata.frame
 
-# disply differences (if any) [with rev. 252 there should be no differences left]
+# display differences (if any) [with rev. 252 there should be no differences left]
 all.equal(pGrunfeld, pGrunfeld2)
 all.equal(pGrunfeld, pGrunfeld2, check.attributes = FALSE)
 # compare::compare(pGrunfeld, pGrunfeld2, allowAll = TRUE)
@@ -158,9 +158,9 @@ if (!isTRUE(all.equal(dim(X[1, , drop = FALSE]), dim(pX[1, , drop = FALSE])))) s
 
 
 ###### test dimensions of index of subsetted pdata.frame
-if (!all(c(dim(pX[1:10 , 2:4])[1], 2L) == dim(attr(pX[1:10 , 2:4], "index")))) stop("index has wrong dimension after subsetting")
-if (!all(c(dim(pX[1:10 ,    ])[1], 2L) == dim(attr(pX[1:10 ,    ], "index")))) stop("index has wrong dimension after subsetting")
-if (!all(c(dim(pX[     , 2:4])[1], 2L) == dim(attr(pX[     , 2:4], "index")))) stop("index has wrong dimension after subsetting")
+if (!all(c(dim(pX[1:10, 2:4])[1], 2L) == dim(attr(pX[1:10, 2:4], "index")))) stop("index has wrong dimension after subsetting")
+if (!all(c(dim(pX[1:10,    ])[1], 2L) == dim(attr(pX[1:10,    ], "index")))) stop("index has wrong dimension after subsetting")
+if (!all(c(dim(pX[    , 2:4])[1], 2L) == dim(attr(pX[    , 2:4], "index")))) stop("index has wrong dimension after subsetting")
 
 # NB: this is class c("pseries", "numeric), need length here
 if (!all(c(length(pX[ , 3]), 2L) == dim(attr(pX[ , 3], "index")))) stop("index has wrong dimension after subsetting")
@@ -222,72 +222,88 @@ Grunfeld[Grunfeld$firm == "19", "valueNonExistent"]
 
 ############### test pseries subsetting ("[.pseries") ################
 #### a sketch for "[.pseries" is in pdata.frame.R, but it does not work with FD models yet
-# data("EmplUK", package = "plm")
-# (plm(log(emp) ~ log(wage) + log(capital), data = EmplUK, model = "fd"))
-# 
-# data("Grunfeld", package = "plm")
-# Grunfeld$fac <- factor(c("a", "b", "c", "d"))
-# pGrunfeld <- pdata.frame(Grunfeld)
-# 
-# pseries <- pGrunfeld$inv
-# pfac <- pGrunfeld$fac
-# fac <- Grunfeld$fac
-# 
-# pseries[1]
-# pseries[c(1,2)]
-# pseries[-c(1,2)]
-# # # this also checks for the both indexes having the same levels after subsetting
-# # # (unused levels in index are dropped):
-# if(!isTRUE(all.equal(index(pseries[c(1)]),    index(pGrunfeld[c(1), ])))) stop("indexes not the same")
-# if(!isTRUE(all.equal(index(pseries[c(1,2)]),  index(pGrunfeld[c(1,2), ])))) stop("indexes not the same")
-# if(!isTRUE(all.equal(index(pseries[-c(1,2)]), index(pGrunfeld[-c(1,2), ])))) stop("indexes not the same")
+data("EmplUK", package = "plm")
+(plm(log(emp) ~ log(wage) + log(capital), data = EmplUK, model = "fd"))
+
+data("Grunfeld", package = "plm")
+Grunfeld$fac <- factor(c("a", "b", "c", "d"))
+pGrunfeld <- pdata.frame(Grunfeld)
+
+pseries <- pGrunfeld$inv
+pfac <- pGrunfeld$fac
+fac <- Grunfeld$fac
+
+pseries[1]
+pseries[c(1,2)]
+pseries[-c(1,2)]
+# # this also checks for the both indexes having the same levels after subsetting
+# # (unused levels in index are dropped):
+if(!isTRUE(all.equal(index(pseries[c(1)]),    index(pGrunfeld[c(1), ])))) stop("indexes not the same")
+if(!isTRUE(all.equal(index(pseries[c(1,2)]),  index(pGrunfeld[c(1,2), ])))) stop("indexes not the same")
+if(!isTRUE(all.equal(index(pseries[-c(1,2)]), index(pGrunfeld[-c(1,2), ])))) stop("indexes not the same")
 
 # subsetting when there are no names (in this case (dummy) names are used in the subsetting code)
-# pseries_nn <- unname(pGrunfeld$inv)
-# pfac_nn <- unname(pGrunfeld$fac)
-# fac_nn <- unname(Grunfeld$fac)
-# 
-# pseries_nn[1]
-# pseries_nn[c(1,2)]
-# pseries_nn[-c(1,2)]
+pseries_nn <- unname(pGrunfeld$inv)
+pfac_nn <- unname(pGrunfeld$fac)
+fac_nn <- unname(Grunfeld$fac)
+
+pseries_nn[1]
+pseries_nn[c(1,2)]
+pseries_nn[-c(1,2)]
 # # # this also checks for the both indexes having the same levels after subsetting
 # # # (unused levels in index are dropped):
-# if(!isTRUE(all.equal(index(pseries_nn[c(1)]),    index(pGrunfeld[c(1), ])))) stop("indexes not the same")
-# if(!isTRUE(all.equal(index(pseries_nn[c(1,2)]),  index(pGrunfeld[c(1,2), ])))) stop("indexes not the same")
-# if(!isTRUE(all.equal(index(pseries_nn[-c(1,2)]), index(pGrunfeld[-c(1,2), ])))) stop("indexes not the same")
-# 
-# 
-# 
-# # subsetting with character
-# pseries["10-1946"]
-# pseries[c("10-1935", "10-1946")]
-# 
-# # character subsetting works for plain numeric:
-#  series <- Grunfeld$inv
-#  names(series) <- names(pseries)
-#  names(fac) <- names(pfac)
-#  series["10-1946"]
-# 
-#  if(!isTRUE(all.equal(index(pseries["10-1946"]),               index(pGrunfeld["10-1946", ])))) stop("indexes not the same")
-#  if(!isTRUE(all.equal(index(pseries[c("10-1935", "10-1946")]), index(pGrunfeld[c("10-1935", "10-1946"), ])))) stop("indexes not the same")
-# 
-# 
-# ### For c("pseries", "factor") perform additional tests of 'drop' argument
-#  pfac[1, drop = TRUE]   # only level "a" should be left
-#  pfac[1:3][drop = TRUE] # only level "a", "b", "c" should be left
-# 
-#  fac[1, drop = TRUE]
-#  fac[1:3][drop = TRUE]
-# 
-#  pfac["nonExist"] # should be NA and levels "a" to "d"
-#  fac["nonExist"]
-# 
-#  pfac["nonExist"][drop = TRUE] # should be NA and no level left
-#  fac["nonExist"][drop = TRUE]
-# 
-# # check subsetting with NA:
-# if(!isTRUE(all.equal(as.numeric(pseries[NA]), series[NA], check.attributes = FALSE))) stop("subsetting with NA not the same for pseries")
+if(!isTRUE(all.equal(index(pseries_nn[c(1)]),    index(pGrunfeld[c(1), ])))) stop("indexes not the same")
+if(!isTRUE(all.equal(index(pseries_nn[c(1,2)]),  index(pGrunfeld[c(1,2), ])))) stop("indexes not the same")
+if(!isTRUE(all.equal(index(pseries_nn[-c(1,2)]), index(pGrunfeld[-c(1,2), ])))) stop("indexes not the same")
 
+
+
+# subsetting with character
+pseries["10-1946"]
+pseries[c("10-1935", "10-1946")]
+
+# character subsetting works for plain numeric:
+ series <- Grunfeld$inv
+ names(series) <- names(pseries)
+ names(fac) <- names(pfac)
+ series["10-1946"]
+
+ if(!isTRUE(all.equal(index(pseries["10-1946"]),               index(pGrunfeld["10-1946", ])))) stop("indexes not the same")
+ if(!isTRUE(all.equal(index(pseries[c("10-1935", "10-1946")]), index(pGrunfeld[c("10-1935", "10-1946"), ])))) stop("indexes not the same")
+
+
+### For c("pseries", "factor") perform additional tests of 'drop' argument
+ pfac[1, drop = TRUE]   # only level "a" should be left
+ pfac[1:3][drop = TRUE] # only level "a", "b", "c" should be left
+
+ fac[1, drop = TRUE]
+ fac[1:3][drop = TRUE]
+
+ pfac["nonExist"] # should be NA and levels "a" to "d"
+ fac["nonExist"]
+
+ pfac["nonExist"][drop = TRUE] # should be NA and no level left
+ fac["nonExist"][drop = TRUE]
+
+# check subsetting with NA:
+if(!isTRUE(all.equal(as.numeric(pseries[NA]), series[NA], check.attributes = FALSE))) stop("subsetting with NA not the same for pseries")
+
+ # assign first operand's attributes:
+ pseries[1:(length(pseries)-1)] + pseries[2:length(pseries)]
+ head(index(pseries[1:(length(pseries)-1)]))
+ head(index(pseries[2:length(pseries)]))
+ 
+ 
+ # ... just as in base R for names:
+ i1 <- 1:100; i2 <- 1:100
+ names(i1) <- 1:100; names(i2) <- LETTERS[(0:99 %% 26) + 1]
+ head(i1)
+ head(i2)
+ # names are taken from first operand in base R numerics,
+ # so for pseries it is ok to assign the index of the first operand
+ names(i1 + i2)
+ names(i2 + i1)
+ 
 
 ## These are ok (give (about) same error msg for plain numeric as for pseries numeric)
 # pseries[1, ] # Error in x[...] : incorrect number of dimensions
