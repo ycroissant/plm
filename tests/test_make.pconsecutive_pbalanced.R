@@ -14,7 +14,7 @@ library(plm)
 data("Grunfeld", package = "plm")
 drop_for_unbalanced <- c(2,42,56,78)
 unbalanced_Grunfeld <- Grunfeld[-drop_for_unbalanced, ]
-gindex <- plm:::make.pconsecutive.indexes(unbalanced_Grunfeld, index = c("firm", "year"))[[1]]
+gindex <- plm:::make.pconsecutive.indexes(unbalanced_Grunfeld, index = c("firm", "year"))[[1L]]
 nrow(gindex)
 all.equal(unbalanced_Grunfeld[, 1:2], gindex[-drop_for_unbalanced, ])
 #compare::compare(unbalanced_Grunfeld[, 1:2], gindex[-drop_for_unbalanced, ], allowAll = TRUE)
@@ -34,7 +34,7 @@ if (!isTRUE(all.equal(unbalanced_Grunfeld[, 1:2], gindex[-drop_for_unbalanced, ]
 
 # make.pconsecutive.indexes: for pdata.frames
 punbalanced_Grunfeld <- pdata.frame(unbalanced_Grunfeld)
-pgindex <- plm:::make.pconsecutive.indexes(punbalanced_Grunfeld, index = c("firm", "year"))[[1]]
+pgindex <- plm:::make.pconsecutive.indexes(punbalanced_Grunfeld, index = c("firm", "year"))[[1L]]
 nrow(pgindex)
 
 if (!identical(attr(punbalanced_Grunfeld, "index")[, 1:2], pgindex[-drop_for_unbalanced, ])) stop("failure index of pdata.frame")
@@ -51,7 +51,7 @@ if (!isTRUE(all.equal(attr(punbalanced_Grunfeld, "index")[, 1:2], pgindex[-drop_
 
 
 # make.pconsecutive.indexes: pseries interface
-pgindex <- plm:::make.pconsecutive.indexes(punbalanced_Grunfeld$inv, index = c("firm", "year"))[[1]]
+pgindex <- plm:::make.pconsecutive.indexes(punbalanced_Grunfeld$inv, index = c("firm", "year"))[[1L]]
 if (!identical(attr(punbalanced_Grunfeld$inv, "index")[, 1:2], pgindex[-drop_for_unbalanced, ])) stop("failure index of pdata.frame")
 if (!isTRUE(all.equal(attr(punbalanced_Grunfeld$inv, "index")[, 1:2], pgindex[-drop_for_unbalanced, ]))) stop("failure index of pdata.frame")
 ##################### END test of make.pconsecutive.indexes #####################
@@ -159,12 +159,12 @@ f_without_indexvars <- pdata.frame(Grunfeld_missing_periods_multi_id, index = c(
 f_consec <- make.pconsecutive(f)
 f_without_indexvars_consec <- make.pconsecutive(f_without_indexvars)
 
-# it seems like it is not possible here to check for equality of subsetted pdata.frames because
-# the subsetting functions for pdata.frame alters the pdata.frame
-# (this seems due to the fact that, currently, pdata.frames when created do not have
-#  "pseries" in columns and carry no index attribute. Only after extracting a column, that column
-#  will be of class c(“pseries”, “original_class”) and carry an index attribute.
-# 
+## it seems like it is not possible here to check for equality of subsetted pdata.frames because
+## the subsetting functions for pdata.frame alters the pdata.frame
+## (this seems due to the fact that, currently, pdata.frames when created do not have
+##  "pseries" in columns and carry no index attribute. Only after extracting a column, that column
+##  will be of class c(“pseries”, “original_class”) and carry an index attribute.
+## 
 # To see this, use lapply (to avoid extraction):
 # df <- data.frame(id = c(1,1,2), time = c(1,2,1), f = factor(c("a", "a", "b")), n = c(1:3))
 # pdf <- pdata.frame(df)
@@ -177,7 +177,7 @@ f_without_indexvars_consec <- make.pconsecutive(f_without_indexvars)
 
 
 all.equal(f, f_consec[-multi_periods, ])
-all.equal(f, f_consec[-multi_periods, ], check.attributes = F)
+all.equal(f, f_consec[-multi_periods, ], check.attributes = FALSE)
 identical(f, f_consec[-multi_periods, ])
 if (!identical(f, f_consec[-multi_periods, ])) stop("make.pconsecutive pdata.frame interface: non identical results")
 
@@ -320,8 +320,8 @@ if (!all(sort(unique(make.pbalanced(Grunfeld_wo_2nd_period_and_3rd_for_id1)$year
 # 
 # 
 # length(age_consec)
-# length(index(age_consec)[[1]])
-# length(index(age_consec)[[2]])
+# length(index(age_consec)[[1L]])
+# length(index(age_consec)[[2L]])
 # 
 # ### test of data.frame interface
 # df_nlswork_r8_consec <- make.pconsecutive(nlswork_r8)

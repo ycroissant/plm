@@ -154,8 +154,8 @@ make.pconsecutive.indexes <- function(x, index, balanced = FALSE, ...) {
   if (inherits(x, "pdata.frame") || inherits(x, "pseries")) {
     pdataframe_or_pseries <- TRUE
     index_orig <- attr(x, which = "index")
-    id_orig    <- index_orig[[1]] # can leave as factor if it is a factor
-    times_orig <- index_orig[[2]]
+    id_orig    <- index_orig[[1L]] # can leave as factor if it is a factor
+    times_orig <- index_orig[[2L]]
     if (!is.numeric(times_orig) && is.factor(times_orig)) times_orig <- as.numeric(levels(times_orig))[as.integer(times_orig)]
     # time var needs to be numeric [as.character needed here!]
     # [R FAQ 7.10 for coercing factors to numeric 
@@ -179,8 +179,8 @@ make.pconsecutive.indexes <- function(x, index, balanced = FALSE, ...) {
     pdataframe_or_pseries <- FALSE
     has_fancy_rownames    <- FALSE
     index_orig <- x[ , index]
-    id_orig    <- index_orig[[1]]
-    times_orig <- index_orig[[2]]
+    id_orig    <- index_orig[[1L]]
+    times_orig <- index_orig[[2L]]
     id_orig_typeof    <- typeof(id_orig)
     times_orig_typeof <- typeof(times_orig)
     rownames_mode <- mode(attr(x, "row.names"))
@@ -224,12 +224,12 @@ make.pconsecutive.indexes <- function(x, index, balanced = FALSE, ...) {
 
 
   if (pdataframe_or_pseries) {
-    df_index_filled[ , 1] <- as.factor(df_index_filled[ , 1])
-    df_index_filled[ , 2] <- as.factor(df_index_filled[ , 2])
+    df_index_filled[ , 1L] <- as.factor(df_index_filled[ , 1L])
+    df_index_filled[ , 2L] <- as.factor(df_index_filled[ , 2L])
     class(df_index_filled) <- c("pindex", class(df_index_filled))
   } else {
-    if (typeof(df_index_filled[ , 1]) != id_orig_typeof)    { mode(df_index_filled[ , 1]) <- id_orig_typeof    }
-    if (typeof(df_index_filled[ , 2]) != times_orig_typeof) { mode(df_index_filled[ , 2]) <- times_orig_typeof }
+    if (typeof(df_index_filled[ , 1L]) != id_orig_typeof)    { mode(df_index_filled[ , 1L]) <- id_orig_typeof    }
+    if (typeof(df_index_filled[ , 2L]) != times_orig_typeof) { mode(df_index_filled[ , 2L]) <- times_orig_typeof }
   }
 
   # restore mode of row.names attribute
@@ -248,7 +248,7 @@ make.pconsecutive.indexes <- function(x, index, balanced = FALSE, ...) {
 #' @export
 make.pconsecutive.data.frame <- function(x, balanced = FALSE, index = NULL, ...){
   # if not NULL, index is must be character of length 2
-  if (!is.null(index) && length(index) != 2)
+  if (!is.null(index) && length(index) != 2L)
     stop("if argument 'index' is not NULL, 'index' needs to specify
          'individual' and 'time' dimension for make.pconsecutive to work on a data.frame")
   
@@ -301,7 +301,9 @@ make.pconsecutive.pdata.frame <- function(x, balanced = FALSE, ...){
   }
   
   x_df_filled <- merge(index_df_filled, x, by = index_orig_names, all.x = TRUE)
-
+  # merge produces a pdata.frame with 'pseries' in columns (if [.pseries is active])
+  # -> remove pseries features from columns
+  x_df_filled <- lapply(x_df_filled, remove_pseries_features)
   
   # make pdata.frame (index vars are already in columns 1,2)
   x_pdf_filled <- pdata.frame(x_df_filled, row.names = has_fancy_rownames)
@@ -543,20 +545,20 @@ make.pbalanced.pdata.frame <- function(x, balance.type = c("fill", "shared.times
             # delete time periods that were not present for any individual, but introduced by
             # making data consecutive
             # result: no time periods are added that are not present for at least one individual
-            times_present_orig <- attr(x_consec_bal, "index")[[2]] %in% unique(index[[2]])
+            times_present_orig <- attr(x_consec_bal, "index")[[2L]] %in% unique(index[[2L]])
             result <- x_consec_bal[times_present_orig, ]
             
             # drop not present factor levels (some new levels were introduced by making data consecutive first):
               # drop from index
               index_result <- attr(result, "index")
-              index_result[[2]] <- droplevels(index_result[[2]])
+              index_result[[2L]] <- droplevels(index_result[[2L]])
               attr(result, "index") <- index_result
               
               # drop from time column (if time index column present in pdata.frame)
               pos_indexvars <- pos.index(result) # position of index vars is c(NA, NA) if index vars are not present as columns
               index_orig_names <- names(pos_indexvars)
               if (!anyNA(pos_indexvars)) {
-                result[ , pos_indexvars[2]] <- droplevels(result[ , pos_indexvars[2]])
+                result[ , pos_indexvars[2L]] <- droplevels(result[ , pos_indexvars[2L]])
               }
         },
         "shared.times" = {
@@ -591,7 +593,7 @@ make.pbalanced.pseries <- function(x, balance.type = c("fill", "shared.times", "
             # making data consecutive
             # result: no time periods are added that are not present for at least one individual
               x_consec_bal_index <- attr(x_consec_bal, "index")
-              times_present_orig <- x_consec_bal_index[[2]] %in% unique(index[[2]])
+              times_present_orig <- x_consec_bal_index[[2L]] %in% unique(index[[2L]])
               result <- x_consec_bal[times_present_orig] # this drops the pseries features (index, class "pseries")
                                                          # because there is no function "[.pseries]" (as of 2016-05-14)
               
@@ -630,7 +632,7 @@ make.pbalanced.pseries <- function(x, balance.type = c("fill", "shared.times", "
 make.pbalanced.data.frame <- function(x, balance.type = c("fill", "shared.times", "shared.individuals"), index = NULL, ...) {
   # NB: for data.frame interface: the data is also sorted as stack time series
 
-  if (length(balance.type) == 1 && balance.type == "shared") {
+  if (length(balance.type) == 1L && balance.type == "shared") {
     # accept "shared" for backward compatibility
     balance.type <- "shared.times"
     warning("Use of balanced.type = 'shared' discouraged, set to 'shared.times'")
@@ -639,7 +641,7 @@ make.pbalanced.data.frame <- function(x, balance.type = c("fill", "shared.times"
 
   ## identify index of data.frame  
       # if not NULL, index is must be character of length 2
-      if (!is.null(index) && length(index) != 2)
+      if (!is.null(index) && length(index) != 2L)
         stop("if argument 'index' is not NULL, 'index' needs to specify
              'individual' and 'time' dimension for make.pconsecutive to work on a data.frame")
       
@@ -656,7 +658,7 @@ make.pbalanced.data.frame <- function(x, balance.type = c("fill", "shared.times"
             # delete time periods that were not present for any individual, but introduced by
             # making data consecutive
             # result: no time periods are added that are not present for at least one individual
-            times_present_orig <- x_consec_bal[ , index_orig_names[2]] %in% unique(index_df[[2]])
+            times_present_orig <- x_consec_bal[ , index_orig_names[2L]] %in% unique(index_df[[2L]])
             result <- x_consec_bal[times_present_orig , ]},
          
         "shared.times" = {
@@ -681,12 +683,12 @@ intersect_index <- function(index, by) {
   
   switch(by,
          "time" = {
-           id <- index[[1]]
-           time <- as.character(index[[2]])
+           id <- index[[1L]]
+           time <- as.character(index[[2L]])
          },
          "individual" = {
-           id <- index[[2]]
-           time <- as.character(index[[1]])
+           id <- index[[2L]]
+           time <- as.character(index[[1L]])
          })
   
   times_by_ids <- split(time, id)
