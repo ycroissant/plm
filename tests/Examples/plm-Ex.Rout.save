@@ -6993,8 +6993,8 @@ pcce(formula = log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
 Balanced Panel: n = 48, T = 17, N = 816
 
 Residuals:
-      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
--0.0918843 -0.0060964  0.0005035  0.0000000  0.0059796  0.0682325 
+         Min.       1st Qu.        Median       3rd Qu.          Max. 
+-0.0918842486 -0.0060964496  0.0005035279  0.0059795741  0.0682325144 
 
 Coefficients:
             Estimate Std. Error z-value  Pr(>|z|)    
@@ -7019,8 +7019,8 @@ pcce(formula = log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
 Balanced Panel: n = 48, T = 17, N = 816
 
 Residuals:
-      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
--0.0918843 -0.0060964  0.0005035  0.0000000  0.0059796  0.0682325 
+         Min.       1st Qu.        Median       3rd Qu.          Max. 
+-0.0918842486 -0.0060964496  0.0005035279  0.0059795741  0.0682325144 
 
 Coefficients:
             Estimate Std. Error z-value  Pr(>|z|)    
@@ -7047,8 +7047,8 @@ pcce(formula = log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
 Balanced Panel: n = 48, T = 17, N = 816
 
 Residuals:
-      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
--0.0806338 -0.0037117  0.0003147  0.0000000  0.0040207  0.0438957 
+        Min.      1st Qu.       Median      3rd Qu.         Max. 
+-0.080633827 -0.003711741  0.000314665  0.004020677  0.043895737 
 
 Coefficients:
             Estimate Std. Error z-value  Pr(>|z|)    
@@ -8782,8 +8782,8 @@ pggls(formula = log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
 Balanced Panel: n = 48, T = 17, N = 816
 
 Residuals:
-     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
--0.117505 -0.023706 -0.004717  0.000000  0.017288  0.177768 
+        Min.      1st Qu.       Median      3rd Qu.         Max. 
+-0.117504866 -0.023705713 -0.004716909  0.017288320  0.177767615 
 
 Coefficients:
              Estimate  Std. Error z-value  Pr(>|z|)    
@@ -9916,8 +9916,8 @@ pmg(formula = log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
 Balanced Panel: n = 48, T = 17, N = 816
 
 Residuals:
-      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
--0.0828079 -0.0118150  0.0004247  0.0000000  0.0126479  0.1189647 
+         Min.       1st Qu.        Median       3rd Qu.          Max. 
+-0.0828078889 -0.0118150348  0.0004246566  0.0126479124  0.1189647497 
 
 Coefficients:
               Estimate Std. Error z-value  Pr(>|z|)    
@@ -9945,8 +9945,8 @@ pmg(formula = log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
 Balanced Panel: n = 48, T = 17, N = 816
 
 Residuals:
-      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
--0.0834415 -0.0076164 -0.0001226  0.0000000  0.0078109  0.1177009 
+         Min.       1st Qu.        Median       3rd Qu.          Max. 
+-0.0834415058 -0.0076164165 -0.0001225963  0.0078108813  0.1177008894 
 
 Coefficients:
               Estimate Std. Error z-value  Pr(>|z|)    
@@ -9974,8 +9974,8 @@ pmg(formula = log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
 Balanced Panel: n = 48, T = 17, N = 816
 
 Residuals:
-      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
--0.0806338 -0.0037117  0.0003147  0.0000000  0.0040207  0.0438957 
+         Min.       1st Qu.        Median       3rd Qu.          Max. 
+-0.0806338274 -0.0037117404  0.0003146628  0.0040206767  0.0438957373 
 
 Coefficients:
                 Estimate Std. Error z-value  Pr(>|z|)    
@@ -14344,8 +14344,8 @@ pcce(formula = log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
 Balanced Panel: n = 48, T = 17, N = 816
 
 Residuals:
-      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
--0.0918843 -0.0060964  0.0005035  0.0000000  0.0059796  0.0682325 
+         Min.       1st Qu.        Median       3rd Qu.          Max. 
+-0.0918842486 -0.0060964496  0.0005035279  0.0059795741  0.0682325144 
 
 Coefficients:
             Estimate Std. Error z-value  Pr(>|z|)    
@@ -14670,7 +14670,7 @@ F-statistic: 309.014 on 2 and 197 DF, p-value: < 2.22e-16
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  23.82 1.25 27.32 NA NA 
+Time elapsed:  15.16 0.45 15.61 NA NA 
 > grDevices::dev.off()
 null device 
           1 
