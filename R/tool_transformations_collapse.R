@@ -285,7 +285,7 @@ between.pseries.collapse <- function(x, effect = c("individual", "time", "group"
   # must be fill = TRUE [to catch case when 1 obs of an individual is NA
   # (otherwise result could contain non-intended NA)]
   res <- collapse::fbetween(x, effect = eff.no, w = NULL, na.rm = na.rm, fill = TRUE)
-  attr(res, "index") <- NULL
+  res <- remove_pseries_features(res)
   keep <- !duplicated(i)
   res <- res[keep]
   names(res) <- as.character(i[keep])

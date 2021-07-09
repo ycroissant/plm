@@ -478,6 +478,8 @@ between.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
                      "group"      = xindex[[3L]],
                      )
     res <- between.default(x, effect = eff.fac, ...)
+    # data compressed by transformation, so pseries features, esp. index, do not make sense
+    res <- remove_pseries_features(res)
     return(res)
 }
 
