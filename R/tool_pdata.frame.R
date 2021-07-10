@@ -540,8 +540,8 @@ subset_pseries <- function(x, ...) {
     # Nargs_mod to distinguish if called by [] (Nargs_mod == 2L); [,] (Nargs_mod == 3L); [,,] (Nargs_mod == 4L)
     Nargs_mod <- nargs() - (!missing.drop)
   
-    old.pdata.frame <- !inherits(x, "data.frame")
-    if (! old.pdata.frame){
+#    old.pdata.frame <- !inherits(x, "data.frame")
+#    if (! old.pdata.frame){
         # this part for backward compatibility (required by meboot)
       
         ### subset index (and row names) appropriately:
@@ -584,7 +584,7 @@ subset_pseries <- function(x, ...) {
             # NB: use droplevels() rather than x[drop = TRUE] as x[drop = TRUE] can also coerce mode!
             # old (up to rev. 251): index <- data.frame(lapply(index, function(x) x[drop = TRUE]))
         }
-    }
+# old meboot workaround:   }
     
     # delete attribute with old index first:
     # this preserves the order of the attributes because 
