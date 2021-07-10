@@ -38,8 +38,8 @@
 ## - index.pdata.frame
 ## - index.pseries
 ## - index.panelmodel
-## - is.index
-## - has.index
+## - is.index (non-exported)
+## - has.index (non-exported)
 ## - checkNA.index (non-exported)
 ## - pos.index (non-exported)
 
@@ -540,51 +540,48 @@ subset_pseries <- function(x, ...) {
     # Nargs_mod to distinguish if called by [] (Nargs_mod == 2L); [,] (Nargs_mod == 3L); [,,] (Nargs_mod == 4L)
     Nargs_mod <- nargs() - (!missing.drop)
   
-#    old.pdata.frame <- !inherits(x, "data.frame")
-#    if (! old.pdata.frame){
-        # this part for backward compatibility (required by meboot)
+    ### subset index (and row names) appropriately:
+    # subsetting data.frame by only j (x[ , j]) or missing j (x[i]) yields full-row
+    # column(s) of data.frame, thus do not subset the index because it needs full rows (original index)
+    #
+    # subset index if:
+    #      * [i,j] (supplied i AND supplied j) (in this case: Nargs_mod == 3L (or 4L depending on present/missing drop))
+    #      * [i, ] (supplied i AND missing j)  (in this case: Nargs_mod == 3L (or 4L depending on present/missing drop))
+    #
+    # do not subset index in all other cases (here are the values of Nargs_mod)
+    #      * [ ,j] (missing  i AND j supplied)                   (Nargs_mod == 3L (or 4L depending on present/missing drop))
+    #      * [i]   (supplied i AND missing j)                    (Nargs_mod == 2L) [Nargs_mod distinguishes this case from the one where subsetting is needed!]
+    #      * [i, drop = TRUE/FALSE] (supplied i AND missing j)   (Nargs_mod == 2L)
+    #
+    # => subset index (and row names) if: supplied i && Nargs_mod >= 3L
+    
+    index <- attr(x, "index")
+    x.rownames <- row.names(x)
+    if (!missing.i && Nargs_mod >= 3L) {
+      iindex <- i
+      if (is.character(iindex)) {
+        # Kevin Tappe 2016-01-04 : in case of indexing (subsetting) a 
+        # pdata.frame by a character, the subsetting vector should be 
+        # converted to numeric by matching to the row names so that the 
+        # index can be correctly subsetted (by this numeric value).
+        # Motivation:
+        # Row names of the pdata.frame and row names of the pdata.frame's 
+        # index are not guaranteed to be the same!
+        iindex <- match(iindex, rownames(x))
+      }
+      # subset index and row names
+      index <- "[.data.frame"(index, iindex, )
+      x.rownames <- x.rownames[iindex]
       
-        ### subset index (and row names) appropriately:
-        # subsetting data.frame by only j (x[ , j]) or missing j (x[i]) yields full-row
-        # column(s) of data.frame, thus do not subset the index because it needs full rows (original index)
-        #
-        # subset index if:
-        #      * [i,j] (supplied i AND supplied j) (in this case: Nargs_mod == 3L (or 4L depending on present/missing drop))
-        #      * [i, ] (supplied i AND missing j)  (in this case: Nargs_mod == 3L (or 4L depending on present/missing drop))
-        #
-        # do not subset index in all other cases (here are the values of Nargs_mod)
-        #      * [ ,j] (missing  i AND j supplied)                   (Nargs_mod == 3L (or 4L depending on present/missing drop))
-        #      * [i]   (supplied i AND missing j)                    (Nargs_mod == 2L) [Nargs_mod distinguishes this case from the one where subsetting is needed!]
-        #      * [i, drop = TRUE/FALSE] (supplied i AND missing j)   (Nargs_mod == 2L)
-        #
-        # => subset index (and row names) if: supplied i && Nargs_mod >= 3L
-      
-        index <- attr(x, "index")
-        x.rownames <- row.names(x)
-        if (!missing.i && Nargs_mod >= 3L) {
-            iindex <- i
-            if (is.character(iindex)) {
-              # Kevin Tappe 2016-01-04 : in case of indexing (subsetting) a 
-              # pdata.frame by a character, the subsetting vector should be 
-              # converted to numeric by matching to the row names so that the 
-              # index can be correctly subsetted (by this numeric value).
-              # Motivation:
-              # Row names of the pdata.frame and row names of the pdata.frame's 
-              # index are not guaranteed to be the same!
-              iindex <- match(iindex, rownames(x))
-            }
-            # subset index and row names
-            index <- "[.data.frame"(index, iindex, )
-            x.rownames <- x.rownames[iindex]
-            
-            # remove empty levels in index (if any)
-            # NB: really do dropping of unused levels? Standard R behaviour is to leave the levels and not drop unused levels
-            #     Maybe the dropping is needed for functions like lag.pseries/lagt.pseries to work correctly?
-            index <- droplevels(index)
-            # NB: use droplevels() rather than x[drop = TRUE] as x[drop = TRUE] can also coerce mode!
-            # old (up to rev. 251): index <- data.frame(lapply(index, function(x) x[drop = TRUE]))
-        }
-# old meboot workaround:   }
+      # remove empty levels in index (if any)
+      # NB: really do dropping of unused levels? Standard R behaviour is to leave the levels and not drop unused levels
+      #     Maybe the dropping is needed for functions like lag.pseries/lagt.pseries to work correctly?
+      index <- droplevels(index)
+      # NB: use droplevels() rather than x[drop = TRUE] as x[drop = TRUE] can also coerce mode!
+      # old (up to rev. 251): index <- data.frame(lapply(index, function(x) x[drop = TRUE]))
+    }
+    
+    ### end of subsetting index
     
     # delete attribute with old index first:
     # this preserves the order of the attributes because 
@@ -764,14 +761,6 @@ as.data.frame.pdata.frame <- function(x, row.names = NULL, optional = FALSE, kee
     }
     return(x)
 }
-
-
-
-
-
-
-
-
 
 
 #' Check if an object is a pseries
