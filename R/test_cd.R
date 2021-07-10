@@ -272,7 +272,7 @@ pcdtest.pseries <- function(x, test = c("cd", "sclm", "bcsclm", "lm", "rho", "ab
   
     pos.na <- is.na(x)
     if (any(pos.na)) {
-      x <- subset_pseries(x, !pos.na)
+      x <- subset_pseries(x, !pos.na) # TODO: use [.pseries (pseries subsetting) once implemented
       warning("NA values encountered in input and removed")
       if (length(x) == 0L) stop("input is empty after removal of NA values")
     }

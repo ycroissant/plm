@@ -51,8 +51,8 @@ wlddevsmall$iso3c <- as.character(wlddevsmall$iso3c)
 data <- replicate(100, wlddevsmall, simplify = FALSE)
 rm(wlddevsmall)
 uniquify <- function(x, i) {
-	x$iso3c <- paste0(x$iso3c, i)
-	x
+  x$iso3c <- paste0(x$iso3c, i)
+  x
 }
 data <- unlist2d(Map(uniquify, data, as.list(1:100)), idcols = FALSE)
 data <- pdata.frame(data, index = c("iso3c", "year"))

@@ -161,7 +161,7 @@ ercomp.formula <- function(object, data,
               theta$total <- 0
           }
         } else {
-          # Nerlove unbalances as in Cottrell (2017), gretl working paper #4
+          # Nerlove unbalanced as in Cottrell (2017), gretl working paper #4
           # -> use weighting
           # (albeit the formula for unbalanced panels reduces to original
           # Nerlove formula for balanced data, we keep it separated)
@@ -210,13 +210,17 @@ ercomp.formula <- function(object, data,
         O <- pdim$nT$N
         wm <- plm.fit(data, effect = "individual", model = "within")
         X <- model.matrix(data, rhs = 1)
-        constants <- apply(X, 2, function(x) all(tapply(x, index(data)[[1L]], is.constant)))
+        ixid <- index(data)[[1L]]
+        charixid <- as.character(ixid)
+        constants <- apply(X, 2, function(x) all(tapply(x, ixid, is.constant)))
         if (length(object)[2L] > 1L){
+          # with instruments
             W1 <- model.matrix(data, rhs = 2)
-            ra <- twosls(fixef(wm, type = "dmean")[as.character(index(data)[[1L]])], X[ , constants, drop = FALSE], W1)
+            ra <- twosls(fixef(wm, type = "dmean")[charixid], X[ , constants, drop = FALSE], W1)
         }
         else{
-            FES <- fixef(wm, type = "dmean")[as.character(index(data)[[1L]])]
+          # without instruments
+            FES <- fixef(wm, type = "dmean")[charixid]
             XCST <- X[ , constants, drop = FALSE]
             ra <- lm(FES ~ XCST - 1)
         }

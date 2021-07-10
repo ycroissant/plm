@@ -489,9 +489,8 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 
 ## Non-exported internal function for subsetting of pseries. Can be used
 ## internally. 
-## Currently we do not have "proper" subsetting function for pseries
-## ([.pseries) which applies in any case (but see the sketch to be tested in
-##  tool_pdata.frame.R)
+## While ther is now a "proper" subsetting function for pseries, leave this
+## subset_pseries for a while just to be safe
 subset_pseries <- function(x, ...) {
   
   ## use '...' instead of only one specific argument, because subsetting for

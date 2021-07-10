@@ -3,6 +3,7 @@
 \name{pdata.frame}
 \alias{pdata.frame}
 \alias{$<-.pdata.frame}
+\alias{[.pseries}
 \alias{[.pdata.frame}
 \alias{[[.pdata.frame}
 \alias{$.pdata.frame}
@@ -24,6 +25,8 @@ pdata.frame(
 )
 
 \method{$}{pdata.frame}(x, name) <- value
+
+\method{[}{pseries}(x, ...)
 
 \method{[}{pdata.frame}(x, i, j, drop)
 
@@ -82,6 +85,8 @@ the index variables),}
 
 \item{value}{the name of the variable to include,}
 
+\item{\dots}{further arguments.}
+
 \item{i}{see \code{\link[=Extract]{Extract()}},}
 
 \item{j}{see \code{\link[=Extract]{Extract()}},}
@@ -89,8 +94,6 @@ the index variables),}
 \item{drop}{see \code{\link[=Extract]{Extract()}},}
 
 \item{y}{one of the columns of the \code{data.frame},}
-
-\item{\dots}{further arguments.}
 
 \item{keep.attributes}{logical, only for as.list and as.data.frame
 methods, indicating whether the elements of the returned

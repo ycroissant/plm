@@ -436,7 +436,7 @@ plm.fit <- function(data, model, effect, random.method,
                         models = random.models, dfcor = random.dfcor)
         sigma2 <- estec$sigma2
         theta <- estec$theta
-        if (length(formula)[2L] >1L && effect == "twoways")
+        if (length(formula)[2L] > 1L && effect == "twoways")
             stop(paste("Instrumental variable random effect estimation",
                        "not implemented for two-ways panels"))
     }
@@ -466,7 +466,9 @@ plm.fit <- function(data, model, effect, random.method,
         # IV case: extract the matrix of instruments if necessary
         # (means here that we have a multi-parts formula)
         if (length(formula)[2L] > 1L){
-            if(!is.null(model.weights(data)) || any(w != 1)) stop("argument 'weights' not yet implemented for instrumental variable models")
+          
+            if(!is.null(model.weights(data)) || any(w != 1))
+              stop("argument 'weights' not yet implemented for instrumental variable models")
             
             #  This is executed for all IV cases
             
