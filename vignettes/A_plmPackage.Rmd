@@ -1678,7 +1678,7 @@ from proximity matrices by means of the `nb2mat` function. Higher orders of
 the $CD(p)$ test can be obtained by lagging the corresponding `nb`s
 through `nblag`.]. 
 
-## Unit root tests
+## Panel unit root tests
 
 ### Preliminary results
 
@@ -1730,9 +1730,9 @@ $$
 
 ### Levin-Lin-Chu model
 
-Then, compute artificial regressions of $\Delta y_{it}$ and $y_{it-1}$
-on $\Delta y_{it-L}$ and $d_{mt}$ and get the two vectors of residuals
-$z_{it}$ and $v_{it}$. 
+Then, as per @LEVIN:LIN:CHU:02, compute artificial regressions of $\Delta y_{it}$
+and $y_{it-1}$ on $\Delta y_{it-L}$ and $d_{mt}$ and get the two vectors of
+residuals $z_{it}$ and $v_{it}$. 
 
 Standardize these two residuals and run the pooled regression of
 $z_{it}/\hat{\sigma}_i$ on $v_{it}/\hat{\sigma}_i$ to get
@@ -1771,8 +1771,8 @@ package.
 
 ### Im, Pesaran and Shin test
 
-This test does not require that $\rho$ is the same for all the
-individuals. The null hypothesis is still that all the series have an
+This test by @IM:PESAR:SHIN:03 does not require that $\rho$ is the same for all
+the individuals. The null hypothesis is still that all the series have an
 unit root, but the alternative is that some may have a unit root and
 others have different values of $\rho_i <0$.
 
@@ -1792,6 +1792,53 @@ $$
 $\mu^*_{m\tilde{T}}$ and $\sigma^*_{m\tilde{T}}$ are
 given in table 2 of the original paper and are also available in the
 package.
+
+### Simes' approach: intersecting hypotheses
+
+A different approach to panel unit root testing can be drawn from the general 
+Simes' test for intersection of individual hypothesis tests [@SIMES:86].
+@HANCK:13 suggests to apply the approach for panel unit root testing.
+
+The tests works by combining p-values from single hypothesis tests (individual
+unit root tests) with a global (intersected) hypothesis and controls for the
+multiplicity in testing. Thus, it works "on top" of any panel unit root test
+which yield a p-value for each individual series. Unlike most other panel unit
+root tests, this approach allows to discriminate between individuals for which
+the individual H0 (unit root present for individual series) is rejected/is not
+rejected and requires a pre-specified significance level. Further, the test is
+robust versus general patterns of cross-sectional dependence.
+
+The function `hansi` for this test takes as main input object either a numeric
+containing p-values of individual tests or a `"purtest"` object as produced by
+function `purtest` which holds a suitable pre-computed panel unit root test
+(one that produces p-values per individual series). The significance level is
+set by argument `alpha` (default 5 %). The function's return value is a list
+with detailed evaluation of the applied Simes test. The associated print method
+gives a verbal evaluation.
+
+The following examples shows both accepted ways of input, the first example
+replicates @HANCK:13, table 11 (left side), who applied some panel unit root test
+for a Purchasing Power Parity analysis per country (individual H0 hypotheses per
+series) to get the individual p-values and then used Simes' approach for testing
+the global (intersecting) hypothesis for the whole panel.
+```{r hansi}
+### input is numeric (p-values), replicates Hanck (2013), Table 11 (left side)
+pvals <- c(0.0001,0.0001,0.0001,0.0001,0.0001,0.0001,0.0050,0.0050,0.0050,
+           0.0050,0.0175,0.0175,0.0200,0.0250,0.0400,0.0500,0.0575,0.2375,0.2475)
+countries <- c("Argentina","Sweden","Norway","Mexico","Italy","Finland","France",
+              "Germany","Belgium","U.K.","Brazil","Australia","Netherlands",
+              "Portugal","Canada", "Spain","Denmark","Switzerland","Japan")
+names(pvals) <- countries
+h <- hansi(pvals)
+print(h)
+h$rejected # logical indicating the individuals with rejected individual H0
+
+
+### input is a (suitable) purtest object
+y <- data.frame(split(Grunfeld$inv, Grunfeld$firm))
+obj <- purtest(y, pmax = 4, exo = "intercept", test = "madwu")
+hansi(obj, alpha = 0.06) # set significance level to 6 %
+```
 
 
 ## Robust covariance matrix estimation{#robust}

@@ -43,29 +43,29 @@ for multiplicity),
 }
 \description{
 Simes' test of intersection of individual hypothesis tests
-\insertCite{SIMES:86;textual}{plm} applied to panel unit root tests as suggested by
+\insertCite{SIMES:86}{plm} applied to panel unit root tests as suggested by
 \insertCite{HANCK:13;textual}{plm}.
 }
 \details{
 Simes' approach to testing is combining p-values from single hypothesis tests
-with a global (intersected) hypothesis. \insertCite{HANCK:13;textual}{plm} mentions it can
-be applied to any panel unit root test which yield a p-value for each
-individual series.
+with a global (intersected) hypothesis. \insertCite{HANCK:13;textual}{plm}
+mentions it can be applied to any panel unit root test which yield a p-value
+for each individual series.
 The test is robust versus general patterns of cross-sectional dependence.
 
 Further, this approach allows to discriminate between individuals for which
-the individual H0 (unit root present for individual series) is rejected/
-is not rejected by Hommel's procedure (\insertCite{HOMM:88;textual}{plm}) for family-wise
-error rate control (FWER) at pre-specified significance level alpha via
-argument \code{alpha} (defaulting to \code{0.05}), i.e., it controls for the multiplicity
-in testing.
+the individual H0 (unit root present for individual series) is rejected/is
+not rejected by Hommel's procedure (\insertCite{HOMM:88;textual}{plm}) for
+family-wise error rate control (FWER) at pre-specified significance level
+alpha via argument \code{alpha} (defaulting to \code{0.05}), i.e., it controls for the
+multiplicity in testing.
 
 The function \code{hansi} takes as main input \code{object} either a plain numeric
 containing p-values of individual tests or a \code{purtest} object which holds
 a suitable pre-computed panel unit root test (one that produces p-values per
 individual series).
 
-The functions return value (see section Value) is a list with detailed
+The function's return value (see section Value) is a list with detailed
 evaluation of the applied Simes test.
 
 The associated \code{print} method prints a verbal evaluation.

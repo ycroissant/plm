@@ -4,10 +4,14 @@
 ### Features:
  * hansi: new function for Simes (1986) test applied to panels for panel unit
    root testing, as suggested in Hanck (2013).
- * [.pseries: implemented function to allow subetting on pseries while retaining
-   the pseries properties, i.e., `some_pseries[<some subsetting condition>]` is
+   
+ * [.pseries: implemented method to allow subetting on pseries while retaining
+   the pseries properties, i.e., `some_pseries[<some subsetting condition>]`
    remains a pseries (before, subsetting on pseries worked as the base R
-   subsetting for vectors was used but the pseries properties were lost).
+   subsetting for vectors was used but the pseries properties were lost). The
+   subsetting method checks for valid pseries features and warns for non-valid
+   onces (as some packages constructed non-valid pseries objects, e.g. with
+   no or null index).
 
 ### Fixes & Others:
  * vcovG (hence vcovHC, vcovDC, vcovNW, vcovSCC), vcovBK: fix error in case of
@@ -36,7 +40,10 @@
    this does not warn anymore: `pseries[1:(length(pseries)-1)] + pseries[2:length(p2)]`).
 
  * Vignettes:
-    * 1st vignette: added a little more information on the use of vcoVXX.
+    * 1st vignette:
+      * added sub-section about new function hansi in chapter about panel unit
+        root tests.
+      * added a little more information on the use of vcovXX.
     * 2nd vignette: added formula for nested error component model.
     * all: references updated to include Baltagi (2021), the 6th edition of the
       textbook; fixed a few typos.
