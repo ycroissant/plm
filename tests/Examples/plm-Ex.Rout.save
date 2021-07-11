@@ -7159,8 +7159,8 @@ alternative hypothesis: cross-sectional dependence
 > 
 > ### Name: pdata.frame
 > ### Title: data.frame for panel data
-> ### Aliases: pdata.frame $<-.pdata.frame [.pdata.frame [[.pdata.frame
-> ###   $.pdata.frame print.pdata.frame as.list.pdata.frame
+> ### Aliases: pdata.frame $<-.pdata.frame [.pseries [.pdata.frame
+> ###   [[.pdata.frame $.pdata.frame print.pdata.frame as.list.pdata.frame
 > ###   as.data.frame.pdata.frame
 > ### Keywords: classes
 > 
@@ -14670,7 +14670,7 @@ F-statistic: 309.014 on 2 and 197 DF, p-value: < 2.22e-16
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  15.16 0.45 15.61 NA NA 
+Time elapsed:  34.21 0.89 36.46 NA NA 
 > grDevices::dev.off()
 null device 
           1 

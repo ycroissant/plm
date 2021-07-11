@@ -1,4 +1,4 @@
-# development version 2.4-19999 
+# development version 2.4-1.999999
  **likely set to either 2.4-2 or 2.6 for CRAN release**
 
 ### Features:
@@ -27,7 +27,7 @@
    to the operations respecting the panel structure, if called on a pseries.
  
  * plm:
-    * for the nested random effect model, check that argument `'model = "random"`,
+    * for the nested random effect model, check that argument `model = "random"`,
      warns and adjusts accordingly if not (might become an error in the future).
     * Non-default random IV cases computed a little faster.
 
