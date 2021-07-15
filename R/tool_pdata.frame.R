@@ -458,7 +458,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
  ## factors can have argument 'drop', e.g., x[i, drop=TRUE] see ?Extract.factor
   index <- attr(x, "index")
   if (is.null(index)) warning("pseries object with is.null(index(pseries)) == TRUE encountered")
-  if (!is.null(index) && !is.index(index)) stop(paste0("pseries object has illegal index with class(index) == ", paste0(class(index), collapse = ", ")))
+  if (!is.null(index) && !is.index(index)) warning(paste0("pseries object has illegal index with class(index) == ", paste0(class(index), collapse = ", ")))
   names_orig <- names(x)
   keep_rownr <- seq_along(x) # full length row numbers original pseries
   names(keep_rownr) <- names_orig
@@ -489,15 +489,15 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 
 ## Non-exported internal function for subsetting of pseries. Can be used
 ## internally. 
-## While ther is now a "proper" subsetting function for pseries, leave this
-## subset_pseries for a while just to be safe
+## While there is now a "proper" subsetting function for pseries, leave this
+## subset_pseries for a while just to be safe (currently used in pcdtest())
 subset_pseries <- function(x, ...) {
   
   ## use '...' instead of only one specific argument, because subsetting for
   ## factors can have argument 'drop', e.g., x[i, drop=TRUE] see ?Extract.factor
   index <- attr(x, "index")
   if (is.null(index)) warning("pseries object with is.null(index(pseries)) == TRUE encountered")
-  if (!is.null(index) && !is.index(index)) stop(paste0("pseries object has illegal index with class(index) == ", paste0(class(index), collapse = ", ")))
+  if (!is.null(index) && !is.index(index)) warning(paste0("pseries object has illegal index with class(index) == ", paste0(class(index), collapse = ", ")))
   names_orig <- names(x)
   keep_rownr <- seq_along(x) # full length row numbers original pseries
   names(keep_rownr) <- names_orig
