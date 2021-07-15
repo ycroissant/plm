@@ -10,7 +10,7 @@
    remains a pseries (before, subsetting on pseries worked as the base R
    subsetting for vectors was used but the pseries properties were lost). The
    subsetting method checks for valid pseries features and warns for non-valid
-   onces (as some packages constructed non-valid pseries objects, e.g. with
+   ones (as some packages constructed non-valid pseries objects, e.g., with
    no or null index).
 
 ### Fixes & Others:
@@ -23,8 +23,9 @@
  * (re-)export base::diff's generic as plm::diff to always be able to call
    plm::diff and get panel-diff-ing (in case some other package overwrites base
    R's generic diff (like dplyr does for base R's lag)). By doing this, it is
-   ensured plm::diff (as prev. for plm::lag, and plm::lead) will always dispatch
-   to the operations respecting the panel structure, if called on a pseries.
+   ensured plm::diff (as already for for plm::lag and plm::lead) will always
+   dispatch to the operations respecting the panel structure, if called on a
+   pseries.
  
  * plm:
     * for the nested random effect model, check that argument `model = "random"`,
