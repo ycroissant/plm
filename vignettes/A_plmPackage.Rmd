@@ -296,12 +296,12 @@ and then to use the `pdata.frame` in the estimation functions.
 
 ### Estimation interface
 
-`plm` provides various functions for estimation, among them:
+Package `plm` provides various functions for panel data estimation, among them:
 
 - `plm`: estimation of the
-  basic panel models, *i.e.*, within, between and random effect
-  models. Models are estimated using the `lm` function to
-  transformed data,
+  basic panel models and instrumental variable panel models, *i.e.*, between and
+  first-difference models and within and random effect  models. Models are
+  estimated internally using the `lm` function on transformed data,
 - `pvcm`: estimation of models with variable coefficients,
 - `pgmm`: estimation of generalized method of moments models,
 - `pggls`: estimation of general feasible generalized least squares
@@ -685,11 +685,13 @@ summary(grun.re)
 ``` 
 
 For a `random` model, the `summary` method gives information
-about the variance of the components of the errors.  Fixed effects may
-be extracted easily using `fixef`. An argument `type`
-indicates how fixed effects should be computed: in levels 
-`type = "level"` (the default), in deviations from the overall mean
-`type = "dmean"` or in deviations from the first individual
+about the variance of the components of the errors; `ranef` extracts the
+random effects from the estimated model.
+
+Fixed effects may be extracted easily using `fixef`. An argument `type`
+indicates how fixed effects should be computed: in levels by
+`type = "level"` (the default), in deviations from the overall mean by
+`type = "dmean"` or in deviations from the first individual by
 `type = "dfirst"`.
 
 ```{r }
@@ -710,7 +712,7 @@ In case of a two-ways effect model, an additional argument
 
 ```{r }
 grun.twfe <- plm(inv~value+capital, data=Grunfeld, model="within", effect="twoways")
-fixef(grun.twfe, effect="time")
+fixef(grun.twfe, effect = "time")
 ``` 
 
 ## More advanced use of plm
@@ -834,7 +836,7 @@ ht <- plm(lwage ~ wks + south + smsa + married + exp + I(exp ^ 2) +
               bluecol + south + smsa + ind + sex + black |
               wks + married + union + exp + I(exp ^ 2), 
           data = Wages, index = 595,
-           model = "random", random.method = "ht", inst.method = "baltagi")
+          model = "random", random.method = "ht", inst.method = "baltagi")
 summary(ht)
 ```
 
@@ -1016,7 +1018,7 @@ lag of wages and output and current value of capital.
 
 ```{r gmm}
 emp.gmm <- pgmm(log(emp)~lag(log(emp), 1:2)+lag(log(wage), 0:1)+log(capital)+
-                lag(log(output), 0:1)|lag(log(emp), 2:99),
+                lag(log(output), 0:1) | lag(log(emp), 2:99),
                 data = EmplUK, effect = "twoways", model = "twosteps")
 summary(emp.gmm)
 ``` 
@@ -1680,6 +1682,11 @@ through `nblag`.].
 
 ## Panel unit root tests
 
+<!-- TODO:
+   * function purtest() is not shown here at all, only a little theory.
+   * also, we should at least mention the other tests implemented
+-->
+
 ### Preliminary results
 
 We consider the following model:
@@ -2061,7 +2068,7 @@ component in the error term.
 
 In the mixed models literature, on the contrary, *fixed effect*
 indicates a parameter that is assumed constant, while
-*random  effects* are parameters that vary randomly around zero
+*random effects* are parameters that vary randomly around zero
 according to a joint multivariate normal distribution.
 
 <!---
@@ -2075,7 +2082,7 @@ according to a joint multivariate normal distribution.
 So, the FE model in econometrics has no counterpart in the
 mixed models framework, unless reducing it to OLS on a
 specification with one dummy for each group (often termed
-*least  squares dummy variables*, or LSDV model) which can
+*least squares dummy variables*, or LSDV model) which can
 trivially be estimated by OLS. The RE model is
 instead a special case of a mixed model where only the intercept is
 specified as a random effect, while the "random" type variable
