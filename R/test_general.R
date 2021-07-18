@@ -746,7 +746,8 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
   vcov_arg <- vcov
   int <- "(Intercept)"
   coefs_wo_int <- coef(x)[!(names(coef(x)) %in% int)]
-  
+  if(!length(coefs_wo_int)) stop(paste("No non-intercept regressors in input model 'x',",
+                                       "cannot perform Wald joint significance test"))
   # sanity check
   if (df2adj == TRUE && (is.null(vcov_arg) || test != "F")) {
     stop("df2adj == TRUE sensible only for robust F test, i.e., test == \"F\" and !is.null(vcov) and missing(.df2)")

@@ -36,6 +36,10 @@
    (integer or NULL) aligned with and correctly passed on to 
    has.intercept.Formula (with a *temporary* back-compatible solution).
 
+ * pwaldtest: error informatively if test is executed on intercept-only model
+   (and do not try to do so in summary.plm and do not try to print in
+   print.summary.plm).
+
  * groupGenerics: no more warning in arithmetic operations on pseries when index
    of both operands have same length but different content (e.g., something like
    this does not warn anymore: `pseries[1:(length(pseries)-1)] + pseries[2:length(p2)]`).

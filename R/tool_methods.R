@@ -290,9 +290,15 @@ summary.plm <- function(object, vcov = NULL, ...){
   if(length(formula(object))[2L] >= 2L) use.norm.chisq <- TRUE # all IV models
   if(model == "ht") use.norm.chisq <- TRUE                     # HT via plm(., model="ht")
   
-  object$fstatistic <- pwaldtest(object,
-                                 test = if(use.norm.chisq) "Chisq" else "F",
-                                 vcov = vcov_arg)
+  # perform Wald test of joint sign. of regressors only if there are
+  # other regressors besides the intercept
+  coef_wo_int <- object$coefficients[!(names(coef(object)) %in% "(Intercept)")]
+  if(length(coef_wo_int)) {
+    object$fstatistic <- pwaldtest(object,
+                                   test = if(use.norm.chisq) "Chisq" else "F",
+                                   vcov = vcov_arg)
+  }
+  
   
   # construct the table of coefficients
   if (!is.null(vcov_arg)) {
@@ -409,16 +415,21 @@ print.summary.plm <- function(x, digits = max(3, getOption("digits") - 2),
   cat(paste("Residual Sum of Squares: ", signif(deviance(x), digits), "\n", sep = ""))
   cat(paste("R-Squared:      ", signif(x$r.squared[1L], digits),      "\n", sep = ""))
   cat(paste("Adj. R-Squared: ", signif(x$r.squared[2L], digits),      "\n", sep = ""))
-  fstat <- x$fstatistic
-  if (names(fstat$statistic) == "F"){
-    cat(paste("F-statistic: ", signif(fstat$statistic),
-              " on ", fstat$parameter["df1"]," and ", fstat$parameter["df2"],
-              " DF, p-value: ", format.pval(fstat$p.value,digits=digits), "\n", sep=""))
-  }
-  else{
-    cat(paste("Chisq: ", signif(fstat$statistic),
-              " on ", fstat$parameter,
-              " DF, p-value: ", format.pval(fstat$p.value, digits = digits), "\n", sep=""))
+
+  # print Wald test of joint sign. of regressors only if there is a statistic
+  # in summary.plm object (not computed by summary.plm if there are no other
+  # regressors than the intercept
+  if(!is.null(fstat <- x$fstatistic)) {
+    if (names(fstat$statistic) == "F"){
+      cat(paste("F-statistic: ", signif(fstat$statistic),
+                " on ", fstat$parameter["df1"]," and ", fstat$parameter["df2"],
+                " DF, p-value: ", format.pval(fstat$p.value,digits=digits), "\n", sep=""))
+    }
+    else{
+      cat(paste("Chisq: ", signif(fstat$statistic),
+                " on ", fstat$parameter,
+                " DF, p-value: ", format.pval(fstat$p.value, digits = digits), "\n", sep=""))
+    }
   }
   invisible(x)
 }
