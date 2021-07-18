@@ -1723,7 +1723,7 @@ about the test performed, among them details about the individual
 regressions/statistics for the test. Associated `summary` and `print.summary`
 methods can be used to extract/display the additional information.
 
-Function `cipstest` implements Peseran's (@pes07) cross-sectionally
+Function `cipstest` implements Pesaran's (@pes07) cross-sectionally
 augmented version of the Im-Pesaran-Shin panel unit root test and is a
 so-called second-generation panel unit root test.
 

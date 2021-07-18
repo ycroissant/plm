@@ -1,9 +1,9 @@
 padf <- function(x, exo = c("none", "intercept", "trend"), p.approx = NULL, ...){
  # p-value approximation for tau distribution of (augmented) Dickey-Fuller test
  # as used in some panel unit root tests in purtest().
- 
+ #
  # argument 'x' must be a numeric (can be length == 1 or >= 1)
-  
+ #  
  # p-values approximation is performed by the method of MacKinnon (1994) or
  # MacKinnon (1996), the latter yielding better approximated p-values but
  # requires package 'urca'.
@@ -141,7 +141,7 @@ adj.ips.wtbar <- aperm(adj.ips.wtbar, c(2, 1, 3, 4))
 
 
 ###############
-## IPS (2003), table 2 (obvious typos (missing minus signs corrected))
+## IPS (2003), table 2 (obvious typos (missing minus signs) corrected)
 
 # intercept 1% critical values
 critval.ips.tbar.int1 <- c(
@@ -303,15 +303,15 @@ YCdiff <- function(object){
 selectT <- function(x, Ts){
   ## This function selects the length of the series as it is tabulated
   if (x %in% Ts) return(x)
-  if (x < Ts[1]){
+  if (x < Ts[1L]){
     warning("the time series is short")
-    return(Ts[1])
+    return(Ts[1L])
   }
   if (x > Ts[length(Ts)]){
     warning("the time series is long")
     return(Ts[length(Ts)])
   }
-  pos <- which((Ts - x) > 0)[1]
+  pos <- which((Ts - x) > 0)[1L]
   return(Ts[c(pos - 1, pos)])
 }
 
@@ -386,7 +386,7 @@ adj.ips.wtbar.value <- function(l = 30, lags = 2, exo = c("intercept", "trend"))
   lags <- min(lags, 8)
   theTs <- as.numeric(dimnames(adj.ips.wtbar)[[2L]])
   Ts <- selectT(l, theTs)
-  if (length(Ts) == 1){
+  if (length(Ts) == 1L){
     # take value as in table
     return(adj.ips.wtbar[as.character(lags), as.character(Ts), , exo])
   }
@@ -394,7 +394,7 @@ adj.ips.wtbar.value <- function(l = 30, lags = 2, exo = c("intercept", "trend"))
     # interpolate value from table
     low  <- adj.ips.wtbar[as.character(lags), as.character(Ts[1L]), , exo]
     high <- adj.ips.wtbar[as.character(lags), as.character(Ts[2L]), , exo]
-    return(low + (l - Ts[1])/(Ts[2] - Ts[1]) * (high - low))
+    return(low + (l - Ts[1L])/(Ts[2L] - Ts[1L]) * (high - low))
   }
 }
 
@@ -1112,7 +1112,7 @@ print.summary.purtest <- function(x, ...){
 #' Simes Test for unit roots in panel data
 #' 
 #' Simes' test of intersection of individual hypothesis tests
-#' \insertCite{SIMES:86}{plm} applied to panel unit root tests as suggested by
+#' (\insertCite{SIMES:86;textual}{plm}) applied to panel unit root tests as suggested by
 #' \insertCite{HANCK:13;textual}{plm}.
 #' 
 #' Simes' approach to testing is combining p-values from single hypothesis tests

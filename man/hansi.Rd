@@ -43,7 +43,7 @@ for multiplicity),
 }
 \description{
 Simes' test of intersection of individual hypothesis tests
-\insertCite{SIMES:86}{plm} applied to panel unit root tests as suggested by
+(\insertCite{SIMES:86;textual}{plm}) applied to panel unit root tests as suggested by
 \insertCite{HANCK:13;textual}{plm}.
 }
 \details{
