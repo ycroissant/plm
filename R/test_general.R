@@ -862,9 +862,8 @@ pwaldtest.pvcm <- function(x, ...) {
     # vcovs and coefficients w/o intercept
     coefs.no.int <- !names(x$coefficients) %in% "(Intercept)"
     vcovl <- lapply(x$vcov, function(x) x[coefs.no.int, coefs.no.int])
-    coefl <- as.list(data.frame(t(x$coefficients[ , coefs.no.int])))
-    
-    df1 <- ncol(x$coefficients[ , coefs.no.int]) # is same df1 for all models (as all models estimate the same coefs)
+    coefl <- as.list(data.frame(t(x$coefficients[ , coefs.no.int, drop = FALSE])))
+    df1 <- ncol(x$coefficients[ , coefs.no.int, drop = FALSE]) # is same df1 for all models (as all models estimate the same coefs)
     df2 <- lengths(residl) - ncol(x$coefficients) # (any intercept is subtracted)
     
     statChisqs <- mapply(FUN = function(v, c) as.numeric(crossprod(solve(v, c), c)),
