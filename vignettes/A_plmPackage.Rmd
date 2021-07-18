@@ -1718,6 +1718,11 @@ Fisher-type tests.^[The individual p-values for the Fisher-type tests
 are approximated as described in @MACK:96 if the package
 `urca` (@PFAFF:08) is available, otherwise as described in @MACK:94.]
 
+`purtest` returns an object of class `"purtest"` which contains details
+about the test performed, among them details about the individual
+regressions/statistics for the test. Associated `summary` and `print.summary`
+methods can be used to extract/display the additional information.
+
 Function `cipstest` implements Peseran's (@pes07) cross-sectionally
 augmented version of the Im-Pesaran-Shin panel unit root test and is a
 so-called second-generation panel unit root test.
@@ -1823,7 +1828,8 @@ regressions is:
 ```{r levinlin}
 data("HousePricesUS", package = "pder")
 lprice <- log(pdata.frame(HousePricesUS)$price)
-purtest(lprice, test = "levinlin", lags = 2, exo = "trend")
+(lev <- purtest(lprice, test = "levinlin", lags = 2, exo = "trend"))
+summary(lev) ### gives details
 ```
 
 
