@@ -1917,10 +1917,13 @@ hansi(obj, alpha = 0.06) # test with significance level set to 6 %
 ## Robust covariance matrix estimation{#robust}
 
 Robust estimators of the covariance matrix of coefficients are
-provided, mostly for use in Wald-type tests. `vcovHC`
-estimates three "flavours" of White's heteroskedasticity-consistent
-covariance matrix^[See @WHIT:80 and @WHIT:84b.]
-(known as the *sandwich* estimator). Interestingly, in the
+provided, mostly for use in Wald-type tests, and this section provides
+some basics and examples. A more comprehensive exposition of the theory
+and the capabilities that come with the plm package is given in @mil17b.
+
+`vcovHC` estimates three "flavours" of White's heteroskedasticity-consistent
+covariance matrix^[See @WHIT:80 and @WHIT:84b.] (known as the
+*sandwich* estimator). Interestingly, in the
 context of panel data the most general version also proves consistent
 vs. serial correlation.
 
@@ -1969,9 +1972,9 @@ correlation of the errors, but on the converse, unlike the White 1 and
 The fixed effects case, as already observed in Section
 [tests of serial correlation](#serialcor) on serial correlation, is
 complicated by the fact that the demeaning induces serial correlation
-in the errors. The original White estimator (`white1`) turns out to be
+in the errors. The original White estimator (`"white1"`) turns out to be
 inconsistent for fixed $T$ as $n$ grows, so in this case it is
-advisable to use the `arellano` version (see @STOC:WATS:08).
+advisable to use the `"arellano"` version (see @STOC:WATS:08).
 
 The errors may be weighted according to the schemes proposed by
 @MACK:WHIT:85 and @CRIB:04 to improve small-sample performance^[The
@@ -1992,7 +1995,7 @@ distribution as we deal with a random effects model here. For these
 types of models, the precise distribution of the coefficients
 estimates is unknown.]:
 
-```{r }
+```{r vcovHC1}
 re <- plm(inv~value+capital, data = Grunfeld, model = "random")
 summary(re, vcov = vcovHC) # gives usual summary output but with robust test statistics
 
@@ -2003,7 +2006,7 @@ coeftest(re, vcovHC, df = Inf)
 
 else one may do the covariance computation inside the call, thus passing on a matrix:
 
-```{r results='hide'}
+```{r vcovHC2, results='hide'}
 summary(re, vcov = vcovHC(re, method="white2", type="HC3"), df = Inf)
 coeftest(re, vcovHC(re, method="white2", type="HC3"), df = Inf)
 ``` 
@@ -2014,7 +2017,7 @@ allows providing the `vcov` of the unrestricted model as a matrix, see
 the documentation of package `lmtest`.].  In this case, optional
 parameters are provided as shown below (see also @ZEIL:04, p. 12):
 
-```{r waldtest}
+```{r waldtest-vcovHC}
 waldtest(re, update(re, . ~ . -capital),
          vcov=function(x) vcovHC(x, method="white2", type="HC3"))
 ```
@@ -2022,7 +2025,7 @@ waldtest(re, update(re, . ~ . -capital),
 Moreover, `linearHypothesis` from package `car` may be used to test 
 for linear restrictions:
 
-```{r }
+```{r car-vcovHC}
 library("car")
 linearHypothesis(re, "2*value=capital", vcov. = vcovHC)
 ```
