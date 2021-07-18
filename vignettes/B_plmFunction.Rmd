@@ -169,11 +169,11 @@ are:
     * `"nerlove"`, which is a specific method which doesn't fit to the
       quadratic form methodology described above (@NERLO:71) and uses an
       within model for the variance estimation as well,
-    * `"ht"` is an slightly modified version of `amemiya` ; when there
+    * `"ht"` is an slightly modified version of `"amemiya"`: when there
       are time-invariant covariates, the @AMEM:71 estimator of the
-      individual component of the variance is under-estimated as the
+      individual component of the variance under-estimates as the
       time-invariant covariates disappear in the within regression. In
-      this case @HAUS:TAYL:81 proposed to regress the estimation of
+      this case, @HAUS:TAYL:81 proposed to regress the estimation of
       the individual effects on the time-invariant covariates and use
       the residuals in order to estimate the components of the
       variance.
@@ -343,9 +343,10 @@ for fixed effect IV models as there is only one method for this type of IV
 models but many for random effect IV models.
 
 The instrumental variable estimators are illustrated in the following example
-from @BALT:05, pp. 117/120; @BALT:13, pp. 133/137; @BALT:21, pp. 162/165, tables 7.1, 7.3.
+from @BALT:05, pp. 117/120; @BALT:13, pp. 133/137; @BALT:21, pp. 162/165, tables 
+7.1, 7.3.
   
-```{r}
+```{r IV}
 data("Crime", package = "plm")
 crbalt <- plm(lcrmrte ~ lprbarr + lpolpc + lprbconv + lprbpris + lavgsen +
               ldensity + lwcon + lwtuc + lwtrd + lwfir + lwser + lwmfg + lwfed +
@@ -366,7 +367,7 @@ with the `plm` function by setting argument `random.method = "ht"` and
 The following example is from @BALT:05, p. 130; @BALT:13, pp. 145-7,
 tables 7.4-7.6; @BALT:21, pp. 174-6 , tables 7.5-7.7.
 
-```{r}
+```{r IV-HT}
 data("Wages", package = "plm")
 ht <- plm(lwage ~ wks + south + smsa + married + exp + I(exp^2) + 
             bluecol + ind + union + sex + black + ed | 
@@ -405,7 +406,7 @@ The group index is given in the 3rd position of the `index` argument to
 `pdata.frame` or to `plm` directly and `plm`'s argument `effect` is set to
 `"nested"`:
 
-```{r}
+```{r nestedRE}
 data("Produc", package = "plm")
 swar <- plm(form <- log(gsp) ~ log(pc) + log(emp) + log(hwy) + log(water) + log(util) + unemp, 
             Produc, index = c("state", "year", "region"), model = "random", effect = "nested", random.method = "swar")
