@@ -3,7 +3,7 @@ output: rmarkdown::html_vignette
 bibliography: ../inst/REFERENCES.bib
 abstract: |
   This introduction to the `plm` package is a slightly
-  modified version of @Croissant:Millo:2008, published in the
+  modified and extended version of @Croissant:Millo:2008, published in the
   *Journal of Statistical Software*. 
   
   Panel data econometrics is obviously one of the main fields
@@ -18,7 +18,7 @@ author:
 - name: Yves Croissant
 - name: Giovanni Millo
 vignette: >
-  %\VignetteIndexEntry{Panel data econometrics with R: the plm package}
+  %\VignetteIndexEntry{Panel data econometrics in R: the plm package}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 
@@ -759,7 +759,7 @@ effects. Using the `effect` argument, one may also introduce:
 For example, to estimate a two-ways effect model for the
 `Grunfeld` data:
 
-```{r }
+```{r 2RE-amemiya}
 grun.tways <- plm(inv~value+capital, data = Grunfeld, effect = "twoways",
                   model = "random", random.method = "amemiya")
 summary(grun.tways)
@@ -811,7 +811,7 @@ The instrumental variables estimator used is indicated with the
 An illustration is in the following example from 
 @BALT:05, p. 120; @BALT:13, p. 137; @BALT:21, p. 165, table 7.3 ("G2SLS").
   
-```{r }
+```{r G2SLS}
 data("Crime", package = "plm")
 cr <- plm(lcrmrte ~ lprbarr + lpolpc + lprbconv + lprbpris + lavgsen +
           ldensity + lwcon + lwtuc + lwtrd + lwfir + lwser + lwmfg + lwfed +
@@ -824,13 +824,13 @@ summary(cr)
 The Hausman-Taylor model (see @HAUS:TAYL:81) may be estimated
 with the `plm`^[Function `pht` is a deprecated way to estimate this type of model:
 `ht <- pht(lwage~wks+south+smsa+married+exp+I(exp^2)+ bluecol+ind+union+sex+black+ed 
-| sex+black+bluecol+south+smsa+ind, data=Wages,index=595)`] 
+| sex+black+bluecol+south+smsa+ind, data=Wages,index=595)`.] 
 function by setting parameters `random.method = "ht"` and
 `inst.method = "baltagi"` like in
 the example below. The following replicates @BALT:05, pp. 129/30;
 @BALT:13, pp. 145/6, tables 7.4/5; @BALT:21, pp. 174/5 tables 7.5/6:
 
-```{r }
+```{r hausman-taylor}
 ht <- plm(lwage ~ wks + south + smsa + married + exp + I(exp ^ 2) + 
               bluecol + ind + union + sex + black + ed |
               bluecol + south + smsa + ind + sex + black |
@@ -844,7 +844,7 @@ summary(ht)
 ## Variable coefficients model
 
 The `pvcm` function enables the estimation of variable
-coefficients models. Time or individual effects are introduced if
+coefficients models. Time or individual effects are introduced if argument
 `effect` is fixed to `"time"` or `"individual"` (the default value).
 
 Coefficients are assumed to be fixed if `model="within"` or 
@@ -1583,7 +1583,7 @@ and distributed as a standard normal (see @PESA:04).
 A bias-corrected scaled version, $BCSCLM$, for the *fixed effect model with individual
 effects* only is also available which is simply the $SCLM$ with a term correcting
 for the bias (@BALT:FENG:KAO:12)^[The unbalanced version of this statistic uses
-max(Tij) for T in the bias-correction term]. This statistic is also asymptotically
+max(Tij) for T in the bias-correction term.]. This statistic is also asymptotically
 distributed as standard normal.
 $$BCSCLM=\sqrt{\frac{1}{n(n-1)}} ( \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} T_{ij} \hat{\rho}_{ij}^2 -1)-\frac{n}{2(T-1)}$$
 
@@ -1682,10 +1682,51 @@ through `nblag`.].
 
 ## Panel unit root tests
 
-<!-- TODO:
-   * function purtest() is not shown here at all, only a little theory.
-   * also, we should at least mention the other tests implemented
--->
+### Overview of functions for panel unit root testing
+
+The package `plm` offers several panel unit root tests contained in
+functions `purtest`, `cipstest`, and `hansi`. While `purtest` implements various
+tests which can be selected via its `test` argument, `cipstest` and `hansi` are
+functions for a specific test each. Below, first an overview is provided
+which tests are implemented per fucntions. A theoretical treatment is given for
+a few of those tests later on.
+
+Function `purtest` offers the following tests by setting argument `test` to:
+
+- `"levinlin"` (default), for the Levin-Lin-Chu test
+              (@LEVIN:LIN:CHU:02), see below for
+              a theoretical exposition ([Levin-Lin-Chu test](#levinlin))),
+- `"ips"`, for Im-Pesaran-Shin (IPS) test by @IM:PESAR:SHIN:03, see below for
+              a theoretical exposition ([Im-Pesaran-Shin test](#ips))),
+- `"madwu"`, is the inverse $\chi^2$ test by @MADDA:WU:99, also called
+            P test by @CHOI:01,
+- `"Pm"`, is the modified P test proposed by @CHOI:01 for large N,
+- `"invnormal"`, is the inverse normal test (@CHOI:01),
+- `"logit"`, is the logit test (@CHOI:01),
+- `"hadri"`, for Hadri's test (@HADR:00).
+
+These tests are often called first generation panel unit root tests as they do
+assume absence of cross-sectional correlation. All mentioned tests except
+Hadri's test are based on the estimation of
+augmented Dickey-Fuller (ADF) regressions for each time series. A
+statistic is then computed using the t-statistics associated with
+the lagged variable. The Hadri residual-based LM statistic is the cross-sectional
+average of individual KPSS statistics (@KWIA:PHIL:SCHM:SHIN:92), standardized
+by their asymptotic mean and standard deviation.
+Among those tests, `"madwu"`, `"Pm"`, `"invormal"`, and `"logit"` are
+Fisher-type tests.^[The individual p-values for the Fisher-type tests
+are approximated as described in @MACK:96 if the package
+`urca` (@PFAFF:08) is available, otherwise as described in @MACK:94.]
+
+Function `cipstest` implements Peseran's (@pes07) cross-sectionally
+augmented version of the Im-Pesaran-Shin panel unit root test and is a
+so-called second-generation panel unit root test.
+
+Function `hansi` implements the idea of @HANCK:13 to apply Simes' testing
+approach for intersection of individual hypothesis tests to panel unit root
+testing, see below for a more thorough treatment
+of [Simes’ approach for intersecting hypotheses](#hansi).
+
 
 ### Preliminary results
 
@@ -1715,7 +1756,7 @@ time-series. Several possibilities are available. They all have in
 common that the maximum number of lags have to be chosen first. Then,
 $p_i$ can be chosen by using:
 
-- the Schwarz information criterion (SIC),
+- the Schwarz information criterion (SIC) (also known as Bayesian information criterion (BIC)),
 - the Akaike information criterion (AIC),
 - the Hall's method, which consist in removing the higher lags while
   they are not significant.
@@ -1735,7 +1776,7 @@ $$
 
 
 
-### Levin-Lin-Chu model
+### Levin-Lin-Chu model{#levinlin}
 
 Then, as per @LEVIN:LIN:CHU:02, compute artificial regressions of $\Delta y_{it}$
 and $y_{it-1}$ on $\Delta y_{it-L}$ and $d_{mt}$ and get the two vectors of
@@ -1776,7 +1817,17 @@ stationarity. $\mu^*_{m\tilde{T}}$ and $\sigma^*_{m\tilde{T}}$ are
 given in table 2 of the original paper and are also available in the
 package.
 
-### Im, Pesaran and Shin test
+An example how the Levin-Lin-Chu test is performed with `purtest` using a lag
+of 2 and intercept and a time trend as exogenous variables in the ADF
+regressions is:
+```{r levinlin}
+data("HousePricesUS", package = "pder")
+lprice <- log(pdata.frame(HousePricesUS)$price)
+purtest(lprice, test = "levinlin", lags = 2, exo = "trend")
+```
+
+
+### Im-Pesaran-Shin (IPS) test{#ips}
 
 This test by @IM:PESAR:SHIN:03 does not require that $\rho$ is the same for all
 the individuals. The null hypothesis is still that all the series have an
@@ -1800,13 +1851,21 @@ $\mu^*_{m\tilde{T}}$ and $\sigma^*_{m\tilde{T}}$ are
 given in table 2 of the original paper and are also available in the
 package.
 
-### Simes' approach: intersecting hypotheses
+
+An example of the IPS test with `purtest` with the same settings as in the
+previously performed Levin-Lin-Chu test is:
+```{r ips}
+purtest(lprice, test = "ips", lags = 2, exo = "trend")
+```
+
+
+
+### Simes' approach: intersecting hypotheses{#hansi}
 
 A different approach to panel unit root testing can be drawn from the general 
 Simes' test for intersection of individual hypothesis tests [@SIMES:86].
-@HANCK:13 suggests to apply the approach for panel unit root testing.
-
-The tests works by combining p-values from single hypothesis tests (individual
+@HANCK:13 suggests to apply the approach for panel unit root testing: The tests
+works by combining p-values from single hypothesis tests (individual
 unit root tests) with a global (intersected) hypothesis and controls for the
 multiplicity in testing. Thus, it works "on top" of any panel unit root test
 which yield a p-value for each individual series. Unlike most other panel unit
@@ -1828,7 +1887,7 @@ replicates @HANCK:13, table 11 (left side), who applied some panel unit root tes
 for a Purchasing Power Parity analysis per country (individual H0 hypotheses per
 series) to get the individual p-values and then used Simes' approach for testing
 the global (intersecting) hypothesis for the whole panel.
-```{r hansi}
+```{r hansi1}
 ### input is numeric (p-values), replicates Hanck (2013), Table 11 (left side)
 pvals <- c(0.0001,0.0001,0.0001,0.0001,0.0001,0.0001,0.0050,0.0050,0.0050,
            0.0050,0.0175,0.0175,0.0200,0.0250,0.0400,0.0500,0.0575,0.2375,0.2475)
@@ -1839,12 +1898,13 @@ names(pvals) <- countries
 h <- hansi(pvals)
 print(h)
 h$rejected # logical indicating the individuals with rejected individual H0
+```
 
-
-### input is a (suitable) purtest object
+```{r hansi2, results='hide'}
+### input is a (suitable) purtest object / different example
 y <- data.frame(split(Grunfeld$inv, Grunfeld$firm))
 obj <- purtest(y, pmax = 4, exo = "intercept", test = "madwu")
-hansi(obj, alpha = 0.06) # set significance level to 6 %
+hansi(obj, alpha = 0.06) # test with significance level set to 6 %
 ```
 
 
@@ -1924,7 +1984,7 @@ itself^[For `coeftest` set `df = Inf` to have the coefficients' tests
 be performed with standard normal distribution instead of t
 distribution as we deal with a random effects model here. For these
 types of models, the precise distribution of the coefficients
-estimates is unknown]:
+estimates is unknown.]:
 
 ```{r }
 re <- plm(inv~value+capital, data = Grunfeld, model = "random")
@@ -1949,7 +2009,7 @@ the documentation of package `lmtest`.].  In this case, optional
 parameters are provided as shown below (see also @ZEIL:04, p. 12):
 
 ```{r waldtest}
-waldtest(re, update(re,.~.-capital),
+waldtest(re, update(re, . ~ . -capital),
          vcov=function(x) vcovHC(x, method="white2", type="HC3"))
 ```
 

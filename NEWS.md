@@ -42,8 +42,9 @@
 
  * Vignettes:
     * 1st vignette:
-      * added sub-section about new function hansi in chapter about panel unit
-        root tests.
+      * panel unit root testing: added short intro with overview of available
+        functions/tests and added two example cases, added sub-section about
+        new function hansi.
       * added a little more information on the use of vcovXX.
     * 2nd vignette: added formula for nested error component model.
     * all: references updated to include Baltagi (2021), the 6th edition of the
