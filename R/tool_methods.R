@@ -281,8 +281,20 @@ summary.plm <- function(object, vcov = NULL, ...){
   model <- describe(object, "model")
   effect <- describe(object, "effect")
   random.method <- describe(object, "random.method")
-  object$r.squared <- c(rsq    = r.squared(object),
-                        adjrsq = r.squared(object, dfcor = TRUE))
+  
+  # determine if intercept-only model (no other regressors)
+  coef_wo_int <- object$coefficients[!(names(coef(object)) %in% "(Intercept)")]
+  int.only <- !length(coef_wo_int)
+  
+  # as cor() is not defined for intercept-only models, use different approach
+  # for R-squared ("rss" and "ess" are defined)
+  object$r.squared <- if(!int.only) {
+      c(rsq    = r.squared(object),
+        adjrsq = r.squared(object, dfcor = TRUE))
+    } else { 
+      c(rsq    = r.squared(object, type = "rss"),
+        adjrsq = r.squared(object, type = "rss", dfcor = TRUE))
+    }
   
   ## determine if standard normal and Chisq test or t distribution and F test to be used
   use.norm.chisq <- FALSE
@@ -292,8 +304,7 @@ summary.plm <- function(object, vcov = NULL, ...){
   
   # perform Wald test of joint sign. of regressors only if there are
   # other regressors besides the intercept
-  coef_wo_int <- object$coefficients[!(names(coef(object)) %in% "(Intercept)")]
-  if(length(coef_wo_int)) {
+  if(!int.only) {
     object$fstatistic <- pwaldtest(object,
                                    test = if(use.norm.chisq) "Chisq" else "F",
                                    vcov = vcov_arg)
