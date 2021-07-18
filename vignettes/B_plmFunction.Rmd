@@ -166,6 +166,9 @@ are:
       @WALL:HUSS:69,
     * `"swar"` (equivalent to `models = c("within", "Between")`), @SWAM:AROR:72,
     * `"amemiya"` (equivalent to `models = c("within")`), @AMEM:71,
+    * `"nerlove"`, which is a specific method which doesn't fit to the
+      quadratic form methodology described above (@NERLO:71) and uses an
+      within model for the variance estimation as well,
     * `"ht"` is an slightly modified version of `amemiya` ; when there
       are time-invariant covariates, the @AMEM:71 estimator of the
       individual component of the variance is under-estimated as the
@@ -173,9 +176,7 @@ are:
       this case @HAUS:TAYL:81 proposed to regress the estimation of
       the individual effects on the time-invariant covariates and use
       the residuals in order to estimate the components of the
-      variance,
-    * `"nerlove"`, which is a specific method which doesn't fit to the
-      quadratic form methodology described above (@NERLO:71).
+      variance.
 
 Note that for `plm`, the arguments are `random.models`, `random.dfcor`, and 
 `random.method` and correspond to arguments `models`, `method`, and
