@@ -356,7 +356,7 @@ between.matrix.collapse <- function(x, effect, ...) {
   }
   res <- collapse::fbetween(x, g = eff.fac, w = NULL, na.rm = na.rm, fill = TRUE)
   rownames(res) <- as.character(eff.fac)
-  res <- res[!duplicated(eff.fac), ]
+  res <- res[!duplicated(eff.fac), , drop = FALSE]
   return(res)
 }
 

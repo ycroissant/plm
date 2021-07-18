@@ -19,6 +19,9 @@
 
  * within_intercept: fix bug which caused an error for FE models with only one
    regressor.
+   
+ * between.matrix: do not coerce result to numeric vector for n x 1 matrix
+   input (use drop = FALSE in extraction).
  
  * (re-)export base::diff's generic as plm::diff to always be able to call
    plm::diff and get panel-diff-ing (in case some other package overwrites base

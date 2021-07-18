@@ -507,7 +507,7 @@ between.matrix <- function(x, effect, ...) {
   rownames(res) <- as.character(eff.fac)
   # compress data down to #elements of index dimension:
   keep <- !duplicated(eff.fac)
-  res <- res[keep, ]
+  res <- res[keep, , drop = FALSE]
   return(res)
 }
 
