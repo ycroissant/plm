@@ -860,7 +860,11 @@ pwaldtest.pvcm <- function(x, ...) {
     residl <- split(x$residuals, index(x)[[ii]])
     
     # vcovs and coefficients w/o intercept
-    coefs.no.int <- !names(x$coefficients) %in% "(Intercept)"
+    coefs.no.int <- !colnames(x$coefficients) %in% "(Intercept)"
+    if(!length(colnames(x$coefficients)[coefs.no.int])) {
+      stop(paste("No non-intercept regressors in model(s) of input 'x',",
+                 "cannot perform Wald joint significance tests"))
+    }
     vcovl <- lapply(x$vcov, function(x) x[coefs.no.int, coefs.no.int])
     coefl <- as.list(data.frame(t(x$coefficients[ , coefs.no.int, drop = FALSE])))
     df1 <- ncol(x$coefficients[ , coefs.no.int, drop = FALSE]) # is same df1 for all models (as all models estimate the same coefs)

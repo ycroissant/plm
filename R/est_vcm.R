@@ -86,7 +86,7 @@ pvcm <- function(formula, data, subset ,na.action, effect = c("individual", "tim
 
     cl <- match.call(expand.dots = TRUE)
     mf <- match.call()
-    mf[[1]] <- as.name("plm")
+    mf[[1L]] <- as.name("plm")
     mf$model <- NA
     data <- eval(mf, parent.frame())
     result <- switch(model.name,
@@ -100,10 +100,9 @@ pvcm <- function(formula, data, subset ,na.action, effect = c("individual", "tim
 }
 
 pvcm.within <- function(formula, data, effect){
-    
     index <- attr(data, "index")
-    id <- index[[1]]
-    time <- index[[2]]
+    id <- index[[1L]]
+    time <- index[[2L]]
     pdim <- pdim(data)
     
     if (effect == "time"){
@@ -117,7 +116,7 @@ pvcm.within <- function(formula, data, effect){
         card.cond <- pdim$nT$n
     }
     ml <- split(data, cond)
-    nr <- sapply(ml, function(x) dim(x)[1]) > 0
+    nr <- vapply(ml, function(x) dim(x)[1L] > 0, FUN.VALUE = TRUE) # == sapply(ml, function(x) dim(x)[1L]) > 0
     ml <- ml[nr]
     attr(ml, "index") <- index
     ols <- lapply(ml,
@@ -130,15 +129,13 @@ pvcm.within <- function(formula, data, effect){
                       names(r$coefficients) <- nc
                       r
                   })
-    
-    coef <- as.data.frame(t(sapply(ols, coefficients)))
+    coef <- as.data.frame(t(as.data.frame(sapply(ols, coef, simplify = FALSE)))) # was: as.data.frame(t(sapply(ols, coef))) #  # vapply(ols, coef, FUN.VALUE = 0.0)
     residuals <- unlist(lapply(ols, residuals))
     residuals <- add_pseries_features(residuals, index)
     vcov <- lapply(ols, vcov)
-    std <- as.data.frame(t(sapply(vcov, function(x) sqrt(diag(x)))))
-    names(coef) <- names(std) <- colnames(coef)
+    std <- as.data.frame(t(as.data.frame(sapply(vcov, function(x) sqrt(diag(x)), simplify = FALSE)))) # was: as.data.frame(t(sapply(vcov, function(x) sqrt(diag(x))))) ## TODO: Check
     ssr <- sum(residuals^2)
-    y <- unlist(lapply(ml, function(x) x[,1]))
+    y <- unlist(lapply(ml, function(x) x[ , 1L]))
     fitted.values <- y - residuals
     tss <- tss(y)
     df.resid <- pdim$nT$N - card.cond * ncol(coef)
@@ -157,8 +154,8 @@ pvcm.random <- function(formula, data, effect){
     
     interc <- has.intercept(formula)
     index <- index(data)
-    id <- index[[1]]
-    time <- index[[2]]
+    id <- index[[1L]]
+    time <- index[[2L]]
     pdim <- pdim(data)
     N <- nrow(data)
     if (effect == "time"){
@@ -173,7 +170,7 @@ pvcm.random <- function(formula, data, effect){
     }
     
     ml <- split(data, cond)
-    nr <- sapply(ml, function(x) dim(x)[1]) > 0
+    nr <- sapply(ml, function(x) dim(x)[1L]) > 0
     ml <- ml[nr]
     attr(ml, "index") <- index
     ols <- lapply(ml,
@@ -195,7 +192,7 @@ pvcm.random <- function(formula, data, effect){
     # list of model matrices
     X <- lapply(ols, model.matrix)
     # same without the covariates with NA coefficients
-    Xna <- lapply(seq_len(nrow(coefm)), function(i)X[[i]][, !coefna[i, ]])
+    Xna <- lapply(seq_len(nrow(coefm)), function(i)X[[i]][ , !coefna[i, ]]) # TODO: likely, catch error of intercept-only model here
     # list of model responses
     y <- lapply(ols, function(x) model.response(model.frame(x)))
     # compute a list of XpX^-1 matrices, with 0 for lines/columns with
@@ -203,13 +200,13 @@ pvcm.random <- function(formula, data, effect){
     xpxm1 <- lapply(seq_len(card.cond), function(i){
         z <- matrix(0, ncol(coefm), ncol(coefm),
                     dimnames=list(colnames(coefm), colnames(coefm)))
-        z[!coefna[i, ], !coefna[i, ]] <- solve(crossprod(X[[i]][!coefna[i, ], !coefna[i,]]))
+        z[!coefna[i, ], !coefna[i, ]] <- solve(crossprod(X[[i]][!coefna[i, ], !coefna[i, ]]))
         z
     })
     # compute the mean of the parameters
     coefb <- apply(coefm, 2, function(x) mean(x, na.rm = TRUE))
     # insert the mean values in place of NA coefficients
-    coefm <- apply(coefm, 2, function(x){x[is.na(x)] <- mean(x, na.rm = TRUE);x})
+    coefm <- apply(coefm, 2, function(x){x[is.na(x)] <- mean(x, na.rm = TRUE); x})
     # compute the first part of the variance matrix
     D1 <- (t(coefm) - coefb) %*% t (t(coefm) - coefb) / (card.cond - 1)
     # compute the second part of the variance matrix
@@ -228,12 +225,12 @@ pvcm.random <- function(formula, data, effect){
     Omegan <- lapply(seq_len(card.cond), function(i) sigi[i] * diag(nrow(X[[i]])) + X[[i]] %*% Delta %*% t(X[[i]]))
     # compute X'Omega X et X'Omega y for each individual
     XyOmXy <- lapply(seq_len(card.cond), function(i){
-        Xn <- X[[i]][, !coefna[i,]]
+        Xn <- X[[i]][, !coefna[i, ]]
         yn <- y[[i]]
         XnXn <- matrix(0, ncol(coefm), ncol(coefm), dimnames=list(colnames(coefm), colnames(coefm)))
         Xnyn <- matrix(0, ncol(coefm), 1, dimnames=list(colnames(coefm), "y"))
-        XnXn[!coefna[i,], !coefna[i,]] <- t(Xn) %*% solve(Omegan[[i]]) %*% Xn
-        Xnyn[!coefna[i, ],] <- t(Xn) %*% solve(Omegan[[i]]) %*% yn
+        XnXn[!coefna[i, ], !coefna[i, ]] <- t(Xn) %*% solve(Omegan[[i]]) %*% Xn
+        Xnyn[!coefna[i, ], ] <- t(Xn) %*% solve(Omegan[[i]]) %*% yn
         list(XnXn = XnXn, Xnyn = Xnyn)
     })
     # Compute the coefficients
@@ -255,7 +252,7 @@ pvcm.random <- function(formula, data, effect){
                            wn <- solve((vcovn + Delta)[! coefna[i, ], ! coefna[i, ]])
                            z <- matrix(0, ncol(coefm), ncol(coefm),
                                        dimnames = list(colnames(coefm), colnames(coefm)))
-                           z[!coefna[i,], !coefna[i,]] <- wn
+                           z[!coefna[i, ], !coefna[i, ]] <- wn
                            z
                        }
                        )

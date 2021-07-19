@@ -21,7 +21,10 @@
    regressor.
    
  * between.matrix: do not coerce result to numeric vector for n x 1 matrix
-   input (use drop = FALSE in extraction).
+   input (by using drop = FALSE in extraction) (prior to this fix, estimation
+   of the between model with only an intercept errored ).
+   
+ * pvcm: for model = "within" intercept-only models are now estimable.
  
  * (re-)export base::diff's generic as plm::diff to always be able to call
    plm::diff and get panel-diff-ing (in case some other package overwrites base
