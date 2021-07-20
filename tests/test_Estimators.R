@@ -268,6 +268,28 @@ print(summary(pmg (form, data = Produc, model = "dmg", trend = TRUE)))
 ##IGNORE_RDIFF_END
 
 ## further run tests without intercept
-plm(inv ~ 0 + value + capital + year, data = Grunfeld, model = "between")
-plm(inv ~ 0 + value + capital + year, data = Grunfeld, model = "random")
-plm(inv ~ 0 + value + capital + year, data = Grunfeld, model = "within")
+plm(inv ~ 0 + value + capital, data = Grunfeld, model = "between")
+plm(inv ~ 0 + value + capital, data = Grunfeld, model = "random")
+plm(inv ~ 0 + value + capital, data = Grunfeld, model = "within")
+plm(inv ~ 0 + value + capital, data = Grunfeld, model = "fd")
+
+## run tests within intercept only
+
+intonly.pool <- plm(inv ~ 1, data = Grunfeld, model = "pooling")
+summary(intonly.pool)
+
+intonly.fd <- plm(inv ~ 1, data = Grunfeld, model = "fd")
+summary(intonly.fd)
+
+# errored up to and incl. rev. 1194
+intonly.be <- plm(inv ~ 1, data = Grunfeld, model = "between")
+summary(intonly.be)
+
+## errors rightfully with "empty model":
+# plm(inv ~ 1, data = pGrun, model = "within")
+
+## errors rightfully due to the within model involved in "swar" RE estimator:
+# intonly.re <- plm(inv ~ 1, data = Grunfeld, model = "random")
+intonly.re2 <- plm(inv ~ 1, data = Grunfeld, model = "random", random.method = "walhus")
+summary(intonly.re2)
+

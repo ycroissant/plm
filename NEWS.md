@@ -22,9 +22,9 @@
    
  * between.matrix: do not coerce result to numeric vector for n x 1 matrix
    input (by using drop = FALSE in extraction) (prior to this fix, estimation
-   of the between model with only an intercept errored ).
+   of the between model with only an intercept errored).
    
- * pvcm: for model = "within" intercept-only models are now estimable.
+ * pvcm: intercept-only models are now estimable.
  
  * (re-)export base::diff's generic as plm::diff to always be able to call
    plm::diff and get panel-diff-ing (in case some other package overwrites base
@@ -42,15 +42,15 @@
    (integer or NULL) aligned with and correctly passed on to 
    has.intercept.Formula (with a *temporary* back-compatible solution).
 
- * pwaldtest: error informatively if test is executed on intercept-only model
-   (and do not try to do so in summary.plm and do not try to print in
-   print.summary.plm).
+ * pwaldtest: error informatively if executed on intercept-only model
+   (and do not try to execute in summary.plm/pvcm and do not try to print in
+   print.summary.plm/pvcm).
 
  * groupGenerics: no more warning in arithmetic operations on pseries when index
    of both operands have same length but different content (e.g., something like
    this does not warn anymore: `pseries[1:(length(pseries)-1)] + pseries[2:length(p2)]`).
 
- * Vignettes:
+### Vignettes
     * 1st vignette:
       * panel unit root testing: added short intro with overview of available
         functions/tests and added two example cases, added sub-section about

@@ -86,12 +86,12 @@ Estimators for random and fixed effects models with variable coefficients.
 effects are introduced, respectively, if \code{effect = "individual"}
 (default) or \code{effect = "time"}.
 
-Coefficients are assumed to be fixed if \code{model = "within"} and
-random if \code{model = "random"}. In the first case, a different model
-is estimated for each individual (or time period). In the second
-case, the \insertCite{SWAM:70;textual}{plm} model is estimated. It
-is a generalized least squares model which uses the results of the
-previous model.
+Coefficients are assumed to be fixed if \code{model = "within"}, i.e., separate
+pooled OLS models are estimated per individual (\code{effect = "individual"})
+or per time period (\code{effect = "time"}). Coefficients are assumed to be
+random if \code{model = "random"} and the model by
+\insertCite{SWAM:70;textual}{plm} is estimated. It is a generalized least
+squares model which uses the results of the previous model.
 }
 \examples{
 

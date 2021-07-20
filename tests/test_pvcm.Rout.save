@@ -1,7 +1,7 @@
 
-R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
-Copyright (C) 2019 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
+R version 4.1.0 (2021-05-18) -- "Camp Pontanezen"
+Copyright (C) 2021 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -522,6 +522,56 @@ Coefficients:
 Total Sum of Squares: 19352
 Residual Sum of Squares: 0.33009
 Multiple R-Squared: 0.99998
+> pwaldtest(zw)
+                     Chisq      p(chisq)          F         p(F) df1 df2
+ALABAMA          608.35870 2.405146e-130  152.08968 3.606344e-10   4  12
+ARIZONA         4650.92920  0.000000e+00 1162.73230 2.028960e-15   4  12
+ARKANSAS        1127.26898 9.298613e-243  281.81725 9.473034e-12   4  12
+CALIFORNIA      1311.43665 1.102881e-282  327.85916 3.859918e-12   4  12
+COLORADO       10200.49901  0.000000e+00 2550.12475 1.840584e-17   4  12
+CONNECTICUT      282.95948  5.127218e-60   70.73987 3.063349e-08   4  12
+DELAWARE         173.69088  1.687421e-36   43.42272 4.816082e-07   4  12
+FLORIDA         4558.68150  0.000000e+00 1139.67037 2.287291e-15   4  12
+GEORGIA         2488.67481  0.000000e+00  622.16870 8.512403e-14   4  12
+IDAHO            986.69428 2.729551e-212  246.67357 2.084942e-11   4  12
+ILLINOIS          63.17981  6.219594e-13   15.79495 9.992685e-05   4  12
+INDIANA          289.02919  2.517767e-61   72.25730 2.712909e-08   4  12
+IOWA             549.73446 1.167830e-117  137.43361 6.530903e-10   4  12
+KANSAS           270.69566  2.258559e-57   67.67392 3.946158e-08   4  12
+KENTUCKY         584.40233 3.679698e-125  146.10058 4.564511e-10   4  12
+LOUISIANA         88.37106  2.920576e-18   22.09276 1.834764e-05   4  12
+MAINE           1269.31000 1.499880e-273  317.32750 4.685542e-12   4  12
+MARYLAND         541.76813 6.179148e-116  135.44203 7.113368e-10   4  12
+MASSACHUSETTS    260.01564  4.524989e-55   65.00391 4.964571e-08   4  12
+MICHIGAN         492.17850 3.293440e-105  123.04463 1.246602e-09   4  12
+MINNESOTA        255.09049  5.210273e-54   63.77262 5.535791e-08   4  12
+MISSISSIPPI      905.15764 1.271065e-194  226.28941 3.472350e-11   4  12
+MISSOURI         309.22602  1.107820e-65   77.30650 1.841567e-08   4  12
+MONTANA          270.41724  2.593262e-57   67.60431 3.969410e-08   4  12
+NEBRASKA         289.70382  1.801051e-61   72.42596 2.676926e-08   4  12
+NEVADA          9261.32661  0.000000e+00 2315.33165 3.283146e-17   4  12
+NEW_HAMPSHIRE   5506.44464  0.000000e+00 1376.61116 7.387120e-16   4  12
+NEW_JERSEY       373.53886  1.447747e-79   93.38471 6.194878e-09   4  12
+NEW_MEXICO      1231.29696 2.613967e-265  307.82424 5.612139e-12   4  12
+NEW_YORK          92.52523  3.827538e-19   23.13131 1.445009e-05   4  12
+NORTH_CAROLINA  1510.13232  0.000000e+00  377.53308 1.669269e-12   4  12
+NORTH_DAKOTA     144.23838  3.491932e-30   36.05959 1.342405e-06   4  12
+OHIO              94.45113  1.490988e-19   23.61278 1.297635e-05   4  12
+OKLAHOMA        1037.33839 2.887734e-223  259.33460 1.550294e-11   4  12
+OREGON          1858.64461  0.000000e+00  464.66115 4.851134e-13   4  12
+PENNSYLVANIA      86.72150  6.541313e-18   21.68037 2.022700e-05   4  12
+RHODE_ISLAND     207.12437  1.103799e-43   51.78109 1.799541e-07   4  12
+SOUTH_CAROLINA   826.52725 1.377735e-177  206.63181 5.939122e-11   4  12
+SOUTH_DAKOTA     341.19419  1.396796e-72   85.29855 1.045367e-08   4  12
+TENNESSE        1275.46135 6.956728e-275  318.86534 4.552990e-12   4  12
+TEXAS           1953.19048  0.000000e+00  488.29762 3.609762e-13   4  12
+UTAH            6393.09582  0.000000e+00 1598.27396 3.022273e-16   4  12
+VERMONT          761.63640 1.565355e-163  190.40910 9.619474e-11   4  12
+VIRGINIA        2971.90248  0.000000e+00  742.97562 2.951061e-14   4  12
+WASHINGTON      5912.95778  0.000000e+00 1478.23944 4.823023e-16   4  12
+WEST_VIRGINIA    148.55583  4.151249e-31   37.13896 1.142025e-06   4  12
+WISCONSIN        535.63434 1.312010e-114  133.90859 7.603384e-10   4  12
+WYOMING          259.30125  6.450019e-55   64.82531 5.043004e-08   4  12
 > 
 > ## IGNORE_RDIFF_BEGIN
 > print(zr$residuals)
@@ -896,7 +946,74 @@ Total Sum of Squares: 19352
 Residual Sum of Squares: 12.785
 Multiple R-Squared: 0.99934
 Chisq: 946.626 on 4 DF, p-value: < 2.22e-16
+> pwaldtest(zr)
+
+	Wald test for joint significance
+
+data:  log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp
+Chisq = 946.63, df = 4, p-value < 2.2e-16
+alternative hypothesis: at least one coefficient is not null
+
 > 
+> 
+> # run tests intercept-only models
+> zwint  <- pvcm(log(gsp) ~ 1, data = Produc, model = "within")
+> zwint2 <- pvcm(log(gsp) ~ 1, data = Produc[1:17, ], model = "within") # test with only one individual
+> summary(zwint) # gave multiple intercept summaries up until rev. 1199
+Oneway (individual) effect No-pooling model
+
+Call:
+pvcm(formula = log(gsp) ~ 1, data = Produc, model = "within")
+
+Balanced Panel: n = 48, T = 17, N = 816
+
+Residuals:
+        Min.      1st Qu.       Median      3rd Qu.         Max. 
+-0.446136619 -0.106991792  0.007483416  0.101613714  0.534427803 
+
+Coefficients:
+  (Intercept)    
+ Min.   : 8.593  
+ 1st Qu.: 9.737  
+ Median :10.583  
+ Mean   :10.509  
+ 3rd Qu.:11.084  
+ Max.   :12.751  
+
+Total Sum of Squares: 849.81
+Residual Sum of Squares: 18.941
+Multiple R-Squared: 0.97771
+> stopifnot(dim(coef(zwint)) == c(48, 1)) 
+> # pwaldtest(zwint) # errors rightfully, and since rev. 1200 also informatively
+> 
+> zrint  <- pvcm(log(gsp) ~ 1, data = Produc, model = "random")
+> # zrint2 <- pvcm(log(gsp) ~ 1, data = Produc[1:17, ], model = "random") # only one individual -> errors -> catch case?
+> summary(zrint) # does not calculate Wald statistic (rightfully, as only intercept)
+Oneway (individual) effect Random coefficients model
+
+Call:
+pvcm(formula = log(gsp) ~ 1, data = Produc, model = "random")
+
+Balanced Panel: n = 48, T = 17, N = 816
+
+Residuals:
+      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+-2.1302626 -0.7979111  0.0871967 -0.0002632  0.6200014  2.5397116 
+
+Estimated mean of the coefficients:
+            Estimate Std. Error z-value  Pr(>|z|)    
+(Intercept) 10.50911    0.14719  71.399 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Estimated variance of the coefficients:
+            (Intercept)
+(Intercept)      1.0384
+
+Total Sum of Squares: 849.81
+Residual Sum of Squares: 849.81
+Multiple R-Squared: -6.6519e-08
+> # pwaldtest(zrint) # errors rightfully, and since rev. 1202 also informatively
 > 
 > ## Stata example:
 > ## http://www.stata.com/manuals/xtxtrc.pdf
@@ -907,4 +1024,4 @@ Chisq: 946.626 on 4 DF, p-value: < 2.22e-16
 > 
 > proc.time()
    user  system elapsed 
-  0.882   0.056   0.929 
+   1.81    0.18    1.98 

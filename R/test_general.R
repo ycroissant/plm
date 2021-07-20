@@ -851,7 +851,14 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
 pwaldtest.pvcm <- function(x, ...) {
   model <- describe(x, "model")
   effect <- describe(x, "effect")
-  
+
+  coefs.no.int <- !names(x$coefficients) %in% "(Intercept)" # logical with non-intercept regressors set to TRUE
+  if(!length(names(x$coefficients)[coefs.no.int])) {
+    # error informatively if only-intercept model (no other regressors)
+    stop(paste("No non-intercept regressors in model(s) of input 'x',",
+               "cannot perform Wald joint significance test(s)"))
+  }
+
   if(model == "within") {
     # for the within case, simply return a data.frame with all test results
     # of single estimations (per individual or per time period)
@@ -860,14 +867,9 @@ pwaldtest.pvcm <- function(x, ...) {
     residl <- split(x$residuals, index(x)[[ii]])
     
     # vcovs and coefficients w/o intercept
-    coefs.no.int <- !colnames(x$coefficients) %in% "(Intercept)"
-    if(!length(colnames(x$coefficients)[coefs.no.int])) {
-      stop(paste("No non-intercept regressors in model(s) of input 'x',",
-                 "cannot perform Wald joint significance tests"))
-    }
     vcovl <- lapply(x$vcov, function(x) x[coefs.no.int, coefs.no.int])
     coefl <- as.list(data.frame(t(x$coefficients[ , coefs.no.int, drop = FALSE])))
-    df1 <- ncol(x$coefficients[ , coefs.no.int, drop = FALSE]) # is same df1 for all models (as all models estimate the same coefs)
+    df1 <- ncol(x$coefficients[ , coefs.no.int, drop = FALSE]) # ncol is same df1 for all models (as all models estimate the same coefs)
     df2 <- lengths(residl) - ncol(x$coefficients) # (any intercept is subtracted)
     
     statChisqs <- mapply(FUN = function(v, c) as.numeric(crossprod(solve(v, c), c)),
@@ -888,8 +890,8 @@ pwaldtest.pvcm <- function(x, ...) {
   }
   
   ## case: model == "random"
-  coefs_wo_int <- x$coefficients[setdiff(names(x$coefficients), "(Intercept)")]
-  stat <- as.numeric(crossprod(solve(vcov(x)[names(coefs_wo_int), names(coefs_wo_int)], coefs_wo_int), coefs_wo_int))
+  coefs_wo_int <- x$coefficients[coefs.no.int]
+  stat <- as.numeric(crossprod(solve(vcov(x)[coefs.no.int, coefs.no.int], coefs_wo_int), coefs_wo_int))
   names(stat) <- "Chisq"
   df1 <- length(coefs_wo_int)
   pval <- pchisq(stat, df = df1, lower.tail = FALSE)
