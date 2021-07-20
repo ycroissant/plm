@@ -975,8 +975,9 @@ pbnftest.panelmodel <- function(x, test = c("bnf", "lbi"), ...) {
   res_diff <- diff(residuals(x), shift = "time")
   d1.1 <- sum(res_diff^2, na.rm = T) / res_crossprod # == BNF (1982), formula (4)
   d1.2_contrib <- as.logical(is.na(res_diff) - obs1)
-  d1.2 <- sum(residuals(x)[d1.2_contrib]^2) / res_crossprod
-  d1 <- d1.1 + d1.2 # == modified BNF statistic = d1 in Baltagi/Wu (1999) formula (16) [reduces to original BNF in case of balanced and consecutive data (d1.2 is zero)]
+  d1.2 <- as.numeric(crossprod(residuals(x)[d1.2_contrib])) / res_crossprod
+  d1 <- d1.1 + d1.2 # == modified BNF statistic = d1 in Baltagi/Wu (1999) formula (16)
+                    #   [reduces to original BNF in case of balanced and consecutive data (d1.2 is zero)]
   
   if (test == "bnf") {
     stat <- d1
@@ -988,11 +989,11 @@ pbnftest.panelmodel <- function(x, test = c("bnf", "lbi"), ...) {
   if (test == "lbi")  {
     ## d2 contains the "earlier" obs surrounded by gaps in time periods
     d2_contrib <- as.logical(is.na(lead(residuals(x), shift = "time")) - obsn)
-    d2 <- sum(residuals(x)[d2_contrib]^2) / res_crossprod
+    d2 <- as.numeric(crossprod(residuals(x)[d2_contrib])) / res_crossprod
     
     ## d3, d4: sum squared residual of first/last time period for all individuals / crossprod(residuals)
-    d3 <- sum(residuals(x)[obs1]^2) / res_crossprod
-    d4 <- sum(residuals(x)[obsn]^2) / res_crossprod
+    d3 <- as.numeric(crossprod(residuals(x)[obs1])) / res_crossprod
+    d4 <- as.numeric(crossprod(residuals(x)[obsn])) / res_crossprod
     
     stat <- d1 + d2 + d3 + d4
     names(stat) <- "LBI"

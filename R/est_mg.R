@@ -317,7 +317,7 @@ summary.pmg <- function(object, ...){
   object$CoefTable <- CoefTable
   y <- object$model[[1L]]
   object$tss <- tss(y)
-  object$ssr <- sum(residuals(object)^2)
+  object$ssr <- as.numeric(crossprod(residuals(object)))
   object$rsqr <- 1-object$ssr/object$tss
   class(object) <- c("summary.pmg")
   return(object)

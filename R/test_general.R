@@ -414,8 +414,9 @@ plmtest.plm <- function(x,
   
   ### calc of parts of test statistic ##
   # calc. is done w/o using matrix calculation, see, e.g., Baltagi/Li (1990), p. 106
-  A1 <- as.numeric(crossprod(tapply(res, id, sum)) / sum(res ^ 2) - 1)   # == A1 <- sum(tapply(res,id,sum)^2)/sum(res^2) - 1
-  A2 <- as.numeric(crossprod(tapply(res, time, sum)) / sum(res ^ 2) - 1) # == A2 <- sum(tapply(res,time,sum)^2)/sum(res^2) - 1
+  CP.res <- crossprod(res)
+  A1 <- as.numeric(crossprod(tapply(res, id,   sum)) / CP.res - 1) # == A1 <- sum(tapply(res,id,sum)^2)   / sum(res^2) - 1
+  A2 <- as.numeric(crossprod(tapply(res, time, sum)) / CP.res - 1) # == A2 <- sum(tapply(res,time,sum)^2) / sum(res^2) - 1
   
   M11 <- sum(T_i ^ 2)
   M22 <- sum(N_t ^ 2)
@@ -1044,13 +1045,13 @@ pooltest <- function(x,...){
 #' @export
 pooltest.plm <- function(x, z, ...){
   rss <- deviance(x)
-  uss <- sum(unlist(residuals(z))^2)
+  uss <- as.numeric(crossprod(residuals(z)))
   dlr <- df.residual(x)
   dlu <- df.residual(z)
   df1 <- dlr - dlu
   df2 <- dlu
   stat <- (rss-uss)/uss*df2/df1
-  pval <- pf(stat, df1, df2, lower.tail = FALSE)
+  pval <- pf(stat, df1 = df1, df2 = df2, lower.tail = FALSE)
   parameter <- c(df1 = df1, df2 = df2)
   names(stat) <- "F"
   res <- list(statistic   = stat,

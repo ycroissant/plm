@@ -134,7 +134,7 @@ pvcm.within <- function(formula, data, effect){
     residuals <- add_pseries_features(residuals, index)
     vcov <- lapply(ols, vcov)
     std <- as.data.frame(t(as.data.frame(sapply(vcov, function(x) sqrt(diag(x)), simplify = FALSE)))) # was: as.data.frame(t(sapply(vcov, function(x) sqrt(diag(x)))))
-    ssr <- sum(residuals^2)
+    ssr <- as.numeric(crossprod(residuals))
     y <- unlist(lapply(ml, function(x) x[ , 1L]))
     fitted.values <- y - residuals
     tss <- tss(y)
