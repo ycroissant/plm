@@ -110,7 +110,7 @@ plm(inv ~ value + capital, data = pGrunfeld[c(23:99), ]) # failed pre rev.251
 
 
 ############ further testing subsetting of pdata.frame and its index
-# up to rev.254 subetting by [i] (with missing j) did not mimic data.frame behavior in case of missing j (j as in [i, j])
+# up to rev.254 subsetting by [i] (with missing j) did not mimic data.frame behavior in case of missing j (j as in [i, j])
 # fixed in rev.255
 data("Grunfeld", package = "plm")
 X <- Grunfeld
