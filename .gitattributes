@@ -143,6 +143,8 @@ tests/test_Estimators.R -text
 tests/test_Estimators.Rout.save -text
 tests/test_EstimatorsIV.R -text
 tests/test_EstimatorsIV.Rout.save -text
+tests/test_EstimatorsNested.R -text
+tests/test_EstimatorsNested.Rout.save -text
 tests/test_Evaluation.R -text
 tests/test_Evaluation.Rout.save -text
 tests/test_FD_models.R -text
@@ -173,8 +175,6 @@ tests/test_misc.R -text
 tests/test_model.frame.R -text
 tests/test_model.matrix_effects.R -text
 tests/test_model.matrix_pmodel.response.R -text
-tests/test_nested.R -text
-tests/test_nested.Rout.save -text
 tests/test_pFtest.R -text
 tests/test_pFtest.Rout.save -text
 tests/test_pbgtest.R -text
