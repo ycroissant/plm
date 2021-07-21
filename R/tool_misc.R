@@ -4,6 +4,9 @@
 ## - twosls : computes the 2SLS estimator (used in plm and ercomp)
 ## - has.intercept : tests the presence of an intercept
 ## - pres : extract model residuals as pseries (used in several estimation functions)
+## - punbalancedness : measures for the unbalancedness of panel data
+## - myvar : calculates variance with NA removel, checks if input is constant (also for factor and character)
+## - pvar : checks if input varies in individual / time dimension
 
 bdiag <- function(...){
   if (nargs() == 1L)
@@ -53,39 +56,6 @@ twosls <- function(y, X, W, intercept = FALSE){
   model$residuals <- y - yhat
   model
 }
-
-## expand.formula <- function(x){
-##   oclass <- class(x)
-##   if (! any(class(x) == "Formula")) stop("not a Formula object")
-##   if (length(x)[2] != 2) stop("not a two part formula")
-##   xs <- structure(x, class = "formula")
-##   has.response <- attr(terms(xs),"response") == 1
-##   if (has.response){
-##     y <- x[[2]]
-##     rhs <- x[[3]]
-##   }
-##   else{
-##     y <- NULL
-##     rhs <- x[[2]]
-##   }
-##   firstpart <- rhs[[2]]
-##   secondpart <- rhs[[3]]
-##   if (has.response){
-##     one <- do.call("~", list(y,firstpart))
-##     two <- do.call("~", list(y,secondpart))
-##   }
-##   else{
-##     one <- do.call("~", list(firstpart))
-##     two <- do.call("~", list(secondpart))
-##   }
-##   two <- update(one, two)
-##   one <- paste(deparse(one), collapse = "")
-##   two <- paste(deparse(two[[3]]), collapse = "")
-##   result <- as.formula(paste(one, "|", two, collapse = ""));
-##   result <- as.Formula(result)
-##   #YC  class(result) <- c("pFormula", class(result))
-##   structure(result, class = oclass)
-## }
 
 
 

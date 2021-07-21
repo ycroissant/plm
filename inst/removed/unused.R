@@ -259,3 +259,36 @@ opdiff <- function(x, cond, effect = c("individual", "time"), has.intercept = FA
     result
 }
 
+## expand.formula <- function(x){
+##   oclass <- class(x)
+##   if (! any(class(x) == "Formula")) stop("not a Formula object")
+##   if (length(x)[2] != 2) stop("not a two part formula")
+##   xs <- structure(x, class = "formula")
+##   has.response <- attr(terms(xs),"response") == 1
+##   if (has.response){
+##     y <- x[[2]]
+##     rhs <- x[[3]]
+##   }
+##   else{
+##     y <- NULL
+##     rhs <- x[[2]]
+##   }
+##   firstpart <- rhs[[2]]
+##   secondpart <- rhs[[3]]
+##   if (has.response){
+##     one <- do.call("~", list(y,firstpart))
+##     two <- do.call("~", list(y,secondpart))
+##   }
+##   else{
+##     one <- do.call("~", list(firstpart))
+##     two <- do.call("~", list(secondpart))
+##   }
+##   two <- update(one, two)
+##   one <- paste(deparse(one), collapse = "")
+##   two <- paste(deparse(two[[3]]), collapse = "")
+##   result <- as.formula(paste(one, "|", two, collapse = ""));
+##   result <- as.Formula(result)
+##   #YC  class(result) <- c("pFormula", class(result))
+##   structure(result, class = oclass)
+## }
+
