@@ -30,7 +30,7 @@
 aneweytest <-  function(formula, data, subset, na.action, index = NULL,  ...){
     mf <- match.call()
     # compute the model.frame using plm with model = NA
-    mf[[1]] <- as.name("plm")
+    mf[[1L]] <- as.name("plm")
     mf$model <- NA
     data <- eval(mf, parent.frame())
     # estimate the within model without instrument and extract the fixed
@@ -46,24 +46,24 @@ aneweytest <-  function(formula, data, subset, na.action, index = NULL,  ...){
     N <- pdim$nT$N
     Ti <- pdim$Tint$Ti
     
-    ht <- match.call(expand.dots=FALSE)
+    ht <- match.call(expand.dots = FALSE)
     m <- match(c("formula", "data", "subset", "na.action",
                  "effect", "model", "inst.method", "restict.matrix",
-                 "restrict.rhs", "index"),names(ht), 0)
-    ht <- ht[c(1,m)]
-    ht[[1]] <- as.name("plm")
+                 "restrict.rhs", "index"), names(ht), 0)
+    ht <- ht[c(1L, m)]
+    ht[[1L]] <- as.name("plm")
     ht$model <- "within"
     ht$effect <- "individual"
     ht <- eval(ht, parent.frame())
     .resid <- split(resid(ht), time)
   
     # extract the covariates, and isolate time-invariant covariates
-    X <- model.matrix(data, model = "pooling", rhs = 1, lhs = 1)[, - 1, drop = FALSE]
+    X <- model.matrix(data, model = "pooling", rhs = 1, lhs = 1)[ , - 1, drop = FALSE]
     cst <- attr(model.matrix(data, model = "within", rhs = 1, lhs = 1), "constant")
 
     # get constant columns and remove the intercept
-    if (length(cst) > 0) cst <- cst[- match("(Intercept)", cst)]
-    if (length(cst) > 0){
+    if (length(cst) > 0L) cst <- cst[- match("(Intercept)", cst)]
+    if (length(cst) > 0L){
         vr <- colnames(X)[!(colnames(X) %in% cst)]
         Z <- X[ , cst, drop = FALSE]
         X <- X[ , vr, drop = FALSE]
@@ -89,8 +89,8 @@ aneweytest <-  function(formula, data, subset, na.action, index = NULL,  ...){
     XX <- cbind(Reduce("cbind", X), Z)
     # compute the unconstrained estimates
     LMS <- lapply(.resid, function(x) lm(x ~ XX - 1))
-    YTOT <- sapply(.resid, function(x) sum(x^2))
-    DEV <- sapply(LMS, deviance)
+    YTOT <- vapply(.resid, function(x) crossprod(x), FUN.VALUE = 0.0)
+    DEV <- vapply(LMS, deviance, FUN.VALUE = 0.0)
     stat <- c("chisq" = sum(1 - DEV / YTOT) * (n - ncol(XX)))
     df <- c("df" = (T ^ 2 - T - 1) * Kx)
     aneweytest <- structure(list(statistic   = stat,
@@ -109,7 +109,7 @@ aneweytest <-  function(formula, data, subset, na.action, index = NULL,  ...){
 #' 
 #' General estimator useful for testing the within specification
 #' 
-#' The Chamberlain method consists on using the covariates of all the
+#' The Chamberlain method consists in using the covariates of all the
 #' periods as regressors. It allows to test the within specification.
 #' 
 #' @aliases piest
@@ -141,7 +141,7 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
     cl <- match.call(expand.dots = TRUE)
     mf <- match.call()
     # compute the model.frame using plm with model = NA
-    mf[[1]] <- as.name("plm")
+    mf[[1L]] <- as.name("plm")
     mf$model <- NA
     data <- eval(mf, parent.frame())
     # estimate the within model without instrument and extract the fixed
@@ -161,11 +161,11 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
     Y <- split(y, time)
     Y <- lapply(Y, function(x) x - mean(x))
     # extract the covariates, and isolate time-invariant covariates
-    X <- model.matrix(data, model = "pooling", rhs = 1, lhs = 1)[, -1, drop = FALSE]
+    X <- model.matrix(data, model = "pooling", rhs = 1, lhs = 1)[ , -1, drop = FALSE]
     cst <- attr(model.matrix(data, model = "within", rhs = 1, lhs = 1), "constant")
     # get constant columns and remove the intercept
-    if (length(cst) > 0) cst <- cst[- match("(Intercept)", cst)]
-    if (length(cst) > 0){
+    if (length(cst) > 0L) cst <- cst[- match("(Intercept)", cst)]
+    if (length(cst) > 0L){
         vr <- colnames(X)[!(colnames(X) %in% cst)]
         Z <- X[ , cst, drop = FALSE]
         X <- X[ , vr, drop = FALSE]
@@ -234,7 +234,8 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
     OOmega <- Omega                                       ## TODO: OOmega is never used
     .resid <- as.matrix(as.data.frame(Y)) - XX %*% piconst
     if(TRUE){                                             ## TODO: this is always TRUE...?!
-        if (robust){
+        if (robust){                                      ## and Omega is calc. again, with a
+                                                          ## different .resid input but with same lapply-construct
             Omega <- lapply(seq_len(n),
                             function(i)
                                 tcrossprod(.resid[i, ]) %x%
@@ -258,16 +259,16 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
                    )
     
     structure(list(coefficients = .coef,
-                   pi      = pi,
-                   daub    = resb,
-                   vcov    =  A / n,
-                   formula = formula,
-                   R       = R,
-                   model   = data,
-                   pitest  = structure(pitest, class = "htest"),
-                   Omega   = Omega,
-                   moments = resb,
-                   call    = cl),
+                   pi           = pi,
+                   daub         = resb,
+                   vcov         = A / n,
+                   formula      = formula,
+                   R            = R,
+                   model        = data,
+                   pitest       = structure(pitest, class = "htest"),
+                   Omega        = Omega,
+                   moments      = resb,
+                   call         = cl),
               class = c("piest", "panelmodel"))
 }
 

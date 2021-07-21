@@ -580,20 +580,19 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
   }
   
   cumres2 <- lapply(resid, function(x) cumsum(x)^2)
-  
   if (!dfcor) {
     sigma2  <- mean(unlist(resid)^2)
-    sigma2i <- unlist(lapply(resid, function(x) mean(x^2)))
+    sigma2i <- vapply(resid, function(x) mean(x^2), FUN.VALUE = 0.0)
   } else {
     # df correction as suggested in Hadri (2000), p. 157
     dfcorval <- switch(exo, "intercept" = (L-1), "trend" = (L-2))
     # -> apply to full length residuals over all individuals -> n*(L-1) or n*(L-2)
-    sigma2 <- sum(unlist(resid)^2) / (n * dfcorval)
+    sigma2 <- as.numeric(crossprod(unlist(resid))) / (n * dfcorval)
     # -> apply to individual residuals' length, so just L -> L-1 or L-2
-    sigma2i <- unlist(lapply(resid, function(x) sum(x^2)/dfcorval))
+    sigma2i <- vapply(resid, function(x) crossprod(x)/dfcorval, FUN.VALUE = 0.0)
   }
   
-  Si2 <- unlist(lapply(cumres2, function(x) sum(x)))
+  Si2 <- vapply(cumres2, function(x) sum(x), FUN.VALUE = 0.0)
   numerator <- 1/n * sum(1/(L^2) * Si2)
   LM <- numerator / sigma2 # non-het consist case (Hcons == FALSE)
   LMi <- 1/(L^2) * Si2 / sigma2i # individual LM statistics

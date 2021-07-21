@@ -645,8 +645,8 @@ pbsytest.panelmodel <- function(x, test = c("ar", "re", "j"), re.normal = if (te
   ## calc. matrices A and B:
   # Sosa-Escudera/Bera (2008), p. 74
   # Baltagi (2013), p. 108 defines A=(S1/S2)-1 and, thus, has slightly different formulae [opposite sign in Baltagi]
-  S1 <- sum(tapply(poolres,ind,sum)^2)
-  S2 <- sum(poolres^2)
+  S1 <- as.numeric(crossprod(tapply(poolres,ind,sum))) # == sum(tapply(poolres,ind,sum)^2)
+  S2 <- as.numeric(crossprod(poolres))                 # == sum(poolres^2)
   A <- 1 - S1/S2
   
   unind <- unique(ind)
@@ -661,7 +661,7 @@ pbsytest.panelmodel <- function(x, test = c("ar", "re", "j"), re.normal = if (te
   }
   B <- sum(uu1)/sum(uu)
   
-  a <- sum(T_i^2) # Sosa-Escudera/Bera (2008), p. 69
+  a <- as.numeric(crossprod(T_i)) # Sosa-Escudera/Bera (2008), p. 69
   
   switch(test,
            "ar" = {

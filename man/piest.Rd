@@ -40,7 +40,7 @@ An object of class \code{"piest"}.
 General estimator useful for testing the within specification
 }
 \details{
-The Chamberlain method consists on using the covariates of all the
+The Chamberlain method consists in using the covariates of all the
 periods as regressors. It allows to test the within specification.
 }
 \examples{
