@@ -141,9 +141,9 @@ ercomp.formula <- function(object, data,
         s2eta <- s2mu <- NULL
         if(balanced) {
           if (effect != "time")
-            s2eta <- sum(fixef(est, type = "dmean", effect = "individual") ^ 2) / (N - 1)
+            s2eta <- as.numeric(crossprod(fixef(est, type = "dmean", effect = "individual"))) / (N - 1)
           if (effect != "individual")
-            s2mu <- sum(fixef(est, type = "dmean", effect = "time") ^ 2) / (TS - 1)
+            s2mu <- as.numeric(crossprod(fixef(est, type = "dmean", effect = "time"))) / (TS - 1)
           sigma2 <- c(idios = s2nu, id = s2eta, time = s2mu)
           theta <- list()
           if (effect != "time")       theta$id   <- (1 - (1 + TS * sigma2["id"]  / sigma2["idios"]) ^ (-0.5))

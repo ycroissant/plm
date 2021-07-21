@@ -366,11 +366,10 @@ pcce <- function (formula, data, subset, na.action,
         },
            
         "p" = {
-
             ## variance of defactored residuals sigma2ccep as in Holly,
             ## Pesaran and Yamagata, (3.15)
             sigma2cce <- 1/(n*(T.-k-2)-k)*
-                sum(unlist(lapply(cceres, crossprod)))
+                sum(vapply(cceres, crossprod, FUN.VALUE = 0.0))
             ## is the same as sum(unlist(cceres)^2)
     })
 
@@ -378,7 +377,7 @@ pcce <- function (formula, data, subset, na.action,
     sigma2.i <- vector("list", n)
     for(i in 1:n) {
           ty <- y[ind == unind[i]]
-          sigma2.i[[i]] <- sum((ty-mean(ty))^2)/(length(ty)-1)
+          sigma2.i[[i]] <- as.numeric(crossprod((ty-mean(ty))))/(length(ty)-1)
       }
     sigma2y <- mean(unlist(sigma2.i))
     r2cce <- 1 - sigma2cce/sigma2y
