@@ -1307,7 +1307,7 @@ direction of the departure from the null hypothesis, i.e.: is
 rejection due to the presence of serial correlation, of random effects
 or of both?
 
-@BERA:SOSA:YOON:01 derive locally robust tests both
+@BERA:SOSA:YOON:01 (hereafter BSY) derive locally robust tests both
 for individual random effects and for first-order serial correlation
 in residuals as "corrected" versions of the standard LM test (see
 `plmtest`). While still dependent on normality and
