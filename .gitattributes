@@ -188,6 +188,8 @@ tests/test_pdata.frame_extract_class_est_mod.R -text
 tests/test_pdata.frame_id_index_more.R -text
 tests/test_pdata.frame_id_index_more.Rout.save -text
 tests/test_pdata.frame_print_duplicated_rownames.R -text
+tests/test_pdata.frame_pseriesfy.R -text
+tests/test_pdata.frame_pseriesfy.Rout -text
 tests/test_pdata.frame_subsetting.R -text
 tests/test_pdata.frame_subsetting.Rout.save -text
 tests/test_pdata.frame_unused_levels.R -text

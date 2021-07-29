@@ -687,6 +687,30 @@ print.pdata.frame <- function(x, ...) {
   print(x, ...)
 }
 
+
+### non-exported ###
+# takes a pdata.frame and makes each column a pseries
+# names of the pdata.frame are not added to the columns as base R's data.frames
+# do not allow for names in columns (but, e.g., a tibble does so since 3.0.0,
+# see https://github.com/tidyverse/tibble/issues/837)
+pseriesfy.pdata.frame <- function(x) { 
+  ix <- attr(x, "index")
+  nam <- attr(x, "row.names")
+  pdf <- as.data.frame(lapply(x, function(column) {
+    column <- add_pseries_features(column, ix)
+  } ))
+  class(pdf) <- c("pdata.frame", class(pdf))
+  attr(pdf, "index") <- ix
+  rownames(pdf) <- nam
+  return(pdf)
+}
+
+pseriesfy.pdata.frame.collapse <- function(x) {
+  ix <- attr(x, "index")
+  return(collapse::dapply(x, function(col) add_pseries_features(col, ix)))
+}
+
+
 # as.list.pdata.frame:
 # The default is to behave identical to as.list.data.frame.
 # This default is necessary, because some code relies on this 
