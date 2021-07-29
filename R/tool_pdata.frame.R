@@ -448,8 +448,22 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 #     assigning with the respective .data.frame methods
 
 
-# Extracting/subsetting function for class pseries, retaining the pseries features
-#  Test cases are in tests/test_pdata.frame_subsetting.R 
+# Extracting/subsetting method for class pseries, [.pseries, retaining the
+# pseries features. est cases are in tests/test_pdata.frame_subsetting.R.
+#
+# We do not provide a [[.pseries method in addition (note the double "["). Thus,
+# the base R method is used and behaviour for pseries is what one would expect 
+# and is in line with base R, see ?Extract for [[ with atomic vectors:
+# "The usual form of indexing is [. [[ can be used to select a single element
+#  dropping names, whereas [ keeps them, e.g., in c(abc = 123)[1]."
+# In addition, it also drops other attributes in base R, so applying [[ from
+# base R results in dropping names and index which is in line with what one
+# would expect for pseries. Example for base R behaviour:
+#  a <- 1:10
+#  names(a) <- letters[1:10]
+#  attr(a, "index") <- "some_index_attribute"
+#  a[[3]] # drops names and attribute (a[3] keeps names and drops other attributes)
+
 #' @rdname pdata.frame
 #' @export
 "[.pseries" <- function(x, ...) {
