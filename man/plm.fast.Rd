@@ -32,7 +32,8 @@ under investigation):
 \item between,
 \item Between,
 \item Sum,
-\item Within.
+\item Within,
+\item pseriesfy.
 }
 }
 \examples{

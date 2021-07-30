@@ -600,7 +600,8 @@ pseriesfy <- function(x,  ...) {
 #'   \item between,
 #'   \item Between,
 #'   \item Sum,
-#'   \item Within.
+#'   \item Within,
+#'   \item pseriesfy.
 #' }
 #' 
 #' @name plm.fast
