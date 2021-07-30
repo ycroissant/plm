@@ -114,6 +114,7 @@ man/pmg.Rd -text
 man/pmodel.response.Rd -text
 man/pooltest.Rd -text
 man/pseries.Rd -text
+man/pseriesfy.Rd -text
 man/punbalancedness.Rd -text
 man/purtest.Rd -text
 man/pvar.Rd -text

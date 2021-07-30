@@ -12,6 +12,11 @@
    subsetting method checks for valid pseries features and warns for non-valid
    ones (as some packages constructed non-valid pseries objects, e.g., with
    no or null index).
+   
+ * pseriesfy: new function to make each column of a pdata.frame a pseries, see
+   `?pseriesfy` for background and useful examples. Faster version is executed
+    (internally using `collapse::dapply`) if `options("plm.fast" = TRUE)` is set
+    (see `?plm.fast`).
 
 ### Fixes & Others:
  * vcovG (hence vcovHC, vcovDC, vcovNW, vcovSCC) and vcovBK: fix error in case

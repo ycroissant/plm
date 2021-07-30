@@ -14,8 +14,10 @@
 ## - print
 ## - as.list
 ## - as.data.frame
+## - pseriesfy
 
 ## pseries:
+## - [
 ## - print
 ## - as.matrix
 ## - plot
@@ -506,7 +508,6 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 ## While there is now a "proper" subsetting function for pseries, leave this
 ## subset_pseries for a while just to be safe (currently used in pcdtest())
 subset_pseries <- function(x, ...) {
-  
   ## use '...' instead of only one specific argument, because subsetting for
   ## factors can have argument 'drop', e.g., x[i, drop=TRUE] see ?Extract.factor
   index <- attr(x, "index")
@@ -688,12 +689,55 @@ print.pdata.frame <- function(x, ...) {
 }
 
 
-### non-exported ###
-# takes a pdata.frame and makes each column a pseries
+# pseriesfy() takes a pdata.frame and makes each column a pseries
 # names of the pdata.frame are not added to the columns as base R's data.frames
 # do not allow for names in columns (but, e.g., a tibble does so since 3.0.0,
 # see https://github.com/tidyverse/tibble/issues/837)
-pseriesfy.pdata.frame <- function(x) { 
+
+#' Turn all columns of a pdata.frame into class pseries.
+#' 
+#' This function takes a pdata.frame and turns all of its columns into
+#' objects of class pseries.
+#' 
+#' Background: Initially created pdata.frames have as columns the pure/basic
+#' class (e.g., numeric, factor, character). When extracting a column from such
+#' a pdata.frame, the extracted column is turned into a pseries.
+#' 
+#'  At times, it can be convenient to apply data transformation operations on
+#'  such a `pseriesfy`-ed pdata.frame, see Examples.
+#' 
+#' @name pseriesfy
+#' @param x an object of class `"pdata.frame"`,
+#' @param \dots further arguments (currently not used).
+#' @return A pdata.frame like the input pdata.frame but with all columns 
+#'         turned into pseries. 
+#' @seealso [pdata.frame()], [plm::as.list()]
+#' @keywords attribute
+#' @export
+#' @examples
+#' library("plm")
+#' data("Grunfeld", package = "plm")
+#' pGrun <- pdata.frame(Grunfeld[ , 1:4], drop.index = TRUE)
+#' pGrun2 <- pseriesfy(pGrun) # pseriesfy-ed pdata.frame
+#' 
+#' # compare classes of columns
+#' lapply(pGrun,  class)
+#' lapply(pGrun2, class)
+#' 
+#' # When using with()
+#' with(pGrun,  lag(value)) # dispatches to base R's lag() 
+#' with(pGrun2, lag(value)) # dispatches to plm's lag() respect. panel structure
+#' 
+#' # When lapply()-ing 
+#' lapply(pGrun,  lag) # dispatches to base R's lag() 
+#' lapply(pGrun2, lag) # dispatches to plm's lag() respect. panel structure
+#' 
+#' # as.list(., keep.attributes = TRUE) on a non-pseriesfy-ed
+#' # pdata.frame is similar and dispatches to plm's lag
+#' lapply(as.list(pGrun, keep.attributes = TRUE), lag) 
+#' 
+pseriesfy <- function(x, ...) { 
+  if(!inherits(x, "pdata.frame")) stop("input 'x' needs to be a pdata.frame")
   ix <- attr(x, "index")
   nam <- attr(x, "row.names")
   pdf <- as.data.frame(lapply(x, function(column) {
@@ -705,7 +749,8 @@ pseriesfy.pdata.frame <- function(x) {
   return(pdf)
 }
 
-pseriesfy.pdata.frame.collapse <- function(x) {
+pseriesfy.collapse <- function(x, ...) {
+  if(!inherits(x, "pdata.frame")) stop("input 'x' needs to be a pdata.frame")
   ix <- attr(x, "index")
   return(collapse::dapply(x, function(col) add_pseries_features(col, ix)))
 }
@@ -724,7 +769,7 @@ pseriesfy.pdata.frame.collapse <- function(x) {
 #  By setting argument keep.attributes = TRUE, the attributes of the pdata.frame
 #  are preserved by as.list.pdata.frame: a list of pseries is returned
 #  and lapply can be used as usual, now working on a list of pseries, e.g.,
-#    lapply(as.list(pdata.frame[ , your_cols], keep.attributes), lag)
+#    lapply(as.list(pdata.frame[ , your_cols], keep.attributes = TRUE), lag)
 #  works as expected.
 
 #' @rdname pdata.frame
