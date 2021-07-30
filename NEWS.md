@@ -15,8 +15,8 @@
    
  * pseriesfy: new function to make each column of a pdata.frame a pseries, see
    `?pseriesfy` for background and useful examples. Faster version is executed
-    (internally using `collapse::dapply`) if `options("plm.fast" = TRUE)` is set
-    (see `?plm.fast`).
+   if `options("plm.fast" = TRUE)` is set, see `?plm.fast` (then internally
+   using `collapse::dapply`). Thanks to Sebastian Krantz for inspiration.
 
 ### Fixes & Others:
  * vcovG (hence vcovHC, vcovDC, vcovNW, vcovSCC) and vcovBK: fix error in case
@@ -53,7 +53,8 @@
 
  * groupGenerics: no more warning in arithmetic operations on pseries when index
    of both operands have same length but different content (e.g., something like
-   this does not warn anymore: `pseries[1:(length(pseries)-1)] + pseries[2:length(p2)]`).
+   this does not warn anymore:
+   `your_pseries[1:(length(your_pseries)-1)] + your_pseries[2:length(your_pseries)]`).
 
 ### Vignettes:
   * 1st vignette:
