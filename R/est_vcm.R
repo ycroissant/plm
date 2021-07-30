@@ -175,7 +175,7 @@ pvcm.random <- function(formula, data, effect){
     attr(ml, "index") <- index
     ols <- lapply(ml,
                   function(x){
-                      X <- model.matrix(formula, x,)
+                      X <- model.matrix(formula, x)
                       if (nrow(X) <= ncol(X)) stop("insufficient number of observations")
                       y <- pmodel.response(x)
                       r <- lm(y ~ X - 1)

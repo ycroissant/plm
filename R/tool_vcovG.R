@@ -790,7 +790,6 @@ vcovSCC.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
     return(S0)
 }
 
-                                        # ICI
 
 ##############################################################
 
@@ -962,7 +961,7 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
     if (!is.null(x$aliased) && any(x$aliased, na.rm = TRUE)) demX <- demX[, !x$aliased, drop = FALSE]
     
     ## control: IV or not (two- or one-part formula)
-    if(length(formula(x))[2L] > 1) {
+    if(length(formula(x))[2L] > 1L) {
         demZ <- model.matrix(x, model = model, rhs = 2, cstcovar.rm = "all")
         ## substitute (transformed) X with projection of X on Z
         ## any linear dependence in Z (demZ) is appropriately taken care of by lm.fit()
