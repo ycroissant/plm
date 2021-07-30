@@ -1,5 +1,5 @@
 bibentry(bibtype = "Book",
-         title = "Panel Data Econometrics with {R}: the {plm} package",
+         title = "Panel Data Econometrics with {R}",
          author = c(person(given = "Yves",
                           family = "Croissant",
                           email = "yves.croissant@univ-reunion.fr"),
