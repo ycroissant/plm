@@ -27,3 +27,4 @@ To install the development version from **R-Forge**:
 
 The development of package `plm` currently takes place on R-Forge in a SVN repository: https://r-forge.r-project.org/R/?group_id=406.
 However, in GitHub's `plm` repository, GitHub's issue tracker is used for the package (but nothing else, currently).
+Here is an independent full R-Forge read-only mirror on GitHub, so the source code of plm can conveniently browsed there: https://github.com/r-forge/plm.
