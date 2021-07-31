@@ -379,7 +379,7 @@ Sum.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
 #' @export
 Sum.matrix <- function(x, effect, ...) {
   # if no index attribute, argument 'effect' is assumed to be a factor
-  eff.fac <- if(is.null(attr(x, "index"))) {
+  eff.fac <- if(is.null(xindex <- attr(x, "index"))) {
     effect
   } else {
     if(!is.character(effect) && length(effect) > 1)
@@ -391,7 +391,6 @@ Sum.matrix <- function(x, effect, ...) {
                      "time"       = 2L,
                      "group"      = 3L,
                      stop("unknown value of argument 'effect'"))
-    xindex <- attr(x, "index")
     checkNA.index(xindex) # index may not contain any NA
     xindex[ , eff.no]
   }
@@ -426,7 +425,7 @@ Between.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
 #' @export
 Between.matrix <- function(x, effect, ...) {
   # if no index attribute, argument 'effect' is assumed to be a factor
-  eff.fac <- if(is.null(attr(x, "index"))) {
+  eff.fac <- if(is.null(xindex <- attr(x, "index"))) {
     effect
   } else {
     if(!is.character(effect) && length(effect) > 1)
@@ -438,7 +437,6 @@ Between.matrix <- function(x, effect, ...) {
                      "time"       = 2L,
                      "group"      = 3L,
                      stop("unknown value of argument 'effect'"))
-    xindex <- attr(x, "index")
     checkNA.index(xindex) # index may not contain any NA
     xindex[ , eff.no]
   }
@@ -487,7 +485,7 @@ between.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
 #' @export
 between.matrix <- function(x, effect, ...) {
   # if no index attribute, argument 'effect' is assumed to be a factor
-  eff.fac <- if(is.null(attr(x, "index"))) {
+  eff.fac <- if(is.null(xindex <- attr(x, "index"))) {
     effect
   } else {
     if(!is.character(effect) && length(effect) > 1)
@@ -499,7 +497,6 @@ between.matrix <- function(x, effect, ...) {
                      "time"       = 2L,
                      "group"      = 3L,
                      stop("unknown value of argument 'effect'"))
-    xindex <- attr(x, "index")
     checkNA.index(xindex) # index may not contain any NA
     xindex[ , eff.no]
   }
@@ -551,7 +548,8 @@ Within.pseries <- function(x, effect = c("individual", "time", "group", "twoways
 #' @rdname pseries
 #' @export
 Within.matrix <- function(x, effect, rm.null = TRUE, ...) {
-    if(is.null(attr(x, "index"))) {
+    if(is.null(xindex <- attr(x, "index"))) {
+      # non-index case
         result <- Within.default(x, effect, ...)
         othervar <- colSums(abs(x)) > sqrt(.Machine$double.eps)
         if(rm.null) {
@@ -562,9 +560,9 @@ Within.matrix <- function(x, effect, rm.null = TRUE, ...) {
         return(result)
     }
     else {
+      # index case
         if(effect %in% c("individual", "time", "group")) result <- x - Between(x, effect, ...)
         if(effect == "twoways") {
-            xindex <- attr(x, "index")
             checkNA.index(xindex) # index may not contain any NA
             if(is.pbalanced(xindex)) {
                 result <- x - Between(x, "individual", ...) - Between(x, "time", ...) +
