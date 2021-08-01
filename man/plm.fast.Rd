@@ -82,10 +82,14 @@ onewayFE <- microbenchmark(
 summary(onewayFE)
 
 twowayFE <-  microbenchmark(
- {options("plm.fast" = FALSE);                                    plm(form, data = data, model = "within", effect = "twoways")},
- {options("plm.fast" = TRUE, "plm.fast.pkg.FE.tw" = "collapse");  plm(form, data = data, model = "within", effect = "twoways")},
- {options("plm.fast" = TRUE, "plm.fast.pkg.FE.tw" = "fixest");    plm(form, data = data, model = "within", effect = "twoways")},
- {options("plm.fast" = TRUE, "plm.fast.pkg.FE.tw" = "lfe");       plm(form, data = data, model = "within", effect = "twoways")},
+ {options("plm.fast" = FALSE);                                    
+    plm(form, data = data, model = "within", effect = "twoways")},
+ {options("plm.fast" = TRUE, "plm.fast.pkg.FE.tw" = "collapse");
+    plm(form, data = data, model = "within", effect = "twoways")},
+ {options("plm.fast" = TRUE, "plm.fast.pkg.FE.tw" = "fixest");
+    plm(form, data = data, model = "within", effect = "twoways")},
+ {options("plm.fast" = TRUE, "plm.fast.pkg.FE.tw" = "lfe");
+    plm(form, data = data, model = "within", effect = "twoways")},
   times = times, unit = "relative")
 
 summary(twowayFE)

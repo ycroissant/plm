@@ -1,7 +1,7 @@
 plm.list <- function(formula, data, subset, na.action,
                      effect = c("individual", "time", "twoways"),
                      model = c("within", "random", "ht", "between", "pooling", "fd"),
-                     random.method = NULL,#c("swar", "walhus", "amemiya", "nerlove", "ht"),
+                     random.method = NULL, #c("swar", "walhus", "amemiya", "nerlove", "ht"),
                      inst.method = c("bvk", "baltagi"),
                      restrict.matrix = NULL,
                      restrict.rhs = NULL,
@@ -26,7 +26,7 @@ plm.list <- function(formula, data, subset, na.action,
       if (is.name(aformula)) aformula <- eval(aformula, parent.frame())
       else aformula <- as.formula(formulas[[l]])
       sysplm$formula <- aformula
-      sysplm[[1]] <- as.name("plm")
+      sysplm[[1L]] <- as.name("plm")
       sysplm$model <- amodel
       # a new pb, plm on every equation fails because of the restrict.matrix argument
       sysplm$restrict.matrix <- NULL
@@ -40,7 +40,7 @@ plm.list <- function(formula, data, subset, na.action,
   # the raw errors
   BIG <- function(X, y, W, Omega){
     S <- chol(Omega)
-    N <- length(y[[1]])
+    N <- length(y[[1L]])
     if (!is.null(W)) BIGW <- c()
     BIGX <- c()
     BIGy <- c()
@@ -99,7 +99,7 @@ plm.list <- function(formula, data, subset, na.action,
   models <- plm.models(sysplm, amodel = model, random.method = "kinla") #TODO NB: "kinla" does not seem to be supported anymore...
   L <- length(models)
   sys <- systemlm(models, restrict.matrix = restrict.matrix, restrict.rhs = restrict.rhs)
-  Instruments <- sapply(models, function(x) length(formula(x))[2]) > 1
+  Instruments <- sapply(models, function(x) length(formula(x))[2L]) > 1L
 
   # Get the residuals and compute the consistent estimation of the
   # covariance matrix of the residuals : Note that if there are
@@ -107,9 +107,10 @@ plm.list <- function(formula, data, subset, na.action,
   # effect models, two covariance matrices must be computed
   if (model == "random"){
     resid.pooling <- Reduce("cbind", lapply(models, function(x) resid(x, model = "pooling")))
-    id <- index(models[[1]])[[1]]
-    T <- pdim(models[[1]])$nT$T
-    N <- pdim(models[[1]])$nT$n
+    id <- index(models[[1L]])[[1L]]
+    pdim <- pdim(models[[1L]])
+    T <- pdim$nT$T
+    N <- pdim$nT$n
     .fixef <- apply(resid.pooling, 2, tapply, id, mean)
     resid.within <- resid.pooling - .fixef[as.character(id),]
     Omega.nu <- crossprod(resid.within)/(N * (T - 1))
@@ -123,10 +124,10 @@ plm.list <- function(formula, data, subset, na.action,
     XB <- lapply(models, function(x) model.matrix(x, model = "Between"))
     yW <- lapply(models, function(x) pmodel.response(x, model = "within"))
     yB <- lapply(models, function(x) pmodel.response(x, model = "Between"))
-    if (Instruments[1]){
+    if (Instruments[1L]){
       WW <- lapply(models,
                    function(x){
-                     if (length(formula(x))[2] == 3) rhss = c(2, 3) else rhss = 2
+                     if (length(formula(x))[2L] == 3L) rhss = c(2, 3) else rhss = 2
                      model.matrix(model.frame(x), rhs = rhss, model = "within")
                    }
                    )
@@ -151,10 +152,10 @@ plm.list <- function(formula, data, subset, na.action,
     colnames(Omega) <- rownames(Omega) <- names.eq
     X <- lapply(models, model.matrix)
     y <- lapply(models, pmodel.response)
-    if (Instruments[1])
+    if (Instruments[1L])
       W <- lapply(models,
                   function(x){
-                    if (length(formula(x))[2] == 3) rhss = c(2, 3) else rhss = 2
+                    if (length(formula(x))[2L] == 3L) rhss = c(2, 3) else rhss = 2
                     model.matrix(model.frame(x), rhs = rhss)
                   }
                   )
@@ -250,12 +251,12 @@ print.summary.plm.list <- function(x, digits = max(3, getOption("digits") - 2),
     print(sd, digits = digits)
     cat("\n")
     cat("  Estimated correlation matrix of the individual effects\n")
-    corid <- x$vcovsys$id / tcrossprod(sd[1, ])
+    corid <- x$vcovsys$id / tcrossprod(sd[1L, ])
     corid[upper.tri(corid)] <- NA
     print(corid, digits = digits, na.print = ".")
     cat("\n")
     cat("  Estimated correlation matrix of the idiosyncratic effects\n")
-    coridios <- x$vcovsys$idios / tcrossprod(sd[2, ])
+    coridios <- x$vcovsys$idios / tcrossprod(sd[2L, ])
     coridios[upper.tri(coridios)] <- NA
     print(coridios, digits = digits, na.print = ".")
   }
