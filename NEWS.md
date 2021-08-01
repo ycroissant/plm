@@ -1,6 +1,23 @@
 # development version 2.4-1.999999
  **likely set to either 2.4-2 or 2.6 for CRAN release**
 
+### Speed-up:
+ * "Fast mode" is not yet the default. To enable, set
+   `options("plm.fast" = TRUE)` manually or in your `.Rprofile` file (see
+   `?plm.fast`, also for benchmarks), option introduced in plm version 2.4-0.
+   It is planned to default to "fast mode" for the next CRAN release of
+   plm (then making package `collapse` a hard dependency).
+
+ * Further speed-up if `options("plm.fast" = TRUE)` is set: In case package
+   `fixest` or `lfe` is available locally *in addition* to package `collapse`,
+   the two-ways fixed transformation is significantly faster compared to the case
+   if only `collapse` is available due to specialised algorithms in these two packages,
+   all being fully integrated into the usual plm functions/user interfaces
+   (`fixest` is preferred over `lfe`, in this case, plm uses internally
+   `collapse::fhdwithin` which in turn uses `fixest::demean`. Thanks to Sebastian
+   Krantz for some early guidance on this.
+
+
 ### Features:
  * hansi: new function for Simes (1986) test applied to panels for panel unit
    root testing, as suggested in Hanck (2013).
@@ -55,6 +72,9 @@
    of both operands have same length but different content (e.g., something like
    this does not warn anymore:
    `your_pseries[1:(length(your_pseries)-1)] + your_pseries[2:length(your_pseries)]`).
+   
+ * various efficiency gains throughout the package by using more s/vapply(),
+   crossprod(), better branching, etc.
 
 ### Vignettes:
   * 1st vignette:
@@ -66,7 +86,9 @@
   * 2nd vignette: added formula for nested error component model.
   * all: references updated to include Baltagi (2021), the 6th edition of the
     textbook; fixed a few typos.
-   
+
+### Dependencies:
+ * Added packages 'fixest' and 'lfe' to 'Suggests'.   
 
 # plm 2.4-1
 

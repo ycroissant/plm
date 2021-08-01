@@ -1,10 +1,14 @@
 ## Tests equivalence of collapse to base-R version of transformation functions
 ## B/between, Within, Sum.
 
-## Run tests only if package 'collapse' is available (as it is Suggests dependency)
+## Run tests only if package 'collapse', 'fixest', and 'lfe' are available
+## (as they are 'Suggests' dependencies)
 collapse.avail <- if (!requireNamespace("collapse", quietly = TRUE)) FALSE else TRUE
+fixest.avail   <- if (!requireNamespace("fixest",   quietly = TRUE)) FALSE else TRUE
+lfe.avail      <- if (!requireNamespace("lfe",      quietly = TRUE)) FALSE else TRUE
 
-if(collapse.avail) {
+
+if(collapse.avail && fixest.avail && lfe.avail) {
 
 # data
 library("plm")
@@ -42,6 +46,17 @@ mat_index_unbal <- attr(mat, "index")[-rm.rows, ]
 wlddev_unbal_wona <- na.omit(wlddev[ , 8:12])
 mat_unbal_wona <- as.matrix(wlddev_unbal_wona)
 attr(mat_unbal_wona, "index") <- index(pwlddev[-attr(wlddev_unbal_wona, "na.action"), ])
+
+
+wlddev_bal_wona <- na.omit(wlddev[wlddev$iso3c %in% c("ARG", "BLR", "CHN", "COL") , c(2, 4, 8:12)])
+pwlddev_bal_wona <- pdata.frame(wlddev_bal_wona, index = c("iso3c", "year"))
+pwlddev_bal_wona <- make.pbalanced(pwlddev_bal_wona, balance.type = "shared.times")
+pdim(pwlddev_bal_wona)
+mat_bal_wona <- as.matrix(pwlddev_bal_wona[ , 3:7])
+attr(mat_bal_wona, "index") <- index(pwlddev_bal_wona)
+
+
+
 
 
 #### Sum - default ####
@@ -623,14 +638,15 @@ stopifnot(isTRUE(all.equal(W1_ti_narm_unbal, W2_ti_narm_unbal, check.attributes 
 
 # twoways
 # need to use non-NA data for plm's original 2-way FE unbalanced transformation (due to lm.fit being used)
-	## so these cannot work
-	# W1_tw      <- Within.pseries(LIFEEX, effect = "twoways") # default
-	# W1_tw_narm <- Within.pseries(LIFEEX, effect = "twoways", na.rm = TRUE)
-	# 
-	# W2_tw       <- Within.pseries(LIFEEX, effect = "twoways")
-	# W2_tw_narm  <- Within.pseries(LIFEEX, effect = "twoways", na.rm = TRUE)
-	# stopifnot(isTRUE(all.equal(W1_tw,      W2_tw,      check.attributes = TRUE))) # TRUE
-	# stopifnot(isTRUE(all.equal(W1_tw_narm, W2_tw_narm, check.attributes = TRUE))) # TRUE
+  ## so these tests cannot work
+  # options("plm.fast" = FALSE)
+  # W1_tw      <- Within.pseries(LIFEEX, effect = "twoways") # default
+  # W1_tw_narm <- Within.pseries(LIFEEX, effect = "twoways", na.rm = TRUE)
+  # options("plm.fast" = TRUE)
+  # W2_tw       <- Within.pseries(LIFEEX, effect = "twoways")
+  # W2_tw_narm  <- Within.pseries(LIFEEX, effect = "twoways", na.rm = TRUE)
+  # stopifnot(isTRUE(all.equal(W1_tw,      W2_tw,      check.attributes = TRUE))) # TRUE
+  # stopifnot(isTRUE(all.equal(W1_tw_narm, W2_tw_narm, check.attributes = TRUE))) # TRUE
 
 ## but these:
 options("plm.fast" = FALSE)
@@ -639,12 +655,23 @@ W1_tw_unbal_wona      <- plm:::Within.pseries(LIFEEX_unbal_wona, effect = "twowa
 W1_tw_narm_unbal_wona <- plm:::Within.pseries(LIFEEX_unbal_wona, effect = "twoways", na.rm = TRUE)
 
 options("plm.fast" = TRUE)
+options("plm.fast.pkg.FE.tw" = "collapse")
+W2_tw_unbal_wona_collapse       <- plm:::Within.pseries(LIFEEX_unbal_wona, effect = "twoways")
+W2_tw_narm_unbal_wona_collapse  <- plm:::Within.pseries(LIFEEX_unbal_wona, effect = "twoways", na.rm = TRUE)
+options("plm.fast.pkg.FE.tw" = "fixest")
+W2_tw_unbal_wona_fixest       <- plm:::Within.pseries(LIFEEX_unbal_wona, effect = "twoways")
+W2_tw_narm_unbal_wona_fixest  <- plm:::Within.pseries(LIFEEX_unbal_wona, effect = "twoways", na.rm = TRUE)
+options("plm.fast.pkg.FE.tw" = "lfe")
+W2_tw_unbal_wona_lfe       <- plm:::Within.pseries(LIFEEX_unbal_wona, effect = "twoways")
+W2_tw_narm_unbal_wona_lfe  <- plm:::Within.pseries(LIFEEX_unbal_wona, effect = "twoways", na.rm = TRUE)
 
-W2_tw_unbal_wona       <- plm:::Within.pseries(LIFEEX_unbal_wona, effect = "twoways")
-W2_tw_narm_unbal_wona  <- plm:::Within.pseries(LIFEEX_unbal_wona, effect = "twoways", na.rm = TRUE)
+stopifnot(isTRUE(all.equal(W1_tw_unbal_wona,      W2_tw_unbal_wona_collapse,      check.attributes = TRUE))) # TRUE
+stopifnot(isTRUE(all.equal(W1_tw_narm_unbal_wona, W2_tw_narm_unbal_wona_collapse, check.attributes = TRUE))) # TRUE
+stopifnot(isTRUE(all.equal(W1_tw_unbal_wona,      W2_tw_unbal_wona_fixest,        check.attributes = TRUE))) # TRUE
+stopifnot(isTRUE(all.equal(W1_tw_narm_unbal_wona, W2_tw_narm_unbal_wona_fixest,   check.attributes = TRUE))) # TRUE
+stopifnot(isTRUE(all.equal(W1_tw_unbal_wona,      W2_tw_unbal_wona_lfe,           check.attributes = TRUE))) # TRUE
+stopifnot(isTRUE(all.equal(W1_tw_narm_unbal_wona, W2_tw_narm_unbal_wona_lfe,      check.attributes = TRUE))) # TRUE
 
-stopifnot(isTRUE(all.equal(W1_tw_unbal_wona,      W2_tw_unbal_wona,      check.attributes = TRUE))) # TRUE
-stopifnot(isTRUE(all.equal(W1_tw_narm_unbal_wona, W2_tw_narm_unbal_wona, check.attributes = TRUE))) # TRUE
 
 #### within - matrix ####
 
@@ -654,13 +681,24 @@ options("plm.fast" = FALSE)
 W1_mat_ind      <- plm:::Within.matrix(mat, effect = "individual") # default
 W1_mat_ind_narm <- plm:::Within.matrix(mat, effect = "individual", na.rm = TRUE)
 
+W1_mat_no_index_ind      <- plm:::Within.matrix(mat_noindex, effect = mat_index[[1L]]) # default
+W1_mat_no_index_ind_narm <- plm:::Within.matrix(mat_noindex, effect = mat_index[[1L]], na.rm = TRUE)
+
 options("plm.fast" = TRUE)
 
 W2_mat_ind       <- plm:::Within.matrix(mat, effect = "individual")
 W2_mat_ind_narm  <- plm:::Within.matrix(mat, effect = "individual", na.rm = TRUE)
 
+W2_mat_no_index_ind      <- plm:::Within.matrix(mat_noindex, effect = mat_index[[1L]]) # default
+W2_mat_no_index_ind_narm <- plm:::Within.matrix(mat_noindex, effect = mat_index[[1L]], na.rm = TRUE)
+
+
 stopifnot(isTRUE(all.equal(W1_mat_ind,      W2_mat_ind,      check.attributes = TRUE))) # TRUE
 stopifnot(isTRUE(all.equal(W1_mat_ind_narm, W2_mat_ind_narm, check.attributes = TRUE))) # TRUE
+
+stopifnot(isTRUE(all.equal(W1_mat_no_index_ind,      W2_mat_no_index_ind,      check.attributes = TRUE))) # TRUE
+stopifnot(isTRUE(all.equal(W1_mat_no_index_ind_narm, W2_mat_no_index_ind_narm, check.attributes = TRUE))) # TRUE
+
 
 # individual effect - unbalanced
 options("plm.fast" = FALSE)
@@ -668,13 +706,24 @@ options("plm.fast" = FALSE)
 W1_mat_unbal_ind      <- plm:::Within.matrix(mat_unbal, effect = "individual") # default
 W1_mat_unbal_ind_narm <- plm:::Within.matrix(mat_unbal, effect = "individual", na.rm = TRUE)
 
+W1_mat_no_index_ind_unbal      <- plm:::Within.matrix(mat_noindex_unbal, effect = mat_index_unbal[[1L]]) # default
+W1_mat_no_index_ind_narm_unbal <- plm:::Within.matrix(mat_noindex_unbal, effect = mat_index_unbal[[1L]], na.rm = TRUE)
+
 options("plm.fast" = TRUE)
 
 W2_mat_unbal_ind       <- plm:::Within.matrix(mat_unbal, effect = "individual")
 W2_mat_unbal_ind_narm  <- plm:::Within.matrix(mat_unbal, effect = "individual", na.rm = TRUE)
 
+W2_mat_no_index_ind_unbal      <- plm:::Within.matrix(mat_noindex_unbal, effect = mat_index_unbal[[1L]]) # default
+W2_mat_no_index_ind_narm_unbal <- plm:::Within.matrix(mat_noindex_unbal, effect = mat_index_unbal[[1L]], na.rm = TRUE)
+
+
 stopifnot(isTRUE(all.equal(W1_mat_unbal_ind,      W2_mat_unbal_ind,      check.attributes = TRUE))) # TRUE
 stopifnot(isTRUE(all.equal(W1_mat_unbal_ind_narm, W2_mat_unbal_ind_narm, check.attributes = TRUE))) # TRUE
+
+stopifnot(isTRUE(all.equal(W1_mat_no_index_ind_unbal,      W2_mat_no_index_ind_unbal,      check.attributes = TRUE))) # TRUE
+stopifnot(isTRUE(all.equal(W1_mat_no_index_ind_narm_unbal, W2_mat_no_index_ind_narm_unbal, check.attributes = TRUE))) # TRUE
+
 
 # time effect - balanced
 options("plm.fast" = FALSE)
@@ -682,13 +731,24 @@ options("plm.fast" = FALSE)
 W1_mat_ti      <- plm:::Within.matrix(mat, effect = "time") # default
 W1_mat_ti_narm <- plm:::Within.matrix(mat, effect = "time", na.rm = TRUE)
 
+W1_mat_no_index_ti      <- plm:::Within.matrix(mat_noindex, effect = mat_index[[2L]]) # default
+W1_mat_no_index_ti_narm <- plm:::Within.matrix(mat_noindex, effect = mat_index[[2L]], na.rm = TRUE)
+
 options("plm.fast" = TRUE)
 
 W2_mat_ti       <- plm:::Within.matrix(mat, effect = "time")
 W2_mat_ti_narm  <- plm:::Within.matrix(mat, effect = "time", na.rm = TRUE)
 
+W2_mat_no_index_ti      <- plm:::Within.matrix(mat_noindex, effect = mat_index[[2L]]) # default
+W2_mat_no_index_ti_narm <- plm:::Within.matrix(mat_noindex, effect = mat_index[[2L]], na.rm = TRUE)
+
+
 stopifnot(isTRUE(all.equal(W1_mat_ti,      W2_mat_ti,      check.attributes = TRUE))) # TRUE
 stopifnot(isTRUE(all.equal(W1_mat_ti_narm, W2_mat_ti_narm, check.attributes = TRUE))) # TRUE
+
+stopifnot(isTRUE(all.equal(W1_mat_no_index_ti,      W2_mat_no_index_ti,      check.attributes = TRUE))) # TRUE
+stopifnot(isTRUE(all.equal(W1_mat_no_index_ti_narm, W2_mat_no_index_ti_narm, check.attributes = TRUE))) # TRUE
+
 
 # time effect - unbalanced
 options("plm.fast" = FALSE)
@@ -696,15 +756,28 @@ options("plm.fast" = FALSE)
 W1_mat_unbal_ti      <- plm:::Within.matrix(mat_unbal, effect = "time") # default
 W1_mat_unbal_ti_narm <- plm:::Within.matrix(mat_unbal, effect = "time", na.rm = TRUE)
 
+W1_mat_no_index_ti_unbal      <- plm:::Within.matrix(mat_noindex_unbal, effect = mat_index_unbal[[2L]]) # default
+W1_mat_no_index_ti_unbal_narm <- plm:::Within.matrix(mat_noindex_unbal, effect = mat_index_unbal[[2L]], na.rm = TRUE)
+
 options("plm.fast" = TRUE)
 
 W2_mat_unbal_ti       <- plm:::Within.matrix(mat_unbal, effect = "time")
 W2_mat_unbal_ti_narm  <- plm:::Within.matrix(mat_unbal, effect = "time", na.rm = TRUE)
 
+W2_mat_no_index_ti_unbal      <- plm:::Within.matrix(mat_noindex_unbal, effect = mat_index_unbal[[2L]]) # default
+W2_mat_no_index_ti_unbal_narm <- plm:::Within.matrix(mat_noindex_unbal, effect = mat_index_unbal[[2L]], na.rm = TRUE)
+
+
 stopifnot(isTRUE(all.equal(W1_mat_unbal_ti,      W2_mat_unbal_ti,      check.attributes = TRUE))) # TRUE
 stopifnot(isTRUE(all.equal(W1_mat_unbal_ti_narm, W2_mat_unbal_ti_narm, check.attributes = TRUE))) # TRUE
 
+stopifnot(isTRUE(all.equal(W1_mat_no_index_ti_unbal,      W2_mat_no_index_ti_unbal,      check.attributes = TRUE))) # TRUE
+stopifnot(isTRUE(all.equal(W1_mat_no_index_ti_unbal_narm, W2_mat_no_index_ti_unbal_narm, check.attributes = TRUE))) # TRUE
+
+
 # twoways - balanced
+### (twoways not possible within non-index case (as Within.default does not handle more than one factor)
+
 options("plm.fast" = FALSE)
 
 W1_mat_tw      <- plm:::Within.matrix(mat, effect = "twoways") # default
@@ -712,26 +785,77 @@ W1_mat_tw_narm <- plm:::Within.matrix(mat, effect = "twoways", na.rm = TRUE)
 
 options("plm.fast" = TRUE)
 
-W2_mat_tw       <- plm:::Within.matrix(mat, effect = "twoways")
-W2_mat_tw_narm  <- plm:::Within.matrix(mat, effect = "twoways", na.rm = TRUE)
+options("plm.fast.pkg.FE.tw" = "collapse")
+W2_mat_tw_collapse       <- plm:::Within.matrix(mat, effect = "twoways")
+W2_mat_tw_narm_collapse  <- plm:::Within.matrix(mat, effect = "twoways", na.rm = TRUE)
 
-stopifnot(isTRUE(all.equal(W1_mat_tw,      W2_mat_tw,      check.attributes = TRUE))) # TRUE
-stopifnot(isTRUE(all.equal(W1_mat_tw_narm, W2_mat_tw_narm, check.attributes = TRUE))) # TRUE
+options("plm.fast.pkg.FE.tw" = "fixest")
+W2_mat_tw_fixest       <- plm:::Within.matrix(mat, effect = "twoways")
+W2_mat_tw_narm_fixest  <- plm:::Within.matrix(mat, effect = "twoways", na.rm = TRUE)
+
+options("plm.fast.pkg.FE.tw" = "lfe")
+W2_mat_tw_lfe       <- plm:::Within.matrix(mat, effect = "twoways")
+W2_mat_tw_narm_lfe  <- plm:::Within.matrix(mat, effect = "twoways", na.rm = TRUE)
+
+
+stopifnot(isTRUE(all.equal(W1_mat_tw, W2_mat_tw_collapse, check.attributes = TRUE))) # TRUE
+stopifnot(isTRUE(all.equal(W1_mat_tw, W2_mat_tw_fixest,   check.attributes = TRUE))) # TRUE
+stopifnot(isTRUE(all.equal(W1_mat_tw, W2_mat_tw_lfe,      check.attributes = TRUE))) # TRUE
+
+
+stopifnot(isTRUE(all.equal(W1_mat_tw_narm,      W2_mat_tw_narm_collapse, check.attributes = TRUE))) # TRUE
+## These two do not match as the NA-removal process is too different for the two functions:
+ # stopifnot(isTRUE(all.equal(W1_mat_tw_narm,      W2_mat_tw_narm_fixest,   check.attributes = TRUE))) # TRUE
+ # stopifnot(isTRUE(all.equal(W1_mat_tw_narm,      W2_mat_tw_narm_lfe,      check.attributes = TRUE))) # TRUE
+# but can check fixest vs. lfe:
+stopifnot(isTRUE(all.equal(W2_mat_tw_narm_fixest,      W2_mat_tw_narm_lfe,      check.attributes = TRUE))) # TRUE
+
+## -> so use a balanced non-NA matrix instead (almost senseless but tests at least a bit of a test for na.rm = TRUE)
+options("plm.fast" = FALSE)
+W1_mat_bal_wona_tw_narm <- plm:::Within.matrix(mat_bal_wona, effect = "twoways", na.rm = TRUE)
+options("plm.fast" = TRUE)
+options("plm.fast.pkg.FE.tw" = "collapse")
+W2_mat_bal_wona_tw_narm_collapse  <- plm:::Within.matrix(mat_bal_wona, effect = "twoways", na.rm = TRUE)
+
+options("plm.fast.pkg.FE.tw" = "fixest")
+W2_mat_bal_wona_tw_narm_fixest  <- plm:::Within.matrix(mat_bal_wona, effect = "twoways", na.rm = TRUE)
+
+options("plm.fast.pkg.FE.tw" = "lfe")
+W2_mat_bal_wona_tw_narm_lfe  <- plm:::Within.matrix(mat_bal_wona, effect = "twoways", na.rm = TRUE)
+
+
+stopifnot(isTRUE(all.equal(W1_mat_bal_wona_tw_narm, W2_mat_bal_wona_tw_narm_collapse, check.attributes = TRUE))) # TRUE
+stopifnot(isTRUE(all.equal(W1_mat_bal_wona_tw_narm, W2_mat_bal_wona_tw_narm_fixest,   check.attributes = TRUE))) # TRUE
+stopifnot(isTRUE(all.equal(W1_mat_bal_wona_tw_narm, W2_mat_bal_wona_tw_narm_lfe,      check.attributes = TRUE))) # TRUE
+
 
 # twoways - unbalanced
-# need to use non-NA data for plm's original 2-way FE unbalanced transformation (due to lm.fit being used)
+## need to use non-NA data in test for plm's original 2-way FE unbalanced transformation (due to lm.fit being used)
 options("plm.fast" = FALSE)
 
 W1_mat_unbal_tw      <- plm:::Within.matrix(mat_unbal_wona, effect = "twoways") # default
 W1_mat_unbal_tw_narm <- plm:::Within.matrix(mat_unbal_wona, effect = "twoways", na.rm = TRUE)
 
 options("plm.fast" = TRUE)
+options("plm.fast.pkg.FE.tw" = "collapse")
+W2_mat_unbal_tw_collapse       <- plm:::Within.matrix(mat_unbal_wona, effect = "twoways")
+W2_mat_unbal_tw_narm_collapse  <- plm:::Within.matrix(mat_unbal_wona, effect = "twoways", na.rm = TRUE)
 
-W2_mat_unbal_tw       <- plm:::Within.matrix(mat_unbal_wona, effect = "twoways")
-W2_mat_unbal_tw_narm  <- plm:::Within.matrix(mat_unbal_wona, effect = "twoways", na.rm = TRUE)
+options("plm.fast.pkg.FE.tw" = "fixest")
+W2_mat_unbal_tw_fixest       <- plm:::Within.matrix(mat_unbal_wona, effect = "twoways")
+W2_mat_unbal_tw_narm_fixest  <- plm:::Within.matrix(mat_unbal_wona, effect = "twoways", na.rm = TRUE)
 
-stopifnot(isTRUE(all.equal(W1_mat_unbal_tw,      W2_mat_unbal_tw,      check.attributes = TRUE))) # TRUE
-stopifnot(isTRUE(all.equal(W1_mat_unbal_tw_narm, W2_mat_unbal_tw_narm, check.attributes = TRUE))) # TRUE
+options("plm.fast.pkg.FE.tw" = "lfe")
+W2_mat_unbal_tw_lfe       <- plm:::Within.matrix(mat_unbal_wona, effect = "twoways")
+W2_mat_unbal_tw_narm_lfe  <- plm:::Within.matrix(mat_unbal_wona, effect = "twoways", na.rm = TRUE)
+
+
+stopifnot(isTRUE(all.equal(W1_mat_unbal_tw,      W2_mat_unbal_tw_collapse,      check.attributes = TRUE))) # TRUE
+stopifnot(isTRUE(all.equal(W1_mat_unbal_tw_narm, W2_mat_unbal_tw_narm_collapse, check.attributes = TRUE))) # TRUE
+stopifnot(isTRUE(all.equal(W1_mat_unbal_tw,      W2_mat_unbal_tw_fixest,        check.attributes = TRUE))) # TRUE
+stopifnot(isTRUE(all.equal(W1_mat_unbal_tw_narm, W2_mat_unbal_tw_narm_fixest,   check.attributes = TRUE))) # TRUE
+stopifnot(isTRUE(all.equal(W1_mat_unbal_tw,      W2_mat_unbal_tw_lfe,           check.attributes = TRUE))) # TRUE
+stopifnot(isTRUE(all.equal(W1_mat_unbal_tw_narm, W2_mat_unbal_tw_narm_lfe,      check.attributes = TRUE))) # TRUE
 
 
 } ### Endif collapse.avail
@@ -762,38 +886,57 @@ stopifnot(isTRUE(all.equal(W1_mat_unbal_tw_narm, W2_mat_unbal_tw_narm, check.att
 # # data <- na.omit(data)
 # # pdim(data) # Unbalanced Panel: n = 13300, T = 1-31, N = 93900
 # 
-# options("plm.fast" = FALSE) # default: fast functions of 'collapse' not in use
 # times <- 3 # no. of repetitions for benchmark
-# bench_res_plm <- microbenchmark(
-#                           plm(form, data = data, model = "within"),
-#                           plm(form, data = data, model = "within", effect = "twoways"),
-#                           plm(form, data = data, model = "random"),
-#                           plm(form, data = data, model = "random", effect = "twoways"),
-#                       times = times)
 # 
-# options("plm.fast" = TRUE)
-# bench_res_collapse <- microbenchmark(
-#                           plm(form, data = data, model = "within"),
-#                           plm(form, data = data, model = "within", effect = "twoways"),
-#                           plm(form, data = data, model = "random"),
-#                           plm(form, data = data, model = "random", effect = "twoways"),
-#                         times = times)
-# print(bench_res_plm,      unit = "s")
-# print(bench_res_collapse, unit = "s")
+# onewayFE <- microbenchmark(
+#   {options("plm.fast" = FALSE); plm(form, data = data, model = "within")},
+#   {options("plm.fast" = TRUE);  plm(form, data = data, model = "within")},
+#   times = times, unit = "relative")
+# 
+# onewayRE <- microbenchmark(
+#   {options("plm.fast" = FALSE); plm(form, data = data, model = "random")},
+#   {options("plm.fast" = TRUE);  plm(form, data = data, model = "random")},
+#   times = times, unit = "relative")
+# 
+# twowayRE <-  microbenchmark(
+#   {options("plm.fast" = FALSE); plm(form, data = data, model = "random", effect = "twoways")},
+#   {options("plm.fast" = TRUE);  plm(form, data = data, model = "random", effect = "twoways")},
+#   times = times, unit = "relative")
+# 
+# twowayRE2 <-  microbenchmark(
+#   {options("plm.fast" = FALSE);                                    plm(form, data = data, model = "random", effect = "twoways")},
+#   {options("plm.fast" = TRUE, "plm.fast.pkg.FE.tw" = "collapse");  plm(form, data = data, model = "random", effect = "twoways")},
+#   {options("plm.fast" = TRUE, "plm.fast.pkg.FE.tw" = "fixest");    plm(form, data = data, model = "random", effect = "twoways")},
+#   {options("plm.fast" = TRUE, "plm.fast.pkg.FE.tw" = "lfe");       plm(form, data = data, model = "random", effect = "twoways")},
+#   times = times, unit = "relative")
+# 
+# twowayFE <-  microbenchmark(
+#   {options("plm.fast" = FALSE);                                    plm(form, data = data, model = "within", effect = "twoways")},
+#   {options("plm.fast" = TRUE, "plm.fast.pkg.FE.tw" = "collapse");  plm(form, data = data, model = "within", effect = "twoways")},
+#   {options("plm.fast" = TRUE, "plm.fast.pkg.FE.tw" = "fixest");    plm(form, data = data, model = "within", effect = "twoways")},
+#   {options("plm.fast" = TRUE, "plm.fast.pkg.FE.tw" = "lfe");       plm(form, data = data, model = "within", effect = "twoways")},
+#   times = times, unit = "relative")
+# 
+# summary(onewayFE)
+# summary(onewayRE)
+# summary(twowayRE)
+# summary(twowayRE2)
+# summary(twowayFE)
 # 
 # 
 # ## 2-FE unbalanced: collapse vs. lfe
-# options("plm.fast" = TRUE)
-# bench_2FE_collapse <- microbenchmark(
-#                           plm(form, data = data, model = "within", effect = "twoways"),
-#                         times = 10)
+# # options("plm.fast" = TRUE)
+# # bench_2FE_collapse <- microbenchmark(
+# #                           plm(form, data = data, model = "within", effect = "twoways"),
+# #                         times = 10)
+# # 
+# # assignInNamespace("Within.pseries", Within.pseries.lfe, envir = as.environment("package:plm"))
+# # assignInNamespace("Within.matrix",  Within.matrix.lfe,  envir = as.environment("package:plm"))
+# # 
+# # bench_2FE_lfe <- microbenchmark(
+# #                       plm(form, data = data, model = "within", effect = "twoways"),
+# #                     times = 10)
+# # 
+# # print(bench_2FE_collapse, unit = "s")
+# # print(bench_2FE_lfe,      unit = "s")
 # 
-# assignInNamespace("Within.pseries", Within.pseries.lfe, envir = as.environment("package:plm"))
-# assignInNamespace("Within.matrix",  Within.matrix.lfe,  envir = as.environment("package:plm"))
-# 
-# bench_2FE_lfe <- microbenchmark(
-#                       plm(form, data = data, model = "within", effect = "twoways"),
-#                     times = 10)
-# 
-# print(bench_2FE_collapse, unit = "s")
-# print(bench_2FE_lfe,      unit = "s") # ~ 2x up to ~3x faster
