@@ -9787,10 +9787,14 @@ Chisq: 6879.2 on 12 DF, p-value: < 2.22e-16
 > ##D summary(onewayFE)
 > ##D 
 > ##D twowayFE <-  microbenchmark(
-> ##D  {options("plm.fast" = FALSE);                                    plm(form, data = data, model = "within", effect = "twoways")},
-> ##D  {options("plm.fast" = TRUE, "plm.fast.pkg.FE.tw" = "collapse");  plm(form, data = data, model = "within", effect = "twoways")},
-> ##D  {options("plm.fast" = TRUE, "plm.fast.pkg.FE.tw" = "fixest");    plm(form, data = data, model = "within", effect = "twoways")},
-> ##D  {options("plm.fast" = TRUE, "plm.fast.pkg.FE.tw" = "lfe");       plm(form, data = data, model = "within", effect = "twoways")},
+> ##D  {options("plm.fast" = FALSE);                                    
+> ##D     plm(form, data = data, model = "within", effect = "twoways")},
+> ##D  {options("plm.fast" = TRUE, "plm.fast.pkg.FE.tw" = "collapse");
+> ##D     plm(form, data = data, model = "within", effect = "twoways")},
+> ##D  {options("plm.fast" = TRUE, "plm.fast.pkg.FE.tw" = "fixest");
+> ##D     plm(form, data = data, model = "within", effect = "twoways")},
+> ##D  {options("plm.fast" = TRUE, "plm.fast.pkg.FE.tw" = "lfe");
+> ##D     plm(form, data = data, model = "within", effect = "twoways")},
 > ##D   times = times, unit = "relative")
 > ##D 
 > ##D summary(twowayFE)
@@ -14968,7 +14972,7 @@ F-statistic: 309.014 on 2 and 197 DF, p-value: < 2.22e-16
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  19.02 0.76 19.8 NA NA 
+Time elapsed:  17.67 0.91 19.11 NA NA 
 > grDevices::dev.off()
 null device 
           1 
