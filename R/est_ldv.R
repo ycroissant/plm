@@ -13,7 +13,7 @@
 #' @param subset see `lm`,
 #' @param weights see `lm`,
 #' @param na.action see `lm`,
-#' @param model one of `"fd"`, `"random"` or `"pooling"`,
+#' @param model one of `"fd"`, `"random"`, or `"pooling"`,
 #' @param index the indexes, see [pdata.frame()],
 #' @param R the number of points for the gaussian quadrature,
 #' @param start a vector of starting values,
@@ -27,7 +27,7 @@
 #' @param sample `"cens"` for a censored (tobit-like) sample,
 #'     `"trunc"` for a truncated sample,
 #' @param \dots further arguments.
-#' @return An object of class `c("plm","panelmodel")`.
+#' @return An object of class `c("plm", "panelmodel")`.
 #' @export
 #' @importFrom maxLik maxLik
 #' @author Yves Croissant
@@ -38,13 +38,13 @@
 #' @keywords regression
 pldv <- function(formula, data, subset, weights, na.action,
                  model = c("fd", "random", "pooling"), index = NULL,
-                 R = 20, start = NULL, lower = 0, upper = + Inf,
+                 R = 20, start = NULL, lower = 0, upper = +Inf,
                  objfun = c("lsq", "lad"), sample = c("cens", "trunc"), ...){
   
 ## Due to the eval() construct with maxLik::maxLik we import maxLik::maxLik
 ## and re-export it via NAMESPACE as plm::maxLik with a minimal documentation 
 ## pointing to the original documentation.
-## This way, we can keep the flexibility of eval() ## [evalutate in parent frame] 
+## This way, we can keep the flexibility of eval() [evalutate in parent frame] 
 ## and can lessen the dependency burden by placing pkg maxLik in 'Imports'
 ## rather than 'Depends' in DESCRIPTION.
   
@@ -55,9 +55,9 @@ pldv <- function(formula, data, subset, weights, na.action,
     mf <- match.call(expand.dots = FALSE)
     mf <- cl
     m <- match(c("formula", "data", "subset", "weights", "na.action", "index"), names(mf), 0)
-    mf <- mf[c(1, m)]
+    mf <- mf[c(1L, m)]
     mf$model <- NA
-    mf[[1]] <- as.name("plm")
+    mf[[1L]] <- as.name("plm")
     mf <- eval(mf, parent.frame())
     formula <- attr(mf, "formula")
     # extract the relevant arguments for maxLik
@@ -65,20 +65,20 @@ pldv <- function(formula, data, subset, weights, na.action,
     m <- match(c("print.level", "ftol", "tol", "reltol",
                  "gradtol", "steptol", "lambdatol", "qrtol",
                  "iterlim", "fixed", "activePar", "method"), names(maxl), 0)
-    maxl <- maxl[c(1, m)]
-    maxl[[1]] <- as.name("maxLik")
+    maxl <- maxl[c(1L, m)]
+    maxl[[1L]] <- as.name("maxLik")
     
     # The within model -> Bo Honore (1992)
     if (model == "fd"){
         objfun <- match.arg(objfun)
         # create a data.frame containing y_t and y_{t-1}
-        y <- as.character(formula[[2]])
+        y <- as.character(formula[[2L]])
         y <- mf[[y]]
         ly <- c(NA, y[1:(length(y) - 1)])
         id <- as.integer(index(mf, "id"))
         lid <- c(NA, id[1:(nrow(mf) - 1)])
         keep <- id == lid
-        keep[1] <- FALSE
+        keep[1L] <- FALSE
         Y <- data.frame(y, ly)
         Y <- Y[keep, ]
         yt <- Y$y
@@ -110,7 +110,6 @@ pldv <- function(formula, data, subset, weights, na.action,
                         (b > - a1 & b < a2) * (a2 - a1 - b) ^ 2 +
                         (a1 <= - b) * (a2 ^ 2 - 2 * a2 * (b + a1))
                 }
-                
             }
         }
         BO <- function(param){
@@ -129,17 +128,17 @@ pldv <- function(formula, data, subset, weights, na.action,
         maxl[c("logLik", "start")] <- list(BO, start)
         result <- eval(maxl, parent.frame())
         if (objfun == "lsq" && sample == "cens"){
-            bdx <- as.numeric(X %*% coef(result))
+            bdx <- as.numeric((crossprod(t(X), coef(result))))
             V4 <- yt ^ 2 * (bdx <= - ytm1) + ytm1 ^ 2 * (yt <= bdx) +
                 (yt - ytm1 - bdx) ^ 2 * (bdx > - ytm1 & bdx < yt)
             V4 <- crossprod(X, V4 * X) / length(V4)
             T4 <- crossprod((bdx > - ytm1 & bdx < yt) * X, X) / length(V4)
-            vcov <- solve(T4) %*% V4 %*% solve(T4)
+            solve_T4 <- solve(T4)
+            vcov <- solve_T4 %*% V4 %*% solve_T4
             result$vcov <- V4
-            result
         }
         if (is.null(result$vcov)) result$vcov <- solve(- result$hessian)
-        resid <- yt - as.numeric(X %*% coef(result))
+        resid <- yt - as.numeric(crossprod(t(X), coef(result)))
         result <- list(coefficients = coef(result),
                        vcov         = result$vcov,
                        formula      = formula,
@@ -151,14 +150,15 @@ pldv <- function(formula, data, subset, weights, na.action,
         class(result) <- c("plm", "panelmodel")
         result
     }
-    else{
+    else{ # model != "fd"
+      
         # old pglm stuff for the pooling and the random model, with
         # update to allow upper and lower bonds
         X <- model.matrix(mf, rhs = 1, model = "pooling", effect = "individual")
         
-        if (ncol(X) == 0) stop("empty model")
+        if (ncol(X) == 0L) stop("empty model")
         y <- pmodel.response(mf, model = "pooling", effect = "individual")
-        id <- attr(mf, "index")[[1]]
+        id <- attr(mf, "index")[[1L]]
         
           # The following is the only instance of statmod::gauss.quad, so check for 
           # the package's availability. (We placed 'statmod' in 'Suggests' rather
@@ -177,32 +177,31 @@ pldv <- function(formula, data, subset, weights, na.action,
         if (model == "pooling"){
             K <- ncol(X)
             if (! ls %in% c(0, K + 1)) stop("irrelevant length for the start vector")
-            if (ls == 0){
+            if (ls == 0L){
                 m <- match(c("formula", "data", "subset", "na.action"), names(cl), 0)
                 lmcl <- cl[c(1,m)]
-                lmcl[[1]] <- as.name("lm")
+                lmcl[[1L]] <- as.name("lm")
                 lmcl <- eval(lmcl, parent.frame())
                 sig2 <- deviance(lmcl) / df.residual(lmcl)
                 sigma <- sqrt(sig2)
                 start <- c(coef(lmcl), sd.nu = sigma)
             }
         }
-        else{
-            if (ls <= 1){
+        else{ # model != "pooling" and != "fd"
+            if (ls <= 1L){
                 startcl <- cl
                 startcl$model <- "pooling"
                 startcl$method <- "bfgs"
                 pglmest <- eval(startcl, parent.frame())
                 thestart <- coef(pglmest)
-                if (ls == 1){
+                if (ls == 1L){
                     start <- c(thestart, start)
                 }
                 else{
-                    resid <- y - as.numeric(X %*% coef(pglmest)[1:ncol(X)])
+                    resid <- y -  as.numeric(tcrossprod(X, t(coef(pglmest)[1:ncol(X)])))
                     eta <- tapply(resid, id, mean)[as.character(id)]
                     nu <- resid - eta
                     start <- c(thestart[1:ncol(X)], sd.nu = sd(nu), sd.eta = sd(eta))
-                    
                 }
             }
         }
@@ -219,7 +218,7 @@ pldv <- function(formula, data, subset, weights, na.action,
         maxl$start <- start
         result <- eval(maxl, parent.frame())
         result[c('call', 'args', 'model')] <- list(cl, args, data)
-    }
+    } # end-if model != "fd"
     result
 }
 
@@ -267,8 +266,8 @@ lnl.tobit <- function(param, y, X, id, lower = 0, upper = +Inf, model = "pooling
         if (! is.na(i)){
             gradi <- cbind(gradi, NA)
             gradi[YLO, K + 2L] <- - mz[YLO] * sqrt(2) * z 
-            gradi[YUT, K + 2L] <- e[YUT] * sqrt(2) * z 
-            gradi[YUP, K + 2L] <- mmz[YUP] * sqrt(2) * z
+            gradi[YUT, K + 2L] <-    e[YUT] * sqrt(2) * z 
+            gradi[YUP, K + 2L] < - mmz[YUP] * sqrt(2) * z
         }
         gradi / sigma
     }
@@ -286,18 +285,18 @@ lnl.tobit <- function(param, y, X, id, lower = 0, upper = +Inf, model = "pooling
         e <- (y - Xb - sqrt(2) * seta * z) / sigma
         mz <-  mills(e)
         mmz <- mills(- e)
-        hbb <- hbs <- hss <- numeric(length = nrow(X))
+        hbb <- hbs <- hss <- numeric(length = nrow(X)) # pre-allocate
         hbb[YLO] <- - (e[YLO] + mz[YLO]) * mz[YLO]
-        hbs[YLO] <-     mz[YLO] * (1 - (e[YLO] + mz[YLO]) * e[YLO])
-        hss[YLO] <-    e[YLO] * mz[YLO] * (2 - (e[YLO] + mz[YLO]) * e[YLO])
+        hbs[YLO] <-          mz[YLO] * (1 - (e[YLO] + mz[YLO]) * e[YLO])
+        hss[YLO] <- e[YLO] * mz[YLO] * (2 - (e[YLO] + mz[YLO]) * e[YLO])
         hbb[YUT] <- - 1
         hbs[YUT] <- - 2 * e[YUT]
         hss[YUT] <- (1 - 3 * e[YUT] ^ 2)
         hbb[YUP] <- - (- e[YUP] + mmz[YUP]) * mmz[YUP]
-        hbs[YUP] <- - mmz[YUP] * (1 + (mmz[YUP] - e[YUP]) * e[YUP])
+        hbs[YUP] <-          - mmz[YUP] * (1 + (mmz[YUP] - e[YUP]) * e[YUP])
         hss[YUP] <- - e[YUP] * mmz[YUP] * (2 + (mmz[YUP] - e[YUP]) * e[YUP])
         hbb <- crossprod(hbb * X * pw, X)
-        hbs <- apply(hbs * X * pw, 2, sum)
+        hbs <- apply(hbs * X * pw, 2, sum) # TODO: can use colSums -> faster
         hss <- sum(hss * pw)
         H <- rbind(cbind(hbb, hbs), c(hbs, hss))
         if (! is.na(i)){
@@ -311,7 +310,7 @@ lnl.tobit <- function(param, y, X, id, lower = 0, upper = +Inf, model = "pooling
             hba[YUP] <- - (- e[YUP] + mmz[YUP]) * mmz[YUP] * sqrt(2) * z
             hsa[YUP] <- - mmz[YUP] * sqrt(2) * z * (1 + (- e[YUP] + mmz[YUP]) * e[YUP])
             haa[YUP] <- - (- e[YUP] + mmz[YUP]) * mmz[YUP] * 2 * z ^ 2
-            hba <- apply(hba * X * pw, 2, sum)
+            hba <- apply(hba * X * pw, 2, sum) # TODO: can use colSums -> faster
             haa <- sum(haa * pw)
             hsa <- sum(hsa * pw)
             H <- rbind(cbind(H, c(hba, hsa)), c(hba, hsa, haa))
@@ -338,9 +337,9 @@ lnl.tobit <- function(param, y, X, id, lower = 0, upper = +Inf, model = "pooling
         lnPn <- log(Reduce("+", lnPn)) - 0.5 * log(pi)
         lnL <- sum(lnPn)
         if (compute.gradient || compute.hessian){
-            glnPnr <- lapply(1:R, function(i) g(i = i))
-            pwn <- lapply(1:R, function(i) exp(lnPnr[[i]] - lnPn))
-            pwnt <- lapply(1:R, function(i) pwn[[i]][as.character(id)])
+            glnPnr  <- lapply(1:R, function(i) g(i = i))
+            pwn     <- lapply(1:R, function(i) exp(lnPnr[[i]] - lnPn))
+            pwnt    <- lapply(1:R, function(i) pwn[[i]][as.character(id)])
             glnPnr2 <- lapply(1:R, function(i) rn$weights[i] * pwnt[[i]]  * glnPnr[[i]])
             gradi <- Reduce("+", glnPnr2) / sqrt(pi)
             attr(lnL, "gradient") <- gradi
@@ -354,7 +353,7 @@ lnl.tobit <- function(param, y, X, id, lower = 0, upper = +Inf, model = "pooling
             DD2 <- Reduce("+", DD2) / sqrt(pi)
             DD3 <- lapply(1:R, function(i) rn$weights[i] * crossprod(sqrt(pwn[[i]]) * apply(glnPnr[[i]], 2, tapply, id, sum)))
             DD3 <- Reduce("+", DD3) / sqrt(pi)
-            H <- (DD1+ DD2 + DD3) 
+            H <- (DD1 + DD2 + DD3) 
             attr(lnL, "hessian") <- H
         }
     }

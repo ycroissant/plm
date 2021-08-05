@@ -33,7 +33,7 @@ estimated,}
 
 \item{na.action}{see \code{lm},}
 
-\item{model}{one of \code{"fd"}, \code{"random"} or \code{"pooling"},}
+\item{model}{one of \code{"fd"}, \code{"random"}, or \code{"pooling"},}
 
 \item{index}{the indexes, see \code{\link[=pdata.frame]{pdata.frame()}},}
 
@@ -57,7 +57,7 @@ deviations,}
 \item{\dots}{further arguments.}
 }
 \value{
-An object of class \code{c("plm","panelmodel")}.
+An object of class \code{c("plm", "panelmodel")}.
 }
 \description{
 Fixed and random effects estimators for truncated or censored
