@@ -47,9 +47,11 @@ variable,}
 \item{upper}{the upper bound for the censored/truncated dependent
 variable,}
 
-\item{objfun}{the objective function for the fixed effect model,
-one of \code{"lsq"} for least squares and \code{"lad"} for least absolute
-deviations,}
+\item{objfun}{the objective function for the fixed effect model (\code{model = "fd"},
+irrelevant for other values of the \code{model} argument ):
+one of \code{"lsq"} for least squares (minimise sum of squares of the residuals)
+and \code{"lad"} for least absolute deviations (minimise sum of absolute values
+of the residuals),}
 
 \item{sample}{\code{"cens"} for a censored (tobit-like) sample,
 \code{"trunc"} for a truncated sample,}
@@ -57,16 +59,38 @@ deviations,}
 \item{\dots}{further arguments.}
 }
 \value{
-An object of class \code{c("plm", "panelmodel")}.
+For \code{model = "fd"}, an object of class \code{c("plm", "panelmodel")}, for
+\code{model = "random"} and \code{model = "pooling"} an object of class \code{c("maxLik", "maxim")}.
 }
 \description{
 Fixed and random effects estimators for truncated or censored
 limited dependent variable
 }
 \details{
-\code{pldv} computes two kinds of models : maximum likelihood estimator
-with an assumed normal distribution for the individual effects and
-a LSQ/LAD estimator for the first-difference model.
+\code{pldv} computes two kinds of models: a LSQ/LAD estimator for the
+first-difference model (\code{model = "fd"}) and a maximum likelihood estimator
+with an assumed normal distribution for the individual effects
+(\code{model = "random"} or \code{"pooling"}).
+
+For maximum-likelihood estimations, \code{pldv} uses internally function
+\code{\link[maxLik:maxLik]{maxLik::maxLik()}} (from package \CRANpkg{maxLik}).
+}
+\examples{
+## as these examples take a bit of time, do not run them automatically
+\dontrun{
+data("Donors", package = "pder")
+library("plm")
+pDonors <- pdata.frame(Donors, index = "id")
+
+# replicate Landry/Lange/List/Price/Rupp (2010), online appendix, table 5a, models A and B
+modA <- pldv(donation ~ treatment +  prcontr, data = pDonors,
+            model = "random", method = "bfgs")
+summary(modA)
+modB <- pldv(donation ~ treatment * prcontr - prcontr, data = pDonors,
+            model = "random", method = "bfgs")
+summary(modB)
+}
+
 }
 \references{
 \insertRef{HONO:92}{plm}

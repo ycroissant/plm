@@ -23,7 +23,7 @@
    root testing, as suggested in Hanck (2013).
    
  * [.pseries: implemented method to allow subsetting on pseries while retaining
-   the pseries properties, i.e., `some_pseries[<some subsetting condition>]`
+   the pseries properties, i.e., `your_pseries[<subsetting condition>]`
    remains a pseries (before, subsetting on pseries worked as the base R
    subsetting for vectors was used but the pseries properties were lost). The
    subsetting method checks for valid pseries features and warns for non-valid
@@ -75,6 +75,8 @@
    
  * various efficiency gains throughout the package by using more s/vapply(),
    crossprod(), better branching, etc.
+   
+ * pldv: man page extended a little, esp. with examples.
 
 ### Vignettes:
   * 1st vignette:
@@ -811,7 +813,7 @@ plm()): Between, between, Sum, Within.
     i.e., lag(x, k = -1) == lead(x, k = 1).
 * diff.pseries: prevented negative lags as input to avoid confusion.
 * doc for pseries functions are made available under their name, e.g., ?lag now displays helpfile for
-    lag.pseries in the help overview (besides e.g. stats::lag).
+    lag.pseries in the help overview (besides, e.g., stats::lag).
 * pdim.default: make error message "duplicate couples (time-id)" printed as proper error message
     (removed cat() around the message in stop(), was printed as regular string on screen before).
 * plm.data: slight improvement for printed outputs (spelling and spacing).

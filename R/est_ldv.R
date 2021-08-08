@@ -3,9 +3,14 @@
 #' Fixed and random effects estimators for truncated or censored
 #' limited dependent variable
 #' 
-#' `pldv` computes two kinds of models : maximum likelihood estimator
-#' with an assumed normal distribution for the individual effects and
-#' a LSQ/LAD estimator for the first-difference model.
+#' `pldv` computes two kinds of models: a LSQ/LAD estimator for the
+#' first-difference model (`model = "fd"`) and a maximum likelihood estimator
+#' with an assumed normal distribution for the individual effects
+#' (`model = "random"` or `"pooling"`).
+#' 
+#' For maximum-likelihood estimations, `pldv` uses internally function 
+#' [maxLik::maxLik()] (from package \CRANpkg{maxLik}).
+#' 
 #' @aliases pldv
 #' @param formula a symbolic description for the model to be
 #'     estimated,
@@ -21,13 +26,17 @@
 #'     variable,
 #' @param upper the upper bound for the censored/truncated dependent
 #'     variable,
-#' @param objfun the objective function for the fixed effect model,
-#'     one of `"lsq"` for least squares and `"lad"` for least absolute
-#'     deviations,
+#' @param objfun the objective function for the fixed effect model (`model = "fd"`,
+#'     irrelevant for other values of the `model` argument ):
+#'     one of `"lsq"` for least squares (minimise sum of squares of the residuals) 
+#'     and `"lad"` for least absolute deviations (minimise sum of absolute values
+#'     of the residuals),
 #' @param sample `"cens"` for a censored (tobit-like) sample,
 #'     `"trunc"` for a truncated sample,
 #' @param \dots further arguments.
-#' @return An object of class `c("plm", "panelmodel")`.
+#' @return For `model = "fd"`, an object of class `c("plm", "panelmodel")`, for
+#'  `model = "random"` and `model = "pooling"` an object of class `c("maxLik", "maxim")`.
+#'  
 #' @export
 #' @importFrom maxLik maxLik
 #' @author Yves Croissant
@@ -36,6 +45,26 @@
 #' \insertRef{HONO:92}{plm}
 #' 
 #' @keywords regression
+#' @examples
+#' ## as these examples take a bit of time, do not run them automatically
+#' \dontrun{
+#' data("Donors", package = "pder")
+#' library("plm")
+#' pDonors <- pdata.frame(Donors, index = "id")
+#' 
+#' # replicate Landry/Lange/List/Price/Rupp (2010), online appendix, table 5a, models A and B
+#' modA <- pldv(donation ~ treatment +  prcontr, data = pDonors,
+#'             model = "random", method = "bfgs")
+#' summary(modA)
+#' modB <- pldv(donation ~ treatment * prcontr - prcontr, data = pDonors,
+#'             model = "random", method = "bfgs")
+#' summary(modB)
+#' }
+#' 
+# 
+# TODO: check if argument method = "bfgs" is needed in example (and why)
+#   -> seems strange as it is no direct argument of pldv
+
 pldv <- function(formula, data, subset, weights, na.action,
                  model = c("fd", "random", "pooling"), index = NULL,
                  R = 20, start = NULL, lower = 0, upper = +Inf,
@@ -60,6 +89,7 @@ pldv <- function(formula, data, subset, weights, na.action,
     mf[[1L]] <- as.name("plm")
     mf <- eval(mf, parent.frame())
     formula <- attr(mf, "formula")
+    
     # extract the relevant arguments for maxLik
     maxl <- cl
     m <- match(c("print.level", "ftol", "tol", "reltol",
@@ -148,9 +178,8 @@ pldv <- function(formula, data, subset, weights, na.action,
                        args         = list(model = "fd", effect = "individual"),
                        call         = cl)
         class(result) <- c("plm", "panelmodel")
-        result
     }
-    else{ # model != "fd"
+    else{ # model != "fd" => cases model = "random" / "pooling"
       
         # old pglm stuff for the pooling and the random model, with
         # update to allow upper and lower bonds
@@ -181,18 +210,18 @@ pldv <- function(formula, data, subset, weights, na.action,
                 m <- match(c("formula", "data", "subset", "na.action"), names(cl), 0)
                 lmcl <- cl[c(1,m)]
                 lmcl[[1L]] <- as.name("lm")
-                lmcl <- eval(lmcl, parent.frame())
+                lmcl <- eval(lmcl, parent.frame()) # eval stats::lm()
                 sig2 <- deviance(lmcl) / df.residual(lmcl)
                 sigma <- sqrt(sig2)
                 start <- c(coef(lmcl), sd.nu = sigma)
             }
         }
-        else{ # model != "pooling" and != "fd"
+        else{ # case model != "pooling" and != "fd" => model ="random"
             if (ls <= 1L){
                 startcl <- cl
                 startcl$model <- "pooling"
                 startcl$method <- "bfgs"
-                pglmest <- eval(startcl, parent.frame())
+                pglmest <- eval(startcl, parent.frame()) # eval pldv() with updated args
                 thestart <- coef(pglmest)
                 if (ls == 1L){
                     start <- c(thestart, start)
@@ -218,7 +247,7 @@ pldv <- function(formula, data, subset, weights, na.action,
         maxl$start <- start
         result <- eval(maxl, parent.frame())
         result[c('call', 'args', 'model')] <- list(cl, args, data)
-    } # end-if model != "fd"
+    } # end cases model = "random" / "pooling"
     result
 }
 
