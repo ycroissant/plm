@@ -59,14 +59,13 @@ account by performing the operations per individual.
 
 Argument \code{shift} controls the shifting of observations to be used
 by methods \code{lag}, \code{lead}, and \code{diff}:
-
-#' - \code{shift = "time"} (default): Methods respect the
-numerical value in the time dimension of the index.  The time
+\itemize{
+\item \code{shift = "time"} (default): Methods respect the
+numerical value in the time dimension of the index. The time
 dimension needs to be interpretable as a sequence t, t+1, t+2,
 \ldots{} where t is an integer (from a technical viewpoint,
 \code{as.numeric(as.character(index(your_pdata.frame)[[2]]))} needs to
 result in a meaningful integer).
-\itemize{
 \item \verb{shift = "row": }Methods perform the shifting operation based
 solely on the "physical position" of the observations,
 i.e., neighbouring rows are shifted per individual. The value in the

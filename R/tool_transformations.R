@@ -610,8 +610,8 @@ Within.matrix <- function(x, effect, rm.null = TRUE, ...) {
 #' Argument `shift` controls the shifting of observations to be used
 #' by methods `lag`, `lead`, and `diff`:
 #' 
-#' #' - `shift = "time"` (default): Methods respect the
-#' numerical value in the time dimension of the index.  The time
+#' - `shift = "time"` (default): Methods respect the
+#' numerical value in the time dimension of the index. The time
 #' dimension needs to be interpretable as a sequence t, t+1, t+2,
 #' \ldots{} where t is an integer (from a technical viewpoint,
 #' `as.numeric(as.character(index(your_pdata.frame)[[2]]))` needs to
