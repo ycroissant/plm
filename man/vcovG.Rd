@@ -66,13 +66,14 @@ zz <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc,
 model="pooling")
 ## reproduce Arellano's covariance matrix
 vcovG(zz, cluster="group", inner="cluster", l=0)
-## use in coefficient significance test
-library(lmtest)
 ## define custom covariance function
 ## (in this example, same as vcovHC)
 myvcov <- function(x) vcovG(x, cluster="group", inner="cluster", l=0)
+summary(zz, vcov = myvcov)
+## use in coefficient significance test
+library(lmtest)
 ## robust significance test
-coeftest(zz, vcov.=myvcov)
+coeftest(zz, vcov. = myvcov)
 
 }
 \references{

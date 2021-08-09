@@ -76,9 +76,7 @@
  * various efficiency gains throughout the package by using more s/vapply(),
    crossprod(), better branching, etc.
    
- * pldv: man page extended a little, esp. with examples.
-
-### Vignettes:
+### Vignettes and Other Documentation:
   * 1st vignette:
     * panel unit root testing:
       * added short intro with overview of available functions/tests and added
@@ -86,11 +84,14 @@
       * added sub-section about new function hansi.
     * added a little more information on the use of vcovXX.
   * 2nd vignette: added formula for nested error component model.
-  * all: references updated to include Baltagi (2021), the 6th edition of the
-    textbook; fixed a few typos.
-
+  * all vignettes: references updated to include Baltagi (2021), the 6th edition 
+    of the textbook; fixed a few typos.
+ * pldv: man page extended a little, esp. with examples.
+ * vcovXX: man pages extended with examples how to use with plm's own summary method.
+  
+  
 ### Dependencies:
- * Added packages 'fixest' and 'lfe' to 'Suggests'.   
+ * Added packages 'fixest' and 'lfe' to 'Suggests'.
 
 # plm 2.4-1
 

@@ -18,14 +18,16 @@
 #' linear model) by \insertCite{MACK:WHIT:85;textual}{plm} and
 #' \insertCite{CRIB:04;textual}{plm} \insertCite{@see @ZEIL:04}{plm}).
 #' 
-#' The main use of `vcovSCC` is to be an argument to other functions,
-#' e.g.,for Wald--type testing: argument `vcov.` to `coeftest()`,
-#' argument `vcov` to `waldtest()` and other methods in the
+#' The main use of `vcovSCC` (and the other variance-covariance estimators 
+#' provided in the package `vcovHC`, `vcovBK`, `vcovNW`, `vcovDC`) is to pass 
+#' it to plm's own functions like `summary`, `pwaldtest`, and `phtest` or 
+#' together with testing functions from the `lmtest` and `car` packages. All of 
+#' these typically allow passing the `vcov` or `vcov.` parameter either as a 
+#' matrix or as a function, e.g., for Wald--type testing: argument `vcov.` to
+#' `coeftest()`, argument `vcov` to `waldtest()` and other methods in the
 #' \CRANpkg{lmtest} package; and argument `vcov.` to
 #' `linearHypothesis()` in the \CRANpkg{car} package (see the
-#' examples). Notice that the `vcov` and `vcov.` arguments allow to
-#' supply a function (which is the safest) or a matrix
-#' \insertCite{@see @ZEIL:04, 4.1-2 and examples below}{plm}.
+#' examples), see \insertCite{@ZEIL:04, 4.1-2 and examples below}{plm}.
 #' 
 #' @aliases vcovSCC
 #' @param x an object of class `"plm"` or `"pcce"`
@@ -61,10 +63,13 @@
 #' @keywords regression
 #' @examples
 #' 
-#' library(lmtest)
 #' data("Produc", package="plm")
 #' zz <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc, model="pooling")
+#' ## as function input to plm's summary method (with and without additional arguments):
+#' summary(zz, vcov = vcovSCC)
+#' summary(zz, vcov = function(x) vcovSCC(x, method="arellano", type="HC1"))
 #' ## standard coefficient significance test
+#' library(lmtest)
 #' coeftest(zz)
 #' ## SCC robust significance test, default
 #' coeftest(zz, vcov.=vcovSCC)
@@ -100,14 +105,16 @@ vcovSCC <- function(x, ...){
 #' linear model) by \insertCite{MACK:WHIT:85;textual}{plm} and
 #' \insertCite{CRIB:04;textual}{plm} \insertCite{@see @ZEIL:04}{plm}.
 #' 
-#' The main use of `vcovNW` is to be an argument to other functions,
-#' e.g., for Wald--type testing: argument `vcov.` to `coeftest()`,
-#' argument `vcov` to `waldtest()` and other methods in the
+#' The main use of `vcovNW` (and the other variance-covariance estimators 
+#' provided in the package `vcovHC`, `vcovBK`, `vcovDC`, `vcovSCC`) is to pass 
+#' it to plm's own functions like `summary`, `pwaldtest`, and `phtest` or 
+#' together with testing functions from the `lmtest` and `car` packages. All of 
+#' these typically allow passing the `vcov` or `vcov.` parameter either as a 
+#' matrix or as a function, e.g., for Wald--type testing: argument `vcov.` to
+#' `coeftest()`, argument `vcov` to `waldtest()` and other methods in the
 #' \CRANpkg{lmtest} package; and argument `vcov.` to
 #' `linearHypothesis()` in the \CRANpkg{car} package (see the
-#' examples). Notice that the `vcov` and `vcov.` arguments allow to
-#' supply a function (which is the safest) or a matrix
-#' \insertCite{@see @ZEIL:04, 4.1-2 and examples below}{plm}.
+#' examples), see \insertCite{@ZEIL:04, 4.1-2 and examples below}{plm}.
 #' 
 #' @aliases vcovNW
 #' @param x an object of class `"plm"` or `"pcce"`
@@ -138,10 +145,13 @@ vcovSCC <- function(x, ...){
 #' @keywords regression
 #' @examples
 #' 
-#' library(lmtest)
 #' data("Produc", package="plm")
 #' zz <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc, model="pooling")
+#' ## as function input to plm's summary method (with and without additional arguments):
+#' summary(zz, vcov = vcovNW)
+#' summary(zz, vcov = function(x) vcovNW(x, method="arellano", type="HC1"))
 #' ## standard coefficient significance test
+#' library(lmtest)
 #' coeftest(zz)
 #' ## NW robust significance test, default
 #' coeftest(zz, vcov.=vcovNW)
@@ -179,14 +189,16 @@ vcovNW <- function(x, ...){
 #' linear model) by \insertCite{MACK:WHIT:85;textual}{plm} and
 #' \insertCite{CRIB:04;textual}{plm} \insertCite{@see @ZEIL:04}{plm}.
 #' 
-#' The main use of `vcovDC` is to be an argument to other functions,
-#' e.g., for Wald--type testing: argument `vcov.` to `coeftest()`,
-#' argument `vcov` to `waldtest()` and other methods in the
+#' The main use of `vcovDC` (and the other variance-covariance estimators 
+#' provided in the package `vcovHC`, `vcovBK`, `vcovNW`, `vcovSCC`) is to pass 
+#' it to plm's own functions like `summary`, `pwaldtest`, and `phtest` or 
+#' together with testing functions from the `lmtest` and `car` packages. All of 
+#' these typically allow passing the `vcov` or `vcov.` parameter either as a 
+#' matrix or as a function, e.g., for Wald--type testing: argument `vcov.` to
+#' `coeftest()`, argument `vcov` to `waldtest()` and other methods in the
 #' \CRANpkg{lmtest} package; and argument `vcov.` to
 #' `linearHypothesis()` in the \CRANpkg{car} package (see the
-#' examples). Notice that the `vcov` and `vcov.` arguments allow to
-#' supply a function (which is the safest) or a matrix
-#' \insertCite{@see @ZEIL:04, 4.1-2 and examples below}{plm}.
+#' examples), see \insertCite{@ZEIL:04, 4.1-2 and examples below}{plm}. 
 #' 
 #' @aliases vcovDC
 #' @param x an object of class `"plm"` or `"pcce"`
@@ -214,10 +226,13 @@ vcovNW <- function(x, ...){
 #' @keywords regression
 #' @examples
 #' 
-#' library(lmtest)
 #' data("Produc", package="plm")
 #' zz <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc, model="pooling")
+#' ## as function input to plm's summary method (with and without additional arguments):
+#' summary(zz, vcov = vcovDC)
+#' summary(zz, vcov = function(x) vcovDC(x, type="HC1", maxlag=4))
 #' ## standard coefficient significance test
+#' library(lmtest)
 #' coeftest(zz)
 #' ## DC robust significance test, default
 #' coeftest(zz, vcov.=vcovDC)
@@ -279,13 +294,14 @@ vcovDC <- function(x, ...){
 #' model="pooling")
 #' ## reproduce Arellano's covariance matrix
 #' vcovG(zz, cluster="group", inner="cluster", l=0)
-#' ## use in coefficient significance test
-#' library(lmtest)
 #' ## define custom covariance function
 #' ## (in this example, same as vcovHC)
 #' myvcov <- function(x) vcovG(x, cluster="group", inner="cluster", l=0)
+#' summary(zz, vcov = myvcov)
+#' ## use in coefficient significance test
+#' library(lmtest)
 #' ## robust significance test
-#' coeftest(zz, vcov.=myvcov)
+#' coeftest(zz, vcov. = myvcov)
 #' 
 vcovG <- function(x, ...) {
     UseMethod("vcovG")
@@ -610,14 +626,16 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 # % TODO: give formula for "sss";
 # elaborate why different result for FE models (intercept)
 #' 
-#' The main use of `vcovHC` is to be an argument to other functions,
-#' e.g., for Wald--type testing: argument `vcov.` to `coeftest()`,
-#' argument `vcov` to `waldtest()` and other methods in the
+#' The main use of `vcovHC` (and the other variance-covariance estimators 
+#' provided in the package `vcovBK`, `vcovNW`, `vcovDC`, `vcovSCC`) is to pass 
+#' it to plm's own functions like `summary`, `pwaldtest`, and `phtest` or 
+#' together with testing functions from the `lmtest` and `car` packages. All of 
+#' these typically allow passing the `vcov` or `vcov.` parameter either as a 
+#' matrix or as a function, e.g., for Wald--type testing: argument `vcov.` to
+#' `coeftest()`, argument `vcov` to `waldtest()` and other methods in the
 #' \CRANpkg{lmtest} package; and argument `vcov.` to
 #' `linearHypothesis()` in the \CRANpkg{car} package (see the
-#' examples). Notice that the `vcov` and `vcov.` arguments allow to
-#' supply a function (which is the safest) or a matrix
-#' \insertCite{@ZEIL:04, 4.1-2 and examples below}{plm}.
+#' examples), see \insertCite{@ZEIL:04, 4.1-2 and examples below}{plm}.
 #' 
 #' A special procedure for `pgmm` objects, proposed by
 #' \insertCite{WIND:05;textual}{plm}, is also provided.
@@ -667,11 +685,15 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 #' @keywords regression
 #' @examples
 #' 
-#' library(lmtest)
 #' data("Produc", package = "plm")
 #' zz <- plm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
 #'           data = Produc, model = "random")
+#' ## as function input to plm's summary method (with and without additional arguments):
+#' summary(zz, vcov = vcovHC)
+#' summary(zz, vcov = function(x) vcovHC(x, method="arellano", type="HC1"))
+#' 
 #' ## standard coefficient significance test
+#' library(lmtest)
 #' coeftest(zz)
 #' ## robust significance test, cluster by group
 #' ## (robust vs. serial correlation)
@@ -832,14 +854,16 @@ vcovSCC.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 # % sample correction as used by Stata. give formula for "sss";
 # % elaborate why different result for FE models (intercept)
 #' 
-#' The main use of `vcovBK` is to be an argument to other functions,
-#' e.g., for Wald--type testing: argument `vcov.` to `coeftest()`,
-#' argument `vcov` to `waldtest()` and other methods in the
+#' The main use of `vcovBK` (and the other variance-covariance estimators 
+#' provided in the package `vcovHC`, `vcovNW`, `vcovDC`, `vcovSCC`) is to pass 
+#' it to plm's own functions like `summary`, `pwaldtest`, and `phtest` or 
+#' together with testing functions from the `lmtest` and `car` packages. All of 
+#' these typically allow passing the `vcov` or `vcov.` parameter either as a 
+#' matrix or as a function, e.g., for Wald--type testing: argument `vcov.` to
+#' `coeftest()`, argument `vcov` to `waldtest()` and other methods in the
 #' \CRANpkg{lmtest} package; and argument `vcov.` to
 #' `linearHypothesis()` in the \CRANpkg{car} package (see the
-#' examples). Notice that the `vcov` and `vcov.` arguments allow to
-#' supply a function (which is the safest) or a matrix
-#' \insertCite{@see @ZEIL:04, 4.1-2 and examples below}{plm}.
+#' examples), see \insertCite{@ZEIL:04, 4.1-2 and examples below}{plm}.
 #' 
 #' @param x an object of class `"plm"`,
 #' @param type the weighting scheme used, one of `"HC0"`, `"HC1"`,
@@ -870,10 +894,14 @@ vcovSCC.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 #' @keywords regression
 #' @examples
 #' 
-#' library(lmtest)
+
 #' data("Produc", package="plm")
 #' zz <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc, model="random")
+#' summary(zz, vcov = vcovBK)
+#' summary(zz, vcov = function(x) vcovBK(x, type="HC1"))
+#' 
 #' ## standard coefficient significance test
+#' library(lmtest)
 #' coeftest(zz)
 #' ## robust significance test, cluster by group
 #' ## (robust vs. serial correlation), default arguments
@@ -882,8 +910,7 @@ vcovSCC.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 #' coeftest(zz, vcov.=function(x) vcovBK(x, type="HC1"))
 #' ## idem, cluster by time period
 #' ## (robust vs. cross-sectional correlation)
-#' coeftest(zz, vcov.=function(x) vcovBK(x,
-#'  type="HC1", cluster="time"))
+#' coeftest(zz, vcov.=function(x) vcovBK(x, type="HC1", cluster="time"))
 #' ## idem with parameters, pass vcov as a matrix argument
 #' coeftest(zz, vcov.=vcovBK(zz, type="HC1"))
 #' ## joint restriction test
@@ -1129,7 +1156,7 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
   pane <- solve(crossprod(demX))
 
   ## sandwich
-  mycov <- tcrossprod(crossprod(t(pane), salame), t(pane)) # == pane %*% salame %*% pane pane %*% salame %*% pane
+  mycov <- tcrossprod(crossprod(t(pane), salame), t(pane)) # == pane %*% salame %*% pane
   
   # save information about cluster variable in matrix (needed for e.g.,
   # robust F test)

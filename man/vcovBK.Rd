@@ -63,21 +63,26 @@ justified theoretically (although in the context of the standard
 linear model) by \insertCite{MACK:WHIT:85;textual}{plm} and
 \insertCite{CRIB:04;textual}{plm} \insertCite{@see @ZEIL:04}{plm}.
 
-The main use of \code{vcovBK} is to be an argument to other functions,
-e.g., for Wald--type testing: argument \code{vcov.} to \code{coeftest()},
-argument \code{vcov} to \code{waldtest()} and other methods in the
+The main use of \code{vcovBK} (and the other variance-covariance estimators
+provided in the package \code{vcovHC}, \code{vcovNW}, \code{vcovDC}, \code{vcovSCC}) is to pass
+it to plm's own functions like \code{summary}, \code{pwaldtest}, and \code{phtest} or
+together with testing functions from the \code{lmtest} and \code{car} packages. All of
+these typically allow passing the \code{vcov} or \code{vcov.} parameter either as a
+matrix or as a function, e.g., for Wald--type testing: argument \code{vcov.} to
+\code{coeftest()}, argument \code{vcov} to \code{waldtest()} and other methods in the
 \CRANpkg{lmtest} package; and argument \code{vcov.} to
 \code{linearHypothesis()} in the \CRANpkg{car} package (see the
-examples). Notice that the \code{vcov} and \code{vcov.} arguments allow to
-supply a function (which is the safest) or a matrix
-\insertCite{@see @ZEIL:04, 4.1-2 and examples below}{plm}.
+examples), see \insertCite{@ZEIL:04, 4.1-2 and examples below}{plm}.
 }
 \examples{
 
-library(lmtest)
 data("Produc", package="plm")
 zz <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp, data=Produc, model="random")
+summary(zz, vcov = vcovBK)
+summary(zz, vcov = function(x) vcovBK(x, type="HC1"))
+
 ## standard coefficient significance test
+library(lmtest)
 coeftest(zz)
 ## robust significance test, cluster by group
 ## (robust vs. serial correlation), default arguments
@@ -86,8 +91,7 @@ coeftest(zz, vcov.=vcovBK)
 coeftest(zz, vcov.=function(x) vcovBK(x, type="HC1"))
 ## idem, cluster by time period
 ## (robust vs. cross-sectional correlation)
-coeftest(zz, vcov.=function(x) vcovBK(x,
- type="HC1", cluster="time"))
+coeftest(zz, vcov.=function(x) vcovBK(x, type="HC1", cluster="time"))
 ## idem with parameters, pass vcov as a matrix argument
 coeftest(zz, vcov.=vcovBK(zz, type="HC1"))
 ## joint restriction test
