@@ -9291,6 +9291,37 @@ alternative hypothesis: within specification does not apply
 > 
 > 
 > cleanEx()
+> nameEx("pldv")
+> ### * pldv
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: pldv
+> ### Title: Panel estimators for limited dependent variables
+> ### Aliases: pldv
+> ### Keywords: regression
+> 
+> ### ** Examples
+> 
+> ## as these examples take a bit of time, do not run them automatically
+> ## Not run: 
+> ##D data("Donors", package = "pder")
+> ##D library("plm")
+> ##D pDonors <- pdata.frame(Donors, index = "id")
+> ##D 
+> ##D # replicate Landry/Lange/List/Price/Rupp (2010), online appendix, table 5a, models A and B
+> ##D modA <- pldv(donation ~ treatment +  prcontr, data = pDonors,
+> ##D             model = "random", method = "bfgs")
+> ##D summary(modA)
+> ##D modB <- pldv(donation ~ treatment * prcontr - prcontr, data = pDonors,
+> ##D             model = "random", method = "bfgs")
+> ##D summary(modB)
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> cleanEx()
 > nameEx("plm-package")
 > ### * plm-package
 > 
@@ -14972,7 +15003,7 @@ F-statistic: 309.014 on 2 and 197 DF, p-value: < 2.22e-16
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  17.67 0.91 19.11 NA NA 
+Time elapsed:  21.12 0.98 22.58 NA NA 
 > grDevices::dev.off()
 null device 
           1 
