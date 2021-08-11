@@ -103,8 +103,7 @@ case of "sys--GMM"),}
 \item{A2}{the weighting matrix for the two--steps estimator,}
 \item{call}{the call.}
 
-It has \code{print}, \code{summary} and \code{print.summary}
-methods.
+It has \code{print}, \code{summary} and \code{print.summary} methods.
 }
 \description{
 Generalized method of moments estimation for static or dynamic

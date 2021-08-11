@@ -61,6 +61,7 @@
 #'     (identity matrix) or `"G"` (\eqn{=D'D} where \eqn{D} is the
 #'     first--difference operator) if `transformation="d"`, one of
 #'     `"GI"` or `"full"` if `transformation="ld"`,
+# TODO: fms = NULL (default)/"full"/"GI" not explained; arg fsm is not evaluated at all
 #' @param index the indexes,
 #' @param digits digits,
 #' @param width the maximum length of the lines in the print output,
@@ -85,8 +86,7 @@
 #' \item{A2}{the weighting matrix for the two--steps estimator,}
 #' \item{call}{the call.}
 #' 
-#' It has `print`, `summary` and `print.summary`
-#' methods.
+#' It has `print`, `summary` and `print.summary` methods.
 #' @author Yves Croissant
 #' @export
 #' @importFrom MASS ginv
@@ -140,7 +140,8 @@ pgmm <- function(formula, data, subset, na.action,
                  model = c("onestep", "twosteps"),
                  collapse = FALSE,
                  lost.ts = NULL,
-                 transformation = c("d", "ld"), fsm = NULL,
+                 transformation = c("d", "ld"),
+                 fsm = NULL, # TODO: argument 'fsm' is not evaluated, 
                  index = NULL, ...){
 
   # yX : response / covariates, W : gmm instruments, Z : normal
@@ -162,17 +163,17 @@ pgmm <- function(formula, data, subset, na.action,
     if (!inherits(formula, "dynformula")){
       formula <- match.call(expand.dots = TRUE)
       m <- match(c("formula", "lag.form", "diff.form", "log.form"),names(formula),0)
-      formula <- formula[c(1, m)]
-      formula[[1]] <- as.name("dynformula")
+      formula <- formula[c(1L, m)]
+      formula[[1L]] <- as.name("dynformula")
       formula <- cl$formula <- eval(formula, parent.frame())
     }
     response.name <- paste(deparse(formula[[2L]]))
     main.lags <- attr(formula, "lag")
-    if (length(main.lags[[1L]]) == 1 && main.lags[[1L]] > 1)
-      main.lags[[1L]] <- c(1, main.lags[[1L]])
+    if (length(main.lags[[1L]]) == 1L && main.lags[[1L]] > 1L)
+      main.lags[[1L]] <- c(1L, main.lags[[1L]])
     main.lags[2:length(main.lags)] <- lapply(main.lags[2:length(main.lags)],
                         function(x){
-                          if (length(x) == 1 && x != 0) x <- c(0, x)
+                          if (length(x) == 1L && x != 0) x <- c(0, x)
                           x
                         })
     main.form <- dynterms2formula(main.lags, response.name)
@@ -201,16 +202,16 @@ pgmm <- function(formula, data, subset, na.action,
 
   cardW <- length(gmm.lags)
   if (is.null(names(collapse))){
-    if (length(collapse) == 1){
+    if (length(collapse) == 1L){
       collapse <- as.vector(rep(collapse, cardW), mode = "list")
     }
     else{
-      if (length(collapse) != cardW) stop("the collapse vector has a wrong length")
+      if (length(collapse) != cardW) stop("the 'collapse' vector has a wrong length")
     }
     names(collapse) <- names(gmm.lags)
   }
   else{
-     if (any(! (names(collapse) %in% names(gmm.lags)))) stop("unknown names in the collapse vector")
+     if (any(! (names(collapse) %in% names(gmm.lags)))) stop("unknown names in the 'collapse' vector")
      else{
        bcollapse <- as.vector(rep(FALSE, cardW), mode = "list")
        names(bcollapse) <- names(gmm.lags)
@@ -227,7 +228,7 @@ pgmm <- function(formula, data, subset, na.action,
   # 1. the third part of the formula describes them
   # 2. all variables not used as gmm are normal instruments
   # 3. all variables are gmm instruments and therefore, there are no
-  # normal instruments except maybe time dummies
+  #    normal instruments except maybe time dummies
   
   # the third part of the formula (if any) deals with the 'normal' instruments
   if (length(x)[2L] == 3L){
@@ -244,7 +245,7 @@ pgmm <- function(formula, data, subset, na.action,
     iv <- names(main.lags)[! names(main.lags) %in% names(gmm.lags)]
     inst.lags <- main.lags[iv]
     # generate the formula for 'normal' instruments
-    if (length(inst.lags) > 0){
+    if (length(inst.lags) > 0L){
       normal.instruments <- TRUE
       inst.form <- dynterms2formula(inst.lags)
     }
@@ -262,28 +263,26 @@ pgmm <- function(formula, data, subset, na.action,
   #################################################################
 
   if (!is.null(lost.ts)){
-    if (!is.numeric(lost.ts)) stop("lost.ts should be numeric")
+    if (!is.numeric(lost.ts)) stop("argument 'lost.ts' should be numeric")
     lost.ts <- as.numeric(lost.ts)
-    if (!(length(lost.ts) %in% c(1, 2))) stop("lost.ts should be of length 1 or 2")
+    if (!(length(lost.ts) %in% c(1L, 2L))) stop("argument 'lost.ts' should be of length 1 or 2")
     TL1 <- lost.ts[1L]
     TL2 <- if(length(lost.ts) == 1L) { TL1 - 1 } else lost.ts[2L]
   }
   else{
-    # How many time series are lost ? May be the maximum number of lags
+    # How many time series are lost? May be the maximum number of lags
     # of any covariates + 1 because of first - differencing or the
     # largest minimum lag for any gmm or normal instruments
-
-    # min or max to select the number of lost time series ? ## TODO: TL1, TL2 calc. twice?!
-    gmm.minlag <- min(sapply(gmm.lags, min))
-    if (!is.null(inst.lags)) inst.maxlag <- max(sapply(inst.lags, max))
-    else inst.maxlag <- 0
-    main.maxlag <- max(sapply(main.lags, max))
+    # min or max to select the number of lost time series?
+    gmm.minlag  <- min(unlist(gmm.lags))                            # was (==): min(sapply(gmm.lags, min))
+    inst.maxlag <- if (!is.null(inst.lags)) max(unlist(inst.lags)) else 0 # was (==): max(sapply(inst.lags, max)) else 0
+    main.maxlag <- max(unlist(main.lags))                          # was (==): max(sapply(main.lags, max))
     TL1 <- max(main.maxlag + 1, inst.maxlag + 1, gmm.minlag)
-    TL2 <- max(main.maxlag, inst.maxlag, gmm.minlag - 1)
+    TL2 <- max(main.maxlag,     inst.maxlag,     gmm.minlag - 1)
     # if TL2 = 0 (no lags), one observation is lost anyway because of
     # the differentiation of the lag instruments
-    TL1 <- max(main.maxlag + 1, gmm.minlag)
-    TL2 <- max(main.maxlag, gmm.minlag - 1)
+    TL1 <- max(main.maxlag + 1, gmm.minlag)       ## TODO: TL1, TL2 calc. twice!?!
+    TL2 <- max(main.maxlag,     gmm.minlag - 1)
   }
 
   #################################################################
@@ -296,8 +295,8 @@ pgmm <- function(formula, data, subset, na.action,
   if (!is.null(inst.form))  Form <- as.Formula(main.form, gmm.form, inst.form)
   else Form <- as.Formula(main.form, gmm.form)
   mf <- match.call(expand.dots = FALSE)
-  m <- match(c("formula", "data", "subset", "na.action", "index"), names(mf), 0)
-  mf <- mf[c(1, m)]
+  m <- match(c("formula", "data", "subset", "na.action", "index"), names(mf), 0L)
+  mf <- mf[c(1L, m)]
   mf$drop.unused.levels <- TRUE
   mf[[1L]] <- as.name("plm")
   mf$model <- NA
@@ -306,9 +305,9 @@ pgmm <- function(formula, data, subset, na.action,
   mf$subset <- NULL
   data <- eval(mf, parent.frame())
   index <- index(data)
-  N <- length(levels(index[[1L]]))
-  T <- length(levels(index[[2L]]))
   pdim <- pdim(data)
+  N <- pdim$nT$n
+  T <- pdim$nT$T
   balanced <- pdim$balanced
 
   # if the data is unbalanced, "balance" the data
@@ -498,8 +497,8 @@ pgmm <- function(formula, data, subset, na.action,
   yX <- yX1
   
   # Compute the first step matrices
-  if (transformation == "d") A1 <- tcrossprod(diff(diag(1, T - TL1 + 1)))
-  if (transformation == "ld") A1 <- FSM(T - TL2, "full")
+  if (transformation == "d")  A1 <- tcrossprod(diff(diag(1, T - TL1 + 1)))
+  if (transformation == "ld") A1 <- FSM(T - TL2, "full")  # TODO: always set to "full" but man page tells otherwise
 
   # compute the estimator
   
@@ -509,43 +508,47 @@ pgmm <- function(formula, data, subset, na.action,
   ## for (i in 1:N) W[[i]] <- W[[i]][, - zerolines]
 
   WX <- mapply(function(x, y) crossprod(x, y), W, yX, SIMPLIFY = FALSE)
-  Wy <- lapply(WX, function(x) x[ ,  1])
-  WX <- lapply(WX, function(x) x[ , -1, drop = FALSE])
+  Wy <- lapply(WX, function(x) x[ ,  1L])
+  WX <- lapply(WX, function(x) x[ , -1L, drop = FALSE])
   A1 <- lapply(W, function(x) crossprod(t(crossprod(x, A1)), x))
   A1 <- Reduce("+", A1)
   minevA1 <- min(eigen(A1)$values)
   eps <- 1E-9
-  if (minevA1 < eps){
-    A1 <- ginv(A1) * length(W)
+  A1 <- if(minevA1 < eps){
     warning("the first-step matrix is singular, a general inverse is used")
+    ginv(A1)
   }
-  else A1 <- solve(A1) * length(W)
+  else solve(A1)
+  A1 <- A1 * length(W)
+  
   WX <- Reduce("+", WX)
   Wy <- Reduce("+", Wy)
-  B1 <- solve(crossprod(WX, t(crossprod(WX, A1))))
-  Y1 <- crossprod(t(crossprod(WX, A1)), Wy)
+  t.CP.WX.A1 <- t(crossprod(WX, A1))
+  B1 <- solve(crossprod(WX, t.CP.WX.A1))
+  Y1 <- crossprod(t.CP.WX.A1, Wy)
   coefficients <- as.numeric(crossprod(B1, Y1))
   if (effect == "twoways") names.coef <- c(names.coef, namesV)
   names(coefficients) <- names.coef
+
   residuals <- lapply(yX,
                       function(x)
-                      as.vector(x[ , 1] - crossprod(t(x[ , -1, drop = FALSE]), coefficients)))
-  outresid <- lapply(residuals,function(x) outer(x,x))
+                      as.vector(x[ , 1L] - crossprod(t(x[ , -1L, drop = FALSE]), coefficients)))
+  outresid <- lapply(residuals, function(x) outer(x, x))
+  
   A2 <- mapply(function(x, y) crossprod(t(crossprod(x, y)), x), W, outresid, SIMPLIFY = FALSE)
   A2 <- Reduce("+", A2)
   minevA2 <- min(eigen(A2)$values)
-  eps <- 1E-9
-  if (minevA2 < eps){
-    A2 <- ginv(A2)
+  A2 <- if (minevA2 < eps) {
     warning("the second-step matrix is singular, a general inverse is used")
+    ginv(A2)
   }
-  else A2 <- solve(A2)
+  else solve(A2)
 
-  B2 <- solve(crossprod(WX, t(crossprod(WX, A2))))
-
-  if (model == "twosteps"){
+  if (model == "twosteps") {
     coef1s <- coefficients
-    Y2 <- crossprod(t(crossprod(WX, A2)), Wy)
+    t.CP.WX.A2 <- t(crossprod(WX, A2))
+    Y2 <- crossprod(t.CP.WX.A2, Wy)
+    B2 <- solve(crossprod(WX, t.CP.WX.A2))
     coefficients <- as.numeric(crossprod(B2, Y2))
     names(coefficients) <- names.coef
     vcov <- B2
@@ -562,10 +565,12 @@ pgmm <- function(formula, data, subset, na.action,
                       )
   fitted.values <- mapply(function(x,y) x[ , 1] - y, yX, residuals)
   if (model == "twosteps") coefficients <- list(coef1s, coefficients)
+  
   args <- list(model          = model,
                effect         = effect,
                transformation = transformation,
                namest         = namesV)
+  
   result <- list(coefficients  = coefficients,
                  residuals     = residuals,
                  vcov          = vcov,
@@ -577,6 +582,7 @@ pgmm <- function(formula, data, subset, na.action,
                  A2            = A2,
                  call          = cl,
                  args          = args)
+  
   result <- structure(result,
                       class = c("pgmm", "panelmodel"),
                       pdim = pdim)
@@ -624,7 +630,7 @@ getvar <- function(x){
     list(avar, lags)
   }
                    )
-  nres <- sapply(result, function(x) x[[1L]])
+  nres   <- sapply(result, function(x) x[[1L]])
   result <- lapply(result, function(x) x[[2L]])
   names(result) <- nres
   result
@@ -646,11 +652,11 @@ dynterms2formula <- function(x, response.name = NULL){
     # if there are still some lags, write them
     if (length(theinst) > 0L){
       if (length(theinst) > 1L){
-        at <- c(at, paste("lag(",names(x)[i],",c(",
+        at <- c(at, paste("lag(", names(x)[i], ",c(",
                           paste(theinst, collapse = ","), "))", sep =""))
       }
       else{
-        at <- c(at, paste("lag(",names(x)[i], ",", theinst, ")", sep =""))
+        at <- c(at, paste("lag(", names(x)[i], ",", theinst, ")", sep =""))
       }
     }
     result <- c(result, at)
@@ -694,11 +700,11 @@ extract.data <- function(data, as.matrix = TRUE){
 G <- function(t){
   G <- matrix(0,t,t)
   for (i in 1:(t-1)){
-    G[i,i] <- 2
-    G[i,i+1] <- -1
-    G[i+1,i] <- -1
+    G[i,   i]   <- 2
+    G[i,   i+1] <- -1
+    G[i+1, i]   <- -1
   }
-  G[t,t] <- 2
+  G[t, t] <- 2
   G
 }
 
@@ -711,14 +717,14 @@ FD <- function(t){
 }
 
 Id <- function(t){
-  diag(rep(1, t))
+  diag(1, t)
 }
 
 FSM <- function(t, fsm){
   switch(fsm,
          "I" = Id(t),
          "G" = G(t),
-         "GI" = bdiag(G(t-1), diag(1, t)),
+         "GI" = bdiag(G(t-1), Id(t)),
          "full" = rbind(cbind(G(t-1), FD(t)), cbind(t(FD(t)), Id(t)))
          )
 }
@@ -749,13 +755,8 @@ makegmm <- function(x, g, TL1, collapse = FALSE){
 
 
 makeW2 <-function (x, collapse = FALSE){
-  if (collapse) {
-    u <- diff(x[-c(length(x))])
-   }
-   else {
-     u <- diag(diff(x[-c(length(x))]))
-   }
-   u
+  if(collapse) { diff(x[-c(length(x))]) }
+  else {    diag(diff(x[-c(length(x))])) }
 }
 
 #' @rdname pgmm
@@ -773,17 +774,12 @@ summary.pgmm <- function(object, robust = TRUE, time.dummies = FALSE, ...) {
   model <- describe(object, "model")
   effect <- describe(object, "effect")
   transformation <- describe(object, "transformation")
-  if (robust){
-    vv <- vcovHC(object)
-  }
-  else{
-    vv <- vcov(object)
-  }
-  if (model == "onestep") K <- length(object$coefficients)
-  else  K <- length(object$coefficients[[2L]])
+  vv <- if(robust) vcovHC(object) else vcov(object)
+  K <- if(model == "onestep") length(object$coefficients)
+       else                   length(object$coefficients[[2L]])
   object$sargan <- sargan(object, "twosteps")
   object$m1 <- mtest(object, order = 1, vcov = vv)
-  # TODO: catch case when order= 2 is not feasible due to too few data
+  # TODO: catch case when order = 2 is not feasible due to too few data
   object$m2 <- mtest(object, order = 2, vcov = vv)
   object$wald.coef <- pwaldtest(object, param = "coef", vcov = vv)
   if (effect == "twoways") object$wald.td <- pwaldtest(object, param = "time", vcov = vv)
@@ -860,8 +856,7 @@ mtest <- function(object, order = 1, vcov = NULL) {
   
   X <- lapply(object$model, function(x) x[ , -1L, drop = FALSE])
   W <- object$W
-  if (model == "onestep") A <- object$A1
-  else  A <- object$A2
+  A <- if(model == "onestep") object$A1 else object$A2
   EVE <- Reduce("+",
                 mapply(function(x, y) t(y) %*% x %*% t(x) %*% y, resid, residl, SIMPLIFY = FALSE))
   EX <- Reduce("+", mapply(crossprod, residl, X, SIMPLIFY = FALSE))
@@ -896,40 +891,40 @@ print.summary.pgmm <- function(x, digits = max(3, getOption("digits") - 2),
   pdim <- attr(x, "pdim")
   formula <- x$call$formula
 
-  cat(paste(effect.pgmm.list[effect]," ",sep=""))
-  cat(paste(model.pgmm.list[model],"\n",sep=""))
+  cat(paste(effect.pgmm.list[effect], " ", sep = ""))
+  cat(paste(model.pgmm.list[model], "\n", sep = ""))
   cat("\nCall:\n")
   print(x$call)
   cat("\n")
   print(pdim)
   ntot <- sum(unlist(x$residuals) != 0)
-  cat("\nNumber of Observations Used: ",ntot,"\n", sep="")
+  cat("\nNumber of Observations Used: ", ntot, "\n", sep = "")
   
   cat("\nResiduals:\n")
   print(summary(unlist(residuals(x))))
   cat("\nCoefficients:\n")
-  printCoefmat(x$coefficients,digits=digits)
+  printCoefmat(x$coefficients, digits = digits)
 
-  cat("\nSargan test: ",names(x$sargan$statistic),
-      "(",x$sargan$parameter,") = ",x$sargan$statistic,
-      " (p-value = ",format.pval(x$sargan$p.value,digits=digits),")\n",sep="")
+  cat("\nSargan test: ", names(x$sargan$statistic),
+      "(", x$sargan$parameter, ") = ", x$sargan$statistic,
+      " (p-value = ", format.pval(x$sargan$p.value,digits=digits), ")\n", sep = "")
 
-  cat("Autocorrelation test (1): ",names(x$m1$statistic),
-      " = ",x$m1$statistic,
-      " (p-value = ",format.pval(x$m1$p.value,digits=digits),")\n",sep="")
+  cat("Autocorrelation test (1): ", names(x$m1$statistic),
+      " = ", x$m1$statistic,
+      " (p-value = ", format.pval(x$m1$p.value, digits = digits), ")\n", sep = "")
   
-  cat("Autocorrelation test (2): ",names(x$m2$statistic),
-      " = ",x$m2$statistic,
-      " (p-value = ",format.pval(x$m2$p.value,digits=digits),")\n",sep="")
-  cat("Wald test for coefficients: ",names(x$wald.coef$statistic),
-      "(",x$wald.coef$parameter,") = ",x$wald.coef$statistic,
-      " (p-value = ",format.pval(x$wald.coef$p.value,digits=digits),")\n",sep="")
+  cat("Autocorrelation test (2): ", names(x$m2$statistic),
+      " = ", x$m2$statistic,
+      " (p-value = ", format.pval(x$m2$p.value,digits=digits), ")\n", sep = "")
+  cat("Wald test for coefficients: ", names(x$wald.coef$statistic),
+      "(",x$wald.coef$parameter,") = ", x$wald.coef$statistic,
+      " (p-value = ", format.pval(x$wald.coef$p.value, digits = digits), ")\n", sep = "")
   
   
   if (describe(x, "effect") == "twoways"){
-    cat("Wald test for time dummies: ",names(x$wald.td$statistic),
-        "(",x$wald.td$parameter,") = ",x$wald.td$statistic,
-        " (p-value = ",format.pval(x$wald.td$p.value,digits=digits),")\n",sep="")
+    cat("Wald test for time dummies: ", names(x$wald.td$statistic),
+        "(", x$wald.td$parameter, ") = ", x$wald.td$statistic,
+        " (p-value = ", format.pval(x$wald.td$p.value, digits = digits), ")\n", sep = "")
   }
   invisible(x)
 }

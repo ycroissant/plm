@@ -1215,14 +1215,15 @@ vcovHC.pgmm <- function(x, ...) {
   else {
     yX <- x$model
     residuals <- x$residuals
-  }    
+  }
   minevA2 <- min(abs(Re(eigen(A2)$values)))
   eps <- 1E-9
-  if(minevA2 < eps){
-    SA2 <- ginv(A2)
+  
+  SA2 <- if(minevA2 < eps){
     warning("a general inverse is used")
+    ginv(A2)
   }
-  else SA2 <- solve(A2)
+  else solve(A2)
   
   if(model == "twosteps") {
     coef1s <- x$coefficients[[1L]]
@@ -1238,7 +1239,7 @@ vcovHC.pgmm <- function(x, ...) {
     vcov1s <- B1 %*% (t(WX) %*% A1 %*% SA2 %*% A1 %*% WX) %*% B1
     for (k in 2:K) {
       exk <- mapply(
-                    function(x,y){
+                    function(x, y){
                       z <- crossprod(t(x[ , k, drop = FALSE]), t(y))
                       - z - t(z)
                     },
@@ -1249,7 +1250,7 @@ vcovHC.pgmm <- function(x, ...) {
                              crossprod(x, crossprod(y, x)),
                              x$W, exk, SIMPLIFY = FALSE))
       Dk <- -B2 %*% t(WX) %*% A2 %*% wexkw %*% A2 %*% We
-      D <- cbind(D,Dk)
+      D <- cbind(D, Dk)
     }
     vcovr <- B2 + crossprod(t(D), B2) + t(crossprod(t(D), B2)) + D %*% vcov1s %*% t(D)
   }

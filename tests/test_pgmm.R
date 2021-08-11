@@ -6,11 +6,11 @@ z1 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
             data = EmplUK, effect = "twoways", model = "twosteps")
 summary(z1)
 
+
 z1col <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
            + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
            data = EmplUK, effect = "twoways", model = "twosteps", collapse = TRUE)
 summary(z1col)
-
 
 z1ind <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
            + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
@@ -38,3 +38,39 @@ z2b <- pgmm(log(emp) ~ lag(log(emp), 1)+ lag(log(wage), 0:1) +
            data = EmplUK, effect = "individual", model = "onestep", 
            transformation = "ld")
 summary(z2b, robust = TRUE)
+
+
+
+### further run tests with various argument values
+summary(z1, robust = TRUE)
+summary(z1col, robust = TRUE)
+summary(z1ind, robust = TRUE)
+summary(z1indcol, robust = TRUE)
+
+summary(z2, robust = FALSE)
+summary(z2b, robust = FALSE)
+
+z3 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
+           + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
+           data = EmplUK, effect = "twoways", model = "twosteps", transformation = "ld")
+summary(z3)
+
+z3col <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
+              + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
+              data = EmplUK, effect = "twoways", model = "twosteps", collapse = TRUE, transformation = "ld")
+summary(z3col)
+
+
+z3ind <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
+              + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
+              data = EmplUK, effect = "individual", model = "twosteps", transformation = "ld")
+summary(z3ind)
+
+z3indcol <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
+                 + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
+                 data = EmplUK, effect = "individual", model = "twosteps", transformation = "ld")
+summary(z3indcol)
+
+
+
+
