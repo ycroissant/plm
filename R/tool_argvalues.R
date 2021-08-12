@@ -41,8 +41,11 @@ model.pggls.list <- c(within  = "Within FGLS model",
                       pooling = "General FGLS model",
                       fd      = "First-Difference FGLS model")
 
-model.pgmm.list <- c(onestep  = "One step model",
-                     twosteps = "Two steps model")
+model.pgmm.list <- c(onestep  = "One-step model",
+                     twosteps = "Two-steps model")
+
+model.pgmm.transformation.list <- c(d  = "Difference GMM",
+                                    ld = "System GMM")
 
 model.pcce.list <- c(ccemg = "Mean Groups model",
                      ccep  = "Pooled model")

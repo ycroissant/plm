@@ -1255,6 +1255,7 @@ vcovHC.pgmm <- function(x, ...) {
     vcovr <- B2 + crossprod(t(D), B2) + t(crossprod(t(D), B2)) + D %*% vcov1s %*% t(D)
   }
   else {
+    # model = "onestep"
     res1s <- lapply(yX, function(z) z[ , 1L] - crossprod(t(z[ , -1L, drop = FALSE]), x$coefficients))
     K <- ncol(yX[[1L]])
     WX <- Reduce("+", mapply(function(z, y) crossprod(z[ , -1L, drop = FALSE], y), yX, x$W, SIMPLIFY = FALSE))

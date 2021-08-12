@@ -59,6 +59,9 @@
     * for the nested random effect model, check that argument `model = "random"`,
      warns and adjusts accordingly if not (might become an error in the future).
     * Non-default random IV cases computed a little faster.
+    
+ * pgmm: printing of summary gives a more information about the model estimated
+         (print.summary.pgmm).
 
  * has.intercept.plm: argument 'part' renamed to 'rhs', argument values
    (integer or NULL) aligned with and correctly passed on to 

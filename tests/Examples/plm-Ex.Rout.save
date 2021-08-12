@@ -1,5 +1,5 @@
 
-R version 4.1.0 (2021-05-18) -- "Camp Pontanezen"
+R version 4.1.1 (2021-08-10) -- "Kick Things"
 Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -8878,7 +8878,7 @@ Multiple R-squared: 0.99961
 +            + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
 +             data = EmplUK, effect = "twoways", model = "twosteps")
 > summary(z1, robust = FALSE)
-Twoways effects Two steps model
+Twoways effects Two-steps model Difference GMM 
 
 Call:
 pgmm(formula = log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 
@@ -8888,7 +8888,6 @@ pgmm(formula = log(emp) ~ lag(log(emp), 1:2) + lag(log(wage),
 Unbalanced Panel: n = 140, T = 7-9, N = 1031
 
 Number of Observations Used: 611
-
 Residuals:
       Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
 -0.6190677 -0.0255683  0.0000000 -0.0001339  0.0332013  0.6410272 
@@ -8918,7 +8917,7 @@ Wald test for time dummies: chisq(6) = 26.9045 (p-value = 0.0001509)
 +            data = EmplUK, effect = "twoways", model = "onestep", 
 +            transformation = "ld")
 > summary(z2, robust = TRUE)
-Twoways effects One step model
+Twoways effects One-step model System GMM 
 
 Call:
 pgmm(formula = log(emp) ~ lag(log(emp), 1) + lag(log(wage), 0:1) + 
@@ -8929,7 +8928,6 @@ pgmm(formula = log(emp) ~ lag(log(emp), 1) + lag(log(wage), 0:1) +
 Unbalanced Panel: n = 140, T = 7-9, N = 1031
 
 Number of Observations Used: 1642
-
 Residuals:
       Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
 -0.7530341 -0.0369030  0.0000000  0.0002882  0.0466069  0.6001503 
@@ -15366,7 +15364,7 @@ F-statistic: 309.014 on 2 and 197 DF, p-value: < 2.22e-16
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  20.13 0.67 20.92 NA NA 
+Time elapsed:  21.6 0.83 22.45 NA NA 
 > grDevices::dev.off()
 null device 
           1 
