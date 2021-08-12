@@ -60,7 +60,7 @@
      warns and adjusts accordingly if not (might become an error in the future).
     * Non-default random IV cases computed a little faster.
     
- * pgmm: printing of summary gives a more information about the model estimated
+ * pgmm: printing of summary gives more information about the model estimated
          (print.summary.pgmm).
 
  * has.intercept.plm: argument 'part' renamed to 'rhs', argument values

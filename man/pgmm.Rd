@@ -94,19 +94,20 @@ An object of class \code{c("pgmm","panelmodel")}, which has the
 following elements:
 
 \item{coefficients}{the vector (or the list for fixed effects) of
-coefficients,} \item{residuals}{the vector of residuals,}
+coefficients,}
+\item{residuals}{the list of residuals for each individual,}
 \item{vcov}{the covariance matrix of the coefficients,}
 \item{fitted.values}{the vector of fitted values,}
 \item{df.residual}{degrees of freedom of the residuals,}
 \item{model}{a list containing the variables used for the
 estimation for each individual,}
-\item{W}{a list containing the instruments for each individual (matrix per
+\item{W}{a list containing the instruments for each individual (a matrix per
 list element) (two lists in case of system GMM,}
 \item{A1}{the weighting matrix for the one--step estimator,}
 \item{A2}{the weighting matrix for the two--steps estimator,}
 \item{call}{the call.}
 
-In addition, it has attribute \code{"pdim"} which containes the pdim object for
+In addition, it has attribute \code{"pdim"} which contains the pdim object for
 model.
 
 It has \code{print}, \code{summary} and \code{print.summary} methods.

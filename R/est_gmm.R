@@ -77,20 +77,21 @@
 #'     following elements:
 #' 
 #' \item{coefficients}{the vector (or the list for fixed effects) of
-#' coefficients,} \item{residuals}{the vector of residuals,}
+#'                     coefficients,}
+#' \item{residuals}{the list of residuals for each individual,}
 #' \item{vcov}{the covariance matrix of the coefficients,}
 #' \item{fitted.values}{the vector of fitted values,}
 #' \item{df.residual}{degrees of freedom of the residuals,}
 #' \item{model}{a list containing the variables used for the
-#' estimation for each individual,} 
-#' \item{W}{a list containing the instruments for each individual (matrix per
-#' list element) (two lists in case of system GMM,}
-# TODO: not correct W2 does not contain two lists for system GMM
+#'              estimation for each individual,} 
+#' \item{W}{a list containing the instruments for each individual (a matrix per
+#'          list element) (two lists in case of system GMM,}
+# TODO: not correct W does not contain two lists for system GMM
 #' \item{A1}{the weighting matrix for the one--step estimator,}
 #' \item{A2}{the weighting matrix for the two--steps estimator,}
 #' \item{call}{the call.}
 #' 
-#' In addition, it has attribute `"pdim"` which containes the pdim object for
+#' In addition, it has attribute `"pdim"` which contains the pdim object for
 #' model.
 #' 
 #' It has `print`, `summary` and `print.summary` methods.
@@ -417,7 +418,7 @@ pgmm <- function(formula, data, subset, na.action,
   }
 
   #################################################################
-  ##### 8. Add time dummies if effect = twoways
+  ##### 8. Add time dummies if effect = "twoways"
   #################################################################
 
   if (effect == "twoways"){
@@ -558,20 +559,24 @@ pgmm <- function(formula, data, subset, na.action,
     B2 <- solve(crossprod(WX, t.CP.WX.A2))
     coefficients <- as.numeric(crossprod(B2, Y2))
     names(coefficients) <- names.coef
+    
+    # calc. residuals with coefs from 2nd step
+    residuals <- lapply(yX,
+                         function(x){
+                           nz <- rownames(x)
+                           z <- as.vector(x[ , 1L] - crossprod(t(x[ , -1L, drop = FALSE]), coefficients))
+                           names(z) <- nz
+                           z})
     vcov <- B2
   }
   else vcov <- B1
   rownames(vcov) <- colnames(vcov) <- names.coef
-  residuals <- lapply(yX,
-                      function(x){
-                        nz <- rownames(x)
-                        z <- as.vector(x[ , 1] - crossprod(t(x[ , -1, drop = FALSE]), coefficients))
-                        names(z) <- nz
-                        z
-                      }
-                      )
-  fitted.values <- mapply(function(x,y) x[ , 1] - y, yX, residuals)
-  if (model == "twosteps") coefficients <- list(coef1s, coefficients)
+
+  # TODO: yX does not contain the original data (first-diff-ed data) -> fitted.values what you would expect
+  fitted.values <- mapply(function(x, y) x[ , 1L] - y, yX, residuals)
+  # fitted.values <- data[ , 1L] - unlist(residuals) # in 'data' is original data, but obs lost due to diff-ing are not dropped -> format incompatible
+  
+  if(model == "twosteps") coefficients <- list(coef1s, coefficients)
   
   args <- list(model          = model,
                effect         = effect,
@@ -580,7 +585,7 @@ pgmm <- function(formula, data, subset, na.action,
                namest         = namesV)
   
   result <- list(coefficients  = coefficients,
-                 residuals     = residuals,
+                 residuals     = residuals, # is a list (but documentation said for a long time 'vector'), mtest and sargen expect a list
                  vcov          = vcov,
                  fitted.values = fitted.values,
           #       df.residual   = df.residual,     # TODO: df.residual is not defined here, hence the function 'df.residual' is attached by this
