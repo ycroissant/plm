@@ -1,3 +1,4 @@
+# plm 2.4-2
 
 ### Speed-up:
  * "Fast mode" is not yet the default. To enable, set
@@ -13,7 +14,7 @@
    all being fully integrated into the usual plm functions/user interfaces
    (`fixest` is preferred over `lfe`, in this case, plm uses internally
    `collapse::fhdwithin` which in turn uses `fixest::demean`. Thanks to Sebastian
-   Krantz for some early guidance on this.
+   Krantz for guidance on this.
 
 
 ### Features:
@@ -29,12 +30,12 @@
    no or null index).
    
  * pseriesfy: new function to make each column of a pdata.frame a pseries, see
-   `?pseriesfy` for background and useful examples. Faster version is executed
+   `?pseriesfy` for background and useful examples. (Faster version is executed
    if `options("plm.fast" = TRUE)` is set, see `?plm.fast` (then internally
-   using `collapse::dapply`). Thanks to Sebastian Krantz for inspiration.
+   using `collapse::dapply`)). Thanks to Sebastian Krantz for inspiration.
 
 ### Fixes & Others:
- * vcovG (hence vcovHC, vcovDC, vcovNW, vcovSCC) and vcovBK: fix error in case
+ * vcovG (hence vcovHC, vcovDC, vcovNW, vcovSCC) and vcovBK: fix bug in case
    of IV estimation with only one regressor.
 
  * within_intercept: fix bug which caused an error for FE models with only one
@@ -47,10 +48,12 @@
  * pvcm: intercept-only models are now estimable.
  
  * plm:
-    * for the nested random effect model, check if argument `model = "random"`,
-      if not plm now warns and adjusts accordingly (might become an error in the
-      future).
-    * Non-default random IV cases computed faster.
+    * for the nested random effect model (`effect = "nested"`), check if argument
+      `model = "random"` is set, if not, plm now warns and adjusts accordingly
+      (will become an error in the future).
+      
+    * Non-default random IV cases computed faster (cases with 
+    `inst.method = "baltagi"` / `"am"` / `"bms"`).
  
  * pgmm: printing of summary gives more information about the model estimated
    (print.summary.pgmm).
