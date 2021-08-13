@@ -1,5 +1,3 @@
-# development version 2.4-1.999999
- **likely set to either 2.4-2 or 2.6 for CRAN release**
 
 ### Speed-up:
  * "Fast mode" is not yet the default. To enable, set
