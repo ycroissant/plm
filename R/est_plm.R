@@ -55,7 +55,7 @@ mylm <- function(y, X, W = NULL){
   result
 }
 
-# some elements not listed here...: "assign", "contrast",
+# Regards plm man page: some elements not listed here...: "assign", "contrast",
 # etc... \item{na.action}{if relevant, information about handling of
 # NAs by the  model.frame function,}
 # NB: na.action is currently not included as it is not supported
@@ -347,7 +347,7 @@ plm <- function(formula, data, subset, weights, na.action,
     }
     
     # Deprecated section
-      if (length(inst.method) == 1 && inst.method == "bmc") {
+      if (length(inst.method) == 1L && inst.method == "bmc") {
         # catch "bmc" (a long-standing typo) for Breusch-Mizon-Schmidt
         # error since 2020-12-31 (R-Forge) / 2021-01-23 (CRAN), was warning before
         # remove catch at some point in the future
@@ -669,7 +669,8 @@ r.squared_no_intercept <- function(object, model = NULL,
     effect <- describe(object, "effect")
     type <- match.arg(type)
     ## TODO: check what is sane for IV and what for within
-    has.int <- if (model != "within") has.intercept(object)[1L] else FALSE # [1L] as has.intercept returns > 1 boolean for IV models # TODO: to check if this is sane
+    # [1L] as has.intercept returns > 1 boolean for IV models # TODO: to check if this is sane
+    has.int <- if (model != "within") has.intercept(object)[1L] else FALSE
     
     if (type == "rss"){
       # approach: 1 - RSS / TSS

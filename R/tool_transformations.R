@@ -119,7 +119,7 @@ NULL
 print.pseries <- function(x, ...){
   attr(x, "index") <- NULL
   attr(x, "class") <- base::setdiff(attr(x, "class"), "pseries")
-  if(length(attr(x, "class")) == 1 && class(x) %in% c("character", "logical", "numeric", "integer", "complex")) {
+  if(length(attr(x, "class")) == 1L && class(x) %in% c("character", "logical", "numeric", "integer", "complex")) {
     attr(x, "class") <- NULL
   }
   print(x, ...)
@@ -244,7 +244,7 @@ summary.pseries <- function(object, ...) {
 #' @export
 plot.summary.pseries <- function(x, ...){
     x <- as.numeric(x)
-    share <- x[-1]/x[1] # vec with length == 2
+    share <- x[-1L]/x[1L] # vec with length == 2
     names(share) <- c("id", "time")
     barplot(share, ...)
 }
@@ -256,9 +256,9 @@ print.summary.pseries <- function(x, ...){
     special_treatment_vars <- c("factor", "logical", "character")
     if(!inherits(x, special_treatment_vars)) {
         x <- as.numeric(x)
-        share <- x[-1]/x[1] # vec with length == 2
+        share <- x[-1L]/x[1L] # vec with length == 2
         names(share) <- c("id", "time")
-        cat(paste("total sum of squares:", signif(x[1], digits = digits),"\n"))
+        cat(paste("total sum of squares:", signif(x[1L], digits = digits),"\n"))
         print.default(share, ...)
     } else {
         class(x) <- setdiff(class(x), c("summary.pseries", special_treatment_vars))
@@ -333,7 +333,7 @@ Tapply.matrix <- function(x, effect, func, ...) {
     # argument 'effect' is assumed to be a factor
     na.x <- is.na(x)
     uniqval <- apply(x, 2, tapply, effect, func, ...)
-    result <- uniqval[as.character(effect), , drop = F]
+    result <- uniqval[as.character(effect), , drop = FALSE]
     result[na.x] <- NA_real_
     return(result)
 }
@@ -382,7 +382,7 @@ Sum.matrix <- function(x, effect, ...) {
   eff.fac <- if(is.null(xindex <- attr(x, "index"))) {
     effect
   } else {
-    if(!is.character(effect) && length(effect) > 1)
+    if(!is.character(effect) && length(effect) > 1L)
       stop("for matrices with index attributes, the effect argument must be a character")
     if(! effect %in% c("individual", "time", "group"))
       stop("irrelevant effect for a between transformation")
@@ -428,7 +428,7 @@ Between.matrix <- function(x, effect, ...) {
   eff.fac <- if(is.null(xindex <- attr(x, "index"))) {
     effect
   } else {
-    if(!is.character(effect) && length(effect) > 1)
+    if(!is.character(effect) && length(effect) > 1L)
       stop("for matrices with index attributes, the effect argument must be a character")
     if(! effect %in% c("individual", "time", "group"))
       stop("irrelevant effect for a between transformation")
@@ -488,7 +488,7 @@ between.matrix <- function(x, effect, ...) {
   eff.fac <- if(is.null(xindex <- attr(x, "index"))) {
     effect
   } else {
-    if(!is.character(effect) && length(effect) > 1)
+    if(!is.character(effect) && length(effect) > 1L)
       stop("for matrices with index attributes, the effect argument must be a character")
     if(! effect %in% c("individual", "time", "group"))
       stop("irrelevant effect for a between transformation")
@@ -519,6 +519,7 @@ Within <- function(x, ...) {
 Within.default <- function(x, effect, ...) {
   # NB: Contrary to the other Within.* methods, Within.default does not handle
   #     twoways effects
+  # TODO: could add support for twoways by supplying a list containing two factors
     if(!is.numeric(x)) stop("the within function only applies to numeric vectors")
     return(x - Between(x, effect, ...))
 }

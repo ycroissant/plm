@@ -325,7 +325,7 @@ ptransform <- function(x, model = NULL, effect = NULL, theta = NULL, ...){
         if (effect == "twoways" && balanced)
             x <- x - theta$id   * Between(x, "individual") -
                      theta$time * Between(x, "time") + theta$total * mean(x)
-        ## could catch non-treated case to error gracefully:
+        ## TODO: could catch non-treated case to error gracefully:
         # if (effect == "twoways" && !balanced) stop("two-way unbalanced case not implemented in ptransform")
     }
     

@@ -150,7 +150,7 @@ pgmm <- function(formula, data, subset, na.action,
                  lost.ts = NULL,
                  transformation = c("d", "ld"),
                  fsm = NULL, # TODO: argument 'fsm' is not evaluated, 
-                 index = NULL, ...){
+                 index = NULL, ...) {
 
   # yX : response / covariates, W : gmm instruments, Z : normal
   # instruments, V : time dummies
@@ -167,7 +167,7 @@ pgmm <- function(formula, data, subset, na.action,
   ##### interface
   #################################################################
   
-  if (inherits(formula, "dynformula") || length(Formula(formula))[2L] == 1){
+  if (inherits(formula, "dynformula") || length(Formula(formula))[2L] == 1L){
     if (!inherits(formula, "dynformula")){
       formula <- match.call(expand.dots = TRUE)
       m <- match(c("formula", "lag.form", "diff.form", "log.form"),names(formula),0)
@@ -282,14 +282,14 @@ pgmm <- function(formula, data, subset, na.action,
     # of any covariates + 1 because of first - differencing or the
     # largest minimum lag for any gmm or normal instruments
     # min or max to select the number of lost time series?
-    gmm.minlag  <- min(unlist(gmm.lags))                            # was (==): min(sapply(gmm.lags, min))
+    gmm.minlag  <- min(unlist(gmm.lags))                                  # was (==): min(sapply(gmm.lags, min))
     inst.maxlag <- if (!is.null(inst.lags)) max(unlist(inst.lags)) else 0 # was (==): max(sapply(inst.lags, max)) else 0
-    main.maxlag <- max(unlist(main.lags))                          # was (==): max(sapply(main.lags, max))
+    main.maxlag <- max(unlist(main.lags))                                 # was (==): max(sapply(main.lags, max))
     TL1 <- max(main.maxlag + 1, inst.maxlag + 1, gmm.minlag)
     TL2 <- max(main.maxlag,     inst.maxlag,     gmm.minlag - 1)
     # if TL2 = 0 (no lags), one observation is lost anyway because of
     # the differentiation of the lag instruments
-    TL1 <- max(main.maxlag + 1, gmm.minlag)       ## TODO: TL1, TL2 calc. twice!?!
+    TL1 <- max(main.maxlag + 1, gmm.minlag)       ## TODO: TL1, TL2 calc. twice and prev. result overwritten!?!
     TL2 <- max(main.maxlag,     gmm.minlag - 1)
   }
 
@@ -506,7 +506,7 @@ pgmm <- function(formula, data, subset, na.action,
   
   # Compute the first step matrices
   if (transformation == "d")  A1 <- tcrossprod(diff(diag(1, T - TL1 + 1)))
-  if (transformation == "ld") A1 <- FSM(T - TL2, "full")  # TODO: always set to "full" but man page tells otherwise
+  if (transformation == "ld") A1 <- FSM(T - TL2, "full")  # TODO: always uses "full" but man page tells otherwise
 
   # compute the estimator
   
@@ -711,9 +711,9 @@ extract.data <- function(data, as.matrix = TRUE){
 }
 
 G <- function(t){
-  G <- matrix(0,t,t)
+  G <- matrix(0, t, t)
   for (i in 1:(t-1)){
-    G[i,   i]   <- 2
+    G[i,   i]   <-  2
     G[i,   i+1] <- -1
     G[i+1, i]   <- -1
   }

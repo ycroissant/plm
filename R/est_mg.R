@@ -105,8 +105,7 @@
 #' summary(ccemgmod)
 pmg <- function(formula, data, subset, na.action,
                 model = c("mg", "cmg", "dmg"), index = NULL,
-                trend = FALSE, ...)
-{
+                trend = FALSE, ...) {
 
     ## same as pggls but for effect, fixed at "individual" for compatibility
     ## ind for id, tind for time, k for K, coefnam for coef.names
@@ -196,7 +195,7 @@ pmg <- function(formula, data, subset, na.action,
       Xm <- Between(X, effect = "time", na.rm = TRUE)
       ym <- as.numeric(Between(y, effect = "time", na.rm = TRUE))
       
-      augX <- cbind(X, ym, Xm[ , -1, drop = FALSE])
+      augX <- cbind(X, ym, Xm[ , -1L, drop = FALSE])
 
       ## allow for extended coef vector
       tcoef0 <- matrix(data = NA_real_, nrow = 2*k+kt, ncol = n)
@@ -205,7 +204,7 @@ pmg <- function(formula, data, subset, na.action,
       ## y_it = alpha_i + beta_i*X_it + c1_i*my_t + c2_i*mX_t + err_it
       unind <- unique(ind)
       for(i in 1:n) {
-        taugX <- augX[ind == unind[i], ]
+        taugX <- augX[ind == unind[i], ] # TODO: check if this kind of extractions need drop = FALSE for corner cases
         ty    <-    y[ind == unind[i]]
 
         if(trend) taugX <- cbind(taugX, 1:(dim(taugX)[[1L]]))
@@ -232,10 +231,11 @@ pmg <- function(formula, data, subset, na.action,
       },
     
     "dmg" = {
-      ## old: between-periods transformation (take means over group for each t)
-         ##  be <- function(x, index, na.rm = TRUE) tapply(x, index, mean, na.rm = na.rm)
-         ##  Xm <- apply(X, 2, FUN = be, index = tind)[tind, , drop = FALSE]
-         ##  ym <- apply(as.matrix(as.numeric(y)), 2, FUN = be, index = tind)[tind]
+      ## old (replaced by general Within function now):
+      ##  between-periods transformation (take means over group for each t)
+          #  be <- function(x, index, na.rm = TRUE) tapply(x, index, mean, na.rm = na.rm)
+          #  Xm <- apply(X, 2, FUN = be, index = tind)[tind, , drop = FALSE]
+          #  ym <- apply(as.matrix(as.numeric(y)), 2, FUN = be, index = tind)[tind]
           # Xm <- Between(X, effect = "time", na.rm = TRUE)
           # ym <- as.numeric(Between(y, effect = "time", na.rm = TRUE))
           ## ...but of course we do not demean the intercept!
@@ -244,7 +244,7 @@ pmg <- function(formula, data, subset, na.action,
           # demy <- y - ym
       
       demX <- Within(X, effect = "time", na.rm = TRUE)
-      demX[ , 1] <- 1 # put back intercept lost by within transformation
+      demX[ , 1L] <- 1 # put back intercept lost by within transformation
       demy <- as.numeric(Within(y, effect = "time", na.rm = TRUE))
       
       ## for each x-sect. i=1..n estimate (over t) a demeaned model
@@ -339,9 +339,9 @@ print.summary.pmg <- function(x, digits = max(3, getOption("digits") - 2), width
   print(sumres(x)) # was until rev. 1178: print(summary(unlist(residuals(x))))
   cat("\nCoefficients:\n")
   printCoefmat(x$CoefTable, digits = digits)
-  cat(paste("Total Sum of Squares: ",    signif(x$tss, digits), "\n", sep=""))
-  cat(paste("Residual Sum of Squares: ", signif(x$ssr, digits), "\n", sep=""))
-  cat(paste("Multiple R-squared: ",      signif(x$rsqr, digits),"\n", sep=""))
+  cat(paste("Total Sum of Squares: ",    signif(x$tss, digits),  "\n", sep=""))
+  cat(paste("Residual Sum of Squares: ", signif(x$ssr, digits),  "\n", sep=""))
+  cat(paste("Multiple R-squared: ",      signif(x$rsqr, digits), "\n", sep=""))
   invisible(x)
 }
 

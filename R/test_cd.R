@@ -539,15 +539,15 @@ cortab <- function(x, grouping, groupnames = NULL,
     ## make w<1.n>:
     for(h in 1:length(regs)) {
       for(k in 1:h) {
-        statew <- matrix(0, ncol=n, nrow=n)
+        statew <- matrix(0, ncol = n, nrow = n)
         ## make statew for cor. between h and k
         for(i in 1:n) {
           ## get first region (all values equal, so take first one)
-          ireg <- grouping[fullind==ids[i]][1L]
-          if(ireg==h) {
+          ireg <- grouping[fullind == ids[i]][1L]
+          if(ireg == h) {
             for(j in 1:n) {
-                jreg <- grouping[fullind==ids[j]][1L]
-                if(jreg==k) statew[i,j] <- 1
+                jreg <- grouping[fullind == ids[j]][1L]
+                if(jreg == k) statew[i, j] <- 1
             }
           }
         }
@@ -575,15 +575,15 @@ cortab <- function(x, grouping, groupnames = NULL,
          for(i in 1:length(regs)) {
              for(j in 1:i) {
                  ## take appropriate w matrix
-                 eval(parse(text=paste("myw<-w", i, ".", j, sep="")))
-                 tabg[i,j] <- pcdtest(x, test="rho", w=myw)[[value]]
+                 eval(parse(text = paste("myw<-w", i, ".", j, sep = "")))
+                 tabg[i, j] <- pcdtest(x, test = "rho", w = myw)[[value]]
              }
          }
          dimnames(tabg) <- list(groupnames, groupnames)
          return(tabg)
     }
     regnames <- ""
-    mytab <- tab.g(x, regs=regs, regnames=regnames, test="rho", value=value)
+    mytab <- tab.g(x, regs = regs, regnames = regnames, test = "rho", value = value)
     return(mytab)
 }
 

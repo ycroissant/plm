@@ -187,7 +187,7 @@ Sum.matrix.collapse <- function(x, effect, ...) {
   eff.fac <- if(is.null(xindex <- attr(x, "index"))) {
     effect
   } else {
-    if(!is.character(effect) && length(effect) > 1)
+    if(!is.character(effect) && length(effect) > 1L)
       stop("for matrices with index attributes, the effect argument must be a character")
     if(! effect %in% c("individual", "time", "group"))
       stop("irrelevant effect for a Sum transformation")
@@ -321,7 +321,7 @@ Between.matrix.collapse <- function(x, effect, ...) {
   eff.fac <- if(is.null(xindex <- attr(x, "index"))) {
     effect
   } else {
-    if(!is.character(effect) && length(effect) > 1)
+    if(!is.character(effect) && length(effect) > 1L)
       stop("for matrices with index attributes, the effect argument must be a character")
     if(! effect %in% c("individual", "time", "group"))
       stop("irrelevant effect for a between transformation")
@@ -542,7 +542,7 @@ Within.matrix.collapse.fixest <- function(x, effect, rm.null = TRUE, ...) {
   
   dots <- match.call(expand.dots = FALSE)$`...`
   na.rm <- if(is.null(dots[["na.rm"]])) {
-    FALSE }# default of plm::between
+    FALSE } # default of plm::between
   else {
     dots[["na.rm"]]
   }
@@ -591,7 +591,7 @@ Within.pseries.collapse.lfe <- function(x, effect = c("individual", "time", "gro
   effect <- match.arg(effect)
   dots <- match.call(expand.dots = FALSE)$`...`
   na.rm <- if(is.null(dots[["na.rm"]])) {
-    FALSE }# default of plm::between
+    FALSE } # default of plm::between
   else {
     dots[["na.rm"]]
   }
@@ -623,7 +623,7 @@ Within.matrix.collapse.lfe <- function(x, effect, rm.null = TRUE, ...) {
 
   dots <- match.call(expand.dots = FALSE)$`...`
   na.rm <- if(is.null(dots[["na.rm"]])) {
-    FALSE }# default of plm::between
+    FALSE } # default of plm::between
   else {
     dots[["na.rm"]]
   }
@@ -661,7 +661,7 @@ Within.matrix.collapse.lfe <- function(x, effect, rm.null = TRUE, ...) {
       # inconsistent / depends on value of argument na.rm,
       # see https://github.com/sgaure/lfe/issues/50.
       result <- lfe::demeanlist(x, fl = eff.list, na.rm = na.rm)
-      if(is.list(result)) result <- result[[1]]
+      if(is.list(result)) result <- result[[1L]]
       attr(result, "index") <- xindex
     }
   }
