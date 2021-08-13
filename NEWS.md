@@ -48,13 +48,6 @@
    
  * pvcm: intercept-only models are now estimable.
  
- * (re-)export base::diff's generic as plm::diff to always be able to call
-   plm::diff and get panel-diff-ing (in case some other package overwrites base
-   R's generic diff (like dplyr does for base R's lag)). By doing this, it is
-   ensured plm::diff (as already for for plm::lag and plm::lead) will always
-   dispatch to the operations respecting the panel structure, if called on a
-   pseries.
- 
  * plm:
     * for the nested random effect model, check if argument `model = "random"`,
       if not plm now warns and adjusts accordingly (might become an error in the
