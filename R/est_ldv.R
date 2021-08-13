@@ -226,7 +226,8 @@ pldv <- function(formula, data, subset, weights, na.action,
                 if (ls == 1L){
                     start <- c(thestart, start)
                 }
-                else{
+                else{ 
+                   # case ls = 0
                     resid <- y -  as.numeric(tcrossprod(X, t(coef(pglmest)[1:ncol(X)])))
                     eta <- tapply(resid, id, mean)[as.character(id)]
                     nu <- resid - eta

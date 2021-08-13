@@ -572,7 +572,7 @@ pgmm <- function(formula, data, subset, na.action,
   else vcov <- B1
   rownames(vcov) <- colnames(vcov) <- names.coef
 
-  # TODO: yX does not contain the original data (first-diff-ed data) -> fitted.values what you would expect
+  # TODO: yX does not contain the original data (but first-diff-ed data) -> fitted.values not what you would expect
   fitted.values <- mapply(function(x, y) x[ , 1L] - y, yX, residuals)
   # fitted.values <- data[ , 1L] - unlist(residuals) # in 'data' is original data, but obs lost due to diff-ing are not dropped -> format incompatible
   
@@ -585,7 +585,7 @@ pgmm <- function(formula, data, subset, na.action,
                namest         = namesV)
   
   result <- list(coefficients  = coefficients,
-                 residuals     = residuals, # is a list (but documentation said for a long time 'vector'), mtest and sargen expect a list
+                 residuals     = residuals, # is a list (but documentation said for a long time 'vector'), mtest() and sargan() expect a list
                  vcov          = vcov,
                  fitted.values = fitted.values,
           #       df.residual   = df.residual,     # TODO: df.residual is not defined here, hence the function 'df.residual' is attached by this
@@ -913,7 +913,7 @@ print.summary.pgmm <- function(x, digits = max(3, getOption("digits") - 2),
   ntot <- sum(unlist(x$residuals) != 0)
   ninst <- dim(x$W[[1L]])[2]
   cat("\nNumber of Observations Used:", ntot, sep = " ")
-#  cat("\nNumber of Instruments Used:  ", ninst, "\n", sep ="") # TODO: more checks, then deactivate
+#  cat("\nNumber of Instruments Used:  ", ninst, "\n", sep ="") # TODO: more checks, then activate printing
   cat("\nResiduals:\n")
   print(summary(unlist(residuals(x))))
   cat("\nCoefficients:\n")
@@ -922,11 +922,9 @@ print.summary.pgmm <- function(x, digits = max(3, getOption("digits") - 2),
   cat("\nSargan test: ", names(x$sargan$statistic),
       "(", x$sargan$parameter, ") = ", x$sargan$statistic,
       " (p-value = ", format.pval(x$sargan$p.value,digits=digits), ")\n", sep = "")
-
   cat("Autocorrelation test (1): ", names(x$m1$statistic),
       " = ", x$m1$statistic,
       " (p-value = ", format.pval(x$m1$p.value, digits = digits), ")\n", sep = "")
-  
   cat("Autocorrelation test (2): ", names(x$m2$statistic),
       " = ", x$m2$statistic,
       " (p-value = ", format.pval(x$m2$p.value,digits=digits), ")\n", sep = "")

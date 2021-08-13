@@ -56,12 +56,13 @@
    pseries.
  
  * plm:
-    * for the nested random effect model, check that argument `model = "random"`,
-     warns and adjusts accordingly if not (might become an error in the future).
-    * Non-default random IV cases computed a little faster.
-    
+    * for the nested random effect model, check if argument `model = "random"`,
+      if not plm now warns and adjusts accordingly (might become an error in the
+      future).
+    * Non-default random IV cases computed faster.
+ 
  * pgmm: printing of summary gives more information about the model estimated
-         (print.summary.pgmm).
+   (print.summary.pgmm).
 
  * has.intercept.plm: argument 'part' renamed to 'rhs', argument values
    (integer or NULL) aligned with and correctly passed on to 
@@ -80,13 +81,13 @@
    crossprod(), better branching, etc.
    
 ### Vignettes and Other Documentation:
-  * 1st vignette:
+ * 1st vignette:
     * panel unit root testing:
       * added short intro with overview of available functions/tests and added
         two example cases.
       * added sub-section about new function hansi.
     * added a little more information on the use of vcovXX.
-  * 2nd vignette: added formula for nested error component model.
+ * 2nd vignette: added formula for nested error component model.
   * all vignettes: references updated to include Baltagi (2021), the 6th edition 
     of the textbook; fixed a few typos.
  * pldv: man page extended a little, esp. with examples.

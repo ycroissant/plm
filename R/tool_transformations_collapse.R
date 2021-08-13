@@ -24,7 +24,9 @@ Within.default.baseR <- plm:::Within.default
 Within.pseries.baseR <- plm:::Within.pseries
 Within.matrix.baseR  <- plm:::Within.matrix
 
-pseriesfy.baseR <- plm:::pseriesfy # in tool_pdata.frame.R
+# ... in tool_pdata.frame.R:
+pseriesfy.baseR    <- plm:::pseriesfy
+
 
 ## ad 2) implement wrapper switches
 
@@ -693,12 +695,12 @@ Within.matrix.collapse.lfe <- function(x, effect, rm.null = TRUE, ...) {
   else options("plm.fast.pkg.collapse" = FALSE)
 }
 
-# wrapper for pseriesfy
+#### wrapper for pseriesfy ####
 pseriesfy <- function(x,  ...) {
   if(!isTRUE(getOption("plm.fast"))) {
     pseriesfy.baseR(x, ...) } else {
-    if(!requireNamespace("collapse", quietly = TRUE)) stop(txt.no.collapse, call. = FALSE)
-    pseriesfy.collapse(x, ...) }
+      if(!requireNamespace("collapse", quietly = TRUE)) stop(txt.no.collapse, call. = FALSE)
+      pseriesfy.collapse(x, ...) }
 }
 
 #' Option to Switch On/Off Fast Data Transformations
