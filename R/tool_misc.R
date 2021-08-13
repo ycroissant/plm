@@ -414,7 +414,8 @@ myvar <- function(x){
 #' NA values in the time dimension for at least one individual,
 #' `FALSE` if not.}
 #' 
-#' @note `pvar` can be time consuming for ``big'' panels.
+#' @note `pvar` can be time consuming for ``big'' panels. As a fast alternative
+#' [collapse::varying()] from package \CRANpkg{collapse} could be used. 
 #' @export
 #' @author Yves Croissant
 #' @seealso [pdim()] to check the dimensions of a 'pdata.frame' (and
