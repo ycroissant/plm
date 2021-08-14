@@ -105,7 +105,7 @@ pbgtest.panelmodel <- function(x, order = NULL, type = c("Chisq", "F"), ...) {
     ## lmtest::bgtest on the demeaned model:
   
     ## pbgtest is the return value of lmtest::bgtest, exception made for the method attribute
-    auxformula <- demy ~ demX - 1 #if(model == "within") demy~demX-1 else demy~demX
+    auxformula <- demy ~ demX - 1
     lm.mod <- lm(auxformula)
     bgtest <- bgtest(lm.mod, order = order, type = type, ...)
     bgtest$method <- "Breusch-Godfrey/Wooldridge test for serial correlation in panel models"
@@ -121,11 +121,11 @@ pbgtest.formula <- function(x, order = NULL, type = c("Chisq", "F"), data, model
     ## formula method for pbgtest;
     ## defaults to a pooling model
     cl <- match.call(expand.dots = TRUE)
-    if (names(cl)[3] == "") names(cl)[3] <- "data"
+    if (names(cl)[3L] == "") names(cl)[3L] <- "data"
     if (is.null(cl$model)) cl$model <- "pooling"
-    names(cl)[2] <- "formula"
+    names(cl)[2L] <- "formula"
     m <- match(plm.arg, names(cl), 0)
-    cl <- cl[c(1L,m)]
+    cl <- cl[c(1L, m)]
     cl[[1L]] <- quote(plm)
     plm.model <- eval(cl,parent.frame())
     pbgtest(plm.model, order = order, type = type, data = data, ...)
@@ -203,7 +203,7 @@ pwtest.formula <- function(x, data, effect = c("individual", "time"), ...) {
   if (cl$model != "pooling") stop("pwtest only relevant for pooling models")
   names(cl)[2] <- "formula"
   m <- match(plm.arg, names(cl), 0)
-  cl <- cl[c(1L,m)]
+  cl <- cl[c(1L, m)]
   cl[[1L]] <- quote(plm)
   plm.model <- eval(cl,parent.frame())
   pwtest.panelmodel(plm.model, effect = effect, ...) # pass on desired 'effect' argument to pwtest.panelmodel
@@ -655,7 +655,7 @@ pbsytest.panelmodel <- function(x, test = c("ar", "re", "j"), re.normal = if (te
   for(i in 1:length(unind)) {
     u.t <- poolres[ind == unind[i]]
     u.t.1 <- u.t[-length(u.t)]
-    u.t <- u.t[-1]
+    u.t <- u.t[-1L]
     uu[i] <- crossprod(u.t)
     uu1[i] <- crossprod(u.t, u.t.1)
   }
@@ -1175,10 +1175,10 @@ pbltest.formula <- function(x, data, alternative = c("twosided", "onesided"), in
   j.33 <- (n./2) * (1/sigma2.1^2 + (t.-1)/sigma2.e^2)
 
   ## build up information matrix
-  Jmat <- matrix(nrow = 3, ncol = 3)
-  Jmat[1, ] <- c(j.rr, j.12, j.13)
-  Jmat[2, ] <- c(j.12, j.22, j.23)
-  Jmat[3, ] <- c(j.13, j.23, j.33)
+  Jmat <- matrix(nrow = 3L, ncol = 3L)
+  Jmat[1L, ] <- c(j.rr, j.12, j.13)
+  Jmat[2L, ] <- c(j.12, j.22, j.23)
+  Jmat[3L, ] <- c(j.13, j.23, j.33)
 
   J11 <- n.^2 * t.^2 * (t.-1) / (det(Jmat) * 4*sigma2.1^2 * sigma2.e^2)
   ## this is the same as J11 <- solve(Jmat)[1,1], see BL page 73
@@ -1367,7 +1367,7 @@ pwfdtest.panelmodel <- function(x, ..., h0 = c("fd", "fe")) {
   }
   # additional check
   # (but should error earlier already as the FD model should be nonestimable)
-  if(length(red_id) == 0)
+  if(length(red_id) == 0L)
     stop("only individuals with one observation in original data: test not feasible")
   
   # make pdata.frame for auxiliary regression: time dimension is not relevant
