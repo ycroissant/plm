@@ -178,16 +178,7 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
       },
     
     "dmg" = {
-      ## old: between-periods transformation (take means over group for each t)
-         ## be <- function(x, index, na.rm = TRUE) tapply(x, index, mean, na.rm = na.rm)
-         ## Xm <- apply(X, 2 , FUN = be, index = tind)[tind, , drop = FALSE]
-         ## ym <- apply(as.matrix(as.numeric(y)), 2 , FUN = be, index = tind)[tind]
-         # Xm <- Between(X, effect = tind, na.rm = TRUE)
-         # ym <- Between(y, effect = tind, na.rm = TRUE)
-         ## demean
-         # demX <- X - Xm
-         # demy <- y - ym
-      
+      ## demean (via means over group for each t)
       ## we do not care about demeaning the intercept or not as it is
       ## eliminated anyway
       demX <- Within(X, effect = tind, na.rm = TRUE)
@@ -232,9 +223,6 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
                           deterministic2, sep = ""))
 
       ## between-periods transformation (take means over groups for each t)
-          # be <- function(x, index, na.rm = TRUE) tapply(x, index, mean, na.rm = na.rm)
-          # Xm <- apply(X, 2, FUN = be, index = tind)[tind, , drop = FALSE]
-          # ym <- apply(as.matrix(as.numeric(y)), 2, FUN = be, index = tind)[tind]
       Xm <- Between(X, effect = tind, na.rm = TRUE)
       ym <- Between(y, effect = tind, na.rm = TRUE)
       
@@ -580,10 +568,12 @@ critvals.cips <- function(stat, n, T., type = c("trend", "drift", "none"),
 }
 
 
-## gettvalue: helper function to extract one or more t value(s)
-## (coef/s.e.) for a coefficient from model object useful if one wants
-## to avoid the computation of a whole lot of values with summary()
 gettvalue <- function(x, coefname) {
+  ## non-exported
+  ## helper function to extract one or more t value(s)
+  ## (coef/s.e.) for a coefficient from model object useful if one wants
+  ## to avoid the computation of a whole lot of values with summary()
+  
   # x: model object (usually class plm or lm) coefname: character
   # indicating name(s) of coefficient(s) for which the t value(s) is
   # (are) requested

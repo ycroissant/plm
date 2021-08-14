@@ -1,11 +1,11 @@
-## Function that are used in more that on place in plm. 
+## Function that are used in more than on place in plm. 
 
 ## - bdiag : takes matrices as argument and returns the block-diagonal matrix (used in pgmm and plm.list)
 ## - twosls : computes the 2SLS estimator (used in plm and ercomp)
 ## - has.intercept : tests the presence of an intercept
 ## - pres : extract model residuals as pseries (used in several estimation functions)
 ## - punbalancedness : measures for the unbalancedness of panel data
-## - myvar : calculates variance with NA removel, checks if input is constant (also for factor and character)
+## - myvar : calculates variance with NA removal, checks if input is constant (also for factor and character)
 ## - pvar : checks if input varies in individual / time dimension
 
 bdiag <- function(...){
