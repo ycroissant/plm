@@ -59,7 +59,7 @@ first.
 }
 \note{
 \code{pvar} can be time consuming for ``big'' panels. As a fast alternative
-\code{\link[collapse:varying]{collapse::varying()}} from \CRANpkg{collapse} could be used.
+\code{\link[collapse:varying]{collapse::varying()}} from package \CRANpkg{collapse} could be used.
 }
 \examples{
 

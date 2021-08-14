@@ -945,7 +945,7 @@ print.summary.pgmm <- function(x, digits = max(3, getOption("digits") - 2),
 #' 
 #' A test of overidentifying restrictions for models estimated by GMM.
 #' 
-#' The Hansen--Sargan test calculates the quadratic form of the moment
+#' The Hansen--Sargan test ("J test") calculates the quadratic form of the moment
 #' restrictions that is minimized while computing the GMM estimator. It follows
 #' asymptotically a chi-square distribution with number of degrees of freedom
 #' equal to the difference between the number of moment conditions and the

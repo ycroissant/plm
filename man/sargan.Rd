@@ -19,7 +19,7 @@ An object of class \code{"htest"}.
 A test of overidentifying restrictions for models estimated by GMM.
 }
 \details{
-The Hansen--Sargan test calculates the quadratic form of the moment
+The Hansen--Sargan test ("J test") calculates the quadratic form of the moment
 restrictions that is minimized while computing the GMM estimator. It follows
 asymptotically a chi-square distribution with number of degrees of freedom
 equal to the difference between the number of moment conditions and the
