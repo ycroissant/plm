@@ -97,13 +97,13 @@
 #' 
 pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar", "Wbar"), order = 1L, index = NULL) {
   # Implementation of formulae follows Lopez/Weber (2017), the formulas are slightly different
-  # compared to Dumistrescu/Hurlin (2012), because "Note however that T in DH's formulas 
+  # compared to Dumistrescu/Hurlin (2012), because "Note however that T in DH's formulae 
   # must be understood as the number of observations remaining in the estimations, that 
   # is the number of periods minus the number of lags included. In order to be consistent
   # with our notation, we therefore replaced DH's T by T - K in the following formulas of
   # the present paper."
   
-  # y ~ x: to test whether x (panel) Granger causes y
+  # y ~ x: to test whether x (panel-)Granger causes y
   
   test <- match.arg(test)
   if (!inherits(data, "pdata.frame")) data <- pdata.frame(data, index = index)
@@ -174,11 +174,11 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar", "Wbar"), orde
     listdata, order_grangertest, SIMPLIFY = FALSE)
   
   # extract Wald/Chisq-statistics and p-values of individual Granger tests
-  Wi   <- lapply(grangertests_i, function(g) g[["Chisq"]][2L])
-  pWi  <- lapply(grangertests_i, function(g) g[["Pr(>Chisq)"]][[2L]])
-  dfWi <- lapply(grangertests_i, function(g) abs(g[["Df"]][2L]))
+  Wi   <- vapply(grangertests_i, function(g) g[["Chisq"]][2L], FUN.VALUE = 0.0)
+  pWi  <- vapply(grangertests_i, function(g) g[["Pr(>Chisq)"]][[2L]], FUN.VALUE = 0.0)
+  dfWi <- vapply(grangertests_i, function(g) abs(g[["Df"]][2L]), FUN.VALUE = 0.0)
   
-  Wbar <- c("Wbar" = mean(unlist(Wi)))
+  Wbar <- c("Wbar" = mean(Wi))
   
   if(test == "Zbar") {
     stat <- c(sqrt(N/(2*order)) * (Wbar - order))
@@ -211,8 +211,8 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar", "Wbar"), orde
   }
   
   # make data frame with individual Granger test results and lag order
-  indgranger <- data.frame(indi[!duplicated(indi)], unlist(Wi),
-                           unlist(pWi), unlist(dfWi), 
+  indgranger <- data.frame(indi[!duplicated(indi)],
+                           Wi, pWi, dfWi, 
                            (if(length(order) == 1L) rep(order, N) else order))
   colnames(indgranger) <- c(names(index(data))[1L], "Chisq", "p-value", "df", "lag")
   
