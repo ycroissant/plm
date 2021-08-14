@@ -539,7 +539,7 @@ Within.pseries <- function(x, effect = c("individual", "time", "group", "twoways
             attr(Dmu, "index") <- xindex
             W1   <- Within(x,   "individual", ...)
             WDmu <- Within(Dmu, "individual", ...)
-            W2 <- fitted(lm.fit(WDmu, x))
+            W2 <- lm.fit(WDmu, x)$fitted.values
             result <- W1 - W2
         }
     }
@@ -575,7 +575,7 @@ Within.matrix <- function(x, effect, rm.null = TRUE, ...) {
                 attr(Dmu, "index") <- xindex
                 W1   <- Within(x,   "individual", rm.null = FALSE, ...)
                 WDmu <- Within(Dmu, "individual", ...)
-                W2 <- fitted(lm.fit(WDmu, x))
+                W2 <- lm.fit(WDmu, x)$fitted.values
                 result <- W1 - W2
             }
         }
