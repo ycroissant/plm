@@ -433,7 +433,7 @@ Within.pseries.collapse <- function(x, effect = c("individual", "time", "group",
       Dmu <- model.matrix(~ time - 1)
       W1   <- collapse::fwithin(x,   effect = 1L, w = NULL, na.rm = na.rm, mean = 0) # pseries interface
       WDmu <- collapse::fwithin(Dmu, g      = id, w = NULL, na.rm = na.rm, mean = 0) # matrix interface
-      W2 <- fitted(lm.fit(WDmu, x))
+      W2 <- lm.fit(WDmu, x)$fitted.values
       res <- W1 - W2
     }
   }
@@ -493,7 +493,7 @@ Within.matrix.collapse <- function(x, effect, rm.null = TRUE, ...) {
         Dmu <- model.matrix(~ time - 1)
         W1   <- collapse::fwithin(x,   g = eff.fac.ind, w = NULL, na.rm = na.rm, mean = 0)
         WDmu <- collapse::fwithin(Dmu, g = eff.fac.ind, w = NULL, na.rm = na.rm, mean = 0)
-        W2 <- fitted(lm.fit(WDmu, x))
+        W2 <- lm.fit(WDmu, x)$fitted.values
         result <- W1 - W2
       }
     }
