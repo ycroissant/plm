@@ -566,19 +566,18 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
   n <- length(object)
   
   if (exo == "intercept"){
-    resid <- lapply(object, function(x) lm(x ~ 1)$residuals)
+    resid <- lapply(object, function(x) .lm.fit(matrix(1, nrow = length(x)), x)$residuals)
     adj <- c(1/6, 1/45) # xi, zeta^2 in eq. (17) in Hadri (2000)
   }
-  
   if (exo == "trend"){
-    resid <- lapply(object,
-                    function(x){
-                      trend <- 1:length(x)
-                      lm(x ~ trend)$residuals
-                    })
+    resid <- lapply(object, function(x) {
+                              lx <- length(x)
+                              dmat <- matrix(c(rep(1, lx), 1:lx), nrow = lx)
+                              .lm.fit(dmat, x)$residuals
+                              })
     adj <- c(1/15, 11/6300) # xi, zeta^2 in eq. (25) in Hadri (2000)
   }
-  
+
   cumres2 <- lapply(resid, function(x) cumsum(x)^2)
   if (!dfcor) {
     sigma2  <- mean(unlist(resid)^2)
