@@ -192,13 +192,14 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
     }
     XX <- cbind(Reduce("cbind", X), Z)
     # compute the unconstrained estimates
-    LMS <- lapply(Y, function(x) lm(x ~ XX - 1))
+    LMS <- lapply(Y, function(x) .lm.fit(XX, x))
+    
     # compute the empirical covariance of the covariates
     Sxxm1 <- solve(crossprod(XX) / n)
     # compute the residuals matrix
     .resid <- sapply(LMS, resid)
     # extract the pi vector of unconstrained estimates
-    pi <- Reduce("c", lapply(LMS, coef))
+    pi <- unlist(lapply(LMS, coef))
     if (robust){
         Omega <- lapply(seq_len(n),
                         function(i)
