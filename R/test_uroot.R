@@ -558,14 +558,15 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
   ## used by purtest(<.>, test = "hadri"); non-exported function
   ## Hadri's test is applicable to balanced data only
   ## input 'object' is a list with observations per individual
-  if (!is.list(object)) stop("argument 'object' in hadritest is supposed to be a list")
-  if (exo == "none") stop("exo = \"none\" is not a valid option for Hadri's test")
-  if (length(unique(sapply(object, length))) > 1L) stop("Hadri test is not applicable to unbalanced panels")
+  if(!is.list(object)) stop("argument 'object' in hadritest is supposed to be a list")
+  if(exo == "none") stop("exo = \"none\" is not a valid option for Hadri's test")
   # determine L (= time periods), unique for balanced panel and number of individuals (n)
-  L <- unique(sapply(object, length))
+  if(length(L <- unique(vapply(object, length, FUN.VALUE = 0L))) > 1L) stop("Hadri test is not applicable to unbalanced panels")
   n <- length(object)
   
   if (exo == "intercept"){
+    # can use .lm.fit here as NAs are dropped in beginning of 'purtest'and 
+    # regression on intercept cannot have collinear columns
     resid <- lapply(object, function(x) .lm.fit(matrix(1, nrow = length(x)), x)$residuals)
     adj <- c(1/6, 1/45) # xi, zeta^2 in eq. (17) in Hadri (2000)
   }
@@ -573,6 +574,8 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
     resid <- lapply(object, function(x) {
                               lx <- length(x)
                               dmat <- matrix(c(rep(1, lx), 1:lx), nrow = lx)
+                              # can use .lm.fit here as NAs are dropped in beginning of 'purtest'and 
+                              # regression on intercept and trend cannot have collinear columns
                               .lm.fit(dmat, x)$residuals
                               })
     adj <- c(1/15, 11/6300) # xi, zeta^2 in eq. (25) in Hadri (2000)
@@ -741,7 +744,7 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
 #'      the statistic, for `test = "levinlin"` and `"ips"`, otherwise `NULL`),
 #' - `"sigma2"` (short-run and long-run variance for `test = "levinlin"`, otherwise NULL).
 #' @export
-#' @importFrom stats setNames
+#' @importFrom stats setNames .lm.fit
 #' @author Yves Croissant and for "Pm", "invnormal", and "logit" Kevin
 #'     Tappe
 #' @seealso [cipstest()], [hansi()]
@@ -820,15 +823,20 @@ purtest <- function(object, data = NULL, index = NULL,
       else stop("the individual dimension is undefined") # cannot derive individual dimension from a vector if not pseries
     }
     if (is.matrix(object) || is.data.frame(object)) {
-      if (!is.null(data)) stop("object is data.frame or matrix but data is not NULL")
+      if (!is.null(data)) stop("object is data.frame or matrix but argument 'data' is not NULL")
       if (is.matrix(object)) object <- as.data.frame(object)
     }
   }
   
-  # by now, object is either a pseries to be split or a data.frame 
+  # by now, object is either a pseries to be split or a data.frame, code continues with list
+  object <- na.omit(object)
+  if(!is.null(attr(object, "na.action")))
+    warning("NA value(s) encountered and dropped, results may not be reliable")
   
   if (!inherits(object, "data.frame")){
     if (is.null(id)) stop("the individual dimension is undefined")
+    # adjust 'id' to correspond data in 'object' after NA dropping:
+    if(!is.null(attr(object, "na.action"))) id <- id[-attr(object, "na.action")]
     object <- split(object, id)
   } else {
     if (!ncol(object) > 1L) warning("data.frame or matrix specified in argument object does not contain more than one individual (individuals are supposed to be in columns)")

@@ -57,6 +57,8 @@
  
  * pgmm: printing of summary gives more information about the model estimated
    (print.summary.pgmm).
+   
+ * purtest: now checks for NA-values, drops any and warns about dropping.
 
  * has.intercept.plm: argument 'part' renamed to 'rhs', argument values
    (integer or NULL) aligned with and correctly passed on to 
@@ -71,8 +73,8 @@
    this does not warn anymore:
    `your_pseries[1:(length(your_pseries)-1)] + your_pseries[2:length(your_pseries)]`).
    
- * various efficiency gains throughout the package by using more s/vapply(),
-   crossprod(), better branching, etc.
+ * various efficiency gains throughout the package by using more vapply(),
+   crossprod(), (.)lm.fit(), better branching, etc.
    
 ### Vignettes and Other Documentation:
  * 1st vignette:
