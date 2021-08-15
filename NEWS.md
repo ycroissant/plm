@@ -59,6 +59,9 @@
    (print.summary.pgmm).
    
  * purtest: now checks for NA-values, drops any and warns about dropping.
+ 
+ * piest: better printing (handling of 'digits' and 'subset' argument) 
+   (print.piest, print.summary.piest).
 
  * has.intercept.plm: argument 'part' renamed to 'rhs', argument values
    (integer or NULL) aligned with and correctly passed on to 

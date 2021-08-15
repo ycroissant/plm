@@ -88,7 +88,7 @@ aneweytest <-  function(formula, data, subset, na.action, index = NULL,  ...){
     }
     XX <- cbind(Reduce("cbind", X), Z)
     # compute the unconstrained estimates
-    LMS <- lapply(.resid, function(x) lm(x ~ XX - 1))
+    LMS <- lapply(.resid, function(x) lm(x ~ XX - 1)) ## TODO: check if (.)lm.fit can be used
     YTOT <- vapply(.resid, function(x) crossprod(x), FUN.VALUE = 0.0)
     DEV <- vapply(LMS, deviance, FUN.VALUE = 0.0)
     stat <- c("chisq" = sum(1 - DEV / YTOT) * (n - ncol(XX)))
@@ -114,7 +114,8 @@ aneweytest <-  function(formula, data, subset, na.action, index = NULL,  ...){
 #' 
 #' @aliases piest
 #' @param formula a symbolic description for the model to be estimated,
-#' @param object,x an object of class `"plm"`,
+#' @param object,x an object of class `"piest"` and of class `"summary.piest"` 
+#'                  for the print method of summary for piest objects,
 #' @param data a `data.frame`,
 #' @param subset see [lm()],
 #' @param na.action see [lm()],
@@ -156,10 +157,12 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
     n <- pdim$nT$n
     N <- pdim$nT$N
     Ti <- pdim$Tint$Ti
-    # extract the response, split by period and remove the mean
+
+    # extract the response, time-demean and split by period
     y <- pmodel.response(data, model = "pooling", effect = "individual")
-    Y <- split(y, time)
-    Y <- lapply(Y, function(x) x - mean(x))
+    Y <- Within(y, "time")
+    Y <- split(Y, time)
+    
     # extract the covariates, and isolate time-invariant covariates
     X <- model.matrix(data, model = "pooling", rhs = 1, lhs = 1)[ , -1, drop = FALSE]
     cst <- attr(model.matrix(data, model = "within", rhs = 1, lhs = 1), "constant")
@@ -179,12 +182,12 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
     }
     Kx <- ncol(X)
     namesX <- colnames(X)
-    # split by time period and remove the mean
-    years <- unique(index(data, "time"));
+    # split by time period and remove the mean # TODO: check if this can use general Within framework
+    years <- unique(time)
     X <- lapply(as.list(years), function(x) X[time == x, , drop = FALSE])
     X <- lapply(X, function(x) t(t(x) - .colMeans(x, nrow(x), ncol(x))))
     if (!is.null(Z)){
-        Z <- Z[time == years[1], , drop = FALSE]
+        Z <- Z[time == years[1L], , drop = FALSE]
         Z <- t(t(Z) - .colMeans(Z, nrow(Z), ncol(Z)))
     }
     for (i in 1:(length(years))){
@@ -192,7 +195,7 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
     }
     XX <- cbind(Reduce("cbind", X), Z)
     # compute the unconstrained estimates
-    LMS <- lapply(Y, function(x) .lm.fit(XX, x))
+    LMS <- LMS <- lapply(Y, function(x) lm(x ~ XX - 1)) # TODO: check if .lm.fit can be used here
     
     # compute the empirical covariance of the covariates
     Sxxm1 <- solve(crossprod(XX) / n)
@@ -233,7 +236,7 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
     resb <- as.numeric(R %*% .coef) - as.numeric(pi)
     piconst <- matrix(R %*% .coef, ncol = T)
     OOmega <- Omega                                       ## TODO: OOmega is never used
-    .resid <- as.matrix(as.data.frame(Y)) - XX %*% piconst
+    .resid <- matrix(unlist(Y), ncol = length(Y)) - XX %*% piconst
     if(TRUE){                                             ## TODO: this is always TRUE...?!
         if (robust){                                      ## and Omega is calc. again, with a
                                                           ## different .resid input but with same lapply-construct
@@ -275,12 +278,11 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
 
 #' @rdname piest
 #' @export
-print.piest <- function(x, ...) print(x$pitest)   
+print.piest <- function(x, ...) print(x$pitest, ...)
 
 #' @rdname piest
 #' @export
 summary.piest <- function(object,...){
-#  object$fstatistic <- Ftest(object, test = "F")
   # construct the table of coefficients
   std.err <- sqrt(diag(vcov(object)))
   b <- coefficients(object)
@@ -295,9 +297,13 @@ summary.piest <- function(object,...){
 }
 
 #' @rdname piest
+#' @param digits number of digits for printed output,
+#' @param width the maximum length of the lines in the printed output,
 #' @export
-print.summary.piest <- function(x, ...){
-  print(x$coefficients)
-  print(x$pitest)
+print.summary.piest <- function(x, digits = max(3, getOption("digits") - 2),
+                                width = getOption("width"), subset = NULL, ...){
+  if(is.null(subset)) printCoefmat(coef(x), digits = digits, ...)
+  else printCoefmat(coef(x)[subset, , drop = FALSE], digits = digits, ...)
+  print(x$pitest, digits, ...)
 }
 
