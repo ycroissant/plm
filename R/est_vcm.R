@@ -38,7 +38,7 @@
 #' \item{fitted.values}{the vector of fitted values,}
 #' 
 #' \item{vcov}{the covariance matrix of the coefficients (a list for
-#' fixed effects),}
+#' fixed effects model (`model = "within"`)),}
 #'
 #' \item{df.residual}{degrees of freedom of the residuals,}
 #'
@@ -129,11 +129,21 @@ pvcm.within <- function(formula, data, effect){
                       names(r$coefficients) <- nc
                       r
                   })
-    coef <- as.data.frame(t(as.data.frame(sapply(ols, coef, simplify = FALSE)))) # was: as.data.frame(t(sapply(ols, coef)))
+    # extract coefficients:
+    coef <- matrix(unlist(lapply(ols, coef)), nrow = length(ols), byrow = TRUE) # was: as.data.frame(t(sapply(ols, coef)))...
+    dimnames(coef)[1:2] <- list(names(ols), names(coef(ols[[1]])))              # ... but that code errored with intercept-only model
+    coef <- as.data.frame(coef)
+    
+    # extract residuals and make pseries:
     residuals <- unlist(lapply(ols, residuals))
     residuals <- add_pseries_features(residuals, index)
+    
+    # extract standard errors:
     vcov <- lapply(ols, vcov)
-    std <- as.data.frame(t(as.data.frame(sapply(vcov, function(x) sqrt(diag(x)), simplify = FALSE)))) # was: as.data.frame(t(sapply(vcov, function(x) sqrt(diag(x)))))
+    std <- matrix(unlist(lapply(vcov, function(x) sqrt(diag(x)))), nrow = length(ols), byrow = TRUE) # was: as.data.frame(t(sapply(ols, coef)))...
+    dimnames(std)[1:2] <- list(names(vcov), colnames(vcov[[1]]))                                    # ... but this code errored with intercept-only model
+    std <- as.data.frame(std)
+    
     ssr <- as.numeric(crossprod(residuals))
     y <- unlist(lapply(ml, function(x) x[ , 1L]))
     fitted.values <- y - residuals
@@ -185,7 +195,9 @@ pvcm.random <- function(formula, data, effect){
                   })
 
     # matrix of coefficients
-    coefm <- t(as.data.frame(sapply(ols, coef, simplify = FALSE)))
+    coefm <- matrix(unlist(lapply(ols, coef)), nrow = length(ols), byrow = TRUE)
+    dimnames(coefm)[1:2] <- list(names(ols), names(coef(ols[[1]])))
+    
     # number of covariates
     K <- ncol(coefm) - has.intercept(formula)
     # check for NA coefficients

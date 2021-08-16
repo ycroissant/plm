@@ -63,7 +63,7 @@ residuals,}
 \item{fitted.values}{the vector of fitted values,}
 
 \item{vcov}{the covariance matrix of the coefficients (a list for
-fixed effects),}
+fixed effects model (\code{model = "within"})),}
 
 \item{df.residual}{degrees of freedom of the residuals,}
 
