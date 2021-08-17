@@ -218,10 +218,10 @@ ercomp.formula <- function(object, data,
         ra <- if(length(object)[2L] > 1L){
           # with instruments
           W1 <- model.matrix(data, rhs = 2)
-          twosls(FES, XCST, W1)
+          twosls(FES, XCST, W1) # TODO: lm.type = "lm.fit" / ".lm.fit"? (and deviance below by crossprod)
         } else{
           # without instruments
-          lm(FES ~ XCST - 1)
+          lm(FES ~ XCST - 1) # TODO: check if .lm.fit can be used (and deviance 2 lines below would need adjustment)
         }
         s2nu <- deviance(wm) / (O - N)
         s21 <- deviance(ra) / N
@@ -379,8 +379,8 @@ ercomp.formula <- function(object, data,
             ZSlambda <- Sum(Z, effect = "group")
             XSeta <- Sum(X, effect = "individual")
             estm1 <- plm.fit(data, effect = "individual", model = "within")
-            estm2 <- lm.fit(ZBetaBlambda, yBetaBlambda)
-            estm3 <- lm.fit(ZBlambda, yBlambda)
+            estm2 <- lm.fit(ZBetaBlambda, yBetaBlambda) # TODO: check if .lm.fit can be used
+            estm3 <- lm.fit(ZBlambda, yBlambda)         # TODO: check if .lm.fit can be used 
             quad <- c(crossprod(resid(estm1)),
                       crossprod(resid(estm2)),
                       crossprod(resid(estm3)))
@@ -710,6 +710,7 @@ print.ercomp <- function(x, digits = max(3, getOption("digits") - 3), ...){
                         group = summary(x$theta$gp)))
         }
     }
+    invisible(x)
 }
 
 amemiya_check <- function(matA, matB, method) {
