@@ -27,11 +27,11 @@ padf <- function(x, exo = c("none", "intercept", "trend"), p.approx = NULL, ...)
   # required dependency.)
   ## Procedure for pkg check for pkg in 'Suggests' as recommended in 
   ## Wickham, R packages (http://r-pkgs.had.co.nz/description.html).
-  urca <- if (!requireNamespace("urca", quietly = TRUE)) FALSE else TRUE
+  urca <- if(!requireNamespace("urca", quietly = TRUE)) FALSE else TRUE
   
   # default: if no p.approx specified by input (NULL),
   # use MacKinnon (1996) if 'urca' is available, else MacKinnon (1994)
-  p.approx <- if (is.null(p.approx)) { if (urca)  "MacKinnon1996" else "MacKinnon1994" } else p.approx
+  p.approx <- if(is.null(p.approx)) { if (urca)  "MacKinnon1996" else "MacKinnon1994" } else p.approx
   
   if (!is.null(p.approx) && p.approx == "MacKinnon1996" && !urca) {
     # catch case when user demands MacKinnon (1996) per argument but 'urca' is unavailable
@@ -39,7 +39,7 @@ padf <- function(x, exo = c("none", "intercept", "trend"), p.approx = NULL, ...)
     p.approx <- "MacKinnon1994"
   }
   
-  if (p.approx == "MacKinnon1996") {
+  if(p.approx == "MacKinnon1996") {
     # translate exo argument to what urca::punitroot expects
     punitroot.exo <- switch (exo,
                              "none"      = "nc",
@@ -49,7 +49,7 @@ padf <- function(x, exo = c("none", "intercept", "trend"), p.approx = NULL, ...)
     res <- urca::punitroot(x, N = Inf, trend = punitroot.exo) # return asymptotic value
   }
   
-  if (p.approx == "MacKinnon1994") {
+  if(p.approx == "MacKinnon1994") {
     # values from MacKinnon (1994), table 3, 4
     small <- matrix(c(0.6344, 1.2378, 3.2496,
                       2.1659, 1.4412, 3.8269,
@@ -429,14 +429,14 @@ critval.ips.tbar.value <- function(ind = 10L, time = 19L, critvals, exo = c("int
   
   exo <- match.arg(exo)
   
-  if (length(Inds) == 1L && length(Ts) == 1L) {
+  if(length(Inds) == 1L && length(Ts) == 1L) {
     # exact hit for individual AND time: take value as in table
     return(critvals[as.character(Inds), as.character(Ts), , exo])
   }
   else{
-    if (length(Inds) == 1L || length(Ts) == 1L) {
+    if(length(Inds) == 1L || length(Ts) == 1L) {
       # exact hit for individual (X)OR time: interpolate other dimension
-      if (length(Inds) == 1L) {
+      if(length(Inds) == 1L) {
         low  <- critvals[as.character(Inds), as.character(Ts[1L]), , exo]
         high <- critvals[as.character(Inds), as.character(Ts[2L]), , exo]
         # L1 distances and inverse weighting for time dimension
@@ -446,7 +446,7 @@ critval.ips.tbar.value <- function(ind = 10L, time = 19L, critvals, exo = c("int
         weight2 <- 1/dist2
         return ((weight1 * low + weight2 * high ) / (weight1 + weight2))
       }
-      if (length(Ts) == 1L) {
+      if(length(Ts) == 1L) {
         # L1 distances and inverse weighting for individual dimension
         low  <- critvals[as.character(Inds[1L]), as.character(Ts), , exo]
         high <- critvals[as.character(Inds[2L]), as.character(Ts), , exo]
@@ -486,9 +486,9 @@ tsadf <- function(object, exo = c("intercept", "none", "trend"),
   L <- length(y)
   Dy <- YCdiff(object)
   Ly <- c(NA, object[1:(length(object) - 1)])
-  if (exo == "none")      m <- NULL
-  if (exo == "intercept") m <- rep(1, length(object))
-  if (exo == "trend")     m <- cbind(1, YCtrend(object))
+  if(exo == "none")      m <- NULL
+  if(exo == "intercept") m <- rep(1, length(object))
+  if(exo == "trend")     m <- cbind(1, YCtrend(object))
   narow <- 1:(lags+1)
   LDy <- YClags(Dy, lags)
   X <- cbind(Ly, LDy, m)[-narow, , drop = FALSE]
@@ -507,11 +507,11 @@ tsadf <- function(object, exo = c("intercept", "none", "trend"),
                  lags   = lags,
                  p.trho = p.trho)
   
-  if (comp.aux.reg){
+  if(comp.aux.reg){
     # for Levin-Lin-Chu test only, compute the residuals of the auxiliary
     # regressions
     X <- cbind(LDy[ , 0:lags], m)[-narow, , drop = FALSE]
-    if (lags == 0 && exo == "none"){
+    if(lags == 0 && exo == "none"){
       resid.diff  <- Dy[-narow]/sigma
       resid.level <- Ly[-narow]/sigma
     }
@@ -537,8 +537,8 @@ longrunvar <- function(x, exo = c("intercept", "none", "trend"), q = NULL){
   T <- length(x)
   if (is.null(q)) q <- round(3.21 * T^(1/3))
   dx <- x[2:T] - x[1:(T-1)]
-  if (exo == "intercept") dx <- dx - mean(dx)
-  if (exo == "trend") dx <- lm.fit(cbind(1, 1:length(dx)), dx)$residuals
+  if(exo == "intercept") dx <- dx - mean(dx)
+  if(exo == "trend")     dx <- lm.fit(cbind(1, 1:length(dx)), dx)$residuals
   dx <- c(NA, dx)
   res <- 1/(T-1)*sum(dx[-1]^2)+
     2*sum(
@@ -561,11 +561,12 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
   if(!is.list(object)) stop("argument 'object' in hadritest is supposed to be a list")
   if(exo == "none") stop("exo = \"none\" is not a valid option for Hadri's test")
   # determine L (= time periods), unique for balanced panel and number of individuals (n)
-  if(length(L <- unique(vapply(object, length, FUN.VALUE = 0L))) > 1L) stop("Hadri test is not applicable to unbalanced panels")
+  if(length(L <- unique(vapply(object, length, FUN.VALUE = 0L))) > 1L) 
+    stop("Hadri test is not applicable to unbalanced panels")
   n <- length(object)
   
-  if (exo == "intercept"){
-    # can use .lm.fit here as NAs are dropped in beginning of 'purtest'and 
+  if(exo == "intercept"){
+    # can use .lm.fit here as NAs are dropped in beginning of 'purtest' and 
     # regression on intercept cannot have collinear columns
     resid <- lapply(object, function(x) .lm.fit(matrix(1, nrow = length(x)), x)$residuals)
     adj <- c(1/6, 1/45) # xi, zeta^2 in eq. (17) in Hadri (2000)
@@ -574,7 +575,7 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
     resid <- lapply(object, function(x) {
                               lx <- length(x)
                               dmat <- matrix(c(rep(1, lx), 1:lx), nrow = lx)
-                              # can use .lm.fit here as NAs are dropped in beginning of 'purtest'and 
+                              # can use .lm.fit here as NAs are dropped in beginning of 'purtest' and 
                               # regression on intercept and trend cannot have collinear columns
                               .lm.fit(dmat, x)$residuals
                               })
@@ -783,27 +784,27 @@ purtest <- function(object, data = NULL, index = NULL,
     # exo is derived from specified formula:
     terms <- terms(object)
     lab <- labels(terms)
-    if (length(lab) == 0L){
-      if (attr(terms, "intercept")) exo <- "intercept"
+    if(length(lab) == 0L){
+      if(attr(terms, "intercept")) exo <- "intercept"
       else exo <- "none"
     }
     else{
-      if (length(lab) > 1L || lab != "trend") stop("incorrect formula")
+      if(length(lab) > 1L || lab != "trend") stop("incorrect formula")
       exo <- "trend"
     }
     object <- paste(deparse(object[[2L]]))
-    if (exists(object) && is.vector(get(object))){
+    if(exists(object) && is.vector(get(object))){
       # is.vector because, eg, inv exists as a function
       object <- get(object)
     }
     else{
-      if (is.null(data)) stop("unknown response")
+      if(is.null(data)) stop("unknown response")
       else{
-        if (!inherits(data, "data.frame")) stop("'data' does not specify a data.frame/pdata.frame")
-        if (object %in% names(data)){
+        if(!inherits(data, "data.frame")) stop("'data' does not specify a data.frame/pdata.frame")
+        if(object %in% names(data)){
           object <- data[[object]]
-          if (!inherits(data, "pdata.frame")){
-            if (is.null(index)) stop("the index attribute is required")
+          if(!inherits(data, "pdata.frame")){
+            if(is.null(index)) stop("the index attribute is required")
             else data <- pdata.frame(data, index)
           }
           id <- attr(data, "index")[[1L]]
@@ -816,15 +817,15 @@ purtest <- function(object, data = NULL, index = NULL,
   } # END object is a formula
   else{
     exo <- match.arg(exo)
-    if (is.null(dim(object))){
-      if (inherits(object, "pseries")){
+    if(is.null(dim(object))){
+      if(inherits(object, "pseries")){
         id <- attr(object, "index")[[1L]]
       }
       else stop("the individual dimension is undefined") # cannot derive individual dimension from a vector if not pseries
     }
-    if (is.matrix(object) || is.data.frame(object)) {
-      if (!is.null(data)) stop("object is data.frame or matrix but argument 'data' is not NULL")
-      if (is.matrix(object)) object <- as.data.frame(object)
+    if(is.matrix(object) || is.data.frame(object)) {
+      if(!is.null(data)) stop("object is data.frame or matrix but argument 'data' is not NULL")
+      if(is.matrix(object)) object <- as.data.frame(object)
     }
   }
   
@@ -833,13 +834,13 @@ purtest <- function(object, data = NULL, index = NULL,
   if(!is.null(attr(object, "na.action")))
     warning("NA value(s) encountered and dropped, results may not be reliable")
   
-  if (!inherits(object, "data.frame")){
-    if (is.null(id)) stop("the individual dimension is undefined")
+  if(!inherits(object, "data.frame")){
+    if(is.null(id)) stop("the individual dimension is undefined")
     # adjust 'id' to correspond data in 'object' after NA dropping:
     if(!is.null(attr(object, "na.action"))) id <- id[-attr(object, "na.action")]
     object <- split(object, id)
   } else {
-    if (!ncol(object) > 1L) warning("data.frame or matrix specified in argument object does not contain more than one individual (individuals are supposed to be in columns)")
+    if(!ncol(object) > 1L) warning("data.frame or matrix specified in argument object does not contain more than one individual (individuals are supposed to be in columns)")
     object <- as.list(object)
   }
   
@@ -858,14 +859,14 @@ purtest <- function(object, data = NULL, index = NULL,
                    purtest.names.exo[exo],")")
   
   # If Hadri test, call function and exit early
-  if (test == "hadri") return(hadritest(object, exo, Hcons, dfcor,
+  if(test == "hadri") return(hadritest(object, exo, Hcons, dfcor,
                                         method, cl, args, data.name, ...)) 
   
   # compute the lags for each time series if necessary
-  if (is.numeric(lags)){
-    if (length(lags) == 1L) lags <- rep(lags, n)
+  if(is.numeric(lags)){
+    if(length(lags) == 1L) lags <- rep(lags, n)
     else{
-      if (length(lags) != n) stop("lags should be of length 1 or n")
+      if(length(lags) != n) stop("lags should be of length 1 or n")
       else lags <- as.list(lags)
     }
   }
@@ -884,9 +885,8 @@ purtest <- function(object, data = NULL, index = NULL,
   
   
   if (test == "levinlin"){
-    if (length(unique(sapply(object, length))) > 1L) stop("test = \"levinlin\" is not applicable to unbalanced panels")
-    
-    T.levinlin <- unique(sapply(object, length)) # time periods
+    if (length(T.levinlin <- unique(vapply(object, length, FUN.VALUE = 0.0))) > 1L)
+      stop("test = \"levinlin\" is not applicable to unbalanced panels")
     
     # get the adjustment parameters for the mean and the variance
     adjval <- adj.levinlin.value(T.levinlin, exo = exo)
@@ -918,20 +918,19 @@ purtest <- function(object, data = NULL, index = NULL,
     pvalues.trho <- sapply(idres, function(x) x[["p.trho"]])
   }
   
-  if (test == "ips"){
-    if (exo == "none") stop("exo = \"none\" is not a valid option for the Im-Pesaran-Shin test")
-    if (!is.null(ips.stat) && !any(ips.stat %in% c("Wtbar", "Ztbar", "tbar"))) stop("argument 'ips.stat' must be one of \"Wtbar\", \"Ztbar\", \"tbar\"")
-    
-    lags  <- sapply(idres, function(x) x[["lags"]])
-    L.ips <- sapply(idres, function(x) x[["T"]]) - lags - 1
-    trho  <- sapply(idres, function(x) x[["trho"]])
-    pvalues.trho <- sapply(idres, function(x) x[["p.trho"]])
+  if(test == "ips"){
+    if(exo == "none") stop("exo = \"none\" is not a valid option for the Im-Pesaran-Shin test")
+    if(!is.null(ips.stat) && !any(ips.stat %in% c("Wtbar", "Ztbar", "tbar"))) stop("argument 'ips.stat' must be one of \"Wtbar\", \"Ztbar\", \"tbar\"")
+    lags  <- vapply(idres, function(x) x[["lags"]], FUN.VALUE = 0.0)
+    L.ips <- vapply(idres, function(x) x[["T"]],    FUN.VALUE = 0.0) - lags - 1
+    trho  <- vapply(idres, function(x) x[["trho"]], FUN.VALUE = 0.0)
+    pvalues.trho <- vapply(idres, function(x) x[["p.trho"]], FUN.VALUE = 0.0)
     tbar <- mean(trho)
     parameter <- NULL
     adjval <- NULL
     
     
-    if (is.null(ips.stat) || ips.stat == "Wtbar") {
+    if(is.null(ips.stat) || ips.stat == "Wtbar") {
       # calc Wtbar - default
       adjval <- mapply(function(x, y) adj.ips.wtbar.value(x, y, exo = exo),
                        as.list(L.ips), as.list(lags))
@@ -941,7 +940,7 @@ purtest <- function(object, data = NULL, index = NULL,
       pvalue <- pnorm(stat, lower.tail = TRUE) # need lower.tail = TRUE (like ADF one-sided to the left), was until rev. 577: 2*pnorm(abs(stat), lower.tail = FALSE)
     }
     
-    if (!is.null(ips.stat) && ips.stat == "Ztbar") {
+    if(!is.null(ips.stat) && ips.stat == "Ztbar") {
       # calc Ztbar
       adjval <- adjval.ztbar <- sapply(L.ips, adj.ips.ztbar.value, 
                                        adj.ips.zbar.time, adj.ips.zbar.means, adj.ips.zbar.vars)
@@ -952,11 +951,11 @@ purtest <- function(object, data = NULL, index = NULL,
       pvalue <- pvalue.ztbar <- pnorm(stat.ztbar, lower.tail = TRUE)
     }
     
-    if (!is.null(ips.stat) && ips.stat == "tbar") {
+    if(!is.null(ips.stat) && ips.stat == "tbar") {
       # give tbar
-      T.tbar <- unique(sapply(object, length))
-      if (length(T.tbar) > 1L) stop("tbar statistic is not applicable to unbalanced panels")
-      if (any(lags > 0L)) stop("tbar statistic is not applicable when 'lags' > 0 is specified")
+      T.tbar <- unique(vapply(object, length, FUN.VALUE = 0.0))
+      if(length(T.tbar) > 1L) stop("tbar statistic is not applicable to unbalanced panels")
+      if(any(lags > 0L)) stop("tbar statistic is not applicable when 'lags' > 0 is specified")
       L.tbar <- T.tbar - 1
       stat <- tbar
       names(stat) <- "tbar"
@@ -966,11 +965,11 @@ purtest <- function(object, data = NULL, index = NULL,
     }
   }
   
-  if (test == "madwu"){
+  if(test == "madwu"){
     # Maddala/Wu (1999), pp. 636-637; Choi (2001), p. 253; Baltagi (2013), pp. 283-285
     ## does not require a balanced panel
-    trho <- sapply(idres, function(x) x[["trho"]])
-    pvalues.trho <- sapply(idres, function(x) x[["p.trho"]])
+    trho <- vapply(idres, function(x) x[["trho"]], FUN.VALUE = 0.0)
+    pvalues.trho <- vapply(idres, function(x) x[["p.trho"]], FUN.VALUE = 0.0)
     stat <- c(chisq = - 2 * sum(log(pvalues.trho)))
     n.madwu <- length(trho)
     parameter <- c(df = 2 * n.madwu)
@@ -978,10 +977,10 @@ purtest <- function(object, data = NULL, index = NULL,
     adjval <- NULL
   }
   
-  if (test == "Pm"){
+  if(test == "Pm"){
     ## Choi Pm (modified P) [proposed for large N]
-    trho <- sapply(idres, function(x) x[["trho"]])
-    pvalues.trho <- sapply(idres, function(x) x[["p.trho"]])
+    trho <- vapply(idres, function(x) x[["trho"]], FUN.VALUE = 0.0)
+    pvalues.trho <- vapply(idres, function(x) x[["p.trho"]], FUN.VALUE = 0.0)
     n.Pm <- length(trho)
     # formula (18) in Choi (2001), p. 255:
     stat <- c( "Pm" = 1/(2 * sqrt(n.Pm)) * sum(-2 * log(pvalues.trho) - 2) ) # == -1/sqrt(n.Pm) * sum(log(pvalues.trho) +1)
@@ -990,10 +989,10 @@ purtest <- function(object, data = NULL, index = NULL,
     adjval <- NULL
   }
   
-  if (test == "invnormal"){
+  if(test == "invnormal"){
     # inverse normal test as in Choi (2001)
-    trho <- sapply(idres, function(x) x[["trho"]])
-    pvalues.trho <- sapply(idres, function(x) x[["p.trho"]])
+    trho <- vapply(idres, function(x) x[["trho"]], FUN.VALUE = 0.0)
+    pvalues.trho <- vapply(idres, function(x) x[["p.trho"]], FUN.VALUE = 0.0)
     n.invnormal <- length(trho)
     stat <- c("z" = sum(qnorm(pvalues.trho)) / sqrt(n.invnormal)) # formula (9), Choi (2001), p. 253
     pvalue <- pnorm(stat, lower.tail = TRUE) # formula (12), Choi, p. 254
@@ -1001,10 +1000,10 @@ purtest <- function(object, data = NULL, index = NULL,
     adjval <- NULL
   }
   
-  if (test == "logit"){
+  if(test == "logit"){
     # logit test as in Choi (2001)
-    trho <- sapply(idres, function(x) x[["trho"]])
-    pvalues.trho <- sapply(idres, function(x) x[["p.trho"]])
+    trho <- vapply(idres, function(x) x[["trho"]], FUN.VALUE = 0.0)
+    pvalues.trho <- vapply(idres, function(x) x[["p.trho"]], FUN.VALUE = 0.0)
     n.logit <- length(trho)
     l_stat <-  c("L*" = sum(log(pvalues.trho / (1 - pvalues.trho)))) # formula (10), Choi (2001), p. 253
     k <- (3 * (5 * n.logit + 4)) / (pi^2 * n.logit * (5 * n.logit + 2))
@@ -1048,11 +1047,11 @@ print.purtest <- function(x, ...){
 #' @export
 summary.purtest <- function(object, ...){
   if (!object$args$test == "hadri"){
-    lags   <- sapply(object$idres, function(x) x[["lags"]])
-    L      <- sapply(object$idres, function(x) x[["T"]])
-    rho    <- sapply(object$idres, function(x) x[["rho"]])
-    trho   <- sapply(object$idres, function(x) x[["trho"]])
-    p.trho <- sapply(object$idres, function(x) x[["p.trho"]])
+    lags   <- vapply(object$idres, function(x) x[["lags"]],   FUN.VALUE = 0.0)
+    L      <- vapply(object$idres, function(x) x[["T"]],      FUN.VALUE = 0.0)
+    rho    <- vapply(object$idres, function(x) x[["rho"]],    FUN.VALUE = 0.0)
+    trho   <- vapply(object$idres, function(x) x[["trho"]],   FUN.VALUE = 0.0)
+    p.trho <- vapply(object$idres, function(x) x[["p.trho"]], FUN.VALUE = 0.0)
     sumidres <- cbind(
       "lags"   = lags,
       "obs"    = L - lags - 1,
@@ -1068,8 +1067,8 @@ summary.purtest <- function(object, ...){
     }
   } else {
     # hadri
-    LM     <- sapply(object$idres, function(x) x[["LM"]])
-    sigma2 <- sapply(object$idres, function(x) x[["sigma2"]])
+    LM     <- vapply(object$idres, function(x) x[["LM"]], FUN.VALUE = 0.0)
+    sigma2 <- vapply(object$idres, function(x) x[["sigma2"]], FUN.VALUE = 0.0)
     sumidres <- cbind("LM" = LM, "sigma2" = sigma2)
   }
   
