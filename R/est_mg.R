@@ -76,11 +76,11 @@
 #'     \item{vcov}{the covariance matrix of the coefficients,}
 #'     \item{df.residual}{degrees of freedom of the residuals,}
 #'     \item{model}{a data.frame containing the variables used for the
-#'     estimation,} \item{call}{the call,} \item{sigma}{always `NULL`
-#'     (`sigma` is here only for compatibility reasons to allow using
-#'     the same `summary` and `print` methods as `pggls`),}
+#'                  estimation,}
+#'     \item{r.squared}{numeric, the R squared,}
+#'     \item{call}{the call,}
 #'     \item{indcoef}{the matrix of individual coefficients from
-#'     separate time series regressions.}
+#'                    separate time series regressions.}
 #' @export
 #' @author Giovanni Millo
 #' @references
@@ -177,7 +177,7 @@ pmg <- function(formula, data, subset, na.action,
         tX <- X[ind == unind[i], ]
         ty <- y[ind == unind[i]]
         if(trend) tX <- cbind(tX, 1:(dim(tX)[[1L]]))
-        tfit <- lm.fit(tX, ty)
+        tfit <- lm.fit(tX, ty) # TODO: .lm.fit?
         tcoef[ , i] <- tfit$coefficients
         tres[[i]]   <- tfit$residuals
       }
@@ -189,9 +189,6 @@ pmg <- function(formula, data, subset, na.action,
     
     "cmg" = {
       ## between-periods transformation (take means over groups for each t)
-         #  be <- function(x, index, na.rm = TRUE) tapply(x, index, mean, na.rm = na.rm)
-         #  Xm <- apply(X, 2, FUN = be, index = tind)[tind, , drop = FALSE]
-         #  ym <- apply(as.matrix(as.numeric(y)), 2, FUN = be, index = tind)[tind]
       Xm <- Between(X, effect = "time", na.rm = TRUE)
       ym <- as.numeric(Between(y, effect = "time", na.rm = TRUE))
       
@@ -209,7 +206,7 @@ pmg <- function(formula, data, subset, na.action,
 
         if(trend) taugX <- cbind(taugX, 1:(dim(taugX)[[1L]]))
 
-        tfit <- lm.fit(taugX, ty)
+        tfit <- lm.fit(taugX, ty) # TODO: .lm.fit?
         tcoef0[ , i] <- tfit$coefficients
         tres[[i]]    <- tfit$residuals
       }
@@ -231,18 +228,7 @@ pmg <- function(formula, data, subset, na.action,
       },
     
     "dmg" = {
-      ## old (replaced by general Within function now):
-      ##  between-periods transformation (take means over group for each t)
-          #  be <- function(x, index, na.rm = TRUE) tapply(x, index, mean, na.rm = na.rm)
-          #  Xm <- apply(X, 2, FUN = be, index = tind)[tind, , drop = FALSE]
-          #  ym <- apply(as.matrix(as.numeric(y)), 2, FUN = be, index = tind)[tind]
-          # Xm <- Between(X, effect = "time", na.rm = TRUE)
-          # ym <- as.numeric(Between(y, effect = "time", na.rm = TRUE))
-          ## ...but of course we do not demean the intercept!
-          # Xm[ , 1] <- 0
-          # demX <- X - Xm
-          # demy <- y - ym
-      
+      ##  time-demean
       demX <- Within(X, effect = "time", na.rm = TRUE)
       demX[ , 1L] <- 1 # put back intercept lost by within transformation
       demy <- as.numeric(Within(y, effect = "time", na.rm = TRUE))
@@ -254,7 +240,7 @@ pmg <- function(formula, data, subset, na.action,
         tdemX <- demX[ind == unind[i], ]
         tdemy <- demy[ind == unind[i]]
         if(trend) tdemX <- cbind(tdemX, 1:(dim(tdemX)[[1L]]))
-        tfit <- lm.fit(tdemX, tdemy)
+        tfit <- lm.fit(tdemX, tdemy) # TODO: .lm.fit?
         tcoef[ , i] <- tfit$coefficients
         tres[[i]]   <- tfit$residuals
       }
@@ -293,12 +279,16 @@ pmg <- function(formula, data, subset, na.action,
     dimnames(tcoef) <- list(coef.names, id.names)
     pmodel <- attr(plm.model, "pmodel")
     pmodel$model.name <- model.name
-    mgmod <- list(coefficients = coef, residuals = residuals,
-                  fitted.values = fitted.values, vcov = vcov,
-                  df.residual = df.residual, r.squared = r2,
-                  model = model.frame(plm.model), sigma = NULL,
-                  indcoef = tcoef, formula = formula,
-                  call = cl)
+    mgmod <- list(coefficients  = coef,
+                  residuals     = residuals,
+                  fitted.values = fitted.values,
+                  vcov          = vcov,
+                  df.residual   = df.residual,
+                  r.squared     = r2,
+                  model         = model.frame(plm.model),
+                  indcoef       = tcoef,
+                  formula       = formula,
+                  call          = cl)
     mgmod <- structure(mgmod, pdim = pdim, pmodel = pmodel)
     class(mgmod) <- c("pmg", "panelmodel")
     mgmod
@@ -325,7 +315,8 @@ summary.pmg <- function(object, ...){
 
 #' @rdname pmg
 #' @export
-print.summary.pmg <- function(x, digits = max(3, getOption("digits") - 2), width = getOption("width"), ...){
+print.summary.pmg <- function(x, digits = max(3, getOption("digits") - 2),
+                              width = getOption("width"), ...){
   pmodel <- attr(x, "pmodel")
   pdim <- attr(x, "pdim")
 #  formula <- pmodel$formula

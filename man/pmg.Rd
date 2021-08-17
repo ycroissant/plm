@@ -61,9 +61,9 @@ An object of class \code{c("pmg", "panelmodel")} containing:
 \item{vcov}{the covariance matrix of the coefficients,}
 \item{df.residual}{degrees of freedom of the residuals,}
 \item{model}{a data.frame containing the variables used for the
-estimation,} \item{call}{the call,} \item{sigma}{always \code{NULL}
-(\code{sigma} is here only for compatibility reasons to allow using
-the same \code{summary} and \code{print} methods as \code{pggls}),}
+estimation,}
+\item{r.squared}{numeric, the R squared,}
+\item{call}{the call,}
 \item{indcoef}{the matrix of individual coefficients from
 separate time series regressions.}
 }

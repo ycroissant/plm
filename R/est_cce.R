@@ -62,11 +62,11 @@
 #'     \item{vcov}{the covariance matrix of the coefficients,}
 #'     \item{df.residual}{degrees of freedom of the residuals,}
 #'     \item{model}{a data.frame containing the variables used for the
-#'     estimation,} \item{call}{the call,} \item{sigma}{always `NULL`,
-#'     `sigma` is here only for compatibility reasons (to allow using
-#'     the same `summary` and `print` methods as `pggls`),}
+#'     estimation,}
+#'     \item{call}{the call,}
 #'     \item{indcoef}{the matrix of individual coefficients from
-#'     separate time series regressions.}
+#'     separate time series regressions,}
+#'     \item{r.squared}{numeric, the R squared.}
 #' @export
 #' @importFrom MASS ginv
 #' @author Giovanni Millo
@@ -178,9 +178,6 @@ pcce <- function (formula, data, subset, na.action,
 
   ## group-invariant part, goes in Hhat
     ## between-periods transformation (take means over groups for each t)
-      #  be <- function(x, index, na.rm = TRUE) tapply(x, index, mean, na.rm = na.rm)
-      #  Xm2 <- apply(X, 2, FUN = be, index = tind)[tind, , drop = FALSE]
-      #  ym2 <- apply(as.matrix(as.numeric(y)), 2, FUN = be, index = tind)[tind]
       Xm <- Between(X, effect = tind, na.rm = TRUE)
       ym <- as.numeric(Between(y, effect = "time", na.rm = TRUE))
 
@@ -412,7 +409,6 @@ pcce <- function (formula, data, subset, na.action,
                     vcov          = vcov,
                     df.residual   = df.residual,
                     model         = model.frame(plm.model),
-                    sigma         = NULL,
                     indcoef       = tcoef,
                     r.squared     = r2cce,
                     #cceres   = as.vector(cceres),
