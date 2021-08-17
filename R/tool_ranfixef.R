@@ -311,7 +311,8 @@ summary.fixef <- function(object, ...) {
 #' @export
 print.summary.fixef <- function(x, digits = max(3, getOption("digits") - 2),
                                 width = getOption("width"), ...){
-    printCoefmat(x, digits = digits)
+  printCoefmat(x, digits = digits)
+  invisible(x)
 }
 
 #' @rdname fixef.plm

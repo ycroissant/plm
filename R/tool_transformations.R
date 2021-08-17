@@ -252,6 +252,7 @@ plot.summary.pseries <- function(x, ...){
 #' @rdname pseries
 #' @export
 print.summary.pseries <- function(x, ...){
+    x.orig <- x
     digits <- getOption("digits")
     special_treatment_vars <- c("factor", "logical", "character")
     if(!inherits(x, special_treatment_vars)) {
@@ -264,6 +265,7 @@ print.summary.pseries <- function(x, ...){
         class(x) <- setdiff(class(x), c("summary.pseries", special_treatment_vars))
         print(x, ...)
     }
+    invisible(x.orig)
 }
 
 
