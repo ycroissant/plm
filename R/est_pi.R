@@ -344,5 +344,6 @@ print.summary.piest <- function(x, digits = max(3, getOption("digits") - 2),
   if(is.null(subset)) printCoefmat(coef(x), digits = digits, ...)
   else printCoefmat(coef(x)[subset, , drop = FALSE], digits = digits, ...)
   print(x$pitest, ...)
+  invisible(x)
 }
 

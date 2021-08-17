@@ -1108,6 +1108,7 @@ print.summary.purtest <- function(x, ...){
   }
   cat("\n")
   print(x$sumidres, ...)
+  invisible(x)
 }
 
 
