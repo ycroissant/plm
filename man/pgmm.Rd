@@ -81,13 +81,14 @@ first--difference operator) if \code{transformation="d"}, one of
 is performed in the summary,}
 
 \item{time.dummies}{for pgmm's summary method: if \code{TRUE}, the estimated
-coefficients of time dummies are present in the table of coefficients
-(default is \code{FALSE}, thus time dummies are dropped in summary's coefficient
-table),}
+coefficients of time dummies are present in the table of coefficients;
+default is \code{FALSE}, thus time dummies are dropped in summary's coefficient
+table (argument is only meaningful if there are time dummies in the model,
+i.e., only for \code{effect = "twoways"}),}
 
 \item{digits}{digits,}
 
-\item{width}{the maximum length of the lines in the print output,}
+\item{width}{the maximum length of the lines in the print output.}
 }
 \value{
 An object of class \code{c("pgmm","panelmodel")}, which has the

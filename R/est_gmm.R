@@ -64,15 +64,17 @@
 #'     `"GI"` or `"full"` if `transformation="ld"`,
 # TODO: fms = NULL (default)/"full"/"GI" not explained; arg fsm is not evaluated at all
 #' @param index the indexes,
-#' @param digits digits,
-#' @param width the maximum length of the lines in the print output,
+#' @param \dots further arguments.
 #' @param robust for pgmm's summary method: if `TRUE` (default), robust inference
 #'               is performed in the summary,
 #' @param time.dummies for pgmm's summary method: if `TRUE`, the estimated
-#'     coefficients of time dummies are present in the table of coefficients
-#'     (default is `FALSE`, thus time dummies are dropped in summary's coefficient
-#'     table),
-#' @param \dots further arguments.
+#'     coefficients of time dummies are present in the table of coefficients;
+#'     default is `FALSE`, thus time dummies are dropped in summary's coefficient
+#'     table (argument is only meaningful if there are time dummies in the model, 
+#'     i.e., only for `effect = "twoways"`),
+#' @param digits digits,
+#' @param width the maximum length of the lines in the print output.
+
 #' @return An object of class `c("pgmm","panelmodel")`, which has the
 #'     following elements:
 #' 
@@ -435,7 +437,7 @@ pgmm <- function(formula, data, subset, na.action,
       # intercept and should be kept anyway
       V2 <- td[- c(1:TL2), - c(2:(2 + TL2 - 1))]
       V1 <- diff(V2)
-      namesV <- c("(intercept)", namesV[- c(0:TL2 + 1)])
+      namesV <- c("(Intercept)", namesV[- c(0:TL2 + 1)])
     }
     for (i in 1:N){
       yX1[[i]] <- cbind(yX1[[i]], V1)
@@ -451,7 +453,7 @@ pgmm <- function(formula, data, subset, na.action,
   # A QAD fix for the bug in mtest for ld model without time.dummies
   if (effect == "individual" && transformation == "ld"){
     namesV <- levels(index(data, which = "time"))
-    namesV <- c("(intercept)", namesV[-c(0:TL2 + 1)])
+    namesV <- c("(Intercept)", namesV[-c(0:TL2 + 1)])
   }
   
   #################################################################
