@@ -28,6 +28,9 @@
 #' aneweytest(log(goutput) ~ log(seed) + log(totlabor) + log(size), RiceFarms, index = "id")
 #' 
 aneweytest <-  function(formula, data, subset, na.action, index = NULL,  ...){
+  # NB: code fails for unbalanced data -> is Angist and Newey's test only for balanced data?
+  #     unbalanced case is currently caught and a message is printed
+  
     mf <- match.call()
     # compute the model.frame using plm with model = NA
     mf[[1L]] <- as.name("plm")
@@ -37,14 +40,18 @@ aneweytest <-  function(formula, data, subset, na.action, index = NULL,  ...){
     # effects
     formula <- as.Formula(formula)
     mf$formula <- formula(formula, rhs = 1)
-    id <- index(data, "id")
-    time <- index(data, "time")
-    years <- unique(time)
+    index <- index(data)
+    id <- index[[1L]]
+    time <- index[[2L]]
+    periods <- unique(time)
     pdim <- pdim(data)
     T <- pdim$nT$T
     n <- pdim$nT$n
     N <- pdim$nT$N
     Ti <- pdim$Tint$Ti
+    balanced <- pdim$balanced
+    
+    if(!balanced) stop("'aneweytest' not implemented for unbalanced data")
     
     ht <- match.call(expand.dots = FALSE)
     m <- match(c("formula", "data", "subset", "na.action",
@@ -55,6 +62,7 @@ aneweytest <-  function(formula, data, subset, na.action, index = NULL,  ...){
     ht$model <- "within"
     ht$effect <- "individual"
     ht <- eval(ht, parent.frame())
+    
     .resid <- split(resid(ht), time)
   
     # extract the covariates, and isolate time-invariant covariates
@@ -75,22 +83,36 @@ aneweytest <-  function(formula, data, subset, na.action, index = NULL,  ...){
         Kz <- 0
         namesZ <- NULL
     }
+
     Kx <- ncol(X)
-    # split by time period and remove the mean
-    X <- lapply(as.list(years), function(x) X[time == x, , drop = FALSE])
-    X <- lapply(X, function(x) t(t(x) - .colMeans(x, nrow(x), ncol(x))))
+    
+    # time-demean and split by period:
+    attr(X, "index") <- index
+    X <- Within(X, effect ="time")
+    X <- lapply(as.list(periods), function(x) X[time == x, , drop = FALSE])
+    # put columnnames for split matrices in X:
+    for (i in 1:(length(periods))){
+      colnames(X[[i]]) <- paste(colnames(X[[i]]), periods[i], sep = ".")
+    }
+    
     if (!is.null(Z)){
-        Z <- Z[time == years[1], , drop = FALSE]
-        Z <- t(t(Z) - .colMeans(Z, nrow(Z), ncol(Z)))
+        Z <- Z[time == periods[1], , drop = FALSE]
+        Z <- t(t(Z) - .colMeans(Z, nrow(Z), ncol(Z))) # TODO: could use Within() framework
     }
-    for (i in 1:(length(years))){
-        colnames(X[[i]]) <- paste(colnames(X[[i]]), years[i], sep = ".")
-    }
+
     XX <- cbind(Reduce("cbind", X), Z)
+
     # compute the unconstrained estimates
-    LMS <- lapply(.resid, function(x) lm(x ~ XX - 1)) ## TODO: check if (.)lm.fit can be used
+    # NA-freeness guaranteed by model frame construction, so can use lm.fit
+    # (non-collinearity is not cared for but code error if collinearity is 
+    # present anyway a bit later)
+    #   was:   LMS <- lapply(.resid, function(x) lm(x ~ XX - 1))
+    LMS <- lapply(.resid, function(x) lm.fit(XX, x))
+    
+    
     YTOT <- vapply(.resid, function(x) crossprod(x), FUN.VALUE = 0.0)
-    DEV <- vapply(LMS, deviance, FUN.VALUE = 0.0)
+    DEV <- vapply(LMS, function(x) crossprod(x$residuals), FUN.VALUE = 0.0)
+    
     stat <- c("chisq" = sum(1 - DEV / YTOT) * (n - ncol(XX)))
     df <- c("df" = (T ^ 2 - T - 1) * Kx)
     aneweytest <- structure(list(statistic   = stat,
@@ -139,6 +161,8 @@ aneweytest <-  function(formula, data, subset, na.action, index = NULL,  ...){
 #' summary(pirice)
 #' 
 piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,  ...){
+  # NB: code fails for unbalanced data -> is Chamberlain's test only for balanced data?
+  #     unbalanced case is currently caught and a message is printed
     cl <- match.call(expand.dots = TRUE)
     mf <- match.call()
     # compute the model.frame using plm with model = NA
@@ -149,8 +173,9 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
     # effects
     formula <- as.Formula(formula)
     mf$formula <- formula(formula, rhs = 1)
-    id <- index(data, "id")
-    time <- index(data, "time")
+    index <- index(data)
+    id <- index[[1L]]
+    time <- index[[2L]]
     pdim <- pdim(data)
     balanced <- pdim$balanced
     T <- pdim$nT$T
@@ -158,6 +183,8 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
     N <- pdim$nT$N
     Ti <- pdim$Tint$Ti
 
+    if(!balanced) stop("'piest' not implemented for unbalanced data")
+    
     # extract the response, time-demean and split by period
     y <- pmodel.response(data, model = "pooling", effect = "individual")
     Y <- Within(y, "time")
@@ -180,22 +207,33 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
         Kz <- 0
         namesZ <- NULL
     }
+    
     Kx <- ncol(X)
     namesX <- colnames(X)
-    # split by time period and remove the mean # TODO: check if this can use general Within framework
-    years <- unique(time)
-    X <- lapply(as.list(years), function(x) X[time == x, , drop = FALSE])
-    X <- lapply(X, function(x) t(t(x) - .colMeans(x, nrow(x), ncol(x))))
+
+    # time-demean X and split by period:
+    attr(X, "index") <- index
+    X <- Within(X, effect ="time")
+    periods <- unique(time)
+    X <- lapply(as.list(periods), function(x) X[time == x, , drop = FALSE])
+    # put columnnames for split matrices in X:
+    for (i in 1:(length(periods))){
+      colnames(X[[i]]) <- paste(colnames(X[[i]]), periods[i], sep = ".")
+    }
+    
     if (!is.null(Z)){
-        Z <- Z[time == years[1L], , drop = FALSE]
-        Z <- t(t(Z) - .colMeans(Z, nrow(Z), ncol(Z)))
+        Z <- Z[time == periods[1L], , drop = FALSE]
+        Z <- t(t(Z) - .colMeans(Z, nrow(Z), ncol(Z))) # TODO: can use Within() framework
     }
-    for (i in 1:(length(years))){
-        colnames(X[[i]]) <- paste(colnames(X[[i]]), years[i], sep = ".")
-    }
+
     XX <- cbind(Reduce("cbind", X), Z)
+    
     # compute the unconstrained estimates
-    LMS <- LMS <- lapply(Y, function(x) lm(x ~ XX - 1)) # TODO: check if .lm.fit can be used here
+      # NA-freeness guaranteed by model frame construction, so can use lm.fit
+      # (non-collinearity is not cared for but code error if collinearity is 
+      # present anyway a bit later)
+      #   was:   LMS <- lapply(Y, function(x) lm(x ~ XX - 1))
+    LMS <- lapply(Y, function(x) lm.fit(XX, x))
     
     # compute the empirical covariance of the covariates
     Sxxm1 <- solve(crossprod(XX) / n)
@@ -227,8 +265,9 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
     for (i in 1:(Kx * T)){
         R[((1:T) - 1) * (Kx * T + Kz) + i , Kx + Kz + i] <- 1
     }
-    A <- solve(t(R) %*% solve(Omega) %*% R)
-    .coef <- as.numeric(A %*% t(R) %*% solve(Omega) %*% as.numeric(pi))
+    solve_Omega <- solve(Omega)
+    A <- solve(t(R) %*% solve_Omega %*% R)
+    .coef <- as.numeric(A %*% t(R) %*% solve_Omega %*% as.numeric(pi))
     #  .coef <- as.numeric(solve(t(R) %*% R) %*% t(R) %*% as.numeric(pi))
     if (Kz > 0) namescoef <- c(namesX, namesZ, colnames(XX)[- c(ncol(XX) - 0:(Kz-1))])
     else namescoef <- c(namesX, namesZ, colnames(XX))
@@ -239,7 +278,7 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
     .resid <- matrix(unlist(Y), ncol = length(Y)) - XX %*% piconst
     if(TRUE){                                             ## TODO: this is always TRUE...?!
         if (robust){                                      ## and Omega is calc. again, with a
-                                                          ## different .resid input but with same lapply-construct
+                                                          ## new .resid input but with same lapply-construct
             Omega <- lapply(seq_len(n),
                             function(i)
                                 tcrossprod(.resid[i, ]) %x%
@@ -252,7 +291,7 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
     }
     A <- solve(t(R) %*% solve(Omega) %*% R)
     stat <- c("chisq" = n * resb %*% solve(Omega) %*% resb)
-    df <- c("df" = Kx * (T ^ 2 - T - 1))                  ## TODO: df is overwritten in next line...?!
+    df <- c("df" = Kx * (T ^ 2 - T - 1))    ## TODO: df is overwritten in next line...?!
     df <- c("df" = length(pi) - length(.coef))
     pitest <- list(statistic   = stat,
                    parameter   = df,
@@ -304,6 +343,6 @@ print.summary.piest <- function(x, digits = max(3, getOption("digits") - 2),
                                 width = getOption("width"), subset = NULL, ...){
   if(is.null(subset)) printCoefmat(coef(x), digits = digits, ...)
   else printCoefmat(coef(x)[subset, , drop = FALSE], digits = digits, ...)
-  print(x$pitest, digits, ...)
+  print(x$pitest, ...)
 }
 

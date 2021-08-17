@@ -6,7 +6,6 @@
    `?plm.fast`, also for benchmarks), option introduced in plm version 2.4-0.
    It is planned to default to "fast mode" for the next CRAN release of
    plm (then making package `collapse` a hard dependency).
-
  * Further speed-up if `options("plm.fast" = TRUE)` is set: In case package
    `fixest` or `lfe` is available locally *in addition* to package `collapse`,
    the two-ways fixed transformation is significantly faster compared to the case
@@ -20,7 +19,6 @@
 ### Features:
  * hansi: new function for Simes (1986) test applied to panels for panel unit
    root testing, as suggested in Hanck (2013).
-   
  * [.pseries: implemented method to allow subsetting on pseries while retaining
    the pseries properties, i.e., `your_pseries[<subsetting condition>]`
    remains a pseries (before, subsetting on pseries worked as the base R
@@ -28,7 +26,6 @@
    subsetting method checks for valid pseries features and warns for non-valid
    ones (as some packages constructed non-valid pseries objects, e.g., with
    no or null index).
-   
  * pseriesfy: new function to make each column of a pdata.frame a pseries, see
    `?pseriesfy` for background and useful examples. (Faster version is executed
    if `options("plm.fast" = TRUE)` is set, see `?plm.fast` (then internally
@@ -37,51 +34,44 @@
 ### Fixes & Others:
  * vcovG (hence vcovHC, vcovDC, vcovNW, vcovSCC) and vcovBK: fix bug in case
    of IV estimation with only one regressor.
-
  * within_intercept: fix bug which caused an error for FE models with only one
    regressor.
-   
  * between.matrix: do not coerce result to numeric vector for n x 1 matrix
    input (by using drop = FALSE in extraction) (prior to this fix, estimation
    of the between model with only an intercept errored).
-   
  * pvcm: intercept-only models are now estimable.
- 
  * plm:
     * for the nested random effect model (`effect = "nested"`), check if argument
       `model = "random"` is set, if not, plm now warns and adjusts accordingly
       (will become an error in the future).
-      
     * Non-default random IV cases computed faster (cases with 
     `inst.method = "baltagi"` / `"am"` / `"bms"`).
- 
  * pgmm: printing of summary gives more information about the model estimated
    (print.summary.pgmm).
-   
  * purtest: now checks for NA-values, drops any and warns about dropping.
- 
  * piest: better printing (handling of 'digits' and 'subset' argument) 
-   (print.piest, print.summary.piest).
-
+     (print.piest, print.summary.piest).
  * has.intercept.plm: argument 'part' renamed to 'rhs', argument values
    (integer or NULL) aligned with and correctly passed on to 
    has.intercept.Formula (with a *temporary* back-compatible solution).
-
  * pwaldtest: error informatively if executed on intercept-only model
    (and do not try to execute in summary.plm/pvcm and do not try to print in
    print.summary.plm/pvcm).
-
  * groupGenerics: no more warning in arithmetic operations on pseries when index
    of both operands have same length but different content (e.g., something like
    this does not warn anymore:
    `your_pseries[1:(length(your_pseries)-1)] + your_pseries[2:length(your_pseries)]`).
-   
+
+### Internals
+
  * various efficiency gains throughout the package by using more vapply(),
    crossprod(), (.)lm.fit(), better branching, etc.
    
+ * piest, aneweytest: now use internal demeaning framework by Within().
+   
 ### Vignettes and Other Documentation:
  * 1st vignette:
-    * panel unit root testing:
+    * In section about panel unit root testing:
       * added short intro with overview of available functions/tests and added
         two example cases.
       * added sub-section about new function hansi.
