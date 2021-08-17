@@ -213,16 +213,15 @@ ercomp.formula <- function(object, data,
         ixid <- index(data)[[1L]]
         charixid <- as.character(ixid)
         constants <- apply(X, 2, function(x) all(tapply(x, ixid, is.constant)))
-        if (length(object)[2L] > 1L){
+        FES <- fixef(wm, type = "dmean")[charixid]
+        XCST <- X[ , constants, drop = FALSE]
+        ra <- if(length(object)[2L] > 1L){
           # with instruments
-            W1 <- model.matrix(data, rhs = 2)
-            ra <- twosls(fixef(wm, type = "dmean")[charixid], X[ , constants, drop = FALSE], W1)
-        }
-        else{
+          W1 <- model.matrix(data, rhs = 2)
+          twosls(FES, XCST, W1)
+        } else{
           # without instruments
-            FES <- fixef(wm, type = "dmean")[charixid]
-            XCST <- X[ , constants, drop = FALSE]
-            ra <- lm(FES ~ XCST - 1)
+          lm(FES ~ XCST - 1)
         }
         s2nu <- deviance(wm) / (O - N)
         s21 <- deviance(ra) / N
