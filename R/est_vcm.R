@@ -131,7 +131,7 @@ pvcm.within <- function(formula, data, effect){
                   })
     # extract coefficients:
     coef <- matrix(unlist(lapply(ols, coef)), nrow = length(ols), byrow = TRUE) # was: as.data.frame(t(sapply(ols, coef)))...
-    dimnames(coef)[1:2] <- list(names(ols), names(coef(ols[[1]])))              # ... but that code errored with intercept-only model
+    dimnames(coef)[1:2] <- list(names(ols), names(coef(ols[[1L]])))             # ... but that code errored with intercept-only model
     coef <- as.data.frame(coef)
     
     # extract residuals and make pseries:
@@ -140,8 +140,8 @@ pvcm.within <- function(formula, data, effect){
     
     # extract standard errors:
     vcov <- lapply(ols, vcov)
-    std <- matrix(unlist(lapply(vcov, function(x) sqrt(diag(x)))), nrow = length(ols), byrow = TRUE) # was: as.data.frame(t(sapply(ols, coef)))...
-    dimnames(std)[1:2] <- list(names(vcov), colnames(vcov[[1]]))                                    # ... but this code errored with intercept-only model
+    std <- matrix(unlist(lapply(vcov, function(x) sqrt(diag(x)))), nrow = length(ols), byrow = TRUE) # was: as.data.frame(t(sapply(vcov, function(x) sqrt(diag(x)))))
+    dimnames(std)[1:2] <- list(names(vcov), colnames(vcov[[1L]]))                                    # ... but this code errored with intercept-only model
     std <- as.data.frame(std)
     
     ssr <- as.numeric(crossprod(residuals))
