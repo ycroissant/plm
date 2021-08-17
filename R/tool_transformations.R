@@ -117,12 +117,14 @@ NULL
 #' @rdname pseries
 #' @export
 print.pseries <- function(x, ...){
+  x.orig <- x
   attr(x, "index") <- NULL
   attr(x, "class") <- base::setdiff(attr(x, "class"), "pseries")
   if(length(attr(x, "class")) == 1L && class(x) %in% c("character", "logical", "numeric", "integer", "complex")) {
     attr(x, "class") <- NULL
   }
   print(x, ...)
+  x.orig
 }
 
 #' @rdname pseries

@@ -1060,6 +1060,7 @@ print.pdim <- function(x, ...) {
       cat(paste("T = ", min(x$Tint$Ti), "-", max(x$Tint$Ti), ", ", sep=""))
       cat(paste("N = ", x$nT$N, "\n", sep=""))
   }
+  invisible(pdim)
 }
 
 #' Extract the indexes of panel data

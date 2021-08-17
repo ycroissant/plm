@@ -276,10 +276,11 @@ fixef.plm <- function(object, effect = NULL,
 #' @export
 print.fixef <- function(x, digits = max(3, getOption("digits") - 2),
                         width = getOption("width"), ...){
-  
+    x.orig <- x
     # prevent attributes from being printed
     attr(x, "se") <- attr(x, "type") <- attr(x, "class") <- attr(x, "df.residual") <- attr(x, "index") <- NULL
     print.default(x, digits, width, ...)
+    x.orig
 }
 
 
