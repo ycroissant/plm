@@ -218,13 +218,13 @@ ercomp.formula <- function(object, data,
         ra <- if(length(object)[2L] > 1L){
           # with instruments
           W1 <- model.matrix(data, rhs = 2)
-          twosls(FES, XCST, W1) # TODO: lm.type = "lm.fit" / ".lm.fit"? (and deviance below by crossprod)
+          twosls(FES, XCST, W1, lm.type = "lm.fit")
         } else{
           # without instruments
-          lm(FES ~ XCST - 1) # TODO: check if .lm.fit can be used (and deviance 2 lines below would need adjustment)
+          lm.fit(XCST, FES)
         }
         s2nu <- deviance(wm) / (O - N)
-        s21 <- deviance(ra) / N
+        s21 <- as.numeric(crossprod(ra$residuals)) / N # == deviance(ra) / N
         s2eta <- (s21 - s2nu) / TS
         sigma2 <- c(idios = s2nu, id = s2eta)
         theta <- (1 - (1 + TS * sigma2["id"] / sigma2["idios"]) ^ (-0.5))
@@ -379,11 +379,11 @@ ercomp.formula <- function(object, data,
             ZSlambda <- Sum(Z, effect = "group")
             XSeta <- Sum(X, effect = "individual")
             estm1 <- plm.fit(data, effect = "individual", model = "within")
-            estm2 <- lm.fit(ZBetaBlambda, yBetaBlambda) # TODO: check if .lm.fit can be used
-            estm3 <- lm.fit(ZBlambda, yBlambda)         # TODO: check if .lm.fit can be used 
-            quad <- c(crossprod(resid(estm1)),
-                      crossprod(resid(estm2)),
-                      crossprod(resid(estm3)))
+            estm2 <- lm.fit(ZBetaBlambda, yBetaBlambda)
+            estm3 <- lm.fit(ZBlambda, yBlambda)
+            quad <- c(crossprod(estm1$residuals),
+                      crossprod(estm2$residuals),
+                      crossprod(estm3$residuals))
             M["w", "nu"]      <- O - N - K
             M["w", "eta"]     <- 0
             M["w", "lambda"]  <- 0
