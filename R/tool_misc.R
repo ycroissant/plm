@@ -39,13 +39,13 @@ bdiag <- function(...){
   return(out)
 }
 
-
+#' @importFrom stats .lm.fit
 twosls <- function(y, X, W, intercept = FALSE, lm.type = "lm"){
   ## non-exported
   # Return value can be controlled by argument lm.type. Often, a full lm model
   # is needed for further processing but can select one of the fast but less
   # rich objects produced by lm.fit or .lm.fit (the latter does not contain, e.g.,
-  # fitted.values)
+  # fitted.values and is to be used very carefully (e.g., coefs not in input order).
 
   # As NA/NaN/(+/-)Inf-freeness needs to be guaranteed when functions call
   # twosls(), so can use lm.fit to calc. Xhat.
