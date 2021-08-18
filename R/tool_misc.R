@@ -9,6 +9,7 @@
 ## - pvar : checks if input varies in individual / time dimension
 
 bdiag <- function(...){
+  ## non-exported
   if (nargs() == 1L)
     x <- as.list(...)
   else
@@ -39,18 +40,35 @@ bdiag <- function(...){
 }
 
 
-twosls <- function(y, X, W, intercept = FALSE){
-  Xhat <- lm(X ~ W)$fitted.values
+twosls <- function(y, X, W, intercept = FALSE, lm.type = "lm"){
+  ## non-exported
+  # Return value can be controlled by argument lm.type. Often, a full lm model
+  # is needed for further processing but can select one of the fast but less
+  # rich objects produced by lm.fit or .lm.fit (the latter does not contain, e.g.,
+  # fitted.values)
+
+  # As NA/NaN/(+/-)Inf-freeness needs to be guaranteed when functions call
+  # twosls(), so can use lm.fit to calc. Xhat.
+  Xhat <- lm.fit(cbind(1, W), X)$fitted.values
+  # old: Xhat <- lm(X ~ W)$fitted.values
+  
   if(!is.matrix(Xhat)){
     Xhat <- matrix(Xhat, ncol = 1L)
     colnames(Xhat) <- colnames(X)
   }
+  
   if(intercept){
-    model <- lm(y ~ Xhat)
+    model <- switch(lm.type,
+                    "lm"      =  lm(y ~ Xhat),
+                    "lm.fit"  =  lm.fit(cbind(1, Xhat), y),
+                    ".lm.fit" = .lm.fit(cbind(1, Xhat), y))
     yhat <- as.vector(crossprod(t(cbind(1, X)), coef(model)))
   }
   else{
-    model <- lm(y ~ Xhat - 1)
+    model <- switch(lm.type,
+                    "lm"      =  lm(y ~ Xhat - 1),
+                    "lm.fit"  =  lm.fit(Xhat, y),
+                    ".lm.fit" = .lm.fit(Xhat, y))
     yhat <- as.vector(crossprod(t(X), coef(model)))
   }
   model$residuals <- y - yhat
@@ -366,6 +384,7 @@ punbalancedness.panelmodel <- function(x, ...) {
 
 
 myvar <- function(x){
+  ## non-exported
   x.na <- is.na(x)
   if(anyNA(x.na)) x <- x[!x.na]
   n <- length(x)
@@ -576,6 +595,7 @@ print.pvar <- function(x, ...){
     var_anyNA <- varnames[x$id.variation_anyNA]
     if(length(var_anyNA)!=0) cat(paste("all NA in ind. dimension for at least one time period:", paste(var_anyNA,collapse=" "),"\n"))
   }
+  invisible(x)
 }
 
 
