@@ -25,20 +25,17 @@ starX <- function(formula, data, model, rhs = 1, effect){
     result
 }
 
-mylm <- function(y, X, W = NULL){
+mylm <- function(y, X, W = NULL) {
   names.X <- colnames(X)
-  if (is.null(W)) result <- lm(y ~ X - 1)
-  else result <- twosls(y, X, W)
-  na.coef <- is.na(coef(result))
-  if (any(na.coef)){
+  result <- if(is.null(W)) lm(y ~ X - 1) else twosls(y, X, W)
+  if(any(na.coef <- is.na(result$coefficients))) {
     ## for debug purpose:
     # warning("Coefficient(s) '", paste((names.X)[na.coef], collapse = ", "), 
     #"' could not be estimated and is (are) dropped.")
-      X <- X[, ! na.coef, drop = FALSE]
-      if (dim(X)[2L] == 0L) stop(paste("estimation not possible: all coefficients",
+      X <- X[ , !na.coef, drop = FALSE]
+      if(dim(X)[2L] == 0L) stop(paste("estimation not possible: all coefficients",
                                       "omitted from estimation due to aliasing"))
-      if (is.null(W)) result <- lm(y ~ X - 1)
-      else result <- twosls(y, X, W)
+      result <- if(is.null(W)) lm(y ~ X - 1) else twosls(y, X, W)
   }
   result$vcov <- vcov(result)
   result$X <- X
