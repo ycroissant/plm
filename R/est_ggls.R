@@ -157,7 +157,7 @@ pggls <- function(formula, data, subset, na.action,
     commonpars <- intersect(names(coef(plm.model)), colnames(X))
     X <- X[ , commonpars, drop = FALSE]
     y <- pmodel.response(plm.model)[myord]
-    resid <- resid(lm.fit(X, y))
+    resid <- lm.fit(X, y)$residuals
     
     cond <- cond[myord]
     other <- other[myord]
@@ -183,7 +183,7 @@ pggls <- function(formula, data, subset, na.action,
         y0 <- y
         X <- X[t1, ]
         y <- y[t1]
-        resid <- resid(lm.fit(X, y))
+        resid <- lm.fit(X, y)$residuals
                                         #resid[t1]
         cond <- cond[t1]
         other <- other[t1]

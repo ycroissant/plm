@@ -566,18 +566,16 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
   n <- length(object)
   
   if(exo == "intercept"){
-    # can use .lm.fit here as NAs are dropped in beginning of 'purtest' and 
-    # regression on intercept cannot have collinear columns
-    resid <- lapply(object, function(x) .lm.fit(matrix(1, nrow = length(x)), x)$residuals)
+    # can use lm.fit here as NAs are dropped in beginning of 'purtest'
+    resid <- lapply(object, function(x) lm.fit(matrix(1, nrow = length(x)), x)$residuals)
     adj <- c(1/6, 1/45) # xi, zeta^2 in eq. (17) in Hadri (2000)
   }
   if (exo == "trend"){
     resid <- lapply(object, function(x) {
                               lx <- length(x)
                               dmat <- matrix(c(rep(1, lx), 1:lx), nrow = lx)
-                              # can use .lm.fit here as NAs are dropped in beginning of 'purtest' and 
-                              # regression on intercept and trend cannot have collinear columns
-                              .lm.fit(dmat, x)$residuals
+                              # can use lm.fit here as NAs are dropped in beginning of 'purtest'
+                              lm.fit(dmat, x)$residuals
                               })
     adj <- c(1/15, 11/6300) # xi, zeta^2 in eq. (25) in Hadri (2000)
   }
@@ -745,9 +743,8 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
 #'      the statistic, for `test = "levinlin"` and `"ips"`, otherwise `NULL`),
 #' - `"sigma2"` (short-run and long-run variance for `test = "levinlin"`, otherwise NULL).
 #' @export
-#' @importFrom stats setNames .lm.fit
-#' @author Yves Croissant and for "Pm", "invnormal", and "logit" Kevin
-#'     Tappe
+#' @importFrom stats setNames
+#' @author Yves Croissant and for "Pm", "invnormal", and "logit" Kevin Tappe
 #' @seealso [cipstest()], [hansi()]
 
 #' @references
@@ -1041,6 +1038,7 @@ print.purtest <- function(x, ...){
     cat("tbar critival values:\n")
     print(x$statistic$ips.tbar.crit, ...)
   }
+  invisible(x)
 }
 
 #' @rdname purtest
@@ -1286,5 +1284,6 @@ print.hansi <- function(x, cutoff = 10L, ...) {
   } else {
     cat(paste0(" ", H0.rej.txt, "\n"))
   }
+  invisible(x)
 }
 

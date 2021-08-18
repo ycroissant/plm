@@ -180,7 +180,6 @@ purtest(inv ~ 1, data = Grunfeld, index = c("firm", "year"), pmax = 4, test = "m
 \code{\link[=cipstest]{cipstest()}}, \code{\link[=hansi]{hansi()}}
 }
 \author{
-Yves Croissant and for "Pm", "invnormal", and "logit" Kevin
-Tappe
+Yves Croissant and for "Pm", "invnormal", and "logit" Kevin Tappe
 }
 \keyword{htest}

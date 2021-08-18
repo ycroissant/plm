@@ -177,7 +177,7 @@ pmg <- function(formula, data, subset, na.action,
         tX <- X[ind == unind[i], ]
         ty <- y[ind == unind[i]]
         if(trend) tX <- cbind(tX, 1:(dim(tX)[[1L]]))
-        tfit <- lm.fit(tX, ty) # TODO: .lm.fit?
+        tfit <- lm.fit(tX, ty)
         tcoef[ , i] <- tfit$coefficients
         tres[[i]]   <- tfit$residuals
       }
@@ -206,7 +206,7 @@ pmg <- function(formula, data, subset, na.action,
 
         if(trend) taugX <- cbind(taugX, 1:(dim(taugX)[[1L]]))
 
-        tfit <- lm.fit(taugX, ty) # TODO: .lm.fit?
+        tfit <- lm.fit(taugX, ty)
         tcoef0[ , i] <- tfit$coefficients
         tres[[i]]    <- tfit$residuals
       }
@@ -240,7 +240,7 @@ pmg <- function(formula, data, subset, na.action,
         tdemX <- demX[ind == unind[i], ]
         tdemy <- demy[ind == unind[i]]
         if(trend) tdemX <- cbind(tdemX, 1:(dim(tdemX)[[1L]]))
-        tfit <- lm.fit(tdemX, tdemy) # TODO: .lm.fit?
+        tfit <- lm.fit(tdemX, tdemy)
         tcoef[ , i] <- tfit$coefficients
         tres[[i]]   <- tfit$residuals
       }

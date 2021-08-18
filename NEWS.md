@@ -65,9 +65,12 @@
 ### Internals
 
  * various efficiency gains throughout the package by using more vapply(),
-   crossprod(), (.)lm.fit(), better branching, etc.
+   crossprod(), lm.fit(), better branching, etc.
    
  * piest, aneweytest: now use internal demeaning framework by Within().
+ 
+ * various print methods now return the input object invisible (before returned
+   NULL).
    
 ### Vignettes and Other Documentation:
  * 1st vignette:
