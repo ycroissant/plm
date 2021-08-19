@@ -130,7 +130,7 @@ print.pseries <- function(x, ...){
 #' @rdname pseries
 #' @export
 as.matrix.pseries <- function(x, idbyrow = TRUE, ...){
-    index <- attr(x, "index")
+    index <- unclass(attr(x, "index")) # unclass for speed
     id <- index[[1L]]
     time <- index[[2L]]
     time.names <- levels(time)
@@ -222,8 +222,9 @@ plot.pseries <- function(x, plot = c("lattice", "superposed"),
 #' @export
 summary.pseries <- function(object, ...) {
     if(!inherits(object, c("factor", "logical", "character"))) {
-        id   <- attr(object, "index")[[1L]]
-        time <- attr(object, "index")[[2L]]
+        index <- unclass(attr(object, "index")) # unclass for speed
+        id   <- index[[1L]]
+        time <- index[[2L]]
         Bid   <- Between(object, na.rm = TRUE)
         Btime <- Between(object, effect = "time", na.rm = TRUE)
         ## res <- structure(c(total = sumsq(object),
@@ -303,32 +304,32 @@ myave.default <- function(x, effect, func, ...) {
 
 Tapply.pseries <- function(x, effect = c("individual", "time", "group"), func, ...){
     effect <- match.arg(effect)
-    xindex <- attr(x, "index")
+    xindex <- unlist(attr(x, "index")) # unclass for speed
     checkNA.index(xindex) # index may not contain any NA
     effect <- switch(effect,
                      "individual"= xindex[[1L]],
                      "time"      = xindex[[2L]],
                      "group"     = xindex[[3L]]
                      )
-    x <- as.numeric(x)
-    z <- Tapply.default(x, effect, func, ...)
-    attr(z, "index") <- xindex
+    z <- as.numeric(x)
+    z <- Tapply.default(z, effect, func, ...)
+    attr(z, "index") <- attr(x, "index") # insert original index
     class(z) <- c("pseries", class(z))
     return(z)
 }
 
 myave.pseries <- function(x, effect = c("individual", "time", "group"), func, ...) {
   effect <- match.arg(effect)
-  xindex <- attr(x, "index")
+  xindex <- unclass(attr(x, "index")) # unclass for speed
   checkNA.index(xindex) # index may not contain any NA
   eff.fac <- switch(effect,
                    "individual"= xindex[[1L]],
                    "time"      = xindex[[2L]],
                    "group"     = xindex[[3L]]
   )
-  x <- as.numeric(x)
-  z <- myave.default(x, eff.fac, func, ...)
-  attr(z, "index") <- xindex
+  z <- as.numeric(x)
+  z <- myave.default(z, eff.fac, func, ...)
+  attr(z, "index") <- attr(x, "index") # insert original index
   class(z) <- c("pseries", class(z))
   return(z)
 }
@@ -395,8 +396,9 @@ Sum.matrix <- function(x, effect, ...) {
                      "time"       = 2L,
                      "group"      = 3L,
                      stop("unknown value of argument 'effect'"))
+    xindex <- unclass(xindex) # unclass for speed
     checkNA.index(xindex) # index may not contain any NA
-    xindex[ , eff.no]
+    xindex[[eff.no]]
   }
   return(myave(x, eff.fac, sum, ...))
 }
@@ -441,8 +443,9 @@ Between.matrix <- function(x, effect, ...) {
                      "time"       = 2L,
                      "group"      = 3L,
                      stop("unknown value of argument 'effect'"))
+    xindex <- unclass(xindex)
     checkNA.index(xindex) # index may not contain any NA
-    xindex[ , eff.no]
+    xindex[[eff.no]]
   }
   return(myave.matrix(x, eff.fac, mean, ...))
 }
@@ -472,7 +475,7 @@ between.default <- function(x, effect, ...) {
 #' @export
 between.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
     effect <- match.arg(effect)
-    xindex <- attr(x, "index")
+    xindex <- unclass(attr(x, "index")) # unclass for speed
     checkNA.index(xindex) # index may not contain any NA
     eff.fac <- switch(effect,
                      "individual" = xindex[[1L]],
@@ -501,8 +504,9 @@ between.matrix <- function(x, effect, ...) {
                      "time"       = 2L,
                      "group"      = 3L,
                      stop("unknown value of argument 'effect'"))
+    xindex <- unclass(xindex) # unclass for speed
     checkNA.index(xindex) # index may not contain any NA
-    xindex[ , eff.no]
+    xindex[[eff.no]]
   }
   res <- apply(x, 2, FUN = function(x) ave(x, eff.fac, FUN = function(y) mean(y, ...)))
   rownames(res) <- as.character(eff.fac)
@@ -532,7 +536,7 @@ Within.default <- function(x, effect, ...) {
 #' @export
 Within.pseries <- function(x, effect = c("individual", "time", "group", "twoways"), ...) {
     effect <- match.arg(effect)
-    xindex <- index(x)
+    xindex <- unclass(attr(x, "index")) # unclass for speed
     checkNA.index(xindex) # index may not contain any NA
     if(effect != "twoways") result <- x - Between(x, effect, ...)
     else {
@@ -540,7 +544,7 @@ Within.pseries <- function(x, effect = c("individual", "time", "group", "twoways
         else {
             time <- xindex[[2L]]
             Dmu <- model.matrix(~ time - 1)
-            attr(Dmu, "index") <- xindex
+            attr(Dmu, "index") <- attr(x, "index") # need original index
             W1   <- Within(x,   "individual", ...)
             WDmu <- Within(Dmu, "individual", ...)
             W2 <- lm.fit(WDmu, x)$fitted.values
@@ -553,7 +557,7 @@ Within.pseries <- function(x, effect = c("individual", "time", "group", "twoways
 #' @rdname pseries
 #' @export
 Within.matrix <- function(x, effect, rm.null = TRUE, ...) {
-    if(is.null(xindex <- attr(x, "index"))) {
+    if(is.null(xindex <- unclass(attr(x, "index")))) { # unclass for speed
       # non-index case
         result <- Within.default(x, effect, ...)
         othervar <- colSums(abs(x)) > sqrt(.Machine$double.eps)
@@ -569,14 +573,14 @@ Within.matrix <- function(x, effect, rm.null = TRUE, ...) {
         if(effect %in% c("individual", "time", "group")) result <- x - Between(x, effect, ...)
         if(effect == "twoways") {
             checkNA.index(xindex) # index may not contain any NA
-            if(is.pbalanced(xindex)) {
+            if(is.pbalanced(xindex[[1L]], xindex[[2L]])) {
                 result <- x - Between(x, "individual", ...) - Between(x, "time", ...) +
                     matrix(colMeans(x, ...), nrow = nrow(x), ncol = ncol(x), byrow = TRUE)
             }
             else { # unbalanced twoways
                 time <- xindex[[2L]]
                 Dmu <- model.matrix(~ time - 1)
-                attr(Dmu, "index") <- xindex
+                attr(Dmu, "index") <- attr(x, "index") # need orig. index here
                 W1   <- Within(x,   "individual", rm.null = FALSE, ...)
                 WDmu <- Within(Dmu, "individual", ...)
                 W2 <- lm.fit(WDmu, x)$fitted.values

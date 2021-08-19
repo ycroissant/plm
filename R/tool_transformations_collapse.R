@@ -171,12 +171,12 @@ Sum.pseries.collapse <- function(x, effect = c("individual", "time", "group"), .
                    "time"       = 2L,
                    "group"      = 3L,
                    stop("unknown value of argument 'effect'"))
-  xindex <- index(x)
+  xindex <- unclass(attr(x, "index")) # unclass for speed
   checkNA.index(xindex) # index may not contain any NA
-  eff.fac <- xindex[ , eff.no]
+  eff.fac <- xindex[[eff.no]]
   res <- collapse::fsum(x, g = eff.fac, w = NULL, na.rm = na.rm, TRA = "replace")
   names(res) <- as.character(eff.fac)
-  res <- add_pseries_features(res, xindex)
+  res <- add_pseries_features(res, attr(x, "index"))
   return(res)
 }
 
@@ -196,8 +196,9 @@ Sum.matrix.collapse <- function(x, effect, ...) {
                      "time"       = 2L,
                      "group"      = 3L,
                      stop("unknown value of argument 'effect'"))
+    xindex <- unclass(xindex) # unclass for speed
     checkNA.index(xindex) # index may not contain any NA
-    xindex[ , eff.no]
+    xindex[[eff.no]]
   }
   dots <- match.call(expand.dots = FALSE)$`...`
   na.rm <- if(is.null(dots[["na.rm"]])) { 
@@ -272,7 +273,7 @@ Between.pseries.collapse <- function(x, effect = c("individual", "time", "group"
             "group"      = 3L,
             stop("unknown value of argument 'effect'"))
   
-  xindex <- index(x)
+  xindex <- unclass(attr(x, "index")) # unclass for speed
   checkNA.index(xindex) # index may not contain any NA
   nms <- as.character(xindex[[eff.no]])
   na.x <- is.na(x)
@@ -299,9 +300,9 @@ between.pseries.collapse <- function(x, effect = c("individual", "time", "group"
            "group"      = 3L,
            stop("unknown value of argument 'effect'"))
   
-  xindex <- index(x)
+  xindex <- unclass(attr(x, "index")) # unclass for speed
   checkNA.index(xindex) # index may not contain any NA
-  i <- xindex[ , eff.no]
+  i <- xindex[[eff.no]]
   # must be fill = TRUE [to catch case when 1 obs of an individual is NA
   # (otherwise result could contain non-intended NA)]
   res <- collapse::fbetween(x, effect = eff.no, w = NULL, na.rm = na.rm, fill = TRUE)
@@ -330,8 +331,9 @@ Between.matrix.collapse <- function(x, effect, ...) {
                      "time"       = 2L,
                      "group"      = 3L,
                      stop("unknown value of argument 'effect'"))
+    xindex <- unclass(xindex) # unclass for speed
     checkNA.index(xindex) # index may not contain any NA
-    xindex[ , eff.no]
+    xindex[[eff.no]]
   }
   dots <- match.call(expand.dots = FALSE)$`...`
   na.rm <- if(is.null(dots[["na.rm"]])) { 
@@ -363,8 +365,9 @@ between.matrix.collapse <- function(x, effect, ...) {
                      "time"       = 2L,
                      "group"      = 3L,
                      stop("unknown value of argument 'effect'"))
+    xindex <- unclass(xindex) # unclass for speed
     checkNA.index(xindex) # index may not contain any NA
-    xindex[ , eff.no]
+    xindex[[eff.no]]
   }
   dots <- match.call(expand.dots = FALSE)$`...`
   na.rm <- if(is.null(dots[["na.rm"]])) { 
@@ -411,7 +414,7 @@ Within.pseries.collapse <- function(x, effect = c("individual", "time", "group",
   else { 
     dots[["na.rm"]]
   }
-  xindex <- index(x)
+  xindex <- unclass(attr(x, "index")) # unclass for speed
   checkNA.index(xindex) # index may not contain any NA
   if(effect != "twoways") {
     eff.no <- switch(effect,
@@ -421,18 +424,18 @@ Within.pseries.collapse <- function(x, effect = c("individual", "time", "group",
              stop("unknown value of argument 'effect'"))
     res <- collapse::fwithin(x, effect = eff.no, w = NULL, na.rm = na.rm, mean = 0)
   } else {
-    if(is.pbalanced(x)) {
+    eff.ind.fac  <- xindex[[1L]]
+    eff.time.fac <- xindex[[2L]]
+    if(is.pbalanced(eff.ind.fac, eff.time.fac)) {
       # effect = "twoways" - balanced
       res <- collapse::fwithin(  x, effect = 1L, w = NULL, na.rm = na.rm, mean = "overall.mean") -
               collapse::fbetween(x, effect = 2L, w = NULL, na.rm = na.rm, fill = TRUE)
             # =(plm)= res <- x - Between(x, "individual", ...) - Between(x, "time", ...) + mean(x, ...)
     } else {
       # effect = "twoways" - unbalanced
-      id   <- xindex[[1L]]
-      time <- xindex[[2L]]
-      Dmu <- model.matrix(~ time - 1)
-      W1   <- collapse::fwithin(x,   effect = 1L, w = NULL, na.rm = na.rm, mean = 0) # pseries interface
-      WDmu <- collapse::fwithin(Dmu, g      = id, w = NULL, na.rm = na.rm, mean = 0) # matrix interface
+      Dmu <- model.matrix(~ eff.time.fac - 1)
+      W1   <- collapse::fwithin(x,   effect = 1L,          w = NULL, na.rm = na.rm, mean = 0) # pseries interface
+      WDmu <- collapse::fwithin(Dmu, g      = eff.ind.fac, w = NULL, na.rm = na.rm, mean = 0) # matrix interface
       W2 <- lm.fit(WDmu, x)$fitted.values
       res <- W1 - W2
     }
@@ -464,7 +467,9 @@ Within.matrix.collapse <- function(x, effect, rm.null = TRUE, ...) {
   }
   else {
     # index case
+    xindex <- unclass(xindex) # unclass for speed
     checkNA.index(xindex) # index may not contain any NA
+    
     if(effect != "twoways") {
       eff.fac <- switch(effect,
                        "individual" = xindex[[1L]],
@@ -477,10 +482,10 @@ Within.matrix.collapse <- function(x, effect, rm.null = TRUE, ...) {
       
     } else {
       # effect = "twoways"
-      if(is.pbalanced(xindex)) {
+      eff.ind.fac  <- xindex[[1L]]
+      eff.time.fac <- xindex[[2L]]
+      if(is.pbalanced(eff.ind.fac, eff.time.fac)) {
         # balanced twoways
-        eff.ind.fac  <- xindex[[1L]]
-        eff.time.fac <- xindex[[2L]]
         result <- collapse::fwithin(  x, g = eff.ind.fac,  w = NULL, na.rm = na.rm, mean = "overall.mean") -
                    collapse::fbetween(x, g = eff.time.fac, w = NULL, na.rm = na.rm, fill = TRUE)
         # =(plm)= result <- x - Between(x, "individual", ...) - Between(x, "time", ...) +
@@ -488,11 +493,10 @@ Within.matrix.collapse <- function(x, effect, rm.null = TRUE, ...) {
       }
       else { # unbalanced twoways
         # as factor is used twice below, make it a collapse::GRP object -> should give some speed-up
-        eff.fac.ind <- collapse::GRP(attr(x, "index")[[1L]], group.sizes = FALSE, return.groups = FALSE, call = FALSE)
-        time <- xindex[[2L]]
-        Dmu <- model.matrix(~ time - 1)
-        W1   <- collapse::fwithin(x,   g = eff.fac.ind, w = NULL, na.rm = na.rm, mean = 0)
-        WDmu <- collapse::fwithin(Dmu, g = eff.fac.ind, w = NULL, na.rm = na.rm, mean = 0)
+        eff.ind.fac <- collapse::GRP(eff.ind.fac, group.sizes = FALSE, return.groups = FALSE, call = FALSE)
+        Dmu <- model.matrix(~ eff.time.fac - 1)
+        W1   <- collapse::fwithin(x,   g = eff.ind.fac, w = NULL, na.rm = na.rm, mean = 0)
+        WDmu <- collapse::fwithin(Dmu, g = eff.ind.fac, w = NULL, na.rm = na.rm, mean = 0)
         W2 <- lm.fit(WDmu, x)$fitted.values
         result <- W1 - W2
       }
@@ -516,7 +520,7 @@ Within.pseries.collapse.fixest <- function(x, effect = c("individual", "time", "
   else { 
     dots[["na.rm"]]
   }
-  xindex <- index(x)
+  xindex <- unclass(attr(x, "index")) # unclass for speed
   checkNA.index(xindex) # index may not contain any NA
   if(effect != "twoways") {
     eff.no <- switch(effect,
@@ -524,12 +528,12 @@ Within.pseries.collapse.fixest <- function(x, effect = c("individual", "time", "
                      "time"       = 2L,
                      "group"      = 3L,
                      stop("unknown value of argument 'effect'"))
-    # in 1-way case fwithin seems faster than fhdwith, so keep 1-way and 2-way
+    # in 1-way case fwithin seems faster than fhdwithin, so keep 1-way and 2-way
     # cases separated
     res <- collapse::fwithin(x, effect = eff.no, w = NULL, na.rm = na.rm, mean = 0)
   } else {
     # effect = "twoways"
-    
+
     # dispatches to pseries method
     res <- collapse::fhdwithin(x, effect = 1:2, w = NULL, na.rm = na.rm)
   }
@@ -560,6 +564,7 @@ Within.matrix.collapse.fixest <- function(x, effect, rm.null = TRUE, ...) {
   }
   else {
     # index case
+    xindex <- unclass(xindex) # unclass for speed
     checkNA.index(xindex) # index may not contain any NA
     if(effect != "twoways") {
       eff.fac <- switch(effect,
@@ -576,9 +581,8 @@ Within.matrix.collapse.fixest <- function(x, effect, rm.null = TRUE, ...) {
       # effect = "twoways"
       # no need to distinguish between balanced/unbalanced
       # as this is fully handled by collapse::fhdwithin()
-      eff.tw.fac <- as.list(xindex[ , 1:2])
       # collapse::fhdwithin needs pkg fixest as it uses fixest::demean
-      result <- collapse::fhdwithin(x, fl = eff.tw.fac, w = NULL, na.rm = na.rm)
+      result <- collapse::fhdwithin(x, fl = xindex[1:2], w = NULL, na.rm = na.rm)
     }
   }
   return(result)
@@ -595,7 +599,7 @@ Within.pseries.collapse.lfe <- function(x, effect = c("individual", "time", "gro
   else {
     dots[["na.rm"]]
   }
-  xindex <- index(x)
+  xindex <- unclass(attr(x, "index"))
   checkNA.index(xindex) # index may not contain any NA
   if(effect != "twoways") {
     eff.no <- switch(effect,
@@ -610,9 +614,8 @@ Within.pseries.collapse.lfe <- function(x, effect = c("individual", "time", "gro
     # effect = "twoways"
     # no need to distinguish between balanced/unbalanced
     # as this is fully handled by lfe::dmeanlist()
-      eff.tw.list <- as.list(xindex[ , 1:2])
-      res <- unlist(lfe::demeanlist(x, fl = eff.tw.list, na.rm = na.rm))
-      res <- add_pseries_features(res, xindex)
+      res <- unlist(lfe::demeanlist(x, fl = xindex[1:2], na.rm = na.rm))
+      res <- add_pseries_features(res, attr(x, "index")) # index needs to be a proper pindex here!
     }
   return(res)
 }
@@ -641,12 +644,13 @@ Within.matrix.collapse.lfe <- function(x, effect, rm.null = TRUE, ...) {
   }
   else {
     # index case
+    xindex <- unclass(xindex)
     checkNA.index(xindex) # index may not contain any NA
     if(effect != "twoways") {
       eff.fac <- switch(effect,
-                        "individual" = attr(x, "index")[[1L]],
-                        "time"       = attr(x, "index")[[2L]],
-                        "group"      = attr(x, "index")[[3L]],
+                        "individual" = xindex[[1L]],
+                        "time"       = xindex[[2L]],
+                        "group"      = xindex[[3L]],
                         stop("unknown value of argument 'effect'"))
       # collapse::fwithin is faster in 1-ways case than lfe::demanlist, so
       # keep cases separated
@@ -656,13 +660,13 @@ Within.matrix.collapse.lfe <- function(x, effect, rm.null = TRUE, ...) {
       # effect = "twoways"
       # no need to distinguish between balanced/unbalanced
       # as this is fully handled by lfe::dmeanlist()
-      eff.list <- as.list(xindex[ , 1:2])
+      #
       # lfe::demeanlist (lfe vers. 2.8-6) return value for matrix input is
       # inconsistent / depends on value of argument na.rm,
       # see https://github.com/sgaure/lfe/issues/50.
-      result <- lfe::demeanlist(x, fl = eff.list, na.rm = na.rm)
+      result <- lfe::demeanlist(x, fl = xindex[1:2], na.rm = na.rm)
       if(is.list(result)) result <- result[[1L]]
-      attr(result, "index") <- xindex
+      attr(result, "index") <- attr(x, "index") # index needs to be a proper pindex here!
     }
   }
   return(result)

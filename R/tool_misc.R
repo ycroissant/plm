@@ -161,8 +161,9 @@ pres <- function(x) {  # pres.panelmodel
   ## but used in residuals.pggls, residuals.pcce, residuals.pmg
   
   ## extract indices
-  groupind <- attr(x$model, "index")[ , 1L]
-  timeind  <- attr(x$model, "index")[ , 2L]
+  xindex <- unclass(attr(x$model, "index")) # unclass for speed
+  groupind <- xindex[[1L]]
+  timeind  <- xindex[[2L]]
   
   # fix to allow operation with pggls, pmg
   # [TODO: one day, make this cleaner; with the describe framework?]
@@ -342,6 +343,7 @@ punbalancedness.default <- function(x, ...) {
     if (ncol(ii) == 3L) {
      ## extension to nested model with additional group variable
      ## Baltagi/Song/Jung (2001), pp. 368-369
+      ii <- unclass(ii) # unclass for speed
       ids <- ii[[1L]]
       tss <- ii[[2L]]
       gps <- ii[[3L]]
@@ -556,10 +558,8 @@ pvar.data.frame <- function(x, index = NULL, ...){
 #' @rdname pvar
 #' @export
 pvar.pdata.frame <- function(x, ...){
-  index <- attr(x, "index")
-  id   <- index[[1L]]
-  time <- index[[2L]]
-  pvar.default(x, id, time)
+  index <- unclass(attr(x, "index")) # unclass for speed
+  pvar.default(x, index[[1L]], index[[2L]])
 }
 
 #' @rdname pvar
