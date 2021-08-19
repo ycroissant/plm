@@ -46,6 +46,8 @@
 ## - pos.index (non-exported)
 
 fancy.row.names <- function(index, sep = "-") {
+  ## non-exported
+  # assumes index is a list of 2 or 3 factors [not class pindex]
   if (length(index) == 2L) {result <- paste(index[[1L]], index[[2L]], sep = sep)}
   # this in the order also used for sorting (group, id, time):
   if (length(index) == 3L) {result <- paste(index[[3L]], index[[1L]], index[[2L]], sep = sep)}
@@ -473,8 +475,14 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
  ## use '...' instead of only one specific argument, because subsetting for
  ## factors can have argument 'drop', e.g., x[i, drop=TRUE] see ?Extract.factor
   index <- attr(x, "index")
-  if (is.null(index)) warning("pseries object with is.null(index(pseries)) == TRUE encountered")
-  if (!is.null(index) && !is.index(index)) warning(paste0("pseries object has illegal index with class(index) == ", paste0(class(index), collapse = ", ")))
+  
+  ## two sanity checks as [.pseries-subsetting was introduced in Q3/2021 and some packages
+  ## produced illegal pseries (these pkg errors were fixed by new CRAN releases but maybe
+  ## other code outhere produces illegal pseries, so leave these sanity checks in here for
+  ## a while, then remove (for speed)
+    if (is.null(index)) warning("pseries object with is.null(index(pseries)) == TRUE encountered")
+    if (!is.null(index) && !is.index(index)) warning(paste0("pseries object has illegal index with class(index) == ", paste0(class(index), collapse = ", ")))
+  
   names_orig <- names(x)
   keep_rownr <- seq_along(x) # full length row numbers original pseries
   names(keep_rownr) <- names_orig
@@ -983,7 +991,7 @@ pdim <- function(x, ...) {
 #' @rdname pdim
 #' @export
 pdim.default <- function(x, y, ...) {
-  if (length(x) != length(y)) stop("The length of the two vectors differs\n")
+  if (length(x) != length(y)) stop("The length of the two inputs differs\n")
   x <- x[drop = TRUE] # drop unused factor levels so that table() 
   y <- y[drop = TRUE] # gives only needed combinations
   z <- table(x,y)
@@ -996,11 +1004,8 @@ pdim.default <- function(x, y, ...) {
   id.names <- rownames(z)
   time.names <- colnames(z)
   panel.names <- list(id.names = id.names, time.names = time.names)
-  if (any(as.vector(z)==0)){
-    balanced <- FALSE
-  }
-  else balanced <- TRUE
-  if (any(as.vector(z) > 1)) stop("duplicate couples (id-time)\n")
+  balanced <- if(any(as.vector(z) == 0)) FALSE else TRUE
+  if(any(as.vector(z) > 1)) stop("duplicate couples (id-time)\n")
   Tint <- list(Ti = Ti, nt = nt)
   z <- list(nT = nT, Tint = Tint, balanced = balanced, panel.names = panel.names)
   class(z) <- "pdim"
@@ -1011,23 +1016,21 @@ pdim.default <- function(x, y, ...) {
 #' @export
 pdim.data.frame <- function(x, index = NULL, ...) {
   x <- pdata.frame(x, index)
-  index <- attr(x, "index")
-  id <- index[[1L]]
-  time <- index[[2L]]
-  pdim(id, time)
+  index <- unclass(attr(x, "index"))
+  pdim(index[[1L]], index[[2L]])
 }
 
 #' @rdname pdim
 #' @export
 pdim.pdata.frame <- function(x,...) {
-  index <- attr(x, "index")
+  index <- unclass(attr(x, "index"))
   pdim(index[[1L]], index[[2L]])
 }
 
 #' @rdname pdim
 #' @export
 pdim.pseries <- function(x,...) {
-  index <- attr(x, "index")
+  index <- unclass(attr(x, "index"))
   pdim(index[[1L]], index[[2L]])
 }
 
@@ -1186,8 +1189,7 @@ index.panelmodel <- function(x, which = NULL, ...) {
 is.index <- function(index) {
   # not exported, helper function
   # checks if the index is an index in the sense of package plm
-  res <- if (all(class(index) == c("pindex", "data.frame"))) TRUE else FALSE
-  return(res)
+  if(all(class(index) == c("pindex", "data.frame"))) TRUE else FALSE
 }
 
 has.index <- function(object) {
@@ -1200,14 +1202,21 @@ has.index <- function(object) {
 
 checkNA.index <- function(index, which = "all", error = TRUE) {
   # not exported, helper function
+  #
   # check if any NA in indexes (all or specific dimension)
+  # 
+  # index can be of class pindex (proper index attribute of pdata.frame/pseries
+  # or a list of factors, thus can call checkNA.index(unclass(proper_index))) 
+  # which gives a speed up as the faster list-subetting is used (instead of the
+  # relatively slower data.frame-subsetting)
   
   feedback <- if(error) stop else warning
-  
+
   if(which == "all") {
     if(anyNA(index[[1L]])) feedback("NA in the individual index variable")
     if(anyNA(index[[2L]])) feedback("NA in the time index variable")
-    if(ncol(index) == 3L) { if(anyNA(index[[3L]])) feedback("NA in the group index variable") }
+    n.index <- if(inherits(index, "pindex")) ncol(index) else length(index) # else is list (for speed)
+    if(n.index == 3L) { if(anyNA(index[[3L]])) feedback("NA in the group index variable") }
   }
   if(which == 1L) {
     if(anyNA(index[[1L]])) feedback("NA in the individual index variable")
