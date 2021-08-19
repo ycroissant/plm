@@ -25,32 +25,6 @@ starX <- function(formula, data, model, rhs = 1, effect){
     result
 }
 
-mylm <- function(y, X, W = NULL) {
-  names.X <- colnames(X)
-  result <- if(is.null(W)) lm(y ~ X - 1) else twosls(y, X, W)
-  if(any(na.coef <- is.na(result$coefficients))) {
-    ## for debug purpose:
-    # warning("Coefficient(s) '", paste((names.X)[na.coef], collapse = ", "), 
-    #"' could not be estimated and is (are) dropped.")
-      X <- X[ , !na.coef, drop = FALSE]
-      if(dim(X)[2L] == 0L) stop(paste("estimation not possible: all coefficients",
-                                      "omitted from estimation due to aliasing"))
-      result <- if(is.null(W)) lm(y ~ X - 1) else twosls(y, X, W)
-  }
-  result$vcov <- vcov(result)
-  result$X <- X
-  result$y <- y
-  result$W <- W
-  # aliased is an element of summary.lm-objects:
-  # since plm drops aliased coefs, store this info in plm object
-  # NB: this only sets coefs to NA that are detected/set to NA by mylm()/lm.fit();
-  #     covariates dropped earlier by model.matrix( , cstcovar.rm) are not included here anymore
-  result$aliased <- na.coef
-  names(result$aliased) <- names.X
-  names(result$coefficients) <- colnames(result$vcov) <- 
-      rownames(result$vcov) <- colnames(X)
-  result
-}
 
 # Regards plm man page: some elements not listed here...: "assign", "contrast",
 # etc... \item{na.action}{if relevant, information about handling of
@@ -547,7 +521,7 @@ plm.fit <- function(data, model, effect, random.method,
         TS <- pdim$nT$T
         theta <- estec$theta$id
         phi2mu <- estec$sigma2["time"] / estec$sigma2["idios"]
-        Dmu <- model.matrix( ~ factor(index(data)[[2L]]) - 1)
+        Dmu <- model.matrix( ~ factor(index(data)[[2L]]) - 1) # TODO unclass index
         attr(Dmu, "index") <- index(data)
         Dmu <- Dmu - theta * Between(Dmu, "individual")
         X <- model.matrix(data, rhs = 1, model = "random", 

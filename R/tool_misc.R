@@ -1,6 +1,8 @@
-## Function that are used in more than on place in plm. 
+## Function that are used in more than on place in plm (or likely to be used in more than one place in the future)
 
 ## - bdiag : takes matrices as argument and returns the block-diagonal matrix (used in pgmm and plm.list)
+## - mylm : inner fitting func based on stats::lm with matrix inputs (used in plm.fit)
+## - my.lm.fit : like the barebone stats::lm.fit but with some extra information (e.g., SEs, sigma) used in purtest
 ## - twosls : computes the 2SLS estimator (used in plm and ercomp)
 ## - has.intercept : tests the presence of an intercept
 ## - pres : extract model residuals as pseries (used in several estimation functions)
@@ -37,6 +39,57 @@ bdiag <- function(...){
   iuse <- as.vector(unlist(iuse))
   out[iuse] <- unlist(x)
   return(out)
+}
+
+# mylm is used in plm.fit()
+mylm <- function(y, X, W = NULL) {
+  ## non-exported
+  names.X <- colnames(X)
+  result <- if(is.null(W)) lm(y ~ X - 1) else twosls(y, X, W)
+  if(any(na.coef <- is.na(result$coefficients))) {
+    ## for debug purpose:
+    # warning("Coefficient(s) '", paste((names.X)[na.coef], collapse = ", "), 
+    #"' could not be estimated and is (are) dropped.")
+    X <- X[ , !na.coef, drop = FALSE]
+    if(dim(X)[2L] == 0L) stop(paste("estimation not possible: all coefficients",
+                                    "omitted from estimation due to aliasing"))
+    
+    ## re-estimate without the columns which resulted previously in NA-coefficients
+    result <- if(is.null(W)) lm(y ~ X - 1) else twosls(y, X, W)
+  }
+  result$vcov <- vcov(result)
+  result$X <- X
+  result$y <- y
+  result$W <- W
+  # aliased is an element of summary.lm-objects:
+  # since plm drops aliased coefs, store this info in plm object
+  # NB: this only sets coefs to NA that are detected/set to NA by mylm()/lm.fit();
+  #     covariates dropped earlier by model.matrix( , cstcovar.rm) are not included here anymore
+  result$aliased <- na.coef
+  names(result$aliased) <- names.X
+  names(result$coefficients) <- colnames(result$vcov) <- 
+    rownames(result$vcov) <- colnames(X)
+  result
+}
+
+# my.lm.fit is used in purtest()
+my.lm.fit <- function(X, y, dfcor = TRUE, ...){
+  reg <- lm.fit(X, y)
+  ## 'as' summary method for lm.fit
+  p <- reg$rank
+  Qr <- reg$qr
+  n <- NROW(Qr$qr)
+  rdf <- n - p
+  p1 <- 1L:p
+  r <- reg$residuals
+  rss <- as.numeric(crossprod(r))
+  resvar <- if (dfcor) rss/rdf else rss/n
+  sigma <- sqrt(resvar)
+  R <- chol2inv(Qr$qr[p1, p1, drop = FALSE])
+  thecoef <- reg$coefficients[Qr$pivot[p1]] #[lags+1]
+  these <- sigma * sqrt(diag(R)) #[lags+1])
+  list(coef = thecoef, se = these, sigma = sigma,
+       rss = rss, n = n, K = p, rdf = rdf)
 }
 
 #' @importFrom stats .lm.fit

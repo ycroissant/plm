@@ -265,25 +265,6 @@ purtest.names.test <- c(levinlin  = "Levin-Lin-Chu Unit-Root Test",
                         logit     = "Choi's Logit Unit-Root Test",
                         hadri     = "Hadri Test")
 
-my.lm.fit <- function(X, y, dfcor = TRUE, ...){
-  reg <- lm.fit(X, y)
-  ## 'as' summary method for lm.fit
-  p <- reg$rank
-  Qr <- reg$qr
-  n <- NROW(Qr$qr)
-  rdf <- n - p
-  p1 <- 1L:p
-  r <- reg$residuals
-  rss <- as.numeric(crossprod(r))
-  resvar <- if (dfcor) rss/rdf else rss/n
-  sigma <- sqrt(resvar)
-  R <- chol2inv(Qr$qr[p1, p1, drop = FALSE])
-  thecoef <- reg$coefficients[Qr$pivot[p1]] #[lags+1]
-  these <- sigma * sqrt(diag(R)) #[lags+1])
-  list(coef = thecoef, se = these, sigma = sigma,
-       rss = rss, n = n, K = p, rdf = rdf)
-}
-
 
 ## General functions to transform series:
 
