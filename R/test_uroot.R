@@ -561,7 +561,7 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
   if(!is.list(object)) stop("argument 'object' in hadritest is supposed to be a list")
   if(exo == "none") stop("exo = \"none\" is not a valid option for Hadri's test")
   # determine L (= time periods), unique for balanced panel and number of individuals (n)
-  if(length(L <- unique(vapply(object, length, FUN.VALUE = 0L))) > 1L) 
+  if(length(L <- unique(vapply(object, length, FUN.VALUE = 0.0))) > 1L) 
     stop("Hadri test is not applicable to unbalanced panels")
   n <- length(object)
   
