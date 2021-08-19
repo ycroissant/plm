@@ -168,7 +168,7 @@ is.pconsecutive.default <- function(x, id, time, na.rm.tindex = FALSE, ...) {
   if (length(id) != length(time)) 
     stop(paste0("arguments 'id' and 'time' must have same length: length(id): ", length(id), ", length(time) ", length(time)))
   
-  if (!is.null(x) && is.vector(x)) {
+  if (!is.null(x) && is.vector(x)) { # is.vector could be too strict? factor is not a vector
     if (!(length(x) == length(id) && length(x) == length(time) && length(id) == length(time)))
       stop(paste0("arguments 'x', 'id', 'time' must have same length: length(x): ", 
                   length(x), ", length(id): ", length(id), ", length(time): ", length(time)))
@@ -243,29 +243,23 @@ is.pconsecutive.data.frame <- function(x, index = NULL, na.rm.tindex = FALSE, ..
 #' @rdname is.pconsecutive
 #' @export
 is.pconsecutive.pseries <- function(x, na.rm.tindex = FALSE, ...){
-  index <- attr(x, "index")
-  id   <- index[[1L]]
-  time <- index[[2L]]
-  return(is.pconsecutive.default(x, id, time, na.rm.tindex = na.rm.tindex, ...))
+  index <- unclass(attr(x, "index"))
+  return(is.pconsecutive.default(x, index[[1L]], index[[2L]], na.rm.tindex = na.rm.tindex, ...))
 }
 
 
 #' @rdname is.pconsecutive
 #' @export
 is.pconsecutive.pdata.frame <- function(x, na.rm.tindex = FALSE, ...){
-  index <- attr(x, "index")
-  id   <- index[[1L]]
-  time <- index[[2L]]
-  return(is.pconsecutive.default(x, id, time, na.rm.tindex = na.rm.tindex, ...))
+  index <- unclass(attr(x, "index"))
+  return(is.pconsecutive.default(x, index[[1L]], index[[2L]], na.rm.tindex = na.rm.tindex, ...))
 }
 
 #' @rdname is.pconsecutive
 #' @export
 is.pconsecutive.panelmodel <- function(x, na.rm.tindex = FALSE, ...){
-  index <- attr(x$model, "index")
-  id   <- index[[1L]]
-  time <- index[[2L]]
-  return(is.pconsecutive.default(x, id, time, na.rm.tindex = na.rm.tindex, ...))
+  index <- unclass(attr(x$model, "index"))
+  return(is.pconsecutive.default(x, index[[1L]], index[[2L]], na.rm.tindex = na.rm.tindex, ...))
 }
 
 
@@ -340,16 +334,12 @@ is.pbalanced <- function(x, ...) {
 #' @rdname is.pbalanced
 #' @export
 is.pbalanced.default <- function(x, y, ...) {
-  if (length(x) != length(y)) stop("The length of the two vectors differs\n")
+  if (length(x) != length(y)) stop("The length of the two inputs differs\n")
   x <- x[drop = TRUE] # drop unused factor levels so that table 
   y <- y[drop = TRUE] # gives only needed combinations
   z <- table(x, y)
-  if (any(v <- as.vector(z) == 0L)) {
-    balanced <- FALSE
-  } else { balanced <- TRUE }
-  
+  balanced <- if(any(v <- as.vector(z) == 0L)) FALSE else TRUE
   if (any(v > 1L)) warning("duplicate couples (id-time)\n")
-  
   return(balanced)
 }
 
@@ -357,23 +347,21 @@ is.pbalanced.default <- function(x, y, ...) {
 #' @export
 is.pbalanced.data.frame <- function(x, index = NULL, ...) {
   x <- pdata.frame(x, index)
-  index <- attr(x, "index")
-  id <- index[[1L]]
-  time <- index[[2L]]
-  return(is.pbalanced(id, time))
+  index <- unclass(attr(x, "index"))
+  return(is.pbalanced(index[[1L]], index[[2L]]))
 }
 
 #' @rdname is.pbalanced
 #' @export
 is.pbalanced.pdata.frame <- function(x, ...) {
-  index <- attr(x, "index")
+  index <- unclass(attr(x, "index"))
   return(is.pbalanced(index[[1L]], index[[2L]]))
 }
 
 #' @rdname is.pbalanced
 #' @export
 is.pbalanced.pseries <- function(x, ...) {
-  index <- attr(x, "index")
+  index <- unclass(attr(x, "index"))
   return(is.pbalanced(index[[1L]], index[[2L]]))
 }
 
