@@ -1,3 +1,9 @@
+---
+title: Changelog/NEWS for package plm
+subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
+          panel data econometrics - https://cran.r-project.org/package=plm
+---
+
 # plm 2.4-2
 
 ### Speed-up:
@@ -23,9 +29,9 @@
    the pseries properties, i.e., `your_pseries[<subsetting condition>]`
    remains a pseries (before, subsetting on pseries worked as the base R
    subsetting for vectors was used but the pseries properties were lost). The
-   subsetting method checks for valid pseries features and warns for non-valid
-   ones (as some packages constructed non-valid pseries objects, e.g., with
-   no or null index).
+   subsetting method currently checks for valid pseries features and warns for
+   non-valid ones (as some packages constructed non-valid pseries objects, e.g., 
+   with no or null index).
  * pseriesfy: new function to make each column of a pdata.frame a pseries, see
    `?pseriesfy` for background and useful examples. (Faster version is executed
    if `options("plm.fast" = TRUE)` is set, see `?plm.fast` (then internally
@@ -55,8 +61,8 @@
    (integer or NULL) aligned with and correctly passed on to 
    has.intercept.Formula (with a *temporary* back-compatible solution).
  * pwaldtest: error informatively if executed on intercept-only model
-   (and do not try to execute in summary.plm/pvcm and do not try to print in
-   print.summary.plm/pvcm).
+   (also for such models: do not execute pwaldtest in summary.plm/pvcm and do 
+   not print pwaldtest in print.summary.plm/pvcm).
  * groupGenerics: no more warning in arithmetic operations on pseries when index
    of both operands have same length but different content (e.g., something like
    this does not warn anymore:
