@@ -269,21 +269,16 @@ pwtest.panelmodel <- function(x, effect = c("individual", "time"), ...) {
     tres[[i]] <- ut %o% ut
   }
 
-  ## sum over all upper triangles of emp. omega blocks:
-  ## define aux. function
-  uptrisum <- function(x) {
-    uts <- sum(x[upper.tri(x, diag = FALSE)])
-    return(uts)}
-  
   ## det. # of upper triangle members (n*t(t-1)/2 if balanced)
-  ti <- sapply(tres, function(x) dim(x)[[1L]])
-  uptrinum <- sum(ti*(ti-1)/2)  # don't need this!!
-
-  ## ...apply to list and sum over resulting vector (df corrected)
-  W <- sum(sapply(tres, uptrisum)) # /sqrt(n) simplifies out
+  ti <- vapply(tres, function(x) dim(x)[[1L]], FUN.VALUE = 0.0)
+  
+  ## sum over all upper triangles of emp. omega blocks:
+  ## and sum over resulting vector (df corrected)
+  sum.uptri <- vapply(tres, function(x) sum(x[upper.tri(x, diag = FALSE)]), FUN.VALUE = 0.0)
+  W <- sum(sum.uptri) # /sqrt(n) simplifies out
   
   ## calculate se(Wstat) as in 10.40
-  seW <- sqrt( sum( sapply(tres, uptrisum)^2 ) )
+  seW <- sqrt(as.numeric(crossprod(sum.uptri)))
   
   ## NB should we apply a df correction here, maybe that of the standard
   ## RE estimator? (see page 261) 
@@ -394,7 +389,7 @@ pwartest.panelmodel <- function(x, ...) {
   
   attr(FEres, "data") <- NULL
   N <- length(FEres)
-  FEres.1 <- c(NA,FEres[1:(N-1)])
+  FEres.1 <- c(NA, FEres[1:(N-1)])
   index <- attr(data, "index")
   id   <- index[[1L]]
   time <- index[[2L]]
@@ -589,7 +584,7 @@ pbsytest.formula <- function(x, data, ..., test = c("ar", "re", "j"), re.normal 
 
   ######### from here generic testing interface from
   ######### plm to my code
-  if (length(test) == 1) test <- tolower(test) # for backward compatibility: allow upper case
+  if (length(test) == 1L) test <- tolower(test) # for backward compatibility: allow upper case
   test <- match.arg(test)
   
   cl <- match.call(expand.dots = TRUE)
@@ -597,7 +592,7 @@ pbsytest.formula <- function(x, data, ..., test = c("ar", "re", "j"), re.normal 
   if (cl$model != "pooling") stop("pbsytest only relevant for pooling models")
   names(cl)[2L] <- "formula"
   if (names(cl)[3L] == "") names(cl)[3L] <- "data"
-  m <- match(plm.arg ,names(cl), 0)
+  m <- match(plm.arg, names(cl), 0)
   cl <- cl[c(1, m)]
   cl[[1L]] <- as.name("plm")
   plm.model <- eval(cl, parent.frame())
@@ -618,8 +613,8 @@ pbsytest.panelmodel <- function(x, test = c("ar", "re", "j"), re.normal = if (te
   data <- model.frame(x)
   ## extract indices
   index <- attr(data, "index")
-  tindex <- index[[2L]]
   iindex <- index[[1L]]
+  tindex <- index[[2L]]
   
   
   ## till here.
@@ -812,7 +807,7 @@ pdwtest.panelmodel <- function(x, ...) {
     ## lmtest::dwtest on the demeaned model:
 
     ## ARtest is the return value of lmtest::dwtest, exception made for the method attribute
-    dots <- match.call(expand.dots=FALSE)[["..."]]
+    dots <- match.call(expand.dots = FALSE)[["..."]]
     if (is.null(dots$order.by)) order.by <- NULL else order.by <- dots$order.by
     if (is.null(dots$alternative)) alternative <- "greater" else alternative <- dots$alternative
     if (is.null(dots$iterations)) iterations <- 15 else iterations <- dots$iterations
@@ -821,7 +816,7 @@ pdwtest.panelmodel <- function(x, ...) {
 
     demy <- remove_pseries_features(demy) # needed as lmtest::dwtest cannot cope with pseries
 
-    auxformula <- demy ~ demX-1
+    auxformula <- demy ~ demX - 1
     lm.mod <- lm(auxformula)
 
     ARtest <- dwtest(lm.mod, order.by = order.by,
@@ -1131,7 +1126,7 @@ pbltest.formula <- function(x, data, alternative = c("twosided", "onesided"), in
   G <- matrix(0, ncol = t., nrow = t.)
   for(i in 2:t.) {
     G[i-1, i] <- 1
-    G[i, i-1] <- 1
+    G[i,   i-1] <- 1
   }
 
   ## retrieve composite (=lowest level) residuals
