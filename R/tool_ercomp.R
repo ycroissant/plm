@@ -175,8 +175,9 @@ ercomp.formula <- function(object, data,
           theta <- list()
           
           # Tns, Nts: full length
-          ids <- index(data)[[1L]]
-          tss <- index(data)[[2L]]
+          xindex <- unclass(index(data)) # unclass for speed
+          ids <- xindex[[1L]]
+          tss <- xindex[[2L]]
           Tns <- pdim$Tint$Ti[as.character(ids)]
           Nts <- pdim$Tint$nt[as.character(tss)]
           
@@ -210,7 +211,7 @@ ercomp.formula <- function(object, data,
         O <- pdim$nT$N
         wm <- plm.fit(data, effect = "individual", model = "within")
         X <- model.matrix(data, rhs = 1)
-        ixid <- index(data)[[1L]]
+        ixid <- unclass(index(data))[[1L]] # unclass for speed
         charixid <- as.character(ixid)
         constants <- apply(X, 2, function(x) all(tapply(x, ixid, is.constant)))
         FES <- fixef(wm, type = "dmean")[charixid]
@@ -270,9 +271,10 @@ ercomp.formula <- function(object, data,
 
     # The nested error component model
     if (effect == "nested"){
-        ids <- attr(data, "index")[[1L]]
-        tss <- attr(data, "index")[[2L]]
-        gps <- attr(data, "index")[[3L]]
+        xindex <- unclass(attr(data, "index")) # unclass for speed
+        ids <- xindex[[1L]]
+        tss <- xindex[[2L]]
+        gps <- xindex[[3L]]
         G <- length(unique(gps))
         Z <- model.matrix(data, model = "pooling")
         X <- model.matrix(data, model = "pooling", cstcovar.rm = "intercept")
@@ -433,7 +435,8 @@ ercomp.formula <- function(object, data,
         swar_Between_check(estm[[2L]], method)
         swar_Between_check(estm[[3L]], method)
     }
-    KS <- sapply(estm, function(x) length(coef(x))) - sapply(estm, function(x){ "(Intercept)" %in% names(coef(x))})
+    KS <- vapply(estm, function(x) length(x$coefficients), FUN.VALUE = 0.0) - 
+           vapply(estm, function(x) { "(Intercept)" %in% names(x$coefficients)}, FUN.VALUE = TRUE)
     quad <- vector(length = 3L, mode = "numeric")
     # first quadratic form, within transformation
     hateps_w <- resid(estm[[1L]], model = "pooling")
@@ -623,8 +626,9 @@ ercomp.formula <- function(object, data,
     sigma2[sigma2 < 0] <- 0
     theta <- list()
     if (! balanced){
-        ids <- index(data)[[1L]]
-        tss <- index(data)[[2L]]
+        xindex <- unclass(index(data)) # unclass for speed
+        ids <- xindex[[1L]]
+        tss <- xindex[[2L]]
         Tns <- Tn[as.character(ids)]
         Nts <- Nt[as.character(tss)]
     }

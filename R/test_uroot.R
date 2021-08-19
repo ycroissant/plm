@@ -785,7 +785,7 @@ purtest <- function(object, data = NULL, index = NULL,
             if(is.null(index)) stop("the index attribute is required")
             else data <- pdata.frame(data, index)
           }
-          id <- attr(data, "index")[[1L]]
+          id <- unclass(attr(data, "index"))[[1L]]
         }
         else{
           stop(paste0("unknown response (\"", object, "\" not in data)"))
@@ -797,7 +797,7 @@ purtest <- function(object, data = NULL, index = NULL,
     exo <- match.arg(exo)
     if(is.null(dim(object))){
       if(inherits(object, "pseries")){
-        id <- attr(object, "index")[[1L]]
+        id <- unclass(attr(object, "index"))[[1L]]
       }
       else stop("the individual dimension is undefined") # cannot derive individual dimension from a vector if not pseries
     }

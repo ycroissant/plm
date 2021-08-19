@@ -366,17 +366,6 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
   ## 
   ## (see the theoretical comments in pvcovHC)
 
-    ## diaghat function for matrices
-
-# old:
-#    dhat <- function(x) {tx <- t(x)
-#                         diag(crossprod(tx, solve(crossprod(x), tx)))}
-    
-    dhat <- function(x) {
-      res <-  rowSums(crossprod(t(x), solve(crossprod(x))) * x) # == diag(crossprod(tx, solve(crossprod(x), tx)))
-      return(res)
-    }
-
     ## this is computationally heavy, do only if needed
     switch(match.arg(type), "HC0" = {diaghat <- NULL},
                             "sss" = {diaghat <- NULL},
@@ -488,8 +477,9 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
   ## group (i.e., the vcov estimator is robust vs. xsectional dependence)
 
   ## extract indices
-    groupind <- as.numeric(attr(x$model, "index")[ , 1L])
-    timeind  <- as.numeric(attr(x$model, "index")[ , 2L])
+    xindex <- unclass(attr(x$model, "index")) # unclass for speed
+    groupind <- as.numeric(xindex[[1L]])
+    timeind  <- as.numeric(xindex[[2L]])
 
   ## adjust for 'fd' model (losing first time period)
     if(model == "fd") {
@@ -995,7 +985,7 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
         nms <- colnames(demX)
         demX <- lm.fit(demZ, demX)$fitted.values
         # catches case with only one regressor -> need to convert numeric 
-        # returned from lm.fit()fitted.valuesto matrix:
+        # returned from lm.fit()fitted.values to matrix:
         if(!is.matrix(demX)) demX <- matrix(demX, dimnames = list(NULL, nms[1L]))
     }
 
@@ -1015,8 +1005,9 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
   ## group (i.e., the vcov estimator is robust vs. xsectional dependence)
 
   ## extract indices
-    groupind <- as.numeric(attr(x$model, "index")[ , 1L])
-    timeind  <- as.numeric(attr(x$model, "index")[ , 2L])
+    xindex <- unclass(attr(x$model, "index")) # unclass for speed
+    groupind <- as.numeric(xindex[[1L]])
+    timeind  <- as.numeric(xindex[[2L]])
 
   ## Achim's fix for 'fd' model (losing first time period)
     if(model == "fd") {
@@ -1054,18 +1045,6 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
   ## (the weighting is defined "in sqrt" relative to the literature)
   ##
   ## (see the theoretical comments in pvcovHC)
-
-    ## diaghat function for matrices
-    
-    ## old:
-    # dhat <- function(x) {tx <- t(x)
-    #                      diag(crossprod(tx, solve(crossprod(x), tx)))}
-    
-    dhat <- function(x) {
-      res <-  rowSums(crossprod(t(x), solve(crossprod(x))) * x) # == diag(crossprod(tx, solve(crossprod(x), tx)))
-      return(res)
-    }
-    
 
     ## this is computationally heavy, do only if needed
     switch(match.arg(type), "HC0" = {diaghat <- NULL},
@@ -1121,11 +1100,7 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
       ut <- uhat[tind[[i]]]
       tpos <- (1:t)[unique(lab) %in% tlab[[i]]]
       ## put nondiag elements to 0 if diagonal=TRUE
-      if(diagonal) {
-        tres[tpos, tpos, i] <- diag(diag(ut %o% ut))
-      } else {
-        tres[tpos, tpos, i] <- ut %o% ut
-      }
+      tres[tpos, tpos, i] <- if(diagonal) diag(diag(ut %o% ut)) else ut %o% ut
     }
 
     ## average over all omega blocks, removing NAs (apply preserving
@@ -1222,8 +1197,7 @@ vcovHC.pgmm <- function(x, ...) {
   SA2 <- if(minevA2 < eps){
     warning("a general inverse is used")
     ginv(A2)
-  }
-  else solve(A2)
+  } else solve(A2)
   
   if(model == "twosteps") {
     coef1s <- x$coefficients[[1L]]
@@ -1263,4 +1237,12 @@ vcovHC.pgmm <- function(x, ...) {
     vcovr <- B1 %*% (WX %*% A1 %*% SA2 %*% A1 %*% t(WX)) %*% B1
   }
   vcovr
+}
+
+
+## dhat: diaghat function for matrices
+# old: dhat <- function(x) {tx <- t(x); diag(crossprod(tx, solve(crossprod(x), tx)))}
+dhat <- function(x) {
+  res <-  rowSums(crossprod(t(x), solve(crossprod(x))) * x) # == diag(crossprod(tx, solve(crossprod(x), tx)))
+  return(res)
 }

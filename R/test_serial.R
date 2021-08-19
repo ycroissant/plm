@@ -228,14 +228,14 @@ pwtest.panelmodel <- function(x, effect = c("individual", "time"), ...) {
   ## extract indices
 
   ## if effect="individual" std., else swap
-  index <- attr(data, "index")
+  xindex <- unclass(attr(data, "index")) # unclass for speed
   if (effect == "individual"){
-    index  <- index[[1L]]
-    tindex <- index[[2L]]
+    index  <- xindex[[1L]]
+    tindex <- xindex[[2L]]
   }
   else{
-    index  <- index[[2L]]
-    tindex <- index[[1L]]
+    index  <- xindex[[2L]]
+    tindex <- xindex[[1L]]
   }
   ## det. number of groups and df
   n <- length(unique(index))
@@ -390,9 +390,9 @@ pwartest.panelmodel <- function(x, ...) {
   attr(FEres, "data") <- NULL
   N <- length(FEres)
   FEres.1 <- c(NA, FEres[1:(N-1)])
-  index <- attr(data, "index")
-  id   <- index[[1L]]
-  time <- index[[2L]]
+  xindex <- unclass(attr(data, "index")) # unclass for speed
+  id   <- xindex[[1L]]
+  time <- xindex[[2L]]
   lagid <- as.numeric(id) - c(NA, as.numeric(id)[1:(N-1)])
   FEres.1[lagid != 0] <- NA
   data <- data.frame(id, time, FEres = unclass(FEres), FEres.1 = unclass(FEres.1))
@@ -956,7 +956,7 @@ pbnftest.panelmodel <- function(x, test = c("bnf", "lbi"), ...) {
   # observation is lost per observational unit
   if (!inherits(residuals(x), "pseries")) stop("pdwtest internal error: residuals are not of class \"pseries\"") # check to be safe: need pseries
   
-  ind <- index(x)[[1L]]
+  ind <- unclass(index(x))[[1L]] # unclass for speed
   obs1 <- !duplicated(ind)                  # first ob of each individual
   obsn <- !duplicated(ind, fromLast = TRUE) # last ob of each individual
   
@@ -1341,9 +1341,9 @@ pwfdtest.panelmodel <- function(x, ..., h0 = c("fd", "fe")) {
   ## indices (full length! must reduce by 1st time period)
   ## this is an ad-hoc solution for the fact that the 'fd' model
   ## carries on the full indices while losing the first time period
-  index <- attr(model.frame(x), "index")
-  time <- as.numeric(index[[2L]])
-  id   <- as.numeric(index[[1L]])
+  xindex <- unclass(attr(model.frame(x), "index")) # unclass for speed
+  time <- as.numeric(xindex[[2L]])
+  id   <- as.numeric(xindex[[1L]])
   
   ## fetch dimensions and adapt to those of indices
   pdim <- pdim(x)

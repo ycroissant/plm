@@ -126,7 +126,7 @@ pmg <- function(formula, data, subset, na.action,
     ## evaluates the call, modified with model = "pooling", inside the
     ## parent frame resulting in the pooling model on formula, data
     plm.model <- eval(plm.model, parent.frame())
-    index <- attr(model.frame(plm.model), "index")
+    index <- unclass(attr(model.frame(plm.model), "index")) # unclass for speed
     ind  <- index[[1L]] ## individual index
     tind <- index[[2L]] ## time index
     ## set dimension variables

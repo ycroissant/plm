@@ -521,7 +521,7 @@ plm.fit <- function(data, model, effect, random.method,
         TS <- pdim$nT$T
         theta <- estec$theta$id
         phi2mu <- estec$sigma2["time"] / estec$sigma2["idios"]
-        Dmu <- model.matrix( ~ factor(index(data)[[2L]]) - 1) # TODO unclass index
+        Dmu <- model.matrix( ~ unclass(index(data))[[2L]] - 1)
         attr(Dmu, "index") <- index(data)
         Dmu <- Dmu - theta * Between(Dmu, "individual")
         X <- model.matrix(data, rhs = 1, model = "random", 

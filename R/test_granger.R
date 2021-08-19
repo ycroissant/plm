@@ -113,7 +113,7 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar", "Wbar"), orde
   N <- pdim$nT$n
   T. <- pdim$nT$T
   Ti <- pdim$Tint$Ti
-  indi <- index(data)[[1L]]
+  indi <- unclass(index(data))[[1L]]
   indi_con <- is.pconsecutive(data)
   
   # some input checks
