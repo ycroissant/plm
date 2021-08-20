@@ -10,13 +10,13 @@
 \alias{diff.pseries}
 \title{lag, lead, and diff for panel data}
 \usage{
-lead(x, k = 1, ...)
+lead(x, k = 1L, ...)
 
-\method{lag}{pseries}(x, k = 1, shift = c("time", "row"), ...)
+\method{lag}{pseries}(x, k = 1L, shift = c("time", "row"), ...)
 
-\method{lead}{pseries}(x, k = 1, shift = c("time", "row"), ...)
+\method{lead}{pseries}(x, k = 1L, shift = c("time", "row"), ...)
 
-\method{diff}{pseries}(x, lag = 1, shift = c("time", "row"), ...)
+\method{diff}{pseries}(x, lag = 1L, shift = c("time", "row"), ...)
 }
 \arguments{
 \item{x}{a \code{pseries} object,}
@@ -25,7 +25,7 @@ lead(x, k = 1, ...)
 methods (can also be negative).  For the \code{lag} method, a
 positive (negative) \code{k} gives lagged (leading) values.  For the
 \code{lead} method, a positive (negative) \code{k} gives leading (lagged)
-values, thus, \code{lag(x, k = -1)} yields the same as \code{lead(x, k = 1)}.
+values, thus, \code{lag(x, k = -1L)} yields the same as \code{lead(x, k = 1L)}.
 If \code{k} is an integer with length > 1 (\code{k = c(k1, k2, ...)}), a
 \code{matrix} with multiple lagged \code{pseries} is returned,}
 
@@ -35,7 +35,7 @@ If \code{k} is an integer with length > 1 (\code{k = c(k1, k2, ...)}), a
 determining how the shifting in the \code{lag}/\code{lead}/\code{diff}
 functions is performed (see Details and Examples).}
 
-\item{lag}{the number of lags for the \code{diff} method, can also be of
+\item{lag}{integer, the number of lags for the \code{diff} method, can also be of
 length > 1 (see argument \code{k}) (only non--negative values in
 argument \code{lag} are allowed for \code{diff}),}
 }
@@ -93,29 +93,29 @@ class(z)
 
 # compute the first and third lag, and the difference lagged twice
 lag(z)
-lag(z, 3)
-diff(z, 2)
+lag(z, 3L)
+diff(z, 2L)
 
 # compute negative lags (= leading values)
-lag(z, -1)
-lead(z, 1) # same as line above
-identical(lead(z, 1), lag(z, -1)) # TRUE
+lag(z, -1L)
+lead(z, 1L) # same as line above
+identical(lead(z, 1L), lag(z, -1L)) # TRUE
  
 # compute more than one lag and diff at once (matrix returned)
-lag(z, c(1,2))
-diff(z, c(1,2))
+lag(z, c(1L,2L))
+diff(z, c(1L,2L))
 
 ## demonstrate behaviour of shift = "time" vs. shift = "row"
 # delete 2nd time period for first individual (1978 is missing (not NA)):
-Em_hole <- Em[-2, ]
+Em_hole <- Em[-2L, ]
 is.pconsecutive(Em_hole) # check: non-consecutive for 1st individual now
 
 # original non-consecutive data:
 head(Em_hole$emp, 10) 
 # for shift = "time", 1-1979 contains the value of former 1-1977 (2 periods lagged):
-head(lag(Em_hole$emp, k = 2, shift = "time"), 10)
+head(lag(Em_hole$emp, k = 2L, shift = "time"), 10L)
 # for shift = "row", 1-1979 contains NA (2 rows lagged (and no entry for 1976):
-head(lag(Em_hole$emp, k = 2, shift = "row"), 10)
+head(lag(Em_hole$emp, k = 2L, shift = "row"), 10L)
 
 }
 \seealso{

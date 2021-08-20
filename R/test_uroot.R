@@ -893,7 +893,7 @@ purtest <- function(object, data = NULL, index = NULL,
     parameter <- NULL
     sigma2 <- cbind(sigmaST^2, sigmaLT^2)
     colnames(sigma2) <- c("sigma2ST", "sigma2LT")
-    pvalues.trho <- sapply(idres, function(x) x[["p.trho"]])
+    pvalues.trho <- vapply(idres, function(x) x[["p.trho"]], FUN.VALUE = 0.0)
   }
   
   if(test == "ips"){
@@ -1064,7 +1064,7 @@ print.summary.purtest <- function(x, ...){
   cat(paste(purtest.names.test[x$args$test], "\n"))
   cat(paste("Exogenous variables:", purtest.names.exo[x$args$exo], "\n"))
   if (x$args$test != "hadri") {
-    thelags <- sapply(x$idres, function(x) x[["lags"]])
+    thelags <- vapply(x$idres, function(x) x[["lags"]], FUN.VALUE = 0.0)
     if (is.character(x$args$lags)){
       lagselectionmethod <- if (x$args$lags == "Hall") "Hall's method" else x$args$lags
       cat(paste0("Automatic selection of lags using ", lagselectionmethod, ": ",
@@ -1198,7 +1198,7 @@ hansi <- function(object, alpha = 0.05) {
   } else {
     # purtest object
     if(object$args$test == "hadri") stop("hansi() [Hanck/Simes' test] not possible for purtest objects based on Hadri's test")
-    p <- sapply(object$idres, function(x) x[["p.trho"]])
+    p <- vapply(object$idres, function(x) x[["p.trho"]], FUN.VALUE = 0.0)
     n <- length(p)
   }
   

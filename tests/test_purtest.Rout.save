@@ -1,5 +1,5 @@
 
-R version 4.0.4 (2021-02-15) -- "Lost Library Book"
+R version 4.1.1 (2021-08-10) -- "Kick Things"
 Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -847,4 +847,4 @@ Evaluation:
 > 
 > proc.time()
    user  system elapsed 
-   2.14    0.23    2.34 
+   4.70    0.40    5.23 

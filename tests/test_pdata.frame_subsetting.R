@@ -68,7 +68,7 @@ if (!identical(pGrunfeld, pGrunfeld2))
 # and from ?attributes "Attributes are not stored internally as a list and should be 
 # thought of as a set and not a vector."
 identical(Grunfeld, Grunfeld2,   attrib.as.set = FALSE)  # TRUE for data.frame
-identical(pGrunfeld, pGrunfeld2, attrib.as.set = FALSE)  # FALSE for pdata.frame
+identical(pGrunfeld, pGrunfeld2, attrib.as.set = FALSE)  # TRUE for pdata.frame [but was false prior to rev. 1271]
 
 # display differences (if any) [with rev. 252 there should be no differences left]
 all.equal(pGrunfeld, pGrunfeld2)

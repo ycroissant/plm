@@ -83,6 +83,13 @@ stopifnot(isTRUE(all.equal(S1_d_ind_narm,       S2_d_ind_narm,       check.attri
 stopifnot(isTRUE(all.equal(S1_d_ind_unbal,      S2_d_ind_unbal,      check.attributes = TRUE))) # TRUE
 stopifnot(isTRUE(all.equal(S1_d_ind_narm_unbal, S2_d_ind_narm_unbal, check.attributes = TRUE))) # TRUE
 
+rm(
+S1_d_ind,            S2_d_ind,
+S1_d_ind_narm,       S2_d_ind_narm,
+S1_d_ind_unbal,      S2_d_ind_unbal,
+S1_d_ind_narm_unbal, S2_d_ind_narm_unbal)
+
+
 # time
 options("plm.fast" = FALSE)
 
@@ -104,6 +111,14 @@ stopifnot(isTRUE(all.equal(S1_d_ti,            S2_d_ti,            check.attribu
 stopifnot(isTRUE(all.equal(S1_d_ti_narm,       S2_d_ti_narm,       check.attributes = TRUE))) # TRUE
 stopifnot(isTRUE(all.equal(S1_d_ti_unbal,      S2_d_ti_unbal,      check.attributes = TRUE))) # TRUE
 stopifnot(isTRUE(all.equal(S1_d_ti_narm_unbal, S2_d_ti_narm_unbal, check.attributes = TRUE))) # TRUE
+
+# be gentle with the memory
+rm(
+S1_d_ti,            S2_d_ti,
+S1_d_ti_narm,       S2_d_ti_narm,
+S1_d_ti_unbal,      S2_d_ti_unbal,
+S1_d_ti_narm_unbal, S2_d_ti_narm_unbal)
+
 
 #### Sum - pseries ####
 
@@ -129,6 +144,13 @@ stopifnot(isTRUE(all.equal(S1_ind_narm,       S2_ind_narm,       check.attribute
 stopifnot(isTRUE(all.equal(S1_ind_unbal,      S2_ind_unbal,      check.attributes = TRUE))) # TRUE
 stopifnot(isTRUE(all.equal(S1_ind_narm_unbal, S2_ind_narm_unbal, check.attributes = TRUE))) # TRUE
 
+rm(
+S1_ind,            S2_ind,
+S1_ind_narm,       S2_ind_narm,
+S1_ind_unbal,      S2_ind_unbal,
+S1_ind_narm_unbal, S2_ind_narm_unbal)
+
+
 # time
 options("plm.fast" = FALSE)
 
@@ -150,6 +172,13 @@ stopifnot(isTRUE(all.equal(S1_ti,            S2_ti,            check.attributes 
 stopifnot(isTRUE(all.equal(S1_ti_narm,       S2_ti_narm,       check.attributes = TRUE))) # TRUE
 stopifnot(isTRUE(all.equal(S1_ti_unbal,      S2_ti_unbal,      check.attributes = TRUE))) # TRUE
 stopifnot(isTRUE(all.equal(S1_ti_narm_unbal, S2_ti_narm_unbal, check.attributes = TRUE))) # TRUE
+
+rm(
+S1_ti,            S2_ti,
+S1_ti_narm,       S2_ti_narm,
+S1_ti_unbal,      S2_ti_unbal,
+S1_ti_narm_unbal, S2_ti_narm_unbal)
+
 
 #### Sum - matrix ####
 

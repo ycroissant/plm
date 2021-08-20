@@ -1421,7 +1421,7 @@ TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
 108.8228 111.3165 102.9836  94.8896  91.4088  92.9650       NA 104.7664 
 140-1978 140-1979 140-1980 140-1981 140-1982 140-1983 140-1984 
 107.4791 108.9188 111.5591 100.0000  99.3965  99.2931 107.0929 
-> lag(z, 3)
+> lag(z, 3L)
   1-1977   1-1978   1-1979   1-1980   1-1981   1-1982   1-1983   2-1977 
       NA       NA       NA  95.7072  97.3569  99.6083 100.5501       NA 
   2-1978   2-1979   2-1980   2-1981   2-1982   2-1983   3-1977   3-1978 
@@ -1680,7 +1680,7 @@ TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
 102.5303 106.1199 108.8228 111.3165 102.9836  94.8896       NA       NA 
 140-1978 140-1979 140-1980 140-1981 140-1982 140-1983 140-1984 
       NA 104.7664 107.4791 108.9188 111.5591 100.0000  99.3965 
-> diff(z, 2)
+> diff(z, 2L)
     1-1977     1-1978     1-1979     1-1980     1-1981     1-1982     1-1983 
         NA         NA   3.901100   3.193197  -0.050201  -1.935003   0.472002 
     2-1977     2-1978     2-1979     2-1980     2-1981     2-1982     2-1983 
@@ -1979,7 +1979,7 @@ TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
   7.696400  14.164002 
 > 
 > # compute negative lags (= leading values)
-> lag(z, -1)
+> lag(z, -1L)
   1-1977   1-1978   1-1979   1-1980   1-1981   1-1982   1-1983   2-1977 
  97.3569  99.6083 100.5501  99.5581  98.6151 100.0301       NA  97.3569 
   2-1978   2-1979   2-1980   2-1981   2-1982   2-1983   3-1977   3-1978 
@@ -2238,7 +2238,7 @@ TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
 102.9836  94.8896  91.4088  92.9650  96.7318       NA 107.4791 108.9188 
 140-1978 140-1979 140-1980 140-1981 140-1982 140-1983 140-1984 
 111.5591 100.0000  99.3965  99.2931 107.0929 113.4571       NA 
-> lead(z, 1) # same as line above
+> lead(z, 1L) # same as line above
   1-1977   1-1978   1-1979   1-1980   1-1981   1-1982   1-1983   2-1977 
  97.3569  99.6083 100.5501  99.5581  98.6151 100.0301       NA  97.3569 
   2-1978   2-1979   2-1980   2-1981   2-1982   2-1983   3-1977   3-1978 
@@ -2497,11 +2497,11 @@ TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
 102.9836  94.8896  91.4088  92.9650  96.7318       NA 107.4791 108.9188 
 140-1978 140-1979 140-1980 140-1981 140-1982 140-1983 140-1984 
 111.5591 100.0000  99.3965  99.2931 107.0929 113.4571       NA 
-> identical(lead(z, 1), lag(z, -1)) # TRUE
+> identical(lead(z, 1L), lag(z, -1L)) # TRUE
 [1] TRUE
 >  
 > # compute more than one lag and diff at once (matrix returned)
-> lag(z, c(1,2))
+> lag(z, c(1L,2L))
                 1        2
 1-1977         NA       NA
 1-1978    95.7072       NA
@@ -3534,7 +3534,7 @@ TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
 140-1982  99.3965 100.0000
 140-1983  99.2931  99.3965
 140-1984 107.0929  99.2931
-> diff(z, c(1,2))
+> diff(z, c(1L,2L))
                   1          2
 1-1977           NA         NA
 1-1978     1.649704         NA
@@ -4570,7 +4570,7 @@ TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
 > 
 > ## demonstrate behaviour of shift = "time" vs. shift = "row"
 > # delete 2nd time period for first individual (1978 is missing (not NA)):
-> Em_hole <- Em[-2, ]
+> Em_hole <- Em[-2L, ]
 > is.pconsecutive(Em_hole) # check: non-consecutive for 1st individual now
     1     2     3     4     5     6     7     8     9    10    11    12    13 
 FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
@@ -4600,11 +4600,11 @@ FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
 1-1977 1-1979 1-1980 1-1981 1-1982 1-1983 2-1977 2-1978 2-1979 2-1980 
  5.041  5.015  4.715  4.093  3.166  2.936 71.319 70.643 70.918 72.031 
 > # for shift = "time", 1-1979 contains the value of former 1-1977 (2 periods lagged):
-> head(lag(Em_hole$emp, k = 2, shift = "time"), 10)
+> head(lag(Em_hole$emp, k = 2L, shift = "time"), 10L)
 1-1977 1-1979 1-1980 1-1981 1-1982 1-1983 2-1977 2-1978 2-1979 2-1980 
     NA  5.041     NA  5.015  4.715  4.093     NA     NA 71.319 70.643 
 > # for shift = "row", 1-1979 contains NA (2 rows lagged (and no entry for 1976):
-> head(lag(Em_hole$emp, k = 2, shift = "row"), 10)
+> head(lag(Em_hole$emp, k = 2L, shift = "row"), 10L)
 1-1977 1-1979 1-1980 1-1981 1-1982 1-1983 2-1977 2-1978 2-1979 2-1980 
     NA     NA     NA  5.015  4.715  4.093     NA     NA 71.319 70.643 
 > 
@@ -15366,7 +15366,7 @@ F-statistic: 309.014 on 2 and 197 DF, p-value: < 2.22e-16
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  24.73 1.14 26.59 NA NA 
+Time elapsed:  40.38 1.5 43 NA NA 
 > grDevices::dev.off()
 null device 
           1 

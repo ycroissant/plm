@@ -192,7 +192,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     
     # if requested: coerce character vectors to factors
     if (stringsAsFactors) {
-        x.char <- names(x)[sapply(x, is.character)]
+        x.char <- names(x)[vapply(x, is.character, FUN.VALUE = TRUE, USE.NAMES = FALSE)]
         for (i in x.char){
             x[[i]] <- factor(x[[i]])
         }
@@ -210,7 +210,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
   
     # if requested: check and remove complete NA series
     if (drop.NA.series) {
-      na.check <- sapply(x, function(x) sum(!is.na(x)) == 0L)
+      na.check <- vapply(x, function(x) sum(!is.na(x)) == 0L, FUN.VALUE = TRUE, USE.NAMES = FALSE)
       na.serie <- names(x)[na.check]
       if (length(na.serie) > 0L){
         if (length(na.serie) == 1L)
@@ -224,14 +224,14 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     # if requested: check for constant series and remove
     if (drop.const.series) {
       # -> var() and sd() on factors is deprecated as of R 3.2.3 -> use duplicated()
-      cst.check <- sapply(x, function(x) {
+      cst.check <- vapply(x, function(x) {
                               if (is.factor(x) || is.character(x)) {
                                 all(duplicated(x[!is.na(x)])[-1L])
                               } else {
                                 x[! is.finite(x)] <- NA # infinite elements set to NA only for this check
                                 var(as.numeric(x), na.rm = TRUE) == 0
                               }
-                            })
+                            }, FUN.VALUE = TRUE, USE.NAMES = FALSE)
       
       # following line: bug fixed thanks to Marciej Szelfer
       cst.check <- cst.check | is.na(cst.check)
@@ -385,9 +385,8 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
             }
         }
     }
-    
     posindex <- match(c(id.name, time.name, group.name), names(x))
-    index <- x[ , posindex]
+    index <- unclass(x[ , posindex]) # unclass to list for speed in subsetting, make it data.frame again later
     if (drop.index) {
         x <- x[ , -posindex, drop = FALSE]
         if (ncol(x) == 0L) warning("after dropping of index variables, the pdata.frame contains 0 columns")
@@ -399,8 +398,8 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
       warning(paste("duplicate couples (id-time) in resulting pdata.frame\n to find out which,",
                     "use, e.g., table(index(your_pdataframe), useNA = \"ifany\")"))
     
-    ### warn if NAs in index as likely not sane
-    if (anyNA(index[[1L]]) || anyNA(index[[2L]]) || (if(ncol(index) == 3L) anyNA(index[[3L]]) else FALSE))
+    ### warn if NAs in index as likely not sane [not using check.NA because that outputs a line for each dimension -> not needed here]
+    if (anyNA(index[[1L]]) || anyNA(index[[2L]]) || (if(length(index) == 3L) anyNA(index[[3L]]) else FALSE))
         warning(paste0("at least one NA in at least one index dimension ",
                        "in resulting pdata.frame\n to find out which, use, e.g., ",
                        "table(index(your_pdataframe), useNA = \"ifany\")\n"))
@@ -480,14 +479,14 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
   ## produced illegal pseries (these pkg errors were fixed by new CRAN releases but maybe
   ## other code outhere produces illegal pseries, so leave these sanity checks in here for
   ## a while, then remove (for speed)
-    if (is.null(index)) warning("pseries object with is.null(index(pseries)) == TRUE encountered")
-    if (!is.null(index) && !is.index(index)) warning(paste0("pseries object has illegal index with class(index) == ", paste0(class(index), collapse = ", ")))
+    if(is.null(index)) warning("pseries object with is.null(index(pseries)) == TRUE encountered")
+    if(!is.null(index) && !is.index(index)) warning(paste0("pseries object has illegal index with class(index) == ", paste0(class(index), collapse = ", ")))
   
   names_orig <- names(x)
   keep_rownr <- seq_along(x) # full length row numbers original pseries
   names(keep_rownr) <- names_orig
 
-  if (is.null(names_orig)) {
+  if(is.null(names_orig)) {
     names(x) <- keep_rownr # if no names are present, set names as integer sequence to identify rows to keep later
     names(keep_rownr) <- keep_rownr
   }
@@ -496,7 +495,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 
   # identify rows to keep in the index:
   keep_rownr <- keep_rownr[names(result)] # row numbers to keep after subsetting
-  if (!is.null(names_orig)) names(result) <- names_orig[keep_rownr] else names(result) <- NULL # restore and subset original names if any
+  names(result) <- if(!is.null(names_orig)) names_orig[keep_rownr] else NULL # restore and subset original names if any
 
   # Subset index accordingly:
   # Check if index is null is a workaround for R's data frame subsetting not
@@ -519,13 +518,13 @@ subset_pseries <- function(x, ...) {
   ## use '...' instead of only one specific argument, because subsetting for
   ## factors can have argument 'drop', e.g., x[i, drop=TRUE] see ?Extract.factor
   index <- attr(x, "index")
-  if (is.null(index)) warning("pseries object with is.null(index(pseries)) == TRUE encountered")
-  if (!is.null(index) && !is.index(index)) warning(paste0("pseries object has illegal index with class(index) == ", paste0(class(index), collapse = ", ")))
+  if(is.null(index)) warning("pseries object with is.null(index(pseries)) == TRUE encountered")
+  if(!is.null(index) && !is.index(index)) warning(paste0("pseries object has illegal index with class(index) == ", paste0(class(index), collapse = ", ")))
   names_orig <- names(x)
   keep_rownr <- seq_along(x) # full length row numbers original pseries
   names(keep_rownr) <- names_orig
   
-  if (is.null(names_orig)) {
+  if(is.null(names_orig)) {
     names(x) <- keep_rownr # if no names are present, set names as integer sequence to identify rows to keep later
     names(keep_rownr) <- keep_rownr
   }
@@ -534,13 +533,13 @@ subset_pseries <- function(x, ...) {
   
   # identify rows to keep in the index:
   keep_rownr <- keep_rownr[names(result)] # row numbers to keep after subsetting
-  if (!is.null(names_orig)) names(result) <- names_orig[keep_rownr] else names(result) <- NULL # restore and subset original names if any
+  names(result) <- if(!is.null(names_orig)) names_orig[keep_rownr] else NULL # restore and subset original names if any
   
   # Subset index accordingly:
   # Check if index is null is a workaround for R's data frame subsetting not
   # stripping class pseries but its attributes for factor (for other data types, pseries class is dropped)
   # see https://bugs.r-project.org/bugzilla/show_bug.cgi?id=18140
-  if (!is.null(index)) {
+  if(!is.null(index)) {
     index <- index[keep_rownr, ]
     index <- droplevels(index) # drop unused levels (like in subsetting of pdata.frames)
   }
@@ -1215,7 +1214,7 @@ checkNA.index <- function(index, which = "all", error = TRUE) {
   if(which == "all") {
     if(anyNA(index[[1L]])) feedback("NA in the individual index variable")
     if(anyNA(index[[2L]])) feedback("NA in the time index variable")
-    n.index <- if(inherits(index, "pindex")) ncol(index) else length(index) # else is list (for speed)
+    n.index <- if(inherits(index, "pindex")) ncol(index) else length(index) # else-branche is list (for speed)
     if(n.index == 3L) { if(anyNA(index[[3L]])) feedback("NA in the group index variable") }
   }
   if(which == 1L) {

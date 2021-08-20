@@ -1,5 +1,5 @@
 
-R version 4.1.0 (2021-05-18) -- "Camp Pontanezen"
+R version 4.1.1 (2021-08-10) -- "Kick Things"
 Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -495,8 +495,8 @@ Type 'q()' to quit R.
 > # thought of as a set and not a vector."
 > identical(Grunfeld, Grunfeld2,   attrib.as.set = FALSE)  # TRUE for data.frame
 [1] TRUE
-> identical(pGrunfeld, pGrunfeld2, attrib.as.set = FALSE)  # FALSE for pdata.frame
-[1] FALSE
+> identical(pGrunfeld, pGrunfeld2, attrib.as.set = FALSE)  # TRUE for pdata.frame [but was false prior to rev. 1271]
+[1] TRUE
 > 
 > # display differences (if any) [with rev. 252 there should be no differences left]
 > all.equal(pGrunfeld, pGrunfeld2)
@@ -972,4 +972,4 @@ A B C D E F
 > 
 > proc.time()
    user  system elapsed 
-   1.01    0.25    1.32 
+   2.59    0.34    2.95 

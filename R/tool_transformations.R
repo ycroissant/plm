@@ -644,10 +644,10 @@ Within.matrix <- function(x, effect, rm.null = TRUE, ...) {
 #'     methods (can also be negative).  For the `lag` method, a
 #'     positive (negative) `k` gives lagged (leading) values.  For the
 #'     `lead` method, a positive (negative) `k` gives leading (lagged)
-#'     values, thus, `lag(x, k = -1)` yields the same as `lead(x, k = 1)`.
+#'     values, thus, `lag(x, k = -1L)` yields the same as `lead(x, k = 1L)`.
 #'     If `k` is an integer with length > 1 (`k = c(k1, k2, ...)`), a 
 #'     `matrix` with multiple lagged `pseries` is returned,
-#' @param lag the number of lags for the `diff` method, can also be of
+#' @param lag integer, the number of lags for the `diff` method, can also be of
 #'     length > 1 (see argument `k`) (only non--negative values in
 #'     argument `lag` are allowed for `diff`),
 #' @param shift character, either `"time"` (default) or `"row"`
@@ -685,42 +685,42 @@ Within.matrix <- function(x, effect, rm.null = TRUE, ...) {
 #' 
 #' # compute the first and third lag, and the difference lagged twice
 #' lag(z)
-#' lag(z, 3)
-#' diff(z, 2)
+#' lag(z, 3L)
+#' diff(z, 2L)
 #' 
 #' # compute negative lags (= leading values)
-#' lag(z, -1)
-#' lead(z, 1) # same as line above
-#' identical(lead(z, 1), lag(z, -1)) # TRUE
+#' lag(z, -1L)
+#' lead(z, 1L) # same as line above
+#' identical(lead(z, 1L), lag(z, -1L)) # TRUE
 #'  
 #' # compute more than one lag and diff at once (matrix returned)
-#' lag(z, c(1,2))
-#' diff(z, c(1,2))
+#' lag(z, c(1L,2L))
+#' diff(z, c(1L,2L))
 #' 
 #' ## demonstrate behaviour of shift = "time" vs. shift = "row"
 #' # delete 2nd time period for first individual (1978 is missing (not NA)):
-#' Em_hole <- Em[-2, ]
+#' Em_hole <- Em[-2L, ]
 #' is.pconsecutive(Em_hole) # check: non-consecutive for 1st individual now
 #' 
 #' # original non-consecutive data:
 #' head(Em_hole$emp, 10) 
 #' # for shift = "time", 1-1979 contains the value of former 1-1977 (2 periods lagged):
-#' head(lag(Em_hole$emp, k = 2, shift = "time"), 10)
+#' head(lag(Em_hole$emp, k = 2L, shift = "time"), 10L)
 #' # for shift = "row", 1-1979 contains NA (2 rows lagged (and no entry for 1976):
-#' head(lag(Em_hole$emp, k = 2, shift = "row"), 10)
+#' head(lag(Em_hole$emp, k = 2L, shift = "row"), 10L)
 #' 
 NULL
 
 #' @rdname lag.plm
 #' @export
-lead <- function(x, k = 1, ...) {
+lead <- function(x, k = 1L, ...) {
   UseMethod("lead")
 }
 
 #' @rdname lag.plm
 #' @exportS3Method
 #' @export lag
-lag.pseries <- function(x, k = 1, shift = c("time", "row"), ...) {
+lag.pseries <- function(x, k = 1L, shift = c("time", "row"), ...) {
   shift <- match.arg(shift)
   res <- if(shift == "time") lagt.pseries(x = x, k = k, ...) else lagr.pseries(x = x, k = k, ...)
   return(res)
@@ -728,7 +728,7 @@ lag.pseries <- function(x, k = 1, shift = c("time", "row"), ...) {
 
 #' @rdname lag.plm
 #' @export
-lead.pseries <- function(x, k = 1, shift = c("time", "row"), ...) {
+lead.pseries <- function(x, k = 1L, shift = c("time", "row"), ...) {
   shift <- match.arg(shift)
   res <- if(shift == "time") leadt.pseries(x = x, k = k, ...) else leadr.pseries(x = x, k = k, ...)
   return(res)
@@ -736,15 +736,15 @@ lead.pseries <- function(x, k = 1, shift = c("time", "row"), ...) {
 
 #' @rdname lag.plm
 #' @exportS3Method
-diff.pseries <- function(x, lag = 1, shift = c("time", "row"), ...) {
+diff.pseries <- function(x, lag = 1L, shift = c("time", "row"), ...) {
   shift <- match.arg(shift)
   res <- if(shift == "time") difft.pseries(x = x, lag = lag, ...) else diffr.pseries(x = x, lag = lag, ...)
   return(res)
 }
 
 ## lagt.pseries lagging taking the time variable into account
-lagt.pseries <- function(x, k = 1, ...) {
-  index <- attr(x, "index")
+lagt.pseries <- function(x, k = 1L, ...) {
+  index <- unclass(attr(x, "index")) # unclass for speed
   id <- index[[1L]]
   time <- index[[2L]]
   
@@ -759,14 +759,14 @@ lagt.pseries <- function(x, k = 1, ...) {
 }
 
 ## leadt.pseries(x, k) is a wrapper for lagt.pseries(x, -k)
-leadt.pseries <- function(x, k = 1, ...) {
+leadt.pseries <- function(x, k = 1L, ...) {
   ret <- lagt.pseries(x, k = -k)
   if(length(k) > 1L) colnames(ret) <- k
   return(ret)
 }
 
 ## difft: diff-ing taking the time variable into account
-difft.pseries <- function(x, lag = 1, ...){
+difft.pseries <- function(x, lag = 1L, ...){
   ## copied/adapted from diffr.pseries except lines which use lagt() ("t") instead of lagr() ("r")
   islogi <- is.logical(x)
   if(! (is.numeric(x) || islogi)) stop("diff is only relevant for numeric or logical series")
@@ -776,7 +776,7 @@ difft.pseries <- function(x, lag = 1, ...){
   
   # prevent input of negative values, because it will most likely confuse users
   # what difft would do in this case
-  neg <- vapply(lag, function(l) l < 0, FUN.VALUE = TRUE)
+  neg <- vapply(lag, function(l) l < 0L, FUN.VALUE = TRUE)
   if(any(neg)) stop("diff is only relevant for non-negative values in 'lag'")
   
   lagtx <- lagt.pseries(x, k = lag) # use "time-based" lagging for difft
@@ -798,7 +798,7 @@ difft.pseries <- function(x, lag = 1, ...){
 alagt <- function(x, ak) {
   if(round(ak) != ak) stop("Lagging value 'k' must be whole-numbered (positive, negative or zero)")
   if(ak != 0) {
-    index <- attr(x, "index")
+    index <- unclass(attr(x, "index")) # unclass for speed
     id   <- index[[1L]]
     time <- index[[2L]]
     
@@ -826,7 +826,7 @@ alagt <- function(x, ak) {
     
     list_id_timevar <- split(time, id, drop = TRUE)
     
-    index_lag_ak_all_list <- sapply(X = list_id_timevar, 
+    index_lag_ak_all_list <- sapply(X = list_id_timevar, # TODO: can use vapply instead?
                                     FUN = function(id_timevar) { 
                                       index_lag_ak <- match(id_timevar - ak, id_timevar, incomparables = NA)
                                     },
@@ -860,8 +860,8 @@ alagt <- function(x, ak) {
 
 
 ## lagr: lagging row-wise
-lagr.pseries <- function(x, k = 1, ...) {
-    index <- attr(x, "index")
+lagr.pseries <- function(x, k = 1L, ...) {
+    index <- unclass(attr(x, "index")) # unclass for speed
     id <- index[[1L]]
     time <- index[[2L]]
   
@@ -879,13 +879,12 @@ lagr.pseries <- function(x, k = 1, ...) {
   
     alagr <- function(x, ak){
         if(round(ak) != ak) stop("Lagging value 'k' must be whole-numbered (positive, negative or zero)")
-        if(ak > 0) {
+        if(ak > 0L) {
       
         # NB: this code does row-wise shifting
-
         # delete first ak observations for each unit
-            isNAtime <- c(rep(T, ak), (diff(as.numeric(time), lag = ak) != ak))
-            isNAid   <- c(rep(T, ak), (diff(as.numeric(id),   lag = ak) != 0))
+            isNAtime <- c(rep(TRUE, ak), (diff(as.numeric(time), lag = ak) != ak))
+            isNAid   <- c(rep(TRUE, ak), (diff(as.numeric(id),   lag = ak) != 0L))
             isNA <- (isNAtime | isNAid)
       
             result <- x                                             # copy x first ...
@@ -893,13 +892,13 @@ lagr.pseries <- function(x, k = 1, ...) {
             result[(ak+1):length(result)] <- x[1:(length(x)-ak)]    # ... shift and ...
             result[isNA] <- NA                                      # ... make more NAs in between: this way, we keep: all factor levels, names, classes
       
-        } else if(ak < 0) { # => compute leading values
+        } else if(ak < 0L) { # => compute leading values
       
         # delete last |ak| observations for each unit
             num_time <- as.numeric(time)
             num_id   <- as.numeric(id)
-            isNAtime <- c(c((num_time[1:(length(num_time)+ak)] - num_time[(-ak+1):length(num_time)]) != ak), rep(T, -ak))
-            isNAid   <- c(c((num_id[1:(length(num_id)+ak)]     - num_id[(-ak+1):length(num_id)])     != 0),  rep(T, -ak))
+            isNAtime <- c(c((num_time[1:(length(num_time)+ak)] - num_time[(-ak+1):length(num_time)]) != ak), rep(TRUE, -ak))
+            isNAid   <- c(c((num_id[1:(length(num_id)+ak)]     - num_id[(-ak+1):length(num_id)])     != 0L),  rep(TRUE, -ak))
             isNA <- (isNAtime | isNAid)
       
             result <- x                                            # copy x first ...
@@ -926,14 +925,14 @@ lagr.pseries <- function(x, k = 1, ...) {
 
 
 # leadr.pseries(x, k) is a wrapper for lagr.pseries(x, -k)
-leadr.pseries <- function(x, k = 1, ...) {
+leadr.pseries <- function(x, k = 1L, ...) {
     ret <- lagr.pseries(x, k = -k)
     if(length(k) > 1L) colnames(ret) <- k
     return(ret)
 }
 
 ## diffr: lagging row-wise
-diffr.pseries <- function(x, lag = 1, ...){
+diffr.pseries <- function(x, lag = 1L, ...){
     islogi <- is.logical(x)
     if(! (is.numeric(x) || islogi)) stop("diff is only relevant for numeric or logical series")
     
@@ -942,7 +941,7 @@ diffr.pseries <- function(x, lag = 1, ...){
     
     # prevent input of negative values, because it will most likely confuse users
     # what diff would do in this case
-    neg <- vapply(lag, function(l) l < 0, FUN.VALUE = TRUE)
+    neg <- vapply(lag, function(l) l < 0L, FUN.VALUE = TRUE)
     if(any(neg)) stop("diff is only relevant for non-negative values in 'lag'")
 
     lagrx <- lagr.pseries(x, k = lag)
@@ -968,7 +967,7 @@ pdiff <- function(x, effect = c("individual", "time"), has.intercept = FALSE){
   # NB: x is assumed to have an index attribute, e.g., a pseries
   #     can check with has.index(x)
     effect <- match.arg(effect)
-    cond <- as.numeric(attr(x, "index")[[1L]])
+    cond <- as.numeric(unclass(attr(x, "index"))[[1L]]) # unclass for speed
     n <- if(is.matrix(x)) nrow(x) else length(x)
     cond <- c(NA, cond[2:n] - cond[1:(n-1)]) # this assumes a certain ordering
     cond[cond != 0] <- NA
