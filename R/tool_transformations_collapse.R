@@ -146,7 +146,7 @@ Sum.default.collapse <- function(x, effect, ...) {
 
   if(!is.numeric(x)) stop("The Sum function only applies to numeric vectors")
   # check for presence of na.rm in dots, if not present set to FALSE
-  na.rm <- if(missing(...)) FALSE else list(...)$na.rm
+  na.rm <- if(missing(...) || is.null(na.rm <- list(...)$na.rm)) FALSE else na.rm
   res <- collapse::fsum(x, g = effect, w = NULL, na.rm = na.rm, TRA = "replace")
   names(res) <- as.character(effect)
   return(res)
@@ -157,7 +157,7 @@ Sum.pseries.collapse <- function(x, effect = c("individual", "time", "group"), .
 # browser()
   effect <- match.arg(effect)
   # check for presence of na.rm in dots, if not present set to FALSE
-  na.rm <- if(missing(...)) FALSE else list(...)$na.rm
+  na.rm <- if(missing(...) || is.null(na.rm <- list(...)$na.rm)) FALSE else na.rm
   eff.no <- switch(effect,
                    "individual" = 1L,
                    "time"       = 2L,
@@ -193,7 +193,7 @@ Sum.matrix.collapse <- function(x, effect, ...) {
     xindex[[eff.no]]
   }
   # check for presence of na.rm in dots, if not present set to FALSE
-  na.rm <- if(missing(...)) FALSE else list(...)$na.rm
+  na.rm <- if(missing(...) || is.null(na.rm <- list(...)$na.rm)) FALSE else na.rm
   res <- collapse::fsum(x, g = eff.fac, w = NULL, na.rm = na.rm, drop = FALSE, TRA = "replace")
   rownames(res) <- as.character(eff.fac)
   attr(res, "index") <- NULL
@@ -211,7 +211,7 @@ Between.default.collapse <- function(x, effect, ...) {
   # argument 'effect' is assumed to be a factor
   if(!is.numeric(x)) stop("The Between function only applies to numeric vectors")
   # check for presence of na.rm in dots, if not present set to FALSE
-  na.rm <- if(missing(...)) FALSE else list(...)$na.rm
+  na.rm <- if(missing(...) || is.null(na.rm <- list(...)$na.rm)) FALSE else na.rm
   nms <- as.character(effect)
   res <- collapse::fbetween(x, g = effect, w = NULL, na.rm = na.rm)
   names(res) <- nms
@@ -225,7 +225,7 @@ between.default.collapse <- function(x, effect, ...) {
   # argument 'effect' is assumed to be a factor
   if(!is.numeric(x)) stop("The Between function only applies to numeric vectors")
   # check for presence of na.rm in dots, if not present set to FALSE
-  na.rm <- if(missing(...)) FALSE else list(...)$na.rm
+  na.rm <- if(missing(...) || is.null(na.rm <- list(...)$na.rm)) FALSE else na.rm
   res <- collapse::fbetween(x, g = effect, w = NULL, na.rm = na.rm, fill = TRUE)
   keep <- !duplicated(effect)
   res <- res[keep]
@@ -240,7 +240,7 @@ Between.pseries.collapse <- function(x, effect = c("individual", "time", "group"
   # translate arguments
   effect <- match.arg(effect)
   # check for presence of na.rm in dots, if not present set to FALSE
-  na.rm <- if(missing(...)) FALSE else list(...)$na.rm  
+  na.rm <- if(missing(...) || is.null(na.rm <- list(...)$na.rm)) FALSE else na.rm
   eff.no <- switch(effect,
             "individual" = 1L,
             "time"       = 2L,
@@ -263,7 +263,7 @@ between.pseries.collapse <- function(x, effect = c("individual", "time", "group"
 # browser()
   effect <- match.arg(effect)
   # check for presence of na.rm in dots, if not present set to FALSE
-  na.rm <- if(missing(...)) FALSE else list(...)$na.rm
+  na.rm <- if(missing(...) || is.null(na.rm <- list(...)$na.rm)) FALSE else na.rm
   eff.no <-  switch(effect,
            "individual" = 1L,
            "time"       = 2L,
@@ -306,7 +306,7 @@ Between.matrix.collapse <- function(x, effect, ...) {
     xindex[[eff.no]]
   }
   # check for presence of na.rm in dots, if not present set to FALSE
-  na.rm <- if(missing(...)) FALSE else list(...)$na.rm
+  na.rm <- if(missing(...) || is.null(na.rm <- list(...)$na.rm)) FALSE else na.rm
   na.x <- is.na(x)
   res <- collapse::fbetween(x, g = eff.fac, w = NULL, na.rm = na.rm, fill = TRUE)
   attr(res, "index") <- NULL
@@ -336,7 +336,7 @@ between.matrix.collapse <- function(x, effect, ...) {
     xindex[[eff.no]]
   }
   # check for presence of na.rm in dots, if not present set to FALSE
-  na.rm <- if(missing(...)) FALSE else list(...)$na.rm
+  na.rm <- if(missing(...) || is.null(na.rm <- list(...)$na.rm)) FALSE else na.rm
   res <- collapse::fbetween(x, g = eff.fac, w = NULL, na.rm = na.rm, fill = TRUE)
   rownames(res) <- as.character(eff.fac)
   res <- res[!duplicated(eff.fac), , drop = FALSE]
@@ -354,7 +354,7 @@ Within.default.collapse <- function(x, effect, ...) {
   # argument 'effect' is assumed to be a factor
   if(!is.numeric(x)) stop("the within function only applies to numeric vectors")
   # check for presence of na.rm in dots, if not present set to FALSE
-  na.rm <- if(missing(...)) FALSE else list(...)$na.rm
+  na.rm <- if(missing(...) || is.null(na.rm <- list(...)$na.rm)) FALSE else na.rm
   res <- collapse::fwithin(x, g = effect, w = NULL, na.rm = na.rm)
   # =(plm)= res <- x - Between(x, effect, ...)
   names(res) <- as.character(effect)
@@ -367,7 +367,7 @@ Within.pseries.collapse <- function(x, effect = c("individual", "time", "group",
 # browser()
   effect <- match.arg(effect)
   # check for presence of na.rm in dots, if not present set to FALSE
-  na.rm <- if(missing(...)) FALSE else list(...)$na.rm
+  na.rm <- if(missing(...) || is.null(na.rm <- list(...)$na.rm)) FALSE else na.rm
   xindex <- unclass(attr(x, "index")) # unclass for speed
   checkNA.index(xindex) # index may not contain any NA
   if(effect != "twoways") {
@@ -419,7 +419,7 @@ Within.matrix.collapse <- function(x, effect, rm.null = TRUE, ...) {
     checkNA.index(xindex) # index may not contain any NA
 
     # check for presence of na.rm in dots, if not present set to FALSE
-    na.rm <- if(missing(...)) FALSE else list(...)$na.rm  
+    na.rm <- if(missing(...) || is.null(na.rm <- list(...)$na.rm)) FALSE else na.rm
     
     if(effect != "twoways") {
       eff.fac <- switch(effect,
@@ -466,7 +466,7 @@ Within.pseries.collapse.fixest <- function(x, effect = c("individual", "time", "
 # browser()
   effect <- match.arg(effect)
   # check for presence of na.rm in dots, if not present set to FALSE
-  na.rm <- if(missing(...)) FALSE else list(...)$na.rm  
+  na.rm <- if(missing(...) || is.null(na.rm <- list(...)$na.rm)) FALSE else na.rm
   xindex <- unclass(attr(x, "index")) # unclass for speed
   checkNA.index(xindex) # index may not contain any NA
   if(effect != "twoways") {
@@ -507,7 +507,7 @@ Within.matrix.collapse.fixest <- function(x, effect, rm.null = TRUE, ...) {
     xindex <- unclass(xindex) # unclass for speed
     checkNA.index(xindex) # index may not contain any NA
     # check for presence of na.rm in dots, if not present set to FALSE
-    na.rm <- if(missing(...)) FALSE else list(...)$na.rm    
+    na.rm <- if(missing(...) || is.null(na.rm <- list(...)$na.rm)) FALSE else na.rm
     
     if(effect != "twoways") {
       eff.fac <- switch(effect,
@@ -539,7 +539,7 @@ Within.pseries.collapse.lfe <- function(x, effect = c("individual", "time", "gro
   xindex <- unclass(attr(x, "index"))
   checkNA.index(xindex) # index may not contain any NA
   # check for presence of na.rm in dots, if not present set to FALSE
-  na.rm <- if(missing(...)) FALSE else list(...)$na.rm    
+  na.rm <- if(missing(...) || is.null(na.rm <- list(...)$na.rm)) FALSE else na.rm
   if(effect != "twoways") {
     eff.no <- switch(effect,
                      "individual" = 1L,
@@ -580,7 +580,7 @@ Within.matrix.collapse.lfe <- function(x, effect, rm.null = TRUE, ...) {
     xindex <- unclass(xindex)
     checkNA.index(xindex) # index may not contain any NA
     # check for presence of na.rm in dots, if not present set to FALSE
-    na.rm <- if(missing(...)) FALSE else list(...)$na.rm    
+    na.rm <- if(missing(...) || is.null(na.rm <- list(...)$na.rm)) FALSE else na.rm
     
     if(effect != "twoways") {
       eff.fac <- switch(effect,
