@@ -477,7 +477,7 @@ preshape <- function(x, na.rm = TRUE, ...) {
     mres <- mres[ , order(dimnames(mres)[[2L]])]
     ## if requested, drop columns (time periods) with NAs
     if(na.rm) {
-        na.cols <- vapply(mres, FUN = anyNA, FUN.VALUE = TRUE)
+        na.cols <- vapply(mres, FUN = anyNA, FUN.VALUE = TRUE, USE.NAMES = FALSE)
         if(sum(na.cols) > 0L) mres <- mres[ , !na.cols]
     }
     return(mres)

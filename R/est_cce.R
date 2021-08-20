@@ -366,7 +366,7 @@ pcce <- function (formula, data, subset, na.action,
             ## variance of defactored residuals sigma2ccep as in Holly,
             ## Pesaran and Yamagata, (3.15)
             sigma2cce <- 1/(n*(T.-k-2)-k)*
-                sum(vapply(cceres, crossprod, FUN.VALUE = 0.0))
+                sum(vapply(cceres, crossprod, FUN.VALUE = 0.0, USE.NAMES = FALSE))
             ## is the same as sum(unlist(cceres)^2)
     })
 

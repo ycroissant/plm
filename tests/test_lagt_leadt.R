@@ -127,6 +127,9 @@ lag(Grunfeld$inv, c(-2, -1, 0, 1, 2))
 lead(Grunfeld$inv, c(-2, -1, 0, 1, 2))
 if(!isTRUE(all.equal(lag(Grunfeld$inv, c(-2, -1, 0, 1, 2)),
                      lead(Grunfeld$inv, -1*c(-2, -1, 0, 1, 2)), check.attributes = FALSE))) stop("'lag( , c())' not equal to 'lead( , -1*c())'")
+# produces a matrix of characters:
+# standard R behaviour for factor input to matrix - not beautiful but "correct"
+lag(Grunfeld$fac, c(-2, -1, 0, 1, 2))
 
 # other data set (different time periods)
 # Hedonic is an unbalanced panel, townid is the individual index

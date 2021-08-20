@@ -263,7 +263,7 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
 
   
   ## CIPS statistic as an average of the t-stats on the coefficient of 'le'
-  tstats <- vapply(tmods, function(mod) gettvalue(mod, "le"), FUN.VALUE = 0.0)
+  tstats <- vapply(tmods, function(mod) gettvalue(mod, "le"), FUN.VALUE = 0.0, USE.NAMES = FALSE)
   
   if(truncated) {
       ## set bounds, Pesaran (2007), p. 277

@@ -435,8 +435,9 @@ ercomp.formula <- function(object, data,
         swar_Between_check(estm[[2L]], method)
         swar_Between_check(estm[[3L]], method)
     }
-    KS <- vapply(estm, function(x) length(x$coefficients), FUN.VALUE = 0.0) - 
-           vapply(estm, function(x) { "(Intercept)" %in% names(x$coefficients)}, FUN.VALUE = TRUE)
+    KS <- vapply(estm, function(x) { length(x$coefficients) - "(Intercept)" %in% names(x$coefficients) }, 
+                  FUN.VALUE = 0.0, USE.NAMES = FALSE)
+    
     quad <- vector(length = 3L, mode = "numeric")
     # first quadratic form, within transformation
     hateps_w <- resid(estm[[1L]], model = "pooling")

@@ -447,7 +447,7 @@ critval.ips.tbar.value <- function(ind = 10L, time = 19L, critvals, exo = c("int
       m <- as.matrix(expand.grid(Inds, Ts))
       colnames(m) <- c("ind", "time")
       dist <- lapply(1:4, function(x) m[x, ] - dot)
-      dist <- vapply(dist, function(x) sqrt(as.numeric(crossprod(x))), 0.0)
+      dist <- vapply(dist, function(x) sqrt(as.numeric(crossprod(x))), 0.0, USE.NAMES = FALSE)
       weight <- 1/dist
       
       res <- (
@@ -542,7 +542,7 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
   if(!is.list(object)) stop("argument 'object' in hadritest is supposed to be a list")
   if(exo == "none") stop("exo = \"none\" is not a valid option for Hadri's test")
   # determine L (= time periods), unique for balanced panel and number of individuals (n)
-  if(length(L <- unique(vapply(object, length, FUN.VALUE = 0.0))) > 1L) 
+  if(length(L <- unique(vapply(object, length, FUN.VALUE = 0.0, USE.NAMES = FALSE))) > 1L) 
     stop("Hadri test is not applicable to unbalanced panels")
   n <- length(object)
   
@@ -564,17 +564,17 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
   cumres2 <- lapply(resid, function(x) cumsum(x)^2)
   if (!dfcor) {
     sigma2  <- mean(unlist(resid)^2)
-    sigma2i <- vapply(resid, function(x) mean(x^2), FUN.VALUE = 0.0)
+    sigma2i <- vapply(resid, function(x) mean(x^2), FUN.VALUE = 0.0, USE.NAMES = FALSE)
   } else {
     # df correction as suggested in Hadri (2000), p. 157
     dfcorval <- switch(exo, "intercept" = (L-1), "trend" = (L-2))
     # -> apply to full length residuals over all individuals -> n*(L-1) or n*(L-2)
     sigma2 <- as.numeric(crossprod(unlist(resid))) / (n * dfcorval)
     # -> apply to individual residuals' length, so just L -> L-1 or L-2
-    sigma2i <- vapply(resid, function(x) crossprod(x)/dfcorval, FUN.VALUE = 0.0)
+    sigma2i <- vapply(resid, function(x) crossprod(x)/dfcorval, FUN.VALUE = 0.0, USE.NAMES = FALSE)
   }
   
-  Si2 <- vapply(cumres2, function(x) sum(x), FUN.VALUE = 0.0)
+  Si2 <- vapply(cumres2, function(x) sum(x), FUN.VALUE = 0.0, USE.NAMES = FALSE)
   numerator <- 1/n * sum(1/(L^2) * Si2)
   LM <- numerator / sigma2 # non-het consist case (Hcons == FALSE)
   LMi <- 1/(L^2) * Si2 / sigma2i # individual LM statistics
@@ -899,10 +899,10 @@ purtest <- function(object, data = NULL, index = NULL,
   if(test == "ips"){
     if(exo == "none") stop("exo = \"none\" is not a valid option for the Im-Pesaran-Shin test")
     if(!is.null(ips.stat) && !any(ips.stat %in% c("Wtbar", "Ztbar", "tbar"))) stop("argument 'ips.stat' must be one of \"Wtbar\", \"Ztbar\", \"tbar\"")
-    lags  <- vapply(idres, function(x) x[["lags"]], FUN.VALUE = 0.0)
-    L.ips <- vapply(idres, function(x) x[["T"]],    FUN.VALUE = 0.0) - lags - 1
-    trho  <- vapply(idres, function(x) x[["trho"]], FUN.VALUE = 0.0)
-    pvalues.trho <- vapply(idres, function(x) x[["p.trho"]], FUN.VALUE = 0.0)
+    lags  <- vapply(idres, function(x) x[["lags"]], FUN.VALUE = 0.0, USE.NAMES = FALSE)
+    L.ips <- vapply(idres, function(x) x[["T"]],    FUN.VALUE = 0.0, USE.NAMES = FALSE) - lags - 1
+    trho  <- vapply(idres, function(x) x[["trho"]], FUN.VALUE = 0.0, USE.NAMES = FALSE)
+    pvalues.trho <- vapply(idres, function(x) x[["p.trho"]], FUN.VALUE = 0.0, USE.NAMES = FALSE)
     tbar <- mean(trho)
     parameter <- NULL
     adjval <- NULL
@@ -931,7 +931,7 @@ purtest <- function(object, data = NULL, index = NULL,
     
     if(!is.null(ips.stat) && ips.stat == "tbar") {
       # give tbar
-      T.tbar <- unique(vapply(object, length, FUN.VALUE = 0.0))
+      T.tbar <- unique(vapply(object, length, FUN.VALUE = 0.0, USE.NAMES = FALSE))
       if(length(T.tbar) > 1L) stop("tbar statistic is not applicable to unbalanced panels")
       if(any(lags > 0L)) stop("tbar statistic is not applicable when 'lags' > 0 is specified")
       L.tbar <- T.tbar - 1
@@ -946,8 +946,8 @@ purtest <- function(object, data = NULL, index = NULL,
   if(test == "madwu"){
     # Maddala/Wu (1999), pp. 636-637; Choi (2001), p. 253; Baltagi (2013), pp. 283-285
     ## does not require a balanced panel
-    trho <- vapply(idres, function(x) x[["trho"]], FUN.VALUE = 0.0)
-    pvalues.trho <- vapply(idres, function(x) x[["p.trho"]], FUN.VALUE = 0.0)
+    trho <- vapply(idres, function(x) x[["trho"]], FUN.VALUE = 0.0, USE.NAMES = FALSE)
+    pvalues.trho <- vapply(idres, function(x) x[["p.trho"]], FUN.VALUE = 0.0, USE.NAMES = FALSE)
     stat <- c(chisq = - 2 * sum(log(pvalues.trho)))
     n.madwu <- length(trho)
     parameter <- c(df = 2 * n.madwu)
@@ -957,8 +957,8 @@ purtest <- function(object, data = NULL, index = NULL,
   
   if(test == "Pm"){
     ## Choi Pm (modified P) [proposed for large N]
-    trho <- vapply(idres, function(x) x[["trho"]], FUN.VALUE = 0.0)
-    pvalues.trho <- vapply(idres, function(x) x[["p.trho"]], FUN.VALUE = 0.0)
+    trho <- vapply(idres, function(x) x[["trho"]], FUN.VALUE = 0.0, USE.NAMES = FALSE)
+    pvalues.trho <- vapply(idres, function(x) x[["p.trho"]], FUN.VALUE = 0.0, USE.NAMES = FALSE)
     n.Pm <- length(trho)
     # formula (18) in Choi (2001), p. 255:
     stat <- c( "Pm" = 1/(2 * sqrt(n.Pm)) * sum(-2 * log(pvalues.trho) - 2) ) # == -1/sqrt(n.Pm) * sum(log(pvalues.trho) +1)
@@ -969,8 +969,8 @@ purtest <- function(object, data = NULL, index = NULL,
   
   if(test == "invnormal"){
     # inverse normal test as in Choi (2001)
-    trho <- vapply(idres, function(x) x[["trho"]], FUN.VALUE = 0.0)
-    pvalues.trho <- vapply(idres, function(x) x[["p.trho"]], FUN.VALUE = 0.0)
+    trho <- vapply(idres, function(x) x[["trho"]], FUN.VALUE = 0.0, USE.NAMES = FALSE)
+    pvalues.trho <- vapply(idres, function(x) x[["p.trho"]], FUN.VALUE = 0.0, USE.NAMES = FALSE)
     n.invnormal <- length(trho)
     stat <- c("z" = sum(qnorm(pvalues.trho)) / sqrt(n.invnormal)) # formula (9), Choi (2001), p. 253
     pvalue <- pnorm(stat, lower.tail = TRUE) # formula (12), Choi, p. 254
@@ -980,8 +980,8 @@ purtest <- function(object, data = NULL, index = NULL,
   
   if(test == "logit"){
     # logit test as in Choi (2001)
-    trho <- vapply(idres, function(x) x[["trho"]], FUN.VALUE = 0.0)
-    pvalues.trho <- vapply(idres, function(x) x[["p.trho"]], FUN.VALUE = 0.0)
+    trho <- vapply(idres, function(x) x[["trho"]], FUN.VALUE = 0.0, USE.NAMES = FALSE)
+    pvalues.trho <- vapply(idres, function(x) x[["p.trho"]], FUN.VALUE = 0.0, USE.NAMES = FALSE)
     n.logit <- length(trho)
     l_stat <-  c("L*" = sum(log(pvalues.trho / (1 - pvalues.trho)))) # formula (10), Choi (2001), p. 253
     k <- (3 * (5 * n.logit + 4)) / (pi^2 * n.logit * (5 * n.logit + 2))
@@ -1026,11 +1026,11 @@ print.purtest <- function(x, ...){
 #' @export
 summary.purtest <- function(object, ...){
   if (!object$args$test == "hadri"){
-    lags   <- vapply(object$idres, function(x) x[["lags"]],   FUN.VALUE = 0.0)
-    L      <- vapply(object$idres, function(x) x[["T"]],      FUN.VALUE = 0.0)
-    rho    <- vapply(object$idres, function(x) x[["rho"]],    FUN.VALUE = 0.0)
-    trho   <- vapply(object$idres, function(x) x[["trho"]],   FUN.VALUE = 0.0)
-    p.trho <- vapply(object$idres, function(x) x[["p.trho"]], FUN.VALUE = 0.0)
+    lags   <- vapply(object$idres, function(x) x[["lags"]],   FUN.VALUE = 0.0, USE.NAMES = FALSE)
+    L      <- vapply(object$idres, function(x) x[["T"]],      FUN.VALUE = 0.0, USE.NAMES = FALSE)
+    rho    <- vapply(object$idres, function(x) x[["rho"]],    FUN.VALUE = 0.0, USE.NAMES = FALSE)
+    trho   <- vapply(object$idres, function(x) x[["trho"]],   FUN.VALUE = 0.0, USE.NAMES = FALSE)
+    p.trho <- vapply(object$idres, function(x) x[["p.trho"]], FUN.VALUE = 0.0, USE.NAMES = FALSE)
     sumidres <- cbind(
       "lags"   = lags,
       "obs"    = L - lags - 1,
@@ -1046,8 +1046,8 @@ summary.purtest <- function(object, ...){
     }
   } else {
     # hadri
-    LM     <- vapply(object$idres, function(x) x[["LM"]], FUN.VALUE = 0.0)
-    sigma2 <- vapply(object$idres, function(x) x[["sigma2"]], FUN.VALUE = 0.0)
+    LM     <- vapply(object$idres, function(x) x[["LM"]], FUN.VALUE = 0.0, USE.NAMES = FALSE)
+    sigma2 <- vapply(object$idres, function(x) x[["sigma2"]], FUN.VALUE = 0.0, USE.NAMES = FALSE)
     sumidres <- cbind("LM" = LM, "sigma2" = sigma2)
   }
   
@@ -1064,7 +1064,7 @@ print.summary.purtest <- function(x, ...){
   cat(paste(purtest.names.test[x$args$test], "\n"))
   cat(paste("Exogenous variables:", purtest.names.exo[x$args$exo], "\n"))
   if (x$args$test != "hadri") {
-    thelags <- vapply(x$idres, function(x) x[["lags"]], FUN.VALUE = 0.0)
+    thelags <- vapply(x$idres, function(x) x[["lags"]], FUN.VALUE = 0.0, USE.NAMES = FALSE)
     if (is.character(x$args$lags)){
       lagselectionmethod <- if (x$args$lags == "Hall") "Hall's method" else x$args$lags
       cat(paste0("Automatic selection of lags using ", lagselectionmethod, ": ",
@@ -1198,7 +1198,7 @@ hansi <- function(object, alpha = 0.05) {
   } else {
     # purtest object
     if(object$args$test == "hadri") stop("hansi() [Hanck/Simes' test] not possible for purtest objects based on Hadri's test")
-    p <- vapply(object$idres, function(x) x[["p.trho"]], FUN.VALUE = 0.0)
+    p <- vapply(object$idres, function(x) x[["p.trho"]], FUN.VALUE = 0.0, USE.NAMES = FALSE)
     n <- length(p)
   }
   

@@ -110,8 +110,8 @@ aneweytest <-  function(formula, data, subset, na.action, index = NULL,  ...){
     LMS <- lapply(.resid, function(x) lm.fit(XX, x))
     
     
-    YTOT <- vapply(.resid, function(x) crossprod(x), FUN.VALUE = 0.0)
-    DEV <- vapply(LMS, function(x) crossprod(x$residuals), FUN.VALUE = 0.0)
+    YTOT <- vapply(.resid, function(x) crossprod(x), FUN.VALUE = 0.0, USE.NAMES = FALSE)
+    DEV <- vapply(LMS, function(x) crossprod(x$residuals), FUN.VALUE = 0.0, USE.NAMES = FALSE)
     
     stat <- c("chisq" = sum(1 - DEV / YTOT) * (n - ncol(XX)))
     df <- c("df" = (T ^ 2 - T - 1) * Kx)

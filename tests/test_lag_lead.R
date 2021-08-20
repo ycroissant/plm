@@ -122,6 +122,9 @@ plm:::lagr.pseries(Grunfeld$inv, c(-2, -1, 0, 1, 2))
 plm:::leadr.pseries(Grunfeld$inv, c(-2, -1, 0, 1, 2))
 if(!isTRUE(all.equal(plm:::lagr.pseries(Grunfeld$inv, c(-2, -1, 0, 1, 2)),
                      plm:::leadr.pseries(Grunfeld$inv, -1*c(-2, -1, 0, 1, 2)), check.attributes = FALSE))) stop("'plm:::lagr.pseries( , c())' not equal to 'plm:::leadr.pseries( , -1*c())'")
+# produces a matrix of characters:
+# standard R behaviour for factor input to matrix - not beautiful but "correct"
+plm:::leadr.pseries(Grunfeld$fac, c(-2, -1, 0, 1, 2))
 
 # other data set (different time periods)
 # Hedonic is an unbalanced panel, townid is the individual index

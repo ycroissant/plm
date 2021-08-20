@@ -441,9 +441,6 @@ plm.fit <- function(data, model, effect, random.method,
             if(!is.null(model.weights(data)) || any(w != 1))
               stop("argument 'weights' not yet implemented for instrumental variable models")
             
-            #  This is executed for all IV cases
-            
-          
           if ( ! (model == "random" && inst.method != "bvk")) {
           #  FD/FE/BE IV and RE "bvk" IV estimator
             if (length(formula)[2L] == 2L){
@@ -636,16 +633,16 @@ r.squared <- function(object, model = NULL,
 ## first try at r.squared adapted to be suitable for non-intercept models
 r.squared_no_intercept <- function(object, model = NULL,
                       type = c("rss", "ess", "cor"), dfcor = FALSE){
-    if (is.null(model)) model <- describe(object, "model")
+    if(is.null(model)) model <- describe(object, "model")
     effect <- describe(object, "effect")
     type <- match.arg(type)
     ## TODO: check what is sane for IV and what for within
     # [1L] as has.intercept returns > 1 boolean for IV models # TODO: to check if this is sane
-    has.int <- if (model != "within") has.intercept(object)[1L] else FALSE
+    has.int <- if(model != "within") has.intercept(object)[1L] else FALSE
     
     if (type == "rss"){
       # approach: 1 - RSS / TSS
-      R2 <- if (has.int) {
+      R2 <- if(has.int) {
         1 - deviance(object, model = model) / tss(object, model = model)  
       } else {
         # use non-centered (= non-demeaned) TSS
@@ -653,7 +650,7 @@ r.squared_no_intercept <- function(object, model = NULL,
       }
     }
         
-    if (type == "ess"){
+    if(type == "ess"){
       # approach: ESS / TSS
       haty <- fitted(object, model = model)
       R2 <- if(has.int) {
@@ -670,7 +667,7 @@ r.squared_no_intercept <- function(object, model = NULL,
       }
     }
     
-    if (type == "cor"){
+    if(type == "cor"){
       # approach: squared-correlation(dependent variable, predicted value), only for models with intercept
       if(!has.int) warning("for models without intercept, type = \"cor\" may not be sane") # TODO: tbd if warning is good
       
@@ -686,7 +683,7 @@ r.squared_no_intercept <- function(object, model = NULL,
     # this takes care of the intercept
     # Still unclear, how the adjustment for within models should look like,
     # i.e., subtract 1 for intercept or not
-    if (dfcor) R2 <- 1 - (1 - R2) * (length(resid(object)) - has.int) / df.residual(object)
+    if(dfcor) R2 <- 1 - (1 - R2) * (length(resid(object)) - has.int) / df.residual(object)
     
     return(R2)
 }

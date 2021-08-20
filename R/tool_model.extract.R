@@ -156,7 +156,7 @@ model.matrix.pdata.frame <- function(object,
                    "values (NA/NaN/Inf/-Inf)"))
     X.assi <- attr(X, "assign")
     X.contr <- attr(X, "contrasts")
-    X.contr <- X.contr[ ! vapply(X.contr, is.null, FUN.VALUE = TRUE) ]
+    X.contr <- X.contr[ ! vapply(X.contr, is.null, FUN.VALUE = TRUE, USE.NAMES = FALSE) ]
     index <- index(data)
     attr(X, "index") <- index
     if (effect == "twoways" && model %in% c("between", "fd"))

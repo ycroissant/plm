@@ -771,12 +771,12 @@ difft.pseries <- function(x, lag = 1L, ...){
   islogi <- is.logical(x)
   if(! (is.numeric(x) || islogi)) stop("diff is only relevant for numeric or logical series")
   
-  non.int <- vapply(lag, function(l) round(l) != l, FUN.VALUE = TRUE)
+  non.int <- vapply(lag, function(l) round(l) != l, FUN.VALUE = TRUE, USE.NAMES = FALSE)
   if(any(non.int)) stop("Lagging value(s) in 'lag' must be whole-numbered (and non-negative)")
   
   # prevent input of negative values, because it will most likely confuse users
   # what difft would do in this case
-  neg <- vapply(lag, function(l) l < 0L, FUN.VALUE = TRUE)
+  neg <- vapply(lag, function(l) l < 0L, FUN.VALUE = TRUE, USE.NAMES = FALSE)
   if(any(neg)) stop("diff is only relevant for non-negative values in 'lag'")
   
   lagtx <- lagt.pseries(x, k = lag) # use "time-based" lagging for difft
@@ -826,11 +826,9 @@ alagt <- function(x, ak) {
     
     list_id_timevar <- split(time, id, drop = TRUE)
     
-    index_lag_ak_all_list <- sapply(X = list_id_timevar, # TODO: can use vapply instead?
-                                    FUN = function(id_timevar) { 
-                                      index_lag_ak <- match(id_timevar - ak, id_timevar, incomparables = NA)
-                                    },
-                                    simplify = FALSE)
+    index_lag_ak_all_list <- sapply(list_id_timevar,
+                                    function(x) match(x - ak, x, incomparables = NA),
+                                    simplify = FALSE, USE.NAMES = FALSE)
     
     # translate block-wise positions to positions in full vector
     index_lag_ak_all <- unlist(index_lag_ak_all_list, use.names = FALSE)
@@ -838,7 +836,7 @@ alagt <- function(x, ak) {
     NApos <- is.na(index_lag_ak_all) # save NA positions for later
     substitute_blockwise <- index_lag_ak_all
     
-    block_lengths <- vapply(index_lag_ak_all_list, length, FUN.VALUE = 0.0) # lengths (with an "s") would be more efficient, but requires R >= 3.2
+    block_lengths <- vapply(index_lag_ak_all_list, length, FUN.VALUE = 0.0, USE.NAMES = FALSE)
     
     # not needed but leave here for illustration:
     #    startpos_block <- cumsum(block_lengths) - block_lengths + 1
@@ -898,7 +896,7 @@ lagr.pseries <- function(x, k = 1L, ...) {
             num_time <- as.numeric(time)
             num_id   <- as.numeric(id)
             isNAtime <- c(c((num_time[1:(length(num_time)+ak)] - num_time[(-ak+1):length(num_time)]) != ak), rep(TRUE, -ak))
-            isNAid   <- c(c((num_id[1:(length(num_id)+ak)]     - num_id[(-ak+1):length(num_id)])     != 0L),  rep(TRUE, -ak))
+            isNAid   <- c(c((num_id[1:(length(num_id)+ak)]     - num_id[(-ak+1):length(num_id)])     != 0L), rep(TRUE, -ak))
             isNA <- (isNAtime | isNAid)
       
             result <- x                                            # copy x first ...
@@ -932,16 +930,16 @@ leadr.pseries <- function(x, k = 1L, ...) {
 }
 
 ## diffr: lagging row-wise
-diffr.pseries <- function(x, lag = 1L, ...){
+diffr.pseries <- function(x, lag = 1L, ...) {
     islogi <- is.logical(x)
     if(! (is.numeric(x) || islogi)) stop("diff is only relevant for numeric or logical series")
     
-    non.int <- vapply(lag, function(l) round(l) != l, FUN.VALUE = TRUE)
+    non.int <- vapply(lag, function(l) round(l) != l, FUN.VALUE = TRUE, USE.NAMES = FALSE)
     if(any(non.int)) stop("Lagging value(s) in 'lag' must be whole-numbered (and non-negative)")
     
     # prevent input of negative values, because it will most likely confuse users
     # what diff would do in this case
-    neg <- vapply(lag, function(l) l < 0L, FUN.VALUE = TRUE)
+    neg <- vapply(lag, function(l) l < 0L, FUN.VALUE = TRUE, USE.NAMES = FALSE)
     if(any(neg)) stop("diff is only relevant for non-negative values in 'lag'")
 
     lagrx <- lagr.pseries(x, k = lag)

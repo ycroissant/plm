@@ -174,9 +174,9 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar", "Wbar"), orde
     listdata, order_grangertest, SIMPLIFY = FALSE)
   
   # extract Wald/Chisq-statistics and p-values of individual Granger tests
-  Wi   <- vapply(grangertests_i, function(g) g[["Chisq"]][2L], FUN.VALUE = 0.0)
-  pWi  <- vapply(grangertests_i, function(g) g[["Pr(>Chisq)"]][[2L]], FUN.VALUE = 0.0)
-  dfWi <- vapply(grangertests_i, function(g) abs(g[["Df"]][2L]), FUN.VALUE = 0.0)
+  Wi   <- vapply(grangertests_i, function(g) g[["Chisq"]][2L], FUN.VALUE = 0.0, USE.NAMES = FALSE)
+  pWi  <- vapply(grangertests_i, function(g) g[["Pr(>Chisq)"]][[2L]], FUN.VALUE = 0.0, USE.NAMES = FALSE)
+  dfWi <- vapply(grangertests_i, function(g) abs(g[["Df"]][2L]), FUN.VALUE = 0.0, USE.NAMES = FALSE)
   
   Wbar <- c("Wbar" = mean(Wi))
   

@@ -270,11 +270,13 @@ pwtest.panelmodel <- function(x, effect = c("individual", "time"), ...) {
   }
 
   ## det. # of upper triangle members (n*t(t-1)/2 if balanced)
-  ti <- vapply(tres, function(x) dim(x)[[1L]], FUN.VALUE = 0.0)
+  ## no needed, only for illustration
+  # ti <- vapply(tres, function(x) dim(x)[[1L]], FUN.VALUE = 0.0, USE.NAMES = FALSE)
+  # uptrinum <- sum(ti*(ti-1)/2)
   
   ## sum over all upper triangles of emp. omega blocks:
   ## and sum over resulting vector (df corrected)
-  sum.uptri <- vapply(tres, function(x) sum(x[upper.tri(x, diag = FALSE)]), FUN.VALUE = 0.0)
+  sum.uptri <- vapply(tres, function(x) sum(x[upper.tri(x, diag = FALSE)]), FUN.VALUE = 0.0, USE.NAMES = FALSE)
   W <- sum(sum.uptri) # /sqrt(n) simplifies out
   
   ## calculate se(Wstat) as in 10.40
