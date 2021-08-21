@@ -537,93 +537,6 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 > 
 > 
 > cleanEx()
-> nameEx("hansi")
-> ### * hansi
-> 
-> flush(stderr()); flush(stdout())
-> 
-> ### Name: hansi
-> ### Title: Simes Test for unit roots in panel data
-> ### Aliases: hansi print.hansi
-> ### Keywords: htest
-> 
-> ### ** Examples
-> 
-> 
-> ### input is numeric (p-values)
-> #### example from Hanck (2013), Table 11 (left side)
-> pvals <- c(0.0001,0.0001,0.0001,0.0001,0.0001,0.0001,0.0050,0.0050,0.0050,
-+            0.0050,0.0175,0.0175,0.0200,0.0250,0.0400,0.0500,0.0575,0.2375,0.2475)
-> 
-> countries <- c("Argentina","Sweden","Norway","Mexico","Italy","Finland","France",
-+               "Germany","Belgium","U.K.","Brazil","Australia","Netherlands",
-+               "Portugal","Canada", "Spain","Denmark","Switzerland","Japan")
-> names(pvals) <- countries
-> 
-> h <- hansi(pvals)
-> print(h)              # (explicitly) prints test's evaluation
-
-        Simes Test as Panel Unit Root Test (Hanck (2013))
-
-H0: All individual series have a unit root
-HA: Stationarity for at least some individuals
-
-Alpha: 0.05
-Number of individuals: 19
-
-Evaluation:
- H0 rejected (globally)
-
- Individual H0 rejected for 10 individual(s) (integer id(s)):
-  1, 2, 3, 4, 5, 6, 7, 8, 9, 10
-> print(h, cutoff = 3L) # print only first 3 rejected ids 
-
-        Simes Test as Panel Unit Root Test (Hanck (2013))
-
-H0: All individual series have a unit root
-HA: Stationarity for at least some individuals
-
-Alpha: 0.05
-Number of individuals: 19
-
-Evaluation:
- H0 rejected (globally)
-
- Individual H0 rejected for 10 individuals, only first 3 printed (integer id(s)):
-  1, 2, 3, ...
-> h$rejected # logical indicating the individuals with rejected individual H0
-  Argentina      Sweden      Norway      Mexico       Italy     Finland 
-       TRUE        TRUE        TRUE        TRUE        TRUE        TRUE 
-     France     Germany     Belgium        U.K.      Brazil   Australia 
-       TRUE        TRUE        TRUE        TRUE       FALSE       FALSE 
-Netherlands    Portugal      Canada       Spain     Denmark Switzerland 
-      FALSE       FALSE       FALSE       FALSE       FALSE       FALSE 
-      Japan 
-      FALSE 
-> 
-> 
-> ### input is a (suitable) purtest object
-> data("Grunfeld", package = "plm")
-> y <- data.frame(split(Grunfeld$inv, Grunfeld$firm))
-> obj <- purtest(y, pmax = 4, exo = "intercept", test = "madwu")
-> 
-> hansi(obj)
-
-        Simes Test as Panel Unit Root Test (Hanck (2013))
-
-H0: All individual series have a unit root
-HA: Stationarity for at least some individuals
-
-Alpha: 0.05
-Number of individuals: 10
-
-Evaluation:
- H0 rejected (globally)
-> 
-> 
-> 
-> 
-> cleanEx()
 > nameEx("index.plm")
 > ### * index.plm
 > 
@@ -9026,6 +8939,93 @@ alternative hypothesis: Granger causality for at least one individual
 > 
 > 
 > cleanEx()
+> nameEx("phansi")
+> ### * phansi
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: phansi
+> ### Title: Simes Test for unit roots in panel data
+> ### Aliases: phansi print.phansi
+> ### Keywords: htest
+> 
+> ### ** Examples
+> 
+> 
+> ### input is numeric (p-values)
+> #### example from Hanck (2013), Table 11 (left side)
+> pvals <- c(0.0001,0.0001,0.0001,0.0001,0.0001,0.0001,0.0050,0.0050,0.0050,
++            0.0050,0.0175,0.0175,0.0200,0.0250,0.0400,0.0500,0.0575,0.2375,0.2475)
+> 
+> countries <- c("Argentina","Sweden","Norway","Mexico","Italy","Finland","France",
++               "Germany","Belgium","U.K.","Brazil","Australia","Netherlands",
++               "Portugal","Canada", "Spain","Denmark","Switzerland","Japan")
+> names(pvals) <- countries
+> 
+> h <- phansi(pvals)
+> print(h)              # (explicitly) prints test's evaluation
+
+        Simes Test as Panel Unit Root Test (Hanck (2013))
+
+H0: All individual series have a unit root
+HA: Stationarity for at least some individuals
+
+Alpha: 0.05
+Number of individuals: 19
+
+Evaluation:
+ H0 rejected (globally)
+
+ Individual H0 rejected for 10 individual(s) (integer id(s)):
+  1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+> print(h, cutoff = 3L) # print only first 3 rejected ids 
+
+        Simes Test as Panel Unit Root Test (Hanck (2013))
+
+H0: All individual series have a unit root
+HA: Stationarity for at least some individuals
+
+Alpha: 0.05
+Number of individuals: 19
+
+Evaluation:
+ H0 rejected (globally)
+
+ Individual H0 rejected for 10 individuals, only first 3 printed (integer id(s)):
+  1, 2, 3, ...
+> h$rejected # logical indicating the individuals with rejected individual H0
+  Argentina      Sweden      Norway      Mexico       Italy     Finland 
+       TRUE        TRUE        TRUE        TRUE        TRUE        TRUE 
+     France     Germany     Belgium        U.K.      Brazil   Australia 
+       TRUE        TRUE        TRUE        TRUE       FALSE       FALSE 
+Netherlands    Portugal      Canada       Spain     Denmark Switzerland 
+      FALSE       FALSE       FALSE       FALSE       FALSE       FALSE 
+      Japan 
+      FALSE 
+> 
+> 
+> ### input is a (suitable) purtest object
+> data("Grunfeld", package = "plm")
+> y <- data.frame(split(Grunfeld$inv, Grunfeld$firm))
+> obj <- purtest(y, pmax = 4, exo = "intercept", test = "madwu")
+> 
+> phansi(obj)
+
+        Simes Test as Panel Unit Root Test (Hanck (2013))
+
+H0: All individual series have a unit root
+HA: Stationarity for at least some individuals
+
+Alpha: 0.05
+Number of individuals: 10
+
+Evaluation:
+ H0 rejected (globally)
+> 
+> 
+> 
+> 
+> cleanEx()
 > nameEx("pht")
 > ### * pht
 > 
@@ -15377,7 +15377,7 @@ F-statistic: 309.014 on 2 and 197 DF, p-value: < 2.22e-16
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  22.65 0.94 23.66 NA NA 
+Time elapsed:  22.48 0.89 24.31 NA NA 
 > grDevices::dev.off()
 null device 
           1 

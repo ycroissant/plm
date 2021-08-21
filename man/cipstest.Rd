@@ -63,7 +63,7 @@ cipstest(Produc$gsp, type = "trend")
 \insertAllCited{}
 }
 \seealso{
-\code{\link[=purtest]{purtest()}}, \code{\link[=hansi]{hansi()}}
+\code{\link[=purtest]{purtest()}}, \code{\link[=phansi]{phansi()}}
 }
 \author{
 Giovanni Millo

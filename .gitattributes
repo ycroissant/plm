@@ -76,7 +76,6 @@ man/cortab.Rd -text
 man/detect.lindep.Rd -text
 man/ercomp.Rd -text
 man/fixef.plm.Rd -text
-man/hansi.Rd -text
 man/has.intercept.Rd -text
 man/index.plm.Rd -text
 man/is.pbalanced.Rd -text
@@ -101,6 +100,7 @@ man/pdwtest.Rd -text
 man/pggls.Rd -text
 man/pgmm.Rd -text
 man/pgrangertest.Rd -text
+man/phansi.Rd -text
 man/pht.Rd -text
 man/phtest.Rd -text
 man/piest.Rd -text

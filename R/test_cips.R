@@ -47,7 +47,7 @@
 #' @return An object of class `"htest"`.
 #' @author Giovanni Millo
 #' @export
-#' @seealso [purtest()], [hansi()]
+#' @seealso [purtest()], [phansi()]
 #' @references
 #'
 #' \insertAllCited{}

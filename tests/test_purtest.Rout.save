@@ -15,7 +15,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> # Various run tests for purtest() and hansi()
+> # Various run tests for purtest() and phansi()
 > 
 > # NB: p-values can differ slightly relative to .Rout.save file due to availability of package 'urca'
 > #     for p-value approximation in individual (A)DF-regressions.
@@ -194,136 +194,136 @@ Exogenous variables: Individual Intercepts
 statistic: 4.184 
 p-value: 0 
 
-          LM       sigma2
-1  0.3143392 776878.74047
-2  0.0974765  86121.20788
-3  0.1464531 162702.95487
-4  0.2507621  24502.54190
-5  1.5352867   5179.84410
-6  1.7158789  44738.61027
-7  0.3565975   1030.01290
-8  1.0287779  46985.26090
-9  0.6875534   5669.88650
-10 0.3207828     81.68617
+             LM       sigma2
+ [1,] 0.3143392 776878.74047
+ [2,] 0.0974765  86121.20788
+ [3,] 0.1464531 162702.95487
+ [4,] 0.2507621  24502.54190
+ [5,] 1.5352867   5179.84410
+ [6,] 1.7158789  44738.61027
+ [7,] 0.3565975   1030.01290
+ [8,] 1.0287779  46985.26090
+ [9,] 0.6875534   5669.88650
+[10,] 0.3207828     81.68617
 > summary(h_1.2)
 Hadri Test 
 Exogenous variables: Individual Intercepts 
 statistic: 3.798 
 p-value: 0 
 
-           LM       sigma2
-1  0.29862219 817767.09524
-2  0.09260268  90653.90303
-3  0.13913042 171266.26829
-4  0.23822401  25792.14937
-5  1.45852236   5452.46747
-6  1.63008494  47093.27397
-7  0.33876762   1084.22411
-8  0.97733904  49458.16937
-9  0.65317574   5968.30158
-10 0.30474367     85.98544
+              LM       sigma2
+ [1,] 0.29862219 817767.09524
+ [2,] 0.09260268  90653.90303
+ [3,] 0.13913042 171266.26829
+ [4,] 0.23822401  25792.14937
+ [5,] 1.45852236   5452.46747
+ [6,] 1.63008494  47093.27397
+ [7,] 0.33876762   1084.22411
+ [8,] 0.97733904  49458.16937
+ [9,] 0.65317574   5968.30158
+[10,] 0.30474367     85.98544
 > summary(h_2.1)
 Hadri Test 
 Exogenous variables: Individual Intercepts 
 statistic: 10.155 
 p-value: 0 
 
-          LM       sigma2
-1  0.3143392 776878.74047
-2  0.0974765  86121.20788
-3  0.1464531 162702.95487
-4  0.2507621  24502.54190
-5  1.5352867   5179.84410
-6  1.7158789  44738.61027
-7  0.3565975   1030.01290
-8  1.0287779  46985.26090
-9  0.6875534   5669.88650
-10 0.3207828     81.68617
+             LM       sigma2
+ [1,] 0.3143392 776878.74047
+ [2,] 0.0974765  86121.20788
+ [3,] 0.1464531 162702.95487
+ [4,] 0.2507621  24502.54190
+ [5,] 1.5352867   5179.84410
+ [6,] 1.7158789  44738.61027
+ [7,] 0.3565975   1030.01290
+ [8,] 1.0287779  46985.26090
+ [9,] 0.6875534   5669.88650
+[10,] 0.3207828     81.68617
 > summary(h_2.2)
 Hadri Test 
 Exogenous variables: Individual Intercepts 
 statistic: 9.471 
 p-value: 0 
 
-           LM       sigma2
-1  0.29862219 817767.09524
-2  0.09260268  90653.90303
-3  0.13913042 171266.26829
-4  0.23822401  25792.14937
-5  1.45852236   5452.46747
-6  1.63008494  47093.27397
-7  0.33876762   1084.22411
-8  0.97733904  49458.16937
-9  0.65317574   5968.30158
-10 0.30474367     85.98544
+              LM       sigma2
+ [1,] 0.29862219 817767.09524
+ [2,] 0.09260268  90653.90303
+ [3,] 0.13913042 171266.26829
+ [4,] 0.23822401  25792.14937
+ [5,] 1.45852236   5452.46747
+ [6,] 1.63008494  47093.27397
+ [7,] 0.33876762   1084.22411
+ [8,] 0.97733904  49458.16937
+ [9,] 0.65317574   5968.30158
+[10,] 0.30474367     85.98544
 > summary(h_3.1)
 Hadri Test 
 Exogenous variables: Individual Intercepts and Trend 
 statistic: 4.534 
 p-value: 0 
 
-           LM       sigma2
-1  0.12037588 671266.58182
-2  0.10309400  86050.07644
-3  0.15460710 160987.22169
-4  0.04652752  21859.45611
-5  0.32820347   1319.04037
-6  0.41795730   6990.22810
-7  0.34773700   1022.55237
-8  0.16362350  21248.56152
-9  0.15446576   3832.05673
-10 0.09570977     71.11004
+              LM       sigma2
+ [1,] 0.12037588 671266.58182
+ [2,] 0.10309400  86050.07644
+ [3,] 0.15460710 160987.22169
+ [4,] 0.04652752  21859.45611
+ [5,] 0.32820347   1319.04037
+ [6,] 0.41795730   6990.22810
+ [7,] 0.34773700   1022.55237
+ [8,] 0.16362350  21248.56152
+ [9,] 0.15446576   3832.05673
+[10,] 0.09570977     71.11004
 > summary(h_3.2)
 Hadri Test 
 Exogenous variables: Individual Intercepts and Trend 
 statistic: 3.576 
 p-value: 0 
 
-           LM       sigma2
-1  0.10833829 745851.75758
-2  0.09278460  95611.19605
-3  0.13914639 178874.69077
-4  0.04187476  24288.28457
-5  0.29538313   1465.60041
-6  0.37616157   7766.92011
-7  0.31296330   1136.16930
-8  0.14726115  23609.51281
-9  0.13901919   4257.84081
-10 0.08613879     79.01116
+              LM       sigma2
+ [1,] 0.10833829 745851.75758
+ [2,] 0.09278460  95611.19605
+ [3,] 0.13914639 178874.69077
+ [4,] 0.04187476  24288.28457
+ [5,] 0.29538313   1465.60041
+ [6,] 0.37616157   7766.92011
+ [7,] 0.31296330   1136.16930
+ [8,] 0.14726115  23609.51281
+ [9,] 0.13901919   4257.84081
+[10,] 0.08613879     79.01116
 > summary(h_4.1)
 Hadri Test 
 Exogenous variables: Individual Intercepts and Trend 
 statistic: 9.578 
 p-value: 0 
 
-           LM       sigma2
-1  0.12037588 671266.58182
-2  0.10309400  86050.07644
-3  0.15460710 160987.22169
-4  0.04652752  21859.45611
-5  0.32820347   1319.04037
-6  0.41795730   6990.22810
-7  0.34773700   1022.55237
-8  0.16362350  21248.56152
-9  0.15446576   3832.05673
-10 0.09570977     71.11004
+              LM       sigma2
+ [1,] 0.12037588 671266.58182
+ [2,] 0.10309400  86050.07644
+ [3,] 0.15460710 160987.22169
+ [4,] 0.04652752  21859.45611
+ [5,] 0.32820347   1319.04037
+ [6,] 0.41795730   6990.22810
+ [7,] 0.34773700   1022.55237
+ [8,] 0.16362350  21248.56152
+ [9,] 0.15446576   3832.05673
+[10,] 0.09570977     71.11004
 > summary(h_4.2)
 Hadri Test 
 Exogenous variables: Individual Intercepts and Trend 
 statistic: 8.116 
 p-value: 0 
 
-           LM       sigma2
-1  0.10833829 745851.75758
-2  0.09278460  95611.19605
-3  0.13914639 178874.69077
-4  0.04187476  24288.28457
-5  0.29538313   1465.60041
-6  0.37616157   7766.92011
-7  0.31296330   1136.16930
-8  0.14726115  23609.51281
-9  0.13901919   4257.84081
-10 0.08613879     79.01116
+              LM       sigma2
+ [1,] 0.10833829 745851.75758
+ [2,] 0.09278460  95611.19605
+ [3,] 0.13914639 178874.69077
+ [4,] 0.04187476  24288.28457
+ [5,] 0.29538313   1465.60041
+ [6,] 0.37616157   7766.92011
+ [7,] 0.31296330   1136.16930
+ [8,] 0.14726115  23609.51281
+ [9,] 0.13901919   4257.84081
+[10,] 0.08613879     79.01116
 > ## IGNORE_RDIFF_END
 > 
 > ### IPS (2003) test
@@ -683,7 +683,7 @@ p-value: 0.004
 > 
 > 
 > ## Simes Test for panels by Hanck
-> hansi(llc)
+> phansi(llc)
 
         Simes Test as Panel Unit Root Test (Hanck (2013))
 
@@ -695,22 +695,7 @@ Number of individuals: 10
 
 Evaluation:
  H0 rejected (globally)
-> hansi(llc_int)
-
-        Simes Test as Panel Unit Root Test (Hanck (2013))
-
-H0: All individual series have a unit root
-HA: Stationarity for at least some individuals
-
-Alpha: 0.05
-Number of individuals: 10
-
-Evaluation:
- H0 rejected (globally)
-
- Individual H0 rejected for 2 individual(s) (integer id(s)):
-  2, 4
-> hansi(llc_trend)
+> phansi(llc_int)
 
         Simes Test as Panel Unit Root Test (Hanck (2013))
 
@@ -725,7 +710,7 @@ Evaluation:
 
  Individual H0 rejected for 2 individual(s) (integer id(s)):
   2, 4
-> hansi(purtest(pG$value, test = "Pm",        exo = "intercept", lags = 2, dfcor = TRUE))
+> phansi(llc_trend)
 
         Simes Test as Panel Unit Root Test (Hanck (2013))
 
@@ -737,7 +722,10 @@ Number of individuals: 10
 
 Evaluation:
  H0 rejected (globally)
-> hansi(purtest(pG$value, test = "invnormal", exo = "intercept", lags = 2, dfcor = TRUE))
+
+ Individual H0 rejected for 2 individual(s) (integer id(s)):
+  2, 4
+> phansi(purtest(pG$value, test = "Pm",        exo = "intercept", lags = 2, dfcor = TRUE))
 
         Simes Test as Panel Unit Root Test (Hanck (2013))
 
@@ -749,7 +737,19 @@ Number of individuals: 10
 
 Evaluation:
  H0 rejected (globally)
-> hansi(purtest(pG$value, test = "logit",     exo = "intercept", lags = 2, dfcor = TRUE))
+> phansi(purtest(pG$value, test = "invnormal", exo = "intercept", lags = 2, dfcor = TRUE))
+
+        Simes Test as Panel Unit Root Test (Hanck (2013))
+
+H0: All individual series have a unit root
+HA: Stationarity for at least some individuals
+
+Alpha: 0.05
+Number of individuals: 10
+
+Evaluation:
+ H0 rejected (globally)
+> phansi(purtest(pG$value, test = "logit",     exo = "intercept", lags = 2, dfcor = TRUE))
 
         Simes Test as Panel Unit Root Test (Hanck (2013))
 
@@ -762,7 +762,7 @@ Number of individuals: 10
 Evaluation:
  H0 rejected (globally)
 > 
-> hansi(purtest(inv ~ 1, data = Grunfeld, index = "firm", pmax = 4, test = "madwu"))
+> phansi(purtest(inv ~ 1, data = Grunfeld, index = "firm", pmax = 4, test = "madwu"))
 
         Simes Test as Panel Unit Root Test (Hanck (2013))
 
@@ -775,7 +775,7 @@ Number of individuals: 10
 Evaluation:
  H0 rejected (globally)
 > 
-> hansi(b_unbal3)
+> phansi(b_unbal3)
 
         Simes Test as Panel Unit Root Test (Hanck (2013))
 
@@ -790,7 +790,7 @@ Evaluation:
 
  Individual H0 rejected for 2 individual(s) (integer id(s)):
   2, 4
-> hansi(b_ztbar)
+> phansi(b_ztbar)
 
         Simes Test as Panel Unit Root Test (Hanck (2013))
 
@@ -805,7 +805,7 @@ Evaluation:
 
  Individual H0 rejected for 2 individual(s) (integer id(s)):
   2, 4
-> hansi(b_ztbar_unbal)
+> phansi(b_ztbar_unbal)
 
         Simes Test as Panel Unit Root Test (Hanck (2013))
 
@@ -820,7 +820,7 @@ Evaluation:
 
  Individual H0 rejected for 2 individual(s) (integer id(s)):
   2, 4
-> hansi(b_ztbar_unbal2)
+> phansi(b_ztbar_unbal2)
 
         Simes Test as Panel Unit Root Test (Hanck (2013))
 
@@ -832,7 +832,7 @@ Number of individuals: 10
 
 Evaluation:
  H0 rejected (globally)
-> hansi(b_lag2_ztbar)
+> phansi(b_lag2_ztbar)
 
         Simes Test as Panel Unit Root Test (Hanck (2013))
 
@@ -847,4 +847,4 @@ Evaluation:
 > 
 > proc.time()
    user  system elapsed 
-   4.70    0.40    5.23 
+   4.42    0.40    4.81 

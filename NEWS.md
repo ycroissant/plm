@@ -23,7 +23,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 
 
 ### Features:
- * hansi: new function for Simes (1986) test applied to panels for panel unit
+ * phansi: new function for Simes (1986) test applied to panels for panel unit
    root testing, as suggested in Hanck (2013).
  * [.pseries: implemented method to allow subsetting on pseries while retaining
    the pseries properties, i.e., `your_pseries[<subsetting condition>]`
@@ -81,7 +81,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
     * In section about panel unit root testing:
       * added short intro with overview of available functions/tests and added
         two example cases.
-      * added sub-section about new function hansi.
+      * added sub-section about new function phansi.
     * added a little more information on the use of vcovXX.
  * 2nd vignette: added formula for nested error component model.
   * all vignettes: references updated to include Baltagi (2021), the 6th edition 
