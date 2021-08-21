@@ -110,7 +110,7 @@ pbgtest.panelmodel <- function(x, order = NULL, type = c("Chisq", "F"), ...) {
     bgtest <- bgtest(lm.mod, order = order, type = type, ...)
     bgtest$method <- "Breusch-Godfrey/Wooldridge test for serial correlation in panel models"
     bgtest$alternative <- "serial correlation in idiosyncratic errors"
-    bgtest$data.name <- paste(deparse(x$call$formula))
+    bgtest$data.name <- data.name(x)
     names(bgtest$statistic) <- if(length(bgtest$parameter) == 1) "chisq" else "F"
     return(bgtest)
 }
@@ -290,14 +290,13 @@ pwtest.panelmodel <- function(x, effect = c("individual", "time"), ...) {
   pW <- 2*pnorm(abs(Wstat), lower.tail = FALSE) # unlike LM, test is two-tailed!
   
   ## insert usual htest features
-  dname <- paste(deparse(substitute(formula)))
-  RVAL <- list(statistic = Wstat,
-               parameter = NULL,
-               method = paste("Wooldridge's test for unobserved",
-                              effect, "effects"),
+  RVAL <- list(statistic   = Wstat,
+               parameter   = NULL,
+               method      = paste("Wooldridge's test for unobserved",
+                                 effect, "effects"),
                alternative = "unobserved effect",
-               p.value = pW,
-               data.name = dname)
+               p.value     = pW,
+               data.name   = paste(deparse(substitute(formula))))
   class(RVAL) <- "htest"
   return(RVAL)
 }
@@ -420,13 +419,12 @@ pwartest.panelmodel <- function(x, ...) {
   pFEARstat <- pf(FEARstat, df1 = df1, df2 = df2, lower.tail = FALSE)
   
   ## insert usual htest features
-  dname <- paste(deparse(substitute(x)))
-  RVAL <- list(statistic = FEARstat,
-               parameter = c(df1, df2),
-               p.value   = pFEARstat,
+  RVAL <- list(statistic   = FEARstat,
+               parameter   = c(df1, df2),
+               p.value     = pFEARstat,
                method = "Wooldridge's test for serial correlation in FE panels",
                alternative = "serial correlation",
-               data.name = dname)
+               data.name   = paste(deparse(substitute(x))))
   class(RVAL) <- "htest"
   return(RVAL)
 }
@@ -809,12 +807,12 @@ pdwtest.panelmodel <- function(x, ...) {
     ## lmtest::dwtest on the demeaned model:
 
     ## ARtest is the return value of lmtest::dwtest, exception made for the method attribute
-    dots <- match.call(expand.dots = FALSE)[["..."]]
-    if (is.null(dots$order.by)) order.by <- NULL else order.by <- dots$order.by
-    if (is.null(dots$alternative)) alternative <- "greater" else alternative <- dots$alternative
-    if (is.null(dots$iterations)) iterations <- 15 else iterations <- dots$iterations
-    if (is.null(dots$exact)) exact <- NULL else exact <- dots$exact
-    if (is.null(dots$tol)) tol <- 1e-10 else tol <- dots$tol
+    dots <- list(...)
+    order.by    <- if(is.null(dots$order.by)) NULL else dots$order.by
+    alternative <- if(is.null(dots$alternative)) "greater" else dots$alternative
+    iterations  <- if(is.null(dots$iterations)) 15 else dots$iterations
+    exact       <- if(is.null(dots$exact)) NULL else dots$exact
+    tol         <- if(is.null(dots$tol)) 1e-10 else dots$tol
 
     demy <- remove_pseries_features(demy) # needed as lmtest::dwtest cannot cope with pseries
 
@@ -828,7 +826,7 @@ pdwtest.panelmodel <- function(x, ...) {
     # overwrite elements of the values produced by lmtest::dwtest
     ARtest$method <- "Durbin-Watson test for serial correlation in panel models"
     ARtest$alternative <- "serial correlation in idiosyncratic errors"
-    ARtest$data.name <- paste(deparse(x$call$formula))
+    ARtest$data.name <- data.name(x)
     return(ARtest)
 }
 
@@ -997,11 +995,11 @@ pbnftest.panelmodel <- function(x, test = c("bnf", "lbi"), ...) {
     method <- "Baltagi/Wu LBI Test for Serial Correlation in Panel Models"
   }
   
-  result <- list(statistic = stat,
+  result <- list(statistic   = stat,
                  # p.value   = NA, # none
-                 method    = method,
+                 method      = method,
                  alternative = "serial correlation in idiosyncratic errors",
-                 data.name = paste(deparse(x$call$formula)))
+                 data.name   = data.name(x))
   class(result) <- "htest"
   return(result) 
 }
@@ -1127,7 +1125,7 @@ pbltest.formula <- function(x, data, alternative = c("twosided", "onesided"), in
   ## make 'bidiagonal' matrix (see BL, p.136)
   G <- matrix(0, ncol = t., nrow = t.)
   for(i in 2:t.) {
-    G[i-1, i] <- 1
+    G[i-1, i]   <- 1
     G[i,   i-1] <- 1
   }
 
@@ -1163,7 +1161,7 @@ pbltest.formula <- function(x, data, alternative = c("twosided", "onesided"), in
   ## star2 is (crossprod(uhat, kronecker(In, star1)) %*% uhat)
 
   ## components for the information matrix
-  a <- (sigma2.e-sigma2.1)/(t.*sigma2.1)
+  a <- (sigma2.e - sigma2.1)/(t.*sigma2.1)
   j.rr <- n. * (2 * a^2 * (t.-1)^2 + 2*a*(2*t.-3) + (t.-1))
   j.12 <- n.*(t.-1)*sigma2.e / sigma2.1^2
   j.13 <- n.*(t.-1)/t. * sigma2.e * (1/sigma2.1^2 - 1/sigma2.e^2)
@@ -1202,12 +1200,12 @@ pbltest.formula <- function(x, data, alternative = c("twosided", "onesided"), in
   method <- paste("Baltagi and Li", method1, "LM test")
   alternative <- "AR(1)/MA(1) errors in RE panel model"
 
-  res <- list(statistic = LMr.m,
-              p.value = pval,
-              method = method,
+  res <- list(statistic   = LMr.m,
+              p.value     = pval,
+              method      = method,
               alternative = alternative,
-              parameter = parameter,
-              data.name = dname)
+              parameter   = parameter,
+              data.name   = dname)
 
   class(res) <- "htest"
   res
@@ -1403,13 +1401,12 @@ pwfdtest.panelmodel <- function(x, ..., h0 = c("fd", "fe")) {
   pFDARstat <- pf(FDARstat, df1 = df1, df2 = df2, lower.tail = FALSE)
   
   ## insert usual htest features
-  dname <- paste(deparse(substitute(x)))
   RVAL <- list(statistic   = FDARstat, 
                parameter   = c(df1, df2),
                p.value     = pFDARstat,
                method      = "Wooldridge's first-difference test for serial correlation in panels",
                alternative = paste("serial correlation in", h0des, "errors"),
-               data.name   = dname)
+               data.name   = paste(deparse(substitute(x))))
   class(RVAL) <- "htest"
   return(RVAL)
 }

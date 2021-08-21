@@ -4,6 +4,7 @@
 ## - mylm : inner fitting func based on stats::lm with matrix inputs (used in plm.fit)
 ## - my.lm.fit : like the barebone stats::lm.fit but with some extra information (e.g., SEs, sigma) used in purtest
 ## - twosls : computes the 2SLS estimator (used in plm and ercomp)
+## - data.name : used in a lot tests to generate the 'data.name' entry for htest objects from the model object's call$formula
 ## - has.intercept : tests the presence of an intercept
 ## - pres : extract model residuals as pseries (used in several estimation functions)
 ## - punbalancedness : measures for the unbalancedness of panel data
@@ -128,7 +129,12 @@ twosls <- function(y, X, W, intercept = FALSE, lm.type = "lm"){
   model
 }
 
-
+data.name <- function(x) {
+  ## non-exported, used in various tests
+  data.name <- paste(deparse(x$call$formula))
+  if (length(data.name) > 1L) paste(data.name[1L], "...")
+  else data.name
+}
 
 ##### has.intercept methods #####
 

@@ -302,13 +302,15 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
 
   parameter <- lags
   names(parameter) <- "lag order"
-  dname <- paste(deparse(substitute(x)))
   names(cipstat) <- "CIPS test"
 
-  RVAL <- list(statistic = cipstat, parameter = parameter,
-               data.name = dname, tmods = tmods,
-               method = "Pesaran's CIPS test for unit roots",
-               alternative = "Stationarity", p.value = pval)
+  RVAL <- list(statistic   = cipstat,
+               parameter   = parameter,
+               data.name   = paste(deparse(substitute(x))),
+               tmods       = tmods,
+               method      = "Pesaran's CIPS test for unit roots",
+               alternative = "Stationarity",
+               p.value     = pval)
   class(RVAL) <- "htest"
   return(RVAL)
 }

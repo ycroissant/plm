@@ -1,8 +1,3 @@
-data.name <- function(x){
-  data.name <- paste(deparse(x$call$formula))
-  if (length(data.name) > 1L) paste(data.name[1L], "...")
-  else data.name
-}
 
 #' Hausman Test for Panel Models
 #' 
@@ -87,12 +82,12 @@ phtest <- function(x,...){
 phtest.formula <- function(x, data, model = c("within", "random"),
                             method = c("chisq", "aux"),
                             index = NULL, vcov = NULL, ...) {
-  # NB: No argument 'effect' here, maybe introduce?
+  # TODO: No argument 'effect' here, maybe introduce?
   #     it gets evaluated due to the eval() call for method="chisq"
   #     and since rev. 305 due to extraction from dots (...) in method="aux" as a quick fix
   #    If introduced as argument, change doc accordingly (currently, effect arg is mentioned in ...)
   
-    if (length(model) != 2) stop("two models should be indicated")
+    if (length(model) != 2) stop("two models should be indicated in argument 'model'")
     for (i in 1:2){
         model.name <- model[i]
         if(!(model.name %in% names(model.plm.list))){
@@ -130,8 +125,8 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                # signature for formula interface/test="aux": see if effect is in dots and extract
                   dots <- list(...)
                   # print(dots) # DEBUG printing
-               if (!is.null(dots$effect)) effect <- dots$effect else effect <- NULL
-               # calculatate FE and RE model
+                  effect <- if(!is.null(dots$effect)) dots$effect else NULL
+               # calculate FE and RE model
 
                fe_mod <- plm(formula = x, data = data, model = model[1L], effect = effect)
                re_mod <- plm(formula = x, data = data, model = model[2L], effect = effect)
@@ -145,7 +140,7 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                  # print(re_mod)
                reY <- pmodel.response(re_mod)
 #               reX <- model.matrix(re_mod)[ , -1, drop = FALSE] # intercept not needed; drop=F needed to prevent matrix
-#               feX <- model.matrix(fe_mod, cstcovar.rm = TRUE)                      # from degenerating to vector if only one regressor
+#               feX <- model.matrix(fe_mod, cstcovar.rm = TRUE)  # from degenerating to vector if only one regressor
                reX <- model.matrix(re_mod, cstcovar.rm = "intercept")
                feX <- model.matrix(fe_mod, cstcovar.rm = "all")
 
@@ -220,7 +215,7 @@ phtest.panelmodel <- function(x, x2, ...){
   names.wi <- names(coef.wi)
   names.re <- names(coef.re)
   common_coef_names <- names.re[names.re %in% names.wi]
-  coef.h <- common_coef_names[!(common_coef_names %in% "(Intercept)")] # drop intercept if included (relevant when between model inputed)
+  coef.h <- common_coef_names[!(common_coef_names %in% "(Intercept)")] # drop intercept if included (relevant when between model input)
   if(length(coef.h) == 0L) stop("no common coefficients in models")
   dbeta <- coef.wi[coef.h] - coef.re[coef.h]
   df <- length(dbeta)
@@ -253,7 +248,6 @@ phtest.panelmodel <- function(x, x2, ...){
   parameter <- df
   names(parameter) <- "df"
   alternative <- "one model is inconsistent"
-#  null.value <- "both models are consistent"
   
   ## DEBUG printing:
      # print(paste0("mod1: ", describe(x,  "effect")))
@@ -264,7 +258,6 @@ phtest.panelmodel <- function(x, x2, ...){
               parameter    = parameter,
               method       = "Hausman Test",
               data.name    = data.name(x),
- #             null.value  = null.value,
               alternative  = alternative)
   class(res) <- "htest"
   return(res)
@@ -405,7 +398,7 @@ plmtest.plm <- function(x,
   T <- pdim$nT$T
   N_obs <- pdim$nT$N
   balanced <- pdim$balanced
-  index <- attr(model.frame(x), "index")
+  index <- unclass(attr(model.frame(x), "index")) # unclass for speed
   id <- index[[1L]]
   time <- index[[2L]]
   T_i <- pdim$Tint$Ti
@@ -602,7 +595,7 @@ pFtest.plm <- function(x, z, ...){
   alternative <- "significant effects"
   res <- list(statistic   = stat,
               p.value     = pval,
-              method      = paste("F test for ", effect, " effects",sep=""),
+              method      = paste("F test for ", effect, " effects", sep=""),
               parameter   = parameter,
               data.name   = data.name(x),
               alternative = alternative)
@@ -865,7 +858,7 @@ pwaldtest.pvcm <- function(x, ...) {
     # of single estimations (per individual or per time period)
     
     ii <- switch(effect, "individual" = 1L, "time" = 2L)
-    residl <- split(x$residuals, index(x)[[ii]])
+    residl <- split(x$residuals, unclass(index(x))[[ii]])
     
     # vcovs and coefficients w/o intercept
     vcovl <- lapply(x$vcov, function(x) x[coefs.no.int, coefs.no.int])

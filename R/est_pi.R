@@ -27,8 +27,8 @@
 #' data("RiceFarms", package = "plm")
 #' aneweytest(log(goutput) ~ log(seed) + log(totlabor) + log(size), RiceFarms, index = "id")
 #' 
-aneweytest <-  function(formula, data, subset, na.action, index = NULL,  ...){
-  # NB: code fails for unbalanced data -> is Angist and Newey's test only for balanced data?
+aneweytest <- function(formula, data, subset, na.action, index = NULL,  ...){
+  # NB: code fails for unbalanced data -> is Angrist and Newey's test only for balanced data?
   #     unbalanced case is currently caught and a message is printed
   
     mf <- match.call()
