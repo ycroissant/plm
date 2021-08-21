@@ -173,7 +173,7 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
       unind <- unique(ind)
       for(i in 1:n) {
         tdati <- adfdati[ind == unind[i], ]
-        tmods[[i]] <- lm(adffm, tdati) # TODO: can check if my.lm.fit can be used
+        tmods[[i]] <- lm(adffm, tdati, model = FALSE) # TODO: check if my.lm.fit can be used
         }                              # (with minor modifications to code down below for t-val extraction etc.)
       },
     
@@ -206,7 +206,7 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
       unind <- unique(ind)
       for(i in 1:n) {
         tdati <- adfdati[ind == unind[i], ]
-        tmods[[i]] <- lm(adffm, tdati)  # TODO: can check if my.lm.fit can be used
+        tmods[[i]] <- lm(adffm, tdati, model = FALSE)  # TODO: check if my.lm.fit can be used
         }
     },
     
@@ -257,7 +257,7 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
       unind <- unique(ind)
       for(i in 1:n) {
         tdati <- adfdati[ind == unind[i], ]
-        tmods[[i]] <- lm(adffm, tdati)  # TODO: can check if my.lm.fit can be used
+        tmods[[i]] <- lm(adffm, tdati, model = FALSE)  # TODO: check if my.lm.fit can be used
         }
   })
 

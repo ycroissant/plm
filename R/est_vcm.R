@@ -124,7 +124,7 @@ pvcm.within <- function(formula, data, effect){
                       X <- model.matrix(x)
                       if (nrow(X) <= ncol(X)) stop("insufficient number of observations")
                       y <- pmodel.response(x)
-                      r <- lm(y ~ X - 1)
+                      r <- lm(y ~ X - 1, model = FALSE)
                       nc <- colnames(model.frame(r)$X)
                       names(r$coefficients) <- nc
                       r
@@ -188,7 +188,7 @@ pvcm.random <- function(formula, data, effect){
                       X <- model.matrix(formula, x)
                       if (nrow(X) <= ncol(X)) stop("insufficient number of observations")
                       y <- pmodel.response(x)
-                      r <- lm(y ~ X - 1)
+                      r <- lm(y ~ X - 1, model = FALSE)
                       nc <- colnames(model.frame(r)$X)
                       names(r$coefficients) <- nc
                       r
