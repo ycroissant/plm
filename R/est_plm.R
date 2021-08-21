@@ -229,7 +229,7 @@ starX <- function(formula, data, model, rhs = 1, effect){
 #'               data = Grunfeld, model = "random", random.method = "walhus",
 #'               effect = "twoways")
 #' 
-#' # summary and summary with a funished vcov (passed as matrix, 
+#' # summary and summary with a furnished vcov (passed as matrix, 
 #' # as function, and as function with additional argument)
 #' summary(wi)
 #' summary(wi, vcov = vcovHC(wi))
@@ -237,7 +237,7 @@ starX <- function(formula, data, model, rhs = 1, effect){
 #' summary(wi, vcov = function(x) vcovHC(x, method = "white2"))
 #' 
 #' 
-#' # nested random effect model
+#' ## nested random effect model
 #' # replicate Baltagi/Song/Jung (2001), p. 378 (table 6), columns SA, WH
 #' # == Baltagi (2013), pp. 204-205
 #' data("Produc", package = "plm")
@@ -247,8 +247,19 @@ starX <- function(formula, data, model, rhs = 1, effect){
 #' summary(plm(form, data = pProduc, model = "random", effect = "nested",
 #'             random.method = "walhus"))
 #' 
+#' ## Instrumental variable estimations
+#' # replicate Baltagi (2013/2021), p. 133/162, table 7.1
+#' data("Crime", package = "plm")
+#' FE2SLS <- plm(lcrmrte ~ lprbarr + lpolpc + lprbconv + lprbpris + lavgsen +
+#'                 ldensity + lwcon + lwtuc + lwtrd + lwfir + lwser + lwmfg + lwfed +
+#'                 lwsta + lwloc + lpctymle + lpctmin + region + smsa + factor(year)
+#'               | . - lprbarr - lpolpc + ltaxpc + lmix,
+#'               data = Crime, model = "within")
+#' G2SLS <- update(FE2SLS, model = "random", inst.method = "bvk")
+#' EC2SLS <- update(G2SLS, model = "random", inst.method = "baltagi")
+#' 
 #' ## Hausman-Taylor estimator and Amemiya-MaCurdy estimator
-#' ## replicate Baltagi (2005, 2013), table 7.4; Baltagi (2021), table 7.5
+#' # replicate Baltagi (2005, 2013), table 7.4; Baltagi (2021), table 7.5
 #' data("Wages", package = "plm")
 #' ht <- plm(lwage ~ wks + south + smsa + married + exp + I(exp ^ 2) + 
 #'               bluecol + ind + union + sex + black + ed |

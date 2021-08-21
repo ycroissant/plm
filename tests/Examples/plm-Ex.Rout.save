@@ -9456,7 +9456,7 @@ F-statistic: 3064.81 on 4 and 764 DF, p-value: < 2.22e-16
 +               data = Grunfeld, model = "random", random.method = "walhus",
 +               effect = "twoways")
 > 
-> # summary and summary with a funished vcov (passed as matrix, 
+> # summary and summary with a furnished vcov (passed as matrix, 
 > # as function, and as function with additional argument)
 > summary(wi)
 Twoways effects Within Model
@@ -9566,7 +9566,7 @@ Adj. R-Squared: 0.67047
 F-statistic: 102.013 on 2 and 9 DF, p-value: 6.5484e-07
 > 
 > 
-> # nested random effect model
+> ## nested random effect model
 > # replicate Baltagi/Song/Jung (2001), p. 378 (table 6), columns SA, WH
 > # == Baltagi (2013), pp. 204-205
 > data("Produc", package = "plm")
@@ -9655,8 +9655,19 @@ R-Squared:      0.97231
 Adj. R-Squared: 0.9721
 Chisq: 19579.7 on 6 DF, p-value: < 2.22e-16
 > 
+> ## Instrumental variable estimations
+> # replicate Baltagi (2013/2021), p. 133/162, table 7.1
+> data("Crime", package = "plm")
+> FE2SLS <- plm(lcrmrte ~ lprbarr + lpolpc + lprbconv + lprbpris + lavgsen +
++                 ldensity + lwcon + lwtuc + lwtrd + lwfir + lwser + lwmfg + lwfed +
++                 lwsta + lwloc + lpctymle + lpctmin + region + smsa + factor(year)
++               | . - lprbarr - lpolpc + ltaxpc + lmix,
++               data = Crime, model = "within")
+> G2SLS <- update(FE2SLS, model = "random", inst.method = "bvk")
+> EC2SLS <- update(G2SLS, model = "random", inst.method = "baltagi")
+> 
 > ## Hausman-Taylor estimator and Amemiya-MaCurdy estimator
-> ## replicate Baltagi (2005, 2013), table 7.4; Baltagi (2021), table 7.5
+> # replicate Baltagi (2005, 2013), table 7.4; Baltagi (2021), table 7.5
 > data("Wages", package = "plm")
 > ht <- plm(lwage ~ wks + south + smsa + married + exp + I(exp ^ 2) + 
 +               bluecol + ind + union + sex + black + ed |
@@ -14145,7 +14156,7 @@ R-Squared:      0.94134
 Adj. R-Squared: 0.93742
 F-statistic: 3064.81 on 4 and 764 DF, p-value: < 2.22e-16
 > 
-> # summary with a funished vcov, passed as matrix, as function, and
+> # summary with a furnished vcov, passed as matrix, as function, and
 > # as function with additional argument
 > data("Grunfeld", package = "plm")
 > wi <- plm(inv ~ value + capital,
@@ -15366,7 +15377,7 @@ F-statistic: 309.014 on 2 and 197 DF, p-value: < 2.22e-16
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  40.38 1.5 43 NA NA 
+Time elapsed:  22.65 0.94 23.66 NA NA 
 > grDevices::dev.off()
 null device 
           1 

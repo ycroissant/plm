@@ -255,7 +255,7 @@ deviance.panelmodel <- function(object, model = NULL, ...){
 #'           data = Produc, index = c("state","year"))
 #' summary(zz)
 #' 
-#' # summary with a funished vcov, passed as matrix, as function, and
+#' # summary with a furnished vcov, passed as matrix, as function, and
 #' # as function with additional argument
 #' data("Grunfeld", package = "plm")
 #' wi <- plm(inv ~ value + capital,
