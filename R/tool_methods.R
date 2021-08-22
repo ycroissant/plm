@@ -132,7 +132,7 @@ nobs.panelmodel <- function(object, ...) {
 #' @rdname nobs.plm
 #' @export
 nobs.pgmm <- function(object, ...) {
-  if (inherits(object, "pgmm")) return(sum(unlist(object$residuals) != 0))
+  if (inherits(object, "pgmm")) return(sum(unlist(object$residuals, use.names = FALSE) != 0))
     else stop("Input 'object' needs to be of class 'pgmm', i. e., a GMM estimation with panel data estimated by pgmm()")
 }
 

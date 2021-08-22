@@ -214,9 +214,9 @@ make.pconsecutive.indexes <- function(x, index, balanced = FALSE, ...) {
       }, simplify = FALSE, USE.NAMES = FALSE)
   }
   
-  times_filled_vector <- unlist(times_filled_list)
+  times_filled_vector <- unlist(times_filled_list, use.names = FALSE)
   id_times <- sapply(times_filled_list, length) # lengths (with an "s") would be more efficient, but requires R >= 3.2
-  id_filled_vector <- unlist(mapply(rep, unique(id_orig), id_times, SIMPLIFY = FALSE))
+  id_filled_vector <- unlist(mapply(rep, unique(id_orig), id_times, SIMPLIFY = FALSE), use.names = FALSE)
                       # SIMPLIFY = FALSE => always return list
 
   df_index_filled <- data.frame(id = id_filled_vector, times = times_filled_vector)

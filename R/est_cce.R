@@ -359,7 +359,7 @@ pcce <- function (formula, data, subset, na.action,
                 sigma2cce.i[[i]] <- crossprod(cceres[[i]])*
                     1/(length(cceres[[i]])-2*k-2)
             }
-            sigma2cce <- 1/n*sum(unlist(sigma2cce.i))
+            sigma2cce <- 1/n*sum(unlist(sigma2cce.i, use.names = FALSE))
         },
            
         "p" = {
@@ -376,7 +376,7 @@ pcce <- function (formula, data, subset, na.action,
           ty <- y[ind == unind[i]]
           sigma2.i[[i]] <- as.numeric(crossprod((ty-mean(ty))))/(length(ty)-1)
       }
-    sigma2y <- mean(unlist(sigma2.i))
+    sigma2y <- mean(unlist(sigma2.i, use.names = FALSE))
     r2cce <- 1 - sigma2cce/sigma2y
 
     ## allow outputting different types of residuals

@@ -207,9 +207,9 @@ pcdtest.formula <- function(x, data, index = NULL, model = NULL,
             tind.res[[i]] <- tind[ind == unind[i]]
         }
         ## make pseries of (all) residuals
-        resdata <- data.frame(ee = unlist(ti.res),
-                              ind = unlist(ind.res),
-                              tind = unlist(tind.res))
+        resdata <- data.frame(ee = unlist(ti.res, use.names = FALSE),
+                              ind = unlist(ind.res, use.names = FALSE),
+                              tind = unlist(tind.res, use.names = FALSE))
         pee <- pdata.frame(resdata, index = c("ind", "tind"))
         tres <- pee$ee
     }

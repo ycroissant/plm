@@ -214,7 +214,7 @@ pggls <- function(formula, data, subset, na.action,
         for (i in 1:ncond) {
             list.cov.blocks[[i]] <- subOmega[lti[[i]], lti[[i]]]
         }
-        omega <- bdsmatrix(groupsdim, unlist(list.cov.blocks))
+        omega <- bdsmatrix(groupsdim, unlist(list.cov.blocks, use.names = FALSE))
     }
     A <- crossprod(X, solve(omega, X))
     B <- crossprod(X, solve(omega, y))

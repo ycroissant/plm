@@ -284,9 +284,9 @@ pgmm <- function(formula, data, subset, na.action,
     # of any covariates + 1 because of first - differencing or the
     # largest minimum lag for any gmm or normal instruments
     # min or max to select the number of lost time series?
-    gmm.minlag  <- min(unlist(gmm.lags))                                  # was (==): min(sapply(gmm.lags, min))
-    inst.maxlag <- if (!is.null(inst.lags)) max(unlist(inst.lags)) else 0 # was (==): max(sapply(inst.lags, max)) else 0
-    main.maxlag <- max(unlist(main.lags))                                 # was (==): max(sapply(main.lags, max))
+    gmm.minlag  <- min(unlist(gmm.lags, use.names = FALSE))                                  # was (==): min(sapply(gmm.lags, min))
+    inst.maxlag <- if (!is.null(inst.lags)) max(unlist(inst.lags, use.names = FALSE)) else 0 # was (==): max(sapply(inst.lags, max)) else 0
+    main.maxlag <- max(unlist(main.lags, use.names = FALSE))                                 # was (==): max(sapply(main.lags, max))
     TL1 <- max(main.maxlag + 1, inst.maxlag + 1, gmm.minlag)
     TL2 <- max(main.maxlag,     inst.maxlag,     gmm.minlag - 1)
     # if TL2 = 0 (no lags), one observation is lost anyway because of
@@ -912,12 +912,12 @@ print.summary.pgmm <- function(x, digits = max(3, getOption("digits") - 2),
   print(x$call)
   cat("\n")
   print(pdim)
-  ntot <- sum(unlist(x$residuals) != 0)
+  ntot <- sum(unlist(x$residuals, use.names = FALSE) != 0)
   ninst <- dim(x$W[[1L]])[2]
   cat("\nNumber of Observations Used:", ntot, sep = " ")
 #  cat("\nNumber of Instruments Used:  ", ninst, "\n", sep ="") # TODO: more checks, then activate printing
   cat("\nResiduals:\n")
-  print(summary(unlist(residuals(x))))
+  print(summary(unlist(residuals(x), use.names = FALSE)))
   cat("\nCoefficients:\n")
   printCoefmat(x$coefficients, digits = digits)
 

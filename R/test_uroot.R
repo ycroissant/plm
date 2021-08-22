@@ -563,13 +563,13 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
 
   cumres2 <- lapply(resid, function(x) cumsum(x)^2)
   if (!dfcor) {
-    sigma2  <- mean(unlist(resid)^2)
+    sigma2  <- mean(unlist(resid, use.names = FALSE)^2)
     sigma2i <- vapply(resid, function(x) mean(x^2), FUN.VALUE = 0.0, USE.NAMES = FALSE)
   } else {
     # df correction as suggested in Hadri (2000), p. 157
     dfcorval <- switch(exo, "intercept" = (L-1), "trend" = (L-2))
     # -> apply to full length residuals over all individuals -> n*(L-1) or n*(L-2)
-    sigma2 <- as.numeric(crossprod(unlist(resid))) / (n * dfcorval)
+    sigma2 <- as.numeric(crossprod(unlist(resid, use.names = FALSE))) / (n * dfcorval)
     # -> apply to individual residuals' length, so just L -> L-1 or L-2
     sigma2i <- vapply(resid, function(x) crossprod(x)/dfcorval, FUN.VALUE = 0.0, USE.NAMES = FALSE)
   }
@@ -878,8 +878,8 @@ purtest <- function(object, data = NULL, index = NULL,
     
     # stack the residuals of each time series and perform the pooled
     # regression
-    res.level <- unlist(lapply(idres, function(x) x$resid[["resid.level"]]))
-    res.diff  <- unlist(lapply(idres, function(x) x$resid[["resid.diff"]]))
+    res.level <- unlist(lapply(idres, function(x) x$resid[["resid.level"]]), use.names = FALSE)
+    res.diff  <- unlist(lapply(idres, function(x) x$resid[["resid.diff"]]), use.names = FALSE)
     z <- my.lm.fit(as.matrix(res.level), res.diff, dfcor = dfcor)
     # compute the Levin-Lin-Chu statistic
     tildeT <- T.levinlin - mean(lags) - 1

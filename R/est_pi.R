@@ -240,7 +240,7 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
     # compute the residuals matrix
     .resid <- sapply(LMS, resid)
     # extract the pi vector of unconstrained estimates
-    pi <- unlist(lapply(LMS, coef))
+    pi <- unlist(lapply(LMS, coef), use.names = FALSE)
     if (robust){
         Omega <- lapply(seq_len(n),
                         function(i)
@@ -275,7 +275,8 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
     resb <- as.numeric(R %*% .coef) - as.numeric(pi)
     piconst <- matrix(R %*% .coef, ncol = T)
     OOmega <- Omega                                       ## TODO: OOmega is never used
-    .resid <- matrix(unlist(Y), ncol = length(Y)) - XX %*% piconst
+    .resid <- matrix(unlist(Y, use.names = FALSE), ncol = length(Y)) - XX %*% piconst
+    
     if(TRUE){                                             ## TODO: this is always TRUE...?!
         if (robust){                                      ## and Omega is calc. again, with a
                                                           ## new .resid input but with same lapply-construct

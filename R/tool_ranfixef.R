@@ -404,7 +404,8 @@ ranef.plm <- function(object, effect = NULL, ...) {
   if (is.null(effect)) effect <- obj.effect
   
   erc <- ercomp(object)
-  theta <- unlist(erc["theta"]) # extract theta, but depending on model/effect, it is adjusted later
+  # extract theta, but depending on model/effect, it is adjusted/overwritten later
+  theta <- unlist(erc["theta"], use.names = FALSE) 
   
   # res <- object$residuals                # gives residuals of quasi-demeaned model
   res <- residuals_overall_exp.plm(object) # but need RE residuals of overall model
