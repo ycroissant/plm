@@ -260,7 +260,7 @@ pmg <- function(formula, data, subset, na.action,
     for (i in 1:n) coefmat[ , , i] <- outer(demcoef[ , i], demcoef[ , i])
     ## summing over the n-dimension of the array we get the
     ## covariance matrix of coefs
-    vcov <- t(colSums(aperm(coefmat))) / (n*(n-1)) # colSums(aperm)-construct is faster than apply(Rmat, 1:2, sum)
+    vcov <- t(colSums(aperm(coefmat))) / (n*(n-1)) # colSums(aperm)-construct is faster than apply(coefmat, 1:2, sum)
 
     ######### na.omit = T in apply was the big problem!!
 
