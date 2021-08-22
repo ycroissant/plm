@@ -1685,12 +1685,17 @@ through `nblag`.].
 
 ### Overview of functions for panel unit root testing
 
-The package `plm` offers several panel unit root tests contained in
-functions `purtest`, `cipstest`, and `phansi`. While `purtest` implements various
-tests which can be selected via its `test` argument, `cipstest` and `phansi` are
-functions for a specific test each. Below, first an overview is provided
-which tests are implemented per functions. A theoretical treatment is given for
-a few of those tests later on.
+
+Below, first an overview is provided which tests are implemented per functions. 
+A theoretical treatment is given for a few of those tests later on. The package 
+`plm` offers several panel unit root tests contained in three functions: 
+
+- `purtest` (Levin-Lin-Chu test, IPS test, several Fisher-type tests, Hadri's test),
+- `cipstest` (cross-sectionally augmented IPS test), and 
+- `phansi` (Simes' test).
+
+While `purtest` implements various tests which can be selected via its `test` 
+argument, `cipstest` and `phansi` are functions for a specific test each.
 
 Function `purtest` offers the following tests by setting argument `test` to:
 
@@ -1706,15 +1711,16 @@ Function `purtest` offers the following tests by setting argument `test` to:
 - `"logit"`, is the logit test (@CHOI:01),
 - `"hadri"`, for Hadri's test (@HADR:00).
 
-These tests are often called first generation panel unit root tests as they do
-assume absence of cross-sectional correlation. All mentioned tests except
-Hadri's test are based on the estimation of
+The tests in `purtest` are often called first generation panel unit root tests 
+as they do assume absence of cross-sectional correlation; all these, except 
+Hadri's test, are based on the estimation of
 augmented Dickey-Fuller (ADF) regressions for each time series. A
 statistic is then computed using the t-statistics associated with
-the lagged variable. The Hadri residual-based LM statistic is the cross-sectional
-average of individual KPSS statistics (@KWIA:PHIL:SCHM:SHIN:92), standardized
+the lagged variable. I a different manner, the Hadri residual-based LM statistic 
+is the cross-sectional average of individual KPSS statistics 
+(@KWIA:PHIL:SCHM:SHIN:92), standardized
 by their asymptotic mean and standard deviation.
-Among those tests, `"madwu"`, `"Pm"`, `"invormal"`, and `"logit"` are
+Among the tests in `purtest`, `"madwu"`, `"Pm"`, `"invormal"`, and `"logit"` are
 Fisher-type tests.^[The individual p-values for the Fisher-type tests
 are approximated as described in @MACK:96 if the package
 `urca` (@PFAFF:08) is available, otherwise as described in @MACK:94.]
