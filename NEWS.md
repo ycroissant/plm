@@ -71,7 +71,8 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 ### Internals
 
  * various efficiency gains throughout the package by using more vapply(),
-   crossprod(), lm.fit(), better branching, etc.
+   crossprod(), lm.fit(), better branching, t(colSums(aperm(.))) (instead of 
+   apply(., 1:2, sum))), etc.
  * piest, aneweytest: now use internal demeaning framework by Within().
  * various print methods now return the input object invisible (before returned
    NULL).

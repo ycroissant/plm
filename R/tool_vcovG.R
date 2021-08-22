@@ -568,7 +568,7 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 
     ## meat
     ## salame <- apply(Sl, 1:2, mean, na.rm=TRUE) * (n-l)
-    salame <- apply(Sl, 1:2, sum)
+    salame <- t(colSums(aperm(Sl))) # colSums(aperm)-construct is faster than apply(Sl, 1:2, sum)
 
     ## bread by standard method
     pane <- solve(crossprod(demX))
@@ -1106,7 +1106,7 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
     ## average over all omega blocks, removing NAs (apply preserving
     ## *two* dimensions, i.e., over the third) to get the unconditional
     ## covariance matrix of errors for a group (viz. time period):
-    OmegaT <- apply(tres, 1:2, mean, na.rm = TRUE)
+    OmegaT <- t(colMeans(aperm(tres), na.rm = TRUE)) # # faster than and identical to prev. used apply(tres, 1:2, mean, na.rm = TRUE)
 
   ## end of PCSE covariance calculation.
 
@@ -1125,7 +1125,7 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
   }
 
   ## meat
-  salame <- apply(salame, 1:2, sum)
+  salame <- t(colSums(aperm(salame))) # faster than and identical to prev. used apply(salame, 1:2, sum)
 
   ## bread
   pane <- solve(crossprod(demX))

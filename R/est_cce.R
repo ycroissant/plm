@@ -293,13 +293,13 @@ pcce <- function (formula, data, subset, na.action,
             ## assign beta CCEMG
             coef <- coefmg
             for(i in 1:n) Rmat[ , , i] <- outer(demcoef[ , i], demcoef[ , i])
-            vcov <- 1/(n*(n-1)) * apply(Rmat, 1:2, sum)
+            vcov <- 1/(n*(n-1)) * t(colSums(aperm(Rmat))) # colSums(aperm)-construct is faster than apply(Rmat, 1:2, sum)
         },
            
         "p" = {
             ## calc beta_CCEP
-            sXMX <- apply(XMX, 1:2, sum)
-            sXMy <- apply(XMy, 1:2, sum)
+            sXMX <- t(colSums(aperm(XMX))) # faster and same as the prev. used slower: apply(XMX, 1:2, sum)
+            sXMy <- t(colSums(aperm(XMy))) # faster and same as the prev. used slower: apply(XMy, 1:2, sum)
             coef <- solve(sXMX, sXMy)
     
             ## calc CCEP covariance:
@@ -309,7 +309,7 @@ pcce <- function (formula, data, subset, na.action,
                 outer(demcoef[ , i], demcoef[ , i]) %*% XMX[ , , i]
             ## summing over the n-dimension of the array we get the
             ## covariance matrix of coefs
-            R.star <- 1/(n-1) * apply(Rmat, 1:2, sum) * 1/(t^2)
+            R.star <- 1/(n-1) * t(colSums(aperm(Rmat))) * 1/(t^2) # t(colSums(aperm(Rmat))) faster than == apply(Rmat, 1:2, sum)
     
             Sigmap.star <- solve(psi.star, R.star) %*% solve(psi.star)
             vcov <- Sigmap.star/n
