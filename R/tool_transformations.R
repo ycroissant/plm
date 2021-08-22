@@ -304,7 +304,7 @@ myave.default <- function(x, effect, func, ...) {
 
 Tapply.pseries <- function(x, effect = c("individual", "time", "group"), func, ...){
     effect <- match.arg(effect)
-    xindex <- unlist(attr(x, "index")) # unclass for speed
+    xindex <- unclass(attr(x, "index")) # unclass for speed
     checkNA.index(xindex) # index may not contain any NA
     effect <- switch(effect,
                      "individual"= xindex[[1L]],
