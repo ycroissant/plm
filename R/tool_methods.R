@@ -297,10 +297,10 @@ summary.plm <- function(object, vcov = NULL, ...){
     }
   
   ## determine if standard normal and Chisq test or t distribution and F test to be used
-  use.norm.chisq <- FALSE
-  if(model == "random") use.norm.chisq <- TRUE                 # all random models
-  if(length(formula(object))[2L] >= 2L) use.norm.chisq <- TRUE # all IV models
-  if(model == "ht") use.norm.chisq <- TRUE                     # HT via plm(., model="ht")
+  ## (normal/chisq for all random models, all IV models, and HT via plm(., model="ht"))
+  use.norm.chisq <- if(model == "random" || 
+                       length(formula(object))[2L] >= 2L || 
+                       model == "ht") TRUE else FALSE
   
   # perform Wald test of joint sign. of regressors only if there are
   # other regressors besides the intercept
