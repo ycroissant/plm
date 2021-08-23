@@ -747,9 +747,7 @@ pseriesfy <- function(x, ...) {
   if(!inherits(x, "pdata.frame")) stop("input 'x' needs to be a pdata.frame")
   ix <- attr(x, "index")
   nam <- attr(x, "row.names")
-  pdf <- as.data.frame(lapply(x, function(column) {
-    column <- add_pseries_features(column, ix)
-  } ))
+  pdf <- as.data.frame(lapply(x, function(col) add_pseries_features(col, ix)))
   class(pdf) <- c("pdata.frame", class(pdf))
   attr(pdf, "index") <- ix
   rownames(pdf) <- nam
