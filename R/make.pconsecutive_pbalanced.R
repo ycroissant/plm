@@ -203,7 +203,7 @@ make.pconsecutive.indexes <- function(x, index, balanced = FALSE, ...) {
     
     times_filled_list <- sapply(seq_len(n_id_orig), function(i) {
         seq(from = min_values[i], to = max_values[i], by = 1)
-      }, simplify = FALSE)
+      }, simplify = FALSE, USE.NAMES = FALSE)
   
   } else {
     min_value <- min(df_index[, "times"])
@@ -215,7 +215,8 @@ make.pconsecutive.indexes <- function(x, index, balanced = FALSE, ...) {
   }
   
   times_filled_vector <- unlist(times_filled_list, use.names = FALSE)
-  id_times <- sapply(times_filled_list, length) # lengths (with an "s") would be more efficient, but requires R >= 3.2
+  id_times <- vapply(times_filled_list, length, FUN.VALUE = 0.0) # lengths (with an "s") would be more efficient, but requires R >= 3.2
+  
   id_filled_vector <- unlist(mapply(rep, unique(id_orig), id_times, SIMPLIFY = FALSE), use.names = FALSE)
                       # SIMPLIFY = FALSE => always return list
 
@@ -253,10 +254,10 @@ make.pconsecutive.data.frame <- function(x, balanced = FALSE, index = NULL, ...)
          'individual' and 'time' dimension for make.pconsecutive to work on a data.frame")
   
   # assume first two columns to be the index vars
-  if (is.null(index)) index_orig_names <- names(x)[1:2]
-    else index_orig_names <- index
+  index_orig_names <- if(is.null(index)) names(x)[1:2] else index
     
   list_ret_make_index <- make.pconsecutive.indexes(x, index_orig_names, balanced = balanced, ...)
+  
   index_df_filled    <- list_ret_make_index[["consec_index"]]
   NArows_old_index   <- list_ret_make_index[["NArows_former_index"]]
   has_fancy_rownames <- list_ret_make_index[["has_fancy_rownames"]]
@@ -345,9 +346,7 @@ make.pconsecutive.pseries <- function(x, balanced = FALSE, ...) {
     class(df_old_index) <- "data.frame"
     
     # strip x to its pure form (no index, no class pseries)
-    attr(x, "index") <- NULL
-    if (inherits(x, "pseries")) class(x) <- setdiff(class(x), "pseries")
-    df_old_index$x <- x
+    df_old_index$x <- remove_pseries_features(x)
     
     # silently drop entries with NA in either individual or time variable of original index
     df_old_index <- df_old_index[!NArows_old_index, ]
@@ -680,7 +679,7 @@ make.pbalanced.data.frame <- function(x, balance.type = c("fill", "shared.times"
 intersect_index <- function(index, by) {
   # intersect() is defined on vectors (not factors)
   #  -> convert respective index to character before
-  
+  unclass(index) # unclass for speed
   switch(by,
          "time" = {
            id <- index[[1L]]

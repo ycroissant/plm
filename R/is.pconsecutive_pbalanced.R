@@ -165,11 +165,11 @@ is.pconsecutive.default <- function(x, id, time, na.rm.tindex = FALSE, ...) {
   # argument 'x' just used for input check (if it is not NULL and is a vector)
   
   # input checks
-  if (length(id) != length(time)) 
+  if(length(id) != length(time)) 
     stop(paste0("arguments 'id' and 'time' must have same length: length(id): ", length(id), ", length(time) ", length(time)))
   
-  if (!is.null(x) && is.vector(x)) { # is.vector could be too strict? factor is not a vector
-    if (!(length(x) == length(id) && length(x) == length(time) && length(id) == length(time)))
+  if(!is.null(x) && is.vector(x)) { # is.vector could be too strict? factor is not a vector
+    if(!(length(x) == length(id) && length(x) == length(time) && length(id) == length(time)))
       stop(paste0("arguments 'x', 'id', 'time' must have same length: length(x): ", 
                   length(x), ", length(id): ", length(id), ", length(time): ", length(time)))
     
@@ -182,7 +182,7 @@ is.pconsecutive.default <- function(x, id, time, na.rm.tindex = FALSE, ...) {
   #   is.pconsecutive.pdata.frame or is.pconsecutive.pseries as a pdata.frame (which is sorted) was constructed 
   #   in the first place; for data.frame interface the ordering is done in the respective function
   
-  if (na.rm.tindex) {
+  if(na.rm.tindex) {
     NA_tindex <- is.na(time)
     time <- time[!NA_tindex]
     id <- id[!NA_tindex]
@@ -193,16 +193,16 @@ is.pconsecutive.default <- function(x, id, time, na.rm.tindex = FALSE, ...) {
   #  see R FAQ 7.10 for coercing factors to numeric: 
   #      as.numeric(levels(factor_var))[as.integer(factor_var)]   is more efficient than
   #      as.numeric(as.character(factor_var))
-  if (!is.numeric(time) && is.factor(time)) time <- as.numeric(levels(time))[as.integer(time)]
+  if(!is.numeric(time) && is.factor(time)) time <- as.numeric(levels(time))[as.integer(time)]
   
   list_id_timevar <- split(time, id, drop = TRUE)
 
-  res <- sapply(list_id_timevar, function(id_timevar) { if(anyNA(id_timevar)) {
+  res <- vapply(list_id_timevar, function(id_timevar) { if(anyNA(id_timevar)) {
                                                            NA # return NA if NA found in the time periods for individual
                                                           } else {
                                                               begin <- id_timevar[1L]
                                                               end   <- id_timevar[length(id_timevar)]
-                                                 
+                                                              
                                                               # compare to length(original id_timevar) to find out if times are consecutive
                                                               (end - begin + 1L) == length(id_timevar)
                                                               
@@ -211,7 +211,8 @@ is.pconsecutive.default <- function(x, id, time, na.rm.tindex = FALSE, ...) {
                                                                 # consecutive <- seq(from = begin, to = end, by = 1)
                                                                 # length(consecutive) == length(id_timevar)
                                                           }
-                                                      })
+                                                      }, FUN.VALUE = TRUE)
+  
   return(res)
 }
 
@@ -222,8 +223,8 @@ is.pconsecutive.data.frame <- function(x, index = NULL, na.rm.tindex = FALSE, ..
     stop("if argument 'index' is not NULL, 'index' needs to specify
          'individual' and 'time' dimension for is.pconsecutive to work on a data.frame")
   
-  if (is.null(index)) index_orig_names <- names(x)[1:2] # assume first two columns to be the index vars
-    else index_orig_names <- index
+  # if index not provided, assume first two columns to be the index vars
+  index_orig_names <- if(is.null(index)) names(x)[1:2] else index
   
   id   <- x[ , index_orig_names[1L]]
   time <- x[ , index_orig_names[2L]]
@@ -243,7 +244,7 @@ is.pconsecutive.data.frame <- function(x, index = NULL, na.rm.tindex = FALSE, ..
 #' @rdname is.pconsecutive
 #' @export
 is.pconsecutive.pseries <- function(x, na.rm.tindex = FALSE, ...){
-  index <- unclass(attr(x, "index"))
+  index <- unclass(attr(x, "index")) # unclass for speed
   return(is.pconsecutive.default(x, index[[1L]], index[[2L]], na.rm.tindex = na.rm.tindex, ...))
 }
 
@@ -251,14 +252,14 @@ is.pconsecutive.pseries <- function(x, na.rm.tindex = FALSE, ...){
 #' @rdname is.pconsecutive
 #' @export
 is.pconsecutive.pdata.frame <- function(x, na.rm.tindex = FALSE, ...){
-  index <- unclass(attr(x, "index"))
+  index <- unclass(attr(x, "index")) # unclass for speed
   return(is.pconsecutive.default(x, index[[1L]], index[[2L]], na.rm.tindex = na.rm.tindex, ...))
 }
 
 #' @rdname is.pconsecutive
 #' @export
 is.pconsecutive.panelmodel <- function(x, na.rm.tindex = FALSE, ...){
-  index <- unclass(attr(x$model, "index"))
+  index <- unclass(attr(x$model, "index")) # unclass for speed
   return(is.pconsecutive.default(x, index[[1L]], index[[2L]], na.rm.tindex = na.rm.tindex, ...))
 }
 
@@ -347,21 +348,21 @@ is.pbalanced.default <- function(x, y, ...) {
 #' @export
 is.pbalanced.data.frame <- function(x, index = NULL, ...) {
   x <- pdata.frame(x, index)
-  index <- unclass(attr(x, "index"))
+  index <- unclass(attr(x, "index")) # unclass for speed
   return(is.pbalanced(index[[1L]], index[[2L]]))
 }
 
 #' @rdname is.pbalanced
 #' @export
 is.pbalanced.pdata.frame <- function(x, ...) {
-  index <- unclass(attr(x, "index"))
+  index <- unclass(attr(x, "index")) # unclass for speed
   return(is.pbalanced(index[[1L]], index[[2L]]))
 }
 
 #' @rdname is.pbalanced
 #' @export
 is.pbalanced.pseries <- function(x, ...) {
-  index <- unclass(attr(x, "index"))
+  index <- unclass(attr(x, "index")) # unclass for speed
   return(is.pbalanced(index[[1L]], index[[2L]]))
 }
 
