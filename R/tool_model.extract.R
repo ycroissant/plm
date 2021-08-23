@@ -83,7 +83,7 @@ model.frame.pdata.frame <- function(formula, data = NULL, ...,
     pdata <- formula
     formula <- as.Formula(data)
     if (is.null(rhs)) rhs <- 1:(length(formula)[2L])
-    if (is.null(lhs)) lhs <- if(length(formula)[1L] > 0) 1 else 0
+    if (is.null(lhs)) lhs <- if(length(formula)[1L] > 0L) 1 else 0
     index <- attr(pdata, "index")
     mf <- model.frame(formula, as.data.frame(pdata, row.names = FALSE), ..., # NB need row.names = FALSE to ensure mf has integer sequence as row names
                       lhs = lhs, rhs = rhs, dot = dot)
@@ -147,7 +147,7 @@ model.matrix.pdata.frame <- function(object,
     data <- object
     has.intercept <- has.intercept(formula, rhs = rhs)
     # relevant defaults for cstcovar.rm
-    if (is.null(cstcovar.rm)) cstcovar.rm <- if(model == "within") "intercept" else "none"
+    if(is.null(cstcovar.rm)) cstcovar.rm <- if(model == "within") "intercept" else "none"
     balanced <- is.pbalanced(data)
     X <- model.matrix(as.Formula(formula), data = data, rhs = rhs, dot = "previous", ...)
     # check for infinite or NA values and exit if there are some
@@ -159,29 +159,30 @@ model.matrix.pdata.frame <- function(object,
     X.contr <- X.contr[ ! vapply(X.contr, is.null, FUN.VALUE = TRUE, USE.NAMES = FALSE) ]
     index <- index(data)
     attr(X, "index") <- index
-    if (effect == "twoways" && model %in% c("between", "fd"))
+    if(effect == "twoways" && model %in% c("between", "fd"))
         stop("twoways effect only relevant for within, random, and pooling models")
-    if (model == "within")  X <- Within(X, effect)
-    if (model == "Sum")     X <- Sum(X, effect)
-    if (model == "Between") X <- Between(X, effect)
-    if (model == "between") X <- between(X, effect)
-    if (model == "mean")    X <- Mean(X)
-    if (model == "fd")      X <- pdiff(X, effect = "individual",
+    if(model == "within")  X <- Within(X, effect)
+    if(model == "Sum")     X <- Sum(X, effect)
+    if(model == "Between") X <- Between(X, effect)
+    if(model == "between") X <- between(X, effect)
+    if(model == "mean")    X <- Mean(X)
+    if(model == "fd")      X <- pdiff(X, effect = "individual",
                                    has.intercept = has.intercept)
-    if (model == "random"){
-        if (is.null(theta)) stop("a theta argument should be provided")
-        if (effect %in% c("time", "individual")) X <- X - theta * Between(X, effect)
-        if (effect == "nested") X <- X - theta$id * Between(X, "individual") -
+    if(model == "random"){
+        if(is.null(theta)) stop("a theta argument must be provided for model = \"random\"")
+        if(effect %in% c("time", "individual")) X <- X - theta * Between(X, effect)
+        if(effect == "nested") X <- X - theta$id * Between(X, "individual") -
                                     theta$gp * Between(X, "group")
-        if (effect == "twoways" && balanced)
+        if(effect == "twoways" && balanced)
             X <- X - theta$id * Between(X, "individual") -
                 theta$time * Between(X, "time") + theta$total * Mean(X)
+        ## TODO: case unbalanced twoways not treated here. Catch and error gracefully?
     }
-    if (cstcovar.rm == "intercept"){
+    if(cstcovar.rm == "intercept"){
         posintercept <- match("(Intercept)", colnames(X))
         if (! is.na(posintercept)) X <- X[ , - posintercept, drop = FALSE]
     }
-    if (cstcovar.rm %in% c("covariates", "all")){
+    if(cstcovar.rm %in% c("covariates", "all")){
         cols <- apply(X, 2, is.constant)
         cstcol <- names(cols)[cols]
         posintercept <- match("(Intercept)", cstcol)
@@ -189,9 +190,9 @@ model.matrix.pdata.frame <- function(object,
         zeroint <- if(cstintercept &&
                           max(X[ , posintercept]) < sqrt(.Machine$double.eps))
                           TRUE else FALSE
-        if (length(cstcol) > 0L){
-            if ((cstcovar.rm == "covariates" || !zeroint) && cstintercept) cstcol <- cstcol[- posintercept]
-            if (length(cstcol) > 0L){
+        if(length(cstcol) > 0L){
+            if((cstcovar.rm == "covariates" || !zeroint) && cstintercept) cstcol <- cstcol[- posintercept]
+            if(length(cstcol) > 0L){
                 X <- X[ , - match(cstcol, colnames(X)), drop = FALSE]
                 attr(X, "constant") <- cstcol
             }
@@ -263,14 +264,12 @@ pmodel.response <- function(object, ...) {
 pmodel.response.plm <- function(object, ...){
     y <- model.response(model.frame(object))
     dots <- list(...)
-    if (is.null(dots$model)) model <- describe(object, "model") else model <- dots$model
-    if (is.null(dots$effect))
-        effect <- describe(object, "effect") else effect <- dots$effect
-    if (is.null(dots$theta)){
-        if (describe(object, "model") == "random")
-            theta <- ercomp(object)$theta else theta <- NULL
-    }
-    else theta <- dots$theta
+    model  <- if(is.null(dots$model))   describe(object, "model")  else dots$model 
+    effect <- if(is.null(dots$effect))  describe(object, "effect") else dots$effect
+    theta  <- if(is.null(dots$theta)) {
+                    if(describe(object, "model") == "random") 
+                        ercomp(object)$theta else NULL
+                } else dots$theta
     ptransform(y, model = model, effect = effect, theta = theta)
 }
 
@@ -278,10 +277,10 @@ pmodel.response.plm <- function(object, ...){
 #' @export
 pmodel.response.data.frame <- function(object, ...){
     dots <- list(...)
-    if (is.null(attr(object, "terms"))) stop("not a model.frame")
+    if(is.null(attr(object, "terms"))) stop("not a model.frame")
     model  <- if(is.null(dots$model))  "pooling"    else dots$model
     effect <- if(is.null(dots$effect)) "individual" else dots$effect
-    if(is.null(dots$theta)) theta <- NULL else theta <- dots$theta
+    theta  <- if(is.null(dots$theta))  NULL         else dots$theta
     y <- model.response(object)
     ptransform(y, model = model, effect = effect, theta = theta)
 }
@@ -291,15 +290,15 @@ pmodel.response.data.frame <- function(object, ...){
 #' @export
 pmodel.response.formula <- function(object, data, ...){
     dots <- list(...)
-    if (is.null(data)) stop("the data argument is mandatory")
-    if (! inherits(data, "pdata.frame")) stop("the data argument must be a pdata.frame")
-    if (is.null(attr(data, "terms"))) data <- model.frame(data, object)
+    if(is.null(data)) stop("the data argument is mandatory")
+    if(! inherits(data, "pdata.frame")) stop("the data argument must be a pdata.frame")
+    if(is.null(attr(data, "terms"))) data <- model.frame(data, object)
     model  <- dots$model
     effect <- dots$effect
     theta  <- dots$theta
-    if (is.null(model)) model <- "pooling"
-    if (is.null(effect)) effect <- "individual"
-    if (model == "random" && is.null(theta)) stop("the theta argument is mandatory for model = \"random\"")
+    if(is.null(model)) model <- "pooling"
+    if(is.null(effect)) effect <- "individual"
+    if(model == "random" && is.null(theta)) stop("the theta argument is mandatory for model = \"random\"")
     y <- model.response(data)
     ptransform(y, model = model, effect = effect, theta = theta)
 }
@@ -307,34 +306,31 @@ pmodel.response.formula <- function(object, data, ...){
 ptransform <- function(x, model = NULL, effect = NULL, theta = NULL, ...){
     # NB: ptransform (and hence pmodel.response) does not handle the random 2-way unbalanced case
     
-    if (model == "pooling") return(x)
-    if (effect == "twoways" && model %in% c("between", "fd"))
+    if(model == "pooling") return(x) # early exit
+    if(effect == "twoways" && model %in% c("between", "fd"))
         stop("twoways effect only relevant for within, random, and pooling models")
 
-    if (model == "within")  x <- Within(x, effect)
-    if (model == "between") x <- between(x, effect)
-    if (model == "Between") x <- Between(x, effect)
-    if (model == "fd")      x <- pdiff(x, "individual")
-    if (model == "random") {
+    if(model == "within")  x <- Within(x, effect)
+    if(model == "between") x <- between(x, effect)
+    if(model == "Between") x <- Between(x, effect)
+    if(model == "fd")      x <- pdiff(x, "individual")
+    if(model == "random") {
         balanced <- is.pbalanced(x) # need to check this right here as long as x is a pseries
-        if (is.null(theta)) stop("a theta argument must be provided")
-        if (effect %in% c("time", "individual")) x <- x - theta * Between(x, effect)
-        if (effect == "nested") x <- x - theta$id * Between(x, "individual") -
+        if(is.null(theta)) stop("a theta argument must be provided")
+        if(effect %in% c("time", "individual")) x <- x - theta * Between(x, effect)
+        if(effect == "nested") x <- x - theta$id * Between(x, "individual") -
                                          theta$gp * Between(x, "group")
-
-        if (effect == "twoways" && balanced)
+        if(effect == "twoways" && balanced)
             x <- x - theta$id   * Between(x, "individual") -
                      theta$time * Between(x, "time") + theta$total * mean(x)
         ## TODO: could catch non-treated case to error gracefully:
         # if (effect == "twoways" && !balanced) stop("two-way unbalanced case not implemented in ptransform")
     }
     
-    res <- if (model %in% c("between", "fd")) {
-    # these models "compress" the data, thus an index does not make sense here -> no pseries
-               x
-           } else {
-               structure(x, index = index(x), class = union("pseries", class(x)))
-           }
-    return(res)
+    # between and fd models "compress" the data, thus an index does not make
+    # sense for those, but add to all others (incl. Between (capital B))
+    x <- if(model %in% c("between", "fd")) x
+         else structure(x, index = index(x), class = union("pseries", class(x)))
+    return(x)
 }
 
