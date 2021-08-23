@@ -63,14 +63,16 @@ padf <- function(x, exo = c("none", "intercept", "trend"), p.approx = NULL, ...)
     large <- t(t(large) / c(1, 10, 10, 100))
     limit <- c(-1.04, -1.61, -2.89)
     rownames(small) <- rownames(large) <- names(limit) <- c("none", "intercept", "trend")
+
+    c.x.x2 <- rbind(1, x, x ^ 2)
+    psmall <- colSums(small[exo, ] * c.x.x2)
+    plarge <- colSums(large[exo, ] * rbind(c.x.x2, x ^ 3))
     
-    psmall <- apply(small[exo, ] * rbind(1, x, x ^ 2), 2, sum)
-    plarge <- apply(large[exo, ] * rbind(1, x, x ^ 2, x ^ 3), 2, sum)
     res <- as.numeric(pnorm(psmall * (x <= limit[exo]) + plarge * (x > limit[exo])))
   }
   attr(res, "p.approx") <- p.approx
   return(res)
-}
+} ## END padf
 
 
 ## IPS (2003), table 3 for Wtbar statistic
@@ -344,7 +346,7 @@ lagsel <- function(object, exo = c("intercept", "none", "trend"),
     lags <- pmax + 1 - which.min(l)
   }
   lags
-}
+} ## END lagsel
 
 
 adj.levinlin.value <- function(l, exo = c("intercept", "none", "trend")){
@@ -359,7 +361,7 @@ adj.levinlin.value <- function(l, exo = c("intercept", "none", "trend")){
     high <- adj.levinlin[as.character(Ts[2L]), , exo]
     return(low + (l - Ts[1L])/(Ts[2L] - Ts[1L]) * (high - low))
   }
-}
+} ## END adj.levinlin.value
 
 adj.ips.wtbar.value <- function(l = 30, lags = 2, exo = c("intercept", "trend")){
   ## extract the adjustment values for Im-Pesaran-Shin test for Wtbar statistic (table 3 in IPS (2003))
@@ -377,7 +379,7 @@ adj.ips.wtbar.value <- function(l = 30, lags = 2, exo = c("intercept", "trend"))
     high <- adj.ips.wtbar[as.character(lags), as.character(Ts[2L]), , exo]
     return(low + (l - Ts[1L])/(Ts[2L] - Ts[1L]) * (high - low))
   }
-}
+} ## END adj.ips.wtbar.value
 
 adj.ips.ztbar.value <- function(l = 30L, time, means, vars){
   ## extract the adjustment values for Im-Pesaran-Shin test's Ztbar statistic
@@ -393,7 +395,7 @@ adj.ips.ztbar.value <- function(l = 30L, time, means, vars){
     high <- c("mean" = means[as.character(Ts[2L])], "var" = vars[as.character(Ts[2L])])
     return(low + (l - Ts[1L])/(Ts[2L] - Ts[1L]) * (high - low))
   }
-}
+} ## END adj.ips.ztbar.value
 
 critval.ips.tbar.value <- function(ind = 10L, time = 19L, critvals, exo = c("intercept", "trend")){
   ## extract and interpolate 1%, 5%, 10% critical values for Im-Pesaran-Shin test's
@@ -458,7 +460,7 @@ critval.ips.tbar.value <- function(ind = 10L, time = 19L, critvals, exo = c("int
       return(res)
     }
   }
-}
+} ## END critval.ips.tbar.value
 
 tsadf <- function(object, exo = c("intercept", "none", "trend"),
                   lags = NULL, dfcor = FALSE, comp.aux.reg = FALSE, ...){
@@ -562,6 +564,7 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
   }
 
   cumres2 <- lapply(resid, function(x) cumsum(x)^2)
+  
   if (!dfcor) {
     sigma2  <- mean(unlist(resid, use.names = FALSE)^2)
     sigma2i <- vapply(resid, function(x) mean(x^2), FUN.VALUE = 0.0, USE.NAMES = FALSE)
