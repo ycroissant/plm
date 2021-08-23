@@ -10,7 +10,7 @@ status](https://www.r-pkg.org/badges/version/plm)](https://CRAN.R-project.org/pa
 `plm`, first posted on **CRAN** in 2006, is an **R** package for panel
 data econometrics. It provides:
 
-- an enhanced data frame, pdata.frame, to deal with data sets for which observations are identified by a combination of two indexes,
+- an enhanced data frame, called pdata.frame, to deal with data sets for which observations are identified by a combination of two indexes,
 - a set of functions to estimate models (especially plm for linear panel models and pgmm for general method of moments estimators applied to panel data),
 - a set of testing functions,
 - a set of robust covariance matrix estimators.
