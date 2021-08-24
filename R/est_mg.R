@@ -203,9 +203,7 @@ pmg <- function(formula, data, subset, na.action,
       for(i in 1:n) {
         taugX <- augX[ind == unind[i], ] # TODO: check if this kind of extractions need drop = FALSE for corner cases
         ty    <-    y[ind == unind[i]]
-
         if(trend) taugX <- cbind(taugX, 1:(dim(taugX)[[1L]]))
-
         tfit <- lm.fit(taugX, ty)
         tcoef0[ , i] <- tfit$coefficients
         tres[[i]]    <- tfit$residuals
@@ -260,7 +258,7 @@ pmg <- function(formula, data, subset, na.action,
     for (i in 1:n) coefmat[ , , i] <- outer(demcoef[ , i], demcoef[ , i])
     ## summing over the n-dimension of the array we get the
     ## covariance matrix of coefs
-    vcov <- t(colSums(aperm(coefmat))) / (n*(n-1)) # colSums(aperm)-construct is faster than apply(coefmat, 1:2, sum)
+    vcov <- rowSums(coefmat, dims = 2L) / (n*(n-1)) # == apply(coefmat, 1:2, sum) / (n*(n-1)) but rowSums(., dims = 2L)-construct is way faster
 
     ######### na.omit = T in apply was the big problem!!
 

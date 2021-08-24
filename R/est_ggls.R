@@ -198,7 +198,7 @@ pggls <- function(formula, data, subset, na.action,
             ut <- resid[cond == lcnd[i]]
             tres[ , , i] <- ut %o% ut
         }
-        subOmega <- t(colMeans(aperm(tres))) # faster than and identical to prev. used apply(tres, 1:2, mean)
+        subOmega <- rowMeans(tres, dims = 2L) # == apply(tres, 1:2, mean) but faster
         omega <- bdsmatrix(rep(nother, ncond), rep(subOmega, ncond))
     } else {
         lti <- list()
@@ -209,7 +209,7 @@ pggls <- function(formula, data, subset, na.action,
             out <- ut %o% ut
             tres[names(ut), names(ut), i] <- out
         }
-        subOmega <- t(colMeans(aperm(tres), na.rm = TRUE)) # faster than and identical to prev. used apply(tres, 1:2, mean, na.rm = TRUE)
+        subOmega <- rowMeans(tres, dims = 2L, na.rm = TRUE) # == apply(tres, 1:2, mean, na.rm = TRUE) but
         list.cov.blocks <- list()
         for (i in 1:ncond) {
             list.cov.blocks[[i]] <- subOmega[lti[[i]], lti[[i]]]
