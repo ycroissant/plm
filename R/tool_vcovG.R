@@ -1123,7 +1123,7 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
     salame[ , , i] <- crossprod(xi, OmegaTi) %*% xi
   }
   ## meat
-  salame <- rowSums(salame, dims = 2L) # == apply(Sl, 1:2, sum) but faster
+  salame <- rowSums(salame, dims = 2L) # == apply(salame, 1:2, sum) but faster
 
   ## bread
   pane <- solve(crossprod(demX))

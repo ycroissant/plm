@@ -177,6 +177,7 @@ model.matrix.pdata.frame <- function(object,
             X <- X - theta$id * Between(X, "individual") -
                 theta$time * Between(X, "time") + theta$total * Mean(X)
         ## TODO: case unbalanced twoways not treated here. Catch and error gracefully?
+        # if (effect == "twoways" && !balanced) stop("two-way unbalanced case not implemented in model.matrix.pdata.frame")
     }
     if(cstcovar.rm == "intercept"){
         posintercept <- match("(Intercept)", colnames(X))
@@ -324,7 +325,7 @@ ptransform <- function(x, model = NULL, effect = NULL, theta = NULL, ...){
             x <- x - theta$id   * Between(x, "individual") -
                      theta$time * Between(x, "time") + theta$total * mean(x)
         ## TODO: could catch non-treated case to error gracefully:
-        # if (effect == "twoways" && !balanced) stop("two-way unbalanced case not implemented in ptransform")
+        # if (effect == "twoways" && !balanced) warning("two-way unbalanced case not implemented in ptransform")
     }
     
     # between and fd models "compress" the data, thus an index does not make
