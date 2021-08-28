@@ -207,13 +207,14 @@ fixef.plm <- function(object, effect = NULL,
       
       res <- structure(fixef, se = sefixef, class = c("fixef", "numeric"),
                 type = type, df.residual = df.residual(object))  
-      return(res)
+      return(res) # early exit for model.effect != "twoways"
     }
     
     ## treat separately here:
     ##  * two-way balanced/unbalanced model for all effects
     if(model.effect == "twoways") {
-      beta.data <- as.numeric(tcrossprod(coef(object), as.matrix(object$model[ , -1, drop = FALSE])))
+
+      beta.data <- as.numeric(tcrossprod(coef(object), model.matrix(object, model = "pooling")[ , nw, drop = FALSE]))
       yhat <- object$model[ , 1L] - object$residuals
       tw.fixef.lvl <- yhat - beta.data # sum of both effects in levels
       
@@ -222,6 +223,8 @@ fixef.plm <- function(object, effect = NULL,
                     "time"       = 2L,
                     "twoways"    = NA_integer_) # needed for weighted.mean below -> leads to no weights
 
+      indexl <- unclass(index(object)) # unclass to list for speed
+      
       if(effect %in% c("individual", "time")) {
         other.eff <- switch(effect,
                             "individual" = "time",
@@ -245,14 +248,14 @@ fixef.plm <- function(object, effect = NULL,
         
         ## other dfirst
         other.fixef.dfirst <- other.fixef.lvl - other.fixef.lvl[1L]
-        tw.fixef.lvl <- tw.fixef.lvl - other.fixef.dfirst[index(object)[[other.idx]]]
+        tw.fixef.lvl <- tw.fixef.lvl - other.fixef.dfirst[indexl[[other.idx]]]
         
-        tw.fixef.lvl <- tw.fixef.lvl[!duplicated(index(object)[[idx]])]
+        tw.fixef.lvl <- tw.fixef.lvl[!duplicated(indexl[[idx]])]
         names(tw.fixef.lvl) <- pdim[["panel.names"]][[idx]]
       } else {
         # everything already computed, just set names
-        names(tw.fixef.lvl) <- paste0(pdim[["panel.names"]][[1L]][index(object)[[1L]]], "-",
-                                      pdim[["panel.names"]][[2L]][index(object)[[2L]]])
+        names(tw.fixef.lvl) <- paste0(pdim[["panel.names"]][[1L]][indexl[[1L]]], "-",
+                                      pdim[["panel.names"]][[2L]][indexl[[2L]]])
       }
       
       tw.fixef <- switch(type,
@@ -260,7 +263,7 @@ fixef.plm <- function(object, effect = NULL,
                       "dfirst" = tw.fixef.lvl[2:length(tw.fixef.lvl)] - tw.fixef.lvl[1L],
                       "dmean"  = {
                           if(pdim$balanced || effect == "twoways") {
-                            tw.fixef.lvl - mean(tw.fixef.lvl) 
+                            tw.fixef.lvl - mean(tw.fixef.lvl)
                           } else {
                             tw.fixef.lvl - weighted.mean(tw.fixef.lvl, w = pdim$Tint[[idx]])
                           }})
@@ -280,7 +283,7 @@ print.fixef <- function(x, digits = max(3, getOption("digits") - 2),
     # prevent attributes from being printed
     attr(x, "se") <- attr(x, "type") <- attr(x, "class") <- attr(x, "df.residual") <- attr(x, "index") <- NULL
     print.default(x, digits, width, ...)
-    x.orig
+    invisible(x.orig)
 }
 
 
