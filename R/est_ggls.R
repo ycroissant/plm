@@ -209,7 +209,7 @@ pggls <- function(formula, data, subset, na.action,
             out <- ut %o% ut
             tres[names(ut), names(ut), i] <- out
         }
-        subOmega <- rowMeans(tres, dims = 2L, na.rm = TRUE) # == apply(tres, 1:2, mean, na.rm = TRUE) but
+        subOmega <- rowMeans(tres, dims = 2L, na.rm = TRUE) # == apply(tres, 1:2, mean, na.rm = TRUE) but faster
         list.cov.blocks <- list()
         for (i in 1:ncond) {
             list.cov.blocks[[i]] <- subOmega[lti[[i]], lti[[i]]]
@@ -254,7 +254,7 @@ summary.pggls <- function(object,...){
   b <- object$coefficients
   z <- b/std.err
   p <- 2*pnorm(abs(z), lower.tail = FALSE)
-  CoefTable <- cbind(b,std.err,z,p)
+  CoefTable <- cbind(b, std.err, z, p)
   colnames(CoefTable) <- c("Estimate", "Std. Error", "z-value", "Pr(>|z|)")
   object$CoefTable <- CoefTable
   y <- object$model[[1L]]

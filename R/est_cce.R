@@ -224,8 +224,8 @@ pcce <- function (formula, data, subset, na.action,
           tcoef[ , i] <- tb
 
           ## cce (defactored) residuals as M_i(y_i - X_i * bCCEMG_i)
-          tytXtb <- ty - tX %*% tb
-          cceres[[i]] <- tMhat %*% tytXtb
+          tytXtb <- ty - tcrossprod(tX, t(tb))
+          cceres[[i]] <- tcrossprod(tMhat, t(tytXtb))
           ## std. (raw) residuals as y_i - X_i * bCCEMG_i - a_i
           ta <- mean(ty - tX)
           stdres[[i]] <- tytXtb - ta
@@ -331,8 +331,8 @@ pcce <- function (formula, data, subset, na.action,
                     tHhat %*% solve(crossprod(tHhat), t(tHhat))
     
                 ## cce residuals as M_i(y_i - X_i * bCCEP)
-                tytXcoef <- ty - tX %*% coef
-                cceres[[i]] <- tMhat %*% tytXcoef
+                tytXcoef <- ty - tcrossprod(tX, t(coef))
+                cceres[[i]] <- tcrossprod(tMhat, t(tytXcoef))
                 ## std. (raw) residuals as y_i - X_i * bCCEMG_i - a_i
                 ta <- mean(ty - tX)
                 stdres[[i]] <- tytXcoef - ta
