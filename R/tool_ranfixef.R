@@ -153,7 +153,7 @@ fixef.plm <- function(object, effect = NULL,
     type <- match.arg(type)
     if(!is.null(object$call)){
         if(describe(object, "model") != "within")
-      stop("fixef is relevant only for within models")
+          stop("fixef is relevant only for within models")
     }
     formula <- formula(object)
     data <- model.frame(object)
@@ -200,21 +200,19 @@ fixef.plm <- function(object, effect = NULL,
                           apply(Xb[, nw, drop = FALSE], 1,
                                 function(x) t(x) %*% vcov %*% x))
       }
-      fixef <- switch(type,
+      res <- switch(type,
                       "level"  = fixef,
                       "dfirst" = fixef[2:length(fixef)] - fixef[1L],
                       "dmean"  = (fixef - weighted.mean(fixef, w = nother)))
       
-      res <- structure(fixef, se = sefixef, class = c("fixef", "numeric"),
+      res <- structure(res, se = sefixef, class = c("fixef", "numeric"),
                 type = type, df.residual = df.residual(object))  
-      return(res) # early exit for model.effect != "twoways"
-    }
-    
-    ## treat separately here:
+    } else {
+    ## case model.effect == "twoways"
     ##  * two-way balanced/unbalanced model for all effects
-    if(model.effect == "twoways") {
 
-      beta.data <- as.numeric(tcrossprod(coef(object), model.matrix(object, model = "pooling")[ , nw, drop = FALSE]))
+      beta.data <- as.numeric(tcrossprod(coef(object),
+                                         model.matrix(object, model = "pooling")[ , nw, drop = FALSE]))
       yhat <- object$model[ , 1L] - object$residuals
       tw.fixef.lvl <- yhat - beta.data # sum of both effects in levels
       
@@ -238,14 +236,6 @@ fixef.plm <- function(object, effect = NULL,
         yb <- pmodel.response(data, model = "between", effect = other.eff)
         other.fixef.lvl <- yb - as.vector(crossprod(t(Xb[ , nw, drop = FALSE]), coef(object)))
         
-        ## other dmean
-        #other.fixef.dmean <- other.fixef.lvl - mean(other.fixef.lvl)
-        #other.fixef.dmean <- other.fixef.dmean[index(object)[[other.idx]]]
-        #tw.fixef.lvl <- tw.fixef.lvl - other.fixef.dmean
-        
-        ## other level
-        # tw.fixef.lvl <- tw.fixef.lvl - other.fixef.lvl[index(object)[[other.idx]]]
-        
         ## other dfirst
         other.fixef.dfirst <- other.fixef.lvl - other.fixef.lvl[1L]
         tw.fixef.lvl <- tw.fixef.lvl - other.fixef.dfirst[indexl[[other.idx]]]
@@ -253,12 +243,12 @@ fixef.plm <- function(object, effect = NULL,
         tw.fixef.lvl <- tw.fixef.lvl[!duplicated(indexl[[idx]])]
         names(tw.fixef.lvl) <- pdim[["panel.names"]][[idx]]
       } else {
-        # everything already computed, just set names
+        # effect = "twoways": everything already computed, just set names
         names(tw.fixef.lvl) <- paste0(pdim[["panel.names"]][[1L]][indexl[[1L]]], "-",
                                       pdim[["panel.names"]][[2L]][indexl[[2L]]])
       }
       
-      tw.fixef <- switch(type,
+      res <- switch(type,
                       "level"  = tw.fixef.lvl,
                       "dfirst" = tw.fixef.lvl[2:length(tw.fixef.lvl)] - tw.fixef.lvl[1L],
                       "dmean"  = {
@@ -268,10 +258,10 @@ fixef.plm <- function(object, effect = NULL,
                             tw.fixef.lvl - weighted.mean(tw.fixef.lvl, w = pdim$Tint[[idx]])
                           }})
       
-      tw.fixef <- structure(tw.fixef, se = NULL, class = c("fixef", "numeric"),
+      res <- structure(res, se = NULL, class = c("fixef", "numeric"),
                             type = type, df.residual = NULL)
-      return(tw.fixef)
     }
+    res
 }
 
 

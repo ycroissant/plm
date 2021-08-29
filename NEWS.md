@@ -4,7 +4,8 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
           panel data econometrics - https://cran.r-project.org/package=plm
 ---
 
-# plm 2.4-2
+# Development version, to become 2.4-2
+# plm 2.4-1.99999
 
 ### Speed-up:
  * "Fast mode" is not yet the default. To enable, set
@@ -46,6 +47,8 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
    input (by using drop = FALSE in extraction) (prior to this fix, estimation
    of the between model with only an intercept errored).
  * pvcm: intercept-only models are now estimable.
+ * fixef: two-ways FE models: fixef does not error anymore if factor is in model
+          and not anymore in IV case.
  * plm:
     * for the nested random effect model (`effect = "nested"`), check if argument
       `model = "random"` is set, if not, plm now warns and adjusts accordingly

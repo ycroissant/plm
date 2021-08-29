@@ -1,6 +1,6 @@
 
-R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R version 4.1.1 (2021-08-10) -- "Kick Things"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -15,9 +15,16 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
+> ###  test file to test plm::fixef(), inner consistency and vs. fixest::fixef() and lfe::getfe()
+> ## (1) ordinary regression models
+> ## (2) IV regression models
+> 
 > library(plm)
 > data("Grunfeld", package = "plm")
 > Grunfeld_unbalanced <- Grunfeld[1:199, ]
+> 
+> 
+> ################## (1) ordinary models (non-IV) ##################
 > 
 > plm_tw   <-  plm(inv ~     value + capital              , data = Grunfeld           , effect = "twoways")
 > plm_tw_u <-  plm(inv ~     value + capital              , data = Grunfeld_unbalanced, effect = "twoways")
@@ -28,10 +35,10 @@ Type 'q()' to quit R.
 > plm_ow_u_ti <-  plm(inv ~     value + capital              , data = Grunfeld_unbalanced, effect = "time")
 > 
 > 
-> # lm_tw       <- lm(inv ~ 0 + value + capital + factor(firm) + factor(year), data = Grunfeld)
-> # lm_tw_int   <- lm(inv ~     value + capital + factor(firm) + factor(year), data = Grunfeld)
-> # lm_tw_u     <- lm(inv ~ 0 + value + capital + factor(firm) + factor(year), data = Grunfeld_unbalanced)
-> # lm_tw_u_int <- lm(inv ~     value + capital + factor(firm) + factor(year), data = Grunfeld_unbalanced)
+> ## lm_tw       <- lm(inv ~ 0 + value + capital + factor(firm) + factor(year), data = Grunfeld)
+> ## lm_tw_int   <- lm(inv ~     value + capital + factor(firm) + factor(year), data = Grunfeld)
+> ## lm_tw_u     <- lm(inv ~ 0 + value + capital + factor(firm) + factor(year), data = Grunfeld_unbalanced)
+> ## lm_tw_u_int <- lm(inv ~     value + capital + factor(firm) + factor(year), data = Grunfeld_unbalanced)
 > 
 > #### tw unbalanced ####
 > ## sum of effects
@@ -42,7 +49,7 @@ Type 'q()' to quit R.
 > pred_y <- plm_tw_u$model[ , 1] - plm_tw_u$residuals
 > pred_effs_tw <- pred_y - pred_betas
 > 
-> ## split in a individual and in a time component 
+> ## split in a individual and in a time component
 > plm_tw_u_fixef_id_dfirst <- c(0, as.numeric(fixef(plm_tw_u, "individual", "dfirst")))
 > plm_tw_u_fixef_ti_dfirst <- c(0, as.numeric(fixef(plm_tw_u, "time",       "dfirst")))
 > 
@@ -83,51 +90,16 @@ Type 'q()' to quit R.
 + 													 check.attributes = FALSE)))
 > 
 > 
+> #### oneway balanced ####
+> plm_ow_fixef_id_level <- as.numeric(fixef(plm_ow_id))
+> plm_ow_fixef_ti_level <- as.numeric(fixef(plm_ow_ti))
+> 
+> 
 > #### oneway unbalanced ####
 > plm_ow_u_fixef_id_level <- as.numeric(fixef(plm_ow_u_id))
 > plm_ow_u_fixef_ti_level <- as.numeric(fixef(plm_ow_u_ti))
 > 
 > 
-> ## checks vs. fixest::feols
-> # fixest.avail <- if(!requireNamespace("fixest", quietly = TRUE)) FALSE else TRUE
-> # if(fixest.avail) {
-> # 	 library(fixest) # version 0.8.0
-> # 	 
-> # 	 # twoways (one level, one dfirst)
-> # 	 feols_tw_u <- fixest::feols(inv ~ value + capital | firm + year, data = Grunfeld_unbalanced)
-> # 	 stopifnot(isTRUE(all.equal(feols_tw_u$sumFE,       plm_tw_u_fixef_tw,        check.attributes = FALSE))) # sum
-> # 	 stopifnot(isTRUE(all.equal(fixef(feols_tw_u)$year, plm_tw_u_fixef_ti_dfirst, check.attributes = FALSE))) # time
-> # 	 stopifnot(isTRUE(all.equal(fixef(feols_tw_u)$firm, plm_tw_u_fixef_id_level,  check.attributes = FALSE))) # individual
-> # 	 
-> # 	 # oneway (levels)
-> # 	 feols_ow_u_id <- fixest::feols(inv ~ value + capital | firm, data = Grunfeld_unbalanced)
-> # 	 feols_ow_u_ti <- fixest::feols(inv ~ value + capital | year, data = Grunfeld_unbalanced)
-> # 	 stopifnot(isTRUE(all.equal(fixef(feols_ow_u_id)$firm, plm_ow_u_fixef_id_level, check.attributes = FALSE))) # individual
-> # 	 stopifnot(isTRUE(all.equal(fixef(feols_ow_u_ti)$year, plm_ow_u_fixef_ti_level, check.attributes = FALSE))) # time
-> # }
-> 
-> # checks vs. lfe::felm
-> # lfe.avail <- if(!requireNamespace("lfe", quietly = TRUE)) FALSE else TRUE
-> # if(lfe.avail) {
-> # 	library(lfe) # version 2.8-5.1
-> # 	
-> # 	# twoways (one level, one dfirst)
-> # 	# (lfe::felm's default reference is vice verse compared to fixest::feols)
-> # 	felm_tw_u <- lfe::felm(inv ~ value + capital | firm + year, data = Grunfeld_unbalanced)
-> # 	felm_tw_u_fixef_id <- lfe::getfe(felm_tw_u)[lfe::getfe(felm_tw_u)[["fe"]] == "firm", 1]
-> # 	felm_tw_u_fixef_ti <- lfe::getfe(felm_tw_u)[lfe::getfe(felm_tw_u)[["fe"]] == "year", 1]
-> # 
-> # 	stopifnot(isTRUE(all.equal(felm_tw_u_fixef_id, plm_tw_u_fixef_id_dfirst, check.attributes = FALSE))) # individual
-> # 	stopifnot(isTRUE(all.equal(felm_tw_u_fixef_ti, plm_tw_u_fixef_ti_level,  check.attributes = FALSE))) # time
-> # 	
-> # 	# oneway (levels)
-> # 	felm_ow_u_id <- lfe::felm(inv ~ value + capital | firm, data = Grunfeld_unbalanced)
-> # 	felm_ow_u_ti <- lfe::felm(inv ~ value + capital | year, data = Grunfeld_unbalanced)
-> # 	felm_ow_u_id_fixef_id <- lfe::getfe(felm_ow_u_id)[lfe::getfe(felm_ow_u_id)[["fe"]] == "firm", 1]
-> # 	felm_ow_u_ti_fixef_ti <- lfe::getfe(felm_ow_u_ti)[lfe::getfe(felm_ow_u_ti)[["fe"]] == "year", 1]
-> # 	stopifnot(isTRUE(all.equal(felm_ow_u_id_fixef_id, plm_ow_u_fixef_id_level, check.attributes = FALSE))) # individual
-> # 	stopifnot(isTRUE(all.equal(felm_ow_u_ti_fixef_ti, plm_ow_u_fixef_ti_level, check.attributes = FALSE))) # time
-> # }
 > 
 > #### tw balanced ####
 > ## sum of effects
@@ -139,10 +111,10 @@ Type 'q()' to quit R.
 > bal_pred_effs_tw <- bal_pred_y - bal_pred_betas
 > 
 > stopifnot(isTRUE(all.equal(as.numeric(bal_pred_effs_tw),
-+ 													 plm_tw_fixef_tw,
-+ 													 check.attributes = FALSE)))
++                            plm_tw_fixef_tw,
++                            check.attributes = FALSE)))
 > 
-> ## split in a individual and in a time component 
+> ## split in a individual and in a time component
 > plm_tw_fixef_id_dfirst <- c(0, as.numeric(fixef(plm_tw, "individual", "dfirst")))
 > plm_tw_fixef_ti_dfirst <- c(0, as.numeric(fixef(plm_tw, "time",       "dfirst")))
 > 
@@ -151,13 +123,13 @@ Type 'q()' to quit R.
 > 
 > ## check the summed up effects and splits
 > stopifnot(isTRUE(all.equal(plm_tw_fixef_tw,
-+ 													 plm_tw_fixef_id_level[ index(plm_tw)[[1L]]] +
-+ 													 plm_tw_fixef_ti_dfirst[index(plm_tw)[[2L]]],
-+ 													 check.attributes = FALSE)))
++                            plm_tw_fixef_id_level[ index(plm_tw)[[1L]]] +
++                              plm_tw_fixef_ti_dfirst[index(plm_tw)[[2L]]],
++                            check.attributes = FALSE)))
 > stopifnot(isTRUE(all.equal(plm_tw_fixef_tw,
-+ 													 plm_tw_fixef_id_dfirst[index(plm_tw)[[1L]]] +
-+ 													 plm_tw_fixef_ti_level[ index(plm_tw)[[2L]]],
-+ 													 check.attributes = FALSE)))
++                            plm_tw_fixef_id_dfirst[index(plm_tw)[[1L]]] +
++                              plm_tw_fixef_ti_level[ index(plm_tw)[[2L]]],
++                            check.attributes = FALSE)))
 > 
 > ### # checks vs. a twoway model implemented via one-way augmented
 > plm_tw_aug_id <- plm(inv ~ value + capital + factor(year), data = Grunfeld, effect = "individual")
@@ -168,53 +140,623 @@ Type 'q()' to quit R.
 > 
 > # id level
 > stopifnot(isTRUE(all.equal(plm_tw_fixef_id_level,
-+ 													 plm_tw_aug_id_id,
-+ 													 check.attributes = FALSE)))
++                            plm_tw_aug_id_id,
++                            check.attributes = FALSE)))
 > # time level
 > stopifnot(isTRUE(all.equal(plm_tw_fixef_ti_level,
-+ 													 plm_tw_aug_ti_ti,
-+ 													 check.attributes = FALSE)))
-> 
-> #### oneway balanced ####
-> plm_ow_id_fixef_id_level <- as.numeric(fixef(plm_ow_id))
-> plm_ow_ti_fixef_ti_level <- as.numeric(fixef(plm_ow_ti))
++                            plm_tw_aug_ti_ti,
++                            check.attributes = FALSE)))
 > 
 > 
 > ## checks vs. fixest::feols
-> # if(fixest.avail) {
-> # 	# twoways (one level, one dfirst)
-> # 	feols_tw <- fixest::feols(inv ~ value + capital | firm + year, data = Grunfeld)
-> # 	stopifnot(isTRUE(all.equal(feols_tw$sumFE,       plm_tw_fixef_tw,        check.attributes = FALSE))) # sum
-> # 	stopifnot(isTRUE(all.equal(fixef(feols_tw)$year, plm_tw_fixef_ti_dfirst, check.attributes = FALSE))) # time
-> # 	stopifnot(isTRUE(all.equal(fixef(feols_tw)$firm, plm_tw_fixef_id_level,  check.attributes = FALSE))) # individual
-> # 	
-> # 	# oneway (levels)
-> # 	feols_ow_id <- fixest::feols(inv ~ value + capital | firm, data = Grunfeld)
-> # 	feols_ow_ti <- fixest::feols(inv ~ value + capital | year, data = Grunfeld)
-> # 	stopifnot(isTRUE(all.equal(fixef(feols_ow_ti)$year, plm_ow_fixef_ti_level, check.attributes = FALSE))) # time
-> # 	stopifnot(isTRUE(all.equal(fixef(feols_ow_id)$firm, plm_ow_fixef_id_level,  check.attributes = FALSE))) # individual
-> # }
+> fixest.avail <- if(!requireNamespace("fixest", quietly = TRUE)) FALSE else TRUE
+> if(fixest.avail) {
++ 	 library(fixest) # version 0.9.0
++   
++   # twoways balanced (one level, one dfirst)
++   feols_tw <- fixest::feols(inv ~ value + capital | firm + year, data = Grunfeld)
++   stopifnot(isTRUE(all.equal(feols_tw$sumFE,       plm_tw_fixef_tw,        check.attributes = FALSE))) # sum
++   stopifnot(isTRUE(all.equal(fixef(feols_tw)$year, plm_tw_fixef_ti_dfirst, check.attributes = FALSE))) # time
++   stopifnot(isTRUE(all.equal(fixef(feols_tw)$firm, plm_tw_fixef_id_level,  check.attributes = FALSE))) # individual
++   
++   # oneway balanced (levels)
++   feols_ow_id <- fixest::feols(inv ~ value + capital | firm, data = Grunfeld)
++   feols_ow_ti <- fixest::feols(inv ~ value + capital | year, data = Grunfeld)
++   stopifnot(isTRUE(all.equal(fixef(feols_ow_ti)$year, plm_ow_fixef_ti_level, check.attributes = FALSE))) # time
++   stopifnot(isTRUE(all.equal(fixef(feols_ow_id)$firm, plm_ow_fixef_id_level, check.attributes = FALSE))) # individual
++ 
++   # twoways unbalanced (one level, one dfirst)
++   feols_tw_u <- fixest::feols(inv ~ value + capital | firm + year, data = Grunfeld_unbalanced)
++   stopifnot(isTRUE(all.equal(feols_tw_u$sumFE,       plm_tw_u_fixef_tw,        check.attributes = FALSE))) # sum
++   stopifnot(isTRUE(all.equal(fixef(feols_tw_u)$year, plm_tw_u_fixef_ti_dfirst, check.attributes = FALSE))) # time
++   stopifnot(isTRUE(all.equal(fixef(feols_tw_u)$firm, plm_tw_u_fixef_id_level,  check.attributes = FALSE))) # individual
++ 
++   # oneway unbalanced (levels)
++   feols_ow_u_id <- fixest::feols(inv ~ value + capital | firm, data = Grunfeld_unbalanced)
++   feols_ow_u_ti <- fixest::feols(inv ~ value + capital | year, data = Grunfeld_unbalanced)
++   stopifnot(isTRUE(all.equal(fixef(feols_ow_u_id)$firm, plm_ow_u_fixef_id_level, check.attributes = FALSE))) # individual
++   stopifnot(isTRUE(all.equal(fixef(feols_ow_u_ti)$year, plm_ow_u_fixef_ti_level, check.attributes = FALSE))) # time
++ }
+fixest 0.9.0, BREAKING changes! (Permanently remove this message with fixest_startup_msg(FALSE).) 
+- In i():
+    + the first two arguments have been swapped! Now it's i(factor_var, continuous_var) for interactions. 
+    + argument 'drop' has been removed (put everything in 'ref' now).
+- In feglm(): 
+    + the default family becomes 'gaussian' to be in line with glm(). Hence, for Poisson estimations, please use fepois() instead.
 > 
-> ## checks vs. lfe::felm
-> # if(lfe.avail) {
-> # 	# twoways (one level, one dfirst)
-> # 	# (lfe::felm's default reference is vice verse compared to fixest::feols)
-> # 	felm_tw   <- lfe::felm(inv ~ value + capital | firm + year, data = Grunfeld)
-> # 	felm_tw_fixef_id <- lfe::getfe(felm_tw)[lfe::getfe(felm_tw)[["fe"]] == "firm", 1]
-> # 	felm_tw_fixef_ti <- lfe::getfe(felm_tw)[lfe::getfe(felm_tw)[["fe"]] == "year", 1]
+> # checks vs. lfe::felm
+> lfe.avail <- if(!requireNamespace("lfe", quietly = TRUE)) FALSE else TRUE
+> if(lfe.avail) {
++ 	library(lfe) # version 2.8-7
++   
++   # twoways balanced (one level, one dfirst)
++   # (lfe::felm's default reference is vice verse compared to fixest::feols)
++   felm_tw   <- lfe::felm(inv ~ value + capital | firm + year, data = Grunfeld)
++   felm_tw_fixef_id <- lfe::getfe(felm_tw)[lfe::getfe(felm_tw)[["fe"]] == "firm", 1]
++   felm_tw_fixef_ti <- lfe::getfe(felm_tw)[lfe::getfe(felm_tw)[["fe"]] == "year", 1]
++   
++   stopifnot(isTRUE(all.equal(felm_tw_fixef_id, plm_tw_fixef_id_dfirst, check.attributes = FALSE))) # individual
++   stopifnot(isTRUE(all.equal(felm_tw_fixef_ti, plm_tw_fixef_ti_level,  check.attributes = FALSE))) # time
++   
++   # oneway balanced (levels)
++   felm_ow_id   <- lfe::felm(inv ~ value + capital | firm, data = Grunfeld)
++   felm_ow_ti   <- lfe::felm(inv ~ value + capital | year, data = Grunfeld)
++   felm_ow_id_fixef_id <- lfe::getfe(felm_ow_id)[lfe::getfe(felm_ow_id)[["fe"]] == "firm", 1]
++   felm_ow_ti_fixef_ti <- lfe::getfe(felm_ow_ti)[lfe::getfe(felm_ow_ti)[["fe"]] == "year", 1]
++   
++   stopifnot(isTRUE(all.equal(felm_ow_id_fixef_id, plm_ow_fixef_id_level, check.attributes = FALSE))) # individual
++   stopifnot(isTRUE(all.equal(felm_ow_ti_fixef_ti, plm_ow_fixef_ti_level, check.attributes = FALSE))) # time
++   
++   # twoways unbalanced (one level, one dfirst)
++   # (lfe::felm's default reference is vice verse compared to fixest::feols)
++   felm_tw_u <- lfe::felm(inv ~ value + capital | firm + year, data = Grunfeld_unbalanced)
++   felm_tw_u_fixef_id <- lfe::getfe(felm_tw_u)[lfe::getfe(felm_tw_u)[["fe"]] == "firm", 1]
++   felm_tw_u_fixef_ti <- lfe::getfe(felm_tw_u)[lfe::getfe(felm_tw_u)[["fe"]] == "year", 1]
++ 
++   stopifnot(isTRUE(all.equal(felm_tw_u_fixef_id, plm_tw_u_fixef_id_dfirst, check.attributes = FALSE))) # individual
++   stopifnot(isTRUE(all.equal(felm_tw_u_fixef_ti, plm_tw_u_fixef_ti_level,  check.attributes = FALSE))) # time
++ 
++   # oneway unbalanced (levels)
++   felm_ow_u_id <- lfe::felm(inv ~ value + capital | firm, data = Grunfeld_unbalanced)
++   felm_ow_u_ti <- lfe::felm(inv ~ value + capital | year, data = Grunfeld_unbalanced)
++   felm_ow_u_id_fixef_id <- lfe::getfe(felm_ow_u_id)[lfe::getfe(felm_ow_u_id)[["fe"]] == "firm", 1]
++   felm_ow_u_ti_fixef_ti <- lfe::getfe(felm_ow_u_ti)[lfe::getfe(felm_ow_u_ti)[["fe"]] == "year", 1]
++   stopifnot(isTRUE(all.equal(felm_ow_u_id_fixef_id, plm_ow_u_fixef_id_level, check.attributes = FALSE))) # individual
++   stopifnot(isTRUE(all.equal(felm_ow_u_ti_fixef_ti, plm_ow_u_fixef_ti_level, check.attributes = FALSE))) # time
++ }
+Loading required package: Matrix
+
+Attaching package: 'lfe'
+
+The following object is masked from 'package:plm':
+
+    sargan
+
+> 
+> 
+> 
+> ################## (2) Instrumental Variable (IV) Models ##################
 > # 
-> # 	stopifnot(isTRUE(all.equal(felm_tw_fixef_id, plm_tw_fixef_id_dfirst, check.attributes = FALSE))) # individual
-> # 	stopifnot(isTRUE(all.equal(felm_tw_fixef_ti, plm_tw_fixef_ti_level,  check.attributes = FALSE))) # time
-> # 	
-> # 	# oneway (levels)
-> # 	felm_ow_id   <- lfe::felm(inv ~ value + capital | firm, data = Grunfeld)
-> # 	felm_ow_ti   <- lfe::felm(inv ~ value + capital | year, data = Grunfeld)
-> # 	felm_ow_id_fixef_id <- lfe::getfe(felm_ow_id)[lfe::getfe(felm_ow_id)[["fe"]] == "firm", 1]
-> # 	felm_ow_ti_fixef_ti <- lfe::getfe(felm_ow_ti)[lfe::getfe(felm_ow_ti)[["fe"]] == "year", 1]
-> # 	
-> # 	stopifnot(isTRUE(all.equal(felm_ow_id_fixef_id, plm_ow_id_fixef_id_level, check.attributes = FALSE))) # individual
-> # 	stopifnot(isTRUE(all.equal(felm_ow_ti_fixef_ti, plm_ow_ti_fixef_ti_level, check.attributes = FALSE))) # time
-> # }
+> ## IV balanced twoways
+> data("Crime", package = "plm")
+> 
+> # in the unbalanced twoway case, getfe() sets as reference a level depending on the unbalancedness structure
+> # -> somewhat arbitrary -> see also https://github.com/sgaure/lfe/issues/52 
+> # for this example, the unbalancedness structure leads to the first time period being the reference
+> delrows <- -c(10,12,17,18)
+> # delrows <- -c(1,2,10,12)
+> # delrows <- -c(9)
+> 
+> crime_formula_plm <- lcrmrte ~ lprbarr + lpolpc + lprbconv + lprbpris + lavgsen +
++                       ldensity + lwcon + lwtuc + lwtrd + lwfir + lwser + lwmfg + lwfed +
++                       lwsta + lwloc + lpctymle | . - lprbarr - lpolpc + ltaxpc + lmix
+> 
+> FE2SLS_id <- plm(crime_formula_plm, data = Crime, model = "within", effect = "individual")
+> FE2SLS_ti <- plm(crime_formula_plm, data = Crime, model = "within", effect = "time")
+> fixef(FE2SLS_id, effect = "individual")
+     1      3      5      7      9     11     13     15     17     19     21 
+4.2444 3.8930 3.3937 4.0075 3.7022 2.7624 4.3154 4.0981 3.9185 3.5553 3.9533 
+    23     25     27     33     35     37     39     41     45     47     49 
+3.7718 3.9917 3.8702 4.0912 4.0481 3.7669 3.3836 3.9352 4.1127 3.7884 3.9903 
+    51     53     55     57     59     61     63     65     67     69     71 
+4.0780 3.3406 3.2879 4.0704 3.7751 3.8371 4.1083 4.5761 3.9043 4.1252 4.0651 
+    77     79     81     83     85     87     89     91     93     97     99 
+3.8814 3.4405 4.2056 4.3159 3.9709 3.9026 4.2362 4.1008 4.2901 4.2764 2.8191 
+   101    105    107    109    111    113    115    117    119    123    125 
+4.0834 4.4076 4.2159 3.6829 3.6950 2.5152 1.9191 4.5046 4.4769 3.8071 3.7587 
+   127    129    131    133    135    137    139    141    143    145    147 
+4.6757 4.5385 4.2245 3.5513 3.5345 3.6066 4.1108 3.6227 3.9323 4.0947 4.1254 
+   149    151    153    155    157    159    161    163    165    167    169 
+3.3748 3.8971 4.3841 4.3347 3.9785 4.0201 3.9632 3.8159 4.5412 3.7986 3.7232 
+   171    173    175    179    181    183    185    187    189    191    193 
+3.7177 2.1067 3.3199 3.9192 4.3799 4.0194 3.2286 4.2319 3.0091 3.8677 4.0338 
+   195    197 
+3.9454 3.4783 
+> fixef(FE2SLS_ti, effect = "time")
+     81      82      83      84      85      86      87 
+0.61247 0.62108 0.57692 0.45365 0.46376 0.54111 0.54620 
+> 
+> FE2SLS_tw <- plm(crime_formula_plm, data = Crime, model = "within", effect = "twoways")
+> fixef(FE2SLS_tw, effect = "individual")
+     1      3      5      7      9     11     13     15     17     19     21 
+3.1500 2.8955 2.5652 3.1431 2.8080 1.9961 3.4568 3.2522 3.0930 2.7022 2.9518 
+    23     25     27     33     35     37     39     41     45     47     49 
+2.8030 2.9542 2.9071 3.1848 3.0011 2.9431 2.5912 3.0347 3.1068 2.9937 2.9858 
+    51     53     55     57     59     61     63     65     67     69     71 
+3.0229 2.5745 2.7554 3.0000 2.8250 2.9734 3.0497 3.6319 2.8637 3.1034 2.9967 
+    77     79     81     83     85     87     89     91     93     97     99 
+3.0571 2.5876 3.0886 3.3662 3.0820 2.9978 3.1701 3.2093 3.4233 3.2858 2.0471 
+   101    105    107    109    111    113    115    117    119    123    125 
+3.1869 3.4149 3.2667 2.6911 2.7953 1.8028 1.0940 3.5264 3.3132 3.0621 2.8959 
+   127    129    131    133    135    137    139    141    143    145    147 
+3.6324 3.4015 3.2864 2.5904 2.6448 2.8445 3.0686 3.0737 3.1298 3.1786 3.1787 
+   149    151    153    155    157    159    161    163    165    167    169 
+2.5638 2.9134 3.4171 3.3507 3.0009 2.9952 2.9722 2.9668 3.5714 2.8148 2.7585 
+   171    173    175    179    181    183    185    187    189    191    193 
+2.7937 1.5817 2.5056 2.9755 3.4290 2.9540 2.3959 3.3825 2.1802 2.9523 3.0693 
+   195    197 
+3.0031 2.6044 
+> fixef(FE2SLS_tw, effect = "time")
+    81     82     83     84     85     86     87 
+3.1500 3.1878 3.1056 3.1048 3.1290 3.1563 3.1935 
+> fixef(FE2SLS_tw, effect = "twoways")
+  1-81   1-82   1-83   1-84   1-85   1-86   1-87   3-81   3-82   3-83   3-84 
+3.1500 3.1878 3.1056 3.1048 3.1290 3.1563 3.1935 2.8955 2.9333 2.8511 2.8503 
+  3-85   3-86   3-87   5-81   5-82   5-83   5-84   5-85   5-86   5-87   7-81 
+2.8745 2.9018 2.9390 2.5652 2.6031 2.5208 2.5200 2.5443 2.5715 2.6087 3.1431 
+  7-82   7-83   7-84   7-85   7-86   7-87   9-81   9-82   9-83   9-84   9-85 
+3.1810 3.0987 3.0979 3.1222 3.1494 3.1866 2.8080 2.8458 2.7636 2.7628 2.7870 
+  9-86   9-87  11-81  11-82  11-83  11-84  11-85  11-86  11-87  13-81  13-82 
+2.8143 2.8515 1.9961 2.0339 1.9517 1.9509 1.9751 2.0024 2.0396 3.4568 3.4947 
+ 13-83  13-84  13-85  13-86  13-87  15-81  15-82  15-83  15-84  15-85  15-86 
+3.4124 3.4116 3.4359 3.4631 3.5003 3.2522 3.2901 3.2078 3.2070 3.2313 3.2585 
+ 15-87  17-81  17-82  17-83  17-84  17-85  17-86  17-87  19-81  19-82  19-83 
+3.2957 3.0930 3.1309 3.0486 3.0478 3.0721 3.0994 3.1365 2.7022 2.7401 2.6578 
+ 19-84  19-85  19-86  19-87  21-81  21-82  21-83  21-84  21-85  21-86  21-87 
+2.6570 2.6813 2.7085 2.7457 2.9518 2.9897 2.9075 2.9066 2.9309 2.9582 2.9953 
+ 23-81  23-82  23-83  23-84  23-85  23-86  23-87  25-81  25-82  25-83  25-84 
+2.8030 2.8409 2.7587 2.7579 2.7821 2.8094 2.8466 2.9542 2.9921 2.9099 2.9091 
+ 25-85  25-86  25-87  27-81  27-82  27-83  27-84  27-85  27-86  27-87  33-81 
+2.9333 2.9606 2.9977 2.9071 2.9449 2.8627 2.8619 2.8861 2.9134 2.9506 3.1848 
+ 33-82  33-83  33-84  33-85  33-86  33-87  35-81  35-82  35-83  35-84  35-85 
+3.2227 3.1404 3.1396 3.1639 3.1911 3.2283 3.0011 3.0390 2.9567 2.9559 2.9802 
+ 35-86  35-87  37-81  37-82  37-83  37-84  37-85  37-86  37-87  39-81  39-82 
+3.0074 3.0446 2.9431 2.9810 2.8987 2.8979 2.9222 2.9494 2.9866 2.5912 2.6291 
+ 39-83  39-84  39-85  39-86  39-87  41-81  41-82  41-83  41-84  41-85  41-86 
+2.5468 2.5460 2.5703 2.5975 2.6347 3.0347 3.0726 2.9903 2.9895 3.0138 3.0410 
+ 41-87  45-81  45-82  45-83  45-84  45-85  45-86  45-87  47-81  47-82  47-83 
+3.0782 3.1068 3.1446 3.0624 3.0616 3.0858 3.1131 3.1503 2.9937 3.0315 2.9493 
+ 47-84  47-85  47-86  47-87  49-81  49-82  49-83  49-84  49-85  49-86  49-87 
+2.9485 2.9727 3.0000 3.0372 2.9858 3.0236 2.9414 2.9406 2.9649 2.9921 3.0293 
+ 51-81  51-82  51-83  51-84  51-85  51-86  51-87  53-81  53-82  53-83  53-84 
+3.0229 3.0608 2.9786 2.9778 3.0020 3.0293 3.0664 2.5745 2.6124 2.5301 2.5293 
+ 53-85  53-86  53-87  55-81  55-82  55-83  55-84  55-85  55-86  55-87  57-81 
+2.5536 2.5809 2.6180 2.7554 2.7933 2.7110 2.7102 2.7345 2.7617 2.7989 3.0000 
+ 57-82  57-83  57-84  57-85  57-86  57-87  59-81  59-82  59-83  59-84  59-85 
+3.0379 2.9556 2.9548 2.9791 3.0063 3.0435 2.8250 2.8628 2.7806 2.7798 2.8040 
+ 59-86  59-87  61-81  61-82  61-83  61-84  61-85  61-86  61-87  63-81  63-82 
+2.8313 2.8685 2.9734 3.0113 2.9290 2.9282 2.9525 2.9797 3.0169 3.0497 3.0875 
+ 63-83  63-84  63-85  63-86  63-87  65-81  65-82  65-83  65-84  65-85  65-86 
+3.0053 3.0045 3.0287 3.0560 3.0932 3.6319 3.6698 3.5876 3.5868 3.6110 3.6383 
+ 65-87  67-81  67-82  67-83  67-84  67-85  67-86  67-87  69-81  69-82  69-83 
+3.6754 2.8637 2.9016 2.8193 2.8185 2.8428 2.8700 2.9072 3.1034 3.1412 3.0590 
+ 69-84  69-85  69-86  69-87  71-81  71-82  71-83  71-84  71-85  71-86  71-87 
+3.0582 3.0824 3.1097 3.1469 2.9967 3.0346 2.9523 2.9515 2.9758 3.0030 3.0402 
+ 77-81  77-82  77-83  77-84  77-85  77-86  77-87  79-81  79-82  79-83  79-84 
+3.0571 3.0949 3.0127 3.0119 3.0361 3.0634 3.1006 2.5876 2.6254 2.5432 2.5424 
+ 79-85  79-86  79-87  81-81  81-82  81-83  81-84  81-85  81-86  81-87  83-81 
+2.5666 2.5939 2.6311 3.0886 3.1265 3.0442 3.0434 3.0677 3.0949 3.1321 3.3662 
+ 83-82  83-83  83-84  83-85  83-86  83-87  85-81  85-82  85-83  85-84  85-85 
+3.4041 3.3218 3.3210 3.3453 3.3725 3.4097 3.0820 3.1199 3.0376 3.0368 3.0611 
+ 85-86  85-87  87-81  87-82  87-83  87-84  87-85  87-86  87-87  89-81  89-82 
+3.0883 3.1255 2.9978 3.0356 2.9534 2.9526 2.9768 3.0041 3.0413 3.1701 3.2079 
+ 89-83  89-84  89-85  89-86  89-87  91-81  91-82  91-83  91-84  91-85  91-86 
+3.1257 3.1249 3.1491 3.1764 3.2136 3.2093 3.2472 3.1650 3.1642 3.1884 3.2157 
+ 91-87  93-81  93-82  93-83  93-84  93-85  93-86  93-87  97-81  97-82  97-83 
+3.2529 3.4233 3.4612 3.3789 3.3781 3.4024 3.4296 3.4668 3.2858 3.3237 3.2415 
+ 97-84  97-85  97-86  97-87  99-81  99-82  99-83  99-84  99-85  99-86  99-87 
+3.2407 3.2649 3.2922 3.3294 2.0471 2.0850 2.0028 2.0020 2.0262 2.0535 2.0907 
+101-81 101-82 101-83 101-84 101-85 101-86 101-87 105-81 105-82 105-83 105-84 
+3.1869 3.2247 3.1425 3.1417 3.1659 3.1932 3.2304 3.4149 3.4528 3.3706 3.3698 
+105-85 105-86 105-87 107-81 107-82 107-83 107-84 107-85 107-86 107-87 109-81 
+3.3940 3.4213 3.4584 3.2667 3.3045 3.2223 3.2215 3.2457 3.2730 3.3102 2.6911 
+109-82 109-83 109-84 109-85 109-86 109-87 111-81 111-82 111-83 111-84 111-85 
+2.7289 2.6467 2.6459 2.6701 2.6974 2.7346 2.7953 2.8332 2.7509 2.7501 2.7744 
+111-86 111-87 113-81 113-82 113-83 113-84 113-85 113-86 113-87 115-81 115-82 
+2.8016 2.8388 1.8028 1.8406 1.7584 1.7576 1.7818 1.8091 1.8463 1.0940 1.1318 
+115-83 115-84 115-85 115-86 115-87 117-81 117-82 117-83 117-84 117-85 117-86 
+1.0496 1.0488 1.0730 1.1003 1.1375 3.5264 3.5642 3.4820 3.4812 3.5054 3.5327 
+117-87 119-81 119-82 119-83 119-84 119-85 119-86 119-87 123-81 123-82 123-83 
+3.5699 3.3132 3.3510 3.2688 3.2680 3.2922 3.3195 3.3567 3.0621 3.1000 3.0177 
+123-84 123-85 123-86 123-87 125-81 125-82 125-83 125-84 125-85 125-86 125-87 
+3.0169 3.0412 3.0684 3.1056 2.8959 2.9338 2.8515 2.8507 2.8750 2.9022 2.9394 
+127-81 127-82 127-83 127-84 127-85 127-86 127-87 129-81 129-82 129-83 129-84 
+3.6324 3.6703 3.5880 3.5872 3.6115 3.6387 3.6759 3.4015 3.4393 3.3571 3.3563 
+129-85 129-86 129-87 131-81 131-82 131-83 131-84 131-85 131-86 131-87 133-81 
+3.3805 3.4078 3.4450 3.2864 3.3243 3.2421 3.2412 3.2655 3.2928 3.3299 2.5904 
+133-82 133-83 133-84 133-85 133-86 133-87 135-81 135-82 135-83 135-84 135-85 
+2.6282 2.5460 2.5452 2.5694 2.5967 2.6339 2.6448 2.6827 2.6005 2.5996 2.6239 
+135-86 135-87 137-81 137-82 137-83 137-84 137-85 137-86 137-87 139-81 139-82 
+2.6512 2.6883 2.8445 2.8823 2.8001 2.7993 2.8235 2.8508 2.8880 3.0686 3.1065 
+139-83 139-84 139-85 139-86 139-87 141-81 141-82 141-83 141-84 141-85 141-86 
+3.0242 3.0234 3.0477 3.0749 3.1121 3.0737 3.1116 3.0293 3.0285 3.0528 3.0800 
+141-87 143-81 143-82 143-83 143-84 143-85 143-86 143-87 145-81 145-82 145-83 
+3.1172 3.1298 3.1677 3.0854 3.0846 3.1089 3.1361 3.1733 3.1786 3.2164 3.1342 
+145-84 145-85 145-86 145-87 147-81 147-82 147-83 147-84 147-85 147-86 147-87 
+3.1334 3.1576 3.1849 3.2221 3.1787 3.2166 3.1343 3.1335 3.1578 3.1850 3.2222 
+149-81 149-82 149-83 149-84 149-85 149-86 149-87 151-81 151-82 151-83 151-84 
+2.5638 2.6016 2.5194 2.5186 2.5429 2.5701 2.6073 2.9134 2.9513 2.8690 2.8682 
+151-85 151-86 151-87 153-81 153-82 153-83 153-84 153-85 153-86 153-87 155-81 
+2.8925 2.9198 2.9569 3.4171 3.4549 3.3727 3.3719 3.3961 3.4234 3.4606 3.3507 
+155-82 155-83 155-84 155-85 155-86 155-87 157-81 157-82 157-83 157-84 157-85 
+3.3885 3.3063 3.3055 3.3297 3.3570 3.3942 3.0009 3.0388 2.9565 2.9557 2.9800 
+157-86 157-87 159-81 159-82 159-83 159-84 159-85 159-86 159-87 161-81 161-82 
+3.0072 3.0444 2.9952 3.0331 2.9508 2.9500 2.9743 3.0015 3.0387 2.9722 3.0101 
+161-83 161-84 161-85 161-86 161-87 163-81 163-82 163-83 163-84 163-85 163-86 
+2.9278 2.9270 2.9513 2.9785 3.0157 2.9668 3.0046 2.9224 2.9216 2.9458 2.9731 
+163-87 165-81 165-82 165-83 165-84 165-85 165-86 165-87 167-81 167-82 167-83 
+3.0103 3.5714 3.6092 3.5270 3.5262 3.5504 3.5777 3.6149 2.8148 2.8526 2.7704 
+167-84 167-85 167-86 167-87 169-81 169-82 169-83 169-84 169-85 169-86 169-87 
+2.7696 2.7938 2.8211 2.8583 2.7585 2.7963 2.7141 2.7133 2.7375 2.7648 2.8020 
+171-81 171-82 171-83 171-84 171-85 171-86 171-87 173-81 173-82 173-83 173-84 
+2.7937 2.8315 2.7493 2.7485 2.7727 2.8000 2.8372 1.5817 1.6195 1.5373 1.5365 
+173-85 173-86 173-87 175-81 175-82 175-83 175-84 175-85 175-86 175-87 179-81 
+1.5607 1.5880 1.6252 2.5056 2.5435 2.4612 2.4604 2.4847 2.5119 2.5491 2.9755 
+179-82 179-83 179-84 179-85 179-86 179-87 181-81 181-82 181-83 181-84 181-85 
+3.0134 2.9311 2.9303 2.9546 2.9818 3.0190 3.4290 3.4669 3.3846 3.3838 3.4081 
+181-86 181-87 183-81 183-82 183-83 183-84 183-85 183-86 183-87 185-81 185-82 
+3.4354 3.4725 2.9540 2.9919 2.9096 2.9088 2.9331 2.9603 2.9975 2.3959 2.4338 
+185-83 185-84 185-85 185-86 185-87 187-81 187-82 187-83 187-84 187-85 187-86 
+2.3515 2.3507 2.3750 2.4022 2.4394 3.3825 3.4204 3.3381 3.3373 3.3616 3.3888 
+187-87 189-81 189-82 189-83 189-84 189-85 189-86 189-87 191-81 191-82 191-83 
+3.4260 2.1802 2.2181 2.1359 2.1351 2.1593 2.1866 2.2237 2.9523 2.9901 2.9079 
+191-84 191-85 191-86 191-87 193-81 193-82 193-83 193-84 193-85 193-86 193-87 
+2.9071 2.9313 2.9586 2.9958 3.0693 3.1071 3.0249 3.0241 3.0483 3.0756 3.1128 
+195-81 195-82 195-83 195-84 195-85 195-86 195-87 197-81 197-82 197-83 197-84 
+3.0031 3.0410 2.9587 2.9579 2.9822 3.0094 3.0466 2.6044 2.6423 2.5601 2.5593 
+197-85 197-86 197-87 
+2.5835 2.6108 2.6480 
+> 
+> ## IV unbalanced twoways
+> FE2SLS_id_unbal <- plm(crime_formula_plm, data = Crime[delrows, ], model = "within", effect = "individual")
+> FE2SLS_ti_unbal <- plm(crime_formula_plm, data = Crime[delrows, ], model = "within", effect = "time")
+> fixef(FE2SLS_id_unbal, effect = "individual")
+     1      3      5      7      9     11     13     15     17     19     21 
+4.7010 4.2924 3.5966 4.3008 4.0593 3.0086 4.6124 4.3784 4.1802 3.8157 4.3787 
+    23     25     27     33     35     37     39     41     45     47     49 
+4.1492 4.4422 4.2339 4.4346 4.4805 4.0481 3.6642 4.2752 4.5200 4.0346 4.3122 
+    51     53     55     57     59     61     63     65     67     69     71 
+4.4947 3.6154 3.4231 4.5125 4.1545 4.1372 4.5478 4.9165 4.4198 4.4796 4.5358 
+    77     79     81     83     85     87     89     91     93     97     99 
+4.1416 3.7717 4.6861 4.6699 4.2891 4.2115 4.6716 4.4061 4.5927 4.6742 3.0269 
+   101    105    107    109    111    113    115    117    119    123    125 
+4.4230 4.7880 4.5820 4.0936 4.0704 2.7355 2.1845 4.8859 4.9861 4.0583 4.0768 
+   127    129    131    133    135    137    139    141    143    145    147 
+5.0911 5.0513 4.5586 3.8526 3.8374 3.8755 4.5077 3.7504 4.2284 4.4254 4.4581 
+   149    151    153    155    157    159    161    163    165    167    169 
+3.6775 4.2687 4.7628 4.7298 4.3762 4.4345 4.3364 4.1172 4.9095 4.1833 4.0979 
+   171    173    175    179    181    183    185    187    189    191    193 
+4.0681 2.2208 3.5979 4.2856 4.7458 4.4532 3.5340 4.5216 3.2699 4.2562 4.3968 
+   195    197 
+4.3073 3.8315 
+> fixef(FE2SLS_ti_unbal, effect = "time")
+     81      82      83      84      85      86      87 
+0.51560 0.52300 0.47597 0.35325 0.36528 0.43883 0.44269 
+> 
+> FE2SLS_tw_unbal <- plm(crime_formula_plm, data = Crime[delrows, ], model = "within", effect = "twoways")
+> fixef(FE2SLS_tw_unbal, effect = "individual")
+      1       3       5       7       9      11      13      15      17      19 
+3.21845 2.92397 2.36665 3.02584 2.76891 1.84400 3.33574 3.14201 2.93973 2.51609 
+     21      23      25      27      33      35      37      39      41      45 
+2.95483 2.78270 3.00498 2.87171 3.15203 3.03046 2.80318 2.44600 2.94790 3.11452 
+     47      49      51      53      55      57      59      61      63      65 
+2.79889 2.95643 3.09821 2.46340 2.41300 3.05295 2.80573 2.87058 3.06787 3.56797 
+     67      69      71      77      79      81      83      85      87      89 
+2.98796 3.05747 3.05870 2.89742 2.54248 3.16383 3.31662 3.02735 2.86312 3.18830 
+     91      93      97      99     101     105     107     109     111     113 
+3.12308 3.34172 3.28033 1.89711 3.11504 3.38228 3.21231 2.71145 2.76745 1.61157 
+    115     117     119     123     125     127     129     131     133     135 
+0.89916 3.52718 3.41088 2.89073 2.79550 3.65757 3.51147 3.25613 2.63101 2.57112 
+    137     139     141     143     145     147     149     151     153     155 
+2.72543 3.11178 2.74321 3.02945 3.09698 3.13617 2.42469 2.88858 3.39734 3.36562 
+    157     159     161     163     165     167     169     171     173     175 
+2.98606 3.00323 2.94192 2.85201 3.54095 2.79548 2.75467 2.74131 1.23830 2.34379 
+    179     181     183     185     187     189     191     193     195     197 
+2.94447 3.38860 2.99807 2.28880 3.27922 2.09247 2.95449 3.04436 2.93793 2.55053 
+> fixef(FE2SLS_tw_unbal, effect = "time")
+    81     82     83     84     85     86     87 
+3.2185 3.2609 3.1691 3.1625 3.1888 3.2017 3.2239 
+> fixef(FE2SLS_tw_unbal, effect = "twoways")
+   1-81    1-82    1-83    1-84    1-85    1-86    1-87    3-81    3-82    3-84 
+3.21845 3.26092 3.16910 3.16249 3.18877 3.20173 3.22385 2.92397 2.96644 2.86801 
+   3-86    3-87    5-81    5-82    5-85    5-86    5-87    7-81    7-82    7-83 
+2.90724 2.92937 2.36665 2.40911 2.33697 2.34992 2.37204 3.02584 3.06831 2.97649 
+   7-84    7-85    7-86    7-87    9-81    9-82    9-83    9-84    9-85    9-86 
+2.96988 2.99616 3.00911 3.03124 2.76891 2.81137 2.71955 2.71295 2.73923 2.75218 
+   9-87   11-81   11-82   11-83   11-84   11-85   11-86   11-87   13-81   13-82 
+2.77430 1.84400 1.88646 1.79464 1.78804 1.81431 1.82727 1.84939 3.33574 3.37821 
+  13-83   13-84   13-85   13-86   13-87   15-81   15-82   15-83   15-84   15-85 
+3.28639 3.27978 3.30606 3.31901 3.34114 3.14201 3.18448 3.09266 3.08605 3.11233 
+  15-86   15-87   17-81   17-82   17-83   17-84   17-85   17-86   17-87   19-81 
+3.12528 3.14741 2.93973 2.98220 2.89038 2.88377 2.91005 2.92300 2.94513 2.51609 
+  19-82   19-83   19-84   19-85   19-86   19-87   21-81   21-82   21-83   21-84 
+2.55855 2.46673 2.46013 2.48641 2.49936 2.52148 2.95483 2.99730 2.90548 2.89887 
+  21-85   21-86   21-87   23-81   23-82   23-83   23-84   23-85   23-86   23-87 
+2.92515 2.93810 2.96023 2.78270 2.82517 2.73335 2.72674 2.75302 2.76597 2.78810 
+  25-81   25-82   25-83   25-84   25-85   25-86   25-87   27-81   27-82   27-83 
+3.00498 3.04744 2.95562 2.94902 2.97530 2.98825 3.01037 2.87171 2.91417 2.82236 
+  27-84   27-85   27-86   27-87   33-81   33-82   33-83   33-84   33-85   33-86 
+2.81575 2.84203 2.85498 2.87711 3.15203 3.19449 3.10268 3.09607 3.12235 3.13530 
+  33-87   35-81   35-82   35-83   35-84   35-85   35-86   35-87   37-81   37-82 
+3.15743 3.03046 3.07293 2.98111 2.97450 3.00078 3.01373 3.03586 2.80318 2.84564 
+  37-83   37-84   37-85   37-86   37-87   39-81   39-82   39-83   39-84   39-85 
+2.75383 2.74722 2.77350 2.78645 2.80858 2.44600 2.48846 2.39665 2.39004 2.41632 
+  39-86   39-87   41-81   41-82   41-83   41-84   41-85   41-86   41-87   45-81 
+2.42927 2.45140 2.94790 2.99037 2.89855 2.89194 2.91822 2.93118 2.95330 3.11452 
+  45-82   45-83   45-84   45-85   45-86   45-87   47-81   47-82   47-83   47-84 
+3.15699 3.06517 3.05856 3.08484 3.09779 3.11992 2.79889 2.84136 2.74954 2.74293 
+  47-85   47-86   47-87   49-81   49-82   49-83   49-84   49-85   49-86   49-87 
+2.76921 2.78217 2.80429 2.95643 2.99889 2.90707 2.90047 2.92675 2.93970 2.96182 
+  51-81   51-82   51-83   51-84   51-85   51-86   51-87   53-81   53-82   53-83 
+3.09821 3.14068 3.04886 3.04225 3.06853 3.08149 3.10361 2.46340 2.50586 2.41404 
+  53-84   53-85   53-86   53-87   55-81   55-82   55-83   55-84   55-85   55-86 
+2.40744 2.43372 2.44667 2.46879 2.41300 2.45547 2.36365 2.35704 2.38332 2.39627 
+  55-87   57-81   57-82   57-83   57-84   57-85   57-86   57-87   59-81   59-82 
+2.41840 3.05295 3.09542 3.00360 2.99699 3.02327 3.03623 3.05835 2.80573 2.84820 
+  59-83   59-84   59-85   59-86   59-87   61-81   61-82   61-83   61-84   61-85 
+2.75638 2.74977 2.77605 2.78900 2.81113 2.87058 2.91304 2.82122 2.81462 2.84090 
+  61-86   61-87   63-81   63-82   63-83   63-84   63-85   63-86   63-87   65-81 
+2.85385 2.87598 3.06787 3.11034 3.01852 3.01191 3.03819 3.05114 3.07327 3.56797 
+  65-82   65-83   65-84   65-85   65-86   65-87   67-81   67-82   67-83   67-84 
+3.61044 3.51862 3.51201 3.53829 3.55124 3.57337 2.98796 3.03043 2.93861 2.93200 
+  67-85   67-86   67-87   69-81   69-82   69-83   69-84   69-85   69-86   69-87 
+2.95828 2.97123 2.99336 3.05747 3.09994 3.00812 3.00151 3.02779 3.04074 3.06287 
+  71-81   71-82   71-83   71-84   71-85   71-86   71-87   77-81   77-82   77-83 
+3.05870 3.10116 3.00934 3.00274 3.02902 3.04197 3.06410 2.89742 2.93989 2.84807 
+  77-84   77-85   77-86   77-87   79-81   79-82   79-83   79-84   79-85   79-86 
+2.84146 2.86774 2.88069 2.90282 2.54248 2.58495 2.49313 2.48652 2.51280 2.52576 
+  79-87   81-81   81-82   81-83   81-84   81-85   81-86   81-87   83-81   83-82 
+2.54788 3.16383 3.20630 3.11448 3.10787 3.13415 3.14710 3.16923 3.31662 3.35909 
+  83-83   83-84   83-85   83-86   83-87   85-81   85-82   85-83   85-84   85-85 
+3.26727 3.26066 3.28694 3.29989 3.32202 3.02735 3.06982 2.97800 2.97139 2.99767 
+  85-86   85-87   87-81   87-82   87-83   87-84   87-85   87-86   87-87   89-81 
+3.01063 3.03275 2.86312 2.90559 2.81377 2.80716 2.83344 2.84639 2.86852 3.18830 
+  89-82   89-83   89-84   89-85   89-86   89-87   91-81   91-82   91-83   91-84 
+3.23077 3.13895 3.13234 3.15862 3.17157 3.19370 3.12308 3.16554 3.07373 3.06712 
+  91-85   91-86   91-87   93-81   93-82   93-83   93-84   93-85   93-86   93-87 
+3.09340 3.10635 3.12848 3.34172 3.38419 3.29237 3.28576 3.31204 3.32499 3.34712 
+  97-81   97-82   97-83   97-84   97-85   97-86   97-87   99-81   99-82   99-83 
+3.28033 3.32280 3.23098 3.22437 3.25065 3.26360 3.28573 1.89711 1.93958 1.84776 
+  99-84   99-85   99-86   99-87  101-81  101-82  101-83  101-84  101-85  101-86 
+1.84115 1.86743 1.88038 1.90251 3.11504 3.15751 3.06569 3.05908 3.08536 3.09831 
+ 101-87  105-81  105-82  105-83  105-84  105-85  105-86  105-87  107-81  107-82 
+3.12044 3.38228 3.42474 3.33292 3.32632 3.35260 3.36555 3.38767 3.21231 3.25478 
+ 107-83  107-84  107-85  107-86  107-87  109-81  109-82  109-83  109-84  109-85 
+3.16296 3.15635 3.18263 3.19558 3.21771 2.71145 2.75392 2.66210 2.65549 2.68177 
+ 109-86  109-87  111-81  111-82  111-83  111-84  111-85  111-86  111-87  113-81 
+2.69472 2.71685 2.76745 2.80992 2.71810 2.71149 2.73777 2.75072 2.77285 1.61157 
+ 113-82  113-83  113-84  113-85  113-86  113-87  115-81  115-82  115-83  115-84 
+1.65403 1.56221 1.55561 1.58189 1.59484 1.61696 0.89916 0.94163 0.84981 0.84320 
+ 115-85  115-86  115-87  117-81  117-82  117-83  117-84  117-85  117-86  117-87 
+0.86948 0.88243 0.90456 3.52718 3.56965 3.47783 3.47122 3.49750 3.51045 3.53258 
+ 119-81  119-82  119-83  119-84  119-85  119-86  119-87  123-81  123-82  123-83 
+3.41088 3.45335 3.36153 3.35492 3.38120 3.39416 3.41628 2.89073 2.93319 2.84137 
+ 123-84  123-85  123-86  123-87  125-81  125-82  125-83  125-84  125-85  125-86 
+2.83477 2.86105 2.87400 2.89612 2.79550 2.83797 2.74615 2.73954 2.76582 2.77877 
+ 125-87  127-81  127-82  127-83  127-84  127-85  127-86  127-87  129-81  129-82 
+2.80090 3.65757 3.70004 3.60822 3.60161 3.62789 3.64084 3.66297 3.51147 3.55394 
+ 129-83  129-84  129-85  129-86  129-87  131-81  131-82  131-83  131-84  131-85 
+3.46212 3.45551 3.48179 3.49475 3.51687 3.25613 3.29859 3.20677 3.20017 3.22645 
+ 131-86  131-87  133-81  133-82  133-83  133-84  133-85  133-86  133-87  135-81 
+3.23940 3.26152 2.63101 2.67347 2.58166 2.57505 2.60133 2.61428 2.63641 2.57112 
+ 135-82  135-83  135-84  135-85  135-86  135-87  137-81  137-82  137-83  137-84 
+2.61358 2.52176 2.51516 2.54144 2.55439 2.57651 2.72543 2.76790 2.67608 2.66947 
+ 137-85  137-86  137-87  139-81  139-82  139-83  139-84  139-85  139-86  139-87 
+2.69575 2.70870 2.73083 3.11178 3.15425 3.06243 3.05582 3.08210 3.09505 3.11718 
+ 141-81  141-82  141-83  141-84  141-85  141-86  141-87  143-81  143-82  143-83 
+2.74321 2.78568 2.69386 2.68725 2.71353 2.72648 2.74861 3.02945 3.07192 2.98010 
+ 143-84  143-85  143-86  143-87  145-81  145-82  145-83  145-84  145-85  145-86 
+2.97349 2.99977 3.01273 3.03485 3.09698 3.13945 3.04763 3.04102 3.06730 3.08025 
+ 145-87  147-81  147-82  147-83  147-84  147-85  147-86  147-87  149-81  149-82 
+3.10238 3.13617 3.17863 3.08681 3.08021 3.10649 3.11944 3.14156 2.42469 2.46716 
+ 149-83  149-84  149-85  149-86  149-87  151-81  151-82  151-83  151-84  151-85 
+2.37534 2.36873 2.39501 2.40796 2.43009 2.88858 2.93105 2.83923 2.83262 2.85890 
+ 151-86  151-87  153-81  153-82  153-83  153-84  153-85  153-86  153-87  155-81 
+2.87186 2.89398 3.39734 3.43980 3.34799 3.34138 3.36766 3.38061 3.40274 3.36562 
+ 155-82  155-83  155-84  155-85  155-86  155-87  157-81  157-82  157-83  157-84 
+3.40808 3.31626 3.30966 3.33594 3.34889 3.37101 2.98606 3.02853 2.93671 2.93010 
+ 157-85  157-86  157-87  159-81  159-82  159-83  159-84  159-85  159-86  159-87 
+2.95638 2.96933 2.99146 3.00323 3.04569 2.95387 2.94727 2.97355 2.98650 3.00862 
+ 161-81  161-82  161-83  161-84  161-85  161-86  161-87  163-81  163-82  163-83 
+2.94192 2.98438 2.89256 2.88596 2.91224 2.92519 2.94731 2.85201 2.89447 2.80265 
+ 163-84  163-85  163-86  163-87  165-81  165-82  165-83  165-84  165-85  165-86 
+2.79605 2.82233 2.83528 2.85741 3.54095 3.58341 3.49160 3.48499 3.51127 3.52422 
+ 165-87  167-81  167-82  167-83  167-84  167-85  167-86  167-87  169-81  169-82 
+3.54635 2.79548 2.83795 2.74613 2.73952 2.76580 2.77875 2.80088 2.75467 2.79714 
+ 169-83  169-84  169-85  169-86  169-87  171-81  171-82  171-83  171-84  171-85 
+2.70532 2.69871 2.72499 2.73794 2.76007 2.74131 2.78377 2.69195 2.68535 2.71163 
+ 171-86  171-87  173-81  173-82  173-83  173-84  173-85  173-86  173-87  175-81 
+2.72458 2.74671 1.23830 1.28077 1.18895 1.18234 1.20862 1.22157 1.24370 2.34379 
+ 175-82  175-83  175-84  175-85  175-86  175-87  179-81  179-82  179-83  179-84 
+2.38626 2.29444 2.28783 2.31411 2.32706 2.34919 2.94447 2.98694 2.89512 2.88851 
+ 179-85  179-86  179-87  181-81  181-82  181-83  181-84  181-85  181-86  181-87 
+2.91479 2.92774 2.94987 3.38860 3.43107 3.33925 3.33264 3.35892 3.37187 3.39400 
+ 183-81  183-82  183-83  183-84  183-85  183-86  183-87  185-81  185-82  185-83 
+2.99807 3.04053 2.94871 2.94211 2.96839 2.98134 3.00346 2.28880 2.33126 2.23945 
+ 185-84  185-85  185-86  185-87  187-81  187-82  187-83  187-84  187-85  187-86 
+2.23284 2.25912 2.27207 2.29420 3.27922 3.32169 3.22987 3.22326 3.24954 3.26249 
+ 187-87  189-81  189-82  189-83  189-84  189-85  189-86  189-87  191-81  191-82 
+3.28462 2.09247 2.13494 2.04312 2.03651 2.06279 2.07574 2.09787 2.95449 2.99696 
+ 191-83  191-84  191-85  191-86  191-87  193-81  193-82  193-83  193-84  193-85 
+2.90514 2.89853 2.92481 2.93777 2.95989 3.04436 3.08683 2.99501 2.98840 3.01468 
+ 193-86  193-87  195-81  195-82  195-83  195-84  195-85  195-86  195-87  197-81 
+3.02764 3.04976 2.93793 2.98039 2.88858 2.88197 2.90825 2.92120 2.94333 2.55053 
+ 197-82  197-83  197-84  197-85  197-86  197-87 
+2.59300 2.50118 2.49457 2.52085 2.53380 2.55593 
+> 
+> 
+> ## check vs. fixest::feols
+> if(fixest.avail) {
++ 	library(fixest) # version 0.9.0
++   
++   crime_formula_fixest_id <- lcrmrte ~ lprbconv + lprbpris + lavgsen + 
++                                   ldensity + lwcon + lwtuc + lwtrd + lwfir +
++                                   lwser + lwmfg + lwfed + lwsta + lwloc + lpctymle | 
++                                   county |
++                                   lprbarr + lpolpc ~ ltaxpc + lmix
++   
++   crime_formula_fixest_ti <- lcrmrte ~ lprbconv + lprbpris + lavgsen + 
++                                   ldensity + lwcon + lwtuc + lwtrd + lwfir +
++                                   lwser + lwmfg + lwfed + lwsta + lwloc + lpctymle | 
++                                   year |
++                                   lprbarr + lpolpc ~ ltaxpc + lmix
++   
++   crime_formula_fixest_tw <- lcrmrte ~ lprbconv + lprbpris + lavgsen + 
++     ldensity + lwcon + lwtuc + lwtrd + lwfir +
++     lwser + lwmfg + lwfed + lwsta + lwloc + lpctymle | 
++     county + year |
++     lprbarr + lpolpc ~ ltaxpc + lmix
++   
++   
++   FE2SLS_id.fixest <- fixest::feols(crime_formula_fixest_id, data = Crime)
++   FE2SLS_ti.fixest <- fixest::feols(crime_formula_fixest_ti, data = Crime)
++   
++   FE2SLS_id_unbal.fixest <- fixest::feols(crime_formula_fixest_id, data = Crime[delrows, ])
++   FE2SLS_ti_unbal.fixest <- fixest::feols(crime_formula_fixest_ti, data = Crime[delrows, ])
++   
++   FE2SLS_tw.fixest <- fixest::feols(crime_formula_fixest_tw, data = Crime)
++   FE2SLS_tw_unbal.fixest <- fixest::feols(crime_formula_fixest_tw, data = Crime[delrows, ])
++   
++   # First, check if model estimations are the same
++   stopifnot(isTRUE(all.equal(FE2SLS_id$coefficients, FE2SLS_id.fixest$coefficients, check.attributes = FALSE)))
++   stopifnot(isTRUE(all.equal(FE2SLS_ti$coefficients, FE2SLS_ti.fixest$coefficients, check.attributes = FALSE)))
++   
++   stopifnot(isTRUE(all.equal(FE2SLS_id_unbal$coefficients, FE2SLS_id_unbal.fixest$coefficients, check.attributes = FALSE)))
++   stopifnot(isTRUE(all.equal(FE2SLS_ti_unbal$coefficients, FE2SLS_ti_unbal.fixest$coefficients, check.attributes = FALSE)))
++ 
++   stopifnot(isTRUE(all.equal(FE2SLS_tw$coefficients,       FE2SLS_tw.fixest$coefficients, check.attributes = FALSE)))
++   stopifnot(isTRUE(all.equal(FE2SLS_tw_unbal$coefficients, FE2SLS_tw_unbal.fixest$coefficients, check.attributes = FALSE)))
++   
++   # check fixef
++   # stopifnot(isTRUE(all.equal(as.numeric(fixef(FE2SLS_id)), fixef(FE2SLS_id.fixest)[["county"]], check.attributes = FALSE))) # no match
++   # stopifnot(isTRUE(all.equal(as.numeric(fixef(FE2SLS_ti)), fixef(FE2SLS_ti.fixest)[["year"]],   check.attributes = FALSE))) # no match
++   # 
++   # stopifnot(isTRUE(all.equal(as.numeric(fixef(FE2SLS_id_unbal)), fixef(FE2SLS_id_unbal.fixest)[["county"]], check.attributes = FALSE))) # no match
++   # stopifnot(isTRUE(all.equal(as.numeric(fixef(FE2SLS_ti_unbal)), fixef(FE2SLS_ti_unbal.fixest)[["year"]],   check.attributes = FALSE))) # no match
++   # 
++   # stopifnot(isTRUE(all.equal(as.numeric(fixef(FE2SLS_tw)),                         fixef(FE2SLS_tw.fixest)[["county"]], check.attributes = FALSE))) # no match
++   # stopifnot(isTRUE(all.equal(as.numeric(c(0, fixef(FE2SLS_tw, "time", "dfirst"))), fixef(FE2SLS_tw.fixest)[["year"]],   check.attributes = FALSE))) # no match
++   # stopifnot(isTRUE(all.equal(as.numeric(fixef(FE2SLS_tw, "twoways")),              FE2SLS_tw.fixest$sumFE,              check.attributes = FALSE))) # no match
++   # 
++   # stopifnot(isTRUE(all.equal(as.numeric(fixef(FE2SLS_tw_unbal)),                         fixef(FE2SLS_tw_unbal.fixest)[["county"]], check.attributes = FALSE))) # no match
++   # stopifnot(isTRUE(all.equal(as.numeric(c(0, fixef(FE2SLS_tw_unbal, "time", "dfirst"))), fixef(FE2SLS_tw_unbal.fixest)[["year"]],   check.attributes = FALSE))) # no match
++   # stopifnot(isTRUE(all.equal(as.numeric(fixef(FE2SLS_tw_unbal, "twoways")),              FE2SLS_tw_unbal.fixest$sumFE,              check.attributes = FALSE))) # no match
++   
++   
++   fixef(FE2SLS_id.fixest)
++   fixef(FE2SLS_id_unbal.fixest)
++   
++   fixef(FE2SLS_ti.fixest)
++   fixef(FE2SLS_ti_unbal.fixest)
++    
++   fixef(FE2SLS_tw.fixest)[["county"]]
++   fixef(FE2SLS_tw.fixest)[["year"]]
++   fixef(FE2SLS_tw_unbal.fixest)[["county"]]
++   fixef(FE2SLS_tw_unbal.fixest)[["year"]]
++ }
+         81          82          83          84          85          86 
+ 0.00000000 -0.07130845 -0.23451251 -0.30845206 -0.15473761 -0.07930569 
+         87 
+-0.09685115 
+> 
+> if(lfe.avail) {
++   library(lfe) # version 2.8-7
++    
++    # check vs. lfe::felm/getfe 
++    formula_lfe_id <- lcrmrte ~ lprbconv + lprbpris + lavgsen + 
++                        ldensity + lwcon + lwtuc + lwtrd + lwfir +
++                        lwser + lwmfg + lwfed + lwsta + lwloc + lpctymle | 
++                        county |
++                        (lprbarr|lpolpc ~ ltaxpc + lmix)
++    
++    formula_lfe_ti <- lcrmrte ~ lprbconv + lprbpris + lavgsen + 
++                        ldensity + lwcon + lwtuc + lwtrd + lwfir +
++                        lwser + lwmfg + lwfed + lwsta + lwloc + lpctymle | 
++                        year |
++                        (lprbarr|lpolpc ~ ltaxpc + lmix)
++    
++    formula_lfe_tw <- lcrmrte ~ lprbconv + lprbpris + lavgsen + 
++                       ldensity + lwcon + lwtuc + lwtrd + lwfir +
++                       lwser + lwmfg + lwfed + lwsta + lwloc + lpctymle | 
++                       county + year |
++                       (lprbarr|lpolpc ~ ltaxpc + lmix)
++ 
++    
++    FE2SLS_id.felm       <- lfe::felm(formula_lfe_id, data = Crime)
++    FE2SLS_ti.felm       <- lfe::felm(formula_lfe_ti, data = Crime)
++    FE2SLS_id_unbal.felm <- lfe::felm(formula_lfe_id, data = Crime[delrows, ])
++    FE2SLS_ti_unbal.felm <- lfe::felm(formula_lfe_ti, data = Crime[delrows, ])
++    FE2SLS_tw.felm       <- lfe::felm(formula_lfe_tw, data = Crime)
++    FE2SLS_tw_unbal.felm <- lfe::felm(formula_lfe_tw, data = Crime[delrows, ])
++    
++    # same order of coef as other estimations
++    FE2SLS_id.felm.coef <- as.numeric(FE2SLS_id.felm$coefficients)
++    names(FE2SLS_id.felm.coef) <- rownames(FE2SLS_id.felm$coefficients)
++    FE2SLS_id.felm.coef <- FE2SLS_id.felm.coef[c(15, 16, 1:14)]
++    
++    FE2SLS_ti.felm.coef <- as.numeric(FE2SLS_ti.felm$coefficients)
++    names(FE2SLS_ti.felm.coef) <- rownames(FE2SLS_ti.felm$coefficients)
++    FE2SLS_ti.felm.coef <- FE2SLS_ti.felm.coef[c(15, 16, 1:14)]
++    
++    FE2SLS_id_unbal.felm.coef <- as.numeric(FE2SLS_id_unbal.felm$coefficients)
++    names(FE2SLS_id_unbal.felm.coef) <- rownames(FE2SLS_id_unbal.felm$coefficients)
++    FE2SLS_id_unbal.felm.coef <- FE2SLS_id_unbal.felm.coef[c(15, 16, 1:14)]
++    
++    FE2SLS_ti_unbal.felm.coef <- as.numeric(FE2SLS_ti_unbal.felm$coefficients)
++    names(FE2SLS_ti_unbal.felm.coef) <- rownames(FE2SLS_ti_unbal.felm$coefficients)
++    FE2SLS_ti_unbal.felm.coef <- FE2SLS_ti_unbal.felm.coef[c(15, 16, 1:14)]
++    
++    FE2SLS_tw.felm.coef <- as.numeric(FE2SLS_tw.felm$coefficients)
++    names(FE2SLS_tw.felm.coef) <- rownames(FE2SLS_tw.felm$coefficients)
++    FE2SLS_tw.felm.coef <- FE2SLS_tw.felm.coef[c(15, 16, 1:14)]
++    
++    FE2SLS_tw_unbal.felm.coef <- as.numeric(FE2SLS_tw_unbal.felm$coefficients)
++    names(FE2SLS_tw_unbal.felm.coef) <- rownames(FE2SLS_tw_unbal.felm$coefficients)
++    FE2SLS_tw_unbal.felm.coef <- FE2SLS_tw_unbal.felm.coef[c(15, 16, 1:14)]
++    
++    # First, check if model estimations are the same
++    stopifnot(isTRUE(all.equal(FE2SLS_id$coefficients,       FE2SLS_id.felm.coef,       check.attributes = FALSE)))
++    stopifnot(isTRUE(all.equal(FE2SLS_ti$coefficients,       FE2SLS_ti.felm.coef,       check.attributes = FALSE)))
++    stopifnot(isTRUE(all.equal(FE2SLS_id_unbal$coefficients, FE2SLS_id_unbal.felm.coef, check.attributes = FALSE)))
++    stopifnot(isTRUE(all.equal(FE2SLS_ti_unbal$coefficients, FE2SLS_ti_unbal.felm.coef, check.attributes = FALSE)))
++    stopifnot(isTRUE(all.equal(FE2SLS_tw$coefficients,       FE2SLS_tw.felm.coef,       check.attributes = FALSE)))
++    stopifnot(isTRUE(all.equal(FE2SLS_tw_unbal$coefficients, FE2SLS_tw_unbal.felm.coef, check.attributes = FALSE)))
++ 
++    FE2SLS_id.felm_fixef       <- lfe::getfe(FE2SLS_id.felm)[lfe::getfe(FE2SLS_id.felm)[["fe"]] == "county", 1]
++    FE2SLS_id_unbal.felm_fixef <- lfe::getfe(FE2SLS_id_unbal.felm)[lfe::getfe(FE2SLS_id_unbal.felm)[["fe"]] == "county", 1]
++    
++    FE2SLS_ti.felm_fixef       <- lfe::getfe(FE2SLS_ti.felm)[lfe::getfe(FE2SLS_ti.felm)[["fe"]] == "year", 1]
++    FE2SLS_ti_unbal.felm_fixef <- lfe::getfe(FE2SLS_ti_unbal.felm)[lfe::getfe(FE2SLS_ti_unbal.felm)[["fe"]] == "year", 1]
++    
++    FE2SLS_tw.id.felm_fixef       <- lfe::getfe(FE2SLS_tw.felm)[lfe::getfe(FE2SLS_tw.felm)[["fe"]] == "county", 1]
++    FE2SLS_tw.id_unbal.felm_fixef <- lfe::getfe(FE2SLS_tw_unbal.felm)[lfe::getfe(FE2SLS_tw_unbal.felm)[["fe"]] == "county", 1]
++    FE2SLS_tw.ti.felm_fixef       <- lfe::getfe(FE2SLS_tw.felm)[lfe::getfe(FE2SLS_tw.felm)[["fe"]] == "year", 1]
++    FE2SLS_tw.ti_unbal.felm_fixef <- lfe::getfe(FE2SLS_tw_unbal.felm)[lfe::getfe(FE2SLS_tw_unbal.felm)[["fe"]] == "year", 1]
++    
++    stopifnot(isTRUE(all.equal(as.numeric(fixef(FE2SLS_id)),       FE2SLS_id.felm_fixef,   check.attributes = FALSE)))
++    stopifnot(isTRUE(all.equal(as.numeric(fixef(FE2SLS_ti)),       FE2SLS_ti.felm_fixef,   check.attributes = FALSE)))
++    stopifnot(isTRUE(all.equal(as.numeric(fixef(FE2SLS_id_unbal)), FE2SLS_id_unbal.felm_fixef, check.attributes = FALSE)))
++ 
++    stopifnot(isTRUE(all.equal(as.numeric(fixef(FE2SLS_ti_unbal)), FE2SLS_ti_unbal.felm_fixef, check.attributes = FALSE)))
++    stopifnot(isTRUE(all.equal(as.numeric(fixef(FE2SLS_tw)),                               FE2SLS_tw.id.felm_fixef,   check.attributes = FALSE)))
++    stopifnot(isTRUE(all.equal(as.numeric(c(0, fixef(FE2SLS_tw, "time", "dfirst"))),       FE2SLS_tw.ti.felm_fixef,   check.attributes = FALSE, tolerance = 10^(-6))))
++ 
++    # in the unbalanced twoway case, getfe() sets as reference a level depending on the unbalancedness structure
++    # -> somewhat arbitrary -> see also https://github.com/sgaure/lfe/issues/52 
++    # for this example, the unbalancedness structure leads to the first time period being the reference
++    stopifnot(isTRUE(all.equal(as.numeric(fixef(FE2SLS_tw_unbal)),                         FE2SLS_tw.id_unbal.felm_fixef, check.attributes = FALSE)))
++    stopifnot(isTRUE(all.equal(as.numeric(c(0, fixef(FE2SLS_tw_unbal, "time", "dfirst"))), FE2SLS_tw.ti_unbal.felm_fixef, check.attributes = FALSE, tolerance = 10^(-6))))
++ }
 > 
 > 
 > 
@@ -222,4 +764,4 @@ Type 'q()' to quit R.
 > 
 > proc.time()
    user  system elapsed 
-   1.04    0.09    1.11 
+   4.84    0.48    5.51 
