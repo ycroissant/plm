@@ -49,6 +49,7 @@ detect.lindep(matrix(NA, nrow = 0, ncol = 0), suppressPrint = TRUE) # empty matr
 detect.lindep(model.matrix(mf, model = "pooling"), suppressPrint = TRUE)
 detect.lindep(model.matrix(mf, model = "within"), suppressPrint = TRUE)
 detect.lindep(model.matrix(mod_fe), suppressPrint = TRUE)
+detect.lindep(model.matrix(mod_fe), suppressPrint = FALSE)
 
 # test for (p)data.frame interface
 df <- as.data.frame(model.matrix(mod_fe))
@@ -68,7 +69,7 @@ alias(lmmod1)
 
 #MM plm_fe <- plm(pform, data = Cigar.p, model = "within")
 plm_fe <- plm(form, data = Cigar.p, model = "within")
-#YC plm_re <- plm(pform, data = Cigar.p, model = "random")                                  # The between model is very special, as there is no interept and cpi is constant
+#YC plm_re <- plm(pform, data = Cigar.p, model = "random")   # The between model is very special, as there is no intercept and cpi is constant
 #MM plm_re_wal <- plm(pform, data = Cigar.p, model = "random", random.method = "walhus")
 #MM plm_fd <- plm(pform, data = Cigar.p, model = "fd")
 #MM plm_pool <- plm(pform, data = Cigar.p, model = "pooling")

@@ -184,7 +184,7 @@ detect.lindep.matrix <- function(object, suppressPrint = FALSE, ...) {
   }
   
   if(!suppressPrint) {
-    if (is.null(num)) {
+    if(is.null(num)) {
       print("No linear dependent column(s) detected.")
     } else {
       print(paste0("Suspicious column number(s): ", paste(num,        collapse = ", ")))
@@ -202,7 +202,7 @@ detect.lindep.data.frame <- function(object, suppressPrint = FALSE, ...) {
   if (!inherits(object, "data.frame")) {
     stop("Input 'object' must be a data.frame")}
 
-  return(detect.lindep.matrix(as.matrix(object), ...))
+  return(detect.lindep.matrix(as.matrix(object), suppressPrint = suppressPrint, ...))
 }
 
 #' @rdname detect.lindep
@@ -212,7 +212,7 @@ detect.lindep.plm <- function(object, suppressPrint = FALSE, ...) {
   if (!inherits(object, "plm")) {
     stop("Input 'object' must be of class \"plm\"")}
 
-  return(detect.lindep.matrix(model.matrix(object), ...))
+  return(detect.lindep.matrix(model.matrix(object), suppressPrint = suppressPrint, ...))
 }
 
 

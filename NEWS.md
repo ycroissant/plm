@@ -73,6 +73,8 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
  * mtest:
     * gained generic, mtest.default and mtest.pgmm methods.
     * print information about user-supplied vcov.
+ * detect.lindep: argument 'suppressPrint' now correctly passed/respected (methods
+   for data frame and matrix).
 
 ### Internals
 
