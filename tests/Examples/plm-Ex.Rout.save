@@ -6506,7 +6506,7 @@ attr(,"index")
 > 
 > ### Name: mtest
 > ### Title: Arellano-Bond Test of Serial Correlation
-> ### Aliases: mtest
+> ### Aliases: mtest mtest.pgmm
 > ### Keywords: htest
 > 
 > ### ** Examples
@@ -6526,7 +6526,7 @@ alternative hypothesis: autocorrelation present
 
 > mtest(ar, order = 2, vcov = vcovHC)
 
-	Arellano-Bond autocorrelation test of degree 2
+	Arellano-Bond autocorrelation test of degree 2, vcov: vcovHC
 
 data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + lag(log(capital),  ...
 normal = -0.36744, p-value = 0.7133
@@ -14954,7 +14954,7 @@ HPY R-squared: 0.99077
 > rv <- vcovHC(ar)
 > mtest(ar, order = 2, vcov = rv)
 
-	Arellano-Bond autocorrelation test of degree 2
+	Arellano-Bond autocorrelation test of degree 2, vcov: rv
 
 data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + log(capital) +  ...
 normal = -0.1165, p-value = 0.9073
@@ -15377,7 +15377,7 @@ F-statistic: 309.014 on 2 and 197 DF, p-value: < 2.22e-16
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  22.48 0.89 24.31 NA NA 
+Time elapsed:  36.36 1.04 42 NA NA 
 > grDevices::dev.off()
 null device 
           1 

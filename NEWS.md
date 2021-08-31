@@ -70,6 +70,9 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
    of both operands have same length but different content (e.g., something like
    this does not warn anymore:
    `your_pseries[1:(length(your_pseries)-1)] + your_pseries[2:length(your_pseries)]`).
+ * mtest:
+    * gained generic, mtest.default and mtest.pgmm methods.
+    * print information about user-supplied vcov.
 
 ### Internals
 

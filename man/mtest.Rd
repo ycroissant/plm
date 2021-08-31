@@ -2,17 +2,22 @@
 % Please edit documentation in R/est_gmm.R
 \name{mtest}
 \alias{mtest}
+\alias{mtest.pgmm}
 \title{Arellano--Bond Test of Serial Correlation}
 \usage{
-mtest(object, order = 1, vcov = NULL)
+mtest(object, ...)
+
+\method{mtest}{pgmm}(object, order = 1, vcov = NULL, ...)
 }
 \arguments{
 \item{object}{an object of class \code{"pgmm"},}
 
+\item{\dots}{further arguments (currently unused).}
+
 \item{order}{the order of the serial correlation (1 or 2),}
 
 \item{vcov}{a matrix of covariance for the coefficients or a function to
-compute it.}
+compute it,}
 }
 \value{
 An object of class \code{"htest"}.

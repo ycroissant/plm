@@ -823,7 +823,8 @@ summary.pgmm <- function(object, robust = TRUE, time.dummies = FALSE, ...) {
 #' @param object an object of class `"pgmm"`,
 #' @param order the order of the serial correlation (1 or 2),
 #' @param vcov a matrix of covariance for the coefficients or a function to
-#' compute it.
+#' compute it,
+#' @param \dots further arguments (currently unused).
 #' @return An object of class `"htest"`.
 #' @export
 #' @author Yves Croissant
@@ -841,8 +842,14 @@ summary.pgmm <- function(object, robust = TRUE, time.dummies = FALSE, ...) {
 #'            data = EmplUK, effect = "twoways", model = "twosteps")
 #' mtest(ar, order = 1)
 #' mtest(ar, order = 2, vcov = vcovHC)
-#' 
-mtest <- function(object, order = 1, vcov = NULL) {
+#'
+mtest <- function(object, ...) {
+UseMethod("mtest")
+}
+
+#' @rdname mtest
+#' @export
+mtest.pgmm <- function(object, order = 1, vcov = NULL, ...) {
   if (!inherits(object, "pgmm")) stop("argument 'object' needs to be class 'pgmm'")
   myvcov <- vcov
   if (is.null(vcov)) vv <- vcov(object)
@@ -882,11 +889,13 @@ mtest <- function(object, order = 1, vcov = NULL) {
   num <- Reduce("+", mapply(crossprod, resid, residl, SIMPLIFY = FALSE))
   stat <- num / sqrt(denom)
   names(stat) <- "normal"
+  if(!is.null(vcov)) vcov <- paste0(", vcov: ", deparse(substitute(vcov)))
+  method <- paste0("Arellano-Bond autocorrelation test of degree ", order, vcov)
   pval <- 2 * pnorm(abs(stat), lower.tail = FALSE)
   mtest <- list(statistic   = stat,
                 p.value     = pval,
                 alternative = "autocorrelation present",
-                method      = paste("Arellano-Bond autocorrelation test of degree", order),
+                method      = method,
                 data.name   = data.name(object))
   class(mtest) <- "htest"
   mtest
