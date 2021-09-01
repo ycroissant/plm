@@ -22,7 +22,6 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
    `collapse::fhdwithin` which in turn uses `fixest::demean`. Thanks to Sebastian
    Krantz for guidance on this.
 
-
 ### Features:
  * phansi: new function for Simes (1986) test applied to panels for panel unit
    root testing, as suggested in Hanck (2013).
@@ -38,53 +37,53 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
    if `options("plm.fast" = TRUE)` is set, see `?plm.fast` (then internally
    using `collapse::dapply`)). Thanks to Sebastian Krantz for inspiration.
 
-### Fixes & Others:
+### Bug Fixes:
  * vcovG (hence vcovHC, vcovDC, vcovNW, vcovSCC) and vcovBK: fix bug in case
    of IV estimation with only one regressor.
- * within_intercept: fix bug which caused an error for FE models with only one
-   regressor.
+ * within_intercept:
+     * fix bug which caused an error for FE models with only one regressor.
+     * error informatively for IV models as not implemented.
  * between.matrix: do not coerce result to numeric vector for n x 1 matrix
    input (by using drop = FALSE in extraction) (prior to this fix, estimation
    of the between model with only an intercept errored).
  * pvcm: intercept-only models are now estimable.
- * fixef: two-ways FE models: fixef does not error anymore if factor is in model
-          and not anymore in IV case.
- * plm:
-    * for the nested random effect model (`effect = "nested"`), check if argument
-      `model = "random"` is set, if not, plm now warns and adjusts accordingly
-      (will become an error in the future).
-    * Non-default random IV cases computed faster (cases with 
-    `inst.method = "baltagi"` / `"am"` / `"bms"`).
- * pgmm: printing of summary gives more information about the model estimated
-   (print.summary.pgmm).
- * purtest: now checks for NA-values, drops any and warns about dropping.
- * piest: better printing (handling of 'digits' and 'subset' argument) 
-     (print.piest, print.summary.piest).
+ * fixef: for two-ways FE models, fixef does not error anymore if factor is in
+   model and not anymore in IV case.
+ * detect.lindep: argument 'suppressPrint' now correctly passed on/respected
+   (methods for data frame and matrix).
  * has.intercept.plm: argument 'part' renamed to 'rhs', argument values
    (integer or NULL) aligned with and correctly passed on to 
    has.intercept.Formula (with a *temporary* back-compatible solution).
- * pwaldtest: error informatively if executed on intercept-only model
-   (also for such models: do not execute pwaldtest in summary.plm/pvcm and do 
-   not print pwaldtest in print.summary.plm/pvcm).
  * groupGenerics: no more warning in arithmetic operations on pseries when index
    of both operands have same length but different content (e.g., something like
    this does not warn anymore:
    `your_pseries[1:(length(your_pseries)-1)] + your_pseries[2:length(your_pseries)]`).
+
+## Others:
+ * plm: for the nested random effect model (`effect = "nested"`), check if
+    argument `model = "random"` is set, if not, plm now warns and adjusts 
+    accordingly (will become an error in the future).
+ * pgmm: printing of summary gives more information about the model estimated
+   (print.summary.pgmm).
+ * purtest: now checks for NA-values, drops any, and warns about dropping.
+ * piest: better printing (handling of 'digits' and 'subset' argument) 
+     (print.piest, print.summary.piest).
+ * pwaldtest: error informatively if executed on intercept-only model
+   (also for such models: do not execute pwaldtest in summary.plm/pvcm and do 
+   not print pwaldtest in print.summary.plm/pvcm).
  * mtest:
-    * gained generic, mtest.default and mtest.pgmm methods.
-    * print information about user-supplied vcov.
- * detect.lindep: argument 'suppressPrint' now correctly passed/respected (methods
-   for data frame and matrix).
- * within_intercept: error informatively for IV models as not implemented.
-
-### Internals
-
- * various efficiency gains throughout the package by using more vapply(),
-   crossprod(), lm.fit(), better branching, rowSums(., dims = 2L) (instead of 
-   apply(., 1:2, sum))), etc.
- * piest, aneweytest: now use internal demeaning framework by Within().
+    * switched to combination of generic and a method for pgmm.
+    * has information information about user-supplied vcov in its return value's
+      method slot (vcov information thus printed as well).
  * various print methods now return the input object invisible (before returned
    NULL).
+ * various efficiency gains throughout the package by using more vapply(),
+   crossprod(), lm.fit(), better branching, rowSums(., dims = 2L) (instead of 
+   apply(., 1:2, sum))), etc., e.g., in plm for non-default random IV cases 
+   (cases with `inst.method = "baltagi"` / `"am"` / `"bms"`), pmg, pcce, purtest.
+ * piest, aneweytest: now use internal demeaning framework by Within() [thus
+   benefitting from fast mode].
+
    
 ### Vignettes and Other Documentation:
  * 1st vignette:
