@@ -2,8 +2,8 @@
 output: rmarkdown::html_vignette
 bibliography: ../inst/REFERENCES.bib
 abstract: |
-  This introduction to the `plm` package is a slightly
-  modified and extended version of @Croissant:Millo:2008, published in the
+  This introduction to the `plm` package is a modified 
+  and extended version of @Croissant:Millo:2008, published in the
   *Journal of Statistical Software*. 
   
   Panel data econometrics is obviously one of the main fields
@@ -663,7 +663,7 @@ particularly interesting when there are a few external instruments.
 Several models can be estimated with `plm` by filling the
 `model` argument:
 
-- the fixed effects model (`"within"`),
+- the fixed effects model (`"within"`), the default,
 - the pooling model (`"pooling"`),
 - the first-difference model (`"fd"`),
 - the between model (`"between"`),
@@ -705,8 +705,11 @@ errors and the test of equality to the overall intercept.
 summary(fixef(grun.fe, type = "dmean"))
 ``` 
 
-In case of a two-ways effect model, an additional argument
-`effect` is required to extract fixed effects:
+In case of a two-ways fixed effect model, argument `effect` is relevant in function 
+`fixef` to extract specific effect fixed effects with possible values `"individual"`
+for individual fixed effects (default for two-ways fixed effect models), `"time"` 
+for time fixed effects, and `"twoways"` for the sum of individual and time fixed
+effects. Example to extract the time fixed effects from a two-ways model:
 
 ```{r }
 grun.twfe <- plm(inv~value+capital, data=Grunfeld, model="within", effect="twoways")
