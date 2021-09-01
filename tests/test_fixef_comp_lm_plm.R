@@ -6,6 +6,7 @@ Grunfeld_unbalanced <- Grunfeld[1:199, ]
 ##  see also: 
 ##      * test file tests/test_within_intercept.R
 ##      * test file tests/test_fixef.R
+##      * test file tests/test_fixef2.R
 
 ### TODO:
 ## * test vcov, once the standard errors have been modified to 

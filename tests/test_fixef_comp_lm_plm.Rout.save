@@ -1,6 +1,6 @@
 
-R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R version 4.1.1 (2021-08-10) -- "Kick Things"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -23,6 +23,7 @@ Type 'q()' to quit R.
 > ##  see also: 
 > ##      * test file tests/test_within_intercept.R
 > ##      * test file tests/test_fixef.R
+> ##      * test file tests/test_fixef2.R
 > 
 > ### TODO:
 > ## * test vcov, once the standard errors have been modified to 
@@ -291,4 +292,4 @@ Type 'q()' to quit R.
 > 
 > proc.time()
    user  system elapsed 
-   0.92    0.09    1.00 
+   3.00    0.35    3.34 
