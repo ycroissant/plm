@@ -380,21 +380,21 @@ ranef.plm <- function(object, effect = NULL, ...) {
   obj.effect <- describe(object, "effect")
   balanced <- is.pbalanced(object)
   
-  if (model != "random") stop("only applicable to random effect models")
+  if(model != "random") stop("only applicable to random effect models")
   # TODO: Are random effects for nested models and IV models calculated the same way?
   #       Be defensive here and error for such models.
-  if (obj.effect == "nested")  stop("nested random effect models are not supported (yet?)")
-  if (length(object$formula)[2L] == 2L) stop("IV models not supported (yet?)")
+  if(obj.effect == "nested")  stop("nested random effect models are not supported (yet?)")
+  if(length(object$formula)[2L] >= 2L) stop("ranef: IV models not supported (yet?)")
   
-  if (!is.null(effect) && !(effect %in% c("individual", "time"))) 
+  if(!is.null(effect) && !(effect %in% c("individual", "time"))) 
       stop("argument 'effect' must be NULL, \"individual\", or \"time\"")
-  if (obj.effect != "twoways" && !is.null(effect) && effect != obj.effect) 
+  if(obj.effect != "twoways" && !is.null(effect) && effect != obj.effect) 
       stop(paste0("for one-way models, argument \"effect\" must be NULL or match the effect introduced in model estimation"))
 
   # default effect is the model's effect
   # for two-ways RE models: set default to effect = "individual"
-  if (obj.effect == "twoways" && is.null(effect)) effect <- "individual"
-  if (is.null(effect)) effect <- obj.effect
+  if(obj.effect == "twoways" && is.null(effect)) effect <- "individual"
+  if(is.null(effect)) effect <- obj.effect
   
   erc <- ercomp(object)
   # extract theta, but depending on model/effect, it is adjusted/overwritten later
@@ -403,7 +403,7 @@ ranef.plm <- function(object, effect = NULL, ...) {
   # res <- object$residuals                # gives residuals of quasi-demeaned model
   res <- residuals_overall_exp.plm(object) # but need RE residuals of overall model
   
-  if (!inherits(res, "pseries")) {
+  if(!inherits(res, "pseries")) {
     # just make sure we have a pseries for the following between() to work
     attr(res, "index") <- index(object$model)
     class(res) <- c("pseries", class(res))
@@ -412,16 +412,16 @@ ranef.plm <- function(object, effect = NULL, ...) {
   # mean_res <- Between(res, effect = effect)  # has length == # observations
   mean_res <- between(res, effect = effect)    # but need length == # individuals
   
-  if (obj.effect == "twoways" && balanced) {
+  if(obj.effect == "twoways" && balanced) {
     theta <- switch(effect,
                     "individual" = theta[1L],
                     "time"       = theta[2L])
   }
-  if (obj.effect == "twoways" && !balanced) {
+  if(obj.effect == "twoways" && !balanced) {
     theta <- erc[["theta"]][[if(effect == "individual") "id" else "time"]]
   }
   
-  if (!balanced) {
+  if(!balanced) {
     # in the unbalanced cases, ercomp[["theta"]] is full length (# obs)
     #  -> reduce to per id/time
     select <- switch(effect,
@@ -551,10 +551,11 @@ within_intercept <- function(object, ...) {
 #' @rdname within_intercept
 #' @export
 within_intercept.plm <- function(object, vcov = NULL, return.model = FALSE, ...) {
-  if (!inherits(object, "plm")) stop("input 'object' needs to be a \"within\" model estimated by plm()")
+  if(!inherits(object, "plm")) stop("input 'object' needs to be a \"within\" model estimated by plm()")
+  if(length(object$formula)[2L] >= 2L) stop("within_intercept: IV models not supported (yet?)")
   model  <- describe(object, what = "model")
   effect <- describe(object, what = "effect")
-  if (model != "within") stop("input 'object' needs to be a \"within\" model estimated by plm(..., model = \"within\", ...)")
+  if(model != "within") stop("input 'object' needs to be a \"within\" model estimated by plm(..., model = \"within\", ...)")
   
   # vcov must be a function, because the auxiliary model estimated to get the
   # overall intercept next to its standard errors is different from

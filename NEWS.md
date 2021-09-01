@@ -75,6 +75,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
     * print information about user-supplied vcov.
  * detect.lindep: argument 'suppressPrint' now correctly passed/respected (methods
    for data frame and matrix).
+ * within_intercept: error informatively for IV models as not implemented.
 
 ### Internals
 
