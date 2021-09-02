@@ -176,6 +176,8 @@ tests/test_misc.R -text
 tests/test_model.frame.R -text
 tests/test_model.matrix_effects.R -text
 tests/test_model.matrix_pmodel.response.R -text
+tests/test_order_between_fixef_ranef.R -text
+tests/test_order_between_fixef_ranef.Rout.save -text
 tests/test_pFtest.R -text
 tests/test_pFtest.Rout.save -text
 tests/test_pbgtest.R -text
