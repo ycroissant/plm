@@ -9828,6 +9828,14 @@ Chisq: 6879.2 on 12 DF, p-value: < 2.22e-16
 > ##D 
 > ##D summary(onewayFE)
 > ##D 
+> ##D ## two-ways FE benchmark requires pkg fixest and lfe
+> ##D ## (End-users shall only set option plm.fast. Option plm.fast.pkg.FE.tw shall
+> ##D ##  _not_ be set by the end-user, it is determined automatically when pkg plm
+> ##D ## is attached; however, it needs to be set explicitly in this example for the
+> ##D ## benchmark.)
+> ##D if(requireNamespace("fixest", quietly = TRUE) &&
+> ##D    requireNamespace("lfe", quietly = TRUE)) {
+> ##D 
 > ##D twowayFE <-  microbenchmark(
 > ##D  {options("plm.fast" = FALSE);                                    
 > ##D     plm(form, data = data, model = "within", effect = "twoways")},
@@ -9840,6 +9848,7 @@ Chisq: 6879.2 on 12 DF, p-value: < 2.22e-16
 > ##D   times = times, unit = "relative")
 > ##D 
 > ##D summary(twowayFE)
+> ##D }
 > ##D 
 > ##D onewayRE <- microbenchmark(
 > ##D  {options("plm.fast" = FALSE); plm(form, data = data, model = "random")},
@@ -15377,7 +15386,7 @@ F-statistic: 309.014 on 2 and 197 DF, p-value: < 2.22e-16
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  36.36 1.04 42 NA NA 
+Time elapsed:  20.14 0.86 21.03 NA NA 
 > grDevices::dev.off()
 null device 
           1 

@@ -81,6 +81,14 @@ onewayFE <- microbenchmark(
 
 summary(onewayFE)
 
+## two-ways FE benchmark requires pkg fixest and lfe
+## (End-users shall only set option plm.fast. Option plm.fast.pkg.FE.tw shall
+##  _not_ be set by the end-user, it is determined automatically when pkg plm
+## is attached; however, it needs to be set explicitly in this example for the
+## benchmark.)
+if(requireNamespace("fixest", quietly = TRUE) &&
+   requireNamespace("lfe", quietly = TRUE)) {
+
 twowayFE <-  microbenchmark(
  {options("plm.fast" = FALSE);                                    
     plm(form, data = data, model = "within", effect = "twoways")},
@@ -93,6 +101,7 @@ twowayFE <-  microbenchmark(
   times = times, unit = "relative")
 
 summary(twowayFE)
+}
 
 onewayRE <- microbenchmark(
  {options("plm.fast" = FALSE); plm(form, data = data, model = "random")},

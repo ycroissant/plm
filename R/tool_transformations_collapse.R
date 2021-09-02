@@ -34,21 +34,21 @@ pseriesfy.baseR    <- plm:::pseriesfy
 Sum.default <- function(x, effect, ...) {
   if(!isTRUE(getOption("plm.fast"))) {
     Sum.default.baseR(x, effect, ...) } else {
-    if(!requireNamespace("collapse", quietly = TRUE)) stop(txt.no.collapse, call. = FALSE)
+    if(!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
     Sum.default.collapse(x, effect, ...) }
 }
 
 Sum.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
   if(!isTRUE(getOption("plm.fast"))) {
     Sum.pseries.baseR(x, effect, ...) } else {
-    if(!requireNamespace("collapse", quietly = TRUE)) stop(txt.no.collapse, call. = FALSE)
+    if(!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
     Sum.pseries.collapse(x, effect, ...) }
 }
 
 Sum.matrix <- function(x, effect, ...) {
   if(!isTRUE(getOption("plm.fast"))) {
     Sum.matrix.baseR(x, effect, ...) } else {
-    if(!requireNamespace("collapse", quietly = TRUE)) stop(txt.no.collapse, call. = FALSE)
+    if(!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
     Sum.matrix.collapse(x, effect, ...) }
 }
 
@@ -56,21 +56,21 @@ Sum.matrix <- function(x, effect, ...) {
 Between.default <- function(x, effect, ...) {
   if(!isTRUE(getOption("plm.fast"))) {
     Between.default.baseR(x, effect, ...) } else {
-    if(!requireNamespace("collapse", quietly = TRUE)) stop(txt.no.collapse, call. = FALSE)
+    if(!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
     Between.default.collapse(x, effect, ...) }
 }
   
 Between.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
   if(!isTRUE(getOption("plm.fast"))) {
     Between.pseries.baseR(x, effect, ...) } else {
-    if(!requireNamespace("collapse", quietly = TRUE)) stop(txt.no.collapse, call. = FALSE)
+    if(!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
     Between.pseries.collapse(x, effect, ...) }
 }
 
 Between.matrix <- function(x, effect, ...) {
   if(!isTRUE(getOption("plm.fast"))) {
     Between.matrix.baseR(x, effect, ...) } else {
-    if(!requireNamespace("collapse", quietly = TRUE)) stop(txt.no.collapse, call. = FALSE)
+    if(!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
     Between.matrix.collapse(x, effect, ...) }
 }
 
@@ -78,21 +78,21 @@ Between.matrix <- function(x, effect, ...) {
 between.default <- function(x, effect, ...) {
   if(!isTRUE(getOption("plm.fast"))) {
      between.default.baseR(x, effect, ...) } else {
-     if(!requireNamespace("collapse", quietly = TRUE)) stop(txt.no.collapse, call. = FALSE)
+     if(!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
      between.default.collapse(x, effect, ...) }
 }
 
 between.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
   if(!isTRUE(getOption("plm.fast"))) {
     between.pseries.baseR(x, effect, ...) } else {
-    if(!requireNamespace("collapse", quietly = TRUE)) stop(txt.no.collapse, call. = FALSE)
+    if(!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
     between.pseries.collapse(x, effect, ...) }
 }
 
 between.matrix <- function(x, effect, ...) {
   if(!isTRUE(getOption("plm.fast"))) {
     between.matrix.baseR(x, effect, ...) } else {
-    if(!requireNamespace("collapse", quietly = TRUE)) stop(txt.no.collapse, call. = FALSE)
+    if(!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
     between.matrix.collapse(x, effect, ...) }
 }
 
@@ -100,7 +100,7 @@ between.matrix <- function(x, effect, ...) {
 Within.default <- function(x, effect, ...) {
   if(!isTRUE(getOption("plm.fast"))) {
     Within.default.baseR(x, effect, ...) } else {
-    if(!requireNamespace("collapse", quietly = TRUE)) stop(txt.no.collapse, call. = FALSE)
+    if(!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
     Within.default.collapse(x, effect, ...) }
 }
 
@@ -108,8 +108,7 @@ Within.pseries <- function(x, effect = c("individual", "time", "group", "twoways
   if(!isTRUE(getOption("plm.fast"))) {
     Within.pseries.baseR(x, effect, ...)
   } else {
-    if (!requireNamespace("collapse", quietly = TRUE))
-      stop(txt.no.collapse, call. = FALSE)
+    if(!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
 
     if(is.null(getOption("plm.fast.pkg.FE.tw"))) options("plm.fast.pkg.FE.tw" = "collapse")
     switch(getOption("plm.fast.pkg.FE.tw"),
@@ -124,8 +123,7 @@ Within.matrix <- function(x, effect, rm.null = TRUE, ...) {
   if(!isTRUE(getOption("plm.fast"))) {
     Within.matrix.baseR(x, effect, ...)
   } else {
-    if (!requireNamespace("collapse", quietly = TRUE))
-      stop(txt.no.collapse, call. = FALSE)
+    if (!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
     
     if(is.null(getOption("plm.fast.pkg.FE.tw"))) options("plm.fast.pkg.FE.tw" = "collapse")
     switch(getOption("plm.fast.pkg.FE.tw"),
@@ -608,14 +606,23 @@ Within.matrix.collapse.lfe <- function(x, effect, rm.null = TRUE, ...) {
   return(result)
 }
 
+#### wrapper for pseriesfy ####
+# both pseriesfy functions are in file tool_pdata.frame.R 
+pseriesfy <- function(x,  ...) {
+  if(!isTRUE(getOption("plm.fast"))) {
+    pseriesfy.baseR(x, ...) } else {
+      if(!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
+      pseriesfy.collapse(x, ...) }
+}
+
 .onAttach <- function(libname, pkgname) {
    # options("plm.fast" = TRUE) # not yet the default, maybe in Q3/2021,
                                # would need pkg collapse as hard dependency
   
-  # determine when pkg plm is attached whether pkg fixest and lfe are available
-  # and set (non-documented) options, which packages are available.
-  # These options are used to determine if we can speed up the 2-way FE case
-  # even more by fixest or lfe.
+  # determine when pkg plm is attached whether pkg collapse, fixest, and lfe are
+  # available and set (non-documented) options, which packages are available.
+  # These options are used to determine in the wrappers if fast mode can be used
+  # and if the speed up by fixest or lfe for the 2-way FE case can be used.
   avail.collapse <- requireNamespace("collapse", quietly = TRUE)
   avail.fixest   <- requireNamespace("fixest",   quietly = TRUE)
   avail.lfe      <- requireNamespace("lfe",      quietly = TRUE)
@@ -624,7 +631,7 @@ Within.matrix.collapse.lfe <- function(x, effect, rm.null = TRUE, ...) {
     options("plm.fast.pkg.collapse" = TRUE)
     options("plm.fast.pkg.FE.tw" = "collapse")
     # fixest wins over lfe
-    if (avail.fixest) {
+    if(avail.fixest) {
       options("plm.fast.pkg.FE.tw" = "fixest")
     } else {
       if(avail.lfe) {
@@ -635,13 +642,6 @@ Within.matrix.collapse.lfe <- function(x, effect, rm.null = TRUE, ...) {
   else options("plm.fast.pkg.collapse" = FALSE)
 }
 
-#### wrapper for pseriesfy ####
-pseriesfy <- function(x,  ...) {
-  if(!isTRUE(getOption("plm.fast"))) {
-    pseriesfy.baseR(x, ...) } else {
-      if(!requireNamespace("collapse", quietly = TRUE)) stop(txt.no.collapse, call. = FALSE)
-      pseriesfy.collapse(x, ...) }
-}
 
 #' Option to Switch On/Off Fast Data Transformations
 #' 
@@ -723,6 +723,14 @@ pseriesfy <- function(x,  ...) {
 #'
 #' summary(onewayFE)
 #'
+#' ## two-ways FE benchmark requires pkg fixest and lfe
+#' ## (End-users shall only set option plm.fast. Option plm.fast.pkg.FE.tw shall
+#' ##  _not_ be set by the end-user, it is determined automatically when pkg plm
+#' ## is attached; however, it needs to be set explicitly in this example for the
+#' ## benchmark.)
+#' if(requireNamespace("fixest", quietly = TRUE) &&
+#'    requireNamespace("lfe", quietly = TRUE)) {
+#' 
 #' twowayFE <-  microbenchmark(
 #'  {options("plm.fast" = FALSE);                                    
 #'     plm(form, data = data, model = "within", effect = "twoways")},
@@ -735,6 +743,7 @@ pseriesfy <- function(x,  ...) {
 #'   times = times, unit = "relative")
 #'
 #' summary(twowayFE)
+#' }
 #' 
 #' onewayRE <- microbenchmark(
 #'  {options("plm.fast" = FALSE); plm(form, data = data, model = "random")},
@@ -753,9 +762,12 @@ pseriesfy <- function(x,  ...) {
 NULL
 
 
-txt.no.collapse <- paste("options(\"plm.fast\") is set to TRUE but package 'collapse'",
-                         "is not available which is needed for fast data transformation functions.",
-                         "Either set 'options(\"plm.fast\" = FALSE)' or install the",
-                         "missing package, e.g., with 'install.packages(\"collapse\")'.\n",
-                         "Having additionally package 'fixest' or 'lfe' installed ",
-                         "will speed up the two-way fixed effect case further.")
+txt.no.collapse <- paste0("options(\"plm.fast\") is set to TRUE but package 'collapse'",
+                          "is not available which is needed for fast data transformation functions.",
+                          "Either set 'options(\"plm.fast\" = FALSE)' or install the",
+                          "missing package, e.g., with 'install.packages(\"collapse\")'.\n",
+                          "Having additionally package 'fixest' or 'lfe' installed ",
+                          "will speed up the two-way fixed effect case further.\n",
+                          "Availability of packages is determined only when ",
+                          "plm is attached, so restart R/reload plm when mentioned ",
+                          "packages have been installed.")
