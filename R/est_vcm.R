@@ -230,12 +230,7 @@ pvcm.random <- function(formula, data, effect){
                              function(i) sigi[i] * xpxm1[[i]])) / card.cond
     # if D1-D2 semi-definite positive, use it, otherwise use D1
     eig <- prod(eigen(D1 - D2)$values >= 0)
-    if (eig){
-        Delta <- D1 - D2
-    }
-    else{
-        Delta <- D1
-    }
+    Delta <- if(eig) { D1 - D2 } else  D1
     
     # compute the Omega matrix for each individual
     Omegan <- lapply(seq_len(card.cond), function(i) sigi[i] * diag(nrow(X[[i]])) + X[[i]] %*% Delta %*% t(X[[i]]))
