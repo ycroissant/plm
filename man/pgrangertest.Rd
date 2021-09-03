@@ -74,8 +74,9 @@ pgrangertest(inv ~ value, data = Grunfeld, order = 2L)
 pgrangertest(inv ~ value, data = Grunfeld, order = 2L, test = "Zbar")
 
 # varying lag order (last individual lag order 3, others lag order 2)
-pgrangertest(inv ~ value, data = Grunfeld, order = c(rep(2L, 9), 3L))
-
+(pgrt <- pgrangertest(inv ~ value, data = Grunfeld, order = c(rep(2L, 9), 3L)))
+# chisq statistics per individual
+pgrt$indgranger
 
 }
 \references{
