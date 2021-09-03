@@ -38,6 +38,10 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
    using `collapse::dapply`)). Thanks to Sebastian Krantz for inspiration.
 
 ### Bug Fixes:
+ * between (and hence fixef, ranef): order of output is order of *factor levels*
+   again (this reverts a change introduced in 2.4-0, there called a fix introducing
+   the order of the appearance in the data which is actually not desirable). Change
+   is relevant in specific unbalanced data constellations.
  * vcovG (hence vcovHC, vcovDC, vcovNW, vcovSCC) and vcovBK: fix bug in case
    of IV estimation with only one regressor.
  * within_intercept:
@@ -156,7 +160,8 @@ plm()): Between, between, Sum, Within.
 * fixef: calculation for two-way models fixed; type = "dmean" for unbalanced
   models fixed (by using weighted.mean()).
 * between.default: keeps original sequence of elements' occurrence (before,
-  compressed output was sorted by the factor's *level* order).
+  compressed output was sorted by the factor's *level* order) [NB: this was
+  reverted again in plm 2.4-2].
 * Between.matrix and (internal) Tapply.matrix: ellipsis (three dots) is passed on,
   allowing for, e.g., na.rm = TRUE (like already possible for between.matrix etc.).
 * Within.pseries/matrix: now handle na.rm argument in ellipsis.

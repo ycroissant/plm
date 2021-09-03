@@ -42,6 +42,10 @@ mat_index <- attr(mat, "index")
 mat_noindex_unbal <- mat[-rm.rows , ]
 attr(mat_noindex_unbal, "index") <- NULL
 mat_index_unbal <- attr(mat, "index")[-rm.rows, ]
+## NB: mat_index_unbal has 215 entries but 216 levels for individual dimension
+##    -> by intention, for corner case check in between when no index matrix is used
+# length(unique(mat_index_unbal[[1]])) 215
+# length(levels(mat_index_unbal[[1]])) # 216
 
 wlddev_unbal_wona <- na.omit(wlddev[ , 8:12])
 mat_unbal_wona <- as.matrix(wlddev_unbal_wona)

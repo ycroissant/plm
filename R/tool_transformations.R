@@ -365,15 +365,21 @@ Sum <- function(x, ...) {
 #' @rdname pseries
 #' @export
 Sum.default <- function(x, effect, ...) {
+# print("Sum.default(.baseR)")
+# browser()
+  
     # argument 'effect' is assumed to be a factor
     if(!is.numeric(x)) stop("The Sum function only applies to numeric vectors")
     #   Tapply(x, effect, sum, ...)
-    return(myave(x, effect, sum, ...))
+    return(myave(x, droplevels(effect), sum, ...))
 }
 
 #' @rdname pseries
 #' @export
 Sum.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
+# print("Sum.pseries(.baseR)")
+# browser()
+  
     effect <- match.arg(effect)
     #   Tapply(x, effect, sum, ...)
     # myave.pseries takes are of checking the index for NAs
@@ -383,9 +389,12 @@ Sum.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
 #' @rdname pseries
 #' @export
 Sum.matrix <- function(x, effect, ...) {
+# print("Sum.matrix(.baseR)")
+# browser()
+  
   # if no index attribute, argument 'effect' is assumed to be a factor
   eff.fac <- if(is.null(xindex <- attr(x, "index"))) {
-    effect
+    droplevels(effect)
   } else {
     if(!is.character(effect) && length(effect) > 1L)
       stop("for matrices with index attributes, the effect argument must be a character")
@@ -412,15 +421,21 @@ Between <- function(x, ...) {
 #' @rdname pseries
 #' @export
 Between.default <- function(x, effect, ...) {
+# print("Between.default(.baseR)")
+# browser()
+  
     # argument 'effect' is assumed to be a factor
     if(!is.numeric(x)) stop("The Between function only applies to numeric vectors")
     #   Tapply(x, effect, mean, ...)
-    return(myave(x, effect, mean, ...))
+    return(myave(x, droplevels(effect), mean, ...))
 }
 
 #' @rdname pseries
 #' @export
 Between.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
+# print("Between.pseries(.baseR)")
+# browser()
+  
     effect <- match.arg(effect)
     #   Tapply(x, effect = effect, mean, ...)
     # myave.pseries takes are of checking the index for NAs
@@ -430,9 +445,12 @@ Between.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
 #' @rdname pseries
 #' @export
 Between.matrix <- function(x, effect, ...) {
+# print("Between.matrix(.baseR)")
+# browser()
+  
   # if no index attribute, argument 'effect' is assumed to be a factor
   eff.fac <- if(is.null(xindex <- attr(x, "index"))) {
-    effect
+    droplevels(effect)
   } else {
     if(!is.character(effect) && length(effect) > 1L)
       stop("for matrices with index attributes, the effect argument must be a character")
@@ -459,21 +477,27 @@ between <- function(x, ...) {
 #' @rdname pseries
 #' @export
 between.default <- function(x, effect, ...) {
+# print("between.default(.baseR)")
+# browser()
+  
     # argument 'effect' is assumed to be a factor
     if(!is.numeric(x)) stop("The between function only applies to numeric vectors")
-    #    res <- tapply(x, effect, mean, ...)
-    ##   res <- res[as.character(effect[!duplicated(effect)])] # restore original order (as tapply's output is sorted by levels factor effect)
-    res <- ave(x, effect, FUN = function(x) mean(x, ...))
-    # reduce down to number of unique elements in effect
-    keep <- !duplicated(effect)
-    res <- res[keep]
-    names(res) <- as.character(effect[keep])
+
+    # use tapply here as tapply's output is sorted by levels factor effect (unlike ave's output)
+    # difference is only relevant for between (small "b") as data is compressed down to # levels
+    res <- tapply(x, droplevels(effect), mean, ...)
+    nms <- attr(res, "dimnames")[[1L]]
+    attr(res, "dimnames") <- attr(res, "dim") <- NULL
+    names(res) <- nms
     return(res)
 }
 
 #' @rdname pseries
 #' @export
 between.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
+# print("between.pseries(.baseR)")
+# browser()
+  
     effect <- match.arg(effect)
     xindex <- unclass(attr(x, "index")) # unclass for speed
     checkNA.index(xindex) # index may not contain any NA
@@ -491,9 +515,12 @@ between.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
 #' @rdname pseries
 #' @export
 between.matrix <- function(x, effect, ...) {
+# print("between.matrix(.baseR)")
+# browser()
+  
   # if no index attribute, argument 'effect' is assumed to be a factor
   eff.fac <- if(is.null(xindex <- attr(x, "index"))) {
-    effect
+    droplevels(effect)
   } else {
     if(!is.character(effect) && length(effect) > 1L)
       stop("for matrices with index attributes, the effect argument must be a character")
@@ -508,11 +535,10 @@ between.matrix <- function(x, effect, ...) {
     checkNA.index(xindex) # index may not contain any NA
     xindex[[eff.no]]
   }
-  res <- apply(x, 2, FUN = function(x) ave(x, eff.fac, FUN = function(y) mean(y, ...)))
-  rownames(res) <- as.character(eff.fac)
-  # compress data down to #elements of index dimension:
-  keep <- !duplicated(eff.fac)
-  res <- res[keep, , drop = FALSE]
+
+  # use tapply here as tapply's output is sorted by levels factor effect (unlike ave's output)
+  # difference is only relevant for between (small "b") as data is compressed down to # levels
+  res <- apply(x, 2, tapply, eff.fac, mean, ...)
   return(res)
 }
 
@@ -525,16 +551,24 @@ Within <- function(x, ...) {
 #' @rdname pseries
 #' @export
 Within.default <- function(x, effect, ...) {
+# print("Within.default(.baseR)")
+# browser()
+  
+  # arg 'effect' is assumed to be a factor
+  
   # NB: Contrary to the other Within.* methods, Within.default does not handle
   #     twoways effects
   # TODO: could add support for twoways by supplying a list containing two factors
     if(!is.numeric(x)) stop("the within function only applies to numeric vectors")
-    return(x - Between(x, effect, ...))
+    return(x - Between(x, droplevels(effect), ...))
 }
 
 #' @rdname pseries
 #' @export
 Within.pseries <- function(x, effect = c("individual", "time", "group", "twoways"), ...) {
+# print("Within.pseries(.baseR)")
+# browser()
+  
     effect <- match.arg(effect)
     xindex <- unclass(attr(x, "index")) # unclass for speed
     checkNA.index(xindex) # index may not contain any NA
@@ -557,6 +591,9 @@ Within.pseries <- function(x, effect = c("individual", "time", "group", "twoways
 #' @rdname pseries
 #' @export
 Within.matrix <- function(x, effect, rm.null = TRUE, ...) {
+# print("Within.matrix(.baseR)")
+# browser()
+  
     if(is.null(xindex <- unclass(attr(x, "index")))) { # unclass for speed
       # non-index case
         result <- Within.default(x, effect, ...)

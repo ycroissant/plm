@@ -11442,8 +11442,8 @@ alternative hypothesis: unstability
 > 
 > # between, Between, Within, and Sum transformations on other dimension
 > between(z, effect = "time")
-     1977      1978      1979      1980      1981      1982      1983      1976 
-110.32734 111.23714 111.06937 103.80583  95.70594  93.83759  95.36660 108.98092 
+     1976      1977      1978      1979      1980      1981      1982      1983 
+108.98092 110.32734 111.23714 111.06937 103.80583  95.70594  93.83759  95.36660 
      1984 
  98.42776 
 > Between(z, effect = "time")
@@ -15398,7 +15398,7 @@ F-statistic: 309.014 on 2 and 197 DF, p-value: < 2.22e-16
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  19.75 0.86 20.63 NA NA 
+Time elapsed:  22.69 1.06 23.84 NA NA 
 > grDevices::dev.off()
 null device 
           1 

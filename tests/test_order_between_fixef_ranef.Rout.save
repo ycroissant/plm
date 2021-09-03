@@ -16,8 +16,10 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 Type 'q()' to quit R.
 
 > ## test for order of output of between() and hence fixef() and ranef()
-> # -> level order or order of appearance in original data
-> 
+> # -> factor level order or order of appearance in original data
+> ## "since ever" plm had level order but this was changed to appearance order
+> # in plm 2.4-0 and changed back in rev. 1307 for plm 2.4-2.
+> # => factor level order makes more sense!
 > 
 > library(plm)
 > data("Crime", package = "plm")
@@ -100,36 +102,33 @@ Type 'q()' to quit R.
 0.027964243 0.028849543 0.037460814 0.020500843 0.045657243 0.015046043 
 > 
 > options("plm.fast" = FALSE)
-> (bet.def.plm.slow.unbal.a <- between(Crime.unbal.a$crmrte, effect = ix.a[[2L]])) # year 83 first in rev. 1305 (and plm 2.4-0/1)
-        83         84         85         86         87         81         82 
-0.03088247 0.02945170 0.02995852 0.03228605 0.03350992 0.03267005 0.03258422 
+> (bet.def.plm.slow.unbal.a <- between(Crime.unbal.a$crmrte, effect = ix.a[[2L]])) # year 81 first from rev. 1307 (and plm < 2.4-0) (year 83 first in rev. 1305 (and plm 2.4-0/1))
+        81         82         83         84         85         86         87 
+0.03267005 0.03258422 0.03088247 0.02945170 0.02995852 0.03228605 0.03350992 
 > (bet.def.plm.slow.unbal.b <- between(Crime.unbal.b$crmrte, effect = ix.b[[2L]])) # year 81 first
         81         82         83         84         85         86         87 
 0.03275022 0.03264823 0.03108788 0.02962723 0.02995852 0.03228605 0.03350992 
 > 
 > options("plm.fast" = TRUE) # same
-> (bet.def.plm.fast.unbal.a <- between(Crime.unbal.a$crmrte, effect = ix.a[[2L]])) # year 83 first in rev. 1305 (and plm 2.4-0/1)
-        83         84         85         86         87         81         82 
-0.03088247 0.02945170 0.02995852 0.03228605 0.03350992 0.03267005 0.03258422 
+> (bet.def.plm.fast.unbal.a <- between(Crime.unbal.a$crmrte, effect = ix.a[[2L]])) # year 81 first from rev. 1307 (and plm < 2.4-0) (year 83 first in rev. 1305 (and plm 2.4-0/1))
+        81         82         83         84         85         86         87 
+0.03267005 0.03258422 0.03088247 0.02945170 0.02995852 0.03228605 0.03350992 
 > (bet.def.plm.fast.unbal.b <- between(Crime.unbal.b$crmrte, effect = ix.b[[2L]])) # year 81 first
         81         82         83         84         85         86         87 
 0.03275022 0.03264823 0.03108788 0.02962723 0.02995852 0.03228605 0.03350992 
 > 
-> all.equal(names(bet.def.unbal.a), levels(ix.a[[1L]]))
-[1] TRUE
-> all.equal(names(bet.def.unbal.b), levels(ix.b[[1L]]))
-[1] TRUE
+> stopifnot(isTRUE(all.equal(names(bet.def.unbal.a), levels(ix.a[[1L]]))))
+> stopifnot(isTRUE(all.equal(names(bet.def.unbal.b), levels(ix.b[[1L]]))))
 > 
-> all.equal(names(bet.def.plm.slow.unbal.a), levels(ix.a[[2L]]))
-[1] "7 string mismatches"
-> all.equal(names(bet.def.plm.slow.unbal.b), levels(ix.b[[2L]]))
-[1] TRUE
+> stopifnot(isTRUE(all.equal(names(bet.def.plm.slow.unbal.a), levels(ix.a[[2L]]))))
+> stopifnot(isTRUE(all.equal(names(bet.def.plm.slow.unbal.b), levels(ix.b[[2L]]))))
 > 
-> all.equal(names(bet.def.plm.fast.unbal.a), levels(ix.a[[2L]]))
-[1] "7 string mismatches"
-> all.equal(names(bet.def.plm.fast.unbal.b), levels(ix.b[[2L]]))
-[1] TRUE
+> stopifnot(isTRUE(all.equal(names(bet.def.plm.fast.unbal.a), levels(ix.a[[2L]]))))
+> stopifnot(isTRUE(all.equal(names(bet.def.plm.fast.unbal.b), levels(ix.b[[2L]]))))
 > 
+> 
+> stopifnot(isTRUE(all.equal(bet.def.plm.slow.unbal.a, bet.def.plm.fast.unbal.a)))
+> stopifnot(isTRUE(all.equal(bet.def.plm.slow.unbal.b, bet.def.plm.fast.unbal.b)))
 > 
 > ## between.pseries ##
 > options("plm.fast" = FALSE)
@@ -197,35 +196,33 @@ Type 'q()' to quit R.
 0.027964243 0.028849543 0.037460814 0.020500843 0.045657243 0.015046043 
 > 
 > options("plm.fast" = FALSE)
-> (bet.pser.plm.slow.unbal.a <- between(pCrime.unbal.a$crmrte, effect = "time")) # year 83 first in rev. 1305 (and plm 2.4-0/1)
-        83         84         85         86         87         81         82 
-0.03088247 0.02945170 0.02995852 0.03228605 0.03350992 0.03267005 0.03258422 
+> (bet.pser.plm.slow.unbal.a <- between(pCrime.unbal.a$crmrte, effect = "time")) # year 81 first from rev. 1307 (and plm < 2.4-0) (year 83 first in rev. 1305 (and plm 2.4-0/1))
+        81         82         83         84         85         86         87 
+0.03267005 0.03258422 0.03088247 0.02945170 0.02995852 0.03228605 0.03350992 
 > (bet.pser.plm.slow.unbal.b <- between(pCrime.unbal.b$crmrte, effect = "time")) # year 81 first
         81         82         83         84         85         86         87 
 0.03275022 0.03264823 0.03108788 0.02962723 0.02995852 0.03228605 0.03350992 
 > 
 > options("plm.fast" = TRUE) # same
-> (bet.pser.plm.fast.unbal.a <- between(pCrime.unbal.a$crmrte, effect = "time")) # year 83 first in rev. 1305 (and plm 2.4-0/1)
-        83         84         85         86         87         81         82 
-0.03088247 0.02945170 0.02995852 0.03228605 0.03350992 0.03267005 0.03258422 
+> (bet.pser.plm.fast.unbal.a <- between(pCrime.unbal.a$crmrte, effect = "time")) # year 81 first from rev. 1307 (and plm < 2.4-0) (year 83 first in rev. 1305 (and plm 2.4-0/1))
+        81         82         83         84         85         86         87 
+0.03267005 0.03258422 0.03088247 0.02945170 0.02995852 0.03228605 0.03350992 
 > (bet.pser.plm.fast.unbal.b <- between(pCrime.unbal.b$crmrte, effect = "time")) # year 81 first
         81         82         83         84         85         86         87 
 0.03275022 0.03264823 0.03108788 0.02962723 0.02995852 0.03228605 0.03350992 
 > 
-> all.equal(names(bet.pser.unbal.a), levels(index(pCrime.unbal.a$crmrte)[[1L]]))
-[1] TRUE
-> all.equal(names(bet.pser.unbal.b), levels(index(pCrime.unbal.b$crmrte)[[1L]]))
-[1] TRUE
+> stopifnot(isTRUE(all.equal(names(bet.pser.unbal.a), levels(index(pCrime.unbal.a$crmrte)[[1L]]))))
+> stopifnot(isTRUE(all.equal(names(bet.pser.unbal.b), levels(index(pCrime.unbal.b$crmrte)[[1L]]))))
 > 
-> all.equal(names(bet.pser.plm.slow.unbal.a), levels(index(pCrime.unbal.a$crmrte)[[2L]]))
-[1] "7 string mismatches"
-> all.equal(names(bet.pser.plm.slow.unbal.a), levels(index(pCrime.unbal.b$crmrte)[[2L]]))
-[1] "7 string mismatches"
+> stopifnot(isTRUE(all.equal(names(bet.pser.plm.slow.unbal.a), levels(index(pCrime.unbal.a$crmrte)[[2L]]))))
+> stopifnot(isTRUE(all.equal(names(bet.pser.plm.slow.unbal.a), levels(index(pCrime.unbal.b$crmrte)[[2L]]))))
 > 
-> all.equal(names(bet.pser.plm.fast.unbal.a), levels(index(pCrime.unbal.a$crmrte)[[2L]]))
-[1] "7 string mismatches"
-> all.equal(names(bet.pser.plm.fast.unbal.a), levels(index(pCrime.unbal.b$crmrte)[[2L]]))
-[1] "7 string mismatches"
+> stopifnot(isTRUE(all.equal(names(bet.pser.plm.fast.unbal.a), levels(index(pCrime.unbal.a$crmrte)[[2L]]))))
+> stopifnot(isTRUE(all.equal(names(bet.pser.plm.fast.unbal.a), levels(index(pCrime.unbal.b$crmrte)[[2L]]))))
+> 
+> 
+> stopifnot(isTRUE(all.equal(bet.pser.plm.slow.unbal.a, bet.pser.plm.fast.unbal.a)))
+> stopifnot(isTRUE(all.equal(bet.pser.plm.slow.unbal.b, bet.pser.plm.fast.unbal.b)))
 > 
 > 
 > ## between.matrix - no index case ##
@@ -419,15 +416,15 @@ Type 'q()' to quit R.
 197 0.015046043 0.1885377
 > 
 > options("plm.fast" = FALSE)
-> (bet.matnoi.plm.slow.unbal.a <- between(mat_no_index.unbal.a, effect = ix.a[[2L]])) # year 83 first in rev. 1305 (and plm 2.4-0/1)
+> (bet.matnoi.plm.slow.unbal.a <- between(mat_no_index.unbal.a, effect = ix.a[[2L]])) # year 81 first from rev. 1307 (and plm < 2.4-0) (year 83 first in rev. 1305 (and plm 2.4-0/1))
        crmrte    prbarr
+81 0.03267005 0.2991626
+82 0.03258422 0.3112727
 83 0.03088247 0.3297886
 84 0.02945170 0.3178034
 85 0.02995852 0.3051005
 86 0.03228605 0.2957571
 87 0.03350992 0.2952375
-81 0.03267005 0.2991626
-82 0.03258422 0.3112727
 > (bet.matnoi.plm.slow.unbal.b <- between(mat_no_index.unbal.b, effect = ix.b[[2L]])) # year 81 first
        crmrte    prbarr
 81 0.03275022 0.2990574
@@ -439,15 +436,15 @@ Type 'q()' to quit R.
 87 0.03350992 0.2952375
 > 
 > options("plm.fast" = TRUE)
-> (bet.matnoi.plm.fast.unbal.a <- between(mat_no_index.unbal.a, effect = ix.a[[2L]])) # year 83 first in rev. 1305 (and plm 2.4-0/1)
+> (bet.matnoi.plm.fast.unbal.a <- between(mat_no_index.unbal.a, effect = ix.a[[2L]])) # year 81 first from rev. 1307 (and plm < 2.4-0) (year 83 first in rev. 1305 (and plm 2.4-0/1))
        crmrte    prbarr
+81 0.03267005 0.2991626
+82 0.03258422 0.3112727
 83 0.03088247 0.3297886
 84 0.02945170 0.3178034
 85 0.02995852 0.3051005
 86 0.03228605 0.2957571
 87 0.03350992 0.2952375
-81 0.03267005 0.2991626
-82 0.03258422 0.3112727
 > (bet.matnoi.plm.fast.unbal.b <- between(mat_no_index.unbal.b, effect = ix.b[[2L]])) # year 81 first
        crmrte    prbarr
 81 0.03275022 0.2990574
@@ -458,20 +455,18 @@ Type 'q()' to quit R.
 86 0.03228605 0.2957571
 87 0.03350992 0.2952375
 > 
-> all.equal(rownames(bet.matnoi.unbal.a), levels(ix.a[[1L]]))
-[1] TRUE
-> all.equal(rownames(bet.matnoi.unbal.b), levels(ix.b[[1L]]))
-[1] TRUE
+> stopifnot(isTRUE(all.equal(rownames(bet.matnoi.unbal.a), levels(ix.a[[1L]]))))
+> stopifnot(isTRUE(all.equal(rownames(bet.matnoi.unbal.b), levels(ix.b[[1L]]))))
 > 
-> all.equal(rownames(bet.matnoi.plm.slow.unbal.a), levels(ix.a[[2L]]))
-[1] "7 string mismatches"
-> all.equal(rownames(bet.matnoi.plm.slow.unbal.b), levels(ix.b[[2L]]))
-[1] TRUE
+> stopifnot(isTRUE(all.equal(rownames(bet.matnoi.plm.slow.unbal.a), levels(ix.a[[2L]]))))
+> stopifnot(isTRUE(all.equal(rownames(bet.matnoi.plm.slow.unbal.b), levels(ix.b[[2L]]))))
 > 
-> all.equal(rownames(bet.matnoi.plm.fast.unbal.a), levels(ix.a[[2L]]))
-[1] "7 string mismatches"
-> all.equal(rownames(bet.matnoi.plm.fast.unbal.b), levels(ix.b[[2L]]))
-[1] TRUE
+> stopifnot(isTRUE(all.equal(rownames(bet.matnoi.plm.fast.unbal.a), levels(ix.a[[2L]]))))
+> stopifnot(isTRUE(all.equal(rownames(bet.matnoi.plm.fast.unbal.b), levels(ix.b[[2L]]))))
+> 
+> 
+> stopifnot(isTRUE(all.equal(bet.matnoi.plm.slow.unbal.a, bet.matnoi.plm.fast.unbal.a)))
+> stopifnot(isTRUE(all.equal(bet.matnoi.plm.slow.unbal.b, bet.matnoi.plm.fast.unbal.b)))
 > 
 > 
 > ## between.matrix - index case ##
@@ -667,15 +662,15 @@ Type 'q()' to quit R.
 197 0.015046043 0.1885377
 > 
 > options("plm.fast" = FALSE)
-> (bet.mati.plm.slow.unbal.a <- between(mat_index.unbal.a, effect = "time")) # year 83 first in rev. 1305 (and plm 2.4-0/1)
+> (bet.mati.plm.slow.unbal.a <- between(mat_index.unbal.a, effect = "time")) # year 81 first from rev. 1307 (and plm < 2.4-0) (year 83 first in rev. 1305 (and plm 2.4-0/1))
        crmrte    prbarr
+81 0.03267005 0.2991626
+82 0.03258422 0.3112727
 83 0.03088247 0.3297886
 84 0.02945170 0.3178034
 85 0.02995852 0.3051005
 86 0.03228605 0.2957571
 87 0.03350992 0.2952375
-81 0.03267005 0.2991626
-82 0.03258422 0.3112727
 > (bet.mati.plm.slow.unbal.b <- between(mat_index.unbal.b, effect = "time")) # year 81 first
        crmrte    prbarr
 81 0.03275022 0.2990574
@@ -687,15 +682,15 @@ Type 'q()' to quit R.
 87 0.03350992 0.2952375
 > 
 > options("plm.fast" = TRUE)
-> (bet.mati.plm.fast.unbal.a <- between(mat_index.unbal.a, effect = "time")) # year 83 first in rev. 1305 (and plm 2.4-0/1)
+> (bet.mati.plm.fast.unbal.a <- between(mat_index.unbal.a, effect = "time")) # year 81 first from rev. 1307 (and plm < 2.4-0) (year 83 first in rev. 1305 (and plm 2.4-0/1))
        crmrte    prbarr
+81 0.03267005 0.2991626
+82 0.03258422 0.3112727
 83 0.03088247 0.3297886
 84 0.02945170 0.3178034
 85 0.02995852 0.3051005
 86 0.03228605 0.2957571
 87 0.03350992 0.2952375
-81 0.03267005 0.2991626
-82 0.03258422 0.3112727
 > (bet.mati.plm.fast.unbal.b <- between(mat_index.unbal.b, effect = "time")) # year 81 first
        crmrte    prbarr
 81 0.03275022 0.2990574
@@ -706,21 +701,18 @@ Type 'q()' to quit R.
 86 0.03228605 0.2957571
 87 0.03350992 0.2952375
 > 
-> all.equal(rownames(bet.mati.unbal.a), levels(ix.a[[1L]]))
-[1] TRUE
-> all.equal(rownames(bet.mati.unbal.b), levels(ix.b[[1L]]))
-[1] TRUE
+> stopifnot(isTRUE(all.equal(rownames(bet.mati.unbal.a), levels(ix.a[[1L]]))))
+> stopifnot(isTRUE(all.equal(rownames(bet.mati.unbal.b), levels(ix.b[[1L]]))))
 > 
-> all.equal(rownames(bet.mati.plm.slow.unbal.a), levels(ix.a[[2L]]))
-[1] "7 string mismatches"
-> all.equal(rownames(bet.mati.plm.slow.unbal.b), levels(ix.b[[2L]]))
-[1] TRUE
+> stopifnot(isTRUE(all.equal(rownames(bet.mati.plm.slow.unbal.a), levels(ix.a[[2L]]))))
+> stopifnot(isTRUE(all.equal(rownames(bet.mati.plm.slow.unbal.b), levels(ix.b[[2L]]))))
 > 
-> all.equal(rownames(bet.mati.plm.fast.unbal.a), levels(ix.a[[2L]]))
-[1] "7 string mismatches"
-> all.equal(rownames(bet.mati.plm.fast.unbal.b), levels(ix.b[[2L]]))
-[1] TRUE
+> stopifnot(isTRUE(all.equal(rownames(bet.mati.plm.fast.unbal.a), levels(ix.a[[2L]]))))
+> stopifnot(isTRUE(all.equal(rownames(bet.mati.plm.fast.unbal.b), levels(ix.b[[2L]]))))
 > 
+> 
+> stopifnot(isTRUE(all.equal(bet.mati.plm.slow.unbal.a, bet.mati.plm.fast.unbal.a)))
+> stopifnot(isTRUE(all.equal(bet.mati.plm.slow.unbal.b, bet.mati.plm.fast.unbal.b)))
 > 
 > 
 > ### fixef ###
@@ -757,12 +749,12 @@ Type 'q()' to quit R.
 1.82329 1.75370 1.81756 1.94934 2.41333 1.62849 1.46246 1.62606 0.98470 1.61221 
     179     181     183     185     187     189     191     193     195     197 
 1.75402 2.32062 1.63185 1.40456 2.32567 1.10469 1.61959 1.86618 1.92283 1.38074 
-> (fx_fe_plm.slow.ti.a    <- fixef(FE_ti.a)) # year 83 first in rev. 1305 (and plm 2.4-0/1)
-     83      84      85      86      87      81      82 
--4.7047 -4.8004 -4.7971 -4.7507 -4.7169 -4.6351 -4.6480 
+> (fx_fe_plm.slow.ti.a    <- fixef(FE_ti.a)) # year 81 first from rev. 1307 (and plm < 2.4-0) (year 83 first in rev. 1305 (and plm 2.4-0/1))
+     81      82      83      84      85      86      87 
+-4.6351 -4.6480 -4.7047 -4.8004 -4.7971 -4.7507 -4.7169 
 > (fx_fe_plm.slow.tw.id.a <- fixef(FE_tw.a, effect = "individual"))
       1       3       5       7       9      11      13      15      17      19 
-2.19173 2.01390 2.01574 2.59166 2.09111 1.52567 2.92628 2.67538 2.65261 2.34621 
+2.25439 2.01390 2.01574 2.59166 2.09111 1.52567 2.92628 2.67538 2.65261 2.34621 
      21      23      25      27      33      35      37      39      41      45 
 2.17986 2.05666 2.06180 2.20304 2.44161 2.15357 2.43919 2.12840 2.45397 2.30102 
      47      49      51      53      55      57      59      61      63      65 
@@ -929,7 +921,7 @@ Type 'q()' to quit R.
 1.80430 1.73952 1.79345 1.90636 2.38586 1.60597 1.42880 1.59981 0.91678 1.57726 
     179     181     183     185     187     189     191     193     195     197 
 1.72451 2.29842 1.62255 1.36153 2.27740 1.05490 1.59726 1.83232 1.90401 1.34863 
-> (fx_fe_plm.slow.ti.b    <- fixef(FE_ti.b)) # year 81 first in rev. 1305 (and plm 2.4-0/1)
+> (fx_fe_plm.slow.ti.b    <- fixef(FE_ti.b)) # year 81 first from rev. 1307 (and plm < 2.4-0) (year 83 first in rev. 1305 (and plm 2.4-0/1))
      81      82      83      84      85      86      87 
 -4.6523 -4.6638 -4.7201 -4.8163 -4.8126 -4.7666 -4.7332 
 > (fx_fe_plm.slow.tw.id.b <- fixef(FE_tw.b, effect = "individual"))
@@ -1102,12 +1094,12 @@ Type 'q()' to quit R.
 1.82329 1.75370 1.81756 1.94934 2.41333 1.62849 1.46246 1.62606 0.98470 1.61221 
     179     181     183     185     187     189     191     193     195     197 
 1.75402 2.32062 1.63185 1.40456 2.32567 1.10469 1.61959 1.86618 1.92283 1.38074 
-> (fx_fe_plm.fast.ti.a    <- fixef(FE_ti.a)) # year 83 first in rev. 1305 (and plm 2.4-0/1)
-     83      84      85      86      87      81      82 
--4.7047 -4.8004 -4.7971 -4.7507 -4.7169 -4.6351 -4.6480 
+> (fx_fe_plm.fast.ti.a    <- fixef(FE_ti.a)) # year 81 first from rev. 1307 (and plm < 2.4-0) (year 83 first in rev. 1305 (and plm 2.4-0/1))
+     81      82      83      84      85      86      87 
+-4.6351 -4.6480 -4.7047 -4.8004 -4.7971 -4.7507 -4.7169 
 > (fx_fe_plm.fast.tw.id.a <- fixef(FE_tw.a, effect = "individual"))
       1       3       5       7       9      11      13      15      17      19 
-2.19173 2.01390 2.01574 2.59166 2.09111 1.52567 2.92628 2.67538 2.65261 2.34621 
+2.25439 2.01390 2.01574 2.59166 2.09111 1.52567 2.92628 2.67538 2.65261 2.34621 
      21      23      25      27      33      35      37      39      41      45 
 2.17986 2.05666 2.06180 2.20304 2.44161 2.15357 2.43919 2.12840 2.45397 2.30102 
      47      49      51      53      55      57      59      61      63      65 
@@ -1274,7 +1266,7 @@ Type 'q()' to quit R.
 1.80430 1.73952 1.79345 1.90636 2.38586 1.60597 1.42880 1.59981 0.91678 1.57726 
     179     181     183     185     187     189     191     193     195     197 
 1.72451 2.29842 1.62255 1.36153 2.27740 1.05490 1.59726 1.83232 1.90401 1.34863 
-> (fx_fe_plm.fast.ti.b    <- fixef(FE_ti.b)) # year 81 first in rev. 1305 (and plm 2.4-0/1)
+> (fx_fe_plm.fast.ti.b    <- fixef(FE_ti.b)) # year 81 first from rev. 1307 (and plm < 2.4-0) (year 83 first in rev. 1305 (and plm 2.4-0/1))
      81      82      83      84      85      86      87 
 -4.6523 -4.6638 -4.7201 -4.8163 -4.8126 -4.7666 -4.7332 
 > (fx_fe_plm.fast.tw.id.b <- fixef(FE_tw.b, effect = "individual"))
@@ -1428,50 +1420,44 @@ Type 'q()' to quit R.
 1.81701 1.75188 1.74302 1.77210 1.81983 1.88162 
 > 
 > 
-> all.equal(names(fx_fe_plm.slow.id.a),    levels(ix.a[[1L]]))
-[1] TRUE
-> all.equal(names(fx_fe_plm.slow.ti.a),    levels(ix.a[[2L]]))
-[1] "7 string mismatches"
-> all.equal(names(fx_fe_plm.slow.tw.id.a), levels(ix.a[[1L]]))
-[1] TRUE
-> all.equal(names(fx_fe_plm.slow.tw.ti.a), levels(ix.a[[2L]]))
-[1] TRUE
-> all.equal(names(fx_fe_plm.slow.tw.tw.a), paste(ix.a[[1L]], ix.a[[2L]], sep = "-"))
-[1] TRUE
+> stopifnot(isTRUE(all.equal(names(fx_fe_plm.slow.id.a),    levels(ix.a[[1L]]))))
+> stopifnot(isTRUE(all.equal(names(fx_fe_plm.slow.ti.a),    levels(ix.a[[2L]]))))
+> stopifnot(isTRUE(all.equal(names(fx_fe_plm.slow.tw.id.a), levels(ix.a[[1L]]))))
+> stopifnot(isTRUE(all.equal(names(fx_fe_plm.slow.tw.ti.a), levels(ix.a[[2L]]))))
+> stopifnot(isTRUE(all.equal(names(fx_fe_plm.slow.tw.tw.a), paste(ix.a[[1L]], ix.a[[2L]], sep = "-"))))
 > 
-> all.equal(names(fx_fe_plm.slow.id.b),    levels(ix.b[[1L]]))
-[1] TRUE
-> all.equal(names(fx_fe_plm.slow.ti.b),    levels(ix.b[[2L]]))
-[1] TRUE
-> all.equal(names(fx_fe_plm.slow.tw.id.b), levels(ix.b[[1L]]))
-[1] TRUE
-> all.equal(names(fx_fe_plm.slow.tw.ti.b), levels(ix.b[[2L]]))
-[1] TRUE
-> all.equal(names(fx_fe_plm.slow.tw.tw.b), paste(ix.b[[1L]], ix.b[[2L]], sep = "-"))
-[1] TRUE
+> stopifnot(isTRUE(all.equal(names(fx_fe_plm.slow.id.b),    levels(ix.b[[1L]]))))
+> stopifnot(isTRUE(all.equal(names(fx_fe_plm.slow.ti.b),    levels(ix.b[[2L]]))))
+> stopifnot(isTRUE(all.equal(names(fx_fe_plm.slow.tw.id.b), levels(ix.b[[1L]]))))
+> stopifnot(isTRUE(all.equal(names(fx_fe_plm.slow.tw.ti.b), levels(ix.b[[2L]]))))
+> stopifnot(isTRUE(all.equal(names(fx_fe_plm.slow.tw.tw.b), paste(ix.b[[1L]], ix.b[[2L]], sep = "-"))))
 > 
-> all.equal(names(fx_fe_plm.fast.id.a),    levels(ix.a[[1L]]))
-[1] TRUE
-> all.equal(names(fx_fe_plm.fast.ti.a),    levels(ix.a[[2L]]))
-[1] "7 string mismatches"
-> all.equal(names(fx_fe_plm.fast.tw.id.a), levels(ix.a[[1L]]))
-[1] TRUE
-> all.equal(names(fx_fe_plm.fast.tw.ti.a), levels(ix.a[[2L]]))
-[1] TRUE
-> all.equal(names(fx_fe_plm.fast.tw.tw.a), paste(ix.a[[1L]], ix.a[[2L]], sep = "-"))
-[1] TRUE
+> stopifnot(isTRUE(all.equal(names(fx_fe_plm.fast.id.a),    levels(ix.a[[1L]]))))
+> stopifnot(isTRUE(all.equal(names(fx_fe_plm.fast.ti.a),    levels(ix.a[[2L]]))))
+> stopifnot(isTRUE(all.equal(names(fx_fe_plm.fast.tw.id.a), levels(ix.a[[1L]]))))
+> stopifnot(isTRUE(all.equal(names(fx_fe_plm.fast.tw.ti.a), levels(ix.a[[2L]]))))
+> stopifnot(isTRUE(all.equal(names(fx_fe_plm.fast.tw.tw.a), paste(ix.a[[1L]], ix.a[[2L]], sep = "-"))))
 > 
-> all.equal(names(fx_fe_plm.fast.id.b),    levels(ix.b[[1L]]))
-[1] TRUE
-> all.equal(names(fx_fe_plm.fast.ti.b),    levels(ix.b[[2L]]))
-[1] TRUE
-> all.equal(names(fx_fe_plm.fast.tw.id.b), levels(ix.b[[1L]]))
-[1] TRUE
-> all.equal(names(fx_fe_plm.fast.tw.ti.b), levels(ix.b[[2L]]))
-[1] TRUE
-> all.equal(names(fx_fe_plm.fast.tw.tw.b), paste(ix.b[[1L]], ix.b[[2L]], sep = "-"))
-[1] TRUE
+> stopifnot(isTRUE(all.equal(names(fx_fe_plm.fast.id.b),    levels(ix.b[[1L]]))))
+> stopifnot(isTRUE(all.equal(names(fx_fe_plm.fast.ti.b),    levels(ix.b[[2L]]))))
+> stopifnot(isTRUE(all.equal(names(fx_fe_plm.fast.tw.id.b), levels(ix.b[[1L]]))))
+> stopifnot(isTRUE(all.equal(names(fx_fe_plm.fast.tw.ti.b), levels(ix.b[[2L]]))))
+> stopifnot(isTRUE(all.equal(names(fx_fe_plm.fast.tw.tw.b), paste(ix.b[[1L]], ix.b[[2L]], sep = "-"))))
 > 
+> 
+> 
+> stopifnot(isTRUE(all.equal(fx_fe_plm.slow.id.a,    fx_fe_plm.fast.id.a)))
+> stopifnot(isTRUE(all.equal(fx_fe_plm.slow.ti.a,    fx_fe_plm.fast.ti.a)))
+> stopifnot(isTRUE(all.equal(fx_fe_plm.slow.tw.id.a, fx_fe_plm.fast.tw.id.a)))
+> stopifnot(isTRUE(all.equal(fx_fe_plm.slow.tw.ti.a, fx_fe_plm.fast.tw.ti.a)))
+> stopifnot(isTRUE(all.equal(fx_fe_plm.slow.tw.tw.a, fx_fe_plm.fast.tw.tw.a)))
+> 
+> 
+> stopifnot(isTRUE(all.equal(fx_fe_plm.slow.id.b,    fx_fe_plm.fast.id.b)))
+> stopifnot(isTRUE(all.equal(fx_fe_plm.slow.ti.b,    fx_fe_plm.fast.ti.b)))
+> stopifnot(isTRUE(all.equal(fx_fe_plm.slow.tw.id.b, fx_fe_plm.fast.tw.id.b)))
+> stopifnot(isTRUE(all.equal(fx_fe_plm.slow.tw.ti.b, fx_fe_plm.fast.tw.ti.b)))
+> stopifnot(isTRUE(all.equal(fx_fe_plm.slow.tw.tw.b, fx_fe_plm.fast.tw.tw.b)))
 > 
 > 
 > ### ranef ###
@@ -1524,11 +1510,11 @@ Type 'q()' to quit R.
  0.0331315139 -0.0465172252  0.1839107842 -0.0998514259 -0.0261075740 
           189           191           193           195           197 
  0.5741168296  0.1004216620 -0.0542233560 -0.0257855358 -0.1070318986 
-> (fx_re_plm.slow.ti.a    <- ranef(RE_ti.a)) # year 83 first in rev. 1305 (and plm 2.4-0/1)
-          83           84           85           86           87           81 
- 0.014062044  0.002139251 -0.004815152 -0.025455702 -0.048208955  0.038494793 
-          82 
- 0.023783721 
+> (fx_re_plm.slow.ti.a    <- ranef(RE_ti.a)) # year 81 first from rev. 1307 (and plm < 2.4-0) (year 83 first in rev. 1305 (and plm 2.4-0/1))
+          81           82           83           84           85           86 
+ 0.038494793  0.023838551  0.014062044  0.002139251 -0.004826252 -0.025397152 
+          87 
+-0.048098070 
 > (fx_re_plm.slow.tw.id.a <- ranef(RE_tw.a, effect = "individual"))
             1             3             5             7             9 
 -0.0598779210 -0.0199552551 -0.1694096234 -0.1003091332 -0.1463739896 
@@ -1567,10 +1553,10 @@ Type 'q()' to quit R.
           189           191           193           195           197 
  0.5806936383  0.1029550402 -0.0543024689 -0.0279997057 -0.1102603655 
 > (fx_re_plm.slow.tw.ti.a <- ranef(RE_tw.a, effect = "time")) # year 81 first (order same as *.b for 2-ways FE)
-          83           84           85           86           87           81 
- 0.019400013  0.003885039 -0.013075603 -0.035416411 -0.057529532  0.049443746 
-          82 
- 0.034684834 
+          81           82           83           84           85           86 
+ 0.049443746  0.034685466  0.019400013  0.003885039 -0.013075841 -0.035415766 
+          87 
+-0.057528483 
 > # (fx_re_plm.slow.tw.tw.a <- ranef(RE_tw.a, effect = "twoways")) # do not have this for ranef
 > 
 > (fx_re_plm.slow.id.b    <- ranef(RE_id.b))
@@ -1604,7 +1590,7 @@ Type 'q()' to quit R.
 -0.093028738  0.035677426  0.032892193 -0.046726581  0.183605578 -0.099296581 
          187          189          191          193          195          197 
 -0.026154195  0.573859582  0.100155190 -0.054384143 -0.025894416 -0.106948315 
-> (fx_re_plm.slow.ti.b    <- ranef(RE_ti.b)) # year 81 first in rev. 1305 (and plm 2.4-0/1)
+> (fx_re_plm.slow.ti.b    <- ranef(RE_ti.b)) # year 81 first from rev. 1307 (and plm < 2.4-0) (year 83 first in rev. 1305 (and plm 2.4-0/1))
           81           82           83           84           85           86 
  0.037650428  0.023093431  0.014967806  0.003304786 -0.005081661 -0.025634449 
           87 
@@ -1691,11 +1677,11 @@ Type 'q()' to quit R.
  0.0331315139 -0.0465172252  0.1839107842 -0.0998514259 -0.0261075740 
           189           191           193           195           197 
  0.5741168296  0.1004216620 -0.0542233560 -0.0257855358 -0.1070318986 
-> (fx_re_plm.fast.ti.a    <- ranef(RE_ti.a)) # year 83 first in rev. 1305 (and plm 2.4-0/1)
-          83           84           85           86           87           81 
- 0.014062044  0.002139251 -0.004815152 -0.025455702 -0.048208955  0.038494793 
-          82 
- 0.023783721 
+> (fx_re_plm.fast.ti.a    <- ranef(RE_ti.a)) # year 81 first from rev. 1307 (and plm < 2.4-0) (year 83 first in rev. 1305 (and plm 2.4-0/1))
+          81           82           83           84           85           86 
+ 0.038494793  0.023838551  0.014062044  0.002139251 -0.004826252 -0.025397152 
+          87 
+-0.048098070 
 > (fx_re_plm.fast.tw.id.a <- ranef(RE_tw.a, effect = "individual"))
             1             3             5             7             9 
 -0.0598779210 -0.0199552551 -0.1694096234 -0.1003091332 -0.1463739896 
@@ -1734,10 +1720,10 @@ Type 'q()' to quit R.
           189           191           193           195           197 
  0.5806936383  0.1029550402 -0.0543024689 -0.0279997057 -0.1102603655 
 > (fx_re_plm.fast.tw.ti.a <- ranef(RE_tw.a, effect = "time")) # year 81 first (order same as *.b for 2-ways FE)
-          83           84           85           86           87           81 
- 0.019400013  0.003885039 -0.013075603 -0.035416411 -0.057529532  0.049443746 
-          82 
- 0.034684834 
+          81           82           83           84           85           86 
+ 0.049443746  0.034685466  0.019400013  0.003885039 -0.013075841 -0.035415766 
+          87 
+-0.057528483 
 > # (fx_re_plm.fast.tw.tw.a <- ranef(RE_tw.a, effect = "twoways")) # do not have this for ranef
 > 
 > (fx_re_plm.fast.id.b    <- ranef(RE_id.b))
@@ -1771,7 +1757,7 @@ Type 'q()' to quit R.
 -0.093028738  0.035677426  0.032892193 -0.046726581  0.183605578 -0.099296581 
          187          189          191          193          195          197 
 -0.026154195  0.573859582  0.100155190 -0.054384143 -0.025894416 -0.106948315 
-> (fx_re_plm.fast.ti.b    <- ranef(RE_ti.b)) # year 81 first in rev. 1305 (and plm 2.4-0/1)
+> (fx_re_plm.fast.ti.b    <- ranef(RE_ti.b)) # year 81 first from rev. 1307 (and plm < 2.4-0) (year 83 first in rev. 1305 (and plm 2.4-0/1))
           81           82           83           84           85           86 
  0.037650428  0.023093431  0.014967806  0.003304786 -0.005081661 -0.025634449 
           87 
@@ -1820,46 +1806,43 @@ Type 'q()' to quit R.
 -0.057567102 
 > # (fx_re_plm.fast.tw.tw.b <- # ranef(RE_tw.b, effect = "twoways")) # do not have this for ranef 
 > 
-> all.equal(names(fx_re_plm.slow.id.a),    levels(ix.a[[1L]]))
-[1] TRUE
-> all.equal(names(fx_re_plm.slow.ti.a),    levels(ix.a[[2L]]))
-[1] "7 string mismatches"
-> all.equal(names(fx_re_plm.slow.tw.id.a), levels(ix.a[[1L]]))
-[1] TRUE
-> all.equal(names(fx_re_plm.slow.tw.ti.a), levels(ix.a[[2L]]))
-[1] "7 string mismatches"
-> # all.equal(names(fx_re_plm.slow.tw.tw.a), levels(ix.a[[2L]])) # don't have this for ranef
+> stopifnot(isTRUE(all.equal(names(fx_re_plm.slow.id.a),    levels(ix.a[[1L]]))))
+> stopifnot(isTRUE(all.equal(names(fx_re_plm.slow.ti.a),    levels(ix.a[[2L]]))))
+> stopifnot(isTRUE(all.equal(names(fx_re_plm.slow.tw.id.a), levels(ix.a[[1L]]))))
+> stopifnot(isTRUE(all.equal(names(fx_re_plm.slow.tw.ti.a), levels(ix.a[[2L]]))))
+> # stopifnot(isTRUE(all.equal(names(fx_re_plm.slow.tw.tw.a), levels(ix.a[[2L]])))) # don't have this for ranef
 > 
-> all.equal(names(fx_re_plm.slow.id.b),    levels(ix.b[[1L]]))
-[1] TRUE
-> all.equal(names(fx_re_plm.slow.ti.b),    levels(ix.b[[2L]]))
-[1] TRUE
-> all.equal(names(fx_re_plm.slow.tw.id.b), levels(ix.b[[1L]]))
-[1] TRUE
-> all.equal(names(fx_re_plm.slow.tw.ti.b), levels(ix.b[[2L]]))
-[1] TRUE
-> # all.equal(names(fx_fe_plm.slow.tw.tw.b), levels(ix.b[[2L]])) # don't have this for ranef
+> stopifnot(isTRUE(all.equal(names(fx_re_plm.slow.id.b),    levels(ix.b[[1L]]))))
+> stopifnot(isTRUE(all.equal(names(fx_re_plm.slow.ti.b),    levels(ix.b[[2L]]))))
+> stopifnot(isTRUE(all.equal(names(fx_re_plm.slow.tw.id.b), levels(ix.b[[1L]]))))
+> stopifnot(isTRUE(all.equal(names(fx_re_plm.slow.tw.ti.b), levels(ix.b[[2L]]))))
+> # stopifnot(isTRUE(all.equal(names(fx_fe_plm.slow.tw.tw.b), levels(ix.b[[2L]])) # don't have this for ranef
 > 
-> all.equal(names(fx_re_plm.fast.id.a),    levels(ix.a[[1L]]))
-[1] TRUE
-> all.equal(names(fx_re_plm.fast.ti.a),    levels(ix.a[[2L]]))
-[1] "7 string mismatches"
-> all.equal(names(fx_re_plm.fast.tw.id.a), levels(ix.a[[1L]]))
-[1] TRUE
-> all.equal(names(fx_re_plm.fast.tw.ti.a), levels(ix.a[[2L]]))
-[1] "7 string mismatches"
-> # all.equal(names(fx_re_plm.fast.tw.tw.a), levels(ix.a[[2L]])) # don't have this for ranef
+> stopifnot(isTRUE(all.equal(names(fx_re_plm.fast.id.a),    levels(ix.a[[1L]]))))
+> stopifnot(isTRUE(all.equal(names(fx_re_plm.fast.ti.a),    levels(ix.a[[2L]]))))
+> stopifnot(isTRUE(all.equal(names(fx_re_plm.fast.tw.id.a), levels(ix.a[[1L]]))))
+> stopifnot(isTRUE(all.equal(names(fx_re_plm.fast.tw.ti.a), levels(ix.a[[2L]]))))
+> # stopifnot(isTRUE(all.equal(names(fx_re_plm.fast.tw.tw.a), levels(ix.a[[2L]])))) # don't have this for ranef
 > 
-> all.equal(names(fx_re_plm.fast.id.b),    levels(ix.b[[1L]]))
-[1] TRUE
-> all.equal(names(fx_re_plm.fast.ti.b),    levels(ix.b[[2L]]))
-[1] TRUE
-> all.equal(names(fx_re_plm.fast.tw.id.b), levels(ix.b[[1L]]))
-[1] TRUE
-> all.equal(names(fx_re_plm.fast.tw.ti.b), levels(ix.b[[2L]]))
-[1] TRUE
-> # all.equal(names(fx_re_plm.fast.tw.tw.b), levels(ix.b[[2L]])) # don't have this for ranef
+> stopifnot(isTRUE(all.equal(names(fx_re_plm.fast.id.b),    levels(ix.b[[1L]]))))
+> stopifnot(isTRUE(all.equal(names(fx_re_plm.fast.ti.b),    levels(ix.b[[2L]]))))
+> stopifnot(isTRUE(all.equal(names(fx_re_plm.fast.tw.id.b), levels(ix.b[[1L]]))))
+> stopifnot(isTRUE(all.equal(names(fx_re_plm.fast.tw.ti.b), levels(ix.b[[2L]]))))
+> # stopifnot(isTRUE(all.equal(names(fx_re_plm.fast.tw.tw.b), levels(ix.b[[2L]])))) # don't have this for ranef
+> 
+> 
+> 
+> stopifnot(isTRUE(all.equal(fx_re_plm.slow.id.a,    fx_re_plm.fast.id.a)))
+> stopifnot(isTRUE(all.equal(fx_re_plm.slow.ti.a,    fx_re_plm.fast.ti.a)))
+> stopifnot(isTRUE(all.equal(fx_re_plm.slow.tw.id.a, fx_re_plm.fast.tw.id.a)))
+> stopifnot(isTRUE(all.equal(fx_re_plm.slow.tw.ti.a, fx_re_plm.fast.tw.ti.a)))
+> 
+> stopifnot(isTRUE(all.equal(fx_re_plm.slow.id.b,    fx_re_plm.fast.id.b)))
+> stopifnot(isTRUE(all.equal(fx_re_plm.slow.ti.b,    fx_re_plm.fast.ti.b)))
+> stopifnot(isTRUE(all.equal(fx_re_plm.slow.tw.id.b, fx_re_plm.fast.tw.id.b)))
+> stopifnot(isTRUE(all.equal(fx_re_plm.slow.tw.ti.b, fx_re_plm.fast.tw.ti.b)))
+> 
 > 
 > proc.time()
    user  system elapsed 
-   3.78    0.48    4.26 
+   3.51    0.40    3.92 

@@ -24,8 +24,7 @@ Within.default.baseR <- plm:::Within.default
 Within.pseries.baseR <- plm:::Within.pseries
 Within.matrix.baseR  <- plm:::Within.matrix
 
-# ... in tool_pdata.frame.R:
-pseriesfy.baseR    <- plm:::pseriesfy
+pseriesfy.baseR      <- plm:::pseriesfy # ... in tool_pdata.frame.R:
 
 
 ## ad 2) implement wrapper switches
@@ -228,6 +227,9 @@ between.default.collapse <- function(x, effect, ...) {
   keep <- !duplicated(effect)
   res <- res[keep]
   names(res) <- as.character(effect[keep])
+  # bring into factor level order (not order as appears in orig. data)
+  lvl <- levels(collapse::fdroplevels(effect))
+  res <- res[lvl]
   return(res)
 }
 
@@ -278,6 +280,9 @@ between.pseries.collapse <- function(x, effect = c("individual", "time", "group"
   keep <- !duplicated(i)
   res <- res[keep]
   names(res) <- as.character(i[keep])
+  # bring into factor level order (not order as appears in orig. data)
+  lvl <- levels(collapse::fdroplevels(i))
+  res <- res[lvl]
   return(res)
 }
 
@@ -337,7 +342,11 @@ between.matrix.collapse <- function(x, effect, ...) {
   na.rm <- if(missing(...) || is.null(na.rm <- list(...)$na.rm)) FALSE else na.rm
   res <- collapse::fbetween(x, g = eff.fac, w = NULL, na.rm = na.rm, fill = TRUE)
   rownames(res) <- as.character(eff.fac)
+  # compress data to number of unique individuals (or time periods)
   res <- res[!duplicated(eff.fac), , drop = FALSE]
+  # bring into factor level order (not order as appears in orig. data)
+  lvl <- levels(collapse::fdroplevels(eff.fac))
+  res <- res[lvl, , drop = FALSE]
   return(res)
 }
 
@@ -616,7 +625,7 @@ pseriesfy <- function(x,  ...) {
 }
 
 .onAttach <- function(libname, pkgname) {
-   # options("plm.fast" = TRUE) # not yet the default, maybe in Q3/2021,
+  # options("plm.fast" = TRUE) # not yet the default, maybe in Q3/2021,
                                # would need pkg collapse as hard dependency
   
   # determine when pkg plm is attached whether pkg collapse, fixest, and lfe are
