@@ -25,10 +25,10 @@ remove_pseries_features <- function(x) {
 #  if (!is.pseries(x)) warning("removing pseries features now but object was not a proper pseries before")
   
   attr(x, "index") <- NULL
-  x <- check_propagation_correct_class(x)
- # attr(x, "class") <- setdiff(class(x), "pseries") # cannot use this, don't know why
-  class(x) <- setdiff(class(x), "pseries")
-  return(x)
+  # unclass is simpler and faster than previously (up to and incl. rev. 1307) used
+  # combination of check_propagation_correct_class() and class() <- setdiff(<.>, "pseries)
+  # unclass handles propagation and keeps names
+  unclass(x)
 }
 
 add_pseries_features <- function(x, index) {
@@ -70,7 +70,7 @@ Ops.pseries <- function(e1, e2) {
   # some other data types
   add_back_pseries <- if (is.atomic(res) && !is.matrix(res) && !is.pairlist(res)) TRUE else FALSE
   if (add_back_pseries) {
-    if (miss_e2 && e1_pseries) relevant_index <- index_e1
+    if (miss_e2 && e1_pseries)      relevant_index <- index_e1
     if ( e1_pseries && !e2_pseries) relevant_index <- index_e1
     if (!e1_pseries &&  e2_pseries) relevant_index <- index_e2
     if ( e1_pseries &&  e2_pseries) {
