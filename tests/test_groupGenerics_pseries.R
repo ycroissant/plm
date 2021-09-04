@@ -126,7 +126,7 @@ if(!isTRUE(all.equal(class(pGrunfeld$logi2double2),       c("pseries", "numeric"
 if(!isTRUE(all.equal(class(pGrunfeld[ , "logi2double3"]), c("pseries", "numeric")))) stop("when assigning by [[<-: double casted to logical (wrong class)")
 
 
-############## (4) test for various kinds of argument combinations in Ops.pseries
+############## (4) test for various kinds of argument combinations in Ops.pseries ##############
 
 # e1: pseries, e2: not a pseries and vice versa
 # -> result must be a pseries in both cases
@@ -168,7 +168,7 @@ stopifnot(is.pseries(e1e2_f))
 
 
 
-############## (5) demonstration of R's behaviour for a wrapping class "myclass" without group generics
+############## (5) demonstration of R's behaviour for a wrapping class "myclass" without group generics ##############
 
 x <- c(1L, 2L, 3L)
 class(x) # integer
@@ -222,7 +222,7 @@ loginum <- logi - 1.5
 class(loginum) # myclass logical
 typeof(loginum) # double
 
-############## (6) demonstrate case of R's behaviour which cannot be worked around even with without group generics
+############## (6) demonstrate case of R's behaviour which cannot be worked around even with without group generics ##############
 # dpois() (also dnorm() and likely more) does not strip unnecessary classes and custom attributes
 # before it performs its operations
 ## see also ## see also: https://bugs.r-project.org/bugzilla/show_bug.cgi?id=17516

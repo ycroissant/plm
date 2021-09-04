@@ -1,5 +1,5 @@
 
-R version 4.1.0 (2021-05-18) -- "Camp Pontanezen"
+R version 4.1.1 (2021-08-10) -- "Kick Things"
 Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -209,7 +209,7 @@ F-statistic: 3064.81 on 4 and 764 DF, p-value: < 2.22e-16
 > if(!isTRUE(all.equal(class(pGrunfeld[ , "logi2double3"]), c("pseries", "numeric")))) stop("when assigning by [[<-: double casted to logical (wrong class)")
 > 
 > 
-> ############## (4) test for various kinds of argument combinations in Ops.pseries
+> ############## (4) test for various kinds of argument combinations in Ops.pseries ##############
 > 
 > # e1: pseries, e2: not a pseries and vice versa
 > # -> result must be a pseries in both cases
@@ -1061,7 +1061,7 @@ F-statistic: 3064.81 on 4 and 764 DF, p-value: < 2.22e-16
 > 
 > 
 > 
-> ############## (5) demonstration of R's behaviour for a wrapping class "myclass" without group generics
+> ############## (5) demonstration of R's behaviour for a wrapping class "myclass" without group generics ##############
 > 
 > x <- c(1L, 2L, 3L)
 > class(x) # integer
@@ -1148,7 +1148,7 @@ attr(,"class")
 > typeof(loginum) # double
 [1] "double"
 > 
-> ############## (6) demonstrate case of R's behaviour which cannot be worked around even with without group generics
+> ############## (6) demonstrate case of R's behaviour which cannot be worked around even with without group generics ##############
 > # dpois() (also dnorm() and likely more) does not strip unnecessary classes and custom attributes
 > # before it performs its operations
 > ## see also ## see also: https://bugs.r-project.org/bugzilla/show_bug.cgi?id=17516
@@ -1174,4 +1174,4 @@ attr(,"class")
 > 
 > proc.time()
    user  system elapsed 
-   0.76    0.31    1.06 
+   4.21    0.40    4.64 

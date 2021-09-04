@@ -26,9 +26,10 @@ remove_pseries_features <- function(x) {
   
   attr(x, "index") <- NULL
   # unclass is simpler and faster than previously (up to and incl. rev. 1307) used
-  # combination of check_propagation_correct_class() and class() <- setdiff(<.>, "pseries)
-  # unclass handles propagation and keeps names
-  unclass(x)
+  # combination of check_propagation_correct_class() and class() <- setdiff(class(<.>), "pseries")
+  # unclass handles propagation and keeps names but coerces factor to integer
+  x <- if(!is.factor(x)) unclass(x) else { class(x) <- setdiff(class(x), "pseries"); x }
+  x
 }
 
 add_pseries_features <- function(x, index) {
