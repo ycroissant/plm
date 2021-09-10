@@ -1,0 +1,206 @@
+
+R version 4.1.1 (2021-08-10) -- "Kick Things"
+Copyright (C) 2021 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> #
+> # Test subsetting for pseries objects
+> #
+> # Note:
+> #  currently, (2016-07-11, rev. 324), we do not have a special subsetting method
+> #  for pseries defined (see for test of pseries features after subsetting further down)
+> 
+> 
+> library(plm)
+> 
+> # data.frame with factor
+> df <- data.frame(id = c(1,1,2), time = c(1,2,1), f = factor(c("a", "a", "b")), n = c(1:3))
+> df$f
+[1] a a b
+Levels: a b
+> levels(df$f) <- c("a","b","c")
+> df$f[1]
+[1] a
+Levels: a b c
+> df$f[1,drop=F]
+[1] a
+Levels: a b c
+> df$f[1,drop=T]
+[1] a
+Levels: a
+> df$f[drop=T]
+[1] a a b
+Levels: a b
+> df$f[0]
+factor(0)
+Levels: a b c
+> 
+> df$f[integer()]
+factor(0)
+Levels: a b c
+> df$f[NA]
+[1] <NA> <NA> <NA>
+Levels: a b c
+> 
+> 
+> # pdata.frame with c("pseries", "factor")
+> pdf <- pdata.frame(df)
+> pdf$f
+1-1 1-2 2-1 
+  a   a   b 
+Levels: a b c
+> levels(pdf$f) <- c("a","b","c")
+> pdf$f[1]
+1-1 
+  a 
+Levels: a b c
+> pdf$f[1, drop=T]
+1-1 
+  a 
+Levels: a
+> pdf$f[drop=T]
+1-1 1-2 2-1 
+  a   a   b 
+Levels: a b
+> pdf$f[0]
+factor(0)
+Levels: a b c
+> attr(pdf$f[0], "index")
+[1] id   time
+<0 rows> (or 0-length row.names)
+> 
+> pdf$f[0]
+factor(0)
+Levels: a b c
+> pdf$f[integer()]
+factor(0)
+Levels: a b c
+> str(pdf$f[integer()])
+ Factor w/ 3 levels "a","b","c": 
+ - attr(*, "names")= chr(0) 
+ - attr(*, "index")=Classes 'pindex' and 'data.frame':	0 obs. of  2 variables:
+  ..$ id  : Factor w/ 0 levels: 
+  ..$ time: Factor w/ 0 levels: 
+> 
+> str( df$f[NA])
+ Factor w/ 3 levels "a","b","c": NA NA NA
+> str(pdf$f[NA])
+ Factor w/ 3 levels "a","b","c": NA NA NA
+ - attr(*, "names")= chr [1:3] NA NA NA
+ - attr(*, "index")=Classes 'pindex' and 'data.frame':	3 obs. of  2 variables:
+  ..$ id  : Factor w/ 0 levels: NA NA NA
+  ..$ time: Factor w/ 0 levels: NA NA NA
+> 
+> 
+> 
+> df$f[integer()]
+factor(0)
+Levels: a b c
+> pdf$f[integer()]
+factor(0)
+Levels: a b c
+> 
+> 
+> pf <- pdf$f
+> 
+> if (!all(levels(pdf$f[1,drop=F]) == c("a","b","c"))) stop("subsetting for c(\"pseries\", \"factor\") (with drop=F) not correct")
+> if (!all(class(pdf$f[1]) == c("pseries", "factor"))) stop("classes not correct after subsetting pseries")
+> 
+> if (!levels(pdf$f[1,drop=T]) == "a") stop("subsetting for c(\"pseries\", \"factor\") with drop=T not correct - unused levels not dropped")
+> if (!all(levels(pdf$f[drop=T]) == c("a", "b"))) stop("subsetting for c(\"pseries\", \"factor\") with drop=T not correct - unused levels not dropped")
+> 
+> ### activate these tests once the subsetting method for pseries is defined.
+> #if (is.null(attr(pdf$f[1], "index"))) stop("no index after subsetting")
+> #if (!nrow(attr(pdf$f[1], "index")) == 1) stop("wrong index after subsetting")
+> 
+> 
+> 
+> lapply(df, attributes)
+$id
+NULL
+
+$time
+NULL
+
+$f
+$f$levels
+[1] "a" "b" "c"
+
+$f$class
+[1] "factor"
+
+
+$n
+NULL
+
+> lapply(pdf, attributes)
+$id
+$id$levels
+[1] "1" "2"
+
+$id$class
+[1] "factor"
+
+
+$time
+$time$levels
+[1] "1" "2"
+
+$time$class
+[1] "factor"
+
+
+$f
+$f$levels
+[1] "a" "b" "c"
+
+$f$class
+[1] "factor"
+
+
+$n
+NULL
+
+> 
+> lapply(df, class)
+$id
+[1] "numeric"
+
+$time
+[1] "numeric"
+
+$f
+[1] "factor"
+
+$n
+[1] "integer"
+
+> lapply(pdf, class)
+$id
+[1] "factor"
+
+$time
+[1] "factor"
+
+$f
+[1] "factor"
+
+$n
+[1] "integer"
+
+> 
+> proc.time()
+   user  system elapsed 
+   2.43    0.43    2.89 

@@ -18,14 +18,32 @@ df$f[1,drop=T]
 df$f[drop=T]
 df$f[0]
 
+df$f[integer()]
+df$f[NA]
+
+
 # pdata.frame with c("pseries", "factor")
 pdf <- pdata.frame(df)
 pdf$f
 levels(pdf$f) <- c("a","b","c")
 pdf$f[1]
+pdf$f[1, drop=T]
 pdf$f[drop=T]
 pdf$f[0]
 attr(pdf$f[0], "index")
+
+pdf$f[0]
+pdf$f[integer()]
+str(pdf$f[integer()])
+
+str( df$f[NA])
+str(pdf$f[NA])
+
+
+
+df$f[integer()]
+pdf$f[integer()]
+
 
 pf <- pdf$f
 

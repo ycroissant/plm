@@ -213,6 +213,7 @@ tests/test_plmtest_unbalanced.R -text
 tests/test_plmtest_unbalanced.Rout.save -text
 tests/test_preserve_rownames.R -text
 tests/test_pseries_subsetting.R -text
+tests/test_pseries_subsetting.Rout.save -text
 tests/test_punbalancedness.R -text
 tests/test_purtest.R -text
 tests/test_purtest.Rout.save -text

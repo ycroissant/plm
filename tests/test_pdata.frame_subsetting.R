@@ -221,7 +221,7 @@ Grunfeld[Grunfeld$firm == "19", "valueNonExistent"]
 
 
 ############### test pseries subsetting ("[.pseries") ################
-#### a sketch for "[.pseries" is in pdata.frame.R, but it does not work with FD models yet
+####  "[.pseries" is in pdata.frame.R
 data("EmplUK", package = "plm")
 (plm(log(emp) ~ log(wage) + log(capital), data = EmplUK, model = "fd"))
 
@@ -309,3 +309,28 @@ if(!isTRUE(all.equal(as.numeric(pseries[NA]), series[NA], check.attributes = FAL
 # pseries[1, ] # Error in x[...] : incorrect number of dimensions
 # series[1, ]  # Error during wrapup: incorrect number of dimensions
 
+# subsetting with NA
+ # entries and names are all NA
+ pseries[NA]
+ attr(pseries[NA], "index") #  same as in pdata.frame's index when pdata.frame is indexed by NA
+ str(pseries[NA])
+ series[NA]
+ 
+# subsetting with integer()
+ pseries[integer()]
+ class(pseries[integer()]) # c("pseries", "numeric")
+ class(attr(pseries[integer()], "index"))
+ str(pseries[integer()], "index")
+ 
+ series[integer()]
+ str(series[integer()])
+ 
+# subsetting with 0
+ pseries[0]
+ class(pseries[0]) # c("pseries", "numeric")
+ class(attr(pseries[0], "index"))
+ str(pseries[0], "index")
+ 
+ series[0]
+ str(series[0])
+ 
