@@ -31,7 +31,8 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
    subsetting for vectors was used but the pseries properties were lost). The
    subsetting method currently checks for valid pseries features and warns for
    non-valid ones (as some packages constructed non-valid pseries objects, e.g., 
-   with no or null index).
+   with no or null index). By this, more things are pseries and some code
+   out there might not expect to encounter a pseries.
  * pseriesfy: new function to make each column of a pdata.frame a pseries, see
    `?pseriesfy` for background and useful examples. (Faster version is executed
    if `options("plm.fast" = TRUE)` is set, see `?plm.fast` (then internally
@@ -43,10 +44,10 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
    the order of the appearance in the data which is actually not desirable). Change
    is relevant in specific unbalanced data constellations.
  * vcovG (hence vcovHC, vcovDC, vcovNW, vcovSCC) and vcovBK: fix bug in case
-   of IV estimation with only one regressor.
+   of IV estimation with only one regressor (errored previously).
  * within_intercept:
      * fix bug which caused an error for FE models with only one regressor.
-     * error informatively for IV models as not implemented.
+     * error informatively for IV models as not suitable.
  * between.matrix: do not coerce result to numeric vector for n x 1 matrix
    input (by using drop = FALSE in extraction) (prior to this fix, estimation
    of the between model with only an intercept errored).
@@ -87,7 +88,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
    apply(., 1:2, sum))), etc., e.g., in plm for non-default random IV cases 
    (cases with `inst.method = "baltagi"` / `"am"` / `"bms"`), pmg, pcce, purtest.
  * piest, aneweytest: now use internal demeaning framework by Within() [thus
-   benefitting from fast mode].
+   benefiting from fast mode].
 
    
 ### Vignettes and Other Documentation:
