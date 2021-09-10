@@ -58,6 +58,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
  * has.intercept.plm: argument 'part' renamed to 'rhs', argument values
    (integer or NULL) aligned with and correctly passed on to 
    has.intercept.Formula (with a *temporary* back-compatible solution).
+ * pcdtest: for formula method, the formula is evaluated in the parent environment.
  * groupGenerics: no more warning in arithmetic operations on pseries when index
    of both operands have same length but different content (e.g., something like
    this does not warn anymore:

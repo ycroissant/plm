@@ -38,8 +38,8 @@ pcdtest(x, ...)
 (depending on the respective interface) describing the model to
 be tested,}
 
-\item{\dots}{further arguments to be passed on to \code{plm}, such as
-\code{effect} or \code{random.method}.}
+\item{\dots}{further arguments to be passed on for model estimation to \code{plm},
+such as \code{effect} or \code{random.method}.}
 
 \item{data}{a \code{data.frame},}
 
@@ -82,22 +82,25 @@ sectional dependence in panel models
 \details{
 These tests are originally meant to use the residuals of separate
 estimation of one time--series regression for each cross-sectional
-unit in order to check for cross--sectional dependence. If a
-different model specification (\code{within}, \code{random}, \ldots{}) is
-assumed consistent, one can resort to its residuals for testing
-(which is common, e.g., when the time dimension's length is
-insufficient for estimating the heterogeneous model).  If the time
-dimension is insufficient and \code{model=NULL}, the function defaults
+unit in order to check for cross--sectional dependence (\code{model = NULL}).
+If a different model specification (\code{model = "within"}, \code{"random"},
+\ldots{}) is assumed consistent, one can resort to its residuals for
+testing (which is common, e.g., when the time dimension's length is
+insufficient for estimating the heterogeneous model).
+
+If the time
+dimension is insufficient and \code{model = NULL}, the function defaults
 to estimation of a \code{within} model and issues a warning. The main
 argument of this function may be either a model of class
-\code{panelmodel} or a \code{formula} and \code{dataframe}; in the second case,
+\code{panelmodel} or a \code{formula} and \verb{data frame}; in the second case,
 unless \code{model} is set to \code{NULL}, all usual parameters relative to
 the estimation of a \code{plm} model may be passed on. The test is
 compatible with any consistent \code{panelmodel} for the data at hand,
-with any specification of \code{effect}. E.g., specifying
-\code{effect="time"} or \code{effect="twoways"} allows to test for residual
-cross-sectional dependence after the introduction of time fixed
-effects to account for common shocks.
+with any specification of \code{effect} (except for \code{test = "bcsclm"} which
+requires a within model with either individual or two-ways effect).
+E.g., specifying  \code{effect = "time"} or \code{effect = "twoways"} allows
+to test for residual cross-sectional dependence after the introduction
+of time fixed effects to account for common shocks.
 
 A \strong{local} version of either test can be computed by supplying a
 proximity matrix (elements coercible to \code{logical}) with argument

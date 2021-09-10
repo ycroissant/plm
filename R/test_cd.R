@@ -40,22 +40,25 @@
 #' 
 #' These tests are originally meant to use the residuals of separate
 #' estimation of one time--series regression for each cross-sectional
-#' unit in order to check for cross--sectional dependence. If a
-#' different model specification (`within`, `random`, \ldots{}) is
-#' assumed consistent, one can resort to its residuals for testing
-#' (which is common, e.g., when the time dimension's length is
-#' insufficient for estimating the heterogeneous model).  If the time
-#' dimension is insufficient and `model=NULL`, the function defaults
+#' unit in order to check for cross--sectional dependence (`model = NULL`).
+#' If a different model specification (`model = "within"`, `"random"`, 
+#' \ldots{}) is assumed consistent, one can resort to its residuals for
+#' testing (which is common, e.g., when the time dimension's length is
+#' insufficient for estimating the heterogeneous model).
+#' 
+#' If the time
+#' dimension is insufficient and `model = NULL`, the function defaults
 #' to estimation of a `within` model and issues a warning. The main
 #' argument of this function may be either a model of class
-#' `panelmodel` or a `formula` and `dataframe`; in the second case,
+#' `panelmodel` or a `formula` and `data frame`; in the second case,
 #' unless `model` is set to `NULL`, all usual parameters relative to
 #' the estimation of a `plm` model may be passed on. The test is
 #' compatible with any consistent `panelmodel` for the data at hand,
-#' with any specification of `effect`. E.g., specifying
-#' `effect="time"` or `effect="twoways"` allows to test for residual
-#' cross-sectional dependence after the introduction of time fixed
-#' effects to account for common shocks.
+#' with any specification of `effect` (except for `test = "bcsclm"` which
+#' requires a within model with either individual or two-ways effect).
+#' E.g., specifying  `effect = "time"` or `effect = "twoways"` allows
+#' to test for residual cross-sectional dependence after the introduction
+#' of time fixed effects to account for common shocks.
 #' 
 #' A **local** version of either test can be computed by supplying a
 #' proximity matrix (elements coercible to `logical`) with argument
@@ -117,8 +120,8 @@
 #'     `as.logical()` is evaluated for neighbouring information (but
 #'     `w` can be symmetric). See also **Details** and
 #'     **Examples**,
-#' @param \dots further arguments to be passed on to `plm`, such as
-#'     `effect` or `random.method`.
+#' @param \dots further arguments to be passed on for model estimation to `plm`,
+#'    such as `effect` or `random.method`.
 #' @return An object of class `"htest"`.
 #' @export
 #' @references
@@ -175,27 +178,46 @@ pcdtest.formula <- function(x, data, index = NULL, model = NULL,
                             w = NULL, ...) {
     #data <- pdata.frame(data, index = index)
     test <- match.arg(test)
-    if (is.null(model) && test == "bcsclm") stop("for test = 'bcsclm', set argument model = 'within'")
-    mymod <- if (test != "bcsclm") plm(x, data = data, index = index, model = "pooling", ...)
-              else plm(x, data = data, index = index, model = "within", ...)
-    if(is.null(model) && min(pdim(mymod)$Tint$Ti) < length(mymod$coefficients)+1) 
-      {
-        warning("Insufficient number of observations in time to estimate heterogeneous model: using within residuals",
+    if(test == "bcsclm" && (is.null(model) || model != "within"))
+      stop("for test = 'bcsclm', set argument model = 'within'")
+
+    # evaluate formula in parent frame
+    cl <- match.call(expand.dots = TRUE)
+    cl$model  <- if(test != "bcsclm") "pooling" else "within"
+      if(test == "bcsclm") {
+        # check args model and effect for test = "bcsclm"
+        if(is.null(cl$effect)) cl$effect <- "individual" # make default within model is individual within
+        eff <- isTRUE(cl$effect == "individual" || cl$effect == "twoways")
+        if(model != "within" || !eff) stop("for test = 'bcsclm', requirement is model = \"within\" and effect = \"individual\" or \"twoways\"")
+      }
+    names(cl)[2L] <- "formula"
+    m <- match(plm.arg, names(cl), 0L)
+    cl <- cl[c(1L, m)]
+    cl[[1L]] <- as.name("plm")
+    mymod <- eval(cl, parent.frame()) # mymod is either "pooling" or "within" (the latter iff for test = "bcsclm")
+    
+    hetero.spec <- if(is.null(model)) TRUE else FALSE
+    
+    if(hetero.spec && min(pdim(mymod)$Tint$Ti) < length(mymod$coefficients)+1) {
+      warning("Insufficient number of observations in time to estimate heterogeneous model: using within residuals",
             call. = FALSE)
-        model <- "within"
+      hetero.spec <- FALSE
+      model <- "within"
     }
     
     ind0 <- attr(model.frame(mymod), "index")
     tind <- as.numeric(ind0[[2L]])
     ind <- as.numeric(ind0[[1L]])
-    if (is.null(model)) {
-        ## estimate individual regressions one by one
+    
+    if(hetero.spec) {
+        ## estimate individual normal regressions one by one
+        ## (original heterogeneous specification of Pesaran)
         X <- model.matrix(mymod)
         y <- model.response(model.frame(mymod))
         unind <- unique(ind)
         n <- length(unind)
-        ti.res <- vector("list", n)
-        ind.res <- vector("list", n)
+        ti.res   <- vector("list", n)
+        ind.res  <- vector("list", n)
         tind.res <- vector("list", n)
         for (i in 1:n) {
             tX <- X[ind == unind[i], , drop = FALSE]
@@ -207,21 +229,32 @@ pcdtest.formula <- function(x, data, index = NULL, model = NULL,
             tind.res[[i]] <- tind[ind == unind[i]]
         }
         ## make pseries of (all) residuals
-        resdata <- data.frame(ee = unlist(ti.res, use.names = FALSE),
-                              ind = unlist(ind.res, use.names = FALSE),
+        resdata <- data.frame(ee   = unlist(ti.res,   use.names = FALSE),
+                              ind  = unlist(ind.res,  use.names = FALSE),
                               tind = unlist(tind.res, use.names = FALSE))
         pee <- pdata.frame(resdata, index = c("ind", "tind"))
         tres <- pee$ee
-    }
-    else {
-        mymod <- plm(x, data, index = index, model = model, ...)
-        tres <- resid(mymod)
-        unind <- unique(ind)
-        n <- length(unind)
-        t <- min(pdim(mymod)$Tint$Ti)
-        nT <- length(ind)
-        k <- length(mymod$coefficients)
-        }
+    } else {
+      # else case is one of:
+      # a) insufficient number of observations for heterogen. spec. or
+      # b) model specified when function was called (incl. case test = "bcsclm")
+      if(test != "bcsclm") {
+        # Estimate the model specified originally in function call or due to
+        # forced model switch to within model by insufficient number of
+        # observations for heterogen. spec.
+        # (for test = "bcsclm" it is ensured that a within model was already
+        # estimated -> no need to estimate again a within model)
+        cl$model <- model
+        mymod <- eval(cl, parent.frame())
+      }
+      
+      tres <- resid(mymod)
+      unind <- unique(ind)
+      n <- length(unind)
+      t <- min(pdim(mymod)$Tint$Ti)
+      nT <- length(ind)
+      k <- length(mymod$coefficients)
+      }
 
     return(pcdres(tres = tres, n = n, w = w,
                   form = paste(deparse(x)),
