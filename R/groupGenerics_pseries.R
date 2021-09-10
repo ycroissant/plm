@@ -80,6 +80,7 @@ Ops.pseries <- function(e1, e2) {
       #  -> must take index of non-recycled object (= longer pseries)
       #
       # Also, base R uses the names of the first operand -> additional justification
+      # to assign index_e1 in case of same number of rows
       relevant_index <- if (nrow(index_e1) >= nrow(index_e2)) index_e1 else index_e2
       
       # do not warn anymore (since rev. 1181)
@@ -97,7 +98,7 @@ Math.pseries <- function(x, ...) {
 #  print("Math.pseries executed!") # debug output
 
   index <- attr(x, "index")
-  if (inherits(x, "pseries")) x <- remove_pseries_features(x)
+  x <- remove_pseries_features(x)
   
   x <- get(.Generic)(x, ...)
   x <- add_pseries_features(x, index)
@@ -109,7 +110,7 @@ Complex.pseries <- function(z) {
 #  print("Complex.pseries executed!") # debug output
 
   index <- attr(z, "index")
-  if (inherits(z, "pseries")) z <- remove_pseries_features(z)
+  z <- remove_pseries_features(z)
 
   z <- get(.Generic)(z)
   z <- add_pseries_features(z, index)
