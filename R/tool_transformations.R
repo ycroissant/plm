@@ -382,7 +382,7 @@ Sum.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
   
     effect <- match.arg(effect)
     #   Tapply(x, effect, sum, ...)
-    # myave.pseries takes are of checking the index for NAs
+    # myave.pseries takes care of checking the index for NAs
     return(myave(x, effect, sum, ...))
 }
 
@@ -438,7 +438,7 @@ Between.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
   
     effect <- match.arg(effect)
     #   Tapply(x, effect = effect, mean, ...)
-    # myave.pseries takes are of checking the index for NAs
+    # myave.pseries takes care of checking the index for NAs
     return(myave(x, effect = effect, mean, ...))
 }
 
