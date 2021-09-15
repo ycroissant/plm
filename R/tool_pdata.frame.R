@@ -467,48 +467,58 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 #  attr(a, "index") <- "some_index_attribute"
 #  a[[3]] # drops names and attribute (a[3] keeps names and drops other attributes)
 
-#' @rdname pdata.frame
-#' @export
-"[.pseries" <- function(x, ...) {
-
- ## use '...' instead of only one specific argument, because subsetting for
- ## factors can have argument 'drop', e.g., x[i, drop=TRUE] see ?Extract.factor
-  index <- attr(x, "index")
-  
-  ## two sanity checks as [.pseries-subsetting was introduced in Q3/2021 and some packages
-  ## produced illegal pseries (these pkg errors were fixed by new CRAN releases but maybe
-  ## other code outhere produces illegal pseries, so leave these sanity checks in here for
-  ## a while, then remove (for speed)
-    if(is.null(index)) warning("pseries object with is.null(index(pseries)) == TRUE encountered")
-    if(!is.null(index) && !is.index(index)) warning(paste0("pseries object has illegal index with class(index) == ", paste0(class(index), collapse = ", ")))
-  
-  names_orig <- names(x)
-  keep_rownr <- seq_along(x) # full length row numbers original pseries
-  names(keep_rownr) <- names_orig
-
-  if(is.null(names_orig)) {
-    names(x) <- keep_rownr # if no names are present, set names as integer sequence to identify rows to keep later
-    names(keep_rownr) <- keep_rownr
-  }
-  x <- remove_pseries_features(x)
-  result <- x[...] # actual subsetting
-
-  # identify rows to keep in the index:
-  keep_rownr <- keep_rownr[names(result)] # row numbers to keep after subsetting
-  names(result) <- if(!is.null(names_orig)) names_orig[keep_rownr] else NULL # restore and subset original names if any
-
-  # Subset index accordingly:
-  # Check if index is null is a workaround for R's data frame subsetting not
-  # stripping class pseries but its attributes for factor (for other data types, pseries class is dropped)
-  # see https://bugs.r-project.org/bugzilla/show_bug.cgi?id=18140
-  if (!is.null(index)) {
-    index <- index[keep_rownr, ]
-    index <- droplevels(index) # drop unused levels (like in subsetting of pdata.frames)
-  }
-
-  result <- add_pseries_features(result, index)
-  return(result)
-}
+##### [.pseries is commented because it leads to headache when dplyr is loaded
+### boiled down to pkg vctrs https://github.com/r-lib/vctrs/issues/1446
+### R.utils::detachPackage("dplyr")
+### test_pure <- pcdtest(diff(log(price)) ~ diff(lag(log(price))) + diff(lag(log(price), 2)), data = php)
+###
+### library(dplyr) # first one will error with [.pseries, for plm 2.4-1 it gives a wrong result (lag is hijacked -> known case)
+### test_dplyr        <- pcdtest(diff(price) ~ diff(lag(price)), data = php)
+### test_dplyr_plmlag <- pcdtest(diff(log(price)) ~ diff(plm::lag(log(price))) + diff(plm::lag(log(price), 2)), data = php) # save way
+##
+##
+## @rdname pdata.frame
+## @export
+# "[.pseries" <- function(x, ...) {
+# 
+#  ## use '...' instead of only one specific argument, because subsetting for
+#  ## factors can have argument 'drop', e.g., x[i, drop=TRUE] see ?Extract.factor
+#   index <- attr(x, "index")
+#   
+#   ## two sanity checks as [.pseries-subsetting was introduced in Q3/2021 and some packages
+#   ## produced illegal pseries (these pkg errors were fixed by new CRAN releases but maybe
+#   ## other code outhere produces illegal pseries, so leave these sanity checks in here for
+#   ## a while, then remove (for speed)
+#     if(is.null(index)) warning("pseries object with is.null(index(pseries)) == TRUE encountered")
+#     if(!is.null(index) && !is.index(index)) warning(paste0("pseries object has illegal index with class(index) == ", paste0(class(index), collapse = ", ")))
+#   
+#   names_orig <- names(x)
+#   keep_rownr <- seq_along(x) # full length row numbers original pseries
+#   names(keep_rownr) <- names_orig
+# 
+#   if(is.null(names_orig)) {
+#     names(x) <- keep_rownr # if no names are present, set names as integer sequence to identify rows to keep later
+#     names(keep_rownr) <- keep_rownr
+#   }
+#   x <- remove_pseries_features(x)
+#   result <- x[...] # actual subsetting
+# 
+#   # identify rows to keep in the index:
+#   keep_rownr <- keep_rownr[names(result)] # row numbers to keep after subsetting
+#   names(result) <- if(!is.null(names_orig)) names_orig[keep_rownr] else NULL # restore and subset original names if any
+# 
+#   # Subset index accordingly:
+#   # Check if index is null is a workaround for R's data frame subsetting not
+#   # stripping class pseries but its attributes for factor (for other data types, pseries class is dropped)
+#   # see https://bugs.r-project.org/bugzilla/show_bug.cgi?id=18140
+#   if (!is.null(index)) {
+#     index <- index[keep_rownr, ]
+#     index <- droplevels(index) # drop unused levels (like in subsetting of pdata.frames)
+#   }
+# 
+#   result <- add_pseries_features(result, index)
+#   return(result)
+# }
 
 ## Non-exported internal function for subsetting of pseries. Can be used
 ## internally. 

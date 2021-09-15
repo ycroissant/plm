@@ -25,14 +25,6 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 ### Features:
  * phansi: new function for Simes (1986) test applied to panels for panel unit
    root testing, as suggested in Hanck (2013).
- * [.pseries: implemented method to allow subsetting on pseries while retaining
-   the pseries properties, i.e., `your_pseries[<subsetting condition>]`
-   remains a pseries (before, subsetting on pseries worked as the base R
-   subsetting for vectors was used but the pseries properties were lost). The
-   subsetting method currently checks for valid pseries features and warns for
-   non-valid ones (as some packages constructed non-valid pseries objects, e.g., 
-   with no or null index). By this, more things are pseries and some code
-   out there might not expect to encounter a pseries.
  * pseriesfy: new function to make each column of a pdata.frame a pseries, see
    `?pseriesfy` for background and useful examples. (Faster version is executed
    if `options("plm.fast" = TRUE)` is set, see `?plm.fast` (then internally
