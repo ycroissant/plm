@@ -4,8 +4,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
           panel data econometrics - https://cran.r-project.org/package=plm
 ---
 
-# Development version, to become 2.4-2
-# plm 2.4-1.99999
+# plm 2.4-2
 
 ### Speed-up:
  * "Fast mode" is not yet the default. To enable, set
