@@ -34,6 +34,8 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
    again (this reverts a change introduced in 2.4-0, there called a fix introducing
    the order of the appearance in the data which is actually not desirable). Change
    is relevant in specific unbalanced data constellations.
+ * fixef: for two-ways FE models, fixef does not error anymore if factor is in
+   model and not anymore in IV case.
  * vcovG (hence vcovHC, vcovDC, vcovNW, vcovSCC) and vcovBK: fix bug in case
    of IV estimation with only one regressor (errored previously).
  * within_intercept:
@@ -43,8 +45,6 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
    input (by using drop = FALSE in extraction) (prior to this fix, estimation
    of the between model with only an intercept errored).
  * pvcm: intercept-only models are now estimable.
- * fixef: for two-ways FE models, fixef does not error anymore if factor is in
-   model and not anymore in IV case.
  * detect.lindep: argument 'suppressPrint' now correctly passed on/respected
    (methods for data frame and matrix).
  * has.intercept.plm: argument 'part' renamed to 'rhs', argument values
@@ -70,7 +70,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
    not print pwaldtest in print.summary.plm/pvcm).
  * mtest:
     * switched to combination of generic and a method for pgmm.
-    * has information information about user-supplied vcov in its return value's
+    * has information about user-supplied vcov in its return value's
       method slot (vcov information thus printed as well).
  * various print methods now return the input object invisible (before returned
    NULL).
