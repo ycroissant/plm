@@ -11,8 +11,8 @@
 data econometrics. It provides:
 
 - an enhanced data frame, called pdata.frame, to deal with data sets for which observations are identified by a combination of two indexes,
-- a set of functions to estimate models (especially plm for linear panel models and pgmm for general method of moments estimators applied to panel data),
-- a set of testing functions,
+- a set of functions to estimate models (especially `plm` for linear panel models and `pgmm` for general method of moments estimators applied to panel data),
+- a set of testing functions (model specification, serial correlation, cross-sectional dependence, panel unit root, panel Granger (non-)causality),
 - a set of robust covariance matrix estimators.
 
 To install the released version from **CRAN**:
