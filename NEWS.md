@@ -10,7 +10,22 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 
 * list of changes (none so far)
 
-
+* planned:
+  * make fast mode the default by setting via package's .onAttach mechanism
+  `options("plm.fast" = TRUE)`, so whenever package plm is attached, fast mode
+  is enabled. slight documentation adjustment necessary. Fast mode can be switched
+  off by setting `options("plm.fast" = FALSE)` either in the command line, in scripts,
+  or via `.Rprofile` file. Recommendation is to have package `fixest` installed as
+  well to benefit from further speed up for two-ways fixed effect calculations.
+ 
+ * introduce 'na.rm' argument for Within(), Sum() etc. doing row-wise NA dropping
+   prior to data transformation (instead of passing on any na.rm argument in 
+   ellipsis ("dots": `...`) to base R functions (like mean, sum, ...) resulting 
+   in column-wise NA removal); thus output can diverges relative
+  to previous versions if NAs are present in input (e.g., result is guaranteed
+  to be NA-free and can have smaller dimensions/shorter length).
+ 
+ 
 # plm 2.4-2
 
 ### Speed-up:
@@ -21,11 +36,11 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
    plm (then making package `collapse` a hard dependency).
  * Further speed-up if `options("plm.fast" = TRUE)` is set: In case package
    `fixest` or `lfe` is available locally *in addition* to package `collapse`,
-   the two-ways fixed transformation is significantly faster compared to the case
-   if only `collapse` is available due to specialised algorithms in these two packages,
-   all being fully integrated into the usual plm functions/user interfaces
-   (`fixest` is preferred over `lfe`, in this case, plm uses internally
-   `collapse::fhdwithin` which in turn uses `fixest::demean`. Thanks to Sebastian
+   the two-ways fixed effect transformation is significantly faster compared to 
+   the case if only `collapse` is available due to specialised algorithms in these
+   two packages, all being fully integrated into the usual plm functions/user
+   interfaces (`fixest` is preferred over `lfe`, in this case, plm uses internally
+   `collapse::fhdwithin` which in turn uses `fixest::demean`). Thanks to Sebastian
    Krantz for guidance on this.
 
 ### Features:
@@ -104,7 +119,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
   
   
 ### Dependencies:
- * Added packages 'fixest' and 'lfe' to 'Suggests'.
+ * Added packages `fixest` and `lfe` to 'Suggests'.
 
 # plm 2.4-1
 
