@@ -1192,11 +1192,11 @@ phansi <- function(object, alpha = 0.05) {
   is.purtest <- if(inherits(object, "purtest")) TRUE else FALSE
   if(!is.purtest) {
     if(is.numeric(object)) {
-      if(anyNA(object)) stop("input p-values 'p' contain at least one NA/NaN value")
+      if(anyNA(object)) stop("input p-values in 'object' contain at least one NA/NaN value")
       n <- length(object)
       p <- object
     } else {
-      stop("argument 'p' needs to specify either a 'purtest' object or a numeric")
+      stop("argument 'object' needs to specify either a 'purtest' object or a numeric")
     }
   } else {
     # purtest object
@@ -1209,7 +1209,7 @@ phansi <- function(object, alpha = 0.05) {
   names(id) <- if(!is.null(names(p))) names(p) else id
   
   p.hommel <- p.adjust(p, method = "hommel")
-  rejected.ind <- p.hommel <= alpha    # TRUE for individual-H0-rejected individuals
+  rejected.ind <- p.hommel <= alpha    # is TRUE for individual-H0-rejected individuals
   rejected.ind.no <- sum(rejected.ind) # number of rejected individuals
   
   res <- structure(list(id           = id,
