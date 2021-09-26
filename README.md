@@ -21,10 +21,8 @@ To install the released version from **CRAN**:
 
 The package's CRAN website is https://cran.r-project.org/package=plm.
 
-To install the development version from **R-Forge**:
+To install the development version from **GitHub**:
 
-`install.packages("plm", repos = 'http://R-Forge.R-project.org')`
+`devtools::install_github("ycroissant/plm")`
 
-The development of package `plm` currently takes place on R-Forge in a SVN repository: https://r-forge.r-project.org/R/?group_id=406.
-However, in GitHub's `plm` repository, GitHub's issue tracker is used for the package (but nothing else, currently).
-Here is an independent full R-Forge read-only mirror on GitHub, so the source code of plm can be conveniently browsed there: https://github.com/r-forge/plm.
+The development of package `plm` takes place on GitHub at https://github.com/ycroissant/plm

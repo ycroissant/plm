@@ -8,9 +8,12 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 # Development version, to become (likely) 2.6
 # plm 2.4-2.9000
 
-* list of changes (none so far)
+### Admin
+* Source code repository for development is now on GitHub https://github.com/ycroissant/plm,
+  not on R-Forge anymore.
+  
 
-* planned:
+### Planned (but not implemented yet)
   * make fast mode the default by setting via package's .onAttach mechanism
   `options("plm.fast" = TRUE)`, so whenever package plm is attached, fast mode
   is enabled. slight documentation adjustment necessary. Fast mode can be switched
