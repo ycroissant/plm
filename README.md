@@ -6,14 +6,31 @@
 [![Downloads](https://cranlogs.r-pkg.org/badges/plm)](https://CRAN.R-project.org/package=plm)
 <!-- badges: end -->
 
+# About
 
-`plm`, first posted on **CRAN** in 2006, is an **R** package for panel
-data econometrics. It provides:
+`plm` is a package for panel data econometrics for the **R** statistical computing
+environment. It was first published on **CRAN** in 2006.
 
-- an enhanced data frame, called pdata.frame, to deal with data sets for which observations are identified by a combination of two indexes,
-- a set of functions to estimate models (especially `plm` for linear panel models and `pgmm` for general method of moments estimators applied to panel data),
-- a set of testing functions (model specification, serial correlation, cross-sectional dependence, panel unit root, panel Granger (non-)causality),
+It includes:
+
+- a set of functions to estimate models:
+  - `plm`: panel data estimators, incl. instrumental-variable estimation (IV).
+  - `pvcm`: variable coefficients models,
+  - `pgmm`: generalized method of moments (GMM) estimation for panel data,
+  - `pggls`: estimation of general feasible generalized least squares models,
+  - `pmg`: mean groups (MG), demeaned MG and common correlated effects (CCEMG) estimators,
+  - `pcce`: estimators for common correlated effects mean groups (CCEMG) and pooled (CCEP) for panel data with common factors,
+  - `pldv`: panel estimators for limited dependent variables.
+
+- a set of testing functions (model specification, serial correlation, 
+  cross-sectional dependence, panel unit root, panel Granger (non-)causality),
+  
 - a set of robust covariance matrix estimators.
+
+- an enhanced data frame, called `pdata.frame`, to deal with data sets for which 
+  observations are identified by a combination of two indexes,
+
+# Installation
 
 To install the released version from **CRAN**:
 
