@@ -1,4 +1,6 @@
-# The `plm` Package: Linear Models and Tests for Panel Data 
+---
+title: The `plm` Package - Linear Models and Tests for Panel Data 
+---
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/plm)](https://CRAN.R-project.org/package=plm)
