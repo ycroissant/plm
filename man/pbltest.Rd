@@ -64,7 +64,7 @@ pbltest(re_mod, alternative = "onesided")
 \insertRef{BALT:LI:97}{plm}
 }
 \seealso{
-\code{\link[=pdwtest]{pdwtest()}}, \code{bgtest},
+\code{\link[=pdwtest]{pdwtest()}}, \code{\link[=pbnftest]{pbnftest()}}, \code{\link[=pbgtest]{pbgtest()}},
 \code{\link[=pbsytest]{pbsytest()}}, \code{\link[=pwartest]{pwartest()}} and
 \code{\link[=pwfdtest]{pwfdtest()}} for other serial correlation tests for
 panel models.

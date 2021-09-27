@@ -1065,7 +1065,7 @@ pbnftest.formula <- function(x, data, test = c("bnf", "lbi"), model = c("pooling
 #' @return An object of class `"htest"`.
 #' @export
 #' @author Giovanni Millo
-#' @seealso [pdwtest()], `bgtest`,
+#' @seealso [pdwtest()], [pbnftest()], [pbgtest()],
 #'     [pbsytest()], [pwartest()] and
 #'     [pwfdtest()] for other serial correlation tests for
 #'     panel models.
