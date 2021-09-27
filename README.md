@@ -6,7 +6,7 @@
 [![Downloads](https://cranlogs.r-pkg.org/badges/plm)](https://CRAN.R-project.org/package=plm)
 <!-- badges: end -->
 
-# About
+## About
 
 `plm` is a package for panel data econometrics for the **R** statistical computing
 environment. It was first published on **CRAN** in 2006.
@@ -43,7 +43,7 @@ It includes (non-exhaustive overview):
   observations are identified by a combination of two indexes, and panel data 
   transformation functions (e.g, `Within`, `Between`, `lag`, `lead`, `diff`).
 
-# Installation
+## Installation
 
 To install the released version from **CRAN**:
 
