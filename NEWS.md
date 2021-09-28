@@ -102,7 +102,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
    NULL).
  * various efficiency gains throughout the package by using more vapply(),
    crossprod(), lm.fit(), better branching, rowSums(., dims = 2L) (instead of 
-   apply(., 1:2, sum))), etc., e.g., in plm for non-default random IV cases 
+   apply(., 1:2, sum)), etc., e.g., in plm for non-default random IV cases 
    (cases with `inst.method = "baltagi"` / `"am"` / `"bms"`), pmg, pcce, purtest.
  * piest, aneweytest: now use internal demeaning framework by Within() [thus
    benefiting from fast mode].
