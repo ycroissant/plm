@@ -9,22 +9,25 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 ### Admin
 * Source code repository for development is now on GitHub https://github.com/ycroissant/plm,
   not on R-Forge anymore.
+* Update one author's email address.
   
 
 ### Planned (but not implemented yet)
   * make fast mode the default by setting via package's .onAttach mechanism
-  `options("plm.fast" = TRUE)`, so whenever package plm is attached, fast mode
-  is enabled. slight documentation adjustment necessary. Fast mode can be switched
-  off by setting `options("plm.fast" = FALSE)` either in the command line, in scripts,
-  or via `.Rprofile` file. Recommendation is to have package `fixest` installed as
-  well to benefit from further speed up for two-ways fixed effect calculations.
+   `options("plm.fast" = TRUE)`, so whenever package plm is attached, fast mode
+   is enabled. slight documentation adjustment necessary. Fast mode can be switched
+   off by setting `options("plm.fast" = FALSE)` either in the command line, in scripts,
+   or via `.Rprofile` file. Recommendation is to have package `fixest` installed as
+   well to benefit from further speed up for two-ways fixed effect calculations.
  
  * introduce 'na.rm' argument for Within(), Sum() etc. doing row-wise NA dropping
    prior to data transformation (instead of passing on any na.rm argument in 
    ellipsis ("dots": `...`) to base R functions (like mean, sum, ...) resulting 
    in column-wise NA removal); thus output can diverges relative
-  to previous versions if NAs are present in input (e.g., result is guaranteed
-  to be NA-free and can have smaller dimensions/shorter length).
+   to previous versions if NAs are present in input (e.g., result is guaranteed
+   to be NA-free and can have smaller dimensions/shorter length).
+
+ * add [.pseries (pseries subsetting)
  
  
 # plm 2.4-2
