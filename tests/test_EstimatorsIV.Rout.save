@@ -1,5 +1,5 @@
 
-R version 4.1.0 (2021-05-18) -- "Camp Pontanezen"
+R version 4.1.1 (2021-08-10) -- "Kick Things"
 Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -1132,6 +1132,9 @@ Chisq: 2471.83 on 5 DF, p-value: < 2.22e-16
 > IVbms_ubal <- plm(form_wage_iv2,
 +              data = pWages_ubal,
 +              model = "random", inst.method = "bms")
+> 
+> ## IGNORE_RDIFF_BEGIN
+> 
 > summary(IVbms_ubal)
 Oneway (individual) effect Random Effect Model 
    (Swamy-Arora's transformation)
@@ -1556,6 +1559,9 @@ Chisq: 1474.18 on 5 DF, p-value: < 2.22e-16
 > # texreg::screenreg(list("BVK tw" = IVbvktw, "Baltagi tw" = IVbalttw, "AM tw" = IVamtw, "BMS tw" = IVbmstw),
 > #                   digits = 5)
 > 
+> 
+> ## IGNORE_RDIFF_END
+> 
 > proc.time()
    user  system elapsed 
-  10.45    0.18   10.65 
+  11.37    0.48   11.85 
