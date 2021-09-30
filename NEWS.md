@@ -4,7 +4,12 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
           panel data econometrics - https://cran.r-project.org/package=plm
 ---
 
-# plm 2.4-2.9000 - development version, to become (likely) 2.6
+# plm 2.4-3
+
+* Release to pacify CRAN additional checks with various BLAS implementations/platforms:
+  Comment parts of a test files with ## IGNORE_RDIFF_BEGIN/END to ignore small
+  numerical differences vs. .Rout.save output across BLASes/platforms.
+
 
 ### Admin
 * Source code repository for development is now on GitHub https://github.com/ycroissant/plm,
@@ -12,24 +17,6 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 * Update one author's e-mail address.
   
 
-### Planned changes (but not implemented yet)
-  * make fast mode the default by setting via package's .onAttach mechanism
-   `options("plm.fast" = TRUE)`, so whenever package plm is attached, fast mode
-   is enabled. slight documentation adjustment necessary. Fast mode can be switched
-   off by setting `options("plm.fast" = FALSE)` either in the command line, in scripts,
-   or via `.Rprofile` file. Recommendation is to have package `fixest` installed as
-   well to benefit from further speed up for two-ways fixed effect calculations.
- 
- * introduce 'na.rm' argument for Within(), Sum() etc. doing row-wise NA dropping
-   prior to data transformation (instead of passing on any na.rm argument in 
-   ellipsis ("dots": `...`) to base R functions (like mean, sum, ...) resulting 
-   in column-wise NA removal); thus output can diverges relative
-   to previous versions if NAs are present in input (e.g., result is guaranteed
-   to be NA-free and can have smaller dimensions/shorter length).
-
- * add [.pseries (pseries subsetting)
- 
- 
 # plm 2.4-2
 
 ### Speed-up:
@@ -82,7 +69,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
    this does not warn anymore:
    `your_pseries[1:(length(your_pseries)-1)] + your_pseries[2:length(your_pseries)]`).
 
-## Others:
+### Others:
  * plm: for the nested random effect model (`effect = "nested"`), check if
     argument `model = "random"` is set, if not, plm now warns and adjusts 
     accordingly (will become an error in the future).
