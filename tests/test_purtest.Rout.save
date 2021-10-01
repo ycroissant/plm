@@ -44,6 +44,8 @@ chisq = 14.719, df = 20, p-value = 0.7923
 alternative hypothesis: stationarity
 
 > 
+> ## IGNORE_RDIFF_BEGIN
+> 
 > summary(a1 <- purtest(pG$inv, lags = "SIC", exo = "intercept", test = "ips", pmax = 8)) # TODO: why is the data requirement check not triggered
 Im-Pesaran-Shin Unit-Root Test 
 Exogenous variables: Individual Intercepts 
@@ -187,7 +189,6 @@ alternative hypothesis: stationarity
 > h_4.1 <- purtest(pG$value, exo = "trend", test = "hadri")
 > h_4.2 <- purtest(pG$value, exo = "trend", test = "hadri", dfcor = TRUE)
 > 
-> ## IGNORE_RDIFF_BEGIN
 > summary(h_1.1)
 Hadri Test 
 Exogenous variables: Individual Intercepts 
@@ -324,7 +325,7 @@ p-value: 0
  [8,] 0.14726115  23609.51281
  [9,] 0.13901919   4257.84081
 [10,] 0.08613879     79.01116
-> ## IGNORE_RDIFF_END
+> 
 > 
 > ### IPS (2003) test
 > ## use dfcor = TRUE to match gretl 2017c and EViews 9.5 exactly
@@ -681,6 +682,7 @@ p-value: 0.004
 9     0  19 -0.4875576 -2.3614046 0.400000183   3009.0288    767.5460
 10    0  19 -0.7854102 -3.4617227 0.043582736     69.7076     21.5264
 > 
+> ## IGNORE_RDIFF_END
 > 
 > ## Simes Test for panels by Hanck
 > phansi(llc)
@@ -847,4 +849,4 @@ Evaluation:
 > 
 > proc.time()
    user  system elapsed 
-   4.42    0.40    4.81 
+   3.28    0.32    3.54 
