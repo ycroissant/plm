@@ -771,12 +771,12 @@ pseriesfy <- function(x,  ...) {
 NULL
 
 
-txt.no.collapse <- paste0("options(\"plm.fast\") is set to TRUE but package 'collapse'",
-                          "is not available which is needed for fast data transformation functions.",
-                          "Either set 'options(\"plm.fast\" = FALSE)' or install the",
-                          "missing package, e.g., with 'install.packages(\"collapse\")'.\n",
+txt.no.collapse <- paste0("options(\"plm.fast\") is set to TRUE but package 'collapse' ",
+                          "is not available which is needed for fast data transformation functions. ",
+                          "Either set 'options(\"plm.fast\" = FALSE)' or install the ",
+                          "missing package, e.g., with 'install.packages(\"collapse\")'. \n",
                           "Having additionally package 'fixest' or 'lfe' installed ",
-                          "will speed up the two-way fixed effect case further.\n",
+                          "will speed up the two-way fixed effect case further. \n",
                           "Availability of packages is determined only when ",
                           "plm is attached, so restart R/reload plm when mentioned ",
                           "packages have been installed.")
