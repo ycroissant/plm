@@ -7,6 +7,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 # plm 2.4-3
 
 * Release to pacify CRAN additional checks with various BLAS implementations/platforms:
+  Checks moaned about neglectable small numerical differences vs. .Rout.save output.
   Moved almost all test files to inst/tests so they are not run on CRAN.
   These can be run either manually or by `R CMD check --test-dir=inst/tests plm_*ver*.tar.gz.`
 
