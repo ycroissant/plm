@@ -1,7 +1,7 @@
 ---
 title: Changelog/NEWS for package plm
 subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
-          panel data econometrics - https://cran.r-project.org/package=plm
+          panel data econometrics - <https://cran.r-project.org/package=plm>
 ---
 
 ***
@@ -32,7 +32,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
   These can be run manually and by `R CMD check --test-dir=inst/tests plm_VERSION.tar.gz.`
 
 ### Admin
-* Source code repository for development is now on GitHub https://github.com/ycroissant/plm,
+* Source code repository for development is now on GitHub <https://github.com/ycroissant/plm>,
   not on R-Forge anymore.
 * Update one author's e-mail address.
 
@@ -187,7 +187,7 @@ plm()): Between, between, Sum, Within.
   unbalanced panels by weighting of the fixed effects (Cottrell (2017)).
 * Sum: is now exported.
 * DESCRIPTION file: added line BugReports pointing to a GitHub repository which is
-  currently only used for GitHub's issue tracker feature (https://github.com/ycroissant/plm/issues).
+  currently only used for GitHub's issue tracker feature (<https://github.com/ycroissant/plm/issues>).
   [Since version 2.4-3, GitHub is also used as the development platform hosting 
   the package's source code.]
 
@@ -302,7 +302,7 @@ plm()): Between, between, Sum, Within.
 ### Minor items:
    * print.fixef: respects / forwards arguments supplied to generic print method.
    * Grunfeld data doc: URL for overview of various Grunfeld data sets updated to
-     https://eeecon.uibk.ac.at/~zeileis/grunfeld/. 
+     <https://eeecon.uibk.ac.at/~zeileis/grunfeld/>. 
 
 ### Dependencies:
    * Package 'urca' added to "Suggests".
