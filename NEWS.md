@@ -49,18 +49,20 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
    the order of the appearance in the data which is actually not desirable). Change
    is relevant in specific unbalanced data constellations.
  * fixef: for two-ways FE models, fixef does not error anymore if factor is in
-   model and not anymore in IV case.
+   model and not anymore in IV case ([#10](https://github.com/ycroissant/plm/issues/10)).
  * vcovG (hence vcovHC, vcovDC, vcovNW, vcovSCC) and vcovBK: fix bug in case
-   of IV estimation with only one regressor (errored previously).
+   of IV estimation with only one regressor (errored previously) 
+   ([#4](https://github.com/ycroissant/plm/issues/4)).
  * within_intercept:
-     * fix bug which caused an error for FE models with only one regressor.
+     * fix bug which caused an error for FE models with only one regressor 
+     ([#4](https://github.com/ycroissant/plm/issues/4)).
      * error informatively for IV models as not suitable.
  * between.matrix: do not coerce result to numeric vector for n x 1 matrix
    input (by using drop = FALSE in extraction) (prior to this fix, estimation
    of the between model with only an intercept errored).
  * pvcm: intercept-only models are now estimable.
  * detect.lindep: argument 'suppressPrint' now correctly passed on/respected
-   (methods for data frame and matrix).
+   (methods for data frame and matrix) ([#11](https://github.com/ycroissant/plm/issues/11)).
  * has.intercept.plm: argument 'part' renamed to 'rhs', argument values
    (integer or NULL) aligned with and correctly passed on to 
    has.intercept.Formula (with a *temporary* back-compatible solution).
@@ -116,7 +118,8 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 # plm 2.4-1
 
  * lag: fix export of generic for lag (lost in 2.4-0; the panel-specific lag
-   method was executed anyway if base R's lag() encountered a pseries).
+   method was executed anyway if base R's lag() encountered a pseries) 
+   ([#3](https://github.com/ycroissant/plm/issues/3)).
  * model.frame.pdata.frame: errors informatively if any index dimension has
    NA values.
  * pdata.frame: warns if NA in index dimension is encountered (before, only
