@@ -684,7 +684,12 @@ pseriesfy <- function(x,  ...) {
 #' effects are #' used (`fixest::demean` (via `collapse::fhdwithin`), 
 #' `lfe::demeanlist`). Both packages are 'Suggests' dependencies.
 #' 
-#' Currently, these functions benefit from the speed-up (more functions are
+#' Users might experience neglectable numerical differences between enabled and
+#' disabled fast mode and base R implementation, depending on the platform and 
+#' the additional packages installed.
+#' 
+#' Currently, these basic functions benefit from the speed-up, used as building 
+#' blocks in most model estimation functions, e.g., in `plm` (more functions are
 #' under investigation):
 #' \itemize{
 #'   \item between,
