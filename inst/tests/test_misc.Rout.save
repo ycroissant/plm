@@ -1,0 +1,1810 @@
+
+R version 4.1.1 (2021-08-10) -- "Kick Things"
+Copyright (C) 2021 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(plm)
+> data("Grunfeld", package = "plm")
+> Grunfeld_unbal <- Grunfeld[1:199, ]
+> # ercomp(plm(inv ~ value, Grunfeld, model = "random"))
+> # ercomp(plm(inv ~ value, Grunfeld, model = "random", random.method = "amemiya"))
+> # ercomp(plm(inv ~ value + capital, Grunfeld_unbal, model = "random"))
+> 
+> 
+> # these resulted in errors pre rev. 523 due to missing drop = FALSE
+> plm(inv ~ value, Grunfeld_unbal, model = "random", random.method = "amemiya")
+
+Model Formula: inv ~ value
+
+Coefficients:
+(Intercept)       value 
+  -40.07159     0.17196 
+
+> plm(inv ~ value, Grunfeld_unbal, model = "random", random.method = "amemiya", effect = "time")
+
+Model Formula: inv ~ value
+
+Coefficients:
+(Intercept)       value 
+   -6.26072     0.14083 
+
+> 
+> 
+> # test case for illegal pseries in pmerge's return value:
+> # up to rev. 675, pmerge produced a data.frame with a column declared to be a pseries but with lacking index,
+> # and there should be no 'pseries' in the resulting data.frame in first place
+> pGrunfeld <- pdata.frame(Grunfeld)
+> df_after_pmerge <- plm:::pmerge(pGrunfeld$inv, pGrunfeld$value)
+> if (inherits(df_after_pmerge$ind, "pseries") && is.null(attr(df_after_pmerge$ind, "index"))) stop("illegal pseries (no index) produced by pmerge")
+> if ("pseries" %in% unlist(lapply(df_after_pmerge, class))) stop("pmerge returned a column with pseries")
+> if (!"data.frame" == class(df_after_pmerge)) stop("pmerge did not return a pure data.frame according to class()")
+> 
+> 
+> # pmodel.response: test case for illegal pseries
+> form <- formula(inv ~ value + capital)
+> if (!is.pseries(pmodel.response(form, data = pGrunfeld, model = "pooling"))) stop("pmodel.response's return value is not a valid pseries")
+> if (!is.pseries(pmodel.response(form, data = pGrunfeld, model = "within"))) stop("pmodel.response's return value is not a valid pseries")
+> if (!is.pseries(pmodel.response(form, data = pGrunfeld, model = "Between"))) stop("pmodel.response's return value is not a valid pseries")
+> if (!is.pseries(pmodel.response(plm(form, data = pGrunfeld, model = "random")))) stop("pmodel.response's return value is not a valid pseries")
+> # for FD and between models, it should be a numeric as a pseries does not make sense due to the data compression
+> if (inherits(pmodel.response(form, data = pGrunfeld, model = "fd"), "pseries")) stop("pmodel.response's return value shall not be a pseries for fd models")
+> if (inherits(pmodel.response(form, data = pGrunfeld, model = "between"), "pseries")) stop("pmodel.response's return value shall not be a pseries for between models")
+> if (plm:::has.index(pmodel.response(plm(form, data = pGrunfeld, model = "fd")))) stop("pmodel.response's return value shall not have an index for fd models")
+> if (plm:::has.index(pmodel.response(plm(form, data = pGrunfeld, model = "between")))) stop("pmodel.response's return value shall not have an index for between models")
+> 
+> 
+> # residuals.plm: test case for illegal pseries 
+> if (!is.pseries(residuals(plm(form, data = pGrunfeld, model = "pooling")))) stop("residuals.plm's return value is not a valid pseries")
+> if (!is.pseries(residuals(plm(form, data = pGrunfeld, model = "within")))) stop("residuals.plm's return value is not a valid pseries")
+> if (!is.pseries(residuals(plm(form, data = pGrunfeld, model = "random")))) stop("residuals.plm's return value is not a valid pseries")
+> # for FD and between models, it should be a numeric as a pseries does not make sense due to the data compression
+> if (inherits(residuals(plm(form, data = pGrunfeld, model = "fd")), "pseries")) stop("residuals.plm's return value shall not be a pseries for fd models")
+> if (inherits(residuals(plm(form, data = pGrunfeld, model = "between")), "pseries")) stop("residuals.plm's return value shall not be a pseries for between models")
+> if (plm:::has.index(residuals(plm(form, data = pGrunfeld, model = "fd")))) stop("residuals.plm's return value shall not have an index for fd models")
+> if (plm:::has.index(residuals(plm(form, data = pGrunfeld, model = "between")))) stop("residuals.plm's return value shall not have an index for between models")
+> 
+> 
+> # fitted.plm: test case for illegal pseries
+> if (!is.pseries(fitted(plm(form, data = pGrunfeld, model = "pooling")))) stop("fitted.plm's return value is not a valid pseries")
+> if (!is.pseries(fitted(plm(form, data = pGrunfeld, model = "within")))) stop("fitted.plm's return value is not a valid pseries")
+> if (!is.pseries(fitted(plm(form, data = pGrunfeld, model = "random")))) stop("fitted.plm's return value is not a valid pseries")
+> # for FD and between models, it should be a numeric as a pseries does not make sense due to the data compression
+> if (inherits(fitted(plm(form, data = pGrunfeld, model = "fd")), "pseries")) stop("fitted.plm's return value shall not be a pseries for fd models")
+> if (inherits(fitted(plm(form, data = pGrunfeld, model = "between")), "pseries")) stop("fitted.plm's return value shall not be a pseries for between models")
+> if (plm:::has.index(fitted(plm(form, data = pGrunfeld, model = "fd")))) stop("fitted.plm's return value shall not have an index for fd models")
+> if (plm:::has.index(fitted(plm(form, data = pGrunfeld, model = "between")))) stop("fitted.plm's return value shall not have an index for between models")
+> 
+> ## WLS
+> p <- plm(inv ~ value, Grunfeld, model = "pooling")
+> pwls <- plm(inv ~ value + capital, data = Grunfeld, weights = Grunfeld$capital, model = "pooling")
+> 
+> if (!is.null(p$weights)) stop("element 'weights' in plm object albeit it should not be there")
+> if (is.null(pwls$weights)) stop("element 'weights' missing in plm object")
+> 
+> ## aneweytest
+> data("RiceFarms", package = "plm")
+> aneweytest(log(goutput) ~ log(seed) + log(totlabor) + log(size), RiceFarms, index = "id")
+
+	Angrist and Newey's test of within model
+
+data:  log(goutput) ~ log(seed) + log(totlabor) + log(size)
+chisq = 141.89, df = 87, p-value = 0.0001851
+alternative hypothesis: within specification does not apply
+
+> 
+> ## piest
+> pirice <- piest(log(goutput) ~ log(seed) + log(totlabor) + log(size), RiceFarms, index = "id")
+> summary(pirice)
+                  Estimate Std. Error z-value  Pr(>|z|)    
+log(seed)        0.1096449  0.0157087  6.9799 2.954e-12 ***
+log(totlabor)    0.2261224  0.0168539 13.4166 < 2.2e-16 ***
+log(size)        0.6575833  0.0226042 29.0912 < 2.2e-16 ***
+log(seed).1      0.1168747  0.0282226  4.1412 3.455e-05 ***
+log(totlabor).1  0.0440505  0.0352284  1.2504 0.2111448    
+log(size).1     -0.2315263  0.0451630 -5.1265 2.952e-07 ***
+log(seed).2     -0.0190152  0.0119321 -1.5936 0.1110215    
+log(totlabor).2 -0.0261597  0.0290088 -0.9018 0.3671718    
+log(size).2      0.0314256  0.0233416  1.3463 0.1781949    
+log(seed).3     -0.0687868  0.0247259 -2.7820 0.0054030 ** 
+log(totlabor).3  0.1221667  0.0294784  4.1443 3.409e-05 ***
+log(size).3      0.0487253  0.0238871  2.0398 0.0413683 *  
+log(seed).4      0.0132149  0.0285666  0.4626 0.6436509    
+log(totlabor).4  0.0526304  0.0272371  1.9323 0.0533221 .  
+log(size).4     -0.0046384  0.0443225 -0.1047 0.9166526    
+log(seed).5     -0.1105456  0.0291603 -3.7910 0.0001501 ***
+log(totlabor).5 -0.2277151  0.0390801 -5.8269 5.647e-09 ***
+log(size).5      0.2376872  0.0437637  5.4311 5.599e-08 ***
+log(seed).6      0.2556306  0.0364290  7.0172 2.263e-12 ***
+log(totlabor).6  0.1535560  0.0354287  4.3342 1.463e-05 ***
+log(size).6     -0.3550436  0.0422203 -8.4093 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+	Chamberlain's pi test
+
+data:  log(goutput) ~ log(seed) + log(totlabor) + log(size)
+chisq = 113.72, df = 87, p-value = 0.02882
+alternative hypothesis: within specification does not apply
+
+> 
+> ## mtest
+> data("EmplUK", package = "plm")
+> ar <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) +
++              lag(log(capital), 0:2) + lag(log(output), 0:2) | lag(log(emp), 2:99),
++            data = EmplUK, effect = "twoways", model = "twosteps")
+> mtest(ar, order = 1)
+
+	Arellano-Bond autocorrelation test of degree 1
+
+data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + lag(log(capital),  ...
+normal = -2.9998, p-value = 0.002702
+alternative hypothesis: autocorrelation present
+
+> mtest(ar, order = 2, vcov = vcovHC)
+
+	Arellano-Bond autocorrelation test of degree 2, vcov: vcovHC
+
+data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + lag(log(capital),  ...
+normal = -0.36744, p-value = 0.7133
+alternative hypothesis: autocorrelation present
+
+> 
+> ## pcdtest
+> pcdtest(inv ~ value + capital, data = Grunfeld,
++         index = c("firm", "year"))
+
+	Pesaran CD test for cross-sectional dependence in panels
+
+data:  inv ~ value + capital
+z = 5.3401, p-value = 9.292e-08
+alternative hypothesis: cross-sectional dependence
+
+> 
+> ## test on two-way fixed effects homogeneous model
+> pcdtest(inv ~ value + capital, data = Grunfeld, model = "within",
++         effect = "twoways", index = c("firm", "year"))
+
+	Pesaran CD test for cross-sectional dependence in panels
+
+data:  inv ~ value + capital
+z = 0.1162, p-value = 0.9075
+alternative hypothesis: cross-sectional dependence
+
+> 
+> ## test on panelmodel object
+> g <- plm(inv ~ value + capital, data = Grunfeld, index = c("firm", "year"))
+> pcdtest(g)
+
+	Pesaran CD test for cross-sectional dependence in panels
+
+data:  inv ~ value + capital
+z = 4.6612, p-value = 3.144e-06
+alternative hypothesis: cross-sectional dependence
+
+> 
+> ## scaled LM test
+> pcdtest(g, test = "sclm")
+
+	Scaled LM test for cross-sectional dependence in panels
+
+data:  inv ~ value + capital
+z = 21.222, p-value < 2.2e-16
+alternative hypothesis: cross-sectional dependence
+
+> 
+> ## test on pseries
+> pGrunfeld <- pdata.frame(Grunfeld)
+> pcdtest(pGrunfeld$value)
+
+	Pesaran CD test for cross-sectional dependence in panels
+
+data:  pGrunfeld$value
+z = 13.843, p-value < 2.2e-16
+alternative hypothesis: cross-sectional dependence
+
+> 
+> ## local test
+> ## define neighbours for individual 2: 1, 3, 4, 5 in lower triangular matrix
+> w <- matrix(0, ncol= 10, nrow=10)
+> w[2,1] <- w[3,2] <- w[4,2] <- w[5,2] <- 1
+> pcdtest(g, w = w)
+
+	Pesaran CD test for local cross-sectional dependence in panels
+
+data:  inv ~ value + capital
+z = -0.87759, p-value = 0.3802
+alternative hypothesis: cross-sectional dependence
+
+> 
+> 
+> ## cortab
+> pGrunfeld <- pdata.frame(Grunfeld)
+> grp <- c(rep(1, 100), rep(2, 50), rep(3, 50)) # make 3 groups
+> cortab(pGrunfeld$value, grouping = grp, groupnames = c("A", "B", "C"))
+          A         B          C
+A 0.5562310        NA         NA
+B 0.5431652 0.5406152         NA
+C 0.3799585 0.2999645 -0.1665637
+> 
+> ## ercomp
+> data("Produc", package = "plm")
+> ercomp(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc,
++        method = "walhus", effect = "time")
+                    var   std.dev share
+idiosyncratic 0.0075942 0.0871449 0.985
+time          0.0001192 0.0109175 0.015
+theta: 0.2448
+> z <- plm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
++          data = Produc, random.method = "walhus",
++          effect = "time", model = "random")
+> ercomp(z)
+                    var   std.dev share
+idiosyncratic 0.0075942 0.0871449 0.985
+time          0.0001192 0.0109175 0.015
+theta: 0.2448
+> ercomp(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc,
++        method = "amemiya", effect = "twoways")
+                    var   std.dev share
+idiosyncratic 0.0011695 0.0341975 0.046
+individual    0.0238635 0.1544780 0.929
+time          0.0006534 0.0255613 0.025
+theta: 0.9464 (id) 0.8104 (time) 0.8084 (total)
+> 
+> ## index
+> data("Grunfeld", package = "plm")
+> Gr <- pdata.frame(Grunfeld, index = c("firm", "year"))
+> m <- plm(inv ~ value + capital, data = Gr)
+> index(Gr, "firm")
+  [1] 1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  2  2  2  2  2 
+ [26] 2  2  2  2  2  2  2  2  2  2  2  2  2  2  2  3  3  3  3  3  3  3  3  3  3 
+ [51] 3  3  3  3  3  3  3  3  3  3  4  4  4  4  4  4  4  4  4  4  4  4  4  4  4 
+ [76] 4  4  4  4  4  5  5  5  5  5  5  5  5  5  5  5  5  5  5  5  5  5  5  5  5 
+[101] 6  6  6  6  6  6  6  6  6  6  6  6  6  6  6  6  6  6  6  6  7  7  7  7  7 
+[126] 7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  8  8  8  8  8  8  8  8  8  8 
+[151] 8  8  8  8  8  8  8  8  8  8  9  9  9  9  9  9  9  9  9  9  9  9  9  9  9 
+[176] 9  9  9  9  9  10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10
+Levels: 1 2 3 4 5 6 7 8 9 10
+> index(Gr, "time")
+  [1] 1935 1936 1937 1938 1939 1940 1941 1942 1943 1944 1945 1946 1947 1948 1949
+ [16] 1950 1951 1952 1953 1954 1935 1936 1937 1938 1939 1940 1941 1942 1943 1944
+ [31] 1945 1946 1947 1948 1949 1950 1951 1952 1953 1954 1935 1936 1937 1938 1939
+ [46] 1940 1941 1942 1943 1944 1945 1946 1947 1948 1949 1950 1951 1952 1953 1954
+ [61] 1935 1936 1937 1938 1939 1940 1941 1942 1943 1944 1945 1946 1947 1948 1949
+ [76] 1950 1951 1952 1953 1954 1935 1936 1937 1938 1939 1940 1941 1942 1943 1944
+ [91] 1945 1946 1947 1948 1949 1950 1951 1952 1953 1954 1935 1936 1937 1938 1939
+[106] 1940 1941 1942 1943 1944 1945 1946 1947 1948 1949 1950 1951 1952 1953 1954
+[121] 1935 1936 1937 1938 1939 1940 1941 1942 1943 1944 1945 1946 1947 1948 1949
+[136] 1950 1951 1952 1953 1954 1935 1936 1937 1938 1939 1940 1941 1942 1943 1944
+[151] 1945 1946 1947 1948 1949 1950 1951 1952 1953 1954 1935 1936 1937 1938 1939
+[166] 1940 1941 1942 1943 1944 1945 1946 1947 1948 1949 1950 1951 1952 1953 1954
+[181] 1935 1936 1937 1938 1939 1940 1941 1942 1943 1944 1945 1946 1947 1948 1949
+[196] 1950 1951 1952 1953 1954
+20 Levels: 1935 1936 1937 1938 1939 1940 1941 1942 1943 1944 1945 1946 ... 1954
+> index(Gr$inv, c(2, 1))
+    year firm
+1   1935    1
+2   1936    1
+3   1937    1
+4   1938    1
+5   1939    1
+6   1940    1
+7   1941    1
+8   1942    1
+9   1943    1
+10  1944    1
+11  1945    1
+12  1946    1
+13  1947    1
+14  1948    1
+15  1949    1
+16  1950    1
+17  1951    1
+18  1952    1
+19  1953    1
+20  1954    1
+21  1935    2
+22  1936    2
+23  1937    2
+24  1938    2
+25  1939    2
+26  1940    2
+27  1941    2
+28  1942    2
+29  1943    2
+30  1944    2
+31  1945    2
+32  1946    2
+33  1947    2
+34  1948    2
+35  1949    2
+36  1950    2
+37  1951    2
+38  1952    2
+39  1953    2
+40  1954    2
+41  1935    3
+42  1936    3
+43  1937    3
+44  1938    3
+45  1939    3
+46  1940    3
+47  1941    3
+48  1942    3
+49  1943    3
+50  1944    3
+51  1945    3
+52  1946    3
+53  1947    3
+54  1948    3
+55  1949    3
+56  1950    3
+57  1951    3
+58  1952    3
+59  1953    3
+60  1954    3
+61  1935    4
+62  1936    4
+63  1937    4
+64  1938    4
+65  1939    4
+66  1940    4
+67  1941    4
+68  1942    4
+69  1943    4
+70  1944    4
+71  1945    4
+72  1946    4
+73  1947    4
+74  1948    4
+75  1949    4
+76  1950    4
+77  1951    4
+78  1952    4
+79  1953    4
+80  1954    4
+81  1935    5
+82  1936    5
+83  1937    5
+84  1938    5
+85  1939    5
+86  1940    5
+87  1941    5
+88  1942    5
+89  1943    5
+90  1944    5
+91  1945    5
+92  1946    5
+93  1947    5
+94  1948    5
+95  1949    5
+96  1950    5
+97  1951    5
+98  1952    5
+99  1953    5
+100 1954    5
+101 1935    6
+102 1936    6
+103 1937    6
+104 1938    6
+105 1939    6
+106 1940    6
+107 1941    6
+108 1942    6
+109 1943    6
+110 1944    6
+111 1945    6
+112 1946    6
+113 1947    6
+114 1948    6
+115 1949    6
+116 1950    6
+117 1951    6
+118 1952    6
+119 1953    6
+120 1954    6
+121 1935    7
+122 1936    7
+123 1937    7
+124 1938    7
+125 1939    7
+126 1940    7
+127 1941    7
+128 1942    7
+129 1943    7
+130 1944    7
+131 1945    7
+132 1946    7
+133 1947    7
+134 1948    7
+135 1949    7
+136 1950    7
+137 1951    7
+138 1952    7
+139 1953    7
+140 1954    7
+141 1935    8
+142 1936    8
+143 1937    8
+144 1938    8
+145 1939    8
+146 1940    8
+147 1941    8
+148 1942    8
+149 1943    8
+150 1944    8
+151 1945    8
+152 1946    8
+153 1947    8
+154 1948    8
+155 1949    8
+156 1950    8
+157 1951    8
+158 1952    8
+159 1953    8
+160 1954    8
+161 1935    9
+162 1936    9
+163 1937    9
+164 1938    9
+165 1939    9
+166 1940    9
+167 1941    9
+168 1942    9
+169 1943    9
+170 1944    9
+171 1945    9
+172 1946    9
+173 1947    9
+174 1948    9
+175 1949    9
+176 1950    9
+177 1951    9
+178 1952    9
+179 1953    9
+180 1954    9
+181 1935   10
+182 1936   10
+183 1937   10
+184 1938   10
+185 1939   10
+186 1940   10
+187 1941   10
+188 1942   10
+189 1943   10
+190 1944   10
+191 1945   10
+192 1946   10
+193 1947   10
+194 1948   10
+195 1949   10
+196 1950   10
+197 1951   10
+198 1952   10
+199 1953   10
+200 1954   10
+> index(m, "id")
+  [1] 1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  2  2  2  2  2 
+ [26] 2  2  2  2  2  2  2  2  2  2  2  2  2  2  2  3  3  3  3  3  3  3  3  3  3 
+ [51] 3  3  3  3  3  3  3  3  3  3  4  4  4  4  4  4  4  4  4  4  4  4  4  4  4 
+ [76] 4  4  4  4  4  5  5  5  5  5  5  5  5  5  5  5  5  5  5  5  5  5  5  5  5 
+[101] 6  6  6  6  6  6  6  6  6  6  6  6  6  6  6  6  6  6  6  6  7  7  7  7  7 
+[126] 7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  8  8  8  8  8  8  8  8  8  8 
+[151] 8  8  8  8  8  8  8  8  8  8  9  9  9  9  9  9  9  9  9  9  9  9  9  9  9 
+[176] 9  9  9  9  9  10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10
+Levels: 1 2 3 4 5 6 7 8 9 10
+> 
+> # with additional group index
+> data("Produc", package = "plm")
+> pProduc <- pdata.frame(Produc, index = c("state", "year", "region"))
+> index(pProduc, 3)
+  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+ [38] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+ [75] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2
+[112] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+[149] 2 2 2 2 2 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
+[186] 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
+[223] 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4
+[260] 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4
+[297] 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4
+[334] 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 5 5 5 5 5 5 5 5 5 5 5 5 5
+[371] 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5
+[408] 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5
+[445] 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5
+[482] 5 5 5 5 5 5 5 5 5 5 5 5 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6
+[519] 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6
+[556] 6 6 6 6 6 6 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7
+[593] 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7
+[630] 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
+[667] 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
+[704] 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
+[741] 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 9 9 9 9 9 9 9 9 9 9 9 9
+[778] 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9
+[815] 9 9
+Levels: 1 2 3 4 5 6 7 8 9
+> index(pProduc, "region")
+  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+ [38] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+ [75] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2
+[112] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+[149] 2 2 2 2 2 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
+[186] 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
+[223] 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4
+[260] 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4
+[297] 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4
+[334] 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 5 5 5 5 5 5 5 5 5 5 5 5 5
+[371] 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5
+[408] 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5
+[445] 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5
+[482] 5 5 5 5 5 5 5 5 5 5 5 5 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6
+[519] 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6
+[556] 6 6 6 6 6 6 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7
+[593] 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7
+[630] 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
+[667] 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
+[704] 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
+[741] 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 9 9 9 9 9 9 9 9 9 9 9 9
+[778] 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9
+[815] 9 9
+Levels: 1 2 3 4 5 6 7 8 9
+> index(pProduc, "group")
+  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+ [38] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+ [75] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2
+[112] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+[149] 2 2 2 2 2 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
+[186] 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
+[223] 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4
+[260] 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4
+[297] 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4
+[334] 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 5 5 5 5 5 5 5 5 5 5 5 5 5
+[371] 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5
+[408] 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5
+[445] 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5
+[482] 5 5 5 5 5 5 5 5 5 5 5 5 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6
+[519] 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6
+[556] 6 6 6 6 6 6 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7
+[593] 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7
+[630] 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
+[667] 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
+[704] 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
+[741] 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 9 9 9 9 9 9 9 9 9 9 9 9
+[778] 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9
+[815] 9 9
+Levels: 1 2 3 4 5 6 7 8 9
+> 
+> ## is.pbalanced
+> Grunfeld_missing_period <- Grunfeld[-2, ]
+> is.pbalanced(Grunfeld_missing_period)     # check if balanced: FALSE
+[1] FALSE
+> pdim(Grunfeld_missing_period)$balanced    # same
+[1] FALSE
+> pGrunfeld_missing_period <- pdata.frame(Grunfeld_missing_period)
+> is.pbalanced(Grunfeld_missing_period)
+[1] FALSE
+> is.pbalanced(pGrunfeld_missing_period$inv)
+[1] FALSE
+> 
+> ## is.pconsecutive
+> is.pconsecutive(Grunfeld)
+   1    2    3    4    5    6    7    8    9   10 
+TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE 
+> is.pconsecutive(Grunfeld, index=c("firm", "year"))
+   1    2    3    4    5    6    7    8    9   10 
+TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE 
+> 
+> # delete 2nd row (2nd time period for first individual)
+> # -> non consecutive 
+> Grunfeld_missing_period <- Grunfeld[-2, ]
+> is.pconsecutive(Grunfeld_missing_period)
+    1     2     3     4     5     6     7     8     9    10 
+FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
+> all(is.pconsecutive(Grunfeld_missing_period)) # FALSE
+[1] FALSE
+> 
+> # delete rows 1 and 2 (1st and 2nd time period for first individual)
+> # -> consecutive
+> Grunfeld_missing_period_other <- Grunfeld[-c(1,2), ]
+> is.pconsecutive(Grunfeld_missing_period_other) # all TRUE
+   1    2    3    4    5    6    7    8    9   10 
+TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE 
+> 
+> # delete year 1937 (3rd period) for _all_ individuals
+> Grunfeld_wo_1937 <- Grunfeld[Grunfeld$year != 1937, ]
+> is.pconsecutive(Grunfeld_wo_1937) # all FALSE
+    1     2     3     4     5     6     7     8     9    10 
+FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE 
+> 
+> # pdata.frame interface
+> pGrunfeld <- pdata.frame(Grunfeld)
+> pGrunfeld_missing_period <- pdata.frame(Grunfeld_missing_period)
+> is.pconsecutive(pGrunfeld) # all TRUE
+   1    2    3    4    5    6    7    8    9   10 
+TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE 
+> is.pconsecutive(pGrunfeld_missing_period) # first FALSE, others TRUE
+    1     2     3     4     5     6     7     8     9    10 
+FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
+> 
+> # panelmodel interface (first, estimate some models)
+> mod_pGrunfeld <- plm(inv ~ value + capital, data = Grunfeld)
+> mod_pGrunfeld_missing_period <- plm(inv ~ value + capital, data = Grunfeld_missing_period)
+> 
+> is.pconsecutive(mod_pGrunfeld)
+   1    2    3    4    5    6    7    8    9   10 
+TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE 
+> is.pconsecutive(mod_pGrunfeld_missing_period)
+    1     2     3     4     5     6     7     8     9    10 
+FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
+> 
+> nobs(mod_pGrunfeld) # 200
+[1] 200
+> nobs(mod_pGrunfeld_missing_period) # 199
+[1] 199
+> 
+> # pseries interface
+> pinv <- pGrunfeld$inv
+> pinv_missing_period <- pGrunfeld_missing_period$inv
+> 
+> is.pconsecutive(pinv)
+   1    2    3    4    5    6    7    8    9   10 
+TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE 
+> is.pconsecutive(pinv_missing_period)
+    1     2     3     4     5     6     7     8     9    10 
+FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
+> 
+> # default method for arbitrary vectors or NULL
+> inv <- Grunfeld$inv
+> inv_missing_period <- Grunfeld_missing_period$inv
+> is.pconsecutive(inv, id = Grunfeld$firm, time = Grunfeld$year)
+   1    2    3    4    5    6    7    8    9   10 
+TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE 
+> is.pconsecutive(inv_missing_period, id = Grunfeld_missing_period$firm, 
++                 time = Grunfeld_missing_period$year)
+    1     2     3     4     5     6     7     8     9    10 
+FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
+> 
+> # only id and time are needed for evaluation
+> is.pconsecutive(NULL, id = Grunfeld$firm, time = Grunfeld$year)
+   1    2    3    4    5    6    7    8    9   10 
+TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE 
+> 
+> ## is.pseries
+> Em <- pdata.frame(EmplUK)
+> z <- Em$output
+> 
+> class(z) # pseries as indicated by class
+[1] "pseries" "numeric"
+> is.pseries(z) # and confirmed by check
+[1] TRUE
+> 
+> # destroy index of pseries and re-check
+> attr(z, "index") <- NA
+> is.pseries(z) # now FALSE
+[1] FALSE
+> 
+> ## model.frame, model.matrix
+> pGrunfeld <- pdata.frame(Grunfeld)
+> 
+> # then make a model frame from a formula and a pdata.frame
+> form <- inv ~ value
+> mf <- model.frame(pGrunfeld, form)
+> 
+> # then construct the (transformed) model matrix (design matrix)
+> # from model frame
+> modmat <- model.matrix(mf, model = "within")
+> 
+> ## retrieve model frame and model matrix from an estimated plm object
+> fe_model <- plm(form, data = pGrunfeld, model = "within")
+> model.frame(fe_model)
+            inv   value
+1-1935   317.60 3078.50
+1-1936   391.80 4661.70
+1-1937   410.60 5387.10
+1-1938   257.70 2792.20
+1-1939   330.80 4313.20
+1-1940   461.20 4643.90
+1-1941   512.00 4551.20
+1-1942   448.00 3244.10
+1-1943   499.60 4053.70
+1-1944   547.50 4379.30
+1-1945   561.20 4840.90
+1-1946   688.10 4900.90
+1-1947   568.90 3526.50
+1-1948   529.20 3254.70
+1-1949   555.10 3700.20
+1-1950   642.90 3755.60
+1-1951   755.90 4833.00
+1-1952   891.20 4924.90
+1-1953  1304.40 6241.70
+1-1954  1486.70 5593.60
+2-1935   209.90 1362.40
+2-1936   355.30 1807.10
+2-1937   469.90 2676.30
+2-1938   262.30 1801.90
+2-1939   230.40 1957.30
+2-1940   361.60 2202.90
+2-1941   472.80 2380.50
+2-1942   445.60 2168.60
+2-1943   361.60 1985.10
+2-1944   288.20 1813.90
+2-1945   258.70 1850.20
+2-1946   420.30 2067.70
+2-1947   420.50 1796.70
+2-1948   494.50 1625.80
+2-1949   405.10 1667.00
+2-1950   418.80 1677.40
+2-1951   588.20 2289.50
+2-1952   645.50 2159.40
+2-1953   641.00 2031.30
+2-1954   459.30 2115.50
+3-1935    33.10 1170.60
+3-1936    45.00 2015.80
+3-1937    77.20 2803.30
+3-1938    44.60 2039.70
+3-1939    48.10 2256.20
+3-1940    74.40 2132.20
+3-1941   113.00 1834.10
+3-1942    91.90 1588.00
+3-1943    61.30 1749.40
+3-1944    56.80 1687.20
+3-1945    93.60 2007.70
+3-1946   159.90 2208.30
+3-1947   147.20 1656.70
+3-1948   146.30 1604.40
+3-1949    98.30 1431.80
+3-1950    93.50 1610.50
+3-1951   135.20 1819.40
+3-1952   157.30 2079.70
+3-1953   179.50 2371.60
+3-1954   189.60 2759.90
+4-1935    40.29  417.50
+4-1936    72.76  837.80
+4-1937    66.26  883.90
+4-1938    51.60  437.90
+4-1939    52.41  679.70
+4-1940    69.41  727.80
+4-1941    68.35  643.60
+4-1942    46.80  410.90
+4-1943    47.40  588.40
+4-1944    59.57  698.40
+4-1945    88.78  846.40
+4-1946    74.12  893.80
+4-1947    62.68  579.00
+4-1948    89.36  694.60
+4-1949    78.98  590.30
+4-1950   100.66  693.50
+4-1951   160.62  809.00
+4-1952   145.00  727.00
+4-1953   174.93 1001.50
+4-1954   172.49  703.20
+5-1935    39.68  157.70
+5-1936    50.73  167.90
+5-1937    74.24  192.90
+5-1938    53.51  156.70
+5-1939    42.65  191.40
+5-1940    46.48  185.50
+5-1941    61.40  199.60
+5-1942    39.67  189.50
+5-1943    62.24  151.20
+5-1944    52.32  187.70
+5-1945    63.21  214.70
+5-1946    59.37  232.90
+5-1947    58.02  249.00
+5-1948    70.34  224.50
+5-1949    67.42  237.30
+5-1950    55.74  240.10
+5-1951    80.30  327.30
+5-1952    85.40  359.40
+5-1953    91.90  398.40
+5-1954    81.43  365.70
+6-1935    20.36  197.00
+6-1936    25.98  210.30
+6-1937    25.94  223.10
+6-1938    27.53  216.70
+6-1939    24.60  286.40
+6-1940    28.54  298.00
+6-1941    43.41  276.90
+6-1942    42.81  272.60
+6-1943    27.84  287.40
+6-1944    32.60  330.30
+6-1945    39.03  324.40
+6-1946    50.17  401.90
+6-1947    51.85  407.40
+6-1948    64.03  409.20
+6-1949    68.16  482.20
+6-1950    77.34  673.80
+6-1951    95.30  676.90
+6-1952    99.49  702.00
+6-1953   127.52  793.50
+6-1954   135.72  927.30
+7-1935    24.43  138.00
+7-1936    23.21  200.10
+7-1937    32.78  210.10
+7-1938    32.54  161.20
+7-1939    26.65  161.70
+7-1940    33.71  145.10
+7-1941    43.50  110.60
+7-1942    34.46   98.10
+7-1943    44.28  108.80
+7-1944    70.80  118.20
+7-1945    44.12  126.50
+7-1946    48.98  156.70
+7-1947    48.51  119.40
+7-1948    50.00  129.10
+7-1949    50.59  134.80
+7-1950    42.53  140.80
+7-1951    64.77  179.00
+7-1952    72.68  178.10
+7-1953    73.86  186.80
+7-1954    89.51  192.70
+8-1935    12.93  191.50
+8-1936    25.90  516.00
+8-1937    35.05  729.00
+8-1938    22.89  560.40
+8-1939    18.84  519.90
+8-1940    28.57  628.50
+8-1941    48.51  537.10
+8-1942    43.34  561.20
+8-1943    37.02  617.20
+8-1944    37.81  626.70
+8-1945    39.27  737.20
+8-1946    53.46  760.50
+8-1947    55.56  581.40
+8-1948    49.56  662.30
+8-1949    32.04  583.80
+8-1950    32.24  635.20
+8-1951    54.38  723.80
+8-1952    71.78  864.10
+8-1953    90.08 1193.50
+8-1954    68.60 1188.90
+9-1935    26.63  290.60
+9-1936    23.39  291.10
+9-1937    30.65  335.00
+9-1938    20.89  246.00
+9-1939    28.78  356.20
+9-1940    26.93  289.80
+9-1941    32.08  268.20
+9-1942    32.21  213.30
+9-1943    35.69  348.20
+9-1944    62.47  374.20
+9-1945    52.32  387.20
+9-1946    56.95  347.40
+9-1947    54.32  291.90
+9-1948    40.53  297.20
+9-1949    32.54  276.90
+9-1950    43.48  274.60
+9-1951    56.49  339.90
+9-1952    65.98  474.80
+9-1953    66.11  496.00
+9-1954    49.34  474.50
+10-1935    2.54   70.91
+10-1936    2.00   87.94
+10-1937    2.19   82.20
+10-1938    1.99   58.72
+10-1939    2.03   80.54
+10-1940    1.81   86.47
+10-1941    2.14   77.68
+10-1942    1.86   62.16
+10-1943    0.93   62.24
+10-1944    1.18   61.82
+10-1945    1.36   65.85
+10-1946    2.24   69.54
+10-1947    3.81   64.97
+10-1948    5.66   68.00
+10-1949    4.21   71.24
+10-1950    3.42   69.05
+10-1951    4.67   83.04
+10-1952    6.00   74.42
+10-1953    6.53   63.51
+10-1954    5.12   58.12
+> model.matrix(fe_model)
+            value
+1-1935  -1255.345
+1-1936    327.855
+1-1937   1053.255
+1-1938  -1541.645
+1-1939    -20.645
+1-1940    310.055
+1-1941    217.355
+1-1942  -1089.745
+1-1943   -280.145
+1-1944     45.455
+1-1945    507.055
+1-1946    567.055
+1-1947   -807.345
+1-1948  -1079.145
+1-1949   -633.645
+1-1950   -578.245
+1-1951    499.155
+1-1952    591.055
+1-1953   1907.855
+1-1954   1259.755
+2-1935   -609.425
+2-1936   -164.725
+2-1937    704.475
+2-1938   -169.925
+2-1939    -14.525
+2-1940    231.075
+2-1941    408.675
+2-1942    196.775
+2-1943     13.275
+2-1944   -157.925
+2-1945   -121.625
+2-1946     95.875
+2-1947   -175.125
+2-1948   -346.025
+2-1949   -304.825
+2-1950   -294.425
+2-1951    317.675
+2-1952    187.575
+2-1953     59.475
+2-1954    143.675
+3-1935   -770.725
+3-1936     74.475
+3-1937    861.975
+3-1938     98.375
+3-1939    314.875
+3-1940    190.875
+3-1941   -107.225
+3-1942   -353.325
+3-1943   -191.925
+3-1944   -254.125
+3-1945     66.375
+3-1946    266.975
+3-1947   -284.625
+3-1948   -336.925
+3-1949   -509.525
+3-1950   -330.825
+3-1951   -121.925
+3-1952    138.375
+3-1953    430.275
+3-1954    818.575
+4-1935   -275.710
+4-1936    144.590
+4-1937    190.690
+4-1938   -255.310
+4-1939    -13.510
+4-1940     34.590
+4-1941    -49.610
+4-1942   -282.310
+4-1943   -104.810
+4-1944      5.190
+4-1945    153.190
+4-1946    200.590
+4-1947   -114.210
+4-1948      1.390
+4-1949   -102.910
+4-1950      0.290
+4-1951    115.790
+4-1952     33.790
+4-1953    308.290
+4-1954      9.990
+5-1935    -73.770
+5-1936    -63.570
+5-1937    -38.570
+5-1938    -74.770
+5-1939    -40.070
+5-1940    -45.970
+5-1941    -31.870
+5-1942    -41.970
+5-1943    -80.270
+5-1944    -43.770
+5-1945    -16.770
+5-1946      1.430
+5-1947     17.530
+5-1948     -6.970
+5-1949      5.830
+5-1950      8.630
+5-1951     95.830
+5-1952    127.930
+5-1953    166.930
+5-1954    134.230
+6-1935   -222.865
+6-1936   -209.565
+6-1937   -196.765
+6-1938   -203.165
+6-1939   -133.465
+6-1940   -121.865
+6-1941   -142.965
+6-1942   -147.265
+6-1943   -132.465
+6-1944    -89.565
+6-1945    -95.465
+6-1946    -17.965
+6-1947    -12.465
+6-1948    -10.665
+6-1949     62.335
+6-1950    253.935
+6-1951    257.035
+6-1952    282.135
+6-1953    373.635
+6-1954    507.435
+7-1935    -11.790
+7-1936     50.310
+7-1937     60.310
+7-1938     11.410
+7-1939     11.910
+7-1940     -4.690
+7-1941    -39.190
+7-1942    -51.690
+7-1943    -40.990
+7-1944    -31.590
+7-1945    -23.290
+7-1946      6.910
+7-1947    -30.390
+7-1948    -20.690
+7-1949    -14.990
+7-1950     -8.990
+7-1951     29.210
+7-1952     28.310
+7-1953     37.010
+7-1954     42.910
+8-1935   -479.410
+8-1936   -154.910
+8-1937     58.090
+8-1938   -110.510
+8-1939   -151.010
+8-1940    -42.410
+8-1941   -133.810
+8-1942   -109.710
+8-1943    -53.710
+8-1944    -44.210
+8-1945     66.290
+8-1946     89.590
+8-1947    -89.510
+8-1948     -8.610
+8-1949    -87.110
+8-1950    -35.710
+8-1951     52.890
+8-1952    193.190
+8-1953    522.590
+8-1954    517.990
+9-1935    -43.050
+9-1936    -42.550
+9-1937      1.350
+9-1938    -87.650
+9-1939     22.550
+9-1940    -43.850
+9-1941    -65.450
+9-1942   -120.350
+9-1943     14.550
+9-1944     40.550
+9-1945     53.550
+9-1946     13.750
+9-1947    -41.750
+9-1948    -36.450
+9-1949    -56.750
+9-1950    -59.050
+9-1951      6.250
+9-1952    141.150
+9-1953    162.350
+9-1954    140.850
+10-1935    -0.011
+10-1936    17.019
+10-1937    11.279
+10-1938   -12.201
+10-1939     9.619
+10-1940    15.549
+10-1941     6.759
+10-1942    -8.761
+10-1943    -8.681
+10-1944    -9.101
+10-1945    -5.071
+10-1946    -1.381
+10-1947    -5.951
+10-1948    -2.921
+10-1949     0.319
+10-1950    -1.871
+10-1951    12.119
+10-1952     3.499
+10-1953    -7.411
+10-1954   -12.801
+attr(,"assign")
+[1] 0 1
+attr(,"index")
+    firm year
+1      1 1935
+2      1 1936
+3      1 1937
+4      1 1938
+5      1 1939
+6      1 1940
+7      1 1941
+8      1 1942
+9      1 1943
+10     1 1944
+11     1 1945
+12     1 1946
+13     1 1947
+14     1 1948
+15     1 1949
+16     1 1950
+17     1 1951
+18     1 1952
+19     1 1953
+20     1 1954
+21     2 1935
+22     2 1936
+23     2 1937
+24     2 1938
+25     2 1939
+26     2 1940
+27     2 1941
+28     2 1942
+29     2 1943
+30     2 1944
+31     2 1945
+32     2 1946
+33     2 1947
+34     2 1948
+35     2 1949
+36     2 1950
+37     2 1951
+38     2 1952
+39     2 1953
+40     2 1954
+41     3 1935
+42     3 1936
+43     3 1937
+44     3 1938
+45     3 1939
+46     3 1940
+47     3 1941
+48     3 1942
+49     3 1943
+50     3 1944
+51     3 1945
+52     3 1946
+53     3 1947
+54     3 1948
+55     3 1949
+56     3 1950
+57     3 1951
+58     3 1952
+59     3 1953
+60     3 1954
+61     4 1935
+62     4 1936
+63     4 1937
+64     4 1938
+65     4 1939
+66     4 1940
+67     4 1941
+68     4 1942
+69     4 1943
+70     4 1944
+71     4 1945
+72     4 1946
+73     4 1947
+74     4 1948
+75     4 1949
+76     4 1950
+77     4 1951
+78     4 1952
+79     4 1953
+80     4 1954
+81     5 1935
+82     5 1936
+83     5 1937
+84     5 1938
+85     5 1939
+86     5 1940
+87     5 1941
+88     5 1942
+89     5 1943
+90     5 1944
+91     5 1945
+92     5 1946
+93     5 1947
+94     5 1948
+95     5 1949
+96     5 1950
+97     5 1951
+98     5 1952
+99     5 1953
+100    5 1954
+101    6 1935
+102    6 1936
+103    6 1937
+104    6 1938
+105    6 1939
+106    6 1940
+107    6 1941
+108    6 1942
+109    6 1943
+110    6 1944
+111    6 1945
+112    6 1946
+113    6 1947
+114    6 1948
+115    6 1949
+116    6 1950
+117    6 1951
+118    6 1952
+119    6 1953
+120    6 1954
+121    7 1935
+122    7 1936
+123    7 1937
+124    7 1938
+125    7 1939
+126    7 1940
+127    7 1941
+128    7 1942
+129    7 1943
+130    7 1944
+131    7 1945
+132    7 1946
+133    7 1947
+134    7 1948
+135    7 1949
+136    7 1950
+137    7 1951
+138    7 1952
+139    7 1953
+140    7 1954
+141    8 1935
+142    8 1936
+143    8 1937
+144    8 1938
+145    8 1939
+146    8 1940
+147    8 1941
+148    8 1942
+149    8 1943
+150    8 1944
+151    8 1945
+152    8 1946
+153    8 1947
+154    8 1948
+155    8 1949
+156    8 1950
+157    8 1951
+158    8 1952
+159    8 1953
+160    8 1954
+161    9 1935
+162    9 1936
+163    9 1937
+164    9 1938
+165    9 1939
+166    9 1940
+167    9 1941
+168    9 1942
+169    9 1943
+170    9 1944
+171    9 1945
+172    9 1946
+173    9 1947
+174    9 1948
+175    9 1949
+176    9 1950
+177    9 1951
+178    9 1952
+179    9 1953
+180    9 1954
+181   10 1935
+182   10 1936
+183   10 1937
+184   10 1938
+185   10 1939
+186   10 1940
+187   10 1941
+188   10 1942
+189   10 1943
+190   10 1944
+191   10 1945
+192   10 1946
+193   10 1947
+194   10 1948
+195   10 1949
+196   10 1950
+197   10 1951
+198   10 1952
+199   10 1953
+200   10 1954
+> 
+> # same as constructed before
+> all.equal(mf, model.frame(fe_model), check.attributes = FALSE) # TRUE
+[1] TRUE
+> all.equal(modmat, model.matrix(fe_model), check.attributes = FALSE) # TRUE
+[1] TRUE
+> 
+> 
+> ## pmodel.response
+> 
+> form <- inv ~ value + capital
+> mf <- model.frame(pGrunfeld, form)
+> # construct (transformed) response of the within model
+> resp <- pmodel.response(form, data = mf, model = "within", effect = "individual")
+> # retrieve (transformed) response directly from model frame
+> resp_mf <- pmodel.response(mf, model = "within", effect = "individual")
+> 
+> # retrieve (transformed) response from a plm object, i.e., an estimated model
+> fe_model <- plm(form, data = pGrunfeld, model = "within")
+> pmodel.response(fe_model)
+   1-1935    1-1936    1-1937    1-1938    1-1939    1-1940    1-1941    1-1942 
+-290.4200 -216.2200 -197.4200 -350.3200 -277.2200 -146.8200  -96.0200 -160.0200 
+   1-1943    1-1944    1-1945    1-1946    1-1947    1-1948    1-1949    1-1950 
+-108.4200  -60.5200  -46.8200   80.0800  -39.1200  -78.8200  -52.9200   34.8800 
+   1-1951    1-1952    1-1953    1-1954    2-1935    2-1936    2-1937    2-1938 
+ 147.8800  283.1800  696.3800  878.6800 -200.5750  -55.1750   59.4250 -148.1750 
+   2-1939    2-1940    2-1941    2-1942    2-1943    2-1944    2-1945    2-1946 
+-180.0750  -48.8750   62.3250   35.1250  -48.8750 -122.2750 -151.7750    9.8250 
+   2-1947    2-1948    2-1949    2-1950    2-1951    2-1952    2-1953    2-1954 
+  10.0250   84.0250   -5.3750    8.3250  177.7250  235.0250  230.5250   48.8250 
+   3-1935    3-1936    3-1937    3-1938    3-1939    3-1940    3-1941    3-1942 
+ -69.1900  -57.2900  -25.0900  -57.6900  -54.1900  -27.8900   10.7100  -10.3900 
+   3-1943    3-1944    3-1945    3-1946    3-1947    3-1948    3-1949    3-1950 
+ -40.9900  -45.4900   -8.6900   57.6100   44.9100   44.0100   -3.9900   -8.7900 
+   3-1951    3-1952    3-1953    3-1954    4-1935    4-1936    4-1937    4-1938 
+  32.9100   55.0100   77.2100   87.3100  -45.8335  -13.3635  -19.8635  -34.5235 
+   4-1939    4-1940    4-1941    4-1942    4-1943    4-1944    4-1945    4-1946 
+ -33.7135  -16.7135  -17.7735  -39.3235  -38.7235  -26.5535    2.6565  -12.0035 
+   4-1947    4-1948    4-1949    4-1950    4-1951    4-1952    4-1953    4-1954 
+ -23.4435    3.2365   -7.1435   14.5365   74.4965   58.8765   88.8065   86.3665 
+   5-1935    5-1936    5-1937    5-1938    5-1939    5-1940    5-1941    5-1942 
+ -22.1225  -11.0725   12.4375   -8.2925  -19.1525  -15.3225   -0.4025  -22.1325 
+   5-1943    5-1944    5-1945    5-1946    5-1947    5-1948    5-1949    5-1950 
+   0.4375   -9.4825    1.4075   -2.4325   -3.7825    8.5375    5.6175   -6.0625 
+   5-1951    5-1952    5-1953    5-1954    6-1935    6-1936    6-1937    6-1938 
+  18.4975   23.5975   30.0975   19.6275  -35.0510  -29.4310  -29.4710  -27.8810 
+   6-1939    6-1940    6-1941    6-1942    6-1943    6-1944    6-1945    6-1946 
+ -30.8110  -26.8710  -12.0010  -12.6010  -27.5710  -22.8110  -16.3810   -5.2410 
+   6-1947    6-1948    6-1949    6-1950    6-1951    6-1952    6-1953    6-1954 
+  -3.5610    8.6190   12.7490   21.9290   39.8890   44.0790   72.1090   80.3090 
+   7-1935    7-1936    7-1937    7-1938    7-1939    7-1940    7-1941    7-1942 
+ -23.1655  -24.3855  -14.8155  -15.0555  -20.9455  -13.8855   -4.0955  -13.1355 
+   7-1943    7-1944    7-1945    7-1946    7-1947    7-1948    7-1949    7-1950 
+  -3.3155   23.2045   -3.4755    1.3845    0.9145    2.4045    2.9945   -5.0655 
+   7-1951    7-1952    7-1953    7-1954    8-1935    8-1936    8-1937    8-1938 
+  17.1745   25.0845   26.2645   41.9145  -29.9615  -16.9915   -7.8415  -20.0015 
+   8-1939    8-1940    8-1941    8-1942    8-1943    8-1944    8-1945    8-1946 
+ -24.0515  -14.3215    5.6185    0.4485   -5.8715   -5.0815   -3.6215   10.5685 
+   8-1947    8-1948    8-1949    8-1950    8-1951    8-1952    8-1953    8-1954 
+  12.6685    6.6685  -10.8515  -10.6515   11.4885   28.8885   47.1885   25.7085 
+   9-1935    9-1936    9-1937    9-1938    9-1939    9-1940    9-1941    9-1942 
+ -15.2590  -18.4990  -11.2390  -20.9990  -13.1090  -14.9590   -9.8090   -9.6790 
+   9-1943    9-1944    9-1945    9-1946    9-1947    9-1948    9-1949    9-1950 
+  -6.1990   20.5810   10.4310   15.0610   12.4310   -1.3590   -9.3490    1.5910 
+   9-1951    9-1952    9-1953    9-1954   10-1935   10-1936   10-1937   10-1938 
+  14.6010   24.0910   24.2210    7.4510   -0.5445   -1.0845   -0.8945   -1.0945 
+  10-1939   10-1940   10-1941   10-1942   10-1943   10-1944   10-1945   10-1946 
+  -1.0545   -1.2745   -0.9445   -1.2245   -2.1545   -1.9045   -1.7245   -0.8445 
+  10-1947   10-1948   10-1949   10-1950   10-1951   10-1952   10-1953   10-1954 
+   0.7255    2.5755    1.1255    0.3355    1.5855    2.9155    3.4455    2.0355 
+> 
+> # same as constructed before
+> all.equal(resp, pmodel.response(fe_model), check.attributes = FALSE) # TRUE
+[1] TRUE
+> 
+> 
+> 
+> ## nobs
+> z <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp,data=Produc,
++          model="random", subset = gsp > 5000)
+> 
+> nobs(z)       # total observations used in estimation
+[1] 808
+> pdim(z)$nT$N  # same information
+[1] 808
+> pdim(z)       # more information about the dimensions (no. of individuals and time periods)
+Unbalanced Panel: n = 48, T = 9-17, N = 808
+> 
+> # illustrate difference between nobs and pdim for first-difference model
+> data("Grunfeld", package = "plm")
+> fdmod <- plm(inv ~ value + capital, data = Grunfeld, model = "fd")
+> nobs(fdmod)      # 190
+[1] 190
+> pdim(fdmod)$nT$N # 200
+[1] 200
+> 
+> ## pgmm
+> ## Arellano and Bond (1991), table 4 col. b 
+> z1 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
++            + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
++            data = EmplUK, effect = "twoways", model = "twosteps")
+> summary(z1, robust = FALSE)
+Twoways effects Two-steps model Difference GMM 
+
+Call:
+pgmm(formula = log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 
+    0:1) + log(capital) + lag(log(output), 0:1) | lag(log(emp), 
+    2:99), data = EmplUK, effect = "twoways", model = "twosteps")
+
+Unbalanced Panel: n = 140, T = 7-9, N = 1031
+
+Number of Observations Used: 611
+Residuals:
+      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+-0.6190677 -0.0255683  0.0000000 -0.0001339  0.0332013  0.6410272 
+
+Coefficients:
+                        Estimate Std. Error  z-value  Pr(>|z|)    
+lag(log(emp), 1:2)1     0.474151   0.085303   5.5584 2.722e-08 ***
+lag(log(emp), 1:2)2    -0.052967   0.027284  -1.9413 0.0522200 .  
+lag(log(wage), 0:1)0   -0.513205   0.049345 -10.4003 < 2.2e-16 ***
+lag(log(wage), 0:1)1    0.224640   0.080063   2.8058 0.0050192 ** 
+log(capital)            0.292723   0.039463   7.4177 1.191e-13 ***
+lag(log(output), 0:1)0  0.609775   0.108524   5.6188 1.923e-08 ***
+lag(log(output), 0:1)1 -0.446373   0.124815  -3.5763 0.0003485 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Sargan test: chisq(25) = 30.11247 (p-value = 0.22011)
+Autocorrelation test (1): normal = -2.427829 (p-value = 0.01519)
+Autocorrelation test (2): normal = -0.3325401 (p-value = 0.73948)
+Wald test for coefficients: chisq(7) = 371.9877 (p-value = < 2.22e-16)
+Wald test for time dummies: chisq(6) = 26.9045 (p-value = 0.0001509)
+> 
+> ## Blundell and Bond (1998) table 4 (cf. DPD for OX p. 12 col. 4)
+> z2 <- pgmm(log(emp) ~ lag(log(emp), 1)+ lag(log(wage), 0:1) +
++              lag(log(capital), 0:1) | lag(log(emp), 2:99) +
++              lag(log(wage), 2:99) + lag(log(capital), 2:99),
++            data = EmplUK, effect = "twoways", model = "onestep", 
++            transformation = "ld")
+> summary(z2, robust = TRUE)
+Twoways effects One-step model System GMM 
+
+Call:
+pgmm(formula = log(emp) ~ lag(log(emp), 1) + lag(log(wage), 0:1) + 
+    lag(log(capital), 0:1) | lag(log(emp), 2:99) + lag(log(wage), 
+    2:99) + lag(log(capital), 2:99), data = EmplUK, effect = "twoways", 
+    model = "onestep", transformation = "ld")
+
+Unbalanced Panel: n = 140, T = 7-9, N = 1031
+
+Number of Observations Used: 1642
+Residuals:
+      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+-0.7530341 -0.0369030  0.0000000  0.0002882  0.0466069  0.6001503 
+
+Coefficients:
+                         Estimate Std. Error z-value  Pr(>|z|)    
+lag(log(emp), 1)         0.935605   0.026295 35.5810 < 2.2e-16 ***
+lag(log(wage), 0:1)0    -0.630976   0.118054 -5.3448 9.050e-08 ***
+lag(log(wage), 0:1)1     0.482620   0.136887  3.5257 0.0004224 ***
+lag(log(capital), 0:1)0  0.483930   0.053867  8.9838 < 2.2e-16 ***
+lag(log(capital), 0:1)1 -0.424393   0.058479 -7.2572 3.952e-13 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Sargan test: chisq(100) = 118.763 (p-value = 0.097096)
+Autocorrelation test (1): normal = -4.808434 (p-value = 1.5212e-06)
+Autocorrelation test (2): normal = -0.2800133 (p-value = 0.77947)
+Wald test for coefficients: chisq(5) = 11174.82 (p-value = < 2.22e-16)
+Wald test for time dummies: chisq(7) = 14.71138 (p-value = 0.039882)
+> 
+> # Same with the old formula or dynformula interface
+> # Arellano and Bond (1991), table 4, col. b
+> z1 <- pgmm(log(emp) ~ log(wage) + log(capital) + log(output),
++              lag.form = list(2,1,0,1), data = EmplUK,
++              effect = "twoways", model = "twosteps",
++              gmm.inst = ~log(emp), lag.gmm = list(c(2,99)))
+Warning messages:
+1: use of 'dynformula()' is deprecated, use a multi-part formula instead 
+2: use of 'dynformula()' is deprecated, use a multi-part formula instead 
+> summary(z1, robust = FALSE)
+Twoways effects Two-steps model Difference GMM 
+
+Call:
+pgmm(formula = log(emp) ~ log(wage) + log(capital) + log(output), 
+    data = EmplUK, effect = "twoways", model = "twosteps", lag.form = list(2, 
+        1, 0, 1), gmm.inst = ~log(emp), lag.gmm = list(c(2, 99)))
+
+Unbalanced Panel: n = 140, T = 7-9, N = 1031
+
+Number of Observations Used: 611
+Residuals:
+      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+-0.6190677 -0.0255683  0.0000000 -0.0001339  0.0332013  0.6410272 
+
+Coefficients:
+                         Estimate Std. Error  z-value  Pr(>|z|)    
+lag(log(emp), c(1, 2))1  0.474151   0.085303   5.5584 2.722e-08 ***
+lag(log(emp), c(1, 2))2 -0.052967   0.027284  -1.9413 0.0522200 .  
+log(wage)               -0.513205   0.049345 -10.4003 < 2.2e-16 ***
+lag(log(wage), 1)        0.224640   0.080063   2.8058 0.0050192 ** 
+log(capital)             0.292723   0.039463   7.4177 1.191e-13 ***
+log(output)              0.609775   0.108524   5.6188 1.923e-08 ***
+lag(log(output), 1)     -0.446373   0.124815  -3.5763 0.0003485 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Sargan test: chisq(25) = 30.11247 (p-value = 0.22011)
+Autocorrelation test (1): normal = -2.427829 (p-value = 0.01519)
+Autocorrelation test (2): normal = -0.3325401 (p-value = 0.73948)
+Wald test for coefficients: chisq(7) = 371.9877 (p-value = < 2.22e-16)
+Wald test for time dummies: chisq(6) = 26.9045 (p-value = 0.0001509)
+> 
+> ## Blundell and Bond (1998) table 4 (cf DPD for OX p. 12 col. 4)
+> z2 <- pgmm(dynformula(log(emp) ~ log(wage) + log(capital), list(1,1,1)),
++              data = EmplUK, effect = "twoways", model = "onestep",
++              gmm.inst = ~log(emp) + log(wage) + log(capital),
++              lag.gmm = c(2,99), transformation = "ld")
+Warning messages:
+1: use of 'dynformula()' is deprecated, use a multi-part formula instead 
+2: use of 'dynformula()' is deprecated, use a multi-part formula instead 
+> summary(z2, robust = TRUE)
+Twoways effects One-step model System GMM 
+
+Call:
+pgmm(formula = dynformula(log(emp) ~ log(wage) + log(capital), 
+    list(1, 1, 1)), data = EmplUK, effect = "twoways", model = "onestep", 
+    transformation = "ld", gmm.inst = ~log(emp) + log(wage) + 
+        log(capital), lag.gmm = c(2, 99))
+
+Unbalanced Panel: n = 140, T = 7-9, N = 1031
+
+Number of Observations Used: 1642
+Residuals:
+      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+-0.7530341 -0.0369030  0.0000000  0.0002882  0.0466069  0.6001503 
+
+Coefficients:
+                      Estimate Std. Error z-value  Pr(>|z|)    
+lag(log(emp), 1)      0.935605   0.026295 35.5810 < 2.2e-16 ***
+log(wage)            -0.630976   0.118054 -5.3448 9.050e-08 ***
+lag(log(wage), 1)     0.482620   0.136887  3.5257 0.0004224 ***
+log(capital)          0.483930   0.053867  8.9838 < 2.2e-16 ***
+lag(log(capital), 1) -0.424393   0.058479 -7.2572 3.952e-13 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Sargan test: chisq(100) = 118.763 (p-value = 0.097096)
+Autocorrelation test (1): normal = -4.808434 (p-value = 1.5212e-06)
+Autocorrelation test (2): normal = -0.2800133 (p-value = 0.77947)
+Wald test for coefficients: chisq(5) = 11174.82 (p-value = < 2.22e-16)
+Wald test for time dummies: chisq(7) = 14.71138 (p-value = 0.039882)
+> 
+> ## pht (deprecated)
+> # deprecated way with pht() for HT
+> data("Wages", package = "plm")
+> ht <- pht(lwage ~ wks + south + smsa + married + exp + I(exp^2) +
++          bluecol + ind + union + sex + black + ed |
++          sex + black + bluecol + south + smsa + ind,
++          data = Wages, model = "ht", index = 595)
+Warning message:
+uses of 'pht()' and 'plm(., model = "ht")' are discouraged, better use 'plm(., model = "random", random.method = "ht", inst.method = "baltagi"/"am"/"bms")' for Hausman-Taylor, Amemiya-MaCurdy, and Breusch-Mizon-Schmidt estimator 
+> summary(ht)
+Oneway (individual) effect Hausman-Taylor Model 
+(Hausman-Taylor estimator) 
+
+Call:
+pht(formula = lwage ~ wks + south + smsa + married + exp + I(exp^2) + 
+    bluecol + ind + union + sex + black + ed | sex + black + 
+    bluecol + south + smsa + ind, data = Wages, model = "ht", 
+    index = 595)
+
+T.V. exo  : bluecol, south, smsa, ind
+T.V. endo : wks, married, exp, I(exp^2), union
+T.I. exo  : sex, black
+T.I. endo : ed
+
+Balanced Panel: n = 595, T = 7, N = 4165
+
+Effects:
+                  var std.dev share
+idiosyncratic 0.02304 0.15180 0.025
+individual    0.88699 0.94180 0.975
+theta: 0.9392
+
+Residuals:
+      Min.    1st Qu.     Median    3rd Qu.       Max. 
+-1.9193535 -0.0707404  0.0065708  0.0796568  2.0250882 
+
+Coefficients:
+               Estimate  Std. Error z-value  Pr(>|z|)    
+(Intercept)  2.9127e+00  2.8365e-01 10.2687 < 2.2e-16 ***
+wks          8.3740e-04  5.9973e-04  1.3963   0.16263    
+southyes     7.4398e-03  3.1955e-02  0.2328   0.81590    
+smsayes     -4.1833e-02  1.8958e-02 -2.2066   0.02734 *  
+marriedyes  -2.9851e-02  1.8980e-02 -1.5728   0.11578    
+exp          1.1313e-01  2.4710e-03 45.7851 < 2.2e-16 ***
+I(exp^2)    -4.1886e-04  5.4598e-05 -7.6718 1.696e-14 ***
+bluecolyes  -2.0705e-02  1.3781e-02 -1.5024   0.13299    
+ind          1.3604e-02  1.5237e-02  0.8928   0.37196    
+unionyes     3.2771e-02  1.4908e-02  2.1982   0.02794 *  
+sexfemale   -1.3092e-01  1.2666e-01 -1.0337   0.30129    
+blackyes    -2.8575e-01  1.5570e-01 -1.8352   0.06647 .  
+ed           1.3794e-01  2.1248e-02  6.4919 8.474e-11 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    886.9
+Residual Sum of Squares: 95.947
+Chisq: 6891.87 on 12 DF, p-value: < 2.22e-16
+> 
+> am <- pht(lwage ~ wks + south + smsa + married + exp + I(exp^2) +
++          bluecol + ind + union + sex + black + ed |
++          sex + black + bluecol + south + smsa + ind,
++          data = Wages, model = "am", index = 595)
+Warning message:
+uses of 'pht()' and 'plm(., model = "ht")' are discouraged, better use 'plm(., model = "random", random.method = "ht", inst.method = "baltagi"/"am"/"bms")' for Hausman-Taylor, Amemiya-MaCurdy, and Breusch-Mizon-Schmidt estimator 
+> summary(am)
+Oneway (individual) effect Hausman-Taylor Model 
+(Amemiya-MaCurdy estimator) 
+
+Call:
+pht(formula = lwage ~ wks + south + smsa + married + exp + I(exp^2) + 
+    bluecol + ind + union + sex + black + ed | sex + black + 
+    bluecol + south + smsa + ind, data = Wages, model = "am", 
+    index = 595)
+
+T.V. exo  : bluecol, south, smsa, ind
+T.V. endo : wks, married, exp, I(exp^2), union
+T.I. exo  : sex, black
+T.I. endo : ed
+
+Balanced Panel: n = 595, T = 7, N = 4165
+
+Effects:
+                  var std.dev share
+idiosyncratic 0.02304 0.15180 0.025
+individual    0.88699 0.94180 0.975
+theta: 0.9392
+
+Residuals:
+      Min.    1st Qu.     Median    3rd Qu.       Max. 
+-1.9192710 -0.0705595  0.0065602  0.0794836  2.0248644 
+
+Coefficients:
+               Estimate  Std. Error z-value  Pr(>|z|)    
+(Intercept)  2.9273e+00  2.7513e-01 10.6399 < 2.2e-16 ***
+wks          8.3806e-04  5.9945e-04  1.3980   0.16210    
+southyes     7.2818e-03  3.1936e-02  0.2280   0.81964    
+smsayes     -4.1951e-02  1.8947e-02 -2.2141   0.02682 *  
+marriedyes  -3.0089e-02  1.8967e-02 -1.5864   0.11266    
+exp          1.1297e-01  2.4688e-03 45.7584 < 2.2e-16 ***
+I(exp^2)    -4.2140e-04  5.4554e-05 -7.7244 1.124e-14 ***
+bluecolyes  -2.0850e-02  1.3765e-02 -1.5147   0.12986    
+ind          1.3629e-02  1.5229e-02  0.8949   0.37082    
+unionyes     3.2475e-02  1.4894e-02  2.1804   0.02922 *  
+sexfemale   -1.3201e-01  1.2660e-01 -1.0427   0.29709    
+blackyes    -2.8590e-01  1.5549e-01 -1.8388   0.06595 .  
+ed           1.3720e-01  2.0570e-02  6.6703 2.553e-11 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    886.9
+Residual Sum of Squares: 95.871
+Chisq: 6879.2 on 12 DF, p-value: < 2.22e-16
+> 
+> ## pldv
+> pder.avail <- if (!requireNamespace("pder", quietly = TRUE)) FALSE else TRUE
+> if(pder.avail) {
++ data("Donors", package = "pder")
++ pDonors <- pdata.frame(Donors, index = "id")
++ modA <- pldv(donation ~ treatment +  prcontr, data = pDonors,
++              model = "random", method = "bfgs")
++ summary(modA)
++ modB <- pldv(donation ~ treatment * prcontr - prcontr, data = pDonors,
++            model = "random", method = "bfgs")
++ summary(modB)
++ invisible(NULL)
++ }
+There were 50 or more warnings (use warnings() to see the first 50)
+> 
+> ## pwartest
+> pwartest(log(emp) ~ log(wage) + log(capital), data = EmplUK)
+
+	Wooldridge's test for serial correlation in FE panels
+
+data:  plm.model
+F = 312.3, df1 = 1, df2 = 889, p-value < 2.2e-16
+alternative hypothesis: serial correlation
+
+> pwartest(log(emp) ~ log(wage) + log(capital), data = EmplUK, type = "HC3")
+
+	Wooldridge's test for serial correlation in FE panels
+
+data:  plm.model
+F = 305.17, df1 = 1, df2 = 889, p-value < 2.2e-16
+alternative hypothesis: serial correlation
+
+> 
+> ## pwfdtest
+> pwfdtest(log(emp) ~ log(wage) + log(capital), data = EmplUK)
+
+	Wooldridge's first-difference test for serial correlation in panels
+
+data:  plm.model
+F = 1.5251, df1 = 1, df2 = 749, p-value = 0.2172
+alternative hypothesis: serial correlation in differenced errors
+
+> pwfdtest(log(emp) ~ log(wage) + log(capital), data = EmplUK, h0 = "fe")
+
+	Wooldridge's first-difference test for serial correlation in panels
+
+data:  plm.model
+F = 131.55, df1 = 1, df2 = 749, p-value < 2.2e-16
+alternative hypothesis: serial correlation in original errors
+
+> pwfdtest(log(emp) ~ log(wage) + log(capital), data = EmplUK, type = "HC3", h0 = "fe")
+
+	Wooldridge's first-difference test for serial correlation in panels
+
+data:  plm.model
+F = 123.79, df1 = 1, df2 = 749, p-value < 2.2e-16
+alternative hypothesis: serial correlation in original errors
+
+> 
+> mod <- plm(log(emp) ~ log(wage) + log(capital), data = EmplUK, model = "fd")
+> pwfdtest(mod)
+
+	Wooldridge's first-difference test for serial correlation in panels
+
+data:  mod
+F = 1.5251, df1 = 1, df2 = 749, p-value = 0.2172
+alternative hypothesis: serial correlation in differenced errors
+
+> pwfdtest(mod, h0 = "fe")
+
+	Wooldridge's first-difference test for serial correlation in panels
+
+data:  mod
+F = 131.55, df1 = 1, df2 = 749, p-value < 2.2e-16
+alternative hypothesis: serial correlation in original errors
+
+> pwfdtest(mod, type = "HC3", h0 = "fe")
+
+	Wooldridge's first-difference test for serial correlation in panels
+
+data:  mod
+F = 123.79, df1 = 1, df2 = 749, p-value < 2.2e-16
+alternative hypothesis: serial correlation in original errors
+
+> 
+> # pwtest
+> pwtest(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc)
+
+	Wooldridge's test for unobserved individual effects
+
+data:  formula
+z = 3.9383, p-value = 8.207e-05
+alternative hypothesis: unobserved effect
+
+> pwtest(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, effect = "time")
+
+	Wooldridge's test for unobserved time effects
+
+data:  formula
+z = 1.3143, p-value = 0.1888
+alternative hypothesis: unobserved effect
+
+> 
+> ## panelmodel interface
+> # first, estimate a pooling model, than compute test statistics
+> form <- formula(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp)
+> pool_prodc <- plm(form, data = Produc, model = "pooling")
+> pwtest(pool_prodc) # == effect="individual"
+
+	Wooldridge's test for unobserved individual effects
+
+data:  formula
+z = 3.9383, p-value = 8.207e-05
+alternative hypothesis: unobserved effect
+
+> pwtest(pool_prodc, effect="time")
+
+	Wooldridge's test for unobserved time effects
+
+data:  formula
+z = 1.3143, p-value = 0.1888
+alternative hypothesis: unobserved effect
+
+> 
+> proc.time()
+   user  system elapsed 
+  19.03    0.54   20.32 
