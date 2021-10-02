@@ -32,7 +32,7 @@ It includes (non-exhaustive overview):
   - panel Granger (non-)causality (`pgrangertest`),
   
 - a set of robust covariance matrix estimators (incl. various weighting schemes
-  small sample adjustment):
+  for small sample adjustment):
   - `vcovHC`: Arellano (1987), White (1980),
   - `vcovBK`: Beck and Katz (1995) (PCSE),
   - `vcovNW`: Newey and West (1987),
