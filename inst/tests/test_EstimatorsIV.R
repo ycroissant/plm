@@ -166,7 +166,6 @@ IVbms_ubal <- plm(form_wage_iv2,
              data = pWages_ubal,
              model = "random", inst.method = "bms")
 
-## IGNORE_RDIFF_BEGIN
 
 summary(IVbms_ubal)
 
@@ -250,4 +249,3 @@ summary(IVbms_t_ubal)
 #                   digits = 5)
 
 
-## IGNORE_RDIFF_END

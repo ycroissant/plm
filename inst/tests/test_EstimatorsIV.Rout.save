@@ -1133,7 +1133,6 @@ Chisq: 2471.83 on 5 DF, p-value: < 2.22e-16
 +              data = pWages_ubal,
 +              model = "random", inst.method = "bms")
 > 
-> ## IGNORE_RDIFF_BEGIN
 > 
 > summary(IVbms_ubal)
 Oneway (individual) effect Random Effect Model 
@@ -1560,8 +1559,7 @@ Chisq: 1474.18 on 5 DF, p-value: < 2.22e-16
 > #                   digits = 5)
 > 
 > 
-> ## IGNORE_RDIFF_END
 > 
 > proc.time()
    user  system elapsed 
-  11.37    0.48   11.85 
+   9.32    0.18    9.54 

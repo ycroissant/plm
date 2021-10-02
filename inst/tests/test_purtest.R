@@ -13,7 +13,6 @@ y <- data.frame(split(Grunfeld$inv, Grunfeld$firm))
 purtest(pG$inv, pmax = 4, exo = "intercept", test = "ips")
 purtest(inv ~ 1, data = Grunfeld, index = "firm", pmax = 4, test = "madwu")
 
-## IGNORE_RDIFF_BEGIN
 
 summary(a1 <- purtest(pG$inv, lags = "SIC", exo = "intercept", test = "ips", pmax = 8)) # TODO: why is the data requirement check not triggered
 print(a1$args$lags)
@@ -136,7 +135,6 @@ summary(llc_int)
 llc_trend <- purtest(pG$value, test = "levinlin", exo = "trend", lags = 0, dfcor = FALSE)
 summary(llc_trend)
 
-## IGNORE_RDIFF_END
 
 ## Simes Test for panels by Hanck
 phansi(llc)

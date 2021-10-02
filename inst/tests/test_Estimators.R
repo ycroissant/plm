@@ -102,14 +102,12 @@ plm_grunfeld_re_amemiya_tw <- plm(inv ~ value + capital, data=Grunfeld, model="r
 plm_grunfeld_re_swar_tw    <- plm(inv ~ value + capital, data=Grunfeld, model="random", random.method="swar",    effect = "twoways")
 plm_grunfeld_re_nerlove_tw <- plm(inv ~ value + capital, data=Grunfeld, model="random", random.method="nerlove", effect = "twoways")
 
-## IGNORE_RDIFF_BEGIN
 summary(plm_grunfeld_pooled_tw    )
 summary(plm_grunfeld_fe_tw        )
 summary(plm_grunfeld_re_walhus_tw )
 summary(plm_grunfeld_re_amemiya_tw)
 summary(plm_grunfeld_re_swar_tw   )
 summary(plm_grunfeld_re_nerlove_tw)
-## IGNORE_RDIFF_END
 
 ##### twoways unbalanced
 plm_grunfeld_pooled_tw_unbal     <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="pooling", effect = "twoways")
@@ -119,14 +117,12 @@ plm_grunfeld_re_amemiya_tw_unbal <- plm(inv ~ value + capital, data=Grunfeld_unb
 plm_grunfeld_re_swar_tw_unbal    <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="swar",    effect = "twoways")
 plm_grunfeld_re_nerlove_tw_unbal <- plm(inv ~ value + capital, data=Grunfeld_unbal, model="random", random.method="nerlove", effect = "twoways")
 
-## IGNORE_RDIFF_BEGIN
 summary(plm_grunfeld_pooled_tw_unbal    )
 summary(plm_grunfeld_fe_tw_unbal        )
 summary(plm_grunfeld_re_walhus_tw_unbal )
 summary(plm_grunfeld_re_amemiya_tw_unbal)
 summary(plm_grunfeld_re_swar_tw_unbal   )
 summary(plm_grunfeld_re_nerlove_tw_unbal)
-## IGNORE_RDIFF_END
 
 ### "amemiya" and "swar" have the same idiosyncratic variance (both based on the within variance)
 # if (!isTRUE(all.equal(ercomp(plm_grunfeld_re_amemiya)[["sigma2"]][["idios"]], ercomp(plm_grunfeld_re_swar)[["sigma2"]][["idios"]])))
@@ -253,7 +249,7 @@ common <- intersect(names(pccemgmod[["coefficients"]]), names(pmgccemgmod[["coef
 coef_pccemgmod   <- round(pccemgmod[["coefficients"]][common],   digits = 7)
 coef_pmgccemgmod <- round(pmgccemgmod[["coefficients"]][common], digits = 7)
 stopifnot(all.equal(coef_pccemgmod, coef_pmgccemgmod, tolerance = 1E-04))
-## IGNORE_RDIFF_BEGIN
+
 print(summary(pccemgmod))
 print(summary(pmgccemgmod))
 
@@ -265,7 +261,6 @@ print(summary(pmg (form, data = Produc, model = "dmg")))
 print(summary(pmg (form, data = Produc, model = "cmg", trend = TRUE)))
 print(summary(pmg (form, data = Produc, model = "mg",  trend = TRUE)))
 print(summary(pmg (form, data = Produc, model = "dmg", trend = TRUE)))
-##IGNORE_RDIFF_END
 
 ## further run tests without intercept
 plm(inv ~ 0 + value + capital, data = Grunfeld, model = "between")

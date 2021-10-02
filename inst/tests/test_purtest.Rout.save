@@ -44,7 +44,6 @@ chisq = 14.719, df = 20, p-value = 0.7923
 alternative hypothesis: stationarity
 
 > 
-> ## IGNORE_RDIFF_BEGIN
 > 
 > summary(a1 <- purtest(pG$inv, lags = "SIC", exo = "intercept", test = "ips", pmax = 8)) # TODO: why is the data requirement check not triggered
 Im-Pesaran-Shin Unit-Root Test 
@@ -682,7 +681,6 @@ p-value: 0.004
 9     0  19 -0.4875576 -2.3614046 0.400000183   3009.0288    767.5460
 10    0  19 -0.7854102 -3.4617227 0.043582736     69.7076     21.5264
 > 
-> ## IGNORE_RDIFF_END
 > 
 > ## Simes Test for panels by Hanck
 > phansi(llc)
@@ -849,4 +847,4 @@ Evaluation:
 > 
 > proc.time()
    user  system elapsed 
-   3.28    0.32    3.54 
+   1.34    0.21    1.54 

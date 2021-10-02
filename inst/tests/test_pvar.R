@@ -2,7 +2,6 @@ library(plm)
 data("Grunfeld", package = "plm")
 
 
-## IGNORE_RDIFF_BEGIN
 
 # corner case make one - id NA and rest non varying 
 # non-variation was detected prior to rev. 206
@@ -95,4 +94,3 @@ pvar(pGrunfeld[1:20, ]$capital)  # should indicate no indivivual variation (b/c 
 # pvar(jtrain.p[ , c(20:26)])
 # print(pvar(jtrain.p[ , c(20:26)]))
 
-## IGNORE_RDIFF_END

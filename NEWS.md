@@ -7,14 +7,14 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 # plm 2.4-3
 
 * Release to pacify CRAN additional checks with various BLAS implementations/platforms:
-  Comment parts of a test files with ## IGNORE_RDIFF_BEGIN/END to ignore small
-  numerical differences vs. .Rout.save output across BLASes/platforms.
-
+  Moved almost all test files to inst/tests so they are not run on CRAN.
+  These can be run either manually or by `R CMD check --test-dir=inst/tests plm_*ver*.tar.gz.`
 
 ### Admin
 * Source code repository for development is now on GitHub https://github.com/ycroissant/plm,
   not on R-Forge anymore.
 * Update one author's e-mail address.
+
   
 
 # plm 2.4-2
