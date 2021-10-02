@@ -34,6 +34,10 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
    interfaces (`fixest` is preferred over `lfe`, in this case, plm uses internally
    `collapse::fhdwithin` which in turn uses `fixest::demean`). Thanks to Sebastian
    Krantz for guidance on this.
+ * various efficiency gains throughout the package by using more vapply(),
+   crossprod(), lm.fit(), better branching, rowSums(., dims = 2L) (instead of 
+   apply(., 1:2, sum)), etc., e.g., in plm for non-default random IV cases 
+   (cases with `inst.method = "baltagi"` / `"am"` / `"bms"`), pmg, pcce, purtest.
 
 ### Features:
  * phansi: new function for Simes (1986) test applied to panels for panel unit
@@ -90,10 +94,6 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
       method slot (vcov information thus printed as well).
  * various print methods now return the input object invisible (before returned
    NULL).
- * various efficiency gains throughout the package by using more vapply(),
-   crossprod(), lm.fit(), better branching, rowSums(., dims = 2L) (instead of 
-   apply(., 1:2, sum)), etc., e.g., in plm for non-default random IV cases 
-   (cases with `inst.method = "baltagi"` / `"am"` / `"bms"`), pmg, pcce, purtest.
  * piest, aneweytest: now use internal demeaning framework by Within() [thus
    benefiting from fast mode].
 
