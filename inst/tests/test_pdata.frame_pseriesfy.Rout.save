@@ -74,7 +74,7 @@ Type 'q()' to quit R.
 + 
 + with(pGrun,        lag(value)) # dispatches to base R's lag
 + with(pGrunpser1.1, lag(value)) # dispatches to plm's lag() respect. panel structure
-+ 
++ invisible(NULL)
 + }
 > 
 > ### benchmark: collapse version about 10x faster
@@ -89,4 +89,4 @@ Type 'q()' to quit R.
 > 
 > proc.time()
    user  system elapsed 
-   0.76    0.18    0.93 
+   2.73    0.50    3.25 

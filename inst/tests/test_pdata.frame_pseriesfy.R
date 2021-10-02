@@ -57,7 +57,7 @@ stopifnot(identical(pGrunpser1.2, pGrunpser2.2))
 
 with(pGrun,        lag(value)) # dispatches to base R's lag
 with(pGrunpser1.1, lag(value)) # dispatches to plm's lag() respect. panel structure
-
+invisible(NULL)
 }
 
 ### benchmark: collapse version about 10x faster
