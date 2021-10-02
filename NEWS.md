@@ -4,6 +4,23 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
           panel data econometrics - https://cran.r-project.org/package=plm
 ---
 
+
+# plm 2.5.9000 - development version to become 2.6
+
+* Fast mode is now the default for the package: when the package is attached,
+  `options("plm.fast" = TRUE)` is set (by R's .onAttach mechanism), requiring 
+  package `collapse` as a hard dependency.
+  Recommendation: If package `fixest` or `lfe` is available locally, a further 
+  significant speed up esp. for the two-ways fixed effects case is gained.
+  
+  Users might experience neglectable numerical differences in fast mode, depending
+  on the platform.
+
+
+### Dependencies:
+ * Added packages `collapse` to 'Imports'.
+  
+
 # plm 2.4-3
 
 * Release to pacify CRAN additional checks with various BLAS implementations/platforms:
