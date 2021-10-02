@@ -43,19 +43,25 @@ It includes (non-exhaustive overview):
   observations are identified by a combination of two indexes, and panel data 
   transformation functions (e.g, `Within`, `Between`, `lag`, `lead`, `diff`).
 
+
 ## Installation
 
 To install the released version from **CRAN**:
 
-`install.packages("plm")`
+```{r}
+install.packages("plm")
+```
 
 The package's CRAN website is https://cran.r-project.org/package=plm.
 
-To install the development version from **GitHub**:
-
-`devtools::install_github("ycroissant/plm")`
 
 The development of package `plm` takes place on GitHub at https://github.com/ycroissant/plm.
+To install the development version from **GitHub**, use, e.g.:
+```{r}
+# install.packages("remotes")
+remotes::install_github("ycroissant/plm")
+```
+
 
 ## Documentation
 
