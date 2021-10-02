@@ -44,6 +44,8 @@ jobs:
           extra-packages: rcmdcheck
 
       - uses: r-lib/actions/check-r-package@v1
+        with:
+          args: '--test-dir=inst/tests --no-manual --as-cran'
 
 #      - name: Show testthat output
 #        if: always()
