@@ -1,0 +1,511 @@
+
+R version 4.1.1 (2021-08-10) -- "Kick Things"
+Copyright (C) 2021 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> ##### Testing of make.pconsecutive.* #####
+> #####     and of make.pbalanced.*    #####
+> #####
+> ## in separate file test_is.pconsecutive.R: test of is.pconsecutive.*
+> 
+> 
+> library(plm)
+> 
+> 
+> ##################### test of make.pconsecutive.indexes #####################
+> # (non-exported function)
+> 
+> # make.pconsecutive.indexes: for data.frames
+> data("Grunfeld", package = "plm")
+> drop_for_unbalanced <- c(2,42,56,78)
+> unbalanced_Grunfeld <- Grunfeld[-drop_for_unbalanced, ]
+> gindex <- plm:::make.pconsecutive.indexes(unbalanced_Grunfeld, index = c("firm", "year"))[[1L]]
+> nrow(gindex)
+[1] 200
+> all.equal(unbalanced_Grunfeld[, 1:2], gindex[-drop_for_unbalanced, ])
+[1] TRUE
+> #compare::compare(unbalanced_Grunfeld[, 1:2], gindex[-drop_for_unbalanced, ], allowAll = TRUE)
+> 
+> if (!identical(unbalanced_Grunfeld[, 1:2], gindex[-drop_for_unbalanced, ])) stop("failure data.frame")
+> if (!isTRUE(all.equal(unbalanced_Grunfeld[, 1:2], gindex[-drop_for_unbalanced, ]))) stop("failure data.frame")
+> 
+> 
+> # class(unbalanced_Grunfeld[, 2])
+> # class(gindex[-drop_for_unbalanced, 2])
+> # 
+> # typeof(unbalanced_Grunfeld[, 2])
+> # typeof(gindex[-drop_for_unbalanced, 2])
+> # 
+> # attr(unbalanced_Grunfeld, "row.names")
+> # attr(gindex, "row.names")
+> 
+> # make.pconsecutive.indexes: for pdata.frames
+> punbalanced_Grunfeld <- pdata.frame(unbalanced_Grunfeld)
+> pgindex <- plm:::make.pconsecutive.indexes(punbalanced_Grunfeld, index = c("firm", "year"))[[1L]]
+> nrow(pgindex)
+[1] 200
+> 
+> if (!identical(attr(punbalanced_Grunfeld, "index")[, 1:2], pgindex[-drop_for_unbalanced, ])) stop("failure index of pdata.frame")
+> if (!isTRUE(all.equal(attr(punbalanced_Grunfeld, "index")[, 1:2], pgindex[-drop_for_unbalanced, ]))) stop("failure index of pdata.frame")
+> #compare::compare(attr(punbalanced_Grunfeld, "index")[, 1:2], pgindex[-drop_for_unbalanced, ], allowAll = TRUE)
+> 
+> 
+> 
+> # class(pgindex[-drop_for_unbalanced, ])
+> # mode(attr(unbalanced_Grunfeld[, 1:2], "row.names"))
+> # mode(attr(gindex[-drop_for_unbalanced, ], "row.names"))
+> # class(row.names(gindex[-drop_for_unbalanced, ]))
+> 
+> 
+> 
+> # make.pconsecutive.indexes: pseries interface
+> pgindex <- plm:::make.pconsecutive.indexes(punbalanced_Grunfeld$inv, index = c("firm", "year"))[[1L]]
+> if (!identical(attr(punbalanced_Grunfeld$inv, "index")[, 1:2], pgindex[-drop_for_unbalanced, ])) stop("failure index of pdata.frame")
+> if (!isTRUE(all.equal(attr(punbalanced_Grunfeld$inv, "index")[, 1:2], pgindex[-drop_for_unbalanced, ]))) stop("failure index of pdata.frame")
+> ##################### END test of make.pconsecutive.indexes #####################
+> 
+> 
+> ##################### test of make.pconsecutive methods (various interfaces) #####################
+> 
+> ### create some easy test data with some leading and trailing NAs ###
+> df_consec <- data.frame(id   = c(1, 1, 1, 2, 2, 3, 3, 3),
++                         time = c(1, 2, 3, 1, 2, 1, 2, 3),
++                         value = c("a", "b", "c", "d", "e", "f", "g", "h"))
+> 
+> df_first_t_NA <- data.frame(id   = c(1,  1, 1, 2, 2, 3, 3, 3),
++                             time = c(NA, 2, 3, 1, 2, 1, 2, 3),
++                             value = c("a", "b", "c", "d", "e", "f", "g", "h"))
+> 
+> df_first_t_NA2 <- data.frame(id   = c(1, 1, 1, 2,  2, 3, 3, 3),
++                              time = c(1, 2, 3, NA, 2, 1, 2, 3),
++                              value = c("a", "b", "c", "d", "e", "f", "g", "h"))
+> 
+> df_last_t_NA <- data.frame(id   = c(1,  1, 1,  2, 2, 3, 3, 3),
++                            time = c(1,  2, NA, 1, 2, 1, 2, 3),
++                            value = c("a", "b", "c", "d", "e", "f", "g", "h"))
+> 
+> df_first_last_t_NA <- data.frame(id  = c(1,  1, 1,  2, 2, 3, 3, 3),
++                                 time = c(NA, 2, NA, 1, 2, 1, 2, NA),
++                                 value = c("a", "b", "c", "d", "e", "f", "g", "h"))
+> 
+> pdf_consec          <- pdata.frame(df_consec)
+> pdf_first_t_NA      <- pdata.frame(df_first_t_NA)
+Warning message:
+In pdata.frame(df_first_t_NA) :
+  at least one NA in at least one index dimension in resulting pdata.frame
+ to find out which, use, e.g., table(index(your_pdataframe), useNA = "ifany")
+
+> pdf_first_t_NA2     <- pdata.frame(df_first_t_NA2)
+Warning message:
+In pdata.frame(df_first_t_NA2) :
+  at least one NA in at least one index dimension in resulting pdata.frame
+ to find out which, use, e.g., table(index(your_pdataframe), useNA = "ifany")
+
+> pdf_last_t_NA       <- pdata.frame(df_last_t_NA)
+Warning message:
+In pdata.frame(df_last_t_NA) :
+  at least one NA in at least one index dimension in resulting pdata.frame
+ to find out which, use, e.g., table(index(your_pdataframe), useNA = "ifany")
+
+> pdf_first_last_t_NA <- pdata.frame(df_first_last_t_NA)
+Warning message:
+In pdata.frame(df_first_last_t_NA) :
+  at least one NA in at least one index dimension in resulting pdata.frame
+ to find out which, use, e.g., table(index(your_pdataframe), useNA = "ifany")
+
+> 
+> 
+> if (!identical(make.pconsecutive(pdf_consec$value), pdf_consec$value))
++   stop("failure for already consecutive pseries: result is not identical to input")
+> 
+> if (!all(names(make.pconsecutive(pdf_first_t_NA$value)) == c("1-2", "1-3", "2-1", "2-2", "3-1", "3-2", "3-3")))
++   stop("failure for leading NA")
+> 
+> if (!all(names(make.pconsecutive(pdf_first_t_NA2$value)) == c("1-1", "1-2", "1-3", "2-2", "3-1", "3-2", "3-3")))
++   stop("failure for leading NA")
+> 
+> if (!all(names(make.pconsecutive(pdf_last_t_NA$value)) == c("1-1", "1-2", "2-1", "2-2", "3-1", "3-2", "3-3")))
++   stop("failure for last NA")
+> 
+> if (!all(names(make.pconsecutive(pdf_first_last_t_NA$value)) == c("1-2", "2-1" , "2-2", "3-1", "3-2")))
++   stop("failure for first/last NA pattern")
+> 
+> 
+> ## some missing periods
+> data("Grunfeld", package = "plm")
+> 
+> Grunfeld_missing_periods_one_id <- Grunfeld[-c(2,6,7), ]
+> pGrunfeld_missing_periods_one_id <- pdata.frame(Grunfeld_missing_periods_one_id)
+> pinv_missing_periods <- pGrunfeld_missing_periods_one_id$inv
+> 
+> multi_periods <- c(2,6,7,22,23,56) # may not be at the first or last pos for an id, otherwise this line cannot be restored
+> Grunfeld_missing_periods_multi_id <- Grunfeld[-multi_periods, ]
+> pGrunfeld_missing_periods_multi_id <- pdata.frame(Grunfeld_missing_periods_multi_id)
+> pinv_missing_periods_multi_id <- pGrunfeld_missing_periods_multi_id$inv
+> 
+> #### test of pseries interface  ####
+> if (!all(is.pconsecutive(make.pconsecutive(pinv_missing_periods)))) stop("failure")
+> if (!nrow(attr(make.pconsecutive(pinv_missing_periods), "index")) == 200) stop("wrong index")
+> if (!all(class(make.pconsecutive(pinv_missing_periods)) == class(pinv_missing_periods))) stop("wrong class")
+> 
+> # test for fancy_rownames
+> names(make.pconsecutive(pinv_missing_periods)) # names should be "fancy"
+  [1] "1-1935"  "1-1936"  "1-1937"  "1-1938"  "1-1939"  "1-1940"  "1-1941" 
+  [8] "1-1942"  "1-1943"  "1-1944"  "1-1945"  "1-1946"  "1-1947"  "1-1948" 
+ [15] "1-1949"  "1-1950"  "1-1951"  "1-1952"  "1-1953"  "1-1954"  "2-1935" 
+ [22] "2-1936"  "2-1937"  "2-1938"  "2-1939"  "2-1940"  "2-1941"  "2-1942" 
+ [29] "2-1943"  "2-1944"  "2-1945"  "2-1946"  "2-1947"  "2-1948"  "2-1949" 
+ [36] "2-1950"  "2-1951"  "2-1952"  "2-1953"  "2-1954"  "3-1935"  "3-1936" 
+ [43] "3-1937"  "3-1938"  "3-1939"  "3-1940"  "3-1941"  "3-1942"  "3-1943" 
+ [50] "3-1944"  "3-1945"  "3-1946"  "3-1947"  "3-1948"  "3-1949"  "3-1950" 
+ [57] "3-1951"  "3-1952"  "3-1953"  "3-1954"  "4-1935"  "4-1936"  "4-1937" 
+ [64] "4-1938"  "4-1939"  "4-1940"  "4-1941"  "4-1942"  "4-1943"  "4-1944" 
+ [71] "4-1945"  "4-1946"  "4-1947"  "4-1948"  "4-1949"  "4-1950"  "4-1951" 
+ [78] "4-1952"  "4-1953"  "4-1954"  "5-1935"  "5-1936"  "5-1937"  "5-1938" 
+ [85] "5-1939"  "5-1940"  "5-1941"  "5-1942"  "5-1943"  "5-1944"  "5-1945" 
+ [92] "5-1946"  "5-1947"  "5-1948"  "5-1949"  "5-1950"  "5-1951"  "5-1952" 
+ [99] "5-1953"  "5-1954"  "6-1935"  "6-1936"  "6-1937"  "6-1938"  "6-1939" 
+[106] "6-1940"  "6-1941"  "6-1942"  "6-1943"  "6-1944"  "6-1945"  "6-1946" 
+[113] "6-1947"  "6-1948"  "6-1949"  "6-1950"  "6-1951"  "6-1952"  "6-1953" 
+[120] "6-1954"  "7-1935"  "7-1936"  "7-1937"  "7-1938"  "7-1939"  "7-1940" 
+[127] "7-1941"  "7-1942"  "7-1943"  "7-1944"  "7-1945"  "7-1946"  "7-1947" 
+[134] "7-1948"  "7-1949"  "7-1950"  "7-1951"  "7-1952"  "7-1953"  "7-1954" 
+[141] "8-1935"  "8-1936"  "8-1937"  "8-1938"  "8-1939"  "8-1940"  "8-1941" 
+[148] "8-1942"  "8-1943"  "8-1944"  "8-1945"  "8-1946"  "8-1947"  "8-1948" 
+[155] "8-1949"  "8-1950"  "8-1951"  "8-1952"  "8-1953"  "8-1954"  "9-1935" 
+[162] "9-1936"  "9-1937"  "9-1938"  "9-1939"  "9-1940"  "9-1941"  "9-1942" 
+[169] "9-1943"  "9-1944"  "9-1945"  "9-1946"  "9-1947"  "9-1948"  "9-1949" 
+[176] "9-1950"  "9-1951"  "9-1952"  "9-1953"  "9-1954"  "10-1935" "10-1936"
+[183] "10-1937" "10-1938" "10-1939" "10-1940" "10-1941" "10-1942" "10-1943"
+[190] "10-1944" "10-1945" "10-1946" "10-1947" "10-1948" "10-1949" "10-1950"
+[197] "10-1951" "10-1952" "10-1953" "10-1954"
+> 
+> pGrunfeld_missing_periods_one_id_wo_fancy_rownames <- pdata.frame(Grunfeld_missing_periods_one_id, row.names = FALSE)
+> pinv_missing_periods_wo_fancy_rownames <- pGrunfeld_missing_periods_one_id_wo_fancy_rownames$inv
+> # should not be "fancy" but sequence of numbers
+> if (!all(as.numeric(names(make.pconsecutive(pinv_missing_periods_wo_fancy_rownames))) == c(1:200)))
++   stop("fancy rownames test failed")
+> 
+> 
+> ### test of data.frame interface ####
+> 
+> # index vars automatically taken from columns 1,2, as no index arg specified
+> a <- make.pconsecutive(Grunfeld_missing_periods_one_id)
+> all.equal(a[-c(2,6,7), ], Grunfeld[-c(2,6,7), ])
+[1] TRUE
+> identical(a[-c(2,6,7), ], Grunfeld[-c(2,6,7), ])
+[1] TRUE
+> if (!identical(a[-c(2,6,7), ], Grunfeld[-c(2,6,7), ])) stop("data.frame interface: non identical results")
+> 
+> b <- make.pconsecutive(Grunfeld_missing_periods_multi_id)
+> all.equal(b[-multi_periods, ], Grunfeld[-multi_periods, ])
+[1] TRUE
+> identical(b[-multi_periods, ], Grunfeld[-multi_periods, ])
+[1] TRUE
+> if (!identical(b[-multi_periods, ], Grunfeld[-multi_periods, ])) stop("data.frame interface: non identical results")
+> 
+> # place index vars at other positions, specify index arg
+> permutate_cols <- c(3, 1, 4, 5, 2)
+> Grunfeld_missing_periods_multi_id_other_pos_index <- Grunfeld_missing_periods_multi_id[ , permutate_cols]
+> 
+> d <- make.pconsecutive(Grunfeld_missing_periods_multi_id_other_pos_index, index = c("firm", "year"))
+> all.equal(d[-multi_periods, ], Grunfeld_missing_periods_multi_id_other_pos_index)
+[1] TRUE
+> identical(d[-multi_periods, ], Grunfeld_missing_periods_multi_id_other_pos_index)
+[1] TRUE
+> if (!identical(d[-multi_periods, ], Grunfeld_missing_periods_multi_id_other_pos_index)) stop("data.frame interface: non identical results")
+> 
+> ### test of pdata.frame interface
+> f <- pdata.frame(Grunfeld_missing_periods_multi_id, index = c("firm", "year"), drop.index = FALSE)
+> f_without_indexvars <- pdata.frame(Grunfeld_missing_periods_multi_id, index = c("firm", "year"), drop.index = TRUE)
+> 
+> f_consec <- make.pconsecutive(f)
+> f_without_indexvars_consec <- make.pconsecutive(f_without_indexvars)
+> 
+> ## it seems like it is not possible here to check for equality of subsetted pdata.frames because
+> ## the subsetting functions for pdata.frame alters the pdata.frame
+> ## (this seems due to the fact that, currently, pdata.frames when created do not have
+> ##  "pseries" in columns and carry no index attribute. Only after extracting a column, that column
+> ##  will be of class c(“pseries”, “original_class”) and carry an index attribute.
+> ## 
+> # To see this, use lapply (to avoid extraction):
+> # df <- data.frame(id = c(1,1,2), time = c(1,2,1), f = factor(c("a", "a", "b")), n = c(1:3))
+> # pdf <- pdata.frame(df)
+> # lapply(df, class)
+> # lapply(pdf, class)
+> # 
+> # lapply(df, attributes)
+> # lapply(pdf, attributes)
+> 
+> 
+> 
+> all.equal(f, f_consec[-multi_periods, ])
+[1] TRUE
+> all.equal(f, f_consec[-multi_periods, ], check.attributes = FALSE)
+[1] TRUE
+> identical(f, f_consec[-multi_periods, ])
+[1] TRUE
+> if (!identical(f, f_consec[-multi_periods, ])) stop("make.pconsecutive pdata.frame interface: non identical results")
+> 
+> all.equal(f_without_indexvars, f_without_indexvars_consec[-multi_periods, ])
+[1] TRUE
+> identical(f_without_indexvars, f_without_indexvars_consec[-multi_periods, ])
+[1] TRUE
+> if (!identical(f_without_indexvars, f_without_indexvars_consec[-multi_periods, ])) stop("pdata.frame interface: non identical results")
+> 
+> 
+> if (!isTRUE(all.equal(f, f_consec[-multi_periods, ], check.attributes = FALSE))) stop("pdata.frame interface: non all.equal results")
+> if (!isTRUE(all.equal(f_without_indexvars, f_without_indexvars_consec[-multi_periods, ], check.attributes = FALSE))) stop("pdata.frame interface: non all.equal results")
+> 
+> 
+> 
+> ##### test for consecutive and at the same time balanced:
+> unbalanced_Grunfeld2 <- Grunfeld[-c(1, 41, 42, 79), ] # due to missing first time periods for some individuals, 
+>                                                       # simply making it consecutive is not possible, because the 
+>                                                       # periods cannot be infered
+> punbalanced_Grunfeld2 <- pdata.frame(unbalanced_Grunfeld2)
+> if (!nrow(make.pconsecutive(unbalanced_Grunfeld2, index = c("firm", "year"), balanced = TRUE)) == 200) stop("not balanced")
+> if (!pdim(make.pconsecutive(unbalanced_Grunfeld2, index = c("firm", "year"), balanced = TRUE))$balanced) stop("not balanced")
+> 
+> if (!nrow(make.pconsecutive(punbalanced_Grunfeld2, index = c("firm", "year"), balanced = TRUE)) == 200) stop("not balanced")
+> if (!pdim(make.pconsecutive(punbalanced_Grunfeld2, index = c("firm", "year"), balanced = TRUE))$balanced) stop("not balanced")
+> 
+> # for pseries
+> if (length(make.pconsecutive(punbalanced_Grunfeld2$inv, balanced = TRUE)) != 200) stop("not balanced")
+> # pseries is consecutive but not balanced and balancedness requested
+> psun <- pdata.frame(Grunfeld[1:199 , ])$inv
+> if (!length(make.pconsecutive(psun, balanced = TRUE)) == 200) stop("faile make.pconsecutive pseries")
+> if (!nrow(attr(make.pconsecutive(psun, balanced = TRUE), "index")) == 200) stop("failure make.pconsecutive pseries' index")
+> 
+> 
+> ######## test make.pbalanced #########
+> delte_2nd_period_and_3rd_for_id1 <- c(c(2, 2 + 20*c(1:9)), 3)
+> Grunfeld_wo_2nd_period_and_3rd_for_id1 <- Grunfeld[-delte_2nd_period_and_3rd_for_id1, ]
+> pGrunfeld_wo_2nd_period_and_3rd_for_id1 <- pdata.frame(Grunfeld_wo_2nd_period_and_3rd_for_id1)
+> nrow(Grunfeld_wo_2nd_period_and_3rd_for_id1)
+[1] 189
+> 
+> # data.frame
+> if (!nrow(make.pbalanced(Grunfeld_wo_2nd_period_and_3rd_for_id1))        == 190) stop("failure make.pbalanced data.frame")
+> # pdata.frame and its index
+> if (!nrow(make.pbalanced(pGrunfeld_wo_2nd_period_and_3rd_for_id1))       == 190) stop("failure make.pbalanced pdata.frame")
+> if (!nrow(attr(make.pbalanced(pGrunfeld_wo_2nd_period_and_3rd_for_id1), "index")) == 190) stop("failure make.pbalanced pdata.frame's index")
+> # pseries and its index
+> if (!length(make.pbalanced(pGrunfeld_wo_2nd_period_and_3rd_for_id1$inv)) == 190) stop("failure make.pbalanced pseries")
+> if (!nrow(attr(make.pbalanced(pGrunfeld_wo_2nd_period_and_3rd_for_id1$inv), "index")) == 190) stop("failure make.pbalanced pseries' index")
+> 
+> # pseries is consecutive but not balanced and balancedness requested
+> psun <- pdata.frame(Grunfeld[1:199 , ])$inv 
+> if (!length(make.pbalanced(psun, balance.type = "fill")) == 200) stop("faile make.pbalanced pseries")
+> if (!nrow(attr(make.pbalanced(psun, balance.type = "fill"), "index")) == 200) stop("failure make.pbalanced pseries' index")
+> 
+> ## make.pbalanced with balance.type = "shared.times":
+> # 2 periods deleted -> 180 rows/entries left in (p)data.frame/pseries
+> 
+>   # data.frame
+>   if (!nrow(make.pbalanced(Grunfeld_wo_2nd_period_and_3rd_for_id1, balance.type = "shared.times") == 180)) stop("failure make.pbalanced, balance.type = \"shared.times\") data.frame")
+>   # pdata.frame
+>   if (!nrow(make.pbalanced(pGrunfeld_wo_2nd_period_and_3rd_for_id1, balance.type = "shared.times") == 180)) stop("failure make.pbalanced, balance.type = \"shared.times\") pdata.frame")
+>   if (!nrow(attr(make.pbalanced(pGrunfeld_wo_2nd_period_and_3rd_for_id1, balance.type = "shared.times"), "index")) == 180) stop("failure make.pbalanced, balance.type = \"shared.times\") pdata.frame's index")
+>   # pseries
+>   if (!length(make.pbalanced(pGrunfeld_wo_2nd_period_and_3rd_for_id1$inv, balance.type = "shared.times")) == 180) stop("failure make.pbalanced(, balance.type = \"shared.times\") pseries")
+>   if (!nrow(attr(make.pbalanced(pGrunfeld_wo_2nd_period_and_3rd_for_id1$inv, balance.type = "shared.times"), "index")) == 180) stop("failure make.pbalanced pseries' index")
+> 
+> # delete one (but different) period per id -> upper half of years (1945 to 1953) should be left
+> delete_1_per_id_half <- c(1, 22, 43, 64, 85, 106, 127, 148, 169, 190)
+> #split(Grunfeld[-delete_1_per_id_half, ]$year, Grunfeld[-delete_1_per_id_half, ]$firm) # inspect structure
+> 
+> if (!nrow(make.pbalanced(Grunfeld[-delete_1_per_id_half, ], balance.type = "shared.times") == 100)) stop("failure make.pbalanced, balance.type = \"shared.times\") data.frame")
+> if (!all(unique(make.pbalanced(Grunfeld[-delete_1_per_id_half, ], balance.type = "shared.times")$year) == c(1945:1954))) stop("wrong years")
+> 
+> # delete two (but different) periods per id -> none should be left -> data frame with 0 rows
+> delete_2_per_id_all <- c(1, 20, 22, 39, 43, 58, 64, 77, 85, 96, 106, 115, 127, 134, 148, 153, 169, 172, 190, 191)
+> #split(Grunfeld[-delete_2_per_id_all, ]$year, Grunfeld[-delete_2_per_id_all, ]$firm) # inspect structure
+> if (!nrow(make.pbalanced(Grunfeld[-delete_2_per_id_all, ], balance.type = "shared.times")) == 0) stop("failure make.pbalanced, balance.type = \"shared.times\") data.frame")
+> 
+> 
+> 
+> ############## check that no additional individuals or times were introduced
+> # (because making it balanced does not introduce time periods
+> # which are not present for at least one individual)
+> # 
+> 
+> # pdata.frame and pseries: this is checking for new factor levels
+> # data.frame: check for unique values
+> 
+> #### pdata.frame
+> if (!all(levels(make.pbalanced(pGrunfeld_wo_2nd_period_and_3rd_for_id1)$year) == levels(pGrunfeld_wo_2nd_period_and_3rd_for_id1$year)))
++   stop("failure pdata.frame: factor levels for time periods do not match")
+> 
+> # test: no new levels in index:
+> if (!all(levels(attr(make.pbalanced(pGrunfeld_wo_2nd_period_and_3rd_for_id1), "index")[[2]]) == levels(pGrunfeld_wo_2nd_period_and_3rd_for_id1$year)))
++   stop("failure pdata.frame: factor levels for time periods in index do not match")
+> 
+> # for pdata.frame without index vars as columns
+> pGrunfeld_wo_2nd_period_and_3rd_for_id1_no_index <- pdata.frame(Grunfeld_wo_2nd_period_and_3rd_for_id1, drop.index = TRUE)
+> if (!all(levels(make.pbalanced(pGrunfeld_wo_2nd_period_and_3rd_for_id1_no_index)$year) == levels(pGrunfeld_wo_2nd_period_and_3rd_for_id1_no_index$year)))
++   stop("failure pdata.frame: factor levels for time periods do not match")
+> 
+> # test: no new levels in index:
+> if (!all(levels(attr(make.pbalanced(pGrunfeld_wo_2nd_period_and_3rd_for_id1_no_index), "index")[[2]]) == levels(pGrunfeld_wo_2nd_period_and_3rd_for_id1_no_index$year)))
++   stop("failure pdata.frame: factor levels for time periods in index do not match")
+> 
+> #### pseries
+> # (only need to test index for pseries): no new levels in index 
+> if (!all(levels(attr(make.pbalanced(pGrunfeld_wo_2nd_period_and_3rd_for_id1_no_index$value), "index")[[2]]) == levels(pGrunfeld_wo_2nd_period_and_3rd_for_id1_no_index$year)))
++   stop("failure for pseries: factor levels for time periods in index do not match")
+> 
+> #### data.frame
+> # check that no additional values for individuals were introduced
+> if (!all(sort(unique(make.pbalanced(Grunfeld_wo_2nd_period_and_3rd_for_id1)$firm)) == sort(unique(Grunfeld_wo_2nd_period_and_3rd_for_id1$firm))))
++   stop("failure for data.frame: unique individuals in index do not match")
+> # check that no additional values for time were introduced
+> if (!all(sort(unique(make.pbalanced(Grunfeld_wo_2nd_period_and_3rd_for_id1)$year)) == sort(unique(Grunfeld_wo_2nd_period_and_3rd_for_id1$year))))
++   stop("failure for data.frame: unique time periods in index do not match")
+> 
+> ######## END test make.pbalanced #########
+> 
+> 
+> 
+> ### messy data with various NA patterns ###
+> #
+> ## commented because needs package 'haven' and data need to be loaded from web
+> # library(haven)
+> # nlswork_r8 <- haven::read_dta("http://www.stata-press.com/data/r8/nlswork.dta")
+> # # remove attributes added by haven
+> # nlswork_r8 <- as.data.frame(lapply(nlswork_r8, function(x) {attr(x, "label") <- NULL; x}))
+> # pnlswork_r8 <- pdata.frame(nlswork_r8, index=c("idcode", "year"), drop.index=F)
+> # nlswork_r8$here_before <- TRUE
+> # 
+> # 
+> # length(unique(pnlswork_r8$year)) # == 15
+> # unique(pnlswork_r8$year)         # years missing: 74, 76, 79, 81, 84, 86 (# = 6)
+> #                                  # => 15 + 6 = 21
+> # 
+> # ### test of pseries interface
+> # 
+> # age_consec <- make.pconsecutive(pnlswork_r8$age)
+> # if (!(all(is.pconsecutive(age_consec)))) stop("failure")
+> # 
+> # 
+> # length(age_consec)
+> # length(index(age_consec)[[1L]])
+> # length(index(age_consec)[[2L]])
+> # 
+> # ### test of data.frame interface
+> # df_nlswork_r8_consec <- make.pconsecutive(nlswork_r8)
+> # 
+> # if (!all(is.pconsecutive(df_nlswork_r8_consec))) stop("failure")
+> # if (!nrow(df_nlswork_r8_consec) == 52365) stop("failure")
+> # 
+> # # make temp original data with row.names so that identical can return TRUE
+> # # otherwise it cannot be TRUE because new row.names were introduced and row.names
+> # # are a consecutive series (rownames == row numbers) in the original data
+> # # see how the output of all.equal diverges
+> # rows_there_before <- df_nlswork_r8_consec$here_before & !is.na(df_nlswork_r8_consec$here_before)
+> # all.equal(df_nlswork_r8_consec[rows_there_before, ], nlswork_r8)
+> # 
+> # nlswork_r8_comparison <- nlswork_r8
+> # attr(nlswork_r8_comparison, "row.names") <- attr(df_nlswork_r8_consec[rows_there_before, ], "row.names")
+> # 
+> # if (!identical(df_nlswork_r8_consec[rows_there_before, ],nlswork_r8_comparison)) stop("data.frame: not identical")
+> # 
+> # if (!identical(typeof(attr(nlswork_r8, "row.names")), typeof(attr(df_nlswork_r8_consec, "row.names"))))
+> #   stop("wrong typeof of attribute 'row.names'")
+> # 
+> # ### test of pdata.frame interface
+> # pdf_pnlswork_r8_consec <- make.pconsecutive(pnlswork_r8)
+> # 
+> # if (!all(is.pconsecutive(pdf_pnlswork_r8_consec))) stop("failure")
+> # if (!nrow(pdf_pnlswork_r8_consec) == 52365) stop("failure")
+> # 
+> # # same row.names adoption necessary as for data.frame
+> # pnlswork_r8_comparison  <- pnlswork_r8
+> # pdf_pnlswork_r8_consec_rows_there_before <- pdf_pnlswork_r8_consec[rows_there_before, ]
+> # attr(attr(pnlswork_r8_comparison, "index"), "row.names") <- attr(attr(pdf_pnlswork_r8_consec_rows_there_before, "index"), "row.names")
+> # # as the index vars are in the pdata.frame: added levels are not to be dropped; thus: adapt here to enable comparison
+> # pdf_pnlswork_r8_consec_rows_there_before$idcode <- droplevels(pdf_pnlswork_r8_consec_rows_there_before$idcode)
+> # pdf_pnlswork_r8_consec_rows_there_before$year <- droplevels(pdf_pnlswork_r8_consec_rows_there_before$year)
+> # 
+> # length(levels(pdf_pnlswork_r8_consec_rows_there_before$year))
+> # 
+> # all.equal(pdf_pnlswork_r8_consec_rows_there_before, pnlswork_r8_comparison)
+> # if (!identical(pdf_pnlswork_r8_consec_rows_there_before, pnlswork_r8_comparison)) stop("pdata.frame: not identical")
+> # 
+> # 
+> # 
+> # dims_consec <- pdim(pdf_pnlswork_r8_consec)
+> # min(dims_consec$Tint$Ti) # 1
+> # max(dims_consec$Tint$Ti) # 21 = 15 + 6
+> # dims_consec$Tint$nt # => ok! (not all the same years for each individual, because just consecutive, not balanced)
+> # 
+> # # 15 + 6 == 21
+> # if (!length(unique(index(pdf_pnlswork_r8_consec)[[2]])) == 21) stop("failure")
+> # #  years 68 to 88 need to be present (each year needs to be present)
+> # if (!all(levels(attr(pdf_pnlswork_r8_consec, "index")[[2]]) == factor(68:88))) stop("failure")
+> # 
+> # 
+> # # test argument balanced on this data set
+> # pdf_pnlswork_r8_consec_bal <- make.pconsecutive(pnlswork_r8, balanced = TRUE)
+> # dims_consec_bal <- pdim(pdf_pnlswork_r8_consec_bal)
+> # # need to have same numer of obs per year (because balanced)
+> # if (!all(dims_consec_bal$Tint$nt[1] == dims_consec_bal$Tint$nt)) stop("failure for argument balanced")
+> # if (!nrow(pdf_pnlswork_r8_consec_bal) == 98931) stop("failure: nrow not correct")
+> # if (!dims_consec_bal$balanced) stop("failure: not balanced")
+> # 
+> # ## test of only making it balanced, but not consecutive
+> # nlswork_r8_bal  <- make.pbalanced(nlswork_r8)  # data.frame
+> # pnlswork_r8_bal <- make.pbalanced(pnlswork_r8) # pdata.frame
+> # 
+> # if (!all(sort(unique(nlswork_r8$year)) == sort(unique(nlswork_r8_bal$year)))) stop("data.frame: times do not match")
+> # if (!all(levels(pnlswork_r8$year)      == levels(pnlswork_r8_bal$year))) stop("pdata.frame: times do not match")
+> 
+> 
+> 
+> ########### compare results to statar ########################
+> # devtools::install_github("matthieugomez/statar")
+> # library(tidyr)
+> # library(dplyr)
+> 
+> 
+> 
+> ########### compare to tidyr ##########
+> ## commented because it requires a separate package
+> # 
+> ## make panel balanced by inserting NAs
+> ## note: this is a good bit faster than make.psconsective(, balanced = TRUE)
+> 
+> # nlswork_r8_no_NA <- tidyr::complete(nlswork_r8, idcode, year = as.integer(tidyr::full_seq(year, 1)))
+> # 
+> # tidyr::full_seq(c(1, 2, 4, 5, 10), 1)
+> # tidyr::full_seq(c(1, 2, 4, 5, 10), 2) # error: not a regular sequence
+> # tidyr::full_seq(c( 2, 4, 6, 10), 2)
+> # pnlswork_r8_no_NA <- pdata.frame(nlswork_r8_no_NA, index=c("idcode", "year"), drop.index=F)
+> # 
+> # 
+> # all(is.pconsecutive(pnlswork_r8_no_NA))
+> # 
+> # pdim_tidyr <- pdim(pnlswork_r8_no_NA)
+> # 
+> # min(dims$Tint$Ti)
+> # max(dims$Tint$Ti)
+> # 
+> # pdim(pnlswork_r8_no_NA)
+> # anyNA(pnlswork_r8_no_NA$year)
+> 
+> 
+> proc.time()
+   user  system elapsed 
+   4.96    0.70    5.75 

@@ -1,0 +1,421 @@
+
+R version 4.1.1 (2021-08-10) -- "Kick Things"
+Copyright (C) 2021 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> # tests for is.pconsecutive
+> #
+> # in separate test file: tests for make.pconsecutive and make.pbalanced
+> 
+> 
+> 
+> ############## test with consecutive and non-consecutive time periods ####
+> 
+> library(plm)
+> data("Grunfeld", package = "plm")
+> Grunfeld_missing_period <- Grunfeld[-2, ]
+> 
+> pGrunfeld <- pdata.frame(Grunfeld)
+> pGrunfeld_missing_period <- pdata.frame(Grunfeld_missing_period) # delete one time period of first individual (1-1936 is missing)
+> 
+> # Expected results:
+> #   Grunfeld: rep(TRUE, 10)
+> #   Grunfeld_missing_period: c(FALSE, rep(TRUE, 9))
+> 
+> # test on data.frame
+> is.pconsecutive(Grunfeld)
+   1    2    3    4    5    6    7    8    9   10 
+TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE 
+> is.pconsecutive(Grunfeld_missing_period)
+    1     2     3     4     5     6     7     8     9    10 
+FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
+> 
+> is.pconsecutive(Grunfeld, index=c("firm", "year"))
+   1    2    3    4    5    6    7    8    9   10 
+TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE 
+> is.pconsecutive(Grunfeld_missing_period, index=c("firm", "year"))
+    1     2     3     4     5     6     7     8     9    10 
+FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
+> 
+> # should result in informative error message: is.pconsecutive(Grunfeld, index=c("firm")
+> # because we need both dimensions when index != NULL
+>   ttC <- tryCatch(is.pconsecutive(Grunfeld, index=c("firm")), error=function(e) e, warning=function(w) w)
+>   if(!is(ttC,"error")) stop("error for non supplied time dimension in index not working")
+>   # print(ttC$message)
+> 
+> # test with not ordered data.frame (ordered by id, time)
+> # [only necessary for data.frame as pdata.frames are always ordered this way]
+> Grun_not_ordered <- Grunfeld
+> Grun_not_ordered <- Grun_not_ordered[order(Grun_not_ordered$capital), ]
+> is.pconsecutive(Grun_not_ordered)
+   1    2    3    4    5    6    7    8    9   10 
+TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE 
+> if (!isTRUE(all.equal(is.pconsecutive(Grun_not_ordered), rep(TRUE, 10), check.attributes = FALSE)))
++   stop("wrong result for not ordered data.frame")
+> 
+> 
+> # test on pdata.frame
+> if (!all(is.pconsecutive(pGrunfeld)))
++   stop("is.pconsecutive on pdata.frame: wrong result")
+> if (!isTRUE(all.equal(is.pconsecutive(pGrunfeld_missing_period), c(FALSE, rep(TRUE, 9)),  check.names = FALSE)))
++   stop("is.pconsecutive on pdata.frame: wrong result")
+> 
+> 
+> # test on panelmodel object
+> estimation_pGrunfeld <- plm(inv ~ value + capital, data = pGrunfeld)
+> estimation_pGrunfeld_missing_period <- plm(inv ~ value + capital, data = pGrunfeld_missing_period)
+> nobs(estimation_pGrunfeld) # 200
+[1] 200
+> nobs(estimation_pGrunfeld_missing_period) # 199
+[1] 199
+> 
+> is.pconsecutive(estimation_pGrunfeld)
+   1    2    3    4    5    6    7    8    9   10 
+TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE 
+> is.pconsecutive(estimation_pGrunfeld_missing_period)
+    1     2     3     4     5     6     7     8     9    10 
+FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
+> 
+> 
+> # default method (by dispatching)
+> # test on "numeric" and "NULL" -> should execute is.pconsecutive.default
+> is.pconsecutive(Grunfeld$inv,      id = Grunfeld$firm, time = Grunfeld$year)
+   1    2    3    4    5    6    7    8    9   10 
+TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE 
+> is.pconsecutive(Grunfeld[["inv"]], id = Grunfeld$firm, time = Grunfeld$year)
+   1    2    3    4    5    6    7    8    9   10 
+TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE 
+> is.pconsecutive(NULL, id = Grunfeld$firm, time = Grunfeld$year)
+   1    2    3    4    5    6    7    8    9   10 
+TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE 
+> exp_res_arbitrary_vec <- rep(TRUE, 10)
+> # formal test
+> if (!isTRUE(all.equal(is.pconsecutive(Grunfeld$inv, id = Grunfeld$firm, time = Grunfeld$year),
++                       exp_res_arbitrary_vec, check.attributes = FALSE)))
++   stop("not correct for arbitrary vector")
+> 
+> 
+> # test on pseries
+> pinv <- pGrunfeld$inv
+> pinv_missing_period <- pGrunfeld_missing_period$inv
+> 
+> is.pconsecutive(pinv)
+   1    2    3    4    5    6    7    8    9   10 
+TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE 
+> is.pconsecutive(pinv_missing_period)
+    1     2     3     4     5     6     7     8     9    10 
+FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
+> 
+> 
+> ## more missing periods
+> Grunfeld_missing_periods <- Grunfeld[-c(2,6,7), ]
+> pGrunfeld_missing_periods <- pdata.frame(Grunfeld_missing_periods)
+> pinv_missing_periods <- pGrunfeld_missing_periods$inv
+> 
+> 
+> 
+> ######## with different data set "Hedonic"
+> data("Hedonic", package = "plm")
+> Hed <- Hedonic
+> pHed <- pdata.frame(Hedonic, index = "townid")
+> Hed_missing_period <- Hedonic[-c(5,11), ] # delete 3-2 and 4-5
+> 
+> pHed_missing_period <- pdata.frame(Hedonic, index = "townid") # make pdata.frame first to produce a time index
+> pHed_missing_period <- as.data.frame(pHed_missing_period)
+> pHed_missing_period <- pHed_missing_period[-c(5,11), ]  # delete 3-2 and 4-5
+> pHed_missing_period <- pdata.frame(pHed_missing_period, index = c("townid", "time"))
+> 
+> 
+> # Expected results
+> #  Hed: all TRUE (rep(TRUE, 92))
+> #  Hed_missing_period: 3rd and 4th individual FALSE, rest TRUE
+> expected_Hed <- rep(TRUE, 92)
+> expected_Hed_missing_period <- expected_Hed
+> expected_Hed_missing_period[c(3,4)] <- FALSE
+> 
+> # test on data.frame
+> Hed_df <- as.data.frame(pHed)
+> Hed_df_missing_period <- as.data.frame(pHed_missing_period)
+> is.pconsecutive(Hed_df, index = c("townid", "time"))
+   1    2    3    4    5    6    7    8    9   10   11   12   13   14   15   16 
+TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE 
+  17   18   19   20   21   22   23   24   25   26   27   28   29   30   31   32 
+TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE 
+  33   34   35   36   37   38   39   40   41   42   43   44   45   46   47   48 
+TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE 
+  49   50   51   52   53   54   55   56   57   58   59   60   61   62   63   64 
+TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE 
+  65   66   67   68   69   70   71   72   73   74   75   76   77   78   79   80 
+TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE 
+  81   82   83   84   85   86   87   88   89   90   91   92 
+TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE 
+> is.pconsecutive(Hed_df_missing_period, index = c("townid", "time"))
+    1     2     3     4     5     6     7     8     9    10    11    12    13 
+ TRUE  TRUE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
+   14    15    16    17    18    19    20    21    22    23    24    25    26 
+ TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
+   27    28    29    30    31    32    33    34    35    36    37    38    39 
+ TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
+   40    41    42    43    44    45    46    47    48    49    50    51    52 
+ TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
+   53    54    55    56    57    58    59    60    61    62    63    64    65 
+ TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
+   66    67    68    69    70    71    72    73    74    75    76    77    78 
+ TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
+   79    80    81    82    83    84    85    86    87    88    89    90    91 
+ TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
+   92 
+ TRUE 
+> 
+> # test on pdata.frame
+> if(!isTRUE(all.equal(is.pconsecutive(pHed), expected_Hed, check.names = FALSE))) stop("is.pconsecutive on pdata.frame: wrong result")
+> if(!isTRUE(all.equal(is.pconsecutive(pHed_missing_period), expected_Hed_missing_period, check.names = FALSE))) stop("is.pconsecutive on pdata.frame: wrong result")
+> 
+> # test on panelmodel object
+> estimation_pHed <- plm(mv ~ crim + indus, data = pHed)
+> estimation_pHed_missing_period <- plm(mv ~ crim + indus, data = pHed_missing_period)
+> 
+> is.pconsecutive(estimation_pHed)
+   1    2    3    4    5    6    7    8    9   10   11   12   13   14   15   16 
+TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE 
+  17   18   19   20   21   22   23   24   25   26   27   28   29   30   31   32 
+TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE 
+  33   34   35   36   37   38   39   40   41   42   43   44   45   46   47   48 
+TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE 
+  49   50   51   52   53   54   55   56   57   58   59   60   61   62   63   64 
+TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE 
+  65   66   67   68   69   70   71   72   73   74   75   76   77   78   79   80 
+TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE 
+  81   82   83   84   85   86   87   88   89   90   91   92 
+TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE 
+> is.pconsecutive(estimation_pHed_missing_period)
+    1     2     3     4     5     6     7     8     9    10    11    12    13 
+ TRUE  TRUE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
+   14    15    16    17    18    19    20    21    22    23    24    25    26 
+ TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
+   27    28    29    30    31    32    33    34    35    36    37    38    39 
+ TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
+   40    41    42    43    44    45    46    47    48    49    50    51    52 
+ TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
+   53    54    55    56    57    58    59    60    61    62    63    64    65 
+ TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
+   66    67    68    69    70    71    72    73    74    75    76    77    78 
+ TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
+   79    80    81    82    83    84    85    86    87    88    89    90    91 
+ TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
+   92 
+ TRUE 
+> 
+> # test on pseries
+> pmv <- pHed$mv
+> pmv_missing_period <- pHed_missing_period$mv
+> 
+> if(!isTRUE(all.equal(is.pconsecutive(pmv), expected_Hed, check.names = FALSE))) stop("is.pconsecutive on pseries: wrong result")
+> if(!isTRUE(all.equal(is.pconsecutive(pmv_missing_period), expected_Hed_missing_period, check.names = FALSE))) stop("is.pconsecutive on pseries: wrong result")
+> 
+> ######## with different data set "Gasoline" (has "named" individuals, not just numbers)
+> data("Gasoline", package = "plm")
+> pGasoline <- pdata.frame(Gasoline)
+> 
+> # test on data.frame
+> is.pconsecutive(Gasoline, index = c("country", "year"))
+ AUSTRIA  BELGIUM   CANADA  DENMARK   FRANCE  GERMANY   GREECE  IRELAND 
+    TRUE     TRUE     TRUE     TRUE     TRUE     TRUE     TRUE     TRUE 
+   ITALY    JAPAN NETHERLA   NORWAY    SPAIN   SWEDEN SWITZERL   TURKEY 
+    TRUE     TRUE     TRUE     TRUE     TRUE     TRUE     TRUE     TRUE 
+    U.K.   U.S.A. 
+    TRUE     TRUE 
+> 
+> # test on pdata.frame
+> is.pconsecutive(pGasoline)
+ AUSTRIA  BELGIUM   CANADA  DENMARK   FRANCE  GERMANY   GREECE  IRELAND 
+    TRUE     TRUE     TRUE     TRUE     TRUE     TRUE     TRUE     TRUE 
+   ITALY    JAPAN NETHERLA   NORWAY    SPAIN   SWEDEN SWITZERL   TURKEY 
+    TRUE     TRUE     TRUE     TRUE     TRUE     TRUE     TRUE     TRUE 
+    U.K.   U.S.A. 
+    TRUE     TRUE 
+> 
+> 
+> 
+> ######### test for case with a time period missing from whole data set
+> data("Grunfeld", package = "plm")
+> obs_3rd <- 3 + 20*c(0:9)
+> Grunfeld_wo_1937 <- pdata.frame(Grunfeld[-obs_3rd, ])
+> 
+> expected_Grunfeld_wo_1937 <- rep(FALSE, 10)
+> 
+> if(!isTRUE(all.equal(is.pconsecutive(Grunfeld_wo_1937), expected_Grunfeld_wo_1937, check.names = FALSE)))
++   stop("is.pconsecutive on pdata.frame: wrong result for a missing time period in whole data set")
+> 
+> if(!isTRUE(all.equal(is.pconsecutive(Grunfeld_wo_1937$inv), expected_Grunfeld_wo_1937, check.names = FALSE)))
++   stop("is.pconsecutive on pdata.frame: wrong result for a missing time period in whole data set")
+> 
+> 
+> ########## Tests with NA in individual and time index ###########
+> 
+> 
+> ### test with NA in time index ###
+> data("Grunfeld", package = "plm") # get fresh Grunfeld (no NAs)
+> Grunfeld_NA_time <- Grunfeld
+> Grunfeld_NA_time[2, "year"] <- NA # firm 1, year 1936: year set to NA
+> 
+> pGrunfeld_NA_time <- pdata.frame(Grunfeld_NA_time)
+Warning message:
+In pdata.frame(Grunfeld_NA_time) :
+  at least one NA in at least one index dimension in resulting pdata.frame
+ to find out which, use, e.g., table(index(your_pdataframe), useNA = "ifany")
+
+> # time index with NA is in pdata.frame
+> # it gets sorted to end of firm 1
+> head(pGrunfeld_NA_time, 21)
+       firm year    inv  value capital
+1-1935    1 1935  317.6 3078.5     2.8
+1-1937    1 1937  410.6 5387.1   156.9
+1-1938    1 1938  257.7 2792.2   209.2
+1-1939    1 1939  330.8 4313.2   203.4
+1-1940    1 1940  461.2 4643.9   207.2
+1-1941    1 1941  512.0 4551.2   255.2
+1-1942    1 1942  448.0 3244.1   303.7
+1-1943    1 1943  499.6 4053.7   264.1
+1-1944    1 1944  547.5 4379.3   201.6
+1-1945    1 1945  561.2 4840.9   265.0
+1-1946    1 1946  688.1 4900.9   402.2
+1-1947    1 1947  568.9 3526.5   761.5
+1-1948    1 1948  529.2 3254.7   922.4
+1-1949    1 1949  555.1 3700.2  1020.1
+1-1950    1 1950  642.9 3755.6  1099.0
+1-1951    1 1951  755.9 4833.0  1207.7
+1-1952    1 1952  891.2 4924.9  1430.5
+1-1953    1 1953 1304.4 6241.7  1777.3
+1-1954    1 1954 1486.7 5593.6  2226.3
+1-NA      1 <NA>  391.8 4661.7    52.6
+2-1935    2 1935  209.9 1362.4    53.8
+> 
+> expected_NA_time <- c(NA, rep(TRUE, 9))
+> expected_NA_time_na.rm.tindex <- c(FALSE, rep(TRUE, 9))
+> 
+> is.pconsecutive(Grunfeld_NA_time)
+   1    2    3    4    5    6    7    8    9   10 
+  NA TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE 
+> is.pconsecutive(Grunfeld_NA_time, na.rm.tindex = FALSE)
+   1    2    3    4    5    6    7    8    9   10 
+  NA TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE 
+> is.pconsecutive(Grunfeld_NA_time, na.rm.tindex = TRUE)
+    1     2     3     4     5     6     7     8     9    10 
+FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
+> 
+> if(!isTRUE(all.equal(is.pconsecutive(Grunfeld_NA_time), is.pconsecutive(pGrunfeld_NA_time))))
++   stop("is.pconsecutive not equal for data.frame and pdata.frame with 'NA' in time index")
+> if(!isTRUE(all.equal(is.pconsecutive(pGrunfeld_NA_time), expected_NA_time, check.names=FALSE)))
++   stop("is.pconsecutive: not expected result with 'NA' in time index")
+> if(!isTRUE(all.equal(is.pconsecutive(pGrunfeld_NA_time, na.rm.tindex = TRUE), expected_NA_time_na.rm.tindex, check.names=FALSE)))
++   stop("is.pconsecutive(, na.rm.tindex = TRUE: not expected result with 'NA' in time index - there should be no NA values left")
+> 
+> ### test with NA in individual index ###
+> # get fresh Grunfeld (no NAs)
+> Grunfeld_NA_ind <- Grunfeld
+> Grunfeld_NA_ind[3, "firm"] <- NA # firm 1, year 1937: firm set to NA
+> pGrunfeld_NA_ind <- pdata.frame(Grunfeld_NA_ind)
+Warning message:
+In pdata.frame(Grunfeld_NA_ind) :
+  at least one NA in at least one index dimension in resulting pdata.frame
+ to find out which, use, e.g., table(index(your_pdataframe), useNA = "ifany")
+
+> 
+> # individual index with NA is in pdata.frame
+> # it gets sorted to end of individuals
+> tail(pGrunfeld_NA_ind, 21)
+        firm year    inv   value capital
+10-1935   10 1935   2.54   70.91    4.50
+10-1936   10 1936   2.00   87.94    4.71
+10-1937   10 1937   2.19   82.20    4.57
+10-1938   10 1938   1.99   58.72    4.56
+10-1939   10 1939   2.03   80.54    4.38
+10-1940   10 1940   1.81   86.47    4.21
+10-1941   10 1941   2.14   77.68    4.12
+10-1942   10 1942   1.86   62.16    3.83
+10-1943   10 1943   0.93   62.24    3.58
+10-1944   10 1944   1.18   61.82    3.41
+10-1945   10 1945   1.36   65.85    3.31
+10-1946   10 1946   2.24   69.54    3.23
+10-1947   10 1947   3.81   64.97    3.90
+10-1948   10 1948   5.66   68.00    5.38
+10-1949   10 1949   4.21   71.24    7.39
+10-1950   10 1950   3.42   69.05    8.74
+10-1951   10 1951   4.67   83.04    9.07
+10-1952   10 1952   6.00   74.42    9.93
+10-1953   10 1953   6.53   63.51   11.68
+10-1954   10 1954   5.12   58.12   14.33
+NA-1937 <NA> 1937 410.60 5387.10  156.90
+> 
+> expected_NA_ind <- c(FALSE, rep(TRUE, 9))
+> 
+> if(!isTRUE(all.equal(is.pconsecutive(Grunfeld_NA_ind), is.pconsecutive(pGrunfeld_NA_ind))))
++   stop("is.pconsecutive not equal for data.frame and pdata.frame with 'NA' in individual index")
+> if(!isTRUE(all.equal(is.pconsecutive(pGrunfeld_NA_ind), expected_NA_ind, check.names=FALSE)))
++   stop("is.pconsecutive: not expected result with 'NA' in individual index")
+> 
+> 
+> 
+> ### test with NA in individual AND time index ###
+> # get fresh Grunfeld (no NAs)
+> Grunfeld_NA_id_time <- Grunfeld
+> Grunfeld_NA_id_time[4, c("firm", "year")] <- NA # firm 1, year 1938: firm and year set to NA
+> pGrunfeld_NA_id_time <- pdata.frame(Grunfeld_NA_id_time)
+Warning message:
+In pdata.frame(Grunfeld_NA_id_time) :
+  at least one NA in at least one index dimension in resulting pdata.frame
+ to find out which, use, e.g., table(index(your_pdataframe), useNA = "ifany")
+
+> 
+> # individual and time index with NA is in pdata.frame
+> # it gets sorted to end of individuals
+> tail(pGrunfeld_NA_id_time, 21)
+        firm year    inv   value capital
+10-1935   10 1935   2.54   70.91    4.50
+10-1936   10 1936   2.00   87.94    4.71
+10-1937   10 1937   2.19   82.20    4.57
+10-1938   10 1938   1.99   58.72    4.56
+10-1939   10 1939   2.03   80.54    4.38
+10-1940   10 1940   1.81   86.47    4.21
+10-1941   10 1941   2.14   77.68    4.12
+10-1942   10 1942   1.86   62.16    3.83
+10-1943   10 1943   0.93   62.24    3.58
+10-1944   10 1944   1.18   61.82    3.41
+10-1945   10 1945   1.36   65.85    3.31
+10-1946   10 1946   2.24   69.54    3.23
+10-1947   10 1947   3.81   64.97    3.90
+10-1948   10 1948   5.66   68.00    5.38
+10-1949   10 1949   4.21   71.24    7.39
+10-1950   10 1950   3.42   69.05    8.74
+10-1951   10 1951   4.67   83.04    9.07
+10-1952   10 1952   6.00   74.42    9.93
+10-1953   10 1953   6.53   63.51   11.68
+10-1954   10 1954   5.12   58.12   14.33
+NA-NA   <NA> <NA> 257.70 2792.20  209.20
+> 
+> expected_NA_ind_time <- c(FALSE, rep(TRUE, 9))
+> 
+> if(!isTRUE(all.equal(is.pconsecutive(Grunfeld_NA_id_time), is.pconsecutive(pGrunfeld_NA_id_time))))
++   stop("is.pconsecutive not equal for data.frame and pdata.frame with 'NA' in individual AND time index")
+> if(!isTRUE(all.equal(is.pconsecutive(pGrunfeld_NA_id_time), expected_NA_ind_time, check.names=FALSE)))
++   stop("is.pconsecutive: not expected result with 'NA' in individual AND time index")
+> 
+> 
+> 
+> 
+> proc.time()
+   user  system elapsed 
+   3.82    0.54    4.48 

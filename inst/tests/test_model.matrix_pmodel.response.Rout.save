@@ -1,0 +1,207 @@
+
+R version 4.1.1 (2021-08-10) -- "Kick Things"
+Copyright (C) 2021 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> ## Tests for model.matrix[.pFormula|.plm] and pmodel.response.[pFormula|.plm|.data.frame]
+> 
+> # commented lines do not run in v1.5-15
+> 
+> # 1) model.matrix[.pFormula|.plm] 
+> # 2) pmodel.response.[pFormula|.plm|.data.frame]
+> 
+> 
+> 
+> library(plm)
+> data("Grunfeld", package="plm")
+> form <- formula(inv ~ value + capital)
+> plm_pool <- plm(form, data=Grunfeld, model="pooling")
+> plm_fe   <- plm(form, data=Grunfeld, model="within")
+> plm_re   <- plm(form, data=Grunfeld, model="random")
+> 
+> ########### 1) model.matrix[.pFormula|.plm] ###########
+> 
+> 
+> 
+> # pooling and within models work pdata.frame [albeit one should input a model.frame of class pdata.frame]
+> pGrunfeld <- pdata.frame(Grunfeld, index = c("firm", "year"))
+> mf <- model.frame(pGrunfeld, form)
+> 
+> #MM modmat_pFormula_pdf_pool <- plm:::model.matrix.pFormula(form, data=pGrunfeld, model="pooling") # works
+> #MM modmat_pFormula_pdf_fe   <- plm:::model.matrix.pFormula(form, data=pGrunfeld, model="within")  # works
+> 
+> modmat_pFormula_pdf_pool <- plm:::model.matrix.pdata.frame(mf, model="pooling") # works
+> modmat_pFormula_pdf_fe   <- plm:::model.matrix.pdata.frame(mf, model="within")  # works
+> 
+> 
+> #modmat_pFormula_re2   <- plm:::model.matrix.pFormula(form, data=pGrunfeld, model="random")  # still fails in v1.5-15
+> 
+> # Error:
+> # Error in plm:::model.matrix.pFormula(form, data = pGrunfeld, model = "random") : 
+> #   dims [product 600] do not match the length of object [0]
+> 
+> 
+> #### some sanity checks if various interfaces yield the same result ###
+> modmat_plm_pool <- model.matrix(plm_pool)
+> modmat_plm_fe   <- model.matrix(plm_fe)
+> modmat_plm_re   <- model.matrix(plm_re)
+> 
+> 
+> ##### interfaces: plm vs. pFormula with pdata.frame
+> if(!isTRUE(all.equal(modmat_plm_pool, modmat_pFormula_pdf_pool, check.attributes = FALSE))) stop("model.matrix's are not the same")
+> if(!isTRUE(all.equal(modmat_plm_fe,   modmat_pFormula_pdf_fe,   check.attributes = FALSE))) stop("model.matrix's are not the same")
+> #if(!isTRUE(all.equal(modmat_plm_re,   modmat_pFormula_pdf_re,   check.attributes = FALSE))) stop("model.matrix's are not the same")
+> 
+> 
+> 
+> 
+> ########### 2) pmodel.response.[pFormula|.plm|.data.frame] ###########
+> 
+> # pooling and within models work on a pdata.frame [the plain pdata.frame is coerced to a model.frame
+> # internally in pmodel.response.pFormula]
+> #MM resp_pFormula_pool <- plm:::pmodel.response.formula(form, data = pGrunfeld, model = "pooling") 
+> #MM resp_pFormula_fe   <- plm:::pmodel.response.formula(form, data = pGrunfeld, model = "within")
+> 
+> resp_pFormula_pool <- plm:::pmodel.response.formula(form, data = pGrunfeld, model = "pooling") 
+> resp_pFormula_fe   <- plm:::pmodel.response.formula(form, data = pGrunfeld, model = "within")
+> 
+> # still fails
+> # resp_pFormula_re <- plm:::pmodel.response.pFormula(form, data = pGrunfeld, model = "random")
+> #
+> # Error in model.matrix.pFormula(pFormula(formula), data = data, model = model,  : 
+> #   dims [product 200] do not match the length of object [0]
+> 
+> 
+> ### pmodel.response.data.frame on data.frame/pdata.frame
+> ## the 'data' data.frame for pmodel.response.data.frame must be a model.frame created by plm's model.frame
+> ## it needs to be a model.frame because then it is ensured we find the response variable in the fist column
+> #pGrunfeld_mf <- model.frame(pFormula(form), data = pGrunfeld)
+> pGrunfeld_mf <- model.frame(pGrunfeld, form)
+> 
+> resp_pdf_mf_pool <- plm:::pmodel.response.data.frame(pGrunfeld_mf, model = "pooling") # works
+> resp_pdf_mf_fe   <- plm:::pmodel.response.data.frame(pGrunfeld_mf, model = "within")   # works
+> #resp_pdf_mf_re   <- plm:::pmodel.response.data.frame(pGrunfeld_mf, model = "random") # error, likely due to missing arguments
+> 
+> ## these errored pre rev. 601 due to missing 'match.arg()' to set default value:
+> #pmodel.response(pFormula(form), data = pGrunfeld)
+> pmodel.response(form, data = pGrunfeld)
+      1       2       3       4       5       6       7       8       9      10 
+ 317.60  391.80  410.60  257.70  330.80  461.20  512.00  448.00  499.60  547.50 
+     11      12      13      14      15      16      17      18      19      20 
+ 561.20  688.10  568.90  529.20  555.10  642.90  755.90  891.20 1304.40 1486.70 
+     21      22      23      24      25      26      27      28      29      30 
+ 209.90  355.30  469.90  262.30  230.40  361.60  472.80  445.60  361.60  288.20 
+     31      32      33      34      35      36      37      38      39      40 
+ 258.70  420.30  420.50  494.50  405.10  418.80  588.20  645.50  641.00  459.30 
+     41      42      43      44      45      46      47      48      49      50 
+  33.10   45.00   77.20   44.60   48.10   74.40  113.00   91.90   61.30   56.80 
+     51      52      53      54      55      56      57      58      59      60 
+  93.60  159.90  147.20  146.30   98.30   93.50  135.20  157.30  179.50  189.60 
+     61      62      63      64      65      66      67      68      69      70 
+  40.29   72.76   66.26   51.60   52.41   69.41   68.35   46.80   47.40   59.57 
+     71      72      73      74      75      76      77      78      79      80 
+  88.78   74.12   62.68   89.36   78.98  100.66  160.62  145.00  174.93  172.49 
+     81      82      83      84      85      86      87      88      89      90 
+  39.68   50.73   74.24   53.51   42.65   46.48   61.40   39.67   62.24   52.32 
+     91      92      93      94      95      96      97      98      99     100 
+  63.21   59.37   58.02   70.34   67.42   55.74   80.30   85.40   91.90   81.43 
+    101     102     103     104     105     106     107     108     109     110 
+  20.36   25.98   25.94   27.53   24.60   28.54   43.41   42.81   27.84   32.60 
+    111     112     113     114     115     116     117     118     119     120 
+  39.03   50.17   51.85   64.03   68.16   77.34   95.30   99.49  127.52  135.72 
+    121     122     123     124     125     126     127     128     129     130 
+  24.43   23.21   32.78   32.54   26.65   33.71   43.50   34.46   44.28   70.80 
+    131     132     133     134     135     136     137     138     139     140 
+  44.12   48.98   48.51   50.00   50.59   42.53   64.77   72.68   73.86   89.51 
+    141     142     143     144     145     146     147     148     149     150 
+  12.93   25.90   35.05   22.89   18.84   28.57   48.51   43.34   37.02   37.81 
+    151     152     153     154     155     156     157     158     159     160 
+  39.27   53.46   55.56   49.56   32.04   32.24   54.38   71.78   90.08   68.60 
+    161     162     163     164     165     166     167     168     169     170 
+  26.63   23.39   30.65   20.89   28.78   26.93   32.08   32.21   35.69   62.47 
+    171     172     173     174     175     176     177     178     179     180 
+  52.32   56.95   54.32   40.53   32.54   43.48   56.49   65.98   66.11   49.34 
+    181     182     183     184     185     186     187     188     189     190 
+   2.54    2.00    2.19    1.99    2.03    1.81    2.14    1.86    0.93    1.18 
+    191     192     193     194     195     196     197     198     199     200 
+   1.36    2.24    3.81    5.66    4.21    3.42    4.67    6.00    6.53    5.12 
+> pmodel.response(pGrunfeld_mf)
+      1       2       3       4       5       6       7       8       9      10 
+ 317.60  391.80  410.60  257.70  330.80  461.20  512.00  448.00  499.60  547.50 
+     11      12      13      14      15      16      17      18      19      20 
+ 561.20  688.10  568.90  529.20  555.10  642.90  755.90  891.20 1304.40 1486.70 
+     21      22      23      24      25      26      27      28      29      30 
+ 209.90  355.30  469.90  262.30  230.40  361.60  472.80  445.60  361.60  288.20 
+     31      32      33      34      35      36      37      38      39      40 
+ 258.70  420.30  420.50  494.50  405.10  418.80  588.20  645.50  641.00  459.30 
+     41      42      43      44      45      46      47      48      49      50 
+  33.10   45.00   77.20   44.60   48.10   74.40  113.00   91.90   61.30   56.80 
+     51      52      53      54      55      56      57      58      59      60 
+  93.60  159.90  147.20  146.30   98.30   93.50  135.20  157.30  179.50  189.60 
+     61      62      63      64      65      66      67      68      69      70 
+  40.29   72.76   66.26   51.60   52.41   69.41   68.35   46.80   47.40   59.57 
+     71      72      73      74      75      76      77      78      79      80 
+  88.78   74.12   62.68   89.36   78.98  100.66  160.62  145.00  174.93  172.49 
+     81      82      83      84      85      86      87      88      89      90 
+  39.68   50.73   74.24   53.51   42.65   46.48   61.40   39.67   62.24   52.32 
+     91      92      93      94      95      96      97      98      99     100 
+  63.21   59.37   58.02   70.34   67.42   55.74   80.30   85.40   91.90   81.43 
+    101     102     103     104     105     106     107     108     109     110 
+  20.36   25.98   25.94   27.53   24.60   28.54   43.41   42.81   27.84   32.60 
+    111     112     113     114     115     116     117     118     119     120 
+  39.03   50.17   51.85   64.03   68.16   77.34   95.30   99.49  127.52  135.72 
+    121     122     123     124     125     126     127     128     129     130 
+  24.43   23.21   32.78   32.54   26.65   33.71   43.50   34.46   44.28   70.80 
+    131     132     133     134     135     136     137     138     139     140 
+  44.12   48.98   48.51   50.00   50.59   42.53   64.77   72.68   73.86   89.51 
+    141     142     143     144     145     146     147     148     149     150 
+  12.93   25.90   35.05   22.89   18.84   28.57   48.51   43.34   37.02   37.81 
+    151     152     153     154     155     156     157     158     159     160 
+  39.27   53.46   55.56   49.56   32.04   32.24   54.38   71.78   90.08   68.60 
+    161     162     163     164     165     166     167     168     169     170 
+  26.63   23.39   30.65   20.89   28.78   26.93   32.08   32.21   35.69   62.47 
+    171     172     173     174     175     176     177     178     179     180 
+  52.32   56.95   54.32   40.53   32.54   43.48   56.49   65.98   66.11   49.34 
+    181     182     183     184     185     186     187     188     189     190 
+   2.54    2.00    2.19    1.99    2.03    1.81    2.14    1.86    0.93    1.18 
+    191     192     193     194     195     196     197     198     199     200 
+   1.36    2.24    3.81    5.66    4.21    3.42    4.67    6.00    6.53    5.12 
+> 
+> 
+> 
+> #### some sanity checks if various interfaces yield the same result ###
+> resp_plm_pool <- pmodel.response(plm_pool)
+> resp_plm_fe   <- pmodel.response(plm_fe)
+> resp_plm_re   <- pmodel.response(plm_re)
+> 
+> 
+> # compare interface pFormula with plm
+> if(!isTRUE(all.equal(resp_pFormula_pool, resp_plm_pool, check.attributes = FALSE))) stop("responses not equal")
+> if(!isTRUE(all.equal(resp_pFormula_fe,   resp_plm_fe, check.attributes = FALSE))) stop("responses not equal")
+> #if(!isTRUE(all.equal(resp_pFormula_re, resp_plm_re, check.attributes = FALSE))) stop("responses not equal")
+> 
+> 
+> # compare interface data.frame with model.frame with plm
+> if(!isTRUE(all.equal(resp_pdf_mf_pool, resp_plm_pool, check.attributes = FALSE))) stop("responses not equal")
+> if(!isTRUE(all.equal(resp_pdf_mf_fe,   resp_plm_fe, check.attributes = FALSE))) stop("responses not equal")
+> #if(!isTRUE(all.equal(resp_pdf_mf_re, resp_plm_re, check.attributes = FALSE))) stop("responses not equal")
+> 
+> 
+> 
+> 
+> 
+> proc.time()
+   user  system elapsed 
+   3.31    0.68    3.98 

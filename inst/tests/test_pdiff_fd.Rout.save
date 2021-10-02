@@ -1,0 +1,201 @@
+
+R version 4.1.1 (2021-08-10) -- "Kick Things"
+Copyright (C) 2021 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> # Test for pdiff (internal function) for the time dimension (effect = "time")
+> 
+> library(plm)
+> data("Grunfeld", package = "plm")
+> pGrunfeld <- pdata.frame(Grunfeld)
+> form <- inv ~ value + capital
+> fd_id <- plm(form, data = Grunfeld, model = "fd")
+> 
+> print(summary(fd_id))
+Oneway (individual) effect First-Difference Model
+
+Call:
+plm(formula = form, data = Grunfeld, model = "fd")
+
+Balanced Panel: n = 10, T = 20, N = 200
+Observations used in estimation: 190
+
+Residuals:
+       Min.     1st Qu.      Median     3rd Qu.        Max. 
+-200.889558  -13.889063    0.016677    9.504223  195.634938 
+
+Coefficients:
+              Estimate Std. Error t-value  Pr(>|t|)    
+(Intercept) -1.8188902  3.5655931 -0.5101    0.6106    
+value        0.0897625  0.0083636 10.7325 < 2.2e-16 ***
+capital      0.2917667  0.0537516  5.4281 1.752e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    584410
+Residual Sum of Squares: 345460
+R-Squared:      0.40888
+Adj. R-Squared: 0.40256
+F-statistic: 64.6736 on 2 and 187 DF, p-value: < 2.22e-16
+> print(vcovHC(fd_id))
+            (Intercept)         value      capital
+(Intercept)  9.56375529  0.0341636854 -0.407853075
+value        0.03416369  0.0001641264 -0.001280677
+capital     -0.40785308 -0.0012806771  0.021508668
+attr(,"cluster")
+[1] "group"
+> print(vcovHC(fd_id, cluster = "time"))
+            (Intercept)        value      capital
+(Intercept) 25.19337837 -0.019969776 -0.423306798
+value       -0.01996978  0.000212163  0.001003194
+capital     -0.42330680  0.001003194  0.013679807
+attr(,"cluster")
+[1] "time"
+> 
+> ## FD models with effect = "time" are be prevented from estimation due to
+> ## not meaningful ordering of individuals
+> #
+> # fd_time <- plm(form, data = Grunfeld, model = "fd", effect = "time")
+> # summary(fd_time)
+> # vcovHC(fd_time)
+> # vcovHC(fd_time, cluster = "group")
+> 
+> 
+> pGrunfeld <- pdata.frame(Grunfeld)
+> #MM modmat_id   <- model.matrix(pFormula(form), data = pGrunfeld, model = "fd", effect = "individual")
+> modmat_id   <- model.matrix(model.frame(pGrunfeld, form), model = "fd", effect = "individual")
+> #YC modmat_time <- model.matrix(pFormula(form), data = pGrunfeld, model = "fd", effect = "time")
+> 
+> if (nrow(modmat_id)   != 190) stop(paste0("nrow not correct, should be 190, is: ", nrow(modmat_id)))
+> #YC if (nrow(modmat_time) != 180) stop(paste0("nrow not correct, should be 180, is: ", nrow(modmat_time)))
+> 
+> # "layout" of resulting matrix for effect = "time":
+> 1362.4 - 3078.5 # pos  1 t_1 - t_1 for id 2,1 [orig pos 21 - orig pos 1]
+[1] -1716.1
+> 1170.6 - 1362.4 # pos 21 t_t - t_1 for id 3,2 [orig pos 41 - orig pos 21]
+[1] -191.8
+> 417.5  - 1170.6 # pos 41 t_t - t_1 for id 4,3 [orig pos 61 - orig pos 41]
+[1] -753.1
+> 
+> # formal test
+> #YC if (!isTRUE(all.equal(1362.4-3078.5, modmat_time[1,  "value"]))) stop("position for effect = \"time\" not correct")
+> #YC if (!isTRUE(all.equal(1170.6-1362.4, modmat_time[21, "value"]))) stop("position for effect = \"time\" not correct")
+> #YC if (!isTRUE(all.equal(417.5-1170.6,  modmat_time[41, "value"]))) stop("position for effect = \"time\" not correct")
+> 
+> head(modmat_id,   41)
+   (Intercept)   value capital
+2            1  1583.2    49.8
+3            1   725.4   104.3
+4            1 -2594.9    52.3
+5            1  1521.0    -5.8
+6            1   330.7     3.8
+7            1   -92.7    48.0
+8            1 -1307.1    48.5
+9            1   809.6   -39.6
+10           1   325.6   -62.5
+11           1   461.6    63.4
+12           1    60.0   137.2
+13           1 -1374.4   359.3
+14           1  -271.8   160.9
+15           1   445.5    97.7
+16           1    55.4    78.9
+17           1  1077.4   108.7
+18           1    91.9   222.8
+19           1  1316.8   346.8
+20           1  -648.1   449.0
+22           1   444.7    -3.3
+23           1   869.2    67.6
+24           1  -874.4   142.1
+25           1   155.4    52.5
+26           1   245.6   -58.5
+27           1   177.6     7.2
+28           1  -211.9    37.3
+29           1  -183.5     3.1
+30           1  -171.2   -22.7
+31           1    36.3   -65.3
+32           1   217.5   -81.2
+33           1  -271.0   132.2
+34           1  -170.9    42.1
+35           1    41.2    44.2
+36           1    10.4     6.7
+37           1   612.1   -15.7
+38           1  -130.1   102.1
+39           1  -128.1   179.4
+40           1    84.2    46.1
+42           1   845.2     6.6
+43           1   787.5    13.6
+44           1  -763.6    38.2
+> #YC head(modmat_time, 41)
+> head(Grunfeld,    41)
+   firm year    inv  value capital
+1     1 1935  317.6 3078.5     2.8
+2     1 1936  391.8 4661.7    52.6
+3     1 1937  410.6 5387.1   156.9
+4     1 1938  257.7 2792.2   209.2
+5     1 1939  330.8 4313.2   203.4
+6     1 1940  461.2 4643.9   207.2
+7     1 1941  512.0 4551.2   255.2
+8     1 1942  448.0 3244.1   303.7
+9     1 1943  499.6 4053.7   264.1
+10    1 1944  547.5 4379.3   201.6
+11    1 1945  561.2 4840.9   265.0
+12    1 1946  688.1 4900.9   402.2
+13    1 1947  568.9 3526.5   761.5
+14    1 1948  529.2 3254.7   922.4
+15    1 1949  555.1 3700.2  1020.1
+16    1 1950  642.9 3755.6  1099.0
+17    1 1951  755.9 4833.0  1207.7
+18    1 1952  891.2 4924.9  1430.5
+19    1 1953 1304.4 6241.7  1777.3
+20    1 1954 1486.7 5593.6  2226.3
+21    2 1935  209.9 1362.4    53.8
+22    2 1936  355.3 1807.1    50.5
+23    2 1937  469.9 2676.3   118.1
+24    2 1938  262.3 1801.9   260.2
+25    2 1939  230.4 1957.3   312.7
+26    2 1940  361.6 2202.9   254.2
+27    2 1941  472.8 2380.5   261.4
+28    2 1942  445.6 2168.6   298.7
+29    2 1943  361.6 1985.1   301.8
+30    2 1944  288.2 1813.9   279.1
+31    2 1945  258.7 1850.2   213.8
+32    2 1946  420.3 2067.7   132.6
+33    2 1947  420.5 1796.7   264.8
+34    2 1948  494.5 1625.8   306.9
+35    2 1949  405.1 1667.0   351.1
+36    2 1950  418.8 1677.4   357.8
+37    2 1951  588.2 2289.5   342.1
+38    2 1952  645.5 2159.4   444.2
+39    2 1953  641.0 2031.3   623.6
+40    2 1954  459.3 2115.5   669.7
+41    3 1935   33.1 1170.6    97.8
+> 
+> 
+> # check pseries
+> pdiff_id   <- plm:::pdiff(pGrunfeld[ , "value"], effect = "individual")
+> #YC pdiff_time <- plm:::pdiff(pGrunfeld[ , "value"], effect = "time")
+> 
+> pos_first_id <- which(pGrunfeld$firm == 1)
+> pos_first_time <- which(pGrunfeld$year == 1935)
+> 
+> diff_id   <- base::diff(Grunfeld[pos_first_id,   "value"])
+> diff_time <- base::diff(Grunfeld[pos_first_time, "value"])
+> 
+> if (!isTRUE(all.equal(pdiff_id[pos_first_id[-length(pos_first_id)]],  diff_id, check.attributes = FALSE))) stop("pdiff on individual not correct")
+> #YC if (!isTRUE(all.equal(pdiff_time[pos_first_time[-length(pos_first_time)]], diff_time, check.attributes = FALSE))) stop("pdiff on time not correct")
+> 
+> proc.time()
+   user  system elapsed 
+   3.34    0.57    4.14 
