@@ -52,10 +52,10 @@ To install the released version from **CRAN**:
 install.packages("plm")
 ```
 
-The package's CRAN website is https://cran.r-project.org/package=plm.
+The package's CRAN website is <https://cran.r-project.org/package=plm>.
 
 
-The development of package `plm` takes place on GitHub at https://github.com/ycroissant/plm.
+The development of package `plm` takes place on GitHub at <https://github.com/ycroissant/plm>.
 To install the development version from **GitHub**, use, e.g.:
 ```{r}
 # install.packages("remotes")
@@ -66,8 +66,9 @@ remotes::install_github("ycroissant/plm")
 ## Documentation
 
 Package plm comes with documentation: Besides the usual help pages for each function,
-the vignettes provide a gentle introduction to the package and some functions
-(vignettes are available at the package's CRAN website https://cran.r-project.org/package=plm).
+the vignettes provide a gentle introduction to the package and some functions.
+Vignettes are available at the package's CRAN website <https://cran.r-project.org/package=plm>
+and can be browsed from within R by `browseVignettes("plm")`.
 
 New package users are advised to start with the first vignette 
 *Panel data econometrics in R: the plm package* for an overview of the package. 
@@ -83,9 +84,9 @@ Further, many textbooks treat package `plm` and/or use it in their examples:
   chapter 3.6.
 
 * Hanck/Arnold/Gerber/Schmelzer, *Econometrics with R*, online book 
-  https://www.econometrics-with-r.org/. Esp. chapter 10.
+  <https://www.econometrics-with-r.org/>. Esp. chapter 10.
 
 * Heiss, *Using R for Introductory Econometrics*, 2nd edition, 2020,
-  Independent Publishing, Düsseldorf, also available online at http://www.urfie.net/.
+  Independent Publishing, Düsseldorf, also available online at <http://www.urfie.net/>.
   A companion book using R to Wooldridge, *Introductory Econometrics*, esp.
   chapters 13-14.
