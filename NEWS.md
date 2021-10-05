@@ -11,7 +11,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
   Moved almost all test files to inst/tests so they are not run on CRAN.
   These can be run manually and by `R CMD check --test-dir=inst/tests plm_VERSION.tar.gz.`
 
-### Admin
+### Admin:
 * Source code repository for development is now on GitHub https://github.com/ycroissant/plm,
   not on R-Forge anymore.
 * Update one author's e-mail address.
