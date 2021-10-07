@@ -34,6 +34,8 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 ### Admin
 * Source code repository for development is now on GitHub <https://github.com/ycroissant/plm>,
   not on R-Forge anymore.
+* Added a REAMDE file to the package giving basic information about package, 
+  displayed on CRAN (as on GitHub repository).
 * Update one author's e-mail address.
 
 ***
