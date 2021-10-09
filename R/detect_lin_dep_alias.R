@@ -51,7 +51,7 @@
 #' \CRANpkg{MASS} on the system. Not all arguments of `alias.lm`
 #' are supported.  Output of `alias` is more informative as it
 #' gives the linear combination of dependent columns (after data
-#' transformations, i. e. after (quasi)-demeaning) while
+#' transformations, i. e., after (quasi)-demeaning) while
 #' `detect.lindep` only gives columns involved in the linear
 #' dependence in a simple format (thus being more suited for automatic
 #' post--processing of the information).
@@ -63,7 +63,7 @@
 #' `"plm"` or a `"pdata.frame"`. Usually, one wants to input a model
 #' matrix here or check an already estimated plm model,
 #' @param suppressPrint for `detect.lindep` only: logical indicating
-#' whether a message shall be printed; defaults to printing the message, i. e.
+#' whether a message shall be printed; defaults to printing the message, i. e.,
 #' to `suppressPrint = FALSE`,
 #' @param model (see `plm`),
 #' @param effect (see `plm`),
@@ -74,7 +74,7 @@
 #' columns are detected.
 #' 
 #' For `alias`: return value of [stats::alias.lm()] run on the
-#' (quasi-)demeaned model, i. e. the information outputted applies to
+#' (quasi-)demeaned model, i. e., the information outputted applies to
 #' the transformed model matrix, not the original data.
 #' @note function `detect.lindep` was called `detect_lin_dep`
 #'     initially but renamed for naming consistency later.

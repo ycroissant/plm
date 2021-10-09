@@ -30,7 +30,7 @@ vector. Thus, \code{nobs} gives the number of observations actually
 used by the estimation procedure. It is not necessarily the number
 of observations of the model frame (number of rows in the model
 frame), because sometimes the model frame is further reduced by the
-estimation procedure. This is e.g. the case for first--difference
+estimation procedure. This is, e.g., the case for first--difference
 models estimated by \code{plm(..., model = "fd")} where the model
 frame does not yet contain the differences (see also
 \strong{Examples}).

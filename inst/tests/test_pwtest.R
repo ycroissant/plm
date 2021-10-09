@@ -1,7 +1,7 @@
 ### Testfile for pwtest()
 
 
-###  panelmodel interface did not respect the effect parameter in pre rev. 200, i. e.
+###  panelmodel interface did not respect the effect parameter in pre rev. 200, i. e.,
 ###  for a supplied panelmodel effect="individual" and effect="time" delivered the same
 ###  result for CRAN version 1.4-0 / r-forge pre rev. 200
 

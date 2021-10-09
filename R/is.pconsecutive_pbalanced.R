@@ -70,7 +70,7 @@
 #'     `index` for `is.pconsecutive` on data frames, for
 #'     further details see [pdata.frame()],
 #' @param id,time only relevant for default method: vectors specifying
-#'     the id and time dimensions, i. e. a sequence of individual and
+#'     the id and time dimensions, i. e., a sequence of individual and
 #'     time identifiers, each as stacked time series,
 #' @param \dots further arguments.
 #' @return A named `logical` vector (names are those of the
