@@ -1,4 +1,4 @@
-# Test of new plmtest implementation (handeling unbalanced panels)
+# Test of new plmtest implementation (handling unbalanced panels)
 #
 # compare to grunfeld data example in Baltagi (2013), Econometric Analysis of Panel Data, 5th ed., p. 74-75 (Table 4.1/4.2)
 #                                also Baltagi (2005), Econometric Analysis of Panel Data, 3rd ed., p. 65-66 (just Table 4.1,
@@ -9,13 +9,13 @@
 #
 # The text book only supplies examples for the balanced Grunfeld data
 # Thus, there are no reference values for an _un_balanced data set.
-# -> compare calculatation of EViews on an unbalanced data set (grunfeld without last observation)
+# -> compare calculation of EViews on an unbalanced data set (grunfeld without last observation)
 
 # unbalanced formulas reduce in the case of a balanced panel to the formula for balanced panels:
 #
 #    balanced panel: => test output as in the text book => implementation is ok.
 #  unbalanced panel: => test statistics for unbalanced panel differ from balanced panel
-#                    => test matches calculcation of EViews
+#                    => test matches calculation of EViews
 
 # Tables from Baltagi
 #

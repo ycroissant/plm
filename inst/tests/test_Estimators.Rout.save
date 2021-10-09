@@ -1470,7 +1470,7 @@ Adj. R-Squared: 0.99067
 Chisq: 1199.5 on 13 DF, p-value: < 2.22e-16
 > 
 > 
-> # pcce(., model = "mg") amd pmg(., model = "cmg") estimate  the same model but
+> # pcce(., model = "mg") and pmg(., model = "cmg") estimate the same model but
 > # in a different way - coefficients need to match
 > data("Produc", package = "plm")
 > form <- log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp

@@ -239,7 +239,7 @@ form2 <- formula(mv2 ~ crim2 + zn2 + indus2 + chas2 + nox2 + rm2 + age2 + dis2 +
 summary(plm(form2, data = pHedonic2, model = "random"))
 
 
-# pcce(., model = "mg") amd pmg(., model = "cmg") estimate  the same model but
+# pcce(., model = "mg") and pmg(., model = "cmg") estimate the same model but
 # in a different way - coefficients need to match
 data("Produc", package = "plm")
 form <- log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp
