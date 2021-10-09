@@ -20,9 +20,6 @@ mf <- model.frame(Cigar.p, form)
 
 detect.lindep(model.matrix(mf, model = "pooling"))
 
-## check if backward compatibility works
-detect_lin_dep(model.matrix(mf, model = "pooling"))
-
 # linear dependence occury after FE transformation
 # [after transformation fact1 == -1 * fact2]
 #MM detect.lindep(model.matrix(pform, data = Cigar.p, model = "within"))

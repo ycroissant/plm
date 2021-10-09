@@ -12,12 +12,17 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
   `options("plm.fast" = TRUE)` is set (by R's .onAttach mechanism), requiring 
   package `collapse` as a hard dependency.
   
-  Recommendation: Install the suggest-dependency package `fixest` or `lfe` as a 
+  Recommendation: Install suggest-dependency package `fixest` or `lfe` as a 
   further significant speed up for the two-ways within transformation (as in 
   two-ways fixed effects  models) is gained.
   
   See `?plm.fast` for more information and a benchmark.
 
+
+### Deprecation/Clean-ups/Removals:
+* detect_lin_dep/detect.lindep: alias detect_lin_dep removed (function was renamed
+  from detect_lin_dep to detect.lindep in CRAN version 1.7-0 (2019-01-04),
+  detect_lin_dep was introduced in CRAN version 1.6-4 (2016-11-30)).
 
 ### Dependencies:
  * Shifted package `collapse` from 'Suggests' to 'Imports'.
@@ -418,7 +423,8 @@ plm()): Between, between, Sum, Within.
 * plm: using the 'instruments' argument errors now (gave deprecation warning).
 * dynformula: the long deprecated function now gives a deprecation warning.
 * detect.lindep: previously named detect_lin_dep; renamed for consistency in
-    function naming (back-compatible solution implemented).
+    function naming (back-compatible solution implemented) [back compatibility 
+    removed in plm 2.6-0].
   
 ### Minor items:
 
@@ -651,7 +657,8 @@ plm()): Between, between, Sum, Within.
                                     for unknown cases, give meaningful error.
 * alias.plm, alias.pFormula: added functions to complement the generic stats::alias to detect
                                linear dependence (much like detect_lin_dep).
-* detect_lin_dep.plm: added (complementing previously added detect_lin_dep methods from version 1.5-15).
+* detect_lin_dep.plm: added (complementing previously added detect_lin_dep methods from version 1.5-15). 
+  [function was renamed to detect.lindep in version 1.7-0].
 * plm objects gained element 'aliased' (a named logical) to indicate any aliased coefficients that are 
     silently dropped during estimation by plm (cf. summary.lm objects).
 * fix: vcovXX.plm / vcovG framework now handle plm models with aliased coefficients (linear dependent columns
@@ -885,7 +892,8 @@ plm()): Between, between, Sum, Within.
     [see tests/test_model.matrix_pmodel.response_NA.R].
 * detect_lin_dep: new function as a little helper function to detect linear dependent
     columns, esp. in model matrices; incl. doc with two examples about how linear
-    dependent columns can be induced by the within transformation.
+    dependent columns can be induced by the within transformation [function was 
+    renamed to detect.lindep in version 1.7-0].
 * doc pFormula.Rd extended (especially examples) and split up in two files to better accommodate
     different return values and input values in the documentation
     (new file added: man/model.frame_model.matrix.Rd).

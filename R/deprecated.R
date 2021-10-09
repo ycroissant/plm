@@ -13,9 +13,10 @@
 #' 
 #' `pvcovHC` is replaced by `vcovHC`.
 #'
-#' `detect_lin_dep` is replaced by `detect.lindep`.
+#' `detect_lin_dep` was renamed to `detect.lindep`.
 #' 
 #' @name plm-deprecated
+#' @aliases detect_lin_dep
 #' @param formula a formula,
 #' @param lag.form a list containing the lag structure of each variable in the
 #' formula,

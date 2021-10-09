@@ -2,7 +2,6 @@
 # model matrix or estimated plm models:
 #  * detect.lindep
 #  * alias (the latter is a wrapper around alias.lm)
-#  * detect_lin_dep for backward compatibility
 #
 # doc file provides an extensive example how linear dependence can arise after
 # the data transformation, e. g., for within transformation
@@ -78,8 +77,7 @@
 #' (quasi-)demeaned model, i. e. the information outputted applies to
 #' the transformed model matrix, not the original data.
 #' @note function `detect.lindep` was called `detect_lin_dep`
-#'     initially but renamed for naming consistency later with a
-#'     back-compatible solution.
+#'     initially but renamed for naming consistency later.
 #' @export
 #' @author Kevin Tappe
 #' @seealso [stats::alias()], [stats::model.matrix()] and especially
@@ -154,14 +152,6 @@
 #' all.equal(modmat_FE[ , "CEOtenure"], modmat_FE[ , "CEOage"])
 #' 
 detect.lindep <- function(object, ...) {
-  UseMethod("detect.lindep")
-}
-
-#' @rdname plm-deprecated
-#' @export
-detect_lin_dep <- function(object, ...) {
-  .Deprecated(old = "detect_lin_dep", new = "detect.lindep",
-              msg = "Function name 'detect_lin_dep' deprecated, please use 'detect.lindep'")
   UseMethod("detect.lindep")
 }
 

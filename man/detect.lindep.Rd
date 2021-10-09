@@ -99,8 +99,7 @@ post--processing of the information).
 }
 \note{
 function \code{detect.lindep} was called \code{detect_lin_dep}
-initially but renamed for naming consistency later with a
-back-compatible solution.
+initially but renamed for naming consistency later.
 }
 \examples{
 
