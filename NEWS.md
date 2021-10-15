@@ -20,7 +20,8 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 
 
 ### Deprecation/Clean-ups/Removals:
-* detect_lin_dep/detect.lindep: alias detect_lin_dep removed (function was renamed
+* detect_lin_dep/detect.lindep: alias detect_lin_dep removed, thus this
+  functionality is now only accessible via detect.lindep (function was renamed
   from detect_lin_dep to detect.lindep in CRAN version 1.7-0 (2019-01-04),
   detect_lin_dep was introduced in CRAN version 1.6-4 (2016-11-30)).
 
@@ -121,8 +122,8 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
       method slot (vcov information thus printed as well).
  * various print methods now return the input object invisible (before returned
    NULL).
- * piest, aneweytest: now use internal demeaning framework by Within() [thus
-   benefiting from fast mode].
+ * piest, aneweytest: now use demeaning framework by Within() [thus benefiting 
+   from fast mode].
 
    
 ### Vignettes and Other Documentation:
