@@ -1,5 +1,5 @@
 ---
-title: Changelog/NEWS for package plm
+title: NEWS/Changelog for package plm
 subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
           panel data econometrics - <https://cran.r-project.org/package=plm>
 ---
