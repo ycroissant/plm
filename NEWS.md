@@ -1487,7 +1487,8 @@ Change since version 1-1.4
 
 * observations are ordered by id and time by pdata.frame.
 
-* a pfix function is added to edit a pdata.frame.
+* a pfix function is added to edit a pdata.frame [at some later point this
+  function was removed from the package].
 
 * a as.data.frame function is provided to coerce a pdata.frame to
     a data.frame.
