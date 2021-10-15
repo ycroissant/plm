@@ -24,6 +24,8 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
   functionality is now only accessible via detect.lindep (function was renamed
   from detect_lin_dep to detect.lindep in CRAN version 1.7-0 (2019-01-04),
   detect_lin_dep was introduced in CRAN version 1.6-4 (2016-11-30)).
+* has.intercept.plm: temporary back-compatible solution for ill-introduced 
+  argument 'part' removed, use argument 'rhs' instead [see also NEWS for 2.4-2].
 
 ### Dependencies:
  * Shifted package `collapse` from 'Suggests' to 'Imports'.

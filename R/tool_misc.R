@@ -196,21 +196,7 @@ has.intercept.panelmodel <- function(object, ...) {
 #' @rdname has.intercept
 #' @export
 has.intercept.plm <- function(object, rhs = 1L, ...) {
-    
-  # catch deprecated argument "part": convert and warn / 2021-03-10
-  dots <- list(...)
-  if(!is.null(part <- dots[["part"]])) {
-    warning("has.intercept.plm: argument 'part' is deprecated and will soon be removed, use argument 'rhs' instead")
-    warning("has.intercept.plm: arguement 'rhs' (if present) overwritten by argument 'part'")
-    if(part[1L] == "first") {
-      rhs <- 1L
-      } else {
-        if(is.numeric(part)) {
-          rhs <- part
-          } else stop("unsupported value for argument 'part', only \"first\" or an integer allowed") 
-      }
-  }
-  has.intercept(formula(object), rhs = rhs)
+  has.intercept(formula(object), rhs = rhs, ...)
 }
 
 
