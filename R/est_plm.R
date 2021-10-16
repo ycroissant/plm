@@ -436,52 +436,59 @@ plm.fit <- function(data, model, effect, random.method,
         
         # IV case: extract the matrix of instruments if necessary
         # (means here that we have a multi-parts formula)
-        if (length(formula)[2L] > 1L){
+        if (length(formula)[2L] > 1L) {
           
             if(!is.null(model.weights(data)) || any(w != 1))
               stop("argument 'weights' not yet implemented for instrumental variable models")
             
           if ( ! (model == "random" && inst.method != "bvk")) {
-          #  FD/FE/BE IV and RE "bvk" IV estimator
-            if (length(formula)[2L] == 2L){
+           #  FD/FE/BE IV and RE "bvk" IV estimator
+            if (length(formula)[2L] == 2L) {
                   W <- model.matrix(data, rhs = 2,
                                     model = model, effect = effect,
                                     theta = theta, cstcovar.rm = "all")
               }
-              else{
-                  W <- model.matrix(data, rhs = c(2, 3), model = model,
-                                        effect = effect, theta = theta, cstcovar.rm = "all")
+              else {
+                  W <- model.matrix(data, rhs = c(2, 3),
+                                    model = model, effect = effect,
+                                    theta = theta, cstcovar.rm = "all")
               }
-            }
+          }
           
-            if (model == "random" && inst.method != "bvk"){
-            # IV estimators RE "baltagi", "am", and "bms"
-                X <- X / sqrt(sigma2["idios"])
-                y <- y / sqrt(sigma2["idios"])
-                W1 <- model.matrix(data, rhs = 2, model = "within",
-                                   effect = effect, theta = theta, cstcovar.rm = "all")
-                B1 <- model.matrix(data, rhs = 2, model = "Between",
-                                   effect = effect, theta = theta, cstcovar.rm = "all")
+          if (model == "random" && inst.method != "bvk") {
+           # IV estimators RE "baltagi", "am", and "bms"
+            X <- X / sqrt(sigma2["idios"])
+            y <- y / sqrt(sigma2["idios"])
+            W1 <- model.matrix(data, rhs = 2,
+                               model = "within", effect = effect,
+                               theta = theta, cstcovar.rm = "all")
+            B1 <- model.matrix(data, rhs = 2,
+                               model = "Between", effect = effect, 
+                               theta = theta, cstcovar.rm = "all")
 
-                if (inst.method %in% c("am", "bms"))
-                    StarW1 <- starX(formula, data, rhs = 2, model = "within",
-                                    effect = effect)
-                if (length(formula)[2L] == 3L){
-                  # eval. 3rd part of formula, if present
-                    W2 <- model.matrix(data, rhs = 3, model = "within",
-                                           effect = effect, theta = theta, cstcovar.rm = "all")
-                    if (inst.method == "bms")
-                        StarW2 <- starX(formula, data, rhs = 3, model = "within",
-                                        effect = effect)
-                }
-                else W2 <- StarW2 <- NULL
-                if (inst.method == "baltagi") W <- sqrt(w) * cbind(W1, W2, B1)                 # TODO: here, some weighting is done but prevented earlier
-                if (inst.method == "am")      W <- sqrt(w) * cbind(W1, W2, B1, StarW1)         #       by stop()?!
-                if (inst.method == "bms")     W <- sqrt(w) * cbind(W1, W2, B1, StarW1, StarW2) #       also: RE bvk/BE/FE IV does not have weighting code...
-            }
+            if (inst.method %in% c("am", "bms"))
+              StarW1 <- starX(formula, data, rhs = 2, model = "within", effect = effect)
+            
+            if (length(formula)[2L] == 3L) {
+              # eval. 3rd part of formula, if present
+              W2 <- model.matrix(data, rhs = 3,
+                                 model = "within", effect = effect, 
+                                 theta = theta, cstcovar.rm = "all")
+              
+              if (inst.method == "bms")
+                StarW2 <- starX(formula, data, rhs = 3, model = "within", effect = effect)
+            } 
+            else W2 <- StarW2 <- NULL
+            
+            # TODO: here, some weighting is done but prevented earlier by stop()?!
+            #       also: RE bvk/BE/FE IV do not have weighting code.
+            if (inst.method == "baltagi") W <- sqrt(w) * cbind(W1, W2, B1)
+            if (inst.method == "am")      W <- sqrt(w) * cbind(W1, W2, B1, StarW1)
+            if (inst.method == "bms")     W <- sqrt(w) * cbind(W1, W2, B1, StarW1, StarW2)
+          }
       
-            if (ncol(W) < ncol(X)) stop("insufficient number of instruments")
-        }
+          if (ncol(W) < ncol(X)) stop("insufficient number of instruments")
+        } # END all IV cases
         else W <- NULL # no instruments (no IV case)
         
         result <- mylm(y, X, W)
@@ -512,7 +519,7 @@ plm.fit <- function(data, model, effect, random.method,
         if (is.null(model.weights(data))) result$weights <- NULL
         if (model == "random") result$ercomp <- estec
     }
-    else{
+    else {
         # random twoways unbalanced:
         pdim <- pdim(data)
         TS <- pdim$nT$T
