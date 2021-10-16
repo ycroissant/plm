@@ -305,22 +305,19 @@ plm <- function(formula, data, subset, weights, na.action,
     }
     dots <- list(...)
     
-    # check and match the effect and model arguments
+    # match and check the effect and model arguments
     effect <- match.arg(effect)
     # note that model can be NA, in this case the model.frame is returned
     if (! anyNA(model)) model <- match.arg(model) 
     if (! anyNA(model) && effect == "nested" && model != "random") {
       # input check for nested RE model
-      # warns since 2021-07-02 on R-Forge (prev. silently changed model = "random");
-      # should become an error in the future
-      warning(paste0("effect = \"nested\" only valid for model = \"random\", but input is model = \"",
-                     model, "\", changed to \"random\""))
-      model <- "random"
-    }
+      stop(paste0("effect = \"nested\" only valid for model = \"random\", but input is model = \"",
+                     model, "\"."))
+      }
     
-    # input checks for FD model: give informative error messages as
-    # described in footnote in vignette
     if (! anyNA(model) && model == "fd") {
+      # input checks for FD model: give informative error messages as
+      # described in footnote in vignette
         if (effect == "time") stop(paste("effect = \"time\" for first-difference model",
                                          "meaningless because cross-sections do not",
                                          "generally have a natural ordering"))

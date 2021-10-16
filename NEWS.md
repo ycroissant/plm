@@ -26,6 +26,8 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
   detect_lin_dep was introduced in CRAN version 1.6-4 (2016-11-30)).
 * has.intercept.plm: temporary back-compatible solution for ill-introduced 
   argument 'part' removed, use argument 'rhs' instead [see also NEWS for 2.4-2].
+* plm: error informatively if argument effect = "nested" and model != "random" 
+  (was a warning incl. argument adjustment before, see NEWS for 2.4-2).
 
 ### Dependencies:
  * Shifted package `collapse` from 'Suggests' to 'Imports'.
@@ -811,7 +813,8 @@ plm()): Between, between, Sum, Within.
 # plm 1.5-18
 
 * pcdtest: small efficiency enhancement (calc only lower.tri of rhos).
-* pos.index (internal, not exported): new func to determine column numbers of index vars in a pdata.frame.
+* pos.index (internal, not exported): new function to determine column numbers 
+  of index vars in a pdata.frame.
 * cosmetics:
     * some extraction/subsetting functions doubled 'pseries' in the class of returned value (fixed now).
     * extraction methods for pdata.frame and pseries now preserve order of attributes.
