@@ -377,18 +377,18 @@ pht <- function(formula, data, subset, na.action, model = c("ht", "am", "bms"), 
 #' @rdname pht
 #' @export
 summary.pht <- function(object, ...){
-	object$fstatistic <- pwaldtest(object, test = "Chisq")
-	# construct the table of coefficients
-	std.err <- sqrt(diag(vcov(object)))
-	b <- coefficients(object)
-	z <- b/std.err
-	p <- 2*pnorm(abs(z), lower.tail = FALSE)
-	object$coefficients <- cbind("Estimate"         = b,
-                                     "Std. Error" = std.err,
-                                     "z-value"    = z,
-                                     "Pr(>|z|)"   = p)
-	class(object) <- c("summary.pht", "pht", "plm", "panelmodel")
-	object
+  object$fstatistic <- pwaldtest(object, test = "Chisq")
+  # construct the table of coefficients
+  std.err <- sqrt(diag(vcov(object)))
+  b <- coefficients(object)
+  z <- b/std.err
+  p <- 2*pnorm(abs(z), lower.tail = FALSE)
+  object$coefficients <- cbind("Estimate"   = b,
+                               "Std. Error" = std.err,
+                               "z-value"    = z,
+                               "Pr(>|z|)"   = p)
+  class(object) <- c("summary.pht", "pht", "plm", "panelmodel")
+  object
 }
 
 #' @rdname pht
@@ -578,8 +578,8 @@ formula.dynformula <- function(x, ...){
     has.int <- attr(terms(x), "intercept") == 1
     chexo <- c()
     if (has.resp){
-        if (log.form[1L]) endog <- paste("log(",endog,")",sep="")
-        if (diff.form[1L]) endog <- paste("diff(",endog,")",sep="")
+        if (log.form[1L])  endog <- paste("log(",  endog, ")", sep = "")
+        if (diff.form[1L]) endog <- paste("diff(", endog, ")", sep = "")
         if (  length(lag.form[[1L]]) == 1L && lag.form[[1L]] != 0L) lag.form[[1L]] <- c(1, lag.form[[1L]])
         if (!(length(lag.form[[1L]]) == 1L && lag.form[[1L]] == 0L))
           chexo <- c(chexo, write.lags(endog, lag.form[[1L]], diff.form[1L]))
@@ -591,12 +591,8 @@ formula.dynformula <- function(x, ...){
         chexo <- c(chexo, write.lags(i, lag.formi, diff.formi))
     }
     chexo <- paste(chexo, collapse = "+")
-    if (has.resp){
-        formod <- as.formula(paste(endog, "~", chexo, sep = ""))
-    }
-    else{
-        formod <- as.formula(paste("~", chexo, sep = ""))
-    }
+    formod <- if(has.resp) { as.formula(paste(endog, "~", chexo, sep = "")) }
+                else { as.formula(paste("~", chexo, sep = "")) }
     if (!has.int) formod <- update(formod, . ~ . -1)
     formod
 }
@@ -696,7 +692,7 @@ model.matrix.pFormula <- function(object, data,
     if (model == "between") X <- between(X, effect)
     if (model == "mean")    X <- Mean(X)
     if (model == "fd")      X <- pdiff(X, effect = "individual",
-                                  has.intercept = has.intercept)
+                                       has.intercept = has.intercept)
     if (model == "random"){
         if (is.null(theta)) stop("a theta argument should be provided")
         if (effect %in% c("time", "individual")) X <- X - theta * Between(X, effect)
@@ -709,7 +705,7 @@ model.matrix.pFormula <- function(object, data,
 
     if (cstcovar.rm == "intercept"){
         posintercept <- match("(Intercept)", colnames(X))
-        if (! is.na(posintercept)) X <- X[, - posintercept, drop = FALSE]
+        if (! is.na(posintercept)) X <- X[ , - posintercept, drop = FALSE]
     }
     if (cstcovar.rm %in% c("covariates", "all")){
         cols <- apply(X, 2, is.constant)
