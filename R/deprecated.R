@@ -230,13 +230,6 @@ pht <- function(formula, data, subset, na.action, model = c("ht", "am", "bms"), 
   cl <- match.call(expand.dots = TRUE)
   mf <- match.call()
   
-  if (length(model) == 1L && model == "bmc") {
-    # catch "bmc" (a long-standing typo) for Breusch-Mizon-Schmidt due to backward compatibility
-  	# error since 2020-12-31 (R-Forge) / 2021-01-23 (CRAN), was a warning before
-  	# remove catch at some point in the future
-    model <- "bms"
-    stop("Use of model = \"bmc\" disallowed, set to \"bms\" for Breusch-Mizon-Schmidt instrumental variable transformation")
-  }
   model <- match.arg(model)
   # compute the model.frame using plm with model = NA
   mf[[1L]] <- as.name("plm")

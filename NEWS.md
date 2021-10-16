@@ -28,12 +28,13 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
   argument 'part' removed, use argument 'rhs' instead [see also NEWS for 2.4-2].
 * plm:
   * error informatively if argument effect = "nested" and model != "random" 
-    (previously, this was a warning incl. argument adjustment before, see also 
+    (previously, this was a warning incl. argument adjustment, see also 
     NEWS for 2.4-2).
   * for argument 'inst.method', the standard R argument matching and error 
-    message is used (no more special message if value "bmc" instead of "bms" is
-    used, "bmc" was a long-standing typo, then accepted with a warning and then 
-    errored with a special error message, see also NEWS for 2.4-0, 1.6-6).
+    message is used, same is true for pht (no more special message if value "bmc" 
+    instead of "bms" is used, "bmc" was a long-standing typo, then accepted with 
+    a warning and then errored with a special error message, see also NEWS for 
+    2.4-0, 1.6-6). A
 
 ### Dependencies:
  * Shifted package `collapse` from 'Suggests' to 'Imports'.
