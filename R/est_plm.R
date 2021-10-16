@@ -307,6 +307,8 @@ plm <- function(formula, data, subset, weights, na.action,
     
     # match and check the effect and model arguments
     effect <- match.arg(effect)
+    inst.method <- match.arg(inst.method)
+    
     # note that model can be NA, in this case the model.frame is returned
     if (! anyNA(model)) model <- match.arg(model) 
     if (! anyNA(model) && effect == "nested" && model != "random") {
@@ -326,16 +328,6 @@ plm <- function(formula, data, subset, weights, na.action,
     }
     
     # Deprecated section
-      if (length(inst.method) == 1L && inst.method == "bmc") {
-        # catch "bmc" (a long-standing typo) for Breusch-Mizon-Schmidt
-        # error since 2020-12-31 (R-Forge) / 2021-01-23 (CRAN), was warning before
-        # remove catch at some point in the future
-        inst.method <- "bms"
-          stop(paste("Use of inst.method = \"bmc\" disallowed, set to \"bms\"",
-                        "for Breusch-Mizon-Schmidt instrumental variable transformation"))
-      }
-      inst.method <- match.arg(inst.method)
-    
       
       # model = "ht" in plm() and pht() are no longer maintained, but working
       # -> call pht() and early exit

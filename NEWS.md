@@ -26,8 +26,14 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
   detect_lin_dep was introduced in CRAN version 1.6-4 (2016-11-30)).
 * has.intercept.plm: temporary back-compatible solution for ill-introduced 
   argument 'part' removed, use argument 'rhs' instead [see also NEWS for 2.4-2].
-* plm: error informatively if argument effect = "nested" and model != "random" 
-  (was a warning incl. argument adjustment before, see NEWS for 2.4-2).
+* plm:
+  * error informatively if argument effect = "nested" and model != "random" 
+    (previously, this was a warning incl. argument adjustment before, see also 
+    NEWS for 2.4-2).
+  * for argument 'inst.method', the standard R argument matching and error 
+    message is used (no more special message if value "bmc" instead of "bms" is
+    used, "bmc" was a long-standing typo, then accepted with a warning and then 
+    errored with a special error message, see also NEWS for 2.4-0, 1.6-6).
 
 ### Dependencies:
  * Shifted package `collapse` from 'Suggests' to 'Imports'.
