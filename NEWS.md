@@ -905,20 +905,15 @@ plm()): Between, between, Sum, Within.
 
 # plm 1.5-14
 
-* mylm: added commented (i.e., inactive) warning about dropped coefficients in estimation.
-* fitted.plm: added commented (i.e., inactive) warning in about dropped coefficients in
-    estimated model compared to specified model.matrix.
-* added testfile tests/test_fitted.plm.R (some of those test currently do not run
-    (commented, i.e., inactive)).
+
+* lag.pseries: modified to handle negative lags (=leading values).
+* lead.pseries: added function as a wrapper for lag.pseries(x, k = -1) for convenience,
+    i.e., lag(x, k = -1) == lead(x, k = 1).
 * pmodel.response.pFormula: make sure supplied formula is a pFormula before we continue
     (coerce to pFormula), fixes "bugs" (rather unexpected, but documented behaviour) like:
       pmodel.response.pFormula(regular_formula, data = dat, model = "pooling")
        # Error in names(y) <- namesy :
        # 'names' attribute [482] must be the same length as the vector [0]
-* some testfiles: fixed wired encodings.
-* lag.pseries: modified to handle negative lags (=leading values).
-* lead.pseries: added function as a wrapper for lag.pseries(x, k = -1) for convenience,
-    i.e., lag(x, k = -1) == lead(x, k = 1).
 * diff.pseries: prevented negative lags as input to avoid confusion.
 * doc for pseries functions are made available under their name, e.g., ?lag now displays helpfile for
     lag.pseries in the help overview (besides, e.g., stats::lag).
@@ -928,6 +923,12 @@ plm()): Between, between, Sum, Within.
 * indexes: fixed return value (was always NULL).
 * doc updates: ?pdim: added section about possible different return values for pdim(pdata.frame) and
     pdim(panelmodel_object); others: linkage to base functions enabled, spelling.
+* mylm: added commented (i.e., inactive) warning about dropped coefficients in estimation.
+* fitted.plm: added commented (i.e., inactive) warning in about dropped coefficients in
+    estimated model compared to specified model.matrix.
+* added testfile tests/test_fitted.plm.R (some of those test currently do not run
+    (commented, i.e., inactive)).
+* some testfiles: fixed wired encodings.
 
 ***
 
@@ -982,7 +983,8 @@ plm()): Between, between, Sum, Within.
 
 # plm 1.5-8
 
-* introduced new phtest (Hausman test) allowing for robust vcov.
+* phtest (Hausman test): introduced new regression-based test, allowing for
+  robust vcov (via argument method = "aux").
 * fixed bugs in pdwtest.
 
 ***
@@ -1077,7 +1079,7 @@ plm()): Between, between, Sum, Within.
 
 * the pgmm function has been improved to deal correctly with holes
     in the cross-sections ; a 'collapse' argument is added to limit the
-    number of gmm instruments.
+    number of GMM instruments.
 
 * the CoefTable element of summary.pgmm objects is renamed to
     coefficients, so that it can easily be extracted using the coef method.
@@ -1105,7 +1107,8 @@ plm()): Between, between, Sum, Within.
 * the pccep function, estimating CCEP models a la Pesaran, has
     been added together with summary and print.summary methods. The
     function generates objects of a class of their own ("pccep"), much
-    like 'pggls', together with 'panelmodel'.
+    like 'pggls', together with 'panelmodel' ['pccep' was later renamed to 
+    'pcce'.]
 
 * the pmg function, estimating MG, DMG and CCEMG models a la
     Pesaran, has been added together with summary and print.summary
@@ -1257,14 +1260,14 @@ plm()): Between, between, Sum, Within.
 * in summary.plm, the p-value is now computed using a Student
     distribution and not a normal one.
 
-* the lag.pserie method is modified so that it deals correctly
-    with factors, and not only with numeric vectors. The diff.pserie
+* 'pserie' is renamed 'pseries'.
+
+* the lag.pseries method is modified so that it deals correctly
+    with factors, and not only with numeric vectors. The diff.pseries
     method returns an error if its argument is not numeric.
 
 * the instruments-"backward compatibility" stuff in plm is
     simplified thanks to the new features of Formula.
-
-* 'pserie' is renamed 'pseries'.
 
 * a THANKS file is added.
 
@@ -1390,7 +1393,7 @@ Change since version 1-1.4
     unbalanced panels.
 
 * the fixef method is much improved, the fixed effects may be
-    computed in levels, in deviation from the first level or in
+    computed in levels, in deviation from the first level, and in
     deviation from the overall mean.
 
 * in pbsytest, the arguments test are now in lowercase.
