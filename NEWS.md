@@ -30,8 +30,8 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
   * error informatively if argument effect = "nested" and model != "random" 
     (previously, this was a warning incl. argument adjustment, see also 
     NEWS for 2.4-2).
-  * for argument 'inst.method', the standard R argument matching and error 
-    message is used, same is true for pht (no more special message if value "bmc" 
+  * (and pht) for argument 'inst.method', the standard R argument matching and
+    error message is used, (no more special message if misspelled value "bmc" 
     instead of "bms" is used, "bmc" was a long-standing typo, then accepted with 
     a warning and then errored with a special error message, see also NEWS for 
     2.4-0, 1.6-6).
@@ -862,10 +862,10 @@ plm()): Between, between, Sum, Within.
     * new function to check if time periods are consecutive per individual,
     * better NA handling by added argument 'rm.na.tindex'.
 * pgmm: fixed bugs affecting the instrument matrix in the following cases:
-    * gmm instruments are collapsed and restricted in lag length;
-    * first lags are used as gmm instruments;
-    * gmm instruments are collapsed in system GMM;
-    * gmm instruments are restricted in lag length in system GMM.
+    * GMM instruments are collapsed and restricted in lag length;
+    * first lags are used as GMM instruments;
+    * GMM instruments are collapsed in system GMM;
+    * GMM instruments are restricted in lag length in system GMM.
 * punbalancedness: data frame interface gains 'index' argument.
 * within_intercept: new function to calculate an overall intercept along its standard error for FE models
                       a la Stata and gretl, accepts argument '.vcov' for user defined vcov.
@@ -1168,9 +1168,9 @@ plm()): Between, between, Sum, Within.
     model with effect="twoways" and transformation="ld" is fixed by
     modifying namest in pgmm.
 
-* there was a bug in pgmm for models with different lags for gmm
+* there was a bug in pgmm for models with different lags for GMM
     instruments. The number of time series lost is now the min (and
-    not the max) of the first lags for gmm instruments.
+    not the max) of the first lags for GMM instruments.
 
 * some parts of summary.pgmm only worked correctly for models with
     time-dummies. It now deals correctly for models with 'individual'
