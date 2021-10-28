@@ -654,7 +654,7 @@ subset_pseries <- function(x, ...) {
         res <- structure(mydata,
                          names = x.rownames,
                          index = index,
-                         class = base::union("pseries", class(mydata)))
+                         class = unique(c("pseries", class(mydata))))
       }
     } else {
           # subsetting returned a data.frame -> add attributes to make it a pdata.frame again
@@ -678,7 +678,7 @@ subset_pseries <- function(x, ...) {
     # use this order for attributes to preserve original order of attributes for a pseries
     result <- structure(result,
                         names = row.names(x),
-                        class = base::union("pseries", class(result)),
+                        class = unique(c("pseries", class(result))),
                         index = index 
                         )
   }
@@ -828,7 +828,7 @@ as.data.frame.pdata.frame <- function(x, row.names = NULL, optional = FALSE, kee
                                                  # in columns because the call to data.frame later deletes
                                                  # the names attribute of columns (definition of data frame)
                     attr(z, "index") <- index
-                    class(z) <- base::union("pseries", class(z))
+                    class(z) <- unique(c("pseries", class(z)))
                     return(z)
                   })
     }

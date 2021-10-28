@@ -612,7 +612,7 @@ pFormula <- function(object) {
   if (!inherits(object, "Formula")){
     object <- Formula(object)
   }
-  class(object) <- union("pFormula", class(object))
+  class(object) <- unique(c("pFormula", class(object)))
   object
 }
 

@@ -324,14 +324,14 @@ ptransform <- function(x, model = NULL, effect = NULL, theta = NULL, ...){
         if(effect == "twoways" && balanced)
             x <- x - theta$id   * Between(x, "individual") -
                      theta$time * Between(x, "time") + theta$total * mean(x)
-        ## TODO: could catch non-treated case to error gracefully:
+        ## TODO: could catch non-treated RE unbalanced twoways case to error gracefully:
         # if (effect == "twoways" && !balanced) warning("two-way unbalanced case not implemented in ptransform")
     }
     
     # between and fd models "compress" the data, thus an index does not make
     # sense for those, but add to all others (incl. Between (capital B))
     x <- if(model %in% c("between", "fd")) x
-         else structure(x, index = index(x), class = union("pseries", class(x)))
+         else structure(x, index = index(x), class = unique(c("pseries", class(x))))
     return(x)
 }
 

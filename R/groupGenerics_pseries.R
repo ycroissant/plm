@@ -37,7 +37,7 @@ add_pseries_features <- function(x, index) {
 #  if (is.null(index)) warning("'index' is null")
   
   attr(x, "index") <- index
-  class(x) <- union("pseries", class(x))
+  class(x) <- unique(c("pseries", class(x)))
   return(x)
 }
 

@@ -610,7 +610,7 @@ make.pbalanced.pseries <- function(x, balance.type = c("fill", "shared.times", "
            # (no subsetting method for pseries in the package (yet),
            #  usual vector subsetting removes the pseries features)
            attr(result, "index") <- index[keep, ]
-           class(result) <- union("pseries", class(result))
+           class(result) <- unique(c("pseries", class(result)))
            },
          
          "shared.individuals" = {
@@ -620,7 +620,7 @@ make.pbalanced.pseries <- function(x, balance.type = c("fill", "shared.times", "
            # (no subsetting method for pseries in the package (yet),
            #  usual vector subsetting removes the pseries features)
            attr(result, "index") <- index[keep, ]
-           class(result) <- union("pseries", class(result))
+           class(result) <- unique(c("pseries", class(result)))
          })
   return(result)
 } ## END make.pbalanced.pseries
