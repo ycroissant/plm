@@ -598,7 +598,7 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
                           p.value     = pvalue),
                      class = "htest")
   
-  idres <- mapply(list, LMi, sigma2i, SIMPLIFY = F)
+  idres <- mapply(list, LMi, sigma2i, SIMPLIFY = FALSE)
   idres <- lapply(idres, setNames, c("LM", "sigma2"))
   
   result <- list(statistic = htest,
@@ -1049,7 +1049,7 @@ summary.purtest <- function(object, ...){
     }
   } else {
     # hadri
-    LM     <- vapply(object$idres, function(x) x[["LM"]], FUN.VALUE = 0.0, USE.NAMES = FALSE)
+    LM     <- vapply(object$idres, function(x) x[["LM"]],     FUN.VALUE = 0.0, USE.NAMES = FALSE)
     sigma2 <- vapply(object$idres, function(x) x[["sigma2"]], FUN.VALUE = 0.0, USE.NAMES = FALSE)
     sumidres <- cbind("LM" = LM, "sigma2" = sigma2)
   }
