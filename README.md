@@ -37,11 +37,12 @@ It includes (non-exhaustive overview):
   - `vcovBK`: Beck and Katz (1995) (PCSE),
   - `vcovNW`: Newey and West (1987),
   - `vcovDC`: double-clustering robust (Thompson (2011), Cameron et al. (2011)),
-  - `vcovSCC`: Driscoll and Kraay (1998).
+  - `vcovSCC`: Driscoll and Kraay (1998),
 
 - an enhanced data frame, called `pdata.frame`, to deal with data sets for which 
-  observations are identified by a combination of two indexes, and panel data 
-  transformation functions (e.g, `Within`, `Between`, `lag`, `lead`, `diff`).
+  observations are identified by a combination of two indexes, and
+
+- panel data transformation functions (e.g, `Within`, `Between`, `lag`, `lead`, `diff`).
 
 
 ## Installation
