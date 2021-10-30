@@ -76,7 +76,7 @@ with transformations performed as specified by the \code{model} and
 requested), in this case the supplied \code{data} argument should be a
 model frame created by plm's \code{model.frame} method. If not, it is
 tried to construct the model frame from the data. Constructing the
-model frame first ensures proper NA handling, see \strong{Examples}.
+model frame first ensures proper \code{NA} handling, see \strong{Examples}.
 }
 \examples{
 

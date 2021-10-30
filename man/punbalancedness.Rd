@@ -91,7 +91,7 @@ also for \code{pdim}). When called on an estimated \code{panelmodel}, the
 number of observations (individual, time) actually used for
 model estimation are taken into account. When called on a
 \verb{(p)data.frame}, the rows in the \verb{(p)data.frame} are
-considered, disregarding any NA values in the dependent or
+considered, disregarding any \code{NA} values in the dependent or
 independent variable(s) which would be dropped during model
 estimation.
 }

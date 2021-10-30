@@ -312,7 +312,7 @@ pres <- function(x) {  # pres.panelmodel
 #'     number of observations (individual, time) actually used for
 #'     model estimation are taken into account. When called on a
 #'     `(p)data.frame`, the rows in the `(p)data.frame` are
-#'     considered, disregarding any NA values in the dependent or
+#'     considered, disregarding any `NA` values in the dependent or
 #'     independent variable(s) which would be dropped during model
 #'     estimation.
 #' @export
@@ -453,7 +453,7 @@ myvar <- function(x){
 #' This function checks for each variable of a panel if it varies
 #' cross-sectionally and over time.
 #' 
-#' For (p)data.frame and matrix interface: All-NA columns are removed
+#' For (p)data.frame and matrix interface: All-`NA` columns are removed
 #' prior to calculation of variation due to coercing to pdata.frame
 #' first.
 #' 
@@ -472,12 +472,12 @@ myvar <- function(x){
 #'
 #' \item{id.variation_anyNA}{a logical vector with `TRUE` values if
 #' the variable has at least one individual-time combination with all
-#' NA values in the individual dimension for at least one time period,
+#' `NA` values in the individual dimension for at least one time period,
 #' `FALSE` if not,}
 #'
 #' \item{time.variation_anyNA}{a logical vector with `TRUE` values if
 #' the variable has at least one individual-time combination with all
-#' NA values in the time dimension for at least one individual,
+#' `NA` values in the time dimension for at least one individual,
 #' `FALSE` if not.}
 #' 
 #' @note `pvar` can be time consuming for ``big'' panels. As a fast alternative

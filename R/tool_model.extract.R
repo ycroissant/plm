@@ -18,7 +18,7 @@
 #' requested), in this case the supplied `data` argument should be a
 #' model frame created by plm's `model.frame` method. If not, it is
 #' tried to construct the model frame from the data. Constructing the
-#' model frame first ensures proper NA handling, see **Examples**.
+#' model frame first ensures proper `NA` handling, see **Examples**.
 #'
 #' @name model.frame.pdata.frame
 #' @param object,formula an object of class `"pdata.frame"` or an
@@ -213,7 +213,7 @@ model.matrix.pdata.frame <- function(object,
 #' response must reside in the first column; this is the case for a
 #' model frame), a `pFormula` + `data` or a `plm` object, and the
 #' transformation specified by `effect` and `model` is applied to
-#' it.\cr Constructing the model frame first ensures proper NA
+#' it.\cr Constructing the model frame first ensures proper `NA`
 #' handling and the response being placed in the first column, see
 #' also **Examples** for usage.
 #' 

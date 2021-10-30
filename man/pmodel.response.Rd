@@ -39,7 +39,7 @@ The model response is extracted from a \code{pdata.frame} (where the
 response must reside in the first column; this is the case for a
 model frame), a \code{pFormula} + \code{data} or a \code{plm} object, and the
 transformation specified by \code{effect} and \code{model} is applied to
-it.\cr Constructing the model frame first ensures proper NA
+it.\cr Constructing the model frame first ensures proper \code{NA}
 handling and the response being placed in the first column, see
 also \strong{Examples} for usage.
 }

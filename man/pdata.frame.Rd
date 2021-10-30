@@ -66,7 +66,7 @@ vectors are to be converted to factors,}
 which \code{is.finite()} yields \code{TRUE} are to be replaced by \code{NA}
 values, except for character variables (defaults to \code{FALSE}),}
 
-\item{drop.NA.series}{logical, indicating whether all-NA columns
+\item{drop.NA.series}{logical, indicating whether all-\code{NA} columns
 are to be removed from the pdata.frame (defaults to \code{FALSE}),}
 
 \item{drop.const.series}{logical, indicating whether constant

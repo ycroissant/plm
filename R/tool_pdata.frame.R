@@ -121,7 +121,7 @@ fancy.row.names <- function(index, sep = "-") {
 #' @param replace.non.finite logical, indicating whether values for
 #'     which `is.finite()` yields `TRUE` are to be replaced by `NA`
 #'     values, except for character variables (defaults to `FALSE`),
-#' @param drop.NA.series logical, indicating whether all-NA columns
+#' @param drop.NA.series logical, indicating whether all-`NA` columns
 #'     are to be removed from the pdata.frame (defaults to `FALSE`),
 #' @param drop.const.series logical, indicating whether constant
 #'     columns are to be removed from the pdata.frame (defaults to
@@ -958,7 +958,7 @@ is.pseries <- function(object) {
 #'     observations (individual, time) actually used for model
 #'     estimation are taken into account.  When called on a
 #'     `(p)data.frame`, the rows in the `(p)data.frame` are
-#'     considered, disregarding any NA values in the dependent or
+#'     considered, disregarding any `NA`values in the dependent or
 #'     independent variable(s) which would be dropped during model
 #'     estimation.
 #' @export
