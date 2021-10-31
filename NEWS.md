@@ -35,6 +35,9 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
     instead of "bms" is used, "bmc" was a long-standing typo, then accepted with 
     a warning and then errored with a special error message, see also NEWS for 
     2.4-0, 1.6-6).
+* DESCRIPTION file: more comprehensive description of the package.
+    
+
 
 ### Dependencies:
  * Shifted package `collapse` from 'Suggests' to 'Imports'.
