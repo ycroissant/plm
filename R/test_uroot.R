@@ -20,7 +20,7 @@ padf <- function(x, exo = c("none", "intercept", "trend"), p.approx = NULL, ...)
   if (!is.null(dots$p.approx)) p.approx <- dots$p.approx
   
   if (!is.null(p.approx) && !p.approx %in% c("MacKinnon1994", "MacKinnon1996"))
-    stop(paste0("unknown 'p.approx' argument: ", p.approx))
+    stop(paste0("unknown argument value: p.approx = \"", p.approx, "\""))
   
   # Check if package 'urca' is available on local machine. We placed 'urca' 
   # in 'Suggests' rather than 'Imports' so that it is not an absolutely 
@@ -31,7 +31,7 @@ padf <- function(x, exo = c("none", "intercept", "trend"), p.approx = NULL, ...)
   
   # default: if no p.approx specified by input (NULL),
   # use MacKinnon (1996) if 'urca' is available, else MacKinnon (1994)
-  p.approx <- if(is.null(p.approx)) { if (urca)  "MacKinnon1996" else "MacKinnon1994" } else p.approx
+  p.approx <- if(is.null(p.approx)) { if(urca)  "MacKinnon1996" else "MacKinnon1994" } else p.approx
   
   if (!is.null(p.approx) && p.approx == "MacKinnon1996" && !urca) {
     # catch case when user demands MacKinnon (1996) per argument but 'urca' is unavailable
@@ -1028,7 +1028,7 @@ print.purtest <- function(x, ...){
 #' @rdname purtest
 #' @export
 summary.purtest <- function(object, ...){
-  if (!object$args$test == "hadri"){
+  if(!object$args$test == "hadri"){
     lags   <- vapply(object$idres, function(x) x[["lags"]],   FUN.VALUE = 0.0, USE.NAMES = FALSE)
     L      <- vapply(object$idres, function(x) x[["T"]],      FUN.VALUE = 0.0, USE.NAMES = FALSE)
     rho    <- vapply(object$idres, function(x) x[["rho"]],    FUN.VALUE = 0.0, USE.NAMES = FALSE)
@@ -1048,7 +1048,7 @@ summary.purtest <- function(object, ...){
       sumidres <- cbind(sumidres, object$sigma2)
     }
   } else {
-    # hadri
+    # hadri case
     LM     <- vapply(object$idres, function(x) x[["LM"]],     FUN.VALUE = 0.0, USE.NAMES = FALSE)
     sigma2 <- vapply(object$idres, function(x) x[["sigma2"]], FUN.VALUE = 0.0, USE.NAMES = FALSE)
     sumidres <- cbind("LM" = LM, "sigma2" = sigma2)
