@@ -321,7 +321,7 @@ plm()): Between, between, Sum, Within.
 ### Minor items:
    * print.fixef: respects / forwards arguments supplied to generic print method.
    * Grunfeld data doc: URL for overview of various Grunfeld data sets updated to
-     <https://eeecon.uibk.ac.at/~zeileis/grunfeld/>. 
+     <https://www.zeileis.org/grunfeld/>. 
 
 ### Dependencies:
    * Package 'urca' added to "Suggests".
