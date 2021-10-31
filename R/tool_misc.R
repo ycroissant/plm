@@ -99,19 +99,20 @@ twosls <- function(y, X, W, intercept = FALSE, lm.type = "lm"){
   # Return value can be controlled by argument lm.type. Often, a full lm model
   # is needed for further processing but can select one of the fast but less
   # rich objects produced by lm.fit or .lm.fit (the latter does not contain, e.g.,
-  # fitted.values and is to be used very carefully (e.g., coefs not in input order).
+  # fitted.values and is to be used very carefully (e.g., coefs not in input order)).
 
   # As NA/NaN/(+/-)Inf-freeness needs to be guaranteed when functions call
   # twosls(), so can use lm.fit to calc. Xhat.
   Xhat <- lm.fit(cbind(1, W), X)$fitted.values
   # old: Xhat <- lm(X ~ W)$fitted.values
   
-  if(!is.matrix(Xhat)){
+  if(!is.matrix(Xhat)) {
+    # ensure Xhat is a matrix
     Xhat <- matrix(Xhat, ncol = 1L)
     colnames(Xhat) <- colnames(X)
   }
   
-  if(intercept){
+  if(intercept) {
     model <- switch(lm.type,
                     "lm"      =  lm(y ~ Xhat),
                     "lm.fit"  =  lm.fit(cbind(1, Xhat), y),

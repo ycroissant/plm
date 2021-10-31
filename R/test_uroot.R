@@ -357,7 +357,7 @@ adj.levinlin.value <- function(l, exo = c("intercept", "none", "trend")){
     return(adj.levinlin[as.character(Ts), , exo])
   }
   else{
-    low <- adj.levinlin[as.character(Ts[1L]), , exo]
+    low  <- adj.levinlin[as.character(Ts[1L]), , exo]
     high <- adj.levinlin[as.character(Ts[2L]), , exo]
     return(low + (l - Ts[1L])/(Ts[2L] - Ts[1L]) * (high - low))
   }
@@ -828,7 +828,7 @@ purtest <- function(object, data = NULL, index = NULL,
   cl <- match.call()
   test <- match.arg(test)
   ips.stat <- if (is.null(ips.stat)) "Wtbar" else ips.stat # set default for IPS test
-  if (is.character(lags)) lags <- match.arg(lags) # if character, select one possible value
+  if (is.character(lags)) lags <- match.arg(lags) # if character, match from list of possible values
   args <- list(test = test, exo = exo, pmax = pmax, lags = lags,
                dfcor = dfcor, fixedT = fixedT, ips.stat = ips.stat)
   n <- length(object) # number of individuals, assumes object is a list
@@ -1034,12 +1034,11 @@ summary.purtest <- function(object, ...){
     rho    <- vapply(object$idres, function(x) x[["rho"]],    FUN.VALUE = 0.0, USE.NAMES = FALSE)
     trho   <- vapply(object$idres, function(x) x[["trho"]],   FUN.VALUE = 0.0, USE.NAMES = FALSE)
     p.trho <- vapply(object$idres, function(x) x[["p.trho"]], FUN.VALUE = 0.0, USE.NAMES = FALSE)
-    sumidres <- cbind(
-      "lags"   = lags,
-      "obs"    = L - lags - 1,
-      "rho"    = rho,
-      "trho"   = trho,
-      "p.trho" = p.trho)
+    sumidres <- cbind("lags"   = lags,
+                      "obs"    = L - lags - 1,
+                      "rho"    = rho,
+                      "trho"   = trho,
+                      "p.trho" = p.trho)
     
     if (object$args$test == "ips" && !object$args$ips.stat == "tbar") {
       sumidres <- cbind(sumidres, t(object$adjval))
@@ -1262,7 +1261,7 @@ print.phansi <- function(x, cutoff = 10L, ...) {
     else { # cut off enumeration of individuals if more than specified in cutoff
       if(cutoff > 0L) {
         ind.cutoff <- paste0(paste0(id[rej.ind][seq_len(cutoff)], collapse = ", "), ", ...")
-        ind.txt <- paste0("Individual H0 rejected for ", rej.ind.no ," individuals, only first ", cutoff , " printed (integer id(s)):\n")
+        ind.txt <- paste0("Individual H0 rejected for ", rej.ind.no ," individuals, only first ", cutoff, " printed (integer id(s)):\n")
         cat(paste0(" ", ind.txt))
         cat(paste0("  ", ind.cutoff, "\n"))
       } else cat(paste0(" Individual H0 rejected for ", rej.ind.no ," individuals. None printed as 'cutoff' set to ", cutoff, ".\n"))
