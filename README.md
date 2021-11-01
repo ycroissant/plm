@@ -40,9 +40,17 @@ It includes (non-exhaustive overview):
   - `vcovSCC`: Driscoll and Kraay (1998),
 
 - an enhanced data frame, called `pdata.frame`, to deal with data sets for which 
-  observations are identified by a combination of two indexes, and
+  observations are identified by a combination of two indexes,
 
-- panel data transformation functions (e.g, `Within`, `Between`, `lag`, `lead`, `diff`).
+- panel data transformation functions (e.g., `Within`, `Between`, `between`, `lag`, 
+  `lead`, `diff`), and
+
+- other functions relating to panel data sets, e.g.:
+  - checks for panel data dimensions (individual, time, group) and balancedness (`pdim`), 
+  - checks for panel balancedness (`is.pbalanced`) and consecutiveness (regularity) (`is.pconsecutive`) 
+    as well as functions to change data to conform to these properties 
+    (`make.pbalanced`, `make.pconsecutive`),
+  - measures for unbalancedness of data (`punbalancedness`) (Ahrens/Pincus (1981)).
 
 
 ## Installation
@@ -55,11 +63,10 @@ install.packages("plm")
 
 The package's CRAN website is <https://cran.r-project.org/package=plm>.
 
-
 The development of package `plm` takes place on GitHub at <https://github.com/ycroissant/plm>.
 To install the development version from **GitHub**, use, e.g.:
 ```{r}
-# install.packages("remotes")
+# install.packages("remotes") # remove '#' if pkg 'remotes' is not installed
 remotes::install_github("ycroissant/plm")
 ```
 
