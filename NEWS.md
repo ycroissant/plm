@@ -41,8 +41,9 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 
 ### Dependencies:
  * Shifted package `collapse` from 'Suggests' to 'Imports'.
-  
-***
+ * Removed package `bookdown` from 'Suggests' as not needed.
+ 
+
 
 # plm 2.4-3
 

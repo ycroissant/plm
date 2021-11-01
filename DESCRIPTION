@@ -14,7 +14,7 @@ Authors@R: c(person(given = "Yves",      family = "Croissant",    role = c("aut"
 Depends: R (>= 3.1.0)
 Imports: MASS, bdsmatrix, collapse (>= 1.6.0), zoo, nlme, sandwich, lattice, lmtest, maxLik, Rdpack, Formula, stats
 Suggests: AER, car, pcse, clusterSEs, pglm, spdep, splm, statmod, urca, Ecdat, pder,
-          stargazer, texreg, foreign, knitr, rmarkdown, bookdown, fixest, lfe
+          stargazer, texreg, foreign, knitr, rmarkdown, fixest, lfe
 Description: A set of estimators for models and (robust) covariance matrices, and tests for panel data
              econometrics, including within/fixed effects, random effects, between, first-difference, 
              nested random effects as well as instrumental-variable (IV) and Hausman-Taylor-style models,
