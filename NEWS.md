@@ -19,7 +19,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
   See `?plm.fast` for more information and a benchmark.
 
 
-### Deprecation/Clean-ups/Removals:
+### Clean-ups:
 * detect_lin_dep/detect.lindep: alias detect_lin_dep removed, thus this
   functionality is now only accessible via detect.lindep (function was renamed
   from detect_lin_dep to detect.lindep in CRAN version 1.7-0 (2019-01-04),
@@ -30,13 +30,13 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
   * error informatively if argument effect = "nested" and model != "random" 
     (previously, this was a warning incl. argument adjustment, see also 
     NEWS for 2.4-2).
-  * (and pht) for argument 'inst.method', the standard R argument matching and
-    error message is used, (no more special message if misspelled value "bmc" 
-    instead of "bms" is used, "bmc" was a long-standing typo, then accepted with 
-    a warning and then errored with a special error message, see also NEWS for 
-    2.4-0, 1.6-6).
-* DESCRIPTION file: more comprehensive description of the package.
-    
+  * (as well as pht) for argument 'inst.method', the standard R argument matching 
+    and error message is used (so no more dedicated message if misspelled value 
+    "bmc" instead of "bms" is used, "bmc" was a long-standing typo, then accepted 
+    with a warning and later errored with an informative error message, see also 
+    NEWS for 2.4-0, 1.6-6).
+* DESCRIPTION file: more comprehensive description of the package, removed some
+  packages from 'Suggests' which are not used.
 
 
 ### Dependencies:
