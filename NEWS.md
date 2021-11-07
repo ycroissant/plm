@@ -41,7 +41,8 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 
 ### Dependencies:
  * Shifted package `collapse` from 'Suggests' to 'Imports'.
- * Removed packages `bookdown` and `stargazer` from 'Suggests' as not needed.
+ * Removed packages `bookdown`, `clusterSEs`, `pcse`, `stargazer` from 'Suggests'
+   as not needed.
  
 
 
