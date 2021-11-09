@@ -23,7 +23,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 * detect_lin_dep/detect.lindep: alias detect_lin_dep removed, thus this
   functionality is now only accessible via detect.lindep (function was renamed
   from detect_lin_dep to detect.lindep in CRAN version 1.7-0 (2019-01-04),
-  detect_lin_dep was introduced in CRAN version 1.6-4 (2016-11-30)).
+  detect_lin_dep was originally introduced in CRAN version 1.6-4 (2016-11-30)).
 * has.intercept.plm: temporary back-compatible solution for ill-introduced 
   argument 'part' removed, use argument 'rhs' instead (see also NEWS for 2.4-2).
 * plm:
@@ -35,8 +35,9 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
     "bmc" instead of "bms" is used, "bmc" was a long-standing typo, then accepted 
     with a warning and later errored with an informative error message, see also 
     NEWS for 2.4-0, 1.6-6).
-* DESCRIPTION file: more comprehensive description of the package, removed some
-  packages from 'Suggests' which are not used.
+* DESCRIPTION file:
+  * more comprehensive description of the package, 
+  * removed some packages from 'Suggests' which are not used (see below).
 
 
 ### Dependencies:

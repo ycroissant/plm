@@ -22,7 +22,7 @@ It includes (non-exhaustive overview):
   - `pmg`: mean groups (MG), demeaned MG and common correlated effects (CCEMG) estimators,
   - `pcce`: estimators for common correlated effects mean groups (CCEMG) and pooled (CCEP) for panel data with common factors,
   - `pvcm`: variable coefficients models,
-  - `pldv`: panel estimators for limited dependent variables.
+  - `pldv`: panel estimators for limited dependent variables,
 
 - a set of testing functions:
   - model specification (`phtest`, `pFtest`, `pooltest`, `plmtest`, `pwaldtest`, `piest`, `aneweytest`, `mtest`, `sargan`),
