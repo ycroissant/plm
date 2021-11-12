@@ -2449,7 +2449,6 @@ covariance estimators robust vs. cross-sectional correlation are also
 in the offing. Lastly, conditional visualization features in the
 `R` environment seem to offer a promising toolbox for visual
 diagnostics, which is another subject for future work.
--->
 
 We plan to expand the methods in this paper to systems of equations
 and to the estimation of models with autoregressive errors. Addition
@@ -2457,6 +2456,7 @@ of covariance estimators robust vs. cross-sectional correlation are
 also in the offing. Lastly, conditional visualization features in the
 `R` environment seem to offer a promising toolbox for visual
 diagnostics, which is another subject for future work.
+-->
 
 
 # Acknowledgments {-}
