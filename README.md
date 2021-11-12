@@ -9,9 +9,11 @@
 ## About
 
 `plm` is a package for panel data econometrics for the **R** statistical computing
-environment. It was first published on **CRAN** in 2006.
+environment. It was first published on **CRAN** in 2006. Be sure to read the NEWS
+on [CRAN](https://cran.r-project.org/package=plm) for any changes in new releases 
+(new features, bugfixes, other improvements, ...).
 
-It includes (non-exhaustive overview):
+The package includes (non-exhaustive overview):
 
 - a set of functions to estimate models:
   - `plm`: panel data estimators (within/fixed effects, random effects, between,
