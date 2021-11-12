@@ -49,7 +49,8 @@ pvcovHC <- function(x, ...){
 
 # plm.data() is now deprecated (since February 2017). Need to keep it in package
 # for backward compatibility of users' code out there and packages, especially 
-# for package 'systemfit'.
+# for package 'systemfit' (systemfit supports pdata.frame since 2017-03-09 but 
+# plm.data can be used there as well)..
 #
 # While plm.data() was a 'full function' once, it now is now using
 # pdata.frame() and re-works the properties of the "plm.dim" objects
