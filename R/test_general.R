@@ -795,7 +795,8 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
   if (test == "Chisq"){
     # perform non-robust chisq test
     if (is.null(vcov_arg)) {
-      stat <- as.numeric(crossprod(solve(vcov(x)[names(coefs_wo_int), names(coefs_wo_int)], coefs_wo_int), coefs_wo_int))
+      names.coes_wo_int <- names(coefs_wo_int)
+      stat <- as.numeric(crossprod(solve(vcov(x)[names.coes_wo_int, names.coes_wo_int], coefs_wo_int), coefs_wo_int))
 #     stat < - (tss-ssr)/(ssr/df2) # does not produce correct results for unbalanced RE models and (un)balanced IV models
       names(stat) <- "Chisq"
       pval <- pchisq(stat, df = df1, lower.tail = FALSE)
@@ -814,7 +815,8 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
     if(length(formula(x))[2L] > 1L) stop("test = \"F\" not sensible for IV models")
     if (is.null(vcov_arg)) {
       # perform "normal" F test
-      stat <- as.numeric(crossprod(solve(vcov(x)[names(coefs_wo_int), names(coefs_wo_int)], coefs_wo_int), coefs_wo_int)) / df1
+      names.coes_wo_int <- names(coefs_wo_int)
+      stat <- as.numeric(crossprod(solve(vcov(x)[names.coes_wo_int, names.coes_wo_int], coefs_wo_int), coefs_wo_int)) / df1
 #      stat <- (tss-ssr)/ssr*df2/df1 # does not produce correct results for unbalanced RE models
       names(stat) <- "F"
       pval <- pf(stat, df1 = df1, df2 = df2, lower.tail = FALSE)
