@@ -134,7 +134,7 @@ stopifnot(isTRUE(all.equal(plm_tw_fixef_ti_level,
 ## checks vs. fixest::feols
 fixest.avail <- if(!requireNamespace("fixest", quietly = TRUE)) FALSE else TRUE
 if(fixest.avail) {
-  library(fixest) # version 0.9.0
+  suppressPackageStartupMessages(library(fixest))
 
   # twoways balanced (one level, one dfirst)
   feols_tw <- fixest::feols(inv ~ value + capital | firm + year, data = Grunfeld)
@@ -244,7 +244,8 @@ fixef(FE2SLS_tw_unbal, effect = "twoways")
 
 ## check vs. fixest::feols
 if(fixest.avail) {
-  library(fixest) # fixest version 0.9.0 does not compute fixef() for IV models correctly,
+  suppressPackageStartupMessages(library(fixest))
+                  # fixest versions < 0.10.0 do not compute fixef() for IV models correctly,
                   # fixed in 0.10.0, see bug report:
                   # https://github.com/lrberge/fixest/issues/190
                   # fix commit 2021-08-31: https://github.com/lrberge/fixest/commit/9cdd106b4fe87c0bfc5cbde1102ac1952e246ab0
