@@ -10,6 +10,7 @@
 ## - punbalancedness : measures for the unbalancedness of panel data
 ## - myvar : calculates variance with NA removal, checks if input is constant (also for factor and character)
 ## - pvar : checks if input varies in individual / time dimension
+## - make.dummies : create a contrast-coded dummy matrix from a factor
 
 bdiag <- function(...){
   ## non-exported
@@ -645,3 +646,85 @@ print.pvar <- function(x, ...){
 }
 
 
+#' Create a Dummy Matrix
+#' 
+#' Contrast-coded dummy matrix created from a factor
+#' 
+#' This function creates a matrix of dummies from the levels of a factor.
+#' In model estimations, it is usually preferable to not create the dummy matrix 
+#' prior to estimation but to simply specify a factor in the formula and let the
+#' estimation function handle the creation of the dummies.
+#' 
+#' This function is merely a convenience wrapper around `stats::contr.treatment`
+#' to ease the dummy matrix creation process shall the dummy matrix be explicitly
+#' required. See Examples for a use case in LSDV (least squares dummy variable)
+#' model estimation and how to merge the dummy matrix to a data.frame.
+#' 
+#' @param x a factor from which the dummies are created (x is coerced to 
+#'          factor if not yet a factor)
+#' @param base integer or character, specifies the reference level (base), if 
+#'             integer it refers to position in `levels(x)`, if character the name 
+#'             of a level,
+#' @param base.add logical, if `TRUE` the reference level (base) is added 
+#'                 to the return value as first column, if `FALSE` the reference
+#'                 level is not included.
+#'
+#' @return A matrix containing the contrast-coded dummies, dimensions are n x n
+#'         where `n = length(levels(x))` if argument  `base.add = TRUE` or 
+#'         `n = length(levels(x)-1)` if `base.add = FALSE`.
+#' @author Kevin Tappe
+#' @importFrom stats contr.treatment
+#' @export
+#' @seealso [stats::contr.treatment()], [stats::contrasts()]
+#' @keywords manip
+#' @examples
+#' library(plm)
+#' data("Grunfeld", package = "plm")
+#' Grunfeld <- Grunfeld[1:100, ] # reduce data set (down to 5 firms)
+#' firm.dum <- make.dummies(Grunfeld$firm) # gives 5 x 5 matrix
+#' 
+#' # add a column named "firm" to be able to merge to the original data set by
+#' # a column of the same name
+#' firm.dum <- data.frame(cbind("firm" = rownames(firm.dum), data.frame(firm.dum)))
+#' Grunfeld <- merge(Grunfeld, firm.dum)
+#' head(Grunfeld) # NB: merge() sorts rows and re-orders columns
+#' # better to create the pdata.frame post hoc:
+#' pGrun <- pdata.frame(Grunfeld, index = c("firm", "year"))
+#' 
+#' ## Model estimation:
+#' ## estimate within model (individual/firm effects) and LSDV models (firm dummies)
+#' # within model:
+#' plm(inv ~ value + capital, data = pGrun, model = "within")
+#' 
+#' # LSDV with user-created dummies by make.dummies:
+#' form_dummies <- paste0("X", c(1:5), collapse = "+")
+#' form_dummies <- formula(paste0("inv ~ value + capital + ", form_dummies))
+#' plm(form_dummies, data = pGrun, model = "pooling") # last dummy (X10) is dropped
+#' 
+#' # LSDV via factor(year) -> let estimation function generate dummies:
+#' plm(inv ~ value + capital + factor(firm), data = pGrun, model = "pooling")
+make.dummies <- function(x, base = 1L, base.add = TRUE) {
+  
+  stopifnot(is.numeric(base) || is.character(base))
+  if(is.numeric(base)) if(round(base) != base) stop("Argument 'ref' specified as numeric but is not integer")
+  if(!is.factor(x)) x <- factor(x)
+  
+  lvl <- levels(x)
+  
+  if(is.character(base)) {
+    pos <- match(base, lvl)
+    if(is.na(pos)) stop(paste0("argument 'ref' specified as character but value \"", 
+                               base, "\", is not in levels(x)"))
+    base <- pos
+  }
+  
+  dummies <- contr.treatment(lvl, base = base)
+  
+  # if requested, add reference level to dummy matrix in 1st position
+  if(base.add) {
+    lvl.base <- levels(x)[base]
+    dummies <- cbind(c(1, rep(0, NROW(dummies)-1)), dummies)
+    colnames(dummies) <- c(lvl.base, colnames(dummies)[-1L])  
+  }
+  dummies # is a matrix
+}

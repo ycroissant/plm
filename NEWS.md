@@ -14,9 +14,14 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
   
   Recommendation: Install suggest-dependency package `fixest` or `lfe` as a 
   further significant speed up for the two-ways within transformation (as in 
-  two-ways fixed effects  models) is gained.
+  two-ways fixed effects models) is gained.
   
   See `?plm.fast` for more information and a benchmark.
+
+### Features:
+
+* make.dummies: new simple function to conveniently create contrast-coded dummies 
+  from a factor.
 
 
 ### Clean-ups:
