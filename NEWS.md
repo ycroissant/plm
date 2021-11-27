@@ -44,6 +44,9 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
   * more comprehensive description of the package, 
   * removed some packages from 'Suggests' which are not used (see below).
 
+### Vignettes:
+ * First vignettes gained an example for the auxiliary-regression-based Hausman
+   test.
 
 ### Dependencies:
  * Shifted package `collapse` from 'Suggests' to 'Imports'.

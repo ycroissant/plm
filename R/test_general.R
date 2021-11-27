@@ -8,11 +8,10 @@
 #' different models.  The `panelmodel` method computes the original
 #' version of the test based on a quadratic form
 #' \insertCite{HAUS:78}{plm}. The `formula` method, if
-#' `method="chisq"` (default), computes the original version of the
-#' test based on a quadratic form; if `method="aux"` then the
-#' auxiliary-regression-based version in Wooldridge (2010,
-#' Sec. 10.7.3.) is computed instead \insertCite{@WOOL:10 Sec.10.7.3}{plm}.
-#' Only the latter can be robustified by specifying a robust
+#' `method = "chisq"` (default), computes the original version of the
+#' test based on a quadratic form; if `method ="aux"` then the
+#' auxiliary-regression-based version as in \insertCite{WOOL:10;textual}{plm},
+#' Sec.10.7.3. Only the latter can be robustified by specifying a robust
 #' covariance estimator as a function through the argument `vcov` (see
 #' **Examples**).
 #' 

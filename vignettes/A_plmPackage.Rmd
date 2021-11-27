@@ -1130,8 +1130,8 @@ To test the hypothesis that all the coefficients in the
 :
 
 ```{r }
-znp <- pvcm(inv~value+capital, data=Grunfeld, model="within")
-zplm <- plm(inv~value+capital, data=Grunfeld, model="within")
+znp <- pvcm(inv ~ value + capital, data = Grunfeld, model = "within")
+zplm <- plm(inv ~ value + capital, data = Grunfeld, model = "within")
 pooltest(zplm, znp)
 ```
 
@@ -1139,7 +1139,7 @@ The same test can be computed using a formula as first argument of the
 `pooltest` function:
 
 ```{r results='hide'}
-pooltest(inv~value+capital, data=Grunfeld, model="within")
+pooltest(inv ~ value + capital, data = Grunfeld, model = "within")
 ``` 
 
 ## Tests for individual and time effects
@@ -1204,17 +1204,29 @@ pFtest(inv~value+capital, data=Grunfeld, effect="twoways")
 
 ## Hausman test
 
-`phtest` computes the Hausman test which is based on the
-comparison of two sets of estimates (see @HAUS:78). Its main
+`phtest` computes the Hausman test (at times also called Durbin--Wu--Hausman 
+test) which is based on the comparison of two sets of estimates (see @HAUS:78).
+
+Its main
 arguments  are two `panelmodel` objects or a
 formula.  A classical application of the Hausman test for panel data
 is to compare the fixed and the random effects models:
 
 ```{r }
-gw <- plm(inv~value+capital, data=Grunfeld, model="within")
-gr <- plm(inv~value+capital, data=Grunfeld, model="random")
+gw <- plm(inv ~ value + capital, data = Grunfeld, model="within")
+gr <- plm(inv ~ value + capital, data = Grunfeld, model="random")
 phtest(gw, gr)
 ```
+
+The command also supports the auxiliary-regression-based version as described in,
+e.g., @WOOL:10 Sec.10.7.3 by using the formula interface and setting argument 
+`test = "aux"`. This auxiliary-regression-based version can be robustified by 
+specifying a robust covariance estimator as a function through the argument 
+`vcov`:
+```{r }
+phtest(inv ~ value + capital, data = Grunfeld, method = "aux", vcov = vcovHC)
+```
+
 
 ## Tests of serial correlation{#serialcor}
 

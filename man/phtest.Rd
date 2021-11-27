@@ -53,11 +53,10 @@ is based on the difference of the vectors of coefficients of two
 different models.  The \code{panelmodel} method computes the original
 version of the test based on a quadratic form
 \insertCite{HAUS:78}{plm}. The \code{formula} method, if
-\code{method="chisq"} (default), computes the original version of the
-test based on a quadratic form; if \code{method="aux"} then the
-auxiliary-regression-based version in Wooldridge (2010,
-Sec. 10.7.3.) is computed instead \insertCite{@WOOL:10 Sec.10.7.3}{plm}.
-Only the latter can be robustified by specifying a robust
+\code{method = "chisq"} (default), computes the original version of the
+test based on a quadratic form; if \code{method ="aux"} then the
+auxiliary-regression-based version as in \insertCite{WOOL:10;textual}{plm},
+Sec.10.7.3. Only the latter can be robustified by specifying a robust
 covariance estimator as a function through the argument \code{vcov} (see
 \strong{Examples}).
 
