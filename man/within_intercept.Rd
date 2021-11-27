@@ -38,7 +38,7 @@ accompanying standard error or an within model with the overall intercept
 The (somewhat artificial) intercept for within models (fixed
 effects models) was made popular by Stata of StataCorp
 \insertCite{@see @GOUL:13}{plm}, EViews of IHS, and gretl
-\insertCite{@gretl p. 160-161, example 18.1}{plm}, see for
+\insertCite{@see @GRETL:2021, p. 200-201, listing 23.1}{plm}, see for
 treatment in the literature,
 e.g., \insertCite{GREE:12;textual}{plm}, Ch. 11.4.4, p. 364. It can
 be considered an overall intercept in the within model framework
