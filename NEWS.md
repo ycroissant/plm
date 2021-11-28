@@ -35,8 +35,8 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
   * error informatively if argument effect = "nested" and model != "random" 
     (previously, this was a warning incl. argument adjustment, see also 
     NEWS for 2.4-2).
-  * (as well as pht) for argument 'inst.method', the standard R argument matching 
-    and error message is used (so no more dedicated message if misspelled value 
+  * (as well as pht) for argument 'inst.method', standard R argument matching 
+    and error message are used (so no more dedicated message if misspelled value 
     "bmc" instead of "bms" is used, "bmc" was a long-standing typo, then accepted 
     with a warning and later errored with an informative error message, see also 
     NEWS for 2.4-0, 1.6-6).
@@ -51,7 +51,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 
 ### Vignettes:
  * First vignettes gained an example for the auxiliary-regression-based Hausman
-   test.
+   test (`phtest(. , method = "aux")`).
 
 ### Dependencies:
  * Shifted package `collapse` from 'Suggests' to 'Imports'.
