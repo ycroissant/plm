@@ -40,6 +40,9 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
     "bmc" instead of "bms" is used, "bmc" was a long-standing typo, then accepted 
     with a warning and later errored with an informative error message, see also 
     NEWS for 2.4-0, 1.6-6).
+* pggls: argument model: removed "random" from the list of official argument's
+    values as its use is depreciated (model = "pooling" does the same; however,
+    value "random" is still accepted for back-compatibility with a warning).
 * DESCRIPTION file:
   * more comprehensive description of the package, 
   * removed some packages from 'Suggests' which are not used (see below).
