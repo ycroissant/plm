@@ -100,7 +100,6 @@ phtest(inv ~ value + capital, data=Grunfeldpdata, effect = "twoways")
 phtest(inv ~ value + capital, data=Grunfeldpdata, effect = "time")
 
 # test to see of phtest(, method = "aux") respects argument effect
-# (rev. 305a introduced a quick fix and extracted argument effect from dots in function signature)
 # formal test (statistic is about 13 for twoways case and well below in one-way cases)
 testobj <- phtest(inv ~ value + capital, data=Grunfeldpdata, effect = "twoways", method = "aux")
 #YC if (round(testobj$statistic, digits = 0) != 13) stop("argument effect seems to be not respected with method = \"aux\"")

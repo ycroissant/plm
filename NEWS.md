@@ -43,6 +43,8 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 * pggls: argument model: removed "random" from the list of official argument's
     values as its use is depreciated (model = "pooling" does the same; however,
     value "random" is still accepted for back-compatibility with a warning).
+* phtest: for formula method, argument 'effect' is now explicit as 4th argument 
+   (previously, it was extracted from ellipsis (...)).
 * DESCRIPTION file:
   * more comprehensive description of the package, 
   * removed some packages from 'Suggests' which are not used (see below).
