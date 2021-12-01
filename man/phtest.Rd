@@ -31,7 +31,7 @@ phtest(x, ...)
 \item{model}{a character vector containing the names of two models
 (length(model) must be 2),}
 
-\item{effect}{a character specifing the effect to be introduced to both models,
+\item{effect}{a character specifying the effect to be introduced to both models,
 one of \code{"individual"}, \code{"time"}, or \code{"twoways"} (only for formula method),}
 
 \item{method}{one of \code{"chisq"} or \code{"aux"},}
@@ -61,7 +61,7 @@ Sec.10.7.3. Only the latter can be robustified by specifying a robust
 covariance estimator as a function through the argument \code{vcov} (see
 \strong{Examples}).
 
-The \code{effect} arguement is only relevant for the formula method/interface and
+The \code{effect} argument is only relevant for the formula method/interface and
 is then applied to both models. For the panelmodel method/interface, the test
 is run with the effects of the already estimated models.
 

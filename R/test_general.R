@@ -15,7 +15,7 @@
 #' covariance estimator as a function through the argument `vcov` (see
 #' **Examples**).
 #'
-#' The `effect` arguement is only relevant for the formula method/interface and 
+#' The `effect` argument is only relevant for the formula method/interface and 
 #' is then applied to both models. For the panelmodel method/interface, the test 
 #' is run with the effects of the already estimated models.
 #' 
@@ -34,7 +34,7 @@
 #' @param x2 an object of class `"panelmodel"` (only for panelmodel method/interface),
 #' @param model a character vector containing the names of two models
 #' (length(model) must be 2),
-#' @param effect a character specifing the effect to be introduced to both models,
+#' @param effect a character specifying the effect to be introduced to both models,
 #'  one of `"individual"`, `"time"`, or `"twoways"` (only for formula method),
 #' @param data a `data.frame`,
 #' @param method one of `"chisq"` or `"aux"`,
@@ -175,9 +175,9 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                nvars <- dim(feX)[[2L]]
                R <- diag(1, nvars)
                r <- rep(0, nvars) # here just for clarity of illustration
-               omega0 <- vcov(auxmod)[(nvars+2):(nvars*2+1),
-                                      (nvars+2):(nvars*2+1)]
-               Rbr <- R %*% coef(auxmod)[(nvars+2):(nvars*2+1)] - r
+               range <- (nvars+2L):(nvars*2L + 1L)
+               omega0 <- vcov(auxmod)[range, range]
+               Rbr <- R %*% coef(auxmod)[range] - r
 
                h2t <- as.numeric(crossprod(Rbr, solve(omega0, Rbr)))
                ph2t <- pchisq(h2t, df = nvars, lower.tail = FALSE)
@@ -919,8 +919,7 @@ pwaldtest.pgmm <- function(x, param = c("coef", "time", "all"), vcov = NULL, ...
   effect <- describe(x, "effect")
   if (param == "time" && effect == "individual") stop("no time dummies in this model")
   transformation <- describe(x, "transformation")
-  if (model == "onestep") coefficients <- x$coefficients
-  else coefficients <- x$coefficients[[2L]]
+  coefficients <- if(model == "onestep") x$coefficients else x$coefficients[[2L]]
   Ktot <- length(coefficients)
   Kt <- length(x$args$namest)
   
