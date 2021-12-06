@@ -129,13 +129,11 @@ plm.data_depr_orig <- function(x, indexes = NULL){
 
 data2plm.data <- function(data, indexes = NULL){
   data <- plm.data(data, indexes)
-  id.name <- names(data)[1]
-  time.name <- names(data)[2]
+  id.name <- names(data)[1L]
+  time.name <- names(data)[2L]
   list(data = data, id.name = id.name, time.name = time.name)
 }
 
-# NB: Are functions indexes and print.indexes still needed?
-# NB: print.indexes does not treat the new group index var
 indexes <- function(x){
   if (!inherits(x, "pdata.frame")){
     stop("indexes function only for pdata.frame\n")
@@ -203,7 +201,6 @@ rbindl <- function(x){
 }
 
 
-## TODO: is print.form actually used? - delete?
 print.form <- function(x, length.line){
   x <- deparse(x,width.cutoff=length.line)
   n <- length(x)
