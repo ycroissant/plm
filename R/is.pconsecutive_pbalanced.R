@@ -162,17 +162,16 @@ is.pconsecutive <- function(x, ...){
 #' @rdname is.pconsecutive
 #' @export
 is.pconsecutive.default <- function(x, id, time, na.rm.tindex = FALSE, ...) {
-  # argument 'x' just used for input check (if it is not NULL and is a vector)
-  
+  # argument 'x' just used for input check (if it is not NULL and is atomic)
+
   # input checks
   if(length(id) != length(time)) 
     stop(paste0("arguments 'id' and 'time' must have same length: length(id): ", length(id), ", length(time) ", length(time)))
   
-  if(!is.null(x) && is.vector(x)) { # is.vector could be too strict? factor is not a vector
+  if(!is.null(x) && is.atomic(x)) { # is.atomic was once is.vector, but is.vector is too strict as a factor is not a vector
     if(!(length(x) == length(id) && length(x) == length(time) && length(id) == length(time)))
       stop(paste0("arguments 'x', 'id', 'time' must have same length: length(x): ", 
                   length(x), ", length(id): ", length(id), ", length(time): ", length(time)))
-    
   }
   
   # NB: 'time' is assumed to be organised as stacked time series (sorted for each individual)
@@ -377,6 +376,6 @@ is.pbalanced.panelmodel <- function(x, ...) {
 #' @rdname is.pbalanced
 #' @export
 is.pbalanced.pgmm <- function(x, ...) {
-## pgmm is also class panelmodel, but take advantage of the pdim attribute in it
+  # pgmm is also class panelmodel, but take advantage of its pdim attribute
   return(attr(x, "pdim")$balanced)
 }
