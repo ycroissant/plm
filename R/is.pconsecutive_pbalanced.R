@@ -260,7 +260,8 @@ is.pconsecutive.pdata.frame <- function(x, na.rm.tindex = FALSE, ...){
 #' @export
 is.pconsecutive.panelmodel <- function(x, na.rm.tindex = FALSE, ...){
   index <- unclass(attr(x$model, "index")) # unclass for speed
-  return(is.pconsecutive.default(x, index[[1L]], index[[2L]], na.rm.tindex = na.rm.tindex, ...))
+  # can determine solely based on indexes:
+  return(is.pconsecutive.default(NULL, index[[1L]], index[[2L]], na.rm.tindex = na.rm.tindex, ...))
 }
 
 
