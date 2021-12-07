@@ -8,13 +8,16 @@
 ## About
 
 `plm` is a package for panel data econometrics for the **R** statistical computing
-environment. It was first published on **CRAN** in 2006. Be sure to read the NEWS
-on [CRAN](https://cran.r-project.org/package=plm) for any changes in new releases 
-(new features, bugfixes, other improvements, ...).
+environment. The package includes functions for model estimation, testing, robust 
+covariance matrix estimation, panel data manipulation and information. It was 
+first published on **CRAN** in 2006.
 
-The package includes (non-exhaustive overview):
+Be sure to read the NEWS on [CRAN](https://cran.r-project.org/package=plm) for 
+any changes in new releases (new features, bugfixes, other improvements, ...).
 
-- a set of functions to estimate models:
+Non-exhaustive function overview: 
+
+- Functions to estimate models:
   - `plm`: panel data estimators (within/fixed effects, random effects, between,
            first-difference, nested random effects), incl. instrumental-variable 
            estimation techniques (IV) and Hausman-Taylor-style models,
@@ -23,30 +26,30 @@ The package includes (non-exhaustive overview):
   - `pmg`: mean groups (MG), demeaned MG and common correlated effects (CCEMG) estimators,
   - `pcce`: estimators for common correlated effects mean groups (CCEMG) and pooled (CCEP) for panel data with common factors,
   - `pvcm`: variable coefficients models,
-  - `pldv`: panel estimators for limited dependent variables,
+  - `pldv`: panel estimators for limited dependent variables.
 
-- a set of testing functions:
+- Testing functions:
   - model specification (`phtest`, `pFtest`, `pooltest`, `plmtest`, `pwaldtest`, `piest`, `aneweytest`, `mtest`, `sargan`),
   - serial correlation (`pbgtest`, `pwfdtest`, `pbnftest`, `pdwtest`, `pwartest`, `pbsytest`, `pbltest`), 
   - cross-sectional dependence (`pcdtest`),
   - panel unit root (`purtest`, `cipstest`, `phansi`),
-  - panel Granger (non-)causality (`pgrangertest`),
+  - panel Granger (non-)causality (`pgrangertest`).
   
-- a set of robust covariance matrix estimators (incl. various weighting schemes
+- Robust covariance matrix estimators (incl. various weighting schemes
   for small sample adjustment):
   - `vcovHC`: Arellano (1987), White (1980),
   - `vcovBK`: Beck and Katz (1995) (PCSE),
   - `vcovNW`: Newey and West (1987),
   - `vcovDC`: double-clustering robust (Thompson (2011), Cameron et al. (2011)),
-  - `vcovSCC`: Driscoll and Kraay (1998),
+  - `vcovSCC`: Driscoll and Kraay (1998).
 
-- an enhanced data frame, called `pdata.frame`, to deal with data sets for which 
-  observations are identified by a combination of two indexes,
+- An enhanced data frame, called `pdata.frame`, to deal with data sets for which 
+  observations are identified by a combination of two indexes.
 
-- panel data transformation functions (e.g., `Within`, `Between`, `between`, `lag`, 
-  `lead`, `diff`), and
+- Panel data transformation functions (e.g., `Within`, `Between`, `between`, `lag`, 
+  `lead`, `diff`).
 
-- other functions relating to panel data sets, e.g.:
+- Other functions relating to panel data sets, e.g.:
   - checks for panel data dimensions (individual, time, group) and balancedness (`pdim`), 
   - checks for panel balancedness (`is.pbalanced`) and consecutiveness (regularity) (`is.pconsecutive`) 
     as well as functions to change data to conform to these properties 
