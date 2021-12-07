@@ -2,7 +2,6 @@
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/plm)](https://CRAN.R-project.org/package=plm)
-[![CRAN check](https://cranchecks.info/badges/summary/plm)](https://cran.r-project.org/web/checks/check_results_plm.html)
 [![Downloads](https://cranlogs.r-pkg.org/badges/plm)](https://CRAN.R-project.org/package=plm)
 <!-- badges: end -->
 
