@@ -12,6 +12,7 @@ phtest(x, ...)
   x,
   data,
   model = c("within", "random"),
+  effect = c("individual", "time", "twoways"),
   method = c("chisq", "aux"),
   index = NULL,
   vcov = NULL,
@@ -23,15 +24,15 @@ phtest(x, ...)
 \arguments{
 \item{x}{an object of class \code{"panelmodel"} or \code{"formula"},}
 
-\item{\dots}{further arguments to be passed on. For the formula method,
-place argument \code{effect} here to compare, e.g., twoway models
-(\code{effect = "twoways"}) Note: Argument \code{effect} is not respected in
-the panelmodel method.}
+\item{\dots}{further arguments to be passed on (currently none).}
 
 \item{data}{a \code{data.frame},}
 
 \item{model}{a character vector containing the names of two models
 (length(model) must be 2),}
+
+\item{effect}{a character specifying the effect to be introduced to both models,
+one of \code{"individual"}, \code{"time"}, or \code{"twoways"} (only for formula method),}
 
 \item{method}{one of \code{"chisq"} or \code{"aux"},}
 
@@ -39,7 +40,7 @@ the panelmodel method.}
 
 \item{vcov}{an optional covariance function,}
 
-\item{x2}{an object of class \code{"panelmodel"},}
+\item{x2}{an object of class \code{"panelmodel"} (only for panelmodel method/interface),}
 }
 \value{
 An object of class \code{"htest"}.
@@ -53,13 +54,16 @@ is based on the difference of the vectors of coefficients of two
 different models.  The \code{panelmodel} method computes the original
 version of the test based on a quadratic form
 \insertCite{HAUS:78}{plm}. The \code{formula} method, if
-\code{method="chisq"} (default), computes the original version of the
-test based on a quadratic form; if \code{method="aux"} then the
-auxiliary-regression-based version in Wooldridge (2010,
-Sec. 10.7.3.) is computed instead \insertCite{@WOOL:10 Sec.10.7.3}{plm}.
-Only the latter can be robustified by specifying a robust
+\code{method = "chisq"} (default), computes the original version of the
+test based on a quadratic form; if \code{method ="aux"} then the
+auxiliary-regression-based version as in \insertCite{WOOL:10;textual}{plm},
+Sec.10.7.3. Only the latter can be robustified by specifying a robust
 covariance estimator as a function through the argument \code{vcov} (see
 \strong{Examples}).
+
+The \code{effect} argument is only relevant for the formula method/interface and
+is then applied to both models. For the panelmodel method/interface, the test
+is run with the effects of the already estimated models.
 
 The equivalent tests in the \strong{one-way} case using a between
 model (either "within vs. between" or "random vs. between")
@@ -79,13 +83,14 @@ wi <- plm(form, data = Gasoline, model = "within")
 re <- plm(form, data = Gasoline, model = "random")
 phtest(wi, re)
 phtest(form, data = Gasoline)
+phtest(form, data = Gasoline, effect = "time")
+
+# Regression-based Hausman test
 phtest(form, data = Gasoline, method = "aux")
 
-# robust Hausman test (regression-based)
+# robust Hausman test with vcov supplied as a function and 
+# with additional parameters
 phtest(form, data = Gasoline, method = "aux", vcov = vcovHC)
-
-# robust Hausman test with vcov supplied as a
-# function and additional parameters
 phtest(form, data = Gasoline, method = "aux",
   vcov = function(x) vcovHC(x, method="white2", type="HC3"))
 

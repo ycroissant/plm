@@ -821,7 +821,7 @@ summary.pgmm <- function(object, robust = TRUE, time.dummies = FALSE, ...) {
 #' covariance matrix can be supplied with the `vcov` argument.
 #' 
 #' @param object an object of class `"pgmm"`,
-#' @param order the order of the serial correlation (1 or 2),
+#' @param order integer: the order of the serial correlation,
 #' @param vcov a matrix of covariance for the coefficients or a function to
 #' compute it,
 #' @param \dots further arguments (currently unused).
@@ -840,8 +840,8 @@ summary.pgmm <- function(object, robust = TRUE, time.dummies = FALSE, ...) {
 #' ar <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) +
 #'            lag(log(capital), 0:2) + lag(log(output), 0:2) | lag(log(emp), 2:99),
 #'            data = EmplUK, effect = "twoways", model = "twosteps")
-#' mtest(ar, order = 1)
-#' mtest(ar, order = 2, vcov = vcovHC)
+#' mtest(ar, order = 1L)
+#' mtest(ar, order = 2L, vcov = vcovHC)
 #'
 mtest <- function(object, ...) {
 UseMethod("mtest")
@@ -849,7 +849,7 @@ UseMethod("mtest")
 
 #' @rdname mtest
 #' @export
-mtest.pgmm <- function(object, order = 1, vcov = NULL, ...) {
+mtest.pgmm <- function(object, order = 1L, vcov = NULL, ...) {
   if (!inherits(object, "pgmm")) stop("argument 'object' needs to be class 'pgmm'")
   myvcov <- vcov
   if (is.null(vcov)) vv <- vcov(object)
@@ -922,7 +922,7 @@ print.summary.pgmm <- function(x, digits = max(3, getOption("digits") - 2),
   cat("\n")
   print(pdim)
   ntot <- sum(unlist(x$residuals, use.names = FALSE) != 0)
-  ninst <- dim(x$W[[1L]])[2]
+  ninst <- dim(x$W[[1L]])[2L]
   cat("\nNumber of Observations Used:", ntot, sep = " ")
 #  cat("\nNumber of Instruments Used:  ", ninst, "\n", sep ="") # TODO: more checks, then activate printing
   cat("\nResiduals:\n")

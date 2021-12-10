@@ -216,7 +216,7 @@ mode(fac)
 logi <- c(TRUE, FALSE, TRUE)
 class(logi) # logical
 typeof(logi) # logical
-class(logi) <- union("myclass", class(logi))
+class(logi) <- c("myclass", class(logi))
 class(logi) # myclass logical
 loginum <- logi - 1.5
 class(loginum) # myclass logical

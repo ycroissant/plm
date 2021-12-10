@@ -682,10 +682,6 @@ named numeric(0)
 numeric(0)
 > 
 > #### since R 3.4.0 the following two cases gave a warning which was pacified in rev. 626
-> # Warning in structure(mydata, index = index, class = base::union("pseries",  :
-> #                                                                   Calling 'structure(NULL, *)' is deprecated, as NULL cannot have attributes.
-> #                                                                 Consider 'structure(list(), *)' instead.
-> 
 > pGrunfeld[pGrunfeld$firm == "31", "valueNonExistent"]
 NULL
 > 
@@ -705,4 +701,4 @@ NULL
 > 
 > proc.time()
    user  system elapsed 
-   2.65    0.43    3.07 
+   2.68    0.42    3.20 

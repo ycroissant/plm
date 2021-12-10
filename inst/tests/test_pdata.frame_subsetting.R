@@ -204,10 +204,6 @@ pGrunfeld[pGrunfeld$firm == "31", "value"]
 Grunfeld[Grunfeld$firm == "31", "value"]
 
 #### since R 3.4.0 the following two cases gave a warning which was pacified in rev. 626
-# Warning in structure(mydata, index = index, class = base::union("pseries",  :
-#                                                                   Calling 'structure(NULL, *)' is deprecated, as NULL cannot have attributes.
-#                                                                 Consider 'structure(list(), *)' instead.
-
 pGrunfeld[pGrunfeld$firm == "31", "valueNonExistent"]
 
 Grunfeld[Grunfeld$firm == "31", "valueNonExistent"]

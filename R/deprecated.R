@@ -13,9 +13,10 @@
 #' 
 #' `pvcovHC` is replaced by `vcovHC`.
 #'
-#' `detect_lin_dep` is replaced by `detect.lindep`.
+#' `detect_lin_dep` was renamed to `detect.lindep`.
 #' 
 #' @name plm-deprecated
+#' @aliases detect_lin_dep
 #' @param formula a formula,
 #' @param lag.form a list containing the lag structure of each variable in the
 #' formula,
@@ -48,7 +49,8 @@ pvcovHC <- function(x, ...){
 
 # plm.data() is now deprecated (since February 2017). Need to keep it in package
 # for backward compatibility of users' code out there and packages, especially 
-# for package 'systemfit'.
+# for package 'systemfit' (systemfit supports pdata.frame since 2017-03-09 but 
+# plm.data can be used there as well)..
 #
 # While plm.data() was a 'full function' once, it now is now using
 # pdata.frame() and re-works the properties of the "plm.dim" objects
@@ -229,13 +231,6 @@ pht <- function(formula, data, subset, na.action, model = c("ht", "am", "bms"), 
   cl <- match.call(expand.dots = TRUE)
   mf <- match.call()
   
-  if (length(model) == 1L && model == "bmc") {
-    # catch "bmc" (a long-standing typo) for Breusch-Mizon-Schmidt due to backward compatibility
-  	# error since 2020-12-31 (R-Forge) / 2021-01-23 (CRAN), was a warning before
-  	# remove catch at some point in the future
-    model <- "bms"
-    stop("Use of model = \"bmc\" disallowed, set to \"bms\" for Breusch-Mizon-Schmidt instrumental variable transformation")
-  }
   model <- match.arg(model)
   # compute the model.frame using plm with model = NA
   mf[[1L]] <- as.name("plm")
@@ -383,18 +378,18 @@ pht <- function(formula, data, subset, na.action, model = c("ht", "am", "bms"), 
 #' @rdname pht
 #' @export
 summary.pht <- function(object, ...){
-	object$fstatistic <- pwaldtest(object, test = "Chisq")
-	# construct the table of coefficients
-	std.err <- sqrt(diag(vcov(object)))
-	b <- coefficients(object)
-	z <- b/std.err
-	p <- 2*pnorm(abs(z), lower.tail = FALSE)
-	object$coefficients <- cbind("Estimate"         = b,
-                                     "Std. Error" = std.err,
-                                     "z-value"    = z,
-                                     "Pr(>|z|)"   = p)
-	class(object) <- c("summary.pht", "pht", "plm", "panelmodel")
-	object
+  object$fstatistic <- pwaldtest(object, test = "Chisq")
+  # construct the table of coefficients
+  std.err <- sqrt(diag(vcov(object)))
+  b <- coefficients(object)
+  z <- b/std.err
+  p <- 2*pnorm(abs(z), lower.tail = FALSE)
+  object$coefficients <- cbind("Estimate"   = b,
+                               "Std. Error" = std.err,
+                               "z-value"    = z,
+                               "Pr(>|z|)"   = p)
+  class(object) <- c("summary.pht", "pht", "plm", "panelmodel")
+  object
 }
 
 #' @rdname pht
@@ -584,8 +579,8 @@ formula.dynformula <- function(x, ...){
     has.int <- attr(terms(x), "intercept") == 1
     chexo <- c()
     if (has.resp){
-        if (log.form[1L]) endog <- paste("log(",endog,")",sep="")
-        if (diff.form[1L]) endog <- paste("diff(",endog,")",sep="")
+        if (log.form[1L])  endog <- paste("log(",  endog, ")", sep = "")
+        if (diff.form[1L]) endog <- paste("diff(", endog, ")", sep = "")
         if (  length(lag.form[[1L]]) == 1L && lag.form[[1L]] != 0L) lag.form[[1L]] <- c(1, lag.form[[1L]])
         if (!(length(lag.form[[1L]]) == 1L && lag.form[[1L]] == 0L))
           chexo <- c(chexo, write.lags(endog, lag.form[[1L]], diff.form[1L]))
@@ -597,12 +592,8 @@ formula.dynformula <- function(x, ...){
         chexo <- c(chexo, write.lags(i, lag.formi, diff.formi))
     }
     chexo <- paste(chexo, collapse = "+")
-    if (has.resp){
-        formod <- as.formula(paste(endog, "~", chexo, sep = ""))
-    }
-    else{
-        formod <- as.formula(paste("~", chexo, sep = ""))
-    }
+    formod <- if(has.resp) { as.formula(paste(endog, "~", chexo, sep = "")) }
+                else { as.formula(paste("~", chexo, sep = "")) }
     if (!has.int) formod <- update(formod, . ~ . -1)
     formod
 }
@@ -622,7 +613,7 @@ pFormula <- function(object) {
   if (!inherits(object, "Formula")){
     object <- Formula(object)
   }
-  class(object) <- union("pFormula", class(object))
+  class(object) <- unique(c("pFormula", class(object)))
   object
 }
 
@@ -702,7 +693,7 @@ model.matrix.pFormula <- function(object, data,
     if (model == "between") X <- between(X, effect)
     if (model == "mean")    X <- Mean(X)
     if (model == "fd")      X <- pdiff(X, effect = "individual",
-                                  has.intercept = has.intercept)
+                                       has.intercept = has.intercept)
     if (model == "random"){
         if (is.null(theta)) stop("a theta argument should be provided")
         if (effect %in% c("time", "individual")) X <- X - theta * Between(X, effect)
@@ -715,7 +706,7 @@ model.matrix.pFormula <- function(object, data,
 
     if (cstcovar.rm == "intercept"){
         posintercept <- match("(Intercept)", colnames(X))
-        if (! is.na(posintercept)) X <- X[, - posintercept, drop = FALSE]
+        if (! is.na(posintercept)) X <- X[ , - posintercept, drop = FALSE]
     }
     if (cstcovar.rm %in% c("covariates", "all")){
         cols <- apply(X, 2, is.constant)

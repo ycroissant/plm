@@ -1,22 +1,81 @@
 ---
-title: Changelog/NEWS for package plm
+title: NEWS/Changelog for package plm
 subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
-          panel data econometrics - https://cran.r-project.org/package=plm
+          panel data econometrics - <https://cran.r-project.org/package=plm>
 ---
+
+***
+
+# plm 2.5.9000 - development version to become 2.6
+
+* Fast mode is now the default for the package: when the package is attached,
+  `options("plm.fast" = TRUE)` is set (by R's .onAttach mechanism), requiring 
+  package `collapse` as a hard dependency.
+  
+  Recommendation: Install suggest-dependency package `fixest` or `lfe` as a 
+  further significant speed up for the two-ways within transformation (as in 
+  two-ways fixed effects models) is gained.
+  
+  See `?plm.fast` for more information and a benchmark.
+
+### Features:
+
+* make.dummies: new simple function to conveniently create contrast-coded dummies 
+  from a factor.
+
+
+### Clean-ups:
+* detect_lin_dep/detect.lindep: alias detect_lin_dep removed, thus this
+  functionality is now only accessible via detect.lindep (function was renamed
+  from detect_lin_dep to detect.lindep in CRAN version 1.7-0 (2019-01-04),
+  detect_lin_dep was originally introduced in CRAN version 1.6-4 (2016-11-30)).
+* has.intercept.plm: temporary back-compatible solution for ill-introduced 
+  argument 'part' removed, use argument 'rhs' instead (see also NEWS for 2.4-2).
+* plm:
+  * error informatively if argument effect = "nested" and model != "random" 
+    (previously, this was a warning incl. argument adjustment, see also 
+    NEWS for 2.4-2).
+  * (as well as pht) for argument 'inst.method', standard R argument matching 
+    and error message are used (so no more dedicated message if misspelled value 
+    "bmc" instead of "bms" is used, "bmc" was a long-standing typo, then accepted 
+    with a warning and later errored with an informative error message, see also 
+    NEWS for 2.4-0, 1.6-6).
+* pggls: argument model: removed "random" from the list of official argument's
+    values as its use is depreciated (model = "pooling" does the same; however,
+    value "random" is still accepted for back-compatibility with a warning).
+* phtest: for formula method, argument 'effect' is now explicit as 4th argument 
+   (previously, it was extracted from ellipsis (...)).
+* DESCRIPTION file:
+  * more comprehensive description of the package, 
+  * removed some packages from 'Suggests' which are not used (see below).
+
+### Vignettes:
+ * First vignettes gained an example for the auxiliary-regression-based Hausman
+   test (`phtest(. , method = "aux")`).
+
+### Dependencies:
+ * Shifted package `collapse` from 'Suggests' to 'Imports'.
+ * Removed packages `bookdown`, `clusterSEs`, `pcse`, `stargazer` from 'Suggests'
+   as not needed.
+ 
+
 
 # plm 2.4-3
 
 * Release to pacify CRAN additional checks with various BLAS implementations/platforms:
-  Checks moaned about neglectable small numerical differences vs. .Rout.save output.
-  Moved almost all test files to inst/tests so they are not run on CRAN.
-  These can be run manually and by `R CMD check --test-dir=inst/tests plm_VERSION.tar.gz.`
+  Checks moaned about neglectable small numerical differences vs. (at times) platform-specific
+  reference output (`.Rout.save` files).
+  Moved almost all test files to directory `inst/tests` so they are not run on CRAN.
+  Tests can be run manually and by `R CMD check --test-dir=inst/tests plm_VERSION.tar.gz.`
 
 ### Admin:
-* Source code repository for development is now on GitHub https://github.com/ycroissant/plm,
+* Source code repository for development is now on GitHub <https://github.com/ycroissant/plm>,
   not on R-Forge anymore.
+* Added a REAMDE file to the package giving basic information about package, 
+  displayed on CRAN (as on GitHub repository).
 * Update one author's e-mail address.
 
-  
+***
 
 # plm 2.4-2
 
@@ -94,8 +153,8 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
       method slot (vcov information thus printed as well).
  * various print methods now return the input object invisible (before returned
    NULL).
- * piest, aneweytest: now use internal demeaning framework by Within() [thus
-   benefiting from fast mode].
+ * piest, aneweytest: now use demeaning framework by Within() [thus benefiting 
+   from fast mode].
 
    
 ### Vignettes and Other Documentation:
@@ -115,6 +174,8 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 ### Dependencies:
  * Added packages `fixest` and `lfe` to 'Suggests'.
 
+***
+  
 # plm 2.4-1
 
  * lag: fix export of generic for lag (lost in 2.4-0; the panel-specific lag
@@ -133,6 +194,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
  * checkNA.index: new non-exported helper function to check for NA in index
    of a pdata.frame or pseries (all dimensions or a specific one).
 
+***
 
 # plm 2.4-0
 
@@ -164,7 +226,9 @@ plm()): Between, between, Sum, Within.
   unbalanced panels by weighting of the fixed effects (Cottrell (2017)).
 * Sum: is now exported.
 * DESCRIPTION file: added line BugReports pointing to a GitHub repository which is
-  currently only used for GitHub's issue tracker feature (https://github.com/ycroissant/plm/issues).
+  currently only used for GitHub's issue tracker feature (<https://github.com/ycroissant/plm/issues>).
+  [Since version 2.4-3, GitHub is also used as the development platform hosting 
+  the package's source code.]
 
 ### Fixes:
 * fixef: calculation for two-way models fixed; type = "dmean" for unbalanced
@@ -214,11 +278,13 @@ plm()): Between, between, Sum, Within.
 ### Dependencies:
  * Added package 'collapse' to 'Suggests'.
 
+***
 
 # plm 2.2-5
 
 * Removed duplicated entries in REFERENCES.bib (dependency Rdpack 2.0 warned).
 
+***
 
 # plm 2.2-4
 
@@ -246,9 +312,13 @@ plm()): Between, between, Sum, Within.
   (archived) [the package was re-added to CRAN at a later point in time but
   not made a 'Suggests' dependency for plm again].
 
+***
+
 # plm 2.2-3
 
 * IGNORE_RDIFF_BEGIN/END added on tests and man pages.
+
+***
 
 # plm 2.2-1
 
@@ -271,11 +341,12 @@ plm()): Between, between, Sum, Within.
 ### Minor items:
    * print.fixef: respects / forwards arguments supplied to generic print method.
    * Grunfeld data doc: URL for overview of various Grunfeld data sets updated to
-     https://eeecon.uibk.ac.at/~zeileis/grunfeld/. 
+     <https://www.zeileis.org/grunfeld/>. 
 
 ### Dependencies:
    * Package 'urca' added to "Suggests".
 
+***
 
 # plm 2.2-0
 
@@ -286,10 +357,14 @@ plm()): Between, between, Sum, Within.
 * pvcm failed for random effect models when there are some NA coefficients for
   some individual level OLS regressions, fixed.
 
+***
+
 # plm 2.1-0
 
 * Problems with vignettes fixed (full text was in italics).
 * In test file 'test_Estimators.R', L256, tolerance lowered to 1E-04.
+
+***
 
 # plm 2.0-2
 
@@ -298,12 +373,16 @@ plm()): Between, between, Sum, Within.
   in element 'rvcov'.
 * Vignettes switched from bookdown::html_document2 to html_vignette.
 
+***
+
 # plm 2.0-1
 
 * Minor update: tests updated to pacify CRAN's testing procedure with
   OpenBLAS.
 * Bug fix in model.frame.pdata.frame: dot previously set to "separate" now set
   to "previous".
+
+***
 
 # plm 2.0-0
 
@@ -318,6 +397,8 @@ plm()): Between, between, Sum, Within.
 * plm: the informative error message about the deprecated argument
     'instruments' is removed and this argument is no longer supported.
 * Man pages and NAMESPACE file are now generated using roxygen2.
+
+***
 
 # plm 1.7-0
 
@@ -374,7 +455,8 @@ plm()): Between, between, Sum, Within.
 * plm: using the 'instruments' argument errors now (gave deprecation warning).
 * dynformula: the long deprecated function now gives a deprecation warning.
 * detect.lindep: previously named detect_lin_dep; renamed for consistency in
-    function naming (back-compatible solution implemented).
+    function naming (back-compatible solution implemented) [back compatibility 
+    removed in plm 2.6-0].
   
 ### Minor items:
 
@@ -413,6 +495,7 @@ plm()): Between, between, Sum, Within.
 ### Dependencies:
 * Added to 'Suggests': knitr, rmarkdown, bookdown.
 
+***
 
 # plm 1.6-6
 
@@ -528,6 +611,7 @@ plm()): Between, between, Sum, Within.
                     splm, statmod, Ecdat, pder, stargazer, texreg,
                     foreign.
 
+***
 
 # plm 1.6-5
 
@@ -535,6 +619,7 @@ plm()): Between, between, Sum, Within.
     (and to allow arbitrary model comparisons); check was erroneously enabled in
     plm version 1.6-4.
 
+***
 
 # plm 1.6-4
 
@@ -546,6 +631,7 @@ plm()): Between, between, Sum, Within.
 * Snesp.Rd, LaborSupply.Rd: broken links fixed.
 * Vignette: updated contact details.
 
+***
 
 # plm 1.6-3
 
@@ -553,12 +639,14 @@ plm()): Between, between, Sum, Within.
     exported, thus no deprecation warning).
 * summary.plm: F statistic uses adjusted df2 parameter in case of robust vcov.
 
+***
 
 # plm 1.6-2
 
 * pcdtest optimized for speed. 'preshape()' added to pcdtest.R to take care of reshaping in wide form
     prior to applying 'cor()'.
 
+***
 
 # plm 1.6-1
 
@@ -582,6 +670,7 @@ plm()): Between, between, Sum, Within.
     balancedness.
 * some functions little more efficient by using is.pbalanced() instead of pdim()\$balanced.
 
+***
 
 # plm 1.5-35
 
@@ -590,6 +679,7 @@ plm()): Between, between, Sum, Within.
 * gettvalue() added as (internal) function to quickly extract one or more t values from an estimated model
     (so one can avoid a call to summary() with all the other unnecessary computations).
 
+***
 
 # plm 1.5-34
 
@@ -599,7 +689,8 @@ plm()): Between, between, Sum, Within.
                                     for unknown cases, give meaningful error.
 * alias.plm, alias.pFormula: added functions to complement the generic stats::alias to detect
                                linear dependence (much like detect_lin_dep).
-* detect_lin_dep.plm: added (complementing previously added detect_lin_dep methods from version 1.5-15).
+* detect_lin_dep.plm: added (complementing previously added detect_lin_dep methods from version 1.5-15). 
+  [function was renamed to detect.lindep in version 1.7-0].
 * plm objects gained element 'aliased' (a named logical) to indicate any aliased coefficients that are 
     silently dropped during estimation by plm (cf. summary.lm objects).
 * fix: vcovXX.plm / vcovG framework now handle plm models with aliased coefficients (linear dependent columns
@@ -608,6 +699,7 @@ plm()): Between, between, Sum, Within.
   * better support for between models.
   * for method="aux", argument 'effect' is now extracted from dots.
 
+***
 
 # plm 1.5-33
 
@@ -615,11 +707,13 @@ plm()): Between, between, Sum, Within.
 * plm: trying to estimate first-difference (FD) models with effect="time" or "twoways" is now prevented 
          with meaningful error messages; footnote 3 in vignette slightly adapted to reflect this.
 
+***
 
 # plm 1.5-32
 
 * pcdtest: fixed p-value for cross-sectional dependence scaled LM test (pcdtest(..., test = "sclm")).
 
+***
 
 # plm 1.5-31
 
@@ -628,23 +722,27 @@ plm()): Between, between, Sum, Within.
                    type and df.residual added as attributes.
     Both class additions allow easier further processing of the return values. 
 
+***
 
 # plm 1.5-30
 
 * lagt.pseries (experimental, non exported function): now handles NA values in time index.
 * pdata.frame: warning about NA in time index turned into a note being printed.
 
+***
 
 # plm 1.5-29
 
 * print.pdata.frame: workaround to prevent error when printing pdata.frames with duplicated row names
     (original row names are suppressed for printing in this case).
 
+***
 
 # plm 1.5-28
 
 * phtest (regression based): if only one regressor in formula, the test does not stop anymore.
 
+***
 
 # plm 1.5-27
 
@@ -652,12 +750,14 @@ plm()): Between, between, Sum, Within.
 * model.matrix.pFormula: little speed up for some more transformations by using .colMeans instead 
                            of apply(X, 2, mean).
 
+***
 
 # plm 1.5-26
 
 * residuals.plm: residuals extracted by residuals(plm_object) now have class c("pseries", "numeric")
                    (was just "pseries" before).
 
+***
 
 # plm 1.5-25
 
@@ -666,6 +766,7 @@ plm()): Between, between, Sum, Within.
   * fixef: for the t distribution to be applied for p-value calculation, objects of class "fixef" 
            gained a "df.residual" element.
 
+***
 
 # plm 1.5-24
 
@@ -674,6 +775,7 @@ plm()): Between, between, Sum, Within.
 * pres: fixed handling of pggls' FD models and, thus, summary on pggls' FD models does not error anymore.
 * pbltest: now has a plm interface (besides the formula interface).
 
+***
 
 # plm 1.5-23
 
@@ -684,6 +786,7 @@ plm()): Between, between, Sum, Within.
 * make.pbalanced: new function to make a (p)data.frame or pseries balanced (but not consecutive)
                     (fills in missing time periods).
 
+***
 
 # plm 1.5-22
 
@@ -702,6 +805,7 @@ plm()): Between, between, Sum, Within.
   * printed is now "id-time" (was: "time-id") to be consistent with
     order of index variables.
 
+***
 
 # plm 1.5-21
 
@@ -714,6 +818,7 @@ plm()): Between, between, Sum, Within.
       list of lagged columns back, use: lapply(as.list(pdataframe[ ,
       your_cols], keep.attributes = TRUE), lag).
 
+***
 
 # plm 1.5-20
 
@@ -721,6 +826,7 @@ plm()): Between, between, Sum, Within.
     the same, sandwiching the appropriate "meat" in transformed
     data. General reference is Wooldridge, Ch. 7.
 
+***
 
 # plm 1.5-19
 
@@ -729,22 +835,26 @@ plm()): Between, between, Sum, Within.
     vcovXX functions and for cluster bootstrapping.
 * summary.pcce outputs the R2 calculated according to Holly, Pesaran and Yamagata instead of RSS/TSS.
 
+***
 
 # plm 1.5-18
 
 * pcdtest: small efficiency enhancement (calc only lower.tri of rhos).
-* pos.index (internal, not exported): new func to determine column numbers of index vars in a pdata.frame.
+* pos.index (internal, not exported): new function to determine column numbers 
+  of index vars in a pdata.frame.
 * cosmetics:
     * some extraction/subsetting functions doubled 'pseries' in the class of returned value (fixed now).
     * extraction methods for pdata.frame and pseries now preserve order of attributes.
     * class "pindex" for attribute index not lost anymore after subsetting a pdata.frame.
 
+***
 
 # plm 1.5-17
 
 * lagt.pseries: new method respecting "content" of time periods [not yet exported due to testing].
 * is.pconsecutive: default method exported so it can be used for arbitrary vectors.
 
+***
 
 # plm 1.5-16
 
@@ -772,10 +882,10 @@ plm()): Between, between, Sum, Within.
     * new function to check if time periods are consecutive per individual,
     * better NA handling by added argument 'rm.na.tindex'.
 * pgmm: fixed bugs affecting the instrument matrix in the following cases:
-    * gmm instruments are collapsed and restricted in lag length;
-    * first lags are used as gmm instruments;
-    * gmm instruments are collapsed in system GMM;
-    * gmm instruments are restricted in lag length in system GMM.
+    * GMM instruments are collapsed and restricted in lag length;
+    * first lags are used as GMM instruments;
+    * GMM instruments are collapsed in system GMM;
+    * GMM instruments are restricted in lag length in system GMM.
 * punbalancedness: data frame interface gains 'index' argument.
 * within_intercept: new function to calculate an overall intercept along its standard error for FE models
                       a la Stata and gretl, accepts argument '.vcov' for user defined vcov.
@@ -797,6 +907,7 @@ plm()): Between, between, Sum, Within.
                                  clustering, e.g., "group" or "time".
 * fixef: gains new argument '.vcov'.
 
+***
 
 # plm 1.5-15
 
@@ -814,28 +925,25 @@ plm()): Between, between, Sum, Within.
     [see tests/test_model.matrix_pmodel.response_NA.R].
 * detect_lin_dep: new function as a little helper function to detect linear dependent
     columns, esp. in model matrices; incl. doc with two examples about how linear
-    dependent columns can be induced by the within transformation.
+    dependent columns can be induced by the within transformation [function was 
+    renamed to detect.lindep in version 1.7-0].
 * doc pFormula.Rd extended (especially examples) and split up in two files to better accommodate
     different return values and input values in the documentation
     (new file added: man/model.frame_model.matrix.Rd).
 
+***
 
 # plm 1.5-14
 
-* mylm: added commented (i.e., inactive) warning about dropped coefficients in estimation.
-* fitted.plm: added commented (i.e., inactive) warning in about dropped coefficients in
-    estimated model compared to specified model.matrix.
-* added testfile tests/test_fitted.plm.R (some of those test currently do not run
-    (commented, i.e., inactive)).
+
+* lag.pseries: modified to handle negative lags (=leading values).
+* lead.pseries: added function as a wrapper for lag.pseries(x, k = -1) for convenience,
+    i.e., lag(x, k = -1) == lead(x, k = 1).
 * pmodel.response.pFormula: make sure supplied formula is a pFormula before we continue
     (coerce to pFormula), fixes "bugs" (rather unexpected, but documented behaviour) like:
       pmodel.response.pFormula(regular_formula, data = dat, model = "pooling")
        # Error in names(y) <- namesy :
        # 'names' attribute [482] must be the same length as the vector [0]
-* some testfiles: fixed wired encodings.
-* lag.pseries: modified to handle negative lags (=leading values).
-* lead.pseries: added function as a wrapper for lag.pseries(x, k = -1) for convenience,
-    i.e., lag(x, k = -1) == lead(x, k = 1).
 * diff.pseries: prevented negative lags as input to avoid confusion.
 * doc for pseries functions are made available under their name, e.g., ?lag now displays helpfile for
     lag.pseries in the help overview (besides, e.g., stats::lag).
@@ -845,7 +953,14 @@ plm()): Between, between, Sum, Within.
 * indexes: fixed return value (was always NULL).
 * doc updates: ?pdim: added section about possible different return values for pdim(pdata.frame) and
     pdim(panelmodel_object); others: linkage to base functions enabled, spelling.
+* mylm: added commented (i.e., inactive) warning about dropped coefficients in estimation.
+* fitted.plm: added commented (i.e., inactive) warning in about dropped coefficients in
+    estimated model compared to specified model.matrix.
+* added testfile tests/test_fitted.plm.R (some of those test currently do not run
+    (commented, i.e., inactive)).
+* some testfiles: fixed wired encodings.
 
+***
 
 # plm 1.5-13
 
@@ -853,6 +968,7 @@ plm()): Between, between, Sum, Within.
     only 1 element.
 * vcovG framework: reintroduced "white2" method.
 
+***
 
 # plm 1.5-12
 
@@ -861,12 +977,14 @@ plm()): Between, between, Sum, Within.
     capital (not public).
 * added importFrom as per CRAN check for submission.
 
+***
 
 # plm 1.5-11
 
 * added RiceFarms to datasets to eliminate non-CRAN dependencies, (temporarily) removed
     'pder' from suggested, uncommented (fixed) example in pdwtest.Rd.
 
+***
 
 # plm 1.5-9
 
@@ -891,12 +1009,15 @@ plm()): Between, between, Sum, Within.
 
 * as.data.frame.pdata.frame(): respects 'row.names' argument.
 
+***
 
 # plm 1.5-8
 
-* introduced new phtest (Hausman test) allowing for robust vcov.
+* phtest (Hausman test): introduced new regression-based test, allowing for
+  robust vcov (via argument method = "aux").
 * fixed bugs in pdwtest.
 
+***
 
 # plm 1.5-6
 
@@ -905,22 +1026,26 @@ plm()): Between, between, Sum, Within.
 
 * temporarily commented problematic examples in pbgtest and pdwtest.
 
+***
 
 # plm 1.5-5
 
 * fixed bug affecting vcovG on unbalanced datasets (thx Liviu Andronic) from propagation
     of NAs in final by-group matrix multiplication.
 
+***
 
 # plm 1.5-4
 
 * fixed testErrors.R with plm.data instead of pdata.frame.
 
+***
 
 # plm 1.5-3
 
 * reintroduced plm.data eliminated by mistake.
 
+***
 
 # plm 1.5-1
 
@@ -928,6 +1053,7 @@ plm()): Between, between, Sum, Within.
 
 * implemented fixef() method for objects estimated by pggls().
 
+***
 
 # plm 1.5-0
 
@@ -935,11 +1061,13 @@ plm()): Between, between, Sum, Within.
 
 * dataset Parity added to /data.
 
+***
 
 # plm 1.4-0
 
 * substituted vcovHC, vcovSCC with the new framework based on vcovG and wrapper functions.
 
+***
 
 # plm 1.3-1
 
@@ -962,6 +1090,7 @@ plm()): Between, between, Sum, Within.
 
 * a small bug is fixed on the var2lev function to deal the case when there are no factors.
 
+***
 
 # plm 1.3-0
 
@@ -969,6 +1098,7 @@ plm()): Between, between, Sum, Within.
 
 * the Wages example is removed from the pvar man page because it's time consuming.
 
+***
 
 # plm 1.2-10
 
@@ -979,7 +1109,7 @@ plm()): Between, between, Sum, Within.
 
 * the pgmm function has been improved to deal correctly with holes
     in the cross-sections ; a 'collapse' argument is added to limit the
-    number of gmm instruments.
+    number of GMM instruments.
 
 * the CoefTable element of summary.pgmm objects is renamed to
     coefficients, so that it can easily be extracted using the coef method.
@@ -1000,13 +1130,15 @@ plm()): Between, between, Sum, Within.
 * plm now estimates systems of equations if a list of formulas is
     provided as the first argument.
 
+***
 
 # plm 1.2-9	
 
 * the pccep function, estimating CCEP models a la Pesaran, has
     been added together with summary and print.summary methods. The
     function generates objects of a class of their own ("pccep"), much
-    like 'pggls', together with 'panelmodel'.
+    like 'pggls', together with 'panelmodel' ['pccep' was later renamed to 
+    'pcce'.]
 
 * the pmg function, estimating MG, DMG and CCEMG models a la
     Pesaran, has been added together with summary and print.summary
@@ -1021,6 +1153,7 @@ plm()): Between, between, Sum, Within.
     to merge lags and differences of a pseries into the original
     pdata.frame. Will possibly be added to the user space in the future.
 
+***
 
 # plm 1.2-8	
 
@@ -1038,6 +1171,7 @@ plm()): Between, between, Sum, Within.
 * the pgmm method has been rewritten; the data frame is first
     balanced and NAs are then overwritten by 0s.
 
+***
 
 # plm 1.2-7
 
@@ -1045,6 +1179,7 @@ plm()): Between, between, Sum, Within.
 
 * package AER is now suggested.
 
+***
 
 # plm 1.2-6
 
@@ -1053,9 +1188,9 @@ plm()): Between, between, Sum, Within.
     model with effect="twoways" and transformation="ld" is fixed by
     modifying namest in pgmm.
 
-* there was a bug in pgmm for models with different lags for gmm
+* there was a bug in pgmm for models with different lags for GMM
     instruments. The number of time series lost is now the min (and
-    not the max) of the first lags for gmm instruments.
+    not the max) of the first lags for GMM instruments.
 
 * some parts of summary.pgmm only worked correctly for models with
     time-dummies. It now deals correctly for models with 'individual'
@@ -1066,6 +1201,7 @@ plm()): Between, between, Sum, Within.
 * p-values for the two-tailed versions of plmtest() were wrong and
     have been fixed. They were divided by 2 instead of multiplied.
 
+***
 
 # plm 1.2-5
 
@@ -1078,6 +1214,7 @@ plm()): Between, between, Sum, Within.
 
 * fixed the example in pggls.Rd.
 
+***
 
 # plm 1.2-4
 
@@ -1093,6 +1230,7 @@ plm()): Between, between, Sum, Within.
 * pmodel.response.plm is modified: no explicit 'effect' and 'model'
     arguments anymore (like in model.matrix.plm).
 
+***
 
 # plm 1.2-3
 
@@ -1112,6 +1250,7 @@ plm()): Between, between, Sum, Within.
 
 * suml(x) is replaced by Reduce("+", x).
 
+***
 
 # plm 1.2-2
 
@@ -1132,6 +1271,7 @@ plm()): Between, between, Sum, Within.
 
 * in pgmm, Kt is fixed to 0 when effect="individual".
 
+***
 
 # plm 1.2-1
 
@@ -1140,6 +1280,7 @@ plm()): Between, between, Sum, Within.
 * [[.pdata.frame is modified so that NULL (and not an error
     message) is returned if an unknown column is selected.
 
+***
 
 # plm 1.2-0	
 
@@ -1149,14 +1290,14 @@ plm()): Between, between, Sum, Within.
 * in summary.plm, the p-value is now computed using a Student
     distribution and not a normal one.
 
-* the lag.pserie method is modified so that it deals correctly
-    with factors, and not only with numeric vectors. The diff.pserie
+* 'pserie' is renamed 'pseries'.
+
+* the lag.pseries method is modified so that it deals correctly
+    with factors, and not only with numeric vectors. The diff.pseries
     method returns an error if its argument is not numeric.
 
 * the instruments-"backward compatibility" stuff in plm is
     simplified thanks to the new features of Formula.
-
-* 'pserie' is renamed 'pseries'.
 
 * a THANKS file is added.
 
@@ -1164,6 +1305,7 @@ plm()): Between, between, Sum, Within.
     pseries and not a pdata.frame when j is a single integer, and a
     backward compatibility feature is added for the "index" attribute.
 
+***
 
 Change since version 1-1.4
 
@@ -1186,6 +1328,7 @@ Change since version 1-1.4
     function. For backward compatibility reasons, it is still
     possible to estimate this model with plm.
 
+***
 
 # plm 1-1.3
 
@@ -1204,11 +1347,13 @@ Change since version 1-1.4
 * the fitted.values element was missing for plm objects and has
     been added.
 
+***
 
 # plm 1-1.2
 
 * the /inst directory was missing, it has been added again.
 
+***
 
 # plm 1-1.1
 
@@ -1226,6 +1371,7 @@ Change since version 1-1.4
     when the data.frame contains no factor: this was responsible for a
     bug in plm.ht.
 
+***
 
 # plm 1-1.0
 
@@ -1247,6 +1393,7 @@ Change since version 1-1.4
 * amemiya method is not implemented for unbalanced panels: an
     error message is now returned.
 
+***
 
 # plm 1-0.1
 
@@ -1276,7 +1423,7 @@ Change since version 1-1.4
     unbalanced panels.
 
 * the fixef method is much improved, the fixed effects may be
-    computed in levels, in deviation from the first level or in
+    computed in levels, in deviation from the first level, and in
     deviation from the overall mean.
 
 * in pbsytest, the arguments test are now in lowercase.
@@ -1284,6 +1431,7 @@ Change since version 1-1.4
 * the pvcovHC function is replaced by suitable vcovHC methods for
     panelmodel and pgmm models.
 
+***
 
 # plm 1-0.0
 
@@ -1305,6 +1453,7 @@ Change since version 1-1.4
 * plm depends now on the 'Formula' package which provides useful
     tools for formula with two parts.
 
+***
 
 # plm 0-3.2
 
@@ -1318,6 +1467,7 @@ Change since version 1-1.4
 * the estimation of a model with only one explanatory variable
     using plm with method = "fd" is now working correctly.
 
+***
 
 # plm 0-3.1
 
@@ -1333,6 +1483,7 @@ Change since version 1-1.4
 
 * honda is now the default option for plmtest.
 
+***
 
 # plm 0-2.2
 
@@ -1357,6 +1508,7 @@ Change since version 1-1.4
 * the pdata.frame function and class is suppressed. The package
     now use ordinary data.frames.
 
+***
 
 # plm 0-2.1
 
@@ -1368,7 +1520,8 @@ Change since version 1-1.4
 
 * observations are ordered by id and time by pdata.frame.
 
-* a pfix function is added to edit a pdata.frame.
+* a pfix function is added to edit a pdata.frame [at some later point this
+  function was removed from the package].
 
 * a as.data.frame function is provided to coerce a pdata.frame to
     a data.frame.
@@ -1384,6 +1537,7 @@ Change since version 1-1.4
 
 * a bug in summary.pgmm has been fixed.
 
+***
 
 # plm 0-1.2
 

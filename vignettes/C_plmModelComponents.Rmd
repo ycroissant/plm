@@ -172,7 +172,8 @@ coef(plm(formiv1, SeatBelt, model = "pooling"))
 ```
 
 
-or with the `ivreg` function from package `AER`:
+or with the `ivreg` function from package `AER` (or with the newer function `ivreg`
+in package `ivreg` superseding `AER::ivreg()`):
 
 ```{r }
 coef(AER::ivreg(formiv1, data = SeatBelt))

@@ -11,9 +11,9 @@ df <- data.frame(id = c(1,1,2), time = c(1,2,1), f = factor(c("a", "a", "b")), n
 df$f
 levels(df$f) <- c("a","b","c")
 df$f[1]
-df$f[1,drop=F]
-df$f[1,drop=T]
-df$f[drop=T]
+df$f[1, drop = FALSE]
+df$f[1, drop = TRUE]
+df$f[drop = TRUE]
 df$f[0]
 
 df$f[integer()]
@@ -25,8 +25,8 @@ pdf <- pdata.frame(df)
 pdf$f
 levels(pdf$f) <- c("a","b","c")
 pdf$f[1]
-pdf$f[1, drop=T]
-pdf$f[drop=T]
+pdf$f[1, drop = TRUE]
+pdf$f[drop = TRUE]
 pdf$f[0]
 attr(pdf$f[0], "index")
 
@@ -45,11 +45,11 @@ pdf$f[integer()]
 
 pf <- pdf$f
 
-if (!all(levels(pdf$f[1,drop=F]) == c("a","b","c"))) stop("subsetting for c(\"pseries\", \"factor\") (with drop=F) not correct")
+if (!all(levels(pdf$f[1, drop = FALSE]) == c("a","b","c"))) stop("subsetting for c(\"pseries\", \"factor\") (with drop = FALSE) not correct")
 if (!all(class(pdf$f[1]) == c("pseries", "factor"))) stop("classes not correct after subsetting pseries")
 
-if (!levels(pdf$f[1,drop=T]) == "a") stop("subsetting for c(\"pseries\", \"factor\") with drop=T not correct - unused levels not dropped")
-if (!all(levels(pdf$f[drop=T]) == c("a", "b"))) stop("subsetting for c(\"pseries\", \"factor\") with drop=T not correct - unused levels not dropped")
+if (!levels(pdf$f[1, drop = TRUE]) == "a") stop("subsetting for c(\"pseries\", \"factor\") with drop = TRUE not correct - unused levels not dropped")
+if (!all(levels(pdf$f[drop = TRUE]) == c("a", "b"))) stop("subsetting for c(\"pseries\", \"factor\") with drop = TRUE not correct - unused levels not dropped")
 
 ### activate these tests once the subsetting method for pseries is defined.
 #if (is.null(attr(pdf$f[1], "index"))) stop("no index after subsetting")

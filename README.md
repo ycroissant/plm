@@ -2,18 +2,22 @@
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/plm)](https://CRAN.R-project.org/package=plm)
-[![CRAN check](https://cranchecks.info/badges/summary/plm)](https://cran.r-project.org/web/checks/check_results_plm.html)
 [![Downloads](https://cranlogs.r-pkg.org/badges/plm)](https://CRAN.R-project.org/package=plm)
 <!-- badges: end -->
 
 ## About
 
 `plm` is a package for panel data econometrics for the **R** statistical computing
-environment. It was first published on **CRAN** in 2006.
+environment. The package includes functions for model estimation, testing, robust 
+covariance matrix estimation, panel data manipulation and information. It was 
+first published on **CRAN** in 2006.
 
-It includes (non-exhaustive overview):
+Be sure to read the NEWS on [CRAN](https://cran.r-project.org/package=plm) for 
+any changes in new releases (new features, bugfixes, other improvements, ...).
 
-- a set of functions to estimate models:
+Non-exhaustive function overview: 
+
+- Functions to estimate models:
   - `plm`: panel data estimators (within/fixed effects, random effects, between,
            first-difference, nested random effects), incl. instrumental-variable 
            estimation techniques (IV) and Hausman-Taylor-style models,
@@ -24,14 +28,14 @@ It includes (non-exhaustive overview):
   - `pvcm`: variable coefficients models,
   - `pldv`: panel estimators for limited dependent variables.
 
-- a set of testing functions:
+- Testing functions:
   - model specification (`phtest`, `pFtest`, `pooltest`, `plmtest`, `pwaldtest`, `piest`, `aneweytest`, `mtest`, `sargan`),
   - serial correlation (`pbgtest`, `pwfdtest`, `pbnftest`, `pdwtest`, `pwartest`, `pbsytest`, `pbltest`), 
   - cross-sectional dependence (`pcdtest`),
   - panel unit root (`purtest`, `cipstest`, `phansi`),
-  - panel Granger (non-)causality (`pgrangertest`),
+  - panel Granger (non-)causality (`pgrangertest`).
   
-- a set of robust covariance matrix estimators (incl. various weighting schemes
+- Robust covariance matrix estimators (incl. various weighting schemes
   for small sample adjustment):
   - `vcovHC`: Arellano (1987), White (1980),
   - `vcovBK`: Beck and Katz (1995) (PCSE),
@@ -39,9 +43,18 @@ It includes (non-exhaustive overview):
   - `vcovDC`: double-clustering robust (Thompson (2011), Cameron et al. (2011)),
   - `vcovSCC`: Driscoll and Kraay (1998).
 
-- an enhanced data frame, called `pdata.frame`, to deal with data sets for which 
-  observations are identified by a combination of two indexes, and panel data 
-  transformation functions (e.g, `Within`, `Between`, `lag`, `lead`, `diff`).
+- An enhanced data frame, called `pdata.frame`, to deal with data sets for which 
+  observations are identified by a combination of two indexes.
+
+- Panel data transformation functions (e.g., `Within`, `Between`, `between`, `lag`, 
+  `lead`, `diff`).
+
+- Other functions relating to panel data sets, e.g.:
+  - checks for panel data dimensions (individual, time, group) and balancedness (`pdim`), 
+  - checks for panel balancedness (`is.pbalanced`) and consecutiveness (regularity) (`is.pconsecutive`) 
+    as well as functions to change data to conform to these properties 
+    (`make.pbalanced`, `make.pconsecutive`),
+  - measures for unbalancedness of data (`punbalancedness`) (Ahrens/Pincus (1981)).
 
 
 ## Installation
@@ -52,13 +65,12 @@ To install the released version from **CRAN**:
 install.packages("plm")
 ```
 
-The package's CRAN website is https://cran.r-project.org/package=plm.
+The package's CRAN website is <https://cran.r-project.org/package=plm>.
 
-
-The development of package `plm` takes place on GitHub at https://github.com/ycroissant/plm.
+The development of package `plm` takes place on GitHub at <https://github.com/ycroissant/plm>.
 To install the development version from **GitHub**, use, e.g.:
 ```{r}
-# install.packages("remotes")
+# install.packages("remotes") # remove '#' if pkg 'remotes' is not installed
 remotes::install_github("ycroissant/plm")
 ```
 
@@ -66,8 +78,9 @@ remotes::install_github("ycroissant/plm")
 ## Documentation
 
 Package plm comes with documentation: Besides the usual help pages for each function,
-the vignettes provide a gentle introduction to the package and some functions
-(vignettes are available at the package's CRAN website https://cran.r-project.org/package=plm).
+the vignettes provide a gentle introduction to the package and some functions.
+Vignettes are available at the package's CRAN website <https://cran.r-project.org/package=plm>
+and can be browsed from within R by `browseVignettes("plm")`.
 
 New package users are advised to start with the first vignette 
 *Panel data econometrics in R: the plm package* for an overview of the package. 
@@ -83,9 +96,9 @@ Further, many textbooks treat package `plm` and/or use it in their examples:
   chapter 3.6.
 
 * Hanck/Arnold/Gerber/Schmelzer, *Econometrics with R*, online book 
-  https://www.econometrics-with-r.org/. Esp. chapter 10.
+  <https://www.econometrics-with-r.org/>. Esp. chapter 10.
 
 * Heiss, *Using R for Introductory Econometrics*, 2nd edition, 2020,
-  Independent Publishing, Düsseldorf, also available online at http://www.urfie.net/.
+  Independent Publishing, Düsseldorf, also available online at <http://www.urfie.net/>.
   A companion book using R to Wooldridge, *Introductory Econometrics*, esp.
   chapters 13-14.

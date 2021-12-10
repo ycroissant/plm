@@ -40,12 +40,12 @@ variable has time variation, \code{FALSE} if not,}
 
 \item{id.variation_anyNA}{a logical vector with \code{TRUE} values if
 the variable has at least one individual-time combination with all
-NA values in the individual dimension for at least one time period,
+\code{NA} values in the individual dimension for at least one time period,
 \code{FALSE} if not,}
 
 \item{time.variation_anyNA}{a logical vector with \code{TRUE} values if
 the variable has at least one individual-time combination with all
-NA values in the time dimension for at least one individual,
+\code{NA} values in the time dimension for at least one individual,
 \code{FALSE} if not.}
 }
 \description{
@@ -53,7 +53,7 @@ This function checks for each variable of a panel if it varies
 cross-sectionally and over time.
 }
 \details{
-For (p)data.frame and matrix interface: All-NA columns are removed
+For (p)data.frame and matrix interface: All-\code{NA} columns are removed
 prior to calculation of variation due to coercing to pdata.frame
 first.
 }

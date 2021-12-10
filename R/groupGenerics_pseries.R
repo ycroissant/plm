@@ -37,7 +37,7 @@ add_pseries_features <- function(x, index) {
 #  if (is.null(index)) warning("'index' is null")
   
   attr(x, "index") <- index
-  class(x) <- union("pseries", class(x))
+  class(x) <- unique(c("pseries", class(x)))
   return(x)
 }
 
@@ -48,40 +48,37 @@ Ops.pseries <- function(e1, e2) {
   miss_e2 <- missing(e2)
   e1_pseries <- e2_pseries <- FALSE
   # either one or both could be pseries
-  if (inherits(e1, "pseries")) {
+  if(inherits(e1, "pseries")) {
     e1_pseries <- TRUE
     index_e1 <- attr(e1, "index")
     e1 <- remove_pseries_features(e1)
   }
-  if (!miss_e2 && inherits(e2, "pseries")) {
+  
+  if(!miss_e2 && inherits(e2, "pseries")) {
     e2_pseries <- TRUE
     index_e2 <- attr(e2, "index")
     e2 <- remove_pseries_features(e2)
   }
 
-  res <- if (!miss_e2) {
-            get(.Generic)(e1, e2)
-          } else {
-            get(.Generic)(e1)
-          }
+  res <- if(!miss_e2) get(.Generic)(e1, e2) else get(.Generic)(e1)
   
   # result could be, e.g., matrix. So check if adding back pseries features
   # makes sense (e.g., do not create something of class c("pseries", "matrix")).
   # Need is.atomic because is.vector is too strict, however need to sort out
   # some other data types
-  add_back_pseries <- if (is.atomic(res) && !is.matrix(res) && !is.pairlist(res)) TRUE else FALSE
-  if (add_back_pseries) {
-    if (miss_e2 && e1_pseries)      relevant_index <- index_e1
-    if ( e1_pseries && !e2_pseries) relevant_index <- index_e1
-    if (!e1_pseries &&  e2_pseries) relevant_index <- index_e2
-    if ( e1_pseries &&  e2_pseries) {
+  add_back_pseries <- if(is.atomic(res) && !is.matrix(res) && !is.pairlist(res)) TRUE else FALSE
+  if(add_back_pseries) {
+    if(miss_e2 && e1_pseries)      relevant_index <- index_e1
+    if( e1_pseries && !e2_pseries) relevant_index <- index_e1
+    if(!e1_pseries &&  e2_pseries) relevant_index <- index_e2
+    if( e1_pseries &&  e2_pseries) {
       # decide on index for result:
       # if objects vary in length: shorter object is recycled by R
       #  -> must take index of non-recycled object (= longer pseries)
       #
       # Also, base R uses the names of the first operand -> additional justification
       # to assign index_e1 in case of same number of rows
-      relevant_index <- if (nrow(index_e1) >= nrow(index_e2)) index_e1 else index_e2
+      relevant_index <- if(nrow(index_e1) >= nrow(index_e2)) index_e1 else index_e2
       
       # do not warn anymore (since rev. 1181)
   #    if ((nrow(index_e1) == nrow(index_e2)) && !isTRUE(all.equal(index_e1, index_e2)))

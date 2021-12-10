@@ -1470,7 +1470,7 @@ Adj. R-Squared: 0.99067
 Chisq: 1199.5 on 13 DF, p-value: < 2.22e-16
 > 
 > 
-> # pcce(., model = "mg") amd pmg(., model = "cmg") estimate  the same model but
+> # pcce(., model = "mg") and pmg(., model = "cmg") estimate the same model but
 > # in a different way - coefficients need to match
 > data("Produc", package = "plm")
 > form <- log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp
@@ -1490,14 +1490,14 @@ pcce(formula = form, data = Produc, model = "mg")
 Balanced Panel: n = 48, T = 17, N = 816
 
 Residuals:
-        Min.      1st Qu.       Median      3rd Qu.         Max. 
--0.080633827 -0.003711741  0.000314665  0.004020677  0.043895737 
+         Min.       1st Qu.        Median       3rd Qu.          Max. 
+-0.0806338298 -0.0037117390  0.0003146508  0.0040206746  0.0438957373 
 
 Coefficients:
             Estimate Std. Error z-value  Pr(>|z|)    
-log(pcap)  0.0899850  0.1176039  0.7652   0.44418    
+log(pcap)  0.0899850  0.1176042  0.7652   0.44418    
 log(pc)    0.0335784  0.0423362  0.7931   0.42770    
-log(emp)   0.6258659  0.1071719  5.8398 5.225e-09 ***
+log(emp)   0.6258657  0.1071720  5.8398 5.226e-09 ***
 unemp     -0.0031178  0.0014389 -2.1668   0.03025 *  
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
@@ -1546,13 +1546,13 @@ Balanced Panel: n = 48, T = 17, N = 816
 
 Residuals:
          Min.       1st Qu.        Median       3rd Qu.          Max. 
--0.0918842486 -0.0060964496  0.0005035279  0.0059795741  0.0682325144 
+-0.0918842484 -0.0060964487  0.0005035277  0.0059795726  0.0682325138 
 
 Coefficients:
             Estimate Std. Error z-value  Pr(>|z|)    
-log(pcap)  0.0432376  0.1041125  0.4153    0.6779    
+log(pcap)  0.0432375  0.1041125  0.4153    0.6779    
 log(pc)    0.0363922  0.0368432  0.9878    0.3233    
-log(emp)   0.8209632  0.1390202  5.9054 3.519e-09 ***
+log(emp)   0.8209631  0.1390202  5.9054 3.519e-09 ***
 unemp     -0.0020925  0.0014973 -1.3976    0.1622    
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
@@ -1838,4 +1838,4 @@ Adj. R-Squared: 4.4409e-16
 > 
 > proc.time()
    user  system elapsed 
-   2.43    0.14    2.51 
+   4.09    0.42    4.68 

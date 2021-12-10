@@ -81,7 +81,7 @@ print.panelmodel <- function(x, digits = max(3, getOption("digits") - 2),
 #' used by the estimation procedure. It is not necessarily the number
 #' of observations of the model frame (number of rows in the model
 #' frame), because sometimes the model frame is further reduced by the
-#' estimation procedure. This is e.g. the case for first--difference
+#' estimation procedure. This is, e.g., the case for first--difference
 #' models estimated by `plm(..., model = "fd")` where the model
 #' frame does not yet contain the differences (see also
 #' **Examples**).
@@ -545,7 +545,7 @@ residuals.plm <- function(object, model = NULL, effect = NULL,  ...){
       # -> do not return pseries but plain numeric
       res
     } else {
-      structure(res, index = index(object), class = union("pseries", class(res)))
+      structure(res, index = index(object), class = unique(c("pseries", class(res))))
     }
     return(res)
 }
@@ -562,7 +562,7 @@ fitted.plm <- function(object, model = NULL, effect = NULL, ...){
     beta <- coef(object)
     comonpars <- intersect(names(beta), colnames(X))
     bX <- as.numeric(crossprod(t(X[, comonpars, drop = FALSE]), beta[comonpars]))
-    bX <- structure(bX, index = index(object), class = union("pseries", class(bX)))
+    bX <- structure(bX, index = index(object), class = unique(c("pseries", class(bX))))
     if (fittedmodel == "within"){
         intercept <- mean(y - bX)
         bX <- bX + intercept

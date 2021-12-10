@@ -30,7 +30,7 @@ an arbitrary vector or \code{NULL}, see \strong{Details},}
 \item{\dots}{further arguments.}
 
 \item{id, time}{only relevant for default method: vectors specifying
-the id and time dimensions, i. e. a sequence of individual and
+the id and time dimensions, i. e., a sequence of individual and
 time identifiers, each as stacked time series,}
 
 \item{na.rm.tindex}{logical indicating whether any \code{NA} values

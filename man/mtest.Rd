@@ -7,14 +7,14 @@
 \usage{
 mtest(object, ...)
 
-\method{mtest}{pgmm}(object, order = 1, vcov = NULL, ...)
+\method{mtest}{pgmm}(object, order = 1L, vcov = NULL, ...)
 }
 \arguments{
 \item{object}{an object of class \code{"pgmm"},}
 
 \item{\dots}{further arguments (currently unused).}
 
-\item{order}{the order of the serial correlation (1 or 2),}
+\item{order}{integer: the order of the serial correlation,}
 
 \item{vcov}{a matrix of covariance for the coefficients or a function to
 compute it,}
@@ -37,8 +37,8 @@ data("EmplUK", package = "plm")
 ar <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) +
            lag(log(capital), 0:2) + lag(log(output), 0:2) | lag(log(emp), 2:99),
            data = EmplUK, effect = "twoways", model = "twosteps")
-mtest(ar, order = 1)
-mtest(ar, order = 2, vcov = vcovHC)
+mtest(ar, order = 1L)
+mtest(ar, order = 2L, vcov = vcovHC)
 
 }
 \references{

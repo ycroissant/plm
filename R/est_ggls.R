@@ -7,26 +7,26 @@
 #' general feasible generalized least squares, either with or without
 #' fixed effects. General FGLS is based on a two-step estimation
 #' process: first a model is estimated by OLS (`model = "pooling"`),
-#' fixed effects (`model = "within"`) or first differences (`model =
-#' "fd"`), then its residuals are used to estimate an error covariance
-#' matrix for use in a feasible-GLS analysis. This framework allows
-#' the error covariance structure inside every group (if `effect =
-#' "individual"`, else symmetric) of observations to be fully
+#' fixed effects (`model = "within"`) or first differences 
+#' (`model = "fd"`), then its residuals are used to estimate an error 
+#' covariance matrix for use in a feasible-GLS analysis. This framework allows
+#' the error covariance structure inside every group 
+#' (if `effect = "individual"`, else symmetric) of observations to be fully
 #' unrestricted and is therefore robust against any type of intragroup
 #' heteroskedasticity and serial correlation. Conversely, this
 #' structure is assumed identical across groups and thus general FGLS
 #' estimation is inefficient under groupwise heteroskedasticity. Note
 #' also that this method requires estimation of \eqn{T(T+1)/2}
-#' variance parameters, thus efficiency requires N >> T (if `effect =
-#' "individual"`, else the opposite). Setting `model = "random"` or
-#' `model = "pooling"`, both produce an unrestricted FGLS model as in
-#' Wooldridge, Ch. 10.5, although the former is deprecated and
-#' included only for retro--compatibility reasons. If `model =
-#' "within"` (the default) then a FEGLS (fixed effects GLS, see ibid.)
-#' is estimated; if `model = "fd"` a FDGLS (first-difference GLS).
+#' variance parameters, thus efficiency requires N >> T 
+#' (if `effect = "individual"`, else the opposite). 
+#' 
+#' If `model = "within"` (the default) then a FEGLS (fixed effects GLS, see 
+#' Wooldridge, Ch. 10.5) is estimated; if `model = "fd"` a FDGLS 
+#' (first-difference GLS). Setting `model = "pooling"` produces an unrestricted 
+#' FGLS model (see ibid.) (`model = "random"` does the same, but using this value
+#' is deprecated and included only for retro--compatibility reasons).
 #' 
 #' @aliases pggls
-#' @importFrom bdsmatrix bdsmatrix
 #' @param formula a symbolic description of the model to be estimated,
 #' @param object,x an object of class `pggls`,
 #' @param data a `data.frame`,
@@ -34,7 +34,7 @@
 #' @param na.action see [lm()],
 #' @param effect the effects introduced in the model, one of
 #'     `"individual"` or `"time"`,
-#' @param model one of `"within"`, `"pooling"`, `"random"` or `"fd"`,
+#' @param model one of `"within"`, `"pooling"`, `"fd"`,
 #' @param index the indexes, see [pdata.frame()],
 #' @param digits digits,
 #' @param width the maximum length of the lines in the print output,
@@ -51,6 +51,7 @@
 #'     \item{sigma}{the estimated intragroup (or cross-sectional, if
 #'     `effect = "time"`) covariance of errors,}
 #' @export
+#' @importFrom bdsmatrix bdsmatrix
 #' @author Giovanni Millo
 #' @references
 #'
@@ -81,17 +82,22 @@
 #' 
 pggls <- function(formula, data, subset, na.action,
                   effect = c("individual", "time"),
-                  model = c("within", "random", "pooling", "fd"),
+                  model = c("within", "pooling", "fd"),
                   index = NULL, ...)
 {
   # check and match the arguments
     effect <- match.arg(effect)
-    model.name <- match.arg(model)
-    if (model.name == "random") {
-        warning("for argument 'model' to pggls(), the value 'random' has been renamed as 'pooling'",
-                call. = FALSE)
-        model.name <- "pooling"
+    
+    if (model == "random") {
+        msg.random <- paste0("pggls(): argument 'model = \"random\"' is deprecated, ",
+                             " changed to 'model = \"pooling\"' for estimation ",
+                             " of unrestricted FGLS model")
+        warning(msg.random, call. = FALSE)
+        model <- "pooling"
     }
+    
+    model.name <- match.arg(model)
+    
     data.name <- paste(deparse(substitute(data)))
     cl <- match.call()
     plm.model <- match.call(expand.dots = FALSE)
@@ -119,7 +125,7 @@ pggls <- function(formula, data, subset, na.action,
         N <- pdim$nT$N - pdim$Tint$nt[1L]
         time.names <- pdim$panel.names$time.names[-1L]
         tind <- as.numeric(index[ , 2L])
-        sel <- (tind-c(-1,tind[-length(tind)]))==1
+        sel <- (tind - c(-1, tind[-length(tind)])) == 1
         index <- index[sel, ]
         id <- index[[1L]]
         time <- factor(index[[2L]], levels = attr(index[ , 2L], "levels")[-1L])

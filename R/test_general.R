@@ -8,13 +8,16 @@
 #' different models.  The `panelmodel` method computes the original
 #' version of the test based on a quadratic form
 #' \insertCite{HAUS:78}{plm}. The `formula` method, if
-#' `method="chisq"` (default), computes the original version of the
-#' test based on a quadratic form; if `method="aux"` then the
-#' auxiliary-regression-based version in Wooldridge (2010,
-#' Sec. 10.7.3.) is computed instead \insertCite{@WOOL:10 Sec.10.7.3}{plm}.
-#' Only the latter can be robustified by specifying a robust
+#' `method = "chisq"` (default), computes the original version of the
+#' test based on a quadratic form; if `method ="aux"` then the
+#' auxiliary-regression-based version as in \insertCite{WOOL:10;textual}{plm},
+#' Sec.10.7.3. Only the latter can be robustified by specifying a robust
 #' covariance estimator as a function through the argument `vcov` (see
 #' **Examples**).
+#'
+#' The `effect` argument is only relevant for the formula method/interface and 
+#' is then applied to both models. For the panelmodel method/interface, the test 
+#' is run with the effects of the already estimated models.
 #' 
 #' The equivalent tests in the **one-way** case using a between
 #' model (either "within vs. between" or "random vs. between")
@@ -28,17 +31,16 @@
 #' 
 #' @aliases phtest
 #' @param x an object of class `"panelmodel"` or `"formula"`,
-#' @param x2 an object of class `"panelmodel"`,
+#' @param x2 an object of class `"panelmodel"` (only for panelmodel method/interface),
 #' @param model a character vector containing the names of two models
 #' (length(model) must be 2),
+#' @param effect a character specifying the effect to be introduced to both models,
+#'  one of `"individual"`, `"time"`, or `"twoways"` (only for formula method),
 #' @param data a `data.frame`,
 #' @param method one of `"chisq"` or `"aux"`,
 #' @param index an optional vector of index variables,
 #' @param vcov an optional covariance function,
-#' @param \dots further arguments to be passed on. For the formula method,
-#' place argument `effect` here to compare, e.g., twoway models
-#' (`effect = "twoways"`) Note: Argument `effect` is not respected in
-#' the panelmodel method.
+#' @param \dots further arguments to be passed on (currently none).
 #' @return An object of class `"htest"`.
 #' @export
 #' @author Yves Croissant, Giovanni Millo
@@ -63,13 +65,14 @@
 #' re <- plm(form, data = Gasoline, model = "random")
 #' phtest(wi, re)
 #' phtest(form, data = Gasoline)
+#' phtest(form, data = Gasoline, effect = "time")
+#' 
+#' # Regression-based Hausman test
 #' phtest(form, data = Gasoline, method = "aux")
 #' 
-#' # robust Hausman test (regression-based)
+#' # robust Hausman test with vcov supplied as a function and 
+#' # with additional parameters
 #' phtest(form, data = Gasoline, method = "aux", vcov = vcovHC)
-#' 
-#' # robust Hausman test with vcov supplied as a
-#' # function and additional parameters
 #' phtest(form, data = Gasoline, method = "aux",
 #'   vcov = function(x) vcovHC(x, method="white2", type="HC3"))
 #' 
@@ -80,12 +83,9 @@ phtest <- function(x,...){
 #' @rdname phtest
 #' @export
 phtest.formula <- function(x, data, model = c("within", "random"),
+                            effect = c("individual", "time", "twoways"),
                             method = c("chisq", "aux"),
                             index = NULL, vcov = NULL, ...) {
-  # TODO: No argument 'effect' here, maybe introduce?
-  #     it gets evaluated due to the eval() call for method="chisq"
-  #     and since rev. 305 due to extraction from dots (...) in method="aux" as a quick fix
-  #    If introduced as argument, change doc accordingly (currently, effect arg is mentioned in ...)
   
     if (length(model) != 2) stop("two models should be indicated in argument 'model'")
     for (i in 1:2){
@@ -94,19 +94,23 @@ phtest.formula <- function(x, data, model = c("within", "random"),
             stop("model must be one of ", oneof(model.plm.list))
         }
     }
+  
+    effect <- match.arg(effect)
+  
     switch(match.arg(method),
-           chisq={
+           "chisq" = {
                cl <- match.call(expand.dots = TRUE)
                cl$model <- model[1L]
+               cl$effect <- effect
                names(cl)[2L] <- "formula"
                m <- match(plm.arg, names(cl), 0L)
                cl <- cl[c(1L, m)]
                cl[[1L]] <- as.name("plm")
                plm.model.1 <- eval(cl, parent.frame())
                plm.model.2 <- update(plm.model.1, model = model[2L])
-               return(phtest(plm.model.1, plm.model.2))
+               return(phtest(plm.model.1, plm.model.2)) # exit to phtest.panelmodel
            },
-           aux={
+           "aux" = {
                ## some interface checks here
                if (model[1L] != "within") {
                    stop("Please supply 'within' as first model type")
@@ -121,13 +125,7 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                                        # comparable for later comparison to obs used in estimation of models (get rid of NA values)
                                        # [needed because pmodel.response() and model.matrix() do not retain fancy rownames, but rownames]
                
-               # rev. 305: quick and dirty fix for missing effect argument in function 
-               # signature for formula interface/test="aux": see if effect is in dots and extract
-                  dots <- list(...)
-                  # print(dots) # DEBUG printing
-                  effect <- if(!is.null(dots$effect)) dots$effect else NULL
                # calculate FE and RE model
-
                fe_mod <- plm(formula = x, data = data, model = model[1L], effect = effect)
                re_mod <- plm(formula = x, data = data, model = model[2L], effect = effect)
 
@@ -138,6 +136,7 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                  # print(paste0("mod2: ", describe(re_mod, "effect")))
                  # print(fe_mod)
                  # print(re_mod)
+               
                reY <- pmodel.response(re_mod)
 #               reX <- model.matrix(re_mod)[ , -1, drop = FALSE] # intercept not needed; drop=F needed to prevent matrix
 #               feX <- model.matrix(fe_mod, cstcovar.rm = TRUE)  # from degenerating to vector if only one regressor
@@ -151,17 +150,17 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                commonrownames <- intersect(intersect(intersect(row.names(data), names(reY)), row.names(reX)), row.names(feX))
                if (!(all(c(row.names(data) %in% commonrownames, commonrownames %in% row.names(data))))) {
                  data <- data[commonrownames, ]
-                 reY  <- reY[commonrownames]
-                 reX  <- reX[commonrownames, ]
-                 feX  <- feX[commonrownames, ]
+                 reY <- reY[commonrownames]
+                 reX <- reX[commonrownames, ]
+                 feX <- feX[commonrownames, ]
                }
                
                # Tests of correct matching of obs (just for safety ...)
-               if (!all.equal(length(reY), nrow(data), nrow(reX), nrow(feX)))
+               if(!all.equal(length(reY), nrow(data), nrow(reX), nrow(feX)))
                   stop("number of cases/observations do not match, most likely due to NAs in \"data\"")
-                if (any(c(is.na(names(reY)), is.na(row.names(data)), is.na(row.names(reX)), is.na(row.names(feX)))))
+                if(any(c(is.na(names(reY)), is.na(row.names(data)), is.na(row.names(reX)), is.na(row.names(feX)))))
                     stop("one (or more) rowname(s) is (are) NA")
-                if (!all.equal(names(reY), row.names(data), row.names(reX), row.names(feX)))
+                if(!all.equal(names(reY), row.names(data), row.names(reX), row.names(feX)))
                   stop("row.names of cases/observations do not match, most likely due to NAs in \"data\"")
 
                ## fetch indices here, check pdata
@@ -176,9 +175,9 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                nvars <- dim(feX)[[2L]]
                R <- diag(1, nvars)
                r <- rep(0, nvars) # here just for clarity of illustration
-               omega0 <- vcov(auxmod)[(nvars+2):(nvars*2+1),
-                                      (nvars+2):(nvars*2+1)]
-               Rbr <- R %*% coef(auxmod)[(nvars+2):(nvars*2+1)] - r
+               range <- (nvars+2L):(nvars*2L + 1L)
+               omega0 <- vcov(auxmod)[range, range]
+               Rbr <- R %*% coef(auxmod)[range] - r
 
                h2t <- as.numeric(crossprod(Rbr, solve(omega0, Rbr)))
                ph2t <- pchisq(h2t, df = nvars, lower.tail = FALSE)
@@ -187,7 +186,7 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                names(df) <- "df"
                names(h2t) <- "chisq"
 
-               if (!is.null(vcov)) {
+               if(!is.null(vcov)) {
                    vcov <- paste(", vcov: ",
                                   paste(deparse(substitute(vcov))),
                                   sep="")
@@ -207,7 +206,7 @@ phtest.formula <- function(x, data, model = c("within", "random"),
 
 #' @rdname phtest
 #' @export
-phtest.panelmodel <- function(x, x2, ...){
+phtest.panelmodel <- function(x, x2, ...) {
   coef.wi <- coef(x)
   coef.re <- coef(x2)
   vcov.wi <- vcov(x)
@@ -300,7 +299,7 @@ pchibarsq <- function(q, df, weights, lower.tail = TRUE, ... ) {
 #' These Lagrange multiplier tests use only the residuals of the
 #' pooling model.  The first argument of this function may be either a
 #' pooling model of class `plm` or an object of class `formula`
-#' describing the model. For inputted within (fixed effects) or random
+#' describing the model. For input within (fixed effects) or random
 #' effects models, the corresponding pooling model is calculated
 #' internally first as the tests are based on the residuals of the
 #' pooling model.
@@ -795,7 +794,8 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
   if (test == "Chisq"){
     # perform non-robust chisq test
     if (is.null(vcov_arg)) {
-      stat <- as.numeric(crossprod(solve(vcov(x)[names(coefs_wo_int), names(coefs_wo_int)], coefs_wo_int), coefs_wo_int))
+      names.coefs_wo_int <- names(coefs_wo_int)
+      stat <- as.numeric(crossprod(solve(vcov(x)[names.coefs_wo_int, names.coefs_wo_int], coefs_wo_int), coefs_wo_int))
 #     stat < - (tss-ssr)/(ssr/df2) # does not produce correct results for unbalanced RE models and (un)balanced IV models
       names(stat) <- "Chisq"
       pval <- pchisq(stat, df = df1, lower.tail = FALSE)
@@ -814,7 +814,8 @@ pwaldtest.plm <- function(x, test = c("Chisq", "F"), vcov = NULL,
     if(length(formula(x))[2L] > 1L) stop("test = \"F\" not sensible for IV models")
     if (is.null(vcov_arg)) {
       # perform "normal" F test
-      stat <- as.numeric(crossprod(solve(vcov(x)[names(coefs_wo_int), names(coefs_wo_int)], coefs_wo_int), coefs_wo_int)) / df1
+      names.coefs_wo_int <- names(coefs_wo_int)
+      stat <- as.numeric(crossprod(solve(vcov(x)[names.coefs_wo_int, names.coefs_wo_int], coefs_wo_int), coefs_wo_int)) / df1
 #      stat <- (tss-ssr)/ssr*df2/df1 # does not produce correct results for unbalanced RE models
       names(stat) <- "F"
       pval <- pf(stat, df1 = df1, df2 = df2, lower.tail = FALSE)
@@ -918,8 +919,7 @@ pwaldtest.pgmm <- function(x, param = c("coef", "time", "all"), vcov = NULL, ...
   effect <- describe(x, "effect")
   if (param == "time" && effect == "individual") stop("no time dummies in this model")
   transformation <- describe(x, "transformation")
-  if (model == "onestep") coefficients <- x$coefficients
-  else coefficients <- x$coefficients[[2L]]
+  coefficients <- if(model == "onestep") x$coefficients else x$coefficients[[2L]]
   Ktot <- length(coefficients)
   Kt <- length(x$args$namest)
   

@@ -1139,7 +1139,7 @@ attr(,"class")
 [1] "logical"
 > typeof(logi) # logical
 [1] "logical"
-> class(logi) <- union("myclass", class(logi))
+> class(logi) <- c("myclass", class(logi))
 > class(logi) # myclass logical
 [1] "myclass" "logical"
 > loginum <- logi - 1.5
@@ -1174,4 +1174,4 @@ attr(,"class")
 > 
 > proc.time()
    user  system elapsed 
-   4.21    0.40    4.64 
+   2.78    0.37    3.18 

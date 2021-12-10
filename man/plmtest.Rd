@@ -55,7 +55,7 @@ Test of individual and/or time effects for panel models.
 These Lagrange multiplier tests use only the residuals of the
 pooling model.  The first argument of this function may be either a
 pooling model of class \code{plm} or an object of class \code{formula}
-describing the model. For inputted within (fixed effects) or random
+describing the model. For input within (fixed effects) or random
 effects models, the corresponding pooling model is calculated
 internally first as the tests are based on the residuals of the
 pooling model.

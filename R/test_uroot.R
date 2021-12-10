@@ -20,7 +20,7 @@ padf <- function(x, exo = c("none", "intercept", "trend"), p.approx = NULL, ...)
   if (!is.null(dots$p.approx)) p.approx <- dots$p.approx
   
   if (!is.null(p.approx) && !p.approx %in% c("MacKinnon1994", "MacKinnon1996"))
-    stop(paste0("unknown 'p.approx' argument: ", p.approx))
+    stop(paste0("unknown argument value: p.approx = \"", p.approx, "\""))
   
   # Check if package 'urca' is available on local machine. We placed 'urca' 
   # in 'Suggests' rather than 'Imports' so that it is not an absolutely 
@@ -31,7 +31,7 @@ padf <- function(x, exo = c("none", "intercept", "trend"), p.approx = NULL, ...)
   
   # default: if no p.approx specified by input (NULL),
   # use MacKinnon (1996) if 'urca' is available, else MacKinnon (1994)
-  p.approx <- if(is.null(p.approx)) { if (urca)  "MacKinnon1996" else "MacKinnon1994" } else p.approx
+  p.approx <- if(is.null(p.approx)) { if(urca)  "MacKinnon1996" else "MacKinnon1994" } else p.approx
   
   if (!is.null(p.approx) && p.approx == "MacKinnon1996" && !urca) {
     # catch case when user demands MacKinnon (1996) per argument but 'urca' is unavailable
@@ -357,7 +357,7 @@ adj.levinlin.value <- function(l, exo = c("intercept", "none", "trend")){
     return(adj.levinlin[as.character(Ts), , exo])
   }
   else{
-    low <- adj.levinlin[as.character(Ts[1L]), , exo]
+    low  <- adj.levinlin[as.character(Ts[1L]), , exo]
     high <- adj.levinlin[as.character(Ts[2L]), , exo]
     return(low + (l - Ts[1L])/(Ts[2L] - Ts[1L]) * (high - low))
   }
@@ -598,7 +598,7 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
                           p.value     = pvalue),
                      class = "htest")
   
-  idres <- mapply(list, LMi, sigma2i, SIMPLIFY = F)
+  idres <- mapply(list, LMi, sigma2i, SIMPLIFY = FALSE)
   idres <- lapply(idres, setNames, c("LM", "sigma2"))
   
   result <- list(statistic = htest,
@@ -828,7 +828,7 @@ purtest <- function(object, data = NULL, index = NULL,
   cl <- match.call()
   test <- match.arg(test)
   ips.stat <- if (is.null(ips.stat)) "Wtbar" else ips.stat # set default for IPS test
-  if (is.character(lags)) lags <- match.arg(lags) # if character, select one possible value
+  if (is.character(lags)) lags <- match.arg(lags) # if character, match from list of possible values
   args <- list(test = test, exo = exo, pmax = pmax, lags = lags,
                dfcor = dfcor, fixedT = fixedT, ips.stat = ips.stat)
   n <- length(object) # number of individuals, assumes object is a list
@@ -1028,18 +1028,17 @@ print.purtest <- function(x, ...){
 #' @rdname purtest
 #' @export
 summary.purtest <- function(object, ...){
-  if (!object$args$test == "hadri"){
+  if(!object$args$test == "hadri"){
     lags   <- vapply(object$idres, function(x) x[["lags"]],   FUN.VALUE = 0.0, USE.NAMES = FALSE)
     L      <- vapply(object$idres, function(x) x[["T"]],      FUN.VALUE = 0.0, USE.NAMES = FALSE)
     rho    <- vapply(object$idres, function(x) x[["rho"]],    FUN.VALUE = 0.0, USE.NAMES = FALSE)
     trho   <- vapply(object$idres, function(x) x[["trho"]],   FUN.VALUE = 0.0, USE.NAMES = FALSE)
     p.trho <- vapply(object$idres, function(x) x[["p.trho"]], FUN.VALUE = 0.0, USE.NAMES = FALSE)
-    sumidres <- cbind(
-      "lags"   = lags,
-      "obs"    = L - lags - 1,
-      "rho"    = rho,
-      "trho"   = trho,
-      "p.trho" = p.trho)
+    sumidres <- cbind("lags"   = lags,
+                      "obs"    = L - lags - 1,
+                      "rho"    = rho,
+                      "trho"   = trho,
+                      "p.trho" = p.trho)
     
     if (object$args$test == "ips" && !object$args$ips.stat == "tbar") {
       sumidres <- cbind(sumidres, t(object$adjval))
@@ -1048,8 +1047,8 @@ summary.purtest <- function(object, ...){
       sumidres <- cbind(sumidres, object$sigma2)
     }
   } else {
-    # hadri
-    LM     <- vapply(object$idres, function(x) x[["LM"]], FUN.VALUE = 0.0, USE.NAMES = FALSE)
+    # hadri case
+    LM     <- vapply(object$idres, function(x) x[["LM"]],     FUN.VALUE = 0.0, USE.NAMES = FALSE)
     sigma2 <- vapply(object$idres, function(x) x[["sigma2"]], FUN.VALUE = 0.0, USE.NAMES = FALSE)
     sumidres <- cbind("LM" = LM, "sigma2" = sigma2)
   }
@@ -1262,7 +1261,7 @@ print.phansi <- function(x, cutoff = 10L, ...) {
     else { # cut off enumeration of individuals if more than specified in cutoff
       if(cutoff > 0L) {
         ind.cutoff <- paste0(paste0(id[rej.ind][seq_len(cutoff)], collapse = ", "), ", ...")
-        ind.txt <- paste0("Individual H0 rejected for ", rej.ind.no ," individuals, only first ", cutoff , " printed (integer id(s)):\n")
+        ind.txt <- paste0("Individual H0 rejected for ", rej.ind.no ," individuals, only first ", cutoff, " printed (integer id(s)):\n")
         cat(paste0(" ", ind.txt))
         cat(paste0("  ", ind.cutoff, "\n"))
       } else cat(paste0(" Individual H0 rejected for ", rej.ind.no ," individuals. None printed as 'cutoff' set to ", cutoff, ".\n"))

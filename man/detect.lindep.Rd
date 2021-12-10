@@ -36,7 +36,7 @@ matrix here or check an already estimated plm model,}
 \item{\dots}{further arguments.}
 
 \item{suppressPrint}{for \code{detect.lindep} only: logical indicating
-whether a message shall be printed; defaults to printing the message, i. e.
+whether a message shall be printed; defaults to printing the message, i. e.,
 to \code{suppressPrint = FALSE},}
 
 \item{model}{(see \code{plm}),}
@@ -50,7 +50,7 @@ transformation, if any are present. \code{NULL} if no linear dependent
 columns are detected.
 
 For \code{alias}: return value of \code{\link[stats:alias]{stats::alias.lm()}} run on the
-(quasi-)demeaned model, i. e. the information outputted applies to
+(quasi-)demeaned model, i. e., the information outputted applies to
 the transformed model matrix, not the original data.
 }
 \description{
@@ -92,15 +92,14 @@ generic to classes \code{"plm"} and \code{"pdata.frame"}.
 \CRANpkg{MASS} on the system. Not all arguments of \code{alias.lm}
 are supported.  Output of \code{alias} is more informative as it
 gives the linear combination of dependent columns (after data
-transformations, i. e. after (quasi)-demeaning) while
+transformations, i. e., after (quasi)-demeaning) while
 \code{detect.lindep} only gives columns involved in the linear
 dependence in a simple format (thus being more suited for automatic
 post--processing of the information).
 }
 \note{
 function \code{detect.lindep} was called \code{detect_lin_dep}
-initially but renamed for naming consistency later with a
-back-compatible solution.
+initially but renamed for naming consistency later.
 }
 \examples{
 

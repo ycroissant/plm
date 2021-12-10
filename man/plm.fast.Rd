@@ -11,31 +11,30 @@ achieved if package \code{fixest} or \code{lfe} is installed (package \code{coll
 needs to be installed for the fast mode in any case).
 }
 \details{
-By default, this speed up is not enabled.
+By default, this speed up is enabled.
 Option \code{plm.fast} can be used to enable/disable the speed up. The option is
 evaluated prior to execution of supported transformations (see below), so
 \code{option("plm.fast" = TRUE)} enables the speed up while
 \code{option("plm.fast" = FALSE)} disables the speed up.
 
-To have it always switched on, put \code{options("plm.fast" = TRUE)} in your
+To have it always switched off, put \code{options("plm.fast" = FALSE)} in your
 .Rprofile file.
 
 See \strong{Examples} for how to use the option and for a benchmarking example.
 
-By default, package \code{plm} uses base R implementations and R-based code. The
+For long, package \code{plm} used base R implementations and R-based code. The
 package \code{collapse} provides fast data transformation functions written
 in C/C++, among them some especially suitable for panel data.
-Having package \code{collapse} installed is a requirement for the speed up.
-However, this package is currently not a hard dependency for package \code{plm}
-but a 'Suggests' dependency.
+Having package \code{collapse} installed is a requirement for the speed up, so
+this package is a hard dependency for package \code{plm}.
 
 Availability of packages \code{fixest} and \code{lfe} is checked for once when
 package plm is attached and the additional speed up for the two-way fixed
 effect case is enabled automatically (\code{fixest} wins over \code{lfe}),
-given one of the packages is detected and \code{options("plm.fast" = TRUE)} is set.
-If so, the packages' fast algorithms to partial out fixed effects are
-used (\code{fixest::demean} (via \code{collapse::fhdwithin}), \code{lfe::demeanlist}).
-Both packages are 'Suggests' dependencies.
+given one of the packages is detected and \code{options("plm.fast" = TRUE)}
+(default) is set. If so, the packages' fast algorithms to partial out fixed
+effects are #' used (\code{fixest::demean} (via \code{collapse::fhdwithin}),
+\code{lfe::demeanlist}). Both packages are 'Suggests' dependencies.
 
 Currently, these functions benefit from the speed-up (more functions are
 under investigation):
@@ -90,7 +89,7 @@ if(requireNamespace("fixest", quietly = TRUE) &&
    requireNamespace("lfe", quietly = TRUE)) {
 
 twowayFE <-  microbenchmark(
- {options("plm.fast" = FALSE);                                    
+ {options("plm.fast" = FALSE);
     plm(form, data = data, model = "within", effect = "twoways")},
  {options("plm.fast" = TRUE, "plm.fast.pkg.FE.tw" = "collapse");
     plm(form, data = data, model = "within", effect = "twoways")},
