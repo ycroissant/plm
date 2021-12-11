@@ -96,7 +96,7 @@ the matrix are the individuals,}
 specifying the dimension (\code{"twoways"} is not possible),}
 
 \item{rm.null}{if \code{TRUE}, for the \code{Within.matrix} method, remove
-the empty columns,}
+the columns which are \code{0}-valued (empty) after within transformation,}
 }
 \value{
 All these functions return an object of class \code{pseries} or a matrix,

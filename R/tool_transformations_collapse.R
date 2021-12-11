@@ -111,24 +111,24 @@ Within.pseries <- function(x, effect = c("individual", "time", "group", "twoways
 
     if(is.null(getOption("plm.fast.pkg.FE.tw"))) options("plm.fast.pkg.FE.tw" = "collapse")
     switch(getOption("plm.fast.pkg.FE.tw"),
-           "collapse" = Within.pseries.collapse(x, effect, ...),        # collapse only,
+           "collapse" = Within.pseries.collapse(       x, effect, ...), # collapse only,
            "fixest"   = Within.pseries.collapse.fixest(x, effect, ...), # collapse for 1-way FE + fixest for 2-way FE,
-           "lfe"      = Within.pseries.collapse.lfe(x, effect, ...),    # collapse for 1-way FE + lfe for 2-way FE,
+           "lfe"      = Within.pseries.collapse.lfe(   x, effect, ...), # collapse for 1-way FE + lfe for 2-way FE,
            stop("unknown value of option 'plm.fast.pkg.FE.tw'"))
   }
 }
 
 Within.matrix <- function(x, effect, rm.null = TRUE, ...) {
   if(!isTRUE(getOption("plm.fast"))) {
-    Within.matrix.baseR(x, effect, ...)
+    Within.matrix.baseR(x, effect, rm.null = rm.null, ...) 
   } else {
     if (!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
     
     if(is.null(getOption("plm.fast.pkg.FE.tw"))) options("plm.fast.pkg.FE.tw" = "collapse")
     switch(getOption("plm.fast.pkg.FE.tw"),
-           "collapse" = Within.matrix.collapse(x, effect, ...),        # collapse only,
-           "fixest"   = Within.matrix.collapse.fixest(x, effect, ...), # collapse for 1-way FE + fixest for 2-way FE,
-           "lfe"      = Within.matrix.collapse.lfe(x, effect, ...),    # collapse for 1-way FE + lfe for 2-way FE,
+           "collapse" = Within.matrix.collapse(       x, effect, rm.null = rm.null, ...), # collapse only,
+           "fixest"   = Within.matrix.collapse.fixest(x, effect, rm.null = rm.null, ...), # collapse for 1-way FE + fixest for 2-way FE,
+           "lfe"      = Within.matrix.collapse.lfe(   x, effect, rm.null = rm.null, ...), # collapse for 1-way FE + lfe for 2-way FE,
            stop("unknown value of option 'plm.fast.pkg.FE.tw'"))
   }
 }

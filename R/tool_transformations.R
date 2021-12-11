@@ -54,7 +54,7 @@
 #' @param idbyrow if `TRUE` in the `as.matrix` method, the lines of
 #'     the matrix are the individuals,
 #' @param rm.null if `TRUE`, for the `Within.matrix` method, remove
-#'     the empty columns,
+#'     the columns which are `0`-valued (empty) after within transformation,
 #' @param plot,scale,transparency,col,lwd plot arguments,
 #' @param \dots further arguments, e. g., `na.rm = TRUE` for
 #'     transformation functions like `beetween`, see **Details**
@@ -592,12 +592,14 @@ Within.pseries <- function(x, effect = c("individual", "time", "group", "twoways
 #' @export
 Within.matrix <- function(x, effect, rm.null = TRUE, ...) {
 # print("Within.matrix(.baseR)")
+# print(paste0("rm.null = ", rm.null))
+# print(paste0("has.index = ", has.index(x)))
 # browser()
   
     if(is.null(xindex <- unclass(attr(x, "index")))) { # unclass for speed
       # non-index case
         result <- Within.default(x, effect, ...)
-        othervar <- colSums(abs(x)) > sqrt(.Machine$double.eps)
+        othervar <- colSums(abs(x)) > sqrt(.Machine$double.eps) # non-null cols
         if(rm.null) {
             result <- result[ , othervar, drop = FALSE]
             attr(result, "constant") <- character(0)
