@@ -87,8 +87,8 @@ pggls <- function(formula, data, subset, na.action,
 {
   # check and match the arguments
     effect <- match.arg(effect)
-    
-    if (model == "random") {
+
+    if(length(model) == 1 && model == "random") {
         msg.random <- paste0("pggls(): argument 'model = \"random\"' is deprecated, ",
                              " changed to 'model = \"pooling\"' for estimation ",
                              " of unrestricted FGLS model")
@@ -107,12 +107,12 @@ pggls <- function(formula, data, subset, na.action,
     plm.model$model <- model.name
     plm.model <- eval(plm.model, parent.frame())
     
-    index <- attr(model.frame(plm.model), "index")
+    mf <- model.frame(plm.model)
+    index <- attr(mf, "index")
     pdim <- pdim(plm.model)
-    balanced <- pdim$balanced
-    
+    balanced   <- pdim$balanced
     time.names <- pdim$panel.names$time.names
-    id.names <- pdim$panel.names$id.names
+    id.names   <- pdim$panel.names$id.names
     coef.names <- names(coef(plm.model))
     K <- length(coef.names)
     
@@ -160,7 +160,7 @@ pggls <- function(formula, data, subset, na.action,
     }
     myord <- order(cond, other)
     X <- model.matrix(plm.model)[myord, , drop = FALSE]
-    commonpars <- intersect(names(coef(plm.model)), colnames(X))
+    commonpars <- intersect(coef.names, colnames(X))
     X <- X[ , commonpars, drop = FALSE]
     y <- pmodel.response(plm.model)[myord]
     resid <- lm.fit(X, y)$residuals
@@ -170,7 +170,7 @@ pggls <- function(formula, data, subset, na.action,
     drop1 <- FALSE
     if (drop1 && model.name %in% c("within", "fd")) {
     ## drop one time period (e.g., first as we do here)
-    ## (see Wooldridge (2002) 10.5, eq. 10.61)/Woolridge (2010),10.5.5, eq.10.61)
+    ## (see Wooldridge (2002) 10.5, eq. 10.61)/Wooldridge (2010),10.5.5, eq.10.61)
     ## this is needed according to Wooldridge (2002), p.277 / Wooldridge (2010), p. 312
     ## but is not totally robust to unbalancedness, dummies etc.
     ## 
@@ -242,7 +242,7 @@ pggls <- function(formula, data, subset, na.action,
                     fitted.values = fitted.values,
                     vcov          = vcov,
                     df.residual   = df.residual,
-                    model         = model.frame(plm.model),
+                    model         = mf,
                     sigma         = subOmega,
                     call          = cl,
                     formula       = plm.model$formula)
@@ -275,9 +275,9 @@ summary.pggls <- function(object,...){
 #' @export
 print.summary.pggls <- function(x, digits = max(3, getOption("digits") - 2), width = getOption("width"), ...){
   pmodel <- attr(x, "pmodel")
-  pdim <- attr(x, "pdim")
-  formula <- pmodel$formula
-  model.name <- pmodel$model.name
+  pdim   <- attr(x, "pdim")
+  formula     <- pmodel$formula
+  model.name  <- pmodel$model.name
   effect.name <- pmodel$effect.name
   cat(paste(effect.pggls.list[effect.name], " ", sep = ""))
   cat(paste(model.pggls.list[model.name], "\n", sep = ""))
