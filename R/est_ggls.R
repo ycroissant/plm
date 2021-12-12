@@ -234,10 +234,7 @@ pggls <- function(formula, data, subset, na.action,
     df.residual <- nrow(X) - ncol(X)
     fitted.values <- y - residuals
     names(coef) <- rownames(vcov) <- colnames(vcov) <- coef.names
-    pmodel <- attr(plm.model, "pmodel")
-# print(pmodel) # DEBUG # TODO: pmodel is NULL -> eradicate pmodel construct
-    pmodel$model.name <- model
-    pmodel$effect.name <- effect
+    pmodel <- list(model.name = model.name, effect.name = effect)
     fullGLS <- list(coefficients  = coef,
                     residuals     = residuals,
                     fitted.values = fitted.values,
@@ -276,11 +273,8 @@ summary.pggls <- function(object,...){
 print.summary.pggls <- function(x, digits = max(3, getOption("digits") - 2), width = getOption("width"), ...){
   pmodel <- attr(x, "pmodel")
   pdim   <- attr(x, "pdim")
-  formula     <- pmodel$formula
-  model.name  <- pmodel$model.name
-  effect.name <- pmodel$effect.name
-  cat(paste(effect.pggls.list[effect.name], " ", sep = ""))
-  cat(paste(model.pggls.list[model.name], "\n", sep = ""))
+  cat(paste(effect.pggls.list[pmodel$effect.name], " ",  sep = ""))
+  cat(paste(model.pggls.list[ pmodel$model.name],  "\n", sep = ""))
   cat("\nCall:\n")
   print(x$call)
   cat("\n")
@@ -289,9 +283,9 @@ print.summary.pggls <- function(x, digits = max(3, getOption("digits") - 2), wid
   print(sumres(x)) # was until rev. 1176:  print(summary(unlist(residuals(x))))
   cat("\nCoefficients:\n")
   printCoefmat(x$CoefTable, digits = digits)
-  cat(paste("Total Sum of Squares: ",    signif(x$tss,digits),  "\n", sep=""))
-  cat(paste("Residual Sum of Squares: ", signif(x$ssr,digits),  "\n", sep=""))
-  cat(paste("Multiple R-squared: ",      signif(x$rsqr,digits), "\n", sep=""))
+  cat(paste("Total Sum of Squares: ",    signif(x$tss,  digits), "\n", sep=""))
+  cat(paste("Residual Sum of Squares: ", signif(x$ssr,  digits), "\n", sep=""))
+  cat(paste("Multiple R-squared: ",      signif(x$rsqr, digits), "\n", sep=""))
   invisible(x)
 }
 

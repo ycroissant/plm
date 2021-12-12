@@ -336,7 +336,6 @@ pcce <- function (formula, data, subset, na.action,
     ## calc. measures of fit according to model type
     switch(model,
         "mg" = {
-
             ## R2 as in HPY 2010: sigma2ccemg = average (over n) of variances
             ## of defactored residuals
             ## (for unbalanced panels, each variance is correctly normalized
@@ -393,9 +392,7 @@ pcce <- function (formula, data, subset, na.action,
     coef <- as.numeric(coef)
     names(coef) <- rownames(vcov) <- colnames(vcov) <- coef.names
     dimnames(tcoef) <- list(coef.names, id.names)
-    pmodel <- attr(plm.model, "pmodel")
-# print(pmodel) # DEBUG # TODO: pmodel is NULL -> eradicate pmodel construct
-    pmodel$model.name <- model.name
+    pmodel <- list(model.name = model.name)
     pccemod <- list(coefficients  = coef,
                     residuals     = residuals,
                     stdres        = stdres,
@@ -451,11 +448,9 @@ summary.pcce <- function(object, vcov = NULL, ...){
 #' @export
 print.summary.pcce <- function(x, digits = max(3, getOption("digits") - 2), width = getOption("width"), ...){
   pmodel <- attr(x, "pmodel")
-  pdim <- attr(x, "pdim")
-#  formula <- pmodel$formula
-  model.name <- pmodel$model.name
+  pdim   <- attr(x, "pdim")
   cat("Common Correlated Effects ")
-  cat(paste(model.pcce.list[model.name], "\n", sep = ""))
+  cat(paste(model.pcce.list[pmodel$model.name], "\n", sep = ""))
   if (!is.null(x$rvcov)) {
     cat("\nNote: Coefficient variance-covariance matrix supplied: ", attr(x$rvcov, which = "rvcov.name"), "\n", sep = "")
   }
@@ -467,9 +462,9 @@ print.summary.pcce <- function(x, digits = max(3, getOption("digits") - 2), widt
   print(sumres(x)) # was until rev. 1178: print(summary(unlist(residuals(x))))
   cat("\nCoefficients:\n")
   printCoefmat(x$CoefTable, digits = digits)
-  cat(paste("Total Sum of Squares: ",    signif(x$tss,digits), "\n", sep=""))
-  cat(paste("Residual Sum of Squares: ", signif(x$ssr,digits), "\n", sep=""))
-  cat(paste("HPY R-squared: ",           signif(x$rsqr,digits),"\n", sep=""))
+  cat(paste("Total Sum of Squares: ",    signif(x$tss,  digits), "\n", sep=""))
+  cat(paste("Residual Sum of Squares: ", signif(x$ssr,  digits), "\n", sep=""))
+  cat(paste("HPY R-squared: ",           signif(x$rsqr, digits), "\n", sep=""))
   invisible(x)
 }
 

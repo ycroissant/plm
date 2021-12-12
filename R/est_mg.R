@@ -276,9 +276,7 @@ pmg <- function(formula, data, subset, na.action,
 
     names(coef) <- rownames(vcov) <- colnames(vcov) <- coef.names
     dimnames(tcoef) <- list(coef.names, id.names)
-    pmodel <- attr(plm.model, "pmodel")
-# print(pmodel) # DEBUG   # TODO: pmodel is NULL -> eradicate pmodel construct
-    pmodel$model.name <- model.name
+    pmodel <- list(model.name = model.name)
     mgmod <- list(coefficients  = coef,
                   residuals     = residuals,
                   fitted.values = fitted.values,
@@ -317,10 +315,8 @@ summary.pmg <- function(object, ...){
 print.summary.pmg <- function(x, digits = max(3, getOption("digits") - 2),
                               width = getOption("width"), ...){
   pmodel <- attr(x, "pmodel")
-  pdim <- attr(x, "pdim")
-#  formula <- pmodel$formula
-  model.name <- pmodel$model.name
-  cat(paste(model.pmg.list[model.name], "\n", sep=""))
+  pdim   <- attr(x, "pdim")
+  cat(paste(model.pmg.list[pmodel$model.name], "\n", sep=""))
   cat("\nCall:\n")
   print(x$call)
   cat("\n")
@@ -329,8 +325,8 @@ print.summary.pmg <- function(x, digits = max(3, getOption("digits") - 2),
   print(sumres(x)) # was until rev. 1178: print(summary(unlist(residuals(x))))
   cat("\nCoefficients:\n")
   printCoefmat(x$CoefTable, digits = digits)
-  cat(paste("Total Sum of Squares: ",    signif(x$tss, digits),  "\n", sep=""))
-  cat(paste("Residual Sum of Squares: ", signif(x$ssr, digits),  "\n", sep=""))
+  cat(paste("Total Sum of Squares: ",    signif(x$tss,  digits),  "\n", sep=""))
+  cat(paste("Residual Sum of Squares: ", signif(x$ssr,  digits),  "\n", sep=""))
   cat(paste("Multiple R-squared: ",      signif(x$rsqr, digits), "\n", sep=""))
   invisible(x)
 }

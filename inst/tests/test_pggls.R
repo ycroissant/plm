@@ -1,15 +1,45 @@
-## do not run as additional package is needed
+library(plm)
+data("Produc", package = "plm")
 
-# library(plm)
+zz_default <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
+               data = Produc)
+
+summary(zz_default) # is within, check if correctly identified in print output
+
+zz_wi <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
+               data = Produc, model = "within")
+summary(zz_wi)
+
+zz_pool <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
+                 data = Produc, model = "pooling")
+summary(zz_pool)
+
+zz_fd <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
+               data = Produc, model = "fd")
+summary(zz_fd)
+
+zz_wi_t <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
+               data = Produc, model = "within", effect = "time")
+summary(zz_wi_t)
+
+zz_pool_t <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
+                 data = Produc, model = "pooling", effect = "time")
+summary(zz_pool_t)
+
+## effect = "time" for FD model not supported as senseless (individ. dimension
+## does not have a natural order)
+
+
+## do not run as additional package is needed
 # library(wooldridge)
-# data("jtrain")
+# data("jtrain", package = "wooldridge")
 # pjtrain <- pdata.frame(jtrain, index = c("fcode", "year"))
 # 
 # ## no examples in Wooldridge (2002/2010), Ch. 10 for the RE GLS, FE GLS, FD GLS models
-# pggls(lscrap ~ d88 + d89 + union + grant + grant_1, data = pjtrain, model = "random")
+# pggls(lscrap ~ d88 + d89 + union + grant + grant_1, data = pjtrain, model = "pooling")
 # pggls(lscrap ~ d88 + d89 + union + grant + grant_1, data = pjtrain, model = "within")
 # pggls(lscrap ~ d88 + d89 + union + grant + grant_1, data = pjtrain, model = "fd") # errored in 1.6-5, run in 1.6-6 (but gives nointercept), with intercept in 1.7-0 (rev. 746)
-# 
+#
 # 
 # summary(plm(lscrap ~ d88 + d89 + union + grant + grant_1, data = pjtrain, model = "random")) # W (2010), p. 297
 # summary(plm(lscrap ~ d88 + d89 + union + grant + grant_1, data = pjtrain, model = "within")) # W (2010), p. 307

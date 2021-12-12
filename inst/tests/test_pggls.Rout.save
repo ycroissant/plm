@@ -1,0 +1,216 @@
+
+R version 4.1.2 (2021-11-01) -- "Bird Hippie"
+Copyright (C) 2021 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(plm)
+> data("Produc", package = "plm")
+> 
+> zz_default <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
++                data = Produc)
+> 
+> summary(zz_default) # is within, check if correctly identified in print output
+Oneway (individual) effect Within FGLS model
+
+Call:
+pggls(formula = log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
+    data = Produc)
+
+Balanced Panel: n = 48, T = 17, N = 816
+
+Residuals:
+        Min.      1st Qu.       Median      3rd Qu.         Max. 
+-0.117504866 -0.023705713 -0.004716909  0.017288320  0.177767615 
+
+Coefficients:
+             Estimate  Std. Error z-value  Pr(>|z|)    
+log(pcap) -0.00104277  0.02900641 -0.0359    0.9713    
+log(pc)    0.17151298  0.01807934  9.4867 < 2.2e-16 ***
+log(emp)   0.84449144  0.02042362 41.3488 < 2.2e-16 ***
+unemp     -0.00357102  0.00047319 -7.5468 4.462e-14 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Total Sum of Squares: 849.81
+Residual Sum of Squares: 1.1623
+Multiple R-squared: 0.99863
+> 
+> zz_wi <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
++                data = Produc, model = "within")
+> summary(zz_wi)
+Oneway (individual) effect Within FGLS model
+
+Call:
+pggls(formula = log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
+    data = Produc, model = "within")
+
+Balanced Panel: n = 48, T = 17, N = 816
+
+Residuals:
+        Min.      1st Qu.       Median      3rd Qu.         Max. 
+-0.117504866 -0.023705713 -0.004716909  0.017288320  0.177767615 
+
+Coefficients:
+             Estimate  Std. Error z-value  Pr(>|z|)    
+log(pcap) -0.00104277  0.02900641 -0.0359    0.9713    
+log(pc)    0.17151298  0.01807934  9.4867 < 2.2e-16 ***
+log(emp)   0.84449144  0.02042362 41.3488 < 2.2e-16 ***
+unemp     -0.00357102  0.00047319 -7.5468 4.462e-14 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Total Sum of Squares: 849.81
+Residual Sum of Squares: 1.1623
+Multiple R-squared: 0.99863
+> 
+> zz_pool <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
++                  data = Produc, model = "pooling")
+> summary(zz_pool)
+Oneway (individual) effect General FGLS model
+
+Call:
+pggls(formula = log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
+    data = Produc, model = "pooling")
+
+Balanced Panel: n = 48, T = 17, N = 816
+
+Residuals:
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-0.255736 -0.070199 -0.014124 -0.008909  0.039118  0.455461 
+
+Coefficients:
+               Estimate  Std. Error z-value  Pr(>|z|)    
+(Intercept)  2.26388494  0.10077679 22.4643 < 2.2e-16 ***
+log(pcap)    0.10566584  0.02004106  5.2725 1.346e-07 ***
+log(pc)      0.21643137  0.01539471 14.0588 < 2.2e-16 ***
+log(emp)     0.71293894  0.01863632 38.2553 < 2.2e-16 ***
+unemp       -0.00447265  0.00045214 -9.8921 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Total Sum of Squares: 849.81
+Residual Sum of Squares: 7.5587
+Multiple R-squared: 0.99111
+> 
+> zz_fd <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
++                data = Produc, model = "fd")
+> summary(zz_fd)
+Oneway (individual) effect First-Difference FGLS model
+
+Call:
+pggls(formula = log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
+    data = Produc, model = "fd")
+
+Balanced Panel: n = 48, T = 17, N = 816
+
+Residuals:
+      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+-0.0847594 -0.0103758  0.0024378  0.0007254  0.0133336  0.1018213 
+
+Coefficients:
+               Estimate  Std. Error  z-value Pr(>|z|)    
+(Intercept)  0.00942926  0.00106337   8.8673  < 2e-16 ***
+log(pcap)   -0.04400764  0.02911083  -1.5117  0.13060    
+log(pc)     -0.03100727  0.01248722  -2.4831  0.01302 *  
+log(emp)     0.87411813  0.02077388  42.0777  < 2e-16 ***
+unemp       -0.00483240  0.00040668 -11.8825  < 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Total Sum of Squares: 849.81
+Residual Sum of Squares: 0.33459
+Multiple R-squared: 0.99961
+> 
+> zz_wi_t <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
++                data = Produc, model = "within", effect = "time")
+> summary(zz_wi_t)
+Oneway (time) effect Within FGLS model
+
+Call:
+pggls(formula = log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
+    data = Produc, effect = "time", model = "within")
+
+Balanced Panel: n = 48, T = 17, N = 816
+
+Residuals:
+        Min.      1st Qu.       Median      3rd Qu.         Max. 
+-0.223571390 -0.058341036 -0.001293562  0.048932542  0.358330871 
+
+Coefficients:
+            Estimate Std. Error z-value  Pr(>|z|)    
+log(pcap)  0.1647758  0.0010173 161.980 < 2.2e-16 ***
+log(pc)    0.3034768  0.0016782 180.838 < 2.2e-16 ***
+log(emp)   0.5889347  0.0016124 365.245 < 2.2e-16 ***
+unemp     -0.0060831  0.0001342 -45.327 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Total Sum of Squares: 849.81
+Residual Sum of Squares: 6.0629
+Multiple R-squared: 0.99287
+> 
+> zz_pool_t <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
++                  data = Produc, model = "pooling", effect = "time")
+> summary(zz_pool_t)
+Oneway (time) effect General FGLS model
+
+Call:
+pggls(formula = log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
+    data = Produc, effect = "time", model = "pooling")
+
+Balanced Panel: n = 48, T = 17, N = 816
+
+Residuals:
+      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+-0.2322110 -0.0611463 -0.0003261 -0.0002164  0.0510696  0.3512185 
+
+Coefficients:
+               Estimate  Std. Error z-value  Pr(>|z|)    
+(Intercept)  1.64508430  0.01162922 141.461 < 2.2e-16 ***
+log(pcap)    0.15507564  0.00099705 155.535 < 2.2e-16 ***
+log(pc)      0.30880784  0.00229903 134.321 < 2.2e-16 ***
+log(emp)     0.59426830  0.00239355 248.280 < 2.2e-16 ***
+unemp       -0.00681164  0.00013671 -49.825 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Total Sum of Squares: 849.81
+Residual Sum of Squares: 6.2942
+Multiple R-squared: 0.99259
+> 
+> ## effect = "time" for FD model not supported as senseless (individ. dimension
+> ## does not have a natural order)
+> 
+> 
+> ## do not run as additional package is needed
+> # library(wooldridge)
+> # data("jtrain", package = "wooldridge")
+> # pjtrain <- pdata.frame(jtrain, index = c("fcode", "year"))
+> # 
+> # ## no examples in Wooldridge (2002/2010), Ch. 10 for the RE GLS, FE GLS, FD GLS models
+> # pggls(lscrap ~ d88 + d89 + union + grant + grant_1, data = pjtrain, model = "pooling")
+> # pggls(lscrap ~ d88 + d89 + union + grant + grant_1, data = pjtrain, model = "within")
+> # pggls(lscrap ~ d88 + d89 + union + grant + grant_1, data = pjtrain, model = "fd") # errored in 1.6-5, run in 1.6-6 (but gives nointercept), with intercept in 1.7-0 (rev. 746)
+> #
+> # 
+> # summary(plm(lscrap ~ d88 + d89 + union + grant + grant_1, data = pjtrain, model = "random")) # W (2010), p. 297
+> # summary(plm(lscrap ~ d88 + d89 + union + grant + grant_1, data = pjtrain, model = "within")) # W (2010), p. 307
+> # summary(plm(lscrap ~       d89 + union + grant + grant_1, data = pjtrain, model = "fd"))     # W (2010), p. 319
+> 
+> ## Results in Wooldridge, Ch. 10 for plm random, p. 297
+> ## 0.415   intercept
+> ## -0.093  d88
+> ## -0.270  d89
+> ## +0.548  union
+> ## -0.215  grant
+> ## -0.377  grant_t-1
+> 
+> proc.time()
+   user  system elapsed 
+   2.64    0.34    3.00 
