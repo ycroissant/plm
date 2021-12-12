@@ -235,6 +235,7 @@ pggls <- function(formula, data, subset, na.action,
     fitted.values <- y - residuals
     names(coef) <- rownames(vcov) <- colnames(vcov) <- coef.names
     pmodel <- attr(plm.model, "pmodel")
+# print(pmodel) # DEBUG # TODO: pmodel is NULL -> eradicate pmodel construct
     pmodel$model.name <- model
     pmodel$effect.name <- effect
     fullGLS <- list(coefficients  = coef,

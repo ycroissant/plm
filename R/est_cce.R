@@ -397,6 +397,7 @@ pcce <- function (formula, data, subset, na.action,
     names(coef) <- rownames(vcov) <- colnames(vcov) <- coef.names
     dimnames(tcoef) <- list(coef.names, id.names)
     pmodel <- attr(plm.model, "pmodel")
+# print(pmodel) # DEBUG # TODO: pmodel is NULL -> eradicate pmodel construct
     pmodel$model.name <- model.name
     pccemod <- list(coefficients  = coef,
                     residuals     = residuals,
