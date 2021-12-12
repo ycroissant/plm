@@ -297,7 +297,6 @@ pmg <- function(formula, data, subset, na.action,
 #' @rdname pmg
 #' @export
 summary.pmg <- function(object, ...){
-  pmodel <- attr(object, "pmodel")
   std.err <- sqrt(diag(object$vcov))
   b <- object$coefficients
   z <- b/std.err

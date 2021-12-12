@@ -127,7 +127,7 @@ pcce <- function (formula, data, subset, na.action,
   N <- pdim$nT$N
   ## set index names
   time.names <- pdim$panel.names$time.names
-  id.names <- pdim$panel.names$id.names
+  id.names   <- pdim$panel.names$id.names
   coef.names <- names(coef(plm.model))
   ## number of coefficients
   k <- length(coef.names)
@@ -421,7 +421,6 @@ pcce <- function (formula, data, subset, na.action,
 #' @rdname pcce
 #' @export
 summary.pcce <- function(object, vcov = NULL, ...){
-  pmodel <- attr(object, "pmodel")
   vcov_arg <- vcov
   std.err <- if (!is.null(vcov_arg)) {
     if (is.matrix(vcov_arg))   rvcov <- vcov_arg

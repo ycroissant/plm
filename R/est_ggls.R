@@ -256,7 +256,6 @@ pggls <- function(formula, data, subset, na.action,
 #' @rdname pggls
 #' @export
 summary.pggls <- function(object,...){
-  pmodel <- attr(object, "pmodel")
   std.err <- sqrt(diag(object$vcov))
   b <- object$coefficients
   z <- b/std.err
