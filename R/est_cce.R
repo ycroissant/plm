@@ -113,7 +113,8 @@ pcce <- function (formula, data, subset, na.action,
   ## evaluates the call, modified with model = "pooling", inside the
   ## parent frame resulting in the pooling model on formula, data
   plm.model <- eval(plm.model, parent.frame())
-  index <- unclass(attr(model.frame(plm.model), "index")) # unclass for speed
+  mf <- model.frame(plm.model)
+  index <- unclass(attr(mf, "index")) # unclass for speed
   ind  <- index[[1L]] ## individual index
   tind <- index[[2L]] ## time index
   ## set dimension variables
@@ -133,7 +134,7 @@ pcce <- function (formula, data, subset, na.action,
 
   ## model data
   X <- model.matrix(plm.model)
-  y <- model.response(model.frame(plm.model))
+  y <- model.response(mf)
 
   ## det. *minimum* group numerosity
   t <- min(Ti) # ==  min(tapply(X[ , 1], ind, length))
@@ -404,7 +405,7 @@ pcce <- function (formula, data, subset, na.action,
                     fitted.values = fitted.values,
                     vcov          = vcov,
                     df.residual   = df.residual,
-                    model         = model.frame(plm.model),
+                    model         = mf,
                     indcoef       = tcoef,
                     r.squared     = r2cce,
                     #cceres   = as.vector(cceres),

@@ -126,7 +126,8 @@ pmg <- function(formula, data, subset, na.action,
     ## evaluates the call, modified with model = "pooling", inside the
     ## parent frame resulting in the pooling model on formula, data
     plm.model <- eval(plm.model, parent.frame())
-    index <- unclass(attr(model.frame(plm.model), "index")) # unclass for speed
+    mf <- model.frame(plm.model)
+    index <- unclass(attr(mf, "index")) # unclass for speed
     ind  <- index[[1L]] ## individual index
     tind <- index[[2L]] ## time index
     ## set dimension variables
@@ -139,14 +140,14 @@ pmg <- function(formula, data, subset, na.action,
     N <- pdim$nT$N
     ## set index names
     time.names <- pdim$panel.names$time.names
-    id.names <- pdim$panel.names$id.names
+    id.names   <- pdim$panel.names$id.names
     coef.names <- names(coef(plm.model))
     ## number of coefficients
     k <- length(coef.names)
 
     ## model data
     X <- model.matrix(plm.model)
-    y <- model.response(model.frame(plm.model))
+    y <- model.response(mf)
 
 
   ## det. *minimum* group numerosity
@@ -283,7 +284,7 @@ pmg <- function(formula, data, subset, na.action,
                   vcov          = vcov,
                   df.residual   = df.residual,
                   r.squared     = r2,
-                  model         = model.frame(plm.model),
+                  model         = mf,
                   indcoef       = tcoef,
                   formula       = formula,
                   call          = cl)
