@@ -1,6 +1,3 @@
-trace <- function(x) sum(diag(x))
-
-is.constant <- function(x) (max(x) - min(x)) < sqrt(.Machine$double.eps)
 
 #' Estimation of the error components
 #' 

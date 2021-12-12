@@ -1,5 +1,7 @@
 ## Function that are used in more than on place in plm (or likely to be used in more than one place in the future)
 
+## - trace : calculate trace of a matrix (used in ercomp())
+## - is.constant : check if a numeric vector or columns of a matrix is constant
 ## - bdiag : takes matrices as argument and returns the block-diagonal matrix (used in pgmm and plm.list)
 ## - mylm : inner fitting func based on stats::lm with matrix inputs (used in plm.fit)
 ## - my.lm.fit : like the barebone stats::lm.fit but with some extra information (e.g., SEs, sigma) used in purtest
@@ -11,6 +13,10 @@
 ## - myvar : calculates variance with NA removal, checks if input is constant (also for factor and character)
 ## - pvar : checks if input varies in individual / time dimension
 ## - make.dummies : create a contrast-coded dummy matrix from a factor
+
+trace <- function(x) sum(diag(x))
+
+is.constant <- function(x) (max(x) - min(x)) < sqrt(.Machine$double.eps)
 
 bdiag <- function(...){
   ## non-exported
