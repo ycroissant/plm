@@ -152,8 +152,9 @@ pcce <- function (formula, data, subset, na.action,
   ## as min(t) > k+1)
 
   ## subtract intercept from parms number and names
-  if(attr(terms(plm.model), "intercept")) {
-      k <- k-1
+  has.int <- attr(terms(plm.model), "intercept")
+  if(has.int) {
+      k <- k - 1
       coef.names <- coef.names[-1L]
   }
 
@@ -169,7 +170,7 @@ pcce <- function (formula, data, subset, na.action,
 
   ## must put the intercept into the group-invariant part!!
   ## so first drop it from X
-  if(attr(terms(plm.model), "intercept")) {
+  if(has.int) {
       X <- X[ , -1L, drop = FALSE]
   }
 
@@ -178,11 +179,7 @@ pcce <- function (formula, data, subset, na.action,
       Xm <- Between(X, effect = tind, na.rm = TRUE)
       ym <- as.numeric(Between(y, effect = "time", na.rm = TRUE))
 
-      if(attr(terms(plm.model), "intercept")) {
-        Hhat <- cbind(ym, Xm, 1L)
-        } else {
-          Hhat <- cbind(ym, Xm)
-      }
+      Hhat <- if(has.int) cbind(ym, Xm, 1L) else cbind(ym, Xm)
 
       ## prepare XMX, XMy arrays
       XMX <- array(data = NA_real_, dim = c(k, k, n))
@@ -377,7 +374,7 @@ pcce <- function (formula, data, subset, na.action,
     r2cce <- 1 - sigma2cce/sigma2y
 
     ## allow outputting different types of residuals
-    stdres <- unlist(stdres)
+    stdres    <- unlist(stdres)
     residuals <- unlist(cceres)
 
     ## add transformed data (for now a simple list)
