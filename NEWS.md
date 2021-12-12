@@ -8,29 +8,31 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 
 # plm 2.5.9000 - development version to become 2.6
 
+### Fast mode:
 * Fast mode is now the default for the package: when the package is attached,
   `options("plm.fast" = TRUE)` is set (by R's .onAttach mechanism), requiring 
   package `collapse` as a hard dependency.
   
-  Recommendation: Install suggest-dependency package `fixest` or `lfe` as a 
+* *Recommendation*: Install suggest-dependency package `fixest` or `lfe` as a 
   further significant speed up for the two-ways within transformation (as in 
   two-ways fixed effects models) is gained.
   
-  See `?plm.fast` for more information and a benchmark.
+* See `?plm.fast` for more information and a benchmark.
 
 ### Features:
-
 * make.dummies: new simple function to conveniently create contrast-coded dummies 
   from a factor.
 
 
 ### Clean-ups:
+* phtest: for formula method, argument 'effect' is now explicit as 4th argument 
+   (previously, it was extracted from ellipsis (...)).
 * detect_lin_dep/detect.lindep: alias detect_lin_dep removed, thus this
   functionality is now only accessible via detect.lindep (function was renamed
   from detect_lin_dep to detect.lindep in CRAN version 1.7-0 (2019-01-04),
   detect_lin_dep was originally introduced in CRAN version 1.6-4 (2016-11-30)).
-* has.intercept.plm: temporary back-compatible solution for ill-introduced 
-  argument 'part' removed, use argument 'rhs' instead (see also NEWS for 2.4-2).
+* has.intercept.plm: removed temporary back-compatible solution for ill-introduced 
+  argument 'part', use argument 'rhs' instead (see also NEWS for 2.4-2).
 * plm:
   * error informatively if argument effect = "nested" and model != "random" 
     (previously, this was a warning incl. argument adjustment, see also 
@@ -43,14 +45,11 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 * pggls: argument model: removed "random" from the list of official argument's
     values as its use is depreciated (model = "pooling" does the same; however,
     value "random" is still accepted for back-compatibility with a warning).
-* phtest: for formula method, argument 'effect' is now explicit as 4th argument 
-   (previously, it was extracted from ellipsis (...)).
-* DESCRIPTION file:
-  * more comprehensive description of the package, 
-  * removed some packages from 'Suggests' which are not used (see below).
 
-### Vignettes:
- * First vignettes gained an example for the auxiliary-regression-based Hausman
+### Documentation:
+* DESCRIPTION file: more comprehensive description of the package, so displayed
+  on CRAN.
+* First vignette gained an example for the auxiliary-regression-based Hausman
    test (`phtest(. , method = "aux")`).
 
 ### Dependencies:
@@ -58,7 +57,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
  * Removed packages `bookdown`, `clusterSEs`, `pcse`, `stargazer` from 'Suggests'
    as not needed.
  
-
+***
 
 # plm 2.4-3
 
