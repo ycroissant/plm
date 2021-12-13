@@ -33,6 +33,8 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
   detect_lin_dep was originally introduced in CRAN version 1.6-4 (2016-11-30)).
 * has.intercept.plm: removed temporary back-compatible solution for ill-introduced 
   argument 'part', use argument 'rhs' instead (see also NEWS for 2.4-2).
+* Within (only matrix method): removed argument 'rm.null' (was defunct since 
+  August 2018).
 * plm:
   * error informatively if argument effect = "nested" and model != "random" 
     (previously, this was a warning incl. argument adjustment, see also 
@@ -48,8 +50,8 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
     value "random" is still accepted and adapted to "pooling" for 
     back-compatibility with a warning).
   * print.summary.pggls: fix printed model name in case default model was selected
-    (printed all three model names).
-* Within.matrix: removed argument 'rm.null' (was defunct since August 2018).
+    (print only one model name, previously all three model names possible for the
+    function were printed).
 
 ### Documentation:
 * DESCRIPTION file: more comprehensive description of the package, so displayed
