@@ -6,8 +6,11 @@
 \alias{is.pbalanced.data.frame}
 \alias{is.pbalanced.pdata.frame}
 \alias{is.pbalanced.pseries}
-\alias{is.pbalanced.panelmodel}
+\alias{is.pbalanced.pggls}
+\alias{is.pbalanced.pcce}
+\alias{is.pbalanced.pmg}
 \alias{is.pbalanced.pgmm}
+\alias{is.pbalanced.panelmodel}
 \title{Check if data are balanced}
 \usage{
 is.pbalanced(x, ...)
@@ -20,9 +23,15 @@ is.pbalanced(x, ...)
 
 \method{is.pbalanced}{pseries}(x, ...)
 
-\method{is.pbalanced}{panelmodel}(x, ...)
+\method{is.pbalanced}{pggls}(x, ...)
+
+\method{is.pbalanced}{pcce}(x, ...)
+
+\method{is.pbalanced}{pmg}(x, ...)
 
 \method{is.pbalanced}{pgmm}(x, ...)
+
+\method{is.pbalanced}{panelmodel}(x, ...)
 }
 \arguments{
 \item{x}{an object of class \code{pdata.frame}, \code{data.frame},

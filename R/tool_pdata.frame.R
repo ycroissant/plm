@@ -1043,9 +1043,23 @@ pdim.pseries <- function(x,...) {
 
 #' @rdname pdim
 #' @export
-pdim.panelmodel <- function(x, ...) {
-  x <- model.frame(x)
-  pdim(x)
+pdim.pggls <- function(x, ...) {
+  ## pggls is also class panelmodel, but take advantage of the pdim attribute in it
+  attr(x, "pdim")
+}
+
+#' @rdname pdim
+#' @export
+pdim.pcce <- function(x, ...) {
+  ## pcce is also class panelmodel, but take advantage of the pdim attribute in it
+  attr(x, "pdim")
+}
+
+#' @rdname pdim
+#' @export
+pdim.pmg <- function(x, ...) {
+  ## pmg is also class panelmodel, but take advantage of the pdim attribute in it
+  attr(x, "pdim")
 }
 
 #' @rdname pdim
@@ -1053,6 +1067,13 @@ pdim.panelmodel <- function(x, ...) {
 pdim.pgmm <- function(x, ...) {
 ## pgmm is also class panelmodel, but take advantage of the pdim attribute in it
   attr(x, "pdim")
+}
+
+#' @rdname pdim
+#' @export
+pdim.panelmodel <- function(x, ...) {
+  x <- model.frame(x)
+  pdim(x)
 }
 
 #' @rdname pdim

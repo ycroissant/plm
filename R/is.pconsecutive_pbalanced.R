@@ -368,9 +368,23 @@ is.pbalanced.pseries <- function(x, ...) {
 
 #' @rdname is.pbalanced
 #' @export
-is.pbalanced.panelmodel <- function(x, ...) {
-  x <- model.frame(x)
-  return(is.pbalanced(x))
+is.pbalanced.pggls <- function(x, ...) {
+  # pggls is also class panelmodel, but take advantage of its pdim attribute
+  return(attr(x, "pdim")$balanced)
+}
+
+#' @rdname is.pbalanced
+#' @export
+is.pbalanced.pcce <- function(x, ...) {
+  # pcce is also class panelmodel, but take advantage of its pdim attribute
+  return(attr(x, "pdim")$balanced)
+}
+
+#' @rdname is.pbalanced
+#' @export
+is.pbalanced.pmg <- function(x, ...) {
+  # pmg is also class panelmodel, but take advantage of its pdim attribute
+  return(attr(x, "pdim")$balanced)
 }
 
 #' @rdname is.pbalanced
@@ -378,4 +392,11 @@ is.pbalanced.panelmodel <- function(x, ...) {
 is.pbalanced.pgmm <- function(x, ...) {
   # pgmm is also class panelmodel, but take advantage of its pdim attribute
   return(attr(x, "pdim")$balanced)
+}
+
+#' @rdname is.pbalanced
+#' @export
+is.pbalanced.panelmodel <- function(x, ...) {
+  x <- model.frame(x)
+  return(is.pbalanced(x))
 }
