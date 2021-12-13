@@ -595,6 +595,8 @@ Within.matrix <- function(x, effect, ...) {
     if(is.null(xindex <- unclass(attr(x, "index")))) { # unclass for speed
       # non-index case
         result <- Within.default(x, effect, ...)
+        # NB: effect is assumed to be a factor; contrary to the other Within.* 
+        #     methods, Within.default does not handle twoways effects
     }
     else {
       # index case
