@@ -8,15 +8,16 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 
 # plm 2.5.9000 - development version to become 2.6
 
+### Speed-up:
 * Fast mode is now the default for the package: when the package is attached,
   `options("plm.fast" = TRUE)` is set (by R's .onAttach mechanism), requiring 
   package `collapse` as a hard dependency.
   
-  Recommendation: Install suggest-dependency package `fixest` or `lfe` as a 
+* Recommendation: Install suggest-dependency package `fixest` or `lfe` as a 
   further significant speed up for the two-ways within transformation (as in 
   two-ways fixed effects models) is gained.
   
-  See `?plm.fast` for more information and a benchmark.
+* See `?plm.fast` for more information and a benchmark.
 
 ### Features:
 
