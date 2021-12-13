@@ -118,17 +118,17 @@ Within.pseries <- function(x, effect = c("individual", "time", "group", "twoways
   }
 }
 
-Within.matrix <- function(x, effect, rm.null = TRUE, ...) {
+Within.matrix <- function(x, effect, ...) {
   if(!isTRUE(getOption("plm.fast"))) {
-    Within.matrix.baseR(x, effect, rm.null = rm.null, ...) 
+    Within.matrix.baseR(x, effect, ...) 
   } else {
     if (!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
     
     if(is.null(getOption("plm.fast.pkg.FE.tw"))) options("plm.fast.pkg.FE.tw" = "collapse")
     switch(getOption("plm.fast.pkg.FE.tw"),
-           "collapse" = Within.matrix.collapse(       x, effect, rm.null = rm.null, ...), # collapse only,
-           "fixest"   = Within.matrix.collapse.fixest(x, effect, rm.null = rm.null, ...), # collapse for 1-way FE + fixest for 2-way FE,
-           "lfe"      = Within.matrix.collapse.lfe(   x, effect, rm.null = rm.null, ...), # collapse for 1-way FE + lfe for 2-way FE,
+           "collapse" = Within.matrix.collapse(       x, effect, ...), # collapse only,
+           "fixest"   = Within.matrix.collapse.fixest(x, effect, ...), # collapse for 1-way FE + fixest for 2-way FE,
+           "lfe"      = Within.matrix.collapse.lfe(   x, effect, ...), # collapse for 1-way FE + lfe for 2-way FE,
            stop("unknown value of option 'plm.fast.pkg.FE.tw'"))
   }
 }
@@ -404,29 +404,21 @@ Within.pseries.collapse <- function(x, effect = c("individual", "time", "group",
   return(res)
 }
 
-Within.matrix.collapse <- function(x, effect, rm.null = TRUE, ...) {
+Within.matrix.collapse <- function(x, effect, ...) {
 # print("Within.matrix.collapse")
 # browser()
   
+  # check for presence of na.rm in dots, if not present set to FALSE
+  na.rm <- if(missing(...) || is.null(na.rm <- list(...)$na.rm)) FALSE else na.rm
   
   if(is.null(xindex <- attr(x, "index"))) {
     # non-index case, 'effect' needs to be a factor
-    result <- Within.default(x, effect, ...)
-    othervar <- colSums(abs(x)) > sqrt(.Machine$double.eps)
-    if(rm.null) {
-      result <- result[ , othervar, drop = FALSE]
-      attr(result, "constant") <- character(0)
-    }
-    else attr(result, "constant") <- colnames(x)[! othervar]
-    return(result)
+    result <- collapse::fwithin(x, g = effect, w = NULL, na.rm = na.rm)
   }
   else {
     # index case
     xindex <- unclass(xindex) # unclass for speed
     checkNA.index(xindex) # index may not contain any NA
-
-    # check for presence of na.rm in dots, if not present set to FALSE
-    na.rm <- if(missing(...) || is.null(na.rm <- list(...)$na.rm)) FALSE else na.rm
     
     if(effect != "twoways") {
       eff.fac <- switch(effect,
@@ -442,6 +434,7 @@ Within.matrix.collapse <- function(x, effect, rm.null = TRUE, ...) {
       # effect = "twoways"
       eff.ind.fac  <- xindex[[1L]]
       eff.time.fac <- xindex[[2L]]
+      
       if(is.pbalanced(eff.ind.fac, eff.time.fac)) {
         # balanced twoways
         result <- collapse::fwithin(  x, g = eff.ind.fac,  w = NULL, na.rm = na.rm, mean = "overall.mean") -
@@ -494,27 +487,21 @@ Within.pseries.collapse.fixest <- function(x, effect = c("individual", "time", "
   return(res)
 }
 
-Within.matrix.collapse.fixest <- function(x, effect, rm.null = TRUE, ...) {
+Within.matrix.collapse.fixest <- function(x, effect, ...) {
 # print("Within.matrix.collapse.fixest")
 # browser()
   
+  # check for presence of na.rm in dots, if not present set to FALSE
+  na.rm <- if(missing(...) || is.null(na.rm <- list(...)$na.rm)) FALSE else na.rm
+  
   if(is.null(xindex <- attr(x, "index"))) {
     # non-index case, 'effect' needs to be a factor
-    result <- Within.default(x, effect, ...)
-    othervar <- colSums(abs(x)) > sqrt(.Machine$double.eps)
-    if(rm.null) {
-      result <- result[ , othervar, drop = FALSE]
-      attr(result, "constant") <- character(0)
-    }
-    else attr(result, "constant") <- colnames(x)[! othervar]
-    return(result)
+    result <- collapse::fwithin(x, g = effect, w = NULL, na.rm = na.rm)
   }
   else {
     # index case
     xindex <- unclass(xindex) # unclass for speed
     checkNA.index(xindex) # index may not contain any NA
-    # check for presence of na.rm in dots, if not present set to FALSE
-    na.rm <- if(missing(...) || is.null(na.rm <- list(...)$na.rm)) FALSE else na.rm
     
     if(effect != "twoways") {
       eff.fac <- switch(effect,
@@ -566,28 +553,21 @@ Within.pseries.collapse.lfe <- function(x, effect = c("individual", "time", "gro
   return(res)
 }
 
-Within.matrix.collapse.lfe <- function(x, effect, rm.null = TRUE, ...) {
+Within.matrix.collapse.lfe <- function(x, effect,  ...) {
 # print("Within.matrix.collapse.lfe")
 # browser()
-
-
+  
+  # check for presence of na.rm in dots, if not present set to FALSE
+  na.rm <- if(missing(...) || is.null(na.rm <- list(...)$na.rm)) FALSE else na.rm
+  
   if(is.null(xindex <- attr(x, "index"))) {
     # non-index case, 'effect' needs to be a factor
-    result <- Within.default(x, effect, ...)
-    othervar <- colSums(abs(x)) > sqrt(.Machine$double.eps)
-    if(rm.null) {
-      result <- result[ , othervar, drop = FALSE]
-      attr(result, "constant") <- character(0)
-    }
-    else attr(result, "constant") <- colnames(x)[! othervar]
-    return(result)
+    result <- collapse::fwithin(x, g = effect, w = NULL, na.rm = na.rm)
   }
   else {
     # index case
     xindex <- unclass(xindex)
     checkNA.index(xindex) # index may not contain any NA
-    # check for presence of na.rm in dots, if not present set to FALSE
-    na.rm <- if(missing(...) || is.null(na.rm <- list(...)$na.rm)) FALSE else na.rm
     
     if(effect != "twoways") {
       eff.fac <- switch(effect,

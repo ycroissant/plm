@@ -53,8 +53,6 @@
 #'     specifying the dimension (`"twoways"` is not possible),
 #' @param idbyrow if `TRUE` in the `as.matrix` method, the lines of
 #'     the matrix are the individuals,
-#' @param rm.null if `TRUE`, for the `Within.matrix` method, remove
-#'     the columns which are `0`-valued (empty) after within transformation,
 #' @param plot,scale,transparency,col,lwd plot arguments,
 #' @param \dots further arguments, e. g., `na.rm = TRUE` for
 #'     transformation functions like `beetween`, see **Details**
@@ -590,22 +588,15 @@ Within.pseries <- function(x, effect = c("individual", "time", "group", "twoways
 
 #' @rdname pseries
 #' @export
-Within.matrix <- function(x, effect, rm.null = TRUE, ...) {
+Within.matrix <- function(x, effect, ...) {
 # print("Within.matrix(.baseR)")
-# print(paste0("rm.null = ", rm.null))
-# print(paste0("has.index = ", has.index(x)))
 # browser()
   
     if(is.null(xindex <- unclass(attr(x, "index")))) { # unclass for speed
       # non-index case
         result <- Within.default(x, effect, ...)
-        othervar <- colSums(abs(x)) > sqrt(.Machine$double.eps) # non-null cols
-        if(rm.null) {
-            result <- result[ , othervar, drop = FALSE]
-            attr(result, "constant") <- character(0)
-        }
-        else attr(result, "constant") <- colnames(x)[! othervar]
-        return(result)
+        # NB: effect is assumed to be a factor; contrary to the other Within.* 
+        #     methods, Within.default does not handle twoways effects
     }
     else {
       # index case
@@ -620,7 +611,7 @@ Within.matrix <- function(x, effect, rm.null = TRUE, ...) {
                 time <- xindex[[2L]]
                 Dmu <- model.matrix(~ time - 1)
                 attr(Dmu, "index") <- attr(x, "index") # need orig. index here
-                W1   <- Within(x,   "individual", rm.null = FALSE, ...)
+                W1   <- Within(x,   "individual", ...)
                 WDmu <- Within(Dmu, "individual", ...)
                 W2 <- lm.fit(WDmu, x)$fitted.values
                 result <- W1 - W2

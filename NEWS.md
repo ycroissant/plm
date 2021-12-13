@@ -8,7 +8,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 
 # plm 2.5.9000 - development version to become 2.6
 
-### Fast mode:
+### Speed-up:
 * Fast mode is now the default for the package: when the package is attached,
   `options("plm.fast" = TRUE)` is set (by R's .onAttach mechanism), requiring 
   package `collapse` as a hard dependency.
@@ -45,9 +45,11 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 * pggls:
   * argument model: removed "random" from the list of official argument's
     values as its use is depreciated (model = "pooling" does the same; however,
-    value "random" is still accepted for back-compatibility with a warning).
+    value "random" is still accepted and adapted to "pooling" for 
+    back-compatibility with a warning).
   * print.summary.pggls: fix printed model name in case default model was selected
     (printed all three model names).
+* Within.matrix: removed argument 'rm.null' (was defunct since August 2018).
 
 ### Documentation:
 * DESCRIPTION file: more comprehensive description of the package, so displayed
