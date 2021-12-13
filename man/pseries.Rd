@@ -76,7 +76,7 @@ Within(x, ...)
 
 \method{Within}{pseries}(x, effect = c("individual", "time", "group", "twoways"), ...)
 
-\method{Within}{matrix}(x, effect, rm.null = TRUE, ...)
+\method{Within}{matrix}(x, effect, ...)
 }
 \arguments{
 \item{x, object}{a \code{pseries} or a matrix; or a \code{summary.pseries} object,}
@@ -94,9 +94,6 @@ the matrix are the individuals,}
 \code{"individual"}, \code{"time"}, or \code{"group"} effect, for \code{Within}
 \code{"twoways"} additionally; for non-pseries methods, \code{effect} is a factor
 specifying the dimension (\code{"twoways"} is not possible),}
-
-\item{rm.null}{if \code{TRUE}, for the \code{Within.matrix} method, remove
-the columns which are \code{0}-valued (empty) after within transformation,}
 }
 \value{
 All these functions return an object of class \code{pseries} or a matrix,
