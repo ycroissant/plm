@@ -33,8 +33,8 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
   detect_lin_dep was originally introduced in CRAN version 1.6-4 (2016-11-30)).
 * has.intercept.plm: removed temporary back-compatible solution for ill-introduced 
   argument 'part', use argument 'rhs' instead (see also NEWS for 2.4-2).
-* Within (only matrix method): removed argument 'rm.null' (was defunct since 
-  August 2018).
+* Within (only matrix method): removed matrix-specific argument 'rm.null'
+  (has been defunct since August 2018 anyways).
 * plm:
   * error informatively if argument effect = "nested" and model != "random" 
     (previously, this was a warning incl. argument adjustment, see also 
@@ -54,15 +54,15 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
     function were printed).
 
 ### Documentation:
-* DESCRIPTION file: more comprehensive description of the package, so displayed
+* DESCRIPTION file: more comprehensive description of the package, so displayed 
   on CRAN.
-* First vignette gained an example for the auxiliary-regression-based Hausman
-   test (`phtest(. , method = "aux")`).
+* First vignette gained an example for the auxiliary-regression-based Hausman 
+  test (`phtest(. , method = "aux")`).
 
 ### Dependencies:
  * Shifted package `collapse` from 'Suggests' to 'Imports'.
- * Removed packages `bookdown`, `clusterSEs`, `pcse`, `stargazer` from 'Suggests'
-   as not needed.
+ * Removed from 'Suggests' as not needed: `bookdown`, `clusterSEs`, `pcse`, 
+   `stargazer`.
  
 ***
 
