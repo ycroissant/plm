@@ -88,7 +88,7 @@ pggls <- function(formula, data, subset, na.action,
   # check and match the arguments
     effect <- match.arg(effect)
 
-    if(length(model) == 1 && model == "random") {
+    if(length(model) == 1L && model == "random") {
         msg.random <- paste0("pggls(): argument 'model = \"random\"' is deprecated, ",
                              " changed to 'model = \"pooling\"' for estimation ",
                              " of unrestricted FGLS model")
