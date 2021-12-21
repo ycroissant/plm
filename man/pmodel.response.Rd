@@ -25,10 +25,10 @@ class \code{"pFormula"},}
 }
 \value{
 A pseries except if model responses' of a \code{"between"}
-or "fd" model as these models "compress" the data (the number
+or \code{"fd"} model as these models "compress" the data (the number
 of observations used in estimation is smaller than the original
 data due to the specific transformation). A numeric is returned
-for the "between" and "fd" model.
+for the \code{"between"} and \code{"fd"} model.
 }
 \description{
 pmodel.response has several methods to conveniently extract the
