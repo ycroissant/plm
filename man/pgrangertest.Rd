@@ -19,7 +19,8 @@ hypothesized Granger causation,}
 \item{data}{a \code{pdata.frame} or a \code{data.frame},}
 
 \item{test}{a character to request the statistic to be returned,
-either \code{"Ztilde"} (default), or \code{"Zbar"},}
+either \code{"Ztilde"} (default),or \code{"Zbar"}, alternatively, set to
+\code{"Wbar"} for an intermediate statistic (see Details),}
 
 \item{order}{integer(s) giving the number of lags to include in the
 test's auxiliary regressions, the length of order must be

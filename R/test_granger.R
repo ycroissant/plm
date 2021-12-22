@@ -54,7 +54,8 @@
 #'     hypothesized Granger causation,
 #' @param data a `pdata.frame` or a `data.frame`,
 #' @param test a character to request the statistic to be returned,
-#'     either `"Ztilde"` (default), or `"Zbar"`,
+#'     either `"Ztilde"` (default),or `"Zbar"`, alternatively, set to
+#'      `"Wbar"` for an intermediate statistic (see Details),
 #' @param order integer(s) giving the number of lags to include in the
 #'     test's auxiliary regressions, the length of order must be
 #'     either 1 (same lag order for all individuals) or equal to the
