@@ -112,7 +112,7 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar", "Wbar"), orde
   
   pdim <- pdim(data)
   balanced <- pdim$balanced
-  N <- pdim$nT$n
+  N  <- pdim$nT$n
   T. <- pdim$nT$T
   Ti <- pdim$Tint$Ti
   indi <- unclass(index(data))[[1L]]
@@ -129,17 +129,18 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar", "Wbar"), orde
   
   if (length(order) > 1L && length(order) != N) stop("'order' must have length 1 or the number of individuals")
   if (test == "Zbar" && !balanced) stop("'test = \"Zbar\"' is not suited for unbalanced panels")
-  if (test == "Zbar" && length(unique(order)) != 1) stop("'test = \"Zbar\"' is not suited for varying lag order")
+  if (test == "Zbar" && length(unique(order)) != 1L) stop("'test = \"Zbar\"' is not suited for varying lag order")
   
   # For statistic Ztilde, the second order moments of the individual statistics must exist
   # (formula (10) in Dumitrescu/Hurlin (2012) where T = T - K)
+  req.obs <- 5L + 3L*order
   if (length(order) == 1L) {
-    if (test == "Ztilde" && !all((Ti > (5 + 3*order)))) {
+    if (test == "Ztilde" && !all((Ti > (req.obs)))) {
       stop(paste0("Condition for test = \"Ztilde\" not met for all individuals: length of time series ",
-                  "must be larger than 5+3*order (>5+3*", order, "=", 5 + 3*order,")"))
+                  "must be larger than 5+3*order (>5+3*", order, "=", req.obs, ")"))
     }
   } else {
-    if (test == "Ztilde" && !all((Ti > (5 + 3*order)))) {
+    if (test == "Ztilde" && !all((Ti > (req.obs)))) {
       stop(paste0("Condition for test = \"Ztilde\" not met for all individuals: length of time series ",
                   "must be larger than 5+3*order [where order is the order specified for the individuals]"))
     }
@@ -167,7 +168,7 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar", "Wbar"), orde
   
   # for this, if necessary, expand order argument for lmtest::grangertest to full length (N)
   # [but leave variable 'order' in its current length for later decision making]
-  if (length(order) == 1L) order_grangertest <- rep(order, N) else order_grangertest <- order
+  order_grangertest <- if(length(order) == 1L) rep(order, N) else order
   
   # Dumitrescu/Hurlin (2012), p. 1453 use the Chisq definition of the Granger test
   grangertests_i <- mapply(function(data, order)
@@ -176,9 +177,9 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar", "Wbar"), orde
     listdata, order_grangertest, SIMPLIFY = FALSE)
   
   # extract Wald/Chisq-statistics and p-values of individual Granger tests
-  Wi   <- vapply(grangertests_i, function(g) g[["Chisq"]][2L], FUN.VALUE = 0.0, USE.NAMES = FALSE)
+  Wi   <- vapply(grangertests_i, function(g) g[["Chisq"]][2L],        FUN.VALUE = 0.0, USE.NAMES = FALSE)
   pWi  <- vapply(grangertests_i, function(g) g[["Pr(>Chisq)"]][[2L]], FUN.VALUE = 0.0, USE.NAMES = FALSE)
-  dfWi <- vapply(grangertests_i, function(g) abs(g[["Df"]][2L]), FUN.VALUE = 0.0, USE.NAMES = FALSE)
+  dfWi <- vapply(grangertests_i, function(g) abs(g[["Df"]][2L]),      FUN.VALUE = 0.0, USE.NAMES = FALSE)
   
   Wbar <- c("Wbar" = mean(Wi))
   
@@ -197,7 +198,7 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar", "Wbar"), orde
       # unbalanced and/or varying lag order
       # unbal stat reduces to the balanced case for balanced data but rather treat it separately here
       # formula (33) in Dumitrescu/Hurlin (2012), p. 1459
-      if (length(order) == 1) order <- rep(order, N) # replicate lag order for all individuals
+      if (length(order) == 1L) order <- rep(order, N) # replicate lag order for all individuals
       stat <- c(   sqrt(N) * ( Wbar - 1/N * sum( order * (Ti - 3*order - 1) / (Ti - 3*order - 3) )) 
                    * 1/sqrt( 1/N * sum( 2* order * ((Ti - 3*order - 1)^2 * (Ti - 2*order - 3)) / 
                                           ((Ti - 3*order - 3)^2 * (Ti - 3*order - 5)) ) ) )
