@@ -285,8 +285,7 @@ phtest.panelmodel <- function(x, x2, ...) {
 # DOI: 10.1002/0471667196.ess0265.pub2
 pchibarsq <- function(q, df, weights, lower.tail = TRUE, ... ) {
   # NB: other parameters in dots (...): not checked if valid! (ncp, log, ...)
-  res <- sum(weights * pchisq(q, df = df, lower.tail = lower.tail, ...))
-  return(res)
+  sum(weights * pchisq(q, df = df, lower.tail = lower.tail, ...))
 }
 
 
