@@ -336,10 +336,10 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
     ## drop any linear dependent columns (corresponding to aliased coefficients)
     ## from model matrix X
     ## na.rm = TRUE because currently, RE tw unbalanced models set aliased simply to NA
-    if (!is.null(x$aliased) && any(x$aliased, na.rm = TRUE)) demX <- demX[, !x$aliased, drop = FALSE]
+    if (!is.null(x$aliased) && any(x$aliased, na.rm = TRUE)) demX <- demX[ , !x$aliased, drop = FALSE]
 
     ## control: IV or not (two- or one-part formula)
-    if(length(formula(x))[2L] > 1) {
+    if(length(formula(x))[2L] > 1L) {
         demZ <- model.matrix(x, model = model, rhs = 2, cstcovar.rm = "all")
         ## substitute (transformed) X with projection of X on Z
         ## any linear dependence in Z (demZ) is appropriately taken care of by lm.fit()
@@ -544,11 +544,11 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
     ## (l=0 gives the special contemporaneous case where Xi=Xil, ui=uil
     ## for computing W, CX, CT)
     for(i in (1+l):n) {
-      X <- demX[tind[[i]], , drop = FALSE]
+      X  <- demX[tind[[i]], ,   drop = FALSE]
       Xl <- demX[tind[[i-l]], , drop = FALSE]
-      u <- uhat[tind[[i]]]
-      names(u) <- tlab[[i]]
+      u  <- uhat[tind[[i]]]
       ul <- uhat[tind[[(i-l)]]]
+      names(u)  <- tlab[[i]]
       names(ul) <- tlab[[(i-l)]]
       ## calculate V_yy
       Sl[ , , i-l] <- crossprod(X, E(u, ul)) %*% Xl
@@ -1239,6 +1239,5 @@ vcovHC.pgmm <- function(x, ...) {
 ## dhat: diaghat function for matrices
 # old: dhat <- function(x) {tx <- t(x); diag(crossprod(tx, solve(crossprod(x), tx)))}
 dhat <- function(x) {
-  res <-  rowSums(crossprod(t(x), solve(crossprod(x))) * x) # == diag(crossprod(tx, solve(crossprod(x), tx)))
-  return(res)
+  rowSums(crossprod(t(x), solve(crossprod(x))) * x) # == diag(crossprod(tx, solve(crossprod(x), tx)))
 }
