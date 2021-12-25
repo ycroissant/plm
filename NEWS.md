@@ -25,8 +25,10 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 
 
 ### Clean-ups:
+* phansi: function renamed to phansitest for name consistency, with a *temporary*
+  back-compatible solution.
 * phtest: for formula method, argument 'effect' is now explicit as 4th argument 
-   (previously, it was extracted from ellipsis (...)).
+  (previously, it was extracted from ellipsis (...)).
 * detect_lin_dep/detect.lindep: alias detect_lin_dep removed, thus this
   functionality is now only accessible via detect.lindep (function was renamed
   from detect_lin_dep to detect.lindep in CRAN version 1.7-0 (2019-01-04),
@@ -106,7 +108,8 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 
 ### Features:
  * phansi: new function for Simes (1986) test applied to panels for panel unit
-   root testing, as suggested in Hanck (2013).
+   root testing, as suggested in Hanck (2013) [later renamed to phansitest in 
+   plm 2.6].
  * pseriesfy: new function to make each column of a pdata.frame a pseries, see
    `?pseriesfy` for background and useful examples. (Faster version is executed
    if `options("plm.fast" = TRUE)` is set, see `?plm.fast` (then internally

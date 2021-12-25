@@ -177,7 +177,7 @@ purtest(inv ~ 1, data = Grunfeld, index = c("firm", "year"), pmax = 4, test = "m
 \insertAllCited{}
 }
 \seealso{
-\code{\link[=cipstest]{cipstest()}}, \code{\link[=phansi]{phansi()}}
+\code{\link[=cipstest]{cipstest()}}, \code{\link[=phansitest]{phansitest()}}
 }
 \author{
 Yves Croissant and for "Pm", "invnormal", and "logit" Kevin Tappe

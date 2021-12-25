@@ -1,5 +1,5 @@
 
-R version 4.1.1 (2021-08-10) -- "Kick Things"
+R version 4.1.2 (2021-11-01) -- "Bird Hippie"
 Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -15,7 +15,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> # Various run tests for purtest() and phansi()
+> # Various run tests for purtest() and phansitest()
 > 
 > # NB: p-values can differ slightly relative to .Rout.save file due to availability of package 'urca'
 > #     for p-value approximation in individual (A)DF-regressions.
@@ -683,7 +683,7 @@ p-value: 0.004
 > 
 > 
 > ## Simes Test for panels by Hanck
-> phansi(llc)
+> phansitest(llc)
 
         Simes Test as Panel Unit Root Test (Hanck (2013))
 
@@ -695,22 +695,7 @@ Number of individuals: 10
 
 Evaluation:
  H0 rejected (globally)
-> phansi(llc_int)
-
-        Simes Test as Panel Unit Root Test (Hanck (2013))
-
-H0: All individual series have a unit root
-HA: Stationarity for at least some individuals
-
-Alpha: 0.05
-Number of individuals: 10
-
-Evaluation:
- H0 rejected (globally)
-
- Individual H0 rejected for 2 individual(s) (integer id(s)):
-  2, 4
-> phansi(llc_trend)
+> phansitest(llc_int)
 
         Simes Test as Panel Unit Root Test (Hanck (2013))
 
@@ -725,7 +710,7 @@ Evaluation:
 
  Individual H0 rejected for 2 individual(s) (integer id(s)):
   2, 4
-> phansi(purtest(pG$value, test = "Pm",        exo = "intercept", lags = 2, dfcor = TRUE))
+> phansitest(llc_trend)
 
         Simes Test as Panel Unit Root Test (Hanck (2013))
 
@@ -737,7 +722,10 @@ Number of individuals: 10
 
 Evaluation:
  H0 rejected (globally)
-> phansi(purtest(pG$value, test = "invnormal", exo = "intercept", lags = 2, dfcor = TRUE))
+
+ Individual H0 rejected for 2 individual(s) (integer id(s)):
+  2, 4
+> phansitest(purtest(pG$value, test = "Pm",        exo = "intercept", lags = 2, dfcor = TRUE))
 
         Simes Test as Panel Unit Root Test (Hanck (2013))
 
@@ -749,7 +737,19 @@ Number of individuals: 10
 
 Evaluation:
  H0 rejected (globally)
-> phansi(purtest(pG$value, test = "logit",     exo = "intercept", lags = 2, dfcor = TRUE))
+> phansitest(purtest(pG$value, test = "invnormal", exo = "intercept", lags = 2, dfcor = TRUE))
+
+        Simes Test as Panel Unit Root Test (Hanck (2013))
+
+H0: All individual series have a unit root
+HA: Stationarity for at least some individuals
+
+Alpha: 0.05
+Number of individuals: 10
+
+Evaluation:
+ H0 rejected (globally)
+> phansitest(purtest(pG$value, test = "logit",     exo = "intercept", lags = 2, dfcor = TRUE))
 
         Simes Test as Panel Unit Root Test (Hanck (2013))
 
@@ -762,7 +762,7 @@ Number of individuals: 10
 Evaluation:
  H0 rejected (globally)
 > 
-> phansi(purtest(inv ~ 1, data = Grunfeld, index = "firm", pmax = 4, test = "madwu"))
+> phansitest(purtest(inv ~ 1, data = Grunfeld, index = "firm", pmax = 4, test = "madwu"))
 
         Simes Test as Panel Unit Root Test (Hanck (2013))
 
@@ -775,7 +775,7 @@ Number of individuals: 10
 Evaluation:
  H0 rejected (globally)
 > 
-> phansi(b_unbal3)
+> phansitest(b_unbal3)
 
         Simes Test as Panel Unit Root Test (Hanck (2013))
 
@@ -790,7 +790,7 @@ Evaluation:
 
  Individual H0 rejected for 2 individual(s) (integer id(s)):
   2, 4
-> phansi(b_ztbar)
+> phansitest(b_ztbar)
 
         Simes Test as Panel Unit Root Test (Hanck (2013))
 
@@ -805,7 +805,7 @@ Evaluation:
 
  Individual H0 rejected for 2 individual(s) (integer id(s)):
   2, 4
-> phansi(b_ztbar_unbal)
+> phansitest(b_ztbar_unbal)
 
         Simes Test as Panel Unit Root Test (Hanck (2013))
 
@@ -820,7 +820,7 @@ Evaluation:
 
  Individual H0 rejected for 2 individual(s) (integer id(s)):
   2, 4
-> phansi(b_ztbar_unbal2)
+> phansitest(b_ztbar_unbal2)
 
         Simes Test as Panel Unit Root Test (Hanck (2013))
 
@@ -832,7 +832,7 @@ Number of individuals: 10
 
 Evaluation:
  H0 rejected (globally)
-> phansi(b_lag2_ztbar)
+> phansitest(b_lag2_ztbar)
 
         Simes Test as Panel Unit Root Test (Hanck (2013))
 
@@ -847,4 +847,4 @@ Evaluation:
 > 
 > proc.time()
    user  system elapsed 
-   1.34    0.21    1.54 
+   7.23    0.95    8.34 

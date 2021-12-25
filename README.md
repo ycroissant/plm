@@ -32,7 +32,7 @@ Non-exhaustive function overview:
   - model specification (`phtest`, `pFtest`, `pooltest`, `plmtest`, `pwaldtest`, `piest`, `aneweytest`, `mtest`, `sargan`),
   - serial correlation (`pbgtest`, `pwfdtest`, `pbnftest`, `pdwtest`, `pwartest`, `pbsytest`, `pbltest`), 
   - cross-sectional dependence (`pcdtest`),
-  - panel unit root (`purtest`, `cipstest`, `phansi`),
+  - panel unit root (`purtest`, `cipstest`, `phansitest`),
   - panel Granger (non-)causality (`pgrangertest`).
   
 - Robust covariance matrix estimators (incl. various weighting schemes

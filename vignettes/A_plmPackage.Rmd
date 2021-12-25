@@ -1698,17 +1698,16 @@ through `nblag`.].
 
 ### Overview of functions for panel unit root testing
 
-
 Below, first an overview is provided which tests are implemented per functions. 
 A theoretical treatment is given for a few of those tests later on. The package 
 `plm` offers several panel unit root tests contained in three functions: 
 
 - `purtest` (Levin-Lin-Chu test, IPS test, several Fisher-type tests, Hadri's test),
 - `cipstest` (cross-sectionally augmented IPS test), and 
-- `phansi` (Simes' test).
+- `phansitest` (Simes' test).
 
 While `purtest` implements various tests which can be selected via its `test` 
-argument, `cipstest` and `phansi` are functions for a specific test each.
+argument, `cipstest` and `phansitest` are functions for a specific test each.
 
 Function `purtest` offers the following tests by setting argument `test` to:
 
@@ -1747,10 +1746,10 @@ Function `cipstest` implements Pesaran's (@pes07) cross-sectionally
 augmented version of the Im-Pesaran-Shin panel unit root test and is a
 so-called second-generation panel unit root test.
 
-Function `phansi` implements the idea of @HANCK:13 to apply Simes' testing
+Function `phansitest` implements the idea of @HANCK:13 to apply Simes' testing
 approach for intersection of individual hypothesis tests to panel unit root
 testing, see below for a more thorough treatment
-of [Simes’ approach for intersecting hypotheses](#phansi).
+of [Simes’ approach for intersecting hypotheses](#phansitest).
 
 
 ### Preliminary results
@@ -1886,7 +1885,7 @@ purtest(lprice, test = "ips", lags = 2, exo = "trend")
 
 
 
-### Simes' approach: intersecting hypotheses{#phansi}
+### Simes' approach: intersecting hypotheses{#phansitest}
 
 A different approach to panel unit root testing can be drawn from the general 
 Simes' test for intersection of individual hypothesis tests [@SIMES:86].
@@ -1900,7 +1899,7 @@ the individual H0 (unit root present for individual series) is rejected/is not
 rejected and requires a pre-specified significance level. Further, the test is
 robust versus general patterns of cross-sectional dependence.
 
-The function `phansi` for this test takes as main input object either a numeric
+The function `phansitest` for this test takes as main input object either a numeric
 containing p-values of individual tests or a `"purtest"` object as produced by
 function `purtest` which holds a suitable pre-computed panel unit root test
 (one that produces p-values per individual series). The significance level is
@@ -1913,7 +1912,7 @@ replicates @HANCK:13, table 11 (left side), who applied some panel unit root tes
 for a Purchasing Power Parity analysis per country (individual H0 hypotheses per
 series) to get the individual p-values and then used Simes' approach for testing
 the global (intersecting) hypothesis for the whole panel.
-```{r phansi1}
+```{r phansitest1}
 ### input is numeric (p-values), replicates Hanck (2013), Table 11 (left side)
 pvals <- c(0.0001,0.0001,0.0001,0.0001,0.0001,0.0001,0.0050,0.0050,0.0050,
            0.0050,0.0175,0.0175,0.0200,0.0250,0.0400,0.0500,0.0575,0.2375,0.2475)
@@ -1921,16 +1920,16 @@ countries <- c("Argentina","Sweden","Norway","Mexico","Italy","Finland","France"
               "Germany","Belgium","U.K.","Brazil","Australia","Netherlands",
               "Portugal","Canada", "Spain","Denmark","Switzerland","Japan")
 names(pvals) <- countries
-h <- phansi(pvals)
+h <- phansitest(pvals)
 print(h)
 h$rejected # logical indicating the individuals with rejected individual H0
 ```
 
-```{r phansi2, results='hide'}
+```{r phansitest2, results='hide'}
 ### input is a (suitable) purtest object / different example
 y <- data.frame(split(Grunfeld$inv, Grunfeld$firm))
 obj <- purtest(y, pmax = 4, exo = "intercept", test = "madwu")
-phansi(obj, alpha = 0.06) # test with significance level set to 6 %
+phansitest(obj, alpha = 0.06) # test with significance level set to 6 %
 ```
 
 

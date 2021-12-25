@@ -1,4 +1,4 @@
-# Various run tests for purtest() and phansi()
+# Various run tests for purtest() and phansitest()
 
 # NB: p-values can differ slightly relative to .Rout.save file due to availability of package 'urca'
 #     for p-value approximation in individual (A)DF-regressions.
@@ -137,17 +137,17 @@ summary(llc_trend)
 
 
 ## Simes Test for panels by Hanck
-phansi(llc)
-phansi(llc_int)
-phansi(llc_trend)
-phansi(purtest(pG$value, test = "Pm",        exo = "intercept", lags = 2, dfcor = TRUE))
-phansi(purtest(pG$value, test = "invnormal", exo = "intercept", lags = 2, dfcor = TRUE))
-phansi(purtest(pG$value, test = "logit",     exo = "intercept", lags = 2, dfcor = TRUE))
+phansitest(llc)
+phansitest(llc_int)
+phansitest(llc_trend)
+phansitest(purtest(pG$value, test = "Pm",        exo = "intercept", lags = 2, dfcor = TRUE))
+phansitest(purtest(pG$value, test = "invnormal", exo = "intercept", lags = 2, dfcor = TRUE))
+phansitest(purtest(pG$value, test = "logit",     exo = "intercept", lags = 2, dfcor = TRUE))
 
-phansi(purtest(inv ~ 1, data = Grunfeld, index = "firm", pmax = 4, test = "madwu"))
+phansitest(purtest(inv ~ 1, data = Grunfeld, index = "firm", pmax = 4, test = "madwu"))
 
-phansi(b_unbal3)
-phansi(b_ztbar)
-phansi(b_ztbar_unbal)
-phansi(b_ztbar_unbal2)
-phansi(b_lag2_ztbar)
+phansitest(b_unbal3)
+phansitest(b_ztbar)
+phansitest(b_ztbar_unbal)
+phansitest(b_ztbar_unbal2)
+phansitest(b_lag2_ztbar)

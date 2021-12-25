@@ -729,7 +729,7 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
 #' @export
 #' @importFrom stats setNames
 #' @author Yves Croissant and for "Pm", "invnormal", and "logit" Kevin Tappe
-#' @seealso [cipstest()], [phansi()]
+#' @seealso [cipstest()], [phansitest()]
 
 #' @references
 #' \insertAllCited{}
@@ -1115,7 +1115,7 @@ print.summary.purtest <- function(x, ...){
 #' alpha via argument `alpha` (defaulting to `0.05`), i.e., it controls for the
 #' multiplicity in testing.
 #' 
-#' The function `phansi` takes as main input `object` either a plain numeric
+#' The function `phansitest` takes as main input `object` either a plain numeric
 #' containing p-values of individual tests or a `purtest` object which holds
 #' a suitable pre-computed panel unit root test (one that produces p-values per
 #' individual series).
@@ -1125,18 +1125,20 @@ print.summary.purtest <- function(x, ...){
 #' 
 #' The associated `print` method prints a verbal evaluation.
 #' 
-#' @aliases phansi
+#' @aliases phansitest
 #' @param object either a numeric containing p-values of individual unit root 
 #' test results (does not need to be sorted) or a suitable `purtest` object
 #' (as produced by `purtest()` for a test which gives p-values of the individuals
 #' (Hadri's test in `purtest` is not suitable)),
 #' @param alpha numeric, the pre-specified significance level (defaults to `0.05`),
-#' @param x an object of class `c("phansi", "list")` as produced by `phansi` to be printed,
+#' @param x an object of class `c("phansitest", "list")` as produced by 
+#'          `phansitest` to be printed,
 #' @param cutoff integer, cutoff value for printing of enumeration of individuals with
 #' rejected individual H0, for print method only,
 #' @param \dots further arguments (currently not used).
 #' 
-#' @return For `phansi`, an object of class `c("phansi", "list")` which is a list with the elements:
+#' @return For `phansitest`, an object of class `c("phansitest", "list")` which i
+#' s a list with the elements:
 #' - `id`: integer, the identifier of the individual (integer sequence referring to
 #' position in input),
 #' - `name`: character, name of the input's individual (if it has a name,
@@ -1173,7 +1175,7 @@ print.summary.purtest <- function(x, ...){
 #'               "Portugal","Canada", "Spain","Denmark","Switzerland","Japan")
 #' names(pvals) <- countries
 #' 
-#' h <- phansi(pvals)
+#' h <- phansitest(pvals)
 #' print(h)              # (explicitly) prints test's evaluation
 #' print(h, cutoff = 3L) # print only first 3 rejected ids 
 #' h$rejected # logical indicating the individuals with rejected individual H0
@@ -1184,9 +1186,9 @@ print.summary.purtest <- function(x, ...){
 #' y <- data.frame(split(Grunfeld$inv, Grunfeld$firm))
 #' obj <- purtest(y, pmax = 4, exo = "intercept", test = "madwu")
 #' 
-#' phansi(obj)
+#' phansitest(obj)
 #' 
-phansi <- function(object, alpha = 0.05) {
+phansitest <- function(object, alpha = 0.05) {
   
   is.purtest <- if(inherits(object, "purtest")) TRUE else FALSE
   if(!is.purtest) {
@@ -1199,7 +1201,7 @@ phansi <- function(object, alpha = 0.05) {
     }
   } else {
     # purtest object
-    if(object$args$test == "hadri") stop("phansi() [Hanck/Simes' test] not possible for purtest objects based on Hadri's test")
+    if(object$args$test == "hadri") stop("phansitest() [Hanck/Simes' test] not possible for purtest objects based on Hadri's test")
     p <- vapply(object$idres, function(x) x[["p.trho"]], FUN.VALUE = 0.0, USE.NAMES = FALSE)
     n <- length(p)
   }
@@ -1218,13 +1220,20 @@ phansi <- function(object, alpha = 0.05) {
                         rejected     = rejected.ind,
                         rejected.no  = rejected.ind.no,
                         alpha        = alpha),
-                   class = c("phansi", "list"))
+                   class = c("phansitest", "list"))
   return(res)
 }
 
-#' @rdname phansi
+phansi <- function(object, alpha = 0.05) {
+  .Deprecated(new = "phansitest", msg = "function 'phansi' renamed to 'phansitest'. Change your code to use 'phansitest'.",
+              old = "phansi")
+  phansitest(object, alpha = alpha)
+}
+
+
+#' @rdname phansitest
 #' @export
-print.phansi <- function(x, cutoff = 10L, ...) {
+print.phansitest <- function(x, cutoff = 10L, ...) {
   if(round(cutoff) != cutoff) stop("Argument 'cutoff' has to be an integer")
   id         <- x$id
   alpha      <- x$alpha
