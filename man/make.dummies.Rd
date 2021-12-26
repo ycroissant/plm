@@ -2,13 +2,23 @@
 % Please edit documentation in R/tool_misc.R
 \name{make.dummies}
 \alias{make.dummies}
+\alias{make.dummies.default}
+\alias{make.dummies.data.frame}
+\alias{make.dummies.pdata.frame}
 \title{Create a Dummy Matrix}
 \usage{
-make.dummies(x, base = 1L, base.add = TRUE)
+make.dummies(x, ...)
+
+\method{make.dummies}{default}(x, base = 1L, base.add = TRUE)
+
+\method{make.dummies}{data.frame}(x, col, base = 1L, base.add = TRUE)
+
+\method{make.dummies}{pdata.frame}(x, col, base = 1L, base.add = TRUE)
 }
 \arguments{
 \item{x}{a factor from which the dummies are created (x is coerced to
-factor if not yet a factor)}
+factor if not yet a factor) for the default method or a data
+data frame/pdata.frame for the respective method.}
 
 \item{base}{integer or character, specifies the reference level (base), if
 integer it refers to position in \code{levels(x)}, if character the name
@@ -17,11 +27,18 @@ of a level,}
 \item{base.add}{logical, if \code{TRUE} the reference level (base) is added
 to the return value as first column, if \code{FALSE} the reference
 level is not included.}
+
+\item{col}{character (only for the data frame and pdata.frame methods), to
+specify the column which is used to derive the dummies from.}
 }
 \value{
-A matrix containing the contrast-coded dummies, dimensions are n x n
-where \code{n = length(levels(x))} if argument  \code{base.add = TRUE} or
-\code{n = length(levels(x)-1)} if \code{base.add = FALSE}.
+For the default method, a matrix containing the contrast-coded dummies,
+dimensions are n x n where \code{n = length(levels(x))} if argument
+\code{base.add = TRUE} or \code{n = length(levels(x)-1)} if \code{base.add = FALSE};
+for the data frame and pdata.frame method, a data frame or pdata.frame,
+respectively, with the dummies appropriately merged to the input as
+last columns (column names are derived from the name of the column
+used to create the dummies and its levels).
 }
 \description{
 Contrast-coded dummy matrix created from a factor
@@ -35,31 +52,40 @@ estimation function handle the creation of the dummies.
 This function is merely a convenience wrapper around \code{stats::contr.treatment}
 to ease the dummy matrix creation process shall the dummy matrix be explicitly
 required. See Examples for a use case in LSDV (least squares dummy variable)
-model estimation and how to merge the dummy matrix to a data.frame.
+model estimation.
+
+The default method uses a factor as main input (or something coercible to a
+factor) to derive the dummmy matrix from. Methods for data frame and pdata.frame
+are available as well and have the additional argument \code{col} to specify the
+the column from which the dummies are created; both methods merge the dummy
+matrix to the data frame/pdata.frame yielding a ready-to-use data set.
+See also Examples for use cases.
 }
 \examples{
 library(plm)
 data("Grunfeld", package = "plm")
 Grunfeld <- Grunfeld[1:100, ] # reduce data set (down to 5 firms)
-firm.dum <- make.dummies(Grunfeld$firm) # gives 5 x 5 matrix
 
-# add a column named "firm" to be able to merge to the original data set by
-# a column of the same name
-firm.dum <- data.frame(cbind("firm" = rownames(firm.dum), data.frame(firm.dum)))
-Grunfeld <- merge(Grunfeld, firm.dum)
-head(Grunfeld) # NB: merge() sorts rows and re-orders columns
-# better to create the pdata.frame post hoc:
-pGrun <- pdata.frame(Grunfeld, index = c("firm", "year"))
+## default method
+make.dummies(Grunfeld$firm) # gives 5 x 5 matrix (5 firms, base level incl.)
+make.dummies(Grunfeld$firm, base = 2L, base.add = FALSE) # gives 5 x 4 matrix
+
+## data frame method
+Grun.dummies <- make.dummies(Grunfeld, col = "firm")
+
+## pdata.frame method
+pGrun <- pdata.frame(Grunfeld)
+pGrun.dummies <- make.dummies(pGrun, col = "firm")
 
 ## Model estimation:
 ## estimate within model (individual/firm effects) and LSDV models (firm dummies)
 # within model:
 plm(inv ~ value + capital, data = pGrun, model = "within")
 
-# LSDV with user-created dummies by make.dummies:
-form_dummies <- paste0("X", c(1:5), collapse = "+")
+## LSDV with user-created dummies by make.dummies:
+form_dummies <- paste0("firm", c(1:5), collapse = "+")
 form_dummies <- formula(paste0("inv ~ value + capital + ", form_dummies))
-plm(form_dummies, data = pGrun, model = "pooling") # last dummy (X10) is dropped
+plm(form_dummies, data = pGrun.dummies, model = "pooling") # last dummy is dropped
 
 # LSDV via factor(year) -> let estimation function generate dummies:
 plm(inv ~ value + capital + factor(firm), data = pGrun, model = "pooling")
