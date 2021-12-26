@@ -683,7 +683,8 @@ print.pvar <- function(x, ...){
 #'                 to the return value as first column, if `FALSE` the reference
 #'                 level is not included.
 #' @param col character (only for the data frame and pdata.frame methods), to
-#'            specify the column which is used to derive the dummies from.
+#'            specify the column which is used to derive the dummies from,
+#' @param \dots further arguments.
 #'
 #' @return For the default method, a matrix containing the contrast-coded dummies, 
 #'         dimensions are n x n where `n = length(levels(x))` if argument  
@@ -731,7 +732,7 @@ make.dummies <- function(x, ...){
 
 #' @rdname make.dummies
 #' @export
-make.dummies.default <- function(x, base = 1L, base.add = TRUE) {
+make.dummies.default <- function(x, base = 1L, base.add = TRUE, ...) {
   
   stopifnot(is.numeric(base) || is.character(base))
   if(is.numeric(base)) if(round(base) != base) stop("Argument 'ref' specified as numeric but is not integer")
@@ -759,7 +760,7 @@ make.dummies.default <- function(x, base = 1L, base.add = TRUE) {
 
 #' @rdname make.dummies
 #' @export
-make.dummies.data.frame <- function(x, col, base = 1L, base.add = TRUE) {
+make.dummies.data.frame <- function(x, col, base = 1L, base.add = TRUE, ...) {
 
   stopifnot(inherits(col, "character"))
   dum.mat <- make.dummies.default(x[ , col], base, base.add) # dummy matrix
@@ -771,7 +772,7 @@ make.dummies.data.frame <- function(x, col, base = 1L, base.add = TRUE) {
 
 #' @rdname make.dummies
 #' @export
-make.dummies.pdata.frame <- function(x, col, base = 1L, base.add = TRUE) {
+make.dummies.pdata.frame <- function(x, col, base = 1L, base.add = TRUE, ...) {
   
   stopifnot(inherits(col, "character"))
 #  idx.pos <- pos.index(x)

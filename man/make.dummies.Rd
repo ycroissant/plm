@@ -9,16 +9,18 @@
 \usage{
 make.dummies(x, ...)
 
-\method{make.dummies}{default}(x, base = 1L, base.add = TRUE)
+\method{make.dummies}{default}(x, base = 1L, base.add = TRUE, ...)
 
-\method{make.dummies}{data.frame}(x, col, base = 1L, base.add = TRUE)
+\method{make.dummies}{data.frame}(x, col, base = 1L, base.add = TRUE, ...)
 
-\method{make.dummies}{pdata.frame}(x, col, base = 1L, base.add = TRUE)
+\method{make.dummies}{pdata.frame}(x, col, base = 1L, base.add = TRUE, ...)
 }
 \arguments{
 \item{x}{a factor from which the dummies are created (x is coerced to
 factor if not yet a factor) for the default method or a data
 data frame/pdata.frame for the respective method.}
+
+\item{\dots}{further arguments.}
 
 \item{base}{integer or character, specifies the reference level (base), if
 integer it refers to position in \code{levels(x)}, if character the name
@@ -29,7 +31,7 @@ to the return value as first column, if \code{FALSE} the reference
 level is not included.}
 
 \item{col}{character (only for the data frame and pdata.frame methods), to
-specify the column which is used to derive the dummies from.}
+specify the column which is used to derive the dummies from,}
 }
 \value{
 For the default method, a matrix containing the contrast-coded dummies,
