@@ -32,8 +32,8 @@ piest(formula, data, subset, na.action, index = NULL, robust = TRUE, ...)
 
 \item{index}{the indexes,}
 
-\item{robust}{if \code{FALSE}, the error as assumed to be spherical,
-otherwise, a robust estimation of the covariance matrix is computed,}
+\item{robust}{logical, if \code{FALSE}, the error is assumed to be spherical,
+if \code{TRUE}, a robust estimation of the covariance matrix is computed,}
 
 \item{\dots}{further arguments.}
 

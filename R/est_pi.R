@@ -66,7 +66,7 @@ aneweytest <- function(formula, data, subset, na.action, index = NULL,  ...){
     .resid <- split(resid(ht), time)
   
     # extract the covariates, and isolate time-invariant covariates
-    X <- model.matrix(data, model = "pooling", rhs = 1, lhs = 1)[ , - 1, drop = FALSE]
+    X <- model.matrix(data, model = "pooling", rhs = 1, lhs = 1)[ , -1, drop = FALSE]
     cst <- attr(model.matrix(data, model = "within", rhs = 1, lhs = 1), "constant")
 
     # get constant columns and remove the intercept
@@ -74,11 +74,10 @@ aneweytest <- function(formula, data, subset, na.action, index = NULL,  ...){
     if (length(cst) > 0L){
         vr <- colnames(X)[!(colnames(X) %in% cst)]
         Z <- X[ , cst, drop = FALSE]
-        X <- X[ , vr, drop = FALSE]
+        X <- X[ , vr,  drop = FALSE]
         Kz <- ncol(Z)
         namesZ <- colnames(Z)
-    }
-    else{
+    } else {
         Z <- NULL
         Kz <- 0
         namesZ <- NULL
@@ -109,9 +108,8 @@ aneweytest <- function(formula, data, subset, na.action, index = NULL,  ...){
     #   was:   LMS <- lapply(.resid, function(x) lm(x ~ XX - 1))
     LMS <- lapply(.resid, function(x) lm.fit(XX, x))
     
-    
-    YTOT <- vapply(.resid, function(x) crossprod(x), FUN.VALUE = 0.0, USE.NAMES = FALSE)
-    DEV <- vapply(LMS, function(x) crossprod(x$residuals), FUN.VALUE = 0.0, USE.NAMES = FALSE)
+    YTOT <- vapply(.resid, function(x) crossprod(x),           FUN.VALUE = 0.0, USE.NAMES = FALSE)
+    DEV  <- vapply(LMS,    function(x) crossprod(x$residuals), FUN.VALUE = 0.0, USE.NAMES = FALSE)
     
     stat <- c("chisq" = sum(1 - DEV / YTOT) * (n - ncol(XX)))
     df <- c("df" = (T ^ 2 - T - 1) * Kx)
@@ -142,8 +140,8 @@ aneweytest <- function(formula, data, subset, na.action, index = NULL,  ...){
 #' @param subset see [lm()],
 #' @param na.action see [lm()],
 #' @param index the indexes,
-#' @param robust if `FALSE`, the error as assumed to be spherical,
-#' otherwise, a robust estimation of the covariance matrix is computed,
+#' @param robust logical, if `FALSE`, the error is assumed to be spherical,
+#' if `TRUE`, a robust estimation of the covariance matrix is computed,
 #' @param \dots further arguments.
 #' @return An object of class `"piest"`.
 #' @export
@@ -174,13 +172,13 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
     formula <- as.Formula(formula)
     mf$formula <- formula(formula, rhs = 1)
     index <- index(data)
-    id <- index[[1L]]
+    id   <- index[[1L]]
     time <- index[[2L]]
     pdim <- pdim(data)
     balanced <- pdim$balanced
-    T <- pdim$nT$T
-    n <- pdim$nT$n
-    N <- pdim$nT$N
+    T  <- pdim$nT$T
+    n  <- pdim$nT$n
+    N  <- pdim$nT$N
     Ti <- pdim$Tint$Ti
 
     if(!balanced) stop("'piest' not implemented for unbalanced data")
@@ -193,6 +191,7 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
     # extract the covariates, and isolate time-invariant covariates
     X <- model.matrix(data, model = "pooling", rhs = 1, lhs = 1)[ , -1, drop = FALSE]
     cst <- attr(model.matrix(data, model = "within", rhs = 1, lhs = 1), "constant")
+    
     # get constant columns and remove the intercept
     if (length(cst) > 0L) cst <- cst[- match("(Intercept)", cst)]
     if (length(cst) > 0L){
@@ -201,8 +200,7 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
         X <- X[ , vr, drop = FALSE]
         Kz <- ncol(Z)
         namesZ <- colnames(Z)
-    }
-    else{
+    } else {
         Z <- NULL
         Kz <- 0
         namesZ <- NULL
@@ -241,14 +239,14 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
     .resid <- sapply(LMS, resid)
     # extract the pi vector of unconstrained estimates
     pi <- unlist(lapply(LMS, coef), use.names = FALSE)
-    if (robust){
+    
+    if(robust) {
         Omega <- lapply(seq_len(n),
                         function(i)
                             tcrossprod(.resid[i, ]) %x%
                             (Sxxm1 %*% tcrossprod(XX[i, ]) %*% Sxxm1))
-        Omega <- Reduce("+", Omega) / n;
-    }
-    else{
+        Omega <- Reduce("+", Omega) / n
+    } else {
         Omega <- (crossprod(.resid) / n) %x% Sxxm1
     }
     
@@ -265,35 +263,37 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
     for (i in 1:(Kx * T)){
         R[((1:T) - 1) * (Kx * T + Kz) + i , Kx + Kz + i] <- 1
     }
+    
     solve_Omega <- solve(Omega)
     A <- solve(t(R) %*% solve_Omega %*% R)
     .coef <- as.numeric(A %*% t(R) %*% solve_Omega %*% as.numeric(pi))
     #  .coef <- as.numeric(solve(t(R) %*% R) %*% t(R) %*% as.numeric(pi))
-    if (Kz > 0) namescoef <- c(namesX, namesZ, colnames(XX)[- c(ncol(XX) - 0:(Kz-1))])
-    else namescoef <- c(namesX, namesZ, colnames(XX))
+    namescoef <- if(Kz > 0)  c(namesX, namesZ, colnames(XX)[- c(ncol(XX) - 0:(Kz-1))])
+                    else     c(namesX, namesZ, colnames(XX))
     names(.coef) <- rownames(A) <- colnames(A) <- namescoef
     resb <- as.numeric(R %*% .coef) - as.numeric(pi)
     piconst <- matrix(R %*% .coef, ncol = T)
     OOmega <- Omega                                       ## TODO: OOmega is never used
     .resid <- matrix(unlist(Y, use.names = FALSE), ncol = length(Y)) - XX %*% piconst
     
-    if(TRUE){                                             ## TODO: this is always TRUE...?!
-        if (robust){                                      ## and Omega is calc. again, with a
+    if(TRUE){                                             ## TODO: this is always TRUE...!
+        if(robust) {                                      ## and Omega is calc. again, with a
                                                           ## new .resid input but with same lapply-construct
             Omega <- lapply(seq_len(n),
                             function(i)
                                 tcrossprod(.resid[i, ]) %x%
                                 (Sxxm1 %*% tcrossprod(XX[i, ]) %*% Sxxm1))
-            Omega <- Reduce("+", Omega) / n;
-        }
-        else{
+            Omega <- Reduce("+", Omega) / n
+        } else {
             Omega <- (crossprod(.resid) / n) %x% Sxxm1
         }
     }
+    
     A <- solve(t(R) %*% solve(Omega) %*% R)
     stat <- c("chisq" = n * resb %*% solve(Omega) %*% resb)
     df <- c("df" = Kx * (T ^ 2 - T - 1))    ## TODO: df is overwritten in next line...?!
     df <- c("df" = length(pi) - length(.coef))
+    
     pitest <- list(statistic   = stat,
                    parameter   = df,
                    method      = "Chamberlain's pi test",
