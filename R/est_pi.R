@@ -89,7 +89,7 @@ aneweytest <- function(formula, data, subset, na.action, index = NULL,  ...){
     attr(X, "index") <- index
     X <- Within(X, effect ="time")
     X <- lapply(as.list(periods), function(x) X[time == x, , drop = FALSE])
-    # put columnnames for split matrices in X:
+    # put column names for split matrices in X:
     for (i in 1:(length(periods))){
       colnames(X[[i]]) <- paste(colnames(X[[i]]), periods[i], sep = ".")
     }
@@ -103,8 +103,8 @@ aneweytest <- function(formula, data, subset, na.action, index = NULL,  ...){
 
     # compute the unconstrained estimates
     # NA-freeness guaranteed by model frame construction, so can use lm.fit
-    # (non-collinearity is not cared for but code error if collinearity is 
-    # present anyway a bit later)
+    # (non-collinearity is not catered for but code errors anywayif collinearity 
+    # is present a bit later)
     #   was:   LMS <- lapply(.resid, function(x) lm(x ~ XX - 1))
     LMS <- lapply(.resid, function(x) lm.fit(XX, x))
     
