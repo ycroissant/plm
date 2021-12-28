@@ -667,7 +667,7 @@ print.pvar <- function(x, ...){
 #' model estimation.
 #' 
 #' The default method uses a factor as main input (or something coercible to a 
-#' factor) to derive the dummmy matrix from. Methods for data frame and pdata.frame 
+#' factor) to derive the dummy matrix from. Methods for data frame and pdata.frame 
 #' are available as well and have the additional argument `col` to specify the
 #' the column from which the dummies are created; both methods merge the dummy 
 #' matrix to the data frame/pdata.frame yielding a ready-to-use data set.

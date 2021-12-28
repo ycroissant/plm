@@ -448,7 +448,7 @@ plm()): Between, between, Sum, Within.
     Thus, propagation to a higher or lower data type works correctly when 
     performed on pseries, e.g., c("pseries", "integer") is propagated
     to c("pseries", "numeric") if an operation returns a decimal.
-* Vingettes: translated package's original vignette to Rmd format and renamed
+* Vignettes: translated package's original vignette to Rmd format and renamed
     to plmPackage.Rmd; added vignette plmFunction.Rmd for further explanation
     about the estimation of error components models with the plm function;
     in plmPackage.Rmd fixed typo in formula for cross-sectional dependence
