@@ -973,7 +973,7 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
     ## drop any linear dependent columns (corresponding to aliased coefficients)
     ## from model matrix X
     ##  na.rm = TRUE because currently, RE tw unbalanced models set aliased simply to NA
-    if (!is.null(x$aliased) && any(x$aliased, na.rm = TRUE)) demX <- demX[, !x$aliased, drop = FALSE]
+    if (!is.null(x$aliased) && any(x$aliased, na.rm = TRUE)) demX <- demX[ , !x$aliased, drop = FALSE]
     
     ## control: IV or not (two- or one-part formula)
     if(length(formula(x))[2L] > 1L) {

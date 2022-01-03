@@ -144,7 +144,7 @@ starX <- function(formula, data, model, rhs = 1, effect){
 #' \item{weights}{(only for weighted estimations) weights as
 #' specified,}
 #' \item{df.residual}{degrees of freedom of the residuals,}
-#' \item{formula}{an object of class `"pFormula"` describing the model,}
+#' \item{formula}{an object of class `"Formula"` describing the model,}
 #' \item{model}{the model frame as a `"pdata.frame"` containing the
 #' variables used for estimation: the response is in first column followed by
 #' the other variables, the individual and time indexes are in the 'index'
@@ -573,10 +573,10 @@ tss.default <- function(x){
 }
 
 tss.plm <- function(x, model = NULL){
-    if (is.null(model)) model <- describe(x, "model")
+    if(is.null(model)) model <- describe(x, "model")
     effect <- describe(x, "effect")
-    if (model == "ht") model <- "pooling"
-    if (model == "random") theta <- x$ercomp$theta else theta <- NULL
+    if(model == "ht") model <- "pooling"
+    theta <- if(model == "random") x$ercomp$theta else NULL
     tss(pmodel.response(x, model = model, effect = effect, theta = theta))
 }
 

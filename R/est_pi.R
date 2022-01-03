@@ -64,8 +64,8 @@ aneweytest <- function(formula, data, subset, na.action, index = NULL,  ...){
     ht <- eval(ht, parent.frame())
     
     .resid <- split(resid(ht), time)
-  
-    # extract the covariates, and isolate time-invariant covariates
+
+    # extract the covariates (no intercept), and isolate time-invariant covariates
     X <- model.matrix(data, model = "pooling", rhs = 1, lhs = 1)[ , -1, drop = FALSE]
     cst <- attr(model.matrix(data, model = "within", rhs = 1, lhs = 1), "constant")
 

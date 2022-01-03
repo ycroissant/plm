@@ -219,7 +219,7 @@ model.matrix.pdata.frame <- function(object,
 #' 
 #' @aliases pmodel.response
 #' @param object an object of class `"plm"`, or a formula of
-#'     class `"pFormula"`,
+#'     class `"Formula"`,
 #' @param data a `data.frame`
 #' @param \dots further arguments.
 #' @return A pseries except if model responses' of a `"between"`

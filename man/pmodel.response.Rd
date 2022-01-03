@@ -17,7 +17,7 @@ pmodel.response(object, ...)
 }
 \arguments{
 \item{object}{an object of class \code{"plm"}, or a formula of
-class \code{"pFormula"},}
+class \code{"Formula"},}
 
 \item{\dots}{further arguments.}
 

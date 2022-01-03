@@ -172,7 +172,7 @@ of the (quasi-)demeaned model),}
 \item{weights}{(only for weighted estimations) weights as
 specified,}
 \item{df.residual}{degrees of freedom of the residuals,}
-\item{formula}{an object of class \code{"pFormula"} describing the model,}
+\item{formula}{an object of class \code{"Formula"} describing the model,}
 \item{model}{the model frame as a \code{"pdata.frame"} containing the
 variables used for estimation: the response is in first column followed by
 the other variables, the individual and time indexes are in the 'index'
