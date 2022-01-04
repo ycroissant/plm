@@ -74,7 +74,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
   Checks moaned about neglectable small numerical differences vs. (at times) platform-specific
   reference output (`.Rout.save` files).
   Moved almost all test files to directory `inst/tests` so they are not run on CRAN.
-  Tests can be run manually and by `R CMD check --test-dir=inst/tests plm_VERSION.tar.gz.`
+  Tests can be run manually and by `R CMD check --test-dir=inst/tests plm_VERSION.tar.gz`.
 
 ### Admin:
 * Source code repository for development is now on GitHub <https://github.com/ycroissant/plm>,
