@@ -90,8 +90,7 @@ pcce <- function (formula, data, subset, na.action,
                    #residuals = c("defactored", "standard"),
                   index = NULL, trend = FALSE, ...) {
   
-  ## Create a Formula object if necessary (from plm.R)
-#  if (!inherits(formula, "pFormula")) formula <- pFormula(formula)
+  ## Create a Formula object if necessary (from plm)
   if (!inherits(formula, "Formula")) formula <- as.Formula(formula)
 
   ## same as pggls but for effect, fixed at "individual" for compatibility

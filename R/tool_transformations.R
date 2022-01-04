@@ -985,7 +985,7 @@ diffr.pseries <- function(x, lag = 1L, ...) {
     return(res)
 }
 
-## pdiff is (only) used in model.matrix.pFormula to calculate the
+## pdiff is (only) used in model.matrix to calculate the
 ## model.matrix for FD models, works for effect = "individual" only,
 ## see model.matrix on how to call pdiff. Result is in order (id,
 ## time) for both effects

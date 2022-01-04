@@ -340,7 +340,7 @@ plm <- function(formula, data, subset, weights, na.action,
           return(ht)
       }
     
-    # check whether data and formula are pdata.frame and pFormula and if not
+    # check whether data and formula are pdata.frame and Formula and if not
     # coerce them
     orig_rownames <- row.names(data)
 
@@ -380,7 +380,7 @@ plm <- function(formula, data, subset, weights, na.action,
         return(data)
     }
 
-    # note that the model.frame has as attributes the pFormula and the index
+    # note that the model.frame has as attributes the Formula and the index
     # data.frame
     args <- list(model = model, effect = effect,
                  random.method = random.method,

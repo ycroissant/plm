@@ -16,20 +16,14 @@ model.matrix(fe2_unbal,    model = "pooling", effect = "time")
 model.matrix(fe2_unbal,    model = "pooling", effect = "twoways")
 
 # this resulted pre rev. 298 in an error due to the effect argument saved in
-# plm_object$args$effect = "twoways" which gets interpreted by model.matrix.pFormula
+# plm_object$args$effect = "twoways" which gets interpreted by model.matrix
 # and "applied" to model = "pooling"
 model.matrix(fe2_unbal,    model = "pooling")
 pmodel.response(fe2_unbal, model = "pooling")
 
-
-
-# these still result in errors
-
 #### "mean"
-# in model.matrix.pFormula: add something for "mean" cases two-ways balanced/unbalanced?
-# meaningful?
-# model.matrix(fe2_unbal, model = "mean")
-# model.matrix(fe2_bal,   model = "mean")
+model.matrix(fe2_unbal, model = "mean")
+model.matrix(fe2_bal,   model = "mean")
 
-#### "random"
+#### "random" results in error
 # model.matrix(fe2_unbal, model = "random")

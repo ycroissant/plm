@@ -59,7 +59,6 @@ detect.lindep(Cigar.p, suppressPrint = TRUE)
 
 
 ######## alias.plm, alias.pFormula ######
-#MM lmmod1 <- lm(pform, data = Cigar.p)
 lmmod1 <- lm(form, data = Cigar.p)
 
 alias(lmmod1)
@@ -67,9 +66,6 @@ alias(lmmod1)
 #MM plm_fe <- plm(pform, data = Cigar.p, model = "within")
 plm_fe <- plm(form, data = Cigar.p, model = "within")
 #YC plm_re <- plm(pform, data = Cigar.p, model = "random")   # The between model is very special, as there is no intercept and cpi is constant
-#MM plm_re_wal <- plm(pform, data = Cigar.p, model = "random", random.method = "walhus")
-#MM plm_fd <- plm(pform, data = Cigar.p, model = "fd")
-#MM plm_pool <- plm(pform, data = Cigar.p, model = "pooling")
 plm_re_wal <- plm(form, data = Cigar.p, model = "random", random.method = "walhus")
 plm_fd <- plm(form, data = Cigar.p, model = "fd")
 plm_pool <- plm(form, data = Cigar.p, model = "pooling")
