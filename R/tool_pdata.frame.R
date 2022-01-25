@@ -1215,8 +1215,9 @@ index.pdata.frame <- function(x, which = NULL, ...) {
 
 getpsidx <- function(x) {
   ix <- attr(x, "index")
-  if(!is.null(ix) && !is.list(ix)) ix <- .Call(C_get_eptr, ix)
-  ix
+  # if(!is.null(ix) && !is.list(ix)) ix <- .Call(C_get_eptr, ix)
+  # ix
+  switch(typeof(ix), externalptr = .Call(C_get_eptr, ix), ix)
 }
 
 #' @rdname index.plm
