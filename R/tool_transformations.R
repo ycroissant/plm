@@ -128,7 +128,7 @@ print.pseries <- function(x, ...){
 #' @rdname pseries
 #' @export
 as.matrix.pseries <- function(x, idbyrow = TRUE, ...){
-    index <- unclass(attr(x, "index")) # unclass for speed
+    index <- unclass(getpsidx(x)) # unclass for speed
     id <- index[[1L]]
     time <- index[[2L]]
     time.names <- levels(time)
@@ -172,8 +172,8 @@ plot.pseries <- function(x, plot = c("lattice", "superposed"),
         scalefun <- function(x) return(x)}
     
     nx <- as.numeric(x)
-    ind <- attr(x, "index")[[1L]]
-    tind <- attr(x, "index")[[2L]] # possibly as.numeric():
+    ind <- getpsidx(x)[[1L]]
+    tind <- getpsidx(x)[[2L]] # possibly as.numeric():
                                    # activates autom. tick
                                    # but loses time labels
 
@@ -220,7 +220,7 @@ plot.pseries <- function(x, plot = c("lattice", "superposed"),
 #' @export
 summary.pseries <- function(object, ...) {
     if(!inherits(object, c("factor", "logical", "character"))) {
-        index <- unclass(attr(object, "index")) # unclass for speed
+        index <- unclass(getpsidx(object)) # unclass for speed
         id   <- index[[1L]]
         time <- index[[2L]]
         Bid   <- Between(object, na.rm = TRUE)
@@ -302,7 +302,7 @@ myave.default <- function(x, effect, func, ...) {
 
 Tapply.pseries <- function(x, effect = c("individual", "time", "group"), func, ...){
     effect <- match.arg(effect)
-    xindex <- unclass(attr(x, "index")) # unclass for speed
+    xindex <- unclass(getpsidx(x)) # unclass for speed
     checkNA.index(xindex) # index may not contain any NA
     effect <- switch(effect,
                      "individual"= xindex[[1L]],
@@ -311,14 +311,14 @@ Tapply.pseries <- function(x, effect = c("individual", "time", "group"), func, .
                      )
     z <- as.numeric(x)
     z <- Tapply.default(z, effect, func, ...)
-    attr(z, "index") <- attr(x, "index") # insert original index
+    attr(z, "index") <- getpsidx(x) # insert original index
     class(z) <- c("pseries", class(z))
     return(z)
 }
 
 myave.pseries <- function(x, effect = c("individual", "time", "group"), func, ...) {
   effect <- match.arg(effect)
-  xindex <- unclass(attr(x, "index")) # unclass for speed
+  xindex <- unclass(getpsidx(x)) # unclass for speed
   checkNA.index(xindex) # index may not contain any NA
   eff.fac <- switch(effect,
                    "individual"= xindex[[1L]],
@@ -327,7 +327,7 @@ myave.pseries <- function(x, effect = c("individual", "time", "group"), func, ..
   )
   z <- as.numeric(x)
   z <- myave.default(z, eff.fac, func, ...)
-  attr(z, "index") <- attr(x, "index") # insert original index
+  attr(z, "index") <- getpsidx(x) # insert original index
   class(z) <- c("pseries", class(z))
   return(z)
 }
@@ -391,7 +391,7 @@ Sum.matrix <- function(x, effect, ...) {
 # browser()
   
   # if no index attribute, argument 'effect' is assumed to be a factor
-  eff.fac <- if(is.null(xindex <- attr(x, "index"))) {
+  eff.fac <- if(is.null(xindex <- getpsidx(x))) {
     droplevels(effect)
   } else {
     if(!is.character(effect) && length(effect) > 1L)
@@ -447,7 +447,7 @@ Between.matrix <- function(x, effect, ...) {
 # browser()
   
   # if no index attribute, argument 'effect' is assumed to be a factor
-  eff.fac <- if(is.null(xindex <- attr(x, "index"))) {
+  eff.fac <- if(is.null(xindex <- getpsidx(x))) {
     droplevels(effect)
   } else {
     if(!is.character(effect) && length(effect) > 1L)
@@ -497,7 +497,7 @@ between.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
 # browser()
   
     effect <- match.arg(effect)
-    xindex <- unclass(attr(x, "index")) # unclass for speed
+    xindex <- unclass(getpsidx(x)) # unclass for speed
     checkNA.index(xindex) # index may not contain any NA
     eff.fac <- switch(effect,
                      "individual" = xindex[[1L]],
@@ -517,7 +517,7 @@ between.matrix <- function(x, effect, ...) {
 # browser()
   
   # if no index attribute, argument 'effect' is assumed to be a factor
-  eff.fac <- if(is.null(xindex <- attr(x, "index"))) {
+  eff.fac <- if(is.null(xindex <- getpsidx(x))) {
     droplevels(effect)
   } else {
     if(!is.character(effect) && length(effect) > 1L)
@@ -568,7 +568,7 @@ Within.pseries <- function(x, effect = c("individual", "time", "group", "twoways
 # browser()
   
     effect <- match.arg(effect)
-    xindex <- unclass(attr(x, "index")) # unclass for speed
+    xindex <- unclass(getpsidx(x)) # unclass for speed
     checkNA.index(xindex) # index may not contain any NA
     if(effect != "twoways") result <- x - Between(x, effect, ...)
     else {
@@ -576,7 +576,7 @@ Within.pseries <- function(x, effect = c("individual", "time", "group", "twoways
         else {
             time <- xindex[[2L]]
             Dmu <- model.matrix(~ time - 1)
-            attr(Dmu, "index") <- attr(x, "index") # need original index
+            attr(Dmu, "index") <- getpsidx(x) # need original index
             W1   <- Within(x,   "individual", ...)
             WDmu <- Within(Dmu, "individual", ...)
             W2 <- lm.fit(WDmu, x)$fitted.values
@@ -592,7 +592,7 @@ Within.matrix <- function(x, effect, ...) {
 # print("Within.matrix(.baseR)")
 # browser()
   
-    if(is.null(xindex <- unclass(attr(x, "index")))) { # unclass for speed
+    if(is.null(xindex <- unclass(getpsidx(x)))) { # unclass for speed
       # non-index case
         result <- Within.default(x, effect, ...)
         # NB: effect is assumed to be a factor; contrary to the other Within.* 
@@ -610,7 +610,7 @@ Within.matrix <- function(x, effect, ...) {
             else { # unbalanced twoways
                 time <- xindex[[2L]]
                 Dmu <- model.matrix(~ time - 1)
-                attr(Dmu, "index") <- attr(x, "index") # need orig. index here
+                attr(Dmu, "index") <- getpsidx(x) # need orig. index here
                 W1   <- Within(x,   "individual", ...)
                 WDmu <- Within(Dmu, "individual", ...)
                 W2 <- lm.fit(WDmu, x)$fitted.values
@@ -774,7 +774,7 @@ diff.pseries <- function(x, lag = 1L, shift = c("time", "row"), ...) {
 
 ## lagt.pseries lagging taking the time variable into account
 lagt.pseries <- function(x, k = 1L, ...) {
-  index <- unclass(attr(x, "index")) # unclass for speed
+  index <- unclass(getpsidx(x)) # unclass for speed
   id <- index[[1L]]
   time <- index[[2L]]
   
@@ -828,7 +828,7 @@ difft.pseries <- function(x, lag = 1L, ...){
 alagt <- function(x, ak) {
   if(round(ak) != ak) stop("Lagging value 'k' must be whole-numbered (positive, negative or zero)")
   if(ak != 0) {
-    index <- unclass(attr(x, "index")) # unclass for speed
+    index <- unclass(getpsidx(x)) # unclass for speed
     id   <- index[[1L]]
     time <- index[[2L]]
     
@@ -889,7 +889,7 @@ alagt <- function(x, ak) {
 
 ## lagr: lagging row-wise
 lagr.pseries <- function(x, k = 1L, ...) {
-    index <- unclass(attr(x, "index")) # unclass for speed
+    index <- unclass(getpsidx(x)) # unclass for speed
     id <- index[[1L]]
     time <- index[[2L]]
   
@@ -995,7 +995,7 @@ pdiff <- function(x, effect = c("individual", "time"), has.intercept = FALSE){
   # NB: x is assumed to have an index attribute, e.g., a pseries
   #     can check with has.index(x)
     effect <- match.arg(effect)
-    cond <- as.numeric(unclass(attr(x, "index"))[[1L]]) # unclass for speed
+    cond <- as.numeric(unclass(getpsidx(x))[[1L]]) # unclass for speed
     n <- if(is.matrix(x)) nrow(x) else length(x)
     cond <- c(NA, cond[2:n] - cond[1:(n-1)]) # this assumes a certain ordering
     cond[cond != 0] <- NA

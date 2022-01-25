@@ -311,8 +311,8 @@ pcdtest.pseries <- function(x, test = c("cd", "sclm", "bcsclm", "lm", "rho", "ab
     }
   
     ## get indices
-    tind <- as.numeric(attr(x, "index")[[2L]])
-    ind <- as.numeric(attr(x, "index")[[1L]])
+    tind <- as.numeric(getpsidx(x)[[2L]])
+    ind <- as.numeric(getpsidx(x)[[1L]])
 
     ## det. number of groups and df
     unind <- unique(ind)
@@ -359,8 +359,8 @@ pcdres <- function(tres, n, w, form, test) {
     
     ## find length of intersecting pairs
     ## fast method, times down 200x
-    data.res <- data.frame(time = attr(tres, "index")[[2L]],
-                           indiv = attr(tres, "index")[[1L]])
+    data.res <- data.frame(time = getpsidx(tres)[[2L]],
+                           indiv = getpsidx(tres)[[1L]])
     ## tabulate which obs in time for each ind are !na
     presence.tab <- table(data.res)
     ## calculate t.ij
@@ -498,8 +498,8 @@ preshape <- function(x, na.rm = TRUE, ...) {
     ## reshapes pseries,
     ## e.g., of residuals from a panelmodel,
     ## in wide form
-    inames <- names(attr(x, "index"))
-    mres <- reshape(cbind(as.vector(x), attr(x, "index")),
+    inames <- names(getpsidx(x))
+    mres <- reshape(cbind(as.vector(x), getpsidx(x)),
                     direction = "wide",
                     timevar = inames[2L],
                     idvar = inames[1L])
@@ -553,7 +553,7 @@ cortab <- function(x, grouping, groupnames = NULL,
     if(!inherits(x, "pseries")) stop("First argument must be a pseries")
     if(length(x) != length(grouping)) stop("arguments 'x' and 'grouping' must have same length")
 
-    fullind <- as.numeric(attr(x, "index")[ , 1L])
+    fullind <- as.numeric(getpsidx(x)[ , 1L])
     ids <- unique(fullind)
     n <- length(ids)
     regs <- 1:length(unique(grouping))

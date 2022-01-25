@@ -800,7 +800,7 @@ purtest <- function(object, data = NULL, index = NULL,
     exo <- match.arg(exo)
     if(is.null(dim(object))){
       if(inherits(object, "pseries")){
-        id <- unclass(attr(object, "index"))[[1L]]
+        id <- unclass(getpsidx(object))[[1L]]
       }
       else stop("the individual dimension is undefined") # cannot derive individual dimension from a vector if not pseries
     }

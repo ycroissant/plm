@@ -153,7 +153,7 @@ make.pconsecutive.indexes <- function(x, index, balanced = FALSE, ...) {
  
   if (inherits(x, "pdata.frame") || inherits(x, "pseries")) {
     pdataframe_or_pseries <- TRUE
-    index_orig <- attr(x, which = "index")
+    index_orig <- getpsidx(x)
     id_orig    <- index_orig[[1L]] # can leave as factor if it is a factor
     times_orig <- index_orig[[2L]]
     if (!is.numeric(times_orig) && is.factor(times_orig)) times_orig <- as.numeric(levels(times_orig))[as.integer(times_orig)]
@@ -170,7 +170,7 @@ make.pconsecutive.indexes <- function(x, index, balanced = FALSE, ...) {
       # pdata.frame
       has_fancy_rownames <- isTRUE(all.equal(row.names(x), fancy.row.names(index_orig)))
       rownames_mode <- mode(attr(x, "row.names"))
-      rownames_typeof <- typeof(attr(attr(x, "index"), "row.names")) # here we want the typeof of the index
+      rownames_typeof <- typeof(attr(getpsidx(x), "row.names")) # here we want the typeof of the index
 
     }
   }
@@ -342,7 +342,7 @@ make.pconsecutive.pseries <- function(x, balanced = FALSE, ...) {
     NArows_old_index   <- list_ret_make_index[["NArows_former_index"]]
     has_fancy_rownames <- list_ret_make_index[["has_fancy_rownames"]]
     
-    df_old_index <- attr(x, "index")
+    df_old_index <- getpsidx(x)
     class(df_old_index) <- "data.frame"
     
     # strip x to its pure form (no index, no class pseries)
@@ -582,7 +582,7 @@ make.pbalanced.pseries <- function(x, balance.type = c("fill", "shared.times", "
     warning("Use of balanced.type = 'shared' discouraged, set to 'shared.times'")
   }
   balance.type <- match.arg(balance.type)
-  index <- attr(x, "index")
+  index <- getpsidx(x)
 
   switch(balance.type,
          "fill" = {
@@ -591,7 +591,7 @@ make.pbalanced.pseries <- function(x, balance.type = c("fill", "shared.times", "
             # delete time periods that were not present for any individual, but introduced by
             # making data consecutive
             # result: no time periods are added that are not present for at least one individual
-              x_consec_bal_index <- attr(x_consec_bal, "index")
+              x_consec_bal_index <- getpsidx(x_consec_bal) 
               times_present_orig <- x_consec_bal_index[[2L]] %in% unique(index[[2L]])
               result <- x_consec_bal[times_present_orig] # this drops the pseries features (index, class "pseries")
                                                          # because there is no function "[.pseries]" (as of 2016-05-14)

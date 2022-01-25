@@ -160,12 +160,12 @@ Sum.pseries.collapse <- function(x, effect = c("individual", "time", "group"), .
                    "time"       = 2L,
                    "group"      = 3L,
                    stop("unknown value of argument 'effect'"))
-  xindex <- unclass(attr(x, "index")) # unclass for speed
+  xindex <- unclass(getpsidx(x)) # unclass for speed
   checkNA.index(xindex) # index may not contain any NA
   eff.fac <- xindex[[eff.no]]
   res <- collapse::fsum(x, g = eff.fac, w = NULL, na.rm = na.rm, TRA = "replace")
   names(res) <- as.character(eff.fac)
-  res <- add_pseries_features(res, attr(x, "index"))
+  res <- add_pseries_features(res, getpsidx(x))
   return(res)
 }
 
@@ -173,7 +173,7 @@ Sum.matrix.collapse <- function(x, effect, ...) {
 # print("Sum.matrix.collapse")
 # browser()
   # if no index attribute, argument 'effect' is assumed to be a factor
-  eff.fac <- if(is.null(xindex <- attr(x, "index"))) {
+  eff.fac <- if(is.null(xindex <- getpsidx(x))) {
     effect
   } else {
     if(!is.character(effect) && length(effect) > 1L)
@@ -247,7 +247,7 @@ Between.pseries.collapse <- function(x, effect = c("individual", "time", "group"
             "group"      = 3L,
             stop("unknown value of argument 'effect'"))
   
-  xindex <- unclass(attr(x, "index")) # unclass for speed
+  xindex <- unclass(getpsidx(x)) # unclass for speed
   checkNA.index(xindex) # index may not contain any NA
   nms <- as.character(xindex[[eff.no]])
   na.x <- is.na(x)
@@ -270,7 +270,7 @@ between.pseries.collapse <- function(x, effect = c("individual", "time", "group"
            "group"      = 3L,
            stop("unknown value of argument 'effect'"))
   
-  xindex <- unclass(attr(x, "index")) # unclass for speed
+  xindex <- unclass(getpsidx(x)) # unclass for speed
   checkNA.index(xindex) # index may not contain any NA
   i <- xindex[[eff.no]]
   # must be fill = TRUE [to catch case when 1 obs of an individual is NA
@@ -292,7 +292,7 @@ Between.matrix.collapse <- function(x, effect, ...) {
 # print("Between.matrix.collapse")
 # browser()
   # if no index attribute, argument 'effect' is assumed to be a factor
-  eff.fac <- if(is.null(xindex <- attr(x, "index"))) {
+  eff.fac <- if(is.null(xindex <- getpsidx(x))) {
     effect
   } else {
     if(!is.character(effect) && length(effect) > 1L)
@@ -322,7 +322,7 @@ between.matrix.collapse <- function(x, effect, ...) {
 # print("between.matrix.collapse")
 # browser()
   # if no index attribute, argument 'effect' is assumed to be a factor
-  eff.fac <- if(is.null(xindex <- attr(x, "index"))) {
+  eff.fac <- if(is.null(xindex <- getpsidx(x))) {
     effect
   } else {
     if(!is.character(effect) && length(effect) > 1L)
@@ -375,7 +375,7 @@ Within.pseries.collapse <- function(x, effect = c("individual", "time", "group",
   effect <- match.arg(effect)
   # check for presence of na.rm in dots, if not present set to FALSE
   na.rm <- if(missing(...) || is.null(na.rm <- list(...)$na.rm)) FALSE else na.rm
-  xindex <- unclass(attr(x, "index")) # unclass for speed
+  xindex <- unclass(getpsidx(x)) # unclass for speed
   checkNA.index(xindex) # index may not contain any NA
   if(effect != "twoways") {
     eff.no <- switch(effect,
@@ -411,7 +411,7 @@ Within.matrix.collapse <- function(x, effect, ...) {
   # check for presence of na.rm in dots, if not present set to FALSE
   na.rm <- if(missing(...) || is.null(na.rm <- list(...)$na.rm)) FALSE else na.rm
   
-  if(is.null(xindex <- attr(x, "index"))) {
+  if(is.null(xindex <- getpsidx(x))) {
     # non-index case, 'effect' needs to be a factor
     result <- collapse::fwithin(x, g = effect, w = NULL, na.rm = na.rm)
   }
@@ -467,7 +467,7 @@ Within.pseries.collapse.fixest <- function(x, effect = c("individual", "time", "
   effect <- match.arg(effect)
   # check for presence of na.rm in dots, if not present set to FALSE
   na.rm <- if(missing(...) || is.null(na.rm <- list(...)$na.rm)) FALSE else na.rm
-  xindex <- unclass(attr(x, "index")) # unclass for speed
+  xindex <- unclass(getpsidx(x)) # unclass for speed
   checkNA.index(xindex) # index may not contain any NA
   if(effect != "twoways") {
     eff.no <- switch(effect,
@@ -494,7 +494,7 @@ Within.matrix.collapse.fixest <- function(x, effect, ...) {
   # check for presence of na.rm in dots, if not present set to FALSE
   na.rm <- if(missing(...) || is.null(na.rm <- list(...)$na.rm)) FALSE else na.rm
   
-  if(is.null(xindex <- attr(x, "index"))) {
+  if(is.null(xindex <- getpsidx(x))) {
     # non-index case, 'effect' needs to be a factor
     result <- collapse::fwithin(x, g = effect, w = NULL, na.rm = na.rm)
   }
@@ -530,7 +530,7 @@ Within.pseries.collapse.lfe <- function(x, effect = c("individual", "time", "gro
 # browser()
 
   effect <- match.arg(effect)
-  xindex <- unclass(attr(x, "index"))
+  xindex <- unclass(getpsidx(x))
   checkNA.index(xindex) # index may not contain any NA
   # check for presence of na.rm in dots, if not present set to FALSE
   na.rm <- if(missing(...) || is.null(na.rm <- list(...)$na.rm)) FALSE else na.rm
@@ -548,7 +548,7 @@ Within.pseries.collapse.lfe <- function(x, effect = c("individual", "time", "gro
     # no need to distinguish between balanced/unbalanced
     # as this is fully handled by lfe::dmeanlist()
       res <- unlist(lfe::demeanlist(x, fl = xindex[1:2], na.rm = na.rm))
-      res <- add_pseries_features(res, attr(x, "index")) # index needs to be a proper pindex here!
+      res <- add_pseries_features(res, getpsidx(x)) # index needs to be a proper pindex here!
     }
   return(res)
 }
@@ -560,7 +560,7 @@ Within.matrix.collapse.lfe <- function(x, effect,  ...) {
   # check for presence of na.rm in dots, if not present set to FALSE
   na.rm <- if(missing(...) || is.null(na.rm <- list(...)$na.rm)) FALSE else na.rm
   
-  if(is.null(xindex <- attr(x, "index"))) {
+  if(is.null(xindex <- getpsidx(x))) {
     # non-index case, 'effect' needs to be a factor
     result <- collapse::fwithin(x, g = effect, w = NULL, na.rm = na.rm)
   }
@@ -589,7 +589,7 @@ Within.matrix.collapse.lfe <- function(x, effect,  ...) {
       # see https://github.com/sgaure/lfe/issues/50.
       result <- lfe::demeanlist(x, fl = xindex[1:2], na.rm = na.rm)
       if(is.list(result)) result <- result[[1L]]
-      attr(result, "index") <- attr(x, "index") # index needs to be a proper pindex here!
+      attr(result, "index") <- getpsidx(x) # index needs to be a proper pindex here!
     }
   }
   return(result)

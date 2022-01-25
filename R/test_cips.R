@@ -594,7 +594,7 @@ pseries2pdataframe <- function(x, pdata.frame = TRUE, ...) {
   ## if pdataframe = TRUE -> return a pdata.frame, if FALSE -> return a data.frame
   ## ellipsis (dots) passed on to pdata.frame()
   if(!inherits(x, "pseries")) stop("input needs to be of class 'pseries'")
-  indices <- attr(x, "index")
+  indices <- getpsidx(x)
   class(indices) <- setdiff(class(indices), "pindex")
   vx <- remove_pseries_features(x)
   dfx <- cbind(indices, vx)

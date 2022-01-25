@@ -414,15 +414,29 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     #   warning(txt.drop.rows)
     # }
     
+    class(index) <- c("pindex", "data.frame")
+    
+    # This gets an external pointer to the index 
+    iptr <- .Call(C_create_eptr, index)
+    # This makes all variables in the pdata.frame "pseries"-light -> 
+    # enabling plm methods to apply in a data masking environment in a memory-efficient way
+    mkps <- function(x) {
+      attr(x, "index") <- iptr
+      class(x) <- c("pseries", class(x))
+      x
+    }
+    # Attaching the external pointer and the class to all variables in the frame. 
+    # index.pseries and other methods throughout the package were modified to obtain the index from the external pointer
+    x <- lapply(x, mkps)
+    
     if (row.names) {
-        attr(x, "row.names") <- fancy.row.names(index)
+        attr(x, "row.names") <- fancy.row.names(unclass(index))
         # NB: attr(x, "row.names") allows for duplicate rownames (as
         # opposed to row.names(x) <- something)
         # NB: no fancy row.names for index attribute (!?):
         # maybe because so it is possible to restore original row.names?
     }
     
-    class(index) <- c("pindex", "data.frame")
     attr(x, "index") <- index
     class(x) <- c("pdata.frame", "data.frame")
     
@@ -527,7 +541,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 subset_pseries <- function(x, ...) {
   ## use '...' instead of only one specific argument, because subsetting for
   ## factors can have argument 'drop', e.g., x[i, drop=TRUE] see ?Extract.factor
-  index <- attr(x, "index")
+  index <- getpsidx(x)
   if(is.null(index)) warning("pseries object with is.null(index(pseries)) == TRUE encountered")
   if(!is.null(index) && !is.index(index)) warning(paste0("pseries object has illegal index with class(index) == ", paste0(class(index), collapse = ", ")))
   names_orig <- names(x)
@@ -1037,7 +1051,7 @@ pdim.pdata.frame <- function(x,...) {
 #' @rdname pdim
 #' @export
 pdim.pseries <- function(x,...) {
-  index <- unclass(attr(x, "index"))
+  index <- unclass(getpsidx(x))
   pdim(index[[1L]], index[[2L]])
 }
 
@@ -1199,10 +1213,16 @@ index.pdata.frame <- function(x, which = NULL, ...) {
   index(x = anindex, which = which)
 }
 
+getpsidx <- function(x) {
+  ix <- attr(x, "index")
+  if(!is.null(ix) && !is.list(ix)) ix <- .Call(C_get_eptr, ix)
+  ix
+}
+
 #' @rdname index.plm
 #' @export
 index.pseries <- function(x, which = NULL, ...) {
-  anindex <- attr(x, "index")
+  anindex <- getpsidx(x)
   index(x = anindex, which = which)
 }
   
@@ -1224,7 +1244,7 @@ has.index <- function(object) {
   # not exported, helper function
   # checks if an object has an index in sense of package plm
   # (esp. to distinguish from zoo::index() which always returns an index)
-  index <- attr(object, "index")
+  index <- getpsidx(object)
   return(is.index(index))
 }
 
@@ -1270,7 +1290,7 @@ checkNA.index <- function(index, which = "all", error = TRUE) {
 # Cannot detect index variables if their columns names were changed after creation of the pdata.frame
 
 pos.index <- function(x, ...) {
-  index <- attr(x, "index")
+  index <- getpsidx(x)
   index_names <- names(index)
   index_pos <- match(index_names, names(x))
   names(index_pos) <- index_names

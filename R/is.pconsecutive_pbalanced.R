@@ -243,7 +243,7 @@ is.pconsecutive.data.frame <- function(x, index = NULL, na.rm.tindex = FALSE, ..
 #' @rdname is.pconsecutive
 #' @export
 is.pconsecutive.pseries <- function(x, na.rm.tindex = FALSE, ...){
-  index <- unclass(attr(x, "index")) # unclass for speed
+  index <- unclass(getpsidx(x)) # unclass for speed
   return(is.pconsecutive.default(x, index[[1L]], index[[2L]], na.rm.tindex = na.rm.tindex, ...))
 }
 
@@ -362,7 +362,7 @@ is.pbalanced.pdata.frame <- function(x, ...) {
 #' @rdname is.pbalanced
 #' @export
 is.pbalanced.pseries <- function(x, ...) {
-  index <- unclass(attr(x, "index")) # unclass for speed
+  index <- unclass(getpsidx(x)) # unclass for speed
   return(is.pbalanced(index[[1L]], index[[2L]]))
 }
 

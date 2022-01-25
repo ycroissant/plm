@@ -50,13 +50,13 @@ Ops.pseries <- function(e1, e2) {
   # either one or both could be pseries
   if(inherits(e1, "pseries")) {
     e1_pseries <- TRUE
-    index_e1 <- attr(e1, "index")
+    index_e1 <- getpsidx(e1)
     e1 <- remove_pseries_features(e1)
   }
   
   if(!miss_e2 && inherits(e2, "pseries")) {
     e2_pseries <- TRUE
-    index_e2 <- attr(e2, "index")
+    index_e2 <- getpsidx(e2)
     e2 <- remove_pseries_features(e2)
   }
 
@@ -94,7 +94,7 @@ Ops.pseries <- function(e1, e2) {
 Math.pseries <- function(x, ...) {
 #  print("Math.pseries executed!") # debug output
 
-  index <- attr(x, "index")
+  index <- getpsidx(x)
   x <- remove_pseries_features(x)
   
   x <- get(.Generic)(x, ...)
@@ -106,7 +106,7 @@ Math.pseries <- function(x, ...) {
 Complex.pseries <- function(z) {
 #  print("Complex.pseries executed!") # debug output
 
-  index <- attr(z, "index")
+  index <- getpsidx(x)
   z <- remove_pseries_features(z)
 
   z <- get(.Generic)(z)
