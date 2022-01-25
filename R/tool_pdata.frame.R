@@ -446,12 +446,12 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 #' @rdname pdata.frame
 #' @export
 "$<-.pdata.frame" <- function(x, name, value) {
-  if (inherits(value, "pseries")){
+  if (!inherits(value, "pseries")) class(value) <- c("pseries", class(value))
     # remove pseries features before adding value as a column to pdata.frame
-    if (length(class(value)) == 1L) value <- unclass(value)
-    else attr(value, "class") <- setdiff(class(value), "pseries")
-    attr(value, "index") <- NULL
-  }
+    # if (length(class(value)) == 1L) value <- unclass(value)
+    # else attr(value, "class") <- setdiff(class(value), "pseries")
+    # attr(value, "index") <- NULL
+  attr(value, "index") <- .Call(C_create_eptr, attr(x, "index"))
   "$<-.data.frame"(x, name, value)
 }
 
