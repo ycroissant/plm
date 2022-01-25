@@ -54,8 +54,8 @@ fancy.row.names <- function(index, sep = "-") {
   return(result)
 }
 
-
-
+# This add this to the NAMESPACE, to load compiled code
+#' @useDynLib plm, .registration = TRUE
 
 #' data.frame for panel data
 #' 
