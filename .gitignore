@@ -4,3 +4,6 @@
 /.Rproj.user
 .Renviron
 .Rprofile
+*.o
+*.so
+*.dll

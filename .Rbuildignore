@@ -2,3 +2,6 @@
 ^\.Rproj\.user$
 ^\.github$
 ^LICENSE$
+*.o
+*.so
+*.dll
