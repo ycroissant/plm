@@ -63,8 +63,9 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 
 ### Dependencies:
  * Shifted package `collapse` from 'Suggests' to 'Imports'.
- * Removed from 'Suggests' as not needed: `bookdown`, `clusterSEs`, `pcse`, 
-   `stargazer`.
+ * Removed from 'Suggests' as not needed and safeguards package `plm` shall the
+   suggested packages be removed from CRAN: `bookdown`, `clusterSEs`, `Ecdat`, 
+   `foreign`, `pcse`, `pglm`, `spdep`, `splm`, and `stargazer`.
  
 ***
 
