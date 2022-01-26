@@ -3,18 +3,19 @@
 
 static void eptrFinalizer(SEXP eptr) {
   if(!R_ExternalPtrAddr(eptr)) return;
+  R_SetExternalPtrProtected(eptr, R_NilValue);
   R_ClearExternalPtr(eptr); 
 }
 
 SEXP create_eptr(SEXP x) {
-  SEXP eptr = PROTECT(R_MakeExternalPtr(x, R_NilValue, R_NilValue));
+  SEXP eptr = PROTECT(R_MakeExternalPtr(x, R_NilValue, x));
   R_RegisterCFinalizerEx(eptr, eptrFinalizer, TRUE);
   UNPROTECT(1);
   return eptr;
 }
 
-void * get_eptr(SEXP x) {
-  return R_ExternalPtrAddr(x);
+SEXP get_eptr(SEXP x) {
+  return R_ExternalPtrProtected(x);
 }
 
 static const R_CallMethodDef CallEntries[] = {
