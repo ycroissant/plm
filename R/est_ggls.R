@@ -205,7 +205,7 @@ pggls <- function(formula, data, subset, na.action,
             tres[ , , i] <- ut %o% ut
         }
         subOmega <- rowMeans(tres, dims = 2L) # == apply(tres, 1:2, mean) but faster
-        omega <- bdsmatrix(rep(nother, ncond), rep(subOmega, ncond))
+        omega <- bdsmatrix::bdsmatrix(rep(nother, ncond), rep(subOmega, ncond))
     } else {
         lti <- list()
         for (i in 1:ncond) {
@@ -220,7 +220,7 @@ pggls <- function(formula, data, subset, na.action,
         for (i in 1:ncond) {
             list.cov.blocks[[i]] <- subOmega[lti[[i]], lti[[i]]]
         }
-        omega <- bdsmatrix(groupsdim, unlist(list.cov.blocks, use.names = FALSE))
+        omega <- bdsmatrix::bdsmatrix(groupsdim, unlist(list.cov.blocks, use.names = FALSE))
     }
     A <- crossprod(X, solve(omega, X))
     B <- crossprod(X, solve(omega, y))
