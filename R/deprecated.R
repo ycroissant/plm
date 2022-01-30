@@ -607,7 +607,8 @@ print.dynformula <- function(x, ...){
 #' @rdname plm-deprecated
 #' @export
 pFormula <- function(object) {
-  .Deprecated(msg = "class 'pFormula' is deprecated, simply use class 'Formula'",
+  .Deprecated(msg = paste0("class 'pFormula' is deprecated, simply use class",
+                          "'Formula'. 'pFormula' will be removed very soon!"),
               old = "pFormula", new = "Formula")
   stopifnot(inherits(object, "formula"))
   if (!inherits(object, "Formula")){
