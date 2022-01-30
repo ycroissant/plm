@@ -73,7 +73,7 @@ pldv <- function(formula, data, subset, weights, na.action,
 ## Due to the eval() construct with maxLik::maxLik we import maxLik::maxLik
 ## and re-export it via NAMESPACE as plm::maxLik with a minimal documentation 
 ## pointing to the original documentation.
-## This way, we can keep the flexibility of eval() [evalutate in parent frame] 
+## This way, we can keep the flexibility of eval() [evaluate in parent frame] 
 ## and can lessen the dependency burden by placing pkg maxLik in 'Imports'
 ## rather than 'Depends' in DESCRIPTION.
   
@@ -273,7 +273,7 @@ lnl.tobit <- function(param, y, X, id, lower = 0, upper = +Inf, model = "pooling
 
     f <- function(i = NA){
         result <- numeric(length = length(y))
-        if (is.na(i)) z <- 0 else z <- rn$nodes[i]
+        z <- if(is.na(i)) 0 else rn$nodes[i]
         e <- (y - Xb - sqrt(2) * seta * z) / sigma
         result[YLO] <- pnorm(  e[YLO], log.p = TRUE)
         result[YUT] <- dnorm(  e[YUT], log = TRUE) - log(sigma)
@@ -282,7 +282,7 @@ lnl.tobit <- function(param, y, X, id, lower = 0, upper = +Inf, model = "pooling
     }
 
     g <- function(i = NA){
-        if (is.na(i)) z <- 0 else z <- rn$nodes[i]
+        z <- if(is.na(i)) 0 else rn$nodes[i]
         e <- (y - Xb - sqrt(2) * seta * z) / sigma
         mz <-  mills(e)
         mmz <- mills(- e)
@@ -351,7 +351,7 @@ lnl.tobit <- function(param, y, X, id, lower = 0, upper = +Inf, model = "pooling
     if (model == "pooling"){
         lnL <- sum(f(i = NA))
         if (compute.gradient) attr(lnL, "gradient") <- g(i = NA)
-        if (compute.hessian) attr(lnL, "hessian") <- h(i = NA)
+        if (compute.hessian)  attr(lnL, "hessian")  <- h(i = NA)
     }
     if (model == "random"){
         lnPntr <- lapply(1:R, function(i)  f(i = i))

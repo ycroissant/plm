@@ -2,9 +2,9 @@ Package: plm
 Version: 2.6
 Date: 2022-01-25
 Title: Linear Models for Panel Data
-Authors@R: c(person(given = "Yves",      family = "Croissant",    role = c("aut", "cre"), email = "yves.croissant@univ-reunion.fr"),
+Authors@R: c(person(given = "Yves",      family = "Croissant",    role = c("aut"), email = "yves.croissant@univ-reunion.fr"),
              person(given = "Giovanni",  family = "Millo",        role = "aut", email = "giovanni.millo@deams.units.it"),
-             person(given = "Kevin",     family = "Tappe",        role = "aut", email = "kevin.tappe@bwi.uni-stuttgart.de"),
+             person(given = "Kevin",     family = "Tappe",        role = c("aut", "cre"), email = "kevin.tappe@bwi.uni-stuttgart.de"),
              person(given = "Ott",       family = "Toomet",       role = "ctb", email = "otoomet@gmail.com"),
              person(given = "Christian", family = "Kleiber",      role = "ctb", email = "Christian.Kleiber@unibas.ch"), 
              person(given = "Achim",     family = "Zeileis",      role = "ctb", email = "Achim.Zeileis@R-project.org"),
