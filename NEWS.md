@@ -6,7 +6,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 
 ***
 
-# plm 2.6
+# plm 2.6-0
 
 ### Speed-up:
 * Fast mode is now the default for the package: when the package is attached,
