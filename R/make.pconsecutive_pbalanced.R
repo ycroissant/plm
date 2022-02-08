@@ -529,11 +529,6 @@ make.pbalanced <- function(x, balance.type = c("fill", "shared.times", "shared.i
 #' @export
 make.pbalanced.pdata.frame <- function(x, balance.type = c("fill", "shared.times", "shared.individuals"), ...) {
 
-  if (length(balance.type) == 1 && balance.type == "shared") {
-    # accept "shared" for backward compatibility
-    balance.type <- "shared.times"
-    warning("Use of balanced.type = 'shared' discouraged, set to 'shared.times'")
-  }
   balance.type <- match.arg(balance.type)
   index <- attr(x, "index")
   
@@ -576,11 +571,6 @@ make.pbalanced.pdata.frame <- function(x, balance.type = c("fill", "shared.times
 #' @export
 make.pbalanced.pseries <- function(x, balance.type = c("fill", "shared.times", "shared.individuals"), ...) {
 
-  if (length(balance.type) == 1 && balance.type == "shared") {
-    # accept "shared" for backward compatibility
-    balance.type <- "shared.times"
-    warning("Use of balanced.type = 'shared' discouraged, set to 'shared.times'")
-  }
   balance.type <- match.arg(balance.type)
   index <- attr(x, "index")
 
@@ -631,11 +621,6 @@ make.pbalanced.pseries <- function(x, balance.type = c("fill", "shared.times", "
 make.pbalanced.data.frame <- function(x, balance.type = c("fill", "shared.times", "shared.individuals"), index = NULL, ...) {
   # NB: for data.frame interface: the data is also sorted as stack time series
 
-  if (length(balance.type) == 1L && balance.type == "shared") {
-    # accept "shared" for backward compatibility
-    balance.type <- "shared.times"
-    warning("Use of balanced.type = 'shared' discouraged, set to 'shared.times'")
-  }
   balance.type <- match.arg(balance.type)
 
   ## identify index of data.frame  
@@ -695,6 +680,4 @@ intersect_index <- function(index, by) {
   keep_entries <- time %in% common_times
   return(keep_entries)
 }
-
-
 
