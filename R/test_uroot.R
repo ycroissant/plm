@@ -544,7 +544,7 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
   if(!is.list(object)) stop("argument 'object' in hadritest is supposed to be a list")
   if(exo == "none") stop("exo = \"none\" is not a valid option for Hadri's test")
   # determine L (= time periods), unique for balanced panel and number of individuals (n)
-  if(length(L <- unique(vapply(object, length, FUN.VALUE = 0.0, USE.NAMES = FALSE))) > 1L) 
+  if(length(L <- unique(lengths(object, use.names = FALSE))) > 1L)
     stop("Hadri test is not applicable to unbalanced panels")
   n <- length(object)
   
@@ -865,8 +865,8 @@ purtest <- function(object, data = NULL, index = NULL,
                   object, as.list(lags), SIMPLIFY = FALSE)
   
   
-  if (test == "levinlin"){
-    if (length(T.levinlin <- unique(vapply(object, length, FUN.VALUE = 0.0))) > 1L)
+  if(test == "levinlin"){
+    if(length(T.levinlin <- unique(lengths(object, use.names = FALSE))) > 1L)
       stop("test = \"levinlin\" is not applicable to unbalanced panels")
     
     # get the adjustment parameters for the mean and the variance
@@ -934,7 +934,7 @@ purtest <- function(object, data = NULL, index = NULL,
     
     if(!is.null(ips.stat) && ips.stat == "tbar") {
       # give tbar
-      T.tbar <- unique(vapply(object, length, FUN.VALUE = 0.0, USE.NAMES = FALSE))
+      T.tbar <- unique(lengths(object, use.names = FALSE))
       if(length(T.tbar) > 1L) stop("tbar statistic is not applicable to unbalanced panels")
       if(any(lags > 0L)) stop("tbar statistic is not applicable when 'lags' > 0 is specified")
       L.tbar <- T.tbar - 1

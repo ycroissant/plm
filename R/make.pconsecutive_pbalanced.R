@@ -215,7 +215,7 @@ make.pconsecutive.indexes <- function(x, index, balanced = FALSE, ...) {
   }
   
   times_filled_vector <- unlist(times_filled_list, use.names = FALSE)
-  id_times <- vapply(times_filled_list, length, FUN.VALUE = 0.0) # lengths (with an "s") would be more efficient, but requires R >= 3.2
+  id_times <- lengths(times_filled_list, use.names = FALSE)
   
   id_filled_vector <- unlist(mapply(rep, unique(id_orig), id_times, SIMPLIFY = FALSE), use.names = FALSE)
                       # SIMPLIFY = FALSE => always return list

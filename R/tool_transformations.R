@@ -866,7 +866,7 @@ alagt <- function(x, ak) {
     NApos <- is.na(index_lag_ak_all) # save NA positions for later
     substitute_blockwise <- index_lag_ak_all
     
-    block_lengths <- vapply(index_lag_ak_all_list, length, FUN.VALUE = 0.0, USE.NAMES = FALSE)
+    block_lengths <- lengths(index_lag_ak_all_list, use.names = FALSE)
     
     # not needed but leave here for illustration:
     #    startpos_block <- cumsum(block_lengths) - block_lengths + 1
