@@ -10,9 +10,12 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 
 * TBD
 
-* TODO: clean-up remove deprecated class `pFormula` once package `cquad` switched 
-to the current plm facilities without `pFormula` (maintainer + developer of 
-`cquad` were notified and were provided a patch in Jan 2022).
+### TODO: 
+ clean-up: remove deprecated class `pFormula` once package `cquad` switched 
+  to the current plm facilities without `pFormula` (maintainer + developer of 
+  `cquad` were notified and were provided a patch in Jan 2022).
+
+
 
 ### Clean-ups:
 * make.pbalanced: for argument `balance.type` the value `"shared"` is not 
@@ -20,7 +23,8 @@ to the current plm facilities without `pFormula` (maintainer + developer of
   `balance.type = "shared.times"` for the same result (see also NEWS entry for 
   version 1.6-6).
 
-
+### Dependencies:
+* Minimum required R version corrected to R 3.2.
 
 ***
 
