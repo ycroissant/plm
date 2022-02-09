@@ -11,7 +11,7 @@ Authors@R: c(person(given = "Yves",      family = "Croissant",    role = c("aut"
              person(given = "Arne",      family = "Henningsen",   role = "ctb", email = "arne.henningsen@googlemail.com"),
              person(given = "Liviu",     family = "Andronic",     role = "ctb"),
              person(given = "Nina",      family = "Schoenfelder", role = "ctb"))
-Depends: R (>= 3.1.0)
+Depends: R (>= 3.2.0)
 Imports: MASS, bdsmatrix, collapse (>= 1.6.0), zoo, nlme, sandwich, lattice, lmtest, maxLik, Rdpack, Formula, stats
 Suggests: AER, car, statmod, urca, pder, texreg, knitr, rmarkdown, fixest, lfe
 Description: A set of estimators for models and (robust) covariance matrices, and tests for panel data
