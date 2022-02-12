@@ -47,7 +47,7 @@ periods are made consecutive per individual.  For consecutiveness, the time
 dimension is interpreted to be numeric, and the data are extended to a
 regularly spaced sequence with distance 1 between the time periods for each
 individual (for each individual the time dimension become a sequence t, t+1,
-t+2, \ldots{} where t is an integer). Non--index variables are filled with
+t+2, \ldots{}, where t is an integer). Non--index variables are filled with
 \code{NA} for the inserted elements (rows for (p)data.frames, vector
 elements for pseries).
 
@@ -58,8 +58,8 @@ the result, each individual will have the same time periods in their time
 dimension by taking the min and max of the time index variable over all
 individuals (w/o \code{NA} values) and inserting the missing time periods.
 Looking at the number of rows of the resulting (pdata.frame) (elements for
-pseries), this results in nrow(make.pconsecutive, balanced = FALSE) <=
-nrow(make.pconsecutive, balanced = TRUE).  For making the data only
+pseries), this results in \verb{nrow(make.pconsecutive(<.>, balanced = FALSE))} <=
+\verb{nrow(make.pconsecutive(<.>, balanced = TRUE))}. For making the data only
 balanced, i.e., not demanding consecutiveness at the same time, use
 \code{\link[=make.pbalanced]{make.pbalanced()}} (see \strong{Examples} for a comparison)).
 
@@ -73,7 +73,7 @@ the time series for that individual, the beginning/end of the resulting time
 series is taken to be the min and max (w/o \code{NA} values) of the original
 time series for that individual, see also \strong{Examples}. Thus, one might
 want to check if there are any \code{NA} values in the index variables
-before applying make.pconsecutive, and especially check for \code{NA} values
+before applying \code{make.pconsecutive}, and especially check for \code{NA} values
 in the first and last position for each individual in original data and, if
 so, maybe set those to some meaningful begin/end value for the time series.
 }

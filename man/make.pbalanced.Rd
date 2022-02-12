@@ -98,7 +98,7 @@ periods for an individual are dropped, which are usually meant to
 depict the beginning and ending of the time series for that
 individual.  Thus, one might want to check if there are any
 \code{NA} values in the index variables before applying
-make.pbalanced, and especially check for \code{NA} values in the
+\code{make.pbalanced}, and especially check for \code{NA} values in the
 first and last position for each individual in original data and,
 if so, maybe set those to some meaningful begin/end value for the
 time series.

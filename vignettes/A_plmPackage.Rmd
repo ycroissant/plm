@@ -677,7 +677,7 @@ model and the random effects model are estimated using:
 grun.fe <- plm(inv~value+capital, data = Grunfeld, model = "within")
 grun.re <- plm(inv~value+capital, data = Grunfeld, model = "random")
 ``` 
-Methods to display a sumamry of the model estimation are available via `summary`.
+Methods to display a summary of the model estimation are available via `summary`.
 For example, for a `random` model, the `summary` method gives information
 about the variance of the components of the errors and some test statistics.
 Random effects of the estimated model can be extracted via `ranef`.
