@@ -272,13 +272,13 @@ pht <- function(formula, data, subset, na.action, model = c("ht", "am", "bms"), 
   }
   
   X <- model.matrix(data, model = "pooling", rhs = 1, lhs = 1)
-  if (length(exo.var) > 0L) XV <- X[ , exo.var, drop = FALSE] else XV <- NULL
-  if (length(edo.var) > 0L) NV <- X[ , edo.var, drop = FALSE] else NV <- NULL
-  if (length(exo.cst) > 0L) XC <- X[ , exo.cst, drop = FALSE] else XC <- NULL
-  if (length(edo.cst) > 0L) NC <- X[ , edo.cst, drop = FALSE] else NC <- NULL
-  if (length(all.cst) != 0L)
-    zo <- twosls(fixef[as.character(id)], cbind(XC, NC), cbind(XC, XV), TRUE)
-  else zo <- lm(fixef ~ 1)
+  XV <- if(length(exo.var) > 0L) X[ , exo.var, drop = FALSE] else NULL
+  NV <- if(length(edo.var) > 0L) X[ , edo.var, drop = FALSE] else NULL
+  XC <- if(length(exo.cst) > 0L) X[ , exo.cst, drop = FALSE] else NULL
+  NC <- if(length(edo.cst) > 0L) X[ , edo.cst, drop = FALSE] else NULL
+  zo <- if(length(all.cst) != 0L)
+           twosls(fixef[as.character(id)], cbind(XC, NC), cbind(XC, XV), TRUE)
+        else lm(fixef ~ 1)
   
   sigma2 <- list()
   sigma2$one <- 0
