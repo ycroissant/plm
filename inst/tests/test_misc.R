@@ -45,6 +45,11 @@ if (plm:::has.index(residuals(plm(form, data = pGrunfeld, model = "fd")))) stop(
 if (plm:::has.index(residuals(plm(form, data = pGrunfeld, model = "between")))) stop("residuals.plm's return value shall not have an index for between models")
 
 
+# test for formula with I() on LHS (issue #17)
+formula_with_I <- I(diff(log(inv))) ~ value + capital
+plm(formula_with_I, data = Grunfeld) # errored pre 6d9ea4a / 2022-02-22
+
+
 # fitted.plm: test case for illegal pseries
 if (!is.pseries(fitted(plm(form, data = pGrunfeld, model = "pooling")))) stop("fitted.plm's return value is not a valid pseries")
 if (!is.pseries(fitted(plm(form, data = pGrunfeld, model = "within")))) stop("fitted.plm's return value is not a valid pseries")

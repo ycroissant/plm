@@ -1,5 +1,5 @@
 
-R version 4.1.1 (2021-08-10) -- "Kick Things"
+R version 4.1.2 (2021-11-01) -- "Bird Hippie"
 Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -74,6 +74,18 @@ Coefficients:
 > if (inherits(residuals(plm(form, data = pGrunfeld, model = "between")), "pseries")) stop("residuals.plm's return value shall not be a pseries for between models")
 > if (plm:::has.index(residuals(plm(form, data = pGrunfeld, model = "fd")))) stop("residuals.plm's return value shall not have an index for fd models")
 > if (plm:::has.index(residuals(plm(form, data = pGrunfeld, model = "between")))) stop("residuals.plm's return value shall not have an index for between models")
+> 
+> 
+> # test for formula with I() on LHS (issue #17)
+> formula_with_I <- I(diff(log(inv))) ~ value + capital
+> plm(formula_with_I, data = Grunfeld) # errored pre 6d9ea4a / 2022-02-22
+
+Model Formula: I(diff(log(inv))) ~ value + capital
+
+Coefficients:
+      value     capital 
+ 0.00025807 -0.00014389 
+
 > 
 > 
 > # fitted.plm: test case for illegal pseries
@@ -1807,4 +1819,4 @@ alternative hypothesis: unobserved effect
 > 
 > proc.time()
    user  system elapsed 
-  19.03    0.54   20.32 
+  17.45    0.45   18.54 

@@ -15,15 +15,18 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
   to the current plm facilities without `pFormula` (maintainer + developer of 
   `cquad` were notified and were provided a patch in Jan 2022).
 
-
+### Bug Fixes:
+* pmodel.response: `I()` in LHS of formula led to error in estimation with plm
+  ([#17](https://github.com/ycroissant/plm/issues/17)).
 
 ### Clean-ups:
 * make.pbalanced: for argument `balance.type` the value `"shared"` is not 
   accepted anymore, it was allowed for back-compatibility for some time. Use
   `balance.type = "shared.times"` for the same result (see also NEWS entry for 
   version 1.6-6).
-* Adjust  example benchmark in `?plm.fast` to new behaviour from version 1.4.8
-  of package `microbenchmark` (https://github.com/joshuaulrich/microbenchmark/issues/34).
+* Adjust example benchmark in `?plm.fast` to new behaviour from version 1.4.8
+  onwards of package `microbenchmark` 
+  (<https://github.com/joshuaulrich/microbenchmark/issues/34>).
 
 ### Dependencies:
 * Minimum required R version corrected to R 3.2.
