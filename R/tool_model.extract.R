@@ -282,14 +282,16 @@ pmodel.response.data.frame <- function(object, ...){
     model  <- if(is.null(dots$model))  "pooling"    else dots$model
     effect <- if(is.null(dots$effect)) "individual" else dots$effect
     theta  <- if(is.null(dots$theta))  NULL         else dots$theta
-    y <- model.response(object)
+    y <- model.response(object) # has index attribute but not class 'pseries'
+    class(y) <- unique(c("pseries", class(y)))
     ptransform(y, model = model, effect = effect, theta = theta)
 }
 
-# deprecated
+# deprecated - is this used anywhere?
 #' @rdname pmodel.response
 #' @export
 pmodel.response.formula <- function(object, data, ...){
+#  print("pmodel.response.formula")
     dots <- list(...)
     if(is.null(data)) stop("the data argument is mandatory")
     if(! inherits(data, "pdata.frame")) stop("the data argument must be a pdata.frame")
