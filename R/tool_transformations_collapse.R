@@ -712,9 +712,9 @@ pseriesfy <- function(x,  ...) {
 #' onewayFE <- microbenchmark(
 #'  {options("plm.fast" = FALSE); plm(form, data = data, model = "within")},
 #'  {options("plm.fast" = TRUE);  plm(form, data = data, model = "within")},
-#'   times = times, unit = "relative")
+#'   times = times)
 #'
-#' summary(onewayFE)
+#' summary(onewayFE, unit = "relative")
 #'
 #' ## two-ways FE benchmark requires pkg fixest and lfe
 #' ## (End-users shall only set option plm.fast. Option plm.fast.pkg.FE.tw shall
@@ -733,24 +733,24 @@ pseriesfy <- function(x,  ...) {
 #'     plm(form, data = data, model = "within", effect = "twoways")},
 #'  {options("plm.fast" = TRUE, "plm.fast.pkg.FE.tw" = "lfe");
 #'     plm(form, data = data, model = "within", effect = "twoways")},
-#'   times = times, unit = "relative")
+#'   times = times)
 #'
-#' summary(twowayFE)
+#' summary(twowayFE, unit = "relative")
 #' }
 #' 
 #' onewayRE <- microbenchmark(
 #'  {options("plm.fast" = FALSE); plm(form, data = data, model = "random")},
 #'  {options("plm.fast" = TRUE);  plm(form, data = data, model = "random")},
-#'   times = times, unit = "relative")
+#'   times = times)
 #'
-#' summary(onewayRE)
+#' summary(onewayRE, unit = "relative")
 #' 
 #' twowayRE <-  microbenchmark(
 #'  {options("plm.fast" = FALSE); plm(form, data = data, model = "random", effect = "twoways")},
 #'  {options("plm.fast" = TRUE);  plm(form, data = data, model = "random", effect = "twoways")},
-#'   times = times, unit = "relative")
+#'   times = times)
 #' 
-#' summary(twowayRE)
+#' summary(twowayRE, unit = "relative")
 #' }
 NULL
 

@@ -22,6 +22,8 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
   accepted anymore, it was allowed for back-compatibility for some time. Use
   `balance.type = "shared.times"` for the same result (see also NEWS entry for 
   version 1.6-6).
+* Adjust  example benchmark in `?plm.fast` to new behaviour from version 1.4.8
+  of package `microbenchmark` (https://github.com/joshuaulrich/microbenchmark/issues/34).
 
 ### Dependencies:
 * Minimum required R version corrected to R 3.2.
