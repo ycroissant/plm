@@ -16,7 +16,7 @@ pdata.frame(
   index = NULL,
   drop.index = FALSE,
   row.names = TRUE,
-  stringsAsFactors = default.stringsAsFactors(),
+  stringsAsFactors = FALSE,
   replace.non.finite = FALSE,
   drop.NA.series = FALSE,
   drop.const.series = FALSE,

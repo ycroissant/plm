@@ -24,6 +24,9 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
   accepted anymore, it was allowed for back-compatibility for some time. Use
   `balance.type = "shared.times"` for the same result (see also NEWS entry for 
   version 1.6-6).
+* pdata.frame: argument 'stringsAsFactors' set to FALSE, was previously
+  default.stringsAsFactors() to determine value from options, but
+  default.stringsAsFactors will be deprecated as of R 4.2.0.
 * Adjust example benchmark in `?plm.fast` to new behaviour from version 1.4.8
   onwards of package `microbenchmark` 
   (<https://github.com/joshuaulrich/microbenchmark/issues/34>).
