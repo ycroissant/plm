@@ -50,12 +50,9 @@ data("Grunfeld", package = "plm")
 pGrunfeld <- pdata.frame(Grunfeld)
 
 # then make a model frame from a pFormula and a pdata.frame
-
-
 form <- inv ~ value + capital
 mf <- model.frame(pGrunfeld, form)
-# construct (transformed) response of the within model
-resp <- pmodel.response(form, data = mf, model = "within", effect = "individual")
+
 # retrieve (transformed) response directly from model frame
 resp_mf <- pmodel.response(mf, model = "within", effect = "individual")
 
@@ -64,7 +61,7 @@ fe_model <- plm(form, data = pGrunfeld, model = "within")
 pmodel.response(fe_model)
 
 # same as constructed before
-all.equal(resp, pmodel.response(fe_model), check.attributes = FALSE) # TRUE
+all.equal(resp_mf, pmodel.response(fe_model), check.attributes = FALSE) # TRUE
 
 }
 \seealso{

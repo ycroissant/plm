@@ -240,12 +240,9 @@ model.matrix.pdata.frame <- function(object,
 #' pGrunfeld <- pdata.frame(Grunfeld)
 #' 
 #' # then make a model frame from a pFormula and a pdata.frame
-#' 
-#' 
 #' form <- inv ~ value + capital
 #' mf <- model.frame(pGrunfeld, form)
-#' # construct (transformed) response of the within model
-#' resp <- pmodel.response(form, data = mf, model = "within", effect = "individual")
+#'
 #' # retrieve (transformed) response directly from model frame
 #' resp_mf <- pmodel.response(mf, model = "within", effect = "individual")
 #' 
@@ -254,7 +251,7 @@ model.matrix.pdata.frame <- function(object,
 #' pmodel.response(fe_model)
 #' 
 #' # same as constructed before
-#' all.equal(resp, pmodel.response(fe_model), check.attributes = FALSE) # TRUE
+#' all.equal(resp_mf, pmodel.response(fe_model), check.attributes = FALSE) # TRUE
 #' 
 pmodel.response <- function(object, ...) {
     UseMethod("pmodel.response")
@@ -287,24 +284,26 @@ pmodel.response.data.frame <- function(object, ...){
     ptransform(y, model = model, effect = effect, theta = theta)
 }
 
-# deprecated - is this used anywhere?
+# "deprecated" (not advertised anymore)
 #' @rdname pmodel.response
 #' @export
 pmodel.response.formula <- function(object, data, ...){
-#  print("pmodel.response.formula")
-    dots <- list(...)
-    if(is.null(data)) stop("the data argument is mandatory")
-    if(! inherits(data, "pdata.frame")) stop("the data argument must be a pdata.frame")
-    if(is.null(attr(data, "terms"))) data <- model.frame(data, object)
-    model  <- dots$model
-    effect <- dots$effect
-    theta  <- dots$theta
-    if(is.null(model)) model <- "pooling"
-    if(is.null(effect)) effect <- "individual"
-    if(model == "random" && is.null(theta)) stop("the theta argument is mandatory for model = \"random\"")
-    y <- model.response(data)
-    ptransform(y, model = model, effect = effect, theta = theta)
+  #  print("pmodel.response.formula")
+  dots <- list(...)
+  if(is.null(data)) stop("the data argument is mandatory")
+  if(! inherits(data, "pdata.frame")) stop("the data argument must be a pdata.frame")
+  if(is.null(attr(data, "terms"))) data <- model.frame(data, object)
+  model  <- dots$model
+  effect <- dots$effect
+  theta  <- dots$theta
+  if(is.null(model)) model <- "pooling"
+  if(is.null(effect)) effect <- "individual"
+  if(model == "random" && is.null(theta)) stop("the theta argument is mandatory for model = \"random\"")
+  y <- model.response(data)
+  class(y) <- unique(c("pseries", class(y)))
+  ptransform(y, model = model, effect = effect, theta = theta)
 }
+
 
 ptransform <- function(x, model = NULL, effect = NULL, theta = NULL, ...){
     # NB: ptransform (and hence pmodel.response) does not handle the random 2-way unbalanced case
