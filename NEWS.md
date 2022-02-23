@@ -10,10 +10,13 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 
 * TBD
 
-### TODO: 
- clean-up: remove deprecated class `pFormula` once package `cquad` switched 
+### TODO (not yet implemented):
+* clean-up: remove deprecated class `pFormula` once package `cquad` switched 
   to the current plm facilities without `pFormula` (maintainer + developer of 
-  `cquad` were notified and were provided a patch in Jan 2022).
+  `cquad` were notified and were provided a patch in Jan 2022). Development
+  repository of cquad is <https://github.com/fravale/cquad_dev/>.
+
+
 
 ### Bug Fixes:
 * pmodel.response: `I()` in LHS of formula led to error in estimation with plm
@@ -24,9 +27,9 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
   accepted anymore, it was allowed for back-compatibility for some time. Use
   `balance.type = "shared.times"` for the same result (see also NEWS entry for 
   version 1.6-6).
-* pdata.frame: argument 'stringsAsFactors' set to FALSE, was previously
-  default.stringsAsFactors() to determine value from options, but
-  default.stringsAsFactors will be deprecated as of R 4.2.0.
+* pdata.frame: argument `stringsAsFactors` set to `FALSE` (was previously
+  `default.stringsAsFactors()` to determine value from options, but that 
+   will be deprecated as of R 4.2.0).
 * Adjust example benchmark in `?plm.fast` to new behaviour from version 1.4.8
   onwards of package `microbenchmark` 
   (<https://github.com/joshuaulrich/microbenchmark/issues/34>).
