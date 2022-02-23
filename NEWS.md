@@ -81,7 +81,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
     NEWS for 2.4-0, 1.6-6).
 * pggls:
   * argument model: removed "random" from the list of official argument's
-    values as its use is depreciated (model = "pooling" does the same; however,
+    values as its use is deprecated (model = "pooling" does the same; however,
     value "random" is still accepted and adapted to "pooling" for 
     back-compatibility with a warning).
   * print.summary.pggls: fix printed model name in case default model was selected
