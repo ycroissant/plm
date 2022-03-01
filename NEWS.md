@@ -22,6 +22,15 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 * pmodel.response: `I()` in LHS of formula led to error in estimation with plm
   ([#17](https://github.com/ycroissant/plm/issues/17)).
 
+### Changes:
+* summary.pseries: returned object is class "summary.pseries" for all inputs and
+  now has added as attribute "SummaryDefault" the summary of the base object
+  (e.g., summary(your_numeric)) if the base object is not a factor, logical, or 
+  character. For factors, logicals, and characters in a pseries, the 
+  summary.pseries object is simply the summary of the base object.
+  Printing of the summary object now gives the pseries-specific output as before 
+  (if applicable) and additionally summary printing of the base object.
+
 ### Clean-ups:
 * make.pbalanced: for argument `balance.type` the value `"shared"` is not 
   accepted anymore, it was allowed for back-compatibility for some time. Use

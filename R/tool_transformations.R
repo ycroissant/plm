@@ -219,7 +219,9 @@ plot.pseries <- function(x, plot = c("lattice", "superposed"),
 #' @rdname pseries
 #' @export
 summary.pseries <- function(object, ...) {
-    if(!inherits(object, c("factor", "logical", "character"))) {
+    object.orig <- object
+    special_treatment_vars <- c("factor", "logical", "character")
+    if(!inherits(object, special_treatment_vars)) {
         index <- unclass(attr(object, "index")) # unclass for speed
         id   <- index[[1L]]
         time <- index[[2L]]
@@ -232,11 +234,14 @@ summary.pseries <- function(object, ...) {
         res <- structure(c(total        = sum( (na.omit(object) - mean(object, na.rm = TRUE)) ^ 2),
                            between_id   = sum( (na.omit(Bid)    - mean(Bid,    na.rm = TRUE)) ^ 2),
                            between_time = sum( (na.omit(Btime)  - mean(Btime,  na.rm = TRUE)) ^ 2)), 
-                          class = c("summary.pseries", "numeric"))
+                          class = c("summary.pseries"),
+                          class.pseries = class(object.orig))
+        attr(res, "SummaryDefault") <- summary(remove_pseries_features(object))
     } else {
-        class(object) <- setdiff(class(object), c("pseries"))
+        object <- remove_pseries_features(object)
         res <- summary(object, ...)
-        class(res) <- c("summary.pseries", class(object), class(res))
+        attr(res, "class.pseries") <- class(object.orig)
+        class(res) <- c("summary.pseries")
     }
     return(res)
 }
@@ -244,10 +249,14 @@ summary.pseries <- function(object, ...) {
 #' @rdname pseries
 #' @export
 plot.summary.pseries <- function(x, ...){
-    x <- as.numeric(x)
-    share <- x[-1L]/x[1L] # vec with length == 2
-    names(share) <- c("id", "time")
-    barplot(share, ...)
+    special_treatment_vars <- c("factor", "logical", "character")
+    class.basic <- setdiff(attr(x, "class.pseries"), "pseries")
+    if(!class.basic %in% special_treatment_vars) {
+      x <- as.numeric(x) # get tss, id/time b by coercing summary.pseries to 'numeric'
+      share <- x[-1L]/x[1L] # vec with length == 2
+      names(share) <- c("id", "time")
+      barplot(share, ...)
+    } else NULL
 }
 
 #' @rdname pseries
@@ -256,14 +265,21 @@ print.summary.pseries <- function(x, ...){
     x.orig <- x
     digits <- getOption("digits")
     special_treatment_vars <- c("factor", "logical", "character")
-    if(!inherits(x, special_treatment_vars)) {
-        x <- as.numeric(x)
+    class.basic <- setdiff(attr(x, "class.pseries"), "pseries")
+    if(!class.basic %in% special_treatment_vars) {
+        x <- as.numeric(x) # get tss, id/time b by coercing summary.pseries to 'numeric'
         share <- x[-1L]/x[1L] # vec with length == 2
         names(share) <- c("id", "time")
         cat(paste("total sum of squares:", signif(x[1L], digits = digits),"\n"))
         print.default(share, ...)
+        cat("\n")
+        print(attr(x.orig, "SummaryDefault"), ...)
     } else {
-        class(x) <- setdiff(class(x), c("summary.pseries", special_treatment_vars))
+      # use base R's facilities
+        attr(x, "class.pseries") <- NULL
+        # factor is special once again:
+        is.fac <- if(class.basic == "factor") TRUE else FALSE
+        attr(x, "class") <- if(is.fac) NULL else "summaryDefault"
         print(x, ...)
     }
     invisible(x.orig)
