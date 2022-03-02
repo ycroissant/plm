@@ -6,17 +6,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 
 ***
 
-# plm 2.6-99999 (Development Version)
-
-* TBD
-
-### TODO (not yet implemented):
-* clean-up: remove deprecated class `pFormula` once package `cquad` switched 
-  to the current plm facilities without `pFormula` (maintainer + developer of 
-  `cquad` were notified and were provided a patch in Jan 2022). Development
-  repository of cquad is <https://github.com/fravale/cquad_dev/>.
-
-
+# plm 2.6-1
 
 ### Bug Fixes:
 * pmodel.response: `I()` in LHS of formula led to error in estimation with plm
@@ -32,13 +22,13 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
   (if applicable) and additionally summary printing of the base object.
 
 ### Clean-ups:
+* pdata.frame: argument `stringsAsFactors` set to `FALSE` (was previously
+  `default.stringsAsFactors()` to determine value from options, but that 
+   will be deprecated as of R 4.2.0).
 * make.pbalanced: for argument `balance.type` the value `"shared"` is not 
   accepted anymore, it was allowed for back-compatibility for some time. Use
   `balance.type = "shared.times"` for the same result (see also NEWS entry for 
   version 1.6-6).
-* pdata.frame: argument `stringsAsFactors` set to `FALSE` (was previously
-  `default.stringsAsFactors()` to determine value from options, but that 
-   will be deprecated as of R 4.2.0).
 * Adjust example benchmark in `?plm.fast` to new behaviour from version 1.4.8
   onwards of package `microbenchmark` 
   (<https://github.com/joshuaulrich/microbenchmark/issues/34>).
@@ -214,7 +204,8 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
     * In section about panel unit root testing:
       * added short intro with overview of available functions/tests and added
         two example cases.
-      * added sub-section about new function phansi.
+      * added sub-section about new function phansi [later renamed to phansitest 
+        in plm 2.6].
     * added a little more information on the use of vcovXX.
  * 2nd vignette: added formula for nested error component model.
   * all vignettes: references updated to include Baltagi (2021), the 6th edition 
