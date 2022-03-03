@@ -68,7 +68,7 @@ plm.list <- function(formula, data, subset, na.action,
   # lists of plm models or with models fitted by mylm (which have X, y
   # and W slots)
   systemlm <- function(object, restrict.matrix, restrict.rhs){
-    if (class(object) == "list"){
+    if (inherits(object, "list")){
       Ucoef <- Reduce("c", lapply(object, coef))
       Uvcov <- Reduce("bdiag", lapply(object, vcov))
       X <- Reduce("bdiag", lapply(object, model.matrix))
