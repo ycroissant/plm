@@ -6,6 +6,18 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 
 ***
 
+# plm 2.6-99999 (Development version)
+
+
+### TODO (not yet implemented):
+* clean-up: remove deprecated class `pFormula` once package `cquad` switched 
+  to the current plm facilities without `pFormula` (maintainer + developer of 
+  `cquad` were notified and were provided a patch in Jan 2022). Development
+  repository of cquad is <https://github.com/fravale/cquad_dev/>.
+
+
+
+
 # plm 2.6-1
 
 ### Bug Fixes:
