@@ -45,7 +45,7 @@ jobs:
 
       - uses: r-lib/actions/check-r-package@v1
         with:
-          args: '"--as-cran", "--test-dir=inst/tests"'
+          args: '"--no-manual", "--as-cran", "--test-dir=inst/tests"'
 
 #      - name: Show testthat output
 #        if: always()
