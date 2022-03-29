@@ -191,14 +191,14 @@ fixef.plm <- function(object, effect = NULL,
                        "time"       = pdim$Tint$nt)
       
       s2 <- deviance(object) / df.residual(object)
-      if (type != "dfirst") {
-        sefixef <- sqrt(s2 / nother + apply(Xb[, nw, drop = FALSE], 1,
-                                            function(x) t(x) %*% vcov %*% x))
-      } else {
-        Xb <- t(t(Xb[-1, ]) - Xb[1L, ])
-        sefixef <- sqrt(s2 * (1 / nother[-1] + 1 / nother[1])+
-                          apply(Xb[, nw, drop = FALSE], 1,
-                                function(x) t(x) %*% vcov %*% x))
+      sefixef <- if (type != "dfirst") {
+                    sqrt(s2 / nother + apply(Xb[, nw, drop = FALSE], 1,
+                                            function(x) t(x) %*% vcov %*% x) )
+                  } else {
+                    Xb <- t(t(Xb[-1L, ]) - Xb[1L, ])
+                    sqrt(s2 * (1 / nother[-1L] + 1 / nother[1L]) +
+                                      apply(Xb[, nw, drop = FALSE], 1,
+                                            function(x) t(x) %*% vcov %*% x) )
       }
       res <- switch(type,
                       "level"  = fixef,
@@ -210,6 +210,8 @@ fixef.plm <- function(object, effect = NULL,
     } else {
     ## case model.effect == "twoways"
     ##  * two-way balanced/unbalanced model for all effects
+    ## TODO: SEs are not computed in this case yet
+    ##       (can be computed for effect = "individual" and "time"; also for "twoways"?)
 
       beta.data <- as.numeric(tcrossprod(coef(object),
                                          model.matrix(object, model = "pooling")[ , nw, drop = FALSE]))
@@ -239,7 +241,6 @@ fixef.plm <- function(object, effect = NULL,
         ## other dfirst
         other.fixef.dfirst <- other.fixef.lvl - other.fixef.lvl[1L]
         tw.fixef.lvl <- tw.fixef.lvl - other.fixef.dfirst[indexl[[other.idx]]]
-        
         tw.fixef.lvl <- tw.fixef.lvl[!duplicated(indexl[[idx]])]
         names(tw.fixef.lvl) <- pdim[["panel.names"]][[idx]]
       } else {
