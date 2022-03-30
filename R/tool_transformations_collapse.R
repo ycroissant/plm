@@ -661,7 +661,7 @@ pseriesfy <- function(x,  ...) {
 #' effect case is enabled automatically (`fixest` wins over `lfe`),
 #' given one of the packages is detected and `options("plm.fast" = TRUE)` 
 #' (default) is set. If so, the packages' fast algorithms to partial out fixed 
-#' effects are #' used (`fixest::demean` (via `collapse::fhdwithin`), 
+#' effects are used (`fixest::demean` (via `collapse::fhdwithin`), 
 #' `lfe::demeanlist`). Both packages are 'Suggests' dependencies.
 #' 
 #' Users might experience neglectable numerical differences between enabled and

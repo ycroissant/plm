@@ -33,7 +33,7 @@ package plm is attached and the additional speed up for the two-way fixed
 effect case is enabled automatically (\code{fixest} wins over \code{lfe}),
 given one of the packages is detected and \code{options("plm.fast" = TRUE)}
 (default) is set. If so, the packages' fast algorithms to partial out fixed
-effects are #' used (\code{fixest::demean} (via \code{collapse::fhdwithin}),
+effects are used (\code{fixest::demean} (via \code{collapse::fhdwithin}),
 \code{lfe::demeanlist}). Both packages are 'Suggests' dependencies.
 
 Users might experience neglectable numerical differences between enabled and
