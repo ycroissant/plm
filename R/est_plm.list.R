@@ -93,7 +93,7 @@ plm.list <- function(formula, data, subset, na.action,
     }
     else{
       .resid <- Reduce("c", lapply(object, resid))
-      structure(list(coefficents = Ucoef, vcov = Uvcov, residuals = .resid), class = "basiclm")
+      structure(list(coefficients = Ucoef, vcov = Uvcov, residuals = .resid), class = "basiclm")
     }
   }
   models <- plm.models(sysplm, amodel = model, random.method = "kinla") #TODO NB: "kinla" does not seem to be supported anymore...
@@ -143,7 +143,7 @@ plm.list <- function(formula, data, subset, na.action,
     #    X[, colnames(BIGW$X)] <- X[, colnames(BIGW$X)] + BIGW$X
     # version provisoire : emplacement des constantes
     intercepts <- c(1, cumsum(sapply(XB, ncol))[-length(XB)]+1)
-    X[, - intercepts] <- X[, - intercepts] + BIGW$X
+    X[ , - intercepts] <- X[ , - intercepts] + BIGW$X
     m <- mylm(y, X, cbind(BIGW$W, BIGB$W))
   }
   else{
