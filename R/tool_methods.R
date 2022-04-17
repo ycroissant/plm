@@ -540,7 +540,7 @@ predict.plm <- function(object, newdata = NULL, na.fill = !inherits(newdata, "pd
       # remove intercept if contained in the formula/terms and, thus, in the 
       # model matrix
       #  (usually, users does not explicitly suppress the
-      #  intercept in FE models (by resp. ~ 0 + depvars), but we need 
+      #  intercept in FE models (e.g., by response ~ 0 + depvars), but we need 
       #  to cater for that suppressed-case as well by has.intercept(tt))
       if(has.intercept(tt)) X <- X[ , -1L, drop = FALSE]
       effect <- describe(object, "effect")
@@ -598,11 +598,14 @@ predict.plm <- function(object, newdata = NULL, na.fill = !inherits(newdata, "pd
         effs <- rep(effs, nrow(X))
       }
     } # end-if model == "within"
-    
     result <- as.numeric(tcrossprod(beta, X)) + if(model == "within") effs else 0
-    # if newdata is a pdata.frame output a pseries
-    if(is.pdf) result <- add_pseries_features(result, index(newdata))
-    names(result) <- rownames(newdata)
+    # if newdata is a pdata.frame output a pseries w/ index stripped down to what
+    # is left after NA-omitting (performed implicitly by model.frame)
+    if(is.pdf) {
+      result.index <- if(!is.null(rmrows <- unclass(attr(m, "na.action")))) index(newdata[-rmrows, ]) else index(newdata)
+      result <- add_pseries_features(result, result.index)
+    }
+    names(result) <- rownames(m)
   }
   result
 }

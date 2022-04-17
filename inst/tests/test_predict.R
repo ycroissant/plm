@@ -144,7 +144,27 @@ if(fixest.avail) {
 }
 
 
-#### random 
+#### corner cases
+
+# NA in newdata
+datNA <- data.frame(id = c(1,1,2,2,3), time = c(1,2,1,2,1), 
+                   y = c(1,3,5,10,8), x = c(1, NA, 3,4,5))
+datNA.p <- pdata.frame(datNA)
+
+pool <- plm(y ~ x, data = datNA.p, index = c("id", "time"), model="pooling")
+
+(predNA <- predict(pool, datNA.p))
+(index(predNA)) # index may have only 4 rows left as one row is removed due to NA in data
+stopifnot(nrow(index(predNA)) == 4L)
+
+(predict(pool, datNA))
+
+# FE model without intercept in formula
+fe0 <- plm(y ~ 0 + x, data = datNA.p, index = c("id", "time"), model="pooling")
+(pred.fe0.NA <- predict(fe0, datNA.p))
+
+
+#### random effects
 fit.plm.re.id <- plm(inv ~ value + capital, data = Grunfeld, model = "random")
 
 (predict(fit.plm.re.id))
