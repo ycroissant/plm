@@ -537,7 +537,12 @@ predict.plm <- function(object, newdata = NULL, na.fill = !inherits(newdata, "pd
     is.pdf <- inherits(newdata, "pdata.frame")
     
     if(model == "within") {
-      X <- X[ , -1L] # drop intercept
+      # remove intercept if contained in the formula/terms and, thus, in the 
+      # model matrix
+      #  (usually, users does not explicitly suppress the
+      #  intercept in FE models (by resp. ~ 0 + depvars), but we need 
+      #  to cater for that suppressed-case as well by has.intercept(tt))
+      if(has.intercept(tt)) X <- X[ , -1L, drop = FALSE]
       effect <- describe(object, "effect")
       effs.orig <- fixef(object, effect = effect)
       
