@@ -237,11 +237,11 @@ if(!isTRUE(all.equal(sum_lm_fe_oneway_ind_u[["coefficients"]][c(4:12) , "Std. Er
 if(!isTRUE(all.equal(sum_lm_fe_oneway_time_u[["coefficients"]][c(4:22) , "Std. Error"], sum_plm_fixef_lm_oneway_time_dfirst_u[ , "Std. Error"], check.attributes = FALSE)))
   stop("standard errors diverge: summary.plm vs. summary.fixef(..., type = \"dfirst\")")
 
-# two-ways balanced
-##### Tests deactivated as SEs are currently not computed for two-way FE
-#if(!isTRUE(all.equal(sum_lm_fe_tw[["coefficients"]][c(4:12) , "Std. Error"], sum_plm_fixef_lm_tw_ind_dfirst[ , "Std. Error"], check.attributes = FALSE)))
+# two-ways balanced 
+##### Tests deactivated as SEs are currently not computed for two-way FE # TODO
+# if(!isTRUE(all.equal(sum_lm_fe_tw[["coefficients"]][c(4:12) , "Std. Error"], sum_plm_fixef_lm_tw_ind_dfirst[ , "Std. Error"], check.attributes = FALSE)))
 #  stop("standard errors diverge: summary.plm vs. summary.fixef(..., type = \"dfirst\")")
-#if(!isTRUE(all.equal(sum_lm_fe_tw[["coefficients"]][c(13:31) , "Std. Error"], sum_plm_fixef_lm_tw_time_dfirst[ , "Std. Error"], check.attributes = FALSE)))
+# if(!isTRUE(all.equal(sum_lm_fe_tw[["coefficients"]][c(13:31) , "Std. Error"], sum_plm_fixef_lm_tw_time_dfirst[ , "Std. Error"], check.attributes = FALSE)))
 #  stop("standard errors diverge: summary.plm vs. summary.fixef(..., type = \"dfirst\")")
 
 # two-ways unbalanced - does not yet match
