@@ -1,6 +1,16 @@
 library(plm)
 data("Grunfeld", package = "plm")
 
+Grunfeld.p <- pdata.frame(Grunfeld)
+
+fit.plm.fe.id       <- plm(inv ~ value + capital, data = Grunfeld, model = "within")
+fit.plm.fe.id.unbal <- plm(inv ~ value + capital, data = Grunfeld[-c(198:200), ], model = "within")
+
+## ensure predict with newdata = original data gives same result
+(pred_orig1 <- predict(fit.plm.fe.id))
+(pred_orig2 <- predict(fit.plm.fe.id, newdata = Grunfeld.p))
+stopifnot(isTRUE(all.equal(pred_orig1, pred_orig2, check.attributes = FALSE)))
+
 
 # generate 40 new observations of two firms used for prediction:
 # firm 1 with years 1935:1964 and firm 2 with years 1935:1944
@@ -13,10 +23,6 @@ newdata <- data.frame(firm = c(rep(1, 30), rep(2, 10)),
                       value = new.value, capital = new.capital)
 
 newdata.p <- pdata.frame(newdata, index = c("firm", "year"))
-
-fit.plm.fe.id       <- plm(inv ~ value + capital, data = Grunfeld, model = "within")
-fit.plm.fe.id.unbal <- plm(inv ~ value + capital, data = Grunfeld[-c(198:200), ], model = "within")
-
 
 (pred.plm.fe.id         <- predict(fit.plm.fe.id, newdata = newdata.p))
 (pred.plm.fe.id.na.fill <- predict(fit.plm.fe.id, newdata = newdata.p, na.fill = TRUE))
@@ -107,40 +113,40 @@ if(fixest.avail) {
   # one-way individual
   fit.feols.fe.id <- feols(inv ~ value + capital | firm, data = Grunfeld)
   pred.feols.fe.id <- predict(fit.feols.fe.id, newdata = newdata)
-  stopifnot(all.equal(pred.feols.fe.id, as.numeric(pred.plm.fe.id), check.attributes = FALSE))
+  stopifnot(isTRUE(all.equal(pred.feols.fe.id, as.numeric(pred.plm.fe.id), check.attributes = FALSE)))
   
   # one-way individual - out-of-sample prediction
   pred.feols.fe.id.oos2 <- predict(fit.feols.fe.id, newdata = newdata.oos2.p)
-  stopifnot(all.equal(pred.feols.fe.id.oos2, as.numeric(pred.plm.fe.id.oos2), check.attributes = FALSE))
+  stopifnot(isTRUE(all.equal(pred.feols.fe.id.oos2, as.numeric(pred.plm.fe.id.oos2), check.attributes = FALSE)))
 
   # one-way individual unbalanced - out-of-sample prediction
   fit.feols.fe.id.unbal <- feols(inv ~ value + capital | firm, data = Grunfeld[-c(198:200), ])
   pred.feols.fe.id.unbal.oos2 <- predict(fit.feols.fe.id.unbal, newdata = newdata.oos2.p)
-  stopifnot(all.equal(pred.feols.fe.id.unbal.oos2, as.numeric(pred.plm.fe.id.unbal.oos2), check.attributes = FALSE))  
+  stopifnot(isTRUE(all.equal(pred.feols.fe.id.unbal.oos2, as.numeric(pred.plm.fe.id.unbal.oos2), check.attributes = FALSE)))
   
   # one-way time
   fit.feols.fe.ti <- feols(inv ~ value + capital | year, Grunfeld)
   pred.feols.fe.ti <- predict(fit.feols.fe.ti, newdata = newdata.ti)
-  stopifnot(all.equal(pred.feols.fe.ti, as.numeric(pred.plm.fe.ti), check.attributes = FALSE))
+  stopifnot(isTRUE(all.equal(pred.feols.fe.ti, as.numeric(pred.plm.fe.ti), check.attributes = FALSE)))
   
   # one-way time unbalanced
   fit.feols.fe.ti.unbal <- feols(inv ~ value + capital | year, data = Grunfeld[-c(198:200), ])
   pred.feols.fe.ti.unbal <- predict(fit.feols.fe.ti.unbal, newdata = newdata.ti.p)
-  stopifnot(all.equal(pred.feols.fe.ti.unbal, as.numeric(pred.plm.fe.ti.unbal), check.attributes = FALSE))  
+  stopifnot(isTRUE(all.equal(pred.feols.fe.ti.unbal, as.numeric(pred.plm.fe.ti.unbal), check.attributes = FALSE)))
   
   # twoways
   fit.feols.fe.tw <- feols(inv ~ value + capital | firm + year, Grunfeld)
   pred.feols.fe.tw <- predict(fit.feols.fe.tw, newdata = newdata.tw)
-  stopifnot(all.equal(pred.feols.fe.tw, as.numeric(pred.plm.fe.tw), check.attributes = FALSE))
+  stopifnot(isTRUE(all.equal(pred.feols.fe.tw, as.numeric(pred.plm.fe.tw), check.attributes = FALSE)))
   
   # twoways - out-of-sample prediction
   pred.feols.fe.tw.oos2 <- predict(fit.feols.fe.tw, newdata = newdata.oos2.p)
-  stopifnot(all.equal(pred.feols.fe.tw.oos2, as.numeric(pred.plm.fe.tw.oos2), check.attributes = FALSE))
+  stopifnot(isTRUE(all.equal(pred.feols.fe.tw.oos2, as.numeric(pred.plm.fe.tw.oos2), check.attributes = FALSE)))
   
   # twoways unbalanced - out-of-sample prediction
   fit.feols.fe.tw.unbal <- feols(inv ~ value + capital | firm + year, Grunfeld[-c(198:200), ])
   pred.feols.fe.tw.unbal.oos2 <- predict(fit.feols.fe.tw.unbal, newdata = newdata.oos2.p)
-  stopifnot(all.equal(pred.feols.fe.tw.unbal.oos2, as.numeric(pred.plm.fe.tw.unbal.oos2), check.attributes = FALSE))
+  stopifnot(isTRUE(all.equal(pred.feols.fe.tw.unbal.oos2, as.numeric(pred.plm.fe.tw.unbal.oos2), check.attributes = FALSE)))
 }
 
 

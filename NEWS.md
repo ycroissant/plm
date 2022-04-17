@@ -16,7 +16,10 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
   repository of cquad is <https://github.com/fravale/cquad_dev/>.
 
 ### Features:
-* predict.plm: prediction implemented for fixed effects models incl. support for
+* predict.plm:
+  * change: case without supplied non-`NULL` `newdata` now gives the predicted 
+    values of the outer model (before: inner model).
+  * prediction implemented for fixed effects models incl. support for
   argument 'newdata' and out-of-sample prediction. Help page (`?predict.plm`) 
   added to specifically explain the prediction for fixed effects models and the 
   out-of-sample case.

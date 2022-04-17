@@ -526,7 +526,7 @@ predict.plm <- function(object, newdata = NULL, na.fill = !inherits(newdata, "pd
   tt <- terms(object)
   if(is.null(newdata)){ 
     # return fitted values of estimated model and exit
-    result <- fitted(object, ...)
+    result <- fitted_exp.plm(object, ...) # fitted_exp.plm gives outer model's fitted values
   }
   else{
     Terms <- delete.response(tt)
