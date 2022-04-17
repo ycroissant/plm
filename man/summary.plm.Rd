@@ -115,7 +115,7 @@ Fstat <- wi_summary[["fstatistic"]]
 est <- wi_summary[["coefficients"]][ , "Estimate"]
 pval <- wi_summary[["coefficients"]][ , "Pr(>|t|)"]
 
-# print summary only for coefficent "value"
+# print summary only for coefficient "value"
 print(wi_summary, subset = "value")
 
 }

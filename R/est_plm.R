@@ -129,7 +129,6 @@ starX <- function(formula, data, model, rhs = 1, effect){
 #' @param formula. a new formula for the update method,
 #' @param evaluate a boolean for the update method, if `TRUE` the
 #'     updated model is returned, if `FALSE` the call is returned,
-#' @param newdata the new data set for the `predict` method,
 #' @param \dots further arguments.
 #' 
 #' @return An object of class `"plm"`.
@@ -177,7 +176,8 @@ starX <- function(formula, data, model, rhs = 1, effect){
 #' @seealso [summary.plm()] for further details about the associated
 #' summary method and the "summary.plm" object both of which provide some model
 #' tests and tests of coefficients.  [fixef()] to compute the fixed
-#' effects for "within" models (=fixed effects models).
+#' effects for "within" models (=fixed effects models). [predict.plm()] for 
+#' predicted values.
 #' @references
 #'
 #' \insertRef{AMEM:71}{plm}

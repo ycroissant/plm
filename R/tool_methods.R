@@ -180,8 +180,6 @@ deviance.panelmodel <- function(object, model = NULL, ...){
 
 
 
-# summary.plm creates a specific summary.plm object that is derived
-# from the associated plm object
 
 
 #' Summary for plm objects
@@ -272,10 +270,12 @@ deviance.panelmodel <- function(object, model = NULL, ...){
 #' est <- wi_summary[["coefficients"]][ , "Estimate"]
 #' pval <- wi_summary[["coefficients"]][ , "Pr(>|t|)"]
 #' 
-#' # print summary only for coefficent "value"
+#' # print summary only for coefficient "value"
 #' print(wi_summary, subset = "value")
 #' 
 summary.plm <- function(object, vcov = NULL, ...){
+  # summary.plm creates a specific summary.plm object that is derived
+  # from the associated plm object
   
   vcov_arg <- vcov
   model <- describe(object, "model")
@@ -363,9 +363,7 @@ print.summary.plm <- function(x, digits = max(3, getOption("digits") - 2),
   
   if (model == "random"){
     ercomp <- describe(x, "random.method")
-    cat(paste(" \n   (",
-              random.method.list[ercomp],
-              "'s transformation)\n",
+    cat(paste(" \n   (", random.method.list[ercomp], "'s transformation)\n",
               sep = ""))
   }
   else{
@@ -383,7 +381,8 @@ print.summary.plm <- function(x, digits = max(3, getOption("digits") - 2),
   }
   
   if (!is.null(x$rvcov)) {
-    cat("\nNote: Coefficient variance-covariance matrix supplied: ", attr(x$rvcov, which = "rvcov.name"), "\n", sep = "")
+    cat("\nNote: Coefficient variance-covariance matrix supplied: ", 
+        attr(x$rvcov, which = "rvcov.name"), "\n", sep = "")
   }
   
   cat("\nCall:\n")
@@ -445,11 +444,88 @@ print.summary.plm <- function(x, digits = max(3, getOption("digits") - 2),
   invisible(x)
 }
 
-#' @rdname plm
+#' Model Prediction for plm Objects
+#' 
+#' Predicted values of response based on plm models.
+#' 
+#' `predict`calculates predicted values by evaluating the regression function of
+#' a plm model for `newdata` or, if `newdata = NULL`, it returns the fitted values
+#' the plm model. 
+#' 
+#' The fixed effects (within) model is somewhat special in prediction as it has
+#' fixed effects estimated per individual, time period (one-way) or both (two-ways
+#' model) which should to be respected when predicting values relating to these
+#' fixed effects in the model: To do so, it is recommended to supply a pdata.frame 
+#' (and not a plain data.frame) in `newdata` as it describes the relationship 
+#' between the data supplied to the individual. and/or time periods. In case
+#' the `newdata`´'s pdata.frame has out-of-sample data (data contains individuals 
+#' and/or time periods not contained in the original model), it is not clear
+#' how values are to be predicted and the result will contain `NA` 
+#' values for these out-of-sample data. Argument `na.fill` can be set to `TRUE`
+#' to apply the original model's weighted mean of fixed effects for the 
+#' out-of-sample data to derive a prediction.
+#' 
+#' If a plain data.frame is given in `newdata` for a fixed effects model, the 
+#' weighted mean is used for all fixed effects as `newdata` for prediction as a 
+#' plain data.frame cannot describe any relation to individuals/time periods 
+#' (`na.fill` is automatically set to `TRUE` and the function warns).
+#' 
+#' See also **Examples**.
+#' 
+#' 
+#' @param object An object of class `"plm"`,
+#' @param newdata An optional pdata.frame in which to look for variables to be
+#'                used for prediction. If `NULL`, the fitted values are returned.
+#'                For fixed effects models, supplying a pdata.frame is recommended.
+#' @param na.fill A logical, only relevant if `object` is a pdata.frame, indicating
+#'                whether for any supplied out-of-sample indexes (individual, time,
+#'                combination of both), the missing fixed effect estimate is filled 
+#'                with the weighted mean of the model's present fixed effect estimates
+#'                or not.
+#' @param \dots further arguments.
+#' @return A numeric (or a pseries if `newdata` is a pdata.frame) carrying the 
+#'         predicted values with length equal to the number of rows as the data 
+#'         supplied in `newdata` and with names the rownames of `newdata` or, if 
+#'         `newdata = NULL`, the fitted values the original model given in `object`.
+#' @keywords regression
 #' @export
-predict.plm <- function(object, newdata = NULL, ...){
+#' @rdname predict.plm
+#' @examples
+#' library(plm)
+#' data("Grunfeld", package = "plm")
+#' 
+#' # fit a fixed effect model
+#' fit.fe <- plm(inv ~ value + capital, data = Grunfeld, model = "within")
+#' 
+#' # generate 55 new observations of three firms used for prediction:
+#' #  * firm 1 with years 1935:1964 (has out-of-sample years 1955:1964), 
+#' #  * firm 2 with years 1935:1949 (all in sample),
+#' #  * firm 11 with years 1935:1944 (firm 11 is out-of-sample)
+#' set.seed(42L)
+#' 
+#' new.value2   <- runif(55, min = min(Grunfeld$value),   max = max(Grunfeld$value))
+#' new.capital2 <- runif(55, min = min(Grunfeld$capital), max = max(Grunfeld$capital))
+#' 
+#' newdata <- data.frame(firm = c(rep(1, 30), rep(2, 15), rep(11, 10)),
+#'                       year = c(1935:(1935+29), 1935:(1935+14), 1935:(1935+9)),
+#'                       value = new.value2, capital = new.capital2)
+#' # make pdata.frame
+#' newdata.p <- pdata.frame(newdata, index = c("firm", "year"))
+#' 
+#' ## predict from fixed effect model with new data as pdata.frame
+#' predict(fit.fe, newdata = newdata.p)
+#' 
+#' ## set na.fill = TRUE to have the weighted mean used to for fixed effects -> no NA values
+#' predict(fit.fe, newdata = newdata.p, na.fill = TRUE)
+#' 
+#' ## predict with plain data.frame from fixed effect model: uses mean fixed effects 
+#' ## for prediction and, thus, yields different result with a warning
+#' predict(fit.fe, newdata = newdata)
+#' 
+predict.plm <- function(object, newdata = NULL, na.fill = !inherits(newdata, "pdata.frame"), ...) {
   tt <- terms(object)
-  if (is.null(newdata)){
+  if(is.null(newdata)){ 
+    # return fitted values of estimated model and exit
     result <- fitted(object, ...)
   }
   else{
@@ -457,7 +533,71 @@ predict.plm <- function(object, newdata = NULL, ...){
     m <- model.frame(Terms, newdata)
     X <- model.matrix(Terms, m)
     beta <- coef(object)
-    result <- as.numeric(crossprod(beta, t(X)))
+    model <- describe(object, "model")
+    is.pdf <- inherits(newdata, "pdata.frame")
+    
+    if(model == "within") {
+      X <- X[ , -1L] # drop intercept
+      effect <- describe(object, "effect")
+      effs.orig <- fixef(object, effect = effect)
+      
+      idx <- switch(effect, "individual" = 1L, "time" = 2L)
+      
+      if(is.pdf) {
+        model.idx   <- unclass(index(object)) # unclass for speed
+        newdata.idx <- unclass(index(newdata))
+        
+        if(effect %in% c("individual", "time")) {
+          # one-way
+          
+          model.idx.eff   <- model.idx[[idx]]
+          newdata.idx.eff <- newdata.idx[[idx]]
+
+          effs <- effs.orig[levels(newdata.idx.eff)][newdata.idx.eff] # has length corresponding to newdata
+          
+          if(na.fill & sum(out.of.sample <- !newdata.idx.eff %in% model.idx.eff) > 0L) {
+            pdim <- pdim(object)
+            effs[out.of.sample] <- weighted.mean(effs.orig, w = pdim$Tint[[idx]])
+          }
+        } else {
+          # two-ways
+          # two-ways case is a little special as the rows of id-time combinations
+          # need to be determined first (not as simple subsetting as in one-way case)
+          model.idx.id   <- model.idx[[1L]]
+          model.idx.ti   <- model.idx[[2L]]
+          
+          newdata.idx.id <- newdata.idx[[1L]]
+          newdata.idx.ti <- newdata.idx[[2L]]
+          
+          model.idx.tw   <- paste(model.idx.id,   model.idx.ti,   sep = "_")
+          newdata.idx.tw <- paste(newdata.idx.id, newdata.idx.ti, sep = "_")
+          
+          names(effs.orig) <- model.idx.tw
+          
+          effs <- effs.orig[newdata.idx.tw] # has length corresponding to newdata
+          
+          if(na.fill & sum(out.of.sample <- !newdata.idx.tw %in% model.idx.tw) > 0L) {
+            pdim <- pdim(object)
+            effs[out.of.sample] <- mean(effs.orig)
+          }
+        }
+      } else {
+        # newdata is not a pdata.frame: use (weighted) mean of fixed effects as best guess
+        # (argument na.fill is not evaluated here as for a data.frame all values would 
+        # be NA, so rather weighted mean of fixed effects is always applied)
+        warning("Data supplied in argument 'newdata' is not a pdata.frame; weighted mean of fixed effects as in original model used for prediction.")
+        pdim <- pdim(object)
+        effs <- if(na.fill) {
+                    if(effect == "twoways") mean(effs.orig) else weighted.mean(effs.orig, w = pdim$Tint[[idx]])
+                  } else NA
+        effs <- rep(effs, nrow(X))
+      }
+    } # end-if model == "within"
+    
+    result <- as.numeric(tcrossprod(beta, X)) + if(model == "within") effs else 0
+    # if newdata is a pdata.frame output a pseries
+    if(is.pdf) result <- add_pseries_features(result, index(newdata))
+    names(result) <- rownames(newdata)
   }
   result
 }

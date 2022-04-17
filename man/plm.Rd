@@ -12,7 +12,6 @@
 \alias{print.panelmodel}
 \alias{update.panelmodel}
 \alias{deviance.panelmodel}
-\alias{predict.plm}
 \alias{formula.plm}
 \alias{plot.plm}
 \alias{residuals.plm}
@@ -66,8 +65,6 @@ plm(
 \method{update}{panelmodel}(object, formula., ..., evaluate = TRUE)
 
 \method{deviance}{panelmodel}(object, model = NULL, ...)
-
-\method{predict}{plm}(object, newdata = NULL, ...)
 
 \method{formula}{plm}(x, ...)
 
@@ -142,8 +139,6 @@ restrictions on the coefficients,}
 
 \item{evaluate}{a boolean for the update method, if \code{TRUE} the
 updated model is returned, if \code{FALSE} the call is returned,}
-
-\item{newdata}{the new data set for the \code{predict} method,}
 
 \item{dx}{the half--length of the individual lines for the plot
 method (relative to x range),}
@@ -348,7 +343,8 @@ summary(am)
 \code{\link[=summary.plm]{summary.plm()}} for further details about the associated
 summary method and the "summary.plm" object both of which provide some model
 tests and tests of coefficients.  \code{\link[=fixef]{fixef()}} to compute the fixed
-effects for "within" models (=fixed effects models).
+effects for "within" models (=fixed effects models). \code{\link[=predict.plm]{predict.plm()}} for
+predicted values.
 }
 \author{
 Yves Croissant
