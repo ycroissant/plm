@@ -485,7 +485,7 @@ print.summary.plm <- function(x, digits = max(3, getOption("digits") - 2),
 #' @param \dots further arguments.
 #' @return A numeric (or a pseries if `newdata` is a pdata.frame) carrying the 
 #'         predicted values with length equal to the number of rows as the data 
-#'         supplied in `newdata` and with names the rownames of `newdata` or, if 
+#'         supplied in `newdata` and with names the rown ames of `newdata` or, if 
 #'         `newdata = NULL`, the fitted values the original model given in `object`.
 #' @keywords regression
 #' @export

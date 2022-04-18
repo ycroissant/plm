@@ -29,7 +29,7 @@ or not.}
 \value{
 A numeric (or a pseries if \code{newdata} is a pdata.frame) carrying the
 predicted values with length equal to the number of rows as the data
-supplied in \code{newdata} and with names the rownames of \code{newdata} or, if
+supplied in \code{newdata} and with names the rown ames of \code{newdata} or, if
 \code{newdata = NULL}, the fitted values the original model given in \code{object}.
 }
 \description{
