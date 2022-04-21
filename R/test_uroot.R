@@ -542,7 +542,7 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
   ## Hadri's test is applicable to balanced data only
   ## input 'object' is a list with observations per individual
   if(!is.list(object)) stop("argument 'object' in hadritest is supposed to be a list")
-  if(exo == "none") stop("exo = \"none\" is not a valid option for Hadri's test")
+  if(exo == "none") stop("exo = \"none\" (\"~0\" in the formula interface) is not a valid option for Hadri's test")
   # determine L (= time periods), unique for balanced panel and number of individuals (n)
   if(length(L <- unique(lengths(object, use.names = FALSE))) > 1L)
     stop("Hadri test is not applicable to unbalanced panels")
@@ -588,7 +588,7 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
   }
   
   stat <- c(z = sqrt(n) * (LM - adj[1L])  / sqrt(adj[2L])) # eq. (14), (22) in Hadri (2000)
-  pvalue <- pnorm(stat, lower.tail = FALSE) # is one-sided! was until rev. 572: 2*(pnorm(abs(stat), lower.tail = FALSE))
+  pvalue <- pnorm(stat, lower.tail = FALSE) # is one-sided!
   
   htest <- structure(list(statistic   = stat,
                           parameter   = NULL,
@@ -900,7 +900,7 @@ purtest <- function(object, data = NULL, index = NULL,
   }
   
   if(test == "ips"){
-    if(exo == "none") stop("exo = \"none\" is not a valid option for the Im-Pesaran-Shin test")
+    if(exo == "none") stop("exo = \"none\" (\"~0\" in the formula interface) is not a valid option for the Im-Pesaran-Shin test")
     if(!is.null(ips.stat) && !any(ips.stat %in% c("Wtbar", "Ztbar", "tbar"))) stop("argument 'ips.stat' must be one of \"Wtbar\", \"Ztbar\", \"tbar\"")
     lags  <- vapply(idres, function(x) x[["lags"]], FUN.VALUE = 0.0, USE.NAMES = FALSE)
     L.ips <- vapply(idres, function(x) x[["T"]],    FUN.VALUE = 0.0, USE.NAMES = FALSE) - lags - 1
@@ -918,7 +918,7 @@ purtest <- function(object, data = NULL, index = NULL,
       Etbar <- mean(adjval[1L, ])
       Vtbar <- mean(adjval[2L, ])
       stat <- c("Wtbar" = sqrt(n) * (tbar - Etbar) / sqrt(Vtbar)) # (3.13) = (4.10) in IPS (2003) [same generic formula for Ztbar and Wtbar]
-      pvalue <- pnorm(stat, lower.tail = TRUE) # need lower.tail = TRUE (like ADF one-sided to the left), was until rev. 577: 2*pnorm(abs(stat), lower.tail = FALSE)
+      pvalue <- pnorm(stat, lower.tail = TRUE) # need lower.tail = TRUE (like ADF one-sided to the left)
     }
     
     if(!is.null(ips.stat) && ips.stat == "Ztbar") {
