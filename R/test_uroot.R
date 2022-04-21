@@ -271,16 +271,20 @@ purtest.names.test <- c(levinlin  = "Levin-Lin-Chu Unit-Root Test",
 ## General functions to transform series:
 
 YClags <- function(object,  k = 3){
+  # NB/TODO: there is no check if k > length(object) so this errors non-gracefully
+  #     if there are not enough observations for an individual
   if (k > 0)
-    sapply(1:k, function(x) c(rep(NA, x), object[1:(length(object)-x)]))
+    sapply(1:k, function(x) c(rep(NA, x), object[seq_len(length(object)-x)]))
   else
     NULL
 }
 
-YCtrend <- function(object) 1:length(object)
+YCtrend <- function(object) seq_along(object)
 
-YCdiff <- function(object){
-  c(NA, object[2:length(object)] - object[1:(length(object)-1)])
+YCdiff <- function(object) {
+  # NB/TODO: no sanity check here: for input of length(object) == 1, a result of 
+  # length 3 is returned: c(NA, NA, 0)
+  c(NA, object[2:length(object)] - object[seq_len(length(object)-1)])
 }
 
 selectT <- function(x, Ts){
@@ -305,11 +309,11 @@ lagsel <- function(object, exo = c("intercept", "none", "trend"),
   method <- match.arg(method)
   y <- object
   Dy <- YCdiff(object)
-  Ly <- c(NA, object[1:(length(object)-1)])
+  Ly <- c(NA, object[seq_len(length(object)-1)])
   if (exo == "none")      m <- NULL
   if (exo == "intercept") m <- rep(1, length(object))
   if (exo == "trend")     m <- cbind(1, YCtrend(object))
-  LDy <- YClags(Dy, pmax)
+  LDy <- YClags(Dy, k = pmax)
   decreasei <- TRUE
   i <- 0
   narow <- 1:(pmax+1)
@@ -468,12 +472,12 @@ tsadf <- function(object, exo = c("intercept", "none", "trend"),
   y <- object
   L <- length(y)
   Dy <- YCdiff(object)
-  Ly <- c(NA, object[1:(length(object) - 1)])
+  Ly <- c(NA, object[seq_len(length(object)-1)])
   if(exo == "none")      m <- NULL
   if(exo == "intercept") m <- rep(1, length(object))
   if(exo == "trend")     m <- cbind(1, YCtrend(object))
   narow <- 1:(lags+1)
-  LDy <- YClags(Dy, lags)
+  LDy <- YClags(Dy, k = lags)
   X <- cbind(Ly, LDy, m)[-narow, , drop = FALSE]
   y <- Dy[- narow]
   result <- my.lm.fit(X, y, dfcor = dfcor)
