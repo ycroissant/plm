@@ -62,6 +62,16 @@ fixef(gtw, effect = "twoways",    type = "dfirst")
 
 fixef(gtw, effect = "twoways",    type = "level")
 
+
+# this errored until 2022-04-22:
+mod2 <- plm(inv ~ value + capital, data = Grunfeld[Grunfeld$firm %in% c(1,2), ])
+fixef(mod2, type = "dfirst")
+
+# until 2022-04-22: this gave non-sane result c(NA, 0), now numeric(0)
+mod1 <- plm(inv ~ value + capital, data = Grunfeld[Grunfeld$firm %in% c(1), ])
+fixef(mod1, type = "dfirst")
+
+
 ############# (2): consistency with summary.plm #############
 # compare summary.plm to summary.fixef( , type = "dfirst")
 mod_pool <- plm(inv ~ value + capital + factor(firm), data = Grunfeld, model = "pooling")
