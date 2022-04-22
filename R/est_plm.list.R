@@ -270,7 +270,7 @@ print.summary.plm.list <- function(x, digits = max(3, getOption("digits") - 2),
     print(corer, digits = digits, na.print = ".")
     cat("\n")
   }
-  for (l in 1:length(x$models)){
+  for (l in seq_along(x$models)){
     cat(paste("\n - ", names(x$models)[l], "\n", sep = ""))
     printCoefmat(x$models[[l]], digits = digits)
   }
@@ -281,7 +281,7 @@ print.summary.plm.list <- function(x, digits = max(3, getOption("digits") - 2),
 #' @export
 print.plm.list <- function(x, digits = max(3, getOption("digits") - 2), width = getOption("width"),...){
   cat("\nModel Formulas:\n")
-  for (l in 1:length(formula(x))){
+  for (l in seq_along(formula(x))){
     cat(paste(names(formula(x))[l], "  : ", deparse(formula(x)[[l]]), "\n", sep = ""))
   }
   cat("\nCoefficients:\n")

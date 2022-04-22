@@ -653,7 +653,7 @@ getvar <- function(x){
 
 dynterms2formula <- function(x, response.name = NULL){
   result <- character(0)
-  for (i in 1:length(x)){
+  for (i in seq_along(x)){
     theinst <- x[[i]]
     # if the first element is zero, write the variable without lag and
     # drop the 0 from the vector
@@ -752,7 +752,7 @@ makegmm <- function(x, g, TL1, collapse = FALSE){
   if (collapse) {
     x <- lapply(x, rev)
     m <- matrix(0, T - TL1, min(T - rg[1L], rg[2L]+1-rg[1L]))
-    for (y in 1:length(x)){ m[y, 1:length(x[[y]])] <- x[[y]]}
+    for (y in seq_along(x)){ m[y, seq_along(x[[y]])] <- x[[y]]}
     result <- m
    }
    else {

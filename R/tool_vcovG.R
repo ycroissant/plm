@@ -425,8 +425,8 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
                     eres <- array(0, dim = dim(efull))
                     dimnames(eres) <- dimnames(efull)
                     ## populate "pseudo-diagonal" with values from efull
-                    for(i in 1:length(names(u))) {
-                        for(j in 1:length(names(v))) {
+                    for(i in seq_along(names(u))) {
+                        for(j in seq_along(names(v))) {
                             if(names(u)[i] == names(v)[j]) {
                                 eres[i, j] <- efull[i, j]
                             }
@@ -452,8 +452,8 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
                     eres <- array(0, dim = dim(efull))
                     dimnames(eres) <- dimnames(efull)
                     ## populate "pseudo-diagonal" with values from efull
-                    for(i in 1:length(names(u))) {
-                        for(j in 1:length(names(v))) {
+                    for(i in seq_along(names(u))) {
+                        for(j in seq_along(names(v))) {
                             if(names(u)[i] == names(v)[j]) {
                                 eres[i, j] <- efull[i, j]
                             }
@@ -511,7 +511,7 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
     tind <- vector("list", n)
     tlab <- vector("list", n)
     
-    for (i in 1:length(unique(relevant.ind))) {
+    for (i in seq_along(unique(relevant.ind))) {
         tind[[i]] <- which(relevant.ind == i)
         tlab[[i]] <- lab[which(relevant.ind == i)]
     }
@@ -1033,7 +1033,7 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
     tind <- vector("list", n)
     tlab <- vector("list", n)
     
-    for (i in 1:length(unique(relevant.ind))) {
+    for (i in seq_along(unique(relevant.ind))) {
         tind[[i]] <- which(relevant.ind == i)
         tlab[[i]] <- lab[which(relevant.ind == i)]
     }

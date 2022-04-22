@@ -207,7 +207,7 @@ plot.pseries <- function(x, plot = c("lattice", "superposed"),
                ## plot lines (notice: tind. are factors, so they
                ## retain the correct labels which would be lost if
                ## using as.numeric
-               for(i in 1:length(unind)) {
+               for(i in seq_along(unind)) {
                    nxi <- nx[ind == unind[i]]
                    tindi <- tind[ind == unind[i]]
                    lines(x = tindi, y = scalefun(nxi),

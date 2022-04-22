@@ -631,7 +631,7 @@ plot.plm <- function(x, dx = 0.2, N = NULL, seed = 1,
     n <- pdim$nT$n
     if (! subs) N <- n
     ids <- unique(index(x, "id"))
-    if (subs) ids <- ids[sample(1:length(ids), N, replace = FALSE)]
+    if (subs) ids <- ids[sample(seq_along(ids), N, replace = FALSE)]
     sel <- index(x, "id") %in% ids
     T. <- pdim$nT$T
     cols <- rainbow(N)

@@ -556,7 +556,7 @@ cortab <- function(x, grouping, groupnames = NULL,
     fullind <- as.numeric(attr(x, "index")[ , 1L])
     ids <- unique(fullind)
     n <- length(ids)
-    regs <- 1:length(unique(grouping))
+    regs <- seq_along(unique(grouping))
 
     if(!(is.numeric(grouping))) grouping <- as.numeric(as.factor(grouping))
     
@@ -570,7 +570,7 @@ cortab <- function(x, grouping, groupnames = NULL,
     ## for each pair of regions (nb: no duplicates, e.g., 3.1 but not 1.3)
 
     ## make w<1.n>:
-    for(h in 1:length(regs)) {
+    for(h in seq_along(regs)) {
       for(k in 1:h) {
         statew <- matrix(0, ncol = n, nrow = n)
         ## make statew for cor. between h and k
@@ -605,7 +605,7 @@ cortab <- function(x, grouping, groupnames = NULL,
     tab.g <- function(x, regs, regnames, test="rho", value) {
         myw <- 0
          tabg <- matrix(NA, ncol=length(regs), nrow=length(regs))
-         for(i in 1:length(regs)) {
+         for(i in seq_along(regs)) {
              for(j in 1:i) {
                  ## take appropriate w matrix
                  eval(parse(text = paste("myw<-w", i, ".", j, sep = "")))

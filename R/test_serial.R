@@ -646,7 +646,7 @@ pbsytest.panelmodel <- function(x, test = c("ar", "re", "j"), re.normal = if (te
   
   unind <- unique(ind)
   uu <-  uu1 <- rep(NA, length(unind))
-  for(i in 1:length(unind)) {
+  for(i in seq_along(unind)) {
     u.t <- poolres[ind == unind[i]]
     u.t.1 <- u.t[-length(u.t)]
     u.t <- u.t[-1L]
