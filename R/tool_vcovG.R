@@ -790,7 +790,7 @@ vcovSCC.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
     S0 <- vcovG(x, type=type, cluster=cluster, l=0, inner=inner)
 
     if(maxlag > 0) {
-        for(i in 1:maxlag) {
+        for(i in seq_len(maxlag)) {
             Vctl <- vcovG(x, type=type, cluster=cluster,
                              l=i, inner=inner)
             S0 <- S0 + wj(i, maxlag) * (Vctl + t(Vctl))
@@ -1094,7 +1094,7 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
     ## for each group 1..n
     ## (use subscripting from condition 'label in labels' set',
     ## the rest stays NA if any)
-    for(i in 1:n) {
+    for(i in seq_len(n)) {
       ut <- uhat[tind[[i]]]
       tpos <- (1:t)[unique(lab) %in% tlab[[i]]]
       ## put nondiag elements to 0 if diagonal=TRUE
@@ -1111,7 +1111,7 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
   unlabs <- unique(lab)
 
   salame <- array(dim = c(k, k, n))
-  for(i in 1:n) {
+  for(i in seq_len(n)) {
     groupinds <- tind[[i]]
     grouplabs <- tlab[[i]]
     xi <- demX[groupinds, , drop = FALSE]

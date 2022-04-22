@@ -174,7 +174,7 @@ pmg <- function(formula, data, subset, na.action,
     "mg" = {
       ## for each x-sect. i = 1..n
       unind <- unique(ind)
-      for(i in 1:n) {
+      for(i in seq_len(n)) {
         tX <- X[ind == unind[i], ]
         ty <- y[ind == unind[i]]
         if(trend) tX <- cbind(tX, 1:(dim(tX)[[1L]]))
@@ -201,7 +201,7 @@ pmg <- function(formula, data, subset, na.action,
       ## for each x-sect. i = 1..n estimate (over t) an augmented model
       ## y_it = alpha_i + beta_i*X_it + c1_i*my_t + c2_i*mX_t + err_it
       unind <- unique(ind)
-      for(i in 1:n) {
+      for(i in seq_len(n)) {
         taugX <- augX[ind == unind[i], ] # TODO: check if this kind of extractions need drop = FALSE for corner cases
         ty    <-    y[ind == unind[i]]
         if(trend) taugX <- cbind(taugX, 1:(dim(taugX)[[1L]]))
@@ -256,7 +256,7 @@ pmg <- function(formula, data, subset, na.action,
     coefmat <- array(data = NA_real_, dim = c(k, k, n))
     demcoef <- tcoef - coef # gets recycled n times by column
 
-    for (i in 1:n) coefmat[ , , i] <- outer(demcoef[ , i], demcoef[ , i])
+    for (i in seq_len(n)) coefmat[ , , i] <- outer(demcoef[ , i], demcoef[ , i])
     ## summing over the n-dimension of the array we get the
     ## covariance matrix of coefs
     vcov <- rowSums(coefmat, dims = 2L) / (n*(n-1)) # == apply(coefmat, 1:2, sum) / (n*(n-1)) but rowSums(., dims = 2L)-construct is way faster

@@ -318,11 +318,11 @@ lagsel <- function(object, exo = c("intercept", "none", "trend"),
   LDy <- YClags(Dy, k = pmax)
   decreasei <- TRUE
   i <- 0
-  narow <- 1:(pmax+1)
+  narow <- seq_len(pmax+1)
   if (method == "Hall"){
     while(decreasei){
       lags <- pmax - i
-      if (!fixedT) narow <- 1:(lags+1)
+      if (!fixedT) narow <- seq_len(lags+1)
       X <- cbind(Ly, LDy[ , 0:lags], m)[-narow, , drop = FALSE]
       y <- Dy[-narow]
       sres <- my.lm.fit(X, y, dfcor = dfcor)
@@ -337,7 +337,7 @@ lagsel <- function(object, exo = c("intercept", "none", "trend"),
     l <- c()
     while(i <= pmax){
       lags <- pmax - i
-      if (!fixedT) narow <- 1:(lags+1)
+      if (!fixedT) narow <- seq_len(lags+1)
       X <- cbind(Ly, LDy[ , 0:lags], m)[-narow, , drop = FALSE]
       y <- Dy[-narow]
       sres <- my.lm.fit(X, y, dfcor = dfcor)
@@ -478,7 +478,7 @@ tsadf <- function(object, exo = c("intercept", "none", "trend"),
   if(exo == "none")      m <- NULL
   if(exo == "intercept") m <- rep(1, length(object))
   if(exo == "trend")     m <- cbind(1, YCtrend(object))
-  narow <- 1:(lags+1)
+  narow <- seq_len(lags+1)
   LDy <- YClags(Dy, k = lags)
   X <- cbind(Ly, LDy, m)[-narow, , drop = FALSE]
   y <- Dy[- narow]

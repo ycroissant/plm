@@ -648,7 +648,7 @@ plot.plm <- function(x, dx = 0.2, N = NULL, seed = 1,
         beta <- coef(x)
         alphas <- meany - meanx * beta
         dx <- dx * (max(thex) - min(thex))
-        for (i in 1:N){
+        for (i in seq_len(N)){
             xmin <- meanx[i] - dx
             xmax <- meanx[i] + dx
             ymin <- alphas[i] + beta * xmin

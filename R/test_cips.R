@@ -171,7 +171,7 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
       
       ## for each x-sect. i=1..n
       unind <- unique(ind)
-      for(i in 1:n) {
+      for(i in seq_len(n)) {
         tdati <- adfdati[ind == unind[i], ]
         tmods[[i]] <- lm(adffm, tdati, model = FALSE) # TODO: check if my.lm.fit can be used
         }                              # (with minor modifications to code down below for t-val extraction etc.)
@@ -204,7 +204,7 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
       ## for each x-sect. i=1..n estimate (over t) a demeaned model
       ## (y_it-my_t) = alpha_i + beta_i*(X_it-mX_t) + err_it
       unind <- unique(ind)
-      for(i in 1:n) {
+      for(i in seq_len(n)) {
         tdati <- adfdati[ind == unind[i], ]
         tmods[[i]] <- lm(adffm, tdati, model = FALSE)  # TODO: check if my.lm.fit can be used
         }
@@ -255,7 +255,7 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
       ## for each x-sect. i=1..n estimate (over t) an augmented model
       ## y_it = alpha_i + beta_i*X_it + c1_i*my_t + c2_i*mX_t + err_it
       unind <- unique(ind)
-      for(i in 1:n) {
+      for(i in seq_len(n)) {
         tdati <- adfdati[ind == unind[i], ]
         tmods[[i]] <- lm(adffm, tdati, model = FALSE)  # TODO: check if my.lm.fit can be used
         }

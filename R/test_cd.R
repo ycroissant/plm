@@ -219,7 +219,7 @@ pcdtest.formula <- function(x, data, index = NULL, model = NULL,
         ti.res   <- vector("list", n)
         ind.res  <- vector("list", n)
         tind.res <- vector("list", n)
-        for (i in 1:n) {
+        for (i in seq_len(n)) {
             tX <- X[ind == unind[i], , drop = FALSE]
             ty <- y[ind == unind[i]]
             res.i <- lm.fit(tX, ty)$residuals
@@ -571,14 +571,14 @@ cortab <- function(x, grouping, groupnames = NULL,
 
     ## make w<1.n>:
     for(h in seq_along(regs)) {
-      for(k in 1:h) {
+      for(k in seq_len(h)) {
         statew <- matrix(0, ncol = n, nrow = n)
         ## make statew for cor. between h and k
-        for(i in 1:n) {
+        for(i in seq_len(n)) {
           ## get first region (all values equal, so take first one)
           ireg <- grouping[fullind == ids[i]][1L]
           if(ireg == h) {
-            for(j in 1:n) {
+            for(j in seq_len(n)) {
                 jreg <- grouping[fullind == ids[j]][1L]
                 if(jreg == k) statew[i, j] <- 1
             }
@@ -606,7 +606,7 @@ cortab <- function(x, grouping, groupnames = NULL,
         myw <- 0
          tabg <- matrix(NA, ncol=length(regs), nrow=length(regs))
          for(i in seq_along(regs)) {
-             for(j in 1:i) {
+             for(j in seq_len(i)) {
                  ## take appropriate w matrix
                  eval(parse(text = paste("myw<-w", i, ".", j, sep = "")))
                  tabg[i, j] <- pcdtest(x, test = "rho", w = myw)[[value]]

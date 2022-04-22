@@ -45,11 +45,11 @@ plm.list <- function(formula, data, subset, na.action,
     BIGX <- c()
     BIGy <- c()
     L <- nrow(S)
-    for (l in 1:L){
+    for (l in seq_len(L)){
       rowBIGy <- rep(0, N)
       rowBIGX <- c()
       if (!is.null(W)) rowBIGW <- c()
-      for (m in 1:L){
+      for (m in seq_len(L)){
         rowBIGX <- cbind(rowBIGX, t(solve(S))[l, m] * X[[m]])
         if (!is.null(W)) rowBIGW <- cbind(rowBIGW, t(S)[l, m] * W[[m]])
         rowBIGy <- rowBIGy + t(solve(S))[l, m] * y[[m]]
@@ -203,7 +203,7 @@ summary.plm.list <- function(object, ...){
                        "t-value"    = z,
                        "Pr(>|t|)"   = p)
   }
-  for (l in 1:L){
+  for (l in seq_len(L)){
       models[[l]] <- coefTable[(Ks[l] + 1):Ks[l + 1] , ]
   }
   names(models) <- eqnames

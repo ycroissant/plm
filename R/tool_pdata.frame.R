@@ -336,7 +336,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
             Ti <- table(x[[id.name]]) # was: Ti <- table(id)
             n <- length(Ti)
             time <- c()
-            for (i in 1:n){
+            for (i in seq_len(n)){
                 time <- c(time, 1:Ti[i])
             }
             time.name <- "time"

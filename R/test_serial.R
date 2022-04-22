@@ -264,7 +264,7 @@ pwtest.panelmodel <- function(x, effect = c("individual", "time"), ...) {
   ## every block by *its* t(t-1)/2)
   unind <- unique(index) # ????
  
-  for(i in 1:n) {
+  for(i in seq_len(n)) {
     ut <- u[index == unind[i]]
     tres[[i]] <- ut %o% ut
   }
@@ -1135,12 +1135,12 @@ pbltest.formula <- function(x, data, alternative = c("twosided", "onesided"), in
   ## break up residuals by group to get rid of Kronecker prod.
   ## data have to be balanced and sorted by group/time, so this works
   uhat.i <- vector("list", n.)
-  for(i in 1:n.) {
+  for(i in seq_len(n.)) {
     uhat.i[[i]] <- uhat[t.*(i-1)+1:t.]
     }
   s2e <- rep(NA, n.)
   s21 <- rep(NA, n.)
-  for(i in 1:n.) {
+  for(i in seq_len(n.)) {
     u.i <- uhat.i[[i]]
     s2e[i] <- as.numeric(crossprod(u.i, Et) %*% u.i)
     s21[i] <- as.numeric(crossprod(u.i, Jt) %*% u.i)
@@ -1152,7 +1152,7 @@ pbltest.formula <- function(x, data, alternative = c("twosided", "onesided"), in
   star1 <- (Jt/sigma2.1 + Et/sigma2.e) %*% G %*% (Jt/sigma2.1 + Et/sigma2.e)
   star2 <- rep(NA, n.)
   ## again, do this group by group to avoid Kronecker prod.
-  for(i in 1:n.) {
+  for(i in seq_len(n.)) {
     star2[i] <- as.numeric(crossprod(uhat.i[[i]], star1) %*% uhat.i[[i]])
     }
   star2 <- sum(star2)
@@ -1356,7 +1356,7 @@ pwfdtest.panelmodel <- function(x, ..., h0 = c("fd", "fe")) {
   ##     creation needs to be re-worked because more than 1 observation per
   ##     individual can be dropped
   red_id <- integer()
-  for(i in 1:n) {
+  for(i in seq_len(n)) {
     red_id <- c(red_id, rep(i, Ti_minus_one[i]))
   }
   # additional check
