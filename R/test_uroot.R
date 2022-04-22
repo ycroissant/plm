@@ -274,7 +274,7 @@ YClags <- function(object,  k = 3){
   # NB/TODO: there is no check if k > length(object) so this errors non-gracefully
   #     if there are not enough observations for an individual
   if (k > 0)
-    sapply(1:k, function(x) c(rep(NA, x), object[seq_len(length(object)-x)]))
+    sapply(seq_len(k), function(x) c(rep(NA, x), object[seq_len(length(object)-x)]))
   else
     NULL
 }
@@ -284,7 +284,9 @@ YCtrend <- function(object) seq_along(object)
 YCdiff <- function(object) {
   # NB/TODO: no sanity check here: for input of length(object) == 1, a result of 
   # length 3 is returned: c(NA, NA, 0)
-  c(NA, object[2:length(object)] - object[seq_len(length(object)-1)])
+  c(NA, object[seq_along(object)[-1L]] - object[seq_len(length(object)-1)])
+  
+  
 }
 
 selectT <- function(x, Ts){
@@ -529,7 +531,7 @@ longrunvar <- function(x, exo = c("intercept", "none", "trend"), q = NULL){
   dx <- c(NA, dx)
   res <- 1/(T-1)*sum(dx[-1]^2)+
     2*sum(
-      sapply(1:q,
+      sapply(seq_len(q),
              function(L){
                sum(dx[2:(T-L)] * dx[(L+2):T]) / (T-1) *
                  (1 - L / (q+1))
