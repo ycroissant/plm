@@ -191,28 +191,29 @@ fixef.plm <- function(object, effect = NULL,
                        "time"       = pdim$Tint$nt)
       
       s2 <- deviance(object) / df.residual(object)
+      
       sefixef <- if (type != "dfirst") {
                     sqrt(s2 / nother + apply(Xb[, nw, drop = FALSE], 1,
                                             function(x) t(x) %*% vcov %*% x) )
                   } else {
-                    Xb <- t(t(Xb[-1L, ]) - Xb[1L, ])
+                    Xb <- t(t(Xb[-1L, , drop = FALSE]) - Xb[1L, ])
                     sqrt(s2 * (1 / nother[-1L] + 1 / nother[1L]) +
                                       apply(Xb[, nw, drop = FALSE], 1,
                                             function(x) t(x) %*% vcov %*% x) )
-      }
+                  }
+
       res <- switch(type,
                       "level"  = fixef,
-                      "dfirst" = fixef[2:length(fixef)] - fixef[1L],
+                      "dfirst" = fixef[seq_along(fixef)[-1L]] - fixef[1L],
                       "dmean"  = (fixef - weighted.mean(fixef, w = nother)))
       
       res <- structure(res, se = sefixef, class = c("fixef", "numeric"),
-                type = type, df.residual = df.residual(object))  
+                       type = type, df.residual = df.residual(object))  
     } else {
     ## case model.effect == "twoways"
     ##  * two-way balanced/unbalanced model for all effects
     ## TODO: SEs are not computed in this case yet
     ##       (can be computed for effect = "individual" and "time"; also for "twoways"?)
-
       beta.data <- as.numeric(tcrossprod(coef(object),
                                          model.matrix(object, model = "pooling")[ , nw, drop = FALSE]))
       yhat <- object$model[ , 1L] - object$residuals

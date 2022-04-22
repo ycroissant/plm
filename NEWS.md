@@ -24,6 +24,11 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
   added to specifically explain the prediction for fixed effects models and the 
   out-of-sample case.
 
+### Bugfixes:
+* fixef with `type = "dfirst"`: for models with length(fixef(mod)) == 2, fixef 
+  does not error anymore and for length(fixef(mod)) == 1, the result is more sane
+  (numeric(0)).
+
 ***
 
 # plm 2.6-1
