@@ -1,6 +1,6 @@
 
-R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R version 4.2.0 (2022-04-22 ucrt) -- "Vigorous Calisthenics"
+Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -42,7 +42,7 @@ Type 'q()' to quit R.
 > 
 > pbsytest(pool_grunfeld, test = "ar")                    # chisq = 10.31    => LM*_rho  in Baltagi's book (RS*_lambda from Sosa-Escudero/Bera (2008), p. 73)
 
-	Bera, Sosa-Escudero and Yoon locally robust test - balanced panel
+	Bera, Sosa-Escudero and Yoon locally robust test
 
 data:  formula
 chisq = 10.31, df = 1, p-value = 0.001323
@@ -50,8 +50,7 @@ alternative hypothesis: AR(1) errors sub random effects
 
 > pbsytest(pool_grunfeld, test = "re", re.normal = FALSE) # chisq = 664.948  => LM*_mu in Baltagi's book (RS*_mu from Sosa-Escudero/Bera (2008), p. 73)
 
-	Bera, Sosa-Escudero and Yoon locally robust test (two-sided) -
-	balanced panel
+	Bera, Sosa-Escudero and Yoon locally robust test (two-sided)
 
 data:  formula
 chisq = 664.95, df = 1, p-value < 2.2e-16
@@ -59,8 +58,7 @@ alternative hypothesis: random effects sub AR(1) errors
 
 > pbsytest(pool_grunfeld, test = "re")                    # [sqrt(chisq) = z = 25.787] =>  RSO*_mu from Sosa-Escudero/Bera (2008), p. 75
 
-	Bera, Sosa-Escudero and Yoon locally robust test (one-sided) -
-	balanced panel
+	Bera, Sosa-Escudero and Yoon locally robust test (one-sided)
 
 data:  formula
 z = 25.787, p-value < 2.2e-16
@@ -68,7 +66,7 @@ alternative hypothesis: random effects sub AR(1) errors
 
 > pbsytest(pool_grunfeld, test = "j")                     # chisq = 808.47   => LM1 in Baltagi's book (RS_lambda_mu in Sosa-Escudero/Bera (2008), p. 74)
 
-	Baltagi and Li AR-RE joint test - balanced panel
+	Baltagi and Li AR-RE joint test
 
 data:  formula
 chisq = 808.47, df = 2, p-value < 2.2e-16
@@ -78,7 +76,7 @@ alternative hypothesis: AR(1) errors or random effects
 > # formula interface
 > pbsytest(form_gunfeld, data = Grunfeld, test = "ar")
 
-	Bera, Sosa-Escudero and Yoon locally robust test - balanced panel
+	Bera, Sosa-Escudero and Yoon locally robust test
 
 data:  formula
 chisq = 10.31, df = 1, p-value = 0.001323
@@ -86,8 +84,7 @@ alternative hypothesis: AR(1) errors sub random effects
 
 > pbsytest(form_gunfeld, data = Grunfeld, test = "re")
 
-	Bera, Sosa-Escudero and Yoon locally robust test (one-sided) -
-	balanced panel
+	Bera, Sosa-Escudero and Yoon locally robust test (one-sided)
 
 data:  formula
 z = 25.787, p-value < 2.2e-16
@@ -95,8 +92,7 @@ alternative hypothesis: random effects sub AR(1) errors
 
 > pbsytest(form_gunfeld, data = Grunfeld, test = "re", re.normal = FALSE)
 
-	Bera, Sosa-Escudero and Yoon locally robust test (two-sided) -
-	balanced panel
+	Bera, Sosa-Escudero and Yoon locally robust test (two-sided)
 
 data:  formula
 chisq = 664.95, df = 1, p-value < 2.2e-16
@@ -104,7 +100,7 @@ alternative hypothesis: random effects sub AR(1) errors
 
 > pbsytest(form_gunfeld, data = Grunfeld, test = "j")
 
-	Baltagi and Li AR-RE joint test - balanced panel
+	Baltagi and Li AR-RE joint test
 
 data:  formula
 chisq = 808.47, df = 2, p-value < 2.2e-16
@@ -113,7 +109,7 @@ alternative hypothesis: AR(1) errors or random effects
 > 
 > plmtest(pool_grunfeld, type = "bp") # LM_mu in Baltagi's book
 
-	Lagrange Multiplier Test - (Breusch-Pagan) for balanced panels
+	Lagrange Multiplier Test - (Breusch-Pagan)
 
 data:  form_gunfeld
 chisq = 798.16, df = 1, p-value < 2.2e-16
@@ -227,4 +223,4 @@ alternative hypothesis: significant effects
 > 
 > proc.time()
    user  system elapsed 
-   0.62    0.17    0.78 
+   1.64    0.12    1.75 

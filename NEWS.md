@@ -24,16 +24,21 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
   added to specifically explain the prediction for fixed effects models and the 
   out-of-sample case.
 
-### Bugfixes:
+### Fixes:
 * fixef with `type = "dfirst"`: for models with length(fixef(mod)) == 2, fixef 
   does not error anymore and for length(fixef(mod)) == 1, the result is more sane
   (numeric(0)).
+  
+### Minors:
+* plmtest and pbsytest objects: text in 'method' does not contain information
+  about balanced/unbalanced panel anymore.
+
 
 ***
 
 # plm 2.6-1
 
-### Bug Fixes:
+### Fixes:
 * pmodel.response: `I()` in LHS of formula led to error in estimation with plm
   ([#17](https://github.com/ycroissant/plm/issues/17)).
 
@@ -173,7 +178,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
    if `options("plm.fast" = TRUE)` is set, see `?plm.fast` (then internally
    using `collapse::dapply`)). Thanks to Sebastian Krantz for inspiration.
 
-### Bug Fixes:
+### Fixes:
  * between (and hence fixef, ranef): order of output is order of *factor levels*
    again (this reverts a change introduced in 2.4-0, there called a fix introducing
    the order of the appearance in the data which is actually not desirable). Change

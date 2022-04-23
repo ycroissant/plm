@@ -1,7 +1,7 @@
 
-R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
-Copyright (C) 2019 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
+R version 4.2.0 (2022-04-22 ucrt) -- "Vigorous Calisthenics"
+Copyright (C) 2022 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -115,7 +115,7 @@ Loading required package: plm
 > hedonic_pool <- plm(form_hedonic, data = pHedonic, model="pooling")
 > plmtest(hedonic_pool)
 
-	Lagrange Multiplier Test - (Honda) for unbalanced panels
+	Lagrange Multiplier Test - (Honda)
 
 data:  form_hedonic
 normal = 25.011274, p-value < 2.2204e-16
@@ -123,7 +123,7 @@ alternative hypothesis: significant effects
 
 > plmtest(hedonic_pool, effect = "time")
 
-	Lagrange Multiplier Test - time effects (Honda) for unbalanced panels
+	Lagrange Multiplier Test - time effects (Honda)
 
 data:  form_hedonic
 normal = 1.5571417, p-value = 0.05971842
@@ -136,7 +136,7 @@ alternative hypothesis: significant effects
 > # individual effect
 > print(honda_ind            <- plmtest(pool_grunfeld, type="honda"))
 
-	Lagrange Multiplier Test - (Honda) for balanced panels
+	Lagrange Multiplier Test - (Honda)
 
 data:  inv ~ value + capital
 normal = 28.251753, p-value < 2.2204e-16
@@ -144,7 +144,7 @@ alternative hypothesis: significant effects
 
 > print(honda_ind_unbalanced <- plmtest(pool_grunfeld_unbalanced, type="honda"))
 
-	Lagrange Multiplier Test - (Honda) for unbalanced panels
+	Lagrange Multiplier Test - (Honda)
 
 data:  inv ~ value + capital
 normal = 28.225193, p-value < 2.2204e-16
@@ -152,7 +152,7 @@ alternative hypothesis: significant effects
 
 > print(bp_ind               <- plmtest(pool_grunfeld, type="bp"))
 
-	Lagrange Multiplier Test - (Breusch-Pagan) for balanced panels
+	Lagrange Multiplier Test - (Breusch-Pagan)
 
 data:  inv ~ value + capital
 chisq = 798.16155, df = 1, p-value < 2.2204e-16
@@ -160,7 +160,7 @@ alternative hypothesis: significant effects
 
 > print(bp_ind_unbalanced    <- plmtest(pool_grunfeld_unbalanced, type="bp"))
 
-	Lagrange Multiplier Test - (Breusch-Pagan) for unbalanced panels
+	Lagrange Multiplier Test - (Breusch-Pagan)
 
 data:  inv ~ value + capital
 chisq = 796.66152, df = 1, p-value < 2.2204e-16
@@ -168,7 +168,7 @@ alternative hypothesis: significant effects
 
 > print(kw_ind               <- plmtest(pool_grunfeld, type="kw"))
 
-	Lagrange Multiplier Test - (King and Wu) for balanced panels
+	Lagrange Multiplier Test - (King and Wu)
 
 data:  inv ~ value + capital
 normal = 28.251753, p-value < 2.2204e-16
@@ -176,7 +176,7 @@ alternative hypothesis: significant effects
 
 > print(kw_ind_unbalanced    <- plmtest(pool_grunfeld_unbalanced, type="kw"))
 
-	Lagrange Multiplier Test - (King and Wu) for unbalanced panels
+	Lagrange Multiplier Test - (King and Wu)
 
 data:  inv ~ value + capital
 normal = 28.225193, p-value < 2.2204e-16
@@ -187,7 +187,7 @@ alternative hypothesis: significant effects
 > # time effect
 > print(honda_time            <- plmtest(pool_grunfeld, type="honda", effect="time"))
 
-	Lagrange Multiplier Test - time effects (Honda) for balanced panels
+	Lagrange Multiplier Test - time effects (Honda)
 
 data:  inv ~ value + capital
 normal = -2.5404491, p-value = 0.9944645
@@ -195,7 +195,7 @@ alternative hypothesis: significant effects
 
 > print(honda_time_unbalanced <- plmtest(pool_grunfeld_unbalanced, type="honda", effect="time"))
 
-	Lagrange Multiplier Test - time effects (Honda) for unbalanced panels
+	Lagrange Multiplier Test - time effects (Honda)
 
 data:  inv ~ value + capital
 normal = -2.5405861, p-value = 0.9944667
@@ -203,8 +203,7 @@ alternative hypothesis: significant effects
 
 > print(bp_time               <- plmtest(pool_grunfeld, type="bp", effect="time"))
 
-	Lagrange Multiplier Test - time effects (Breusch-Pagan) for balanced
-	panels
+	Lagrange Multiplier Test - time effects (Breusch-Pagan)
 
 data:  inv ~ value + capital
 chisq = 6.4538816, df = 1, p-value = 0.01107102
@@ -212,8 +211,7 @@ alternative hypothesis: significant effects
 
 > print(bp_time_unbalanced    <- plmtest(pool_grunfeld_unbalanced, type="bp", effect="time"))
 
-	Lagrange Multiplier Test - time effects (Breusch-Pagan) for unbalanced
-	panels
+	Lagrange Multiplier Test - time effects (Breusch-Pagan)
 
 data:  inv ~ value + capital
 chisq = 6.4545778, df = 1, p-value = 0.01106668
@@ -221,8 +219,7 @@ alternative hypothesis: significant effects
 
 > print(kw_time               <- plmtest(pool_grunfeld, type="kw", effect="time"))
 
-	Lagrange Multiplier Test - time effects (King and Wu) for balanced
-	panels
+	Lagrange Multiplier Test - time effects (King and Wu)
 
 data:  inv ~ value + capital
 normal = -2.5404491, p-value = 0.9944645
@@ -230,8 +227,7 @@ alternative hypothesis: significant effects
 
 > print(kw_time_unbalanced    <- plmtest(pool_grunfeld_unbalanced, type="kw", effect="time"))
 
-	Lagrange Multiplier Test - time effects (King and Wu) for unbalanced
-	panels
+	Lagrange Multiplier Test - time effects (King and Wu)
 
 data:  inv ~ value + capital
 normal = -2.5405861, p-value = 0.9944667
@@ -242,8 +238,7 @@ alternative hypothesis: significant effects
 > # twoways effect
 > print(honda_tw            <- plmtest(pool_grunfeld, type="honda", effect="twoways"))
 
-	Lagrange Multiplier Test - two-ways effects (Honda) for balanced
-	panels
+	Lagrange Multiplier Test - two-ways effects (Honda)
 
 data:  inv ~ value + capital
 normal = 18.180637, p-value < 2.2204e-16
@@ -251,8 +246,7 @@ alternative hypothesis: significant effects
 
 > print(honda_tw_unbalanced <- plmtest(pool_grunfeld_unbalanced, type="honda", effect="twoways"))
 
-	Lagrange Multiplier Test - two-ways effects (Honda) for unbalanced
-	panels
+	Lagrange Multiplier Test - two-ways effects (Honda)
 
 data:  inv ~ value + capital
 normal = 18.16176, p-value < 2.2204e-16
@@ -260,8 +254,7 @@ alternative hypothesis: significant effects
 
 > print(bp_tw               <- plmtest(pool_grunfeld, type="bp", effect="twoways"))
 
-	Lagrange Multiplier Test - two-ways effects (Breusch-Pagan) for
-	balanced panels
+	Lagrange Multiplier Test - two-ways effects (Breusch-Pagan)
 
 data:  inv ~ value + capital
 chisq = 804.61543, df = 2, p-value < 2.2204e-16
@@ -269,8 +262,7 @@ alternative hypothesis: significant effects
 
 > print(bp_tw_unbalanced    <- plmtest(pool_grunfeld_unbalanced, type="bp", effect="twoways"))
 
-	Lagrange Multiplier Test - two-ways effects (Breusch-Pagan) for
-	unbalanced panels
+	Lagrange Multiplier Test - two-ways effects (Breusch-Pagan)
 
 data:  inv ~ value + capital
 chisq = 803.1161, df = 2, p-value < 2.2204e-16
@@ -278,8 +270,7 @@ alternative hypothesis: significant effects
 
 > print(kw_tw               <- plmtest(pool_grunfeld, type="kw", effect="twoways"))
 
-	Lagrange Multiplier Test - two-ways effects (King and Wu) for balanced
-	panels
+	Lagrange Multiplier Test - two-ways effects (King and Wu)
 
 data:  inv ~ value + capital
 normal = 21.832209, p-value < 2.2204e-16
@@ -287,8 +278,7 @@ alternative hypothesis: significant effects
 
 > print(kw_tw_unbalanced    <- plmtest(pool_grunfeld_unbalanced, type="kw", effect="twoways"))
 
-	Lagrange Multiplier Test - two-ways effects (King and Wu) for
-	unbalanced panels
+	Lagrange Multiplier Test - two-ways effects (King and Wu)
 
 data:  inv ~ value + capital
 normal = 21.810252, p-value < 2.2204e-16
@@ -297,7 +287,7 @@ alternative hypothesis: significant effects
 > print(ghm_tw              <- plmtest(pool_grunfeld, type="ghm", effect="twoways"))
 
 	Lagrange Multiplier Test - two-ways effects (Gourieroux, Holly and
-	Monfort) for balanced panels
+	Monfort)
 
 data:  inv ~ value + capital
 chibarsq = 798.16155, df0 = 0.00, df1 = 1.00, df2 = 2.00, w0 = 0.25, w1
@@ -307,7 +297,7 @@ alternative hypothesis: significant effects
 > print(ghm_tw_unbalanced   <- plmtest(pool_grunfeld_unbalanced, type="ghm", effect="twoways"))
 
 	Lagrange Multiplier Test - two-ways effects (Gourieroux, Holly and
-	Monfort) for unbalanced panels
+	Monfort)
 
 data:  inv ~ value + capital
 chibarsq = 796.66152, df0 = 0.00, df1 = 1.00, df2 = 2.00, w0 = 0.25, w1
@@ -322,7 +312,7 @@ alternative hypothesis: significant effects
 > # individual effect
 > print(honda_ind_form            <- plmtest(inv ~ value + capital, data=Grunfeldpdata, type="honda"))
 
-	Lagrange Multiplier Test - (Honda) for balanced panels
+	Lagrange Multiplier Test - (Honda)
 
 data:  inv ~ value + capital
 normal = 28.251753, p-value < 2.2204e-16
@@ -330,7 +320,7 @@ alternative hypothesis: significant effects
 
 > print(honda_ind_unbalanced_form <- plmtest(inv ~ value + capital, data=Grunfeldpdata_unbalanced, type="honda"))
 
-	Lagrange Multiplier Test - (Honda) for unbalanced panels
+	Lagrange Multiplier Test - (Honda)
 
 data:  inv ~ value + capital
 normal = 28.225193, p-value < 2.2204e-16
@@ -338,7 +328,7 @@ alternative hypothesis: significant effects
 
 > print(bp_ind_form               <- plmtest(inv ~ value + capital, data=Grunfeldpdata, type="bp"))
 
-	Lagrange Multiplier Test - (Breusch-Pagan) for balanced panels
+	Lagrange Multiplier Test - (Breusch-Pagan)
 
 data:  inv ~ value + capital
 chisq = 798.16155, df = 1, p-value < 2.2204e-16
@@ -346,7 +336,7 @@ alternative hypothesis: significant effects
 
 > print(bp_ind_unbalanced_form    <- plmtest(inv ~ value + capital, data=Grunfeldpdata_unbalanced, type="bp"))
 
-	Lagrange Multiplier Test - (Breusch-Pagan) for unbalanced panels
+	Lagrange Multiplier Test - (Breusch-Pagan)
 
 data:  inv ~ value + capital
 chisq = 796.66152, df = 1, p-value < 2.2204e-16
@@ -354,7 +344,7 @@ alternative hypothesis: significant effects
 
 > print(kw_ind_form               <- plmtest(inv ~ value + capital, data=Grunfeldpdata, type="kw"))
 
-	Lagrange Multiplier Test - (King and Wu) for balanced panels
+	Lagrange Multiplier Test - (King and Wu)
 
 data:  inv ~ value + capital
 normal = 28.251753, p-value < 2.2204e-16
@@ -362,7 +352,7 @@ alternative hypothesis: significant effects
 
 > print(kw_ind_unbalanced_form    <- plmtest(inv ~ value + capital, data=Grunfeldpdata_unbalanced, type="kw"))
 
-	Lagrange Multiplier Test - (King and Wu) for unbalanced panels
+	Lagrange Multiplier Test - (King and Wu)
 
 data:  inv ~ value + capital
 normal = 28.225193, p-value < 2.2204e-16
@@ -373,7 +363,7 @@ alternative hypothesis: significant effects
 > # time effect
 > print(honda_time_form            <- plmtest(inv ~ value + capital, data=Grunfeldpdata, type="honda", effect="time"))
 
-	Lagrange Multiplier Test - time effects (Honda) for balanced panels
+	Lagrange Multiplier Test - time effects (Honda)
 
 data:  inv ~ value + capital
 normal = -2.5404491, p-value = 0.9944645
@@ -381,7 +371,7 @@ alternative hypothesis: significant effects
 
 > print(honda_time_unbalanced_form <- plmtest(inv ~ value + capital, data=Grunfeldpdata_unbalanced, type="honda", effect="time"))
 
-	Lagrange Multiplier Test - time effects (Honda) for unbalanced panels
+	Lagrange Multiplier Test - time effects (Honda)
 
 data:  inv ~ value + capital
 normal = -2.5405861, p-value = 0.9944667
@@ -389,8 +379,7 @@ alternative hypothesis: significant effects
 
 > print(bp_time_form               <- plmtest(inv ~ value + capital, data=Grunfeldpdata, type="bp", effect="time"))
 
-	Lagrange Multiplier Test - time effects (Breusch-Pagan) for balanced
-	panels
+	Lagrange Multiplier Test - time effects (Breusch-Pagan)
 
 data:  inv ~ value + capital
 chisq = 6.4538816, df = 1, p-value = 0.01107102
@@ -398,8 +387,7 @@ alternative hypothesis: significant effects
 
 > print(bp_time_unbalanced_form    <- plmtest(inv ~ value + capital, data=Grunfeldpdata_unbalanced, type="bp", effect="time"))
 
-	Lagrange Multiplier Test - time effects (Breusch-Pagan) for unbalanced
-	panels
+	Lagrange Multiplier Test - time effects (Breusch-Pagan)
 
 data:  inv ~ value + capital
 chisq = 6.4545778, df = 1, p-value = 0.01106668
@@ -407,8 +395,7 @@ alternative hypothesis: significant effects
 
 > print(kw_time_form               <- plmtest(inv ~ value + capital, data=Grunfeldpdata, type="kw", effect="time"))
 
-	Lagrange Multiplier Test - time effects (King and Wu) for balanced
-	panels
+	Lagrange Multiplier Test - time effects (King and Wu)
 
 data:  inv ~ value + capital
 normal = -2.5404491, p-value = 0.9944645
@@ -416,8 +403,7 @@ alternative hypothesis: significant effects
 
 > print(kw_time_unbalanced_form    <- plmtest(inv ~ value + capital, data=Grunfeldpdata_unbalanced, type="kw", effect="time"))
 
-	Lagrange Multiplier Test - time effects (King and Wu) for unbalanced
-	panels
+	Lagrange Multiplier Test - time effects (King and Wu)
 
 data:  inv ~ value + capital
 normal = -2.5405861, p-value = 0.9944667
@@ -428,8 +414,7 @@ alternative hypothesis: significant effects
 > # twoways effect
 > print(honda_tw_form            <- plmtest(inv ~ value + capital, data=Grunfeldpdata, type="honda", effect="twoways"))
 
-	Lagrange Multiplier Test - two-ways effects (Honda) for balanced
-	panels
+	Lagrange Multiplier Test - two-ways effects (Honda)
 
 data:  inv ~ value + capital
 normal = 18.180637, p-value < 2.2204e-16
@@ -437,8 +422,7 @@ alternative hypothesis: significant effects
 
 > print(honda_tw_unbalanced_form <- plmtest(inv ~ value + capital, data=Grunfeldpdata_unbalanced, type="honda", effect="twoways"))
 
-	Lagrange Multiplier Test - two-ways effects (Honda) for unbalanced
-	panels
+	Lagrange Multiplier Test - two-ways effects (Honda)
 
 data:  inv ~ value + capital
 normal = 18.16176, p-value < 2.2204e-16
@@ -446,8 +430,7 @@ alternative hypothesis: significant effects
 
 > print(bp_tw_form               <- plmtest(inv ~ value + capital, data=Grunfeldpdata, type="bp", effect="twoways"))
 
-	Lagrange Multiplier Test - two-ways effects (Breusch-Pagan) for
-	balanced panels
+	Lagrange Multiplier Test - two-ways effects (Breusch-Pagan)
 
 data:  inv ~ value + capital
 chisq = 804.61543, df = 2, p-value < 2.2204e-16
@@ -455,8 +438,7 @@ alternative hypothesis: significant effects
 
 > print(bp_tw_unbalanced_form    <- plmtest(inv ~ value + capital, data=Grunfeldpdata_unbalanced, type="bp", effect="twoways"))
 
-	Lagrange Multiplier Test - two-ways effects (Breusch-Pagan) for
-	unbalanced panels
+	Lagrange Multiplier Test - two-ways effects (Breusch-Pagan)
 
 data:  inv ~ value + capital
 chisq = 803.1161, df = 2, p-value < 2.2204e-16
@@ -464,8 +446,7 @@ alternative hypothesis: significant effects
 
 > print(kw_tw_form               <- plmtest(inv ~ value + capital, data=Grunfeldpdata, type="kw", effect="twoways"))
 
-	Lagrange Multiplier Test - two-ways effects (King and Wu) for balanced
-	panels
+	Lagrange Multiplier Test - two-ways effects (King and Wu)
 
 data:  inv ~ value + capital
 normal = 21.832209, p-value < 2.2204e-16
@@ -473,8 +454,7 @@ alternative hypothesis: significant effects
 
 > print(kw_tw_unbalanced_form    <- plmtest(inv ~ value + capital, data=Grunfeldpdata_unbalanced, type="kw", effect="twoways"))
 
-	Lagrange Multiplier Test - two-ways effects (King and Wu) for
-	unbalanced panels
+	Lagrange Multiplier Test - two-ways effects (King and Wu)
 
 data:  inv ~ value + capital
 normal = 21.810252, p-value < 2.2204e-16
@@ -483,7 +463,7 @@ alternative hypothesis: significant effects
 > print(ghm_tw_form              <- plmtest(inv ~ value + capital, data=Grunfeldpdata, type="ghm", effect="twoways"))
 
 	Lagrange Multiplier Test - two-ways effects (Gourieroux, Holly and
-	Monfort) for balanced panels
+	Monfort)
 
 data:  inv ~ value + capital
 chibarsq = 798.16155, df0 = 0.00, df1 = 1.00, df2 = 2.00, w0 = 0.25, w1
@@ -493,7 +473,7 @@ alternative hypothesis: significant effects
 > print(ghm_tw_unbalanced_form   <- plmtest(inv ~ value + capital, data=Grunfeldpdata_unbalanced, type="ghm", effect="twoways"))
 
 	Lagrange Multiplier Test - two-ways effects (Gourieroux, Holly and
-	Monfort) for unbalanced panels
+	Monfort)
 
 data:  inv ~ value + capital
 chibarsq = 796.66152, df0 = 0.00, df1 = 1.00, df2 = 2.00, w0 = 0.25, w1
@@ -662,4 +642,4 @@ chibarsq
 > 
 > proc.time()
    user  system elapsed 
-  0.875   0.050   0.919 
+   1.82    0.23    2.04 

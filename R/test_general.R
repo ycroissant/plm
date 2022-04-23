@@ -474,7 +474,7 @@ plmtest.plm <- function(x,
   balanced.type <- if(balanced) "balanced" else "unbalanced"
   
   method <- paste("Lagrange Multiplier Test - ", method.effect,
-                  " (", method.type, ") for ", balanced.type, " panels", sep="")
+                  " (", method.type, ")", sep="")
   
   if (type %in% c("honda", "kw")) {
     RVAL <- list(statistic = stat,
