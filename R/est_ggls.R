@@ -200,7 +200,7 @@ pggls <- function(formula, data, subset, na.action,
                   dimnames = list(other.names, other.names, cond.names))
     lcnd <- levels(cond)
     if (balanced) {
-        for (i in 1:ncond) {
+        for (i in seq_len(ncond)) {
             ut <- resid[cond == lcnd[i]]
             tres[ , , i] <- ut %o% ut
         }
@@ -208,7 +208,7 @@ pggls <- function(formula, data, subset, na.action,
         omega <- bdsmatrix::bdsmatrix(rep(nother, ncond), rep(subOmega, ncond))
     } else {
         lti <- list()
-        for (i in 1:ncond) {
+        for (i in seq_len(ncond)) {
             cond.i <- cond == lcnd[i]
             ut <- resid[cond.i]
             names(ut) <- lti[[i]] <- other[cond.i]
@@ -217,7 +217,7 @@ pggls <- function(formula, data, subset, na.action,
         }
         subOmega <- rowMeans(tres, dims = 2L, na.rm = TRUE) # == apply(tres, 1:2, mean, na.rm = TRUE) but faster
         list.cov.blocks <- list()
-        for (i in 1:ncond) {
+        for (i in seq_len(ncond)) {
             list.cov.blocks[[i]] <- subOmega[lti[[i]], lti[[i]]]
         }
         omega <- bdsmatrix::bdsmatrix(groupsdim, unlist(list.cov.blocks, use.names = FALSE))

@@ -235,7 +235,7 @@ pmg <- function(formula, data, subset, na.action,
       ## for each x-sect. i=1..n estimate (over t) a demeaned model
       ## (y_it-my_t) = alpha_i + beta_i*(X_it-mX_t) + err_it
       unind <- unique(ind)
-      for (i in 1:n) {
+      for (i in seq_len(n)) {
         tdemX <- demX[ind == unind[i], ]
         tdemy <- demy[ind == unind[i]]
         if(trend) tdemX <- cbind(tdemX, 1:(dim(tdemX)[[1L]]))

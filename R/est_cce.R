@@ -189,13 +189,13 @@ pcce <- function (formula, data, subset, na.action,
       ## for each x-sect. i=1..n estimate (over t) the CCE for every TS
       ## as in KPY, eq. 15
       unind <- unique(ind)
-      for(i in 1:n) {
+      for(i in seq_len(n)) {
           tX <- X[ind == unind[i], , drop = FALSE]
           ty <- y[ind == unind[i]]
           tHhat <- Hhat[ind == unind[i], , drop = FALSE]
 
           ## if 'trend' then augment the xs-invariant component
-          if(trend) tHhat <- cbind(tHhat, 1:(dim(tHhat)[[1L]]))
+          if(trend) tHhat <- cbind(tHhat, seq_len(dim(tHhat)[[1L]]))
 
           ## NB tHat, tMhat should be i-invariant
           tMhat <- diag(1, length(ty)) -
@@ -234,7 +234,7 @@ pcce <- function (formula, data, subset, na.action,
     tHhat1 <- Hhat[ind == unind[1L], , drop = FALSE]
 
     ## if 'trend' then augment the xs-invariant component
-    if(trend) tHhat1 <- cbind(tHhat1, 1:(dim(tHhat)[[1L]]))
+    if(trend) tHhat1 <- cbind(tHhat1, seq_len(dim(tHhat)[[1L]]))
 
     ## NB tHat, tMhat should be i-invariant (but beware of unbalanced)
     tMhat1 <- diag(1, length(ty1)) -
@@ -247,7 +247,7 @@ pcce <- function (formula, data, subset, na.action,
         tHhat <- Hhat[ind == unind[i], , drop = FALSE]
 
         ## if 'trend' then augment the xs-invariant component
-        if(trend) tHhat <- cbind(tHhat, 1:(dim(tHhat)[[1L]]))
+        if(trend) tHhat <- cbind(tHhat, seq_len(dim(tHhat)[[1L]]))
 
         ## NB tHat, tMhat should be i-invariant
         tMhat <- diag(1, length(ty)) -
@@ -285,7 +285,7 @@ pcce <- function (formula, data, subset, na.action,
         "mg" = {
             ## assign beta CCEMG
             coef <- coefmg
-            for(i in 1:n) Rmat[ , , i] <- outer(demcoef[ , i], demcoef[ , i])
+            for(i in seq_len(n)) Rmat[ , , i] <- outer(demcoef[ , i], demcoef[ , i])
             vcov <- 1/(n*(n-1)) * rowSums(Rmat, dims = 2L) # == 1/(n*(n-1)) * apply(Rmat, 1:2, sum), but rowSums(., dims = 2L)-construct is way faster
         },
            
@@ -298,7 +298,7 @@ pcce <- function (formula, data, subset, na.action,
             ## calc CCEP covariance:
             psi.star <- 1/N * sXMX
     
-            for(i in 1:n) Rmat[ , , i] <- XMX[ , , i] %*%
+            for(i in seq_len(n)) Rmat[ , , i] <- XMX[ , , i] %*%
                 outer(demcoef[ , i], demcoef[ , i]) %*% XMX[ , , i]
             ## summing over the n-dimension of the array we get the
             ## covariance matrix of coefs
@@ -308,7 +308,7 @@ pcce <- function (formula, data, subset, na.action,
             vcov <- Sigmap.star/n
     
             ## calc CCEP residuals both defactored and raw
-            for(i in 1:n) {
+            for(i in seq_len(n)) {
                 ## must redo all this because needs b_CCEP, which is
                 ## not known at by-groups step
                 tX <- X[ind == unind[i], , drop = FALSE]
@@ -316,7 +316,7 @@ pcce <- function (formula, data, subset, na.action,
                 tHhat <- Hhat[ind == unind[i], , drop = FALSE]
     
                 ## if 'trend' then augment the xs-invariant component
-                if(trend) tHhat <- cbind(tHhat, 1:(dim(tHhat)[[1L]]))
+                if(trend) tHhat <- cbind(tHhat, seq_len(dim(tHhat)[[1L]]))
     
                 ## NB tHat, tMhat should be i-invariant (but for the
                 ## group size if unbalanced)
@@ -347,7 +347,7 @@ pcce <- function (formula, data, subset, na.action,
             sigma2cce.i <- vector("list", n)
             ## average variance of defactored residuals sigma2ccemg as in
             ## Holly, Pesaran and Yamagata, (3.14)
-            for(i in 1:n) {
+            for(i in seq_len(n)) {
                 sigma2cce.i[[i]] <- crossprod(cceres[[i]])*
                     1/(length(cceres[[i]])-2*k-2)
             }
@@ -364,7 +364,7 @@ pcce <- function (formula, data, subset, na.action,
 
     ## calc. overall R2, CCEMG or CCEP depending on 'model'
     sigma2.i <- vector("list", n)
-    for(i in 1:n) {
+    for(i in seq_len(n)) {
           ty <- y[ind == unind[i]]
           sigma2.i[[i]] <- as.numeric(crossprod((ty-mean(ty))))/(length(ty)-1)
       }

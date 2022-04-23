@@ -439,7 +439,7 @@ pgmm <- function(formula, data, subset, na.action,
       V1 <- diff(V2)
       namesV <- c("(Intercept)", namesV[- c(0:TL2 + 1)])
     }
-    for (i in 1:N){
+    for (i in seq_len(N)){
       yX1[[i]] <- cbind(yX1[[i]], V1)
       if (transformation == "d"){
         W1[[i]] <- cbind(W1[[i]], V1)
@@ -461,7 +461,7 @@ pgmm <- function(formula, data, subset, na.action,
   ##### rows for missing time series with 0
   #################################################################
 
-  for (i in 1:N){
+  for (i in seq_len(N)){
     narows <- apply(yX1[[i]], 1, function(z) anyNA(z))
     yX1[[i]][narows, ] <- 0
     W1[[i]][is.na(W1[[i]])] <- 0
@@ -488,14 +488,14 @@ pgmm <- function(formula, data, subset, na.action,
   #################################################################
   
   if (transformation == "ld"){
-    for (i in 1:N){
+    for (i in seq_len(N)){
       W1[[i]] <- bdiag(W1[[i]], W2[[i]])
       yX1[[i]] <- rbind(yX1[[i]], yX2[[i]])
       if (normal.instruments) Z1[[i]] <- bdiag(Z1[[i]], Z2[[i]])
     }
   }
   if (normal.instruments){
-    for (i in 1:N) W1[[i]] <- cbind(W1[[i]], Z1[[i]])
+    for (i in seq_len(N)) W1[[i]] <- cbind(W1[[i]], Z1[[i]])
   }
 
   
@@ -515,7 +515,7 @@ pgmm <- function(formula, data, subset, na.action,
   ## WX <- mapply(function(x, y) crossprod(x, y), W, yX, SIMPLIFY = FALSE)
   ## WX <- Reduce("+", WX)
   ## zerolines <- which(apply(WX, 1, function(z) sum(abs(z))) == 0)
-  ## for (i in 1:N) W[[i]] <- W[[i]][, - zerolines]
+  ## for (i in seq_len(N)) W[[i]] <- W[[i]][, - zerolines]
 
   WX <- mapply(function(x, y) crossprod(x, y), W, yX, SIMPLIFY = FALSE)
   Wy <- lapply(WX, function(x) x[ ,  1L])
