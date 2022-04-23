@@ -631,7 +631,7 @@ pbsytest.panelmodel <- function(x, test = c("ar", "re", "j"), re.normal = if (te
   tind <- tindex[oo]
   poolres <- poolres[oo]
   pdim <- pdim(x)
-  n <- max(pdim$Tint$n) ## det. number of groups
+  n <- max(pdim$Tint$nt) ## det. number of groups
   T_i <- pdim$Tint$Ti
   N_t <- pdim$Tint$nt
   t <- max(T_i) ## det. max. group numerosity
