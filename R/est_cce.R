@@ -118,7 +118,6 @@ pcce <- function (formula, data, subset, na.action,
   tind <- index[[2L]] ## time index
   ## set dimension variables
   pdim <- pdim(plm.model)
-  balanced <- pdim$balanced
   nt <- pdim$Tint$nt
   Ti <- pdim$Tint$Ti
   T. <- pdim$nT$T

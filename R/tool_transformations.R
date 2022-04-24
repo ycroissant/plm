@@ -222,9 +222,6 @@ summary.pseries <- function(object, ...) {
     object.orig <- object
     special_treatment_vars <- c("factor", "logical", "character")
     if(!inherits(object, special_treatment_vars)) {
-        index <- unclass(attr(object, "index")) # unclass for speed
-        id   <- index[[1L]]
-        time <- index[[2L]]
         Bid   <- Between(object, na.rm = TRUE)
         Btime <- Between(object, effect = "time", na.rm = TRUE)
         ## res <- structure(c(total = sumsq(object),

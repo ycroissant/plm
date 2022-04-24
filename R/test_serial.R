@@ -229,23 +229,11 @@ pwtest.panelmodel <- function(x, effect = c("individual", "time"), ...) {
 
   ## if effect="individual" std., else swap
   xindex <- unclass(attr(data, "index")) # unclass for speed
-  if (effect == "individual"){
-    index  <- xindex[[1L]]
-    tindex <- xindex[[2L]]
-  }
-  else{
-    index  <- xindex[[2L]]
-    tindex <- xindex[[1L]]
-  }
+  index <- if(effect == "individual") xindex[[1L]] else xindex[[2L]]
+  
   ## det. number of groups and df
   n <- length(unique(index))
   X <- model.matrix(x)
-
-  k <- ncol(X)
-  ## det. total number of obs. (robust vs. unbalanced panels)
-  nT <- nrow(X)
-  ## det. max. group numerosity
-  t <- max(tapply(X[ , 1L], index, length))
 
   ## ref. Wooldridge (2002), p.264 / Wooldridge (2010), p.299
     
@@ -846,7 +834,7 @@ pdwtest.formula <- function(x, data, ...) {
 
 
 
-## references:
+## pbnftest references:
 ## * balanced and consecutive:
 ##    Bhargava/Franzini/Narendranathan (1982), Serial Correlation and the Fixed Effects Model, Review of Economic Studies (1982), XLIX(4), pp. 533-549.
 ##    (also in Baltagi (2005/2013), p. 98-99/109-110 for FE application)
@@ -1335,12 +1323,10 @@ pwfdtest.panelmodel <- function(x, ..., h0 = c("fd", "fe")) {
   
   ## fetch fd residuals
   FDres <- x$residuals
+  
   ## indices (full length! must reduce by 1st time period)
   ## this is an ad-hoc solution for the fact that the 'fd' model
   ## carries on the full indices while losing the first time period
-  xindex <- unclass(attr(model.frame(x), "index")) # unclass for speed
-  time <- as.numeric(xindex[[2L]])
-  id   <- as.numeric(xindex[[1L]])
   
   ## fetch dimensions and adapt to those of indices
   pdim <- pdim(x)
@@ -1384,8 +1370,6 @@ pwfdtest.panelmodel <- function(x, ..., h0 = c("fd", "fe")) {
          ## theoretical rho under H0: no serial 
          ## corr. in original errors is -0.5
          rho.H0 <- -0.5})
-  
-  myH0 <- paste("FDres.1 = ", as.character(rho.H0), sep="")
   
   ## test H0: rho=rho.H0 with HAC, more params may be passed via ellipsis
   myvcov <- function(x) vcovHC(x, method = "arellano", ...) 

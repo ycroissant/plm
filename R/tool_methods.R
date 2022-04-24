@@ -279,8 +279,6 @@ summary.plm <- function(object, vcov = NULL, ...){
   
   vcov_arg <- vcov
   model <- describe(object, "model")
-  effect <- describe(object, "effect")
-  random.method <- describe(object, "random.method")
   
   # determine if intercept-only model (no other regressors)
   coef_wo_int <- object$coefficients[!(names(coef(object)) %in% "(Intercept)")]
