@@ -331,7 +331,6 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
     }
 
   ## extract demeaned data
-    demy <- pmodel.response(x, model = model)
     demX <- model.matrix(x, model = model, rhs = 1, cstcovar.rm = "all")
     ## drop any linear dependent columns (corresponding to aliased coefficients)
     ## from model matrix X
@@ -968,7 +967,6 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
     }
     
   ## extract demeaned data
-    demy <- pmodel.response(x, model = model)
     demX <- model.matrix(x, model = model, rhs = 1, cstcovar.rm = "all")
     ## drop any linear dependent columns (corresponding to aliased coefficients)
     ## from model matrix X
