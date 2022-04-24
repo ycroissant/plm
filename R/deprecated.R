@@ -512,7 +512,6 @@ write.lags <- function(name, lags, diff){
                 if (diff) chlag <- c(chlag, paste("diff(",name,")")) else chlag <- c(chlag,name)
             }
             else{
-                ichar <- paste(i)
                 chlag <- c(chlag, paste(lag.string,"(",name,",",i,")",sep=""))
             }
         }
