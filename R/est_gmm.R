@@ -371,7 +371,7 @@ pgmm <- function(formula, data, subset, na.action,
   yX1 <- lapply(yX,
                 function(x){
                   xd <- diff(x)
-                  xd <- xd[- c(1:(TL1 - 1)), , drop = FALSE]
+                  xd <- xd[- c(seq_len(TL1 - 1)), , drop = FALSE]
                   xd
                 }
                 )
@@ -379,7 +379,7 @@ pgmm <- function(formula, data, subset, na.action,
     Z1 <- lapply(Z,
                  function(x){
                    xd <- diff(x)
-                   xd <- xd[- c(1:(TL1 - 1)), , drop = FALSE]
+                   xd <- xd[- c(seq_len(TL1 - 1)), , drop = FALSE]
                    xd
                  }
                  )
@@ -435,7 +435,7 @@ pgmm <- function(formula, data, subset, na.action,
       # in level (the difference of position between rows and columns
       # is due to the fact that the first column of td is the
       # intercept and should be kept anyway
-      V2 <- td[- c(1:TL2), - c(2:(2 + TL2 - 1))]
+      V2 <- td[- c(seq_len(TL2)), - c(2:(2 + TL2 - 1))]
       V1 <- diff(V2)
       namesV <- c("(Intercept)", namesV[- c(0:TL2 + 1)])
     }
@@ -714,7 +714,7 @@ extract.data <- function(data, as.matrix = TRUE){
 
 G <- function(t){
   G <- matrix(0, t, t)
-  for (i in 1:(t-1)){
+  for (i in seq_len(t-1)){
     G[i,   i]   <-  2
     G[i,   i+1] <- -1
     G[i+1, i]   <- -1
@@ -725,7 +725,7 @@ G <- function(t){
 
 FD <- function(t){
   FD <- Id(t)[-1L, ]
-  for (i in 1:(t-1)){
+  for (i in seq_len(t-1)){
     FD[i, i] <- -1
   }
   FD
@@ -799,7 +799,7 @@ summary.pgmm <- function(object, robust = TRUE, time.dummies = FALSE, ...) {
   if(effect == "twoways") object$wald.td <- pwaldtest(object, param = "time", vcov = vv)
   Kt <- length(object$args$namest)
   rowsel <- if(!time.dummies && effect == "twoways") -c((K - Kt + 1):K)
-            else 1:K
+            else seq_len(K)
   std.err <- sqrt(diag(vv))
   b <- coef(object)
   z <- b / std.err

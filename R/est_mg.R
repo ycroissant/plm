@@ -177,7 +177,7 @@ pmg <- function(formula, data, subset, na.action,
       for(i in seq_len(n)) {
         tX <- X[ind == unind[i], ]
         ty <- y[ind == unind[i]]
-        if(trend) tX <- cbind(tX, 1:(dim(tX)[[1L]]))
+        if(trend) tX <- cbind(tX, seq_len(dim(tX)[[1L]]))
         tfit <- lm.fit(tX, ty)
         tcoef[ , i] <- tfit$coefficients
         tres[[i]]   <- tfit$residuals
@@ -204,13 +204,13 @@ pmg <- function(formula, data, subset, na.action,
       for(i in seq_len(n)) {
         taugX <- augX[ind == unind[i], ] # TODO: check if this kind of extractions need drop = FALSE for corner cases
         ty    <-    y[ind == unind[i]]
-        if(trend) taugX <- cbind(taugX, 1:(dim(taugX)[[1L]]))
+        if(trend) taugX <- cbind(taugX, seq_len(dim(taugX)[[1L]]))
         tfit <- lm.fit(taugX, ty)
         tcoef0[ , i] <- tfit$coefficients
         tres[[i]]    <- tfit$residuals
       }
-      tcoef     <- tcoef0[1:k, ] # TODO: this line seems superfluous as tcoef is overwritten a few lines below again
-      tcoef.bar <- tcoef0[-(1:k), ]
+      tcoef     <- tcoef0[seq_len(k), ] # TODO: this line seems superfluous as tcoef is overwritten a few lines below again
+      tcoef.bar <- tcoef0[-(seq_len(k)), ]
 
       coef.names.bar <- c("y.bar", paste(coef.names[-1L], ".bar", sep=""))
 
@@ -238,7 +238,7 @@ pmg <- function(formula, data, subset, na.action,
       for (i in seq_len(n)) {
         tdemX <- demX[ind == unind[i], ]
         tdemy <- demy[ind == unind[i]]
-        if(trend) tdemX <- cbind(tdemX, 1:(dim(tdemX)[[1L]]))
+        if(trend) tdemX <- cbind(tdemX, seq_len(dim(tdemX)[[1L]]))
         tfit <- lm.fit(tdemX, tdemy)
         tcoef[ , i] <- tfit$coefficients
         tres[[i]]   <- tfit$residuals

@@ -228,10 +228,10 @@ pldv <- function(formula, data, subset, weights, na.action,
                 }
                 else{ 
                    # case ls = 0
-                    resid <- y -  as.numeric(tcrossprod(X, t(coef(pglmest)[1:ncol(X)])))
+                    resid <- y -  as.numeric(tcrossprod(X, t(coef(pglmest)[seq_len(ncol(X))])))
                     eta <- tapply(resid, id, mean)[as.character(id)]
                     nu <- resid - eta
-                    start <- c(thestart[1:ncol(X)], sd.nu = sd(nu), sd.eta = sd(eta))
+                    start <- c(thestart[seq_len(ncol(X))], sd.nu = sd(nu), sd.eta = sd(eta))
                 }
             }
         }
@@ -354,7 +354,7 @@ lnl.tobit <- function(param, y, X, id, lower = 0, upper = +Inf, model = "pooling
         if (compute.hessian)  attr(lnL, "hessian")  <- h(i = NA)
     }
     if (model == "random"){
-        lnPntr <- lapply(1:R, function(i)  f(i = i))
+        lnPntr <- lapply(seq_len(R), function(i)  f(i = i))
         lnPnr <- lapply(lnPntr, function(x){
             result <- tapply(x, id, sum)
             ids <- names(result)
@@ -363,25 +363,25 @@ lnl.tobit <- function(param, y, X, id, lower = 0, upper = +Inf, model = "pooling
             result
         }
         )
-        lnPn <- lapply(1:R, function(i) rn$weights[i] * exp(lnPnr[[i]]))
+        lnPn <- lapply(seq_len(R), function(i) rn$weights[i] * exp(lnPnr[[i]]))
         lnPn <- log(Reduce("+", lnPn)) - 0.5 * log(pi)
         lnL <- sum(lnPn)
         if (compute.gradient || compute.hessian){
-            glnPnr  <- lapply(1:R, function(i) g(i = i))
-            pwn     <- lapply(1:R, function(i) exp(lnPnr[[i]] - lnPn))
-            pwnt    <- lapply(1:R, function(i) pwn[[i]][as.character(id)])
-            glnPnr2 <- lapply(1:R, function(i) rn$weights[i] * pwnt[[i]]  * glnPnr[[i]])
+            glnPnr  <- lapply(seq_len(R), function(i) g(i = i))
+            pwn     <- lapply(seq_len(R), function(i) exp(lnPnr[[i]] - lnPn))
+            pwnt    <- lapply(seq_len(R), function(i) pwn[[i]][as.character(id)])
+            glnPnr2 <- lapply(seq_len(R), function(i) rn$weights[i] * pwnt[[i]]  * glnPnr[[i]])
             gradi <- Reduce("+", glnPnr2) / sqrt(pi)
             attr(lnL, "gradient") <- gradi
         }
         if (compute.hessian){
-            hlnPnr <- lapply(1:R, function(i) h(i = i, pwnt = pwnt))
-            daub <- lapply(1:R, function(i) apply(glnPnr[[i]], 2, tapply, id, sum) * pwn[[i]] * rn$weights[i])
+            hlnPnr <- lapply(seq_len(R), function(i) h(i = i, pwnt = pwnt))
+            daub <- lapply(seq_len(R), function(i) apply(glnPnr[[i]], 2, tapply, id, sum) * pwn[[i]] * rn$weights[i])
             daub <- Reduce("+", daub) / sqrt(pi)
             DD1 <- - crossprod(daub)
-            DD2 <- lapply(1:R, function(i) rn$weights[i] * hlnPnr[[i]])
+            DD2 <- lapply(seq_len(R), function(i) rn$weights[i] * hlnPnr[[i]])
             DD2 <- Reduce("+", DD2) / sqrt(pi)
-            DD3 <- lapply(1:R, function(i) rn$weights[i] * crossprod(sqrt(pwn[[i]]) * apply(glnPnr[[i]], 2, tapply, id, sum)))
+            DD3 <- lapply(seq_len(R), function(i) rn$weights[i] * crossprod(sqrt(pwn[[i]]) * apply(glnPnr[[i]], 2, tapply, id, sum)))
             DD3 <- Reduce("+", DD3) / sqrt(pi)
             H <- (DD1 + DD2 + DD3) 
             attr(lnL, "hessian") <- H

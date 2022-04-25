@@ -1094,8 +1094,8 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
     ## the rest stays NA if any)
     for(i in seq_len(n)) {
       ut <- uhat[tind[[i]]]
-      tpos <- (1:t)[unique(lab) %in% tlab[[i]]]
-      ## put nondiag elements to 0 if diagonal=TRUE
+      tpos <- seq_len(t)[unique(lab) %in% tlab[[i]]]
+      ## put non-diag elements to 0 if diagonal=TRUE
       tres[tpos, tpos, i] <- if(diagonal) diag(diag(ut %o% ut)) else ut %o% ut
     }
 
