@@ -360,9 +360,8 @@ lnl.tobit <- function(param, y, X, id, lower = 0, upper = +Inf, model = "pooling
             ids <- names(result)
             result <- as.numeric(result)
             names(result) <- ids
-            result
-        }
-        )
+            result})
+        
         lnPn <- lapply(seq_len(R), function(i) rn$weights[i] * exp(lnPnr[[i]]))
         lnPn <- log(Reduce("+", lnPn)) - 0.5 * log(pi)
         lnL <- sum(lnPn)

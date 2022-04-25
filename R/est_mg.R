@@ -132,12 +132,9 @@ pmg <- function(formula, data, subset, na.action,
     tind <- index[[2L]] ## time index
     ## set dimension variables
     pdim <- pdim(plm.model)
-    balanced <- pdim$balanced
-    nt <- pdim$Tint$nt
     Ti <- pdim$Tint$Ti
     T. <- pdim$nT$T
     n <- pdim$nT$n
-    N <- pdim$nT$N
     ## set index names
     time.names <- pdim$panel.names$time.names
     id.names   <- pdim$panel.names$id.names

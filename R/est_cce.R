@@ -149,11 +149,16 @@ pcce <- function (formula, data, subset, na.action,
   ## (might be unbalanced => t1 != t2 but we don't care as long
   ## as min(t) > k+1)
 
-  ## subtract intercept from parms number and names
+  
   has.int <- attr(terms(plm.model), "intercept")
   if(has.int) {
+    ## subtract intercept from parms number and names
       k <- k - 1
       coef.names <- coef.names[-1L]
+      
+    ## must put the intercept into the group-invariant part!!
+    ## so first drop it from X
+      X <- X[ , -1L, drop = FALSE]
   }
 
   ## "pre-allocate" coefficients matrix for the n models
@@ -166,62 +171,57 @@ pcce <- function (formula, data, subset, na.action,
 
   ## CCE by-group estimation
 
-  ## must put the intercept into the group-invariant part!!
-  ## so first drop it from X
-  if(has.int) {
-      X <- X[ , -1L, drop = FALSE]
-  }
-
   ## group-invariant part, goes in Hhat
     ## between-periods transformation (take means over groups for each t)
-      Xm <- Between(X, effect = tind, na.rm = TRUE)
-      ym <- as.numeric(Between(y, effect = "time", na.rm = TRUE))
+    Xm <- Between(X, effect = tind, na.rm = TRUE)
+    ym <- as.numeric(Between(y, effect = "time", na.rm = TRUE))
 
-      Hhat <- if(has.int) cbind(ym, Xm, 1L) else cbind(ym, Xm)
+    Hhat <- if(has.int) cbind(ym, Xm, 1L) else cbind(ym, Xm)
 
-      ## prepare XMX, XMy arrays
-      XMX <- array(data = NA_real_, dim = c(k, k, n))
-      XMy <- array(data = NA_real_, dim = c(k, 1L, n))
+    ## prepare XMX, XMy arrays
+    XMX <- array(data = NA_real_, dim = c(k, k, n))
+    XMy <- array(data = NA_real_, dim = c(k, 1L, n))
 
-      ## hence calc. beta_i anyway because of vcov
+    ## hence calc. beta_i anyway because of vcov
 
-      ## for each x-sect. i=1..n estimate (over t) the CCE for every TS
-      ## as in KPY, eq. 15
-      unind <- unique(ind)
-      for(i in seq_len(n)) {
-          tX <- X[ind == unind[i], , drop = FALSE]
-          ty <- y[ind == unind[i]]
-          tHhat <- Hhat[ind == unind[i], , drop = FALSE]
+    ## for each x-sect. i=1..n estimate (over t) the CCE for every TS
+    ## as in KPY, eq. 15
+    unind <- unique(ind)
+    for(i in seq_len(n)) {
+      tX <- X[ind == unind[i], , drop = FALSE]
+      ty <- y[ind == unind[i]]
+      tHhat <- Hhat[ind == unind[i], , drop = FALSE]
 
-          ## if 'trend' then augment the xs-invariant component
-          if(trend) tHhat <- cbind(tHhat, seq_len(dim(tHhat)[[1L]]))
+      ## if 'trend' then augment the xs-invariant component
+      if(trend) tHhat <- cbind(tHhat, seq_len(dim(tHhat)[[1L]]))
 
-          ## NB tHat, tMhat should be i-invariant
-          tMhat <- diag(1, length(ty)) -
+      ## NB tHat, tMhat should be i-invariant
+      tMhat <- diag(1, length(ty)) -
               tHhat %*% solve(crossprod(tHhat), t(tHhat))
           
-          CP.tXtMhat <- crossprod(tX, tMhat)
-          tXMX <- tcrossprod(CP.tXtMhat, t(tX))
-          tXMy <- tcrossprod(CP.tXtMhat, t(ty))
+      CP.tXtMhat <- crossprod(tX, tMhat)
+      tXMX <- tcrossprod(CP.tXtMhat, t(tX))
+      tXMy <- tcrossprod(CP.tXtMhat, t(ty))
 
-          ## XMX_i, XMy_i
-          XMX[ , , i] <- tXMX
-          XMy[ , , i] <- tXMy
+      ## XMX_i, XMy_i
+      XMX[ , , i] <- tXMX
+      XMy[ , , i] <- tXMy
 
-          ## single CCE coefficients
-          tb <- ginv(tXMX) %*% tXMy  #solve(tXMX, tXMy)
-          ## USED A GENERALIZED INVERSE HERE BECAUSE OF PBs WITH ECM SPECS
-          ## Notice remark in Pesaran (2006, p.977, between (27) and (28))
-          ## that XMX.i is invariant to the choice of a g-inverse for H'H
-          tcoef[ , i] <- tb
+      ## single CCE coefficients
+      tb <- ginv(tXMX) %*% tXMy  #solve(tXMX, tXMy)
+        ## USED A GENERALIZED INVERSE HERE BECAUSE OF PBs WITH ECM SPECS
+        ## Notice remark in Pesaran (2006, p.977, between (27) and (28))
+        ## that XMX.i is invariant to the choice of a g-inverse for H'H
+      
+      tcoef[ , i] <- tb
 
-          ## cce (defactored) residuals as M_i(y_i - X_i * bCCEMG_i)
-          tytXtb <- ty - tcrossprod(tX, t(tb))
-          cceres[[i]] <- tcrossprod(tMhat, t(tytXtb))
-          ## std. (raw) residuals as y_i - X_i * bCCEMG_i - a_i
-          ta <- mean(ty - tX)
-          stdres[[i]] <- tytXtb - ta
-        }
+      ## cce (defactored) residuals as M_i(y_i - X_i * bCCEMG_i)
+      tytXtb <- ty - tcrossprod(tX, t(tb))
+      cceres[[i]] <- tcrossprod(tMhat, t(tytXtb))
+      ## std. (raw) residuals as y_i - X_i * bCCEMG_i - a_i
+      ta <- mean(ty - tX)
+      stdres[[i]] <- tytXtb - ta
+    }
 
   ## module for making transformed data My, MX for vcovHC use
     ## (NB M is symmetric)
@@ -240,22 +240,23 @@ pcce <- function (formula, data, subset, na.action,
         tHhat1 %*% solve(crossprod(tHhat1), t(tHhat1))
     MX <- crossprod(tMhat1, tX1)
     My <- crossprod(tMhat1, ty1)
+    
     for(i in 2:n) {
-        tX <- X[ind == unind[i], , drop = FALSE]
-        ty <- y[ind == unind[i]]
-        tHhat <- Hhat[ind == unind[i], , drop = FALSE]
+      tX <- X[ind == unind[i], , drop = FALSE]
+      ty <- y[ind == unind[i]]
+      tHhat <- Hhat[ind == unind[i], , drop = FALSE]
 
-        ## if 'trend' then augment the xs-invariant component
-        if(trend) tHhat <- cbind(tHhat, seq_len(dim(tHhat)[[1L]]))
+      ## if 'trend' then augment the xs-invariant component
+      if(trend) tHhat <- cbind(tHhat, seq_len(dim(tHhat)[[1L]]))
 
-        ## NB tHat, tMhat should be i-invariant
-        tMhat <- diag(1, length(ty)) -
+      ## NB tHat, tMhat should be i-invariant
+      tMhat <- diag(1, length(ty)) -
             tHhat %*% solve(crossprod(tHhat), t(tHhat))
-        tMX <- crossprod(tMhat, tX)
-        tMy <- crossprod(tMhat, ty)
+      tMX <- crossprod(tMhat, tX)
+      tMy <- crossprod(tMhat, ty)
 
-        MX <- rbind(MX, tMX)
-        My <- c(My, tMy)
+      MX <- rbind(MX, tMX)
+      My <- c(My, tMy)
     }
 
     ## checks
@@ -271,7 +272,7 @@ pcce <- function (formula, data, subset, na.action,
 
     ## CCEMG coefs are averages across individual regressions
     ## (here: coefs of xs-variants only!)
-    coefmg <- rowMeans(tcoef) # was: apply(tcoef, 1, mean)
+    coefmg <- rowMeans(tcoef)
 
     ## make matrix of cross-products of demeaned individual coefficients
     Rmat <- array(data = NA_real_, dim = c(k, k, n))
@@ -365,7 +366,7 @@ pcce <- function (formula, data, subset, na.action,
     sigma2.i <- vector("list", n)
     for(i in seq_len(n)) {
           ty <- y[ind == unind[i]]
-          sigma2.i[[i]] <- as.numeric(crossprod((ty-mean(ty))))/(length(ty)-1)
+          sigma2.i[[i]] <- as.numeric(crossprod(ty-mean(ty)))/(length(ty)-1)
       }
     sigma2y <- mean(unlist(sigma2.i, use.names = FALSE))
     r2cce <- 1 - sigma2cce/sigma2y

@@ -155,7 +155,7 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar", "Wbar"), orde
     }
     else { # cut off enumeration of individuals in warning message if more than 5
       breakpoint <- which(cumsum(!indi_con) == 5L)[1L]
-      paste0(paste0(indnames[1L:breakpoint][!indi_con[1L:breakpoint]], collapse = ", "), ", ...")
+      paste0(paste0(indnames[seq_len(breakpoint)][!indi_con[seq_len(breakpoint)]], collapse = ", "), ", ...")
     }
     wrn <- paste0(wrn1, wrn2)
     warning(wrn)

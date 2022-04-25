@@ -88,7 +88,7 @@ my.lm.fit <- function(X, y, dfcor = TRUE, ...){
   Qr <- reg$qr
   n <- NROW(Qr$qr)
   rdf <- n - p
-  p1 <- 1L:p
+  p1 <- seq_len(p)
   r <- reg$residuals
   rss <- as.numeric(crossprod(r))
   resvar <- if (dfcor) rss/rdf else rss/n

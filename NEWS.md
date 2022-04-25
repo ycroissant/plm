@@ -16,22 +16,23 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
   repository of cquad is <https://github.com/fravale/cquad_dev/>.
 
 ### Features:
-* predict.plm:
+* `predict.plm`:
   * change: case without supplied non-`NULL` `newdata` now gives the predicted 
     values of the outer model (before: inner model).
   * prediction implemented for fixed effects models incl. support for
-  argument 'newdata' and out-of-sample prediction. Help page (`?predict.plm`) 
+  argument `newdata` and out-of-sample prediction. Help page (`?predict.plm`) 
   added to specifically explain the prediction for fixed effects models and the 
   out-of-sample case.
 
 ### Fixes:
-* fixef with `type = "dfirst"`: for models with length(fixef(mod)) == 2, fixef 
-  does not error anymore and for length(fixef(mod)) == 1, the result is more sane
-  (numeric(0)).
+* `fixef(., type = "dfirst"`): for models with `length(fixef(<model_object>)) == 2`, 
+  fixef does not error anymore and for `length(fixef(<model_object>)) == 1`, 
+  the result is more sane (`numeric(0)`).
   
 ### Minors:
-* plmtest and pbsytest objects: text in 'method' does not contain information
-  about balanced/unbalanced panel anymore.
+* `plmtest` and `pbsytest`: text in result object's `method` does not 
+  contain information about balanced/unbalanced panel anymore and is, thus, not
+  printed anymore.
 
 
 ***
