@@ -1,6 +1,6 @@
 ## Common Correlated Effects Pooled/MG estimators
   ## ref. Holly, Pesaran and Yamagata JoE 158 (2010)
-  ## (also Kapetanios, Pesaran and Yamagata JoE 2010)
+  ## (also Kapetanios, Pesaran and Yamagata JoE 2011)
   ## CCEP and CCEMG together in the same SW framework
   ## based on generalized FEs
 
@@ -73,6 +73,8 @@
 #' @references
 #'
 #' \insertRef{kappesyam11}{plm}
+#' 
+#' \insertRef{HOLL:PESA:YAMA:10}{plm}
 #' 
 #' @keywords regression
 #' @examples
@@ -277,7 +279,7 @@ pcce <- function (formula, data, subset, na.action,
     ## (here: coefs of xs-variants only!)
     coefmg <- rowMeans(tcoef)
 
-    ## make b_i - b_CCEMG
+    ## make demeaned coefficients: b_i - b_CCEMG
     demcoef <- tcoef - coefmg # coefmg gets recycled n times by column
     
     ## make matrix of cross-products of demeaned individual coefficients
@@ -288,6 +290,9 @@ pcce <- function (formula, data, subset, na.action,
         "mg" = {
             ## assign beta CCEMG
             coef <- coefmg
+
+            ## calc CCEMG covariance:
+            ## (HPY 2010, p. 163, between (3.10) and (3.11) / KPY 2011, p. 330 (38))
             for(i in seq_len(n)) Rmat[ , , i] <- outer(demcoef[ , i], demcoef[ , i])
             vcov <- 1/(n*(n-1)) * rowSums(Rmat, dims = 2L) # == 1/(n*(n-1)) * apply(Rmat, 1:2, sum), but rowSums(., dims = 2L)-construct is way faster
         },
@@ -298,8 +303,8 @@ pcce <- function (formula, data, subset, na.action,
             sXMy <- rowSums(XMy, dims = 2L) # == apply(XMy, 1:2, sum), but rowSums(., dims = 2L)-construct is way faster
             coef <- solve(sXMX, sXMy)
 
-
             ## calc CCEP covariance:
+            ## (HPY 2010, p. 163-4, (3.12, 3.13)
             psi.star <- 1/N * sXMX
     
             for(i in seq_len(n)) {
@@ -334,7 +339,8 @@ pcce <- function (formula, data, subset, na.action,
                 tytXcoef    <- ty - tcrossprod(tX, t(coef))
                 cceres[[i]] <- tcrossprod(tMhat, t(tytXcoef))
                 
-                ## std. (raw) residuals as y_i - X_i * bCCEMG_i - a_i
+                ## std. (raw) residuals as y_i - X_i * bCCEP - a_i
+                # (HPY, p. 165 (left column at the bottom))
                 ta <- mean(ty - tX)
                 stdres[[i]] <- tytXcoef - ta
             }

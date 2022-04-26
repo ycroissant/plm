@@ -107,6 +107,8 @@ summary(ccemgmod)
 }
 \references{
 \insertRef{kappesyam11}{plm}
+
+\insertRef{HOLL:PESA:YAMA:10}{plm}
 }
 \author{
 Giovanni Millo
