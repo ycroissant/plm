@@ -238,8 +238,8 @@ pcce <- function (formula, data, subset, na.action,
     ## NB tHat, tMhat should be i-invariant (but beware of unbalanced)
     tMhat1 <- diag(1, length(ty1)) -
         tHhat1 %*% solve(crossprod(tHhat1), t(tHhat1))
-    MX <- crossprod(tMhat1, tX1)
-    My <- crossprod(tMhat1, ty1)
+    MX1 <- crossprod(tMhat1, tX1)
+    My1 <- crossprod(tMhat1, ty1)
     
     for(i in 2:n) {
       tX <- X[ind == unind[i], , drop = FALSE]
@@ -255,8 +255,8 @@ pcce <- function (formula, data, subset, na.action,
       tMX <- crossprod(tMhat, tX)
       tMy <- crossprod(tMhat, ty)
 
-      MX <- rbind(MX, tMX)
-      My <- c(My, tMy)
+      MX <- rbind(MX1, tMX)
+      My <- c(My1, tMy)
     }
 
     ## checks
