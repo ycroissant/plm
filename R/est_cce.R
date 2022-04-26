@@ -92,6 +92,13 @@ pcce <- function (formula, data, subset, na.action,
                    #residuals = c("defactored", "standard"),
                   index = NULL, trend = FALSE, ...) {
   
+  ## TODO: in general: 
+  ##    * consider if data can be split only once and work on the split
+  ##      data instead of cycling through the data with for-loops at various
+  ##      occasions (could be faster).
+  ##    * consider parallel execution via mclapply (aligns with the 
+  ##      split-only-once aspect mentioned above).
+  
   ## Create a Formula object if necessary (from plm)
   if (!inherits(formula, "Formula")) formula <- as.Formula(formula)
 
@@ -231,6 +238,9 @@ pcce <- function (formula, data, subset, na.action,
         ## that XMX.i is invariant to the choice of a g-inverse for H'H
       
       tcoef[ , i] <- tb
+      
+      # TODO: check if calc. of residuals for MG model can be deferred to 
+      #       the MG-only code path below
 
       ## cce (defactored) residuals as M_i(y_i - X_i * bCCEMG_i)
       tytXtb      <- ty - tcrossprod(tX, t(tb))
@@ -253,7 +263,7 @@ pcce <- function (formula, data, subset, na.action,
     ## make demeaned coefficients: b_i - b_CCEMG
     demcoef <- tcoef - coefmg # coefmg gets recycled n times by column
     
-    ## make matrix of cross-products of demeaned individual coefficients
+    ## pre-allocate matrix of cross-products of demeaned individual coefficients
     Rmat <- array(data = NA_real_, dim = c(k, k, n))
 
     ## calc. coef and vcov according to model
