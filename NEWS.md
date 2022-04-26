@@ -33,6 +33,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 * `plmtest` and `pbsytest`: text in result object's `method` does not 
   contain information about balanced/unbalanced panel anymore and is, thus, not
   printed anymore.
+* `pcce`: made faster by coding improvments.
 
 
 ***
