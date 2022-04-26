@@ -216,7 +216,7 @@ pcce <- function (formula, data, subset, na.action,
       tcoef[ , i] <- tb
 
       ## cce (defactored) residuals as M_i(y_i - X_i * bCCEMG_i)
-      tytXtb <- ty - tcrossprod(tX, t(tb))
+      tytXtb      <- ty - tcrossprod(tX, t(tb))
       cceres[[i]] <- tcrossprod(tMhat, t(tytXtb))
       ## std. (raw) residuals as y_i - X_i * bCCEMG_i - a_i
       ta <- mean(ty - tX)
@@ -227,6 +227,7 @@ pcce <- function (formula, data, subset, na.action,
     ## (NB M is symmetric)
     ## Some redundancy because this might be moved to model.matrix.pcce
 
+    ## only first individual
     ## initialize
     tX1 <- X[ind == unind[1L], , drop = FALSE]
     ty1 <- y[ind == unind[1L]]
@@ -237,10 +238,12 @@ pcce <- function (formula, data, subset, na.action,
 
     ## NB tHat, tMhat should be i-invariant (but beware of unbalanced)
     tMhat1 <- diag(1, length(ty1)) -
-        tHhat1 %*% solve(crossprod(tHhat1), t(tHhat1))
+      crossprod(t(tHhat1), solve(crossprod(tHhat1), t(tHhat1)))
+    
     MX <- crossprod(tMhat1, tX1)
     My <- crossprod(tMhat1, ty1)
-    
+
+    ## individuals 2 to n
     for(i in 2:n) {
       tX <- X[ind == unind[i], , drop = FALSE]
       ty <- y[ind == unind[i]]
@@ -251,7 +254,7 @@ pcce <- function (formula, data, subset, na.action,
 
       ## NB tHat, tMhat should be i-invariant
       tMhat <- diag(1, length(ty)) -
-            tHhat %*% solve(crossprod(tHhat), t(tHhat))
+        crossprod(t( tHhat), solve(crossprod(tHhat), t(tHhat)))
       tMX <- crossprod(tMhat, tX)
       tMy <- crossprod(tMhat, ty)
 
@@ -294,19 +297,23 @@ pcce <- function (formula, data, subset, na.action,
             sXMX <- rowSums(XMX, dims = 2L) # == apply(XMX, 1:2, sum), but rowSums(., dims = 2L)-construct is way faster
             sXMy <- rowSums(XMy, dims = 2L) # == apply(XMy, 1:2, sum), but rowSums(., dims = 2L)-construct is way faster
             coef <- solve(sXMX, sXMy)
-    
+
+
             ## calc CCEP covariance:
             psi.star <- 1/N * sXMX
     
-            for(i in seq_len(n)) Rmat[ , , i] <- XMX[ , , i] %*%
-                outer(demcoef[ , i], demcoef[ , i]) %*% XMX[ , , i]
+            for(i in seq_len(n)) {
+              Rmat[ , , i] <- XMX[ , , i] %*% 
+                             outer(demcoef[ , i], demcoef[ , i]) %*% XMX[ , , i] 
+              }
+            
             ## summing over the n-dimension of the array we get the
             ## covariance matrix of coefs
             R.star <- 1/(n-1) * rowSums(Rmat, dims = 2L) * 1/(t^2) # rowSums(Rmat, dims = 2L) faster than == apply(Rmat, 1:2, sum)
     
             Sigmap.star <- solve(psi.star, R.star) %*% solve(psi.star)
             vcov <- Sigmap.star/n
-    
+
             ## calc CCEP residuals both defactored and raw
             for(i in seq_len(n)) {
                 ## must redo all this because needs b_CCEP, which is
@@ -321,11 +328,12 @@ pcce <- function (formula, data, subset, na.action,
                 ## NB tHat, tMhat should be i-invariant (but for the
                 ## group size if unbalanced)
                 tMhat <- diag(1, length(ty)) -
-                    tHhat %*% solve(crossprod(tHhat), t(tHhat))
+                  crossprod(t(tHhat), solve(crossprod(tHhat), t(tHhat)))
     
                 ## cce residuals as M_i(y_i - X_i * bCCEP)
-                tytXcoef <- ty - tcrossprod(tX, t(coef))
+                tytXcoef    <- ty - tcrossprod(tX, t(coef))
                 cceres[[i]] <- tcrossprod(tMhat, t(tytXcoef))
+                
                 ## std. (raw) residuals as y_i - X_i * bCCEMG_i - a_i
                 ta <- mean(ty - tX)
                 stdres[[i]] <- tytXcoef - ta
