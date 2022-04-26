@@ -216,7 +216,7 @@ pcce <- function (formula, data, subset, na.action,
 
       ## NB tHat, tMhat should be i-invariant
       tMhat <- diag(1, length(ty)) -
-              tHhat %*% solve(crossprod(tHhat), t(tHhat))
+                crossprod(t(tHhat), solve(crossprod(tHhat), t(tHhat)))
  
       CP.tXtMhat <- crossprod(tX, tMhat)
       tXMX <- tcrossprod(CP.tXtMhat, t(tX))
