@@ -164,13 +164,14 @@ pcce <- function (formula, data, subset, na.action,
   }
 
   ## "pre-allocate" coefficients matrix for the n models
+  ## (dimensions are known in advance/by now)
   tcoef <- matrix(NA_real_, nrow = k, ncol = n)
 
   ## pre-allocate residuals lists for individual regressions
   ## (lists allow for unbalanced panels)
   cceres <- vector("list", n)
   stdres <- vector("list", n)
-
+  
   ## CCE by-group estimation
 
   ## group-invariant part, goes in Hhat
@@ -180,15 +181,24 @@ pcce <- function (formula, data, subset, na.action,
 
     Hhat <- if(has.int) cbind(ym, Xm, 1L) else cbind(ym, Xm)
 
-    ## prepare XMX, XMy arrays
+    ## pre-allocate XMX, XMy arrays
+    ## (dimensions are known in advance/by now)
     XMX <- array(data = NA_real_, dim = c(k, k, n))
     XMy <- array(data = NA_real_, dim = c(k, 1L, n))
+    
+    ## pre-allocate MX, My for list of transformed data, 
+    ## later reduced to matrix and numeric, respectively
+    ## (dimensions of n matrices/numerics to be hold by MX/My are not known in
+    ## advance, depend on time periods per individual -> hence use list)
+    MX <- vector("list", length = n)
+    My <- vector("list", length = n)
 
     ## hence calc. beta_i anyway because of vcov
 
     ## for each x-sect. i=1..n estimate (over t) the CCE for every TS
     ## as in KPY, eq. 15
     unind <- unique(ind)
+    
     for(i in seq_len(n)) {
       tX <- X[ind == unind[i], , drop = FALSE]
       ty <- y[ind == unind[i]]
@@ -200,14 +210,19 @@ pcce <- function (formula, data, subset, na.action,
       ## NB tHat, tMhat should be i-invariant
       tMhat <- diag(1, length(ty)) -
               tHhat %*% solve(crossprod(tHhat), t(tHhat))
-          
+ 
       CP.tXtMhat <- crossprod(tX, tMhat)
       tXMX <- tcrossprod(CP.tXtMhat, t(tX))
       tXMy <- tcrossprod(CP.tXtMhat, t(ty))
-
+      
       ## XMX_i, XMy_i
       XMX[ , , i] <- tXMX
       XMy[ , , i] <- tXMy
+      
+      ## save transformed data My, MX for vcovHC use
+      ## (NB M is symmetric)
+      MX[[i]] <- t(CP.tXtMhat)
+      My[[i]] <- crossprod(tMhat, ty)
 
       ## single CCE coefficients
       tb <- ginv(tXMX) %*% tXMy  #solve(tXMX, tXMy)
@@ -225,53 +240,9 @@ pcce <- function (formula, data, subset, na.action,
       stdres[[i]] <- tytXtb - ta
     }
 
-  ## module for making transformed data My, MX for vcovHC use
-    ## (NB M is symmetric)
-    ## Some redundancy because this might be moved to model.matrix.pcce
-
-    ## only first individual
-    ## initialize
-    tX1 <- X[ind == unind[1L], , drop = FALSE]
-    ty1 <- y[ind == unind[1L]]
-    tHhat1 <- Hhat[ind == unind[1L], , drop = FALSE]
-
-    ## if 'trend' then augment the xs-invariant component
-    if(trend) tHhat1 <- cbind(tHhat1, seq_len(dim(tHhat)[[1L]]))
-
-    ## NB tHat, tMhat should be i-invariant (but beware of unbalanced)
-    tMhat1 <- diag(1, length(ty1)) -
-      crossprod(t(tHhat1), solve(crossprod(tHhat1), t(tHhat1)))
-    
-    MX <- crossprod(tMhat1, tX1)
-    My <- crossprod(tMhat1, ty1)
-
-    ## individuals 2 to n
-    for(i in 2:n) {
-      tX <- X[ind == unind[i], , drop = FALSE]
-      ty <- y[ind == unind[i]]
-      tHhat <- Hhat[ind == unind[i], , drop = FALSE]
-
-      ## if 'trend' then augment the xs-invariant component
-      if(trend) tHhat <- cbind(tHhat, seq_len(dim(tHhat)[[1L]]))
-
-      ## NB tHat, tMhat should be i-invariant
-      tMhat <- diag(1, length(ty)) -
-        crossprod(t( tHhat), solve(crossprod(tHhat), t(tHhat)))
-      tMX <- crossprod(tMhat, tX)
-      tMy <- crossprod(tMhat, ty)
-
-      MX <- rbind(MX, tMX)
-      My <- c(My, tMy)
-    }
-
-    ## checks
-    ## MX <<- MX
-    ## My <<- My
-
-    ## ALT:
-    ## MXa <<- kronecker(diag(n), tMhat1) %*% X
-    ## Mya <<- kronecker(diag(n), tMhat1) %*% y
-    ## very same result, less efficient
+    # Reduce transformed data to matrix and numeric, respectively
+    MX <- Reduce(rbind, MX)
+    My <- Reduce(c, My)
 
   ## end data module
 
@@ -385,7 +356,8 @@ pcce <- function (formula, data, subset, na.action,
     sigma2y <- mean(unlist(sigma2.i, use.names = FALSE))
     r2cce <- 1 - sigma2cce/sigma2y
 
-    ## allow outputting different types of residuals
+    ## allow outputting different types of residuals, defactored residuals are
+    ## default/go into slot 'residuals'
     stdres    <- unlist(stdres)
     residuals <- unlist(cceres)
 
