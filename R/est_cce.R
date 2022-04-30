@@ -96,7 +96,7 @@ pcce <- function (formula, data, subset, na.action,
   ##    * consider if data can be split only once and work on the split
   ##      data instead of cycling through the data with for-loops at various
   ##      occasions (could be faster).
-  ##    * consider parallel execution via mclapply (aligns with the 
+  ##    * consider parallel execution via mclapply/mcmapply (aligns with the 
   ##      split-only-once aspect mentioned above).
   
   ## Create a Formula object if necessary (from plm)
@@ -239,15 +239,19 @@ pcce <- function (formula, data, subset, na.action,
       
       tcoef[ , i] <- tb
       
-      # TODO: check if calc. of residuals for MG model can be deferred to 
-      #       the MG-only code path below
-
-      ## cce (defactored) residuals as M_i(y_i - X_i * bCCEMG_i)
-      tytXtb      <- ty - tcrossprod(tX, t(tb))
-      cceres[[i]] <- tcrossprod(tMhat, t(tytXtb))
-      ## std. (raw) residuals as y_i - X_i * bCCEMG_i - a_i
-      ta <- mean(ty - tX)
-      stdres[[i]] <- tytXtb - ta
+      ## calc CCEMG residuals, both defactored and raw
+      if(model == "mg") {
+        # These are the residuals for MG model, calc. only if model is selected
+        # (residuals for pooled model are calc. later)
+        # (maybe this part here could be shifted to the mg code patch below)
+        
+        ## cce (defactored) residuals as M_i(y_i - X_i * bCCEMG_i)
+        tytXtb      <- ty - tcrossprod(tX, t(tb))
+        cceres[[i]] <- tcrossprod(tMhat, t(tytXtb))
+        ## std. (raw) residuals as y_i - X_i * bCCEMG_i - a_i
+        ta <- mean(ty - tX)
+        stdres[[i]] <- tytXtb - ta
+      }
     }
 
     # Reduce transformed data to matrix and numeric, respectively
@@ -300,7 +304,7 @@ pcce <- function (formula, data, subset, na.action,
             Sigmap.star <- solve(psi.star, R.star) %*% solve(psi.star)
             vcov <- Sigmap.star/n
 
-            ## calc CCEP residuals both defactored and raw
+            ## calc CCEP residuals, both defactored and raw
             for(i in seq_len(n)) {
                 ## must redo all this because needs b_CCEP, which is
                 ## not known at by-groups step
