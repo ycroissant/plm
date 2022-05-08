@@ -161,7 +161,9 @@ pvcm.within <- function(formula, data, effect){
 
 
 pvcm.random <- function(formula, data, effect){
-    
+    ## Swamy (1970)
+    ## see also Poi (2003), The Stata Journal: 
+    ## https://www.stata-journal.com/sjpdf.html?articlenum=st0046
     interc <- has.intercept(formula)
     index <- index(data)
     id <- index[[1L]]
@@ -180,7 +182,7 @@ pvcm.random <- function(formula, data, effect){
     }
     
     ml <- split(data, cond)
-    nr <- vapply(ml, function(x) dim(x)[1L] > 0, FUN.VALUE = TRUE) # == sapply(ml, function(x) dim(x)[1L]) > 0
+    nr <- vapply(ml, function(x) dim(x)[1L] > 0, FUN.VALUE = TRUE)
     ml <- ml[nr]
     attr(ml, "index") <- index
     ols <- lapply(ml,
@@ -303,7 +305,6 @@ pvcm.random <- function(formula, data, effect){
 summary.pvcm <- function(object, ...) {
   model <- describe(object, "model")
   if (model == "random") {
-    
     coef_wo_int <- object$coefficients[!(names(coef(object)) %in% "(Intercept)")]
     int.only <- !length(coef_wo_int)
     object$waldstatistic <- if(!int.only) pwaldtest(object) else NULL
