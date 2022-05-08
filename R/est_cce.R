@@ -363,11 +363,9 @@ pcce <- function (formula, data, subset, na.action,
     })
 
     ## calc. overall R2, CCEMG or CCEP depending on 'model'
-    sigma2.i <- vector("list", n)
-    for(i in seq_len(n)) {
-          ty <- y[ind == unind[i]]
-          sigma2.i[[i]] <- as.numeric(crossprod(ty-mean(ty)))/(length(ty)-1)
-      }
+    sigma2.i <- split(y, ind)
+    sigma2.i <- lapply(sigma2.i, function(y.i) {
+                    as.numeric(crossprod(y.i - mean(y.i)))/(length(y.i)-1)})
     sigma2y <- mean(unlist(sigma2.i, use.names = FALSE))
     r2cce <- 1 - sigma2cce/sigma2y
 
