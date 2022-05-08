@@ -110,7 +110,7 @@ pldv <- function(formula, data, subset, weights, na.action,
         keep <- id == lid
         keep[1L] <- FALSE
         Y <- data.frame(y, ly)
-        Y <- Y[keep, ]
+        Y <- Y[keep, , drop = FALSE]
         yt <- Y$y
         ytm1 <- Y$ly
         # create the matrix of first differenced covariates
@@ -354,7 +354,7 @@ lnl.tobit <- function(param, y, X, id, lower = 0, upper = +Inf, model = "pooling
         if (compute.hessian)  attr(lnL, "hessian")  <- h(i = NA)
     }
     if (model == "random"){
-        lnPntr <- lapply(seq_len(R), function(i)  f(i = i))
+        lnPntr <- lapply(seq_len(R), function(i) f(i = i))
         lnPnr <- lapply(lnPntr, function(x){
             result <- tapply(x, id, sum)
             ids <- names(result)
