@@ -204,8 +204,8 @@ pcdtest.formula <- function(x, data, index = NULL, model = NULL,
       hetero.spec <- FALSE
       model <- "within"
     }
-    
-    ind0 <- attr(model.frame(mymod), "index")
+
+    ind0 <- unclass(attr(model.frame(mymod), "index")) # unclass for speed
     tind <- as.numeric(ind0[[2L]])
     ind <- as.numeric(ind0[[1L]])
     
@@ -273,11 +273,11 @@ pcdtest.panelmodel <- function(x, test = c("cd", "sclm", "bcsclm", "lm", "rho", 
     model <- describe(x, "model")
     effect <- describe(x, "effect")
     eff <- (effect == "individual" || effect == "twoways")
-    if (test == "bcsclm")
-      if (model != "within" || !eff) stop("for test = 'bcsclm', model x must be a within individual or twoways model")
-  
+    if (test == "bcsclm" && (model != "within" || !eff))
+      stop("for test = 'bcsclm', model x must be a within individual or twoways model")
+    
     tres <- resid(x)
-    index <- attr(model.frame(x), "index")
+    index <- unclass(attr(model.frame(x), "index")) # unclass for speed
     #tind <- as.numeric(index[[2L]])
     ind <- as.numeric(index[[1L]])
     unind <- unique(ind)
@@ -311,8 +311,9 @@ pcdtest.pseries <- function(x, test = c("cd", "sclm", "bcsclm", "lm", "rho", "ab
     }
   
     ## get indices
-    tind <- as.numeric(attr(x, "index")[[2L]])
-    ind <- as.numeric(attr(x, "index")[[1L]])
+    ix <- unclass(attr(x, "index")) # unclass for speed
+    tind <- as.numeric(ix[[2L]])
+    ind <- as.numeric(ix[[1L]])
 
     ## det. number of groups and df
     unind <- unique(ind)
@@ -359,8 +360,9 @@ pcdres <- function(tres, n, w, form, test) {
     
     ## find length of intersecting pairs
     ## fast method, times down 200x
-    data.res <- data.frame(time = attr(tres, "index")[[2L]],
-                           indiv = attr(tres, "index")[[1L]])
+    ix <- unclass(attr(tres, "index")) # unclass for speed
+    data.res <- data.frame(time  = ix[[2L]],
+                           indiv = ix[[1L]])
     ## tabulate which obs in time for each ind are !na
     presence.tab <- table(data.res)
     ## calculate t.ij
@@ -499,10 +501,11 @@ preshape <- function(x, na.rm = TRUE, ...) {
     ## e.g., of residuals from a panelmodel,
     ## in wide form
     inames <- names(attr(x, "index"))
-    mres <- reshape(cbind(as.vector(x), attr(x, "index")),
+    mres <- reshape(cbind(as.vector(x),
+                          attr(x, "index")),
                     direction = "wide",
-                    timevar = inames[2L],
-                    idvar = inames[1L])
+                    timevar   = inames[2L],
+                    idvar     = inames[1L])
     ## drop ind in first column
     mres <- mres[ , -1L, drop = FALSE]
     ## reorder columns (may be scrambled depending on first
