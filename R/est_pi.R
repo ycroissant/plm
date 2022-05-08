@@ -88,10 +88,15 @@ aneweytest <- function(formula, data, subset, na.action, index = NULL,  ...){
     # time-demean and split by period:
     attr(X, "index") <- index
     X <- Within(X, effect ="time")
-    X <- lapply(as.list(periods), function(x) X[time == x, , drop = FALSE])
+    
+    X.ncol <- NCOL(X)
+    namesX <- colnames(X)
+    X <- split(X, time)
+    X <- lapply(X, function(m) matrix(m, ncol = X.ncol))
+    
     # put column names for split matrices in X:
     for (i in seq_along(periods)){
-      colnames(X[[i]]) <- paste(colnames(X[[i]]), periods[i], sep = ".")
+      colnames(X[[i]]) <- paste(namesX, periods[i], sep = ".")
     }
     
     if (!is.null(Z)){
@@ -213,10 +218,14 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
     attr(X, "index") <- index
     X <- Within(X, effect ="time")
     periods <- unique(time)
-    X <- lapply(as.list(periods), function(x) X[time == x, , drop = FALSE])
-    # put columnnames for split matrices in X:
+    
+    X.ncol <- NCOL(X)
+    X <- split(X, time)
+    X <- lapply(X, function(m) matrix(m, ncol = X.ncol))
+
+    # put column names for split matrices in X:
     for (i in seq_along(periods)){
-      colnames(X[[i]]) <- paste(colnames(X[[i]]), periods[i], sep = ".")
+      colnames(X[[i]]) <- paste(namesX, periods[i], sep = ".")
     }
     
     if (!is.null(Z)){
