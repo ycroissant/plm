@@ -207,7 +207,7 @@ pvcm.random <- function(formula, data, effect){
     # list of model matrices
     X <- lapply(ols, model.matrix)
     # same without the covariates with NA coefficients
-    Xna <- lapply(seq_len(nrow(coefm)), function(i) X[[i]][ , !coefna[i, ]]) # TODO: Xna is used nowhere!?
+    # Xna <- lapply(seq_len(nrow(coefm)), function(i) X[[i]][ , !coefna[i, ], drop = FALSE])
     # list of model responses
     y <- lapply(ols, function(x) model.response(model.frame(x)))
     # compute a list of XpX^-1 matrices, with 0 for lines/columns with
@@ -215,7 +215,7 @@ pvcm.random <- function(formula, data, effect){
     xpxm1 <- lapply(seq_len(card.cond), function(i){
         z <- matrix(0, ncol(coefm), ncol(coefm),
                     dimnames = list(colnames(coefm), colnames(coefm)))
-        z[!coefna[i, ], !coefna[i, ]] <- solve(crossprod(X[[i]][!coefna[i, ], !coefna[i, ]]))
+        z[!coefna[i, ], !coefna[i, ]] <- solve(crossprod(X[[i]][!coefna[i, ], !coefna[i, ], drop = FALSE]))
         z
     })
 
@@ -236,9 +236,10 @@ pvcm.random <- function(formula, data, effect){
     
     # compute the Omega matrix for each individual
     Omegan <- lapply(seq_len(card.cond), function(i) sigi[i] * diag(nrow(X[[i]])) + X[[i]] %*% Delta %*% t(X[[i]]))
+
     # compute X'Omega X and X'Omega y for each individual
     XyOmXy <- lapply(seq_len(card.cond), function(i){
-        Xn <- X[[i]][ , !coefna[i, ]] ## TODO: check if drop = FALSE needed (also in other extractions)
+        Xn <- X[[i]][ , !coefna[i, ], drop = FALSE]
         yn <- y[[i]]
         # pre-allocate matrices
         XnXn <- matrix(0, ncol(coefm), ncol(coefm), dimnames = list(colnames(coefm), colnames(coefm)))
@@ -268,7 +269,7 @@ pvcm.random <- function(formula, data, effect){
 #                           wn <- solve(vcovn + Deltan)
                            #new
                            vcovn <- vcov(ols[[i]])
-                           wn <- solve((vcovn + Delta)[!coefna[i, ], !coefna[i, ]])
+                           wn <- solve((vcovn + Delta)[!coefna[i, ], !coefna[i, ], drop = FALSE])
                            z <- matrix(0, nrow = ncol(coefm), ncol = ncol(coefm),
                                        dimnames = list(colnames(coefm), colnames(coefm)))
                            z[!coefna[i, ], !coefna[i, ]] <- wn
