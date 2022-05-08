@@ -207,31 +207,36 @@ pcdtest.formula <- function(x, data, index = NULL, model = NULL,
 
     ind0 <- unclass(attr(model.frame(mymod), "index")) # unclass for speed
     tind <- as.numeric(ind0[[2L]])
-    ind <- as.numeric(ind0[[1L]])
+    ind  <- as.numeric(ind0[[1L]])
+
+    unind <- unique(ind)
+    n <- length(unind)
     
     if(hetero.spec) {
         ## estimate individual normal regressions one by one
         ## (original heterogeneous specification of Pesaran)
         X <- model.matrix(mymod)
         y <- model.response(model.frame(mymod))
-        unind <- unique(ind)
-        n <- length(unind)
-        ti.res   <- vector("list", n)
-        ind.res  <- vector("list", n)
-        tind.res <- vector("list", n)
-        for (i in seq_len(n)) {
-            tX <- X[ind == unind[i], , drop = FALSE]
-            ty <- y[ind == unind[i]]
-            res.i <- lm.fit(tX, ty)$residuals
-            ti.res[[i]] <- res.i
-            names(ti.res[[i]]) <- tind[ind == unind[i]]
-            ind.res[[i]] <- rep(i, length(res.i))
-            tind.res[[i]] <- tind[ind == unind[i]]
-        }
+ 
+        # split X, y per individual
+        X.ncol <- NCOL(X)
+        tX <- split(X, ind)
+        tX <- lapply(tX, function(m) matrix(m, ncol = X.ncol))
+        ty <- split(y, ind)
+
+        # calc. residuals
+        res.i <- mapply(function(X, y) lm.fit(X, y)$residuals, tX, ty, SIMPLIFY = FALSE)
+        
+        # construct indexes
+        ind.i <- rep(seq_len(n), lengths(res.i))
+        tind.i <- split(tind, ind)
+        tind.i <- unlist(tind.i, use.names = FALSE)
+        
         ## make pseries of (all) residuals
-        resdata <- data.frame(ee   = unlist(ti.res,   use.names = FALSE),
-                              ind  = unlist(ind.res,  use.names = FALSE),
-                              tind = unlist(tind.res, use.names = FALSE))
+        resdata <- data.frame(ee   = unlist(res.i,  use.names = FALSE),
+                              ind  = ind.i,
+                              tind = tind.i)
+        
         pee <- pdata.frame(resdata, index = c("ind", "tind"))
         tres <- pee$ee
     } else {
@@ -249,12 +254,7 @@ pcdtest.formula <- function(x, data, index = NULL, model = NULL,
       }
       
       tres <- resid(mymod)
-      unind <- unique(ind)
-      n <- length(unind)
-      t <- min(pdim(mymod)$Tint$Ti)
-      nT <- length(ind)
-      k <- length(mymod$coefficients)
-      }
+    }
 
     return(pcdres(tres = tres, n = n, w = w,
                   form = paste(deparse(x)),
@@ -313,7 +313,7 @@ pcdtest.pseries <- function(x, test = c("cd", "sclm", "bcsclm", "lm", "rho", "ab
     ## get indices
     ix <- unclass(attr(x, "index")) # unclass for speed
     tind <- as.numeric(ix[[2L]])
-    ind <- as.numeric(ix[[1L]])
+    ind  <- as.numeric(ix[[1L]])
 
     ## det. number of groups and df
     unind <- unique(ind)
@@ -514,7 +514,7 @@ preshape <- function(x, na.rm = TRUE, ...) {
     ## if requested, drop columns (time periods) with NAs
     if(na.rm) {
         na.cols <- vapply(mres, FUN = anyNA, FUN.VALUE = TRUE, USE.NAMES = FALSE)
-        if(sum(na.cols) > 0L) mres <- mres[ , !na.cols]
+        if(sum(na.cols) > 0L) mres <- mres[ , !na.cols, drop = FALSE]
     }
     return(mres)
 }
@@ -622,7 +622,4 @@ cortab <- function(x, grouping, groupnames = NULL,
     mytab <- tab.g(x, regs = regs, regnames = regnames, test = "rho", value = value)
     return(mytab)
 }
-
-
-
 
