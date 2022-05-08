@@ -1,6 +1,6 @@
 
-R version 4.1.1 (2021-08-10) -- "Kick Things"
-Copyright (C) 2021 The R Foundation for Statistical Computing
+R Under development (unstable) (2022-04-30 r82287 ucrt) -- "Unsuffered Consequences"
+Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -1491,7 +1491,7 @@ Balanced Panel: n = 48, T = 17, N = 816
 
 Residuals:
          Min.       1st Qu.        Median       3rd Qu.          Max. 
--0.0806338298 -0.0037117390  0.0003146508  0.0040206746  0.0438957373 
+-0.0806338298 -0.0037117388  0.0003146508  0.0040206746  0.0438957373 
 
 Coefficients:
             Estimate Std. Error z-value  Pr(>|z|)    
@@ -1832,10 +1832,10 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Total Sum of Squares:    2362500
 Residual Sum of Squares: 2362500
-R-Squared:      4.4409e-16
-Adj. R-Squared: 4.4409e-16
+R-Squared:      5.5511e-16
+Adj. R-Squared: 5.5511e-16
 > 
 > 
 > proc.time()
    user  system elapsed 
-   4.09    0.42    4.68 
+   3.35    0.28    3.60 
