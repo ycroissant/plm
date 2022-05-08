@@ -158,7 +158,6 @@ pcce <- function (formula, data, subset, na.action,
   ## (might be unbalanced => t1 != t2 but we don't care as long
   ## as min(t) > k+1)
 
-  
   has.int <- attr(terms(plm.model), "intercept")
   if(has.int) {
     ## subtract intercept from parms number and names
@@ -205,7 +204,7 @@ pcce <- function (formula, data, subset, na.action,
     ## for each x-sect. i=1..n estimate (over t) the CCE for every TS
     ## as in KPY, eq. 15
     unind <- unique(ind)
-    
+
     for(i in seq_len(n)) {
       tX <- X[ind == unind[i], , drop = FALSE]
       ty <- y[ind == unind[i]]
@@ -232,7 +231,7 @@ pcce <- function (formula, data, subset, na.action,
       My[[i]] <- crossprod(tMhat, ty)
 
       ## single CCE coefficients
-      tb <- ginv(tXMX) %*% tXMy  #solve(tXMX, tXMy)
+      tb <- crossprod(ginv(tXMX), tXMy) # solve(tXMX, tXMy)
         ## USED A GENERALIZED INVERSE HERE BECAUSE OF PBs WITH ECM SPECS
         ## Notice remark in Pesaran (2006, p.977, between (27) and (28))
         ## that XMX.i is invariant to the choice of a g-inverse for H'H
@@ -290,18 +289,20 @@ pcce <- function (formula, data, subset, na.action,
 
             ## calc CCEP covariance:
             ## (HPY 2010, p. 163-4, (3.12, 3.13)
-            psi.star <- 1/N * sXMX
-    
+
             for(i in seq_len(n)) {
-              Rmat[ , , i] <- XMX[ , , i] %*% 
-                             outer(demcoef[ , i], demcoef[ , i]) %*% XMX[ , , i] 
-              }
+              Rmat[ , , i] <- crossprod(XMX[ , , i], 
+                                        crossprod(outer(demcoef[ , i],
+                                                        demcoef[ , i]), 
+                                                  XMX[ , , i]))
+            }
             
             ## summing over the n-dimension of the array we get the
             ## covariance matrix of coefs
             R.star <- 1/(n-1) * rowSums(Rmat, dims = 2L) * 1/(t^2) # rowSums(Rmat, dims = 2L) faster than == apply(Rmat, 1:2, sum)
     
-            Sigmap.star <- solve(psi.star, R.star) %*% solve(psi.star)
+            psi.star <- 1/N * sXMX
+            Sigmap.star <-  tcrossprod(solve(psi.star, R.star), solve(psi.star))
             vcov <- Sigmap.star/n
 
             ## calc CCEP residuals, both defactored and raw
