@@ -200,7 +200,7 @@ pldv <- function(formula, data, subset, weights, na.action,
                  call. = FALSE)
           }
         # compute the nodes and the weights for the gaussian quadrature
-        rn <- statmod::gauss.quad(R, kind = 'hermite')
+        rn <- statmod::gauss.quad(R, kind = "hermite")
         # compute the starting values
         ls <- length(start)
         if (model == "pooling"){
@@ -326,7 +326,7 @@ lnl.tobit <- function(param, y, X, id, lower = 0, upper = +Inf, model = "pooling
         hbs[YUP] <-          - mmz[YUP] * (1 + (mmz[YUP] - e[YUP]) * e[YUP])
         hss[YUP] <- - e[YUP] * mmz[YUP] * (2 + (mmz[YUP] - e[YUP]) * e[YUP])
         hbb <- crossprod(hbb * X * pw, X)
-        hbs <- apply(hbs * X * pw, 2, sum) # TODO: can use colSums -> faster
+        hbs <- colSums(hbs * X * pw)
         hss <- sum(hss * pw)
         H <- rbind(cbind(hbb, hbs), c(hbs, hss))
         if (! is.na(i)){
@@ -340,7 +340,7 @@ lnl.tobit <- function(param, y, X, id, lower = 0, upper = +Inf, model = "pooling
             hba[YUP] <- - (- e[YUP] + mmz[YUP]) * mmz[YUP] * sqrt(2) * z
             hsa[YUP] <- - mmz[YUP] * sqrt(2) * z * (1 + (- e[YUP] + mmz[YUP]) * e[YUP])
             haa[YUP] <- - (- e[YUP] + mmz[YUP]) * mmz[YUP] * 2 * z ^ 2
-            hba <- apply(hba * X * pw, 2, sum) # TODO: can use colSums -> faster
+            hba <- colSums(hba * X * pw)
             haa <- sum(haa * pw)
             hsa <- sum(hsa * pw)
             H <- rbind(cbind(H, c(hba, hsa)), c(hba, hsa, haa))
