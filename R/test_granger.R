@@ -212,11 +212,10 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar", "Wbar"), orde
     names(stat) <- "Wbar"
     pval <- NULL
   }
-  
+
   # make data frame with individual Granger test results and lag order
   indgranger <- data.frame(indi[!duplicated(indi)],
-                           Wi, pWi, dfWi, 
-                           (if(length(order) == 1L) rep(order, N) else order))
+                           Wi, pWi, dfWi, order_grangertest)
   colnames(indgranger) <- c(names(index(data))[1L], "Chisq", "p-value", "df", "lag")
   
   RVAL <- list(statistic = stat,
