@@ -141,7 +141,7 @@ Hadri's test, the test of Levin/Lin/Chu, and the tbar statistic of
 Im/Pesaran/Shin are not applicable to unbalanced panels; the tbar statistic
 is not applicable when \code{lags > 0} is given.
 
-The exogeneous instruments of the tests (where applicable) can be specified
+The exogenous instruments of the tests (where applicable) can be specified
 in several ways, depending on how the data is handed over to the function:
 \itemize{
 \item For the \code{formula}/\code{data} interface (if \code{data} is a \code{data.frame},

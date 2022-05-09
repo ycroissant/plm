@@ -660,7 +660,7 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
 #' Im/Pesaran/Shin are not applicable to unbalanced panels; the tbar statistic
 #' is not applicable when `lags > 0` is given.
 #' 
-#' The exogeneous instruments of the tests (where applicable) can be specified
+#' The exogenous instruments of the tests (where applicable) can be specified
 #' in several ways, depending on how the data is handed over to the function:
 #' 
 #' - For the `formula`/`data` interface (if `data` is a `data.frame`,
