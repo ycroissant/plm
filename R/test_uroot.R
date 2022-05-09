@@ -317,18 +317,18 @@ lagsel <- function(object, exo = c("intercept", "none", "trend"),
   if (exo == "trend")     m <- cbind(1, YCtrend(object))
   LDy <- YClags(Dy, k = pmax)
   decreasei <- TRUE
-  i <- 0
+  i <- 0L
   narow <- seq_len(pmax+1)
   if (method == "Hall"){
     while(decreasei){
       lags <- pmax - i
-      if (!fixedT) narow <- seq_len(lags+1)
+      if (!fixedT) narow <- seq_len(lags + 1L)
       X <- cbind(Ly, LDy[ , 0:lags], m)[-narow, , drop = FALSE]
       y <- Dy[-narow]
       sres <- my.lm.fit(X, y, dfcor = dfcor)
-      tml <- sres$coef[lags+1]/sres$se[lags+1]
-      if (abs(tml) < 1.96 && lags > 0)
-        i <- i + 1
+      tml <- sres$coef[lags + 1L]/sres$se[lags + 1L]
+      if (abs(tml) < 1.96 && lags > 0L)
+        i <- i + 1L
       else
         decreasei <- FALSE
     }
@@ -337,7 +337,7 @@ lagsel <- function(object, exo = c("intercept", "none", "trend"),
     l <- c()
     while(i <= pmax){
       lags <- pmax - i
-      if (!fixedT) narow <- seq_len(lags+1)
+      if (!fixedT) narow <- seq_len(lags + 1L)
       X <- cbind(Ly, LDy[ , 0:lags], m)[-narow, , drop = FALSE]
       y <- Dy[-narow]
       sres <- my.lm.fit(X, y, dfcor = dfcor)
@@ -347,7 +347,7 @@ lagsel <- function(object, exo = c("intercept", "none", "trend"),
         log(sres$rss / sres$n) + sres$K * log(sres$n) / sres$n
       }
       l <- c(l, AIC)
-      i <- i + 1
+      i <- i + 1L
     }
     lags <- pmax + 1 - which.min(l)
   }
@@ -359,14 +359,14 @@ adj.levinlin.value <- function(l, exo = c("intercept", "none", "trend")){
   ## extract the adjustment values for Levin-Lin-Chu test
   theTs <- as.numeric(dimnames(adj.levinlin)[[1L]])
   Ts <- selectT(l, theTs)
-  if (length(Ts) == 1L){
-    return(adj.levinlin[as.character(Ts), , exo])
-  }
-  else{
+  res <- if (length(Ts) == 1L) {
+    adj.levinlin[as.character(Ts), , exo]
+  } else{
     low  <- adj.levinlin[as.character(Ts[1L]), , exo]
     high <- adj.levinlin[as.character(Ts[2L]), , exo]
-    return(low + (l - Ts[1L])/(Ts[2L] - Ts[1L]) * (high - low))
+    low + (l - Ts[1L]) / (Ts[2L] - Ts[1L]) * (high - low)
   }
+  res
 } ## END adj.levinlin.value
 
 adj.ips.wtbar.value <- function(l = 30, lags = 2, exo = c("intercept", "trend")){
@@ -375,32 +375,35 @@ adj.ips.wtbar.value <- function(l = 30, lags = 2, exo = c("intercept", "trend"))
   lags <- min(lags, 8)
   theTs <- as.numeric(dimnames(adj.ips.wtbar)[[2L]])
   Ts <- selectT(l, theTs)
-  if (length(Ts) == 1L){
+  res <- if (length(Ts) == 1L) {
     # take value as in table
-    return(adj.ips.wtbar[as.character(lags), as.character(Ts), , exo])
+    adj.ips.wtbar[as.character(lags), as.character(Ts), , exo]
   }
   else{
     # interpolate value from table
-    low  <- adj.ips.wtbar[as.character(lags), as.character(Ts[1L]), , exo]
-    high <- adj.ips.wtbar[as.character(lags), as.character(Ts[2L]), , exo]
-    return(low + (l - Ts[1L])/(Ts[2L] - Ts[1L]) * (high - low))
+    lags.char <- as.character(lags)
+    low  <- adj.ips.wtbar[lags.char, as.character(Ts[1L]), , exo]
+    high <- adj.ips.wtbar[lags.char, as.character(Ts[2L]), , exo]
+    low + (l - Ts[1L]) / (Ts[2L] - Ts[1L]) * (high - low)
   }
+  res
 } ## END adj.ips.wtbar.value
 
 adj.ips.ztbar.value <- function(l = 30L, time, means, vars){
   ## extract the adjustment values for Im-Pesaran-Shin test's Ztbar statistic
   ## from table 1, right hand pane in IPS (2003) fed by arguments means and vars
   Ts <- selectT(l, time)
-  if (length(Ts) == 1L){
+  res <- if (length(Ts) == 1L){
     # take value as in table
-    return(c("mean" = means[as.character(Ts)], "var" = vars[as.character(Ts)]))
+    c("mean" = means[as.character(Ts)], "var" = vars[as.character(Ts)])
   }
   else{
     # interpolate value from table
     low  <- c("mean" = means[as.character(Ts[1L])], "var" = vars[as.character(Ts[1L])])
     high <- c("mean" = means[as.character(Ts[2L])], "var" = vars[as.character(Ts[2L])])
-    return(low + (l - Ts[1L])/(Ts[2L] - Ts[1L]) * (high - low))
+    low + (l - Ts[1L])/(Ts[2L] - Ts[1L]) * (high - low)
   }
+  res
 } ## END adj.ips.ztbar.value
 
 critval.ips.tbar.value <- function(ind = 10L, time = 19L, critvals, exo = c("intercept", "trend")){
@@ -418,6 +421,7 @@ critval.ips.tbar.value <- function(ind = 10L, time = 19L, critvals, exo = c("int
   
   exo <- match.arg(exo)
   
+  ## check cases and early exit:
   if(length(Inds) == 1L && length(Ts) == 1L) {
     # exact hit for individual AND time: take value as in table
     return(critvals[as.character(Inds), as.character(Ts), , exo])
@@ -585,13 +589,14 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
   
   Si2 <- vapply(cumres2, function(x) sum(x), FUN.VALUE = 0.0, USE.NAMES = FALSE)
   numerator <- 1/n * sum(1/(L^2) * Si2)
-  LM <- numerator / sigma2 # non-het consist case (Hcons == FALSE)
   LMi <- 1/(L^2) * Si2 / sigma2i # individual LM statistics
   
-  if (Hcons) {
-    LM <- mean(LMi)
-    method <- paste0(method, " (Heterosked. Consistent)")
-  }
+  LM <- if(!Hcons) {
+                    numerator / sigma2 # non-het consistent case
+                  } else {
+                    method <- paste0(method, " (Heterosked. Consistent)")
+                    mean(LMi) # het. consistent case
+                  }
   
   stat <- c(z = sqrt(n) * (LM - adj[1L])  / sqrt(adj[2L])) # eq. (14), (22) in Hadri (2000)
   pvalue <- pnorm(stat, lower.tail = FALSE) # is one-sided!
