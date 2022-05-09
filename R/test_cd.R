@@ -319,23 +319,7 @@ pcdtest.pseries <- function(x, test = c("cd", "sclm", "bcsclm", "lm", "rho", "ab
     unind <- unique(ind)
     n <- length(unind)
 
-    tres <- x
-    
-    ## "pre-allocate" an empty list of length n
-    #tres <- vector("list", n)
-
-    ## use model residuals, group by group
-    ## list of n:
-    ## t_i residuals for each x-sect. 1..n
-    #for(i in 1:n) {
-    #          # remove NAs
-    #          xnonna <- !is.na(x[ind==unind[i]])
-    #          tres[[i]] <- x[ind==unind[i]][xnonna]
-    #          ## name resids after the time index
-    #          names(tres[[i]]) <- tind[ind==unind[i]][xnonna]
-    #          }
-
-    return(pcdres(tres = tres, n = n, w = w,
+    return(pcdres(tres = x, n = n, w = w,
                   form = form,
                   test = match.arg(test)))
 }
@@ -410,7 +394,7 @@ pcdres <- function(tres, n, w, form, test) {
   
   ## if no intersection or only 1 shared period of e_it and e_jt
   ## => exclude from calculation and issue a warning.
-  ## In general, length(m.ij) gives the number of shared periods by indiviudals i, j
+  ## In general, length(m.ij) gives the number of shared periods by individuals i, j
   ## Thus, non intersecting pairs are indicated by length(m.ij) == 0 (t.ij[i,j] == 0)
   no.one.intersect <- (t.ij <= 1)
   if (any(no.one.intersect, na.rm = TRUE)) {
@@ -454,7 +438,7 @@ pcdres <- function(tres, n, w, form, test) {
    },
    bcsclm = {
      # Baltagi/Feng/Kao (2012), formula (11)
-     # (unbalanced case as sclm + in bias correction as EViews: max(T_ij) instead of T)
+     # (unbalanced case as sclm + bias correction as EViews: max(T_ij) instead of T)
       CDstat        <- sqrt(1/(2*elem.num))*sum((t.ij*rho^2-1)[selector.mat]) - (n/(2*(max(t.ij)-1)))
       pCD           <- 2*pnorm(abs(CDstat), lower.tail = FALSE)
       names(CDstat) <- "z"
