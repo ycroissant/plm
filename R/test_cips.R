@@ -493,11 +493,10 @@ critvals.cips <- function(stat, n, T., type = c("trend", "drift", "none"),
   }
   
   ## set this according to model
-  switch(match.arg(type), 
-         "trend" = {cvals <- tvals},
-         "drift" = {cvals <- dvals},
-         "none"  = {cvals <- nvals})
-  
+  cvals <- switch(match.arg(type), 
+                   "trend" = tvals,
+                   "drift" = dvals,
+                   "none"  = nvals)
   
   ## find intervals for current n and T.
   nintl <- findInterval(n, rnam)
