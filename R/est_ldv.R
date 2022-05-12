@@ -164,8 +164,7 @@ pldv <- function(formula, data, subset, weights, na.action,
             V4 <- crossprod(X, V4 * X) / length(V4)
             T4 <- crossprod((bdx > - ytm1 & bdx < yt) * X, X) / length(V4)
             solve_T4 <- solve(T4)
-            vcov <- solve_T4 %*% V4 %*% solve_T4
-            result$vcov <- V4
+            result$vcov <- solve_T4 %*% V4 %*% solve_T4
         }
         if (is.null(result$vcov)) result$vcov <- solve(- result$hessian)
         resid <- yt - as.numeric(crossprod(t(X), coef(result)))

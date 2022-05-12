@@ -25,6 +25,8 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
   out-of-sample case.
 
 ### Fixes:
+* `pldv`: variance-covariance fixed for case `model = "fd"` when `objfun == "lsq"` 
+   and `sample == "cens"`.
 * `fixef(., type = "dfirst"`): for models with `length(fixef(<model_object>)) == 2`, 
   fixef does not error anymore and for `length(fixef(<model_object>)) == 1`, 
   the result is more sane (`numeric(0)`).
