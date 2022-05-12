@@ -319,7 +319,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     }
     else{
         # id.name is not numeric, i.e., individual index is supplied
-        if (!id.name %in% names(x)) stop(paste("variable ", id.name, " does not exist (individual index)", sep=""))
+        if (!id.name %in% names(x)) stop(paste("variable '", id.name, "' does not exist (individual index)", sep=""))
         if (is.factor(x[[id.name]])){
             id <- x[[id.name]] <- x[[id.name]][drop = TRUE] # drops unused levels of factor
         }
@@ -347,7 +347,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
         else{
             # use supplied time index
             if (!time.name %in% names(x))
-                stop(paste0("variable ", time.name, " does not exist (time index)"))
+                stop(paste0("variable '", time.name, "' does not exist (time index)"))
             
             if (is.factor(x[[time.name]])){
                 time <- x[[time.name]] <- x[[time.name]][drop = TRUE]

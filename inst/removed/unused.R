@@ -78,7 +78,7 @@ plm.data_depr_orig <- function(x, indexes = NULL){
   }
   else{
     if (!id.name %in% names(x))
-      stop(paste("variable ",id.name," does not exist",sep="")
+      stop(paste("variable '",id.name,"' does not exist ",sep="")
            )
     if (is.factor(x[[id.name]])){
       id <- x[[id.name]] <- x[[id.name]][drop=TRUE]
@@ -99,7 +99,7 @@ plm.data_depr_orig <- function(x, indexes = NULL){
     }
     else{
     if (!time.name %in% names(x))
-      stop(paste("variable ",time.name," does not exist",sep="")
+      stop(paste("variable '",time.name,"' does not exist",sep="")
            )
       if (is.factor(x[[time.name]])){
         time <- x[[time.name]] <- x[[time.name]][drop=TRUE]
