@@ -588,7 +588,7 @@ predict.plm <- function(object, newdata = NULL, na.fill = !inherits(newdata, "pd
         # newdata is not a pdata.frame: use (weighted) mean of fixed effects as best guess
         # (argument na.fill is not evaluated here as for a data.frame all values would 
         # be NA, so rather weighted mean of fixed effects is always applied)
-        warning("Data supplied in argument 'newdata' is not a pdata.frame; weighted mean of fixed effects as in original model used for prediction.")
+        warning("Data supplied in argument 'newdata' is not a pdata.frame; weighted mean of fixed effects as in original model used for prediction, see ?predict.plm.")
         pdim <- pdim(object)
         effs <- if(na.fill) {
                     if(effect == "twoways") mean(effs.orig) else weighted.mean(effs.orig, w = pdim$Tint[[idx]])
