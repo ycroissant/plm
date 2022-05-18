@@ -110,8 +110,8 @@ twosls <- function(y, X, W, intercept = FALSE, lm.type = "lm"){
 
   # As NA/NaN/(+/-)Inf-freeness needs to be guaranteed when functions call
   # twosls(), so can use lm.fit to calc. Xhat.
-  Xhat <- lm.fit(cbind(1, W), X)$fitted.values
-  # old: Xhat <- lm(X ~ W)$fitted.values
+   Xhat <- lm.fit(W, X)$fitted.values
+
   
   if(!is.matrix(Xhat)) {
     # ensure Xhat is a matrix
