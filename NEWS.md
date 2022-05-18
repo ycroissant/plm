@@ -6,25 +6,23 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 
 ***
 
-# plm 2.6-99999 (Development version)
+# plm 2.6-99999
 
-
-### TODO (not yet implemented):
-* clean-up: remove deprecated class `pFormula` once package `cquad` switched 
-  to the current plm facilities without `pFormula` (maintainer + developer of 
-  `cquad` were notified and were provided a patch in Jan 2022). Development
-  repository of cquad is <https://github.com/fravale/cquad_dev/>.
 
 ### Features:
 * `predict.plm`:
+  * prediction implemented for fixed effects models incl. support for
+    argument `newdata` and out-of-sample prediction. Help page (`?predict.plm`) 
+    added to specifically explain the prediction for fixed effects models and the 
+    out-of-sample case.
   * change: case without supplied non-`NULL` `newdata` now gives the predicted 
     values of the outer model (before: inner model).
-  * prediction implemented for fixed effects models incl. support for
-  argument `newdata` and out-of-sample prediction. Help page (`?predict.plm`) 
-  added to specifically explain the prediction for fixed effects models and the 
-  out-of-sample case.
 
 ### Fixes:
+* `mtest`: error gracefully if argument `order` specifies a value larger than or 
+   equal to the number of available observations ([#23](https://github.com/ycroissant/plm/issues/23)).
+* `summary.pgmm` (and associated print method): does not execute `mtest` with 
+   `order = 2L` in case there are too few observations ([#23](https://github.com/ycroissant/plm/issues/23)).
 * `pldv`: variance-covariance fixed for case `model = "fd"` when `objfun == "lsq"` 
    and `sample == "cens"`.
 * `fixef(., type = "dfirst"`): for models with `length(fixef(<model_object>)) == 2`, 
@@ -35,7 +33,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 * `plmtest` and `pbsytest`: text in result object's `method` does not 
   contain information about balanced/unbalanced panel anymore and is, thus, not
   printed anymore.
-* `pcce`: made faster by coding improvments.
+* `pcce`: made faster by coding improvements.
 
 
 ***
