@@ -793,8 +793,8 @@ summary.pgmm <- function(object, robust = TRUE, time.dummies = FALSE, ...) {
        else                   length(object$coefficients[[2L]])
   object$sargan <- sargan(object, "twosteps")
   object$m1 <- mtest(object, order = 1, vcov = vv)
-  # TODO: catch case when order = 2 is not feasible due to too few data
-  object$m2 <- mtest(object, order = 2, vcov = vv)
+  # mtest with order = 2 is only feasible if more than 2 observations are present
+  if(NROW(object$model[[1]]) > 2) object$m2 <- mtest(object, order = 2, vcov = vv)
   object$wald.coef <- pwaldtest(object, param = "coef", vcov = vv)
   if(effect == "twoways") object$wald.td <- pwaldtest(object, param = "time", vcov = vv)
   Kt <- length(object$args$namest)
@@ -858,7 +858,14 @@ mtest.pgmm <- function(object, order = 1L, vcov = NULL, ...) {
   model <- describe(object, "model")
   transformation <- describe(object, "transformation")
   Kt <- length(object$args$namest)
-  
+
+  if(order >= (obs <- NROW(object$model[[1]]))) {
+    error.msg <- paste0("argument 'order' (", order, ") specifies an order ",
+                        "larger or equal than the number of available ", 
+                        "observations (", obs, ")")
+    stop(error.msg)
+  }
+
   switch(transformation,
          "d" = {
            resid <- object$residuals
@@ -936,10 +943,13 @@ print.summary.pgmm <- function(x, digits = max(3, getOption("digits") - 2),
   cat("Autocorrelation test (1): ", names(x$m1$statistic),
       " = ", x$m1$statistic,
       " (p-value = ", format.pval(x$m1$p.value, digits = digits), ")\n", sep = "")
-  cat("Autocorrelation test (2): ", names(x$m2$statistic),
-      " = ", x$m2$statistic,
-      " (p-value = ", format.pval(x$m2$p.value,digits=digits), ")\n", sep = "")
-  cat("Wald test for coefficients: ", names(x$wald.coef$statistic),
+  if(!is.null(x$m2)) {
+    # # mtest with order = 2 is only present in x if more than 2 observations were present
+    cat("Autocorrelation test (2): ", names(x$m2$statistic),
+        " = ", x$m2$statistic,
+        " (p-value = ", format.pval(x$m2$p.value,digits=digits), ")\n", sep = "")
+  }
+    cat("Wald test for coefficients: ", names(x$wald.coef$statistic),
       "(",x$wald.coef$parameter,") = ", x$wald.coef$statistic,
       " (p-value = ", format.pval(x$wald.coef$p.value, digits = digits), ")\n", sep = "")
   
