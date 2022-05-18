@@ -37,6 +37,8 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
   printed anymore.
 * `pcce`: made faster by coding improvements.
 
+### Admin:
+* Package's maintainer changed (for technical reasons only).
 
 ***
 
