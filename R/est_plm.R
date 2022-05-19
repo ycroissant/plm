@@ -442,7 +442,7 @@ plm.fit <- function(data, model, effect, random.method,
               stop("argument 'weights' not yet implemented for instrumental variable models")
             
           if ( ! (model == "random" && inst.method != "bvk")) {
-           #  FD/FE/BE IV and RE "bvk" IV estimator
+           #  Pool/FD/FE/BE IV and RE "bvk" IV estimator
             if (length(formula)[2L] == 2L) {
                   W <- model.matrix(data, rhs = 2,
                                     model = model, effect = effect,
