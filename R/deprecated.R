@@ -276,9 +276,9 @@ pht <- function(formula, data, subset, na.action, model = c("ht", "am", "bms"), 
   NV <- if(length(edo.var) > 0L) X[ , edo.var, drop = FALSE] else NULL
   XC <- if(length(exo.cst) > 0L) X[ , exo.cst, drop = FALSE] else NULL
   NC <- if(length(edo.cst) > 0L) X[ , edo.cst, drop = FALSE] else NULL
-  zo <- if(length(all.cst) != 0L)
-           twosls(fixef[as.character(id)], cbind(XC, NC), cbind(XC, XV), TRUE)
-        else lm(fixef ~ 1)
+  zo <- if(length(all.cst) != 0L) {
+    twosls.pht(fixef[as.character(id)], cbind(XC, NC), cbind(XC, XV), intercept = TRUE)
+  } else lm(fixef ~ 1)
   
   sigma2 <- list()
   sigma2$one <- 0
@@ -349,8 +349,8 @@ pht <- function(formula, data, subset, na.action, model = c("ht", "am", "bms"), 
     }
     W <- cbind(within.inst, XC, between.inst, Vxstar)
   }
-  
-  result <- twosls(y, X, W)
+
+  result <- twosls.pht(y, X, W)
   K <- length(data)
   ve <- lev2var(data)
   varlist <- list(xv = unique(ve[exo.var]),
@@ -374,6 +374,49 @@ pht <- function(formula, data, subset, na.action, model = c("ht", "am", "bms"), 
     class(result) <- c("pht", "plm", "panelmodel")
     result
 }
+
+twosls.pht <- function(y, X, W, intercept = FALSE, lm.type = "lm"){
+## this is a dedicated version of twosls() only for use in pht() as the
+## pht() code requires the instrument matrix W always be amended with an 
+## intercept prior to regression, see marked line below. It was easier to
+## have this separate dedicated twosls.pht() function than to adjust the 
+## rest of the pht() code.
+  
+  ## non-exported
+  # Return value can be controlled by argument lm.type. Often, a full lm model
+  # is needed for further processing but can select one of the fast but less
+  # rich objects produced by lm.fit or .lm.fit (the latter does not contain, e.g.,
+  # fitted.values and is to be used very carefully (e.g., coefs not in input order)).
+  
+  # As NA/NaN/(+/-)Inf-freeness needs to be guaranteed when functions call
+  # twosls(), so can use lm.fit to calc. Xhat.
+  
+  Xhat <- lm.fit(cbind(1, W), X)$fitted.values ##### this line is different relative to twosls()
+  
+  if(!is.matrix(Xhat)) {
+    # ensure Xhat is a matrix
+    Xhat <- matrix(Xhat, ncol = 1L)
+    colnames(Xhat) <- colnames(X)
+  }
+  
+  if(intercept) {
+    model <- switch(lm.type,
+                    "lm"      =  lm(y ~ Xhat),
+                    "lm.fit"  =  lm.fit(cbind(1, Xhat), y),
+                    ".lm.fit" = .lm.fit(cbind(1, Xhat), y))
+    yhat <- as.vector(crossprod(t(cbind(1, X)), coef(model)))
+  }
+  else{
+    model <- switch(lm.type,
+                    "lm"      =  lm(y ~ Xhat - 1),
+                    "lm.fit"  =  lm.fit(Xhat, y),
+                    ".lm.fit" = .lm.fit(Xhat, y))
+    yhat <- as.vector(crossprod(t(X), coef(model)))
+  }
+  model$residuals <- y - yhat
+  model
+}
+
 
 #' @rdname pht
 #' @export
