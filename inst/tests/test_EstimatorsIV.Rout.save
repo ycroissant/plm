@@ -1,5 +1,5 @@
 
-R Under development (unstable) (2022-04-30 r82287 ucrt) -- "Unsuffered Consequences"
+R version 4.2.0 (2022-04-22 ucrt) -- "Vigorous Calisthenics"
 Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -1156,24 +1156,24 @@ theta:
 
 Residuals:
     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
--12.8868  -0.7873   0.0499  -0.0001   0.7873  13.7632 
+-12.8867  -0.7873   0.0498  -0.0001   0.7873  13.7632 
 
 Coefficients:
                Estimate  Std. Error  z-value  Pr(>|z|)    
-(Intercept)  5.46239794  0.05389512 101.3524 < 2.2e-16 ***
-wks          0.00114784  0.00077707   1.4771    0.1396    
-marriedyes  -0.11378215  0.02447694  -4.6485 3.343e-06 ***
-exp          0.08706549  0.00316031  27.5496 < 2.2e-16 ***
-I(exp^2)    -0.00081605  0.00007060 -11.5588 < 2.2e-16 ***
-bluecolyes  -0.10979219  0.01605807  -6.8372 8.076e-12 ***
+(Intercept)  5.4625e+00  5.3896e-02 101.3525 < 2.2e-16 ***
+wks          1.1479e-03  7.7707e-04   1.4772    0.1396    
+marriedyes  -1.1384e-01  2.4478e-02  -4.6507 3.308e-06 ***
+exp          8.7064e-02  3.1603e-03  27.5490 < 2.2e-16 ***
+I(exp^2)    -8.1602e-04  7.0601e-05 -11.5582 < 2.2e-16 ***
+bluecolyes  -1.0979e-01  1.6058e-02  -6.8371 8.079e-12 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Total Sum of Squares:    265.29
-Residual Sum of Squares: 7066.8
+Residual Sum of Squares: 7066.9
 R-Squared:      0.38114
 Adj. R-Squared: 0.38039
-Chisq: 2473.51 on 5 DF, p-value: < 2.22e-16
+Chisq: 2473.5 on 5 DF, p-value: < 2.22e-16
 > 
 > # texreg::screenreg(list("BVK ui" = IVbvk_ubal, "Baltagi ui" = IVbalt_ubal, "AM ui" = IVam_ubal, "BMS ui" = IVbms_ubal),
 > #                  digits = 5)
@@ -1562,4 +1562,4 @@ Chisq: 1474.18 on 5 DF, p-value: < 2.22e-16
 > 
 > proc.time()
    user  system elapsed 
-   6.84    0.65    7.48 
+   6.95    0.81    7.71 

@@ -1,5 +1,5 @@
 
-R Under development (unstable) (2022-04-30 r82287 ucrt) -- "Unsuffered Consequences"
+R version 4.2.0 (2022-04-22 ucrt) -- "Vigorous Calisthenics"
 Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -1832,10 +1832,10 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Total Sum of Squares:    2362500
 Residual Sum of Squares: 2362500
-R-Squared:      5.5511e-16
-Adj. R-Squared: 5.5511e-16
+R-Squared:      4.4409e-16
+Adj. R-Squared: 4.4409e-16
 > 
 > 
 > proc.time()
    user  system elapsed 
-   3.35    0.28    3.60 
+   3.34    0.32    3.71 

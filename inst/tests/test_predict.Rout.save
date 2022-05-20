@@ -1,5 +1,5 @@
 
-R version 4.1.3 (2022-03-10) -- "One Push-Up"
+R version 4.2.0 (2022-04-22 ucrt) -- "Vigorous Calisthenics"
 Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -214,7 +214,7 @@ Type 'q()' to quit R.
 1011.47830  -41.66037  348.41883  920.23047  365.58466 
 Warning message:
 In predict.plm(fit.plm.fe.id, newdata = newdata) :
-  Data supplied in argument 'newdata' is not a pdata.frame; weighted mean of fixed effects as in original model used for prediction.
+  Data supplied in argument 'newdata' is not a pdata.frame; weighted mean of fixed effects as in original model used for prediction, see ?predict.plm.
 > 
 > 
 > ## one-way individual out-of-sample prediction
@@ -264,7 +264,7 @@ In predict.plm(fit.plm.fe.id, newdata = newdata) :
 1011.47830  -41.66037  348.41883  920.23047  365.58466 
 Warning message:
 In predict.plm(fit.plm.fe.id, newdata = newdata.oos) :
-  Data supplied in argument 'newdata' is not a pdata.frame; weighted mean of fixed effects as in original model used for prediction.
+  Data supplied in argument 'newdata' is not a pdata.frame; weighted mean of fixed effects as in original model used for prediction, see ?predict.plm.
 > 
 > 
 > 
@@ -328,7 +328,7 @@ In predict.plm(fit.plm.fe.id, newdata = newdata.oos) :
  953.45920 1078.95974  992.24589  925.27723  678.23033  725.61053 
 Warning message:
 In predict.plm(fit.plm.fe.id, newdata = newdata.oos2) :
-  Data supplied in argument 'newdata' is not a pdata.frame; weighted mean of fixed effects as in original model used for prediction.
+  Data supplied in argument 'newdata' is not a pdata.frame; weighted mean of fixed effects as in original model used for prediction, see ?predict.plm.
 > 
 > (pred.plm.fe.id.unbal.oos2         <- predict(fit.plm.fe.id.unbal, newdata = newdata.oos2.p)) # sorted by ind. due to pdata.frame sorting (stacked)
     1-1935     1-1936     1-1937     1-1938     1-1939     1-1940     1-1941 
@@ -384,7 +384,7 @@ In predict.plm(fit.plm.fe.id, newdata = newdata.oos2) :
  953.45920 1078.95974  992.24589  925.27723  678.23033  725.61053 
 Warning message:
 In predict.plm(fit.plm.fe.id, newdata = newdata.oos2) :
-  Data supplied in argument 'newdata' is not a pdata.frame; weighted mean of fixed effects as in original model used for prediction.
+  Data supplied in argument 'newdata' is not a pdata.frame; weighted mean of fixed effects as in original model used for prediction, see ?predict.plm.
 > 
 > 
 > # one-way - time
@@ -413,7 +413,7 @@ In predict.plm(fit.plm.fe.id, newdata = newdata.oos2) :
 -18.260249  19.420928  28.511406  31.206284 -31.751687 -29.716482 
 Warning message:
 In predict.plm(fit.plm.fe.ti, newdata = newdata.ti) :
-  Data supplied in argument 'newdata' is not a pdata.frame; weighted mean of fixed effects as in original model used for prediction.
+  Data supplied in argument 'newdata' is not a pdata.frame; weighted mean of fixed effects as in original model used for prediction, see ?predict.plm.
 > 
 > (pred.plm.fe.ti.unbal    <- predict(fit.plm.fe.ti.unbal,   newdata = newdata.ti.p))
      1-1935      1-1936      2-1935      2-1936      3-1935      3-1936 
@@ -433,7 +433,7 @@ In predict.plm(fit.plm.fe.ti, newdata = newdata.ti) :
 -19.872640  17.779936  27.538080  30.281352 -33.344051 -31.309288 
 Warning message:
 In predict.plm(fit.plm.fe.ti.unbal, newdata = newdata.ti) :
-  Data supplied in argument 'newdata' is not a pdata.frame; weighted mean of fixed effects as in original model used for prediction.
+  Data supplied in argument 'newdata' is not a pdata.frame; weighted mean of fixed effects as in original model used for prediction, see ?predict.plm.
 > 
 > ## two-ways
 > fit.plm.fe.tw       <- plm(inv ~ value + capital, data = Grunfeld, model = "within", effect = "twoways")
@@ -520,7 +520,7 @@ In predict.plm(fit.plm.fe.ti.unbal, newdata = newdata.ti) :
  -68.5071992  -68.1932096 
 Warning message:
 In predict.plm(fit.plm.fe.tw, newdata = Grunfeld) :
-  Data supplied in argument 'newdata' is not a pdata.frame; weighted mean of fixed effects as in original model used for prediction.
+  Data supplied in argument 'newdata' is not a pdata.frame; weighted mean of fixed effects as in original model used for prediction, see ?predict.plm.
 > 
 > (pred.plm.fe.tw.unbal    <- predict(fit.plm.fe.tw.unbal,   newdata = newdata.tw.p))
     1-1935     1-1936     2-1935     2-1936     3-1935     3-1936     4-1935 
@@ -612,7 +612,7 @@ In predict.plm(fit.plm.fe.tw, newdata = Grunfeld) :
  -73.31032998  -71.52046724  -72.23649689  -72.90210621  -72.58147046 
 Warning message:
 In predict.plm(fit.plm.fe.tw.unbal, newdata = Grunfeld) :
-  Data supplied in argument 'newdata' is not a pdata.frame; weighted mean of fixed effects as in original model used for prediction.
+  Data supplied in argument 'newdata' is not a pdata.frame; weighted mean of fixed effects as in original model used for prediction, see ?predict.plm.
 > 
 > 
 > # two-ways - out-of-sample prediction
@@ -670,7 +670,7 @@ In predict.plm(fit.plm.fe.tw.unbal, newdata = Grunfeld) :
 1045.57680 1180.02966 1097.38596 1018.45240  715.49514  775.24013 
 Warning message:
 In predict.plm(fit.plm.fe.tw, newdata = newdata.oos2) :
-  Data supplied in argument 'newdata' is not a pdata.frame; weighted mean of fixed effects as in original model used for prediction.
+  Data supplied in argument 'newdata' is not a pdata.frame; weighted mean of fixed effects as in original model used for prediction, see ?predict.plm.
 > 
 > (pred.plm.fe.tw.unbal.oos2         <- predict(fit.plm.fe.tw.unbal,   newdata = newdata.oos2.p))
     1-1935     1-1936     1-1937     1-1938     1-1939     1-1940     1-1941 
@@ -726,7 +726,7 @@ In predict.plm(fit.plm.fe.tw, newdata = newdata.oos2) :
 1058.12776 1194.46609 1110.99389 1030.72182  722.28245  783.15477 
 Warning message:
 In predict.plm(fit.plm.fe.tw.unbal, newdata = newdata.oos2) :
-  Data supplied in argument 'newdata' is not a pdata.frame; weighted mean of fixed effects as in original model used for prediction.
+  Data supplied in argument 'newdata' is not a pdata.frame; weighted mean of fixed effects as in original model used for prediction, see ?predict.plm.
 > 
 > 
 > ### test versus  fixest::predict (fixest::predict does not do out-of-sample)
@@ -908,4 +908,4 @@ In predict.plm(fit.plm.fe.tw.unbal, newdata = newdata.oos2) :
 > 
 > proc.time()
    user  system elapsed 
-   1.90    0.23    2.10 
+   1.93    0.43    2.31 

@@ -1,5 +1,5 @@
 
-R Under development (unstable) (2022-04-30 r82287 ucrt) -- "Unsuffered Consequences"
+R version 4.2.0 (2022-04-22 ucrt) -- "Vigorous Calisthenics"
 Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -7355,10 +7355,10 @@ SOUTH_CAROLINA-1986   SOUTH_DAKOTA-1970   SOUTH_DAKOTA-1971   SOUTH_DAKOTA-1972
 > # vcovXX
 > vcovHC(pccemgmod)
               log(pcap)       log(pc)      log(emp)         unemp
-log(pcap)  1.438222e-15 -4.704070e-17  6.919599e-16  4.396291e-18
-log(pc)   -4.698838e-17  1.597205e-18 -2.275796e-17 -1.447567e-19
-log(emp)   6.920293e-16 -2.290015e-17  3.337731e-16  2.122364e-18
-unemp      4.397651e-18 -1.461715e-19  2.123456e-18  1.351272e-20
+log(pcap)  1.438292e-15 -4.702633e-17  6.920192e-16  4.396644e-18
+log(pc)   -4.699060e-17  1.591562e-18 -2.278234e-17 -1.451394e-19
+log(emp)   6.920740e-16 -2.285032e-17  3.339247e-16  2.123091e-18
+unemp      4.397738e-18 -1.453407e-19  2.124444e-18  1.351245e-20
 attr(,"cluster")
 [1] "group"
 > vcovHC(pccepmod)
@@ -7406,4 +7406,4 @@ attr(,"cluster")
 > 
 > proc.time()
    user  system elapsed 
-   2.06    0.21    2.26 
+   2.21    0.42    2.57 

@@ -31,7 +31,7 @@ summary(ht4)
 # estimating with pht and plm(., model = "ht") should give the same results
 stopifnot(isTRUE(all.equal(coef(ht4), coef(ht))))
 
-# estimating with pht and plm(., model = "random", random.method = "ht", inst.method = "baltagi") should give the same results
+# estimating with pht and plm(., model = "random", random.method = "ht", inst.method = "baltagi" / "am", "bms") should give the same results
 ht5 <- plm(lwage ~ wks + south + smsa + married + exp + I(exp ^ 2) + 
              bluecol + ind + union + sex + black + ed |
              bluecol + south + smsa + ind + sex + black |
