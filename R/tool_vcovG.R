@@ -508,18 +508,8 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
               relevant.ind <- timeind
               lab <- groupind})
     
-    tind <- vector("list", n)
-    tlab <- vector("list", n)
-
-    for (i in seq_along(unique(relevant.ind))) {
-      tind[[i]] <- which(relevant.ind == i)
-      tlab[[i]] <- lab[which(relevant.ind == i)]
-    }
-
-## faster alternative to check: does not produce empty (numeric(0)) as first list entry for FD model
-#    tind <- split(seq_along(relevant.ind), relevant.ind)
-#    tlab <- split(lab, relevant.ind)
-## browser()
+    tind <- split(seq_along(relevant.ind), relevant.ind)
+    tlab <- split(lab, relevant.ind)
 
   ## lab were the 'labels' (a numeric, actually) for the relevant index;
   ## in use again from the need to make pseudo-diagonals for
@@ -1035,18 +1025,8 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
               lab <- groupind
             })
     
-    tind <- vector("list", n)
-    tlab <- vector("list", n)
-    
-    for (i in seq_along(unique(relevant.ind))) {
-      tind[[i]] <- which(relevant.ind == i)
-      tlab[[i]] <- lab[which(relevant.ind == i)]
-    }
-       
-## faster alternative to check: does not produce empty (numeric(0)) as first list entry for FD model
-#    tind <- split(seq_along(relevant.ind), relevant.ind)
-#    tlab <- split(lab, relevant.ind)
-## browser()
+    tind <- split(seq_along(relevant.ind), relevant.ind)
+    tlab <- split(lab, relevant.ind)
     
   ## define residuals weighting function omega(res)
   ## (code taken from meatHC and modified)

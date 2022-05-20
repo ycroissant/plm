@@ -1,6 +1,6 @@
 
-R version 4.1.1 (2021-08-10) -- "Kick Things"
-Copyright (C) 2021 The R Foundation for Statistical Computing
+R version 4.2.0 (2022-04-22 ucrt) -- "Vigorous Calisthenics"
+Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -57,10 +57,10 @@ capital     -0.40785308 -0.0012806771  0.021508668
 attr(,"cluster")
 [1] "group"
 > print(vcovHC(fd_id, cluster = "time"))
-            (Intercept)        value      capital
-(Intercept) 25.19337837 -0.019969776 -0.423306798
-value       -0.01996978  0.000212163  0.001003194
-capital     -0.42330680  0.001003194  0.013679807
+            (Intercept)         value       capital
+(Intercept) 32.94751735 -0.0135764752 -0.5895287603
+value       -0.01357648  0.0002174342  0.0008661439
+capital     -0.58952876  0.0008661439  0.0172430320
 attr(,"cluster")
 [1] "time"
 > 
@@ -198,4 +198,4 @@ attr(,"cluster")
 > 
 > proc.time()
    user  system elapsed 
-   3.34    0.57    4.14 
+   2.03    0.18    2.20 
