@@ -366,14 +366,14 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
   ## (see the theoretical comments in pvcovHC)
 
     ## this is computationally heavy, do only if needed
-    switch(match.arg(type), "HC0" = {diaghat <- NULL},
-                            "sss" = {diaghat <- NULL},
-                            "HC1" = {diaghat <- NULL},
-                            "HC2" = {diaghat <- try(dhat(demX), silent = TRUE)},
-                            "HC3" = {diaghat <- try(dhat(demX), silent = TRUE)},
-                            "HC4" = {diaghat <- try(dhat(demX), silent = TRUE)})
+    diaghat <- switch(type, "HC0" = NULL,
+                            "sss" = NULL,
+                            "HC1" = NULL,
+                            "HC2" = try(dhat(demX), silent = TRUE),
+                            "HC3" = try(dhat(demX), silent = TRUE),
+                            "HC4" = try(dhat(demX), silent = TRUE))
     df <- nT - k
-    switch(match.arg(type), 
+    switch(type, 
            "HC0" = {
             omega <- function(residuals, diaghat, df, g) residuals
         }, "sss" = {
@@ -488,14 +488,15 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
       selector[1L] <- 1 # the first must always be 1
       ## eliminate first obs in time for each group
       groupind <- groupind[!selector]
-      timeind <- timeind[!selector]
+      timeind  <- timeind[!selector]
       nT <- nT - n0
       Ti <- Ti - 1
       t0 <- t0 - 1
     }
 
   ## set grouping indexes
-    switch(match.arg(cluster),
+    cluster <- match.arg(cluster)
+    switch(cluster,
             "group" = {
               n <- n0
               t <- t0
@@ -509,12 +510,17 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
     
     tind <- vector("list", n)
     tlab <- vector("list", n)
-    
+
     for (i in seq_along(unique(relevant.ind))) {
-        tind[[i]] <- which(relevant.ind == i)
-        tlab[[i]] <- lab[which(relevant.ind == i)]
+      tind[[i]] <- which(relevant.ind == i)
+      tlab[[i]] <- lab[which(relevant.ind == i)]
     }
-  
+
+## faster alternative to check: does not produce empty (numeric(0)) as first list entry for FD model
+#    tind <- split(seq_along(relevant.ind), relevant.ind)
+#    tlab <- split(lab, relevant.ind)
+## browser()
+
   ## lab were the 'labels' (a numeric, actually) for the relevant index;
   ## in use again from the need to make pseudo-diagonals for
   ## calc. the lagged White terms on unbalanced panels
@@ -932,13 +938,13 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
   ## this average block (say, OmegaM in EViews notation) is then put into
   ## White's formula instead of each Omega_i.
   ##
-  ## The clustering defaults to "group" for consistency with pvcovHC;
+  ## The clustering defaults to "group" for consistency with vcovHC;
   ## nevertheless the most likely usage is cluster="time" for robustness vs.
   ## cross-sectional dependence, as in the original Beck and Katz paper (where
   ## it is applied to "pooling" models).
   ##
   ## This version: compliant with plm 1.2-0; lmtest.
-  ## Code is identical to pvcovHC until mark.
+  ## Code is identical to vcovHC until mark.
   ##
   ## Usage:
   ## myplm <- plm(<model>,<data>, ...)
@@ -1008,14 +1014,15 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
   ## Achim's fix for 'fd' model (losing first time period)
     if(model == "fd") {
       groupind <- groupind[timeind > 1]
-      timeind <- timeind[timeind > 1]
+      timeind  <- timeind[ timeind > 1]
       nT <- nT - n0
       Ti <- Ti - 1
       t0 <- t0 - 1
     }
 
   ## set grouping indexes
-    switch(match.arg(cluster),
+    cluster <- match.arg(cluster)
+    switch(cluster,
             "group" = {
               n <- n0 # this is needed only for 'pcse'
               t <- t0 # this is needed only for 'pcse'
@@ -1032,10 +1039,15 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
     tlab <- vector("list", n)
     
     for (i in seq_along(unique(relevant.ind))) {
-        tind[[i]] <- which(relevant.ind == i)
-        tlab[[i]] <- lab[which(relevant.ind == i)]
+      tind[[i]] <- which(relevant.ind == i)
+      tlab[[i]] <- lab[which(relevant.ind == i)]
     }
-
+       
+## faster alternative to check: does not produce empty (numeric(0)) as first list entry for FD model
+#    tind <- split(seq_along(relevant.ind), relevant.ind)
+#    tlab <- split(lab, relevant.ind)
+## browser()
+    
   ## define residuals weighting function omega(res)
   ## (code taken from meatHC and modified)
   ## (the weighting is defined "in sqrt" relative to the literature)
@@ -1043,13 +1055,13 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
   ## (see the theoretical comments in pvcovHC)
 
     ## this is computationally heavy, do only if needed
-    switch(match.arg(type), "HC0" = {diaghat <- NULL},
-                            "HC1" = {diaghat <- NULL},
-                            "HC2" = {diaghat <- try(dhat(demX), silent = TRUE)},
-                            "HC3" = {diaghat <- try(dhat(demX), silent = TRUE)},
-                            "HC4" = {diaghat <- try(dhat(demX), silent = TRUE)})
+    diaghat <- switch(type, "HC0" = NULL,
+                            "HC1" = NULL,
+                            "HC2" = try(dhat(demX), silent = TRUE),
+                            "HC3" = try(dhat(demX), silent = TRUE),
+                            "HC4" = try(dhat(demX), silent = TRUE))
     df <- nT - k
-    switch(match.arg(type), 
+    switch(type, 
            "HC0" = {
             omega <- function(residuals, diaghat, df) residuals
         }, "HC1" = {
