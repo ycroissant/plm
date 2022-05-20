@@ -269,7 +269,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
  * Between/between/Sum/Within: Methods which rely on the index attribute
    (\*.pseries and (if with index attribute) \*.matrix) now error informatively
    if NA in any index dimension is encountered.
- * Vignettes: file names renamed to start with "A_", "B_", "C_" so that the
+ * Vignettes: files renamed to start with "A_", "B_", "C_" so that the
    Vignettes are sorted on CRAN's plm page in an order better suited for new
    package users.
  * checkNA.index: new non-exported helper function to check for NA in index
