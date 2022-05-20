@@ -95,7 +95,7 @@ pcce <- function (formula, data, subset, na.action,
   ## TODO: in general: 
   ##    * consider if data can be split only once and work on the split
   ##      data instead of cycling through the data with for-loops at various
-  ##      occasions (could be faster).
+  ##      occasions (could be faster); splitting once is implemented 2022-05-21
   ##    * consider parallel execution via mclapply/mcmapply (aligns with the 
   ##      split-only-once aspect mentioned above).
   
@@ -203,12 +203,22 @@ pcce <- function (formula, data, subset, na.action,
 
     ## for each x-sect. i=1..n estimate (over t) the CCE for every TS
     ## as in KPY, eq. 15
-    unind <- unique(ind)
-
+    
+    # split X, y, Hhat by individual and store in lists
+    X.col <- NCOL(X)
+    tX.list <- split(X, ind)
+    tX.list <- lapply(tX.list, function(m) matrix(m, ncol = X.col))
+    
+    ty.list <- split(y, ind)
+    
+    Hhat.col <- NCOL(Hhat)
+    tHhat.list <- split(Hhat, ind)
+    tHhat.list <- lapply(tHhat.list, function(m) matrix(m, ncol = Hhat.col))
+ 
     for(i in seq_len(n)) {
-      tX <- X[ind == unind[i], , drop = FALSE]
-      ty <- y[ind == unind[i]]
-      tHhat <- Hhat[ind == unind[i], , drop = FALSE]
+      tX <- tX.list[[i]]
+      ty <- ty.list[[i]]
+      tHhat <- tHhat.list[[i]]
 
       ## if 'trend' then augment the xs-invariant component
       if(trend) tHhat <- cbind(tHhat, seq_len(dim(tHhat)[[1L]]))
@@ -242,7 +252,7 @@ pcce <- function (formula, data, subset, na.action,
       if(model == "mg") {
         # These are the residuals for MG model, calc. only if model is selected
         # (residuals for pooled model are calc. later)
-        # (maybe this part here could be shifted to the mg code patch below)
+        # (maybe this part here could be shifted to the mg code path below)
         
         ## cce (defactored) residuals as M_i(y_i - X_i * bCCEMG_i)
         tytXtb      <- ty - tcrossprod(tX, t(tb))
@@ -256,6 +266,10 @@ pcce <- function (formula, data, subset, na.action,
     # Reduce transformed data to matrix and numeric, respectively
     MX <- Reduce(rbind, MX)
     My <- Reduce(c, My)
+    
+    # set names lost in processing above
+    dimnames(MX) <- list(rownames(X), colnames(X))
+    names(My) <- names(y)
 
   ## end data module
 
@@ -309,9 +323,9 @@ pcce <- function (formula, data, subset, na.action,
             for(i in seq_len(n)) {
                 ## must redo all this because needs b_CCEP, which is
                 ## not known at by-groups step
-                tX <- X[ind == unind[i], , drop = FALSE]
-                ty <- y[ind == unind[i]]
-                tHhat <- Hhat[ind == unind[i], , drop = FALSE]
+                tX <- tX.list[[i]]
+                ty <- ty.list[[i]]
+                tHhat <- tHhat.list[[i]]
     
                 ## if 'trend' then augment the xs-invariant component
                 if(trend) tHhat <- cbind(tHhat, seq_len(dim(tHhat)[[1L]]))
