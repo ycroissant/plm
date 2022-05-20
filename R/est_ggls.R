@@ -211,7 +211,7 @@ pggls <- function(formula, data, subset, na.action,
     } else {
         lti <- list()
         for (i in seq_len(ncond)) {
-            cond.i <- cond == lcnd[i]
+            cond.i <- cond == lcnd[i] # TODO: can be optimised via split(), see balanced case
             ut <- resid[cond.i]
             names(ut) <- lti[[i]] <- other[cond.i]
             out <- ut %o% ut

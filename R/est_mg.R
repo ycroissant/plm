@@ -172,7 +172,7 @@ pmg <- function(formula, data, subset, na.action,
       ## for each x-sect. i = 1..n
       unind <- unique(ind)
       for(i in seq_len(n)) {
-        tX <- X[ind == unind[i], , drop = FALSE]
+        tX <- X[ind == unind[i], , drop = FALSE] # TODO: can be optimised via split(),
         ty <- y[ind == unind[i]]
         if(trend) tX <- cbind(tX, seq_len(dim(tX)[[1L]]))
         tfit <- lm.fit(tX, ty)
@@ -199,7 +199,7 @@ pmg <- function(formula, data, subset, na.action,
       ## y_it = alpha_i + beta_i*X_it + c1_i*my_t + c2_i*mX_t + err_it
       unind <- unique(ind)
       for(i in seq_len(n)) {
-        taugX <- augX[ind == unind[i], , drop = FALSE]
+        taugX <- augX[ind == unind[i], , drop = FALSE] # TODO: can be optimised via split(),
         ty    <-    y[ind == unind[i]]
         if(trend) taugX <- cbind(taugX, seq_len(dim(taugX)[[1L]]))
         tfit <- lm.fit(taugX, ty)
@@ -233,7 +233,7 @@ pmg <- function(formula, data, subset, na.action,
       ## (y_it-my_t) = alpha_i + beta_i*(X_it-mX_t) + err_it
       unind <- unique(ind)
       for (i in seq_len(n)) {
-        tdemX <- demX[ind == unind[i], , drop = FALSE]
+        tdemX <- demX[ind == unind[i], , drop = FALSE] # TODO: can be optimised via split(),
         tdemy <- demy[ind == unind[i]]
         if(trend) tdemX <- cbind(tdemX, seq_len(dim(tdemX)[[1L]]))
         tfit <- lm.fit(tdemX, tdemy)
