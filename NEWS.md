@@ -23,8 +23,10 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
    equal to the number of available observations ([#23](https://github.com/ycroissant/plm/issues/23)).
 * `summary.pgmm` (and associated print method): does not execute `mtest` with 
    `order = 2L` in case there are too few observations ([#23](https://github.com/ycroissant/plm/issues/23)).
-* `plm` for IV estimation: respect suppressed intercept in formula's 2nd-part of 
+* `plm` for IV estimation: respect suppressed intercept in formula's 2nd part of 
    RHS.
+* `vcovXX` functions: fix vcov output for first-difference models in case of 
+  `cluster = "time"`.
 * `pldv`: variance-covariance fixed for case `model = "fd"` when `objfun == "lsq"` 
    and `sample == "cens"`.
 * `fixef(., type = "dfirst"`): for models with `length(fixef(<model_object>)) == 2`, 
