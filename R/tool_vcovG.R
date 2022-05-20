@@ -1084,9 +1084,13 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
     ## for each group 1..n
     ## (use subscripting from condition 'label in labels' set',
     ## the rest stays NA if any)
+    
+    unlabs <- unique(lab) # fetch (all, unique) values of the relevant labels
+    seq.len.t <- seq_len(t)
+    
     for(i in seq_len(n)) {
       ut <- uhat[tind[[i]]]
-      tpos <- seq_len(t)[unique(lab) %in% tlab[[i]]]
+      tpos <- seq.len.t[unlabs %in% tlab[[i]]]
       ## put non-diag elements to 0 if diagonal=TRUE
       tres[tpos, tpos, i] <- if(diagonal) diag(diag(ut %o% ut)) else ut %o% ut
     }
@@ -1096,9 +1100,6 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
     ## covariance matrix of errors for a group (viz. time period):
     OmegaT <- rowMeans(tres, dims = 2L, na.rm = TRUE) # == apply(tres, 1:2, mean, na.rm = TRUE) but faster
   ## end of PCSE covariance calculation.
-
-  ## fetch (all, unique) values of the relevant labels
-  unlabs <- unique(lab)
 
   salame <- array(dim = c(k, k, n))
   for(i in seq_len(n)) {
