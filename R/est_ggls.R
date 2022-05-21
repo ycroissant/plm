@@ -228,17 +228,22 @@ pggls <- function(formula, data, subset, na.action,
         for (i in seq_len(ncond)) {
             list.cov.blocks[[i]] <- subOmega[lti[[i]], lti[[i]]]
         }
-        # TODO: this errors for unbalanced FD models
+        ### TODO: this errors for unbalanced FD models
+        ## unlist(lapply(list.cov.blocks, dim))
+        ## groupsdim
         omega <- bdsmatrix::bdsmatrix(groupsdim, unlist(list.cov.blocks, use.names = FALSE))
     }
     A <- crossprod(X, solve(omega, X))
     B <- crossprod(X, solve(omega, y))
     vcov <- solve(A)
     coef <- as.numeric(solve(A, B))
+    
     if (drop1 && model == "within") {
+      ## This 'if' parameterization is just for debugging.
         X <- X0
         y <- y0
     }
+    
     residuals <- y - as.numeric(tcrossprod(coef, X))
     df.residual <- nrow(X) - ncol(X)
     fitted.values <- y - residuals
