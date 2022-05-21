@@ -294,7 +294,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
         time.name <- time
     }
     
-    # if index is numeric, this indicats a balanced panel with no. of
+    # if index is numeric, this indicates a balanced panel with no. of
     # individuals equal to id.name
     if(is.numeric(id.name)){
         if(!is.null(time.name))
@@ -333,7 +333,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
             # for the automatic addition of time index to be
             # successful if no time index was supplied
             x <- x[order(x[[id.name]]), ]
-            Ti <- table(x[[id.name]]) # was: Ti <- table(id)
+            Ti <- table(x[[id.name]])
             n <- length(Ti)
             time <- c()
             for (i in seq_len(n)){
@@ -594,7 +594,7 @@ subset_pseries <- function(x, ...) {
         # Kevin Tappe 2016-01-04 : in case of indexing (subsetting) a 
         # pdata.frame by a character, the subsetting vector should be 
         # converted to numeric by matching to the row names so that the 
-        # index can be correctly subsetted (by this numeric value).
+        # index can be correctly subset (by this numeric value).
         # Motivation:
         # Row names of the pdata.frame and row names of the pdata.frame's 
         # index are not guaranteed to be the same!
@@ -647,7 +647,7 @@ subset_pseries <- function(x, ...) {
       # if dim is NULL, subsetting did not return a data frame but  a vector or a
       #   factor or NULL (nothing more is left)
       if (is.null(mydata)) {
-        # since R 3.4.0 NULL cannot have attributes, so special case it
+        # since R 3.4.0, NULL cannot have attributes, so special case it
         res <- NULL
       } else {
         # vector or factor -> make it a pseries
@@ -1011,8 +1011,8 @@ pdim.default <- function(x, y, ...) {
   id.names <- rownames(z)
   time.names <- colnames(z)
   panel.names <- list(id.names = id.names, time.names = time.names)
-  balanced <- if(any(as.vector(z) == 0)) FALSE else TRUE
-  if(any(as.vector(z) > 1)) stop("duplicate couples (id-time)\n")
+  balanced <- if(any(z <- as.vector(z) == 0)) FALSE else TRUE
+  if(any(z > 1)) stop("duplicate couples (id-time)\n")
   Tint <- list(Ti = Ti, nt = nt)
   z <- list(nT = nT, Tint = Tint, balanced = balanced, panel.names = panel.names)
   class(z) <- "pdim"
