@@ -218,9 +218,8 @@ pmg <- function(formula, data, subset, na.action,
         tcoef0[ , i] <- tfit$coefficients
         tres[[i]]    <- tfit$residuals
       }
-      tcoef     <- tcoef0[seq_len(k), ] # TODO: this line seems superfluous as tcoef is overwritten a few lines below again
+      
       tcoef.bar <- tcoef0[-(seq_len(k)), ]
-
       coef.names.bar <- c("y.bar", paste(coef.names[-1L], ".bar", sep=""))
 
       ## 'trend' always comes last
