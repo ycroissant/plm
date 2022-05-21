@@ -1559,7 +1559,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 Total Sum of Squares: 849.81
 Residual Sum of Squares: 0.11927
 HPY R-squared: 0.99077
-> print(summary(pmg (form, data = Produc, model = "mg")))
+> print(summary( pmg(form, data = Produc, model = "mg")))
 Mean Groups model
 
 Call:
@@ -1583,7 +1583,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 Total Sum of Squares: 849.81
 Residual Sum of Squares: 0.33009
 Multiple R-squared: 0.99961
-> print(summary(pmg (form, data = Produc, model = "dmg")))
+> print(summary( pmg(form, data = Produc, model = "dmg")))
 Demeaned Mean Groups model
 
 Call:
@@ -1607,7 +1607,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 Total Sum of Squares: 849.81
 Residual Sum of Squares: 0.23666
 Multiple R-squared: 0.99972
-> print(summary(pmg (form, data = Produc, model = "cmg", trend = TRUE)))
+> print(summary( pmg(form, data = Produc, model = "cmg", trend = TRUE)))
 Common Correlated Effects Mean Groups model
 
 Call:
@@ -1637,7 +1637,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 Total Sum of Squares: 849.81
 Residual Sum of Squares: 0.039344
 Multiple R-squared: 0.99995
-> print(summary(pmg (form, data = Produc, model = "mg",  trend = TRUE)))
+> print(summary( pmg(form, data = Produc, model = "mg",  trend = TRUE)))
 Mean Groups model
 
 Call:
@@ -1662,7 +1662,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 Total Sum of Squares: 849.81
 Residual Sum of Squares: 0.19488
 Multiple R-squared: 0.99977
-> print(summary(pmg (form, data = Produc, model = "dmg", trend = TRUE)))
+> print(summary( pmg(form, data = Produc, model = "dmg", trend = TRUE)))
 Demeaned Mean Groups model
 
 Call:
@@ -1838,4 +1838,4 @@ Adj. R-Squared: 4.4409e-16
 > 
 > proc.time()
    user  system elapsed 
-   3.34    0.32    3.71 
+   3.42    0.15    3.59 

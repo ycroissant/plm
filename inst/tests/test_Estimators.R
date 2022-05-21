@@ -256,11 +256,11 @@ print(summary(pmgccemgmod))
 
 # run and output tests for pcce/pmg with model = 'p'/'mg'/'dmg'
 print(summary(pcce(form, data = Produc, model = "p")))
-print(summary(pmg (form, data = Produc, model = "mg")))
-print(summary(pmg (form, data = Produc, model = "dmg")))
-print(summary(pmg (form, data = Produc, model = "cmg", trend = TRUE)))
-print(summary(pmg (form, data = Produc, model = "mg",  trend = TRUE)))
-print(summary(pmg (form, data = Produc, model = "dmg", trend = TRUE)))
+print(summary( pmg(form, data = Produc, model = "mg")))
+print(summary( pmg(form, data = Produc, model = "dmg")))
+print(summary( pmg(form, data = Produc, model = "cmg", trend = TRUE)))
+print(summary( pmg(form, data = Produc, model = "mg",  trend = TRUE)))
+print(summary( pmg(form, data = Produc, model = "dmg", trend = TRUE)))
 
 ## further run tests without intercept
 plm(inv ~ 0 + value + capital, data = Grunfeld, model = "between")
