@@ -169,11 +169,18 @@ pmg <- function(formula, data, subset, na.action,
 
   switch(model,
     "mg" = {
+      
+      # split X, y, Hhat by individual and store in lists
+      X.col <- NCOL(X)
+      tX.list <- split(X, ind)
+      tX.list <- lapply(tX.list, function(m) matrix(m, ncol = X.col))
+      
+      ty.list <- split(y, ind)
+      
       ## for each x-sect. i = 1..n
-      unind <- unique(ind)
       for(i in seq_len(n)) {
-        tX <- X[ind == unind[i], , drop = FALSE] # TODO: can be optimised via split(),
-        ty <- y[ind == unind[i]]
+        tX <- tX.list[[i]]
+        ty <- ty.list[[i]]
         if(trend) tX <- cbind(tX, seq_len(dim(tX)[[1L]]))
         tfit <- lm.fit(tX, ty)
         tcoef[ , i] <- tfit$coefficients
@@ -195,12 +202,17 @@ pmg <- function(formula, data, subset, na.action,
       ## allow for extended coef vector
       tcoef0 <- matrix(data = NA_real_, nrow = 2*k+kt, ncol = n)
 
+      augX.col <- NCOL(augX)
+      taugX.list <- split(augX, ind)
+      taugX.list <- lapply(taugX.list, function(m) matrix(m, ncol = augX.col))
+      
+      ty.list <- split(y, ind)
+      
       ## for each x-sect. i = 1..n estimate (over t) an augmented model
       ## y_it = alpha_i + beta_i*X_it + c1_i*my_t + c2_i*mX_t + err_it
-      unind <- unique(ind)
       for(i in seq_len(n)) {
-        taugX <- augX[ind == unind[i], , drop = FALSE] # TODO: can be optimised via split(),
-        ty    <-    y[ind == unind[i]]
+        taugX <- taugX.list[[i]]
+        ty    <-    ty.list[[i]]
         if(trend) taugX <- cbind(taugX, seq_len(dim(taugX)[[1L]]))
         tfit <- lm.fit(taugX, ty)
         tcoef0[ , i] <- tfit$coefficients
@@ -228,13 +240,18 @@ pmg <- function(formula, data, subset, na.action,
       demX <- Within(X, effect = "time", na.rm = TRUE)
       demX[ , 1L] <- 1 # put back intercept lost by within transformation
       demy <- as.numeric(Within(y, effect = "time", na.rm = TRUE))
+
+      demX.col <- NCOL(demX)
+      tdemX.list <- split(demX, ind)
+      tdemX.list <- lapply(tdemX.list, function(m) matrix(m, ncol = demX.col))
       
+      tdemy.list <- split(demy, ind)
+            
       ## for each x-sect. i=1..n estimate (over t) a demeaned model
       ## (y_it-my_t) = alpha_i + beta_i*(X_it-mX_t) + err_it
-      unind <- unique(ind)
       for (i in seq_len(n)) {
-        tdemX <- demX[ind == unind[i], , drop = FALSE] # TODO: can be optimised via split(),
-        tdemy <- demy[ind == unind[i]]
+        tdemX <- tdemX.list[[i]]
+        tdemy <- tdemy.list[[i]]
         if(trend) tdemX <- cbind(tdemX, seq_len(dim(tdemX)[[1L]]))
         tfit <- lm.fit(tdemX, tdemy)
         tcoef[ , i] <- tfit$coefficients
