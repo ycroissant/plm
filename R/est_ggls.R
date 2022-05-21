@@ -218,8 +218,7 @@ pggls <- function(formula, data, subset, na.action,
         for (i in seq_len(ncond)) {
             ut <- resid.list[[i]]
             names(ut) <- lti[[i]] <- other.list[[i]]
-            out <- outer(ut, ut)
-            tres[names(ut), names(ut), i] <- out
+            tres[names(ut), names(ut), i] <- outer(ut, ut)
         }
 
         subOmega <- rowMeans(tres, dims = 2L, na.rm = TRUE) # == apply(tres, 1:2, mean, na.rm = TRUE) but faster
