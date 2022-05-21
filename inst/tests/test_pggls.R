@@ -1,34 +1,67 @@
 library(plm)
 data("Produc", package = "plm")
 
+pProduc <- pdata.frame(Produc)
+pProduc_unbal <- pdata.frame(Produc[-c(2, 5, 10, 50:60), ])
+
+## balanced
 zz_default <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
-               data = Produc)
+               data = pProduc)
 
 summary(zz_default) # is within, check if correctly identified in print output
 
 zz_wi <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
-               data = Produc, model = "within")
+               data = pProduc, model = "within")
 summary(zz_wi)
 
 zz_pool <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
-                 data = Produc, model = "pooling")
+                 data = pProduc, model = "pooling")
 summary(zz_pool)
 
 zz_fd <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
-               data = Produc, model = "fd")
+               data = pProduc, model = "fd")
 summary(zz_fd)
 
 zz_wi_t <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
-               data = Produc, model = "within", effect = "time")
+               data = pProduc, model = "within", effect = "time")
 summary(zz_wi_t)
 
 zz_pool_t <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
-                 data = Produc, model = "pooling", effect = "time")
+                 data = pProduc, model = "pooling", effect = "time")
 summary(zz_pool_t)
 
 ## effect = "time" for FD model not supported as senseless (individ. dimension
 ## does not have a natural order)
 
+## unbalanced
+zz_default_unbal <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
+                    data = pProduc_unbal)
+
+summary(zz_default_unbal) # is within, check if correctly identified in print output
+
+zz_wi_unbal <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
+               data = pProduc_unbal, model = "within")
+summary(zz_wi_unbal)
+
+zz_pool_unbal <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
+                 data = pProduc_unbal, model = "pooling")
+summary(zz_pool_unbal)
+
+## bug in pggls() for unbalanced FD models
+# zz_fd_unbal <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
+#                data = pProduc_unbal, model = "fd")
+# summary(zz_fd_unbal)
+
+zz_wi_t_unbal <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
+                 data = pProduc_unbal, model = "within", effect = "time")
+summary(zz_wi_t_unbal)
+
+zz_pool_t_unbal <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
+                   data = pProduc_unbal, model = "pooling", effect = "time")
+summary(zz_pool_t_unbal)
+
+## effect = "time" for FD model not supported as senseless (individ. dimension
+## does not have a natural order)
 
 ## do not run as additional package is needed
 # library(wooldridge)

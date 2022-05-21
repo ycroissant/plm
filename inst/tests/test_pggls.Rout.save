@@ -1,6 +1,6 @@
 
-R version 4.1.2 (2021-11-01) -- "Bird Hippie"
-Copyright (C) 2021 The R Foundation for Statistical Computing
+R version 4.2.0 (2022-04-22 ucrt) -- "Vigorous Calisthenics"
+Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -18,15 +18,19 @@ Type 'q()' to quit R.
 > library(plm)
 > data("Produc", package = "plm")
 > 
+> pProduc <- pdata.frame(Produc)
+> pProduc_unbal <- pdata.frame(Produc[-c(2, 5, 10, 50:60), ])
+> 
+> ## balanced
 > zz_default <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
-+                data = Produc)
++                data = pProduc)
 > 
 > summary(zz_default) # is within, check if correctly identified in print output
 Oneway (individual) effect Within FGLS model
 
 Call:
 pggls(formula = log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
-    data = Produc)
+    data = pProduc)
 
 Balanced Panel: n = 48, T = 17, N = 816
 
@@ -47,13 +51,13 @@ Residual Sum of Squares: 1.1623
 Multiple R-squared: 0.99863
 > 
 > zz_wi <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
-+                data = Produc, model = "within")
++                data = pProduc, model = "within")
 > summary(zz_wi)
 Oneway (individual) effect Within FGLS model
 
 Call:
 pggls(formula = log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
-    data = Produc, model = "within")
+    data = pProduc, model = "within")
 
 Balanced Panel: n = 48, T = 17, N = 816
 
@@ -74,13 +78,13 @@ Residual Sum of Squares: 1.1623
 Multiple R-squared: 0.99863
 > 
 > zz_pool <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
-+                  data = Produc, model = "pooling")
++                  data = pProduc, model = "pooling")
 > summary(zz_pool)
 Oneway (individual) effect General FGLS model
 
 Call:
 pggls(formula = log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
-    data = Produc, model = "pooling")
+    data = pProduc, model = "pooling")
 
 Balanced Panel: n = 48, T = 17, N = 816
 
@@ -102,13 +106,13 @@ Residual Sum of Squares: 7.5587
 Multiple R-squared: 0.99111
 > 
 > zz_fd <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
-+                data = Produc, model = "fd")
++                data = pProduc, model = "fd")
 > summary(zz_fd)
 Oneway (individual) effect First-Difference FGLS model
 
 Call:
 pggls(formula = log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
-    data = Produc, model = "fd")
+    data = pProduc, model = "fd")
 
 Balanced Panel: n = 48, T = 17, N = 816
 
@@ -130,13 +134,13 @@ Residual Sum of Squares: 0.33459
 Multiple R-squared: 0.99961
 > 
 > zz_wi_t <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
-+                data = Produc, model = "within", effect = "time")
++                data = pProduc, model = "within", effect = "time")
 > summary(zz_wi_t)
 Oneway (time) effect Within FGLS model
 
 Call:
 pggls(formula = log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
-    data = Produc, effect = "time", model = "within")
+    data = pProduc, effect = "time", model = "within")
 
 Balanced Panel: n = 48, T = 17, N = 816
 
@@ -157,13 +161,13 @@ Residual Sum of Squares: 6.0629
 Multiple R-squared: 0.99287
 > 
 > zz_pool_t <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
-+                  data = Produc, model = "pooling", effect = "time")
++                  data = pProduc, model = "pooling", effect = "time")
 > summary(zz_pool_t)
 Oneway (time) effect General FGLS model
 
 Call:
 pggls(formula = log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
-    data = Produc, effect = "time", model = "pooling")
+    data = pProduc, effect = "time", model = "pooling")
 
 Balanced Panel: n = 48, T = 17, N = 816
 
@@ -187,6 +191,152 @@ Multiple R-squared: 0.99259
 > ## effect = "time" for FD model not supported as senseless (individ. dimension
 > ## does not have a natural order)
 > 
+> ## unbalanced
+> zz_default_unbal <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
++                     data = pProduc_unbal)
+> 
+> summary(zz_default_unbal) # is within, check if correctly identified in print output
+Oneway (individual) effect Within FGLS model
+
+Call:
+pggls(formula = log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
+    data = pProduc_unbal)
+
+Unbalanced Panel: n = 48, T = 8-17, N = 802
+
+Residuals:
+        Min.      1st Qu.       Median      3rd Qu.         Max. 
+-0.125493707 -0.024218897 -0.002547206  0.018701060  0.181634830 
+
+Coefficients:
+             Estimate  Std. Error z-value  Pr(>|z|)    
+log(pcap)  0.00347467  0.02474791  0.1404    0.8883    
+log(pc)    0.20739732  0.01417785 14.6283 < 2.2e-16 ***
+log(emp)   0.84249155  0.01778162 47.3799 < 2.2e-16 ***
+unemp     -0.00335929  0.00042896 -7.8313 4.829e-15 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Total Sum of Squares: 809.12
+Residual Sum of Squares: 1.1125
+Multiple R-squared: 0.99863
+> 
+> zz_wi_unbal <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
++                data = pProduc_unbal, model = "within")
+> summary(zz_wi_unbal)
+Oneway (individual) effect Within FGLS model
+
+Call:
+pggls(formula = log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
+    data = pProduc_unbal, model = "within")
+
+Unbalanced Panel: n = 48, T = 8-17, N = 802
+
+Residuals:
+        Min.      1st Qu.       Median      3rd Qu.         Max. 
+-0.125493707 -0.024218897 -0.002547206  0.018701060  0.181634830 
+
+Coefficients:
+             Estimate  Std. Error z-value  Pr(>|z|)    
+log(pcap)  0.00347467  0.02474791  0.1404    0.8883    
+log(pc)    0.20739732  0.01417785 14.6283 < 2.2e-16 ***
+log(emp)   0.84249155  0.01778162 47.3799 < 2.2e-16 ***
+unemp     -0.00335929  0.00042896 -7.8313 4.829e-15 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Total Sum of Squares: 809.12
+Residual Sum of Squares: 1.1125
+Multiple R-squared: 0.99863
+> 
+> zz_pool_unbal <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
++                  data = pProduc_unbal, model = "pooling")
+> summary(zz_pool_unbal)
+Oneway (individual) effect General FGLS model
+
+Call:
+pggls(formula = log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
+    data = pProduc_unbal, model = "pooling")
+
+Unbalanced Panel: n = 48, T = 8-17, N = 802
+
+Residuals:
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-0.266733 -0.062506 -0.009497 -0.003773  0.048782  0.476729 
+
+Coefficients:
+               Estimate  Std. Error  z-value  Pr(>|z|)    
+(Intercept)  2.31244916  0.08489843  27.2378 < 2.2e-16 ***
+log(pcap)    0.05036768  0.01689952   2.9804  0.002879 ** 
+log(pc)      0.24117178  0.01242361  19.4124 < 2.2e-16 ***
+log(emp)     0.74369505  0.01472074  50.5202 < 2.2e-16 ***
+unemp       -0.00374158  0.00028636 -13.0661 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Total Sum of Squares: 809.12
+Residual Sum of Squares: 7.317
+Multiple R-squared: 0.99096
+> 
+> ## bug in pggls() for unbalanced FD models
+> # zz_fd_unbal <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
+> #                data = pProduc_unbal, model = "fd")
+> # summary(zz_fd_unbal)
+> 
+> zz_wi_t_unbal <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
++                  data = pProduc_unbal, model = "within", effect = "time")
+> summary(zz_wi_t_unbal)
+Oneway (time) effect Within FGLS model
+
+Call:
+pggls(formula = log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
+    data = pProduc_unbal, effect = "time", model = "within")
+
+Unbalanced Panel: n = 48, T = 8-17, N = 802
+
+Residuals:
+       Min.     1st Qu.      Median     3rd Qu.        Max. 
+-0.21899346 -0.05899366 -0.00282161  0.04837777  0.35969685 
+
+Coefficients:
+             Estimate  Std. Error z-value  Pr(>|z|)    
+log(pcap)  0.15042581  0.00108392 138.779 < 2.2e-16 ***
+log(pc)    0.30707167  0.00117753 260.776 < 2.2e-16 ***
+log(emp)   0.59623950  0.00121330 491.421 < 2.2e-16 ***
+unemp     -0.00637932  0.00010944 -58.289 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Total Sum of Squares: 809.12
+Residual Sum of Squares: 5.8813
+Multiple R-squared: 0.99273
+> 
+> zz_pool_t_unbal <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
++                    data = pProduc_unbal, model = "pooling", effect = "time")
+> summary(zz_pool_t_unbal)
+Oneway (time) effect General FGLS model
+
+Call:
+pggls(formula = log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
+    data = pProduc_unbal, effect = "time", model = "pooling")
+
+Unbalanced Panel: n = 48, T = 8-17, N = 802
+
+Residuals:
+      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+-0.2295471 -0.0611845 -0.0021499 -0.0001393  0.0500350  0.3500958 
+
+Coefficients:
+               Estimate  Std. Error z-value  Pr(>|z|)    
+(Intercept)  1.6874e+00  4.6305e-03  364.42 < 2.2e-16 ***
+log(pcap)    1.4220e-01  4.6208e-04  307.74 < 2.2e-16 ***
+log(pc)      3.1272e-01  8.1624e-04  383.12 < 2.2e-16 ***
+log(emp)     6.0018e-01  8.3413e-04  719.53 < 2.2e-16 ***
+unemp       -6.9425e-03  2.3193e-05 -299.33 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Total Sum of Squares: 809.12
+Residual Sum of Squares: 6.1113
+Multiple R-squared: 0.99245
+> 
+> ## effect = "time" for FD model not supported as senseless (individ. dimension
+> ## does not have a natural order)
 > 
 > ## do not run as additional package is needed
 > # library(wooldridge)
@@ -213,4 +363,4 @@ Multiple R-squared: 0.99259
 > 
 > proc.time()
    user  system elapsed 
-   2.64    0.34    3.00 
+   3.29    0.50    3.87 

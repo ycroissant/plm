@@ -197,10 +197,7 @@ pggls <- function(formula, data, subset, na.action,
         nother <- nother - 1
         other.names <- other.names[-1L]
     }
-    tres <- array(NA_real_, dim = c(nother, nother, ncond),
-                  dimnames = list(other.names, other.names, cond.names))
-    lcnd <- levels(cond)
-   
+
     if (balanced) {
         tres <- split(resid, cond)
         tres <- lapply(tres, function(x) outer(x, x))
@@ -209,19 +206,29 @@ pggls <- function(formula, data, subset, na.action,
         subOmega <- rowMeans(tres, dims = 2L) # == apply(tres, 1:2, mean) but faster
         omega <- bdsmatrix::bdsmatrix(rep(nother, ncond), rep(subOmega, ncond))
     } else {
-        lti <- list()
+      # pre-allocate
+        lti <- vector("list", length = length(ncond))
+        tres <- array(NA_real_, dim = c(nother, nother, ncond),
+                      dimnames = list(other.names, other.names, cond.names))
+        
+        # split data by cond
+        resid.list <- split(resid, cond)
+        other.list <- split(other, cond)
+        
         for (i in seq_len(ncond)) {
-            cond.i <- cond == lcnd[i] # TODO: can be optimised via split(), see balanced case
-            ut <- resid[cond.i]
-            names(ut) <- lti[[i]] <- other[cond.i]
-            out <- ut %o% ut
+            ut <- resid.list[[i]]
+            names(ut) <- lti[[i]] <- other.list[[i]]
+            out <- outer(ut, ut)
             tres[names(ut), names(ut), i] <- out
         }
+
         subOmega <- rowMeans(tres, dims = 2L, na.rm = TRUE) # == apply(tres, 1:2, mean, na.rm = TRUE) but faster
         list.cov.blocks <- list()
+        
         for (i in seq_len(ncond)) {
             list.cov.blocks[[i]] <- subOmega[lti[[i]], lti[[i]]]
         }
+        # TODO: this errors for unbalanced FD models
         omega <- bdsmatrix::bdsmatrix(groupsdim, unlist(list.cov.blocks, use.names = FALSE))
     }
     A <- crossprod(X, solve(omega, X))
