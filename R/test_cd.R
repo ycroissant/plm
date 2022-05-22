@@ -563,10 +563,10 @@ cortab <- function(x, grouping, groupnames = NULL,
         ## make statew for cor. between h and k
         for(i in seq_len(n)) {
           ## get first region (all values equal, so take first one)
-          ireg <- grouping[fullind == ids[i]][1L]
+          ireg <- grouping[fullind == ids[i]][1L] # TODO: can be made faster via split()-approach
           if(ireg == h) {
             for(j in seq_len(n)) {
-                jreg <- grouping[fullind == ids[j]][1L]
+                jreg <- grouping[fullind == ids[j]][1L] # TODO: can be made faster via split()-approach
                 if(jreg == k) statew[i, j] <- 1
             }
           }
