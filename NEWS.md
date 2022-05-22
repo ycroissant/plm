@@ -34,8 +34,9 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
   the result is more sane (`numeric(0)`).
   
 ### Others/Minors:
-* Many functions which split data by an index dimension are now faster due to 
-  more efficient splitting approach, esp. `pcce`, `pggls`, `pmg`, `cipstest`.
+* Many functions which split data by an index dimension are now faster on large
+  data sets due to more efficient splitting approach, esp. `pcce`, `pggls`, 
+  `pmg`, `cipstest`, `pcdtest`.
 * `plmtest` and `pbsytest`: text in result object's `method` does not 
   contain information about balanced/unbalanced panel anymore and is, thus, not
   printed anymore.
