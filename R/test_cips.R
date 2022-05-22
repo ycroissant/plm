@@ -145,9 +145,7 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
   ## (might be unbalanced => t1!=t2 but we don't care as long
   ## as min(t)>k+1)
 
-  ## "pre-allocate" models' list for the n models
-  tmods <- vector("list", n)
-
+  # prepare data as per requested model
   switch(match.arg(model),
          
     "mg" = {
