@@ -2,6 +2,7 @@
 
 ## - trace : calculate trace of a matrix (used in ercomp())
 ## - is.constant : check if a numeric vector or columns of a matrix is constant
+## - sumres : gives summary for residuals (used in several print.summary.* methods)
 ## - bdiag : takes matrices as argument and returns the block-diagonal matrix (used in pgmm and plm.list)
 ## - mylm : inner fitting func based on stats::lm with matrix inputs (used in plm.fit)
 ## - my.lm.fit : like the barebone stats::lm.fit but with some extra information (e.g., SEs, sigma) used in purtest
@@ -17,6 +18,15 @@
 trace <- function(x) sum(diag(x))
 
 is.constant <- function(x) (max(x) - min(x)) < sqrt(.Machine$double.eps)
+
+sumres <- function(x){
+  sr <- summary(unclass(resid(x)))
+  srm <- sr["Mean"]
+  if (abs(srm) < 1e-10){
+    sr <- sr[c(1:3, 5:6)]
+  }
+  sr
+}
 
 bdiag <- function(...){
   ## non-exported

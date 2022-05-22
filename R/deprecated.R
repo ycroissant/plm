@@ -495,16 +495,6 @@ print.summary.pht <- function(x, digits = max(3, getOption("digits") - 2),
 
 ## dynformula
 
-sumres <- function(x){
-    sr <- summary(unclass(resid(x)))
-    srm <- sr["Mean"]
-    if (abs(srm) < 1e-10){
-        sr <- sr[c(1:3, 5:6)]
-    }
-    sr
-}
-
-
 create.list <- function(alist, K, has.int, has.resp, endog, exo, default){
     # if alist is NULL, create a list of 0
     if (is.null(alist)) alist <- rep(list(default), K+has.resp)
