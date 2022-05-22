@@ -241,9 +241,6 @@ pwtest.panelmodel <- function(x, effect = c("individual", "time"), ...) {
   u <- x$residuals
 
   ## est. random effect variance
-  ## "pre-allocate" an empty list of length n
-  tres <- vector("list", n)
-
   ## list of n "empirical omega-blocks"
   ## with averages of xproducts of t(i) residuals
   ## for each group 1..n 
@@ -629,16 +626,19 @@ pbsytest.panelmodel <- function(x, test = c("ar", "re", "j"), re.normal = if (te
   A <- 1 - S1/S2
   
   unind <- unique(ind)
-  uu <-  uu1 <- rep(NA, length(unind))
-  for(i in seq_along(unind)) {
-    u.t <- poolres[ind == unind[i]] # TODO: can be made faster via split()-approach
+  length.unind <- length(unind)
+  uu <-  uu1 <- rep(NA_real_, length.unind) # pre-allocate
+  poolres.list <- split(poolres, ind)
+  
+  for(i in seq_len(length.unind)) {
+    u.t <- poolres.list[[i]]
     u.t.1 <- u.t[-length(u.t)]
     u.t <- u.t[-1L]
     uu[i] <- crossprod(u.t)
     uu1[i] <- crossprod(u.t, u.t.1)
   }
+
   B <- sum(uu1)/sum(uu)
-  
   a <- as.numeric(crossprod(T_i)) # Sosa-Escudera/Bera (2008), p. 69
   
   switch(test,
