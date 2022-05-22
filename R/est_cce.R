@@ -466,7 +466,7 @@ print.summary.pcce <- function(x, digits = max(3, getOption("digits") - 2), widt
   cat("\n")
   print(pdim)
   cat("\nResiduals:\n")
-  print(sumres(x)) # was until rev. 1178: print(summary(unlist(residuals(x))))
+  print(sumres(x))
   cat("\nCoefficients:\n")
   printCoefmat(x$CoefTable, digits = digits)
   cat(paste("Total Sum of Squares: ",    signif(x$tss,  digits), "\n", sep=""))

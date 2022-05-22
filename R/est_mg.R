@@ -1,7 +1,9 @@
   ## Mean Group estimator
   ## ref. Coakley, Fuertes and Smith 2004
   ##
-  ## This version 10:
+  ## This version 11:
+  ##   uses optimised data split approach (via split())
+  ## version 10:
   ##   added R2 = 1-var(resid)/var(y) as a measure of fit
   ## from version 9:
   ##   fixed residuals
@@ -169,8 +171,7 @@ pmg <- function(formula, data, subset, na.action,
 
   switch(model,
     "mg" = {
-      
-      # split X, y, Hhat by individual and store in lists
+      # split X, y by individual and store in lists
       X.col <- NCOL(X)
       tX.list <- split(X, ind)
       tX.list <- lapply(tX.list, function(m) matrix(m, ncol = X.col))
@@ -335,7 +336,7 @@ print.summary.pmg <- function(x, digits = max(3, getOption("digits") - 2),
   cat("\n")
   print(pdim)
   cat("\nResiduals:\n")
-  print(sumres(x)) # was until rev. 1178: print(summary(unlist(residuals(x))))
+  print(sumres(x))
   cat("\nCoefficients:\n")
   printCoefmat(x$CoefTable, digits = digits)
   cat(paste("Total Sum of Squares: ",    signif(x$tss,  digits),  "\n", sep=""))
@@ -347,5 +348,5 @@ print.summary.pmg <- function(x, digits = max(3, getOption("digits") - 2),
 #' @rdname pmg
 #' @export
 residuals.pmg <- function(object, ...) {
-  return(pres(object))
+  pres(object)
 }
