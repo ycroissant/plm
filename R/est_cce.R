@@ -229,10 +229,8 @@ pcce <- function (formula, data, subset, na.action,
       tMhat <- diag(1, length(ty)) -
                 crossprod(t(tHhat), solve(crossprod(tHhat), t(tHhat)))
       
-      if(model == "p") {
-        # for model == "p", tMhat is needed again later, so save in list
-        tMhat.list[[i]] <- tMhat 
-      }
+      ## tMhat is needed again later, so save in list
+      tMhat.list[[i]] <- tMhat
  
       CP.tXtMhat <- crossprod(tX, tMhat)
       tXMX <- tcrossprod(CP.tXtMhat, t(tX))
@@ -253,21 +251,7 @@ pcce <- function (formula, data, subset, na.action,
         ## Notice remark in Pesaran (2006, p.977, between (27) and (28))
         ## that XMX.i is invariant to the choice of a g-inverse for H'H
       
-      tcoef[ , i] <- tb
-      
-      ## calc CCEMG residuals, both defactored and raw
-      if(model == "mg") {
-        # These are the residuals for MG model, calc. only if model is selected
-        # (residuals for pooled model are calc. later)
-        # (maybe this part here could be shifted to the mg code path below)
-        
-        ## cce (defactored) residuals as M_i(y_i - X_i * bCCEMG_i)
-        tytXtb      <- ty - tcrossprod(tX, t(tb))
-        cceres[[i]] <- tcrossprod(tMhat, t(tytXtb))
-        ## std. (raw) residuals as y_i - X_i * bCCEMG_i - a_i
-        ta <- mean(ty - tX)
-        stdres[[i]] <- tytXtb - ta
-      }
+      tcoef[ , i] <- tb # save single coefficients
     }
 
     # Reduce transformed data to matrix and numeric, respectively
@@ -290,7 +274,7 @@ pcce <- function (formula, data, subset, na.action,
     ## pre-allocate matrix of cross-products of demeaned individual coefficients
     Rmat <- array(data = NA_real_, dim = c(k, k, n))
 
-    ## calc. coef and vcov according to model
+    ## calc. coef, vcov, and residuals according to model
     switch(model,
         "mg" = {
             ## assign beta CCEMG
@@ -300,17 +284,33 @@ pcce <- function (formula, data, subset, na.action,
             ## (HPY 2010, p. 163, between (3.10) and (3.11) / KPY 2011, p. 330 (38))
             for(i in seq_len(n)) Rmat[ , , i] <- outer(demcoef[ , i], demcoef[ , i])
             vcov <- 1/(n*(n-1)) * rowSums(Rmat, dims = 2L) # == 1/(n*(n-1)) * apply(Rmat, 1:2, sum), but rowSums(., dims = 2L)-construct is way faster
+
+            ## calc CCEMG residuals, both defactored and raw
+            for(i in seq_len(n)) {
+              ## must redo all this because needs b_CCEP, which is
+              ## not known at by-groups step
+              tX <- tX.list[[i]]
+              ty <- ty.list[[i]]
+              tMhat <- tMhat.list[[i]]
+              tb <- tcoef[ , i]
+              
+              ## cce (defactored) residuals as M_i(y_i - X_i * bCCEMG_i)
+              tytXtb      <- ty - tcrossprod(tX, t(tb))
+              cceres[[i]] <- tcrossprod(tMhat, t(tytXtb))
+              ## std. (raw) residuals as y_i - X_i * bCCEMG_i - a_i
+              ta <- mean(ty - tX)
+              stdres[[i]] <- tytXtb - ta
+            }
         },
            
         "p" = {
             ## calc beta_CCEP
             sXMX <- rowSums(XMX, dims = 2L) # == apply(XMX, 1:2, sum), but rowSums(., dims = 2L)-construct is way faster
             sXMy <- rowSums(XMy, dims = 2L) # == apply(XMy, 1:2, sum), but rowSums(., dims = 2L)-construct is way faster
-            coef <- solve(sXMX, sXMy)
+            coef <- solve(sXMX, sXMy) # bCCEP in HPY
 
             ## calc CCEP covariance:
             ## (HPY 2010, p. 163-4, (3.12, 3.13)
-
             for(i in seq_len(n)) {
               Rmat[ , , i] <- crossprod(XMX[ , , i], 
                                         crossprod(outer(demcoef[ , i],
@@ -328,8 +328,6 @@ pcce <- function (formula, data, subset, na.action,
 
             ## calc CCEP residuals, both defactored and raw
             for(i in seq_len(n)) {
-                ## must redo all this because needs b_CCEP, which is
-                ## not known at by-groups step
                 tX <- tX.list[[i]]
                 ty <- ty.list[[i]]
                 tMhat <- tMhat.list[[i]]
