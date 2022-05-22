@@ -118,7 +118,7 @@ pcce <- function (formula, data, subset, na.action,
   plm.model[[1L]] <- as.name("plm")
   ## change the 'model' in call
   plm.model$model <- "pooling"
-  ## evaluates the call, modified with model = "pooling", inside the
+  ## evaluates the call, modified with model == "pooling", inside the
   ## parent frame resulting in the pooling model on formula, data
   plm.model <- eval(plm.model, parent.frame())
   mf <- model.frame(plm.model)
@@ -214,18 +214,25 @@ pcce <- function (formula, data, subset, na.action,
     Hhat.col <- NCOL(Hhat)
     tHhat.list <- split(Hhat, ind)
     tHhat.list <- lapply(tHhat.list, function(m) matrix(m, ncol = Hhat.col))
+    tMhat.list <- vector("list", length = n) # pre-allocate
  
     for(i in seq_len(n)) {
       tX <- tX.list[[i]]
       ty <- ty.list[[i]]
       tHhat <- tHhat.list[[i]]
 
-      ## if 'trend' then augment the xs-invariant component
+      ## if 'trend' then augment the xs-invariant component 
       if(trend) tHhat <- cbind(tHhat, seq_len(dim(tHhat)[[1L]]))
-
-      ## NB tHat, tMhat should be i-invariant
+      
+      ## NB tHHat, tMhat should be i-invariant (but for the
+      ## group size if unbalanced)
       tMhat <- diag(1, length(ty)) -
                 crossprod(t(tHhat), solve(crossprod(tHhat), t(tHhat)))
+      
+      if(model == "p") {
+        # for model == "p", tMhat is needed again later, so save in list
+        tMhat.list[[i]] <- tMhat 
+      }
  
       CP.tXtMhat <- crossprod(tX, tMhat)
       tXMX <- tcrossprod(CP.tXtMhat, t(tX))
@@ -325,15 +332,7 @@ pcce <- function (formula, data, subset, na.action,
                 ## not known at by-groups step
                 tX <- tX.list[[i]]
                 ty <- ty.list[[i]]
-                tHhat <- tHhat.list[[i]]
-    
-                ## if 'trend' then augment the xs-invariant component
-                if(trend) tHhat <- cbind(tHhat, seq_len(dim(tHhat)[[1L]]))
-    
-                ## NB tHat, tMhat should be i-invariant (but for the
-                ## group size if unbalanced)
-                tMhat <- diag(1, length(ty)) -
-                  crossprod(t(tHhat), solve(crossprod(tHhat), t(tHhat)))
+                tMhat <- tMhat.list[[i]]
     
                 ## cce residuals as M_i(y_i - X_i * bCCEP)
                 tytXcoef    <- ty - tcrossprod(tX, t(coef))

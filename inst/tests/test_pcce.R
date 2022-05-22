@@ -64,3 +64,38 @@ vcovNW(pccepmod)
 
 vcovSCC(pccemgmod)
 vcovSCC(pccepmod)
+
+########## with trend ##########
+summary(pccemgmod_trend  <- pcce(form, data = pProduc, model = "mg",  trend = TRUE))
+summary(pccepmod_trend   <- pcce(form, data = pProduc, model = "p",   trend = TRUE))
+
+summary(pccemgmod_trend_unbal  <- pcce(form, data = pProduc_unbal, model = "mg",  trend = TRUE))
+summary(pccepmod_trend_unbal   <- pcce(form, data = pProduc_unbal, model = "p",   trend = TRUE))
+
+
+residuals(pccemgmod_trend, type = "defactored") # default
+residuals(pccemgmod_trend, type = "standard")
+
+residuals(pccepmod_trend, type = "defactored") # default
+residuals(pccepmod_trend, type = "standard")
+
+residuals(pccemgmod_trend_unbal, type = "defactored") # default
+residuals(pccemgmod_trend_unbal, type = "standard")
+
+residuals(pccepmod_trend_unbal, type = "defactored") # default
+residuals(pccepmod_trend_unbal, type = "standard")
+
+
+# transformed data
+pccemgmod_trend$tr.model$y
+pccemgmod_trend$tr.model$X
+
+pccepmod_trend$tr.model$y
+pccepmod_trend$tr.model$X
+
+pccemgmod_trend_unbal$tr.model$y
+pccemgmod_trend_unbal$tr.model$X
+
+pccepmod_trend_unbal$tr.model$y
+pccepmod_trend_unbal$tr.model$X
+
