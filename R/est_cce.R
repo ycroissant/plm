@@ -356,15 +356,13 @@ pcce <- function (formula, data, subset, na.action,
             ## If balanced, would simply be
             ## sum(unlist(cceres)^2)/(n*(T.-2*k-2))
     
-            ## pre-allocate list for individual CCEMG residual variances
-            sigma2cce.i <- vector("list", n)
             ## average variance of defactored residuals sigma2ccemg as in
             ## Holly, Pesaran and Yamagata, (3.14)
-            for(i in seq_len(n)) {
-                sigma2cce.i[[i]] <- crossprod(cceres[[i]])*
-                    1/(length(cceres[[i]])-2*k-2)
-            }
-            sigma2cce <- 1/n*sum(unlist(sigma2cce.i, use.names = FALSE))
+            sigma2cce.i <- vapply(cceres,
+                                  function(cceres.i)
+                                    crossprod(cceres.i) * 1/(length(cceres.i)-2*k-2),
+                                  FUN.VALUE = 0.0, USE.NAMES = FALSE)
+            sigma2cce <- 1/n*sum(sigma2cce.i)
         },
            
         "p" = {
