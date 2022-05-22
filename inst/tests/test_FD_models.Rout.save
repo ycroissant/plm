@@ -1,6 +1,6 @@
 
-R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R version 4.2.0 (2022-04-22 ucrt) -- "Vigorous Calisthenics"
+Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -19,18 +19,24 @@ Type 'q()' to quit R.
 > 
 > library(plm)
 > data("Produc", package = "plm")
-> 
+> pProduc <- pdata.frame(Produc)
+> pProduc_unbal <- pdata.frame(Produc[-c(2, 5, 10, 50:60), ])
 > 
 > # plm with intercept
-> fd_plm <- plm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model = "fd")
+> fd_plm       <- plm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, model = "fd", data = pProduc)
+> fd_plm_unbal <- plm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, model = "fd", data = pProduc_unbal)
+> 
 > # plm without intercept
-> fd_plm2 <- plm(log(gsp) ~ 0 + log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model = "fd")
+> fd_plm2       <- plm(log(gsp) ~ 0 + log(pcap) + log(pc) + log(emp) + unemp, model = "fd", data = pProduc)
+> fd_plm2_unbal <- plm(log(gsp) ~ 0 + log(pcap) + log(pc) + log(emp) + unemp, model = "fd", data = pProduc_unbal)
 > 
 > # pggls with intercept
-> fd_pggls <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model = "fd")
->   
+> fd_pggls       <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, model = "fd", data = pProduc)
+> # fd_pggls_unbal <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, model = "fd", data = pProduc_unbal) # TODO: errors
+> 
 > # pggls without intercept
-> fd_pggls2 <- pggls(log(gsp) ~ 0 + log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model = "fd")
+> fd_pggls2       <- pggls(log(gsp) ~ 0 + log(pcap) + log(pc) + log(emp) + unemp, model = "fd", data = pProduc)
+> # fd_pggls2_unbal <- pggls(log(gsp) ~ 0 + log(pcap) + log(pc) + log(emp) + unemp, model = "fd", data = pProduc_unbal) # TODO: errors
 > 
 > 
 > summary(fd_plm)
@@ -38,7 +44,7 @@ Oneway (individual) effect First-Difference Model
 
 Call:
 plm(formula = log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
-    data = Produc, model = "fd")
+    data = pProduc, model = "fd")
 
 Balanced Panel: n = 48, T = 17, N = 816
 Observations used in estimation: 768
@@ -62,12 +68,41 @@ Residual Sum of Squares: 0.33308
 R-Squared:      0.69166
 Adj. R-Squared: 0.69004
 F-statistic: 427.885 on 4 and 763 DF, p-value: < 2.22e-16
+> summary(fd_plm_unbal)
+Oneway (individual) effect First-Difference Model
+
+Call:
+plm(formula = log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
+    data = pProduc_unbal, model = "fd")
+
+Unbalanced Panel: n = 48, T = 8-17, N = 802
+Observations used in estimation: 754
+
+Residuals:
+      Min.    1st Qu.     Median    3rd Qu.       Max. 
+-0.0852542 -0.0107736  0.0016319  0.0128760  0.1022295 
+
+Coefficients:
+               Estimate  Std. Error t-value  Pr(>|t|)    
+(Intercept)  0.01050902  0.00138975  7.5618 1.165e-13 ***
+log(pcap)   -0.00742313  0.04653240 -0.1595    0.8733    
+log(pc)     -0.03078377  0.02324457 -1.3243    0.1858    
+log(emp)     0.83902990  0.03739988 22.4340 < 2.2e-16 ***
+unemp       -0.00591127  0.00076652 -7.7119 3.953e-14 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    1.0769
+Residual Sum of Squares: 0.33229
+R-Squared:      0.69145
+Adj. R-Squared: 0.6898
+F-statistic: 419.618 on 4 and 749 DF, p-value: < 2.22e-16
 > summary(fd_plm2)
 Oneway (individual) effect First-Difference Model
 
 Call:
 plm(formula = log(gsp) ~ 0 + log(pcap) + log(pc) + log(emp) + 
-    unemp, data = Produc, model = "fd")
+    unemp, data = pProduc, model = "fd")
 
 Balanced Panel: n = 48, T = 17, N = 816
 Observations used in estimation: 768
@@ -90,12 +125,40 @@ Residual Sum of Squares: 0.35939
 R-Squared:      0.67909
 Adj. R-Squared: 0.67783
 F-statistic: 735.389 on 4 and 764 DF, p-value: < 2.22e-16
+> summary(fd_plm2_unbal)
+Oneway (individual) effect First-Difference Model
+
+Call:
+plm(formula = log(gsp) ~ 0 + log(pcap) + log(pc) + log(emp) + 
+    unemp, data = pProduc_unbal, model = "fd")
+
+Unbalanced Panel: n = 48, T = 8-17, N = 802
+Observations used in estimation: 754
+
+Residuals:
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+-0.07929 -0.00907  0.00436  0.00320  0.01675  0.10369 
+
+Coefficients:
+             Estimate  Std. Error t-value  Pr(>|t|)    
+log(pcap)  0.12092342  0.04491987  2.6920  0.007261 ** 
+log(pc)    0.01832687  0.02313966  0.7920  0.428605    
+log(emp)   0.96247278  0.03488660 27.5886 < 2.2e-16 ***
+unemp     -0.00429338  0.00076312 -5.6261 2.604e-08 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    1.0769
+Residual Sum of Squares: 0.35766
+R-Squared:      0.67941
+Adj. R-Squared: 0.67813
+F-statistic: 718.242 on 4 and 750 DF, p-value: < 2.22e-16
 > summary(fd_pggls)
 Oneway (individual) effect First-Difference FGLS model
 
 Call:
 pggls(formula = log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
-    data = Produc, model = "fd")
+    data = pProduc, model = "fd")
 
 Balanced Panel: n = 48, T = 17, N = 816
 
@@ -115,12 +178,13 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 Total Sum of Squares: 849.81
 Residual Sum of Squares: 0.33459
 Multiple R-squared: 0.99961
+> # summary(fd_pggls_unbal)
 > summary(fd_pggls2)
 Oneway (individual) effect First-Difference FGLS model
 
 Call:
 pggls(formula = log(gsp) ~ 0 + log(pcap) + log(pc) + log(emp) + 
-    unemp, data = Produc, model = "fd")
+    unemp, data = pProduc, model = "fd")
 
 Balanced Panel: n = 48, T = 17, N = 816
 
@@ -139,6 +203,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 Total Sum of Squares: 849.81
 Residual Sum of Squares: 0.36212
 Multiple R-squared: 0.99957
+> # summary(fd_pggls2_unbal)
 > vcovHC(fd_plm)
               (Intercept)     log(pcap)       log(pc)      log(emp)
 (Intercept)  1.535028e-06 -3.409304e-06 -9.074916e-06 -1.586871e-05
@@ -162,10 +227,11 @@ log(emp)  -5.907699e-04 -5.151465e-05  9.602959e-04  1.788651e-05
 unemp     -2.007078e-05  1.072643e-06  1.788651e-05  6.544230e-07
 attr(,"cluster")
 [1] "group"
-> ## vcovHC does not run pggls models
+> 
+> ## vcovHC does not run on pggls models/not implemented
 > # vcovHC(fd_pggls)
 > # vcovHC(fd_pggls2)
 > 
 > proc.time()
    user  system elapsed 
-   1.57    0.20    1.84 
+   1.56    0.20    1.76 
