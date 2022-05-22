@@ -1116,17 +1116,18 @@ pbltest.formula <- function(x, data, alternative = c("twosided", "onesided"), in
   ## sigma2.e and sigma2.1 as in BL
   ## break up residuals by group to get rid of Kronecker prod.
   ## data have to be balanced and sorted by group/time, so this works
+  
+  ## pre-allocate
   uhat.i <- vector("list", n.)
-  for(i in seq_len(n.)) {
-    uhat.i[[i]] <- uhat[t.*(i-1)+1:t.]
-    }
   s2e <- rep(NA, n.)
   s21 <- rep(NA, n.)
+  
   for(i in seq_len(n.)) {
-    u.i <- uhat.i[[i]]
-    s2e[i] <- as.numeric(crossprod(u.i, Et) %*% u.i)
-    s21[i] <- as.numeric(crossprod(u.i, Jt) %*% u.i)
-    }
+    uhat.i[[i]] <- u.i <- uhat[t.*(i-1)+1:t.]
+    s2e[i] <- as.numeric(tcrossprod(crossprod(u.i, Et), u.i))
+    s21[i] <- as.numeric(tcrossprod(crossprod(u.i, Jt), u.i))
+  }
+
   sigma2.e <- sum(s2e) / (n.*(t.-1))
   sigma2.1 <- sum(s21) / n.
 
@@ -1340,7 +1341,7 @@ pwfdtest.panelmodel <- function(x, ..., h0 = c("fd", "fe")) {
     red_id <- c(red_id, rep(i, Ti_minus_one[i]))
   }
   # additional check
-  # (but should error earlier already as the FD model should be nonestimable)
+  # (but should error earlier already as the FD model should be non-estimable)
   if(length(red_id) == 0L)
     stop("only individuals with one observation in original data: test not feasible")
   
