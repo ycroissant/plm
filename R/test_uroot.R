@@ -566,7 +566,7 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
   if (exo == "trend"){
     resid <- lapply(object, function(x) {
                               lx <- length(x)
-                              dmat <- matrix(c(rep(1, lx), 1:lx), nrow = lx)
+                              dmat <- matrix(c(rep(1, lx), seq_len(lx)), nrow = lx)
                               # can use lm.fit here as NAs are dropped in beginning of 'purtest'
                               lm.fit(dmat, x)$residuals
                               })
@@ -777,8 +777,7 @@ purtest <- function(object, data = NULL, index = NULL,
     terms <- terms(object)
     lab <- labels(terms)
     if(length(lab) == 0L){
-      if(attr(terms, "intercept")) exo <- "intercept"
-      else exo <- "none"
+      exo <- if(attr(terms, "intercept")) "intercept" else "none"
     }
     else{
       if(length(lab) > 1L || lab != "trend") stop("incorrect formula")
