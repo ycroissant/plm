@@ -34,7 +34,8 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
   the result is more sane (`numeric(0)`).
   
 ### Others/Minors:
-* `pcce`, `pggls`, `pmg`: made faster by coding improvements.
+* Many functions which split data by an index dimension are now faster due to 
+  more efficient splitting approach, esp. `pcce`, `pggls`, `pmg`, `cipstest`.
 * `plmtest` and `pbsytest`: text in result object's `method` does not 
   contain information about balanced/unbalanced panel anymore and is, thus, not
   printed anymore.
