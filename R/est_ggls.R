@@ -167,6 +167,7 @@ pggls <- function(formula, data, subset, na.action,
     
     cond <- cond[myord]
     other <- other[myord]
+    
     drop1 <- FALSE
     if (drop1 && model.name %in% c("within", "fd")) {
     ## This 'if' parameterization is just for debugging.
@@ -306,5 +307,5 @@ print.summary.pggls <- function(x, digits = max(3, getOption("digits") - 2), wid
 #' @rdname pggls
 #' @export
 residuals.pggls <- function(object, ...) {
-  return(pres(object))
+  pres(object)
 }
