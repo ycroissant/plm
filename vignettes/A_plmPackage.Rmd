@@ -436,7 +436,7 @@ OLS formulas to the demeaned data, which are contained inside
 subsection [inference in the panel model](#inference).
 
 
-### The object oriented approach to general GLS computations
+### The object-oriented approach to general GLS computations
 
 The covariance matrix of errors in general GLS models is too
 generic to fit the quasi-demeaning framework, so this method calls for
