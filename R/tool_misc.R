@@ -51,7 +51,7 @@ bdiag <- function(...){
   ind[2,   ] <- rcum
   ind[3, -1] <- ccum[-n]
   ind[4,   ] <- ccum
-  imat <- array(1:(rsum * csum), c(rsum, csum))
+  imat <- array(seq_len(rsum * csum), c(rsum, csum))
   iuse <- apply(ind, 2, function(y, imat) imat[(y[1L]+1):y[2L],
                                                (y[3L]+1):y[4L]], imat = imat)
   iuse <- as.vector(unlist(iuse))

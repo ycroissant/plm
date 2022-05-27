@@ -928,24 +928,24 @@ lagr.pseries <- function(x, k = 1L, ...) {
             isNAid   <- c(rep(TRUE, ak), (diff(as.numeric(id),   lag = ak) != 0L))
             isNA <- (isNAtime | isNAid)
       
-            result <- x                                             # copy x first ...
-            result[1:ak] <- NA                                      # ... then make first ak obs NA ... 
-            result[(ak+1):length(result)] <- x[1:(length(x)-ak)]    # ... shift and ...
-            result[isNA] <- NA                                      # ... make more NAs in between: this way, we keep: all factor levels, names, classes
+            result <- x                                               # copy x first ...
+            result[1:ak] <- NA                                        # ... then make first ak obs NA ... 
+            result[(ak+1):length(result)] <- x[seq_len(length(x)-ak)] # ... shift and ...
+            result[isNA] <- NA                                        # ... make more NAs in between: this way, we keep: all factor levels, names, classes
       
         } else if(ak < 0L) { # => compute leading values
       
         # delete last |ak| observations for each unit
             num_time <- as.numeric(time)
             num_id   <- as.numeric(id)
-            isNAtime <- c(c((num_time[1:(length(num_time)+ak)] - num_time[(-ak+1):length(num_time)]) != ak), rep(TRUE, -ak))
-            isNAid   <- c(c((num_id[1:(length(num_id)+ak)]     - num_id[(-ak+1):length(num_id)])     != 0L), rep(TRUE, -ak))
+            isNAtime <- c(c((num_time[seq_len(length(num_time)+ak)] - num_time[(-ak+1):length(num_time)]) != ak), rep(TRUE, -ak))
+            isNAid   <- c(c((num_id[seq_len(length(num_id)+ak)]     - num_id[(-ak+1):length(num_id)])     != 0L), rep(TRUE, -ak))
             isNA <- (isNAtime | isNAid)
       
-            result <- x                                            # copy x first ...
-            result[(length(result)+ak+1):length(result)] <- NA     # ... then make last |ak| obs NA ... 
-            result[1:(length(result)+ak)] <- x[(1-ak):(length(x))] # ... shift and ...
-            result[isNA] <- NA                                     # ... make more NAs in between: this way, we keep: all factor levels, names, classes
+            result <- x                                                 # copy x first ...
+            result[(length(result)+ak+1):length(result)] <- NA          # ... then make last |ak| obs NA ... 
+            result[seq_len(length(result)+ak)] <- x[(1-ak):(length(x))] # ... shift and ...
+            result[isNA] <- NA                                          # ... make more NAs in between: this way, we keep: all factor levels, names, classes
       
         } else { # ak == 0 => nothing to do, return original pseries (no lagging/no leading)
             result <- x
@@ -1010,15 +1010,15 @@ pdiff <- function(x, effect = c("individual", "time"), has.intercept = FALSE){
     effect <- match.arg(effect)
     cond <- as.numeric(unclass(attr(x, "index"))[[1L]]) # unclass for speed
     n <- if(is.matrix(x)) nrow(x) else length(x)
-    cond <- c(NA, cond[2:n] - cond[1:(n-1)]) # this assumes a certain ordering
+    cond <- c(NA, cond[2:n] - cond[seq_len(n-1)]) # this assumes a certain ordering
     cond[cond != 0] <- NA
     if(! is.matrix(x)){
-        result <- c(NA , x[2:n] - x[1:(n-1)])
+        result <- c(NA , x[2:n] - x[seq_len(n-1)])
         result[is.na(cond)] <- NA
         result <- na.omit(result)
     }
     else{
-        result <- rbind(NA, x[2:n, , drop = FALSE] - x[1:(n-1), , drop = FALSE])
+        result <- rbind(NA, x[2:n, , drop = FALSE] - x[seq_len(n-1), , drop = FALSE])
         result[is.na(cond), ] <- NA
         result <- na.omit(result)
         result <- result[ , apply(result, 2, var) > 1E-12, drop = FALSE]

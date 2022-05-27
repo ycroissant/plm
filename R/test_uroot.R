@@ -529,7 +529,7 @@ longrunvar <- function(x, exo = c("intercept", "none", "trend"), q = NULL){
   # integer from that formula (not, e.g., trunc)
   T <- length(x)
   if (is.null(q)) q <- round(3.21 * T^(1/3))
-  dx <- x[2:T] - x[1:(T-1)]
+  dx <- x[2:T] - x[seq_len(T-1)]
   if(exo == "intercept") dx <- dx - mean(dx)
   if(exo == "trend")     dx <- lm.fit(cbind(1, seq_along(dx)), dx)$residuals
   dx <- c(NA, dx)

@@ -82,7 +82,7 @@ model.frame.pdata.frame <- function(formula, data = NULL, ...,
                                     lhs = NULL, rhs = NULL, dot = "previous"){
     pdata <- formula
     formula <- as.Formula(data)
-    if (is.null(rhs)) rhs <- 1:(length(formula)[2L])
+    if (is.null(rhs)) rhs <- seq_len(length(formula)[2L])
     if (is.null(lhs)) lhs <- if(length(formula)[1L] > 0L) 1 else 0
     index <- attr(pdata, "index")
     mf <- model.frame(formula, as.data.frame(pdata, row.names = FALSE), ..., # NB need row.names = FALSE to ensure mf has integer sequence as row names

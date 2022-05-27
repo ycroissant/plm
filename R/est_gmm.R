@@ -871,7 +871,7 @@ mtest.pgmm <- function(object, order = 1L, vcov = NULL, ...) {
            resid <- object$residuals
            residl <- lapply(resid,
                             function(x)
-                              c(rep(0, order), x[1:(length(x) - order)]))
+                              c(rep(0, order), x[seq_len(length(x) - order)]))
                },
          "ld" = {
            resid <- lapply(object$residuals,
@@ -879,7 +879,7 @@ mtest.pgmm <- function(object, order = 1L, vcov = NULL, ...) {
                              c(x[-c(Kt:(2 * Kt + 1))], rep(0, Kt)))
            residl <- lapply(object$residuals,
                             function(x)
-                              c(rep(0, order), x[1:(Kt - order - 1)], rep(0, Kt)))
+                              c(rep(0, order), x[seq_len(Kt - order - 1)], rep(0, Kt)))
          })
   
   X <- lapply(object$model, function(x) x[ , -1L, drop = FALSE])

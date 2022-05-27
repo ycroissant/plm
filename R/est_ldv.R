@@ -104,9 +104,9 @@ pldv <- function(formula, data, subset, weights, na.action,
         # create a data.frame containing y_t and y_{t-1}
         y <- as.character(formula[[2L]])
         y <- mf[[y]]
-        ly <- c(NA, y[1:(length(y) - 1)])
+        ly <- c(NA, y[seq_len(length(y) - 1)])
         id <- as.integer(index(mf, "id"))
-        lid <- c(NA, id[1:(nrow(mf) - 1)])
+        lid <- c(NA, id[seq_len(nrow(mf) - 1)])
         keep <- id == lid
         keep[1L] <- FALSE
         Y <- data.frame(y, ly)
