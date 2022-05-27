@@ -371,11 +371,11 @@ pwartest.panelmodel <- function(x, ...) {
   
   attr(FEres, "data") <- NULL
   N <- length(FEres)
-  FEres.1 <- c(NA, FEres[1:(N-1)])
+  FEres.1 <- c(NA, FEres[seq_len(N-1)])
   xindex <- unclass(attr(data, "index")) # unclass for speed
   id   <- xindex[[1L]]
   time <- xindex[[2L]]
-  lagid <- as.numeric(id) - c(NA, as.numeric(id)[1:(N-1)])
+  lagid <- as.numeric(id) - c(NA, as.numeric(id)[seq_len(N-1)])
   FEres.1[lagid != 0] <- NA
   data <- data.frame(id, time, FEres = unclass(FEres), FEres.1 = unclass(FEres.1))
   names(data)[c(1L, 2L)] <- c("id", "time")
