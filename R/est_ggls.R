@@ -115,7 +115,7 @@ pggls <- function(formula, data, subset, na.action,
     id.names   <- pdim$panel.names$id.names
     coef.names <- names(coef(plm.model))
     K <- length(coef.names)
-    
+
     if (model.name == "fd") {
     ## eliminate first year in indices
         nt <- pdim$Tint$nt[-1L]
@@ -124,9 +124,12 @@ pggls <- function(formula, data, subset, na.action,
         n <- pdim$nT$n
         N <- pdim$nT$N - pdim$Tint$nt[1L]
         time.names <- pdim$panel.names$time.names[-1L]
-        tind <- as.numeric(index[ , 2L])
-        sel <- (tind - c(-1, tind[-length(tind)])) == 1
-        index <- index[sel, ]
+        groupi <- as.numeric(index[[1L]])
+        ## make vector =1 on first obs in each group, 0 elsewhere
+        sel <- groupi - c(0, groupi[-length(groupi)])
+        sel[1L] <- 1 # the first must always be 1
+        ## eliminate first obs in time for each group
+        index <- index[!sel, ]
         id <- index[[1L]]
         time <- factor(index[[2L]], levels = attr(index[ , 2L], "levels")[-1L])
     } else {
@@ -135,7 +138,6 @@ pggls <- function(formula, data, subset, na.action,
         T <- pdim$nT$T
         n <- pdim$nT$n
         N <- pdim$nT$N
-        
         id <- index[[1L]]
         time <- index[[2L]]
     }
@@ -228,9 +230,7 @@ pggls <- function(formula, data, subset, na.action,
         for (i in seq_len(ncond)) {
             list.cov.blocks[[i]] <- subOmega[lti[[i]], lti[[i]]]
         }
-        ### TODO: this errors for unbalanced FD models
-        ## unlist(lapply(list.cov.blocks, dim))
-        ## groupsdim
+        
         omega <- bdsmatrix::bdsmatrix(groupsdim, unlist(list.cov.blocks, use.names = FALSE))
     }
     A <- crossprod(X, solve(omega, X))

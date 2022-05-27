@@ -15,11 +15,11 @@ fd_plm2_unbal <- plm(log(gsp) ~ 0 + log(pcap) + log(pc) + log(emp) + unemp, mode
 
 # pggls with intercept
 fd_pggls       <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, model = "fd", data = pProduc)
-# fd_pggls_unbal <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, model = "fd", data = pProduc_unbal) # TODO: errors
+fd_pggls_unbal <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, model = "fd", data = pProduc_unbal)
 
 # pggls without intercept
 fd_pggls2       <- pggls(log(gsp) ~ 0 + log(pcap) + log(pc) + log(emp) + unemp, model = "fd", data = pProduc)
-# fd_pggls2_unbal <- pggls(log(gsp) ~ 0 + log(pcap) + log(pc) + log(emp) + unemp, model = "fd", data = pProduc_unbal) # TODO: errors
+fd_pggls2_unbal <- pggls(log(gsp) ~ 0 + log(pcap) + log(pc) + log(emp) + unemp, model = "fd", data = pProduc_unbal)
 
 
 summary(fd_plm)
@@ -27,9 +27,9 @@ summary(fd_plm_unbal)
 summary(fd_plm2)
 summary(fd_plm2_unbal)
 summary(fd_pggls)
-# summary(fd_pggls_unbal)
+summary(fd_pggls_unbal)
 summary(fd_pggls2)
-# summary(fd_pggls2_unbal)
+summary(fd_pggls2_unbal)
 vcovHC(fd_plm)
 vcovHC(fd_plm2)
 

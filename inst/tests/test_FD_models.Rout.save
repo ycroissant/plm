@@ -32,11 +32,11 @@ Type 'q()' to quit R.
 > 
 > # pggls with intercept
 > fd_pggls       <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, model = "fd", data = pProduc)
-> # fd_pggls_unbal <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, model = "fd", data = pProduc_unbal) # TODO: errors
+> fd_pggls_unbal <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, model = "fd", data = pProduc_unbal)
 > 
 > # pggls without intercept
 > fd_pggls2       <- pggls(log(gsp) ~ 0 + log(pcap) + log(pc) + log(emp) + unemp, model = "fd", data = pProduc)
-> # fd_pggls2_unbal <- pggls(log(gsp) ~ 0 + log(pcap) + log(pc) + log(emp) + unemp, model = "fd", data = pProduc_unbal) # TODO: errors
+> fd_pggls2_unbal <- pggls(log(gsp) ~ 0 + log(pcap) + log(pc) + log(emp) + unemp, model = "fd", data = pProduc_unbal)
 > 
 > 
 > summary(fd_plm)
@@ -178,7 +178,31 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 Total Sum of Squares: 849.81
 Residual Sum of Squares: 0.33459
 Multiple R-squared: 0.99961
-> # summary(fd_pggls_unbal)
+> summary(fd_pggls_unbal)
+Oneway (individual) effect First-Difference FGLS model
+
+Call:
+pggls(formula = log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
+    data = pProduc_unbal, model = "fd")
+
+Unbalanced Panel: n = 48, T = 8-17, N = 802
+
+Residuals:
+      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+-0.0848646 -0.0101020  0.0023654  0.0006766  0.0134952  0.1013484 
+
+Coefficients:
+               Estimate  Std. Error  z-value Pr(>|z|)    
+(Intercept)  0.00937270  0.00105090   8.9187  < 2e-16 ***
+log(pcap)   -0.05329450  0.02893267  -1.8420  0.06547 .  
+log(pc)     -0.02599389  0.01179091  -2.2046  0.02748 *  
+log(emp)     0.88142468  0.02051693  42.9608  < 2e-16 ***
+unemp       -0.00476446  0.00039157 -12.1674  < 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Total Sum of Squares: 809.12
+Residual Sum of Squares: 0.33384
+Multiple R-squared: 0.99959
 > summary(fd_pggls2)
 Oneway (individual) effect First-Difference FGLS model
 
@@ -203,7 +227,30 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 Total Sum of Squares: 849.81
 Residual Sum of Squares: 0.36212
 Multiple R-squared: 0.99957
-> # summary(fd_pggls2_unbal)
+> summary(fd_pggls2_unbal)
+Oneway (individual) effect First-Difference FGLS model
+
+Call:
+pggls(formula = log(gsp) ~ 0 + log(pcap) + log(pc) + log(emp) + 
+    unemp, data = pProduc_unbal, model = "fd")
+
+Unbalanced Panel: n = 48, T = 8-17, N = 802
+
+Residuals:
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-0.078767 -0.007233  0.005566  0.004530  0.018224  0.104464 
+
+Coefficients:
+             Estimate  Std. Error z-value Pr(>|z|)    
+log(pcap)  0.06523967  0.02748771  2.3734  0.01762 *  
+log(pc)    0.00652506  0.01189704  0.5485  0.58338    
+log(emp)   0.96429917  0.01768824 54.5164  < 2e-16 ***
+unemp     -0.00368444  0.00038632 -9.5372  < 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Total Sum of Squares: 809.12
+Residual Sum of Squares: 0.3603
+Multiple R-squared: 0.99955
 > vcovHC(fd_plm)
               (Intercept)     log(pcap)       log(pc)      log(emp)
 (Intercept)  1.535028e-06 -3.409304e-06 -9.074916e-06 -1.586871e-05
@@ -234,4 +281,4 @@ attr(,"cluster")
 > 
 > proc.time()
    user  system elapsed 
-   1.56    0.20    1.76 
+   1.89    0.12    2.03 
