@@ -6,7 +6,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 
 ***
 
-# plm 2.6-99999
+# plm 2.6-9999
 
 
 ### Features:
@@ -27,7 +27,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
    RHS.
 * `vcovXX` functions: fix vcov output for first-difference models in case of 
   `cluster = "time"`.
-* `pggls`, unbalanced first-difference models do not error anymore.
+* `pggls`: unbalanced first-difference models do not error anymore.
 * `pldv`: variance-covariance fixed for case `model = "fd"` when `objfun == "lsq"` 
    and `sample == "cens"`.
 * `fixef(., type = "dfirst"`): for models with `length(fixef(<model_object>)) == 2`, 

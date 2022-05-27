@@ -95,7 +95,8 @@ pcce <- function (formula, data, subset, na.action,
   ## TODO: in general: 
   ##    * consider if data can be split only once and work on the split
   ##      data instead of cycling through the data with for-loops at various
-  ##      occasions (could be faster); splitting once is implemented 2022-05-21
+  ##      occasions (could be faster); splitting only once is implemented since 
+  ##      2022-05-21
   ##    * consider parallel execution via mclapply/mcmapply (aligns with the 
   ##      split-only-once aspect mentioned above).
   
@@ -144,7 +145,7 @@ pcce <- function (formula, data, subset, na.action,
   y <- model.response(mf)
 
   ## det. *minimum* group numerosity
-  t <- min(Ti) # ==  min(tapply(X[ , 1], ind, length))
+  t <- min(Ti)
 
   ## check min. t numerosity
     ## NB it is also possible to allow estimation if there *is* one group
@@ -246,12 +247,10 @@ pcce <- function (formula, data, subset, na.action,
       My[[i]] <- crossprod(tMhat, ty)
 
       ## single CCE coefficients
-      tb <- crossprod(ginv(tXMX), tXMy) # solve(tXMX, tXMy)
+      tcoef[ , i] <- crossprod(ginv(tXMX), tXMy) # solve(tXMX, tXMy)
         ## USED A GENERALIZED INVERSE HERE BECAUSE OF PBs WITH ECM SPECS
         ## Notice remark in Pesaran (2006, p.977, between (27) and (28))
         ## that XMX.i is invariant to the choice of a g-inverse for H'H
-      
-      tcoef[ , i] <- tb # save single coefficients
     }
 
     # Reduce transformed data to matrix and numeric, respectively
