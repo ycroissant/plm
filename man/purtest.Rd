@@ -98,7 +98,8 @@ named:
 \item \code{"idres"} (containing results from the individual regressions),
 \item \code{"adjval"} (containing the simulated means and variances needed to compute
 the statistic, for \code{test = "levinlin"} and \code{"ips"}, otherwise \code{NULL}),
-\item \code{"sigma2"} (short-run and long-run variance for \code{test = "levinlin"}, otherwise NULL).
+\item \code{"sigma2"} (short-run and long-run variance for \code{test = "levinlin"},
+otherwise \code{NULL}).
 }
 }
 \description{

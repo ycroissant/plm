@@ -736,7 +736,8 @@ hadritest <- function(object, exo, Hcons, dfcor, method,
 #' - `"idres"` (containing results from the individual regressions),
 #' - `"adjval"` (containing the simulated means and variances needed to compute 
 #'      the statistic, for `test = "levinlin"` and `"ips"`, otherwise `NULL`),
-#' - `"sigma2"` (short-run and long-run variance for `test = "levinlin"`, otherwise NULL).
+#' - `"sigma2"` (short-run and long-run variance for `test = "levinlin"`, 
+#'       otherwise `NULL`).
 #' @export
 #' @importFrom stats setNames
 #' @author Yves Croissant and for "Pm", "invnormal", and "logit" Kevin Tappe
