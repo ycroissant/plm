@@ -83,6 +83,7 @@ Total Sum of Squares: 849.81
 Residual Sum of Squares: 0.056978
 Multiple R-squared: 0.99993
 > 
+> #### pcce ####
 > 
 > # further tests, incl. residuals
 > ((summary(pccepmod <- pcce(form, data = pProduc, model = "p"))))
@@ -8346,6 +8347,57 @@ unemp      8.797956e-06 -1.802669e-05  7.944401e-05  1.948669e-06
 attr(,"cluster")
 [1] "group"
 > 
+> vcovHC(pccemgmod_unbal)
+             log(pcap)      log(pc)     log(emp)        unemp
+log(pcap) 1.007017e-18 1.786973e-19 3.446992e-19 2.531406e-21
+log(pc)   1.668915e-19 2.278102e-20 8.149456e-20 2.354289e-22
+log(emp)  3.552069e-19 8.022625e-20 1.435194e-19 1.023203e-21
+unemp     2.317200e-21 6.673035e-22 1.091985e-21 2.365689e-23
+attr(,"cluster")
+[1] "group"
+> vcovHC(pccepmod_unbal)
+              log(pcap)       log(pc)      log(emp)         unemp
+log(pcap)  4.619787e-03 -2.249267e-04 -1.574371e-03 -3.649931e-05
+log(pc)   -2.249267e-04  8.363765e-04 -6.512089e-04 -5.453392e-06
+log(emp)  -1.574371e-03 -6.512089e-04  3.295271e-03  3.105766e-05
+unemp     -3.649931e-05 -5.453392e-06  3.105766e-05  2.178145e-06
+attr(,"cluster")
+[1] "group"
+> 
+> vcovHC(pccemgmod, cluster = "time")
+              log(pcap)       log(pc)      log(emp)         unemp
+log(pcap)  1.164552e-03 -5.926627e-05 -2.154638e-04 -2.625700e-07
+log(pc)   -5.926627e-05  1.083377e-04  1.140135e-04  2.102956e-06
+log(emp)  -2.154638e-04  1.140135e-04  2.095696e-03  2.839718e-05
+unemp     -2.625700e-07  2.102956e-06  2.839718e-05  4.632235e-07
+attr(,"cluster")
+[1] "time"
+> vcovHC(pccepmod,  cluster = "time")
+             log(pcap)      log(pc)     log(emp)        unemp
+log(pcap) 4.975449e-03 1.980540e-04 0.0011778751 1.093823e-05
+log(pc)   1.980540e-04 3.110989e-04 0.0002903405 7.410672e-06
+log(emp)  1.177875e-03 2.903405e-04 0.0074629318 1.163143e-04
+unemp     1.093823e-05 7.410672e-06 0.0001163143 2.127187e-06
+attr(,"cluster")
+[1] "time"
+> 
+> vcovHC(pccemgmod_unbal, cluster = "time")
+              log(pcap)       log(pc)      log(emp)         unemp
+log(pcap)  6.080731e-04 -3.671968e-05 -6.459388e-04 -9.770456e-06
+log(pc)   -3.671968e-05  1.330546e-04  1.081147e-04  4.604369e-06
+log(emp)  -6.459388e-04  1.081147e-04  1.080931e-03  2.003767e-05
+unemp     -9.770456e-06  4.604369e-06  2.003767e-05  5.134834e-07
+attr(,"cluster")
+[1] "time"
+> vcovHC(pccepmod_unbal,  cluster = "time")
+              log(pcap)       log(pc)      log(emp)         unemp
+log(pcap)  2.169355e-03 -3.805217e-04 -1.656601e-03 -3.867232e-05
+log(pc)   -3.805217e-04  8.644519e-04 -7.894444e-05  9.907367e-06
+log(emp)  -1.656601e-03 -7.894444e-05  2.891786e-03  5.978109e-05
+unemp     -3.867232e-05  9.907367e-06  5.978109e-05  1.710907e-06
+attr(,"cluster")
+[1] "time"
+> 
 > vcovNW(pccemgmod)
               log(pcap)       log(pc)      log(emp)         unemp
 log(pcap)  9.254394e-04 -9.526960e-05  1.550594e-04 -1.167083e-06
@@ -8363,6 +8415,57 @@ unemp      2.911817e-06  1.485046e-07  4.006493e-05 1.165936e-06
 attr(,"cluster")
 [1] "time"
 > 
+> vcovNW(pccemgmod_unbal)
+              log(pcap)       log(pc)      log(emp)         unemp
+log(pcap)  3.893579e-04 -8.604424e-05 -2.051486e-04 -6.065854e-06
+log(pc)   -8.604424e-05  2.022602e-04 -7.251561e-05  3.125813e-06
+log(emp)  -2.051486e-04 -7.251561e-05  9.124582e-04  8.451569e-06
+unemp     -6.065854e-06  3.125813e-06  8.451569e-06  4.038465e-07
+attr(,"cluster")
+[1] "time"
+> vcovNW(pccepmod_unbal)
+              log(pcap)       log(pc)      log(emp)         unemp
+log(pcap)  2.504159e-03 -3.360092e-04 -7.375769e-04 -1.750655e-05
+log(pc)   -3.360092e-04  7.016008e-04 -3.860935e-04  3.527736e-06
+log(emp)  -7.375769e-04 -3.860935e-04  2.476665e-03  2.008012e-05
+unemp     -1.750655e-05  3.527736e-06  2.008012e-05  1.190116e-06
+attr(,"cluster")
+[1] "time"
+> 
+> vcovNW(pccemgmod, cluster = "time")
+              log(pcap)       log(pc)      log(emp)         unemp
+log(pcap)  9.254394e-04 -9.526960e-05  1.550594e-04 -1.167083e-06
+log(pc)   -9.526960e-05  1.411690e-04 -1.935763e-05  8.696115e-07
+log(emp)   1.550594e-04 -1.935763e-05  9.245668e-04  6.493422e-06
+unemp     -1.167083e-06  8.696115e-07  6.493422e-06  3.065735e-07
+attr(,"cluster")
+[1] "time"
+> vcovNW(pccepmod,  cluster = "time")
+              log(pcap)       log(pc)      log(emp)        unemp
+log(pcap)  4.130336e-03 -3.969226e-04  1.055982e-03 2.911817e-06
+log(pc)   -3.969226e-04  6.960224e-04 -5.680180e-04 1.485046e-07
+log(emp)   1.055982e-03 -5.680180e-04  4.761687e-03 4.006493e-05
+unemp      2.911817e-06  1.485046e-07  4.006493e-05 1.165936e-06
+attr(,"cluster")
+[1] "time"
+> 
+> vcovNW(pccemgmod_unbal, cluster = "time")
+              log(pcap)       log(pc)      log(emp)         unemp
+log(pcap)  3.893579e-04 -8.604424e-05 -2.051486e-04 -6.065854e-06
+log(pc)   -8.604424e-05  2.022602e-04 -7.251561e-05  3.125813e-06
+log(emp)  -2.051486e-04 -7.251561e-05  9.124582e-04  8.451569e-06
+unemp     -6.065854e-06  3.125813e-06  8.451569e-06  4.038465e-07
+attr(,"cluster")
+[1] "time"
+> vcovNW(pccepmod_unbal,  cluster = "time")
+              log(pcap)       log(pc)      log(emp)         unemp
+log(pcap)  2.504159e-03 -3.360092e-04 -7.375769e-04 -1.750655e-05
+log(pc)   -3.360092e-04  7.016008e-04 -3.860935e-04  3.527736e-06
+log(emp)  -7.375769e-04 -3.860935e-04  2.476665e-03  2.008012e-05
+unemp     -1.750655e-05  3.527736e-06  2.008012e-05  1.190116e-06
+attr(,"cluster")
+[1] "time"
+> 
 > vcovSCC(pccemgmod)
               log(pcap)       log(pc)      log(emp)        unemp
 log(pcap)  8.685574e-04 -1.434515e-04 -2.486942e-04 1.814313e-06
@@ -8377,6 +8480,57 @@ log(pcap)  4.396347e-03 -7.857706e-05  9.527798e-04 9.254816e-06
 log(pc)   -7.857706e-05  2.673193e-04 -7.413313e-06 3.396196e-07
 log(emp)   9.527798e-04 -7.413313e-06  3.675342e-03 5.472138e-05
 unemp      9.254816e-06  3.396196e-07  5.472138e-05 9.498025e-07
+attr(,"cluster")
+[1] "time"
+> 
+> vcovSCC(pccemgmod_unbal)
+              log(pcap)       log(pc)      log(emp)         unemp
+log(pcap)  4.119173e-04 -2.124361e-05 -3.401504e-04 -4.560103e-06
+log(pc)   -2.124361e-05  1.044314e-04  6.997757e-05  4.000569e-06
+log(emp)  -3.401504e-04  6.997757e-05  5.123131e-04  1.146103e-05
+unemp     -4.560103e-06  4.000569e-06  1.146103e-05  3.881222e-07
+attr(,"cluster")
+[1] "time"
+> vcovSCC(pccepmod_unbal)
+              log(pcap)       log(pc)      log(emp)         unemp
+log(pcap)  1.504366e-03  2.112660e-04 -0.0013095065 -1.848176e-05
+log(pc)    2.112660e-04  4.062011e-04 -0.0003153107 -5.103585e-06
+log(emp)  -1.309506e-03 -3.153107e-04  0.0024145295  4.131950e-05
+unemp     -1.848176e-05 -5.103585e-06  0.0000413195  9.763420e-07
+attr(,"cluster")
+[1] "time"
+> 
+> vcovSCC(pccemgmod, cluster = "time")
+              log(pcap)       log(pc)      log(emp)        unemp
+log(pcap)  8.685574e-04 -1.434515e-04 -2.486942e-04 1.814313e-06
+log(pc)   -1.434515e-04  7.849504e-05  1.042816e-04 7.303837e-07
+log(emp)  -2.486942e-04  1.042816e-04  9.406283e-04 1.128283e-05
+unemp      1.814313e-06  7.303837e-07  1.128283e-05 2.159412e-07
+attr(,"cluster")
+[1] "time"
+> vcovSCC(pccepmod,  cluster = "time")
+              log(pcap)       log(pc)      log(emp)        unemp
+log(pcap)  4.396347e-03 -7.857706e-05  9.527798e-04 9.254816e-06
+log(pc)   -7.857706e-05  2.673193e-04 -7.413313e-06 3.396196e-07
+log(emp)   9.527798e-04 -7.413313e-06  3.675342e-03 5.472138e-05
+unemp      9.254816e-06  3.396196e-07  5.472138e-05 9.498025e-07
+attr(,"cluster")
+[1] "time"
+> 
+> vcovSCC(pccemgmod_unbal, cluster = "time")
+              log(pcap)       log(pc)      log(emp)         unemp
+log(pcap)  4.119173e-04 -2.124361e-05 -3.401504e-04 -4.560103e-06
+log(pc)   -2.124361e-05  1.044314e-04  6.997757e-05  4.000569e-06
+log(emp)  -3.401504e-04  6.997757e-05  5.123131e-04  1.146103e-05
+unemp     -4.560103e-06  4.000569e-06  1.146103e-05  3.881222e-07
+attr(,"cluster")
+[1] "time"
+> vcovSCC(pccepmod_unbal,  cluster = "time")
+              log(pcap)       log(pc)      log(emp)         unemp
+log(pcap)  1.504366e-03  2.112660e-04 -0.0013095065 -1.848176e-05
+log(pc)    2.112660e-04  4.062011e-04 -0.0003153107 -5.103585e-06
+log(emp)  -1.309506e-03 -3.153107e-04  0.0024145295  4.131950e-05
+unemp     -1.848176e-05 -5.103585e-06  0.0000413195  9.763420e-07
 attr(,"cluster")
 [1] "time"
 > 
@@ -16642,7 +16796,326 @@ WYOMING-1984        -1.816052e-04  2.776038e-02  8.631402e-03 -0.7279063333
 WYOMING-1985         6.378160e-03  1.286925e-02 -9.549615e-03 -0.2561316506
 WYOMING-1986        -2.413594e-03 -9.123139e-02 -2.454552e-02  0.5212973346
 > 
+> #### pmg ####
+> 
+> # run and output tests for pcce/pmg with model = 'p'/'mg'/'dmg'
+> print(summary(pmg_cmg <- pmg(form, data = pProduc, model = "cmg")))
+Common Correlated Effects Mean Groups model
+
+Call:
+pmg(formula = form, data = pProduc, model = "cmg")
+
+Balanced Panel: n = 48, T = 17, N = 816
+
+Residuals:
+         Min.       1st Qu.        Median       3rd Qu.          Max. 
+-0.0806338274 -0.0037117404  0.0003146628  0.0040206767  0.0438957373 
+
+Coefficients:
+                Estimate Std. Error z-value  Pr(>|z|)    
+(Intercept)   -0.6741754  1.0445518 -0.6454  0.518655    
+log(pcap)      0.0899850  0.1176040  0.7652  0.444180    
+log(pc)        0.0335784  0.0423362  0.7931  0.427698    
+log(emp)       0.6258659  0.1071719  5.8398 5.225e-09 ***
+unemp         -0.0031178  0.0014389 -2.1668  0.030249 *  
+y.bar          1.0038005  0.1078874  9.3041 < 2.2e-16 ***
+log(pcap).bar -0.0491919  0.2396185 -0.2053  0.837344    
+log(pc).bar   -0.0033198  0.1576547 -0.0211  0.983200    
+log(emp).bar  -0.6978359  0.2432887 -2.8683  0.004126 ** 
+unemp.bar      0.0025544  0.0031848  0.8021  0.422505    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Total Sum of Squares: 849.81
+Residual Sum of Squares: 0.056978
+Multiple R-squared: 0.99993
+> print(summary(pmg_mg  <- pmg(form, data = pProduc, model = "mg")))
+Mean Groups model
+
+Call:
+pmg(formula = form, data = pProduc, model = "mg")
+
+Balanced Panel: n = 48, T = 17, N = 816
+
+Residuals:
+         Min.       1st Qu.        Median       3rd Qu.          Max. 
+-0.0828078889 -0.0118150348  0.0004246566  0.0126479124  0.1189647497 
+
+Coefficients:
+              Estimate Std. Error z-value  Pr(>|z|)    
+(Intercept)  2.6722392  0.4126515  6.4758 9.433e-11 ***
+log(pcap)   -0.1048507  0.0799132 -1.3121   0.18950    
+log(pc)      0.2182539  0.0500862  4.3576 1.315e-05 ***
+log(emp)     0.9334776  0.0750072 12.4452 < 2.2e-16 ***
+unemp       -0.0037216  0.0016427 -2.2655   0.02348 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Total Sum of Squares: 849.81
+Residual Sum of Squares: 0.33009
+Multiple R-squared: 0.99961
+> print(summary(pmg_dmg <- pmg(form, data = pProduc, model = "dmg")))
+Demeaned Mean Groups model
+
+Call:
+pmg(formula = form, data = pProduc, model = "dmg")
+
+Balanced Panel: n = 48, T = 17, N = 816
+
+Residuals:
+         Min.       1st Qu.        Median       3rd Qu.          Max. 
+-0.0834415058 -0.0076164165 -0.0001225963  0.0078108813  0.1177008894 
+
+Coefficients:
+              Estimate Std. Error z-value  Pr(>|z|)    
+(Intercept)  0.0580979  0.1042881  0.5571  0.577466    
+log(pcap)   -0.0629002  0.1021706 -0.6156  0.538133    
+log(pc)      0.1607882  0.0591334  2.7191  0.006546 ** 
+log(emp)     0.8425585  0.0704896 11.9529 < 2.2e-16 ***
+unemp       -0.0050181  0.0020770 -2.4160  0.015693 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Total Sum of Squares: 849.81
+Residual Sum of Squares: 0.23666
+Multiple R-squared: 0.99972
+> print(summary(pmg_cmg_trend <- pmg(form, data = pProduc, model = "cmg", trend = TRUE)))
+Common Correlated Effects Mean Groups model
+
+Call:
+pmg(formula = form, data = pProduc, model = "cmg", trend = TRUE)
+
+Balanced Panel: n = 48, T = 17, N = 816
+
+Residuals:
+         Min.       1st Qu.        Median       3rd Qu.          Max. 
+-0.0344687086 -0.0031627228  0.0002987933  0.0032868591  0.0376921540 
+
+Coefficients:
+                Estimate Std. Error z-value  Pr(>|z|)    
+(Intercept)   -1.5070998  2.3224783 -0.6489 0.5163909    
+log(pcap)      0.0158617  0.1630186  0.0973 0.9224881    
+log(pc)        0.0142806  0.0501462  0.2848 0.7758130    
+log(emp)       0.6437498  0.1028653  6.2582 3.895e-10 ***
+unemp         -0.0026343  0.0016265 -1.6196 0.1053197    
+y.bar          1.0783238  0.1403259  7.6844 1.537e-14 ***
+log(pcap).bar -0.1257206  0.2293070 -0.5483 0.5835113    
+log(pc).bar    0.1368755  0.1655543  0.8268 0.4083669    
+log(emp).bar  -0.7235769  0.2041846 -3.5437 0.0003945 ***
+unemp.bar      0.0027532  0.0041063  0.6705 0.5025474    
+trend         -0.0024686  0.0075303 -0.3278 0.7430488    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Total Sum of Squares: 849.81
+Residual Sum of Squares: 0.039344
+Multiple R-squared: 0.99995
+> print(summary(pmg_mg_trend  <- pmg(form, data = pProduc, model = "mg",  trend = TRUE)))
+Mean Groups model
+
+Call:
+pmg(formula = form, data = pProduc, model = "mg", trend = TRUE)
+
+Balanced Panel: n = 48, T = 17, N = 816
+
+Residuals:
+         Min.       1st Qu.        Median       3rd Qu.          Max. 
+-7.609341e-02 -8.279992e-03 -6.593009e-05  8.589863e-03  1.237588e-01 
+
+Coefficients:
+              Estimate Std. Error z-value  Pr(>|z|)    
+(Intercept)  4.9053650  1.2456243  3.9381 8.214e-05 ***
+log(pcap)    0.1900332  0.1055302  1.8007   0.07174 .  
+log(pc)     -0.0613999  0.0535890 -1.1458   0.25190    
+log(emp)     0.6259588  0.1207121  5.1856 2.154e-07 ***
+unemp       -0.0089830  0.0022760 -3.9468 7.921e-05 ***
+trend        0.0133940  0.0029888  4.4814 7.414e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Total Sum of Squares: 849.81
+Residual Sum of Squares: 0.19488
+Multiple R-squared: 0.99977
+> print(summary(pmg_dmg_trend <- pmg(form, data = pProduc, model = "dmg", trend = TRUE)))
+Demeaned Mean Groups model
+
+Call:
+pmg(formula = form, data = pProduc, model = "dmg", trend = TRUE)
+
+Balanced Panel: n = 48, T = 17, N = 816
+
+Residuals:
+         Min.       1st Qu.        Median       3rd Qu.          Max. 
+-0.0850324288 -0.0058606596 -0.0002823731  0.0065328252  0.0613773162 
+
+Coefficients:
+              Estimate Std. Error z-value Pr(>|z|)    
+(Intercept) -0.0721421  0.1828551 -0.3945  0.69319    
+log(pcap)    0.0826555  0.1273591  0.6490  0.51634    
+log(pc)      0.0421269  0.0386986  1.0886  0.27633    
+log(emp)     0.9059747  0.0773599 11.7112  < 2e-16 ***
+unemp       -0.0025406  0.0014973 -1.6968  0.08973 .  
+trend        0.0024740  0.0016826  1.4704  0.14145    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Total Sum of Squares: 849.81
+Residual Sum of Squares: 0.12972
+Multiple R-squared: 0.99985
+> 
+> print(summary(pmg_cmg_unbal <- pmg(form, data = pProduc_unbal, model = "cmg")))
+Common Correlated Effects Mean Groups model
+
+Call:
+pmg(formula = form, data = pProduc_unbal, model = "cmg")
+
+Unbalanced Panel: n = 48, T = 15-17, N = 810
+
+Residuals:
+         Min.       1st Qu.        Median       3rd Qu.          Max. 
+-8.895688e-02 -4.864626e-03  8.073782e-05  4.757606e-03  7.205819e-02 
+
+Coefficients:
+                Estimate Std. Error z-value  Pr(>|z|)    
+(Intercept)    0.9673111  0.9571911  1.0106  0.312221    
+log(pcap)      0.1758510  0.1125493  1.5624  0.118186    
+log(pc)        0.0256933  0.0364327  0.7052  0.480670    
+log(emp)       0.7637404  0.0960110  7.9547 1.795e-15 ***
+unemp         -0.0034493  0.0016914 -2.0393  0.041417 *  
+y.bar          0.9831214  0.1118116  8.7927 < 2.2e-16 ***
+log(pcap).bar -0.3763984  0.1162133 -3.2389  0.001200 ** 
+log(pc).bar   -0.0737576  0.1390001 -0.5306  0.595676    
+log(emp).bar  -0.5522267  0.1865236 -2.9606  0.003070 ** 
+unemp.bar      0.0077676  0.0026376  2.9449  0.003231 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Total Sum of Squares: 839.63
+Residual Sum of Squares: 0.078063
+Multiple R-squared: 0.99991
+> print(summary(pmg_mg_unbal  <- pmg(form, data = pProduc_unbal, model = "mg")))
+Mean Groups model
+
+Call:
+pmg(formula = form, data = pProduc_unbal, model = "mg")
+
+Unbalanced Panel: n = 48, T = 15-17, N = 810
+
+Residuals:
+         Min.       1st Qu.        Median       3rd Qu.          Max. 
+-0.0762133199 -0.0118256554  0.0002581821  0.0126582504  0.1189647497 
+
+Coefficients:
+              Estimate Std. Error z-value  Pr(>|z|)    
+(Intercept)  2.6819294  0.4105413  6.5327 6.461e-11 ***
+log(pcap)   -0.1008308  0.0796929 -1.2652   0.20578    
+log(pc)      0.2147181  0.0501281  4.2834 1.841e-05 ***
+log(emp)     0.9337517  0.0747138 12.4977 < 2.2e-16 ***
+unemp       -0.0036503  0.0016372 -2.2296   0.02577 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Total Sum of Squares: 839.63
+Residual Sum of Squares: 0.31888
+Multiple R-squared: 0.99962
+> print(summary(pmg_dmg_unbal <- pmg(form, data = pProduc_unbal, model = "dmg")))
+Demeaned Mean Groups model
+
+Call:
+pmg(formula = form, data = pProduc_unbal, model = "dmg")
+
+Unbalanced Panel: n = 48, T = 15-17, N = 810
+
+Residuals:
+         Min.       1st Qu.        Median       3rd Qu.          Max. 
+-0.0804741213 -0.0092412667 -0.0002128778  0.0087573036  0.1038122079 
+
+Coefficients:
+              Estimate Std. Error z-value  Pr(>|z|)    
+(Intercept)  0.0314914  0.0582331  0.5408  0.588658    
+log(pcap)   -0.0146058  0.0793357 -0.1841  0.853934    
+log(pc)      0.1574928  0.0600216  2.6239  0.008692 ** 
+log(emp)     0.8573487  0.0558405 15.3535 < 2.2e-16 ***
+unemp       -0.0047347  0.0020370 -2.3243  0.020109 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Total Sum of Squares: 839.63
+Residual Sum of Squares: 0.23291
+Multiple R-squared: 0.99972
+> print(summary(pmg_cmg_unbal_trend <- pmg(form, data = pProduc_unbal, model = "cmg", trend = TRUE)))
+Common Correlated Effects Mean Groups model
+
+Call:
+pmg(formula = form, data = pProduc_unbal, model = "cmg", trend = TRUE)
+
+Unbalanced Panel: n = 48, T = 15-17, N = 810
+
+Residuals:
+         Min.       1st Qu.        Median       3rd Qu.          Max. 
+-3.468290e-02 -4.287475e-03  3.962213e-05  4.279189e-03  4.482101e-02 
+
+Coefficients:
+                 Estimate  Std. Error z-value  Pr(>|z|)    
+(Intercept)    1.48106636  1.60436480  0.9231 0.3559300    
+log(pcap)      0.04965156  0.12029994  0.4127 0.6798035    
+log(pc)        0.00702365  0.03487965  0.2014 0.8404107    
+log(emp)       0.78019474  0.09260689  8.4248 < 2.2e-16 ***
+unemp         -0.00329774  0.00181438 -1.8176 0.0691314 .  
+y.bar          1.04634802  0.17939033  5.8328  5.45e-09 ***
+log(pcap).bar -0.45334550  0.23776461 -1.9067 0.0565596 .  
+log(pc).bar    0.03616082  0.14877973  0.2430 0.8079672    
+log(emp).bar  -0.57633283  0.16745614 -3.4417 0.0005781 ***
+unemp.bar      0.00784826  0.00423424  1.8535 0.0638074 .  
+trend         -0.00018053  0.00655084 -0.0276 0.9780146    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Total Sum of Squares: 839.63
+Residual Sum of Squares: 0.056178
+Multiple R-squared: 0.99993
+> print(summary(pmg_mg_unbal_trend  <- pmg(form, data = pProduc_unbal, model = "mg",  trend = TRUE)))
+Mean Groups model
+
+Call:
+pmg(formula = form, data = pProduc_unbal, model = "mg", trend = TRUE)
+
+Unbalanced Panel: n = 48, T = 15-17, N = 810
+
+Residuals:
+         Min.       1st Qu.        Median       3rd Qu.          Max. 
+-7.609341e-02 -8.005901e-03 -9.553226e-05  8.611457e-03  1.237588e-01 
+
+Coefficients:
+              Estimate Std. Error z-value  Pr(>|z|)    
+(Intercept)  5.0121152  1.1229895  4.4632 8.075e-06 ***
+log(pcap)    0.1970762  0.1053775  1.8702   0.06146 .  
+log(pc)     -0.0625226  0.0536676 -1.1650   0.24402    
+log(emp)     0.6058857  0.1115457  5.4317 5.581e-08 ***
+unemp       -0.0092138  0.0022194 -4.1514 3.305e-05 ***
+trend        0.0137569  0.0029555  4.6547 3.245e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Total Sum of Squares: 839.63
+Residual Sum of Squares: 0.19675
+Multiple R-squared: 0.99977
+> print(summary(pmg_dmg_unbal_trend <- pmg(form, data = pProduc_unbal, model = "dmg", trend = TRUE)))
+Demeaned Mean Groups model
+
+Call:
+pmg(formula = form, data = pProduc_unbal, model = "dmg", trend = TRUE)
+
+Unbalanced Panel: n = 48, T = 15-17, N = 810
+
+Residuals:
+         Min.       1st Qu.        Median       3rd Qu.          Max. 
+-0.0900565778 -0.0067352187 -0.0001963401  0.0065986360  0.0676921858 
+
+Coefficients:
+              Estimate Std. Error z-value Pr(>|z|)    
+(Intercept) -0.0923775  0.0877656 -1.0525   0.2925    
+log(pcap)    0.1034891  0.0790548  1.3091   0.1905    
+log(pc)      0.0515712  0.0379800  1.3579   0.1745    
+log(emp)     0.9760785  0.0636696 15.3304   <2e-16 ***
+unemp       -0.0021471  0.0016145 -1.3299   0.1835    
+trend        0.0011420  0.0015099  0.7563   0.4494    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Total Sum of Squares: 839.63
+Residual Sum of Squares: 0.14762
+Multiple R-squared: 0.99982
+> 
 > 
 > proc.time()
    user  system elapsed 
-   2.20    0.56    2.71 
+   2.93    0.43    3.37 

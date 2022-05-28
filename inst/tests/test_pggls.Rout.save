@@ -275,10 +275,33 @@ Total Sum of Squares: 809.12
 Residual Sum of Squares: 7.317
 Multiple R-squared: 0.99096
 > 
-> ## bug in pggls() for unbalanced FD models
-> # zz_fd_unbal <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
-> #                data = pProduc_unbal, model = "fd")
-> # summary(zz_fd_unbal)
+> zz_fd_unbal <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
++                 data = pProduc_unbal, model = "fd")
+> summary(zz_fd_unbal)
+Oneway (individual) effect First-Difference FGLS model
+
+Call:
+pggls(formula = log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
+    data = pProduc_unbal, model = "fd")
+
+Unbalanced Panel: n = 48, T = 8-17, N = 802
+
+Residuals:
+      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+-0.0848646 -0.0101020  0.0023654  0.0006766  0.0134952  0.1013484 
+
+Coefficients:
+               Estimate  Std. Error  z-value Pr(>|z|)    
+(Intercept)  0.00937270  0.00105090   8.9187  < 2e-16 ***
+log(pcap)   -0.05329450  0.02893267  -1.8420  0.06547 .  
+log(pc)     -0.02599389  0.01179091  -2.2046  0.02748 *  
+log(emp)     0.88142468  0.02051693  42.9608  < 2e-16 ***
+unemp       -0.00476446  0.00039157 -12.1674  < 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Total Sum of Squares: 809.12
+Residual Sum of Squares: 0.33384
+Multiple R-squared: 0.99959
 > 
 > zz_wi_t_unbal <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
 +                  data = pProduc_unbal, model = "within", effect = "time")
@@ -363,4 +386,4 @@ Multiple R-squared: 0.99245
 > 
 > proc.time()
    user  system elapsed 
-   3.29    0.50    3.87 
+   2.12    0.29    2.37 

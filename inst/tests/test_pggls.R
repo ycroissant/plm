@@ -47,10 +47,9 @@ zz_pool_unbal <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
                  data = pProduc_unbal, model = "pooling")
 summary(zz_pool_unbal)
 
-## bug in pggls() for unbalanced FD models
-# zz_fd_unbal <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
-#                data = pProduc_unbal, model = "fd")
-# summary(zz_fd_unbal)
+zz_fd_unbal <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
+                data = pProduc_unbal, model = "fd")
+summary(zz_fd_unbal)
 
 zz_wi_t_unbal <- pggls(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
                  data = pProduc_unbal, model = "within", effect = "time")

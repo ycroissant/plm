@@ -16,6 +16,7 @@ stopifnot(all.equal(pccemgmod$residuals, pmgccemgmod$residuals, check.attributes
 ((summary(pccemgmod)))
 ((summary(pmgccemgmod)))
 
+#### pcce ####
 
 # further tests, incl. residuals
 ((summary(pccepmod <- pcce(form, data = pProduc, model = "p"))))
@@ -59,11 +60,38 @@ pccepmod_unbal$tr.model$X
 vcovHC(pccemgmod)
 vcovHC(pccepmod)
 
+vcovHC(pccemgmod_unbal)
+vcovHC(pccepmod_unbal)
+
+vcovHC(pccemgmod, cluster = "time")
+vcovHC(pccepmod,  cluster = "time")
+
+vcovHC(pccemgmod_unbal, cluster = "time")
+vcovHC(pccepmod_unbal,  cluster = "time")
+
 vcovNW(pccemgmod)
 vcovNW(pccepmod)
 
+vcovNW(pccemgmod_unbal)
+vcovNW(pccepmod_unbal)
+
+vcovNW(pccemgmod, cluster = "time")
+vcovNW(pccepmod,  cluster = "time")
+
+vcovNW(pccemgmod_unbal, cluster = "time")
+vcovNW(pccepmod_unbal,  cluster = "time")
+
 vcovSCC(pccemgmod)
 vcovSCC(pccepmod)
+
+vcovSCC(pccemgmod_unbal)
+vcovSCC(pccepmod_unbal)
+
+vcovSCC(pccemgmod, cluster = "time")
+vcovSCC(pccepmod,  cluster = "time")
+
+vcovSCC(pccemgmod_unbal, cluster = "time")
+vcovSCC(pccepmod_unbal,  cluster = "time")
 
 ########## with trend ##########
 summary(pccemgmod_trend  <- pcce(form, data = pProduc, model = "mg",  trend = TRUE))
@@ -98,4 +126,21 @@ pccemgmod_trend_unbal$tr.model$X
 
 pccepmod_trend_unbal$tr.model$y
 pccepmod_trend_unbal$tr.model$X
+
+#### pmg ####
+
+# run and output tests for pcce/pmg with model = 'p'/'mg'/'dmg'
+print(summary(pmg_cmg <- pmg(form, data = pProduc, model = "cmg")))
+print(summary(pmg_mg  <- pmg(form, data = pProduc, model = "mg")))
+print(summary(pmg_dmg <- pmg(form, data = pProduc, model = "dmg")))
+print(summary(pmg_cmg_trend <- pmg(form, data = pProduc, model = "cmg", trend = TRUE)))
+print(summary(pmg_mg_trend  <- pmg(form, data = pProduc, model = "mg",  trend = TRUE)))
+print(summary(pmg_dmg_trend <- pmg(form, data = pProduc, model = "dmg", trend = TRUE)))
+
+print(summary(pmg_cmg_unbal <- pmg(form, data = pProduc_unbal, model = "cmg")))
+print(summary(pmg_mg_unbal  <- pmg(form, data = pProduc_unbal, model = "mg")))
+print(summary(pmg_dmg_unbal <- pmg(form, data = pProduc_unbal, model = "dmg")))
+print(summary(pmg_cmg_unbal_trend <- pmg(form, data = pProduc_unbal, model = "cmg", trend = TRUE)))
+print(summary(pmg_mg_unbal_trend  <- pmg(form, data = pProduc_unbal, model = "mg",  trend = TRUE)))
+print(summary(pmg_dmg_unbal_trend <- pmg(form, data = pProduc_unbal, model = "dmg", trend = TRUE)))
 
