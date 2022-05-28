@@ -935,7 +935,7 @@ pbnftest.panelmodel <- function(x, test = c("bnf", "lbi"), ...) {
   # it would be the case if base::diff() is used and as it is done for
   # lm-objects) NAs are introduced by the differencing as one
   # observation is lost per observational unit
-  if (!inherits(residuals(x), "pseries")) stop("pdwtest internal error: residuals are not of class \"pseries\"") # check to be safe: need pseries
+  if (!inherits(residuals(x), "pseries")) stop("pbnftest internal error: residuals are not of class \"pseries\"") # check to be safe: need pseries
   
   ind <- unclass(index(x))[[1L]] # unclass for speed
   obs1 <- !duplicated(ind)                  # first ob of each individual
