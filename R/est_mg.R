@@ -164,9 +164,11 @@ pmg <- function(formula, data, subset, na.action,
   ## (might be unbalanced => t1!=t2 but we don't care as long
   ## as min(t)>k+1)
 
-  ## "pre-allocate" coefficients matrix for the n models
-  kt <- if (trend) 1L else 0L
-  tcoef <- matrix(data = NA_real_, nrow = k+kt, ncol = n)
+  ## "pre-allocate" coefficients matrix for the n models and list for residuals
+  kt <- if(trend) 1L else 0L
+  tcoef <- if(model == "cmg") {
+    matrix(data = NA_real_, nrow = 2*k+kt, ncol = n) ## allow for extended coef vector
+  } else matrix(data = NA_real_, nrow = k+kt, ncol = n)
   tres <- vector("list", n)
 
   switch(model,
@@ -200,9 +202,6 @@ pmg <- function(formula, data, subset, na.action,
       
       augX <- cbind(X, ym, Xm[ , -1L, drop = FALSE])
 
-      ## allow for extended coef vector
-      tcoef0 <- matrix(data = NA_real_, nrow = 2*k+kt, ncol = n)
-
       augX.col <- NCOL(augX)
       taugX.list <- split(augX, ind)
       taugX.list <- lapply(taugX.list, function(m) matrix(m, ncol = augX.col))
@@ -216,19 +215,15 @@ pmg <- function(formula, data, subset, na.action,
         ty    <-    ty.list[[i]]
         if(trend) taugX <- cbind(taugX, seq_len(dim(taugX)[[1L]]))
         tfit <- lm.fit(taugX, ty)
-        tcoef0[ , i] <- tfit$coefficients
-        tres[[i]]    <- tfit$residuals
+        tcoef[ , i] <- tfit$coefficients
+        tres[[i]]   <- tfit$residuals
       }
-      
-      tcoef.bar <- tcoef0[-(seq_len(k)), ]
+
+      ## add names of coefs for augmented x-sectional averages
       coef.names.bar <- c("y.bar", paste(coef.names[-1L], ".bar", sep=""))
-
-      ## 'trend' always comes last
-      if(trend) coef.names.bar <- c(coef.names.bar, "trend")
-
-      ## output complete coefs
-      tcoef <- tcoef0
       coef.names <- c(coef.names, coef.names.bar)
+      ## 'trend' always comes last
+      if(trend) coef.names <- c(coef.names, "trend")
       ## adjust k
       k <- length(coef.names)
 
