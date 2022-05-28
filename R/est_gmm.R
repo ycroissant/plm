@@ -344,11 +344,10 @@ pgmm <- function(formula, data, subset, na.action,
   attr(data, "formula") <- formula(main.form)
   yX <- extract.data(data)
   names.coef <- colnames(yX[[1L]])[-1L]
-  if (normal.instruments){
-    attr(data, "formula") <- inst.form
-    Z <- extract.data(data)
-  }
-  else Z <- NULL
+  Z <- if(normal.instruments){
+          attr(data, "formula") <- inst.form
+          extract.data(data)
+        } else NULL
   attr(data, "formula") <- gmm.form
   W <- extract.data(data, as.matrix = FALSE)
   
@@ -527,8 +526,7 @@ pgmm <- function(formula, data, subset, na.action,
   A1 <- if(minevA1 < eps){
     warning("the first-step matrix is singular, a general inverse is used")
     ginv(A1)
-  }
-  else solve(A1)
+  } else solve(A1)
   A1 <- A1 * length(W)
   
   WX <- Reduce("+", WX)
@@ -551,8 +549,7 @@ pgmm <- function(formula, data, subset, na.action,
   A2 <- if (minevA2 < eps) {
     warning("the second-step matrix is singular, a general inverse is used")
     ginv(A2)
-  }
-  else solve(A2)
+  } else solve(A2)
 
   if (model == "twosteps") {
     coef1s <- coefficients
@@ -844,7 +841,7 @@ summary.pgmm <- function(object, robust = TRUE, time.dummies = FALSE, ...) {
 #' mtest(ar, order = 2L, vcov = vcovHC)
 #'
 mtest <- function(object, ...) {
-UseMethod("mtest")
+  UseMethod("mtest")
 }
 
 #' @rdname mtest
