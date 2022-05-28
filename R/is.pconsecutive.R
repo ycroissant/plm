@@ -6,7 +6,7 @@
 # For this, we need as.numeric(as.character(time_var)) where as.character is a crucial part!
 # Equivalent but more efficient is as.numeric(levels(id_timevar))[as.integer(id_timevar)]
 # (see R FAQ 7.10 for coercing factors to numeric]
-# and the coerction of time_var in this manner needs to be meaningful numbers.
+# and the coercion of time_var in this manner needs to be meaningful numbers.
 #
 # see also in separate file make.pconsecutive.R:
 #   * make.pconsecutive
@@ -212,7 +212,7 @@ is.pconsecutive.default <- function(x, id, time, na.rm.tindex = FALSE, ...) {
                                                           }
                                                       }, FUN.VALUE = TRUE)
   
-  return(res)
+  res
 }
 
 #' @rdname is.pconsecutive
@@ -237,14 +237,14 @@ is.pconsecutive.data.frame <- function(x, index = NULL, na.rm.tindex = FALSE, ..
 #  if (!identical(x, x_ordered)) 
 #    print("Note: for test of consecutiveness of time periods, the data.frame was ordered by index variables (id, time)")
   
-  return(is.pconsecutive.default(x_ordered, id_ordered, time_ordered, na.rm.tindex = na.rm.tindex, ...))
+  is.pconsecutive.default(x_ordered, id_ordered, time_ordered, na.rm.tindex = na.rm.tindex, ...)
 }
 
 #' @rdname is.pconsecutive
 #' @export
 is.pconsecutive.pseries <- function(x, na.rm.tindex = FALSE, ...){
   index <- unclass(attr(x, "index")) # unclass for speed
-  return(is.pconsecutive.default(x, index[[1L]], index[[2L]], na.rm.tindex = na.rm.tindex, ...))
+  is.pconsecutive.default(x, index[[1L]], index[[2L]], na.rm.tindex = na.rm.tindex, ...)
 }
 
 
@@ -252,7 +252,7 @@ is.pconsecutive.pseries <- function(x, na.rm.tindex = FALSE, ...){
 #' @export
 is.pconsecutive.pdata.frame <- function(x, na.rm.tindex = FALSE, ...){
   index <- unclass(attr(x, "index")) # unclass for speed
-  return(is.pconsecutive.default(x, index[[1L]], index[[2L]], na.rm.tindex = na.rm.tindex, ...))
+  is.pconsecutive.default(x, index[[1L]], index[[2L]], na.rm.tindex = na.rm.tindex, ...)
 }
 
 #' @rdname is.pconsecutive
@@ -260,143 +260,6 @@ is.pconsecutive.pdata.frame <- function(x, na.rm.tindex = FALSE, ...){
 is.pconsecutive.panelmodel <- function(x, na.rm.tindex = FALSE, ...){
   index <- unclass(attr(x$model, "index")) # unclass for speed
   # can determine solely based on indexes:
-  return(is.pconsecutive.default(NULL, index[[1L]], index[[2L]], na.rm.tindex = na.rm.tindex, ...))
+  is.pconsecutive.default(NULL, index[[1L]], index[[2L]], na.rm.tindex = na.rm.tindex, ...)
 }
 
-
-########### is.pbalanced ##############
-### for convenience and to be faster than pdim() for the purpose
-### of the determination of balancedness only, because it avoids
-### pdim()'s calculations which are unnecessary for balancedness.
-###
-### copied (and adapted) methods and code from pdim.*
-### (only relevant parts to determine balancedness)
-
-
-#' Check if data are balanced
-#' 
-#' This function checks if the data are balanced, i.e., if each individual has
-#' the same time periods
-#' 
-#' Balanced data are data for which each individual has the same time periods.
-#' The returned values of the `is.pbalanced(object)` methods are identical
-#' to `pdim(object)$balanced`.  `is.pbalanced` is provided as a short
-#' cut and is faster than `pdim(object)$balanced` because it avoids those
-#' computations performed by `pdim` which are unnecessary to determine the
-#' balancedness of the data.
-#' 
-#' @aliases is.pbalanced
-#' @param x an object of class `pdata.frame`, `data.frame`,
-#'     `pseries`, `panelmodel`, or `pgmm`,
-#' @param y (only in default method) the time index variable (2nd index
-#' variable),
-#' @param index only relevant for `data.frame` interface; if
-#'     `NULL`, the first two columns of the data.frame are
-#'     assumed to be the index variables; if not `NULL`, both
-#'     dimensions ('individual', 'time') need to be specified by
-#'     `index` as character of length 2 for data frames, for
-#'     further details see [pdata.frame()],
-#' @param \dots further arguments.
-#' @return A logical indicating whether the data associated with
-#'     object `x` are balanced (`TRUE`) or not
-#'     (`FALSE`).
-#' @seealso [punbalancedness()] for two measures of
-#'     unbalancedness, [make.pbalanced()] to make data
-#'     balanced; [is.pconsecutive()] to check if data are
-#'     consecutive; [make.pconsecutive()] to make data
-#'     consecutive (and, optionally, also balanced).\cr
-#'     [pdim()] to check the dimensions of a 'pdata.frame'
-#'     (and other objects), [pvar()] to check for individual
-#'     and time variation of a 'pdata.frame' (and other objects),
-#'     [pseries()], [data.frame()],
-#'     [pdata.frame()].
-#' @export
-#' @keywords attribute
-#' @examples
-#' 
-#' # take balanced data and make it unbalanced
-#' # by deletion of 2nd row (2nd time period for first individual)
-#' data("Grunfeld", package = "plm")
-#' Grunfeld_missing_period <- Grunfeld[-2, ]
-#' is.pbalanced(Grunfeld_missing_period)     # check if balanced: FALSE
-#' pdim(Grunfeld_missing_period)$balanced    # same
-#' 
-#' # pdata.frame interface
-#' pGrunfeld_missing_period <- pdata.frame(Grunfeld_missing_period)
-#' is.pbalanced(Grunfeld_missing_period)
-#' 
-#' # pseries interface
-#' is.pbalanced(pGrunfeld_missing_period$inv)
-#' 
-is.pbalanced <- function(x, ...) {
-  UseMethod("is.pbalanced")
-}
-
-#' @rdname is.pbalanced
-#' @export
-is.pbalanced.default <- function(x, y, ...) {
-  if (length(x) != length(y)) stop("The length of the two inputs differs\n")
-  x <- x[drop = TRUE] # drop unused factor levels so that table 
-  y <- y[drop = TRUE] # gives only needed combinations
-  z <- table(x, y)
-  balanced <- if(any(v <- as.vector(z) == 0L)) FALSE else TRUE
-  if (any(v > 1L)) warning("duplicate couples (id-time)\n")
-  return(balanced)
-}
-
-#' @rdname is.pbalanced
-#' @export
-is.pbalanced.data.frame <- function(x, index = NULL, ...) {
-  x <- pdata.frame(x, index)
-  index <- unclass(attr(x, "index")) # unclass for speed
-  return(is.pbalanced(index[[1L]], index[[2L]]))
-}
-
-#' @rdname is.pbalanced
-#' @export
-is.pbalanced.pdata.frame <- function(x, ...) {
-  index <- unclass(attr(x, "index")) # unclass for speed
-  return(is.pbalanced(index[[1L]], index[[2L]]))
-}
-
-#' @rdname is.pbalanced
-#' @export
-is.pbalanced.pseries <- function(x, ...) {
-  index <- unclass(attr(x, "index")) # unclass for speed
-  return(is.pbalanced(index[[1L]], index[[2L]]))
-}
-
-#' @rdname is.pbalanced
-#' @export
-is.pbalanced.pggls <- function(x, ...) {
-  # pggls is also class panelmodel, but take advantage of its pdim attribute
-  return(attr(x, "pdim")$balanced)
-}
-
-#' @rdname is.pbalanced
-#' @export
-is.pbalanced.pcce <- function(x, ...) {
-  # pcce is also class panelmodel, but take advantage of its pdim attribute
-  return(attr(x, "pdim")$balanced)
-}
-
-#' @rdname is.pbalanced
-#' @export
-is.pbalanced.pmg <- function(x, ...) {
-  # pmg is also class panelmodel, but take advantage of its pdim attribute
-  return(attr(x, "pdim")$balanced)
-}
-
-#' @rdname is.pbalanced
-#' @export
-is.pbalanced.pgmm <- function(x, ...) {
-  # pgmm is also class panelmodel, but take advantage of its pdim attribute
-  return(attr(x, "pdim")$balanced)
-}
-
-#' @rdname is.pbalanced
-#' @export
-is.pbalanced.panelmodel <- function(x, ...) {
-  x <- model.frame(x)
-  return(is.pbalanced(x))
-}
