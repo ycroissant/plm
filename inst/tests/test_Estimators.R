@@ -185,7 +185,7 @@ summary(plm_grunfeld_re_nerlove_tw_unbal)
 # south                      -.0606309      .0109319
 # _cons                      1.03732        .0485546
 
-# resambles Stata (ex. 2, p. 14)
+# resembles Stata (ex. 2, p. 14)
 # => coefficients, std.errors, R^2 (=R-sq within), F => correct
 # (NB: Stata outputs an "artificial" constant for FE models, see below)
 #summary(plm_fe_nlswork)

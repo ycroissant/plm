@@ -211,7 +211,7 @@ if(!all(
 
 
 
-########## resamble critical values at alpha = 0.05 from Table 4.1 (Baltagi (2013), p. 74)
+########## resemble critical values at alpha = 0.05 from Table 4.1 (Baltagi (2013), p. 74)
 alpha <- 0.05
 
 #### honda and kw oneway and twoway -> 1.645
@@ -248,7 +248,7 @@ crit <- c(7.289, 4.231, 2.952)   # without typo
 p.vals <- (1/4)*pchisq(crit, df=0, lower.tail = F) + (1/2) * pchisq(crit, df=1, lower.tail = F) + (1/4) * pchisq(crit, df=2, lower.tail = F)
 
 
-# Baltagi (2013), p. 73, 74 contains another example of the mixed chi-square (chi-bar-square) distibution of another statistic
+# Baltagi (2013), p. 73, 74 contains another example of the mixed chi-square (chi-bar-square) distribution of another statistic
 # The p-values for that example is also reassembled here
 crit_2 <- c(2.706) # for alpha=0.05
 p.val_2 <- (1/2)*pchisq(crit_2, df=0, lower.tail = F) + (1/2) * pchisq(crit_2, df=1, lower.tail = F)
