@@ -30,10 +30,7 @@ sumres <- function(x){
 
 bdiag <- function(...){
   ## non-exported
-  if (nargs() == 1L)
-    x <- as.list(...)
-  else
-    x <- list(...)
+  x <- if(nargs() == 1L) as.list(...) else list(...)
   n <- length(x)
   if(n == 0L) return(NULL)
   x <- lapply(x, function(y) if(length(y)) as.matrix(y) else
@@ -56,7 +53,7 @@ bdiag <- function(...){
                                                (y[3L]+1):y[4L]], imat = imat)
   iuse <- as.vector(unlist(iuse))
   out[iuse] <- unlist(x)
-  return(out)
+  out
 }
 
 # mylm is used in plm.fit()
@@ -387,7 +384,6 @@ punbalancedness <- function(x, ...) {
 
 
 punbalancedness.default <- function(x, ...) {
-
   ii <- index(x)
   if(!is.index(ii)) stop("no valid index found for input object 'x'")
   
@@ -424,7 +420,7 @@ punbalancedness.default <- function(x, ...) {
       result <- (c(c1 = c1, c2 = c2, c3 = c3))
     } else stop(paste0("unsupported number of dimensions: ", ncol(ii)))
   }
-  return(result)
+  result
 }
 
 #' @rdname punbalancedness
@@ -794,6 +790,4 @@ make.dummies.pdata.frame <- function(x, col, base = 1L, base.add = TRUE, ...) {
   class(res) <- c("pdata.frame", class(res))
   res
 }
-
-
 
