@@ -214,7 +214,8 @@ pvcm.random <- function(formula, data, effect){
     xpxm1 <- lapply(seq_len(card.cond), function(i){
         z <- matrix(0, ncol(coefm), ncol(coefm),
                     dimnames = list(colnames(coefm), colnames(coefm)))
-        z[!coefna[i, ], !coefna[i, ]] <- solve(crossprod(X[[i]][!coefna[i, ], !coefna[i, ], drop = FALSE]))
+        ii <- !coefna[i, ]
+        z[ii, ii] <- solve(crossprod(X[[i]][ii, ii, drop = FALSE]))
         z
     })
 
@@ -271,13 +272,13 @@ pvcm.random <- function(formula, data, effect){
 #                           wn <- solve(vcovn + Deltan)
                            #new
                            vcovn <- vcov(ols[[i]])
-                           wn <- solve((vcovn + Delta)[!coefna[i, ], !coefna[i, ], drop = FALSE])
+                           ii <- !coefna[i, ]
+                           wn <- solve((vcovn + Delta)[ii, ii, drop = FALSE])
                            z <- matrix(0, nrow = ncol(coefm), ncol = ncol(coefm),
                                        dimnames = list(colnames(coefm), colnames(coefm)))
-                           z[!coefna[i, ], !coefna[i, ]] <- wn
+                           z[ii, ii] <- wn
                            z
-                       }
-                       )
+                       })
     V <- solve(Reduce("+", weightsn))
     weightsn <- lapply(weightsn, function(x) V %*% x)
     ## TODO: should "Beta" be called "beta"?

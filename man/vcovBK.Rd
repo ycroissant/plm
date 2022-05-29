@@ -26,7 +26,7 @@ vcovBK(x, ...)
 \item{cluster}{one of \code{"group"}, \code{"time"},}
 
 \item{diagonal}{a logical value specifying whether to force
-nondiagonal elements to zero,}
+non-diagonal elements to zero,}
 }
 \value{
 An object of class \code{"matrix"} containing the estimate of
@@ -52,7 +52,7 @@ formula is based on N- (T-) asymptotics and will not be appropriate
 elsewhere.
 
 The \code{diagonal} logical argument can be used, if set to
-\code{TRUE}, to force to zero all nondiagonal elements in the
+\code{TRUE}, to force to zero all non-diagonal elements in the
 estimated error covariances; this is appropriate if both serial and
 cross--sectional correlation are assumed out, and yields a
 timewise- (groupwise-) heteroskedasticity--consistent estimator.

@@ -108,7 +108,7 @@ summary(pvcm(log(gsp) ~ log(pc) + log(hwy) + log(water) + log(util) + log(emp) +
 data(Grunfeld, package = "AER") # 11 firm Grunfeld data needed from package AER
 gw <- pvcm(invest ~ value + capital, data = Grunfeld, index = c("firm", "year"))
 }
-             
+
 
 }
 \references{

@@ -822,7 +822,7 @@ vcovSCC.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 #' elsewhere.
 #' 
 #' The `diagonal` logical argument can be used, if set to
-#' `TRUE`, to force to zero all nondiagonal elements in the
+#' `TRUE`, to force to zero all non-diagonal elements in the
 #' estimated error covariances; this is appropriate if both serial and
 #' cross--sectional correlation are assumed out, and yields a
 #' timewise- (groupwise-) heteroskedasticity--consistent estimator.
@@ -853,7 +853,7 @@ vcovSCC.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 #'     `"HC2"`, `"HC3"`, `"HC4"`, see Details,
 #' @param cluster one of `"group"`, `"time"`,
 #' @param diagonal a logical value specifying whether to force
-#'     nondiagonal elements to zero,
+#'     non-diagonal elements to zero,
 #' @param \dots further arguments.
 #' @export
 #' @return An object of class `"matrix"` containing the estimate of
@@ -1228,7 +1228,6 @@ vcovHC.pgmm <- function(x, ...) {
 
 
 ## dhat: diaghat function for matrices
-# old: dhat <- function(x) {tx <- t(x); diag(crossprod(tx, solve(crossprod(x), tx)))}
 dhat <- function(x) {
-  rowSums(crossprod(t(x), solve(crossprod(x))) * x) # == diag(crossprod(tx, solve(crossprod(x), tx)))
+  rowSums(crossprod(t(x), solve(crossprod(x))) * x) # == (old) diag(crossprod(t(x), solve(crossprod(x), t(x)))
 }
