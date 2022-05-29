@@ -59,6 +59,7 @@ inst.method.list <- c(bvk     = "Balestra-Varadharajan-Krishnakumar",
                       am      = "Amemiya-MaCurdy",
                       bms     = "Breusch-Mizon-Schmidt")
 
+# robust.list and weights.list are not used anywhere...
 robust.list <- c(white1   = "White 1",
                  white2   = "White 2",
                  arellano = "Arellano")
