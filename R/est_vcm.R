@@ -75,7 +75,7 @@
 #' data(Grunfeld, package = "AER") # 11 firm Grunfeld data needed from package AER
 #' gw <- pvcm(invest ~ value + capital, data = Grunfeld, index = c("firm", "year"))
 #' }
-#'              
+#'
 #' 
 pvcm <- function(formula, data, subset ,na.action, effect = c("individual", "time"),
                  model = c("within", "random"), index = NULL, ...){
@@ -116,7 +116,7 @@ pvcm.within <- function(formula, data, effect){
         card.cond <- pdim$nT$n
     }
     ml <- split(data, cond)
-    nr <- vapply(ml, function(x) dim(x)[1L] > 0, FUN.VALUE = TRUE) # == sapply(ml, function(x) dim(x)[1L]) > 0
+    nr <- vapply(ml, function(x) dim(x)[1L] > 0, FUN.VALUE = TRUE)
     ml <- ml[nr]
     attr(ml, "index") <- index
     ols <- lapply(ml,
@@ -130,8 +130,8 @@ pvcm.within <- function(formula, data, effect){
                       r
                   })
     # extract coefficients:
-    coef <- matrix(unlist(lapply(ols, coef)), nrow = length(ols), byrow = TRUE) # was: as.data.frame(t(sapply(ols, coef)))...
-    dimnames(coef)[1:2] <- list(names(ols), names(coef(ols[[1L]])))             # ... but that code errored with intercept-only model
+    coef <- matrix(unlist(lapply(ols, coef)), nrow = length(ols), byrow = TRUE)
+    dimnames(coef)[1:2] <- list(names(ols), names(coef(ols[[1L]])))
     coef <- as.data.frame(coef)
     
     # extract residuals and make pseries:
@@ -140,10 +140,9 @@ pvcm.within <- function(formula, data, effect){
     
     # extract standard errors:
     vcov <- lapply(ols, vcov)
-    std <- matrix(unlist(lapply(vcov, function(x) sqrt(diag(x)))), nrow = length(ols), byrow = TRUE) # was: as.data.frame(t(sapply(vcov, function(x) sqrt(diag(x)))))
-    dimnames(std)[1:2] <- list(names(vcov), colnames(vcov[[1L]]))                                    # ... but this code errored with intercept-only model
+    std <- matrix(unlist(lapply(vcov, function(x) sqrt(diag(x)))), nrow = length(ols), byrow = TRUE)
+    dimnames(std)[1:2] <- list(names(vcov), colnames(vcov[[1L]]))
     std <- as.data.frame(std)
-    
     ssr <- as.numeric(crossprod(residuals))
     y <- unlist(lapply(ml, function(x) x[ , 1L]))
     fitted.values <- y - residuals
@@ -241,18 +240,21 @@ pvcm.random <- function(formula, data, effect){
     XyOmXy <- lapply(seq_len(card.cond), function(i){
         Xn <- X[[i]][ , !coefna[i, ], drop = FALSE]
         yn <- y[[i]]
+        
         # pre-allocate matrices
         XnXn <- matrix(0, ncol(coefm), ncol(coefm), dimnames = list(colnames(coefm), colnames(coefm)))
         Xnyn <- matrix(0, ncol(coefm), 1L,          dimnames = list(colnames(coefm), "y"))
+        
         solve_Omegan_i <- solve(Omegan[[i]])
         CP.tXn.solve_Omegan_i <- crossprod(Xn, solve_Omegan_i)
         XnXn[!coefna[i, ], !coefna[i, ]] <- CP.tXn.solve_Omegan_i %*% Xn # == t(Xn) %*% solve(Omegan[[i]]) %*% Xn
         Xnyn[!coefna[i, ], ]             <- CP.tXn.solve_Omegan_i %*% yn # == t(Xn) %*% solve(Omegan[[i]]) %*% yn
         list("XnXn" = XnXn, "Xnyn" = Xnyn)
     })
+    
     # Compute coefficients
     # extract and reduce XnXn (pos 1 in list's element) and Xnyn (pos 2)
-    # position-wise extraction is faster than name-based extraction
+    # (position-wise extraction is faster than name-based extraction)
     XpXm1 <-    solve(Reduce("+", vapply(XyOmXy, "[", 1L, FUN.VALUE = list(length(XyOmXy)))))
     beta <- XpXm1 %*% Reduce("+", vapply(XyOmXy, "[", 2L, FUN.VALUE = list(length(XyOmXy))))
     

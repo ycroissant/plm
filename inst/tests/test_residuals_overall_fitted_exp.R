@@ -3,7 +3,6 @@
 #   * residuals_overall_exp.plm
 #   * fitted_exp.plm
 #
-# TODO: plm model "ht": is that deprecated? currently, it is not supported by residuals_overall_exp.plm and fitted_exp.plm
 
 library(plm)
 data("Grunfeld", package = "plm")
