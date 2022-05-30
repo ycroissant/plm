@@ -27,7 +27,7 @@
 #' `coeftest()`, argument `vcov` to `waldtest()` and other methods in the
 #' \CRANpkg{lmtest} package; and argument `vcov.` to
 #' `linearHypothesis()` in the \CRANpkg{car} package (see the
-#' examples), see \insertCite{@ZEIL:04, 4.1-2 and examples below}{plm}.
+#' examples), \insertCite{@see also @ZEIL:04}{plm}, 4.1-2, and examples below.
 #' 
 #' @aliases vcovSCC
 #' @param x an object of class `"plm"` or `"pcce"`
@@ -114,7 +114,7 @@ vcovSCC <- function(x, ...){
 #' `coeftest()`, argument `vcov` to `waldtest()` and other methods in the
 #' \CRANpkg{lmtest} package; and argument `vcov.` to
 #' `linearHypothesis()` in the \CRANpkg{car} package (see the
-#' examples), see \insertCite{@ZEIL:04, 4.1-2 and examples below}{plm}.
+#' examples), see \insertCite{@see also @ZEIL:04}{plm}, 4.1-2, and examples below.
 #' 
 #' @aliases vcovNW
 #' @param x an object of class `"plm"` or `"pcce"`
@@ -198,7 +198,7 @@ vcovNW <- function(x, ...){
 #' `coeftest()`, argument `vcov` to `waldtest()` and other methods in the
 #' \CRANpkg{lmtest} package; and argument `vcov.` to
 #' `linearHypothesis()` in the \CRANpkg{car} package (see the
-#' examples), see \insertCite{@ZEIL:04, 4.1-2 and examples below}{plm}. 
+#' examples), see \insertCite{@see also @ZEIL:04}{plm}, 4.1-2, and examples below.
 #' 
 #' @aliases vcovDC
 #' @param x an object of class `"plm"` or `"pcce"`
@@ -620,7 +620,7 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 #' `coeftest()`, argument `vcov` to `waldtest()` and other methods in the
 #' \CRANpkg{lmtest} package; and argument `vcov.` to
 #' `linearHypothesis()` in the \CRANpkg{car} package (see the
-#' examples), see \insertCite{@ZEIL:04, 4.1-2 and examples below}{plm}.
+#' examples), see \insertCite{@see also @ZEIL:04}{plm}, 4.1-2, and examples below.
 #' 
 #' A special procedure for `pgmm` objects, proposed by
 #' \insertCite{WIND:05;textual}{plm}, is also provided.
@@ -846,7 +846,7 @@ vcovSCC.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 #' `coeftest()`, argument `vcov` to `waldtest()` and other methods in the
 #' \CRANpkg{lmtest} package; and argument `vcov.` to
 #' `linearHypothesis()` in the \CRANpkg{car} package (see the
-#' examples), see \insertCite{@ZEIL:04, 4.1-2 and examples below}{plm}.
+#' examples), see \insertCite{@see also @ZEIL:04}{plm}, 4.1-2, and examples below.
 #' 
 #' @param x an object of class `"plm"`,
 #' @param type the weighting scheme used, one of `"HC0"`, `"HC1"`,

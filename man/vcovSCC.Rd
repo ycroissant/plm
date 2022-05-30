@@ -79,7 +79,7 @@ matrix or as a function, e.g., for Wald--type testing: argument \code{vcov.} to
 \code{coeftest()}, argument \code{vcov} to \code{waldtest()} and other methods in the
 \CRANpkg{lmtest} package; and argument \code{vcov.} to
 \code{linearHypothesis()} in the \CRANpkg{car} package (see the
-examples), see \insertCite{@ZEIL:04, 4.1-2 and examples below}{plm}.
+examples), \insertCite{@see also @ZEIL:04}{plm}, 4.1-2, and examples below.
 }
 \examples{
 
