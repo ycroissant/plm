@@ -6,7 +6,7 @@ date: '`r Sys.Date()`'
 output: rmarkdown::html_vignette
 bibliography: ../inst/REFERENCES.bib
 vignette: >
-  %\VignetteIndexEntry{Estimation of error component models with the plm function}
+  %\VignetteIndexEntry{Estimation of error components models with the plm function}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
