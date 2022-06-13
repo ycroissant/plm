@@ -345,10 +345,8 @@ pcdres <- function(tres, n, w, form, test) {
     ## find length of intersecting pairs
     ## fast method, times down 200x
     ix <- unclass(attr(tres, "index")) # unclass for speed
-    data.res <- data.frame(time  = ix[[2L]],
-                           indiv = ix[[1L]])
     ## tabulate which obs in time for each ind are !na
-    presence.tab <- table(data.res)
+    presence.tab <- table(ix[[2L]], ix[[1L]])
     ## calculate t.ij
     t.ij <- crossprod(presence.tab)
     
