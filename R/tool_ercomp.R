@@ -282,9 +282,9 @@ ercomp.formula <- function(object, data,
         N <- pdim$nT$n
         TS <- pdim$nT$T
         TG <- unique(data.frame(tss, gps))
-        TG <- table(TG$gps)
+        TG <- collapse::qtable(TG$gps)
         NG <- unique(data.frame(ids, gps))
-        NG <- table(NG$gps)
+        NG <- collapse::qtable(NG$gps)
         Tn <- pdim$Tint$Ti
         Nt <- pdim$Tint$nt
         quad <- vector(length = 3L, mode = "numeric")
@@ -393,8 +393,8 @@ ercomp.formula <- function(object, data,
             M["gp", "eta"]    <- sum(TG) - trace(crossprod(t(CPZBlambda.solve), crossprod(ZBlambda, ZSeta)))
             M["gp", "lambda"] <- O       - trace(crossprod(t(CPZBlambda.solve), crossprod(ZSlambda, Z)))
         }
-        Gs <- as.numeric(table(gps)[as.character(gps)])
-        Tn <- as.numeric(table(ids)[as.character(ids)])
+        Gs <- as.numeric(collapse::qtable(gps)[as.character(gps)])
+        Tn <- as.numeric(collapse::qtable(ids)[as.character(ids)])
         sigma2 <- as.numeric(solve(M, quad))
         names(sigma2) <- c("idios", "id", "gp")
         theta <- list(id = 1 - sqrt(sigma2["idios"] / (Tn * sigma2["id"] + sigma2["idios"])),

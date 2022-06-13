@@ -34,16 +34,15 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
   fixef does not error anymore and for `length(fixef(<model_object>)) == 1`, 
   the result is more sane (`numeric(0)`).
   
-### Others/Minors:
+### Speed-up:
 * Many functions which split data by an index dimension are now faster on large
   data sets due to more efficient splitting approach, esp. `pcce`, `pggls`, 
   `pmg`, `cipstest`, `pcdtest`.
+  
+### Others/Minors/Admin:
 * `plmtest` and `pbsytest`: text in result object's `method` does not 
   contain information about balanced/unbalanced panel anymore and is, thus, not
   printed anymore.
-
-
-### Admin:
 * Package's maintainer changed (for technical reasons only).
 
 ***

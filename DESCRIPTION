@@ -1,6 +1,6 @@
 Package: plm
-Version: 2.6-99999
-Date: 2022-05-21
+Version: 2.6-2
+Date: 2022-06-13
 Title: Linear Models for Panel Data
 Authors@R: c(person(given = "Yves",      family = "Croissant",    role = c("aut"), email = "yves.croissant@univ-reunion.fr"),
              person(given = "Giovanni",  family = "Millo",        role = c("aut"), email = "giovanni.millo@deams.units.it"),
@@ -12,7 +12,7 @@ Authors@R: c(person(given = "Yves",      family = "Croissant",    role = c("aut"
              person(given = "Liviu",     family = "Andronic",     role = "ctb"),
              person(given = "Nina",      family = "Schoenfelder", role = "ctb"))
 Depends: R (>= 3.2.0)
-Imports: MASS, bdsmatrix, collapse (>= 1.6.0), zoo, nlme, sandwich, lattice, lmtest, maxLik, Rdpack, Formula, stats
+Imports: MASS, bdsmatrix, collapse (>= 1.8.0), zoo, nlme, sandwich, lattice, lmtest, maxLik, Rdpack, Formula, stats
 Suggests: AER, car, statmod, urca, pder, texreg, knitr, rmarkdown, fixest, lfe
 Description: A set of estimators for models and (robust) covariance matrices, and tests for panel data
              econometrics, including within/fixed effects, random effects, between, first-difference, 
@@ -29,7 +29,7 @@ License: GPL (>=2)
 VignetteBuilder: knitr
 URL: https://cran.r-project.org/package=plm (CRAN releases), https://github.com/ycroissant/plm (development repository)
 BugReports: https://github.com/ycroissant/plm/issues
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.0
 Roxygen: list(markdown = TRUE)
 RdMacros: Rdpack
 Encoding: UTF-8

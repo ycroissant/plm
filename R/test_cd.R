@@ -346,7 +346,7 @@ pcdres <- function(tres, n, w, form, test) {
     ## fast method, times down 200x
     ix <- unclass(attr(tres, "index")) # unclass for speed
     ## tabulate which obs in time for each ind are !na
-    presence.tab <- table(ix[[2L]], ix[[1L]])
+    presence.tab <- collapse::qtable(ix[[2L]], ix[[1L]])
     ## calculate t.ij
     t.ij <- crossprod(presence.tab)
     

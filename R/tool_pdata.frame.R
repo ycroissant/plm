@@ -333,7 +333,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
             # for the automatic addition of time index to be
             # successful if no time index was supplied
             x <- x[order(x[[id.name]]), ]
-            Ti <- table(x[[id.name]])
+            Ti <- collapse::qtable(x[[id.name]])
             n <- length(Ti)
             time <- c()
             for (i in seq_len(n)){
@@ -391,9 +391,9 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
         x <- x[ , -posindex, drop = FALSE]
         if (ncol(x) == 0L) warning("after dropping of index variables, the pdata.frame contains 0 columns")
     }
-    
+
     ### warn if duplicate couples
-    test_doub <- table(index[[1L]], index[[2L]], useNA = "ifany")
+    test_doub <- collapse::qtable(index[[1L]], index[[2L]], na.exclude = FALSE) # == base R's table(x, y) # == table(index[[1L]], index[[2L]], useNA = "ifany")
     if (any(as.vector(test_doub[!is.na(rownames(test_doub)), !is.na(colnames(test_doub))]) > 1L))
       warning(paste("duplicate couples (id-time) in resulting pdata.frame\n to find out which,",
                     "use, e.g., table(index(your_pdataframe), useNA = \"ifany\")"))
@@ -1001,7 +1001,7 @@ pdim.default <- function(x, y, ...) {
   if (length(x) != length(y)) stop("The length of the two inputs differs\n")
   x <- x[drop = TRUE] # drop unused factor levels so that table() 
   y <- y[drop = TRUE] # gives only needed combinations
-  z <- table(x,y)
+  z <- collapse::qtable(x, y) ## == base R's table(x, y)
   Ti <- rowSums(z) # faster than: apply(z, 1, sum)
   nt <- colSums(z) #              apply(z, 2, sum)
   n <- nrow(z)
@@ -1168,7 +1168,7 @@ is.pbalanced.default <- function(x, y, ...) {
   if (length(x) != length(y)) stop("The length of the two inputs differs\n")
   x <- x[drop = TRUE] # drop unused factor levels so that table 
   y <- y[drop = TRUE] # gives only needed combinations
-  z <- table(x, y)
+  z <- collapse::qtable(x, y) # == base R's table(x, y)
   balanced <- if(any(v <- as.vector(z) == 0L)) FALSE else TRUE
   if (any(v > 1L)) warning("duplicate couples (id-time)\n")
   balanced
