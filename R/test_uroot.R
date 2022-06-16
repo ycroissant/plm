@@ -271,10 +271,10 @@ purtest.names.test <- c(levinlin  = "Levin-Lin-Chu Unit-Root Test",
 ## General functions to transform series:
 
 YClags <- function(object,  k = 3){
-  # NB/TODO: there is no check if k > length(object) so this errors non-gracefully
-  #     if there are not enough observations for an individual
-  if (k > 0)
-    sapply(seq_len(k), function(x) c(rep(NA, x), object[seq_len(length(object)-x)]))
+  n <- length(object)
+  if(k > n) stop("lag value larger than length of series to lag")
+  if(k > 0)
+    sapply(seq_len(k), function(x) c(rep(NA, x), object[seq_len(n - x)]))
   else
     NULL
 }
@@ -283,8 +283,6 @@ YCdiff <- function(object) {
   # NB/TODO: no sanity check here: for input of length(object) == 1, a result of 
   # length 3 is returned: c(NA, NA, 0)
   c(NA, object[seq_along(object)[-1L]] - object[seq_len(length(object)-1)])
-  
-  
 }
 
 selectT <- function(x, Ts){
@@ -314,7 +312,7 @@ lagsel <- function(object, exo = c("intercept", "none", "trend"),
   if (exo == "intercept") m <- rep(1, length(object))
   if (exo == "trend")     m <- cbind(1, seq_along(object))
   LDy <- YClags(Dy, k = pmax)
-
+  
   decreasei <- TRUE
   i <- 0L
   narow <- seq_len(pmax+1)
@@ -341,9 +339,9 @@ lagsel <- function(object, exo = c("intercept", "none", "trend"),
       y <- Dy[-narow]
       sres <- my.lm.fit(X, y, dfcor = dfcor)
       AIC <- if (method == "AIC") {
-        log(sres$rss / sres$n) + 2 * sres$K / sres$n
+        log(sres$rss / sres$n) + 2 * sres$K / sres$n # AIC
       } else {
-        log(sres$rss / sres$n) + sres$K * log(sres$n) / sres$n
+        log(sres$rss / sres$n) + sres$K * log(sres$n) / sres$n # SIC
       }
       l <- c(l, AIC)
       i <- i + 1L
@@ -820,7 +818,7 @@ purtest <- function(object, data = NULL, index = NULL,
     }
   }
   
-  # by now, object is either a pseries to be split or a data.frame, code continues with list
+  # by now, object is either a pseries or a data.frame
   object <- na.omit(object)
   if(!is.null(attr(object, "na.action")))
     warning("NA value(s) encountered and dropped, results may not be reliable")
@@ -834,6 +832,7 @@ purtest <- function(object, data = NULL, index = NULL,
     if(!ncol(object) > 1L) warning("data.frame or matrix specified in argument object does not contain more than one individual (individuals are supposed to be in columns)")
     object <- as.list(object)
   }
+  # by now, object is a list
   
   cl <- match.call()
   test <- match.arg(test)
@@ -861,7 +860,7 @@ purtest <- function(object, data = NULL, index = NULL,
       else lags <- as.list(lags)
     }
   }
-  else{ # lag selection procedure SIC, AIC, or Hall
+  else{ # one of the lag selection procedures SIC, AIC, or Hall
     lag.method <- match.arg(lags)
     lags <- sapply(object, function(x)
       lagsel(x, exo = exo, method = lag.method,
