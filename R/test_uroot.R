@@ -279,8 +279,6 @@ YClags <- function(object,  k = 3){
     NULL
 }
 
-YCtrend <- function(object) seq_along(object)
-
 YCdiff <- function(object) {
   # NB/TODO: no sanity check here: for input of length(object) == 1, a result of 
   # length 3 is returned: c(NA, NA, 0)
@@ -314,8 +312,9 @@ lagsel <- function(object, exo = c("intercept", "none", "trend"),
   Ly <- c(NA, object[seq_len(length(object)-1)])
   if (exo == "none")      m <- NULL
   if (exo == "intercept") m <- rep(1, length(object))
-  if (exo == "trend")     m <- cbind(1, YCtrend(object))
+  if (exo == "trend")     m <- cbind(1, seq_along(object))
   LDy <- YClags(Dy, k = pmax)
+
   decreasei <- TRUE
   i <- 0L
   narow <- seq_len(pmax+1)
@@ -481,7 +480,7 @@ tsadf <- function(object, exo = c("intercept", "none", "trend"),
   Ly <- c(NA, object[seq_len(length(object)-1)])
   if(exo == "none")      m <- NULL
   if(exo == "intercept") m <- rep(1, length(object))
-  if(exo == "trend")     m <- cbind(1, YCtrend(object))
+  if(exo == "trend")     m <- cbind(1, seq_along(object))
   narow <- seq_len(lags+1)
   LDy <- YClags(Dy, k = lags)
   X <- cbind(Ly, LDy, m)[-narow, , drop = FALSE]
