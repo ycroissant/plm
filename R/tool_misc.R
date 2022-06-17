@@ -741,14 +741,14 @@ make.dummies <- function(x, ...){
 make.dummies.default <- function(x, base = 1L, base.add = TRUE, ...) {
   
   stopifnot(is.numeric(base) || is.character(base))
-  if(is.numeric(base)) if(round(base) != base) stop("Argument 'ref' specified as numeric but is not integer")
+  if(is.numeric(base)) if(round(base) != base) stop("Argument 'base' specified as numeric but is not integer")
   if(!is.factor(x)) x <- factor(x)
   
   lvl <- levels(x)
   
   if(is.character(base)) {
     pos <- match(base, lvl)
-    if(is.na(pos)) stop(paste0("argument 'ref' specified as character but value \"", 
+    if(is.na(pos)) stop(paste0("argument 'base' specified as character but value \"", 
                                base, "\", is not in levels(x)"))
     base <- pos
   }
