@@ -273,10 +273,11 @@ purtest.names.test <- c(levinlin  = "Levin-Lin-Chu Unit-Root Test",
 YClags <- function(object,  k = 3){
   n <- length(object)
   if(k > n) stop("lag value larger than length of series to lag")
-  if(k > 0)
-    sapply(seq_len(k), function(x) c(rep(NA, x), object[seq_len(n - x)]))
-  else
-    NULL
+  if(k > 0) {
+    res <- sapply(seq_len(k), function(x) c(rep(NA, x), object[seq_len(n - x)]))
+    if(is.null(dim(res))) res <- as.matrix(res) # guarantee to return a matrix
+  } else res <-  NULL
+  res
 }
 
 YCdiff <- function(object) {
@@ -482,6 +483,7 @@ tsadf <- function(object, exo = c("intercept", "none", "trend"),
   narow <- seq_len(lags+1)
   LDy <- YClags(Dy, k = lags)
   X <- cbind(Ly, LDy, m)[-narow, , drop = FALSE]
+  if(dim(X)[[1]] == 0L) stop("after lagging, no non-NA case left in a series")
   y <- Dy[- narow]
   result <- my.lm.fit(X, y, dfcor = dfcor)
   sigma <- result$sigma

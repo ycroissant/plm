@@ -40,6 +40,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
   `pmg`, `cipstest`, `pcdtest`.
   
 ### Others/Minors/Admin:
+* `purtest`: errors more informatively when no non-NA cases are left after lagging.
 * `plmtest` and `pbsytest`: text in result object's `method` does not 
   contain information about balanced/unbalanced panel anymore and is, thus, not
   printed anymore.
