@@ -122,7 +122,7 @@ print.pseries <- function(x, ...){
     attr(x, "class") <- NULL
   }
   print(x, ...)
-  x.orig
+  invisible(x.orig)
 }
 
 #' @rdname pseries

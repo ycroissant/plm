@@ -44,6 +44,8 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 * `plmtest` and `pbsytest`: text in result object's `method` does not 
   contain information about balanced/unbalanced panel anymore and is, thus, not
   printed anymore.
+* `print.pseries`: return input object invisibly (prevents double printing when 
+  print() is called explicitly on a pseries).
 * Package's maintainer changed (for technical reasons only).
 
 ***
