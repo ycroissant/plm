@@ -521,6 +521,10 @@ print.summary.plm <- function(x, digits = max(3, getOption("digits") - 2),
 #' predict(fit.fe, newdata = newdata)
 #' 
 predict.plm <- function(object, newdata = NULL, na.fill = !inherits(newdata, "pdata.frame"), ...) {
+  # NB (TODO?): for between and FD models: output is of different length for 
+  #     newdata = NULL (output is compressed data) and for 
+  #     newdata = original pdata.frame (output has original length)
+  
   tt <- terms(object)
   if(is.null(newdata)){ 
     # return fitted values of estimated model and exit
