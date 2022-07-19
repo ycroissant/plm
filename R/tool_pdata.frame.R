@@ -110,7 +110,7 @@ fancy.row.names <- function(index, sep = "-") {
 #' @param drop see [Extract()],
 #' @param drop.index logical, indicates whether the indexes are to be
 #'     excluded from the resulting pdata.frame,
-#' @param optional see [as.data.frame()],
+#' @param check.names see [data.frame()]
 #' @param row.names `NULL` or logical, indicates whether "fancy" row
 #'     names (combination of individual index and time index) are to
 #'     be added to the returned (p)data.frame (`NULL` and `FALSE` have
@@ -177,7 +177,8 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
                         stringsAsFactors = FALSE,
                         replace.non.finite = FALSE,
                         drop.NA.series = FALSE, drop.const.series = FALSE,
-                        drop.unused.levels = FALSE) {
+                        drop.unused.levels = FALSE, check.names = TRUE
+                        ) {
 
     if (inherits(x, "pdata.frame")) stop("already a pdata.frame")
   
@@ -188,7 +189,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     # prune input: x is supposed to be a plain data.frame. Other classes building
     # on top of R's data frame can inject attributes etc. that confuse functions
     # in pkg plm.
-    x <- data.frame(x)
+    x <- data.frame(x, check.names = check.names)
     
     # if requested: coerce character vectors to factors
     if (stringsAsFactors) {
