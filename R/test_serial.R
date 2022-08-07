@@ -361,7 +361,9 @@ pwartest.formula <- function(x, data, ...) {
 #' @export
 pwartest.panelmodel <- function(x, ...) {
   
-  if (describe(x, "model") != "within") stop("pwartest only relevant for within models")
+  mod.nam <- describe(x, "model")
+  if(mod.nam != "within") stop(paste0("pwartest only relevant for \"within\" ",
+                                      "models, but model = \"", mod.nam, "\""))
 
   FEres <- x$residuals
   data <- model.frame(x)
