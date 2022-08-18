@@ -402,16 +402,17 @@ plm.fit <- function(data, model, effect, random.method,
 
     # if a random effect model is estimated, compute the error components
     if (model == "random"){
+      ## stopping control
+      if (length(formula)[2L] > 1L && effect == "twoways")
+        stop(paste("Instrumental variable random effect estimation",
+                   "not implemented for two-ways panels"))
+      
         is.balanced <- is.pbalanced(data)
         estec <- ercomp(data, effect, method = random.method,
                         models = random.models, dfcor = random.dfcor)
         sigma2 <- estec$sigma2
         theta <- estec$theta
-        if (length(formula)[2L] > 1L && effect == "twoways")
-            stop(paste("Instrumental variable random effect estimation",
-                       "not implemented for two-ways panels"))
-    }
-    else theta <- NULL
+    } else theta <- NULL
 
     # For all models except the unbalanced twoways random model, the
     # estimator is obtained as a linear regression on transformed data
