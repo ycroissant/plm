@@ -487,7 +487,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
 #   
 #   ## two sanity checks as [.pseries-subsetting was introduced in Q3/2021 and some packages
 #   ## produced illegal pseries (these pkg errors were fixed by new CRAN releases but maybe
-#   ## other code outhere produces illegal pseries, so leave these sanity checks in here for
+#   ## other code out there produces illegal pseries, so leave these sanity checks in here for
 #   ## a while, then remove (for speed)
 #     if(is.null(index)) warning("pseries object with is.null(index(pseries)) == TRUE encountered")
 #     if(!is.null(index) && !is.index(index)) warning(paste0("pseries object has illegal index with class(index) == ", paste0(class(index), collapse = ", ")))
@@ -644,7 +644,7 @@ subset_pseries <- function(x, ...) {
     mydata <- eval(sc_mod)
 
     if (is.null(dim(mydata))) {
-      # if dim is NULL, subsetting did not return a data frame but  a vector or a
+      # if dim is NULL, subsetting did not return a data frame but a vector or a
       #   factor or NULL (nothing more is left)
       if (is.null(mydata)) {
         # since R 3.4.0, NULL cannot have attributes, so special case it
@@ -1380,7 +1380,7 @@ checkNA.index <- function(index, which = "all", error = TRUE) {
   if(which == "all") {
     if(anyNA(index[[1L]])) feedback("NA in the individual index variable")
     if(anyNA(index[[2L]])) feedback("NA in the time index variable")
-    n.index <- if(inherits(index, "pindex")) ncol(index) else length(index) # else-branche is list (for speed)
+    n.index <- if(inherits(index, "pindex")) ncol(index) else length(index) # else-branch is list (for speed)
     if(n.index == 3L) { if(anyNA(index[[3L]])) feedback("NA in the group index variable") }
   }
   if(which == 1L) {
