@@ -4,8 +4,8 @@ starX <- function(formula, data, model, rhs = 1, effect){
   # NB: function is not symmetric in individual and time effect
     apdim <- pdim(data)
     amatrix <- model.matrix(data, model, effect, rhs)
-    T <- apdim$nT$T # was (same): length(unique(index(data, 2L)))
-    N <- apdim$nT$n # was (same): length(unique(index(data, 1L)))
+    T <- apdim$nT$T
+    N <- apdim$nT$n
     if (apdim$balanced){
         result <- Reduce("cbind",
                         lapply(seq_len(ncol(amatrix)),
@@ -310,14 +310,15 @@ plm <- function(formula, data, subset, weights, na.action,
     inst.method <- match.arg(inst.method)
     
     # note that model can be NA, in this case the model.frame is returned
-    if (! anyNA(model)) model <- match.arg(model) 
-    if (! anyNA(model) && effect == "nested" && model != "random") {
+    anyNA.model <- anyNA(model)
+    if (! anyNA.model) model <- match.arg(model) 
+    if (! anyNA.model && effect == "nested" && model != "random") {
       # input check for nested RE model
       stop(paste0("effect = \"nested\" only valid for model = \"random\", but input is model = \"",
                      model, "\"."))
       }
     
-    if (! anyNA(model) && model == "fd") {
+    if (! anyNA.model && model == "fd") {
       # input checks for FD model: give informative error messages as
       # described in footnote in vignette
         if (effect == "time") stop(paste("effect = \"time\" for first-difference model",
@@ -331,7 +332,7 @@ plm <- function(formula, data, subset, weights, na.action,
       
       # model = "ht" in plm() and pht() are no longer maintained, but working
       # -> call pht() and early exit
-      if (! anyNA(model) && model == "ht"){
+      if (! anyNA.model && model == "ht"){
           ht <- match.call(expand.dots = FALSE)
           m <- match(c("formula", "data", "subset", "na.action", "index"), names(ht), 0)
           ht <- ht[c(1L, m)]
