@@ -1406,7 +1406,7 @@ R-Squared:      0.99091
 Adj. R-Squared: 0.99067
 Chisq: 1199.5 on 13 DF, p-value: < 2.22e-16
 > 
-> ## do (weired) scaling of variables as in Baltagi/Chang (1994)
+> ## do (weird) scaling of variables as in Baltagi/Chang (1994)
 > Hedonic$mv2      <- Hedonic$mv
 > Hedonic$crim2    <- Hedonic$crim / 100
 > Hedonic$zn2      <- Hedonic$zn / 1000
