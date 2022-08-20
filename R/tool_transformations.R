@@ -1031,3 +1031,28 @@ pdiff <- function(x, effect = c("individual", "time"), has.intercept = FALSE){
     result
 }
 
+pdiff.collapse <- function(x, effect = c("individual", "time"), has.intercept = FALSE){
+  # NB: x is assumed to have an index attribute
+  #     can check with has.index(x)
+  effect <- match.arg(effect)
+  xindex <- unclass(attr(x, "index"))
+  checkNA.index(xindex) # index may not contain any NA
+browser()
+  eff.no <- switch(effect,
+                     "individual" = 1L,
+                     "time"       = 2L,
+                     stop("unknown value of argument 'effect'"))
+
+  eff.fac <- xindex[[eff.no]]
+  
+  if(inherits(x, "pseries")) x <- remove_pseries_features(x)
+  
+  res <- collapse::fdiff(x, g = eff.fac)
+  res <- na.omit(res)
+
+  if(has.intercept){
+    # if intercept is requested, set intercept column to 1 as it was diff'ed out
+    res <- res[ , "(Intercept)"] <- 1L
+  }
+  res
+}

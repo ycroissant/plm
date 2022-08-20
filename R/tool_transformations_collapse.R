@@ -24,6 +24,8 @@ Within.default.baseR <- plm:::Within.default
 Within.pseries.baseR <- plm:::Within.pseries
 Within.matrix.baseR  <- plm:::Within.matrix
 
+pdiff.baseR         <- plm:::pdiff
+
 pseriesfy.baseR      <- plm:::pseriesfy # ... in tool_pdata.frame.R:
 
 
@@ -131,6 +133,24 @@ Within.matrix <- function(x, effect, ...) {
            "lfe"      = Within.matrix.collapse.lfe(   x, effect, ...), # collapse for 1-way FE + lfe for 2-way FE,
            stop("unknown value of option 'plm.fast.pkg.FE.tw'"))
   }
+}
+
+#### wrapper for pdiff ####
+pdiff <- function(x,  ...) {
+  if(!isTRUE(getOption("plm.fast"))) {
+    pdiff.baseR(x, effect = c("individual", "time"), has.intercept = FALSE) } else {
+      if(!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
+      pdiff.collapse(x, effect = c("individual", "time"), has.intercept = FALSE) }
+}
+
+
+#### wrapper for pseriesfy ####
+# both pseriesfy functions are in file tool_pdata.frame.R 
+pseriesfy <- function(x,  ...) {
+  if(!isTRUE(getOption("plm.fast"))) {
+    pseriesfy.baseR(x, ...) } else {
+      if(!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
+      pseriesfy.collapse(x, ...) }
 }
 
 
@@ -595,14 +615,6 @@ Within.matrix.collapse.lfe <- function(x, effect,  ...) {
   return(result)
 }
 
-#### wrapper for pseriesfy ####
-# both pseriesfy functions are in file tool_pdata.frame.R 
-pseriesfy <- function(x,  ...) {
-  if(!isTRUE(getOption("plm.fast"))) {
-    pseriesfy.baseR(x, ...) } else {
-      if(!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
-      pseriesfy.collapse(x, ...) }
-}
 
 .onAttach <- function(libname, pkgname) {
   options("plm.fast" = TRUE) # since 2.6: needs pkg collapse as hard dependency
