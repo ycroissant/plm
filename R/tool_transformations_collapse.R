@@ -712,7 +712,8 @@ pdiff.collapse <- function(x, effect = c("individual", "time"), has.intercept = 
 #'   \item Between,
 #'   \item Sum,
 #'   \item Within,
-#'   \item pseriesfy.
+#'   \item pseriesfy,
+#'   \item pdiff (internal function).
 #' }
 #' 
 #' @name plm.fast

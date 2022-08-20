@@ -48,7 +48,8 @@ under investigation):
 \item Between,
 \item Sum,
 \item Within,
-\item pseriesfy.
+\item pseriesfy,
+\item pdiff (internal function).
 }
 }
 \examples{
