@@ -1007,12 +1007,14 @@ diffr.pseries <- function(x, lag = 1L, ...) {
 pdiff <- function(x, effect = c("individual", "time"), has.intercept = FALSE){
   # NB: x is assumed to have an index attribute, e.g., a pseries
   #     can check with has.index(x)
+  
     effect <- match.arg(effect)
     cond <- as.numeric(unclass(attr(x, "index"))[[1L]]) # unclass for speed
     n <- if(is.matrix(x)) nrow(x) else length(x)
     cond <- c(NA, cond[2:n] - cond[seq_len(n-1)]) # this assumes a certain ordering
     cond[cond != 0] <- NA
     if(! is.matrix(x)){
+
         result <- c(NA , x[2:n] - x[seq_len(n-1)])
         result[is.na(cond)] <- NA
         result <- na.omit(result)
@@ -1027,31 +1029,9 @@ pdiff <- function(x, effect = c("individual", "time"), has.intercept = FALSE){
             colnames(result)[1L] <- "(Intercept)"
         }
     }
+
     attr(result, "na.action") <- NULL
     result
 }
 
-pdiff.collapse <- function(x, effect = c("individual", "time"), has.intercept = FALSE){
-  # NB: x is assumed to have an index attribute
-  #     can check with has.index(x)
-  effect <- match.arg(effect)
-  xindex <- unclass(attr(x, "index"))
-  checkNA.index(xindex) # index may not contain any NA
-#browser()
-  eff.no <- switch(effect,
-                     "individual" = 1L,
-                     "time"       = 2L,
-                     stop("unknown value of argument 'effect'"))
 
-  eff.fac <- xindex[[eff.no]]
-  
-  if(inherits(x, "pseries")) x <- remove_pseries_features(x)
-  
-  res <- collapse::fdiff(x, g = eff.fac)
-  res <- na.omit(res)
-
-  # if intercept is requested, set intercept column to 1 as it was diff'ed out
-  if(has.intercept) res <- res[ , "(Intercept)"] <- 1L
-
-  res
-}
