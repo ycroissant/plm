@@ -642,12 +642,17 @@ pdiff.collapse <- function(x, effect = c("individual", "time"), has.intercept = 
     # make a pdata.frame the dirty way (esp. to names like "(Intercept)")
     # .. works as x is already ensures to be panel-stacked
     # and apply collapse::fdiff on it
-    x.pdf <- as.data.frame(x)
-    class(x.pdf) <- c("pdata.frame", class(x.pdf))
-    attr(x.pdf, "index") <- attr(x, "index")
-    
-    res <- collapse::fdiff(x.pdf)
-    res <- as.matrix(res)
+    if(is.matrix(x)) {
+      x.pdf <- as.data.frame(x)
+      class(x.pdf) <- c("pdata.frame", class(x.pdf))
+      attr(x.pdf, "index") <- attr(x, "index")
+      
+      res <- collapse::fdiff(x.pdf)
+      res <- as.matrix(res)  
+    } else {
+      # pseries case
+      res <- collapse::fdiff(x)
+    }
   }
 
   res <- na.omit(res)
