@@ -998,13 +998,32 @@ diffr.pseries <- function(x, lag = 1L, ...) {
     res
 }
 
+
 ## pdiff is (only) used in model.matrix to calculate the
-## model.matrix for FD models, works for effect = "individual" only,
+## model.matrix for FD models
+## wrapper
+pdiff <- function(x, effect = c("individual", "time"),
+                  has.intercept = FALSE,
+                  shift = c("time", "row")) {
+  
+    shift <- match.arg(shift)
+    res <- if (shift == "time")
+              pdifft(x = x,
+                     effect = effect,
+                     has.intercept = has.intercept)
+            else
+              pdiffr(x = x,
+                     effect = effect,
+                     has.intercept = has.intercept)
+    res
+}
+  
+## pdiffr works for effect = "individual" only,
 ## see model.matrix on how to call pdiff. Result is in order (id,
 ## time) for both effects
 ##
-## Performs row-wise shifting
-pdiff <- function(x, effect = c("individual", "time"), has.intercept = FALSE){
+## Performs row-wise shifting (note the 'r' in pdiffr)
+pdiffr <- function(x, effect = c("individual", "time"), has.intercept = FALSE){
   # NB: x is assumed to have an index attribute, e.g., a pseries
   #     can check with has.index(x)
   
@@ -1032,6 +1051,29 @@ pdiff <- function(x, effect = c("individual", "time"), has.intercept = FALSE){
 
     attr(result, "na.action") <- NULL
     result
+}
+
+## performes time-wise shifting (note the 't' in pdifft)
+pdifft <- function(x, effect = c("individual", "time"), has.intercept = FALSE) {
+  effect <- match.arg(effect)
+  x.index <- attr(x, "index")
+  x.pdf <- as.data.frame(x, make.names = FALSE)
+  x.pdf <- cbind(x.index, x.df)
+  x.pdf <- pdata.frame(x.df, drop.index = TRUE)
+  
+  if(!is.matrix(x)) {
+    # pseries case (LHS)
+    res <- diff(x, effect = effect, shift = "time")
+    res <- subset_pseries(res, !is.na(res)) # TODO: use [.pseries (pseries subsetting) once implemented
+  } else {
+    # matrix case (RHS)
+    res <- apply(x, 2, function(col) diff(add_pseries_features(col, x.index),
+                                          effect = effect, shift = "time"))
+    res <- na.omit(res)
+    # if intercept is requested, set intercept column to 1 as it was diff'ed out
+    if(has.intercept) res[ , 1L] <- 1L
+  }
+  res
 }
 
 

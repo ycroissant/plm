@@ -136,11 +136,12 @@ Within.matrix <- function(x, effect, ...) {
 }
 
 #### wrapper for pdiff ####
-pdiff <- function(x, effect = c("individual", "time"), has.intercept = FALSE) {
+pdiff <- function(x, effect = c("individual", "time"), has.intercept = FALSE,
+                  shift = c("time", "row")) {
   if(!isTRUE(getOption("plm.fast"))) {
-    pdiff.baseR(x, effect, has.intercept) } else {
+    pdiff.baseR(x, effect, has.intercept, shift) } else {
       if(!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
-      pdiff.collapse(x, effect, has.intercept) }
+      pdiff.collapse(x, effect, has.intercept, shift) }
 }
 
 
@@ -615,10 +616,14 @@ Within.matrix.collapse.lfe <- function(x, effect,  ...) {
   return(result)
 }
 
-pdiff.collapse <- function(x, effect = c("individual", "time"), has.intercept = FALSE){
+pdiff.collapse <- function(x, effect = c("individual", "time"), has.intercept = FALSE, shift = c("time", "row")){
   # NB: x is assumed to have an index attribute
   #     can check with has.index(x)
+  
+  ## TODO: does not yet implement shift = "time", gives row-wise shifting no matter the input for arg shift
+  
   effect <- match.arg(effect)
+  shift <- match(shift)
   xindex <- unclass(attr(x, "index"))
   checkNA.index(xindex) # index may not contain any NA
   
