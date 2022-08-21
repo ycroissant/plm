@@ -10,7 +10,10 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 
 Changes relative to CRAN 2.6-2:
 
-### Speed-up: first-difference model estimation faster (due to using `collapse::fdiff`).
+### Speed-up:
+* `plm(., model = "fd")`: faster first-difference model estimation (due to 
+   using `collapse::fdiff`).
+   NB: FD models are based on row-wise differences, not (yet) time-wise.
 
 
 # plm 2.6-2

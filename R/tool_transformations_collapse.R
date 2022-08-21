@@ -623,7 +623,7 @@ pdiff.collapse <- function(x, effect = c("individual", "time"), has.intercept = 
   ## TODO: does not yet implement shift = "time", gives row-wise shifting no matter the input for arg shift
   
   effect <- match.arg(effect)
-  shift <- match(shift)
+  shift <- match.arg(shift)
   xindex <- unclass(attr(x, "index"))
   checkNA.index(xindex) # index may not contain any NA
   
