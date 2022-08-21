@@ -96,7 +96,7 @@ if (!isTRUE(all.equal(lag(Grunfeld$inv, 1), lead(Grunfeld$inv, -1)))) stop("'lag
 
 
 # with logical
-Grunfeld$log <- rep(c(T, T, F, T), 50)
+Grunfeld$log <- rep(c(TRUE, TRUE, FALSE, TRUE), 50)
 if (!isTRUE(all.equal(lag(Grunfeld$log, -1), lead(Grunfeld$log, 1)))) stop("'lag( , -1)' not equal to 'lead( , 1)'")
 if (!isTRUE(all.equal(lag(Grunfeld$log, 1), lead(Grunfeld$log, -1)))) stop("'lag( , 1)' not equal to 'lead( , -1)'")
 
