@@ -1394,6 +1394,24 @@ checkNA.index <- function(index, which = "all", error = TRUE) {
   }
 }
 
+
+make.fdindex <- function(x) {
+  ## non-exported helper function
+  ## constructs an index suitable for time-wise first-difference data
+  ## input: an index (class c("pindex", "data.frame"))
+  ## return value: plain 2-entry list of the index factors
+  ix <- unclass(x)
+  
+  ix.ind.lag <- lag(add_pseries_features(ix[[1L]], ix))
+  ix.ti.lag  <- lag(add_pseries_features(ix[[2L]], ix))
+  
+  ix.ind.lag <- ix.ind.lag[!is.na(ix.ind.lag)]
+  ix.ti.lag  <- ix.ti.lag[!is.na(ix.ti.lag)]
+  
+  list(ix.ind.lag, ix.ti.lag)
+}
+
+
 # pos.index:
 # not exported, helper function
 #
