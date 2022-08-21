@@ -987,15 +987,16 @@ diffr.pseries <- function(x, lag = 1L, ...) {
 
     lagrx <- lagr.pseries(x, k = lag)
     
-    if(is.matrix(lagrx)) {
+    res <- if (is.matrix(lagrx)) {
       # if 'lagrx' is matrix (case length(lag) > 1):
-      # perform subtraction without pseries feature of 'x', because otherwise 
+      # perform subtraction without pseries feature of 'x', because otherwise
       # the result would be c("pseries", "matrix") which is not supported
-      res <- as.numeric(x) - lagrx
+      as.numeric(x) - lagrx
     } else {
-      res <- x - lagrx
+      x - lagrx
     }
-    return(res)
+    
+    res
 }
 
 ## pdiff is (only) used in model.matrix to calculate the
