@@ -116,6 +116,8 @@ pggls <- function(formula, data, subset, na.action,
     coef.names <- names(coef(plm.model))
     K <- length(coef.names)
 
+    
+    ## TODO: for FD models respecting time-wise diffing: need dedicated procedure to construct index
     if (model.name == "fd") {
     ## eliminate first year in indices
         nt <- pdim$Tint$nt[-1L]
@@ -160,6 +162,7 @@ pggls <- function(formula, data, subset, na.action,
         other.names <- time.names
         groupsdim <- Ti
     }
+
     myord <- order(cond, other)
     X <- model.matrix(plm.model)[myord, , drop = FALSE]
     commonpars <- intersect(coef.names, colnames(X))
