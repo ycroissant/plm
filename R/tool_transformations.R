@@ -766,7 +766,7 @@ lead <- function(x, k = 1L, ...) {
 lag.pseries <- function(x, k = 1L, shift = c("time", "row"), ...) {
   shift <- match.arg(shift)
   res <- if(shift == "time") lagt.pseries(x = x, k = k, ...) else lagr.pseries(x = x, k = k, ...)
-  return(res)
+  res
 }
 
 #' @rdname lag.plm
@@ -774,7 +774,7 @@ lag.pseries <- function(x, k = 1L, shift = c("time", "row"), ...) {
 lead.pseries <- function(x, k = 1L, shift = c("time", "row"), ...) {
   shift <- match.arg(shift)
   res <- if(shift == "time") leadt.pseries(x = x, k = k, ...) else leadr.pseries(x = x, k = k, ...)
-  return(res)
+  res
 }
 
 #' @rdname lag.plm
@@ -782,7 +782,7 @@ lead.pseries <- function(x, k = 1L, shift = c("time", "row"), ...) {
 diff.pseries <- function(x, lag = 1L, shift = c("time", "row"), ...) {
   shift <- match.arg(shift)
   res <- if(shift == "time") difft.pseries(x = x, lag = lag, ...) else diffr.pseries(x = x, lag = lag, ...)
-  return(res)
+  res
 }
 
 ## lagt.pseries lagging taking the time variable into account
@@ -798,7 +798,7 @@ lagt.pseries <- function(x, k = 1L, ...) {
   else {
     rval <- alagt(x, k)
   }
-  return(rval)
+  rval
 }
 
 ## leadt.pseries(x, k) is a wrapper for lagt.pseries(x, -k)
@@ -824,16 +824,16 @@ difft.pseries <- function(x, lag = 1L, ...){
   
   lagtx <- lagt.pseries(x, k = lag) # use "time-based" lagging for difft
   
-  if(is.matrix(lagtx)) {
+  res <- if (is.matrix(lagtx)) {
     # if 'lagtx' is matrix (case length(lag) > 1):
-    # perform subtraction without pseries feature of 'x', because otherwise 
+    # perform subtraction without pseries feature of 'x', because otherwise
     # the result would be c("pseries", "matrix") which is not supported
-    res <- as.numeric(x) - lagtx
+    as.numeric(x) - lagtx
   } else {
-    res <- x - lagtx
+    x - lagtx
   }
   
-  return(res)
+  res
 }
 
 ## alagt: non-exported helper function for lagt (actual work horse),
@@ -874,10 +874,9 @@ alagt <- function(x, ak) {
                                     simplify = FALSE, USE.NAMES = FALSE)
     
     # translate block-wise positions to positions in full vector
-    index_lag_ak_all <- unlist(index_lag_ak_all_list, use.names = FALSE)
+    substitute_blockwise <- unlist(index_lag_ak_all_list, use.names = FALSE)
     
-    NApos <- is.na(index_lag_ak_all) # save NA positions for later
-    substitute_blockwise <- index_lag_ak_all
+    NApos <- is.na(substitute_blockwise) # save NA positions for later
     
     block_lengths <- lengths(index_lag_ak_all_list, use.names = FALSE)
     
@@ -896,7 +895,7 @@ alagt <- function(x, ak) {
     x[NApos] <- NA  # set NAs where necessary
     attributes(x) <- orig_attr # restore original names and 'pseries' class (lost by subsetting x)
   }
-  return(x)
+  x
 } # END alagt
 
 
@@ -969,7 +968,7 @@ lagr.pseries <- function(x, k = 1L, ...) {
 leadr.pseries <- function(x, k = 1L, ...) {
     ret <- lagr.pseries(x, k = -k)
     if(length(k) > 1L) colnames(ret) <- k
-    return(ret)
+    ret
 }
 
 ## diffr: lagging row-wise
@@ -987,32 +986,54 @@ diffr.pseries <- function(x, lag = 1L, ...) {
 
     lagrx <- lagr.pseries(x, k = lag)
     
-    if(is.matrix(lagrx)) {
+    res <- if (is.matrix(lagrx)) {
       # if 'lagrx' is matrix (case length(lag) > 1):
-      # perform subtraction without pseries feature of 'x', because otherwise 
+      # perform subtraction without pseries feature of 'x', because otherwise
       # the result would be c("pseries", "matrix") which is not supported
-      res <- as.numeric(x) - lagrx
+      as.numeric(x) - lagrx
     } else {
-      res <- x - lagrx
+      x - lagrx
     }
-    return(res)
+    
+    res
 }
 
+
 ## pdiff is (only) used in model.matrix to calculate the
-## model.matrix for FD models, works for effect = "individual" only,
+## model.matrix for FD models
+## wrapper
+pdiff <- function(x, effect = c("individual", "time"),
+                  has.intercept = FALSE,
+                  shift = c("time", "row")) {
+  
+    shift <- match.arg(shift)
+    res <- if (shift == "time")
+              pdifft(x = x,
+                     effect = effect,
+                     has.intercept = has.intercept)
+            else
+              pdiffr(x = x,
+                     effect = effect,
+                     has.intercept = has.intercept)
+    res
+}
+  
+## pdiffr works for effect = "individual" only,
 ## see model.matrix on how to call pdiff. Result is in order (id,
 ## time) for both effects
 ##
-## Performs row-wise shifting
-pdiff <- function(x, effect = c("individual", "time"), has.intercept = FALSE){
+## Performs row-wise shifting (note the 'r' in pdiffr)
+pdiffr <- function(x, effect = c("individual", "time"), has.intercept = FALSE){
   # NB: x is assumed to have an index attribute, e.g., a pseries
   #     can check with has.index(x)
+  
     effect <- match.arg(effect)
     cond <- as.numeric(unclass(attr(x, "index"))[[1L]]) # unclass for speed
     n <- if(is.matrix(x)) nrow(x) else length(x)
     cond <- c(NA, cond[2:n] - cond[seq_len(n-1)]) # this assumes a certain ordering
     cond[cond != 0] <- NA
     if(! is.matrix(x)){
+
         result <- c(NA , x[2:n] - x[seq_len(n-1)])
         result[is.na(cond)] <- NA
         result <- na.omit(result)
@@ -1027,7 +1048,32 @@ pdiff <- function(x, effect = c("individual", "time"), has.intercept = FALSE){
             colnames(result)[1L] <- "(Intercept)"
         }
     }
+
     attr(result, "na.action") <- NULL
     result
 }
+
+## performes time-wise shifting (note the 't' in pdifft)
+pdifft <- function(x, effect = c("individual", "time"), has.intercept = FALSE) {
+  effect <- match.arg(effect)
+  x.index <- attr(x, "index")
+  x.pdf <- as.data.frame(x, make.names = FALSE)
+  x.pdf <- cbind(x.index, x.df)
+  x.pdf <- pdata.frame(x.df, drop.index = TRUE)
+  
+  if(!is.matrix(x)) {
+    # pseries case (LHS)
+    res <- diff(x, effect = effect, shift = "time")
+    res <- subset_pseries(res, !is.na(res)) # TODO: use [.pseries (pseries subsetting) once implemented
+  } else {
+    # matrix case (RHS)
+    res <- apply(x, 2, function(col) diff(add_pseries_features(col, x.index),
+                                          effect = effect, shift = "time"))
+    res <- na.omit(res)
+    # if intercept is requested, set intercept column to 1 as it was diff'ed out
+    if(has.intercept) res[ , 1L] <- 1L
+  }
+  res
+}
+
 

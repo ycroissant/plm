@@ -24,6 +24,8 @@ Within.default.baseR <- plm:::Within.default
 Within.pseries.baseR <- plm:::Within.pseries
 Within.matrix.baseR  <- plm:::Within.matrix
 
+pdiff.baseR         <- plm:::pdiff
+
 pseriesfy.baseR      <- plm:::pseriesfy # ... in tool_pdata.frame.R:
 
 
@@ -131,6 +133,25 @@ Within.matrix <- function(x, effect, ...) {
            "lfe"      = Within.matrix.collapse.lfe(   x, effect, ...), # collapse for 1-way FE + lfe for 2-way FE,
            stop("unknown value of option 'plm.fast.pkg.FE.tw'"))
   }
+}
+
+#### wrapper for pdiff ####
+pdiff <- function(x, effect = c("individual", "time"), has.intercept = FALSE,
+                  shift = c("time", "row")) {
+  if(!isTRUE(getOption("plm.fast"))) {
+    pdiff.baseR(x, effect, has.intercept, shift) } else {
+      if(!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
+      pdiff.collapse(x, effect, has.intercept, shift) }
+}
+
+
+#### wrapper for pseriesfy ####
+# both pseriesfy functions are in file tool_pdata.frame.R 
+pseriesfy <- function(x,  ...) {
+  if(!isTRUE(getOption("plm.fast"))) {
+    pseriesfy.baseR(x, ...) } else {
+      if(!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
+      pseriesfy.collapse(x, ...) }
 }
 
 
@@ -595,14 +616,34 @@ Within.matrix.collapse.lfe <- function(x, effect,  ...) {
   return(result)
 }
 
-#### wrapper for pseriesfy ####
-# both pseriesfy functions are in file tool_pdata.frame.R 
-pseriesfy <- function(x,  ...) {
-  if(!isTRUE(getOption("plm.fast"))) {
-    pseriesfy.baseR(x, ...) } else {
-      if(!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
-      pseriesfy.collapse(x, ...) }
+pdiff.collapse <- function(x, effect = c("individual", "time"), has.intercept = FALSE, shift = c("time", "row")){
+  # NB: x is assumed to have an index attribute
+  #     can check with has.index(x)
+  
+  ## TODO: does not yet implement shift = "time", gives row-wise shifting no matter the input for arg shift
+  
+  effect <- match.arg(effect)
+  shift <- match.arg(shift)
+  xindex <- unclass(attr(x, "index"))
+  checkNA.index(xindex) # index may not contain any NA
+  
+  eff.no <- switch(effect,
+                   "individual" = 1L,
+                   "time"       = 2L,
+                   stop("unknown value of argument 'effect'"))
+  
+  eff.fac <- xindex[[eff.no]]
+  
+  if(inherits(x, "pseries")) x <- remove_pseries_features(x)
+  
+  res <- collapse::fdiff(x, g = eff.fac)
+  res <- na.omit(res)
+  
+  # if intercept is requested, set intercept column to 1 as it was diff'ed out
+  if(has.intercept) res[ , "(Intercept)"] <- 1L
+  res
 }
+
 
 .onAttach <- function(libname, pkgname) {
   options("plm.fast" = TRUE) # since 2.6: needs pkg collapse as hard dependency
@@ -676,7 +717,8 @@ pseriesfy <- function(x,  ...) {
 #'   \item Between,
 #'   \item Sum,
 #'   \item Within,
-#'   \item pseriesfy.
+#'   \item pseriesfy,
+#'   \item pdiff (internal function).
 #' }
 #' 
 #' @name plm.fast

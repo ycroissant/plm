@@ -167,7 +167,7 @@ model.matrix.pdata.frame <- function(object,
     if(model == "between") X <- between(X, effect)
     if(model == "mean")    X <- Mean(X)
     if(model == "fd")      X <- pdiff(X, effect = "individual",
-                                   has.intercept = has.intercept)
+                                   has.intercept = has.intercept, shift = "row")
     if(model == "random"){
         if(is.null(theta)) stop("a theta argument must be provided for model = \"random\"")
         if(effect %in% c("time", "individual")) X <- X - theta * Between(X, effect)
@@ -315,7 +315,7 @@ ptransform <- function(x, model = NULL, effect = NULL, theta = NULL, ...){
     if(model == "within")  x <- Within(x, effect)
     if(model == "between") x <- between(x, effect)
     if(model == "Between") x <- Between(x, effect)
-    if(model == "fd")      x <- pdiff(x, "individual")
+    if(model == "fd")      x <- pdiff(x, effect = "individual", shift = "row")
     if(model == "random") {
         balanced <- is.pbalanced(x) # need to check this right here as long as x is a pseries
         if(is.null(theta)) stop("a theta argument must be provided")
