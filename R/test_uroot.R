@@ -1236,9 +1236,7 @@ phansitest <- function(object, alpha = 0.05) {
 }
 
 phansi <- function(object, alpha = 0.05) {
-  .Deprecated(new = "phansitest", msg = "function 'phansi' renamed to 'phansitest'. Change your code to use 'phansitest'.",
-              old = "phansi")
-  phansitest(object, alpha = alpha)
+  stop("function 'phansi' renamed to 'phansitest'. Change your code to use 'phansitest'.")
 }
 
 
