@@ -620,23 +620,36 @@ pdiff.collapse <- function(x, effect = c("individual", "time"), has.intercept = 
   # NB: x is assumed to have an index attribute
   #     can check with has.index(x)
   
-  ## TODO: does not yet implement shift = "time", gives row-wise shifting no matter the input for arg shift
-  
   effect <- match.arg(effect)
   shift <- match.arg(shift)
   xindex <- unclass(attr(x, "index"))
   checkNA.index(xindex) # index may not contain any NA
-  
-  eff.no <- switch(effect,
-                   "individual" = 1L,
-                   "time"       = 2L,
-                   stop("unknown value of argument 'effect'"))
-  
-  eff.fac <- xindex[[eff.no]]
-  
-  if(inherits(x, "pseries")) x <- remove_pseries_features(x)
-  
-  res <- collapse::fdiff(x, g = eff.fac)
+
+  if(shift == "row") {
+    eff.no <- switch(effect,
+                     "individual" = 1L,
+                     "time"       = 2L,
+                     stop("unknown value of argument 'effect'"))
+    
+    eff.fac <- xindex[[eff.no]]
+    
+    if(inherits(x, "pseries")) x <- remove_pseries_features(x)
+    res <- collapse::fdiff(x, g = eff.fac)
+    
+  } else {
+    # shift = "time"
+    
+    # make a pdata.frame the dirty way (esp. to names like "(Intercept)")
+    # .. works as x is already ensures to be panel-stacked
+    # and apply collapse::fdiff on it
+    x.pdf <- as.data.frame(x)
+    class(x.pdf) <- c("pdata.frame", class(x.pdf))
+    attr(x.pdf, "index") <- attr(x, "index")
+    
+    res <- collapse::fdiff(x.pdf)
+    res <- as.matrix(res)
+  }
+
   res <- na.omit(res)
   
   # if intercept is requested, set intercept column to 1 as it was diff'ed out
