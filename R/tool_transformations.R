@@ -766,7 +766,7 @@ lead <- function(x, k = 1L, ...) {
 lag.pseries <- function(x, k = 1L, shift = c("time", "row"), ...) {
   shift <- match.arg(shift)
   res <- if(shift == "time") lagt.pseries(x = x, k = k, ...) else lagr.pseries(x = x, k = k, ...)
-  return(res)
+  res
 }
 
 #' @rdname lag.plm
@@ -774,7 +774,7 @@ lag.pseries <- function(x, k = 1L, shift = c("time", "row"), ...) {
 lead.pseries <- function(x, k = 1L, shift = c("time", "row"), ...) {
   shift <- match.arg(shift)
   res <- if(shift == "time") leadt.pseries(x = x, k = k, ...) else leadr.pseries(x = x, k = k, ...)
-  return(res)
+  res
 }
 
 #' @rdname lag.plm
@@ -782,7 +782,7 @@ lead.pseries <- function(x, k = 1L, shift = c("time", "row"), ...) {
 diff.pseries <- function(x, lag = 1L, shift = c("time", "row"), ...) {
   shift <- match.arg(shift)
   res <- if(shift == "time") difft.pseries(x = x, lag = lag, ...) else diffr.pseries(x = x, lag = lag, ...)
-  return(res)
+  res
 }
 
 ## lagt.pseries lagging taking the time variable into account
@@ -798,7 +798,7 @@ lagt.pseries <- function(x, k = 1L, ...) {
   else {
     rval <- alagt(x, k)
   }
-  return(rval)
+  rval
 }
 
 ## leadt.pseries(x, k) is a wrapper for lagt.pseries(x, -k)
@@ -824,16 +824,16 @@ difft.pseries <- function(x, lag = 1L, ...){
   
   lagtx <- lagt.pseries(x, k = lag) # use "time-based" lagging for difft
   
-  if(is.matrix(lagtx)) {
+  res <- if (is.matrix(lagtx)) {
     # if 'lagtx' is matrix (case length(lag) > 1):
-    # perform subtraction without pseries feature of 'x', because otherwise 
+    # perform subtraction without pseries feature of 'x', because otherwise
     # the result would be c("pseries", "matrix") which is not supported
-    res <- as.numeric(x) - lagtx
+    as.numeric(x) - lagtx
   } else {
-    res <- x - lagtx
+    x - lagtx
   }
   
-  return(res)
+  res
 }
 
 ## alagt: non-exported helper function for lagt (actual work horse),
@@ -896,7 +896,7 @@ alagt <- function(x, ak) {
     x[NApos] <- NA  # set NAs where necessary
     attributes(x) <- orig_attr # restore original names and 'pseries' class (lost by subsetting x)
   }
-  return(x)
+  x
 } # END alagt
 
 
@@ -969,7 +969,7 @@ lagr.pseries <- function(x, k = 1L, ...) {
 leadr.pseries <- function(x, k = 1L, ...) {
     ret <- lagr.pseries(x, k = -k)
     if(length(k) > 1L) colnames(ret) <- k
-    return(ret)
+    ret
 }
 
 ## diffr: lagging row-wise
@@ -987,15 +987,16 @@ diffr.pseries <- function(x, lag = 1L, ...) {
 
     lagrx <- lagr.pseries(x, k = lag)
     
-    if(is.matrix(lagrx)) {
+    res <- if (is.matrix(lagrx)) {
       # if 'lagrx' is matrix (case length(lag) > 1):
-      # perform subtraction without pseries feature of 'x', because otherwise 
+      # perform subtraction without pseries feature of 'x', because otherwise
       # the result would be c("pseries", "matrix") which is not supported
-      res <- as.numeric(x) - lagrx
+      as.numeric(x) - lagrx
     } else {
-      res <- x - lagrx
+      x - lagrx
     }
-    return(res)
+    
+    res
 }
 
 ## pdiff is (only) used in model.matrix to calculate the
