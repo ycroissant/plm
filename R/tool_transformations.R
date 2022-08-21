@@ -874,10 +874,9 @@ alagt <- function(x, ak) {
                                     simplify = FALSE, USE.NAMES = FALSE)
     
     # translate block-wise positions to positions in full vector
-    index_lag_ak_all <- unlist(index_lag_ak_all_list, use.names = FALSE)
+    substitute_blockwise <- unlist(index_lag_ak_all_list, use.names = FALSE)
     
-    NApos <- is.na(index_lag_ak_all) # save NA positions for later
-    substitute_blockwise <- index_lag_ak_all
+    NApos <- is.na(substitute_blockwise) # save NA positions for later
     
     block_lengths <- lengths(index_lag_ak_all_list, use.names = FALSE)
     
