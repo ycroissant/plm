@@ -219,7 +219,7 @@ pHedonic <- pdata.frame(Hedonic, index = "townid")
 form <- formula(mv ~ crim + zn + indus + chas + nox + rm + age + dis + rad + tax + ptratio + blacks + lstat)
 summary(plm(form, data = pHedonic, model = "random"))
 
-## do (weired) scaling of variables as in Baltagi/Chang (1994)
+## do (weird) scaling of variables as in Baltagi/Chang (1994)
 Hedonic$mv2      <- Hedonic$mv
 Hedonic$crim2    <- Hedonic$crim / 100
 Hedonic$zn2      <- Hedonic$zn / 1000
