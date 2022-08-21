@@ -1404,9 +1404,11 @@ make.fdindex <- function(x) {
   
   ix.ind.lag <- lag(add_pseries_features(ix[[1L]], ix))
   ix.ti.lag  <- lag(add_pseries_features(ix[[2L]], ix))
-  
-  ix.ind.lag <- ix.ind.lag[!is.na(ix.ind.lag)]
-  ix.ti.lag  <- ix.ti.lag[!is.na(ix.ti.lag)]
+
+  na <- is.na(ix.ind.lag) # NAs are in same positions for ind and time index
+
+  ix.ind.lag <- ix.ind.lag[!na]
+  ix.ti.lag  <- ix.ti.lag[!na]
   
   list(ix.ind.lag, ix.ti.lag)
 }
