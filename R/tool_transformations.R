@@ -1058,8 +1058,8 @@ pdifft <- function(x, effect = c("individual", "time"), has.intercept = FALSE) {
   effect <- match.arg(effect)
   x.index <- attr(x, "index")
   x.pdf <- as.data.frame(x, make.names = FALSE)
-  x.pdf <- cbind(x.index, x.df)
-  x.pdf <- pdata.frame(x.df, drop.index = TRUE)
+  x.pdf <- cbind(x.index, x.pdf)
+  x.pdf <- pdata.frame(x.pdf, drop.index = TRUE)
   
   if(!is.matrix(x)) {
     # pseries case (LHS)
