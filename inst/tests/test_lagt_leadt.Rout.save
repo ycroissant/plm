@@ -1,6 +1,6 @@
 
-R version 4.1.1 (2021-08-10) -- "Kick Things"
-Copyright (C) 2021 The R Foundation for Statistical Computing
+R version 4.2.1 (2022-06-23 ucrt) -- "Funny-Looking Kid"
+Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -325,8 +325,14 @@ Levels: 1 2 3 4 5 6 7 8 9 10
 > # should be all NA
 > if(!isTRUE(all(is.na(lag(Grunfeld$inv, 20))))) stop("all-NA case not correct") # 20 is no of obs per id
 > if(!isTRUE(all(is.na(lag(Grunfeld$inv, 21))))) stop("all-NA case not correct") # 21 is more than obs per id available
+Warning message:
+In flag.pseries(x = x, n = k, shift = "time") :
+  lag-length exceeds average group-size (20). This could also be a result of unused factor levels. See #25. Use fdroplevels() to remove unused factor levels from your data.
 > if(!isTRUE(all(is.na(lead(Grunfeld$inv, 20))))) stop("all-NA case not correct") # 20 is no of obs per id
 > if(!isTRUE(all(is.na(lead(Grunfeld$inv, 21))))) stop("all-NA case not correct") # 21 is more than obs per id available
+Warning message:
+In flag.pseries(x = x, n = -k, shift = "time") :
+  lag-length exceeds average group-size (20). This could also be a result of unused factor levels. See #25. Use fdroplevels() to remove unused factor levels from your data.
 > 
 > ## length(k) > 1
 > lag(Grunfeld$inv, c(-2, -1, 0, 1, 2))
@@ -1296,4 +1302,4 @@ In pdata.frame(dfNA) :
 > 
 > proc.time()
    user  system elapsed 
-   3.00    0.54    3.70 
+   1.68    0.18    1.85 

@@ -28,6 +28,7 @@ pdiff.baseR         <- plm:::pdiff
 
 pseriesfy.baseR      <- plm:::pseriesfy # ... in tool_pdata.frame.R:
 
+## lag, lead, diff: are collapse-powered but in file tool_transformations.R (incl. their wrappers).
 
 ## ad 2) implement wrapper switches
 
@@ -735,6 +736,7 @@ pdiff.collapse <- function(x, effect = c("individual", "time"), has.intercept = 
 #'   \item Between,
 #'   \item Sum,
 #'   \item Within,
+#'   \item lag, lead, and diff,
 #'   \item pseriesfy,
 #'   \item pdiff (internal function).
 #' }

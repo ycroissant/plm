@@ -765,7 +765,23 @@ lead <- function(x, k = 1L, ...) {
 #' @export lag
 lag.pseries <- function(x, k = 1L, shift = c("time", "row"), ...) {
   shift <- match.arg(shift)
-  res <- if(shift == "time") lagt.pseries(x = x, k = k, ...) else lagr.pseries(x = x, k = k, ...)
+  
+  if (shift == "time") {
+    if (!isTRUE(getOption("plm.fast"))) {
+      res <- lagt.pseries(x = x, k = k, ...) # base R
+    } else {
+      if (!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
+      res <- collapse2plm_lag_diff(collapse::flag(x = x, n = k, shift = "time"), k = k)
+    }
+  } else {
+    ## row-wise shifting
+    if (!isTRUE(getOption("plm.fast"))) {
+      res <- lagr.pseries(x = x, k = k, ...) # base R
+    } else {
+      if (!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
+      res <- collapse2plm_lag_diff(collapse::flag(x = x, n = k, shift = "row"), k = k)
+    }
+  }
   res
 }
 
@@ -773,7 +789,23 @@ lag.pseries <- function(x, k = 1L, shift = c("time", "row"), ...) {
 #' @export
 lead.pseries <- function(x, k = 1L, shift = c("time", "row"), ...) {
   shift <- match.arg(shift)
-  res <- if(shift == "time") leadt.pseries(x = x, k = k, ...) else leadr.pseries(x = x, k = k, ...)
+  
+  if (shift == "time") {
+    if (!isTRUE(getOption("plm.fast"))) {
+      res <- leadt.pseries(x = x, k = k, ...) # base R
+    } else {
+      if (!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
+      res <- collapse2plm_lag_diff(collapse::flag(x = x, n = -k, shift = "time"), k = k)
+    }
+  } else {
+    ## row-wise shifting
+    if (!isTRUE(getOption("plm.fast"))) {
+      res <- leadr.pseries(x = x, k = k, ...) # base R
+    } else {
+      if (!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
+      res <- collapse2plm_lag_diff(collapse::flag(x = x, n = -k, shift = "row"), k = k)
+    }
+  }
   res
 }
 
@@ -781,7 +813,32 @@ lead.pseries <- function(x, k = 1L, shift = c("time", "row"), ...) {
 #' @exportS3Method
 diff.pseries <- function(x, lag = 1L, shift = c("time", "row"), ...) {
   shift <- match.arg(shift)
-  res <- if(shift == "time") difft.pseries(x = x, lag = lag, ...) else diffr.pseries(x = x, lag = lag, ...)
+  
+  if (shift == "time") {
+    if (!isTRUE(getOption("plm.fast"))) {
+      res <- difft.pseries(x = x, lag = lag, ...) # base R
+    } else {
+      if (!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
+      res <- collapse2plm_lag_diff(collapse::fdiff(x = x, n = lag, shift = "time"), k = lag)
+      
+      # work around a little sublety in collapse (at mim up to and incl. 1.8.8) where
+      # a differed logical pseries does not result in a pseries of integers but stays
+      # a logical pseries
+      if(inherits(x, "logical") && inherits(res, "logical")) class(res) <- c("pseries", "integer")
+    }
+  } else {
+    ## row-wise shifting
+    if (!isTRUE(getOption("plm.fast"))) {
+      res <- diffr.pseries(x = x, lag = lag, ...) # base R
+    } else {
+      if (!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
+      res <- collapse2plm_lag_diff(collapse::fdiff(x = x, n = lag, shift = "row"), k = lag)
+      # work around a little sublety in collapse (at mim up to and incl. 1.8.8) where
+      # a differed logical pseries does not result in a pseries of integers but stays
+      # a logical pseries
+      if(inherits(x, "logical") && inherits(res, "logical")) class(res) <- c("pseries", "integer")
+    }
+  }
   res
 }
 
@@ -1076,4 +1133,20 @@ pdifft <- function(x, effect = c("individual", "time"), has.intercept = FALSE) {
   res
 }
 
-
+### non-exported helper function to align collapse::flag to plm's original lag
+## https://github.com/SebKrantz/collapse/issues/183 and there is no factor matrix
+## https://stackoverflow.com/a/28724756/4640346
+collapse2plm_lag_diff <- function(x, k) {
+  if(is.matrix(x)) {
+    dim.nam1 <- dimnames(x)[[1L]]
+    if(inherits(x, "factor")) {
+      # cater for collapse's special factor matrix case
+      x <- matrix(as.character(x), ncol = dim(x)[[2L]])
+      dimnames(x)[[1L]] <- dim.nam1
+    }
+    class(x) <- NULL
+    attr(x, "index") <- NULL
+    dimnames(x)[[2L]] <- k
+  }
+  x
+}

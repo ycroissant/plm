@@ -14,6 +14,8 @@ Changes relative to CRAN 2.6-2:
 * `plm/pggls(., model = "fd")`: faster first-difference model estimation (due to 
    using `collapse::fdiff`).
    NB: FD models are based on row-wise differences, not (yet) time-wise.
+* `lag`, `lead`, and `diff` on panel data (pseries) are now faster due to using 
+    the fast collapse functions internally (`collapse::flag`, `collapse::fdiff`).
 
 
 # plm 2.6-2
