@@ -91,7 +91,7 @@ if (!isTRUE(all.equal(plm:::lagr.pseries(Grunfeld$inv, 1), plm:::leadr.pseries(G
 
 
 # with logical
-Grunfeld$log <- rep(c(T, T, F, T), 50)
+Grunfeld$log <- rep(c(TRUE, TRUE, FALSE, TRUE), 50)
 if (!isTRUE(all.equal(plm:::lagr.pseries(Grunfeld$log, -1), plm:::leadr.pseries(Grunfeld$log, 1)))) stop("'plm:::lagr.pseries( , -1)' not equal to 'plm:::leadr.pseries( , 1)'")
 if (!isTRUE(all.equal(plm:::lagr.pseries(Grunfeld$log, 1), plm:::leadr.pseries(Grunfeld$log, -1)))) stop("'plm:::lagr.pseries( , 1)' not equal to 'plm:::leadr.pseries( , -1)'")
   # identical is even stricter than all.equal

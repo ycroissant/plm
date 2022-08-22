@@ -4,7 +4,7 @@ library("plm")
 data("Grunfeld", package = "plm")
 
 Grunfeld$char <- rep("ab", 200)
-Grunfeld$logi <- rep(c(T, F), 100)
+Grunfeld$logi <- rep(c(TRUE, FALSE), 100)
 Grunfeld$fac <- factor(rep(c("a", "b"), 100))
 
 pGrund <- pdata.frame(Grunfeld, stringsAsFactors = FALSE)
