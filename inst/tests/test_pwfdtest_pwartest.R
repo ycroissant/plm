@@ -22,7 +22,7 @@
 # pnlswork_r8$age2 <- (pnlswork_r8$age)^2
 # pnlswork_r8$tenure2 <- (pnlswork_r8$tenure)^2
 # 
-# form_nls <- formula(ln_wage ~ age + age2 + ttl_exp  + tenure + tenure2 + south)
+# form_nls <- formula(ln_wage ~ 0 + age + age2 + ttl_exp  + tenure + tenure2 + south)
 # 
 # fe_nls <- plm(form_nls, data = pnlswork_r8, model = "within")
 # fd_nls <- plm(form_nls, data = pnlswork_r8, model = "fd")
@@ -52,7 +52,7 @@
 # pwfdtest(fd_nls)
 # pwfdtest(form_nls, data=nlswork_r8)
 # pwfdtest(form_nls, data=pnlswork_r8)
-#
+# 
 # pwartest(fe_nls)
 ## pwartest(fd_nls) # errors rightfully and informatively
 ## pwfdtest(fe_nls) # errors rightfully and informatively
