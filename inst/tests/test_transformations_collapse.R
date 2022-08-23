@@ -921,6 +921,24 @@ stopifnot(isTRUE(all.equal(W1_mat_unbal_tw_narm, W2_mat_unbal_tw_narm_lfe,      
 # 
 # times <- 3 # no. of repetitions for benchmark
 # 
+# 
+# bench_lag <- microbenchmark(
+#      {options("plm.fast" = FALSE); lapply(as.list(data, keep.attributes = TRUE), lag)},
+#      {options("plm.fast" = TRUE);  lapply(as.list(data, keep.attributes = TRUE), lag)},
+#      times = times, unit = "s")
+# 
+# 
+# bench_diff<- microbenchmark(
+#      {options("plm.fast" = FALSE); lapply(as.list(data, keep.attributes = TRUE), function(x) {if(is.numeric(x)) diff(x)})},
+#      {options("plm.fast" = TRUE);  lapply(as.list(data, keep.attributes = TRUE), function(x) {if(is.numeric(x)) diff(x)})},
+#      times = times, unit = "s")
+# 
+# 
+# FD <- microbenchmark(
+#   {options("plm.fast" = FALSE); plm(form, data = data, model = "fd")},
+#   {options("plm.fast" = TRUE);  plm(form, data = data, model = "fd")},
+#   times = times, unit = "relative")
+# 
 # onewayFE <- microbenchmark(
 #   {options("plm.fast" = FALSE); plm(form, data = data, model = "within")},
 #   {options("plm.fast" = TRUE);  plm(form, data = data, model = "within")},
@@ -957,19 +975,19 @@ stopifnot(isTRUE(all.equal(W1_mat_unbal_tw_narm, W2_mat_unbal_tw_narm_lfe,      
 # summary(twowayFE)
 # 
 # 
-# ## 2-FE unbalanced: collapse vs. lfe
-# # options("plm.fast" = TRUE)
-# # bench_2FE_collapse <- microbenchmark(
-# #                           plm(form, data = data, model = "within", effect = "twoways"),
-# #                         times = 10)
-# # 
-# # assignInNamespace("Within.pseries", Within.pseries.lfe, envir = as.environment("package:plm"))
-# # assignInNamespace("Within.matrix",  Within.matrix.lfe,  envir = as.environment("package:plm"))
-# # 
-# # bench_2FE_lfe <- microbenchmark(
-# #                       plm(form, data = data, model = "within", effect = "twoways"),
-# #                     times = 10)
-# # 
-# # print(bench_2FE_collapse, unit = "s")
-# # print(bench_2FE_lfe,      unit = "s")
-# 
+## 2-FE unbalanced: collapse vs. lfe
+# options("plm.fast" = TRUE)
+# bench_2FE_collapse <- microbenchmark(
+#                           plm(form, data = data, model = "within", effect = "twoways"),
+#                         times = 10)
+#
+# assignInNamespace("Within.pseries", Within.pseries.lfe, envir = as.environment("package:plm"))
+# assignInNamespace("Within.matrix",  Within.matrix.lfe,  envir = as.environment("package:plm"))
+#
+# bench_2FE_lfe <- microbenchmark(
+#                       plm(form, data = data, model = "within", effect = "twoways"),
+#                     times = 10)
+#
+# print(bench_2FE_collapse, unit = "s")
+# print(bench_2FE_lfe,      unit = "s")
+
