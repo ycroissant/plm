@@ -791,3 +791,21 @@ make.dummies.pdata.frame <- function(x, col, base = 1L, base.add = TRUE, ...) {
   res
 }
 
+
+gettvalue <- function(x, coefname) {
+  ## non-exported
+  ## helper function to extract one or more t value(s)
+  ## (coef/s.e.) for a coefficient from model object useful if one wants
+  ## to avoid the computation of a whole lot of values with summary()
+  
+  # x: model object (usually class plm or lm) coefname: character
+  # indicating name(s) of coefficient(s) for which the t value(s) is
+  # (are) requested
+  # return value: named numeric vector of length == length(coefname)
+  # with requested t value(s)
+  beta <- coef(x)[coefname]
+  se <- sqrt(diag(vcov(x))[coefname])
+  tvalue <- beta / se
+  return(tvalue)
+}
+
