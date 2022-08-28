@@ -26,6 +26,9 @@
 ## - print.summary
 ## - is.pseries
 
+## - pseries2pdataframe (non-exported)
+## - pmerge (non-exported)
+
 ## pdim:
 ## - pdim.default
 ## - pdim.data.frame
@@ -1432,4 +1435,41 @@ pos.index <- function(x, ...) {
   index_pos <- match(index_names, names(x))
   names(index_pos) <- index_names
   return(index_pos)
+}
+
+pseries2pdataframe <- function(x, pdata.frame = TRUE, ...) {
+  ## non-exported
+  ## Transforms a pseries in a (p)data.frame with the indices as regular columns
+  ## in positions 1, 2 and (if present) 3 (individual index, time index, group index).
+  ## if pdataframe = TRUE -> return a pdata.frame, if FALSE -> return a data.frame
+  ## ellipsis (dots) passed on to pdata.frame()
+  if(!inherits(x, "pseries")) stop("input needs to be of class 'pseries'")
+  indices <- attr(x, "index")
+  class(indices) <- setdiff(class(indices), "pindex")
+  vx <- remove_pseries_features(x)
+  dfx <- cbind(indices, vx)
+  dimnames(dfx)[[2L]] <- c(names(indices), deparse(substitute(x)))
+  res <- if(pdata.frame == TRUE) {
+    pdata.frame(dfx, index = names(indices), ...)
+  } else { dfx }
+  return(res)
+}
+
+pmerge <- function(x, y, ...) {
+  ## non-exported
+  ## Returns a data.frame, not a pdata.frame.
+  ## pmerge is used to merge pseries or pdata.frames into a data.frame or
+  ## to merge a pseries to a data.frame
+  
+  ## transf. if pseries or pdata.frame
+  if(inherits(x, "pseries")) x <- pseries2pdataframe(x, pdata.frame = FALSE)
+  if(inherits(y, "pseries")) y <- pseries2pdataframe(y, pdata.frame = FALSE)
+  if(inherits(x, "pdata.frame")) x <- as.data.frame(x, keep.attributes = FALSE)
+  if(inherits(y, "pdata.frame")) y <- as.data.frame(y, keep.attributes = FALSE)
+  
+  # input to merge() needs to be data.frames; not yet suitable for 3rd index (group variable)
+  z <- merge(x, y,
+             by.x = dimnames(x)[[2L]][1:2],
+             by.y = dimnames(y)[[2L]][1:2], ...)
+  return(z)
 }
