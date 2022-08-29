@@ -11,9 +11,9 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 Changes relative to CRAN 2.6-2:
 
 ### Speed-up:
-* `lag`, `lead`, and `diff` on panel data (pseries) are now faster due to using 
-    the fast collapse functions internally (`collapse::flag`, `collapse::fdiff`),
-    on large data sets approx. 10x to 20x faster.
+* `lag`, `lead`, and `diff` on panel data (pseries, pdata.frame) are now faster 
+    due to usage of the fast collapse functions internally (`collapse::flag`, 
+    `collapse::fdiff`), on large data sets approx. 10x to 20x faster.
     
 * `plm/pggls(., model = "fd")`: faster first-difference model estimation (due to 
    using `collapse::fdiff`).
@@ -21,7 +21,6 @@ Changes relative to CRAN 2.6-2:
 
 
 # plm 2.6-2
-
 
 ### Features:
 * `predict.plm`:
@@ -45,7 +44,7 @@ Changes relative to CRAN 2.6-2:
 * `pldv`: variance-covariance fixed for case `model = "fd"` when `objfun == "lsq"` 
    and `sample == "cens"`.
 * `fixef(., type = "dfirst"`): for models with `length(fixef(<model_object>)) == 2`, 
-  fixef does not error anymore and for `length(fixef(<model_object>)) == 1`, 
+  `fixef` does not error anymore and for `length(fixef(<model_object>)) == 1`, 
   the result is more sane (`numeric(0)`).
   
 ### Speed-up:
