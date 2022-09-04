@@ -1110,7 +1110,7 @@ pdiffr <- function(x, effect = c("individual", "time"), has.intercept = FALSE){
     result
 }
 
-## performes time-wise shifting (note the 't' in pdifft)
+## performs time-wise shifting (note the 't' in pdifft)
 pdifft <- function(x, effect = c("individual", "time"), has.intercept = FALSE) {
   effect <- match.arg(effect)
   x.index <- attr(x, "index")

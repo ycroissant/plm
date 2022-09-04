@@ -640,8 +640,8 @@ pdiff.collapse <- function(x, effect = c("individual", "time"), has.intercept = 
   } else {
     # shift = "time"
     
-    # make a pdata.frame the dirty way (esp. to names like "(Intercept)")
-    # .. works as x is already ensures to be panel-stacked
+    # make a pdata.frame the dirty way (esp. to keep names like "(Intercept)")
+    # .. works as x is already ensured to be panel-stacked
     # and apply collapse::fdiff on it
     if(is.matrix(x)) {
       x.pdf <- as.data.frame(x)

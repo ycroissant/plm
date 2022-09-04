@@ -109,7 +109,7 @@ list element) (two lists in case of system GMM,}
 \item{call}{the call.}
 
 In addition, it has attribute \code{"pdim"} which contains the pdim object for
-model.
+the model.
 
 It has \code{print}, \code{summary} and \code{print.summary} methods.
 }
