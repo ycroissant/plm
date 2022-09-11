@@ -961,7 +961,7 @@ is.pseries <- function(object) {
 #'     observations (individual, time) actually used for model
 #'     estimation are taken into account.  When called on a
 #'     `(p)data.frame`, the rows in the `(p)data.frame` are
-#'     considered, disregarding any `NA`values in the dependent or
+#'     considered, disregarding any `NA` values in the dependent or
 #'     independent variable(s) which would be dropped during model
 #'     estimation.
 #' @export
