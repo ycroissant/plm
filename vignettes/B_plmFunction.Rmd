@@ -109,13 +109,15 @@ more main arguments can be set :
   index.
 - `effect` indicates the effects that should be taken into account ;
   this is one of `"individual"`, `"time"`, and `"twoways"`.
-- `model` indicates the model to be estimated : `"pooling"` is just the
-  OLS estimation (equivalent to a call to `lm`), `"between"` performs
-  the estimation on the individual or time means, `"within"` on the
-  deviations from the individual or/and time mean, `"fd"` on the first
-  differences and `"random"` perform a feasible generalized least
-  squares estimation which takes into account the correlation induced
-  by the presence of individual and/or time effects.
+- `model` indicates the model to be estimated :
+    + `"pooling"` is the OLS estimation (equivalent to a call to `lm`),
+    + `"between"` performs the estimation on the individual or time means, 
+    + `"within"` (fixed-effects model) on the deviations from the individual 
+                  or/and time mean, 
+    + `"fd"` on the first differences, and 
+    + `"random"` (random-effects model) perform a feasible generalized least 
+    squares estimation which takes into account the correlation induced by the 
+    presence of individual and/or time effects.
 
 The estimation of all but the last model is straightforward, as it
 requires only the estimation by *OLS* of obvious transformations of
