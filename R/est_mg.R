@@ -131,6 +131,7 @@ pmg <- function(formula, data, subset, na.action,
     mf <- model.frame(plm.model)
     index <- unclass(attr(mf, "index")) # unclass for speed
     ind  <- index[[1L]] ## individual index
+    ind.GRP <- collapse::GRP(ind) ## individual index as collapse-optimised GRP
     tind <- index[[2L]] ## time index
     ## set dimension variables
     pdim <- pdim(plm.model)
@@ -150,7 +151,7 @@ pmg <- function(formula, data, subset, na.action,
 
 
   ## det. *minimum* group numerosity
-  t <- min(Ti) # == min(tapply(X[ , 1], ind, length))
+  t <- min(Ti)
 
   ## check min. t numerosity
   ## NB it is also possible to allow estimation if there *is* one group
@@ -174,11 +175,9 @@ pmg <- function(formula, data, subset, na.action,
   switch(model,
     "mg" = {
       # split X, y by individual and store in lists
-      X.col <- NCOL(X)
-      tX.list <- split(X, ind)
-      tX.list <- lapply(tX.list, function(m) matrix(m, ncol = X.col))
+      tX.list <- collapse::rsplit(X, ind.GRP, use.names = FALSE)
       
-      ty.list <- split(y, ind)
+      ty.list <- collapse::gsplit(y, ind.GRP)
       
       ## for each x-sect. i = 1..n
       for(i in seq_len(n)) {
@@ -202,11 +201,9 @@ pmg <- function(formula, data, subset, na.action,
       
       augX <- cbind(X, ym, Xm[ , -1L, drop = FALSE])
 
-      augX.col <- NCOL(augX)
-      taugX.list <- split(augX, ind)
-      taugX.list <- lapply(taugX.list, function(m) matrix(m, ncol = augX.col))
+      taugX.list <- collapse::rsplit(augX, ind.GRP, use.names = FALSE)
       
-      ty.list <- split(y, ind)
+      ty.list <- collapse::gsplit(y, ind.GRP)
       
       ## for each x-sect. i = 1..n estimate (over t) an augmented model
       ## y_it = alpha_i + beta_i*X_it + c1_i*my_t + c2_i*mX_t + err_it
@@ -236,11 +233,9 @@ pmg <- function(formula, data, subset, na.action,
       demX[ , 1L] <- 1 # put back intercept lost by within transformation
       demy <- as.numeric(Within(y, effect = "time", na.rm = TRUE))
 
-      demX.col <- NCOL(demX)
-      tdemX.list <- split(demX, ind)
-      tdemX.list <- lapply(tdemX.list, function(m) matrix(m, ncol = demX.col))
+      tdemX.list <- collapse::rsplit(demX, ind.GRP, use.name = FALSE)
       
-      tdemy.list <- split(demy, ind)
+      tdemy.list <- collapse::gsplit(demy, ind.GRP)
             
       ## for each x-sect. i=1..n estimate (over t) a demeaned model
       ## (y_it-my_t) = alpha_i + beta_i*(X_it-mX_t) + err_it

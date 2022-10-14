@@ -69,6 +69,7 @@
 #'     \item{r.squared}{numeric, the R squared.}
 #' @export
 #' @importFrom MASS ginv
+#' @importFrom collapse rsplit GRP
 #' @author Giovanni Millo
 #' @references
 #'
@@ -93,10 +94,6 @@ pcce <- function (formula, data, subset, na.action,
                   index = NULL, trend = FALSE, ...) {
   
   ## TODO: in general: 
-  ##    * consider if data can be split only once and work on the split
-  ##      data instead of cycling through the data with for-loops at various
-  ##      occasions (could be faster); splitting only once is implemented since 
-  ##      2022-05-21
   ##    * consider parallel execution via mclapply/mcmapply (aligns with the 
   ##      split-only-once aspect mentioned above).
   
@@ -206,15 +203,12 @@ pcce <- function (formula, data, subset, na.action,
     ## as in KPY, eq. 15
     
     # split X, y, Hhat by individual and store in lists
-    X.col <- NCOL(X)
-    tX.list <- split(X, ind)
-    tX.list <- lapply(tX.list, function(m) matrix(m, ncol = X.col))
+    ind.GRP <- collapse::GRP(ind)
+    tX.list <- collapse::rsplit(X, ind.GRP, use.names = FALSE)
     
-    ty.list <- split(y, ind)
+    ty.list <- collapse::gsplit(y, ind.GRP)
     
-    Hhat.col <- NCOL(Hhat)
-    tHhat.list <- split(Hhat, ind)
-    tHhat.list <- lapply(tHhat.list, function(m) matrix(m, ncol = Hhat.col))
+    tHhat.list <- collapse::rsplit(Hhat, ind.GRP, use.names = FALSE)
     tMhat.list <- vector("list", length = n) # pre-allocate
  
     for(i in seq_len(n)) {
@@ -371,7 +365,7 @@ pcce <- function (formula, data, subset, na.action,
     })
 
     ## calc. overall R2, CCEMG or CCEP depending on 'model'
-    sigma2.i <- split(y, ind)
+    sigma2.i <- collapse::gsplit(y, ind.GRP)
     sigma2.i <- lapply(sigma2.i, function(y.i) {
                     as.numeric(crossprod(y.i - mean(y.i)))/(length(y.i)-1)})
     sigma2y <- mean(unlist(sigma2.i, use.names = FALSE))

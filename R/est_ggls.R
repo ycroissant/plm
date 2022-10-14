@@ -205,7 +205,7 @@ pggls <- function(formula, data, subset, na.action,
     }
 
     if (balanced) {
-        tres <- split(resid, cond)
+        tres <- collapse::gsplit(resid, cond)
         tres <- lapply(tres, function(x) outer(x, x))
         tres <- array(unlist(tres), dim = c(nother, nother, ncond)) # make array so rowMeans can be used
       
@@ -217,8 +217,9 @@ pggls <- function(formula, data, subset, na.action,
                       dimnames = list(other.names, other.names, cond.names))
         
         # split data by cond
-        resid.list <- split(resid, cond)
-        other.list <- split(other, cond)
+        cond.GRP <- collapse::GRP(cond)
+        resid.list <- collapse::gsplit(resid, cond.GRP)
+        other.list <- collapse::gsplit(other, cond.GRP)
         
         for (i in seq_len(ncond)) {
             ut <- resid.list[[i]]

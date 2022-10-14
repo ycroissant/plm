@@ -21,7 +21,8 @@ stopifnot(all.equal(c("pseries", class(Grunfeld$integer / 33)), class(pGrunfeld$
 stopifnot(all.equal(c("pseries", class(Grunfeld$logi + 1.1)), class(pGrunfeld$logi + 1.1)))
 stopifnot(all.equal(c("pseries", class(-Grunfeld$logi)), class(-pGrunfeld$logi)))
 
-stopifnot(all(class(diff(pGrunfeld$logi)) == c("pseries", "integer")))
+stopifnot(all(class(diff(pGrunfeld$logi)) == c("pseries", "integer")) || 
+          all(class(diff(pGrunfeld$logi)) ==  c("pseries", "numeric"))) ## collapse's (1.8.9) fdiff etc. switch inter to numeric
 
 ## check Ops: non-vector result, result is matrix (may not be class c("pseries", "matrix"))
 mdat <- matrix(c(1:200), nrow = 200, ncol = 1, byrow = TRUE)

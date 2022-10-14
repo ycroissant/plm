@@ -820,11 +820,6 @@ diff.pseries <- function(x, lag = 1L, shift = c("time", "row"), ...) {
     } else {
       if (!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
       res <- collapse2plm_lag_diff(collapse::fdiff(x = x, n = lag, shift = "time"), k = lag)
-      
-      # work around a little sublety in collapse (at mim up to and incl. 1.8.8) where
-      # a differed logical pseries does not result in a pseries of integers but stays
-      # a logical pseries
-      if(inherits(x, "logical") && inherits(res, "logical")) class(res) <- c("pseries", "integer")
     }
   } else {
     ## row-wise shifting
@@ -833,10 +828,6 @@ diff.pseries <- function(x, lag = 1L, shift = c("time", "row"), ...) {
     } else {
       if (!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
       res <- collapse2plm_lag_diff(collapse::fdiff(x = x, n = lag, shift = "row"), k = lag)
-      # work around a little sublety in collapse (at mim up to and incl. 1.8.8) where
-      # a differed logical pseries does not result in a pseries of integers but stays
-      # a logical pseries
-      if(inherits(x, "logical") && inherits(res, "logical")) class(res) <- c("pseries", "integer")
     }
   }
   res

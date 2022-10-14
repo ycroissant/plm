@@ -63,7 +63,8 @@ aneweytest <- function(formula, data, subset, na.action, index = NULL,  ...){
     ht$effect <- "individual"
     ht <- eval(ht, parent.frame())
     
-    .resid <- split(resid(ht), time)
+    time.GRP <- collapse::GRP(time)
+    .resid <- collapse::gsplit(resid(ht), time.GRP)
 
     # extract the covariates (no intercept), and isolate time-invariant covariates
     X <- model.matrix(data, model = "pooling", rhs = 1, lhs = 1)[ , -1, drop = FALSE]
@@ -88,11 +89,9 @@ aneweytest <- function(formula, data, subset, na.action, index = NULL,  ...){
     # time-demean and split by period:
     attr(X, "index") <- index
     X <- Within(X, effect ="time")
-    
-    X.ncol <- NCOL(X)
     namesX <- colnames(X)
-    X <- split(X, time)
-    X <- lapply(X, function(m) matrix(m, ncol = X.ncol))
+    
+    X <- collapse::rsplit(X, time.GRP, use.names = FALSE)
     
     # put column names for split matrices in X:
     for (i in seq_along(periods)){
@@ -191,7 +190,8 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
     # extract the response, time-demean and split by period
     y <- pmodel.response(data, model = "pooling", effect = "individual")
     Y <- Within(y, "time")
-    Y <- split(Y, time)
+    time.GRP <- collapse::GRP(time)
+    Y <- collapse::gsplit(Y, time.GRP)
     
     # extract the covariates, and isolate time-invariant covariates
     X <- model.matrix(data, model = "pooling", rhs = 1, lhs = 1)[ , -1, drop = FALSE]
@@ -219,9 +219,7 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
     X <- Within(X, effect ="time")
     periods <- unique(time)
     
-    X.ncol <- NCOL(X)
-    X <- split(X, time)
-    X <- lapply(X, function(m) matrix(m, ncol = X.ncol))
+    X <- collapse::rsplit(X, time.GRP, use.names = FALSE)
 
     # put column names for split matrices in X:
     for (i in seq_along(periods)){
@@ -237,7 +235,7 @@ piest <- function(formula, data, subset, na.action, index = NULL, robust = TRUE,
     
     # compute the unconstrained estimates
       # NA-freeness guaranteed by model frame construction, so can use lm.fit
-      # (non-collinearity is not cared for but code error if collinearity is 
+      # (non-collinearity is not cared for but code errors if collinearity is 
       # present anyway a bit later)
       #   was:   LMS <- lapply(Y, function(x) lm(x ~ XX - 1))
     LMS <- lapply(Y, function(x) lm.fit(XX, x))

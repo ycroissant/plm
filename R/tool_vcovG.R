@@ -508,8 +508,9 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
               relevant.ind <- timeind
               lab <- groupind})
     
-    tind <- split(seq_along(relevant.ind), relevant.ind)
-    tlab <- split(lab, relevant.ind)
+    relevant.ind.GRP <- collapse::GRP(relevant.ind)
+    tind <- collapse::gsplit(seq_along(relevant.ind), relevant.ind.GRP)
+    tlab <- collapse::gsplit(lab, relevant.ind.GRP)
 
   ## lab were the 'labels' (a numeric, actually) for the relevant index;
   ## in use again from the need to make pseudo-diagonals for
@@ -1025,8 +1026,9 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
               lab <- groupind
             })
     
-    tind <- split(seq_along(relevant.ind), relevant.ind)
-    tlab <- split(lab, relevant.ind)
+    relevant.ind.GRP <- collapse::GRP(relevant.ind)
+    tind <- collapse::gsplit(seq_along(relevant.ind), relevant.ind.GRP)
+    tlab <- collapse::gsplit(lab, relevant.ind.GRP)
     
   ## define residuals weighting function omega(res)
   ## (code taken from meatHC and modified)

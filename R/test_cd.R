@@ -219,17 +219,16 @@ pcdtest.formula <- function(x, data, index = NULL, model = NULL,
         y <- model.response(model.frame(mymod))
  
         # split X, y per individual
-        X.ncol <- NCOL(X)
-        tX <- split(X, ind)
-        tX <- lapply(tX, function(m) matrix(m, ncol = X.ncol))
-        ty <- split(y, ind)
+        ind.GRP <- collapse::GRP(ind)
+        tX <- collapse::rsplit(X, ind.GRP, use.names = FALSE)
+        ty <- collapse::gsplit(y, ind.GRP)
 
         # calc. residuals
         res.i <- mapply(function(X, y) lm.fit(X, y)$residuals, tX, ty, SIMPLIFY = FALSE)
         
         # construct indexes
         ind.i <- rep(seq_len(n), lengths(res.i))
-        tind.i <- split(tind, ind)
+        tind.i <- collapse::gsplit(tind, ind.GRP)
         tind.i <- unlist(tind.i, use.names = FALSE)
         
         ## make pseries of (all) residuals
