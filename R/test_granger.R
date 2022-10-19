@@ -160,9 +160,8 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar", "Wbar"), orde
     wrn <- paste0(wrn1, wrn2)
     warning(wrn)
   }
-  
-  listdata <- split(data, indi) # split data per individual
-  
+
+  listdata <- collapse::rsplit(data, indi, use.names = FALSE) # split data per individual
   
   ## use lmtest::grangertest for the individual Granger tests
   

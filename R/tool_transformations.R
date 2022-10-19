@@ -132,7 +132,7 @@ as.matrix.pseries <- function(x, idbyrow = TRUE, ...){
     id <- index[[1L]]
     time <- index[[2L]]
     time.names <- levels(time)
-    x <- split(data.frame(x, time), id)
+    x <- collapse::rsplit(data.frame(x, time), id)
     x <- lapply(x, function(x){
         rownames(x) <- x[ , 2L]
         x[ , -2L, drop = FALSE]
@@ -915,7 +915,7 @@ alagt <- function(x, ak) {
     if(! anyNA(numlevtime)) time <- as.numeric(levels(time))[as.integer(time)]
     else time <- as.numeric(time)
     
-    list_id_timevar <- split(time, id, drop = TRUE)
+    list_id_timevar <- collapse::gsplit(time, id, drop = TRUE, use.names = FALSE)
     
     index_lag_ak_all_list <- sapply(list_id_timevar,
                                     function(x) match(x - ak, x, incomparables = NA),

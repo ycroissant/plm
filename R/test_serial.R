@@ -247,7 +247,7 @@ pwtest.panelmodel <- function(x, effect = c("individual", "time"), ...) {
   ## (possibly different sizes if unbal., thus a list
   ## and thus, unlike Wooldridge (eq.10.37), we divide 
   ## every block by *its* t(t-1)/2)
-  ut.list <- split(u, index)
+  ut.list <- collapse::gsplit(u, index, use.names = FALSE)
   tres <- lapply(ut.list, function(x) outer(x, x))
   
   ## det. # of upper triangle members (n*t(t-1)/2 if balanced)
@@ -630,7 +630,7 @@ pbsytest.panelmodel <- function(x, test = c("ar", "re", "j"), re.normal = if (te
   unind <- unique(ind)
   length.unind <- length(unind)
   uu <-  uu1 <- rep(NA_real_, length.unind) # pre-allocate
-  poolres.list <- split(poolres, ind)
+  poolres.list <- collapse::gsplit(poolres, ind, use.names = FALSE)
   
   for(i in seq_len(length.unind)) {
     u.t <- poolres.list[[i]]

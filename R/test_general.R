@@ -854,7 +854,8 @@ pwaldtest.pvcm <- function(x, ...) {
     # of single estimations (per individual or per time period)
     
     ii <- switch(effect, "individual" = 1L, "time" = 2L)
-    residl <- split(x$residuals, unclass(index(x))[[ii]])
+    
+    residl <- collapse::gsplit(x$residuals, unclass(index(x))[[ii]], use.names = FALSE)
     
     # vcovs and coefficients w/o intercept
     vcovl <- lapply(x$vcov, function(x) x[coefs.no.int, coefs.no.int])

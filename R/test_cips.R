@@ -242,7 +242,7 @@ cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
   #  * for "cmg" this is:
   ##    for each x-sect. i=1..n estimate (over t) an augmented model
   ##    y_it = alpha_i + beta_i*X_it + c1_i*my_t + c2_i*mX_t + err_it
-  adfdati.list <- split(adfdati, ind)
+  adfdati.list <- collapse::rsplit(adfdati, ind, use.names = FALSE)
   tmods <- lapply(adfdati.list, function(tdati) lm(adffm, tdati, model = FALSE))
     # TODO: 
     #     * check if my.lm.fit can be used instead of lm (with minor modifications
