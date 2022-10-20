@@ -69,7 +69,7 @@
 #'     \item{r.squared}{numeric, the R squared.}
 #' @export
 #' @importFrom MASS ginv
-#' @importFrom collapse rsplit GRP
+#' @importFrom collapse rsplit gsplit GRP
 #' @author Giovanni Millo
 #' @references
 #'
