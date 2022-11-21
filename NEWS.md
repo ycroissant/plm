@@ -19,6 +19,10 @@ Changes relative to CRAN 2.6-2:
    using `collapse::fdiff`).
    NB: FD models are based on row-wise differences, not (yet) time-wise.
 
+### Clean-ups:
+* phansitest: previously deprecated but working alias `phansi` for 
+  `phansitest` is now an error (see also NEWS entry for 2.6-0 when `phansi` was
+   renamed to `phansitest`).
 
 # plm 2.6-2
 
