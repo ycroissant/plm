@@ -164,11 +164,8 @@ data.name <- function(x) {
 #'     `plm` or `panelmodel`),
 #' @param rhs an integer (length > 1 is possible), indicating the parts of right
 #'      hand sides of the formula to be evaluated for the presence of an
-#'      intercept or `NULL` for all parts of the right hand side
+#'      intercept or NULL for all parts of the right hand side
 #'      (relevant for the `Formula` and the `plm` methods)
-#' @param data typically not needed (thus, default is `NULL`), needed if the 
-#'             special symbol `.` (dot) in a formula is to be inferred where the 
-#'             `.` represents the remaining variables contained in `data`
 #' @param \dots further arguments.
 #'
 #' @return a logical
@@ -179,30 +176,27 @@ has.intercept <- function(object, ...) {
 
 #' @rdname has.intercept
 #' @export
-has.intercept.default <- function(object, data = NULL, ...) {
-  has.intercept(formula(object), data = data, ...)
+has.intercept.default <- function(object, ...) {
+  has.intercept(formula(object), ...)
 }
 
 #' @rdname has.intercept
 #' @export
-has.intercept.formula <- function(object, data = NULL, ...) {
-# stop()
-  attr(terms(object, data = data, ...), "intercept") == 1L
+has.intercept.formula <- function(object, ...) {
+  attr(terms(object), "intercept") == 1L
 }
 
 #' @rdname has.intercept
 #' @export
-has.intercept.Formula <- function(object, rhs = NULL, data = NULL, ...) {
+has.intercept.Formula <- function(object, rhs = NULL, ...) {
   ## NOTE: returns a logical vector of the necessary length
   ## (which might be > 1)
   if (is.null(rhs)) rhs <- seq_along(attr(object, "rhs"))
-
-  # expand the dot in formula (if any) in all the RHS parts except the first:
   res <- sapply(rhs, function(x) {
     aform <- formula(object, lhs = 0, rhs = x)
-# stop()
-    if (x > 1L) aform <- update(formula(object, lhs = 0, rhs = 1), aform, data = data, ...)
-    has.intercept(aform, data = data, ...)
+    # expand the dot if any in all the parts except the first
+    if (x > 1L) aform <- update(formula(object, lhs = 0, rhs = 1), aform)
+    has.intercept(aform)
   })
   return(res)
 }
@@ -540,8 +534,8 @@ pvar.default <- function(x, id, time, ...){
   id.variation   <- rep(TRUE, len)
   time.variation_anyNA <- rep(FALSE, len)
   id.variation_anyNA   <- rep(FALSE, len)
-  lid   <- collapse::rsplit(x, id,   drop = FALSE, flatten = TRUE)   # these split() functions seem particularly slow
-  ltime <- collapse::rsplit(x, time, drop = FALSE, flatten = TRUE)
+  lid   <- split(x, id)   # these split() functions seem particularly slow
+  ltime <- split(x, time)
   if(is.list(x)){
     if(len == 1L){
       # time variation
