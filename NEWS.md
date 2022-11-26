@@ -490,10 +490,10 @@ plm()): Between, between, Sum, Within.
 
 * class 'pFormula' is deprecated and will be removed soon.
 * model.frame now has a pdata.frame method (instead of a pFormula
-    method) and model.matrix has a pdata.frame method (a pdata.frame
-    with a terms attribute). 'formula' as an argument in model.matrix
-    was unnecessary as the formula can be retrieved from the
-    pdata.frame.
+    method) and model.matrix has a pdata.frame method (takes as input a model 
+    frame as a pdata.frame with a terms attribute and a formula attribute).
+    'formula' as an argument in model.matrix was unnecessary as the formula can 
+    be retrieved from the pdata.frame.
 * A third vignette was added describing the plm model components
     (plmModelComponents.Rmd).
 * plm: the informative error message about the deprecated argument
