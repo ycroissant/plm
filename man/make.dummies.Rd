@@ -34,7 +34,8 @@ level is not included.}
 specify the column which is used to derive the dummies from,}
 }
 \value{
-For the default method, a matrix containing the contrast-coded dummies,
+For the default method, a matrix containing the contrast-coded
+dummies (treatment coding),
 dimensions are n x n where \code{n = length(levels(x))} if argument
 \code{base.add = TRUE} or \code{n = length(levels(x)-1)} if \code{base.add = FALSE};
 for the data frame and pdata.frame method, a data frame or pdata.frame,
@@ -43,13 +44,14 @@ last columns (column names are derived from the name of the column
 used to create the dummies and its levels).
 }
 \description{
-Contrast-coded dummy matrix created from a factor
+Contrast-coded dummy matrix (treatment coding) created from a factor
 }
 \details{
-This function creates a matrix of dummies from the levels of a factor.
-In model estimations, it is usually preferable to not create the dummy matrix
-prior to estimation but to simply specify a factor in the formula and let the
-estimation function handle the creation of the dummies.
+This function creates a matrix of dummies from the levels of a factor in
+treatment coding. In model estimations, it is usually preferable to not
+create the dummy matrix prior to estimation but to simply specify a factor
+in the formula and let the estimation function handle the creation of the
+dummies.
 
 This function is merely a convenience wrapper around \code{stats::contr.treatment}
 to ease the dummy matrix creation process shall the dummy matrix be explicitly
