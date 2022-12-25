@@ -348,3 +348,9 @@ form <- formula(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp)
 pool_prodc <- plm(form, data = Produc, model = "pooling")
 pwtest(pool_prodc) # == effect="individual"
 pwtest(pool_prodc, effect="time")
+
+
+## test for issue #35 (formula expansion with dot)
+has.intercept(y ~ . , data = mtcars) # errors
+# plm(inv ~ . , data = pGrunfeld[ , -c(1:2)]) # this needs min. pkg Formula 1.2-5
+

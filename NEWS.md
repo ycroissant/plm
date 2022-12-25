@@ -19,6 +19,13 @@ Changes relative to CRAN 2.6-2:
    using `collapse::fdiff`).
    NB: FD models are based on row-wise differences, not (yet) time-wise.
 
+### Minors:
+* model estimation with dot (`.`) in formula now possible, e.g., `plm(y ~ ., data = <data>)`.
+  This needs pkg Formula in version >= 1.2-5, not yet on CRAN but available on R-Forge.
+  (addresses [#35](https://github.com/ycroissant/plm/issues/35)).)
+* has.intercept: gained new argument `data` to support formulae containing a 
+  `.` (dot). (partly addresses [#35](https://github.com/ycroissant/plm/issues/35)).
+
 ### Clean-ups:
 * `phansitest`: deprecated working alias `phansi` for `phansitest` is now an 
    error (see also NEWS entry for 2.6-0 when `phansi` was renamed to `phansitest`).

@@ -1,6 +1,6 @@
 Package: plm
 Version: 2.6-99999
-Date: 2022-08-22
+Date: 2022-12-25
 Title: Linear Models for Panel Data
 Authors@R: c(person(given = "Yves",      family = "Croissant",    role = c("aut"), email = "yves.croissant@univ-reunion.fr"),
              person(given = "Giovanni",  family = "Millo",        role = c("aut"), email = "giovanni.millo@deams.units.it"),
@@ -29,7 +29,7 @@ License: GPL (>=2)
 VignetteBuilder: knitr
 URL: https://cran.r-project.org/package=plm (CRAN releases), https://github.com/ycroissant/plm (development repository)
 BugReports: https://github.com/ycroissant/plm/issues
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Roxygen: list(markdown = TRUE)
 RdMacros: Rdpack
 Encoding: UTF-8

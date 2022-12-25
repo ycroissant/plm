@@ -145,7 +145,7 @@ model.matrix.pdata.frame <- function(object,
     effect <- match.arg(effect)
     formula <- attr(object, "formula")
     data <- object
-    has.intercept <- has.intercept(formula, rhs = rhs)
+    has.intercept <- has.intercept(formula, rhs = rhs, data = data)
     # relevant defaults for cstcovar.rm
     if(is.null(cstcovar.rm)) cstcovar.rm <- if(model == "within") "intercept" else "none"
     balanced <- is.pbalanced(data)

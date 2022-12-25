@@ -1,6 +1,6 @@
 
-R version 4.1.2 (2021-11-01) -- "Bird Hippie"
-Copyright (C) 2021 The R Foundation for Statistical Computing
+R version 4.2.2 (2022-10-31 ucrt) -- "Innocent and Trusting"
+Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -1817,6 +1817,13 @@ z = 1.3143, p-value = 0.1888
 alternative hypothesis: unobserved effect
 
 > 
+> 
+> ## test for issue #35 (formula expansion with dot)
+> has.intercept(y ~ . , data = mtcars) # errors
+[1] TRUE
+> # plm(inv ~ . , data = pGrunfeld[ , -c(1:2)]) # this needs min. pkg Formula 1.2-5
+> 
+> 
 > proc.time()
    user  system elapsed 
-  17.45    0.45   18.54 
+  10.89    0.59   11.70 
