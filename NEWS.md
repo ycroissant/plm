@@ -21,10 +21,10 @@ Changes relative to CRAN 2.6-2:
 
 ### Minors:
 * model estimation with dot (`.`) in formula now possible, e.g., `plm(y ~ ., data = <data>)`.
-  This needs pkg Formula in version >= 1.2-5, not yet on CRAN but available on R-Forge.
-  (addresses [#35](https://github.com/ycroissant/plm/issues/35)).)
+  This needs pkg Formula in version >= 1.2-5, not yet on CRAN but available on R-Forge
+  (addresses [#35](https://github.com/ycroissant/plm/issues/35)).
 * has.intercept: gained new argument `data` to support formulae containing a 
-  `.` (dot). (partly addresses [#35](https://github.com/ycroissant/plm/issues/35)).
+  `.` (dot) (partly addresses [#35](https://github.com/ycroissant/plm/issues/35)).
 
 ### Clean-ups:
 * `phansitest`: deprecated working alias `phansi` for `phansitest` is now an 
