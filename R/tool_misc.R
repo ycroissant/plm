@@ -534,8 +534,8 @@ pvar.default <- function(x, id, time, ...){
   id.variation   <- rep(TRUE, len)
   time.variation_anyNA <- rep(FALSE, len)
   id.variation_anyNA   <- rep(FALSE, len)
-  lid   <- collapse::rsplit(x, id,   drop = FALSE, flatten = TRUE)
-  ltime <- collapse::rsplit(x, time, drop = FALSE, flatten = TRUE)
+  lid   <- split(x, id)   # these split() functions seem particularly slow
+  ltime <- split(x, time)
   if(is.list(x)){
     if(len == 1L){
       # time variation
