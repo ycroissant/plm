@@ -6,7 +6,7 @@
 \usage{
 cipstest(
   x,
-  lags = 2,
+  lags = 2L,
   type = c("trend", "drift", "none"),
   model = c("cmg", "mg", "dmg"),
   truncated = FALSE,

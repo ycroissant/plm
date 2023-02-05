@@ -1,6 +1,6 @@
 ## taken from pmg to estimate CIPS test statistic as "average of t's"
 ## since version 4: added type warning, and output single CADF
-## regressions as well, use func gettvalue for speed.  estimation loop
+## regressions as well, use func gettvalue for speed. estimation loop
 ## for single TS models is now lm(formula, data) with 'data' properly
 ## subset; this allows for decent output of individual mods.
 
@@ -61,7 +61,7 @@
 #' ## check whether the gross state product (gsp) is trend-stationary
 #' cipstest(Produc$gsp, type = "trend")
 #' 
-cipstest <- function (x, lags = 2, type = c("trend", "drift", "none"),
+cipstest <- function (x, lags = 2L, type = c("trend", "drift", "none"),
                       model = c("cmg", "mg", "dmg"), truncated = FALSE, ...) {
 
   ## type = c("trend", "drift", "none") corresponds to Case III, II, I 
