@@ -71,7 +71,11 @@ cipstest <- function (x, lags = 2L, type = c("trend", "drift", "none"),
   if(!inherits(x, "pseries")) stop("Argument 'x' has to be a pseries")
   if(!is.numeric(lags)) stop("Argument 'lags' has to be an integer") # but accept numeric as well
   if(round(lags) != lags) stop("Argument 'lags' has to be an integer")
-  # TODO: does 'lags' always need to be >= 1? if so, check for this, too
+  ## TODO: does 'lags' always need to be >= 1? if so, check for this, too
+  #  code below fails for lags = 0 while Stata's pescadf runs with lags = 0.
+  #  Use of lags = 0 is doubtful, see https://github.com/ycroissant/plm/issues/39
+  #  For now, error gracefully for lags = 0
+  if(lags == 0L) stop("cipstest implementation does not support 'lags = 0L'.")
 
   dati <- pmerge(diff(x), lag(x))
   dati <- pmerge(dati, diff(lag(x)))
