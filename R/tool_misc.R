@@ -129,13 +129,13 @@ twosls <- function(y, X, W, intercept = FALSE, lm.type = "lm", weights = 1){
   if(intercept) {
     model <- switch(lm.type,
                     "lm"      =  lm(y ~ Xhat, weights = weights),
-                    "lm.fit"  =  lm.fit(cbind(1, Xhat), y, weights))
+                    "lm.fit"  =  lm.wfit(cbind(1, Xhat), y, weights))
     yhat <- as.vector(crossprod(t(cbind(1, X)), coef(model)))
   }
   else{
     model <- switch(lm.type,
                     "lm"      =  lm(y ~ Xhat - 1, weights = weights),
-                    "lm.fit"  =  lm.fit(Xhat, y, weights))
+                    "lm.fit"  =  lm.wfit(Xhat, y, weights))
     yhat <- as.vector(crossprod(t(X), coef(model)))
   }
   model$residuals <- y - yhat
