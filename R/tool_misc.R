@@ -57,10 +57,10 @@ bdiag <- function(...){
 }
 
 # mylm is used in plm.fit()
-mylm <- function(y, X, W = NULL) {
+mylm <- function(y, X, W = NULL, weights = 1) {
   ## non-exported
   names.X <- colnames(X)
-  result <- if(is.null(W)) lm(y ~ X - 1) else twosls(y, X, W)
+  result <- if(is.null(W)) lm(y ~ X - 1, weights = weights) else twosls(y, X, W, weights = weights)
   if(any(na.coef <- is.na(result$coefficients))) {
     ## for debug purpose:
     # warning("Coefficient(s) '", paste((names.X)[na.coef], collapse = ", "), 
@@ -70,7 +70,7 @@ mylm <- function(y, X, W = NULL) {
                                     "omitted from estimation due to aliasing"))
     
     ## re-estimate without the columns which resulted previously in NA-coefficients
-    result <- if(is.null(W)) lm(y ~ X - 1) else twosls(y, X, W)
+    result <- if(is.null(W)) lm(y ~ X - 1, weights = weights) else twosls(y, X, W, weights = weights)
   }
   result$vcov <- vcov(result)
   result$X <- X
@@ -108,7 +108,7 @@ my.lm.fit <- function(X, y, dfcor = TRUE, ...){
 }
 
 #' @importFrom stats .lm.fit
-twosls <- function(y, X, W, intercept = FALSE, lm.type = "lm"){
+twosls <- function(y, X, W, intercept = FALSE, lm.type = "lm", weights = 1){
   ## non-exported
   # Return value can be controlled by argument lm.type. Often, a full lm model
   # is needed for further processing but can select one of the fast but less
@@ -117,7 +117,7 @@ twosls <- function(y, X, W, intercept = FALSE, lm.type = "lm"){
 
   # As NA/NaN/(+/-)Inf-freeness needs to be guaranteed when functions call
   # twosls(), so can use lm.fit to calc. Xhat.
-   Xhat <- lm.fit(W, X)$fitted.values
+   Xhat <- lm.wfit(W, X, weights)$fitted.values
 
   
   if(!is.matrix(Xhat)) {
@@ -128,16 +128,14 @@ twosls <- function(y, X, W, intercept = FALSE, lm.type = "lm"){
   
   if(intercept) {
     model <- switch(lm.type,
-                    "lm"      =  lm(y ~ Xhat),
-                    "lm.fit"  =  lm.fit(cbind(1, Xhat), y),
-                    ".lm.fit" = .lm.fit(cbind(1, Xhat), y))
+                    "lm"      =  lm(y ~ Xhat, weights = weights),
+                    "lm.fit"  =  lm.fit(cbind(1, Xhat), y, weights))
     yhat <- as.vector(crossprod(t(cbind(1, X)), coef(model)))
   }
   else{
     model <- switch(lm.type,
-                    "lm"      =  lm(y ~ Xhat - 1),
-                    "lm.fit"  =  lm.fit(Xhat, y),
-                    ".lm.fit" = .lm.fit(Xhat, y))
+                    "lm"      =  lm(y ~ Xhat - 1, weights = weights),
+                    "lm.fit"  =  lm.fit(Xhat, y, weights))
     yhat <- as.vector(crossprod(t(X), coef(model)))
   }
   model$residuals <- y - yhat
