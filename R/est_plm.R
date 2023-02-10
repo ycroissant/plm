@@ -489,6 +489,10 @@ plm.fit <- function(data, model, effect, random.method,
           if (ncol(W) < ncol(X)) stop("insufficient number of instruments")
         } # END all IV cases
         else W <- NULL # no instruments (no IV case)
+      
+        # undo manual weighting above, because lm can do it for us
+        X <- X / sqrt(w)
+        y <- y / sqrt(w)
         
         result <- mylm(y, X, W, weights = w)
         df <- df.residual(result)
