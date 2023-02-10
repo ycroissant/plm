@@ -439,9 +439,6 @@ plm.fit <- function(data, model, effect, random.method,
         # IV case: extract the matrix of instruments if necessary
         # (means here that we have a multi-parts formula)
         if (length(formula)[2L] > 1L) {
-          
-            if(!is.null(model.weights(data)) || any(w != 1))
-              stop("argument 'weights' not yet implemented for instrumental variable models")
             
           if ( ! (model == "random" && inst.method != "bvk")) {
            #  Pool/FD/FE/BE IV and RE "bvk" IV estimator
@@ -493,7 +490,7 @@ plm.fit <- function(data, model, effect, random.method,
         } # END all IV cases
         else W <- NULL # no instruments (no IV case)
         
-        result <- mylm(y, X, W)
+        result <- mylm(y, X, W, weights = w)
         df <- df.residual(result)
         vcov <- result$vcov
         aliased <- result$aliased
