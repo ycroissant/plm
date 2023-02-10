@@ -428,7 +428,7 @@ plm.fit <- function(data, model, effect, random.method,
         if (ncol(X) == 0L) stop("empty model")
         
         w <- model.weights(data)
-        if (!is.null(w)){
+        if (! is.null(w)){
             if (! is.numeric(w)) stop("'weights' must be a numeric vector")
             if (any(w < 0) || anyNA(w)) stop("missing or negative weights not allowed")
         }
@@ -438,7 +438,7 @@ plm.fit <- function(data, model, effect, random.method,
         # (means here that we have a multi-parts formula)
         if (length(formula)[2L] > 1L) {
             
-          if (model != "random" || inst.method == "bvk") {
+          if ( ! (model == "random" && inst.method != "bvk")) {
            #  Pool/FD/FE/BE IV and RE "bvk" IV estimator
             if (length(formula)[2L] == 2L) {
                   W <- model.matrix(data, rhs = 2,
@@ -450,7 +450,9 @@ plm.fit <- function(data, model, effect, random.method,
                                     model = model, effect = effect,
                                     theta = theta, cstcovar.rm = "all")
               }
-          } else {
+          }
+          
+          if (model == "random" && inst.method != "bvk") {
            # IV estimators RE "baltagi", "am", and "bms"
             X <- X / sqrt(sigma2["idios"])
             y <- y / sqrt(sigma2["idios"])
