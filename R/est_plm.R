@@ -428,11 +428,10 @@ plm.fit <- function(data, model, effect, random.method,
         if (ncol(X) == 0L) stop("empty model")
         
         w <- model.weights(data)
-        if (! is.null(w)){
+        has_weights = !is.null(w)
+        if (has_weights){
             if (! is.numeric(w)) stop("'weights' must be a numeric vector")
             if (any(w < 0) || anyNA(w)) stop("missing or negative weights not allowed")
-            X <- X * sqrt(w)
-            y <- y * sqrt(w)
         }
         else w <- 1
         
@@ -452,9 +451,7 @@ plm.fit <- function(data, model, effect, random.method,
                                     model = model, effect = effect,
                                     theta = theta, cstcovar.rm = "all")
               }
-          }
-          
-          if (model == "random" && inst.method != "bvk") {
+          } else {
            # IV estimators RE "baltagi", "am", and "bms"
             X <- X / sqrt(sigma2["idios"])
             y <- y / sqrt(sigma2["idios"])
@@ -479,20 +476,14 @@ plm.fit <- function(data, model, effect, random.method,
             } 
             else W2 <- StarW2 <- NULL
             
-            # TODO: here, some weighting is done but prevented earlier by stop()?!
-            #       also: RE bvk/BE/FE IV do not have weighting code.
-            if (inst.method == "baltagi") W <- sqrt(w) * cbind(W1, W2, B1)
-            if (inst.method == "am")      W <- sqrt(w) * cbind(W1, W2, B1, StarW1)
-            if (inst.method == "bms")     W <- sqrt(w) * cbind(W1, W2, B1, StarW1, StarW2)
+            if (inst.method == "baltagi") W <- cbind(W1, W2, B1)
+            if (inst.method == "am")      W <- cbind(W1, W2, B1, StarW1)
+            if (inst.method == "bms")     W <- cbind(W1, W2, B1, StarW1, StarW2)
           }
       
           if (ncol(W) < ncol(X)) stop("insufficient number of instruments")
         } # END all IV cases
         else W <- NULL # no instruments (no IV case)
-      
-        # undo manual weighting above, because lm can do it for us
-        X <- X / sqrt(w)
-        y <- y / sqrt(w)
         
         result <- mylm(y, X, W, weights = w)
         df <- df.residual(result)
