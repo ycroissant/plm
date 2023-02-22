@@ -27,10 +27,11 @@ Changes relative to CRAN 2.6-2:
   (addresses [#35](https://github.com/ycroissant/plm/issues/35)).
 * `has.intercept`: gained new argument `data` to support formulae containing a 
   `.` (dot) (partly addresses [#35](https://github.com/ycroissant/plm/issues/35)).
-* `vcovXX.pggls`: stopping break for `plm::vcovHC`, `plm::vcovNW`, `plm::vcovBK`,
-   and, `plm::vcovSCC` applied to `pggls` objects implemented via new methods.
-   (P)GGLS models estimate a parametric covariance, hence it does not make much 
-   sense to robustify them.
+* `vcovXX.pggls`: stopping break for `vcovHC`, `vcovNW`, `vcovBK`, 
+   `vcovSCC`, `vcovDC`, and `vcovG` applied to `pggls` objects implemented via
+   newly introduced methods giving an informative error message. (P)GGLS models 
+   estimate a parametric covariance, hence it does not make much sense to 
+   robustify them.
 
 ### Clean-ups:
 * `phansitest`: deprecated working alias `phansi` for `phansitest` is now an 
