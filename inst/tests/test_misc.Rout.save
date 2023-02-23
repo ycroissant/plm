@@ -1818,12 +1818,20 @@ alternative hypothesis: unobserved effect
 
 > 
 > 
-> ## test for issue #35 (formula expansion with dot)
-> has.intercept(y ~ . , data = mtcars) # errors
+> ## test for issue #35 (formula expansion with dot) https://github.com/ycroissant/plm/issues/35
+> ## these errored in plm <= 2.6-2:
+> has.intercept(y ~ . , data = mtcars)
 [1] TRUE
-> # plm(inv ~ . , data = pGrunfeld[ , -c(1:2)]) # this needs min. pkg Formula 1.2-5
+> plm(inv ~ . , data = pGrunfeld[ , -c(1:2)]) # this needs Formula >= 1.2-5
+
+Model Formula: inv ~ .
+
+Coefficients:
+  value capital 
+0.11012 0.31007 
+
 > 
 > 
 > proc.time()
    user  system elapsed 
-  10.89    0.59   11.70 
+   9.70    0.71   10.40 

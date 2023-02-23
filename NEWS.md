@@ -23,8 +23,8 @@ Changes relative to CRAN 2.6-2:
 * `ciptstest`: error gracefully when argument `lags = 0L` (partly addresses 
    [#39](https://github.com/ycroissant/plm/issues/39)).
 * model estimation with dot (`.`) in formula now possible, e.g., `plm(y ~ ., data = <data>)`.
-  This needs pkg Formula in version >= 1.2-5, not yet on CRAN but available on R-Forge
-  (addresses [#35](https://github.com/ycroissant/plm/issues/35)).
+  This needs dependency package `Formula` in version >= 1.2-5, on CRAN since
+  2023-02-24 (addresses [#35](https://github.com/ycroissant/plm/issues/35)).
 * `has.intercept`: gained new argument `data` to support formulae containing a 
   `.` (dot) (partly addresses [#35](https://github.com/ycroissant/plm/issues/35)).
 * `vcovXX.pggls`: stopping break for `vcovHC`, `vcovNW`, `vcovBK`, 

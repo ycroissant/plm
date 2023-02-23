@@ -350,7 +350,8 @@ pwtest(pool_prodc) # == effect="individual"
 pwtest(pool_prodc, effect="time")
 
 
-## test for issue #35 (formula expansion with dot)
-has.intercept(y ~ . , data = mtcars) # errors
-# plm(inv ~ . , data = pGrunfeld[ , -c(1:2)]) # this needs min. pkg Formula 1.2-5
+## test for issue #35 (formula expansion with dot) https://github.com/ycroissant/plm/issues/35
+## these errored in plm <= 2.6-2:
+has.intercept(y ~ . , data = mtcars)
+plm(inv ~ . , data = pGrunfeld[ , -c(1:2)]) # this needs Formula >= 1.2-5
 
