@@ -166,7 +166,7 @@ model.matrix.pdata.frame <- function(object,
     if(model == "Between") X <- Between(X, effect)
     if(model == "between") X <- between(X, effect)
     if(model == "mean")    X <- Mean(X)
-    if(model == "fd")      X <- pdiff(X, effect = "individual",
+    if(model == "fd")      X <- pdiff(X, effect = "individual",   # pdiff has its own handling of intercept and const. columns
                                    has.intercept = has.intercept, shift = "row")
     if(model == "random"){
         if(is.null(theta)) stop("a theta argument must be provided for model = \"random\"")

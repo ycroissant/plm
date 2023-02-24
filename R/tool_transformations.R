@@ -1074,6 +1074,9 @@ pdiff <- function(x, effect = c("individual", "time"),
 pdiffr <- function(x, effect = c("individual", "time"), has.intercept = FALSE){
   # NB: x is assumed to have an index attribute, e.g., a pseries
   #     can check with has.index(x)
+  # TODO: pdiff's usage in model.matrix is not very elegant as pdiff does its own
+  #     removal of constant columns and intercept handling which could be handled
+  #     via model.matrix.
   
     effect <- match.arg(effect)
     cond <- as.numeric(unclass(attr(x, "index"))[[1L]]) # unclass for speed
@@ -1090,7 +1093,9 @@ pdiffr <- function(x, effect = c("individual", "time"), has.intercept = FALSE){
         result <- rbind(NA, x[2:n, , drop = FALSE] - x[seq_len(n-1), , drop = FALSE])
         result[is.na(cond), ] <- NA
         result <- na.omit(result)
-        result <- result[ , apply(result, 2, var) > 1E-12, drop = FALSE]
+        # remove constant columns
+        cst.col <- apply(result, 2, is.constant)
+        result <- result[ , !cst.col, drop = FALSE]
         if(has.intercept){
             result <- cbind(1, result)
             colnames(result)[1L] <- "(Intercept)"

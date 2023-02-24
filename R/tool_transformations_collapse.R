@@ -620,6 +620,9 @@ Within.matrix.collapse.lfe <- function(x, effect,  ...) {
 pdiff.collapse <- function(x, effect = c("individual", "time"), has.intercept = FALSE, shift = c("time", "row")){
   # NB: x is assumed to have an index attribute
   #     can check with has.index(x)
+  # TODO: pdiff's usage in model.matrix is not very elegant as pdiff does its own
+  #     removal of constant columns and intercept handling which could be handled
+  #     via model.matrix.
   
   effect <- match.arg(effect)
   shift <- match.arg(shift)
@@ -656,10 +659,22 @@ pdiff.collapse <- function(x, effect = c("individual", "time"), has.intercept = 
     }
   }
 
+  ## last data preperation before return
   res <- na.omit(res)
-  
-  # if intercept is requested, set intercept column to 1 as it was diff'ed out
-  if(has.intercept) res[ , "(Intercept)"] <- 1L
+  if(is.matrix(x)) {
+    # original pdiff (coded in base R) removes constant columns in matrix, 
+    # so do likewise collapse-powered version
+    cst.col <- apply(res, 2, is.constant)
+    res <- res[ , !cst.col, drop = FALSE]
+    
+    # if intercept is requested, set intercept column to 1 as it was 
+    # diff'ed out by collapse::fdiff and anyways removed by the removal of
+    # constant columns just above
+    if(has.intercept){
+      res <- cbind(1, res)
+      colnames(res)[1L] <- "(Intercept)"
+    }
+  }
   res
 }
 
