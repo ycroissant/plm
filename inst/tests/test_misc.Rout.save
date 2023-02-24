@@ -1693,7 +1693,7 @@ Total Sum of Squares:    886.9
 Residual Sum of Squares: 95.871
 Chisq: 6879.2 on 12 DF, p-value: < 2.22e-16
 > 
-> ## pldv
+> ##### pldv ####
 > pder.avail <- if (!requireNamespace("pder", quietly = TRUE)) FALSE else TRUE
 > if(pder.avail) {
 + data("Donors", package = "pder")
@@ -1705,7 +1705,58 @@ Chisq: 6879.2 on 12 DF, p-value: < 2.22e-16
 +            model = "random", method = "bfgs")
 + summary(modB)
 + invisible(NULL)
++ 
++ ## taken from ?pder::LateBudgets for FD model test
++ data("LateBudgets", package = "pder")
++ LateBudgets$dayslatepos <- pmax(LateBudgets$dayslate, 0)
++ LateBudgets$divgov <- with(LateBudgets, 
++                            factor(splitbranch == "yes" | 
++                                     splitleg == "yes", 
++                                   labels = c("no", "yes")))
++ LateBudgets$unemprise <- pmax(LateBudgets$unempdiff, 0)
++ LateBudgets$unempfall <- - pmin(LateBudgets$unempdiff, 0)
++ form <- dayslatepos ~ unemprise + unempfall + divgov + elecyear + 
++   pop + fulltimeleg + shutdown + censusresp + endbalance + kids + 
++   elderly + demgov + lameduck + newgov + govexp + nocarry + 
++   supmaj + black + graduate
++ 
++ FEtobit <- pldv(form, LateBudgets) # default is "fd" model
++ summary(FEtobit)
++ 
 + }
+Oneway (individual) effect First-Difference Model
+
+Call:
+pldv(formula = form, data = LateBudgets)
+
+Unbalanced Panel: n = 48, T = 2-20, N = 730
+Observations used in estimation: 682
+
+Residuals:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+-107.59  -14.90    5.45    7.79   26.54  168.92 
+
+Coefficients:
+             Estimate Std. Error t-value Pr(>|t|)
+(Intercept)  -0.28124   54.23985 -0.0052   0.9959
+unemprise     9.04974   64.95836  0.1393   0.8892
+unempfall   -31.63081   98.15507 -0.3223   0.7474
+divgovyes    19.89305  176.18304  0.1129   0.9101
+elecyear    -24.64236   70.97584 -0.3472   0.7286
+pop           0.63039  201.90129  0.0031   0.9975
+endbalance   -3.85521   12.97293 -0.2972   0.7664
+kids          0.78571  105.80082  0.0074   0.9941
+elderly      60.66397  270.45861  0.2243   0.8226
+demgovyes    -6.33854  165.72305 -0.0382   0.9695
+lameduckyes -22.05156   98.66969 -0.2235   0.8232
+newgovyes     5.57770  119.01315  0.0469   0.9626
+govexp        3.38177   14.63503  0.2311   0.8173
+
+Total Sum of Squares:    328270
+Residual Sum of Squares: 998540
+R-Squared:      0.025594
+Adj. R-Squared: 0.0081157
+F-statistic: 0.0224461 on 12 and 669 DF, p-value: 1
 There were 50 or more warnings (use warnings() to see the first 50)
 > 
 > ## pwartest
@@ -1834,4 +1885,4 @@ Coefficients:
 > 
 > proc.time()
    user  system elapsed 
-   9.70    0.71   10.40 
+  13.39    0.75   14.37 

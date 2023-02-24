@@ -310,7 +310,7 @@ am <- pht(lwage ~ wks + south + smsa + married + exp + I(exp^2) +
          data = Wages, model = "am", index = 595)
 summary(am)
 
-## pldv
+##### pldv ####
 pder.avail <- if (!requireNamespace("pder", quietly = TRUE)) FALSE else TRUE
 if(pder.avail) {
 data("Donors", package = "pder")
@@ -322,6 +322,24 @@ modB <- pldv(donation ~ treatment * prcontr - prcontr, data = pDonors,
            model = "random", method = "bfgs")
 summary(modB)
 invisible(NULL)
+
+## taken from ?pder::LateBudgets for FD model test
+data("LateBudgets", package = "pder")
+LateBudgets$dayslatepos <- pmax(LateBudgets$dayslate, 0)
+LateBudgets$divgov <- with(LateBudgets, 
+                           factor(splitbranch == "yes" | 
+                                    splitleg == "yes", 
+                                  labels = c("no", "yes")))
+LateBudgets$unemprise <- pmax(LateBudgets$unempdiff, 0)
+LateBudgets$unempfall <- - pmin(LateBudgets$unempdiff, 0)
+form <- dayslatepos ~ unemprise + unempfall + divgov + elecyear + 
+  pop + fulltimeleg + shutdown + censusresp + endbalance + kids + 
+  elderly + demgov + lameduck + newgov + govexp + nocarry + 
+  supmaj + black + graduate
+
+FEtobit <- pldv(form, LateBudgets) # default is "fd" model
+summary(FEtobit)
+
 }
 
 ## pwartest
