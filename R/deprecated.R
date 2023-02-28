@@ -635,36 +635,3 @@ formula.dynformula <- function(x, ...){
 print.dynformula <- function(x, ...){
     print(formula(x), ...)
 }
-
-#' @rdname plm-deprecated
-#' @export
-pFormula <- function(object) {
-  stop("'pFormula' removed (it use has been deprecated since plm 2.0-0 / 2019-05-14)")
-}
-
-
-#' @rdname plm-deprecated
-#' @export
-as.Formula.pFormula <- function(x, ...){
-  stop("'pFormula' and associated methods removed (it use has been deprecated since plm 2.0-0 / 2019-05-14)")
-}
-
-#' @rdname plm-deprecated
-#' @export
-model.frame.pFormula <- function(formula, data, ..., lhs = NULL, rhs = NULL){
-  stop("'pFormula' and associated methods removed (it use has been deprecated since plm 2.0-0 / 2019-05-14)")
-}
-
-
-#' @rdname plm-deprecated
-#' @export
-model.matrix.pFormula <- function(object, data,
-                                  model = c("pooling", "within", "Between", "Sum",
-                                            "between", "mean", "random", "fd"),
-                                  effect = c("individual", "time", "twoways", "nested"),
-                                  rhs = 1,
-                                  theta = NULL,
-                                  cstcovar.rm = NULL,
-                                  ...){
-  stop("'pFormula' and associated methods removed (it use has been deprecated since plm 2.0-0 / 2019-05-14)")
-}
