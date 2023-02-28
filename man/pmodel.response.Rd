@@ -37,7 +37,8 @@ response of several objects.
 \details{
 The model response is extracted from a \code{pdata.frame} (where the
 response must reside in the first column; this is the case for a
-model frame), a \code{pFormula} + \code{data} or a \code{plm} object, and the
+model frame), a \code{Formula} + \code{data} (being a model frame) or a \code{plm}
+object, and the
 transformation specified by \code{effect} and \code{model} is applied to
 it.\cr Constructing the model frame first ensures proper \code{NA}
 handling and the response being placed in the first column, see
@@ -49,7 +50,7 @@ also \strong{Examples} for usage.
 data("Grunfeld", package = "plm")
 pGrunfeld <- pdata.frame(Grunfeld)
 
-# then make a model frame from a pFormula and a pdata.frame
+# then make a model frame from a Formula and a pdata.frame
 form <- inv ~ value + capital
 mf <- model.frame(pGrunfeld, form)
 

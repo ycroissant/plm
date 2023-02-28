@@ -28,8 +28,6 @@ pFormula(object)
 
 \method{as.Formula}{pFormula}(x, ...)
 
-\method{as.Formula}{pFormula}(x, ...)
-
 \method{model.frame}{pFormula}(formula, data, ..., lhs = NULL, rhs = NULL)
 
 \method{model.matrix}{pFormula}(

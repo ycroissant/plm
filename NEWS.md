@@ -36,6 +36,8 @@ Changes relative to CRAN 2.6-2:
 ### Clean-ups:
 * `phansitest`: deprecated working alias `phansi` for `phansitest` is now an 
    error (see also NEWS entry for 2.6-0 when `phansi` was renamed to `phansitest`).
+* `pFormula` (class and associated methods): use of this deprecated function 
+   gives an informative error.
 
 ***
 

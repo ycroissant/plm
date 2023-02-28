@@ -205,9 +205,9 @@ detect.lindep.plm <- function(object, suppressPrint = FALSE, ...) {
 }
 
 
-### alias.plm, alias.pFormula
+### alias.plm
 # This is just a wrapper function to allow to apply the generic stats::alias on
-# plm objects and pFormulas with the _transformed data_ (the transformed model.matrix).
+# plm objects with the _transformed data_ (the transformed model.matrix).
 # NB: arguments 'model' and 'effect' are not treated here.
 
 
@@ -215,20 +215,20 @@ detect.lindep.plm <- function(object, suppressPrint = FALSE, ...) {
 #' @export
 alias.plm <- function(object, ...) {
   dots <- list(...)
-  if (!is.null(dots$inst.method)) stop("alias.plm/alias.pFormula: IV not supported")
-  if (length(formula(object))[2] == 2) stop("alias.plm/alias.pFormula: IV not supported")
+  if (!is.null(dots$inst.method)) stop("alias.plm: IV not supported")
+  if (length(formula(object))[2] == 2) stop("alias.plm: IV not supported")
   
   # catch unsupported alias.lm args and convert
   if (!is.null(dots[["partial"]])) {
     if (dots[["partial"]]) {
       dots[["partial"]] <- FALSE
-      warning("alias.plm/alias.pFormula: arg partial = TRUE not supported, changed to FALSE")
+      warning("alias.plm: arg partial = TRUE not supported, changed to FALSE")
     }
-  } 
+  }
   if (!is.null(dots[["partial.pattern"]])) {
     if (dots[["partial.pattern"]]) {
       dots[["partial.pattern"]] <- FALSE
-      warning("alias.plm/alias.pFormula: arg partial.pattern = TRUE not supported, changed to FALSE")
+      warning("alias.plm: arg partial.pattern = TRUE not supported, changed to FALSE")
     }
   }
   
@@ -243,7 +243,7 @@ alias.plm <- function(object, ...) {
   ## could estimate lm model with lm(), but takes more resources and 
   ## need to remove extra classes "formula" for lm to prevent warning
   # form <- object$formula
-  # form <- setdiff(class(form), c("pFormula", "Formula"))
+  # form <- setdiff(class(form), c("Formula"))
   # Xdf <- as.data.frame(X)
   # ydf <- as.data.frame(y)
   # names(ydf) <- names(object$model)[1]
@@ -254,29 +254,6 @@ alias.plm <- function(object, ...) {
   return(stats::alias(lm.fit.obj, ... = dots))
 }
 
-## alias.pFormula <- function(object, data,
-##                            model = c("pooling", "within", "Between", "between",
-##                                      "mean", "random", "fd"),
-##                            effect = c("individual", "time", "twoways"),
-##                            ...) {
-##   dots <- list(...)
-##   if (!is.null(dots$inst.method)) stop("alias.plm/alias.pFormula: IV not supported")
-##   model <- match.arg(model)
-##   effect <- match.arg(effect)
-##   formula <- object
-
-##   # check if object is already pFormula, try to convert if not    
-##   if (!inherits(formula, "pFormula")) formula <- pFormula(formula)
-  
-##   # check if data is already a model frame, convert to if not
-##   if (is.null(attr(data, "terms"))) {
-##     data <- model.frame.pFormula(pFormula(formula), data)
-##   }
-
-##   plmobj <- plm(formula, data = data, model = model, effect = effect, ...)
-## #  print(summary(plmobj))
-##   return(alias(plmobj, ...))
-## }
 
 
 #' @rdname detect.lindep
@@ -287,7 +264,7 @@ alias.pdata.frame <- function(object,
                               effect = c("individual", "time", "twoways"),
                               ...) {
     dots <- list(...)
-    if (!is.null(dots$inst.method)) stop("alias.plm/alias.pFormula: IV not supported")
+    if (!is.null(dots$inst.method)) stop("alias.pdata.frame: IV not supported")
     model <- match.arg(model)
     effect <- match.arg(effect)
       # check if data is already a model frame, if not exit

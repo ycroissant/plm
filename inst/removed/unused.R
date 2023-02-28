@@ -289,3 +289,142 @@ opdiff <- function(x, cond, effect = c("individual", "time"), has.intercept = FA
 ##   structure(result, class = oclass)
 ## }
 
+
+##### Old pFormula stuff - removed 2023-02-28 ####
+# @rdname plm-deprecated
+# @export
+pFormula <- function(object) {
+  .Deprecated(msg = paste0("class 'pFormula' is deprecated, simply use class",
+                           "'Formula'. 'pFormula' will be removed very soon!"),
+              old = "pFormula", new = "Formula")
+  stopifnot(inherits(object, "formula"))
+  if (!inherits(object, "Formula")){
+    object <- Formula(object)
+  }
+  class(object) <- unique(c("pFormula", class(object)))
+  object
+}
+
+# @rdname plm-deprecated
+# @export
+as.Formula.pFormula <- function(x, ...){
+  class(x) <- setdiff(class(x), "pFormula")
+  x
+}
+
+# @rdname plm-deprecated
+# @export
+model.frame.pFormula <- function(formula, data, ..., lhs = NULL, rhs = NULL){
+  if (is.null(rhs)) rhs <- 1:(length(formula)[2L])
+  if (is.null(lhs)) lhs <- if(length(formula)[1L] > 0L) 1 else 0
+  index <- attr(data, "index")
+  mf <- model.frame(as.Formula(formula), as.data.frame(data), ..., rhs = rhs)
+  index <- index[as.numeric(rownames(mf)), ]
+  index <- droplevels(index)
+  class(index) <- c("pindex", "data.frame")
+  structure(mf,
+            index = index,
+            class = c("pdata.frame", class(mf)))
+}
+
+
+# @rdname plm-deprecated
+# @export
+model.matrix.pFormula <- function(object, data,
+                                  model = c("pooling", "within", "Between", "Sum",
+                                            "between", "mean", "random", "fd"),
+                                  effect = c("individual", "time", "twoways", "nested"),
+                                  rhs = 1,
+                                  theta = NULL,
+                                  cstcovar.rm = NULL,
+                                  ...){
+  model <- match.arg(model)
+  effect <- match.arg(effect)
+  formula <- object  
+  has.intercept <- has.intercept(formula, rhs = rhs)
+  # relevant defaults for cstcovar.rm
+  if (is.null(cstcovar.rm)) cstcovar.rm <- ifelse(model == "within", "intercept", "none")
+  balanced <- is.pbalanced(data)
+  # check if inputted data is a model.frame, if not convert it to
+  # model.frame (important for NA handling of the original data when
+  # model.matrix.pFormula is called directly) As there is no own
+  # class for a model.frame, check if the 'terms' attribute is
+  # present (this mimics what lm does to detect a model.frame)    
+  if (is.null(attr(data, "terms")))
+    data <- model.frame.pFormula(pFormula(formula), data)  
+  # this goes to Formula::model.matrix.Formula:
+  X <- model.matrix(as.Formula(formula), rhs = rhs, data = data, ...)
+  # check for infinite or NA values and exit if there are some
+  if(any(! is.finite(X))) stop(paste("model matrix or response contains non-finite",
+                                     "values (NA/NaN/Inf/-Inf)"))
+  X.assi <- attr(X, "assign")
+  X.contr <- attr(X, "contrasts")
+  X.contr <- X.contr[ ! sapply(X.contr, is.null) ]
+  index <- index(data)
+  checkNA.index(index) # check for NAs in model.frame's index and error if any
+  attr(X, "index") <- index
+  if (effect == "twoways" && model %in% c("between", "fd"))
+    stop("twoways effect only relevant for within, random and pooling models")
+  if (model == "within")  X <- Within(X, effect)
+  if (model == "Sum")     X <- Sum(X, effect)
+  if (model == "Between") X <- Between(X, effect)
+  if (model == "between") X <- between(X, effect)
+  if (model == "mean")    X <- Mean(X)
+  if (model == "fd")      X <- pdiff(X, effect = "individual",
+                                     has.intercept = has.intercept)
+  if (model == "random"){
+    if (is.null(theta)) stop("a theta argument should be provided")
+    if (effect %in% c("time", "individual")) X <- X - theta * Between(X, effect)
+    if (effect == "nested") X <- X - theta$id * Between(X, "individual") -
+        theta$gp * Between(X, "group")
+    if (effect == "twoways" && balanced)
+      X <- X - theta$id * Between(X, "individual") -
+        theta$time * Between(X, "time") + theta$total * Mean(X)
+  }
+  
+  if (cstcovar.rm == "intercept"){
+    posintercept <- match("(Intercept)", colnames(X))
+    if (! is.na(posintercept)) X <- X[ , - posintercept, drop = FALSE]
+  }
+  if (cstcovar.rm %in% c("covariates", "all")){
+    cols <- apply(X, 2, is.constant)
+    cstcol <- names(cols)[cols]
+    posintercept <- match("(Intercept)", cstcol)
+    cstintercept <- if(is.na(posintercept)) FALSE else TRUE
+    zeroint <- if(cstintercept &&
+                  max(X[, posintercept]) < sqrt(.Machine$double.eps))
+      TRUE else FALSE
+    if (length(cstcol) > 0L){
+      if ((cstcovar.rm == "covariates" || !zeroint) && cstintercept) cstcol <- cstcol[- posintercept]
+      if (length(cstcol) > 0L){
+        X <- X[, - match(cstcol, colnames(X)), drop = FALSE]
+        attr(X, "constant") <- cstcol
+      }
+    }
+  }
+  structure(X, assign = X.assi, contrasts = X.contr, index = index)
+}
+
+## alias.pFormula <- function(object, data,
+##                            model = c("pooling", "within", "Between", "between",
+##                                      "mean", "random", "fd"),
+##                            effect = c("individual", "time", "twoways"),
+##                            ...) {
+##   dots <- list(...)
+##   if (!is.null(dots$inst.method)) stop("alias.plm/alias.pFormula: IV not supported")
+##   model <- match.arg(model)
+##   effect <- match.arg(effect)
+##   formula <- object
+
+##   # check if object is already pFormula, try to convert if not    
+##   if (!inherits(formula, "pFormula")) formula <- pFormula(formula)
+
+##   # check if data is already a model frame, convert to if not
+##   if (is.null(attr(data, "terms"))) {
+##     data <- model.frame.pFormula(pFormula(formula), data)
+##   }
+
+##   plmobj <- plm(formula, data = data, model = model, effect = effect, ...)
+## #  print(summary(plmobj))
+##   return(alias(plmobj, ...))
+## }
