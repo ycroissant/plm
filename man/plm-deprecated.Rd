@@ -8,10 +8,6 @@
 \alias{dynformula}
 \alias{formula.dynformula}
 \alias{print.dynformula}
-\alias{pFormula}
-\alias{as.Formula.pFormula}
-\alias{model.frame.pFormula}
-\alias{model.matrix.pFormula}
 \title{Deprecated functions of plm}
 \usage{
 pvcovHC(x, ...)
@@ -23,23 +19,6 @@ dynformula(formula, lag.form = NULL, diff.form = NULL, log.form = NULL)
 \method{formula}{dynformula}(x, ...)
 
 \method{print}{dynformula}(x, ...)
-
-pFormula(object)
-
-\method{as.Formula}{pFormula}(x, ...)
-
-\method{model.frame}{pFormula}(formula, data, ..., lhs = NULL, rhs = NULL)
-
-\method{model.matrix}{pFormula}(
-  object,
-  data,
-  model = c("pooling", "within", "Between", "Sum", "between", "mean", "random", "fd"),
-  effect = c("individual", "time", "twoways", "nested"),
-  rhs = 1,
-  theta = NULL,
-  cstcovar.rm = NULL,
-  ...
-)
 }
 \arguments{
 \item{\dots}{further arguments.}
