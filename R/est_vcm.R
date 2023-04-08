@@ -115,7 +115,9 @@ pvcm.within <- function(formula, data, effect){
         other <- time
         card.cond <- pdim$nT$n
     }
+    ### KT
     ml <- split(data, cond)
+    # ml <- collapse::rsplit(data, cond)
     nr <- vapply(ml, function(x) dim(x)[1L] > 0, FUN.VALUE = TRUE)
     ml <- ml[nr]
     attr(ml, "index") <- index
@@ -180,7 +182,9 @@ pvcm.random <- function(formula, data, effect){
         card.cond <- pdim$nT$n
     }
     
+    ### TODO: can speed up with collapse:
     ml <- split(data, cond)
+    #ml <- collapse::rsplit(data, cond) # does not yet work
     nr <- vapply(ml, function(x) dim(x)[1L] > 0, FUN.VALUE = TRUE)
     ml <- ml[nr]
     attr(ml, "index") <- index

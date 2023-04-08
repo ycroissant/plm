@@ -194,7 +194,11 @@ is.pconsecutive.default <- function(x, id, time, na.rm.tindex = FALSE, ...) {
   #      as.numeric(as.character(factor_var))
   if(!is.numeric(time) && is.factor(time)) time <- as.numeric(levels(time))[as.integer(time)]
   
+  ### TODO: can speed up with collapse:
   list_id_timevar <- split(time, id, drop = TRUE)
+  # does not yet work with test file due to NAs 
+  # NA handling is different to base R's split
+  # list_id_timevar <- collapse::rsplit(time[-collapse::whichNA(id)], id[-collapse::whichNA(id)], drop = TRUE, use.names = FALSE)
 
   res <- vapply(list_id_timevar, function(id_timevar) { if(anyNA(id_timevar)) {
                                                            NA # return NA if NA found in the time periods for individual

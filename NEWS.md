@@ -14,10 +14,10 @@ Changes relative to CRAN 2.6-2:
 * `lag`, `lead`, and `diff` on panel data (pseries, pdata.frame) are now faster 
     due to usage of the fast collapse functions internally (`collapse::flag`, 
     `collapse::fdiff`), on large data sets approx. 10x to 20x faster.
-    
 * `plm/pggls(., model = "fd")`: faster first-difference model estimation (due to 
    using `collapse::fdiff`).
    NB: FD models are based on row-wise differences, not (yet) time-wise.
+* Usages of `split()` substituted with `collapse`'s fast `rsplit()`/`gsplit()`.
 
 ### Minors:
 * `ciptstest`: error gracefully when argument `lags = 0L` (partly addresses 

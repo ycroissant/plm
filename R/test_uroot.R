@@ -829,7 +829,7 @@ purtest <- function(object, data = NULL, index = NULL,
     if(is.null(id)) stop("the individual dimension is undefined")
     # adjust 'id' to correspond data in 'object' after NA dropping:
     if(!is.null(attr(object, "na.action"))) id <- id[-attr(object, "na.action")]
-    object <- split(object, id)
+    object <- collapse::gsplit(object, id, use.g.names = TRUE) # was: object <- split(object, id)
   } else {
     if(!ncol(object) > 1L) warning("data.frame or matrix specified in argument object does not contain more than one individual (individuals are supposed to be in columns)")
     object <- as.list(object)

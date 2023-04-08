@@ -697,8 +697,11 @@ extract.data <- function(data, as.matrix = TRUE){
     X <- cbind(data[[1L]], X)
     colnames(X)[1L] <- deparse(trms[[2L]])
   }
+### TODO: can speed up with collapse:
   data <- split(as.data.frame(X), index[[1L]])
   time <- split(index[[2L]], index[[1L]])
+#  data <- collapse::rsplit(as.data.frame(X), index[[1L]])  # does not yet work
+#  time <- collapse::gsplit(index[[2L]], index[[1L]])
   data <- mapply(
                  function(x, y){
                    rownames(x) <- y

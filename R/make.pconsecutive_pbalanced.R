@@ -675,7 +675,7 @@ intersect_index <- function(index, by) {
            time <- as.character(index[[1L]])
          })
   
-  times_by_ids <- split(time, id)
+  times_by_ids <- collapse::gsplit(time, id) # was: times_by_ids <- split(time, id)
   common_times <- Reduce(intersect, times_by_ids) 
   keep_entries <- time %in% common_times
   return(keep_entries)
