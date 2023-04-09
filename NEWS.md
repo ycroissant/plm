@@ -6,9 +6,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 
 ***
 
-# plm 2.6-99999 (Development version)
-
-Changes relative to CRAN 2.6-2:
+# plm 2.6-3
 
 ### Speed-up:
 * `lag`, `lead`, and `diff` on panel data (pseries, pdata.frame) are now faster 
