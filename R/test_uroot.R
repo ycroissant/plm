@@ -1235,10 +1235,6 @@ phansitest <- function(object, alpha = 0.05) {
   return(res)
 }
 
-phansi <- function(object, alpha = 0.05) {
-  stop("function 'phansi' renamed to 'phansitest'. Change your code to use 'phansitest'.")
-}
-
 
 #' @rdname phansitest
 #' @export
