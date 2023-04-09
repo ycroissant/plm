@@ -6,6 +6,11 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 
 ***
 
+# plm 2.6-9999
+
+* Changes relative to CRAN-released version 2.6-2:
+(none so far)
+
 # plm 2.6-3
 
 ### Speed-up:
