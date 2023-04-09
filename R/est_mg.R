@@ -168,15 +168,14 @@ pmg <- function(formula, data, subset, na.action,
   ## "pre-allocate" coefficients matrix for the n models and list for residuals
   kt <- if(trend) 1L else 0L
   tcoef <- if(model == "cmg") {
-    matrix(data = NA_real_, nrow = 2*k+kt, ncol = n) ## allow for extended coef vector
-  } else matrix(data = NA_real_, nrow = k+kt, ncol = n)
+         matrix(data = NA_real_, nrow = 2*k+kt, ncol = n) ## allow for extended coef vector
+  } else matrix(data = NA_real_, nrow =   k+kt, ncol = n)
   tres <- vector("list", n)
 
   switch(model,
     "mg" = {
       # split X, y by individual and store in lists
       tX.list <- collapse::rsplit(X, ind.GRP, use.names = FALSE)
-      
       ty.list <- collapse::gsplit(y, ind.GRP)
       
       ## for each x-sect. i = 1..n
@@ -329,8 +328,8 @@ print.summary.pmg <- function(x, digits = max(3, getOption("digits") - 2),
   print(sumres(x))
   cat("\nCoefficients:\n")
   printCoefmat(x$CoefTable, digits = digits)
-  cat(paste("Total Sum of Squares: ",    signif(x$tss,  digits),  "\n", sep=""))
-  cat(paste("Residual Sum of Squares: ", signif(x$ssr,  digits),  "\n", sep=""))
+  cat(paste("Total Sum of Squares: ",    signif(x$tss,  digits), "\n", sep=""))
+  cat(paste("Residual Sum of Squares: ", signif(x$ssr,  digits), "\n", sep=""))
   cat(paste("Multiple R-squared: ",      signif(x$rsqr, digits), "\n", sep=""))
   invisible(x)
 }
