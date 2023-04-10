@@ -457,7 +457,7 @@ myvar <- function(x){
     if(n == 1L) z <- 0
   } else {
     z <- if(!(is.factor(x) || is.character(x))) var(x)
-         else !all(duplicated(x)[-1L])
+         else !all(collapse::fduplicated(x, all = FALSE)[-1L])
   }
   z
 }

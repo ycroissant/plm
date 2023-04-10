@@ -242,7 +242,7 @@ fixef.plm <- function(object, effect = NULL,
         ## other dfirst
         other.fixef.dfirst <- other.fixef.lvl - other.fixef.lvl[1L]
         tw.fixef.lvl <- tw.fixef.lvl - other.fixef.dfirst[indexl[[other.idx]]]
-        tw.fixef.lvl <- tw.fixef.lvl[!duplicated(indexl[[idx]])]
+        tw.fixef.lvl <- tw.fixef.lvl[!collapse::fduplicated(indexl[[idx]], all = FALSE)]
         names(tw.fixef.lvl) <- pdim[["panel.names"]][[idx]]
       } else {
         # effect = "twoways": everything already computed, just set names
@@ -427,8 +427,8 @@ ranef.plm <- function(object, effect = NULL, ...) {
     # in the unbalanced cases, ercomp[["theta"]] is full length (# obs)
     #  -> reduce to per id/time
     select <- switch(effect,
-                     "individual" = !duplicated(index(object$model)[1L]),
-                     "time"       = !duplicated(index(object$model)[2L]))
+                     "individual" = !collapse::fduplicated(index(object$model)[1L], all = FALSE),
+                     "time"       = !collapse::fduplicated(index(object$model)[2L], all = FALSE))
     theta <- theta[select]
   }
   

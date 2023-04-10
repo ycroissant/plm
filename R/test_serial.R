@@ -940,7 +940,7 @@ pbnftest.panelmodel <- function(x, test = c("bnf", "lbi"), ...) {
   if (!inherits(residuals(x), "pseries")) stop("pbnftest internal error: residuals are not of class \"pseries\"") # check to be safe: need pseries
   
   ind <- unclass(index(x))[[1L]] # unclass for speed
-  obs1 <- !duplicated(ind)                  # first ob of each individual
+  obs1 <- !collapse::fduplicated(ind, all = FALSE)  # first ob of each individual
   obsn <- !duplicated(ind, fromLast = TRUE) # last ob of each individual
   
   #### d1, d2, d3, d4 as in Baltagi/Wu (1999), p. 819 formula (16)

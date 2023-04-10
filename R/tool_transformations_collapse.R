@@ -246,7 +246,7 @@ between.default.collapse <- function(x, effect, ...) {
   # check for presence of na.rm in dots, if not present set to FALSE
   na.rm <- if(missing(...) || is.null(na.rm <- list(...)$na.rm)) FALSE else na.rm
   res <- collapse::fbetween(x, g = effect, w = NULL, na.rm = na.rm, fill = TRUE)
-  keep <- !duplicated(effect)
+  keep <- !collapse::fduplicated(effect, all = FALSE)
   res <- res[keep]
   names(res) <- as.character(effect[keep])
   # bring into factor level order (not order as appears in orig. data)
@@ -299,7 +299,7 @@ between.pseries.collapse <- function(x, effect = c("individual", "time", "group"
   # (otherwise result could contain non-intended NA)]
   res <- collapse::fbetween(x, effect = eff.no, w = NULL, na.rm = na.rm, fill = TRUE)
   res <- remove_pseries_features(res)
-  keep <- !duplicated(i)
+  keep <- !collapse::fduplicated(i, all = FALSE)
   res <- res[keep]
   names(res) <- as.character(i[keep])
   # bring into factor level order (not order as appears in orig. data)
@@ -365,7 +365,7 @@ between.matrix.collapse <- function(x, effect, ...) {
   res <- collapse::fbetween(x, g = eff.fac, w = NULL, na.rm = na.rm, fill = TRUE)
   rownames(res) <- as.character(eff.fac)
   # compress data to number of unique individuals (or time periods)
-  res <- res[!duplicated(eff.fac), , drop = FALSE]
+  res <- res[!collapse::fduplicated(eff.fac, all = FALSE), , drop = FALSE]
   # bring into factor level order (not order as appears in orig. data)
   lvl <- levels(collapse::fdroplevels(eff.fac))
   res <- res[lvl, , drop = FALSE]

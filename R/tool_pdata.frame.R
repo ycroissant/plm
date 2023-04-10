@@ -701,7 +701,7 @@ print.pdata.frame <- function(x, ...) {
   class(x) <- "data.frame"
   # This is a workaround: print.data.frame cannot handle
   # duplicated row names which are currently possible for pdata frames
-  if (anyDuplicated(rownames(x))) {
+  if (collapse::any_duplicated(rownames(x))) {
       print("Note: pdata.frame contains duplicated row names, thus original row names are not printed")
       rownames(x) <- NULL 
   }

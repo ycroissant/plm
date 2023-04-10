@@ -213,7 +213,7 @@ pgrangertest <- function(formula, data, test = c("Ztilde", "Zbar", "Wbar"), orde
   }
 
   # make data frame with individual Granger test results and lag order
-  indgranger <- data.frame(indi[!duplicated(indi)],
+  indgranger <- data.frame(indi[!collapse::fduplicated(indi, all = FALSE)],
                            Wi, pWi, dfWi, order_grangertest)
   colnames(indgranger) <- c(names(index(data))[1L], "Chisq", "p-value", "df", "lag")
   
