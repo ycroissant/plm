@@ -1440,6 +1440,26 @@ pos.index <- function(x, ...) {
   return(index_pos)
 }
 
+is.pdata.frame <- function(x) {
+  # not exported, helper function
+  # checks if the a pdata.frame as pdata.frame properties
+  res <- TRUE
+  if(!inherits(x, "pdata.frame"))        res <- FALSE
+  if(!has.index(x))                      res <- FALSE
+  if(!nrow((i <- index(x))) == nrow(x))  res <- FALSE
+  res
+}
+
+check.pdata.frame <- function(x) {
+  # not exported, helper function
+  # checks if the a pdata.frame as pdata.frame properties
+  # Like is.pdata.frame but with error output about ill-specification
+  stopifnot(inherits(x, "pdata.frame"))
+  stopifnot(has.index(x))
+  stopifnot(nrow(index(x)) == nrow(x))
+  TRUE
+}
+
 pseries2pdataframe <- function(x, pdata.frame = TRUE, ...) {
   ## non-exported
   ## Transforms a pseries in a (p)data.frame with the indices as regular columns
