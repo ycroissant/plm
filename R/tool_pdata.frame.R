@@ -1449,13 +1449,25 @@ pos.index <- function(x, ...) {
   return(index_pos)
 }
 
-is.pdata.frame <- function(x) {
+is.pdata.frame <- function(x, feedback = NULL) {
   # not exported, helper function
   # checks if the a pdata.frame as pdata.frame properties
+
   res <- TRUE
-  if(!inherits(x, "pdata.frame"))        res <- FALSE
-  if(!has.index(x))                      res <- FALSE
-  if(!nrow((i <- index(x))) == nrow(x))  res <- FALSE
+  if(!inherits(x, "pdata.frame")) res <- FALSE
+  if(!has.index(x))               res <- FALSE
+  if(!nrow(index(x)) == nrow(x))  res <- FALSE
+  
+  if(!res && !is.null(feedback)) {
+    feedback <- switch(feedback,
+                       "error" = stop,
+                       "warn"  = warning)
+    feedback.txt <- paste0("input data claims to be a pdata.frame but does not seem to have compliant properties, ",
+                           "results can be unreliable. This can happen due to data manipulation by ",
+                           "non-pdata.frame-aware functions (e.g., 'dplyr' on pdata.frame). \n Maybe re-create ",
+                           "data input as fresh pdata.frame after last data manipulation with other tools.")
+    feedback(feedback.txt)
+  }
   res
 }
 
