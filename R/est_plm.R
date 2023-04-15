@@ -321,18 +321,18 @@ plm <- function(formula, data, subset, weights, na.action,
     if (! anyNA.model && model == "fd") {
       # input checks for FD model: give informative error messages as
       # described in footnote in vignette
-        if (effect == "time") stop(paste("effect = \"time\" for first-difference model",
-                                         "meaningless because cross-sections do not",
-                                         "generally have a natural ordering"))
-        if (effect == "twoways") stop(paste("effect = \"twoways\" is not defined",
-                                            "for first-difference models"))
+        if(effect == "time") stop(paste("effect = \"time\" for first-difference model",
+                                        "meaningless because cross-sections do not",
+                                        "generally have a natural ordering"))
+        if(effect == "twoways") stop(paste("effect = \"twoways\" is not defined",
+                                           "for first-difference models"))
     }
     
     # Deprecated section
       
       # model = "ht" in plm() and pht() are no longer maintained, but working
       # -> call pht() and early exit
-      if (! anyNA.model && model == "ht"){
+      if(! anyNA.model && model == "ht"){
           ht <- match.call(expand.dots = FALSE)
           m <- match(c("formula", "data", "subset", "na.action", "index"), names(ht), 0)
           ht <- ht[c(1L, m)]
@@ -341,23 +341,17 @@ plm <- function(formula, data, subset, weights, na.action,
           return(ht)
       }
     
+    orig_rownames <- row.names(data) # save original rownames for later restoring
+    
     # check whether data and formula are pdata.frame and Formula and if not
     # coerce them
-    orig_rownames <- row.names(data)
-
+    
     # convert data to pdata.frame; if already pdata.frame input, sanity check
-    if (!inherits(data, "pdata.frame")) {
+    if(!inherits(data, "pdata.frame")) {
       data <- pdata.frame(data, index)
-      } else {
-      if(!is.pdata.frame(data)) {
-        wrn.txt <- paste0("input data claims to be a pdata.frame but does not seem to have compliant properties, ",
-                          "results can be unreliable. This can happen due to data manipulation by ",
-                          "non-pdata.frame-aware functions (e.g., 'dplyr' on pdata.frame). \n Maybe re-create ",
-                          "data input as fresh pdata.frame after last data manipulation with other tools.")
-        warning(wrn.txt)
-      }
-    }
-    if (!inherits(formula, "Formula")) formula <- as.Formula(formula)
+      } else is.pdata.frame(data, feedback = "warn")
+        
+    if(!inherits(formula, "Formula")) formula <- as.Formula(formula)
 
     # in case of 2-part formula, check whether the second part should
     # be updated, e.g., y ~ x1 + x2 + x3 | . - x2 + z becomes 

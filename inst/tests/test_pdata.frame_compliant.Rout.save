@@ -78,7 +78,7 @@ Coefficients:
 -0.19314  0.11291 
 
 Warning message:
-In plm(form, data = pdf_dplyr, method = "within") :
+In is.pdata.frame(data, feedback = "warn") :
   input data claims to be a pdata.frame but does not seem to have compliant properties, results can be unreliable. This can happen due to data manipulation by non-pdata.frame-aware functions (e.g., 'dplyr' on pdata.frame). 
  Maybe re-create data input as fresh pdata.frame after last data manipulation with other tools.
 > 
@@ -121,7 +121,7 @@ Coefficients:
 -0.19314  0.11291 
 
 Warning message:
-In plm(form, data = pdf_dplyr) :
+In is.pdata.frame(data, feedback = "warn") :
   input data claims to be a pdata.frame but does not seem to have compliant properties, results can be unreliable. This can happen due to data manipulation by non-pdata.frame-aware functions (e.g., 'dplyr' on pdata.frame). 
  Maybe re-create data input as fresh pdata.frame after last data manipulation with other tools.
 > pggls(form, data = pdf_dplyr) # warns
@@ -133,7 +133,7 @@ Coefficients:
 -0.183156  0.081844 
 
 Warning message:
-In plm(formula = form, data = pdf_dplyr, model = "within") :
+In is.pdata.frame(data, feedback = "warn") :
   input data claims to be a pdata.frame but does not seem to have compliant properties, results can be unreliable. This can happen due to data manipulation by non-pdata.frame-aware functions (e.g., 'dplyr' on pdata.frame). 
  Maybe re-create data input as fresh pdata.frame after last data manipulation with other tools.
 > pcce( form, data = pdf_dplyr) # warns
@@ -145,7 +145,7 @@ Coefficients:
 -0.3510  0.1926 
 
 Warning message:
-In plm(formula = form, data = pdf_dplyr, model = "pooling") :
+In is.pdata.frame(data, feedback = "warn") :
   input data claims to be a pdata.frame but does not seem to have compliant properties, results can be unreliable. This can happen due to data manipulation by non-pdata.frame-aware functions (e.g., 'dplyr' on pdata.frame). 
  Maybe re-create data input as fresh pdata.frame after last data manipulation with other tools.
 > pmg(  form, data = pdf_dplyr) # warns
@@ -157,7 +157,7 @@ Coefficients:
     0.58466    -0.22964     0.17775 
 
 Warning message:
-In plm(formula = form, data = pdf_dplyr, model = "pooling") :
+In is.pdata.frame(data, feedback = "warn") :
   input data claims to be a pdata.frame but does not seem to have compliant properties, results can be unreliable. This can happen due to data manipulation by non-pdata.frame-aware functions (e.g., 'dplyr' on pdata.frame). 
  Maybe re-create data input as fresh pdata.frame after last data manipulation with other tools.
 > pvcm( form, data = pdf_dplyr) # warns
@@ -175,7 +175,7 @@ Coefficients:
 6     0.89948 -0.442882 -0.383766
 
 Warning message:
-In plm(formula = form, data = pdf_dplyr, model = NA) :
+In is.pdata.frame(data, feedback = "warn") :
   input data claims to be a pdata.frame but does not seem to have compliant properties, results can be unreliable. This can happen due to data manipulation by non-pdata.frame-aware functions (e.g., 'dplyr' on pdata.frame). 
  Maybe re-create data input as fresh pdata.frame after last data manipulation with other tools.
 > pldv( form, data = pdf_dplyr) # warns
@@ -187,13 +187,13 @@ Coefficients:
   -0.010898   -0.355880    0.155699 
 
 Warning message:
-In plm(formula = form, data = pdf_dplyr, model = NA) :
+In is.pdata.frame(data, feedback = "warn") :
   input data claims to be a pdata.frame but does not seem to have compliant properties, results can be unreliable. This can happen due to data manipulation by non-pdata.frame-aware functions (e.g., 'dplyr' on pdata.frame). 
  Maybe re-create data input as fresh pdata.frame after last data manipulation with other tools.
 > pgmm( A ~ B + C | lag(C, 2:10), data = pdf_dplyr) # warns
 
 Model Formula: A ~ B + C | lag(C, 2:10)
-<environment: 0x000001364b17ec20>
+<environment: 0x000001e5111b5c50>
 
 Coefficients:
          B          C          3          4          5          6          7 
@@ -202,7 +202,7 @@ Coefficients:
 -0.2109483 -0.2132612 -0.2750264 
 
 Warning messages:
-1: In plm(formula = A ~ B + C | C | B, data = pdf_dplyr, drop.unused.levels = TRUE,  :
+1: In is.pdata.frame(data, feedback = "warn") :
   input data claims to be a pdata.frame but does not seem to have compliant properties, results can be unreliable. This can happen due to data manipulation by non-pdata.frame-aware functions (e.g., 'dplyr' on pdata.frame). 
  Maybe re-create data input as fresh pdata.frame after last data manipulation with other tools.
 2: In pgmm(A ~ B + C | lag(C, 2:10), data = pdf_dplyr) :
@@ -219,4 +219,4 @@ In pdata.frame(pdf_dplyr, index = c("id", "t")) :
 > 
 > proc.time()
    user  system elapsed 
-   1.68    0.20    1.89 
+   1.73    0.31    2.04 
