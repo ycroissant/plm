@@ -182,9 +182,18 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
                         drop.NA.series = FALSE, drop.const.series = FALSE,
                         drop.unused.levels = FALSE) {
 
-    if (inherits(x, "pdata.frame")) stop("already a pdata.frame")
+    if(inherits(x, "pdata.frame")) {
+      if(!is.pdata.frame(x)) {
+        # check properties beyond class and if non-compliant, create proper
+        # pdata.frame by continuing with pdata.frame function
+        wrn.txt <- paste0("input 'x' claims to be a pdata.frame but does not have ",
+                          "compliant properties, so tried to re-create a compliant ",
+                          "pdata.frame from 'x'")
+        warning(wrn.txt)
+      } else { stop("already a pdata.frame") }
+    }
   
-    if (length(index) > 3L){
+    if(length(index) > 3L){
         stop("'index' can be of length 3 at the most (one index variable for individual, time, group)")
     }
     
