@@ -1407,6 +1407,7 @@ checkNA.index <- function(index, which = "all", error = TRUE) {
   if(which == 3L) {
     if(anyNA(index[[3L]])) feedback("NA in the group index variable")
   }
+  NULL
 }
 
 
@@ -1478,7 +1479,7 @@ check.pdata.frame <- function(x) {
   stopifnot(inherits(x, "pdata.frame"))
   stopifnot(has.index(x))
   stopifnot(nrow(index(x)) == nrow(x))
-  TRUE
+  NULL
 }
 
 pseries2pdataframe <- function(x, pdata.frame = TRUE, ...) {
