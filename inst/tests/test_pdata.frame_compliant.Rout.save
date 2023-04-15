@@ -1,0 +1,222 @@
+
+R version 4.2.3 (2023-03-15 ucrt) -- "Shortstop Beagle"
+Copyright (C) 2023 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(plm)
+> 
+> set.seed(42)
+> A = c(runif(100))
+> B = c(runif(100))
+> C = c(runif(100))
+> df <- data.frame(A,B,C)
+> df$id <- floor((as.numeric(rownames(df))-1)/10)
+> df$t <- ave(df$A, df$id, FUN = seq_along)
+> 
+> form <- A ~ B + C
+> 
+> pdf <- pdata.frame(df, index = c("id","t"))
+> pdf_base <- subset(pdf, (as.numeric(pdf$t) < 8))
+> 
+> # library(dplyr)
+> # ## dplyr is not pdata.frame-aware/does not subset the index in row-filtering
+> # pdf_dplyr <- pdf %>% filter(as.numeric(t) < 8)
+> 
+> ## emulate dplyr behaviour (no subsetting of index) so no dependency to dplyr for test is necessary
+> pdf_dplyr <- subset(df, (as.numeric(df$t) < 8))
+> pdf_dplyr <- pdata.frame(pdf_dplyr, index = c("id", "t"))
+> attr(pdf_dplyr, "index") <- index(pdf)
+> 
+> ### Demonstration of issue
+> # lm(): results are the same
+> print(lm(form, data = pdf_base))
+
+Call:
+lm(formula = form, data = pdf_base)
+
+Coefficients:
+(Intercept)            B            C  
+     0.5564      -0.1642       0.1581  
+
+> print(lm(form, data = pdf_dplyr))
+
+Call:
+lm(formula = form, data = pdf_dplyr)
+
+Coefficients:
+(Intercept)            B            C  
+     0.5564      -0.1642       0.1581  
+
+> 
+> # plm(): results differ for ill-conditioned pdata.frame:
+> print(plm(form, data = pdf_base,  method = "within"))
+
+Model Formula: A ~ B + C
+
+Coefficients:
+       B        C 
+-0.20179  0.11307 
+
+> print(plm(form, data = pdf_dplyr, method = "within"))
+
+Model Formula: A ~ B + C
+
+Coefficients:
+       B        C 
+-0.19314  0.11291 
+
+Warning message:
+In plm(form, data = pdf_dplyr, method = "within") :
+  input data claims to be a pdata.frame but does not seem to have compliant properties, results can be unreliable. This can happen due to data manipulation by non-pdata.frame-aware functions (e.g., 'dplyr' on pdata.frame). 
+ Maybe re-create data input as fresh pdata.frame after last data manipulation with other tools.
+> 
+> # plm(): correct with well-behaved pdata.frame
+> pdf_dplyr_fixed <- pdata.frame(as.data.frame(pdf_dplyr), c("id", "t"))
+> print(plm(form, data = pdf_dplyr_fixed))
+
+Model Formula: A ~ B + C
+
+Coefficients:
+       B        C 
+-0.20179  0.11307 
+
+> 
+> nrow(pdf_base)         # 70
+[1] 70
+> nrow(index(pdf_base))  # 70
+[1] 70
+> nrow(pdf_dplyr)        # 70
+[1] 70
+> nrow(index(pdf_dplyr)) # 100 (should be 70 to be a proper pdata.frame)
+[1] 100
+> nrow(pdf_dplyr_fixed)        # 70
+[1] 70
+> nrow(index(pdf_dplyr_fixed)) # 70
+[1] 70
+> 
+> plm:::is.pdata.frame(pdf_base)
+[1] TRUE
+> plm:::is.pdata.frame(pdf_dplyr) ## ill-behaved pdata.frame is detected
+[1] FALSE
+> 
+> ## these should give a proper warning about ill-behaved pdata.frame
+> plm(  form, data = pdf_dplyr) # warns
+
+Model Formula: A ~ B + C
+
+Coefficients:
+       B        C 
+-0.19314  0.11291 
+
+Warning message:
+In plm(form, data = pdf_dplyr) :
+  input data claims to be a pdata.frame but does not seem to have compliant properties, results can be unreliable. This can happen due to data manipulation by non-pdata.frame-aware functions (e.g., 'dplyr' on pdata.frame). 
+ Maybe re-create data input as fresh pdata.frame after last data manipulation with other tools.
+> pggls(form, data = pdf_dplyr) # warns
+
+Model Formula: A ~ B + C
+
+Coefficients:
+        B         C 
+-0.183156  0.081844 
+
+Warning message:
+In plm(formula = form, data = pdf_dplyr, model = "within") :
+  input data claims to be a pdata.frame but does not seem to have compliant properties, results can be unreliable. This can happen due to data manipulation by non-pdata.frame-aware functions (e.g., 'dplyr' on pdata.frame). 
+ Maybe re-create data input as fresh pdata.frame after last data manipulation with other tools.
+> pcce( form, data = pdf_dplyr) # warns
+
+Model Formula: A ~ B + C
+
+Coefficients:
+      B       C 
+-0.3510  0.1926 
+
+Warning message:
+In plm(formula = form, data = pdf_dplyr, model = "pooling") :
+  input data claims to be a pdata.frame but does not seem to have compliant properties, results can be unreliable. This can happen due to data manipulation by non-pdata.frame-aware functions (e.g., 'dplyr' on pdata.frame). 
+ Maybe re-create data input as fresh pdata.frame after last data manipulation with other tools.
+> pmg(  form, data = pdf_dplyr) # warns
+
+Model Formula: A ~ B + C
+
+Coefficients:
+(Intercept)           B           C 
+    0.58466    -0.22964     0.17775 
+
+Warning message:
+In plm(formula = form, data = pdf_dplyr, model = "pooling") :
+  input data claims to be a pdata.frame but does not seem to have compliant properties, results can be unreliable. This can happen due to data manipulation by non-pdata.frame-aware functions (e.g., 'dplyr' on pdata.frame). 
+ Maybe re-create data input as fresh pdata.frame after last data manipulation with other tools.
+> pvcm( form, data = pdf_dplyr) # warns
+
+Model Formula: A ~ B + C
+
+Coefficients:
+  (Intercept)         B         C
+0     0.78116 -0.028017 -0.113573
+1     0.43220 -0.615856  0.900289
+2     0.54642 -0.048754 -0.130432
+3     0.39129 -0.259538  0.993062
+4     0.45999  0.195818  0.033738
+5     0.58210 -0.408266 -0.055073
+6     0.89948 -0.442882 -0.383766
+
+Warning message:
+In plm(formula = form, data = pdf_dplyr, model = NA) :
+  input data claims to be a pdata.frame but does not seem to have compliant properties, results can be unreliable. This can happen due to data manipulation by non-pdata.frame-aware functions (e.g., 'dplyr' on pdata.frame). 
+ Maybe re-create data input as fresh pdata.frame after last data manipulation with other tools.
+> pldv( form, data = pdf_dplyr) # warns
+
+Model Formula: A ~ B + C
+
+Coefficients:
+(Intercept)           B           C 
+  -0.010898   -0.355880    0.155699 
+
+Warning message:
+In plm(formula = form, data = pdf_dplyr, model = NA) :
+  input data claims to be a pdata.frame but does not seem to have compliant properties, results can be unreliable. This can happen due to data manipulation by non-pdata.frame-aware functions (e.g., 'dplyr' on pdata.frame). 
+ Maybe re-create data input as fresh pdata.frame after last data manipulation with other tools.
+> pgmm( A ~ B + C | lag(C, 2:10), data = pdf_dplyr) # warns
+
+Model Formula: A ~ B + C | lag(C, 2:10)
+<environment: 0x000001364b17ec20>
+
+Coefficients:
+         B          C          3          4          5          6          7 
+-0.2090424  0.1685637 -0.1178354  0.0048865  0.0100595 -0.4196449  0.0623738 
+         8          9         10 
+-0.2109483 -0.2132612 -0.2750264 
+
+Warning messages:
+1: In plm(formula = A ~ B + C | C | B, data = pdf_dplyr, drop.unused.levels = TRUE,  :
+  input data claims to be a pdata.frame but does not seem to have compliant properties, results can be unreliable. This can happen due to data manipulation by non-pdata.frame-aware functions (e.g., 'dplyr' on pdata.frame). 
+ Maybe re-create data input as fresh pdata.frame after last data manipulation with other tools.
+2: In pgmm(A ~ B + C | lag(C, 2:10), data = pdf_dplyr) :
+  the first-step matrix is singular, a general inverse is used
+3: In pgmm(A ~ B + C | lag(C, 2:10), data = pdf_dplyr) :
+  the second-step matrix is singular, a general inverse is used
+> 
+> # test for re-creation of a compliant pdata.frame from a non-compliant one
+> pdf_dplyr_fixed2 <- pdata.frame(pdf_dplyr, index = c("id", "t"))
+Warning message:
+In pdata.frame(pdf_dplyr, index = c("id", "t")) :
+  input 'x' claims to be a pdata.frame but does not have compliant properties, so tried to re-create a compliant pdata.frame from 'x'
+> stopifnot(isTRUE(all.equal(pdf_dplyr_fixed, pdf_dplyr_fixed2)))
+> 
+> proc.time()
+   user  system elapsed 
+   1.68    0.20    1.89 
