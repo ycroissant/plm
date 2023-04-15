@@ -118,6 +118,7 @@ pggls <- function(formula, data, subset, na.action,
 
     
     ## TODO: for FD models respecting time-wise diffing: need dedicated procedure to construct index
+    ##       -> check if non-exported make.fdindex can do the trick
     if (model.name == "fd") {
     ## eliminate first year in indices
         nt <- pdim$Tint$nt[-1L]
