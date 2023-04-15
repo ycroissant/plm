@@ -13,6 +13,12 @@ Changes relative to CRAN-released version 2.6-2:
 ### Speed-up:
 * Replaced base R's `duplicated` with faster `collapse::fduplicated(x, all = FALSE)`.
 
+### Others:
+* `plm()` now warns if a data input claims to be a pdata.frame but has non-compliant
+   properties. This can happen due to data manipulation by non-pdata.frame-aware functions 
+   (e.g., `dplyr`'s row-filtering on pdata.frame does not take care of pdata.frame's index
+   attribute). 
+
 ***
 
 

@@ -345,8 +345,19 @@ plm <- function(formula, data, subset, weights, na.action,
     # coerce them
     orig_rownames <- row.names(data)
 
-    if (! inherits(data, "pdata.frame")) data <- pdata.frame(data, index)
-    if (! inherits(formula, "Formula")) formula <- as.Formula(formula)
+    # convert data to pdata.frame; if already pdata.frame input, sanity check
+    if (!inherits(data, "pdata.frame")) {
+      data <- pdata.frame(data, index)
+      } else {
+      if(!is.pdata.frame(data)) {
+        wrn.txt <- paste0("input data claims to be a pdata.frame but does not seem to have compliant properties, ",
+                          "results can be unreliable. This can happen due to data manipulation by ",
+                          "non-pdata.frame-aware functions (e.g., 'dplyr' on pdata.frame). \n Maybe re-create ",
+                          "data input as fresh pdata.frame after last data manipulation with other tools.")
+        warning(wrn.txt)
+      }
+    }
+    if (!inherits(formula, "Formula")) formula <- as.Formula(formula)
 
     # in case of 2-part formula, check whether the second part should
     # be updated, e.g., y ~ x1 + x2 + x3 | . - x2 + z becomes 
