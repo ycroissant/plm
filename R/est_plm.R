@@ -372,13 +372,16 @@ plm <- function(formula, data, subset, weights, na.action,
     mf$formula <- data
     mf$data <- formula
     data <- eval(mf, parent.frame())
-
+    
     # preserve original row.names for data [also fancy rownames]; so functions
     # like pmodel.response(), model.frame(), model.matrix(), residuals() return
     # the original row.names eval(mf, parent.frame()) returns row.names as
     # character vector containing the "row_number" with incomplete observations
     # dropped
-    row.names(data) <- orig_rownames[as.numeric(row.names(data))]
+    # row.names(data) <- orig_rownames[as.numeric(row.names(data))]
+    ## TODO make this cleaner. This is a dirty workaround to enable sandwich::vcovBS
+    ##      on plm objects (vcovBS(fe_complete, cluster=~firm, R = 999))
+    attr(data, "row.names") <- orig_rownames[as.numeric(row.names(data))]
 
     # return the model.frame (via early exit) if model = NA, else estimate model
     if (is.na(model)){
