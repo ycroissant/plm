@@ -1357,7 +1357,10 @@ index.panelmodel <- function(x, which = NULL, ...) {
 is.index <- function(index) {
   # not exported, helper function
   # checks if the index is an index in the sense of package plm
-  if(all(class(index) == c("pindex", "data.frame"))) TRUE else FALSE
+  res <- TRUE
+  if(!all(class(index) == c("pindex", "data.frame"))) res <- FALSE
+  if(!is.null(n <- ncol(index)) && !(n %in% c(2, 3))) res <- FALSE
+  res
 }
 
 has.index <- function(object) {
