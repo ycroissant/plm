@@ -849,6 +849,10 @@ as.data.frame.pdata.frame <- function(x, row.names = NULL, optional = FALSE, kee
       # do as base::as.data.frame does for NULL
       x <- as.data.frame(x, row.names = NULL)
     } else {
+      # argument check
+      if(!(isTRUE(row.names) || isFALSE(row.names) || is.character(row.names)))
+        stop("argument 'row.names' is none of NULL, FALSE, TRUE, and not a character")
+      
       if(is.logical(row.names) && row.names == FALSE) {
         # set row names to integer sequence 1, 2, 3, ...
         x <- as.data.frame(x)
@@ -863,8 +867,7 @@ as.data.frame.pdata.frame <- function(x, row.names = NULL, optional = FALSE, kee
         x <- as.data.frame(x)
         row.names(x) <- row.names
       }
-      if(!(isTRUE(row.names) || isFALSE(row.names) || is.character(row.names)))
-        stop("argument 'row.names' is none of NULL, FALSE, TRUE, and not a character")
+      
       # using row.names(x) <- "something" is safer (does not allow
       # duplicate row.names) than # attr(x,"row.names") <- "something"
     }
