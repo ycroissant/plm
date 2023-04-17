@@ -1,4 +1,4 @@
-# tests if model is re-producable from plm_object$model (model.frame in plm_object)
+# tests if model is re-producible from plm_object$model (model.frame in plm_object)
 # => reproduction works
 
 library(plm)

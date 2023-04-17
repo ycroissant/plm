@@ -15,7 +15,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> # tests if model is re-producable from plm_object$model (model.frame in plm_object)
+> # tests if model is re-producible from plm_object$model (model.frame in plm_object)
 > # => reproduction works
 > 
 > library(plm)
