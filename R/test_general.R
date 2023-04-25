@@ -151,8 +151,8 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                if (!(all(c(row.names(data) %in% commonrownames, commonrownames %in% row.names(data))))) {
                  data <- data[commonrownames, ]
                  reY <- reY[commonrownames]
-                 reX <- reX[commonrownames, ]
-                 feX <- feX[commonrownames, ]
+                 reX <- reX[commonrownames, , drop = FALSE]
+                 feX <- feX[commonrownames, , drop = FALSE]
                }
                
                # Tests of correct matching of obs (just for safety ...)
