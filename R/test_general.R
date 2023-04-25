@@ -156,11 +156,13 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                }
                
                # Tests of correct matching of obs (just for safety ...)
-               if(!all.equal(length(reY), nrow(data), nrow(reX), nrow(feX)))
+               if(!all(c(isTRUE(all.equal(length(reY), nrow(data))), isTRUE(all.equal(nrow(reX), nrow(feX))), 
+                         isTRUE(all.equal(length(reY), nrow(reX))))))
                   stop("number of cases/observations do not match, most likely due to NAs in \"data\"")
                 if(any(c(is.na(names(reY)), is.na(row.names(data)), is.na(row.names(reX)), is.na(row.names(feX)))))
                     stop("one (or more) rowname(s) is (are) NA")
-                if(!all.equal(names(reY), row.names(data), row.names(reX), row.names(feX)))
+                if(!all(c(isTRUE(all.equal(names(reY), row.names(data))), isTRUE(all.equal(row.names(reX), row.names(feX))),
+                          isTRUE(all.equal(names(reY), row.names(reX))))))
                   stop("row.names of cases/observations do not match, most likely due to NAs in \"data\"")
 
                ## fetch indices here, check pdata
