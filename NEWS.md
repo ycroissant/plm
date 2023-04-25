@@ -13,12 +13,16 @@ Changes relative to CRAN-released version 2.6-2:
 ### Speed-up:
 * Replaced base R's `duplicated` with faster `collapse::fduplicated(x, all = FALSE)`.
 
+### Fixes:
+* `phtest(<.>, method = "aux") (regression-based Hausman test): errored in case of
+  `NA`s and one independent variable (reported by Kurt Schmidheiny).
+
 ### Others:
-* Estimation function (e.g,, `plm()`, `pcce()`) now warn if a data input claims to 
+* Estimation functions (e.g., `plm()`, `pcce()`) now warn if a data input claims to 
   be a pdata.frame but has non-compliant properties. This can happen due to data 
   manipulation by non-pdata.frame-aware functions (e.g., `dplyr`'s row-filtering 
   on pdata.frame does not take care of pdata.frame's index attribute).
-* `pdata.frame()` tries to return (re-create) a compliant pdata.frame if a 
+* `pdata.frame()` returns (re-creates) a compliant pdata.frame if a 
   non-compliant pdata.frame is input and warns about the non-compliant pdata.frame
   input.
 
@@ -69,6 +73,11 @@ Changes relative to CRAN-released version 2.6-2:
   * change: case without supplied non-`NULL` `newdata` now gives the predicted 
     values of the outer model (before: inner model).
 
+### Speed-up:
+* Many functions which split data by an index dimension are now faster on large
+  data sets due to more efficient splitting approach, esp. `pcce`, `pggls`, 
+  `pmg`, `cipstest`, `pcdtest`.
+
 ### Fixes:
 * `mtest`: error gracefully if argument `order` specifies a value larger than or 
    equal to the number of available observations ([#23](https://github.com/ycroissant/plm/issues/23)).
@@ -84,11 +93,6 @@ Changes relative to CRAN-released version 2.6-2:
 * `fixef(., type = "dfirst"`): for models with `length(fixef(<model_object>)) == 2`, 
   `fixef` does not error anymore and for `length(fixef(<model_object>)) == 1`, 
   the result is more sane (`numeric(0)`).
-  
-### Speed-up:
-* Many functions which split data by an index dimension are now faster on large
-  data sets due to more efficient splitting approach, esp. `pcce`, `pggls`, 
-  `pmg`, `cipstest`, `pcdtest`.
   
 ### Others/Minors/Admin:
 * `purtest`: errors more informatively when no non-NA cases are left after lagging.
