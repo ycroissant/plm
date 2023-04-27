@@ -143,13 +143,12 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                reX <- model.matrix(re_mod, cstcovar.rm = "intercept")
                feX <- model.matrix(fe_mod, cstcovar.rm = "all")
 
-               dimnames(feX)[[2L]] <- paste(dimnames(feX)[[2L]], "tilde", sep=".")
                ## estimated models could have fewer obs (due dropping of NAs) compared to the original data
                ## => match original data and observations used in estimated models
                ## routine adapted from lmtest::bptest
                commonrownames <- intersect(intersect(intersect(row.names(data), names(reY)), row.names(reX)), row.names(feX))
-               if (!(all(c(row.names(data) %in% commonrownames, commonrownames %in% row.names(data))))) {
-                 data <- data[commonrownames, ]
+               if(!(all(c(row.names(data) %in% commonrownames, commonrownames %in% row.names(data))))) {
+                 data <- data[commonrownames, , drop = FALSE]
                  reY <- reY[commonrownames]
                  reX <- reX[commonrownames, , drop = FALSE]
                  feX <- feX[commonrownames, , drop = FALSE]
@@ -165,21 +164,21 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                           isTRUE(all.equal(names(reY), row.names(reX))))))
                   stop("row.names of cases/observations do not match, most likely due to NAs in \"data\"")
 
-               ## fetch indices here, check pdata
                ## construct data set and formula for auxiliary regression
-               data <- pdata.frame(cbind(index(data), reY, reX, feX))
+               dimnames(feX)[[2L]] <- paste(dimnames(feX)[[2L]], "tilde", sep=".")
+               auxdata <- pdata.frame(cbind(index(data), reY, reX, feX))
                auxfm <- as.formula(paste("reY~",
                                          paste(dimnames(reX)[[2L]],
                                                collapse="+"), "+",
                                          paste(dimnames(feX)[[2L]],
                                                collapse="+"), sep=""))
-               auxmod <- plm(formula = auxfm, data = data, model = "pooling")
+               auxmod <- plm(formula = auxfm, data = auxdata, model = "pooling")
                nvars <- dim(feX)[[2L]]
                R <- diag(1, nvars)
                r <- rep(0, nvars) # here just for clarity of illustration
                range <- (nvars+2L):(nvars*2L + 1L)
                omega0 <- vcov(auxmod)[range, range]
-               Rbr <- R %*% coef(auxmod)[range] - r
+               Rbr <- crossprod(R, coef(auxmod)[range]) - r
 
                h2t <- as.numeric(crossprod(Rbr, solve(omega0, Rbr)))
                ph2t <- pchisq(h2t, df = nvars, lower.tail = FALSE)
