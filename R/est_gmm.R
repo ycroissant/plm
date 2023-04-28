@@ -302,7 +302,7 @@ pgmm <- function(formula, data, subset, na.action,
   #################################################################
   
   gmm.form <- as.formula(paste("~", paste(names(gmm.lags), collapse = "+")))
-  if (!is.null(inst.form))  Form <- as.Formula(main.form, gmm.form, inst.form)
+  if (!is.null(inst.form)) Form <- as.Formula(main.form, gmm.form, inst.form)
   else Form <- as.Formula(main.form, gmm.form)
   mf <- match.call(expand.dots = FALSE)
   m <- match(c("formula", "data", "subset", "na.action", "index"), names(mf), 0L)
