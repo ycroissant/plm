@@ -345,9 +345,9 @@ plm <- function(formula, data, subset, weights, na.action,
     # check whether data and formula are pdata.frame and Formula and if not
     # coerce them
     
-    # convert data to pdata.frame; if already pdata.frame input, sanity check
+    # convert data to pdata.frame; if already pdata.frame input, do a sanity check
     if(!inherits(data, "pdata.frame")) {
-      data <- pdata.frame(data, index)
+      data <- pdata.frame(data, index = index, ...)
       } else is.pdata.frame(data, feedback = "warn")
         
     if(!inherits(formula, "Formula")) formula <- as.Formula(formula)

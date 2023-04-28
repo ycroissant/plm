@@ -25,6 +25,9 @@ Changes relative to CRAN-released version 2.6-2:
 * `pdata.frame()` returns (re-creates) a compliant pdata.frame if a 
   non-compliant pdata.frame is input and warns about the non-compliant pdata.frame
   input.
+* `plm()` passes on ellipsis ("dots" (`...`)) to internal pdata.frame creation
+  (if pdata.frame is to be created internally due to non-pdata.frame passed in `data` 
+  argument).
 
 ***
 
