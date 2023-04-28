@@ -58,7 +58,8 @@ any(diff(as.numeric(Grunfeld_wo_1937$year)) > 1) # FALSE -> no gap detected
 as.numeric(as.character(Grunfeld_wo_1937$year)) # use as.character before as.numeric!
 any(diff(as.numeric(as.character(Grunfeld_wo_1937$year))) > 1) # TRUE -> gap now detected
 
-
+# in plm function
+plm(inv ~ value + lag(capital), data = Grunfeld_wo_1937)
 
 ############## (3) some general tests ##########
 data("Grunfeld", package = "plm")
@@ -125,6 +126,10 @@ if(!isTRUE(all.equal(plm:::lagr.pseries(Grunfeld$inv, c(-2, -1, 0, 1, 2)),
 # produces a matrix of characters:
 # standard R behaviour for factor input to matrix - not beautiful but "correct"
 plm:::leadr.pseries(Grunfeld$fac, c(-2, -1, 0, 1, 2))
+
+# length(k) > 1 in plm function
+plm(inv ~ value + lag(capital, 1:2), data = Grunfeld)
+
 
 # other data set (different time periods)
 # Hedonic is an unbalanced panel, townid is the individual index

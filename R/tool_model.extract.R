@@ -83,9 +83,53 @@ model.frame.pdata.frame <- function(formula, data = NULL, ...,
     if (is.null(rhs)) rhs <- seq_len(length(formula)[2L])
     if (is.null(lhs)) lhs <- if(length(formula)[1L] > 0L) 1 else 0
     index <- attr(pdata, "index")
-    mf <- model.frame(formula, as.data.frame(pdata, row.names = FALSE), ..., # NB need row.names = FALSE to ensure mf has integer sequence as row names
-                      lhs = lhs, rhs = rhs, dot = dot)
-    index <- index[as.numeric(rownames(mf)), ] # reduce index down to rows left in model frame
+
+# browser()
+
+    # TODO KT: likely, row.names = FALSE is not needed anymore
+#    mf <- model.frame(formula, as.data.frame(pdata, row.names = FALSE), ..., # NB need row.names = FALSE to ensure mf has integer sequence as row names
+#                      lhs = lhs, rhs = rhs, dot = dot)
+
+    mf <- model.frame(formula,
+                      as.data.frame(pdata, row.names = rownames(pdata), keep.attributes = TRUE),
+                      ...,
+                      lhs = lhs,
+                      rhs = rhs,
+                      dot = dot)
+
+    # reduce index down to rows left in model frame according to subset (if any)
+    # and to any NA dropping (na.action attribute referrers to the _subset_ 
+    # model frame (see ?stats::model.frame))
+    if(!is.null(subset <- substitute(list(...))$subset)) {
+      env <- environment(formula)
+      subset <- eval(substitute(subset), pdata, env) # adapted from stats::model.frame
+      if(is.character(subset)) subset <- rownames(pdata) %in% subset
+      index <- index[subset, ]
+#    keep.na.action <- (!seq_len(subset) %in% na.action)
+#      keep.na.action <- (!seq_len(nrow(pdata))[subset] %in% na.action) # TODO: can also be names?
+
+  #    keep.na.action <- (!seq_along(subset[subset]) %in% na.action)
+ #     keep <- subset[subset] & keep.na.action # TODO: subset[subset] is always TRUE -> can simplify via rep(TRUE, sum(subset))?
+#      index <- index[keep, ]                  # TODO: subset can be an indexing vector (integer) -> check (also if expression - need some eval(subset?)
+#    } else {                                  #     from stats::model.frame: subset <- eval(substitute(subset), data, env)
+      # case if no subset argument was supplied: only adjust for na.action
+#      keep.na.action <- (!seq_along(nrow(mf)) %in% na.action)
+#      index <- index[keep.na.action, ]
+    }
+    
+    if(!is.null(na.action <- attr(mf, "na.action"))) index <- index[-na.action, ]
+    
+    # test
+      # keep.na.action <- (!seq_along(subset[subset]) %in% na.action)
+      # head(pdata[subset, ])
+      # head(attr(pdata, "index"))
+      # head(mf)
+      # 
+      # length(subset)
+      # length(subset[subset])
+      # length(keep.na.action)
+      # head(subset[subset] & keep.na.action)
+    
     checkNA.index(index) # check for NAs in model.frame's index and error if any
     index <- droplevels(index)
     class(index) <- c("pindex", "data.frame")

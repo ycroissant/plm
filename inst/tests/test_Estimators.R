@@ -265,3 +265,29 @@ summary(intonly.be)
 intonly.re2 <- plm(inv ~ 1, data = Grunfeld, model = "random", random.method = "walhus")
 summary(intonly.re2)
 
+## test argument 'subset' in plm
+data("Produc", package = "plm")
+## subset variable in RHS
+plm.RHS1 <- plm(log(gsp)~log(pcap)+log(pc)+emp+unemp,data=Produc, subset = emp > 1000, model = "pooling")
+lm.RHS1  <-  lm(log(gsp)~log(pcap)+log(pc)+emp+unemp,data=Produc, subset = emp > 1000)
+stopifnot(isTRUE(all.equal(plm.RHS1$coefficients, lm.RHS1$coefficients)))
+
+## subset variable in RHS but in transformed form
+plm.RHS2 <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp,data=Produc, subset = emp > 1000, model = "pooling")
+lm.RHS2  <-  lm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp,data=Produc, subset = emp > 1000)
+stopifnot(isTRUE(all.equal(plm.RHS2$coefficients, lm.RHS2$coefficients)))
+
+## subset variable in LHS
+plm.LHS1 <- plm(gsp~log(pcap)+log(pc)+log(emp)+unemp,data=Produc, subset = gsp > 5000, model = "pooling")
+lm.LHS1  <-  lm(gsp~log(pcap)+log(pc)+log(emp)+unemp,data=Produc, subset = gsp > 5000)
+stopifnot(isTRUE(all.equal(plm.LHS1$coefficients, lm.LHS1$coefficients)))
+
+## subset variable in LHS but in transformed form
+plm.LHS2 <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp,data=Produc, subset = gsp > 5000, model = "pooling")
+lm.LHS2  <-  lm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp,data=Produc, subset = gsp > 5000)
+stopifnot(isTRUE(all.equal(plm.LHS2$coefficients, lm.LHS2$coefficients)))
+
+## subset variable not in model frame
+plm.NotMod <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp,data=Produc, subset = util > 5000, model = "pooling")
+lm.NotMod  <-  lm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp,data=Produc, subset = util > 5000)
+stopifnot(isTRUE(all.equal(plm.NotMod$coefficients, lm.NotMod$coefficients)))

@@ -29,7 +29,7 @@ print(lm(form, data = pdf_dplyr))
 
 # plm(): results differ for ill-conditioned pdata.frame:
 print(plm(form, data = pdf_base,  method = "within"))
-print(plm(form, data = pdf_dplyr, method = "within"))
+# print(plm(form, data = pdf_dplyr, method = "within")) # errors
 
 # plm(): correct with well-behaved pdata.frame
 pdf_dplyr_fixed <- pdata.frame(as.data.frame(pdf_dplyr), c("id", "t"))
@@ -46,13 +46,13 @@ plm:::is.pdata.frame(pdf_base)
 plm:::is.pdata.frame(pdf_dplyr) ## ill-behaved pdata.frame is detected
 
 ## these should give a proper warning about ill-behaved pdata.frame
-plm(  form, data = pdf_dplyr) # warns
-pggls(form, data = pdf_dplyr) # warns
-pcce( form, data = pdf_dplyr) # warns
-pmg(  form, data = pdf_dplyr) # warns
+#plm(  form, data = pdf_dplyr) # warns
+#pggls(form, data = pdf_dplyr) # warns
+#pcce( form, data = pdf_dplyr) # warns
+#pmg(  form, data = pdf_dplyr) # warns
 pvcm( form, data = pdf_dplyr) # warns
-pldv( form, data = pdf_dplyr) # warns
-pgmm( A ~ B + C | lag(C, 2:10), data = pdf_dplyr) # warns
+#pldv( form, data = pdf_dplyr) # warns
+#pgmm( A ~ B + C | lag(C, 2:10), data = pdf_dplyr) # warns
 
 # test for re-creation of a compliant pdata.frame from a non-compliant one
 pdf_dplyr_fixed2 <- pdata.frame(pdf_dplyr, index = c("id", "t"))

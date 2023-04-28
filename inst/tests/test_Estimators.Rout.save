@@ -1,6 +1,6 @@
 
-R version 4.2.0 (2022-04-22 ucrt) -- "Vigorous Calisthenics"
-Copyright (C) 2022 The R Foundation for Statistical Computing
+R version 4.3.0 (2023-04-21 ucrt) -- "Already Tomorrow"
+Copyright (C) 2023 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -1614,10 +1614,36 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Total Sum of Squares:    2362500
 Residual Sum of Squares: 2362500
-R-Squared:      4.4409e-16
-Adj. R-Squared: 4.4409e-16
+R-Squared:      5.5511e-16
+Adj. R-Squared: 5.5511e-16
 > 
+> ## test argument 'subset' in plm
+> data("Produc", package = "plm")
+> ## subset variable in RHS
+> plm.RHS1 <- plm(log(gsp)~log(pcap)+log(pc)+emp+unemp,data=Produc, subset = emp > 1000, model = "pooling")
+> lm.RHS1  <-  lm(log(gsp)~log(pcap)+log(pc)+emp+unemp,data=Produc, subset = emp > 1000)
+> stopifnot(isTRUE(all.equal(plm.RHS1$coefficients, lm.RHS1$coefficients)))
+> 
+> ## subset variable in RHS but in transformed form
+> plm.RHS2 <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp,data=Produc, subset = emp > 1000, model = "pooling")
+> lm.RHS2  <-  lm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp,data=Produc, subset = emp > 1000)
+> stopifnot(isTRUE(all.equal(plm.RHS2$coefficients, lm.RHS2$coefficients)))
+> 
+> ## subset variable in LHS
+> plm.LHS1 <- plm(gsp~log(pcap)+log(pc)+log(emp)+unemp,data=Produc, subset = gsp > 5000, model = "pooling")
+> lm.LHS1  <-  lm(gsp~log(pcap)+log(pc)+log(emp)+unemp,data=Produc, subset = gsp > 5000)
+> stopifnot(isTRUE(all.equal(plm.LHS1$coefficients, lm.LHS1$coefficients)))
+> 
+> ## subset variable in LHS but in transformed form
+> plm.LHS2 <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp,data=Produc, subset = gsp > 5000, model = "pooling")
+> lm.LHS2  <-  lm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp,data=Produc, subset = gsp > 5000)
+> stopifnot(isTRUE(all.equal(plm.LHS2$coefficients, lm.LHS2$coefficients)))
+> 
+> ## subset variable not in model frame
+> plm.NotMod <- plm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp,data=Produc, subset = util > 5000, model = "pooling")
+> lm.NotMod  <-  lm(log(gsp)~log(pcap)+log(pc)+log(emp)+unemp,data=Produc, subset = util > 5000)
+> stopifnot(isTRUE(all.equal(plm.NotMod$coefficients, lm.NotMod$coefficients)))
 > 
 > proc.time()
    user  system elapsed 
-   3.15    0.28    3.42 
+   3.62    0.25    4.01 
