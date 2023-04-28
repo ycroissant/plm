@@ -14,7 +14,7 @@ Changes relative to CRAN-released version 2.6-2:
 * Replaced base R's `duplicated` with faster `collapse::fduplicated(x, all = FALSE)`.
 
 ### Fixes:
-* `phtest(<.>, method = "aux") (regression-based Hausman test): errored in case of
+* `phtest(<.>, method = "aux")` (regression-based Hausman test): errored in case of
   `NA`s and one independent variable (reported by Kurt Schmidheiny).
 
 ### Others:

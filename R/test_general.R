@@ -121,9 +121,10 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                ## set pdata.frame
                if (!inherits(data, "pdata.frame")) data <- pdata.frame(data, index = index) #, ...)
 
-               row.names(data) <- NULL # reset rownames of original data set (->numbers rownames in clean sequence) to make rownames
-                                       # comparable for later comparison to obs used in estimation of models (get rid of NA values)
-                                       # [needed because pmodel.response() and model.matrix() do not retain fancy rownames, but rownames]
+               # reset rownames of original data set (->numbers rownames in clean sequence) to make rownames
+               # comparable for later comparison to obs used in estimation of models (get rid of NA values)
+               # [needed because pmodel.response() and model.matrix() do not retain fancy rownames, but rownames]
+               row.names(data) <- NULL
                
                # calculate FE and RE model
                fe_mod <- plm(formula = x, data = data, model = model[1L], effect = effect)
@@ -168,10 +169,9 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                dimnames(feX)[[2L]] <- paste(dimnames(feX)[[2L]], "tilde", sep=".")
                auxdata <- pdata.frame(cbind(index(data), reY, reX, feX))
                auxfm <- as.formula(paste("reY~",
-                                         paste(dimnames(reX)[[2L]],
-                                               collapse="+"), "+",
-                                         paste(dimnames(feX)[[2L]],
-                                               collapse="+"), sep=""))
+                                         paste(dimnames(reX)[[2L]], collapse="+"),
+                                         "+",
+                                         paste(dimnames(feX)[[2L]], collapse="+"), sep=""))
                auxmod <- plm(formula = auxfm, data = auxdata, model = "pooling")
                nvars <- dim(feX)[[2L]]
                R <- diag(1, nvars)
@@ -179,11 +179,12 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                range <- (nvars+2L):(nvars*2L + 1L)
                omega0 <- vcov(auxmod)[range, range]
                Rbr <- crossprod(R, coef(auxmod)[range]) - r
-
-               h2t <- as.numeric(crossprod(Rbr, solve(omega0, Rbr)))
-               ph2t <- pchisq(h2t, df = nvars, lower.tail = FALSE)
-
+               
                df <- nvars
+               
+               h2t <- as.numeric(crossprod(Rbr, solve(omega0, Rbr)))
+               ph2t <- pchisq(h2t, df = df, lower.tail = FALSE)
+
                names(df) <- "df"
                names(h2t) <- "chisq"
 
