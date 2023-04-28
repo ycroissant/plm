@@ -102,9 +102,7 @@ phtest(inv ~ value + capital, data=Grunfeldpdata, effect = "time")
 # test to see of phtest(, method = "aux") respects argument effect
 # formal test (statistic is about 13 for twoways case and well below in one-way cases)
 testobj <- phtest(inv ~ value + capital, data=Grunfeldpdata, effect = "twoways", method = "aux")
-#YC if (round(testobj$statistic, digits = 0) != 13) stop("argument effect seems to be not respected with method = \"aux\"")
 testobj2 <- phtest(inv ~ value + capital, data=Grunfeldpdata, effect = "twoways") # just to be sure: test for method="chisq" also...
-#YC if (round(testobj2$statistic, digits = 0) != 13) stop("argument effect seems to be not respected with method = \"chisq\"")
 
 
 
@@ -117,9 +115,7 @@ if (class(testobj2$statistic) != "numeric") stop(paste0("class of statistic is n
 if (class(testobj3$statistic) != "numeric") stop(paste0("class of statistic is not numeric, but ", class(testobj3$statistic)))
 
 
-
-
-# Two-ways case with beetween model should result in informative errors.
+# Two-ways case with between model should result in informative errors.
 # phtest(fe2_grun, be_grun)
 # phtest(re2_grun, be_grun)
 
@@ -138,7 +134,7 @@ if (class(testobj3$statistic) != "numeric") stop(paste0("class of statistic is n
 # chi2(8)   = (b-B)'[(V_b-V_B)^(-1)](b-B)
 #           =      149.43
 # Prob>chi2 =      0.0000
-
+# 
 # library(haven)
 # nlswork <- read_dta("http://www.stata-press.com/data/r14/nlswork.dta") # large file
 # nlswork$race     <- factor(nlswork$race) # convert
@@ -155,15 +151,16 @@ if (class(testobj3$statistic) != "numeric") stop(paste0("class of statistic is n
 # plm_fe_nlswork <- plm(form_nls_ex2, data = pnlswork, model = "within")
 # plm_be_nlswork <- plm(form_nls_ex2, data = pnlswork, model = "between")
 # plm_re_nlswork <- plm(form_nls_ex2, data = pnlswork, model = "random")
+# plm_re2_nlswork <- plm(form_nls_ex2, data = pnlswork, model = "random", random.models = c("within", "between"))
 # 
+# # both slightly different to Stata's example due to diff. RE estimation in Stata
 # summary(plm_re_nlswork)
+# summary(plm_re2_nlswork)
 # 
 # ### Stata: chi2(8) = 149.43
 # phtest(plm_fe_nlswork, plm_re_nlswork)              # chisq = 176.39, df = 8,  p-value < 2.2e-16
 # phtest(plm_be_nlswork, plm_re_nlswork)              # chisq = 141.97, df = 10, p-value < 2.2e-16
-# phtest(form_nls_ex2, data = pnlswork, method="aux") # chisq = 627.46, df = 8,  p-value < 2.2e-16 [this resulted in an error for SVN revisions 125 - 141]
+# phtest(form_nls_ex2, data = pnlswork, method="aux") # chisq = 627.46, df = 8,  p-value < 2.2e-16
 # phtest(form_nls_ex2, data = nlswork,  method="aux") # same on data.frame
 # phtest(form_nls_ex2, data = pnlswork, method="aux", vcov = vcovHC) # chisq = 583.56, df = 8, p-value < 2.2e-16
-# # phtest(form_nls_ex2, data = pnlswork, method="aux", vcov = function(x) vcovHC(x, method="white2", type="HC3")) # computationally too heavy!
-
-
+# phtest(form_nls_ex2, data = pnlswork, method="aux", vcov = function(x) vcovHC(x, method="white2", type="HC3"))
