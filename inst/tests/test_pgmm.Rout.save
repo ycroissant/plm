@@ -1,6 +1,6 @@
 
-R version 4.2.0 (2022-04-22 ucrt) -- "Vigorous Calisthenics"
-Copyright (C) 2022 The R Foundation for Statistical Computing
+R version 4.3.0 (2023-04-21 ucrt) -- "Already Tomorrow"
+Copyright (C) 2023 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -700,7 +700,7 @@ year_78          -0.0690354  0.0149865 -4.6065 4.095e-06 ***
 year_79          -0.1192233  0.0157143 -7.5869 3.276e-14 ***
 year_80          -0.1376209  0.0206042 -6.6793 2.401e-11 ***
 year_81          -0.1537759  0.0235528 -6.5290 6.621e-11 ***
-year_82          -0.1501573  0.0192424 -7.8034 6.024e-15 ***
+year_82          -0.1501573  0.0192425 -7.8034 6.024e-15 ***
 year_83          -0.1214331  0.0143877 -8.4401 < 2.2e-16 ***
 year_84          -0.1058821  0.0107484 -9.8510 < 2.2e-16 ***
 year_85          -0.0760759  0.0100939 -7.5368 4.817e-14 ***
@@ -716,10 +716,10 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 Sargan test: chisq(27) = 28.86345 (p-value = 0.36755)
 Autocorrelation test (1): normal = -4.750024 (p-value = 2.0339e-06)
 Autocorrelation test (2): normal = 1.857129 (p-value = 0.063293)
-Wald test for coefficients: chisq(26) = 6139.499 (p-value = < 2.22e-16)
+Wald test for coefficients: chisq(26) = 6139.501 (p-value = < 2.22e-16)
 Warning message:
 In vcovHC.pgmm(object) : a general inverse is used
 > 
 > proc.time()
    user  system elapsed 
-   7.40    0.53    7.93 
+   7.21    0.53    7.81 

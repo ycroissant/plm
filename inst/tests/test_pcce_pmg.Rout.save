@@ -1,6 +1,6 @@
 
-R version 4.2.0 (2022-04-22 ucrt) -- "Vigorous Calisthenics"
-Copyright (C) 2022 The R Foundation for Statistical Computing
+R version 4.3.0 (2023-04-21 ucrt) -- "Already Tomorrow"
+Copyright (C) 2023 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -8332,10 +8332,10 @@ WYOMING-1986        -1.248207e-03 -1.020804e-01 -2.996379e-02  0.5683338321
 > # vcovXX
 > vcovHC(pccemgmod)
               log(pcap)       log(pc)      log(emp)         unemp
-log(pcap)  1.438292e-15 -4.702633e-17  6.920192e-16  4.396644e-18
-log(pc)   -4.699060e-17  1.591562e-18 -2.278234e-17 -1.451394e-19
-log(emp)   6.920740e-16 -2.285032e-17  3.339247e-16  2.123091e-18
-unemp      4.397738e-18 -1.453407e-19  2.124444e-18  1.351245e-20
+log(pcap)  1.438222e-15 -4.704070e-17  6.919599e-16  4.396291e-18
+log(pc)   -4.698838e-17  1.597205e-18 -2.275796e-17 -1.447567e-19
+log(emp)   6.920293e-16 -2.290015e-17  3.337731e-16  2.122364e-18
+unemp      4.397651e-18 -1.461715e-19  2.123456e-18  1.351272e-20
 attr(,"cluster")
 [1] "group"
 > vcovHC(pccepmod)
@@ -8348,11 +8348,11 @@ attr(,"cluster")
 [1] "group"
 > 
 > vcovHC(pccemgmod_unbal)
-             log(pcap)      log(pc)     log(emp)        unemp
-log(pcap) 1.007017e-18 1.786973e-19 3.446992e-19 2.531406e-21
-log(pc)   1.668915e-19 2.278102e-20 8.149456e-20 2.354289e-22
-log(emp)  3.552069e-19 8.022625e-20 1.435194e-19 1.023203e-21
-unemp     2.317200e-21 6.673035e-22 1.091985e-21 2.365689e-23
+             log(pcap)      log(pc)     log(emp)         unemp
+log(pcap) 1.030052e-18 1.766303e-19 3.393092e-19  2.021816e-21
+log(pc)   1.999640e-19 2.295395e-20 5.191246e-20 -2.254747e-22
+log(emp)  2.777390e-19 6.198624e-20 1.329175e-19  1.476310e-21
+unemp     1.369783e-21 1.191913e-22 9.951117e-22  9.686219e-24
 attr(,"cluster")
 [1] "group"
 > vcovHC(pccepmod_unbal)
@@ -17118,4 +17118,4 @@ Multiple R-squared: 0.99982
 > 
 > proc.time()
    user  system elapsed 
-   2.93    0.43    3.37 
+   2.65    0.40    3.06 
