@@ -303,7 +303,6 @@ plm <- function(formula, data, subset, weights, na.action,
         stop(paste0("arguments 'restrict.matrix' and 'restrict.rhs' cannot yet be used ",
                     "for single equations"))
     }
-    dots <- list(...)
     
     # match and check the effect and model arguments
     effect <- match.arg(effect)
