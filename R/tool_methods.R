@@ -421,6 +421,7 @@ print.summary.plm <- function(x, digits = max(3, getOption("digits") - 2),
   cat("\n")
   cat(paste("Total Sum of Squares:    ", signif(tss(x),      digits), "\n", sep = ""))
   cat(paste("Residual Sum of Squares: ", signif(deviance(x), digits), "\n", sep = ""))
+  if(nzchar(na.msg <- naprint(x$na.action)))      cat("  (", na.msg, ")\n", sep = "")
   cat(paste("R-Squared:      ", signif(x$r.squared[1L], digits),      "\n", sep = ""))
   cat(paste("Adj. R-Squared: ", signif(x$r.squared[2L], digits),      "\n", sep = ""))
 
@@ -676,7 +677,10 @@ plot.plm <- function(x, dx = 0.2, N = NULL, seed = 1,
 residuals.plm <- function(object, model = NULL, effect = NULL,  ...){
     if (is.null(model) && is.null(effect)){
         model <- describe(object, "model")
-        res <- object$residuals
+        # do NA treatment to residuals as specified by na.action
+        # (e.g. na.action=na.exclude: pad residuals with NA to meet data's original no of rows)
+        # Do this only if the residuals of the estimated models are requested!
+        res <- stats::naresid(object$na.action, object$residuals)
     }
     else{
         cl <- match.call(expand.dots = FALSE)

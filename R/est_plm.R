@@ -348,7 +348,7 @@ plm <- function(formula, data, subset, weights, na.action,
     
     # convert data to pdata.frame; if already pdata.frame input, sanity check
     if(!inherits(data, "pdata.frame")) {
-      data <- pdata.frame(data, index)
+      data <- pdata.frame(data, index, ...)
       } else is.pdata.frame(data, feedback = "warn")
         
     if(!inherits(formula, "Formula")) formula <- as.Formula(formula)
@@ -381,12 +381,13 @@ plm <- function(formula, data, subset, weights, na.action,
     # row.names(data) <- orig_rownames[as.numeric(row.names(data))]
     ## TODO make this cleaner. This is a dirty workaround to enable sandwich::vcovBS
     ##      on plm objects (vcovBS(fe_complete, cluster=~firm, R = 999))
-    attr(data, "row.names") <- orig_rownames[as.numeric(row.names(data))]
+# browser()
+    # attr(data, "row.names") <- orig_rownames[as.numeric(row.names(data))]
 
     # return the model.frame (via early exit) if model = NA, else estimate model
-    if (is.na(model)){
-        attr(data, "formula") <- formula
-        return(data)
+    if(is.na(model)){
+      attr(data, "formula") <- formula
+      return(data)
     }
 
     # note that the model.frame has as attributes the Formula and the index
@@ -400,6 +401,7 @@ plm <- function(formula, data, subset, weights, na.action,
                       random.models, random.dfcor, inst.method)
     result$call <- cl
     result$args <- args
+    result$na.action <- attr(data, "na.action")
     result
 }
 
