@@ -79,7 +79,7 @@
 #' Pesaran (2005)). The bias-corrected scaled test (`test="bcsclm"`)
 #' is due to \insertCite{BALT:FENG:KAO:12}{plm} and only valid for
 #' within models including the individual effect (it's unbalanced
-#' version uses max(Tij) for T) in the bias-correction term).
+#' version uses max(Tij) for T in the bias-correction term).
 #' \insertCite{BREU:PAGA:80;textual}{plm} is the original source for
 #' the LM test.
 #' 
