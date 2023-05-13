@@ -21,11 +21,7 @@ is.constant <- function(x) (max(x) - min(x)) < sqrt(.Machine$double.eps)
 
 sumres <- function(x){
   sr <- summary(unclass(resid(x)))
-  srm <- sr["Mean"]
-  if (abs(srm) < 1e-10){
-    sr <- sr[c(1:3, 5:6)]
-  }
-  sr
+  if(abs(sr["Mean"]) < 1e-10) sr[c(1:3, 5:6)] else sr
 }
 
 bdiag <- function(...){
