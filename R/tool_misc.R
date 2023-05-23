@@ -625,6 +625,12 @@ pvar.pseries <- function(x, ...){
   # use drop.index = TRUE so that the index columns' 
   # variations are not evaluated:
   pdfx <- pseries2pdataframe(x, drop.index = TRUE)
+
+  # give the variable in pdata.frame the original name, so it prints nicely
+  substx <- substitute(x)
+  len <- length(substx)
+  names(pdfx) <- paste(substx)[len]
+
   pvar.pdata.frame(pdfx)
 }
 

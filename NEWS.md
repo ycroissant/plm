@@ -28,6 +28,8 @@ Changes relative to CRAN-released version 2.6-2:
 * `plm()` passes on ellipsis ("dots" (`...`)) to internal pdata.frame creation
   (if pdata.frame is to be created internally due to non-pdata.frame passed in `data` 
   argument).
+* `pvar.pseries`: when printed, original variable's name is printed 
+  (not always `x`).
 
 ***
 

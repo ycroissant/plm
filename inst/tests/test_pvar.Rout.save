@@ -1,6 +1,6 @@
 
-R version 4.1.1 (2021-08-10) -- "Kick Things"
-Copyright (C) 2021 The R Foundation for Statistical Computing
+R version 4.3.0 (2023-04-21 ucrt) -- "Already Tomorrow"
+Copyright (C) 2023 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -140,7 +140,7 @@ all NA in ind. dimension for at least one time period: capital
 > pGrunfeld <- pdata.frame(Grunfeld)
 > pvar(pGrunfeld$capital)          # should indicate variation in both dimensions (nothing is printed)
 > pvar(pGrunfeld[1:20, ]$capital)  # should indicate no indivivual variation (b/c only 1 individual is evaluated)
-no individual variation: x 
+no individual variation: capital 
 > 
 > 
 > # library(foreign);library(plm)
@@ -159,4 +159,4 @@ no individual variation: x
 > 
 > proc.time()
    user  system elapsed 
-   0.92    0.10    1.00 
+   2.65    0.35    3.00 
