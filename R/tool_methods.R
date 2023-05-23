@@ -328,7 +328,7 @@ summary.plm <- function(object, vcov = NULL, ...){
   # construct the object of class summary.plm
   object$coefficients <- cbind(b, std.err, z, p)
   colnames(object$coefficients) <- if(use.norm.chisq) {
-    c("Estimate", "Std. Error", "z-value", "Pr(>|z|)")
+           c("Estimate", "Std. Error", "z-value", "Pr(>|z|)")
   } else { c("Estimate", "Std. Error", "t-value", "Pr(>|t|)") }
   
   ## add some info to summary.plm object 
