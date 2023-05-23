@@ -382,7 +382,7 @@ plm <- function(formula, data, subset, weights, na.action,
     ##      on plm objects (vcovBS(fe_complete, cluster=~firm, R = 999))
     attr(data, "row.names") <- orig_rownames[as.numeric(row.names(data))]
 
-    # return the model.frame (via early exit) if model = NA, else estimate model
+    # if model = NA return the model.frame (via early exit), else continue to estimate model
     if (is.na(model)){
         attr(data, "formula") <- formula
         return(data)
@@ -713,17 +713,11 @@ describe <- function(x,
   what <- match.arg(what)
   cl <- x$args
   switch(what,
-         "model"          = if(!is.null(cl$model))
-                                   cl$model else  "within",
-         "effect"         = if(!is.null(cl$effect)) 
-                                   cl$effect else "individual",
-         "random.method"  = if(!is.null(cl$random.method))
-                                   cl$random.method else "swar",
-         "inst.method"    = if(!is.null(cl$inst.method))
-                                   cl$inst.method else "bvk",
-         "transformation" = if(!is.null(cl$transformation))
-                                   cl$transformation else "d",
-         "ht.method"      = if(!is.null(cl$ht.method))
-                                   cl$ht.method else "ht"
+         "model"          = if(!is.null(cl$model))          cl$model          else "within",
+         "effect"         = if(!is.null(cl$effect))         cl$effect         else "individual",
+         "random.method"  = if(!is.null(cl$random.method))  cl$random.method  else "swar",
+         "inst.method"    = if(!is.null(cl$inst.method))    cl$inst.method    else "bvk",
+         "transformation" = if(!is.null(cl$transformation)) cl$transformation else "d",
+         "ht.method"      = if(!is.null(cl$ht.method))      cl$ht.method      else "ht"
          )
 }
