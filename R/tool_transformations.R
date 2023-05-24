@@ -224,10 +224,6 @@ summary.pseries <- function(object, ...) {
     if(!inherits(object, special_treatment_vars)) {
         Bid   <- Between(object, na.rm = TRUE)
         Btime <- Between(object, effect = "time", na.rm = TRUE)
-        ## res <- structure(c(total = sumsq(object),
-        ##                    between_id = sumsq(Bid),
-        ##                    between_time = sumsq(Btime)), 
-        ##                  class = c("summary.pseries", "numeric"))
         res <- structure(c(total        = sum( (na.omit(object) - mean(object, na.rm = TRUE)) ^ 2),
                            between_id   = sum( (na.omit(Bid)    - mean(Bid,    na.rm = TRUE)) ^ 2),
                            between_time = sum( (na.omit(Btime)  - mean(Btime,  na.rm = TRUE)) ^ 2)), 
