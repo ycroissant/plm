@@ -55,7 +55,7 @@
 #'     the matrix are the individuals,
 #' @param plot,scale,transparency,col,lwd plot arguments,
 #' @param \dots further arguments, e. g., `na.rm = TRUE` for
-#'     transformation functions like `beetween`, see **Details**
+#'     transformation functions like `between`, see **Details**
 #'     and **Examples**.
 #' @return All these functions return an object of class `pseries` or a matrix,
 #'     except:\cr `between`, which returns a numeric vector or a matrix;

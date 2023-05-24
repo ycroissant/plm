@@ -82,7 +82,7 @@ Within(x, ...)
 \item{x, object}{a \code{pseries} or a matrix; or a \code{summary.pseries} object,}
 
 \item{\dots}{further arguments, e. g., \code{na.rm = TRUE} for
-transformation functions like \code{beetween}, see \strong{Details}
+transformation functions like \code{between}, see \strong{Details}
 and \strong{Examples}.}
 
 \item{idbyrow}{if \code{TRUE} in the \code{as.matrix} method, the lines of
