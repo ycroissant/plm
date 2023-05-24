@@ -1455,7 +1455,7 @@ pos.index <- function(x, ...) {
 
 is.pdata.frame <- function(x, feedback = NULL) {
   # not exported, helper function
-  # checks if a pdata.frame as pdata.frame properties
+  # checks if a pdata.frame has appropriate properties
 
   res <- TRUE
   if(!inherits(x, "pdata.frame")) res <- FALSE
@@ -1477,7 +1477,7 @@ is.pdata.frame <- function(x, feedback = NULL) {
 
 check.pdata.frame <- function(x) {
   # not exported, helper function
-  # checks if a pdata.frame as pdata.frame properties
+  # checks if a pdata.frame has appropriate properties
   # Like is.pdata.frame but with error output about ill-specification
   stopifnot(inherits(x, "pdata.frame"))
   stopifnot(has.index(x))
