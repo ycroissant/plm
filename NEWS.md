@@ -22,9 +22,10 @@ Changes relative to CRAN-released version 2.6-2:
   be a pdata.frame but has non-compliant properties. This can happen due to data 
   manipulation by non-pdata.frame-aware functions (e.g., `dplyr`'s row-filtering 
   on pdata.frame does not take care of pdata.frame's index attribute).
-* `pdata.frame()` returns (re-creates) a compliant pdata.frame if a 
-  non-compliant pdata.frame is input and warns about the non-compliant pdata.frame
-  input.
+* `pdata.frame()`:
+   * does not stop anymore when a pdata.frame is input, just continues to create
+     a new pdata.frame from input.
+   * warns if pdata.frame with non-compliant features is input.
 * `plm()` passes on ellipsis ("dots" (`...`)) to internal pdata.frame creation
   (if pdata.frame is to be created internally due to non-pdata.frame passed in `data` 
   argument).

@@ -190,7 +190,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
                           "compliant properties, so tried to re-create a compliant ",
                           "pdata.frame from 'x'")
         warning(wrn.txt)
-      } else { stop("already a pdata.frame") }
+      }
     }
   
     if(length(index) > 3L){
