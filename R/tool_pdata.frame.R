@@ -15,6 +15,7 @@
 ## - as.list
 ## - as.data.frame
 ## - pseriesfy
+## - arrange for dplyr compatibility
 
 ## pseries:
 ## - [
@@ -1521,3 +1522,39 @@ pmerge <- function(x, y, ...) {
              by.y = dimnames(y)[[2L]][1:2], ...)
   return(z)
 }
+
+## dplyr "compatibility"/awareness/warning, see https://github.com/ycroissant/plm/issues/46
+# test in test_pdata.frame_compliant.R
+#' @exportS3Method dplyr::arrange pdata.frame
+arrange.pdata.frame <- function(.data, ..., .by_group = FALSE, .locale = NULL) {
+  # function signature of dplyr:::arrange.data.frame
+  idx <- index(.data)
+  ag.data <- NextMethod()
+  ag.idx <- arrange(idx, ..., .by_group = FALSE, .locale = NULL) # dispatched to arrange.pindex
+  attr(ag.data, "index") <- ag.idx
+  ag.data
+}
+
+#' @exportS3Method dplyr::arrange pindex
+arrange.pindex <- function(.data, ..., .by_group = .by_group, .locale = .locale) {
+  NextMethod()
+}
+
+### alternatives
+# arrange.pdata.frame <- function(.data, ..., .by_group = FALSE, .locale = NULL) {
+#   ### this alternative would require dplyr to be at least a Suggests-dependency
+#   idx <- index(.data)
+#   ag.df  <- dplyr::arrange(.data, ..., .by_group = FALSE, .locale = NULL)
+#   ag.idx <- dplyr::arrange(idx,   ..., .by_group = FALSE, .locale = NULL)
+#   attr(ag.df, "index") <- ag.idx
+#   ag.df
+# }
+
+# arrange.pdata.frame <- function(.data, ..., .by_group = FALSE, .locale = NULL) {
+#   # this alternative just warns and executes dplyr's plain arrange destroying the index
+#   wrn <- paste0("dplyr::arrange not safe on pdata.frames!\n",
+#                 "Before input to estimation and test functions of package plm, ",
+#                 "create a fresh pdata.frame from the dplyr-manipulated data to be safe")
+#   warning(wrn)
+#   NextMethod()
+# }

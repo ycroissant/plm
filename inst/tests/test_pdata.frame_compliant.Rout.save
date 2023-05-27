@@ -1,5 +1,5 @@
 
-R version 4.2.3 (2023-03-15 ucrt) -- "Shortstop Beagle"
+R version 4.3.0 (2023-04-21 ucrt) -- "Already Tomorrow"
 Copyright (C) 2023 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -193,7 +193,7 @@ In is.pdata.frame(data, feedback = "warn") :
 > pgmm( A ~ B + C | lag(C, 2:10), data = pdf_dplyr) # warns
 
 Model Formula: A ~ B + C | lag(C, 2:10)
-<environment: 0x000001e5111b5c50>
+<environment: 0x0000026cd5d86538>
 
 Coefficients:
          B          C          3          4          5          6          7 
@@ -217,6 +217,26 @@ In pdata.frame(pdf_dplyr, index = c("id", "t")) :
   input 'x' claims to be a pdata.frame but does not have compliant properties, so tried to re-create a compliant pdata.frame from 'x'
 > stopifnot(isTRUE(all.equal(pdf_dplyr_fixed, pdf_dplyr_fixed2)))
 > 
+> 
+> ## dplyr::arrange compatibility via arrange.pdata.frame, arrange.pindex:
+> # https://github.com/ycroissant/plm/issues/46
+> # cannot have this automatically tested withouth making dplyr at least a Suggests-dependency
+> # avail.dplyr <- if(!requireNamespace("dplyr", quietly = TRUE)) FALSE else TRUE
+> # if(avail.dplyr) {
+> #   data("Produc", package = "plm")
+> #   library(dplyr)
+> #   p_orig <- pdata.frame(Produc, index = c("state", "year"))
+> #   p_subset <- p_orig[order(p_orig$year), ]
+> #   p_dplyr <- dplyr::arrange(p_orig, year, state)
+> #   head(p_subset)
+> #   head(index(p_subset))
+> #   head(p_dplyr)
+> #   head(index(p_dplyr))
+> #   
+> #   stopifnot(all.equal(p_dplyr, p_subset))
+> # }
+> 
+> 
 > proc.time()
    user  system elapsed 
-   1.73    0.31    2.04 
+   1.59    0.29    1.81 

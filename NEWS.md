@@ -18,6 +18,8 @@ Changes relative to CRAN-released version 2.6-2:
   `NA`s and one independent variable (reported by Kurt Schmidheiny).
 
 ### Others:
+* Compatability for `dplyr::arange` by supplying a `pdata.frame` method for `arrange`
+  which takes care of pdata.frame's index attribute ([#46](https://github.com/ycroissant/plm/issues/46)).
 * Estimation functions (e.g., `plm()`, `pcce()`) now warn if a data input claims to 
   be a pdata.frame but has non-compliant properties. This can happen due to data 
   manipulation by non-pdata.frame-aware functions (e.g., `dplyr`'s row-filtering 
@@ -30,7 +32,7 @@ Changes relative to CRAN-released version 2.6-2:
   (if pdata.frame is to be created internally due to non-pdata.frame passed in `data` 
   argument).
 * `pvar.pseries`: when printed, original variable's name is printed 
-  (not always `x`).
+  (not always `x` anymore).
 
 ***
 

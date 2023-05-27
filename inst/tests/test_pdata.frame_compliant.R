@@ -57,3 +57,23 @@ pgmm( A ~ B + C | lag(C, 2:10), data = pdf_dplyr) # warns
 # test for re-creation of a compliant pdata.frame from a non-compliant one
 pdf_dplyr_fixed2 <- pdata.frame(pdf_dplyr, index = c("id", "t"))
 stopifnot(isTRUE(all.equal(pdf_dplyr_fixed, pdf_dplyr_fixed2)))
+
+
+## dplyr::arrange compatibility via arrange.pdata.frame, arrange.pindex:
+# https://github.com/ycroissant/plm/issues/46
+# cannot have this automatically tested withouth making dplyr at least a Suggests-dependency
+# avail.dplyr <- if(!requireNamespace("dplyr", quietly = TRUE)) FALSE else TRUE
+# if(avail.dplyr) {
+#   data("Produc", package = "plm")
+#   library(dplyr)
+#   p_orig <- pdata.frame(Produc, index = c("state", "year"))
+#   p_subset <- p_orig[order(p_orig$year), ]
+#   p_dplyr <- dplyr::arrange(p_orig, year, state)
+#   head(p_subset)
+#   head(index(p_subset))
+#   head(p_dplyr)
+#   head(index(p_dplyr))
+#   
+#   stopifnot(all.equal(p_dplyr, p_subset))
+# }
+
