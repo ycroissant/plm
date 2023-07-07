@@ -351,7 +351,7 @@ est.ols <- function(mf, cond) {
   ols <- lapply(ml,
                 function(x){
                   X <- model.matrix(x)
-                  if (nrow(X) <= ncol(X)) stop("insufficient number of observations") ## TODO: improve error msg
+                  if (nrow(X) <= ncol(X)) stop("insufficient number of observations for at least one individual in defined model")
                   y <- pmodel.response(x)
                   r <- lm(y ~ X - 1, model = FALSE)
                   nc <- colnames(model.frame(r)$X)
