@@ -345,8 +345,6 @@ est.ols <- function(mf, cond) {
 ## helper function: estimate the single OLS regressions (used for pvcm's model = "random" as well as "within" )
   ml <- split(mf, cond)
   #ml <- collapse::rsplit(data, cond) # does not yet work - TODO: check why (comment stemming from random model)
-  nr <- vapply(ml, function(x) dim(x)[1L] > 0, FUN.VALUE = TRUE) ## TODO: needed? mf is a model frame
-  ml <- ml[nr]
   attr(ml, "index") <- index
   ols <- lapply(ml,
                 function(x){
