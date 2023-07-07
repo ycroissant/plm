@@ -88,7 +88,7 @@ pvcm <- function(formula, data, subset ,na.action, effect = c("individual", "tim
     mf <- match.call()
     mf[[1L]] <- as.name("plm")
     mf$model <- NA
-    data <- eval(mf, parent.frame())
+    data <- eval(mf, parent.frame()) # make model.frame
     result <- switch(model.name,
                      "within" = pvcm.within(formula, data, effect),
                      "random" = pvcm.random(formula, data, effect)
@@ -115,22 +115,9 @@ pvcm.within <- function(formula, data, effect){
         other <- time
         card.cond <- pdim$nT$n
     }
-    ### KT
-    ml <- split(data, cond)
-    # ml <- collapse::rsplit(data, cond)
-    nr <- vapply(ml, function(x) dim(x)[1L] > 0, FUN.VALUE = TRUE)
-    ml <- ml[nr]
-    attr(ml, "index") <- index
-    ols <- lapply(ml,
-                  function(x){
-                      X <- model.matrix(x)
-                      if (nrow(X) <= ncol(X)) stop("insufficient number of observations")
-                      y <- pmodel.response(x)
-                      r <- lm(y ~ X - 1, model = FALSE)
-                      nc <- colnames(model.frame(r)$X)
-                      names(r$coefficients) <- nc
-                      r
-                  })
+
+    ols <- est.ols(data, cond) # estimate single OLS regressions and save in a list
+    
     # extract coefficients:
     coef <- matrix(unlist(lapply(ols, coef)), nrow = length(ols), byrow = TRUE)
     dimnames(coef)[1:2] <- list(names(ols), names(coef(ols[[1L]])))
@@ -146,7 +133,7 @@ pvcm.within <- function(formula, data, effect){
     dimnames(std)[1:2] <- list(names(vcov), colnames(vcov[[1L]]))
     std <- as.data.frame(std)
     ssr <- as.numeric(crossprod(residuals))
-    y <- unlist(lapply(ml, function(x) x[ , 1L]))
+    y <- unlist(split(model.response(data), cond))
     fitted.values <- y - residuals
     tss <- tss(y)
     df.resid <- pdim$nT$N - card.cond * ncol(coef)
@@ -182,23 +169,8 @@ pvcm.random <- function(formula, data, effect){
         card.cond <- pdim$nT$n
     }
     
-    ### TODO: can speed up with collapse:
-    ml <- split(data, cond)
-    #ml <- collapse::rsplit(data, cond) # does not yet work
-    nr <- vapply(ml, function(x) dim(x)[1L] > 0, FUN.VALUE = TRUE)
-    ml <- ml[nr]
-    attr(ml, "index") <- index
-    ols <- lapply(ml,
-                  function(x){
-                      X <- model.matrix(formula, x)
-                      if (nrow(X) <= ncol(X)) stop("insufficient number of observations")
-                      y <- pmodel.response(x)
-                      r <- lm(y ~ X - 1, model = FALSE)
-                      nc <- colnames(model.frame(r)$X)
-                      names(r$coefficients) <- nc
-                      r
-                  })
-
+    ols <- est.ols(data, cond) # estimate single OLS regressions and save in a list
+    
     # matrix of coefficients
     coefm <- matrix(unlist(lapply(ols, coef)), nrow = length(ols), byrow = TRUE)
     dimnames(coefm)[1:2] <- list(names(ols), names(coef(ols[[1]])))
@@ -367,3 +339,24 @@ print.summary.pvcm <- function(x, digits = max(3, getOption("digits") - 2),
     }
     invisible(x)
   }
+
+
+est.ols <- function(mf, cond) {
+## helper function: estimate the single OLS regressions (used for pvcm's model = "random" as well as "within" )
+  ml <- split(mf, cond)
+  #ml <- collapse::rsplit(data, cond) # does not yet work - TODO: check why (comment stemming from random model)
+  nr <- vapply(ml, function(x) dim(x)[1L] > 0, FUN.VALUE = TRUE) ## TODO: needed? mf is a model frame
+  ml <- ml[nr]
+  attr(ml, "index") <- index
+  ols <- lapply(ml,
+                function(x){
+                  X <- model.matrix(x)
+                  if (nrow(X) <= ncol(X)) stop("insufficient number of observations") ## TODO: improve error msg
+                  y <- pmodel.response(x)
+                  r <- lm(y ~ X - 1, model = FALSE)
+                  nc <- colnames(model.frame(r)$X)
+                  names(r$coefficients) <- nc
+                  r
+                })
+  ols
+}
