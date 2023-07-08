@@ -214,7 +214,7 @@ pvcm.random <- function(formula, data, effect){
     # compute the Omega matrix for each individual
     Omegan <- lapply(seq_len(card.cond), function(i) {
       Xi <- X[[i]]
-      sigi[i] * diag(nrow(Xi)) + crossprod(t(Xi), tcrossprod(Delta, Xi))
+      diag(sigi[i], nrow = nrow(Xi)) + crossprod(t(Xi), tcrossprod(Delta, Xi))
       })
 
     # compute X'Omega X and X'Omega y for each individual
