@@ -116,7 +116,7 @@ pvcm.within <- function(formula, data, effect){
     }
 
     # estimate single OLS regressions and save in a list
-    ols <- est.ols(data, cond)
+    ols <- est.ols(data, cond, effect)
     
     # extract coefficients:
     coef <- matrix(unlist(lapply(ols, coef)), nrow = length(ols), byrow = TRUE)
@@ -169,7 +169,7 @@ pvcm.random <- function(formula, data, effect){
     }
     
     # estimate single OLS regressions and save in a list
-    ols <- est.ols(data, cond)
+    ols <- est.ols(data, cond, effect)
     
     # matrix of coefficients
     coefm <- matrix(unlist(lapply(ols, coef)), nrow = length(ols), byrow = TRUE)
@@ -351,19 +351,21 @@ print.summary.pvcm <- function(x, digits = max(3, getOption("digits") - 2),
   }
 
 
-est.ols <- function(mf, cond) {
+est.ols <- function(mf, cond, effect) {
 ## helper function: estimate the single OLS regressions (used for pvcm's model = "random" as well as "within" )
   ml <- split(mf, cond)
-  #ml2 <- collapse::rsplit(mf, cond) # does not yet work - TODO: check why (comment stemming from random model)
-  attr(ml, "index") <- index
-  ols <- lapply(ml,
-                function(x){
-                  X <- model.matrix(x)
-                  if (nrow(X) <= ncol(X)) stop("insufficient number of observations for at least one individual in defined model")
-                  y <- pmodel.response(x)
-                  r <- lm(y ~ X - 1, model = FALSE)
-                  names(r$coefficients) <- colnames(X)
-                  r
-                })
+  #ml <- collapse::rsplit(mf, cond) # does not yet work - TODO: check why (comment stemming from random model)
+  ols <- lapply(ml, function(x) {
+      X <- model.matrix(x)
+      if(nrow(X) <= ncol(X)) {
+        error.msg <- paste0("insufficient number of observations for at least ",
+                            "one group in ", effect, " dimension, so defined ",
+                            "model is non-estimable")
+        stop(error.msg)
+      }
+      y <- pmodel.response(x)
+      r <- lm(y ~ X - 1, model = FALSE)
+      names(r$coefficients) <- colnames(X)
+      r})
   ols
 }
