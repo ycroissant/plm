@@ -262,12 +262,16 @@ pvcm.random <- function(formula, data, effect){
                        })
     V <- solve(Reduce("+", weightsn))
     weightsn <- lapply(weightsn, function(x) V %*% x)
-    ## TODO: should "Beta" be called "beta"?
     Beta <- Reduce("+", lapply(seq_len(card.cond), function(i) weightsn[[i]] %*% coefm[i, ]))
     Beta.names <- rownames(Beta)
     Beta <- as.numeric(Beta)
     names(Beta) <- Beta.names
     XpXm1 <- V
+    
+    ## TODO:
+    ##   * "Beta" vs "beta" - seem to be the same - so calculated twice?
+    ##   * XpXm1 vs. V, seem to be the same - so calculated twice?
+    ##    -> Beta/beta, XpXm1/V have same result for balanced and unbalanced data, so seems to be superfluous calculations here
     
     y <- pmodel.response(data)
     X <- model.matrix(data)
