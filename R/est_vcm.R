@@ -91,8 +91,7 @@ pvcm <- function(formula, data, subset ,na.action, effect = c("individual", "tim
     data <- eval(mf, parent.frame()) # make model.frame
     result <- switch(model.name,
                      "within" = pvcm.within(formula, data, effect),
-                     "random" = pvcm.random(formula, data, effect)
-                     )
+                     "random" = pvcm.random(formula, data, effect))
     class(result) <- c("pvcm", "panelmodel")
     result$call <- cl
     result$args <- list(model = model, effect = effect)
@@ -116,7 +115,8 @@ pvcm.within <- function(formula, data, effect){
         card.cond <- pdim$nT$n
     }
 
-    ols <- est.ols(data, cond) # estimate single OLS regressions and save in a list
+    # estimate single OLS regressions and save in a list
+    ols <- est.ols(data, cond)
     
     # extract coefficients:
     coef <- matrix(unlist(lapply(ols, coef)), nrow = length(ols), byrow = TRUE)
@@ -132,7 +132,7 @@ pvcm.within <- function(formula, data, effect){
     std <- matrix(unlist(lapply(vcov, function(x) sqrt(diag(x)))), nrow = length(ols), byrow = TRUE)
     dimnames(std)[1:2] <- list(names(vcov), colnames(vcov[[1L]]))
     std <- as.data.frame(std)
-    ssr <- as.numeric(crossprod(residuals))
+    # ssr <- as.numeric(crossprod(residuals)) # not used here, so commented
     y <- unlist(split(model.response(data), cond))
     fitted.values <- y - residuals
     tss <- tss(y)
@@ -152,7 +152,6 @@ pvcm.random <- function(formula, data, effect){
     ## Swamy (1970)
     ## see also Poi (2003), The Stata Journal: 
     ## https://www.stata-journal.com/sjpdf.html?articlenum=st0046
-    interc <- has.intercept(formula)
     index <- index(data)
     id <- index[[1L]]
     time <- index[[2L]]
@@ -169,7 +168,8 @@ pvcm.random <- function(formula, data, effect){
         card.cond <- pdim$nT$n
     }
     
-    ols <- est.ols(data, cond) # estimate single OLS regressions and save in a list
+    # estimate single OLS regressions and save in a list
+    ols <- est.ols(data, cond)
     
     # matrix of coefficients
     coefm <- matrix(unlist(lapply(ols, coef)), nrow = length(ols), byrow = TRUE)
@@ -183,6 +183,7 @@ pvcm.random <- function(formula, data, effect){
     X <- lapply(ols, model.matrix)
     # same without the covariates with NA coefficients
     # Xna <- lapply(seq_len(nrow(coefm)), function(i) X[[i]][ , !coefna[i, ], drop = FALSE])
+    
     # list of model responses
     y <- lapply(ols, function(x) model.response(model.frame(x)))
     # compute a list of XpX^-1 matrices, with 0 for lines/columns with
@@ -211,11 +212,15 @@ pvcm.random <- function(formula, data, effect){
     Delta <- if(eig) { D1 - D2 } else  D1
     
     # compute the Omega matrix for each individual
-    Omegan <- lapply(seq_len(card.cond), function(i) sigi[i] * diag(nrow(X[[i]])) + X[[i]] %*% Delta %*% t(X[[i]]))
+    Omegan <- lapply(seq_len(card.cond), function(i) {
+      Xi <- X[[i]]
+      sigi[i] * diag(nrow(Xi)) + Xi %*% Delta %*% t(Xi)
+      })
 
     # compute X'Omega X and X'Omega y for each individual
     XyOmXy <- lapply(seq_len(card.cond), function(i){
-        Xn <- X[[i]][ , !coefna[i, ], drop = FALSE]
+        ii <- !coefna[i, ]
+        Xn <- X[[i]][ , ii, drop = FALSE]
         yn <- y[[i]]
         
         # pre-allocate matrices
@@ -224,16 +229,16 @@ pvcm.random <- function(formula, data, effect){
         
         solve_Omegan_i <- solve(Omegan[[i]])
         CP.tXn.solve_Omegan_i <- crossprod(Xn, solve_Omegan_i)
-        XnXn[!coefna[i, ], !coefna[i, ]] <- CP.tXn.solve_Omegan_i %*% Xn # == t(Xn) %*% solve(Omegan[[i]]) %*% Xn
-        Xnyn[!coefna[i, ], ]             <- CP.tXn.solve_Omegan_i %*% yn # == t(Xn) %*% solve(Omegan[[i]]) %*% yn
+        XnXn[ii, ii] <- CP.tXn.solve_Omegan_i %*% Xn # == t(Xn) %*% solve(Omegan[[i]]) %*% Xn
+        Xnyn[ii, ]   <- CP.tXn.solve_Omegan_i %*% yn # == t(Xn) %*% solve(Omegan[[i]]) %*% yn
         list("XnXn" = XnXn, "Xnyn" = Xnyn)
     })
     
     # Compute coefficients
     # extract and reduce XnXn (pos 1 in list's element) and Xnyn (pos 2)
     # (position-wise extraction is faster than name-based extraction)
-    XpXm1 <-    solve(Reduce("+", vapply(XyOmXy, "[", 1L, FUN.VALUE = list(length(XyOmXy)))))
-    beta <- XpXm1 %*% Reduce("+", vapply(XyOmXy, "[", 2L, FUN.VALUE = list(length(XyOmXy))))
+    XpXm1 <-     solve(Reduce("+", vapply(XyOmXy, "[", 1L, FUN.VALUE = list(length(XyOmXy)))))
+    beta  <- XpXm1 %*% Reduce("+", vapply(XyOmXy, "[", 2L, FUN.VALUE = list(length(XyOmXy))))
     
     beta.names <- rownames(beta)
     beta <- as.numeric(beta)
@@ -344,7 +349,7 @@ print.summary.pvcm <- function(x, digits = max(3, getOption("digits") - 2),
 est.ols <- function(mf, cond) {
 ## helper function: estimate the single OLS regressions (used for pvcm's model = "random" as well as "within" )
   ml <- split(mf, cond)
-  #ml <- collapse::rsplit(data, cond) # does not yet work - TODO: check why (comment stemming from random model)
+  #ml2 <- collapse::rsplit(mf, cond) # does not yet work - TODO: check why (comment stemming from random model)
   attr(ml, "index") <- index
   ols <- lapply(ml,
                 function(x){
