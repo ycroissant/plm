@@ -323,7 +323,7 @@ pvcm.random <- function(formula, data, effect){
     # pchisq(chi.sq.stat, df = 329, lower.tail = FALSE) # Greene (2018): stat: 25556,26, df = 329 (=7*47)
     
     chi.sq.df <- ncol(coefm) * (pdim$nT$n - 1)
-    chi.sq.p  <- pchisq(chi.sq.df, df = ncol(coefm) * (pdim$nT$n - 1), lower.tail = FALSE)
+    chi.sq.p  <- pchisq(chi.sq.stat, df = ncol(coefm) * (pdim$nT$n - 1), lower.tail = FALSE)
     
     chi.sq.test <- list(statistic   = c("chisq" = chi.sq.stat),
                         parameter   = c("df"    = chi.sq.df),

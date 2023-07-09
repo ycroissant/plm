@@ -25,6 +25,11 @@ Type 'q()' to quit R.
 > zw <- pvcm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model = "within")
 > zr <- pvcm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model = "random")
 > 
+> # time effect as run test
+> zw.ti <- pvcm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model = "within", effect = "time")
+> zr.ti <- pvcm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model = "random", effect = "time")
+> 
+> 
 > print(zw$residuals)
          ALABAMA.1          ALABAMA.2          ALABAMA.3          ALABAMA.4 
      -2.784630e-02       1.383510e-02       2.577634e-02       2.092742e-02 
@@ -942,7 +947,7 @@ Total Sum of Squares: 19352
 Residual Sum of Squares: 12.785
 Multiple R-Squared: 0.99934
 Chisq: 946.626 on 4 DF, p-value: < 2.22e-16
-Test for parameter homogeneity: Chisq = 11425.2 on 235 DF, p-value: 0.48773
+Test for parameter homogeneity: Chisq = 11425.2 on 235 DF, p-value: < 2.22e-16
 > pwaldtest(zr)
 
 	Wald test for joint significance
@@ -984,7 +989,7 @@ Multiple R-Squared: 0.97771
 > # pwaldtest(zwint) # errors rightfully, and since rev. 1200 also informatively
 > 
 > zrint  <- pvcm(log(gsp) ~ 1, data = Produc, model = "random")
-> # zrint2 <- pvcm(log(gsp) ~ 1, data = Produc[1:17, ], model = "random") # only one individual -> errors -> catch case?
+> # zrint2 <- pvcm(log(gsp) ~ 1, data = Produc[1:17, ], model = "random") # errors rightfully with informative msg
 > summary(zrint) # does not calculate Wald statistic (rightfully, as only intercept)
 Oneway (individual) effect Random coefficients model
 
@@ -1010,19 +1015,19 @@ Estimated variance of the coefficients:
 Total Sum of Squares: 849.81
 Residual Sum of Squares: 849.81
 Multiple R-Squared: -6.6519e-08
-Test for parameter homogeneity: Chisq = 66492.9 on 47 DF, p-value: 0.47256
+Test for parameter homogeneity: Chisq = 66492.9 on 47 DF, p-value: < 2.22e-16
 > # pwaldtest(zrint) # errors rightfully, and since rev. 1202 also informatively
 > 
 > 
 > ## replicate Greene (2018), p. 452, table 11.22/(2012), p. 419, table 11.14
-> greene.ols     <- plm( log(gsp) ~ log(pc) + log(hwy) + log(water) + log(util) + log(emp) + unemp, data = Produc, model = "pooling")
-> greene.pvcm.re <- pvcm(log(gsp) ~ log(pc) + log(hwy) + log(water) + log(util) + log(emp) + unemp, data = Produc, model = "random")
+> form.greene <- log(gsp) ~ log(pc) + log(hwy) + log(water) + log(util) + log(emp) + unemp
+> greene.ols     <- plm( form.greene, data = Produc, model = "pooling")
+> greene.pvcm.re <- pvcm(form.greene, data = Produc, model = "random")
 > summary(greene.pvcm.re)
 Oneway (individual) effect Random coefficients model
 
 Call:
-pvcm(formula = log(gsp) ~ log(pc) + log(hwy) + log(water) + log(util) + 
-    log(emp) + unemp, data = Produc, model = "random")
+pvcm(formula = form.greene, data = Produc, model = "random")
 
 Balanced Panel: n = 48, T = 17, N = 816
 
@@ -1064,29 +1069,51 @@ Total Sum of Squares: 21431
 Residual Sum of Squares: 36.691
 Multiple R-Squared: 0.99829
 Chisq: 434.623 on 6 DF, p-value: < 2.22e-16
-Test for parameter homogeneity: Chisq = 25554.4 on 329 DF, p-value: 0.48963
+Test for parameter homogeneity: Chisq = 25554.4 on 329 DF, p-value: < 2.22e-16
 > 
-> phtest(greene.ols, greene.pvcm.re)
-
-	Hausman Test
-
-data:  log(gsp) ~ log(pc) + log(hwy) + log(water) + log(util) + log(emp) +  ...
-chisq = 0.23306, df = 6, p-value = 0.9998
-alternative hypothesis: one model is inconsistent
-
+> greene.pvcm.re$single.coefs[ , 1]
+       ALABAMA        ARIZONA       ARKANSAS     CALIFORNIA       COLORADO 
+    3.35870164    -0.59864805     4.20566816     1.74275144    -0.34127685 
+   CONNECTICUT       DELAWARE        FLORIDA        GEORGIA          IDAHO 
+    1.00182781     1.71718980     4.95246631    -1.24291622    -1.83841413 
+      ILLINOIS        INDIANA           IOWA         KANSAS       KENTUCKY 
+   -1.46245460    -1.72060929     0.26555783     0.75161889     2.48518563 
+     LOUISIANA          MAINE       MARYLAND  MASSACHUSETTS       MICHIGAN 
+    7.37506747     1.31727339     0.82398024    -1.53999969     3.35755300 
+     MINNESOTA    MISSISSIPPI       MISSOURI        MONTANA       NEBRASKA 
+   -7.36854920     0.67950619     1.36014560     2.62148320    -4.66787785 
+        NEVADA  NEW_HAMPSHIRE     NEW_JERSEY     NEW_MEXICO       NEW_YORK 
+    5.25211898     4.43806051     0.09684847     5.66787215   -12.86975332 
+NORTH_CAROLINA   NORTH_DAKOTA           OHIO       OKLAHOMA         OREGON 
+    2.57095795    -2.69705719     2.71217890     3.93275661    -0.07769597 
+  PENNSYLVANIA   RHODE_ISLAND SOUTH_CAROLINA   SOUTH_DAKOTA       TENNESSE 
+    4.16985792     2.16555997     6.52778533     3.82160848    -1.15246153 
+         TEXAS           UTAH        VERMONT       VIRGINIA     WASHINGTON 
+    3.21112604     3.86145541     4.94455387     5.09014344     1.45961559 
+ WEST_VIRGINIA      WISCONSIN        WYOMING 
+    2.96703799    -1.63486005    17.65480334 
+> 
+> 
 > 
 > ## Stata example:
 > ## http://www.stata.com/manuals/xtxtrc.pdf
 > ## replicate Stata's example:
 > ##
-> # dat <- haven::read_dta("http://www.stata-press.com/data/r15/invest2.dta")
-> # pvcm(invest ~ market + stock, data = dat, index = c("company", "time"), model = "random")
-> 
-> ### Coefficients:
-> ##   (Intercept)      market       stock
-> ##    -23.583612    0.080765    0.283989
-> 
+> #  dat <- haven::read_dta("http://www.stata-press.com/data/r15/invest2.dta")
+> #  mod.pvcm.re <- pvcm(invest ~ market + stock, data = dat, index = c("company", "time"), model = "random")
+> # 
+> # ### Coefficients:
+> # ##   (Intercept)      market       stock
+> # ##    -23.583612    0.080765    0.283989
+> # 
+> #  print(mod.pvcm.re$single.coefs)
+> #  ##  (Intercept)     market     stock
+> #  ## 1  -71.629273 0.10278480 0.3678493
+> #  ## 2   -9.819343 0.08423601 0.3092167
+> #  ## 3  -12.032683 0.02793844 0.1508282
+> #  ## 4    3.269523 0.04110890 0.1407172
+> #  ## 5  -27.706284 0.14775499 0.4513312
 > 
 > proc.time()
    user  system elapsed 
-   2.71    0.17    2.89 
+   2.96    0.28    3.23 
