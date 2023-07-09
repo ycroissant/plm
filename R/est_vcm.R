@@ -204,7 +204,7 @@ pvcm.random <- function(formula, data, effect){
     if(any(coefna)) coefm <- apply(coefm, 2, function(x){x[is.na(x)] <- mean(x, na.rm = TRUE); x})
     # D1: compute the first part of the variance matrix
     coef.mb <- t(coefm) - coefb
-    D1 <- tcrossprod(coef.mb, coef.mb / (card.cond - 1)) # TODO: this fails if only 1 individual, catch this corner case w/ informative error msg?
+    D1 <- tcrossprod(coef.mb, coef.mb) / (card.cond - 1) # TODO: this fails if only 1 individual, catch this corner case w/ informative error msg?
     # D2: compute the second part of the variance matrix
     sigi <- vapply(ols, function(x) deviance(x) / df.residual(x), FUN.VALUE = 0.0)
     D2 <- Reduce("+", lapply(seq_len(card.cond),
