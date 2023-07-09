@@ -170,6 +170,14 @@ pvcm.random <- function(formula, data, effect){
         card.cond <- pdim$nT$n
     }
     
+    # stopping control: later we we have to calc. D1 with (card.cond - 1), 
+    # so check here early if model is estimable
+    if(!(card.cond - 1L)) {
+      error.msg <- paste0("Swarmy (1970) model non-estimable due to only 1 ",
+                          "group in ", effect, " dimension, but need > 1")
+      stop(error.msg)
+    }
+    
     # estimate single OLS regressions and save in a list
     ols <- est.ols(data, cond, effect)
     
@@ -209,7 +217,7 @@ pvcm.random <- function(formula, data, effect){
     }
 
     # D1: compute the first part of the variance matrix
-    D1 <- tcrossprod(coef.mb) / (card.cond - 1) # TODO: this fails if only 1 individual, catch this corner case w/ informative error msg?
+    D1 <- tcrossprod(coef.mb) / (card.cond - 1)
     # D2: compute the second part of the variance matrix
     sigi <- vapply(ols, function(x) deviance(x) / df.residual(x), FUN.VALUE = 0.0)
     D2 <- Reduce("+", lapply(seq_len(card.cond),
