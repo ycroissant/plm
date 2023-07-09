@@ -302,30 +302,30 @@ pvcm.random <- function(formula, data, effect){
     df.resid <- N - ncol(coefm)
     
     ## Chi-sq test for homogeneous parameters (all panel-effect-specific coefficients are the same)
-    #  notation resambles Greene (2018)
+    #  notation resambles Greene (2018), ch. 11, p. 452
     # TODO: 
     #       * this is a crude but correct implementation, improve one day
-    #       * include in (print.)summary.pvcm
-    #       * need to have it in the model estimation due to the many inputs or can be a seprate function?
-    #       * mention in documentation
+    #       * need to have it in the model estimation due to the many inputs or can be a separate function?
+    #       * mention in documentation of pvcm object
     V.t <- lapply(seq_len(card.cond), function(i) sigi[i] * xpxm1[[i]])
     V.t.inv <- lapply(V.t, function(i) solve(i))
-    b <- lapply(ols, coefficients)
+    b <- collapse::mrtl(coefm) # create list based on matrix rows
     b.left <- solve(Reduce("+", V.t.inv))
     b.right <- Reduce("+", lapply(seq_len(card.cond), function(i) crossprod(V.t.inv[[i]], b[[i]])))
-    b.star <- b.left %*% b.right
-    chi.sq.stat <- as.numeric(Reduce("+", lapply(seq_len(card.cond), function(i) {
-      t(b[[i]] - b.star) %*% V.t.inv[[i]] %*% (b[[i]] - b.star)
-      })))
+    b.star <- as.numeric(crossprod(b.left, b.right))
+    chi.sq.stat <- as.numeric(Reduce("+", mapply(function(coefs, mat) {
+      bi.bstar <- coefs - b.star
+      tcrossprod(crossprod(bi.bstar, mat), bi.bstar)}, # == t(b[[i]] - b.star) %*% V.t.inv[[i]] %*% (b[[i]] - b.star)
+      b, V.t.inv)))
     
-    # pchisq(chi.sq.df, df = 12,  lower.tail = FALSE) # Poi (2003): stat: 603.9944, df = 12
-    # pchisq(chi.sq.df, df = 329, lower.tail = FALSE) # Greene (2018): stat: 25556,26, df = 329 (=7*47)
+    # pchisq(chi.sq.stat, df = 12,  lower.tail = FALSE) # Poi (2003): stat: 603.9944, df = 12
+    # pchisq(chi.sq.stat, df = 329, lower.tail = FALSE) # Greene (2018): stat: 25556,26, df = 329 (=7*47)
     
     chi.sq.df <- ncol(coefm) * (pdim$nT$n - 1)
-    chi.sq.p <- pchisq(chi.sq.df, df = ncol(coefm) * (pdim$nT$n - 1), lower.tail = FALSE)
+    chi.sq.p  <- pchisq(chi.sq.df, df = ncol(coefm) * (pdim$nT$n - 1), lower.tail = FALSE)
     
     chi.sq.test <- list(statistic   = c("chisq" = chi.sq.stat),
-                        parameter   = c("df" = chi.sq.df),
+                        parameter   = c("df"    = chi.sq.df),
                         method      = "Test for parameter homogeniety",
                         p.value     = chi.sq.p,
                         alternative = "Heterogeneous parameters (panel-effect-specific coefficients differ)",
@@ -380,13 +380,13 @@ print.summary.pvcm <- function(x, digits = max(3, getOption("digits") - 2),
     print(pdim(model.frame(x)))
     cat("\nResiduals:\n")
     print(sumres(x))
-    if (model == "random") {
+    if(model == "random") {
       cat("\nEstimated mean of the coefficients:\n")
       printCoefmat(x$coefficients, digits = digits)
       cat("\nEstimated variance of the coefficients:\n")
       print(x$Delta, digits = digits)
     }
-    if (model == "within") {
+    if(model == "within") {
       cat("\nCoefficients:\n")
       print(summary(x$coefficients))
     }
@@ -398,6 +398,12 @@ print.summary.pvcm <- function(x, digits = max(3, getOption("digits") - 2),
       cat(paste0("Chisq: ", signif(waldstat$statistic), " on ",
           waldstat$parameter, " DF, p-value: ",
           format.pval(waldstat$p.value, digits = digits), "\n"))
+    }
+    if(model == "random") {
+      cat("Test for parameter homogeneity: ")
+      cat(paste("Chisq = ", signif(x$chisq.test$statistic),
+                " on ", x$chisq.test$parameter,
+                " DF, p-value: ", format.pval(x$chisq.test$p.value, digits = digits), "\n", sep=""))
     }
     invisible(x)
   }

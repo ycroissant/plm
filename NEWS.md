@@ -10,6 +10,9 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 
 Changes relative to CRAN-released version 2.6-2:
 
+### Features:
+* `pvcm`: implemented parameter homogeneity test (printed when summary is printed).
+
 ### Speed-up:
 * Replaced base R's `duplicated` with faster `collapse::fduplicated(x, all = FALSE)`.
 
