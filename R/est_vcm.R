@@ -243,7 +243,10 @@ pvcm.random <- function(formula, data, effect){
     beta.names <- rownames(beta)
     beta <- as.numeric(beta)
     names(beta) <- beta.names
-    
+
+## Start of debug control (always TRUE) was removed December 6th, 2018 leading to the double calc.
+## was this commit: https://github.com/ycroissant/plm/commit/af5d895ccd6309448fd0ba7f5574a04a1d515550#diff-c4395861f56386ea1dc3f81a026ead695951d2de7b40293d4509ade929e5c830
+
     weightsn <- lapply(seq_len(card.cond),
                        function(i){
                            # YC2019/30/08
@@ -267,6 +270,8 @@ pvcm.random <- function(formula, data, effect){
     Beta <- as.numeric(Beta)
     names(Beta) <- Beta.names
     XpXm1 <- V
+    
+## End of debug control (always TRUE) was removed December 6th, 2018 leading to the double calc.
     
     ## TODO:
     ##   * "Beta" vs "beta" - seem to be the same - so calculated twice?
