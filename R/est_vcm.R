@@ -223,8 +223,9 @@ pvcm.random <- function(formula, data, effect){
     D2 <- Reduce("+", lapply(seq_len(card.cond),
                              function(i) sigi[i] * xpxm1[[i]])) / card.cond
     # if D1-D2 semi-definite positive, use it, otherwise use D1
-    # (practical solution, e.g., advertised in Poi (2003))
-    eig <- all(eigen(D1 - D2)$values >= 0)
+    # (practical solution, e.g., advertised in Poi (2003), Greene (2018), p. 452)
+    ## TODO: Poi (2003) and Greene (2018) only write about positive definite (not semi-def.)
+    eig <- all(eigen(D1 - D2)$values >= 0) 
     Delta <- if(eig) { D1 - D2 } else D1
     
     # compute the Omega matrix for each individual
