@@ -35,6 +35,14 @@ zrint  <- pvcm(log(gsp) ~ 1, data = Produc, model = "random")
 summary(zrint) # does not calculate Wald statistic (rightfully, as only intercept)
 # pwaldtest(zrint) # errors rightfully, and since rev. 1202 also informatively
 
+
+## replicate Greene (2018), p. 452, table 11.22/(2012), p. 419, table 11.14
+greene.ols     <- plm( log(gsp) ~ log(pc) + log(hwy) + log(water) + log(util) + log(emp) + unemp, data = Produc, model = "pooling")
+greene.pvcm.re <- pvcm(log(gsp) ~ log(pc) + log(hwy) + log(water) + log(util) + log(emp) + unemp, data = Produc, model = "random")
+summary(greene.pvcm.re)
+
+phtest(greene.ols, greene.pvcm.re)
+
 ## Stata example:
 ## http://www.stata.com/manuals/xtxtrc.pdf
 ## replicate Stata's example:
@@ -45,3 +53,4 @@ summary(zrint) # does not calculate Wald statistic (rightfully, as only intercep
 ### Coefficients:
 ##   (Intercept)      market       stock
 ##    -23.583612    0.080765    0.283989
+
