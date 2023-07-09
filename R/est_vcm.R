@@ -66,7 +66,7 @@
 #' zw <- pvcm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model = "within")
 #' zr <- pvcm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, model = "random")
 #' 
-#' ## replicate Greene (2012), p. 419, table 11.14
+#' ## replicate Greene (2018), p. 452, table 11.22/(2012), p. 419, table 11.14
 #' summary(pvcm(log(gsp) ~ log(pc) + log(hwy) + log(water) + log(util) + log(emp) + unemp, 
 #'              data = Produc, model = "random"))
 #'              
@@ -152,6 +152,8 @@ pvcm.random <- function(formula, data, effect){
     ## Swamy (1970)
     ## see also Poi (2003), The Stata Journal: 
     ## https://www.stata-journal.com/sjpdf.html?articlenum=st0046
+    ## and Stata's xtxtrc command, section Method and formulas:
+    ## https://www.stata.com/manuals/xtxtrc.pdf
     index <- index(data)
     id <- index[[1L]]
     time <- index[[2L]]
@@ -208,6 +210,7 @@ pvcm.random <- function(formula, data, effect){
     D2 <- Reduce("+", lapply(seq_len(card.cond),
                              function(i) sigi[i] * xpxm1[[i]])) / card.cond
     # if D1-D2 semi-definite positive, use it, otherwise use D1
+    # (practical solution, e.g., advertised in Poi (2003))
     eig <- prod(eigen(D1 - D2)$values >= 0)
     Delta <- if(eig) { D1 - D2 } else  D1
     
@@ -222,18 +225,18 @@ pvcm.random <- function(formula, data, effect){
         ii <- !coefna[i, ]
         Xn <- X[[i]][ , ii, drop = FALSE]
         yn <- y[[i]]
-        
+
         # pre-allocate matrices
         XnXn <- matrix(0, ncol(coefm), ncol(coefm), dimnames = list(colnames(coefm), colnames(coefm)))
         Xnyn <- matrix(0, ncol(coefm), 1L,          dimnames = list(colnames(coefm), "y"))
-        
+
         solve_Omegan_i <- solve(Omegan[[i]])
         CP.tXn.solve_Omegan_i <- crossprod(Xn, solve_Omegan_i)
         XnXn[ii, ii] <- CP.tXn.solve_Omegan_i %*% Xn # == t(Xn) %*% solve(Omegan[[i]]) %*% Xn
         Xnyn[ii, ]   <- CP.tXn.solve_Omegan_i %*% yn # == t(Xn) %*% solve(Omegan[[i]]) %*% yn
         list("XnXn" = XnXn, "Xnyn" = Xnyn)
     })
-    
+
     # Compute coefficients
     # extract and reduce XnXn (pos 1 in list's element) and Xnyn (pos 2)
     # (position-wise extraction is faster than name-based extraction)
@@ -244,7 +247,7 @@ pvcm.random <- function(formula, data, effect){
     beta <- as.numeric(beta)
     names(beta) <- beta.names
 
-## Start of debug control (always TRUE) was removed December 6th, 2018 leading to the double calc.
+## Start of debug control (always TRUE) was removed December 6th, 2018 which has the double calc.
 ## was this commit: https://github.com/ycroissant/plm/commit/af5d895ccd6309448fd0ba7f5574a04a1d515550#diff-c4395861f56386ea1dc3f81a026ead695951d2de7b40293d4509ade929e5c830
 
     weightsn <- lapply(seq_len(card.cond),
@@ -263,6 +266,7 @@ pvcm.random <- function(formula, data, effect){
                            z[ii, ii] <- wn
                            z
                        })
+
     V <- solve(Reduce("+", weightsn))
     weightsn <- lapply(weightsn, function(x) V %*% x)
     Beta <- Reduce("+", lapply(seq_len(card.cond), function(i) weightsn[[i]] %*% coefm[i, ]))
@@ -270,7 +274,6 @@ pvcm.random <- function(formula, data, effect){
     Beta <- as.numeric(Beta)
     names(Beta) <- Beta.names
     XpXm1 <- V
-    
 ## End of debug control (always TRUE) was removed December 6th, 2018 leading to the double calc.
     
     ## TODO:
