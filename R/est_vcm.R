@@ -94,7 +94,7 @@ pvcm <- function(formula, data, subset ,na.action, effect = c("individual", "tim
                      "random" = pvcm.random(formula, data, effect))
     class(result) <- c("pvcm", "panelmodel")
     result$call <- cl
-    result$args <- list(model = model, effect = effect)
+    result$args <- list(model = model.name, effect = effect)
     result
 }
 
