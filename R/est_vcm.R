@@ -55,10 +55,8 @@
 #' 
 #' @export
 #' @author Yves Croissant
-#' @references
-#'
-#' \insertRef{SWAM:70}{plm}
-#' \insertRef{SWAM:71}{plm}
+#' @references \insertAllCited{}
+#' @references \insertRef{SWAM:71}{plm}
 #' 
 #' @keywords regression
 #' @examples

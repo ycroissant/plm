@@ -112,7 +112,8 @@ gw <- pvcm(invest ~ value + capital, data = Grunfeld, index = c("firm", "year"))
 
 }
 \references{
-\insertRef{SWAM:70}{plm}
+\insertAllCited{}
+
 \insertRef{SWAM:71}{plm}
 }
 \author{
