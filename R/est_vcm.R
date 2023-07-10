@@ -58,6 +58,7 @@
 #' @references
 #'
 #' \insertRef{SWAM:70}{plm}
+#' \insertRef{SWAM:71}{plm}
 #' 
 #' @keywords regression
 #' @examples
@@ -71,7 +72,7 @@
 #'              data = Produc, model = "random"))
 #'              
 #' \dontrun{
-#' # replicate Swamy (1970), p. 166, table 5.2
+#' # replicate Swamy (1971), p. 166, table 5.2
 #' data(Grunfeld, package = "AER") # 11 firm Grunfeld data needed from package AER
 #' gw <- pvcm(invest ~ value + capital, data = Grunfeld, index = c("firm", "year"))
 #' }
