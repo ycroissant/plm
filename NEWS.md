@@ -39,7 +39,7 @@ Changes relative to CRAN-released version 2.6-2:
 * `pvar.pseries`: when printed, original variable's name is printed 
   (not always `x` anymore).
 * `pvcm`: more informative about non-estimable models:
-   * `model = "randeom"`: implemented stopping control for non-estimable model 
+   * `model = "random"`: implemented stopping control for non-estimable model 
      if only one group.
    * improved error message if too few observations.
    * `model = "within"`: be less strict about required number of observations 
