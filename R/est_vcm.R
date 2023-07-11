@@ -115,7 +115,7 @@ pvcm.within <- function(formula, data, effect){
     }
 
     # estimate single OLS regressions and save in a list
-    ols <- est.ols(data, cond, effect)
+    ols <- est.ols(data, cond, effect, "within")
     
     # extract coefficients:
     coef <- matrix(unlist(lapply(ols, coef)), nrow = length(ols), byrow = TRUE)
@@ -178,7 +178,7 @@ pvcm.random <- function(formula, data, effect){
     }
     
     # estimate single OLS regressions and save in a list
-    ols <- est.ols(data, cond, effect)
+    ols <- est.ols(data, cond, effect, "random")
     
     # matrix of coefficients
     coefm <- matrix(unlist(lapply(ols, coef)), nrow = length(ols), byrow = TRUE)
@@ -409,13 +409,18 @@ print.summary.pvcm <- function(x, digits = max(3, getOption("digits") - 2),
   }
 
 
-est.ols <- function(mf, cond, effect) {
+est.ols <- function(mf, cond, effect, model) {
 ## helper function: estimate the single OLS regressions (used for pvcm's model = "random" as well as "within" )
   ml <- split(mf, cond)
   #ml <- collapse::rsplit(mf, cond) # does not yet work - TODO: check why (comment stemming from random model)
   ols <- lapply(ml, function(x) {
       X <- model.matrix(x)
-      if(nrow(X) <= ncol(X)) {
+      if(    (nrow(X) <  ncol(X)) && model == "within"
+          || (nrow(X) <= ncol(X)) && model == "random") {
+        ## catch non-estimable model
+        ## equality NROW NCOL: can estimate coefficients but not variance
+        ##             -> for "within" model: this is ok (output has variance NA/NaN)
+        #              -> or "random" model:variance is needed for D2, chi-sq test, so rather be strict
         error.msg <- paste0("insufficient number of observations for at least ",
                             "one group in ", effect, " dimension, so defined ",
                             "model is non-estimable")

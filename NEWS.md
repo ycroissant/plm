@@ -40,7 +40,11 @@ Changes relative to CRAN-released version 2.6-2:
   (not always `x` anymore).
 * `pvcm`:
    * implemented stopping control for non-estimable model if only one group.
-   * improved error message if too few data.
+   * improved error message if too few observations.
+   * for "within" case: be less strict about required #observations for pure 
+     coefficient estimation (#obs = #coefs now allowed, errored before, variance
+     cannot be estimated, though). Note that this relaxation is not possible for
+     the "random" case (Swamy (1970).
 
 ***
 
