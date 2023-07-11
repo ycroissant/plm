@@ -10,8 +10,9 @@
 #' pooled OLS models are estimated per individual (`effect = "individual"`)
 #' or per time period (`effect = "time"`). Coefficients are assumed to be
 #' random if `model = "random"` and the model by 
-#' \insertCite{SWAM:70;textual}{plm} is estimated. It is a generalized least
-#' squares model which uses the results of the previous model.
+#' \insertCite{SWAM:70;textual}{plm} is estimated; it is a generalized least
+#' squares model which uses the results of the OLS models estimated per 
+#' individual/time dimension.
 #' 
 #' @aliases pvcm
 #' @param formula a symbolic description for the model to be estimated,
