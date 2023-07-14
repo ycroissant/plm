@@ -57,8 +57,7 @@ following elements:
 \item{coefficients}{the vector (or the data frame for fixed
 effects) of coefficients,}
 
-\item{residuals}{the vector of
-residuals,}
+\item{residuals}{the vector of residuals,}
 
 \item{fitted.values}{the vector of fitted values,}
 
@@ -70,13 +69,17 @@ fixed effects model (\code{model = "within"})),}
 \item{model}{a data frame containing the variables used for the
 estimation,}
 
-\item{call}{the call,} \item{Delta}{the estimation of the
-covariance matrix of the coefficients (random effect models only),}
+\item{call}{the call,}
 
+random coefficients model only (\code{model = "random"})
+\item{Delta}{the estimation of the covariance matrix of the coefficients,}
+\item{single.coefs}{matrix of unbiased coefficients of single estimations,}
+\item{single.var}{list of variance-covariance matrices for \code{single.coefs},}
+\item{single.std.error}{matrix of standard errors of \code{single.coefs},}
+
+separate OLS estimations only (\code{model = "within"}):
 \item{std.error}{a data frame containing standard errors for all
 coefficients for each individual (within models only).}
-
-\code{pvcm} objects have \code{print}, \code{summary} and \code{print.summary} methods.
 }
 \description{
 Estimators for random and fixed effects models with variable coefficients.
@@ -92,7 +95,11 @@ or per time period (\code{effect = "time"}). Coefficients are assumed to be
 random if \code{model = "random"} and the model by
 \insertCite{SWAM:70;textual}{plm} is estimated; it is a generalized least
 squares model which uses the results of the OLS models estimated per
-individual/time dimension.
+individual/time dimension. The corresponding unbiased single coefficients,
+variance-covariance matrices, and standard errors of the random coefficients
+model are available in the returned object (see \emph{Value}).
+
+\code{pvcm} objects have \code{print}, \code{summary} and \code{print.summary} methods.
 }
 \examples{
 
@@ -104,20 +111,36 @@ zr <- pvcm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, data = Produc, mod
 summary(pvcm(log(gsp) ~ log(pc) + log(hwy) + log(water) + log(util) + log(emp) + unemp, 
              data = Produc, model = "random"))
              
+## replicate Poi (2003) (need data adjustment, remaining tiny diffs are due 
+## Poi's data set having more digits, not justified by the original Grunfeld data)
+data(Grunfeld) # need firm = 1, 4, 3, 8, 2
+Gr.Poi.2003 <- Grunfeld[c(1:20, 61:80, 41:60, 141:160, 21:40), ]
+Gr.Poi.2003$firm <- rep(1:5, each = 20)
+Gr.Poi.2003[c(86, 98), "inv"] <- c(261.6, 645.2)
+Gr.Poi.2003[c(92), "capital"] <- c(232.6)
+
+mod.poi <- pvcm(inv ~ value + capital, data = Gr.Poi.2003, model = "random")
+summary(mod.poi)
+print(mod.poi$single.coefs)
+print(mod.poi$single.std.err)
+
 \dontrun{
 # replicate Swamy (1971), p. 166, table 5.2
 data(Grunfeld, package = "AER") # 11 firm Grunfeld data needed from package AER
 gw <- pvcm(invest ~ value + capital, data = Grunfeld, index = c("firm", "year"))
 }
 
-
 }
 \references{
 \insertAllCited{}
 
 \insertRef{SWAM:71}{plm}
+
+\insertRef{GREE:18}{plm}
+
+\insertRef{POI:03}{plm}
 }
 \author{
-Yves Croissant
+Yves Croissant, Kevin Tappe
 }
 \keyword{regression}

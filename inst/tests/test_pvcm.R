@@ -47,25 +47,48 @@ greene.ols     <- plm( form.greene, data = Produc, model = "pooling")
 greene.pvcm.re <- pvcm(form.greene, data = Produc, model = "random")
 summary(greene.pvcm.re)
 
-greene.pvcm.re$single.coefs[ , 1]
+## single unbiased coefficients and std.error
+print(greene.pvcm.re$single.coefs)
+print(greene.pvcm.re$single.std.err)
+
+## replicate Poi (2003) with the Grunfeld data and inject values from 
+## Stata's invest2.dta data set (remaining tiny diffs are due to invest2.dta
+## having more digits, not justified by the original Grunfeld print of data)
+data(Grunfeld) # need firm = 1, 4, 3, 8, 2
+Gr.Poi.2003 <- Grunfeld[c(1:20, 61:80, 41:60, 141:160, 21:40), ]
+Gr.Poi.2003$firm <- rep(1:5, each = 20)
+Gr.Poi.2003[c(86, 98), "inv"] <- c(261.6, 645.2)
+Gr.Poi.2003[c(92), "capital"] <- c(232.6)
+
+mod.poi <- pvcm(inv ~ value + capital, data = Gr.Poi.2003, model = "random")
+summary(mod.poi)
+print(mod.poi$single.coefs)
+print(mod.poi$single.std.err)
 
 
-
-## Stata example:
+## Stata example / Poi (2003):
 ## http://www.stata.com/manuals/xtxtrc.pdf
+## https://journals.sagepub.com/doi/pdf/10.1177/1536867X0300300307
 ## replicate Stata's example:
 ##
 #  dat <- haven::read_dta("http://www.stata-press.com/data/r15/invest2.dta")
-#  mod.pvcm.re <- pvcm(invest ~ market + stock, data = dat, index = c("company", "time"), model = "random")
+#  mod.poi.stata.dat <- pvcm(invest ~ market + stock, data = dat, index = c("company", "time"), model = "random")
 # 
 # ### Coefficients:
 # ##   (Intercept)      market       stock
 # ##    -23.583612    0.080765    0.283989
 # 
-#  print(mod.pvcm.re$single.coefs)
+#  print(mod.poi.stata.dat$single.coefs)
 #  ##  (Intercept)     market     stock
 #  ## 1  -71.629273 0.10278480 0.3678493
 #  ## 2   -9.819343 0.08423601 0.3092167
 #  ## 3  -12.032683 0.02793844 0.1508282
 #  ## 4    3.269523 0.04110890 0.1407172
 #  ## 5  -27.706284 0.14775499 0.4513312
+#  print(mod.poi.stata.dat$single.std.err)
+#  ##  (Intercept)     market      stock
+#  ## 1   37.466633 0.01085665 0.03313519
+#  ## 2   14.074958 0.01557613 0.03018058
+#  ## 3   29.580826 0.01347698 0.02869037
+#  ## 4    9.510794 0.01181795 0.03402793
+#  ## 5   42.125236 0.01819023 0.05692992

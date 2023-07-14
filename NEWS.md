@@ -11,8 +11,13 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 Changes relative to CRAN-released version 2.6-2:
 
 ### Features:
-* `pvcm`: implemented parameter homogeneity test for variable coefficients model
-  (`model = "random"`), printed when summary is printed.
+* `pvcm`: 
+  * implemented parameter homogeneity test for variable coefficients model
+    (`model = "random"`), printed when summary is printed.
+  * implemented calculation of single unbiased coefficients (incl. variance/std.
+    error) for `model = "random"`, can be extracted via 
+    `return_value$single.coef`, `return_value$single.var`, 
+    `return_value$single.std.err`, respectively.
 
 ### Speed-up:
 * Replaced base R's `duplicated` with faster `collapse::fduplicated(x, all = FALSE)`.
