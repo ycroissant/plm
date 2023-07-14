@@ -34,10 +34,10 @@
 #' @return An object of class `c("pvcm", "panelmodel")`, which has the
 #' following elements:
 #' 
-#' \item{coefficients}{the vector (or the data frame for fixed
-#' effects) of coefficients,}
+#' \item{coefficients}{the vector (numeric) of coefficients (or data frame for 
+#' fixed effects),}
 #'
-#' \item{residuals}{the vector of residuals,}
+#' \item{residuals}{the vector (numeric) of residuals,}
 #'
 #' \item{fitted.values}{the vector of fitted values,}
 #' 
@@ -50,6 +50,8 @@
 #' estimation,}
 #'
 #' \item{call}{the call,}
+#' 
+#' \item{args}{the arguments of the call,}
 #' 
 #' random coefficients model only (`model = "random"`)
 #' \item{Delta}{the estimation of the covariance matrix of the coefficients,}
@@ -245,7 +247,7 @@ pvcm.random <- function(formula, data, effect){
   # if D1-D2 semi-definite positive, use it, otherwise use D1
   # (practical solution, e.g., advertised in Poi (2003), Greene (2018), p. 452)
   ## TODO: Poi (2003) and Greene (2018) only write about positive definite (not semi-def.)
-  ##       Hsiao (2014), p. 174 writes about D1-D2 possibly being "non-negative definite"
+  ##       Hsiao (2014), p. 174 writes about D1-D2 possibly being not "non-negative definite"
   eig <- all(eigen(D1 - D2)$values >= 0) 
   Delta <- if(eig) { D1 - D2 } else D1
   
@@ -311,6 +313,12 @@ pvcm.random <- function(formula, data, effect){
   names(Beta) <- Beta.names
   XpXm1 <- V
   
+  ## TODO:
+  ##   * "Beta" vs "beta" - seem to be the same - so calculated twice?
+  ##   * XpXm1 vs. V, seem to be the same - so calculated twice?
+  ##    -> Beta/beta, XpXm1(1st calc further up) and V (XpXm1 <- V) have same result for 
+  ##       balanced and unbalanced data, so seems to be superfluous calculations here
+  
   ## calc. single unbiased coefficients and variance:
   solve.Delta <- solve(Delta)
   b.hat.coef.var <- lapply(seq_len(card.cond), function(i) {
@@ -318,26 +326,27 @@ pvcm.random <- function(formula, data, effect){
     cp.Xi <- crossprod(Xi)
     sigi.inv <- 1/sigi[i]
     # (Poi (2003), p. 304, 2nd line) (1st line in Poi (2003) is Hsiao (2014), p. 175)
-    left<- solve(solve.Delta + sigi.inv * cp.Xi)
-    right <- crossprod(sigi.inv * cp.Xi, coefm[i, ]) + crossprod(solve.Delta, Beta)
+    sigi.inv.cp.Xi <- sigi.inv * cp.Xi
+    left<- solve(solve.Delta + sigi.inv.cp.Xi)
+    right <- crossprod(sigi.inv.cp.Xi, coefm[i, ]) + crossprod(solve.Delta, Beta)
     b.hat.i <- crossprod(left, right)
     
     ## beta.hat.i: same result via formula following Hsiao (2014), p. 175 (need residuals first)
     # Beta + Delta %*% t(Xi) %*% solve(Xi %*% Delta %*% t(Xi) + sigi_i * diag(1, nrow(Xi))) %*% resid[[i]]
     
-    # Variance-Covariance matrix (asymp. formula in Poi (2003))
+    ## Variance-Covariance matrix (asymp. formula in Poi (2003))
     # V = Var(beta-hat)
     # vcov(ols[[i]]) # = Var(bi)
     A <- crossprod(left, solve.Delta)
     IA <- diag(1, nrow(A)) - A 
-    var.b.hat.i <- V + IA %*% (vcov(ols[[i]]) - V) %*% t(IA)
+    var.b.hat.i <- V + tcrossprod(IA, crossprod(vcov(ols[[i]]) - V, t(IA)))
     
     list(b.hat.i, var.b.hat.i)
   })
   
   # extract single coeffs, variance, std. error
-  b.hat.i     <- t(collapse::qM(lapply(b.hat.coef.var, "[[", 1)))
-  var.b.hat.i <-                lapply(b.hat.coef.var, "[[", 2)
+  b.hat.i     <- t(collapse::qM(lapply(b.hat.coef.var, "[[", 1L)))
+  var.b.hat.i <-                lapply(b.hat.coef.var, "[[", 2L)
   rm(b.hat.coef.var)
   std.err.b.hat.i <- lapply(var.b.hat.i, function(i) sqrt(diag(i)))
   std.err.b.hat.i <- t(collapse::qM(std.err.b.hat.i))
@@ -345,11 +354,6 @@ pvcm.random <- function(formula, data, effect){
   
 ## Here was end of debug control (always TRUE), removed December 6th, 2018 leading to the double calc.
   
-  ## TODO:
-  ##   * "Beta" vs "beta" - seem to be the same - so calculated twice?
-  ##   * XpXm1 vs. V, seem to be the same - so calculated twice?
-  ##    -> Beta/beta, XpXm1(1st calc further up) and V (XpXm1 <- V) have same result for 
-  ##       balanced and unbalanced data, so seems to be superfluous calculations here
   
   y <- pmodel.response(data)
   X <- model.matrix(data)
@@ -377,8 +381,8 @@ pvcm.random <- function(formula, data, effect){
   # pchisq(chi.sq.stat, df = 12,  lower.tail = FALSE) # Poi (2003): stat: 603.9944, df = 12
   # pchisq(chi.sq.stat, df = 329, lower.tail = FALSE) # Greene (2018): stat: 25556,26, df = 329 (=7*47)
   
-  chi.sq.df <- ncol(coefm) * (pdim$nT$n - 1)
-  chi.sq.p  <- pchisq(chi.sq.stat, df = ncol(coefm) * (pdim$nT$n - 1), lower.tail = FALSE)
+  chi.sq.df <- ncol(coefm) * (pdim$nT$n - 1L)
+  chi.sq.p  <- pchisq(chi.sq.stat, df = ncol(coefm) * (pdim$nT$n - 1L), lower.tail = FALSE)
   
   chi.sq.test <- list(statistic   = c("chisq" = chi.sq.stat),
                       parameter   = c("df"    = chi.sq.df),
