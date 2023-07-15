@@ -16,6 +16,10 @@
 #' variance-covariance matrices, and standard errors of the random coefficients 
 #' model are available in the returned object (see *Value*).
 #' 
+#' A test for parameter stability (homogeneous coefficients) of the random 
+#' coefficients model is printed in the model's summary and is available in the
+#' returned object (see *Value*).
+#' 
 #' `pvcm` objects have `print`, `summary` and `print.summary` methods.
 #' 
 #' @aliases pvcm
@@ -58,6 +62,8 @@
 #' \item{single.coefs}{matrix of unbiased coefficients of single estimations,}
 #' \item{single.var}{list of variance-covariance matrices for `single.coefs`,}
 #' \item{single.std.error}{matrix of standard errors of `single.coefs`,} 
+#' \item{chisq.test}{htest object: parameter stability test (homogeneous 
+#'                   coefficients),} 
 #' 
 #' separate OLS estimations only (`model = "within"`):
 #' \item{std.error}{a data frame containing standard errors for all
@@ -366,7 +372,6 @@ pvcm.random <- function(formula, data, effect){
   # TODO: 
   #       * this is a crude but correct implementation, improve one day
   #       * need to have it in the model estimation due to the many inputs or can be a separate function?
-  #       * mention in documentation of pvcm object
   V.t <- lapply(seq_len(card.cond), function(i) sigi[i] * xpxm1[[i]])
   V.t.inv <- lapply(V.t, function(i) solve(i))
   b <- collapse::mrtl(coefm) # create list based on matrix rows
