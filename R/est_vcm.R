@@ -341,7 +341,7 @@ pvcm.random <- function(formula, data, effect){
     # vcov(ols[[i]]) # = Var(bi)
     A <- crossprod(left, solve.Delta)
     IA <- diag(1, nrow(A)) - A
-    var.b.hat.i <- V + tcrossprod(IA, crossprod((vcov(ols[[i]]) - V), t(IA)))
+    var.b.hat.i <- V + crossprod(t(IA), crossprod((vcov(ols[[i]]) - V), t(IA)))
     
     list(b.hat.i, var.b.hat.i)
   })
