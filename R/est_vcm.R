@@ -292,9 +292,6 @@ pvcm.random <- function(formula, data, effect){
   # beta <- as.numeric(beta)
   # names(beta) <- beta.names
   
-## Here was start of debug control (always TRUE), removed December 6th, 2018 which has the double calc.
-## was this commit: https://github.com/ycroissant/plm/commit/af5d895ccd6309448fd0ba7f5574a04a1d515550#diff-c4395861f56386ea1dc3f81a026ead695951d2de7b40293d4509ade929e5c830
-  
   ## notation here follows Hsiao (2014), p. 173
   weightsn <- lapply(seq_len(card.cond),
                      function(i){
@@ -316,11 +313,6 @@ pvcm.random <- function(formula, data, effect){
   Beta <- as.numeric(Beta)
   names(Beta) <- Beta.names
   
-  ## TODO:
-  ##   * "Beta" vs "beta" - seem to be the same - so calculated twice?
-  ##   * XpXm1 vs. V, seem to be the same - so calculated twice?
-  ##    -> Beta/beta, XpXm1(1st calc further up) and V (XpXm1 <- V) have same result for 
-  ##       balanced and unbalanced data, so seems to be superfluous calculations here
   
   ## calc. single unbiased coefficients and variance:
   solve.Delta <- solve(Delta)
@@ -355,9 +347,6 @@ pvcm.random <- function(formula, data, effect){
   std.err.b.hat.i <- t(collapse::qM(std.err.b.hat.i))
   rownames(std.err.b.hat.i) <- rownames(b.hat.i) <- names(var.b.hat.i) <- names(sigi)
   
-## Here was end of debug control (always TRUE), removed December 6th, 2018 leading to the double calc.
-  
-  
   y <- pmodel.response(data)
   X <- model.matrix(data)
   fit <- as.numeric(tcrossprod(Beta, X))
@@ -366,9 +355,7 @@ pvcm.random <- function(formula, data, effect){
   
   ## Chi-sq test for homogeneous parameters (all panel-effect-specific coefficients are the same)
   #  notation resembles Greene (2018), ch. 11, p. 452
-  # TODO: 
-  #       * this is a crude but correct implementation, improve one day
-  #       * need to have it in the model estimation due to the many inputs or can be a separate function?
+  # TODO: this is a crude but correct implementation, improve one day
   V.t <- lapply(seq_len(card.cond), function(i) sigi[i] * xpxm1[[i]])
   V.t.inv <- lapply(V.t, function(i) solve(i))
   b <- collapse::mrtl(coefm) # create list based on matrix rows
