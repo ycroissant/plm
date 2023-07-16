@@ -296,24 +296,20 @@ pvcm.random <- function(formula, data, effect){
   ## notation here follows Hsiao (2014), p. 173
   weightsn <- lapply(seq_len(card.cond),
                      function(i){
-                       # YC2019/30/08
-                       #old
-                       #                           vcovn <- vcov(ols[[i]])
-                       #                           Deltan <- Delta[! coefna[i,], ! coefna[i,]]
-                       #                           wn <- solve(vcovn + Deltan)
-                       #new
                        vcovn <- vcov(ols[[i]])
                        ii <- !coefna[i, ]
                        wn <- solve((vcovn + Delta)[ii, ii, drop = FALSE])
-                       z <- matrix(0, nrow = ncol(coefm), ncol = ncol(coefm),
-                                   dimnames = list(colnames(coefm), colnames(coefm)))
+                       nms <- colnames(coefm)
+                       nrcols <- ncol(coefm)
+                       z <- matrix(0, nrow = nrcols, ncol = nrcols,
+                                      dimnames = list(nms, nms))
                        z[ii, ii] <- wn
                        z
                      })
   
   V <- solve(Reduce("+", weightsn)) # V: left part of W_i  (in Hsiao)
   weightsn <- lapply(weightsn, function(x) V %*% x) # full W_i (in Hsiao)
-  Beta <- Reduce("+", lapply(seq_len(card.cond), function(i) weightsn[[i]] %*% coefm[i, ]))
+  Beta <- Reduce("+", lapply(seq_len(card.cond), function(i) tcrossprod(weightsn[[i]], t(coefm[i, ]))))
   Beta.names <- rownames(Beta)
   Beta <- as.numeric(Beta)
   names(Beta) <- Beta.names
@@ -344,8 +340,8 @@ pvcm.random <- function(formula, data, effect){
     # V = Var(beta-hat)
     # vcov(ols[[i]]) # = Var(bi)
     A <- crossprod(left, solve.Delta)
-    IA <- diag(1, nrow(A)) - A 
-    var.b.hat.i <- V + tcrossprod(IA, crossprod(vcov(ols[[i]]) - V, t(IA)))
+    IA <- diag(1, nrow(A)) - A
+    var.b.hat.i <- V + tcrossprod(IA, crossprod((vcov(ols[[i]]) - V), t(IA)))
     
     list(b.hat.i, var.b.hat.i)
   })
@@ -382,9 +378,6 @@ pvcm.random <- function(formula, data, effect){
     bi.bstar <- coefs - b.star
     tcrossprod(crossprod(bi.bstar, mat), bi.bstar)}, # == t(b[[i]] - b.star) %*% V.t.inv[[i]] %*% (b[[i]] - b.star)
     b, V.t.inv)))
-  
-  # pchisq(chi.sq.stat, df = 12,  lower.tail = FALSE) # Poi (2003): stat: 603.9944, df = 12
-  # pchisq(chi.sq.stat, df = 329, lower.tail = FALSE) # Greene (2018): stat: 25556,26, df = 329 (=7*47)
   
   chi.sq.df <- ncol(coefm) * (pdim$nT$n - 1L)
   chi.sq.p  <- pchisq(chi.sq.stat, df = ncol(coefm) * (pdim$nT$n - 1L), lower.tail = FALSE)
