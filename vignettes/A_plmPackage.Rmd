@@ -849,11 +849,11 @@ coefficients models. Time or individual effects are introduced if argument
 `effect` is fixed to `"time"` or `"individual"` (the default value).
 
 Coefficients are assumed to be fixed if `model="within"` or 
-random if `model="random"`. In the first case, a different
-model is estimated for each individual (or time period). In the second
-case, the Swamy model (see @SWAM:70) model is estimated. It is a generalized
-least squares model which uses the results of the previous
-model. Denoting $\hat{\beta}_i$ the vectors of coefficients obtained
+random if `model="random"`. In the first case, a separate
+OLS model is estimated for each individual (or time period). In the second
+case, Swamy's random coefficient model (see @SWAM:70) model is estimated. 
+It is a generalized least squares model which uses the results of separate OLS
+models. Denoting $\hat{\beta}_i$ the vectors of coefficients obtained
 for each individual, we get:
 
 \begin{equation*}
@@ -878,6 +878,15 @@ grun.varw <- pvcm(inv~value+capital, data=Grunfeld, model="within")
 grun.varr <- pvcm(inv~value+capital, data=Grunfeld, model="random")
 summary(grun.varr)
 ``` 
+A $\chi^2$ test of homogeneous parameters of the random coefficients model is 
+printed in the last line of the summary output.
+
+The unconditioned best linear unbiased single estimations for the coefficient of 
+the single panel-effect specific regressions associated with the random coefficients
+model can be extracted from the returned object, for the example in 
+`grun.varr$single.coefs`, while single variance-covariance matrices and standard 
+errors are available in `grun.varr$single.vcov` and `grunvarr$single.std.error`, 
+respectively.
 
 ## Generalized method of moments estimator
 
