@@ -60,7 +60,7 @@
 #' random coefficients model only (`model = "random"`)
 #' \item{Delta}{the estimation of the covariance matrix of the coefficients,}
 #' \item{single.coefs}{matrix of unbiased coefficients of single estimations,}
-#' \item{single.var}{list of variance-covariance matrices for `single.coefs`,}
+#' \item{single.vcov}{list of variance-covariance matrices for `single.coefs`,}
 #' \item{single.std.error}{matrix of standard errors of `single.coefs`,} 
 #' \item{chisq.test}{htest object: parameter stability test (homogeneous 
 #'                   coefficients),} 
@@ -389,17 +389,17 @@ pvcm.random <- function(formula, data, effect){
                       alternative = "Heterogeneous parameters (panel-effect-specific coefficients differ)",
                       data.name   = paste(deparse(formula)))
   
-  list(coefficients   = beta,
-       residuals      = res,
-       fitted.values  = fit,
-       vcov           = XpXm1,
-       df.residual    = df.resid,
-       model          = data,
-       Delta          = Delta,
-       single.coefs   = b.hat.i,
-       single.var     = var.b.hat.i,
-       single.std.err = std.err.b.hat.i,
-       chisq.test     = structure(chi.sq.test, class = "htest"))
+  list(coefficients     = beta,
+       residuals        = res,
+       fitted.values    = fit,
+       vcov             = XpXm1,
+       df.residual      = df.resid,
+       model            = data,
+       Delta            = Delta,
+       single.coefs     = b.hat.i,
+       single.vcov      = var.b.hat.i,
+       single.std.error = std.err.b.hat.i,
+       chisq.test       = structure(chi.sq.test, class = "htest"))
 }
 
 #' @rdname pvcm

@@ -1171,7 +1171,7 @@ WASHINGTON      0.8966244 -6.900671e-03
 WEST_VIRGINIA   0.5746480 -6.711925e-03
 WISCONSIN       0.8088569 -6.352242e-03
 WYOMING         1.1038495 -8.824878e-03
-> print(greene.pvcm.re$single.std.err)
+> print(greene.pvcm.re$single.std.error)
                (Intercept)    log(pc)   log(hwy) log(water)  log(util)
 ALABAMA          2.5436659 0.13882541 0.52036904 0.14495361 0.25073326
 ARIZONA          1.9820643 0.11020933 0.38178894 0.07816585 0.07059191
@@ -1319,7 +1319,7 @@ Test for parameter homogeneity: Chisq = 603.994 on 12 DF, p-value: < 2.22e-16
 3  -12.032688 0.02793844 0.1508282
 4    3.269521 0.04110891 0.1407172
 5  -27.706276 0.14775499 0.4513312
-> print(mod.poi$single.std.err)
+> print(mod.poi$single.std.error)
   (Intercept)      value    capital
 1   37.466646 0.01085665 0.03313519
 2   14.074959 0.01557614 0.03018058
@@ -1347,7 +1347,7 @@ Test for parameter homogeneity: Chisq = 603.994 on 12 DF, p-value: < 2.22e-16
 > #  ## 3  -12.032683 0.02793844 0.1508282
 > #  ## 4    3.269523 0.04110890 0.1407172
 > #  ## 5  -27.706284 0.14775499 0.4513312
-> #  print(mod.poi.stata.dat$single.std.err)
+> #  print(mod.poi.stata.dat$single.std.error)
 > #  ##  (Intercept)     market      stock
 > #  ## 1   37.466633 0.01085665 0.03313519
 > #  ## 2   14.074958 0.01557613 0.03018058

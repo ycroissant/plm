@@ -16,8 +16,8 @@ Changes relative to CRAN-released version 2.6-2:
     (`model = "random"`), printed when summary is printed.
   * implemented calculation of single unbiased coefficients (incl. variance/std.
     error) for `model = "random"`, can be extracted via 
-    `return_value$single.coef`, `return_value$single.var`, 
-    `return_value$single.std.err`, respectively.
+    `return_value$single.coef`, `return_value$single.vcov`, 
+    `return_value$single.std.error`, respectively.
 
 ### Speed-up:
 * Replaced base R's `duplicated` with faster `collapse::fduplicated(x, all = FALSE)`.
