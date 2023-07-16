@@ -227,8 +227,10 @@ pvcm.random <- function(formula, data, effect){
   # compute a list of XpX^-1 matrices, with 0 for lines/columns with
   # NA coefficients
   xpxm1 <- lapply(seq_len(card.cond), function(i){
-    z <- matrix(0, ncol(coefm), ncol(coefm),
-                dimnames = list(colnames(coefm), colnames(coefm)))
+    nms <- colnames(coefm)
+    nrcols <- ncol(coefm)
+    z <- matrix(0, nrow = nrcols, ncol = nrcols,
+                   dimnames = list(nms, nms))
     ii <- !coefna[i, ]
     z[ii, ii] <- solve(crossprod(X[[i]][ii, ii, drop = FALSE]))
     z
@@ -347,10 +349,8 @@ pvcm.random <- function(formula, data, effect){
   std.err.b.hat.i <- t(collapse::qM(std.err.b.hat.i))
   rownames(std.err.b.hat.i) <- rownames(b.hat.i) <- names(var.b.hat.i) <- names(sigi)
   
-  y <- pmodel.response(data)
-  X <- model.matrix(data)
-  fit <- as.numeric(tcrossprod(Beta, X))
-  res <- y - fit
+  fit <- as.numeric(tcrossprod(Beta, model.matrix(data)))
+  resid <- pmodel.response(data) - fit
   df.resid <- N - ncol(coefm)
   
   ## Chi-sq test for homogeneous parameters (all panel-effect-specific coefficients are the same)
@@ -368,7 +368,7 @@ pvcm.random <- function(formula, data, effect){
     b, V.t.inv)))
   
   chi.sq.df <- ncol(coefm) * (pdim$nT$n - 1L)
-  chi.sq.p  <- pchisq(chi.sq.stat, df = ncol(coefm) * (pdim$nT$n - 1L), lower.tail = FALSE)
+  chi.sq.p  <- pchisq(chi.sq.stat, df = chi.sq.df, lower.tail = FALSE)
   
   chi.sq.test <- list(statistic   = c("chisq" = chi.sq.stat),
                       parameter   = c("df"    = chi.sq.df),
@@ -378,7 +378,7 @@ pvcm.random <- function(formula, data, effect){
                       data.name   = paste(deparse(formula)))
   
   list(coefficients     = Beta,
-       residuals        = res,
+       residuals        = resid,
        fitted.values    = fit,
        vcov             = V,
        df.residual      = df.resid,
@@ -467,8 +467,8 @@ est.ols <- function(mf, cond, effect, model) {
           || (nrow(X) <= ncol(X)) && model == "random") {
         ## catch non-estimable model
         ## equality NROW NCOL: can estimate coefficients but not variance
-        ##             -> for "within" model: this is ok (output has variance NA/NaN)
-        #              -> or "random" model:variance is needed for D2, chi-sq test, so rather be strict
+        ##    -> for "within" model: this is ok (output has variance NA/NaN)
+        #     -> or "random" model: variance is needed for D2, chi-sq test, so rather be strict
         error.msg <- paste0("insufficient number of observations for at least ",
                             "one group in ", effect, " dimension, so defined ",
                             "model is non-estimable")
