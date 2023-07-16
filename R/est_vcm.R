@@ -57,7 +57,7 @@
 #' 
 #' \item{args}{the arguments of the call,}
 #' 
-#' random coefficients model only (`model = "random"`)
+#' random coefficients model only (`model = "random"`):
 #' \item{Delta}{the estimation of the covariance matrix of the coefficients,}
 #' \item{single.coefs}{matrix of unbiased coefficients of single estimations,}
 #' \item{single.vcov}{list of variance-covariance matrices for `single.coefs`,}
@@ -67,7 +67,7 @@
 #' 
 #' separate OLS estimations only (`model = "within"`):
 #' \item{std.error}{a data frame containing standard errors for all
-#' coefficients for each individual (within models only).}
+#' coefficients for each single regression.}
 #' 
 #' @export
 #' @author Yves Croissant, Kevin Tappe

@@ -851,7 +851,7 @@ coefficients models. Time or individual effects are introduced if argument
 Coefficients are assumed to be fixed if `model="within"` or 
 random if `model="random"`. In the first case, a separate
 OLS model is estimated for each individual (or time period). In the second
-case, Swamy's random coefficient model (see @SWAM:70) model is estimated. 
+case, Swamy's random coefficients model (see @SWAM:70) model is estimated. 
 It is a generalized least squares model which uses the results of separate OLS
 models. Denoting $\hat{\beta}_i$ the vectors of coefficients obtained
 for each individual, we get:

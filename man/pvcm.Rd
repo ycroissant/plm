@@ -54,10 +54,10 @@ pvcm(
 An object of class \code{c("pvcm", "panelmodel")}, which has the
 following elements:
 
-\item{coefficients}{the vector (or the data frame for fixed
-effects) of coefficients,}
+\item{coefficients}{the vector (numeric) of coefficients (or data frame for
+fixed effects),}
 
-\item{residuals}{the vector of residuals,}
+\item{residuals}{the vector (numeric) of residuals,}
 
 \item{fitted.values}{the vector of fitted values,}
 
@@ -71,15 +71,19 @@ estimation,}
 
 \item{call}{the call,}
 
-random coefficients model only (\code{model = "random"})
+\item{args}{the arguments of the call,}
+
+random coefficients model only (\code{model = "random"}):
 \item{Delta}{the estimation of the covariance matrix of the coefficients,}
 \item{single.coefs}{matrix of unbiased coefficients of single estimations,}
-\item{single.var}{list of variance-covariance matrices for \code{single.coefs},}
+\item{single.vcov}{list of variance-covariance matrices for \code{single.coefs},}
 \item{single.std.error}{matrix of standard errors of \code{single.coefs},}
+\item{chisq.test}{htest object: parameter stability test (homogeneous
+coefficients),}
 
 separate OLS estimations only (\code{model = "within"}):
 \item{std.error}{a data frame containing standard errors for all
-coefficients for each individual (within models only).}
+coefficients for each individual.}
 }
 \description{
 Estimators for random and fixed effects models with variable coefficients.
@@ -98,6 +102,10 @@ squares model which uses the results of the OLS models estimated per
 individual/time dimension. The corresponding unbiased single coefficients,
 variance-covariance matrices, and standard errors of the random coefficients
 model are available in the returned object (see \emph{Value}).
+
+A test for parameter stability (homogeneous coefficients) of the random
+coefficients model is printed in the model's summary and is available in the
+returned object (see \emph{Value}).
 
 \code{pvcm} objects have \code{print}, \code{summary} and \code{print.summary} methods.
 }
