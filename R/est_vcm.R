@@ -256,39 +256,41 @@ pvcm.random <- function(formula, data, effect){
   ##       Hsiao (2014), p. 174 writes about D1-D2 possibly being not "non-negative definite"
   eig <- all(eigen(D1 - D2)$values >= 0) 
   Delta <- if(eig) { D1 - D2 } else D1
-  
-  # compute the Omega matrix for each individual
-  Omegan <- lapply(seq_len(card.cond), function(i) {
-    Xi <- X[[i]]
-    diag(sigi[i], nrow = nrow(Xi)) + crossprod(t(Xi), tcrossprod(Delta, Xi))
-  })
-  
-  # compute X'Omega X and X'Omega y for each individual
-  XyOmXy <- lapply(seq_len(card.cond), function(i){
-    ii <- !coefna[i, ]
-    Xn <- X[[i]][ , ii, drop = FALSE]
-    yn <- y[[i]]
-    
-    # pre-allocate matrices
-    XnXn <- matrix(0, ncol(coefm), ncol(coefm), dimnames = list(colnames(coefm), colnames(coefm)))
-    Xnyn <- matrix(0, ncol(coefm), 1L,          dimnames = list(colnames(coefm), "y"))
-    
-    solve_Omegan_i <- solve(Omegan[[i]])
-    CP.tXn.solve_Omegan_i <- crossprod(Xn, solve_Omegan_i)
-    XnXn[ii, ii] <- CP.tXn.solve_Omegan_i %*% Xn # == t(Xn) %*% solve(Omegan[[i]]) %*% Xn
-    Xnyn[ii, ]   <- CP.tXn.solve_Omegan_i %*% yn # == t(Xn) %*% solve(Omegan[[i]]) %*% yn
-    list("XnXn" = XnXn, "Xnyn" = Xnyn)
-  })
-  
-  # Compute coefficients
-  # extract and reduce XnXn (pos 1 in list's element) and Xnyn (pos 2)
-  # (position-wise extraction is faster than name-based extraction)
-  XpXm1 <-     solve(Reduce("+", vapply(XyOmXy, "[", 1L, FUN.VALUE = list(length(XyOmXy)))))
-  beta  <- XpXm1 %*% Reduce("+", vapply(XyOmXy, "[", 2L, FUN.VALUE = list(length(XyOmXy))))
-  
-  beta.names <- rownames(beta)
-  beta <- as.numeric(beta)
-  names(beta) <- beta.names
+
+  ### these calculations are superfluous because down below Beta is calculated
+  ### via weightsn etc.
+  # # compute the Omega matrix for each individual
+  # Omegan <- lapply(seq_len(card.cond), function(i) {
+  #   Xi <- X[[i]]
+  #   diag(sigi[i], nrow = nrow(Xi)) + crossprod(t(Xi), tcrossprod(Delta, Xi))
+  # })
+  # 
+  # # compute X'Omega X and X'Omega y for each individual
+  # XyOmXy <- lapply(seq_len(card.cond), function(i){
+  #   ii <- !coefna[i, ]
+  #   Xn <- X[[i]][ , ii, drop = FALSE]
+  #   yn <- y[[i]]
+  #   
+  #   # pre-allocate matrices
+  #   XnXn <- matrix(0, ncol(coefm), ncol(coefm), dimnames = list(colnames(coefm), colnames(coefm)))
+  #   Xnyn <- matrix(0, ncol(coefm), 1L,          dimnames = list(colnames(coefm), "y"))
+  #   
+  #   solve_Omegan_i <- solve(Omegan[[i]])
+  #   CP.tXn.solve_Omegan_i <- crossprod(Xn, solve_Omegan_i)
+  #   XnXn[ii, ii] <- CP.tXn.solve_Omegan_i %*% Xn # == t(Xn) %*% solve(Omegan[[i]]) %*% Xn
+  #   Xnyn[ii, ]   <- CP.tXn.solve_Omegan_i %*% yn # == t(Xn) %*% solve(Omegan[[i]]) %*% yn
+  #   list("XnXn" = XnXn, "Xnyn" = Xnyn)
+  # })
+  # 
+  # # Compute coefficients
+  # # extract and reduce XnXn (pos 1 in list's element) and Xnyn (pos 2)
+  # # (position-wise extraction is faster than name-based extraction)
+  # XpXm1 <-     solve(Reduce("+", vapply(XyOmXy, "[", 1L, FUN.VALUE = list(length(XyOmXy)))))
+  # beta  <- XpXm1 %*% Reduce("+", vapply(XyOmXy, "[", 2L, FUN.VALUE = list(length(XyOmXy))))
+  # 
+  # beta.names <- rownames(beta)
+  # beta <- as.numeric(beta)
+  # names(beta) <- beta.names
   
 ## Here was start of debug control (always TRUE), removed December 6th, 2018 which has the double calc.
 ## was this commit: https://github.com/ycroissant/plm/commit/af5d895ccd6309448fd0ba7f5574a04a1d515550#diff-c4395861f56386ea1dc3f81a026ead695951d2de7b40293d4509ade929e5c830
@@ -313,7 +315,6 @@ pvcm.random <- function(formula, data, effect){
   Beta.names <- rownames(Beta)
   Beta <- as.numeric(Beta)
   names(Beta) <- Beta.names
-  XpXm1 <- V
   
   ## TODO:
   ##   * "Beta" vs "beta" - seem to be the same - so calculated twice?
@@ -359,7 +360,7 @@ pvcm.random <- function(formula, data, effect){
   
   y <- pmodel.response(data)
   X <- model.matrix(data)
-  fit <- as.numeric(tcrossprod(beta, X))
+  fit <- as.numeric(tcrossprod(Beta, X))
   res <- y - fit
   df.resid <- N - ncol(coefm)
   
@@ -389,10 +390,10 @@ pvcm.random <- function(formula, data, effect){
                       alternative = "Heterogeneous parameters (panel-effect-specific coefficients differ)",
                       data.name   = paste(deparse(formula)))
   
-  list(coefficients     = beta,
+  list(coefficients     = Beta,
        residuals        = res,
        fitted.values    = fit,
-       vcov             = XpXm1,
+       vcov             = V,
        df.residual      = df.resid,
        model            = data,
        Delta            = Delta,
