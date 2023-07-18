@@ -206,7 +206,6 @@ pvcm.random <- function(formula, data, effect){
     stop(error.msg)
   }
   
-  seq_len.card.cond <- seq_len(card.cond) # save as used quite often
   
   # estimate single OLS regressions and save in a list
   ols <- est.ols(data, cond, effect, "random")
@@ -215,8 +214,13 @@ pvcm.random <- function(formula, data, effect){
   coefm <- matrix(unlist(lapply(ols, coef)), nrow = length(ols), byrow = TRUE)
   dimnames(coefm)[1:2] <- list(names(ols), names(coef(ols[[1]])))
   
+  # save these as used quite often
+  seq_len.card.cond <- seq_len(card.cond)
+  colnms.coefm <- colnames(coefm)
+  nrcols.coefm <- ncol(coefm)
+  
   # number of covariates
-  K <- ncol(coefm) - has.intercept(formula)
+  K <- nrcols.coefm - has.intercept(formula)
   # check for NA coefficients
   coefna <- is.na(coefm)
   # list of model matrices
@@ -229,19 +233,15 @@ pvcm.random <- function(formula, data, effect){
   # compute a list of XpX and XpX^-1 matrices, with 0 for lines/columns with
   # NA coefficients
   xpx <- lapply(seq_len.card.cond, function(i){
-    nms <- colnames(coefm)
-    nrcols <- ncol(coefm)
-    cp <- matrix(0, nrow = nrcols, ncol = nrcols,
-                dimnames = list(nms, nms))
+    cp <- matrix(0, nrow = nrcols.coefm, ncol = nrcols.coefm,
+                dimnames = list(colnms.coefm, colnms.coefm))
     ii <- !coefna[i, ]
     cp[ii, ii] <- crossprod(X[[i]][ii, ii, drop = FALSE])
   })
   
   xpxm1 <- lapply(seq_len.card.cond, function(i){
-    nms <- colnames(coefm)
-    nrcols <- ncol(coefm)
-    inv <- matrix(0, nrow = nrcols, ncol = nrcols,
-                   dimnames = list(nms, nms))
+    inv <- matrix(0, nrow = nrcols.coefm, ncol = nrcols.coefm,
+                   dimnames = list(colnms.coefm, colnms.coefm))
     ii <- !coefna[i, ]
     inv[ii, ii] <- solve(xpx[[i]])
   })
@@ -310,10 +310,8 @@ pvcm.random <- function(formula, data, effect){
                        vcovn <- vcov(ols[[i]])
                        ii <- !coefna[i, ]
                        wn <- solve((vcovn + Delta)[ii, ii, drop = FALSE])
-                       nms <- colnames(coefm)
-                       nrcols <- ncol(coefm)
-                       z <- matrix(0, nrow = nrcols, ncol = nrcols,
-                                      dimnames = list(nms, nms))
+                       z <- matrix(0, nrow = nrcols.coefm, ncol = nrcols.coefm,
+                                      dimnames = list(colnms.coefm, colnms.coefm))
                        z[ii, ii] <- wn
                        z
                      })
@@ -357,7 +355,7 @@ pvcm.random <- function(formula, data, effect){
   
   fit <- as.numeric(tcrossprod(Beta, model.matrix(data)))
   resid <- pmodel.response(data) - fit
-  df.resid <- N - ncol(coefm)
+  df.resid <- N - nrcols.coefm
   
   ## Chi-sq test for homogeneous parameters (all panel-effect-specific coefficients are the same)
   #  notation resembles Greene (2018), ch. 11, p. 452
@@ -366,14 +364,14 @@ pvcm.random <- function(formula, data, effect){
   b.star.left <- solve(rowSums(V.t.inv, dims = 2)) # == solve(Reduce("+", V.t.inv))
   b.star.right <- rowSums(vapply(seq_len.card.cond,
                                  function(i) crossprod(V.t.inv[ , , i], coefm[i , ]), 
-                                 FUN.VALUE = numeric(ncol(coefm))))
+                                 FUN.VALUE = numeric(nrcols.coefm)))
   b.star <- as.numeric(crossprod(b.star.left, b.star.right))
   bi.bstar <- t(coefm) - b.star
   chi.sq.stat <- sum(vapply(seq_len.card.cond, function(i) {
                             tcrossprod(crossprod(bi.bstar[ , i], V.t.inv[ , , i]), bi.bstar[ , i])
                             }, FUN.VALUE = numeric(1L)))
   
-  chi.sq.df <- ncol(coefm) * (pdim$nT$n - 1L)
+  chi.sq.df <- nrcols.coefm * (pdim$nT$n - 1L)
   chi.sq.p  <- pchisq(chi.sq.stat, df = chi.sq.df, lower.tail = FALSE)
   
   chi.sq.test <- list(statistic   = c("chisq" = chi.sq.stat),
