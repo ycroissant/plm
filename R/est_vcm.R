@@ -206,6 +206,8 @@ pvcm.random <- function(formula, data, effect){
     stop(error.msg)
   }
   
+  seq_len.card.cond <- seq_len(card.cond) # save as used quite often
+  
   # estimate single OLS regressions and save in a list
   ols <- est.ols(data, cond, effect, "random")
   
@@ -224,18 +226,26 @@ pvcm.random <- function(formula, data, effect){
   
   # list of model responses
   y <- lapply(ols, function(x) model.response(model.frame(x)))
-  # compute a list of XpX^-1 matrices, with 0 for lines/columns with
+  # compute a list of XpX and XpX^-1 matrices, with 0 for lines/columns with
   # NA coefficients
-  xpxm1 <- lapply(seq_len(card.cond), function(i){
+  xpx <- lapply(seq_len.card.cond, function(i){
     nms <- colnames(coefm)
     nrcols <- ncol(coefm)
-    z <- matrix(0, nrow = nrcols, ncol = nrcols,
-                   dimnames = list(nms, nms))
+    cp <- matrix(0, nrow = nrcols, ncol = nrcols,
+                dimnames = list(nms, nms))
     ii <- !coefna[i, ]
-    z[ii, ii] <- solve(crossprod(X[[i]][ii, ii, drop = FALSE]))
-    z
+    cp[ii, ii] <- crossprod(X[[i]][ii, ii, drop = FALSE])
   })
   
+  xpxm1 <- lapply(seq_len.card.cond, function(i){
+    nms <- colnames(coefm)
+    nrcols <- ncol(coefm)
+    inv <- matrix(0, nrow = nrcols, ncol = nrcols,
+                   dimnames = list(nms, nms))
+    ii <- !coefna[i, ]
+    inv[ii, ii] <- solve(xpx[[i]])
+  })
+
   # coef.mb: compute demeaned coefficients
   coef.mb <- if(!any(coefna)) {
     t(collapse::fwithin(coefm))
@@ -250,8 +260,8 @@ pvcm.random <- function(formula, data, effect){
   D1 <- tcrossprod(coef.mb) / (card.cond - 1)
   # D2: compute the second part of the variance matrix
   sigi <- vapply(ols, function(x) deviance(x) / df.residual(x), FUN.VALUE = 0.0)
-  D2 <- Reduce("+", lapply(seq_len(card.cond),
-                           function(i) sigi[i] * xpxm1[[i]])) / card.cond
+  sigi.xpxm1 <- lapply(seq_len.card.cond, function(i) sigi[i] * xpxm1[[i]])
+  D2 <- Reduce("+", sigi.xpxm1) / card.cond
   # if D1-D2 semi-definite positive, use it, otherwise use D1
   # (practical solution, e.g., advertised in Poi (2003), Greene (2018), p. 452)
   ## TODO: Poi (2003) and Greene (2018) only write about positive definite (not semi-def.)
@@ -295,7 +305,7 @@ pvcm.random <- function(formula, data, effect){
   # names(beta) <- beta.names
   
   ## notation here follows Hsiao (2014), p. 173
-  weightsn <- lapply(seq_len(card.cond),
+  weightsn <- lapply(seq_len.card.cond,
                      function(i){
                        vcovn <- vcov(ols[[i]])
                        ii <- !coefna[i, ]
@@ -310,21 +320,17 @@ pvcm.random <- function(formula, data, effect){
   
   V <- solve(Reduce("+", weightsn)) # V: left part of W_i  (in Hsiao)
   weightsn <- lapply(weightsn, function(x) V %*% x) # full W_i (in Hsiao)
-  Beta <- Reduce("+", lapply(seq_len(card.cond), function(i) tcrossprod(weightsn[[i]], t(coefm[i, ]))))
+  Beta <- Reduce("+", lapply(seq_len.card.cond, function(i) tcrossprod(weightsn[[i]], t(coefm[i, ]))))
   Beta.names <- rownames(Beta)
   Beta <- as.numeric(Beta)
   names(Beta) <- Beta.names
   
-  
   ## calc. single unbiased coefficients and variance:
   solve.Delta <- solve(Delta)
-  b.hat.coef.var <- lapply(seq_len(card.cond), function(i) {
-    Xi <- X[[i]]
-    cp.Xi <- crossprod(Xi)
-    sigi.inv <- 1/sigi[i]
+  b.hat.coef.var <- lapply(seq_len.card.cond, function(i) {
     # (Poi (2003), p. 304, 2nd line) (1st line in Poi (2003) is Hsiao (2014), p. 175)
-    sigi.inv.cp.Xi <- sigi.inv * cp.Xi
-    left<- solve(solve.Delta + sigi.inv.cp.Xi)
+    sigi.inv.cp.Xi <- 1/sigi[i] * xpx[[i]]
+    left <- solve(solve.Delta + sigi.inv.cp.Xi)
     right <- crossprod(sigi.inv.cp.Xi, coefm[i, ]) + crossprod(solve.Delta, Beta)
     b.hat.i <- crossprod(left, right)
     
@@ -355,17 +361,17 @@ pvcm.random <- function(formula, data, effect){
   
   ## Chi-sq test for homogeneous parameters (all panel-effect-specific coefficients are the same)
   #  notation resembles Greene (2018), ch. 11, p. 452
-  # TODO: this is a crude but correct implementation, improve one day
-  V.t <- lapply(seq_len(card.cond), function(i) sigi[i] * xpxm1[[i]])
-  V.t.inv <- lapply(V.t, function(i) solve(i))
-  b <- collapse::mrtl(coefm) # create list based on matrix rows
-  b.left <- solve(Reduce("+", V.t.inv))
-  b.right <- Reduce("+", lapply(seq_len(card.cond), function(i) crossprod(V.t.inv[[i]], b[[i]])))
-  b.star <- as.numeric(crossprod(b.left, b.right))
-  chi.sq.stat <- as.numeric(Reduce("+", mapply(function(coefs, mat) {
-    bi.bstar <- coefs - b.star
-    tcrossprod(crossprod(bi.bstar, mat), bi.bstar)}, # == t(b[[i]] - b.star) %*% V.t.inv[[i]] %*% (b[[i]] - b.star)
-    b, V.t.inv)))
+  dims <- dim(sigi.xpxm1[[1]])
+  V.t.inv <- vapply(sigi.xpxm1, solve, FUN.VALUE = matrix(0, nrow = dims[1], ncol = dims[2])) # V.t = sigi.xpxm1
+  b.star.left <- solve(rowSums(V.t.inv, dims = 2)) # == solve(Reduce("+", V.t.inv))
+  b.star.right <- rowSums(vapply(seq_len.card.cond,
+                                 function(i) crossprod(V.t.inv[ , , i], coefm[i , ]), 
+                                 FUN.VALUE = numeric(ncol(coefm))))
+  b.star <- as.numeric(crossprod(b.star.left, b.star.right))
+  bi.bstar <- t(coefm) - b.star
+  chi.sq.stat <- sum(vapply(seq_len.card.cond, function(i) {
+                            tcrossprod(crossprod(bi.bstar[ , i], V.t.inv[ , , i]), bi.bstar[ , i])
+                            }, FUN.VALUE = numeric(1L)))
   
   chi.sq.df <- ncol(coefm) * (pdim$nT$n - 1L)
   chi.sq.p  <- pchisq(chi.sq.stat, df = chi.sq.df, lower.tail = FALSE)
@@ -377,6 +383,7 @@ pvcm.random <- function(formula, data, effect){
                       alternative = "Heterogeneous parameters (panel-effect-specific coefficients differ)",
                       data.name   = paste(deparse(formula)))
   
+  # return object: estimations incl. variance and chi-sq test
   list(coefficients     = Beta,
        residuals        = resid,
        fitted.values    = fit,
