@@ -361,15 +361,29 @@ pvcm.random <- function(formula, data, effect){
   #  notation resembles Greene (2018), ch. 11, p. 452
   dims <- dim(sigi.xpxm1[[1]])
   V.t.inv <- vapply(sigi.xpxm1, solve, FUN.VALUE = matrix(0, nrow = dims[1], ncol = dims[2])) # V.t = sigi.xpxm1
-  b.star.left <- solve(rowSums(V.t.inv, dims = 2)) # == solve(Reduce("+", V.t.inv))
-  b.star.right <- rowSums(vapply(seq_len.card.cond,
-                                 function(i) crossprod(V.t.inv[ , , i], coefm[i , ]), 
-                                 FUN.VALUE = numeric(nrcols.coefm)))
-  b.star <- as.numeric(crossprod(b.star.left, b.star.right))
-  bi.bstar <- t(coefm) - b.star
-  chi.sq.stat <- sum(vapply(seq_len.card.cond, function(i) {
-                            tcrossprod(crossprod(bi.bstar[ , i], V.t.inv[ , , i]), bi.bstar[ , i])
-                            }, FUN.VALUE = numeric(1L)))
+
+  if(inherits(V.t.inv, "array")) {
+    b.star.left <- solve(rowSums(V.t.inv, dims = 2)) # == solve(Reduce("+", V.t.inv))
+    b.star.right <- rowSums(vapply(seq_len.card.cond,
+                                   function(i) crossprod(V.t.inv[ , , i], coefm[i , ]), 
+                                   FUN.VALUE = numeric(nrcols.coefm)))
+    b.star <- as.numeric(crossprod(b.star.left, b.star.right))
+    bi.bstar <- t(coefm) - b.star
+    chi.sq.stat <- sum(vapply(seq_len.card.cond, function(i) {
+                              tcrossprod(crossprod(bi.bstar[ , i], V.t.inv[ , , i]), bi.bstar[ , i])
+                              }, FUN.VALUE = numeric(1L)))
+  }  else {
+    ## need to special-case the intercept-only case
+    b.star.left <- solve(sum(V.t.inv))
+    b.star.right <- sum(vapply(seq_len.card.cond,
+                                   function(i) crossprod(V.t.inv[i], coefm[i , ]), 
+                                   FUN.VALUE = numeric(nrcols.coefm))) 
+    b.star <- as.numeric(crossprod(b.star.left, b.star.right))
+    bi.bstar <- t(coefm) - b.star
+    chi.sq.stat <- sum(vapply(seq_len.card.cond, function(i) {
+                                  tcrossprod(crossprod(bi.bstar[ , i], V.t.inv[i]), bi.bstar[ , i])
+                              }, FUN.VALUE = numeric(1L)))
+  }
   
   chi.sq.df <- nrcols.coefm * (pdim$nT$n - 1L)
   chi.sq.p  <- pchisq(chi.sq.stat, df = chi.sq.df, lower.tail = FALSE)
