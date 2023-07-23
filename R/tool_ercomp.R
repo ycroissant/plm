@@ -118,7 +118,6 @@ ercomp.formula <- function(object, data,
 
     # we use later a general expression for the three kinds of effects,
     # select the relevant lines
-
     therows <- switch(effect,
                       "individual" = 1:2,
                       "time"       = c(1, 3),
@@ -143,16 +142,16 @@ ercomp.formula <- function(object, data,
             s2mu <- as.numeric(crossprod(fixef(est, type = "dmean", effect = "time"))) / (TS - 1)
           sigma2 <- c(idios = s2nu, id = s2eta, time = s2mu)
           theta <- list()
-          if (effect != "time")       theta$id   <- (1 - (1 + TS * sigma2["id"]  / sigma2["idios"]) ^ (-0.5))
-          if (effect != "individual") theta$time <- (1 - (1 + N * sigma2["time"] / sigma2["idios"]) ^ (-0.5))
+          if (effect != "time")       theta$id   <- (1 - (1 + TS * sigma2["id"]   / sigma2["idios"]) ^ (-0.5))
+          if (effect != "individual") theta$time <- (1 - (1 + N  * sigma2["time"] / sigma2["idios"]) ^ (-0.5))
           if (effect == "twoways") {
             theta$total <- theta$id + theta$time - 1 +
-              (1 + N * sigma2["time"] / sigma2["idios"] +
-                 TS * sigma2["id"]   / sigma2["idios"]) ^ (-0.5)
+                                (1 + N  * sigma2["time"] / sigma2["idios"] +
+                                     TS * sigma2["id"]   / sigma2["idios"]) ^ (-0.5)
             names(theta$total) <- "total"
             # tweak for numerical precision:
             # if either theta$id or theta$time is 0 => theta$total must be zero
-            # but in calculation above some precision is lost
+            # but in calculation above some precision is lost, so force to zero
             if(    isTRUE(all.equal(sigma2[["time"]], 0, check.attributes = FALSE))
                 || isTRUE(all.equal(sigma2[["id"]],   0, check.attributes = FALSE)))
               theta$total <- 0
@@ -187,11 +186,10 @@ ercomp.formula <- function(object, data,
             names(theta$total) <- paste0(names(theta$id), "-", names(theta$time))
             # tweak for numerical precision:
             # if either theta$id or theta$time is 0 => theta$total must be zero
-            # but in calculation above some precision is lost
+            # but in calculation above some precision is lost, so force to zero
             if(    isTRUE(all.equal(sigma2[["time"]], 0, check.attributes = FALSE))
                 || isTRUE(all.equal(sigma2[["id"]],   0, check.attributes = FALSE)))
               theta$total <- 0
-          
           }
         }
         if (effect != "twoways") theta <- theta[[1L]]
@@ -231,7 +229,7 @@ ercomp.formula <- function(object, data,
         return(result)
     } ## end HT
     
-    # method argument is used, check its validity and set the relevant
+    # 'method' argument is used, check its validity and set the relevant
     # models and dfcor
     if (! is.null(method)){
         if (! method %in% c("swar", "walhus", "amemiya"))
@@ -409,11 +407,11 @@ ercomp.formula <- function(object, data,
     # the "classic" error component model
     Z <- model.matrix(data)
     O <- nrow(Z)
-    K <- ncol(Z) - 1  # INTERCEPT
+    K <- ncol(Z) - 1L  # INTERCEPT
     pdim <- pdim(data)
     N <- pdim$nT$n
     TS <- pdim$nT$T
-    NTS <- N * (effect != "time") + TS * (effect != "individual") - 1 * (effect == "twoways")
+    NTS <- N * (effect != "time") + TS * (effect != "individual") - 1L * (effect == "twoways")
     Tn <- pdim$Tint$Ti
     Nt <- pdim$Tint$nt
     # Estimate the relevant models
@@ -471,12 +469,12 @@ ercomp.formula <- function(object, data,
         if (dfcor[1L] == 2L) M["w", "nu"] <- M["w", "nu"] - NTS - KS[1L]
         if (effect != "time"){
             M["w", "eta"] <- 0
-            M["id", "nu"] <- if(dfcor[2L] == 2L) { N - KS[2L] - 1 } else  N
+            M["id", "nu"] <- if(dfcor[2L] == 2L) { N - KS[2L] - 1L } else  N
             M["id", "eta"] <- barT * M["id", "nu"]
         }
         if (effect != "individual"){
             M["w", "mu"] <- 0
-            M["ts", "nu"] <- if(dfcor[2L] == 2L) { TS - KS[3L] - 1 } else  TS
+            M["ts", "nu"] <- if(dfcor[2L] == 2L) { TS - KS[3L] - 1L } else  TS
             M["ts", "mu"] <- N * M["ts", "nu"]
         }
         if (effect == "twoways") {
@@ -622,7 +620,7 @@ ercomp.formula <- function(object, data,
     } ## END of General case, compute the unbiased version of the estimators
     sigma2 <- as.numeric(solve(M[therows, therows], quad[therows]))
     names(sigma2) <- c("idios", "id", "time")[therows]
-    sigma2[sigma2 < 0] <- 0
+    sigma2[sigma2 < 0] <- 0 # if negative variance estimate, set to zero
     theta <- list()
     if (! balanced){
         xindex <- unclass(index(data)) # unclass for speed
