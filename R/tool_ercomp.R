@@ -269,6 +269,7 @@ ercomp.formula <- function(object, data,
     # The nested error component model
     if (effect == "nested"){
         xindex <- unclass(attr(data, "index")) # unclass for speed
+        if(length(xindex) < 3L) stop("the nested error component model requires three-indexed data.")
         ids <- xindex[[1L]]
         tss <- xindex[[2L]]
         gps <- xindex[[3L]]
