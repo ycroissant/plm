@@ -83,7 +83,7 @@ coefficients),}
 
 separate OLS estimations only (\code{model = "within"}):
 \item{std.error}{a data frame containing standard errors for all
-coefficients for each individual.}
+coefficients for each single regression.}
 }
 \description{
 Estimators for random and fixed effects models with variable coefficients.
