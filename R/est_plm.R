@@ -704,20 +704,3 @@ r.squared_no_intercept <- function(object, model = NULL,
     return(R2)
 }
 
-
-
-# describe function: extract characteristics of plm model
-describe <- function(x,
-                     what = c("model", "effect", "random.method",
-                              "inst.method", "transformation", "ht.method")){
-  what <- match.arg(what)
-  cl <- x$args
-  switch(what,
-         "model"          = if(!is.null(cl$model))          cl$model          else "within",
-         "effect"         = if(!is.null(cl$effect))         cl$effect         else "individual",
-         "random.method"  = if(!is.null(cl$random.method))  cl$random.method  else "swar",
-         "inst.method"    = if(!is.null(cl$inst.method))    cl$inst.method    else "bvk",
-         "transformation" = if(!is.null(cl$transformation)) cl$transformation else "d",
-         "ht.method"      = if(!is.null(cl$ht.method))      cl$ht.method      else "ht"
-         )
-}

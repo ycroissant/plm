@@ -14,6 +14,7 @@
 ## - myvar : calculates variance with NA removal, checks if input is constant (also for factor and character)
 ## - pvar : checks if input varies in individual / time dimension
 ## - make.dummies : create a contrast-coded dummy matrix from a factor
+## - describe : extract characteristics of plm and other model objects
 
 trace <- function(x) sum(diag(x))
 
@@ -815,3 +816,17 @@ gettvalue <- function(x, coefname) {
   return(tvalue)
 }
 
+# describe function: extract characteristics of plm and other model objects
+describe <- function(x, what = c("model", "effect", "random.method",
+                                 "inst.method", "transformation", "ht.method")){
+  what <- match.arg(what)
+  cl <- x$args
+  switch(what,
+         "model"          = if(!is.null(cl$model))          cl$model          else "within",
+         "effect"         = if(!is.null(cl$effect))         cl$effect         else "individual",
+         "random.method"  = if(!is.null(cl$random.method))  cl$random.method  else "swar",
+         "inst.method"    = if(!is.null(cl$inst.method))    cl$inst.method    else "bvk",
+         "transformation" = if(!is.null(cl$transformation)) cl$transformation else "d",
+         "ht.method"      = if(!is.null(cl$ht.method))      cl$ht.method      else "ht"
+  )
+}
