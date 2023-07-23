@@ -153,7 +153,7 @@ pvcm.within <- function(formula, data, effect){
     coef <- as.data.frame(coef)
     
     # extract residuals and make pseries:
-    residuals <- unlist(lapply(ols, residuals))
+    residuals <- unlist(sapply(ols, residuals, simplify = FALSE, USE.NAMES = FALSE), use.names = TRUE)
     residuals <- add_pseries_features(residuals, index)
     
     # extract standard errors:
@@ -161,10 +161,8 @@ pvcm.within <- function(formula, data, effect){
     std <- matrix(unlist(lapply(vcov, function(x) sqrt(diag(x)))), nrow = length(ols), byrow = TRUE)
     dimnames(std)[1:2] <- list(names(vcov), colnames(vcov[[1L]]))
     std <- as.data.frame(std)
-    # ssr <- as.numeric(crossprod(residuals)) # not used here, so commented
-    y <- unlist(split(model.response(data), cond))
+    y <- unlist(split(model.response(data), cond)) # TODO: check if collapse::rsplit can be used
     fitted.values <- y - residuals
-    tss <- tss(y)
     df.resid <- pdim$nT$N - card.cond * ncol(coef)
     nopool <- list(coefficients  = coef,
                    residuals     = residuals,
@@ -186,7 +184,7 @@ pvcm.random <- function(formula, data, effect){
   id <- index[[1L]]
   time <- index[[2L]]
   pdim <- pdim(data)
-  N <- nrow(data)
+  
   if (effect == "time"){
     cond <- time
     other <- id
@@ -228,13 +226,11 @@ pvcm.random <- function(formula, data, effect){
   # same without the covariates with NA coefficients
   # Xna <- lapply(seq_len(nrow(coefm)), function(i) X[[i]][ , !coefna[i, ], drop = FALSE])
   
-  # list of model responses
-  y <- lapply(ols, function(x) model.response(model.frame(x)))
   # compute a list of XpX and XpX^-1 matrices, with 0 for lines/columns with
   # NA coefficients
   xpx <- lapply(seq_len.card.cond, function(i){
     cp <- matrix(0, nrow = nrcols.coefm, ncol = nrcols.coefm,
-                dimnames = list(colnms.coefm, colnms.coefm))
+                    dimnames = list(colnms.coefm, colnms.coefm))
     ii <- !coefna[i, ]
     cp[ii, ii] <- crossprod(X[[i]][ii, ii, drop = FALSE])
   })
@@ -277,6 +273,9 @@ pvcm.random <- function(formula, data, effect){
   #   diag(sigi[i], nrow = nrow(Xi)) + crossprod(t(Xi), tcrossprod(Delta, Xi))
   # })
   # 
+  # # list of model responses
+  # y <- lapply(ols, function(x) model.response(model.frame(x)))
+  #
   # # compute X'Omega X and X'Omega y for each individual
   # XyOmXy <- lapply(seq_len(card.cond), function(i){
   #   ii <- !coefna[i, ]
@@ -348,22 +347,23 @@ pvcm.random <- function(formula, data, effect){
   # extract single coeffs, variance, std. error
   b.hat.i     <- t(collapse::qM(lapply(b.hat.coef.var, "[[", 1L)))
   var.b.hat.i <-                lapply(b.hat.coef.var, "[[", 2L)
-  rm(b.hat.coef.var)
+  rm(b.hat.coef.var) # not needed anymore (rm to save space)
   std.err.b.hat.i <- lapply(var.b.hat.i, function(i) sqrt(diag(i)))
   std.err.b.hat.i <- t(collapse::qM(std.err.b.hat.i))
   rownames(std.err.b.hat.i) <- rownames(b.hat.i) <- names(var.b.hat.i) <- names(sigi)
   
   fit <- as.numeric(tcrossprod(Beta, model.matrix(data)))
   resid <- pmodel.response(data) - fit
-  df.resid <- N - nrcols.coefm
+  df.resid <- pdim$nT$N - nrcols.coefm
+
   
   ## Chi-sq test for homogeneous parameters (all panel-effect-specific coefficients are the same)
   #  notation resembles Greene (2018), ch. 11, p. 452
-  dims <- dim(sigi.xpxm1[[1]])
-  V.t.inv <- vapply(sigi.xpxm1, solve, FUN.VALUE = matrix(0, nrow = dims[1], ncol = dims[2])) # V.t = sigi.xpxm1
+  dims <- dim(sigi.xpxm1[[1L]])
+  V.t.inv <- vapply(sigi.xpxm1, solve, FUN.VALUE = matrix(0, nrow = dims[1L], ncol = dims[2L])) # V.t = sigi.xpxm1
 
   if(inherits(V.t.inv, "array")) {
-    b.star.left <- solve(rowSums(V.t.inv, dims = 2)) # == solve(Reduce("+", V.t.inv))
+    b.star.left <- solve(rowSums(V.t.inv, dims = 2L)) # == solve(Reduce("+", V.t.inv))
     b.star.right <- rowSums(vapply(seq_len.card.cond,
                                    function(i) crossprod(V.t.inv[ , , i], coefm[i , ]), 
                                    FUN.VALUE = numeric(nrcols.coefm)))
