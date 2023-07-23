@@ -16,7 +16,7 @@
 ## - make.dummies : create a contrast-coded dummy matrix from a factor
 ## - describe : extract characteristics of plm and other model objects
 
-trace <- function(x) sum(diag(x))
+trace <- function(x, names = FALSE) sum(diag(x, names = names)) # opposite default for names for speed
 
 is.constant <- function(x) (max(x) - min(x)) < sqrt(.Machine$double.eps)
 
