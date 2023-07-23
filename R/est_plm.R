@@ -52,6 +52,12 @@ starX <- function(formula, data, model, rhs = 1, effect){
 #' \insertCite{NERLO:71}{plm} (see below for Hausman-Taylor instrumental
 #' variable case).
 #' 
+#' The nested random effect model (\insertCite{BALT:SONG:JUNG:01}{plm}) 
+#' is estimated by setting `model = "random"` and `effect = "nested"`, 
+#' requiring the data to be indexed by a third index  in which the "individual" 
+#' dimension is nested (see section *Examples* and the vignette 
+#' "Estimation of error components models with the plm function".)
+#' 
 #' For first--difference models, the intercept is maintained (which
 #' from a specification viewpoint amounts to allowing for a trend in
 #' the levels model). The user can exclude it from the estimated
