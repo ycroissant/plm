@@ -14,7 +14,7 @@ Changes relative to CRAN-released version 2.6-2:
 * `pvcm`: 
   * implemented parameter homogeneity test for variable coefficients model
     (`model = "random"`), printed when summary is printed.
-  * implemented calculation of single unbiased coefficients (incl. variance/std.
+  * implemented estimation of single unbiased coefficients (incl. variance/std.
     error) for `model = "random"`, can be extracted via 
     `return_value$single.coef`, `return_value$single.vcov`, 
     `return_value$single.std.error`, respectively.
