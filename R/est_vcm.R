@@ -260,10 +260,12 @@ pvcm.random <- function(formula, data, effect){
   D2 <- Reduce("+", sigi.xpxm1) / card.cond
   # if D1-D2 semi-definite positive, use it, otherwise use D1
   # (practical solution, e.g., advertised in Poi (2003), Greene (2018), p. 452)
-  ## TODO: Poi (2003) and Greene (2018) only write about positive definite (not semi-def.)
-  ##       Hsiao (2014), p. 174 writes about D1-D2 possibly being not "non-negative definite"
-  eig <- all(eigen(D1 - D2)$values >= 0) 
-  Delta <- if(eig) { D1 - D2 } else D1
+  ## Poi (2003) and Greene (2018) only write about positive definite (not semi-def.)
+  ## Hsiao (2014), p. 174 writes about D1-D2 possibly being not "non-negative definite"
+  ## -> stick with pos. semi-def.
+  Delta <- D1 - D2
+  eig <- all(eigen(Delta)$values >= 0)
+  Delta <- if(!eig) D1
 
   ### these calculations are superfluous because down below Beta is calculated
   ### via weightsn etc.
