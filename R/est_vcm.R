@@ -265,7 +265,7 @@ pvcm.random <- function(formula, data, effect){
   ## -> stick with pos. semi-def.
   Delta <- D1 - D2
   eig <- all(eigen(Delta)$values >= 0)
-  Delta <- if(!eig) D1
+  if(!eig) Delta <- D1
 
   ### these calculations are superfluous because down below Beta is calculated
   ### via weightsn etc.
@@ -317,8 +317,8 @@ pvcm.random <- function(formula, data, effect){
                        z
                      })
   
-  V <- solve(Reduce("+", weightsn)) # V: left part of W_i  (in Hsiao)
-  weightsn <- lapply(weightsn, function(x) V %*% x) # full W_i (in Hsiao)
+  V <- solve(Reduce("+", weightsn)) # V = var(Beta-hat): left part of W_i in Hsiao (6.2.9)
+  weightsn <- lapply(weightsn, function(x) crossprod(V, x)) # full W_i in Hsiao (6.2.9)
   Beta <- Reduce("+", lapply(seq_len.card.cond, function(i) tcrossprod(weightsn[[i]], t(coefm[i, ]))))
   Beta.names <- rownames(Beta)
   Beta <- as.numeric(Beta)
