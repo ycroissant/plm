@@ -12,7 +12,9 @@
 #' random if `model = "random"` and the model by 
 #' \insertCite{SWAM:70;textual}{plm} is estimated; it is a generalized least
 #' squares model which uses the results of the OLS models estimated per 
-#' individual/time dimension. The corresponding unbiased single coefficients, 
+#' individual/time dimension (coefficient estimates are weighted averages of the
+#' single OLS estimates with weights inversely proportional to the 
+#' variance-covariance matrices). The corresponding unbiased single coefficients, 
 #' variance-covariance matrices, and standard errors of the random coefficients 
 #' model are available in the returned object (see *Value*).
 #' 
@@ -75,6 +77,7 @@
 #' @references \insertRef{SWAM:71}{plm}
 #' @references \insertRef{GREE:18}{plm}
 #' @references \insertRef{POI:03}{plm}
+#' @references \insertRef{KLEI:ZEIL:10}{plm}
 #'
 #' @keywords regression
 #' @examples
@@ -104,6 +107,9 @@
 #' # replicate Swamy (1971), p. 166, table 5.2
 #' data(Grunfeld, package = "AER") # 11 firm Grunfeld data needed from package AER
 #' gw <- pvcm(invest ~ value + capital, data = Grunfeld, index = c("firm", "year"))
+#' # close replication of Swamy (1970), (7.4) [remaining diffs likely due to less 
+#' # precise numerical methods in the 1970, as supposed in Kleiber/Zeileis (2010), p. 9]
+#' gr <- pvcm(invest ~ value + capital, data = Grunfeld, index = c("firm", "year"), model = "random")
 #' }
 #' 
 pvcm <- function(formula, data, subset, na.action, effect = c("individual", "time"),
