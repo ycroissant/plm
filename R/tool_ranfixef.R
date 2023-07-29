@@ -535,7 +535,7 @@ ranef.plm <- function(object, effect = NULL, ...) {
 #' mod_fe_int <- within_intercept(gi, return.model = TRUE)
 #' summary(mod_fe_int)
 #' # replicates Stata's robust standard errors
-#' summary(mod_fe_int, vcvov = function(x) vcovHC(x, type = "sss")) 
+#' summary(mod_fe_int, vcov = function(x) vcovHC(x, type = "sss")) 
 # 
 within_intercept <- function(object, ...) {
   UseMethod("within_intercept")

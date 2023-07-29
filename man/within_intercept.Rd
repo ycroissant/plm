@@ -96,7 +96,7 @@ within_intercept(gi, vcov = function(x) vcovHC(x, method="arellano", type="HC0")
 mod_fe_int <- within_intercept(gi, return.model = TRUE)
 summary(mod_fe_int)
 # replicates Stata's robust standard errors
-summary(mod_fe_int, vcvov = function(x) vcovHC(x, type = "sss")) 
+summary(mod_fe_int, vcov = function(x) vcovHC(x, type = "sss")) 
 }
 \references{
 \insertAllCited{}
