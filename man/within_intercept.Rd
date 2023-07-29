@@ -49,7 +49,7 @@ relationship).
 computationally more demanding than just taking the weighted
 mean. However, with \code{within_intercept} one also gets the
 associated standard error and it is possible to get an overall
-intercept for twoway fixed effect models.
+intercept for two-way fixed effect models.
 
 Users can set argument \code{vcov} to a function to calculate a
 specific (robust) variance--covariance matrix and get the
@@ -95,7 +95,7 @@ within_intercept(gi, vcov = function(x) vcovHC(x, method="arellano", type="HC0")
 ## have a model returned
 mod_fe_int <- within_intercept(gi, return.model = TRUE)
 summary(mod_fe_int)
-# replicates Stata's robust standard errors
+# replicates Stata's robust standard errors exactly as model is with intercept
 summary(mod_fe_int, vcov = function(x) vcovHC(x, type = "sss")) 
 }
 \references{
