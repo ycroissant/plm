@@ -160,44 +160,52 @@ summary(plm_grunfeld_re_nerlove_tw_unbal)
 # 
 # plm_fe_nlswork <- plm(form_nls_ex2, data = pnlswork, model = "within")
 
-# Stata's results:
+## Stata's results:
+##
+## R-sq:
+##   within  = 0.1727
+##   between = 0.3505
+##   overall = 0.262
+
+## F(8,23386) = 610.12
+## Prob > F = 0.0000
+
+## ln_wage                       Coef.       Std. Err.
+##-------------------------------------------------------
+## grade                           0         (omitted)
+## age                         .0359987      .0033864
+## c.age#c.age                -.000723       .0000533
+## ttl_exp                     .0334668      .0029653
+## c.ttl_exp#c.ttl_exp         .0002163      .0001277
+## tenure                      .0357539      .0018487
+## c.tenure#c.tenure          -.0019701      .000125
+##   race
+## black                           0         (omitted)
+## not_smsa                   -.0890108      .0095316
+## south                      -.0606309      .0109319
+## _cons                      1.03732        .0485546
+
+## resembles Stata (ex. 2, p. 14)
+## => coefficients, std.errors, R^2 (=R-sq within), F => correct
+## (NB: Stata outputs an "artificial" constant for FE models, see below)
+# summary(plm_fe_nlswork)
+
+## Stata outputs a constant for the FE model which is computed as the weighted average of the individual constants
+## see http://www.stata.com/support/faqs/statistics/intercept-in-fixed-effects-model/
+## However, Stata also outputs std.err, t-test and p-value for the artificial constant
+## gretl mimics Stata: see gretl user's guide example p. 160-161 (example 18.1)
+## http://gretl.sourceforge.net/gretl-help/gretl-guide.pdf
+## http://lists.wfu.edu/pipermail/gretl-devel/2013-May/004459.html
+# within.intercept(plm_fe_nlswork)
+# const_fe_Stata_gretl <- weighted.mean(fixef(plm_fe_nlswork) , as.numeric(table(index(plm_fe_nlswork)[[1]])))
 #
-# R-sq:                                          
-#   within  = 0.1727                               
-#   between = 0.3505                               
-#   overall = 0.262
+## replicate robust standard errors fully (p. 17 on https://www.stata.com/manuals/xtxtreg.pdf)
+## best seen for std. errors of estimates for not_smsa and south
+# plm_fe_nlswork_Int <- within_intercept(plm_fe_nlswork, return.model = TRUE)
+# summary(plm_fe_nlswork_Int, vcov = function(x) vcovHC(x, type = "sss"))
 
-# F(8,23386) = 610.12
-# Prob > F = 0.0000
 
-# ln_wage                       Coef.       Std. Err.
-#-------------------------------------------------------
-# grade                           0         (omitted)
-# age                         .0359987      .0033864    
-# c.age#c.age                -.000723       .0000533
-# ttl_exp                     .0334668      .0029653    
-# c.ttl_exp#c.ttl_exp         .0002163      .0001277    
-# tenure                      .0357539      .0018487    
-# c.tenure#c.tenure          -.0019701      .000125   
-#   race
-# black                           0         (omitted)
-# not_smsa                   -.0890108      .0095316   
-# south                      -.0606309      .0109319
-# _cons                      1.03732        .0485546
 
-# resembles Stata (ex. 2, p. 14)
-# => coefficients, std.errors, R^2 (=R-sq within), F => correct
-# (NB: Stata outputs an "artificial" constant for FE models, see below)
-#summary(plm_fe_nlswork)
-
-# Stata outputs a constant for the FE model which is computed as the weighted average of the individual constants
-# see http://www.stata.com/support/faqs/statistics/intercept-in-fixed-effects-model/
-# However, Stata also outputs std.err, t-test and p-value for the artificial constant
-# gretl mimics Stata: see gretl user's guide example p. 160-161 (example 18.1)
-# http://gretl.sourceforge.net/gretl-help/gretl-guide.pdf
-# http://lists.wfu.edu/pipermail/gretl-devel/2013-May/004459.html
-#within.intercept(plm_fe_nlswork)
-#const_fe_Stata_gretl <- weighted.mean(fixef(plm_fe_nlswork) , as.numeric(table(index(plm_fe_nlswork)[[1]])))
 
 # RE estimator
 # note Stata 14 uses by default a different method compared to plm's Swamy-Arora variance component estimator
