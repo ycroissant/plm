@@ -1474,7 +1474,7 @@ plm()): Between, between, Sum, Within.
 
 ***
 
-Change since version 1-1.4
+# Change since version 1-1.4
 
 * an 'args' argument is added to plm objects, and the internal
     function relies now on it (and not on the call as previously).
