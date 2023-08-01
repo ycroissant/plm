@@ -232,20 +232,22 @@ pvcm.random <- function(formula, data, effect){
   # same without the covariates with NA coefficients
   # Xna <- lapply(seq_len(nrow(coefm)), function(i) X[[i]][ , !coefna[i, ], drop = FALSE])
   
-  # compute a list of XpX and XpX^-1 matrices, with 0 for lines/columns with
-  # NA coefficients
+  # compute a list of XpX and XpX^-1 matrices, with 0 for lines/columns 
+  # corresponding to the NA coefficients of coefm
   xpx <- lapply(seq_len.card.cond, function(i){
     cp <- matrix(0, nrow = nrcols.coefm, ncol = nrcols.coefm,
                     dimnames = list(colnms.coefm, colnms.coefm))
     ii <- !coefna[i, ]
     cp[ii, ii] <- crossprod(X[[i]][ii, ii, drop = FALSE])
+    cp
   })
   
   xpxm1 <- lapply(seq_len.card.cond, function(i){
     inv <- matrix(0, nrow = nrcols.coefm, ncol = nrcols.coefm,
                    dimnames = list(colnms.coefm, colnms.coefm))
     ii <- !coefna[i, ]
-    inv[ii, ii] <- solve(xpx[[i]])
+    inv[ii, ii] <- solve(xpx[[i]][ii, ii])
+    inv
   })
 
   # coef.mb: compute demeaned coefficients
@@ -277,23 +279,28 @@ pvcm.random <- function(formula, data, effect){
   ### via weightsn etc.
   # # compute the Omega matrix for each individual
   # Omegan <- lapply(seq_len(card.cond), function(i) {
-  #   Xi <- X[[i]]
+  #   #    Xi <- X[[i]] ## this Xi has a column for the NA coef
+  #   ### adding these three lines leads to matching the "weightsn" approach
+  #   Xi <- matrix(0, nrow(X[[i]]), ncol(X[[i]]))
+  #   ii <- !coefna[i, ]
+  #   Xi[ , ii] <- X[[i]][, ii]
+  #   
   #   diag(sigi[i], nrow = nrow(Xi)) + crossprod(t(Xi), tcrossprod(Delta, Xi))
   # })
   # 
   # # list of model responses
   # y <- lapply(ols, function(x) model.response(model.frame(x)))
-  #
+  # 
   # # compute X'Omega X and X'Omega y for each individual
   # XyOmXy <- lapply(seq_len(card.cond), function(i){
   #   ii <- !coefna[i, ]
   #   Xn <- X[[i]][ , ii, drop = FALSE]
   #   yn <- y[[i]]
-  #   
+  # 
   #   # pre-allocate matrices
   #   XnXn <- matrix(0, ncol(coefm), ncol(coefm), dimnames = list(colnames(coefm), colnames(coefm)))
   #   Xnyn <- matrix(0, ncol(coefm), 1L,          dimnames = list(colnames(coefm), "y"))
-  #   
+  # 
   #   solve_Omegan_i <- solve(Omegan[[i]])
   #   CP.tXn.solve_Omegan_i <- crossprod(Xn, solve_Omegan_i)
   #   XnXn[ii, ii] <- CP.tXn.solve_Omegan_i %*% Xn # == t(Xn) %*% solve(Omegan[[i]]) %*% Xn
@@ -304,31 +311,28 @@ pvcm.random <- function(formula, data, effect){
   # # Compute coefficients
   # # extract and reduce XnXn (pos 1 in list's element) and Xnyn (pos 2)
   # # (position-wise extraction is faster than name-based extraction)
-  # XpXm1 <-     solve(Reduce("+", vapply(XyOmXy, "[", 1L, FUN.VALUE = list(length(XyOmXy)))))
-  # beta  <- XpXm1 %*% Reduce("+", vapply(XyOmXy, "[", 2L, FUN.VALUE = list(length(XyOmXy))))
+  #  XpXm1 <-     solve(Reduce("+", vapply(XyOmXy, "[", 1L, FUN.VALUE = list(length(XyOmXy)))))
+  #  beta  <- XpXm1 %*% Reduce("+", vapply(XyOmXy, "[", 2L, FUN.VALUE = list(length(XyOmXy))))
   # 
   # beta.names <- rownames(beta)
   # beta <- as.numeric(beta)
   # names(beta) <- beta.names
-  
+
   ## notation here follows Hsiao (2014), p. 173
   weightsn <- lapply(seq_len.card.cond,
                      function(i){
                        vcovn <- vcov(ols[[i]])
                        ii <- !coefna[i, ]
                        wn <- solve((vcovn + Delta)[ii, ii, drop = FALSE])
-                       z <- matrix(0, nrow = nrcols.coefm, ncol = nrcols.coefm,
-                                      dimnames = list(colnms.coefm, colnms.coefm))
+                       z <- matrix(0, nrow = nrcols.coefm, ncol = nrcols.coefm)
                        z[ii, ii] <- wn
                        z
                      })
   
   V <- solve(Reduce("+", weightsn)) # V = var(Beta-hat): left part of W_i in Hsiao (6.2.9)
   weightsn <- lapply(weightsn, function(x) crossprod(V, x)) # full W_i in Hsiao (6.2.9)
-  Beta <- Reduce("+", lapply(seq_len.card.cond, function(i) tcrossprod(weightsn[[i]], t(coefm[i, ]))))
-  Beta.names <- rownames(Beta)
-  Beta <- as.numeric(Beta)
-  names(Beta) <- Beta.names
+  Beta <- as.numeric(Reduce("+", lapply(seq_len.card.cond, function(i) tcrossprod(weightsn[[i]], t(coefm[i, ])))))
+  names(Beta) <- colnames(coefm)
   
   ## calc. single unbiased coefficients and variance:
   solve.Delta <- solve(Delta)
@@ -368,8 +372,14 @@ pvcm.random <- function(formula, data, effect){
   ## Chi-sq test for homogeneous parameters (all panel-effect-specific coefficients are the same)
   #  notation resembles Greene (2018), ch. 11, p. 452
   dims <- dim(sigi.xpxm1[[1L]])
-  V.t.inv <- vapply(sigi.xpxm1, solve, FUN.VALUE = matrix(0, nrow = dims[1L], ncol = dims[2L])) # V.t = sigi.xpxm1
-
+  
+  V.t.inv <- vapply(seq_len.card.cond, function(i) {
+                V.t.inv.i <- matrix(0, nrow = nrcols.coefm, ncol = nrcols.coefm)
+                ii <- !coefna[i, ]
+                V.t.inv.i[ii, ii] <- solve(sigi.xpxm1[[i]][ii, ii])
+                V.t.inv.i},
+              FUN.VALUE = matrix(0, nrow = dims[1L], ncol = dims[2L])) # V.t = sigi.xpxm1
+  
   if(inherits(V.t.inv, "array")) {
     b.star.left <- solve(rowSums(V.t.inv, dims = 2L)) # == solve(Reduce("+", V.t.inv))
     b.star.right <- rowSums(vapply(seq_len.card.cond,
@@ -507,3 +517,4 @@ est.ols <- function(mf, cond, effect, model) {
       r})
   ols
 }
+

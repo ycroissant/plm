@@ -92,3 +92,13 @@ print(mod.poi$single.std.error)
 #  ## 3   29.580826 0.01347698 0.02869037
 #  ## 4    9.510794 0.01181795 0.03402793
 #  ## 5   42.125236 0.01819023 0.05692992
+
+## run test for a model with NA coeffs
+pder.avail <- if(!requireNamespace("pder", quietly = TRUE)) FALSE else TRUE
+if(pder.avail) {
+  # from Croissant/Millo (2019), ex. 8.1, p. 189
+  data("Dialysis", package = "pder")
+  rndcoef <- pvcm(log(diffusion / (1 - diffusion)) ~ trend + trend:regulation, data = Dialysis, model="random")
+  summary(rndcoef)
+}
+
