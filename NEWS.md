@@ -26,7 +26,9 @@ Changes relative to CRAN-released version 2.6-2:
 ### Fixes:
 * `phtest(<.>, method = "aux")` (regression-based Hausman test): errored in case of
   `NA`s and one independent variable (reported by Kurt Schmidheiny).
-* `pvcm`: return value now always has a single valid value in `$args$model`.
+* `pvcm`:
+    * return value now always has a single valid value in `$args$model`.
+    * tiny fix for coefficient estimation in case of NA coefficients.
 
 ### Others:
 * Compatibility for `dplyr::arange` by supplying a `pdata.frame` method for `arrange`
