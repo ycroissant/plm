@@ -9,7 +9,7 @@
 \alias{print.pdata.frame}
 \alias{as.list.pdata.frame}
 \alias{as.data.frame.pdata.frame}
-\title{data.frame for panel data}
+\title{pdata.frame: a data.frame for panel data}
 \usage{
 pdata.frame(
   x,
@@ -20,7 +20,8 @@ pdata.frame(
   replace.non.finite = FALSE,
   drop.NA.series = FALSE,
   drop.const.series = FALSE,
-  drop.unused.levels = FALSE
+  drop.unused.levels = FALSE,
+  ...
 )
 
 \method{$}{pdata.frame}(x, name) <- value
@@ -78,6 +79,8 @@ of factors are to be dropped (defaults to \code{FALSE}) (unused
 levels are always dropped from variables serving to construct
 the index variables),}
 
+\item{\dots}{further arguments passed on to internal usage of  \code{data.frame}.}
+
 \item{name}{the name of the \code{data.frame},}
 
 \item{value}{the name of the variable to include,}
@@ -89,8 +92,6 @@ the index variables),}
 \item{drop}{see \code{\link[=Extract]{Extract()}},}
 
 \item{y}{one of the columns of the \code{data.frame},}
-
-\item{\dots}{further arguments.}
 
 \item{keep.attributes}{logical, only for as.list and as.data.frame
 methods, indicating whether the elements of the returned
@@ -177,7 +178,7 @@ lapply(as.list(Wag[ , c("ed", "lwage")], keep.attributes = TRUE), lag)
 'pdata.frame' (and other objects), \code{\link[=pdim]{pdim()}} to check the
 dimensions of a 'pdata.frame' (and other objects), \code{\link[=pvar]{pvar()}} to
 check for each variable if it varies cross-sectionally and over
-time.  To check if the time periods are consecutive per
+time. To check if the time periods are consecutive per
 individual, see \code{\link[=is.pconsecutive]{is.pconsecutive()}}.
 }
 \author{

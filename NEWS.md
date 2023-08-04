@@ -41,9 +41,9 @@ Changes relative to CRAN-released version 2.6-2:
    * does not stop anymore when a pdata.frame is input, just continues to create
      a new pdata.frame from input.
    * warns if pdata.frame with non-compliant features is input.
-* `plm()` passes on ellipsis ("dots" (`...`)) to internal pdata.frame creation
-  (if pdata.frame is to be created internally due to non-pdata.frame passed in 
-  `data` argument).
+* `plm()` passes on ellipsis ("dots" (`...`)) to internal pdata.frame creation, 
+  intern passed on to internal usage of `data.frame` (if pdata.frame is to be 
+  created internally due to non-pdata.frame passed in `plm()`s `data` argument).
 * `pvar.pseries`: when printed, original variable's name is printed 
   (not always `x` anymore).
 * `pvcm`: more informative about non-estimable models:

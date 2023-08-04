@@ -61,7 +61,7 @@ fancy.row.names <- function(index, sep = "-") {
 
 
 
-#' data.frame for panel data
+#' pdata.frame: a data.frame for panel data
 #' 
 #' An object of class 'pdata.frame' is a data.frame with an index
 #' attribute that describes its individual and time dimensions.
@@ -141,7 +141,7 @@ fancy.row.names <- function(index, sep = "-") {
 #'     as.data.frame),
 #' @param name the name of the `data.frame`,
 #' @param value the name of the variable to include,
-#' @param \dots further arguments.
+#' @param \dots further arguments passed on to internal usage of  `data.frame`.
 #' @return a `pdata.frame` object: this is a `data.frame` with an
 #'     `index` attribute which is a `data.frame` with two variables,
 #'     the individual and the time indexes, both being factors.  The
@@ -153,7 +153,7 @@ fancy.row.names <- function(index, sep = "-") {
 #'     'pdata.frame' (and other objects), [pdim()] to check the
 #'     dimensions of a 'pdata.frame' (and other objects), [pvar()] to
 #'     check for each variable if it varies cross-sectionally and over
-#'     time.  To check if the time periods are consecutive per
+#'     time. To check if the time periods are consecutive per
 #'     individual, see [is.pconsecutive()].
 #' @keywords classes
 #' @examples
@@ -181,7 +181,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
                         stringsAsFactors = FALSE,
                         replace.non.finite = FALSE,
                         drop.NA.series = FALSE, drop.const.series = FALSE,
-                        drop.unused.levels = FALSE) {
+                        drop.unused.levels = FALSE, ...) {
 
     if(inherits(x, "pdata.frame")) {
       if(!is.pdata.frame(x)) {
@@ -201,7 +201,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     # prune input: x is supposed to be a plain data.frame. Other classes building
     # on top of R's data frame can inject attributes etc. that confuse functions
     # in pkg plm.
-    x <- data.frame(x)
+    x <- data.frame(x, ...)
     
     # if requested: coerce character vectors to factors
     if (stringsAsFactors) {
@@ -1530,10 +1530,12 @@ arrange.pdata.frame <- function(.data, ..., .by_group = FALSE, .locale = NULL) {
   # function signature of dplyr:::arrange.data.frame
   idx <- index(.data)
   ag.data <- NextMethod()
-  ag.idx <- arrange(idx, ..., .by_group = FALSE, .locale = NULL) # dispatched to arrange.pindex
+  ag.idx <- arrange(idx, ..., .by_group = FALSE, .locale = NULL) # dispatches to arrange.pindex
   attr(ag.data, "index") <- ag.idx
   ag.data
 }
+
+
 
 #' @exportS3Method dplyr::arrange pindex
 arrange.pindex <- function(.data, ..., .by_group = .by_group, .locale = .locale) {
