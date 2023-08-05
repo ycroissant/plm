@@ -578,16 +578,19 @@ plm.fit <- function(data, model, effect, random.method,
     result
 }
 
+
 tss <- function(x, ...){
   UseMethod("tss")
 }
 
-tss.default <- function(x){
+#' @rawNamespace S3method(tss, default)
+tss.default <- function(x, ...){
   # always gives centered TSS (= demeaned TSS)
   var(x) * (length(x) - 1)
 }
 
-tss.plm <- function(x, model = NULL){
+#' @rawNamespace S3method(tss, plm)
+tss.plm <- function(x, model = NULL, ...){
     if(is.null(model)) model <- describe(x, "model")
     effect <- describe(x, "effect")
     if(model == "ht") model <- "pooling"

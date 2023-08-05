@@ -381,7 +381,7 @@ punbalancedness <- function(x, ...) {
   UseMethod("punbalancedness")
 }
 
-
+#' @export
 punbalancedness.default <- function(x, ...) {
   ii <- index(x)
   if(!is.index(ii)) stop("no valid index found for input object 'x'")
@@ -526,6 +526,7 @@ pvar <- function(x, ...){
   UseMethod("pvar")
 }
 
+#' @export
 pvar.default <- function(x, id, time, ...){
   name.var <- names(x)
   len <- length(x)

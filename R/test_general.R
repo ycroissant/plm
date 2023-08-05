@@ -957,6 +957,7 @@ pwaldtest.pgmm <- function(x, param = c("coef", "time", "all"), vcov = NULL, ...
   return(wald.pgmm)
 }
 
+#' @export
 pwaldtest.default <- function(x, ...) {
   pwaldtest.plm(x, ...)
 }
