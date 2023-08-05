@@ -1525,7 +1525,7 @@ pmerge <- function(x, y, ...) {
 
 ## dplyr "compatibility"/awareness/warning, see https://github.com/ycroissant/plm/issues/46
 # test in test_pdata.frame_compliant.R
-#' @exportS3Method dplyr::arrange pdata.frame
+#' @rawNamespace if(getRversion() >= "3.6.0") {S3method(dplyr::arrange, pdata.frame)}
 arrange.pdata.frame <- function(.data, ..., .by_group = FALSE, .locale = NULL) {
   # function signature of dplyr:::arrange.data.frame
   idx <- index(.data)
@@ -1537,7 +1537,7 @@ arrange.pdata.frame <- function(.data, ..., .by_group = FALSE, .locale = NULL) {
 
 
 
-#' @exportS3Method dplyr::arrange pindex
+#' @rawNamespace if(getRversion() >= "3.6.0") {S3method(dplyr::arrange, pindex)}
 arrange.pindex <- function(.data, ..., .by_group = .by_group, .locale = .locale) {
   NextMethod()
 }
