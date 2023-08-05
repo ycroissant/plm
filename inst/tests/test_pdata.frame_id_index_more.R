@@ -125,6 +125,23 @@ index(p3, which = "id") # with warning
 index(p3, which = "time") # with warning
 
 
+### test for passing on ellipsis from pdata.frame to internal usage of data.frame() and from plm() to pdata.frame()
+Grun.2.error <- Grunfeld
+Grun.2.noerror <- Grunfeld
+Grun.nam.error <- replace(names(Grunfeld), names(Grunfeld) == "firm", "fi^rm")
+
+(colnames(Grun.2.error) <- Grun.nam.error)
+(colnames(Grun.2.noerror) <- Grun.nam.error)
+
+## errors rightfully as check.names = TRUE changed the invalid name:
+pdat.error <-  tryCatch(pdata.frame(Grun.2.error, index = c("fi^rm", "year"), check.names = TRUE), error=function(e) e, warning = function(w) w)
+if(!is(pdat.error,"error") | pdat.error$message != "variable 'fi^rm' does not exist (individual index)") stop("error not thrown")
+
+# no error:
+Grun.nam.p <- pdata.frame(Grun.2.noerror, index = c("fi^rm", "year"), check.names = FALSE)
+plm(inv ~ value + capital, Grun.2.noerror, effect='twoway', model='within', index = c("fi^rm", "year"), check.names = FALSE)
+
+
 
 # test for error about length(index)>2
 # Should result in error with informative message

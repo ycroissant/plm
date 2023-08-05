@@ -1,6 +1,6 @@
 
-R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R version 4.3.1 (2023-06-16 ucrt) -- "Beagle Scouts"
+Copyright (C) 2023 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -3376,6 +3376,32 @@ In index.pindex(x = anindex, which = which) :
   an index variable not being the time index is called 'time'. Likely, any results are distorted.
 > 
 > 
+> ### test for passing on ellipsis from pdata.frame to internal usage of data.frame() and from plm() to pdata.frame()
+> Grun.2.error <- Grunfeld
+> Grun.2.noerror <- Grunfeld
+> Grun.nam.error <- replace(names(Grunfeld), names(Grunfeld) == "firm", "fi^rm")
+> 
+> (colnames(Grun.2.error) <- Grun.nam.error)
+[1] "fi^rm"   "year"    "inv"     "value"   "capital"
+> (colnames(Grun.2.noerror) <- Grun.nam.error)
+[1] "fi^rm"   "year"    "inv"     "value"   "capital"
+> 
+> ## errors rightfully as check.names = TRUE changed the invalid name:
+> pdat.error <-  tryCatch(pdata.frame(Grun.2.error, index = c("fi^rm", "year"), check.names = TRUE), error=function(e) e, warning = function(w) w)
+> if(!is(pdat.error,"error") | pdat.error$message != "variable 'fi^rm' does not exist (individual index)") stop("error not thrown")
+> 
+> # no error:
+> Grun.nam.p <- pdata.frame(Grun.2.noerror, index = c("fi^rm", "year"), check.names = FALSE)
+> plm(inv ~ value + capital, Grun.2.noerror, effect='twoway', model='within', index = c("fi^rm", "year"), check.names = FALSE)
+
+Model Formula: inv ~ value + capital
+
+Coefficients:
+  value capital 
+0.11772 0.35792 
+
+> 
+> 
 > 
 > # test for error about length(index)>2
 > # Should result in error with informative message
@@ -3434,4 +3460,4 @@ In index.pindex(x = anindex, which = which) :
 > 
 > proc.time()
    user  system elapsed 
-   1.62    0.40    2.00 
+   1.64    0.31    1.90 
