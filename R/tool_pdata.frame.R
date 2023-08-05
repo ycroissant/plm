@@ -1527,10 +1527,11 @@ pmerge <- function(x, y, ...) {
 # test in test_pdata.frame_compliant.R
 #' @exportS3Method dplyr::arrange pdata.frame
 arrange.pdata.frame <- function(.data, ..., .by_group = FALSE, .locale = NULL) {
+  stopifnot(requireNamespace("dplyr"))
   # function signature of dplyr:::arrange.data.frame
   idx <- index(.data)
   ag.data <- NextMethod()
-  ag.idx <- arrange(idx, ..., .by_group = FALSE, .locale = NULL) # dispatches to arrange.pindex
+  ag.idx <- dplyr::arrange(idx, ..., .by_group = FALSE, .locale = NULL) # dispatches to arrange.pindex
   attr(ag.data, "index") <- ag.idx
   ag.data
 }
