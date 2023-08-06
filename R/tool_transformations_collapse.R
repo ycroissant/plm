@@ -8,25 +8,25 @@
 ##    mechanism: options("plm.fast" = TRUE).
 
 ## ad 1) new name for base R functions defined in tool_transformations.R
-Sum.default.baseR <- plm:::Sum.default
-Sum.pseries.baseR <- plm:::Sum.pseries
-Sum.matrix.baseR  <- plm:::Sum.matrix
+Sum_default_baseR <- plm:::Sum.default
+Sum_pseries_baseR <- plm:::Sum.pseries
+Sum_matrix_baseR  <- plm:::Sum.matrix
 
-between.default.baseR <- plm:::between.default
-between.pseries.baseR <- plm:::between.pseries
-between.matrix.baseR  <- plm:::between.matrix
+between_default_baseR <- plm:::between.default
+between_pseries_baseR <- plm:::between.pseries
+between_matrix_baseR  <- plm:::between.matrix
 
-Between.default.baseR <- plm:::Between.default
-Between.pseries.baseR <- plm:::Between.pseries
-Between.matrix.baseR  <- plm:::Between.matrix
+Between_default_baseR <- plm:::Between.default
+Between_pseries_baseR <- plm:::Between.pseries
+Between_matrix_baseR  <- plm:::Between.matrix
 
-Within.default.baseR <- plm:::Within.default
-Within.pseries.baseR <- plm:::Within.pseries
-Within.matrix.baseR  <- plm:::Within.matrix
+Within_default_baseR  <- plm:::Within.default
+Within_pseries_baseR <- plm:::Within.pseries
+Within_matrix_baseR   <- plm:::Within.matrix
 
-pdiff.baseR         <- plm:::pdiff
+pdiff_baseR           <- plm:::pdiff
 
-pseriesfy.baseR      <- plm:::pseriesfy # ... in tool_pdata.frame.R:
+pseriesfy_baseR       <- plm:::pseriesfy # ... in tool_pdata.frame.R:
 
 ## lag, lead, diff: are collapse-powered but in file tool_transformations.R (incl. their wrappers).
 
@@ -35,103 +35,103 @@ pseriesfy.baseR      <- plm:::pseriesfy # ... in tool_pdata.frame.R:
 #### Sum wrapper switches ####
 Sum.default <- function(x, effect, ...) {
   if(!isTRUE(getOption("plm.fast"))) {
-    Sum.default.baseR(x, effect, ...) } else {
+    Sum_default_baseR(x, effect, ...) } else {
     if(!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
-    Sum.default.collapse(x, effect, ...) }
+    Sum_default_collapse(x, effect, ...) }
 }
 
 Sum.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
   if(!isTRUE(getOption("plm.fast"))) {
-    Sum.pseries.baseR(x, effect, ...) } else {
+    Sum_pseries_baseR(x, effect, ...) } else {
     if(!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
-    Sum.pseries.collapse(x, effect, ...) }
+    Sum_pseries_collapse(x, effect, ...) }
 }
 
 Sum.matrix <- function(x, effect, ...) {
   if(!isTRUE(getOption("plm.fast"))) {
-    Sum.matrix.baseR(x, effect, ...) } else {
+    Sum_matrix_baseR(x, effect, ...) } else {
     if(!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
-    Sum.matrix.collapse(x, effect, ...) }
+    Sum_matrix_collapse(x, effect, ...) }
 }
 
 #### Between wrapper switches ####
 Between.default <- function(x, effect, ...) {
   if(!isTRUE(getOption("plm.fast"))) {
-    Between.default.baseR(x, effect, ...) } else {
+    Between_default_baseR(x, effect, ...) } else {
     if(!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
-    Between.default.collapse(x, effect, ...) }
+    Between_default_collapse(x, effect, ...) }
 }
   
 Between.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
   if(!isTRUE(getOption("plm.fast"))) {
-    Between.pseries.baseR(x, effect, ...) } else {
+    Between_pseries_baseR(x, effect, ...) } else {
     if(!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
-    Between.pseries.collapse(x, effect, ...) }
+    Between_pseries_collapse(x, effect, ...) }
 }
 
 Between.matrix <- function(x, effect, ...) {
   if(!isTRUE(getOption("plm.fast"))) {
-    Between.matrix.baseR(x, effect, ...) } else {
+    Between_matrix_baseR(x, effect, ...) } else {
     if(!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
-    Between.matrix.collapse(x, effect, ...) }
+    Between_matrix_collapse(x, effect, ...) }
 }
 
 #### between wrapper switches ####
 between.default <- function(x, effect, ...) {
   if(!isTRUE(getOption("plm.fast"))) {
-     between.default.baseR(x, effect, ...) } else {
+     between_default_baseR(x, effect, ...) } else {
      if(!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
-     between.default.collapse(x, effect, ...) }
+     between_default_collapse(x, effect, ...) }
 }
 
 between.pseries <- function(x, effect = c("individual", "time", "group"), ...) {
   if(!isTRUE(getOption("plm.fast"))) {
-    between.pseries.baseR(x, effect, ...) } else {
+    between_pseries_baseR(x, effect, ...) } else {
     if(!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
-    between.pseries.collapse(x, effect, ...) }
+    between_pseries_collapse(x, effect, ...) }
 }
 
 between.matrix <- function(x, effect, ...) {
   if(!isTRUE(getOption("plm.fast"))) {
-    between.matrix.baseR(x, effect, ...) } else {
+    between_matrix_baseR(x, effect, ...) } else {
     if(!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
-    between.matrix.collapse(x, effect, ...) }
+    between_matrix_collapse(x, effect, ...) }
 }
 
 #### Within wrapper switches ####
 Within.default <- function(x, effect, ...) {
   if(!isTRUE(getOption("plm.fast"))) {
-    Within.default.baseR(x, effect, ...) } else {
+    Within_default_baseR (x, effect, ...) } else {
     if(!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
-    Within.default.collapse(x, effect, ...) }
+    Within_default_collapse(x, effect, ...) }
 }
 
 Within.pseries <- function(x, effect = c("individual", "time", "group", "twoways"), ...) {
   if(!isTRUE(getOption("plm.fast"))) {
-    Within.pseries.baseR(x, effect, ...)
+    Within_pseries_baseR(x, effect, ...)
   } else {
     if(!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
 
     if(is.null(getOption("plm.fast.pkg.FE.tw"))) options("plm.fast.pkg.FE.tw" = "collapse")
     switch(getOption("plm.fast.pkg.FE.tw"),
-           "collapse" = Within.pseries.collapse(       x, effect, ...), # collapse only,
-           "fixest"   = Within.pseries.collapse.fixest(x, effect, ...), # collapse for 1-way FE + fixest for 2-way FE,
-           "lfe"      = Within.pseries.collapse.lfe(   x, effect, ...), # collapse for 1-way FE + lfe for 2-way FE,
+           "collapse" = Within_pseries_collapse(       x, effect, ...), # collapse only,
+           "fixest"   = Within_pseries_collapse_fixest(x, effect, ...), # collapse for 1-way FE + fixest for 2-way FE,
+           "lfe"      = Within_pseriesc_collapse_lfe(   x, effect, ...), # collapse for 1-way FE + lfe for 2-way FE,
            stop("unknown value of option 'plm.fast.pkg.FE.tw'"))
   }
 }
 
 Within.matrix <- function(x, effect, ...) {
   if(!isTRUE(getOption("plm.fast"))) {
-    Within.matrix.baseR(x, effect, ...) 
+    Within_matrix_baseR(x, effect, ...) 
   } else {
     if (!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
     
     if(is.null(getOption("plm.fast.pkg.FE.tw"))) options("plm.fast.pkg.FE.tw" = "collapse")
     switch(getOption("plm.fast.pkg.FE.tw"),
-           "collapse" = Within.matrix.collapse(       x, effect, ...), # collapse only,
-           "fixest"   = Within.matrix.collapse.fixest(x, effect, ...), # collapse for 1-way FE + fixest for 2-way FE,
-           "lfe"      = Within.matrix.collapse.lfe(   x, effect, ...), # collapse for 1-way FE + lfe for 2-way FE,
+           "collapse" = Within_matrix_collapse(       x, effect, ...), # collapse only,
+           "fixest"   = Within_matrix_collapse_fixest(x, effect, ...), # collapse for 1-way FE + fixest for 2-way FE,
+           "lfe"      = Within_matrix_collapse_lfe(   x, effect, ...), # collapse for 1-way FE + lfe for 2-way FE,
            stop("unknown value of option 'plm.fast.pkg.FE.tw'"))
   }
 }
@@ -140,7 +140,7 @@ Within.matrix <- function(x, effect, ...) {
 pdiff <- function(x, effect = c("individual", "time"), has.intercept = FALSE,
                   shift = c("time", "row")) {
   if(!isTRUE(getOption("plm.fast"))) {
-    pdiff.baseR(x, effect, has.intercept, shift) } else {
+    pdiff_baseR(x, effect, has.intercept, shift) } else {
       if(!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
       pdiff.collapse(x, effect, has.intercept, shift) }
 }
@@ -150,7 +150,7 @@ pdiff <- function(x, effect = c("individual", "time"), has.intercept = FALSE,
 # both pseriesfy functions are in file tool_pdata.frame.R 
 pseriesfy <- function(x,  ...) {
   if(!isTRUE(getOption("plm.fast"))) {
-    pseriesfy.baseR(x, ...) } else {
+    pseriesfy_baseR(x, ...) } else {
       if(!isTRUE(getOption("plm.fast.pkg.collapse"))) stop(txt.no.collapse, call. = FALSE)
       pseriesfy.collapse(x, ...) }
 }
@@ -158,8 +158,8 @@ pseriesfy <- function(x,  ...) {
 
 #### Sum ####
 
-Sum.default.collapse <- function(x, effect, ...) {
-# print("Sum.default.collapse")
+Sum_default_collapse <- function(x, effect, ...) {
+# print("Sum_default_collapse")
 # browser()
   # argument 'effect' is assumed to be a factor
 
@@ -171,8 +171,8 @@ Sum.default.collapse <- function(x, effect, ...) {
   return(res)
 }
 
-Sum.pseries.collapse <- function(x, effect = c("individual", "time", "group"), ...) {
-# print("Sum.pseries.collapse")
+Sum_pseries_collapse <- function(x, effect = c("individual", "time", "group"), ...) {
+# print("Sum_pseries_collapse")
 # browser()
   effect <- match.arg(effect)
   # check for presence of na.rm in dots, if not present set to FALSE
@@ -191,8 +191,8 @@ Sum.pseries.collapse <- function(x, effect = c("individual", "time", "group"), .
   return(res)
 }
 
-Sum.matrix.collapse <- function(x, effect, ...) {
-# print("Sum.matrix.collapse")
+Sum_matrix_collapse <- function(x, effect, ...) {
+# print("Sum_matrix_collapse")
 # browser()
   # if no index attribute, argument 'effect' is assumed to be a factor
   eff.fac <- if(is.null(xindex <- attr(x, "index"))) {
@@ -223,8 +223,8 @@ Sum.matrix.collapse <- function(x, effect, ...) {
 
 # Need separate implementations of Between.pseries and between.pseries due to different NA handling
 
-Between.default.collapse <- function(x, effect, ...) {
-# print("Between.default.collapse")
+Between_default_collapse <- function(x, effect, ...) {
+# print("Between_default_collapse")
 # browser()
   
   # argument 'effect' is assumed to be a factor
@@ -237,8 +237,8 @@ Between.default.collapse <- function(x, effect, ...) {
   return(res)
 }
 
-between.default.collapse <- function(x, effect, ...) {
-# print("between.default.collapse")
+between_default_collapse <- function(x, effect, ...) {
+# print("between_default_collapse")
 # browser()
   
   # argument 'effect' is assumed to be a factor
@@ -255,8 +255,8 @@ between.default.collapse <- function(x, effect, ...) {
   return(res)
 }
 
-Between.pseries.collapse <- function(x, effect = c("individual", "time", "group"), ...) {
-# print("Between.pseries.collapse")
+Between_pseries_collapse <- function(x, effect = c("individual", "time", "group"), ...) {
+# print("Between_pseries_collapse")
 # browser()
   
   # translate arguments
@@ -280,8 +280,8 @@ Between.pseries.collapse <- function(x, effect = c("individual", "time", "group"
   return(res)
 }
 
-between.pseries.collapse <- function(x, effect = c("individual", "time", "group"), ...) {
-# print("between.pseries.collapse")
+between_pseries_collapse <- function(x, effect = c("individual", "time", "group"), ...) {
+# print("between_pseries_collapse")
 # browser()
   effect <- match.arg(effect)
   # check for presence of na.rm in dots, if not present set to FALSE
@@ -310,8 +310,8 @@ between.pseries.collapse <- function(x, effect = c("individual", "time", "group"
 
 
 
-Between.matrix.collapse <- function(x, effect, ...) {
-# print("Between.matrix.collapse")
+Between_matrix_collapse <- function(x, effect, ...) {
+# print("Between_matrix_collapse")
 # browser()
   # if no index attribute, argument 'effect' is assumed to be a factor
   eff.fac <- if(is.null(xindex <- attr(x, "index"))) {
@@ -340,8 +340,8 @@ Between.matrix.collapse <- function(x, effect, ...) {
   return(res)
 }
 
-between.matrix.collapse <- function(x, effect, ...) {
-# print("between.matrix.collapse")
+between_matrix_collapse <- function(x, effect, ...) {
+# print("between_matrix_collapse")
 # browser()
   # if no index attribute, argument 'effect' is assumed to be a factor
   eff.fac <- if(is.null(xindex <- attr(x, "index"))) {
@@ -376,8 +376,8 @@ between.matrix.collapse <- function(x, effect, ...) {
 #### Within ####
 # Within - default
 
-Within.default.collapse <- function(x, effect, ...) {
-# print("Within.default.collapse")
+Within_default_collapse <- function(x, effect, ...) {
+# print("Within_default_collapse")
 # browser()
   
   # argument 'effect' is assumed to be a factor
@@ -391,8 +391,8 @@ Within.default.collapse <- function(x, effect, ...) {
 }
 
 
-Within.pseries.collapse <- function(x, effect = c("individual", "time", "group", "twoways"), ...) {
-# print("Within.pseries.collapse")
+Within_pseries_collapse <- function(x, effect = c("individual", "time", "group", "twoways"), ...) {
+# print("Within_pseries_collapse")
 # browser()
   effect <- match.arg(effect)
   # check for presence of na.rm in dots, if not present set to FALSE
@@ -426,8 +426,8 @@ Within.pseries.collapse <- function(x, effect = c("individual", "time", "group",
   return(res)
 }
 
-Within.matrix.collapse <- function(x, effect, ...) {
-# print("Within.matrix.collapse")
+Within_matrix_collapse <- function(x, effect, ...) {
+# print("Within_matrix_collapse")
 # browser()
   
   # check for presence of na.rm in dots, if not present set to FALSE
@@ -483,8 +483,8 @@ Within.matrix.collapse <- function(x, effect, ...) {
 #### the 2-way within transformation which are dramatically faster than
 #### the implementation via separate collapse::fwithin calls (due to the special
 #### algorithms used to partial out the fixed effects)
-Within.pseries.collapse.fixest <- function(x, effect = c("individual", "time", "group", "twoways"), ...) {
-# print("Within.pseries.collapse.fixest")
+Within_pseries_collapse_fixest <- function(x, effect = c("individual", "time", "group", "twoways"), ...) {
+# print("Within_pseries_collapse_fixest")
 # browser()
   effect <- match.arg(effect)
   # check for presence of na.rm in dots, if not present set to FALSE
@@ -509,8 +509,8 @@ Within.pseries.collapse.fixest <- function(x, effect = c("individual", "time", "
   return(res)
 }
 
-Within.matrix.collapse.fixest <- function(x, effect, ...) {
-# print("Within.matrix.collapse.fixest")
+Within_matrix_collapse_fixest <- function(x, effect, ...) {
+# print("Within_matrix_collapse_fixest")
 # browser()
   
   # check for presence of na.rm in dots, if not present set to FALSE
@@ -547,8 +547,8 @@ Within.matrix.collapse.fixest <- function(x, effect, ...) {
   return(result)
 }
 
-Within.pseries.collapse.lfe <- function(x, effect = c("individual", "time", "group", "twoways"), ...) {
-# print("Within.pseries.collapse.lfe")
+Within_pseriesc_collapse_lfe <- function(x, effect = c("individual", "time", "group", "twoways"), ...) {
+# print("Within_pseriesc_collapse_lfe")
 # browser()
 
   effect <- match.arg(effect)
@@ -575,8 +575,8 @@ Within.pseries.collapse.lfe <- function(x, effect = c("individual", "time", "gro
   return(res)
 }
 
-Within.matrix.collapse.lfe <- function(x, effect,  ...) {
-# print("Within.matrix.collapse.lfe")
+Within_matrix_collapse_lfe <- function(x, effect,  ...) {
+# print("Within_matrix_collapse_lfe")
 # browser()
   
   # check for presence of na.rm in dots, if not present set to FALSE

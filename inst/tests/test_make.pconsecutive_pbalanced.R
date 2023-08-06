@@ -7,14 +7,14 @@
 library(plm)
 
 
-##################### test of make.pconsecutive.indexes #####################
+##################### test of make.pconsecutive_indexes #####################
 # (non-exported function)
 
-# make.pconsecutive.indexes: for data.frames
+# make.pconsecutive_indexes: for data.frames
 data("Grunfeld", package = "plm")
 drop_for_unbalanced <- c(2,42,56,78)
 unbalanced_Grunfeld <- Grunfeld[-drop_for_unbalanced, ]
-gindex <- plm:::make.pconsecutive.indexes(unbalanced_Grunfeld, index = c("firm", "year"))[[1L]]
+gindex <- plm:::make.pconsecutive_indexes(unbalanced_Grunfeld, index = c("firm", "year"))[[1L]]
 nrow(gindex)
 all.equal(unbalanced_Grunfeld[, 1:2], gindex[-drop_for_unbalanced, ])
 #compare::compare(unbalanced_Grunfeld[, 1:2], gindex[-drop_for_unbalanced, ], allowAll = TRUE)
@@ -32,9 +32,9 @@ if (!isTRUE(all.equal(unbalanced_Grunfeld[, 1:2], gindex[-drop_for_unbalanced, ]
 # attr(unbalanced_Grunfeld, "row.names")
 # attr(gindex, "row.names")
 
-# make.pconsecutive.indexes: for pdata.frames
+# make.pconsecutive_indexes: for pdata.frames
 punbalanced_Grunfeld <- pdata.frame(unbalanced_Grunfeld)
-pgindex <- plm:::make.pconsecutive.indexes(punbalanced_Grunfeld, index = c("firm", "year"))[[1L]]
+pgindex <- plm:::make.pconsecutive_indexes(punbalanced_Grunfeld, index = c("firm", "year"))[[1L]]
 nrow(pgindex)
 
 if (!identical(attr(punbalanced_Grunfeld, "index")[, 1:2], pgindex[-drop_for_unbalanced, ])) stop("failure index of pdata.frame")
@@ -50,11 +50,11 @@ if (!isTRUE(all.equal(attr(punbalanced_Grunfeld, "index")[, 1:2], pgindex[-drop_
 
 
 
-# make.pconsecutive.indexes: pseries interface
-pgindex <- plm:::make.pconsecutive.indexes(punbalanced_Grunfeld$inv, index = c("firm", "year"))[[1L]]
+# make.pconsecutive_indexes: pseries interface
+pgindex <- plm:::make.pconsecutive_indexes(punbalanced_Grunfeld$inv, index = c("firm", "year"))[[1L]]
 if (!identical(attr(punbalanced_Grunfeld$inv, "index")[, 1:2], pgindex[-drop_for_unbalanced, ])) stop("failure index of pdata.frame")
 if (!isTRUE(all.equal(attr(punbalanced_Grunfeld$inv, "index")[, 1:2], pgindex[-drop_for_unbalanced, ]))) stop("failure index of pdata.frame")
-##################### END test of make.pconsecutive.indexes #####################
+##################### END test of make.pconsecutive_indexes #####################
 
 
 ##################### test of make.pconsecutive methods (various interfaces) #####################

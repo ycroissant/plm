@@ -144,8 +144,8 @@ make.pconsecutive <- function(x, ...){
 }
 
 # no export needed
-make.pconsecutive.indexes <- function(x, index, balanced = FALSE, ...) {
-# make.pconsecutive.indexes: helper function, not exported
+make.pconsecutive_indexes <- function(x, index, balanced = FALSE, ...) {
+# make.pconsecutive_indexes: helper function, not exported
 # returns list with 3 elements:
 #   1 "consec_index":        consecutive data.frame to serve as the new index data.frame in other functions, 
 #   2 "NArows_former_index": information about dropped lines (logical vector with length of original data)
@@ -242,7 +242,7 @@ make.pconsecutive.indexes <- function(x, index, balanced = FALSE, ...) {
               has_fancy_rownames   = has_fancy_rownames)
   
   return(res)
-} ### END: make.pconsecutive.indexes
+} ### END: make.pconsecutive_indexes
 
 
 #' @rdname make.pconsecutive
@@ -256,7 +256,7 @@ make.pconsecutive.data.frame <- function(x, balanced = FALSE, index = NULL, ...)
   # assume first two columns to be the index vars
   index_orig_names <- if(is.null(index)) names(x)[1:2] else index
     
-  list_ret_make_index <- make.pconsecutive.indexes(x, index_orig_names, balanced = balanced, ...)
+  list_ret_make_index <- make.pconsecutive_indexes(x, index_orig_names, balanced = balanced, ...)
   
   index_df_filled    <- list_ret_make_index[["consec_index"]]
   NArows_old_index   <- list_ret_make_index[["NArows_former_index"]]
@@ -283,7 +283,7 @@ make.pconsecutive.data.frame <- function(x, balanced = FALSE, index = NULL, ...)
 make.pconsecutive.pdata.frame <- function(x, balanced = FALSE, ...){
   orig_column_names <- names(x)
     
-  list_ret_make_index <- make.pconsecutive.indexes(x, balanced = balanced, ...)
+  list_ret_make_index <- make.pconsecutive_indexes(x, balanced = balanced, ...)
   index_df_filled    <- list_ret_make_index[["consec_index"]]
   NArows_old_index   <- list_ret_make_index[["NArows_former_index"]]
   has_fancy_rownames <- list_ret_make_index[["has_fancy_rownames"]]
@@ -337,7 +337,7 @@ make.pconsecutive.pseries <- function(x, balanced = FALSE, ...) {
   
   if (anyNA(is_p) || !all(is_p) || make_balanced) {
     
-    list_ret_make_index <- make.pconsecutive.indexes(x, balanced = balanced, ...)
+    list_ret_make_index <- make.pconsecutive_indexes(x, balanced = balanced, ...)
     df_index_filled    <- list_ret_make_index[["consec_index"]]
     NArows_old_index   <- list_ret_make_index[["NArows_former_index"]]
     has_fancy_rownames <- list_ret_make_index[["has_fancy_rownames"]]
