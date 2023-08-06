@@ -32,7 +32,8 @@ Changes relative to CRAN-released version 2.6-2:
 
 ### Others:
 * Compatibility for `dplyr::arange` by supplying a `pdata.frame` method for `arrange`
-  which takes care of pdata.frame's index attribute ([#46](https://github.com/ycroissant/plm/issues/46)).
+  which takes care of pdata.frame's index attribute ([#46](https://github.com/ycroissant/plm/issues/46)
+  , thanks to @ssoyounglee for reporting and @zeileis for prompt analysis and hints).
 * Estimation functions (e.g., `plm()`, `pcce()`) now warn if a data input claims to 
   be a pdata.frame but has non-compliant properties. This can happen due to data 
   manipulation by non-pdata.frame-aware functions (e.g., `dplyr`'s row-filtering 

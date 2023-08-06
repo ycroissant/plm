@@ -1525,6 +1525,13 @@ pmerge <- function(x, y, ...) {
 
 ## dplyr "compatibility"/awareness/warning, see https://github.com/ycroissant/plm/issues/46
 # test in test_pdata.frame_compliant.R
+# 
+# Approach: Avoid dplyr-dependency albeit registering methods for it, needs the
+# utils::globalVariables() statement to avoid a NOTE in R CMD check about 
+# undefined global variable.
+# Shall CRAN ever increase the code checking strictness, the approach with a
+# Suggests-dependency is given commented below as well.
+utils::globalVariables("arrange")
 #' @rawNamespace if(getRversion() >= "3.6.0") {S3method(dplyr::arrange, pdata.frame)}
 arrange.pdata.frame <- function(.data, ..., .by_group = FALSE, .locale = NULL) {
   # function signature of dplyr:::arrange.data.frame
@@ -1535,8 +1542,6 @@ arrange.pdata.frame <- function(.data, ..., .by_group = FALSE, .locale = NULL) {
   ag.data
 }
 
-
-
 #' @rawNamespace if(getRversion() >= "3.6.0") {S3method(dplyr::arrange, pindex)}
 arrange.pindex <- function(.data, ..., .by_group = .by_group, .locale = .locale) {
   NextMethod()
@@ -1545,6 +1550,7 @@ arrange.pindex <- function(.data, ..., .by_group = .by_group, .locale = .locale)
 ### alternatives
 # arrange.pdata.frame <- function(.data, ..., .by_group = FALSE, .locale = NULL) {
 #   ### this alternative would require dplyr to be at least a Suggests-dependency
+#   stopifnot(requireNamespace("dplyr"))
 #   idx <- index(.data)
 #   ag.df  <- dplyr::arrange(.data, ..., .by_group = FALSE, .locale = NULL)
 #   ag.idx <- dplyr::arrange(idx,   ..., .by_group = FALSE, .locale = NULL)
