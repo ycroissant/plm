@@ -114,9 +114,9 @@ Within.pseries <- function(x, effect = c("individual", "time", "group", "twoways
 
     if(is.null(getOption("plm.fast.pkg.FE.tw"))) options("plm.fast.pkg.FE.tw" = "collapse")
     switch(getOption("plm.fast.pkg.FE.tw"),
-           "collapse" = Within_pseries_collapse(       x, effect, ...), # collapse only,
-           "fixest"   = Within_pseries_collapse_fixest(x, effect, ...), # collapse for 1-way FE + fixest for 2-way FE,
-           "lfe"      = Within_pseriesc_collapse_lfe(   x, effect, ...), # collapse for 1-way FE + lfe for 2-way FE,
+           "collapse" = Within_pseries_collapse(       x, effect, ...),  # collapse only,
+           "fixest"   = Within_pseries_collapse_fixest(x, effect, ...),  # collapse for 1-way FE + fixest for 2-way FE,
+           "lfe"      = Within_pseriesc_collapse_lfe(   x, effect, ...), # collapse for 1-way FE + lfe    for 2-way FE
            stop("unknown value of option 'plm.fast.pkg.FE.tw'"))
   }
 }
@@ -131,7 +131,7 @@ Within.matrix <- function(x, effect, ...) {
     switch(getOption("plm.fast.pkg.FE.tw"),
            "collapse" = Within_matrix_collapse(       x, effect, ...), # collapse only,
            "fixest"   = Within_matrix_collapse_fixest(x, effect, ...), # collapse for 1-way FE + fixest for 2-way FE,
-           "lfe"      = Within_matrix_collapse_lfe(   x, effect, ...), # collapse for 1-way FE + lfe for 2-way FE,
+           "lfe"      = Within_matrix_collapse_lfe(   x, effect, ...), # collapse for 1-way FE + lfe    for 2-way FE
            stop("unknown value of option 'plm.fast.pkg.FE.tw'"))
   }
 }
@@ -174,6 +174,7 @@ Sum_default_collapse <- function(x, effect, ...) {
 Sum_pseries_collapse <- function(x, effect = c("individual", "time", "group"), ...) {
 # print("Sum_pseries_collapse")
 # browser()
+  
   effect <- match.arg(effect)
   # check for presence of na.rm in dots, if not present set to FALSE
   na.rm <- if(missing(...) || is.null(na.rm <- list(...)$na.rm)) FALSE else na.rm
@@ -194,6 +195,7 @@ Sum_pseries_collapse <- function(x, effect = c("individual", "time", "group"), .
 Sum_matrix_collapse <- function(x, effect, ...) {
 # print("Sum_matrix_collapse")
 # browser()
+  
   # if no index attribute, argument 'effect' is assumed to be a factor
   eff.fac <- if(is.null(xindex <- attr(x, "index"))) {
     effect
@@ -283,6 +285,7 @@ Between_pseries_collapse <- function(x, effect = c("individual", "time", "group"
 between_pseries_collapse <- function(x, effect = c("individual", "time", "group"), ...) {
 # print("between_pseries_collapse")
 # browser()
+  
   effect <- match.arg(effect)
   # check for presence of na.rm in dots, if not present set to FALSE
   na.rm <- if(missing(...) || is.null(na.rm <- list(...)$na.rm)) FALSE else na.rm
@@ -313,6 +316,7 @@ between_pseries_collapse <- function(x, effect = c("individual", "time", "group"
 Between_matrix_collapse <- function(x, effect, ...) {
 # print("Between_matrix_collapse")
 # browser()
+  
   # if no index attribute, argument 'effect' is assumed to be a factor
   eff.fac <- if(is.null(xindex <- attr(x, "index"))) {
     effect
@@ -343,6 +347,7 @@ Between_matrix_collapse <- function(x, effect, ...) {
 between_matrix_collapse <- function(x, effect, ...) {
 # print("between_matrix_collapse")
 # browser()
+  
   # if no index attribute, argument 'effect' is assumed to be a factor
   eff.fac <- if(is.null(xindex <- attr(x, "index"))) {
     effect
@@ -394,6 +399,7 @@ Within_default_collapse <- function(x, effect, ...) {
 Within_pseries_collapse <- function(x, effect = c("individual", "time", "group", "twoways"), ...) {
 # print("Within_pseries_collapse")
 # browser()
+  
   effect <- match.arg(effect)
   # check for presence of na.rm in dots, if not present set to FALSE
   na.rm <- if(missing(...) || is.null(na.rm <- list(...)$na.rm)) FALSE else na.rm
@@ -486,6 +492,7 @@ Within_matrix_collapse <- function(x, effect, ...) {
 Within_pseries_collapse_fixest <- function(x, effect = c("individual", "time", "group", "twoways"), ...) {
 # print("Within_pseries_collapse_fixest")
 # browser()
+  
   effect <- match.arg(effect)
   # check for presence of na.rm in dots, if not present set to FALSE
   na.rm <- if(missing(...) || is.null(na.rm <- list(...)$na.rm)) FALSE else na.rm
