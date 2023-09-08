@@ -29,6 +29,9 @@ Changes relative to CRAN-released version 2.6-2:
 * `pvcm`:
     * return value now always has a single valid value in `$args$model`.
     * tiny fix for coefficient estimation in case of NA coefficients.
+* `pdata.frame`: fix in detection of 3rd index variable (relevant only in quite 
+   specific circumstances) ([#50](https://github.com/ycroissant/plm/pull/50), 
+   thanks to @MichaelChirico).
 
 ### Others:
 * Compatibility for `dplyr::arange` by supplying a `pdata.frame` method for `arrange`
