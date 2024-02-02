@@ -1110,21 +1110,21 @@ print.summary.purtest <- function(x, ...){
 #' Simes Test for unit roots in panel data
 #' 
 #' Simes' test of intersection of individual hypothesis tests
-#' (\insertCite{SIMES:86;textual}{plm}) applied to panel unit root tests as suggested by
-#' \insertCite{HANCK:13;textual}{plm}.
+#' (\insertCite{SIMES:86;textual}{plm}) applied to panel unit root tests as 
+#' suggested by \insertCite{HANCK:13;textual}{plm}.
 #' 
 #' Simes' approach to testing is combining p-values from single hypothesis tests
 #' with a global (intersected) hypothesis. \insertCite{HANCK:13;textual}{plm}
-#' mentions it can be applied to any panel unit root test which yield a p-value
+#' mentions it can be applied to any panel unit root test which yields a p-value
 #' for each individual series.
 #' The test is robust versus general patterns of cross-sectional dependence.
 #' 
 #' Further, this approach allows to discriminate between individuals for which
 #' the individual H0 (unit root present for individual series) is rejected/is
 #' not rejected by Hommel's procedure (\insertCite{HOMM:88;textual}{plm}) for
-#' family-wise error rate control (FWER) at pre-specified significance level
-#' alpha via argument `alpha` (defaulting to `0.05`), i.e., it controls for the
-#' multiplicity in testing.
+#' family-wise error rate control (FWER) at a pre-specified significance level
+#' \eqn{\alpha} via argument `alpha` (defaulting to `0.05`), i.e., it controls 
+#' for the multiplicity in testing.
 #' 
 #' The function `phansitest` takes as main input `object` either a plain numeric
 #' containing p-values of individual tests or a `purtest` object which holds
@@ -1144,12 +1144,12 @@ print.summary.purtest <- function(x, ...){
 #' @param alpha numeric, the pre-specified significance level (defaults to `0.05`),
 #' @param x an object of class `c("phansitest", "list")` as produced by 
 #'          `phansitest` to be printed,
-#' @param cutoff integer, cutoff value for printing of enumeration of individuals with
-#' rejected individual H0, for print method only,
+#' @param cutoff integer, cutoff value for printing of enumeration of individuals 
+#'          with rejected individual H0, for print method only,
 #' @param \dots further arguments (currently not used).
 #' 
-#' @return For `phansitest`, an object of class `c("phansitest", "list")` which i
-#' s a list with the elements:
+#' @return For `phansitest`, an object of class `c("phansitest", "list")` which 
+#'         is a list with the elements:
 #' - `id`: integer, the identifier of the individual (integer sequence referring to
 #' position in input),
 #' - `name`: character, name of the input's individual (if it has a name,
