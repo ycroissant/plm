@@ -48,7 +48,6 @@ NULL
 #' the package.
 #' 
 #' @name plm-package
-#' @docType package
 #' @keywords package
 #' @examples
 #' 
@@ -76,7 +75,7 @@ NULL
 #'               data = Grunfeld, model = "random", random.method = "walhus",
 #'               effect = "twoways")
 #' 
-NULL
+"_PACKAGE"
 
 
 #' Cigarette Consumption

@@ -65,4 +65,33 @@ walhus <- plm(inv ~ value + capital,
               effect = "twoways")
 
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://cran.r-project.org/package=plm (CRAN releases)}
+  \item \url{https://github.com/ycroissant/plm (development repository)}
+  \item Report bugs at \url{https://github.com/ycroissant/plm/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Kevin Tappe \email{kevin.tappe@bwi.uni-stuttgart.de}
+
+Authors:
+\itemize{
+  \item Yves Croissant \email{yves.croissant@univ-reunion.fr}
+  \item Giovanni Millo \email{giovanni.millo@deams.units.it}
+}
+
+Other contributors:
+\itemize{
+  \item Ott Toomet \email{otoomet@gmail.com} [contributor]
+  \item Christian Kleiber \email{Christian.Kleiber@unibas.ch} [contributor]
+  \item Achim Zeileis \email{Achim.Zeileis@R-project.org} [contributor]
+  \item Arne Henningsen \email{arne.henningsen@googlemail.com} [contributor]
+  \item Liviu Andronic [contributor]
+  \item Nina Schoenfelder [contributor]
+}
+
+}
 \keyword{package}
