@@ -46,7 +46,7 @@ Changes relative to CRAN-released version 2.6-3:
      a new pdata.frame from input.
    * warns if pdata.frame with non-compliant features is input.
 * `plm()` passes on ellipsis ("dots" (`...`)) to internal pdata.frame creation, 
-  futher passed on to internal usage of `data.frame` (if pdata.frame is to be 
+  further passed on to internal usage of `data.frame` (if pdata.frame is to be 
   created internally due to non-pdata.frame passed in `plm()`'s `data` argument).
 * `pvar.pseries`: when printed, original variable's name is printed 
   (not always `x` anymore).
