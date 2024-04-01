@@ -68,8 +68,8 @@ walhus <- plm(inv ~ value + capital,
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://cran.r-project.org/package=plm (CRAN releases)}
-  \item \url{https://github.com/ycroissant/plm (development repository)}
+  \item \url{https://cran.r-project.org/package=plm}
+  \item \url{https://github.com/ycroissant/plm}
   \item Report bugs at \url{https://github.com/ycroissant/plm/issues}
 }
 

@@ -27,7 +27,7 @@ Description: A set of estimators for models and (robust) covariance matrices, an
              Panel Data Econometrics with R (<doi:10.1002/9781119504641>).
 License: GPL (>=2)
 VignetteBuilder: knitr
-URL: https://cran.r-project.org/package=plm (CRAN releases), https://github.com/ycroissant/plm (development repository)
+URL: https://cran.r-project.org/package=plm, https://github.com/ycroissant/plm
 BugReports: https://github.com/ycroissant/plm/issues
 RoxygenNote: 7.3.1
 Roxygen: list(markdown = TRUE)
