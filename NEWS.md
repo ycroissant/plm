@@ -741,7 +741,7 @@ plm()): Between, between, Sum, Within.
         before (all default to FALSE).
   * warning issued if an index variable is to be constructed that subsequently 
         overwrites an already present column of the same name ('id' and/or 'time').
-  * pacified warning in subsetting with with non-existent rows and columns due
+  * pacified warning in subsetting with non-existent rows and columns due
         to deprecation of 'structure(NULL, *)' in R >= 3.4.0.
   * \$<-.pdata.frame: preserves storage mode and sets correct class if propagation
                          to higher class occurred for a pseries prior to assignment

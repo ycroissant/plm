@@ -1,6 +1,6 @@
 # Currently, duplicated row names are allowed for pdata frames.
 # This leads to an error when printing pdata frames with duplicate
-# row names, becase print.pdata.frame uses print.data.frame
+# row names, because print.pdata.frame uses print.data.frame
 #
 # This is a testfile to check if the workaround works
 library(plm)

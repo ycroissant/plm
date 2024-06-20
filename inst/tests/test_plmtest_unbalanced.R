@@ -27,7 +27,7 @@
 # [...]
 
 ##### Grunfeld data set - balanced ####
-# Table 4.2 [Output from EViews], similiar to above table but with p-values
+# Table 4.2 [Output from EViews], similar to above table but with p-values
 ##### EViews add-in BPTest for some older version of EViews needed:
 ##### http://www.eviews.com/Addins/addins.shtml#addins
 ##### http://forums.eviews.com/viewtopic.php?f=23&t=2228
@@ -280,7 +280,7 @@ p.val_2 <- (1/2)*pchisq(crit_2, df=0, lower.tail = F) + (1/2) * pchisq(crit_2, d
 #                       , data = pnlswork, model = "pooling")
 # 
 # 
-# # Reassembles Exmaple 1 in http://www.stata.com/manuals14/xtxtregpostestimation.pdf
+# # Reassembles Example 1 in http://www.stata.com/manuals14/xtxtregpostestimation.pdf
 # # use modified plmtest() as a wrapper
 # options(digits = 10)
 # plmtest(plm_pool_nlswork, type="bp")

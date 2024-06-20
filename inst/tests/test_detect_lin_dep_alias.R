@@ -1,7 +1,7 @@
 # Tests for functions:
 #  * detect.lindep
 #  * alias
-# YC 2017/10/09 :  RE model par defaut pb because the between model is empty
+# YC 2017/10/09 :  RE model par default pb because the between model is empty
 
 
 library(plm)

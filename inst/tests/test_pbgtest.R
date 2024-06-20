@@ -33,7 +33,7 @@ g_fe_lm <- lm(inv ~ factor(firm) + value + capital, data = Grunfeld)
 
   # compare plm::pbgtest to lmtest::bgtest
   # Hint: for lm::bgtest(), if no order argument is supplied, order=1 is default,
-  #      while plm::pbgtest() assues mininum number of obs over time (typically != 1)
+  #      while plm::pbgtest() assumes minimum number of obs over time (typically != 1)
 
   # panelmodel interface
   plm::pbgtest(g_pool, order = 1)

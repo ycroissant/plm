@@ -61,7 +61,7 @@ if (!identical(vcovBK(mod_fe_lin_dep), vcovBK(mod_fe_no_lin_dep))) {
   vcovBK(cr2)
 
 
-# just run test for for pgmm models (as vcovXX.pgmm methods use vcovXX.plm)
+# just run test for pgmm models (as vcovXX.pgmm methods use vcovXX.plm)
 # (no linear dependence involved here)
 data("EmplUK", package="plm")
 ar <- pgmm(dynformula(log(emp) ~ log(wage) + log(capital) + log(output),
