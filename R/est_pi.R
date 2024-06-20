@@ -54,7 +54,7 @@ aneweytest <- function(formula, data, subset, na.action, index = NULL,  ...){
     if(!balanced) stop("'aneweytest' not implemented for unbalanced data")
     
     ht <- match.call(expand.dots = FALSE)
-    ~ <- match(c("formula", "data", "subset", "na.action",
+    m <- match(c("formula", "data", "subset", "na.action",
                  "effect", "model", "inst.method", "restrict.matrix",
                  "restrict.rhs", "index"), names(ht), 0)
     ht <- ht[c(1L, m)]
