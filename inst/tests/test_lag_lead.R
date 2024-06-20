@@ -35,13 +35,13 @@ plm:::lagr.pseries(Grunfeld$firm2)
 # from the sample's unique factor levels, but it should stay in the levels
 plm:::lagr.pseries(Grunfeld$fac)
 if (!(length(unique(Grunfeld$fac)) == 200)) stop("wrong factor values") # 200
-if (!(length(unique(plm:::lagr.pseries(Grunfeld$fac))) == 191)) stop("plm:::lagr.pseries: wrong actually uniquely occuring factor values")  # 191
+if (!(length(unique(plm:::lagr.pseries(Grunfeld$fac))) == 191)) stop("plm:::lagr.pseries: wrong actually uniquely occurring factor values")  # 191
 if (!(length(levels(plm:::lagr.pseries(Grunfeld$fac))) == 200)) stop("wrong factor levels")  # 200
 
 # plm::lead eliminates e.g., level "200"
 plm:::leadr.pseries(Grunfeld$fac)
 if (!(length(unique(Grunfeld$fac)) == 200)) stop("wrong factor levels") # 200
-if (!(length(unique(plm:::leadr.pseries(Grunfeld$fac))) == 191)) stop("plm:::leadr.pseries: wrong actually uniquely occuring factor values") # 191
+if (!(length(unique(plm:::leadr.pseries(Grunfeld$fac))) == 191)) stop("plm:::leadr.pseries: wrong actually uniquely occurring factor values") # 191
 if (!(length(levels(plm:::leadr.pseries(Grunfeld$fac))) == 200)) stop("plm:::leadr.pseries: wrong factor levels")  # 200
 
 

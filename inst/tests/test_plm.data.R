@@ -1,13 +1,13 @@
 # testfile to check if the deprecated function plm.data() is correctly
 # reworked by using pdata.frame()
 # 
-# Usefull especially if future changes to pdata.frame() affect the "plm.dim"
+# Useful especially if future changes to pdata.frame() affect the "plm.dim"
 # object onces created by plm.data()
 
 library(plm)
 
 # use a data set that has index variables not in first two columns, because
-# plm.dim objects always have them in the fist two colums (id, time)
+# plm.dim objects always have them in the first two columns (id, time)
 data("Hedonic", package = "plm")
 pHed <- pdata.frame(Hedonic, index = "townid")
 plm:::pos.index(pHed) # gives position of indexes

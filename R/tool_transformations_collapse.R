@@ -666,7 +666,7 @@ pdiff.collapse <- function(x, effect = c("individual", "time"), has.intercept = 
     }
   }
 
-  ## last data preperation before return
+  ## last data preparation before return
   res <- na.omit(res)
   if(is.matrix(x)) {
     # original pdiff (coded in base R) removes constant columns in matrix, 

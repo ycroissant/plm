@@ -14,7 +14,7 @@ if(!isTRUE(all.equal(names(residuals(gr)),       row.names(Grunfeld)))) stop("or
 
 
 # make a pdata.frame with "fancy" row.names (default)
-# [i.e., combination of individual index an time index]
+# [i.e., combination of individual index and time index]
 pGrunfeld <- pdata.frame(Grunfeld, index = c("firm", "year"))
 row.names(pGrunfeld) # fancy row.names
 gr_fancy_rownames <- plm(inv ~ value + capital, data=pGrunfeld, model="pooling")
