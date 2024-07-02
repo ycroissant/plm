@@ -1,7 +1,7 @@
 
-R version 4.2.0 (2022-04-22 ucrt) -- "Vigorous Calisthenics"
-Copyright (C) 2022 The R Foundation for Statistical Computing
-Platform: x86_64-w64-mingw32/x64 (64-bit)
+R version 4.4.1 (2024-06-14 ucrt) -- "Race for Your Life"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -44,7 +44,7 @@ Type 'q()' to quit R.
 > # [...]
 > 
 > ##### Grunfeld data set - balanced ####
-> # Table 4.2 [Output from EViews], similiar to above table but with p-values
+> # Table 4.2 [Output from EViews], similar to above table but with p-values
 > ##### EViews add-in BPTest for some older version of EViews needed:
 > ##### http://www.eviews.com/Addins/addins.shtml#addins
 > ##### http://forums.eviews.com/viewtopic.php?f=23&t=2228
@@ -628,7 +628,7 @@ chibarsq
 > #                       , data = pnlswork, model = "pooling")
 > # 
 > # 
-> # # Reassembles Exmaple 1 in http://www.stata.com/manuals14/xtxtregpostestimation.pdf
+> # # Reassembles Example 1 in http://www.stata.com/manuals14/xtxtregpostestimation.pdf
 > # # use modified plmtest() as a wrapper
 > # options(digits = 10)
 > # plmtest(plm_pool_nlswork, type="bp")
@@ -642,4 +642,4 @@ chibarsq
 > 
 > proc.time()
    user  system elapsed 
-   1.82    0.23    2.04 
+   2.09    0.25    2.31 

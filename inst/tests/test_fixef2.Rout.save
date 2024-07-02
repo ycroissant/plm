@@ -1,7 +1,7 @@
 
-R version 4.1.2 (2021-11-01) -- "Bird Hippie"
-Copyright (C) 2021 The R Foundation for Statistical Computing
-Platform: x86_64-w64-mingw32/x64 (64-bit)
+R version 4.4.1 (2024-06-14 ucrt) -- "Race for Your Life"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -221,6 +221,10 @@ Type 'q()' to quit R.
 Loading required package: Matrix
 
 Attaching package: 'lfe'
+
+The following object is masked from 'package:fixest':
+
+    fepois
 
 The following object is masked from 'package:plm':
 
@@ -757,4 +761,4 @@ The following object is masked from 'package:plm':
 > 
 > proc.time()
    user  system elapsed 
-   4.28    0.68    5.07 
+   2.73    0.37    3.17 

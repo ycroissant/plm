@@ -1,7 +1,7 @@
 
-R version 4.2.0 (2022-04-22 ucrt) -- "Vigorous Calisthenics"
-Copyright (C) 2022 The R Foundation for Statistical Computing
-Platform: x86_64-w64-mingw32/x64 (64-bit)
+R version 4.4.1 (2024-06-14 ucrt) -- "Race for Your Life"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -25,7 +25,8 @@ Type 'q()' to quit R.
 +             sex + black + bluecol + south + smsa + ind,
 +           data = Wages, model = "ht", index = 595)
 Warning message:
-uses of 'pht()' and 'plm(., model = "ht")' are discouraged, better use 'plm(., model = "random", random.method = "ht", inst.method = "baltagi"/"am"/"bms")' for Hausman-Taylor, Amemiya-MaCurdy, and Breusch-Mizon-Schmidt estimator 
+In pht(lwage ~ wks + south + smsa + married + exp + I(exp^2) + bluecol +  :
+  uses of 'pht()' and 'plm(., model = "ht")' are discouraged, better use 'plm(., model = "random", random.method = "ht", inst.method = "baltagi"/"am"/"bms")' for Hausman-Taylor, Amemiya-MaCurdy, and Breusch-Mizon-Schmidt estimator
 > summary(ht)
 Oneway (individual) effect Hausman-Taylor Model 
 (Hausman-Taylor estimator) 
@@ -81,7 +82,8 @@ Chisq: 6891.87 on 12 DF, p-value: < 2.22e-16
 +             sex + black + bluecol + south + smsa + ind,
 +           data = Wages, model = "am", index = 595)
 Warning message:
-uses of 'pht()' and 'plm(., model = "ht")' are discouraged, better use 'plm(., model = "random", random.method = "ht", inst.method = "baltagi"/"am"/"bms")' for Hausman-Taylor, Amemiya-MaCurdy, and Breusch-Mizon-Schmidt estimator 
+In pht(lwage ~ wks + south + smsa + married + exp + I(exp^2) + bluecol +  :
+  uses of 'pht()' and 'plm(., model = "ht")' are discouraged, better use 'plm(., model = "random", random.method = "ht", inst.method = "baltagi"/"am"/"bms")' for Hausman-Taylor, Amemiya-MaCurdy, and Breusch-Mizon-Schmidt estimator
 > summary(ht2)
 Oneway (individual) effect Hausman-Taylor Model 
 (Amemiya-MaCurdy estimator) 
@@ -136,7 +138,8 @@ Chisq: 6879.2 on 12 DF, p-value: < 2.22e-16
 +             sex + black + bluecol + south + smsa + ind,
 +           data = Wages, model = "bms", index = 595)
 Warning message:
-uses of 'pht()' and 'plm(., model = "ht")' are discouraged, better use 'plm(., model = "random", random.method = "ht", inst.method = "baltagi"/"am"/"bms")' for Hausman-Taylor, Amemiya-MaCurdy, and Breusch-Mizon-Schmidt estimator 
+In pht(lwage ~ wks + south + smsa + married + exp + I(exp^2) + bluecol +  :
+  uses of 'pht()' and 'plm(., model = "ht")' are discouraged, better use 'plm(., model = "random", random.method = "ht", inst.method = "baltagi"/"am"/"bms")' for Hausman-Taylor, Amemiya-MaCurdy, and Breusch-Mizon-Schmidt estimator
 > summary(ht3)
 Oneway (individual) effect Hausman-Taylor Model 
 (Breusch-Mizon-Schmidt estimator) 
@@ -191,7 +194,8 @@ Chisq: 6467.37 on 12 DF, p-value: < 2.22e-16
 +             sex + black + bluecol + south + smsa + ind, model = "ht",
 +            data = Wages, index = 595)
 Warning message:
-uses of 'pht()' and 'plm(., model = "ht")' are discouraged, better use 'plm(., model = "random", random.method = "ht", inst.method = "baltagi"/"am"/"bms")' for Hausman-Taylor, Amemiya-MaCurdy, and Breusch-Mizon-Schmidt estimator 
+In pht(formula = lwage ~ wks + south + smsa + married + exp + I(exp^2) +  :
+  uses of 'pht()' and 'plm(., model = "ht")' are discouraged, better use 'plm(., model = "random", random.method = "ht", inst.method = "baltagi"/"am"/"bms")' for Hausman-Taylor, Amemiya-MaCurdy, and Breusch-Mizon-Schmidt estimator
 > summary(ht4)
 Oneway (individual) effect Hausman-Taylor Model 
 (Hausman-Taylor estimator) 
@@ -417,4 +421,4 @@ Chisq: 6467.37 on 12 DF, p-value: < 2.22e-16
 > 
 > proc.time()
    user  system elapsed 
-   2.85    0.43    3.21 
+   3.03    0.29    3.34 

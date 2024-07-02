@@ -1,7 +1,7 @@
 
-R version 4.3.0 (2023-04-21 ucrt) -- "Already Tomorrow"
-Copyright (C) 2023 The R Foundation for Statistical Computing
-Platform: x86_64-w64-mingw32/x64 (64-bit)
+R version 4.4.1 (2024-06-14 ucrt) -- "Race for Your Life"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -716,10 +716,10 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 Sargan test: chisq(27) = 28.86345 (p-value = 0.36755)
 Autocorrelation test (1): normal = -4.750024 (p-value = 2.0339e-06)
 Autocorrelation test (2): normal = 1.857129 (p-value = 0.063293)
-Wald test for coefficients: chisq(26) = 6139.501 (p-value = < 2.22e-16)
+Wald test for coefficients: chisq(26) = 6139.5 (p-value = < 2.22e-16)
 Warning message:
 In vcovHC.pgmm(object) : a general inverse is used
 > 
 > proc.time()
    user  system elapsed 
-   7.21    0.53    7.81 
+   7.73    0.81    8.48 

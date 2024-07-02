@@ -1,7 +1,7 @@
 
-R version 4.2.2 (2022-10-31 ucrt) -- "Innocent and Trusting"
-Copyright (C) 2022 The R Foundation for Statistical Computing
-Platform: x86_64-w64-mingw32/x64 (64-bit)
+R version 4.4.1 (2024-06-14 ucrt) -- "Race for Your Life"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -1505,8 +1505,10 @@ Wald test for time dummies: chisq(7) = 14.71138 (p-value = 0.039882)
 +              effect = "twoways", model = "twosteps",
 +              gmm.inst = ~log(emp), lag.gmm = list(c(2,99)))
 Warning messages:
-1: use of 'dynformula()' is deprecated, use a multi-part formula instead 
-2: use of 'dynformula()' is deprecated, use a multi-part formula instead 
+1: In dynformula(formula = log(emp) ~ log(wage) + log(capital) + log(output),  :
+  use of 'dynformula()' is deprecated, use a multi-part formula instead
+2: In dynformula(gmm.inst, lag.form = lag.gmm) :
+  use of 'dynformula()' is deprecated, use a multi-part formula instead
 > summary(z1, robust = FALSE)
 Twoways effects Two-steps model Difference GMM 
 
@@ -1546,8 +1548,10 @@ Wald test for time dummies: chisq(6) = 26.9045 (p-value = 0.0001509)
 +              gmm.inst = ~log(emp) + log(wage) + log(capital),
 +              lag.gmm = c(2,99), transformation = "ld")
 Warning messages:
-1: use of 'dynformula()' is deprecated, use a multi-part formula instead 
-2: use of 'dynformula()' is deprecated, use a multi-part formula instead 
+1: In dynformula(log(emp) ~ log(wage) + log(capital), list(1, 1, 1)) :
+  use of 'dynformula()' is deprecated, use a multi-part formula instead
+2: In dynformula(gmm.inst, lag.form = lag.gmm) :
+  use of 'dynformula()' is deprecated, use a multi-part formula instead
 > summary(z2, robust = TRUE)
 Twoways effects One-step model System GMM 
 
@@ -1588,7 +1592,8 @@ Wald test for time dummies: chisq(7) = 14.71138 (p-value = 0.039882)
 +          sex + black + bluecol + south + smsa + ind,
 +          data = Wages, model = "ht", index = 595)
 Warning message:
-uses of 'pht()' and 'plm(., model = "ht")' are discouraged, better use 'plm(., model = "random", random.method = "ht", inst.method = "baltagi"/"am"/"bms")' for Hausman-Taylor, Amemiya-MaCurdy, and Breusch-Mizon-Schmidt estimator 
+In pht(lwage ~ wks + south + smsa + married + exp + I(exp^2) + bluecol +  :
+  uses of 'pht()' and 'plm(., model = "ht")' are discouraged, better use 'plm(., model = "random", random.method = "ht", inst.method = "baltagi"/"am"/"bms")' for Hausman-Taylor, Amemiya-MaCurdy, and Breusch-Mizon-Schmidt estimator
 > summary(ht)
 Oneway (individual) effect Hausman-Taylor Model 
 (Hausman-Taylor estimator) 
@@ -1643,7 +1648,8 @@ Chisq: 6891.87 on 12 DF, p-value: < 2.22e-16
 +          sex + black + bluecol + south + smsa + ind,
 +          data = Wages, model = "am", index = 595)
 Warning message:
-uses of 'pht()' and 'plm(., model = "ht")' are discouraged, better use 'plm(., model = "random", random.method = "ht", inst.method = "baltagi"/"am"/"bms")' for Hausman-Taylor, Amemiya-MaCurdy, and Breusch-Mizon-Schmidt estimator 
+In pht(lwage ~ wks + south + smsa + married + exp + I(exp^2) + bluecol +  :
+  uses of 'pht()' and 'plm(., model = "ht")' are discouraged, better use 'plm(., model = "random", random.method = "ht", inst.method = "baltagi"/"am"/"bms")' for Hausman-Taylor, Amemiya-MaCurdy, and Breusch-Mizon-Schmidt estimator
 > summary(am)
 Oneway (individual) effect Hausman-Taylor Model 
 (Amemiya-MaCurdy estimator) 
@@ -1885,4 +1891,4 @@ Coefficients:
 > 
 > proc.time()
    user  system elapsed 
-  13.39    0.75   14.37 
+  10.04    0.75   10.76 

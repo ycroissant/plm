@@ -1,7 +1,7 @@
 
-R version 4.1.1 (2021-08-10) -- "Kick Things"
-Copyright (C) 2021 The R Foundation for Statistical Computing
-Platform: x86_64-w64-mingw32/x64 (64-bit)
+R version 4.4.1 (2024-06-14 ucrt) -- "Race for Your Life"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -175,7 +175,7 @@ Levels: 1 2 3 4 5 6 7 8 9 10
      11      10       9       8       7       6       5       4       3       2 
 200 Levels: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 ... 200
 > if (!(length(unique(Grunfeld$fac)) == 200)) stop("wrong factor values") # 200
-> if (!(length(unique(plm:::lagr.pseries(Grunfeld$fac))) == 191)) stop("plm:::lagr.pseries: wrong actually uniquely occuring factor values")  # 191
+> if (!(length(unique(plm:::lagr.pseries(Grunfeld$fac))) == 191)) stop("plm:::lagr.pseries: wrong actually uniquely occurring factor values")  # 191
 > if (!(length(levels(plm:::lagr.pseries(Grunfeld$fac))) == 200)) stop("wrong factor levels")  # 200
 > 
 > # plm::lead eliminates e.g., level "200"
@@ -222,7 +222,7 @@ Levels: 1 2 3 4 5 6 7 8 9 10
       9       8       7       6       5       4       3       2       1    <NA> 
 200 Levels: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 ... 200
 > if (!(length(unique(Grunfeld$fac)) == 200)) stop("wrong factor levels") # 200
-> if (!(length(unique(plm:::leadr.pseries(Grunfeld$fac))) == 191)) stop("plm:::leadr.pseries: wrong actually uniquely occuring factor values") # 191
+> if (!(length(unique(plm:::leadr.pseries(Grunfeld$fac))) == 191)) stop("plm:::leadr.pseries: wrong actually uniquely occurring factor values") # 191
 > if (!(length(levels(plm:::leadr.pseries(Grunfeld$fac))) == 200)) stop("plm:::leadr.pseries: wrong factor levels")  # 200
 > 
 > 
@@ -1199,4 +1199,4 @@ FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
 > 
 > proc.time()
    user  system elapsed 
-   3.67    0.42    4.26 
+   1.59    0.17    1.75 

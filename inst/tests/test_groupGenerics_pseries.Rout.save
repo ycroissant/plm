@@ -1,7 +1,7 @@
 
-R version 4.2.1 (2022-06-23 ucrt) -- "Funny-Looking Kid"
-Copyright (C) 2022 The R Foundation for Statistical Computing
-Platform: x86_64-w64-mingw32/x64 (64-bit)
+R version 4.4.1 (2024-06-14 ucrt) -- "Race for Your Life"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -136,7 +136,7 @@ F-statistic: 3064.81 on 4 and 764 DF, p-value: < 2.22e-16
 > if (!isTRUE(all.equal(zz$coefficients, zz2$coefficients))) stop("estimation results not equal")
 > 
 > 
-> ############# (3) assinging to a pdata.frame #############
+> ############# (3) assigning to a pdata.frame #############
 > ## test for assigning by $<- to a pdata.frame
 > ## pre rev. 634: decimals which had been integers previously were converted to integers with typeof == integer
 > ##               and gave wrong results.
@@ -1090,7 +1090,7 @@ F-statistic: 3064.81 on 4 and 764 DF, p-value: < 2.22e-16
 [1] "double"
 > 
 > y2 <- y / 10
-> class(y2) # c("myclass", "interger") - not propagated to c("myclass", "numeric")
+> class(y2) # c("myclass", "integer") - not propagated to c("myclass", "numeric")
 [1] "myclass" "integer"
 > mode(y2)
 [1] "numeric"
@@ -1175,4 +1175,4 @@ attr(,"class")
 > 
 > proc.time()
    user  system elapsed 
-   1.64    0.18    1.82 
+   1.45    0.26    1.70 

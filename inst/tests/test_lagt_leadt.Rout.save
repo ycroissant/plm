@@ -1,7 +1,7 @@
 
-R version 4.2.1 (2022-06-23 ucrt) -- "Funny-Looking Kid"
-Copyright (C) 2022 The R Foundation for Statistical Computing
-Platform: x86_64-w64-mingw32/x64 (64-bit)
+R version 4.4.1 (2024-06-14 ucrt) -- "Race for Your Life"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -176,7 +176,7 @@ Levels: 1 2 3 4 5 6 7 8 9 10
      11      10       9       8       7       6       5       4       3       2 
 200 Levels: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 ... 200
 > if (!(length(unique(Grunfeld$fac)) == 200)) stop("wrong factor levels") # 200
-> if (!(length(unique(lag(Grunfeld$fac))) == 191)) stop("wrong actually uniquely occuring factor levels")  # 191
+> if (!(length(unique(lag(Grunfeld$fac))) == 191)) stop("wrong actually uniquely occurring factor levels")  # 191
 > if (!(length(levels(lag(Grunfeld$fac))) == 200)) stop("wrong factor levels")  # 200
 > 
 > # lead eliminates e.g., level "200"
@@ -1302,4 +1302,4 @@ In pdata.frame(dfNA) :
 > 
 > proc.time()
    user  system elapsed 
-   1.68    0.18    1.85 
+   2.31    0.42    2.85 
