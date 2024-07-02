@@ -67,7 +67,7 @@ print(summary(zz2))
 if (!isTRUE(all.equal(zz$coefficients, zz2$coefficients))) stop("estimation results not equal")
 
 
-############# (3) assinging to a pdata.frame #############
+############# (3) assigning to a pdata.frame #############
 ## test for assigning by $<- to a pdata.frame
 ## pre rev. 634: decimals which had been integers previously were converted to integers with typeof == integer
 ##               and gave wrong results.
@@ -188,7 +188,7 @@ mode(x2)
 typeof(x2)
 
 y2 <- y / 10
-class(y2) # c("myclass", "interger") - not propagated to c("myclass", "numeric")
+class(y2) # c("myclass", "integer") - not propagated to c("myclass", "numeric")
 mode(y2)
 typeof(y2)
 y2 # 0.1 0.2 0.3 - class is c("myclass", "integer") but result is decimals!

@@ -36,3 +36,24 @@ vcovHC(fd_plm2)
 ## vcovHC does not run on pggls models/not implemented
 # vcovHC(fd_pggls)
 # vcovHC(fd_pggls2)
+
+# vcovXX on FD models
+data("Grunfeld", package = "plm")
+pGrun <- pdata.frame(Grunfeld)
+pGrun1 <- pGrun[-c(61:200), ]
+pGrun1 <- pGrun1[-c(2:20), ]
+pdim(pGrun1)
+pdim(pGrun1)$Tint
+mod <- plm(inv ~ value + capital, data = pGrun1, model="fd")
+vcovHC(mod)
+vcovBK(mod)
+diff(pGrun1$inv)
+
+pGrun2 <- pGrun[-c(21, 41, 61, 81, 101, 121, 141, 161, 181), ]
+mod2 <- plm(inv ~ value + capital, data = pGrun2, model="fd")
+vcovHC(mod2)
+# vcovBK(mod2) # errors with Error in demX[groupinds, , drop = FALSE] : subscript out of bounds
+
+# data with one time period per group -> first-differenced away -> empty model
+#pGrun3 <- pGrun[c(1, 21, 41, 61, 81, 101, 121, 141, 161, 181), ]
+#mod3 <- plm(inv ~ value + capital, data = pGrun3, model="fd")

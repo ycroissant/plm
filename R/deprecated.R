@@ -87,7 +87,7 @@ plm.data <- function(x, indexes = NULL) {
   class(x) <- setdiff(class(x), "pdata.frame")
   
   # class "plm.dim" always has indexes in first two columns (id, time)
-  # while "pdata.frame" leaves the index variables at it's place (if not dropped at all with drop.index = T)
+  # while "pdata.frame" leaves the index variables at its place (if not dropped at all with drop.index = T)
   x <- x[ , c(names_indexes, setdiff(orig_col_order, names_indexes))]
   
   # set class

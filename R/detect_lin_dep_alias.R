@@ -101,7 +101,7 @@
 #' form <- price ~ 0 + cpi + fact1 + fact2
 #' mf <- model.frame(Cigar.p, form)
 #' # no linear dependence in the pooling model's model matrix
-#' # (with intercept in the formula, there would be linear depedence)
+#' # (with intercept in the formula, there would be linear dependence)
 #' detect.lindep(model.matrix(mf, model = "pooling"))
 #' # linear dependence present in the FE transformed model matrix
 #' modmat_FE <- model.matrix(mf, model = "within")

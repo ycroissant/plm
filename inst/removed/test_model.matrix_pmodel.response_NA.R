@@ -1,7 +1,7 @@
 ## Tests for correct construction in case of NAs of model.matrix[.pFormula|.plm] and pmodel.response.[pFormula|.plm]
 
 # see, if NA dropping in construction of model.matrix and pmodel.response is done correctly.
-# Some special NA patterns were not handeled correctly pre rev. 192 if pmodel.repsonse or model.matrix were called directly
+# Some special NA patterns were not handeled correctly pre rev. 192 if pmodel.response or model.matrix were called directly
 
 # 1) model.matrix[.pFormula|.plm] 
 # 2) pmodel.response.[pFormula|.plm]
@@ -190,7 +190,7 @@ resp_pFormula_NA_depvar_fe   <- plm:::pmodel.response.formula(form, data = pGrun
 #Error in model.matrix.pFormula(pFormula(formula), data = data, model = model,  : 
 #  dims [product 199] do not match the length of object [0] 
 
-# pmodel.repsonse.plm
+# pmodel.response.plm
 resp_plm_NA_depvar_pool  <- plm:::pmodel.response.plm(plm(form, data = pGrunfeld_NA_dep_var, model = "pooling"))
 resp_plm_NA_depvar_fe    <- plm:::pmodel.response.plm(plm(form, data = pGrunfeld_NA_dep_var, model = "within"))
 resp_plm_NA_depvar_fe_tw <- plm:::pmodel.response.plm(plm(form, data = pGrunfeld_NA_dep_var, model = "within", effect = "twoways"))
@@ -202,17 +202,17 @@ resp_plm_NA_indepvar_fe_tw <- plm:::pmodel.response.plm(plm(form, data = pGrunfe
 resp_plm_NA_indepvar_re    <- plm:::pmodel.response.plm(plm(form, data = pGrunfeld_NA_indep_var, model = "random"))
 
 
-# pmodel.repsonse.pFormula with NA in dependent variable
+# pmodel.response.pFormula with NA in dependent variable
 resp_pFormula_NA_depvar_pool  <- plm:::pmodel.response.formula(form, data = pGrunfeld_NA_dep_var, model = "pooling")
 resp_pFormula_NA_depvar_fe    <- plm:::pmodel.response.formula(form, data = pGrunfeld_NA_dep_var, model = "within")
 resp_pFormula_NA_depvar_fe_tw <- plm:::pmodel.response.formula(form, data = pGrunfeld_NA_dep_var, model = "within", effect = "twoways")
 # NOT OK: error
 #resp_pFormula_NA_depvar_re    <- plm:::pmodel.response.pFormula(form, data = pGrunfeld_NA_dep_var, model = "random")
 
-# pmodel.repsonse.pFormula with NA in _in_dependent variable
+# pmodel.response.pFormula with NA in _in_dependent variable
 # NA in independent variable is detected and vector of dependent variable (response) adjusted according (drop the observation)
 # -> resulting response has 199 entries, albeit there are 200 obs for the response but NA in independent variable
-# -> thus, the results of pmodel.repsonse and model.matrix match
+# -> thus, the results of pmodel.response and model.matrix match
 resp_pFormula_NA_indepvar_pool  <- plm:::pmodel.response.formula(form, data = pGrunfeld_NA_indep_var, model = "pooling")
 resp_pFormula_NA_indepvar_fe    <- plm:::pmodel.response.formula(form, data = pGrunfeld_NA_indep_var, model = "within")
 resp_pFormula_NA_indepvar_fe_tw <- plm:::pmodel.response.formula(form, data = pGrunfeld_NA_indep_var, model = "within", effect = "twoways")

@@ -448,7 +448,7 @@ ranef.plm <- function(object, effect = NULL, ...) {
 #' Overall Intercept for Within Models Along its Standard Error
 #' 
 #' This function gives an overall intercept for within models and its
-#' accompanying standard error or an within model with the overall intercept
+#' accompanying standard error or a within model with the overall intercept
 #' 
 #' The (somewhat artificial) intercept for within models (fixed
 #' effects models) was made popular by Stata of StataCorp

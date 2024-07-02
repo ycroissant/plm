@@ -1,7 +1,7 @@
 
-R version 4.2.0 (2022-04-22 ucrt) -- "Vigorous Calisthenics"
-Copyright (C) 2022 The R Foundation for Statistical Computing
-Platform: x86_64-w64-mingw32/x64 (64-bit)
+R version 4.4.1 (2024-06-14 ucrt) -- "Race for Your Life"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -279,6 +279,64 @@ attr(,"cluster")
 > # vcovHC(fd_pggls)
 > # vcovHC(fd_pggls2)
 > 
+> # vcovXX on FD models
+> data("Grunfeld", package = "plm")
+> pGrun <- pdata.frame(Grunfeld)
+> pGrun1 <- pGrun[-c(61:200), ]
+> pGrun1 <- pGrun1[-c(2:20), ]
+> pdim(pGrun1)
+Unbalanced Panel: n = 3, T = 1-20, N = 41
+> pdim(pGrun1)$Tint
+$Ti
+ 1  2  3 
+ 1 20 20 
+
+$nt
+1935 1936 1937 1938 1939 1940 1941 1942 1943 1944 1945 1946 1947 1948 1949 1950 
+   3    2    2    2    2    2    2    2    2    2    2    2    2    2    2    2 
+1951 1952 1953 1954 
+   2    2    2    2 
+
+> mod <- plm(inv ~ value + capital, data = pGrun1, model="fd")
+> vcovHC(mod)
+            (Intercept)        value      capital
+(Intercept)   9.9316457 -0.182458536 -0.150584023
+value        -0.1824585  0.003352024  0.002766444
+capital      -0.1505840  0.002766444  0.002283161
+attr(,"cluster")
+[1] "group"
+> vcovBK(mod)
+            (Intercept)        value      capital
+(Intercept)  5.15120917 -0.085738400 -0.076423494
+value       -0.08573840  0.001957880  0.001465764
+capital     -0.07642349  0.001465764  0.001261444
+attr(,"cluster")
+[1] "group"
+> diff(pGrun1$inv)
+1-1935 2-1935 2-1936 2-1937 2-1938 2-1939 2-1940 2-1941 2-1942 2-1943 2-1944 
+    NA     NA  145.4  114.6 -207.6  -31.9  131.2  111.2  -27.2  -84.0  -73.4 
+2-1945 2-1946 2-1947 2-1948 2-1949 2-1950 2-1951 2-1952 2-1953 2-1954 3-1935 
+ -29.5  161.6    0.2   74.0  -89.4   13.7  169.4   57.3   -4.5 -181.7     NA 
+3-1936 3-1937 3-1938 3-1939 3-1940 3-1941 3-1942 3-1943 3-1944 3-1945 3-1946 
+  11.9   32.2  -32.6    3.5   26.3   38.6  -21.1  -30.6   -4.5   36.8   66.3 
+3-1947 3-1948 3-1949 3-1950 3-1951 3-1952 3-1953 3-1954 
+ -12.7   -0.9  -48.0   -4.8   41.7   22.1   22.2   10.1 
+> 
+> pGrun2 <- pGrun[-c(21, 41, 61, 81, 101, 121, 141, 161, 181), ]
+> mod2 <- plm(inv ~ value + capital, data = pGrun2, model="fd")
+> vcovHC(mod2)
+            (Intercept)         value      capital
+(Intercept)  7.75100710  0.0272456499 -0.370440306
+value        0.02724565  0.0001316189 -0.001260823
+capital     -0.37044031 -0.0012608229  0.020684253
+attr(,"cluster")
+[1] "group"
+> # vcovBK(mod2) # errors with Error in demX[groupinds, , drop = FALSE] : subscript out of bounds
+> 
+> # data with one time period per group -> first-differenced away -> empty model
+> #pGrun3 <- pGrun[c(1, 21, 41, 61, 81, 101, 121, 141, 161, 181), ]
+> #mod3 <- plm(inv ~ value + capital, data = pGrun3, model="fd")
+> 
 > proc.time()
    user  system elapsed 
-   1.89    0.12    2.03 
+   1.53    0.32    1.81 

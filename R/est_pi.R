@@ -55,7 +55,7 @@ aneweytest <- function(formula, data, subset, na.action, index = NULL,  ...){
     
     ht <- match.call(expand.dots = FALSE)
     m <- match(c("formula", "data", "subset", "na.action",
-                 "effect", "model", "inst.method", "restict.matrix",
+                 "effect", "model", "inst.method", "restrict.matrix",
                  "restrict.rhs", "index"), names(ht), 0)
     ht <- ht[c(1L, m)]
     ht[[1L]] <- as.name("plm")

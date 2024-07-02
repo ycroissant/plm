@@ -28,7 +28,7 @@ if (!isTRUE(all.equal(levels(iind), levels(droplevels(iind))))) stop("unused lev
 ######## test of dropping unused level in factor (non index variable)
 df <- data.frame(id = c(1,1,2), time = c(1,2,1),
                  f = factor(c("a", "a", "b")),
-                 f2 = factor(c(1,2,3), levels = c(1,2,3,4)), # level 4 is unsed
+                 f2 = factor(c(1,2,3), levels = c(1,2,3,4)), # level 4 is unused
                  n = c(1:3))
 pdf <- pdata.frame(df, drop.unused.levels = TRUE)
 
@@ -41,7 +41,7 @@ if (!isTRUE(all.equal(levels(pdf$f2), c("1", "2", "3")))) stop("used levels in n
 dfindex <- data.frame(id = c(1,1,2), 
                       time = factor(c(1,2,1), levels = c(1,2,9)), # level 9 is unused
                       f = factor(c("a", "a", "b")),
-                      f2 = factor(c(1,2,3), levels = c(1,2,3,4)), # level 4 is unsed
+                      f2 = factor(c(1,2,3), levels = c(1,2,3,4)), # level 4 is unused
                       n = c(1:3))
 pdfindex <- pdata.frame(dfindex, drop.unused.levels = FALSE)
 
