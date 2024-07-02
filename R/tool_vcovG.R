@@ -503,7 +503,7 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
         # drop groups in Ti that are now empty (group had 1 observation before first-differencing, hence 0 after)
         # and adjust n0 due to same reason
         Ti <- Ti[!drop]
-        n0 <- n0 - 1
+        n0 <- n0 - sum(drop)
       }
       t0 <- t0 - 1
       
@@ -1033,7 +1033,7 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
         # drop groups in Ti that are now empty (group had 1 observation before first-differencing, hence 0 after)
         # and adjust n0 due to same reason
         Ti <- Ti[!drop]
-        n0 <- n0 - 1
+        n0 <- n0 - sum(drop)
       }
       t0 <- t0 - 1
     }
