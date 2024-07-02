@@ -353,8 +353,8 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
     nT <- pdim$nT$N
     Ti <- pdim$Tint$Ti
     k <- dim(demX)[[2L]]
-    n0 <- pdim$nT$n
-    t0 <- pdim$nT$T
+    n0 <- pdim$nT$n # no. of groups
+    t0 <- pdim$nT$T # max time periods over groups
 
   ## extract residuals
     uhat <- x$residuals
@@ -480,8 +480,16 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
     groupind <- as.numeric(xindex[[1L]])
     timeind  <- as.numeric(xindex[[2L]])
 
+
   ## adjust for 'fd' model (losing first time period)
     if(model == "fd") {
+      ## debug printing:
+      #print("before FD adj:")
+      #print(paste0("nT = ", nT))
+      #print(paste0("Ti = ", paste0(Ti, collapse = ", ")))
+      #print(paste0("t0 = ", t0))
+      #cat("\n")
+      
       groupi <- as.numeric(groupind)
       ## make vector =1 on first obs in each group, 0 elsewhere
       selector <- groupi - c(0, groupi[-length(groupi)])
@@ -491,7 +499,19 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
       timeind  <- timeind[!selector]
       nT <- nT - n0
       Ti <- Ti - 1
+      if(any(drop <- Ti == 0L)) {
+        # drop groups in Ti that are now empty (group had 1 observation before first-differencing, hence 0 after)
+        # and adjust n0 due to same reason
+        Ti <- Ti[!drop]
+        n0 <- n0 - 1
+      }
       t0 <- t0 - 1
+      
+      ## debug printing:
+      #print("after FD adj:")
+      #print(paste0("nT = ", nT))
+      #print(paste0("Ti = ", paste0(Ti, collapse = ", ")))
+      #print(paste0("t0 = ", t0))
     }
 
   ## set grouping indexes
@@ -539,6 +559,7 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
     
     ## (l=0 gives the special contemporaneous case where Xi=Xil, ui=uil
     ## for computing W, CX, CT)
+
     for(i in (1+l):n) {
       X  <- demX[tind[[i]], ,   drop = FALSE]
       Xl <- demX[tind[[i-l]], , drop = FALSE]
@@ -1008,6 +1029,12 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
       timeind  <- timeind[ timeind > 1]
       nT <- nT - n0
       Ti <- Ti - 1
+      if(any(drop <- Ti == 0L)) {
+        # drop groups in Ti that are now empty (group had 1 observation before first-differencing, hence 0 after)
+        # and adjust n0 due to same reason
+        Ti <- Ti[!drop]
+        n0 <- n0 - 1
+      }
       t0 <- t0 - 1
     }
 
@@ -1089,7 +1116,7 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
     
     unlabs <- unique(lab) # fetch (all, unique) values of the relevant labels
     seq.len.t <- seq_len(t)
-    
+        
     for(i in seq_len(n)) {
       ut <- uhat[tind[[i]]]
       tpos <- seq.len.t[unlabs %in% tlab[[i]]]
