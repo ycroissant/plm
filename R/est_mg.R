@@ -232,7 +232,7 @@ pmg <- function(formula, data, subset, na.action,
       demX[ , 1L] <- 1 # put back intercept lost by within transformation
       demy <- as.numeric(Within(y, effect = "time", na.rm = TRUE))
 
-      tdemX.list <- collapse::rsplit(demX, ind.GRP, use.name = FALSE)
+      tdemX.list <- collapse::rsplit(demX, ind.GRP, use.names = FALSE)
       
       tdemy.list <- collapse::gsplit(demy, ind.GRP)
             
