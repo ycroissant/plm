@@ -167,7 +167,7 @@ pvcm.within <- function(formula, data, effect){
     std <- matrix(unlist(lapply(vcov, function(x) sqrt(diag(x)))), nrow = length(ols), byrow = TRUE)
     dimnames(std)[1:2] <- list(names(vcov), colnames(vcov[[1L]]))
     std <- as.data.frame(std)
-    y <- unlist(split(model.response(data), cond)) # TODO: check if collapse::rsplit can be used
+    y <- unlist(rsplit(model.response(data), cond), use.names = FALSE)
     fitted.values <- y - residuals
     df.resid <- pdim$nT$N - card.cond * ncol(coef)
     nopool <- list(coefficients  = coef,
