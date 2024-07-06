@@ -122,9 +122,16 @@ pggls <- function(formula, data, subset, na.action,
     if (model.name == "fd") {
     ## eliminate first year in indices
         nt <- pdim$Tint$nt[-1L]
-        Ti <- pdim$Tint$Ti - 1
-        T <- pdim$nT$T - 1
         n <- pdim$nT$n
+        Ti <- pdim$Tint$Ti - 1
+        if(any(drop <- Ti == 0L)) {
+          # drop groups in Ti that are now empty (group had 1 observation before first-differencing, hence 0 after)
+          # and adjust n and id.names due to same reason
+          Ti <- Ti[!drop]
+          n <- n - sum(drop)
+          id.names <- id.names[!drop]
+        }
+        T <- pdim$nT$T - 1
         N <- pdim$nT$N - pdim$Tint$nt[1L]
         time.names <- pdim$panel.names$time.names[-1L]
         groupi <- as.numeric(index[[1L]])
@@ -133,7 +140,7 @@ pggls <- function(formula, data, subset, na.action,
         sel[1L] <- 1 # the first must always be 1
         ## eliminate first obs in time for each group
         index <- index[!sel, ]
-        id <- index[[1L]]
+        id <- droplevels(index[[1L]])
         time <- factor(index[[2L]], levels = attr(index[ , 2L], "levels")[-1L])
     } else {
         nt <- pdim$Tint$nt
@@ -229,7 +236,7 @@ pggls <- function(formula, data, subset, na.action,
         }
 
         subOmega <- rowMeans(tres, dims = 2L, na.rm = TRUE) # == apply(tres, 1:2, mean, na.rm = TRUE) but faster
-        list.cov.blocks <- sapply(other.list, function(i) subOmega[i, i], USE.NAMES = FALSE)
+        list.cov.blocks <- sapply(other.list, function(i) subOmega[i, i], USE.NAMES = FALSE, simplify = FALSE)
         omega <- bdsmatrix::bdsmatrix(groupsdim, unlist(list.cov.blocks, use.names = FALSE))
     }
     A <- crossprod(X, solve(omega, X))

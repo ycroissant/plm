@@ -49,9 +49,10 @@ mod <- plm(inv ~ value + capital, data = pGrun1, model="fd")
 vcovHC(mod)
 vcovBK(mod)
 diff(pGrun1$inv)
+ 
+## pggls run test
+mod.pggls <- pggls(inv ~ value + capital, data = pGrun1, model="fd")
 
-## TODO: pggls errors
-# mod.pggls <- pggls(inv ~ value + capital, data = pGrun1, model="fd")
 
 # one time period with only one observation
 pGrun2 <- pGrun[-c(21, 41, 61, 81, 101, 121, 141, 161, 181), ]

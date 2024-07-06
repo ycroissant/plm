@@ -5,9 +5,12 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 ---
 
 # 2.6-9999 development version, changes since 2.6-4
-* vcovXX: FD models with only one observation per group prior to 
-          first-differencing errored ([#58](https://github.com/ycroissant/plm/issues/58)).
-* is.pdata.frame (non-exported helper function): fix part of the check if object 
+
+### Fixes:
+* `vcovXX`: FD models with only one observation per group prior to 
+           first-differencing errored ([#58](https://github.com/ycroissant/plm/issues/58)).
+* `pggls`: FD models errored with the data constellation as described for `vcovXX`. 
+* `is.pdata.frame` (non-exported helper function): fix part of the check if object 
                                                  does not have an index.
 
 ***

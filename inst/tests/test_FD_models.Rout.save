@@ -322,9 +322,10 @@ attr(,"cluster")
   11.9   32.2  -32.6    3.5   26.3   38.6  -21.1  -30.6   -4.5   36.8   66.3 
 3-1947 3-1948 3-1949 3-1950 3-1951 3-1952 3-1953 3-1954 
  -12.7   -0.9  -48.0   -4.8   41.7   22.1   22.2   10.1 
+>  
+> ## pggls run test
+> mod.pggls <- pggls(inv ~ value + capital, data = pGrun1, model="fd")
 > 
-> ## TODO: pggls errors
-> # mod.pggls <- pggls(inv ~ value + capital, data = pGrun1, model="fd")
 > 
 > # one time period with only one observation
 > pGrun2 <- pGrun[-c(21, 41, 61, 81, 101, 121, 141, 161, 181), ]
@@ -363,4 +364,4 @@ attr(,"cluster")
 > 
 > proc.time()
    user  system elapsed 
-   1.59    0.20    1.78 
+   1.90    0.23    2.17 
