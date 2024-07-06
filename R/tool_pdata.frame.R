@@ -1459,9 +1459,10 @@ is.pdata.frame <- function(x, feedback = NULL) {
   # checks if a pdata.frame has appropriate properties
 
   res <- TRUE
-  if(!inherits(x, "pdata.frame")) res <- FALSE
-  if(!has.index(x))               res <- FALSE
-  if(!nrow(index(x)) == nrow(x))  res <- FALSE
+  if(!inherits(x, "pdata.frame"))   res <- FALSE
+  if(!has.index(x))                 res <- FALSE else {
+    if(!nrow(index(x)) == nrow(x))  res <- FALSE 
+  }
   
   if(!res && !is.null(feedback)) {
     feedback <- switch(feedback,
