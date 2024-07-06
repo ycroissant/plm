@@ -32,7 +32,7 @@ in summary()).
 }
 \description{
 This function gives an overall intercept for within models and its
-accompanying standard error or an within model with the overall intercept
+accompanying standard error or a within model with the overall intercept
 }
 \details{
 The (somewhat artificial) intercept for within models (fixed

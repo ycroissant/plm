@@ -29,7 +29,7 @@ License: GPL (>=2)
 VignetteBuilder: knitr
 URL: https://cran.r-project.org/package=plm, https://github.com/ycroissant/plm
 BugReports: https://github.com/ycroissant/plm/issues
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Roxygen: list(markdown = TRUE)
 RdMacros: Rdpack
 Encoding: UTF-8
