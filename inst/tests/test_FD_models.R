@@ -37,9 +37,10 @@ vcovHC(fd_plm2)
 # vcovHC(fd_pggls)
 # vcovHC(fd_pggls2)
 
-# vcovXX on FD models
+### vcovXX on FD models
 data("Grunfeld", package = "plm")
 pGrun <- pdata.frame(Grunfeld)
+# one group with only one observation > gets first-differenced away
 pGrun1 <- pGrun[-c(61:200), ]
 pGrun1 <- pGrun1[-c(2:20), ]
 pdim(pGrun1)
@@ -49,10 +50,22 @@ vcovHC(mod)
 vcovBK(mod)
 diff(pGrun1$inv)
 
+## TODO: pggls errors
+# mod.pggls <- pggls(inv ~ value + capital, data = pGrun1, model="fd")
+
+# one time period with only one observation
 pGrun2 <- pGrun[-c(21, 41, 61, 81, 101, 121, 141, 161, 181), ]
+pdim(pGrun2)
+pdim(pGrun2)$Tint
 mod2 <- plm(inv ~ value + capital, data = pGrun2, model="fd")
 vcovHC(mod2)
+
+## TODO vcovBK errors
 # vcovBK(mod2) # errors with Error in demX[groupinds, , drop = FALSE] : subscript out of bounds
+ 
+mod2.pggls <- pggls(inv ~ value + capital, data = pGrun2, model="fd")
+
+
 
 # data with one time period per group -> first-differenced away -> empty model
 #pGrun3 <- pGrun[c(1, 21, 41, 61, 81, 101, 121, 141, 161, 181), ]
