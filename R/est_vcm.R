@@ -496,25 +496,32 @@ print.summary.pvcm <- function(x, digits = max(3, getOption("digits") - 2),
 
 est.ols <- function(mf, cond, effect, model) {
 ## helper function: estimate the single OLS regressions (used for pvcm's model = "random" as well as "within" )
-  ml <- split(mf, cond)
-  #ml <- collapse::rsplit(mf, cond) # does not yet work - TODO: check why (comment stemming from random model)
-  ols <- lapply(ml, function(x) {
-      X <- model.matrix(x)
-      if(    (nrow(X) <  ncol(X)) && model == "within"
-          || (nrow(X) <= ncol(X)) && model == "random") {
-        ## catch non-estimable model
-        ## equality NROW NCOL: can estimate coefficients but not variance
-        ##    -> for "within" model: this is ok (output has variance NA/NaN)
-        #     -> or "random" model: variance is needed for D2, chi-sq test, so rather be strict
-        error.msg <- paste0("insufficient number of observations for at least ",
-                            "one group in ", effect, " dimension, so defined ",
-                            "model is non-estimable")
-        stop(error.msg)
-      }
-      y <- pmodel.response(x)
-      r <- lm(y ~ X - 1, model = FALSE)
-      names(r$coefficients) <- colnames(X)
-      r})
+  mm <- model.matrix(mf)
+  
+  ## catch non-estimable model:
+  ## check for obs. per individual vs. nr. of variables. equality: can estimate coefficients but not variance
+  ##    -> for "within" model: this is ok (output has variance NA/NaN)
+  #     -> or "random" model: variance is needed for D2, chi-sq test, so rather be strict
+    error.msg <- paste0("insufficient number of observations for at least ",
+                        "one group in ", effect, " dimension, so defined ",
+                        "model is non-estimable")
+     cond <- GRP(cond)
+     Ti <- collapse::GRPN(cond, expand = FALSE)
+     ncolumns <- ncol(mm)
+     if(model == "within" && any(Ti <  ncolumns)) stop(error.msg)
+     if(model == "random" && any(Ti <= ncolumns)) stop(error.msg)
+
+     # split data by group
+     X <- collapse::rsplit(mm,                 cond)
+     y <- collapse::rsplit(model.response(mf), cond)
+     
+     # estimate OLS per group
+     ols <- mapply(function(X_i, y_i) {
+       r <- lm(y_i ~ X_i - 1, model = FALSE)
+       names(r$coefficients) <- colnames(X_i) # need to plug-in original coef names due to lm(., model = FALSE) losing them
+       r
+     },  X, y, SIMPLIFY = FALSE)
+     
   ols
 }
 
