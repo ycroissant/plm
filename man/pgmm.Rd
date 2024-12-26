@@ -66,7 +66,8 @@ missing, it is set to the first one minus one,}
 model: either \code{"d"} (the default value) for the
 "difference GMM" model or \code{"ld"} for the "system GMM" model,}
 
-\item{fsm}{the matrix for the one step estimator: one of \code{"I"}
+\item{fsm}{character of length 1 to specify the matrix for the
+\code{"onestep"} estimator: one of \code{"I"}
 (identity matrix) or \code{"G"} (\eqn{=D'D} where \eqn{D} is the
 first--difference operator) if \code{transformation="d"}, one of
 \code{"GI"} or \code{"full"} if \code{transformation="ld"},}

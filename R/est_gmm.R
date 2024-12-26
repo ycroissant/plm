@@ -58,11 +58,14 @@
 #' @param transformation the kind of transformation to apply to the
 #'     model: either `"d"` (the default value) for the
 #'     "difference GMM" model or `"ld"` for the "system GMM" model,
-#' @param fsm the matrix for the one step estimator: one of `"I"`
+#' @param fsm character of length 1 to specify the matrix for the 
+#'      `"onestep"` estimator: one of `"I"`
 #'     (identity matrix) or `"G"` (\eqn{=D'D} where \eqn{D} is the
 #'     first--difference operator) if `transformation="d"`, one of
 #'     `"GI"` or `"full"` if `transformation="ld"`,
-# TODO: fms = NULL (default)/"full"/"GI" not explained; arg fsm is not evaluated at all
+# TODO: fms = NULL (default)/"full"/"GI" not explained;
+#       function FSM() not used if transformation = "d";
+#       for transformation = "fd", arg fsm is always "full"
 #' @param index the indexes,
 #' @param \dots further arguments.
 #' @param robust for pgmm's summary method: if `TRUE` (default), robust inference
@@ -151,17 +154,23 @@ pgmm <- function(formula, data, subset, na.action,
                  collapse = FALSE, # TODO: collapse does not seem to be assumed a logical in the code below but rather a character vector
                  lost.ts = NULL,
                  transformation = c("d", "ld"),
-                 fsm = NULL, # TODO: argument 'fsm' is not evaluated, 
+                 fsm = NULL,
                  index = NULL, ...) {
 
-  # yX : response / covariates, W : gmm instruments, Z : normal
-  # instruments, V : time dummies
+  # yX : response / covariates, W : gmm instruments, 
+  # Z : normal instruments, V : time dummies
   
 #  cl <- match.call(expand.dots = FALSE)
   cl <- match.call(expand.dots = TRUE)
   effect <- match.arg(effect)
   model <- match.arg(model)
   transformation <- match.arg(transformation)
+  if(!is.null(fsm)) {
+    stopifnot(is.character(fsm) && length(fsm))
+    # interface check as specified in man page, currently deactivated
+    #  if(transformation == "d")  stopifnot(fsm == "I"  || fsm == "G")
+    #  if(transformation == "ld") stopifnot(fsm == "GI" || fsm == "full")
+    } else fsm <- "full" # TODO: always uses "full" (as has been the case "since ever"), but man page tells otherwise
   namesV <- NULL
   
   #################################################################
@@ -493,6 +502,7 @@ pgmm <- function(formula, data, subset, na.action,
       if (normal.instruments) Z1[[i]] <- bdiag(Z1[[i]], Z2[[i]])
     }
   }
+
   if (normal.instruments){
     for (i in seq_len(N)) W1[[i]] <- cbind(W1[[i]], Z1[[i]])
   }
@@ -504,10 +514,10 @@ pgmm <- function(formula, data, subset, na.action,
 
   W <- W1
   yX <- yX1
-  
+
   # Compute the first step matrices
-  if (transformation == "d")  A1 <- tcrossprod(diff(diag(1, T - TL1 + 1)))
-  if (transformation == "ld") A1 <- FSM(T - TL2, "full")  # TODO: always uses "full" but man page tells otherwise
+  if (transformation == "d")  A1 <- tcrossprod(diff(diag(1, T - TL1 + 1))) # TODO: to use FSM() as well?
+  if (transformation == "ld") A1 <- FSM(T - TL2, fsm)
 
   # compute the estimator
   
@@ -567,8 +577,8 @@ pgmm <- function(formula, data, subset, na.action,
                            names(z) <- nz
                            z})
     vcov <- B2
-  }
-  else vcov <- B1
+  } else vcov <- B1
+  
   rownames(vcov) <- colnames(vcov) <- names.coef
 
   # TODO: yX does not contain the original data (but first-diff-ed data) -> fitted.values not what you would expect
@@ -735,7 +745,8 @@ Id <- function(t){
   diag(1, t)
 }
 
-FSM <- function(t, fsm){
+FSM <- function(t, fsm = c("full", "I", "G", "GI")){
+  fsm <- match.arg(fsm)
   switch(fsm,
          "I" = Id(t),
          "G" = G(t),
