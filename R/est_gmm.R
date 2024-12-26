@@ -516,7 +516,7 @@ pgmm <- function(formula, data, subset, na.action,
   yX <- yX1
 
   # Compute the first step matrices
-  if (transformation == "d")  A1 <- tcrossprod(diff(diag(1, T - TL1 + 1))) # TODO: to use FSM() as well?
+  if (transformation == "d")  A1 <- FSM(T - TL1, "G") # == tcrossprod(diff(diag(1, T - TL1 + 1))) # TODO: FSM's arg fsm not fully flexible
   if (transformation == "ld") A1 <- FSM(T - TL2, fsm)
 
   # compute the estimator
@@ -552,7 +552,8 @@ pgmm <- function(formula, data, subset, na.action,
                       function(x)
                       as.vector(x[ , 1L] - crossprod(t(x[ , -1L, drop = FALSE]), coefficients)))
   outresid <- lapply(residuals, function(x) outer(x, x))
-  
+
+  # A2 is only needed for model = "twosteps", but seems currently needed in vcov.pggm also for "onestep" model
   A2 <- mapply(function(x, y) crossprod(t(crossprod(x, y)), x), W, outresid, SIMPLIFY = FALSE)
   A2 <- Reduce("+", A2)
   minevA2 <- min(eigen(A2)$values)
@@ -560,7 +561,7 @@ pgmm <- function(formula, data, subset, na.action,
     warning("the second-step matrix is singular, a general inverse is used")
     ginv(A2)
   } else solve(A2)
-
+  
   if (model == "twosteps") {
     coef1s <- coefficients
     t.CP.WX.A2 <- t(crossprod(WX, A2))

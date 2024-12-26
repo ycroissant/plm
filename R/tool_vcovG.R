@@ -1233,6 +1233,7 @@ vcovHC.pgmm <- function(x, ...) {
     residuals <- x$residuals
   }
   else {
+    # transformation = "d"
     yX <- x$model
     residuals <- x$residuals
   }
@@ -1243,7 +1244,7 @@ vcovHC.pgmm <- function(x, ...) {
     warning("a general inverse is used")
     ginv(A2)
   } else solve(A2)
-  
+
   if(model == "twosteps") {
     coef1s <- x$coefficients[[1L]]
     res1s <- lapply(yX, function(x) x[ , 1L] - crossprod(t(x[ , -1L, drop = FALSE]), coef1s))
@@ -1254,7 +1255,6 @@ vcovHC.pgmm <- function(x, ...) {
     We <- Reduce("+", mapply(function(x, y) crossprod(x, y), x$W, residuals, SIMPLIFY = FALSE))
     B1 <- solve(t(WX) %*% A1 %*% WX)
     B2 <- vcov(x)
-
     vcov1s <- B1 %*% (t(WX) %*% A1 %*% SA2 %*% A1 %*% WX) %*% B1
     for (k in 2:K) {
       exk <- mapply(
