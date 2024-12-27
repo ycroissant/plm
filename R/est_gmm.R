@@ -553,7 +553,8 @@ pgmm <- function(formula, data, subset, na.action,
                       as.vector(x[ , 1L] - crossprod(t(x[ , -1L, drop = FALSE]), coefficients)))
   outresid <- lapply(residuals, function(x) outer(x, x))
 
-  # A2 is only needed for model = "twosteps", but seems currently needed in vcov.pggm also for "onestep" model
+  # A2 is also needed in vcovHC.pggm for "onestep" model, hence calc. here and 
+  # include in model object also for onestep model
   A2 <- mapply(function(x, y) crossprod(t(crossprod(x, y)), x), W, outresid, SIMPLIFY = FALSE)
   A2 <- Reduce("+", A2)
   minevA2 <- min(eigen(A2)$values)
@@ -692,9 +693,10 @@ extract.data <- function(data, as.matrix = TRUE){
   # the previous version is *very* slow because :
   # 1. split works wrong on pdata.frame
   # 2. model.matrix is lapplied !
+  ### -> using collpse's fast *split functions / 2024-12-27
   form <- attr(data, "formula")
   trms <- terms(form)
-  has.response <- attr(trms, 'response') == 1
+  has.response  <- attr(trms, 'response')  == 1
   has.intercept <- attr(trms, 'intercept') == 1
   if (has.intercept == 1){
     # Formula is unable to update formulas with no lhs
@@ -708,11 +710,8 @@ extract.data <- function(data, as.matrix = TRUE){
     X <- cbind(data[[1L]], X)
     colnames(X)[1L] <- deparse(trms[[2L]])
   }
-### TODO: can speed up with collapse:
-  data <- split(as.data.frame(X), index[[1L]])
-  time <- split(index[[2L]], index[[1L]])
-#  data <- collapse::rsplit(as.data.frame(X), index[[1L]])  # does not yet work
-#  time <- collapse::gsplit(index[[2L]], index[[1L]])
+  data <- collapse::rsplit(as.data.frame(X), index[[1L]], simplify = FALSE)
+  time <- collapse::gsplit(index[[2L]], index[[1L]], use.g.names = TRUE)
   data <- mapply(
                  function(x, y){
                    rownames(x) <- y
