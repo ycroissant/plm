@@ -514,12 +514,6 @@ pgmm <- function(formula, data, subset, na.action,
 
   W  <- W1
   yX <- yX1
-
-  # Compute the first step matrices
-  if (transformation == "d")  A1 <- FSM(T - TL1, "G") # == tcrossprod(diff(diag(1, T - TL1 + 1))) # TODO: FSM's arg fsm not fully flexible
-  if (transformation == "ld") A1 <- FSM(T - TL2, fsm)
-
-  # compute the estimator
   
   ## WX <- mapply(function(x, y) crossprod(x, y), W, yX, SIMPLIFY = FALSE)
   ## WX <- Reduce("+", WX)
@@ -529,6 +523,14 @@ pgmm <- function(formula, data, subset, na.action,
   WX <- mapply(function(x, y) crossprod(x, y), W, yX, SIMPLIFY = FALSE)
   Wy <- lapply(WX, function(x) x[ ,  1L])
   WX <- lapply(WX, function(x) x[ , -1L, drop = FALSE])
+  WX <- Reduce("+", WX)
+  Wy <- Reduce("+", Wy)
+
+  # Compute the first step matrices
+  A1 <- switch(fsm,
+          "d" = FSM(T - TL1, "G"), # == tcrossprod(diff(diag(1, T - TL1 + 1))) # TODO: FSM's arg fsm not fully flexible
+         "ld" = FSM(T - TL2, fsm))
+  
   A1 <- lapply(W, function(x) crossprod(t(crossprod(x, A1)), x))
   A1 <- Reduce("+", A1)
   minevA1 <- min(eigen(A1)$values)
@@ -538,9 +540,7 @@ pgmm <- function(formula, data, subset, na.action,
     ginv(A1)
   } else solve(A1)
   A1 <- A1 * length(W)
-  
-  WX <- Reduce("+", WX)
-  Wy <- Reduce("+", Wy)
+
   t.CP.WX.A1 <- t(crossprod(WX, A1))
   B1 <- solve(crossprod(WX, t.CP.WX.A1))
   Y1 <- crossprod(t.CP.WX.A1, Wy)
@@ -693,7 +693,7 @@ extract.data <- function(data, as.matrix = TRUE){
   # the previous version is *very* slow because :
   # 1. split works wrong on pdata.frame
   # 2. model.matrix is lapplied !
-  ### -> using collpse's fast *split functions / 2024-12-27
+  ### -> using collapse's fast *split functions / 2024-12-27
   form <- attr(data, "formula")
   trms <- terms(form)
   has.response  <- attr(trms, 'response')  == 1
