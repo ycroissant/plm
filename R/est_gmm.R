@@ -453,7 +453,7 @@ pgmm <- function(formula, data, subset, na.action,
         W1[[i]] <- cbind(W1[[i]], V1)
       }
       else{
-        W2[[i]] <- cbind(W2[[i]], V2)
+        W2[[i]]  <- cbind( W2[[i]], V2)
         yX2[[i]] <- cbind(yX2[[i]], V2)
       }
     }
@@ -497,7 +497,7 @@ pgmm <- function(formula, data, subset, na.action,
   
   if (transformation == "ld"){
     for (i in seq_len(N)){
-      W1[[i]] <- bdiag(W1[[i]], W2[[i]])
+       W1[[i]] <- bdiag( W1[[i]],  W2[[i]])
       yX1[[i]] <- rbind(yX1[[i]], yX2[[i]])
       if (normal.instruments) Z1[[i]] <- bdiag(Z1[[i]], Z2[[i]])
     }
@@ -512,7 +512,7 @@ pgmm <- function(formula, data, subset, na.action,
   ##### 11. Compute the estimator
   #################################################################
 
-  W <- W1
+  W  <- W1
   yX <- yX1
 
   # Compute the first step matrices
