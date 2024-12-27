@@ -710,8 +710,9 @@ extract.data <- function(data, as.matrix = TRUE){
     X <- cbind(data[[1L]], X)
     colnames(X)[1L] <- deparse(trms[[2L]])
   }
-  data <- if(!as.matrix) collapse::rsplit(as.data.frame(X), index[[1L]], simplify = FALSE)
-          else           collapse::rsplit(X, index[[1L]], simplify = FALSE)
+  
+  if(!as.matrix) X <- as.data.frame(X)
+  data <- collapse::rsplit(X, index[[1L]], simplify = FALSE)
   time <- collapse::gsplit(index[[2L]], index[[1L]])
   data <- mapply(
                  function(x, y){
