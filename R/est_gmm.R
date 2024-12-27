@@ -528,7 +528,7 @@ pgmm <- function(formula, data, subset, na.action,
 
   # Compute the first step matrices
   A1 <- switch(transformation,
-          "d" = FSM(T - TL1, "G"), # == tcrossprod(diff(diag(1, T - TL1 + 1))) # TODO: FSM's arg fsm not fully flexible
+          "d" = FSM(T - TL1, "G"), # == tcrossprod(diff(diag(1, T - TL1 + 1))) # TODO: FSM's arg fsm not fully flexible 
          "ld" = FSM(T - TL2, fsm))
   
   A1 <- lapply(W, function(x) crossprod(t(crossprod(x, A1)), x))
