@@ -1254,13 +1254,12 @@ vcovHC.pgmm <- function(x, ...) {
                  mapply(function(x, y) crossprod(x, y[ , -1L, drop = FALSE]), x$W, yX, SIMPLIFY = FALSE))
     We <- Reduce("+", mapply(function(x, y) crossprod(x, y), x$W, residuals, SIMPLIFY = FALSE))
     B1 <- solve(t(WX) %*% A1 %*% WX)
-    B2 <- vcov(x)
-    vcov1s <- B1 %*% (t(WX) %*% A1 %*% SA2 %*% A1 %*% WX) %*% B1
+    vcov1s <- B1 %*% (t(WX) %*% A1 %*% SA2 %*% A1 %*% WX) %*% B1 # robust vcov for one-step model
     for (k in 2:K) {
       exk <- mapply(
                     function(x, y){
                       z <- crossprod(t(x[ , k, drop = FALSE]), t(y))
-                      - z - t(z)
+                      return(- z - t(z))
                     },
                     yX, res1s, SIMPLIFY = FALSE)
       wexkw <- Reduce("+",
@@ -1268,10 +1267,11 @@ vcovHC.pgmm <- function(x, ...) {
                              function(x, y)
                              crossprod(x, crossprod(y, x)),
                              x$W, exk, SIMPLIFY = FALSE))
+      B2 <- vcov(x)
       Dk <- -B2 %*% t(WX) %*% A2 %*% wexkw %*% A2 %*% We
       D <- cbind(D, Dk)
     }
-    vcovr <- B2 + crossprod(t(D), B2) + t(crossprod(t(D), B2)) + D %*% vcov1s %*% t(D)
+    vcovr <- B2 + crossprod(t(D), B2) + t(crossprod(t(D), B2)) + D %*% vcov1s %*% t(D) # robust vcov for twosteps model, Roodman (2019) form. (18)
   }
   else {
     # model = "onestep"
@@ -1279,7 +1279,7 @@ vcovHC.pgmm <- function(x, ...) {
     K <- ncol(yX[[1L]])
     WX <- Reduce("+", mapply(function(z, y) crossprod(z[ , -1L, drop = FALSE], y), yX, x$W, SIMPLIFY = FALSE))
     B1 <- vcov(x)
-    vcovr <- B1 %*% (WX %*% A1 %*% SA2 %*% A1 %*% t(WX)) %*% B1
+    vcovr <- B1 %*% (WX %*% A1 %*% SA2 %*% A1 %*% t(WX)) %*% B1 # robust vcov onestep model, Roodman (2019) form. (15)
   }
   vcovr
 }
