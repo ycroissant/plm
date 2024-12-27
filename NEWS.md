@@ -11,7 +11,9 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
            first-differencing errored ([#58](https://github.com/ycroissant/plm/issues/58)).
 * `pggls`: FD models errored with the data constellation as described for `vcovXX`. 
 * `is.pdata.frame` (non-exported helper function): fix part of the check if object 
-                                                 does not have an index.
+                                                   does not have an index.
+* Vignette A: fixed description of `pgmm`'s `effect` argument.
+                                              
 
 ***
 

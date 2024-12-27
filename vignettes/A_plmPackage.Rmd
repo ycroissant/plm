@@ -1011,16 +1011,14 @@ the model that are not used as GMM instruments are used as
 normal instruments, with the same lag structure; "normal"
 instruments may also be indicated in the third part of the formula. 
 
-The `effect` argument is either `NULL`, `"individual"`
-(the default), or `"twoways"`. In the first case, the model is
-estimated in levels. In the second case, the model is estimated in
+The `effect` argument is either `"individual"` or `"twoways"` (the default).
+In the first case, the model is the model is estimated in
 first differences to get rid of the individuals effects. In the last
 case, the model is estimated in first differences and time dummies are
 included.
 
 The `model` argument specifies whether a one-step or a
-two-steps model is requested (`"onestep"` or
-`"twosteps"`).
+two-steps model is requested (`"onestep"` or `"twosteps"`).
 
 The following example is from @AREL:BOND:91. Employment is
 explained by past values of employment (two lags), current and first
