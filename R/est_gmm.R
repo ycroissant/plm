@@ -290,9 +290,9 @@ pgmm <- function(formula, data, subset, na.action,
     # of any covariates + 1 because of first - differencing or the
     # largest minimum lag for any gmm or normal instruments
     # min or max to select the number of lost time series?
-    gmm.minlag  <- min(unlist(gmm.lags, use.names = FALSE))                                  # was (==): min(sapply(gmm.lags, min))
-    inst.maxlag <- if (!is.null(inst.lags)) max(unlist(inst.lags, use.names = FALSE)) else 0 # was (==): max(sapply(inst.lags, max)) else 0
-    main.maxlag <- max(unlist(main.lags, use.names = FALSE))                                 # was (==): max(sapply(main.lags, max))
+    gmm.minlag  <- min(unlist(gmm.lags, use.names = FALSE))
+    inst.maxlag <- if (!is.null(inst.lags)) max(unlist(inst.lags, use.names = FALSE)) else 0
+    main.maxlag <- max(unlist(main.lags, use.names = FALSE))
     TL1 <- max(main.maxlag + 1, inst.maxlag + 1, gmm.minlag)
     TL2 <- max(main.maxlag,     inst.maxlag,     gmm.minlag - 1)
     # if TL2 = 0 (no lags), one observation is lost anyway because of
@@ -377,7 +377,7 @@ pgmm <- function(formula, data, subset, na.action,
                    xd <- diff(x)
                    xd[-seq_len(TL1 - 1), , drop = FALSE]
                  })
-    }
+  }
   
   #################################################################
   ##### 7. In case of system gmm, create the matrix of
@@ -558,8 +558,7 @@ pgmm <- function(formula, data, subset, na.action,
     names(coefficients) <- names.coef
     
     # calc. residuals with coefs from 2nd step
-    residuals <- lapply(yX,
-                         function(x){
+    residuals <- lapply(yX, function(x){
                            nz <- rownames(x)
                            z <- as.vector(x[ , 1L] - crossprod(t(x[ , -1L, drop = FALSE]), coefficients))
                            names(z) <- nz
