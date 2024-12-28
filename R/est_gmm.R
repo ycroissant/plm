@@ -96,9 +96,6 @@
 #' \item{A2}{the weighting matrix for the two--steps estimator,}
 #' \item{call}{the call.}
 #' 
-#' In addition, it has attribute `"pdim"` which contains the pdim object for
-#' the model.
-#' 
 #' It has `print`, `summary` and `print.summary` methods.
 #' @author Yves Croissant
 #' @export
@@ -679,10 +676,7 @@ dynterms2formula <- function(x, response.name = NULL){
 }
 
 extract.data <- function(data, form, as.matrix = TRUE){
-  # the previous version is *very* slow because :
-  # 1. split works wrong on pdata.frame
-  # 2. model.matrix is lapplied !
-  ### -> using collapse's fast *split functions / 2024-12-27
+  # uses collapse's fast *split functions / 2024-12-27
   trms <- terms(form)
   has.response  <- attr(trms, 'response')  == 1
   has.intercept <- attr(trms, 'intercept') == 1

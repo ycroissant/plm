@@ -109,9 +109,6 @@ list element) (two lists in case of system GMM,}
 \item{A2}{the weighting matrix for the two--steps estimator,}
 \item{call}{the call.}
 
-In addition, it has attribute \code{"pdim"} which contains the pdim object for
-the model.
-
 It has \code{print}, \code{summary} and \code{print.summary} methods.
 }
 \description{
