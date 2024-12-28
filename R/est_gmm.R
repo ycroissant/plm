@@ -480,8 +480,9 @@ pgmm <- function(formula, data, subset, na.action,
   }
 
   #################################################################
-  ##### 10. In case of sys gmm, bdiag or rbind the diff and level
-  ##### matrices
+  ##### 10. a) In case of sys gmm: bdiag or rbind the diff and level
+  #####        matrices; 
+  #####     b) cbind normal instruments, if any
   #################################################################
   
   if (transformation == "ld"){
