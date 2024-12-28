@@ -350,15 +350,12 @@ pgmm <- function(formula, data, subset, na.action,
   ##### individuals
   #################################################################
 
-  attr(data, "formula") <- formula(main.form)
-  yX <- extract.data(data)
+  yX <- extract.data(data, form = main.form)
   names.coef <- colnames(yX[[1L]])[-1L]
   Z <- if(normal.instruments){
-          attr(data, "formula") <- inst.form
-          extract.data(data)
+          extract.data(data, form = inst.form)
         } else NULL
-  attr(data, "formula") <- gmm.form
-  W <- extract.data(data, as.matrix = FALSE)
+  W <- extract.data(data, form = gmm.form, as.matrix = FALSE)
   
   #################################################################
   ##### 6. Create the matrix of response/covariates, gmm instruments
@@ -680,12 +677,11 @@ dynterms2formula <- function(x, response.name = NULL){
   else as.formula(paste(response.name, "~", paste(result, collapse = "+")))
 }
 
-extract.data <- function(data, as.matrix = TRUE){
+extract.data <- function(data, form, as.matrix = TRUE){
   # the previous version is *very* slow because :
   # 1. split works wrong on pdata.frame
   # 2. model.matrix is lapplied !
   ### -> using collapse's fast *split functions / 2024-12-27
-  form <- attr(data, "formula")
   trms <- terms(form)
   has.response  <- attr(trms, 'response')  == 1
   has.intercept <- attr(trms, 'intercept') == 1
