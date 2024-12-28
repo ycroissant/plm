@@ -365,33 +365,25 @@ pgmm <- function(formula, data, subset, na.action,
   ##### and normal instruments for the diff model
   #################################################################
   # create the matrix of gmm instruments for every individual
-  W1 <- lapply(W,
-               function(x){
+  W1 <- lapply(W, function(x){
                  u <- mapply(makegmm, x, gmm.lags, TL1, collapse, SIMPLIFY = FALSE)
-                 u <- matrix(unlist(u), nrow = nrow(u[[1L]]))
-                 u
-               }
-               )
+                 matrix(unlist(u), nrow = nrow(u[[1L]]))
+               })
 
   # differentiate the matrix of response/covariates (and of normal
-  # instruments if any) and remove T1 - 1 time series (xd is already
+  # instruments, if any) and remove T1 - 1 time series (xd is already
   # differenced)
-  yX1 <- lapply(yX,
-                function(x){
+  yX1 <- lapply(yX, function(x){
                   xd <- diff(x)
-                  xd <- xd[- c(seq_len(TL1 - 1)), , drop = FALSE]
-                  xd
-                }
-                )
+                  xd[-seq_len(TL1 - 1), , drop = FALSE]
+                })
+  
   if (normal.instruments){
-    Z1 <- lapply(Z,
-                 function(x){
+    Z1 <- lapply(Z, function(x){
                    xd <- diff(x)
-                   xd <- xd[- c(seq_len(TL1 - 1)), , drop = FALSE]
-                   xd
-                 }
-                 )
-  }
+                   xd[-seq_len(TL1 - 1), , drop = FALSE]
+                 })
+    }
   
   #################################################################
   ##### 7. In case of system gmm, create the matrix of
@@ -400,8 +392,7 @@ pgmm <- function(formula, data, subset, na.action,
   #################################################################
 
   if (transformation == "ld"){
-    W2 <- lapply(W,
-                 function(x){
+    W2 <- lapply(W, function(x){
                    u <- mapply(makeW2, x, collapse, SIMPLIFY = FALSE)
                    # the matrix of instruments in difference has T - 2
                    # rows if one time series is lost (there are no gmm
@@ -413,17 +404,17 @@ pgmm <- function(formula, data, subset, na.action,
                    u <- matrix(unlist(u), nrow = nrow.ud)
                    if (TL2 == 1) u <- rbind(0, u)
                    u
-                 }
-                 )
+                 })
+    
     # remove the relevant number of time series for data in level
-    yX2 <- lapply(yX,
-                  function(x){
-                    x <- x[- c(0:TL2), , drop = FALSE]
-                    x
-                  }
-                  )
+    yX2 <- lapply(yX, function(x){
+                    x[-seq_len(TL2), , drop = FALSE]
+                  })
+    
     if (normal.instruments){
-      Z2 <- lapply(Z, function(x){x <- x[- c(0:TL2), , drop = FALSE]; x})
+      Z2 <- lapply(Z, function(x){
+                     x[-seq_len(TL2), , drop = FALSE]
+                     })
     }
   }
 
@@ -434,8 +425,8 @@ pgmm <- function(formula, data, subset, na.action,
   if (effect == "twoways"){
     namesV <- levels(index(data, which = "time"))
     if (transformation == "d"){
-      V1 <- td.model.diff <- diff(diag(1, T - TL1 + 1))[, -1]
-      namesV <- namesV[- c(0:(TL1))]
+      V1 <- td.model.diff <- diff(diag(1, T - TL1 + 1))[ , -1, drop = FALSE]
+      namesV <- namesV[-seq_len(TL1)]
     }
     else{
       td <- cbind(1, rbind(0, diag(1, T - 1)))
@@ -445,8 +436,9 @@ pgmm <- function(formula, data, subset, na.action,
       # intercept and should be kept anyway
       V2 <- td[- c(seq_len(TL2)), - c(2:(2 + TL2 - 1))]
       V1 <- diff(V2)
-      namesV <- c("(Intercept)", namesV[- c(0:TL2 + 1)])
+      namesV <- c("(Intercept)", namesV[-seq_len(TL2 + 1)])
     }
+    
     for (i in seq_len(N)){
       yX1[[i]] <- cbind(yX1[[i]], V1)
       if (transformation == "d"){
@@ -461,7 +453,7 @@ pgmm <- function(formula, data, subset, na.action,
   # A QAD fix for the bug in mtest for ld model without time.dummies
   if (effect == "individual" && transformation == "ld"){
     namesV <- levels(index(data, which = "time"))
-    namesV <- c("(Intercept)", namesV[-c(0:TL2 + 1)])
+    namesV <- c("(Intercept)", namesV[-seq_len(TL2 + 1)])
   }
   
   #################################################################
@@ -528,7 +520,7 @@ pgmm <- function(formula, data, subset, na.action,
 
   # Compute the first step matrices
   A1 <- switch(transformation,
-          "d" = FSM(T - TL1, "G"), # == tcrossprod(diff(diag(1, T - TL1 + 1))) # TODO: FSM's arg fsm not fully flexible 
+          "d" = FSM(T - TL1, "G"), # == tcrossprod(diff(diag(1, T - TL1 + 1))) ## TODO: FSM's arg fsm not fully flexible
          "ld" = FSM(T - TL2, fsm))
   
   A1 <- lapply(W, function(x) crossprod(t(crossprod(x, A1)), x))
@@ -548,8 +540,7 @@ pgmm <- function(formula, data, subset, na.action,
   if (effect == "twoways") names.coef <- c(names.coef, namesV)
   names(coefficients) <- names.coef
 
-  residuals <- lapply(yX,
-                      function(x)
+  residuals <- lapply(yX, function(x)
                       as.vector(x[ , 1L] - crossprod(t(x[ , -1L, drop = FALSE]), coefficients)))
   outresid <- lapply(residuals, function(x) outer(x, x))
 
@@ -714,12 +705,10 @@ extract.data <- function(data, as.matrix = TRUE){
   if(!as.matrix) X <- as.data.frame(X)
   data <- collapse::rsplit(X, index[[1L]], simplify = FALSE)
   time <- collapse::gsplit(index[[2L]], index[[1L]])
-  data <- mapply(
-                 function(x, y){
+  data <- mapply(function(x, y){
                    rownames(x) <- y
                    x
-                 }
-                 , data, time, SIMPLIFY = FALSE)
+                 }, data, time, SIMPLIFY = FALSE)
   data
 }
 
