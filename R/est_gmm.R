@@ -114,12 +114,24 @@
 #' 
 #' data("EmplUK", package = "plm")
 #' 
-#' ## Arellano and Bond (1991), table 4 col. b 
-#' z1 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
-#'            + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
+#'# Arellano/Bond 1991, Table 4, column (a1) [non-robust SEs]
+#'ab.a1 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
+#'              + lag(log(capital), 0:2) + lag(log(output), 0:2) | lag(log(emp), 2:99),
+#'              data = EmplUK, effect = "twoways", model = "onestep")
+#'summary(ab.a1, robust = FALSE)
+#'
+#'# Arellano/Bond 1991, Table 4, column (a2) [non-robust SEs]
+#'ab.a2 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
+#'              + lag(log(capital), 0:2) + lag(log(output), 0:2) | lag(log(emp), 2:99),
+#'              data = EmplUK, effect = "twoways", model = "twosteps")
+#'summary(ab.a2, robust = FALSE)
+#'
+## Arellano and Bond (1991), table 4 col. b
+#'ab.b <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
+#'             + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
 #'             data = EmplUK, effect = "twoways", model = "twosteps")
-#' summary(z1, robust = FALSE)
-#' 
+#'summary(ab.b, robust = FALSE)
+#'
 #' ## Blundell and Bond (1998) table 4 (cf. DPD for OX p. 12 col. 4)
 #' z2 <- pgmm(log(emp) ~ lag(log(emp), 1)+ lag(log(wage), 0:1) +
 #'            lag(log(capital), 0:1) | lag(log(emp), 2:99) +
@@ -528,19 +540,27 @@ pgmm <- function(formula, data, subset, na.action,
   } else solve(A1)
   A1 <- A1 * length(W)
 
+  # coefficients: Roodman (2019) formula (13, upper part for beta1) with B1 = (X'Z(Z'HZ)^(-1)Z'X)^(-1), A1 = (Z'HZ)^(-1)
   t.CP.WX.A1 <- t(crossprod(WX, A1))
   B1 <- solve(crossprod(WX, t.CP.WX.A1))
   Y1 <- crossprod(t.CP.WX.A1, Wy)
   coefficients <- as.numeric(crossprod(B1, Y1))
+  
   if (effect == "twoways") names.coef <- c(names.coef, namesV)
   names(coefficients) <- names.coef
 
   residuals <- lapply(yX, function(x)
                       as.vector(x[ , 1L] - crossprod(t(x[ , -1L, drop = FALSE]), coefficients)))
   outresid <- lapply(residuals, function(x) outer(x, x))
-
-  # A2 is also needed in vcovHC.pggm for "onestep" model, hence calc. here and 
-  # include in model object also for onestep model
+  
+  # non-robust variance-covariance matrix of one-step GMM:
+  # see Doornik/Arellano/Bond (2012), p. 31 (formula for V^hat1 with sig2 as in (4) on p. 30)
+  CPresid <- crossprod(unlist(residuals))
+  sig2 <- as.numeric(CPresid / (pdim$nT$N - NCOL(B1)))
+  vcov <- sig2 * B1
+  
+  # A2 is also needed  for "onestep" model in vcovHC.pgmm, hence calc. here and 
+  # always include in model object 
   A2 <- mapply(function(x, y) crossprod(t(crossprod(x, y)), x), W, outresid, SIMPLIFY = FALSE)
   A2 <- Reduce("+", A2)
   minevA2 <- min(eigen(A2)$values)
@@ -553,26 +573,24 @@ pgmm <- function(formula, data, subset, na.action,
     coef1s <- coefficients
     t.CP.WX.A2 <- t(crossprod(WX, A2))
     Y2 <- crossprod(t.CP.WX.A2, Wy)
-    B2 <- solve(crossprod(WX, t.CP.WX.A2))
-    coefficients <- as.numeric(crossprod(B2, Y2))
-    names(coefficients) <- names.coef
+    vcov <- solve(crossprod(WX, t.CP.WX.A2))
+    coef2s <- as.numeric(crossprod(vcov, Y2))
+    names(coef2s) <- names.coef
+    coefficients <- list("step1" = coef1s, "step2" = coef2s)
     
     # calc. residuals with coefs from 2nd step
     residuals <- lapply(yX, function(x){
                            nz <- rownames(x)
-                           z <- as.vector(x[ , 1L] - crossprod(t(x[ , -1L, drop = FALSE]), coefficients))
+                           z <- as.vector(x[ , 1L] - crossprod(t(x[ , -1L, drop = FALSE]), coef2s))
                            names(z) <- nz
                            z})
-    vcov <- B2
-  } else vcov <- B1
+  }
   
   rownames(vcov) <- colnames(vcov) <- names.coef
 
   # TODO: yX does not contain the original data (but first-diff-ed data) -> fitted.values not what you would expect
   fitted.values <- mapply(function(x, y) x[ , 1L] - y, yX, residuals)
   # fitted.values <- data[ , 1L] - unlist(residuals) # in 'data' is original data, but obs lost due to diff-ing are not dropped -> format incompatible
-  
-  if(model == "twosteps") coefficients <- list(coef1s, coefficients)
   
   args <- list(model          = model,
                effect         = effect,
@@ -589,6 +607,7 @@ pgmm <- function(formula, data, subset, na.action,
                  W             = W,
                  A1            = A1,
                  A2            = A2,
+                 B1            = B1,
                  call          = cl,
                  args          = args)
   
@@ -783,9 +802,9 @@ summary.pgmm <- function(object, robust = TRUE, time.dummies = FALSE, ...) {
   K <- if(model == "onestep") length(object$coefficients)
        else                   length(object$coefficients[[2L]])
   object$sargan <- sargan(object, "twosteps")
-  object$m1 <- mtest(object, order = 1, vcov = vv)
+  object$m1 <- mtest(object, order = 1L, vcov = vv)
   # mtest with order = 2 is only feasible if more than 2 observations are present
-  if(NROW(object$model[[1]]) > 2) object$m2 <- mtest(object, order = 2, vcov = vv)
+  if(NROW(object$model[[1L]]) > 2L) object$m2 <- mtest(object, order = 2L, vcov = vv)
   object$wald.coef <- pwaldtest(object, param = "coef", vcov = vv)
   if(effect == "twoways") object$wald.td <- pwaldtest(object, param = "time", vcov = vv)
   Kt <- length(object$args$namest)
@@ -914,6 +933,8 @@ print.summary.pgmm <- function(x, digits = max(3, getOption("digits") - 2),
                       model.pgmm.transformation.list[transformation], sep = " ")
   cat(paste(model.text, "\n"))
   ## TODO: add info about collapse argument in printed output
+  
+  ## TODO: print information about non-robust/robust SE, see, e.g., print.summary.plm
 
   cat("\nCall:\n")
   print(x$call)
