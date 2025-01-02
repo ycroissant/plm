@@ -896,15 +896,13 @@ mtest.pgmm <- function(object, order = 1L, vcov = NULL, ...) {
   X <- lapply(object$model, function(x) x[ , -1L, drop = FALSE])
   W <- object$W
   A <- if(model == "onestep") object$A1 else object$A2
-  EVE <- Reduce("+",
-                mapply(function(x, y) t(y) %*% x %*% t(x) %*% y, resid, residl, SIMPLIFY = FALSE))
-  EX <- Reduce("+", mapply(crossprod, residl, X, SIMPLIFY = FALSE))
-  XZ <- Reduce("+", mapply(crossprod, W,      X, SIMPLIFY = FALSE))
-  ZVE <- Reduce("+",
-                mapply(function(x, y, z) t(x) %*% y %*% t(y) %*% z, W, resid, residl, SIMPLIFY = FALSE))
+  EX  <- Reduce("+", mapply(crossprod, residl, X, SIMPLIFY = FALSE))
+  XZ  <- Reduce("+", mapply(crossprod, W,      X, SIMPLIFY = FALSE))
+  EVE <- Reduce("+", mapply(function(x, y)    t(y) %*% x %*% t(x) %*% y,    resid, residl, SIMPLIFY = FALSE))
+  ZVE <- Reduce("+", mapply(function(w, x, y) t(w) %*% x %*% t(x) %*% y, W, resid, residl, SIMPLIFY = FALSE))
 
-  denom <- EVE - 2 * EX %*% vcov(object) %*% t(XZ) %*% A %*% ZVE + EX %*% vv %*% t(EX)
   num <- Reduce("+", mapply(crossprod, resid, residl, SIMPLIFY = FALSE))
+  denom <- EVE - 2 * EX %*% vcov(object) %*% t(XZ) %*% A %*% ZVE + EX %*% vv %*% t(EX)
   stat <- num / sqrt(denom)
   names(stat) <- "normal"
   if(!is.null(vcov)) vcov <- paste0(", vcov: ", deparse(substitute(vcov)))
