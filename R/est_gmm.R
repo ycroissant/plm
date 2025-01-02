@@ -126,11 +126,12 @@
 #'              data = EmplUK, effect = "twoways", model = "twosteps")
 #'summary(ab.a2, robust = FALSE)
 #'
-## Arellano and Bond (1991), table 4 col. b
+## Arellano and Bond (1991), table 4 col. b / # Windmeijer (2025), table 2, std. errc
 #'ab.b <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
 #'             + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
 #'             data = EmplUK, effect = "twoways", model = "twosteps")
-#'summary(ab.b, robust = FALSE)
+#'summary(ab.b, robust = FALSE) # Arellano/Bond
+#'summary(ab.b, robust = TRUE)  # Windmeijer
 #'
 #' ## Blundell and Bond (1998) table 4 (cf. DPD for OX p. 12 col. 4)
 #' z2 <- pgmm(log(emp) ~ lag(log(emp), 1)+ lag(log(wage), 0:1) +
