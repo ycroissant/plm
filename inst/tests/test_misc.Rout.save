@@ -1,5 +1,5 @@
 
-R version 4.4.1 (2024-06-14 ucrt) -- "Race for Your Life"
+R version 4.4.2 (2024-10-31 ucrt) -- "Pile of Leaves"
 Copyright (C) 2024 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64
 
@@ -1493,8 +1493,8 @@ lag(log(capital), 0:1)1 -0.424393   0.058479 -7.2572 3.952e-13 ***
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Sargan test: chisq(100) = 118.763 (p-value = 0.097096)
-Autocorrelation test (1): normal = -4.808434 (p-value = 1.5212e-06)
-Autocorrelation test (2): normal = -0.2800133 (p-value = 0.77947)
+Autocorrelation test (1): normal = -5.519159 (p-value = 3.4063e-08)
+Autocorrelation test (2): normal = -0.2524777 (p-value = 0.80067)
 Wald test for coefficients: chisq(5) = 11174.82 (p-value = < 2.22e-16)
 Wald test for time dummies: chisq(7) = 14.71138 (p-value = 0.039882)
 > 
@@ -1542,7 +1542,7 @@ Autocorrelation test (2): normal = -0.3325401 (p-value = 0.73948)
 Wald test for coefficients: chisq(7) = 371.9877 (p-value = < 2.22e-16)
 Wald test for time dummies: chisq(6) = 26.9045 (p-value = 0.0001509)
 > 
-> ## Blundell and Bond (1998) table 4 (cf DPD for OX p. 12 col. 4)
+> ## Blundell and Bond (1998) table 4 (cf. DPD for OX p. 12 col. 4)
 > z2 <- pgmm(dynformula(log(emp) ~ log(wage) + log(capital), list(1,1,1)),
 +              data = EmplUK, effect = "twoways", model = "onestep",
 +              gmm.inst = ~log(emp) + log(wage) + log(capital),
@@ -1579,8 +1579,8 @@ lag(log(capital), 1) -0.424393   0.058479 -7.2572 3.952e-13 ***
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Sargan test: chisq(100) = 118.763 (p-value = 0.097096)
-Autocorrelation test (1): normal = -4.808434 (p-value = 1.5212e-06)
-Autocorrelation test (2): normal = -0.2800133 (p-value = 0.77947)
+Autocorrelation test (1): normal = -5.519159 (p-value = 3.4063e-08)
+Autocorrelation test (2): normal = -0.2524777 (p-value = 0.80067)
 Wald test for coefficients: chisq(5) = 11174.82 (p-value = < 2.22e-16)
 Wald test for time dummies: chisq(7) = 14.71138 (p-value = 0.039882)
 > 
@@ -1891,4 +1891,4 @@ Coefficients:
 > 
 > proc.time()
    user  system elapsed 
-  10.04    0.75   10.76 
+   9.45    0.90   10.32 
