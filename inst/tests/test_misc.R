@@ -288,7 +288,7 @@ z1 <- pgmm(log(emp) ~ log(wage) + log(capital) + log(output),
              gmm.inst = ~log(emp), lag.gmm = list(c(2,99)))
 summary(z1, robust = FALSE)
 
-## Blundell and Bond (1998) table 4 (cf DPD for OX p. 12 col. 4)
+## Blundell and Bond (1998) table 4 (cf. DPD for OX p. 12 col. 4)
 z2 <- pgmm(dynformula(log(emp) ~ log(wage) + log(capital), list(1,1,1)),
              data = EmplUK, effect = "twoways", model = "onestep",
              gmm.inst = ~log(emp) + log(wage) + log(capital),
