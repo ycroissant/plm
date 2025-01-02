@@ -1,5 +1,5 @@
 
-R version 4.4.1 (2024-06-14 ucrt) -- "Race for Your Life"
+R version 4.4.2 (2024-10-31 ucrt) -- "Pile of Leaves"
 Copyright (C) 2024 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64
 
@@ -17,11 +17,202 @@ Type 'q()' to quit R.
 
 > library("plm")
 > data("EmplUK", package = "plm")
+> 
+> # Arellano/Bond 1991, Table 4, column (a1) [non-robust SEs]
+> ab.a1 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
++               + lag(log(capital), 0:2) + lag(log(output), 0:2) | lag(log(emp), 2:99),
++               data = EmplUK, effect = "twoways", model = "onestep")
+> 
+> (s.ab.a1  <- summary(ab.a1, robust = FALSE)) # as tabulated by Arellano/Bond
+Twoways effects One-step model Difference GMM 
+
+Call:
+pgmm(formula = log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 
+    0:1) + lag(log(capital), 0:2) + lag(log(output), 0:2) | lag(log(emp), 
+    2:99), data = EmplUK, effect = "twoways", model = "onestep")
+
+Unbalanced Panel: n = 140, T = 7-9, N = 1031
+
+Number of Observations Used: 611
+Residuals:
+      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+-0.6006508 -0.0299498  0.0000000 -0.0001193  0.0311461  0.5693264 
+
+Coefficients:
+                          Estimate Std. Error   z-value  Pr(>|z|)    
+lag(log(emp), 1:2)1      0.6862259  0.0136001   50.4573 < 2.2e-16 ***
+lag(log(emp), 1:2)2     -0.0853582  0.0040665  -20.9908 < 2.2e-16 ***
+lag(log(wage), 0:1)0    -0.6078207  0.0060187 -100.9892 < 2.2e-16 ***
+lag(log(wage), 0:1)1     0.3926231  0.0099965   39.2761 < 2.2e-16 ***
+lag(log(capital), 0:2)0  0.3568456  0.0033888  105.3012 < 2.2e-16 ***
+lag(log(capital), 0:2)1 -0.0580010  0.0053356  -10.8706 < 2.2e-16 ***
+lag(log(capital), 0:2)2 -0.0199476  0.0038094   -5.2364 1.637e-07 ***
+lag(log(output), 0:2)0   0.6085055  0.0123121   49.4235 < 2.2e-16 ***
+lag(log(output), 0:2)1  -0.7111640  0.0168802  -42.1301 < 2.2e-16 ***
+lag(log(output), 0:2)2   0.1057976  0.0130731    8.0928 5.831e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Sargan test: chisq(25) = 48.74983 (p-value = 0.0030295)
+Autocorrelation test (1): normal = -4.147354 (p-value = 3.3634e-05)
+Autocorrelation test (2): normal = -0.4498036 (p-value = 0.65285)
+Wald test for coefficients: chisq(10) = 60814.2 (p-value = < 2.22e-16)
+Wald test for time dummies: chisq(6) = 1139.61 (p-value = < 2.22e-16)
+> (s.ab.a1r <- summary(ab.a1, robust = TRUE))
+Twoways effects One-step model Difference GMM 
+
+Call:
+pgmm(formula = log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 
+    0:1) + lag(log(capital), 0:2) + lag(log(output), 0:2) | lag(log(emp), 
+    2:99), data = EmplUK, effect = "twoways", model = "onestep")
+
+Unbalanced Panel: n = 140, T = 7-9, N = 1031
+
+Number of Observations Used: 611
+Residuals:
+      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+-0.6006508 -0.0299498  0.0000000 -0.0001193  0.0311461  0.5693264 
+
+Coefficients:
+                         Estimate Std. Error z-value  Pr(>|z|)    
+lag(log(emp), 1:2)1      0.686226   0.144594  4.7459 2.076e-06 ***
+lag(log(emp), 1:2)2     -0.085358   0.056016 -1.5238 0.1275510    
+lag(log(wage), 0:1)0    -0.607821   0.178205 -3.4108 0.0006478 ***
+lag(log(wage), 0:1)1     0.392623   0.167993  2.3371 0.0194319 *  
+lag(log(capital), 0:2)0  0.356846   0.059020  6.0462 1.483e-09 ***
+lag(log(capital), 0:2)1 -0.058001   0.073180 -0.7926 0.4280206    
+lag(log(capital), 0:2)2 -0.019948   0.032713 -0.6098 0.5420065    
+lag(log(output), 0:2)0   0.608506   0.172531  3.5269 0.0004204 ***
+lag(log(output), 0:2)1  -0.711164   0.231716 -3.0691 0.0021469 ** 
+lag(log(output), 0:2)2   0.105798   0.141202  0.7493 0.4536974    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Sargan test: chisq(25) = 48.74983 (p-value = 0.0030295)
+Autocorrelation test (1): normal = -2.678079 (p-value = 0.0074046)
+Autocorrelation test (2): normal = -0.3527172 (p-value = 0.7243)
+Wald test for coefficients: chisq(10) = 408.2859 (p-value = < 2.22e-16)
+Wald test for time dummies: chisq(6) = 11.57904 (p-value = 0.072046)
+> 
+> ### Arellano-Bond test, Sargan test and Wald test yield different results for onestep
+> ## xtabond2 result for robust mtest for col. a1
+> #  xtabond2 n L.n L2.n w L.w L(0/2).(k ys) yr*, gmm(L.n) iv(w L.w L(0/2).(k ys) yr*) nolevel robust
+> #Arellano-Bond test for AR(1) in first differences: z = -3.60 Pr > z = 0.000
+> #Arellano-Bond test for AR(2) in first differences: z = -0.52 Pr > z = 0.606
+> 
+> 
+> # Arellano/Bond 1991, Table 4, column (a2) [non-robust SEs]
+> ab.a2 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
++               + lag(log(capital), 0:2) + lag(log(output), 0:2) | lag(log(emp), 2:99),
++               data = EmplUK, effect = "twoways", model = "twosteps")
+> (s.ab.a2  <- summary(ab.a2, robust = FALSE)) # as tabulated by Arellano/Bond
+Twoways effects Two-steps model Difference GMM 
+
+Call:
+pgmm(formula = log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 
+    0:1) + lag(log(capital), 0:2) + lag(log(output), 0:2) | lag(log(emp), 
+    2:99), data = EmplUK, effect = "twoways", model = "twosteps")
+
+Unbalanced Panel: n = 140, T = 7-9, N = 1031
+
+Number of Observations Used: 611
+Residuals:
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-0.687507 -0.029383  0.000000 -0.000311  0.030857  0.633822 
+
+Coefficients:
+                         Estimate Std. Error z-value  Pr(>|z|)    
+lag(log(emp), 1:2)1      0.628709   0.090454  6.9506 3.638e-12 ***
+lag(log(emp), 1:2)2     -0.065188   0.026501 -2.4598  0.013900 *  
+lag(log(wage), 0:1)0    -0.525760   0.053769 -9.7781 < 2.2e-16 ***
+lag(log(wage), 0:1)1     0.311290   0.094012  3.3112  0.000929 ***
+lag(log(capital), 0:2)0  0.278362   0.044908  6.1984 5.702e-10 ***
+lag(log(capital), 0:2)1  0.014100   0.052805  0.2670  0.789459    
+lag(log(capital), 0:2)2 -0.040248   0.025804 -1.5598  0.118809    
+lag(log(output), 0:2)0   0.591923   0.116211  5.0935 3.515e-07 ***
+lag(log(output), 0:2)1  -0.565985   0.139674 -4.0522 5.074e-05 ***
+lag(log(output), 0:2)2   0.100543   0.112675  0.8923  0.372217    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Sargan test: chisq(25) = 31.38142 (p-value = 0.1767)
+Autocorrelation test (1): normal = -2.99977 (p-value = 0.0027018)
+Autocorrelation test (2): normal = -0.4157541 (p-value = 0.67759)
+Wald test for coefficients: chisq(10) = 667.0498 (p-value = < 2.22e-16)
+Wald test for time dummies: chisq(6) = 24.93988 (p-value = 0.00035032)
+> (s.ab.a2r <- summary(ab.a2, robust = TRUE))
+Twoways effects Two-steps model Difference GMM 
+
+Call:
+pgmm(formula = log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 
+    0:1) + lag(log(capital), 0:2) + lag(log(output), 0:2) | lag(log(emp), 
+    2:99), data = EmplUK, effect = "twoways", model = "twosteps")
+
+Unbalanced Panel: n = 140, T = 7-9, N = 1031
+
+Number of Observations Used: 611
+Residuals:
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-0.687507 -0.029383  0.000000 -0.000311  0.030857  0.633822 
+
+Coefficients:
+                         Estimate Std. Error z-value  Pr(>|z|)    
+lag(log(emp), 1:2)1      0.628709   0.193413  3.2506 0.0011516 ** 
+lag(log(emp), 1:2)2     -0.065188   0.045050 -1.4470 0.1478934    
+lag(log(wage), 0:1)0    -0.525760   0.154610 -3.4005 0.0006725 ***
+lag(log(wage), 0:1)1     0.311290   0.203000  1.5334 0.1251663    
+lag(log(capital), 0:2)0  0.278362   0.072802  3.8235 0.0001315 ***
+lag(log(capital), 0:2)1  0.014100   0.092458  0.1525 0.8787948    
+lag(log(capital), 0:2)2 -0.040248   0.043274 -0.9301 0.3523329    
+lag(log(output), 0:2)0   0.591923   0.173091  3.4197 0.0006269 ***
+lag(log(output), 0:2)1  -0.565985   0.261100 -2.1677 0.0301820 *  
+lag(log(output), 0:2)2   0.100543   0.161098  0.6241 0.5325571    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Sargan test: chisq(25) = 31.38142 (p-value = 0.1767)
+Autocorrelation test (1): normal = -2.125472 (p-value = 0.033547)
+Autocorrelation test (2): normal = -0.3516578 (p-value = 0.72509)
+Wald test for coefficients: chisq(10) = 269.1608 (p-value = < 2.22e-16)
+Wald test for time dummies: chisq(6) = 15.43165 (p-value = 0.017152)
+> 
 > ## Arellano and Bond (1991), table 4 col. b
-> z1 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
+> ab.b <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
 +            + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
 +             data = EmplUK, effect = "twoways", model = "twosteps")
-> summary(z1, robust = TRUE) # default
+> (s.ab.b  <- summary(ab.b, robust = FALSE)) # as tabulated by Arellano/Bond
+Twoways effects Two-steps model Difference GMM 
+
+Call:
+pgmm(formula = log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 
+    0:1) + log(capital) + lag(log(output), 0:1) | lag(log(emp), 
+    2:99), data = EmplUK, effect = "twoways", model = "twosteps")
+
+Unbalanced Panel: n = 140, T = 7-9, N = 1031
+
+Number of Observations Used: 611
+Residuals:
+      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+-0.6190677 -0.0255683  0.0000000 -0.0001339  0.0332013  0.6410272 
+
+Coefficients:
+                        Estimate Std. Error  z-value  Pr(>|z|)    
+lag(log(emp), 1:2)1     0.474151   0.085303   5.5584 2.722e-08 ***
+lag(log(emp), 1:2)2    -0.052967   0.027284  -1.9413 0.0522200 .  
+lag(log(wage), 0:1)0   -0.513205   0.049345 -10.4003 < 2.2e-16 ***
+lag(log(wage), 0:1)1    0.224640   0.080063   2.8058 0.0050192 ** 
+log(capital)            0.292723   0.039463   7.4177 1.191e-13 ***
+lag(log(output), 0:1)0  0.609775   0.108524   5.6188 1.923e-08 ***
+lag(log(output), 0:1)1 -0.446373   0.124815  -3.5763 0.0003485 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Sargan test: chisq(25) = 30.11247 (p-value = 0.22011)
+Autocorrelation test (1): normal = -2.427829 (p-value = 0.01519)
+Autocorrelation test (2): normal = -0.3325401 (p-value = 0.73948)
+Wald test for coefficients: chisq(7) = 371.9877 (p-value = < 2.22e-16)
+Wald test for time dummies: chisq(6) = 26.9045 (p-value = 0.0001509)
+> (s.ab.br <- summary(ab.b, robust = TRUE))
 Twoways effects Two-steps model Difference GMM 
 
 Call:
@@ -55,10 +246,10 @@ Wald test for coefficients: chisq(7) = 142.0353 (p-value = < 2.22e-16)
 Wald test for time dummies: chisq(6) = 16.97046 (p-value = 0.0093924)
 > 
 > 
-> z1col <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
+> ab.b.collapse <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
 +            + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
 +            data = EmplUK, effect = "twoways", model = "twosteps", collapse = TRUE)
-> summary(z1col, robust = TRUE) # default
+> summary(ab.b.collapse, robust = TRUE) # default
 Twoways effects Two-steps model Difference GMM 
 
 Call:
@@ -92,45 +283,10 @@ Autocorrelation test (2): normal = 0.4482577 (p-value = 0.65397)
 Wald test for coefficients: chisq(7) = 134.788 (p-value = < 2.22e-16)
 Wald test for time dummies: chisq(6) = 11.91947 (p-value = 0.06379)
 > 
-> z1ind <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
+> ab.b.ind <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
 +            + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
 +             data = EmplUK, effect = "individual", model = "twosteps")
-> summary(z1ind, robust = TRUE) # default
-Oneway (individual) effect Two-steps model Difference GMM 
-
-Call:
-pgmm(formula = log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 
-    0:1) + log(capital) + lag(log(output), 0:1) | lag(log(emp), 
-    2:99), data = EmplUK, effect = "individual", model = "twosteps")
-
-Unbalanced Panel: n = 140, T = 7-9, N = 1031
-
-Number of Observations Used: 611
-Residuals:
-      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
--0.5891371 -0.0258848  0.0000000 -0.0001108  0.0354295  0.6092587 
-
-Coefficients:
-                        Estimate Std. Error z-value  Pr(>|z|)    
-lag(log(emp), 1:2)1     0.448806   0.182638  2.4573 0.0139968 *  
-lag(log(emp), 1:2)2    -0.042209   0.056360 -0.7489 0.4539021    
-lag(log(wage), 0:1)0   -0.542931   0.150326 -3.6117 0.0003042 ***
-lag(log(wage), 0:1)1    0.191413   0.154501  1.2389 0.2153787    
-log(capital)            0.320322   0.057396  5.5809 2.393e-08 ***
-lag(log(output), 0:1)0  0.636832   0.113729  5.5996 2.149e-08 ***
-lag(log(output), 0:1)1 -0.246296   0.204975 -1.2016 0.2295240    
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Sargan test: chisq(25) = 31.87899 (p-value = 0.16154)
-Autocorrelation test (1): normal = -1.501206 (p-value = 0.1333)
-Autocorrelation test (2): normal = -0.41767 (p-value = 0.67619)
-Wald test for coefficients: chisq(7) = 725.4739 (p-value = < 2.22e-16)
-> 
-> z1indcol <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
-+             + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
-+             data = EmplUK, effect = "individual", model = "twosteps")
-> summary(z1indcol, robust = TRUE) # default
+> summary(ab.b.ind, robust = TRUE) # default
 Oneway (individual) effect Two-steps model Difference GMM 
 
 Call:
@@ -165,6 +321,8 @@ Wald test for coefficients: chisq(7) = 725.4739 (p-value = < 2.22e-16)
 > 
 > ## Blundell and Bond (1998) table 4 (cf DPD for OX p.12 col.4)
 > ## not quite...
+> ## Maybe due to this: "The original implementation of system GMM
+> ## (Blundell and Bond 1998) used H = I." (from Roodman 2009, p. 117)
 > z2 <- pgmm(log(emp) ~ lag(log(emp), 1)+ lag(log(wage), 0:1) +
 +            lag(log(capital), 0:1) | lag(log(emp), 2:99) +
 +            lag(log(wage), 3:99) + lag(log(capital), 2:99),
@@ -197,8 +355,8 @@ lag(log(capital), 0:1)1 -0.414113   0.061467 -6.7371 1.616e-11 ***
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Sargan test: chisq(94) = 115.8547 (p-value = 0.062687)
-Autocorrelation test (1): normal = -4.955307 (p-value = 7.2216e-07)
-Autocorrelation test (2): normal = -0.2551838 (p-value = 0.79858)
+Autocorrelation test (1): normal = -5.582464 (p-value = 2.3713e-08)
+Autocorrelation test (2): normal = -0.2330438 (p-value = 0.81573)
 Wald test for coefficients: chisq(5) = 7517.379 (p-value = < 2.22e-16)
 Wald test for time dummies: chisq(7) = 15.88489 (p-value = 0.026189)
 > 
@@ -234,201 +392,10 @@ lag(log(capital), 0:1)1 -0.484148   0.050905 -9.5108 < 2.2e-16 ***
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Sargan test: chisq(94) = 104.872 (p-value = 0.20826)
-Autocorrelation test (1): normal = -5.646905 (p-value = 1.6336e-08)
-Autocorrelation test (2): normal = -0.5507488 (p-value = 0.58181)
+Autocorrelation test (1): normal = -5.38121 (p-value = 7.3987e-08)
+Autocorrelation test (2): normal = -0.5605374 (p-value = 0.57511)
 Wald test for coefficients: chisq(5) = 20061.48 (p-value = < 2.22e-16)
 > 
-> 
-> ### further run tests with various argument values
-> summary(z1, robust = FALSE)
-Twoways effects Two-steps model Difference GMM 
-
-Call:
-pgmm(formula = log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 
-    0:1) + log(capital) + lag(log(output), 0:1) | lag(log(emp), 
-    2:99), data = EmplUK, effect = "twoways", model = "twosteps")
-
-Unbalanced Panel: n = 140, T = 7-9, N = 1031
-
-Number of Observations Used: 611
-Residuals:
-      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
--0.6190677 -0.0255683  0.0000000 -0.0001339  0.0332013  0.6410272 
-
-Coefficients:
-                        Estimate Std. Error  z-value  Pr(>|z|)    
-lag(log(emp), 1:2)1     0.474151   0.085303   5.5584 2.722e-08 ***
-lag(log(emp), 1:2)2    -0.052967   0.027284  -1.9413 0.0522200 .  
-lag(log(wage), 0:1)0   -0.513205   0.049345 -10.4003 < 2.2e-16 ***
-lag(log(wage), 0:1)1    0.224640   0.080063   2.8058 0.0050192 ** 
-log(capital)            0.292723   0.039463   7.4177 1.191e-13 ***
-lag(log(output), 0:1)0  0.609775   0.108524   5.6188 1.923e-08 ***
-lag(log(output), 0:1)1 -0.446373   0.124815  -3.5763 0.0003485 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Sargan test: chisq(25) = 30.11247 (p-value = 0.22011)
-Autocorrelation test (1): normal = -2.427829 (p-value = 0.01519)
-Autocorrelation test (2): normal = -0.3325401 (p-value = 0.73948)
-Wald test for coefficients: chisq(7) = 371.9877 (p-value = < 2.22e-16)
-Wald test for time dummies: chisq(6) = 26.9045 (p-value = 0.0001509)
-> summary(z1col, robust = FALSE)
-Twoways effects Two-steps model Difference GMM 
-
-Call:
-pgmm(formula = log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 
-    0:1) + log(capital) + lag(log(output), 0:1) | lag(log(emp), 
-    2:99), data = EmplUK, effect = "twoways", model = "twosteps", 
-    collapse = TRUE)
-
-Unbalanced Panel: n = 140, T = 7-9, N = 1031
-
-Number of Observations Used: 611
-Residuals:
-      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
--0.8455637 -0.0326605  0.0000000 -0.0003799  0.0312841  0.7010278 
-
-Coefficients:
-                        Estimate Std. Error z-value  Pr(>|z|)    
-lag(log(emp), 1:2)1     0.853895   0.263518  3.2404  0.001194 ** 
-lag(log(emp), 1:2)2    -0.169886   0.064766 -2.6231  0.008714 ** 
-lag(log(wage), 0:1)0   -0.533119   0.180123 -2.9597  0.003079 ** 
-lag(log(wage), 0:1)1    0.352516   0.266323  1.3236  0.185622    
-log(capital)            0.271707   0.055429  4.9019 9.494e-07 ***
-lag(log(output), 0:1)0  0.612855   0.186648  3.2835  0.001025 ** 
-lag(log(output), 0:1)1 -0.682550   0.370817 -1.8407  0.065670 .  
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Sargan test: chisq(5) = 11.62681 (p-value = 0.040275)
-Autocorrelation test (1): normal = -2.266948 (p-value = 0.023393)
-Autocorrelation test (2): normal = 0.5875041 (p-value = 0.55687)
-Wald test for coefficients: chisq(7) = 190.1203 (p-value = < 2.22e-16)
-Wald test for time dummies: chisq(6) = 17.70124 (p-value = 0.0070238)
-> summary(z1ind, robust = FALSE)
-Oneway (individual) effect Two-steps model Difference GMM 
-
-Call:
-pgmm(formula = log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 
-    0:1) + log(capital) + lag(log(output), 0:1) | lag(log(emp), 
-    2:99), data = EmplUK, effect = "individual", model = "twosteps")
-
-Unbalanced Panel: n = 140, T = 7-9, N = 1031
-
-Number of Observations Used: 611
-Residuals:
-      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
--0.5891371 -0.0258848  0.0000000 -0.0001108  0.0354295  0.6092587 
-
-Coefficients:
-                        Estimate Std. Error  z-value  Pr(>|z|)    
-lag(log(emp), 1:2)1     0.448806   0.097605   4.5982 4.261e-06 ***
-lag(log(emp), 1:2)2    -0.042209   0.034526  -1.2225   0.22151    
-lag(log(wage), 0:1)0   -0.542931   0.044565 -12.1828 < 2.2e-16 ***
-lag(log(wage), 0:1)1    0.191413   0.088443   2.1642   0.03045 *  
-log(capital)            0.320322   0.037208   8.6089 < 2.2e-16 ***
-lag(log(output), 0:1)0  0.636832   0.077032   8.2671 < 2.2e-16 ***
-lag(log(output), 0:1)1 -0.246296   0.112826  -2.1830   0.02904 *  
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Sargan test: chisq(25) = 31.87899 (p-value = 0.16154)
-Autocorrelation test (1): normal = -2.269105 (p-value = 0.023262)
-Autocorrelation test (2): normal = -0.5029366 (p-value = 0.61501)
-Wald test for coefficients: chisq(7) = 1438.767 (p-value = < 2.22e-16)
-> summary(z1indcol, robust = FALSE)
-Oneway (individual) effect Two-steps model Difference GMM 
-
-Call:
-pgmm(formula = log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 
-    0:1) + log(capital) + lag(log(output), 0:1) | lag(log(emp), 
-    2:99), data = EmplUK, effect = "individual", model = "twosteps")
-
-Unbalanced Panel: n = 140, T = 7-9, N = 1031
-
-Number of Observations Used: 611
-Residuals:
-      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
--0.5891371 -0.0258848  0.0000000 -0.0001108  0.0354295  0.6092587 
-
-Coefficients:
-                        Estimate Std. Error  z-value  Pr(>|z|)    
-lag(log(emp), 1:2)1     0.448806   0.097605   4.5982 4.261e-06 ***
-lag(log(emp), 1:2)2    -0.042209   0.034526  -1.2225   0.22151    
-lag(log(wage), 0:1)0   -0.542931   0.044565 -12.1828 < 2.2e-16 ***
-lag(log(wage), 0:1)1    0.191413   0.088443   2.1642   0.03045 *  
-log(capital)            0.320322   0.037208   8.6089 < 2.2e-16 ***
-lag(log(output), 0:1)0  0.636832   0.077032   8.2671 < 2.2e-16 ***
-lag(log(output), 0:1)1 -0.246296   0.112826  -2.1830   0.02904 *  
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Sargan test: chisq(25) = 31.87899 (p-value = 0.16154)
-Autocorrelation test (1): normal = -2.269105 (p-value = 0.023262)
-Autocorrelation test (2): normal = -0.5029366 (p-value = 0.61501)
-Wald test for coefficients: chisq(7) = 1438.767 (p-value = < 2.22e-16)
-> 
-> summary(z2, robust = FALSE)
-Twoways effects One-step model System GMM 
-
-Call:
-pgmm(formula = log(emp) ~ lag(log(emp), 1) + lag(log(wage), 0:1) + 
-    lag(log(capital), 0:1) | lag(log(emp), 2:99) + lag(log(wage), 
-    3:99) + lag(log(capital), 2:99), data = EmplUK, effect = "twoways", 
-    model = "onestep", transformation = "ld")
-
-Unbalanced Panel: n = 140, T = 7-9, N = 1031
-
-Number of Observations Used: 1642
-Residuals:
-      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
--0.7501512 -0.0389075  0.0000000  0.0001834  0.0459166  0.6149616 
-
-Coefficients:
-                         Estimate Std. Error z-value  Pr(>|z|)    
-lag(log(emp), 1)         0.945068   0.019033 49.6533 < 2.2e-16 ***
-lag(log(wage), 0:1)0    -0.655654   0.070755 -9.2666 < 2.2e-16 ***
-lag(log(wage), 0:1)1     0.499634   0.065372  7.6429 2.124e-14 ***
-lag(log(capital), 0:1)0  0.474032   0.045731 10.3657 < 2.2e-16 ***
-lag(log(capital), 0:1)1 -0.414113   0.049202 -8.4165 < 2.2e-16 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Sargan test: chisq(94) = 115.8547 (p-value = 0.062687)
-Autocorrelation test (1): normal = -5.029015 (p-value = 4.9301e-07)
-Autocorrelation test (2): normal = -0.2562654 (p-value = 0.79775)
-Wald test for coefficients: chisq(5) = 16102.85 (p-value = < 2.22e-16)
-Wald test for time dummies: chisq(7) = 25.92564 (p-value = 0.00051931)
-> summary(z2b, robust = FALSE)
-Oneway (individual) effect One-step model System GMM 
-
-Call:
-pgmm(formula = log(emp) ~ lag(log(emp), 1) + lag(log(wage), 0:1) + 
-    lag(log(capital), 0:1) | lag(log(emp), 2:99) + lag(log(wage), 
-    3:99) + lag(log(capital), 2:99), data = EmplUK, effect = "individual", 
-    model = "onestep", transformation = "ld")
-
-Unbalanced Panel: n = 140, T = 7-9, N = 1031
-
-Number of Observations Used: 1642
-Residuals:
-     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
--0.772126 -0.035115  0.000000  0.004193  0.055023  0.591462 
-
-Coefficients:
-                         Estimate Std. Error  z-value  Pr(>|z|)    
-lag(log(emp), 1)         0.903871   0.025343  35.6656 < 2.2e-16 ***
-lag(log(wage), 0:1)0    -0.513039   0.056721  -9.0449 < 2.2e-16 ***
-lag(log(wage), 0:1)1     0.546466   0.056239   9.7169 < 2.2e-16 ***
-lag(log(capital), 0:1)0  0.554952   0.036886  15.0449 < 2.2e-16 ***
-lag(log(capital), 0:1)1 -0.484148   0.036522 -13.2563 < 2.2e-16 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Sargan test: chisq(94) = 104.872 (p-value = 0.20826)
-Autocorrelation test (1): normal = -5.831331 (p-value = 5.4987e-09)
-Autocorrelation test (2): normal = -0.5530494 (p-value = 0.58023)
-Wald test for coefficients: chisq(5) = 63160.34 (p-value = < 2.22e-16)
 > 
 > z3 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
 +            + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
@@ -586,25 +553,25 @@ Wald test for coefficients: chisq(7) = 77862.01 (p-value = < 2.22e-16)
 > # (as opposed to xtabond and not mentioning of collapsed instruments in older edition).
 > 
 > data("Cigar", package = "plm")
-> Cigar$real_c     <- Cigar$sales * Cigar$pop/Cigar$pop16
-> Cigar$real_p     <- Cigar$price/Cigar$cpi * 100
-> Cigar$real_pimin <- Cigar$pimin/Cigar$cpi * 100
-> Cigar$real_ndi   <- Cigar$ndi/Cigar$cpi
+> Cigar$real_c     <- Cigar$sales * Cigar$pop / Cigar$pop16
+> Cigar$real_p     <- Cigar$price / Cigar$cpi * 100
+> Cigar$real_pimin <- Cigar$pimin / Cigar$cpi * 100
+> Cigar$real_ndi   <- Cigar$ndi   / Cigar$cpi
 > 
-> form_cig <- log(real_c) ~ lag(log(real_c)) + log(real_p) + log(real_pimin) + log(real_ndi) | lag(log(real_c), 2:99)
 > 
-> # Baltagi (2005, 3rd edition), table 8.1 
-> # one-step GMM
-> gmm_onestep <- pgmm(form_cig, data = Cigar, effect = "twoways", model = "onestep")
+> # Baltagi (2005, 3rd edition), table 8.1 [one-step not contained in later editions anymore]
+> # GMM-one-step
+> form_cig_GMMonestep <- log(real_c) ~ lag(log(real_c)) + log(real_p) + log(real_pimin) + log(real_ndi) | lag(log(real_c), 2:99)
+> gmm_onestep <- pgmm(form_cig_GMMonestep, data = Cigar, effect = "twoways", model = "onestep")
 Warning message:
-In pgmm(form_cig, data = Cigar, effect = "twoways", model = "onestep") :
+In pgmm(form_cig_GMMonestep, data = Cigar, effect = "twoways", model = "onestep") :
   the second-step matrix is singular, a general inverse is used
-> # matches table 8.1: 0.84, -0.377, -0.016, 0.14
-> summary(gmm_onestep)
+> (sgmm_onestep <- summary(gmm_onestep, robust = FALSE))
 Twoways effects One-step model Difference GMM 
 
 Call:
-pgmm(formula = form_cig, data = Cigar, effect = "twoways", model = "onestep")
+pgmm(formula = form_cig_GMMonestep, data = Cigar, effect = "twoways", 
+    model = "onestep")
 
 Balanced Panel: n = 46, T = 30, N = 1380
 
@@ -614,65 +581,184 @@ Residuals:
 -0.309407 -0.022219 -0.001561  0.000000  0.022143  0.293543 
 
 Coefficients:
-                  Estimate Std. Error z-value Pr(>|z|)    
-lag(log(real_c))  0.842867   0.031279 26.9466  < 2e-16 ***
-log(real_p)      -0.377229   0.045527 -8.2859  < 2e-16 ***
-log(real_pimin)  -0.016150   0.059643 -0.2708  0.78657    
-log(real_ndi)     0.139449   0.064857  2.1501  0.03155 *  
+                   Estimate Std. Error  z-value Pr(>|z|)    
+lag(log(real_c))  0.8428669  0.0032625 258.3512  < 2e-16 ***
+log(real_p)      -0.3772291  0.0065088 -57.9568  < 2e-16 ***
+log(real_pimin)  -0.0161496  0.0084318  -1.9153  0.05545 .  
+log(real_ndi)     0.1394494  0.0073290  19.0271  < 2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Sargan test: chisq(405) = 46 (p-value = 1)
-Autocorrelation test (1): normal = -5.071433 (p-value = 3.9483e-07)
-Autocorrelation test (2): normal = 2.281198 (p-value = 0.022537)
-Wald test for coefficients: chisq(4) = 1440.769 (p-value = < 2.22e-16)
-Wald test for time dummies: chisq(28) = 1252.564 (p-value = < 2.22e-16)
+Autocorrelation test (1): normal = -5.04748 (p-value = 4.4768e-07)
+Autocorrelation test (2): normal = 2.240326 (p-value = 0.02507)
+Wald test for coefficients: chisq(4) = 120712.4 (p-value = < 2.22e-16)
+Wald test for time dummies: chisq(28) = 10708.69 (p-value = < 2.22e-16)
+> round(sgmm_onestep$coefficients[ , 1], 3)
+lag(log(real_c))      log(real_p)  log(real_pimin)    log(real_ndi) 
+           0.843           -0.377           -0.016            0.139 
+> round(sgmm_onestep$coefficients[ , 3], 3) 
+lag(log(real_c))      log(real_p)  log(real_pimin)    log(real_ndi) 
+         258.351          -57.957           -1.915           19.027 
+> 
+> # matches coefficients in table 8.1: 0.84, -0.377, -0.016, 0.14
+> # but not t-statistics
+> #  t-statistics in parenthesis:      (52.0) (11.7) (0.4) (3.8)
+> #### TODO: maybe matrix is a different one?
+> # Keane/Neal (2016). p. 529 replicate by 
+> # xtabond2 logc l.logc logp logpn logy i.yr, gmm(l.logc) iv(logp logpn logy i.yr) nolevel
+> # What they call DIFF-GMM is “GMM-one-step” in Baltagi (2005)
+> # and give 3 digits of coefficients:
+> #                                   0.843  −0.377  −0.016 0.139
+> #                                   (52.66)  (−11.81)  (−0.39) (3.88)
+> 
+> # individual onestep (without time dummies)
+> # Keane/Neal (2016). p. 529 also give individual model (without time dummies) by
+> # xtabond2 logc l.logc logp logpn logy, gmm(l.logc) iv(logp logpn logy) nolevel
+> gmm_onestep_ind <- pgmm(form_cig_GMMonestep, data = Cigar, effect = "individual", model = "onestep")
 Warning message:
-In vcovHC.pgmm(object) : a general inverse is used
+In pgmm(form_cig_GMMonestep, data = Cigar, effect = "individual",  :
+  the second-step matrix is singular, a general inverse is used
+> 
+> (sgmm_onestep_ind <- summary(gmm_onestep_ind, robust = FALSE))
+Oneway (individual) effect One-step model Difference GMM 
+
+Call:
+pgmm(formula = form_cig_GMMonestep, data = Cigar, effect = "individual", 
+    model = "onestep")
+
+Balanced Panel: n = 46, T = 30, N = 1380
+
+Number of Observations Used: 1288
+Residuals:
+      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+-0.3233858 -0.0267407 -0.0008852  0.0018121  0.0285814  0.3085815 
+
+Coefficients:
+                   Estimate Std. Error  z-value  Pr(>|z|)    
+lag(log(real_c))  0.8912807  0.0038220 233.1984 < 2.2e-16 ***
+log(real_p)      -0.1519185  0.0055774 -27.2380 < 2.2e-16 ***
+log(real_pimin)   0.0503454  0.0054758   9.1941 < 2.2e-16 ***
+log(real_ndi)    -0.0705714  0.0023383 -30.1809 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Sargan test: chisq(405) = 46 (p-value = 1)
+Autocorrelation test (1): normal = -5.162279 (p-value = 2.4396e-07)
+Autocorrelation test (2): normal = 2.178175 (p-value = 0.029393)
+Wald test for coefficients: chisq(4) = 262079.6 (p-value = < 2.22e-16)
+> 
+> round(sgmm_onestep_ind$coefficients[ , 1], 3)
+lag(log(real_c))      log(real_p)  log(real_pimin)    log(real_ndi) 
+           0.891           -0.152            0.050           -0.071 
+> round(sgmm_onestep_ind$coefficients[ , 3], 3)
+lag(log(real_c))      log(real_p)  log(real_pimin)    log(real_ndi) 
+         233.198          -27.238            9.194          -30.181 
+> ## -> matches coefficients
+> # TODO: statistic
+> # 0.891  −0.152  0.050  −0.071
+> # (47.04) (−5.49) (1.85) (−6.09)
+> 
+> 
+> # Replicate OLS and 2-way FE from Baltagi table 8.1
+> form_cig_OLS <- log(real_c) ~ lag(log(real_c)) + log(real_p) + log(real_pimin) + log(real_ndi)
+> summary(plm(form_cig_OLS, data= Cigar, model="pooling"))
+Pooling Model
+
+Call:
+plm(formula = form_cig_OLS, data = Cigar, model = "pooling")
+
+Balanced Panel: n = 46, T = 29, N = 1334
+
+Residuals:
+      Min.    1st Qu.     Median    3rd Qu.       Max. 
+-0.2042970 -0.0205536  0.0012857  0.0236424  0.2239515 
+
+Coefficients:
+                   Estimate Std. Error  t-value  Pr(>|t|)    
+(Intercept)       0.5827881  0.0623703   9.3440 < 2.2e-16 ***
+lag(log(real_c))  0.9694942  0.0061489 157.6687 < 2.2e-16 ***
+log(real_p)      -0.0901512  0.0145795  -6.1834 8.332e-10 ***
+log(real_pimin)   0.0240347  0.0131562   1.8269   0.06794 .  
+log(real_ndi)    -0.0306788  0.0060279  -5.0895 4.106e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    66.746
+Residual Sum of Squares: 2.3538
+R-Squared:      0.96474
+Adj. R-Squared: 0.96463
+F-statistic: 9089.46 on 4 and 1329 DF, p-value: < 2.22e-16
+> summary(plm(form_cig_OLS, data= Cigar, model="within", effect = "twoways"))
+Twoways effects Within Model
+
+Call:
+plm(formula = form_cig_OLS, data = Cigar, effect = "twoways", 
+    model = "within")
+
+Balanced Panel: n = 46, T = 29, N = 1334
+
+Residuals:
+      Min.    1st Qu.     Median    3rd Qu.       Max. 
+-0.1843242 -0.0168631  0.0013432  0.0173047  0.2582479 
+
+Coefficients:
+                  Estimate Std. Error  t-value  Pr(>|t|)    
+lag(log(real_c))  0.833383   0.012562  66.3438 < 2.2e-16 ***
+log(real_p)      -0.298598   0.023601 -12.6519 < 2.2e-16 ***
+log(real_pimin)   0.034045   0.027465   1.2396    0.2154    
+log(real_ndi)     0.100279   0.023850   4.2046 2.801e-05 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    11.449
+Residual Sum of Squares: 1.647
+R-Squared:      0.85614
+Adj. R-Squared: 0.84733
+F-statistic: 1868.75 on 4 and 1256 DF, p-value: < 2.22e-16
+> 
 > 
 > # two-step GMM
 > #
-> # Table 8.1, 8.2 in Baltagi (2021): Coefs (z-stat) 0.70 (10.2) −0.396 (6.0) −0.105 (1.3) 0.13 (3.5) 
+> ## Table 8.1, 8.2 in Baltagi (2021): Coefs (z-stat) 0.70 (10.2) −0.396 (6.0) −0.105 (1.3) 0.13 (3.5) 
 > # 
 > # Stata xtabond2 lnc L.(lnc) lnrp lnrpn lnrdi dum3 dum8 dum10-dum29, gmm(L.(lnc), collapse)
 > #           iv(lnrp lnrpn lndrdi dum3 dum8 dum10-29) noleveleq robust nomata twostep
-> # No of obs 1288, no of groups = 48, balanced, no of instruments = 53
+> # No of obs 1288, no of groups = 46, balanced, 28 obs/group, no of instruments = 53
 > 
 > year.d <- contr.treatment(levels(factor(Cigar$year)))
-> year.d <- cbind("63" = c(1, rep(0, nrow(year.d)-1)), year.d)
-> colnames(year.d) <- paste0("year_", colnames(year.d))
-> year.d <- cbind("year" = rownames(year.d), as.data.frame(year.d))
+> year.d <- cbind("63" = c(1, rep(0, nrow(year.d)-1)), year.d) # add base level
+> colnames(year.d) <- paste0("year", colnames(year.d)) # make colnames
+> year.d <- cbind("year" = rownames(year.d), as.data.frame(year.d)) # add column with year as numeric (to enable merge in next step) and make final data frame
 > 
-> Cigar <- merge(Cigar, year.d)
-> pCigar <- pdata.frame(Cigar, index = c("state", "year"))
+> pCigar <- merge(Cigar, year.d, by = "year", sort = FALSE, all.x = TRUE, all.y = FALSE)
+> pCigar <- pCigar[ , c(2,1, 3:length(names(pCigar)))] # order columns
+> pCigar <- pdata.frame(pCigar, index = c("state", "year"))
 > 
 > # not quite (need to add IV instruments!?):
-> gmm_twostep <- pgmm(log(real_c) ~ lag(log(real_c)) + log(real_p) + log(real_pimin) + log(real_ndi) 
-+                 # + year_63 + year_64 
-+                 + year_65 + 
-+                 # year_66 + year_67 + year_68 + year_69 + 
-+                   year_70 + 
-+                 # year_71 + 
-+                 year_72 + year_73 + year_74 + year_75 + year_76 + year_77 + 
-+                 year_78 + year_79 + year_80 + year_81 + year_82 + year_83 + 
-+                 year_84 + year_85 + year_86 + year_87 + year_88 + year_89 + 
-+                 year_90 + year_91 
-+                 # + year_92
-+                 | lag(log(real_c), 2:99)
-+                 , data = pCigar, effect = "individual", model = "twosteps", transformation = "d", collapse = TRUE)
+> form2021 <- formula(log(real_c) ~ lag(log(real_c)) + log(real_p) + log(real_pimin) + log(real_ndi) +
++   # year63 + year64 +
++   year65 + 
++   # year66 + year67 + year68 + year69 + 
++   year70 + 
++   # year71 + 
++   year72 + year73 + year74 + year75 + year76 + year77 + 
++   year78 + year79 + year80 + year81 + year82 + year83 + 
++   year84 + year85 + year86 + year87 + year88 + year89 + 
++   year90 + year91
++ #  + year92
++  | lag(log(real_c), 2:99)
++ )
+> 
+> gmm_twostep <- pgmm(form2021, data = pCigar, effect = "individual", model = "twosteps", transformation = "d", collapse = TRUE)
 Warning message:
-In pgmm(log(real_c) ~ lag(log(real_c)) + log(real_p) + log(real_pimin) +  :
+In pgmm(form2021, data = pCigar, effect = "individual", model = "twosteps",  :
   the second-step matrix is singular, a general inverse is used
 > summary(gmm_twostep)
 Oneway (individual) effect Two-steps model Difference GMM 
 
 Call:
-pgmm(formula = log(real_c) ~ lag(log(real_c)) + log(real_p) + 
-    log(real_pimin) + log(real_ndi) + year_65 + year_70 + year_72 + 
-    year_73 + year_74 + year_75 + year_76 + year_77 + year_78 + 
-    year_79 + year_80 + year_81 + year_82 + year_83 + year_84 + 
-    year_85 + year_86 + year_87 + year_88 + year_89 + year_90 + 
-    year_91 | lag(log(real_c), 2:99), data = pCigar, effect = "individual", 
+pgmm(formula = form2021, data = pCigar, effect = "individual", 
     model = "twosteps", collapse = TRUE, transformation = "d")
 
 Balanced Panel: n = 46, T = 30, N = 1380
@@ -688,28 +774,28 @@ lag(log(real_c))  0.7127422  0.0671003 10.6220 < 2.2e-16 ***
 log(real_p)      -0.3867883  0.0685552 -5.6420 1.681e-08 ***
 log(real_pimin)  -0.1067969  0.0792667 -1.3473 0.1778803    
 log(real_ndi)     0.1392827  0.0372024  3.7439 0.0001812 ***
-year_65           0.0181928  0.0069297  2.6253 0.0086560 ** 
-year_70          -0.0320790  0.0099423 -3.2265 0.0012530 ** 
-year_72           0.0177397  0.0082126  2.1601 0.0307686 *  
-year_73          -0.0284079  0.0106662 -2.6633 0.0077367 ** 
-year_74          -0.0449170  0.0118539 -3.7892 0.0001511 ***
-year_75          -0.0653649  0.0145267 -4.4996 6.807e-06 ***
-year_76          -0.0490544  0.0129143 -3.7985 0.0001456 ***
-year_77          -0.0832712  0.0152030 -5.4773 4.319e-08 ***
-year_78          -0.0690354  0.0149865 -4.6065 4.095e-06 ***
-year_79          -0.1192233  0.0157143 -7.5869 3.276e-14 ***
-year_80          -0.1376209  0.0206042 -6.6793 2.401e-11 ***
-year_81          -0.1537759  0.0235528 -6.5290 6.621e-11 ***
-year_82          -0.1501573  0.0192425 -7.8034 6.024e-15 ***
-year_83          -0.1214331  0.0143877 -8.4401 < 2.2e-16 ***
-year_84          -0.1058821  0.0107484 -9.8510 < 2.2e-16 ***
-year_85          -0.0760759  0.0100939 -7.5368 4.817e-14 ***
-year_86          -0.0673082  0.0101933 -6.6032 4.024e-11 ***
-year_87          -0.0733055  0.0083516 -8.7774 < 2.2e-16 ***
-year_88          -0.0736761  0.0118634 -6.2104 5.285e-10 ***
-year_89          -0.0739029  0.0077779 -9.5016 < 2.2e-16 ***
-year_90          -0.0665771  0.0096429 -6.9043 5.047e-12 ***
-year_91          -0.0538857  0.0093046 -5.7913 6.985e-09 ***
+year65            0.0181928  0.0069297  2.6253 0.0086560 ** 
+year70           -0.0320790  0.0099423 -3.2265 0.0012530 ** 
+year72            0.0177397  0.0082126  2.1601 0.0307686 *  
+year73           -0.0284079  0.0106662 -2.6633 0.0077367 ** 
+year74           -0.0449170  0.0118539 -3.7892 0.0001511 ***
+year75           -0.0653649  0.0145267 -4.4996 6.807e-06 ***
+year76           -0.0490544  0.0129143 -3.7985 0.0001456 ***
+year77           -0.0832712  0.0152030 -5.4773 4.319e-08 ***
+year78           -0.0690354  0.0149865 -4.6065 4.095e-06 ***
+year79           -0.1192233  0.0157143 -7.5869 3.276e-14 ***
+year80           -0.1376209  0.0206042 -6.6793 2.401e-11 ***
+year81           -0.1537759  0.0235528 -6.5290 6.621e-11 ***
+year82           -0.1501573  0.0192425 -7.8034 6.024e-15 ***
+year83           -0.1214331  0.0143877 -8.4401 < 2.2e-16 ***
+year84           -0.1058821  0.0107484 -9.8510 < 2.2e-16 ***
+year85           -0.0760759  0.0100939 -7.5368 4.817e-14 ***
+year86           -0.0673082  0.0101933 -6.6032 4.024e-11 ***
+year87           -0.0733055  0.0083516 -8.7774 < 2.2e-16 ***
+year88           -0.0736761  0.0118634 -6.2104 5.285e-10 ***
+year89           -0.0739029  0.0077779 -9.5016 < 2.2e-16 ***
+year90           -0.0665771  0.0096429 -6.9043 5.047e-12 ***
+year91           -0.0538857  0.0093046 -5.7913 6.985e-09 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -720,6 +806,249 @@ Wald test for coefficients: chisq(26) = 6139.5 (p-value = < 2.22e-16)
 Warning message:
 In vcovHC.pgmm(object) : a general inverse is used
 > 
+> 
+> ## Table 8.1, 8.2 in Baltagi (2005) "GMM-two-step"
+> # Coefs (z-stat) 0.80 (3.7) −0.379 (8.0) −0.020 (0.4) 0.24 (0.9)
+> # with xtbond (not xtbond2) and a different set of time dummies:
+> # xtabond lnc lnrp lnrpn lnrdi dum3-dum29, lag(1) twostep
+> form2005 <- formula(log(real_c) ~ lag(log(real_c)) + log(real_p) + log(real_pimin) + log(real_ndi) +
++ # + year63 + year64 
++   year65 + 
++   year66 + year67 + year68 + year69 + 
++   year70 + 
++   year71 + 
++   year72 + year73 + year74 + year75 + year76 + year77 + 
++   year78 + year79 + year80 + year81 + year82 + year83 + 
++   year84 + year85 + year86 + year87 + year88 + year89 + 
++   year90 + year91
++  # year92 
++   | lag(log(real_c), 2:99))
+> 
+> gmm_twostep_2005 <- pgmm(form2005, data = pCigar, effect = "individual", model = "twosteps", transformation = "d")
+Warning message:
+In pgmm(form2005, data = pCigar, effect = "individual", model = "twosteps",  :
+  the second-step matrix is singular, a general inverse is used
+> summary(gmm_twostep_2005)
+Oneway (individual) effect Two-steps model Difference GMM 
+
+Call:
+pgmm(formula = form2005, data = pCigar, effect = "individual", 
+    model = "twosteps", transformation = "d")
+
+Balanced Panel: n = 46, T = 30, N = 1380
+
+Number of Observations Used: 1288
+Residuals:
+      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+-0.3155528 -0.0223345 -0.0009081 -0.0002982  0.0206165  0.2960017 
+
+Coefficients:
+                   Estimate Std. Error z-value  Pr(>|z|)    
+lag(log(real_c))  0.7991766  0.1962817  4.0716 4.670e-05 ***
+log(real_p)      -0.3696419  0.0921545 -4.0111 6.043e-05 ***
+log(real_pimin)  -0.0782846  0.1524425 -0.5135  0.607577    
+log(real_ndi)     0.1846966  0.1215665  1.5193  0.128686    
+year65            0.0243308  0.0094619  2.5715  0.010127 *  
+year66           -0.0030911  0.0118500 -0.2609  0.794207    
+year67            0.0131757  0.0137773  0.9563  0.338905    
+year68           -0.0017510  0.0144538 -0.1211  0.903575    
+year69           -0.0111711  0.0138267 -0.8079  0.419126    
+year70           -0.0383205  0.0190457 -2.0120  0.044217 *  
+year71            0.0064850  0.0134505  0.4821  0.629709    
+year72            0.0115149  0.0223779  0.5146  0.606857    
+year73           -0.0320925  0.0331616 -0.9678  0.333165    
+year74           -0.0422986  0.0377234 -1.1213  0.262167    
+year75           -0.0653186  0.0408507 -1.5990  0.109829    
+year76           -0.0521701  0.0395207 -1.3201  0.186812    
+year77           -0.0833946  0.0466671 -1.7870  0.073936 .  
+year78           -0.0777370  0.0457138 -1.7005  0.089034 .  
+year79           -0.1228220  0.0499804 -2.4574  0.013995 *  
+year80           -0.1270269  0.0556802 -2.2814  0.022527 *  
+year81           -0.1484367  0.0615838 -2.4103  0.015939 *  
+year82           -0.1467949  0.0540749 -2.7147  0.006634 ** 
+year83           -0.1216310  0.0418559 -2.9059  0.003661 ** 
+year84           -0.1055779  0.0350749 -3.0101  0.002612 ** 
+year85           -0.0751966  0.0299454 -2.5111  0.012035 *  
+year86           -0.0711153  0.0278238 -2.5559  0.010591 *  
+year87           -0.0712981  0.0237736 -2.9990  0.002708 ** 
+year88           -0.0738314  0.0274059 -2.6940  0.007060 ** 
+year89           -0.0714217  0.0182389 -3.9159 9.007e-05 ***
+year90           -0.0632753  0.0154565 -4.0938 4.244e-05 ***
+year91           -0.0487161  0.0162177 -3.0039  0.002666 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Sargan test: chisq(405) = 21.91377 (p-value = 1)
+Autocorrelation test (1): normal = -3.804323 (p-value = 0.00014219)
+Autocorrelation test (2): normal = 1.899814 (p-value = 0.057458)
+Wald test for coefficients: chisq(31) = 11112.15 (p-value = < 2.22e-16)
+Warning message:
+In vcovHC.pgmm(object) : a general inverse is used
+> round(coefficients(gmm_twostep_2005)[1:4], 3)
+lag(log(real_c))      log(real_p)  log(real_pimin)    log(real_ndi) 
+           0.799           -0.370           -0.078            0.185 
+> ## -> only nearly replicates
+> 
+> pdynmc.avail <- if (!requireNamespace("pdynmc", quietly = TRUE)) FALSE else TRUE
+> 
+> if(pdynmc.avail) {
++   
++   library(pdynmc)
++   ## from PDF R-Journal (https://journal.r-project.org/archive/2021/RJ-2021-035/RJ-2021-035.pdf)
++   dat <- EmplUK
++   dat[ , c(4:7)] <- log(dat[ , c(4:7)])
++   names(dat)[4:7] <- c("n", "w", "k", "ys") # n = emp, w = wage, k = capital, ys = output
++   
++   ### Sargan test and Wald test yield a different results for onestep
++   ab.a1.pdynmc <- pdynmc(
++     dat = dat, varname.i = "firm", varname.t = "year",
++     use.mc.diff = TRUE, use.mc.lev = FALSE, use.mc.nonlin = FALSE,
++     include.y = TRUE, varname.y = "n", lagTerms.y = 2,
++     fur.con = TRUE, fur.con.diff = TRUE, fur.con.lev = FALSE,
++     varname.reg.fur = c("w", "k", "ys"), lagTerms.reg.fur = c(1,2,2),
++     include.dum = TRUE, dum.diff = TRUE, dum.lev = FALSE, varname.dum = "year",
++     w.mat = "iid.err", std.err = "unadjusted",
++     estimation = "onestep", opt.meth = "none")
++   summary(ab.a1.pdynmc)
++   
++   ab.a1r.pdynmc <- pdynmc(
++     dat = dat, varname.i = "firm", varname.t = "year",
++     use.mc.diff = TRUE, use.mc.lev = FALSE, use.mc.nonlin = FALSE,
++     include.y = TRUE, varname.y = "n", lagTerms.y = 2,
++     fur.con = TRUE, fur.con.diff = TRUE, fur.con.lev = FALSE,
++     varname.reg.fur = c("w", "k", "ys"), lagTerms.reg.fur = c(1,2,2),
++     include.dum = TRUE, dum.diff = TRUE, dum.lev = FALSE, varname.dum = "year",
++     w.mat = "iid.err", std.err = "corrected",
++     estimation = "onestep", opt.meth = "none")
++   summary(ab.a1r.pdynmc)
++   
++   ab.a2.pdynmc <- pdynmc(
++     dat = dat, varname.i = "firm", varname.t = "year",
++     use.mc.diff = TRUE, use.mc.lev = FALSE, use.mc.nonlin = FALSE,
++     include.y = TRUE, varname.y = "n", lagTerms.y = 2,
++     fur.con = TRUE, fur.con.diff = TRUE, fur.con.lev = FALSE,
++     varname.reg.fur = c("w", "k", "ys"), lagTerms.reg.fur = c(1,2,2),
++     include.dum = TRUE, dum.diff = TRUE, dum.lev = FALSE, varname.dum = "year",
++     w.mat = "iid.err", std.err = "unadjusted",
++     estimation = "twostep", opt.meth = "none")
++   summary(ab.a2.pdynmc)
++   
++   ab.a2r.pdynmc <- pdynmc(
++     dat = dat, varname.i = "firm", varname.t = "year",
++     use.mc.diff = TRUE, use.mc.lev = FALSE, use.mc.nonlin = FALSE,
++     include.y = TRUE, varname.y = "n", lagTerms.y = 2,
++     fur.con = TRUE, fur.con.diff = TRUE, fur.con.lev = FALSE,
++     varname.reg.fur = c("w", "k", "ys"), lagTerms.reg.fur = c(1,2,2),
++     include.dum = TRUE, dum.diff = TRUE, dum.lev = FALSE, varname.dum = "year",
++     w.mat = "iid.err", std.err = "corrected",
++     estimation = "twostep", opt.meth = "none")
++   summary(ab.a2r.pdynmc)
++   
++   ### check coefs and SE pgmm vs. pdynmc ###
++   
++   ## one-step GMM
++   # check coefficients
++   stopifnot(isTRUE(all.equal(round( s.ab.a1[[1L]][ , 1], 5), round( ab.a1.pdynmc$coefficients[1:10], 5), check.attributes = FALSE)))
++   
++   # check standard errors (non-robust and robust)
++   stopifnot(isTRUE(all.equal(round( s.ab.a1[[1L]][ , 2], 5), round( ab.a1.pdynmc$stderr$step1[1:10], 5), check.attributes = FALSE)))
++   stopifnot(isTRUE(all.equal(round(s.ab.a1r[[1L]][ , 2], 5), round(ab.a1r.pdynmc$stderr$step1[1:10], 5), check.attributes = FALSE)))
++   
++   ## two-steps GMM
++   # check coefficients
++   stopifnot(isTRUE(all.equal(round( s.ab.a2[[1L]][ , 1], 5), round( ab.a2.pdynmc$coefficients[1:10], 5), check.attributes = FALSE)))
++   
++   # check standard errors (non-robust and robust)
++   stopifnot(isTRUE(all.equal(round( s.ab.a2[[1L]][ , 2], 5), round( ab.a2.pdynmc$stderr$step2[1:10], 5), check.attributes = FALSE)))
++   stopifnot(isTRUE(all.equal(round(s.ab.a2r[[1L]][ , 2], 5), round(ab.a2r.pdynmc$stderr$step2[1:10], 5), check.attributes = FALSE)))
++   
++   ## Baltagi table 8.1
++   data("Cigar", package = "plm")
++   Cigar$real_c     <- log((Cigar$sales*Cigar$pop) / Cigar$pop16)
++   Cigar$real_p     <- log(Cigar$price/Cigar$cpi * 100)
++   Cigar$real_pimin <- log(Cigar$pimin/Cigar$cpi * 100)
++   Cigar$real_ndi   <- log(Cigar$ndi/Cigar$cpi)
++   
++   ## TODO: does not replicate literature yet
++   c1 <- pdynmc(dat = Cigar, varname.i = "state", varname.t = "year",
++                use.mc.diff = TRUE, use.mc.lev = FALSE, use.mc.nonlin = FALSE,
++                include.y = TRUE, varname.y = "real_c", lagTerms.y = 1,
++                fur.con = TRUE, fur.con.diff = TRUE, fur.con.lev = FALSE,
++                varname.reg.fur = c("real_p", "real_pimin", "real_ndi"), lagTerms.reg.fur = c(0,0,0),
++                include.dum = TRUE, dum.diff = TRUE, dum.lev = FALSE, varname.dum = "year",
++                w.mat = "iid.err", std.err = "unadjusted", estimation = "onestep",
++                opt.meth = "none")
++   summary(c1)
++ }
+
+Dynamic linear panel estimation (onestep)
+GMM estimation steps: 1
+
+Coefficients:
+               Estimate   Std.Err z-value Pr(>|z|)    
+L1.real_c      0.761547  0.004755 160.148   <2e-16 ***
+L0.real_p     -0.371025  0.006665 -55.664   <2e-16 ***
+L0.real_pimin -0.047757  0.008898  -5.367   <2e-16 ***
+L0.real_ndi    0.140011  0.008405  16.658   <2e-16 ***
+73            -0.041096  0.001671 -24.590   <2e-16 ***
+74            -0.055380  0.002036 -27.205   <2e-16 ***
+75            -0.072264  0.002173 -33.261   <2e-16 ***
+76            -0.057469  0.002019 -28.471   <2e-16 ***
+77            -0.093032  0.002327 -39.979   <2e-16 ***
+78            -0.081482  0.002171 -37.530   <2e-16 ***
+79            -0.126373  0.002602 -48.574   <2e-16 ***
+80            -0.137293  0.003181 -43.154   <2e-16 ***
+81            -0.148699  0.003645 -40.799   <2e-16 ***
+64            -0.020916  0.002642  -7.918   <2e-16 ***
+82            -0.150219  0.003191 -47.081   <2e-16 ***
+83            -0.130951  0.002215 -59.112   <2e-16 ***
+84            -0.117293  0.001861 -63.027   <2e-16 ***
+85            -0.088388  0.001910 -46.282   <2e-16 ***
+86            -0.085308  0.002081 -40.994   <2e-16 ***
+87            -0.086906  0.002222 -39.119   <2e-16 ***
+88            -0.090797  0.002501 -36.310   <2e-16 ***
+89            -0.088860  0.002765 -32.143   <2e-16 ***
+90            -0.087488  0.003122 -28.026   <2e-16 ***
+91            -0.069144  0.003183 -21.724   <2e-16 ***
+65             0.004214  0.002276   1.852    0.064 .  
+92            -0.028840  0.004131  -6.982   <2e-16 ***
+66            -0.010406  0.002032  -5.121   <2e-16 ***
+67            -0.008796  0.001908  -4.610   <2e-16 ***
+68            -0.021115  0.001757 -12.018   <2e-16 ***
+69            -0.030944  0.001714 -18.050   <2e-16 ***
+70            -0.049845  0.001605 -31.055   <2e-16 ***
+71            -0.007117  0.001532  -4.644   <2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+ 437 total instruments are employed to estimate 32 parameters
+ 406 linear (DIF) 
+ 3 further controls (DIF) 
+ 28 time dummies (DIF) 
+ 
+J-Test (overid restrictions):  28.88 with 405 DF, pvalue: 1
+F-Statistic (slope coeff):  4996.89 with 4 DF, pvalue: <0.001
+F-Statistic (time dummies):  1792.04 with 28 DF, pvalue: <0.001
+Warning messages:
+1: In Matrix::crossprod(do.call(get(paste("step", j, sep = ""), resGMM.Szero.j),  :
+  more than 2 arguments passed to default method of 'crossprod'
+2: In Matrix::crossprod(do.call(Szero.j, what = "c"), do.call(Szero.j,  :
+  more than 2 arguments passed to default method of 'crossprod'
+3: In Matrix::crossprod(do.call(Szero.j, what = "c"), do.call(Szero.j,  :
+  more than 2 arguments passed to default method of 'crossprod'
+4: In Matrix::crossprod(do.call(Szero.j, what = "c"), do.call(Szero.j,  :
+  more than 2 arguments passed to default method of 'crossprod'
+5: In Matrix::crossprod(do.call(Szero.j, what = "c"), do.call(Szero.j,  :
+  more than 2 arguments passed to default method of 'crossprod'
+6: In Matrix::crossprod(do.call(get(paste("step", j, sep = ""), resGMM.Szero.j),  :
+  more than 2 arguments passed to default method of 'crossprod'
+7: In Matrix::crossprod(do.call(get(paste("step", j, sep = ""), resGMM.Szero.j),  :
+  more than 2 arguments passed to default method of 'crossprod'
+8: In Matrix::crossprod(do.call(Szero.j, what = "c"), do.call(Szero.j,  :
+  more than 2 arguments passed to default method of 'crossprod'
+9: In Matrix::crossprod(do.call(Szero.j, what = "c"), do.call(Szero.j,  :
+  more than 2 arguments passed to default method of 'crossprod'
+> 
 > proc.time()
    user  system elapsed 
-   7.73    0.81    8.48 
+  32.85    2.25   35.29 
