@@ -1020,7 +1020,7 @@ included.
 The `model` argument specifies whether a one-step or a
 two-steps model is requested (`"onestep"` or `"twosteps"`).
 
-The following example is from @AREL:BOND:91. Employment is
+The following example is from @AREL:BOND:91, table 4, column b. Employment is
 explained by past values of employment (two lags), current and first
 lag of wages and output and current value of capital.
 
@@ -1028,7 +1028,7 @@ lag of wages and output and current value of capital.
 emp.gmm <- pgmm(log(emp)~lag(log(emp), 1:2)+lag(log(wage), 0:1)+log(capital)+
                 lag(log(output), 0:1) | lag(log(emp), 2:99),
                 data = EmplUK, effect = "twoways", model = "twosteps")
-summary(emp.gmm)
+summary(emp.gmm, robust = FALSE)
 ``` 
 
 The following example is from @BLUN:BOND:98. The "sys"
