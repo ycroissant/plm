@@ -9,7 +9,7 @@ sargan(object, weights = c("twosteps", "onestep"))
 \arguments{
 \item{object}{an object of class \code{"pgmm"},}
 
-\item{weights}{the weighting matrix to be used for the computation of the
+\item{weights}{the weighing matrix to be used for the computation of the
 test.}
 }
 \value{
