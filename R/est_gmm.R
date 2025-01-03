@@ -988,7 +988,7 @@ print.summary.pgmm <- function(x, digits = max(3, getOption("digits") - 2),
 #' number of coefficients.
 #' 
 #' @param object an object of class `"pgmm"`,
-#' @param weights the weighting matrix to be used for the computation of the
+#' @param weights the weighing matrix to be used for the computation of the
 #' test.
 #' @return An object of class `"htest"`.
 #' @export
