@@ -58,14 +58,11 @@
 #' @param transformation the kind of transformation to apply to the
 #'     model: either `"d"` (the default value) for the
 #'     "difference GMM" model or `"ld"` for the "system GMM" model,
-#' @param fsm character of length 1 to specify the matrix for the 
-#'      `"onestep"` estimator: one of `"I"`
-#'     (identity matrix) or `"G"` (\eqn{=D'D} where \eqn{D} is the
-#'     first--difference operator) if `transformation="d"`, one of
-#'     `"GI"` or `"full"` if `transformation="ld"`,
-# TODO: fms = NULL (default)/"full"/"GI" not explained;
-#       function FSM() not used if transformation = "d";
-#       for transformation = "fd", arg fsm is always "full"
+#' @param fsm character of length 1 to specify type of weighing matrix
+#'      for the first step /the `"onestep"` estimator: one of `"I"` (identity 
+#'      matrix) or `"G"` (\eqn{=D'D} where \eqn{D} is the first--difference 
+#'      operator), if `transformation="d"`, one of `"GI"` or `"full"` 
+#'      if `transformation="ld"`,
 #' @param index the indexes,
 #' @param \dots further arguments.
 #' @param robust for pgmm's summary method: if `TRUE` (default), robust inference
@@ -91,9 +88,10 @@
 #'              estimation for each individual,} 
 #' \item{W}{a list containing the instruments for each individual (a matrix per
 #'          list element) (two lists in case of system GMM,}
-# TODO: not correct W does not contain two lists for system GMM
-#' \item{A1}{the weighting matrix for the one--step estimator,}
-#' \item{A2}{the weighting matrix for the two--steps estimator,}
+# TODO: not correct, W does not contain two lists for system GMM
+#' \item{A1}{the weighing matrix for the one--step estimator,}
+#' \item{A2}{the weighing matrix for the two--steps estimator,}
+# TODO: add B1 description here
 #' \item{call}{the call.}
 #' 
 #' It has `print`, `summary` and `print.summary` methods.
@@ -164,7 +162,7 @@ pgmm <- function(formula, data, subset, na.action,
                  collapse = FALSE, # TODO: collapse does not seem to be assumed a logical in the code below but rather a character vector
                  lost.ts = NULL,
                  transformation = c("d", "ld"),
-                 fsm = NULL,
+                 fsm = switch(transformation, "d" = "G", "ld" = "full"),
                  index = NULL, ...) {
 
   # yX : response / covariates, W : gmm instruments, 
@@ -176,11 +174,17 @@ pgmm <- function(formula, data, subset, na.action,
   model <- match.arg(model)
   transformation <- match.arg(transformation)
   if(!is.null(fsm)) {
-    stopifnot(is.character(fsm) && length(fsm))
-    # interface check as specified in man page, currently deactivated
-    #  if(transformation == "d")  stopifnot(fsm == "I"  || fsm == "G")
-    #  if(transformation == "ld") stopifnot(fsm == "GI" || fsm == "full")
-    } else fsm <- "full" # TODO: always uses "full" (as has been the case "since ever"), but man page tells otherwise
+    # some interface checks
+    stopifnot(is.character(fsm) && length(fsm) == 1L)
+    if(!(fsm %in% names(pgmm.fsm.list))) stop("argument 'fsm' must be one of ", oneof(pgmm.fsm.list))
+    if(transformation == "d")  stopifnot(fsm == "I"  || fsm == "G")
+    if(transformation == "ld") stopifnot(fsm == "GI" || fsm == "full")
+  } else {
+    # set fsm if null
+    fsm <- switch(transformation, "d" = "G", "ld" = "full")
+    warning(paste0("as argument 'fsm' was NULL, it has been set to \"", fsm, "\""))
+    }
+
   namesV <- NULL
   
   #################################################################
@@ -527,11 +531,11 @@ pgmm <- function(formula, data, subset, na.action,
   Wy <- Reduce("+", Wy)
 
   # Compute the first step matrices
-  A1 <- switch(transformation,
-          "d" = FSM(T - TL1, "G"), # == tcrossprod(diff(diag(1, T - TL1 + 1))) ## TODO: FSM's arg fsm not fully flexible
+  w.A1 <- switch(transformation,
+          "d" = FSM(T - TL1, fsm), # for fsm == "G": FSM(. "G") gives the same as previously hard coded tcrossprod(diff(diag(1, T - TL1 + 1)))
          "ld" = FSM(T - TL2, fsm))
   
-  A1 <- lapply(W, function(x) crossprod(t(crossprod(x, A1)), x))
+  A1 <- lapply(W, function(x) crossprod(t(crossprod(x, w.A1)), x))
   A1 <- Reduce("+", A1)
   minevA1 <- min(eigen(A1)$values)
   eps <- 1E-9
@@ -745,7 +749,7 @@ Id <- function(t){
   diag(1, t)
 }
 
-FSM <- function(t, fsm = c("full", "I", "G", "GI")){
+FSM <- function(t, fsm = c("I", "G", "GI", "full")){
   fsm <- match.arg(fsm)
   switch(fsm,
          "I" = Id(t),

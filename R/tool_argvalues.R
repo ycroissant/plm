@@ -81,3 +81,9 @@ oneof <- function(x){
 
 plm.arg <- c("formula", "data", "subset", "weights", "na.action", "effect", "model",
              "instruments", "random.method", "inst.method", "index")
+
+pgmm.fsm.list <- c(I    = "I",
+                   G    = "G",
+                   GI   = "GI",
+                   full = "full")
+                              

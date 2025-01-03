@@ -17,7 +17,7 @@ pgmm(
   collapse = FALSE,
   lost.ts = NULL,
   transformation = c("d", "ld"),
-  fsm = NULL,
+  fsm = switch(transformation, d = "G", ld = "full"),
   index = NULL,
   ...
 )
@@ -66,11 +66,11 @@ missing, it is set to the first one minus one,}
 model: either \code{"d"} (the default value) for the
 "difference GMM" model or \code{"ld"} for the "system GMM" model,}
 
-\item{fsm}{character of length 1 to specify the matrix for the
-\code{"onestep"} estimator: one of \code{"I"}
-(identity matrix) or \code{"G"} (\eqn{=D'D} where \eqn{D} is the
-first--difference operator) if \code{transformation="d"}, one of
-\code{"GI"} or \code{"full"} if \code{transformation="ld"},}
+\item{fsm}{character of length 1 to specify type of weighing matrix
+for the first step /the \code{"onestep"} estimator: one of \code{"I"} (identity
+matrix) or \code{"G"} (\eqn{=D'D} where \eqn{D} is the first--difference
+operator), if \code{transformation="d"}, one of \code{"GI"} or \code{"full"}
+if \code{transformation="ld"},}
 
 \item{index}{the indexes,}
 
@@ -105,8 +105,8 @@ coefficients,}
 estimation for each individual,}
 \item{W}{a list containing the instruments for each individual (a matrix per
 list element) (two lists in case of system GMM,}
-\item{A1}{the weighting matrix for the one--step estimator,}
-\item{A2}{the weighting matrix for the two--steps estimator,}
+\item{A1}{the weighing matrix for the one--step estimator,}
+\item{A2}{the weighing matrix for the two--steps estimator,}
 \item{call}{the call.}
 
 It has \code{print}, \code{summary} and \code{print.summary} methods.
