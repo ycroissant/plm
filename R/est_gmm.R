@@ -902,8 +902,9 @@ mtest.pgmm <- function(object, order = 1L, vcov = NULL, ...) {
   A <- if(model == "onestep") object$A1 else object$A2
   EX  <- Reduce("+", mapply(crossprod, residl, X, SIMPLIFY = FALSE))
   XZ  <- Reduce("+", mapply(crossprod, W,      X, SIMPLIFY = FALSE))
-  EVE <- Reduce("+", mapply(function(x, y)    t(y) %*% x %*% t(x) %*% y,    resid, residl, SIMPLIFY = FALSE))
-  ZVE <- Reduce("+", mapply(function(w, x, y) t(w) %*% x %*% t(x) %*% y, W, resid, residl, SIMPLIFY = FALSE))
+  V <- mapply(tcrossprod, resid, SIMPLIFY = FALSE)
+  EVE <- Reduce("+", mapply(function(v, e)    t(e) %*% v %*% e,    V, residl, SIMPLIFY = FALSE))
+  ZVE <- Reduce("+", mapply(function(w, v, e) t(w) %*% v %*% e, W, V, residl, SIMPLIFY = FALSE))
 
   num <- Reduce("+", mapply(crossprod, resid, residl, SIMPLIFY = FALSE))
   denom <- EVE - 2 * EX %*% vcov(object) %*% t(XZ) %*% A %*% ZVE + EX %*% vv %*% t(EX)
