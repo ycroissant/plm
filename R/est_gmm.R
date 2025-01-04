@@ -556,17 +556,16 @@ pgmm <- function(formula, data, subset, na.action,
 
   residuals <- lapply(yX, function(x)
                       as.vector(x[ , 1L] - crossprod(t(x[ , -1L, drop = FALSE]), coefficients)))
-  outresid <- lapply(residuals, function(x) outer(x, x))
   
   # non-robust variance-covariance matrix of one-step GMM:
   # see Doornik/Arellano/Bond (2012), p. 31 (formula for V^hat1 with sig2 as in (4) on p. 30)
   CPresid <- crossprod(unlist(residuals))
   sig2 <- as.numeric(CPresid / (pdim$nT$N - NCOL(B1)))
   vcov <- sig2 * B1
-  
+
   # A2 is also needed  for "onestep" model in vcovHC.pgmm, hence calc. here and 
   # always include in model object 
-  A2 <- mapply(function(x, y) crossprod(t(crossprod(x, y)), x), W, outresid, SIMPLIFY = FALSE)
+  A2 <- mapply(function(w, res) tcrossprod(crossprod(w, tcrossprod(res)), t(w)), W, residuals, SIMPLIFY = FALSE) # == mapply(function(w, res) t(w) %*% tcrossprod(res) %*% w, W, residuals, SIMPLIFY = FALSE)
   A2 <- Reduce("+", A2)
   minevA2 <- min(eigen(A2)$values)
   A2 <- if (minevA2 < eps) {
