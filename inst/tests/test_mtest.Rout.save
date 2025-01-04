@@ -1,0 +1,188 @@
+
+R version 4.4.2 (2024-10-31 ucrt) -- "Pile of Leaves"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> ### test results with plm 2.6-4
+> library(plm)
+> data("EmplUK", package = "plm")
+> 
+> ########################## one-step ######################
+> 
+> # Arellano/Bond 1991, Table 4, column (a1) (has robust SEs)
+> ab.a1 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
++               + lag(log(capital), 0:2) + lag(log(output), 0:2) | lag(log(emp), 2:99),
++               data = EmplUK, effect = "twoways", model = "onestep")
+> 
+> mtest(ab.a1, 1, vcov = NULL)
+
+	Arellano-Bond autocorrelation test of degree 1
+
+data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + lag(log(capital),  ...
+normal = -4.1906, p-value = 2.782e-05
+alternative hypothesis: autocorrelation present
+
+> mtest(ab.a1, 2, vcov = NULL)
+
+	Arellano-Bond autocorrelation test of degree 2
+
+data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + lag(log(capital),  ...
+normal = -0.64241, p-value = 0.5206
+alternative hypothesis: autocorrelation present
+
+> mtest(ab.a1, 1, vcov = vcovHC)
+
+	Arellano-Bond autocorrelation test of degree 1, vcov: vcovHC
+
+data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + lag(log(capital),  ...
+normal = NaN, p-value = NA
+alternative hypothesis: autocorrelation present
+
+Warning message:
+In sqrt(denom) : NaNs produced
+> mtest(ab.a1, 2, vcov = vcovHC) # -0.516 (reference)
+
+	Arellano-Bond autocorrelation test of degree 2, vcov: vcovHC
+
+data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + lag(log(capital),  ...
+normal = NaN, p-value = NA
+alternative hypothesis: autocorrelation present
+
+Warning message:
+In sqrt(denom) : NaNs produced
+> 
+> # Windmeijer (2025), table 2, onestep with corrected std. err
+> wind.s1 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
++                 + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
++                 data = EmplUK, effect = "twoways", model = "onestep")
+> mtest(wind.s1, 1, vcov = NULL)
+
+	Arellano-Bond autocorrelation test of degree 1
+
+data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + log(capital) +  ...
+normal = -3.9009, p-value = 9.583e-05
+alternative hypothesis: autocorrelation present
+
+> mtest(wind.s1, 2, vcov = NULL)
+
+	Arellano-Bond autocorrelation test of degree 2
+
+data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + log(capital) +  ...
+normal = -0.46764, p-value = 0.64
+alternative hypothesis: autocorrelation present
+
+> mtest(wind.s1, 1, vcov = vcovHC) # -2.493 (reference)
+
+	Arellano-Bond autocorrelation test of degree 1, vcov: vcovHC
+
+data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + log(capital) +  ...
+normal = NaN, p-value = NA
+alternative hypothesis: autocorrelation present
+
+Warning message:
+In sqrt(denom) : NaNs produced
+> mtest(wind.s1, 2, vcov = vcovHC) # -0.359 (reference)
+
+	Arellano-Bond autocorrelation test of degree 2, vcov: vcovHC
+
+data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + log(capital) +  ...
+normal = NaN, p-value = NA
+alternative hypothesis: autocorrelation present
+
+Warning message:
+In sqrt(denom) : NaNs produced
+> 
+> ########################## two-steps ######################
+> 
+> # Arellano/Bond 1991, Table 4, column (a2) (non-robust SEs)
+> ab.a2 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
++               + lag(log(capital), 0:2) + lag(log(output), 0:2) | lag(log(emp), 2:99),
++               data = EmplUK, effect = "twoways", model = "twosteps")
+> 
+> mtest(ab.a2, 1, vcov = NULL)
+
+	Arellano-Bond autocorrelation test of degree 1
+
+data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + lag(log(capital),  ...
+normal = -2.9998, p-value = 0.002702
+alternative hypothesis: autocorrelation present
+
+> mtest(ab.a2, 2, vcov = NULL) # -0.434 (reference)
+
+	Arellano-Bond autocorrelation test of degree 2
+
+data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + lag(log(capital),  ...
+normal = -0.41575, p-value = 0.6776
+alternative hypothesis: autocorrelation present
+
+> mtest(ab.a2, 1, vcov = vcovHC)
+
+	Arellano-Bond autocorrelation test of degree 1, vcov: vcovHC
+
+data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + lag(log(capital),  ...
+normal = -2.3456, p-value = 0.01899
+alternative hypothesis: autocorrelation present
+
+> mtest(ab.a2, 2, vcov = vcovHC)
+
+	Arellano-Bond autocorrelation test of degree 2, vcov: vcovHC
+
+data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + lag(log(capital),  ...
+normal = -0.36744, p-value = 0.7133
+alternative hypothesis: autocorrelation present
+
+> 
+> ## Arellano and Bond (1991), table 4 col. b / Windmeijer (2025), table 2
+> ab.b <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
++              + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
++              data = EmplUK, effect = "twoways", model = "twosteps")
+> 
+> mtest(ab.b, 1, vcov = NULL)   # -2.826 (reference about A/B's m1 in Windmeijer)
+
+	Arellano-Bond autocorrelation test of degree 1
+
+data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + log(capital) +  ...
+normal = -2.4278, p-value = 0.01519
+alternative hypothesis: autocorrelation present
+
+> mtest(ab.b, 2, vcov = NULL)   # -0.327 (reference in A/B)
+
+	Arellano-Bond autocorrelation test of degree 2
+
+data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + log(capital) +  ...
+normal = -0.33254, p-value = 0.7395
+alternative hypothesis: autocorrelation present
+
+> mtest(ab.b, 1, vcov = vcovHC) # -1.999 (reference in Windmeijer)
+
+	Arellano-Bond autocorrelation test of degree 1, vcov: vcovHC
+
+data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + log(capital) +  ...
+normal = -1.5357, p-value = 0.1246
+alternative hypothesis: autocorrelation present
+
+> mtest(ab.b, 2, vcov = vcovHC) # -0.316 (reference in Windmeijer)
+
+	Arellano-Bond autocorrelation test of degree 2, vcov: vcovHC
+
+data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + log(capital) +  ...
+normal = -0.30388, p-value = 0.7612
+alternative hypothesis: autocorrelation present
+
+> 
+> 
+> proc.time()
+   user  system elapsed 
+   3.89    0.48    4.35 
