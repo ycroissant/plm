@@ -112,13 +112,13 @@
 #' 
 #' data("EmplUK", package = "plm")
 #' 
-#'# Arellano/Bond 1991, Table 4, column (a1) [non-robust SEs]
+#'# Arellano/Bond 1991, Table 4, column (a1) (has robust SEs)
 #'ab.a1 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
 #'              + lag(log(capital), 0:2) + lag(log(output), 0:2) | lag(log(emp), 2:99),
 #'              data = EmplUK, effect = "twoways", model = "onestep")
-#'summary(ab.a1, robust = FALSE)
+#'summary(ab.a1, robust = TRUE)
 #'
-#'# Arellano/Bond 1991, Table 4, column (a2) [non-robust SEs]
+#'# Arellano/Bond 1991, Table 4, column (a2) (has non-robust SEs)
 #'ab.a2 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
 #'              + lag(log(capital), 0:2) + lag(log(output), 0:2) | lag(log(emp), 2:99),
 #'              data = EmplUK, effect = "twoways", model = "twosteps")
@@ -132,28 +132,28 @@
 #'summary(ab.b, robust = TRUE)  # Windmeijer
 #'
 #' ## Blundell and Bond (1998) table 4 (cf. DPD for OX p. 12 col. 4)
-#' z2 <- pgmm(log(emp) ~ lag(log(emp), 1)+ lag(log(wage), 0:1) +
+#' bb.4 <- pgmm(log(emp) ~ lag(log(emp), 1)+ lag(log(wage), 0:1) +
 #'            lag(log(capital), 0:1) | lag(log(emp), 2:99) +
 #'            lag(log(wage), 2:99) + lag(log(capital), 2:99),
 #'            data = EmplUK, effect = "twoways", model = "onestep", 
 #'            transformation = "ld")
-#' summary(z2, robust = TRUE)
+#' summary(bb.4, robust = TRUE)
 #' 
 #' \dontrun{
 #' ## Same with the old formula or dynformula interface
 #' ## Arellano and Bond (1991), table 4, col. b 
-#' z1 <- pgmm(log(emp) ~ log(wage) + log(capital) + log(output),
+#' ab.b <- pgmm(log(emp) ~ log(wage) + log(capital) + log(output),
 #'             lag.form = list(2,1,0,1), data = EmplUK, 
 #'             effect = "twoways", model = "twosteps",
 #'             gmm.inst = ~log(emp), lag.gmm = list(c(2,99)))
-#' summary(z1, robust = FALSE)
+#' summary(ab.b, robust = FALSE)
 #' 
-#' ## Blundell and Bond (1998) table 4 (cf DPD for OX p. 12 col. 4)
-#' z2 <- pgmm(dynformula(log(emp) ~ log(wage) + log(capital), list(1,1,1)), 
+#' ## Blundell and Bond (1998) table 4 (cf. DPD for OX p. 12 col. 4)
+#' bb.4 <- pgmm(dynformula(log(emp) ~ log(wage) + log(capital), list(1,1,1)), 
 #'             data = EmplUK, effect = "twoways", model = "onestep", 
 #'             gmm.inst = ~log(emp) + log(wage) + log(capital), 
 #'             lag.gmm = c(2,99), transformation = "ld")
-#' summary(z2, robust = TRUE)
+#' summary(bb.4, robust = TRUE)
 #' }
 #' 
 pgmm <- function(formula, data, subset, na.action,
