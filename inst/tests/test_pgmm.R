@@ -6,7 +6,7 @@ ab.a1 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
               + lag(log(capital), 0:2) + lag(log(output), 0:2) | lag(log(emp), 2:99),
               data = EmplUK, effect = "twoways", model = "onestep")
 
-(s.ab.a1  <- summary(ab.a1, robust = FALSE))
+(s.ab.a1  <- summary(ab.a1, robust = FALSE)) # xtabond manual has totally different values for non-robust standard errors
 (s.ab.a1r <- summary(ab.a1, robust = TRUE)) # as tabulated by Arellano/Bond
 
 ### Arellano-Bond test, Sargan test and Wald test yield different results for onestep
