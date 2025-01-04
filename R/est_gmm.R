@@ -531,11 +531,11 @@ pgmm <- function(formula, data, subset, na.action,
   Wy <- Reduce("+", Wy)
 
   # Compute the first step matrices
-  w.A1 <- switch(transformation,
+  H <- switch(transformation,
           "d" = FSM(T - TL1, fsm), # for fsm == "G": FSM(. "G") gives the same as previously hard coded tcrossprod(diff(diag(1, T - TL1 + 1)))
          "ld" = FSM(T - TL2, fsm))
   
-  A1 <- lapply(W, function(x) crossprod(t(crossprod(x, w.A1)), x))
+  A1 <- lapply(W, function(x) crossprod(t(crossprod(x, H)), x))
   A1 <- Reduce("+", A1)
   minevA1 <- min(eigen(A1)$values)
   eps <- 1E-9
