@@ -896,7 +896,7 @@ mtest.pgmm <- function(object, order = 1L, vcov = NULL, ...) {
   X <- lapply(object$model, function(x) x[ , -1L, drop = FALSE])
   W <- object$W
   A <- if(model == "onestep") object$A1 else object$A2
-  B <- if(model == "onestep") object$B1 else object$vcov # "B2"
+  B <- object$vcov # object$vcov is "B1" for one-step and "B2" for two-steps model
   EX  <- Reduce("+", mapply(crossprod, residl, X, SIMPLIFY = FALSE))
   XZ  <- Reduce("+", mapply(crossprod, W,      X, SIMPLIFY = FALSE))
   V <- mapply(tcrossprod, resid, SIMPLIFY = FALSE)
