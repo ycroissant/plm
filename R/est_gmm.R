@@ -908,7 +908,7 @@ mtest.pgmm <- function(object, order = 1L, vcov = NULL, ...) {
 
   num <- Reduce("+", mapply(crossprod, resid, residl, SIMPLIFY = FALSE))
   denom <- EVE - 2 * EX %*% vcov(object) %*% t(XZ) %*% A %*% ZVE + EX %*% vv %*% t(EX)
-  stat <- num / sqrt(denom)
+  stat <- as.numeric(num / sqrt(denom))
   names(stat) <- "normal"
   if(!is.null(vcov)) vcov <- paste0(", vcov: ", deparse(substitute(vcov)))
   method <- paste0("Arellano-Bond autocorrelation test of degree ", order, vcov)
