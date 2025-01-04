@@ -900,6 +900,7 @@ mtest.pgmm <- function(object, order = 1L, vcov = NULL, ...) {
   X <- lapply(object$model, function(x) x[ , -1L, drop = FALSE])
   W <- object$W
   A <- if(model == "onestep") object$A1 else object$A2
+  B1 <- object$B1
   EX  <- Reduce("+", mapply(crossprod, residl, X, SIMPLIFY = FALSE))
   XZ  <- Reduce("+", mapply(crossprod, W,      X, SIMPLIFY = FALSE))
   V <- mapply(tcrossprod, resid, SIMPLIFY = FALSE)
@@ -907,7 +908,7 @@ mtest.pgmm <- function(object, order = 1L, vcov = NULL, ...) {
   ZVE <- Reduce("+", mapply(function(w, v, e) t(w) %*% v %*% e, W, V, residl, SIMPLIFY = FALSE))
 
   num <- Reduce("+", mapply(crossprod, resid, residl, SIMPLIFY = FALSE))
-  denom <- EVE - 2 * EX %*% vcov(object) %*% t(XZ) %*% A %*% ZVE + EX %*% vv %*% t(EX)
+  denom <- EVE - 2 * EX %*% B1 %*% t(XZ) %*% A %*% ZVE + EX %*% vv %*% t(EX)
   stat <- as.numeric(num / sqrt(denom))
   names(stat) <- "normal"
   if(!is.null(vcov)) vcov <- paste0(", vcov: ", deparse(substitute(vcov)))
