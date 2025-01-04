@@ -525,9 +525,9 @@ pgmm <- function(formula, data, subset, na.action,
   ## for (i in seq_len(N)) W[[i]] <- W[[i]][, - zerolines]
 
   WX <- mapply(function(x, y) crossprod(x, y), W, yX, SIMPLIFY = FALSE)
+  Wy <- lapply(WX, function(x) x[ ,  1L])
   WX <- lapply(WX, function(x) x[ , -1L, drop = FALSE])
   WX <- Reduce("+", WX)
-  Wy <- lapply(WX, function(x) x[ ,  1L])
   Wy <- Reduce("+", Wy)
 
   # Compute the first step matrices
