@@ -8,7 +8,6 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 
 ### Fixes:
 * `pgmm`:
-  * for one-step GMM models: usual (non-robust) covariance matrix/standard errors fixed.
   * argument `fsm` can now be set to influence the first step's weighing matrix.
 * `vcovXX`: FD models with only one observation per group prior to 
     first-differencing errored ([#58](https://github.com/ycroissant/plm/issues/58)).

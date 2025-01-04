@@ -557,11 +557,6 @@ pgmm <- function(formula, data, subset, na.action,
   residuals <- lapply(yX, function(x)
                       as.vector(x[ , 1L] - crossprod(t(x[ , -1L, drop = FALSE]), coefficients)))
   
-  # non-robust variance-covariance matrix of one-step GMM:
-  # see Doornik/Arellano/Bond (2012), p. 31 (formula for V^hat1 with sig2 as in (4) on p. 30)
-  CPresid <- crossprod(unlist(residuals))
-  sig2 <- as.numeric(CPresid / (pdim$nT$N - NCOL(B1)))
-  vcov <- sig2 * B1
 
   # A2 is also needed  for "onestep" model in vcovHC.pgmm, hence calc. here and 
   # always include in model object 
@@ -588,6 +583,8 @@ pgmm <- function(formula, data, subset, na.action,
                            z <- as.vector(x[ , 1L] - crossprod(t(x[ , -1L, drop = FALSE]), coef2s))
                            names(z) <- nz
                            z})
+  } else {
+    vcov <- B1
   }
   
   rownames(vcov) <- colnames(vcov) <- names.coef
