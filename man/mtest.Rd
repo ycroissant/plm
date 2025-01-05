@@ -31,9 +31,17 @@ the estimation. By default, the computation is done with the standard
 covariance matrix of the coefficients. A robust estimator of a
 covariance matrix can be supplied with the \code{vcov} argument.
 
-Note that \code{mtest} computes like DPD for Ox and xtabond do, see
-\insertCite{@see @DOOR:AREL:BOND:12}{plm}, p. 32, footnote 7;
-hence some results for two-step models slightly diverge from original papers,
+Note that \code{mtest} computes like DPD for Ox and xtabond do, i.e., uses for two-steps
+models the one-step model's residuals which were used to construct the efficient
+two-steps estimator, see \insertCite{@DOOR:AREL:BOND:12}{plm}, p. 32, footnote 7;
+As noted by \insertCite{@AREL:BOND:91}{plm} (p. 282), the m statistic is rather
+flexible and can be defined with any consistent GMM estimator which gives leeway
+for implementation, but the test's asymptotic  power depends on the estimator's efficiency.
+\insertCite{@AREL:BOND:91}{plm} (see their footnote 9) used
+DPD98 for Gauss (\insertCite{AREL:BOND:98}{plm}) as did
+\insertCite{@WIND:05}{plm} (see his footnote 10) for the basis of his
+covariance correction, both with a slightly different implementation.
+Hence some results for \code{mtest} with two-step models diverge from original papers,
 see examples below.
 }
 \examples{
