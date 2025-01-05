@@ -198,8 +198,7 @@ summary(bb.4, robust = TRUE)
 }
 \seealso{
 \code{\link[=sargan]{sargan()}} for the Hansen--Sargan test and \code{\link[=mtest]{mtest()}} for
-Arellano--Bond's test of serial correlation.  \code{\link[=dynformula]{dynformula()}} for
-dynamic formulas (deprecated).
+Arellano--Bond's test of serial correlation.
 }
 \author{
 Yves Croissant

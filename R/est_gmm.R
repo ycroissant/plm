@@ -74,7 +74,6 @@
 #'     i.e., only for `effect = "twoways"`),
 #' @param digits digits,
 #' @param width the maximum length of the lines in the print output.
-
 #' @return An object of class `c("pgmm","panelmodel")`, which has the
 #'     following elements:
 #' 
@@ -101,9 +100,7 @@
 #' @seealso
 #' 
 #' [sargan()] for the Hansen--Sargan test and [mtest()] for
-#' Arellano--Bond's test of serial correlation.  [dynformula()] for
-#' dynamic formulas (deprecated).
-# TODO: delete above reference to dynformula
+#' Arellano--Bond's test of serial correlation.
 #' @references
 #'
 #' \insertAllCited{}
@@ -834,13 +831,13 @@ summary.pgmm <- function(object, robust = TRUE, time.dummies = FALSE, ...) {
 #' 
 #' Note that `mtest` computes like DPD for Ox and xtabond do, i.e., uses for two-steps
 #' models the one-step model's residuals which were used to construct the efficient
-#' two-steps estimator, see \insertCite{@DOOR:AREL:BOND:12}{plm}, p. 32, footnote 7;
-#' As noted by \insertCite{@AREL:BOND:91}{plm} (p. 282), the m statistic is rather 
+#' two-steps estimator, see \insertCite{DOOR:AREL:BOND:12}{plm}, p. 32, footnote 7;
+#' As noted by \insertCite{AREL:BOND:91}{plm} (p. 282), the m statistic is rather 
 #' flexible and can be defined with any consistent GMM estimator which gives leeway 
 #' for implementation, but the test's asymptotic  power depends on the estimator's efficiency. 
-#' \insertCite{@AREL:BOND:91}{plm} (see their footnote 9) used 
+#' \insertCite{AREL:BOND:91}{plm} (see their footnote 9) used 
 #' DPD98 for Gauss (\insertCite{AREL:BOND:98}{plm}) as did 
-#' \insertCite{@WIND:05}{plm} (see his footnote 10) for the basis of his 
+#' \insertCite{WIND:05}{plm} (see footnote 10) for the basis of his 
 #' covariance correction, both with a slightly different implementation. 
 #' Hence some results for `mtest` with two-step models diverge from original papers,
 #' see examples below.
@@ -856,7 +853,6 @@ summary.pgmm <- function(object, robust = TRUE, time.dummies = FALSE, ...) {
 #' @seealso [pgmm()], [vcovHC.pgmm()]
 #' @references
 #'
-#' \insertCite{AREL:BOND:91}{plm}
 #' \insertAllCited{}
 #' 
 #' @keywords htest
