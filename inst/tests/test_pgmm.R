@@ -23,14 +23,14 @@ ab.a2 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
 (s.ab.a2  <- summary(ab.a2, robust = FALSE)) # as tabulated by Arellano/Bond
 (s.ab.a2r <- summary(ab.a2, robust = TRUE))
 
-## Arellano and Bond (1991), table 4 col. b / Windmeijer (2025), table 2
+## Arellano and Bond (1991), table 4 col. b / Windmeijer (2005), table 2
 ab.b <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
            + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
             data = EmplUK, effect = "twoways", model = "twosteps")
 (s.ab.b  <- summary(ab.b, robust = FALSE)) # as tabulated by Arellano/Bond
-(s.ab.br <- summary(ab.b, robust = TRUE))  # Windmeijer (2025), table 2, twostep, std. errc
+(s.ab.br <- summary(ab.b, robust = TRUE))  # Windmeijer (2005), table 2, twostep, std. errc
 
-# Windmeijer (2025), table 2, onestep with corrected std. err
+# Windmeijer (2005), table 2, onestep with corrected std. err
 # (Windmeijer's table header does not indicate that for one-step model these are
 # corrected std errors, but this can be varified when looking at the produced results)
 wind.s1 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)

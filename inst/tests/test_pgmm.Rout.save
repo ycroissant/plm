@@ -176,7 +176,7 @@ Autocorrelation test (2): normal = -0.3516578 (p-value = 0.72509)
 Wald test for coefficients: chisq(10) = 269.1608 (p-value = < 2.22e-16)
 Wald test for time dummies: chisq(6) = 15.43165 (p-value = 0.017152)
 > 
-> ## Arellano and Bond (1991), table 4 col. b / Windmeijer (2025), table 2
+> ## Arellano and Bond (1991), table 4 col. b / Windmeijer (2005), table 2
 > ab.b <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
 +            + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
 +             data = EmplUK, effect = "twoways", model = "twosteps")
@@ -212,7 +212,7 @@ Autocorrelation test (1): normal = -2.427829 (p-value = 0.01519)
 Autocorrelation test (2): normal = -0.3325401 (p-value = 0.73948)
 Wald test for coefficients: chisq(7) = 371.9877 (p-value = < 2.22e-16)
 Wald test for time dummies: chisq(6) = 26.9045 (p-value = 0.0001509)
-> (s.ab.br <- summary(ab.b, robust = TRUE))  # Windmeijer (2025), table 2, twostep, std. errc
+> (s.ab.br <- summary(ab.b, robust = TRUE))  # Windmeijer (2005), table 2, twostep, std. errc
 Twoways effects Two-steps model Difference GMM 
 
 Call:
@@ -245,7 +245,7 @@ Autocorrelation test (2): normal = -0.2796829 (p-value = 0.77972)
 Wald test for coefficients: chisq(7) = 142.0353 (p-value = < 2.22e-16)
 Wald test for time dummies: chisq(6) = 16.97046 (p-value = 0.0093924)
 > 
-> # Windmeijer (2025), table 2, onestep with corrected std. err
+> # Windmeijer (2005), table 2, onestep with corrected std. err
 > # (Windmeijer's table header does not indicate that for one-step model these are
 > # corrected std errors, but this can be varified when looking at the produced results)
 > wind.s1 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
@@ -1090,4 +1090,4 @@ F-Statistic (time dummies):  no time dummies included in estimation
 > 
 > proc.time()
    user  system elapsed 
-  45.53    4.20   49.65 
+  46.73    4.64   51.37 
