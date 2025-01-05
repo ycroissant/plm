@@ -58,7 +58,7 @@
 #' @param transformation the kind of transformation to apply to the
 #'     model: either `"d"` (the default value) for the
 #'     "difference GMM" model or `"ld"` for the "system GMM" model,
-#' @param fsm character of length 1 to specify type of weighing matrix
+#' @param fsm character of length 1 to specify type of weighting matrix
 #'      for the first step /the `"onestep"` estimator: one of `"I"` (identity 
 #'      matrix) or `"G"` (\eqn{=D'D} where \eqn{D} is the first--difference 
 #'      operator), if `transformation="d"`, one of `"GI"` or `"full"` 
@@ -89,8 +89,8 @@
 #' \item{W}{a list containing the instruments for each individual (a matrix per
 #'          list element) (two lists in case of system GMM,}
 # TODO: not correct, W does not contain two lists for system GMM
-#' \item{A1}{the weighing matrix for the one--step estimator,}
-#' \item{A2}{the weighing matrix for the two--steps estimator,}
+#' \item{A1}{the weighting matrix for the one--step estimator,}
+#' \item{A2}{the weighting matrix for the two--steps estimator,}
 # TODO: add B1 description here
 #' \item{call}{the call.}
 #' 
@@ -103,6 +103,7 @@
 #' [sargan()] for the Hansen--Sargan test and [mtest()] for
 #' Arellano--Bond's test of serial correlation.  [dynformula()] for
 #' dynamic formulas (deprecated).
+# TODO: delete above reference to dynformula
 #' @references
 #'
 #' \insertAllCited{}
@@ -118,18 +119,18 @@
 #'              data = EmplUK, effect = "twoways", model = "onestep")
 #'summary(ab.a1, robust = TRUE)
 #'
-#'# Arellano/Bond 1991, Table 4, column (a2) (has non-robust SEs)
-#'ab.a2 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
-#'              + lag(log(capital), 0:2) + lag(log(output), 0:2) | lag(log(emp), 2:99),
-#'              data = EmplUK, effect = "twoways", model = "twosteps")
-#'summary(ab.a2, robust = FALSE)
+#' # Arellano/Bond 1991, Table 4, column (a2) (has non-robust SEs)
+#' ab.a2 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
+#'               + lag(log(capital), 0:2) + lag(log(output), 0:2) | lag(log(emp), 2:99),
+#'               data = EmplUK, effect = "twoways", model = "twosteps")
+#' summary(ab.a2, robust = FALSE)
 #'
-## Arellano and Bond (1991), table 4 col. b / # Windmeijer (2025), table 2, std. errc
-#'ab.b <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
-#'             + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
-#'             data = EmplUK, effect = "twoways", model = "twosteps")
-#'summary(ab.b, robust = FALSE) # Arellano/Bond
-#'summary(ab.b, robust = TRUE)  # Windmeijer
+#' # Arellano and Bond (1991), table 4 col. b / # Windmeijer (2005), table 2, std. errc
+#' ab.b <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
+#'              + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
+#'              data = EmplUK, effect = "twoways", model = "twosteps")
+#' summary(ab.b, robust = FALSE) # Arellano/Bond
+#' summary(ab.b, robust = TRUE)  # Windmeijer
 #'
 #' ## Blundell and Bond (1998) table 4 (cf. DPD for OX p. 12 col. 4)
 #' bb.4 <- pgmm(log(emp) ~ lag(log(emp), 1)+ lag(log(wage), 0:1) +
@@ -828,8 +829,13 @@ summary.pgmm <- function(object, robust = TRUE, time.dummies = FALSE, ...) {
 #' 
 #' The Arellano--Bond test is a test of correlation based on the residuals of
 #' the estimation. By default, the computation is done with the standard
-#' covariance matrix of the coefficients.  A robust estimator of this
+#' covariance matrix of the coefficients. A robust estimator of a
 #' covariance matrix can be supplied with the `vcov` argument.
+#' 
+#' Note that `mtest` computes like DPD for Ox and xtabond do, see 
+#' \insertCite{@see @DOOR:AREL:BOND:12}{plm}, p. 32, footnote 7;
+#' hence some results for two-step models slightly diverge from original papers,
+#' see examples below.
 #' 
 #' @param object an object of class `"pgmm"`,
 #' @param order integer: the order of the serial correlation,
@@ -839,21 +845,35 @@ summary.pgmm <- function(object, robust = TRUE, time.dummies = FALSE, ...) {
 #' @return An object of class `"htest"`.
 #' @export
 #' @author Yves Croissant
-#' @seealso [pgmm()]
+#' @seealso [pgmm()], [vcovHC.pgmm()]
 #' @references
 #'
 #' \insertCite{AREL:BOND:91}{plm}
+#' \insertAllCited{}
 #' 
 #' @keywords htest
 #' @examples
+#' # Arellano/Bond 1991, Table 4, column (a1)
+#' ab.a1 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
+#'               + lag(log(capital), 0:2) + lag(log(output), 0:2) | lag(log(emp), 2:99),
+#'               data = EmplUK, effect = "twoways", model = "onestep")
+#' mtest(ab.a1, 1L)
+#' mtest(ab.a1, 2L, vcov = vcovHC)
 #' 
-#' data("EmplUK", package = "plm")
-#' ar <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) +
-#'            lag(log(capital), 0:2) + lag(log(output), 0:2) | lag(log(emp), 2:99),
-#'            data = EmplUK, effect = "twoways", model = "twosteps")
-#' mtest(ar, order = 1L)
-#' mtest(ar, order = 2L, vcov = vcovHC)
-#'
+#' # Windmeijer (2005), table 2, onestep with corrected std. err
+#' ab.b.onestep <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
+#'                      + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
+#'                      data = EmplUK, effect = "twoways", model = "onestep")
+#' mtest(ab.b.onestep, 1L, vcov = vcovHC)
+#' mtest(ab.b.onestep, 2L, vcov = vcovHC)
+#' 
+#' # Arellano/Bond 1991, Table 4, column (a2)
+#' ab.a2 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
+#'              + lag(log(capital), 0:2) + lag(log(output), 0:2) | lag(log(emp), 2:99),
+#'              data = EmplUK, effect = "twoways", model = "twosteps")
+#' mtest(ab.a2, 1L)
+#' mtest(ab.a2, 2L) # while a la Arellano/Bond (1991) -0.434
+
 mtest <- function(object, ...) {
   UseMethod("mtest")
 }
@@ -986,7 +1006,7 @@ print.summary.pgmm <- function(x, digits = max(3, getOption("digits") - 2),
 #' number of coefficients.
 #' 
 #' @param object an object of class `"pgmm"`,
-#' @param weights the weighing matrix to be used for the computation of the
+#' @param weights the weighting matrix to be used for the computation of the
 #' test.
 #' @return An object of class `"htest"`.
 #' @export

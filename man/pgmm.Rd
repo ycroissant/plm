@@ -66,7 +66,7 @@ missing, it is set to the first one minus one,}
 model: either \code{"d"} (the default value) for the
 "difference GMM" model or \code{"ld"} for the "system GMM" model,}
 
-\item{fsm}{character of length 1 to specify type of weighing matrix
+\item{fsm}{character of length 1 to specify type of weighting matrix
 for the first step /the \code{"onestep"} estimator: one of \code{"I"} (identity
 matrix) or \code{"G"} (\eqn{=D'D} where \eqn{D} is the first--difference
 operator), if \code{transformation="d"}, one of \code{"GI"} or \code{"full"}
@@ -105,8 +105,8 @@ coefficients,}
 estimation for each individual,}
 \item{W}{a list containing the instruments for each individual (a matrix per
 list element) (two lists in case of system GMM,}
-\item{A1}{the weighing matrix for the one--step estimator,}
-\item{A2}{the weighing matrix for the two--steps estimator,}
+\item{A1}{the weighting matrix for the one--step estimator,}
+\item{A2}{the weighting matrix for the two--steps estimator,}
 \item{call}{the call.}
 
 It has \code{print}, \code{summary} and \code{print.summary} methods.
@@ -156,13 +156,14 @@ summary(ab.a1, robust = TRUE)
 
 # Arellano/Bond 1991, Table 4, column (a2) (has non-robust SEs)
 ab.a2 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
-             + lag(log(capital), 0:2) + lag(log(output), 0:2) | lag(log(emp), 2:99),
-             data = EmplUK, effect = "twoways", model = "twosteps")
+              + lag(log(capital), 0:2) + lag(log(output), 0:2) | lag(log(emp), 2:99),
+              data = EmplUK, effect = "twoways", model = "twosteps")
 summary(ab.a2, robust = FALSE)
 
+# Arellano and Bond (1991), table 4 col. b / # Windmeijer (2005), table 2, std. errc
 ab.b <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
-            + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
-            data = EmplUK, effect = "twoways", model = "twosteps")
+             + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
+             data = EmplUK, effect = "twoways", model = "twosteps")
 summary(ab.b, robust = FALSE) # Arellano/Bond
 summary(ab.b, robust = TRUE)  # Windmeijer
 

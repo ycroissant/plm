@@ -28,24 +28,42 @@ Test of serial correlation for models estimated by GMM
 \details{
 The Arellano--Bond test is a test of correlation based on the residuals of
 the estimation. By default, the computation is done with the standard
-covariance matrix of the coefficients.  A robust estimator of this
+covariance matrix of the coefficients. A robust estimator of a
 covariance matrix can be supplied with the \code{vcov} argument.
+
+Note that \code{mtest} computes like DPD for Ox and xtabond do, see
+\insertCite{@see @DOOR:AREL:BOND:12}{plm}, p. 32, footnote 7;
+hence some results for two-step models slightly diverge from original papers,
+see examples below.
 }
 \examples{
+# Arellano/Bond 1991, Table 4, column (a1)
+ab.a1 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
+              + lag(log(capital), 0:2) + lag(log(output), 0:2) | lag(log(emp), 2:99),
+              data = EmplUK, effect = "twoways", model = "onestep")
+mtest(ab.a1, 1L)
+mtest(ab.a1, 2L, vcov = vcovHC)
 
-data("EmplUK", package = "plm")
-ar <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) +
-           lag(log(capital), 0:2) + lag(log(output), 0:2) | lag(log(emp), 2:99),
-           data = EmplUK, effect = "twoways", model = "twosteps")
-mtest(ar, order = 1L)
-mtest(ar, order = 2L, vcov = vcovHC)
+# Windmeijer (2005), table 2, onestep with corrected std. err
+ab.b.onestep <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
+                     + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
+                     data = EmplUK, effect = "twoways", model = "onestep")
+mtest(ab.b.onestep, 1L, vcov = vcovHC)
+mtest(ab.b.onestep, 2L, vcov = vcovHC)
 
+# Arellano/Bond 1991, Table 4, column (a2)
+ab.a2 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
+             + lag(log(capital), 0:2) + lag(log(output), 0:2) | lag(log(emp), 2:99),
+             data = EmplUK, effect = "twoways", model = "twosteps")
+mtest(ab.a2, 1L)
+mtest(ab.a2, 2L) # while a la Arellano/Bond (1991) -0.434
 }
 \references{
 \insertCite{AREL:BOND:91}{plm}
+\insertAllCited{}
 }
 \seealso{
-\code{\link[=pgmm]{pgmm()}}
+\code{\link[=pgmm]{pgmm()}}, \code{\link[=vcovHC.pgmm]{vcovHC.pgmm()}}
 }
 \author{
 Yves Croissant
