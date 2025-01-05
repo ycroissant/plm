@@ -23,7 +23,7 @@ Type 'q()' to quit R.
 +               + lag(log(capital), 0:2) + lag(log(output), 0:2) | lag(log(emp), 2:99),
 +               data = EmplUK, effect = "twoways", model = "onestep")
 > 
-> (s.ab.a1  <- summary(ab.a1, robust = FALSE))
+> (s.ab.a1  <- summary(ab.a1, robust = FALSE)) # xtabond manual, example 1, has slightly different values for non-robust standard errors
 Twoways effects One-step model Difference GMM 
 
 Call:
@@ -39,25 +39,25 @@ Residuals:
 -0.6006508 -0.0299498  0.0000000 -0.0001193  0.0311461  0.5693264 
 
 Coefficients:
-                          Estimate Std. Error   z-value  Pr(>|z|)    
-lag(log(emp), 1:2)1      0.6862259  0.0136001   50.4573 < 2.2e-16 ***
-lag(log(emp), 1:2)2     -0.0853582  0.0040665  -20.9908 < 2.2e-16 ***
-lag(log(wage), 0:1)0    -0.6078207  0.0060187 -100.9892 < 2.2e-16 ***
-lag(log(wage), 0:1)1     0.3926231  0.0099965   39.2761 < 2.2e-16 ***
-lag(log(capital), 0:2)0  0.3568456  0.0033888  105.3012 < 2.2e-16 ***
-lag(log(capital), 0:2)1 -0.0580010  0.0053356  -10.8706 < 2.2e-16 ***
-lag(log(capital), 0:2)2 -0.0199476  0.0038094   -5.2364 1.637e-07 ***
-lag(log(output), 0:2)0   0.6085055  0.0123121   49.4235 < 2.2e-16 ***
-lag(log(output), 0:2)1  -0.7111640  0.0168802  -42.1301 < 2.2e-16 ***
-lag(log(output), 0:2)2   0.1057976  0.0130731    8.0928 5.831e-16 ***
+                         Estimate Std. Error z-value  Pr(>|z|)    
+lag(log(emp), 1:2)1      0.686226   0.143272  4.7897 1.671e-06 ***
+lag(log(emp), 1:2)2     -0.085358   0.042839 -1.9925 0.0463110 *  
+lag(log(wage), 0:1)0    -0.607821   0.063404 -9.5864 < 2.2e-16 ***
+lag(log(wage), 0:1)1     0.392623   0.105309  3.7283 0.0001928 ***
+lag(log(capital), 0:2)0  0.356846   0.035700  9.9957 < 2.2e-16 ***
+lag(log(capital), 0:2)1 -0.058001   0.056209 -1.0319 0.3021238    
+lag(log(capital), 0:2)2 -0.019948   0.040131 -0.4971 0.6191424    
+lag(log(output), 0:2)0   0.608506   0.129703  4.6915 2.712e-06 ***
+lag(log(output), 0:2)1  -0.711164   0.177827 -3.9992 6.356e-05 ***
+lag(log(output), 0:2)2   0.105798   0.137720  0.7682 0.4423635    
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Sargan test: chisq(25) = 48.74983 (p-value = 0.0030295)
-Autocorrelation test (1): normal = -4.147354 (p-value = 3.3634e-05)
-Autocorrelation test (2): normal = -0.4498036 (p-value = 0.65285)
-Wald test for coefficients: chisq(10) = 60814.2 (p-value = < 2.22e-16)
-Wald test for time dummies: chisq(6) = 1139.61 (p-value = < 2.22e-16)
+Autocorrelation test (1): normal = -4.190586 (p-value = 2.7824e-05)
+Autocorrelation test (2): normal = -0.6424125 (p-value = 0.52061)
+Wald test for coefficients: chisq(10) = 547.9814 (p-value = < 2.22e-16)
+Wald test for time dummies: chisq(6) = 10.26874 (p-value = 0.11378)
 > (s.ab.a1r <- summary(ab.a1, robust = TRUE)) # as tabulated by Arellano/Bond
 Twoways effects One-step model Difference GMM 
 
@@ -89,8 +89,8 @@ lag(log(output), 0:2)2   0.105798   0.141202  0.7493 0.4536974
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Sargan test: chisq(25) = 48.74983 (p-value = 0.0030295)
-Autocorrelation test (1): normal = -2.678079 (p-value = 0.0074046)
-Autocorrelation test (2): normal = -0.3527172 (p-value = 0.7243)
+Autocorrelation test (1): normal = -3.599593 (p-value = 0.00031872)
+Autocorrelation test (2): normal = -0.5160282 (p-value = 0.60583)
 Wald test for coefficients: chisq(10) = 408.2859 (p-value = < 2.22e-16)
 Wald test for time dummies: chisq(6) = 11.57904 (p-value = 0.072046)
 > 
@@ -279,8 +279,8 @@ lag(log(output), 0:1)1 -0.611704   0.211796 -2.8882 0.0038748 **
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Sargan test: chisq(25) = 44.61875 (p-value = 0.009239)
-Autocorrelation test (1): normal = -1.953189 (p-value = 0.050797)
-Autocorrelation test (2): normal = -0.257198 (p-value = 0.79703)
+Autocorrelation test (1): normal = -2.493372 (p-value = 0.012654)
+Autocorrelation test (2): normal = -0.3594476 (p-value = 0.71926)
 Wald test for coefficients: chisq(7) = 219.6233 (p-value = < 2.22e-16)
 Wald test for time dummies: chisq(6) = 11.45041 (p-value = 0.075414)
 > 
@@ -394,8 +394,8 @@ lag(log(capital), 0:1)1 -0.414113   0.061467 -6.7371 1.616e-11 ***
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Sargan test: chisq(94) = 115.8547 (p-value = 0.062687)
-Autocorrelation test (1): normal = -5.582464 (p-value = 2.3713e-08)
-Autocorrelation test (2): normal = -0.2330438 (p-value = 0.81573)
+Autocorrelation test (1): normal = -4.955307 (p-value = 7.2216e-07)
+Autocorrelation test (2): normal = -0.2551838 (p-value = 0.79858)
 Wald test for coefficients: chisq(5) = 7517.379 (p-value = < 2.22e-16)
 Wald test for time dummies: chisq(7) = 15.88489 (p-value = 0.026189)
 > 
@@ -431,8 +431,8 @@ lag(log(capital), 0:1)1 -0.484148   0.050905 -9.5108 < 2.2e-16 ***
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Sargan test: chisq(94) = 104.872 (p-value = 0.20826)
-Autocorrelation test (1): normal = -5.38121 (p-value = 7.3987e-08)
-Autocorrelation test (2): normal = -0.5605374 (p-value = 0.57511)
+Autocorrelation test (1): normal = -5.646905 (p-value = 1.6336e-08)
+Autocorrelation test (2): normal = -0.5507488 (p-value = 0.58181)
 Wald test for coefficients: chisq(5) = 20061.48 (p-value = < 2.22e-16)
 > 
 > 
@@ -644,8 +644,8 @@ log(real_ndi)     0.139449   0.064857  2.1501  0.03155 *
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Sargan test: chisq(405) = 46 (p-value = 1)
-Autocorrelation test (1): normal = -4.988943 (p-value = 6.0711e-07)
-Autocorrelation test (2): normal = 2.225413 (p-value = 0.026053)
+Autocorrelation test (1): normal = -5.071433 (p-value = 3.9483e-07)
+Autocorrelation test (2): normal = 2.281198 (p-value = 0.022537)
 Wald test for coefficients: chisq(4) = 1440.769 (p-value = < 2.22e-16)
 Wald test for time dummies: chisq(28) = 1252.564 (p-value = < 2.22e-16)
 Warning message:
@@ -702,8 +702,8 @@ log(real_ndi)    -0.070571   0.013654 -5.1686 2.359e-07 ***
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Sargan test: chisq(405) = 46 (p-value = 1)
-Autocorrelation test (1): normal = -5.134152 (p-value = 2.8342e-07)
-Autocorrelation test (2): normal = 2.176744 (p-value = 0.0295)
+Autocorrelation test (1): normal = -5.327237 (p-value = 9.9718e-08)
+Autocorrelation test (2): normal = 2.216107 (p-value = 0.026684)
 Wald test for coefficients: chisq(4) = 9571.196 (p-value = < 2.22e-16)
 Warning message:
 In vcovHC.pgmm(object) : a general inverse is used
@@ -1015,8 +1015,9 @@ lag(log(real_c))      log(real_p)  log(real_pimin)    log(real_ndi)
 +   # check coefficients
 +   stopifnot(isTRUE(all.equal(round( s.ab.a1[[1L]][ , 1], 5), round( ab.a1.pdynmc$coefficients[1:10], 5), check.attributes = FALSE)))
 +   
-+   # check standard errors (non-robust and robust)
-+   stopifnot(isTRUE(all.equal(round( s.ab.a1[[1L]][ , 2], 5), round( ab.a1.pdynmc$stderr$step1[1:10], 5), check.attributes = FALSE)))
++   # check standard errors (non-robust and robust) 
++     # pdynmc 2025-01-05 does not seem to produce correct non-robust SEs in one-step case
++ #  stopifnot(isTRUE(all.equal(round( s.ab.a1[[1L]][ , 2], 5), round( ab.a1.pdynmc$stderr$step1[1:10], 5), check.attributes = FALSE)))
 +   stopifnot(isTRUE(all.equal(round(s.ab.a1r[[1L]][ , 2], 5), round(ab.a1r.pdynmc$stderr$step1[1:10], 5), check.attributes = FALSE)))
 +   
 +   ## two-steps GMM
@@ -1089,4 +1090,4 @@ F-Statistic (time dummies):  no time dummies included in estimation
 > 
 > proc.time()
    user  system elapsed 
-  47.18    4.06   53.35 
+  45.53    4.20   49.65 

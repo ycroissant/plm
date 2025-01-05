@@ -556,17 +556,11 @@ pgmm <- function(formula, data, subset, na.action,
 
   residuals <- lapply(yX, function(x)
                       as.vector(x[ , 1L] - crossprod(t(x[ , -1L, drop = FALSE]), coefficients)))
-  outresid <- lapply(residuals, function(x) outer(x, x))
   
-  # non-robust variance-covariance matrix of one-step GMM:
-  # see Doornik/Arellano/Bond (2012), p. 31 (formula for V^hat1 with sig2 as in (4) on p. 30)
-  CPresid <- crossprod(unlist(residuals))
-  sig2 <- as.numeric(CPresid / (pdim$nT$N - NCOL(B1)))
-  vcov <- sig2 * B1
-  
+
   # A2 is also needed  for "onestep" model in vcovHC.pgmm, hence calc. here and 
   # always include in model object 
-  A2 <- mapply(function(x, y) crossprod(t(crossprod(x, y)), x), W, outresid, SIMPLIFY = FALSE)
+  A2 <- mapply(function(w, res) tcrossprod(crossprod(w, tcrossprod(res)), t(w)), W, residuals, SIMPLIFY = FALSE) # == mapply(function(w, res) t(w) %*% tcrossprod(res) %*% w, W, residuals, SIMPLIFY = FALSE)
   A2 <- Reduce("+", A2)
   minevA2 <- min(eigen(A2)$values)
   A2 <- if (minevA2 < eps) {
@@ -578,7 +572,7 @@ pgmm <- function(formula, data, subset, na.action,
     coef1s <- coefficients
     t.CP.WX.A2 <- t(crossprod(WX, A2))
     Y2 <- crossprod(t.CP.WX.A2, Wy)
-    vcov <- solve(crossprod(WX, t.CP.WX.A2))
+    vcov <- solve(crossprod(WX, t.CP.WX.A2)) # "B2"
     coef2s <- as.numeric(crossprod(vcov, Y2))
     names(coef2s) <- names.coef
     coefficients <- list("step1" = coef1s, "step2" = coef2s)
@@ -589,6 +583,8 @@ pgmm <- function(formula, data, subset, na.action,
                            z <- as.vector(x[ , 1L] - crossprod(t(x[ , -1L, drop = FALSE]), coef2s))
                            names(z) <- nz
                            z})
+  } else {
+    vcov <- B1
   }
   
   rownames(vcov) <- colnames(vcov) <- names.coef
@@ -900,6 +896,7 @@ mtest.pgmm <- function(object, order = 1L, vcov = NULL, ...) {
   X <- lapply(object$model, function(x) x[ , -1L, drop = FALSE])
   W <- object$W
   A <- if(model == "onestep") object$A1 else object$A2
+  B <- object$vcov # object$vcov is "B1" for one-step and "B2" for two-steps model
   EX  <- Reduce("+", mapply(crossprod, residl, X, SIMPLIFY = FALSE))
   XZ  <- Reduce("+", mapply(crossprod, W,      X, SIMPLIFY = FALSE))
   V <- mapply(tcrossprod, resid, SIMPLIFY = FALSE)
@@ -907,7 +904,7 @@ mtest.pgmm <- function(object, order = 1L, vcov = NULL, ...) {
   ZVE <- Reduce("+", mapply(function(w, v, e) t(w) %*% v %*% e, W, V, residl, SIMPLIFY = FALSE))
 
   num <- Reduce("+", mapply(crossprod, resid, residl, SIMPLIFY = FALSE))
-  denom <- EVE - 2 * EX %*% vcov(object) %*% t(XZ) %*% A %*% ZVE + EX %*% vv %*% t(EX)
+  denom <- EVE - 2 * EX %*% B %*% t(XZ) %*% A %*% ZVE + EX %*% vv %*% t(EX)
   stat <- as.numeric(num / sqrt(denom))
   names(stat) <- "normal"
   if(!is.null(vcov)) vcov <- paste0(", vcov: ", deparse(substitute(vcov)))

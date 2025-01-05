@@ -1225,7 +1225,7 @@ vcovHC.pgmm <- function(x, ...) {
   transformation <- describe(x, "transformation")
   A1 <- x$A1
   A2 <- x$A2
-  B1 <- x$B1
+  B1 <- x$B1 # needs to be B1 (from one-step model)
 
   if(transformation == "ld") {
 ##     yX <- lapply(x$model,function(x) rbind(diff(x),x))
@@ -1268,11 +1268,12 @@ vcovHC.pgmm <- function(x, ...) {
       wexkw <- Reduce("+", mapply(function(x, y) 
                                     crossprod(x, crossprod(y, x)),
                                   x$W, exk, SIMPLIFY = FALSE))
-      B2 <- vcov(x)
+      B2 <- x$vcov # is "B2" for two-step model
       Dk <- -B2 %*% t(WX) %*% A2 %*% wexkw %*% A2 %*% We
       D <- cbind(D, Dk)
     }
-    # robust vcov for twosteps GMM model, Roodman (2019) form. (18)
+    # Windmeijer (2005) small sample bias correction for twosteps GMM model, 
+    # see Windmeijer (2005), p. 33 formula (3.3); Roodman (2019) form. (18)
     vcovr2s <- B2 + crossprod(t(D), B2) + t(crossprod(t(D), B2)) + D %*% vcovr1s %*% t(D)
   }
   if(model == "twosteps") vcovr2s else vcovr1s
