@@ -861,6 +861,7 @@ summary.pgmm <- function(object, robust = TRUE, time.dummies = FALSE, ...) {
 #' 
 #' @keywords htest
 #' @examples
+#' data("EmplUK", package = "plm")
 #' # Arellano/Bond 1991, Table 4, column (a1)
 #' ab.a1 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
 #'               + lag(log(capital), 0:2) + lag(log(output), 0:2) | lag(log(emp), 2:99),
