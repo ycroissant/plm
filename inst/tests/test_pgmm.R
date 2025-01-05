@@ -207,138 +207,138 @@ summary(gmm_twostep_2005)
 round(coefficients(gmm_twostep_2005)[1:4], 3)
 ## -> only nearly replicates
 
-pdynmc.avail <- if (!requireNamespace("pdynmc", quietly = TRUE)) FALSE else TRUE
-
-if(pdynmc.avail) {
-  
-  library(pdynmc)
-  ## from PDF R-Journal (https://journal.r-project.org/archive/2021/RJ-2021-035/RJ-2021-035.pdf)
-  dat <- EmplUK
-  dat[ , c(4:7)] <- log(dat[ , c(4:7)])
-  names(dat)[4:7] <- c("n", "w", "k", "ys") # n = emp, w = wage, k = capital, ys = output
-  
-  ### Sargan test and Wald test yield a different results for onestep
-  ab.a1.pdynmc <- pdynmc(
-    dat = dat, varname.i = "firm", varname.t = "year",
-    use.mc.diff = TRUE, use.mc.lev = FALSE, use.mc.nonlin = FALSE,
-    include.y = TRUE, varname.y = "n", lagTerms.y = 2,
-    fur.con = TRUE, fur.con.diff = TRUE, fur.con.lev = FALSE,
-    varname.reg.fur = c("w", "k", "ys"), lagTerms.reg.fur = c(1,2,2),
-    include.dum = TRUE, dum.diff = TRUE, dum.lev = FALSE, varname.dum = "year",
-    w.mat = "iid.err", std.err = "unadjusted",
-    estimation = "onestep", opt.meth = "none")
-  summary(ab.a1.pdynmc)
-  
-  ab.a1r.pdynmc <- pdynmc(
-    dat = dat, varname.i = "firm", varname.t = "year",
-    use.mc.diff = TRUE, use.mc.lev = FALSE, use.mc.nonlin = FALSE,
-    include.y = TRUE, varname.y = "n", lagTerms.y = 2,
-    fur.con = TRUE, fur.con.diff = TRUE, fur.con.lev = FALSE,
-    varname.reg.fur = c("w", "k", "ys"), lagTerms.reg.fur = c(1,2,2),
-    include.dum = TRUE, dum.diff = TRUE, dum.lev = FALSE, varname.dum = "year",
-    w.mat = "iid.err", std.err = "corrected",
-    estimation = "onestep", opt.meth = "none")
-  summary(ab.a1r.pdynmc)
-  
-  ab.a2.pdynmc <- pdynmc(
-    dat = dat, varname.i = "firm", varname.t = "year",
-    use.mc.diff = TRUE, use.mc.lev = FALSE, use.mc.nonlin = FALSE,
-    include.y = TRUE, varname.y = "n", lagTerms.y = 2,
-    fur.con = TRUE, fur.con.diff = TRUE, fur.con.lev = FALSE,
-    varname.reg.fur = c("w", "k", "ys"), lagTerms.reg.fur = c(1,2,2),
-    include.dum = TRUE, dum.diff = TRUE, dum.lev = FALSE, varname.dum = "year",
-    w.mat = "iid.err", std.err = "unadjusted",
-    estimation = "twostep", opt.meth = "none")
-  summary(ab.a2.pdynmc)
-  
-  ab.a2r.pdynmc <- pdynmc(
-    dat = dat, varname.i = "firm", varname.t = "year",
-    use.mc.diff = TRUE, use.mc.lev = FALSE, use.mc.nonlin = FALSE,
-    include.y = TRUE, varname.y = "n", lagTerms.y = 2,
-    fur.con = TRUE, fur.con.diff = TRUE, fur.con.lev = FALSE,
-    varname.reg.fur = c("w", "k", "ys"), lagTerms.reg.fur = c(1,2,2),
-    include.dum = TRUE, dum.diff = TRUE, dum.lev = FALSE, varname.dum = "year",
-    w.mat = "iid.err", std.err = "corrected",
-    estimation = "twostep", opt.meth = "none")
-  summary(ab.a2r.pdynmc)
-  
-  
-  ab.b.pdynmc <- pdynmc(
-    dat = dat, varname.i = "firm", varname.t = "year",
-    use.mc.diff = TRUE, use.mc.lev = FALSE, use.mc.nonlin = FALSE,
-    include.y = TRUE, varname.y = "n", lagTerms.y = 2,
-    fur.con = TRUE, fur.con.diff = TRUE, fur.con.lev = FALSE,
-    varname.reg.fur = c("w", "k", "ys"), lagTerms.reg.fur = c(1,0,1),
-    include.dum = TRUE, dum.diff = TRUE, dum.lev = FALSE, varname.dum = "year",
-    w.mat = "iid.err", std.err = "unadjusted",
-    estimation = "twostep", opt.meth = "none")
-  summary(ab.b.pdynmc)
-  
-  ab.br.pdynmc <- pdynmc(
-    dat = dat, varname.i = "firm", varname.t = "year",
-    use.mc.diff = TRUE, use.mc.lev = FALSE, use.mc.nonlin = FALSE,
-    include.y = TRUE, varname.y = "n", lagTerms.y = 2,
-    fur.con = TRUE, fur.con.diff = TRUE, fur.con.lev = FALSE,
-    varname.reg.fur = c("w", "k", "ys"), lagTerms.reg.fur = c(1,0,1),
-    include.dum = TRUE, dum.diff = TRUE, dum.lev = FALSE, varname.dum = "year",
-    w.mat = "iid.err", std.err = "corrected",
-    estimation = "twostep", opt.meth = "none")
-  summary(ab.br.pdynmc)
-  
-  ### check coefs and SE pgmm vs. pdynmc ###
-  
-  ## one-step GMM
-  # check coefficients
-  stopifnot(isTRUE(all.equal(round( s.ab.a1[[1L]][ , 1], 5), round( ab.a1.pdynmc$coefficients[1:10], 5), check.attributes = FALSE)))
-  
-  # check standard errors (non-robust and robust) 
-    # pdynmc 2025-01-05 does not seem to produce correct non-robust SEs in one-step case
-#  stopifnot(isTRUE(all.equal(round( s.ab.a1[[1L]][ , 2], 5), round( ab.a1.pdynmc$stderr$step1[1:10], 5), check.attributes = FALSE)))
-  stopifnot(isTRUE(all.equal(round(s.ab.a1r[[1L]][ , 2], 5), round(ab.a1r.pdynmc$stderr$step1[1:10], 5), check.attributes = FALSE)))
-  
-  ## two-steps GMM
-  # check coefficients
-  stopifnot(isTRUE(all.equal(round( s.ab.a2[[1L]][ , 1], 5), round( ab.a2.pdynmc$coefficients[1:10], 5), check.attributes = FALSE)))
-  
-  # check standard errors (non-robust and robust)
-  stopifnot(isTRUE(all.equal(round( s.ab.a2[[1L]][ , 2], 5), round( ab.a2.pdynmc$stderr$step2[1:10], 5), check.attributes = FALSE)))
-  stopifnot(isTRUE(all.equal(round(s.ab.a2r[[1L]][ , 2], 5), round(ab.a2r.pdynmc$stderr$step2[1:10], 5), check.attributes = FALSE)))
-  
-  # check coefficients
-  stopifnot(isTRUE(all.equal(round( s.ab.b[[1L]][ , 1], 5), round( ab.b.pdynmc$coefficients[1:7], 5), check.attributes = FALSE)))
-  
-  # check standard errors (non-robust and robust)
-  stopifnot(isTRUE(all.equal(round( s.ab.b[[1L]][ , 2], 5), round( ab.b.pdynmc$stderr$step2[1:7], 5), check.attributes = FALSE)))
-  stopifnot(isTRUE(all.equal(round(s.ab.br[[1L]][ , 2], 5), round(ab.br.pdynmc$stderr$step2[1:7], 5), check.attributes = FALSE)))
-  
-  
-  ## Baltagi table 8.1
-  
-  ## TODO: does not replicate literature yet
-  c1 <- pdynmc(dat = Cigar, varname.i = "state", varname.t = "year",
-               use.mc.diff = TRUE, use.mc.lev = FALSE, use.mc.nonlin = FALSE,
-               include.y = TRUE, varname.y = "real_c", lagTerms.y = 1,
-               fur.con = TRUE, fur.con.diff = TRUE, fur.con.lev = FALSE,
-               varname.reg.fur = c("real_p", "real_pimin", "real_ndi",
-                                   # "year65", "year70", paste0("year", 72:91)), # Baltagi 2013, 2021
-                                   paste0("year", 65:91)),  # Baltagi 2005
-               lagTerms.reg.fur = c(rep(0, 3), rep(0, 27)), # Baltagi 2005
-               include.dum = FALSE,
-               inst.collapse = FALSE,
-               w.mat = "iid.err", std.err = "corrected", estimation = "twostep",
-               opt.meth = "none")
-  summary(c1)
-  
-  # onestep without time dummies
-  onestep_ind <- pdynmc(dat = Cigar, varname.i = "state", varname.t = "year",
-                        use.mc.diff = TRUE, use.mc.lev = FALSE, use.mc.nonlin = FALSE,
-                        include.y = TRUE, varname.y = "log_real_c", lagTerms.y = 1,
-                        fur.con = TRUE, fur.con.diff = TRUE, fur.con.lev = FALSE,
-                        varname.reg.fur = c("log_real_p", "log_real_pimin", "log_real_ndi"),
-                        lagTerms.reg.fur = c(rep(0, 3)),
-                        include.dum = FALSE,
-                        inst.collapse = FALSE,
-                        w.mat = "iid.err", std.err = "corrected", estimation = "onestep",
-                        opt.meth = "none")
-  summary(onestep_ind)
-}
+# pdynmc.avail <- if (!requireNamespace("pdynmc", quietly = TRUE)) FALSE else TRUE
+# 
+# if(pdynmc.avail) {
+#   
+#   library(pdynmc)
+#   ## from PDF R-Journal (https://journal.r-project.org/archive/2021/RJ-2021-035/RJ-2021-035.pdf)
+#   dat <- EmplUK
+#   dat[ , c(4:7)] <- log(dat[ , c(4:7)])
+#   names(dat)[4:7] <- c("n", "w", "k", "ys") # n = emp, w = wage, k = capital, ys = output
+#   
+#   ### Sargan test and Wald test yield a different results for onestep
+#   ab.a1.pdynmc <- pdynmc(
+#     dat = dat, varname.i = "firm", varname.t = "year",
+#     use.mc.diff = TRUE, use.mc.lev = FALSE, use.mc.nonlin = FALSE,
+#     include.y = TRUE, varname.y = "n", lagTerms.y = 2,
+#     fur.con = TRUE, fur.con.diff = TRUE, fur.con.lev = FALSE,
+#     varname.reg.fur = c("w", "k", "ys"), lagTerms.reg.fur = c(1,2,2),
+#     include.dum = TRUE, dum.diff = TRUE, dum.lev = FALSE, varname.dum = "year",
+#     w.mat = "iid.err", std.err = "unadjusted",
+#     estimation = "onestep", opt.meth = "none")
+#   summary(ab.a1.pdynmc)
+#   
+#   ab.a1r.pdynmc <- pdynmc(
+#     dat = dat, varname.i = "firm", varname.t = "year",
+#     use.mc.diff = TRUE, use.mc.lev = FALSE, use.mc.nonlin = FALSE,
+#     include.y = TRUE, varname.y = "n", lagTerms.y = 2,
+#     fur.con = TRUE, fur.con.diff = TRUE, fur.con.lev = FALSE,
+#     varname.reg.fur = c("w", "k", "ys"), lagTerms.reg.fur = c(1,2,2),
+#     include.dum = TRUE, dum.diff = TRUE, dum.lev = FALSE, varname.dum = "year",
+#     w.mat = "iid.err", std.err = "corrected",
+#     estimation = "onestep", opt.meth = "none")
+#   summary(ab.a1r.pdynmc)
+#   
+#   ab.a2.pdynmc <- pdynmc(
+#     dat = dat, varname.i = "firm", varname.t = "year",
+#     use.mc.diff = TRUE, use.mc.lev = FALSE, use.mc.nonlin = FALSE,
+#     include.y = TRUE, varname.y = "n", lagTerms.y = 2,
+#     fur.con = TRUE, fur.con.diff = TRUE, fur.con.lev = FALSE,
+#     varname.reg.fur = c("w", "k", "ys"), lagTerms.reg.fur = c(1,2,2),
+#     include.dum = TRUE, dum.diff = TRUE, dum.lev = FALSE, varname.dum = "year",
+#     w.mat = "iid.err", std.err = "unadjusted",
+#     estimation = "twostep", opt.meth = "none")
+#   summary(ab.a2.pdynmc)
+#   
+#   ab.a2r.pdynmc <- pdynmc(
+#     dat = dat, varname.i = "firm", varname.t = "year",
+#     use.mc.diff = TRUE, use.mc.lev = FALSE, use.mc.nonlin = FALSE,
+#     include.y = TRUE, varname.y = "n", lagTerms.y = 2,
+#     fur.con = TRUE, fur.con.diff = TRUE, fur.con.lev = FALSE,
+#     varname.reg.fur = c("w", "k", "ys"), lagTerms.reg.fur = c(1,2,2),
+#     include.dum = TRUE, dum.diff = TRUE, dum.lev = FALSE, varname.dum = "year",
+#     w.mat = "iid.err", std.err = "corrected",
+#     estimation = "twostep", opt.meth = "none")
+#   summary(ab.a2r.pdynmc)
+#   
+#   
+#   ab.b.pdynmc <- pdynmc(
+#     dat = dat, varname.i = "firm", varname.t = "year",
+#     use.mc.diff = TRUE, use.mc.lev = FALSE, use.mc.nonlin = FALSE,
+#     include.y = TRUE, varname.y = "n", lagTerms.y = 2,
+#     fur.con = TRUE, fur.con.diff = TRUE, fur.con.lev = FALSE,
+#     varname.reg.fur = c("w", "k", "ys"), lagTerms.reg.fur = c(1,0,1),
+#     include.dum = TRUE, dum.diff = TRUE, dum.lev = FALSE, varname.dum = "year",
+#     w.mat = "iid.err", std.err = "unadjusted",
+#     estimation = "twostep", opt.meth = "none")
+#   summary(ab.b.pdynmc)
+#   
+#   ab.br.pdynmc <- pdynmc(
+#     dat = dat, varname.i = "firm", varname.t = "year",
+#     use.mc.diff = TRUE, use.mc.lev = FALSE, use.mc.nonlin = FALSE,
+#     include.y = TRUE, varname.y = "n", lagTerms.y = 2,
+#     fur.con = TRUE, fur.con.diff = TRUE, fur.con.lev = FALSE,
+#     varname.reg.fur = c("w", "k", "ys"), lagTerms.reg.fur = c(1,0,1),
+#     include.dum = TRUE, dum.diff = TRUE, dum.lev = FALSE, varname.dum = "year",
+#     w.mat = "iid.err", std.err = "corrected",
+#     estimation = "twostep", opt.meth = "none")
+#   summary(ab.br.pdynmc)
+#   
+#   ### check coefs and SE pgmm vs. pdynmc ###
+#   
+#   ## one-step GMM
+#   # check coefficients
+#   stopifnot(isTRUE(all.equal(round( s.ab.a1[[1L]][ , 1], 5), round( ab.a1.pdynmc$coefficients[1:10], 5), check.attributes = FALSE)))
+#   
+#   # check standard errors (non-robust and robust) 
+#     # pdynmc 2025-01-05 does not seem to produce correct non-robust SEs in one-step case
+# #  stopifnot(isTRUE(all.equal(round( s.ab.a1[[1L]][ , 2], 5), round( ab.a1.pdynmc$stderr$step1[1:10], 5), check.attributes = FALSE)))
+#   stopifnot(isTRUE(all.equal(round(s.ab.a1r[[1L]][ , 2], 5), round(ab.a1r.pdynmc$stderr$step1[1:10], 5), check.attributes = FALSE)))
+#   
+#   ## two-steps GMM
+#   # check coefficients
+#   stopifnot(isTRUE(all.equal(round( s.ab.a2[[1L]][ , 1], 5), round( ab.a2.pdynmc$coefficients[1:10], 5), check.attributes = FALSE)))
+#   
+#   # check standard errors (non-robust and robust)
+#   stopifnot(isTRUE(all.equal(round( s.ab.a2[[1L]][ , 2], 5), round( ab.a2.pdynmc$stderr$step2[1:10], 5), check.attributes = FALSE)))
+#   stopifnot(isTRUE(all.equal(round(s.ab.a2r[[1L]][ , 2], 5), round(ab.a2r.pdynmc$stderr$step2[1:10], 5), check.attributes = FALSE)))
+#   
+#   # check coefficients
+#   stopifnot(isTRUE(all.equal(round( s.ab.b[[1L]][ , 1], 5), round( ab.b.pdynmc$coefficients[1:7], 5), check.attributes = FALSE)))
+#   
+#   # check standard errors (non-robust and robust)
+#   stopifnot(isTRUE(all.equal(round( s.ab.b[[1L]][ , 2], 5), round( ab.b.pdynmc$stderr$step2[1:7], 5), check.attributes = FALSE)))
+#   stopifnot(isTRUE(all.equal(round(s.ab.br[[1L]][ , 2], 5), round(ab.br.pdynmc$stderr$step2[1:7], 5), check.attributes = FALSE)))
+#   
+#   
+#   ## Baltagi table 8.1
+#   
+#   ## TODO: does not replicate literature yet
+#   c1 <- pdynmc(dat = Cigar, varname.i = "state", varname.t = "year",
+#                use.mc.diff = TRUE, use.mc.lev = FALSE, use.mc.nonlin = FALSE,
+#                include.y = TRUE, varname.y = "real_c", lagTerms.y = 1,
+#                fur.con = TRUE, fur.con.diff = TRUE, fur.con.lev = FALSE,
+#                varname.reg.fur = c("real_p", "real_pimin", "real_ndi",
+#                                    # "year65", "year70", paste0("year", 72:91)), # Baltagi 2013, 2021
+#                                    paste0("year", 65:91)),  # Baltagi 2005
+#                lagTerms.reg.fur = c(rep(0, 3), rep(0, 27)), # Baltagi 2005
+#                include.dum = FALSE,
+#                inst.collapse = FALSE,
+#                w.mat = "iid.err", std.err = "corrected", estimation = "twostep",
+#                opt.meth = "none")
+#   summary(c1)
+#   
+#   # onestep without time dummies
+#   onestep_ind <- pdynmc(dat = Cigar, varname.i = "state", varname.t = "year",
+#                         use.mc.diff = TRUE, use.mc.lev = FALSE, use.mc.nonlin = FALSE,
+#                         include.y = TRUE, varname.y = "log_real_c", lagTerms.y = 1,
+#                         fur.con = TRUE, fur.con.diff = TRUE, fur.con.lev = FALSE,
+#                         varname.reg.fur = c("log_real_p", "log_real_pimin", "log_real_ndi"),
+#                         lagTerms.reg.fur = c(rep(0, 3)),
+#                         include.dum = FALSE,
+#                         inst.collapse = FALSE,
+#                         w.mat = "iid.err", std.err = "corrected", estimation = "onestep",
+#                         opt.meth = "none")
+#   summary(onestep_ind)
+# }
