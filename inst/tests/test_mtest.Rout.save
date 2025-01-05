@@ -25,7 +25,7 @@ Type 'q()' to quit R.
 +               + lag(log(capital), 0:2) + lag(log(output), 0:2) | lag(log(emp), 2:99),
 +               data = EmplUK, effect = "twoways", model = "onestep")
 > 
-> mtest(ab.a1, 1, vcov = NULL)   # -3.9394  (p = 0.0001) xtabond manual, example 1
+> mtest(ab.a1, 1, vcov = NULL)   # -3.9394  (p = 0.0001) xtabond manual, example 1 | nearly replicates with plm 2.6-4 and dev version
 
 	Arellano-Bond autocorrelation test of degree 1
 
@@ -33,7 +33,7 @@ data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + lag(log(capital),  
 normal = -4.1906, p-value = 2.782e-05
 alternative hypothesis: autocorrelation present
 
-> mtest(ab.a1, 2, vcov = NULL)   # -0.54239 (p = 0.5876) xtabond manual, example 1
+> mtest(ab.a1, 2, vcov = NULL)   # -0.54239 (p = 0.5876) xtabond manual, example 1 | nearly replicates with plm 2.6-4 and dev version
 
 	Arellano-Bond autocorrelation test of degree 2
 
@@ -41,7 +41,7 @@ data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + lag(log(capital),  
 normal = -0.64241, p-value = 0.5206
 alternative hypothesis: autocorrelation present
 
-> mtest(ab.a1, 1, vcov = vcovHC) # -3.600 (p = 0.000) (reference DPD/Ox abest3.out)         / -3.5996  (p = 0.0003) xtabond manual, example 2
+> mtest(ab.a1, 1, vcov = vcovHC) # -3.600 (p = 0.000) (reference DPD/Ox abest3.out)         / -3.5996  (p = 0.0003) xtabond manual, example 2 | plm 2.6-4 errors, dev version exactly replicates
 
 	Arellano-Bond autocorrelation test of degree 1, vcov: vcovHC
 
@@ -49,7 +49,7 @@ data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + lag(log(capital),  
 normal = -3.5996, p-value = 0.0003187
 alternative hypothesis: autocorrelation present
 
-> mtest(ab.a1, 2, vcov = vcovHC) # -0.516 (p = 0.606) (reference A/B and DPD/Ox abest3.out) / -0.51603 (p = 0.6058) xtabond manual, example 2
+> mtest(ab.a1, 2, vcov = vcovHC) # -0.516 (p = 0.606) (reference A/B and DPD/Ox abest3.out) / -0.51603 (p = 0.6058) xtabond manual, example 2 | plm 2.6-4 errors, dev version exactly replicates
 
 	Arellano-Bond autocorrelation test of degree 2, vcov: vcovHC
 
@@ -65,7 +65,7 @@ alternative hypothesis: autocorrelation present
 +                 data = EmplUK, effect = "twoways", model = "onestep")
 > # NB: coef match, non-robust std. errors do not match abest1.out
 > 
-> mtest(ab.b.onestep, 1, vcov = NULL)   # -3.409  (p = 0.001) (reference in DPD/Ox abest1.out)
+> mtest(ab.b.onestep, 1, vcov = NULL)   # -3.409  (p = 0.001) (reference in DPD/Ox abest1.out) | nearly replicates with plm 2.6-4 and dev version
 
 	Arellano-Bond autocorrelation test of degree 1
 
@@ -73,7 +73,7 @@ data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + log(capital) +  ...
 normal = -3.9009, p-value = 9.583e-05
 alternative hypothesis: autocorrelation present
 
-> mtest(ab.b.onestep, 2, vcov = NULL)   # -0.3695 (p = 0.712) (reference in DPD/Ox abest1.out)
+> mtest(ab.b.onestep, 2, vcov = NULL)   # -0.3695 (p = 0.712) (reference in DPD/Ox abest1.out) | nearly replicates with plm 2.6-4 and dev version
 
 	Arellano-Bond autocorrelation test of degree 2
 
@@ -81,7 +81,7 @@ data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + log(capital) +  ...
 normal = -0.46764, p-value = 0.64
 alternative hypothesis: autocorrelation present
 
-> mtest(ab.b.onestep, 1, vcov = vcovHC) # -2.493  (reference in Windmeijer) / -2.493  (p = 0.013) DPD/Ox abest1.out
+> mtest(ab.b.onestep, 1, vcov = vcovHC) # -2.493  (reference in Windmeijer) / -2.493  (p = 0.013) DPD/Ox abest1.out | plm 2.6-4 errors, dev version exactly replicates
 
 	Arellano-Bond autocorrelation test of degree 1, vcov: vcovHC
 
@@ -89,7 +89,7 @@ data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + log(capital) +  ...
 normal = -2.4934, p-value = 0.01265
 alternative hypothesis: autocorrelation present
 
-> mtest(ab.b.onestep, 2, vcov = vcovHC) # -0.359  (reference in Windmeijer) / -0.3594 (p = 0.719) DPD/Ox abest1.out
+> mtest(ab.b.onestep, 2, vcov = vcovHC) # -0.359  (reference in Windmeijer) / -0.3594 (p = 0.719) DPD/Ox abest1.out | plm 2.6-4 errors, dev version exactly replicates
 
 	Arellano-Bond autocorrelation test of degree 2, vcov: vcovHC
 
@@ -107,7 +107,7 @@ alternative hypothesis: autocorrelation present
 +               + lag(log(capital), 0:2) + lag(log(output), 0:2) | lag(log(emp), 2:99),
 +               data = EmplUK, effect = "twoways", model = "twosteps")
 > 
-> mtest(ab.a2, 1, vcov = NULL)   # -3.000 (p = 0.003) (reference DPD/Ox in abest3.out)
+> mtest(ab.a2, 1, vcov = NULL)   # -3.000 (p = 0.003) (reference DPD/Ox in abest3.out) | replicates with plm 2.6-4 and dev version
 
 	Arellano-Bond autocorrelation test of degree 1
 
@@ -115,7 +115,7 @@ data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + lag(log(capital),  
 normal = -2.9998, p-value = 0.002702
 alternative hypothesis: autocorrelation present
 
-> mtest(ab.a2, 2, vcov = NULL)   # -0.434 (reference A/B) / DPD/Ox has -0.4158 (p = 0.678) in abest3.out, see comment in footnote 7, p. 32
+> mtest(ab.a2, 2, vcov = NULL)   # -0.434 (reference A/B) / DPD/Ox has -0.4158 (p = 0.678) in abest3.out, see comment in footnote 7, p. 32 | replicates with plm 2.6-4 and dev version
 
 	Arellano-Bond autocorrelation test of degree 2
 
@@ -123,7 +123,7 @@ data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + lag(log(capital),  
 normal = -0.41575, p-value = 0.6776
 alternative hypothesis: autocorrelation present
 
-> mtest(ab.a2, 1, vcov = vcovHC) # -2.1255  (p = 0.0335) xtabond manual, example 4
+> mtest(ab.a2, 1, vcov = vcovHC) # -2.1255  (p = 0.0335) xtabond manual, example 4 | does only nearly replicate with plm 2.6-4 and dev version
 
 	Arellano-Bond autocorrelation test of degree 1, vcov: vcovHC
 
@@ -131,7 +131,7 @@ data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + lag(log(capital),  
 normal = -2.1255, p-value = 0.03355
 alternative hypothesis: autocorrelation present
 
-> mtest(ab.a2, 2, vcov = vcovHC) # -0.35166 (p = 0.7251) xtabond manual, example 4
+> mtest(ab.a2, 2, vcov = vcovHC) # -0.35166 (p = 0.7251) xtabond manual, example 4 | does only nearly replicate with plm 2.6-4 and dev version
 
 	Arellano-Bond autocorrelation test of degree 2, vcov: vcovHC
 
@@ -145,7 +145,7 @@ alternative hypothesis: autocorrelation present
 +              + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
 +              data = EmplUK, effect = "twoways", model = "twosteps")
 > 
-> mtest(ab.b, 1, vcov = NULL)   # -2.826 (reference about A/B's m1 in Windmeijer) / DPD/Ox has -2.428  (p = 0.015) in abest1.out
+> mtest(ab.b, 1, vcov = NULL)   # -2.826 (reference about A/B's m1 in Windmeijer) / DPD/Ox has -2.428  (p = 0.015) in abest1.out | replicates with plm 2.6-4 and dev version
 
 	Arellano-Bond autocorrelation test of degree 1
 
@@ -153,7 +153,7 @@ data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + log(capital) +  ...
 normal = -2.4278, p-value = 0.01519
 alternative hypothesis: autocorrelation present
 
-> mtest(ab.b, 2, vcov = NULL)   # -0.327 (reference in A/B and in Windmeijer)     / DPD/Ox has -0.3325 (p = 0.739) in abest1.out, explanation in footnote 7 on p. 32
+> mtest(ab.b, 2, vcov = NULL)   # -0.327 (reference in A/B and in Windmeijer)     / DPD/Ox has -0.3325 (p = 0.739) in abest1.out, explanation in footnote 7 on p. 32 | replicates with plm 2.6-4 and dev version
 
 	Arellano-Bond autocorrelation test of degree 2
 
@@ -161,7 +161,7 @@ data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + log(capital) +  ...
 normal = -0.33254, p-value = 0.7395
 alternative hypothesis: autocorrelation present
 
-> mtest(ab.b, 1, vcov = vcovHC) # -1.999 (reference in Windmeijer)
+> mtest(ab.b, 1, vcov = vcovHC) # -1.999 (reference in Windmeijer) / no DPD/Ox and no xtabond reference | does only nearly replicate with plm 2.6-4 and dev version
 
 	Arellano-Bond autocorrelation test of degree 1, vcov: vcovHC
 
@@ -169,7 +169,7 @@ data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + log(capital) +  ...
 normal = -1.5385, p-value = 0.1239
 alternative hypothesis: autocorrelation present
 
-> mtest(ab.b, 2, vcov = vcovHC) # -0.316 (reference in Windmeijer)
+> mtest(ab.b, 2, vcov = vcovHC) # -0.316 (reference in Windmeijer) / no DPD/Ox and no xtabond reference | does only nearly replicate with plm 2.6-4 and dev version
 
 	Arellano-Bond autocorrelation test of degree 2, vcov: vcovHC
 
@@ -180,4 +180,4 @@ alternative hypothesis: autocorrelation present
 > 
 > proc.time()
    user  system elapsed 
-   2.39    0.34    2.73 
+   2.70    0.45    3.12 
