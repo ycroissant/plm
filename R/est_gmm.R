@@ -557,6 +557,10 @@ pgmm <- function(formula, data, subset, na.action,
   residuals <- lapply(yX, function(x)
                       as.vector(x[ , 1L] - crossprod(t(x[ , -1L, drop = FALSE]), coefficients)))
   
+  ## TODO KT
+#  CPresid <- crossprod(unlist(residuals))
+#  sig2 <- as.numeric(CPresid / (pdim$nT$N - NCOL(B1)))
+#  vcov <- sig2 * B1
 
   # A2 is also needed  for "onestep" model in vcovHC.pgmm, hence calc. here and 
   # always include in model object 
@@ -609,6 +613,7 @@ pgmm <- function(formula, data, subset, na.action,
                  A1            = A1,
                  A2            = A2,
                  B1            = B1,
+              H = H,
                  call          = cl,
                  args          = args)
   
@@ -897,20 +902,30 @@ mtest.pgmm <- function(object, order = 1L, vcov = NULL, ...) {
   W <- object$W
   A <- if(model == "onestep") object$A1 else object$A2
   B <- object$vcov # object$vcov is "B1" for one-step and "B2" for two-steps model
-  EX  <- Reduce("+", mapply(crossprod, residl, X, SIMPLIFY = FALSE))
+  EX  <- Reduce("+", mapply(crossprod, residl, X, SIMPLIFY = FALSE))  # wW # v_-2X*
   XZ  <- Reduce("+", mapply(crossprod, W,      X, SIMPLIFY = FALSE))
   V <- mapply(tcrossprod, resid, SIMPLIFY = FALSE)
-  EVE <- Reduce("+", mapply(function(v, e)    t(e) %*% v %*% e,    V, residl, SIMPLIFY = FALSE))
+  EVE <- Reduce("+", mapply(function(v, e)    t(e) %*% v %*% e,    V, residl, SIMPLIFY = FALSE)) # d1
   ZVE <- Reduce("+", mapply(function(w, v, e) t(w) %*% v %*% e, W, V, residl, SIMPLIFY = FALSE))
 
   num <- Reduce("+", mapply(crossprod, resid, residl, SIMPLIFY = FALSE))
   denom <- EVE - 2 * EX %*% B %*% t(XZ) %*% A %*% ZVE + EX %*% vv %*% t(EX)
   stat <- as.numeric(num / sqrt(denom))
   names(stat) <- "normal"
+#browser()
+  ## with H
+  H <- object$H
+  EVE.H <- Reduce("+", mapply(function(v, e)    t(e) %*% H %*% e,    V, residl, SIMPLIFY = FALSE)) # d1
+  ZVE.H <- Reduce("+", mapply(function(w, v, e) t(w) %*% H %*% e, W, V, residl, SIMPLIFY = FALSE))
+  denom.H <- EVE.H - 2 * EX %*% object$B1 %*% t(XZ) %*% A %*% ZVE.H + EX %*% vv %*% t(EX)
+  stat.H <- as.numeric(num / sqrt(denom.H))
+  
+  
+  
   if(!is.null(vcov)) vcov <- paste0(", vcov: ", deparse(substitute(vcov)))
   method <- paste0("Arellano-Bond autocorrelation test of degree ", order, vcov)
-  pval <- 2 * pnorm(abs(stat), lower.tail = FALSE)
-  mtest <- list(statistic   = stat,
+  pval <- 2 * pnorm(abs(stat.H), lower.tail = FALSE)
+  mtest <- list(statistic   = stat.H,
                 p.value     = pval,
                 alternative = "autocorrelation present",
                 method      = method,
