@@ -169,7 +169,7 @@ alternative hypothesis: autocorrelation present
 	Arellano-Bond autocorrelation test of degree 2, vcov: vcovHC
 
 data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + lag(log(capital),  ...
-normal = -0.36744, p-value = 0.7133
+normal = -0.35166, p-value = 0.7251
 alternative hypothesis: autocorrelation present
 
 > 
@@ -1493,8 +1493,8 @@ lag(log(capital), 0:1)1 -0.424393   0.058479 -7.2572 3.952e-13 ***
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Sargan test: chisq(100) = 118.763 (p-value = 0.097096)
-Autocorrelation test (1): normal = -5.519159 (p-value = 3.4063e-08)
-Autocorrelation test (2): normal = -0.2524777 (p-value = 0.80067)
+Autocorrelation test (1): normal = -4.808434 (p-value = 1.5212e-06)
+Autocorrelation test (2): normal = -0.2800133 (p-value = 0.77947)
 Wald test for coefficients: chisq(5) = 11174.82 (p-value = < 2.22e-16)
 Wald test for time dummies: chisq(7) = 14.71138 (p-value = 0.039882)
 > 
@@ -1579,8 +1579,8 @@ lag(log(capital), 1) -0.424393   0.058479 -7.2572 3.952e-13 ***
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Sargan test: chisq(100) = 118.763 (p-value = 0.097096)
-Autocorrelation test (1): normal = -5.519159 (p-value = 3.4063e-08)
-Autocorrelation test (2): normal = -0.2524777 (p-value = 0.80067)
+Autocorrelation test (1): normal = -4.808434 (p-value = 1.5212e-06)
+Autocorrelation test (2): normal = -0.2800133 (p-value = 0.77947)
 Wald test for coefficients: chisq(5) = 11174.82 (p-value = < 2.22e-16)
 Wald test for time dummies: chisq(7) = 14.71138 (p-value = 0.039882)
 > 
@@ -1891,4 +1891,4 @@ Coefficients:
 > 
 > proc.time()
    user  system elapsed 
-   9.45    0.90   10.32 
+   9.40    1.07   10.51 
