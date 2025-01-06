@@ -46,5 +46,5 @@ ab.b <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
 
 mtest(ab.b, 1, vcov = NULL)   # -2.826 (reference about A/B's m1 in Windmeijer) / DPD/Ox has -2.428  (p = 0.015) in abest1.out | replicates with plm 2.6-4 and dev version
 mtest(ab.b, 2, vcov = NULL)   # -0.327 (reference in A/B and in Windmeijer)     / DPD/Ox has -0.3325 (p = 0.739) in abest1.out, explanation in footnote 7 on p. 32 | replicates with plm 2.6-4 and dev version
-mtest(ab.b, 1, vcov = vcovHC) # -1.999 (reference in Windmeijer) / no DPD/Ox and no xtabond reference | does only nearly replicate with plm 2.6-4 and dev version
-mtest(ab.b, 2, vcov = vcovHC) # -0.316 (reference in Windmeijer) / no DPD/Ox and no xtabond reference | does only nearly replicate with plm 2.6-4 and dev version
+mtest(ab.b, 1, vcov = vcovHC) # -1.999 (reference in Windmeijer) / no DPD/Ox and no xtabond reference / -1.54 (p = 0.124) xtabond2 (from Sigmund/Ferstl) | does only nearly replicate with plm 2.6-4, replicates with dev version
+mtest(ab.b, 2, vcov = vcovHC) # -0.316 (reference in Windmeijer) / no DPD/Ox and no xtabond reference / -0.28 (p = 0.78)  xtabond2 (from Sigmund/Ferstl) | does only nearly replicate with plm 2.6-4, replicates with dev version
