@@ -123,7 +123,7 @@ data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + lag(log(capital),  
 normal = -0.41575, p-value = 0.6776
 alternative hypothesis: autocorrelation present
 
-> mtest(ab.a2, 1, vcov = vcovHC) # -2.1255  (p = 0.0335) xtabond manual, example 4 | does only nearly replicate with plm 2.6-4 and dev version
+> mtest(ab.a2, 1, vcov = vcovHC) # -2.1255  (p = 0.0335) xtabond manual, example 4 | does only nearly replicate with plm 2.6-4, replicates in dev version
 
 	Arellano-Bond autocorrelation test of degree 1, vcov: vcovHC
 
@@ -131,7 +131,7 @@ data:  log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + lag(log(capital),  
 normal = -2.1255, p-value = 0.03355
 alternative hypothesis: autocorrelation present
 
-> mtest(ab.a2, 2, vcov = vcovHC) # -0.35166 (p = 0.7251) xtabond manual, example 4 | does only nearly replicate with plm 2.6-4 and dev version
+> mtest(ab.a2, 2, vcov = vcovHC) # -0.35166 (p = 0.7251) xtabond manual, example 4 | does only nearly replicate with plm 2.6-4, replicates in dev version
 
 	Arellano-Bond autocorrelation test of degree 2, vcov: vcovHC
 
@@ -180,4 +180,4 @@ alternative hypothesis: autocorrelation present
 > 
 > proc.time()
    user  system elapsed 
-   2.70    0.45    3.12 
+   2.64    0.43    3.04 

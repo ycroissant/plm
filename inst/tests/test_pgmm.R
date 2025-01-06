@@ -9,12 +9,6 @@ ab.a1 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
 (s.ab.a1  <- summary(ab.a1, robust = FALSE)) # xtabond manual, example 1, has slightly different values for non-robust standard errors
 (s.ab.a1r <- summary(ab.a1, robust = TRUE)) # as tabulated by Arellano/Bond
 
-### Arellano-Bond test, Sargan test and Wald test yield different results for onestep
-## xtabond2 result for robust mtest for col. a1
-#  xtabond2 n L.n L2.n w L.w L(0/2).(k ys) yr*, gmm(L.n) iv(w L.w L(0/2).(k ys) yr*) nolevel robust
-#Arellano-Bond test for AR(1) in first differences: z = -3.60 Pr > z = 0.000
-#Arellano-Bond test for AR(2) in first differences: z = -0.52 Pr > z = 0.606
-
 
 # Arellano/Bond 1991, Table 4, column (a2) (non-robust SEs)
 ab.a2 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)

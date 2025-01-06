@@ -94,12 +94,6 @@ Autocorrelation test (2): normal = -0.5160282 (p-value = 0.60583)
 Wald test for coefficients: chisq(10) = 408.2859 (p-value = < 2.22e-16)
 Wald test for time dummies: chisq(6) = 11.57904 (p-value = 0.072046)
 > 
-> ### Arellano-Bond test, Sargan test and Wald test yield different results for onestep
-> ## xtabond2 result for robust mtest for col. a1
-> #  xtabond2 n L.n L2.n w L.w L(0/2).(k ys) yr*, gmm(L.n) iv(w L.w L(0/2).(k ys) yr*) nolevel robust
-> #Arellano-Bond test for AR(1) in first differences: z = -3.60 Pr > z = 0.000
-> #Arellano-Bond test for AR(2) in first differences: z = -0.52 Pr > z = 0.606
-> 
 > 
 > # Arellano/Bond 1991, Table 4, column (a2) (non-robust SEs)
 > ab.a2 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
@@ -1069,4 +1063,4 @@ lag(log(real_c))      log(real_p)  log(real_pimin)    log(real_ndi)
 > 
 > proc.time()
    user  system elapsed 
-  24.04    2.31   26.51 
+  33.45    3.53   37.60 

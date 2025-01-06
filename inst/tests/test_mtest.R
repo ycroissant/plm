@@ -36,8 +36,8 @@ ab.a2 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
 
 mtest(ab.a2, 1, vcov = NULL)   # -3.000 (p = 0.003) (reference DPD/Ox in abest3.out) | replicates with plm 2.6-4 and dev version
 mtest(ab.a2, 2, vcov = NULL)   # -0.434 (reference A/B) / DPD/Ox has -0.4158 (p = 0.678) in abest3.out, see comment in footnote 7, p. 32 | replicates with plm 2.6-4 and dev version
-mtest(ab.a2, 1, vcov = vcovHC) # -2.1255  (p = 0.0335) xtabond manual, example 4 | does only nearly replicate with plm 2.6-4 and dev version
-mtest(ab.a2, 2, vcov = vcovHC) # -0.35166 (p = 0.7251) xtabond manual, example 4 | does only nearly replicate with plm 2.6-4 and dev version
+mtest(ab.a2, 1, vcov = vcovHC) # -2.1255  (p = 0.0335) xtabond manual, example 4 | does only nearly replicate with plm 2.6-4, replicates in dev version
+mtest(ab.a2, 2, vcov = vcovHC) # -0.35166 (p = 0.7251) xtabond manual, example 4 | does only nearly replicate with plm 2.6-4, replicates in dev version
 
 ## Arellano and Bond (1991), table 4 col. b / Windmeijer (2005), table 2
 ab.b <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
