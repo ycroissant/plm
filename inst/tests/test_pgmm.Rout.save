@@ -18,6 +18,8 @@ Type 'q()' to quit R.
 > library("plm")
 > data("EmplUK", package = "plm")
 > 
+> ############################ one-step FD models ###############################
+> 
 > # Arellano/Bond 1991, Table 4, column (a1) (has robust SEs)
 > ab.a1 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
 +               + lag(log(capital), 0:2) + lag(log(output), 0:2) | lag(log(emp), 2:99),
@@ -94,6 +96,47 @@ Autocorrelation test (2): normal = -0.5160282 (p-value = 0.60583)
 Wald test for coefficients: chisq(10) = 408.2859 (p-value = < 2.22e-16)
 Wald test for time dummies: chisq(6) = 11.57904 (p-value = 0.072046)
 > 
+> # Windmeijer (2005), table 2, onestep with corrected std. err
+> # (Windmeijer's table header does not indicate that for one-step model these are
+> # corrected std errors, but this can be varified when looking at the produced results)
+> ab.b.onestep <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
++                 + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
++                 data = EmplUK, effect = "twoways", model = "onestep")
+> (s.ab.b.onestep <- summary(ab.b.onestep, robust = TRUE))
+Twoways effects One-step model Difference GMM 
+
+Call:
+pgmm(formula = log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 
+    0:1) + log(capital) + lag(log(output), 0:1) | lag(log(emp), 
+    2:99), data = EmplUK, effect = "twoways", model = "onestep")
+
+Unbalanced Panel: n = 140, T = 7-9, N = 1031
+
+Number of Observations Used: 611
+Residuals:
+      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+-0.5911117 -0.0262899  0.0000000 -0.0000754  0.0340327  0.5811418 
+
+Coefficients:
+                        Estimate Std. Error z-value  Pr(>|z|)    
+lag(log(emp), 1:2)1     0.534614   0.166449  3.2119 0.0013187 ** 
+lag(log(emp), 1:2)2    -0.075069   0.067979 -1.1043 0.2694623    
+lag(log(wage), 0:1)0   -0.591573   0.167884 -3.5237 0.0004256 ***
+lag(log(wage), 0:1)1    0.291510   0.141058  2.0666 0.0387722 *  
+log(capital)            0.358502   0.053828  6.6601 2.736e-11 ***
+lag(log(output), 0:1)0  0.597198   0.171933  3.4734 0.0005138 ***
+lag(log(output), 0:1)1 -0.611704   0.211796 -2.8882 0.0038748 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Sargan test: chisq(25) = 44.61875 (p-value = 0.009239)
+Autocorrelation test (1): normal = -2.493372 (p-value = 0.012654)
+Autocorrelation test (2): normal = -0.3594476 (p-value = 0.71926)
+Wald test for coefficients: chisq(7) = 219.6233 (p-value = < 2.22e-16)
+Wald test for time dummies: chisq(6) = 11.45041 (p-value = 0.075414)
+> 
+> 
+> ############################ two-steps FD models ###############################
 > 
 > # Arellano/Bond 1991, Table 4, column (a2) (non-robust SEs)
 > ab.a2 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
@@ -239,45 +282,6 @@ Autocorrelation test (2): normal = -0.2796829 (p-value = 0.77972)
 Wald test for coefficients: chisq(7) = 142.0353 (p-value = < 2.22e-16)
 Wald test for time dummies: chisq(6) = 16.97046 (p-value = 0.0093924)
 > 
-> # Windmeijer (2005), table 2, onestep with corrected std. err
-> # (Windmeijer's table header does not indicate that for one-step model these are
-> # corrected std errors, but this can be varified when looking at the produced results)
-> wind.s1 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
-+              + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
-+              data = EmplUK, effect = "twoways", model = "onestep")
-> (s.wind.s1 <- summary(wind.s1, robust = TRUE))
-Twoways effects One-step model Difference GMM 
-
-Call:
-pgmm(formula = log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 
-    0:1) + log(capital) + lag(log(output), 0:1) | lag(log(emp), 
-    2:99), data = EmplUK, effect = "twoways", model = "onestep")
-
-Unbalanced Panel: n = 140, T = 7-9, N = 1031
-
-Number of Observations Used: 611
-Residuals:
-      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
--0.5911117 -0.0262899  0.0000000 -0.0000754  0.0340327  0.5811418 
-
-Coefficients:
-                        Estimate Std. Error z-value  Pr(>|z|)    
-lag(log(emp), 1:2)1     0.534614   0.166449  3.2119 0.0013187 ** 
-lag(log(emp), 1:2)2    -0.075069   0.067979 -1.1043 0.2694623    
-lag(log(wage), 0:1)0   -0.591573   0.167884 -3.5237 0.0004256 ***
-lag(log(wage), 0:1)1    0.291510   0.141058  2.0666 0.0387722 *  
-log(capital)            0.358502   0.053828  6.6601 2.736e-11 ***
-lag(log(output), 0:1)0  0.597198   0.171933  3.4734 0.0005138 ***
-lag(log(output), 0:1)1 -0.611704   0.211796 -2.8882 0.0038748 ** 
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Sargan test: chisq(25) = 44.61875 (p-value = 0.009239)
-Autocorrelation test (1): normal = -2.493372 (p-value = 0.012654)
-Autocorrelation test (2): normal = -0.3594476 (p-value = 0.71926)
-Wald test for coefficients: chisq(7) = 219.6233 (p-value = < 2.22e-16)
-Wald test for time dummies: chisq(6) = 11.45041 (p-value = 0.075414)
-> 
 > 
 > ab.b.collapse <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
 +            + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
@@ -352,6 +356,7 @@ Autocorrelation test (2): normal = -0.41767 (p-value = 0.67619)
 Wald test for coefficients: chisq(7) = 725.4739 (p-value = < 2.22e-16)
 > 
 > 
+> ############################ Sys models ###############################
 > ## Blundell and Bond (1998) table 4 (cf. DPD for OX p.12 col.4)
 > ## not quite...
 > ## Maybe due to this: "The original implementation of system GMM
@@ -1063,4 +1068,4 @@ lag(log(real_c))      log(real_p)  log(real_pimin)    log(real_ndi)
 > 
 > proc.time()
    user  system elapsed 
-  33.45    3.53   37.60 
+  21.07    2.06   23.07 

@@ -1,6 +1,8 @@
 library("plm")
 data("EmplUK", package = "plm")
 
+############################ one-step FD models ###############################
+
 # Arellano/Bond 1991, Table 4, column (a1) (has robust SEs)
 ab.a1 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
               + lag(log(capital), 0:2) + lag(log(output), 0:2) | lag(log(emp), 2:99),
@@ -9,6 +11,16 @@ ab.a1 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
 (s.ab.a1  <- summary(ab.a1, robust = FALSE)) # xtabond manual, example 1, has slightly different values for non-robust standard errors
 (s.ab.a1r <- summary(ab.a1, robust = TRUE)) # as tabulated by Arellano/Bond
 
+# Windmeijer (2005), table 2, onestep with corrected std. err
+# (Windmeijer's table header does not indicate that for one-step model these are
+# corrected std errors, but this can be varified when looking at the produced results)
+ab.b.onestep <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
+                + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
+                data = EmplUK, effect = "twoways", model = "onestep")
+(s.ab.b.onestep <- summary(ab.b.onestep, robust = TRUE))
+
+
+############################ two-steps FD models ###############################
 
 # Arellano/Bond 1991, Table 4, column (a2) (non-robust SEs)
 ab.a2 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
@@ -24,14 +36,6 @@ ab.b <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
 (s.ab.b  <- summary(ab.b, robust = FALSE)) # as tabulated by Arellano/Bond
 (s.ab.br <- summary(ab.b, robust = TRUE))  # Windmeijer (2005), table 2, twostep, std. errc
 
-# Windmeijer (2005), table 2, onestep with corrected std. err
-# (Windmeijer's table header does not indicate that for one-step model these are
-# corrected std errors, but this can be varified when looking at the produced results)
-wind.s1 <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
-             + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
-             data = EmplUK, effect = "twoways", model = "onestep")
-(s.wind.s1 <- summary(wind.s1, robust = TRUE))
-
 
 ab.b.collapse <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
            + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),
@@ -44,6 +48,7 @@ ab.b.ind <- pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1)
 summary(ab.b.ind, robust = TRUE) # default
 
 
+############################ Sys models ###############################
 ## Blundell and Bond (1998) table 4 (cf. DPD for OX p.12 col.4)
 ## not quite...
 ## Maybe due to this: "The original implementation of system GMM
