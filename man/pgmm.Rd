@@ -79,7 +79,8 @@ if \code{transformation="ld"},}
 \item{object, x}{an object of class \code{"pgmm"},}
 
 \item{robust}{for pgmm's summary method: if \code{TRUE} (default), robust inference
-is performed in the summary,}
+is performed in the summary, for a two-steps model with the
+small-sample correction by \insertCite{WIND:05;textual}{plm},}
 
 \item{time.dummies}{for pgmm's summary method: if \code{TRUE}, the estimated
 coefficients of time dummies are present in the table of coefficients;
@@ -198,7 +199,8 @@ summary(bb.4, robust = TRUE)
 }
 \seealso{
 \code{\link[=sargan]{sargan()}} for the Hansen--Sargan test and \code{\link[=mtest]{mtest()}} for
-Arellano--Bond's test of serial correlation.
+Arellano--Bond's test of serial correlation. \link{vcovHC.pgmm} for the robust
+inference.
 }
 \author{
 Yves Croissant

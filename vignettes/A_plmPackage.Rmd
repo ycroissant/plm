@@ -1034,9 +1034,9 @@ summary(emp.gmm, robust = FALSE)
 The following example is from @BLUN:BOND:98. The "sys"
 estimator is obtained using `transformation = "ld"` for level
 and difference. The `robust` argument of the `summary`
-method enables to use the robust covariance matrix proposed by
-@WIND:05. For all pgmm models, `robust = TRUE` is the default (but set 
-in this example explicitly).
+method enables to use the robust covariance matrix, in case of a two-steps model
+with the small-sample correction proposed by @WIND:05. For all pgmm models,
+`robust = TRUE` is the default (but set in this example explicitly).
 
 ```{r gmm2}
 z2 <- pgmm(log(emp) ~ lag(log(emp), 1)+ lag(log(wage), 0:1) +

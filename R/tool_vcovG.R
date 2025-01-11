@@ -644,8 +644,9 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 #' `linearHypothesis()` in the \CRANpkg{car} package (see the
 #' examples), see \insertCite{@see also @ZEIL:04}{plm}, 4.1-2, and examples below.
 #' 
-#' A special procedure for `pgmm` objects, proposed by
-#' \insertCite{WIND:05;textual}{plm}, is also provided.
+#' A method for `pgmm` objects, `vcovHC.pgmm`, is also provided and gives the robust
+#' variance-covariances matrix, in case of a two-steps panel GMM model with the 
+#' small-sample correction proposed by \insertCite{WIND:05;textual}{plm}.
 #' 
 #' @name vcovHC.plm
 #' @aliases vcovHC
@@ -1268,11 +1269,11 @@ vcovHC.pgmm <- function(x, ...) {
       wexkw <- Reduce("+", mapply(function(x, y) 
                                     crossprod(x, crossprod(y, x)),
                                   x$W, exk, SIMPLIFY = FALSE))
-      B2 <- x$vcov # is "B2" for two-step model
+      B2 <- x$vcov # is "B2" for a two-step model
       Dk <- -B2 %*% t(WX) %*% A2 %*% wexkw %*% A2 %*% We
       D <- cbind(D, Dk)
     }
-    # Windmeijer (2005) small sample bias correction for twosteps GMM model, 
+    # Windmeijer (2005) small-sample bias correction for twosteps GMM model, 
     # see Windmeijer (2005), p. 33 formula (3.3); Roodman (2019) form. (18)
     vcovr2s <- B2 + crossprod(t(D), B2) + t(crossprod(t(D), B2)) + D %*% vcovr1s %*% t(D)
   }

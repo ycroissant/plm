@@ -66,7 +66,8 @@
 #' @param index the indexes,
 #' @param \dots further arguments.
 #' @param robust for pgmm's summary method: if `TRUE` (default), robust inference
-#'               is performed in the summary,
+#'               is performed in the summary, for a two-steps model with the 
+#'               small-sample correction by \insertCite{WIND:05;textual}{plm},
 #' @param time.dummies for pgmm's summary method: if `TRUE`, the estimated
 #'     coefficients of time dummies are present in the table of coefficients;
 #'     default is `FALSE`, thus time dummies are dropped in summary's coefficient
@@ -100,7 +101,8 @@
 #' @seealso
 #' 
 #' [sargan()] for the Hansen--Sargan test and [mtest()] for
-#' Arellano--Bond's test of serial correlation.
+#' Arellano--Bond's test of serial correlation. [vcovHC.pgmm] for the robust
+#' inference.
 #' @references
 #'
 #' \insertAllCited{}
