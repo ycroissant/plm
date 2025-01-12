@@ -1,7 +1,8 @@
 ---
 title: NEWS/Changelog for package plm
 subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
-          panel data econometrics - <https://cran.r-project.org/package=plm>
+          panel data econometrics - <https://cran.r-project.org/package=plm> 
+          (development repository <https://github.com/ycroissant/plm/>)
 ---
 
 # 2.6-9999 development version, changes since 2.6-4

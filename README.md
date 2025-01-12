@@ -12,8 +12,9 @@ environment. The package includes functions for model estimation, testing, robus
 covariance matrix estimation, panel data manipulation and information. It was 
 first published on **CRAN** in 2006.
  
-Be sure to read the NEWS on [CRAN](https://cran.r-project.org/package=plm) for 
-any changes in new releases (new features, bugfixes, other improvements, ...).
+Be sure to read the NEWS on [CRAN](https://cran.r-project.org/package=plm) (or
+in the [development repository](https://github.com/ycroissant/plm/blob/main/NEWS.md))
+for any changes in new releases (new features, bugfixes, other improvements, ...).
 
 Non-exhaustive function overview: 
 
