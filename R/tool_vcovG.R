@@ -1139,7 +1139,7 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
     ## for every group, take relevant positions
     tpos <- unlabs %in% grouplabs
     OmegaTi <- OmegaT[tpos, tpos, drop = FALSE]
-    salame[ , , i] <- crossprod(xi, OmegaTi) %*% xi
+    salame[ , , i] <- tcrossprod(crossprod(xi, OmegaTi), t(xi))
   }
   ## meat
   salame <- rowSums(salame, dims = 2L) # == apply(salame, 1:2, sum) but faster
