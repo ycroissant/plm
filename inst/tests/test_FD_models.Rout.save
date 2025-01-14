@@ -1,5 +1,5 @@
 
-R version 4.4.1 (2024-06-14 ucrt) -- "Race for Your Life"
+R version 4.4.2 (2024-10-31 ucrt) -- "Pile of Leaves"
 Copyright (C) 2024 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64
 
@@ -350,9 +350,13 @@ value        0.02724565  0.0001316189 -0.001260823
 capital     -0.37044031 -0.0012608229  0.020684253
 attr(,"cluster")
 [1] "group"
-> 
-> ## TODO vcovBK errors
-> # vcovBK(mod2) # errors with Error in demX[groupinds, , drop = FALSE] : subscript out of bounds
+> vcovBK(mod2) # vcovBK on this model fixed January 2025
+            (Intercept)         value       capital
+(Intercept)  7.39871087  1.030353e-02 -0.0622936494
+value        0.01030353  7.881124e-05 -0.0007559169
+capital     -0.06229365 -7.559169e-04  0.0017526223
+attr(,"cluster")
+[1] "group"
 >  
 > mod2.pggls <- pggls(inv ~ value + capital, data = pGrun2, model="fd")
 > 
@@ -364,4 +368,4 @@ attr(,"cluster")
 > 
 > proc.time()
    user  system elapsed 
-   1.90    0.23    2.17 
+   1.60    0.28    1.82 

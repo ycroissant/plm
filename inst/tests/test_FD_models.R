@@ -60,9 +60,7 @@ pdim(pGrun2)
 pdim(pGrun2)$Tint
 mod2 <- plm(inv ~ value + capital, data = pGrun2, model="fd")
 vcovHC(mod2)
-
-## TODO vcovBK errors
-# vcovBK(mod2) # errors with Error in demX[groupinds, , drop = FALSE] : subscript out of bounds
+vcovBK(mod2) # vcovBK on this model fixed January 2025
  
 mod2.pggls <- pggls(inv ~ value + capital, data = pGrun2, model="fd")
 
