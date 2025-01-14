@@ -489,7 +489,7 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
       #print(paste0("Ti = ", paste0(Ti, collapse = ", ")))
       #print(paste0("t0 = ", t0))
       #cat("\n")
-      
+   
       groupi <- as.numeric(groupind)
       ## make vector =1 on first obs in each group, 0 elsewhere
       selector <- groupi - c(0, groupi[-length(groupi)])
@@ -1026,9 +1026,9 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
 
   ## Achim's fix for 'fd' model (losing first time period)
     if(model == "fd") {
-      groupind <- groupind[timeind > 1]
-      timeind  <- timeind[ timeind > 1]
-      nT <- nT - n0
+      groupind <- groupind[timeind > 1] # TODO: this removes only the 1st time period in the sense of the minimum time period across all individuals,
+      timeind  <- timeind[ timeind > 1] #       not the first time period for each invidiual (e.g., assume for three individuals these time periods:
+      nT <- nT - n0                     #        1, 2, 3;    2, 3;  2, 3    -> then only 1 is removed (not 2 and 2 from the other individuals)
       Ti <- Ti - 1
       if(any(drop <- Ti == 0L)) {
         # drop groups in Ti that are now empty (group had 1 observation before first-differencing, hence 0 after)
@@ -1038,7 +1038,7 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
       }
       t0 <- t0 - 1
     }
-
+    
   ## set grouping indexes
     cluster <- match.arg(cluster)
     switch(cluster,
