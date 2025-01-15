@@ -1140,7 +1140,7 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
       ut <- uhat[tind[[i]]]
       tpos <- seq.len.t[unlabs %in% tlab[[i]]]
       ## put non-diag elements to 0 if diagonal=TRUE
-      tres[tpos, tpos, i] <- if(diagonal) diag(diag(ut %o% ut)) else ut %o% ut
+      tres[tpos, tpos, i] <- if(diagonal) diag(diag(tcrossprod(ut))) else tcrossprod(ut)
     }
 
     ## average over all omega blocks, removing NAs (apply preserving
