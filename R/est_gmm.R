@@ -907,16 +907,12 @@ mtest.pgmm <- function(object, order = 1L, vcov = NULL, ...) {
   switch(transformation,
          "d" = {
            resid <- object$residuals
-           residl <- lapply(resid,
-                            function(x)
-                              c(rep(0, order), x[seq_len(length(x) - order)]))
+           residl <- lapply(resid, function(x) c(rep(0, order), x[seq_len(length(x) - order)]))
                },
          "ld" = {
-           resid <- lapply(object$residuals,
-                           function(x)
+           resid <- lapply(object$residuals, function(x)
                              c(x[-c(Kt:(2 * Kt + 1))], rep(0, Kt)))
-           residl <- lapply(object$residuals,
-                            function(x)
+           residl <- lapply(object$residuals, function(x)
                               c(rep(0, order), x[seq_len(Kt - order - 1)], rep(0, Kt)))
          })
   
