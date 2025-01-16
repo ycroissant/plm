@@ -5,7 +5,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
           (development repository <https://github.com/ycroissant/plm/>)
 ---
 
-# 2.6-9999 development version, changes since 2.6-4
+# 2.6-5
 
 ### Fixes:
 * `pgmm`: argument `fsm` can now be set to influence the first step's weighting matrix.
@@ -19,7 +19,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
     does not have an index.
     
 ### Documentation:
-* `?mtest` now has a little more explanation with replication examples.
+* `?mtest` now has more explanation with replication examples.
 * First vignette: improved description of `pgmm`'s `effect` argument.
 
 
