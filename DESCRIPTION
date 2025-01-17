@@ -1,6 +1,6 @@
 Package: plm
-Version: 2.6-5
-Date: 2025-01-16
+Version: 2.6-9999
+Date: 2025-01-17
 Title: Linear Models for Panel Data
 Authors@R: c(person(given = "Yves",      family = "Croissant",    role = c("aut"), email = "yves.croissant@univ-reunion.fr"),
              person(given = "Giovanni",  family = "Millo",        role = c("aut"), email = "giovanni.millo@deams.units.it"),
