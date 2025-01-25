@@ -9,7 +9,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 
 changes relative to last CRAN version 2.6-5:
 
-* (none so far)
+* (internal): little code generalisation in vcovG and vcovBK by extracting function omega and re-use
 
 
 ***

@@ -1,0 +1,446 @@
+
+R version 4.4.2 (2024-10-31 ucrt) -- "Pile of Leaves"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> # Currently (in at least rev. 195), plm() and summary() can deal with linear dependent
+> # columns (by silently dropping them), but vcovG framework had a hiccup pre rev. 302
+> # see the example below
+> 
+> library(plm)
+> data("Cigar", package = "plm")
+> Cigar.p <- pdata.frame(Cigar)
+> Cigar.p[ , "fact1"] <- c(0,1)
+> Cigar.p[ , "fact2"] <- c(1,0)
+> 
+> # linear dependent columns are silently dropped in these functions, thus they work
+> mod_fe_lin_dep <- plm(price ~ cpi + fact1 + fact2, data = Cigar.p, model = "within") # contains lin dep columns
+> mod_fe_no_lin_dep <- plm(price ~ cpi + fact1, data = Cigar.p, model = "within")      # does not contain lin dep columns
+> summary(mod_fe_lin_dep)    # works with linear dep columns
+Oneway (individual) effect Within Model
+
+Call:
+plm(formula = price ~ cpi + fact1 + fact2, data = Cigar.p, model = "within")
+
+Balanced Panel: n = 46, T = 30, N = 1380
+
+Residuals:
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-29.59679  -6.48806   0.90744   6.68253  56.79803 
+
+Coefficients: (1 dropped because of singularities)
+       Estimate Std. Error  t-value Pr(>|t|)    
+cpi   1.0896210  0.0091879 118.5928  < 2e-16 ***
+fact1 1.8678965  0.6710140   2.7837  0.00545 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    2397500
+Residual Sum of Squares: 206370
+R-Squared:      0.91392
+Adj. R-Squared: 0.91089
+F-statistic: 7071.25 on 2 and 1332 DF, p-value: < 2.22e-16
+> summary(mod_fe_no_lin_dep) 
+Oneway (individual) effect Within Model
+
+Call:
+plm(formula = price ~ cpi + fact1, data = Cigar.p, model = "within")
+
+Balanced Panel: n = 46, T = 30, N = 1380
+
+Residuals:
+     Min.   1st Qu.    Median   3rd Qu.      Max. 
+-29.59679  -6.48806   0.90744   6.68253  56.79803 
+
+Coefficients:
+       Estimate Std. Error  t-value Pr(>|t|)    
+cpi   1.0896210  0.0091879 118.5928  < 2e-16 ***
+fact1 1.8678965  0.6710140   2.7837  0.00545 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Total Sum of Squares:    2397500
+Residual Sum of Squares: 206370
+R-Squared:      0.91392
+Adj. R-Squared: 0.91089
+F-statistic: 7071.25 on 2 and 1332 DF, p-value: < 2.22e-16
+> 
+> # detect linear dependence
+> detect.lindep(model.matrix(mod_fe_lin_dep))
+[1] "Suspicious column number(s): 2, 3"
+[1] "Suspicious column name(s):   fact1, fact2"
+> detect.lindep(model.matrix(mod_fe_no_lin_dep))
+[1] "No linear dependent column(s) detected."
+> mod_fe_lin_dep$aliased
+  cpi fact1 fact2 
+FALSE FALSE  TRUE 
+> mod_fe_no_lin_dep$aliased
+  cpi fact1 
+FALSE FALSE 
+> 
+> # failed in vcovG up to rev. 301;
+> # fixed in rev. 302 by taking care of aliased coefficients
+> # the linear dependent column is not dropped leading to failing function due
+> # to the non-invertible matrix
+> vcovHC(mod_fe_lin_dep)
+               cpi        fact1
+cpi   0.0001916213 0.0002952683
+fact1 0.0002952683 0.0134974703
+attr(,"cluster")
+[1] "group"
+> vcovHC(mod_fe_no_lin_dep)
+               cpi        fact1
+cpi   0.0001916213 0.0002952683
+fact1 0.0002952683 0.0134974703
+attr(,"cluster")
+[1] "group"
+> if (!identical(vcovHC(mod_fe_lin_dep), vcovHC(mod_fe_no_lin_dep))) {
++   stop("vcov w/ linear dependent columns and the corresponding one w/o are not identical")
++ }
+> 
+> ## test for vcovBK because code is separate from the vcovG framework
+> vcovBK(mod_fe_lin_dep)
+               cpi        fact1
+cpi   0.0001916213 0.0002952683
+fact1 0.0002952683 0.0134974703
+attr(,"cluster")
+[1] "group"
+> vcovBK(mod_fe_no_lin_dep)
+               cpi        fact1
+cpi   0.0001916213 0.0002952683
+fact1 0.0002952683 0.0134974703
+attr(,"cluster")
+[1] "group"
+> if (!identical(vcovBK(mod_fe_lin_dep), vcovBK(mod_fe_no_lin_dep))) {
++   stop("vcov w/ linear dependent columns and the corresponding one w/o are not identical")
++ }
+> 
+> ## test for IV models with linear dependent columns
+>   data("Crime", package = "plm")
+>   cr <- plm(log(crmrte) ~ log(prbarr) + log(polpc) + log(prbconv) + I(2*log(prbconv))
++             | log(prbarr) + log(polpc) +
++             log(taxpc) + log(mix), data = Crime,
++             model = "pooling")
+>   head(model.matrix(cr$formula, cr$model, rhs = 1))
+  (Intercept) log(prbarr) log(polpc) log(prbconv) I(2 * log(prbconv))
+1           1   -1.238923  -6.327329   -0.9111490           -1.822298
+2           1   -1.084381  -6.338698   -0.8370060           -1.674012
+3           1   -1.107303  -6.300275   -0.6430189           -1.286038
+4           1   -1.014662  -6.273350   -0.5030129           -1.006026
+5           1   -1.122715  -6.253141   -0.5469313           -1.093863
+6           1   -1.120668  -6.268431   -0.6687980           -1.337596
+>   head(model.matrix(cr$formula, cr$model, rhs = 2))
+  (Intercept) log(prbarr) log(polpc) log(taxpc)  log(mix)
+1           1   -1.238923  -6.327329   3.246399 -2.303406
+2           1   -1.084381  -6.338698   3.213833 -2.272550
+3           1   -1.107303  -6.300275   3.275311 -2.517281
+4           1   -1.014662  -6.273350   3.289981 -2.544612
+5           1   -1.122715  -6.253141   3.337204 -2.372486
+6           1   -1.120668  -6.268431   3.392526 -2.329722
+>   detect.lindep(cr)
+[1] "Suspicious column number(s): 4, 5"
+[1] "Suspicious column name(s):   log(prbconv), I(2 * log(prbconv))"
+>   vcovHC(cr)
+             (Intercept) log(prbarr) log(polpc) log(prbconv)
+(Intercept)   13.2739267 -0.49990207  2.7224303   -5.6365742
+log(prbarr)   -0.4999021  0.07486831 -0.1279805    0.3478194
+log(polpc)     2.7224303 -0.12798047  0.5772235   -1.2839973
+log(prbconv)  -5.6365742  0.34781945 -1.2839973    3.3356246
+attr(,"cluster")
+[1] "group"
+>   vcovBK(cr)
+             (Intercept) log(prbarr)  log(polpc) log(prbconv)
+(Intercept)    3.4529436 -0.30245824  0.81505728   -2.1093780
+log(prbarr)   -0.3024582  0.07513500 -0.09115636    0.2796016
+log(polpc)     0.8150573 -0.09115636  0.20393544   -0.5673417
+log(prbconv)  -2.1093780  0.27960161 -0.56734173    1.7585564
+attr(,"cluster")
+[1] "group"
+>   
+>   ## linear dependence in instrument part
+>   cr2 <- plm(log(crmrte) ~ log(prbarr) + log(polpc) + log(prbconv)
++             | log(prbarr) + log(polpc) +
++             log(taxpc) + log(mix) + I(2*log(mix)), data = Crime,
++             model = "pooling")
+>   detect.lindep(cr2) # does not inspect instrument matrix
+[1] "No linear dependent column(s) detected."
+>   head(model.matrix(cr2$formula, cr2$model, rhs = 2))
+  (Intercept) log(prbarr) log(polpc) log(taxpc)  log(mix) I(2 * log(mix))
+1           1   -1.238923  -6.327329   3.246399 -2.303406       -4.606813
+2           1   -1.084381  -6.338698   3.213833 -2.272550       -4.545099
+3           1   -1.107303  -6.300275   3.275311 -2.517281       -5.034561
+4           1   -1.014662  -6.273350   3.289981 -2.544612       -5.089224
+5           1   -1.122715  -6.253141   3.337204 -2.372486       -4.744972
+6           1   -1.120668  -6.268431   3.392526 -2.329722       -4.659444
+>   detect.lindep(model.matrix(cr2$formula, cr2$model, rhs = 2))
+[1] "Suspicious column number(s): 5, 6"
+[1] "Suspicious column name(s):   log(mix), I(2 * log(mix))"
+>   vcovHC(cr2)
+             (Intercept) log(prbarr) log(polpc) log(prbconv)
+(Intercept)   13.2739267 -0.49990207  2.7224303   -5.6365742
+log(prbarr)   -0.4999021  0.07486831 -0.1279805    0.3478194
+log(polpc)     2.7224303 -0.12798047  0.5772235   -1.2839973
+log(prbconv)  -5.6365742  0.34781945 -1.2839973    3.3356246
+attr(,"cluster")
+[1] "group"
+>   vcovBK(cr2)
+             (Intercept) log(prbarr)  log(polpc) log(prbconv)
+(Intercept)    3.4529436 -0.30245824  0.81505728   -2.1093780
+log(prbarr)   -0.3024582  0.07513500 -0.09115636    0.2796016
+log(polpc)     0.8150573 -0.09115636  0.20393544   -0.5673417
+log(prbconv)  -2.1093780  0.27960161 -0.56734173    1.7585564
+attr(,"cluster")
+[1] "group"
+> 
+> 
+> # just run test for pgmm models (as vcovXX.pgmm methods use vcovXX.plm)
+> # (no linear dependence involved here)
+> data("EmplUK", package="plm")
+> ar <- pgmm(dynformula(log(emp) ~ log(wage) + log(capital) + log(output),
++            list(2, 1, 2, 2)), data = EmplUK, effect = "twoways",
++            model = "twosteps", gmm.inst = ~ log(emp),
++            lag.gmm = list(c(2, 99)))
+Warning messages:
+1: In dynformula(log(emp) ~ log(wage) + log(capital) + log(output),  :
+  use of 'dynformula()' is deprecated, use a multi-part formula instead
+2: In dynformula(gmm.inst, lag.form = lag.gmm) :
+  use of 'dynformula()' is deprecated, use a multi-part formula instead
+> vcovHC(ar)
+                        lag(log(emp), c(1, 2))1 lag(log(emp), c(1, 2))2
+lag(log(emp), c(1, 2))1            3.242903e-02           -3.112098e-03
+lag(log(emp), c(1, 2))2           -3.112098e-03            1.828536e-03
+log(wage)                          5.576167e-03           -2.822753e-03
+lag(log(wage), 1)                  1.066764e-02            7.440992e-04
+log(capital)                      -4.157661e-03            5.855354e-05
+lag(log(capital), 2)              -5.126227e-03           -6.270500e-05
+log(output)                       -5.005883e-03            1.995055e-03
+lag(log(output), 2)               -5.624039e-03           -6.866904e-04
+1979                               5.644829e-05            3.879565e-05
+1980                              -1.817706e-04            2.403239e-05
+1981                               4.732602e-04            1.622626e-04
+1982                               2.374308e-03            5.750292e-05
+1983                               3.899326e-03           -3.044217e-04
+1984                               3.634088e-03           -3.523684e-04
+                            log(wage) lag(log(wage), 1)  log(capital)
+lag(log(emp), c(1, 2))1  0.0055761666      1.066764e-02 -4.157661e-03
+lag(log(emp), c(1, 2))2 -0.0028227530      7.440992e-04  5.855354e-05
+log(wage)                0.0191008333     -1.205993e-02 -2.075710e-03
+lag(log(wage), 1)       -0.0120599272      1.804035e-02  5.457798e-04
+log(capital)            -0.0020757103      5.457798e-04  3.288690e-03
+lag(log(capital), 2)     0.0005977478     -2.907785e-03  5.002984e-04
+log(output)             -0.0081456488      3.376731e-03  6.345523e-04
+lag(log(output), 2)     -0.0030770071     -2.980206e-05  1.508275e-03
+1979                    -0.0003666927      3.500486e-04 -7.154580e-06
+1980                    -0.0004104969      2.401544e-04  1.450789e-04
+1981                    -0.0020145724      1.815964e-03  4.184983e-04
+1982                    -0.0024867853      3.036475e-03  4.834365e-04
+1983                    -0.0025560335      3.603192e-03  4.811921e-04
+1984                    -0.0023664775      3.275553e-03  4.230712e-04
+                        lag(log(capital), 2)   log(output) lag(log(output), 2)
+lag(log(emp), c(1, 2))1        -5.126227e-03 -5.005883e-03       -5.624039e-03
+lag(log(emp), c(1, 2))2        -6.270500e-05  1.995055e-03       -6.866904e-04
+log(wage)                       5.977478e-04 -8.145649e-03       -3.077007e-03
+lag(log(wage), 1)              -2.907785e-03  3.376731e-03       -2.980206e-05
+log(capital)                    5.002984e-04  6.345523e-04        1.508275e-03
+lag(log(capital), 2)            1.803865e-03  5.316635e-05        2.832796e-04
+log(output)                     5.316635e-05  2.135136e-02       -7.089227e-03
+lag(log(output), 2)             2.832796e-04 -7.089227e-03        1.881253e-02
+1979                           -7.602725e-05  4.507034e-04       -1.140870e-04
+1980                           -6.200074e-06  1.648507e-03       -7.690503e-04
+1981                           -2.430682e-04  3.752464e-03       -1.469096e-03
+1982                           -7.366116e-04  3.241195e-03       -4.104696e-04
+1983                           -9.348948e-04  2.350962e-03        8.187146e-04
+1984                           -8.138045e-04  1.881461e-03        1.139669e-03
+                                 1979          1980          1981          1982
+lag(log(emp), c(1, 2))1  5.644829e-05 -1.817706e-04  0.0004732602  2.374308e-03
+lag(log(emp), c(1, 2))2  3.879565e-05  2.403239e-05  0.0001622626  5.750292e-05
+log(wage)               -3.666927e-04 -4.104969e-04 -0.0020145724 -2.486785e-03
+lag(log(wage), 1)        3.500486e-04  2.401544e-04  0.0018159636  3.036475e-03
+log(capital)            -7.154580e-06  1.450789e-04  0.0004184983  4.834365e-04
+lag(log(capital), 2)    -7.602725e-05 -6.200074e-06 -0.0002430682 -7.366116e-04
+log(output)              4.507034e-04  1.648507e-03  0.0037524637  3.241195e-03
+lag(log(output), 2)     -1.140870e-04 -7.690503e-04 -0.0014690961 -4.104696e-04
+1979                     7.834373e-05  8.086480e-05  0.0001488305  1.597348e-04
+1980                     8.086480e-05  2.306925e-04  0.0004017672  3.574121e-04
+1981                     1.488305e-04  4.017672e-04  0.0009917896  1.000965e-03
+1982                     1.597348e-04  3.574121e-04  0.0010009652  1.385314e-03
+1983                     1.525740e-04  2.784101e-04  0.0009221268  1.502138e-03
+1984                     1.338452e-04  2.432689e-04  0.0007998609  1.351479e-03
+                                 1983          1984
+lag(log(emp), c(1, 2))1  0.0038993259  0.0036340876
+lag(log(emp), c(1, 2))2 -0.0003044217 -0.0003523684
+log(wage)               -0.0025560335 -0.0023664775
+lag(log(wage), 1)        0.0036031923  0.0032755534
+log(capital)             0.0004811921  0.0004230712
+lag(log(capital), 2)    -0.0009348948 -0.0008138045
+log(output)              0.0023509617  0.0018814610
+lag(log(output), 2)      0.0008187146  0.0011396693
+1979                     0.0001525740  0.0001338452
+1980                     0.0002784101  0.0002432689
+1981                     0.0009221268  0.0007998609
+1982                     0.0015021376  0.0013514786
+1983                     0.0019861309  0.0018372748
+1984                     0.0018372748  0.0018895461
+> plm:::vcovHC.pgmm(ar)
+                        lag(log(emp), c(1, 2))1 lag(log(emp), c(1, 2))2
+lag(log(emp), c(1, 2))1            3.242903e-02           -3.112098e-03
+lag(log(emp), c(1, 2))2           -3.112098e-03            1.828536e-03
+log(wage)                          5.576167e-03           -2.822753e-03
+lag(log(wage), 1)                  1.066764e-02            7.440992e-04
+log(capital)                      -4.157661e-03            5.855354e-05
+lag(log(capital), 2)              -5.126227e-03           -6.270500e-05
+log(output)                       -5.005883e-03            1.995055e-03
+lag(log(output), 2)               -5.624039e-03           -6.866904e-04
+1979                               5.644829e-05            3.879565e-05
+1980                              -1.817706e-04            2.403239e-05
+1981                               4.732602e-04            1.622626e-04
+1982                               2.374308e-03            5.750292e-05
+1983                               3.899326e-03           -3.044217e-04
+1984                               3.634088e-03           -3.523684e-04
+                            log(wage) lag(log(wage), 1)  log(capital)
+lag(log(emp), c(1, 2))1  0.0055761666      1.066764e-02 -4.157661e-03
+lag(log(emp), c(1, 2))2 -0.0028227530      7.440992e-04  5.855354e-05
+log(wage)                0.0191008333     -1.205993e-02 -2.075710e-03
+lag(log(wage), 1)       -0.0120599272      1.804035e-02  5.457798e-04
+log(capital)            -0.0020757103      5.457798e-04  3.288690e-03
+lag(log(capital), 2)     0.0005977478     -2.907785e-03  5.002984e-04
+log(output)             -0.0081456488      3.376731e-03  6.345523e-04
+lag(log(output), 2)     -0.0030770071     -2.980206e-05  1.508275e-03
+1979                    -0.0003666927      3.500486e-04 -7.154580e-06
+1980                    -0.0004104969      2.401544e-04  1.450789e-04
+1981                    -0.0020145724      1.815964e-03  4.184983e-04
+1982                    -0.0024867853      3.036475e-03  4.834365e-04
+1983                    -0.0025560335      3.603192e-03  4.811921e-04
+1984                    -0.0023664775      3.275553e-03  4.230712e-04
+                        lag(log(capital), 2)   log(output) lag(log(output), 2)
+lag(log(emp), c(1, 2))1        -5.126227e-03 -5.005883e-03       -5.624039e-03
+lag(log(emp), c(1, 2))2        -6.270500e-05  1.995055e-03       -6.866904e-04
+log(wage)                       5.977478e-04 -8.145649e-03       -3.077007e-03
+lag(log(wage), 1)              -2.907785e-03  3.376731e-03       -2.980206e-05
+log(capital)                    5.002984e-04  6.345523e-04        1.508275e-03
+lag(log(capital), 2)            1.803865e-03  5.316635e-05        2.832796e-04
+log(output)                     5.316635e-05  2.135136e-02       -7.089227e-03
+lag(log(output), 2)             2.832796e-04 -7.089227e-03        1.881253e-02
+1979                           -7.602725e-05  4.507034e-04       -1.140870e-04
+1980                           -6.200074e-06  1.648507e-03       -7.690503e-04
+1981                           -2.430682e-04  3.752464e-03       -1.469096e-03
+1982                           -7.366116e-04  3.241195e-03       -4.104696e-04
+1983                           -9.348948e-04  2.350962e-03        8.187146e-04
+1984                           -8.138045e-04  1.881461e-03        1.139669e-03
+                                 1979          1980          1981          1982
+lag(log(emp), c(1, 2))1  5.644829e-05 -1.817706e-04  0.0004732602  2.374308e-03
+lag(log(emp), c(1, 2))2  3.879565e-05  2.403239e-05  0.0001622626  5.750292e-05
+log(wage)               -3.666927e-04 -4.104969e-04 -0.0020145724 -2.486785e-03
+lag(log(wage), 1)        3.500486e-04  2.401544e-04  0.0018159636  3.036475e-03
+log(capital)            -7.154580e-06  1.450789e-04  0.0004184983  4.834365e-04
+lag(log(capital), 2)    -7.602725e-05 -6.200074e-06 -0.0002430682 -7.366116e-04
+log(output)              4.507034e-04  1.648507e-03  0.0037524637  3.241195e-03
+lag(log(output), 2)     -1.140870e-04 -7.690503e-04 -0.0014690961 -4.104696e-04
+1979                     7.834373e-05  8.086480e-05  0.0001488305  1.597348e-04
+1980                     8.086480e-05  2.306925e-04  0.0004017672  3.574121e-04
+1981                     1.488305e-04  4.017672e-04  0.0009917896  1.000965e-03
+1982                     1.597348e-04  3.574121e-04  0.0010009652  1.385314e-03
+1983                     1.525740e-04  2.784101e-04  0.0009221268  1.502138e-03
+1984                     1.338452e-04  2.432689e-04  0.0007998609  1.351479e-03
+                                 1983          1984
+lag(log(emp), c(1, 2))1  0.0038993259  0.0036340876
+lag(log(emp), c(1, 2))2 -0.0003044217 -0.0003523684
+log(wage)               -0.0025560335 -0.0023664775
+lag(log(wage), 1)        0.0036031923  0.0032755534
+log(capital)             0.0004811921  0.0004230712
+lag(log(capital), 2)    -0.0009348948 -0.0008138045
+log(output)              0.0023509617  0.0018814610
+lag(log(output), 2)      0.0008187146  0.0011396693
+1979                     0.0001525740  0.0001338452
+1980                     0.0002784101  0.0002432689
+1981                     0.0009221268  0.0007998609
+1982                     0.0015021376  0.0013514786
+1983                     0.0019861309  0.0018372748
+1984                     0.0018372748  0.0018895461
+> 
+> ## test of various weighting schemes for vcovHC (hence vcovXX but BK) and vcovBK
+> data("Grunfeld",  package = "plm")
+> gr <- plm(inv ~ value + capital, data = Grunfeld)
+> vcovHC(gr, type = "HC0")
+               value      capital
+value   0.0002056971 0.0004174588
+capital 0.0004174588 0.0024793039
+attr(,"cluster")
+[1] "group"
+> vcovHC(gr, type = "sss")
+               value      capital
+value   0.0002297066 0.0004661857
+capital 0.0004661857 0.0027686951
+attr(,"cluster")
+[1] "group"
+> vcovHC(gr, type = "HC1")
+               value      capital
+value   0.0002077748 0.0004216755
+capital 0.0004216755 0.0025043474
+attr(,"cluster")
+[1] "group"
+> vcovHC(gr, type = "HC2")
+               value      capital
+value   0.0002319339 0.0005361669
+capital 0.0005361669 0.0030842457
+attr(,"cluster")
+[1] "group"
+> vcovHC(gr, type = "HC3")
+               value      capital
+value   0.0002660928 0.0006930533
+capital 0.0006930533 0.0038748424
+attr(,"cluster")
+[1] "group"
+> vcovHC(gr, type = "HC4")
+               value     capital
+value   0.0003661005 0.001170512
+capital 0.0011705121 0.006247676
+attr(,"cluster")
+[1] "group"
+> 
+> vcovBK(gr, type = "HC0")
+               value      capital
+value   1.402882e-04 6.484264e-05
+capital 6.484264e-05 1.622653e-03
+attr(,"cluster")
+[1] "group"
+> vcovBK(gr, type = "HC1")
+               value      capital
+value   1.417053e-04 6.549762e-05
+capital 6.549762e-05 1.639043e-03
+attr(,"cluster")
+[1] "group"
+> vcovBK(gr, type = "HC2")
+               value      capital
+value   1.494464e-04 7.642135e-05
+capital 7.642135e-05 1.721126e-03
+attr(,"cluster")
+[1] "group"
+> vcovBK(gr, type = "HC3")
+               value      capital
+value   0.0001609399 0.0000915552
+capital 0.0000915552 0.0018459483
+attr(,"cluster")
+[1] "group"
+> vcovBK(gr, type = "HC4")
+               value      capital
+value   0.0001914954 0.0001349352
+capital 0.0001349352 0.0021856901
+attr(,"cluster")
+[1] "group"
+> 
+> proc.time()
+   user  system elapsed 
+   2.60    0.37    2.98 

@@ -359,12 +359,6 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
   ## extract residuals
     uhat <- x$residuals
 
-  ## define residuals weighting function omega(res)
-  ## (code taken from meatHC and modified)
-  ## (the weighting is defined "in sqrt" relative to the literature)
-  ## 
-  ## (see the theoretical comments in pvcovHC)
-
     ## this is computationally heavy, do only if needed
     diaghat <- switch(type, "HC0" = NULL,
                             "sss" = NULL,
@@ -373,29 +367,6 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
                             "HC3" = try(dhat(demX), silent = TRUE),
                             "HC4" = try(dhat(demX), silent = TRUE))
     df <- nT - k
-    switch(type, 
-           "HC0" = {
-            omega <- function(residuals, diaghat, df, g) residuals
-        }, "sss" = {
-            omega <- function(residuals, diaghat, df, g) residuals *
-                                sqrt(g/(g-1)*((nT-1)/(nT-k)))
-        }, "HC1" = {
-            omega <- function(residuals, diaghat, df, g) residuals *
-                                sqrt(length(residuals)/df)
-        }, "HC2" = {
-            omega <- function(residuals, diaghat, df, g) residuals /
-                                sqrt(1 - diaghat)
-        }, "HC3" = {
-            omega <- function(residuals, diaghat, df, g) residuals /
-                                (1 - diaghat)
-        }, "HC4" = {
-            omega <- function(residuals, diaghat, df, g) {
-                residuals/sqrt(1 - diaghat)^
-                 pmin(4, length(residuals) *
-                      diaghat/as.integer(round(sum(diaghat),
-                digits = 0)))
-            }
-        })
 
    ## Definition module for E(u,v)
     if(is.function(inner)) {
@@ -545,7 +516,9 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
     ## find some more elegant solution for this!
     ## (perhaps if white then sss -> HC1 but check...)
   G <- if(match.arg(inner) == "cluster") n else nT
-  uhat <- omega(uhat, diaghat, df, G)
+  
+  # transform residuals by weights
+  uhat <- omega(residuals = uhat, diaghat = diaghat, df = df, g = G, nT, k, type = type)
 
   ## compute basic block: X'_t u_t u'_(t-l) X_(t-l) foreach t,
   ## then calculate Sl_t and sum over t (here i in place of t)
@@ -1076,12 +1049,6 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
     tind <- collapse::gsplit(seq_along(relevant.ind), relevant.ind.GRP)
     tlab <- collapse::gsplit(lab, relevant.ind.GRP)
     
-  ## define residuals weighting function omega(res)
-  ## (code taken from meatHC and modified)
-  ## (the weighting is defined "in sqrt" relative to the literature)
-  ##
-  ## (see the theoretical comments in pvcovHC)
-
     ## this is computationally heavy, do only if needed
     diaghat <- switch(type, "HC0" = NULL,
                             "HC1" = NULL,
@@ -1089,26 +1056,10 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
                             "HC3" = try(dhat(demX), silent = TRUE),
                             "HC4" = try(dhat(demX), silent = TRUE))
     df <- nT - k
-    switch(type, 
-           "HC0" = {
-            omega <- function(residuals, diaghat, df) residuals
-        }, "HC1" = {
-            omega <- function(residuals, diaghat, df) residuals *
-                                sqrt(length(residuals)/df)
-        }, "HC2" = {
-            omega <- function(residuals, diaghat, df) residuals /
-                                sqrt(1 - diaghat)
-        }, "HC3" = {
-            omega <- function(residuals, diaghat, df) residuals /
-                                (1 - diaghat)
-        }, "HC4" = {
-            omega <- function(residuals, diaghat, df) residuals/sqrt(1 -
-                diaghat)^pmin(4, length(residuals) * diaghat/as.integer(round(sum(diaghat),
-                digits = 0)))
-        })
 
   ## transform residuals by weights
-  uhat <- omega(uhat, diaghat, df)
+  uhat <- omega(residuals = uhat, diaghat = diaghat, df = df, 
+                g = NULL, nT = NULL, k = NULL, type = type)
 
   ## CODE TAKEN FROM pvcovHC() UNTIL HERE except for ind/time labeling ##
 
@@ -1302,4 +1253,24 @@ vcovHC.pgmm <- function(x, ...) {
 ## dhat: diaghat function for matrices
 dhat <- function(x) {
   rowSums(crossprod(t(x), solve(crossprod(x))) * x) # == (old) diag(crossprod(t(x), solve(crossprod(x), t(x)))
+}
+
+## omega: weighting function, used in vcvG and vcovBK
+## define residuals weighting function omega(res)
+## (code taken from meatHC and modified)
+## (the weighting is defined "in sqrt" relative to the literature)
+## 
+## (see the theoretical comments in pvcovHC)
+omega <- function(residuals, diaghat, df, g, nT, k, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4")) {
+  ## type = "sss" not (yet?) implemented in vcovBK
+  type <- match.arg(type)
+  switch(type,
+         "HC0" = { residuals },
+         "sss" = { residuals * sqrt(g/(g-1)*((nT-1)/(nT-k))) },
+         "HC1" = { residuals * sqrt(length(residuals)/df) },
+         "HC2" = { residuals / sqrt(1 - diaghat) },
+         "HC3" = { residuals / (1 - diaghat) },
+         "HC4" = { residuals / sqrt(1 - diaghat)^pmin(4, length(residuals) *
+                                                        diaghat/as.integer(round(sum(diaghat), digits = 0))) }
+  )
 }

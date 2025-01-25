@@ -70,3 +70,19 @@ ar <- pgmm(dynformula(log(emp) ~ log(wage) + log(capital) + log(output),
            lag.gmm = list(c(2, 99)))
 vcovHC(ar)
 plm:::vcovHC.pgmm(ar)
+
+## test of various weighting schemes for vcovHC (hence vcovXX but BK) and vcovBK
+data("Grunfeld",  package = "plm")
+gr <- plm(inv ~ value + capital, data = Grunfeld)
+vcovHC(gr, type = "HC0")
+vcovHC(gr, type = "sss")
+vcovHC(gr, type = "HC1")
+vcovHC(gr, type = "HC2")
+vcovHC(gr, type = "HC3")
+vcovHC(gr, type = "HC4")
+
+vcovBK(gr, type = "HC0")
+vcovBK(gr, type = "HC1")
+vcovBK(gr, type = "HC2")
+vcovBK(gr, type = "HC3")
+vcovBK(gr, type = "HC4")
