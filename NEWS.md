@@ -5,11 +5,16 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
           (development repository <https://github.com/ycroissant/plm/>)
 ---
 
-# 2.6-9999 (development version)
+# 2.6-9999 (development version), changes relative to last CRAN version 2.6-5:
 
-changes relative to last CRAN version 2.6-5:
+### Fixes:
+* `vcovXX`: for first-difference models with weighting scheme `type = "HC1"`
+            fix degrees of freedom used in weighting (was previously only correct 
+            for `vcovBK`).
 
-* (internal): little code generalisation in vcovG and vcovBK by extracting function omega and re-use
+### Others:
+* (internal): little code generalisation in vcovG and vcovBK by extracting function 
+              omega and re-use
 
 
 ***

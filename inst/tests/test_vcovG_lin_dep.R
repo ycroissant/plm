@@ -86,3 +86,18 @@ vcovBK(gr, type = "HC1")
 vcovBK(gr, type = "HC2")
 vcovBK(gr, type = "HC3")
 vcovBK(gr, type = "HC4")
+
+## check that HC1 gives same results for canned and explicit FD model
+data("Produc", package = "plm")
+
+fm <- log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp
+dfm <- diff(log(gsp)) ~ diff(log(pcap)) + diff(log(pc)) + diff(log(emp)) + diff(unemp)
+
+fdmod <- plm(fm, Produc, model="fd")       ## canned FD model
+edmod <- plm(dfm, Produc, model="pooling") ## explicit diff model
+
+## vcovHC, HC1 adjustment (fixed in January 2025)
+fd.vcov <- vcovHC(fdmod, type="HC1")
+ed.vcov <- vcovHC(edmod, type="HC1")
+
+stopifnot(isTRUE(all.equal(fd.vcov, ed.vcov, check.attributes = FALSE)))

@@ -365,7 +365,7 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
                             "HC2" = try(dhat(demX), silent = TRUE),
                             "HC3" = try(dhat(demX), silent = TRUE),
                             "HC4" = try(dhat(demX), silent = TRUE))
-    df <- nT - k   # TODO: check if calc. of df is to be placed after FD adjustment (like it is in vcovBK)
+    
 
    ## Definition module for E(u,v)
     if(is.function(inner)) {
@@ -517,6 +517,7 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
   G <- if(match.arg(inner) == "cluster") n else nT
   
   # transform residuals by weights
+  df <- nT - k
   uhat <- omega(residuals = uhat, diaghat = diaghat, df = df, g = G, nT = nT, k = k, type = type)
 
   ## compute basic block: X'_t u_t u'_(t-l) X_(t-l) foreach t,
@@ -1257,7 +1258,7 @@ omega <- function(residuals, diaghat, df, g, nT, k, type = c("HC0", "sss", "HC1"
   switch(type,
          "HC0" = { residuals },
          "sss" = { residuals * sqrt(g/(g-1) * ((nT-1)/(nT-k))) },
-         "HC1" = { residuals * sqrt(length(residuals)/df) }, # TODO: df is somewhat superflous as in vcovG/vcovBK is is only calc for omega as nT - k
+         "HC1" = { residuals * sqrt(length(residuals)/df) }, # TODO: df is superflous as in vcovG/vcovBK it is only calc for omega as nT - k
          "HC2" = { residuals / sqrt(1 - diaghat) },
          "HC3" = { residuals /     (1 - diaghat) },
          "HC4" = { residuals / sqrt(1 - diaghat)^pmin(4, length(residuals) *
