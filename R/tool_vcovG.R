@@ -359,7 +359,6 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
   ## extract residuals
     uhat <- x$residuals
 
-    ## this is computationally heavy, do only if needed
     diaghat <- switch(type, "HC0" = NULL,
                             "sss" = NULL,
                             "HC1" = NULL,
@@ -711,9 +710,9 @@ NULL
 
 #' @rdname vcovHC.plm
 #' @export
-vcovHC.plm <- function(x, method=c("arellano", "white1", "white2"),
-                       type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
-                       cluster=c("group", "time"), ...) {
+vcovHC.plm <- function(x, method = c("arellano", "white1", "white2"),
+                       type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
+                       cluster = c("group", "time"), ...) {
     ## user-level wrapper for White-Arellano covariances
 
     ## translate arguments
@@ -722,35 +721,32 @@ vcovHC.plm <- function(x, method=c("arellano", "white1", "white2"),
                     "white1"   = "white",
                     "white2"   = "diagavg")
 
-    return(vcovG(x, type=type, cluster=cluster,
-                        l=0, inner=inner, ...))
+    return(vcovG(x, type = type, cluster = cluster, l = 0, inner = inner, ...))
 }
 
 #' @rdname vcovNW
 #' @export
-vcovNW.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
-                       maxlag=NULL,
-                       wj=function(j, maxlag) 1-j/(maxlag+1),
+vcovNW.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
+                       maxlag = NULL,
+                       wj = function(j, maxlag) 1-j/(maxlag+1),
                        ...) {
     ## user-level wrapper for panel Newey-West estimator
 
     ## set default lag order
     if(is.null(maxlag)) maxlag <- floor((max(pdim(x)$Tint$Ti))^(1/4))
 
-    return(vcovSCC(x, type=type, maxlag=maxlag, inner="white", wj=wj, ...))
+    return(vcovSCC(x, type = type, maxlag = maxlag, inner = "white", wj = wj, ...))
 }
 
 #' @rdname vcovDC
 #' @export
-vcovDC.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
+vcovDC.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
                        ...) {
     ## user-level wrapper for double-clustering (no persistence)
 
-    Vcx <- vcovG(x, type=type, cluster="group",
-                        l=0, inner="cluster", ...)
-    Vct <- vcovG(x, type=type, cluster="time",
-                        l=0, inner="cluster", ...)
-    Vw <- vcovG(x, type=type, l=0, inner="white", ...)
+    Vcx <- vcovG(x, type = type, cluster = "group", l = 0, inner = "cluster", ...)
+    Vct <- vcovG(x, type = type, cluster = "time",  l = 0, inner = "cluster", ...)
+    Vw  <- vcovG(x, type = type,                    l = 0, inner = "white", ...)
 
     res <- Vcx + Vct - Vw
     
@@ -762,14 +758,12 @@ vcovDC.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 
 #' @rdname vcovSCC
 #' @export
-vcovSCC.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
-                        cluster="time",
-                        maxlag=NULL,
-                        inner=c("cluster", "white", "diagavg"),
-                        wj=function(j, maxlag) 1-j/(maxlag+1),
+vcovSCC.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
+                        cluster = "time",
+                        maxlag = NULL,
+                        inner = c("cluster", "white", "diagavg"),
+                        wj = function(j, maxlag) 1-j/(maxlag+1),
                         ...) {
-
-    ## replicates vcovSCC
 
     ## set default lag order
     if(is.null(maxlag)) maxlag <- floor((max(pdim(x)$Tint$Ti))^(1/4))
@@ -778,12 +772,11 @@ vcovSCC.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
     ## wj <- function(j, maxlag) 1-j/(maxlag+1)
     ## has been passed as argument
 
-    S0 <- vcovG(x, type=type, cluster=cluster, l=0, inner=inner)
+    S0 <- vcovG(x, type = type, cluster = cluster, l = 0, inner = inner)
 
     if(maxlag > 0) {
         for(i in seq_len(maxlag)) {
-            Vctl <- vcovG(x, type=type, cluster=cluster,
-                             l=i, inner=inner)
+            Vctl <- vcovG(x, type = type, cluster = cluster, l = i, inner = inner)
             S0 <- S0 + wj(i, maxlag) * (Vctl + t(Vctl))
         }
     }
@@ -795,8 +788,6 @@ vcovSCC.plm <- function(x, type=c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 ##############################################################
 
 ## separate function for BK (PCSE) covariance
-
-
 
 #' Beck and Katz Robust Covariance Matrix Estimators
 #' 
@@ -997,7 +988,7 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
     groupind <- as.numeric(xindex[[1L]])
     timeind  <- as.numeric(xindex[[2L]])
 
-    ## adjust for 'fd' model (losing first time period)
+    ## adjust for 'fd' model (losing first time period) [same code as in vcovG.plm]
     if(model == "fd") {
       ## debug printing:
       #print("before FD adj:")
@@ -1049,7 +1040,6 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
     tind <- collapse::gsplit(seq_along(relevant.ind), relevant.ind.GRP)
     tlab <- collapse::gsplit(lab, relevant.ind.GRP)
     
-    ## this is computationally heavy, do only if needed
     diaghat <- switch(type, "HC0" = NULL,
                             "HC1" = NULL,
                             "HC2" = try(dhat(demX), silent = TRUE),
