@@ -517,7 +517,7 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
   G <- if(match.arg(inner) == "cluster") n else nT
   
   # transform residuals by weights
-  uhat <- omega(residuals = uhat, diaghat = diaghat, df = df, g = G, nT, k, type = type)
+  uhat <- omega(residuals = uhat, diaghat = diaghat, df = df, g = G, nT = nT, k = k, type = type)
 
   ## compute basic block: X'_t u_t u'_(t-l) X_(t-l) foreach t,
   ## then calculate Sl_t and sum over t (here i in place of t)
@@ -1256,10 +1256,10 @@ omega <- function(residuals, diaghat, df, g, nT, k, type = c("HC0", "sss", "HC1"
   type <- match.arg(type)
   switch(type,
          "HC0" = { residuals },
-         "sss" = { residuals * sqrt(g/(g-1)*((nT-1)/(nT-k))) },
-         "HC1" = { residuals * sqrt(length(residuals)/df) },
+         "sss" = { residuals * sqrt(g/(g-1) * ((nT-1)/(nT-k))) },
+         "HC1" = { residuals * sqrt(length(residuals)/df) }, # TODO: df is somewhat superflous as in vcovG/vcovBK is is only calc for omega as nT - k
          "HC2" = { residuals / sqrt(1 - diaghat) },
-         "HC3" = { residuals / (1 - diaghat) },
+         "HC3" = { residuals /     (1 - diaghat) },
          "HC4" = { residuals / sqrt(1 - diaghat)^pmin(4, length(residuals) *
                                                         diaghat/as.integer(round(sum(diaghat), digits = 0))) }
   )
