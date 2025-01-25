@@ -365,7 +365,7 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
                             "HC2" = try(dhat(demX), silent = TRUE),
                             "HC3" = try(dhat(demX), silent = TRUE),
                             "HC4" = try(dhat(demX), silent = TRUE))
-    df <- nT - k
+    df <- nT - k   # TODO: check if calc. of df is to be placed after FD adjustment (like it is in vcovBK)
 
    ## Definition module for E(u,v)
     if(is.function(inner)) {
