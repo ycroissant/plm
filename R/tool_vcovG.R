@@ -527,7 +527,7 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 
     ## preallocate k x k x (T-l) array for 'pile' of kxk matrices
     ## holding the X' E(u,ul) X elements
-    Sl <- array(dim = c(k, k, n-l))
+    Sl <- array(NA_real_, dim = c(k, k, n-l))
     
     ## (l=0 gives the special contemporaneous case where Xi=Xil, ui=uil
     ## for computing W, CX, CT)
@@ -540,7 +540,7 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
       names(u)  <- tlab[[i]]
       names(ul) <- tlab[[(i-l)]]
       ## calculate V_yy
-      Sl[ , , i-l] <- crossprod(X, E(u, ul)) %*% Xl
+      Sl[ , , i-l] <- tcrossprod(crossprod(X, E(u, ul)), t(Xl))
     }
     
     ## in order to sum on available observations two things can be done:
@@ -562,11 +562,11 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
     ## bread by standard method
     pane <- solve(crossprod(demX))
     ## sandwich
-    mycov <-  tcrossprod(crossprod(t(pane), salame), t(pane)) # == pane %*% salame %*% pane
+    mycov <- tcrossprod(tcrossprod(pane, salame), t(pane)) # == pane %*% salame %*% pane
     
     # save information about cluster variable in matrix (needed for e.g.,
     # robust F test)
-    attr(mycov, which = "cluster") <- match.arg(cluster)
+    attr(mycov, which = "cluster") <- cluster
     return(mycov)
 }
 
@@ -1065,7 +1065,7 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
 
     ## est. omega submatrix
     ## "pre-allocate" an empty array
-    tres <- array(dim = c(t, t, n))
+    tres <- array(NA_real_, dim = c(t, t, n))
 
     ## array of n "empirical omega-blocks"
     ## with outer product of t(i) residuals
@@ -1089,7 +1089,7 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
     OmegaT <- rowMeans(tres, dims = 2L, na.rm = TRUE) # == apply(tres, 1:2, mean, na.rm = TRUE) but faster
   ## end of PCSE covariance calculation.
 
-  salame <- array(dim = c(k, k, n))
+  salame <- array(NA_real_, dim = c(k, k, n))
   for(i in seq_len(n)) {
     groupinds <- tind[[i]]
     grouplabs <- tlab[[i]]
@@ -1106,11 +1106,11 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
   pane <- solve(crossprod(demX))
 
   ## sandwich
-  mycov <- tcrossprod(crossprod(t(pane), salame), t(pane)) # == pane %*% salame %*% pane
+  mycov <- tcrossprod(tcrossprod(pane, salame), t(pane)) # == pane %*% salame %*% pane
   
   # save information about cluster variable in matrix (needed for e.g.,
   # robust F test)
-  attr(mycov, which = "cluster") <- match.arg(cluster)
+  attr(mycov, which = "cluster") <- cluster
   return(mycov)
 }
 
