@@ -1050,8 +1050,6 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
   uhat <- omega(residuals = uhat, diaghat = diaghat,
                 g = NULL, nT = nT, k = k, type = type)
 
-  ## CODE TAKEN FROM pvcovHC() UNTIL HERE except for ind/time labeling ##
-
   ## the PCSE covariance estimator is based on the unconditional estimate
   ## of the intragroup (intraperiod) covariance of errors, OmegaT or OmegaM
   ## in the EViews help.
@@ -1248,8 +1246,6 @@ dhat <- function(x) {
 ## define residuals weighting function omega(res)
 ## (code taken from meatHC and modified)
 ## (the weighting is defined "in sqrt" relative to the literature)
-## 
-## (see the theoretical comments in pvcovHC)
 omega <- function(residuals, diaghat, g, nT, k, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4")) {
   ## type = "sss" not (yet?) implemented in vcovBK
   type <- match.arg(type)
