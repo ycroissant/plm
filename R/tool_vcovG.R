@@ -517,8 +517,7 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
   G <- if(match.arg(inner) == "cluster") n else nT
   
   # transform residuals by weights
-  df <- nT - k
-  uhat <- omega(residuals = uhat, diaghat = diaghat, df = df, g = G, nT = nT, k = k, type = type)
+  uhat <- omega(residuals = uhat, diaghat = diaghat, g = G, nT = nT, k = k, type = type)
 
   ## compute basic block: X'_t u_t u'_(t-l) X_(t-l) foreach t,
   ## then calculate Sl_t and sum over t (here i in place of t)
@@ -1046,11 +1045,10 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
                             "HC2" = try(dhat(demX), silent = TRUE),
                             "HC3" = try(dhat(demX), silent = TRUE),
                             "HC4" = try(dhat(demX), silent = TRUE))
-    df <- nT - k
 
   ## transform residuals by weights
-  uhat <- omega(residuals = uhat, diaghat = diaghat, df = df, 
-                g = NULL, nT = NULL, k = NULL, type = type)
+  uhat <- omega(residuals = uhat, diaghat = diaghat,
+                g = NULL, nT = nT, k = k, type = type)
 
   ## CODE TAKEN FROM pvcovHC() UNTIL HERE except for ind/time labeling ##
 
@@ -1252,13 +1250,13 @@ dhat <- function(x) {
 ## (the weighting is defined "in sqrt" relative to the literature)
 ## 
 ## (see the theoretical comments in pvcovHC)
-omega <- function(residuals, diaghat, df, g, nT, k, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4")) {
+omega <- function(residuals, diaghat, g, nT, k, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4")) {
   ## type = "sss" not (yet?) implemented in vcovBK
   type <- match.arg(type)
   switch(type,
          "HC0" = { residuals },
-         "sss" = { residuals * sqrt(g/(g-1) * ((nT-1)/(nT-k))) },
-         "HC1" = { residuals * sqrt(length(residuals)/df) }, # TODO: df is superflous as in vcovG/vcovBK it is only calc for omega as nT - k
+         "sss" = { residuals * sqrt(g/(g-1) * ((nT-1) / (nT-k))) },
+         "HC1" = { residuals * sqrt(length(residuals) / (nT-k))  },
          "HC2" = { residuals / sqrt(1 - diaghat) },
          "HC3" = { residuals /     (1 - diaghat) },
          "HC4" = { residuals / sqrt(1 - diaghat)^pmin(4, length(residuals) *
