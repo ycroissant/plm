@@ -266,13 +266,12 @@ vcovDC <- function(x, ...){
 #' @aliases vcovG
 #' @param x an object of class `"plm"` or `"pcce"`
 #' @param type the weighting scheme used, one of `"HC0"`,
-#'     `"sss"`, `"HC1"`, `"HC2"`, `"HC3"`,
-#'     `"HC4"`,
+#'     `"sss"`, `"HC1"`, `"HC2"`, `"HC3"`, `"HC4"`,
 #' @param cluster one of `"group"`, `"time"`,
 #' @param l lagging order, defaulting to zero
 #' @param inner the function to be applied to the residuals inside the
 #'     sandwich: one of `"cluster"` or `"white"` or
-#'     `"diagavg"`,
+#'     `"diagavg"`, or a user specified R function,
 #' @param \dots further arguments
 #' @return An object of class `"matrix"` containing the estimate
 #'     of the covariance matrix of coefficients.
@@ -280,8 +279,7 @@ vcovDC <- function(x, ...){
 #' @author Giovanni Millo
 #' @seealso [vcovHC()], [vcovSCC()],
 #'     [vcovDC()], [vcovNW()], and
-#'     [vcovBK()] albeit the latter does not make use of
-#'     vcovG.
+#'     [vcovBK()] albeit the latter does not make use of vcovG.
 #' @references
 #'
 #' \insertRef{mil17b}{plm}
@@ -369,6 +367,8 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 
    ## Definition module for E(u,v)
     if(is.function(inner)) {
+      # case of user-specified function
+      # (only if user calls workhorse vcovG directly (i.e., not possible via wrappers vcovXX)
         E <- inner
     } else {
       ## outer for clustering/arellano, diag(diag(inner)) for white
@@ -507,12 +507,12 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
   ## calc. the lagged White terms on unbalanced panels
 
   ## transform residuals by weights (here because type='sss' needs to
-  ## know who the grouping index 'g' is
+  ## know who the grouping index 'g' is in helper function omega())
 
   ## set number of clusters for Stata-like small sample correction
   ## (if clustering, i.e., inner="cluster", then G is the cardinality of
   ## the grouping index; if inner="white" it is simply the sample size)
-    ## find some more elegant solution for this!
+    ## TODO: find some more elegant solution for this!
     ## (perhaps if white then sss -> HC1 but check...)
   G <- if(match.arg(inner) == "cluster") n else nT
   

@@ -32,8 +32,7 @@ vcovG(x, ...)
 \item{\dots}{further arguments}
 
 \item{type}{the weighting scheme used, one of \code{"HC0"},
-\code{"sss"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"},
-\code{"HC4"},}
+\code{"sss"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"}, \code{"HC4"},}
 
 \item{cluster}{one of \code{"group"}, \code{"time"},}
 
@@ -41,7 +40,7 @@ vcovG(x, ...)
 
 \item{inner}{the function to be applied to the residuals inside the
 sandwich: one of \code{"cluster"} or \code{"white"} or
-\code{"diagavg"},}
+\code{"diagavg"}, or a user specified R function,}
 }
 \value{
 An object of class \code{"matrix"} containing the estimate
@@ -82,8 +81,7 @@ coeftest(zz, vcov. = myvcov)
 \seealso{
 \code{\link[=vcovHC]{vcovHC()}}, \code{\link[=vcovSCC]{vcovSCC()}},
 \code{\link[=vcovDC]{vcovDC()}}, \code{\link[=vcovNW]{vcovNW()}}, and
-\code{\link[=vcovBK]{vcovBK()}} albeit the latter does not make use of
-vcovG.
+\code{\link[=vcovBK]{vcovBK()}} albeit the latter does not make use of vcovG.
 }
 \author{
 Giovanni Millo
