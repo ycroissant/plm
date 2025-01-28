@@ -82,6 +82,7 @@ vcovHC(gr, type = "HC3")
 vcovHC(gr, type = "HC4")
 
 vcovBK(gr, type = "HC0")
+vcovBK(gr, type = "sss")
 vcovBK(gr, type = "HC1")
 vcovBK(gr, type = "HC2")
 vcovBK(gr, type = "HC3")

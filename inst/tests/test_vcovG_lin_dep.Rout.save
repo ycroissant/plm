@@ -416,6 +416,12 @@ value   1.402882e-04 6.484264e-05
 capital 6.484264e-05 1.622653e-03
 attr(,"cluster")
 [1] "group"
+> vcovBK(gr, type = "sss")
+               value      capital
+value   1.566631e-04 7.241126e-05
+capital 7.241126e-05 1.812053e-03
+attr(,"cluster")
+[1] "group"
 > vcovBK(gr, type = "HC1")
                value      capital
 value   1.417053e-04 6.549762e-05
@@ -458,4 +464,4 @@ attr(,"cluster")
 > 
 > proc.time()
    user  system elapsed 
-   2.17    0.29    2.53 
+   2.37    0.31    2.68 

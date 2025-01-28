@@ -537,8 +537,8 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
       Xl <- demX[tind[[i-l]], , drop = FALSE]
       u  <- uhat[tind[[i]]]
       ul <- uhat[tind[[(i-l)]]]
-      names(u)  <- tlab[[i]]
-      names(ul) <- tlab[[(i-l)]]
+      names(u)  <- tlab[[i]]      # names needed in E()
+      names(ul) <- tlab[[(i-l)]]  #   --- " ---
       ## calculate V_yy
       Sl[ , , i-l] <- tcrossprod(crossprod(X, E(u, ul)), t(Xl))
     }
@@ -836,7 +836,7 @@ vcovSCC.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
 #' examples), see \insertCite{@see also @ZEIL:04}{plm}, 4.1-2, and examples below.
 #' 
 #' @param x an object of class `"plm"`,
-#' @param type the weighting scheme used, one of `"HC0"`, `"HC1"`,
+#' @param type the weighting scheme used, one of `"HC0"`, `"sss"`, `"HC1"`,
 #'     `"HC2"`, `"HC3"`, `"HC4"`, see Details,
 #' @param cluster one of `"group"`, `"time"`,
 #' @param diagonal a logical value specifying whether to force
@@ -894,12 +894,9 @@ vcovBK <- function(x, ...) {
     UseMethod("vcovBK")
 }
 
-
-# TODO: add type "sss" for vcovBK
-
 #' @rdname vcovBK
 #' @export
-vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
+vcovBK.plm <- function(x, type = c("HC0", "sss" , "HC1", "HC2", "HC3", "HC4"),
                        cluster = c("group", "time"),
                        diagonal = FALSE, ...) {
 
@@ -1041,14 +1038,15 @@ vcovBK.plm <- function(x, type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
     tlab <- collapse::gsplit(lab, relevant.ind.GRP)
     
     diaghat <- switch(type, "HC0" = NULL,
+                            "sss" = NULL,
                             "HC1" = NULL,
                             "HC2" = try(dhat(demX), silent = TRUE),
                             "HC3" = try(dhat(demX), silent = TRUE),
                             "HC4" = try(dhat(demX), silent = TRUE))
-
+  
   ## transform residuals by weights
   uhat <- omega(residuals = uhat, diaghat = diaghat,
-                g = NULL, nT = nT, k = k, type = type)
+                g = n, nT = nT, k = k, type = type)
 
   ## the PCSE covariance estimator is based on the unconditional estimate
   ## of the intragroup (intraperiod) covariance of errors, OmegaT or OmegaM
@@ -1247,7 +1245,6 @@ dhat <- function(x) {
 ## (code taken from meatHC and modified)
 ## (the weighting is defined "in sqrt" relative to the literature)
 omega <- function(residuals, diaghat, g, nT, k, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4")) {
-  ## type = "sss" not (yet?) implemented in vcovBK
   type <- match.arg(type)
   switch(type,
          "HC0" = { residuals },

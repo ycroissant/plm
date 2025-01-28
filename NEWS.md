@@ -7,6 +7,10 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 
 # 2.6-9999 (development version), changes relative to last CRAN version 2.6-5:
 
+### Features:
+* `vcovBK`: enabled `type = "sss"` (weighting scheme), the Stata-style small 
+            sample adjustment (like for other `vcovXX` functions for a long time).
+
 ### Fixes:
 * `vcovXX`: for first-difference models with weighting scheme `type = "HC1"`
             fix degrees of freedom used in weighting (was previously only correct 
@@ -1097,8 +1101,7 @@ plm()): Between, between, Sum, Within.
 * summary.plm: 
   * argument '.vcov' can also be a function (before, only matrix was possible).
   * internal: the furnished vcov is saved in the summary.plm object in
-                             object\$rvcov (vcov function name in
-                             attr(object\$rvcov, which="rvcov.name").
+       object\$rvcov (vcov function name in attr(object\$rvcov, which="rvcov.name").
 * Ftest: 
   * gained '.vcov' argument, which enables robust F test and chi-sq
          test computations [robust versions not yet weaved in

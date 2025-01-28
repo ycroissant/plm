@@ -9,7 +9,7 @@ vcovBK(x, ...)
 
 \method{vcovBK}{plm}(
   x,
-  type = c("HC0", "HC1", "HC2", "HC3", "HC4"),
+  type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
   cluster = c("group", "time"),
   diagonal = FALSE,
   ...
@@ -20,7 +20,7 @@ vcovBK(x, ...)
 
 \item{\dots}{further arguments.}
 
-\item{type}{the weighting scheme used, one of \code{"HC0"}, \code{"HC1"},
+\item{type}{the weighting scheme used, one of \code{"HC0"}, \code{"sss"}, \code{"HC1"},
 \code{"HC2"}, \code{"HC3"}, \code{"HC4"}, see Details,}
 
 \item{cluster}{one of \code{"group"}, \code{"time"},}
