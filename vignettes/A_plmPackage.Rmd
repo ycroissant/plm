@@ -2057,8 +2057,8 @@ linearHypothesis(re, "2*value=capital", vcov. = vcovHC)
 ```
 
 A specific methods are also provided for `pcce` and `pgmm` objects, for the latter
-`vcovHC` provides the robust covariance matrix proposed by
-@WIND:05 for generalized method of moments estimators.
+`vcovHC` provides a robust covariance matrix with the small-sample adjustment as 
+proposed by @WIND:05 for generalized method of moments estimators.
 
 
 # plm versus nlme and lme4{#nlme}
