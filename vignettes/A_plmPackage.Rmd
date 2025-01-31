@@ -2340,7 +2340,7 @@ Linear models with groupwise structures of time-dependence^[Take heed
 that here, in contrast to the usual meaning of serial correlation in
 time series, we always speak of serial correlation *between the errors
 of each group*.]  may be fitted by `gls()`, specifying the correlation
-structure in the `correlation` option^[note that the time index is
+structure in the `correlation` option^[Note that the time index is
 coerced to numeric before the estimation.]:
 
 
