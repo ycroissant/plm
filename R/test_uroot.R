@@ -960,7 +960,7 @@ purtest <- function(object, data = NULL, index = NULL,
   if(test == "madwu"){
     # Maddala/Wu (1999), pp. 636-637; Choi (2001), p. 253; Baltagi (2013), pp. 283-285
     ## does not require a balanced panel
-    trho <- vapply(idres, function(x) x[["trho"]], FUN.VALUE = 0.0, USE.NAMES = FALSE)
+    trho         <- vapply(idres, function(x) x[["trho"]],   FUN.VALUE = 0.0, USE.NAMES = FALSE)
     pvalues.trho <- vapply(idres, function(x) x[["p.trho"]], FUN.VALUE = 0.0, USE.NAMES = FALSE)
     stat <- c(chisq = - 2 * sum(log(pvalues.trho)))
     n.madwu <- length(trho)
@@ -971,7 +971,7 @@ purtest <- function(object, data = NULL, index = NULL,
   
   if(test == "Pm"){
     ## Choi Pm (modified P) [proposed for large N]
-    trho <- vapply(idres, function(x) x[["trho"]], FUN.VALUE = 0.0, USE.NAMES = FALSE)
+    trho         <- vapply(idres, function(x) x[["trho"]],   FUN.VALUE = 0.0, USE.NAMES = FALSE)
     pvalues.trho <- vapply(idres, function(x) x[["p.trho"]], FUN.VALUE = 0.0, USE.NAMES = FALSE)
     n.Pm <- length(trho)
     # formula (18) in Choi (2001), p. 255:
@@ -983,7 +983,7 @@ purtest <- function(object, data = NULL, index = NULL,
   
   if(test == "invnormal"){
     # inverse normal test as in Choi (2001)
-    trho <- vapply(idres, function(x) x[["trho"]], FUN.VALUE = 0.0, USE.NAMES = FALSE)
+    trho         <- vapply(idres, function(x) x[["trho"]],   FUN.VALUE = 0.0, USE.NAMES = FALSE)
     pvalues.trho <- vapply(idres, function(x) x[["p.trho"]], FUN.VALUE = 0.0, USE.NAMES = FALSE)
     n.invnormal <- length(trho)
     stat <- c("z" = sum(qnorm(pvalues.trho)) / sqrt(n.invnormal)) # formula (9), Choi (2001), p. 253
@@ -994,7 +994,7 @@ purtest <- function(object, data = NULL, index = NULL,
   
   if(test == "logit"){
     # logit test as in Choi (2001)
-    trho <- vapply(idres, function(x) x[["trho"]], FUN.VALUE = 0.0, USE.NAMES = FALSE)
+    trho         <- vapply(idres, function(x) x[["trho"]],   FUN.VALUE = 0.0, USE.NAMES = FALSE)
     pvalues.trho <- vapply(idres, function(x) x[["p.trho"]], FUN.VALUE = 0.0, USE.NAMES = FALSE)
     n.logit <- length(trho)
     l_stat <-  c("L*" = sum(log(pvalues.trho / (1 - pvalues.trho)))) # formula (10), Choi (2001), p. 253
