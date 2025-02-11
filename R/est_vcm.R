@@ -205,7 +205,7 @@ pvcm.random <- function(formula, data, effect){
   # stopping control: later we have to calc. D1 with division by (card.cond - 1), 
   # so check here early if model is estimable
   if(!(card.cond - 1L)) {
-    error.msg <- paste0("Swarmy (1970) model non-estimable due to only 1 ",
+    error.msg <- paste0("Swamy (1970) model non-estimable due to only 1 ",
                         "group in ", effect, " dimension, but need > 1")
     stop(error.msg)
   }
