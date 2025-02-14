@@ -1165,7 +1165,7 @@ plm()): Between, between, Sum, Within.
     estimated model compared to specified model.matrix.
 * added testfile tests/test_fitted.plm.R (some of those test currently do not run
     (commented, i.e., inactive)).
-* some testfiles: fixed wired encodings.
+* some testfiles: fixed weired encodings.
 
 ***
 
