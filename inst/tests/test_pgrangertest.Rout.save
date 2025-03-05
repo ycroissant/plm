@@ -1,7 +1,7 @@
 
-R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
-Copyright (C) 2019 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
+R version 4.4.3 (2025-02-28 ucrt) -- "Trophy Case"
+Copyright (C) 2025 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -60,7 +60,7 @@ alternative hypothesis: Granger causality for at least one individual
 10   10  0.2960011 0.862430626  2   2
 > 
 > # varying lag order
-> bal_varorder <- pgrangertest(inv ~ value, data = Grunfeld[1:199, ], order = c(rep(2L, 9), 3L))
+> bal_varorder <- pgrangertest(inv ~ value, data = Grunfeld, order = c(rep(2L, 9), 3L))
 > bal_varorder$indgranger
    firm      Chisq     p-value df lag
 1     1  1.8255237 0.401414049  2   2
@@ -72,7 +72,7 @@ alternative hypothesis: Granger causality for at least one individual
 7     7  1.3410752 0.511433558  2   2
 8     8  0.2900525 0.864999607  2   2
 9     9  4.4068769 0.110422824  2   2
-10   10  2.9874921 0.393557671  3   3
+10   10  4.0173070 0.259601337  3   3
 > unbal_varorder <- pgrangertest(inv ~ value, data = Grunfeld[1:199, ], order = c(rep(2L, 9), 3L))
 > unbal_varorder$indgranger
    firm      Chisq     p-value df lag
@@ -107,4 +107,4 @@ alternative hypothesis: Granger causality for at least one individual
 > 
 > proc.time()
    user  system elapsed 
-  1.042   0.068   1.108 
+   2.09    0.17    2.25 

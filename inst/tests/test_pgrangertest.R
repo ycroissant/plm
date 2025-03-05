@@ -11,7 +11,7 @@ unbal <- pgrangertest(inv ~ value, data = Grunfeld[1:199, ], order = 2L)
 unbal$indgranger
 
 # varying lag order
-bal_varorder <- pgrangertest(inv ~ value, data = Grunfeld[1:199, ], order = c(rep(2L, 9), 3L))
+bal_varorder <- pgrangertest(inv ~ value, data = Grunfeld, order = c(rep(2L, 9), 3L))
 bal_varorder$indgranger
 unbal_varorder <- pgrangertest(inv ~ value, data = Grunfeld[1:199, ], order = c(rep(2L, 9), 3L))
 unbal_varorder$indgranger
