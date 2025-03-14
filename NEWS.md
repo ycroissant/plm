@@ -16,7 +16,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
             fix degrees of freedom used in weighting (was previously only correct 
             for `vcovBK`).
 * `predict.plm`: when argument `newdata` is a pdata.frame, the (internal) model 
-                 frame creation based on the new data is fixed.
+                 frame creation based on the new data is fixed ([#67](https://github.com/ycroissant/plm/issues/67)).
 
 ### Others:
 * (internal): little code generalisation in vcovG and vcovBK by extracting function 
