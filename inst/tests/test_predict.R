@@ -165,6 +165,21 @@ stopifnot(nrow(index(predNA)) == 4L)
 
 (predict(pool, datNA))
 
+# test model frame building with function
+dat.lag <- data.frame(id = c(1,1,2,2,3), time = c(1,2,1,2,1), 
+                       y = c(1,3,5,10,8),   x = c(1,2,3,4,5))
+dat.lag <- pdata.frame(dat.lag)
+dat.lag$lag_y <- lag(dat.lag$y)
+
+pool.lag  <- plm(x ~ plm::lag(y, k = 1), data = dat.lag, model = 'pooling')
+pool.lag2 <- plm(x ~ lag_y,              data = dat.lag, model = 'pooling')
+
+stopifnot(isTRUE(all.equal(predict(pool.lag),  predict(pool.lag,  newdata = dat.lag))))
+stopifnot(isTRUE(all.equal(predict(pool.lag2), predict(pool.lag2, newdata = dat.lag))))
+
+# result's name as in newdata (here: fancy rownames)
+print(predict(pool.lag,  newdata = dat.lag))
+
 # FE model without intercept in formula
 fe0 <- plm(y ~ 0 + x, data = datNA.p, index = c("id", "time"), model="pooling")
 (pred.fe0.NA <- predict(fe0, datNA.p))

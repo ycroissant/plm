@@ -525,26 +525,36 @@ predict.plm <- function(object, newdata = NULL, na.fill = !inherits(newdata, "pd
   #     newdata = NULL (output is compressed data) and for 
   #     newdata = original pdata.frame (output has original length)
   
-  tt <- terms(object)
   if(is.null(newdata)){ 
-    # return fitted values of estimated model and exit
+    # result is simply fitted values of estimated model
     result <- fitted_exp.plm(object, ...) # fitted_exp.plm gives outer model's fitted values
   }
   else{
-    Terms <- delete.response(tt)
-    m <- model.frame(Terms, newdata)
-    X <- model.matrix(Terms, m)
+    
+    # begin case newdata != NULL
+    is.pdf <- inherits(newdata, "pdata.frame")
+    
+    # model frame and model matrix without response (as not needed)
+    if(is.pdf) {
+      m <- model.frame(newdata, object$formula, lhs = 0)
+      X <- model.matrix(m)
+    } else {
+      tt <- terms(object)
+      Terms <- delete.response(tt)
+      m <- model.frame(Terms, newdata)
+      X <- model.matrix(Terms, m)
+    }
+    
     beta <- coef(object)
     model <- describe(object, "model")
-    is.pdf <- inherits(newdata, "pdata.frame")
     
     if(model == "within") {
       # remove intercept if contained in the formula/terms and, thus, in the 
       # model matrix
       #  (usually, users does not explicitly suppress the
       #  intercept in FE models (e.g., by response ~ 0 + depvars), but we need 
-      #  to cater for that suppressed-case as well by has.intercept(tt))
-      if(has.intercept(tt)) X <- X[ , -1L, drop = FALSE]
+      #  to cater for that suppressed-case as well by has.intercept(object))
+      if(has.intercept(object)) X <- X[ , -1L, drop = FALSE]
       effect <- describe(object, "effect")
       effs.orig <- fixef(object, effect = effect)
       
@@ -600,15 +610,18 @@ predict.plm <- function(object, newdata = NULL, na.fill = !inherits(newdata, "pd
         effs <- rep(effs, nrow(X))
       }
     } # end-if model == "within"
+    
     result <- as.numeric(tcrossprod(beta, X)) + if(model == "within") effs else 0
     # if newdata is a pdata.frame output a pseries w/ index stripped down to what
     # is left after NA-omitting (performed implicitly by model.frame)
+    rmrows <- unclass(attr(m, "na.action"))
+    nms <- rownames(newdata)
     if(is.pdf) {
-      result.index <- if(!is.null(rmrows <- unclass(attr(m, "na.action")))) index(newdata[-rmrows, ]) else index(newdata)
+      result.index <- if(!is.null(rmrows)) index(newdata[-rmrows, ]) else index(newdata)
       result <- add_pseries_features(result, result.index)
     }
-    names(result) <- rownames(m)
-  }
+    names(result) <- if(!is.null(rmrows)) nms[-rmrows] else nms
+  } # end case newdata != NULL
   result
 }
 
