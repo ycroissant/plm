@@ -18,10 +18,6 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 * `predict.plm`: when argument `newdata` is a pdata.frame, the (internal) model 
                  frame creation based on the new data is fixed ([#67](https://github.com/ycroissant/plm/issues/67)).
 
-### Others:
-* (internal): little code generalisation in vcovG and vcovBK by extracting function 
-              omega and re-use
-
 
 ***
 
@@ -1167,7 +1163,7 @@ plm()): Between, between, Sum, Within.
     estimated model compared to specified model.matrix.
 * added testfile tests/test_fitted.plm.R (some of those test currently do not run
     (commented, i.e., inactive)).
-* some testfiles: fixed weired encodings.
+* some testfiles: fixed weird encodings.
 
 ***
 
