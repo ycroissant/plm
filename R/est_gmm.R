@@ -699,7 +699,7 @@ extract.data <- function(data, form, as.matrix = TRUE){
   trms <- terms(form)
   has.response  <- attr(trms, 'response')  == 1
   has.intercept <- attr(trms, 'intercept') == 1
-  if (has.intercept == 1){
+  if(has.intercept){
     # Formula is unable to update formulas with no lhs
     form <- Formula(update(formula(form), ~ . -1))
 #    form <- update(form, ~. -1)
