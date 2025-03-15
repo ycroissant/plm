@@ -221,7 +221,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 
 ### Clean-ups:
 * phansi: function renamed to phansitest for name consistency, with a *temporary*
-  back-compatible solution.
+  back-compatible solution. [back-compatibility removed in plm 2.6-3]
 * phtest: for formula method, argument 'effect' is now explicit as 4th argument 
   (previously, it was extracted from ellipsis (...)).
 * detect_lin_dep/detect.lindep: alias detect_lin_dep removed, thus this
@@ -333,7 +333,8 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
    (methods for data frame and matrix) ([#11](https://github.com/ycroissant/plm/issues/11)).
  * has.intercept.plm: argument 'part' renamed to 'rhs', argument values
    (integer or NULL) aligned with and correctly passed on to 
-   has.intercept.Formula (with a *temporary* back-compatible solution).
+   has.intercept.Formula (with a *temporary* back-compatible solution 
+   [back-compatibility removed in plm 2.6-0]).
  * pcdtest: for formula method, the formula is evaluated in the parent environment.
  * groupGenerics: no more warning in arithmetic operations on pseries when index
    of both operands have same length but different content (e.g., something like
@@ -597,7 +598,7 @@ plm()): Between, between, Sum, Within.
     method) and model.matrix has a pdata.frame method (takes as input a model 
     frame as a pdata.frame with a terms attribute and a formula attribute).
     'formula' as an argument in model.matrix was unnecessary as the formula can 
-    be retrieved from the pdata.frame.
+    be retrieved from model frame's pdata.frame.
 * A third vignette was added describing the plm model components
     (plmModelComponents.Rmd).
 * plm: the informative error message about the deprecated argument
