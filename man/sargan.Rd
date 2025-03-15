@@ -2,15 +2,20 @@
 % Please edit documentation in R/est_gmm.R
 \name{sargan}
 \alias{sargan}
+\alias{sargan.pgmm}
 \title{Hansen--Sargan Test of Overidentifying Restrictions}
 \usage{
-sargan(object, weights = c("twosteps", "onestep"))
+sargan(object, ...)
+
+\method{sargan}{pgmm}(object, weights = c("twosteps", "onestep"), ...)
 }
 \arguments{
 \item{object}{an object of class \code{"pgmm"},}
 
+\item{\dots}{further arguments (currently unused).}
+
 \item{weights}{the weighting matrix to be used for the computation of the
-test.}
+test,}
 }
 \value{
 An object of class \code{"htest"}.

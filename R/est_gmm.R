@@ -1010,7 +1010,8 @@ print.summary.pgmm <- function(x, digits = max(3, getOption("digits") - 2),
 #' 
 #' @param object an object of class `"pgmm"`,
 #' @param weights the weighting matrix to be used for the computation of the
-#' test.
+#' test,
+#' @param \dots further arguments (currently unused).
 #' @return An object of class `"htest"`.
 #' @export
 #' @author Yves Croissant
@@ -1030,7 +1031,13 @@ print.summary.pgmm <- function(x, digits = max(3, getOption("digits") - 2),
 #'            data = EmplUK, effect = "twoways", model = "twosteps")
 #' sargan(ar)
 #' 
-sargan <- function(object, weights = c("twosteps", "onestep")) {
+sargan <- function(object, ...) {
+  UseMethod("sargan")
+}
+
+#' @rdname sargan
+#' @export
+sargan.pgmm <- function(object, weights = c("twosteps", "onestep"), ...) {
   if (!inherits(object, "pgmm")) stop("argument 'object' needs to be class 'pgmm'")
   weights <- match.arg(weights)
   model <- describe(object, "model")

@@ -17,7 +17,9 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
             for `vcovBK`).
 * `predict.plm`: when argument `newdata` is a pdata.frame, the (internal) model 
                  frame creation based on the new data is fixed ([#67](https://github.com/ycroissant/plm/issues/67)).
+### Others:
 
+* `sargan`: switch from plain function to generic and method for `pgmm` objects.
 
 ***
 
@@ -276,7 +278,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 * Source code repository for development is now on GitHub <https://github.com/ycroissant/plm>,
   not on R-Forge anymore.
 * Added a REAMDE file to the package giving basic information about package, 
-  displayed on CRAN (as on GitHub repository).
+  displayed on CRAN (and on GitHub repository).
 * Update one author's e-mail address.
 
 ***
