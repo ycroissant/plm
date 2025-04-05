@@ -5,6 +5,12 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
           (development repository <https://github.com/ycroissant/plm/>)
 ---
 
+# 2.6-9999 Development version, changes relative to last CRAN release 2.6-6:
+
+* (none so far)
+
+***
+
 # 2.6-6:
 
 ### Features:
@@ -17,6 +23,7 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
             for `vcovBK`).
 * `predict.plm`: when argument `newdata` is a pdata.frame, the (internal) model 
                  frame creation based on the new data is fixed ([#67](https://github.com/ycroissant/plm/issues/67)).
+
 ### Others:
 
 * `sargan`: switch from plain function to generic and method for `pgmm` objects.
