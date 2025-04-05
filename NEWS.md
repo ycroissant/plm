@@ -5,13 +5,13 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
           (development repository <https://github.com/ycroissant/plm/>)
 ---
 
-# 2.6-9999 Development version, changes relative to last CRAN release 2.6-6:
+# 2.6-9999 Development version, changes relative to last CRAN release 2.6-6
 
 * (none so far)
 
 ***
 
-# 2.6-6:
+# 2.6-6
 
 ### Features:
 * `vcovBK`: enabled `type = "sss"` (weighting scheme), the Stata-style small 
