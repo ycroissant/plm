@@ -190,13 +190,13 @@ if(!isTRUE(all.equal(fixef_lm_tw_time_dfirst_u,  as.numeric(fixef_plm_tw_time_df
 # ## balanced
 plm_fw_tw_ind_level  <- fixef(plm_fe_tw, type = "level", effect = "individual")
 plm_fw_tw_time_level <- fixef(plm_fe_tw, type = "level", effect = "time")
-if(isTRUE(!all.equal(plm_fw_tw_ind_level[1], plm_fw_tw_time_level[1], check.attributes = FALSE))) {
+if(!isTRUE(all.equal(plm_fw_tw_ind_level[1], plm_fw_tw_time_level[1], check.attributes = FALSE))) {
   stop("two-ways balanced levels: first components of individual and time effect in levels are not equal")
 }
 ## unbalanced
 plm_fw_tw_ind_level_u  <- fixef(plm_fe_tw_u, type = "level", effect = "individual")
 plm_fw_tw_time_level_u <- fixef(plm_fe_tw_u, type = "level", effect = "time")
-if(isTRUE(!all.equal(plm_fw_tw_ind_level_u[1], plm_fw_tw_time_level_u[1], check.attributes = FALSE))) {
+if(!isTRUE(all.equal(plm_fw_tw_ind_level_u[1], plm_fw_tw_time_level_u[1], check.attributes = FALSE))) {
   stop("two-ways unbalanced levels: first components of individual and time effect in levels are not equal")
 }
 
