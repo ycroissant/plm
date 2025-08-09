@@ -66,7 +66,7 @@ if(!all(plm_fe_NA_dep_var$coefficients == plm_fe_NA_dep_var2$coefficients)) stop
 
 # model.frames in plm_objects are the same
 if(!all(plm_fe_NA_dep_var$model == plm_fe_NA_dep_var2$model)) stop("model.frames diverge")
-if(!all.equal(plm_fe_NA_dep_var$model, plm_fe_NA_dep_var2$model, check.attributes = FALSE)) stop("model.frames diverge")
+if(!isTRUE(all.equal(plm_fe_NA_dep_var$model, plm_fe_NA_dep_var2$model, check.attributes = FALSE))) stop("model.frames diverge")
 #compare::compare(as.data.frame(plm_fe_NA_dep_var$model), as.data.frame(plm_fe_NA_dep_var2$model), ignoreAttrs = TRUE) # TRUE
 
 
@@ -80,7 +80,7 @@ if (!all(plm_fe_NA_dep_var_more$coefficients == plm_fe_NA_dep_var_more2$coeffici
 
 # model.frame in plm_object is same
 if (!all(plm_fe_NA_dep_var_more$model == plm_fe_NA_dep_var_more2$model)) stop("model.frames diverge")
-if (!all.equal(plm_fe_NA_dep_var_more$model, plm_fe_NA_dep_var_more2$model, check.attributes = FALSE)) stop("model.frames diverge")
+if (!isTRUE(all.equal(plm_fe_NA_dep_var_more$model, plm_fe_NA_dep_var_more2$model, check.attributes = FALSE))) stop("model.frames diverge")
 #compare::compare(as.data.frame(plm_fe_NA_dep_var_more$model), as.data.frame(plm_fe_NA_dep_var_more2$model), ignoreAttrs = TRUE) # TRUE
 
 
@@ -93,7 +93,7 @@ if (!all(plm_fe_NA_dep_var_tw$coefficients == plm_fe_NA_dep_var_tw2$coefficients
 
 # model.frame in plm_object is same
 if (!all(plm_fe_NA_dep_var_tw$model == plm_fe_NA_dep_var_tw$model)) stop("model.frames diverge")
-if (!all.equal(plm_fe_NA_dep_var_tw$model, plm_fe_NA_dep_var_tw2$model, check.attributes = FALSE)) stop("model.frames diverge")
+if (!isTRUE(all.equal(plm_fe_NA_dep_var_tw$model, plm_fe_NA_dep_var_tw2$model, check.attributes = FALSE))) stop("model.frames diverge")
 #compare::compare(as.data.frame(plm_fe_NA_dep_var_tw$model), as.data.frame(plm_fe_NA_dep_var_tw2$model), ignoreAttrs = TRUE) # TRUE
 
 
@@ -109,7 +109,7 @@ if (!all(plm_re_NA_dep_var$coefficients == plm_re_NA_dep_var2$coefficients)) sto
 
 # model.frames in plm_objects are the same
 if (!all(plm_re_NA_dep_var$model == plm_re_NA_dep_var2$model)) stop("model.frames diverge")
-if (!all.equal(plm_re_NA_dep_var$model, plm_re_NA_dep_var2$model, check.attributes = FALSE)) stop("model.frames diverge")
+if (!isTRUE(all.equal(plm_re_NA_dep_var$model, plm_re_NA_dep_var2$model, check.attributes = FALSE))) stop("model.frames diverge")
 #compare::compare(as.data.frame(plm_re_NA_dep_var$model), as.data.frame(plm_re_NA_dep_var2$model), ignoreAttrs = TRUE) # TRUE
 
 
@@ -123,7 +123,7 @@ if (!all(plm_re_NA_dep_var_more$coefficients == plm_re_NA_dep_var_more2$coeffici
 
 # model.frame in plm_object is same
 if (!all(plm_re_NA_dep_var_more$model == plm_re_NA_dep_var_more2$model)) stop("model.frames diverge")
-if (!all.equal(plm_re_NA_dep_var_more$model, plm_re_NA_dep_var_more2$model, check.attributes = FALSE)) stop("model.frames diverge")
+if (!isTRUE(all.equal(plm_re_NA_dep_var_more$model, plm_re_NA_dep_var_more2$model, check.attributes = FALSE))) stop("model.frames diverge")
 #compare::compare(as.data.frame(plm_re_NA_dep_var_more$model), as.data.frame(plm_re_NA_dep_var_more2$model), ignoreAttrs = TRUE) # TRUE
 
 
