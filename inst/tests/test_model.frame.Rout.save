@@ -1,7 +1,7 @@
 
-R version 4.1.1 (2021-08-10) -- "Kick Things"
-Copyright (C) 2021 The R Foundation for Statistical Computing
-Platform: x86_64-w64-mingw32/x64 (64-bit)
+R version 4.5.1 (2025-06-13 ucrt) -- "Great Square Root"
+Copyright (C) 2025 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -86,7 +86,7 @@ Type 'q()' to quit R.
 > 
 > # model.frames in plm_objects are the same
 > if(!all(plm_fe_NA_dep_var$model == plm_fe_NA_dep_var2$model)) stop("model.frames diverge")
-> if(!all.equal(plm_fe_NA_dep_var$model, plm_fe_NA_dep_var2$model, check.attributes = FALSE)) stop("model.frames diverge")
+> if(!isTRUE(all.equal(plm_fe_NA_dep_var$model, plm_fe_NA_dep_var2$model, check.attributes = FALSE))) stop("model.frames diverge")
 > #compare::compare(as.data.frame(plm_fe_NA_dep_var$model), as.data.frame(plm_fe_NA_dep_var2$model), ignoreAttrs = TRUE) # TRUE
 > 
 > 
@@ -100,7 +100,7 @@ Type 'q()' to quit R.
 > 
 > # model.frame in plm_object is same
 > if (!all(plm_fe_NA_dep_var_more$model == plm_fe_NA_dep_var_more2$model)) stop("model.frames diverge")
-> if (!all.equal(plm_fe_NA_dep_var_more$model, plm_fe_NA_dep_var_more2$model, check.attributes = FALSE)) stop("model.frames diverge")
+> if (!isTRUE(all.equal(plm_fe_NA_dep_var_more$model, plm_fe_NA_dep_var_more2$model, check.attributes = FALSE))) stop("model.frames diverge")
 > #compare::compare(as.data.frame(plm_fe_NA_dep_var_more$model), as.data.frame(plm_fe_NA_dep_var_more2$model), ignoreAttrs = TRUE) # TRUE
 > 
 > 
@@ -113,7 +113,7 @@ Type 'q()' to quit R.
 > 
 > # model.frame in plm_object is same
 > if (!all(plm_fe_NA_dep_var_tw$model == plm_fe_NA_dep_var_tw$model)) stop("model.frames diverge")
-> if (!all.equal(plm_fe_NA_dep_var_tw$model, plm_fe_NA_dep_var_tw2$model, check.attributes = FALSE)) stop("model.frames diverge")
+> if (!isTRUE(all.equal(plm_fe_NA_dep_var_tw$model, plm_fe_NA_dep_var_tw2$model, check.attributes = FALSE))) stop("model.frames diverge")
 > #compare::compare(as.data.frame(plm_fe_NA_dep_var_tw$model), as.data.frame(plm_fe_NA_dep_var_tw2$model), ignoreAttrs = TRUE) # TRUE
 > 
 > 
@@ -129,7 +129,7 @@ Type 'q()' to quit R.
 > 
 > # model.frames in plm_objects are the same
 > if (!all(plm_re_NA_dep_var$model == plm_re_NA_dep_var2$model)) stop("model.frames diverge")
-> if (!all.equal(plm_re_NA_dep_var$model, plm_re_NA_dep_var2$model, check.attributes = FALSE)) stop("model.frames diverge")
+> if (!isTRUE(all.equal(plm_re_NA_dep_var$model, plm_re_NA_dep_var2$model, check.attributes = FALSE))) stop("model.frames diverge")
 > #compare::compare(as.data.frame(plm_re_NA_dep_var$model), as.data.frame(plm_re_NA_dep_var2$model), ignoreAttrs = TRUE) # TRUE
 > 
 > 
@@ -143,7 +143,7 @@ Type 'q()' to quit R.
 > 
 > # model.frame in plm_object is same
 > if (!all(plm_re_NA_dep_var_more$model == plm_re_NA_dep_var_more2$model)) stop("model.frames diverge")
-> if (!all.equal(plm_re_NA_dep_var_more$model, plm_re_NA_dep_var_more2$model, check.attributes = FALSE)) stop("model.frames diverge")
+> if (!isTRUE(all.equal(plm_re_NA_dep_var_more$model, plm_re_NA_dep_var_more2$model, check.attributes = FALSE))) stop("model.frames diverge")
 > #compare::compare(as.data.frame(plm_re_NA_dep_var_more$model), as.data.frame(plm_re_NA_dep_var_more2$model), ignoreAttrs = TRUE) # TRUE
 > 
 > 
@@ -162,4 +162,4 @@ Type 'q()' to quit R.
 > 
 > proc.time()
    user  system elapsed 
-   3.32    0.45    3.82 
+   1.54    0.15    1.65 
