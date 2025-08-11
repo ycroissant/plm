@@ -572,7 +572,7 @@ predict.plm <- function(object, newdata = NULL, na.fill = !inherits(newdata, "pd
 
           effs <- effs.orig[levels(newdata.idx.eff)][newdata.idx.eff] # has length corresponding to newdata
           
-          if(na.fill & sum(out.of.sample <- !newdata.idx.eff %in% model.idx.eff) > 0L) {
+          if(na.fill && sum(out.of.sample <- !newdata.idx.eff %in% model.idx.eff) > 0L) {
             pdim <- pdim(object)
             effs[out.of.sample] <- weighted.mean(effs.orig, w = pdim$Tint[[idx]])
           }
@@ -593,7 +593,7 @@ predict.plm <- function(object, newdata = NULL, na.fill = !inherits(newdata, "pd
           
           effs <- effs.orig[newdata.idx.tw] # has length corresponding to newdata
           
-          if(na.fill & sum(out.of.sample <- !newdata.idx.tw %in% model.idx.tw) > 0L) {
+          if(na.fill && sum(out.of.sample <- !newdata.idx.tw %in% model.idx.tw) > 0L) {
             pdim <- pdim(object)
             effs[out.of.sample] <- mean(effs.orig)
           }
