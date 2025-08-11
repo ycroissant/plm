@@ -260,7 +260,6 @@ make.pconsecutive.data.frame <- function(x, balanced = FALSE, index = NULL, ...)
   
   index_df_filled    <- list_ret_make_index[["consec_index"]]
   NArows_old_index   <- list_ret_make_index[["NArows_former_index"]]
-  has_fancy_rownames <- list_ret_make_index[["has_fancy_rownames"]]
   
   # silently drop rows with NA in either individual or time variable of original index
   x <- x[!NArows_old_index, ]
@@ -550,7 +549,6 @@ make.pbalanced.pdata.frame <- function(x, balance.type = c("fill", "shared.times
               
               # drop from time column (if time index column present in pdata.frame)
               pos_indexvars <- pos.index(result) # position of index vars is c(NA, NA) if index vars are not present as columns
-              index_orig_names <- names(pos_indexvars)
               if (!anyNA(pos_indexvars)) {
                 result[ , pos_indexvars[2L]] <- droplevels(result[ , pos_indexvars[2L]])
               }
