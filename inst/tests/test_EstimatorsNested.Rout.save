@@ -1,7 +1,7 @@
 
-R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
-Copyright (C) 2020 The R Foundation for Statistical Computing
-Platform: x86_64-w64-mingw32/x64 (64-bit)
+R version 4.5.1 (2025-06-13 ucrt) -- "Great Square Root"
+Copyright (C) 2025 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -40,7 +40,7 @@ group 0.03960556 0.0466931 0.05713605 0.05577645 0.06458029 0.06458029
 
 Residuals:
      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
--0.106171 -0.024805 -0.001816 -0.000054  0.019795  0.182810 
+-1.06e-01 -2.48e-02 -1.82e-03 -5.43e-05  1.98e-02  1.83e-01 
 
 Coefficients:
                Estimate  Std. Error z-value  Pr(>|z|)    
@@ -81,7 +81,7 @@ group 0.05409908 0.06154491 0.07179372 0.07023704 0.07867007 0.07867007
 
 Residuals:
      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
--0.105014 -0.024736 -0.001879 -0.000056  0.019944  0.182082 
+-1.05e-01 -2.47e-02 -1.88e-03 -5.57e-05  1.99e-02  1.82e-01 
 
 Coefficients:
                Estimate  Std. Error z-value  Pr(>|z|)    
@@ -122,7 +122,7 @@ group 0.02996995 0.03548869 0.04369353 0.04264991 0.04959127 0.04959127
 
 Residuals:
      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
--0.104625 -0.024323 -0.002264 -0.000038  0.019351  0.178975 
+-1.05e-01 -2.43e-02 -2.26e-03 -3.82e-05  1.94e-02  1.79e-01 
 
 Coefficients:
                Estimate  Std. Error z-value  Pr(>|z|)    
@@ -247,7 +247,7 @@ group 0.03058569 0.03628007 0.04091226 0.04361291 0.04806296 0.2186737
 
 Residuals:
      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
--0.105106 -0.024277 -0.002881 -0.000097  0.019620  0.179820 
+-1.05e-01 -2.43e-02 -2.88e-03 -9.65e-05  1.96e-02  1.80e-01 
 
 Coefficients:
               Estimate Std. Error z-value  Pr(>|z|)    
@@ -269,4 +269,4 @@ Chisq: 14790.8 on 6 DF, p-value: < 2.22e-16
 > 
 > proc.time()
    user  system elapsed 
-   1.23    0.26    1.39 
+   1.89    0.21    2.14 

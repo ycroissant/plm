@@ -1,7 +1,7 @@
 
-R version 4.2.0 (2022-04-22 ucrt) -- "Vigorous Calisthenics"
-Copyright (C) 2022 The R Foundation for Statistical Computing
-Platform: x86_64-w64-mingw32/x64 (64-bit)
+R version 4.5.1 (2025-06-13 ucrt) -- "Great Square Root"
+Copyright (C) 2025 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -1021,8 +1021,8 @@ theta:
  0.5639  0.8198  0.8198  0.8196  0.8198  0.8198 
 
 Residuals:
-    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
--1.96701 -0.11847  0.00915 -0.00001  0.11963  2.09363 
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-1.97e+00 -1.18e-01  9.15e-03 -9.80e-06  1.20e-01  2.09e+00 
 
 Coefficients:
                Estimate  Std. Error  z-value  Pr(>|z|)    
@@ -1065,8 +1065,8 @@ theta:
  0.5639  0.8198  0.8198  0.8196  0.8198  0.8198 
 
 Residuals:
-    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
--12.8856  -0.7915   0.0470  -0.0004   0.7861  13.7637 
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-1.29e+01 -7.91e-01  4.70e-02 -3.52e-04  7.86e-01  1.38e+01 
 
 Coefficients:
                Estimate  Std. Error  z-value  Pr(>|z|)    
@@ -1109,8 +1109,8 @@ theta:
  0.5639  0.8198  0.8198  0.8196  0.8198  0.8198 
 
 Residuals:
-    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
--12.8863  -0.7867   0.0495  -0.0001   0.7861  13.7627 
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-12.88629  -0.78669   0.04950  -0.00012   0.78612  13.76269 
 
 Coefficients:
                Estimate  Std. Error  z-value  Pr(>|z|)    
@@ -1155,8 +1155,8 @@ theta:
  0.5639  0.8198  0.8198  0.8196  0.8198  0.8198 
 
 Residuals:
-    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
--12.8867  -0.7873   0.0498  -0.0001   0.7873  13.7632 
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-1.29e+01 -7.87e-01  4.98e-02 -1.21e-04  7.87e-01  1.38e+01 
 
 Coefficients:
                Estimate  Std. Error  z-value  Pr(>|z|)    
@@ -1562,4 +1562,4 @@ Chisq: 1474.18 on 5 DF, p-value: < 2.22e-16
 > 
 > proc.time()
    user  system elapsed 
-   6.95    0.81    7.71 
+   6.92    0.39    7.46 

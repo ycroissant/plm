@@ -1,7 +1,7 @@
 
-R version 4.2.0 (2022-04-22 ucrt) -- "Vigorous Calisthenics"
-Copyright (C) 2022 The R Foundation for Statistical Computing
-Platform: x86_64-w64-mingw32/x64 (64-bit)
+R version 4.5.1 (2025-06-13 ucrt) -- "Great Square Root"
+Copyright (C) 2025 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -173,7 +173,7 @@ Balanced Panel: n = 48, T = 17, N = 816
 
 Residuals:
       Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
--0.2322110 -0.0611463 -0.0003261 -0.0002164  0.0510696  0.3512185 
+-0.2322110 -0.0611463 -0.0003261 -0.0002164  0.0510697  0.3512185 
 
 Coefficients:
                Estimate  Std. Error z-value  Pr(>|z|)    
@@ -288,7 +288,7 @@ Unbalanced Panel: n = 48, T = 8-17, N = 802
 
 Residuals:
       Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
--0.0848646 -0.0101020  0.0023654  0.0006766  0.0134952  0.1013484 
+-0.0848646 -0.0101020  0.0023655  0.0006766  0.0134952  0.1013483 
 
 Coefficients:
                Estimate  Std. Error  z-value Pr(>|z|)    
@@ -386,4 +386,4 @@ Multiple R-squared: 0.99245
 > 
 > proc.time()
    user  system elapsed 
-   2.12    0.29    2.37 
+   1.64    0.29    1.87 

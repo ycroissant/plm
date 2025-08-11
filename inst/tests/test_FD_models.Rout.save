@@ -1,6 +1,6 @@
 
-R version 4.4.2 (2024-10-31 ucrt) -- "Pile of Leaves"
-Copyright (C) 2024 The R Foundation for Statistical Computing
+R version 4.5.1 (2025-06-13 ucrt) -- "Great Square Root"
+Copyright (C) 2025 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -189,7 +189,7 @@ Unbalanced Panel: n = 48, T = 8-17, N = 802
 
 Residuals:
       Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
--0.0848646 -0.0101020  0.0023654  0.0006766  0.0134952  0.1013484 
+-0.0848646 -0.0101020  0.0023655  0.0006766  0.0134952  0.1013483 
 
 Coefficients:
                Estimate  Std. Error  z-value Pr(>|z|)    
@@ -368,4 +368,4 @@ attr(,"cluster")
 > 
 > proc.time()
    user  system elapsed 
-   1.60    0.28    1.82 
+   1.81    0.21    2.04 

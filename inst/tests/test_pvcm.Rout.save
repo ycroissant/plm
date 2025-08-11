@@ -1,6 +1,6 @@
 
-R version 4.4.1 (2024-06-14 ucrt) -- "Race for Your Life"
-Copyright (C) 2024 The R Foundation for Statistical Computing
+R version 4.5.1 (2025-06-13 ucrt) -- "Great Square Root"
+Copyright (C) 2025 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -923,7 +923,7 @@ Balanced Panel: n = 48, T = 17, N = 816
 
 Residuals:
     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
--0.27874 -0.03826  0.03301  0.03531  0.08882  0.71105 
+-0.27874 -0.03826  0.03301  0.03531  0.08881  0.71105 
 
 Estimated mean of the coefficients:
               Estimate Std. Error z-value  Pr(>|z|)    
@@ -1398,4 +1398,4 @@ Test for parameter homogeneity: Chisq = 696.429 on 147 DF, p-value: < 2.22e-16
 > 
 > proc.time()
    user  system elapsed 
-   2.21    0.34    2.54 
+   2.21    0.26    2.46 

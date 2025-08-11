@@ -1,7 +1,7 @@
 
-R version 4.3.1 (2023-06-16 ucrt) -- "Beagle Scouts"
-Copyright (C) 2023 The R Foundation for Statistical Computing
-Platform: x86_64-w64-mingw32/x64 (64-bit)
+R version 4.5.1 (2025-06-13 ucrt) -- "Great Square Root"
+Copyright (C) 2025 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -525,8 +525,8 @@ theta:
  0.8602  0.8637  0.8637  0.8634  0.8637  0.8637 
 
 Residuals:
-    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
--177.211  -19.802    4.641   -0.017   19.687  252.771 
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-177.2108  -19.8017    4.6407   -0.0174   19.6871  252.7706 
 
 Coefficients:
               Estimate Std. Error z-value Pr(>|z|)    
@@ -560,8 +560,8 @@ theta:
  0.8577  0.8612  0.8612  0.8609  0.8612  0.8612 
 
 Residuals:
-    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
--177.611  -19.815    4.769   -0.018   19.686  252.876 
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-177.6107  -19.8151    4.7691   -0.0177   19.6864  252.8758 
 
 Coefficients:
               Estimate Std. Error z-value Pr(>|z|)    
@@ -595,8 +595,8 @@ theta:
  0.8564  0.8599  0.8599  0.8596  0.8599  0.8599 
 
 Residuals:
-    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
--177.811  -19.945    4.834   -0.018   19.678  252.929 
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-177.8113  -19.9447    4.8335   -0.0179   19.6785  252.9295 
 
 Coefficients:
               Estimate Std. Error z-value Pr(>|z|)    
@@ -831,8 +831,8 @@ theta:
  0.1028  0.1124  0.1124  0.1119  0.1124  0.1124 
 
 Residuals:
-   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
--291.08  -28.31    5.81    0.00   34.04  370.70 
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-291.0767  -28.3089    5.8054    0.0009   34.0360  370.6970 
 
 Coefficients:
                Estimate  Std. Error z-value  Pr(>|z|)    
@@ -1136,8 +1136,8 @@ time  0.0000000 0.000000 0.000000 0.0000000 0.000000 0.000000
 total 0.0000000 0.000000 0.000000 0.0000000 0.000000 0.000000
 
 Residuals:
-   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
--329.39  -41.02   10.57   -0.25   46.73  329.43 
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+-329.388  -41.024   10.570   -0.252   46.732  329.430 
 
 Coefficients:
                Estimate  Std. Error z-value  Pr(>|z|)    
@@ -1174,8 +1174,8 @@ time  0.3094100 0.3286443 0.3286443 0.3277744 0.3286443 0.3286443
 total 0.3082868 0.3273981 0.3273981 0.3265245 0.3273981 0.3273981
 
 Residuals:
-   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
--344.32  -44.34   14.98   -0.19   51.14  324.13 
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+-344.317  -44.340   14.979   -0.188   51.144  324.126 
 
 Coefficients:
                Estimate  Std. Error z-value  Pr(>|z|)    
@@ -1212,8 +1212,8 @@ time  0.0000000 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000
 total 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000
 
 Residuals:
-   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
--329.50  -41.03   10.61   -0.25   46.75  329.39 
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+-329.495  -41.034   10.611   -0.253   46.749  329.391 
 
 Coefficients:
                Estimate  Std. Error z-value  Pr(>|z|)    
@@ -1250,8 +1250,8 @@ time  0.4491128 0.4692672 0.4692672 0.4683557 0.4692672 0.4692672
 total 0.4474297 0.4674017 0.4674017 0.4664846 0.4674017 0.4674017
 
 Residuals:
-   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
--352.09  -44.32   15.52   -0.16   51.19  321.29 
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+-352.087  -44.318   15.522   -0.159   51.190  321.291 
 
 Coefficients:
                Estimate  Std. Error z-value  Pr(>|z|)    
@@ -1628,4 +1628,4 @@ Adj. R-Squared: 5.5511e-16
 > 
 > proc.time()
    user  system elapsed 
-   3.00    0.46    3.45 
+   3.50    0.26    3.79 

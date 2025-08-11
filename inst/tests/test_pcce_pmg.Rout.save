@@ -1,6 +1,6 @@
 
-R version 4.4.2 (2024-10-31 ucrt) -- "Pile of Leaves"
-Copyright (C) 2024 The R Foundation for Statistical Computing
+R version 4.5.1 (2025-06-13 ucrt) -- "Great Square Root"
+Copyright (C) 2025 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -8332,10 +8332,10 @@ WYOMING-1986        -1.248207e-03 -1.020804e-01 -2.996379e-02  0.5683338321
 > # vcovXX
 > vcovHC(pccemgmod)
               log(pcap)       log(pc)      log(emp)         unemp
-log(pcap)  1.438205e-15 -4.697937e-17  6.920185e-16  4.397136e-18
-log(pc)   -4.701335e-17  1.584901e-18 -2.274348e-17 -1.446445e-19
-log(emp)   6.919188e-16 -2.274286e-17  3.338970e-16  2.123785e-18
-unemp      4.395993e-18 -1.447705e-19  2.123371e-18  1.351029e-20
+log(pcap)  1.438258e-15 -4.700850e-17  6.920249e-16  4.396713e-18
+log(pc)   -4.702224e-17  1.586535e-18 -2.283914e-17 -1.453564e-19
+log(emp)   6.920718e-16 -2.282172e-17  3.339717e-16  2.125331e-18
+unemp      4.397364e-18 -1.455958e-19  2.124911e-18  1.354335e-20
 attr(,"cluster")
 [1] "group"
 > vcovHC(pccepmod)
@@ -8348,11 +8348,11 @@ attr(,"cluster")
 [1] "group"
 > 
 > vcovHC(pccemgmod_unbal)
-             log(pcap)      log(pc)     log(emp)         unemp
-log(pcap) 1.022578e-18 1.675301e-19 3.258246e-19  2.501125e-21
-log(pc)   1.701106e-19 3.376572e-20 6.893985e-20  8.002402e-23
-log(emp)  2.859291e-19 6.811090e-20 1.623706e-19  9.226476e-22
-unemp     2.108684e-21 5.342066e-22 6.085322e-22 -1.254200e-24
+             log(pcap)       log(pc)     log(emp)        unemp
+log(pcap) 1.028349e-18  1.682690e-19 3.341535e-19 2.262065e-21
+log(pc)   1.797616e-19  3.492621e-20 4.385596e-20 9.819877e-24
+log(emp)  3.199950e-19  5.515934e-20 1.222387e-19 1.457045e-21
+unemp     2.106278e-21 -5.092025e-22 1.672822e-21 8.440605e-24
 attr(,"cluster")
 [1] "group"
 > vcovHC(pccepmod_unbal)
@@ -9103,7 +9103,7 @@ SOUTH_CAROLINA-1985 SOUTH_CAROLINA-1986   SOUTH_DAKOTA-1970   SOUTH_DAKOTA-1971
        FLORIDA-1971        FLORIDA-1972        FLORIDA-1973        FLORIDA-1974 
       -13.605052728       -13.665927442       -13.717525245       -13.785845863 
        FLORIDA-1975        FLORIDA-1976        FLORIDA-1977        FLORIDA-1978 
-      -13.842987666       -13.883611688       -13.943506704       -13.998946916 
+      -13.842987665       -13.883611688       -13.943506704       -13.998946916 
        FLORIDA-1979        FLORIDA-1980        FLORIDA-1981        FLORIDA-1982 
       -14.045169274       -14.094468030       -14.131969943       -14.178461787 
        FLORIDA-1983        FLORIDA-1984        FLORIDA-1985        FLORIDA-1986 
@@ -17118,4 +17118,4 @@ Multiple R-squared: 0.99982
 > 
 > proc.time()
    user  system elapsed 
-   2.43    0.37    2.81 
+   2.84    0.42    3.28 

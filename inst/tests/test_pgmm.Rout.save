@@ -1,6 +1,6 @@
 
-R version 4.4.2 (2024-10-31 ucrt) -- "Pile of Leaves"
-Copyright (C) 2024 The R Foundation for Statistical Computing
+R version 4.5.1 (2025-06-13 ucrt) -- "Great Square Root"
+Copyright (C) 2025 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -489,7 +489,7 @@ Unbalanced Panel: n = 140, T = 7-9, N = 1031
 Number of Observations Used: 1362
 Residuals:
      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
--1.607481 -0.026549  0.000000  0.001298  0.032377  1.235349 
+-1.607480 -0.026549  0.000000  0.001298  0.032377  1.235349 
 
 Coefficients:
                         Estimate Std. Error z-value  Pr(>|z|)    
@@ -689,7 +689,7 @@ Balanced Panel: n = 46, T = 30, N = 1380
 Number of Observations Used: 1288
 Residuals:
       Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
--0.3233858 -0.0267407 -0.0008852  0.0018121  0.0285814  0.3085815 
+-0.3233858 -0.0267407 -0.0008852  0.0018121  0.0285815  0.3085815 
 
 Coefficients:
                   Estimate Std. Error z-value  Pr(>|z|)    
@@ -809,7 +809,7 @@ Balanced Panel: n = 46, T = 30, N = 1380
 Number of Observations Used: 1288
 Residuals:
       Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
--0.2923112 -0.0238082 -0.0004016 -0.0001540  0.0218978  0.2798715 
+-0.2923112 -0.0238082 -0.0004017 -0.0001540  0.0218978  0.2798715 
 
 Coefficients:
                    Estimate Std. Error z-value  Pr(>|z|)    
@@ -1068,4 +1068,4 @@ lag(log(real_c))      log(real_p)  log(real_pimin)    log(real_ndi)
 > 
 > proc.time()
    user  system elapsed 
-  21.07    2.06   23.07 
+  20.51    1.89   22.50 

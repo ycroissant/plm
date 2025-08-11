@@ -1,7 +1,7 @@
 
-R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
-Copyright (C) 2020 The R Foundation for Statistical Computing
-Platform: x86_64-w64-mingw32/x64 (64-bit)
+R version 4.5.1 (2025-06-13 ucrt) -- "Great Square Root"
+Copyright (C) 2025 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -160,8 +160,8 @@ theta:
  0.8775  0.8795  0.8795  0.8795  0.8795  0.8795 
 
 Residuals:
-   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
--79.865  -8.851   0.526   0.000   8.733 135.499 
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-79.86537  -8.85111   0.52604  -0.00005   8.73308 135.49936 
 
 Coefficients:
                Estimate  Std. Error z-value  Pr(>|z|)    
@@ -194,8 +194,8 @@ theta:
  0.4900  0.4942  0.4942  0.4940  0.4942  0.4942 
 
 Residuals:
-   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
--65.024 -15.652  -3.569   0.003   8.662 170.409 
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-65.02424 -15.65241  -3.56887   0.00327   8.66215 170.40886 
 
 Coefficients:
                Estimate  Std. Error z-value  Pr(>|z|)    
@@ -345,8 +345,8 @@ time  0.4426693 0.4468900 0.4468900 0.4467522 0.4468900 0.4468900
 total 0.4417103 0.4459100 0.4459100 0.4457719 0.4459100 0.4459100
 
 Residuals:
-   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
--70.856 -15.317  -3.646  -0.008   8.711 164.621 
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-70.85552 -15.31732  -3.64580  -0.00815   8.71122 164.62110 
 
 Coefficients:
                Estimate  Std. Error   z-value Pr(>|z|)    
@@ -411,4 +411,4 @@ Chisq: 41645.3 on 2 DF, p-value: < 2.22e-16
 > 
 > proc.time()
    user  system elapsed 
-   2.39    0.21    2.56 
+   1.89    0.18    2.03 
