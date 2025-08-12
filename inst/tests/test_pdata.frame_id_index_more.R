@@ -61,7 +61,7 @@ head(Hedonic3)
   data("Grunfeld", package = "plm")
   Grunfeld_dup <- rbind(Grunfeld, Grunfeld[200, ])
   ttC <-  tryCatch(pdata.frame(Grunfeld_dup), error=function(e) e, warning=function(w) w)
-  if(!is(ttC,"warning") | ttC$message != "duplicate couples (id-time) in resulting pdata.frame\n to find out which, use, e.g., table(index(your_pdataframe), useNA = \"ifany\")")
+  if(!is(ttC,"warning") || ttC$message != "duplicate couples (id-time) in resulting pdata.frame\n to find out which, use, e.g., table(index(your_pdataframe), useNA = \"ifany\")")
     stop("warning of duplicated couples not successful")
 
 
@@ -97,7 +97,7 @@ pdim(Wag)
 
 # test for warning about time index
 ttC2 <-  tryCatch(pdata.frame(Wages, index=c(595, 3)), error=function(e) e, warning = function(w) w)
-if(!is(ttC2,"warning") | ttC2$message != "The time index (second element of 'index' argument) will be ignored\n") stop("warning about unused time index not sent")
+if(!is(ttC2,"warning") || ttC2$message != "The time index (second element of 'index' argument) will be ignored\n") stop("warning about unused time index not sent")
 
 # test of index() when individual index is called "group" (fixed in revision 904)
 data("Produc", package = "plm")
@@ -135,7 +135,7 @@ Grun.nam.error <- replace(names(Grunfeld), names(Grunfeld) == "firm", "fi^rm")
 
 ## errors rightfully as check.names = TRUE changed the invalid name:
 pdat.error <-  tryCatch(pdata.frame(Grun.2.error, index = c("fi^rm", "year"), check.names = TRUE), error=function(e) e, warning = function(w) w)
-if(!is(pdat.error,"error") | pdat.error$message != "variable 'fi^rm' does not exist (individual index)") stop("error not thrown")
+if(!is(pdat.error,"error") || pdat.error$message != "variable 'fi^rm' does not exist (individual index)") stop("error not thrown")
 
 # no error:
 Grun.nam.p <- pdata.frame(Grun.2.noerror, index = c("fi^rm", "year"), check.names = FALSE)
