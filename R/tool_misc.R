@@ -557,16 +557,16 @@ pvar.default <- function(x, id, time, ...){
     else{
       # time variation
       temp_time.var          <- sapply(lid, function(x) sapply(x, myvar))
-      temp_time.var_sumNoVar <- apply(temp_time.var == 0, 1, sum, na.rm = TRUE)
-      temp_time.var_sumNA    <- apply(is.na(temp_time.var), 1, sum)
+      temp_time.var_sumNoVar <- rowSums(temp_time.var==0, na.rm = TRUE)
+      temp_time.var_sumNA    <- rowSums(is.na(temp_time.var))
       temp_time.varResult    <- temp_time.var_sumNoVar + temp_time.var_sumNA
       time.variation         <- temp_time.varResult != length(lid)
       time.variation_anyNA   <- temp_time.var_sumNA > 0
       
       # id variation
       temp_id.var          <- sapply(ltime, function(x) sapply(x, myvar))
-      temp_id.var_sumNoVar <- apply(temp_id.var == 0, 1, sum, na.rm = TRUE)
-      temp_id.var_sumNA    <- apply(is.na(temp_id.var), 1, sum)
+      temp_id.var_sumNoVar <- rowSums(temp_id.var==0, na.rm = TRUE)
+      temp_id.var_sumNA    <- rowSums(is.na(temp_id.var))
       temp_id.varResult    <- temp_id.var_sumNoVar + temp_id.var_sumNA
       id.variation         <- temp_id.varResult != length(ltime)
       id.variation_anyNA   <- temp_id.var_sumNA > 0
