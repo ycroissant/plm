@@ -108,7 +108,7 @@ lev2var <- function(x, ...){
     x <- x[is.fact]
     wl <- lapply(x,levels)
     # nl is the number of levels for each factor
-    nl <- sapply(wl,length)
+    nl <- lengths(wl)
     # nf is a vector of length equal to the total number of levels
     # containing the name of the factor
     nf <- rep(names(nl),nl)

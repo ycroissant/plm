@@ -767,7 +767,7 @@ makegmm <- function(x, g, TL1, collapse = FALSE){
     result <- m
    }
    else {
-     lx <- vapply(x, length, FUN.VALUE = 0.0)
+     lx <- lengths(x)
      n <- length(x)
      lxc <- cumsum(lx)
      before <- c(0, lxc[-n])

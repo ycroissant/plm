@@ -188,7 +188,7 @@ summary.plm.list <- function(object, ...){
   formulas <- eval(object$call$formula)
   eqnames <- names(formulas)
   L <- length(object$coefnames)
-  Ks <- c(0, cumsum(sapply(object$coefnames, length)))
+  Ks <- c(0, cumsum(lengths(object$coefnames)))
   models <- vector(mode = "list", length = L)
   if (is.null(object$vcov)){
     coefTable <- coef(summary(object))
