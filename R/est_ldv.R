@@ -242,7 +242,7 @@ pldv <- function(formula, data, subset, weights, na.action,
         args <- list(param = "start",
                      y = "y", X = "X", id = "id", model = "model",
                      rn = "rn", lower = lower, upper = upper)
-        thefunc <- paste("function(start) lnl.tobit", "(", argschar(args), ")", sep = "")
+        thefunc <- paste0("function(start) lnl.tobit", "(", argschar(args), ")")
         maxl$logLik <- eval(parse(text = thefunc))
         maxl$start <- start
         result <- eval(maxl, parent.frame())

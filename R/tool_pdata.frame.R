@@ -332,7 +332,7 @@ pdata.frame <- function(x, index = NULL, drop.index = FALSE, row.names = TRUE,
     }
     else{
         # id.name is not numeric, i.e., individual index is supplied
-        if (!id.name %in% names(x)) stop(paste("variable '", id.name, "' does not exist (individual index)", sep=""))
+        if (!id.name %in% names(x)) stop(paste0("variable '", id.name, "' does not exist (individual index)"))
         if (is.factor(x[[id.name]])){
             id <- x[[id.name]] <- x[[id.name]][drop = TRUE] # drops unused levels of factor
         }
@@ -1097,15 +1097,15 @@ pdim.panelmodel <- function(x, ...) {
 print.pdim <- function(x, ...) {
   if (x$balanced){
       cat("Balanced Panel: ")
-      cat(paste("n = ", x$nT$n, ", ", sep=""))
-      cat(paste("T = ", x$nT$T, ", ", sep=""))
-      cat(paste("N = ", x$nT$N, "\n", sep=""))
+      cat(paste0("n = ", x$nT$n, ", "))
+      cat(paste0("T = ", x$nT$T, ", "))
+      cat(paste0("N = ", x$nT$N, "\n"))
   }
   else{
       cat("Unbalanced Panel: ")
-      cat(paste("n = ", x$nT$n,", ", sep=""))
-      cat(paste("T = ", min(x$Tint$Ti), "-", max(x$Tint$Ti), ", ", sep=""))
-      cat(paste("N = ", x$nT$N, "\n", sep=""))
+      cat(paste0("n = ", x$nT$n, ", "))
+      cat(paste0("T = ", min(x$Tint$Ti), "-", max(x$Tint$Ti), ", "))
+      cat(paste0("N = ", x$nT$N, "\n"))
   }
   invisible(pdim)
 }

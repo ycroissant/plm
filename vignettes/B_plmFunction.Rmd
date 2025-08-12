@@ -38,7 +38,7 @@ extract.plm <- function(model, include.rsquared = TRUE, include.adjrs = TRUE,
       if (model$args$model == "random"){
           se <- sqrt(ercomp(model)$sigma)
           gof <- c(gof, se)
-          gof.names <- c(gof.names, paste("s_", names(se), sep = ""))
+          gof.names <- c(gof.names, paste0("s_", names(se)))
           gof.decimal <- c(gof.decimal, rep(TRUE, length(se)))
       }
   }  

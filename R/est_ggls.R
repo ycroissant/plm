@@ -294,8 +294,8 @@ summary.pggls <- function(object,...){
 print.summary.pggls <- function(x, digits = max(3, getOption("digits") - 2), width = getOption("width"), ...){
   pmodel <- attr(x, "pmodel")
   pdim   <- attr(x, "pdim")
-  cat(paste(effect.pggls.list[pmodel$effect.name], " ",  sep = ""))
-  cat(paste(model.pggls.list[ pmodel$model.name],  "\n", sep = ""))
+  cat(paste0(effect.pggls.list[pmodel$effect.name], " "))
+  cat(paste0(model.pggls.list[ pmodel$model.name],  "\n"))
   cat("\nCall:\n")
   print(x$call)
   cat("\n")
@@ -304,9 +304,9 @@ print.summary.pggls <- function(x, digits = max(3, getOption("digits") - 2), wid
   print(sumres(x))
   cat("\nCoefficients:\n")
   printCoefmat(x$CoefTable, digits = digits)
-  cat(paste("Total Sum of Squares: ",    signif(x$tss,  digits), "\n", sep=""))
-  cat(paste("Residual Sum of Squares: ", signif(x$ssr,  digits), "\n", sep=""))
-  cat(paste("Multiple R-squared: ",      signif(x$rsqr, digits), "\n", sep=""))
+  cat(paste0("Total Sum of Squares: ",    signif(x$tss,  digits), "\n"))
+  cat(paste0("Residual Sum of Squares: ", signif(x$ssr,  digits), "\n"))
+  cat(paste0("Multiple R-squared: ",      signif(x$rsqr, digits), "\n"))
   invisible(x)
 }
 

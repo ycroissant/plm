@@ -457,8 +457,8 @@ print.summary.pvcm <- function(x, digits = max(3, getOption("digits") - 2),
     effect <- describe(x, "effect")
     formula <- formula(x)
     model <- describe(x, "model")
-    cat(paste(effect.pvcm.list[effect], " ", sep = ""))
-    cat(paste(model.pvcm.list[model], "\n", sep = ""))
+    cat(paste0(effect.pvcm.list[effect], " "))
+    cat(paste0(model.pvcm.list[model], "\n"))
     cat("\nCall:\n")
     print(x$call)
     cat("\n")
@@ -486,9 +486,9 @@ print.summary.pvcm <- function(x, digits = max(3, getOption("digits") - 2),
     }
     if(model == "random") {
       cat("Test for parameter homogeneity: ")
-      cat(paste("Chisq = ", signif(x$chisq.test$statistic),
-                " on ", x$chisq.test$parameter,
-                " DF, p-value: ", format.pval(x$chisq.test$p.value, digits = digits), "\n", sep=""))
+      cat(paste0("Chisq = ", signif(x$chisq.test$statistic),
+                 " on ", x$chisq.test$parameter,
+                 " DF, p-value: ", format.pval(x$chisq.test$p.value, digits = digits), "\n"))
     }
     invisible(x)
   }

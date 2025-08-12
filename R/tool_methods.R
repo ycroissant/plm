@@ -356,13 +356,12 @@ print.summary.plm <- function(x, digits = max(3, getOption("digits") - 2),
   has.instruments <- (length(formula)[2L] >= 2L)
   effect <- describe(x, "effect")
   model  <- describe(x, "model")
-  if (model != "pooling") { cat(paste(effect.plm.list[effect], " ", sep = "")) }
-  cat(paste(model.plm.list[model], " Model", sep = ""))
+  if (model != "pooling") { cat(paste0(effect.plm.list[effect], " ")) }
+  cat(paste0(model.plm.list[model], " Model"))
   
   if (model == "random"){
     ercomp <- describe(x, "random.method")
-    cat(paste(" \n   (", random.method.list[ercomp], "'s transformation)\n",
-              sep = ""))
+    cat(paste0(" \n   (", random.method.list[ercomp], "'s transformation)\n"))
   }
   else{
     cat("\n")
@@ -419,24 +418,24 @@ print.summary.plm <- function(x, digits = max(3, getOption("digits") - 2),
   if (is.null(subset)) printCoefmat(coef(x), digits = digits)
   else printCoefmat(coef(x)[subset, , drop = FALSE], digits = digits)
   cat("\n")
-  cat(paste("Total Sum of Squares:    ", signif(tss(x),      digits), "\n", sep = ""))
-  cat(paste("Residual Sum of Squares: ", signif(deviance(x), digits), "\n", sep = ""))
-  cat(paste("R-Squared:      ", signif(x$r.squared[1L], digits),      "\n", sep = ""))
-  cat(paste("Adj. R-Squared: ", signif(x$r.squared[2L], digits),      "\n", sep = ""))
+  cat(paste0("Total Sum of Squares:    ", signif(tss(x),      digits), "\n"))
+  cat(paste0("Residual Sum of Squares: ", signif(deviance(x), digits), "\n"))
+  cat(paste0("R-Squared:      ", signif(x$r.squared[1L], digits),      "\n"))
+  cat(paste0("Adj. R-Squared: ", signif(x$r.squared[2L], digits),      "\n"))
 
   # print Wald test of joint sign. of regressors only if there is a statistic
   # in summary.plm object (not computed by summary.plm if there are no other
   # regressors than the intercept
   if(!is.null(fstat <- x$fstatistic)) {
     if (names(fstat$statistic) == "F"){
-      cat(paste("F-statistic: ", signif(fstat$statistic),
+      cat(paste0("F-statistic: ", signif(fstat$statistic),
                 " on ", fstat$parameter["df1"]," and ", fstat$parameter["df2"],
-                " DF, p-value: ", format.pval(fstat$p.value,digits=digits), "\n", sep=""))
+                " DF, p-value: ", format.pval(fstat$p.value,digits=digits), "\n"))
     }
     else{
-      cat(paste("Chisq: ", signif(fstat$statistic),
+      cat(paste0("Chisq: ", signif(fstat$statistic),
                 " on ", fstat$parameter,
-                " DF, p-value: ", format.pval(fstat$p.value, digits = digits), "\n", sep=""))
+                " DF, p-value: ", format.pval(fstat$p.value, digits = digits), "\n"))
     }
   }
   invisible(x)

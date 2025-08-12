@@ -686,7 +686,7 @@ print.ercomp <- function(x, digits = max(3, getOption("digits") - 3), ...){
     if (! is.null(x$theta)){
         if (effect %in% c("individual", "time")){
             if (balanced){
-                cat(paste("theta: ", signif(x$theta,digits), "\n", sep = ""))
+                cat(paste0("theta: ", signif(x$theta,digits), "\n"))
             }
             else{
                 cat("theta:\n")
@@ -695,9 +695,9 @@ print.ercomp <- function(x, digits = max(3, getOption("digits") - 3), ...){
         }
         if (effect == "twoways"){
             if(balanced){
-                cat(paste("theta: ", signif(x$theta$id,digits), " (id) ",
+                cat(paste0("theta: ", signif(x$theta$id,digits), " (id) ",
                                      signif(x$theta$time,digits), " (time) ",
-                                     signif(x$theta$total,digits), " (total)\n", sep = ""))
+                                     signif(x$theta$total,digits), " (total)\n"))
             } else {
               cat("theta:\n")
               print(rbind(id = summary(x$theta$id),
@@ -724,7 +724,7 @@ amemiya_check <- function(matA, matB, method) {
     offending_vars <- if (length(offending_vars) > 3L) {
       paste0(paste(offending_vars[1:3], collapse = ", "), ", ...") 
       } else { 
-        paste(offending_vars, collapse = ", ")
+        paste0(offending_vars, collapse = ", ")
       }
     stop(paste0("'amemiya' model not estimable due to variable(s) lacking within variation: ", offending_vars))
   } else NULL

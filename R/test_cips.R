@@ -88,7 +88,7 @@ cipstest <- function (x, lags = 2L, type = c("trend", "drift", "none"),
   if(lags > 1L) {
       for(i in 2:lags) {
           dati <- pmerge(dati, diff(lag(x, i)))
-          clnames <- c(clnames, paste("d", i, "e", sep = ""))
+          clnames <- c(clnames, paste0("d", i, "e"))
       }
   }
 
@@ -100,9 +100,9 @@ cipstest <- function (x, lags = 2L, type = c("trend", "drift", "none"),
                           "none"  = {"-1"})
 
   ## make formula
-  adffm <- as.formula(paste("de~le+",
+  adffm <- as.formula(paste0("de~le+",
                             paste(clnames[3:(lags+2)], collapse = "+"),
-                            deterministic, sep = ""))
+                            deterministic))
 
   ## estimate preliminary pooling plm, to take care of all diffs
   ## and lags in a 'panel' way (would be lost in single TS regr.s)
@@ -202,11 +202,11 @@ cipstest <- function (x, lags = 2L, type = c("trend", "drift", "none"),
                                "drift" = {""},
                                "none"  = {"-1"})
       ## adjust formula
-      adffm <- as.formula(paste("de~le+",
-                           paste(clnames[3:(lags+2)], collapse = "+"),
+      adffm <- as.formula(paste0("de~le+",
+                           paste0(clnames[3:(lags+2)], collapse = "+"),
                            "+", paste(paste(clnames, "bar", sep = "."),
                            collapse = "+"),
-                          deterministic2, sep = ""))
+                          deterministic2))
 
       ## between-periods transformation (take means over groups for each t)
       Xm <- Between(X, effect = tind, na.rm = TRUE)

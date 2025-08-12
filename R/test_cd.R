@@ -399,9 +399,9 @@ pcdres <- function(tres, n, w, form, test) {
     number.of.non.one.intersecting.pairs <- sum(no.one.intersect, na.rm = TRUE)
     number.of.total.pairs <- (n*(n-1))/2
     share.on.one.intersect.pairs <- number.of.non.one.intersecting.pairs / number.of.total.pairs * 100
-    warning(paste("Some pairs of individuals (",
+    warning(paste0("Some pairs of individuals (",
                   signif(share.on.one.intersect.pairs, digits = 2),
-                  " percent) do not have any or just one time period in common and have been omitted from calculation", sep=""))
+                  " percent) do not have any or just one time period in common and have been omitted from calculation"))
     selector.mat[no.one.intersect] <- FALSE
   }
 
@@ -574,7 +574,7 @@ cortab <- function(x, grouping, groupnames = NULL,
         ## eliminate self.correlation of states if i=j
         diag(statew) <- 0
         ## not needed: pcdtest seems to do this by construction
-        eval(parse(text=paste("w", h, ".", k, " <- statew", sep="")))
+        eval(parse(text=paste0("w", h, ".", k, " <- statew")))
       }
      }
 
@@ -592,7 +592,7 @@ cortab <- function(x, grouping, groupnames = NULL,
          for(i in seq_along(regs)) {
              for(j in seq_len(i)) {
                  ## take appropriate w matrix
-                 eval(parse(text = paste("myw<-w", i, ".", j, sep = "")))
+                 eval(parse(text = paste0("myw<-w", i, ".", j)))
                  tabg[i, j] <- pcdtest(x, test = "rho", w = myw)[[value]]
              }
          }

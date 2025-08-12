@@ -389,7 +389,7 @@ pwartest.panelmodel <- function(x, ...) {
   ## calc. theoretical rho under H0: no serial corr. in errors
   t. <- pdim(x)$nT$T
   rho.H0 <- -1/(t.-1)
-  myH0 <- paste("FEres.1 = ", as.character(rho.H0), sep="")
+  myH0 <- paste0("FEres.1 = ", as.character(rho.H0))
   
   ## test H0: rho=rho.H0 with HAC
   myvcov <- function(x) vcovHC(x, method = "arellano", ...) # more params may be passed via ellipsis
@@ -1095,7 +1095,7 @@ pbltest.formula <- function(x, data, alternative = c("twosided", "onesided"), in
 
  ## make random effects formula
   rformula <- NULL
-  eval(parse(text = paste("rformula <- ~1|", gindex, sep = "")))
+  eval(parse(text = paste0("rformula <- ~1|", gindex)))
 
   ## est. MLE model
   mymod <- lme(x, data = data, random = rformula, method = "ML")

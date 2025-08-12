@@ -106,7 +106,7 @@ pcce <- function (formula, data, subset, na.action,
 
   ## record call etc.
   model <- match.arg(model)
-  model.name <- paste("cce", model, sep="")
+  model.name <- paste0("cce", model)
   data.name <- paste(deparse(substitute(data)))
   cl <- match.call()
   plm.model <- match.call(expand.dots = FALSE)
@@ -450,7 +450,7 @@ print.summary.pcce <- function(x, digits = max(3, getOption("digits") - 2), widt
   pmodel <- attr(x, "pmodel")
   pdim   <- attr(x, "pdim")
   cat("Common Correlated Effects ")
-  cat(paste(model.pcce.list[pmodel$model.name], "\n", sep = ""))
+  cat(paste0(model.pcce.list[pmodel$model.name], "\n"))
   if (!is.null(x$rvcov)) {
     cat("\nNote: Coefficient variance-covariance matrix supplied: ", attr(x$rvcov, which = "rvcov.name"), "\n", sep = "")
   }
@@ -462,9 +462,9 @@ print.summary.pcce <- function(x, digits = max(3, getOption("digits") - 2), widt
   print(sumres(x))
   cat("\nCoefficients:\n")
   printCoefmat(x$CoefTable, digits = digits)
-  cat(paste("Total Sum of Squares: ",    signif(x$tss,  digits), "\n", sep=""))
-  cat(paste("Residual Sum of Squares: ", signif(x$ssr,  digits), "\n", sep=""))
-  cat(paste("HPY R-squared: ",           signif(x$rsqr, digits), "\n", sep=""))
+  cat(paste0("Total Sum of Squares: ",    signif(x$tss,  digits), "\n"))
+  cat(paste0("Residual Sum of Squares: ", signif(x$ssr,  digits), "\n"))
+  cat(paste0("HPY R-squared: ",           signif(x$rsqr, digits), "\n"))
   invisible(x)
 }
 

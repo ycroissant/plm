@@ -168,10 +168,10 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                ## construct data set and formula for auxiliary regression
                dimnames(feX)[[2L]] <- paste(dimnames(feX)[[2L]], "tilde", sep=".")
                auxdata <- pdata.frame(cbind(index(data), reY, reX, feX))
-               auxfm <- as.formula(paste("reY~",
+               auxfm <- as.formula(paste0("reY~",
                                          paste(dimnames(reX)[[2L]], collapse="+"),
                                          "+",
-                                         paste(dimnames(feX)[[2L]], collapse="+"), sep=""))
+                                         paste(dimnames(feX)[[2L]], collapse="+")))
                auxmod <- plm(formula = auxfm, data = auxdata, model = "pooling")
                nvars <- dim(feX)[[2L]]
                R <- diag(1, nvars)
@@ -189,16 +189,14 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                names(h2t) <- "chisq"
 
                if(!is.null(vcov)) {
-                   vcov <- paste(", vcov: ",
-                                  paste(deparse(substitute(vcov))),
-                                  sep="")
+                   vcov <- paste0(", vcov: ", paste(deparse(substitute(vcov))))
                }
 
                haus2 <- list(statistic   = h2t,
                              p.value     = ph2t,
                              parameter   = df,
-                             method      = paste("Regression-based Hausman test",
-                                                  vcov, sep=""),
+                             method      = paste0("Regression-based Hausman test",
+                                                  vcov),
                              alternative = "one model is inconsistent",
                              data.name   = paste(deparse(substitute(x))),
                              auxmod      = auxmod)
@@ -472,8 +470,8 @@ plmtest.plm <- function(x,
                             time    = "time effects",
                             twoways = "two-ways effects")
   
-  method <- paste("Lagrange Multiplier Test - ", method.effect,
-                  " (", method.type, ")", sep="")
+  method <- paste0("Lagrange Multiplier Test - ", method.effect,
+                  " (", method.type, ")")
   
   if (type %in% c("honda", "kw")) {
     RVAL <- list(statistic = stat,
@@ -592,7 +590,7 @@ pFtest.plm <- function(x, z, ...){
   alternative <- "significant effects"
   res <- list(statistic   = stat,
               p.value     = pval,
-              method      = paste("F test for ", effect, " effects", sep=""),
+              method      = paste0("F test for ", effect, " effects"),
               parameter   = parameter,
               data.name   = data.name(x),
               alternative = alternative)

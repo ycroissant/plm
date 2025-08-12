@@ -114,7 +114,7 @@ lev2var <- function(x, ...){
     nf <- rep(names(nl),nl)
     result <- unlist(wl)
     names(result) <- nf
-    result <- paste(names(result), result, sep = "")
+    result <- paste0(names(result), result)
     names(nf) <- result
     c(nf, not.fact)
   }
@@ -438,23 +438,23 @@ print.summary.pht <- function(x, digits = max(3, getOption("digits") - 2),
   effect <- describe(x, "effect")
   model <- describe(x, "model")
   ht.method <- describe(x, "ht.method")
-  cat(paste(effect.plm.list[effect]," ", sep = ""))
-  cat(paste(model.plm.list[model]," Model", sep = ""), "\n")
-  cat(paste("(", ht.method.list[ht.method], ")", sep = ""), "\n")
+  cat(paste0(effect.plm.list[effect], " "))
+  cat(paste0(model.plm.list[model]," Model"), "\n")
+  cat(paste0("(", ht.method.list[ht.method], ")"), "\n")
   
   cat("\nCall:\n")
   print(x$call)
   
   #    cat("\nTime-Varying Variables: ")
-  names.xv <- paste(x$varlist$xv, collapse=", ")
-  names.nv <- paste(x$varlist$nv, collapse=", ")
-  names.xc <- paste(x$varlist$xc, collapse=", ")
-  names.nc <- paste(x$varlist$nc, collapse=", ")
-  cat(paste("\nT.V. exo  : ", names.xv,"\n", sep = ""))
-  cat(paste("T.V. endo : ",   names.nv,"\n", sep = ""))
+  names.xv <- paste(x$varlist$xv, collapse = ", ")
+  names.nv <- paste(x$varlist$nv, collapse = ", ")
+  names.xc <- paste(x$varlist$xc, collapse = ", ")
+  names.nc <- paste(x$varlist$nc, collapse = ", ")
+  cat(paste0("\nT.V. exo  : ", names.xv, "\n"))
+  cat(paste0("T.V. endo : ",   names.nv, "\n"))
   #    cat("Time-Invariant Variables: ")
-  cat(paste("T.I. exo  : ", names.xc, "\n", sep= ""))
-  cat(paste("T.I. endo : ", names.nc, "\n", sep= ""))
+  cat(paste0("T.I. exo  : ", names.xc, "\n"))
+  cat(paste0("T.I. endo : ", names.nc, "\n"))
   cat("\n")
   pdim <- pdim(x)
   print(pdim)
@@ -469,19 +469,19 @@ print.summary.pht <- function(x, digits = max(3, getOption("digits") - 2),
   if (is.null(subset)) printCoefmat(coef(x), digits = digits)
   else printCoefmat(coef(x)[subset, , drop = FALSE], digits = digits)
   cat("\n")
-  cat(paste("Total Sum of Squares:    ", signif(tss(x), digits),     "\n", sep = ""))
-  cat(paste("Residual Sum of Squares: ", signif(deviance(x),digits), "\n", sep = ""))
+  cat(paste0("Total Sum of Squares:    ", signif(tss(x), digits),     "\n"))
+  cat(paste0("Residual Sum of Squares: ", signif(deviance(x),digits), "\n"))
   #  cat(paste("Multiple R-Squared:      ",signif(x$rsq,digits),"\n",sep=""))
   fstat <- x$fstatistic
   if (names(fstat$statistic) == "F"){
-    cat(paste("F-statistic: ",signif(fstat$statistic),
+    cat(paste0("F-statistic: ",signif(fstat$statistic),
               " on ",fstat$parameter["df1"]," and ",fstat$parameter["df2"],
-              " DF, p-value: ",format.pval(fstat$p.value,digits=digits),"\n",sep=""))
+              " DF, p-value: ",format.pval(fstat$p.value,digits=digits), "\n"))
   }
   else{
-    cat(paste("Chisq: ", signif(fstat$statistic),
+    cat(paste0("Chisq: ", signif(fstat$statistic),
               " on ", fstat$parameter,
-              " DF, p-value: ", format.pval(fstat$p.value,digits=digits), "\n", sep=""))
+              " DF, p-value: ", format.pval(fstat$p.value,digits=digits), "\n"))
     
   }
   invisible(x)
@@ -539,7 +539,7 @@ write.lags <- function(name, lags, diff){
                 if (diff) chlag <- c(chlag, paste("diff(",name,")")) else chlag <- c(chlag,name)
             }
             else{
-                chlag <- c(chlag, paste(lag.string,"(",name,",",i,")",sep=""))
+                chlag <- c(chlag, paste0(lag.string,"(",name,",",i,")"))
             }
         }
         ret <- paste(chlag, collapse="+")
@@ -605,8 +605,8 @@ formula.dynformula <- function(x, ...){
     has.int <- attr(terms(x), "intercept") == 1
     chexo <- c()
     if (has.resp){
-        if (log.form[1L])  endog <- paste("log(",  endog, ")", sep = "")
-        if (diff.form[1L]) endog <- paste("diff(", endog, ")", sep = "")
+        if (log.form[1L])  endog <- paste0("log(",  endog, ")")
+        if (diff.form[1L]) endog <- paste0("diff(", endog, ")")
         if (  length(lag.form[[1L]]) == 1L && lag.form[[1L]] != 0L) lag.form[[1L]] <- c(1, lag.form[[1L]])
         if (!(length(lag.form[[1L]]) == 1L && lag.form[[1L]] == 0L))
           chexo <- c(chexo, write.lags(endog, lag.form[[1L]], diff.form[1L]))
@@ -614,12 +614,12 @@ formula.dynformula <- function(x, ...){
     for (i in exo){
         lag.formi <- lag.form[[i]]
         diff.formi <- diff.form[i]
-        if (log.form[[i]]) i <- paste("log(",i,")", sep = "")
+        if (log.form[[i]]) i <- paste0("log(",i,")")
         chexo <- c(chexo, write.lags(i, lag.formi, diff.formi))
     }
     chexo <- paste(chexo, collapse = "+")
-    formod <- if(has.resp) { as.formula(paste(endog, "~", chexo, sep = "")) }
-                else { as.formula(paste("~", chexo, sep = "")) }
+    formod <- if(has.resp) { as.formula(paste0(endog, "~", chexo)) }
+                else       { as.formula(paste0(       "~", chexo)) }
     if (!has.int) formod <- update(formod, . ~ . -1)
     formod
 }

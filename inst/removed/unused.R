@@ -78,8 +78,7 @@ plm.data_depr_orig <- function(x, indexes = NULL){
   }
   else{
     if (!id.name %in% names(x))
-      stop(paste("variable '",id.name,"' does not exist ",sep="")
-           )
+      stop(paste0("variable '",id.name,"' does not exist "))
     if (is.factor(x[[id.name]])){
       id <- x[[id.name]] <- x[[id.name]][drop=TRUE]
     }
@@ -99,8 +98,7 @@ plm.data_depr_orig <- function(x, indexes = NULL){
     }
     else{
     if (!time.name %in% names(x))
-      stop(paste("variable '",time.name,"' does not exist",sep="")
-           )
+      stop(paste0("variable '",time.name,"' does not exist"))
       if (is.factor(x[[time.name]])){
         time <- x[[time.name]] <- x[[time.name]][drop=TRUE]
       }
@@ -178,13 +176,13 @@ oppl <- function(x,y,func){
   z <- list()
   if (!is.list(y)){
     for (i in 1:n){
-      t <- paste("\"",func,"\"","(x[[i]],y)",sep="")
+      t <- paste0("\"",func,"\"","(x[[i]],y)")
       z[[i]] <- eval(parse(text=t))
     }
   }
   else{
     for (i in 1:n){
-      t <- paste("\"",func,"\"","(x[[i]],y[[i]])",sep="")
+      t <- paste0("\"",func,"\"","(x[[i]],y[[i]])")
       z[[i]] <- eval(parse(text=t))
     }
   }
@@ -204,10 +202,10 @@ rbindl <- function(x){
 print.form <- function(x, length.line){
   x <- deparse(x,width.cutoff=length.line)
   n <- length(x)
-  cat(paste(x[1],"\n",sep=""))
+  cat(paste0(x[1],"\n"))
   if (n>1){
     for (i in 2:n){
-      cat(paste(x[i],"\n",sep=""))
+      cat(paste0(x[i],"\n"))
     }
   }
 }

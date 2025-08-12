@@ -681,11 +681,11 @@ dynterms2formula <- function(x, response.name = NULL){
     # if there are still some lags, write them
     if (length(theinst) > 0L){
       if (length(theinst) > 1L){
-        at <- c(at, paste("lag(", names(x)[i], ",c(",
-                          paste(theinst, collapse = ","), "))", sep =""))
+        at <- c(at, paste0("lag(", names(x)[i], ",c(",
+                          paste(theinst, collapse = ","), "))"))
       }
       else{
-        at <- c(at, paste("lag(", names(x)[i], ",", theinst, ")", sep =""))
+        at <- c(at, paste0("lag(", names(x)[i], ",", theinst, ")"))
       }
     }
     result <- c(result, at)

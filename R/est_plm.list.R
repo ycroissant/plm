@@ -227,14 +227,13 @@ print.summary.plm.list <- function(x, digits = max(3, getOption("digits") - 2),
                                    width = getOption("width"), ...){
   effect <- describe(x, "effect")
   model <- describe(x, "model")
-  cat(paste(effect.plm.list[effect]," ",sep=""))
-  cat(paste(model.plm.list[model]," Model",sep=""))
+  cat(paste0(effect.plm.list[effect], " "))
+  cat(paste0(model.plm.list[model], " Model"))
   if (model=="random"){
     ercomp <- describe(x, "random.method")
-    cat(paste(" \n   (",
+    cat(paste0(" \n   (",
               random.method.list[ercomp],
-              "'s transformation)\n",
-              sep=""))
+              "'s transformation)\n"))
   }
   else{
     cat("\n")
@@ -271,7 +270,7 @@ print.summary.plm.list <- function(x, digits = max(3, getOption("digits") - 2),
     cat("\n")
   }
   for (l in seq_along(x$models)){
-    cat(paste("\n - ", names(x$models)[l], "\n", sep = ""))
+    cat(paste0("\n - ", names(x$models)[l], "\n"))
     printCoefmat(x$models[[l]], digits = digits)
   }
   invisible(x)
@@ -282,7 +281,7 @@ print.summary.plm.list <- function(x, digits = max(3, getOption("digits") - 2),
 print.plm.list <- function(x, digits = max(3, getOption("digits") - 2), width = getOption("width"),...){
   cat("\nModel Formulas:\n")
   for (l in seq_along(formula(x))){
-    cat(paste(names(formula(x))[l], "  : ", deparse(formula(x)[[l]]), "\n", sep = ""))
+    cat(paste0(names(formula(x))[l], "  : ", deparse(formula(x)[[l]]), "\n"))
   }
   cat("\nCoefficients:\n")
   print(coef(x),digits = digits)
