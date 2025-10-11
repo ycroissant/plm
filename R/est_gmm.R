@@ -734,7 +734,7 @@ G <- function(t){
 }
 
 FD <- function(t){
-  FD <- Id(t)[-1L, ]
+  FD <- Id(t)[-1L, , drop = FALSE]
   for (i in seq_len(t-1)){
     FD[i, i] <- -1
   }
@@ -782,7 +782,7 @@ makegmm <- function(x, g, TL1, collapse = FALSE){
 
 makeW2 <-function (x, collapse = FALSE){
   if(collapse) { diff(x[-c(length(x))]) }
-  else {    diag(diff(x[-c(length(x))])) }
+  else {    diag(diff(x[-c(length(x))]), nrow = length(x)-1) }
 }
 
 #' @rdname pgmm
@@ -976,9 +976,9 @@ print.summary.pgmm <- function(x, digits = max(3, getOption("digits") - 2),
   cat("\nSargan test: ", names(x$sargan$statistic),
       "(", x$sargan$parameter, ") = ", x$sargan$statistic,
       " (p-value = ", format.pval(x$sargan$p.value,digits=digits), ")\n", sep = "")
-  cat("Autocorrelation test (1): ", names(x$m1$statistic),
-      " = ", x$m1$statistic,
-      " (p-value = ", format.pval(x$m1$p.value, digits = digits), ")\n", sep = "")
+    cat("Autocorrelation test (1): ", names(x$m1$statistic),
+        " = ", x$m1$statistic,
+        " (p-value = ", format.pval(x$m1$p.value, digits = digits), ")\n", sep = "")
   if(!is.null(x$m2)) {
     # # mtest with order = 2 is only present in x if more than 2 observations were present
     cat("Autocorrelation test (2): ", names(x$m2$statistic),
