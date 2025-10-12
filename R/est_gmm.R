@@ -804,9 +804,9 @@ summary.pgmm <- function(object, robust = TRUE, time.dummies = FALSE, ...) {
        else                   length(object$coefficients[[2L]])
   object$sargan <- sargan(object, "twosteps")
   # mtest with order = 1 is only feasible if more than 1 observations are present
-  if(NROW(object$model[[1L]]) > 1L) object$m1 <- mtest(object, order = 1L, vcov = if(!robust) NULL else vv)
+  try(if(NROW(object$model[[1L]]) > 1L) object$m1 <- mtest(object, order = 1L, vcov = if(!robust) NULL else vv))
   # mtest with order = 2 is only feasible if more than 2 observations are present
-  if(NROW(object$model[[1L]]) > 2L) object$m2 <- mtest(object, order = 2L, vcov = if(!robust) NULL else vv)
+  try(if(NROW(object$model[[1L]]) > 2L) object$m2 <- mtest(object, order = 2L, vcov = if(!robust) NULL else vv))
   object$wald.coef <- pwaldtest(object, param = "coef", vcov = if(!robust) NULL else vv)
   if(effect == "twoways") object$wald.td <- pwaldtest(object, param = "time", vcov = if(!robust) NULL else vv)
   Kt <- length(object$args$namest)
