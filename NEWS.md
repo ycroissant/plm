@@ -7,7 +7,8 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 
 # 2.6-9999 Development version, changes relative to last CRAN release 2.6-6
 
-* (none so far)
+* Fix format of an entry in REFERENCES.bib (fixes #75), detected by upcoming 
+  version of package `Rdpack`.
 
 ***
 
