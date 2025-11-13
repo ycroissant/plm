@@ -5,6 +5,13 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
           (development repository <https://github.com/ycroissant/plm/>)
 ---
 
+### 2.6-9999 Development version
+
+# Changes relative to current CRAN version 2.6-7
+
+* (none so far)
+
+
 # 2.6-7
 
 ### Fixes:
