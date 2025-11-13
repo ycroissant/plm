@@ -17,8 +17,6 @@ A data frame containing :
 }
 \source{
 Online supplements to Hayashi (2000).
-
-\url{http://fhayashi.fc2web.com/datasets.htm}
 }
 \description{
 A panel of 125 observations from 1960 to 1985

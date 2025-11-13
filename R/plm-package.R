@@ -729,8 +729,6 @@ NULL
 #'
 #' @source Online supplements to Hayashi (2000).
 #' 
-#' \url{http://fhayashi.fc2web.com/datasets.htm}
-#'
 #' @keywords datasets
 NULL
 
