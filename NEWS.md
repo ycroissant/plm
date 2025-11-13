@@ -5,10 +5,14 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
           (development repository <https://github.com/ycroissant/plm/>)
 ---
 
-# 2.6-9999 Development version, changes relative to last CRAN release 2.6-6
+# 2.6-7
 
-* Fix format of an entry in REFERENCES.bib (fixes #75), detected by upcoming 
-  version of package `Rdpack`.
+### Fixes:
+
+* Fix format of an entry in `REFERENCES.bib` (fixes #75), detected by upcoming 
+  version of package `rbibutils` (thanks for the heads-up to @GeoBosh).
+  
+
 
 ***
 
