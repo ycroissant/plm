@@ -16,8 +16,9 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 
 ### Fixes:
 
-* Fix format of an entry in `REFERENCES.bib` (fixes [#75](https://github.com/ycroissant/plm/issues/75)), 
-  detected by upcoming version of package `rbibutils` (thanks for the heads-up to @GeoBosh).
+* Fix format of an entry in `REFERENCES.bib` which fixes a CRAN warning 
+  (fixes [#75](https://github.com/ycroissant/plm/issues/75)), detected by 
+  upcoming version of package `rbibutils` (thanks for the heads-up to @GeoBosh).
   
 
 
