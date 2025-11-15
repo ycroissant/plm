@@ -734,7 +734,7 @@ G <- function(t){
 }
 
 FD <- function(t){
-  FD <- Id(t)[-1L, ]
+  FD <- Id(t)[-1L, , drop = FALSE]
   for (i in seq_len(t-1)){
     FD[i, i] <- -1
   }
@@ -782,7 +782,7 @@ makegmm <- function(x, g, TL1, collapse = FALSE){
 
 makeW2 <-function (x, collapse = FALSE){
   if(collapse) { diff(x[-c(length(x))]) }
-  else {    diag(diff(x[-c(length(x))])) }
+  else {    diag(diff(x[-c(length(x))]), nrow = length(x)-1) }
 }
 
 #' @rdname pgmm
@@ -803,9 +803,10 @@ summary.pgmm <- function(object, robust = TRUE, time.dummies = FALSE, ...) {
   K <- if(model == "onestep") length(object$coefficients)
        else                   length(object$coefficients[[2L]])
   object$sargan <- sargan(object, "twosteps")
-  object$m1 <- mtest(object, order = 1L, vcov = if(!robust) NULL else vv)
+  # mtest with order = 1 is only feasible if more than 1 observations are present
+  try(if(NROW(object$model[[1L]]) > 1L) object$m1 <- mtest(object, order = 1L, vcov = if(!robust) NULL else vv))
   # mtest with order = 2 is only feasible if more than 2 observations are present
-  if(NROW(object$model[[1L]]) > 2L) object$m2 <- mtest(object, order = 2L, vcov = if(!robust) NULL else vv)
+  try(if(NROW(object$model[[1L]]) > 2L) object$m2 <- mtest(object, order = 2L, vcov = if(!robust) NULL else vv))
   object$wald.coef <- pwaldtest(object, param = "coef", vcov = if(!robust) NULL else vv)
   if(effect == "twoways") object$wald.td <- pwaldtest(object, param = "time", vcov = if(!robust) NULL else vv)
   Kt <- length(object$args$namest)
@@ -976,9 +977,13 @@ print.summary.pgmm <- function(x, digits = max(3, getOption("digits") - 2),
   cat("\nSargan test: ", names(x$sargan$statistic),
       "(", x$sargan$parameter, ") = ", x$sargan$statistic,
       " (p-value = ", format.pval(x$sargan$p.value,digits=digits), ")\n", sep = "")
-  cat("Autocorrelation test (1): ", names(x$m1$statistic),
-      " = ", x$m1$statistic,
-      " (p-value = ", format.pval(x$m1$p.value, digits = digits), ")\n", sep = "")
+  
+  if(!is.null(x$m1)) {
+    # # mtest with order = 1 is only present in x if more than 1 observations were present
+    cat("Autocorrelation test (1): ", names(x$m1$statistic),
+        " = ", x$m1$statistic,
+        " (p-value = ", format.pval(x$m1$p.value, digits = digits), ")\n", sep = "")
+  }
   if(!is.null(x$m2)) {
     # # mtest with order = 2 is only present in x if more than 2 observations were present
     cat("Autocorrelation test (2): ", names(x$m2$statistic),
