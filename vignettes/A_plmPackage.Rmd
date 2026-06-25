@@ -824,8 +824,8 @@ summary(cr)
 
 The Hausman-Taylor model (see @HAUS:TAYL:81) may be estimated
 with the `plm`^[Function `pht` is a deprecated way to estimate this type of model:
-`ht <- pht(lwage~wks+south+smsa+married+exp+I(exp^2)+ bluecol+ind+union+sex+black+ed 
-| sex+black+bluecol+south+smsa+ind, data=Wages,index=595)`.] 
+`ht <- pht(lwage~wks+south+smsa+married+exp+I(exp^2)+bluecol+ind+union+sex+black+ed 
+| sex+black+bluecol+south+smsa+ind, data=Wages, index=595)`.] 
 function by setting parameters `random.method = "ht"` and
 `inst.method = "baltagi"` like in
 the example below. The following replicates @BALT:05, pp. 129/30;
