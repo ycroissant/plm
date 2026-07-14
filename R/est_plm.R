@@ -444,17 +444,12 @@ plm.fit <- function(data, model, effect, random.method,
         if (! is.null(w)){
             if (! is.numeric(w)) stop("'weights' must be a numeric vector")
             if (any(w < 0) || anyNA(w)) stop("missing or negative weights not allowed")
-            X <- X * sqrt(w)
-            y <- y * sqrt(w)
         }
         else w <- 1
         
         # IV case: extract the matrix of instruments if necessary
         # (means here that we have a multi-parts formula)
         if (length(formula)[2L] > 1L) {
-          
-            if(!is.null(model.weights(data)) || any(w != 1))
-              stop("argument 'weights' not yet implemented for instrumental variable models")
             
           if ( ! (model == "random" && inst.method != "bvk")) {
            #  Pool/FD/FE/BE IV and RE "bvk" IV estimator
@@ -495,18 +490,16 @@ plm.fit <- function(data, model, effect, random.method,
             } 
             else W2 <- StarW2 <- NULL
             
-            # TODO: here, some weighting is done but prevented earlier by stop()?!
-            #       also: RE bvk/BE/FE IV do not have weighting code.
-            if (inst.method == "baltagi") W <- sqrt(w) * cbind(W1, W2, B1)
-            if (inst.method == "am")      W <- sqrt(w) * cbind(W1, W2, B1, StarW1)
-            if (inst.method == "bms")     W <- sqrt(w) * cbind(W1, W2, B1, StarW1, StarW2)
+            if (inst.method == "baltagi") W <- cbind(W1, W2, B1)
+            if (inst.method == "am")      W <- cbind(W1, W2, B1, StarW1)
+            if (inst.method == "bms")     W <- cbind(W1, W2, B1, StarW1, StarW2)
           }
       
           if (ncol(W) < ncol(X)) stop("insufficient number of instruments")
         } # END all IV cases
         else W <- NULL # no instruments (no IV case)
         
-        result <- mylm(y, X, W)
+        result <- mylm(y, X, W, weights = w)
         df <- df.residual(result)
         vcov <- result$vcov
         aliased <- result$aliased
