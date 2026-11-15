@@ -192,3 +192,23 @@ fit.plm.re.id <- plm(inv ~ value + capital, data = Grunfeld, model = "random")
 
 (pred.plm.re    <- predict(fit.plm.re.id, newdata = newdata.p))
 (pred.plm.re.df <- predict(fit.plm.re.id, newdata = newdata))
+
+
+## newdata with NA values in a regressor: rows with NA are dropped, and the
+## fixed effects must be matched to the remaining rows (one-way and two-ways)
+Grunfeld.na <- Grunfeld
+Grunfeld.na$value[c(7, 55)] <- NA
+Grunfeld.na.p <- pdata.frame(Grunfeld.na)
+fit.na    <- plm(inv ~ value + capital, data = Grunfeld.na, model = "within")
+fit.na.tw <- plm(inv ~ value + capital, data = Grunfeld.na, model = "within", effect = "twoways")
+pred.na    <- predict(fit.na,    newdata = Grunfeld.na.p)
+pred.na.tw <- predict(fit.na.tw, newdata = Grunfeld.na.p)
+lm.na    <- lm(inv ~ value + capital + factor(firm), data = Grunfeld.na)
+lm.na.tw <- lm(inv ~ value + capital + factor(firm) + factor(year), data = Grunfeld.na)
+stopifnot(length(pred.na) == 198L, length(pred.na.tw) == 198L)
+stopifnot(isTRUE(all.equal(as.numeric(pred.na),    as.numeric(fitted(lm.na)))))
+stopifnot(isTRUE(all.equal(as.numeric(pred.na.tw), as.numeric(fitted(lm.na.tw)))))
+stopifnot(identical(names(pred.na), rownames(Grunfeld.na.p)[-c(7, 55)]))
+## same for a plain data.frame (fixed effects replaced by their weighted mean)
+pred.na.df <- suppressWarnings(predict(fit.na, newdata = Grunfeld.na))
+stopifnot(length(pred.na.df) == 198L)
