@@ -235,14 +235,25 @@ fixef.plm <- function(object, effect = NULL,
                           "individual" = 2L,
                           "time"       = 1L)
 
-        Xb <- model.matrix(data, rhs = 1, model = "between", effect = other.eff)
-        yb <- pmodel.response(data, model = "between", effect = other.eff)
-        other.fixef.lvl <- yb - as.vector(crossprod(t(Xb[ , nw, drop = FALSE]), coef(object)))
+        if(pdim$balanced) {
+          Xb <- model.matrix(data, rhs = 1, model = "between", effect = other.eff)
+          yb <- pmodel.response(data, model = "between", effect = other.eff)
+          other.fixef.lvl <- yb - as.vector(crossprod(t(Xb[ , nw, drop = FALSE]), coef(object)))
+        } else {
+          # unbalanced: the means by the other index also contain an average of
+          # the effects of the groups observed in each, so they do not give the
+          # other effect; get it by least squares on both indexes instead
+          other.fixef.lvl <- twoways_effects(object$model[ , 1L] - beta.data,
+                                             indexl[[1L]], indexl[[2L]])[[other.idx]]
+        }
         
         ## other dfirst
         other.fixef.dfirst <- other.fixef.lvl - other.fixef.lvl[1L]
         tw.fixef.lvl <- tw.fixef.lvl - other.fixef.dfirst[indexl[[other.idx]]]
-        tw.fixef.lvl <- tw.fixef.lvl[!collapse::fduplicated(indexl[[idx]], all = FALSE)]
+        first <- !collapse::fduplicated(indexl[[idx]], all = FALSE)
+        # first occurrences follow the data order (sorted by individual, then
+        # time), not the level order of the index used for the names below
+        tw.fixef.lvl <- tw.fixef.lvl[first][order(indexl[[idx]][first])]
         names(tw.fixef.lvl) <- pdim[["panel.names"]][[idx]]
       } else {
         # effect = "twoways": everything already computed, just set names
@@ -266,6 +277,24 @@ fixef.plm <- function(object, effect = NULL,
     res
 }
 
+
+# Least-squares split of r into individual and time effects, r ~ a[id] + g[time],
+# for unbalanced two-way models. As in the two-way within transformation
+# (Within_matrix_collapse), the time effects are the coefficients of the
+# regression of the individual-demeaned r on the individual-demeaned time
+# dummies. Effects are identified up to a constant: the first time effect is
+# set to 0. Returns list(individual = a, time = g), each in factor level order.
+twoways_effects <- function(r, id, time) {
+  r <- as.numeric(r) # drop pseries features, so that g = id is used
+  Dt  <- model.matrix(~ time - 1)
+  WDt <- collapse::fwithin(Dt, g = id, mean = 0)
+  Wr  <- collapse::fwithin(r,  g = id, mean = 0)
+  g <- lm.fit(WDt, Wr)$coefficients
+  g[is.na(g)] <- 0 # one time dummy is collinear with the individual effects
+  g <- unname(g - g[1L])
+  a <- as.vector(collapse::fmean(r - g[as.integer(time)], g = id))
+  list(individual = a, time = g)
+}
 
 #' @rdname fixef.plm
 #' @export

@@ -9,7 +9,15 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 
 # Changes relative to current CRAN version 2.6-7
 
-* (none so far)
+### Fixes:
+* `fixef`: for two-way unbalanced models, the individual and the time effects
+           (`effect = "individual"` and `effect = "time"`) are now computed by
+           least squares on both indexes, so they match the dummy coefficients of
+           `lm()`. Previously, the other effect was taken from means by its
+           index, which is correct only for balanced panels, and the time
+           effects could be assigned to the wrong time periods when the first
+           individual is not observed in the first period. The sum of effects
+           (`effect = "twoways"`) and balanced models are unaffected.
 
 
 # 2.6-7

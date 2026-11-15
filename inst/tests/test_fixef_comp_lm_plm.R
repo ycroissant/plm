@@ -250,3 +250,35 @@ if(!isTRUE(all.equal(sum_lm_fe_oneway_time_u[["coefficients"]][c(4:22) , "Std. E
 # if (!isTRUE(all.equal(sum_lm_fe_tw_u[["coefficients"]][c(13:31) , "Std. Error"], sum_plm_fixef_lm_tw_time_dfirst_u[ , "Std. Error"], check.attributes = FALSE)))
 #   stop("standard errors diverge: summary.plm vs. summary.fixef(..., type = \"dfirst\")")
 
+
+## two-ways unbalanced: individual and time effects vs. lm, for panels with
+## observations missing other than at the end (Grunfeld with rows dropped at
+## random; EmplUK, where firm 1 is not observed in the first year)
+set.seed(42)
+Grunfeld_unbalanced2 <- Grunfeld[-sample(nrow(Grunfeld), 23), ]
+data("EmplUK", package = "plm")
+tw_cases <- list(
+  Grunfeld = list(data = Grunfeld_unbalanced2, f = inv ~ value + capital),
+  EmplUK   = list(data = EmplUK, f = log(emp) ~ log(wage) + log(capital)))
+for(nm in names(tw_cases)) {
+  d <- tw_cases[[nm]]$data
+  f <- tw_cases[[nm]]$f
+  plm_tw <- plm(f, data = d, model = "within", effect = "twoways")
+  lm_tw  <- lm(update(f, . ~ . + factor(firm) + factor(year)), data = d)
+  cf <- coef(lm_tw)
+  if(!isTRUE(all.equal(as.numeric(fixef(plm_tw, type = "dfirst", effect = "individual")),
+                       as.numeric(cf[grep("^factor\\(firm\\)", names(cf))]), tolerance = 1e-6)))
+    stop(nm, ": two-ways unbalanced: individual dfirst fixefs do not match lm")
+  if(!isTRUE(all.equal(as.numeric(fixef(plm_tw, type = "dfirst", effect = "time")),
+                       as.numeric(cf[grep("^factor\\(year\\)", names(cf))]), tolerance = 1e-6)))
+    stop(nm, ": two-ways unbalanced: time dfirst fixefs do not match lm")
+  if(!identical(names(fixef(plm_tw, effect = "time")), levels(index(plm_tw)[[2L]])))
+    stop(nm, ": two-ways unbalanced: names of time effects not in level order")
+  # level effects add up to the sum of effects
+  idx <- index(plm_tw)
+  if(!isTRUE(all.equal(as.numeric(fixef(plm_tw, effect = "individual")[as.character(idx[[1L]])] +
+                                  fixef(plm_tw, effect = "time")[as.character(idx[[2L]])] -
+                                  fixef(plm_tw, effect = "individual")[1L]),
+                       as.numeric(fixef(plm_tw, effect = "twoways")), tolerance = 1e-6)))
+    stop(nm, ": two-ways unbalanced: individual and time effects do not add up to the two-ways effects")
+}
