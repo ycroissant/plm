@@ -9,7 +9,13 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 
 # Changes relative to current CRAN version 2.6-7
 
-* (none so far)
+### Fixes:
+* `predict.plm`: for fixed effects models and `newdata` being a pdata.frame with
+                 `NA` values in a regressor, the fixed effects are now matched to
+                 the rows left after dropping the `NA` rows. Previously, the
+                 predictions for all rows after the first dropped one were
+                 computed with the fixed effects of other rows (with only a
+                 warning about recycling).
 
 
 # 2.6-7

@@ -610,10 +610,14 @@ predict.plm <- function(object, newdata = NULL, na.fill = !inherits(newdata, "pd
       }
     } # end-if model == "within"
     
+    # rows of newdata dropped by model.frame because of NA values
+    rmrows <- unclass(attr(m, "na.action"))
+    # for a pdata.frame, effs has one value per row of newdata, but X only
+    # the rows without NA values
+    if(model == "within" && is.pdf && !is.null(rmrows)) effs <- effs[-rmrows]
     result <- as.numeric(tcrossprod(beta, X)) + if(model == "within") effs else 0
     # if newdata is a pdata.frame output a pseries w/ index stripped down to what
     # is left after NA-omitting (performed implicitly by model.frame)
-    rmrows <- unclass(attr(m, "na.action"))
     nms <- rownames(newdata)
     if(is.pdf) {
       result.index <- if(!is.null(rmrows)) index(newdata[-rmrows, ]) else index(newdata)
