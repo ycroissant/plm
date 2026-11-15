@@ -9,7 +9,19 @@ subtitle: plm - Linear Models for Panel Data - A set of estimators and tests for
 
 # Changes relative to current CRAN version 2.6-7
 
-* (none so far)
+### Fixes:
+* `plm`: weighted fixed effects models (`model = "within"` with argument
+         `weights`) now take deviations from weighted means, so that
+         coefficients and their variance match `lm()` with dummies and the
+         same weights (one-way and two-ways, balanced and unbalanced).
+         Previously, unweighted means were subtracted, which gives wrong
+         estimates whenever weights vary within individuals (time periods)
+         (fixes [#5](https://github.com/ycroissant/plm/issues/5)).
+* `fixef`: for weighted fixed effects models, the effects (and their standard
+           errors for one-way models) are now based on weighted means; for
+           weighted two-way models, `effect = "individual"` and `effect = "time"`
+           now give an error instead of wrong values (`effect = "twoways"`
+           works).
 
 
 # 2.6-7

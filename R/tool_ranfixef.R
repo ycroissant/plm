@@ -174,8 +174,15 @@ fixef.plm <- function(object, effect = NULL,
     #     all other cases (twoways/balanced; oneway(ind/time)/balanced/unbalanced) are correct
     #     for these formulae.
     if(model.effect != "twoways") {
-      Xb <- model.matrix(data, rhs = 1, model = "between", effect = effect)
-      yb <- pmodel.response(data, model = "between", effect = effect)
+      if(is.null(w <- object$weights)) {
+        Xb <- model.matrix(data, rhs = 1, model = "between", effect = effect)
+        yb <- pmodel.response(data, model = "between", effect = effect)
+      } else {
+        # weighted model: the effects are weighted means of y - Xb
+        eff.fac <- unclass(index(data))[[switch(effect, "individual" = 1L, "time" = 2L)]]
+        Xb <- collapse::fmean(model.matrix(data, rhs = 1, model = "pooling"), g = eff.fac, w = w)
+        yb <- collapse::fmean(as.numeric(pmodel.response(data, model = "pooling")), g = eff.fac, w = w)
+      }
       fixef <- yb - as.vector(crossprod(t(Xb[ , nw, drop = FALSE]), coef(object)))
       
       # use robust vcov if supplied
@@ -189,6 +196,8 @@ fixef.plm <- function(object, effect = NULL,
       nother <- switch(effect,
                        "individual" = pdim$Tint$Ti,
                        "time"       = pdim$Tint$nt)
+      # weighted model: the variance of a weighted mean is s2 / (sum of weights)
+      if(!is.null(w)) nother <- as.numeric(collapse::fsum(w, g = eff.fac))
       
       s2 <- deviance(object) / df.residual(object)
       
@@ -216,8 +225,17 @@ fixef.plm <- function(object, effect = NULL,
     ##       (can be computed for effect = "individual" and "time"; also for "twoways"?)
       beta.data <- as.numeric(tcrossprod(coef(object),
                                          model.matrix(object, model = "pooling")[ , nw, drop = FALSE]))
-      yhat <- object$model[ , 1L] - object$residuals
-      tw.fixef.lvl <- yhat - beta.data # sum of both effects in levels
+      if(is.null(object$weights)) {
+        yhat <- object$model[ , 1L] - object$residuals
+        tw.fixef.lvl <- yhat - beta.data # sum of both effects in levels
+      } else {
+        # weighted model: object$residuals are scaled by sqrt(weights); the sum
+        # of effects is the weighted least-squares fit of y - Xb on both indexes
+        r <- as.numeric(object$model[ , 1L]) - beta.data
+        tw.fixef.lvl <- r - as.numeric(Within_weighted(r, index(object), "twoways", object$weights))
+        if(effect != "twoways")
+          stop("fixef(): effect = \"", effect, "\" not yet implemented for weighted two-way models; use effect = \"twoways\"")
+      }
       
       idx <- switch(effect,
                     "individual" = 1L,

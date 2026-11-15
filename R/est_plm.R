@@ -444,6 +444,15 @@ plm.fit <- function(data, model, effect, random.method,
         if (! is.null(w)){
             if (! is.numeric(w)) stop("'weights' must be a numeric vector")
             if (any(w < 0) || anyNA(w)) stop("missing or negative weights not allowed")
+            if (model == "within") {
+                # the within transformation of a weighted model takes deviations
+                # from weighted means (as lm() with dummies does), not from the
+                # unweighted means used above
+                X <- Within_weighted(model.matrix(data, rhs = 1, model = "pooling")[ , colnames(X), drop = FALSE],
+                                     index(data), effect, w)
+                y <- as.numeric(Within_weighted(pmodel.response(data, model = "pooling"),
+                                                index(data), effect, w))
+            }
             X <- X * sqrt(w)
             y <- y * sqrt(w)
         }
@@ -713,3 +722,34 @@ r.squared_no_intercept <- function(object, model = NULL,
     return(R2)
 }
 
+
+# Within transformation with weights: deviations from weighted means by
+# individual or time, or, for two-way models, from the weighted least-squares
+# fit on both indexes (weighted individual demeaning, then projecting out the
+# demeaned time dummies, as Within_matrix_collapse does without weights).
+# Rows of groups with zero total weight (which do not enter the fit) are set to 0.
+Within_weighted <- function(x, index, effect, w) {
+  # (as.matrix() of a pseries gives an individual x time matrix)
+  if(!is.matrix(x)) x <- matrix(as.numeric(x), ncol = 1L)
+  index <- unclass(index)
+  if(effect == "twoways") {
+    id  <- index[[1L]]
+    Dt  <- model.matrix(~ index[[2L]] - 1)
+    W1  <- collapse::fwithin(x,  g = id, w = w, mean = 0)
+    WDt <- collapse::fwithin(Dt, g = id, w = w, mean = 0)
+    W1[!is.finite(W1)] <- 0
+    WDt[!is.finite(WDt)] <- 0
+    coefs <- lm.fit(WDt * sqrt(w), W1 * sqrt(w))$coefficients
+    coefs[is.na(coefs)] <- 0
+    res <- W1 - WDt %*% as.matrix(coefs)
+  } else {
+    g <- switch(effect,
+                "individual" = index[[1L]],
+                "time"       = index[[2L]],
+                stop("weights not supported for within models with effect = \"", effect, "\""))
+    res <- collapse::fwithin(x, g = g, w = w, mean = 0)
+  }
+  res[!is.finite(res)] <- 0
+  dimnames(res) <- dimnames(x)
+  res
+}
