@@ -498,14 +498,6 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
               relevant.ind <- timeind
               lab <- groupind})
     
-    relevant.ind.GRP <- collapse::GRP(relevant.ind)
-    tind <- collapse::gsplit(seq_along(relevant.ind), relevant.ind.GRP)
-    tlab <- collapse::gsplit(lab, relevant.ind.GRP)
-
-  ## lab were the 'labels' (a numeric, actually) for the relevant index;
-  ## in use again from the need to make pseudo-diagonals for
-  ## calc. the lagged White terms on unbalanced panels
-
   ## transform residuals by weights (here because type='sss' needs to
   ## know who the grouping index 'g' is in helper function omega())
 
@@ -514,17 +506,20 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
   ## the grouping index; if inner="white" it is simply the sample size)
     ## TODO: find some more elegant solution for this!
     ## (perhaps if white then sss -> HC1 but check...)
-  G <- if(match.arg(inner) == "cluster") n else nT
+  clustered <- match.arg(inner) == "cluster"
+  G <- if(clustered) n else nT
   
   # transform residuals by weights
   uhat <- omega(residuals = uhat, diaghat = diaghat, g = G, nT = nT, k = k, type = type)
 
-  ## compute basic block: X'_t u_t u'_(t-l) X_(t-l) foreach t,
-  ## then calculate Sl_t and sum over t (here i in place of t)
-
-    ## here the benchmark case is time-clustering, but beware
-    ## that group-clustering is the default
-
+  if (clustered && l == 0L) {
+    # X' u u' X equals the outer product of the cluster's summed scores.
+    scores <- rowsum(demX * as.numeric(uhat), relevant.ind, reorder = FALSE)
+    salame <- crossprod(scores)
+  } else {
+    relevant.ind.GRP <- collapse::GRP(relevant.ind)
+    tind <- collapse::gsplit(seq_along(relevant.ind), relevant.ind.GRP)
+    tlab <- collapse::gsplit(lab, relevant.ind.GRP)
     ## preallocate k x k x (T-l) array for 'pile' of kxk matrices
     ## holding the X' E(u,ul) X elements
     Sl <- array(NA_real_, dim = c(k, k, n-l))
@@ -558,6 +553,7 @@ vcovG.plm <- function(x, type = c("HC0", "sss", "HC1", "HC2", "HC3", "HC4"),
     ## meat
     ## salame <- apply(Sl, 1:2, mean, na.rm=TRUE) * (n-l)
     salame <- rowSums(Sl, dims = 2L) # == apply(Sl, 1:2, sum) but faster
+  }
 
     ## bread by standard method
     pane <- solve(crossprod(demX))
